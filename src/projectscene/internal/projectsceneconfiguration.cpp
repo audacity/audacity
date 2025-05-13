@@ -138,7 +138,7 @@ const std::vector<std::pair<std::string, std::string> >& ProjectSceneConfigurati
 
 std::string ProjectSceneConfiguration::nextTrackColor()
 {
-    return clipColors()[trackColorIdx++ % clipColors().size()].second;
+    return clipColors()[m_trackColorIdx++ % clipColors().size()].second;
 }
 
 ClipStyles::Style ProjectSceneConfiguration::clipStyle() const

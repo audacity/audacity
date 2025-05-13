@@ -60,6 +60,6 @@ private:
     muse::async::Notification m_effectsPanelVisible;
     muse::async::Notification m_asymmetricStereoHeightsChanged;
     muse::async::Notification m_asymmetricStereoHeightsWorkspacesChanged;
-    size_t trackColorIdx{ 0 };
+    size_t m_trackColorIdx{ 0 };
 };
 }

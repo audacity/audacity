@@ -183,7 +183,7 @@ void ProjectSceneUiActions::init()
 
     for (const auto& color : colors) {
         UiAction clipColorAction;
-        clipColorAction.code = muse::actions::ActionQuery(makeColorChangeAction(color.second)).toString();
+        clipColorAction.code = muse::actions::ActionQuery(makeClipColorChangeAction(color.second)).toString();
         clipColorAction.uiCtx = context::UiCtxProjectOpened;
         clipColorAction.scCtx = context::CTX_PROJECT_FOCUSED;
         clipColorAction.description = muse::TranslatableString("action", "Change clip color");

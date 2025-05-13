@@ -155,9 +155,9 @@ MenuItemList ClipContextMenuModel::makeClipColourItems()
 
     const auto& colors = projectSceneConfiguration()->clipColors();
     for (const auto& color : colors) {
-        items << makeMenuItem(makeColorChangeAction(color.second).toString(),
+        items << makeMenuItem(makeClipColorChangeAction(color.second).toString(),
                               muse::TranslatableString("clip", muse::String::fromStdString(color.first)));
-        m_colorChangeActionCodeList.push_back(makeColorChangeAction(color.second).toString());
+        m_colorChangeActionCodeList.push_back(makeClipColorChangeAction(color.second).toString());
     }
 
     return items;
