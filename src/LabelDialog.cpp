@@ -632,8 +632,8 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
          XO("Select a text file containing labels"),
          wxEmptyString,     // Path
          wxT(""),       // Name
-         wxT("txt"),   // Extension
-         { FileNames::TextFiles, LabelTrack::SubripFiles, FileNames::AllFiles },
+         wxT(""),   // Extension
+         { LabelTrack::AllSupportedFiles, FileNames::TextFiles, LabelTrack::SubripFiles, FileNames::AllFiles },
          wxRESIZE_BORDER, // Flags
          this);    // Parent
 
