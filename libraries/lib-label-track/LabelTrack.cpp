@@ -522,8 +522,11 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index, LabelFormat format
       // Labels in audacity should be only one line, so join multiple lines
       // with spaces.  This is not reversed on export.
       while (index < (int)file.GetLineCount() &&
-             !file.GetLine(index).IsEmpty())
+             !file.GetLine(index).IsEmpty()) 
+      {
          title += " " + file.GetLine(index);
+         index++;
+      }
 
       index++; // Skip over empty line
 
