@@ -30,11 +30,25 @@ Item {
     RowLayout {
         anchors.fill: parent
 
-        StyledIconLabel {
+        FlatButton {
             Layout.preferredWidth: root.height
             Layout.preferredHeight: root.height
 
-            iconCode: IconCode.AUDIO
+            icon: IconCode.AUDIO
+            accentButton: popup.isOpened
+
+            onClicked: {
+                if (popup.isOpened) {
+                    popup.close()
+                } else {
+                    popup.open()
+                }
+            }
+
+            PlaybackMeterCustomisePopup {
+                id: popup
+            }
+   
         }
 
         Item {

@@ -8,6 +8,7 @@
         <file>qml/Audacity/Playback/components/TimecodeStartEnd.qml</file>
         <file>qml/Audacity/Playback/components/ArrowButton.qml</file>
         <file>qml/Audacity/Playback/components/ArrowMenuButton.qml</file>
+        <file>qml/Audacity/Playback/components/PlaybackMeterCustomisePopup.qml</file>
         <file>qml/Audacity/Playback/toolbars/PlaybackLevel.qml</file>
         <file>qml/Audacity/Playback/toolbars/TimeSignature.qml</file>
         <file>qml/Audacity/Playback/toolbars/BPM.qml</file>
