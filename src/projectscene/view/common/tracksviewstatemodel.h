@@ -10,6 +10,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
+#include "record/irecordcontroller.h"
 
 namespace au::projectscene {
 //! NOTE This is model need for synchronization of view (scroll, height and so on)
@@ -33,10 +34,12 @@ class TracksViewStateModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool ctrlPressed READ ctrlPressed NOTIFY ctrlPressedChanged FINAL)
 
     Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
+    Q_PROPERTY(bool isRecording READ isRecording NOTIFY isRecordingChanged FINAL)
     Q_PROPERTY(bool snapEnabled READ snapEnabled NOTIFY snapEnabledChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<playback::IPlaybackController> playbackController;
+    muse::Inject<record::IRecordController> recordController;
 
 public:
     TracksViewStateModel(QObject* parent = nullptr);
@@ -56,6 +59,7 @@ public:
     bool altPressed() const;
     bool ctrlPressed() const;
     bool isPlaying() const;
+    bool isRecording() const;
 
     Q_INVOKABLE void changeTracksVericalY(int deltaY);
     Q_INVOKABLE void setMouseY(double y);
@@ -79,6 +83,7 @@ signals:
     void altPressedChanged();
     void ctrlPressedChanged();
     void isPlayingChanged();
+    void isRecordingChanged();
 
     void snapEnabledChanged();
 

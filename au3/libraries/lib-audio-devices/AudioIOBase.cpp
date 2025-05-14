@@ -17,7 +17,6 @@ Paul Licameli split from AudioIO.cpp
 #include <wx/txtstrm.h>
 
 #include "IteratorX.h"
-#include "Meter.h"
 #include "Prefs.h"
 
 #include "portaudio.h"
@@ -309,7 +308,7 @@ int AudioIOBase::GetHostIndex(const std::string& hostName)
 }
 
 void AudioIOBase::SetCaptureMeter(
-    const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<Meter>& wMeter)
+    const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<IMeterSender>& wMeter)
 {
     if (auto pOwningProject = mOwningProject.lock();
         (pOwningProject) && (pOwningProject != project)) {
@@ -319,14 +318,14 @@ void AudioIOBase::SetCaptureMeter(
     auto meter = wMeter.lock();
     if (meter) {
         mInputMeter = meter;
-        meter->Reset(mRate, true);
+        meter->reset();
     } else {
         mInputMeter.reset();
     }
 }
 
 void AudioIOBase::SetPlaybackMeter(
-    const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<IMeterChannel>& wMeter)
+    const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<IMeterSender>& wMeter)
 {
     if (auto pOwningProject = mOwningProject.lock();
         (pOwningProject) && (pOwningProject != project)) {

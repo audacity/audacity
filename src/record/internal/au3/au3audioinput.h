@@ -10,13 +10,9 @@
 #include "context/iglobalcontext.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/au3audiometer.h"
 
 #include "../../iaudioinput.h"
-
-namespace au::playback {
-class InOutMeter;
-}
-
 namespace au::record {
 class Au3AudioInput : public IAudioInput, public muse::async::Asyncable
 {
@@ -30,6 +26,7 @@ public:
     muse::async::Channel<float> recordVolumeChanged() const override;
 
     muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> recordSignalChanges() const override;
+    muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> recordTrackSignalChanges(int64_t key) const;
 
 private:
     au3::Au3Project& projectRef() const;
@@ -38,6 +35,6 @@ private:
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
 
-    std::shared_ptr<playback::InOutMeter> m_inputMeter;
+    std::shared_ptr<au::au3::Meter> m_inputMeter;
 };
 }

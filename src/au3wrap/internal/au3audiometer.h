@@ -4,19 +4,19 @@
 
 #pragma once
 
-#include "libraries/lib-audio-devices/IMeterChannel.h"
-
 #include "global/async/asyncable.h"
-#include "global/async/promise.h"
 #include "global/async/channel.h"
 
 #include "au3audio/audiotypes.h"
 
-namespace au::playback {
-class OutMeter : public IMeterChannel, public muse::async::Asyncable
+#include "libraries/lib-audio-devices/IMeterSender.h"
+
+namespace au::au3 {
+class Meter : public IMeterSender, public muse::async::Asyncable
 {
 public:
-    OutMeter();
+    Meter();
+    void push(uint8_t channel, const IMeterSender::InterleavedSampleData& sampleData, int64_t key) override;
     void push(uint8_t channel, float signal, int64_t key) override;
     void sendAll() override;
     void reset() override;

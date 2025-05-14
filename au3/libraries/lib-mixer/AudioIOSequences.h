@@ -71,6 +71,8 @@ struct MIXER_API RecordableSequence {
     virtual void RepairChannels() = 0;
 
     virtual void InsertSilence(double t, double len) = 0;
+
+    virtual int64_t GetRecordableSequenceId() const = 0;
 };
 
 using RecordableSequences = std::vector<std::shared_ptr<RecordableSequence> >;

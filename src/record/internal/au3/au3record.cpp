@@ -14,7 +14,6 @@
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-stretching-sequence/StretchingSequence.h"
 #include "libraries/lib-viewport/Viewport.h"
-#include "libraries/lib-audio-devices/Meter.h"
 
 #include "au3audioinput.h"
 
@@ -345,7 +344,7 @@ muse::Ret Au3Record::stop()
 
     auto captureMeter = projectAudioIO.GetCaptureMeter();
     if (captureMeter) {
-        captureMeter->Clear();
+        captureMeter->reset();
     }
 
     return make_ok();

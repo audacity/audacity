@@ -18,6 +18,7 @@ Canvas {
     property real minDisplayedVolumePressure: -60.0
     property real maxDisplayedVolumePressure: 0.0
     property bool isPlaying: false
+    property bool isRecording: false
 
     property real indicatorWidth
     property bool showRuler: false
@@ -334,6 +335,17 @@ Canvas {
             prv.clipped = false
         }
         else {
+            prv.needsClear = true
+            prv.recentVolumePressure = []
+            prv.recentPeak = -60
+            prv.maxPeak = -60
+        }
+        requestPaint()
+    }
+
+    onIsRecordingChanged: {
+        if (root.isRecording) {
+            prv.clipped = false
             prv.needsClear = true
             prv.recentVolumePressure = []
             prv.recentPeak = -60

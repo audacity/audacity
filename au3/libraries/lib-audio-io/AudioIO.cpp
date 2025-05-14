@@ -67,6 +67,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "DeviceManager.h"
 
 #include <cfloat>
+#include <cstring>
 #include <math.h>
 #include <stdlib.h>
 #include <algorithm>
@@ -100,7 +101,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 #endif
 
 #include "Channel.h"
-#include "Meter.h"
 #include "Mix.h"
 #include "Resample.h"
 #include "RingBuffer.h"
@@ -1486,7 +1486,7 @@ bool AudioIO::IsAvailable(AudacityProject& project) const
 void AudioIO::SetMeters()
 {
     if (auto pInputMeter = mInputMeter.lock()) {
-        pInputMeter->Reset(mRate, true);
+        pInputMeter->reset();
     }
     if (auto pOutputMeter = mOutputMeter.lock()) {
         pOutputMeter->reset();
@@ -1696,7 +1696,7 @@ void AudioIO::StopStream()
     }
 
     if (auto pInputMeter = mInputMeter.lock()) {
-        pInputMeter->Reset(mRate, false);
+        pInputMeter->reset();
     }
 
     if (auto pOutputMeter = mOutputMeter.lock()) {
@@ -3026,16 +3026,17 @@ void AudioIoCallback::SendVuInputMeterData(
     const float* inputSamples,
     unsigned long framesPerBuffer)
 {
-    const auto numCaptureChannels = mNumCaptureChannels;
-    auto pInputMeter = mInputMeter.lock();
-    if (!pInputMeter) {
+    auto inputMeter = mInputMeter.lock();
+    if (!inputMeter) {
         return;
     }
-    if (pInputMeter->IsMeterDisabled()) {
+
+    if (!inputSamples) {
         return;
     }
-    pInputMeter->UpdateDisplay(
-        numCaptureChannels, framesPerBuffer, inputSamples);
+
+    PushInputMeterValues(inputMeter, inputSamples, framesPerBuffer);
+    inputMeter->sendAll();
 }
 
 /* Send data to playback VU meter if applicable */
@@ -3061,18 +3062,64 @@ void AudioIoCallback::SendVuOutputMeterData(
     outputMeter->sendAll();
 }
 
+void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float * values, unsigned long frames)
+{
+    if ((mCaptureSequences.size() == 0) || (frames == 0)) {
+        return;
+    }
 
-void AudioIoCallback::PushMainMeterValues(const std::shared_ptr<IMeterChannel>& channel, const float * values, uint8_t channels, unsigned long frames)
+    // Update meter tracks
+    auto sptr = values;
+    for (const auto& sequence : mCaptureSequences) {
+        auto nChannels = sequence->NChannels();
+        const int64_t id = sequence->GetRecordableSequenceId();
+        for (size_t ch = 0; ch < nChannels; ch++) {
+            sender->push(ch, {sptr + ch, frames, nChannels}, id);
+        }
+    }
+
+    constexpr size_t maxMainTrackChannels = 2;
+    // Update main meter
+    // If the input source has more than 2 channels it will be splitted on multiple mono sequences
+    if (mCaptureSequences.size() == 1) {
+        const auto nChannels = mCaptureSequences[0]->NChannels();
+        assert(nChannels <= 2);
+        for (size_t ch = 0; ch < nChannels; ++ch) {
+            sender->push(ch, {sptr + ch, frames, nChannels});
+        }
+    }
+    else {
+        assert(std::all_of(mCaptureSequences.begin(), mCaptureSequences.end(),
+            [](const auto& seq) { return seq->NChannels() == 1; }));
+
+        const auto mainTrackInput = stackAllocate(float, frames * maxMainTrackChannels);
+        std::memset(mainTrackInput, 0, frames * maxMainTrackChannels * sizeof(float));
+        for (size_t i = 0; i < frames; ++i) {
+            for (size_t seqNum = 0; seqNum < mCaptureSequences.size(); seqNum++) {
+                const auto channel = seqNum % maxMainTrackChannels;
+                mainTrackInput[channel * frames + i] = std::max(
+                    mainTrackInput[channel * frames + i], *sptr);
+                    sptr++;
+            }
+        }
+
+        for (size_t ch = 0; ch < maxMainTrackChannels; ++ch) {
+            sender->push(ch, {mainTrackInput + ch * frames, frames, 1});
+        }
+    }
+}
+
+void AudioIoCallback::PushMainMeterValues(const std::shared_ptr<IMeterSender>& sender, const float * values, uint8_t channels, unsigned long frames)
 {
     auto sptr = values;
     for (size_t ch = 0; ch < channels; ++ch) {
         auto sptr = values + ch;
-        channel->push(ch, GetAbsValue(sptr, frames, channels));
+        sender->push(ch, {sptr, frames, channels});
     }
 }
 
 
-void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterChannel>& channel, unsigned long frames)
+void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterSender>& sender, unsigned long frames)
 {
     auto stackBuffer = stackAllocate(float, frames);
 
@@ -3086,7 +3133,7 @@ void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterChannel>&
                 frames
             );
 
-            channel->push(nch, GetAbsValue(stackBuffer, len, 1), track.trackId());
+            sender->push(nch, {stackBuffer, len, 1}, track.trackId());
         }
     }
 }
