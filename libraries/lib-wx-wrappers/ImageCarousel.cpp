@@ -6,10 +6,13 @@
 
 #include "ImageCarousel.h"
 #include "Prefs.h"
+#include "Theme.h"
+#include "AllThemeResources.h"
 
 ImageCarousel::ImageCarousel(wxWindow* parent, const std::vector<CarouselSnapshot>& snapshots, wxWindowID winid, const wxPoint& pos, const wxSize& size)
     : m_snapshots(snapshots), m_id(winid), wxPanel(parent, winid, pos, size) {
    SetBackgroundStyle(wxBG_STYLE_PAINT);
+   SetBackgroundColour(theTheme.Colour(clrMedium));
 
    gPrefs->Read(wxT("/GUI/IntroOrderStart"), &m_currentIndex, 0);
    m_currentIndex = m_currentIndex % m_snapshots.size();
@@ -134,13 +137,13 @@ void ImageCarousel::DrawDots(wxDC& dc, const wxSize& size)
 
    int totalWidth = numDots * (dotRadius * 2) + (numDots - 1) * spacing;
    int startX = (size.GetWidth() - totalWidth) / 2;
-   int y = size.GetHeight() - 30;
+   int y = size.GetHeight() - 38;
 
    for (int i = 0; i < numDots; ++i)
    {
       wxColour color = (i == m_currentIndex)
-                        ? wxColour(56, 56, 74)
-                        : wxColour(203, 203, 211);
+                        ? theTheme.Colour(clrTrackPanelText)
+                        : theTheme.Colour(clrDark);
 
       dc.SetBrush(wxBrush(color));
       dc.SetPen(*wxTRANSPARENT_PEN);
