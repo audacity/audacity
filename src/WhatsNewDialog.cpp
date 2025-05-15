@@ -32,13 +32,15 @@
 #include "ImageCarousel.h"
 #include "HyperLink.h"
 
-#include "../images/ACE.jpg.h"
 #include "../images/Audacity_3.7.2_Thumb.jpg.h"
 #include "../images/Cloud.xpm"
 #include "../images/Cloud_low_res.xpm"
-#include "../images/ACE.xpm"
-#include "../images/Audacity36.xpm"
-#include "../images/CompleteAudioComSetup.xpm"
+
+#include "../images/AudacityMerchStore.h"
+#include "../images/AudioDotComPromo.h"
+#include "../images/AudacityPromo.h"
+#include "../images/AudacityFeatureSurvey.h"
+#include "../images/MuseHubPromo.h"
 
 namespace
 {
@@ -61,12 +63,14 @@ enum {
    WhatsNewID_GoToAudioCom,
 };
 
-const char* WhatsNewURL = "https://audacityteam.org/3.7.0-video";
+const char* WhatsNewURL = "https://youtu.be/f5TXPUOFH6A?si=L-RbB7c1Lrd-1-ys&utm_source=au-app-welcome-yt-video&utm_medium=audacity-3-6-vid&utm_campaign=au-app-welcome-au-app-welcome-yt-video-audacity-3-6-vid&utm_id=au-app-welcome";
 const char* ChangeLogURL = "https://support.audacityteam.org/additional-resources/changelog";
 //const char* MuseHubURL = "https://www.audacityteam.org/mh-whatsnew";
-const char* MuseHubURL = "https://www.musehub.com/app/ace-studio?utm_source=au-app&utm_medium=ace-studio&utm_campaign=au-app-welcome-ace-studio";
+const char* MuseHubURL = "https://www.musehub.com/plugin/soap-voice-cleaner?utm_source=au-app-welcome-mh-web&utm_medium=soap-voice-cleaner&utm_campaign=au-app-welcome-mh-web-soap-voice-cleaner&utm_id=au-app-welcome";
 const char* PromoURL = "https://audacityteam.org/audacitypromo";
 const char* AudioComURL = "https://audio.com/audacity/auth/sign-in?mtm_campaign=audacitydesktop&mtm_content=app_launch_popup";
+const char* AudacitySurveyURL = "http://audacityteam.org/survey?utm_source=au-app-survey&utm_medium=survey&utm_campaign=au-app-welcome-au-app-survey-survey&utm_id=au-app-welcome";
+const char* AudacityMerchStoreURL = "https://audacity-shop.fourthwall.com/en-gbp/?utm_source=au-app-merch-store&utm_medium=merch-25y&utm_campaign=au-app-welcome-au-app-merch-store-merch-25y&utm_id=au-app-welcome";
 
 #if defined(__WXOSX__) || defined(__WXMSW__)
 constexpr auto WindowWidth = 812;
@@ -76,9 +80,9 @@ constexpr auto WindowWidth = 550;
 
 #if defined(__WXOSX__)
 // wxHTML renders text with smaller line spacing on macOS
-   constexpr auto WindowHeight = 620;
+   constexpr auto WindowHeight = 612;
 #elif defined(__WXMSW__)
-   constexpr auto WindowHeight = 668;
+   constexpr auto WindowHeight = 656;
 #else
    constexpr auto WindowHeight = 450;
 #endif
@@ -319,13 +323,9 @@ WhatsNewDialog::WhatsNewDialog(wxWindow* parent, wxWindowID id)
 {
 
    SetSize(FromDIP(wxSize(WindowWidth, WindowHeight)));
+   SetBackgroundColour(theTheme.Colour(clrDark));
+   
 
-#if defined(__WXMSW__)
-   //On Windows UI controls doesn't use same theme preference
-   //as per application, we should use the latter one to get
-   //match with LinkingHtmlWindow's theme
-   SetBackgroundColour(theTheme.Colour(clrMedium));
-#endif
    SetName();
    ShuttleGui S( this, eIsCreating );
    Populate( S );
@@ -358,27 +358,35 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 #endif
    std::vector<CarouselSnapshot> snapshots {
       {  XXO("Complete your Audacity cloud setup with audio.com"),
-         Rescale(wxBitmap(CompleteAudioComSetup), width, height),
+         Rescale(LoadEmbeddedPNG(AudioDotComPromo_png, AudioDotComPromo_png_len), width, height),
          AudioComURL,
          XXO("Continue")
       },
       {
          XXO("What's new in Audacity"),
-         Rescale(wxBitmap(Audacity36), width, height),
+         Rescale(LoadEmbeddedPNG(AudacityPromo_png, AudacityPromo_png_len), width, height),
          WhatsNewURL,
          XXO("Watch the release video")
       },
+#if defined (__WXOSX__) || defined(__WXMSW__)
       {
-         XXO("ACE Studio - A Singing Voice AI Generator"),
-         Rescale(wxBitmap(ACE), width, height),
+         XXO("Soap Voice Cleaner: studio-quality voice-over sound"),
+         Rescale(LoadEmbeddedPNG(MuseHubPromo_png, MuseHubPromo_png_len), width, height),
          MuseHubURL,
          XXO("Get it on MuseHub")
       },
+#endif
       {
-         XXO("Survey: choose next Audacity features"),
-         Rescale(wxBitmap(Audacity36), width, height),
-         WhatsNewURL,
+         XXO("Help us decide the future of Audacity"),
+         Rescale(LoadEmbeddedPNG(AudacityFeatureSurvey_png, AudacityFeatureSurvey_png_len), width, height),
+         AudacitySurveyURL,
          XXO("Take part in survey")
+      },
+      {
+         XXO("25th Anniversary Merchandise!"),
+         Rescale(LoadEmbeddedPNG(AudacityMerchStore_png, AudacityMerchStore_png_len), width, height),
+         AudacityMerchStoreURL,
+         XXO("Visit now")
       }
    };
    
@@ -387,7 +395,6 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
       S.StartHorizontalLay(wxEXPAND);
       {
          const auto carousel = safenew ImageCarousel(S.GetParent(), snapshots);
-         carousel->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
          S
             .Prop(1)
             .Position(wxEXPAND)
@@ -397,7 +404,6 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
    }
    S.EndVerticalLay();
 
-   S.AddSpace(15);
    const auto line = safenew wxWindow(S.GetParent(), wxID_ANY);
    line->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
    line->SetSize(-1, 1);
@@ -431,6 +437,14 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
          .AddWindow(forumLink);
    }
    S.EndHorizontalLay();
+   
+   const auto bottomLine = safenew wxWindow(S.GetParent(), wxID_ANY);
+   bottomLine->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
+   bottomLine->SetSize(-1, 1);
+   S
+      .Prop(0)
+      .Position(wxEXPAND)
+      .AddWindow(bottomLine);
 
    S.Position(wxEXPAND).StartPanel(2);
    {
@@ -485,4 +499,16 @@ wxBitmap WhatsNewDialog::Rescale(const wxBitmap& bmp, int width, int height)
    img.Rescale(width, height, wxIMAGE_QUALITY_HIGH);
    
    return wxBitmap(img);
+}
+
+wxBitmap WhatsNewDialog::LoadEmbeddedPNG(const unsigned char* data, size_t len)
+{
+    wxMemoryInputStream stream(data, len);
+    wxImage image;
+    if (!image.LoadFile(stream, wxBITMAP_TYPE_PNG))
+    {
+        wxLogError("Failed to load embedded PNG image.");
+        return wxBitmap();
+    }
+    return wxBitmap(image);
 }

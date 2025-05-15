@@ -8,7 +8,7 @@
 
 wxBEGIN_EVENT_TABLE(ArrowButton, wxPanel)
     EVT_PAINT(ArrowButton::OnPaint)
-    EVT_LEFT_DOWN(ArrowButton::OnMouseClick)
+    EVT_LEFT_UP(ArrowButton::OnMouseClick)
 wxEND_EVENT_TABLE()
 
 ArrowButton::ArrowButton(wxWindow* parent, ArrowDirection direction)
