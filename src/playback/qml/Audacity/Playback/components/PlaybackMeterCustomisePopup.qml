@@ -8,8 +8,14 @@ import QtQuick.Controls 2.15
 import Muse.UiComponents 1.0
 import Muse.Ui 1.0
 
+import Audacity.Playback 1.0
+
 StyledPopupView {
     id: root
+
+    signal playbackMeterTypeChanged(int meterType)
+    signal playbackMeterStyleChanged(int meterStyle)
+    signal playbackMeterPositionChanged(int meterPosition)
 
     contentWidth: 292
     contentHeight: 248
@@ -68,14 +74,26 @@ StyledPopupView {
                                 RoundedRadioButton {
                                     checked: true
                                     text: qsTr("Default")
+
+                                    onToggled: {
+                                        root.playbackMeterStyleChanged(PlaybackMeterStyle.Default)
+                                    }
                                 }
 
                                 RoundedRadioButton {
                                     text: qsTr("RMS")
+
+                                    onToggled: {
+                                        root.playbackMeterStyleChanged(PlaybackMeterStyle.RMS)
+                                    }
                                 }
 
                                 RoundedRadioButton {
                                     text: qsTr("Gradient")
+
+                                    onToggled: {
+                                        root.playbackMeterStyleChanged(PlaybackMeterStyle.Gradient)
+                                    }
                                 }
                             }
                         }
@@ -126,10 +144,18 @@ StyledPopupView {
                                 RoundedRadioButton {
                                     checked: true
                                     text: qsTr("dB")
+
+                                    onToggled: {
+                                        root.playbackMeterTypeChanged(PlaybackMeterType.Db)
+                                    }
                                 }
 
                                 RoundedRadioButton {
                                     text: qsTr("Linear")
+
+                                    onToggled: {
+                                        root.playbackMeterTypeChanged(PlaybackMeterType.Linear)
+                                    }
                                 }
                             }
                         }
@@ -181,10 +207,18 @@ StyledPopupView {
                             RoundedRadioButton {
                                 checked: true
                                 text: qsTr("Top bar (horizontal)")
+
+                                onToggled: {
+                                    root.playbackMeterPositionChanged(PlaybackMeterPosition.TopBar)
+                                }
                             }
 
                             RoundedRadioButton {
                                 text: qsTr("Side bar (vertical)")
+
+                                onToggled: {
+                                    root.playbackMeterPositionChanged(PlaybackMeterPosition.SideBar)
+                                }
                             }
                         }
                     }

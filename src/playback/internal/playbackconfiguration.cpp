@@ -60,27 +60,27 @@ async::Notification PlaybackConfiguration::playbackTimeItemFormatChanged() const
 void PlaybackConfiguration::init()
 {
     muse::settings()->setDefaultValue(PLAYBACK_QUALITY, muse::Val(playbackNames.at(3)));
-    muse::settings()->valueChanged(PLAYBACK_QUALITY).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(PLAYBACK_QUALITY).onReceive(nullptr, [this](const muse::Val&) {
         m_playbackQualityChanged.notify();
     });
 
     muse::settings()->setDefaultValue(DITHERING, muse::Val(ditherNames.at(0)));
-    muse::settings()->valueChanged(DITHERING).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(DITHERING).onReceive(nullptr, [this](const muse::Val&) {
         m_ditheringChanged.notify();
     });
 
     muse::settings()->setDefaultValue(SOLO_BEHAVIOR, muse::Val(TracksBehaviors::SoloBehavior::SoloBehaviorMulti));
-    muse::settings()->valueChanged(SOLO_BEHAVIOR).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(SOLO_BEHAVIOR).onReceive(nullptr, [this](const muse::Val&) {
         m_soloBehaviorChanged.notify();
     });
 
     muse::settings()->setDefaultValue(SEEK_SHORT_PERIOD, muse::Val(5.0));
-    muse::settings()->valueChanged(SEEK_SHORT_PERIOD).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(SEEK_SHORT_PERIOD).onReceive(nullptr, [this](const muse::Val&) {
         m_shortSkipChanged.notify();
     });
 
     muse::settings()->setDefaultValue(SEEK_LONG_PERIOD, muse::Val(15.0));
-    muse::settings()->valueChanged(SEEK_LONG_PERIOD).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(SEEK_LONG_PERIOD).onReceive(nullptr, [this](const muse::Val&) {
         m_longSkipChanged.notify();
     });
 }
