@@ -7,6 +7,8 @@ import QtQuick.Layouts 1.15
 import Muse.UiComponents 1.0
 import Muse.Ui 1.0
 
+import Audacity.Playback 1.0
+
 import "../components"
 
 Item {
@@ -26,6 +28,9 @@ Item {
     property int navigationOrder: 0
 
     signal volumeLevelChangeRequested(var level)
+    signal playbackMeterTypeChanged(int meterType)
+    signal playbackMeterStyleChanged(int meterStyle)
+    signal playbackMeterPositionChanged(int meterPosition)
 
     RowLayout {
         anchors.fill: parent
@@ -47,6 +52,18 @@ Item {
 
             PlaybackMeterCustomisePopup {
                 id: popup
+
+                onPlaybackMeterTypeChanged: function(meterType) {
+                    root.playbackMeterTypeChanged(meterType)
+                }
+
+                onPlaybackMeterStyleChanged: function(meterStyle) {
+                    root.playbackMeterStyleChanged(meterStyle)
+                }
+
+                onPlaybackMeterPositionChanged: function(meterPosition) {
+                    root.playbackMeterPositionChanged(meterPosition)
+                }
             }
    
         }

@@ -109,6 +109,18 @@ Item {
                 onVolumeLevelChangeRequested: function(level) {
                     itemData.level = level
                 }
+
+                onPlaybackMeterTypeChanged: function(meterType) {
+                    //console.log("meterType: ", meterType)
+                }
+
+                onPlaybackMeterStyleChanged: function(meterStyle) {
+                    //console.log("meterStyle: ", meterStyle)
+                }
+
+                onPlaybackMeterPositionChanged: function(meterPosition) {
+                    //console.log("meterPosition: ", meterPosition)
+                }
             }
         }
 
