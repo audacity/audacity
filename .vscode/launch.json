@@ -26,6 +26,44 @@
             },
             "symbolSearchPath": "${env:QTDIR}/bin",
             "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis",
+        },
+        {
+            "name": "run audacity (Linux)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${config:cmake.installPrefix}/bin/audacity",
+            "args": [
+                // Comment this out to run audacity in plugin registration mode
+                // "--register-audio-plugin", "C:/Program Files/Common Files/VST3/Your plugin.vst3"
+            ],
+            "preLaunchTask": "CMake: install",
+            "stopAtEntry": false,
+            "cwd": "${config:cmake.installPrefix}/bin",
+            "environment": [
+                {
+                    "name": "QTDIR",
+                    "value": "~/Qt/6.2.4/gcc_64"
+                },
+                {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "${config:cmake.installPrefix}/bin"
+                },
+                {
+                    "name": "QT_PLUGIN_PATH",
+                    "value": "~/Qt/6.2.4/gcc_64/plugins"
+                },
+                {
+                    "name": "QML2_IMPORT_PATH",
+                    "value": "~/Qt/6.2.4/gcc_64/qml"
+                }
+            ],
+            "sourceFileMap": {
+                "C:/work/build/qt5_workdir/w/s": "${env:QTDIR}/../Src",
+                "C:/Users/qt/worwk/install": "${env:QTDIR}/../Src",
+                "C:/Users/qt/work/qt": "${env:QTDIR}/../Src",
+                "Q:/qt_workdir/w/s": "${env:QTDIR}/../Src",
+            },
+            "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis",
         }
     ]
 }

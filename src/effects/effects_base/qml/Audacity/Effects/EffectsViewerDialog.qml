@@ -68,6 +68,8 @@ EffectStyledDialogView {
             VstViewer {
                 instanceId: root.instanceId
                 height: implicitHeight
+                headerHeight: presetsBar.height
+                footerHeight: btnBarLoader.implicitHeight
                 x: root.margins
                 y: root.margins * 3 + presetsBar.height + separator.height
             }
