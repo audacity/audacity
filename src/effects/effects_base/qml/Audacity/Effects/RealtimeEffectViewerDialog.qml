@@ -42,6 +42,7 @@ EffectStyledDialogView {
         VstViewer {
             id: view
             instanceId: root.instanceId
+            headerHeight: headerBar.height
             y: 62
         }
     }

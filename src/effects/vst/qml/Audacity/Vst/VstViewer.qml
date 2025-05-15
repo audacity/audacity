@@ -33,6 +33,8 @@ Rectangle {
 
     // in
     property alias instanceId: view.instanceId
+    property alias headerHeight: view.headerHeight
+    property alias footerHeight: view.footerHeight
 
     // out
     property alias title: view.title
