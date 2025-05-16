@@ -525,7 +525,16 @@ Rectangle {
                     mouseArea.visible: root.enableCursorInteraction
 
                     icon: IconCode.CLOCK
-                    text: Math.round(root.speedPercentage) + "%"
+                    text: {
+                        var speed = root.speedPercentage;
+
+                        if (Math.abs(speed - 100) < 0.95) {
+                            var adjusted = speed > 100 ? Math.max(speed, 100.1) : Math.min(speed, 99.9);
+                            return adjusted.toFixed(1) + "%";
+                        } else {
+                            return Math.round(speed) + "%";
+                        }
+                    }
 
                     visible: root.speedPercentage !== 100.0
 
