@@ -72,6 +72,11 @@ bool TrackeditOperationController::changeClipColor(const ClipKey& clipKey, const
     return trackAndClipOperations()->changeClipColor(clipKey, color);
 }
 
+bool TrackeditOperationController::changeTrackColor(const TrackId trackId, const std::string& color)
+{
+    return trackAndClipOperations()->changeTrackColor(trackId, color);
+}
+
 bool TrackeditOperationController::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
 {
     return trackAndClipOperations()->changeClipOptimizeForVoice(clipKey, optimize);

@@ -27,7 +27,7 @@ if (CC_IS_GCC)
 elseif(CC_IS_MSVC)
     message(STATUS "Using Compiler MSVC ${CMAKE_CXX_COMPILER_VERSION}")
 
-    set(CMAKE_CXX_FLAGS                 "/MP /EHsc /utf-8")
+    set(CMAKE_CXX_FLAGS                 "/MP /EHsc /utf-8 /bigobj")
     set(CMAKE_C_FLAGS                   "/MP /utf-8")
     set(CMAKE_CXX_FLAGS_DEBUG           "/MDd /Zi /Ob0 /Od /RTC1")
     set(CMAKE_CXX_FLAGS_RELEASE         "/MD /O2 /Ob2")

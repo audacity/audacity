@@ -20,6 +20,7 @@
 
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "au3wrap/internal/trackcolor.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -405,6 +406,41 @@ TEST_F(Au3InteractionTests, ClipColorRetainedWhenClipIsCopied)
     // Cleanup
     removeTrack(trackId);
     removeTrack(newTrackId);
+}
+
+TEST_F(Au3InteractionTests, ChangeTrackColor)
+{
+    //! [GIVEN] There is a project with a track
+    const TrackId trackMinSilenceId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackMinSilenceId, INVALID_TRACK) << "Failed to create track";
+
+    Au3Project& project = projectRef();
+    const std::shared_ptr<Au3WaveClip> au3Clip = DomAccessor::findWaveClip(project, trackMinSilenceId, 0);
+
+    m_au3Interaction->changeClipColor(ClipKey { trackMinSilenceId, au3Clip->GetId() }, "#66A3FF");
+
+    //! [THEN] The track edit project should notify about the track and clip change
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(Truly([&](const Track& modifiedTrack) {
+        return modifiedTrack.id == trackMinSilenceId;
+    }))).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(Truly([=](const Clip& clip) {
+        return clip.key == ClipKey { trackMinSilenceId, au3Clip->GetId() };
+    })));
+
+    //! [WHEN] Change the color of the track
+    m_au3Interaction->changeTrackColor(trackMinSilenceId, "#48BECF");
+
+    //! [THEN] Clip color is cleared to follow the track color
+    const std::shared_ptr<Au3WaveClip> au3UpdatedClip = DomAccessor::findWaveClip(project, trackMinSilenceId, 0);
+    EXPECT_EQ(au3UpdatedClip->GetColor(), "");
+
+    //! [THEN] Track color is changed
+    const auto& waveTrack = DomAccessor::findWaveTrack(project, Au3TrackId { trackMinSilenceId });
+    const auto& trackColor = TrackColor::Get(waveTrack).GetColor();
+    EXPECT_EQ(trackColor.toString(), "#48BECF");
+
+    // Cleanup
+    removeTrack(trackMinSilenceId);
 }
 
 TEST_F(Au3InteractionTests, SplitRangeSelectionAtSilencesOnValidInterval)

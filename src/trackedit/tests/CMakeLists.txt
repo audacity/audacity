@@ -27,7 +27,3 @@ set(MODULE_TEST_LINK
 set(MODULE_TEST_DATA_ROOT ${CMAKE_CURRENT_LIST_DIR})
 
 include(SetupGTest)
-
-if (NINJA_BIGOBJ)
-    target_compile_options(trackedit_tests PRIVATE /bigobj)
-endif()

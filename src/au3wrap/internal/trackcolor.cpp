@@ -8,6 +8,8 @@ static const AttachedTrackObjects::RegisteredFactory keyTrackColor{
 
 static constexpr auto ColorAttr = "color";
 
+static size_t lastColorIndex = 0;
+
 TrackColor& TrackColor::Get(Track* track)
 {
     return track->AttachedTrackObjects::Get<TrackColor>(keyTrackColor);
@@ -18,20 +20,40 @@ TrackColor& TrackColor::Get(const Track* track)
     return Get(const_cast<Track*>(track));
 }
 
+void TrackColor::Init(size_t index)
+{
+    lastColorIndex = index;
+}
+
+void TrackColor::CopyTo(Track& track) const
+{
+    auto& color = Get(&track);
+    color.SetColor(mColor);
+
+    // Keep track of the latest used color
+    const auto colors = projectSceneConfiguration()->clipColors();
+    const auto colorString = mColor.toString();
+    for (size_t i = 0; i < colors.size(); ++i) {
+        if (colors[i].second == colorString) {
+            lastColorIndex = i;
+            break;
+        }
+    }
+}
+
 TrackColor::TrackColor(Track& track)
     : mTrack{track.shared_from_this()}
 {
-    auto clipColors = projectSceneConfiguration()->clipColors();
-    std::vector<muse::draw::Color> colors;
-    for (const auto& color : clipColors) {
-        colors.push_back(muse::draw::Color::fromString(color.second));
+    auto ntrack = mTrack.lock();
+    if (!ntrack) {
+        return;
     }
 
-    size_t colorIdx = std::llabs(track.GetId());
-    if (colorIdx >= colors.size()) {
-        colorIdx = colorIdx % colors.size();
+    if (ntrack->GetId() == -1) {
+        //Only assign color to newly created tracks
+        const auto colors = projectSceneConfiguration()->clipColors();
+        mColor = muse::draw::Color::fromString(colors[++lastColorIndex % colors.size()].second);
     }
-    mColor = colors.at(colorIdx);
 }
 
 void TrackColor::Reparent(const std::shared_ptr<Track>& parent)
@@ -54,4 +76,12 @@ bool TrackColor::HandleXMLAttribute(const std::string_view& attr, const XMLAttri
     return false;
 }
 
-muse::draw::Color TrackColor::GetColor() const { return mColor; }
+muse::draw::Color TrackColor::GetColor() const
+{
+    return mColor;
+}
+
+void TrackColor::SetColor(const muse::draw::Color& color)
+{
+    mColor = color;
+}

@@ -71,6 +71,11 @@ bool TrackeditInteraction::changeClipColor(const ClipKey& clipKey, const std::st
     return m_interaction->changeClipColor(clipKey, color);
 }
 
+bool TrackeditInteraction::changeTrackColor(const TrackId trackId, const std::string& color)
+{
+    return m_interaction->changeTrackColor(trackId, color);
+}
+
 bool TrackeditInteraction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
 {
     return withPlaybackStop(&ITrackeditInteraction::changeClipOptimizeForVoice, clipKey, optimize);

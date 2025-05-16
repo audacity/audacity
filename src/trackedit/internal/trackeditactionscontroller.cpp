@@ -83,6 +83,7 @@ static const ActionCode UNGROUP_CLIPS_CODE("ungroup-clips");
 
 static const ActionQuery AUTO_COLOR_QUERY("action://trackedit/clip/change-color-auto");
 static const ActionQuery CHANGE_COLOR_QUERY("action://trackedit/clip/change-color");
+static const ActionQuery TRACK_CHANGE_COLOR_QUERY("action://trackedit/track/change-color");
 
 // In principle, disabled are actions that modify the data involved in playback.
 static const std::vector<ActionCode> actionsDisabledDuringRecording {
@@ -212,6 +213,8 @@ void TrackeditActionsController::init()
 
     dispatcher()->reg(this, AUTO_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
     dispatcher()->reg(this, CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
+
+    dispatcher()->reg(this, TRACK_CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setTrackColor);
 
     projectHistory()->historyChanged().onNotify(this, [this]() {
         notifyActionEnabledChanged(UNDO);
@@ -1181,6 +1184,25 @@ void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& 
 
     auto clipKey = selectionController()->selectedClips().front();
     trackeditInteraction()->changeClipColor(clipKey, newColor);
+    notifyActionCheckedChanged(q.toString());
+}
+
+void TrackeditActionsController::setTrackColor(const muse::actions::ActionQuery& q)
+{
+    const auto tracks = selectionController()->selectedTracks();
+    if (tracks.empty()) {
+        return;
+    }
+
+    std::string color;
+    if (q.contains("color")) {
+        color = q.param("color").toString();
+    } else {
+        color = "";
+    }
+
+    const auto track = tracks.front();
+    trackeditInteraction()->changeTrackColor(track, color);
     notifyActionCheckedChanged(q.toString());
 }
 

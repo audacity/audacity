@@ -163,10 +163,17 @@ public:
 };
 
 constexpr const char16_t* COLOR_CHANGE_ACTION = u"action://trackedit/clip/change-color?color=%1";
-inline muse::actions::ActionQuery makeColorChangeAction(const std::string& colorHex)
+inline muse::actions::ActionQuery makeClipColorChangeAction(const std::string& colorHex)
 {
     return muse::actions::ActionQuery(muse::String(COLOR_CHANGE_ACTION).arg(muse::String::fromStdString(
                                                                                 colorHex)));
+}
+
+constexpr const char16_t* TRACK_COLOR_CHANGE_ACTION = u"action://trackedit/track/change-color?color=%1";
+inline muse::actions::ActionQuery makeTrackColorChangeAction(const std::string& colorHex)
+{
+    return muse::actions::ActionQuery(muse::String(TRACK_COLOR_CHANGE_ACTION).arg(muse::String::fromStdString(
+                                                                                      colorHex)));
 }
 }
 
