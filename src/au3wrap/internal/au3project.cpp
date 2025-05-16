@@ -28,13 +28,27 @@
 #include "wxtypes_convert.h"
 #include "../au3types.h"
 #include "domconverter.h"
+#include "trackcolor.h"
 
 #include "log.h"
 
+#include <random>
+
 using namespace au::au3;
+
+namespace {
+size_t randomIndex()
+{
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_int_distribution<size_t> distribution(0, 20);
+    return distribution(generator);
+}
+}
 
 std::shared_ptr<IAu3Project> Au3ProjectCreator::create() const
 {
+    TrackColor::Init(randomIndex());
     return std::make_shared<Au3ProjectAccessor>();
 }
 

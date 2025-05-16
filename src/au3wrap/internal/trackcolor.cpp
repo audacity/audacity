@@ -8,6 +8,8 @@ static const AttachedTrackObjects::RegisteredFactory keyTrackColor{
 
 static constexpr auto ColorAttr = "color";
 
+static size_t lastColorIndex = 0;
+
 TrackColor& TrackColor::Get(Track* track)
 {
     return track->AttachedTrackObjects::Get<TrackColor>(keyTrackColor);
@@ -18,10 +20,25 @@ TrackColor& TrackColor::Get(const Track* track)
     return Get(const_cast<Track*>(track));
 }
 
+void TrackColor::Init(size_t index)
+{
+    lastColorIndex = index;
+}
+
 void TrackColor::CopyTo(Track& track) const
 {
     auto& color = Get(&track);
     color.SetColor(mColor);
+
+    // Keep track of the latest used color
+    const auto colors = projectSceneConfiguration()->clipColors();
+    const auto colorString = mColor.toString();
+    for (size_t i = 0; i < colors.size(); ++i) {
+        if (colors[i].second == colorString) {
+            lastColorIndex = i;
+            break;
+        }
+    }
 }
 
 TrackColor::TrackColor(Track& track)
@@ -34,7 +51,8 @@ TrackColor::TrackColor(Track& track)
 
     if (ntrack->GetId() == -1) {
         //Only assign color to newly created tracks
-        mColor = muse::draw::Color::fromString(projectSceneConfiguration()->nextTrackColor());
+        const auto colors = projectSceneConfiguration()->clipColors();
+        mColor = muse::draw::Color::fromString(colors[++lastColorIndex % colors.size()].second);
     }
 }
 

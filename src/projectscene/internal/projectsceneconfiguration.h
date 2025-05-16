@@ -40,7 +40,6 @@ public:
     muse::async::Notification isEffectsPanelVisibleChanged() const override;
 
     const std::vector<std::pair<std::string, std::string> >& clipColors() const override;
-    std::string nextTrackColor() override;
 
     ClipStyles::Style clipStyle() const override;
     void setClipStyle(ClipStyles::Style style) override;
@@ -60,6 +59,5 @@ private:
     muse::async::Notification m_effectsPanelVisible;
     muse::async::Notification m_asymmetricStereoHeightsChanged;
     muse::async::Notification m_asymmetricStereoHeightsWorkspacesChanged;
-    size_t m_trackColorIdx{ 0 };
 };
 }

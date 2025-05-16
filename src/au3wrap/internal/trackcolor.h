@@ -16,6 +16,8 @@ public:
     static TrackColor& Get(const Track* track);
     static TrackColor& Get(Track* track);
 
+    static void Init(size_t index);
+
     TrackColor(Track& track);
     void Reparent(const std::shared_ptr<Track>& parent) override;
     void CopyTo(Track& track) const override;
