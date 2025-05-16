@@ -4,14 +4,21 @@
 #pragma once
 
 #include "itrackeditinteraction.h"
+#include "iprojecthistory.h"
 #include "itrackandclipoperations.h"
+#include "itrackeditclipboard.h"
 #include "iundomanager.h"
+#include "context/iglobalcontext.h"
+#include "async/asyncable.h"
 #include "modularity/ioc.h"
 
 namespace au::trackedit {
-class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable
+class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable, public muse::async::Asyncable
 {
     muse::Inject<ITrackAndClipOperations> trackAndClipOperations;
+    muse::Inject<ITrackeditClipboard> clipboard;
+    muse::Inject<IProjectHistory> projectHistory;
+    muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:
     TrackeditOperationController(std::unique_ptr<IUndoManager> undoManager);
@@ -46,7 +53,7 @@ public:
     bool removeClip(const ClipKey& clipKey) override;
     bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) override;
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
-    bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed) override;
+    bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, bool& clipsMovedToOtherTrack) override;
     bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) override;
     bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
     bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
@@ -94,6 +101,11 @@ public:
     muse::ProgressPtr progress() const override;
 
 private:
+    void pushProjectHistoryJoinState(secs_t start, secs_t duration);
+    void pushProjectHistoryDuplicateState();
+    void pushProjectHistorySplitDeleteState();
+    void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
+
     const std::unique_ptr<IUndoManager> m_undoManager;
 };
 }

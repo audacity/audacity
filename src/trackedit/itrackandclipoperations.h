@@ -11,6 +11,8 @@
 #include "global/progress.h"
 
 #include "trackedittypes.h"
+#include "timespan.h"
+#include "itrackdata.h"
 #include "types/ret.h"
 
 namespace au::trackedit {
@@ -40,17 +42,17 @@ public:
     virtual bool changeTrackColor(const TrackId trackId, const std::string& color) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
-    virtual void clearClipboard() = 0;
-    virtual muse::Ret pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks=false) = 0;
-    virtual bool cutClipIntoClipboard(const ClipKey& clipKey) = 0;
-    virtual bool cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) = 0;
-    virtual bool copyClipIntoClipboard(const ClipKey& clipKey) = 0;
-    virtual bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) = 0;
-    virtual bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) = 0;
-    virtual bool removeClip(const ClipKey& clipKey) = 0;
+    virtual muse::Ret paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks,
+                            bool isMultiSelectionCopy, bool& modifiedState) = 0;
+    virtual ITrackDataPtr cutClip(const ClipKey& clipKey) = 0;
+    virtual ITrackDataPtr cutTrackData(const TrackId trackId, secs_t begin, secs_t end, bool moveClips) = 0;
+    virtual ITrackDataPtr copyClip(const ClipKey& clipKey) = 0;
+    virtual ITrackDataPtr copyNonContinuousTrackData(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) = 0;
+    virtual ITrackDataPtr copyContinuousTrackData(const TrackId trackId, secs_t begin, secs_t end) = 0;
+    virtual std::optional<TimeSpan> removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) = 0;
     virtual bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) = 0;
-    virtual bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed) = 0;
+    virtual bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, bool& clipsMovedToOtherTracks) = 0;
     virtual bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) = 0;
     virtual bool splitClipsAtSilences(const ClipKeyList& clipKeyList) = 0;
     virtual bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
@@ -60,14 +62,14 @@ public:
     virtual bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool duplicateClip(const ClipKey& clipKey) = 0;
     virtual bool duplicateClips(const ClipKeyList& clipKeyList) = 0;
-    virtual bool clipSplitCut(const ClipKey& clipKey) = 0;
+    virtual ITrackDataPtr clipSplitCut(const ClipKey& clipKey) = 0;
     virtual bool clipSplitDelete(const ClipKey& clipKey) = 0;
-    virtual bool splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) = 0;
+    virtual std::vector<ITrackDataPtr> splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) = 0;
-    virtual bool trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) = 0;
-    virtual bool trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) = 0;
-    virtual bool stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) = 0;
-    virtual bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) = 0;
+    virtual bool trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
+    virtual bool trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
+    virtual bool stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
+    virtual bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
     virtual secs_t clipDuration(const ClipKey& clipKey) const = 0;
     virtual std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const = 0;
 
@@ -76,8 +78,8 @@ public:
     virtual bool newLabelTrack() = 0;
     virtual bool deleteTracks(const TrackIdList& trackIds) = 0;
     virtual bool duplicateTracks(const TrackIdList& trackIds) = 0;
-    virtual void moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) = 0;
-    virtual void moveTracksTo(const TrackIdList& trackIds, int pos) = 0;
+    virtual bool moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) = 0;
+    virtual bool moveTracksTo(const TrackIdList& trackIds, int pos) = 0;
 
     virtual bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) = 0;
 
