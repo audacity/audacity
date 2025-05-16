@@ -41,8 +41,4 @@ KnobControl {
     onMouseReleased: {
         newBalanceRequested(root.value, true)
     }
-
-    mouseArea.onDoubleClicked: {
-        newBalanceRequested(root.value = 0, true)
-    }
 }

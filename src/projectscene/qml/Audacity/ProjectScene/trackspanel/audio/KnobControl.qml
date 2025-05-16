@@ -21,6 +21,10 @@ Dial {
 
     property alias mouseArea: mouseArea
 
+    property alias currentValue: root.value
+
+    property bool shiftPressed: false
+
     implicitWidth: root.radius * 2
     implicitHeight: implicitWidth
 
@@ -227,9 +231,28 @@ Dial {
 
         onPositionChanged: function(mouse)  {
             if (prv.dragActive) {
+                if ((mouse.modifiers & (Qt.ShiftModifier))) {
+                    if (!root.shiftPressed) {
+                        root.shiftPressed = true
+                        prv.initialValue = root.value
+                        prv.dragStartX = mouse.x
+                        prv.dragStartY = mouse.y
+                    }
+                } else {
+                    if (root.shiftPressed) {
+                        root.shiftPressed = false
+                        prv.initialValue = root.value
+                        prv.dragStartX = mouse.x
+                        prv.dragStartY = mouse.y
+                    }
+                }
+
                 let dx = mouse.x - prv.dragStartX
                 let dy = mouse.y - prv.dragStartY
                 let dist = Math.sqrt(dx * dx + dy * dy)
+                if ((mouse.modifiers & (Qt.ShiftModifier))) {
+                    dist /= 3
+                }
                 let sgn = (dy < dx) ? 1 : -1
                 let newValue = prv.initialValue + dist * root.stepSize * sgn
                 prv.requestNewValue(newValue)
