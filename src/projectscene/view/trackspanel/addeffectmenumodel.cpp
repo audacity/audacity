@@ -21,8 +21,8 @@ void AddEffectMenuModel::doLoad()
 void AddEffectMenuModel::doPopulateMenu()
 {
     const MenuItemList items
-        = au::effects::utils::effectMenus(effectsConfiguration()->realtimeEffectOrganization(),
-                                          effectsProvider()->effectMetaList(), m_effectFilter, *this);
+        = au::effects::utils::realtimeEffectMenu(effectsConfiguration()->effectMenuOrganization(),
+                                                 effectsProvider()->effectMetaList(), m_effectFilter, *this);
     setItems(items);
 }
 

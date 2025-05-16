@@ -5,15 +5,13 @@
 #include "effectsutils.h"
 #include "log.h"
 
-namespace {
+namespace impl {
 using namespace muse;
 using namespace muse::uicomponents;
 using namespace au::effects;
 
 using EffectIdSet = std::set<EffectId>;
-
-//! It can be that (different versions of) the same effect is installed in several places.
-//! For those, we need a disambiguation submenu, whose items show the effect's path rather than title.
+using EffectMetaSet = std::unordered_set<const EffectMeta*>;
 using AmbiguousTitleEntries = std::map<String /*effect title*/, EffectIdSet>;
 
 MenuItemList makeItemsOrDisambiguationSubmenus(const AmbiguousTitleEntries& entries, IEffectMenuItemFactory& effectMenu)
@@ -42,111 +40,138 @@ MenuItem* makeEffectSubmenu(const String& title, const EffectIdSet& effectIds, I
     return effectMenu.makeMenuEffect(title, subItems);
 }
 
-MenuItemList makeDisambiguatedSubmenus(const std::map<String, AmbiguousTitleEntries>& map, IEffectMenuItemFactory& effectMenu)
+MenuItem* makeRealtimeBuiltinEffectSubmenu(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
 {
-    MenuItemList items;
-    for (const auto& [family, entries] : map) {
-        const MenuItemList subItems = makeItemsOrDisambiguationSubmenus(entries, effectMenu);
-        items << effectMenu.makeMenuEffect(family, subItems);
+    EffectIdSet ids;
+    for (const EffectMeta& meta : effects) {
+        if (meta.family == EffectFamily::Builtin) {
+            ids.insert(meta.id);
+        }
     }
-    return items;
+    return makeEffectSubmenu(muse::String { "Audacity" }, ids, effectMenu);
 }
 
-muse::uicomponents::MenuItemList effectMenusByType(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
+MenuItemList makeDestructiveBuiltinEffectSubmenu(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
 {
-    struct EffectTreeByType {
-        //! Built-in effects are in the binary, there cannot be multiple installations - no need for disambiguation.
-        EffectIdSet builtinEffects;
-        std::map<String /*family*/, AmbiguousTitleEntries> otherFamilies;
-    };
-
-    EffectTreeByType tree;
-
+    std::map<String /*category*/, EffectIdSet> categories;
     for (const EffectMeta& meta : effects) {
-        switch (meta.family) {
-        case EffectFamily::Builtin:
-            tree.builtinEffects.insert(meta.id);
-            break;
-        case EffectFamily::VST3:
-        {
-            auto& familyMenu = tree.otherFamilies[muse::String{ "VST3" }];
-            familyMenu[meta.title].insert(meta.id);
-        }
-        break;
-        case EffectFamily::Unknown:
-            assert(false);
-            continue;
+        if (meta.family == EffectFamily::Builtin) {
+            categories[meta.category].insert(meta.id);
         }
     }
-
     MenuItemList items;
-
-    if (!tree.builtinEffects.empty()) {
-        items << makeEffectSubmenu(muse::String { "Audacity" }, tree.builtinEffects, effectMenu);
-    }
-
-    if (!tree.builtinEffects.empty() && !tree.otherFamilies.empty()) {
-        items << effectMenu.makeMenuSeparator();
-    }
-
-    items << makeDisambiguatedSubmenus(tree.otherFamilies, effectMenu);
-
-    return items;
-}
-
-muse::uicomponents::MenuItemList effectMenusByCategory(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
-{
-    struct EffectTreeByCategory {
-        //! Categorized effects are exclusively built-in effects, of which there cannot be multiple installations - no need for disambiguation.
-        std::map<String /*category*/, EffectIdSet> categorizedEffects;
-        std::map<String /*vendor*/, AmbiguousTitleEntries> vendoredEffects;
-        //! Unmatched effects aren't nested in sub-menus.
-        AmbiguousTitleEntries unmatchedEffects;
-    };
-
-    EffectTreeByCategory tree;
-
-    for (const EffectMeta& meta : effects) {
-        if (!meta.category.isEmpty()) {
-            tree.categorizedEffects[meta.category].insert(meta.id);
-        } else if (!meta.vendor.isEmpty()) {
-            tree.vendoredEffects[meta.vendor][meta.title].insert(meta.id);
-        } else {
-            tree.unmatchedEffects[meta.title].insert(meta.id);
-        }
-    }
-
-    MenuItemList items;
-
-    for (const auto& [category, effectIds] : tree.categorizedEffects) {
+    for (const auto& [category, effectIds] : categories) {
         items << makeEffectSubmenu(category, effectIds, effectMenu);
     }
+    return items;
+}
 
-    if (!tree.categorizedEffects.empty() && !(tree.vendoredEffects.empty() && tree.unmatchedEffects.empty())) {
-        items << effectMenu.makeMenuSeparator();
+MenuItemList makeNonBuiltinEffectSubmenus(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
+{
+    std::map<String /*family*/, std::map<String /*publisher*/, std::map<String /*title*/, EffectMetaSet> > > families;
+
+    for (const EffectMeta& meta : effects) {
+        if (meta.family == EffectFamily::VST3) {
+            families[muse::String{ "VST3" }][meta.vendor][meta.title].insert(&meta);
+        }
     }
 
-    items << makeDisambiguatedSubmenus(tree.vendoredEffects, effectMenu);
+    MenuItemList items;
 
-    items << makeItemsOrDisambiguationSubmenus(tree.unmatchedEffects, effectMenu);
+    if (families.empty()) {
+        return items;
+    }
+
+    items << effectMenu.makeMenuSeparator();
+
+    for (const auto& [family, publishers] : families) {
+        MenuItemList publisherMenus;
+        AmbiguousTitleEntries aloneEffectItems;
+        for (const auto& [publisher, titles] : publishers) {
+            if (titles.size() == 1) {
+                // Only one title for this publisher (but possibly several binaries in different locations):
+                // no need for a submenu
+                const EffectMetaSet& metas = titles.begin()->second;
+                for (const EffectMeta* meta : metas) {
+                    aloneEffectItems[meta->title].insert(meta->id);
+                }
+            } else {
+                AmbiguousTitleEntries publisherEffects;
+                for (const auto& [title, effectMetas] : titles) {
+                    for (const EffectMeta* meta : effectMetas) {
+                        publisherEffects[meta->title].insert(meta->id);
+                    }
+                }
+                publisherMenus << effectMenu.makeMenuEffect(publisher, makeItemsOrDisambiguationSubmenus(publisherEffects, effectMenu));
+            }
+        }
+
+        publisherMenus << effectMenu.makeMenuSeparator() << makeItemsOrDisambiguationSubmenus(aloneEffectItems, effectMenu);
+        items << effectMenu.makeMenuEffect(family, publisherMenus);
+    }
 
     return items;
 }
+
+MenuItemList realtimeEffectMenu(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
+{
+    MenuItemList items;
+    items << makeRealtimeBuiltinEffectSubmenu(effects, effectMenu);
+    items << makeNonBuiltinEffectSubmenus(effects, effectMenu);
+    return items;
 }
 
-muse::uicomponents::MenuItemList au::effects::utils::effectMenus(EffectMenuOrganization organization, EffectMetaList effects,
-                                                                 const EffectFilter& filter,
-                                                                 IEffectMenuItemFactory& effectMenu)
+MenuItemList destructiveEffectMenu(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
+{
+    MenuItemList items;
+    items << makeDestructiveBuiltinEffectSubmenu(effects, effectMenu);
+    items << makeNonBuiltinEffectSubmenus(effects, effectMenu);
+    return items;
+}
+
+MenuItemList makeFlatList(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
+{
+    MenuItemList items;
+    AmbiguousTitleEntries otherFamilies;
+    for (const EffectMeta& meta : effects) {
+        if (meta.family == EffectFamily::Builtin) {
+            items << effectMenu.makeMenuEffectItem(meta.id);
+        } else {
+            otherFamilies[meta.title].insert(meta.id);
+        }
+    }
+    if (!otherFamilies.empty()) {
+        items << effectMenu.makeMenuSeparator();
+        items << makeItemsOrDisambiguationSubmenus(otherFamilies, effectMenu);
+    }
+    return items;
+}
+} // namespace
+
+muse::uicomponents::MenuItemList au::effects::utils::destructiveEffectMenu(EffectMenuOrganization organization,
+                                                                           EffectMetaList effects,
+                                                                           const EffectFilter& filter,
+                                                                           IEffectMenuItemFactory& effectMenu)
 {
     effects.erase(std::remove_if(effects.begin(), effects.end(), filter), effects.end());
+    if (organization == EffectMenuOrganization::Flat) {
+        return impl::makeFlatList(effects, effectMenu);
+    } else {
+        assert(organization == EffectMenuOrganization::Grouped);
+        return impl::destructiveEffectMenu(effects, effectMenu);
+    }
+}
 
-    switch (organization) {
-    case EffectMenuOrganization::ByCategory:
-        return effectMenusByCategory(effects, effectMenu);
-    case EffectMenuOrganization::ByType:
-        return effectMenusByType(effects, effectMenu);
-    default:
-        assert(false);
-        return {};
+muse::uicomponents::MenuItemList au::effects::utils::realtimeEffectMenu(EffectMenuOrganization organization,
+                                                                        EffectMetaList effects,
+                                                                        const EffectFilter& filter,
+                                                                        IEffectMenuItemFactory& effectMenu)
+{
+    effects.erase(std::remove_if(effects.begin(), effects.end(), filter), effects.end());
+    if (organization == EffectMenuOrganization::Flat) {
+        return impl::makeFlatList(effects, effectMenu);
+    } else {
+        assert(organization == EffectMenuOrganization::Grouped);
+        return impl::realtimeEffectMenu(effects, effectMenu);
     }
 }

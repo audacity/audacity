@@ -10,6 +10,8 @@
 namespace au::effects::utils {
 using EffectFilter = std::function<bool (const EffectMeta&)>;
 
-muse::uicomponents::MenuItemList effectMenus(EffectMenuOrganization organization, EffectMetaList metaList, const EffectFilter& filter,
-                                             IEffectMenuItemFactory& effectMenu);
+muse::uicomponents::MenuItemList destructiveEffectMenu(EffectMenuOrganization organization, EffectMetaList metaList,
+                                                       const EffectFilter& filter, IEffectMenuItemFactory& effectMenu);
+muse::uicomponents::MenuItemList realtimeEffectMenu(EffectMenuOrganization organization, EffectMetaList metaList,
+                                                    const EffectFilter& filter, IEffectMenuItemFactory& effectMenu);
 }
