@@ -9,45 +9,49 @@ import Audacity.Preferences
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Effect options")
+    title: qsTrc("appshell/preferences", "Effect menu organization")
     spacing: 16
 
     property var pluginPreferencesModel: null
 
-    property var effectOrganizationLabels: [
-        qsTrc("playback", "Group by category"),
-        qsTrc("playback", "Group by type"),
-    ]
+    RadioButtonGroup {
 
-    ComboBoxWithTitle {
-        title: qsTrc("appshell/preferences", "Effect menu organization")
-        columnWidth: root.columnWidth
+        width: parent.width
+        height: 50
 
-        currentIndex: pluginPreferencesModel.effectMenuOrganization
-        model: effectOrganizationLabels
+        spacing: root.rowSpacing
+        orientation: Qt.Vertical
 
-        navigation.name: "EffectMenuOrganizationBox"
-        navigation.panel: root.navigation
-        navigation.row: 0
+        Column {
+            width: parent.width
+            spacing: root.columnSpacing
 
-        onValueEdited: function(newIndex, newValue) {
-            pluginPreferencesModel.setEffectMenuOrganization(newIndex)
-        }
-    }
+            RoundedRadioButton {
 
-    ComboBoxWithTitle {
-        title: qsTrc("appshell/preferences", "Realtime effect organization")
-        columnWidth: root.columnWidth
+                checked: pluginPreferencesModel.effectMenuOrganization == 0
+                text: qsTrc("appshell/preferences", "Group effects")
 
-        currentIndex: pluginPreferencesModel.realtimeEffectOrganization
-        model: effectOrganizationLabels
+                navigation.name: "GroupEffects"
+                navigation.panel: root.navigation
+                navigation.row: 0
 
-        navigation.name: "RealtimeEffectOrganizationBox"
-        navigation.panel: root.navigation
-        navigation.row: 1
+                onToggled: {
+                    pluginPreferencesModel.setEffectMenuOrganization(0)
+                }
+            }
 
-        onValueEdited: function(newIndex, newValue) {
-            pluginPreferencesModel.setRealtimeEffectOrganization(newIndex)
+            RoundedRadioButton {
+                checked: pluginPreferencesModel.effectMenuOrganization == 1
+                text: qsTrc("appshell/preferences", "Display effects in one flat list")
+
+                navigation.name: "DoNotGroupEffects"
+                navigation.panel: root.navigation
+                navigation.row: 1
+
+                onToggled: {
+                    pluginPreferencesModel.setEffectMenuOrganization(1)
+                }
+            }
         }
     }
 }

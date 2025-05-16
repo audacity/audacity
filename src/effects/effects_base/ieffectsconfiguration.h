@@ -22,9 +22,5 @@ public:
     virtual EffectMenuOrganization effectMenuOrganization() const = 0;
     virtual void setEffectMenuOrganization(EffectMenuOrganization) = 0;
     virtual muse::async::Notification effectMenuOrganizationChanged() const = 0;
-
-    virtual EffectMenuOrganization realtimeEffectOrganization() const = 0;
-    virtual void setRealtimeEffectOrganization(EffectMenuOrganization) = 0;
-    virtual muse::async::Notification realtimeEffectOrganizationChanged() const = 0;
 };
 }
