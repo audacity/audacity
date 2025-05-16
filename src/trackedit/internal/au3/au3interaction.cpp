@@ -1249,7 +1249,7 @@ bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin
     return true;
 }
 
-bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, EditReport& report)
+bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, bool& clipsMovedToOtherTracks)
 {
     //! NOTE: cannot start moving until previous move is handled
     if (m_busy) {
@@ -1289,13 +1289,12 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
 
             changeClipStartTime(selectedClip, clip->GetPlayStartTime() + timePositionOffset, completed);
         }
-        report.clipsMovedHorizontally = true;
     }
 
     if (trackPositionOffset != 0) {
         // Update m_moveClipsNeedsDownmixing only when moving up/down
         m_moveClipsNeedsDownmixing = moveSelectedClipsUpOrDown(trackPositionOffset) == NeedsDownmixing::Yes;
-        report.clipsMovedVertically = true;
+        clipsMovedToOtherTracks = true;
     }
 
     if (!completed) {

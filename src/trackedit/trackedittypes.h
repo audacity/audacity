@@ -49,11 +49,6 @@ struct TimeSignature
     int lower = 0;
 };
 
-struct EditReport {
-    bool clipsMovedHorizontally = false;
-    bool clipsMovedVertically = false;
-};
-
 enum class UndoPushType : unsigned char {
     NONE = 0,
     CONSOLIDATE = 1 << 0,

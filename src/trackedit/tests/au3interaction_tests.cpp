@@ -1494,8 +1494,8 @@ TEST_F(Au3InteractionTests, MoveClipsRight)
         }));
 
     //! [WHEN] Move the clips right
-    EditReport report;
-    m_au3Interaction->moveClips(secondsToMove, 0, true, report);
+    auto clipsMovedToOtherTracks = false;
+    m_au3Interaction->moveClips(secondsToMove, 0, true, clipsMovedToOtherTracks);
 
     //! [THEN] All clips are moved
     const WaveTrack::IntervalConstHolder modifiedFirstClip = track->GetSortedClipByIndex(0);
@@ -1541,8 +1541,8 @@ TEST_F(Au3InteractionTests, MoveClipLeftWhenClipIsAtZero)
         }));
 
     //! [WHEN] Move the clips left
-    EditReport report;
-    m_au3Interaction->moveClips(-1.0, 0, true, report);
+    auto clipsMovedToOtherTracks = false;
+    m_au3Interaction->moveClips(-1.0, 0, true, clipsMovedToOtherTracks);
 
     //! [THEN] No clip is moved
     const WaveTrack::IntervalConstHolder modifiedFirstClip = track->GetSortedClipByIndex(0);

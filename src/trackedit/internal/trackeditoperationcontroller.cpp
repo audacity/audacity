@@ -232,18 +232,17 @@ bool TrackeditOperationController::removeTracksData(const TrackIdList& tracksIds
 bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed,
                                              bool& clipsMovedToOtherTrack)
 {
-    EditReport report;
     auto success = true;
-    if (!trackAndClipOperations()->moveClips(timePositionOffset, trackPositionOffset, completed, report)) {
+    if (!trackAndClipOperations()->moveClips(timePositionOffset, trackPositionOffset, completed, clipsMovedToOtherTrack)) {
         success = false;
-        if (report.clipsMovedHorizontally || report.clipsMovedVertically) {
+        if (completed) {
+            clipsMovedToOtherTrack = false;
             projectHistory()->rollbackState();
             globalContext()->currentTrackeditProject()->reload();
         }
     } else if (completed) {
         projectHistory()->pushHistoryState("Clip moved", "Move clip");
     }
-    clipsMovedToOtherTrack = report.clipsMovedVertically;
     return success;
 }
 
