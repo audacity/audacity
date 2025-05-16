@@ -44,8 +44,8 @@ using TrackId = long;
 using EffectChainLinkIndex = int;
 
 enum class EffectMenuOrganization {
-    ByCategory = 0,
-    ByType = 1,
+    Grouped = 0,
+    Flat = 1,
 };
 
 enum class EffectFamily {

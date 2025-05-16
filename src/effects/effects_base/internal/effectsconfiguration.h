@@ -26,13 +26,8 @@ public:
     void setEffectMenuOrganization(EffectMenuOrganization) override;
     muse::async::Notification effectMenuOrganizationChanged() const override;
 
-    EffectMenuOrganization realtimeEffectOrganization() const override;
-    void setRealtimeEffectOrganization(EffectMenuOrganization) override;
-    muse::async::Notification realtimeEffectOrganizationChanged() const override;
-
 private:
     muse::async::Notification m_applyEffectToAllAudioChanged;
     muse::async::Notification m_effectMenuOrganizationChanged;
-    muse::async::Notification m_realtimeEffectOrganizationChanged;
 };
 }
