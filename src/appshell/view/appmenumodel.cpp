@@ -801,8 +801,10 @@ MenuItemList AppMenuModel::makeEffectsItems()
     const effects::utils::EffectFilter filter = [](const effects::EffectMeta& meta) {
         return meta.type != effects::EffectType::Processor;
     };
-    const muse::uicomponents::MenuItemList effectMenus = effects::utils::effectMenus(effectsConfiguration()->effectMenuOrganization(),
-                                                                                     effectsProvider()->effectMetaList(), filter,  *this);
+    const muse::uicomponents::MenuItemList effectMenus = effects::utils::destructiveEffectMenu(
+        effectsConfiguration()->effectMenuOrganization(),
+        effectsProvider()->effectMetaList(), filter,
+        *this);
     if (!effectMenus.empty()) {
         items << makeSeparator() << effectMenus;
     }
@@ -820,8 +822,10 @@ MenuItemList AppMenuModel::makeGeneratorItems()
     const effects::utils::EffectFilter filter = [](const effects::EffectMeta& meta) {
         return meta.type != effects::EffectType::Generator;
     };
-    const muse::uicomponents::MenuItemList effectMenus = effects::utils::effectMenus(effectsConfiguration()->effectMenuOrganization(),
-                                                                                     effectsProvider()->effectMetaList(), filter,  *this);
+    const muse::uicomponents::MenuItemList effectMenus = effects::utils::destructiveEffectMenu(
+        effectsConfiguration()->effectMenuOrganization(),
+        effectsProvider()->effectMetaList(), filter,
+        *this);
 
     items << effectMenus;
 
