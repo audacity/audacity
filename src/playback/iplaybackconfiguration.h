@@ -24,6 +24,18 @@ public:
     virtual void setPlaybackTimeItemFormat(TimecodeFormatType format) = 0;
     virtual muse::async::Notification playbackTimeItemFormatChanged() const = 0;
 
+    virtual PlaybackMeterStyle::MeterStyle playbackMeterStyle() const = 0;
+    virtual void setPlaybackMeterStyle(PlaybackMeterStyle::MeterStyle style) = 0;
+    virtual muse::async::Notification playbackMeterStyleChanged() const = 0;
+
+    virtual PlaybackMeterType::MeterType playbackMeterType() const = 0;
+    virtual void setPlaybackMeterType(PlaybackMeterType::MeterType type) = 0;
+    virtual muse::async::Notification playbackMeterTypeChanged() const = 0;
+
+    virtual PlaybackMeterPosition::MeterPosition playbackMeterPosition() const = 0;
+    virtual void setPlaybackMeterPosition(PlaybackMeterPosition::MeterPosition position) = 0;
+    virtual muse::async::Notification playbackMeterPositionChanged() const = 0;
+
     virtual std::vector<PlaybackQualityPrefs::PlaybackQuality> playbackQualityList() const = 0;
     virtual PlaybackQualityPrefs::PlaybackQuality currentPlaybackQuality() const = 0;
     virtual void setPlaybackQuality(PlaybackQualityPrefs::PlaybackQuality quality) = 0;

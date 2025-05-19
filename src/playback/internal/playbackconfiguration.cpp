@@ -7,6 +7,9 @@
 #include "playbackconfiguration.h"
 
 static const QString PLAYBACK_TIME_ITEM_FORMAT("playbackToolbar/playbackTimeItemFormat");
+static const QString PLAYBACK_METER_STYLE("playbackToolbar/playbackMeterStyle");
+static const QString PLAYBACK_METER_TYPE("playbackToolbar/playbackMeterType");
+static const QString PLAYBACK_METER_POSITION("playbackToolbar/playbackMeterPosition");
 
 using namespace muse;
 using namespace au::playback;
@@ -55,6 +58,72 @@ void PlaybackConfiguration::setPlaybackTimeItemFormat(TimecodeFormatType format)
 async::Notification PlaybackConfiguration::playbackTimeItemFormatChanged() const
 {
     return uiConfiguration()->uiItemStateChanged(PLAYBACK_TIME_ITEM_FORMAT);
+}
+
+PlaybackMeterStyle::MeterStyle PlaybackConfiguration::playbackMeterStyle() const
+{
+    PlaybackMeterStyle::MeterStyle result = PlaybackMeterStyle::MeterStyle::Default;
+
+    QString formatStr = uiConfiguration()->uiItemState(PLAYBACK_METER_STYLE);
+    if (!formatStr.isEmpty()) {
+        result = static_cast<PlaybackMeterStyle::MeterStyle>(formatStr.toInt());
+    }
+
+    return result;
+}
+
+void PlaybackConfiguration::setPlaybackMeterStyle(PlaybackMeterStyle::MeterStyle style)
+{
+    uiConfiguration()->setUiItemState(PLAYBACK_METER_STYLE, QString::number(static_cast<int>(style)));
+}
+
+muse::async::Notification PlaybackConfiguration::playbackMeterStyleChanged() const
+{
+    return uiConfiguration()->uiItemStateChanged(PLAYBACK_METER_STYLE);
+}
+
+PlaybackMeterType::MeterType PlaybackConfiguration::playbackMeterType() const
+{
+    PlaybackMeterType::MeterType result = PlaybackMeterType::MeterType::DbLog;
+
+    QString formatStr = uiConfiguration()->uiItemState(PLAYBACK_METER_TYPE);
+    if (!formatStr.isEmpty()) {
+        result = static_cast<PlaybackMeterType::MeterType>(formatStr.toInt());
+    }
+
+    return result;
+}
+
+void PlaybackConfiguration::setPlaybackMeterType(PlaybackMeterType::MeterType type)
+{
+    uiConfiguration()->setUiItemState(PLAYBACK_METER_TYPE, QString::number(static_cast<int>(type)));
+}
+
+muse::async::Notification PlaybackConfiguration::playbackMeterTypeChanged() const
+{
+    return uiConfiguration()->uiItemStateChanged(PLAYBACK_METER_TYPE);
+}
+
+PlaybackMeterPosition::MeterPosition PlaybackConfiguration::playbackMeterPosition() const
+{
+    PlaybackMeterPosition::MeterPosition result = PlaybackMeterPosition::MeterPosition::TopBar;
+
+    QString formatStr = uiConfiguration()->uiItemState(PLAYBACK_METER_POSITION);
+    if (!formatStr.isEmpty()) {
+        result = static_cast<PlaybackMeterPosition::MeterPosition>(formatStr.toInt());
+    }
+
+    return result;
+}
+
+void PlaybackConfiguration::setPlaybackMeterPosition(PlaybackMeterPosition::MeterPosition position)
+{
+    uiConfiguration()->setUiItemState(PLAYBACK_METER_POSITION, QString::number(static_cast<int>(position)));
+}
+
+muse::async::Notification PlaybackConfiguration::playbackMeterPositionChanged() const
+{
+    return uiConfiguration()->uiItemStateChanged(PLAYBACK_METER_POSITION);
 }
 
 void PlaybackConfiguration::init()

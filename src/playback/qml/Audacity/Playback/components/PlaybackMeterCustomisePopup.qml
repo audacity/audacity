@@ -13,14 +13,42 @@ import Audacity.Playback 1.0
 StyledPopupView {
     id: root
 
-    signal playbackMeterTypeChanged(int meterType)
-    signal playbackMeterStyleChanged(int meterStyle)
-    signal playbackMeterPositionChanged(int meterPosition)
+    property int meterStyle: PlaybackMeterStyle.Default
+    property int meterType: PlaybackMeterType.DbLog
+    property int meterPosition: PlaybackMeterPosition.TopBar
 
-    contentWidth: 292
+    contentWidth: 336
     contentHeight: 248
 
     margins: 12
+
+    onMeterStyleChanged: {
+        if (root.meterStyle == PlaybackMeterStyle.Default) {
+            meterStyleDefault.checked = true
+        } else if (root.meterStyle == PlaybackMeterStyle.RMS) {
+            meterStyleRMS.checked = true
+        } else if (root.meterStyle == PlaybackMeterStyle.Gradient) {
+            meterStylePeak.checked = true
+        }
+    }
+
+    onMeterTypeChanged: {
+        if (root.meterType == PlaybackMeterType.DbLog) {
+            meterTypeDbLog.checked = true
+        } else if (root.meterType == PlaybackMeterType.DbLinear) {
+            meterTypeDbLinear.checked = true
+        } else if (root.meterType == PlaybackMeterType.Linear) {
+            meterTypeLinear.checked = true
+        }
+    }
+
+    onMeterPositionChanged: {
+        if (root.meterPosition == PlaybackMeterPosition.TopBar) {
+            meterPositionTopBar.checked = true
+        } else if (root.meterPosition == PlaybackMeterPosition.SideBar) {
+            meterPositionSideBar.checked = true
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -72,27 +100,30 @@ StyledPopupView {
                                 spacing: 8
 
                                 RoundedRadioButton {
+                                    id: meterStyleDefault
                                     checked: true
                                     text: qsTr("Default")
 
                                     onToggled: {
-                                        root.playbackMeterStyleChanged(PlaybackMeterStyle.Default)
+                                        root.meterStyle = PlaybackMeterStyle.Default
                                     }
                                 }
 
                                 RoundedRadioButton {
+                                    id: meterStyleRMS
                                     text: qsTr("RMS")
 
                                     onToggled: {
-                                        root.playbackMeterStyleChanged(PlaybackMeterStyle.RMS)
+                                        root.meterStyle = PlaybackMeterStyle.RMS
                                     }
                                 }
 
                                 RoundedRadioButton {
+                                    id: meterStylePeak
                                     text: qsTr("Gradient")
 
                                     onToggled: {
-                                        root.playbackMeterStyleChanged(PlaybackMeterStyle.Gradient)
+                                        root.meterStyle = PlaybackMeterStyle.Gradient
                                     }
                                 }
                             }
@@ -142,19 +173,33 @@ StyledPopupView {
                                 spacing: 8
 
                                 RoundedRadioButton {
+                                    id: meterTypeDbLog
+
                                     checked: true
-                                    text: qsTr("dB")
+                                    text: qsTr("Logarithmic (dB)")
 
                                     onToggled: {
-                                        root.playbackMeterTypeChanged(PlaybackMeterType.Db)
+                                        root.meterType = PlaybackMeterType.DbLog
                                     }
                                 }
 
                                 RoundedRadioButton {
-                                    text: qsTr("Linear")
+                                    id: meterTypeDbLinear
+
+                                    text: qsTr("Linear (dB)")
 
                                     onToggled: {
-                                        root.playbackMeterTypeChanged(PlaybackMeterType.Linear)
+                                        root.meterType = PlaybackMeterType.DbLinear
+                                    }
+                                }
+
+                                RoundedRadioButton {
+                                    id: meterTypeLinear
+
+                                    text: qsTr("Linear (amp)")
+
+                                    onToggled: {
+                                        root.meterType = PlaybackMeterType.Linear
                                     }
                                 }
                             }
@@ -205,19 +250,23 @@ StyledPopupView {
                             spacing: 8
 
                             RoundedRadioButton {
+                                id: meterPositionTopBar
+
                                 checked: true
                                 text: qsTr("Top bar (horizontal)")
 
                                 onToggled: {
-                                    root.playbackMeterPositionChanged(PlaybackMeterPosition.TopBar)
+                                    root.meterPosition = PlaybackMeterPosition.TopBar
                                 }
                             }
 
                             RoundedRadioButton {
+                                id: meterPositionSideBar
+
                                 text: qsTr("Side bar (vertical)")
 
                                 onToggled: {
-                                    root.playbackMeterPositionChanged(PlaybackMeterPosition.SideBar)
+                                    root.meterPosition = PlaybackMeterPosition.SideBar
                                 }
                             }
                         }

@@ -104,22 +104,46 @@ Item {
                 leftCurrentVolumePressure: Boolean(itemData) ? itemData.leftChannelPressure : 0
                 rightCurrentVolumePressure: Boolean(itemData) ? itemData.rightChannelPressure : 0
 
+                meterStyle: {
+                    return Boolean(itemData) ? itemData.meterStyle : PlaybackMeterStyle.Default
+                }
+
+                meterType: {
+                    return Boolean(itemData) ? itemData.meterType : PlaybackMeterType.DbLog
+                }
+
+                meterPosition: {
+                    return Boolean(itemData) ? itemData.meterPosition : PlaybackMeterPosition.TopBar
+                }
+
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
                 onVolumeLevelChangeRequested: function(level) {
                     itemData.level = level
                 }
 
-                onPlaybackMeterTypeChanged: function(meterType) {
-                    //console.log("meterType: ", meterType)
+                onMeterStyleChanged: {
+                    if (!Boolean(itemData)) {
+                        return
+                    }
+
+                    itemData.meterStyle = meterStyle
                 }
 
-                onPlaybackMeterStyleChanged: function(meterStyle) {
-                    //console.log("meterStyle: ", meterStyle)
+                onMeterTypeChanged: {
+                    if (!Boolean(itemData)) {
+                        return
+                    }
+
+                    itemData.meterType = meterType
                 }
 
-                onPlaybackMeterPositionChanged: function(meterPosition) {
-                    //console.log("meterPosition: ", meterPosition)
+                onMeterPositionChanged: {
+                    if (!Boolean(itemData)) {
+                        return
+                    }
+
+                    itemData.meterPosition = meterPosition
                 }
             }
         }

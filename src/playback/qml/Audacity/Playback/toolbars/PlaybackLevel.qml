@@ -27,10 +27,11 @@ Item {
     property NavigationPanel navigationPanel: null
     property int navigationOrder: 0
 
+    property alias meterStyle: popup.meterStyle
+    property alias meterType: popup.meterType
+    property alias meterPosition: popup.meterPosition
+
     signal volumeLevelChangeRequested(var level)
-    signal playbackMeterTypeChanged(int meterType)
-    signal playbackMeterStyleChanged(int meterStyle)
-    signal playbackMeterPositionChanged(int meterPosition)
 
     RowLayout {
         anchors.fill: parent
@@ -52,18 +53,6 @@ Item {
 
             PlaybackMeterCustomisePopup {
                 id: popup
-
-                onPlaybackMeterTypeChanged: function(meterType) {
-                    root.playbackMeterTypeChanged(meterType)
-                }
-
-                onPlaybackMeterStyleChanged: function(meterStyle) {
-                    root.playbackMeterStyleChanged(meterStyle)
-                }
-
-                onPlaybackMeterPositionChanged: function(meterPosition) {
-                    root.playbackMeterPositionChanged(meterPosition)
-                }
             }
    
         }
