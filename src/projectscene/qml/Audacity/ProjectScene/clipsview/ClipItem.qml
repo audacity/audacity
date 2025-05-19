@@ -526,13 +526,13 @@ Rectangle {
 
                     icon: IconCode.CLOCK
                     text: {
-                        var speed = root.speedPercentage;
+                        var speed = root.speedPercentage
 
                         if (Math.abs(speed - 100) < 0.95) {
-                            var adjusted = speed > 100 ? Math.max(speed, 100.1) : Math.min(speed, 99.9);
-                            return adjusted.toFixed(1) + "%";
+                            var adjusted = speed > 100 ? Math.max(speed, 100.1) : Math.min(speed, 99.9)
+                            return adjusted.toFixed(1) + "%"
                         } else {
-                            return Math.round(speed) + "%";
+                            return Math.round(speed) + "%"
                         }
                     }
 
