@@ -7,6 +7,7 @@
 
 #include "modularity/ioc.h"
 #include "playback/iplayback.h"
+#include "playback/iplaybackconfiguration.h"
 
 #include "uicomponents/view/toolbaritem.h"
 
@@ -25,7 +26,13 @@ class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
     Q_PROPERTY(float rightRecentPeak READ rightRecentPeak NOTIFY rightRecentPeakChanged FINAL)
     Q_PROPERTY(float rightMaxPeak READ rightMaxPeak NOTIFY rightMaxPeakChanged FINAL)
 
+    Q_PROPERTY(PlaybackMeterStyle::MeterStyle meterStyle READ meterStyle WRITE setMeterStyle NOTIFY meterStyleChanged FINAL)
+    Q_PROPERTY(PlaybackMeterType::MeterType meterType READ meterType WRITE setMeterType NOTIFY meterTypeChanged FINAL)
+    Q_PROPERTY(
+        PlaybackMeterPosition::MeterPosition meterPosition READ meterPosition WRITE setMeterPosition NOTIFY meterPositionChanged FINAL)
+
     muse::Inject<IPlayback> playback;
+    muse::Inject<IPlaybackConfiguration> configuration;
 
 public:
     explicit PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
@@ -42,6 +49,10 @@ public:
     float rightRecentPeak() const;
     float rightMaxPeak() const;
 
+    PlaybackMeterStyle::MeterStyle meterStyle() const;
+    PlaybackMeterType::MeterType meterType() const;
+    PlaybackMeterPosition::MeterPosition meterPosition() const;
+
 public slots:
     void setLeftChannelPressure(float leftChannelPressure);
     void setLeftRecentPeak(float newLeftRecentPeak);
@@ -50,6 +61,10 @@ public slots:
     void setRightChannelPressure(float rightChannelPressure);
     void setRightRecentPeak(float newRightRecentPeak);
     void setRightMaxPeak(float newRightMaxPeak);
+
+    void setMeterStyle(PlaybackMeterStyle::MeterStyle style);
+    void setMeterType(PlaybackMeterType::MeterType type);
+    void setMeterPosition(PlaybackMeterPosition::MeterPosition position);
 
 signals:
     void levelChanged();
@@ -61,6 +76,10 @@ signals:
     void rightChannelPressureChanged(float rightChannelPressure);
     void rightRecentPeakChanged();
     void rightMaxPeakChanged();
+
+    void meterStyleChanged();
+    void meterTypeChanged();
+    void meterPositionChanged();
 
 private:
     void setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue);
@@ -75,5 +94,9 @@ private:
     float m_rightChannelPressure = 0.0;
     float m_rightRecentPeak = 0.0;
     float m_rightMaxPeak = 0.0;
+
+    PlaybackMeterStyle::MeterStyle m_meterStyle = PlaybackMeterStyle::MeterStyle::Default;
+    PlaybackMeterType::MeterType m_meterType = PlaybackMeterType::MeterType::DbLog;
+    PlaybackMeterPosition::MeterPosition m_meterPosition = PlaybackMeterPosition::MeterPosition::TopBar;
 };
 }

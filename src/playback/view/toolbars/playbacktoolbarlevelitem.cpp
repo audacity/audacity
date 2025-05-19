@@ -169,3 +169,48 @@ void PlaybackToolBarLevelItem::setRightMaxPeak(float newRightMaxPeak)
     m_rightMaxPeak = newRightMaxPeak;
     emit rightMaxPeakChanged();
 }
+
+void PlaybackToolBarLevelItem::setMeterStyle(PlaybackMeterStyle::MeterStyle style)
+{
+    if (meterStyle() == style) {
+        return;
+    }
+
+    configuration()->setPlaybackMeterStyle(style);
+    emit meterStyleChanged();
+}
+
+PlaybackMeterStyle::MeterStyle PlaybackToolBarLevelItem::meterStyle() const
+{
+    return configuration()->playbackMeterStyle();
+}
+
+void PlaybackToolBarLevelItem::setMeterType(PlaybackMeterType::MeterType type)
+{
+    if (meterType() == type) {
+        return;
+    }
+
+    configuration()->setPlaybackMeterType(type);
+    emit meterTypeChanged();
+}
+
+PlaybackMeterType::MeterType PlaybackToolBarLevelItem::meterType() const
+{
+    return configuration()->playbackMeterType();
+}
+
+void PlaybackToolBarLevelItem::setMeterPosition(PlaybackMeterPosition::MeterPosition position)
+{
+    if (meterPosition() == position) {
+        return;
+    }
+
+    configuration()->setPlaybackMeterPosition(position);
+    emit meterPositionChanged();
+}
+
+PlaybackMeterPosition::MeterPosition PlaybackToolBarLevelItem::meterPosition() const
+{
+    return configuration()->playbackMeterPosition();
+}

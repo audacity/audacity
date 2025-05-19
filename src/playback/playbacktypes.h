@@ -107,8 +107,9 @@ class PlaybackMeterType
     Q_GADGET
 public:
     enum class MeterType {
-        Db = 0,
-        Linear = 1,
+        DbLog = 0,
+        DbLinear = 1,
+        Linear = 2,
     };
     Q_ENUM(MeterType)
 };
