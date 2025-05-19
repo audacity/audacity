@@ -503,6 +503,7 @@ void ToolManager::Destroy()
          pair.second.reset();
 
       mIndicator.reset();
+      mMenuManagerSubscription.Reset();
    }
 }
 
