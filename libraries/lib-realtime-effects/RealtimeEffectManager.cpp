@@ -146,12 +146,17 @@ size_t RealtimeEffectManager::Process(bool suspended,
    // the output of one effect as the input to the next effect
    // Tracks how many processors were called
    size_t called = 0;
-   size_t discardable = 0;
+   size_t totalDiscardable = 0;
    VisitGroup(group,
       [&](RealtimeEffectState &state, bool)
       {
-         discardable +=
-            state.Process(group, nBuffers, ibuf, obuf, dummy, numSamples);
+         const size_t discardable = std::min(state.Process(group, nBuffers, ibuf, obuf, dummy, numSamples), numSamples);
+         for (unsigned int i = 0; i < nBuffers; i++) {
+             ibuf[i] += discardable;
+             obuf[i] += discardable;
+         }
+         numSamples -= discardable;
+         totalDiscardable += discardable;
          for (auto i = 0; i < nBuffers; ++i)
             std::swap(ibuf[i], obuf[i]);
          called++;
@@ -169,7 +174,7 @@ size_t RealtimeEffectManager::Process(bool suspended,
    //
    // This is wrong...needs to handle tails
    //
-   return discardable;
+   return totalDiscardable;
 }
 
 //
