@@ -22,10 +22,12 @@
 #include "ExportUtils.h"
 
 #include "OAuthService.h"
+#include "ServiceConfig.h"
 
 #include "AuthorizationHandler.h"
 #include "LinkFailedDialog.h"
 #include "LinkSucceededDialog.h"
+#include "HyperLink.h"
 
 namespace audacity::cloud::audiocom
 {
@@ -44,7 +46,19 @@ LinkWithTokenDialog::LinkWithTokenDialog(AudiocomTrace trace, wxWindow* parent)
       s.StartInvisiblePanel(16);
       {
          s.SetBorder(0);
-         s.AddFixedText(XO("Enter token to link your account"));
+         s.StartHorizontalLay(wxEXPAND, 0);
+            s.AddFixedText(XO("Enter token to link your account"));
+         
+            s.AddSpace(30, 0, 1);
+         
+            const auto audioComLink = safenew HyperLink(
+               s.GetParent(),
+               wxID_ANY,
+               _("Sign-in and get the token"),
+               GetServiceConfig().GetOAuthLoginPage(mAudiocomTrace));
+            s.AddWindow(audioComLink);
+         
+         s.EndHorizontalLay();
 
          s.AddSpace(0, 4, 0);
 
