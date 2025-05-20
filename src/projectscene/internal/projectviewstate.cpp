@@ -3,6 +3,7 @@
 */
 #include "projectviewstate.h"
 #include "au3wrap/internal/projectsnap.h"
+#include "au3/viewinfo.h"
 #include "au3wrap/au3types.h"
 
 using namespace au::projectscene;
@@ -37,6 +38,24 @@ Snap getProjectSnap(std::shared_ptr<au::au3::IAu3Project> project)
         projectSnap.isSnapTriplets()
     };
 }
+
+void saveProjectZoomState(au::au3::Au3Project* au3Project, const ZoomState& zoomState)
+{
+    auto& projectZoomState = au::au3::ViewInfo::Get(*au3Project);
+    projectZoomState.setZoom(zoomState.zoom);
+    projectZoomState.setVPos(zoomState.tracksVerticalY);
+    projectZoomState.setHPos(zoomState.frameStart);
+}
+
+ZoomState getProjectZoomState(au::au3::Au3Project* au3Project)
+{
+    auto& projectZoomState = au::au3::ViewInfo::Get(*au3Project);
+    return ZoomState {
+        projectZoomState.zoom(),
+        projectZoomState.hPos(),
+        projectZoomState.vPos()
+    };
+}
 }
 
 ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project)
@@ -47,6 +66,18 @@ ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project
     m_snap.set(getProjectSnap(project));
     m_snap.ch.onReceive(this, [project = project](const Snap& s) {
         saveProjectSnap(project, s);
+    });
+
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    IF_ASSERT_FAILED(au3Project) {
+        return;
+    }
+
+    m_tracksVericalY.set(getProjectZoomState(au3Project).tracksVerticalY);
+    m_tracksVericalY.ch.onReceive(this, [au3Project](const int y) {
+        ZoomState zoomState = getProjectZoomState(au3Project);
+        zoomState.tracksVerticalY = y;
+        saveProjectZoomState(au3Project, zoomState);
     });
 }
 
@@ -265,6 +296,18 @@ void ProjectViewState::setClipsBoundaries(const std::set<muse::secs_t>& boundari
 std::set<muse::secs_t> ProjectViewState::clipsBoundaries() const
 {
     return m_clipsBoundaries;
+}
+
+void ProjectViewState::setZoomState(const ZoomState& state)
+{
+    au::au3::Au3Project* project = reinterpret_cast<au::au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    saveProjectZoomState(project, state);
+}
+
+ZoomState ProjectViewState::zoomState() const
+{
+    au::au3::Au3Project* project = reinterpret_cast<au::au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    return getProjectZoomState(project);
 }
 
 muse::ValCh<bool> ProjectViewState::altPressed() const

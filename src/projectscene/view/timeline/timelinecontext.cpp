@@ -52,16 +52,23 @@ TimelineContext::TimelineContext(QObject* parent)
 
 void TimelineContext::init(double frameWidth)
 {
-    double initialTimeRange = trackEditProject() ? trackEditProject()->totalTime().to_double() * 2 : 0.0;
-    if (muse::is_zero(initialTimeRange)) {
-        m_zoom = configuration()->zoom();
+    auto vs = this->viewState();
+    ZoomState zoomState = vs->zoomState();
+
+    if (!muse::RealIsEqual(zoomState.zoom, 0.0)) {
+        m_zoom = zoomState.zoom;
     } else {
-        m_zoom = m_frameWidth / initialTimeRange;
+        double initialTimeRange = trackEditProject() ? trackEditProject()->totalTime().to_double() * 2 : 0.0;
+        if (muse::is_zero(initialTimeRange)) {
+            m_zoom = configuration()->zoom();
+        } else {
+            m_zoom = m_frameWidth / initialTimeRange;
+        }
     }
     emit zoomChanged();
 
     m_frameWidth = frameWidth;
-    m_frameStartTime = 0.0;
+    m_frameStartTime = zoomState.frameStart;
     emit frameStartTimeChanged();
     m_frameEndTime = positionToTime(frameWidth);
 
@@ -604,6 +611,8 @@ void TimelineContext::setZoom(double zoom, double mouseX)
 
     emit verticalScrollChanged();
     emit frameTimeChanged();
+
+    saveViewState();
 }
 
 int TimelineContext::BPM() const
@@ -658,6 +667,8 @@ void TimelineContext::setFrameStartTime(double newFrameStartTime)
     m_frameStartTime = newFrameStartTime;
 
     emit frameStartTimeChanged();
+
+    saveViewState();
 }
 
 double TimelineContext::frameEndTime() const
@@ -840,6 +851,16 @@ qreal TimelineContext::verticalScrollableSize() const
 double TimelineContext::timeToContentPosition(double time) const
 {
     return std::floor(0.5 + m_zoom * time);
+}
+
+void TimelineContext::saveViewState() const
+{
+    auto vs = this->viewState();
+    ZoomState state = {
+        m_zoom, m_frameStartTime, vs->tracksVericalY().val
+    };
+
+    vs->setZoomState(state);
 }
 
 qreal TimelineContext::startHorizontalScrollPosition() const

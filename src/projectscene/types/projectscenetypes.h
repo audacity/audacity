@@ -110,6 +110,12 @@ struct Snap {
     bool isSnapTriplets = false;
 };
 
+struct ZoomState {
+    double zoom = 0.0;
+    double frameStart = 0.0;
+    int tracksVerticalY = 0;
+};
+
 enum class TimelineRulerMode {
     MINUTES_AND_SECONDS = 0,
     BEATS_AND_MEASURES
