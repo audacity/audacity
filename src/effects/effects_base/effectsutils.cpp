@@ -10,9 +10,22 @@ using namespace muse;
 using namespace muse::uicomponents;
 using namespace au::effects;
 
-using EffectIdSet = std::set<EffectId>;
+// String with Case-Insensitive comparison
+class CiString : public String
+{
+public:
+    bool operator<(const CiString& other) const
+    {
+        const auto lhs = this->toStdString();
+        const auto rhs = other.toStdString();
+        return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(),
+                                            [](char a, char b) { return std::tolower(a) < std::tolower(b); });
+    }
+};
+
+using CiStringSet = std::set<CiString>;
 using EffectMetaSet = std::unordered_set<const EffectMeta*>;
-using AmbiguousTitleEntries = std::map<String /*effect title*/, EffectIdSet>;
+using AmbiguousTitleEntries = std::map<CiString /*effect title*/, CiStringSet>;
 
 MenuItemList makeItemsOrDisambiguationSubmenus(const AmbiguousTitleEntries& entries, IEffectMenuItemFactory& effectMenu)
 {
@@ -31,7 +44,7 @@ MenuItemList makeItemsOrDisambiguationSubmenus(const AmbiguousTitleEntries& entr
     return items;
 }
 
-MenuItem* makeEffectSubmenu(const String& title, const EffectIdSet& effectIds, IEffectMenuItemFactory& effectMenu)
+MenuItem* makeEffectSubmenu(const String& title, const CiStringSet& effectIds, IEffectMenuItemFactory& effectMenu)
 {
     MenuItemList subItems;
     for (const auto& effectId : effectIds) {
@@ -42,10 +55,10 @@ MenuItem* makeEffectSubmenu(const String& title, const EffectIdSet& effectIds, I
 
 MenuItem* makeRealtimeBuiltinEffectSubmenu(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
 {
-    EffectIdSet ids;
+    CiStringSet ids;
     for (const EffectMeta& meta : effects) {
         if (meta.family == EffectFamily::Builtin) {
-            ids.insert(meta.id);
+            ids.insert(CiString { meta.id });
         }
     }
     return makeEffectSubmenu(muse::String { "Audacity" }, ids, effectMenu);
@@ -53,10 +66,10 @@ MenuItem* makeRealtimeBuiltinEffectSubmenu(const EffectMetaList& effects, IEffec
 
 MenuItemList makeDestructiveBuiltinEffectSubmenu(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
 {
-    std::map<String /*category*/, EffectIdSet> categories;
+    std::map<CiString /*category*/, CiStringSet> categories;
     for (const EffectMeta& meta : effects) {
         if (meta.family == EffectFamily::Builtin) {
-            categories[meta.category].insert(meta.id);
+            categories[CiString{ meta.category }].insert(CiString { meta.id });
         }
     }
     MenuItemList items;
@@ -68,11 +81,11 @@ MenuItemList makeDestructiveBuiltinEffectSubmenu(const EffectMetaList& effects, 
 
 MenuItemList makeNonBuiltinEffectSubmenus(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
 {
-    std::map<String /*family*/, std::map<String /*publisher*/, std::map<String /*title*/, EffectMetaSet> > > families;
+    std::map<CiString /*family*/, std::map<CiString /*publisher*/, std::map<CiString /*title*/, EffectMetaSet> > > families;
 
     for (const EffectMeta& meta : effects) {
         if (meta.family == EffectFamily::VST3) {
-            families[muse::String{ "VST3" }][meta.vendor][meta.title].insert(&meta);
+            families[CiString{ muse::String{ "VST3" } }][CiString{ meta.vendor }][CiString{ meta.title }].insert(&meta);
         }
     }
 
@@ -86,27 +99,15 @@ MenuItemList makeNonBuiltinEffectSubmenus(const EffectMetaList& effects, IEffect
 
     for (const auto& [family, publishers] : families) {
         MenuItemList publisherMenus;
-        AmbiguousTitleEntries aloneEffectItems;
         for (const auto& [publisher, titles] : publishers) {
-            if (titles.size() == 1) {
-                // Only one title for this publisher (but possibly several binaries in different locations):
-                // no need for a submenu
-                const EffectMetaSet& metas = titles.begin()->second;
-                for (const EffectMeta* meta : metas) {
-                    aloneEffectItems[meta->title].insert(meta->id);
+            AmbiguousTitleEntries publisherEffects;
+            for (const auto& [title, effectMetas] : titles) {
+                for (const EffectMeta* meta : effectMetas) {
+                    publisherEffects[CiString{ meta->title }].insert(CiString { meta->id });
                 }
-            } else {
-                AmbiguousTitleEntries publisherEffects;
-                for (const auto& [title, effectMetas] : titles) {
-                    for (const EffectMeta* meta : effectMetas) {
-                        publisherEffects[meta->title].insert(meta->id);
-                    }
-                }
-                publisherMenus << effectMenu.makeMenuEffect(publisher, makeItemsOrDisambiguationSubmenus(publisherEffects, effectMenu));
             }
+            publisherMenus << effectMenu.makeMenuEffect(publisher, makeItemsOrDisambiguationSubmenus(publisherEffects, effectMenu));
         }
-
-        publisherMenus << effectMenu.makeMenuSeparator() << makeItemsOrDisambiguationSubmenus(aloneEffectItems, effectMenu);
         items << effectMenu.makeMenuEffect(family, publisherMenus);
     }
 
@@ -137,7 +138,7 @@ MenuItemList makeFlatList(const EffectMetaList& effects, IEffectMenuItemFactory&
         if (meta.family == EffectFamily::Builtin) {
             items << effectMenu.makeMenuEffectItem(meta.id);
         } else {
-            otherFamilies[meta.title].insert(meta.id);
+            otherFamilies[CiString{ meta.title }].insert(CiString { meta.id });
         }
     }
     if (!otherFamilies.empty()) {
