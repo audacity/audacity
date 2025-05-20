@@ -115,10 +115,15 @@ Rectangle {
         playPositionActionController.init()
         tracksViewState.init()
         project.init()
+
         //! NOTE Loading tracks, or rather clips, is the most havy operation.
         // Let's make sure that everything is loaded and initialized before this,
         // to avoid double loading at the beginning, when some parameters are initialized.
         Qt.callLater(tracksModel.load)
+
+        //! NOTE setting verticalY has to be done after tracks are loaded,
+        // otherwise project always starts at the very top
+        Qt.callLater(() => tracksClipsView.contentY = tracksViewState.tracksVericalY)
     }
 
     Rectangle {

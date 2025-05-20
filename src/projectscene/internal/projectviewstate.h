@@ -66,6 +66,9 @@ public:
     void setClipsBoundaries(const std::set<muse::secs_t>& boundaries) override;
     std::set<muse::secs_t> clipsBoundaries() const override;
 
+    void setZoomState(const ZoomState& state) override;
+    ZoomState zoomState() const override;
+
     muse::ValCh<bool> altPressed() const override;
     muse::ValCh<bool> ctrlPressed() const override;
 

@@ -31,6 +31,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.h
+    
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/viewinfo.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/viewinfo.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.h
