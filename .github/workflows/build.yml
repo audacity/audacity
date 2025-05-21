@@ -79,9 +79,9 @@ on:
         required: false
       SENTRY_PROJECT_SLUG:
         required: false
-      WINDOWS_CERTIFICATE:
+      WINDOWS_CODE_SIGNING_ACCESS_KEY_ID:
         required: false
-      WINDOWS_CERTIFICATE_PASSWORD:
+      WINDOWS_CODE_SIGNING_SECRET_ACCESS_KEY:
         required: false
 
 env:
@@ -142,7 +142,7 @@ jobs:
       run: |
         sudo apt install gnome-themes-extra
     - name: Configure
-      uses: audacity/audacity-actions/configure@v2
+      uses: audacity/audacity-actions/configure@v3
       with:
         generator: Unix Makefiles
         build_type: ${{ env.BUILD_TYPE }}
@@ -200,7 +200,7 @@ jobs:
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
     - name: Configure
-      uses: audacity/audacity-actions/configure@v2
+      uses: audacity/audacity-actions/configure@v3
       with:
         generator: ${{ matrix.config.generator }}
         arch: ${{ matrix.config.arch }}
@@ -210,8 +210,8 @@ jobs:
         cmake_options: |
           ${{ env.CONFIGURE_CMAKE_OPTIONS }}
           -DCMAKE_SYSTEM_VERSION=${{ matrix.config.windows_sdk }}
-        windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
-        windows_certificate_password: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+        windows_code_signing_access_key_id: ${{ secrets.WINDOWS_CODE_SIGNING_ACCESS_KEY_ID }}
+        windows_code_signing_secret_access_key: ${{ secrets.WINDOWS_CODE_SIGNING_SECRET_ACCESS_KEY }}
     - name: Build
       uses: audacity/audacity-actions/build@v2
     - name: Test
@@ -235,7 +235,7 @@ jobs:
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
     - name: Configure x86_64
-      uses: audacity/audacity-actions/configure@v2
+      uses: audacity/audacity-actions/configure@v3
       with:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
@@ -269,7 +269,7 @@ jobs:
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
     - name: Configure x86_64
-      uses: audacity/audacity-actions/configure@v2
+      uses: audacity/audacity-actions/configure@v3
       with:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
@@ -282,7 +282,7 @@ jobs:
       with:
         target: image-compiler
     - name: Configure arm64
-      uses: audacity/audacity-actions/configure@v2
+      uses: audacity/audacity-actions/configure@v3
       with:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
@@ -358,7 +358,7 @@ jobs:
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
     - name: Configure
-      uses: audacity/audacity-actions/configure@v2
+      uses: audacity/audacity-actions/configure@v3
       with:
         generator: Unix Makefiles
         build_type: ${{ env.BUILD_TYPE }}

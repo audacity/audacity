@@ -7,8 +7,6 @@
 # BUILDING_64_BIT - Flag, that indicates that we are building a 64-bit installer
 # EMBED_MANUAL - embed a fresh copy of manual
 # SIGN - sign the installer
-# WINDOWS_CERTIFICATE - path to PFX file. If not present, env:WINDOWS_CERTIFICATE will be used
-# WINDOWS_CERTIFICATE_PASSWORD - password for the PFX file. If not present, env:WINDOWS_CERTIFICATE_PASSWORD will be used
 # USE_GPL3 - set the license to GPLv3 in the installer
 
 if( BUILDING_64_BIT )
@@ -21,15 +19,6 @@ endif()
 
 if( SIGN )
     set( SIGN_TOOL "SignTool=byparam powershell -ExecutionPolicy Bypass -File \$q${SOURCE_DIR}/scripts/build/windows/PfxSign.ps1\$q -File $f")
-
-    if( WINDOWS_CERTIFICATE )
-        string(APPEND SIGN_TOOL " -CertFile \$q${WINDOWS_CERTIFICATE}\$q")
-    endif()
-
-    if( WINDOWS_CERTIFICATE_PASSWORD )
-        message("Setting env:WINDOWS_CERTIFICATE_PASSWORD...")
-        set( ENV{WINDOWS_CERTIFICATE_PASSWORD} "${WINDOWS_CERTIFICATE_PASSWORD}")
-    endif()
 else()
     set( SIGN_TOOL )
 endif()
