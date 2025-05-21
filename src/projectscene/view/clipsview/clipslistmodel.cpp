@@ -601,37 +601,22 @@ QVariant ClipsListModel::findGuideline(const ClipKey& key, Direction direction)
         return QVariant();
     }
 
-    if (vs->isSnapEnabled()) {
-        if (direction != Direction::Right) {
-            double clipStartTime = item->time().clipStartTime;
-            if (muse::RealIsEqual(clipStartTime, m_context->applySnapToTime(clipStartTime))) {
-                return QVariant(clipStartTime);
-            }
+    if (direction != Direction::Right) {
+        double clipStartTime = item->time().clipStartTime;
+        double guidelineTime = m_context->findGuideline(clipStartTime);
+        if (!muse::RealIsEqual(guidelineTime, -1.0)) {
+            return QVariant(guidelineTime);
         }
-
-        if (direction != Direction::Left) {
-            double clipEndTime = item->time().clipEndTime;
-            if (muse::RealIsEqual(clipEndTime, m_context->applySnapToTime(clipEndTime))) {
-                return QVariant(clipEndTime);
-            }
-        }
-    } else {
-        if (direction != Direction::Right) {
-            double clipStartTime = item->time().clipStartTime;
-            if (muse::contains(vs->clipsBoundaries(), static_cast<muse::secs_t>(clipStartTime))) {
-                return QVariant(clipStartTime);
-            }
-        }
-
-        if (direction != Direction::Left) {
-            double clipEndTime = item->time().clipEndTime;
-            if (muse::contains(vs->clipsBoundaries(), static_cast<muse::secs_t>(clipEndTime))) {
-                return QVariant(clipEndTime);
-            }
+    }
+    if (direction != Direction::Left) {
+        double clipEndTime = item->time().clipEndTime;
+        double guidelineTime = m_context->findGuideline(clipEndTime);
+        if (!muse::RealIsEqual(guidelineTime, -1.0)) {
+            return QVariant(guidelineTime);
         }
     }
 
-    return -1.0;
+    return QVariant(-1.0);
 }
 
 bool ClipsListModel::asymmetricStereoHeightsPossible() const
@@ -683,24 +668,7 @@ void ClipsListModel::startEditClip(const ClipKey& key)
     vs->setClipEditStartTimeOffset(mousePositionTime - item->clip().startTime);
     vs->setClipEditEndTimeOffset(item->clip().endTime - mousePositionTime);
 
-    auto prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
-        return;
-    }
-
-    std::set<secs_t> boundaries;
-    for (const auto& trackId : prj->trackIdList()) {
-        for (const auto& clip : prj->clipList(trackId)) {
-            if (muse::contains(selectionController()->selectedClips(), clip.key)) {
-                continue;
-            }
-
-            boundaries.insert(trackeditInteraction()->clipStartTime(clip.key));
-            boundaries.insert(trackeditInteraction()->clipEndTime(clip.key));
-        }
-    }
-
-    vs->setClipsBoundaries(boundaries);
+    updateClipsBoundaries();
 }
 
 void ClipsListModel::endEditClip(const ClipKey& key)
@@ -718,7 +686,34 @@ void ClipsListModel::endEditClip(const ClipKey& key)
     vs->setClipEditStartTimeOffset(-1.0);
     vs->setClipEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
-    vs->setClipsBoundaries({});
+    updateClipsBoundaries();
+}
+
+void ClipsListModel::updateClipsBoundaries()
+{
+    auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return;
+    }
+
+    std::set<secs_t> boundaries;
+    for (const auto& trackId : prj->trackIdList()) {
+        for (const auto& clip : prj->clipList(trackId)) {
+            if (muse::contains(selectionController()->selectedClips(), clip.key)) {
+                continue;
+            }
+
+            boundaries.insert(trackeditInteraction()->clipStartTime(clip.key));
+            boundaries.insert(trackeditInteraction()->clipEndTime(clip.key));
+        }
+    }
+
+    vs->setClipsBoundaries(boundaries);
 }
 
 /*!

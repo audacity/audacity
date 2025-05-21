@@ -99,6 +99,24 @@ void TracksListModel::load()
 
     loadTracks(prj->trackList());
 
+    std::set<muse::secs_t> boundaries;
+    for (const auto& trackId : prj->trackIdList()) {
+        for (const auto& clip : prj->clipList(trackId)) {
+            if (muse::contains(selectionController()->selectedClips(), clip.key)) {
+                continue;
+            }
+
+            boundaries.insert(trackeditInteraction()->clipStartTime(clip.key));
+            boundaries.insert(trackeditInteraction()->clipEndTime(clip.key));
+        }
+    }
+
+    const IProjectViewStatePtr vs = prj ? globalContext()->currentProject()->viewState() : nullptr;
+    if (!vs) {
+        return;
+    }
+    vs->setClipsBoundaries(boundaries);
+
     emit isEmptyChanged();
     emit isAddingAvailableChanged(true);
 }

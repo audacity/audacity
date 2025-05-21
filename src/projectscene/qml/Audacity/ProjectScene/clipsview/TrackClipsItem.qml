@@ -54,7 +54,8 @@ Item {
 
     signal clipHeaderHoveredChanged(bool val)
 
-    signal triggerGuideline(real x, bool completed)
+    signal handleTimeGuideline(real x, bool completed)
+    signal triggerClipGuideline(real x, bool completed)
 
     height: trackViewState.trackHeight
 
@@ -350,31 +351,31 @@ Item {
                 onClipEndEditRequested: function() {
                     clipsModel.endEditClip(clipItem.key)
 
-                    root.triggerGuideline(false, -1)
+                    root.triggerClipGuideline(false, -1)
                 }
 
                 onClipLeftTrimRequested: function(completed, action) {
                     clipsModel.trimLeftClip(clipItem.key, completed, action)
 
-                    handleGuideline(clipItem.key, Direction.Left, completed)
+                    handleClipGuideline(clipItem.key, Direction.Left, completed)
                 }
 
                 onClipRightTrimRequested: function(completed, action) {
                     clipsModel.trimRightClip(clipItem.key, completed, action)
 
-                    handleGuideline(clipItem.key, Direction.Right, completed)
+                    handleClipGuideline(clipItem.key, Direction.Right, completed)
                 }
 
                 onClipLeftStretchRequested: function(completed, action) {
                     clipsModel.stretchLeftClip(clipItem.key, completed, action)
 
-                    handleGuideline(clipItem.key, Direction.Left, completed)
+                    handleClipGuideline(clipItem.key, Direction.Left, completed)
                 }
 
                 onClipRightStretchRequested: function(completed, action) {
                     clipsModel.stretchRightClip(clipItem.key, completed, action)
 
-                    handleGuideline(clipItem.key, Direction.Right, completed)
+                    handleClipGuideline(clipItem.key, Direction.Right, completed)
                 }
 
                 onStartAutoScroll: {
@@ -389,6 +390,9 @@ Item {
                     var yWithinTrack = yWithinClip
                     var xWithinTrack = xWithinClip + clipItem.x
                     trackItemMousePositionChanged(xWithinTrack, yWithinTrack, clipItem.key)
+
+                    let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
+                    root.triggerClipGuideline(time, false)
                 }
 
                 onRequestSelected: {
@@ -469,6 +473,10 @@ Item {
         onRequestSelectionContextMenu: function(x, y) {
             let position = mapToItem(root.parent, Qt.point(x, y))
             root.requestSelectionContextMenu(position.x, position.y)
+        }
+
+        onHandleGuideline: function(x, completed) {
+            root.handleTimeGuideline(x, completed)
         }
     }
 
@@ -572,7 +580,7 @@ Item {
                 setHoveredClipKey(clipsModel.updateClipTrack(clipKey));
             }
 
-            handleGuideline(clipKey, Direction.Auto, completed)
+            handleClipGuideline(clipKey, Direction.Auto, completed)
         }
 
         function onClipStartEditRequested(clipKey) {
@@ -592,10 +600,10 @@ Item {
         }
     }
 
-    function handleGuideline(clipKey, direction, completed) {
+    function handleClipGuideline(clipKey, direction, completed) {
         let guidelinePos = clipsModel.findGuideline(clipKey, direction)
         if (guidelinePos) {
-            triggerGuideline(guidelinePos, completed)
+            triggerClipGuideline(guidelinePos, completed)
         }
     }
 }
