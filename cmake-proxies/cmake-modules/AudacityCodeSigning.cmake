@@ -1,17 +1,6 @@
 # Code signing
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-   # On windows, we expect WINDOWS_CERTIFICATE to be set
-   # as a CMake variable or as an environment variable
-   if( DEFINED WINDOWS_CERTIFICATE )
-      install( CODE "set( WINDOWS_CERTIFICATE \"${WINDOWS_CERTIFICATE}\" )" )
-   endif()
-
-   if( DEFINED WINDOWS_CERTIFICATE_PASSWORD )
-      # To simplify the helper script - we push password to the environment
-      install( CODE "set( ENV{WINDOWS_CERTIFICATE_PASSWORD} \"${WINDOWS_CERTIFICATE_PASSWORD}\") " )
-   endif()
-
    install( CODE "set( PFX_SIGN_PS_LOCATION \"${CMAKE_SOURCE_DIR}/scripts/build/windows/PfxSign.ps1\") " )
    install( SCRIPT "scripts/build/windows/PfxSign.cmake" )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin")

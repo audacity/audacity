@@ -1,19 +1,15 @@
-# This script uses Set-AuthenticodeSignature to sign a file
-# or exe/dll/msi files in a directory using a pfx file.
-# If PFX file is not present, script expects a base64 encode certificate
-# in WINDOWS_CERTIFICATE environment variable.
-# Password can be passed using WINDOWS_CERTIFICATE_PASSWORD environment variable.
-# The script only signs previously unsigned files
+# This script uses signing service to sign windows binaries.
+
+# The file to be signed should be uploaded to the /unsigned/ folder.
+# The signing service runs automatically on a schedule
+# The result - the signed file - is placed by the service in the same s3 bucket
+#     in the signed folder with the same name as the source file.
+# The file must be removed from the signed folder after downloading.
 
 [CmdletBinding()]
 param (
-    # A path to the certificate file. If missing, env:WINDOWS_CERTIFICATE will be used.
-    [string]$CertFile, 
-    # A password for the certificate. If missing, env:WINDOWS_CERTIFICATE_PASSWORD will be used.
-    [string]$Password,
-    # A file to sign. 
+    # it can be a single file or a directory, but not both
     [string]$File,
-    # A directory to sign.
     [string]$Directory
 )
 
@@ -21,29 +17,146 @@ param (
 $ErrorActionPreference = "Stop"
 $PSDefaultParameterValues['*:ErrorAction']='Stop'
 
-# Sign a file, if it was previously unsigned
-# We sign using SHA256, as we only support Windows 7+.
-function Set-FileSignature {
-    param (
-        [String]$InputFile,
-        $pfxCert
-    )
-    if((Get-AuthenticodeSignature $InputFile).Status -ne [System.Management.Automation.SignatureStatus]::Valid) {
-        Write-Host "Singning file $InputFile"
+$env:AWS_DEFAULT_REGION="us-east-1"
+$env:AWS_ACCESS_KEY_ID = $env:WINDOWS_CODE_SIGNING_ACCESS_KEY_ID
+$env:AWS_SECRET_ACCESS_KEY = $env:WINDOWS_CODE_SIGNING_SECRET_ACCESS_KEY
 
-        Set-AuthenticodeSignature `
-            -FilePath $InputFile `
-            -Certificate $pfxCert `
-            -IncludeChain All `
-            -TimestampServer 'http://timestamp.digicert.com' `
-            -HashAlgorithm 'sha256' `
-            -Force
-    } else {
-        Write-Host "Skipping file $InputFile as it is already signed"
+$s3Bucket = "muse-sign"
+$s3UnsignedDir = "unsigned"
+$s3SignedDir = "signed"
+
+# Global dictionary to store the mapping of original filename to its S3-friendly unique name
+$global:FileMap = @{}
+
+function IsExecutable {
+    param (
+        [string]$FilePath
+    )
+
+    try {
+        # Check for MZ signature
+        Write-Host "Checking if ${FilePath} is executable..."
+        $fs = [System.IO.File]::OpenRead(${FilePath})
+        $byte1 = $fs.ReadByte()
+        $byte2 = $fs.ReadByte()
+        $fs.Close()
+
+        Write-Host "Checking file signature for ${FilePath}: byte1=${byte1}, byte2=${byte2}"
+
+        # Oh hi Mark Z
+        return ($byte1 -eq 0x4D -and $byte2 -eq 0x5A)
+    } catch {
+        Write-Warning "Failed to check signature for ${FilePath}: $_"
+        return $false
     }
 }
 
-# Sanity checks: only allow File or Directory
+function Upload-FilesForSigning {
+    param (
+        [string[]]$FilesToUpload
+    )
+
+    Write-Host "Uploading files for signing..."
+    foreach ($file in $FilesToUpload) {
+        $originalFileName = [System.IO.Path]::GetFileName($file)
+        $fileExtension = [System.IO.Path]::GetExtension($file)
+        $fileNameWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($file)
+        $uniqueId = [guid]::NewGuid().ToString()
+
+        # Workaround for InnoSetup installer files (executable with .tmp extension)
+        if ($fileExtension -in @(".exe", ".dll")) {
+            $uploadExtension = $fileExtension
+        } elseif (IsExecutable -FilePath ${file}) {
+            Write-Host "Detected MZ signature in ${file}, treating as .exe"
+            $uploadExtension = ".exe"
+        } else {
+            Write-Warning "Skipping ${file}: not an EXE/DLL and no MZ signature"
+            $global:FileMap[$file] = "[SKIP]"
+            continue
+        }
+
+        $s3FileName = "$($fileNameWithoutExtension)_$($uniqueId)$uploadExtension"
+        $s3UnsignedUrl = "s3://$s3Bucket/$s3UnsignedDir/$s3FileName"
+
+        $global:FileMap[$file] = $s3FileName
+
+        Write-Host "Uploading $file to $s3UnsignedUrl (as $s3FileName)"
+        aws s3 cp $file $s3UnsignedUrl | Out-Null
+    }
+    Write-Host "All unsigned files uploaded:"
+    $FilesToUpload | ForEach-Object { Write-Host " - $_ (uploaded as $($global:FileMap[$_]))" }
+}
+
+function Download-SignedFiles {
+    param (
+        [string[]]$FilesToDownload
+    )
+
+    Write-Host "Waiting for signed files from S3..."
+    Write-Host "Expecting signed files for:"
+    $FilesToDownload | ForEach-Object { Write-Host " - $_ (originally uploaded as $($global:FileMap[$_]))" }
+
+    $signedFilesDownloaded = @()
+    $maxAttempts = 10
+    $sleepSeconds = 60
+
+    for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+        Write-Host "`nChecking for signed files... attempt $attempt"
+        $allSigned = $true
+
+        foreach ($file in $FilesToDownload) {
+            $s3FileName = $global:FileMap[$file]
+            $s3SignedUrl = "s3://$s3Bucket/$s3SignedDir/$s3FileName"
+            $fileSignedPath = "${file}_signed_temp"
+
+            if ($signedFilesDownloaded -contains $file) {
+                Write-Host "Already downloaded: $file"
+                continue
+            }
+            if ($global:FileMap[$file] -eq "[SKIP]") {
+                $signedFilesDownloaded += $file
+                continue
+            }
+
+            Write-Host "Trying to download signed file: $s3FileName (for original: $file)"
+            aws s3 cp $s3SignedUrl $fileSignedPath --quiet
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "Successfully downloaded signed file: $s3FileName"
+                $signedFilesDownloaded += $file
+                Write-Host "Replacing original with signed file: $file"
+
+                Remove-Item -Path $file -Force
+                Rename-Item -Path $fileSignedPath -NewName $file -Force
+
+                Write-Host "Removing signed file from S3: $s3SignedUrl"
+                aws s3 rm $s3SignedUrl | Out-Null
+            } else {
+                Write-Host "Signed file not available yet: $s3FileName"
+                $allSigned = $false
+            }
+        }
+
+        $pendingFiles = $FilesToDownload.Where({ $signedFilesDownloaded -notcontains $_ })
+        if ($pendingFiles.Count -gt 0) {
+            Write-Host "Still waiting for:"
+            $pendingFiles | ForEach-Object { Write-Host " - $_" }
+        }
+
+        Write-Host "Signing done: $allSigned, Files processed: $($signedFilesDownloaded.Count) / $($FilesToDownload.Count)"
+
+        if ($allSigned -and ($FilesToDownload.Count -eq $signedFilesDownloaded.Count)) {
+            Write-Host "`nAll signed files downloaded and processed successfully."
+            break
+        } elseif ($attempt -eq $maxAttempts) {
+            throw "Signing failed for some files after multiple attempts. Missing signed files: $($pendingFiles)"
+        }
+
+        Write-Host "Sleeping for $sleepSeconds seconds before next check..."
+        Start-Sleep -Seconds $sleepSeconds
+    }
+}
+
+# Only allow File or Directory
 if ($File -eq "" -and $Directory -eq "") {
     Write-Host "-File or -Directory should be provided"
     exit 1
@@ -52,57 +165,36 @@ if ($File -eq "" -and $Directory -eq "") {
     exit 1
 }
 
-$cleanupPfx = $false
-
-# Check, if we need to retrieve PFX from environment
-if($CertFile -eq "") {
-    Write-Host "Trying to read certificate file from env:WINDOWS_CERTIFICATE"
-
-    if(Test-Path "env:WINDOWS_CERTIFICATE") {
-        $CertFile = "cert.pfx"
-
-        [IO.File]::WriteAllBytes($CertFile, [System.Convert]::FromBase64String($env:WINDOWS_CERTIFICATE))
-
-        $cleanupPfx = $true
-    } else {
-        Write-Host "No certificate is provided"
-        exit 1
-    }
-}
-
-# Check, if we need to retrieve password from environment
-if($Password -eq "") {
-    if (Test-Path "env:WINDOWS_CERTIFICATE_PASSWORD") {
-        $Password = $env:WINDOWS_CERTIFICATE_PASSWORD
-    }
-}
-
-$pfx = $null
-
-# Retrieve the actual certificate
-if($Password -ne "") {  
-    $securePassword = ConvertTo-SecureString -String $Password -AsPlainText -Force
-    $pfx = Get-PfxData -FilePath "$CertFile" -Password $securePassword
-} else {
-    $pfx = Get-PfxData -FilePath "$CertFile"
-}
-
-$pfxCert =  $pfx.EndEntityCertificates[0]
-
-# Perform the code signing.
+# Get list of files to sign
+$filesToProcess = @()
 if ($File -ne "") {
-    Set-FileSignature -InputFile $File -pfxCert $pfxCert
+    Write-Host "Processing single file: $File"
+    $filesToProcess += $File
+
 } else {
-    Get-ChildItem `
+    Write-Host "Searching for unsigned files in directory: $Directory"
+    # dlls are skipped for now because the signing process is too slow
+    $filesToProcess = Get-ChildItem `
         -Path "$Directory" `
-        -Include *.dll,*.exe,*.msi `
+        -Include *.exe,*.msi `
         -Recurse `
-        -File | ForEach-Object {
-            Set-FileSignature -InputFile $_.FullName -pfxCert $pfxCert
-        }
+        -File | Where-Object {
+            (Get-AuthenticodeSignature $_.FullName).Status -ne [System.Management.Automation.SignatureStatus]::Valid
+        } | Select-Object -ExpandProperty FullName
+
+    Write-Host "Unsigned files found:"
+    $filesToProcess | ForEach-Object { Write-Host " - $_" }
 }
 
-# Remove PFX file if it was created from environment.
-if($cleanupPfx) {
-    Remove-Item "${CertFile}"
+if ($filesToProcess.Count -eq 0) {
+    Write-Host "No unsigned files found to process."
+    exit 0
 }
+
+# Step 1: Upload all unsigned files
+Upload-FilesForSigning -FilesToUpload $filesToProcess
+
+# Step 2: Download all signed files
+Download-SignedFiles -FilesToDownload $filesToProcess
+
+Write-Host "`nSigning process completed successfully."
