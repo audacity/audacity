@@ -12,6 +12,7 @@ Item {
 
     signal selectionDraged(var x1, var x2, var completed)
     signal requestSelectionContextMenu(real x, real y)
+    signal handleGuideline(var x, var completed)
 
     onSelectionInProgressChanged: {
         leftMa.cursorShape = root.selectionInProgress ? Qt.IBeamCursor : Qt.SizeHorCursor
@@ -76,6 +77,7 @@ Item {
             leftMa.startW = selRect.width
             leftMa.x = selRect.x
             centerMa.cursorShape = Qt.SizeHorCursor
+            handleGuideline(selRect.x, false)
         }
 
         onPositionChanged: function(mouse) {
@@ -88,6 +90,7 @@ Item {
             } else {
                 root.selectionDraged(leftMa.startX + mouse.x, leftMa.startX + mouse.x + newWidth, false)
             }
+            handleGuideline(selRect.x, false)
         }
 
         onReleased: function(mouse) {
@@ -98,6 +101,7 @@ Item {
             leftMa.x = Qt.binding(function() { return selRect.x })
             leftMa.cursorShape = Qt.SizeHorCursor
             centerMa.cursorShape = Qt.IBeamCursor
+            handleGuideline(selRect.x, true)
         }
 
         onClicked: function(mouse) {
@@ -132,6 +136,7 @@ Item {
             rightMa.startW = selRect.width
             rightMa.x = selRect.x + selRect.width - rightMa.width
             centerMa.cursorShape = Qt.SizeHorCursor
+            handleGuideline(root.context.selectionEndPosition, false)
         }
 
         onPositionChanged: function(mouse) {
@@ -143,6 +148,7 @@ Item {
                 newWidth = root.minSelection
             }
             root.selectionDraged(selRect.x, selRect.x + newWidth, false)
+            handleGuideline(root.context.selectionEndPosition, false)
         }
 
         onReleased: function(mouse) {
@@ -153,6 +159,7 @@ Item {
             rightMa.x = Qt.binding(function() {return selRect.x + selRect.width - rightMa.width })
             rightMa.cursorShape = Qt.SizeHorCursor
             centerMa.cursorShape = Qt.IBeamCursor
+            handleGuideline(root.context.selectionEndPosition, true)
         }
 
         onClicked: function(mouse) {

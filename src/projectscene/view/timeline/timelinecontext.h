@@ -108,6 +108,8 @@ public:
     double singleStepToTime(double position, Direction direction, const Snap& snap) const;
     double applySnapToTime(double time) const;
     double applySnapToClip(double time) const;
+    Q_INVOKABLE double applyDetectedSnap(double time) const;
+    Q_INVOKABLE double findGuideline(double time) const;
 
     Q_INVOKABLE void updateMousePositionTime(double mouseX);
     Q_INVOKABLE double mousePositionTime() const;
