@@ -56,7 +56,13 @@ muse::String categoryIdString(EffectCategoryId category)
 {
     switch (category) {
     case EffectCategoryId::None:
-        return muse::String{ "" };
+        // Maybe a temporary solution to generator menu organization:
+        // since generators don't have a category, with this they'll end up in the Audacity "category".
+        // When we implement Nyquist support, though, either we create the
+        // "Nyquist" category and are happy with that, or we
+        // will have to ask our designers to specify organization of generators
+        // (and analyzers).
+        return muse::String{ "Audacity" };
     case EffectCategoryId::VolumeAndCompression:
         return muse::String{ "Volume and Compression" };
     case EffectCategoryId::Fading:
