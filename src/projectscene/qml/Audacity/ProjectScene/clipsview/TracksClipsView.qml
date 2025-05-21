@@ -275,6 +275,7 @@ Rectangle {
                         selectionController.onPressed(e.x, e.y)
                         selectionController.resetSelectedClip()
                         clipsSelection.visible = true
+                        handleGuideline(e.x, false)
                     }
                 } else if (e.button === Qt.RightButton) {
                     if (tracksHovered) {
@@ -292,6 +293,7 @@ Rectangle {
                     tracksClipsView.startAutoScroll()
                 } else {
                     selectionController.onPositionChanged(e.x, e.y)
+                    handleGuideline(e.x, false)
 
                     if (root.clipHovered && !tracksClipsView.moveActive) {
                         root.clipHovered = false
@@ -312,6 +314,7 @@ Rectangle {
                         playCursorController.seekToX(e.x)
                     }
                     selectionController.onReleased(e.x, e.y)
+                    handleGuideline(e.x, true)
                     if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
                         playCursorController.seekToX(timeline.context.selectionStartPosition)
                     }
@@ -671,6 +674,18 @@ Rectangle {
             tracksModel.handleDroppedFiles(urls);
 
             drop.acceptProposedAction()
+        }
+    }
+
+    function handleGuideline(x, completed) {
+        let time = timeline.context.positionToTime(x)
+        time = timeline.context.applyDetectedSnap(time)
+        let guidelineTimePos = timeline.context.findGuideline(time)
+        if (guidelineTimePos != -1) {
+            clipGuideline.x = timeline.context.timeToPosition(guidelineTimePos)
+            root.guidelineActive = !completed
+        } else {
+            root.guidelineActive = false
         }
     }
 }

@@ -557,6 +557,40 @@ double TimelineContext::applySnapToClip(double time) const
     return m_snapTimeFormatter->snapToClip(time, tolerance, clipsBoundaries);
 }
 
+double TimelineContext::applyDetectedSnap(double time) const
+{
+    auto vs = this->viewState();
+    if (!vs) {
+        return time;
+    }
+
+    if (vs->isSnapEnabled()) {
+        return applySnapToTime(time);
+    }
+
+    return applySnapToClip(time);
+}
+
+double TimelineContext::findGuideline(double time) const
+{
+    auto vs = this->viewState();
+    if (!vs) {
+        return time;
+    }
+
+    if (vs->isSnapEnabled()) {
+        if (muse::RealIsEqual(time, applySnapToTime(time))) {
+            return time;
+        }
+    } else {
+        if (muse::contains(vs->clipsBoundaries(), static_cast<muse::secs_t>(time))) {
+            return time;
+        }
+    }
+
+    return -1.0;
+}
+
 void TimelineContext::updateMousePositionTime(double mouseX)
 {
     m_mousePositionTime = positionToTime(mouseX);

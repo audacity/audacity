@@ -589,6 +589,7 @@ void ClipsListModel::resetClipSpeed(const ClipKey& key)
     trackeditInteraction()->resetClipSpeed(key.key);
 }
 
+// use timeline findGuideline func here
 QVariant ClipsListModel::findGuideline(const ClipKey& key, Direction direction)
 {
     auto vs = globalContext()->currentProject()->viewState();
