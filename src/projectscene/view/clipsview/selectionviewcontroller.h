@@ -8,6 +8,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/itrackeditinteraction.h"
 
 #include "../timeline/timelinecontext.h"
 
@@ -23,6 +24,7 @@ class SelectionViewController : public QObject
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
 
 public:
     SelectionViewController(QObject* parent = nullptr);

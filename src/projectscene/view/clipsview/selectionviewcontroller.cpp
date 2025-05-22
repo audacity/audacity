@@ -65,6 +65,26 @@ void SelectionViewController::onPressed(double x, double y)
         selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), false);
     }
 
+    auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    // move to trackeditutils?
+    std::set<secs_t> boundaries;
+    for (const auto& trackId : prj->trackIdList()) {
+        for (const auto& clip : prj->clipList(trackId)) {
+            if (muse::contains(selectionController()->selectedClips(), clip.key)) {
+                continue;
+            }
+
+            boundaries.insert(trackeditInteraction()->clipStartTime(clip.key));
+            boundaries.insert(trackeditInteraction()->clipEndTime(clip.key));
+        }
+    }
+
+    viewState()->setClipsBoundaries(boundaries);
+
     m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this](){
         onPositionChanged(m_lastPoint.x(), m_lastPoint.y());
     });
@@ -167,6 +187,8 @@ void SelectionViewController::onReleased(double x, double y)
 
     // time
     setSelection(x1, x2, true);
+
+    viewState()->setClipsBoundaries({});
 }
 
 void SelectionViewController::onSelectionDraged(double x1, double x2, bool completed)
@@ -304,6 +326,14 @@ void SelectionViewController::setSelectionActive(bool newSelectionActive)
 
 void SelectionViewController::setSelection(double x1, double x2, bool complete)
 {
-    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), complete);
-    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), complete);
+    if (viewState()->isSnapEnabled()) {
+        selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), complete);
+        selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), complete);
+    } else {
+        double clipSnappedStartTime = m_context->applySnapToClip(m_context->positionToTime(x1, false /*withSnap*/));
+        double clipSnappedEndTime = m_context->applySnapToClip(m_context->positionToTime(x2, false /*withSnap*/));
+
+        selectionController()->setDataSelectedStartTime(clipSnappedStartTime, complete);
+        selectionController()->setDataSelectedEndTime(clipSnappedEndTime, complete);
+    }
 }

@@ -389,6 +389,12 @@ Item {
                     var yWithinTrack = yWithinClip
                     var xWithinTrack = xWithinClip + clipItem.x
                     trackItemMousePositionChanged(xWithinTrack, yWithinTrack, clipItem.key)
+
+                    if (xWithinClip > 4 && xWithinClip < (clipItem.width - 4)) {
+                        root.triggerGuideline(-1, true)
+                    } else {
+                        root.triggerGuideline(xWithinTrack, false)
+                    }
                 }
 
                 onRequestSelected: {
