@@ -114,13 +114,15 @@ env:
 jobs:
   build_linux:
     name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
       matrix:
         config:
         - name: Ubuntu 20.04 AppImage (x86_64)
-          os: ubuntu-20.04
+          os: ubuntu:20.04
           force_gcc11: false
           postfix: '-20.04'
 #        - name: Ubuntu 20.04 AppImage (x86_64, gcc 11)
@@ -128,19 +130,16 @@ jobs:
 #          force_gcc11: true
 #          postfix: '-20.04-gcc11'
         - name: Ubuntu 22.04 AppImage (x86_64)
-          os: ubuntu-22.04
+          os: ubuntu:22.04
           force_gcc11: false
           postfix: '-22.04'
     steps:
-    - name: Checkout Audacity
-      uses: actions/checkout@v4
     - name: Setup Dependencies
-      uses: audacity/audacity-actions/dependencies@v2
+      uses: audacity/audacity-actions/dependencies@v3
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
-    - name: Install themes
-      run: |
-        sudo apt install gnome-themes-extra
+    - name: Checkout Audacity
+      uses: actions/checkout@v4
     - name: Configure
       uses: audacity/audacity-actions/configure@v3
       with:
@@ -150,14 +149,14 @@ jobs:
         build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
     - name: Build
-      uses: audacity/audacity-actions/build@v2
+      uses: audacity/audacity-actions/build@v3
     - name: Test
       uses: GabrielBB/xvfb-action@v1
       with:
         run: ctest -C ${{ env.BUILD_TYPE }} --verbose
         working-directory: ./.build.x64/
     - name: Package
-      uses: audacity/audacity-actions/package@v2
+      uses: audacity/audacity-actions/package@v3
       with:
         postfix: ${{ matrix.config.postfix }}
 
@@ -196,7 +195,7 @@ jobs:
     - name: Checkout Audacity
       uses: actions/checkout@v4
     - name: Setup Dependencies
-      uses: audacity/audacity-actions/dependencies@v2
+      uses: audacity/audacity-actions/dependencies@v3
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
     - name: Configure
@@ -213,7 +212,7 @@ jobs:
         windows_code_signing_access_key_id: ${{ secrets.WINDOWS_CODE_SIGNING_ACCESS_KEY_ID }}
         windows_code_signing_secret_access_key: ${{ secrets.WINDOWS_CODE_SIGNING_SECRET_ACCESS_KEY }}
     - name: Build
-      uses: audacity/audacity-actions/build@v2
+      uses: audacity/audacity-actions/build@v3
     - name: Test
       shell: pwsh
       run: |
@@ -221,7 +220,7 @@ jobs:
         ctest -C ${{ env.BUILD_TYPE }} --verbose
         popd
     - name: Package
-      uses: audacity/audacity-actions/package@v2
+      uses: audacity/audacity-actions/package@v3
       with:
         postfix: ${{ matrix.config.postfix }}
   build_macos_intel:
@@ -231,7 +230,7 @@ jobs:
     - name: Checkout Audacity
       uses: actions/checkout@v4
     - name: Setup Dependencies
-      uses: audacity/audacity-actions/dependencies@v2
+      uses: audacity/audacity-actions/dependencies@v3
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
     - name: Configure x86_64
@@ -244,7 +243,7 @@ jobs:
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: x64
     - name: Build x86_64
-      uses: audacity/audacity-actions/build@v2
+      uses: audacity/audacity-actions/build@v3
     - name: Test
       shell: bash
       run: |
@@ -265,7 +264,7 @@ jobs:
     - name: Checkout Audacity
       uses: actions/checkout@v4
     - name: Setup Dependencies
-      uses: audacity/audacity-actions/dependencies@v2
+      uses: audacity/audacity-actions/dependencies@v3
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
     - name: Configure x86_64
@@ -278,7 +277,7 @@ jobs:
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: x64
     - name: Build x86_64
-      uses: audacity/audacity-actions/build@v2
+      uses: audacity/audacity-actions/build@v3
       with:
         target: image-compiler
     - name: Configure arm64
@@ -292,7 +291,7 @@ jobs:
         arch: arm64
         image_compiler: "${{ github.workspace }}/.build.x64/RelWithDebInfo/Audacity.app/Contents/image-compiler/image-compiler"
     - name: Build arm64
-      uses: audacity/audacity-actions/build@v2
+      uses: audacity/audacity-actions/build@v3
     - name: 'Tar files'
       shell: bash
       run: tar cf macos_arm64.tar .build.arm64
@@ -333,7 +332,7 @@ jobs:
         p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
         p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
     - name: Package
-      uses: audacity/audacity-actions/package@v2
+      uses: audacity/audacity-actions/package@v3
       env:
         AUDACITY_BUILD_DIR: "${{ github.workspace }}/.build.x64"
         AUDACITY_BUILD_TYPE: ${{ env.BUILD_TYPE }}
@@ -349,14 +348,14 @@ jobs:
 
   sources:
     name: Source Tarball
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout Audacity
-      uses: actions/checkout@v4
     - name: Setup Dependencies
-      uses: audacity/audacity-actions/dependencies@v2
+      uses: audacity/audacity-actions/dependencies@v3
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
+    - name: Checkout Audacity
+      uses: actions/checkout@v4
     - name: Configure
       uses: audacity/audacity-actions/configure@v3
       with:
