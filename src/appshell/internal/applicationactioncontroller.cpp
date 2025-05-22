@@ -260,11 +260,12 @@ void ApplicationActionController::revertToFactorySettings()
                                      "This action will not delete any of your scores.");
 
     int revertBtn = int(muse::IInteractive::Button::Apply);
-    muse::IInteractive::Result result = interactive()->warning(title, question,
-                                                               { interactive()->buttonData(muse::IInteractive::Button::Cancel),
-                                                                 muse::IInteractive::ButtonData(revertBtn, muse::trc("appshell", "Revert"),
-                                                                                                true) },
-                                                               revertBtn);
+    muse::IInteractive::Result result = interactive()->warningSync(title, question,
+                                                                   { interactive()->buttonData(muse::IInteractive::Button::Cancel),
+                                                                     muse::IInteractive::ButtonData(revertBtn,
+                                                                                                    muse::trc("appshell", "Revert"),
+                                                                                                    true) },
+                                                                   revertBtn);
 
     if (result.standardButton() == muse::IInteractive::Button::Cancel) {
         return;
@@ -278,10 +279,10 @@ void ApplicationActionController::revertToFactorySettings()
     question = muse::trc("appshell", "Audacity needs to be restarted for these changes to take effect.");
 
     int restartBtn = int(muse::IInteractive::Button::Apply);
-    result = interactive()->question(title, question,
-                                     { interactive()->buttonData(muse::IInteractive::Button::Cancel),
-                                       muse::IInteractive::ButtonData(restartBtn, muse::trc("appshell", "Restart"), true) },
-                                     restartBtn);
+    result = interactive()->questionSync(title, question,
+                                         { interactive()->buttonData(muse::IInteractive::Button::Cancel),
+                                           muse::IInteractive::ButtonData(restartBtn, muse::trc("appshell", "Restart"), true) },
+                                         restartBtn);
 
     if (result.standardButton() == muse::IInteractive::Button::Cancel) {
         return;

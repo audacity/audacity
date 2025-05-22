@@ -361,7 +361,7 @@ IInteractive::Button ProjectActionsController::askAboutSavingProject(IAudacityPr
 
     std::string body = muse::trc("project", "Your changes will be lost if you don’t save them.");
 
-    IInteractive::Result result = interactive()->warning(title, body, {
+    IInteractive::Result result = interactive()->warningSync(title, body, {
         IInteractive::Button::DontSave,
         IInteractive::Button::Cancel,
         IInteractive::Button::Save

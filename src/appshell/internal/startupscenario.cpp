@@ -207,9 +207,9 @@ void StartupScenario::openScore(const ProjectFile& file)
 
 void StartupScenario::restoreLastSession()
 {
-    muse::IInteractive::Result result = interactive()->question(muse::trc("appshell", "The previous session quit unexpectedly."),
-                                                                muse::trc("appshell", "Do you want to restore the session?"),
-                                                                { muse::IInteractive::Button::No, muse::IInteractive::Button::Yes });
+    muse::IInteractive::Result result = interactive()->questionSync(muse::trc("appshell", "The previous session quit unexpectedly."),
+                                                                    muse::trc("appshell", "Do you want to restore the session?"),
+                                                                    { muse::IInteractive::Button::No, muse::IInteractive::Button::Yes });
 
     if (result.button() == static_cast<int>(muse::IInteractive::Button::Yes)) {
         sessionsManager()->restore();
