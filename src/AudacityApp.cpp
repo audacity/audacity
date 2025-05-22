@@ -1698,6 +1698,14 @@ bool AudacityApp::InitPart2()
       project = ProjectManager::New();
    }
 
+   // Update Manager may spawn a modal dialog, we need to hide the splash screen before that
+   bool splashFadeOut = !playingJournal;
+   HideSplashScreen(splashFadeOut);
+
+#if defined(HAVE_UPDATES_CHECK)
+   UpdateManager::Start(playingJournal);
+#endif
+
    if (!playingJournal && ProjectSettings::Get(*project).GetShowSplashScreen())
    {
       // This may do a check-for-updates at every start up.
@@ -1708,14 +1716,6 @@ bool AudacityApp::InitPart2()
       WhatsNewDialog::Show(*project);
 #endif
    }
-
-   // Update Manager may spawn a modal dialog, we need to hide the splash screen before that
-   bool splashFadeOut = !playingJournal;
-   HideSplashScreen(splashFadeOut);
-
-#if defined(HAVE_UPDATES_CHECK)
-   UpdateManager::Start(playingJournal);
-#endif
 
    Importer::Get().Initialize();
    ExportPluginRegistry::Get().Initialize();
