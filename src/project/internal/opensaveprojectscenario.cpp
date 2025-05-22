@@ -379,7 +379,7 @@ bool OpenSaveProjectScenario::warnBeforeSavingToExistingPubliclyVisibleCloudProj
         IInteractive::ButtonData(IInteractive::Button::Ok, muse::trc("project/save", "Publish"), true)
     };
 
-    IInteractive::Result result = interactive()->warning(
+    IInteractive::Result result = interactive()->warningSync(
         muse::trc("project/save", "Publish changes online?"),
         muse::trc("project/save", "Your saved changes will be publicly visible. We will also "
                                   "need to generate a new MP3 for public playback."),
@@ -401,10 +401,10 @@ Ret OpenSaveProjectScenario::warnCloudNotAvailableForUploading(bool isPublishSha
         IInteractive::ButtonData(IInteractive::Button::Ok, muse::trc("project/save", "Save to computer"), true)
     };
 
-    IInteractive::Result result = interactive()->warning(muse::trc("project/save", "Unable to connect to the cloud"),
-                                                         muse::trc("project/save",
-                                                                   "Please check your internet connection or try again later."),
-                                                         buttons, int(IInteractive::Button::Ok));
+    IInteractive::Result result = interactive()->warningSync(muse::trc("project/save", "Unable to connect to the cloud"),
+                                                             muse::trc("project/save",
+                                                                       "Please check your internet connection or try again later."),
+                                                             buttons, int(IInteractive::Button::Ok));
 
     if (result.standardButton() == IInteractive::Button::Ok) {
         return Ret(RET_CODE_CHANGE_SAVE_LOCATION_TYPE);

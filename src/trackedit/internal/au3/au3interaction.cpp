@@ -2679,7 +2679,7 @@ bool Au3Interaction::userIsOkWithDownmixing() const
     const std::string body = muse::trc("trackedit",
                                        "This action requires one or more clips to be converted to mono. Would you like to proceed?");
 
-    const muse::IInteractive::Result result = interactive()->warning(title, body, {
+    const muse::IInteractive::Result result = interactive()->warningSync(title, body, {
         muse::IInteractive::Button::Cancel,
         muse::IInteractive::Button::Yes
     }, muse::IInteractive::Button::Cancel, muse::IInteractive::Option::WithDontShowAgainCheckBox);
