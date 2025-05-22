@@ -260,17 +260,29 @@ ListItemBlank {
 
             VolumePressureMeter {
                 id: leftOrMonoVolumePressureMeter
+
                 height: root.height
+
+                meterStyle: trackViewState.meterStyle
+
                 currentVolumePressure: root.item.leftChannelPressure
+                currentRMS: root.item.leftChannelRMS
+
                 isPlaying: trackViewState.isPlaying
                 isRecording: trackViewState.isRecording
             }
 
             VolumePressureMeter {
                 id: rightVolumePressureMeter
+
                 visible: root.item.channelCount === 2
                 height: root.height
+
+                meterStyle: trackViewState.meterStyle
+
                 currentVolumePressure: root.item.rightChannelPressure
+                currentRMS: root.item.rightChannelRMS
+
                 isPlaying: trackViewState.isPlaying
                 isRecording: trackViewState.isRecording
             }

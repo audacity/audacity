@@ -17,6 +17,10 @@ StyledPopupView {
     property int meterType: PlaybackMeterType.DbLog
     property int meterPosition: PlaybackMeterPosition.TopBar
 
+    signal positionChangeRequested(int position)
+    signal styleChangeRequested(int style)
+    signal typeChangeRequested(int type)
+
     contentWidth: 336
     contentHeight: 248
 
@@ -105,7 +109,7 @@ StyledPopupView {
                                     text: qsTr("Default")
 
                                     onToggled: {
-                                        root.meterStyle = PlaybackMeterStyle.Default
+                                        styleChangeRequested(PlaybackMeterStyle.Default)
                                     }
                                 }
 
@@ -114,7 +118,7 @@ StyledPopupView {
                                     text: qsTr("RMS")
 
                                     onToggled: {
-                                        root.meterStyle = PlaybackMeterStyle.RMS
+                                        styleChangeRequested(PlaybackMeterStyle.RMS)
                                     }
                                 }
 
@@ -123,7 +127,7 @@ StyledPopupView {
                                     text: qsTr("Gradient")
 
                                     onToggled: {
-                                        root.meterStyle = PlaybackMeterStyle.Gradient
+                                        styleChangeRequested(PlaybackMeterStyle.Gradient)
                                     }
                                 }
                             }
@@ -179,7 +183,7 @@ StyledPopupView {
                                     text: qsTr("Logarithmic (dB)")
 
                                     onToggled: {
-                                        root.meterType = PlaybackMeterType.DbLog
+                                        typeChangeRequested(PlaybackMeterType.DbLog)
                                     }
                                 }
 
@@ -189,7 +193,7 @@ StyledPopupView {
                                     text: qsTr("Linear (dB)")
 
                                     onToggled: {
-                                        root.meterType = PlaybackMeterType.DbLinear
+                                        typeChangeRequested(PlaybackMeterType.DbLinear)
                                     }
                                 }
 
@@ -199,7 +203,7 @@ StyledPopupView {
                                     text: qsTr("Linear (amp)")
 
                                     onToggled: {
-                                        root.meterType = PlaybackMeterType.Linear
+                                        typeChangeRequested(PlaybackMeterType.Linear)
                                     }
                                 }
                             }
@@ -256,7 +260,7 @@ StyledPopupView {
                                 text: qsTr("Top bar (horizontal)")
 
                                 onToggled: {
-                                    root.meterPosition = PlaybackMeterPosition.TopBar
+                                    positionChangeRequested(PlaybackMeterPosition.TopBar)
                                 }
                             }
 
@@ -266,7 +270,7 @@ StyledPopupView {
                                 text: qsTr("Side bar (vertical)")
 
                                 onToggled: {
-                                    root.meterPosition = PlaybackMeterPosition.SideBar
+                                    positionChangeRequested(PlaybackMeterPosition.SideBar)
                                 }
                             }
                         }

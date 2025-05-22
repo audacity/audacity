@@ -17,21 +17,22 @@ Item {
     property alias volumeLevel: volumeSlider.volumeLevel
 
     property alias leftCurrentVolumePressure: leftVolumePressure.currentVolumePressure
-    property alias leftRecentPeak: leftVolumePressure.recentPeak
-    property alias leftMaxPeak: leftVolumePressure.maxPeak
+    property alias leftCurrentRMS: leftVolumePressure.currentRMS
 
     property alias rightCurrentVolumePressure: rightVolumePressure.currentVolumePressure
-    property alias rightRecentPeak: rightVolumePressure.recentPeak
-    property alias rightMaxPeak: rightVolumePressure.maxPeak
+    property alias rightCurrentRMS: rightVolumePressure.currentRMS
 
     property NavigationPanel navigationPanel: null
     property int navigationOrder: 0
 
-    property alias meterStyle: popup.meterStyle
-    property alias meterType: popup.meterType
-    property alias meterPosition: popup.meterPosition
+    property int meterStyle: PlaybackMeterStyle.Default
+    property int meterType: PlaybackMeterType.DbLog
+    property int meterPosition: PlaybackMeterPosition.TopBar
 
     signal volumeLevelChangeRequested(var level)
+    signal positionChangeRequested(int position)
+    signal styleChangeRequested(int style)
+    signal typeChangeRequested(int type)
 
     RowLayout {
         anchors.fill: parent
@@ -44,15 +45,27 @@ Item {
             accentButton: popup.isOpened
 
             onClicked: {
-                if (popup.isOpened) {
-                    popup.close()
-                } else {
-                    popup.open()
-                }
+                popup.isOpened ? popup.close() : popup.open()
             }
 
             PlaybackMeterCustomisePopup {
                 id: popup
+
+                meterStyle: root.meterStyle
+                meterType: root.meterType
+                meterPosition: root.meterPosition
+
+                onPositionChangeRequested: function (position) {
+                    root.positionChangeRequested(position)
+                }
+
+                onStyleChangeRequested: function (style) {
+                    root.styleChangeRequested(style)
+                }
+
+                onTypeChangeRequested: function (type) {
+                    root.typeChangeRequested(type)
+                }
             }
    
         }
@@ -70,12 +83,16 @@ Item {
 
                 spacing: 2
 
-                VolumePressureMeter {
+                HorizontalVolumePressureMeter {
                     id: leftVolumePressure
+                    meterStyle: root.meterStyle
+
                     enabled: root.enabled
                 }
-                VolumePressureMeter {
+                HorizontalVolumePressureMeter {
                     id: rightVolumePressure
+                    meterStyle: root.meterStyle
+
                     showRuler: true
                     enabled: root.enabled
                 }

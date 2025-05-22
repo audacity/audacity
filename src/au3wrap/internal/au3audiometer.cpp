@@ -10,16 +10,21 @@
 #include "libraries/lib-utility/MemoryX.h"
 
 namespace {
-float GetAbsValue(const float* buffer, size_t frames, size_t step)
+std::tuple<float, float> GetAbsValue(const float* buffer, size_t frames, size_t step)
 {
     auto sptr = buffer;
     float peak = 0.0f;
+    float rms = 0.0f;
 
     for (unsigned long i = 0; i < frames; i++) {
         peak = std::max(peak, static_cast<float>(std::fabs(*sptr)));
+        rms += (*sptr) * (*sptr);
         sptr += step;
     }
-    return std::min(peak, 1.0f);
+
+    rms = std::sqrt(rms / static_cast<float>(frames));
+
+    return { std::min(peak, 1.0f), std::min(rms, 1.0f) };
 }
 }
 
@@ -31,7 +36,8 @@ Meter::Meter()
         for (const Meter::Data& item : data) {
             const auto it = m_channels.find(item.key);
             if (it != m_channels.end()) {
-                it->second.send(item.channel, item.signal);
+                const au::audio::MeterSignal signal { item.peak, item.rms };
+                it->second.send(item.channel, signal);
             }
         }
     });
@@ -39,21 +45,23 @@ Meter::Meter()
 
 void Meter::push(uint8_t channel, const IMeterSender::InterleavedSampleData& sampleData, int64_t key)
 {
-    float peak = GetAbsValue(sampleData.buffer, sampleData.frames, sampleData.nChannels);
-    push(channel, peak, key);
+    auto value = GetAbsValue(sampleData.buffer, sampleData.frames, sampleData.nChannels);
+    push(channel, value, key);
 }
 
-void Meter::push(uint8_t channel, float signal, int64_t key)
+void Meter::push(uint8_t channel, std::tuple<float, float> value, int64_t key)
 {
+    const auto [peak, rms] = value;
     m_trackData.push_back(Data { key, channel,
-                                 au::audio::AudioSignalVal { signal, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(signal)) } });
+                                 au::audio::AudioSignalVal { peak, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak)) },
+                                 au::audio::AudioSignalVal { rms, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(rms)) } });
 }
 
 void Meter::reset()
 {
     for (auto& [key, _] : m_channels) {
-        push(0, 0.0, key);
-        push(1, 0.0, key);
+        push(0, { 0.0, 0.0 }, key);
+        push(1, { 0.0, 0.0 }, key);
     }
     sendAll();
 }
@@ -69,7 +77,7 @@ void Meter::sendAll()
     m_trackData = {};
 }
 
-muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> Meter::dataChanged(int64_t key)
+muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Meter::dataChanged(int64_t key)
 {
     auto channel = m_channels[key];
     channel.onClose(this, [this, key]() {
