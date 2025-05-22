@@ -453,7 +453,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
          S.SetBorder(4);
          mDontShowAgain = S
             .Position(wxALL | wxALIGN_CENTER)
-            .AddCheckBox( XXO("Don't show this again at start up"), !showSplashScreen);
+            .AddCheckBox( XXO("&Don't show this again at start up"), !showSplashScreen);
 
          S.AddSpace(1,1,1);
 
