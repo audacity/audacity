@@ -48,9 +48,6 @@ function download_linuxdeploy_component()
 function create_path()
 {
     local -r path="$1"
-    if [[ -d "${path}" ]]; then
-        return 1 # already exists
-    fi
     mkdir -p "${path}"
 }
 
