@@ -14,6 +14,7 @@
         <file>qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TracksTitleBarBackground.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml</file>
+        <file>qml/Audacity/ProjectScene/trackspanel/PlaybackMeterPanel.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TrackEffectList.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/EditableLabel.qml</file>

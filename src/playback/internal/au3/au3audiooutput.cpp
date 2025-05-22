@@ -102,12 +102,13 @@ muse::async::Channel<au::audio::sample_rate_t> Au3AudioOutput::sampleRateChanged
     return m_sampleRateChanged;
 }
 
-muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> Au3AudioOutput::playbackSignalChanges() const
+muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioOutput::playbackSignalChanges() const
 {
     return m_outputMeter->dataChanged();
 }
 
-muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> Au3AudioOutput::playbackTrackSignalChanges(int64_t key) const
+muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioOutput::playbackTrackSignalChanges(
+    int64_t key) const
 {
     return m_outputMeter->dataChanged(key);
 }

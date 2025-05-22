@@ -16,7 +16,7 @@ public:
     };
 
     virtual ~IMeterSender() = default;
-    virtual void push(uint8_t channel, float signal, int64_t key = MASTER_TRACK_ID) = 0;
+    virtual void push(uint8_t channel, std::tuple<float, float> value, int64_t key = MASTER_TRACK_ID) = 0;
     virtual void push(uint8_t channel, const InterleavedSampleData& sampleData, int64_t key = MASTER_TRACK_ID) = 0;
     virtual void sendAll() = 0;
     virtual void reset() = 0;

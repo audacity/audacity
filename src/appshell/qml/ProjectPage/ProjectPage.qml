@@ -116,6 +116,14 @@ DockPage {
         root.panelBottomDropDestination
     ]
 
+    PlaybackMeterModel {
+        id: playbackMeterModel
+
+        onMeterPositionChanged: {
+            playbackMeterModel.meterPosition === PlaybackMeterPosition.SideBar ? playbackMeterPanel.open() : playbackMeterPanel.close()
+        }
+    }
+
     mainToolBars: [
         DockToolBar {
             id: projectToolBar
@@ -317,6 +325,55 @@ DockPage {
                     function onShowEffectsSectionChanged() {
                         tracksPanelContent.showEffectsSection = tracksPanel.showEffectsSection
                     }
+                }
+            }
+        },
+
+        DockPanel {
+            id: playbackMeterPanel
+
+            objectName: "playbackMeterPanel"
+            title: qsTrc("appshell", "Playback meter")
+
+            closable: false
+            floatable: false
+
+            width: 40
+            minimumWidth: 40
+            maximumWidth: 40
+
+            location: Location.Right
+
+            visible: false
+
+            onVisibleChanged: {
+                //NOTE: For some reason the panel does not follow the visibility on the first time
+                if (playbackMeterPanel.visible && (playbackMeterModel.meterPosition === PlaybackMeterPosition.TopBar)) {
+                    playbackMeterPanel.close()
+                }
+            }
+
+            PlaybackMeterPanel {
+                id: panel
+
+                meterPosition: playbackMeterModel.meterPosition
+                meterStyle: playbackMeterModel.meterStyle
+                meterType: playbackMeterModel.meterType
+                leftChannelPressure: playbackMeterModel.leftChannelPressure
+                leftChannelRMS: playbackMeterModel.leftChannelRMS
+                rightChannelPressure: playbackMeterModel.rightChannelPressure
+                rightChannelRMS: playbackMeterModel.rightChannelRMS
+
+                onPositionChangeRequested: function(position) {
+                    playbackMeterModel.meterPosition = position
+                }
+
+                onStyleChangeRequested: function(style) {
+                    playbackMeterModel.meterStyle = style
+                }
+
+                onTypeChangeRequested: function(type) {
+                    playbackMeterModel.meterType = type
                 }
             }
         },

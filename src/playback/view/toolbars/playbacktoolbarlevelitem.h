@@ -19,10 +19,12 @@ class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
     Q_PROPERTY(int level READ level WRITE setLevel NOTIFY levelChanged FINAL)
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
+    Q_PROPERTY(float leftChannelRMS READ leftChannelRMS NOTIFY leftChannelRMSChanged)
     Q_PROPERTY(float leftRecentPeak READ leftRecentPeak NOTIFY leftRecentPeakChanged FINAL)
     Q_PROPERTY(float leftMaxPeak READ leftMaxPeak NOTIFY leftMaxPeakChanged FINAL)
 
     Q_PROPERTY(float rightChannelPressure READ rightChannelPressure NOTIFY rightChannelPressureChanged)
+    Q_PROPERTY(float rightChannelRMS READ rightChannelRMS NOTIFY rightChannelRMSChanged)
     Q_PROPERTY(float rightRecentPeak READ rightRecentPeak NOTIFY rightRecentPeakChanged FINAL)
     Q_PROPERTY(float rightMaxPeak READ rightMaxPeak NOTIFY rightMaxPeakChanged FINAL)
 
@@ -42,10 +44,12 @@ public:
     void setLevel(int newLevel);
 
     float leftChannelPressure() const;
+    float leftChannelRMS() const;
     float leftRecentPeak() const;
     float leftMaxPeak() const;
 
     float rightChannelPressure() const;
+    float rightChannelRMS() const;
     float rightRecentPeak() const;
     float rightMaxPeak() const;
 
@@ -55,10 +59,12 @@ public:
 
 public slots:
     void setLeftChannelPressure(float leftChannelPressure);
+    void setLeftChannelRMS(float leftChannelRMS);
     void setLeftRecentPeak(float newLeftRecentPeak);
     void setLeftMaxPeak(float newLeftMaxPeak);
 
     void setRightChannelPressure(float rightChannelPressure);
+    void setRightChannelRMS(float rightChannelRMS);
     void setRightRecentPeak(float newRightRecentPeak);
     void setRightMaxPeak(float newRightMaxPeak);
 
@@ -70,10 +76,12 @@ signals:
     void levelChanged();
 
     void leftChannelPressureChanged(float leftChannelPressure);
+    void leftChannelRMSChanged(float leftChannelRMS);
     void leftRecentPeakChanged();
     void leftMaxPeakChanged();
 
     void rightChannelPressureChanged(float rightChannelPressure);
+    void rightChannelRMSChanged(float rightChannelRMS);
     void rightRecentPeakChanged();
     void rightMaxPeakChanged();
 
@@ -83,17 +91,20 @@ signals:
 
 private:
     void setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue);
+    void setAudioChannelRMS(const audio::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
 
     int m_level = 0;
 
-    float m_leftChannelPressure = 0.0;
-    float m_leftRecentPeak = 0.0;
-    float m_leftMaxPeak = 0.0;
+    float m_leftChannelPressure = -60.0;
+    float m_leftChannelRMS = -60.0;
+    float m_leftRecentPeak = -60.0;
+    float m_leftMaxPeak = -60.0;
 
-    float m_rightChannelPressure = 0.0;
-    float m_rightRecentPeak = 0.0;
-    float m_rightMaxPeak = 0.0;
+    float m_rightChannelPressure = -60.0;
+    float m_rightChannelRMS = -60.0;
+    float m_rightRecentPeak = -60.0;
+    float m_rightMaxPeak = -60.0;
 
     PlaybackMeterStyle::MeterStyle m_meterStyle = PlaybackMeterStyle::MeterStyle::Default;
     PlaybackMeterType::MeterType m_meterType = PlaybackMeterType::MeterType::DbLog;

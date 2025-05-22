@@ -19,7 +19,8 @@ public:
     virtual audio::sample_rate_t sampleRate() const = 0;
     virtual muse::async::Channel<audio::sample_rate_t> sampleRateChanged() const = 0;
 
-    virtual muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> playbackSignalChanges() const = 0;
-    virtual muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> playbackTrackSignalChanges(int64_t key) const = 0;
+    virtual muse::async::Channel<audio::audioch_t, audio::MeterSignal> playbackSignalChanges() const = 0;
+    virtual muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> playbackTrackSignalChanges(
+        int64_t key) const = 0;
 };
 }

@@ -78,12 +78,13 @@ muse::async::Channel<float> Au3AudioInput::recordVolumeChanged() const
     return m_recordVolumeChanged;
 }
 
-muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> Au3AudioInput::recordSignalChanges() const
+muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioInput::recordSignalChanges() const
 {
     return m_inputMeter->dataChanged();
 }
 
-muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> Au3AudioInput::recordTrackSignalChanges(int64_t key) const
+muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioInput::recordTrackSignalChanges(
+    int64_t key) const
 {
     return m_inputMeter->dataChanged(key);
 }

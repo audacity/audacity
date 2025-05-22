@@ -46,15 +46,16 @@ void TrackItem::init(const trackedit::Track& track)
     m_trackId = track.id;
 
     m_playbackTrackSignalChanged = playback()->audioOutput()->playbackTrackSignalChanges(m_trackId);
-    m_playbackTrackSignalChanged.onReceive(this, [this](au::audio::audioch_t channel, const au::audio::AudioSignalVal& newValue) {
-        const float newPressure = std::clamp(newValue.pressure, MIN_ALLOWED_PRESSURE, MAX_ALLOWED_PRESSURE);
-        setAudioChannelVolumePressure(channel, newPressure);
+    m_playbackTrackSignalChanged.onReceive(this, [this](au::audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
+        setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
+        setAudioChannelRMS(channel, meterSignal.rms.pressure);
     });
 
     m_recordTrackSignalChanged = record()->audioInput()->recordTrackSignalChanges(m_trackId);
-    m_recordTrackSignalChanged.onReceive(this, [this](au::audio::audioch_t channel, const au::audio::AudioSignalVal& newValue) {
-        const float newPressure = std::clamp(newValue.pressure, MIN_ALLOWED_PRESSURE, MAX_ALLOWED_PRESSURE);
-        setAudioChannelVolumePressure(channel, newPressure);
+    m_recordTrackSignalChanged.onReceive(this,
+                                         [this](au::audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
+        setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
+        setAudioChannelRMS(channel, meterSignal.rms.pressure);
     });
 
     if (m_title != track.title) {
@@ -130,6 +131,16 @@ float TrackItem::leftChannelPressure() const
 float TrackItem::rightChannelPressure() const
 {
     return m_rightChannelPressure;
+}
+
+float TrackItem::leftChannelRMS() const
+{
+    return m_leftChannelRMS;
+}
+
+float TrackItem::rightChannelRMS() const
+{
+    return m_rightChannelRMS;
 }
 
 float TrackItem::volumeLevel() const
@@ -228,6 +239,26 @@ void TrackItem::setRightChannelPressure(float rightChannelPressure)
     emit rightChannelPressureChanged(m_rightChannelPressure);
 }
 
+void TrackItem::setLeftChannelRMS(float leftChannelRMS)
+{
+    if (qFuzzyCompare(m_leftChannelRMS, leftChannelRMS)) {
+        return;
+    }
+
+    m_leftChannelRMS = leftChannelRMS;
+    emit leftChannelRMSChanged(m_leftChannelRMS);
+}
+
+void TrackItem::setRightChannelRMS(float rightChannelRMS)
+{
+    if (qFuzzyCompare(m_rightChannelRMS, rightChannelRMS)) {
+        return;
+    }
+
+    m_rightChannelRMS = rightChannelRMS;
+    emit rightChannelRMSChanged(m_rightChannelRMS);
+}
+
 void TrackItem::setVolumeLevel(float volumeLevel, bool completed)
 {
     trackPlaybackControl()->setVolume(trackId(), volumeLevel, completed);
@@ -265,11 +296,14 @@ void TrackItem::setMuted(bool mute)
 
 void TrackItem::setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue)
 {
-    if (chNum == 0) {
-        setLeftChannelPressure(newValue);
-    } else {
-        setRightChannelPressure(newValue);
-    }
+    float clampedValue = std::clamp(newValue, MIN_ALLOWED_PRESSURE, MAX_ALLOWED_PRESSURE);
+    chNum == 0 ? setLeftChannelPressure(clampedValue) : setRightChannelPressure(clampedValue);
+}
+
+void TrackItem::setAudioChannelRMS(const trackedit::audioch_t chNum, const float newValue)
+{
+    float clampedValue = std::clamp(newValue, MIN_ALLOWED_PRESSURE, MAX_ALLOWED_PRESSURE);
+    chNum == 0 ? setLeftChannelRMS(clampedValue) : setRightChannelRMS(clampedValue);
 }
 
 void TrackItem::resetAudioChannelsVolumePressure()

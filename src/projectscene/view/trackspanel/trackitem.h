@@ -30,6 +30,8 @@ class TrackItem : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float rightChannelPressure READ rightChannelPressure NOTIFY rightChannelPressureChanged)
+    Q_PROPERTY(float leftChannelRMS READ leftChannelRMS NOTIFY leftChannelRMSChanged)
+    Q_PROPERTY(float rightChannelRMS READ rightChannelRMS NOTIFY rightChannelRMSChanged)
 
     Q_PROPERTY(float volumeLevel READ volumeLevel NOTIFY volumeLevelChanged)
     Q_PROPERTY(int balance READ balance NOTIFY balanceChanged)
@@ -57,6 +59,8 @@ public:
 
     float leftChannelPressure() const;
     float rightChannelPressure() const;
+    float leftChannelRMS() const;
+    float rightChannelRMS() const;
 
     float volumeLevel() const;
     Q_INVOKABLE void setVolumeLevel(float volumeLevel, bool completed);
@@ -85,6 +89,8 @@ public slots:
 
     void setLeftChannelPressure(float leftChannelPressure);
     void setRightChannelPressure(float rightChannelPressure);
+    void setLeftChannelRMS(float leftChannelRMS);
+    void setRightChannelRMS(float rightChannelRMS);
 
     void setSolo(bool solo);
     void setMuted(bool mute);
@@ -94,6 +100,8 @@ signals:
 
     void leftChannelPressureChanged(float leftChannelPressure);
     void rightChannelPressureChanged(float rightChannelPressure);
+    void leftChannelRMSChanged(float leftChannelRMS);
+    void rightChannelRMSChanged(float rightChannelRMS);
 
     void volumeLevelChanged(float volumeLevel);
     void balanceChanged(int balance);
@@ -113,10 +121,11 @@ signals:
 
 protected:
     void setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue);
+    void setAudioChannelRMS(const trackedit::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
 
-    muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> m_playbackTrackSignalChanged;
-    muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> m_recordTrackSignalChanged;
+    muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> m_playbackTrackSignalChanged;
+    muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> m_recordTrackSignalChanged;
     audio::AudioOutputParams m_outParams;
 
     trackedit::TrackId m_trackId = -1;
@@ -124,8 +133,10 @@ protected:
     QString m_title;
     bool m_outputOnly = false;
 
-    float m_leftChannelPressure = 0.0;
-    float m_rightChannelPressure = 0.0;
+    float m_leftChannelPressure = -60.0;
+    float m_rightChannelPressure = -60.0;
+    float m_leftChannelRMS = -60.0;
+    float m_rightChannelRMS = -60.0;
 
     bool m_outputResourceItemsLoading = false;
 

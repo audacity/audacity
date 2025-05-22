@@ -101,8 +101,10 @@ Item {
                 height: 28
 
                 volumeLevel: Boolean(itemData) ? itemData.level : 0
-                leftCurrentVolumePressure: Boolean(itemData) ? itemData.leftChannelPressure : 0
-                rightCurrentVolumePressure: Boolean(itemData) ? itemData.rightChannelPressure : 0
+                leftCurrentVolumePressure: Boolean(itemData) ? itemData.leftChannelPressure : -60
+                leftCurrentRMS: Boolean(itemData) ? itemData.leftChannelRMS : -60
+                rightCurrentVolumePressure: Boolean(itemData) ? itemData.rightChannelPressure : -60
+                rightCurrentRMS: Boolean(itemData) ? itemData.rightChannelRMS : -60
 
                 meterStyle: {
                     return Boolean(itemData) ? itemData.meterStyle : PlaybackMeterStyle.Default
@@ -122,28 +124,16 @@ Item {
                     itemData.level = level
                 }
 
-                onMeterStyleChanged: {
-                    if (!Boolean(itemData)) {
-                        return
-                    }
-
-                    itemData.meterStyle = meterStyle
+                onPositionChangeRequested: function(position) {
+                    itemData.meterPosition = position
                 }
 
-                onMeterTypeChanged: {
-                    if (!Boolean(itemData)) {
-                        return
-                    }
-
-                    itemData.meterType = meterType
+                onStyleChangeRequested: function(style) {
+                    itemData.meterStyle = style
                 }
 
-                onMeterPositionChanged: {
-                    if (!Boolean(itemData)) {
-                        return
-                    }
-
-                    itemData.meterPosition = meterPosition
+                onTypeChangeRequested: function(type) {
+                    itemData.meterType = type
                 }
             }
         }
