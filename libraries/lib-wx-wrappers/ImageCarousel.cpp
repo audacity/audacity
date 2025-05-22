@@ -13,6 +13,7 @@ ImageCarousel::ImageCarousel(wxWindow* parent, const std::vector<CarouselSnapsho
     : m_snapshots(snapshots), m_id(winid), wxPanel(parent, winid, pos, size) {
    SetBackgroundStyle(wxBG_STYLE_PAINT);
    SetBackgroundColour(theTheme.Colour(clrMedium));
+   SetWindowStyleFlag(GetWindowStyleFlag() | wxTAB_TRAVERSAL);
 
    gPrefs->Read(wxT("/GUI/IntroOrderStart"), &m_currentIndex, 0);
    m_currentIndex = m_currentIndex % m_snapshots.size();
@@ -20,7 +21,6 @@ ImageCarousel::ImageCarousel(wxWindow* parent, const std::vector<CarouselSnapsho
    gPrefs->Write(wxT("/GUI/IntroOrderStart"), nextLaunchIndex);
        
    m_btnLeft = new ArrowButton(this, ArrowDirection::Left);
-   m_btnRight = new ArrowButton(this, ArrowDirection::Right);
 #if defined (__WXOSX__) || defined(__WXMSW__)
    m_btnMiddle = new GradientButton(this, m_id,
       m_snapshots[m_currentIndex].buttonText.Translation(), wxDefaultPosition, wxDefaultSize);
@@ -28,6 +28,7 @@ ImageCarousel::ImageCarousel(wxWindow* parent, const std::vector<CarouselSnapsho
    m_btnMiddle = new wxButton(this, m_id,
       m_snapshots[m_currentIndex].buttonText.Translation(), wxDefaultPosition, wxDefaultSize);
 #endif
+   m_btnRight = new ArrowButton(this, ArrowDirection::Right);
 
    m_btnLeft->SetClickHandler([this] { OnLeftClicked(); });
    m_btnRight->SetClickHandler([this] { OnRightClicked(); });
