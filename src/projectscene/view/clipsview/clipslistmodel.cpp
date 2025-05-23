@@ -748,7 +748,7 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     bool clipsMovedToOtherTrack = false;
     MoveOffset moveOffset = calculateMoveOffset(item, key, completed);
     if (vs->moveInitiated()) {
-        clipsMovedToOtherTrack = trackeditInteraction()->moveClips(moveOffset.timeOffset, moveOffset.trackOffset, completed);
+        trackeditInteraction()->moveClips(moveOffset.timeOffset, moveOffset.trackOffset, completed, clipsMovedToOtherTrack);
     }
 
     if ((completed && m_autoScrollConnection)) {

@@ -136,12 +136,13 @@ bool TrackeditInteraction::removeTracksData(const TrackIdList& tracksIds, secs_t
     return withPlaybackStop(&ITrackeditInteraction::removeTracksData, tracksIds, begin, end, moveClips);
 }
 
-bool TrackeditInteraction::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed)
+bool TrackeditInteraction::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, bool& clipsMovedToOtherTrack)
 {
     return withPlaybackStop(&ITrackeditInteraction::moveClips,
                             timePositionOffset,
                             trackPositionOffset,
-                            completed);
+                            completed,
+                            clipsMovedToOtherTrack);
 }
 
 bool TrackeditInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)

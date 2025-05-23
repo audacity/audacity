@@ -13,6 +13,7 @@ static constexpr int TRACKEDIT_FIRST = 6000; // TODO This has to go in framework
 enum class Err {
     Undefined       = int(muse::Ret::Code::Undefined),
     NoError         = int(muse::Ret::Code::Ok),
+    Cancel          = int(muse::Ret::Code::Cancel),
     UnknownError    = TRACKEDIT_FIRST,
 
     WaveTrackNotFound,
@@ -31,6 +32,7 @@ inline muse::Ret make_ret(Err e)
     switch (e) {
     case Err::Undefined: return muse::Ret(retCode);
     case Err::NoError: return muse::Ret(retCode);
+    case Err::Cancel: return muse::Ret(retCode);
     case Err::UnknownError: return muse::Ret(retCode);
     case Err::WaveTrackNotFound: return muse::Ret(retCode);
     case Err::ClipNotFound: return muse::Ret(retCode);
