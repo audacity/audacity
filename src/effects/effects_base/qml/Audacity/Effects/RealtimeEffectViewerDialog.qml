@@ -16,14 +16,20 @@ EffectStyledDialogView {
     property string instanceId
     property alias effectState: viewerModel.effectState
 
-    property alias viewItem: viewLoader.item
-
     title: viewerModel.title + " - " + viewerModel.trackName
     navigationSection.name: title
 
-    contentWidth: viewItem ? Math.max(viewItem.implicitWidth, headerBar.width) : headerBar.width
-    contentHeight: 2 * 16 + headerBar.height + (viewItem ? viewItem.implicitHeight : 0)
+    implicitWidth: prv.viewItem ? Math.max(prv.viewItem.implicitWidth, headerBar.width) : headerBar.width
+    implicitHeight: 2 * prv.padding + headerBar.height + (prv.viewItem ? prv.viewItem.implicitHeight : 0)
+    minimumWidth: 270
+
     alwaysOnTop: true
+
+    QtObject {
+        id: prv
+        property int padding: viewerModel.isVst3() ? 4 : 16
+        property alias viewItem: viewLoader.item
+    }
 
     Component.onCompleted: {
         viewerModel.load()
@@ -42,7 +48,8 @@ EffectStyledDialogView {
         VstViewer {
             id: view
             instanceId: root.instanceId
-            y: 62
+            topPadding: headerBar.y + headerBar.height + prv.padding
+            minimumWidth: root.minimumWidth
         }
     }
 
@@ -50,9 +57,9 @@ EffectStyledDialogView {
         id: builtinViewerComponent
         Column {
             topPadding: 0
-            leftPadding: 16
-            rightPadding: 16
-            bottomPadding: 16
+            leftPadding: prv.padding
+            rightPadding: prv.padding
+            bottomPadding: prv.padding
 
             EffectsViewer {
                 id: view
@@ -63,12 +70,13 @@ EffectStyledDialogView {
 
     ColumnLayout {
         spacing: 0
+        anchors.fill: parent
 
         RowLayout {
             id: headerBar
 
             Layout.fillWidth: true
-            Layout.margins: 16
+            Layout.margins: prv.padding
             spacing: presetsBar.spacing
 
             BypassEffectButton {

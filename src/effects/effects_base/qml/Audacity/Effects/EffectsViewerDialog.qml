@@ -16,15 +16,20 @@ EffectStyledDialogView {
     property var instanceId
     property bool isVst: false
 
-    property alias viewer: viewerLoader.item
-    property bool isApplyAllowed: isVst || (viewer && viewer.isApplyAllowed)
+    QtObject {
+        id: prv
+        property alias viewer: viewerLoader.item
+        property bool isApplyAllowed: isVst || (viewer && viewer.isApplyAllowed)
+        property int separatorHeight: isVst ? 0 : separator.height + root.margins
+    }
 
-    title: viewer ? viewer.title : ""
+    title: prv.viewer ? prv.viewer.title : ""
 
-    contentWidth: Math.max(viewerLoader.width, 300)
-    contentHeight: presetsBar.height + separator.height + viewerLoader.height + btnBarLoader.height + margins * 3
+    minimumWidth: 250
+    implicitWidth: viewerLoader.width
+    implicitHeight: presetsBar.height + viewerLoader.height + btnBarLoader.height + margins * 2 + prv.separatorHeight
 
-    margins: 16
+    margins: isVst ? 4 : 16
 
     onWindowChanged: {
         // Wait until the window is set: VstView needs it for intialization
@@ -41,7 +46,7 @@ EffectStyledDialogView {
         id: column
         anchors.fill: parent
 
-        spacing: 16
+        spacing: root.margins
 
         EffectPresetsBar {
             id: presetsBar
@@ -54,6 +59,7 @@ EffectStyledDialogView {
 
         SeparatorLine {
             id: separator
+            visible: !isVst
         }
 
         Component {
@@ -68,8 +74,10 @@ EffectStyledDialogView {
             VstViewer {
                 instanceId: root.instanceId
                 height: implicitHeight
-                x: root.margins
-                y: root.margins * 3 + presetsBar.height + separator.height
+                topPadding: root.margins * 2 + presetsBar.height + prv.separatorHeight
+                bottomPadding: btnBarLoader.implicitHeight + 2 * root.margins
+                sidePadding: root.margins
+                minimumWidth: root.minimumWidth
             }
         }
 
@@ -83,6 +91,7 @@ EffectStyledDialogView {
                 id: bbox
 
                 width: root.contentWidth
+                spacing: root.margins
 
                 //! TODO Move function to ButtonBox (Muse framework)
                 function buttonById(id) {
@@ -103,8 +112,9 @@ EffectStyledDialogView {
                     buttonId: ButtonBoxModel.CustomButton + 2
                     isLeftSide: true
                     minWidth: 80
-                    onClicked: viewer.preview()
-                    enabled: root.isApplyAllowed
+                    onClicked: prv.viewer.preview()
+                    enabled: prv.isApplyAllowed
+                    height: presetsBar.height
                 }
 
                 FlatButton {
@@ -114,6 +124,7 @@ EffectStyledDialogView {
                     buttonId: ButtonBoxModel.Cancel
                     minWidth: 80
                     onClicked: root.reject()
+                    height: presetsBar.height
                 }
 
                 FlatButton {
@@ -124,7 +135,8 @@ EffectStyledDialogView {
                     minWidth: 80
                     accentButton: true
                     onClicked: root.accept()
-                    enabled: root.isApplyAllowed
+                    enabled: prv.isApplyAllowed
+                    height: presetsBar.height
                 }
             }
         }
