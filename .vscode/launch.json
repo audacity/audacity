@@ -4,7 +4,7 @@
             "name": "run audacity",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${config:cmake.installPrefix}/bin/audacity.exe",
+            "program": "${workspaceFolder}/build/Debug/install/bin/audacity.exe",
             "args": [
                 // Comment this out to run audacity in plugin registration mode
                 // "--register-audio-plugin", "C:/Program Files/Common Files/VST3/Your plugin.vst3"
@@ -26,6 +26,17 @@
             },
             "symbolSearchPath": "${env:QTDIR}/bin",
             "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis",
+        },
+        {
+            "name": "run audacity (Linux)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug/src/app/audacity",
+            "preLaunchTask": "CMake: build",
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build/Debug/src/app",
+            "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis",
+            "showDisplayString": true
         }
     ]
 }
