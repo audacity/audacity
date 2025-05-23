@@ -33,6 +33,10 @@ Rectangle {
 
     // in
     property alias instanceId: view.instanceId
+    property alias sidePadding: view.sidePadding
+    property alias topPadding: view.topPadding
+    property alias bottomPadding: view.bottomPadding
+    property alias minimumWidth: view.minimumWidth
 
     // out
     property alias title: view.title
@@ -82,7 +86,5 @@ Rectangle {
         id: view
         width: implicitWidth
         height: implicitHeight
-        x: root.x
-        y: root.y
     }
 }
