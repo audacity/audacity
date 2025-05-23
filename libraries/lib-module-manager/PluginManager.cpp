@@ -207,7 +207,7 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
                                         FilePaths & files,
                                         bool directories)
 {
-   
+
    wxLogNull nolog;
 
    // Why bother...
@@ -225,7 +225,7 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
       const wxFileName &ff = FileNames::PlugInDir();
       paths.push_back(ff.GetFullPath());
    }
- 
+
    // Add the "Audacity" plug-ins directory
    wxFileName ff = wxString { PlatformCompatibility::GetExecutablePath() };
 #if defined(__WXMAC__)
@@ -527,7 +527,7 @@ bool PluginManager::DropFile(const wxString &fileName)
          }
       }
    }
-   
+
    return false;
 }
 
@@ -1018,7 +1018,7 @@ const PluginID & PluginManager::RegisterPlugin(
    plug.SetEffectDefault(effect->IsDefault());
    plug.SetRealtimeSupport(effect->RealtimeSupport());
    plug.SetEffectAutomatable(effect->SupportsAutomation());
-   
+
    plug.SetEffectLegacy(true);
    plug.SetEnabled(true);
    plug.SetValid(true);
@@ -1067,7 +1067,8 @@ void PluginManager::Iterator::Advance(bool incrementing)
          continue;
       auto plugType = plug.GetPluginType();
       if ((mPluginType == PluginTypeNone || (plugType & mPluginType)) &&
-         (mEffectType == EffectTypeNone || plug.GetEffectType() == mEffectType)) {
+         (mEffectType == EffectTypeNone || plug.GetEffectType() == mEffectType) &&
+         (mFilter == nullptr || mFilter(plug))) {
          if (!all && (plugType & PluginTypeEffect)) {
             // This preference may be written by EffectsPrefs
             auto setting = mPm.GetPluginEnabledSetting( plug );
@@ -1083,7 +1084,7 @@ void PluginManager::Iterator::Advance(bool incrementing)
 PluginManager::Iterator::Iterator(PluginManager &manager)
 : mPm{ manager }
 , mIterator{ manager.mRegisteredPlugins.begin() }
-{   
+{
 }
 
 PluginManager::Iterator::Iterator(PluginManager &manager, int type)
@@ -1101,6 +1102,15 @@ PluginManager::Iterator::Iterator(PluginManager &manager, EffectType type)
 {
    Advance(false);
 }
+
+PluginManager::Iterator::Iterator(PluginManager &manager, PluginManager::Iterator::Filter filter)
+: mPm{ manager }
+, mIterator{ manager.mRegisteredPlugins.begin() }
+, mFilter{ filter }
+{
+   Advance(false);
+}
+
 
 auto PluginManager::Iterator::operator ++() -> Iterator &
 {
@@ -1178,7 +1188,7 @@ ComponentInterface *PluginManager::Load(const PluginID & ID)
       if(desc.GetPluginType() == PluginTypeModule)
          //it's very likely that this code path is not used
          return ModuleManager::Get().CreateProviderInstance(desc.GetID(), desc.GetPath());
-      
+
       if(auto provider = ModuleManager::Get().CreateProviderInstance(desc.GetProviderID(), wxEmptyString))
       {
          auto pluginInterface = provider->LoadPlugin(desc.GetPath());
@@ -1420,7 +1430,7 @@ bool PluginManager::HasGroup(const RegistryPath & groupName)
 
    if(!settings->HasGroup(groupName))
       return false;
-   
+
    auto group = settings->BeginGroup(groupName);
    return !settings->GetChildGroups().empty() || !settings->GetChildKeys().empty();
 }
@@ -1492,7 +1502,7 @@ RegistryPath PluginManager::SettingsPath(
       return {};
    else {
       const PluginDescriptor & plug = iter->second;
-      
+
       wxString id = GetPluginTypeString(plug.GetPluginType()) +
                     wxT("_") +
                     plug.GetEffectFamily() + // is empty for non-Effects
@@ -1511,7 +1521,7 @@ RegistryPath PluginManager::SettingsPath(
 
 /* Return value is a key for lookup in a config file */
 RegistryPath PluginManager::Group( ConfigurationType type,
-   const PluginID & ID, const RegistryPath & group) 
+   const PluginID & ID, const RegistryPath & group)
 {
    auto path = SettingsPath(type, ID);
 
