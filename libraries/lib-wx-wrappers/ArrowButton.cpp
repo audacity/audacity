@@ -55,14 +55,19 @@ void ArrowButton::OnPaint(wxPaintEvent&)
    wxPoint center = wxPoint(GetClientSize().GetWidth() / 2, GetClientSize().GetHeight() / 2);
    wxPoint points[3];
 
+#if defined(__WXOSX__) || defined(__WXMSW__)
+   int radius = 6;
+#else
+   int radius = FromDIP(6);
+#endif
    if (m_direction == ArrowDirection::Left) {
-      points[0] = { center.x + 6, center.y - 6 };
-      points[1] = { center.x - 6, center.y };
-      points[2] = { center.x + 6, center.y + 6 };
+      points[0] = { center.x + radius, center.y - radius };
+      points[1] = { center.x - radius, center.y };
+      points[2] = { center.x + radius, center.y + radius };
    } else {
-      points[0] = { center.x - 6, center.y - 6 };
-      points[1] = { center.x + 6, center.y };
-      points[2] = { center.x - 6, center.y + 6 };
+      points[0] = { center.x - radius, center.y - radius };
+      points[1] = { center.x + radius, center.y };
+      points[2] = { center.x - radius, center.y + radius };
    }
 
    dc.SetBrush(*wxBLACK_BRUSH);
