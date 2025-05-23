@@ -120,6 +120,23 @@ void ImageCarousel::UpdateButtons()
 #if defined(__WXMSW__) || defined(__WXOSX__)
    m_btnMiddle->SetFont(labelFont);
 #endif
+   
+   m_btnLeft->SetToolTip(_("Previous slide"));
+   m_btnRight->SetToolTip(_("Next slide"));
+   if (m_snapshots[m_currentIndex].imageText.empty()) {
+      m_btnMiddle->SetToolTip(wxString::Format(_("Slide %d of %d, %s. %s"),
+                                               m_currentIndex + 1,
+                                               static_cast<int>(m_snapshots.size()),
+                                               m_snapshots[m_currentIndex].title.Translation(),
+                                               translated));
+   } else {
+      m_btnMiddle->SetToolTip(wxString::Format(_("Slide %d of %d, %s, %s. %s"),
+                                               m_currentIndex + 1,
+                                               static_cast<int>(m_snapshots.size()),
+                                               m_snapshots[m_currentIndex].title.Translation(),
+                                               m_snapshots[m_currentIndex].imageText.Translation(),
+                                               translated));
+   }
   
    wxSize btnSize = m_btnMiddle->GetBestSize();
 #if defined(__WXMSW__)

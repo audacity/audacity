@@ -18,6 +18,7 @@ struct CarouselSnapshot {
    wxBitmap bitmap;
    const char* url;
    TranslatableString buttonText;
+   TranslatableString imageText;
 };
 
 class WX_WRAPPERS_API ImageCarousel : public wxPanel {

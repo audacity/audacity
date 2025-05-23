@@ -360,33 +360,38 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
       {  XXO("Complete your Audacity cloud setup with audio.com"),
          Rescale(LoadEmbeddedPNG(AudioDotComPromo_png, AudioDotComPromo_png_len), width, height),
          AudioComURL,
-         XXO("Continue")
+         XXO("Continue"),
+         XXO("")
       },
       {
          XXO("What's new in Audacity"),
          Rescale(LoadEmbeddedPNG(AudacityPromo_png, AudacityPromo_png_len), width, height),
          WhatsNewURL,
-         XXO("Watch the release video")
+         XXO("Watch the release video"),
+         XXO("")
       },
 #if defined (__WXOSX__) || defined(__WXMSW__)
       {
          XXO("Soap Voice Cleaner: studio-quality voice-over sound"),
          Rescale(LoadEmbeddedPNG(MuseHubPromo_png, MuseHubPromo_png_len), width, height),
          MuseHubURL,
-         XXO("Get it on MuseHub")
+         XXO("Get it on MuseHub"),
+         XXO("")
       },
 #endif
       {
          XXO("Help us decide the future of Audacity"),
          Rescale(LoadEmbeddedPNG(AudacityFeatureSurvey_png, AudacityFeatureSurvey_png_len), width, height),
          AudacitySurveyURL,
-         XXO("Take part in survey")
+         XXO("Take part in survey"),
+         XXO("Audacity feature survey")
       },
       {
          XXO("25th Anniversary Merchandise!"),
          Rescale(LoadEmbeddedPNG(AudacityMerchStore_png, AudacityMerchStore_png_len), width, height),
          AudacityMerchStoreURL,
-         XXO("Visit now")
+         XXO("Visit now"),
+         XXO("Visit our new Audacity merch store")
       }
    };
    
