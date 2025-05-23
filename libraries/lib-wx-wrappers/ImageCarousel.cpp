@@ -27,6 +27,8 @@ ImageCarousel::ImageCarousel(wxWindow* parent, const std::vector<CarouselSnapsho
 #else
    m_btnMiddle = new wxButton(this, m_id,
       m_snapshots[m_currentIndex].buttonText.Translation(), wxDefaultPosition, wxDefaultSize);
+   m_btnLeft->SetSize(FromDIP(wxSize(48, 48)));
+   m_btnRight->SetSize(FromDIP(wxSize(48, 48)));
 #endif
 
    m_btnLeft->SetClickHandler([this] { OnLeftClicked(); });
