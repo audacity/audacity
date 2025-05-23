@@ -12,7 +12,7 @@
 
 enum class ArrowDirection { Left, Right };
 
-class WX_WRAPPERS_API ArrowButton : public wxPanel {
+class WX_WRAPPERS_API ArrowButton : public wxButton {
 public:
    ArrowButton(wxWindow* parent, ArrowDirection direction);
 
@@ -20,7 +20,7 @@ public:
 
 private:
    void OnPaint(wxPaintEvent& event);
-   void OnMouseClick(wxMouseEvent& event);
+   void OnButtonClick(wxCommandEvent& event);
 
    ArrowDirection m_direction;
    std::function<void()> m_onClick;
