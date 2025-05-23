@@ -119,12 +119,15 @@ EffectsMenuGroups LoadEffectsMenuGroups(const wxString& path)
    return result;
 }
 
-// Some weird special case stuff just for Noise Reduction so that there is
-// more informative help
+// Some weird special case stuff
 CommandFlag FixBatchFlags(CommandFlag batchflags, const PluginDescriptor* plug)
 {
+   // For Noise Reduction so that there is more informative help
    if ( plug->GetSymbol().Msgid() == XO( "Noise Reduction" ) )
       return ( batchflags | NoiseReductionTimeSelectedFlag() ) & ~TimeSelectedFlag();
+   // For OpenVINO Music Generation so that it could be used when no audio is selected
+   if ( plug->GetSymbol().Msgid() == XO( "OpenVINO Music Generation" ) )
+      return AudioIONotBusyFlag();
    return batchflags;
 }
 
@@ -150,7 +153,7 @@ void AddEffectMenuItemGroup(
    }
 
    using namespace MenuRegistry;
-   
+
    for (int i = 0; i < namesCnt; i++)
    {
       // compare full translations not msgids!
@@ -266,7 +269,7 @@ auto MakeAddGroupItems(
          TranslatableStrings groupNames;
          PluginIDs groupPlugs;
          std::vector<CommandFlag> groupFlags;
-         
+
          auto srcNames = p.second;
          std::sort(srcNames.begin(), srcNames.end(), TranslationLess);
 
@@ -392,7 +395,7 @@ void AddGroupedEffectMenuItems(
             path[1] = vendorName;
          }
       }
-      
+
       group.push_back(plug->GetID());
       names.push_back(plug->GetSymbol().Msgid());
       flags.push_back(FixBatchFlags( batchflags, plug ) );
@@ -411,7 +414,7 @@ bool CompareEffectsByPublisher(
    const PluginDescriptor *a, const PluginDescriptor *b)
 {
    auto &em = EffectManager::Get();
-   
+
    auto akey = em.GetVendorName(a->GetID());
    auto bkey = em.GetVendorName(b->GetID());
 
@@ -571,7 +574,7 @@ void MenuHelper::PopulateEffectsMenu(
    PluginManager & pm = PluginManager::Get();
 
    std::vector<MenuSectionBuilder> sections;
-   
+
    auto MakeAddSortedItems = [=](SortBy sortby)
    {
       return [=](Group& items, std::vector<const PluginDescriptor*>& plugins)
@@ -588,7 +591,12 @@ void MenuHelper::PopulateEffectsMenu(
       };
    };
 
+
+   // Make sure all OpenVINO effects are groupped in the same menu under /Effects
+   auto EffectsFilter = [type](const auto& plug) { return (plug.GetVendor() == "OpenVINO AI Effects") ? (type == EffectTypeProcess) : (plug.GetEffectType() == type); };
+
    auto DefaultFilter = [](auto plug) { return IsEnabledPlugin(plug) && IsDefaultPlugin(plug); };
+
    if(groupby == "default")
    {
       if(type == EffectTypeProcess)
@@ -734,11 +742,11 @@ void MenuHelper::PopulateEffectsMenu(
             MakeAddSortedItems(SortBy::Name)
          });
    }
-   for(auto& plugin : pm.EffectsOfType(type))
+   for(auto& plugin : pm.Plugins(EffectsFilter))
    {
       if(pred && !pred(plugin))
          continue;
-      
+
       for(auto& section : sections)
       {
          if(section.filter(&plugin))

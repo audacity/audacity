@@ -129,6 +129,8 @@ public:
    //! @{
    class MODULE_MANAGER_API Iterator {
    public:
+      using Filter = std::function<bool(const PluginDescriptor&)>;
+
       //! Iterates all, even disabled
       explicit Iterator(PluginManager &manager);
       //! Iterates only enabled and matching plugins, with family enabled too if an effect
@@ -137,6 +139,8 @@ public:
       );
       //! Iterates only enabled and matching effects, with family enabled too
       Iterator(PluginManager &manager, EffectType type);
+      //! Iterates only enabled plugins matching the filter predicate
+      Iterator(PluginManager &manager, Filter filter);
       bool operator != (int) const {
          return mIterator != mPm.mRegisteredPlugins.end();
       }
@@ -146,6 +150,7 @@ public:
       void Advance(bool incrementing);
       const PluginManager &mPm;
       PluginMap::iterator mIterator;
+      Filter mFilter { nullptr };
       EffectType mEffectType{ EffectTypeNone };
       int mPluginType{ PluginTypeNone };
    };
@@ -158,6 +163,7 @@ public:
    Range AllPlugins() { return { Iterator{ *this } }; }
    Range PluginsOfType(int type) { return { Iterator{ *this, type } }; }
    Range EffectsOfType(EffectType type) { return { Iterator{ *this, type } }; }
+   Range Plugins(Iterator::Filter filter) { return { Iterator{ *this, filter } }; }
    //! @}
 
    bool IsPluginEnabled(const PluginID & ID);
