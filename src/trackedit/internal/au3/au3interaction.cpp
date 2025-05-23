@@ -896,8 +896,6 @@ bool Au3Interaction::changeTrackColor(const TrackId trackId, const std::string& 
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clips.get()));
     }
 
-    projectHistory()->pushHistoryState("Changed track color", "Changed track color");
-
     return true;
 }
 
