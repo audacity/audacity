@@ -6,8 +6,8 @@
     ],
     "settings": {
         "cmake.generator": "Ninja",
-        "cmake.buildDirectory": "${workspaceFolder}/build",
-        "cmake.installPrefix": "${workspaceFolder}/build/install",
+        "cmake.buildDirectory": "${workspaceFolder}/build/${buildType}",
+        "cmake.installPrefix": "${workspaceFolder}/build/${buildType}/install",
         "cmake.configureArgs": [
             // "-DAU_MODULE_EFFECTS_VST=ON"
         ],
