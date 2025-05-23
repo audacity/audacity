@@ -46,11 +46,13 @@ private:
    std::vector<CarouselSnapshot> m_snapshots;
    int m_currentIndex = 0;
    
+#if defined (__WXOSX__) || defined(__WXMSW__)
    ArrowButton* m_btnLeft;
    ArrowButton* m_btnRight;
-#if defined (__WXOSX__) || defined(__WXMSW__)
    GradientButton* m_btnMiddle;
 #else
+   wxButton* m_btnLeft;
+   wxButton* m_btnRight;
    wxButton* m_btnMiddle;
 #endif
    

@@ -72,11 +72,7 @@ const char* AudioComURL = "https://audio.com/audacity/auth/sign-in?mtm_campaign=
 const char* AudacitySurveyURL = "http://audacityteam.org/survey?utm_source=au-app-survey&utm_medium=survey&utm_campaign=au-app-welcome-au-app-survey-survey&utm_id=au-app-welcome";
 const char* AudacityMerchStoreURL = "https://audacity-shop.fourthwall.com/en-gbp/?utm_source=au-app-merch-store&utm_medium=merch-25y&utm_campaign=au-app-welcome-au-app-merch-store-merch-25y&utm_id=au-app-welcome";
 
-#if defined(__WXOSX__) || defined(__WXMSW__)
 constexpr auto WindowWidth = 812;
-#else
-constexpr auto WindowWidth = 550;
-#endif
 
 #if defined(__WXOSX__)
 // wxHTML renders text with smaller line spacing on macOS
@@ -84,7 +80,7 @@ constexpr auto WindowWidth = 550;
 #elif defined(__WXMSW__)
    constexpr auto WindowHeight = 656;
 #else
-   constexpr auto WindowHeight = 450;
+   constexpr auto WindowHeight = 640;
 #endif
 
 }
@@ -353,8 +349,8 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
    const int width = 572;
    const int height = 322;
 #else
-   const int width = 762;
-   const int height = 429;
+   const int width = FromDIP(572);
+   const int height = FromDIP(322);
 #endif
    std::vector<CarouselSnapshot> snapshots {
       {  XXO("Complete your Audacity cloud setup with audio.com"),

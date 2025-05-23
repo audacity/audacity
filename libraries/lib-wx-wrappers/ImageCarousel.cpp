@@ -20,18 +20,30 @@ ImageCarousel::ImageCarousel(wxWindow* parent, const std::vector<CarouselSnapsho
    int nextLaunchIndex = (m_currentIndex + 1) % m_snapshots.size();
    gPrefs->Write(wxT("/GUI/IntroOrderStart"), nextLaunchIndex);
        
-   m_btnLeft = new ArrowButton(this, ArrowDirection::Left);
+   
 #if defined (__WXOSX__) || defined(__WXMSW__)
+   m_btnLeft = new ArrowButton(this, ArrowDirection::Left);
    m_btnMiddle = new GradientButton(this, m_id,
       m_snapshots[m_currentIndex].buttonText.Translation(), wxDefaultPosition, wxDefaultSize);
+   m_btnRight = new ArrowButton(this, ArrowDirection::Right);
 #else
+   m_btnLeft = new wxButton(this, wxID_ANY, "<", wxDefaultPosition, FromDIP(wxSize(48, 48)));
    m_btnMiddle = new wxButton(this, m_id,
       m_snapshots[m_currentIndex].buttonText.Translation(), wxDefaultPosition, wxDefaultSize);
+   m_btnRight = new wxButton(this, wxID_ANY, ">", wxDefaultPosition, FromDIP(wxSize(48, 48)));
 #endif
-   m_btnRight = new ArrowButton(this, ArrowDirection::Right);
-
+   
+#if defined (__WXOSX__) || defined(__WXMSW__)
    m_btnLeft->SetClickHandler([this] { OnLeftClicked(); });
    m_btnRight->SetClickHandler([this] { OnRightClicked(); });
+#else
+   m_btnLeft->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+      OnLeftClicked();
+   });
+   m_btnRight->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+      OnRightClicked();
+   });
+#endif
    m_btnMiddle->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
       OpenURL();
    });
@@ -144,7 +156,12 @@ void ImageCarousel::UpdateButtons()
 #else
    m_btnMiddle->SetSize(wxSize(btnSize.GetWidth() + 30, btnSize.GetHeight() + 15));
 #endif
+
+#if defined(__WXMSW__) || defined(__WXOSX__)
    m_btnMiddle->SetPosition(wxPoint(x + bmp.GetWidth() / 2 - m_btnMiddle->GetSize().GetWidth() / 2 , y + bmp.GetHeight() + 22));
+#else
+   m_btnMiddle->SetPosition(wxPoint(x + bmp.GetWidth() / 2 - m_btnMiddle->GetSize().GetWidth() / 2 , y + bmp.GetHeight() + FromDIP(10)));
+#endif
 }
 
 void ImageCarousel::DrawDots(wxDC& dc, const wxSize& size)
@@ -155,7 +172,11 @@ void ImageCarousel::DrawDots(wxDC& dc, const wxSize& size)
 
    int totalWidth = numDots * (dotRadius * 2) + (numDots - 1) * spacing;
    int startX = (size.GetWidth() - totalWidth) / 2;
+#if defined(__WXMSW__) || defined(__WXOSX__)
    int y = size.GetHeight() - 38;
+#else
+   int y = m_btnMiddle->GetPosition().y + m_btnMiddle->GetSize().GetHeight() + FromDIP(5);
+#endif
 
    for (int i = 0; i < numDots; ++i)
    {
