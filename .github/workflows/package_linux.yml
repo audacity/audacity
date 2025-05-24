@@ -121,6 +121,9 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
   build_package:
     name: Build Package (${{ matrix.config.name }})
+    env:
+      CFLAGS: -std=gnu17
+      CXXFLAGS: -std=gnu++17
     strategy:
       fail-fast: false
       matrix:
