@@ -62,6 +62,10 @@ md5sums=(
 )
 
 build() {
+    # temporary force C++17, to avoid build errors with GCC 15.1
+    export CFLAGS+=" -std=gnu17"
+    export CXXFLAGS+=" -std=gnu++17"
+
     cmake_args=(
         -D CMAKE_BUILD_TYPE=Release
         -D CMAKE_INSTALL_PREFIX=/usr
@@ -69,6 +73,8 @@ build() {
         -D audacity_use_pch=no
         -D audacity_use_sbsms=local # sbsms is only available in AUR
         -D audacity_has_vst3=no
+        -D CMAKE_C_FLAGS="${CFLAGS}"
+        -D CMAKE_CXX_FLAGS="${CXXFLAGS}"
         #-D audacity_use_vst3sdk=system
     )
 
