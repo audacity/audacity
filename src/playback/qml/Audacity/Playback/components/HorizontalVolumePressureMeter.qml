@@ -105,7 +105,6 @@ Canvas {
         property real recentPeak: -60.0
         property var recentVolumePressure: []
 
-        //onMeterBackgroundColorChanged: { root.requestPaint() }
         onUnitTextColorChanged: { root.requestPaint() }
         onUnitTextFontChanged: { root.requestPaint() }
 
@@ -177,6 +176,14 @@ Canvas {
         }
     }
 
+    function reset() {
+        prv.maxPeak = -60
+        prv.recentPeak = -60
+        prv.recentVolumePressure = []
+        prv.updatedVolumePressure = -60
+
+        requestPaint()
+    }
 
     function drawBackground(ctx) {
         ctx.clearRect(0, 0, prv.indicatorWidth, prv.indicatorHeight)
