@@ -667,8 +667,7 @@ void ClipsListModel::startEditClip(const ClipKey& key)
 
     vs->setClipEditStartTimeOffset(mousePositionTime - item->clip().startTime);
     vs->setClipEditEndTimeOffset(item->clip().endTime - mousePositionTime);
-
-    updateClipsBoundaries();
+    vs->updateClipsBoundaries(true, key.key);
 }
 
 void ClipsListModel::endEditClip(const ClipKey& key)
@@ -686,34 +685,7 @@ void ClipsListModel::endEditClip(const ClipKey& key)
     vs->setClipEditStartTimeOffset(-1.0);
     vs->setClipEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
-    updateClipsBoundaries();
-}
-
-void ClipsListModel::updateClipsBoundaries()
-{
-    auto prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
-        return;
-    }
-
-    auto vs = globalContext()->currentProject()->viewState();
-    if (!vs) {
-        return;
-    }
-
-    std::set<secs_t> boundaries;
-    for (const auto& trackId : prj->trackIdList()) {
-        for (const auto& clip : prj->clipList(trackId)) {
-            if (muse::contains(selectionController()->selectedClips(), clip.key)) {
-                continue;
-            }
-
-            boundaries.insert(trackeditInteraction()->clipStartTime(clip.key));
-            boundaries.insert(trackeditInteraction()->clipEndTime(clip.key));
-        }
-    }
-
-    vs->setClipsBoundaries(boundaries);
+    vs->updateClipsBoundaries(true);
 }
 
 /*!
