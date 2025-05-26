@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.3\n"
+"Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-13 10:52+0300\n"
+"POT-Creation-Date: 2025-05-26 19:42+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Tadahisa Sugisaki, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/audacity/teams/164520/ja/)\n"
@@ -2066,6 +2066,11 @@ msgstr "SubRip テキストファイル"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "WebVTT ファイル"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "Supported label file"
+msgstr "エクスポートラベル形式:"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4618,6 +4623,26 @@ msgstr "既存のファイルを選択してください。"
 #: libraries/lib-wx-wrappers/FileDialog/mac/FileDialogPrivate.mm
 msgid "File type:"
 msgstr "ファイルの種類:"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Previous slide"
+msgstr "前のクリップ(&U)"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Next slide"
+msgstr "次のクリップ(&E)"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy, c-format
+msgid "Slide %d of %d, %s. %s"
+msgstr "%1$s、%3$d個中%2$d個目のクリップ、%4$s"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s, %s. %s"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7446,6 +7471,11 @@ msgid "Enter token to link your account"
 msgstr "アカウントとリンクするためのトークンを入力"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#, fuzzy
+msgid "Sign-in and get the token"
+msgstr "サインインしてクラウドに保存"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
 msgstr "トークン"
 
@@ -7525,7 +7555,7 @@ msgstr "アカウントを作成しますか?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: src/AudioPasteDialog.cpp src/WhatsNewDialog.cpp
 msgid "Continue"
 msgstr "続ける"
 
@@ -7830,7 +7860,7 @@ msgstr "MuseHub.com に接続できません。接続を確認してやり直し
 msgid "Try again"
 msgstr "再試行"
 
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
 msgstr "MuseHub から入手"
 
@@ -11632,12 +11662,47 @@ msgid "Welcome to Audacity!"
 msgstr "Audacity へようこそ!"
 
 #: src/WhatsNewDialog.cpp
+msgid "Complete your Audacity cloud setup with audio.com"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "What's new in Audacity"
+msgstr "Audacity %s の更新内容"
+
+#: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
 msgstr "リリース動画を見る"
 
 #: src/WhatsNewDialog.cpp
-msgid "Available on MuseHub"
-msgstr "MuseHub から入手できます"
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Help us decide the future of Audacity"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Take part in survey"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Audacity feature survey"
+msgstr "Audacity 起動エラー"
+
+#: src/WhatsNewDialog.cpp
+msgid "25th Anniversary Merchandise!"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit now"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Visit our new Audacity merch store"
+msgstr "これは Audacity プロジェクトファイルではありません"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11647,8 +11712,9 @@ msgstr "チュートリアルを表示"
 msgid "Visit our forum"
 msgstr "フォーラムにアクセス"
 
-#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "&Don't show this again at start up"
 msgstr "次回からは起動時に表示しない"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
@@ -15645,6 +15711,10 @@ msgstr "ラベルで結合"
 #: src/menus/LabelMenus.cpp
 msgid "&Label Track"
 msgstr "ラベルトラック(&L)"
+
+#: src/menus/MenuHelper.cpp
+msgid "OpenVINO Music Generation"
+msgstr ""
 
 #: src/menus/MenuHelper.cpp
 msgid "..."
@@ -19842,6 +19912,10 @@ msgid "Update Audacity"
 msgstr "Audacity を更新"
 
 #: src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "次回からは起動時に表示しない"
+
+#: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr "スキップ(&S)"
@@ -21685,3 +21759,6 @@ msgstr "スペクトルツール"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "レガシー"
+
+#~ msgid "Available on MuseHub"
+#~ msgstr "MuseHub から入手できます"

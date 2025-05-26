@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.3\n"
+"Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-13 10:52+0300\n"
+"POT-Creation-Date: 2025-05-26 19:42+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Heino Keränen, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/audacity/teams/164520/fi/)\n"
@@ -2066,6 +2066,11 @@ msgstr "SubRip-tekstitiedosto"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "WebVTT -tiedosto"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "Supported label file"
+msgstr "Vietyjen merkkien tyyli:"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4631,6 +4636,26 @@ msgstr "Valitse olemassa oleva tiedosto."
 #: libraries/lib-wx-wrappers/FileDialog/mac/FileDialogPrivate.mm
 msgid "File type:"
 msgstr "Tiedostotyyppi:"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Previous slide"
+msgstr "Edellin&en leike"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Next slide"
+msgstr "Seuraava leike"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy, c-format
+msgid "Slide %d of %d, %s. %s"
+msgstr "%s, %d / %d leike %s"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s, %s. %s"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7452,6 +7477,11 @@ msgid "Enter token to link your account"
 msgstr "Liitä tilisi antamalla tunnus"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#, fuzzy
+msgid "Sign-in and get the token"
+msgstr "Kirjaudu sisään tallentaaksesi pilveen"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
 msgstr "Tunnus"
 
@@ -7531,7 +7561,7 @@ msgstr "Tarvitsetko tilin?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: src/AudioPasteDialog.cpp src/WhatsNewDialog.cpp
 msgid "Continue"
 msgstr "Jatka"
 
@@ -7838,7 +7868,7 @@ msgstr "Audacity ei voi muodostaa yhteyttä MuseHub.com-sivustoon. Tarkista yhte
 msgid "Try again"
 msgstr "Yritä uudelleen"
 
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
 msgstr "Hanki se MuseHubista"
 
@@ -11634,12 +11664,47 @@ msgid "Welcome to Audacity!"
 msgstr "Tervetuloa käyttämään Audacityä!"
 
 #: src/WhatsNewDialog.cpp
+msgid "Complete your Audacity cloud setup with audio.com"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "What's new in Audacity"
+msgstr "Mitä uutta Audacityssä %s"
+
+#: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
 msgstr "Katso julkaisuvideo"
 
 #: src/WhatsNewDialog.cpp
-msgid "Available on MuseHub"
-msgstr "Saatavilla MuseHubista"
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Help us decide the future of Audacity"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Take part in survey"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Audacity feature survey"
+msgstr "Audacity-käynnistysvirhe"
+
+#: src/WhatsNewDialog.cpp
+msgid "25th Anniversary Merchandise!"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit now"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Visit our new Audacity merch store"
+msgstr "Tämä ei ole Audacity-projektitiedosto"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11649,8 +11714,9 @@ msgstr "Näytä opetusohjelmia"
 msgid "Visit our forum"
 msgstr "Käy osoitteessa"
 
-#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "&Don't show this again at start up"
 msgstr "Älä näytä tätä käynnistyksessä"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
@@ -15633,6 +15699,10 @@ msgstr "Liitä yhteen merkillä"
 #: src/menus/LabelMenus.cpp
 msgid "&Label Track"
 msgstr "&Merkkiraita"
+
+#: src/menus/MenuHelper.cpp
+msgid "OpenVINO Music Generation"
+msgstr ""
 
 #: src/menus/MenuHelper.cpp
 msgid "..."
@@ -19829,6 +19899,10 @@ msgid "Update Audacity"
 msgstr "Päivitä Audacity"
 
 #: src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "Älä näytä tätä käynnistyksessä"
+
+#: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr "&Ohita"
@@ -21670,3 +21744,6 @@ msgstr "Spektrityökalut"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Perinteinen"
+
+#~ msgid "Available on MuseHub"
+#~ msgstr "Saatavilla MuseHubista"

@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.3\n"
+"Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-13 10:52+0300\n"
+"POT-Creation-Date: 2025-05-26 19:42+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Mihai Vasiliu <mihai.vasiliu.93@gmail.com>, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/audacity/teams/164520/ro/)\n"
@@ -2066,6 +2066,11 @@ msgstr "Fișier text SubRip"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "FIșier WebVTT"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "Supported label file"
+msgstr "Stil etichetă exportată:"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4633,6 +4638,26 @@ msgstr "Te rog alege un fișier existent."
 #: libraries/lib-wx-wrappers/FileDialog/mac/FileDialogPrivate.mm
 msgid "File type:"
 msgstr "Tip fișier:"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Previous slide"
+msgstr "Clipul p&recedent"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Next slide"
+msgstr "Clipul ur&mător"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy, c-format
+msgid "Slide %d of %d, %s. %s"
+msgstr "%s, %d din %d clip %s"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s, %s. %s"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7454,6 +7479,11 @@ msgid "Enter token to link your account"
 msgstr "Introdu jetonul pentru a-ți asocia contul"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#, fuzzy
+msgid "Sign-in and get the token"
+msgstr "Conectează-te pentru a salva în Cloud"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
 msgstr "Jeton"
 
@@ -7533,7 +7563,7 @@ msgstr "Ai nevoie de un cont? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: src/AudioPasteDialog.cpp src/WhatsNewDialog.cpp
 msgid "Continue"
 msgstr "Continuă"
 
@@ -7842,7 +7872,7 @@ msgstr "Audacity nu se poate conecta la MuseHub.com. Te rog verifică conexiunea
 msgid "Try again"
 msgstr "Încearcă din nou"
 
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
 msgstr "Obține-l pe MuseHub"
 
@@ -11641,12 +11671,47 @@ msgid "Welcome to Audacity!"
 msgstr "Bun venit la Audacity!"
 
 #: src/WhatsNewDialog.cpp
+msgid "Complete your Audacity cloud setup with audio.com"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "What's new in Audacity"
+msgstr "Ce este nou în Audacity %s"
+
+#: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
 msgstr "Urmărește videoul de lansare"
 
 #: src/WhatsNewDialog.cpp
-msgid "Available on MuseHub"
-msgstr "Disponibil pe MuseHub"
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Help us decide the future of Audacity"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Take part in survey"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Audacity feature survey"
+msgstr "Eroare la pornirea Audacity"
+
+#: src/WhatsNewDialog.cpp
+msgid "25th Anniversary Merchandise!"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit now"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Visit our new Audacity merch store"
+msgstr "Acesta nu este un fișier de proiect Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11656,8 +11721,9 @@ msgstr "Vezi tutorialele"
 msgid "Visit our forum"
 msgstr "Vizitează forumul nostru"
 
-#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "&Don't show this again at start up"
 msgstr "Nu mai arăta din nou la pornire"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
@@ -15643,6 +15709,10 @@ msgstr "Unire etichete"
 #: src/menus/LabelMenus.cpp
 msgid "&Label Track"
 msgstr "Pistă de etic&hete"
+
+#: src/menus/MenuHelper.cpp
+msgid "OpenVINO Music Generation"
+msgstr ""
 
 #: src/menus/MenuHelper.cpp
 msgid "..."
@@ -19844,6 +19914,10 @@ msgid "Update Audacity"
 msgstr "Actualizează Audacity"
 
 #: src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "Nu mai arăta din nou la pornire"
+
+#: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr "&Omite"
@@ -21686,3 +21760,6 @@ msgstr "Unelte spectrale"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Învechite"
+
+#~ msgid "Available on MuseHub"
+#~ msgstr "Disponibil pe MuseHub"

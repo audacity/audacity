@@ -9,9 +9,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.3\n"
+"Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-13 10:52+0300\n"
+"POT-Creation-Date: 2025-05-26 19:42+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Link Winterberg, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/audacity/teams/164520/da/)\n"
@@ -2065,6 +2065,11 @@ msgstr "SubRip-tekstfil"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "WebVTT-fil"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "Supported label file"
+msgstr "Eksporteret etiketstil:"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4628,6 +4633,26 @@ msgstr "Vælg venligst en eksisterende fil."
 #: libraries/lib-wx-wrappers/FileDialog/mac/FileDialogPrivate.mm
 msgid "File type:"
 msgstr "Filtype:"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Previous slide"
+msgstr "&Forrige klip"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Next slide"
+msgstr "&Næste klip"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy, c-format
+msgid "Slide %d of %d, %s. %s"
+msgstr "%s, %d af %d klip %s"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s, %s. %s"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7449,6 +7474,11 @@ msgid "Enter token to link your account"
 msgstr "Indsæt godkendelseskoden for at koble din konto til"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#, fuzzy
+msgid "Sign-in and get the token"
+msgstr "Log ind for at gemme på netdrevet"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
 msgstr "Godkendelseskode"
 
@@ -7528,7 +7558,7 @@ msgstr "Har du brug for en konto?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: src/AudioPasteDialog.cpp src/WhatsNewDialog.cpp
 msgid "Continue"
 msgstr "Fortsæt"
 
@@ -7835,7 +7865,7 @@ msgstr "Audacity kunne ikke få forbindelse til MuseHub.com. Kontrollér din for
 msgid "Try again"
 msgstr "Forsøg igen"
 
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
 msgstr "Hent det på MuseHub"
 
@@ -11626,12 +11656,47 @@ msgid "Welcome to Audacity!"
 msgstr "Velkommen til Audacity!"
 
 #: src/WhatsNewDialog.cpp
+msgid "Complete your Audacity cloud setup with audio.com"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "What's new in Audacity"
+msgstr "Nyt i Audacity %s"
+
+#: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
 msgstr "Se video om den nye udgave"
 
 #: src/WhatsNewDialog.cpp
-msgid "Available on MuseHub"
-msgstr "Tilgængelig på MuseHub"
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Help us decide the future of Audacity"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Take part in survey"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Audacity feature survey"
+msgstr "Mislykket opstart af Audacity"
+
+#: src/WhatsNewDialog.cpp
+msgid "25th Anniversary Merchandise!"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit now"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Visit our new Audacity merch store"
+msgstr "Dette er ikke en Audacity-projektfil"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11641,8 +11706,9 @@ msgstr "Se vejledninger"
 msgid "Visit our forum"
 msgstr "Besøg vores forum"
 
-#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "&Don't show this again at start up"
 msgstr "Vis ikke igen ved opstart"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
@@ -15625,6 +15691,10 @@ msgstr "Etiket sammenføj"
 #: src/menus/LabelMenus.cpp
 msgid "&Label Track"
 msgstr "&Etiketspor"
+
+#: src/menus/MenuHelper.cpp
+msgid "OpenVINO Music Generation"
+msgstr ""
 
 #: src/menus/MenuHelper.cpp
 msgid "..."
@@ -19825,6 +19895,10 @@ msgid "Update Audacity"
 msgstr "Opdatér Audacity"
 
 #: src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "Vis ikke igen ved opstart"
+
+#: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr "&Spring over"
@@ -21666,3 +21740,6 @@ msgstr "Spektrogramværktøjer"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Klassisk"
+
+#~ msgid "Available on MuseHub"
+#~ msgstr "Tilgængelig på MuseHub"

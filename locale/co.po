@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.3\n"
+"Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-13 10:52+0300\n"
+"POT-Creation-Date: 2025-05-26 19:42+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2025\n"
 "Language-Team: Corsican (https://app.transifex.com/audacity/teams/164520/co/)\n"
@@ -2065,6 +2065,11 @@ msgstr "Schedariu di testu SubRip"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "Schedariu WebVTT"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "Supported label file"
+msgstr "Stilu d’etichette espurtate :"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4631,6 +4636,26 @@ msgstr "Ci vole à sceglie un schedariu chì esiste."
 #: libraries/lib-wx-wrappers/FileDialog/mac/FileDialogPrivate.mm
 msgid "File type:"
 msgstr "Tipu di schedariu :"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Previous slide"
+msgstr "Pezzu &precedente"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Next slide"
+msgstr "Pezzu &seguente"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy, c-format
+msgid "Slide %d of %d, %s. %s"
+msgstr "%s, %d nant’à %d pezzu %s"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s, %s. %s"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7452,6 +7477,11 @@ msgid "Enter token to link your account"
 msgstr "Stampittà u gettone per ligà u vostru contu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#, fuzzy
+msgid "Sign-in and get the token"
+msgstr "Cunnittitevi per arregistrà in u nivulu"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
 msgstr "Gettone"
 
@@ -7531,7 +7561,7 @@ msgstr "Bisognu d’un contu ? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: src/AudioPasteDialog.cpp src/WhatsNewDialog.cpp
 msgid "Continue"
 msgstr "Cuntinuà"
 
@@ -7838,7 +7868,7 @@ msgstr "Audacity ùn riesce micca à cunnettesi à MuseHub.com. Ci vole à verif
 msgid "Try again"
 msgstr "Pruvà torna"
 
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
 msgstr "Truvatelu nant’à MuseHub"
 
@@ -11631,12 +11661,47 @@ msgid "Welcome to Audacity!"
 msgstr "Benvenuti in Audacity !"
 
 #: src/WhatsNewDialog.cpp
+msgid "Complete your Audacity cloud setup with audio.com"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "What's new in Audacity"
+msgstr "Ciò chì hè novu in Audacity %s"
+
+#: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
 msgstr "Fighjà u filmettu di a versione"
 
 #: src/WhatsNewDialog.cpp
-msgid "Available on MuseHub"
-msgstr "Dispunibule nant’à MuseHub"
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Help us decide the future of Audacity"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Take part in survey"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Audacity feature survey"
+msgstr "Fiascu à l’avviu d’Audacity"
+
+#: src/WhatsNewDialog.cpp
+msgid "25th Anniversary Merchandise!"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit now"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Visit our new Audacity merch store"
+msgstr "Què ùn hè micca un schedariu di prughjettu Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11646,8 +11711,9 @@ msgstr "Fighjate e furmazioni autonome"
 msgid "Visit our forum"
 msgstr "Visitate u nostru foru"
 
-#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "&Don't show this again at start up"
 msgstr "Ùn affissà più stu messaghju à u lanciu"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
@@ -15630,6 +15696,10 @@ msgstr "Etichetta Unisce"
 #: src/menus/LabelMenus.cpp
 msgid "&Label Track"
 msgstr "Traccia d’&etichetta"
+
+#: src/menus/MenuHelper.cpp
+msgid "OpenVINO Music Generation"
+msgstr ""
 
 #: src/menus/MenuHelper.cpp
 msgid "..."
@@ -19829,6 +19899,10 @@ msgid "Update Audacity"
 msgstr "Mette à livellu Audacity"
 
 #: src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "Ùn affissà più stu messaghju à u lanciu"
+
+#: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr "&Tralascià"
@@ -21670,3 +21744,6 @@ msgstr "Attrezzi spettrali"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Classicu"
+
+#~ msgid "Available on MuseHub"
+#~ msgstr "Dispunibule nant’à MuseHub"
