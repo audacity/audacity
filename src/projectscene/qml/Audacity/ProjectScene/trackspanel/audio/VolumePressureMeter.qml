@@ -15,13 +15,12 @@ Canvas {
     property real currentRMS: -60.0
     property real minDisplayedVolumePressure: -60.0
     property real maxDisplayedVolumePressure: 0.0
-    property bool isPlaying: false
-    property bool isRecording: false
 
     property int meterStyle: PlaybackMeterStyle.Default
 
     property real indicatorWidth
     property bool showRuler: false
+    property bool showClippedInfo: true
 
     property int recentPeakIntervalMiliseconds: 600
 
@@ -85,6 +84,14 @@ Canvas {
         // value ranges
         readonly property int fullValueRangeLength: root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure
         readonly property real heightPerUnit: (prv.indicatorHeight - prv.overloadHeight) / fullValueRangeLength
+
+        readonly property color unitTextColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.8)
+        readonly property string unitTextFont: {
+            var pxSize = String('8px')
+            var family = String('\'' + ui.theme.bodyFont.family + '\'')
+
+            return pxSize + ' ' + family
+        }
 
         property bool needsClear: false
 
@@ -223,10 +230,12 @@ Canvas {
         prv.maxPeak = -60
         prv.recentPeak = -60
         prv.recentVolumePressure = []
-        prv.updatedVolumePressure = -60
 
+        requestPaint()
+    }
+
+    function resetClipped() {
         prv.clipped = false
-
         requestPaint()
     }
 
@@ -329,7 +338,11 @@ Canvas {
         }
 
         drawBackground(ctx)
-        drawClippedIndicator(ctx)
+
+        if (root.showClippedInfo) {
+            drawClippedIndicator(ctx)
+        }
+
         if (prv.needsClear) {
             // Just don´t draw anything else
             prv.needsClear = false
@@ -358,30 +371,6 @@ Canvas {
     }
 
     onMeterStyleChanged: {
-        requestPaint()
-    }
-
-    onIsPlayingChanged: {
-        if (root.isPlaying) {
-            prv.clipped = false
-        }
-        else {
-            prv.needsClear = true
-            prv.recentVolumePressure = []
-            prv.recentPeak = -60
-            prv.maxPeak = -60
-        }
-        requestPaint()
-    }
-
-    onIsRecordingChanged: {
-        if (root.isRecording) {
-            prv.clipped = false
-            prv.needsClear = true
-            prv.recentVolumePressure = []
-            prv.recentPeak = -60
-            prv.maxPeak = -60
-        }
         requestPaint()
     }
 

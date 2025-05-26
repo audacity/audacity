@@ -77,6 +77,23 @@ ListItemBlank {
     TracksViewStateModel {
         id: trackViewState
         trackId: root.item ? root.item.trackId : -1
+
+        onIsPlayingChanged: {
+            if (trackViewState.isPlaying) {
+                leftOrMonoVolumePressureMeter.resetClipped()
+                rightVolumePressureMeter.resetClipped()
+            }
+        }
+
+        onIsRecordingChanged: {
+            if (trackViewState.isRecording) {
+                leftOrMonoVolumePressureMeter.resetClipped()
+                rightVolumePressureMeter.resetClipped()
+            }
+
+            leftOrMonoVolumePressureMeter.reset()
+            rightVolumePressureMeter.reset()
+        }
     }
 
     TrackContextMenuModel {
@@ -254,7 +271,9 @@ ListItemBlank {
                 id: volumePressureTapHandler
                 onTapped: {
                     rightVolumePressureMeter.reset()
+                    rightVolumePressureMeter.resetClipped()
                     leftOrMonoVolumePressureMeter.reset()
+                    leftOrMonoVolumePressureMeter.resetClipped()
                 }
             }
 
@@ -267,9 +286,6 @@ ListItemBlank {
 
                 currentVolumePressure: root.item.leftChannelPressure
                 currentRMS: root.item.leftChannelRMS
-
-                isPlaying: trackViewState.isPlaying
-                isRecording: trackViewState.isRecording
             }
 
             VolumePressureMeter {
@@ -282,9 +298,6 @@ ListItemBlank {
 
                 currentVolumePressure: root.item.rightChannelPressure
                 currentRMS: root.item.rightChannelRMS
-
-                isPlaying: trackViewState.isPlaying
-                isRecording: trackViewState.isRecording
             }
 
             states: [

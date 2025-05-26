@@ -179,7 +179,8 @@ StyledPopupView {
                                 RoundedRadioButton {
                                     id: meterTypeDbLog
 
-                                    checked: true
+                                    //TODO: enable when dB log is implemented
+                                    enabled: false
                                     text: qsTr("Logarithmic (dB)")
 
                                     onToggled: {
@@ -190,6 +191,7 @@ StyledPopupView {
                                 RoundedRadioButton {
                                     id: meterTypeDbLinear
 
+                                    checked: true
                                     text: qsTr("Linear (dB)")
 
                                     onToggled: {
@@ -200,6 +202,8 @@ StyledPopupView {
                                 RoundedRadioButton {
                                     id: meterTypeLinear
 
+                                    //TODO: enable when linear is implemented
+                                    enabled: false
                                     text: qsTr("Linear (amp)")
 
                                     onToggled: {

@@ -79,6 +79,8 @@ Item {
             VolumePressureMeter {
                 id: leftVolumePressure
 
+                showClippedInfo: false
+
                 currentVolumePressure: root.leftChannelPressure
                 currentRMS: root.leftChannelRMS
 
@@ -90,6 +92,8 @@ Item {
 
             VolumePressureMeter {
                 id: rightVolumePressure
+
+                showClippedInfo: false
 
                 currentVolumePressure: root.rightChannelPressure
                 currentRMS: root.rightChannelRMS
