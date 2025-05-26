@@ -119,8 +119,21 @@ DockPage {
     PlaybackMeterModel {
         id: playbackMeterModel
 
-        onMeterPositionChanged: {
+        function handlePanel() {
+            if (!playbackMeterModel.visible) {
+                playbackMeterPanel.close()
+                return;
+            }
+
             playbackMeterModel.meterPosition === PlaybackMeterPosition.SideBar ? playbackMeterPanel.open() : playbackMeterPanel.close()
+        }
+
+        onMeterPositionChanged: {
+            handlePanel()
+        }
+
+        onVisibleChanged: {
+            handlePanel()
         }
     }
 

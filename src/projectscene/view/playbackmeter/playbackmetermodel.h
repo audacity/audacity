@@ -9,6 +9,7 @@
 #include "playback/iplaybackconfiguration.h"
 #include "playback/playbacktypes.h"
 #include "playback/iaudiooutput.h"
+#include "ui/iuiconfiguration.h"
 
 namespace au::projectscene {
 class PlaybackMeterModel : public QObject, public muse::async::Asyncable
@@ -17,6 +18,7 @@ class PlaybackMeterModel : public QObject, public muse::async::Asyncable
 
     muse::Inject<au::playback::IPlayback> playback;
     muse::Inject<au::playback::IPlaybackConfiguration> configuration;
+    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float leftChannelRMS READ leftChannelRMS NOTIFY leftChannelRMSChanged)
@@ -28,6 +30,7 @@ class PlaybackMeterModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(playback::PlaybackMeterType::MeterType meterType READ meterType WRITE setMeterType NOTIFY meterTypeChanged FINAL)
     Q_PROPERTY(
         playback::PlaybackMeterPosition::MeterPosition meterPosition READ meterPosition WRITE setMeterPosition NOTIFY meterPositionChanged FINAL)
+    Q_PROPERTY(bool visible READ visible NOTIFY visibleChanged FINAL)
 
 public:
     explicit PlaybackMeterModel(QObject* parent = nullptr);
@@ -41,6 +44,8 @@ public:
     playback::PlaybackMeterStyle::MeterStyle meterStyle() const;
     playback::PlaybackMeterType::MeterType meterType() const;
     playback::PlaybackMeterPosition::MeterPosition meterPosition() const;
+
+    bool visible() const;
 
 public slots:
     void setLeftChannelPressure(float leftChannelPressure);
@@ -64,6 +69,7 @@ signals:
     void meterTypeChanged();
     void meterPositionChanged();
 
+    void visibleChanged();
 private:
     void setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue);
     void setAudioChannelRMS(const audio::audioch_t chNum, const float newValue);
@@ -78,5 +84,7 @@ private:
     playback::PlaybackMeterStyle::MeterStyle m_meterStyle = playback::PlaybackMeterStyle::MeterStyle::Default;
     playback::PlaybackMeterType::MeterType m_meterType = playback::PlaybackMeterType::MeterType::DbLog;
     playback::PlaybackMeterPosition::MeterPosition m_meterPosition = playback::PlaybackMeterPosition::MeterPosition::TopBar;
+
+    bool m_visible = true;
 };
 }

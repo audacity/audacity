@@ -1,8 +1,12 @@
 #include "playbackmetermodel.h"
 
 #include "playback/playbacktypes.h"
+#include "projectscene/internal/projectsceneuiactions.h"
 
 using namespace au::projectscene;
+
+static const QString TOOLBAR_NAME("playbackToolBar");
+static const muse::actions::ActionCode PLAYBACK_LEVEL_CODE("playback-level");
 
 PlaybackMeterModel::PlaybackMeterModel(QObject* parent)
     : QObject(parent)
@@ -24,6 +28,23 @@ PlaybackMeterModel::PlaybackMeterModel(QObject* parent)
 
     configuration()->playbackMeterTypeChanged().onNotify(this, [this]() {
         emit meterTypeChanged();
+    });
+
+    uiConfiguration()->toolConfigChanged(TOOLBAR_NAME).onNotify(this, [this]() {
+        muse::ui::ToolConfig playbackConfig
+            = uiConfiguration()->toolConfig(TOOLBAR_NAME, ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+
+        const auto it = std::find_if(playbackConfig.items.begin(), playbackConfig.items.end(),
+                                     [](const muse::ui::ToolConfig::Item& item) {
+            return item.action == PLAYBACK_LEVEL_CODE;
+        });
+
+        if (it != playbackConfig.items.end()) {
+            if ((*it).show != visible()) {
+                m_visible = (*it).show;
+                visibleChanged();
+            }
+        }
     });
 
     resetAudioChannelsVolumePressure();
@@ -150,4 +171,9 @@ void PlaybackMeterModel::setMeterPosition(playback::PlaybackMeterPosition::Meter
 au::playback::PlaybackMeterPosition::MeterPosition PlaybackMeterModel::meterPosition() const
 {
     return configuration()->playbackMeterPosition();
+}
+
+bool PlaybackMeterModel::visible() const
+{
+    return m_visible;
 }
