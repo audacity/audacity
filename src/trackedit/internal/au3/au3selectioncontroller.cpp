@@ -54,6 +54,11 @@ void Au3SelectionController::init()
             restorer.selectionSetter = [this](const ClipAndTimeSelection& selection) {
                 restoreSelection(selection);
             };
+
+            auto vs = globalContext()->currentProject()->viewState();
+            if (vs) {
+                vs->updateClipsBoundaries(false);
+            }
         } else {
             m_tracksSubc.Reset();
         }

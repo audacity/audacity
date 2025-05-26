@@ -65,20 +65,7 @@ void SelectionViewController::onPressed(double x, double y)
         selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), false);
     }
 
-    auto prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
-        return;
-    }
-
-    std::set<secs_t> boundaries;
-    for (const auto& trackId : prj->trackIdList()) {
-        for (const auto& clip : prj->clipList(trackId)) {
-            boundaries.insert(trackeditInteraction()->clipStartTime(clip.key));
-            boundaries.insert(trackeditInteraction()->clipEndTime(clip.key));
-        }
-    }
-
-    viewState()->setClipsBoundaries(boundaries);
+    viewState()->updateClipsBoundaries(true);
 
     m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this](){
         onPositionChanged(m_lastPoint.x(), m_lastPoint.y());

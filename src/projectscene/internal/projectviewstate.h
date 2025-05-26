@@ -3,13 +3,16 @@
 */
 #pragma once
 
-#include "../iprojectviewstate.h"
+#include "async/asyncable.h"
+
+#include "modularity/ioc.h"
+#include "context/iglobalcontext.h"
+#include "trackedit/iselectioncontroller.h"
 #include "../iprojectsceneconfiguration.h"
 
-#include "context/iglobalcontext.h"
-#include "modularity/ioc.h"
-#include "async/asyncable.h"
 #include "au3wrap/iau3project.h"
+
+#include "../iprojectviewstate.h"
 
 namespace au::projectscene {
 class ProjectViewState : public QObject, public IProjectViewState, public muse::async::Asyncable
@@ -18,6 +21,7 @@ class ProjectViewState : public QObject, public IProjectViewState, public muse::
 
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<IProjectSceneConfiguration> configuration;
+    muse::Inject<trackedit::ISelectionController> selectionController;
 
 public:
     ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project);
@@ -65,6 +69,7 @@ public:
 
     void setClipsBoundaries(const std::set<muse::secs_t>& boundaries) override;
     std::set<muse::secs_t> clipsBoundaries() const override;
+    void updateClipsBoundaries(bool excludeCurrentSelection, const trackedit::ClipKey& clipKeyToOmit = trackedit::ClipKey {}) override;
 
     void setZoomState(const ZoomState& state) override;
     ZoomState zoomState() const override;

@@ -298,6 +298,32 @@ std::set<muse::secs_t> ProjectViewState::clipsBoundaries() const
     return m_clipsBoundaries;
 }
 
+void ProjectViewState::updateClipsBoundaries(bool excludeCurrentSelection, const trackedit::ClipKey& keyToOmit)
+{
+    auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    std::set<muse::secs_t> boundaries;
+    for (const auto& trackId : prj->trackIdList()) {
+        for (const auto& clip : prj->clipList(trackId)) {
+            if (excludeCurrentSelection && muse::contains(selectionController()->selectedClips(), clip.key)) {
+                continue;
+            }
+
+            if (keyToOmit.isValid() && clip.key == keyToOmit) {
+                continue;
+            }
+
+            boundaries.insert(clip.startTime);
+            boundaries.insert(clip.endTime);
+        }
+    }
+
+    setClipsBoundaries(boundaries);
+}
+
 void ProjectViewState::setZoomState(const ZoomState& state)
 {
     au::au3::Au3Project* project = reinterpret_cast<au::au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
