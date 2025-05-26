@@ -38,6 +38,7 @@ static const ActionCode REWIND_START_ACTION_CODE("rewind-start");
 static const ActionCode REWIND_END_ACTION_CODE("rewind-end");
 static const ActionCode LOOP_ACTION_CODE("loop");
 
+static const ActionCode PLAYBACK_LEVEL_CODE("playback-level");
 static const ActionCode PLAYBACK_LEVEL("playback-level");
 static const ActionCode PLAYBACK_TIME("playback-time");
 static const ActionCode PLAYBACK_BPM("playback-bpm");
@@ -85,6 +86,10 @@ void PlaybackToolBarModel::load()
         reload();
 
         emit isEnabledChanged();
+    });
+
+    configuration()->playbackMeterPositionChanged().onNotify(this, [this]() {
+        reload();
     });
 
     updateActions();
@@ -241,6 +246,13 @@ void PlaybackToolBarModel::updateActions()
     for (const muse::ui::ToolConfig::Item& citem : playbackConfig.items) {
         if (!citem.show) {
             continue;
+        }
+
+        if (citem.action == PLAYBACK_LEVEL_CODE) {
+            if (configuration()->playbackMeterPosition() == playback::PlaybackMeterPosition::MeterPosition::SideBar) {
+                // Skip playback meter item if it is set to be displayed in the sidebar
+                continue;
+            }
         }
 
         if (citem.action == AbstractToolBarModel::SEPARATOR_ID) {

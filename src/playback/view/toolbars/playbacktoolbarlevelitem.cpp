@@ -217,7 +217,6 @@ void PlaybackToolBarLevelItem::setMeterStyle(PlaybackMeterStyle::MeterStyle styl
     }
 
     configuration()->setPlaybackMeterStyle(style);
-    emit meterStyleChanged();
 }
 
 PlaybackMeterStyle::MeterStyle PlaybackToolBarLevelItem::meterStyle() const
@@ -232,7 +231,6 @@ void PlaybackToolBarLevelItem::setMeterType(PlaybackMeterType::MeterType type)
     }
 
     configuration()->setPlaybackMeterType(type);
-    emit meterTypeChanged();
 }
 
 PlaybackMeterType::MeterType PlaybackToolBarLevelItem::meterType() const
@@ -247,7 +245,6 @@ void PlaybackToolBarLevelItem::setMeterPosition(PlaybackMeterPosition::MeterPosi
     }
 
     configuration()->setPlaybackMeterPosition(position);
-    emit meterPositionChanged();
 }
 
 PlaybackMeterPosition::MeterPosition PlaybackToolBarLevelItem::meterPosition() const
