@@ -68,8 +68,8 @@ static PreferencesResetHandler::Registration<ModuleSettingsResetHandler> preserv
 
 static const std::unordered_set<wxString> &autoEnabledModules()
 {
-   // Add names to this list, of modules that are expected to ship
-   // with Audacity and enable automatically.
+   // Add names to this list, of modules that are expected to ship with Audacity
+   // or widely used third-party modules to enable automatically.
    static std::unordered_set<wxString> modules{
       "mod-ogg",
       "mod-flac",
@@ -86,6 +86,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
       "mod-midi-import-export",
       "mod-cloud-audiocom",
       "mod-musehub-ui",
+      "mod-openvino",
    };
    return modules;
 }
