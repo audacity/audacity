@@ -265,7 +265,6 @@ void GetEffectsDialog::AddEffectsPage(const std::string& group, const std::vecto
    page->Create(m_treebook, wxID_ANY);
 
    page->SetScrollRate(0, 20);
-   page->SetBackgroundColour(theTheme.Colour(clrMedium));
 
    wxGridSizer* grid = safenew wxGridSizer(2, 16, 40);
 
@@ -273,7 +272,6 @@ void GetEffectsDialog::AddEffectsPage(const std::string& group, const std::vecto
       wxPanel* itemPanel = safenew wxPanel(page);
       itemPanel->SetMinSize({effectPanelWidth, effectPanelHeight});
       itemPanel->SetMaxSize({effectPanelWidth, effectPanelHeight});
-      itemPanel->SetBackgroundColour(theTheme.Colour(clrMedium));
 
       wxImage img(effectIconWidth, effectIconHeight);
       auto fillCol = theTheme.Colour(clrDark);
@@ -287,7 +285,6 @@ void GetEffectsDialog::AddEffectsPage(const std::string& group, const std::vecto
       FetchImage(bitmap, elem.iconUrl);
 
       wxPanel* textPanel = safenew wxPanel(itemPanel);
-      textPanel->SetBackgroundColour(theTheme.Colour(clrMedium));
 
       wxStaticText* title = safenew wxStaticText(textPanel, wxID_ANY, elem.title);
       wxFont titleFont = title->GetFont().MakeBold().MakeLarger();

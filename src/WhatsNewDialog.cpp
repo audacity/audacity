@@ -319,8 +319,6 @@ WhatsNewDialog::WhatsNewDialog(wxWindow* parent, wxWindowID id)
 {
 
    SetSize(FromDIP(wxSize(WindowWidth, WindowHeight)));
-   SetBackgroundColour(theTheme.Colour(clrDark));
-   
 
    SetName();
    ShuttleGui S( this, eIsCreating );
@@ -390,7 +388,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
          XXO("Visit our new Audacity merch store")
       }
    };
-   
+
    S.StartVerticalLay(wxEXPAND);
    {
       S.StartHorizontalLay(wxEXPAND);
@@ -438,7 +436,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
          .AddWindow(forumLink);
    }
    S.EndHorizontalLay();
-   
+
    const auto bottomLine = safenew wxWindow(S.GetParent(), wxID_ANY);
    bottomLine->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
    bottomLine->SetSize(-1, 1);
@@ -498,7 +496,7 @@ wxBitmap WhatsNewDialog::Rescale(const wxBitmap& bmp, int width, int height)
 {
    wxImage img = bmp.ConvertToImage();
    img.Rescale(width, height, wxIMAGE_QUALITY_HIGH);
-   
+
    return wxBitmap(img);
 }
 

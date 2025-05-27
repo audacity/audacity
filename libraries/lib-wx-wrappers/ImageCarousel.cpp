@@ -19,8 +19,8 @@ ImageCarousel::ImageCarousel(wxWindow* parent, const std::vector<CarouselSnapsho
    m_currentIndex = m_currentIndex % m_snapshots.size();
    int nextLaunchIndex = (m_currentIndex + 1) % m_snapshots.size();
    gPrefs->Write(wxT("/GUI/IntroOrderStart"), nextLaunchIndex);
-       
-   
+
+
 #if defined (__WXOSX__) || defined(__WXMSW__)
    m_btnLeft = new ArrowButton(this, ArrowDirection::Left);
    m_btnMiddle = new GradientButton(this, m_id,
@@ -32,7 +32,7 @@ ImageCarousel::ImageCarousel(wxWindow* parent, const std::vector<CarouselSnapsho
       m_snapshots[m_currentIndex].buttonText.Translation(), wxDefaultPosition, wxDefaultSize);
    m_btnRight = new wxButton(this, wxID_ANY, ">", wxDefaultPosition, FromDIP(wxSize(48, 48)));
 #endif
-   
+
 #if defined (__WXOSX__) || defined(__WXMSW__)
    m_btnLeft->SetClickHandler([this] { OnLeftClicked(); });
    m_btnRight->SetClickHandler([this] { OnRightClicked(); });
@@ -47,7 +47,7 @@ ImageCarousel::ImageCarousel(wxWindow* parent, const std::vector<CarouselSnapsho
    m_btnMiddle->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
       OpenURL();
    });
-       
+
    Bind(wxEVT_PAINT, &ImageCarousel::OnPaint, this);
    Bind(wxEVT_LEFT_DOWN, &ImageCarousel::OnMouseClick, this);
    Bind(wxEVT_SIZE, &ImageCarousel::OnResize, this);
@@ -69,9 +69,9 @@ void ImageCarousel::OnPaint(wxPaintEvent& event) {
    }
 
    wxSize size = GetClientSize();
-   
+
    DrawTitle(dc, size);
-   
+
    wxBitmap& bmp = m_snapshots[m_currentIndex].bitmap;
    // center image
    int x = (size.GetWidth() - bmp.GetWidth()) / 2;
@@ -89,7 +89,7 @@ void ImageCarousel::OnResize(wxSizeEvent& event) {
    if (!m_snapshots.empty()) {
       UpdateButtons();
    }
-   
+
    event.Skip();
 }
 
@@ -102,12 +102,12 @@ void ImageCarousel::DrawTitle(wxDC& dc, const wxSize& size) {
    wxFont titleFont(14, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 #endif
    dc.SetFont(titleFont);
-   
+
    wxSize textSize = dc.GetTextExtent(m_snapshots[m_currentIndex].title.Translation());
    int textX = (size.GetWidth() - textSize.GetWidth()) / 2;
    int textY = 25;
 
-   dc.SetBrush(wxBrush(wxColour(56, 56, 74)));
+   dc.SetTextForeground(theTheme.Colour(clrTrackPanelText));
    dc.DrawText(m_snapshots[m_currentIndex].title.Translation(), textX, textY);
 }
 
@@ -117,10 +117,10 @@ void ImageCarousel::UpdateButtons()
    const wxBitmap& bmp = m_snapshots[m_currentIndex].bitmap;
    int x = (clientSize.GetWidth() - bmp.GetWidth()) / 2;
    int y = (clientSize.GetHeight() - bmp.GetHeight()) / 2 - 20;
-   
+
    m_btnLeft->SetPosition(wxPoint(x - m_btnLeft->GetSize().GetWidth() - 36, y + bmp.GetHeight() / 2 - 24));
    m_btnRight->SetPosition(wxPoint(x + bmp.GetWidth() + 36, y + bmp.GetHeight() / 2 - 24));
-  
+
    const auto translated = m_snapshots[m_currentIndex].buttonText.Translation();
    m_btnMiddle->SetLabel(translated);
 #if defined(__WXMSW__)
@@ -128,11 +128,11 @@ void ImageCarousel::UpdateButtons()
 #elif defined(__WXOSX__)
    wxFont labelFont(14, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 #endif
-   
+
 #if defined(__WXMSW__) || defined(__WXOSX__)
    m_btnMiddle->SetFont(labelFont);
 #endif
-   
+
    m_btnLeft->SetToolTip(_("Previous slide"));
    m_btnRight->SetToolTip(_("Next slide"));
    if (m_snapshots[m_currentIndex].imageText.empty()) {
@@ -149,7 +149,7 @@ void ImageCarousel::UpdateButtons()
                                                m_snapshots[m_currentIndex].imageText.Translation(),
                                                translated));
    }
-  
+
    wxSize btnSize = m_btnMiddle->GetBestSize();
 #if defined(__WXMSW__)
    m_btnMiddle->SetSize(wxSize(btnSize.GetWidth() + 30, btnSize.GetHeight() + 20));
@@ -223,7 +223,7 @@ void ImageCarousel::OpenURL()
    if (m_snapshots.empty()) {
       return;
    }
-   
+
    const wxString& url = m_snapshots[m_currentIndex].url;
    wxLaunchDefaultBrowser(url);
 }
