@@ -42,7 +42,7 @@ public:
     FilePath InstallPath() override;
 
     void AutoRegisterPlugins(PluginManagerInterface& pm) override;
-    PluginPaths FindModulePaths(PluginManagerInterface& pm) override;
+    PluginPaths FindModulePaths(PluginManagerInterface& pm) const override;
     unsigned DiscoverPluginsAtPath(
         const PluginPath& path, TranslatableString& errMsg, const RegistrationCallback& callback)
     override;

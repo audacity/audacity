@@ -140,7 +140,7 @@ void VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface&)
 {
 }
 
-PluginPaths VSTEffectsModule::FindModulePaths(PluginManagerInterface& pm)
+PluginPaths VSTEffectsModule::FindModulePaths(PluginManagerInterface& pm) const
 {
     FilePaths pathList;
     FilePaths files;
@@ -155,7 +155,7 @@ PluginPaths VSTEffectsModule::FindModulePaths(PluginManagerInterface& pm)
         }
     }
 
-    const auto AddCustomPaths = [](PluginManagerInterface& pm, VSTEffectsModule& module, FilePaths& pathList)
+    const auto AddCustomPaths = [](PluginManagerInterface& pm, const VSTEffectsModule& module, FilePaths& pathList)
     {
         const auto customPaths = pm.ReadCustomPaths(module);
         std::copy(customPaths.begin(), customPaths.end(), std::back_inserter(pathList));

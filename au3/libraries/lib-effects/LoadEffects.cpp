@@ -165,7 +165,7 @@ void BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface& pm)
     }
 }
 
-PluginPaths BuiltinEffectsModule::FindModulePaths(PluginManagerInterface&)
+PluginPaths BuiltinEffectsModule::FindModulePaths(PluginManagerInterface&) const
 {
     // Not really libraries
     PluginPaths names;
