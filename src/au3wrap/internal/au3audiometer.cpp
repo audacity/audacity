@@ -10,7 +10,7 @@
 #include "libraries/lib-utility/MemoryX.h"
 
 namespace {
-std::tuple<float, float> GetAbsValue(const float* buffer, size_t frames, size_t step)
+IMeterSender::Sample GetAbsValue(const float* buffer, size_t frames, size_t step)
 {
     auto sptr = buffer;
     float peak = 0.0f;
@@ -24,7 +24,7 @@ std::tuple<float, float> GetAbsValue(const float* buffer, size_t frames, size_t 
 
     rms = std::sqrt(rms / static_cast<float>(frames));
 
-    return { std::min(peak, 1.0f), std::min(rms, 1.0f) };
+    return IMeterSender::Sample{ std::min(peak, 1.0f), std::min(rms, 1.0f) };
 }
 }
 
@@ -45,16 +45,17 @@ Meter::Meter()
 
 void Meter::push(uint8_t channel, const IMeterSender::InterleavedSampleData& sampleData, int64_t key)
 {
-    auto value = GetAbsValue(sampleData.buffer, sampleData.frames, sampleData.nChannels);
+    const auto value = GetAbsValue(sampleData.buffer, sampleData.frames, sampleData.nChannels);
     push(channel, value, key);
 }
 
-void Meter::push(uint8_t channel, std::tuple<float, float> value, int64_t key)
+void Meter::push(uint8_t channel, const IMeterSender::Sample& sample, int64_t key)
 {
-    const auto [peak, rms] = value;
     m_trackData.push_back(Data { key, channel,
-                                 au::audio::AudioSignalVal { peak, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak)) },
-                                 au::audio::AudioSignalVal { rms, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(rms)) } });
+                                 au::audio::AudioSignalVal { sample.peak, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(
+                                                                                                                    sample.peak)) },
+                                 au::audio::AudioSignalVal { sample.rms,
+                                                             static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(sample.rms)) } });
 }
 
 void Meter::reset()

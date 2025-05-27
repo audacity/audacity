@@ -3,7 +3,6 @@ ProjectToolBar 1.0 toolbars/ProjectToolBar.qml
 UndoRedoToolBar 1.0 toolbars/UndoRedoToolBar.qml
 PlaybackToolBar 1.0 toolbars/PlaybackToolBar.qml
 WorkspacesToolBar 1.0 toolbars/WorkspacesToolBar.qml
-PlaybackMeterPanel 1.0 trackspanel/PlaybackMeterPanel.qml
 RealtimeEffectListItem 1.0 trackspanel/RealtimeEffectListItem.qml
 RealtimeEffectListItemButtonBackground 1.0 trackspanel/RealtimeEffectListItemButtonBackground.qml
 TracksPanel 1.0 trackspanel/TracksPanel.qml
@@ -16,3 +15,4 @@ TracksPositionController 1.0 common/TracksPositionController.qml
 SelectionStatus 1.0 statusbar/SelectionStatus.qml
 Snap 1.0 toolbars/Snap.qml
 HistoryPanel 1.0 historypanel/HistoryPanel.qml
+VolumePressureMeter 1.0 trackspanel/audio/VolumePressureMeter.qml

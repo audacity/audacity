@@ -13,6 +13,8 @@
 #include "context/iglobalcontext.h"
 #include "iappshellconfiguration.h"
 #include "dockwindow/idockwindowprovider.h"
+#include "ui/iuiconfiguration.h"
+#include "playback/iplaybackconfiguration.h"
 
 //! TODO AU4
 // #include "braille/ibrailleconfiguration.h"
@@ -26,6 +28,8 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<muse::dock::IDockWindowProvider> dockWindowProvider;
     muse::Inject<IAppShellConfiguration> configuration;
+    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
 
 //! TODO AU4
 //    INJECT(braille::IBrailleConfiguration, brailleConfiguration)
@@ -33,11 +37,14 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     Q_PROPERTY(bool isNavigatorVisible READ isNavigatorVisible NOTIFY isNavigatorVisibleChanged)
     Q_PROPERTY(bool isBraillePanelVisible READ isBraillePanelVisible NOTIFY isBraillePanelVisibleChanged)
 
+    Q_PROPERTY(bool isPlaybackMeterPanelVisible READ isPlaybackMeterPanelVisible NOTIFY isPlaybackMeterPanelVisibleChanged FINAL)
+
 public:
     explicit ProjectPageModel(QObject* parent = nullptr);
 
     bool isNavigatorVisible() const;
     bool isBraillePanelVisible() const;
+    bool isPlaybackMeterPanelVisible() const;
 
     Q_INVOKABLE void init();
 
@@ -64,6 +71,7 @@ public:
 signals:
     void isNavigatorVisibleChanged();
     void isBraillePanelVisibleChanged();
+    void isPlaybackMeterPanelVisibleChanged();
 
 private:
     void onNotationChanged();
@@ -71,6 +79,9 @@ private:
     void toggleDock(const QString& name);
 
     void updateDrumsetPanelVisibility();
+    void updatePlaybackMeterVisibility();
+
+    bool m_playbackMeterVisible = false;
 };
 }
 

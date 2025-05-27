@@ -105,9 +105,5 @@ private:
     float m_rightChannelRMS = -60.0;
     float m_rightRecentPeak = -60.0;
     float m_rightMaxPeak = -60.0;
-
-    PlaybackMeterStyle::MeterStyle m_meterStyle = PlaybackMeterStyle::MeterStyle::Default;
-    PlaybackMeterType::MeterType m_meterType = PlaybackMeterType::MeterType::DbLog;
-    PlaybackMeterPosition::MeterPosition m_meterPosition = PlaybackMeterPosition::MeterPosition::TopBar;
 };
 }
