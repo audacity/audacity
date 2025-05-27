@@ -53,7 +53,11 @@ TimelineContext::TimelineContext(QObject* parent)
 void TimelineContext::init(double frameWidth)
 {
     auto vs = this->viewState();
-    ZoomState zoomState = vs->zoomState();
+    ZoomState zoomState;
+
+    if (vs) {
+        zoomState = vs->zoomState();
+    }
 
     if (!muse::RealIsEqual(zoomState.zoom, 0.0)) {
         m_zoom = zoomState.zoom;
