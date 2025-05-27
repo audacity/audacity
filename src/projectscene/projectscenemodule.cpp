@@ -64,7 +64,7 @@
 
 #include "view/historypanel/historypanelmodel.h"
 
-#include "view/playbackmeter/playbackmetermodel.h"
+#include "view/playbackmeter/playbackmeterpanelmodel.h"
 
 using namespace au::projectscene;
 using namespace muse::modularity;
@@ -181,7 +181,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<HistoryPanelModel>("Audacity.ProjectScene", 1, 0, "HistoryPanelModel");
 
     //playback meter
-    qmlRegisterType<PlaybackMeterModel>("Audacity.ProjectScene", 1, 0, "PlaybackMeterModel");
+    qmlRegisterType<PlaybackMeterPanelModel>("Audacity.ProjectScene", 1, 0, "PlaybackMeterPanelModel");
 }
 
 void ProjectSceneModule::onInit(const muse::IApplication::RunMode& mode)

@@ -1,0 +1,118 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
+
+import Muse.Ui
+import Muse.UiComponents
+
+import Audacity.ProjectScene 1.0
+import Audacity.Playback 1.0
+
+Item {
+    id: root
+
+    PlaybackMeterPanelModel {
+        id: model
+    }
+
+    ColumnLayout {
+        anchors.fill: parent
+
+        FlatButton {
+            id: meterOptionsBtn
+
+            Layout.preferredWidth: parent.width
+            Layout.preferredHeight: 40
+
+            icon: IconCode.AUDIO
+
+            onClicked: {
+                popup.toggleOpened()
+            }
+
+            PlaybackMeterCustomisePopup {
+                id: popup
+
+                meterStyle: model.meterStyle
+                meterType: model.meterType
+                meterPosition: model.meterPosition
+
+                onPositionChangeRequested: function (position) {
+                    model.positionChangeRequested(position)
+                }
+
+                onStyleChangeRequested: function (style) {
+                    model.styleChangeRequested(style)
+                }
+
+                onTypeChangeRequested: function (type) {
+                    model.typeChangeRequested(type)
+                }
+            }
+        }
+
+        Item {
+            Layout.fillHeight: true
+            Layout.preferredWidth: root.width
+
+            Row {
+                id: meterChannelRow
+                topPadding: volumeSlider.handleHeight /  2
+
+                spacing: 2
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+
+                VolumePressureMeter {
+                    id: leftVolumePressure
+
+                    showClippedInfo: false
+
+                    currentVolumePressure: model.leftChannelPressure
+                    currentRMS: model.leftChannelRMS
+
+                    meterStyle: model.meterStyle
+
+                    height: parent.height - volumeSlider.handleHeight / 2
+                    indicatorWidth: 6
+                }
+
+                VolumePressureMeter {
+                    id: rightVolumePressure
+
+                    showClippedInfo: false
+
+                    currentVolumePressure: model.rightChannelPressure
+                    currentRMS: model.rightChannelRMS
+
+                    meterStyle: model.meterStyle
+
+                    height: parent.height - volumeSlider.handleHeight / 2
+                    indicatorWidth: 6
+                    showRuler: true
+                }
+            }
+
+
+            VerticalVolumeSlider {
+                id: volumeSlider
+
+                orientation: Qt.Vertical
+
+                volumeLevel: model.level
+
+                anchors.left: parent.left
+                anchors.leftMargin: 3
+
+                onVolumeLevelMoved: function(level) {
+                    model.volumeLevelChangeRequested(level)
+                }
+            }
+        }
+    }
+}

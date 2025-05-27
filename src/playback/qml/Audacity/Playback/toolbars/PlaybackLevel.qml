@@ -9,8 +9,6 @@ import Muse.Ui 1.0
 
 import Audacity.Playback 1.0
 
-import "../components"
-
 Item {
     id: root
 
@@ -45,7 +43,7 @@ Item {
             accentButton: popup.isOpened
 
             onClicked: {
-                popup.isOpened ? popup.close() : popup.open()
+                popup.toggleOpened()
             }
 
             PlaybackMeterCustomisePopup {
@@ -67,7 +65,6 @@ Item {
                     root.typeChangeRequested(type)
                 }
             }
-   
         }
 
         Item {
