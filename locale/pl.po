@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-05-26 19:42+0300\n"
-"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"PO-Revision-Date: 2025-05-28 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
 "Language: pl\n"
@@ -2067,9 +2067,8 @@ msgid "WebVTT file"
 msgstr "Plik WebVTT"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "Wyeksportowany styl etykiety:"
+msgstr "Obsługiwany plik etykiety"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -3108,7 +3107,7 @@ msgstr "Ścieżka odtwarzana"
 
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Multi-track"
-msgstr "Multiścieżka"
+msgstr "Wielościeżka"
 
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Simple"
@@ -4639,24 +4638,22 @@ msgid "File type:"
 msgstr "Typ pliku:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "P&oprzednie przycięcie"
+msgstr "Poprzedni slajd"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "Następn&e przycięcie"
+msgstr "Następny slajd"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "%s, %d z %d klip %s"
+msgstr "Slajd %d z %d, %s. %s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr ""
+msgstr "Slajd %d z %d, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -5173,7 +5170,7 @@ msgstr "FFmpeg : BŁĄD - Nie można przydzielić bajtów dla bufora próbek."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not setup audio frame"
-msgstr "FFmpeg : BŁĄD - Nie można skonfigurować ramki dźwięku."
+msgstr "FFmpeg : BŁĄD - Nie można ustawić ramki dźwięku."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - encoding frame failed"
@@ -7478,9 +7475,8 @@ msgid "Enter token to link your account"
 msgstr "Wprowadź token, aby połączyć swoje konto"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
 msgid "Sign-in and get the token"
-msgstr "Zaloguj się, aby zapisać w chmurze"
+msgstr "Zaloguj się i uzyskaj token"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -8097,7 +8093,7 @@ msgstr "O %s"
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
 msgid "translator_credits"
-msgstr "Polskie tłumaczenie Audacity: Grzegorz „Gootector” Pruchniakowski."
+msgstr "Polskie tłumaczenie Audacity: Grzegorz Pruchniakowski."
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -11669,12 +11665,11 @@ msgstr "Witaj w Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
+msgstr "Wypełnij ustawienia chmury Audacity za pomocą Audio.com"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "What's new in Audacity"
-msgstr "Co nowego w Audacity %s"
+msgstr "Co nowego w Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11682,33 +11677,31 @@ msgstr "Obejrzyj wideo o wydaniu"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner: dźwięk wokalu o jakości studyjnej"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Pomóż nam zdecydować o przyszłości Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Weź udział w badaniu"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "Błąd uruchamiania Audacity"
+msgstr "Badanie funkcji Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
-msgstr ""
+msgstr "25-lecie marki!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit now"
-msgstr ""
+msgstr "Odwiedź teraz"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our new Audacity merch store"
-msgstr "To nie jest plik projektu Audacity"
+msgstr "Odwiedź nasz nowy sklep Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11719,9 +11712,8 @@ msgid "Visit our forum"
 msgstr "Odwiedź nasze forum"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "Nie pokazuj ponownie tego przy starcie"
+msgstr "Ni&e pokazuj ponownie tego przy starcie"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -15712,7 +15704,7 @@ msgstr "&Etykieta ścieżki"
 
 #: src/menus/MenuHelper.cpp
 msgid "OpenVINO Music Generation"
-msgstr ""
+msgstr "OpenVINO Music Generation"
 
 #: src/menus/MenuHelper.cpp
 msgid "..."
@@ -15778,13 +15770,13 @@ msgstr "Przełącz się mię&dzy skupionymi ścieżkami"
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "A journal will be recorded after Audacity restarts."
-msgstr "Dziennik zostanie nagrany po ponownym uruchomieniu Audacity."
+msgstr "Dziennik zostanie nagrany po zrestartowaniu Audacity."
 
 #. i18n-hint a "journal" is a text file that records
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "No journal will be recorded after Audacity restarts."
-msgstr "Żaden dziennik nie zostanie nagrany po ponownym uruchomieniu Audacity."
+msgstr "Żaden dziennik nie zostanie nagrany po zrestartowaniu Audacity."
 
 #: src/menus/PluginMenus.cpp
 msgid "Plugin Manager"
@@ -17062,7 +17054,7 @@ msgstr "Katalog %s nie jest przeznaczony do zapisu"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
-msgstr "Zmiana katalogu tymczasowego będzie nieaktywna aż do ponownego uruchomienia Audacity"
+msgstr "Zmiana katalogu tymczasowego będzie nieaktywna aż do zrestartowania Audacity"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
@@ -17589,7 +17581,7 @@ msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when restarting Audacity.\n"
-msgstr "Zmiany w tych ustawieniach zaczną obowiązywać dopiero po ponownym uruchomieniu Audacity.\n"
+msgstr "Zmiany w tych ustawieniach zaczną obowiązywać dopiero po zrestartowaniu Audacity.\n"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Always ask"
@@ -21760,6 +21752,3 @@ msgstr "Narzędzia widma"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Stare"
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "Dostępne na MuseHubie"
