@@ -156,7 +156,7 @@ bool VST3EffectsModule::SupportsCustomModulePaths() const
 }
 
 PluginPaths
-VST3EffectsModule::FindModulePaths(PluginManagerInterface& pluginManager)
+VST3EffectsModule::FindModulePaths(PluginManagerInterface& pluginManager) const
 {
     //Note: The host recursively scans these folders at startup in this order (User/Global/Application).
     //https://developer.steinberg.help/display/VST/Plug-in+Locations

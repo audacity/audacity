@@ -184,7 +184,7 @@ void AudioUnitEffectsModule::AutoRegisterPlugins(PluginManagerInterface&)
 {
 }
 
-PluginPaths AudioUnitEffectsModule::FindModulePaths(PluginManagerInterface&)
+PluginPaths AudioUnitEffectsModule::FindModulePaths(PluginManagerInterface&) const
 {
     PluginPaths effects;
 

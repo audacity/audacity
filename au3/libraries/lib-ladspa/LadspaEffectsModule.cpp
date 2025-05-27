@@ -177,7 +177,7 @@ void LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface& pm)
     }
 }
 
-PluginPaths LadspaEffectsModule::FindModulePaths(PluginManagerInterface& pm)
+PluginPaths LadspaEffectsModule::FindModulePaths(PluginManagerInterface& pm) const
 {
     auto pathList = GetSearchPaths(pm);
     FilePaths files;
@@ -306,7 +306,7 @@ bool LadspaEffectsModule::CheckPluginExist(const PluginPath& path) const
     return wxFileName::FileExists(realPath);
 }
 
-FilePaths LadspaEffectsModule::GetSearchPaths(PluginManagerInterface& pluginManager)
+FilePaths LadspaEffectsModule::GetSearchPaths(PluginManagerInterface& pluginManager) const
 {
     FilePaths pathList;
     wxString pathVar;
