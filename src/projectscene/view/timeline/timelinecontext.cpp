@@ -5,6 +5,7 @@
 
 #include "global/types/number.h"
 
+#include "playback/iaudiooutput.h"
 #include "snaptimeformatter.h"
 
 #include "log.h"
@@ -598,8 +599,10 @@ double TimelineContext::findGuideline(double time) const
         return time;
     }
 
+    const double LIMIT = 1. / playback()->audioOutput()->sampleRate(); // 1 sample at current project's sample rate
+
     if (vs->isSnapEnabled()) {
-        if (muse::RealIsEqual(time, applySnapToTime(time))) {
+        if (muse::RealIsEqualOrLess(std::abs(time - applySnapToTime(time)), LIMIT)) {
             return time;
         }
     } else {
