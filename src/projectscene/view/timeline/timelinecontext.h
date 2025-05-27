@@ -2,14 +2,15 @@
 
 #include <QObject>
 
-#include "global/async/asyncable.h"
-#include "actions/actionable.h"
-
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "global/async/asyncable.h"
+#include "actions/actionable.h"
 #include "actions/iactionsdispatcher.h"
-#include "trackedit/iselectioncontroller.h"
+
 #include "iprojectsceneconfiguration.h"
+#include "playback/iplayback.h"
+#include "trackedit/iselectioncontroller.h"
 
 //! NOTE This class does two things:
 //! 1. This is a context that is passed to other classes
@@ -56,6 +57,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<IProjectSceneConfiguration> configuration;
+    muse::Inject<playback::IPlayback> playback;
 
 public:
 
