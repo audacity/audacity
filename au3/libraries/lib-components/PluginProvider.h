@@ -146,7 +146,7 @@ public:
      @see GetFileExtensions DiscoverPluginsAtPath
      */
     virtual PluginPaths
-    FindModulePaths(PluginManagerInterface& pluginManager) = 0;
+    FindModulePaths(PluginManagerInterface& pluginManager) const = 0;
 
     //! Further expand a path reported by FindModulePaths
     /*!

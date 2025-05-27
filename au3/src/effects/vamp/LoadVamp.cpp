@@ -124,7 +124,7 @@ void VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface&)
 {
 }
 
-PluginPaths VampEffectsModule::FindModulePaths(PluginManagerInterface&)
+PluginPaths VampEffectsModule::FindModulePaths(PluginManagerInterface&) const
 {
     PluginPaths names;
 

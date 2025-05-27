@@ -220,7 +220,7 @@ void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface& pluginManager
     lilv_world_load_all(LV2Symbols::gWorld);
 }
 
-PluginPaths LV2EffectsModule::FindModulePaths(PluginManagerInterface&)
+PluginPaths LV2EffectsModule::FindModulePaths(PluginManagerInterface&) const
 {
     // Retrieve data about all LV2 plugins
     const LilvPlugins* plugs = lilv_world_get_all_plugins(LV2Symbols::gWorld);
