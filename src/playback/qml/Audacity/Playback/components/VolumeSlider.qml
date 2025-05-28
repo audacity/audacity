@@ -19,6 +19,7 @@ Slider {
     readonly property real handleHeight: handleWidth
 
     signal volumeLevelMoved(var level)
+    signal handlePressed()
 
     from: -60
     to: 0
@@ -107,6 +108,7 @@ Slider {
 
             onPressed: function(mouse) {
                 prv.dragStartOffset = mouse.x
+                root.handlePressed()
             }
 
             onPositionChanged: function(mouse)  {

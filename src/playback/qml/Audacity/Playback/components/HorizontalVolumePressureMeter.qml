@@ -19,10 +19,11 @@ Canvas {
     property int meterStyle: PlaybackMeterStyle.Default
 
     property bool showRuler: false
+    property bool showClippedInfo: true
 
     property int recentPeakIntervalMiliseconds: 600
 
-    readonly property int overloadWidth: 4
+    readonly property int overloadWidth: 10
 
     width: parent.width
     height: root.showRuler ? prv.indicatorHeight + prv.unitsTextWidth : prv.indicatorHeight
@@ -33,6 +34,7 @@ Canvas {
         id: meterStyle
 
         readonly property var clippedColor: "#EF476F"
+        readonly property var noClippedColor: ui.theme.buttonColor
 
         readonly property var rmsColor: ui.theme.accentColor
         readonly property var rmsOverlayColor: "#66000000"
@@ -80,7 +82,9 @@ Canvas {
         id: prv
 
         property bool needsClear: false
+
         property bool isClipping: currentVolumePressure >= maxDisplayedVolumePressure
+        property bool clipped: false
 
         readonly property real indicatorWidth: root.width - root.overloadWidth
         readonly property real indicatorHeight: 6
@@ -137,6 +141,13 @@ Canvas {
                                     Math.min(sampleValue, root.maxDisplayedVolumePressure));
             return prv.divisionPixels * (prv.fullValueRangeLength - Math.abs(clampedValue));
         }
+
+        onIsClippingChanged: {
+            if (prv.isClipping) {
+                prv.clipped = true
+                root.requestPaint()
+            }
+        }
     }
 
     QtObject {
@@ -176,6 +187,11 @@ Canvas {
         }
     }
 
+    function resetClipped() {
+        prv.clipped = false
+        requestPaint()
+    }
+
     function reset() {
         prv.maxPeak = -60
         prv.recentPeak = -60
@@ -190,6 +206,11 @@ Canvas {
 
         ctx.fillStyle = meterStyle.meterBackgroundColor
         ctx.fillRect(0, 0, prv.indicatorWidth, prv.indicatorHeight)
+    }
+
+    function drawClippedIndicator(ctx) {
+        ctx.fillStyle = prv.clipped ? meterStyle.clippedColor : meterStyle.noClippedColor
+        ctx.fillRect(prv.indicatorWidth, 0, root.overloadWidth, prv.indicatorHeight)
     }
 
     function drawMeterBar(ctx) {
@@ -271,7 +292,13 @@ Canvas {
             ctx = getContext("2d")
         }
 
-        drawBackground(ctx) 
+        drawBackground(ctx)
+
+        if (root.showClippedInfo)
+        {
+            drawClippedIndicator(ctx)
+        }
+
         if (prv.needsClear) {
             // Just don´t draw anything else
             prv.needsClear = false

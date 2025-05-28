@@ -20,6 +20,7 @@ Slider {
     readonly property real handleHeight: handleWidth
 
     signal volumeLevelMoved(var level)
+    signal handlePressed()
 
     from: -60
     to: 0
@@ -108,6 +109,7 @@ Slider {
 
             onPressed: function(mouse) {
                 prv.dragStartOffset = mouse.y
+                root.handlePressed()
             }
 
             onPositionChanged: function(mouse)  {
@@ -120,7 +122,6 @@ Slider {
                 let newRootPosition = 1.0 - clampedProportion
 
                 let localNewValue = root.valueAt(newRootPosition)
-                console.log("New volume level: " + localNewValue)
                 root.volumeLevelMoved(localNewValue)
             }
         }

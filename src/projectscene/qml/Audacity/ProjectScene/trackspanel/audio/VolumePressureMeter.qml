@@ -24,6 +24,8 @@ Canvas {
 
     property int recentPeakIntervalMiliseconds: 600
 
+    property int overloadHeight: 4
+
     width: root.showRuler ? indicatorWidth + 20 : indicatorWidth
 
     QtObject {
@@ -77,13 +79,11 @@ Canvas {
     QtObject {
         id: prv
 
-        readonly property int overloadHeight: 4
-
-        readonly property real indicatorHeight: root.height - prv.overloadHeight - 6
+        readonly property real indicatorHeight: root.height - root.overloadHeight - 6
 
         // value ranges
         readonly property int fullValueRangeLength: root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure
-        readonly property real heightPerUnit: (prv.indicatorHeight - prv.overloadHeight) / fullValueRangeLength
+        readonly property real heightPerUnit: (prv.indicatorHeight - root.overloadHeight) / fullValueRangeLength
 
         readonly property color unitTextColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.8)
         readonly property string unitTextFont: {
@@ -181,7 +181,7 @@ Canvas {
         }
 
         function drawRuler(ctx) {
-            var originVPos = prv.overloadHeight
+            var originVPos = root.overloadHeight
             var originHPos = indicatorWidth + ruler.strokeHorizontalMargin
 
             ctx.clearRect(indicatorWidth, 0, root.width - indicatorWidth, root.height)
@@ -248,7 +248,7 @@ Canvas {
 
     function drawClippedIndicator(ctx) {
         ctx.fillStyle = prv.clipped ? meterStyle.clippedColor : meterStyle.noClippedColor
-        ctx.fillRect(0, 0, root.indicatorWidth, prv.overloadHeight)
+        ctx.fillRect(0, 0, root.indicatorWidth, root.overloadHeight)
     }
 
     function drawMeterBar(ctx) {

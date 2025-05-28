@@ -110,7 +110,19 @@ Item {
                 navigation.order: root.navigationOrder
 
                 onVolumeLevelMoved: function(level) {
+                    leftVolumePressure.reset()
+                    leftVolumePressure.resetClipped()
+                    rightVolumePressure.reset()
+                    rightVolumePressure.resetClipped()
+
                     root.volumeLevelChangeRequested(Math.round(level * 10) / 10)
+                }
+
+                onHandlePressed: function() {
+                    leftVolumePressure.reset()
+                    leftVolumePressure.resetClipped()
+                    rightVolumePressure.reset()
+                    rightVolumePressure.resetClipped()
                 }
             }
         }

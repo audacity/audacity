@@ -68,6 +68,7 @@ Item {
 
             Row {
                 id: meterChannelRow
+
                 topPadding: volumeSlider.handleHeight /  2
 
                 spacing: 2
@@ -79,7 +80,7 @@ Item {
                 VolumePressureMeter {
                     id: leftVolumePressure
 
-                    showClippedInfo: false
+                    overloadHeight: 10
 
                     currentVolumePressure: model.leftChannelPressure
                     currentRMS: model.leftChannelRMS
@@ -93,7 +94,7 @@ Item {
                 VolumePressureMeter {
                     id: rightVolumePressure
 
-                    showClippedInfo: false
+                    overloadHeight: 10
 
                     currentVolumePressure: model.rightChannelPressure
                     currentRMS: model.rightChannelRMS
@@ -106,7 +107,6 @@ Item {
                 }
             }
 
-
             VerticalVolumeSlider {
                 id: volumeSlider
 
@@ -114,11 +114,26 @@ Item {
 
                 volumeLevel: model.level
 
+                anchors.top: parent.top
+                anchors.topMargin: handleHeight / 2
+                anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.leftMargin: 3
 
                 onVolumeLevelMoved: function(level) {
+                    leftVolumePressure.reset()
+                    leftVolumePressure.resetClipped()
+                    rightVolumePressure.reset()
+                    rightVolumePressure.resetClipped()
+
                     model.volumeLevelChangeRequested(level)
+                }
+
+                onHandlePressed: function() {
+                    leftVolumePressure.reset()
+                    leftVolumePressure.resetClipped()
+                    rightVolumePressure.reset()
+                    rightVolumePressure.resetClipped()
                 }
             }
         }
