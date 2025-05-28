@@ -6,10 +6,10 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::effects {
-class VstEffectsModule : public muse::modularity::IModuleSetup
+class Lv2EffectsModule : public muse::modularity::IModuleSetup
 {
 public:
-    VstEffectsModule() = default;
+    Lv2EffectsModule() = default;
 
     std::string moduleName() const override;
     void registerResources() override;
