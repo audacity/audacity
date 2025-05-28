@@ -16,6 +16,13 @@ Item {
 
     PlaybackMeterPanelModel {
         id: model
+
+        onIsPlayingChanged: {
+            if (model.isPlaying) {
+                leftVolumePressure.reset()
+                rightVolumePressure.reset()
+            }
+        }
     }
 
     ColumnLayout {
