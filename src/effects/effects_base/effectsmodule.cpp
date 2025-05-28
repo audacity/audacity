@@ -75,6 +75,7 @@ void EffectsModule::registerUiTypes()
 {
     qmlRegisterType<EffectViewLoader>("Audacity.Effects", 1, 0, "EffectViewLoader");
     qmlRegisterType<RealtimeEffectViewerDialogModel>("Audacity.Effects", 1, 0, "RealtimeEffectViewerDialogModel");
+    qmlRegisterUncreatableType<EffectFamilies>("Audacity.Effects", 1, 0, "EffectFamily", "Not creatable from QML");
 }
 
 void EffectsModule::onInit(const muse::IApplication::RunMode&)

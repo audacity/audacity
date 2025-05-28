@@ -1,20 +1,21 @@
 /*
-* Audacity: A Digital Audio Editor
-*/
+ * Audacity: A Digital Audio Editor
+ */
 #pragma once
 
 #include "effects/effects_base/internal/abstractaudiopluginmetareader.h"
-#include "libraries/lib-vst3/VST3EffectsModule.h"
+#include "libraries/lib-lv2/LoadLV2.h"
 
 namespace au::effects {
-class Vst3PluginsMetaReader : public AbstractAudioPluginMetaReader
+class Lv2PluginMetaReader final : public AbstractAudioPluginMetaReader
 {
 public:
-    Vst3PluginsMetaReader();
+    Lv2PluginMetaReader();
     muse::audio::AudioResourceType metaType() const override;
     bool canReadMeta(const muse::io::path_t& pluginPath) const override;
 
 private:
-    VST3EffectsModule m_module;
+    void doInit(const muse::IApplication::RunMode& mode) override;
+    LV2EffectsModule m_module;
 };
 }

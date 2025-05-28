@@ -95,14 +95,32 @@ void RealtimeEffectViewerDialogModel::load()
         }
     });
 
-    realtimeEffectService()->effectSettingsChanged().onNotify(this, [this]{
+    realtimeEffectService()->effectSettingsChanged().onNotify(this, [this] {
         emit isActiveChanged();
     });
 }
 
-bool RealtimeEffectViewerDialogModel::isVst3() const
+EffectFamily RealtimeEffectViewerDialogModel::prop_effectFamily() const
 {
-    return m_isVst3;
+    if (!m_effectState) {
+        return EffectFamily::Unknown;
+    }
+    const auto effectId = m_effectState->GetID().ToStdString();
+    const PluginDescriptor* const plug = PluginManager::Get().GetPlugin(effectId);
+    if (!plug || !PluginManager::IsPluginAvailable(*plug)) {
+        return EffectFamily::Unknown;
+    }
+    const std::string family = au3::wxToStdSting(plug->GetEffectFamily());
+    if (family == "VST3") {
+        return EffectFamily::VST3;
+    } else if (family == "LV2") {
+        return EffectFamily::LV2;
+    } else if (family == "Audacity") {
+        return EffectFamily::Builtin;
+    } else {
+        assert(false);
+        return EffectFamily::Unknown;
+    }
 }
 
 bool RealtimeEffectViewerDialogModel::prop_isActive() const
@@ -141,18 +159,11 @@ void RealtimeEffectViewerDialogModel::prop_setEffectState(const QString& effectS
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(m_effectState->GetInstance());
     instancesRegister()->regInstance(muse::String::fromStdString(effectId), instance, m_effectState->GetAccess());
 
-    const PluginDescriptor* const plug = PluginManager::Get().GetPlugin(effectId);
-    if (!plug || !PluginManager::IsPluginAvailable(*plug)) {
-        LOGE() << "plugin not available, effectId: " << effectId;
-        return;
-    }
-    const std::string family = au3::wxToStdSting(plug->GetEffectFamily());
-    m_isVst3 = family == "VST3";
-
     emit isActiveChanged();
     emit trackNameChanged();
     emit titleChanged();
     emit isMasterEffectChanged();
+    emit effectFamilyChanged();
 }
 
 void RealtimeEffectViewerDialogModel::unregisterState()
