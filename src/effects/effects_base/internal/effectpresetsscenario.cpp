@@ -30,7 +30,7 @@ void EffectPresetsScenario::applyPreset(const EffectInstanceId& effectInstanceId
 
 void EffectPresetsScenario::saveCurrentAsPreset(const EffectInstanceId& effectInstanceId)
 {
-    RetVal<Val> rv = interactive()->open("audacity://effects/presets/input_name");
+    RetVal<Val> rv = interactive()->openSync("audacity://effects/presets/input_name");
     std::string name = rv.val.toString();
     if (rv.ret.code() == (int)Ret::Code::Cancel || name.empty()) {
         LOGD() << "input preset name is canceled";

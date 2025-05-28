@@ -653,5 +653,6 @@ muse::Ret ProjectActionsController::openPageIfNeed(muse::Uri pageUri)
         return muse::make_ret(muse::Ret::Code::Ok);
     }
 
-    return interactive()->open(pageUri).ret;
+    interactive()->open(pageUri);
+    return muse::make_ok();
 }

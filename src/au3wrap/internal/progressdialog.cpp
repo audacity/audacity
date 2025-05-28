@@ -8,7 +8,7 @@
 
 ProgressDialog::ProgressDialog()
 {
-    muse::Ret ret = interactive()->showProgress(std::string(), &m_progress);
+    interactive()->showProgress(std::string(), &m_progress);
     m_progress.started();
 
     m_progress.canceled().onNotify(this, [this]() {
