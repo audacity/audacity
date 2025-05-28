@@ -11,6 +11,7 @@
 #include "playback/iplaybackconfiguration.h"
 #include "playback/playbacktypes.h"
 #include "playback/iaudiooutput.h"
+#include "playback/iplaybackcontroller.h"
 
 namespace au::projectscene {
 class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable
@@ -19,6 +20,7 @@ class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable
 
     muse::Inject<au::playback::IPlayback> playback;
     muse::Inject<au::playback::IPlaybackConfiguration> configuration;
+    muse::Inject<playback::IPlaybackController> controller;
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float leftChannelRMS READ leftChannelRMS NOTIFY leftChannelRMSChanged)
@@ -31,6 +33,8 @@ class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(playback::PlaybackMeterPosition::MeterPosition meterPosition READ meterPosition NOTIFY meterPositionChanged FINAL)
 
     Q_PROPERTY(float level READ level NOTIFY levelChanged FINAL)
+
+    Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
 
 public:
     explicit PlaybackMeterPanelModel(QObject* parent = nullptr);
@@ -46,6 +50,8 @@ public:
     playback::PlaybackMeterPosition::MeterPosition meterPosition() const;
 
     float level() const;
+
+    bool isPlaying() const;
 
     Q_INVOKABLE void positionChangeRequested(playback::PlaybackMeterPosition::MeterPosition position);
     Q_INVOKABLE void styleChangeRequested(playback::PlaybackMeterStyle::MeterStyle style);
@@ -71,6 +77,8 @@ signals:
     void meterPositionChanged();
 
     void levelChanged();
+
+    void isPlayingChanged();
 
 private:
     void setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue);

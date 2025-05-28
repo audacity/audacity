@@ -27,6 +27,10 @@ PlaybackMeterPanelModel::PlaybackMeterPanelModel(QObject* parent)
         emit meterTypeChanged();
     });
 
+    controller()->isPlayingChanged().onNotify(this, [this]() {
+        emit isPlayingChanged();
+    });
+
     resetAudioChannelsVolumePressure();
 }
 
@@ -43,6 +47,11 @@ float PlaybackMeterPanelModel::rightChannelPressure() const
 float PlaybackMeterPanelModel::level() const
 {
     return m_level;
+}
+
+bool PlaybackMeterPanelModel::isPlaying() const
+{
+    return controller()->isPlaying();
 }
 
 void PlaybackMeterPanelModel::setLeftChannelPressure(float leftChannelPressure)

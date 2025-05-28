@@ -80,7 +80,9 @@ ListItemBlank {
 
         onIsPlayingChanged: {
             if (trackViewState.isPlaying) {
+                leftOrMonoVolumePressureMeter.reset()
                 leftOrMonoVolumePressureMeter.resetClipped()
+                rightVolumePressureMeter.reset()
                 rightVolumePressureMeter.resetClipped()
             }
         }
