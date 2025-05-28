@@ -47,10 +47,11 @@ muse::Ret Vst3ViewLauncher::showEffect(const EffectInstanceId& instanceId) const
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    constexpr auto isVst = true;
-    muse::Ret ret = interactive()->open(muse::String(EFFECT_VIEWER_URI)
-                                        .arg(size_t(museVstInstance->id())).arg(isVst).toStdString()
-                                        ).ret;
+    muse::UriQuery uri(muse::String(EFFECT_VIEWER_URI).toStdString());
+    uri.addParam("instanceId", muse::Val(instanceId));
+    uri.addParam("effectFamily", muse::Val(EffectFamily::VST3));
+
+    muse::Ret ret = interactive()->open(uri).ret;
 
     return ret;
 }

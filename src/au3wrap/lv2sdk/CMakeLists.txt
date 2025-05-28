@@ -172,6 +172,11 @@ set(MODULE_INCLUDE
 
 set(MODULE_DEF
     -D_GNU_SOURCE # for /zix/src/posix/filesystem_posix.c
+    -DSORD_STATIC
+    -DLILV_STATIC
+    -DSERD_STATIC
+    -DSRATOM_STATIC
+    -DZIX_STATIC
 )
 
 set(MODULE_USE_PCH OFF)

@@ -22,9 +22,9 @@ set(FETCHCONTENT_QUIET OFF)
 set(FETCHCONTENT_BASE_DIR ${CMAKE_CURRENT_LIST_DIR}/_deps)
 include(FetchContent)
 FetchContent_Declare(
-  muse_framework
-  GIT_REPOSITORY https://github.com/musescore/framework_tmp.git
-  GIT_TAG        u250522
+    muse_framework
+    GIT_REPOSITORY https://github.com/saintmatthieu/framework_tmp.git
+    GIT_TAG        2d6164731f9057c4d23522a89016494fd2e70ccf
 )
 
 FetchContent_GetProperties(muse_framework)
@@ -117,7 +117,7 @@ option(AU_BUILD_EFFECTS_TESTS "Build effects tests" ON)
 option(AU_MODULE_EFFECTS_VST "Build audacity vst module" ON)
 set(AU_MODULE_VST_VST3_SDK_PATH "" CACHE PATH "[optional] Path to VST3_SDK. SDK version >= ${VST3_SDK_VERSION} required")
 
-option(AU_MODULE_EFFECTS_LV2 "Build audacity lv2 module" OFF)
+option(AU_MODULE_EFFECTS_LV2 "Build audacity lv2 module" ON) # TODO do we need a stub for this module, too?
 set(AU_MODULE_LV2_LV2SDK_PATH "" CACHE PATH "[optional] Path to lv2 SDK. lilv version >= 0.24.26 required")
 
 option(AU_USE_FFMPEG "Build mod-ffmpeg module" ON)

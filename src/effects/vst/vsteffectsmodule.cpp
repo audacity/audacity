@@ -30,6 +30,11 @@ static void vst_init_qrc()
     Q_INIT_RESOURCE(vst);
 }
 
+VstEffectsModule::VstEffectsModule()
+    : m_vstMetaReader(std::make_shared<Vst3PluginsMetaReader>())
+{
+}
+
 std::string VstEffectsModule::moduleName() const
 {
     return "effects_vst";
@@ -56,7 +61,7 @@ void VstEffectsModule::resolveImports()
 
     auto metaReaderRegister = ioc()->resolve<muse::audioplugins::IAudioPluginMetaReaderRegister>(moduleName());
     if (metaReaderRegister) {
-        metaReaderRegister->registerReader(std::make_shared<Vst3PluginsMetaReader>());
+        metaReaderRegister->registerReader(m_vstMetaReader);
     }
 
     auto lr = ioc()->resolve<IEffectViewLaunchRegister>(moduleName());
@@ -76,12 +81,14 @@ void VstEffectsModule::registerUiTypes()
     qmlRegisterType<VstViewModel>("Audacity.Vst", 1, 0, "VstViewModel");
 }
 
-void VstEffectsModule::onInit(const muse::IApplication::RunMode&)
+void VstEffectsModule::onInit(const muse::IApplication::RunMode& runMode)
 {
     m_museVstModulesRepository->init();
+    m_vstMetaReader->init(runMode);
 }
 
 void VstEffectsModule::onDeinit()
 {
     m_museVstModulesRepository->deinit();
+    m_vstMetaReader->deinit();
 }
