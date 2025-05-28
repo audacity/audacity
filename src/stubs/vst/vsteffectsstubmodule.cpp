@@ -1,7 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "vsteffectsstubmodule.h"
+#include "vsteffectsmodule.h"
 
 static void vst_init_qrc()
 {
@@ -9,12 +9,12 @@ static void vst_init_qrc()
 }
 
 namespace au::effects {
-std::string VstEffectsStubModule::moduleName() const
+std::string VstEffectsModule::moduleName() const
 {
     return "effects_vst_stub";
 }
 
-void VstEffectsStubModule::registerResources()
+void VstEffectsModule::registerResources()
 {
     vst_init_qrc();
 }
