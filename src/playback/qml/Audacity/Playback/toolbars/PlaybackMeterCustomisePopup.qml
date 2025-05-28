@@ -36,171 +36,84 @@ StyledPopupView {
             
             spacing: 12
 
-            ColumnLayout {
+            StyledGroupBox {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                spacing: 12
+                title: qsTrc("Playback", "Meter style")
 
-                StyledTextLabel {
-                    Layout.fillWidth: true
+                titleSpacing: 12
+                itemSpacing: 8
+                itemMargin: 12
 
-                    text: qsTrc("Playback", "Meter style")
-                    horizontalAlignment: Text.AlignLeft
-                }
-                
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                borderWidth: 1
+                boarderRadius: 2
 
-                    color: ui.theme.backgroundPrimaryColor
-                    border.width: 1
-                    border.color: ui.theme.strokeColor
-                    radius: 2
+                value: root.meterStyle
 
-                    Item {
-                        anchors.fill: parent
-                        anchors.margins: 12
+                model: [
+                    {label : qsTrc("playback","Default"), value: PlaybackMeterStyle.Default},
+                    {label : qsTrc("playback","RMS"), value: PlaybackMeterStyle.RMS},
+                    {label : qsTrc("playback","Gradient"), value: PlaybackMeterStyle.Gradient}
+                ]
 
-                        RadioButtonGroup {
-                            id: meterStyleGroup
-
-                            orientation: Qt.Vertical
-                            width: parent.width
-
-                            spacing: 8
-
-                            model: [
-                                {label : "Default", style: PlaybackMeterStyle.Default},
-                                {label : "RMS", style: PlaybackMeterStyle.RMS},
-                                {label : "Gradient", style: PlaybackMeterStyle.Gradient}
-                            ]
-
-                            delegate: RoundedRadioButton {
-                                id: meterStyleButton
-                                text: qsTrc("playback", modelData["label"])
-                                checked: root.meterStyle == modelData["style"]
-
-                                onToggled: {
-                                    root.styleChangeRequested(modelData["style"])
-                                }
-                            }
-                        }
-                    }
+                onValueChangeRequested: function(value) {
+                    root.styleChangeRequested(value)
                 }
             }
 
-            ColumnLayout {
+            StyledGroupBox {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                spacing: 12
+                title: qsTrc("Playback", "Meter type")
 
-                StyledTextLabel {
-                    Layout.fillWidth: true
+                titleSpacing: 12
+                itemSpacing: 8
+                itemMargin: 12
 
-                    text: qsTrc("Playback", "Meter type")
-                    horizontalAlignment: Text.AlignLeft
-                }
-                
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                borderWidth: 1
+                boarderRadius: 2
 
-                    color: ui.theme.backgroundPrimaryColor
-                    border.width: 1
-                    border.color: ui.theme.strokeColor
-                    radius: 2
+                value: root.meterType
 
-                    Item {
-                        anchors.fill: parent
-                        anchors.margins: 12
+                // TODO: Modify when dbLog and Linear (amp) are implemented
+                enabled: false
 
-                        RadioButtonGroup {
-                            id: meterTypeGroup
+                model: [
+                    {label : qsTrc("playback","Logarithmic (dB)"), value: PlaybackMeterType.DbLog},
+                    {label : qsTrc("playback","Linear (dB)"), value: PlaybackMeterType.DbLinear},
+                    {label : qsTrc("playback","Linear (amp)"), value: PlaybackMeterType.Linear}
+                ]
 
-                            orientation: Qt.Vertical
-
-                            width: parent.width
-                            height: parent.height
-
-                            spacing: 8
-
-                            //TODO: Modify when dbLog and Linear (amp) are implemented
-                            model: [
-                                {label : "Logarithmic (dB)", type: PlaybackMeterType.DbLog, enabled: false, checked: false},
-                                {label : "Linear (dB)", type: PlaybackMeterType.DbLinear, enabled: true, checked: true},
-                                {label : "Linear (amp)", type: PlaybackMeterType.Linear, enabled: false, checked: false},
-                            ]
-
-                            delegate: RoundedRadioButton {
-                                id: meterTypeButton
-                                text: qsTrc("playback", modelData["label"])
-                                checked: modelData["checked"]
-                                enabled: modelData["enabled"]
-
-                                onToggled: {
-                                    root.typeChangeRequested(modelData["type"])
-                                }
-                            }
-                        }
-                    }
+                onValueChangeRequested: function(value) {
+                    root.typeChangeRequested(value)
                 }
             }
         }
-        
-        ColumnLayout {
+
+        StyledGroupBox {
             Layout.fillWidth: true
             Layout.preferredHeight: 100
 
-            spacing: 12
+            title: qsTrc("playback", "Position")
 
-            StyledTextLabel {
-                Layout.fillWidth: true
+            titleSpacing: 12
+            itemSpacing: 8
+            itemMargin: 12
 
-                text: qsTr("Position")
-                horizontalAlignment: Text.AlignLeft
-            }
-            
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+            borderWidth: 1
+            boarderRadius: 2
 
-                color: ui.theme.backgroundPrimaryColor
-                border.width: 1
-                border.color: ui.theme.strokeColor
-                radius: 2
+            value: root.meterPosition
 
-                Item {
-                    anchors.fill: parent
-                    anchors.margins: 12
+            model: [
+                {label : qsTrc("playback","Top bar (horizontal)"), value: PlaybackMeterPosition.TopBar},
+                {label : qsTrc("playback","Side bar (vertical)"), value: PlaybackMeterPosition.SideBar}
+            ]
 
-                    RadioButtonGroup {
-                        id: meterPositionGroup
-
-                        orientation: Qt.Vertical
-
-                        width: parent.width
-                        height: parent.height
-
-                        spacing: 8
-
-                        model: [
-                            {label : "Top bar (horizontal)", position: PlaybackMeterPosition.TopBar},
-                            {label : "Side bar (vertical)", position: PlaybackMeterPosition.SideBar}
-                        ]
-
-                        delegate: RoundedRadioButton {
-                            id: meterPositionButton
-                            text: qsTrc("playback", modelData["label"])
-                            checked: root.meterPosition == modelData["position"]
-
-                            onToggled: {
-                                root.positionChangeRequested(modelData["position"])
-                            }
-                        }
-                    }
-                }
+            onValueChangeRequested: function(value) {
+                root.positionChangeRequested(value)
             }
         }
     }
