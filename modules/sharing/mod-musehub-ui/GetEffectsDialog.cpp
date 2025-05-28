@@ -24,9 +24,11 @@
 #include "NetworkManager.h"
 #include "Request.h"
 
-#include "RoundedStaticBitmap.h"
+#include "AppEvents.h"
 #include "BasicUI.h"
+#include "menus/GetEffectsHelper.h"
 #include "Theme.h"
+#include "RoundedStaticBitmap.h"
 #include "AllThemeResources.h"
 #include "GradientButton.h"
 #include "WindowAccessible.h"
@@ -361,5 +363,29 @@ void GetEffectsDialog::AddEffectsPage(const std::string& group, const std::vecto
    page->SetAutoLayout(true);
    m_treebook->AddPage(page, group.data());
 }
+
+
+class GetEffectsHandler
+{
+
+public:
+   GetEffectsHandler() {
+      AppEvents::OnAppInitialized([this] {
+         mSubscription = GetEffectsHelper::Get().Subscribe(
+            [this](const auto&) -> bool {
+               GetEffectsDialog dialog(wxTheApp->GetTopWindow());
+               dialog.ShowModal();
+               return true;
+            }, GetEffectsHandlerType::Custom
+         );
+      });
+   }
+
+private:
+   Observer::Subscription mSubscription;
+
+};
+
+static GetEffectsHandler sEventHandler;
 
 }

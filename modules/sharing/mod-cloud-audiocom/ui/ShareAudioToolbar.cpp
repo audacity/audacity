@@ -9,6 +9,7 @@
 
 **********************************************************************/
 #include "ShareAudioToolbar.h"
+#include "menus/GetEffectsHelper.h"
 
 #include <wx/sizer.h>
 #include <wx/stattext.h>
@@ -28,7 +29,7 @@
 #include "ProjectWindow.h"
 #include "Theme.h"
 
-#include "GetEffectsDialog.h"
+#include "menus/GetEffectsHelper.h"
 #include "dialogs/ShareAudioDialog.h"
 #include "toolbars/ToolManager.h"
 #include "widgets/AButton.h"
@@ -214,11 +215,10 @@ void ShareAudioToolbar::MakeGetEffectsButton()
    mGetEffectsButton = MakeButton(ID_GET_EFFECTS_BUTTON, XO("Get Effects"), theTheme.Image(bmpPlug));
 
    mGetEffectsButton->Bind(wxEVT_BUTTON, [this](auto) {
-      musehub::GetEffectsDialog dlg(&ProjectWindow::Get(mProject));
-      dlg.ShowModal();
+      GetEffectsHelper::Get().GetEffects();
 
-         mGetEffectsButton->PopUp();
-      });
+      mGetEffectsButton->PopUp();
+   });
 
 }
 void ShareAudioToolbar::ArrangeButtons()

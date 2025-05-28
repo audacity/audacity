@@ -21,6 +21,7 @@
 #include "PluginStartupRegistration.h"
 #include "ProgressDialog.h"
 #include "ShuttleGui.h"
+#include "menus/GetEffectsHelper.h"
 
 #include <set>
 #include <wx/setup.h> // for wxUSE_* macros
@@ -344,7 +345,7 @@ void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
 
 void PluginRegistrationDialog::OnGetMoreEffects(wxCommandEvent& WXUNUSED(evt))
 {
-   OpenInDefaultBrowser("https://www.audacityteam.org/mh-pluginmanager");
+   GetEffectsHelper::Get().GetEffects();
 }
 
 void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))

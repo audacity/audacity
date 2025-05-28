@@ -48,6 +48,7 @@
 #include "ListNavigationPanel.h"
 #include "MovableControl.h"
 #include "menus/MenuHelper.h"
+#include "menus/GetEffectsHelper.h"
 #include "prefs/EffectsPrefs.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -154,7 +155,7 @@ namespace
             if(commandId == wxID_REMOVE)
                return wxString {};
             if(commandId == wxID_MORE)
-               OpenInDefaultBrowser("https://www.audacityteam.org/mh-rtepanel");
+               GetEffectsHelper::Get().GetEffects();
             else
                return visitor.GetPluginID(commandId).GET();
          }
