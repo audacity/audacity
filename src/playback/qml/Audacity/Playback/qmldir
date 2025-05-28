@@ -5,6 +5,7 @@ VolumeSlider 1.0 components/VolumeSlider.qml
 HorizontalVolumePressureMeter 1.0 components/HorizontalVolumePressureMeter.qml
 Timecode 1.0 components/Timecode.qml
 TimecodeStartEnd 1.0 components/TimecodeStartEnd.qml
+StyledGroupBox 1.0 components/StyledGroupBox.qml
 
 PlaybackMeterCustomisePopup 1.0 toolbars/PlaybackMeterCustomisePopup.qml
 PlaybackLevel 1.0 toolbars/PlaybackLevel.qml

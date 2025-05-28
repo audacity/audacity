@@ -24,10 +24,11 @@ Item {
         FlatButton {
             id: meterOptionsBtn
 
-            Layout.preferredWidth: parent.width
-            Layout.preferredHeight: 40
+            Layout.preferredWidth: root.width
+            Layout.preferredHeight: root.width
 
             icon: IconCode.AUDIO
+            accentButton: popup.isOpened
 
             onClicked: {
                 popup.toggleOpened()
