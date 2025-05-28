@@ -140,6 +140,12 @@ option(MUSE_COMPILE_USE_CCACHE "Try use ccache" ON)
 ###########################################
 # Setup Configure
 ###########################################
+
+# default
+set(QT_ADD_LINGUISTTOOLS ON)
+set(QT_ADD_CONCURRENT ON)
+set(QT_QPROCESS_SUPPORTED ON)
+
 if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake")
     include(${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake)
 else()

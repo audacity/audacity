@@ -169,6 +169,15 @@ endif()
 if (QT_SUPPORT)
     add_definitions(-DQT_SUPPORT)
     add_definitions(-DKORS_LOGGER_QT_SUPPORT)
+
+    if (QT_QPROCESS_SUPPORTED)
+        add_compile_definitions(QT_QPROCESS_SUPPORTED)
+    endif()
+
+    if (QT_ADD_CONCURRENT)
+        add_compile_definitions(QT_CONCURRENT_SUPPORTED)
+    endif()
+
 else()
     add_definitions(-DNO_QT_SUPPORT)
 endif()
