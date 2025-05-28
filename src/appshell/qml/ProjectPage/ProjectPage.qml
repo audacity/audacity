@@ -38,17 +38,7 @@ DockPage {
 
     property var topToolKeyNavSec
 
-    property ProjectPageModel pageModel: ProjectPageModel {
-        id: projectPageModel
-
-        Component.onCompleted: {
-            projectPageModel.isPlaybackMeterPanelVisible ? playbackMeterPanel.open() : playbackMeterPanel.close()
-        }
-
-        onIsPlaybackMeterPanelVisibleChanged: {
-            projectPageModel.isPlaybackMeterPanelVisible ? playbackMeterPanel.open() : playbackMeterPanel.close()
-        }
-    }
+    property ProjectPageModel pageModel: ProjectPageModel {}
 
     property NavigationSection playbackToolBarKeyNavSec: NavigationSection {
         id: keynavSec
@@ -331,9 +321,7 @@ DockPage {
         },
 
         DockPanel {
-            id: playbackMeterPanel
-
-            objectName: "playbackMeterPanel"
+            objectName: pageModel.playbackMeterPanelName()
             title: qsTrc("appshell", "Playback meter")
 
             closable: false
@@ -347,9 +335,7 @@ DockPage {
 
             visible: false
 
-            PlaybackMeterPanel {
-                id: panel
-            }
+            PlaybackMeterPanel {}
         },
 
         DockPanel {
