@@ -43,6 +43,11 @@ bool EffectsProvider::isNyquistSupported() const
     return nyquistEffectsRepository() ? true : false;
 }
 
+bool EffectsProvider::isLv2Supported() const
+{
+    return lv2EffectsRepository() ? true : false;
+}
+
 void EffectsProvider::reloadEffects()
 {
     m_effects.clear();
@@ -66,6 +71,14 @@ void EffectsProvider::reloadEffects()
     // Nyquist
     if (isNyquistSupported()) {
         EffectMetaList metaList = nyquistEffectsRepository()->effectMetaList();
+        for (EffectMeta meta : metaList) {
+            m_effects.push_back(std::move(meta));
+        }
+    }
+
+    // LV2
+    if (isLv2Supported()) {
+        EffectMetaList metaList = lv2EffectsRepository()->effectMetaList();
         for (EffectMeta meta : metaList) {
             m_effects.push_back(std::move(meta));
         }
@@ -108,14 +121,21 @@ bool EffectsProvider::loadEffect(const EffectId& effectId) const
         // If an effect is not a VST and is in m_effects, then it's a built-in effect and it's loaded already.
         return true;
     }
-    IF_ASSERT_FAILED(it->family == EffectFamily::VST3) {
+    switch (it->family) {
+    case EffectFamily::VST3:
+        IF_ASSERT_FAILED(vstEffectsRepository()) {
+            return false;
+        }
+        return vstEffectsRepository()->ensurePluginIsLoaded(effectId);
+    case EffectFamily::LV2:
+        IF_ASSERT_FAILED(lv2EffectsRepository()) {
+            return false;
+        }
+        return lv2EffectsRepository()->ensurePluginIsLoaded(effectId);
+    default:
         LOGE() << "unknown family: " << static_cast<int>(it->family);
         return false;
     }
-    IF_ASSERT_FAILED(vstEffectsRepository()) {
-        return false;
-    }
-    return vstEffectsRepository()->ensurePluginIsLoaded(effectId);
 }
 
 std::string EffectsProvider::effectName(const std::string& effectId) const
