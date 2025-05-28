@@ -37,6 +37,9 @@ public:
     LV2EffectsModule();
     virtual ~LV2EffectsModule();
 
+    //! Execute eitehr InitializePluginRegistration() or Initialize()
+    bool InitializePluginRegistration();
+
     // ComponentInterface implementation
 
     PluginPath GetPath() const override;

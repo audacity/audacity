@@ -8,6 +8,7 @@ import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.Effects
+import Audacity.Lv2
 import Audacity.Vst
 
 EffectStyledDialogView {
@@ -27,13 +28,25 @@ EffectStyledDialogView {
 
     QtObject {
         id: prv
-        property int padding: viewerModel.isVst3() ? 4 : 16
+        property int padding: viewerModel.effectFamily == EffectFamily.Builtin ? 16 : 4
         property alias viewItem: viewLoader.item
     }
 
     Component.onCompleted: {
         viewerModel.load()
-        viewLoader.sourceComponent = viewerModel.isVst3() ? vstViewerComponent : builtinViewerComponent
+        switch (viewerModel.effectFamily) {
+            case EffectFamily.Builtin:
+                viewLoader.sourceComponent = builtinViewerComponent
+                break
+            case EffectFamily.LV2:
+                viewLoader.sourceComponent = lv2ViewerComponent
+                break
+            case EffectFamily.VST3:
+                viewLoader.sourceComponent = vstViewerComponent
+                break
+            default:
+                viewLoader.sourceComponent = null
+        }
     }
 
     RealtimeEffectViewerDialogModel {
@@ -65,6 +78,15 @@ EffectStyledDialogView {
                 id: view
                 instanceId: root.instanceId
             }
+        }
+    }
+
+
+    Component {
+        id: lv2ViewerComponent
+        Lv2Viewer {
+            id: view
+            instanceId: root.instanceId
         }
     }
 
