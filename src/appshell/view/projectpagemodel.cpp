@@ -12,7 +12,6 @@
 using namespace au::appshell;
 using namespace muse::actions;
 
-static const QString TOOLBAR_NAME("playbackToolBar");
 static const muse::actions::ActionCode PLAYBACK_LEVEL_CODE("playback-level");
 
 ProjectPageModel::ProjectPageModel(QObject* parent)
@@ -40,12 +39,12 @@ void ProjectPageModel::init()
         dispatcher()->reg(this, actionCode, [=]() { toggleDock(dockName); });
     }
 
-    uiConfiguration()->toolConfigChanged(TOOLBAR_NAME).onNotify(this, [this]() {
+    uiConfiguration()->toolConfigChanged(playbackToolBarName()).onNotify(this, [this]() {
         updatePlaybackMeterVisibility();
     });
 
     playbackConfiguration()->playbackMeterPositionChanged().onNotify(this, [this]() {
-        emit isPlaybackMeterPanelVisibleChanged();
+        updatePlaybackMeterVisibility();
     });
 
     // globalContext()->currentNotationChanged().onNotify(this, [this]() {
@@ -63,7 +62,7 @@ void ProjectPageModel::init()
 
 void ProjectPageModel::updatePlaybackMeterVisibility()
 {
-    const auto toolConfig = uiConfiguration()->toolConfig(TOOLBAR_NAME,
+    const auto toolConfig = uiConfiguration()->toolConfig(playbackToolBarName(),
                                                           au::projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
     const auto it = std::find_if(toolConfig.items.begin(), toolConfig.items.end(),
                                  [](const muse::ui::ToolConfig::Item& item) {
@@ -71,8 +70,10 @@ void ProjectPageModel::updatePlaybackMeterVisibility()
     });
 
     if (it != toolConfig.items.end()) {
-        m_playbackMeterVisible = (*it).show;
-        emit isPlaybackMeterPanelVisibleChanged();
+        const bool meterPanelVisible = it->show
+                                       && (playbackConfiguration()->playbackMeterPosition()
+                                           == playback::PlaybackMeterPosition::MeterPosition::SideBar);
+        dispatcher()->dispatch("dock-set-open", ActionData::make_arg2<QString, bool>(playbackMeterPanelName(), meterPanelVisible));
     }
 }
 
@@ -109,6 +110,11 @@ QString ProjectPageModel::tracksPanelName() const
 QString ProjectPageModel::historyPanelName() const
 {
     return HISTORY_PANEL_NAME;
+}
+
+QString ProjectPageModel::playbackMeterPanelName() const
+{
+    return PLAYBACK_METER_PANEL_NAME;
 }
 
 QString ProjectPageModel::instrumentsPanelName() const
@@ -208,10 +214,4 @@ void ProjectPageModel::updateDrumsetPanelVisibility()
     // bool isNeedOpen = noteInput->isNoteInputMode() && noteInput->state().drumset != nullptr;
 
     // setDrumsetPanelOpen(isNeedOpen);
-}
-
-bool ProjectPageModel::isPlaybackMeterPanelVisible() const
-{
-    return m_playbackMeterVisible
-           && (playbackConfiguration()->playbackMeterPosition() == playback::PlaybackMeterPosition::MeterPosition::SideBar);
 }

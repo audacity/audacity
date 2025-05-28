@@ -37,14 +37,11 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     Q_PROPERTY(bool isNavigatorVisible READ isNavigatorVisible NOTIFY isNavigatorVisibleChanged)
     Q_PROPERTY(bool isBraillePanelVisible READ isBraillePanelVisible NOTIFY isBraillePanelVisibleChanged)
 
-    Q_PROPERTY(bool isPlaybackMeterPanelVisible READ isPlaybackMeterPanelVisible NOTIFY isPlaybackMeterPanelVisibleChanged FINAL)
-
 public:
     explicit ProjectPageModel(QObject* parent = nullptr);
 
     bool isNavigatorVisible() const;
     bool isBraillePanelVisible() const;
-    bool isPlaybackMeterPanelVisible() const;
 
     Q_INVOKABLE void init();
 
@@ -56,6 +53,7 @@ public:
 
     Q_INVOKABLE QString tracksPanelName() const;
     Q_INVOKABLE QString historyPanelName() const;
+    Q_INVOKABLE QString playbackMeterPanelName() const;
 
     Q_INVOKABLE QString instrumentsPanelName() const;
     Q_INVOKABLE QString inspectorPanelName() const;
@@ -71,7 +69,6 @@ public:
 signals:
     void isNavigatorVisibleChanged();
     void isBraillePanelVisibleChanged();
-    void isPlaybackMeterPanelVisibleChanged();
 
 private:
     void onNotationChanged();
@@ -80,8 +77,6 @@ private:
 
     void updateDrumsetPanelVisibility();
     void updatePlaybackMeterVisibility();
-
-    bool m_playbackMeterVisible = false;
 };
 }
 

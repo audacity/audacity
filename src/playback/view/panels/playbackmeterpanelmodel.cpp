@@ -2,7 +2,7 @@
 
 #include "playback/playbacktypes.h"
 
-using namespace au::projectscene;
+using namespace au::playback;
 
 PlaybackMeterPanelModel::PlaybackMeterPanelModel(QObject* parent)
     : QObject(parent)

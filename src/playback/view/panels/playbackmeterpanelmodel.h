@@ -13,14 +13,14 @@
 #include "playback/iaudiooutput.h"
 #include "playback/iplaybackcontroller.h"
 
-namespace au::projectscene {
+namespace au::playback {
 class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    muse::Inject<au::playback::IPlayback> playback;
-    muse::Inject<au::playback::IPlaybackConfiguration> configuration;
-    muse::Inject<playback::IPlaybackController> controller;
+    muse::Inject<IPlayback> playback;
+    muse::Inject<IPlaybackConfiguration> configuration;
+    muse::Inject<IPlaybackController> controller;
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float leftChannelRMS READ leftChannelRMS NOTIFY leftChannelRMSChanged)
@@ -28,9 +28,9 @@ class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(float rightChannelPressure READ rightChannelPressure NOTIFY rightChannelPressureChanged)
     Q_PROPERTY(float rightChannelRMS READ rightChannelRMS NOTIFY rightChannelRMSChanged)
 
-    Q_PROPERTY(playback::PlaybackMeterStyle::MeterStyle meterStyle READ meterStyle NOTIFY meterStyleChanged FINAL)
-    Q_PROPERTY(playback::PlaybackMeterType::MeterType meterType READ meterType NOTIFY meterTypeChanged FINAL)
-    Q_PROPERTY(playback::PlaybackMeterPosition::MeterPosition meterPosition READ meterPosition NOTIFY meterPositionChanged FINAL)
+    Q_PROPERTY(PlaybackMeterStyle::MeterStyle meterStyle READ meterStyle NOTIFY meterStyleChanged FINAL)
+    Q_PROPERTY(PlaybackMeterType::MeterType meterType READ meterType NOTIFY meterTypeChanged FINAL)
+    Q_PROPERTY(PlaybackMeterPosition::MeterPosition meterPosition READ meterPosition NOTIFY meterPositionChanged FINAL)
 
     Q_PROPERTY(float level READ level NOTIFY levelChanged FINAL)
 
@@ -45,17 +45,17 @@ public:
     float rightChannelPressure() const;
     float rightChannelRMS() const;
 
-    playback::PlaybackMeterStyle::MeterStyle meterStyle() const;
-    playback::PlaybackMeterType::MeterType meterType() const;
-    playback::PlaybackMeterPosition::MeterPosition meterPosition() const;
+    PlaybackMeterStyle::MeterStyle meterStyle() const;
+    PlaybackMeterType::MeterType meterType() const;
+    PlaybackMeterPosition::MeterPosition meterPosition() const;
 
     float level() const;
 
     bool isPlaying() const;
 
-    Q_INVOKABLE void positionChangeRequested(playback::PlaybackMeterPosition::MeterPosition position);
-    Q_INVOKABLE void styleChangeRequested(playback::PlaybackMeterStyle::MeterStyle style);
-    Q_INVOKABLE void typeChangeRequested(playback::PlaybackMeterType::MeterType type);
+    Q_INVOKABLE void positionChangeRequested(PlaybackMeterPosition::MeterPosition position);
+    Q_INVOKABLE void styleChangeRequested(PlaybackMeterStyle::MeterStyle style);
+    Q_INVOKABLE void typeChangeRequested(PlaybackMeterType::MeterType type);
     Q_INVOKABLE void volumeLevelChangeRequested(float level);
 
 public slots:
