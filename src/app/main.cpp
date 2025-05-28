@@ -61,6 +61,8 @@
 #include "effects/builtin/builtineffectsmodule.h"
 #ifdef AU_MODULE_EFFECTS_LV2
 #include "effects/lv2/lv2effectsmodule.h"
+#else
+#include "stubs/lv2/lv2effectsstubmodule.h"
 #endif
 #ifdef AU_MODULE_EFFECTS_VST
 #include "effects/vst/vsteffectsmodule.h"
@@ -159,14 +161,9 @@ int main(int argc, char** argv)
 
     // modules
     app.addModule(new au::appshell::AppShellModule());
-#ifdef AU_MODULE_EFFECTS_LV2
     app.addModule(new au::effects::Lv2EffectsModule());
-#endif
-#ifdef AU_MODULE_EFFECTS_VST
     app.addModule(new au::effects::VstEffectsModule());
-#else
-    app.addModule(new au::effects::VstEffectsStubModule());
-#endif
+
     if (!isPluginRegistration) {
         app.addModule(new au::context::ContextModule());
         app.addModule(new au::audio::AudioModule());
