@@ -245,7 +245,6 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             if (ret) {
                 effect->SaveUserPreset(CurrentSettingsGroup(), *settings);
             } else {
-                LOGE() << "failed show effect: " << effectId << ", ret: " << ret.toString();
                 return ret;
             }
         }

@@ -584,6 +584,9 @@ if (AU_MODULE_EFFECTS_LV2)
         ${AU3_LIBRARIES}/lib-lv2/LV2Utils.h
         ${AU3_LIBRARIES}/lib-lv2/LV2Wrapper.cpp
         ${AU3_LIBRARIES}/lib-lv2/LV2Wrapper.h
+        ${AU3_LIBRARIES}/lib-lv2/zix/common.h
+        ${AU3_LIBRARIES}/lib-lv2/zix/ring.cpp
+        ${AU3_LIBRARIES}/lib-lv2/zix/ring.h
     )
 endif()
 

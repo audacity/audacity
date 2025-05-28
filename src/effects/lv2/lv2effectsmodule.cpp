@@ -6,14 +6,29 @@
 #include "audioplugins/iaudiopluginsscannerregister.h"
 #include "audioplugins/iaudiopluginmetareaderregister.h"
 
+#include "effects/effects_base/ieffectviewlaunchregister.h"
+
+#include "internal/lv2effectsrepository.h"
+#include "internal/lv2pluginmetareader.h"
 #include "internal/lv2pluginsscanner.h"
+#include "internal/lv2viewlauncher.h"
+#include "view/lv2viewloader.h"
+
+#include "log.h"
+
+#include "libraries/lib-lv2/LoadLV2.h"
 
 using namespace muse;
 using namespace au::effects;
 
 static void lv2_init_qrc()
 {
-    //Q_INIT_RESOURCE(lv2);
+    Q_INIT_RESOURCE(lv2);
+}
+
+Lv2EffectsModule::Lv2EffectsModule()
+    : m_metaReader{std::make_shared<Lv2PluginMetaReader>()}
+{
 }
 
 std::string Lv2EffectsModule::moduleName() const
@@ -23,6 +38,7 @@ std::string Lv2EffectsModule::moduleName() const
 
 void Lv2EffectsModule::registerExports()
 {
+    ioc()->registerExport<ILv2EffectsRepository>(moduleName(), new Lv2EffectsRepository());
 }
 
 void Lv2EffectsModule::resolveImports()
@@ -32,15 +48,15 @@ void Lv2EffectsModule::resolveImports()
         scannerRegister->registerScanner(std::make_shared<Lv2PluginsScanner>());
     }
 
-    // auto metaReaderRegister = ioc()->resolve<muse::audioplugins::IAudioPluginMetaReaderRegister>(moduleName());
-    // if (metaReaderRegister) {
-    //     metaReaderRegister->registerReader(std::make_shared<Lv2PluginsMetaReader>());
-    // }
+    auto metaReaderRegister = ioc()->resolve<muse::audioplugins::IAudioPluginMetaReaderRegister>(moduleName());
+    if (metaReaderRegister) {
+        metaReaderRegister->registerReader(m_metaReader);
+    }
 
-    // auto lr = ioc()->resolve<IEffectViewLaunchRegister>(moduleName());
-    // if (lr) {
-    //     lr->regLauncher("LV2", std::make_shared<Lv2ViewLauncher>());
-    // }
+    auto lr = ioc()->resolve<IEffectViewLaunchRegister>(moduleName());
+    if (lr) {
+        lr->regLauncher("LV2", std::make_shared<Lv2ViewLauncher>());
+    }
 
     // auto ir = ioc()->resolve<IInteractiveUriRegister>(moduleName());
     // if (ir) {
@@ -55,12 +71,15 @@ void Lv2EffectsModule::registerResources()
 
 void Lv2EffectsModule::registerUiTypes()
 {
+    qmlRegisterType<Lv2ViewLoader>("Audacity.Lv2", 1, 0, "Lv2ViewLoader");
 }
 
-void Lv2EffectsModule::onInit(const muse::IApplication::RunMode&)
+void Lv2EffectsModule::onInit(const muse::IApplication::RunMode& runMode)
 {
+    m_metaReader->init(runMode);
 }
 
 void Lv2EffectsModule::onDeinit()
 {
+    m_metaReader->deinit();
 }

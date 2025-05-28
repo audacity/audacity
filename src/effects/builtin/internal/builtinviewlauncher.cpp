@@ -16,7 +16,7 @@ muse::Ret BuiltinViewLauncher::showEffect(const EffectInstanceId& instanceId) co
 {
     muse::UriQuery uri(muse::String(EFFECT_VIEWER_URI).toStdString());
     uri.addParam("instanceId", muse::Val(instanceId));
-    uri.addParam("isVst", muse::Val(false));
+    uri.addParam("effectFamily", muse::Val(EffectFamily::Builtin));
     return interactive()->openSync(uri).ret;
 }
 

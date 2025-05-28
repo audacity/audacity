@@ -37,6 +37,9 @@ public:
     LV2EffectsModule();
     virtual ~LV2EffectsModule();
 
+    //! Execute eitehr InitializePluginRegistration() or Initialize()
+    bool InitializePluginRegistration();
+
     // ComponentInterface implementation
 
     PluginPath GetPath() const override;
@@ -70,9 +73,9 @@ public:
 
     std::unique_ptr<Validator> MakeValidator() const override;
 
-private:
-
     static const LilvPlugin* GetPlugin(const PluginPath& path);
+
+private:
 
     //During initialization LV2 module will update LV2_PATH
     //environment variable, we need to preserve the its contents

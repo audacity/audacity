@@ -79,14 +79,30 @@ MenuItemList makeDestructiveBuiltinEffectSubmenu(const EffectMetaList& effects, 
     return items;
 }
 
+namespace {
+constexpr const char* effectFamiliyString(EffectFamily family)
+{
+    switch (family) {
+    case EffectFamily::Builtin: return "Audacity";
+    case EffectFamily::VST3: return "VST3";
+    case EffectFamily::LV2: return "LV2";
+    default:
+        assert(false);
+        return "Unknown";
+    }
+}
+} // namespace
+
 MenuItemList makeNonBuiltinEffectSubmenus(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
 {
     std::map<CiString /*family*/, std::map<CiString /*publisher*/, std::map<CiString /*title*/, EffectMetaSet> > > families;
 
     for (const EffectMeta& meta : effects) {
-        if (meta.family == EffectFamily::VST3) {
-            families[CiString{ muse::String{ "VST3" } }][CiString{ meta.vendor }][CiString{ meta.title }].insert(&meta);
+        if (meta.family == EffectFamily::Builtin) {
+            // Built-in effects are handled separately
+            continue;
         }
+        families[CiString{ muse::String{ effectFamiliyString(meta.family) } }][CiString{ meta.vendor }][CiString{ meta.title }].insert(&meta);
     }
 
     MenuItemList items;

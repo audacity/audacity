@@ -9,9 +9,13 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::effects {
+class Lv2PluginMetaReader;
+
 class Lv2EffectsModule : public muse::modularity::IModuleSetup
 {
 public:
+    Lv2EffectsModule();
+
     std::string moduleName() const override;
     void registerExports() override;
     void resolveImports() override;
@@ -21,5 +25,6 @@ public:
     void onDeinit() override;
 
 private:
+    const std::shared_ptr<Lv2PluginMetaReader> m_metaReader;
 };
 }
