@@ -142,7 +142,7 @@ RetVal<SaveLocationType> OpenSaveProjectScenario::askSaveLocationType() const
     bool shouldAsk = configuration()->shouldAskSaveLocationType();
     query.addParam("askAgain", Val(shouldAsk));
 
-    RetVal<Val> rv = interactive()->open(query);
+    RetVal<Val> rv = interactive()->openSync(query);
     if (!rv.ret) {
         return rv.ret;
     }
@@ -196,7 +196,7 @@ RetVal<CloudAudioInfo> OpenSaveProjectScenario::askShareAudioLocation(IAudacityP
     //     query.addParam("existingScoreOrAudioUrl", Val(uploadUrl.toString()));
     // }
 
-    RetVal<Val> rv = interactive()->open(query);
+    RetVal<Val> rv = interactive()->openSync(query);
     if (!rv.ret) {
         return rv.ret;
     }

@@ -277,7 +277,7 @@ Promise<QPixmap> RecentFilesController::thumbnail(const muse::io::path_t& filePa
         });
 
         return Promise<QPixmap>::Result::unchecked();
-    }, Promise<QPixmap>::AsynchronyType::ProvidedByBody);
+    }, PromiseType::AsyncByBody);
 }
 
 void RecentFilesController::cleanUpThumbnailCache(const RecentFilesList& files)

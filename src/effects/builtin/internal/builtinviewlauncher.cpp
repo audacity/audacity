@@ -17,7 +17,7 @@ muse::Ret BuiltinViewLauncher::showEffect(const EffectInstanceId& instanceId) co
     muse::UriQuery uri(muse::String(EFFECT_VIEWER_URI).toStdString());
     uri.addParam("instanceId", muse::Val(instanceId));
     uri.addParam("isVst", muse::Val(false));
-    return interactive()->open(uri).ret;
+    return interactive()->openSync(uri).ret;
 }
 
 void BuiltinViewLauncher::showRealtimeEffect(const RealtimeEffectStatePtr& state) const
