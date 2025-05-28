@@ -13,6 +13,7 @@ set( SOURCES
 list(APPEND LIBRARIES
    lib-wx-wrappers-interface
    lib-musehub-interface
+   Audacity
 )
 
 audacity_module( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )

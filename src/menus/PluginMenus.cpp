@@ -15,6 +15,7 @@
 #include "EffectManager.h"
 #include "HelpSystem.h"
 #include "Journal.h"
+#include "GetEffectsHelper.h"
 #include "MenuHelper.h"
 #include "PluginManager.h"
 #include "Prefs.h"
@@ -364,15 +365,7 @@ auto EffectMenu()
          , Command(
             wxT("GetMoreEffects"), XXO("Get more effects..."),
             [](const CommandContext&) {
-               OpenInDefaultBrowser("https://www.audacityteam.org/mh-effectmenu");
-            },
-            AlwaysEnabledFlag)
-#endif
-#if defined(__WXMSW__)
-         , Command(
-            wxT("GetAIEffects"), XXO("Get AI effects..."),
-            [](const CommandContext&) {
-               OpenInDefaultBrowser("https://audacityteam.org/download/openvino");
+               GetEffectsHelper::Get().GetEffects();
             },
             AlwaysEnabledFlag)
 #endif

@@ -561,6 +561,7 @@ set( SOURCES
       menus/EditMenus.cpp
       menus/ExtraMenus.cpp
       menus/FileMenus.cpp
+      menus/GetEffectsHelper.cpp
       menus/HelpMenus.cpp
       menus/LabelMenus.cpp
       menus/MenuHelper.cpp
