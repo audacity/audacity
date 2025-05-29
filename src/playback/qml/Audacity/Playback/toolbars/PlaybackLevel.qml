@@ -136,6 +136,28 @@ Item {
                     rightVolumePressure.resetClipped()
                 }
             }
+
+            MouseArea {
+                id: overloadClickArea
+
+                anchors.top: volumePressureContainer.top
+                anchors.bottom: volumePressureContainer.bottom
+
+                anchors.right: volumePressureContainer.right
+
+                width: leftVolumePressure.overloadWidth + 2
+
+                z: 10
+
+                enabled: (volumeSlider.handleX <= parent.width - leftVolumePressure.overloadWidth)
+
+                onClicked: {
+                    leftVolumePressure.reset()
+                    leftVolumePressure.resetClipped()
+                    rightVolumePressure.reset()
+                    rightVolumePressure.resetClipped()
+                }
+            }
         }
     }
 }

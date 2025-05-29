@@ -26,7 +26,7 @@ Canvas {
 
     property int overloadHeight: 4
 
-    width: root.showRuler ? indicatorWidth + 20 : indicatorWidth
+    width: root.showRuler ? indicatorWidth + 26 : indicatorWidth
 
     QtObject {
         id: meterStyle
@@ -87,7 +87,7 @@ Canvas {
 
         readonly property color unitTextColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.8)
         readonly property string unitTextFont: {
-            var pxSize = String('8px')
+            var pxSize = String('12px')
             var family = String('\'' + ui.theme.bodyFont.family + '\'')
 
             return pxSize + ' ' + family
@@ -147,11 +147,9 @@ Canvas {
         id: ruler
 
         readonly property real strokeHorizontalMargin: 2
-        readonly property real longStrokeHeight: 1
-        readonly property real longStrokeWidth: 5
+        readonly property real strokeHeight: 1
+        readonly property real strokeWidth: 4
         readonly property color longStrokeColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.5)
-        readonly property real shortStrokeHeight: 1
-        readonly property real shortStrokeWidth: 2
         readonly property color shortStrokeColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.3)
 
         // Rounding up fullStep value to the predefined one,
@@ -200,9 +198,13 @@ Canvas {
 
             // Drawing small steps
             for (let k = 1; k < smallStepCount; k++) {
+                if (k % (fullStep / smallStep) === 0) {
+                    // Skip drawing small steps that are multiples of full step
+                    continue;
+                }
                 const vPos = originVPos + prv.heightPerUnit * smallStep * k;
                 ctx.fillStyle = ruler.shortStrokeColor
-                ctx.fillRect(originHPos, vPos, ruler.shortStrokeWidth, ruler.shortStrokeHeight)
+                ctx.fillRect(originHPos, vPos, ruler.strokeWidth, ruler.strokeHeight)
             }
 
             // Drawing full steps
@@ -211,14 +213,14 @@ Canvas {
 
                 // We don´t draw the first stroke
                 if (j == 0) {
-                    let textHPos = originHPos + ruler.strokeHorizontalMargin
+                    let textHPos = originHPos + ruler.strokeWidth + ruler.strokeHorizontalMargin
                     ctx.fillStyle = prv.unitTextColor
                     ctx.fillText(fullStep * j, textHPos, vPos + 4)
                 } else {
                     ctx.fillStyle = ruler.longStrokeColor
-                    ctx.fillRect(originHPos, vPos, ruler.longStrokeWidth, ruler.longStrokeHeight)
+                    ctx.fillRect(originHPos + ruler.strokeWidth, vPos, ruler.strokeWidth, ruler.strokeHeight)
 
-                    let textHPos = originHPos + ruler.longStrokeWidth + ruler.strokeHorizontalMargin
+                    let textHPos = originHPos + ruler.strokeWidth * 2 + ruler.strokeHorizontalMargin
                     ctx.fillStyle = prv.unitTextColor
                     ctx.fillText(fullStep * j, textHPos, vPos + 4)
                 }
@@ -229,6 +231,7 @@ Canvas {
     function reset() {
         prv.maxPeak = -60
         prv.recentPeak = -60
+        prv.updatedVolumePressure = -60
         prv.recentVolumePressure = []
 
         requestPaint()
