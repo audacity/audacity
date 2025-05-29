@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-26 19:42+0300\n"
-"PO-Revision-Date: 2025-05-28 00:00+0000\n"
+"POT-Creation-Date: 2025-05-29 17:54+0300\n"
+"PO-Revision-Date: 2025-05-29 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
 "Language: pl\n"
@@ -15703,10 +15703,6 @@ msgid "&Label Track"
 msgstr "&Etykieta ścieżki"
 
 #: src/menus/MenuHelper.cpp
-msgid "OpenVINO Music Generation"
-msgstr "OpenVINO Music Generation"
-
-#: src/menus/MenuHelper.cpp
 msgid "..."
 msgstr "..."
 
@@ -15793,10 +15789,6 @@ msgstr "Efe&kt"
 #: src/menus/PluginMenus.cpp
 msgid "Add Realtime Effects"
 msgstr "Dodaj efekty w czasie rzeczywistym"
-
-#: src/menus/PluginMenus.cpp
-msgid "Get AI effects..."
-msgstr "Uzyskaj efekty SI..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
