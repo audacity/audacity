@@ -20,7 +20,9 @@ Item {
         onIsPlayingChanged: {
             if (model.isPlaying) {
                 leftVolumePressure.reset()
+                leftVolumePressure.resetClipped()
                 rightVolumePressure.reset()
+                rightVolumePressure.resetClipped();
             }
         }
     }

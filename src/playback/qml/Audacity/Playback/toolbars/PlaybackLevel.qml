@@ -27,10 +27,21 @@ Item {
     property int meterType: PlaybackMeterType.DbLog
     property int meterPosition: PlaybackMeterPosition.TopBar
 
+    property bool isPlaying: false
+
     signal volumeLevelChangeRequested(var level)
     signal positionChangeRequested(int position)
     signal styleChangeRequested(int style)
     signal typeChangeRequested(int type)
+
+    onIsPlayingChanged: {
+        if (root.isPlaying) {
+            leftVolumePressure.reset()
+            leftVolumePressure.resetClipped()
+            rightVolumePressure.reset()
+            rightVolumePressure.resetClipped();
+        }
+    }
 
     RowLayout {
         anchors.fill: parent
