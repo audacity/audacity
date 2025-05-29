@@ -8,12 +8,6 @@
 
 ProgressDialog::ProgressDialog()
 {
-    interactive()->showProgress(std::string(), &m_progress);
-    m_progress.started();
-
-    m_progress.canceled().onNotify(this, [this]() {
-        m_cancelled = true;
-    });
 }
 
 ProgressDialog::~ProgressDialog()
@@ -32,6 +26,16 @@ void ProgressDialog::SetDialogTitle(const TranslatableString& title)
 
 ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long long denominator, const TranslatableString& message)
 {
+    if (!m_progress.isStarted()) {
+        interactive()->showProgress(std::string(), &m_progress);
+
+        m_progress.canceled().onNotify(this, [this]() {
+            m_cancelled = true;
+        });
+
+        m_progress.start();
+    }
+
     m_progress.progress(numerator, denominator, message.Translation().ToStdString());
     QCoreApplication::processEvents();
 
