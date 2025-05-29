@@ -105,6 +105,7 @@ Item {
                 leftCurrentRMS: Boolean(itemData) ? itemData.leftChannelRMS : -60
                 rightCurrentVolumePressure: Boolean(itemData) ? itemData.rightChannelPressure : -60
                 rightCurrentRMS: Boolean(itemData) ? itemData.rightChannelRMS : -60
+                isPlaying: Boolean(itemData) ? itemData.isPlaying : false
 
                 meterStyle: {
                     return Boolean(itemData) ? itemData.meterStyle : PlaybackMeterStyle.Default

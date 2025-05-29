@@ -8,6 +8,7 @@
 #include "modularity/ioc.h"
 #include "playback/iplayback.h"
 #include "playback/iplaybackconfiguration.h"
+#include "playback/iplaybackcontroller.h"
 
 #include "uicomponents/view/toolbaritem.h"
 
@@ -33,8 +34,11 @@ class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
     Q_PROPERTY(
         PlaybackMeterPosition::MeterPosition meterPosition READ meterPosition WRITE setMeterPosition NOTIFY meterPositionChanged FINAL)
 
+    Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
+
     muse::Inject<IPlayback> playback;
     muse::Inject<IPlaybackConfiguration> configuration;
+    muse::Inject<IPlaybackController> controller;
 
 public:
     explicit PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
@@ -56,6 +60,8 @@ public:
     PlaybackMeterStyle::MeterStyle meterStyle() const;
     PlaybackMeterType::MeterType meterType() const;
     PlaybackMeterPosition::MeterPosition meterPosition() const;
+
+    bool isPlaying() const;
 
 public slots:
     void setLeftChannelPressure(float leftChannelPressure);
@@ -88,6 +94,8 @@ signals:
     void meterStyleChanged();
     void meterTypeChanged();
     void meterPositionChanged();
+
+    void isPlayingChanged();
 
 private:
     void setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue);
