@@ -34,6 +34,7 @@ Item {
     TracksViewStateModel {
         id: tracksViewState
         onTracksVericalYChanged: {
+            let headerHeight = view.header.height ? view.header.height : 0
             view.contentY = tracksViewState.tracksVericalY
         }
     }
@@ -169,6 +170,12 @@ Item {
 
                 model: tracksModel
 
+                header: Rectangle {
+                    height: 2
+                    width: parent.width
+                    color: "transparent"
+                }
+
                 footer: Item {
                     height: tracksViewState.tracksVerticalScrollPadding
                 }
@@ -178,6 +185,7 @@ Item {
                 delegate: TrackItem {
                     item: itemData
                     isSelected: Boolean(item) ? item.isSelected : false
+                    isFocused: Boolean(item) ? item.isFocused : false
                     container: view
 
                     navigation.name: Boolean(item) ? item.title + item.index : ""
@@ -228,12 +236,13 @@ Item {
                         acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
 
                         onWheel: function(wheelEvent) {
+                            let headerHeight = view.headerItem ? view.headerItem.height : 0
                             let delta = wheelEvent.pixelDelta.y !== 0 ? wheelEvent.pixelDelta.y : wheelEvent.angleDelta.y
                             let offset  = view.contentY - delta
 
                             let maxContentY = view.contentHeight - view.height
                             maxContentY = Math.max(maxContentY, view.contentY)
-                            offset = Math.max(Math.min(offset, maxContentY), 0)
+                            offset = Math.max(Math.min(offset, maxContentY), -headerHeight)
 
                             view.contentY = offset
                         }

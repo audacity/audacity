@@ -75,6 +75,10 @@ public:
 
     void resetTimeSelection() override;
 
+    trackedit::TrackId focusedTrack() const override;
+    void setFocusedTrack(TrackId trackId) override;
+    muse::async::Channel<trackedit::TrackId> focusedTrackChanged() const override;
+
 private:
     void addSelectedTrack(const trackedit::TrackId& trackId);
     void updateSelectionController();
@@ -113,5 +117,8 @@ private:
     Val<trackedit::secs_t> m_selectedEndTime;
 
     Val<trackedit::secs_t> m_selectionStartTime; // indicates where user started selection
+
+    // track focus state
+    Val<TrackId> m_focusedTrack;
 };
 }

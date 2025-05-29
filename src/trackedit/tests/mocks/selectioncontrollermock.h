@@ -54,5 +54,9 @@ public:
     MOCK_METHOD(bool, isSelectionGrouped, (), (const, override));
 
     MOCK_METHOD(void, resetTimeSelection, (), (override));
+
+    MOCK_METHOD(TrackId, focusedTrack, (), (const, override));
+    MOCK_METHOD(void, setFocusedTrack, (TrackId trackId), (override));
+    MOCK_METHOD(muse::async::Channel<trackedit::TrackId>, focusedTrackChanged, (), (const, override));
 };
 }

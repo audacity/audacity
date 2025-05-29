@@ -1007,6 +1007,7 @@ muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t b
     if (selectedTracks.empty()) {
         const TrackIdList tracksIdsToSelect = pasteIntoNewTracks(copiedData);
         selectionController()->setSelectedTracks(tracksIdsToSelect);
+        selectionController()->setFocusedTrack(tracksIdsToSelect.front());
         projectWasModified = true;
         return muse::make_ok();
     }
@@ -1105,6 +1106,7 @@ muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t b
     }
 
     selectionController()->setSelectedTracks(dstTracksIds);
+    selectionController()->setFocusedTrack(dstTracksIds.front());
 
     return ok;
 }
@@ -1906,6 +1908,7 @@ void Au3Interaction::addWaveTrack(int numChannels)
     prj->notifyAboutTrackAdded(DomConverter::track(track));
 
     selectionController()->setSelectedTracks({ track->GetId() });
+    selectionController()->setFocusedTrack(track->GetId());
 }
 
 bool Au3Interaction::newLabelTrack()

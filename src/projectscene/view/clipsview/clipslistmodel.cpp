@@ -1002,6 +1002,7 @@ void ClipsListModel::selectClip(const ClipKey& key)
             }
         } else {
             selectionController()->setSelectedClips(trackeditInteraction()->clipsInGroup(clipGroupId), complete);
+            selectionController()->setFocusedTrack(key.key.trackId);
         }
     } else {
         if (modifiers.testFlag(Qt::ShiftModifier)) {

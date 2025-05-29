@@ -74,5 +74,10 @@ public:
     virtual bool isSelectionGrouped() const = 0;
 
     virtual void resetTimeSelection() = 0;
+
+    // track focus state
+    virtual TrackId focusedTrack() const = 0;
+    virtual void setFocusedTrack(TrackId trackId) = 0;
+    virtual muse::async::Channel<trackedit::TrackId> focusedTrackChanged() const = 0;
 };
 }

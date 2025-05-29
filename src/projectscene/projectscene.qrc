@@ -25,7 +25,8 @@
         <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumeTooltip.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/PlayCursor.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview/PlayCursorLine.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview/PlayCursorHead.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/VerticalRulersPanel.qml</file>
         <file>qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml</file>
