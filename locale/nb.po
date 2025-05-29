@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-26 19:42+0300\n"
+"POT-Creation-Date: 2025-05-29 17:54+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Stian Kristensen, 2024\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/audacity/teams/164520/nb/)\n"
@@ -15679,10 +15679,6 @@ msgid "&Label Track"
 msgstr "&Etikettspor"
 
 #: src/menus/MenuHelper.cpp
-msgid "OpenVINO Music Generation"
-msgstr ""
-
-#: src/menus/MenuHelper.cpp
 msgid "..."
 msgstr "..."
 
@@ -15769,10 +15765,6 @@ msgstr "&Effekt"
 #: src/menus/PluginMenus.cpp
 msgid "Add Realtime Effects"
 msgstr "Legg til sanntidseffekter"
-
-#: src/menus/PluginMenus.cpp
-msgid "Get AI effects..."
-msgstr "Få AI-effekter..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -21697,3 +21689,6 @@ msgstr "Spektralverktøy"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
+
+#~ msgid "Get AI effects..."
+#~ msgstr "Få AI-effekter..."

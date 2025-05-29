@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-26 19:42+0300\n"
+"POT-Creation-Date: 2025-05-29 17:54+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Tadahisa Sugisaki, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/audacity/teams/164520/ja/)\n"
@@ -15713,10 +15713,6 @@ msgid "&Label Track"
 msgstr "ラベルトラック(&L)"
 
 #: src/menus/MenuHelper.cpp
-msgid "OpenVINO Music Generation"
-msgstr ""
-
-#: src/menus/MenuHelper.cpp
 msgid "..."
 msgstr "..."
 
@@ -15803,10 +15799,6 @@ msgstr "エフェクト(&C)"
 #: src/menus/PluginMenus.cpp
 msgid "Add Realtime Effects"
 msgstr "リアルタイムエフェクトを登録"
-
-#: src/menus/PluginMenus.cpp
-msgid "Get AI effects..."
-msgstr "AI エフェクトを取得..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -21759,6 +21751,9 @@ msgstr "スペクトルツール"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "レガシー"
+
+#~ msgid "Get AI effects..."
+#~ msgstr "AI エフェクトを取得..."
 
 #~ msgid "Available on MuseHub"
 #~ msgstr "MuseHub から入手できます"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-26 19:42+0300\n"
+"POT-Creation-Date: 2025-05-29 17:54+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Link Winterberg, 2024\n"
 "Language-Team: Slovak (https://app.transifex.com/audacity/teams/164520/sk/)\n"
@@ -15699,10 +15699,6 @@ msgid "&Label Track"
 msgstr "Stopa s &popiskami"
 
 #: src/menus/MenuHelper.cpp
-msgid "OpenVINO Music Generation"
-msgstr ""
-
-#: src/menus/MenuHelper.cpp
 msgid "..."
 msgstr "..."
 
@@ -15789,10 +15785,6 @@ msgstr "&Efekt"
 #: src/menus/PluginMenus.cpp
 msgid "Add Realtime Effects"
 msgstr "Pridať efekty v reálnom čase"
-
-#: src/menus/PluginMenus.cpp
-msgid "Get AI effects..."
-msgstr "Získať AI efekty..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -21748,3 +21740,6 @@ msgstr "Spektrálne nástroje"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Pravidlá"
+
+#~ msgid "Get AI effects..."
+#~ msgstr "Získať AI efekty..."

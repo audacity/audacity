@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-26 19:42+0300\n"
+"POT-Creation-Date: 2025-05-29 17:54+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Catarina Anabela, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/audacity/teams/164520/id/)\n"
@@ -15685,10 +15685,6 @@ msgid "&Label Track"
 msgstr "&Trek Label"
 
 #: src/menus/MenuHelper.cpp
-msgid "OpenVINO Music Generation"
-msgstr ""
-
-#: src/menus/MenuHelper.cpp
 msgid "..."
 msgstr "..."
 
@@ -15775,10 +15771,6 @@ msgstr "E&fek"
 #: src/menus/PluginMenus.cpp
 msgid "Add Realtime Effects"
 msgstr "Tambahkan Efek Realtime"
-
-#: src/menus/PluginMenus.cpp
-msgid "Get AI effects..."
-msgstr "Dapatkan efek AI..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -21731,6 +21723,9 @@ msgstr "Alat Spektral"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Terdahulu"
+
+#~ msgid "Get AI effects..."
+#~ msgstr "Dapatkan efek AI..."
 
 #~ msgid "Available on MuseHub"
 #~ msgstr "Tersedia di MuseHub"

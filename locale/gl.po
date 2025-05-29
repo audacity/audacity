@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-26 19:42+0300\n"
+"POT-Creation-Date: 2025-05-29 17:54+0300\n"
 "PO-Revision-Date: 2015-02-20 17:07-0000\n"
 "Last-Translator: Miguel Anxo Bouzada <mbouzada@gmail.com>\n"
 "Language-Team: Galician <proxecto@trasno.net>\n"
@@ -16432,10 +16432,6 @@ msgid "&Label Track"
 msgstr "Pista de &etiquetas"
 
 #: src/menus/MenuHelper.cpp
-msgid "OpenVINO Music Generation"
-msgstr ""
-
-#: src/menus/MenuHelper.cpp
 #, fuzzy
 msgid "..."
 msgstr ".."
@@ -16538,11 +16534,6 @@ msgstr "Efe&cto"
 #, fuzzy
 msgid "Add Realtime Effects"
 msgstr "Rexistrar os efectos"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Get AI effects..."
-msgstr "Preferencias..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -23053,6 +23044,10 @@ msgstr "Es&pectro"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Get AI effects..."
+#~ msgstr "Preferencias..."
 
 #, fuzzy
 #~ msgid "Available on MuseHub"

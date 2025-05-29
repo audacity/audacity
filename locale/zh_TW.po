@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-26 19:42+0300\n"
+"POT-Creation-Date: 2025-05-29 17:54+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Jesse Lin <jesselin.com@gmail.com>, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/audacity/teams/164520/zh_TW/)\n"
@@ -15674,10 +15674,6 @@ msgid "&Label Track"
 msgstr "標籤軌道(&L)"
 
 #: src/menus/MenuHelper.cpp
-msgid "OpenVINO Music Generation"
-msgstr ""
-
-#: src/menus/MenuHelper.cpp
 msgid "..."
 msgstr "…"
 
@@ -15764,10 +15760,6 @@ msgstr "效果(&C)"
 #: src/menus/PluginMenus.cpp
 msgid "Add Realtime Effects"
 msgstr "即時效果"
-
-#: src/menus/PluginMenus.cpp
-msgid "Get AI effects..."
-msgstr "取得 AI 效果器..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -21715,6 +21707,9 @@ msgstr "頻譜工具"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "傳統"
+
+#~ msgid "Get AI effects..."
+#~ msgstr "取得 AI 效果器..."
 
 #~ msgid "Available on MuseHub"
 #~ msgstr "可在 MuseHub 找到"
