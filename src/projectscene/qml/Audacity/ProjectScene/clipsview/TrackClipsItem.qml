@@ -20,6 +20,7 @@ Item {
 
     property bool isDataSelected: false
     property bool isTrackSelected: false
+    property bool isTrackFocused: false
     property bool isMultiSelectionActive: false
     property bool isTrackAudible: true
     property bool isStereo: clipsModel.isStereo
@@ -489,11 +490,26 @@ Item {
 
     Rectangle {
         id: selectedTrackHighlight
-        z: 0
+
         anchors.fill: parent
+        anchors.bottomMargin: sep.thickness
+        anchors.leftMargin: -canvas.anchors.leftMargin
+
+        color: "#FFFFFF"
+        opacity: 0.10
+
+        visible: root.isDataSelected || root.isTrackSelected
+    }
+
+    Rectangle {
+        id: defaultTrackHighlight
+
+        anchors.fill: parent
+        anchors.bottomMargin: sep.thickness
+        anchors.leftMargin: -canvas.anchors.leftMargin
+
         color: "#FFFFFF"
         opacity: 0.05
-        visible: root.isDataSelected || root.isTrackSelected
     }
 
     MouseArea {
@@ -548,10 +564,26 @@ Item {
         }
     }
 
+    Rectangle {
+        id: trackFocusState
+
+        anchors.fill: parent
+        anchors.leftMargin: -border.width - canvas.anchors.leftMargin
+        anchors.rightMargin: -border.width
+        anchors.topMargin: -border.width
+
+        visible: isTrackFocused
+
+        color: "transparent"
+
+        border.color: "#7EB1FF"
+        border.width: 2
+    }
+
     SeparatorLine {
         id: sep
-        color: "#FFFFFF"
-        opacity: 0.1
+
+        color: "transparent"
         anchors.bottom: parent.bottom
         thickness: 2
     }
