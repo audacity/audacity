@@ -21744,3 +21744,9 @@ msgstr "Narzędzia widma"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Stare"
+
+#~ msgid "Get AI effects..."
+#~ msgstr "Uzyskaj efekty SI..."
+
+#~ msgid "Available on MuseHub"
+#~ msgstr "Dostępne na MuseHubie"
