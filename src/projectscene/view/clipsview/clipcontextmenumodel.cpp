@@ -150,7 +150,7 @@ MenuItemList ClipContextMenuModel::makeClipColourItems()
     m_colorChangeActionCodeList.clear();
     MenuItemList items;
     items <<
-        makeMenuItem("action://trackedit/clip/change-color-auto", muse::TranslatableString("clip", muse::String::fromStdString("Auto")));
+        makeMenuItem("action://trackedit/clip/change-color-auto", muse::TranslatableString("clip", muse::String::fromStdString("Same as Track Color")));
     m_colorChangeActionCodeList.push_back("action://trackedit/clip/change-color-auto");
 
     const auto& colors = projectSceneConfiguration()->clipColors();
