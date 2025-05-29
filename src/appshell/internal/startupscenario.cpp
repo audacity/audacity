@@ -30,7 +30,7 @@ using namespace au::appshell;
 using namespace muse::actions;
 using namespace au::project;
 
-static const muse::Uri FIRST_LAUNCH_SETUP_URI("musescore://firstLaunchSetup");
+static const muse::UriQuery FIRST_LAUNCH_SETUP_URI("musescore://firstLaunchSetup?floating=true");
 static const muse::Uri HOME_URI("musescore://home");
 static const muse::Uri PROJECT_URI("audacity://project");
 
