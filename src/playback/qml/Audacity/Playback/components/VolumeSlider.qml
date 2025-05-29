@@ -133,7 +133,7 @@ Slider {
                 anchors.margins: 1
                 radius: width / 2
                 color: ui.theme.backgroundPrimaryColor
-                opacity: 0.3
+                opacity: 0.7
             }
 
         }
