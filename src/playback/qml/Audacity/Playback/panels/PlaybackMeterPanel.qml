@@ -117,10 +117,10 @@ Item {
                 volumeLevel: model.level
 
                 anchors.top: parent.top
-                anchors.topMargin: handleHeight / 2
+                anchors.topMargin: leftVolumePressure.overloadHeight
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.leftMargin: 3
+                anchors.leftMargin: 2
 
                 onVolumeLevelMoved: function(level) {
                     leftVolumePressure.reset()
