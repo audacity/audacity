@@ -50,6 +50,9 @@ void SelectionViewController::onPressed(double x, double y)
         tracks = selectionController()->determinateTracks(m_startPoint.y(), y);
     }
 
+    if (!tracks.empty()) {
+        selectionController()->setFocusedTrack(tracks.at(0));
+    }
     selectionController()->setSelectedTracks(tracks, true);
 
     if (modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier)) {
@@ -99,7 +102,7 @@ void SelectionViewController::onPositionChanged(double x, double y)
     } else {
         tracks = selectionController()->determinateTracks(m_startPoint.y(), y);
     }
-    selectionController()->setSelectedTracks(tracks, true);
+    selectionController()->setSelectedTracks(tracks, false);
 
     // time
     double x1 = m_startPoint.x();
@@ -160,8 +163,10 @@ void SelectionViewController::onReleased(double x, double y)
 
     setSelectionActive(true);
 
-    if (!tracks.empty()) {
-        selectionController()->setSelectedTracks(tracks);
+    if (m_startPoint.y() < y) {
+        selectionController()->setFocusedTrack(tracks.back());
+    } else {
+        selectionController()->setFocusedTrack(tracks.front());
     }
     selectionController()->setSelectedTracks(tracks, true);
 

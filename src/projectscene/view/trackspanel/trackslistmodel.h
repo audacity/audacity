@@ -98,6 +98,7 @@ private:
 
     void onProjectChanged();
     void onSelectedTracks(const trackedit::TrackIdList& tracksIds);
+    void onFocusedTrack(const trackedit::TrackId& trackId);
     void onTracksChanged(const std::vector<trackedit::Track>& tracks);
     void onTrackAdded(const trackedit::Track& track);
     void onTrackRemoved(const trackedit::Track& track);

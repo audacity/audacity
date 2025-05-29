@@ -99,6 +99,12 @@ void TracksListModel::load()
 
     loadTracks(prj->trackList());
 
+    onFocusedTrack(selectionController()->focusedTrack());
+
+    selectionController()->focusedTrackChanged().onReceive(this, [this](trackedit::TrackId trackId) {
+        onFocusedTrack(trackId);
+    });
+
     emit isEmptyChanged();
     emit isAddingAvailableChanged(true);
 }
@@ -349,6 +355,7 @@ void TracksListModel::setItemsSelected(const QModelIndexList& indexes, bool sele
     if (selected) {
         // if selecting new tracks, add them to the existing selection
         alreadySelectedTracksIds.insert(alreadySelectedTracksIds.end(), idsToModify.begin(), idsToModify.end());
+        selectionController()->setFocusedTrack(idsToModify.back());
     } else {
         // if deselecting tracks, remove them from the existing selection
         alreadySelectedTracksIds.erase(
@@ -574,6 +581,14 @@ void TracksListModel::onSelectedTracks(const TrackIdList& trackIds)
     QSignalBlocker blocker(m_selectionModel);
     QItemSelectionModel* selectionModel = m_selectionModel;
     selectionModel->select(selection, QItemSelectionModel::ClearAndSelect);
+}
+
+void TracksListModel::onFocusedTrack(const trackedit::TrackId& trackId)
+{
+    for (int i = 0; i < m_trackList.size(); ++i) {
+        auto& track = m_trackList.at(i);
+        track->setIsFocused(track->trackId() == trackId);
+    }
 }
 
 void TracksListModel::onTracksChanged(const std::vector<au::trackedit::Track>& tracks)

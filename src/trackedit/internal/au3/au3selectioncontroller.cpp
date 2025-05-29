@@ -9,6 +9,7 @@
 
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
+#include "libraries/lib-track-selection/TrackFocus.h"
 
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/au3types.h"
@@ -576,6 +577,28 @@ void Au3SelectionController::resetTimeSelection()
     resetSelectedClips();
 }
 
+au::trackedit::TrackId Au3SelectionController::focusedTrack() const
+{
+    return m_focusedTrack.val;
+}
+
+void Au3SelectionController::setFocusedTrack(TrackId trackId)
+{
+    Au3Track* track = au3::DomAccessor::findTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(track) {
+        return;
+    }
+    auto& trackFocus = TrackFocus::Get(projectRef());
+    trackFocus.SetFocus(track->shared_from_this());
+
+    m_focusedTrack.set(trackId, true);
+}
+
+muse::async::Channel<au::trackedit::TrackId> Au3SelectionController::focusedTrackChanged() const
+{
+    return m_focusedTrack.changed;
+}
+
 muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedEndTimeChanged() const
 {
     return m_selectedEndTime.changed;
@@ -605,6 +628,10 @@ void Au3SelectionController::updateSelectionController()
     }
 
     m_selectedTracks.set(selectedTracks, true);
+
+    if (!selectedTracks.empty()) {
+        setFocusedTrack(selectedTracks.front());
+    }
 }
 
 Au3Project& Au3SelectionController::projectRef() const
