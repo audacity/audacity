@@ -33,8 +33,10 @@ Item {
         FlatButton {
             id: meterOptionsBtn
 
-            Layout.preferredWidth: root.width
-            Layout.preferredHeight: root.width
+            Layout.preferredWidth: 28
+            Layout.preferredHeight: 28
+            Layout.alignment: Qt.AlignHCenter
+            Layout.topMargin: 6
 
             icon: IconCode.AUDIO
             accentButton: popup.isOpened
@@ -90,7 +92,7 @@ Item {
                     meterStyle: model.meterStyle
 
                     height: parent.height - volumeSlider.handleHeight / 2
-                    indicatorWidth: 6
+                    indicatorWidth: 11
                 }
 
                 VolumePressureMeter {
@@ -104,7 +106,7 @@ Item {
                     meterStyle: model.meterStyle
 
                     height: parent.height - volumeSlider.handleHeight / 2
-                    indicatorWidth: 6
+                    indicatorWidth: 11
                     showRuler: true
                 }
             }
@@ -120,7 +122,9 @@ Item {
                 anchors.topMargin: leftVolumePressure.overloadHeight
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.leftMargin: 2
+                anchors.leftMargin: 6
+
+                handleWidth: 18
 
                 onVolumeLevelMoved: function(level) {
                     leftVolumePressure.reset()

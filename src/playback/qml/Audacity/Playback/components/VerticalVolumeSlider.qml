@@ -16,7 +16,7 @@ Slider {
 
     property alias navigation: navCtrl
 
-    readonly property real handleWidth: 16
+    property real handleWidth: 16
     readonly property real handleHeight: handleWidth
 
     signal volumeLevelMoved(var level)
@@ -138,7 +138,7 @@ Slider {
                 anchors.margins: 1
                 radius: width / 2
                 color: ui.theme.backgroundPrimaryColor
-                opacity: 0.3
+                opacity: 0.7
             }
 
         }
