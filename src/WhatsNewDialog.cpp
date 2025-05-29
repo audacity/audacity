@@ -307,6 +307,16 @@ private:
 };
 }
 
+class NotFocusableWindow : public wxWindow
+{
+public:
+   NotFocusableWindow(wxWindow* parent, wxWindowID id)
+      : wxWindow(parent, id)
+   {}
+
+   bool AcceptsFocus() const override { return false; }
+};
+
 BEGIN_EVENT_TABLE(WhatsNewDialog, wxDialogWrapper)
    EVT_BUTTON(WhatsNewID_WatchReleaseVideo, WhatsNewDialog::OnWatchReleaseVideo)
    EVT_BUTTON(WhatsNewID_GoToMuseHub, WhatsNewDialog::OnGoToMuseHub)
@@ -403,7 +413,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
    }
    S.EndVerticalLay();
 
-   const auto line = safenew wxWindow(S.GetParent(), wxID_ANY);
+   const auto line = safenew NotFocusableWindow(S.GetParent(), wxID_ANY);
    line->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
    line->SetSize(-1, 1);
 
@@ -437,7 +447,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
    }
    S.EndHorizontalLay();
 
-   const auto bottomLine = safenew wxWindow(S.GetParent(), wxID_ANY);
+   const auto bottomLine = safenew NotFocusableWindow(S.GetParent(), wxID_ANY);
    bottomLine->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
    bottomLine->SetSize(-1, 1);
    S
