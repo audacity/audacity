@@ -33,6 +33,9 @@ Slider {
 
     opacity: enabled ? 1.0 : ui.theme.itemOpacityDisabled
 
+    property alias handleX: handleItem.x
+    property alias handleY: handleItem.y
+
     signal increaseRequested()
     signal decreaseRequested()
 
@@ -85,6 +88,8 @@ Slider {
     }
 
     handle: Item {
+        id: handleItem
+
         x: root.position * prv.rulerLineWidth
         y: prv.rulerYPos - root.handleHeight / 2
         implicitWidth: root.handleWidth

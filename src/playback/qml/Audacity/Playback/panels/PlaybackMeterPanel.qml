@@ -67,19 +67,22 @@ Item {
         }
 
         Item {
+            id: meterContainer
+
             Layout.fillHeight: true
             Layout.preferredWidth: root.width
 
             Row {
                 id: meterChannelRow
 
-                topPadding: volumeSlider.handleHeight /  2
+                topPadding: 14
 
                 spacing: 2
 
-                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 6
 
                 VolumePressureMeter {
                     id: leftVolumePressure
@@ -119,10 +122,10 @@ Item {
                 volumeLevel: model.level
 
                 anchors.top: parent.top
-                anchors.topMargin: leftVolumePressure.overloadHeight
+                anchors.topMargin: meterChannelRow.topPadding + leftVolumePressure.overloadHeight - volumeSlider.handleHeight / 2
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.leftMargin: 6
+                anchors.leftMargin: 9
 
                 handleWidth: 18
 
@@ -136,6 +139,29 @@ Item {
                 }
 
                 onHandlePressed: function() {
+                    leftVolumePressure.reset()
+                    leftVolumePressure.resetClipped()
+                    rightVolumePressure.reset()
+                    rightVolumePressure.resetClipped()
+                }
+            }
+
+            MouseArea {
+                id: overloadClickArea
+
+                anchors.top: meterContainer.top
+                anchors.topMargin: volumeSlider.handleHeight /  2
+                anchors.left: meterContainer.left
+                anchors.right: meterContainer.right
+
+                height: leftVolumePressure.overloadHeight + 8
+
+                z: 10
+
+                // This will avoid to reset the volume levels when clicking on the overload area
+                enabled: (volumeSlider.handleY >= leftVolumePressure.overloadHeight)
+
+                onClicked: function(mouse) {
                     leftVolumePressure.reset()
                     leftVolumePressure.resetClipped()
                     rightVolumePressure.reset()
