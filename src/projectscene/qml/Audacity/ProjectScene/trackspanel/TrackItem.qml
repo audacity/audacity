@@ -60,7 +60,6 @@ ListItemBlank {
     }
 
     height: trackViewState.trackHeight
-    clip: true
     opacity: dragged ? 0.5 : 1
 
     background.color: (root.isSelected || hoverHandler.hovered) ?
@@ -120,11 +119,13 @@ ListItemBlank {
 
         spacing: 0
 
-        TrackSelectionBar {
-            id: selectionBar
+        Rectangle {
+            id: spacer
 
-            isSelected: root.isSelected
-            isHovered: hoverHandler.hovered
+            color: "transparent"
+
+            Layout.fillHeight: true
+            Layout.preferredWidth: 9
         }
 
         ColumnLayout {
@@ -239,7 +240,9 @@ ListItemBlank {
             }
         }
 
-        SeparatorLine {}
+        SeparatorLine {
+            Layout.bottomMargin: 2 * bottomSeparator.thickness
+        }
 
         Row {
             id: volumePressureContainer
@@ -360,12 +363,48 @@ ListItemBlank {
         }
     }
 
+    Rectangle {
+        id: trackHeaderBorder
+
+        anchors.fill: parent
+        anchors.rightMargin: -radius
+        anchors.leftMargin: spacer.width
+        anchors.bottomMargin: bottomSeparator.thickness
+
+        color: "transparent"
+        border.width: 1
+        border.color: ui.theme.strokeColor
+
+        radius: 4
+    }
+
     SeparatorLine {
         id: bottomSeparator
 
         anchors.bottom: parent.bottom
 
+        color: "transparent"
+
         thickness: 2
+    }
+
+    Rectangle {
+        id: trackFocusState
+
+        anchors.fill: parent
+        anchors.leftMargin: spacer.width - border.width
+        anchors.rightMargin: -radius
+        anchors.topMargin: -border.width
+        anchors.bottomMargin: bottomSeparator.thickness - border.width
+
+        visible: root.isSelected // temporary
+
+        color: "transparent"
+
+        border.color: "#7EB1FF"
+        border.width: 2
+
+        radius: 6
     }
 
     Component {

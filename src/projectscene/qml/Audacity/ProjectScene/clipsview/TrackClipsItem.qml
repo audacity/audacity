@@ -491,9 +491,19 @@ Item {
         id: selectedTrackHighlight
         z: 0
         anchors.fill: parent
+        anchors.bottomMargin: sep.thickness
         color: "#FFFFFF"
-        opacity: 0.05
+        opacity: 0.12
         visible: root.isDataSelected || root.isTrackSelected
+    }
+
+    Rectangle {
+        id: defaultTrackHighlight
+        z: 0
+        anchors.fill: parent
+        anchors.bottomMargin: sep.thickness
+        color: "#FFFFFF"
+        opacity: 0.06
     }
 
     MouseArea {
@@ -548,10 +558,27 @@ Item {
         }
     }
 
+    Rectangle {
+        id: trackFocusState
+
+        anchors.fill: parent
+        anchors.leftMargin: -border.width
+        anchors.rightMargin: -border.width
+        anchors.topMargin: -border.width
+
+        visible: isTrackSelected // temporary
+
+        color: "transparent"
+
+        border.color: "#7EB1FF"
+        border.width: 2
+    }
+
     SeparatorLine {
         id: sep
-        color: "#FFFFFF"
-        opacity: 0.1
+        // color: "#FFFFFF"
+        // opacity: 0.1
+        color: "transparent"
         anchors.bottom: parent.bottom
         thickness: 2
     }

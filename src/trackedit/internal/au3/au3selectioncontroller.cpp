@@ -576,6 +576,21 @@ void Au3SelectionController::resetTimeSelection()
     resetSelectedClips();
 }
 
+au::trackedit::TrackId Au3SelectionController::focusedTrack() const
+{
+    return m_focusedTrack.val;
+}
+
+void Au3SelectionController::setFocusedTrack(TrackId trackId)
+{
+    m_focusedTrack.set(trackId, true);
+}
+
+muse::async::Channel<au::trackedit::TrackId> Au3SelectionController::focusedTrackChanged() const
+{
+    return m_focusedTrack.changed;
+}
+
 muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedEndTimeChanged() const
 {
     return m_selectedEndTime.changed;

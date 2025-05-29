@@ -82,7 +82,8 @@ Rectangle {
     TracksViewStateModel {
         id: tracksViewState
         onTracksVericalYChanged: {
-            tracksClipsView.contentY = tracksViewState.tracksVericalY
+            // need to add header heigh here but it breaks sync with TracksPanel
+            tracksClipsView.contentY = tracksViewState.tracksVericalY + tracksClipsView.header.height
         }
     }
 
@@ -123,7 +124,7 @@ Rectangle {
 
         //! NOTE setting verticalY has to be done after tracks are loaded,
         // otherwise project always starts at the very top
-        Qt.callLater(() => tracksClipsView.contentY = tracksViewState.tracksVericalY)
+        Qt.callLater(() => tracksClipsView.contentY = tracksViewState.tracksVericalY - tracksClipsView.header.height)
     }
 
     Rectangle {
@@ -375,6 +376,7 @@ Rectangle {
             StyledListView {
                 id: tracksClipsView
 
+                topMargin: 2
                 anchors.fill: parent
                 clip: true
 
@@ -404,6 +406,12 @@ Rectangle {
                 signal startAutoScroll()
                 signal stopAutoScroll()
 
+                header: Rectangle {
+                    height: 2
+                    width: parent.width
+                    color: "transparent"
+                }
+
                 footer: Item {
                     height: tracksViewState.tracksVerticalScrollPadding
                 }
@@ -430,6 +438,7 @@ Rectangle {
                     target: timeline.context
 
                     function onViewContentYChangeRequested(delta) {
+                        let headerHeight = tracksClipsView.headerItem ? tracksClipsView.headerItem.height : 0
                         let totalContentHeight = tracksModel.totalTracksHeight + tracksViewState.tracksVerticalScrollPadding
                         let canMove = totalContentHeight > tracksClipsView.height
                         if (!canMove) {
@@ -440,7 +449,7 @@ Rectangle {
 
                         let maxContentY = totalContentHeight - tracksClipsView.height
                         maxContentY = Math.max(maxContentY, tracksClipsView.contentY)
-                        contentYOffset = Math.max(Math.min(contentYOffset, maxContentY), 0)
+                        contentYOffset = Math.max(Math.min(contentYOffset, maxContentY), -headerHeight)
 
                         tracksClipsView.contentY = contentYOffset
                     }
