@@ -10,6 +10,7 @@ Rectangle {
     property int borderWidth: 1
     property bool timelinePressed: false
 
+    // move to PlayCursorHead
     signal setPlaybackPosition(real x)
     signal playCursorMousePositionChanged(real x)
 
@@ -44,45 +45,5 @@ Rectangle {
             height: borderWidth
             anchors.bottom: parent.bottom
         }
-    }
-
-    StyledIconLabel {
-        id: playheadIcon
-
-        x: -(playheadIcon.width) / 2 - 0.5
-        y: -playheadIcon.height
-        z: 1
-
-        iconCode: IconCode.PLAYHEAD_FILLED
-
-        font.pixelSize: 17
-        color: "black"
-
-        StyledIconLabel {
-            id: playheadFill
-
-            x: 1.1
-            y: 0.9
-
-            iconCode: IconCode.PLAYHEAD_FILLED
-
-            font.pixelSize: 15
-            color: "white"
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: pressed || timelinePressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor
-
-            onPositionChanged: function(e) {
-                var ix = mapToItem(root.parent, e.x, e.y).x
-                if (pressed) {
-                    setPlaybackPosition(ix)
-                }
-                playCursorMousePositionChanged(ix)
-            }
-        }
-
     }
 }

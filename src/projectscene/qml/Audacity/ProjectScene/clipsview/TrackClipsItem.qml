@@ -492,6 +492,7 @@ Item {
         z: 0
         anchors.fill: parent
         anchors.bottomMargin: sep.thickness
+        anchors.leftMargin: -12
         color: "#FFFFFF"
         opacity: 0.12
         visible: root.isDataSelected || root.isTrackSelected
@@ -502,6 +503,7 @@ Item {
         z: 0
         anchors.fill: parent
         anchors.bottomMargin: sep.thickness
+        anchors.leftMargin: -12
         color: "#FFFFFF"
         opacity: 0.06
     }
@@ -562,7 +564,7 @@ Item {
         id: trackFocusState
 
         anchors.fill: parent
-        anchors.leftMargin: -border.width
+        anchors.leftMargin: -border.width - 12 // make variable
         anchors.rightMargin: -border.width
         anchors.topMargin: -border.width
 

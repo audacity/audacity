@@ -35,7 +35,7 @@ Item {
         id: tracksViewState
         onTracksVericalYChanged: {
             let headerHeight = view.header.height ? view.header.height : 0
-            view.contentY = tracksViewState.tracksVericalY + view.header.height // not is sync with tracksclipsview...
+            view.contentY = tracksViewState.tracksVericalY
         }
     }
 
