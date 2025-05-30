@@ -93,6 +93,7 @@ Item {
                     currentRMS: model.leftChannelRMS
 
                     meterStyle: model.meterStyle
+                    meterType: model.meterType
 
                     height: parent.height - volumeSlider.handleHeight / 2
                     indicatorWidth: 11
@@ -106,6 +107,7 @@ Item {
                     currentVolumePressure: model.rightChannelPressure
                     currentRMS: model.rightChannelRMS
 
+                    meterType: model.meterType
                     meterStyle: model.meterStyle
 
                     height: parent.height - volumeSlider.handleHeight / 2

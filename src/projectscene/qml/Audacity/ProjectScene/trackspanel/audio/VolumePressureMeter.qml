@@ -17,6 +17,7 @@ Canvas {
     property real maxDisplayedVolumePressure: 0.0
 
     property int meterStyle: PlaybackMeterStyle.Default
+    property int meterType: PlaybackMeterType.DbLog
 
     property real indicatorWidth
     property bool showRuler: false
@@ -27,6 +28,11 @@ Canvas {
     property int overloadHeight: 4
 
     width: root.showRuler ? indicatorWidth + 26 : indicatorWidth
+
+    onMeterTypeChanged: {
+        console.log("Meter type changed to: " + root.meterType)
+        requestPaint()
+    }
 
     QtObject {
         id: meterStyle
@@ -84,6 +90,7 @@ Canvas {
         // value ranges
         readonly property int fullValueRangeLength: root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure
         readonly property real heightPerUnit: (prv.indicatorHeight - root.overloadHeight) / fullValueRangeLength
+        readonly property real heightPerPercentage: (prv.indicatorHeight - root.overloadHeight) / 100.0
 
         readonly property color unitTextColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.8)
         readonly property string unitTextFont: {
@@ -102,6 +109,30 @@ Canvas {
 
         property bool isClipping: updatedVolumePressure >= root.maxDisplayedVolumePressure
         property bool clipped: false
+
+        function drawRulerFn(ctx) {
+            if (root.meterType === PlaybackMeterType.DbLinear) {
+                return ruler.drawRuler(ctx)
+            }
+
+            if (root.meterType === PlaybackMeterType.Linear) {
+                return ruler.drawLinearRuler(ctx)
+            }
+
+            return ruler.drawLogDbRuler(ctx)
+        }
+
+        function valueToPercentage(sampleValue) {
+            if (root.meterType === PlaybackMeterType.Linear) {
+                return linearValueToPercentage(sampleValue)
+            }
+
+            if (root.meterType === PlaybackMeterType.DbLinear) {
+                return dbLinearValueToPercentage(sampleValue)
+            }
+
+            return dbLogValuePercentage(sampleValue)
+        }
 
         function updateRecentPeak() {
             const now = Date.now()
@@ -128,11 +159,42 @@ Canvas {
         }
 
         function sampleValueToHeight(sampleValue) {
+            const convertedValue = prv.valueToPercentage(sampleValue)
+            return prv.heightPerPercentage * convertedValue;
+
+        }
+
+        function dbLinearValueToPercentage(dbValue) {
             const clampedValue = Math.max(root.minDisplayedVolumePressure,
-                                    Math.min(sampleValue, root.maxDisplayedVolumePressure));
+                                    Math.min(dbValue, root.maxDisplayedVolumePressure));
 
-            return prv.heightPerUnit * (clampedValue - root.minDisplayedVolumePressure)
+            let m = 100 / (root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure);
+            return 100 + m * clampedValue;
+        }
 
+        function linearValueToPercentage(dbValue) {
+            const linearValue = Math.pow(10.0, dbValue / 20.0);
+            const clampedValue = Math.max(0.0, Math.min(linearValue, 1.0));
+
+            return 100 * clampedValue;
+        }
+
+        function dbLogValuePercentage(dbValue) {
+            if (dbValue > 0) {
+                return 0;
+            } else if (dbValue > -20.0) {
+                return 100 + 2.5 * dbValue;
+            } else if (dbValue > -30.0) {
+                return 50 + 2.0 * (dbValue + 20.0);
+            } else if (dbValue > -40.0) {
+                return 30 + 1.5 * (dbValue + 30.0);
+            } else if (dbValue > 50.0) {
+                return 15 + 0.75 * (dbValue + 40.0);
+            } else if (dbValue > -60.0) {
+                return 7.5 + 0.5 * (dbValue + 50.0);
+            } else {
+                return 0.0;
+            }
         }
         
         onIsClippingChanged: {
@@ -165,6 +227,25 @@ Canvas {
                 { fullStep: 20, smallStep: 4 },
                 { fullStep: 50, smallStep: 10 },
                 { fullStep: 100, smallStep: 20 }
+            ];
+
+            // Find the nearest full step
+            for (let i = 0; i < steps.length; i++) {
+                if (value <= steps[i].fullStep) {
+                    return steps[i];
+                }
+            }
+
+            // Should not happen
+            return steps[steps.length - 1];
+        }
+
+        function roundUpToFixedValueLinear(value) {
+            // full and small step is
+            // a number units per each respective notch on the ruler
+            const steps = [
+                { fullStep: 6, smallStep: 2 },
+                { fullStep: 15, smallStep: 7.5 }
             ];
 
             // Find the nearest full step
@@ -224,6 +305,103 @@ Canvas {
                     ctx.fillStyle = prv.unitTextColor
                     ctx.fillText(fullStep * j, textHPos, vPos + 4)
                 }
+            }
+        }
+
+        function drawLogDbRuler(ctx) {
+            var orignVPos = root.overloadHeight
+            var originHPos = indicatorWidth + ruler.strokeHorizontalMargin
+
+            ctx.clearRect(indicatorWidth, 0, root.width - indicatorWidth, root.height)
+            ctx.font = prv.unitTextFont
+
+            let config = [
+                { rulerStartPosition: 0, rulerEndPosition: 0.5, startPosition: 0, endPosition: 20, fullStep: 5, smallStep: 1 },
+                { rulerStartPosition: 0.5, rulerEndPosition: 0.7, startPosition: 20, endPosition: 30, fullStep: 5, smallStep: 5 },
+                { rulerStartPosition: 0.7, rulerEndPosition: 0.85, startPosition: 30, endPosition: 40, fullStep: 5, smallStep: 5 },
+                { rulerStartPosition: 0.85, rulerEndPosition: 0.925, startPosition: 40, endPosition: 50, fullStep: 10, smallStep: 10 },
+                { rulerStartPosition: 0.925, rulerEndPosition: 0.975, startPosition: 50, endPosition: 60, fullStep: 10, smallStep: 10 },
+                { rulerStartPosition: 0.975, rulerEndPosition: 1.0, startPosition: 60, endPosition: 70, fullStep: 10, smallStep: 10 },
+            ]
+
+            for (var cfg of config) {
+                drawLogDbSegment(ctx, cfg)
+            }
+        }
+
+        function drawLogDbSegment(ctx, cfg)
+        {
+            const rulerPercentage = (cfg.rulerEndPosition - cfg.rulerStartPosition)
+            const heightPerUnit = (prv.indicatorHeight - root.overloadHeight) * rulerPercentage / (cfg.endPosition - cfg.startPosition)
+
+            const orignVPos = root.overloadHeight + (prv.indicatorHeight - root.overloadHeight) * cfg.rulerStartPosition
+            const originHPos = indicatorWidth + ruler.strokeHorizontalMargin
+ 
+            const smallStepCount = cfg.smallStep ? ((cfg.endPosition - cfg.startPosition) / cfg.smallStep) : 0
+
+            for (let k = 1; k < smallStepCount; k++) {
+                if (k % (cfg.fullStep / cfg.smallStep) === 0) {
+                    // Skip drawing small steps that are multiples of full step
+                    continue;
+                }
+                const vPos = orignVPos + (heightPerUnit * cfg.smallStep * k);
+                ctx.fillStyle = ruler.shortStrokeColor
+                ctx.fillRect(originHPos, vPos, ruler.strokeWidth, ruler.strokeHeight)
+            }
+
+            const fullStepCount = ((cfg.endPosition - cfg.startPosition) / cfg.fullStep) - 1;
+
+            for (let j = 0; j <= fullStepCount; j++) {
+                const vPos = orignVPos + (heightPerUnit * cfg.fullStep * j);
+
+                let textHPos = originHPos + ruler.strokeWidth * 2
+                if (cfg.startPosition != 0 || j != 0) {
+                    ctx.fillStyle = ruler.longStrokeColor
+                    ctx.fillRect(originHPos + ruler.strokeWidth, vPos, ruler.strokeWidth, ruler.strokeHeight)
+                    textHPos += ruler.strokeHorizontalMargin
+                }
+
+                ctx.fillStyle = prv.unitTextColor
+                ctx.fillText(cfg.startPosition + cfg.fullStep * j, textHPos, vPos + 4)
+            }
+        }
+
+        function drawLinearRuler(ctx) {
+            var originVPos = root.overloadHeight
+            var originHPos = indicatorWidth + ruler.strokeHorizontalMargin
+
+            ctx.clearRect(indicatorWidth, 0, root.width - indicatorWidth, root.height)
+            ctx.font = prv.unitTextFont
+
+            // Minimal height of a single full step
+            const minimalFullStepHeight = 20;
+            // Number of full steps to draw
+            const fullStepCount = Math.ceil(root.height / minimalFullStepHeight);
+            // Number of units per full step
+            const unitsPerStep = 100;
+            // Calculating normalized full and small step value
+            const { fullStep, smallStep } = roundUpToFixedValueLinear(unitsPerStep / fullStepCount);
+            // Number of small steps to draw
+            const smallStepCount = smallStep ? unitsPerStep / smallStep : 0
+
+            // Drawing small steps
+            for (let k = 1; k < smallStepCount; k++) {
+                if (k % (fullStep / smallStep) === 0) {
+                    // Skip drawing small steps that are multiples of full step
+                    continue;
+                }
+                const vPos = originVPos + prv.heightPerUnit * smallStep * k;
+                ctx.fillStyle = ruler.shortStrokeColor
+                ctx.fillRect(originHPos, vPos, ruler.strokeWidth, ruler.strokeHeight)
+            }
+
+            // Drawing full steps
+            for (let j = 0; j <= fullStepCount; j++) {
+                const vPos = originVPos + prv.heightPerUnit * fullStep * j;
+
+                let textHPos = originHPos + 1
+                ctx.fillStyle = prv.unitTextColor
+                ctx.fillText((1.0 - (fullStep * j) / 60.0).toFixed(2), textHPos, vPos + 4)
             }
         }
     }
@@ -354,7 +532,7 @@ Canvas {
         drawMeterBar(ctx)
 
         if (root.showRuler) {
-            ruler.drawRuler(ctx)
+            prv.drawRulerFn(ctx)
         }
     }
 
