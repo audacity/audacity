@@ -55,7 +55,20 @@
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/Debug/src/app",
             "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis",
-            "showDisplayString": true,
+            "showDisplayString": true
         },
+        {
+            "name": "run audacity (MacOS)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug/src/app/audacity.app/Contents/MacOS/audacity",
+            "args": [],
+            "preLaunchTask": "CMake: install",
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb"
+        }
     ]
 }
