@@ -6,67 +6,100 @@ import QtQuick 2.15
 import Muse.UiComponents 1.0
 import Muse.Ui 1.0
 
+import Audacity.Playback 1.0
+
 Canvas {
     id: root
 
-    enum Style {
-        Solid,
-        Gradient
-    }
-
     property real currentVolumePressure: -60.0
+    property real currentRMS: -60.0
     property real minDisplayedVolumePressure: -60.0
     property real maxDisplayedVolumePressure: 0.0
-    property bool isPlaying: false
-    property bool isRecording: false
+
+    property int meterStyle: PlaybackMeterStyle.Default
+    property int meterType: PlaybackMeterType.DbLog
 
     property real indicatorWidth
     property bool showRuler: false
-    property int style: VolumePressureMeter.Style.Solid
-    property color meterColor: "#7689E6" // TODO: Use the track color
+    property bool showClippedInfo: true
 
     property int recentPeakIntervalMiliseconds: 600
 
-    width: root.showRuler ? indicatorWidth + 20 : indicatorWidth
+    property int overloadHeight: 4
+
+    width: root.showRuler ? indicatorWidth + 26 : indicatorWidth
+
+    onMeterTypeChanged: {
+        console.log("Meter type changed to: " + root.meterType)
+        requestPaint()
+    }
+
+    QtObject {
+        id: meterStyle
+
+        readonly property var clippedColor: "#EF476F"
+        readonly property var noClippedColor: ui.theme.buttonColor
+
+        readonly property var rmsColor: ui.theme.accentColor
+        readonly property var rmsOverlayColor: "#66000000"
+
+        readonly property var defaultColor: ui.theme.accentColor
+
+        readonly property var gradientColorGreen: "#50DF46"
+        readonly property var gradientColorYellow: "#FFE100"
+        readonly property var gradientColorRed: "#EF476F"
+
+        readonly property color meterBackgroundColor: Utils.colorWithAlpha(ui.theme.strokeColor, 0.7)
+
+        readonly property var maxPeakMarkerColor: "#14151A"
+
+        function getRecentPeakMarkerColor() {
+            switch (root.meterStyle) {
+                case PlaybackMeterStyle.Default:
+                    return meterStyle.defaultColor
+                case PlaybackMeterStyle.RMS:
+                    return meterStyle.rmsColor
+                case PlaybackMeterStyle.Gradient:
+                    var recentPeakRatio = (prv.recentPeak - root.minDisplayedVolumePressure) / (root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure)
+                    if (recentPeakRatio < 0.2) {
+                        return meterStyle.gradientColorGreen
+                    } else if (recentPeakRatio < 0.8) {
+                        return meterStyle.gradientColorYellow
+                    }
+                    return meterStyle.gradientColorRed
+                default:
+                    return meterStyle.maxPeakMarkerColor
+            }
+        }
+
+        function createGradient(ctx, width, height) {
+            const gradient = ctx.createLinearGradient(0, 0, width, height)
+            gradient.addColorStop(0, gradientColorRed)
+            gradient.addColorStop(0.2, gradientColorYellow)
+            gradient.addColorStop(1.0, gradientColorGreen)
+
+            return gradient
+        }
+    }
 
     QtObject {
         id: prv
 
-        property var gradient: null
-        readonly property int overloadHeight: 4
-
-        readonly property real indicatorHeight: root.height - prv.overloadHeight - 6
-
+        readonly property real indicatorHeight: root.height - root.overloadHeight - 6
 
         // value ranges
         readonly property int fullValueRangeLength: root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure
-        readonly property real heightPerUnit: (prv.indicatorHeight - prv.overloadHeight) / fullValueRangeLength
+        readonly property real heightPerUnit: (prv.indicatorHeight - root.overloadHeight) / fullValueRangeLength
+        readonly property real heightPerPercentage: (prv.indicatorHeight - root.overloadHeight) / 100.0
 
-        readonly property real unitsTextWidth: 12
         readonly property color unitTextColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.8)
         readonly property string unitTextFont: {
-            var pxSize = String('8px')
+            var pxSize = String('12px')
             var family = String('\'' + ui.theme.bodyFont.family + '\'')
 
             return pxSize + ' ' + family
         }
 
-        onUnitTextColorChanged: { prv.rulerNeedsPaint = true; root.requestPaint() }
-        onUnitTextFontChanged: { prv.rulerNeedsPaint = true; root.requestPaint() }
-
-        // strokes
-        readonly property real strokeHorizontalMargin: 2
-        readonly property real longStrokeHeight: 1
-        readonly property real longStrokeWidth: 5
-        readonly property color longStrokeColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.5)
-        readonly property real shortStrokeHeight: 1
-        readonly property real shortStrokeWidth: 2
-        readonly property color shortStrokeColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.3)
-
-        onLongStrokeColorChanged: { prv.rulerNeedsPaint = true; root.requestPaint() }
-        onShortStrokeColorChanged: { prv.rulerNeedsPaint = true; root.requestPaint() }
-
-        property bool rulerNeedsPaint: true
         property bool needsClear: false
 
         property real updatedVolumePressure: -60.0
@@ -76,6 +109,30 @@ Canvas {
 
         property bool isClipping: updatedVolumePressure >= root.maxDisplayedVolumePressure
         property bool clipped: false
+
+        function drawRulerFn(ctx) {
+            if (root.meterType === PlaybackMeterType.DbLinear) {
+                return ruler.drawRuler(ctx)
+            }
+
+            if (root.meterType === PlaybackMeterType.Linear) {
+                return ruler.drawLinearRuler(ctx)
+            }
+
+            return ruler.drawLogDbRuler(ctx)
+        }
+
+        function valueToPercentage(sampleValue) {
+            if (root.meterType === PlaybackMeterType.Linear) {
+                return linearValueToPercentage(sampleValue)
+            }
+
+            if (root.meterType === PlaybackMeterType.DbLinear) {
+                return dbLinearValueToPercentage(sampleValue)
+            }
+
+            return dbLogValuePercentage(sampleValue)
+        }
 
         function updateRecentPeak() {
             const now = Date.now()
@@ -102,11 +159,42 @@ Canvas {
         }
 
         function sampleValueToHeight(sampleValue) {
+            const convertedValue = prv.valueToPercentage(sampleValue)
+            return prv.heightPerPercentage * convertedValue;
+
+        }
+
+        function dbLinearValueToPercentage(dbValue) {
             const clampedValue = Math.max(root.minDisplayedVolumePressure,
-                                    Math.min(sampleValue, root.maxDisplayedVolumePressure));
+                                    Math.min(dbValue, root.maxDisplayedVolumePressure));
 
-            return prv.heightPerUnit * (clampedValue - root.minDisplayedVolumePressure)
+            let m = 100 / (root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure);
+            return 100 + m * clampedValue;
+        }
 
+        function linearValueToPercentage(dbValue) {
+            const linearValue = Math.pow(10.0, dbValue / 20.0);
+            const clampedValue = Math.max(0.0, Math.min(linearValue, 1.0));
+
+            return 100 * clampedValue;
+        }
+
+        function dbLogValuePercentage(dbValue) {
+            if (dbValue > 0) {
+                return 0;
+            } else if (dbValue > -20.0) {
+                return 100 + 2.5 * dbValue;
+            } else if (dbValue > -30.0) {
+                return 50 + 2.0 * (dbValue + 20.0);
+            } else if (dbValue > -40.0) {
+                return 30 + 1.5 * (dbValue + 30.0);
+            } else if (dbValue > 50.0) {
+                return 15 + 0.75 * (dbValue + 40.0);
+            } else if (dbValue > -60.0) {
+                return 7.5 + 0.5 * (dbValue + 50.0);
+            } else {
+                return 0.0;
+            }
         }
         
         onIsClippingChanged: {
@@ -117,132 +205,304 @@ Canvas {
         }
     }
 
+    QtObject {
+        id: ruler
+
+        readonly property real strokeHorizontalMargin: 2
+        readonly property real strokeHeight: 1
+        readonly property real strokeWidth: 4
+        readonly property color longStrokeColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.5)
+        readonly property color shortStrokeColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.3)
+
+        // Rounding up fullStep value to the predefined one,
+        // to avoid getting funny intervals like 3, or 7
+        function roundUpToFixedValue(value) {
+            // full and small step is
+            // a number units per each respective notch on the ruler
+            const steps = [
+                { fullStep: 1, smallStep: 0 },
+                { fullStep: 2, smallStep: 1 },
+                { fullStep: 6, smallStep: 2 },
+                { fullStep: 10, smallStep: 2 },
+                { fullStep: 20, smallStep: 4 },
+                { fullStep: 50, smallStep: 10 },
+                { fullStep: 100, smallStep: 20 }
+            ];
+
+            // Find the nearest full step
+            for (let i = 0; i < steps.length; i++) {
+                if (value <= steps[i].fullStep) {
+                    return steps[i];
+                }
+            }
+
+            // Should not happen
+            return steps[steps.length - 1];
+        }
+
+        function roundUpToFixedValueLinear(value) {
+            // full and small step is
+            // a number units per each respective notch on the ruler
+            const steps = [
+                { fullStep: 6, smallStep: 2 },
+                { fullStep: 15, smallStep: 7.5 }
+            ];
+
+            // Find the nearest full step
+            for (let i = 0; i < steps.length; i++) {
+                if (value <= steps[i].fullStep) {
+                    return steps[i];
+                }
+            }
+
+            // Should not happen
+            return steps[steps.length - 1];
+        }
+
+        function drawRuler(ctx) {
+            var originVPos = root.overloadHeight
+            var originHPos = indicatorWidth + ruler.strokeHorizontalMargin
+
+            ctx.clearRect(indicatorWidth, 0, root.width - indicatorWidth, root.height)
+            ctx.font = prv.unitTextFont
+
+            // Minimal height of a single full step
+            const minimalFullStepHeight = 20;
+            // Number of full steps to draw
+            const fullStepCount = Math.ceil(root.height / minimalFullStepHeight);
+            // Number of units per full step
+            const unitsPerStep = root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure;
+            // Calculating normalized full and small step value
+            const { fullStep, smallStep } = roundUpToFixedValue(unitsPerStep / fullStepCount);
+            // Number of small steps to draw
+            const smallStepCount = smallStep ? unitsPerStep / smallStep : 0
+
+            // Drawing small steps
+            for (let k = 1; k < smallStepCount; k++) {
+                if (k % (fullStep / smallStep) === 0) {
+                    // Skip drawing small steps that are multiples of full step
+                    continue;
+                }
+                const vPos = originVPos + prv.heightPerUnit * smallStep * k;
+                ctx.fillStyle = ruler.shortStrokeColor
+                ctx.fillRect(originHPos, vPos, ruler.strokeWidth, ruler.strokeHeight)
+            }
+
+            // Drawing full steps
+            for (let j = 0; j <= fullStepCount; j++) {
+                const vPos = originVPos + prv.heightPerUnit * fullStep * j;
+
+                // We don´t draw the first stroke
+                if (j == 0) {
+                    let textHPos = originHPos + ruler.strokeWidth + ruler.strokeHorizontalMargin
+                    ctx.fillStyle = prv.unitTextColor
+                    ctx.fillText(fullStep * j, textHPos, vPos + 4)
+                } else {
+                    ctx.fillStyle = ruler.longStrokeColor
+                    ctx.fillRect(originHPos + ruler.strokeWidth, vPos, ruler.strokeWidth, ruler.strokeHeight)
+
+                    let textHPos = originHPos + ruler.strokeWidth * 2 + ruler.strokeHorizontalMargin
+                    ctx.fillStyle = prv.unitTextColor
+                    ctx.fillText(fullStep * j, textHPos, vPos + 4)
+                }
+            }
+        }
+
+        function drawLogDbRuler(ctx) {
+            var orignVPos = root.overloadHeight
+            var originHPos = indicatorWidth + ruler.strokeHorizontalMargin
+
+            ctx.clearRect(indicatorWidth, 0, root.width - indicatorWidth, root.height)
+            ctx.font = prv.unitTextFont
+
+            let config = [
+                { rulerStartPosition: 0, rulerEndPosition: 0.5, startPosition: 0, endPosition: 20, fullStep: 5, smallStep: 1 },
+                { rulerStartPosition: 0.5, rulerEndPosition: 0.7, startPosition: 20, endPosition: 30, fullStep: 5, smallStep: 5 },
+                { rulerStartPosition: 0.7, rulerEndPosition: 0.85, startPosition: 30, endPosition: 40, fullStep: 5, smallStep: 5 },
+                { rulerStartPosition: 0.85, rulerEndPosition: 0.925, startPosition: 40, endPosition: 50, fullStep: 10, smallStep: 10 },
+                { rulerStartPosition: 0.925, rulerEndPosition: 0.975, startPosition: 50, endPosition: 60, fullStep: 10, smallStep: 10 },
+                { rulerStartPosition: 0.975, rulerEndPosition: 1.0, startPosition: 60, endPosition: 70, fullStep: 10, smallStep: 10 },
+            ]
+
+            for (var cfg of config) {
+                drawLogDbSegment(ctx, cfg)
+            }
+        }
+
+        function drawLogDbSegment(ctx, cfg)
+        {
+            const rulerPercentage = (cfg.rulerEndPosition - cfg.rulerStartPosition)
+            const heightPerUnit = (prv.indicatorHeight - root.overloadHeight) * rulerPercentage / (cfg.endPosition - cfg.startPosition)
+
+            const orignVPos = root.overloadHeight + (prv.indicatorHeight - root.overloadHeight) * cfg.rulerStartPosition
+            const originHPos = indicatorWidth + ruler.strokeHorizontalMargin
+ 
+            const smallStepCount = cfg.smallStep ? ((cfg.endPosition - cfg.startPosition) / cfg.smallStep) : 0
+
+            for (let k = 1; k < smallStepCount; k++) {
+                if (k % (cfg.fullStep / cfg.smallStep) === 0) {
+                    // Skip drawing small steps that are multiples of full step
+                    continue;
+                }
+                const vPos = orignVPos + (heightPerUnit * cfg.smallStep * k);
+                ctx.fillStyle = ruler.shortStrokeColor
+                ctx.fillRect(originHPos, vPos, ruler.strokeWidth, ruler.strokeHeight)
+            }
+
+            const fullStepCount = ((cfg.endPosition - cfg.startPosition) / cfg.fullStep) - 1;
+
+            for (let j = 0; j <= fullStepCount; j++) {
+                const vPos = orignVPos + (heightPerUnit * cfg.fullStep * j);
+
+                let textHPos = originHPos + ruler.strokeWidth * 2
+                if (cfg.startPosition != 0 || j != 0) {
+                    ctx.fillStyle = ruler.longStrokeColor
+                    ctx.fillRect(originHPos + ruler.strokeWidth, vPos, ruler.strokeWidth, ruler.strokeHeight)
+                    textHPos += ruler.strokeHorizontalMargin
+                }
+
+                ctx.fillStyle = prv.unitTextColor
+                ctx.fillText(cfg.startPosition + cfg.fullStep * j, textHPos, vPos + 4)
+            }
+        }
+
+        function drawLinearRuler(ctx) {
+            var originVPos = root.overloadHeight
+            var originHPos = indicatorWidth + ruler.strokeHorizontalMargin
+
+            ctx.clearRect(indicatorWidth, 0, root.width - indicatorWidth, root.height)
+            ctx.font = prv.unitTextFont
+
+            // Minimal height of a single full step
+            const minimalFullStepHeight = 20;
+            // Number of full steps to draw
+            const fullStepCount = Math.ceil(root.height / minimalFullStepHeight);
+            // Number of units per full step
+            const unitsPerStep = 100;
+            // Calculating normalized full and small step value
+            const { fullStep, smallStep } = roundUpToFixedValueLinear(unitsPerStep / fullStepCount);
+            // Number of small steps to draw
+            const smallStepCount = smallStep ? unitsPerStep / smallStep : 0
+
+            // Drawing small steps
+            for (let k = 1; k < smallStepCount; k++) {
+                if (k % (fullStep / smallStep) === 0) {
+                    // Skip drawing small steps that are multiples of full step
+                    continue;
+                }
+                const vPos = originVPos + prv.heightPerUnit * smallStep * k;
+                ctx.fillStyle = ruler.shortStrokeColor
+                ctx.fillRect(originHPos, vPos, ruler.strokeWidth, ruler.strokeHeight)
+            }
+
+            // Drawing full steps
+            for (let j = 0; j <= fullStepCount; j++) {
+                const vPos = originVPos + prv.heightPerUnit * fullStep * j;
+
+                let textHPos = originHPos + 1
+                ctx.fillStyle = prv.unitTextColor
+                ctx.fillText((1.0 - (fullStep * j) / 60.0).toFixed(2), textHPos, vPos + 4)
+            }
+        }
+    }
+
     function reset() {
         prv.maxPeak = -60
         prv.recentPeak = -60
-        prv.recentVolumePressure = []
         prv.updatedVolumePressure = -60
-
-        prv.clipped = false
+        prv.recentVolumePressure = []
 
         requestPaint()
     }
 
-
-    // Rounding up fullStep value to the predefined one,
-    // to avoid getting funny intervals like 3, or 7
-    function roundUpToFixedValue(value) {
-        // full and small step is
-        // a number units per each respective notch on the ruler
-        const steps = [
-            { fullStep: 1, smallStep: 0 },
-            { fullStep: 2, smallStep: 1 },
-            { fullStep: 5, smallStep: 1 },
-            { fullStep: 10, smallStep: 2 },
-            { fullStep: 20, smallStep: 4 },
-            { fullStep: 50, smallStep: 10 },
-            { fullStep: 100, smallStep: 20 }
-        ];
-
-        // Find the nearest full step
-        for (let i = 0; i < steps.length; i++) {
-            if (value <= steps[i].fullStep) {
-                return steps[i];
-            }
-        }
-
-        // Should not happen
-        return steps[steps.length - 1];
+    function resetClipped() {
+        prv.clipped = false
+        requestPaint()
     }
 
-    // Draws a rectangle rounded at the top, bottom or both
-    function drawRoundedRect(ctx, fillStyle, x, y, width, height, radius, roundedEdge) {
-        ctx.save();
-        ctx.fillStyle = fillStyle;
-        ctx.beginPath();
+    function drawBackground(ctx) {
+        ctx.clearRect(0, 0, root.indicatorWidth, prv.indicatorHeight)
 
-        if (roundedEdge === "top" || roundedEdge === "both") {
-            ctx.moveTo(x + radius, y);
-            ctx.arcTo(x + width, y, x + width, y + radius, radius);
-        } else {
-            ctx.moveTo(x, y);
-            ctx.lineTo(x + width, y);
-        }
-
-        if (roundedEdge === "bottom" || roundedEdge === "both") {
-            ctx.lineTo(x + width, y + height - radius);
-            ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
-            ctx.lineTo(x + radius, y + height);
-            ctx.arcTo(x, y + height, x, y + height - radius, radius);
-        } else {
-            ctx.lineTo(x + width, y + height);
-            ctx.lineTo(x, y + height);
-        }
-
-        if (roundedEdge === "top" || roundedEdge === "both") {
-            ctx.lineTo(x, y + radius);
-            ctx.arcTo(x, y, x + radius, y, radius);
-        } else {
-            ctx.lineTo(x, y);
-        }
-
-        ctx.closePath();
-        ctx.fill();
-        ctx.restore();
+        ctx.fillStyle = meterStyle.meterBackgroundColor
+        ctx.fillRect(0, 0, root.indicatorWidth, prv.indicatorHeight)
     }
 
-    function getMeterFillStyle(ctx) {
-        if (root.style === VolumePressureMeter.Style.Gradient) {
-            if (!prv.gradient) {
-                // Preparing the gradient to draw the volume pressure
-                prv.gradient = ctx.createLinearGradient(0, prv.indicatorHeight - prv.overloadHeight, 0, prv.overloadHeight)
-                prv.gradient.addColorStop(0.0, "#26E386")
-                prv.gradient.addColorStop(0.55, "#CBED41")
-                prv.gradient.addColorStop(0.80, "#FC8226")
-            }
-            return prv.gradient
-        }
-        return root.meterColor
+    function drawClippedIndicator(ctx) {
+        ctx.fillStyle = prv.clipped ? meterStyle.clippedColor : meterStyle.noClippedColor
+        ctx.fillRect(0, 0, root.indicatorWidth, root.overloadHeight)
     }
 
-    function drawRuler(ctx, originHPos, originVPos) {
-        ctx.clearRect(indicatorWidth, 0, root.width - indicatorWidth, root.height)
-        ctx.font = prv.unitTextFont
+    function drawMeterBar(ctx) {
+        if (root.meterStyle == PlaybackMeterStyle.Default) {
+            drawBarStyleDefault(ctx)
+        } else if (root.meterStyle == PlaybackMeterStyle.RMS) {
+            drawBarStyleRMS(ctx)
+        } else if (root.meterStyle == PlaybackMeterStyle.Gradient) {
+            drawBarStyleGradient(ctx)
+        }
+    }
 
-        // Minimal height of a single full step
-        const minimalFullStepHeight = 20;
-        // Number of full steps to draw
-        const fullStepCount = Math.ceil(root.height / minimalFullStepHeight);
-        // Number of units per full step
-        const unitsPerStep = root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure;
-        // Calculating normalized full and small step value
-        const { fullStep, smallStep } = roundUpToFixedValue(unitsPerStep / fullStepCount);
-        // Number of small steps to draw
-        const smallStepCount = smallStep ? unitsPerStep / smallStep : 0
-
-        // Drawing small steps
-        for (let k = 1; k < smallStepCount; k++) {
-            const vPos = originVPos + prv.heightPerUnit * smallStep * k;
-            ctx.fillStyle = prv.shortStrokeColor
-            ctx.fillRect(originHPos, vPos,
-                         prv.shortStrokeWidth,
-                         prv.shortStrokeHeight)
+    function drawPeakMarkers(ctx) {
+        const recentPeakHeight = prv.sampleValueToHeight(prv.recentPeak)
+        if (recentPeakHeight > 0) {
+            ctx.fillStyle = meterStyle.getRecentPeakMarkerColor()
+            ctx.fillRect(0, root.height - 10 - recentPeakHeight, root.indicatorWidth, 1)
         }
 
-        // Drawing full steps
-        for (let j = 0; j <= fullStepCount; j++) {
-            const vPos = originVPos + prv.heightPerUnit * fullStep * j;
-            ctx.fillStyle = prv.longStrokeColor
-            ctx.fillRect(originHPos, vPos,
-                         prv.longStrokeWidth,
-                         prv.longStrokeHeight)
+        const maxPeakHeight = prv.sampleValueToHeight(prv.maxPeak)
+        if (maxPeakHeight > 0) {
+            ctx.fillStyle = meterStyle.maxPeakMarkerColor
+            ctx.fillRect(0, root.height - 10 - maxPeakHeight, root.indicatorWidth, 1)
+        }
+    }
 
-            let textHPos = originHPos + prv.longStrokeWidth + prv.strokeHorizontalMargin
-            ctx.fillStyle = prv.unitTextColor
-            ctx.fillText(fullStep * j, textHPos, vPos + 2)
+    function drawBarStyleDefault(ctx) {
+        // On clipping draw full red rectangle
+        if (prv.isClipping) {
+            ctx.fillStyle = meterStyle.clippedColor
+            ctx.fillRect(0, 0, root.indicatorWidth, prv.indicatorHeight)
+            return
         }
 
-        prv.rulerNeedsPaint = false
+        // Draw the volume pressure
+        const meterHeight = prv.sampleValueToHeight(prv.updatedVolumePressure)
+        if (meterHeight > 0) {
+            ctx.fillStyle = meterStyle.defaultColor
+            ctx.fillRect(0, root.height - 10 - meterHeight, indicatorWidth, meterHeight)
+        }
+
+        drawPeakMarkers(ctx)
+    }
+
+    function drawBarStyleRMS(ctx) {
+        // On clipping draw full red rectangle
+        if (prv.isClipping) {
+            ctx.fillStyle = meterStyle.clippedColor
+            ctx.fillRect(0, 0, indicatorWidth, prv.indicatorHeight)
+            return
+        }
+
+        var yRMS = prv.sampleValueToHeight(root.currentRMS)
+        var yPeak = prv.sampleValueToHeight(root.currentVolumePressure)
+
+        ctx.fillStyle = meterStyle.rmsColor
+        ctx.fillRect(0, root.height - 10 - yPeak, root.indicatorWidth, yPeak)
+
+        ctx.fillStyle = meterStyle.rmsOverlayColor
+        ctx.fillRect(0, root.height - 10 - yPeak, root.indicatorWidth, yPeak - yRMS)
+
+        drawPeakMarkers(ctx)
+    }
+
+    function drawBarStyleGradient(ctx) {
+        // Draw the volume pressure
+        const meterHeight = prv.sampleValueToHeight(prv.updatedVolumePressure)
+        if (meterHeight > 0) {
+            ctx.fillStyle = meterStyle.createGradient(ctx, 0, prv.indicatorHeight)
+            ctx.fillRect(0, root.height - 10 - meterHeight, indicatorWidth, meterHeight)
+        }
+
+        drawPeakMarkers(ctx)
     }
 
     onPaint: {
@@ -258,20 +518,10 @@ Canvas {
             }
         }
 
-        ctx.clearRect(0, 0, indicatorWidth, prv.indicatorHeight)
+        drawBackground(ctx)
 
-        // Filling the background of the meter
-        drawRoundedRect(ctx, ui.theme.strokeColor, 0, 0, indicatorWidth, prv.indicatorHeight, 2, "both")
-
-        // Drawing the Overload indicator
-        const overloadStyle = prv.clipped ? "#EF476F" : ui.theme.buttonColor
-        drawRoundedRect(ctx, overloadStyle, 0, 0, indicatorWidth, prv.overloadHeight, 2, "top")
-
-        if (prv.rulerNeedsPaint) {
-            var originVPos = prv.overloadHeight
-            var originHPos = indicatorWidth + prv.strokeHorizontalMargin
-
-            drawRuler(ctx, originHPos, originVPos)
+        if (root.showClippedInfo) {
+            drawClippedIndicator(ctx)
         }
 
         if (prv.needsClear) {
@@ -279,43 +529,14 @@ Canvas {
             prv.needsClear = false
             return
         }
+        drawMeterBar(ctx)
 
-        // On clipping draw full red rectangle
-        if (prv.isClipping) {
-            drawRoundedRect(ctx, "#EF476F", 0, 0, indicatorWidth, prv.indicatorHeight, 2, "both")
-            return
+        if (root.showRuler) {
+            prv.drawRulerFn(ctx)
         }
-
-        // Draw the volume pressure
-        const meterHeight = prv.sampleValueToHeight(prv.updatedVolumePressure)
-        if (meterHeight > 0) {
-            drawRoundedRect(ctx, ui.theme.accentColor,
-                            0, root.height - 10 - meterHeight,
-                            indicatorWidth, meterHeight,
-                            2, "bottom")
-        }
-
-        // Draw the recent peak
-        const meterRecentPeakHeight = prv.sampleValueToHeight(prv.recentPeak)
-        drawRoundedRect(ctx, ui.theme.accentColor,
-                        0, root.height - 10 - meterRecentPeakHeight,
-                        indicatorWidth, 1,
-                        0, "none")
-
-        // Draw the max peak
-        const meterPeakHeight = prv.sampleValueToHeight(prv.maxPeak)
-        drawRoundedRect(ctx, prv.unitTextColor,
-                        0, root.height - 10 - meterPeakHeight,
-                        indicatorWidth, 1,
-                        0, "none")
-        
-
     }
 
     onHeightChanged: {
-        // Gradient and the ruler need to be updated
-        prv.rulerNeedsPaint = true
-        prv.gradient = null
         requestPaint();
     }
 
@@ -330,32 +551,11 @@ Canvas {
         requestPaint()
     }
 
-    onIsPlayingChanged: {
-        if (root.isPlaying) {
-            prv.clipped = false
-        }
-        else {
-            prv.needsClear = true
-            prv.recentVolumePressure = []
-            prv.recentPeak = -60
-            prv.maxPeak = -60
-        }
-        requestPaint()
-    }
-
-    onIsRecordingChanged: {
-        if (root.isRecording) {
-            prv.clipped = false
-            prv.needsClear = true
-            prv.recentVolumePressure = []
-            prv.recentPeak = -60
-            prv.maxPeak = -60
-        }
+    onMeterStyleChanged: {
         requestPaint()
     }
 
     Component.onCompleted: {
-        prv.rulerNeedsPaint = true
         requestPaint()
     }
 }
