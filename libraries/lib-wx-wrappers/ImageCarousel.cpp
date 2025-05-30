@@ -8,6 +8,7 @@
 #include "Prefs.h"
 #include "Theme.h"
 #include "AllThemeResources.h"
+#include "WindowAccessible.h"
 
 ImageCarousel::ImageCarousel(wxWindow* parent, const std::vector<CarouselSnapshot>& snapshots, wxWindowID winid, const wxPoint& pos, const wxSize& size)
     : m_snapshots(snapshots), m_id(winid), wxPanel(parent, winid, pos, size) {
@@ -26,6 +27,11 @@ ImageCarousel::ImageCarousel(wxWindow* parent, const std::vector<CarouselSnapsho
    m_btnMiddle = new GradientButton(this, m_id,
       m_snapshots[m_currentIndex].buttonText.Translation(), wxDefaultPosition, wxDefaultSize);
    m_btnRight = new ArrowButton(this, ArrowDirection::Right);
+#if wxUSE_ACCESSIBILITY
+   safenew WindowAccessible(m_btnLeft);
+   safenew WindowAccessible(m_btnMiddle);
+   safenew WindowAccessible(m_btnRight);
+#endif
 #else
    m_btnLeft = new wxButton(this, wxID_ANY, "<", wxDefaultPosition, FromDIP(wxSize(48, 48)));
    m_btnMiddle = new wxButton(this, m_id,
@@ -134,15 +140,19 @@ void ImageCarousel::UpdateButtons()
 #endif
 
    m_btnLeft->SetToolTip(_("Previous slide"));
+   m_btnLeft->SetName(_("Previous slide"));     // for screen readers
    m_btnRight->SetToolTip(_("Next slide"));
+   m_btnRight->SetName(_("Next slide"));        // for screen readers
    if (m_snapshots[m_currentIndex].imageText.empty()) {
-      m_btnMiddle->SetToolTip(wxString::Format(_("Slide %d of %d, %s. %s"),
+      // for screen readers
+      m_btnMiddle->SetName(wxString::Format(_("Slide %d of %d, %s. %s"),
                                                m_currentIndex + 1,
                                                static_cast<int>(m_snapshots.size()),
                                                m_snapshots[m_currentIndex].title.Translation(),
                                                translated));
    } else {
-      m_btnMiddle->SetToolTip(wxString::Format(_("Slide %d of %d, %s, %s. %s"),
+      // for screen readers
+      m_btnMiddle->SetName(wxString::Format(_("Slide %d of %d, %s, %s. %s"),
                                                m_currentIndex + 1,
                                                static_cast<int>(m_snapshots.size()),
                                                m_snapshots[m_currentIndex].title.Translation(),
