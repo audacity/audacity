@@ -86,7 +86,7 @@ Item {
                 id: volumePressureContainer
 
                 anchors.fill: parent
-                anchors.topMargin: 4
+                anchors.topMargin: 2
                 anchors.rightMargin: volumeSlider.handleWidth/2 - leftVolumePressure.overloadWidth
 
                 spacing: 2
@@ -113,7 +113,7 @@ Item {
                 anchors.leftMargin: -handleWidth/2
                 anchors.right: parent.right
                 anchors.top: parent.top
-                anchors.topMargin: 3
+                anchors.topMargin: 1
 
                 enabled: root.enabled
 

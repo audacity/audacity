@@ -95,10 +95,10 @@ Canvas {
 
         readonly property real leftStepMargin: 4
 
-        readonly property real unitsTextWidth: 12
+        readonly property real unitsTextWidth: 14
         readonly property color unitTextColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.8)
         readonly property string unitTextFont: {
-            var pxSize = String('8px')
+            var pxSize = String('12px')
             var family = String('\'' + ui.theme.bodyFont.family + '\'')
 
             return pxSize + ' ' + family
@@ -155,15 +155,20 @@ Canvas {
 
         function drawRuler(ctx) {
             var originHPos = 0
-            var originVPos = root.height - 4
+            var originVPos = root.height - 2
 
             ctx.clearRect(0, prv.indicatorHeight, root.width, root.height - prv.indicatorHeight)
             ctx.font = prv.unitTextFont
 
             var currentStrokeHPos = 0
             var fullStep = 12
+            var smallStep = 6
             var division = prv.divisionPixels
             var negativeMargin = 8
+
+
+            ctx.save()
+            ctx.fillStyle = prv.unitTextColor
 
             for (var i = 0; i <= prv.fullValueRangeLength; i+=fullStep) {
                 var value = String(root.minDisplayedVolumePressure + i)
@@ -177,13 +182,10 @@ Canvas {
                     currentStrokeHPos += division * fullStep
                 }
 
-                ctx.save()
-
                 ctx.fillStyle = prv.unitTextColor
                 ctx.fillText(value, currentStrokeHPos - (value <= -10 ? negativeMargin : 2), originVPos)
-
-                ctx.restore()
             }
+            ctx.restore()
         }
     }
 
