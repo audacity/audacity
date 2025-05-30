@@ -30,7 +30,7 @@ Rectangle {
 
     color: ui.theme.backgroundPrimaryColor
 
-    clip:true
+    clip: true
 
     TracksListClipsModel {
         id: tracksModel
@@ -127,84 +127,142 @@ Rectangle {
     }
 
     Rectangle {
-        id: timelineIndent
+        id: canvasIndent
+        anchors.top: timelineHeader.bottom
+        anchors.bottom: parent.bottom
+        height: timelineHeader.height
+        width: content.anchors.leftMargin
+        color: ui.theme.backgroundQuarternaryColor
+    }
+
+    Item {
+        id: timelineHeader
+
         anchors.top: parent.top
         anchors.left: parent.left
-        height: timeline.height
-        width: content.anchors.leftMargin
-        color: timeline.color
-
-        SeparatorLine {
-            id: topBorder
-            width: parent.width
-            anchors.bottom: parent.bottom
-            color: ui.theme.strokeColor
-        }
-    }
-
-    Rectangle {
-        id: canvasIndent
-        anchors.top: timelineIndent.bottom
-        anchors.bottom: parent.bottom
-        height: timeline.height
-        width: content.anchors.leftMargin
-        color: ui.theme.backgroundTertiaryColor
-    }
-
-    Timeline {
-        id: timeline
-
-        anchors.top: parent.top
-        anchors.left: timelineIndent.right
         anchors.right: parent.right
+        height: timeline.height
+        z: content.z + 1
 
         clip: true
 
-        height: 40
-
-        function updateCursorPosition(x, y) {
-            lineCursor.x = x
-            timeline.context.updateMousePositionTime(x)
-            tracksViewState.setMouseY(Math.max(0, Math.min(y, mainMouseArea.height)));
-        }
-
-        MouseArea {
-            id: timelineMouseArea
-            anchors.fill: parent
-            hoverEnabled: true
-
-            onPositionChanged: function(e) {
-                timeline.updateCursorPosition(e.x, e.y)
-            }
-
-            onClicked: function (e) {
-                if (!timeline.isMajorSection(e.y)) {
-                    playCursorController.seekToX(e.x, true /* triggerPlay */)
-                }
-            }
-        }
-
         Rectangle {
-            id: lineCursor
-
-            y: parent.top
+            id: timelineIndent
+            anchors.top: parent.top
+            anchors.left: parent.left
             height: timeline.height
-            width: 1
+            width: content.anchors.leftMargin
+            color: timeline.color
+            z: timeline.z
 
-            color: ui.theme.fontPrimaryColor
+            SeparatorLine {
+                id: topBorder
+                width: parent.width
+                anchors.bottom: parent.bottom
+                color: ui.theme.strokeColor
+            }
         }
 
-        Rectangle {
-            id: timelineSelRect
-
-            x: timeline.context.singleClipSelected ? timeline.context.selectedClipStartPosition : timeline.context.selectionStartPosition
-            width: timeline.context.singleClipSelected ? timeline.context.selectedClipEndPosition - x : timeline.context.selectionEndPosition - x
+        Timeline {
+            id: timeline
 
             anchors.top: parent.top
-            anchors.bottom: parent.bottom
+            anchors.left: timelineIndent.right
+            anchors.right: parent.right
 
-            color: "#ABE7FF"
-            opacity: 0.3
+            height: 40
+
+            function updateCursorPosition(x, y) {
+                lineCursor.x = x
+                timeline.context.updateMousePositionTime(x)
+                tracksViewState.setMouseY(Math.max(0, Math.min(y, mainMouseArea.height)));
+            }
+
+            MouseArea {
+                id: timelineMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+
+                onPositionChanged: function(e) {
+                    timeline.updateCursorPosition(e.x, e.y)
+                }
+
+                onClicked: function (e) {
+                    if (!timeline.isMajorSection(e.y)) {
+                        playCursorController.seekToX(e.x, true /* triggerPlay */)
+                    }
+                }
+            }
+
+            Rectangle {
+                id: lineCursor
+
+                y: parent.top
+                height: timeline.height
+                width: 1
+
+                color: ui.theme.fontPrimaryColor
+            }
+
+            Rectangle {
+                id: timelineSelRect
+
+                x: timeline.context.singleClipSelected ? timeline.context.selectedClipStartPosition : timeline.context.selectionStartPosition
+                width: timeline.context.singleClipSelected ? timeline.context.selectedClipEndPosition - x : timeline.context.selectionEndPosition - x
+
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+
+                color: "#ABE7FF"
+                opacity: 0.3
+            }
+
+            // make a separate component: PlayCursorHead
+            Item {
+                id: playCursorHead
+
+                x: playCursorController.positionX
+
+                StyledIconLabel {
+                    id: playheadIcon
+
+
+                    x: -(playheadIcon.width) / 2 - 0.5
+                    anchors.bottom: timeline.bottom
+                    y: timeline.height - playheadIcon.height
+
+                    iconCode: IconCode.PLAYHEAD_FILLED
+
+                    font.pixelSize: 17
+                    color: "black"
+
+                    StyledIconLabel {
+                        id: playheadFill
+
+                        x: 1.1
+                        y: 0.9
+
+                        iconCode: IconCode.PLAYHEAD_FILLED
+
+                        font.pixelSize: 15
+                        color: "white"
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: pressed || timelineMouseArea.pressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor
+
+                        onPositionChanged: function(e) {
+                            var ix = mapToItem(content, e.x, e.y).x
+                            if (pressed) {
+                                playCursorController.seekToX(ix)
+                            }
+                            timeline.updateCursorPosition(ix, -1)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -230,7 +288,7 @@ Rectangle {
         id: content
         objectName: "clipsView"
         anchors.leftMargin: 12
-        anchors.top: timeline.bottom
+        anchors.top: timelineHeader.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -286,7 +344,7 @@ Rectangle {
                     if (tracksHovered) {
                         //! TODO AU4: handle context menu over empty track area
                     } else {
-                        canvasContextMenuLoader.show(Qt.point(e.x + timelineIndent.width, e.y + timeline.height), canvasContextMenuModel.items)
+                        canvasContextMenuLoader.show(Qt.point(e.x + timelineIndent.width, e.y + timelineHeader.height), canvasContextMenuModel.items)
                     }
                 }
             }
@@ -379,8 +437,9 @@ Rectangle {
             StyledListView {
                 id: tracksClipsView
 
+                topMargin: 2
                 anchors.fill: parent
-                clip: true
+                clip: false
 
                 navigation.section: root.navigationSection
                 navigation.order: 3
@@ -408,6 +467,12 @@ Rectangle {
                 signal startAutoScroll()
                 signal stopAutoScroll()
 
+                header: Rectangle {
+                    height: 2
+                    width: parent.width
+                    color: "transparent"
+                }
+
                 footer: Item {
                     height: tracksViewState.tracksVerticalScrollPadding
                 }
@@ -434,6 +499,7 @@ Rectangle {
                     target: timeline.context
 
                     function onViewContentYChangeRequested(delta) {
+                        let headerHeight = tracksClipsView.headerItem ? tracksClipsView.headerItem.height : 0
                         let totalContentHeight = tracksModel.totalTracksHeight + tracksViewState.tracksVerticalScrollPadding
                         let canMove = totalContentHeight > tracksClipsView.height
                         if (!canMove) {
@@ -444,7 +510,7 @@ Rectangle {
 
                         let maxContentY = totalContentHeight - tracksClipsView.height
                         maxContentY = Math.max(maxContentY, tracksClipsView.contentY)
-                        contentYOffset = Math.max(Math.min(contentYOffset, maxContentY), 0)
+                        contentYOffset = Math.max(Math.min(contentYOffset, maxContentY), -headerHeight)
 
                         tracksClipsView.contentY = contentYOffset
                     }
@@ -510,7 +576,7 @@ Rectangle {
                     }
 
                     onRequestSelectionContextMenu: function(x, y) {
-                        selectionContextMenuLoader.show(Qt.point(x + canvasIndent.width, y + timeline.height), selectionContextMenuModel.items)
+                        selectionContextMenuLoader.show(Qt.point(x + canvasIndent.width, y + timelineHeader.height), selectionContextMenuModel.items)
                     }
 
                     onSelectionDraged: function(x1, x2, completed) {
@@ -641,7 +707,7 @@ Rectangle {
             anchors.top: tracksClipsViewArea.top
             anchors.bottom: parent.bottom
             x: playCursorController.positionX
-            z: 2
+            z: timeline.z + 2
             timelinePressed: timelineMouseArea.pressed
 
             onSetPlaybackPosition: function(ix) {
@@ -669,7 +735,7 @@ Rectangle {
         VerticalRulersPanel {
             id: verticalRulers
 
-            height: parent.height - timeline.height
+            height: parent.height - timelineHeader.height
             anchors.right: tracksClipsViewArea.right
             anchors.bottom: tracksClipsViewArea.bottom
 
