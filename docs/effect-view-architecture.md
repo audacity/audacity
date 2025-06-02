@@ -21,20 +21,20 @@ classDiagram
   IEffectViewLauncher <|-- Vst3ViewLauncher
   IEffectViewLauncher <|-- BuiltinViewLauncher
 
-  RealtimeEffectViewerDialog o.. EffectsViewer
+  RealtimeEffectViewerDialog o.. BuiltinEffectViewer
   RealtimeEffectViewerDialog o.. VstViewer
   EffectsViewerDialog o.. VstViewer
-  EffectsViewerDialog o.. EffectsViewer
-  EffectsViewer *-- EffectViewLoader
-  EffectViewLoader o.. ReverbView: loads
-  EffectViewLoader o.. CompressorView: loads
+  EffectsViewerDialog o.. BuiltinEffectViewer
+  BuiltinEffectViewer *-- BuiltinEffectViewLoader
+  BuiltinEffectViewLoader o.. ReverbView: loads
+  BuiltinEffectViewLoader o.. CompressorView: loads
   Vst3ViewLauncher ..> EffectsViewerDialog
   BuiltinViewLauncher ..> EffectsViewerDialog
 
   class ReverbView:::qml
   class CompressorView:::qml
 
-  class EffectViewLoader {
+  class BuiltinEffectViewLoader {
     load(instanceId)
   }
 
@@ -63,7 +63,7 @@ classDiagram
     manageBtn
   }
 
-  class EffectsViewer:::qml {
+  class BuiltinEffectViewer:::qml {
     load(instanceId)
   }
 
