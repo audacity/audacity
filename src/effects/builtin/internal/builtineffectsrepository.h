@@ -6,8 +6,8 @@
 #include <map>
 
 #include "modularity/ioc.h"
-#include "effects/effects_base/ieffectsviewregister.h"
 
+#include "../ieffectsviewregister.h"
 #include "../ibuiltineffectsrepository.h"
 
 #include "libraries/lib-components/ComponentInterfaceSymbol.h"

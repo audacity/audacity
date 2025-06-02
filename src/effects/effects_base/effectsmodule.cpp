@@ -21,7 +21,6 @@
 #include "internal/effectviewlaunchregister.h"
 
 #include "view/effectmanagemenu.h"
-#include "view/effectsviewregister.h"
 #include "view/effectsuiengine.h"
 #include "view/realtimeeffectviewerdialogmodel.h"
 
@@ -46,7 +45,6 @@ void EffectsModule::registerExports()
 
     ioc()->registerExport<IEffectsProvider>(moduleName(), m_provider);
     ioc()->registerExport<IEffectsConfiguration>(moduleName(), m_configuration);
-    ioc()->registerExport<IEffectsViewRegister>(moduleName(), new EffectsViewRegister());
     ioc()->registerExport<IEffectsUiEngine>(moduleName(), new EffectsUiEngine());
     ioc()->registerExport<IEffectInstancesRegister>(moduleName(), new EffectInstancesRegister());
     ioc()->registerExport<IEffectExecutionScenario>(moduleName(), new EffectExecutionScenario());

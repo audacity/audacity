@@ -9,6 +9,7 @@
 #include "common/abstracteffectmodel.h"
 
 #include "view/builtineffectviewloader.h"
+#include "view/effectsviewregister.h"
 
 #include "effects/effects_base/ieffectviewlaunchregister.h"
 
@@ -29,6 +30,7 @@ void BuiltinEffectsModule::registerExports()
     m_builtinEffectsRepository = std::make_shared<BuiltinEffectsRepository>();
 
     ioc()->registerExport<IBuiltinEffectsRepository>(moduleName(), m_builtinEffectsRepository);
+    ioc()->registerExport<IEffectsViewRegister>(moduleName(), new EffectsViewRegister());
 }
 
 void BuiltinEffectsModule::resolveImports()
