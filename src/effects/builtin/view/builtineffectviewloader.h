@@ -8,15 +8,15 @@
 #include <QQuickItem>
 
 #include "global/async/asyncable.h"
-
 #include "modularity/ioc.h"
-#include "../ieffectsviewregister.h"
-#include "../ieffectsuiengine.h"
-#include "../ieffectinstancesregister.h"
+
+#include "effects/effects_base/ieffectsviewregister.h"
+#include "effects/effects_base/ieffectsuiengine.h"
+#include "effects/effects_base/ieffectinstancesregister.h"
 
 namespace au::effects {
 //! TODO Move to builtin module
-class EffectViewLoader : public QObject, public muse::async::Asyncable
+class BuiltinEffectViewLoader : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -27,8 +27,8 @@ class EffectViewLoader : public QObject, public muse::async::Asyncable
     muse::Inject<IEffectInstancesRegister> instancesRegister;
 
 public:
-    EffectViewLoader(QObject* parent = nullptr);
-    ~EffectViewLoader() override;
+    BuiltinEffectViewLoader(QObject* parent = nullptr);
+    ~BuiltinEffectViewLoader() override;
 
     QQuickItem* contentItem() const;
 

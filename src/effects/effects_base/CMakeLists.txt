@@ -64,10 +64,10 @@ set(MODULE_SRC
     # view
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewregister.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectmanagemenu.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectmanagemenu.h
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/effectviewloader.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/effectviewloader.h
     ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.h
     )

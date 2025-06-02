@@ -3,7 +3,7 @@
 */
 import QtQuick
 
-import Audacity.Effects
+import Audacity.BuiltinEffects
 
 Rectangle {
 
@@ -40,7 +40,7 @@ Rectangle {
         }
     }
 
-    EffectViewLoader {
+    BuiltinEffectViewLoader {
         id: builder
 
         onCloseRequested: root.closeRequested()
