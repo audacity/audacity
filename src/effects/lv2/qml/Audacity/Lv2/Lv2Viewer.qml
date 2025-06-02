@@ -11,37 +11,37 @@ Rectangle {
 
     property string instanceId: ""
 
-    property string title: builder.contentItem ? builder.contentItem.title : ""
-    property bool isApplyAllowed: builder.contentItem ? builder.contentItem.isApplyAllowed : false
+    property string title: model.contentItem ? model.contentItem.title : ""
+    property bool isApplyAllowed: model.contentItem ? model.contentItem.isApplyAllowed : false
 
     signal closeRequested()
 
     color: ui.theme.backgroundPrimaryColor
 
-    implicitWidth: builder.contentItem ? builder.contentItem.implicitWidth : 450
-    implicitHeight: builder.contentItem ? builder.contentItem.implicitHeight : 200
+    implicitWidth: model.contentItem ? model.contentItem.implicitWidth : 450
+    implicitHeight: model.contentItem ? model.contentItem.implicitHeight : 200
 
     width: implicitWidth
     height: implicitHeight
 
     Component.onCompleted: {
-        builder.load(root.instanceId, root)
+        model.load(root.instanceId, root)
     }
 
     function manage(parent) {
-        if (builder.contentItem) {
-            builder.contentItem.manage(parent)
+        if (model.contentItem) {
+            model.contentItem.manage(parent)
         }
     }
 
     function preview() {
-        if (builder.contentItem) {
-            builder.contentItem.preview()
+        if (model.contentItem) {
+            model.contentItem.preview()
         }
     }
 
-    Lv2ViewLoader {
-        id: builder
+    Lv2ViewModel {
+        id: model
 
         onCloseRequested: root.closeRequested()
     }
