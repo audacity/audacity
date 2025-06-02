@@ -1,24 +1,22 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "lv2viewloader.h"
+#include "lv2viewmodel.h"
+
 #include "effects/effects_base/effectstypes.h"
-
-#include <QQmlEngine>
-
 #include "au3wrap/internal/wxtypes_convert.h"
-#include "global/types/number.h"
+
 #include "libraries/lib-effects/EffectManager.h"
 #include "libraries/lib-effects/Effect.h"
 
 #include "log.h"
 
 namespace au::effects {
-Lv2ViewLoader::Lv2ViewLoader(QObject* parent)
+Lv2ViewModel::Lv2ViewModel(QObject* parent)
     : QObject(parent)
 {}
 
-Lv2ViewLoader::~Lv2ViewLoader()
+Lv2ViewModel::~Lv2ViewModel()
 {
     if (m_contentItem) {
         m_contentItem->deleteLater();
@@ -26,12 +24,12 @@ Lv2ViewLoader::~Lv2ViewLoader()
     }
 }
 
-void Lv2ViewLoader::load(const QString& /* instanceId */, QObject* /* itemParent */)
+void Lv2ViewModel::load(const QString& instanceId, QObject* /* itemParent */)
 {
     LOGW() << "not implemented";
 }
 
-QQuickItem* Lv2ViewLoader::contentItem() const
+QQuickItem* Lv2ViewModel::contentItem() const
 {
     return m_contentItem;
 }

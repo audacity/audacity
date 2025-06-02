@@ -21,17 +21,16 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2viewlauncher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2viewlauncher.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/lv2viewloader.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/lv2viewloader.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/lv2view.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/lv2view.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/lv2viewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/lv2viewmodel.h
 )
 
 # AU3
 include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3defs.cmake)
 
-set(MODULE_INCLUDE
-    ${AU3_INCLUDE}
-    ${MUSE_FRAMEWORK_SRC_PATH}/vst
-)
+set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
 
 set(MODULE_LINK au3wrap lv2sdk)

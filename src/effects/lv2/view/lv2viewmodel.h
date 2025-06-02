@@ -7,15 +7,15 @@
 #include <QQuickItem>
 
 namespace au::effects {
-class Lv2ViewLoader : public QObject
+class Lv2ViewModel : public QObject
 {
     Q_OBJECT
 
     Q_PROPERTY(QQuickItem * contentItem READ contentItem NOTIFY contentItemChanged FINAL)
 
 public:
-    Lv2ViewLoader(QObject* parent = nullptr);
-    ~Lv2ViewLoader() override;
+    Lv2ViewModel(QObject* parent = nullptr);
+    ~Lv2ViewModel() override;
 
     QQuickItem* contentItem() const;
 
