@@ -8,6 +8,7 @@ import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.Effects
+import Audacity.BuiltinEffects
 import Audacity.Lv2
 import Audacity.Vst
 
@@ -77,7 +78,7 @@ EffectStyledDialogView {
 
         Component {
             id: builtinViewerComp
-            EffectsViewer {
+            BuiltinEffectViewer {
                 instanceId: root.instanceId
             }
         }

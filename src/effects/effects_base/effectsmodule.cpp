@@ -20,8 +20,8 @@
 #include "internal/effectpresetsscenario.h"
 #include "internal/effectviewlaunchregister.h"
 
+#include "view/effectmanagemenu.h"
 #include "view/effectsviewregister.h"
-#include "view/effectviewloader.h"
 #include "view/effectsuiengine.h"
 #include "view/realtimeeffectviewerdialogmodel.h"
 
@@ -73,7 +73,7 @@ void EffectsModule::registerResources()
 
 void EffectsModule::registerUiTypes()
 {
-    qmlRegisterType<EffectViewLoader>("Audacity.Effects", 1, 0, "EffectViewLoader");
+    qmlRegisterType<EffectManageMenu>("Audacity.Effects", 1, 0, "EffectManageMenu");
     qmlRegisterType<RealtimeEffectViewerDialogModel>("Audacity.Effects", 1, 0, "RealtimeEffectViewerDialogModel");
     qmlRegisterUncreatableType<EffectFamilies>("Audacity.Effects", 1, 0, "EffectFamily", "Not creatable from QML");
 }
