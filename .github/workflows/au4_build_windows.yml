@@ -23,7 +23,7 @@ env:
 
 jobs:
   au4_build_windows:
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
     - name: Clone repository
       uses: actions/checkout@v4
