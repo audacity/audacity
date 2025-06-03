@@ -21,7 +21,8 @@
  */
 #include "firstlaunchsetupmodel.h"
 
-#include "translation.h"
+#include "global/translation.h"
+#include "global/async/async.h"
 
 using namespace muse;
 using namespace au::appshell;
@@ -91,7 +92,9 @@ void FirstLaunchSetupModel::setCurrentPageIndex(int index)
     m_currentPageIndex = index;
     emit currentPageChanged();
 
-    interactive()->open(m_pages.at(m_currentPageIndex).backgroundUri);
+    async::Async::call(this, [this]() {
+        interactive()->open(m_pages.at(m_currentPageIndex).backgroundUri);
+    });
 }
 
 bool FirstLaunchSetupModel::askAboutClosingEarly()
