@@ -222,7 +222,6 @@ ListItemBlank {
             FlatButton {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 24
-                Layout.margins: 4
 
                 opacity: root.height > root.mapFromItem(this, 0, height + bottomSeparator.height).y ? 1 : 0
                 visible: opacity !== 0
