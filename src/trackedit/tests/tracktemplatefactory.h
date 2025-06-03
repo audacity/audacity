@@ -1,9 +1,11 @@
 #pragma once
 
-#include "au3wrap/au3types.h"
-
 #include <functional>
 #include <memory>
+#include <string>
+
+#include "au3wrap/au3types.h"
+
 namespace au::trackedit {
 using ClipDataGeneratorFunc = std::function<std::vector<float>(double duration, double sampleRate)>;
 
