@@ -88,6 +88,10 @@ void TracksViewStateModel::init()
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         emit isRecordingChanged();
     });
+
+    playbackConfiguration()->playbackMeterStyleChanged().onNotify(this, [this]() {
+        emit meterStyleChanged();
+    });
 }
 
 void TracksViewStateModel::changeTrackHeight(int deltaY)
@@ -200,4 +204,9 @@ bool TracksViewStateModel::isPlaying() const
 bool TracksViewStateModel::isRecording() const
 {
     return recordController()->isRecording();
+}
+
+au::playback::PlaybackMeterStyle::MeterStyle TracksViewStateModel::meterStyle() const
+{
+    return playbackConfiguration()->playbackMeterStyle();
 }

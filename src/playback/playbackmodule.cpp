@@ -14,6 +14,7 @@
 #include "view/toolbars/components/timecodemodeselector.h"
 #include "view/toolbars/components/timecodemodel.h"
 #include "view/toolbars/components/bpmmodel.h"
+#include "view/panels/playbackmeterpanelmodel.h"
 
 #include "playbackmodule.h"
 
@@ -66,9 +67,13 @@ void PlaybackModule::registerUiTypes()
     qmlRegisterType<TimecodeModel>("Audacity.Playback", 1, 0, "TimecodeModel");
     qmlRegisterType<PlaybackStateModel>("Audacity.Playback", 1, 0, "PlaybackStateModel");
     qmlRegisterType<BPMModel>("Audacity.Playback", 1, 0, "BPMModel");
+    qmlRegisterType<PlaybackMeterPanelModel>("Audacity.Playback", 1, 0, "PlaybackMeterPanelModel");
     qmlRegisterUncreatableType<TracksBehaviors>("Audacity.Playback", 1, 0, "SoloBehavior", "Not creatable from QML");
     qmlRegisterUncreatableType<PlaybackQualityPrefs>("Audacity.Playback", 1, 0, "PlaybackQuality", "Not creatable from QML");
     qmlRegisterUncreatableType<DitherTypePrefs>("Audacity.Playback", 1, 0, "DitherType", "Not creatable from QML");
+    qmlRegisterUncreatableType<PlaybackMeterType>("Audacity.Playback", 1, 0, "PlaybackMeterType", "Not creatable from QML");
+    qmlRegisterUncreatableType<PlaybackMeterStyle>("Audacity.Playback", 1, 0, "PlaybackMeterStyle", "Not creatable from QML");
+    qmlRegisterUncreatableType<PlaybackMeterPosition>("Audacity.Playback", 1, 0, "PlaybackMeterPosition", "Not creatable from QML");
 }
 
 void PlaybackModule::onInit(const IApplication::RunMode& mode)

@@ -21,6 +21,11 @@ struct AudioSignalVal {
     volume_dbfs_t pressure = 0.f;
 };
 
+struct MeterSignal {
+    AudioSignalVal peak;
+    AudioSignalVal rms;
+};
+
 struct AudioOutputParams {
     volume_db_t volume = 0.f;
     balance_t balance = 0.f;

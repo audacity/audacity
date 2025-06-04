@@ -1,11 +1,15 @@
 module Audacity.Playback
 
+VerticalVolumeSlider 1.0 components/VerticalVolumeSlider.qml
 VolumeSlider 1.0 components/VolumeSlider.qml
-VolumePressureMeter 1.0 components/VolumePressureMeter.qml
+HorizontalVolumePressureMeter 1.0 components/HorizontalVolumePressureMeter.qml
 Timecode 1.0 components/Timecode.qml
 TimecodeStartEnd 1.0 components/TimecodeStartEnd.qml
+StyledGroupBox 1.0 components/StyledGroupBox.qml
 
+PlaybackMeterCustomisePopup 1.0 toolbars/PlaybackMeterCustomisePopup.qml
 PlaybackLevel 1.0 toolbars/PlaybackLevel.qml
 BPM 1.0 toolbars/BPM.qml
 TimeSignature 1.0 toolbars/TimeSignature.qml
 
+PlaybackMeterPanel 1.0 panels/PlaybackMeterPanel.qml

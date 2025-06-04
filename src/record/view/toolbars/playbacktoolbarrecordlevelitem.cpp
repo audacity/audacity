@@ -24,18 +24,18 @@ PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::U
         emit levelChanged();
     });
 
-    record()->audioInput()->recordSignalChanges().onReceive(this, [this](const audioch_t audioChNum, const audio::AudioSignalVal& newValue) {
+    record()->audioInput()->recordSignalChanges().onReceive(this, [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
         if (!m_active) {
             return;
         }
 
-        if (newValue.pressure < MIN_DISPLAYED_DBFS) {
+        if (meterSignal.peak.pressure < MIN_DISPLAYED_DBFS) {
             setAudioChannelVolumePressure(audioChNum,
                                           MIN_DISPLAYED_DBFS);
-        } else if (newValue.pressure > MAX_DISPLAYED_DBFS) {
+        } else if (meterSignal.peak.pressure > MAX_DISPLAYED_DBFS) {
             setAudioChannelVolumePressure(audioChNum, MAX_DISPLAYED_DBFS);
         } else {
-            setAudioChannelVolumePressure(audioChNum, newValue.pressure);
+            setAudioChannelVolumePressure(audioChNum, meterSignal.peak.pressure);
         }
     });
 

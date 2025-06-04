@@ -7,6 +7,9 @@
 #include "playbackconfiguration.h"
 
 static const QString PLAYBACK_TIME_ITEM_FORMAT("playbackToolbar/playbackTimeItemFormat");
+static const QString PLAYBACK_METER_STYLE("playbackToolbar/playbackMeterStyle");
+static const QString PLAYBACK_METER_TYPE("playbackToolbar/playbackMeterType");
+static const QString PLAYBACK_METER_POSITION("playbackToolbar/playbackMeterPosition");
 
 using namespace muse;
 using namespace au::playback;
@@ -57,30 +60,96 @@ async::Notification PlaybackConfiguration::playbackTimeItemFormatChanged() const
     return uiConfiguration()->uiItemStateChanged(PLAYBACK_TIME_ITEM_FORMAT);
 }
 
+PlaybackMeterStyle::MeterStyle PlaybackConfiguration::playbackMeterStyle() const
+{
+    PlaybackMeterStyle::MeterStyle result = PlaybackMeterStyle::MeterStyle::Default;
+
+    QString formatStr = uiConfiguration()->uiItemState(PLAYBACK_METER_STYLE);
+    if (!formatStr.isEmpty()) {
+        result = static_cast<PlaybackMeterStyle::MeterStyle>(formatStr.toInt());
+    }
+
+    return result;
+}
+
+void PlaybackConfiguration::setPlaybackMeterStyle(PlaybackMeterStyle::MeterStyle style)
+{
+    uiConfiguration()->setUiItemState(PLAYBACK_METER_STYLE, QString::number(static_cast<int>(style)));
+}
+
+muse::async::Notification PlaybackConfiguration::playbackMeterStyleChanged() const
+{
+    return uiConfiguration()->uiItemStateChanged(PLAYBACK_METER_STYLE);
+}
+
+PlaybackMeterType::MeterType PlaybackConfiguration::playbackMeterType() const
+{
+    PlaybackMeterType::MeterType result = PlaybackMeterType::MeterType::DbLog;
+
+    QString formatStr = uiConfiguration()->uiItemState(PLAYBACK_METER_TYPE);
+    if (!formatStr.isEmpty()) {
+        result = static_cast<PlaybackMeterType::MeterType>(formatStr.toInt());
+    }
+
+    return result;
+}
+
+void PlaybackConfiguration::setPlaybackMeterType(PlaybackMeterType::MeterType type)
+{
+    uiConfiguration()->setUiItemState(PLAYBACK_METER_TYPE, QString::number(static_cast<int>(type)));
+}
+
+muse::async::Notification PlaybackConfiguration::playbackMeterTypeChanged() const
+{
+    return uiConfiguration()->uiItemStateChanged(PLAYBACK_METER_TYPE);
+}
+
+PlaybackMeterPosition::MeterPosition PlaybackConfiguration::playbackMeterPosition() const
+{
+    PlaybackMeterPosition::MeterPosition result = PlaybackMeterPosition::MeterPosition::TopBar;
+
+    QString formatStr = uiConfiguration()->uiItemState(PLAYBACK_METER_POSITION);
+    if (!formatStr.isEmpty()) {
+        result = static_cast<PlaybackMeterPosition::MeterPosition>(formatStr.toInt());
+    }
+
+    return result;
+}
+
+void PlaybackConfiguration::setPlaybackMeterPosition(PlaybackMeterPosition::MeterPosition position)
+{
+    uiConfiguration()->setUiItemState(PLAYBACK_METER_POSITION, QString::number(static_cast<int>(position)));
+}
+
+muse::async::Notification PlaybackConfiguration::playbackMeterPositionChanged() const
+{
+    return uiConfiguration()->uiItemStateChanged(PLAYBACK_METER_POSITION);
+}
+
 void PlaybackConfiguration::init()
 {
     muse::settings()->setDefaultValue(PLAYBACK_QUALITY, muse::Val(playbackNames.at(3)));
-    muse::settings()->valueChanged(PLAYBACK_QUALITY).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(PLAYBACK_QUALITY).onReceive(nullptr, [this](const muse::Val&) {
         m_playbackQualityChanged.notify();
     });
 
     muse::settings()->setDefaultValue(DITHERING, muse::Val(ditherNames.at(0)));
-    muse::settings()->valueChanged(DITHERING).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(DITHERING).onReceive(nullptr, [this](const muse::Val&) {
         m_ditheringChanged.notify();
     });
 
     muse::settings()->setDefaultValue(SOLO_BEHAVIOR, muse::Val(TracksBehaviors::SoloBehavior::SoloBehaviorMulti));
-    muse::settings()->valueChanged(SOLO_BEHAVIOR).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(SOLO_BEHAVIOR).onReceive(nullptr, [this](const muse::Val&) {
         m_soloBehaviorChanged.notify();
     });
 
     muse::settings()->setDefaultValue(SEEK_SHORT_PERIOD, muse::Val(5.0));
-    muse::settings()->valueChanged(SEEK_SHORT_PERIOD).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(SEEK_SHORT_PERIOD).onReceive(nullptr, [this](const muse::Val&) {
         m_shortSkipChanged.notify();
     });
 
     muse::settings()->setDefaultValue(SEEK_LONG_PERIOD, muse::Val(15.0));
-    muse::settings()->valueChanged(SEEK_LONG_PERIOD).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(SEEK_LONG_PERIOD).onReceive(nullptr, [this](const muse::Val&) {
         m_longSkipChanged.notify();
     });
 }
