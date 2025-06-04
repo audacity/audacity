@@ -57,6 +57,7 @@
 // #include "view/preferences/importpreferencesmodel.h"
 #include "view/preferences/playbackpreferencesmodel.h"
 #include "view/preferences/commonaudioapiconfigurationmodel.h"
+#include "view/preferences/exportpreferencesmodel.h"
 // #include "view/preferences/braillepreferencesmodel.h"
 #include "view/framelesswindow/framelesswindowmodel.h"
 #include "view/publish/publishtoolbarmodel.h"
@@ -134,6 +135,7 @@ void AppShellModule::resolveImports()
         ir->registerUri(Uri("musescore://firstLaunchSetup"),
                         ContainerMeta(ContainerType::QmlDialog, "FirstLaunchSetup/FirstLaunchSetupDialog.qml"));
         ir->registerUri(Uri("audacity://preferences"), ContainerMeta(ContainerType::QmlDialog, "Preferences/PreferencesDialog.qml"));
+        ir->registerUri(Uri("audacity://exportoptions"), ContainerMeta(ContainerType::QmlDialog, "Preferences/ExportOptionsDialog.qml"));
     }
 }
 
@@ -161,6 +163,9 @@ void AppShellModule::registerUiTypes()
     qmlRegisterType<PlaybackPreferencesModel>("Audacity.Preferences", 1, 0, "PlaybackPreferencesModel");
     qmlRegisterType<CommonAudioApiConfigurationModel>("Audacity.Preferences", 1, 0, "CommonAudioApiConfigurationModel");
     // qmlRegisterType<BraillePreferencesModel>("MuseScore.Preferences", 1, 0, "BraillePreferencesModel");
+    qmlRegisterType<ExportPreferencesModel>("Audacity.Preferences", 1, 0, "ExportPreferencesModel");
+
+    qmlRegisterUncreatableType<importexport::ExportChannelsPref>("Audacity.Preferences", 1, 0, "ExportChannels", "Not creatable from QML");
 
 #if defined(Q_OS_MACOS)
     qmlRegisterType<AppMenuModel>("Audacity.AppShell", 1, 0, "PlatformAppMenuModel");
