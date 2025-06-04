@@ -23,7 +23,7 @@ effects.
 #include "Effect.h"
 #include "PluginManager.h"
 #include <algorithm>
-
+#include "ParallelUtils.h"
 /*******************************************************************************
 Creates a singleton and returns reference
 
@@ -292,4 +292,14 @@ const EffectInstanceFactory*
 EffectManager::GetInstanceFactory(const PluginID& ID)
 {
     return Get().GetEffect(ID);
+}
+
+// this function processes the effect on the given track
+void EffectManager::Process(WaveTrack& track) {
+    int numChunks = std::thread::hardware_concurrency();
+    auto chunks = track.SplitIntoChunks(numChunks);
+
+    ParallelExecutor::ExecuteInParallel(numChunks, [&](int i) {
+        chunks[i].ApplyEffect();
+    });
 }
