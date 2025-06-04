@@ -37,6 +37,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
 
     Q_PROPERTY(bool isSelected READ isSelected NOTIFY isSelectedChanged)
+    Q_PROPERTY(bool isFocused READ isFocused NOTIFY isFocusedChanged)
 
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
@@ -80,6 +81,9 @@ public:
     bool isSelected() const;
     void setIsSelected(bool selected);
 
+    bool isFocused() const;
+    void setIsFocused(bool focused);
+
 public slots:
     void setTitle(QString title);
 
@@ -110,6 +114,7 @@ signals:
     void auxSendItemListChanged();
 
     void isSelectedChanged();
+    void isFocusedChanged();
 
 protected:
     void setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue);
@@ -130,6 +135,7 @@ protected:
     bool m_outputResourceItemsLoading = false;
 
     bool m_isSelected = false;
+    bool m_isFocused = false;
 };
 }
 

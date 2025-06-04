@@ -14,7 +14,7 @@ void GridLines::paint(QPainter* painter)
 {
     // set background
     QRectF rect = boundingRect();
-    QColor canvasColor = uiconfiguration()->currentTheme().values.value(muse::ui::BACKGROUND_TERTIARY_COLOR).toString();
+    QColor canvasColor = uiconfiguration()->currentTheme().values.value(muse::ui::BACKGROUND_QUARTERNARY_COLOR).toString();
     painter->fillRect(rect, canvasColor);
 
     // draw left border

@@ -63,6 +63,7 @@ private:
         TrackIdRole,
         IsDataSelectedRole,
         IsTrackSelectedRole,
+        IsTrackFocusedRole,
         IsMultiSelectionActiveRole,
         IsTrackAudibleRole,
     };

@@ -302,3 +302,18 @@ void TrackItem::setIsSelected(bool selected)
     m_isSelected = selected;
     emit isSelectedChanged();
 }
+
+bool TrackItem::isFocused() const
+{
+    return m_isFocused;
+}
+
+void TrackItem::setIsFocused(bool focused)
+{
+    if (m_isFocused == focused) {
+        return;
+    }
+
+    m_isFocused = focused;
+    emit isFocusedChanged();
+}
