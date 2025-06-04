@@ -18,6 +18,11 @@ using namespace au::effects;
 using namespace muse;
 using namespace muse::audio;
 
+muse::audio::AudioResourceType Vst3PluginsMetaReader::metaType() const
+{
+    return muse::audio::AudioResourceType::VstPlugin;
+}
+
 bool Vst3PluginsMetaReader::canReadMeta(const io::path_t&) const
 {
     return true;
