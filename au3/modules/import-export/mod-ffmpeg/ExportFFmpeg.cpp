@@ -18,32 +18,47 @@ function.
 
 *//*******************************************************************/
 
-#include "../FFmpeg.h"
-#include "FFmpegFunctions.h"
-#include "FifoBuffer.h"
+#include "FFmpeg.h"
+#include "lib-ffmpeg-support/FFmpegFunctions.h"
+#include "lib-ffmpeg-support/FifoBuffer.h"
 
 #include <wx/app.h>
 #include <wx/log.h>
 
-#include <wx/window.h>
-#include <wx/button.h>
-#include <wx/textctrl.h>
+// #include <wx/window.h>
+// #include <wx/button.h>
+// #include <wx/textctrl.h>
 
 #include "BasicSettings.h"
 #include "Mix.h"
-#include "Tags.h"
+#include "libraries/lib-tags/Tags.h"
 #include "Track.h"
 #include "wxFileNameWrapper.h"
 
 #include "ExportFFmpegOptions.h"
-#include "SelectFile.h"
-#include "ShuttleGui.h"
+// #include "SelectFile.h"
+#if defined(__WXMSW__)
+// Note, on Windows we don't define an OSFILENAME() to prevent accidental use.
+// See VerifyFilename() for an explanation.
+#define OSINPUT(X) VerifyFilename(X, true)
+#define OSOUTPUT(X) VerifyFilename(X, false)
+#elif defined(__WXMAC__)
+#define OSFILENAME(X) ((char*)(const char*)(X).fn_str())
+#define OSINPUT(X) OSFILENAME(X)
+#define OSOUTPUT(X) OSFILENAME(X)
+#else
+#define OSFILENAME(X) ((char*)(const char*)(X).mb_str())
+#define OSINPUT(X) OSFILENAME(X)
+#define OSOUTPUT(X) OSFILENAME(X)
+#endif
 
-#include "ExportPluginHelpers.h"
-#include "PlainExportOptionsEditor.h"
+// #include "ShuttleGui.h"
+
+#include "libraries/lib-import-export/ExportPluginHelpers.h"
+#include "libraries/lib-import-export/PlainExportOptionsEditor.h"
 #include "FFmpegDefines.h"
-#include "ExportOptionsUIServices.h"
-#include "ExportPluginRegistry.h"
+// #include "ExportOptionsUIServices.h"
+#include "libraries/lib-import-export/ExportPluginRegistry.h"
 
 #if defined(WIN32) && _MSC_VER < 1900
 #define snprintf _snprintf
@@ -54,17 +69,18 @@ function.
 
 static int AdjustFormatIndex(int format)
 {
-    int subFormat = -1;
-    for (int i = 0; i <= FMT_OTHER; i++) {
-        if (ExportFFmpegOptions::fmts[i].compiledIn) {
-            subFormat++;
-        }
-        if (subFormat == format || i == FMT_OTHER) {
-            subFormat = i;
-            break;
-        }
-    }
-    return subFormat;
+    // int subFormat = -1;
+    // for (int i = 0; i <= FMT_OTHER; i++) {
+    //     if (ExportFFmpegOptions::fmts[i].compiledIn) {
+    //         subFormat++;
+    //     }
+    //     if (subFormat == format || i == FMT_OTHER) {
+    //         subFormat = i;
+    //         break;
+    //     }
+    // }
+    // return subFormat;
+    return format;
 }
 
 namespace {
@@ -390,193 +406,193 @@ const std::vector<ExportOption> FFmpegOptions {
     { FEFormatID, {}, std::string() }
 };
 
-class ExportOptionsFFmpegCustomEditor : public ExportOptionsEditor, public ExportOptionsUIServices
-{
-    std::unordered_map<int, ExportValue> mValues;
-    std::shared_ptr<FFmpegFunctions> mFFmpeg;
-    ExportOptionsEditor::Listener* mListener{};
-    //created on-demand
-    mutable std::unique_ptr<AVCodecWrapper> mAVCodec;
-public:
+// class ExportOptionsFFmpegCustomEditor : public ExportOptionsEditor//, public ExportOptionsUIServices
+// {
+//     std::unordered_map<int, ExportValue> mValues;
+//     std::shared_ptr<FFmpegFunctions> mFFmpeg;
+//     ExportOptionsEditor::Listener* mListener{};
+//     //created on-demand
+//     mutable std::unique_ptr<AVCodecWrapper> mAVCodec;
+// public:
 
-    ExportOptionsFFmpegCustomEditor(ExportOptionsEditor::Listener* listener = nullptr)
-        : mListener(listener)
-    {
-    }
+//     ExportOptionsFFmpegCustomEditor(ExportOptionsEditor::Listener* listener = nullptr)
+//         : mListener(listener)
+//     {
+//     }
 
-    void PopulateUI(ShuttleGui& S) override
-    {
-        CheckFFmpeg(true);
-        //Continue anyway, as we do not need ffmpeg functions to build and fill in the UI
+// void PopulateUI(ShuttleGui& S) override
+// {
+//     CheckFFmpeg(true);
+//     //Continue anyway, as we do not need ffmpeg functions to build and fill in the UI
 
-        mParent = S.GetParent();
+//     mParent = S.GetParent();
 
-        S.StartHorizontalLay(wxCENTER);
-        {
-            S.StartVerticalLay(wxCENTER, 0);
-            {
-                S.AddButton(XXO("Open custom FFmpeg format options"))
-                ->Bind(wxEVT_BUTTON, &ExportOptionsFFmpegCustomEditor::OnOpen, this);
-                S.StartMultiColumn(2, wxCENTER);
-                {
-                    S.AddPrompt(XXO("Current Format:"));
-                    mFormat = S.Name(XXO("Current Format:"))
-                              .Style(wxTE_READONLY).AddTextBox({}, wxT(""), 25);
-                    S.AddPrompt(XXO("Current Codec:"));
-                    mCodec = S.Name(XXO("Current Codec:"))
-                             .Style(wxTE_READONLY).AddTextBox({}, wxT(""), 25);
-                }
-                S.EndMultiColumn();
-            }
-            S.EndHorizontalLay();
-        }
-        S.EndHorizontalLay();
+//     S.StartHorizontalLay(wxCENTER);
+//     {
+//         S.StartVerticalLay(wxCENTER, 0);
+//         {
+//             S.AddButton(XXO("Open custom FFmpeg format options"))
+//             ->Bind(wxEVT_BUTTON, &ExportOptionsFFmpegCustomEditor::OnOpen, this);
+//             S.StartMultiColumn(2, wxCENTER);
+//             {
+//                 S.AddPrompt(XXO("Current Format:"));
+//                 mFormat = S.Name(XXO("Current Format:"))
+//                           .Style(wxTE_READONLY).AddTextBox({}, wxT(""), 25);
+//                 S.AddPrompt(XXO("Current Codec:"));
+//                 mCodec = S.Name(XXO("Current Codec:"))
+//                          .Style(wxTE_READONLY).AddTextBox({}, wxT(""), 25);
+//             }
+//             S.EndMultiColumn();
+//         }
+//         S.EndHorizontalLay();
+//     }
+//     S.EndHorizontalLay();
 
-        UpdateCodecAndFormat();
-    }
+//     UpdateCodecAndFormat();
+// }
 
-    bool TransferDataFromWindow() override
-    {
-        Load(*gPrefs);
-        return true;
-    }
+// bool TransferDataFromWindow() override
+// {
+//     Load(*gPrefs);
+//     return true;
+// }
 
-    int GetOptionsCount() const override
-    {
-        return static_cast<int>(FFmpegOptions.size());
-    }
+// int GetOptionsCount() const override
+// {
+//     return static_cast<int>(FFmpegOptions.size());
+// }
 
-    bool GetOption(int index, ExportOption& option) const override
-    {
-        if (index >= 0 && index < FFmpegOptions.size()) {
-            option = FFmpegOptions[index];
-            return true;
-        }
-        return false;
-    }
+// bool GetOption(int index, ExportOption& option) const override
+// {
+//     if (index >= 0 && index < FFmpegOptions.size()) {
+//         option = FFmpegOptions[index];
+//         return true;
+//     }
+//     return false;
+// }
 
-    bool GetValue(int id, ExportValue& value) const override
-    {
-        auto it = mValues.find(id);
-        if (it != mValues.end()) {
-            value = it->second;
-            return true;
-        }
-        return false;
-    }
+// bool GetValue(int id, ExportValue& value) const override
+// {
+//     auto it = mValues.find(id);
+//     if (it != mValues.end()) {
+//         value = it->second;
+//         return true;
+//     }
+//     return false;
+// }
 
-    bool SetValue(int id, const ExportValue& value) override
-    {
-        return false;
-    }
+// bool SetValue(int id, const ExportValue& value) override
+// {
+//     return false;
+// }
 
-    SampleRateList GetSampleRateList() const override
-    {
-        if (!mAVCodec) {
-            auto it = mValues.find(FECodecID);
-            if (it == mValues.end()) {
-                return {}
-            }
+// SampleRateList GetSampleRateList() const override
+// {
+//     if (!mAVCodec) {
+//         auto it = mValues.find(FECodecID);
+//         if (it == mValues.end()) {
+//             return {}
+//         }
 
-            const auto codecId = *std::get_if<std::string>(&it->second);
-            if (mFFmpeg) {
-                mAVCodec = mFFmpeg->CreateEncoder(codecId.c_str());
-            }
-        }
-        if (!mAVCodec) {
-            return {}
-        }
+//         const auto codecId = *std::get_if<std::string>(&it->second);
+//         if (mFFmpeg) {
+//             mAVCodec = mFFmpeg->CreateEncoder(codecId.c_str());
+//         }
+//     }
+//     if (!mAVCodec) {
+//         return {}
+//     }
 
-        if (const auto rates = mAVCodec->GetSupportedSamplerates()) {
-            return ToSampleRateList(rates);
-        }
-        return {};
-    }
+//     if (const auto rates = mAVCodec->GetSupportedSamplerates()) {
+//         return ToSampleRateList(rates);
+//     }
+//     return {};
+// }
 
-    void Load(const audacity::BasicSettings& config) override
-    {
-        mValues[FELanguageID] = std::string(config.Read(wxT("/FileFormats/FFmpegLanguage"), wxT("")).ToUTF8());
-        mValues[FESampleRateID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegSampleRate"), 0L));
-        mValues[FEBitrateID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegBitRate"), 0L));
-        mValues[FETagID] = std::string(config.Read(wxT("/FileFormats/FFmpegTag"), wxT(""))
-                                       .mb_str(wxConvUTF8));
-        mValues[FEQualityID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegQuality"), -99999L));
-        mValues[FECutoffID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegCutOff"), 0L));
-        mValues[FEBitReservoirID] = config.ReadBool(wxT("/FileFormats/FFmpegBitReservoir"), true);
-        mValues[FEVariableBlockLenID] = config.ReadBool(wxT("/FileFormats/FFmpegVariableBlockLen"), true);
-        mValues[FECompLevelID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegCompLevel"), -1L));
-        mValues[FEFrameSizeID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegFrameSize"), 0L));
+// void Load(const audacity::BasicSettings& config) override
+// {
+//     mValues[FELanguageID] = std::string(config.Read(wxT("/FileFormats/FFmpegLanguage"), wxT("")).ToUTF8());
+//     mValues[FESampleRateID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegSampleRate"), 0L));
+//     mValues[FEBitrateID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegBitRate"), 0L));
+//     mValues[FETagID] = std::string(config.Read(wxT("/FileFormats/FFmpegTag"), wxT(""))
+//                                    .mb_str(wxConvUTF8));
+//     mValues[FEQualityID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegQuality"), -99999L));
+//     mValues[FECutoffID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegCutOff"), 0L));
+//     mValues[FEBitReservoirID] = config.ReadBool(wxT("/FileFormats/FFmpegBitReservoir"), true);
+//     mValues[FEVariableBlockLenID] = config.ReadBool(wxT("/FileFormats/FFmpegVariableBlockLen"), true);
+//     mValues[FECompLevelID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegCompLevel"), -1L));
+//     mValues[FEFrameSizeID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegFrameSize"), 0L));
 
-        mValues[FELPCCoeffsID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegLPCCoefPrec"), 0L));
-        mValues[FEMinPredID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMinPredOrder"), -1L));
-        mValues[FEMaxPredID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMaxPredOrder"), -1L));
-        mValues[FEMinPartOrderID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMinPartOrder"), -1L));
-        mValues[FEMaxPartOrderID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMaxPartOrder"), -1L));
-        mValues[FEPredOrderID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegPredOrderMethod"), 0L));
-        mValues[FEMuxRateID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMuxRate"), 0L));
-        mValues[FEPacketSizeID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegPacketSize"), 0L));
-        mValues[FECodecID] = std::string(config.Read(wxT("/FileFormats/FFmpegCodec")));
-        mValues[FEFormatID] = std::string(config.Read(wxT("/FileFormats/FFmpegFormat")));
-    }
+//     mValues[FELPCCoeffsID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegLPCCoefPrec"), 0L));
+//     mValues[FEMinPredID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMinPredOrder"), -1L));
+//     mValues[FEMaxPredID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMaxPredOrder"), -1L));
+//     mValues[FEMinPartOrderID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMinPartOrder"), -1L));
+//     mValues[FEMaxPartOrderID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMaxPartOrder"), -1L));
+//     mValues[FEPredOrderID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegPredOrderMethod"), 0L));
+//     mValues[FEMuxRateID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMuxRate"), 0L));
+//     mValues[FEPacketSizeID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegPacketSize"), 0L));
+//     mValues[FECodecID] = std::string(config.Read(wxT("/FileFormats/FFmpegCodec")));
+//     mValues[FEFormatID] = std::string(config.Read(wxT("/FileFormats/FFmpegFormat")));
+// }
 
-    void Store(audacity::BasicSettings& settings) const override
-    {
-    }
+// void Store(audacity::BasicSettings& settings) const override
+// {
+// }
 
-private:
+// private:
 
-    bool CheckFFmpeg(bool showError)
-    {
-        // Show "Locate FFmpeg" dialog
-        if (!mFFmpeg) {
-            mFFmpeg = FFmpegFunctions::Load();
-            if (!mFFmpeg) {
-                FindFFmpegLibs();
-                return LoadFFmpeg(showError);
-            }
-        }
-        return true;
-    }
+//     bool CheckFFmpeg(bool showError)
+//     {
+//         // Show "Locate FFmpeg" dialog
+//         if (!mFFmpeg) {
+//             mFFmpeg = FFmpegFunctions::Load();
+//             if (!mFFmpeg) {
+//                 FindFFmpegLibs();
+//                 return LoadFFmpeg(showError);
+//             }
+//         }
+//         return true;
+//     }
 
-    void UpdateCodecAndFormat()
-    {
-        mFormat->SetValue(gPrefs->Read(wxT("/FileFormats/FFmpegFormat"), wxT("")));
-        mCodec->SetValue(gPrefs->Read(wxT("/FileFormats/FFmpegCodec"), wxT("")));
-    }
+//     void UpdateCodecAndFormat()
+//     {
+//         mFormat->SetValue(gPrefs->Read(wxT("/FileFormats/FFmpegFormat"), wxT("")));
+//         mCodec->SetValue(gPrefs->Read(wxT("/FileFormats/FFmpegCodec"), wxT("")));
+//     }
 
-    void OnOpen(const wxCommandEvent&)
-    {
-        if (!CheckFFmpeg(true)) {
-            return;
-        }
+//  void OnOpen(const wxCommandEvent&)
+//  {
+//      if (!CheckFFmpeg(true)) {
+//          return;
+//      }
 
-   #ifdef __WXMAC__
-        // Bug 2077 Must be a parent window on OSX or we will appear behind.
-        auto pWin = wxGetTopLevelParent(mParent);
-   #else
-        // Use GetTopWindow on windows as there is no hWnd with top level parent.
-        auto pWin = wxTheApp->GetTopWindow();
-   #endif
+// #ifdef __WXMAC__
+//      // Bug 2077 Must be a parent window on OSX or we will appear behind.
+//      auto pWin = wxGetTopLevelParent(mParent);
+// #else
+//      // Use GetTopWindow on windows as there is no hWnd with top level parent.
+//      auto pWin = wxTheApp->GetTopWindow();
+// #endif
 
-        ExportFFmpegOptions od(pWin);
-        od.ShowModal();
-        //ExportFFmpegOptions uses gPrefs to store options
-        //Instead we could provide it with instance of wxConfigBase
-        //constructed locally and read from it later
-        Load(*gPrefs);
-        mAVCodec.reset();
+//      ExportFFmpegOptions od(pWin);
+//      od.ShowModal();
+//      //ExportFFmpegOptions uses gPrefs to store options
+//      //Instead we could provide it with instance of wxConfigBase
+//      //constructed locally and read from it later
+//      Load(*gPrefs);
+//      mAVCodec.reset();
 
-        UpdateCodecAndFormat();
-        if (mListener) {
-            mListener->OnSampleRateListChange();
-        }
-    }
+//      UpdateCodecAndFormat();
+//      if (mListener) {
+//          mListener->OnSampleRateListChange();
+//      }
+//  }
 
-    wxWindow* mParent { nullptr };
-    wxTextCtrl* mFormat { nullptr };
-    wxTextCtrl* mCodec { nullptr };
-};
-}
+//     wxWindow* mParent { nullptr };
+//     wxTextCtrl* mFormat { nullptr };
+//     wxTextCtrl* mCodec { nullptr };
+// };
+// }
 
 ///Performs actual export
 class FFmpegExporter final
@@ -765,32 +781,32 @@ ExportFFmpeg::~ExportFFmpeg() = default;
 std::unique_ptr<ExportOptionsEditor>
 ExportFFmpeg::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* listener) const
 {
-    switch (AdjustFormatIndex(format)) {
-    case FMT_M4A:
-        return std::make_unique<PlainExportOptionsEditor>(AACOptions, listener);
-    case FMT_AC3:
-        return std::make_unique<PlainExportOptionsEditor>(
-            AC3Options,
-            ToSampleRateList(iAC3SampleRates),
-            listener);
-    case FMT_AMRNB:
-        return std::make_unique<PlainExportOptionsEditor>(
-            AMRNBOptions,
-            ExportOptionsEditor::SampleRateList { 8000 },
-            listener);
-#ifdef SHOW_FFMPEG_OPUS_EXPORT
-    case FMT_OPUS:
-        return std::make_unique<PlainExportOptionsEditor>(OPUSOptions, listener);
-#endif
-    case FMT_WMA2:
-        return std::make_unique<PlainExportOptionsEditor>(
-            WMAOptions,
-            ToSampleRateList(iWMASampleRates),
-            listener);
-    case FMT_OTHER:
-        return std::make_unique<ExportOptionsFFmpegCustomEditor>(listener);
-    }
-    return {};
+    // switch (AdjustFormatIndex(format)) {
+//     case FMT_M4A:
+//         return std::make_unique<PlainExportOptionsEditor>(AACOptions, listener);
+//     case FMT_AC3:
+//         return std::make_unique<PlainExportOptionsEditor>(
+//             AC3Options,
+//             ToSampleRateList(iAC3SampleRates),
+//             listener);
+//     case FMT_AMRNB:
+//         return std::make_unique<PlainExportOptionsEditor>(
+//             AMRNBOptions,
+//             ExportOptionsEditor::SampleRateList { 8000 },
+//             listener);
+// #ifdef SHOW_FFMPEG_OPUS_EXPORT
+//     case FMT_OPUS:
+//         return std::make_unique<PlainExportOptionsEditor>(OPUSOptions, listener);
+// #endif
+//     case FMT_WMA2:
+//         return std::make_unique<PlainExportOptionsEditor>(
+//             WMAOptions,
+//             ToSampleRateList(iWMASampleRates),
+//             listener);
+//     case FMT_OTHER:
+//         return {};//std::make_unique<ExportOptionsFFmpegCustomEditor>(listener);
+//     }
+//     return {};
 }
 
 int ExportFFmpeg::GetFormatCount() const
@@ -968,7 +984,7 @@ bool FFmpegExporter::InitCodecs(int sampleRate,
     {
         int q = ExportPluginHelpers::GetParameterValue(parameters, AACOptionIDQuality, -99999);
 
-        q = wxClip(q, 98 * mChannels, 160 * mChannels);
+        // q = wxClip(q, 98 * mChannels, 160 * mChannels);
         // Set bit rate to between 98 kbps and 320 kbps (if two channels)
         mEncAudioCodecCtx->SetBitRate(q * 1000);
         mEncAudioCodecCtx->SetProfile(AUDACITY_FF_PROFILE_AAC_LOW);
@@ -1758,3 +1774,4 @@ int FFmpegExporter::AskResample(int bitrate, int rate, int lowrate, int highrate
 static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "FFmpeg",
                                                                  []{ return std::make_unique< ExportFFmpeg >(); }
 };
+}

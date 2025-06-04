@@ -9,6 +9,7 @@
 #include "FileNames.h"
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-import-export/Import.h"
+#include "libraries/lib-import-export/ExportPluginRegistry.h"
 #include "libraries/lib-preferences/Prefs.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
 #include "libraries/lib-module-manager/ModuleManager.h"
@@ -68,6 +69,7 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 
     ModuleManager::Get().Initialize();
     Importer::Get().Initialize();
+    ExportPluginRegistry::Get().Initialize();
 
     muse::String tempDir = projectConfiguration()->temporaryDir().toString();
     UpdateDefaultPath(FileNames::Operation::Temp, wxFromString(tempDir));

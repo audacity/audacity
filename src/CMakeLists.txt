@@ -54,6 +54,7 @@ if (AU_BUILD_EFFECTS_MODULE)
 endif()
 
 add_subdirectory(importexport/import)
+add_subdirectory(importexport/export)
 
 # Stubs
 add_subdirectory(stubs)

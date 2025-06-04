@@ -20,6 +20,8 @@ static const muse::Uri PROJECT_PAGE_URI("audacity://project");
 static const muse::Uri HOME_PAGE_URI("musescore://home");
 static const muse::Uri NEW_PROJECT_URI("audacity://project/new");
 
+static const muse::Uri EXPORT_OPTIONS_URI("audacity://exportoptions");
+
 static const QString AUDACITY_URL_SCHEME("AUDACITY");
 static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
 
@@ -523,6 +525,9 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
 
     projectHistory()->init();
 
+    exportConfiguration()->setFilename("untitled");
+    exportConfiguration()->setDirectoryPath(dirpath(project->path()));
+
     return openPageIfNeed(PROJECT_PAGE_URI);
 }
 
@@ -653,7 +658,12 @@ void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const m
 
 void ProjectActionsController::exportAudio()
 {
-    NOT_IMPLEMENTED;
+    IAudacityProjectPtr project = globalContext()->currentProject();
+    auto ret = interactive()->open(EXPORT_OPTIONS_URI);
+
+    ret.onResolve(this, [=](Val ret){
+        project->exportAudio();
+    });
 }
 
 void ProjectActionsController::exportLabels()

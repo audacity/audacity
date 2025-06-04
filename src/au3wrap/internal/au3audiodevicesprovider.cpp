@@ -313,7 +313,7 @@ std::vector<uint64_t> Au3AudioDevicesProvider::availableSampleRateList() const
 
 uint64_t Au3AudioDevicesProvider::defaultSampleRate() const
 {
-    return muse::settings()->value(DEFAULT_SAMPLE_RATE).toDouble();
+    return muse::settings()->value(DEFAULT_SAMPLE_RATE).toInt();
 }
 
 void Au3AudioDevicesProvider::setDefaultSampleRate(uint64_t newRate)
