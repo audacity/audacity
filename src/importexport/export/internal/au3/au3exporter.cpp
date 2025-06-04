@@ -1,0 +1,226 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+
+#include "BasicUI.h"
+#include "MixerOptions.h"
+#include "Track.h"
+#include "WaveTrack.h"
+#include "au3wrap/au3types.h"
+#include "libraries/lib-import-export/ExportPluginRegistry.h"
+#include "libraries/lib-import-export/ExportUtils.h"
+
+#include "au3exporter.h"
+
+using namespace au::au3;
+using namespace au::importexport;
+
+namespace {
+ExportPlugin* formatPlugin(const std::string& format)
+{
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
+            return plugin;
+        }
+    }
+
+    return nullptr;
+}
+}
+
+class DialogExportProgressDelegate : public ExportProcessorDelegate
+{
+    std::atomic<bool> mCancelled { false };
+    std::atomic<bool> mStopped { false };
+    std::atomic<double> mProgress {};
+
+    TranslatableString mStatus;
+
+    std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
+public:
+
+    bool IsCancelled() const override
+    {
+        return mCancelled;
+    }
+
+    bool IsStopped() const override
+    {
+        return mStopped;
+    }
+
+    void SetStatusString(const TranslatableString& str) override
+    {
+        mStatus = str;
+    }
+
+    void OnProgress(double progress) override
+    {
+        mProgress = progress;
+    }
+
+    void UpdateUI()
+    {
+        constexpr long long ProgressSteps = 1000ul;
+
+        if (!mProgressDialog) {
+            mProgressDialog = BasicUI::MakeProgress(XO("Export"), mStatus);
+        } else {
+            mProgressDialog->SetMessage(mStatus);
+        }
+
+        const auto result = mProgressDialog->Poll(mProgress * ProgressSteps, ProgressSteps);
+
+        if (result == BasicUI::ProgressResult::Cancelled) {
+            if (!mStopped) {
+                mCancelled = true;
+            }
+        } else if (result == BasicUI::ProgressResult::Stopped) {
+            if (!mCancelled) {
+                mStopped = true;
+            }
+        }
+    }
+};
+
+bool Au3Exporter::doExport()
+{
+    muse::io::path_t directoryPath = exportConfiguration()->directoryPath();
+    muse::io::path_t filePath = directoryPath.appendingComponent(exportConfiguration()->filename())
+                                .appendingSuffix(formatExtension(exportConfiguration()->currentFormat()));
+
+    wxFileName filename = wxString(filePath.toStdString());
+
+    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    if (!project) {
+        return false;
+    }
+
+    int format = formatIndex(exportConfiguration()->currentFormat());
+    if (format == -1) {
+        return false;
+    }
+    m_format = format;
+
+    m_plugin = formatPlugin(exportConfiguration()->currentFormat());
+    if (!m_plugin) {
+        return false;
+    }
+
+    // TODO: implement other ProcessType's selections
+    if (exportConfiguration()->process() == ProcessType::SELECTED_AUDIO) {
+        m_t0
+            = selectionController()->timeSelectionIsNotEmpty() ? selectionController()->dataSelectedStartTime() : static_cast<trackedit::
+                                                                                                                              secs_t>(
+                  selectionController()->leftMostSelectedClipStartTime());
+        m_t1
+            = selectionController()->timeSelectionIsNotEmpty() ? selectionController()->dataSelectedEndTime() : static_cast<trackedit::
+                                                                                                                            secs_t>(
+                  selectionController()->rightMostSelectedClipEndTime());
+    } else {
+        auto trackeditProject = globalContext()->currentProject()->trackeditProject();
+
+        m_t0 = 0.0;
+        m_t1 = trackeditProject->totalTime().to_double();
+    }
+
+    m_selectedOnly = false;
+
+    auto exportedTracks = ExportUtils::FindExportWaveTracks(TrackList::Get(*project), m_selectedOnly);
+    if (exportedTracks.empty()) {
+        //! NOTE: All selected audio is muted
+        return false;
+    }
+
+    m_mixerSpec = std::make_unique<MixerOptions::Downmix>(exportedTracks.size(), 2).get();
+    m_sampleRate = exportConfiguration()->exportSampleRate();
+
+    // TODO: update when custom mapping is implemented
+    if (exportConfiguration()->exportChannels() == ExportChannelsPref::ExportChannels::MONO) {
+        m_numChannels = 1;
+    } else {
+        m_numChannels = 2;
+    }
+
+    auto processor = m_plugin->CreateProcessor(m_format);
+    if (!processor->Initialize(*project,
+                               m_parameters,
+                               filename.GetFullPath(),
+                               m_t0, m_t1, m_selectedOnly,
+                               m_sampleRate, m_numChannels,
+                               m_mixerSpec,
+                               m_tags)) {
+        return false;
+    }
+
+    auto exportTask = ExportTask([actualFilename = filename,
+                                  targetFilename = filename,
+                                  processor = std::shared_ptr<ExportProcessor>(processor.release())]
+                                 (ExportProcessorDelegate& delegate)
+    {
+        auto result = ExportResult::Error;
+        auto cleanup = finally([&] {
+            if (result == ExportResult::Success || result == ExportResult::Stopped) {
+                if (actualFilename != targetFilename) {
+                    //may fail...
+                    ::wxRenameFile(actualFilename.GetFullPath(),
+                                   targetFilename.GetFullPath(),
+                                   true);
+                }
+            } else {
+                ::wxRemoveFile(actualFilename.GetFullPath());
+            }
+        });
+
+        result = processor->Process(delegate);
+        return result;
+    });
+
+    auto f = exportTask.get_future();
+    DialogExportProgressDelegate delegate;
+    std::thread(std::move(exportTask), std::ref(delegate)).detach();
+    auto result = ExportResult::Error;
+    while (f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready) {
+        delegate.UpdateUI();
+    }
+
+    if (result == ExportResult::Error) {
+        return false;
+    }
+    return true;
+}
+
+std::vector<std::string> Au3Exporter::formatList() const
+{
+    std::vector<std::string> formatList;
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        formatList.push_back(plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString());
+    }
+
+    return formatList;
+}
+
+int Au3Exporter::formatIndex(const std::string& format) const
+{
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
+            return formatIndex;
+        }
+    }
+
+    return -1;
+}
+
+std::string Au3Exporter::formatExtension(const std::string& format) const
+{
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
+            auto extensions = plugin->GetFormatInfo(formatIndex).extensions;
+            if (!extensions.empty()) {
+                return extensions.front().ToStdString();
+            }
+        }
+    }
+
+    return {};
+}
