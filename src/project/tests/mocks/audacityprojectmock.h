@@ -15,6 +15,7 @@ public:
     MOCK_METHOD(muse::Ret, load, (const muse::io::path_t& path, bool forceMode, const std::string& format), (override));
     MOCK_METHOD(muse::Ret, import, (const muse::io::path_t& path, bool forceMode), (override));
     MOCK_METHOD(muse::Ret, import, (const std::vector<muse::io::path_t>& paths, bool forceMode), (override));
+    MOCK_METHOD(muse::Ret, exportAudio, (), (override));
 
     MOCK_METHOD(void, close, (), (override));
     MOCK_METHOD(muse::async::Notification, aboutCloseBegin, (), (const, override));

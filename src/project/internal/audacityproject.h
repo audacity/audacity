@@ -12,6 +12,7 @@
 #include "trackedit/itrackeditclipboard.h"
 #include "trackedit/itrackeditproject.h"
 #include "importexport/import/iimporter.h"
+#include "importexport/export/iexporter.h"
 
 namespace au::au3 {
 class Au3ProjectAccessor;
@@ -51,6 +52,7 @@ class Audacity4Project : public IAudacityProject, public muse::async::Asyncable
     muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
     muse::Inject<IThumbnailCreator> thumbnailCreator;
     muse::Inject<importexport::IImporter> importer;
+    muse::Inject<importexport::IExporter> exporter;
 
 public:
     Audacity4Project();
@@ -60,6 +62,7 @@ public:
     muse::Ret load(const muse::io::path_t& path, bool forceMode = false, const std::string& format = "") override;
     muse::Ret import(const muse::io::path_t& path, bool forceMode = false) override;
     muse::Ret import(const std::vector<muse::io::path_t>& paths, bool forceMode) override;
+    muse::Ret exportAudio() override;
     void close() override;
     muse::async::Notification aboutCloseBegin() const override;
     muse::async::Notification aboutCloseEnd() const override;
@@ -94,6 +97,7 @@ private:
 
     muse::Ret doLoad(const muse::io::path_t& path, bool forceMode, const std::string& format);
     muse::Ret doImport(const muse::io::path_t& path, bool forceMode);
+    muse::Ret doExport();
 
     muse::Ret saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup = true,
                           bool createThumbnail = true);

@@ -15,8 +15,10 @@
 
 #pragma once
 
-#include "FFmpegFunctions.h"
-#include "wxPanelWrapper.h"
+#include "Identifier.h"
+#include "TranslatableString.h"
+#include "lib-ffmpeg-support/FFmpegFunctions.h"
+// #include "wxPanelWrapper.h"
 
 class FFmpegPresets;
 class ShuttleGui;
@@ -70,95 +72,95 @@ struct ExposedFormat
 };
 
 /// Custom FFmpeg export dialog
-class ExportFFmpegOptions final : public wxDialogWrapper
+class ExportFFmpegOptions final //: public wxDialogWrapper
 {
 public:
 
-    ExportFFmpegOptions(wxWindow* parent);
-    ~ExportFFmpegOptions();
-    void PopulateOrExchange(ShuttleGui& S);
-    void OnOK(wxCommandEvent& event);
-    void OnGetURL(wxCommandEvent& event);
-    void OnFormatList(wxCommandEvent& event);
-    void DoOnFormatList();
-    void OnCodecList(wxCommandEvent& event);
-    void DoOnCodecList();
-    void OnAllFormats(wxCommandEvent& event);
-    void OnAllCodecs(wxCommandEvent& event);
-    void OnSavePreset(wxCommandEvent& event);
-    void OnLoadPreset(wxCommandEvent& event);
-    void OnDeletePreset(wxCommandEvent& event);
-    void OnImportPresets(wxCommandEvent& event);
-    void OnExportPresets(wxCommandEvent& event);
-    bool SavePreset(bool bCheckForOverwrite);
+//     ExportFFmpegOptions(wxWindow* parent);
+//     ~ExportFFmpegOptions();
+//     void PopulateOrExchange(ShuttleGui& S);
+//     void OnOK(wxCommandEvent& event);
+//     void OnGetURL(wxCommandEvent& event);
+//     void OnFormatList(wxCommandEvent& event);
+//     void DoOnFormatList();
+//     void OnCodecList(wxCommandEvent& event);
+//     void DoOnCodecList();
+//     void OnAllFormats(wxCommandEvent& event);
+//     void OnAllCodecs(wxCommandEvent& event);
+//     void OnSavePreset(wxCommandEvent& event);
+//     void OnLoadPreset(wxCommandEvent& event);
+//     void OnDeletePreset(wxCommandEvent& event);
+//     void OnImportPresets(wxCommandEvent& event);
+//     void OnExportPresets(wxCommandEvent& event);
+//     bool SavePreset(bool bCheckForOverwrite);
 
-    // Static tables
+//     // Static tables
     static CompatibilityEntry CompatibilityList[];
     static ExposedFormat fmts[];
     static const int iAACSampleRates[];
     static ApplicableFor apptable[];
 
-private:
+// private:
 
-    wxArrayString mShownFormatNames;
-    wxArrayString mShownFormatLongNames;
-    wxArrayString mShownCodecNames;
-    wxArrayString mShownCodecLongNames;
-    wxArrayStringEx mFormatNames;
-    wxArrayString mFormatLongNames;
-    wxArrayStringEx mCodecNames;
-    wxArrayString mCodecLongNames;
+//     wxArrayString mShownFormatNames;
+//     wxArrayString mShownFormatLongNames;
+//     wxArrayString mShownCodecNames;
+//     wxArrayString mShownCodecLongNames;
+//     wxArrayStringEx mFormatNames;
+//     wxArrayString mFormatLongNames;
+//     wxArrayStringEx mCodecNames;
+//     wxArrayString mCodecLongNames;
 
-    wxListBox* mFormatList;
-    wxListBox* mCodecList;
+//     wxListBox* mFormatList;
+//     wxListBox* mCodecList;
 
-    wxStaticText* mFormatName;
-    wxStaticText* mCodecName;
+//     wxStaticText* mFormatName;
+//     wxStaticText* mCodecName;
 
-    wxComboBox* mPresetCombo;
+//     wxComboBox* mPresetCombo;
 
-    int mBitRateFromChoice;
-    int mSampleRateFromChoice;
+//     int mBitRateFromChoice;
+//     int mSampleRateFromChoice;
 
-    std::unique_ptr<FFmpegPresets> mPresets;
+//     std::unique_ptr<FFmpegPresets> mPresets;
 
-    wxArrayStringEx mPresetNames;
+//     wxArrayStringEx mPresetNames;
 
-    std::shared_ptr<FFmpegFunctions> mFFmpeg;
+//     std::shared_ptr<FFmpegFunctions> mFFmpeg;
 
-    /// Finds the format currently selected and returns its name and description
-    void FindSelectedFormat(wxString** name, wxString** longname);
+//     /// Finds the format currently selected and returns its name and description
+//     void FindSelectedFormat(wxString** name, wxString** longname);
 
-    /// Finds the codec currently selected and returns its name and description
-    void FindSelectedCodec(wxString** name, wxString** longname);
+//     /// Finds the codec currently selected and returns its name and description
+//     void FindSelectedCodec(wxString** name, wxString** longname);
 
-    /// Retrieves format list from libavformat
-    void FetchFormatList();
+//     /// Retrieves format list from libavformat
+//     void FetchFormatList();
 
-    /// Retrieves a list of formats compatible to codec
-    ///\param id Codec ID
-    ///\param selfmt format selected at the moment
-    ///\return index of the selfmt in NEW format list or -1 if it is not in the list
-    int FetchCompatibleFormatList(AudacityAVCodecID id, wxString* selfmt);
+//     /// Retrieves a list of formats compatible to codec
+//     ///\param id Codec ID
+//     ///\param selfmt format selected at the moment
+//     ///\return index of the selfmt in NEW format list or -1 if it is not in the list
+//     int FetchCompatibleFormatList(AudacityAVCodecID id, wxString* selfmt);
 
-    /// Retrieves codec list from libavcodec
-    void FetchCodecList();
+//     /// Retrieves codec list from libavcodec
+//     void FetchCodecList();
 
-    /// Retrieves a list of codecs compatible to format
-    ///\param fmt Format short name
-    ///\param id id of the codec selected at the moment
-    ///\return index of the id in NEW codec list or -1 if it is not in the list
-    int FetchCompatibleCodecList(const wxChar* fmt, AudacityAVCodecID id);
+//     /// Retrieves a list of codecs compatible to format
+//     ///\param fmt Format short name
+//     ///\param id id of the codec selected at the moment
+//     ///\return index of the id in NEW codec list or -1 if it is not in the list
+//     int FetchCompatibleCodecList(const wxChar* fmt, AudacityAVCodecID id);
 
-    /// Retrieves list of presets from configuration file
-    void FetchPresetList();
+//     /// Retrieves list of presets from configuration file
+//     void FetchPresetList();
 
-    bool ReportIfBadCombination();
+//     bool ReportIfBadCombination();
 
-    // Enables/disables controls based on format/codec combination,
-    // leaving only relevant controls enabled.
-    // Hiding the controls may have been a better idea,
-    // but it's hard to hide their text labels too
-    void EnableDisableControls(AVCodecWrapper* cdc, wxString* selfmt);
-    DECLARE_EVENT_TABLE()
+//     // Enables/disables controls based on format/codec combination,
+//     // leaving only relevant controls enabled.
+//     // Hiding the controls may have been a better idea,
+//     // but it's hard to hide their text labels too
+//     void EnableDisableControls(AVCodecWrapper* cdc, wxString* selfmt);
+//     DECLARE_EVENT_TABLE()
 };
