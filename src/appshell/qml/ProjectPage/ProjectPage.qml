@@ -94,6 +94,14 @@ DockPage {
         return null
     }
 
+    function openNotepad() {
+        if (notepadPanel.visible) {
+            notepadPanel.close()
+        } else {
+            notepadPanel.open()
+        }
+    }
+
     onInited: {
         Qt.callLater(pageModel.init)
     }
@@ -227,6 +235,10 @@ DockPage {
                     relayout()
                 }
 
+                onOpenNotepad: {
+                    root.openNotepad()
+                }
+
                 navigationPanel.section: root.playbackToolBarKeyNavSec
                 navigationPanel.order: 1
 
@@ -344,6 +356,65 @@ DockPage {
             HistoryPanel {
                 navigationSection: historyPanel.navigationSection
                 navigationOrderStart: historyPanel.contentNavigationPanelOrderStart
+            }
+        },
+
+        DockPanel {
+            id: notepadPanel
+            readonly property int effectsSectionWidth: 240
+            property bool showEffectsSection: false
+            property int titleBarHeight: 39
+
+            signal newFile()
+            signal saveFile()
+            signal openFile()
+
+            title: qsTrc("appshell", "Notepad")
+
+            groupName: root.verticalPanelsGroup
+            location: Location.Right
+
+            visible: false
+
+            dropDestinations: root.verticalPanelDropDestinations
+
+            titleBar: TextEditorTitleBar {
+                id: teTitleBarItem
+                effectsSectionWidth: notepadPanel.effectsSectionWidth
+                showEffectsSection: notepadPanel.showEffectsSection
+                implicitHeight: notepadPanel.titleBarHeight
+
+                onOpenFile: {
+                    notepadPanel.openFile()
+                }
+
+                onSaveFile: {
+                    notepadPanel.saveFile()
+                }
+
+                onNewFile: {
+                    notepadPanel.newFile()
+                }
+            }
+
+            TextEditor {
+                id: te
+
+                Connections {
+                    target: notepadPanel
+
+                    function onOpenFile() {
+                        te.notepad.openFile()
+                    }
+
+                    function onSaveFile() {
+                        te.notepad.save()
+                    }
+
+                    function onNewFile() {
+                        te.notepad.newFile()
+                    }
+                }
             }
         }
     ]

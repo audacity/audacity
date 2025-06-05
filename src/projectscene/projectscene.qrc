@@ -52,6 +52,9 @@
         <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/PitchSection.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/GeneralSection.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/SpeedSection.qml</file>
+        <file>qml/Audacity/ProjectScene/common/TextEditor.qml</file>
+        <file>qml/Audacity/ProjectScene/common/TextEditorTitleBar.qml</file>
+        <file>qml/Audacity/ProjectScene/common/TextEditorTitleBarBackground.qml</file>
         <file>qml/Audacity/ProjectScene/historypanel/HistoryPanel.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/DropdownWithTitle.qml</file>

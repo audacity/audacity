@@ -22,6 +22,8 @@ Item {
 
     property alias navigationPanel: view.navigationPanel
 
+    signal openNotepad()
+
     width: {
         let contentWidth = view.width + prv.customizeButtonSpaceWidth
         return maximumWidth > 0 ? Math.max(contentWidth, maximumWidth) : contentWidth
@@ -250,6 +252,28 @@ Item {
                     itemData.handleMenuItem(itemId)
                 }
             }
+        }
+    }
+
+
+    FlatButton {
+        id: openNotepadButton
+
+        anchors.right: parent.right
+        anchors.rightMargin: 24 + customizeButton.width
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 12
+
+        width: 28
+        height: width
+
+        icon: IconCode.PAGE
+        iconFont: ui.theme.toolbarIconsFont
+        toolTipTitle: qsTrc("projectscene", "Open Notepad")
+        toolTipDescription: qsTrc("projectscene", "Show/hide notepad")
+
+        onClicked: {
+            root.openNotepad()
         }
     }
 
