@@ -14,7 +14,7 @@
 #include "vst/ivstinstancesregister.h"
 
 namespace au::effects {
-class Vst3ViewLauncher : public AbstractViewLauncher
+class Vst3ViewLauncher final : public AbstractViewLauncher
 {
     muse::Inject<muse::vst::IVstInstancesRegister> museInstancesRegister;
 

@@ -30,6 +30,7 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable,
     Q_PROPERTY(
         muse::ui::NavigationPanel
         * navigationPanel READ prop_navigationPanel WRITE prop_setNavigationPanel NOTIFY navigationPanelChanged);
+    Q_PROPERTY(EffectFamily effectFamily READ prop_effectFamily NOTIFY effectFamilyChanged);
 
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectsProvider> effectsProvider;
@@ -39,7 +40,6 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable,
 
 public:
     Q_INVOKABLE void load();
-    Q_INVOKABLE bool isVst3() const;
 
     RealtimeEffectViewerDialogModel(QObject* parent = nullptr);
     ~RealtimeEffectViewerDialogModel() override;
@@ -60,6 +60,8 @@ public:
     muse::ui::NavigationPanel* prop_navigationPanel() const;
     void prop_setNavigationPanel(muse::ui::NavigationPanel* navigationPanel);
 
+    EffectFamily prop_effectFamily() const;
+
 signals:
     void trackNameChanged();
     void titleChanged();
@@ -67,6 +69,7 @@ signals:
     void isMasterEffectChanged();
     void dialogViewChanged();
     void navigationPanelChanged();
+    void effectFamilyChanged();
 
 private:
     void subscribe();
@@ -75,7 +78,6 @@ private:
     bool eventFilter(QObject* obj, QEvent* event) override;
 
     RealtimeEffectStatePtr m_effectState;
-    bool m_isVst3 = false;
     muse::uicomponents::DialogView* m_dialogView = nullptr;
     muse::ui::NavigationPanel* m_navigationPanel = nullptr;
 };

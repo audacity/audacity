@@ -28,7 +28,7 @@ class wxString;
 typedef wxString PluginID;
 class Effect;
 class EffectPlugin;
-class EffectSettings;
+struct EffectSettings;
 class EffectInstance;
 
 struct EffectAndDefaultSettings {
