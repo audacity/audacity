@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "run audacity",
+            "name": "Launch",
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/Debug/install/bin/audacity.exe",
@@ -28,15 +28,47 @@
             "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis",
         },
         {
-            "name": "run audacity (Linux)",
-            "type": "cppdbg",
+            // Requires CodeLLDB extension
+            // Doesn't support visualizerFile but is much faster than cppvsdbg
+            "name": "Launch (Linux - lldb)",
+            "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/build/Debug/src/app/audacity",
             "preLaunchTask": "CMake: build",
+            "args": [
+                // "--register-audio-plugin",
+                // "https://wasted.audio/software/wstd_flangr"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Launch (Linux - cppdbg)",
+            "type": "cppdbg",
+            "MIMode": "gdb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug/src/app/audacity",
+            "preLaunchTask": "CMake: build",
+            "args": [
+                "--register-audio-plugin",
+                "https://wasted.audio/software/wstd_flangr"
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/Debug/src/app",
             "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis",
             "showDisplayString": true
+        },
+        {
+            "name": "run audacity (MacOS)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug/src/app/audacity.app/Contents/MacOS/audacity",
+            "args": [],
+            "preLaunchTask": "CMake: install",
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb"
         }
     ]
 }
