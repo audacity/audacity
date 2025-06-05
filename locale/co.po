@@ -1,11 +1,11 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Audacity Team
+# Copyright (C) 2025 Audacity Team
 # This file is distributed under the same license as the audacity package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2021.
 #
 # Translators:
 # Link Winterberg, 2024
-# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2025
+# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2021-2025
 #
 #, fuzzy
 msgid ""
@@ -13,14 +13,15 @@ msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-05-29 17:54+0300\n"
-"PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2025\n"
+"PO-Revision-Date: 2025-06-05 14:48+0200\n"
+"Last-Translator: Patriccollu di Santa Maria è Sichè <https://github.com/Patriccollu/Lingua_Corsa-Infurmatica/#readme>\n"
 "Language-Team: Corsican (https://app.transifex.com/audacity/teams/164520/co/)\n"
 "Language: co\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.6.3\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -2067,9 +2068,8 @@ msgid "WebVTT file"
 msgstr "Schedariu WebVTT"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "Stilu d’etichette espurtate :"
+msgstr "Schedariu d’etichette accettatu"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4638,24 +4638,22 @@ msgid "File type:"
 msgstr "Tipu di schedariu :"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "Pezzu &precedente"
+msgstr "Annunziu precedente"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "Pezzu &seguente"
+msgstr "Annunziu seguente"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "%s, %d nant’à %d pezzu %s"
+msgstr "Annunziu %d nant’à %d, %s. %s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr ""
+msgstr "Annunziu %d nant’à %d, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7477,9 +7475,8 @@ msgid "Enter token to link your account"
 msgstr "Stampittà u gettone per ligà u vostru contu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
 msgid "Sign-in and get the token"
-msgstr "Cunnittitevi per arregistrà in u nivulu"
+msgstr "Cunnittitevi è ottinite u gettone"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -11662,12 +11659,11 @@ msgstr "Benvenuti in Audacity !"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
+msgstr "Cumpiete a vostra cunfigurazione di u nivulu Audacity cù audio.com"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "What's new in Audacity"
-msgstr "Ciò chì hè novu in Audacity %s"
+msgstr "Ciò chì hè novu in Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11675,33 +11671,31 @@ msgstr "Fighjà u filmettu di a versione"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner : sonu di voce « off » di qualità « studio »"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Aiutateci à cuncipisce u futuru d’Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Pigliate parte à l’inchiesta"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "Fiascu à l’avviu d’Audacity"
+msgstr "Inchiesta nant’à e funzioni d’Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
-msgstr ""
+msgstr "Prudutti derivati per u 25u anniversariu !"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit now"
-msgstr ""
+msgstr "Visitate avà"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our new Audacity merch store"
-msgstr "Què ùn hè micca un schedariu di prughjettu Audacity"
+msgstr "Visitate a nostra buttea nova di prudutti derivati Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11712,9 +11706,8 @@ msgid "Visit our forum"
 msgstr "Visitate u nostru foru"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "Ùn affissà più stu messaghju à u lanciu"
+msgstr "Ù&n affissà più stu messaghju à u lanciu"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
