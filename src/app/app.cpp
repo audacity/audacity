@@ -68,6 +68,8 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
     // ====================================================
     // Setup global Qt application variables
     // ====================================================
+    printf("Executando App::run()\n");
+
     app_init_qrc();
 
     qputenv("QT_STYLE_OVERRIDE", "Fusion");
