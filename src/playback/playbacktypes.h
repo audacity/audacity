@@ -101,4 +101,39 @@ public:
     };
     Q_ENUM(PlaybackQuality)
 };
+
+class PlaybackMeterType
+{
+    Q_GADGET
+public:
+    enum class MeterType {
+        DbLog = 0,
+        DbLinear = 1,
+        Linear = 2,
+    };
+    Q_ENUM(MeterType)
+};
+
+class PlaybackMeterStyle
+{
+    Q_GADGET
+public:
+    enum class MeterStyle {
+        Default,
+        RMS,
+        Gradient,
+    };
+    Q_ENUM(MeterStyle)
+};
+
+class PlaybackMeterPosition
+{
+    Q_GADGET
+public:
+    enum class MeterPosition {
+        TopBar = 0,
+        SideBar = 1,
+    };
+    Q_ENUM(MeterPosition)
+};
 }
