@@ -109,6 +109,11 @@ bool TrackeditOperationController::changeClipColor(const ClipKey& clipKey, const
     return trackAndClipOperations()->changeClipColor(clipKey, color);
 }
 
+bool TrackeditOperationController::changeWaveColor(const ClipKey& clipKey, const std::string& wave_color)
+{
+    return trackAndClipOperations()->changeWaveColor(clipKey, wave_color);
+}
+
 bool TrackeditOperationController::changeTrackColor(const TrackId trackId, const std::string& color)
 {
     if (trackAndClipOperations()->changeTrackColor(trackId, color)) {

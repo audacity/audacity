@@ -292,6 +292,7 @@ WaveClip::WaveClip(
     mIsPlaceholder = orig.GetIsPlaceholder();
 
     mColor = orig.mColor;
+    mWaveColor = orig.mWaveColor;
 
     assert(NChannels() == (token.emptyCopy ? 0 : orig.NChannels()));
     assert(token.emptyCopy || CheckInvariants());
@@ -357,6 +358,7 @@ WaveClip::WaveClip(
     }
 
     mColor = orig.mColor;
+    mWaveColor = orig.mWaveColor;
 
     assert(NChannels() == orig.NChannels());
     assert(CheckInvariants());
@@ -1088,6 +1090,7 @@ static constexpr auto ClipTempo_attr = "clipTempo";
 static constexpr auto Name_attr = "name";
 static constexpr auto GroupId_attr = "groupId";
 static constexpr auto Color_attr = "color";
+static constexpr auto waveColor_attr = "wave_color";
 
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
 {
@@ -1160,6 +1163,10 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& a
             } else if (attr == Color_attr) {
                 if (value.IsStringView()) {
                     SetColor(value.ToWString());
+                }
+            } else if (attr == waveColor_attr) {
+                if (value.IsStringView()) {
+                    SetWaveColor(value.ToWString());
                 }
             } else if (Attachments::FindIf(
                            [&](WaveClipListener& listener){
@@ -1242,6 +1249,7 @@ void WaveClip::WriteXML(size_t ii, XMLWriter& xmlFile) const
     xmlFile.WriteAttr(Name_attr, mName);
     xmlFile.WriteAttr(GroupId_attr, static_cast<long>(mGroupId));
     xmlFile.WriteAttr(Color_attr, mColor);
+    xmlFile.WriteAttr(Color_attr, mWaveColor);
     Attachments::ForEach([&](const WaveClipListener& listener){
         listener.WriteXMLAttributes(xmlFile);
     });
@@ -1913,9 +1921,19 @@ void WaveClip::SetColor(const wxString& color)
     mColor = color;
 }
 
+void WaveClip::SetWaveColor(const wxString& color)
+{
+    mWaveColor = color;
+}
+
 const wxString& WaveClip::GetColor() const
 {
     return mColor;
+}
+
+const wxString& WaveClip::GetWaveColor() const
+{
+    return mWaveColor;
 }
 
 sampleCount WaveClip::TimeToSamples(double time) const

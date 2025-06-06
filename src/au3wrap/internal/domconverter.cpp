@@ -45,6 +45,8 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
     clip.endTime = au3clip->GetPlayEndTime();
     clip.color = (!wxToString(au3clip->GetColor()).isEmpty()) ? muse::draw::Color(au3clip->GetColor()) : TrackColor::Get(
         waveTrack).GetColor();
+    clip.wave_color = (!wxToString(au3clip->GetWaveColor()).isEmpty()) ? muse::draw::Color(au3clip->GetWaveColor())
+                                                                        : QColor(0,0,0);
     clip.groupId = au3clip->GetGroupId();
     clip.hasCustomColor = !wxToString(au3clip->GetColor()).isEmpty();
     clip.stereo = au3clip->NChannels() > 1;

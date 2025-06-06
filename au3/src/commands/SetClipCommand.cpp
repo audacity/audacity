@@ -61,6 +61,7 @@ bool SetClipCommand::VisitSettings(SettingsVisitorBase<Const>& S)
 {
     S.OptionalY(bHasContainsTime).Define(mContainsTime,   wxT("At"),         0.0, 0.0, 100000.0);
     S.OptionalN(bHasColour).DefineEnum(mColour,         wxT("Color"),      kColour0, kColourStrings, nColours);
+    S.OptionalN(bHasWaveColour).DefineEnum(mWaveColour,         wxT("WaveColor"),      kColour0, kColourStrings, nColours);
     // Allowing a negative start time is not a mistake.
     // It will be used in demonstrating time before zero.
     S.OptionalN(bHasT0).Define(mT0,             wxT("Start"),      0.0, -5.0, 1000000.0);
@@ -81,6 +82,8 @@ void SetClipCommand::PopulateOrExchange(ShuttleGui& S)
     {
         S.Optional(bHasContainsTime).TieNumericTextBox(XXO("At:"),            mContainsTime);
         S.Optional(bHasColour).TieChoice(XXO("Color:"),         mColour,
+                                         Msgids(kColourStrings, nColours));
+        S.Optional(bHasWaveColour).TieChoice(XXO("Wave Color:"), mWaveColour,
                                          Msgids(kColourStrings, nColours));
         S.Optional(bHasT0).TieNumericTextBox(XXO("Start:"),         mT0);
         S.Optional(bHasName).TieTextBox(XXO("Name:"),          mName);
@@ -105,6 +108,11 @@ bool SetClipCommand::Apply(const CommandContext& context)
                     if (bHasColour) {
                         for (const auto channel : interval->Channels()) {
                             WaveColorAttachment::Get(*channel).SetColorIndex(mColour);
+                        }
+                    }
+                    if (bHasWaveColour) {
+                        for (const auto channel : interval->Channels()) {
+                            WaveColorAttachment::Get(*channel).SetWaveColorIndex(mColour);
                         }
                     }
                     // No validation of overlap yet.  We assume the user is sensible!

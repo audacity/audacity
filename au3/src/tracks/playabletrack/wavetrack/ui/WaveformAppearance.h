@@ -36,6 +36,7 @@ public:
 
     int GetColorIndex() const { return mColorIndex; }
     void SetColorIndex(int colorIndex);
+    void SetWaveColorIndex(int colorIndex);
 
 private:
     void Subscribe(const std::shared_ptr<WaveTrack>& pTrack);
@@ -68,6 +69,7 @@ struct WaveColorAttachment final : WaveClipListener
 
     int GetColorIndex() const { return mColorIndex; }
     void SetColorIndex(int colorIndex) { mColorIndex = colorIndex; }
+    void SetWaveColorIndex(int colorIndex) { mColorIndex = colorIndex; }
 
 private:
     int mColorIndex{};

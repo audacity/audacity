@@ -18,6 +18,7 @@ struct Clip {
 
     muse::String title;
     muse::draw::Color color;
+    muse::draw::Color wave_color;// = QColor(0, 128, 255); // Default to blue
     int groupId = -1;
     double startTime = 0.0;
     double endTime = 0.0;
@@ -29,6 +30,7 @@ struct Clip {
 
     bool stretchToMatchTempo = false;
     bool hasCustomColor = false;
+    bool hasCustomWaveColor = false;
 
     inline bool isValid() const { return key.isValid(); }
 };

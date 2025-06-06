@@ -175,6 +175,13 @@ inline muse::actions::ActionQuery makeClipColorChangeAction(const std::string& c
                                                                                 colorHex)));
 }
 
+constexpr const char16_t* WAVE_COLOR_CHANGE_ACTION = u"action://trackedit/clip/change-wave-color?wave_color=%1";
+inline muse::actions::ActionQuery makeWaveColorChangeAction(const std::string& wave_colorHex)
+{
+    return muse::actions::ActionQuery(muse::String(WAVE_COLOR_CHANGE_ACTION).arg(muse::String::fromStdString(
+                                                                                wave_colorHex)));
+}
+
 constexpr const char16_t* TRACK_COLOR_CHANGE_ACTION = u"action://trackedit/track/change-color?color=%1";
 inline muse::actions::ActionQuery makeTrackColorChangeAction(const std::string& colorHex)
 {

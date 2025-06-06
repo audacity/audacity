@@ -5,6 +5,8 @@ Rectangle {
     id: root
 
     property color clipColor: "#677CE4"
+    property color waveColor: "#000000"
+
     property bool collapsed: false
 
     //radius: 4

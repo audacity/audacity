@@ -18,6 +18,7 @@ void ClipListItem::setClip(const trackedit::Clip& clip)
     emit pitchChanged();
     emit speedPercentageChanged();
     emit colorChanged();
+    emit wave_colorChanged();
     emit groupIdChanged();
     emit waveChanged();
 }
@@ -46,6 +47,11 @@ void ClipListItem::setTitle(const QString& newTitle)
 QColor ClipListItem::color() const
 {
     return m_clip.color.toQColor();
+}
+
+QColor ClipListItem::wave_color() const
+{
+    return m_clip.wave_color.toQColor();
 }
 
 int ClipListItem::groupId() const

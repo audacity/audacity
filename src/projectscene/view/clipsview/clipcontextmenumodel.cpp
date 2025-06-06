@@ -35,11 +35,14 @@ void ClipContextMenuModel::load()
     updateStretchEnabledState(*enableStretchItem);
 
     auto colorItems = makeClipColourItems();
+    
+    auto waveItems = makeWaveColourItems();
 
     MenuItemList items {
         makeItemWithArg("clip-properties"),
         makeItemWithArg("rename-clip"),
         makeMenu(muse::TranslatableString("clip", "Clip color"), colorItems, "colorMenu"),
+        makeMenu(muse::TranslatableString("clip", "Wave color"), waveItems, "waveColorMenu"),
         makeSeparator(),
         makeItemWithArg("copy"),
         makeItemWithArg("duplicate"),
@@ -133,6 +136,36 @@ void ClipContextMenuModel::updateColorCheckedState()
     }
 }
 
+void ClipContextMenuModel::updateWaveColorCheckedState()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) 
+    {
+        return;
+    }
+    auto clip = project->trackeditProject()->clip(m_clipKey.key);
+    if (!clip.isValid()) 
+    {
+        return;
+    }
+
+    for (const auto& action : m_wave_colorChangeActionCodeList) {
+        MenuItem& item = findItem(ActionCode(action));
+        ActionQuery query(action);
+
+        if ((!clip.hasCustomWaveColor && action == m_wave_colorChangeActionCodeList.at(0))
+            || (clip.hasCustomWaveColor && query.param("wave_color").toString() == clip.wave_color.toString())) {
+            auto state = item.state();
+            state.checked = true;
+            item.setState(state);
+        } else {
+            auto state = item.state();
+            state.checked = false;
+            item.setState(state);
+        }
+    }
+}
+
 void ClipContextMenuModel::updateColorMenu()
 {
     ClipStyles::Style clipStyle = projectSceneConfiguration()->clipStyle();
@@ -142,6 +175,18 @@ void ClipContextMenuModel::updateColorMenu()
         colorMenu.setState(muse::ui::UiActionState::make_disabled());
     } else {
         colorMenu.setState(muse::ui::UiActionState::make_enabled());
+    }
+}
+
+void ClipContextMenuModel::updateWaveColorMenu()
+{
+    ClipStyles::Style clipStyle = projectSceneConfiguration()->clipStyle();
+    MenuItem& waveColorMenu = findMenu("waveColorMenu");
+
+    if (clipStyle == ClipStyles::Style::CLASSIC) {
+        waveColorMenu.setState(muse::ui::UiActionState::make_disabled());
+    } else {
+        waveColorMenu.setState(muse::ui::UiActionState::make_enabled());
     }
 }
 
@@ -162,3 +207,22 @@ MenuItemList ClipContextMenuModel::makeClipColourItems()
 
     return items;
 }
+
+MenuItemList ClipContextMenuModel::makeWaveColourItems()
+{
+    m_wave_colorChangeActionCodeList.clear();
+    MenuItemList items;
+    items <<
+        makeMenuItem("action://trackedit/clip/change-wave-color-auto", muse::TranslatableString("clip", muse::String::fromStdString("Auto")));
+    m_wave_colorChangeActionCodeList.push_back("action://trackedit/clip/change-wave-color-auto");
+
+    const auto& colors = projectSceneConfiguration()->waveColors();
+    for (const auto& color : colors) {
+        items << makeMenuItem(makeWaveColorChangeAction(color.second).toString(),
+                              muse::TranslatableString("clip", muse::String::fromStdString(color.first)));
+        m_wave_colorChangeActionCodeList.push_back(makeWaveColorChangeAction(color.second).toString());
+    }
+
+    return items;
+}
+

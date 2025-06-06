@@ -18,6 +18,7 @@ class ClipListItem : public QObject
     Q_PROPERTY(ClipKey key READ key CONSTANT)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged FINAL)
     Q_PROPERTY(QColor color READ color NOTIFY colorChanged FINAL)
+    Q_PROPERTY(QColor wave_color READ wave_color NOTIFY wave_colorChanged FINAL)
     Q_PROPERTY(int groupId READ groupId NOTIFY groupIdChanged FINAL)
 
     Q_PROPERTY(double x READ x WRITE setX NOTIFY xChanged FINAL)
@@ -44,6 +45,8 @@ public:
     void setTitle(const QString& newTitle);
 
     QColor color() const;
+    
+    QColor wave_color() const;
 
     int groupId() const;
 
@@ -73,6 +76,7 @@ signals:
     void xChanged();
     void widthChanged();
     void colorChanged();
+    void wave_colorChanged();
     void groupIdChanged();
     void leftVisibleMarginChanged();
     void rightVisibleMarginChanged();

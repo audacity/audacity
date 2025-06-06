@@ -21,6 +21,7 @@ Rectangle {
     property alias channelHeightRatio: channelSplitter.channelHeightRatio
     property var canvas: null
     property color clipColor: "#677CE4"
+    property color waveColor: "#000000"
     property color normalHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : root.classicHeaderColor
     property color selectedHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors("#ffffff", root.clipColor, 0.3) : classicHeaderColor
     property color normalHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors("#ffffff", root.clipColor, 0.8) : classicHeaderHoveredColor
@@ -651,6 +652,7 @@ Rectangle {
             channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
 
             clipColor: root.clipColor
+            waveColor: root.waveColor
             clipSelected: root.clipSelected
             isIsolationMode: root.isIsolationMode
             multiSampleEdit: root.multiSampleEdit

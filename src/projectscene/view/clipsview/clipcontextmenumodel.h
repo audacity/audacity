@@ -37,10 +37,14 @@ private:
     void updateStretchEnabledState(muse::uicomponents::MenuItem& item);
 
     muse::uicomponents::MenuItemList makeClipColourItems();
+    muse::uicomponents::MenuItemList makeWaveColourItems();
     void updateColorCheckedState();
+    void updateWaveColorCheckedState();
     void updateColorMenu();
+    void updateWaveColorMenu();
 
     ClipKey m_clipKey;
     muse::actions::ActionCodeList m_colorChangeActionCodeList;
+    muse::actions::ActionCodeList m_wave_colorChangeActionCodeList;
 };
 }

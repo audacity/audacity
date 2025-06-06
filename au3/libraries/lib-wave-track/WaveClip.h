@@ -842,8 +842,10 @@ public:
     void SetGroupId(int64_t id);
 
     void SetColor(const wxString& color);
+    void SetWaveColor(const wxString& color);
     const wxString& GetColor() const;
-
+    const wxString& GetWaveColor() const;
+    
     // TimeToSamples and SamplesToTime take clip stretch ratio into account.
     // Use them to convert time / sample offsets.
     sampleCount TimeToSamples(double time) const override;
@@ -1060,6 +1062,7 @@ private:
     int64_t mGroupId = -1;
 
     wxString mColor;
+    wxString mWaveColor;
 };
 
 #endif

@@ -136,6 +136,23 @@ const std::vector<std::pair<std::string, std::string> >& ProjectSceneConfigurati
     return colors;
 }
 
+const std::vector<std::pair<std::string, std::string> >& ProjectSceneConfiguration::waveColors() const
+{
+    static std::vector<std::pair<std::string /*name*/, std::string /*color*/> > wave_colors = {
+        { "Blue", "#3576CC" },
+        { "Violet", "#6B63B8" },
+        { "Magenta", "#A05C99" },
+        { "Red", "#B24D4D" },
+        { "Orange", "#8B5C2A" },
+        { "Yellow", "#B8962A" },
+        { "Green", "#4C8B36" },
+        { "Turquoise", "#25806A" },
+        { "Cyan", "#2B7E8F" },
+    };
+
+    return wave_colors;
+}
+
 ClipStyles::Style ProjectSceneConfiguration::clipStyle() const
 {
     return muse::settings()->value(CLIP_STYLE).toEnum<ClipStyles::Style>();
