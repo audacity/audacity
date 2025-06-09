@@ -23,7 +23,7 @@ Item {
     property bool isMultiSelectionActive: false
     property bool isTrackAudible: true
     property bool isStereo: clipsModel.isStereo
-    property double channelHeightRatio: isStereo ? 0.5 : 1
+    property double channelHeightRatio: 0.5
     property bool moveActive: false
     property bool altPressed: false
     property bool ctrlPressed: false
