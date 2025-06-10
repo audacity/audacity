@@ -1287,7 +1287,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
         mCentShift = other.mCentShift;
         mClipStretchRatio = other.mClipStretchRatio;
         mRawAudioTempo = other.mRawAudioTempo;
-        mProjectTempo = other.mProjectTempo;
+        mClipTempo = other.mClipTempo;
     } else if (!HasEqualPitchAndSpeed(other)) {
         // post is satisfied
         return false;
