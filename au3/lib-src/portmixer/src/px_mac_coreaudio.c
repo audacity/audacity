@@ -54,6 +54,13 @@
 #define IS_INPUT    (TRUE)
 #define IS_OUTPUT   (FALSE)
 
+#ifndef kAudioObjectPropertyScopeInput
+#define kAudioObjectPropertyScopeInput kAudioDevicePropertyScopeInput
+#endif
+#ifndef kAudioObjectPropertyScopeOutput
+#define kAudioObjectPropertyScopeOutput kAudioDevicePropertyScopeOutput
+#endif
+
 typedef struct PxInfo
 {
    AudioDeviceID  input;
@@ -291,7 +298,7 @@ static PxVolume get_volume(AudioDeviceID device, Boolean isInput)
    /* Assume no master volume, so find highest volume of individual channels */
    for (ch = 1; ch <= 2; ch++) {
       inAddress.mElement = ch;
-      
+
       outSize = sizeof(Float32);
       inAddress.mSelector = kAudioDevicePropertyVolumeScalar;
       err = AudioObjectGetPropertyData(device,
@@ -493,7 +500,7 @@ static void set_current_input_source(px_mixer *Px, int i)
    if (i >= info->numsrcs) {
       return;
    }
-   
+
    AudioObjectPropertyAddress inAddress = {
       kAudioDevicePropertyDataSource,
       kAudioObjectPropertyScopeInput,
@@ -558,7 +565,7 @@ static PxVolume get_play_through(px_mixer *Px)
                                     &flag);
    if (err)
       return 0.0;
- 
+
    if (flag)
       return 1.0;
    else
