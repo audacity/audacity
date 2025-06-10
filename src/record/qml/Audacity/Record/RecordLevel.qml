@@ -16,13 +16,9 @@ FlatButton {
 
     property alias leftCurrentVolumePressure: leftVolumePressure.currentVolumePressure
     property alias leftCurrentRMS: leftVolumePressure.currentRMS
-    //property alias leftRecentPeak: leftVolumePressure.recentPeak
-    //property alias leftMaxPeak: leftVolumePressure.maxPeak
 
     property alias rightCurrentVolumePressure: rightVolumePressure.currentVolumePressure
     property alias rightCurrentRMS: rightVolumePressure.currentRMS
-    //property alias rightRecentPeak: rightVolumePressure.recentPeak
-    //property alias rightMaxPeak: rightVolumePressure.maxPeak
 
     property NavigationPanel navigationPanel: null
     property int navigationOrder: 0

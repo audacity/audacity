@@ -29,6 +29,7 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
+        anchors.bottomMargin: 2
 
         FlatButton {
             id: meterOptionsBtn
@@ -71,18 +72,17 @@ Item {
 
             Layout.fillHeight: true
             Layout.preferredWidth: root.width
+            Layout.topMargin: 12
 
             Row {
                 id: meterChannelRow
 
-                topPadding: 14
-
                 spacing: 2
 
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 6
+                anchors.fill: parent
+                anchors.leftMargin: 4
+                anchors.rightMargin: 4
+                anchors.topMargin: 2
 
                 VolumePressureMeter {
                     id: leftVolumePressure
@@ -94,8 +94,9 @@ Item {
 
                     meterStyle: model.meterStyle
 
-                    height: parent.height - volumeSlider.handleHeight / 2
-                    indicatorWidth: 11
+                    textBottomMargin: 4
+                    height: parent.height - volumeSlider.handleWidth / 2 + textBottomMargin
+                    indicatorWidth: 10
                 }
 
                 VolumePressureMeter {
@@ -108,8 +109,9 @@ Item {
 
                     meterStyle: model.meterStyle
 
-                    height: parent.height - volumeSlider.handleHeight / 2
-                    indicatorWidth: 11
+                    textBottomMargin: 4
+                    height: parent.height - volumeSlider.handleWidth / 2 + textBottomMargin
+                    indicatorWidth: 10
                     showRuler: true
                 }
             }
@@ -122,12 +124,11 @@ Item {
                 volumeLevel: model.level
 
                 anchors.top: parent.top
-                anchors.topMargin: meterChannelRow.topPadding + leftVolumePressure.overloadHeight - volumeSlider.handleHeight / 2
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.leftMargin: 9
+                anchors.leftMargin: 3
 
-                handleWidth: 18
+                handleWidth: 24
 
                 onVolumeLevelMoved: function(level) {
                     leftVolumePressure.reset()
@@ -149,12 +150,11 @@ Item {
             MouseArea {
                 id: overloadClickArea
 
-                anchors.top: meterContainer.top
-                anchors.topMargin: volumeSlider.handleHeight /  2
+                anchors.top: meterChannelRow.top
                 anchors.left: meterContainer.left
                 anchors.right: meterContainer.right
 
-                height: leftVolumePressure.overloadHeight + 8
+                height: leftVolumePressure.overloadHeight + 2
 
                 z: 10
 

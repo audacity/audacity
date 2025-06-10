@@ -23,7 +23,7 @@ Canvas {
 
     property int recentPeakIntervalMiliseconds: 600
 
-    readonly property int overloadWidth: 10
+    readonly property int overloadWidth: 8
 
     width: parent.width
     height: root.showRuler ? prv.indicatorHeight + prv.unitsTextWidth : prv.indicatorHeight
@@ -98,7 +98,7 @@ Canvas {
         readonly property real unitsTextWidth: 14
         readonly property color unitTextColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.8)
         readonly property string unitTextFont: {
-            var pxSize = String('12px')
+            var pxSize = String('10px')
             var family = String('\'' + ui.theme.bodyFont.family + '\'')
 
             return pxSize + ' ' + family

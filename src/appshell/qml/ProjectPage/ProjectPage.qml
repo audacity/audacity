@@ -327,9 +327,9 @@ DockPage {
             closable: false
             floatable: false
 
-            width: 60
-            minimumWidth: 60
-            maximumWidth: 60
+            width: 56
+            minimumWidth: 56
+            maximumWidth: 56
 
             location: Location.Right
 

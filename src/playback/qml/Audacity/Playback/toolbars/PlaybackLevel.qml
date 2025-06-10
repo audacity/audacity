@@ -81,6 +81,7 @@ Item {
         Item {
             Layout.fillWidth: true
             Layout.preferredHeight: root.height
+            Layout.leftMargin: volumeSlider.handleWidth / 2
 
             Column {
                 id: volumePressureContainer

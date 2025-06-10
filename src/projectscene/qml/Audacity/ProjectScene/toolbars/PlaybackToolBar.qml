@@ -284,9 +284,9 @@ Item {
         id: customizeButton
 
         anchors.right: parent.right
-        anchors.rightMargin: 8
+        anchors.rightMargin: 12
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 8
+        anchors.bottomMargin: 10
 
         width: 28
         height: width

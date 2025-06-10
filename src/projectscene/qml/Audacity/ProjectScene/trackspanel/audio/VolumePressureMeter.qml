@@ -25,8 +25,9 @@ Canvas {
     property int recentPeakIntervalMiliseconds: 600
 
     property int overloadHeight: 4
+    property int textBottomMargin: 0
 
-    width: root.showRuler ? indicatorWidth + 26 : indicatorWidth
+    width: root.showRuler ? indicatorWidth + ruler.width : indicatorWidth
 
     QtObject {
         id: meterStyle
@@ -79,15 +80,15 @@ Canvas {
     QtObject {
         id: prv
 
-        readonly property real indicatorHeight: root.height - root.overloadHeight - 6
+        readonly property real indicatorHeight:  root.height - root.overloadHeight - root.textBottomMargin
 
         // value ranges
         readonly property int fullValueRangeLength: root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure
-        readonly property real heightPerUnit: (prv.indicatorHeight - root.overloadHeight) / fullValueRangeLength
+        readonly property real heightPerUnit: prv.indicatorHeight / fullValueRangeLength
 
-        readonly property color unitTextColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.8)
+        readonly property color unitTextColor: ui.theme.fontPrimaryColor
         readonly property string unitTextFont: {
-            var pxSize = String('12px')
+            var pxSize = String('10px')
             var family = String('\'' + ui.theme.bodyFont.family + '\'')
 
             return pxSize + ' ' + family
@@ -134,6 +135,41 @@ Canvas {
             return prv.heightPerUnit * (clampedValue - root.minDisplayedVolumePressure)
 
         }
+
+        function drawRoundedRect(ctx, fillStyle, x, y, width, height, radius, roundedEdge) {
+            ctx.save();
+            ctx.fillStyle = fillStyle;
+            ctx.beginPath();
+
+            if (roundedEdge === "top" || roundedEdge === "both") {
+                ctx.moveTo(x + radius, y);
+                ctx.arcTo(x + width, y, x + width, y + radius, radius);
+            } else {
+                ctx.moveTo(x, y);
+                ctx.lineTo(x + width, y);
+            }
+
+            if (roundedEdge === "bottom" || roundedEdge === "both") {
+                ctx.lineTo(x + width, y + height - radius);
+                ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+                ctx.lineTo(x + radius, y + height);
+                ctx.arcTo(x, y + height, x, y + height - radius, radius);
+            } else {
+                ctx.lineTo(x + width, y + height);
+                ctx.lineTo(x, y + height);
+            }
+
+            if (roundedEdge === "top" || roundedEdge === "both") {
+                ctx.lineTo(x, y + radius);
+                ctx.arcTo(x, y, x + radius, y, radius);
+            } else {
+                ctx.lineTo(x, y);
+            }
+
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
         
         onIsClippingChanged: {
             if (prv.isClipping) {
@@ -146,11 +182,14 @@ Canvas {
     QtObject {
         id: ruler
 
-        readonly property real strokeHorizontalMargin: 2
+        readonly property int width: textAvailableWidth + textLeftMarging
+
+        readonly property int textAvailableWidth: 24
+        readonly property int textLeftMarging: 2
+
         readonly property real strokeHeight: 1
         readonly property real strokeWidth: 4
-        readonly property color longStrokeColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.5)
-        readonly property color shortStrokeColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.3)
+        readonly property color shortStrokeColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.5)
 
         // Rounding up fullStep value to the predefined one,
         // to avoid getting funny intervals like 3, or 7
@@ -180,7 +219,7 @@ Canvas {
 
         function drawRuler(ctx) {
             var originVPos = root.overloadHeight
-            var originHPos = indicatorWidth + ruler.strokeHorizontalMargin
+            var originHPos = indicatorWidth + ruler.textLeftMarging
 
             ctx.clearRect(indicatorWidth, 0, root.width - indicatorWidth, root.height)
             ctx.font = prv.unitTextFont
@@ -213,16 +252,23 @@ Canvas {
 
                 // We don´t draw the first stroke
                 if (j == 0) {
-                    let textHPos = originHPos + ruler.strokeWidth + ruler.strokeHorizontalMargin
+                    let textHPos = originHPos + (ruler.textAvailableWidth / 2)
                     ctx.fillStyle = prv.unitTextColor
+                    ctx.textAlign = "center"
                     ctx.fillText(fullStep * j, textHPos, vPos + 4)
                 } else {
-                    ctx.fillStyle = ruler.longStrokeColor
-                    ctx.fillRect(originHPos + ruler.strokeWidth, vPos, ruler.strokeWidth, ruler.strokeHeight)
+                    //We should center align both the stroke and the text
+                    const text = String(fullStep * j)
+                    const textWidth = ctx.measureText(text).width
+                    const totalWidth = ruler.strokeWidth + textWidth + 1
+                    const startPos = originHPos + (ruler.textAvailableWidth - totalWidth) / 2
 
-                    let textHPos = originHPos + ruler.strokeWidth * 2 + ruler.strokeHorizontalMargin
-                    ctx.fillStyle = prv.unitTextColor
-                    ctx.fillText(fullStep * j, textHPos, vPos + 4)
+                    ctx.fillStyle = ruler.unitTextColor
+                    ctx.fillRect(startPos, vPos, ruler.strokeWidth, ruler.strokeHeight)
+
+                    let textHPos = startPos + ruler.strokeWidth + 1
+                    ctx.textAlign = "start"
+                    ctx.fillText(text, textHPos, vPos + 4)
                 }
             }
         }
@@ -243,15 +289,15 @@ Canvas {
     }
 
     function drawBackground(ctx) {
-        ctx.clearRect(0, 0, root.indicatorWidth, prv.indicatorHeight)
+        ctx.clearRect(0, 0, root.indicatorWidth, root.height)
 
-        ctx.fillStyle = meterStyle.meterBackgroundColor
-        ctx.fillRect(0, 0, root.indicatorWidth, prv.indicatorHeight)
+        const fillStyle = meterStyle.meterBackgroundColor
+        prv.drawRoundedRect(ctx, fillStyle, 0, 0, root.indicatorWidth, root.height - root.textBottomMargin, 2, "both")
     }
 
     function drawClippedIndicator(ctx) {
-        ctx.fillStyle = prv.clipped ? meterStyle.clippedColor : meterStyle.noClippedColor
-        ctx.fillRect(0, 0, root.indicatorWidth, root.overloadHeight)
+        const fillStyle = prv.clipped ? meterStyle.clippedColor : meterStyle.noClippedColor
+        prv.drawRoundedRect(ctx, fillStyle, 0, 0, root.indicatorWidth, root.overloadHeight, 2, "top")
     }
 
     function drawMeterBar(ctx) {
@@ -268,13 +314,13 @@ Canvas {
         const recentPeakHeight = prv.sampleValueToHeight(prv.recentPeak)
         if (recentPeakHeight > 0) {
             ctx.fillStyle = meterStyle.getRecentPeakMarkerColor()
-            ctx.fillRect(0, root.height - 10 - recentPeakHeight, root.indicatorWidth, 1)
+            ctx.fillRect(0, root.height - root.textBottomMargin - recentPeakHeight, root.indicatorWidth, 1)
         }
 
         const maxPeakHeight = prv.sampleValueToHeight(prv.maxPeak)
         if (maxPeakHeight > 0) {
             ctx.fillStyle = meterStyle.maxPeakMarkerColor
-            ctx.fillRect(0, root.height - 10 - maxPeakHeight, root.indicatorWidth, 1)
+            ctx.fillRect(0, root.height - root.textBottomMargin - maxPeakHeight, root.indicatorWidth, 1)
         }
     }
 
@@ -289,8 +335,7 @@ Canvas {
         // Draw the volume pressure
         const meterHeight = prv.sampleValueToHeight(prv.updatedVolumePressure)
         if (meterHeight > 0) {
-            ctx.fillStyle = meterStyle.defaultColor
-            ctx.fillRect(0, root.height - 10 - meterHeight, indicatorWidth, meterHeight)
+            prv.drawRoundedRect(ctx, meterStyle.defaultColor, 0, root.height - root.textBottomMargin - meterHeight, indicatorWidth, meterHeight, 2, "bottom")
         }
 
         drawPeakMarkers(ctx)
@@ -307,11 +352,10 @@ Canvas {
         var yRMS = prv.sampleValueToHeight(root.currentRMS)
         var yPeak = prv.sampleValueToHeight(root.currentVolumePressure)
 
-        ctx.fillStyle = meterStyle.rmsColor
-        ctx.fillRect(0, root.height - 10 - yPeak, root.indicatorWidth, yPeak)
+        prv.drawRoundedRect(ctx, meterStyle.rmsColor, 0, root.height - root.textBottomMargin - yPeak, root.indicatorWidth, yPeak, 2, "bottom")
 
         ctx.fillStyle = meterStyle.rmsOverlayColor
-        ctx.fillRect(0, root.height - 10 - yPeak, root.indicatorWidth, yPeak - yRMS)
+        ctx.fillRect(0, root.height - root.textBottomMargin - yPeak, root.indicatorWidth, yPeak - yRMS)
 
         drawPeakMarkers(ctx)
     }
@@ -320,8 +364,8 @@ Canvas {
         // Draw the volume pressure
         const meterHeight = prv.sampleValueToHeight(prv.updatedVolumePressure)
         if (meterHeight > 0) {
-            ctx.fillStyle = meterStyle.createGradient(ctx, 0, prv.indicatorHeight)
-            ctx.fillRect(0, root.height - 10 - meterHeight, indicatorWidth, meterHeight)
+            const fillStyle = meterStyle.createGradient(ctx, 0, prv.indicatorHeight)
+            prv.drawRoundedRect(ctx, fillStyle, 0, root.height - root.textBottomMargin - meterHeight, indicatorWidth, meterHeight, 2, "bottom")
         }
 
         drawPeakMarkers(ctx)
