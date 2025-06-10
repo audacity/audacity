@@ -537,6 +537,7 @@ LabelStruct LabelStruct::Import(wxTextFile& file, int& index, LabelFormat format
         while (index < (int)file.GetLineCount()
                && !file.GetLine(index).IsEmpty()) {
             title += " " + file.GetLine(index);
+            index++;
         }
 
         index++; // Skip over empty line
