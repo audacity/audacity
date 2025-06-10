@@ -24,9 +24,11 @@
 #include "NetworkManager.h"
 #include "Request.h"
 
-#include "RoundedStaticBitmap.h"
+#include "AppEvents.h"
 #include "BasicUI.h"
+#include "menus/GetEffectsHelper.h"
 #include "Theme.h"
+#include "RoundedStaticBitmap.h"
 #include "AllThemeResources.h"
 #include "GradientButton.h"
 #include "WindowAccessible.h"
@@ -265,7 +267,6 @@ void GetEffectsDialog::AddEffectsPage(const std::string& group, const std::vecto
    page->Create(m_treebook, wxID_ANY);
 
    page->SetScrollRate(0, 20);
-   page->SetBackgroundColour(theTheme.Colour(clrMedium));
 
    wxGridSizer* grid = safenew wxGridSizer(2, 16, 40);
 
@@ -273,7 +274,6 @@ void GetEffectsDialog::AddEffectsPage(const std::string& group, const std::vecto
       wxPanel* itemPanel = safenew wxPanel(page);
       itemPanel->SetMinSize({effectPanelWidth, effectPanelHeight});
       itemPanel->SetMaxSize({effectPanelWidth, effectPanelHeight});
-      itemPanel->SetBackgroundColour(theTheme.Colour(clrMedium));
 
       wxImage img(effectIconWidth, effectIconHeight);
       auto fillCol = theTheme.Colour(clrDark);
@@ -287,7 +287,6 @@ void GetEffectsDialog::AddEffectsPage(const std::string& group, const std::vecto
       FetchImage(bitmap, elem.iconUrl);
 
       wxPanel* textPanel = safenew wxPanel(itemPanel);
-      textPanel->SetBackgroundColour(theTheme.Colour(clrMedium));
 
       wxStaticText* title = safenew wxStaticText(textPanel, wxID_ANY, elem.title);
       wxFont titleFont = title->GetFont().MakeBold().MakeLarger();
@@ -361,5 +360,29 @@ void GetEffectsDialog::AddEffectsPage(const std::string& group, const std::vecto
    page->SetAutoLayout(true);
    m_treebook->AddPage(page, group.data());
 }
+
+
+class GetEffectsHandler
+{
+
+public:
+   GetEffectsHandler() {
+      AppEvents::OnAppInitialized([this] {
+         mSubscription = GetEffectsHelper::Get().Subscribe(
+            [this](const auto&) -> bool {
+               GetEffectsDialog dialog(wxTheApp->GetTopWindow());
+               dialog.ShowModal();
+               return true;
+            }, GetEffectsHandlerType::Custom
+         );
+      });
+   }
+
+private:
+   Observer::Subscription mSubscription;
+
+};
+
+static GetEffectsHandler sEventHandler;
 
 }

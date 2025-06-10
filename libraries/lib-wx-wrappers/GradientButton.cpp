@@ -41,10 +41,13 @@ void GradientButton::OnPaint(wxPaintEvent& event) {
     wxAutoBufferedPaintDC dc(this);
 
     wxSize size = GetSize();
+
+    dc.SetPen(*wxTRANSPARENT_PEN);
+    dc.SetBrush(GetParent()->GetBackgroundColour());
+    dc.DrawRectangle(0, 0, size.GetWidth(), size.GetHeight());
+
     wxColour outline(darkBlue);
     dc.SetPen(wxPen(outline, 1));
-
-    dc.Clear();
     wxGraphicsContext* gc = wxGraphicsContext::Create(dc);
     if (gc) {
         wxColour startColor = m_isPressed ? m_pressedColorStart : m_normalColorStart;

@@ -93,7 +93,6 @@ list(APPEND LIBRARIES
       lib-menus-interface
       lib-shuttlegui-interface
       lib-wx-wrappers-interface
-      mod-musehub-ui-interface # Get Effects dialog
       Audacity # Toolbars live here
 )
 

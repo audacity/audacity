@@ -5,9 +5,9 @@
 # Miroslav Nikolić <miroslavnikolic@rocketmail.com>, 2011—2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.3\n"
+"Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-13 10:52+0300\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
 "PO-Revision-Date: 2014-10-06 05:34-0000\n"
 "Last-Translator: Miroslav Nikolic\n"
 "Language-Team: Serbian <>\n"
@@ -2134,6 +2134,11 @@ msgstr "Datoteke naziva:"
 #, fuzzy
 msgid "WebVTT file"
 msgstr "MP3 datoteke"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "Supported label file"
+msgstr "Izvezi natpise kao:"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 #, fuzzy
@@ -4754,6 +4759,26 @@ msgstr ""
 #, fuzzy
 msgid "File type:"
 msgstr "Vrsta &propusnika:"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Previous slide"
+msgstr "Prethodni alat"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Next slide"
+msgstr "Sledeći alat"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s. %s"
+msgstr ""
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s, %s. %s"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7727,6 +7752,11 @@ msgid "Enter token to link your account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#, fuzzy
+msgid "Sign-in and get the token"
+msgstr "Sačuvaj dnevnik u:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
 msgstr ""
 
@@ -7806,7 +7836,7 @@ msgstr "Izobličenje"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: src/AudioPasteDialog.cpp src/WhatsNewDialog.cpp
 #, fuzzy
 msgid "Continue"
 msgstr "Ostali saradnici"
@@ -8144,7 +8174,7 @@ msgstr ""
 msgid "Try again"
 msgstr ""
 
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 #, fuzzy
 msgid "Get it on MuseHub"
 msgstr "Klizač snimanja"
@@ -12047,13 +12077,47 @@ msgid "Welcome to Audacity!"
 msgstr "Dobrodošli u Odvažnost!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Watch the release video"
+msgid "Complete your Audacity cloud setup with audio.com"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
 #, fuzzy
-msgid "Available on MuseHub"
-msgstr "Klizač snimanja"
+msgid "What's new in Audacity"
+msgstr "Zatvori Odvažnost"
+
+#: src/WhatsNewDialog.cpp
+msgid "Watch the release video"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Help us decide the future of Audacity"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Take part in survey"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Audacity feature survey"
+msgstr "Datoteke projekta Odvažnosti"
+
+#: src/WhatsNewDialog.cpp
+msgid "25th Anniversary Merchandise!"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit now"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Visit our new Audacity merch store"
+msgstr "Čuvanje projekta Odvažnosti"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12064,8 +12128,9 @@ msgstr ""
 msgid "Visit our forum"
 msgstr "Umnoži natpisani zvuk"
 
-#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "&Don't show this again at start up"
 msgstr "Ne prikazuj više pri pokretanju"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
@@ -16537,11 +16602,6 @@ msgstr "&Dejstvo"
 #, fuzzy
 msgid "Add Realtime Effects"
 msgstr "Uključite efekte"
-
-#: src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Get AI effects..."
-msgstr "Postavke..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -21086,6 +21146,10 @@ msgid "Update Audacity"
 msgstr "Zatvori Odvažnost"
 
 #: src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "Ne prikazuj više pri pokretanju"
+
+#: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr ""
@@ -23074,8 +23138,12 @@ msgid "Legacy"
 msgstr ""
 
 #, fuzzy
-#~ msgid "What's new in Audacity"
-#~ msgstr "Zatvori Odvažnost"
+#~ msgid "Get AI effects..."
+#~ msgstr "Postavke..."
+
+#, fuzzy
+#~ msgid "Available on MuseHub"
+#~ msgstr "Klizač snimanja"
 
 #, fuzzy
 #~ msgid "Open trace audio.com"

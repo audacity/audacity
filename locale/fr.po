@@ -4,17 +4,6 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Lionel Allorge
-# Olivier Ballestraz
-# Christian Brochec
-# Fabrice Silva
-# Corentin Rossignon <corentin.rossignon@gmail.com>, 2013
-# Lucas Lechat <lucaslechat@outlook.com>, 2013
-# BobSynfig, 2014
-# Louis Boucherie, 2015
-# Tubuntu <tubuntu@testimonium.be>, 2013-2015
-# Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>, 2017-2024
-# Leaumonte, 2023
 # Link Winterberg, 2024
 # 2424b8c1452cb0f648922f67bdb52c16_7bd1e0e, 2024
 # Jean-Louis Waltener, 2025
@@ -22,9 +11,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.3\n"
+"Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-13 10:52+0300\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Jean-Louis Waltener, 2025\n"
 "Language-Team: French (https://app.transifex.com/audacity/teams/164520/fr/)\n"
@@ -121,22 +110,22 @@ msgstr "Canaux de lecture : %d\n"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "Low Recording Latency: %g\n"
-msgstr "Latence d’enregistrement basse : %g\n"
+msgstr "Latence d’enregistrement faible : %g\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "Low Playback Latency: %g\n"
-msgstr "Latence de lecture basse : %g\n"
+msgstr "Latence de lecture faible : %g\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "High Recording Latency: %g\n"
-msgstr "Latence d’enregistrement haute : %g\n"
+msgstr "Latence d’enregistrement élevée : %g\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "High Playback Latency: %g\n"
-msgstr "Latence de lecture haute : %g\n"
+msgstr "Latence de lecture élevée : %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -146,7 +135,7 @@ msgstr "Taux de lecture pris en charge :\n"
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Capture Rates:\n"
-msgstr "Taux de capture pris en charge \n"
+msgstr "Taux de capture pris en charge : \n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -234,7 +223,7 @@ msgstr "Erreur de l’initialisation de l’audio"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Audacity Audio"
-msgstr "Audacity audio"
+msgstr "Audio Audacity"
 
 #: libraries/lib-audio-io/AudioIO.cpp src/ProjectAudioManager.cpp
 #, c-format
@@ -349,7 +338,7 @@ msgstr "L’équipe d’Audacity"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 msgid "Provides Audio Unit Effects support to Audacity"
-msgstr "Fournit le support des effets Audio Unit à Audacity"
+msgstr "Fournit la prise en charge des effets Audio Unit à Audacity"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 msgid "Could not find component"
@@ -731,7 +720,7 @@ msgstr "Coupure des aigüs"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr "Pour appliquer l’égalisation, toutes les pistes doivent avoir le même taux d’échantillonnage."
+msgstr "Pour appliquer l’Égalisation, toutes les pistes doivent avoir le même taux d’échantillonnage."
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Track sample rate is too low for this effect."
@@ -799,7 +788,7 @@ msgstr "Marquer la saturation"
 
 #: libraries/lib-builtin-effects/FindClippingBase.cpp
 msgid "Creates labels where clipping is detected"
-msgstr "Crée des marqueurs là où la saturation est détectée"
+msgstr "Crée des étiquettes là où la saturation est détectée"
 
 #: libraries/lib-builtin-effects/FindClippingBase.cpp
 msgid "Clipping"
@@ -937,7 +926,7 @@ msgstr "Toutes les données de profil de bruit doivent avoir le même taux d’�
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr "Le taux d’échantillonnage du profil de bruit doit correspondre au son devant être traité."
+msgstr "Le taux d’échantillonnage du profil de bruit doit correspondre au son qui doit être traité."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Selected noise profile is too short."
@@ -1392,7 +1381,7 @@ msgstr "L'exportation a échoué"
 #: libraries/lib-import-export/ExportProgressUI.h
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Export error"
-msgstr "Erreur d'export"
+msgstr "Erreur d'exportation"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
 msgid "Failed to attach to the Cloud project database"
@@ -1840,11 +1829,11 @@ msgstr "Exporter"
 
 #: libraries/lib-import-export/ExportProgressUI.cpp
 msgid "Export completed with error."
-msgstr "Exporter terminé avec erreur."
+msgstr "Exportation terminée avec erreur."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
-msgstr "Tous les fichiers supportés"
+msgstr "Tous les fichiers pris en charge"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -1873,7 +1862,7 @@ msgstr "L'opération a été annulée par l'utilisateur"
 #: libraries/lib-import-export/Import.cpp
 #, c-format
 msgid "This version of Audacity was not compiled with %s support."
-msgstr "Cette version d’Audacity n’a pas été compilée avec le support %s."
+msgstr "Cette version d’Audacity n’a pas été compilée avec le support de %s."
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -1884,9 +1873,9 @@ msgid ""
 "Extract (rip) the CD tracks to an audio format that \n"
 "Audacity can import, such as WAV or AIFF."
 msgstr ""
-"\"%s\" est une piste de CD audio. \n"
-"Audacity ne peut pas ouvrir de CD audio directement. \n"
-"Extraire (ripper) les pistes de CD dans un format audio\n"
+"\"%s\" est une piste audio CD. \n"
+"Audacity ne peut pas ouvrir audio CD directement. \n"
+"Extraire (ripper) les pistes CD dans un format audio\n"
 "qu’Audacity peut importer, comme le WAV ou l’AIFF."
 
 #. i18n-hint: %s will be the filename
@@ -1910,8 +1899,8 @@ msgid ""
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" est un fichier Windows Media Audio. \n"
-"Audacity ne peut pas ouvrir ce type de fichier pour des raisons de droits. \n"
-"Vous devez le convertir dans un format audio compatible, tel le WAV ou l’AIFF."
+"Audacity ne peut pas ouvrir ce type de fichier pour des raisons de licence. \n"
+"Vous devez le convertir dans un format audio compatible, comme WAV ou AIFF."
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -2079,6 +2068,10 @@ msgid "WebVTT file"
 msgstr "Fichier WebVTT"
 
 #: libraries/lib-label-track/LabelTrack.cpp
+msgid "Supported label file"
+msgstr "Fichier d'étiquettes pris en charge"
+
+#: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
 msgstr "S&tandard"
 
@@ -2089,7 +2082,7 @@ msgstr "Étendue (avec plages de fréquences) (&x)"
 #: libraries/lib-label-track/LabelTrack.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
 msgid "Labels"
-msgstr "Marqueurs"
+msgstr "Étiquettes"
 
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
@@ -2097,7 +2090,7 @@ msgstr "Marqueurs"
 #: libraries/lib-label-track/LabelTrack.cpp src/LabelDialog.cpp
 #: src/LabelDialog.h src/TrackPanelAx.cpp
 msgid "Label Track"
-msgstr "Piste de marqueur"
+msgstr "Piste d'étiquettes"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Importing WebVTT files is not currently supported."
@@ -2105,7 +2098,7 @@ msgstr "L'importation de fichiers WebVTT n'est actuellement pas prise en charge.
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
-msgstr "Un ou plusieurs marqueurs enregistrés n'ont pas pu être lus."
+msgstr "Une ou plusieurs étiquettes enregistrés n'ont pas pu être lues."
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
@@ -2151,7 +2144,7 @@ msgstr "Effets LV2"
 
 #: libraries/lib-lv2/LoadLV2.cpp
 msgid "Provides LV2 Effects support to Audacity"
-msgstr "Fournit le support des effets LV2 à Audacity"
+msgstr "Fournit la prise en charge des effets LV2 à Audacity"
 
 #: libraries/lib-math/Dither.cpp src/effects/EffectPresetDialog.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
@@ -2540,7 +2533,7 @@ msgstr "Prise en charge de la sortie : %d\n"
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Supports input: %d\n"
-msgstr "Prise en charge d’entrée : %d\n"
+msgstr "Prise en charge de l'entrée : %d\n"
 
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
@@ -2967,7 +2960,7 @@ msgstr "Effets Nyquist"
 
 #: libraries/lib-nyquist-effects/LoadNyquist.cpp
 msgid "Provides Nyquist Effects support to Audacity"
-msgstr "Fournit le support des effets Nyquist à Audacity"
+msgstr "Fournit la prise en charge des effets Nyquist à Audacity"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Applying Nyquist Effect..."
@@ -3020,7 +3013,7 @@ msgstr "effets de ';type tool' ne peuvent pas retourner de l’audio depuis Nyqu
 #. i18n-hint: Don't translate ';type tool'.
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "';type tool' effects cannot return labels from Nyquist.\n"
-msgstr "effets de ';type tool' ne peuvent pas retourner des marqueurs depuis Nyquist.\n"
+msgstr "Effets ';type tool' ne peuvent pas retourner des étiquettes depuis Nyquist.\n"
 
 #. i18n-hint: "%s" is replaced by name of plug-in.
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
@@ -3069,7 +3062,7 @@ msgstr "[Attention : Nyquist a retourné une chaîne de caractères UTF-8 invali
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "Cette version d’Audacity ne supporte pas la version %ld du greffon Nyquist"
+msgstr "Cette version d’Audacity ne prend pas en charge la version %ld du greffon Nyquist"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Could not open file"
@@ -3163,7 +3156,7 @@ msgstr "Pointage de contrôle %s"
 #: libraries/lib-project-file-io/DBConnection.cpp
 #: libraries/lib-project-file-io/ProjectFileIO.cpp src/CrashReport.cpp
 msgid "This may take several seconds"
-msgstr "Ceci peut prendre plusieurs secondes"
+msgstr "Cela peut prendre plusieurs secondes"
 
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
@@ -4643,6 +4636,24 @@ msgstr "Veuillez choisir un fichier existant."
 msgid "File type:"
 msgstr "Type de filtre :"
 
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+msgid "Previous slide"
+msgstr "Annonce précédente"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+msgid "Next slide"
+msgstr "Annonce suivante"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s. %s"
+msgstr "Annonce %d de %d, %s. %s"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s, %s. %s"
+msgstr "Annonce %d de %d, %s, %s. %s"
+
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 msgid "Select a directory"
@@ -5212,15 +5223,17 @@ msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
 "file format. "
 msgstr ""
-"Le taux d’échantillonnage du projet (%d) n’est pas supporté par le format\n"
-"de fichier de sortie actuel.  "
+"Le taux d’échantillonnage du projet (%d) n’est pas pris en charge\n"
+"par le format de fichier de sortie actuel."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
-msgstr "La combinaison du taux d’échantillonnage (%d) et du débit binaire (%d kbps) du projet n’est pas supportée par le format de fichier de sortie actuel. "
+msgstr ""
+"La combinaison du taux d’échantillonnage (%d) et du bitrate (%d kbps) du projet\n"
+"n’est pas pris en charge par le format de fichier de sortie actuel. "
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -6005,7 +6018,7 @@ msgstr "Fichiers MP2"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "Cannot export MP2 with this sample rate and bit rate"
-msgstr "Impossible d’exporter en MP2 à ce taux d’échantillonnage et ce débit binaire"
+msgstr "Impossible d’exporter en MP2 à ce taux d’échantillonnage et ce bitrate"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -6260,7 +6273,7 @@ msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
 "file format. "
 msgstr ""
-"Le taux d’échantillonnage du projet (%d) n’est pas supporté\n"
+"Le taux d’échantillonnage du projet (%d) n’est pas pris en charge\n"
 "par le format de fichier MP3. "
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -6269,8 +6282,8 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format. "
 msgstr ""
-"La combinaison du taux d’échantillonnage (%d) et du débit binaire (%d kbps)\n"
-"du projet n’est pas supportée par le format de fichier MP3. "
+"La combinaison du taux d’échantillonnage (%d) et du bitrate (%d kbps) du projet n’est pas\n"
+"pris en charge par le format de fichier MP3. "
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "MP3 export library not found"
@@ -6427,7 +6440,7 @@ msgstr "Fichiers Opus"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unsupported sample rate"
-msgstr "Taux d'échantillon non-supportés"
+msgstr "Taux d'échantillonnage non-supporté"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Exporting selected audio as Opus"
@@ -7461,6 +7474,10 @@ msgid "Enter token to link your account"
 msgstr "Entrez le jeton pour lier votre compte"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Sign-in and get the token"
+msgstr "Connectez-vous et obtenez le jeton"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
 msgstr "Jeton"
 
@@ -7472,7 +7489,7 @@ msgstr "C&ontinuer"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "L&ink audio.com account..."
-msgstr "Assoc&ier le compte audio.com..."
+msgstr "Ass&ocier le compte audio.com..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create cloud account"
@@ -7540,7 +7557,7 @@ msgstr "Besoin d'un compte ? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: src/AudioPasteDialog.cpp src/WhatsNewDialog.cpp
 msgid "Continue"
 msgstr "Continuer"
 
@@ -7849,7 +7866,7 @@ msgstr "Audacity ne parvient pas à se connecter à MuseHub.com. Veuillez vérif
 msgid "Try again"
 msgstr "Essayer à nouveau"
 
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
 msgstr "Trouvez-le sur MuseHub"
 
@@ -8074,8 +8091,22 @@ msgstr "À propos d’%s"
 #: src/AboutDialog.cpp
 msgid "translator_credits"
 msgstr ""
-"Traduction Française par Jean-Louis Waltener :\n"
-"https://app.transifex.com/user/profile/JLWaltener"
+"Traduction Française par Jean-Louis Waltener. 2024-2025<br /> \n"
+"Contact : https://app.transifex.com/user/profile/JLWaltener<br /> \n"
+"<br />\n"
+"<b>Traducteurs en Français précédents :</b><br />\n"
+"Lionel Allorge<br />\n"
+"Olivier Ballestraz<br />\n"
+"Christian Brochec<br />\n"
+"Fabrice Silva<br />\n"
+"Corentin Rossignon, 2013<br />\n"
+"Lucas Lechat, 2013<br />\n"
+"BobSynfig, 2014<br />\n"
+"Louis Boucherie, 2015<br />\n"
+"Tubuntu, 2013-2015<br />\n"
+"Olivier Humbert, 2017-2023<br />\n"
+"Leaumonte, 2023<br />\n"
+"Link Winterberg (Leo Wattenberg), Septembre 2024"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -8306,7 +8337,7 @@ msgstr "Support du changement extrême de hauteur et de tempo"
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "Legal"
-msgstr "Juridique"
+msgstr "Informations légales"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -9592,7 +9623,7 @@ msgstr "Échec de l’initialisation de la commande"
 
 #: src/ExportLabelTrack.cpp
 msgid "Exported Label Style:"
-msgstr "Style de la balise exportée :"
+msgstr "Style de l'étiquette exportée :"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
@@ -9840,7 +9871,7 @@ msgstr "Échec du journal d'enregistrement"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
-msgstr "Éditer les marqueurs"
+msgstr "Éditer les étiquettes"
 
 #. i18n-hint: (noun).  A track contains waves, audio etc.
 #: src/LabelDialog.cpp
@@ -9852,7 +9883,7 @@ msgstr "Piste"
 #: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
-msgstr "Marqueur"
+msgstr "Étiquette"
 
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp src/TimerRecordDialog.cpp
@@ -9884,7 +9915,7 @@ msgstr "Appuyer sur F2 ou double-cliquer pour éditer le contenu des cellules."
 
 #: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Select a text file containing labels"
-msgstr "Sélectionner un fichier texte contenant les marqueurs"
+msgstr "Sélectionner un fichier texte contenant les étiquettes"
 
 #: src/LabelDialog.cpp src/ProjectFileManager.cpp src/menus/FileMenus.cpp
 #, c-format
@@ -9893,15 +9924,15 @@ msgstr "Impossible d’ouvrir le fichier : %s"
 
 #: src/LabelDialog.cpp
 msgid "No labels to export."
-msgstr "Aucun marqueur à exporter."
+msgstr "Aucune étiquette à exporter."
 
 #: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Export Labels As:"
-msgstr "Exporter les marqueurs sous :"
+msgstr "Exporter les étiquettes sous :"
 
 #: src/LabelDialog.cpp
 msgid "New Label Track"
-msgstr "Nouvelle piste de marqueurs"
+msgstr "Nouvelle piste d'étiquettes"
 
 #: src/LabelDialog.cpp
 msgid "Enter track name"
@@ -10129,8 +10160,8 @@ msgid ""
 "each stereo track)"
 msgstr ""
 "Trop peu de pistes sont sélectionnées pour l’enregistrement à\n"
-"ce taux d’échantillonnage. (Audacity nécessite deux canaux à la\n"
-"même fréquence d’échantillonnage pour chaque piste stéréo)"
+"ce taux d’échantillonnage. (Audacity nécessite deux canaux au\n"
+"même taux d’échantillonnage pour chaque piste stéréo)"
 
 #: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 msgid "Too Few Compatible Tracks Selected"
@@ -10531,12 +10562,12 @@ msgstr "Un canal d'une piste stéréo était manquant."
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
 msgid "This project contained stereo tracks with different sample rates per channel."
-msgstr "Ce projet contenait des pistes stéréo avec différentes fréquences d'échantillonnage par canal."
+msgstr "Ce projet contenait des pistes stéréo avec différents taux  d'échantillonnage par canal."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
 msgid "This project contained stereo tracks with different sample formats in channels."
-msgstr "Ce projet contenait des pistes stéréo avec différentes fréquences d'échantillonnage dans les canaux."
+msgstr "Ce projet contenait des pistes stéréo avec différents taux d'échantillonnage des canaux."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
@@ -11647,12 +11678,44 @@ msgid "Welcome to Audacity!"
 msgstr "Bienvenue dans Audacity !"
 
 #: src/WhatsNewDialog.cpp
+msgid "Complete your Audacity cloud setup with audio.com"
+msgstr "Finalisez votre configuration cloud Audacity avec audio.com"
+
+#: src/WhatsNewDialog.cpp
+msgid "What's new in Audacity"
+msgstr "Quoi de neuf dans Audacity"
+
+#: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
 msgstr "Regarder la vidéo"
 
 #: src/WhatsNewDialog.cpp
-msgid "Available on MuseHub"
-msgstr "Disponible sur MuseHub"
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr "Soap Voice Cleaner : Son de voix off de qualité studio"
+
+#: src/WhatsNewDialog.cpp
+msgid "Help us decide the future of Audacity"
+msgstr "Aidez-nous à imaginer l'avenir d'Audacity"
+
+#: src/WhatsNewDialog.cpp
+msgid "Take part in survey"
+msgstr "Participez à l'enquête"
+
+#: src/WhatsNewDialog.cpp
+msgid "Audacity feature survey"
+msgstr "Enquête sur les fonctionnalités d'Audacity"
+
+#: src/WhatsNewDialog.cpp
+msgid "25th Anniversary Merchandise!"
+msgstr "Produits dérivés pour le 25ème anniversaire !"
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit now"
+msgstr "Visitez maintenant"
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit our new Audacity merch store"
+msgstr "Visitez notre nouvelle boutique de produits dérivés Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11662,9 +11725,9 @@ msgstr "Voir les tutoriels"
 msgid "Visit our forum"
 msgstr "Visitez notre forum"
 
-#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
-msgstr "Ne plus afficher au démarrage"
+#: src/WhatsNewDialog.cpp
+msgid "&Don't show this again at start up"
+msgstr "Ne plus afficher au &démarrage"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -12198,11 +12261,11 @@ msgstr "Paramètre une position du point d’enveloppe."
 
 #: src/commands/SetLabelCommand.cpp
 msgid "Set Label"
-msgstr "Paramètre un marqueur"
+msgstr "Définir l'étiquette"
 
 #: src/commands/SetLabelCommand.cpp
 msgid "Label Index"
-msgstr "Index de marqueur"
+msgstr "Index des étiquettes"
 
 #: src/commands/SetLabelCommand.cpp
 msgid "End:"
@@ -12214,15 +12277,15 @@ msgstr "Sélectionné"
 
 #: src/commands/SetLabelCommand.cpp
 msgid "Edited Label"
-msgstr "Marqueur édité"
+msgstr "Étiquette éditée"
 
 #: src/commands/SetLabelCommand.cpp
 msgid "Set Label..."
-msgstr "Paramétrer le marqueur…"
+msgstr "Définir l'étiquette..."
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
-msgstr "Paramètre différentes valeurs pour un marqueur."
+msgstr "Définir différentes valeurs pour une étiquette."
 
 #: src/commands/SetProjectCommand.cpp
 msgid "Set Project"
@@ -14649,11 +14712,11 @@ msgstr "Sélection ac&tuelle"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Using Label/Track Name"
-msgstr "Selon le marqueur ou le nom de piste"
+msgstr "Utilisation du nom de l'étiquette / de la piste"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Numbering before Label/Track Name"
-msgstr "Numérotation avant le nom de marqueur ou de piste"
+msgstr "Numérotation avant le nom d'étiquette / le nom de piste"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Numbering after File name prefix"
@@ -14685,7 +14748,7 @@ msgstr "Séparer en fichier selon :"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Include audio before first label"
-msgstr "Inclure l’audio avant le premier marqueur"
+msgstr "Inclure l’audio avant la première étiquette"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Name files:"
@@ -15168,7 +15231,7 @@ msgstr "Groupé de %.2f secondes à t=%.2f"
 
 #: src/menus/EditMenus.cpp
 msgid "Join"
-msgstr "Fusionner"
+msgstr "Raccorder"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -15243,7 +15306,7 @@ msgstr "Scinder dans une &nouvelle piste"
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
 msgid "&Join"
-msgstr "&Fusionner"
+msgstr "&Raccorder"
 
 #: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
 msgid "Detac&h at Silences"
@@ -15285,20 +15348,20 @@ msgstr ""
 #. i18n-hint: filename containing exported text from label tracks
 #: src/menus/FileMenus.cpp
 msgid "labels.txt"
-msgstr "marqueurs.txt"
+msgstr "etiquettes.txt"
 
 #: src/menus/FileMenus.cpp
 msgid "There are no label tracks to export."
-msgstr "Il n’y a pas de piste de marqueurs à exporter."
+msgstr "Il n’y a pas de piste d'étiquettes à exporter."
 
 #: src/menus/FileMenus.cpp
 #, c-format
 msgid "Imported labels from '%s'"
-msgstr "Marqueurs importés depuis '%s'"
+msgstr "Étiquettes importées depuis '%s'"
 
 #: src/menus/FileMenus.cpp
 msgid "Import Labels"
-msgstr "Importer les marqueurs"
+msgstr "Importer les étiquettes"
 
 #: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
@@ -15336,7 +15399,7 @@ msgstr "Expo&rter Autre"
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
-msgstr "Exporter les marq&ueurs…"
+msgstr "Exporter les étiq&uettes..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Audio..."
@@ -15344,7 +15407,7 @@ msgstr "&Audio…"
 
 #: src/menus/FileMenus.cpp
 msgid "&Labels..."
-msgstr "Mar&queurs…"
+msgstr "Éti&quettes..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Raw Data..."
@@ -15440,7 +15503,7 @@ msgstr "&Générer les données de support…"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
-msgstr "Vérifier les mises à jour (&c)…"
+msgstr "Re&chercher les mises à jour..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&About Audacity"
@@ -15449,32 +15512,32 @@ msgstr "À propos d’&Audacity"
 #: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "Added label"
-msgstr "Marqueur ajouté"
+msgstr "Étiquette ajoutée"
 
 #: src/menus/LabelMenus.cpp
 msgid "Paste Text to New Label"
-msgstr "Coller le texte dans le nouveau marqueur"
+msgstr "Coller le texte dans la nouvelle étiquette"
 
 #. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
 #. regions.
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio regions to clipboard"
-msgstr "Couper les régions audio marquées vers le presse-papier"
+msgstr "Couper les régions audio étiquetées vers le presse-papier"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
 msgid "Cut Labeled Audio"
-msgstr "Couper l’audio marqué"
+msgstr "Couper l’audio étiqueté"
 
 #. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
 #: src/menus/LabelMenus.cpp
 msgid "Deleted labeled audio regions"
-msgstr "Régions audio marquées supprimées"
+msgstr "Régions audio étiquetées supprimées"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
 msgid "Delete Labeled Audio"
-msgstr "Supprimer l’audio marqué"
+msgstr "Supprimer l’audio étiqueté"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio regions to clipboard and leave gap"
@@ -15488,54 +15551,54 @@ msgstr "Coupez l'audio étiqueté et garder l'espace"
 #. the labeled audio regions
 #: src/menus/LabelMenus.cpp
 msgid "Split Deleted labeled audio regions"
-msgstr "Les régions audio marquées effacées ont été partagées"
+msgstr "Régions audio étiquetées divisées et supprimées"
 
 #. i18n-hint: (verb) Do a special kind of DELETE on labeled audio
 #. regions
 #: src/menus/LabelMenus.cpp
 msgid "Split Delete Labeled Audio"
-msgstr "Les audio marqués effacés ont été partagés"
+msgstr "Diviser et supprimer l'audio étiqueté "
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
 msgid "Silenced labeled audio regions"
-msgstr "Régions audio étiquetées silencieuses"
+msgstr "Régions audio étiquetées muettes"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
 msgid "Silence Labeled Audio"
-msgstr "Remplacer l’audio marqué par du silence"
+msgstr "Remplacer l’audio étiqueté par du silence"
 
 #: src/menus/LabelMenus.cpp
 msgid "Copied labeled audio regions to clipboard"
-msgstr "Régions de l’audio marqué copiées vers le presse-papier"
+msgstr "Régions de l’audio étiqueté copiées vers le presse-papier"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
 msgid "Copy Labeled Audio"
-msgstr "Copier l’audio marqué"
+msgstr "Copier l’audio étiqueté"
 
 #. i18n-hint: (verb) past tense.  Audacity has just split the labeled
 #. audio (a point or a region)
 #: src/menus/LabelMenus.cpp
 msgid "Split labeled audio (points or regions)"
-msgstr "Séparer l’audio marqué (points ou régions)"
+msgstr "Diviser l’audio étiqueté (points ou régions)"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
 msgid "Split Labeled Audio"
-msgstr "Séparer l’audio marqué"
+msgstr "Diviser l’audio étiqueté"
 
 #. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
 #. regions)
 #: src/menus/LabelMenus.cpp
 msgid "Joined labeled audio (points or regions)"
-msgstr "Audio marqué raccordé (points ou régions)"
+msgstr "Audio étiqueté raccordé (points ou régions)"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
 msgid "Join Labeled Audio"
-msgstr "Raccorder l’audio marqué"
+msgstr "Raccorder l’audio étiqueté"
 
 #. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
 #. This message appears in history and tells you about something
@@ -15551,7 +15614,7 @@ msgstr "Détacher les pistes audio marquées"
 
 #: src/menus/LabelMenus.cpp
 msgid "Created new label track"
-msgstr "Nouvelle piste de marqueurs créée"
+msgstr "Nouvelle piste d'étiquettes créée"
 
 #: src/menus/LabelMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
@@ -15561,7 +15624,7 @@ msgstr "Nouvelle piste"
 
 #: src/menus/LabelMenus.cpp
 msgid "&Labels"
-msgstr "&Marqueurs"
+msgstr "Éti&quettes"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label &Editor"
@@ -15649,7 +15712,7 @@ msgstr "Marquer la jointure"
 
 #: src/menus/LabelMenus.cpp
 msgid "&Label Track"
-msgstr "Piste de mar&queurs"
+msgstr "Piste d'é&tiquettes"
 
 #: src/menus/MenuHelper.cpp
 msgid "..."
@@ -15738,10 +15801,6 @@ msgstr "&Effets"
 #: src/menus/PluginMenus.cpp
 msgid "Add Realtime Effects"
 msgstr "Ajouter les effets temps-réel"
-
-#: src/menus/PluginMenus.cpp
-msgid "Get AI effects..."
-msgstr "Obtenez les effets AI..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -16467,11 +16526,11 @@ msgstr "Déplacer la piste qui a le focus tout en &bas"
 
 #: src/menus/TransportMenus.cpp
 msgid "no label track"
-msgstr "pas de piste de marqueur"
+msgstr "pas de piste d'étiquettes"
 
 #: src/menus/TransportMenus.cpp
 msgid "no label track at or below focused track"
-msgstr "pas de piste de marqueur sur ou en dessous de la piste visée"
+msgstr "pas de piste d'étiquettes sur ou au-dessous de la piste visée"
 
 #. i18n-hint:
 #. String is replaced by the name of a label,
@@ -16486,7 +16545,7 @@ msgstr "%s %d de %d"
 
 #: src/menus/TransportMenus.cpp
 msgid "no labels in label track"
-msgstr "pas de marqueur dans la piste de marqueurs"
+msgstr "pas d'étiquettes dans la piste d'étiquettes"
 
 #. i18n-hint Sets a starting point for looping play
 #: src/menus/TransportMenus.cpp
@@ -16841,7 +16900,7 @@ msgstr "Taux d’échantillonnage du &Projet :"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Sample Rate used when recording new tracks, mixing down tracks and for playback in this project."
-msgstr "Taux d'échantillonnage utilisé lors de l'enregistrement de nouvelles pistes, du mixage des pistes et de la lecture dans ce projet."
+msgstr "Taux d'échantillonnage utilisé lors de l'enregistrement de nouvelles pistes, du mixage des pistes et de la lecture de ce projet."
 
 #: src/prefs/DevicePrefs.cpp
 msgid "D&efault Sample Rate:"
@@ -18749,7 +18808,7 @@ msgstr "&Police…"
 #. i18n-hint: (noun) This is the font for the label track.
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp
 msgid "Label Track Font"
-msgstr "Police de la piste de marqueurs"
+msgstr "Police de la piste d'étiquettes"
 
 #. i18n-hint: (noun) The name of the typeface
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp
@@ -19085,7 +19144,7 @@ msgstr "Diviser le clip"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Join Clips"
-msgstr "Joindre les clips"
+msgstr "Raccorder les clips"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Rename Clip..."
@@ -19496,7 +19555,7 @@ msgstr "Ajouter une piste stéréo"
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Add Label Track"
-msgstr "Ajouter une piste de marqueur"
+msgstr "Ajouter une piste d'étiquettes"
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Export Audio..."
@@ -19850,6 +19909,10 @@ msgstr "Accepter && continuer"
 msgctxt "update dialog"
 msgid "Update Audacity"
 msgstr "Mettre Audacity à jour"
+
+#: src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "Ne plus afficher au démarrage"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -20742,11 +20805,11 @@ msgstr "Durée minimum du silence"
 
 #: plug-ins/label-sounds.ny
 msgid "Minimum label interval"
-msgstr "Intervalle minimale de marqueur"
+msgstr "Intervalle minimum entre étiquettes"
 
 #: plug-ins/label-sounds.ny
 msgid "Label type"
-msgstr "Type de marqueur"
+msgstr "Type d'étiquette"
 
 #: plug-ins/label-sounds.ny
 msgid "Point before sound"
@@ -20785,7 +20848,7 @@ msgstr "~ah ~am ~as"
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
-msgstr "Trop de silences détectés.~%Seules les 10000 premières balises ajoutées."
+msgstr "Trop de silences détectés.~%Seules les 10000 premières étiquettes sont ajoutées."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
@@ -20803,7 +20866,7 @@ msgid ""
 "                 at least two sounds.~%~\n"
 "                 Only one sound detected."
 msgstr ""
-"Le marquage des régions entre les sons nécessite~%~\n"
+"L'étiquetage des régions entre les sons nécessite~%~\n"
 "                 au moins deux sons.~%~\n"
 "                 Un seul son détecté."
 
@@ -20870,7 +20933,7 @@ msgstr "Sélectionner la fonction"
 
 #: plug-ins/noisegate.ny
 msgid "Gate"
-msgstr "Porte (gate)"
+msgstr "Gate"
 
 #: plug-ins/noisegate.ny
 msgid "Analyze Noise Level"
@@ -21641,7 +21704,7 @@ msgstr "Fréquence des aiguilles de radar (Hz)"
 #: plug-ins/vocoder.ny
 #, lisp-format
 msgid "Error.~%No modulation carrier."
-msgstr "Erreur.~%Aucune porteuse de modulation."
+msgstr "Erreur.~%Pas de porteuse de modulation."
 
 #. Effects menu group name; audio dynamics compression, not data compression
 #: resources/EffectsMenuDefaults.xml

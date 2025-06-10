@@ -34,17 +34,18 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.3\n"
+"Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-13 10:52+0300\n"
-"PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Fúlvio Alves <fga.fulvio@gmail.com>, 2025\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
+"PO-Revision-Date: 2025-05-30 20:37-0300\n"
+"Last-Translator: Fúlvio Alves <fga.fulvio@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/audacity/teams/164520/pt_BR/)\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"X-Generator: Poedit 3.6\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -2087,6 +2088,10 @@ msgstr "Arquivos de texto SubRip"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "Arquivo WebVTT"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Supported label file"
+msgstr "Arquivo de rótulo suportado"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4655,6 +4660,24 @@ msgstr "Escolha um arquivo existente."
 #: libraries/lib-wx-wrappers/FileDialog/mac/FileDialogPrivate.mm
 msgid "File type:"
 msgstr "Tipo de arquivo:"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+msgid "Previous slide"
+msgstr "Slide anterior"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+msgid "Next slide"
+msgstr "Próximo slide"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s. %s"
+msgstr "Slide %d sw %d, %s. %s"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s, %s. %s"
+msgstr "Slide %d sw %d, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7475,6 +7498,10 @@ msgid "Enter token to link your account"
 msgstr "Digite o token para vincular sua conta"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Sign-in and get the token"
+msgstr "Entre e obtenha o token"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
 msgstr "Token"
 
@@ -7554,7 +7581,7 @@ msgstr "Precisa de uma conta? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: src/AudioPasteDialog.cpp src/WhatsNewDialog.cpp
 msgid "Continue"
 msgstr "Continuar"
 
@@ -7863,7 +7890,7 @@ msgstr "O Audacity não consegue se conectar a MuseHub.com. Verifique sua conex�
 msgid "Try again"
 msgstr "Tentar novamente"
 
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
 msgstr "Obtenha no MuseHub"
 
@@ -11674,12 +11701,44 @@ msgid "Welcome to Audacity!"
 msgstr "Bem-vindo ao Audacity!"
 
 #: src/WhatsNewDialog.cpp
+msgid "Complete your Audacity cloud setup with audio.com"
+msgstr "Complete a configuração de sua nuvem Audacity em audio.com"
+
+#: src/WhatsNewDialog.cpp
+msgid "What's new in Audacity"
+msgstr "O que há de novo no Audacity"
+
+#: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
 msgstr "Assista ao vídeo de lançamento"
 
 #: src/WhatsNewDialog.cpp
-msgid "Available on MuseHub"
-msgstr "Disponível no MuseHub"
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr "Soap Voice Cleaner: som de locução com qualidade de estúdio"
+
+#: src/WhatsNewDialog.cpp
+msgid "Help us decide the future of Audacity"
+msgstr "Nos ajude a decidir o futuro do Audacity"
+
+#: src/WhatsNewDialog.cpp
+msgid "Take part in survey"
+msgstr "Participe da pesquisa"
+
+#: src/WhatsNewDialog.cpp
+msgid "Audacity feature survey"
+msgstr "Pesquisa de recursos do Audacity"
+
+#: src/WhatsNewDialog.cpp
+msgid "25th Anniversary Merchandise!"
+msgstr "Produtos do 25º Aniversário!"
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit now"
+msgstr "Visite agora"
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit our new Audacity merch store"
+msgstr "Visite nossa nova loja de produtos do Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11689,8 +11748,8 @@ msgstr "Ver tutoriais"
 msgid "Visit our forum"
 msgstr "Visite nosso fórum"
 
-#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
+#: src/WhatsNewDialog.cpp
+msgid "&Don't show this again at start up"
 msgstr "Não exibir novamente ao iniciar"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
@@ -15764,10 +15823,6 @@ msgstr "Efe&itos"
 #: src/menus/PluginMenus.cpp
 msgid "Add Realtime Effects"
 msgstr "Adicionar Efeitos em tempo real"
-
-#: src/menus/PluginMenus.cpp
-msgid "Get AI effects..."
-msgstr "Obter efeitos de IA..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -19877,6 +19932,10 @@ msgid "Update Audacity"
 msgstr "Atualizar o Audacity"
 
 #: src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "Não exibir novamente ao iniciar"
+
+#: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr "&Ir para"
@@ -21719,3 +21778,9 @@ msgstr "Ferramentas Espectrais"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Legado"
+
+#~ msgid "Get AI effects..."
+#~ msgstr "Obter efeitos de IA..."
+
+#~ msgid "Available on MuseHub"
+#~ msgstr "Disponível no MuseHub"

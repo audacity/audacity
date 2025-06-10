@@ -1,5 +1,18 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.7.4
+
+This is a patch release. It contains the following changes:
+
+   * #6890 Fixed a crash when closing a large unsaved project
+   * #8709 Fixed a crash when using real-time effects that activate delay compensation
+   * #8494 Fixed issue where Studio Fade Out creates a new clip when applied at the end of a clip
+   * #8442 Fixed incorrect waveform rendering on clipped audio
+   * #8559 Fixed unintended deletion of a clip when joining two clips with pitch adjustment
+   * #3003 Effect preview now works when the track is muted
+   * #8666 Fixed possible incorrect calculations in the Hamming window derivative (Thanks, witwald!)
+   * #8577 Fixed compilation issues on legacy macOS (Thanks, barracuda156!)
+
 Changes in version 3.7.3
 
 This is a hotfix release. It fixes the following bugs:

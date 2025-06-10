@@ -307,6 +307,16 @@ private:
 };
 }
 
+class NotFocusableWindow : public wxWindow
+{
+public:
+   NotFocusableWindow(wxWindow* parent, wxWindowID id)
+      : wxWindow(parent, id)
+   {}
+
+   bool AcceptsFocus() const override { return false; }
+};
+
 BEGIN_EVENT_TABLE(WhatsNewDialog, wxDialogWrapper)
    EVT_BUTTON(WhatsNewID_WatchReleaseVideo, WhatsNewDialog::OnWatchReleaseVideo)
    EVT_BUTTON(WhatsNewID_GoToMuseHub, WhatsNewDialog::OnGoToMuseHub)
@@ -319,8 +329,6 @@ WhatsNewDialog::WhatsNewDialog(wxWindow* parent, wxWindowID id)
 {
 
    SetSize(FromDIP(wxSize(WindowWidth, WindowHeight)));
-   SetBackgroundColour(theTheme.Colour(clrDark));
-   
 
    SetName();
    ShuttleGui S( this, eIsCreating );
@@ -390,7 +398,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
          XXO("Visit our new Audacity merch store")
       }
    };
-   
+
    S.StartVerticalLay(wxEXPAND);
    {
       S.StartHorizontalLay(wxEXPAND);
@@ -405,7 +413,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
    }
    S.EndVerticalLay();
 
-   const auto line = safenew wxWindow(S.GetParent(), wxID_ANY);
+   const auto line = safenew NotFocusableWindow(S.GetParent(), wxID_ANY);
    line->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
    line->SetSize(-1, 1);
 
@@ -438,8 +446,8 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
          .AddWindow(forumLink);
    }
    S.EndHorizontalLay();
-   
-   const auto bottomLine = safenew wxWindow(S.GetParent(), wxID_ANY);
+
+   const auto bottomLine = safenew NotFocusableWindow(S.GetParent(), wxID_ANY);
    bottomLine->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
    bottomLine->SetSize(-1, 1);
    S
@@ -498,7 +506,7 @@ wxBitmap WhatsNewDialog::Rescale(const wxBitmap& bmp, int width, int height)
 {
    wxImage img = bmp.ConvertToImage();
    img.Rescale(width, height, wxIMAGE_QUALITY_HIGH);
-   
+
    return wxBitmap(img);
 }
 

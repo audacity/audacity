@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.3\n"
+"Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-13 10:52+0300\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Mihai Vasiliu <mihai.vasiliu.93@gmail.com>, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/audacity/teams/164520/ro/)\n"
@@ -2066,6 +2066,10 @@ msgstr "Fișier text SubRip"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "FIșier WebVTT"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Supported label file"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4633,6 +4637,24 @@ msgstr "Te rog alege un fișier existent."
 #: libraries/lib-wx-wrappers/FileDialog/mac/FileDialogPrivate.mm
 msgid "File type:"
 msgstr "Tip fișier:"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+msgid "Previous slide"
+msgstr ""
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+msgid "Next slide"
+msgstr ""
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s. %s"
+msgstr ""
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s, %s. %s"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7454,6 +7476,10 @@ msgid "Enter token to link your account"
 msgstr "Introdu jetonul pentru a-ți asocia contul"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Sign-in and get the token"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
 msgstr "Jeton"
 
@@ -7533,7 +7559,7 @@ msgstr "Ai nevoie de un cont? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: src/AudioPasteDialog.cpp src/WhatsNewDialog.cpp
 msgid "Continue"
 msgstr "Continuă"
 
@@ -7842,7 +7868,7 @@ msgstr "Audacity nu se poate conecta la MuseHub.com. Te rog verifică conexiunea
 msgid "Try again"
 msgstr "Încearcă din nou"
 
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
 msgstr "Obține-l pe MuseHub"
 
@@ -8884,7 +8910,7 @@ msgstr "Coversie MP3"
 
 #: src/BatchCommands.cpp
 msgid "Fade Ends"
-msgstr "Sfârșit fade"
+msgstr "Sfârșit atenuare"
 
 #: src/BatchCommands.cpp
 msgid "Import Macro"
@@ -11641,12 +11667,44 @@ msgid "Welcome to Audacity!"
 msgstr "Bun venit la Audacity!"
 
 #: src/WhatsNewDialog.cpp
+msgid "Complete your Audacity cloud setup with audio.com"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "What's new in Audacity"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
 msgstr "Urmărește videoul de lansare"
 
 #: src/WhatsNewDialog.cpp
-msgid "Available on MuseHub"
-msgstr "Disponibil pe MuseHub"
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Help us decide the future of Audacity"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Take part in survey"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Audacity feature survey"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "25th Anniversary Merchandise!"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit now"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit our new Audacity merch store"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11656,9 +11714,9 @@ msgstr "Vezi tutorialele"
 msgid "Visit our forum"
 msgstr "Vizitează forumul nostru"
 
-#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
-msgstr "Nu mai arăta din nou la pornire"
+#: src/WhatsNewDialog.cpp
+msgid "&Don't show this again at start up"
+msgstr ""
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -15733,10 +15791,6 @@ msgid "Add Realtime Effects"
 msgstr "Adaugă efecte în timp real"
 
 #: src/menus/PluginMenus.cpp
-msgid "Get AI effects..."
-msgstr "Obține efecte IA..."
-
-#: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
 msgstr "Repetă ultimul efect"
 
@@ -17580,7 +17634,7 @@ msgstr "Perioadă lu&ngă:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
-msgstr "&Micro-fade-uri"
+msgstr "&Micro-atenuări"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
@@ -19844,6 +19898,10 @@ msgid "Update Audacity"
 msgstr "Actualizează Audacity"
 
 #: src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "Nu mai arăta din nou la pornire"
+
+#: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr "&Omite"
@@ -20108,7 +20166,7 @@ msgstr "Valoarea nu trebuie să fie mai mare de %s"
 
 #: plug-ins/ShelfFilter.ny resources/EffectsMenuDefaults.xml
 msgid "Shelf Filter"
-msgstr "Filtru raft"
+msgstr "Filtru treaptă"
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
@@ -20132,11 +20190,11 @@ msgstr "Tip filtru"
 
 #: plug-ins/ShelfFilter.ny
 msgid "Low-shelf"
-msgstr "Raft jos"
+msgstr "Treaptă inferioară"
 
 #: plug-ins/ShelfFilter.ny
 msgid "High-shelf"
-msgstr "Raft sus"
+msgstr "Treaptă superioară"
 
 #: plug-ins/ShelfFilter.ny plug-ins/highpass.ny plug-ins/lowpass.ny
 #: plug-ins/notch.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
@@ -20242,7 +20300,7 @@ msgstr ""
 
 #: plug-ins/SpectralEditShelves.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Edit Shelves"
-msgstr "Rafturi de editare spectrală"
+msgstr "Trepte de editare spectrală"
 
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
@@ -20265,11 +20323,11 @@ msgstr "Selecția este prea scurtă.~%Trebuie să fie mai lungă de 2 eșantioan
 
 #: plug-ins/adjustable-fade.ny resources/EffectsMenuDefaults.xml
 msgid "Adjustable Fade"
-msgstr "Fade ajustabil"
+msgstr "Atenuare ajustabilă"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Type"
-msgstr "Tip fade"
+msgstr "Tip atenuare"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Up"
@@ -20289,7 +20347,7 @@ msgstr "Curbă-S în jos"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Mid-fade Adjust (%)"
-msgstr "Ajustare mid-fade (%)"
+msgstr "Ajustare mijloc atenuare (%)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Start/End as"
@@ -20442,7 +20500,7 @@ msgstr "Aplică crossfade pe piste"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Fade TYPE"
-msgstr "TIP fade"
+msgstr "TIP atenuare"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Constant Gain"
@@ -20466,7 +20524,7 @@ msgstr "Curbă personalizată"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Fade direction"
-msgstr "Direcție fade"
+msgstr "Direcție atenuare"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Alternating Out / In"
@@ -21644,7 +21702,7 @@ msgstr "Amplitudine și compresie"
 #. Effects menu group name
 #: resources/EffectsMenuDefaults.xml
 msgid "Fading"
-msgstr "Fading"
+msgstr "Atenuare"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Pitch and Tempo"

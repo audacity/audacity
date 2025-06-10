@@ -126,7 +126,9 @@ CommandFlag FixBatchFlags(CommandFlag batchflags, const PluginDescriptor* plug)
    if ( plug->GetSymbol().Msgid() == XO( "Noise Reduction" ) )
       return ( batchflags | NoiseReductionTimeSelectedFlag() ) & ~TimeSelectedFlag();
    // For OpenVINO Music Generation so that it could be used when no audio is selected
-   if ( plug->GetSymbol().Msgid() == XO( "OpenVINO Music Generation" ) )
+   // Note: do not use translatable string here, because
+   // translations are not synchronized yet with OpenVINO project
+   if ( plug->GetSymbol().Internal() == "OpenVINO Music Generation" )
       return AudioIONotBusyFlag();
    return batchflags;
 }

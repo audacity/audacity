@@ -11,9 +11,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.3\n"
+"Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-13 10:52+0300\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Bashishtha Narayan Singh <bashishtha.singh@gmail.com>, 2024\n"
 "Language-Team: Hindi (https://app.transifex.com/audacity/teams/164520/hi/)\n"
@@ -2062,6 +2062,11 @@ msgstr ""
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr ""
+
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "Supported label file"
+msgstr "निर्यातित लेबल शैली :"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4621,6 +4626,26 @@ msgstr "मौजूदा फ़ाइलों में से एक चु�
 #: libraries/lib-wx-wrappers/FileDialog/mac/FileDialogPrivate.mm
 msgid "File type:"
 msgstr "फाइल प्रकार :"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Previous slide"
+msgstr "पिछला कतरन"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy
+msgid "Next slide"
+msgstr "अगला क्लिप"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, fuzzy, c-format
+msgid "Slide %d of %d, %s. %s"
+msgstr "%s, %d  कुल %d क्लिप में से %s"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s, %s. %s"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7439,6 +7464,10 @@ msgid "Enter token to link your account"
 msgstr "अपना खाता लिंक करने के लिए टोकन दर्ज करें"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Sign-in and get the token"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
 msgstr "टोकन"
 
@@ -7514,7 +7543,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: src/AudioPasteDialog.cpp src/WhatsNewDialog.cpp
 msgid "Continue"
 msgstr "आगे बढ़ें"
 
@@ -7819,7 +7848,7 @@ msgstr ""
 msgid "Try again"
 msgstr ""
 
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
 msgstr ""
 
@@ -11613,12 +11642,47 @@ msgid "Welcome to Audacity!"
 msgstr "Audacity में आपका स्वागत है!"
 
 #: src/WhatsNewDialog.cpp
+msgid "Complete your Audacity cloud setup with audio.com"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "What's new in Audacity"
+msgstr "Audacity %s में नया क्या है"
+
+#: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Available on MuseHub"
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
 msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Help us decide the future of Audacity"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Take part in survey"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Audacity feature survey"
+msgstr "Audacity स्टार्टअप विफलता"
+
+#: src/WhatsNewDialog.cpp
+msgid "25th Anniversary Merchandise!"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit now"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Visit our new Audacity merch store"
+msgstr "यह एक Audacity प्रोजेक्ट फ़ाइल नहीं है"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11628,8 +11692,9 @@ msgstr ""
 msgid "Visit our forum"
 msgstr ""
 
-#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "&Don't show this again at start up"
 msgstr "फिर यह संदेश शुरुआत में न दिखाएँ"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
@@ -15700,10 +15765,6 @@ msgstr "प्रभाव (&c)"
 #: src/menus/PluginMenus.cpp
 msgid "Add Realtime Effects"
 msgstr "समयोचित प्रभाव जोड़ें"
-
-#: src/menus/PluginMenus.cpp
-msgid "Get AI effects..."
-msgstr ""
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -19802,6 +19863,10 @@ msgstr ""
 msgctxt "update dialog"
 msgid "Update Audacity"
 msgstr "Audacity अपडेट करें"
+
+#: src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "फिर यह संदेश शुरुआत में न दिखाएँ"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
