@@ -5,15 +5,16 @@
 #
 # Translators:
 # Link Winterberg, 2024
+# عمّار عبدالله, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-29 17:54+0300\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Link Winterberg, 2024\n"
+"Last-Translator: عمّار عبدالله, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/audacity/teams/164520/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -27,11 +28,13 @@ msgid ""
 "This plugin could not be loaded.\n"
 "It may have been deleted."
 msgstr ""
+"تعذر تحميل هذه الإضافة.\n"
+"ربما تم حذفها."
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
 msgid "Plugin Error"
-msgstr ""
+msgstr "خطأ في الإضافة"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #, c-format
@@ -50,7 +53,7 @@ msgstr "كرر %s"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
-msgstr ""
+msgstr "البث نشط ... غير قادر على جمع المعلومات.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -67,13 +70,13 @@ msgstr "رقم جهاز التشغيل الافتراضي: %d\n"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
 msgid "No devices found\n"
-msgstr ""
+msgstr "لم يتم العثور على أجهزة\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device info unavailable for: %d\n"
-msgstr ""
+msgstr "معلومات الجهاز غير متوفرة لـ: %d\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -96,7 +99,7 @@ msgstr "اسم المضيف: %s\n"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "Recording channels: %d\n"
-msgstr ""
+msgstr "قنوات التسجيل: %d\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -108,32 +111,32 @@ msgstr ""
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "Low Recording Latency: %g\n"
-msgstr ""
+msgstr "زمن التأخير المنخفض للتسجيل: %g: \n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "Low Playback Latency: %g\n"
-msgstr ""
+msgstr "زمن التأخير المنخفض للاستماع: %g\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "High Recording Latency: %g\n"
-msgstr ""
+msgstr "زمن التأخير المرتفع في التسجيل: %g\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "High Playback Latency: %g\n"
-msgstr ""
+msgstr "زمن التأخير المرتفع في الاستماع: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Playback Rates:\n"
-msgstr ""
+msgstr "معدلات التشغيل المدعومة:\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Capture Rates:\n"
-msgstr ""
+msgstr "نسب التقاط الصوت المدعومة:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -143,7 +146,7 @@ msgstr "جهاز التسجيل المختار: %d - %s\n"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "No recording device found for '%s'.\n"
-msgstr ""
+msgstr "لم يتم العثور على جهاز تسجيل لـ'%s':\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -153,28 +156,28 @@ msgstr "جهاز التشغيل المختار: %d - %s\n"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "No playback device found for '%s'.\n"
-msgstr ""
+msgstr "لم يتم العثور على جهاز تشغيل لـ '%s'.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Rates:\n"
-msgstr ""
+msgstr "النسب المدعومة:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr ""
+msgstr "\"لا يمكن التحقق من معدلات العينات المتبادلة بدون الجهازبن معاً.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "Received %d while opening devices\n"
-msgstr ""
+msgstr "تم استلام القيمة %dأثناء فتح الأجهزة\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Unable to open Portmixer\n"
-msgstr ""
+msgstr "تعذر فتح Portmixer\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available mixers:\n"
-msgstr ""
+msgstr "أجهزة الـ mixer المتاحة:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -219,7 +222,7 @@ msgstr "خطأ في بدء الصوت"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Audacity Audio"
-msgstr ""
+msgstr "صوت Audacity"
 
 #: libraries/lib-audio-io/AudioIO.cpp src/ProjectAudioManager.cpp
 #, c-format
@@ -255,7 +258,7 @@ msgstr "توقف تعديل مستوى الصوت المؤتمت. لم بكن م
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
-msgstr "أنقص تعديل مستوى الصوت المؤتمت الحجم إلى %.2f."
+msgstr "خَفَضَ الضبط التلقائي لمستوى التسجيل مستوى الصوت إلى %f."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
@@ -282,11 +285,11 @@ msgstr "توقف تعديل مستوى الصوت المؤتمت. يبدو %.2f 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
 msgid "Failed to encode preset from \"%s\""
-msgstr ""
+msgstr "فشل ترميز الإعداد المسبق من قبل \"%s\""
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 msgid "Unable to store preset in config file"
-msgstr ""
+msgstr "تعذر تخزين الإعداد المسبق في ملف التكوين"
 
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
@@ -300,17 +303,17 @@ msgstr "غير قابل للتطبيق"
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
 msgid "Couldn't open \"%s\""
-msgstr ""
+msgstr "لا يمكن فتح \"%s\""
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
 msgid "Failed to write XML preset to \"%s\""
-msgstr ""
+msgstr "فشل كتابة إعداد XML المسبق إلى \"%s\""
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
 msgid "Unable to read the preset from \"%s\""
-msgstr ""
+msgstr "تعذر قراءة الإعداد المسبق من \"%s\""
 
 #. i18n-hint: the name of an Apple audio software protocol
 #: libraries/lib-audio-unit/AudioUnitEffectBase.h
@@ -347,38 +350,38 @@ msgstr "لم أتمكن من بدأ الجزء الأساسي"
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to decode \"%s\" preset"
-msgstr ""
+msgstr "فشل فك تشفير الإعداد المسبق \"%s\""
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to convert \"%s\" preset to internal format"
-msgstr ""
+msgstr "فشل تحويل الإعداد المسبق \"%s\" إلى التنسيق الداخلي"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to create property list for \"%s\" preset"
-msgstr ""
+msgstr "فشل في إنشاء قائمة خصائص للإعداد المسبق لـ \"%s\""
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to set class info for \"%s\" preset"
-msgstr ""
+msgstr "فشل في تعيين معلومات الفئة لـ \"%s\" إعداد مسبق"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 msgid "Failed to set preset name"
-msgstr ""
+msgstr "فشل تعيين اسم الإعداد المسبق"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 msgid "Failed to retrieve preset content"
-msgstr ""
+msgstr "فشل استرداد المحتوى المعين مسبقاً"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 msgid "Failed to convert property list to XML data"
-msgstr ""
+msgstr "فشل تحويل لائحة الخصائص إلى بيانات XML"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 msgid "XML data is empty after conversion"
-msgstr ""
+msgstr "بيانات XML أصبحت فارغة بعد التحويل"
 
 #: libraries/lib-basic-ui/BasicUI.cpp
 #: libraries/lib-exceptions/AudacityException.h
@@ -398,7 +401,7 @@ msgstr "غمر تلقائي للصوت"
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr "يقلل حجم واحد أو أكثر من المقاطع كلما بلغ حجم مقطع تحكم معين إلى مستوى مفرد"
+msgstr "يُخفض (يُخمِد) مستوى الصوت لمسار أو أكثر كلما وصل مستوى الصوت لمسار تحكم محدد إلى مستوى معين."
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks'
 #. (reduces the volume) of the audio automatically when there is
@@ -416,7 +419,7 @@ msgstr "الغمر التلقائي يحتاج إلى مقطع تحكم يجب �
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Rendering Control-Track Time-Stretched Audio"
-msgstr ""
+msgstr "معالجة الصوت الزمني الممتد لمسار التحكم"
 
 #: libraries/lib-builtin-effects/BassTrebleBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -443,7 +446,7 @@ msgstr "تغيير الطبقة عالي الجودة"
 #: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Change Speed and Pitch"
-msgstr ""
+msgstr "تغيير السرعة والطبقة الصوتية"
 
 #: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
 msgid "Changes the speed of a track, also changing its pitch"
@@ -569,7 +572,7 @@ msgstr "المتكلم-الماشي"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Blues drive sustain"
-msgstr ""
+msgstr "استدامة Blues drive"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Light Crunch Overdrive"
@@ -581,7 +584,7 @@ msgstr "دفع ثقيل"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "3rd Harmonic (Perfect Fifth)"
-msgstr "التوافقية الثالثة (خامس مثالي)"
+msgstr "الموجة التوافقية الثالثة (الخامسة التامة)"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Valve Overdrive"
@@ -589,7 +592,7 @@ msgstr "دفع صمام"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "2nd Harmonic (Octave)"
-msgstr "التوافقية الثانية (جواب)"
+msgstr "الموجة التوافقية الثانية (الأوكتاف)"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Gated Expansion Distortion"
@@ -653,6 +656,8 @@ msgid ""
 "DTMF sequence empty.\n"
 "Check ALL settings for this effect."
 msgstr ""
+"تسلسل نغمات DTMF فارغ.\n"
+"راجِع كافة إعدادات هذا التأثير."
 
 #: libraries/lib-builtin-effects/EchoBase.cpp resources/EffectsMenuDefaults.xml
 msgid "Echo"
@@ -678,7 +683,7 @@ msgstr "يعدل مستويات الصوت لترددات مفردة"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "100Hz Rumble"
-msgstr ""
+msgstr "دمدمة 100Hz"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "AM Radio"
@@ -690,15 +695,15 @@ msgstr "رفع الباس"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Bass Cut"
-msgstr ""
+msgstr "قطع الترددات المنخفضة"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Low rolloff for speech"
-msgstr ""
+msgstr "قطع الترددات الدُنيا لتحسين الكلام"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "RIAA"
-msgstr ""
+msgstr "RIAA"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Telephone"
@@ -706,11 +711,11 @@ msgstr "هاتف"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Treble Boost"
-msgstr ""
+msgstr "تعزيز الترددات العالية"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Treble Cut"
-msgstr ""
+msgstr "قطع الترددات العالية"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "To apply Equalization, all selected tracks must have the same sample rate."
@@ -758,7 +763,7 @@ msgstr "جيب التمام"
 
 #: libraries/lib-builtin-effects/EqualizationParameters.cpp
 msgid "Cubic"
-msgstr "مكعبي"
+msgstr "تكعيبي"
 
 #: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade In"
@@ -797,7 +802,7 @@ msgstr "القطع"
 #, c-format
 msgctxt "find clipping"
 msgid "%lld of %lld"
-msgstr ""
+msgstr "%lld من %lld"
 
 #: libraries/lib-builtin-effects/Generator.cpp
 msgid "There is not enough room available to generate the audio"
@@ -814,7 +819,7 @@ msgstr "يقلب عينات الصوت رأسا على عقب، عاكسا قط�
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy Compressor"
-msgstr ""
+msgstr "الضاغط القديم"
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 msgid "Compresses the dynamic range of audio"
@@ -823,11 +828,11 @@ msgstr "اضغط المدى  للصوت"
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Loudness Normalization"
-msgstr ""
+msgstr "توحيد مستوى الصوت"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 msgid "Sets the loudness of one or more tracks"
-msgstr ""
+msgstr "تحديد مستوى الصوت لمسار أو عدة مسارات"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 msgid "Normalizing Loudness...\n"
@@ -849,20 +854,20 @@ msgstr "أعالج: %s"
 #: libraries/lib-builtin-effects/NoiseBase.cpp
 msgctxt "noise"
 msgid "White"
-msgstr ""
+msgstr "أبيض"
 
 #. i18n-hint: not a color, but "pink noise" having a spectrum with more power
 #. in low frequencies
 #: libraries/lib-builtin-effects/NoiseBase.cpp
 msgctxt "noise"
 msgid "Pink"
-msgstr ""
+msgstr "وردي"
 
 #. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
 #: libraries/lib-builtin-effects/NoiseBase.cpp
 msgctxt "noise"
 msgid "Brownian"
-msgstr ""
+msgstr "براوني"
 
 #: libraries/lib-builtin-effects/NoiseBase.cpp
 msgid "Noise"
@@ -874,7 +879,7 @@ msgstr "يولد واحدا من ثلاثة أنواع مختلفة من الض�
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Median"
-msgstr ""
+msgstr "متوسط"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Second greatest"
@@ -941,7 +946,7 @@ msgstr "أزيل انحياز التيار المستمر و أطبع...\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Removing DC offset...\n"
-msgstr "أزيل انحياز التيار المستمر...\n"
+msgstr "جاري إزالة إزاحة التيار المستمر (DC)...\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Normalizing without removing DC offset...\n"
@@ -983,7 +988,7 @@ msgstr "تمديد Paul"
 
 #: libraries/lib-builtin-effects/PaulstretchBase.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr ""
+msgstr "أداة Paulstretch مخصصة فقط لتمديد زمني شديد أو تأثير \"ثبات\" صوتي"
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the
 #. Paulstretch effect.
@@ -1040,18 +1045,20 @@ msgstr "يجمع الإشارات منقولة الطور مع الإشارة ا
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr ""
+msgstr "لرسم الطيف، يجب أن تكون جميع المسارات المحددة بنفس معدل العينات."
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 msgid ""
 "Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
 "Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
+"تعذّر تحليل الصوت. قد يكون هذا بسبب مقطع ممتد أو معدل الطبقة.\n"
+"جرب إعادة ضبط المقاطع الممتدة، أو ادمج المسارات واصدرها قبل التحليل."
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 #, c-format
 msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
-msgstr ""
+msgstr "تم تحديد كم كبير جداً من الصوت. سيتم تحليل أول %.1f ثانية منه فقط."
 
 #: libraries/lib-builtin-effects/Repair.cpp resources/EffectsMenuDefaults.xml
 msgid "Repair"
@@ -1063,7 +1070,7 @@ msgstr "يحدد أعلى مستوى لواحد أو أكثر من المقاط�
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr ""
+msgstr "لا يمكن تطبيق تأثير الإصلاح على المقاطع الممتدة أو المنكمشة"
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid ""
@@ -1101,29 +1108,29 @@ msgstr "يعيد الجزء المختار للعدد المحدد من المر
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Acoustic"
-msgstr ""
+msgstr "صوتي"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Ambience"
-msgstr ""
+msgstr "الأجواء المحيطة"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Artificial"
-msgstr ""
+msgstr "اصطناعي"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Clean"
-msgstr ""
+msgstr "امسح"
 
 #. i18n-hint: This is the name of an effect preset
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Modern"
-msgstr ""
+msgstr "عصري"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
@@ -1138,17 +1145,17 @@ msgstr "لفظ 2"
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Dance Vocal"
-msgstr ""
+msgstr "أصوات الرقص"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Modern Vocal"
-msgstr ""
+msgstr "المعالجة الصوتية العصرية"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Voice Tail"
-msgstr ""
+msgstr "ذيل الصوت"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
@@ -1188,7 +1195,7 @@ msgstr "كاثدرائية"
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Big Cave"
-msgstr ""
+msgstr "الكهف الكبير"
 
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -1231,11 +1238,11 @@ msgstr "Chebyshev نوع II"
 
 #: libraries/lib-builtin-effects/ScienFilterBase.cpp
 msgid "Lowpass"
-msgstr ""
+msgstr "مرشح الترددات المنخفضة"
 
 #: libraries/lib-builtin-effects/ScienFilterBase.cpp
 msgid "Highpass"
-msgstr ""
+msgstr "مرشح الترددات العالية"
 
 #: libraries/lib-builtin-effects/ScienFilterBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -1255,7 +1262,7 @@ msgstr "لتطبق مرشحة، يجب أن يكون لجميع المقاطع �
 #: libraries/lib-builtin-effects/SilenceBase.cpp
 msgctxt "generator"
 msgid "Silence"
-msgstr ""
+msgstr "إسكات"
 
 #: libraries/lib-builtin-effects/SilenceBase.cpp
 msgid "Creates audio of zero amplitude"
@@ -1271,12 +1278,12 @@ msgstr "يحول المقاطع الثنائية إلى أحادية"
 
 #: libraries/lib-builtin-effects/StereoToMono.cpp
 msgid "Mixing down to mono"
-msgstr ""
+msgstr "تحويل إلى صوت أحادي "
 
 #: libraries/lib-builtin-effects/TimeScaleBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Sliding Stretch"
-msgstr ""
+msgstr "تمديد زمني انزلاقي"
 
 #: libraries/lib-builtin-effects/TimeScaleBase.cpp
 msgid "Allows continuous changes to the tempo and/or pitch"
@@ -1312,7 +1319,7 @@ msgstr "مربع، دون استعارة"
 #: libraries/lib-builtin-effects/ToneGenBase.cpp
 msgctxt "waveform"
 msgid "Triangle"
-msgstr ""
+msgstr "مثلث"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
 msgid "Truncate Detected Silence"
@@ -1346,209 +1353,209 @@ msgstr "تغيرات نوع نغمة سريعة، مثل صوت القيثارة
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
-msgstr ""
+msgstr "لا يمكن متابعة الرفع."
 
 #. i18n-hint: database operation has failed because the requested item was not found
 #: libraries/lib-cloud-audiocom/sync/DataUploader.cpp
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "File not found"
-msgstr ""
+msgstr "الملف غير موجود"
 
 #: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
 msgid "Project was closed before snapshot was created"
-msgstr ""
+msgstr "تم إغلاق المشروع قبل إنشاء لقطة منه"
 
 #: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
 #, c-format
 msgid "Invalid Response: %s"
-msgstr ""
+msgstr "استجابة غير صالحة: %s"
 
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
 msgid "Export failed"
-msgstr ""
+msgstr "فشل التصدير"
 
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
 #: libraries/lib-import-export/ExportProgressUI.cpp
 #: libraries/lib-import-export/ExportProgressUI.h
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Export error"
-msgstr ""
+msgstr "خطأ في التصدير"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
 msgid "Failed to attach to the Cloud project database"
-msgstr ""
+msgstr "فشل الإرفاق بقاعدة بيانات المشروع السحابي"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
 msgid "Failed to decompress the Cloud project block"
-msgstr ""
+msgstr "فشل في فك ضغط كتلة المشروع السحابي"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Local project data was removed before the sync has completed"
-msgstr ""
+msgstr "تمت إزالة بيانات المشروع المحلية قبل اكتمال المزامنة"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Failed to deserialize the response"
-msgstr ""
+msgstr "تعذرت إعادة تسلسل الاستجابة"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Glue Compressor"
-msgstr ""
+msgstr "ضاغط الربط الصوتي"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Gentle"
-msgstr ""
+msgstr "معتدل"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Beat Booster"
-msgstr ""
+msgstr "معزز الإيقاع"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Deep Dive Master"
-msgstr ""
+msgstr "أستاذ الغوص العميق"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Beefy Master"
-msgstr ""
+msgstr "معزز الترددات المنخفضة الرئيسي"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Make It Right Master"
-msgstr ""
+msgstr "أداة الضبط الدقيق"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Brick Wall Master"
-msgstr ""
+msgstr "أداة التحديد الصارم"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Lead Vocals"
-msgstr ""
+msgstr "الأصوات الرئيسية"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Fat Vocals"
-msgstr ""
+msgstr "الأصوات الممتلئة"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Power Vocals"
-msgstr ""
+msgstr "الأصوات القوية"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Vocal Control"
-msgstr ""
+msgstr "أدوات التحكم الصوتي"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Vocal Touch-Up"
-msgstr ""
+msgstr "تنقية الأصوات"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Voice Memos Balancer"
-msgstr ""
+msgstr "موازن التسجيلات الصوتية"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Podcast/Radio"
-msgstr ""
+msgstr "بودكاست/راديو"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Piano"
-msgstr ""
+msgstr "بيانو"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Acoustic Guitar"
-msgstr ""
+msgstr "جيتار صوتي"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Bass Guitar"
-msgstr ""
+msgstr "الغيتار الكهربائي منخفض التردد"
 
 #. i18n-hint: This is the name of an effect preset. Strings is violins, etc
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Strings"
-msgstr ""
+msgstr "السلاسل النصية"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Kick Drums"
-msgstr ""
+msgstr "طبول الكيك"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Drums Control"
-msgstr ""
+msgstr "تحكم الطبول"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Climax Impulser SFX"
-msgstr ""
+msgstr "مؤثر نبضات الذروة"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Engine Breathing SFX"
-msgstr ""
+msgstr "مؤثر تنفس المحرك"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Impact SFX"
-msgstr ""
+msgstr "مؤثر الاصطدام القوي"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Body SFX"
-msgstr ""
+msgstr "مؤثر الجسم الصوتي القوي"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Tail SFX"
-msgstr ""
+msgstr "مؤثر النهاية الممتدة"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Smack Explosion SFX"
-msgstr ""
+msgstr "صفعة انفجار SFX"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Master Limiter"
-msgstr ""
+msgstr "المحدد الرئيسي"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "SFX Limiter"
-msgstr ""
+msgstr "محدد SFX"
 
 #. i18n-hint: This is the name of an effect preset. VO means Voiceover.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "VO Limiter"
-msgstr ""
+msgstr "محدد VO"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Modern Punch"
-msgstr ""
+msgstr "القوة الصوتية العصرية"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Modern Punch 2"
-msgstr ""
+msgstr "القوة الصوتية العصرية 2"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Play it Loud"
-msgstr ""
+msgstr "شغّل بصوت عالٍ"
 
 #: libraries/lib-effects/Effect.cpp
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
@@ -1665,17 +1672,17 @@ msgstr "ولتش"
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: libraries/lib-fft/FFT.cpp
 msgid "Gaussian(a=2.5)"
-msgstr ""
+msgstr "غاوسي (a = 2.5)"
 
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: libraries/lib-fft/FFT.cpp
 msgid "Gaussian(a=3.5)"
-msgstr ""
+msgstr "غاوسي (a = 3.5)"
 
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: libraries/lib-fft/FFT.cpp
 msgid "Gaussian(a=4.5)"
-msgstr ""
+msgstr "غاوسي (a = 4.5)"
 
 #. i18n-hint: %s will be the error message from the libsndfile software library
 #: libraries/lib-file-formats/FileFormats.cpp
@@ -1704,6 +1711,8 @@ msgid ""
 "Audacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full."
 msgstr ""
+"أخفق Audacity في الكتابة إلى ملف.\n"
+"ربما %s غير قابل للكتابة ، أو أن القرص ممتلئ."
 
 #: libraries/lib-files/FileException.h
 msgid "File Error"
@@ -1712,13 +1721,13 @@ msgstr "خطأ ملف"
 #: libraries/lib-files/FileNames.cpp plug-ins/nyquist-plug-in-installer.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 msgid "All files"
-msgstr ""
+msgstr "جميع الملفات"
 
 #. i18n-hint an Audacity project is the state of the program, stored as
 #. files that can be reopened to resume the session later
 #: libraries/lib-files/FileNames.cpp
 msgid "AUP3 project files"
-msgstr ""
+msgstr "ملفات مشروع AUP3"
 
 #: libraries/lib-files/FileNames.cpp
 msgid "Dynamically Linked Libraries"
@@ -1734,7 +1743,7 @@ msgstr "ملفات نص"
 
 #: libraries/lib-files/FileNames.cpp
 msgid "XML files"
-msgstr ""
+msgstr "ملفات XML"
 
 #: libraries/lib-files/FileNames.cpp
 msgid ", "
@@ -1745,7 +1754,7 @@ msgstr "، "
 #: libraries/lib-files/FileNames.cpp
 #, c-format
 msgid "%s files"
-msgstr ""
+msgstr "ملفات %s"
 
 #: libraries/lib-files/FileNames.cpp src/BatchCommands.cpp
 #: src/effects/lv2/LV2Editor.cpp
@@ -1759,10 +1768,12 @@ msgid ""
 "\n"
 "%s does not have write permissions."
 msgstr ""
+"\n"
+"%sلا يملك صلاحيات الكتابة."
 
 #: libraries/lib-files/TempDirectory.cpp
 msgid "Unsuitable"
-msgstr ""
+msgstr "غير مناسب"
 
 #: libraries/lib-files/TempDirectory.cpp
 msgid ""
@@ -1801,6 +1812,8 @@ msgid ""
 "Unable to export.\n"
 "Error %s"
 msgstr ""
+"تعذر التصدير.\n"
+"خطأ %s"
 
 #: libraries/lib-import-export/ExportProgressUI.cpp
 #: src/export/ExportAudioDialog.cpp
@@ -1809,11 +1822,11 @@ msgstr "صدر"
 
 #: libraries/lib-import-export/ExportProgressUI.cpp
 msgid "Export completed with error."
-msgstr ""
+msgstr "اكتمل التصدير مع خطأ."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
-msgstr ""
+msgstr "جميع الملفات المدعومة"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -1825,16 +1838,16 @@ msgstr ""
 
 #: libraries/lib-import-export/Import.cpp
 msgid "Importing files"
-msgstr ""
+msgstr "استيراد الملفات"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
 msgid "Importing %s..."
-msgstr ""
+msgstr "جاري استيراد %s..."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "Operation was canceled by user"
-msgstr ""
+msgstr "تم إلغاء العملية من قبل المستخدم"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -2031,7 +2044,7 @@ msgstr ""
 
 #: libraries/lib-import-export/ImportUtils.h
 msgid "Import Project"
-msgstr ""
+msgstr "استورد مشروع"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "SubRip text file"
@@ -2039,16 +2052,15 @@ msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
-msgstr ""
+msgstr "ملف WebVTT"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "استوردت العلامات من '%s'"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
-msgstr ""
+msgstr "قياسي"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "E&xtended (with frequency ranges)"
@@ -2069,7 +2081,7 @@ msgstr "مقطع علامة"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Importing WebVTT files is not currently supported."
-msgstr ""
+msgstr "استيراد ملفات WebVTT غير مدعوم حالياً."
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
@@ -2134,7 +2146,7 @@ msgstr "مستطيل"
 #: libraries/lib-math/Dither.cpp
 msgctxt "dither"
 msgid "Triangle"
-msgstr ""
+msgstr "مثلث"
 
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
@@ -2284,7 +2296,7 @@ msgstr "32-بِت عائم"
 
 #: libraries/lib-math/SampleFormat.cpp
 msgid "Unknown format"
-msgstr ""
+msgstr "صيغة عير معروفة"
 
 #: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
 msgid "Command"
@@ -2413,7 +2425,7 @@ msgstr ""
 #: libraries/lib-module-manager/PluginManager.cpp
 #, c-format
 msgid "Overwrite the plug-in file %s?"
-msgstr ""
+msgstr "الكتابة فوق ملف الإضافة %s؟"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 msgid "Plug-in already exists"
@@ -2436,12 +2448,12 @@ msgstr "أخفقت في تدوين %s"
 msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "عدم تمكين أية إضافة؟\n"
+msgstr[1] "تمكين هذه الإضافة؟\n"
+msgstr[2] "تمكين هاتين الإضافتين؟\n"
+msgstr[3] "تمكين هذه الإضافات؟\n"
+msgstr[4] "تمكين هذه الإضافات؟\n"
+msgstr[5] "تمكين هذه الإضافات؟\n"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 msgid "Enable new plug-ins"
@@ -2454,7 +2466,7 @@ msgstr "تذكرة Nyquist"
 #: libraries/lib-network-manager/MultipartData.cpp
 #, c-format
 msgid "Failed to open the file for upload: %s"
-msgstr ""
+msgstr "فشل فتح الملف للتحميل: %s"
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid "There was an error initializing the midi i/o layer.\n"
@@ -2489,18 +2501,18 @@ msgstr "النقرات"
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Supports output: %d\n"
-msgstr ""
+msgstr "المُخرَج المدعوم: %d\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Supports input: %d\n"
-msgstr ""
+msgstr "المُدخل المدعوم: %d\n"
 
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Opened: %d\n"
-msgstr ""
+msgstr "مفتوح: %d\n"
 
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
@@ -2571,17 +2583,17 @@ msgstr "جوابات"
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar"
-msgstr ""
+msgstr "شريط"
 
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "beat"
-msgstr ""
+msgstr "الإيقاع"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat"
-msgstr ""
+msgstr "شريط: إيقاع"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements. "tick"
 #. corresponds to a 16th note.
@@ -2600,7 +2612,7 @@ msgstr "01000،01000 ثانية"
 #. * and milliseconds (1/1000 second)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "seconds + milliseconds"
-msgstr ""
+msgstr "ثانية + مللي ثانية"
 
 #. i18n-hint: Format string for displaying time in seconds and milliseconds
 #. * as fractional seconds. Change the comma in the middle to the 1000s separator
@@ -2609,7 +2621,7 @@ msgstr ""
 #. * your languages uses a ',' or to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "01000,01000>01000 seconds"
-msgstr ""
+msgstr "01000,01000>01000 ثانية"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
@@ -2843,11 +2855,11 @@ msgstr "01000،01000 إطار|75"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "010,01000>0100 Hz"
-msgstr ""
+msgstr "010,01000>0100 Hz"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "centihertz"
-msgstr ""
+msgstr "سنتي هرتز "
 
 #. i18n-hint: Name of display format that shows frequency in kilohertz
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
@@ -2864,7 +2876,7 @@ msgstr "01000>01000 kHz|0.001"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "hertz"
-msgstr ""
+msgstr "هيرتز"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
@@ -3060,7 +3072,7 @@ msgstr "مقطع صوت"
 
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Playable Track"
-msgstr ""
+msgstr "مقطع قابل للتشغيل"
 
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Multi-track"
@@ -3086,7 +3098,7 @@ msgstr "المكتبة"
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
 msgid "(%d): %s"
-msgstr ""
+msgstr "(%d): %s"
 
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
@@ -3110,7 +3122,7 @@ msgstr ""
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
 msgid "Checkpointing %s"
-msgstr ""
+msgstr "التحقق من النقاط %s"
 
 #: libraries/lib-project-file-io/DBConnection.cpp
 #: libraries/lib-project-file-io/ProjectFileIO.cpp src/CrashReport.cpp
@@ -3120,7 +3132,7 @@ msgstr ""
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
 msgid "Could not write to %s.\n"
-msgstr ""
+msgstr "تعذرت الكتابة إلى %s.\n"
 
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
@@ -3128,6 +3140,8 @@ msgid ""
 "Disk is full.\n"
 "%s"
 msgstr ""
+"القرص ممتلئ.\n"
+"%s"
 
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
@@ -3155,7 +3169,7 @@ msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
-msgstr ""
+msgstr "فشل فتح قاعدة بيانات المشروع"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
@@ -3167,11 +3181,11 @@ msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Failed to discard connection"
-msgstr ""
+msgstr "فشل في تجاهل الاتصال"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Failed to restore connection"
-msgstr ""
+msgstr "فشل في استعادة الاتصال"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
@@ -3190,7 +3204,7 @@ msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
-msgstr ""
+msgstr "هذا ليس ملف مشروع Audacity"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid ""
@@ -3206,11 +3220,11 @@ msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Project update required"
-msgstr ""
+msgstr "تحديث المشروع مطلوب"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
-msgstr ""
+msgstr "تعذرت التهيئة الأولية لملف المشروع"
 
 #. i18n-hint: An error message.  Don't translate inset or blockids.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -3223,6 +3237,8 @@ msgid ""
 "Project is read only\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"المشروع للقراءة فقط\n"
+" (غير قادر على العمل مع ملفات الكتل)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -3269,7 +3285,7 @@ msgstr ""
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to work with the blockfiles"
-msgstr ""
+msgstr "تعذر العمل مع ملفات الكتل"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
@@ -3306,7 +3322,7 @@ msgstr "تقدم"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Failed to bind SQL parameter"
-msgstr ""
+msgstr "فشل ربط معامل SQL"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
@@ -3323,7 +3339,7 @@ msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Copying Project"
-msgstr ""
+msgstr "نسخ المشروع"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Error Writing to File"
@@ -3339,7 +3355,7 @@ msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Compacting project"
-msgstr ""
+msgstr "مشروع الدمج"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -3388,7 +3404,7 @@ msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Saving project"
-msgstr ""
+msgstr "حفظ المشروع"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp src/ProjectFileManager.cpp
 msgid "Error Saving Project"
@@ -3396,7 +3412,7 @@ msgstr "خطأ في حفظ المشروع"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Syncing"
-msgstr ""
+msgstr "المزامنة"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
@@ -3418,11 +3434,11 @@ msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Backing up project"
-msgstr ""
+msgstr "النسخ الاحتياطي للمشروع"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Automatic database backup failed."
-msgstr ""
+msgstr "فشل النسخ الاحتياطي التلقائي لقاعدة البيانات."
 
 #: libraries/lib-project-file-io/ProjectSerializer.cpp
 msgid ""
@@ -3467,11 +3483,11 @@ msgstr ""
 
 #: libraries/lib-sample-track/SampleTrack.cpp
 msgid "Sample Track"
-msgstr ""
+msgstr "عينة مقطع"
 
 #: libraries/lib-sample-track/SampleTrack.cpp
 msgid "Writable Sample Track"
-msgstr ""
+msgstr "مسار العينة القابل للكتابة"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp libraries/lib-wx-init/LogWindow.cpp
 #: src/effects/Contrast.cpp
@@ -3505,45 +3521,45 @@ msgstr "انزع الأخطاء"
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "Beats"
-msgstr ""
+msgstr "الإيقاعات"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "Bar"
-msgstr ""
+msgstr "شريط"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/2"
-msgstr ""
+msgstr "1/2"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/4"
-msgstr ""
+msgstr "1/4"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/8"
-msgstr ""
+msgstr "1/8"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/16"
-msgstr ""
+msgstr "1/16"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/32"
-msgstr ""
+msgstr "1/32"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/64"
-msgstr ""
+msgstr "1/64"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/128"
-msgstr ""
+msgstr "1/128"
 
 #. i18n-hint: The music theory "triplet"
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "Triplets"
-msgstr ""
+msgstr "التوائم الثلاثة"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/2 (triplets)"
@@ -3575,27 +3591,27 @@ msgstr ""
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
 msgid "Video frames"
-msgstr ""
+msgstr "إطارات الفيديو"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
 msgid "Film frames (24 fps)"
-msgstr ""
+msgstr "إطارات الفيلم (24 إ.ف.ث)"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
 msgid "NTSC frames (29.97 fps)"
-msgstr ""
+msgstr "إطارات NTSC (29.97 إ.ف.ث)"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
 msgid "NTSC frames (30 fps)"
-msgstr ""
+msgstr "إطارات NTSC (30 إ.ف.ث)"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
 msgid "CD frames"
-msgstr ""
+msgstr "إطارات الأقراص المدمجة"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 msgid "Seconds && samples"
-msgstr ""
+msgstr "الثواني والعينات"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 #: src/prefs/TracksPrefs.cpp plug-ins/sample-data-export.ny
@@ -3604,15 +3620,15 @@ msgstr "ثواني"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 msgid "Deciseconds"
-msgstr ""
+msgstr "ديسي ثانية"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 msgid "Centiseconds"
-msgstr ""
+msgstr "سنيتي ثانية"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 msgid "Milliseconds"
-msgstr ""
+msgstr "ميلي ثانية"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 #: src/prefs/TracksPrefs.cpp
@@ -3621,17 +3637,17 @@ msgstr "عينات"
 
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "SQLite3 error"
-msgstr ""
+msgstr "خطأ SQLite3"
 
 #. i18n-hint: database operation was successful
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "No error"
-msgstr ""
+msgstr "لا أخطاء"
 
 #. i18n-hint: database operation has failed, but there is no specific reason
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Generic error"
-msgstr ""
+msgstr "خطأ عام"
 
 #. i18n-hint: database operation has failed due to the internal error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -3641,7 +3657,7 @@ msgstr ""
 #. i18n-hint: database operation has failed due to the permission error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Access permission denied"
-msgstr ""
+msgstr "تم رفض إذن الدخول"
 
 #. i18n-hint: database operation was aborted by the callback
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -3651,7 +3667,7 @@ msgstr ""
 #. i18n-hint: database operation has failed because database is locked
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database file is locked"
-msgstr ""
+msgstr "ملف قاعدة البيانات مقفل"
 
 #. i18n-hint: database operation has failed because table is locked
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -3671,42 +3687,42 @@ msgstr ""
 #. i18n-hint: database operation was interrupted
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Operation terminated"
-msgstr ""
+msgstr "تم إنهاء العملية"
 
 #. i18n-hint: database operation has failed due to the I/O failure
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "I/O error occurred"
-msgstr ""
+msgstr "حدث خطأ في I/O"
 
 #. i18n-hint: database operation has failed due to the database corruption
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database disk image is malformed"
-msgstr ""
+msgstr "صورة قرص قاعدة البيانات مشوهة"
 
 #. i18n-hint: database operation has failed because the drive is full
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Insertion failed because the drive is full"
-msgstr ""
+msgstr "فشل الإدراج لأن محرك الأقراص ممتلئ"
 
 #. i18n-hint: database operation has failed because the file cannot be opened
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Unable to open the database file"
-msgstr ""
+msgstr "تعذر فتح ملف قاعدة البيانات"
 
 #. i18n-hint: database operation has failed because the lock protocol has failed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Database lock protocol error"
-msgstr ""
+msgstr "خطأ في بروتوكول قفل قاعدة البيانات"
 
 #. i18n-hint: database operation has failed because the database schema has changed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database schema changed"
-msgstr ""
+msgstr "تم تغيير مخطط قاعدة البيانات"
 
 #. i18n-hint: database operation has failed because the string or BLOB exceeds size limit
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "String or BLOB exceeds size limit"
-msgstr ""
+msgstr "السلسلة أو BLOB تتجاوز الحد الأقصى للحجم"
 
 #. i18n-hint: database operation has failed due to the constraint violation
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -3716,51 +3732,51 @@ msgstr ""
 #. i18n-hint: database operation has failed due to the data type mismatch
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Data type mismatch"
-msgstr ""
+msgstr "عدم تطابق نوع البيانات"
 
 #. i18n-hint: database operation has failed due to the library misuse
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Library used incorrectly"
-msgstr ""
+msgstr "المكتبة مستخدمة بشكل غير صحيح"
 
 #. i18n-hint: database operation has failed because the large file support is disabled
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The large file support is disabled"
-msgstr ""
+msgstr "تم تعطيل دعم الملفات الكبيرة"
 
 #. i18n-hint: database operation has failed due to the authorization error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Authorization denied"
-msgstr ""
+msgstr "المصادقة مطلوبة"
 
 #. i18n-hint: database operation has failed due to the format error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Not used"
-msgstr ""
+msgstr " غير مستخدم"
 
 #. i18n-hint: database operation has failed because the parameter is out of range
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "2nd parameter to sqlite3_bind out of range"
-msgstr ""
+msgstr "المعامل الثاني إلى sqlite3_bind خارج النطاق"
 
 #. i18n-hint: database operation has failed because the file opened is not a database file
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "File opened that is not a database file "
-msgstr ""
+msgstr "ملف تم فتحه ليس ملف قاعدة بيانات"
 
 #. i18n-hint: database operation has failed due to the unknown error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 #: modules/import-export/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
 msgid "Unknown error"
-msgstr ""
+msgstr "خطأ غير معروف"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
-msgstr ""
+msgstr "قص/نسخ/لصق"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "&Cut/Copy/Paste Toolbar"
-msgstr ""
+msgstr "شريط أدوات &قص/نسخ/لصق "
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -3769,33 +3785,33 @@ msgstr "غير قادر على تحديد"
 #: libraries/lib-strings/Internat.cpp
 #, c-format
 msgid "%s bytes"
-msgstr ""
+msgstr "%sبايت"
 
 #. i18n-hint: Abbreviation for Kilo bytes
 #: libraries/lib-strings/Internat.cpp
 #, c-format
 msgid "%s KB"
-msgstr ""
+msgstr "%s KB"
 
 #. i18n-hint: Abbreviation for Mega bytes
 #: libraries/lib-strings/Internat.cpp
 #, c-format
 msgid "%s MB"
-msgstr ""
+msgstr "%s MB"
 
 #. i18n-hint: Abbreviation for Giga bytes
 #: libraries/lib-strings/Internat.cpp
 #, c-format
 msgid "%s GB"
-msgstr ""
+msgstr "%s GB"
 
 #: libraries/lib-strings/Languages.cpp
 msgid "Simplified"
-msgstr ""
+msgstr "مبسَّط"
 
 #: libraries/lib-strings/Languages.cpp
 msgid "System"
-msgstr ""
+msgstr "النظام"
 
 #. i18n-hint: describing the "classic" or traditional
 #. appearance of older versions of Audacity
@@ -3999,7 +4015,7 @@ msgstr "يضيف القدرة على استخدام تأثيرات VST في Auda
 
 #: libraries/lib-vst/VSTWrapper.cpp
 msgid "Unable to allocate memory when loading presets file."
-msgstr "غير قادر على الذاكرة عند تحميل ملف المسبقات."
+msgstr "تعذر تخصيص الذاكرة عند تحميل ملف الإعدادات المسبقة."
 
 #: libraries/lib-vst/VSTWrapper.cpp src/effects/VST/VSTEffect.cpp
 msgid "Error Loading VST Presets"
@@ -4007,7 +4023,7 @@ msgstr "خطأ في تحميل مسبقة VST"
 
 #: libraries/lib-vst/VSTWrapper.cpp
 msgid "Unable to read presets file."
-msgstr "غير قادر على قراءة ملف المسبقات."
+msgstr "تعذر قراءة ملف الإعدادات المسبقة."
 
 #: libraries/lib-vst/VSTWrapper.cpp libraries/lib-xml/XMLFileReader.cpp
 #: src/effects/BasicEffectUIServices.cpp
@@ -4041,7 +4057,7 @@ msgstr "أكد"
 
 #: libraries/lib-vst3/VST3EffectBase.cpp
 msgid "VST3"
-msgstr ""
+msgstr "VST3"
 
 #. i18n-hint VST3 effect description string
 #: libraries/lib-vst3/VST3EffectBase.cpp
@@ -4051,7 +4067,7 @@ msgstr ""
 
 #: libraries/lib-vst3/VST3EffectsModule.cpp
 msgid "VST3 Effects"
-msgstr ""
+msgstr "تأثيرات VST3 "
 
 #: libraries/lib-vst3/VST3EffectsModule.cpp
 msgid "Adds the ability to use VST3 effects in Audacity."
@@ -4169,7 +4185,7 @@ msgstr ""
 #: libraries/lib-wave-track-settings/WaveformSettings.cpp
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Linear (dB)"
-msgstr ""
+msgstr "خطي (dB)"
 
 #: libraries/lib-wave-track-settings/WaveformSettings.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
@@ -4218,7 +4234,7 @@ msgstr "تحذير - أقلم ملف كتلة أطول مما ينبغي"
 
 #: libraries/lib-wave-track/TimeStretching.cpp
 msgid "Pre-processing"
-msgstr ""
+msgstr "المعالجة المسبقة"
 
 #: libraries/lib-wave-track/TimeStretching.cpp
 msgid "Rendering Clip"
@@ -4534,14 +4550,12 @@ msgid "File type:"
 msgstr "نوع الملف:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "المقطع الضمني السابق"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "المقطع الضمني التالي"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
@@ -4905,7 +4919,7 @@ msgstr "متوقف"
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "On"
-msgstr ""
+msgstr "تشغيل"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-opus/ExportOpus.cpp
@@ -5232,7 +5246,7 @@ msgstr "أظهر جميع المشفرين"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Formats"
-msgstr ""
+msgstr "الصيغ"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Codecs"
@@ -5873,11 +5887,11 @@ msgstr "إصدار"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MPEG2"
-msgstr ""
+msgstr "MPEG2"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MPEG1"
-msgstr ""
+msgstr "MPEG1"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MP2 Files"
@@ -5907,39 +5921,39 @@ msgstr "أصدر الصوت عند %ld Kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "220-260 kbps (Best Quality)"
-msgstr ""
+msgstr "220-260 kbps (أفضل جودة)"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "200-250 kbps"
-msgstr ""
+msgstr "200-250 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "170-210 kbps"
-msgstr ""
+msgstr "170-210 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "155-195 kbps"
-msgstr ""
+msgstr "155-195 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "145-185 kbps"
-msgstr ""
+msgstr "145-185 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "110-150 kbps"
-msgstr ""
+msgstr "110-150 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "95-135 kbps"
-msgstr ""
+msgstr "95-135 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "80-120 kbps"
-msgstr ""
+msgstr "80-120 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "65-105 kbps"
-msgstr ""
+msgstr "65-105 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "45-85 kbps (Smaller files)"
@@ -6180,7 +6194,7 @@ msgstr "غير قادر على تعيين جودة التقديم لـ QuickTime
 
 #: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem initialising"
-msgstr ""
+msgstr "غير قادر على التصدير - مشكلة في التثبيت"
 
 #: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem creating stream"
@@ -6233,7 +6247,7 @@ msgstr "خطأ منطقي داخلي"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "no error"
-msgstr ""
+msgstr "لا أخطاء"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #: modules/import-export/mod-opus/ImportOpus.cpp
@@ -6247,7 +6261,7 @@ msgstr ""
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "internal error"
-msgstr ""
+msgstr "خطأ داخلي"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #: modules/import-export/mod-opus/ImportOpus.cpp
@@ -6285,7 +6299,7 @@ msgstr ""
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Speech"
-msgstr ""
+msgstr "الكلام"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Buffer overflow in OGG packet"
@@ -6404,7 +6418,7 @@ msgstr "WAV (Microsoft)"
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Encoding"
-msgstr ""
+msgstr "الترميز"
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Header"
@@ -6506,7 +6520,7 @@ msgstr ""
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "RF64 (RIFF 64)"
-msgstr ""
+msgstr "RF64 (RIFF 64)"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "SD2 (Sound Designer II)"
@@ -6631,25 +6645,25 @@ msgstr ""
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Low Quality (Fast)"
-msgstr ""
+msgstr "جودة منخفضة (سريع)"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Normal Quality"
-msgstr ""
+msgstr "جودة عادية"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "High Quality (Slow)"
-msgstr ""
+msgstr "جودة عالية (بطيء)"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Very High Quality (Slowest)"
-msgstr ""
+msgstr "جودة عالية جداً (الأبطأ)"
 
 #. i18n-hint bps abbreviates "bits per sample"
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, c-format
 msgid "%.1f bps"
-msgstr ""
+msgstr "%.1f bps"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Hybrid Mode"
@@ -7050,7 +7064,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
-msgstr ""
+msgstr "مزامنة المشروع"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Previews can be updated only for Cloud projects"
@@ -7074,15 +7088,15 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
-msgstr ""
+msgstr "سحابة"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Account"
-msgstr ""
+msgstr "الحساب"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Export behavior"
-msgstr ""
+msgstr "سلوك التصدير"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "S&how 'How would you like to export?' dialog"
@@ -7120,7 +7134,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "days"
-msgstr ""
+msgstr "أيام"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "&Remove temporary files after:"
@@ -7147,7 +7161,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
 msgid "Failed."
-msgstr ""
+msgstr "أخفق."
 
 #: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
 #, c-format
@@ -7190,7 +7204,7 @@ msgstr ""
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Sign in"
-msgstr ""
+msgstr "تسجيل الدخول"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Sign Out"
@@ -7220,7 +7234,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "On your computer"
-msgstr ""
+msgstr "على جهازك الشخصي"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid ""
@@ -7269,21 +7283,21 @@ msgstr ""
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Project Name"
-msgstr ""
+msgstr "اسم المشروع"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
-msgstr ""
+msgstr "خاص"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Unlisted"
-msgstr ""
+msgstr "غير مدرج"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Public"
-msgstr ""
+msgstr "عام"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Save to computer..."
@@ -7305,7 +7319,7 @@ msgstr ""
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Link account"
-msgstr ""
+msgstr "ربط الحساب"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 msgid "We were unable to link your account. Please try again."
@@ -7338,7 +7352,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
-msgstr ""
+msgstr "الرمز الفريد"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
@@ -7352,11 +7366,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create cloud account"
-msgstr ""
+msgstr "إنشاء حساب سحابي"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to cloud"
-msgstr ""
+msgstr "سجل الدخول إلى السحابة"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
@@ -7380,41 +7394,41 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
-msgstr ""
+msgstr "المتابعة مع Google"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
-msgstr ""
+msgstr "المتابعة مع Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
-msgstr ""
+msgstr "البريد الإلكتروني"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Password"
-msgstr ""
+msgstr "كلمة السر"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Forgot your password?"
-msgstr ""
+msgstr "نسيت كلمة السر؟"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr ""
+msgstr "لديك حساب بالفعل؟"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in here"
-msgstr ""
+msgstr "سجّل الدخول هنا"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Need an account? "
-msgstr ""
+msgstr "تحتاج إلى حساب؟"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 #: src/AudioPasteDialog.cpp src/WhatsNewDialog.cpp
 msgid "Continue"
-msgstr ""
+msgstr "المتابعة"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
@@ -7452,7 +7466,7 @@ msgstr ""
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "Visit audio.com"
-msgstr ""
+msgstr "زيارة audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Project version conflict detected"
@@ -7464,7 +7478,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Save this project"
-msgstr ""
+msgstr "احفظ هذا المشروع"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Discard and open latest version"
@@ -7476,7 +7490,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Open local project"
-msgstr ""
+msgstr "فتح مشروع محلي"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Cloud project conflict"
@@ -7492,11 +7506,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Open new version"
-msgstr ""
+msgstr "فتح إصدار جديد"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Open from Cloud"
-msgstr ""
+msgstr "الفتح من السحابة"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "less than 1 minute"
@@ -7546,7 +7560,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Search:"
-msgstr ""
+msgstr "البحث:"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Prev"
@@ -7554,12 +7568,12 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "View in audio.com"
-msgstr ""
+msgstr "العرض في  audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "Page %d of %d"
-msgstr ""
+msgstr "الصفحة %d من %d"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Anyone will be able to listen to this audio."
@@ -7575,11 +7589,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Cancel upload to Audio.com"
-msgstr ""
+msgstr "إلغاء الرفع إلى Audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Uploading audio..."
-msgstr ""
+msgstr "رفع الصوت..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
@@ -7587,7 +7601,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Upload error"
-msgstr ""
+msgstr "خطأ في الرفع"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "We are unable to prepare this file for uploading."
@@ -7648,7 +7662,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "Sync failed"
-msgstr ""
+msgstr "فشلت المزامنة"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #, c-format
@@ -7656,6 +7670,8 @@ msgid ""
 "Error details:\n"
 "%s"
 msgstr ""
+"تفاصيل الخطأ:\n"
+"%s"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 msgid "Syncing your project"
@@ -7675,7 +7691,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Done"
-msgstr ""
+msgstr "تم"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "Cloud project incomplete"
@@ -7699,7 +7715,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
 msgid "Retry"
-msgstr ""
+msgstr "إعادة المحاولة"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
@@ -7707,15 +7723,15 @@ msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Loading..."
-msgstr ""
+msgstr "جاري التحميل..."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Please wait..."
-msgstr ""
+msgstr "الرجاء الانتظار..."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Connection error"
-msgstr ""
+msgstr "خطأ في الاتصال"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
@@ -7723,7 +7739,7 @@ msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Try again"
-msgstr ""
+msgstr "حاول مرة أُخرى"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
@@ -7940,7 +7956,7 @@ msgstr "%s (يتضمن %s، %s، %s، %s و %s)"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "About %s"
-msgstr ""
+msgstr "حول %s"
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
@@ -7953,7 +7969,7 @@ msgstr "الترجمة العربية من قبل حسام الحمصي."
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
-msgstr ""
+msgstr "<h3>"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -8034,7 +8050,7 @@ msgstr "ممَكن"
 #. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
 msgid "The Build"
-msgstr ""
+msgstr "البناء"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
@@ -8079,7 +8095,7 @@ msgstr "بادئة التثبيت:"
 
 #: src/AboutDialog.cpp
 msgid "Cache folder:"
-msgstr ""
+msgstr "مجلد ذاكرة التخزين المؤقت:"
 
 #: src/AboutDialog.cpp
 msgid "Settings folder:"
@@ -8116,13 +8132,13 @@ msgstr "دعم صيغة الملف"
 
 #: src/AboutDialog.cpp
 msgid "MP3 Import"
-msgstr ""
+msgstr "استيراد MP3"
 
 #. i18n-hint: LAME is the codec name. This name should not be translated
 #.
 #: src/AboutDialog.cpp
 msgid "MP3 Export"
-msgstr ""
+msgstr "تصدير MP3"
 
 #. i18n-hint: Opus is the codec name. This name should not be translated
 #.
@@ -10466,7 +10482,7 @@ msgstr "شريط تمرير عمودي"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "No Effect"
-msgstr ""
+msgstr "لا تأثير"
 
 #: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
 msgid "Get more effects..."
@@ -10489,7 +10505,7 @@ msgstr ""
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid "Power"
-msgstr ""
+msgstr "تشغيل"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -10525,7 +10541,7 @@ msgstr ""
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Remove %s"
-msgstr ""
+msgstr "إزالة %s"
 
 #. i18n-hint: undo history,
 #. first and second parameters - realtime effect names
@@ -10554,7 +10570,7 @@ msgstr ""
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Add effect"
-msgstr ""
+msgstr "إضافة تأثير"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -10576,7 +10592,7 @@ msgstr ""
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Change effect order"
-msgstr ""
+msgstr "غيّر درجة التأثير"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -10585,13 +10601,13 @@ msgstr ""
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Added %s to %s"
-msgstr ""
+msgstr "%s مضاف إلى %s"
 
 #. i18n-hint: undo history record
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Add %s"
-msgstr ""
+msgstr "إضافة %s"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects"
@@ -10609,7 +10625,7 @@ msgstr ""
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
-msgstr ""
+msgstr "شاهد الفيديو"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects are non-destructive and can be changed at any time."
@@ -10617,11 +10633,11 @@ msgstr ""
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Master Effects"
-msgstr ""
+msgstr "المؤثرات الرئيسية"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Applies to all tracks"
-msgstr ""
+msgstr "طبق على كافة المقاطع"
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -10641,7 +10657,7 @@ msgstr ""
 
 #: src/SpectralDataDialog.cpp
 msgid "Brush Tool"
-msgstr ""
+msgstr "أداة الفرشاة"
 
 #: src/SpectralDataDialog.cpp
 msgid "Spectral Brush"
@@ -10649,7 +10665,7 @@ msgstr ""
 
 #: src/SpectralDataDialog.cpp
 msgid "Brush radius"
-msgstr ""
+msgstr "نصف قطر الفرشاة"
 
 #: src/SpectralDataDialog.cpp
 msgid "Custom brush size"
@@ -10661,7 +10677,7 @@ msgstr ""
 
 #: src/SpectralDataDialog.cpp
 msgid "Enable smart selection"
-msgstr ""
+msgstr "تفعيل التحديد الذكي"
 
 #: src/SpectralDataDialog.cpp
 msgid ""
@@ -10703,7 +10719,7 @@ msgstr "استخدم مفاتيح الأسهم (أو مفتاح ENTER بعد ا�
 
 #: src/TagsEditor.cpp
 msgid "Tag"
-msgstr "بطاقة"
+msgstr "علامة"
 
 #: src/TagsEditor.cpp
 msgid "Value"
@@ -10759,19 +10775,19 @@ msgstr "هل أنت متأكد من أنك تريد إعادة تعيين قائ
 
 #: src/TagsEditor.cpp
 msgid "Unable to open genre file."
-msgstr "غير قادر على فتح ملف النوع."
+msgstr "تعذر فتح ملف النوع."
 
 #: src/TagsEditor.cpp
 msgid "Load Metadata As:"
-msgstr "حمل ما وراء المعطيات كـ:"
+msgstr "حمل البيانات الوصفية كـ:"
 
 #: src/TagsEditor.cpp
 msgid "Error Loading Metadata"
-msgstr "خطأ في تحميل ما وراء المعطيات"
+msgstr "خطأ في تحميل البيانات الوصفية"
 
 #: src/TagsEditor.cpp
 msgid "Save Metadata As:"
-msgstr "حفظ الميتابيانات كـ:"
+msgstr "حفظ البيانات الوصفية كـ:"
 
 #: src/TagsEditor.cpp
 msgid "Error Saving Tags File"
@@ -10780,11 +10796,11 @@ msgstr "خطأ في حفظ ملف البطاقات"
 #: src/TagsEditor.cpp src/TimerRecordExportDialog.cpp
 #: src/export/ExportAudioDialog.cpp
 msgid "Edit Metadata Tags"
-msgstr "حرر شعارات البيانات الوصفية"
+msgstr "تحرير علامات البيانات الوصفية"
 
 #: src/TagsEditor.cpp
 msgid "Metadata Tags"
-msgstr "شعارات البيانات الوصفية"
+msgstr "علامات البيانات الوصفية"
 
 #: src/TagsEditor.cpp
 msgid "&Metadata Editor"
@@ -10803,7 +10819,7 @@ msgstr ""
 #: src/effects/VST/VSTEditor.cpp src/effects/VST3/VST3Editor.cpp
 #: src/effects/ladspa/LadspaEditor.cpp src/effects/lv2/LV2Editor.cpp
 msgid "Duration"
-msgstr "الأمد"
+msgstr "المدة"
 
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
@@ -10833,7 +10849,7 @@ msgstr "الأمد هو صفر. لا شيء سيسجل."
 
 #: src/TimerRecordDialog.cpp
 msgid "Error in Duration"
-msgstr "خطأ في الأمد"
+msgstr "خطأ في المدة"
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Save path is invalid."
@@ -10883,7 +10899,7 @@ msgstr "بداية التسجيل:"
 #: src/TimerRecordDialog.cpp src/effects/VST/VSTEditor.cpp
 #: src/effects/VST3/VST3Editor.cpp src/effects/ladspa/LadspaEditor.cpp
 msgid "Duration:"
-msgstr "الأمد:"
+msgstr "المدة:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Recording end:"
@@ -11447,9 +11463,8 @@ msgid "Take part in survey"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "تفضيلات Audacity"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -11472,9 +11487,8 @@ msgid "Visit our forum"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "لا تظهر هذا مرة أخرى عند بدأ البرنامج"
+msgstr ""
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -14116,7 +14130,7 @@ msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unable to load presets file."
-msgstr "غير قادر على تحميل ملف المسبقات."
+msgstr "تعذر تحميل ملف الإعدادات المسبقة."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp

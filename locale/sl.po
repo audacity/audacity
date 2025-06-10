@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-29 17:54+0300\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/audacity/teams/164520/sl/)\n"
@@ -2067,9 +2067,8 @@ msgid "WebVTT file"
 msgstr "Datoteka WebVTT"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "Slog izvoženih oznak:"
+msgstr "Podprta datoteka oznak"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4639,24 +4638,22 @@ msgid "File type:"
 msgstr "Vrsta datoteke:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "Pred&hodni posnetek"
+msgstr "Prejšnja drsnica"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "Nas&lednji posnetek"
+msgstr "Naslednja drsnica"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "%s, %d. od %d posnetka steze %s"
+msgstr "Drsnica %d od %d, %s. %s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr ""
+msgstr "Drsnica %d od %d, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7476,9 +7473,8 @@ msgid "Enter token to link your account"
 msgstr "Vnesite žeton za povezavo s svojim računom"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
 msgid "Sign-in and get the token"
-msgstr "Prijavite se za shranjevanje v oblak"
+msgstr "Prijavi se in pridobi žeton"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -11666,12 +11662,11 @@ msgstr "Dobrodošli v Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
+msgstr "Dokončajte svojo oblačno nastavitev Audacity z audio.com"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "What's new in Audacity"
-msgstr "Novosti v Audacity %s"
+msgstr "Novosti v Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11679,33 +11674,31 @@ msgstr "Oglejte si video ob izdaji"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Čistilnik glasu z milom: zvok pripovedovalcev v studijski kakovosti"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Pomagajte se nam odločiti o prihodnosti Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Udeležite se ankete"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "Spodletel zagon Audacity"
+msgstr "Anketa o funkcionalnostih Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
-msgstr ""
+msgstr "Blago z logotipom ob 25. obletnici"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit now"
-msgstr ""
+msgstr "Obišči zdaj"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our new Audacity merch store"
-msgstr "To ni projektna datoteka Audacity"
+msgstr "Obiščite našo novo trgovino z blagom Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11716,9 +11709,8 @@ msgid "Visit our forum"
 msgstr "Obiščite naš forum"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "Tega ob zagonu ne prikaži več"
+msgstr "&Tega ob zagonu ne prikaži več"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -21748,9 +21740,3 @@ msgstr "Spektralna orodja"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Opuščeno"
-
-#~ msgid "Get AI effects..."
-#~ msgstr "Pridobi učinke UI ..."
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "Na voljo na MuseHub"

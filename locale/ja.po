@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-29 17:54+0300\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Tadahisa Sugisaki, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/audacity/teams/164520/ja/)\n"
@@ -925,7 +925,7 @@ msgstr "すべてのノイズプロファイルは同じサンプリング周波
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr "ノイズプロファイルのサンプリング周波数は、処理する音と一致している必要があります。"
+msgstr "ノイズプロファイルのサンプリング周波数は、処理するサウンドと一致している必要があります。"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Selected noise profile is too short."
@@ -1071,7 +1071,7 @@ msgstr "1 トラック以上に対してピーク振幅を設定"
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr "リペアエフェクトはストレッチを行ったクリップ内では使用できません。"
+msgstr "修復エフェクトは、ストレッチを行ったクリップ内では使用できません。"
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid ""
@@ -2068,9 +2068,8 @@ msgid "WebVTT file"
 msgstr "WebVTT ファイル"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "エクスポートラベル形式:"
+msgstr "対応ラベルファイル"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4625,24 +4624,22 @@ msgid "File type:"
 msgstr "ファイルの種類:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "前のクリップ(&U)"
+msgstr "前のスライド"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "次のクリップ(&E)"
+msgstr "次のスライド"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "%1$s、%3$d個中%2$d個目のクリップ、%4$s"
+msgstr "スライド %d（%d 中）、%s. %s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr ""
+msgstr "スライド %d（%d 中）、%s、%s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7471,9 +7468,8 @@ msgid "Enter token to link your account"
 msgstr "アカウントとリンクするためのトークンを入力"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
 msgid "Sign-in and get the token"
-msgstr "サインインしてクラウドに保存"
+msgstr "サインインしてトークンを取得"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -10866,7 +10862,7 @@ msgstr "位置"
 
 #: src/SoundActivatedRecord.cpp
 msgid "Sound Activated Record"
-msgstr "音による録音起動"
+msgstr "サウンドによる録音起動"
 
 #: src/SoundActivatedRecord.cpp
 msgid "Activation level (dB):"
@@ -11663,12 +11659,11 @@ msgstr "Audacity へようこそ!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
+msgstr "audio.com で Audacity クラウドの設定を完了する"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "What's new in Audacity"
-msgstr "Audacity %s の更新内容"
+msgstr "Audacity の新機能"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11676,33 +11671,31 @@ msgstr "リリース動画を見る"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap ボイスクリーナー：スタジオ品質のナレーションサウンド"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Audacity の未来にご協力ください"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "調査に参加"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "Audacity 起動エラー"
+msgstr "Audacity 機能調査"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
-msgstr ""
+msgstr "25周年記念商品!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit now"
-msgstr ""
+msgstr "今すぐ接続"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our new Audacity merch store"
-msgstr "これは Audacity プロジェクトファイルではありません"
+msgstr "新しい Audacity 販売ストアに接続"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11713,9 +11706,8 @@ msgid "Visit our forum"
 msgstr "フォーラムにアクセス"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "次回からは起動時に表示しない"
+msgstr "次回からは起動時に表示しない(&D)"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -16642,7 +16634,7 @@ msgstr "録音/再生オプション(&O)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Set sound activation le&vel..."
-msgstr "録音起動音量レベルを設定(&V)..."
+msgstr "録音起動サウンドレベルを設定(&V)..."
 
 #: src/menus/TransportMenus.cpp
 msgid "Enable sound a&ctivated recording"
@@ -20076,7 +20068,7 @@ msgstr "システムに無いリアルタイムエフェクトプラグインが
 #: src/widgets/MissingPluginsErrorDialog.cpp
 #, c-format
 msgid "The project may sound different than intended. %s"
-msgstr "プロジェクトの意図と異なる音になる可能性があります。 %s"
+msgstr "プロジェクトの意図と異なるサウンドになる可能性があります。 %s"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
 msgid "Learn more"
@@ -20827,7 +20819,7 @@ msgstr "終了側に確保する最長無音部"
 
 #: plug-ins/label-sounds.ny
 msgid "Sound ##1"
-msgstr "サウンド##1"
+msgstr "サウンド ##1"
 
 #. i18n-hint: hours minutes and seconds. Do not translate "~a".
 #: plug-ins/label-sounds.ny
@@ -21751,9 +21743,3 @@ msgstr "スペクトルツール"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "レガシー"
-
-#~ msgid "Get AI effects..."
-#~ msgstr "AI エフェクトを取得..."
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "MuseHub から入手できます"

@@ -5,6 +5,7 @@
 #
 # Translators:
 # Link Winterberg, 2024
+# Dmitry Makarenko, 2025
 # Heino Keränen, 2025
 #
 #, fuzzy
@@ -12,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-29 17:54+0300\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Heino Keränen, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/audacity/teams/164520/fi/)\n"
@@ -2068,9 +2069,8 @@ msgid "WebVTT file"
 msgstr "WebVTT -tiedosto"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "Vietyjen merkkien tyyli:"
+msgstr "Tuettu merkkitiedosto"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4638,24 +4638,22 @@ msgid "File type:"
 msgstr "Tiedostotyyppi:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "Edellin&en leike"
+msgstr "Edellinen dia"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "Seuraava leike"
+msgstr "Seuraava dia"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "%s, %d / %d leike %s"
+msgstr "Dia %d / %d,  %s. %s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr ""
+msgstr "Dia %d / %d, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7477,9 +7475,8 @@ msgid "Enter token to link your account"
 msgstr "Liitä tilisi antamalla tunnus"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
 msgid "Sign-in and get the token"
-msgstr "Kirjaudu sisään tallentaaksesi pilveen"
+msgstr "Kirjaudu sisään ja hanki tunnus"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -11665,12 +11662,11 @@ msgstr "Tervetuloa käyttämään Audacityä!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
+msgstr "Viimeistele Audacity-pilvipalvelusi asennus osoitteessa audio.com"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "What's new in Audacity"
-msgstr "Mitä uutta Audacityssä %s"
+msgstr "Uutta Audacityssä"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11678,33 +11674,31 @@ msgstr "Katso julkaisuvideo"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner: studiolaatuinen äänitys"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Auta meitä päättämään Audacityn tulevaisuudesta"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Osallistu kyselyyn"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "Audacity-käynnistysvirhe"
+msgstr "Audacityn ominaisuuskysely"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
-msgstr ""
+msgstr "25-vuotisjuhlatuotteita!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit now"
-msgstr ""
+msgstr "Käy nyt"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our new Audacity merch store"
-msgstr "Tämä ei ole Audacity-projektitiedosto"
+msgstr "Käy uudessa Audacity-tuotekaupassamme"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11715,9 +11709,8 @@ msgid "Visit our forum"
 msgstr "Käy osoitteessa"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "Älä näytä tätä käynnistyksessä"
+msgstr "&Älä näytä tätä uudelleen käynnistyksen yhteydessä"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -21736,9 +21729,3 @@ msgstr "Spektrityökalut"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Perinteinen"
-
-#~ msgid "Get AI effects..."
-#~ msgstr "Hanki tekoälytehosteita..."
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "Saatavilla MuseHubista"

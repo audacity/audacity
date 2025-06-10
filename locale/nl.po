@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-29 17:54+0300\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Thomas De Rocker, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/audacity/teams/164520/nl/)\n"
@@ -2068,9 +2068,8 @@ msgid "WebVTT file"
 msgstr "WebVTT-bestand"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "Stijl geëxporteerd label:"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4638,19 +4637,17 @@ msgid "File type:"
 msgstr "Bestandstype:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "Vorige clip"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "Volgende clip"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "%s, %d van %d clip %s"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
@@ -7471,9 +7468,8 @@ msgid "Enter token to link your account"
 msgstr "Token ingeven om uw account te koppelen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
 msgid "Sign-in and get the token"
-msgstr "Aanmelden om naar de cloud op te slaan"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -11648,9 +11644,8 @@ msgid "Complete your Audacity cloud setup with audio.com"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "What's new in Audacity"
-msgstr "Wat is nieuw in Audacity %s"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11669,9 +11664,8 @@ msgid "Take part in survey"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "Audacity opstartfout"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -11682,9 +11676,8 @@ msgid "Visit now"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our new Audacity merch store"
-msgstr "Dit is geen Audacity-projectbestand"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11695,9 +11688,8 @@ msgid "Visit our forum"
 msgstr "Bezoek ons forum"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "Niet meer weergeven bij het opstarten"
+msgstr ""
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -21722,9 +21714,3 @@ msgstr "Spectraal gereedschap"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Oud"
-
-#~ msgid "Get AI effects..."
-#~ msgstr "AI-effecten verkrijgen..."
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "Beschikbaar op MuseHub"

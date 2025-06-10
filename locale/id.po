@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-29 17:54+0300\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Catarina Anabela, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/audacity/teams/164520/id/)\n"
@@ -1828,11 +1828,11 @@ msgstr "Ekspor"
 
 #: libraries/lib-import-export/ExportProgressUI.cpp
 msgid "Export completed with error."
-msgstr "Ekspor yang telah selesai dengan kesalahan."
+msgstr "Ekspor telah selesai dengan kesalahan."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
-msgstr "Semua berkas yang terdukung"
+msgstr "Semua berkas yang didukung"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -1847,7 +1847,7 @@ msgstr ""
 
 #: libraries/lib-import-export/Import.cpp
 msgid "Importing files"
-msgstr "Mengimpor file"
+msgstr "Mengimpor berkas"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -2068,9 +2068,8 @@ msgid "WebVTT file"
 msgstr "Berkas SubRip"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "Style Label Terekspor:"
+msgstr "Berkas label yang didukung"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4639,24 +4638,22 @@ msgid "File type:"
 msgstr "Tipe berkas:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "Klip Sebelum&nya"
+msgstr "Slide sebelumnya"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "Klip b&erikutnya"
+msgstr "Slide berikutnya"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "%s, %d dari %d klip %s"
+msgstr "Slide %d dari %d, %s. %s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr ""
+msgstr "Slide %d dari %d, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -6228,7 +6225,7 @@ msgstr "Tidak dapat menginisialisasi pustaka encoding MP3!"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Not a valid or supported MP3 encoding library!"
-msgstr "Pustaka encoding MP3 tidak valid atau terdukung!"
+msgstr "Pustaka encoding MP3 tidak valid atau didukung!"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Unable to initialize MP3 stream"
@@ -7369,7 +7366,7 @@ msgid ""
 "Note: To export MP3 and WAV files, use File > Export Audio instead."
 msgstr ""
 "File disimpan di perangkat Anda.\n"
-"Catatan: Untuk mengekspor file MP3 dan WAV, gunakan File > Ekspor Audio."
+"Catatan: Untuk mengekspor Berkas MP3 dan WAV, gunakan File > Ekspor Audio."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Save to &computer"
@@ -7476,9 +7473,8 @@ msgid "Enter token to link your account"
 msgstr "Masukkan token untuk menghubungkan akun"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
 msgid "Sign-in and get the token"
-msgstr "Masuk untuk menyimpan ke awan"
+msgstr "Masuk dan dapatkan token"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -11652,12 +11648,11 @@ msgstr "Selamat datang di Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
+msgstr "Selesaikan pengaturan cloud Audacity Anda dengan audio.com"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "What's new in Audacity"
-msgstr "Apa yang baru di Audacity %s"
+msgstr "Apa yang baru di Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11665,33 +11660,31 @@ msgstr "Tonton video rilis"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Pembersih Suara: hasil sulih suara sejernih studio"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Bantu kami menentukan masa depan Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Ambil bagian dalam survei"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "Kegagalan Startup Audacity"
+msgstr "Survei fitur Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
-msgstr ""
+msgstr "Merchandise Hari Jadi ke-25!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit now"
-msgstr ""
+msgstr "Kunjungi sekarang"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our new Audacity merch store"
-msgstr "Ini bukan berkas proyek Audacity"
+msgstr "Kunjungi toko merchandise Audacity baru kami"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11702,9 +11695,8 @@ msgid "Visit our forum"
 msgstr "Kunjungi forum kami"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "Jangan tampilkan lagi waktu mulai"
+msgstr "&Jangan tampilkan lagi waktu mulai"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -21723,9 +21715,3 @@ msgstr "Alat Spektral"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Terdahulu"
-
-#~ msgid "Get AI effects..."
-#~ msgstr "Dapatkan efek AI..."
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "Tersedia di MuseHub"

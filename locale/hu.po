@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-29 17:54+0300\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/audacity/teams/164520/hu/)\n"
@@ -299,7 +299,7 @@ msgstr "Nem sikerült az előbeállítás tárolása a konfigurációs fájlban"
 #: libraries/lib-nyquist-effects/NyquistBase.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/EffectUI.cpp
 msgid "n/a"
-msgstr "n/a"
+msgstr "–"
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
@@ -402,7 +402,7 @@ msgstr "Automatikus lehalkítás"
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr "Csökkenti (lehalkítja) egy vagy több sáv hangerejét, amikor egy megadott \"vezérlő\" sáv hangereje elér egy bizonyos szintet"
+msgstr "Csökkenti (lehalkítja) egy vagy több sáv hangerejét, amikor egy megadott „vezérlő” sáv hangereje elér egy bizonyos szintet"
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks'
 #. (reduces the volume) of the audio automatically when there is
@@ -416,7 +416,7 @@ msgstr "Olyan sávot jelölt ki, amely nem tartalmaz hangot. Az automatikus leha
 #. track.  Not as in 'Donald-Duck'!
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "Az automatikus lehalkítás egy vezérlősávot igényel, amelyet a kijelölt sáv(ok) alá kell tenni."
+msgstr "Az automatikus lehalkítás egy vezérlősávot igényel, amelyet a kijelölt sávok alá kell tenni."
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Rendering Control-Track Time-Stretched Audio"
@@ -601,23 +601,23 @@ msgstr "Kapuzott bővítéses torzítás"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Light, -70dB noise floor"
-msgstr "Szintező, könnyű, -70dB zajszint padló"
+msgstr "Szintező, könnyű, -70 dB zajszintpadló"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Moderate, -70dB noise floor"
-msgstr "Szintező, mérsékelt, -70dB zajszint padló"
+msgstr "Szintező, mérsékelt, -70 dB zajszintpadló"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Heavy, -70dB noise floor"
-msgstr "Szintező, nehéz, -70dB zajszint padló"
+msgstr "Szintező, nehéz, -70 dB zajszintpadló"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Heavier, -70dB noise floor"
-msgstr "Szintező, nehezebb, -70dB zajszint padló"
+msgstr "Szintező, nehezebb, -70 dB zajszintpadló"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Heaviest, -70dB noise floor"
-msgstr "Szintező, legnehezebb, -70dB zajszint padló"
+msgstr "Szintező, legnehezebb, -70 dB zajszintpadló"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Half-wave Rectifier"
@@ -642,7 +642,7 @@ msgstr "Torzítás"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Waveshaping distortion effect"
-msgstr "Hullámformáló torzítás hatás"
+msgstr "Hullámformáló torzítási hatás"
 
 #: libraries/lib-builtin-effects/DtmfBase.cpp
 msgid "DTMF Tones"
@@ -650,14 +650,14 @@ msgstr "DTMF hangok"
 
 #: libraries/lib-builtin-effects/DtmfBase.cpp
 msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr "Olyan kéttónusú, többfrekvenciás (DTMF) hangokat állít elő, mint például amilyeneket a telefonokon lévő billentyűzet hoz létre"
+msgstr "Olyan kéttónusú, többfrekvenciás (DTMF) hangokat állít elő, amelyeket a telefonokon lévő billentyűzet hoz létre"
 
 #: libraries/lib-builtin-effects/DtmfBase.cpp
 msgid ""
 "DTMF sequence empty.\n"
 "Check ALL settings for this effect."
 msgstr ""
-"A DTMF szekvencia üres.\n"
+"A DTMF sorozat üres.\n"
 "Ellenőrizze a hatás ÖSSZES beállítását."
 
 #: libraries/lib-builtin-effects/EchoBase.cpp resources/EffectsMenuDefaults.xml
@@ -747,7 +747,7 @@ msgstr ""
 
 #: libraries/lib-builtin-effects/EqualizationCurves.cpp
 msgid "Error Saving Equalization Curves"
-msgstr "Hiba a kiegyenlítő-görbék mentésekor"
+msgstr "Hiba a kiegyenlítési görbék mentésekor"
 
 #: libraries/lib-builtin-effects/EqualizationCurvesList.cpp
 msgid "Requested curve not found, using 'unnamed'"
@@ -820,7 +820,7 @@ msgstr "Fejjel lefelé tükrözi a hangmintákat, megfordítva azok polaritásá
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy Compressor"
-msgstr "Örökölt tömörító"
+msgstr "Örökölt kompresszor"
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 msgid "Compresses the dynamic range of audio"
@@ -837,7 +837,7 @@ msgstr "Egy vagy több sáv hangerejének beállítása"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 msgid "Normalizing Loudness...\n"
-msgstr "Hangosság normalizálása\n"
+msgstr "Hangosság normalizálása…\n"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
@@ -898,7 +898,7 @@ msgstr "Zajcsökkentés"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr "Eltávolítja a háttérzajokat, mint például ventilátorok, kazettazaj vagy zümmögések"
+msgstr "Eltávolítja a háttérzajokat, például a ventilátorokat, a kazettazajokat vagy a zümmögéseket"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Steps per block are too few for the window types."
@@ -906,7 +906,7 @@ msgstr "A blokkonkénti lépések száma túl kevés az ablaktípusokhoz."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Steps per block cannot exceed the window size."
-msgstr "A blokkonkénti lépések nem léphetik túl az ablakméretet."
+msgstr "A blokkonkénti lépések nem lépheti túl az ablakméretet."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Median method is not implemented for more than four steps per window."
@@ -918,7 +918,7 @@ msgstr "Az 1. és 2. lépéshez ugyanazt az ablakméretet kell megadnia."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Warning: window types are not the same as for profiling."
-msgstr "Figyelmeztetés: az ablaktípusok nem ugyanazok mint a profilkészítésnél megadottak."
+msgstr "Figyelmeztetés: az ablaktípusok nem egyeznek meg a profilkészítésnél megadottakkal."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "All noise profile data must have the same sample rate."
@@ -951,11 +951,11 @@ msgstr "DC-eltolás eltávolítása…\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Normalizing without removing DC offset...\n"
-msgstr "Normalizálás DC-eltolás eltávolítása nélkül…\n"
+msgstr "Normalizálás a DC-eltolás eltávolítása nélkül…\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Not doing anything...\n"
-msgstr "Semmi sem történik...\n"
+msgstr "Semmi sem történik…\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #, c-format
@@ -1033,8 +1033,8 @@ msgid ""
 msgstr ""
 "Az „Időfelbontás” túl hosszú a kijelöléshez.\n"
 "\n"
-"Próbálja meg növelni a hangkijelölést legalább %.1f másodpercre,\n"
-"vagy csökkentse az 'Időfelbontás'-t kevesebb mint %.1f másodpercre."
+"Próbálja meg legalább %.1f másodpercesre növelni a hangkijelölést,\n"
+"vagy csökkentse %.1f másodperc alá az „Időfelbontás” értékét."
 
 #: libraries/lib-builtin-effects/PhaserBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -1080,7 +1080,7 @@ msgid ""
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
-"A javítás hatást a sérült hang csak nagyon rövid szakaszaira való használatára szánták (legfeljebb 128 minta).\n"
+"A javítási hatást a sérült hang csak nagyon rövid szakaszaira való használatára szánták (legfeljebb 128 minta).\n"
 "\n"
 "Nagyítson bele, és jelölje ki egy másodperc töredékét a javításhoz."
 
@@ -1105,7 +1105,7 @@ msgstr "Ismétlés"
 
 #: libraries/lib-builtin-effects/RepeatBase.cpp
 msgid "Repeats the selection the specified number of times"
-msgstr "A megadott alkalommal ismétli a kijelölést"
+msgstr "A megadott számú alkalommal ismétli a kijelölést"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
@@ -1115,7 +1115,7 @@ msgstr "Akusztikus"
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Ambience"
-msgstr "Környezeit"
+msgstr "Környezeti"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
@@ -1125,7 +1125,7 @@ msgstr "Mesterséges"
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Clean"
-msgstr "Tisztítás"
+msgstr "Tiszta"
 
 #. i18n-hint: This is the name of an effect preset
 #. i18n-hint: This is the name of an effect preset.
@@ -1613,7 +1613,7 @@ msgstr "Keverés és renderelés"
 
 #: libraries/lib-effects/MixAndRender.cpp
 msgid "Mixing and rendering tracks"
-msgstr "Sávok keverése és megjelenítése"
+msgstr "Sávok keverése és renderelése"
 
 #: libraries/lib-exceptions/InconsistencyException.cpp
 #, c-format
@@ -2070,9 +2070,8 @@ msgid "WebVTT file"
 msgstr "WebVTT-fájl"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "Exportált címkestílusok:"
+msgstr "Támogatott címkefájlok"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -2359,7 +2358,7 @@ msgstr "&Mégis"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Module Unsuitable"
-msgstr "Alkalmatlan modul"
+msgstr "Nem megfelelő modul"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 #, c-format
@@ -2478,8 +2477,8 @@ msgstr ""
 msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
-msgstr[0] "Bekapcsolja ezt a bővítményt?\n"
-msgstr[1] "Bekapcsolja ezeket a bővítményeket?\n"
+msgstr[0] "Engedélyezi ezt a bővítményt?\n"
+msgstr[1] "Engedélyezi ezeket a bővítményeket?\n"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 msgid "Enable new plug-ins"
@@ -2566,7 +2565,7 @@ msgstr "Nem található MIDI lejátszóeszköz ehhez: „%s”.\n"
 #. * minutes, seconds and samples (at the current project sample rate)
 #: libraries/lib-numeric-formats/NumericConverterFormats.cpp
 msgid "hh:mm:ss + samples"
-msgstr "óó:pp:mm + minták"
+msgstr "hh:mm:ss + minták"
 
 #. i18n-hint: Name of time display format that shows time in seconds
 #: libraries/lib-numeric-formats/NumericConverterFormats.cpp
@@ -2579,19 +2578,19 @@ msgstr "másodperc"
 #. * and seconds
 #: libraries/lib-numeric-formats/NumericConverterFormats.cpp
 msgid "hh:mm:ss"
-msgstr "óó:pp:mm"
+msgstr "hh:mm:ss"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and milliseconds (1/1000 second)
 #: libraries/lib-numeric-formats/NumericConverterFormats.cpp
 msgid "hh:mm:ss + milliseconds"
-msgstr "óó:pp:mm + ezredmásodperc"
+msgstr "hh:mm:ss + ezredmásodperc"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and hundredths of a second (1/100 second)
 #: libraries/lib-numeric-formats/NumericConverterFormats.cpp
 msgid "hh:mm:ss + hundredths"
-msgstr "óó:pp:mm + századmásodperc"
+msgstr "hh:mm:ss + századmásodperc"
 
 #. i18n-hint: Name of display format that shows frequency in hertz
 #. i18n-hint: This is the abbreviation for "Hertz", or
@@ -2611,23 +2610,23 @@ msgstr "oktávok"
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar"
-msgstr "eszköztár"
+msgstr "ütem"
 
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "beat"
-msgstr "ütem"
+msgstr "leütés"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat"
-msgstr "sáv:ütem"
+msgstr "ütem:leütés"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements. "tick"
 #. corresponds to a 16th note.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat:tick"
-msgstr "sáv:ütem:tik"
+msgstr "ütem:leütés:tik"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -2640,7 +2639,7 @@ msgstr "01000,01000 másodperc"
 #. * and milliseconds (1/1000 second)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "seconds + milliseconds"
-msgstr "másodpercek + ezredmásodpercek"
+msgstr "másodperc + ezredmásodperc"
 
 #. i18n-hint: Format string for displaying time in seconds and milliseconds
 #. * as fractional seconds. Change the comma in the middle to the 1000s separator
@@ -2663,13 +2662,13 @@ msgstr "ezredmásodperc"
 #. * locale
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s"
-msgstr "0100 ó 060 p 060 m"
+msgstr "0100 h 060 m 060 s"
 
 #. i18n-hint: Name of time display format that shows time in days, hours,
 #. * minutes and seconds
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "dd:hh:mm:ss"
-msgstr "nn:óó:pp:mm"
+msgstr "dd:hh:mm:ss"
 
 #. i18n-hint: Format string for displaying time in days, hours, minutes and
 #. * seconds. Change the 'days' to the word for days, 'h' to the abbreviation
@@ -2678,7 +2677,7 @@ msgstr "nn:óó:pp:mm"
 #. * 24 hours in a day in your locale
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 days 024 h 060 m 060 s"
-msgstr "0100 nap 024 h 060 p 060 m"
+msgstr "0100 nap 024 h 060 m 060 s"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
@@ -2689,7 +2688,7 @@ msgstr "0100 nap 024 h 060 p 060 m"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060>0100 s"
-msgstr "0100 ó 060 p 060>0100 m"
+msgstr "0100 h 060 m 060>0100 s"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "centiseconds"
@@ -2704,7 +2703,7 @@ msgstr "tizedmásodperc"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060>01000 s"
-msgstr "0100 ó 060 p 060>01000 m"
+msgstr "0100 h 060 m 060>01000 s"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -2715,7 +2714,7 @@ msgstr "0100 ó 060 p 060>01000 m"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+># samples"
-msgstr "0100 ó 060 p 060 m+># minta"
+msgstr "0100 h 060 m 060 s+># minta"
 
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
@@ -2738,7 +2737,7 @@ msgstr "01000,01000,01000 minta|#"
 #. * seconds and frames at 24 frames per second (commonly used for films)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "hh:mm:ss + film frames (24 fps)"
-msgstr "óó:pp:mm + filmképkocka (24 fps)"
+msgstr "hh:mm:ss + filmképkocka (24 fps)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames at 24 frames per second. Change the 'h' to the abbreviation
@@ -2749,13 +2748,13 @@ msgstr "óó:pp:mm + filmképkocka (24 fps)"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>24 frames"
-msgstr "0100 ó 060 p 060 m+>24 képkocka"
+msgstr "0100 h 060 m 060 s+>24 képkocka"
 
 #. i18n-hint: Name of time display format that shows time in frames (lots of
 #. * frames) at 24 frames per second (commonly used for films)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "film frames (24 fps)"
-msgstr "film képkocka (24 fps)"
+msgstr "filmképkocka (24 fps)"
 
 #. i18n-hint: Format string for displaying time in frames at 24 frames per
 #. * second. Change the comma
@@ -2770,7 +2769,7 @@ msgstr "01000,01000 képkocka|24"
 #. * Japanese TV, and very odd)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "hh:mm:ss + NTSC drop frames"
-msgstr "óó:pp:mm + NTSC eldobási képkocka"
+msgstr "hh:mm:ss + NTSC eldobási képkocka"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
@@ -2780,14 +2779,14 @@ msgstr "óó:pp:mm + NTSC eldobási képkocka"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>30 frames|N"
-msgstr "0100 ó 060 p 060 m+>30 képkocka|N"
+msgstr "0100 h 060 m 060 s+>30 képkocka|N"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at NTSC TV non-drop-frame rate (used for American /
 #. * Japanese TV, and doesn't quite match wall time
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "hh:mm:ss + NTSC non-drop frames"
-msgstr "óó:pp:mm + NTSC nem eldobási képkocka"
+msgstr "hh:mm:ss + NTSC nem eldobási képkocka"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
@@ -2798,7 +2797,7 @@ msgstr "óó:pp:mm + NTSC nem eldobási képkocka"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>030 frames| .999000999"
-msgstr "0100 ó 060 p 060 m+>030 képkocka| .999000999"
+msgstr "0100 h 060 m 060 s+>030 képkocka| .999000999"
 
 #. i18n-hint: Name of time display format that shows time in frames at NTSC
 #. * TV frame rate (used for American / Japanese TV
@@ -2819,7 +2818,7 @@ msgstr "01000,01000 képkocka|29.97002997"
 #. * seconds and frames at PAL TV frame rate (used for European TV)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "hh:mm:ss + PAL frames (25 fps)"
-msgstr "óó:pp:mm + PAL képkocka (25 fps)"
+msgstr "hh:mm:ss + PAL képkocka (25 fps)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with PAL TV frames. Change the 'h' to the abbreviation
@@ -2829,7 +2828,7 @@ msgstr "óó:pp:mm + PAL képkocka (25 fps)"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>25 frames"
-msgstr "0100 ó 060 p 060 m+>25 képkocka"
+msgstr "0100 h 060 m 060 s+>25 képkocka"
 
 #. i18n-hint: Name of time display format that shows time in frames at PAL
 #. * TV frame rate (used for European TV)
@@ -2850,7 +2849,7 @@ msgstr "01000,01000 képkocka|25"
 #. * seconds and frames at CD Audio frame rate (75 frames per second)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "hh:mm:ss + CDDA frames (75 fps)"
-msgstr "óó:pp:mm + CDDA képkocka (75 fps)"
+msgstr "hh:mm:ss + CDDA képkocka (75 fps)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with CD Audio frames. Change the 'h' to the abbreviation
@@ -2860,7 +2859,7 @@ msgstr "óó:pp:mm + CDDA képkocka (75 fps)"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>75 frames"
-msgstr "0100 ó 060 p 060 m+>75 képkocka"
+msgstr "0100 h 060 m 060 s+>75 képkocka"
 
 #. i18n-hint: Name of time display format that shows time in frames at CD
 #. * Audio frame rate (75 frames per second)
@@ -3238,7 +3237,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Nem sikerült végrehajani a projektfájl-parancsot:\n"
+"Nem sikerült végrehajtani a projektfájl-parancsot:\n"
 "\n"
 "%s"
 
@@ -3366,7 +3365,7 @@ msgstr "Nem sikerült csatolni a céladatbázist"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
-msgstr "Nem lehet gyors naplózási módra váltani"
+msgstr "Nem sikerült gyors naplózási módra váltani"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
@@ -3453,7 +3452,7 @@ msgid ""
 "This file was saved using Audacity %s.\n"
 "You are using Audacity %s. You may need to upgrade to a newer version to open this file."
 msgstr ""
-"Ez a fájl az Audacity %s verzióval lett mentve.\n"
+"Ez a fájl az Audacity %s verziójal lett mentve.\n"
 "Az Audacity %s verziót használja. A fájl megnyitásához frissítenie kell egy újabb verzióra."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -3605,12 +3604,12 @@ msgstr "Hibake&resés"
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "Beats"
-msgstr "Ütem"
+msgstr "Leütések"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "Bar"
-msgstr "Sáv"
+msgstr "Ütem"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/2"
@@ -3643,35 +3642,35 @@ msgstr "1/128"
 #. i18n-hint: The music theory "triplet"
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "Triplets"
-msgstr "Hármasok"
+msgstr "Triola"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/2 (triplets)"
-msgstr "1/2 (hármasok)"
+msgstr "1/2 (triolák)"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/4 (triplets)"
-msgstr "1/4 (hármasok)"
+msgstr "1/4 (triolák)"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/8 (triplets)"
-msgstr "1/8 (hármasok)"
+msgstr "1/8 (triolák)"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/16 (triplets)"
-msgstr "1/16 (hármasok)"
+msgstr "1/16 (triolák)"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/32 (triplets)"
-msgstr "1/32 (hármasok)"
+msgstr "1/32 (triolák)"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/64 (triplets)"
-msgstr "1/64 (hármasok)"
+msgstr "1/64 (triolák)"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/128 (triplets)"
-msgstr "1/128 (hármasok)"
+msgstr "1/128 (triolák)"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
 msgid "Video frames"
@@ -3695,7 +3694,7 @@ msgstr "CD képkockák"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 msgid "Seconds && samples"
-msgstr "Másodpercek és minták"
+msgstr "Másodperc és minták"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 #: src/prefs/TracksPrefs.cpp plug-ins/sample-data-export.ny
@@ -3911,7 +3910,7 @@ msgstr "Sötét"
 #. background colors
 #: libraries/lib-theme-resources/HighContrastThemeAsCeeCode.cpp
 msgid "High Contrast"
-msgstr "Nagy kontraszt"
+msgstr "Nagy kontrasztú"
 
 #. i18n-hint: Light meaning opposite of dark
 #: libraries/lib-theme-resources/LightThemeAsCeeCode.cpp
@@ -4357,7 +4356,7 @@ msgstr "%s.%i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
-msgstr "Nincs elég elérhető hely a kijelölés beillesztéséhez"
+msgstr "Nem érhető el elég hely a kijelölés beillesztéséhez"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "A track has a corrupted sample sequence."
@@ -4365,7 +4364,7 @@ msgstr "Egy sáv egy mintaszekvenciája sérült."
 
 #: libraries/lib-wave-track/WaveTrackUtilities.cpp
 msgid "There is not enough room available to expand the cut line"
-msgstr "Nincs elég elérhető hely a metszésvonal kibővítéséhez"
+msgstr "Nem érhető el elég hely a metszésvonal kibővítéséhez"
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -4387,7 +4386,7 @@ msgstr "Elküldi a jelentést, mely segíti munkánkat a hiba javításában?"
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 #, c-format
 msgid "All reports are anonymous. See %s for more info."
-msgstr "Az összes jelentés névtelen. További információért lásd az %s."
+msgstr "Az összes jelentés névtelen. További információért lásd: %s."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
@@ -4397,7 +4396,7 @@ msgstr "Adatvédelmi szabályzatot"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 msgid "Problem details"
-msgstr "Probléma részletei"
+msgstr "A probléma részletei"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/TagsEditor.cpp
 msgid "Comments"
@@ -4447,7 +4446,7 @@ msgstr "Helyi"
 
 #: libraries/lib-wx-init/HelpSystem.cpp
 msgid "From Internet"
-msgstr "Az Internetről"
+msgstr "Az internetről"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "Welcome!"
@@ -4638,24 +4637,22 @@ msgid "File type:"
 msgstr "Fájltípus:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "&Előző klip"
+msgstr "Előző dia"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "Következő klip"
+msgstr "Következő dia"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "%s, %d / %d klip %s"
+msgstr "%d / %d dia, %s. %s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr ""
+msgstr "%d / %d dia, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -5103,7 +5100,7 @@ msgstr "Jelenlegi kodek:"
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't determine format description for file \"%s\"."
-msgstr "FFmpeg: HIBA – Nem határozható meg a formátumleírás a következő fájlnál: \"%s\"."
+msgstr "FFmpeg: HIBA – Nem határozható meg a formátumleírás a következő fájlnál: „%s”."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate output format context."
@@ -5270,7 +5267,7 @@ msgstr "AC3-fájlok (FFmpeg)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "AMR (narrow band) Files (FFmpeg)"
-msgstr "AMR (keskeny sávú) fájlok (FFmpeg)"
+msgstr "AMR (keskenysávú) fájlok (FFmpeg)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Opus (OggOpus) Files (FFmpeg)"
@@ -5310,7 +5307,7 @@ msgstr "Logaritmikus keresés"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Configure custom FFmpeg options"
-msgstr "Egyéni FFmpeg beállítások konfigurálása"
+msgstr "Egyéni FFmpeg kapcsolók beállítása"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Preset:"
@@ -5350,7 +5347,7 @@ msgstr "Kodek:"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
-msgstr "Nem minden formátum és kodek kompatibilis. Nem minden beállítási kombináció kompatibilis minden kodekkel."
+msgstr "Nem minden formátum és kodek kompatibilis. Nem minden beállítási kombináció kompatibilis az összes kodekkel."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Formats"
@@ -5380,7 +5377,7 @@ msgid ""
 msgstr ""
 "ISO 639 3 betűs nyelvkód\n"
 "Nem kötelező\n"
-"üres - automatikus"
+"üres – automatikus"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Language:"
@@ -5388,7 +5385,7 @@ msgstr "Nyelv:"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Bit Reservoir"
-msgstr "Bit tartály"
+msgstr "Bittároló"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "VBL"
@@ -5403,7 +5400,7 @@ msgid ""
 msgstr ""
 "Kodekcímke (FOURCC)\n"
 "Nem kötelező\n"
-"üres - automatikus"
+"üres – automatikus"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Tag:"
@@ -5416,7 +5413,7 @@ msgid ""
 "0 - automatic\n"
 "Recommended - 192000"
 msgstr ""
-"Bitsebesség (bit/másodperc) - befolyásolja a kapott fájlméretet és minőséget\n"
+"Bitsebesség (bit/másodperc) – befolyásolja a kapott fájlméretet és minőséget\n"
 "Néhány kodek csak bizonyos értékeket fogad el (128k, 192k, 256k, stb.)\n"
 "0 - automatikus\n"
 "Ajánlott - 192000"
@@ -5434,8 +5431,8 @@ msgid ""
 msgstr ""
 "Teljes minőség, a különböző kodekek eltérően használják\n"
 "Vorbis esetén szükséges\n"
-"0 - automatikus\n"
-"-1 - ki (bitsebesség használata helyette)"
+"0 – automatikus\n"
+"-1 – ki (bitsebesség használata helyette)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Quality:"
@@ -7479,9 +7476,8 @@ msgid "Enter token to link your account"
 msgstr "Adja meg a tokent a fiók összekapcsolásához"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
 msgid "Sign-in and get the token"
-msgstr "A felhőbe történő mentéshez jelentkezzen be"
+msgstr "Bejelentkezés és token kérése"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -7848,7 +7844,7 @@ msgstr "Újrapróbálkozás"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
-msgstr "A folytatáshoz egy művelet szükséges az audio.com oldalon. Ha végezett, kattintson az Újrapróbálkozás gombra."
+msgstr "A folytatáshoz egy művelet szükséges az audio.com oldalon. Ha végzett, kattintson az Újrapróbálkozás gombra."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Loading..."
@@ -8097,7 +8093,8 @@ msgid "translator_credits"
 msgstr ""
 "Magyar fordítás:\n"
 "<br/>Meskó Balázs (mesko.balazs@fsf.hu), 2024-2025\n"
-"<br/>Kiss-Kálmán Dániel (kisskalmandaniel@gmail.com), 2022-2025<br/>Úr Balázs (urbalazs@gmail.com), 2014, 2015, 2016\n"
+"<br/>Kiss-Kálmán Dániel (kisskalmandaniel@gmail.com), 2022-2025\n"
+"<br/>Úr Balázs (urbalazs@gmail.com), 2014, 2015, 2016\n"
 "<br/>Koncz László (koncz.l@upcmail.hu), 2014\n"
 "<br/>Pelládi Gábor (pelladigabor@gmail.com), 2008\n"
 "<br/>Márton Balázs (documan@mailbox.hu), 2008"
@@ -8355,7 +8352,7 @@ msgstr "További információért lásd: %s."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to define a looping region."
-msgstr "Kattintás és húzás az ismétlődő terület megadásához"
+msgstr "Kattintás és húzás az ismétlődő terület megadásához."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -11675,12 +11672,11 @@ msgstr "Üdvözöl az Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
+msgstr "Audacity felhős beállításának befejezése audio.com-mal"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "What's new in Audacity"
-msgstr "Audacity %s újdonságai"
+msgstr "Audacity újdonságai"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11688,33 +11684,31 @@ msgstr "Nézd meg a videót"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "SOAP Voice Cleaner: stúdióminőségű beszédhang"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Segíts dönteni az Audacity jövőjéről"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Részvétel a felmérésben"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "Audacity indítási hiba"
+msgstr "Audacity tulajdonságok felmérő"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
-msgstr ""
+msgstr "25. évfordulós ajándéktárgyak!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit now"
-msgstr ""
+msgstr "Meglátogatás most"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our new Audacity merch store"
-msgstr "Ez nem egy Audacity projektfájl"
+msgstr "Látogasd meg új Audacity áruházunkat"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11725,9 +11719,8 @@ msgid "Visit our forum"
 msgstr "Látogasd meg fórumunkat"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "Ne jelenjen meg többet indításkor"
+msgstr "&Ne jelenjen meg többet indításkor"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -16799,7 +16792,7 @@ msgstr "Alkalmazás beállításai"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Frissítési értesítések"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16809,22 +16802,22 @@ msgstr "&Frissítések keresése"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "A frissítés-ellenőrzés hálózati kapcsolatot igényel. Az adatvédelme biztosítása érdekében az Audacity nem tárolja a személyes adatait."
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr ""
+msgstr "&Használati információk (UUID)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr ""
+msgstr "Hogy segítsen annak megértésében, hogy az emberek hogyan használják az Audacityt, minden egyes telepítéshez egy véletlenszerű azonosítót (UUID-t) állítunk elő. Ez segít nekünk a funkciók fejlesztésében és a jövőbeli frissítések tervezésében. Ez az azonosító nem tartalmaz személyazonosításra alkalmas információt."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19855,7 +19848,7 @@ msgstr "%s letöltése"
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates & usage info"
-msgstr ""
+msgstr "Alkalmazásfrissítések és használati információk"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19870,7 +19863,7 @@ msgstr "Az Audacity az alkalmazáson belül értesít, amikor letölthető egy �
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr ""
+msgstr "Használati információk"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
@@ -19998,7 +19991,7 @@ msgstr "Mérő"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Disable Silent Monitoring"
-msgstr "Csend figyelése ki"
+msgstr "Csendfigyelés kikapcsolása"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Enable Silent Monitoring"
@@ -20029,11 +20022,11 @@ msgstr ""
 
 #: src/widgets/MeterPanel.cpp
 msgid "Meter refresh rate per second [1-100]"
-msgstr "Mérő frissítési időköze másodpercben [1-100]"
+msgstr "Mérő frissítési gyakorisága másodpercenként [1-100]"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Meter refresh rate per second [1-100]: "
-msgstr "Mérő frissítési időköze másodpercben [1-100]: "
+msgstr "Mérő frissítési gyakorisága másodpercenként [1-100]: "
 
 #: src/widgets/MeterPanel.cpp
 msgid "Meter Style"
@@ -20079,11 +20072,11 @@ msgstr "A projekt a elvárttól eltérően hangozhat. %s"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
 msgid "Learn more"
-msgstr "Tudj meg többet"
+msgstr "További információk"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
-msgstr "(Használja a helyi menüt a formátum változtatásához.)"
+msgstr "(Használja a helyi menüt a formátum módosításához.)"
 
 #: src/widgets/PopupMenuTable.h
 #, c-format
@@ -20099,18 +20092,18 @@ msgstr "Nem lehet fájlokat írni a mappába: %s."
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
-msgstr "Kérem, ellenőrizd, hogy a mappa létezik, megvannak a szükséges jogosultságok, és a tárhely nem telt meg."
+msgstr "Ellenőrizze, hogy a mappa létezik, megvannak a szükséges jogosultságok, és a tárhely nem telt meg."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 #, c-format
 msgid "You can change the directory in %s."
-msgstr "Nem válthatsz mappát itt: %s."
+msgstr "Nem válthat mappát itt: %s."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Preferences > Directories"
-msgstr "Beállítások > Mappák"
+msgstr "Beállítások > Könyvtárak"
 
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
@@ -20227,7 +20220,7 @@ msgstr "Paul Licameli"
 #: plug-ins/SpectralEditShelves.ny
 #, lisp-format
 msgid "~aPlease select frequencies."
-msgstr "~aVálassz frekvenciákat."
+msgstr "~aVálasszon frekvenciákat."
 
 #: plug-ins/SpectralEditMulti.ny
 #, lisp-format
@@ -20263,7 +20256,7 @@ msgstr "Spektrális szerkesztő paraméteres EQ"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
 msgid "Gain (dB)"
-msgstr "Növelés (dB)"
+msgstr "Nyereség (dB)"
 
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
@@ -20331,7 +20324,7 @@ msgstr "Állítható elkeverés"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Type"
-msgstr "Fel-/Lekeverés típusa"
+msgstr "Elkeverés típusa"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Up"
@@ -20359,11 +20352,11 @@ msgstr "Kezdés/Vég mint"
 
 #: plug-ins/adjustable-fade.ny
 msgid "% of Original"
-msgstr "%-a eredetinek"
+msgstr "%-a az eredetinek"
 
 #: plug-ins/adjustable-fade.ny
 msgid "dB Gain"
-msgstr "db hangerő"
+msgstr "nyereség dB-ben"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Start (or end)"
@@ -20481,17 +20474,17 @@ msgstr "Csökkentse az amplitúdót, hogy lehetővé tegye a visszaállított cs
 
 #: plug-ins/crossfadeclips.ny resources/EffectsMenuDefaults.xml
 msgid "Crossfade Clips"
-msgstr "Keresztátmenetes klipek"
+msgstr "Klipek keresztátmenete"
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
-msgstr "Hiba.~%Érvénytelen kijelölés.~%Több, mint 2 hangklipet választottál."
+msgstr "Hiba.~%Érvénytelen kijelölés.~%Több, mint 2 hangklipet választott."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr "Hiba.~%Érvénytelen kijelölés.~%Üres rész a kijelölt részt elején/végén."
+msgstr "Hiba.~%Érvénytelen kijelölés.~%Üres rész a kijelölt rész elején/végén."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
@@ -20500,11 +20493,11 @@ msgstr "Hiba.~%A keresztátmenetes vágások csak egy sávon használhatók."
 
 #: plug-ins/crossfadetracks.ny resources/EffectsMenuDefaults.xml
 msgid "Crossfade Tracks"
-msgstr "Keresztátmenetes sávok"
+msgstr "Sávok keresztátmenete"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Fade TYPE"
-msgstr "Fel-/Lekeverés TÍPUSA"
+msgstr "Elkeverés TÍPUSA"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Constant Gain"
@@ -20528,7 +20521,7 @@ msgstr "Egyéni görbe"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Fade direction"
-msgstr "Elhalványítás iránya"
+msgstr "Elkeverés iránya"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Alternating Out / In"
@@ -20561,7 +20554,7 @@ msgstr "Pattogó labda"
 
 #: plug-ins/delay.ny
 msgid "Reverse Bouncing Ball"
-msgstr "Visszafelé ugráló labda"
+msgstr "Visszafelé pattogó labda"
 
 #: plug-ins/delay.ny
 msgid "Delay level per echo (dB)"
@@ -20573,15 +20566,15 @@ msgstr "Késleltetési idő (másodperc)"
 
 #: plug-ins/delay.ny
 msgid "Pitch change effect"
-msgstr "Hangmagasság-módosító hatás előnézete"
+msgstr "Hangmagasság-módosító hatás"
 
 #: plug-ins/delay.ny
 msgid "Pitch/Tempo"
-msgstr "Hangmagasság/Tempó"
+msgstr "Hangmagasság/tempó"
 
 #: plug-ins/delay.ny
 msgid "Low-quality Pitch Shift"
-msgstr "Gyenge minőségű hangmagasság-eltolás"
+msgstr "Alacsony minőségű hangmagasság-eltolás"
 
 #: plug-ins/delay.ny
 msgid "High-quality Pitch Shift"
@@ -20589,7 +20582,7 @@ msgstr "Magas minőségű hangmagasság-eltolás"
 
 #: plug-ins/delay.ny
 msgid "Pitch change per echo (semitones)"
-msgstr "Hangmagasság módosítás visszhangonként (félhangok)"
+msgstr "Hangmagasság-módosítás visszhangonként (félhangok)"
 
 #: plug-ins/delay.ny
 msgid "Number of echoes"
@@ -20601,7 +20594,7 @@ msgstr "Időtartam módosításának engedélyezése"
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
-msgstr "Azonos távolságú címkék"
+msgstr "Azonos közű címkék"
 
 #. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
@@ -20610,7 +20603,7 @@ msgstr "Címkék létrehozása ez alapján"
 
 #: plug-ins/equalabel.ny
 msgid "Number and Interval"
-msgstr "Szám és távolság"
+msgstr "Szám és köz"
 
 #: plug-ins/equalabel.ny
 msgid "Number of Labels"
@@ -20618,7 +20611,7 @@ msgstr "Címkék száma"
 
 #: plug-ins/equalabel.ny
 msgid "Label Interval"
-msgstr "Címkék távolsága"
+msgstr "Címkeköz"
 
 #: plug-ins/equalabel.ny
 msgid "Number of labels"
@@ -20626,11 +20619,11 @@ msgstr "Címkék száma"
 
 #: plug-ins/equalabel.ny
 msgid "Label interval (seconds)"
-msgstr "Címkék távolsága (másodperc)"
+msgstr "Címkeköz (másodperc)"
 
 #: plug-ins/equalabel.ny
 msgid "Length of label region (seconds)"
-msgstr "Kijelölt terület hossza (másodperc)"
+msgstr "Címketerület hossza (másodperc)"
 
 #: plug-ins/equalabel.ny
 msgid "Adjust label interval to fit length"
@@ -20643,39 +20636,39 @@ msgstr "Címkeszöveg"
 
 #: plug-ins/equalabel.ny
 msgid "Minimum number of digits in label"
-msgstr "Tizedesek minimális száma a címkében"
+msgstr "Tizedesek legkisebb száma a címkében"
 
 #: plug-ins/equalabel.ny
 msgid "None - Text Only"
-msgstr "Nincs – Csak szöveg"
+msgstr "Nincs – csak szöveg"
 
 #: plug-ins/equalabel.ny
 msgid "1 (Before Label)"
-msgstr "1 (Címke előtt)"
+msgstr "1 (címke előtt)"
 
 #: plug-ins/equalabel.ny
 msgid "2 (Before Label)"
-msgstr "2 (Címke előtt)"
+msgstr "2 (címke előtt)"
 
 #: plug-ins/equalabel.ny
 msgid "3 (Before Label)"
-msgstr "3 (Címke előtt)"
+msgstr "3 (címke előtt)"
 
 #: plug-ins/equalabel.ny
 msgid "1 (After Label)"
-msgstr "1 (Címke után)"
+msgstr "1 (címke után)"
 
 #: plug-ins/equalabel.ny
 msgid "2 (After Label)"
-msgstr "2 (Címke után)"
+msgstr "2 (címke után)"
 
 #: plug-ins/equalabel.ny
 msgid "3 (After Label)"
-msgstr "3 (Címke után)"
+msgstr "3 (címke után)"
 
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
-msgstr "Számozás indítása innen"
+msgstr "Számozás indítása innen:"
 
 #: plug-ins/equalabel.ny
 msgid "Message on completion"
@@ -20712,12 +20705,12 @@ msgstr "címkepont"
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "~a~a ~a at intervals of ~a seconds.~%"
-msgstr "~a~a ~a intervallum ~a másodperc.~%"
+msgstr "~a~a ~a intervallum, ~a másodperc.~%"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "~aRegion length = ~a seconds."
-msgstr "~aA terület hossza = ~a másodperc."
+msgstr "~aTerület hossza = ~a másodperc."
 
 #: plug-ins/highpass.ny resources/EffectsMenuDefaults.xml
 msgid "High-Pass Filter"
@@ -20840,7 +20833,7 @@ msgstr "~ah ~am ~as"
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
-msgstr "Túl sok csendet észleltünk.~%Csak az első 10000 címkét adjuk hozzá."
+msgstr "Túl sok csend észlelve.~%Csak az első 10000 címke lett hozzáadva."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
@@ -20849,7 +20842,7 @@ msgid ""
 "                 Try lowering 'Threshold level (dB)'."
 msgstr ""
 "Nem találhatók hangok.~%\n"
-"                 Próbáld csökkenteni a 'Küszöbérték (dB)' értékét."
+"                 Próbálja csökkenteni a „Küszöbérték (dB)” értékét."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
@@ -20860,11 +20853,11 @@ msgid ""
 msgstr ""
 "A hangok közötti régiók címkézéséhez~%~\n"
 "                 legalább két hangra van szükség.~%~\n"
-"                 Csak egy hangot észleltünk."
+"                 Csak egy hang észlelhető."
 
 #: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Legacy Limiter"
-msgstr "Örökségkorlátok"
+msgstr "Örökölt korlátozó"
 
 #: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
@@ -20921,7 +20914,7 @@ msgstr "Zajkapu"
 
 #: plug-ins/noisegate.ny
 msgid "Select Function"
-msgstr "Funkció kiválasztása"
+msgstr "Függvény kiválasztása"
 
 #: plug-ins/noisegate.ny
 msgid "Gate"
@@ -20933,7 +20926,7 @@ msgstr "Zajszint elemzése"
 
 #: plug-ins/noisegate.ny
 msgid "Stereo Linking"
-msgstr "Sztereó összekapcsolás"
+msgstr "Sztereó összekapcsolása"
 
 #: plug-ins/noisegate.ny
 msgid "Link Stereo Tracks"
@@ -20941,7 +20934,7 @@ msgstr "Sztereósávok összekapcsolása"
 
 #: plug-ins/noisegate.ny
 msgid "Don't Link Stereo"
-msgstr "Nem kapcsolja összes a sztereókat"
+msgstr "Ne kapcsolja össze a sztereókat"
 
 #: plug-ins/noisegate.ny
 msgid "Gate threshold (dB)"
@@ -20993,8 +20986,8 @@ msgid ""
 "Peak based on first ~a seconds ~a dB~%~\n"
 "               Suggested Threshold Setting ~a dB."
 msgstr ""
-"Csúcs az első ~a másodperc alapján ~a dB~%~\n"
-"               Javasolt küszöbérték-beállítás ~a dB."
+"Csúcs az első ~a másodperc alapján: ~a dB~%~\n"
+"               Javasolt küszöbérték-beállítás: ~a dB."
 
 #. i18n-hint: hours and minutes. Do not translate "~a".
 #: plug-ins/noisegate.ny
@@ -21012,7 +21005,7 @@ msgstr "Steve Daulton és Bill Wharrie"
 
 #: plug-ins/notch.ny
 msgid "Q (higher value reduces width)"
-msgstr "Q (nagyobb érték növeli a szélességet)"
+msgstr "Q (a nagyobb érték csökkenti a szélességet)"
 
 #: plug-ins/notch.ny
 #, lisp-format
@@ -21021,7 +21014,7 @@ msgid ""
 "               Track sample rate is ~a Hz.~%~\n"
 "               Frequency must be less than ~a Hz."
 msgstr ""
-"Hiba:~%~%Frekvencia (~a Hz) túl magas a sáv mintavételi gyakoriságához.~%~%~\n"
+"Hiba:~%~%A frekvencia (~a Hz) túl magas a sáv mintavételi gyakoriságához.~%~%~\n"
 "                 A sáv mintavételi gyakorisága ~a Hz~%~\n"
 "                 A frekvenciának ~a Hz-nél kisebbnek kell lennie."
 
@@ -21080,7 +21073,7 @@ msgstr "Figyelmeztetés.~%Néhány fájl másolása nem sikerült:~%"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
-msgstr "Bővítmény sikeren telepítetted.~%(Használd a Bővítménykezelőt a hatások engedélyezéséhez):"
+msgstr "A bővítmény telepítetve.~%(Használja a Bővítménykezelőt a hatások engedélyezéséhez):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -21088,7 +21081,7 @@ msgstr "Bővítmények frissítve:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Files copied to plug-ins folder:"
-msgstr "Bővítmények mappába másolt fájlok:"
+msgstr "Bővítmények mappájába másolt fájlok:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Not found or cannot be read:"
@@ -21100,11 +21093,11 @@ msgstr "Nem támogatott fájltípus:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Files already installed ('Allow Overwriting' disabled):"
-msgstr "A fájl már létezik ('Felülírás engedélyezése' nincs bekapcsolva):"
+msgstr "A fájl már létezik (a „Felülírás engedélyezése” nincs bekapcsolva):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Cannot be written to plug-ins folder:"
-msgstr "Nem sikerült írni a bővítmények mappába:"
+msgstr "Nem sikerült írni a bővítmények mappájába:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
@@ -21153,7 +21146,7 @@ msgstr "Tempó (bpm)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "30 - 300 beats/minute"
-msgstr "30 - 300 ütem/mérték"
+msgstr "30 - 300 ütem/perc"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Beats per bar"
@@ -21173,7 +21166,7 @@ msgstr "+/- 1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
-msgstr "A 'Ritmussáv időtartama' bekapcsolásához állítsa a 'Sávok száma értékét nullára."
+msgstr "A „Ritmussáv időtartama” bekapcsolásához állítsa a „Sávok száma” értékét nullára."
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
@@ -21189,7 +21182,7 @@ msgstr "Ritmussáv időtartama"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Used if 'Number of bars' = 0"
-msgstr "Akkor használatos, ha a 'Sávok száma' = 0"
+msgstr "Akkor használatos, ha a „Sávok száma” = 0"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Start time offset"
@@ -21253,8 +21246,8 @@ msgid ""
 "Set either 'Number of bars' or~%~\n"
 "                    'Rhythm track duration' to greater than zero."
 msgstr ""
-"Állítsa be a 'Sávok száma' vagy~%~\n"
-"                    'Ritmussáv időtartama' értékét nullánál nagyobbra."
+"Állítsa be a „Sávok száma” vagy~%~\n"
+"                    „Ritmussáv időtartama” értékét nullánál nagyobbra."
 
 #: plug-ins/rissetdrum.ny
 msgid "Risset Drum"
@@ -21286,7 +21279,7 @@ msgstr "Amplitúdó (0 - 1)"
 
 #: plug-ins/sample-data-export.ny
 msgid "Sample Data Export"
-msgstr "Mintaadat exportálása"
+msgstr "Mintaadatok exportálása"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -21298,7 +21291,7 @@ msgstr "Mérési skála"
 
 #: plug-ins/sample-data-export.ny
 msgid "Export data to"
-msgstr "Adat exportálása"
+msgstr "Adatok exportálása ide:"
 
 #: plug-ins/sample-data-export.ny
 msgid "CSV files"
@@ -21318,11 +21311,11 @@ msgstr "Mintaszám"
 
 #: plug-ins/sample-data-export.ny
 msgid "Time Indexed"
-msgstr "Idő indexelve"
+msgstr "Időindexelt"
 
 #: plug-ins/sample-data-export.ny
 msgid "Include header information"
-msgstr "Tartalmazza a fejléc információkat"
+msgstr "Tartalmazza a fejléc-információkat"
 
 #: plug-ins/sample-data-export.ny
 msgid "Minimal"
@@ -21330,7 +21323,7 @@ msgstr "Minimális"
 
 #: plug-ins/sample-data-export.ny
 msgid "Optional header text"
-msgstr "Opcionális fejlécszöveg"
+msgstr "Nem kötelező fejlécszöveg"
 
 #: plug-ins/sample-data-export.ny
 msgid "Channel layout for stereo"
@@ -21376,7 +21369,7 @@ msgstr "~%~%Jobb csatorna.~%~%"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~aData written to:~%~a"
-msgstr "~aAdat írása történt ide:~%~a"
+msgstr "~aAdatok ide írva:~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -21537,7 +21530,7 @@ msgstr "Csatornánként egy sor.~%"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left channel then Right channel on same line.~%"
-msgstr "Bal csatorna, majd jobb csatorna ugyanazon a sorban.~%"
+msgstr "Bal csatorna, majd jobb csatorna ugyanabban a sorban.~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -21748,9 +21741,3 @@ msgstr "Spektrális eszközök"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Örökölt"
-
-#~ msgid "Get AI effects..."
-#~ msgstr "MI hatások beszerzése…"
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "Elérhető a MuseHub-on"

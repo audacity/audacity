@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-29 17:54+0300\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: lee tg, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/audacity/teams/164520/ko/)\n"
@@ -2066,9 +2066,8 @@ msgid "WebVTT file"
 msgstr "WebVTT 파일"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "레이블 스타일 내보내기:"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4631,19 +4630,17 @@ msgid "File type:"
 msgstr "파일 형식:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "이전 클립(&U)"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "다음 클립(&E)"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "%s, %d / %d 클립 %s"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
@@ -7470,9 +7467,8 @@ msgid "Enter token to link your account"
 msgstr "계정을 연결하기 위한 토큰을 입력하세요"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
 msgid "Sign-in and get the token"
-msgstr "로그인하여 클라우드에 저장하기"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -11650,9 +11646,8 @@ msgid "Complete your Audacity cloud setup with audio.com"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "What's new in Audacity"
-msgstr "오데시티 %s 에서 변경된 사항"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11671,9 +11666,8 @@ msgid "Take part in survey"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "오데시티 시작 실패"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -11684,9 +11678,8 @@ msgid "Visit now"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our new Audacity merch store"
-msgstr "이 파일은 오데시티 프로젝트 파일이 아닙니다"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11697,9 +11690,8 @@ msgid "Visit our forum"
 msgstr "포럼 방문하기"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "시작시 다시 보여주지 않음"
+msgstr ""
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -21716,9 +21708,3 @@ msgstr "특수 도구"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "레거시"
-
-#~ msgid "Get AI effects..."
-#~ msgstr "AI 효과 가져오기..."
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "MuseHub에서 사용 가능"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-29 17:54+0300\n"
+"POT-Creation-Date: 2025-06-10 14:25+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/audacity/teams/164520/uk/)\n"
@@ -2069,9 +2069,8 @@ msgid "WebVTT file"
 msgstr "файл WebVTT"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "Стиль експортованих міток:"
+msgstr "Підтримуваний файл міток"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4641,24 +4640,22 @@ msgid "File type:"
 msgstr "Тип файлів:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "Поп&ередній кліп"
+msgstr "Попередній слайд"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "Н&аступний кліп"
+msgstr "Наступний слайд"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "%s, %d з %d кліпу %s"
+msgstr "Слайд %d з %d, %s. %s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr ""
+msgstr "Слайд %d з %d, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7480,9 +7477,8 @@ msgid "Enter token to link your account"
 msgstr "Введіть жетон для прив'язки вашого облікового запису"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
 msgid "Sign-in and get the token"
-msgstr "Увійдіть, щоб зберегти дані до «хмари»"
+msgstr "Увійти і отримати жетон"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -11676,12 +11672,11 @@ msgstr "Ласкаво просимо до Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
+msgstr "Завершіть ваше налаштовування хмари Audacity за допомогою audio.com"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "What's new in Audacity"
-msgstr "Нове в Audacity %s"
+msgstr "Що нового в Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11689,33 +11684,31 @@ msgstr "Переглянути відео щодо випуску"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner: студійна якість накладного звуку"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Допоможіть нам створити майбутнє Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Взяти участь в опитуванні"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "Помилка під час запуску Audacity"
+msgstr "Опитування щодо можливостей Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
-msgstr ""
+msgstr "Розпродаж товарів до 25-річчя!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit now"
-msgstr ""
+msgstr "Відвідати зараз"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our new Audacity merch store"
-msgstr "Цей файл не є файлом проєкту Audacity"
+msgstr "Відвідайте нашу нову крамницю товарів Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11726,9 +11719,8 @@ msgid "Visit our forum"
 msgstr "Відвідати наш форум"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "Не показувати цього знову під час запуску"
+msgstr "&Не показувати цього знову під час запуску"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -21758,9 +21750,3 @@ msgstr "Спектральні інструменти"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Застарілі"
-
-#~ msgid "Get AI effects..."
-#~ msgstr "Отримати ШІ-ефекти…"
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "Доступне на MuseHub"
