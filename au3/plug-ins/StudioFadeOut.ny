@@ -3,7 +3,7 @@ $version 4
 $type process
 $name (_ "Studio Fade Out")
 $author (_ "Steve Daulton")
-$release 3.0.4-1
+$release 3.7.4
 $copyright (_ "GNU General Public License v2.0 or later")
 
 ;; Produce a smooth and musical sounding fade out.
@@ -17,8 +17,8 @@ $copyright (_ "GNU General Public License v2.0 or later")
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 
-;;; sweeping low pass filter 
- (defun filter (sig dur)
+;;; sweeping low pass filter
+(defun filter (sig dur)
   (abs-env
     ;; cross-fade the filter
     (let* ((nyq-hz (/ *sound-srate* 2))
@@ -26,13 +26,13 @@ $copyright (_ "GNU General Public License v2.0 or later")
            (f-in (diff (snd-const 1 0 *sound-srate* dur) f-out)))
       (sim
         (mult f-out sig)
-        (mult f-in (lp sig (pwlv nyq-hz dur 100)))))))
+        (mult f-in (lp sig (pwlv nyq-hz dur 100 (+ dur 0.05) 100)))))))
 
 ;;; raised cosine
 (defun r-cos (dur)
   (abs-env
-    (mult 0.5 
-      (sum 1 
+    (mult 0.5
+      (sum 1
         (osc (hz-to-step (/ (* dur 2))) dur *table* 90)))))
 
 (let ((dur (get-duration 1)))
@@ -40,4 +40,4 @@ $copyright (_ "GNU General Public License v2.0 or later")
     ((< len 3) (format nil (_ "Selection too short.~%It must be more than 2 samples.")))
     ((< dur 0.2) (mult *track* (r-cos dur)))
     (t (mult (filter *track* dur)(r-cos dur)))))
-  
+
