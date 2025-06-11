@@ -122,14 +122,28 @@ function Download-SignedFiles {
             aws s3 cp $s3SignedUrl $fileSignedPath --quiet
             if ($LASTEXITCODE -eq 0) {
                 Write-Host "Successfully downloaded signed file: $s3FileName"
-                $signedFilesDownloaded += $file
-                Write-Host "Replacing original with signed file: $file"
 
-                Remove-Item -Path $file -Force
-                Rename-Item -Path $fileSignedPath -NewName $file -Force
+                # Do not trust the signing service, check the signature
+                $sig = Get-AuthenticodeSignature -FilePath $fileSignedPath
+                if ($sig.Status -eq 'Valid') {
+                    $signedFilesDownloaded += $file
+                    Write-Host "File is signed. Replacing original with signed file: $file"
 
-                Write-Host "Removing signed file from S3: $s3SignedUrl"
-                aws s3 rm $s3SignedUrl | Out-Null
+                    Remove-Item -Path $file -Force
+                    Rename-Item -Path $fileSignedPath -NewName $file -Force
+
+                    Write-Host "Removing signed file from S3: $s3SignedUrl"
+                    aws s3 rm $s3SignedUrl | Out-Null
+                } else {
+                    Write-Host "Downloaded file is not properly signed: $fileSignedPath (Status: $($sig.Status))"
+                    # Retry by re-uploading the unsigned file
+                    $s3UnsignedUrl = "s3://$s3Bucket/$s3UnsignedDir/$s3FileName"
+                    Write-Host "Re-uploading unsigned file to S3: $s3UnsignedUrl"
+                    aws s3 cp $fileSignedPath $s3UnsignedUrl | Out-Null
+                    Write-Host "Removing invalid signed file: $fileSignedPath"
+                    Remove-Item -Path $fileSignedPath -Force
+                    $allSigned = $false
+                }
             } else {
                 Write-Host "Signed file not available yet: $s3FileName"
                 $allSigned = $false
