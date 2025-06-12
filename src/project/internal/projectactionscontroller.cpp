@@ -562,10 +562,9 @@ RetVal<IAudacityProjectPtr> ProjectActionsController::loadProject(const io::path
             return ret;
         }
 
-        //! TODO AU4
-        // if (checkCanIgnoreError(ret, loadPath)) {
-        //     ret = project->load(loadPath, "" /*stylePath*/, true /*forceMode*/, format);
-        // }
+        if (checkCanIgnoreError(ret, loadPath)) {
+            ret = project->load(loadPath, true /*forceMode*/, format);
+        }
 
         if (!ret) {
             return ret;
@@ -620,6 +619,57 @@ RecentFile ProjectActionsController::makeRecentFile(IAudacityProjectPtr project)
 void ProjectActionsController::clearRecentProjects()
 {
     recentFilesController()->clearRecentFiles();
+}
+
+bool ProjectActionsController::checkCanIgnoreError(const Ret& ret, const muse::io::path_t& filepath)
+{
+    if (ret) {
+        return true;
+    }
+/*
+    //! TODO AU4 :
+    switch (static_cast<engraving::Err>(ret.code())) {
+    case engraving::Err::FileTooOld:
+    case engraving::Err::FileOld300Format:
+        return askIfUserAgreesToOpenProjectWithIncompatibleVersion(ret.text());
+    case engraving::Err::FileTooNew:
+        warnFileTooNew(filepath);
+        return configuration()->disableVersionChecking();
+    case engraving::Err::FileCorrupted:
+        return askIfUserAgreesToOpenCorruptedProject(io::filename(filepath).toString(), ret.text());
+    case engraving::Err::FileCriticallyCorrupted:
+        warnProjectCriticallyCorrupted(io::filename(filepath).toString(), ret.text());
+        return false;
+    default:
+        break;
+    }
+*/
+    warnProjectCannotBeOpened(ret, filepath);
+    return false;
+}
+
+void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const muse::io::path_t& filepath)
+{
+    std::string title = muse::mtrc("project", "Cannot read file %1").arg(io::toNativeSeparators(filepath).toString()).toStdString();
+    std::string body;
+
+    switch (ret.code()) {
+    case int(Err::FileNotFound):
+        body = muse::trc("project", "This file does not exist or cannot be accessed at the moment.");
+        break;
+    case int(Err::FileOpenError):
+        body = muse::trc("project",
+                         "This file could not be opened. Please make sure that Audacity has permission to read this file.");
+        break;
+    default:
+        if (!ret.text().empty()) {
+            body = ret.text();
+        } else {
+            body = muse::trc("project", "An error occurred while reading this file.");
+        }
+    }
+
+    interactive()->error(title, body);
 }
 
 void ProjectActionsController::exportAudio()
