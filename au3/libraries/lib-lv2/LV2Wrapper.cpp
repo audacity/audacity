@@ -22,7 +22,7 @@
 #endif
 
 #include "LV2Wrapper.h"
-#include "effects/lv2/internal/features/lv2featureslist.h"
+#include "LV2FeaturesList.h"
 #include "LV2Ports.h"
 
 #if defined(__WXMSW__)

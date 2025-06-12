@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_LV2_EFFECT_BASE__
 #define __AUDACITY_LV2_EFFECT_BASE__
 
-#include "effects/lv2/internal/features/lv2featureslist.h"
+#include "LV2FeaturesList.h"
 #include "LV2Ports.h"
 
 #include "SampleFormat.h"

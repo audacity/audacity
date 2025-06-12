@@ -580,6 +580,13 @@ if (AU_MODULE_EFFECTS_LV2)
         ${AU3_LIBRARIES}/lib-lv2/LV2Utils.h
         ${AU3_LIBRARIES}/lib-lv2/LV2Wrapper.cpp
         ${AU3_LIBRARIES}/lib-lv2/LV2Wrapper.h
+
+        ${AU3_LIBRARIES}/lib-lv2/LV2FeaturesList.cpp
+        ${AU3_LIBRARIES}/lib-lv2/LV2FeaturesList.h
+        ${AU3_LIBRARIES}/lib-lv2/LV2InstanceFeaturesList.cpp
+        ${AU3_LIBRARIES}/lib-lv2/LV2InstanceFeaturesList.h
+        ${AU3_LIBRARIES}/lib-lv2/LV2UIFeaturesList.cpp
+        ${AU3_LIBRARIES}/lib-lv2/LV2UIFeaturesList.h
     )
 endif()
 
