@@ -1,6 +1,0 @@
-# Test long literals with missing end
-@prefix :  <http://example.org/ex#> .
-:a :b """a long
-	literal
-with
-newlines

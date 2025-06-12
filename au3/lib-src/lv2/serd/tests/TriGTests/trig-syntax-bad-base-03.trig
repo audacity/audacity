@@ -1,3 +1,0 @@
-# FULL STOP used after SPARQL BASE
-BASE <http://example/> .
-{<s> <p> <o> .}

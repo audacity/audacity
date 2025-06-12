@@ -1,2 +1,0 @@
-# x53 is capital S
-<http://www.w3.org/2013/TurtleTests/\U00000053> <http://www.w3.org/2013/TurtleTests/p> <http://www.w3.org/2013/TurtleTests/o> .

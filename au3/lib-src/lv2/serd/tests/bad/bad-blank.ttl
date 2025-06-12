@@ -1,3 +1,0 @@
-@prefix eg: <http://example.org/> .
-
-_:.bad a eg:Thing .

@@ -19,7 +19,8 @@
 #if USE_LV2
 
 #include "LV2Utils.h"
-#include "LV2InstanceFeaturesList.h"
+#include "effects/lv2/internal/features/lv2featureslist.h"
+#include "effects/lv2/internal/features/lv2instancefeatureslist.h"
 
 #include "lilv/lilv.h"
 #include "lv2/core/attributes.h"

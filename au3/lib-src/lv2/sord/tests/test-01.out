@@ -1,3 +1,0 @@
-<http://example.org/base1#a> <http://example.org/base1#b> <http://example.org/base1#c> .
-<http://example.org/base2#a> <http://example.org/base2#b> <http://example.org/base2#c> .
-<http://example.org/base1#a> <http://example.org/base2#a> <http://example.org/base3#a> .

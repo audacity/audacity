@@ -1,2 +1,0 @@
-# No relative IRIs in N-Triples
-<http://example/s> <http://example/p> "foo"^^<dt> .

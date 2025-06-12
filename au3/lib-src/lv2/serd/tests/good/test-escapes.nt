@@ -1,2 +1,0 @@
-<http://example.org/thing> <http://example.org/comment> "\\\r\n\t" .
-<http://example.org/thing> <http://example.org/comment> <http://example.org/\u005C> .

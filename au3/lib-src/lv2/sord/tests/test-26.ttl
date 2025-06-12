@@ -1,4 +1,0 @@
-# comment line with no final newline test
-@prefix : <http://example.org/#> .
-:a :b :c .
-#foo

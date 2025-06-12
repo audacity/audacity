@@ -17,7 +17,7 @@
 
 #if USE_LV2
 
-#include "LV2InstanceFeaturesList.h"
+#include "effects/lv2/internal/features/lv2instancefeatureslist.h"
 #include "LV2Ports.h"
 #include "PerTrackEffect.h"
 

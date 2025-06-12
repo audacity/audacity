@@ -1,3 +1,0 @@
-@prefix p: <http://a.example/>.
-{<http://a.example/s> p:p <http://a.example/o> .}
-<http://example/graph> {<http://a.example/s> p:p <http://a.example/o> .}

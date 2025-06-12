@@ -1,4 +1,0 @@
-@prefix : <http://example.org/base#> .
-
-:c :d [] .
-_:b1 :a :b .

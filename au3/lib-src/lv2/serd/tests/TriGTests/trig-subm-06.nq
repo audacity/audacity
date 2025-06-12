@@ -1,8 +1,0 @@
-_:b1 <http://example.org/base#a> <http://example.org/base#b> .
-_:b1 <http://example.org/base#c> <http://example.org/base#d> .
-<http://example.org/base#e> <http://example.org/base#f> _:b2 .
-_:b2 <http://example.org/base#g> <http://example.org/base#h> .
-_:b3 <http://example.org/base#a> <http://example.org/base#b> <http://example/graph> .
-_:b3 <http://example.org/base#c> <http://example.org/base#d> <http://example/graph> .
-<http://example.org/base#e> <http://example.org/base#f> _:b4 <http://example/graph> .
-_:b4 <http://example.org/base#g> <http://example.org/base#h> <http://example/graph> .

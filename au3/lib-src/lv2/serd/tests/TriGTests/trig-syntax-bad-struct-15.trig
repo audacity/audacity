@@ -1,2 +1,0 @@
-# Literal as predicate
-{<http://example/s> "abc" <http://example/p>  .}

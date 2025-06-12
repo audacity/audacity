@@ -1,3 +1,0 @@
-# Bad %-sequence
-@prefix : <http://www.w3.org/2013/TurtleTests/> .
-:a%2 :p :o .

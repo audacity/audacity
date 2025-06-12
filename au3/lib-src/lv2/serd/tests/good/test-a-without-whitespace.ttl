@@ -1,6 +1,0 @@
-[a<http://example.org/>].
-[a[]].
-[a()].
-<http://example.org/s>a<http://example.org/Thing>.
-<http://example.org/s>a[].
-<http://example.org/s>a().

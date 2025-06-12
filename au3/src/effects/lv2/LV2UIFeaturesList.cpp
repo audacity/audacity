@@ -11,8 +11,8 @@
 
 **********************************************************************/
 
-#include "LV2UIFeaturesList.h"
-#include "LV2InstanceFeaturesList.h"
+#include "effects/lv2/internal/features/lv2uifeatureslist.h"
+#include "effects/lv2/internal/features/lv2instancefeatureslist.h"
 #include "lv2/instance-access/instance-access.h"
 #include <wx/window.h>
 

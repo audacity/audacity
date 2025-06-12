@@ -16,7 +16,7 @@
 
 #if USE_LV2
 
-#include "LV2FeaturesList.h"
+#include "effects/lv2/internal/features/lv2featureslist.h"
 #include "lv2_external_ui.h"
 #include <suil/suil.h>
 #include "lv2/data-access/data-access.h"

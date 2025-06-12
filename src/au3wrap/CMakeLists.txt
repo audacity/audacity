@@ -569,11 +569,7 @@ if (AU_MODULE_EFFECTS_LV2)
         ${AU3_LIBRARIES}/lib-lv2/LV2EffectBase.cpp
         ${AU3_LIBRARIES}/lib-lv2/LV2EffectBase.h
         ${AU3_LIBRARIES}/lib-lv2/lv2_external_ui.h
-        ${AU3_LIBRARIES}/lib-lv2/LV2FeaturesList.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LV2FeaturesList.h
         ${AU3_LIBRARIES}/lib-lv2/LV2Instance.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LV2InstanceFeaturesList.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LV2InstanceFeaturesList.h
         ${AU3_LIBRARIES}/lib-lv2/LV2Instance.h
         ${AU3_LIBRARIES}/lib-lv2/LV2Ports.cpp
         ${AU3_LIBRARIES}/lib-lv2/LV2Ports.h
@@ -720,10 +716,6 @@ set(MODULE_SRC ${MODULE_SRC} ${AU3_SRC})
 set(MODULE_LINK ${AU3_LINK})
 
 if (AU_MODULE_EFFECTS_LV2)
-    set(MODULE_INCLUDE ${MODULE_INCLUDE}
-        ${AU_MODULE_LV2_LV2SDK_PATH}/lv2/include
-        ${AU_MODULE_LV2_LV2SDK_PATH}/lilv/include
-    )
     set(MODULE_LINK ${MODULE_LINK} lv2sdk)
 endif()
 

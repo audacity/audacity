@@ -1,2 +1,0 @@
-# Turtle does not allow literals-as-predicates
-<http://www.w3.org/2013/TurtleTests/s> "hello" <http://www.w3.org/2013/TurtleTests/o> .

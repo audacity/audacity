@@ -1,6 +1,0 @@
-@prefix : <http://www.w3.org/2013/TurtleTests/> .
-
-:s
-	:p [
-		:p1 27.
-	] .

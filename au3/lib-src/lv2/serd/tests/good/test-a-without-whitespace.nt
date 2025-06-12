@@ -1,6 +1,0 @@
-_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/> .
-_:b2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> _:b3 .
-_:b4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
-<http://example.org/s> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Thing> .
-<http://example.org/s> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> _:b5 .
-<http://example.org/s> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .

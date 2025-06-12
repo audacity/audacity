@@ -1,3 +1,0 @@
-@prefix eg: <http://example.org/> .
-eg:s eg:p eg:o;eg:p2 eg:o2,eg:o3 .
-eg:s a<http://example.org/Thing> .

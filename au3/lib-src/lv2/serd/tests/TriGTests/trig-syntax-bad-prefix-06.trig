@@ -1,4 +1,0 @@
-# @prefix inside graph
-{
-  @prefix ex: <http://example/> .
-}

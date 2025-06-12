@@ -1,6 +1,0 @@
-<http://example.org/stuff/1.0/a> <http://example.org/stuff/1.0/b> _:b1 .
-_:b1 <http://example.org/stuff/1.0/c> _:b2 .
-_:b2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> "apple" .
-_:b2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:b3 .
-_:b3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> "banana" .
-_:b3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .

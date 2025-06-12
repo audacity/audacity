@@ -1,2 +1,0 @@
-# @prefix without prefix name .
-@prefix <http://www.w3.org/2013/TurtleTests/> .

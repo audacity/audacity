@@ -1,3 +1,0 @@
-# ~ must be escaped.
-@prefix : <http://example/> .
-{:a~b :p :o .}
