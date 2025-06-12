@@ -22,6 +22,18 @@ public:
     void setPlaybackTimeItemFormat(TimecodeFormatType format) override;
     muse::async::Notification playbackTimeItemFormatChanged() const override;
 
+    PlaybackMeterStyle::MeterStyle playbackMeterStyle() const override;
+    void setPlaybackMeterStyle(PlaybackMeterStyle::MeterStyle style) override;
+    muse::async::Notification playbackMeterStyleChanged() const override;
+
+    PlaybackMeterType::MeterType playbackMeterType() const override;
+    void setPlaybackMeterType(PlaybackMeterType::MeterType type) override;
+    muse::async::Notification playbackMeterTypeChanged() const override;
+
+    PlaybackMeterPosition::MeterPosition playbackMeterPosition() const override;
+    void setPlaybackMeterPosition(PlaybackMeterPosition::MeterPosition position) override;
+    muse::async::Notification playbackMeterPositionChanged() const override;
+
     std::vector<PlaybackQualityPrefs::PlaybackQuality> playbackQualityList() const override;
     PlaybackQualityPrefs::PlaybackQuality currentPlaybackQuality() const override;
     void setPlaybackQuality(PlaybackQualityPrefs::PlaybackQuality quality) override;

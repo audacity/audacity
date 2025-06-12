@@ -1,3 +1,4 @@
+
 /*
 * Audacity: A Digital Audio Editor
 */
@@ -15,7 +16,7 @@ Slider {
 
     property alias navigation: navCtrl
 
-    readonly property real handleWidth: 16
+    property real handleWidth: 16
     readonly property real handleHeight: handleWidth
 
     signal volumeLevelMoved(var level)
@@ -25,11 +26,11 @@ Slider {
     to: 0
     value: root.volumeLevel
     stepSize: 0.1
-    orientation: Qt.Horizontal
+    orientation: Qt.Vertical
     wheelEnabled: true
 
-    width: parent.width
-    height: handleWidth
+    height: parent.height
+    width: handleWidth
 
     opacity: enabled ? 1.0 : ui.theme.itemOpacityDisabled
 
@@ -42,9 +43,9 @@ Slider {
     QtObject {
         id: prv
 
-        readonly property real rulerLineWidth: root.width - root.handleWidth
+        readonly property real rulerLineHeight: root.height - root.handleHeight
 
-        readonly property int rulerYPos: root.height / 2
+        readonly property int rulerXPos: root.width / 2
 
         property real dragStartOffset: 0.0
     }
@@ -64,11 +65,11 @@ Slider {
 
         onNavigationEvent: function(event) {
             switch(event.type) {
-            case NavigationEvent.Left:
+            case NavigationEvent.Down:
                 root.decreaseRequested()
                 event.accepted = true
                 break
-            case NavigationEvent.Right:
+            case NavigationEvent.Up:
                 root.increaseRequested()
                 event.accepted = true
                 break
@@ -90,8 +91,8 @@ Slider {
     handle: Item {
         id: handleItem
 
-        x: root.position * prv.rulerLineWidth
-        y: prv.rulerYPos - root.handleHeight / 2
+        x: prv.rulerXPos - root.handleWidth / 2
+        y: (1.0 - root.position) * prv.rulerLineHeight
         implicitWidth: root.handleWidth
         implicitHeight: root.handleHeight
 
@@ -112,16 +113,20 @@ Slider {
             preventStealing: true // Don't let a Flickable steal the mouse
 
             onPressed: function(mouse) {
-                prv.dragStartOffset = mouse.x
+                prv.dragStartOffset = mouse.y
                 root.handlePressed()
             }
 
             onPositionChanged: function(mouse)  {
-                let mousePosInRoot = mapToItem(root, mouse.x - prv.dragStartOffset, 0).x
-                let newPosZeroToOne = mousePosInRoot / prv.rulerLineWidth
+                let mousePosInRoot = mapToItem(root, 0, mouse.y - prv.dragStartOffset).y
+                if (prv.rulerLineHeight === 0) {
+                    return;
+                }
+                let proportionFromTop = mousePosInRoot / prv.rulerLineHeight
+                let clampedProportion = Math.max(0.0, Math.min(proportionFromTop, 1.0))
+                let newRootPosition = 1.0 - clampedProportion
 
-                let newPosClamped = Math.max(0.0, Math.min(newPosZeroToOne, 1.0))
-                let localNewValue = root.valueAt(newPosClamped)
+                let localNewValue = root.valueAt(newRootPosition)
                 root.volumeLevelMoved(localNewValue)
             }
         }

@@ -30,7 +30,6 @@ import Audacity.AppShell
 import Audacity.ProjectScene
 import Audacity.Playback
 
-
 DockPage {
     id: root
 
@@ -319,6 +318,24 @@ DockPage {
                     }
                 }
             }
+        },
+
+        DockPanel {
+            objectName: pageModel.playbackMeterPanelName()
+            title: qsTrc("appshell", "Playback meter")
+
+            closable: false
+            floatable: false
+
+            width: 56
+            minimumWidth: 56
+            maximumWidth: 56
+
+            location: Location.Right
+
+            visible: false
+
+            PlaybackMeterPanel {}
         },
 
         DockPanel {

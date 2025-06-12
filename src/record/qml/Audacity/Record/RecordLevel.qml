@@ -15,12 +15,10 @@ FlatButton {
     property alias volumeLevel: volumeSlider.volumeLevel
 
     property alias leftCurrentVolumePressure: leftVolumePressure.currentVolumePressure
-    property alias leftRecentPeak: leftVolumePressure.recentPeak
-    property alias leftMaxPeak: leftVolumePressure.maxPeak
+    property alias leftCurrentRMS: leftVolumePressure.currentRMS
 
     property alias rightCurrentVolumePressure: rightVolumePressure.currentVolumePressure
-    property alias rightRecentPeak: rightVolumePressure.recentPeak
-    property alias rightMaxPeak: rightVolumePressure.maxPeak
+    property alias rightCurrentRMS: rightVolumePressure.currentRMS
 
     property NavigationPanel navigationPanel: null
     property int navigationOrder: 0
@@ -114,10 +112,10 @@ FlatButton {
 
                         spacing: 2
 
-                        VolumePressureMeter {
+                        HorizontalVolumePressureMeter {
                             id: leftVolumePressure
                         }
-                        VolumePressureMeter {
+                        HorizontalVolumePressureMeter {
                             id: rightVolumePressure
                             showRuler: true
                         }

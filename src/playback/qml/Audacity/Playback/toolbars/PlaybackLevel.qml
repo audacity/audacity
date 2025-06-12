@@ -7,7 +7,7 @@ import QtQuick.Layouts 1.15
 import Muse.UiComponents 1.0
 import Muse.Ui 1.0
 
-import "../components"
+import Audacity.Playback 1.0
 
 Item {
     id: root
@@ -15,47 +15,93 @@ Item {
     property alias volumeLevel: volumeSlider.volumeLevel
 
     property alias leftCurrentVolumePressure: leftVolumePressure.currentVolumePressure
-    property alias leftRecentPeak: leftVolumePressure.recentPeak
-    property alias leftMaxPeak: leftVolumePressure.maxPeak
+    property alias leftCurrentRMS: leftVolumePressure.currentRMS
 
     property alias rightCurrentVolumePressure: rightVolumePressure.currentVolumePressure
-    property alias rightRecentPeak: rightVolumePressure.recentPeak
-    property alias rightMaxPeak: rightVolumePressure.maxPeak
+    property alias rightCurrentRMS: rightVolumePressure.currentRMS
 
     property NavigationPanel navigationPanel: null
     property int navigationOrder: 0
 
+    property int meterStyle: PlaybackMeterStyle.Default
+    property int meterType: PlaybackMeterType.DbLog
+    property int meterPosition: PlaybackMeterPosition.TopBar
+
+    property bool isPlaying: false
+
     signal volumeLevelChangeRequested(var level)
+    signal positionChangeRequested(int position)
+    signal styleChangeRequested(int style)
+    signal typeChangeRequested(int type)
+
+    onIsPlayingChanged: {
+        if (root.isPlaying) {
+            leftVolumePressure.reset()
+            leftVolumePressure.resetClipped()
+            rightVolumePressure.reset()
+            rightVolumePressure.resetClipped();
+        }
+    }
 
     RowLayout {
         anchors.fill: parent
 
-        StyledIconLabel {
+        FlatButton {
             Layout.preferredWidth: root.height
             Layout.preferredHeight: root.height
 
-            iconCode: IconCode.AUDIO
+            icon: IconCode.AUDIO
+            accentButton: popup.isOpened
+
+            onClicked: {
+                popup.toggleOpened()
+            }
+
+            PlaybackMeterCustomisePopup {
+                id: popup
+
+                meterStyle: root.meterStyle
+                meterType: root.meterType
+                meterPosition: root.meterPosition
+
+                onPositionChangeRequested: function (position) {
+                    root.positionChangeRequested(position)
+                }
+
+                onStyleChangeRequested: function (style) {
+                    root.styleChangeRequested(style)
+                }
+
+                onTypeChangeRequested: function (type) {
+                    root.typeChangeRequested(type)
+                }
+            }
         }
 
         Item {
             Layout.fillWidth: true
             Layout.preferredHeight: root.height
+            Layout.leftMargin: volumeSlider.handleWidth / 2
 
             Column {
                 id: volumePressureContainer
 
                 anchors.fill: parent
-                anchors.topMargin: 4
+                anchors.topMargin: 2
                 anchors.rightMargin: volumeSlider.handleWidth/2 - leftVolumePressure.overloadWidth
 
                 spacing: 2
 
-                VolumePressureMeter {
+                HorizontalVolumePressureMeter {
                     id: leftVolumePressure
+                    meterStyle: root.meterStyle
+
                     enabled: root.enabled
                 }
-                VolumePressureMeter {
+                HorizontalVolumePressureMeter {
                     id: rightVolumePressure
+                    meterStyle: root.meterStyle
+
                     showRuler: true
                     enabled: root.enabled
                 }
@@ -68,7 +114,7 @@ Item {
                 anchors.leftMargin: -handleWidth/2
                 anchors.right: parent.right
                 anchors.top: parent.top
-                anchors.topMargin: 3
+                anchors.topMargin: 1
 
                 enabled: root.enabled
 
@@ -76,7 +122,41 @@ Item {
                 navigation.order: root.navigationOrder
 
                 onVolumeLevelMoved: function(level) {
+                    leftVolumePressure.reset()
+                    leftVolumePressure.resetClipped()
+                    rightVolumePressure.reset()
+                    rightVolumePressure.resetClipped()
+
                     root.volumeLevelChangeRequested(Math.round(level * 10) / 10)
+                }
+
+                onHandlePressed: function() {
+                    leftVolumePressure.reset()
+                    leftVolumePressure.resetClipped()
+                    rightVolumePressure.reset()
+                    rightVolumePressure.resetClipped()
+                }
+            }
+
+            MouseArea {
+                id: overloadClickArea
+
+                anchors.top: volumePressureContainer.top
+                anchors.bottom: volumePressureContainer.bottom
+
+                anchors.right: volumePressureContainer.right
+
+                width: leftVolumePressure.overloadWidth + 2
+
+                z: 10
+
+                enabled: (volumeSlider.handleX <= parent.width - leftVolumePressure.overloadWidth)
+
+                onClicked: {
+                    leftVolumePressure.reset()
+                    leftVolumePressure.resetClipped()
+                    rightVolumePressure.reset()
+                    rightVolumePressure.resetClipped()
                 }
             }
         }

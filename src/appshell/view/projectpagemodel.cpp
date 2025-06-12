@@ -5,11 +5,14 @@
 
 #include "internal/applicationuiactions.h"
 #include "dockwindow/idockwindow.h"
+#include "projectscene/internal/projectsceneuiactions.h"
 
 #include "log.h"
 
 using namespace au::appshell;
 using namespace muse::actions;
+
+static const muse::actions::ActionCode PLAYBACK_LEVEL_CODE("playback-level");
 
 ProjectPageModel::ProjectPageModel(QObject* parent)
     : QObject(parent)
@@ -36,6 +39,14 @@ void ProjectPageModel::init()
         dispatcher()->reg(this, actionCode, [=]() { toggleDock(dockName); });
     }
 
+    uiConfiguration()->toolConfigChanged(playbackToolBarName()).onNotify(this, [this]() {
+        updatePlaybackMeterVisibility();
+    });
+
+    playbackConfiguration()->playbackMeterPositionChanged().onNotify(this, [this]() {
+        updatePlaybackMeterVisibility();
+    });
+
     // globalContext()->currentNotationChanged().onNotify(this, [this]() {
     //     onNotationChanged();
     // });
@@ -45,7 +56,25 @@ void ProjectPageModel::init()
     // });
 
     onNotationChanged();
+    updatePlaybackMeterVisibility();
     updateDrumsetPanelVisibility();
+}
+
+void ProjectPageModel::updatePlaybackMeterVisibility()
+{
+    const auto toolConfig = uiConfiguration()->toolConfig(playbackToolBarName(),
+                                                          au::projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+    const auto it = std::find_if(toolConfig.items.begin(), toolConfig.items.end(),
+                                 [](const muse::ui::ToolConfig::Item& item) {
+        return item.action == PLAYBACK_LEVEL_CODE;
+    });
+
+    if (it != toolConfig.items.end()) {
+        const bool meterPanelVisible = it->show
+                                       && (playbackConfiguration()->playbackMeterPosition()
+                                           == playback::PlaybackMeterPosition::MeterPosition::SideBar);
+        dispatcher()->dispatch("dock-set-open", ActionData::make_arg2<QString, bool>(playbackMeterPanelName(), meterPanelVisible));
+    }
 }
 
 QString ProjectPageModel::projectToolBarName() const
@@ -81,6 +110,11 @@ QString ProjectPageModel::tracksPanelName() const
 QString ProjectPageModel::historyPanelName() const
 {
     return HISTORY_PANEL_NAME;
+}
+
+QString ProjectPageModel::playbackMeterPanelName() const
+{
+    return PLAYBACK_METER_PANEL_NAME;
 }
 
 QString ProjectPageModel::instrumentsPanelName() const

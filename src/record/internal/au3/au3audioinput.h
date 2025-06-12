@@ -25,8 +25,8 @@ public:
     void setRecordVolume(float volume) override;
     muse::async::Channel<float> recordVolumeChanged() const override;
 
-    muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> recordSignalChanges() const override;
-    muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> recordTrackSignalChanges(int64_t key) const;
+    muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordSignalChanges() const override;
+    muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> recordTrackSignalChanges(int64_t key) const;
 
 private:
     au3::Au3Project& projectRef() const;

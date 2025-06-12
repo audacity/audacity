@@ -10,6 +10,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
+#include "playback/iplaybackconfiguration.h"
 #include "record/irecordcontroller.h"
 
 namespace au::projectscene {
@@ -37,8 +38,11 @@ class TracksViewStateModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool isRecording READ isRecording NOTIFY isRecordingChanged FINAL)
     Q_PROPERTY(bool snapEnabled READ snapEnabled NOTIFY snapEnabledChanged FINAL)
 
+    Q_PROPERTY(playback::PlaybackMeterStyle::MeterStyle meterStyle READ meterStyle NOTIFY meterStyleChanged FINAL)
+
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<playback::IPlaybackController> playbackController;
+    muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
     muse::Inject<record::IRecordController> recordController;
 
 public:
@@ -53,6 +57,7 @@ public:
     bool isTrackCollapsed() const;
     bool tracksVerticalScrollLocked() const;
     int tracksVerticalScrollPadding() const;
+    playback::PlaybackMeterStyle::MeterStyle meterStyle() const;
 
     // context of user interaction
     int tracksVericalY() const;
@@ -87,6 +92,7 @@ signals:
 
     void snapEnabledChanged();
 
+    void meterStyleChanged();
 private:
     static constexpr int m_tracksVerticalScrollPadding = 228;
 

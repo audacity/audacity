@@ -38,14 +38,25 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
     });
 
     playback()->audioOutput()->playbackSignalChanges().onReceive(this,
-                                                                 [this](const audioch_t audioChNum, const audio::AudioSignalVal& newValue) {
-        if (newValue.pressure < MIN_DISPLAYED_DBFS) {
-            setAudioChannelVolumePressure(audioChNum, MIN_DISPLAYED_DBFS);
-        } else if (newValue.pressure > MAX_DISPLAYED_DBFS) {
-            setAudioChannelVolumePressure(audioChNum, MAX_DISPLAYED_DBFS);
-        } else {
-            setAudioChannelVolumePressure(audioChNum, newValue.pressure);
-        }
+                                                                 [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
+        setAudioChannelVolumePressure(audioChNum, meterSignal.peak.pressure);
+        setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
+    });
+
+    configuration()->playbackMeterPositionChanged().onNotify(this, [this]() {
+        emit meterPositionChanged();
+    });
+
+    configuration()->playbackMeterStyleChanged().onNotify(this, [this]() {
+        emit meterStyleChanged();
+    });
+
+    configuration()->playbackMeterTypeChanged().onNotify(this, [this]() {
+        emit meterTypeChanged();
+    });
+
+    controller()->isPlayingChanged().onNotify(this, [this]() {
+        emit isPlayingChanged();
     });
 
     resetAudioChannelsVolumePressure();
@@ -75,6 +86,11 @@ float PlaybackToolBarLevelItem::rightChannelPressure() const
     return m_rightChannelPressure;
 }
 
+bool PlaybackToolBarLevelItem::isPlaying() const
+{
+    return controller()->isPlaying();
+}
+
 void PlaybackToolBarLevelItem::setLeftChannelPressure(float leftChannelPressure)
 {
     if (qFuzzyCompare(m_leftChannelPressure, leftChannelPressure)) {
@@ -97,11 +113,14 @@ void PlaybackToolBarLevelItem::setRightChannelPressure(float rightChannelPressur
 
 void PlaybackToolBarLevelItem::setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue)
 {
-    if (chNum == 0) {
-        setLeftChannelPressure(newValue);
-    } else {
-        setRightChannelPressure(newValue);
-    }
+    float clampedValue = std::clamp(newValue, MIN_DISPLAYED_DBFS, MAX_DISPLAYED_DBFS);
+    chNum == 0 ? setLeftChannelPressure(clampedValue) : setRightChannelPressure(clampedValue);
+}
+
+void PlaybackToolBarLevelItem::setAudioChannelRMS(const audio::audioch_t chNum, const float newValue)
+{
+    float clampedValue = std::clamp(newValue, MIN_DISPLAYED_DBFS, MAX_DISPLAYED_DBFS);
+    chNum == 0 ? setLeftChannelRMS(clampedValue) : setRightChannelRMS(clampedValue);
 }
 
 void PlaybackToolBarLevelItem::resetAudioChannelsVolumePressure()
@@ -168,4 +187,76 @@ void PlaybackToolBarLevelItem::setRightMaxPeak(float newRightMaxPeak)
 
     m_rightMaxPeak = newRightMaxPeak;
     emit rightMaxPeakChanged();
+}
+
+float PlaybackToolBarLevelItem::leftChannelRMS() const
+{
+    return m_leftChannelRMS;
+}
+
+void PlaybackToolBarLevelItem::setLeftChannelRMS(float leftChannelRMS)
+{
+    if (qFuzzyCompare(m_leftChannelRMS, leftChannelRMS)) {
+        return;
+    }
+
+    m_leftChannelRMS = leftChannelRMS;
+    emit leftChannelRMSChanged(m_leftChannelRMS);
+}
+
+float PlaybackToolBarLevelItem::rightChannelRMS() const
+{
+    return m_rightChannelRMS;
+}
+
+void PlaybackToolBarLevelItem::setRightChannelRMS(float rightChannelRMS)
+{
+    if (qFuzzyCompare(m_rightChannelRMS, rightChannelRMS)) {
+        return;
+    }
+
+    m_rightChannelRMS = rightChannelRMS;
+    emit rightChannelRMSChanged(m_rightChannelRMS);
+}
+
+void PlaybackToolBarLevelItem::setMeterStyle(PlaybackMeterStyle::MeterStyle style)
+{
+    if (meterStyle() == style) {
+        return;
+    }
+
+    configuration()->setPlaybackMeterStyle(style);
+}
+
+PlaybackMeterStyle::MeterStyle PlaybackToolBarLevelItem::meterStyle() const
+{
+    return configuration()->playbackMeterStyle();
+}
+
+void PlaybackToolBarLevelItem::setMeterType(PlaybackMeterType::MeterType type)
+{
+    if (meterType() == type) {
+        return;
+    }
+
+    configuration()->setPlaybackMeterType(type);
+}
+
+PlaybackMeterType::MeterType PlaybackToolBarLevelItem::meterType() const
+{
+    return configuration()->playbackMeterType();
+}
+
+void PlaybackToolBarLevelItem::setMeterPosition(PlaybackMeterPosition::MeterPosition position)
+{
+    if (meterPosition() == position) {
+        return;
+    }
+
+    configuration()->setPlaybackMeterPosition(position);
+}
+
+PlaybackMeterPosition::MeterPosition PlaybackToolBarLevelItem::meterPosition() const
+{
+    return configuration()->playbackMeterPosition();
 }

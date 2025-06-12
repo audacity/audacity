@@ -13,6 +13,8 @@
 #include "context/iglobalcontext.h"
 #include "iappshellconfiguration.h"
 #include "dockwindow/idockwindowprovider.h"
+#include "ui/iuiconfiguration.h"
+#include "playback/iplaybackconfiguration.h"
 
 //! TODO AU4
 // #include "braille/ibrailleconfiguration.h"
@@ -26,6 +28,8 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<muse::dock::IDockWindowProvider> dockWindowProvider;
     muse::Inject<IAppShellConfiguration> configuration;
+    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
 
 //! TODO AU4
 //    INJECT(braille::IBrailleConfiguration, brailleConfiguration)
@@ -49,6 +53,7 @@ public:
 
     Q_INVOKABLE QString tracksPanelName() const;
     Q_INVOKABLE QString historyPanelName() const;
+    Q_INVOKABLE QString playbackMeterPanelName() const;
 
     Q_INVOKABLE QString instrumentsPanelName() const;
     Q_INVOKABLE QString inspectorPanelName() const;
@@ -71,6 +76,7 @@ private:
     void toggleDock(const QString& name);
 
     void updateDrumsetPanelVisibility();
+    void updatePlaybackMeterVisibility();
 };
 }
 

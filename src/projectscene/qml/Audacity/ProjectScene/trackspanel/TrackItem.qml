@@ -77,6 +77,25 @@ ListItemBlank {
     TracksViewStateModel {
         id: trackViewState
         trackId: root.item ? root.item.trackId : -1
+
+        onIsPlayingChanged: {
+            if (trackViewState.isPlaying) {
+                leftOrMonoVolumePressureMeter.reset()
+                leftOrMonoVolumePressureMeter.resetClipped()
+                rightVolumePressureMeter.reset()
+                rightVolumePressureMeter.resetClipped()
+            }
+        }
+
+        onIsRecordingChanged: {
+            if (trackViewState.isRecording) {
+                leftOrMonoVolumePressureMeter.resetClipped()
+                rightVolumePressureMeter.resetClipped()
+            }
+
+            leftOrMonoVolumePressureMeter.reset()
+            rightVolumePressureMeter.reset()
+        }
     }
 
     TrackContextMenuModel {
@@ -257,25 +276,33 @@ ListItemBlank {
                 id: volumePressureTapHandler
                 onTapped: {
                     rightVolumePressureMeter.reset()
+                    rightVolumePressureMeter.resetClipped()
                     leftOrMonoVolumePressureMeter.reset()
+                    leftOrMonoVolumePressureMeter.resetClipped()
                 }
             }
 
             VolumePressureMeter {
                 id: leftOrMonoVolumePressureMeter
+
                 height: root.height
+
+                meterStyle: trackViewState.meterStyle
+
                 currentVolumePressure: root.item.leftChannelPressure
-                isPlaying: trackViewState.isPlaying
-                isRecording: trackViewState.isRecording
+                currentRMS: root.item.leftChannelRMS
             }
 
             VolumePressureMeter {
                 id: rightVolumePressureMeter
+
                 visible: root.item.channelCount === 2
                 height: root.height
+
+                meterStyle: trackViewState.meterStyle
+
                 currentVolumePressure: root.item.rightChannelPressure
-                isPlaying: trackViewState.isPlaying
-                isRecording: trackViewState.isRecording
+                currentRMS: root.item.rightChannelRMS
             }
 
             states: [
