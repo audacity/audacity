@@ -39,6 +39,15 @@
                 // "--register-audio-plugin",
                 // "https://wasted.audio/software/wstd_flangr"
             ],
+            // If you need to debug a plugin, you can do something like this.
+            // (If you don't have these plugins, you'll only get a harmless warning.)
+            "initCommands": [
+                "settings set target.load-cwd-lldbinit true"
+            ],
+            "postRunCommands": [
+                "target symbols add /usr/lib/lv2/meters.lv2/meters.so",
+                "target symbols add /usr/lib/lv2/meters.lv2/meters_glui.so",
+            ],
             "cwd": "${workspaceFolder}"
         },
         {
