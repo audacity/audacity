@@ -1,3 +1,0 @@
-[submodule "waflib"]
-	path = waflib
-	url = ../../drobilla/autowaf

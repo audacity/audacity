@@ -1,4 +1,0 @@
-# Collection as Graph Name
-PREFIX : <http://example/> 
-
-() {:s :p :o}

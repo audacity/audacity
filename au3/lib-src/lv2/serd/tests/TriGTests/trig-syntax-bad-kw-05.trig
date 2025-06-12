@@ -1,2 +1,0 @@
-@prefix : <http://example/> .
-{:s true :o .}

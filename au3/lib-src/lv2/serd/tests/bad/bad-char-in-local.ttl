@@ -1,3 +1,0 @@
-@prefix eg: <http://example.org/> .
-
-eg:†bad <http://example.org/p> <http://example.org/o> .

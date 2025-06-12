@@ -1,4 +1,0 @@
-<http://example.org/#a> <http://example.org/#b> "" .
-<http://example.org/#c> <http://example.org/#d> "" .
-<http://example.org/#a> <http://example.org/#b> "" <http://example/graph> .
-<http://example.org/#c> <http://example.org/#d> "" <http://example/graph> .

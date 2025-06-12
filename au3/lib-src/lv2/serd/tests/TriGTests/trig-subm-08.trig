@@ -1,4 +1,0 @@
-@prefix : <http://example.org/stuff/1.0/> .
-{:a :b ( "apple" "banana" ) .}
-<http://example/graph> {:a :b ( "apple" "banana" ) .}
-

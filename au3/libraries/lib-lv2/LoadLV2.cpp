@@ -197,7 +197,6 @@ void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface& pluginManager
     newVar += wxT(":") + libdir.GetPath();
 
     // Tell SUIL where to find his GUI support modules
-    wxSetEnv(wxT("SUIL_MODULE_DIR"), wxT(PKGLIBDIR));
 #endif
 
     {

@@ -1,3 +1,0 @@
-@prefix : <http://example.org/ns#> .
-
-:s :p1 """test-\\""" .

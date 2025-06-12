@@ -1,2 +1,0 @@
-<http://example.org/thing> <http://example.org/label> "\u000C" .
-<http://example.org/thing> <http://example.org/label> "" .

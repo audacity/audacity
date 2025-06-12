@@ -1,6 +1,0 @@
-# Test long literal twice to ensure it does not over-quote
-@prefix :  <http://example.org/ex#> .
-{
-:a :b """first long literal""" .
-:c :d """second long literal""" .
-}

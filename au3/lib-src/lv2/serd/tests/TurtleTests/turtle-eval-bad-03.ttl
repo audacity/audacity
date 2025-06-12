@@ -1,2 +1,0 @@
-# Bad IRI : hex 3E is >
-<http://www.w3.org/2013/TurtleTests/\u003E> <http://www.w3.org/2013/TurtleTests/p> <http://www.w3.org/2013/TurtleTests/o> .

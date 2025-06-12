@@ -1,2 +1,0 @@
-<http://a.example/s> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://a.example/o> .
-<http://a.example/s> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://a.example/o> <http://example/graph> .

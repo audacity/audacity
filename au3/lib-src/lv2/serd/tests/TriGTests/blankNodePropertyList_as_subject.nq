@@ -1,4 +1,0 @@
-_:b1 <http://a.example/p> <http://a.example/o> .
-_:b1 <http://a.example/p2> <http://a.example/o2> .
-_:b2 <http://a.example/p> <http://a.example/o> <http://example/graph> .
-_:b2 <http://a.example/p2> <http://a.example/o2> <http://example/graph> .

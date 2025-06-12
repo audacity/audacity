@@ -1,7 +1,0 @@
-prefix=@PREFIX@
-includedir=@INCLUDEDIR@
-
-Name: LV2
-Version: @VERSION@
-Description: An extensible audio plugin interface.
-Cflags: -I${includedir}

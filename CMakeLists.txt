@@ -117,8 +117,9 @@ option(AU_BUILD_EFFECTS_TESTS "Build effects tests" ON)
 option(AU_MODULE_EFFECTS_VST "Build audacity vst module" ON)
 set(AU_MODULE_VST_VST3_SDK_PATH "" CACHE PATH "[optional] Path to VST3_SDK. SDK version >= ${VST3_SDK_VERSION} required")
 
-option(AU_MODULE_EFFECTS_LV2 "Build audacity lv2 module" ON)
-set(AU_MODULE_LV2_LV2SDK_PATH "" CACHE PATH "[optional] Path to lv2 SDK. lilv version >= 0.24.26 required")
+if (OS_IS_LIN)
+    option(AU_MODULE_EFFECTS_LV2 "Build audacity lv2 module" ON)
+endif(OS_IS_LIN)
 
 option(AU_USE_FFMPEG "Build mod-ffmpeg module" ON)
 if (AU_USE_FFMPEG)

@@ -1,4 +1,0 @@
-@prefix : <http://example.org/base#> .
-
-:subj :pred [ a :FirstThing ] ;
-      :pred [ a :SecondThing ] .

@@ -1,5 +1,0 @@
-@prefix : <http://example/> .
-{:a :b :c.}
-:G {:a :b :d.}
-{:a :b :e.}
-:G {:a :b :f.}

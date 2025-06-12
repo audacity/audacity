@@ -1,2 +1,0 @@
-PREFIX p: <http://a.example/>
-p:s <http://a.example/p> <http://a.example/o> .

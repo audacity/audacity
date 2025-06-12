@@ -1,6 +1,0 @@
-<http://drobilla.net/sw/serd/tests/good/a/b/c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Thing> .
-<http://drobilla.net/sw/serd/tests> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Thing> .
-<http://drobilla.net/sw/serd/tests/good/test-rel.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Thing> .
-<http://drobilla.net/sw/serd/tests/good/test-not.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Thing> .
-<http://drobilla.net/sw/serd/tests/good/a/b/c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Thing> .
-<http://www.w3.org/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Thing> .
