@@ -490,6 +490,7 @@ Item {
 
         anchors.top: root.top
         anchors.bottom: root.bottom
+        anchors.bottomMargin: sep.thickness
 
         visible: root.isDataSelected
         color: "#ABE7FF"
