@@ -59,7 +59,7 @@ const void* MemoryStream::GetData() const
     return mLinearData.data();
 }
 
-const size_t MemoryStream::GetSize() const noexcept
+size_t MemoryStream::GetSize() const noexcept
 {
     return mDataSize;
 }

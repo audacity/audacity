@@ -15,7 +15,7 @@ import Audacity.Vst
 EffectStyledDialogView {
     id: root
 
-    property var instanceId
+    property alias instanceId: viewerModel.instanceId
     property int effectFamily: EffectFamily.Unknown
 
     QtObject {
@@ -25,9 +25,9 @@ EffectStyledDialogView {
         property int separatorHeight: effectFamily == EffectFamily.Builtin ? separator.height + root.margins : 0
     }
 
-    title: prv.viewer ? prv.viewer.title : ""
+    title: viewerModel.title
 
-    minimumWidth: 250
+    minimumWidth: effectFamily === EffectFamily.LV2 ? 500 : 250
     implicitWidth: viewerLoader.width
     implicitHeight: presetsBar.height + viewerLoader.height + btnBarLoader.height + margins * 2 + prv.separatorHeight
 
@@ -54,6 +54,10 @@ EffectStyledDialogView {
         // Delay loading of ButtonBox because it needs to know the final width before executing its layout
         // (which it only does once)
         btnBarLoader.sourceComponent = bboxComponent
+    }
+
+    EffectViewerDialogModel {
+        id: viewerModel
     }
 
     Column {
@@ -87,6 +91,7 @@ EffectStyledDialogView {
             id: lv2ViewerComp
             Lv2Viewer {
                 instanceId: root.instanceId
+                title: root.title
             }
         }
 

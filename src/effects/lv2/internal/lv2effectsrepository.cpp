@@ -20,6 +20,10 @@ namespace {
 muse::String effectTitle(const muse::io::path_t& path)
 {
     const LilvPlugin* plugin = ::LV2EffectsModule::GetPlugin(path.c_str());
+    if (!plugin) {
+        // Plugin not found, maybe it was removed.
+        return {};
+    }
     return muse::String { lilv_node_as_string(lilv_plugin_get_name(plugin)) };
 }
 }

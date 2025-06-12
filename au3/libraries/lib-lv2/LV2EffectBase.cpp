@@ -21,6 +21,7 @@
 #endif
 
 #include "LV2EffectBase.h"
+#include "LV2PluginId.h"
 #include "LV2Instance.h"
 #include "LV2Wrapper.h"
 #include "ConfigInterface.h"
@@ -38,7 +39,7 @@ LV2EffectBase::~LV2EffectBase() = default;
 
 PluginPath LV2EffectBase::GetPath() const
 {
-    return LilvString(lilv_plugin_get_uri(&mPlug));
+    return LV2PluginId{ &mPlug }.Serialize();
 }
 
 ComponentInterfaceSymbol LV2EffectBase::GetSymbol() const

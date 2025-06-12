@@ -3,46 +3,76 @@
  */
 import QtQuick
 
+import Muse.UiComponents
+import Muse.Ui
+
+import Audacity.Effects
 import Audacity.Lv2
 
 Rectangle {
 
     id: root
 
-    property string instanceId: ""
+    // in
+    property alias instanceId: model.instanceId
+    property alias effectState: model.effectState
+    property alias title: model.title
 
-    property string title: model.contentItem ? model.contentItem.title : ""
-    property bool isApplyAllowed: model.contentItem ? model.contentItem.isApplyAllowed : false
-
-    signal closeRequested()
-
+    implicitWidth: textItem.width
+    implicitHeight: textItem.height
     color: ui.theme.backgroundPrimaryColor
 
-    implicitWidth: model.contentItem ? model.contentItem.implicitWidth : 450
-    implicitHeight: model.contentItem ? model.contentItem.implicitHeight : 200
-
-    width: implicitWidth
-    height: implicitHeight
-
     Component.onCompleted: {
-        model.load(root.instanceId, root)
+        model.init()
+        Qt.callLater(manageMenuModel.load)
     }
 
-    function manage(parent) {
-        if (model.contentItem) {
-            model.contentItem.manage(parent)
-        }
+    Component.onDestruction: {
+        model.deinit()
     }
 
     function preview() {
-        if (model.contentItem) {
-            model.contentItem.preview()
+       model.preview()
+    }
+
+    function manage(parent) {
+        var px = parent.x
+        var py = parent.y + parent.height
+        var pos = mapFromItem(parent, px, py)
+
+        menuLoader.show(pos, manageMenuModel)
+    }
+
+    EffectManageMenu {
+        id: manageMenuModel
+        instanceId: model.instanceId
+    }
+
+    ContextMenuLoader {
+        id: menuLoader
+
+        onHandleMenuItem: function(itemId) {
+            manageMenuModel.handleMenuItem(itemId)
         }
     }
 
     Lv2ViewModel {
         id: model
+        onExternalUiClosed: {
+            window.close()
+        }
+    }
 
-        onCloseRequested: root.closeRequested()
+    Text {
+        id: textItem
+        visible: model.unsupportedUiReason.length > 0
+        width: visible ? 300 : 0
+        height: visible ? 100 : 0
+        anchors.centerIn: parent
+        text: "No available UI:\n" + model.unsupportedUiReason + "\n(Plain UI not implemented yet)"
+        color: ui.theme.fontPrimaryColor
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+        wrapMode: Text.WordWrap
     }
 }

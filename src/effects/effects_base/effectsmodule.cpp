@@ -22,6 +22,7 @@
 
 #include "view/effectmanagemenu.h"
 #include "view/effectsuiengine.h"
+#include "view/effectviewerdialogmodel.h"
 #include "view/realtimeeffectviewerdialogmodel.h"
 
 using namespace au::effects;
@@ -72,6 +73,7 @@ void EffectsModule::registerResources()
 void EffectsModule::registerUiTypes()
 {
     qmlRegisterType<EffectManageMenu>("Audacity.Effects", 1, 0, "EffectManageMenu");
+    qmlRegisterType<EffectViewerDialogModel>("Audacity.Effects", 1, 0, "EffectViewerDialogModel");
     qmlRegisterType<RealtimeEffectViewerDialogModel>("Audacity.Effects", 1, 0, "RealtimeEffectViewerDialogModel");
     qmlRegisterUncreatableType<EffectFamilies>("Audacity.Effects", 1, 0, "EffectFamily", "Not creatable from QML");
 }

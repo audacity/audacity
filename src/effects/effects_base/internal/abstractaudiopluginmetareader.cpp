@@ -1,4 +1,5 @@
 #include "abstractaudiopluginmetareader.h"
+#include "effecterrors.h"
 
 #include "libraries/lib-components/PluginProvider.h"
 #include "libraries/lib-strings/TranslatableString.h"
@@ -95,6 +96,11 @@ muse::RetVal<muse::audio::AudioResourceMetaList> AbstractAudioPluginMetaReader::
     if (!ok) {
         LOGE() << "error: " << errorStr;
         return make_ret(muse::Ret::Code::InternalError); //! todo
+    }
+
+    if (std::none_of(descriptors.begin(), descriptors.end(),
+                     [](const PluginDescriptor& desc) { return desc.IsValid(); })) {
+        return effects::make_ret(effects::Err::EffectLoadFailed);
     }
 
     muse::audio::AudioResourceMetaList metaList;

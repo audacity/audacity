@@ -65,6 +65,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/effectmanagemenu.h
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectviewerdialogmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectviewerdialogmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.h
     )

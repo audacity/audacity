@@ -15,21 +15,18 @@ muse::audio::AudioResourceType Lv2PluginMetaReader::metaType() const
     return muse::audio::AudioResourceType::Lv2Plugin;
 }
 
-void Lv2PluginMetaReader::doInit(const muse::IApplication::RunMode& mode)
+void Lv2PluginMetaReader::doInit(const muse::IApplication::RunMode&)
 {
-    if (mode == muse::IApplication::RunMode::AudioPluginRegistration) {
-        m_module.InitializePluginRegistration();
-    } else {
-        m_module.Initialize();
-    }
+    m_module.Initialize();
 }
 
 bool Lv2PluginMetaReader::canReadMeta(const muse::io::path_t& path) const
 {
-    const wxString wxPluginPath{ path.toStdString() };
+    const wxString wxPath{ path.c_str() };
+    m_module.LoadBundle(wxPath);
     const std::vector<wxString> paths = m_module.FindModulePaths(PluginManager::Get());
     return std::any_of(paths.begin(), paths.end(), [&](const wxString& modulePath) {
-        return wxPluginPath == modulePath;
+        return wxPath == modulePath;
     });
 }
 }

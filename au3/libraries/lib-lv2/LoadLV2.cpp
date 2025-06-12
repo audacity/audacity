@@ -22,6 +22,7 @@ Functions that find and load all LV2 plugins on the system.
 #endif
 
 #include "LoadLV2.h"
+#include "LV2PluginId.h"
 #include "ModuleManager.h"
 
 #include <cstdlib>
@@ -118,11 +119,16 @@ bool LV2EffectsModule::Initialize()
     return true;
 }
 
-bool LV2EffectsModule::InitializePluginRegistration()
+void LV2EffectsModule::LoadBundle(const PluginPath& path) const
 {
-    Initialize();
-    lilv_world_load_all(LV2Symbols::gWorld);
-    return true;
+    const std::optional<LV2PluginId> id = LV2PluginId::Deserialize(path.ToStdString());
+    if (!id) {
+        wxLogError(_("Invalid LV2 plugin path: %s"), path);
+        return;
+    }
+
+    LilvNodePtr node{ lilv_new_uri(LV2Symbols::gWorld, id->bundleUri.c_str()) };
+    lilv_world_load_bundle(LV2Symbols::gWorld, node.get());
 }
 
 void LV2EffectsModule::Terminate()
@@ -233,23 +239,25 @@ PluginPaths LV2EffectsModule::FindModulePaths(PluginManagerInterface&) const
         LilvNodePtr name{ lilv_plugin_get_name(plug) };
 
         // Bypass unsupported plugin types
+        const auto pluginUri = lilv_node_as_string(lilv_plugin_get_uri(plug));
+
         using namespace LV2Symbols;
         if (lilv_node_equals(cls, node_InstrumentPlugin)
             || lilv_node_equals(cls, node_MIDIPlugin)
             || lilv_node_equals(cls, node_MathConstants)
             || lilv_node_equals(cls, node_MathFunctions)) {
-            wxLogInfo(wxT("LV2 plugin '%s' has unsupported type '%s'"), lilv_node_as_string(lilv_plugin_get_uri(plug)),
+            wxLogInfo(wxT("LV2 plugin '%s' has unsupported type '%s'"), pluginUri,
                       lilv_node_as_string(cls));
             continue;
         }
 
         // If it doesn't have a name or has no ports, then it's not valid
         if (!name || !lilv_plugin_get_port_by_index(plug, 0)) {
-            wxLogInfo(wxT("LV2 plugin '%s' is invalid"), lilv_node_as_string(lilv_plugin_get_uri(plug)));
+            wxLogInfo(wxT("LV2 plugin '%s' is invalid"), pluginUri);
             continue;
         }
 
-        plugins.push_back(LilvString(lilv_plugin_get_uri(plug)));
+        plugins.push_back(LV2PluginId { plug }.Serialize());
     }
 
     return plugins;
@@ -335,7 +343,11 @@ std::unique_ptr<PluginProvider::Validator> LV2EffectsModule::MakeValidator() con
 const LilvPlugin* LV2EffectsModule::GetPlugin(const PluginPath& path)
 {
     using namespace LV2Symbols;
-    if (LilvNodePtr uri{ lilv_new_uri(gWorld, path.ToUTF8()) }) {
+    const std::optional<LV2PluginId> info = LV2PluginId::Deserialize(path.ToStdString());
+    if (!info) {
+        return nullptr;
+    }
+    if (LilvNodePtr uri{ lilv_new_uri(gWorld, info->pluginUri.c_str()) }) {
         // lilv.h says returns from the following two functions don't need freeing
         return lilv_plugins_get_by_uri(
             lilv_world_get_all_plugins(gWorld), uri.get());
