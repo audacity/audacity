@@ -8,19 +8,20 @@ import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.Effects
+import Audacity.Lv2
 import Audacity.Vst
 
 EffectStyledDialogView {
     id: root
 
     property var instanceId
-    property bool isVst: false
+    property int effectFamily: EffectFamily.Unknown
 
     QtObject {
         id: prv
         property alias viewer: viewerLoader.item
-        property bool isApplyAllowed: isVst || (viewer && viewer.isApplyAllowed)
-        property int separatorHeight: isVst ? 0 : separator.height + root.margins
+        property bool isApplyAllowed: effectFamily != EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
+        property int separatorHeight: effectFamily == EffectFamily.Builtin ? separator.height + root.margins : 0
     }
 
     title: prv.viewer ? prv.viewer.title : ""
@@ -29,11 +30,23 @@ EffectStyledDialogView {
     implicitWidth: viewerLoader.width
     implicitHeight: presetsBar.height + viewerLoader.height + btnBarLoader.height + margins * 2 + prv.separatorHeight
 
-    margins: isVst ? 4 : 16
+    margins: effectFamily == EffectFamily.Builtin ? 16 : 4
 
     onWindowChanged: {
         // Wait until the window is set: VstView needs it for intialization
-        viewerLoader.sourceComponent = isVst ? vstViewerComp : builtinViewerComp
+        switch (effectFamily) {
+            case EffectFamily.Builtin:
+                viewerLoader.sourceComponent = builtinViewerComp
+                break
+            case EffectFamily.LV2:
+                viewerLoader.sourceComponent = lv2ViewerComp
+                break
+            case EffectFamily.VST3:
+                viewerLoader.sourceComponent = vstViewerComp
+                break
+            default:
+                viewerLoader.sourceComponent = null
+        }
     }
 
     Component.onCompleted: {
@@ -59,12 +72,19 @@ EffectStyledDialogView {
 
         SeparatorLine {
             id: separator
-            visible: !isVst
+            visible: effectFamily == EffectFamily.Builtin
         }
 
         Component {
             id: builtinViewerComp
             EffectsViewer {
+                instanceId: root.instanceId
+            }
+        }
+
+        Component {
+            id: lv2ViewerComp
+            Lv2Viewer {
                 instanceId: root.instanceId
             }
         }

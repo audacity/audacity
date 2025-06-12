@@ -156,7 +156,7 @@ void BuiltinCommandsModule::AutoRegisterPlugins(PluginManagerInterface& pm)
     }
 }
 
-PluginPaths BuiltinCommandsModule::FindModulePaths(PluginManagerInterface&)
+PluginPaths BuiltinCommandsModule::FindModulePaths(PluginManagerInterface&) const
 {
     // Not really libraries
     PluginPaths names;

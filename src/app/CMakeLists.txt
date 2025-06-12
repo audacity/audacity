@@ -87,6 +87,7 @@ set(LINK_LIB
     au3wrap
     context
     effects_vst
+    effects_lv2
     project
     projectscene
     audio
@@ -104,7 +105,6 @@ if (AU_MODULE_EFFECTS_VST)
 endif()
 
 if (AU_MODULE_EFFECTS_LV2)
-    list(APPEND LINK_LIB effects_lv2)
     add_definitions(-DAU_MODULE_EFFECTS_LV2)
 endif()
 
