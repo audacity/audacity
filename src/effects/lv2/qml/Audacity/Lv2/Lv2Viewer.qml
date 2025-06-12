@@ -3,46 +3,61 @@
  */
 import QtQuick
 
+import Muse.UiComponents
+
+import Audacity.Effects
 import Audacity.Lv2
 
 Rectangle {
 
     id: root
 
-    property string instanceId: ""
+    // in
+    property alias instanceId: model.instanceId
 
-    property string title: model.contentItem ? model.contentItem.title : ""
-    property bool isApplyAllowed: model.contentItem ? model.contentItem.isApplyAllowed : false
-
-    signal closeRequested()
+    // out
+    property alias title: model.title
 
     color: ui.theme.backgroundPrimaryColor
 
-    implicitWidth: model.contentItem ? model.contentItem.implicitWidth : 450
-    implicitHeight: model.contentItem ? model.contentItem.implicitHeight : 200
-
-    width: implicitWidth
-    height: implicitHeight
+    implicitWidth: view.implicitWidth
+    implicitHeight: view.implicitHeight
 
     Component.onCompleted: {
-        model.load(root.instanceId, root)
-    }
-
-    function manage(parent) {
-        if (model.contentItem) {
-            model.contentItem.manage(parent)
-        }
+        model.init()
+        view.init()
+        Qt.callLater(manageMenuModel.load)
     }
 
     function preview() {
-        if (model.contentItem) {
-            model.contentItem.preview()
+       model.preview()
+    }
+
+    function manage(parent) {
+        var px = parent.x
+        var py = parent.y + parent.height
+        var pos = mapFromItem(parent, px, py)
+
+        menuLoader.show(pos, manageMenuModel)
+    }
+
+    EffectManageMenu {
+        id: manageMenuModel
+        instanceId: view.instanceId
+    }
+
+    ContextMenuLoader {
+        id: menuLoader
+
+        onHandleMenuItem: function(itemId) {
+            manageMenuModel.handleMenuItem(itemId)
         }
     }
 
     Lv2ViewModel {
         id: model
-
-        onCloseRequested: root.closeRequested()
+        onExternalUiClosed: {
+            window.close()
+        }
     }
 }

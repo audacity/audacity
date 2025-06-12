@@ -21,8 +21,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2viewlauncher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2viewlauncher.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/lv2view.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/lv2view.h
     ${CMAKE_CURRENT_LIST_DIR}/view/lv2viewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/lv2viewmodel.h
 )
