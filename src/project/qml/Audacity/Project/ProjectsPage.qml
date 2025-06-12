@@ -326,22 +326,24 @@ FocusScope {
             accessible.name: qsTrc("project", "Projects actions")
         }
 
-        FlatButton {
-            anchors.left: parent.left
-            anchors.leftMargin: prv.sideMargin
-            anchors.verticalCenter: parent.verticalCenter
+        //! AU4: if we want to enable this then we need to solve the problem of two other buttons
+        //       overlapping this one when the window size is minimum
+//        FlatButton {
+//            anchors.left: parent.left
+//            anchors.leftMargin: prv.sideMargin
+//            anchors.verticalCenter: parent.verticalCenter
 
-            navigation.name: "ProjectManager"
-            navigation.panel: navBottomPanel
-            navigation.column: 1
+//            navigation.name: "ProjectManager"
+//            navigation.panel: navBottomPanel
+//            navigation.column: 1
 
-            minWidth: 216
-            text: qsTrc("project", "Project manager (online)")
+//            minWidth: 216
+//            text: qsTrc("project", "Project manager (online)")
 
-            onClicked: {
-                projectsPageModel.openProjectManager()
-            }
-        }
+//            onClicked: {
+//                projectsPageModel.openProjectManager()
+//            }
+//        }
 
         Row {
             anchors.right : parent.right
