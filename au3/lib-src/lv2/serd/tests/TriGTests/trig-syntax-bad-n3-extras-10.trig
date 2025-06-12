@@ -1,3 +1,0 @@
-# <= is not Turtle
-@prefix : <http://example/> .
-{:s <= :o .}

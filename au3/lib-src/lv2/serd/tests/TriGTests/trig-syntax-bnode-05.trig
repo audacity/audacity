@@ -1,2 +1,0 @@
-@prefix : <http://example/> .
-{[ :q1 :o1 ; :q2 :o2 ] :p :o .}

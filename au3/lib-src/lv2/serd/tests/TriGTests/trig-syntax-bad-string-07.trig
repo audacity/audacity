@@ -1,3 +1,0 @@
-# Long literal with 4'
-@prefix : <http://example/> .
-{:s :p '''abc''''@en .}

@@ -1,5 +1,0 @@
-# comment line with no final newline test
-@prefix : <http://example.org/#> .
-{:a :b :c .}
-<http://example/graph> {:a :b :c .}
-#foo

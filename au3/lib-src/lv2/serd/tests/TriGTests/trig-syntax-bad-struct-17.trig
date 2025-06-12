@@ -1,2 +1,0 @@
-# BNode as predicate
-{<http://example/s> _:a <http://example/p>  .}

@@ -3,225 +3,185 @@
 #
 declare_module(lv2sdk)
 
-message(STATUS "AU_MODULE_LV2_LV2SDK_PATH: ${AU_MODULE_LV2_LV2SDK_PATH}")
+FetchContent_Declare(
+   lv2
+   GIT_REPOSITORY https://gitlab.com/lv2/lv2.git
+   # The latest tag, v1.18.10, doesn't have the Qt6UI type yet,
+   # which we want to give a chance to.
+   GIT_TAG 4b8760cec9636a1d9757afa79ceee2111b86e98b
+)
+FetchContent_MakeAvailable(lv2)
 
-if(AU_MODULE_LV2_LV2SDK_PATH)
-    set(LV2SDK_PATH ${AU_MODULE_LV2_LV2SDK_PATH})
-else()
-    set(LV2SDK_PATH ${CMAKE_SOURCE_DIR}/au3/lib-src/lv2)
-endif()
+set( LILV_VERSION 0.24.26 )
+FetchContent_Declare(
+   lilv
+   GIT_REPOSITORY https://gitlab.com/lv2/lilv.git
+   GIT_TAG v${LILV_VERSION}
+)
+FetchContent_MakeAvailable(lilv)
 
-message(STATUS "LV2SDK_PATH: ${LV2SDK_PATH}")
+FetchContent_Declare(
+   zix
+   GIT_REPOSITORY https://github.com/drobilla/zix.git
+   GIT_TAG v0.6.2
+)
+FetchContent_MakeAvailable(zix)
+   
+set( SORD_VERSION 0.16.18 )
+FetchContent_Declare(
+   sord
+   GIT_REPOSITORY https://github.com/drobilla/sord.git
+   GIT_TAG v${SORD_VERSION}
+)
+FetchContent_MakeAvailable(sord)
 
+set( SERD_VERSION 0.32.4 )
+FetchContent_Declare(
+   serd
+   GIT_REPOSITORY https://github.com/drobilla/serd.git
+   GIT_TAG v${SERD_VERSION}
+)
+FetchContent_MakeAvailable(serd)
 
-set(_PRVDIR ${CMAKE_CURRENT_BINARY_DIR}/private)
-set(_PUBDIR ${CMAKE_CURRENT_BINARY_DIR}/public)
-set(_DEST ${CMAKE_CURRENT_BINARY_DIR}/lib)
-set(_INTDIR ${CMAKE_CURRENT_BINARY_DIR})
-set(_LIBDIR ${CMAKE_INSTALL_LIBDIR} )
+set( SRATOM_VERSION 0.6.18 )
+FetchContent_Declare(
+   sratom
+   GIT_REPOSITORY https://gitlab.com/lv2/sratom.git
+   GIT_TAG v${SRATOM_VERSION}
+)
+FetchContent_MakeAvailable(sratom)
 
-if (OS_IS_WIN)
-   set(_PKGLIB "")
-elseif(OS_IS_MAC)
-   set(_PKGLIB audacity.app/Contents/${_APPDIR}/Frameworks)
-else()
-   set(_PKGLIB ${_LIBDIR}/audacity)
-endif()
+set( SUIL_VERSION 0.10.22 )
+FetchContent_Declare(
+   suil
+   GIT_REPOSITORY https://gitlab.com/lv2/suil.git
+   GIT_TAG v${SUIL_VERSION}
+)
+FetchContent_MakeAvailable(suil)
 
 set( SOURCES
    PRIVATE
 
+      # zix
+      ${zix_SOURCE_DIR}/src/allocator.c
+      ${zix_SOURCE_DIR}/src/bump_allocator.c
+      ${zix_SOURCE_DIR}/src/digest.c
+      ${zix_SOURCE_DIR}/src/errno_status.h
+      ${zix_SOURCE_DIR}/src/hash.c
+      ${zix_SOURCE_DIR}/src/path.c
+      ${zix_SOURCE_DIR}/src/status.c
+      ${zix_SOURCE_DIR}/src/system.c
+      ${zix_SOURCE_DIR}/src/tree.c
+      ${zix_SOURCE_DIR}/src/zix_config.h
+      ${zix_SOURCE_DIR}/src/btree.c
+      ${zix_SOURCE_DIR}/src/errno_status.c
+      ${zix_SOURCE_DIR}/src/filesystem.c
+      ${zix_SOURCE_DIR}/src/index_range.h
+      ${zix_SOURCE_DIR}/src/path_iter.h
+      ${zix_SOURCE_DIR}/src/ring.c
+      ${zix_SOURCE_DIR}/src/string_view.c
+      ${zix_SOURCE_DIR}/src/system.h
+      # We only target Linux for now, but the darwin and win32 source files are
+      # available if needed.
+      ${zix_SOURCE_DIR}/src/posix/environment_posix.c
+      ${zix_SOURCE_DIR}/src/posix/filesystem_posix.c
+      ${zix_SOURCE_DIR}/src/posix/sem_posix.c
+      ${zix_SOURCE_DIR}/src/posix/system_posix.c
+      ${zix_SOURCE_DIR}/src/posix/thread_posix.c
+
       # lilv
 
-      ${LV2SDK_PATH}/lilv/lilv/lilv.h
-      ${LV2SDK_PATH}/lilv/src/collections.c
-      ${LV2SDK_PATH}/lilv/src/instance.c
-      ${LV2SDK_PATH}/lilv/src/lib.c
-      ${LV2SDK_PATH}/lilv/src/lilv_internal.h
-      ${LV2SDK_PATH}/lilv/src/node.c
-      ${LV2SDK_PATH}/lilv/src/plugin.c
-      ${LV2SDK_PATH}/lilv/src/pluginclass.c
-      ${LV2SDK_PATH}/lilv/src/port.c
-      ${LV2SDK_PATH}/lilv/src/query.c
-      ${LV2SDK_PATH}/lilv/src/scalepoint.c
-      ${LV2SDK_PATH}/lilv/src/state.c
-      ${LV2SDK_PATH}/lilv/src/ui.c
-      ${LV2SDK_PATH}/lilv/src/util.c
-      ${LV2SDK_PATH}/lilv/src/world.c
-      ${LV2SDK_PATH}/lilv/src/zix/common.h
-      ${LV2SDK_PATH}/lilv/src/zix/tree.c
-      ${LV2SDK_PATH}/lilv/src/zix/tree.h
-      ${LV2SDK_PATH}/lilv/utils/bench.h
-      ${LV2SDK_PATH}/lilv/utils/uri_table.h
+      ${lilv_SOURCE_DIR}/src/collections.c
+      ${lilv_SOURCE_DIR}/src/dylib.c
+      ${lilv_SOURCE_DIR}/src/dylib.h
+      ${lilv_SOURCE_DIR}/src/instance.c
+      ${lilv_SOURCE_DIR}/src/lib.c
+      ${lilv_SOURCE_DIR}/src/lilv_config.h
+      ${lilv_SOURCE_DIR}/src/lilv_internal.h
+      ${lilv_SOURCE_DIR}/src/node.c
+      ${lilv_SOURCE_DIR}/src/plugin.c
+      ${lilv_SOURCE_DIR}/src/pluginclass.c
+      ${lilv_SOURCE_DIR}/src/port.c
+      ${lilv_SOURCE_DIR}/src/query.c
+      ${lilv_SOURCE_DIR}/src/scalepoint.c
+      ${lilv_SOURCE_DIR}/src/state.c
+      ${lilv_SOURCE_DIR}/src/ui.c
+      ${lilv_SOURCE_DIR}/src/util.c
+      ${lilv_SOURCE_DIR}/src/world.c
 
       # serd
 
-      ${LV2SDK_PATH}/serd/serd/serd.h
-      ${LV2SDK_PATH}/serd/src/byte_source.c
-      ${LV2SDK_PATH}/serd/src/env.c
-      ${LV2SDK_PATH}/serd/src/n3.c
-      ${LV2SDK_PATH}/serd/src/node.c
-      ${LV2SDK_PATH}/serd/src/reader.c
-      ${LV2SDK_PATH}/serd/src/reader.h
-      ${LV2SDK_PATH}/serd/src/serd_internal.h
-      ${LV2SDK_PATH}/serd/src/string.c
-      ${LV2SDK_PATH}/serd/src/uri.c
-      ${LV2SDK_PATH}/serd/src/writer.c
-      
+      ${serd_SOURCE_DIR}/src/attributes.h
+      ${serd_SOURCE_DIR}/src/base64.c
+      ${serd_SOURCE_DIR}/src/base64.h
+      ${serd_SOURCE_DIR}/src/byte_sink.h
+      ${serd_SOURCE_DIR}/src/byte_source.c
+      ${serd_SOURCE_DIR}/src/byte_source.h
+      ${serd_SOURCE_DIR}/src/env.c
+      ${serd_SOURCE_DIR}/src/n3.c
+      ${serd_SOURCE_DIR}/src/node.c
+      ${serd_SOURCE_DIR}/src/reader.c
+      ${serd_SOURCE_DIR}/src/reader.h
+      ${serd_SOURCE_DIR}/src/serd_config.h
+      ${serd_SOURCE_DIR}/src/serd_internal.h
+      ${serd_SOURCE_DIR}/src/serdi.c
+      ${serd_SOURCE_DIR}/src/stack.h
+      ${serd_SOURCE_DIR}/src/string.c
+      ${serd_SOURCE_DIR}/src/string_utils.h
+      ${serd_SOURCE_DIR}/src/system.c
+      ${serd_SOURCE_DIR}/src/system.h
+      ${serd_SOURCE_DIR}/src/try.h
+      ${serd_SOURCE_DIR}/src/uri.c
+      ${serd_SOURCE_DIR}/src/uri_utils.h
+      ${serd_SOURCE_DIR}/src/warnings.h
+      ${serd_SOURCE_DIR}/src/writer.c
+
       # sord
 
-      ${LV2SDK_PATH}/sord/sord/sord.h
-      ${LV2SDK_PATH}/sord/src/sord.c
-      ${LV2SDK_PATH}/sord/src/sord_internal.h
-      ${LV2SDK_PATH}/sord/src/syntax.c
-      ${LV2SDK_PATH}/sord/src/zix/btree.c
-      ${LV2SDK_PATH}/sord/src/zix/btree.h
-      ${LV2SDK_PATH}/sord/src/zix/common.h
-      ${LV2SDK_PATH}/sord/src/zix/digest.c
-      ${LV2SDK_PATH}/sord/src/zix/digest.h
-      ${LV2SDK_PATH}/sord/src/zix/hash.c
-      ${LV2SDK_PATH}/sord/src/zix/hash.h
+      ${sord_SOURCE_DIR}/src/sord.c
+      ${sord_SOURCE_DIR}/src/sord_config.h
+      ${sord_SOURCE_DIR}/src/sord_internal.h
+      ${sord_SOURCE_DIR}/src/sord_validate.c
+      ${sord_SOURCE_DIR}/src/sordi.c
+      ${sord_SOURCE_DIR}/src/syntax.c
 
       # sratom
 
-      ${LV2SDK_PATH}/sratom/sratom/sratom.h
-      ${LV2SDK_PATH}/sratom/src/sratom.c
+      ${sratom_SOURCE_DIR}/src/sratom.c
 
       # suil
 
-      ${LV2SDK_PATH}/suil/src/host.c
-      ${LV2SDK_PATH}/suil/src/instance.c
-      ${LV2SDK_PATH}/suil/src/suil_internal.h
-      ${LV2SDK_PATH}/suil/suil/suil.h
+      ${suil_SOURCE_DIR}/src/host.c
+      ${suil_SOURCE_DIR}/src/instance.c
+      ${suil_SOURCE_DIR}/src/suil_internal.h
 )
 
 set( INCLUDES
    PRIVATE
-      ${_PRVDIR}
-      ${LV2SDK_PATH}/lilv/src
-      ${LV2SDK_PATH}/lilv/src/zix
-      ${LV2SDK_PATH}/serd/src
-      ${LV2SDK_PATH}/sord/src
-      ${LV2SDK_PATH}/sord/src/zix
-      ${LV2SDK_PATH}/sratom/src
-      ${LV2SDK_PATH}/suil/src
+      ${lilv_SOURCE_DIR}/src
+      ${zix_SOURCE_DIR}/src
+      ${serd_SOURCE_DIR}/src
+      ${sord_SOURCE_DIR}/src
+      ${sratom_SOURCE_DIR}/src
+      ${suil_SOURCE_DIR}/src
    PUBLIC
-      ${_PUBDIR}
-      ${LV2SDK_PATH}/lv2
-      ${LV2SDK_PATH}/lilv
-      ${LV2SDK_PATH}/serd
-      ${LV2SDK_PATH}/sord
-      ${LV2SDK_PATH}/sratom
-      ${LV2SDK_PATH}/suil
+      ${zix_SOURCE_DIR}/include
+      ${lv2_SOURCE_DIR}/include
+      ${lilv_SOURCE_DIR}/include
+      ${serd_SOURCE_DIR}/include
+      ${sord_SOURCE_DIR}/include
+      ${sratom_SOURCE_DIR}/include
+      ${suil_SOURCE_DIR}/include
 )
 
-set( DEFINES
+set( SUIL_DEFS
    PRIVATE
-      SUIL_INTERNAL
+      HAVE_X11=OFF
+      SUIL_MODULE_DIR=""
 )
 
-set( HEADERS
-
-   # lv2
-
-   ${LV2SDK_PATH}/lv2/lv2/atom/atom.h
-   ${LV2SDK_PATH}/lv2/lv2/atom/forge.h
-   ${LV2SDK_PATH}/lv2/lv2/atom/util.h
-   ${LV2SDK_PATH}/lv2/lv2/buf-size/buf-size.h
-   ${LV2SDK_PATH}/lv2/lv2/core/attributes.h
-   ${LV2SDK_PATH}/lv2/lv2/core/lv2.h
-   ${LV2SDK_PATH}/lv2/lv2/core/lv2_util.h
-   ${LV2SDK_PATH}/lv2/lv2/data-access/data-access.h
-   ${LV2SDK_PATH}/lv2/lv2/dynmanifest/dynmanifest.h
-   ${LV2SDK_PATH}/lv2/lv2/event/event-helpers.h
-   ${LV2SDK_PATH}/lv2/lv2/event/event.h
-   ${LV2SDK_PATH}/lv2/lv2/instance-access/instance-access.h
-   ${LV2SDK_PATH}/lv2/lv2/log/log.h
-   ${LV2SDK_PATH}/lv2/lv2/log/logger.h
-   ${LV2SDK_PATH}/lv2/lv2/midi/midi.h
-   ${LV2SDK_PATH}/lv2/lv2/morph/morph.h
-   ${LV2SDK_PATH}/lv2/lv2/options/options.h
-   ${LV2SDK_PATH}/lv2/lv2/parameters/parameters.h
-   ${LV2SDK_PATH}/lv2/lv2/patch/patch.h
-   ${LV2SDK_PATH}/lv2/lv2/port-groups/port-groups.h
-   ${LV2SDK_PATH}/lv2/lv2/port-props/port-props.h
-   ${LV2SDK_PATH}/lv2/lv2/presets/presets.h
-   ${LV2SDK_PATH}/lv2/lv2/resize-port/resize-port.h
-   ${LV2SDK_PATH}/lv2/lv2/state/state.h
-   ${LV2SDK_PATH}/lv2/lv2/time/time.h
-   ${LV2SDK_PATH}/lv2/lv2/ui/ui.h
-   ${LV2SDK_PATH}/lv2/lv2/units/units.h
-   ${LV2SDK_PATH}/lv2/lv2/uri-map/uri-map.h
-   ${LV2SDK_PATH}/lv2/lv2/urid/urid.h
-   ${LV2SDK_PATH}/lv2/lv2/worker/worker.h
-)
-
-set( src ${LV2SDK_PATH}/lv2 )
-set( dst ${_PUBDIR} )
-set( ns ${dst}/lv2/lv2plug.in/ns )
-set( stamp ${_INTDIR}/.stamp.lv2 )
-
-# Simulate the older directory structure (trailing "/" is important)
-file( MAKE_DIRECTORY ${ns} )
-file( COPY ${src}/lv2/core/lv2.h DESTINATION ${dst} )
-file( COPY ${src}/lv2/ DESTINATION ${ns}/ext )
-file( COPY ${src}/lv2/ DESTINATION ${ns}/extensions )
-file( COPY ${src}/lv2/core/ DESTINATION  ${ns}/lv2core )
-
-set( LILV_VERSION 0.24.4 )
-set( SERD_VERSION 0.30.2 )
-set( SORD_VERSION 0.16.4 )
-set( SRATOM_VERSION 0.6.4 )
-set( SUIL_VERSION 0.10.6 )
-
-set( HAVE_LV2 1 )
-set( HAVE_SERD 1 )
-set( HAVE_SORD 1 )
-set( HAVE_SRATOM 1 )
-
-if( OS_IS_WIN )
-   set( LILV_PATH_SEP ";" )
-   set( LILV_DIR_SEP "\\\\" )
-   set( LILV_DEFAULT_LV2_PATH "%APPDATA%\\\\LV2;%COMMONPROGRAMFILES%\\\\LV2" )
-
-   set( SUIL_MODULE_DIR "" )
-   set( SUIL_DIR_SEP "" )
-   set( SUIL_GTK2_LIB_NAME "libgtk-x11-2.0.so.0" )
-   set( SUIL_GTK3_LIB_NAME "libgtk-x11-3.0.so.0" )
-   set( SUIL_MODULE_PREFIX "" )
-   set( SUIL_MODULE_EXT ".dll" )
-elseif( OS_IS_MAC )
-   set( LILV_PATH_SEP ":" )
-   set( LILV_DIR_SEP "/" )
-   set( LILV_DEFAULT_LV2_PATH "~/Library/Audio/Plug-Ins/LV2:~/.lv2:/usr/local/lib/lv2:/usr/lib/lv2:/Library/Audio/Plug-Ins/LV2" )
-
-   set( SUIL_MODULE_DIR "" )
-   set( SUIL_DIR_SEP "" )
-   set( SUIL_GTK2_LIB_NAME "libgtk-x11-2.0.so.0" )
-   set( SUIL_GTK3_LIB_NAME "libgtk-x11-3.0.so.0" )
-   set( SUIL_MODULE_PREFIX "lib" )
-   set( SUIL_MODULE_EXT ".dylib" )
-elseif( OS_IS_LIN )
-   set( LILV_PATH_SEP ":" )
-   set( LILV_DIR_SEP "/" )
-   set( LILV_DEFAULT_LV2_PATH "~/.lv2:/usr/lib/lv2:/usr/local/lib/lv2" )
-
-   set( SUIL_MODULE_DIR "" )
-   set( SUIL_DIR_SEP "" )
-   set( SUIL_GTK2_LIB_NAME "libgtk-x11-2.0.so.0" )
-   set( SUIL_GTK3_LIB_NAME "libgtk-x11-3.0.so.0" )
-   set( SUIL_MODULE_PREFIX "lib" )
-   set( SUIL_MODULE_EXT ".so" )
-endif()
-
-configure_file( lilv_config.h.in "${_PRVDIR}/lilv_config.h" )
-configure_file( serd_config.h.in "${_PRVDIR}/serd_config.h" )
-configure_file( sord_config.h.in "${_PRVDIR}/sord_config.h" )
-configure_file( sratom_config.h.in "${_PRVDIR}/sratom_config.h" )
-configure_file( suil_config.h.in "${_PRVDIR}/suil_config.h" )
-
-set(MODULE_SRC ${SOURCES} ${HEADERS})
-set(MODULE_DEF ${DEFINES})
+set(MODULE_SRC ${SOURCES})
+set(MODULE_DEF ${SUIL_DEFS})
 set(MODULE_INCLUDE ${INCLUDES})
 set(MODULE_USE_PCH OFF)
 set(MODULE_USE_UNITY OFF)
@@ -229,59 +189,3 @@ set(MODULE_USE_UNITY OFF)
 setup_module()
 
 target_no_warning(${MODULE} -w)
-
-if (OS_IS_LIN)
-   pkg_check_modules( X11 IMPORTED_TARGET "x11" )
-   pkg_check_modules( GTK2 IMPORTED_TARGET "gtk+-2.0" )
-   pkg_check_modules( GTK3 IMPORTED_TARGET "gtk+-3.0" )
-   pkg_check_modules( GTK2X11 IMPORTED_TARGET "gtk+-x11-2.0" )
-   pkg_check_modules( GTK3X11 IMPORTED_TARGET "gtk+-x11-3.0" )
-   pkg_check_modules( QT4 IMPORTED_TARGET "QtGui >= 4.4.0" )
-   pkg_check_modules( QT5 IMPORTED_TARGET "Qt5Widgets >= 5.1.0" )
-
-   macro( bld name packages define sources )
-      set( libs )
-      set( missing )
-      set( lib ${SUIL_MODULE_PREFIX}${name} )
-      foreach( pkg ${packages} )
-         if( NOT "${${pkg}_FOUND}" )
-            set( missing ON )
-            break()
-         endif()
-
-         list( APPEND libs
-            PRIVATE
-               PkgConfig::${pkg}
-         )
-      endforeach()
-
-      if( NOT missing )
-         list( APPEND DEFINES
-            PRIVATE
-               ${define}
-         )
-
-         add_library( ${lib} MODULE ${sources} )
-         add_dependencies( ${MODULE} ${lib} )
-
-         set_target_properties( ${lib}
-            PROPERTIES
-               LIBRARY_OUTPUT_DIRECTORY ${_DEST}/${_PKGLIB}
-               PREFIX ""
-         )
-
-         target_compile_definitions( ${lib} PRIVATE SUIL_SHARED ${DEFINES} )
-         target_include_directories( ${lib} PRIVATE ${INCLUDES} )
-         target_link_libraries( ${lib} PRIVATE ${libs} )
-      endif()
-   endmacro()
-
-   bld( "suil_x11"
-        "X11"
-        "SUIL_WITH_X11"
-        "${LV2SDK_PATH}/suil/src/x11.c" )
-   bld( "suil_x11_in_gtk2"
-        "X11;GTK2X11"
-        "SUIL_WITH_X11_IN_GTK2"
-        "${LV2SDK_PATH}/suil/src/x11_in_gtk2.c" )
-endif()

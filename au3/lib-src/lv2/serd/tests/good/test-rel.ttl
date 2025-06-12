@@ -1,6 +1,0 @@
-<http://drobilla.net/sw/serd/tests/good/a/b/c> a <http://example.org/Thing> .
-<http://drobilla.net/sw/serd/tests> a <http://example.org/Thing> .
-<http://drobilla.net/sw/serd/tests/good/test-rel.ttl> a <http://example.org/Thing> .
-<http://drobilla.net/sw/serd/tests/good/test-not.ttl> a <http://example.org/Thing> .
-<a/b/c> a <http://example.org/Thing> .
-<http://www.w3.org/> a <http://example.org/Thing> .

@@ -1,2 +1,0 @@
-<http://example.org/foo#a> <http://example.org/foo#b> "\nthis \ris a \U00012451long\t\nliteral\uABCD\n" .
-<http://example.org/foo#d> <http://example.org/foo#e> "\tThis \uABCDis\r \U00012451another\n\none\n" .

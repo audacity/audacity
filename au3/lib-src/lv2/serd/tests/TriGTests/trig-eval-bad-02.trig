@@ -1,2 +1,0 @@
-# Bad IRI : hex 3C is <
-{<http://example/\u003C> <http://example/p> <http://example/o> .}

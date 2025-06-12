@@ -1,2 +1,0 @@
-# TriG does not allow bnodes-as-predicates
-{<http://example/s> _:p <http://example/o> .}

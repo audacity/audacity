@@ -1,4 +1,0 @@
-{<http://a.example/s> <http://a.example/p> '''
-''' .}
-<http://example/graph> {<http://a.example/s> <http://a.example/p> '''
-''' .}

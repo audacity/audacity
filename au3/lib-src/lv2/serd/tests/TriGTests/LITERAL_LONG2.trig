@@ -1,2 +1,0 @@
-{<http://a.example/s> <http://a.example/p> """x""" .}
-<http://example/graph> {<http://a.example/s> <http://a.example/p> """x""" .}

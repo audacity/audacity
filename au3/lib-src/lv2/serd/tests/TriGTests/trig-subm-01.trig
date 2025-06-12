@@ -1,3 +1,0 @@
-@prefix : <#> .
-{[] :x :y .}
-<http://example/graph> {[] :x :y .}

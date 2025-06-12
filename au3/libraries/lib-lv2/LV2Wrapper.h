@@ -19,6 +19,7 @@
 #if USE_LV2
 
 #include "LV2Utils.h"
+#include "LV2FeaturesList.h"
 #include "LV2InstanceFeaturesList.h"
 
 #include "lilv/lilv.h"

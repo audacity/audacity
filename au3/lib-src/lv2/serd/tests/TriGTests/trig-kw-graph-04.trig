@@ -1,8 +1,0 @@
-# GRAPH tests
-PREFIX : <http://example/> 
-
-GRAPH :g1 { :s :p :o }
-GRAPH :g2 { :s :p :o }
-:g3 { :s :p :o }
-GRAPH :g4 { :s :p :o }
-GRAPH :g5 { :s :p :o }

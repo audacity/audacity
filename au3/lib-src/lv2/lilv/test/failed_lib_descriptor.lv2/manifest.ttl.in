@@ -1,7 +1,0 @@
-@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-
-<http://example.org/failed-lib-descriptor>
-	a lv2:Plugin ;
-	lv2:binary <failed_lib_descriptor@SHLIB_EXT@> ;
-	rdfs:seeAlso <failed_lib_descriptor.ttl> .

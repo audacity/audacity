@@ -1,2 +1,0 @@
-# BNode as predicate
-<http://www.w3.org/2013/TurtleTests/s> [] <http://www.w3.org/2013/TurtleTests/p>  .

@@ -1,2 +1,0 @@
-<http://a.example/s> <http://a.example/p> "\u0000\t\u000B\u000C\u000E&([]\u007F" .
-<http://a.example/s> <http://a.example/p> "\u0000\t\u000B\u000C\u000E&([]\u007F" <http://example/graph> .

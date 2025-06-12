@@ -1,4 +1,0 @@
-@prefix : <http://example.org/ns#> .
-
-{:s :p1 """test-\\""" .}
-<http://example/graph> {:s :p1 """test-\\""" .}
