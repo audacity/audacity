@@ -4,6 +4,7 @@
 import QtQuick
 
 import Muse.UiComponents
+import Muse.Ui
 
 import Audacity.Effects
 import Audacity.Lv2
@@ -14,18 +15,17 @@ Rectangle {
 
     // in
     property alias instanceId: model.instanceId
+    property alias effectState: model.effectState
 
     // out
     property alias title: model.title
 
+    implicitWidth: textItem.width
+    implicitHeight: textItem.height
     color: ui.theme.backgroundPrimaryColor
-
-    implicitWidth: view.implicitWidth
-    implicitHeight: view.implicitHeight
 
     Component.onCompleted: {
         model.init()
-        view.init()
         Qt.callLater(manageMenuModel.load)
     }
 
@@ -43,7 +43,7 @@ Rectangle {
 
     EffectManageMenu {
         id: manageMenuModel
-        instanceId: view.instanceId
+        instanceId: model.instanceId
     }
 
     ContextMenuLoader {
@@ -59,5 +59,18 @@ Rectangle {
         onExternalUiClosed: {
             window.close()
         }
+    }
+
+    Text {
+        id: textItem
+        visible: model.unsupportedUiReason.length > 0
+        width: visible ? 300 : 0
+        height: visible ? 100 : 0
+        anchors.centerIn: parent
+        text: "No available UI:\n" + model.unsupportedUiReason + "\n(Plain UI not implemented yet)"
+        color: ui.theme.fontPrimaryColor
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+        wrapMode: Text.WordWrap
     }
 }
