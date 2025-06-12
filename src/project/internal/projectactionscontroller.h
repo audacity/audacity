@@ -69,6 +69,9 @@ private:
     muse::io::path_t selectOpeningFile();
     muse::io::path_t selectImportFile();
 
+    bool checkCanIgnoreError(const muse::Ret& ret, const muse::io::path_t& filepath);
+    void warnProjectCannotBeOpened(const muse::Ret& ret, const muse::io::path_t& filepath);
+
     muse::IInteractive::Button askAboutSavingProject(IAudacityProjectPtr project);
 
     muse::Ret canSaveProject() const;

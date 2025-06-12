@@ -6,6 +6,8 @@
 #include "global/io/ioretcodes.h"
 
 #include "log.h"
+#include "global/io/fileinfo.h"
+#include "io/file.h"
 
 using namespace muse;
 using namespace au::project;
@@ -96,6 +98,18 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
 
     UNUSED(forceMode);
     UNUSED(format);
+
+    if (!io::FileInfo::exists(path)) {
+        LOGE() << "file does not exist at path: \"" << path << "\"";
+        return make_ret(Err::FileNotFound, path);
+    }
+
+    // check for file permissions
+    io::File file(path);
+    if (!file.open(io::IODevice::ReadOnly)) {
+        LOGE() << "failed open file: " << path;
+        return make_ret(Err::FileOpenError, path);
+    }
 
     m_au3Project = au3ProjectCreator()->create();
     bool isLoaded = m_au3Project->load(path);
@@ -215,7 +229,7 @@ Ret Audacity4Project::canSave() const
 
     // Ret ret = m_engravingProject->checkCorrupted();
     // if (!ret) {
-    //     Err errorCode = m_engravingProject->isCorruptedUponLoading() ? Err::CorruptionUponOpenningError : Err::CorruptionError;
+    //     Err errorCode = m_engravingProject->isCorruptedUponLoading() ? Err::CorruptionUponOpeningError : Err::CorruptionError;
     //     ret.setCode(static_cast<int>(errorCode));
     // }
 
