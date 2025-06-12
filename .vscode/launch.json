@@ -4,7 +4,7 @@
             "name": "Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/install/bin/audacity.exe",
+            "program": "${workspaceFolder}/build/${command:cmake.buildType}/install/bin/audacity.exe",
             "args": [
                 // Comment this out to run audacity in plugin registration mode
                 // "--register-audio-plugin", "C:/Program Files/Common Files/VST3/Your plugin.vst3"
@@ -33,11 +33,20 @@
             "name": "Launch (Linux - lldb)",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/src/app/audacity",
+            "program": "${workspaceFolder}/build/${command:cmake.buildType}/src/app/audacity",
             "preLaunchTask": "CMake: build",
             "args": [
                 // "--register-audio-plugin",
                 // "https://wasted.audio/software/wstd_flangr"
+            ],
+            // If you need to debug a plugin, you can do something like this.
+            // (If you don't have these plugins, you'll only get a harmless warning.)
+            "initCommands": [
+                "settings set target.load-cwd-lldbinit true"
+            ],
+            "postRunCommands": [
+                "target symbols add /usr/lib/lv2/meters.lv2/meters.so",
+                "target symbols add /usr/lib/lv2/meters.lv2/meters_glui.so",
             ],
             "cwd": "${workspaceFolder}"
         },
@@ -46,14 +55,14 @@
             "type": "cppdbg",
             "MIMode": "gdb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/src/app/audacity",
+            "program": "${workspaceFolder}/build/${command:cmake.buildType}/src/app/audacity",
             "preLaunchTask": "CMake: build",
             "args": [
-                "--register-audio-plugin",
-                "https://wasted.audio/software/wstd_flangr"
+                // "--register-audio-plugin",
+                // "https://wasted.audio/software/wstd_flangr"
             ],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/Debug/src/app",
+            "cwd": "${workspaceFolder}/build/${command:cmake.buildType}/src/app",
             "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis",
             "showDisplayString": true
         },
@@ -61,7 +70,7 @@
             "name": "run audacity (MacOS)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/src/app/audacity.app/Contents/MacOS/audacity",
+            "program": "${workspaceFolder}/build/${command:cmake.buildType}/src/app/audacity.app/Contents/MacOS/audacity",
             "args": [],
             "preLaunchTask": "CMake: install",
             "stopAtEntry": false,
