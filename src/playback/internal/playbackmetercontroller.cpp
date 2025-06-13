@@ -33,7 +33,7 @@ PlaybackMeterController::PlaybackMeterController()
         m_playbackMeterChanged.notify();
     });
 
-    createMeterStrategy(configuration()->playbackMeterType());
+    m_strategy = createMeterStrategy(configuration()->playbackMeterType());
 }
 
 double PlaybackMeterController::stepToPosition(double step) const
