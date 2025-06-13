@@ -288,6 +288,7 @@ ListItemBlank {
                 height: root.height
 
                 meterStyle: trackViewState.meterStyle
+                meterModel: trackViewState.meterModel
 
                 currentVolumePressure: root.item.leftChannelPressure
                 currentRMS: root.item.leftChannelRMS
@@ -300,6 +301,7 @@ ListItemBlank {
                 height: root.height
 
                 meterStyle: trackViewState.meterStyle
+                meterModel: trackViewState.meterModel
 
                 currentVolumePressure: root.item.rightChannelPressure
                 currentRMS: root.item.rightChannelRMS

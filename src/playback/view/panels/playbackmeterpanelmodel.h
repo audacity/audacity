@@ -7,6 +7,7 @@
 #include "modularity/ioc.h"
 #include "ui/iuiconfiguration.h"
 
+#include "playback/view/common/playbackmetermodel.h"
 #include "playback/iplayback.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/playbacktypes.h"
@@ -32,6 +33,8 @@ class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(PlaybackMeterType::MeterType meterType READ meterType NOTIFY meterTypeChanged FINAL)
     Q_PROPERTY(PlaybackMeterPosition::MeterPosition meterPosition READ meterPosition NOTIFY meterPositionChanged FINAL)
 
+    Q_PROPERTY(PlaybackMeterModel * meterModel READ meterModel NOTIFY meterModelChanged FINAL)
+
     Q_PROPERTY(float level READ level NOTIFY levelChanged FINAL)
 
     Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
@@ -48,6 +51,7 @@ public:
     PlaybackMeterStyle::MeterStyle meterStyle() const;
     PlaybackMeterType::MeterType meterType() const;
     PlaybackMeterPosition::MeterPosition meterPosition() const;
+    PlaybackMeterModel* meterModel() const;
 
     float level() const;
 
@@ -75,6 +79,7 @@ signals:
     void meterStyleChanged();
     void meterTypeChanged();
     void meterPositionChanged();
+    void meterModelChanged();
 
     void levelChanged();
 
@@ -84,6 +89,8 @@ private:
     void setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue);
     void setAudioChannelRMS(const audio::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
+
+    PlaybackMeterModel* m_meterModel = nullptr;
 
     float m_leftChannelPressure = -60.0;
     float m_leftChannelRMS = -60.0;
