@@ -165,12 +165,14 @@ void SelectionViewController::onReleased(double x, double y)
 
     setSelectionActive(true);
 
-    if (m_startPoint.y() < y) {
-        selectionController()->setFocusedTrack(tracks.back());
-    } else {
-        selectionController()->setFocusedTrack(tracks.front());
+    if (!tracks.empty()) {
+        if (m_startPoint.y() < y) {
+            selectionController()->setFocusedTrack(tracks.back());
+        } else {
+            selectionController()->setFocusedTrack(tracks.front());
+        }
+        selectionController()->setSelectedTracks(tracks, true);
     }
-    selectionController()->setSelectedTracks(tracks, true);
 
     // time
     setSelection(x1, x2, true);
