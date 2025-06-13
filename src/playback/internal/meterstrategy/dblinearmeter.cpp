@@ -62,5 +62,5 @@ std::vector<double> DbLinearMeter::fullSteps(int) const
 
 std::vector<double> DbLinearMeter::smallSteps(int) const
 {
-    return { -1.5, -4.5, -7.5, -10.5, -13.5, -15.0, -16.5, -20, -22, -26, -28 };
+    return { -1, -2, -4, -5, -7, -8, -10, -11, -13.5, -15.0, -16.5, -20, -22, -26, -28, -35, -45 };
 }
