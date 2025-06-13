@@ -97,6 +97,7 @@ Item {
                     currentRMS: model.leftChannelRMS
 
                     meterStyle: model.meterStyle
+                    meterModel: model.meterModel
 
                     indicatorWidth: 10
                 }
@@ -115,12 +116,15 @@ Item {
                     currentRMS: model.rightChannelRMS
 
                     meterStyle: model.meterStyle
+                    meterModel: model.meterModel
 
                     indicatorWidth: 10
                 }
 
                 VolumePressureRuler {
                     id: ruler
+
+                    meterModel: model.meterModel
 
                     anchors.top: parent.top
                     anchors.topMargin: leftVolumePressure.overloadHeight - topTextMargin

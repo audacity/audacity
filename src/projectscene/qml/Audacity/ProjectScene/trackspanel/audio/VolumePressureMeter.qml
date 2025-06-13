@@ -18,6 +18,8 @@ Canvas {
 
     property int meterStyle: PlaybackMeterStyle.Default
 
+    property var meterModel: null
+
     property real indicatorWidth
     property bool showClippedInfo: true
 
@@ -26,6 +28,10 @@ Canvas {
     property int overloadHeight: 4
 
     width: indicatorWidth
+
+    onMeterModelChanged: {
+        requestPaint()
+    }
 
     QtObject {
         id: meterStyle
@@ -45,6 +51,12 @@ Canvas {
         readonly property color meterBackgroundColor: Utils.colorWithAlpha(ui.theme.strokeColor, 0.7)
 
         readonly property var maxPeakMarkerColor: "#14151A"
+
+        readonly property var smallSteps: root.meterModel.smallSteps
+
+        onSmallStepsChanged: {
+            requestPaint()
+        }
 
         function getRecentPeakMarkerColor() {
             switch (root.meterStyle) {
@@ -79,10 +91,6 @@ Canvas {
         id: prv
 
         readonly property real indicatorHeight:  root.height - root.overloadHeight
-
-        // value ranges
-        readonly property int fullValueRangeLength: root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure
-        readonly property real heightPerUnit: prv.indicatorHeight / fullValueRangeLength
 
         property bool needsClear: false
 
@@ -119,11 +127,11 @@ Canvas {
         }
 
         function sampleValueToHeight(sampleValue) {
-            const clampedValue = Math.max(root.minDisplayedVolumePressure,
-                                    Math.min(sampleValue, root.maxDisplayedVolumePressure));
+            if (!root.meterModel) {
+                return;
+            }
 
-            return prv.heightPerUnit * (clampedValue - root.minDisplayedVolumePressure)
-
+            return prv.indicatorHeight * root.meterModel.sampleToPosition(sampleValue); 
         }
 
         function drawRoundedRect(ctx, fillStyle, x, y, width, height, radius, roundedEdge) {

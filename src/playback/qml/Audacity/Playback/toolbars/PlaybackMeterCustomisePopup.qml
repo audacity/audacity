@@ -77,9 +77,6 @@ StyledPopupView {
 
                 value: root.meterType
 
-                // TODO: Modify when dbLog and Linear (amp) are implemented
-                enabled: false
-
                 model: [
                     {label : qsTrc("playback","Logarithmic (dB)"), value: PlaybackMeterType.DbLog},
                     {label : qsTrc("playback","Linear (dB)"), value: PlaybackMeterType.DbLinear},
