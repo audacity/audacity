@@ -14,9 +14,28 @@
 #include <QObject>
 #include <QQuickItem>
 
+class LV2PortUIStates;
+
 namespace au::effects {
+class Lv2ViewModel;
+
+class MyUiHandler : public LV2UIFeaturesList::UIHandler
+{
+public:
+    MyUiHandler(Lv2ViewModel& viewModel);
+    ~MyUiHandler() override = default;
+
+private:
+    int ui_resize(int width, int height) override;
+    void ui_closed() override;
+    void suil_port_write(uint32_t port_index, uint32_t buffer_size, uint32_t protocol, const void* buffer) override;
+    uint32_t suil_port_index(const char* port_symbol) override;
+
+    Lv2ViewModel& m_viewModel;
+};
+
 //! TODO Move to builtin module
-class Lv2ViewModel : public QObject, public LV2UIFeaturesList::UIHandler
+class Lv2ViewModel : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
@@ -41,18 +60,23 @@ signals:
     void externalUiClosed();
 
 private:
-    int ui_resize(int /* width */, int /* height */) override { return 0; }
-    void ui_closed() override {}
-    void suil_port_write(uint32_t port_index, uint32_t buffer_size, uint32_t protocol, const void* buffer) override;
-    uint32_t suil_port_index(const char* /* port_symbol */) override;
+    friend class MyUiHandler;
+    int ui_resize(int width, int height);
+    void ui_closed();
+    void suil_port_write(uint32_t port_index, uint32_t buffer_size, uint32_t protocol, const void* buffer);
+    uint32_t suil_port_index(const char* port_symbol);
 
 private:
     using SuilInstancePtr = Lilv_ptr<SuilInstance, suil_instance_free>;
+
+    MyUiHandler m_handler;
 
     int m_instanceId = -1;
     QString m_title;
     std::unique_ptr<LV2Wrapper> m_wrapper;
     const LilvPlugin* m_lilvPlugin = nullptr;
+    const LV2Ports* m_ports = nullptr;
+    std::unique_ptr<LV2PortUIStates> m_portUIStates;
 
     SuilInstancePtr m_suilInstance;
     std::shared_ptr<SuilHost> mSuilHost;
@@ -61,7 +85,7 @@ private:
     std::unique_ptr<QTimer> m_externalUiTimer;
     LV2_External_UI_Widget* m_externalUiWidget = nullptr;
 
-    const LV2UI_Idle_Interface *mUiIdleInterface = nullptr;
-    const LV2UI_Show_Interface *mUiShowInterface = nullptr;
+    const LV2UI_Idle_Interface* mUiIdleInterface = nullptr;
+    const LV2UI_Show_Interface* mUiShowInterface = nullptr;
 };
 }

@@ -3,7 +3,6 @@
  */
 #include "lv2viewmodel.h"
 
-
 #include "effects/effects_base/effectstypes.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
@@ -54,7 +53,7 @@ std::shared_ptr<SuilHost> getSuilHost()
 static LV2EffectsModule::Factory::SubstituteInUnique<LV2Effect> scope;
 
 Lv2ViewModel::Lv2ViewModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), m_handler(*this)
 {}
 
 Lv2ViewModel::~Lv2ViewModel()
@@ -68,6 +67,8 @@ Lv2ViewModel::~Lv2ViewModel()
     if (mUiShowInterface && mUiShowInterface->hide) {
         mUiShowInterface->hide(suil_instance_get_handle(m_suilInstance.get()));
     }
+
+    instancesRegister()->settingsAccessById(m_instanceId)->Flush();
 }
 
 namespace {
@@ -112,6 +113,8 @@ void Lv2ViewModel::init()
     }
 
     m_lilvPlugin = &effect->mPlug;
+    m_ports = &effect->mPorts;
+    m_portUIStates = std::make_unique<LV2PortUIStates>(instance->GetPortStates(), *m_ports);
 
     m_title = au3::wxToString(effect->GetSymbol().Internal());
     emit titleChanged();
@@ -168,7 +171,7 @@ void Lv2ViewModel::init()
 
     const auto uinode = lilv_ui_get_uri(ui);
     lilv_world_load_resource(gWorld, uinode);
-    auto& features = mUiFeatures.emplace(m_wrapper->GetFeatures(), this, uinode,
+    auto& features = mUiFeatures.emplace(m_wrapper->GetFeatures(), &m_handler, uinode,
                                          &m_wrapper->GetInstance(), nullptr);
     if (!features.mOk) {
         return;
@@ -195,7 +198,7 @@ void Lv2ViewModel::init()
     }
 
     const std::vector<const LV2_Feature*> featurePointers = features.GetFeaturePointers();
-    m_suilInstance.reset(suil_instance_new(mSuilHost.get(), this, containerTypeUri, pluginUri, uiUri, uiTypeUri, uiBundlePath.get(),
+    m_suilInstance.reset(suil_instance_new(mSuilHost.get(), &m_handler, containerTypeUri, pluginUri, uiUri, uiTypeUri, uiBundlePath.get(),
                                            uiBinaryPath.get(), featurePointers.data()));
 
     if (!m_suilInstance) {
@@ -252,45 +255,6 @@ void Lv2ViewModel::init()
     m_externalUiTimer->start(30);
 }
 
-void Lv2ViewModel::suil_port_write(uint32_t port_index, uint32_t buffer_size, uint32_t protocol, const void* buffer)
-{
-    // Handle implicit floats
-    if (protocol == 0 && buffer_size == sizeof(float)) {
-        // if (auto it = mPorts.mControlPortMap.find(port_index);
-        //     it != mPorts.mControlPortMap.end()) {
-        //     const auto value = *static_cast<const float*>(buffer);
-        //     mAccess.ModifySettings(
-        //         [&](EffectSettings& settings)
-        //     {
-        //         GetSettings(settings).values[it->second] = value;
-        //         return nullptr;
-        //     });
-
-        //     Publish({ size_t(port_index), value });
-        // }
-    }
-    // Handle event transfers
-    else if (protocol == LV2Symbols::urid_EventTransfer) {
-        // auto& portUIStates = mPortUIStates;
-        // auto& atomPortState = portUIStates.mControlIn;
-        // if (atomPortState && port_index == atomPortState->mpPort->mIndex) {
-        //     atomPortState->ReceiveFromDialog(buffer, buffer_size);
-        // }
-    }
-}
-
-uint32_t Lv2ViewModel::suil_port_index(const char* port_symbol)
-{
-    for (size_t i = 0, cnt = lilv_plugin_get_num_ports(m_lilvPlugin); i < cnt; ++i) {
-        const auto port = lilv_plugin_get_port_by_index(m_lilvPlugin, i);
-        if (strcmp(port_symbol,
-                   lilv_node_as_string(lilv_port_get_symbol(m_lilvPlugin, port))) == 0) {
-            return lilv_port_get_index(m_lilvPlugin, port);
-        }
-    }
-    return LV2UI_INVALID_PORT_INDEX;
-}
-
 int Lv2ViewModel::instanceId() const
 {
     return m_instanceId;
@@ -308,5 +272,79 @@ void Lv2ViewModel::setInstanceId(int newInstanceId)
 QString Lv2ViewModel::title() const
 {
     return m_title;
+}
+
+int Lv2ViewModel::ui_resize(int /* width */, int /* height */)
+{
+    // TODO inform view
+    return 0;
+}
+
+void Lv2ViewModel::ui_closed()
+{
+    emit externalUiClosed();
+}
+
+void Lv2ViewModel::suil_port_write(uint32_t port_index, uint32_t buffer_size, uint32_t protocol, const void* buffer)
+{
+    // Handle implicit floats
+    if (protocol == 0 && buffer_size == sizeof(float)) {
+        if (auto it = m_ports->mControlPortMap.find(port_index);
+            it != m_ports->mControlPortMap.end()) {
+            const auto value = *static_cast<const float*>(buffer);
+            const auto access = instancesRegister()->settingsAccessById(m_instanceId);
+            access->ModifySettings(
+                [&](EffectSettings& settings)
+            {
+                GetSettings(settings).values[it->second] = value;
+                return nullptr;
+            });
+
+            // Publish({ size_t(port_index), value });
+        }
+    }
+    // Handle event transfers
+    else if (protocol == LV2Symbols::urid_EventTransfer) {
+        const LV2AtomPortStatePtr& atomPortState = m_portUIStates->mControlIn;
+        if (atomPortState && port_index == atomPortState->mpPort->mIndex) {
+            atomPortState->ReceiveFromDialog(buffer, buffer_size);
+        }
+    }
+}
+
+uint32_t Lv2ViewModel::suil_port_index(const char* port_symbol)
+{
+    for (size_t i = 0, cnt = lilv_plugin_get_num_ports(m_lilvPlugin); i < cnt; ++i) {
+        const auto port = lilv_plugin_get_port_by_index(m_lilvPlugin, i);
+        if (strcmp(port_symbol,
+                   lilv_node_as_string(lilv_port_get_symbol(m_lilvPlugin, port))) == 0) {
+            return lilv_port_get_index(m_lilvPlugin, port);
+        }
+    }
+    return LV2UI_INVALID_PORT_INDEX;
+}
+
+MyUiHandler::MyUiHandler(Lv2ViewModel& viewModel)
+    : m_viewModel(viewModel)
+{}
+
+int MyUiHandler::ui_resize(int width, int height)
+{
+    return m_viewModel.ui_resize(width, height);
+}
+
+void MyUiHandler::ui_closed()
+{
+    m_viewModel.ui_closed();
+}
+
+void MyUiHandler::suil_port_write(uint32_t port_index, uint32_t buffer_size, uint32_t protocol, const void* buffer)
+{
+    m_viewModel.suil_port_write(port_index, buffer_size, protocol, buffer);
+}
+
+uint32_t MyUiHandler::suil_port_index(const char* port_symbol)
+{
+    return m_viewModel.suil_port_index(port_symbol);
 }
 }
