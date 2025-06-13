@@ -88,6 +88,7 @@ EffectStyledDialogView {
         Lv2Viewer {
             id: view
             instanceId: root.instanceId
+            effectState: root.effectState
         }
     }
 

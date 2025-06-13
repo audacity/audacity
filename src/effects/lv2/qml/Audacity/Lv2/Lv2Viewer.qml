@@ -14,6 +14,7 @@ Rectangle {
 
     // in
     property alias instanceId: model.instanceId
+    property alias effectState: model.effectState
 
     // out
     property alias title: model.title

@@ -15,6 +15,7 @@
 #include <QQuickItem>
 
 class LV2PortUIStates;
+struct LV2EffectOutputs;
 
 namespace au::effects {
 class Lv2ViewModel;
@@ -40,6 +41,7 @@ class Lv2ViewModel : public QObject
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged FINAL)
+    Q_PROPERTY(QString effectState READ effectState WRITE setEffectState NOTIFY effectStateChanged FINAL)
 
     muse::Inject<IEffectInstancesRegister> instancesRegister;
 
@@ -52,12 +54,16 @@ public:
     int instanceId() const;
     void setInstanceId(int newInstanceId);
 
+    QString effectState() const;
+    void setEffectState(const QString& state);
+
     QString title() const;
 
 signals:
     void instanceIdChanged();
     void titleChanged();
     void externalUiClosed();
+    void effectStateChanged();
 
 private:
     friend class MyUiHandler;
@@ -68,15 +74,19 @@ private:
 
 private:
     using SuilInstancePtr = Lilv_ptr<SuilInstance, suil_instance_free>;
+    void onIdle();
 
     MyUiHandler m_handler;
 
     int m_instanceId = -1;
     QString m_title;
+    RealtimeEffectStatePtr m_effectState;
     std::unique_ptr<LV2Wrapper> m_wrapper;
     const LilvPlugin* m_lilvPlugin = nullptr;
     const LV2Ports* m_ports = nullptr;
     std::unique_ptr<LV2PortUIStates> m_portUIStates;
+    const LV2EffectOutputs* m_realtimeOutputs = nullptr;
+    EffectSettingsAccessPtr m_settingsAccess;
 
     SuilInstancePtr m_suilInstance;
     std::shared_ptr<SuilHost> mSuilHost;

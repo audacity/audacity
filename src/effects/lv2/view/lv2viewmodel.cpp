@@ -8,11 +8,12 @@
 
 #include "libraries/lib-effects/EffectManager.h"
 #include "libraries/lib-effects/Effect.h"
-
+#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "libraries/lib-lv2/LV2Instance.h"
 #include "libraries/lib-lv2/LoadLV2.h"
 #include "libraries/lib-lv2/LV2Utils.h"
 #include "libraries/lib-lv2/LV2UIFeaturesList.h"
+#include "libraries/lib-lv2/LV2Ports.h"
 
 #include "lv2/ui/ui.h"
 #include "suil/suil.h"
@@ -67,8 +68,6 @@ Lv2ViewModel::~Lv2ViewModel()
     if (mUiShowInterface && mUiShowInterface->hide) {
         mUiShowInterface->hide(suil_instance_get_handle(m_suilInstance.get()));
     }
-
-    instancesRegister()->settingsAccessById(m_instanceId)->Flush();
 }
 
 namespace {
@@ -88,6 +87,24 @@ unsigned uiIsSupported(const char* host_type_uri,
     }
     return 0;
 }
+}
+
+QString Lv2ViewModel::effectState() const
+{
+    if (!m_effectState) {
+        return {};
+    }
+    return QString::number(reinterpret_cast<uintptr_t>(m_effectState.get()));
+}
+
+void Lv2ViewModel::setEffectState(const QString& state)
+{
+    if (state == effectState()) {
+        return;
+    }
+    m_effectState = reinterpret_cast<RealtimeEffectState*>(state.toULongLong())->shared_from_this();
+    m_realtimeOutputs = dynamic_cast<const LV2EffectOutputs*>(m_effectState->GetOutputs());
+    emit effectStateChanged();
 }
 
 void Lv2ViewModel::init()
@@ -115,6 +132,7 @@ void Lv2ViewModel::init()
     m_lilvPlugin = &effect->mPlug;
     m_ports = &effect->mPorts;
     m_portUIStates = std::make_unique<LV2PortUIStates>(instance->GetPortStates(), *m_ports);
+    m_settingsAccess = instancesRegister()->settingsAccessById(m_instanceId);
 
     m_title = au3::wxToString(effect->GetSymbol().Internal());
     emit titleChanged();
@@ -214,45 +232,80 @@ void Lv2ViewModel::init()
     m_externalUiTimer = std::make_unique<QTimer>(this);
     std::function<void()> timerCallback;
 
+    mUiIdleInterface = static_cast<const LV2UI_Idle_Interface*>(
+        suil_instance_extension_data(m_suilInstance.get(), LV2_UI__idleInterface));
+
+    mUiShowInterface = static_cast<const LV2UI_Show_Interface*>(
+        suil_instance_extension_data(m_suilInstance.get(), LV2_UI__showInterface));
+
+    connect(m_externalUiTimer.get(), &QTimer::timeout, this, &Lv2ViewModel::onIdle);
+
     if (uiType == node_ExternalUI) {
         m_externalUiWidget = static_cast<LV2_External_UI_Widget*>(suil_instance_get_widget(m_suilInstance.get()));
-        timerCallback = [this] {
-            m_externalUiWidget->run(m_externalUiWidget);
-        };
         m_externalUiWidget->show(m_externalUiWidget);
     } else {
-        mUiIdleInterface = static_cast<const LV2UI_Idle_Interface*>(
-            suil_instance_extension_data(m_suilInstance.get(), LV2_UI__idleInterface));
-
-        mUiShowInterface = static_cast<const LV2UI_Show_Interface*>(
-            suil_instance_extension_data(m_suilInstance.get(), LV2_UI__showInterface));
-
-        if (!mUiIdleInterface || !mUiShowInterface) {
-            // TODO: is this an error?
-            return;
-        }
-
-        SuilHandle const handle = suil_instance_get_handle(m_suilInstance.get());
-
-        timerCallback = [this, handle] {
-            if (mUiIdleInterface && mUiIdleInterface->idle && mUiIdleInterface->idle(handle)) {
-                mUiIdleInterface = nullptr;
-                // The UI has been closed, stop the timer and hide the UI
-                m_externalUiTimer->stop();
-                if (mUiShowInterface->hide) {
-                    mUiShowInterface->hide(handle);
-                }
-                emit externalUiClosed();
-            }
-        };
-
-        if (mUiShowInterface->show) {
-            mUiShowInterface->show(handle);
+        if (mUiShowInterface && mUiShowInterface->show) {
+            mUiShowInterface->show(suil_instance_get_handle(m_suilInstance.get()));
         }
     }
 
-    connect(m_externalUiTimer.get(), &QTimer::timeout, this, timerCallback);
     m_externalUiTimer->start(30);
+}
+
+void Lv2ViewModel::onIdle()
+{
+    const auto handle = suil_instance_get_handle(m_suilInstance.get());
+    if (mUiIdleInterface && mUiIdleInterface->idle && mUiIdleInterface->idle(handle)) {
+        mUiIdleInterface = nullptr;
+        // The UI has been closed, stop the timer and hide the UI
+        m_externalUiTimer->stop();
+        if (mUiShowInterface->hide) {
+            mUiShowInterface->hide(handle);
+        }
+        emit externalUiClosed();
+    }
+
+    auto& portUIStates = *m_portUIStates;
+
+    if (auto& atomState = portUIStates.mControlOut) {
+        atomState->SendToDialog([&](const LV2_Atom* atom, uint32_t size) {
+            suil_instance_port_event(m_suilInstance.get(),
+                                     atomState->mpPort->mIndex, size,
+                                     // Means this event sends some structured data:
+                                     LV2Symbols::urid_EventTransfer, atom);
+        });
+    }
+
+    m_settingsAccess->Flush();
+    auto& values = GetSettings(m_settingsAccess->Get()).values;
+
+    size_t index = 0;
+    for (auto& state : portUIStates.mControlPortStates) {
+        auto& port = state.mpPort;
+
+        const auto pValue = port->mIsInput
+                            ? &values[index]
+                            : m_realtimeOutputs ? &m_realtimeOutputs->values[index]
+                            : nullptr;
+        if (pValue) {
+            auto& value = *pValue;
+            // Let UI know that a port's value has changed
+            if (value != state.mLst) {
+                suil_instance_port_event(m_suilInstance.get(),
+                                         port->mIndex, sizeof(value),
+                                         /* Means this event sends a float: */ 0,
+/*
+   Quoting what suil.h says about the next argument (which is good):
+
+   The `buffer` must be valid only for the duration of this call, the UI must
+   not keep a reference to it.
+ */
+                                         &value);
+                state.mLst = value;
+            }
+        }
+        ++index;
+    }
 }
 
 int Lv2ViewModel::instanceId() const
@@ -292,8 +345,7 @@ void Lv2ViewModel::suil_port_write(uint32_t port_index, uint32_t buffer_size, ui
         if (auto it = m_ports->mControlPortMap.find(port_index);
             it != m_ports->mControlPortMap.end()) {
             const auto value = *static_cast<const float*>(buffer);
-            const auto access = instancesRegister()->settingsAccessById(m_instanceId);
-            access->ModifySettings(
+            m_settingsAccess->ModifySettings(
                 [&](EffectSettings& settings)
             {
                 GetSettings(settings).values[it->second] = value;
