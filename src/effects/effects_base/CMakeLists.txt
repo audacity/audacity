@@ -18,7 +18,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsuiengine.h
-    ${CMAKE_CURRENT_LIST_DIR}/ieffectsviewregister.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectinstancesregister.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectexecutionscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/irealtimeeffectservice.h
@@ -28,6 +27,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectviewlaunchregister.h
 
     # internal
+    ${CMAKE_CURRENT_LIST_DIR}/internal/abstractaudiopluginmetareader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/abstractaudiopluginmetareader.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/abstractviewlauncher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/abstractviewlauncher.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectconfigsettings.cpp
@@ -40,6 +41,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsrepositoryhelper.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsrepositoryhelper.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectinstancesregister.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectinstancesregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectexecutionscenario.cpp
@@ -58,12 +61,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewlaunchregister.h
 
     # view
-    ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewregister.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectmanagemenu.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectmanagemenu.h
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/effectviewloader.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/effectviewloader.h
     ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.h
     )

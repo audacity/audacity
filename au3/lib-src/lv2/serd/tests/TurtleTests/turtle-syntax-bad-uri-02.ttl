@@ -1,2 +1,0 @@
-# Bad IRI : bad escape
-<http://www.w3.org/2013/TurtleTests/\u00ZZ11> <http://www.w3.org/2013/TurtleTests/p> <http://www.w3.org/2013/TurtleTests/o> .

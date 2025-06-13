@@ -1,2 +1,0 @@
-# @base without URI.
-@base .

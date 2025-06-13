@@ -1,4 +1,0 @@
-# Test non empty [] operator; not allowed as predicate
-@prefix : <http://example.org/base#> .
-[ :a :b ] :c :d .
-:e :f [ :g :h ] .

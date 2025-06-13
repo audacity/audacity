@@ -6,7 +6,7 @@
 #include "effects/effects_base/internal/abstractviewlauncher.h"
 
 namespace au::effects {
-class BuiltinViewLauncher : public AbstractViewLauncher
+class BuiltinViewLauncher final : public AbstractViewLauncher
 {
 public:
     BuiltinViewLauncher() = default;

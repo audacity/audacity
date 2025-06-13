@@ -14,7 +14,6 @@ Functions that find and load all LV2 plugins on the system.
 
 *//*******************************************************************/
 #include "LV2Wrapper.h"
-#include "PluginHost.h"
 #include "PluginInterface.h"
 #if defined(USE_LV2)
 
@@ -116,12 +115,13 @@ bool LV2EffectsModule::Initialize()
     }
 
     wxGetEnv(wxT("LV2_PATH"), &mStartupPathVar);
+    return true;
+}
 
-    if (PluginHost::IsHostProcess()) {
-        //Plugin validation process does not call `AutoRegisterPlugins`
-        //Register plugins from `LV2_PATH` here
-        lilv_world_load_all(LV2Symbols::gWorld);
-    }
+bool LV2EffectsModule::InitializePluginRegistration()
+{
+    Initialize();
+    lilv_world_load_all(LV2Symbols::gWorld);
     return true;
 }
 
@@ -197,7 +197,6 @@ void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface& pluginManager
     newVar += wxT(":") + libdir.GetPath();
 
     // Tell SUIL where to find his GUI support modules
-    wxSetEnv(wxT("SUIL_MODULE_DIR"), wxT(PKGLIBDIR));
 #endif
 
     {
@@ -220,7 +219,7 @@ void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface& pluginManager
     lilv_world_load_all(LV2Symbols::gWorld);
 }
 
-PluginPaths LV2EffectsModule::FindModulePaths(PluginManagerInterface&)
+PluginPaths LV2EffectsModule::FindModulePaths(PluginManagerInterface&) const
 {
     // Retrieve data about all LV2 plugins
     const LilvPlugins* plugs = lilv_world_get_all_plugins(LV2Symbols::gWorld);

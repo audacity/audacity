@@ -1,2 +1,0 @@
-<http://example.org/ex#a> <http://example.org/ex#b> "Cheers"@en-UK .
-<http://example.org/ex#a> <http://example.org/ex#b> "Cheers"@en-UK <http://example/graph> .

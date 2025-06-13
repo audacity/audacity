@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
+        <file>qml/Audacity/BuiltinEffects/qmldir</file>
+        <file>qml/Audacity/BuiltinEffects/BuiltinEffectViewer.qml</file>
         <file>common/EffectBase.qml</file>
         <file>amplify/AmplifyView.qml</file>
         <file>tonegen/ChirpView.qml</file>

@@ -1,3 +1,0 @@
-@base <http://example.org> .
-
-<instance> a <http://example.org/Thing> .

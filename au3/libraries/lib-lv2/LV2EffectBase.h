@@ -13,8 +13,6 @@
 #ifndef __AUDACITY_LV2_EFFECT_BASE__
 #define __AUDACITY_LV2_EFFECT_BASE__
 
-#if USE_LV2
-
 #include "LV2FeaturesList.h"
 #include "LV2Ports.h"
 
@@ -105,5 +103,4 @@ public:
     mutable wxArrayString mFactoryPresetUris;
 };
 
-#endif
 #endif

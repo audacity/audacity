@@ -1,3 +1,0 @@
-# ~ must be escaped.
-@prefix : <http://www.w3.org/2013/TurtleTests/> .
-:a~b :p :o .

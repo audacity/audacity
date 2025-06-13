@@ -1,5 +1,0 @@
-# N3 paths
-@prefix : <http://example/> .
-@prefix ns: <http://example/p#> .
-
-{:x^ns:p :p :z .}

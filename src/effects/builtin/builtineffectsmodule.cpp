@@ -7,7 +7,9 @@
 #include "internal/builtinviewlauncher.h"
 
 #include "common/abstracteffectmodel.h"
-#include "common/effectmanagemenu.h"
+
+#include "view/builtineffectviewloader.h"
+#include "view/effectsviewregister.h"
 
 #include "effects/effects_base/ieffectviewlaunchregister.h"
 
@@ -28,6 +30,7 @@ void BuiltinEffectsModule::registerExports()
     m_builtinEffectsRepository = std::make_shared<BuiltinEffectsRepository>();
 
     ioc()->registerExport<IBuiltinEffectsRepository>(moduleName(), m_builtinEffectsRepository);
+    ioc()->registerExport<IEffectsViewRegister>(moduleName(), new EffectsViewRegister());
 }
 
 void BuiltinEffectsModule::resolveImports()
@@ -45,8 +48,8 @@ void BuiltinEffectsModule::registerResources()
 
 void BuiltinEffectsModule::registerUiTypes()
 {
-    qmlRegisterUncreatableType<AbstractEffectModel>("Audacity.Effects", 1, 0, "AbstractEffectModel", "Not creatable abstract type");
-    qmlRegisterType<EffectManageMenu>("Audacity.Effects", 1, 0, "EffectManageMenu");
+    qmlRegisterUncreatableType<AbstractEffectModel>("Audacity.BuiltinEffects", 1, 0, "AbstractEffectModel", "Not creatable abstract type");
+    qmlRegisterType<BuiltinEffectViewLoader>("Audacity.BuiltinEffects", 1, 0, "BuiltinEffectViewLoader");
 }
 
 void BuiltinEffectsModule::onPreInit(const muse::IApplication::RunMode&)

@@ -1,2 +1,0 @@
-@prefix : <http://example/> .
-{_:b1. :p :o .}

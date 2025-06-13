@@ -3,25 +3,32 @@
 #
 declare_module(effects_lv2)
 
-#set(MODULE_QRC lv2.qrc)
+set(MODULE_QRC lv2.qrc)
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
 set(MODULE_SRC
+    ${CMAKE_CURRENT_LIST_DIR}/ilv2effectsrepository.h
     ${CMAKE_CURRENT_LIST_DIR}/lv2effectsmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/lv2effectsmodule.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2effectsrepository.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2effectsrepository.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginmetareader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginmetareader.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginsscanner.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginsscanner.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2viewlauncher.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2viewlauncher.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/lv2viewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/lv2viewmodel.h
 )
 
 # AU3
 include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3defs.cmake)
 
-set(MODULE_INCLUDE
-    ${AU3_INCLUDE}
-    ${MUSE_FRAMEWORK_SRC_PATH}/vst
-)
+set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
 
 set(MODULE_LINK au3wrap lv2sdk)

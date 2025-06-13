@@ -1,6 +1,0 @@
-<http://example.org/base#a> <http://example.org/base#b> <http://example.org/base#c> .
-<http://example.org/base#a> <http://example.org/base#b> <http://example.org/base#d> .
-<http://example.org/base#a> <http://example.org/base#b> <http://example.org/base#e> .
-<http://example.org/base#a> <http://example.org/base#b> <http://example.org/base#c> <http://example/graph> .
-<http://example.org/base#a> <http://example.org/base#b> <http://example.org/base#d> <http://example/graph> .
-<http://example.org/base#a> <http://example.org/base#b> <http://example.org/base#e> <http://example/graph> .

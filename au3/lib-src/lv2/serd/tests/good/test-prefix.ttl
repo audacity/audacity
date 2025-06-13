@@ -1,8 +1,0 @@
-@prefix eg: <http://example.org/a/> .
-
-<http://example.org/a/b> a <http://example.org/Thing> .
-<http://example.org/a/b/c> a <http://example.org/Thing> .
-<http://example.org/a/num0num> a <http://example.org/Thing> .
-<http://example.org/a/under_under> a <http://example.org/Thing> .
-<http://example.org/a/dash-dash> a <http://example.org/Thing> .
-<http://example.org/a/.invalidname.> a <http://example.org/Thing> .

@@ -1,3 +1,0 @@
-# Long literal with 4"
-@prefix : <http://www.w3.org/2013/TurtleTests/> .
-:s :p """abc""""@en .

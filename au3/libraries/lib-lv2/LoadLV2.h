@@ -37,6 +37,9 @@ public:
     LV2EffectsModule();
     virtual ~LV2EffectsModule();
 
+    //! Execute eitehr InitializePluginRegistration() or Initialize()
+    bool InitializePluginRegistration();
+
     // ComponentInterface implementation
 
     PluginPath GetPath() const override;
@@ -56,7 +59,7 @@ public:
     FilePath InstallPath() override { return {}; }
 
     void AutoRegisterPlugins(PluginManagerInterface& pm) override;
-    PluginPaths FindModulePaths(PluginManagerInterface& pm) override;
+    PluginPaths FindModulePaths(PluginManagerInterface& pm) const override;
     unsigned DiscoverPluginsAtPath(
         const PluginPath& path, TranslatableString& errMsg, const RegistrationCallback& callback)
     override;

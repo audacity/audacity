@@ -1,8 +1,0 @@
-@prefix : <http://example/> .
-
-{
-:s
-	:p [
-		:p1 27.
-	] .
-}

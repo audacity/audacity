@@ -83,7 +83,7 @@ struct LV2_API LV2AtomPortState final {
     //! @pre `pPort != nullptr`
     explicit LV2AtomPortState(LV2AtomPortPtr pPort)
         : mpPort{move(pPort)}
-        , mRing{zix_ring_new(mpPort->mMinimumSize)}
+        , mRing{zix_ring_new(zix_default_allocator(), mpPort->mMinimumSize)}
         , mBuffer{safenew uint8_t[mpPort->mMinimumSize]}
     {
         assert(mpPort);

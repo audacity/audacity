@@ -1,3 +1,0 @@
-@prefix eg: <http://example.org> .
-
-<> eg:uri <http://example.org/dontstop

@@ -211,7 +211,7 @@ void NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface& pm)
     }
 }
 
-PluginPaths NyquistEffectsModule::FindModulePaths(PluginManagerInterface& pm)
+PluginPaths NyquistEffectsModule::FindModulePaths(PluginManagerInterface& pm) const
 {
     auto pathList = NyquistBase::GetNyquistSearchPath();
     FilePaths files;

@@ -1,3 +1,0 @@
-@prefix a: <http://example.org/> .
-a:s1 a:p1 a:o1
-a:s2 a:p2 a:o2 .

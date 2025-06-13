@@ -46,6 +46,11 @@ URIDLIST
 
 bool InitializeGWorld()
 {
+    if (gWorld) {
+        // Already initialized.
+        return true;
+    }
+
     // Try to initialise Lilv, or return.
     uWorld.reset(lilv_world_new());
     if (!uWorld) {

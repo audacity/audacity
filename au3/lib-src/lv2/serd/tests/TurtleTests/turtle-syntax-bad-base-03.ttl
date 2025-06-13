@@ -1,3 +1,0 @@
-# FULL STOP used after SPARQL BASE
-BASE <http://www.w3.org/2013/TurtleTests/> .
-<s> <p> <o> .
