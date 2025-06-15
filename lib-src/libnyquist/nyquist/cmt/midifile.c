@@ -23,12 +23,8 @@
 #include "string.h"
 
 #define MIDIFILE_ERROR -1
-
-#ifdef PROTOTYPES
 #define NOARGS void
-#else
-#define NOARGS
-#endif
+
 
 /* public stuff */
 extern int abort_flag;
@@ -38,7 +34,6 @@ void (*Mf_starttrack)(NOARGS) = 0;
 void (*Mf_endtrack)(NOARGS) = 0;
 int (*Mf_getc)(NOARGS) = 0;
 void (*Mf_eot)(NOARGS) = 0;
-#ifdef PROTOTYPES
 void (*Mf_error)(char *) = 0;
 void (*Mf_header)(int,int,int) = 0;
 void (*Mf_on)(int,int,int) = 0;
@@ -58,27 +53,6 @@ void (*Mf_tempo)(int) = 0;
 void (*Mf_keysig)(int,int) = 0;
 void (*Mf_sqspecific)(int,char*) = 0;
 void (*Mf_text)(int,int,char*) = 0;
-#else
-void (*Mf_error)() = 0;
-void (*Mf_header)() = 0;
-void (*Mf_on)() = 0;
-void (*Mf_off)() = 0;
-void (*Mf_pressure)() = 0;
-void (*Mf_controller)() = 0;
-void (*Mf_pitchbend)() = 0;
-void (*Mf_program)() = 0;
-void (*Mf_chanpressure)() = 0;
-void (*Mf_sysex)() = 0;
-void (*Mf_arbitrary)() = 0;
-void (*Mf_metamisc)() = 0;
-void (*Mf_seqnum)() = 0;
-void (*Mf_smpte)() = 0;
-void (*Mf_tempo)() = 0;
-void (*Mf_timesig)() = 0;
-void (*Mf_keysig)() = 0;
-void (*Mf_sqspecific)() = 0;
-void (*Mf_text)() = 0;
-#endif
 
 int Mf_nomerge = 0;             /* 1 => continue'ed system exclusives are */
                                 /* not collapsed. */
@@ -100,7 +74,6 @@ static void sysex(NOARGS), msginit(NOARGS);
 static int egetc(NOARGS);
 static int msgleng(NOARGS);
 
-#ifdef PROTOTYPES
 static int readmt(char*,int);
 static long to32bit(int,int,int,int);
 static int to16bit(int,int);
@@ -109,15 +82,6 @@ static void badbyte(int);
 static void metaevent(int);
 static void msgadd(int);
 static void chanmessage(int,int,int);
-#else
-static long to32bit();
-static int to16bit();
-static void mferror();
-static void badbyte();
-static void metaevent();
-static void msgadd();
-static void chanmessage();
-#endif
 
 static int midifile_error;
 
@@ -128,7 +92,7 @@ midifile()              /* The only non-static function in this file. */
         midifile_error = 0;
 
         if ( Mf_getc == 0 ) {
-                mferror("mf.h() called without setting Mf_getc"); 
+                mferror("mf.h() called without setting Mf_getc");
                 return;
         }
         ntrks = readheader();
