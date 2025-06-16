@@ -350,6 +350,10 @@ void TracksListModel::setItemsSelected(const QModelIndexList& indexes, bool sele
         }
     }
 
+    if (idsToModify.empty()) {
+        return;
+    }
+
     // keep selectionController in sync with muse::uicomponents::ItemMultiSelectionModel
     auto alreadySelectedTracksIds = selectionController()->selectedTracks();
     if (selected) {

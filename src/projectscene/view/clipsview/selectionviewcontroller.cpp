@@ -163,6 +163,12 @@ void SelectionViewController::onReleased(double x, double y)
         return;
     }
 
+    if (tracks.empty()) {
+        selectionController()->resetSelectedTracks();
+        setSelection(x1, x2, true);
+        return;
+    }
+
     setSelectionActive(true);
 
     if (m_startPoint.y() < y) {
