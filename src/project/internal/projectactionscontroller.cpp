@@ -631,25 +631,7 @@ bool ProjectActionsController::shouldRetryLoadAfterError(const Ret& ret, const m
     if (ret) {
         return true;
     }
-    //! TODO AU4 :
-    switch (static_cast<project::Err>(ret.code())) {
-    /*
-        case project::Err::FileTooOld:
-        case project::Err::FileOld300Format:
-            return askIfUserAgreesToOpenProjectWithIncompatibleVersion(ret.text());
-        case project::Err::FileTooNew:
-            warnFileTooNew(filepath);
-            return configuration()->disableVersionChecking();
-        case project::Err::FileCorrupted:
-            return askIfUserAgreesToOpenCorruptedProject(io::filename(filepath).toString(), ret.text());
-        case project::Err::FileCriticallyCorrupted:
-            warnProjectCriticallyCorrupted(io::filename(filepath).toString(), ret.text());
-            return false;
-    */
-    default:
-        warnProjectCannotBeOpened(ret, filepath);
-        break;
-    }
+    warnProjectCannotBeOpened(ret, filepath);
     return false;
 }
 
