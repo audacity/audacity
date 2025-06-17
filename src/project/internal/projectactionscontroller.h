@@ -62,6 +62,7 @@ private:
     void openProject(const muse::actions::ActionData& args);
     void importFile();
     muse::Ret openProject(const muse::io::path_t& givenPath, const muse::String& displayNameOverride = muse::String());
+    muse::Ret loadWithFallback(const IAudacityProjectPtr& project, const muse::io::path_t& loadPath, const std::string& format);
     muse::Ret doOpenProject(const muse::io::path_t& filePath);
     //! TODO AU4
     // muse::Ret openAudacityUrl(const QUrl& url);
@@ -69,7 +70,7 @@ private:
     muse::io::path_t selectOpeningFile();
     muse::io::path_t selectImportFile();
 
-    bool checkCanIgnoreError(const muse::Ret& ret, const muse::io::path_t& filepath);
+    bool shouldRetryLoadAfterError(const muse::Ret& ret, const muse::io::path_t& filepath);
     void warnProjectCannotBeOpened(const muse::Ret& ret, const muse::io::path_t& filepath);
 
     muse::IInteractive::Button askAboutSavingProject(IAudacityProjectPtr project);

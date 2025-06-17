@@ -99,16 +99,26 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
     UNUSED(forceMode);
     UNUSED(format);
 
+    // check file access
     if (!io::FileInfo::exists(path)) {
         LOGE() << "file does not exist at path: \"" << path << "\"";
-        return make_ret(Err::FileNotFound, path);
+        return make_ret(Err::ProjectFileNotFound, path);
     }
 
     // check for file permissions
-    io::File file(path);
-    if (!file.open(io::IODevice::ReadOnly)) {
-        LOGE() << "failed open file: " << path;
-        return make_ret(Err::FileOpenError, path);
+    {
+        io::File file(path);
+        if (!file.open(io::IODevice::ReadOnly)) {
+            LOGE() << "failed open file (Can't Read): " << path;
+            return make_ret(Err::ProjectFileIsReadProtected, path);
+        }
+        file.close();
+
+        if (!file.open(io::IODevice::WriteOnly)) {
+            LOGE() << "failed open file (Can't Write): " << path;
+            return make_ret(Err::ProjectFileIsWriteProtected, path);
+        }
+        file.close();
     }
 
     m_au3Project = au3ProjectCreator()->create();

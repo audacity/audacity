@@ -551,24 +551,12 @@ RetVal<IAudacityProjectPtr> ProjectActionsController::loadProject(const io::path
     //! TODO AU4
     // bool hasUnsavedChanges = projectAutoSaver()->projectHasUnsavedChanges(filePath);
     // io::path_t loadPath = hasUnsavedChanges ? projectAutoSaver()->projectAutoSavePath(filePath) : filePath;
-    io::path_t loadPath = filePath;
 
-    std::string format = io::suffix(filePath);
+    const io::path_t loadPath = filePath;
+    const std::string format = io::suffix(filePath);
 
-    Ret ret = project->load(loadPath, false /*forceMode*/, format);
-
-    if (!ret) {
-        if (ret.code() == static_cast<int>(Ret::Code::Cancel)) {
-            return ret;
-        }
-
-        if (checkCanIgnoreError(ret, loadPath)) {
-            ret = project->load(loadPath, true /*forceMode*/, format);
-        }
-
-        if (!ret) {
-            return ret;
-        }
+    if (Ret result = loadWithFallback(project, loadPath, format); !result) {
+        return result;
     }
 
     //! TODO AU4
@@ -586,6 +574,23 @@ RetVal<IAudacityProjectPtr> ProjectActionsController::loadProject(const io::path
     // }
 
     return RetVal<IAudacityProjectPtr>::make_ok(project);
+}
+
+Ret ProjectActionsController::loadWithFallback(const IAudacityProjectPtr& project,
+                                               const muse::io::path_t& loadPath,
+                                               const std::string& format)
+{
+    Ret result = project->load(loadPath, /*forceMode*/ false, format);
+
+    if (result || result.code() == static_cast<int>(Ret::Code::Cancel)) {
+        return result;
+    }
+
+    if (const bool forceLoad = shouldRetryLoadAfterError(result, loadPath)) {
+        result = project->load(loadPath, /*forceMode*/ forceLoad, format);
+    }
+
+    return result;
 }
 
 bool ProjectActionsController::isProjectOpened(const muse::io::path_t& projectPath) const
@@ -621,30 +626,30 @@ void ProjectActionsController::clearRecentProjects()
     recentFilesController()->clearRecentFiles();
 }
 
-bool ProjectActionsController::checkCanIgnoreError(const Ret& ret, const muse::io::path_t& filepath)
+bool ProjectActionsController::shouldRetryLoadAfterError(const Ret& ret, const muse::io::path_t& filepath)
 {
     if (ret) {
         return true;
     }
-/*
     //! TODO AU4 :
-    switch (static_cast<engraving::Err>(ret.code())) {
-    case engraving::Err::FileTooOld:
-    case engraving::Err::FileOld300Format:
-        return askIfUserAgreesToOpenProjectWithIncompatibleVersion(ret.text());
-    case engraving::Err::FileTooNew:
-        warnFileTooNew(filepath);
-        return configuration()->disableVersionChecking();
-    case engraving::Err::FileCorrupted:
-        return askIfUserAgreesToOpenCorruptedProject(io::filename(filepath).toString(), ret.text());
-    case engraving::Err::FileCriticallyCorrupted:
-        warnProjectCriticallyCorrupted(io::filename(filepath).toString(), ret.text());
-        return false;
+    switch (static_cast<project::Err>(ret.code())) {
+    /*
+        case project::Err::FileTooOld:
+        case project::Err::FileOld300Format:
+            return askIfUserAgreesToOpenProjectWithIncompatibleVersion(ret.text());
+        case project::Err::FileTooNew:
+            warnFileTooNew(filepath);
+            return configuration()->disableVersionChecking();
+        case project::Err::FileCorrupted:
+            return askIfUserAgreesToOpenCorruptedProject(io::filename(filepath).toString(), ret.text());
+        case project::Err::FileCriticallyCorrupted:
+            warnProjectCriticallyCorrupted(io::filename(filepath).toString(), ret.text());
+            return false;
+    */
     default:
+        warnProjectCannotBeOpened(ret, filepath);
         break;
     }
-*/
-    warnProjectCannotBeOpened(ret, filepath);
     return false;
 }
 
@@ -654,12 +659,22 @@ void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const m
     std::string body;
 
     switch (ret.code()) {
-    case int(Err::FileNotFound):
-        body = muse::trc("project", "This file does not exist or cannot be accessed at the moment.");
-        break;
-    case int(Err::FileOpenError):
+    case int(Err::ProjectFileNotFound):
         body = muse::trc("project",
-                         "This file could not be opened. Please make sure that Audacity has permission to read this file.");
+                         "The file cannot be found or accessed at this location. If it’s stored on an external or cloud drive, please verify that the drive is connected and syncing properly.");
+        break;
+    case int(Err::ProjectFileIsReadProtected):
+        title = muse::mtrc("project", "This file cannot be opened due to access restrictions").arg(io::toNativeSeparators(
+                                                                                                       filepath).toString()).toStdString();
+        body = muse::trc("project",
+                         "To open this file, please check the file’s properties and permissions, ensure it is not stored on a drive or folder with restricted access, or try running Audacity as an administrator.");
+        break;
+    case int(Err::ProjectFileIsWriteProtected):
+        title
+            = muse::mtrc("project",
+                         "This file is write-protected and cannot be opened").arg(io::toNativeSeparators(filepath).toString()).toStdString();
+        body = muse::trc("project",
+                         "To open this file, please remove the write protection by checking the file’s properties, ensuring it is not stored on a write-protected drive or folder, or by running Audacity as an administrator.");
         break;
     default:
         if (!ret.text().empty()) {
