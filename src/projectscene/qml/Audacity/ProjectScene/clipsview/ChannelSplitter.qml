@@ -11,15 +11,7 @@ Item {
 
     opacity: 0.05
 
-    signal ratioChanged(double v)
-
-    QtObject {
-        id: prv
-
-        readonly property double minChannelHeight: 20
-        readonly property double minRatio: minChannelHeight / root.height
-        readonly property double maxRatio: (root.height - minChannelHeight) / root.height
-    }
+    signal positionChangeRequested(int y)
 
     Rectangle {
         id: splitter
@@ -43,26 +35,19 @@ Item {
         enabled: asymmetricStereoHeightsPossible
 
         onPositionChanged: {
-            let ratio = splitter.y / root.height
-            clampRatio(ratio)
+            root.positionChangeRequested(splitter.y)
         }
-    }
-
-    Component.onCompleted: {
-        root.heightChanged.connect(function() {
-            clampRatio(root.channelHeightRatio)
-        });
-    }
-
-    function clampRatio(ratio) {
-        let newRatio = Math.max(prv.minRatio, Math.min(prv.maxRatio, ratio));
-        root.ratioChanged(newRatio)
-        splitter.y = Math.round(newRatio * root.height - 1)
     }
 
     Binding {
         target: splitter
         property: "y"
-        value: Math.round(root.channelHeightRatio * root.height - 1)
+        value: {
+            if (root.height <= 0) {
+                return 0
+            }
+
+            return Math.round(root.channelHeightRatio * root.height)
+        }
     }
 }
