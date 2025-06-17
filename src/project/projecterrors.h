@@ -36,8 +36,9 @@ enum class Err {
     CorruptionError,
     CorruptionUponOpeningError,
 
-    FileOpenError,
-    FileNotFound,
+    ProjectFileNotFound,
+    ProjectFileIsReadProtected,
+    ProjectFileIsWriteProtected,
     InvalidCloudProjectId,
 
     UnsupportedUrl,
@@ -59,11 +60,14 @@ inline muse::Ret make_ret(Err err, const muse::io::path_t& filePath)
     // case Err::FileUnknownError:
     // text = muse::mtrc("project", "Unknown error");
     // break;
-    case Err::FileNotFound:
-        text = muse::mtrc("project", "File “%1” not found").arg(filePath.toString());
+    case Err::ProjectFileNotFound:
+        text = muse::mtrc("project", "Project “%1” not found").arg(filePath.toString());
         break;
-    case Err::FileOpenError:
-        text = muse::mtrc("project", "File open error");
+    case Err::ProjectFileIsReadProtected:
+        text = muse::mtrc("project", "Project file “%1” is read-protected and cannot be opened").arg(filePath.toString());
+        break;
+    case Err::ProjectFileIsWriteProtected:
+        text = muse::mtrc("project", "Project file “%1” is write-protected and cannot be opened").arg(filePath.toString());
         break;
     // case Err::FileBadFormat:
     // text = muse::mtrc("project", "Bad format");
