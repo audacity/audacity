@@ -1,13 +1,12 @@
 #include "audacityproject.h"
 
 #include "au3wrap/iau3project.h"
-#include "iprojectautosaver.h"
-#include "projecterrors.h"
-#include "global/io/ioretcodes.h"
-
-#include "log.h"
+#include "project/iprojectautosaver.h"
+#include "project/projecterrors.h"
+#include "global/log.h"
+#include "global/io/file.h"
 #include "global/io/fileinfo.h"
-#include "io/file.h"
+#include "global/io/ioretcodes.h"
 
 using namespace muse;
 using namespace au::project;
@@ -99,13 +98,11 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
     UNUSED(forceMode);
     UNUSED(format);
 
-    // check file access
     if (!io::FileInfo::exists(path)) {
         LOGE() << "file does not exist at path: \"" << path << "\"";
         return make_ret(Err::ProjectFileNotFound, path);
     }
 
-    // check for file permissions
     {
         io::File file(path);
         if (!file.open(io::IODevice::ReadOnly)) {
