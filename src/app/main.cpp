@@ -30,6 +30,7 @@
 #include "log.h"
 
 // Framework
+#include "muse_framework_config.h"
 #include "diagnostics/diagnosticsmodule.h"
 #include "framework/draw/drawmodule.h"
 #include "framework/actions/actionsmodule.h"
@@ -69,6 +70,10 @@
 #endif
 #include "effects/nyquist/nyquisteffectsmodule.h"
 #include "importexport/import/importermodule.h"
+
+#ifdef MUSE_MODULE_AUTOBOT
+#include "autobot/autobotmodule.h"
+#endif
 
 #include "au3wrap/au3wrapmodule.h"
 
@@ -159,6 +164,9 @@ int main(int argc, char** argv)
 
     // modules
     app.addModule(new au::appshell::AppShellModule());
+#ifdef MUSE_MODULE_AUTOBOT
+    app.addModule(new muse::autobot::AutobotModule());
+#endif
 #ifdef AU_MODULE_EFFECTS_LV2
     app.addModule(new au::effects::Lv2EffectsModule());
 #endif
