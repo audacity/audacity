@@ -16,16 +16,25 @@ using namespace au::playback;
 static constexpr double MIN_VOLUME_DB = 0.0;
 static constexpr double MAX_VOLUME_DB = 1.0;
 
-static std::vector<double> roundUpToFixedValue(int meterSize)
+static constexpr int LOW_RESOLUTION_METER_THRESHOLD = 400;
+static constexpr int HIGH_RESOLUTION_METER_THRESHOLD = 1500;
+
+struct StepValue {
+    int threshold;
+    double fullStep;
+    double smallStep;
+};
+
+static StepValue roundUpToFixedValue(int meterSize)
 {
-    const std::vector<std::vector<double> > steps = {
-        { 1500, 0.05, 0.05 / 2 },
-        { 700, 0.1, 0.1 / 3 },
+    const std::vector<StepValue> steps = {
+        { HIGH_RESOLUTION_METER_THRESHOLD, 0.05, 0.05 / 2 },
+        { LOW_RESOLUTION_METER_THRESHOLD, 0.1, 0.1 / 3 },
         { 0, 0.25, 0.25 / 3 }
     };
 
     for (const auto& step : steps) {
-        if (meterSize >= step[0]) {
+        if (meterSize >= step.threshold) {
             return step;
         }
     }
@@ -59,9 +68,9 @@ std::vector<double> LinearMeter::fullSteps(int meterSize) const
         return {};
     }
 
-    const std::vector<double> stepValues = roundUpToFixedValue(meterSize);
+    const StepValue stepValue = roundUpToFixedValue(meterSize);
 
-    if (stepValues[1] == 0) {
+    if (stepValue.fullStep == 0) {
         return {};
     }
 
@@ -70,7 +79,7 @@ std::vector<double> LinearMeter::fullSteps(int meterSize) const
 
     while (value <= MAX_VOLUME_DB) {
         steps.push_back(value);
-        value += stepValues[1];
+        value += stepValue.fullStep;
     }
 
     return steps;
@@ -84,9 +93,9 @@ std::vector<double> LinearMeter::smallSteps(int meterSize) const
 
     const auto fullStepsValue = fullSteps(meterSize);
 
-    const std::vector<double> stepValues = roundUpToFixedValue(meterSize);
+    const StepValue stepValue = roundUpToFixedValue(meterSize);
 
-    if (stepValues[2] == 0) {
+    if (stepValue.smallStep == 0) {
         return {};
     }
 
@@ -97,7 +106,7 @@ std::vector<double> LinearMeter::smallSteps(int meterSize) const
         if (std::find(fullStepsValue.begin(), fullStepsValue.end(), value) == fullStepsValue.end()) {
             steps.push_back(value);
         }
-        value += stepValues[2];
+        value += stepValue.smallStep;
     }
 
     return steps;

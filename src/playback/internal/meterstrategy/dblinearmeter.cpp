@@ -12,6 +12,8 @@
 static constexpr double MIN_VOLUME_DB = -60.0;
 static constexpr double MAX_VOLUME_DB = 0.0;
 
+static constexpr int LOW_RESOLUTION_METER_THRESHOLD = 400;
+
 using namespace au::playback;
 
 static double dbToValuePercentage(double dbValue)
@@ -41,7 +43,7 @@ double DbLinearMeter::stepToPosition(double step) const
 
 double DbLinearMeter::sampleToPosition(double sample) const
 {
-    if (sample == -60) {
+    if (sample == MIN_VOLUME_DB) {
         return 0.0;
     }
 
@@ -57,7 +59,7 @@ std::string DbLinearMeter::sampleToText(double sample) const
 
 std::vector<double> DbLinearMeter::fullSteps(int meterSize) const
 {
-    if (meterSize < 500) {
+    if (meterSize < LOW_RESOLUTION_METER_THRESHOLD) {
         return { -60, -30, -20, -15, -10, -5, 0 };
     }
 
@@ -66,7 +68,7 @@ std::vector<double> DbLinearMeter::fullSteps(int meterSize) const
 
 std::vector<double> DbLinearMeter::smallSteps(int meterSize) const
 {
-    if (meterSize < 500) {
+    if (meterSize < LOW_RESOLUTION_METER_THRESHOLD) {
         return {};
     }
 
