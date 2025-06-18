@@ -8,4 +8,4 @@ install (DIRECTORY
     PATTERN ".*" EXCLUDE
     )
 
-subdirs(locale)
+subdirs(locale autobotscripts)

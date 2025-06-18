@@ -108,6 +108,10 @@ if (AU_MODULE_EFFECTS_LV2)
     add_definitions(-DAU_MODULE_EFFECTS_LV2)
 endif()
 
+if (MUSE_MODULE_AUTOBOT)
+    list(APPEND LINK_LIB muse::autobot)
+endif()
+
 ###########################################
 # Resources
 ###########################################
