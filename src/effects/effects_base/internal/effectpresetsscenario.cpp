@@ -94,9 +94,9 @@ void EffectPresetsScenario::importPreset(const EffectInstanceId& effectInstanceI
     }
 
     const std::string interactiveTitle = muse::trc("effects", "Import Effect Parameters");
-    io::path_t path = interactive()->selectOpeningFile(QString::fromStdString(interactiveTitle),
-                                                       m_lastImportPath,
-                                                       presetFilesFilter());
+    io::path_t path = interactive()->selectOpeningFileSync(interactiveTitle,
+                                                           m_lastImportPath,
+                                                           presetFilesFilter());
 
     if (path.empty()) {
         LOGD() << "select file to import is canceled";
@@ -124,9 +124,9 @@ void EffectPresetsScenario::exportPreset(const EffectInstanceId& effectInstanceI
         m_lastExportPath = globalConfiguration()->homePath();
     }
 
-    io::path_t path = interactive()->selectSavingFile(muse::qtrc("effects", "Export Effect Parameters"),
-                                                      m_lastExportPath,
-                                                      presetFilesFilter());
+    io::path_t path = interactive()->selectSavingFileSync(muse::trc("effects", "Export Effect Parameters"),
+                                                          m_lastExportPath,
+                                                          presetFilesFilter());
 
     if (path.empty()) {
         LOGD() << "select file to export is canceled";

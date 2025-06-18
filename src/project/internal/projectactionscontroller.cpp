@@ -313,7 +313,7 @@ muse::io::path_t ProjectActionsController::selectOpeningFile()
         defaultDir = configuration()->defaultUserProjectsPath();
     }
 
-    io::path_t filePath = interactive()->selectOpeningFile(qtrc("project", "Open"), defaultDir, filter);
+    io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("project", "Open"), defaultDir, filter);
 
     if (!filePath.empty()) {
         configuration()->setLastOpenedProjectsPath(io::dirpath(filePath));
@@ -345,7 +345,7 @@ io::path_t ProjectActionsController::selectImportFile()
         defaultDir = configuration()->defaultUserProjectsPath();
     }
 
-    io::path_t filePath = interactive()->selectOpeningFile(qtrc("project", "Open"), defaultDir, filter);
+    io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("project", "Open"), defaultDir, filter);
 
     if (!filePath.empty()) {
         configuration()->setLastOpenedProjectsPath(io::dirpath(filePath));
