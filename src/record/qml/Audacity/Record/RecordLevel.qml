@@ -117,7 +117,6 @@ FlatButton {
                         }
                         HorizontalVolumePressureMeter {
                             id: rightVolumePressure
-                            showRuler: true
                         }
                     }
 

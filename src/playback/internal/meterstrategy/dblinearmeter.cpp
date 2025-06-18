@@ -26,7 +26,7 @@ static double dbToValuePercentage(double dbValue)
         return (30 + 1.5 * (dbValue + 30.0)) / 100.0;
     } else if (dbValue > -50.0) {
         return (15 + 0.75 * (dbValue + 40.0)) / 100.0;
-    } else if (dbValue >= -60.0) {
+    } else if (dbValue > -60.0) {
         return (7.5 + 0.5 * (dbValue + 50.0)) / 100.0;
     } else {
         return 0.0;
@@ -55,12 +55,20 @@ std::string DbLinearMeter::sampleToText(double sample) const
     return ss.str();
 }
 
-std::vector<double> DbLinearMeter::fullSteps(int) const
+std::vector<double> DbLinearMeter::fullSteps(int meterSize) const
 {
+    if (meterSize < 500) {
+        return { -60, -30, -20, -15, -10, -5, 0 };
+    }
+
     return { 0.0, -3.0, -6.0, -9.0, -12.0, -18.0, -24.0, -30.0, -40.0, -50.0, -60.0 };
 }
 
-std::vector<double> DbLinearMeter::smallSteps(int) const
+std::vector<double> DbLinearMeter::smallSteps(int meterSize) const
 {
+    if (meterSize < 500) {
+        return {};
+    }
+
     return { -1, -2, -4, -5, -7, -8, -10, -11, -13.5, -15.0, -16.5, -20, -22, -26, -28, -35, -45 };
 }

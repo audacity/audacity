@@ -21,8 +21,7 @@ static std::vector<double> roundUpToFixedValue(int meterSize)
     const std::vector<std::vector<double> > steps = {
         { 1500, 0.05, 0.05 / 2 },
         { 700, 0.1, 0.1 / 3 },
-        { 400, 0.2, 0.2 / 3 },
-        { 0, 0.25, 0.25 / 2 }
+        { 0, 0.25, 0.25 / 3 }
     };
 
     for (const auto& step : steps) {
