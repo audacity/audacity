@@ -97,7 +97,7 @@ Item {
             PlaybackLevel {
                 property var itemData: null
 
-                width: 240
+                width: 288
                 height: 28
 
                 volumeLevel: Boolean(itemData) ? itemData.level : 0

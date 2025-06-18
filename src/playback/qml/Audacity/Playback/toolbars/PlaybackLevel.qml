@@ -132,7 +132,7 @@ Item {
                 id: volumeSlider
 
                 anchors.left: parent.left
-                anchors.leftMargin: -handleWidth/2
+                anchors.leftMargin: playbackMeterRuler.leftTextMargin - volumeSlider.handleWidth / 2
                 anchors.right: parent.right
                 anchors.rightMargin: leftVolumePressure.overloadTotalSpace
                 anchors.top: parent.top

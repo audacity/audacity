@@ -114,9 +114,12 @@ FlatButton {
 
                         HorizontalVolumePressureMeter {
                             id: leftVolumePressure
+                            showOverload: false
                         }
+
                         HorizontalVolumePressureMeter {
                             id: rightVolumePressure
+                            showOverload: false
                         }
                     }
 
