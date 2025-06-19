@@ -483,15 +483,19 @@ muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
             makeMenuItem("diagnostic-accessible-tree-dump"),
         };
 
-        //! TODO AU4
-        // MenuItemList autobotItems {
-        //     makeMenuItem("autobot-show-scripts"),
-        // };
+        MenuItemList autobotItems {
+            makeMenuItem("autobot-show-scripts"),
+        };
+
+        MenuItemList extensionsItems {
+            makeMenuItem("extensions-show-apidump"),
+        };
 
         items << makeMenu(TranslatableString("appshell/menu/diagnostics", "A&ctions"), actionsItems, "menu-actions")
-              << makeMenu(TranslatableString("appshell/menu/diagnostics", "&Accessibility"), accessibilityItems, "menu-accessibility");
+              << makeMenu(TranslatableString("appshell/menu/diagnostics", "&Accessibility"), accessibilityItems, "menu-accessibility")
+              << makeMenu(TranslatableString("appshell/menu/diagnostics", "E&xtensions"), extensionsItems, "menu-extensions")
+              << makeMenu(TranslatableString("appshell/menu/diagnostics", "Auto&bot"), autobotItems, "menu-autobot");
         //! TODO AU4
-        // << makeMenu(TranslatableString("appshell/menu/diagnostics", "Auto&bot"), autobotItems, "menu-autobot")
         // << makeMenuItem("multiinstances-dev-show-info");
     }
 
