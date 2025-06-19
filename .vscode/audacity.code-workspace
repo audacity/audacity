@@ -26,6 +26,7 @@
         "uncrustify.configPath.windows": "${workspaceFolder}/_deps/muse_framework-src/buildscripts/ci/checkcodestyle/uncrustify_muse.cfg",
         "uncrustify.configPath.linux": "${workspaceFolder}/_deps/muse_framework-src/buildscripts/ci/checkcodestyle/uncrustify_muse.cfg",
         "uncrustify.configPath.osx": "${workspaceFolder}/_deps/muse_framework-src/buildscripts/ci/checkcodestyle/uncrustify_muse.cfg",
+        "editor.defaultFormatter": "zachflower.uncrustify",
         "cmake.useVsDeveloperEnvironment": "auto",
     }
 }
