@@ -112,6 +112,10 @@ if (MUSE_MODULE_AUTOBOT)
     list(APPEND LINK_LIB muse::autobot)
 endif()
 
+if (MUSE_MODULE_EXTENSIONS)
+    list(APPEND LINK_LIB muse::extensions)
+endif()
+
 ###########################################
 # Resources
 ###########################################

@@ -75,6 +75,12 @@
 #include "autobot/autobotmodule.h"
 #endif
 
+#ifdef MUSE_MODULE_EXTENSIONS
+#include "framework/extensions/extensionsmodule.h"
+#else
+#include "framework/stubs/extensions/extensionsstubmodule.h"
+#endif
+
 #include "au3wrap/au3wrapmodule.h"
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
@@ -164,6 +170,7 @@ int main(int argc, char** argv)
 
     // modules
     app.addModule(new au::appshell::AppShellModule());
+    app.addModule(new muse::extensions::ExtensionsModule());
 #ifdef MUSE_MODULE_AUTOBOT
     app.addModule(new muse::autobot::AutobotModule());
 #endif
