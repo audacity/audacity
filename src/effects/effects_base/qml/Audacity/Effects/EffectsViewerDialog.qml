@@ -87,6 +87,8 @@ EffectStyledDialogView {
             id: lv2ViewerComp
             Lv2Viewer {
                 instanceId: root.instanceId
+                minimumWidth: root.minimumWidth
+                title: root.title
             }
         }
 

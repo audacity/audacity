@@ -139,9 +139,6 @@ void Lv2ViewModel::init()
     m_portUIStates = std::make_unique<LV2PortUIStates>(m_instance->GetPortStates(), *m_ports);
     m_settingsAccess = instancesRegister()->settingsAccessById(m_instanceId);
 
-    m_title = au3::wxToString(effect->GetSymbol().Internal());
-    emit titleChanged();
-
     const auto sampleRate = playback()->audioOutput()->sampleRate();
     m_wrapper = m_instance->MakeWrapper(*settings, sampleRate, nullptr);
     IF_ASSERT_FAILED(m_wrapper) {
@@ -402,6 +399,29 @@ void Lv2ViewModel::setInstanceId(int newInstanceId)
 QString Lv2ViewModel::title() const
 {
     return m_title;
+}
+
+void Lv2ViewModel::setTitle(const QString& title)
+{
+    if (m_title == title) {
+        return;
+    }
+    m_title = title;
+    emit titleChanged();
+}
+
+int Lv2ViewModel::minimumWidth() const
+{
+    return m_minimumWidth;
+}
+
+void Lv2ViewModel::setMinimumWidth(int width)
+{
+    if (m_minimumWidth == width) {
+        return;
+    }
+    m_minimumWidth = width;
+    emit minimumWidthChanged();
 }
 
 int Lv2ViewModel::onResizeUi(int /* width */, int /* height */)

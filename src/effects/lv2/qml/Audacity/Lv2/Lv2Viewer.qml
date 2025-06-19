@@ -16,9 +16,8 @@ Rectangle {
     // in
     property alias instanceId: model.instanceId
     property alias effectState: model.effectState
-
-    // out
     property alias title: model.title
+    property alias minimumWidth: model.minimumWidth
 
     implicitWidth: textItem.width
     implicitHeight: textItem.height

@@ -89,6 +89,8 @@ EffectStyledDialogView {
             id: view
             instanceId: root.instanceId
             effectState: root.effectState
+            title: root.title
+            minimumWidth: root.minimumWidth
         }
     }
 

@@ -31,9 +31,10 @@ class Lv2ViewModel : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
-    Q_PROPERTY(QString title READ title NOTIFY titleChanged FINAL)
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged FINAL)
     Q_PROPERTY(QString effectState READ effectState WRITE setEffectState NOTIFY effectStateChanged FINAL)
     Q_PROPERTY(QString unsupportedUiReason READ unsupportedUiReason NOTIFY unsupportedUiReasonChanged FINAL)
+    Q_PROPERTY(int minimumWidth READ minimumWidth WRITE setMinimumWidth NOTIFY minimumWidthChanged FINAL)
 
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectExecutionScenario> executionScenario;
@@ -53,8 +54,13 @@ public:
     QString effectState() const;
     void setEffectState(const QString& state);
 
-    QString title() const;
     QString unsupportedUiReason() const;
+
+    QString title() const;
+    void setTitle(const QString& title);
+
+    int minimumWidth() const;
+    void setMinimumWidth(int width);
 
 signals:
     void instanceIdChanged();
@@ -62,6 +68,7 @@ signals:
     void externalUiClosed();
     void effectStateChanged();
     void unsupportedUiReasonChanged();
+    void minimumWidthChanged();
 
 private:
     friend class Lv2UiHandler;
@@ -85,8 +92,10 @@ private:
     Lv2UiHandler m_handler;
 
     int m_instanceId = -1;
+    int m_minimumWidth = 0;
     QString m_title;
     RealtimeEffectStatePtr m_effectState;
+
     std::shared_ptr<LV2Instance> m_instance;
     std::unique_ptr<LV2Wrapper> m_wrapper;
     const LilvPlugin* m_lilvPlugin = nullptr;
