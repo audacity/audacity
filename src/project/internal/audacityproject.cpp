@@ -93,6 +93,7 @@ Ret Audacity4Project::import(const std::vector<muse::io::path_t>& paths, bool fo
 
 muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const std::string& format)
 {
+    muse::Ret ret = muse::make_ret(Ret::Code::Ok);
     TRACEFUNC;
 
     UNUSED(forceMode);
@@ -103,26 +104,18 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
         return make_ret(Err::ProjectFileNotFound, path);
     }
 
-    {
-        io::File file(path);
-        if (!file.open(io::IODevice::ReadOnly)) {
-            LOGE() << "failed open file (Can't Read): " << path;
-            return make_ret(Err::ProjectFileIsReadProtected, path);
-        }
-        file.close();
-
-        if (!file.open(io::IODevice::WriteOnly)) {
-            LOGE() << "failed open file (Can't Write): " << path;
-            return make_ret(Err::ProjectFileIsWriteProtected, path);
-        }
-        file.close();
+    io::File file(path);
+    if (!file.open(io::IODevice::ReadOnly)) {
+        LOGE() << "failed open file (Can't Read): " << path;
+        return make_ret(Err::ProjectFileIsReadProtected, path);
     }
+    file.close();
 
     m_au3Project = au3ProjectCreator()->create();
-    bool isLoaded = m_au3Project->load(path);
-    if (!isLoaded) {
+    ret = m_au3Project->load(path);
+    if (!ret) {
         LOGE() << "Failed load:" << path;
-        return muse::make_ret(muse::Ret::Code::UnknownError);
+        return ret;
     }
 
     LOGI() << "success loaded au3 project: " << m_au3Project->title();
@@ -131,7 +124,7 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
 
     m_viewState = viewStateCreator()->createViewState(m_au3Project);
 
-    return muse::make_ret(Ret::Code::Ok);
+    return ret;
 }
 
 Ret Audacity4Project::doImport(const muse::io::path_t& path, bool forceMode)

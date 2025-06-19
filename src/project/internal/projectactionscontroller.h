@@ -1,25 +1,25 @@
 #ifndef AU_PROJECT_PROJECTACTIONSCONTROLLER_H
 #define AU_PROJECT_PROJECTACTIONSCONTROLLER_H
 
-#include "iprojectfilescontroller.h"
+#include "project/iprojectfilescontroller.h"
 
 #include "actions/actionable.h"
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
-#include "iinteractive.h"
+#include "global/iinteractive.h"
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
 #include "global/iinteractive.h"
 #include "global/io/ifilesystem.h"
-#include "../iprojectconfiguration.h"
-#include "irecentfilescontroller.h"
-#include "iprojectautosaver.h"
 #include "iopensaveprojectscenario.h"
 #include "record/irecordcontroller.h"
-
-#include "../iaudacityproject.h"
 #include "trackedit/iprojecthistory.h"
+
+#include "project/iprojectconfiguration.h"
+#include "project/irecentfilescontroller.h"
+#include "project/iprojectautosaver.h"
+#include "project/iaudacityproject.h"
 
 namespace au::project {
 class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable, public muse::async::Asyncable
@@ -42,7 +42,7 @@ public:
 
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
-    muse::Ret openProject(const ProjectFile& file) override;
+    [[nodiscard]] muse::Ret openProject(const ProjectFile& file) override;
     bool isUrlSupported(const QUrl& url) const override;
     bool isFileSupported(const muse::io::path_t& path) const override;
     bool closeOpenedProject(bool quitApp = false) override;
@@ -71,7 +71,7 @@ private:
     muse::io::path_t selectImportFile();
 
     bool shouldRetryLoadAfterError(const muse::Ret& ret, const muse::io::path_t& filepath);
-    void warnProjectCannotBeOpened(const muse::Ret& ret, const muse::io::path_t& filepath);
+    void warnProjectCannotBeOpened(const muse::Ret& ret, const muse::io::path_t& filepath) const;
 
     muse::IInteractive::Button askAboutSavingProject(IAudacityProjectPtr project);
 

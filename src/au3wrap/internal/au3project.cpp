@@ -34,6 +34,8 @@
 
 #include <random>
 
+#include "project/projecterrors.h"
+
 using namespace au::au3;
 
 namespace {
@@ -80,8 +82,10 @@ void Au3ProjectAccessor::open()
     projectFileIO.OpenProject();
 }
 
-bool Au3ProjectAccessor::load(const muse::io::path_t& filePath)
+muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath)
 {
+    muse::Ret ret = muse::make_ok();
+
     auto& project = m_data->projectRef();
     auto& projectFileIO = ProjectFileIO::Get(project);
     std::string sstr = filePath.toStdString();
@@ -91,9 +95,21 @@ bool Au3ProjectAccessor::load(const muse::io::path_t& filePath)
 
     try {
         conn.emplace(projectFileIO.LoadProject(fileName, false /*ignoreAutosave*/).value());
-    } catch (AudacityException&) {
+    } catch (AudacityException& exception) {
         LOGE() << "failed load project: " << filePath << ", exception received";
-        return false;
+        ret = make_ret(project::Err::AudacityExceptionError, filePath.toString());
+        return ret;
+    } catch (std::bad_optional_access)
+    {
+        if (static_cast<project::Err>(projectFileIO.GetLastErrorCode()) == project::Err::ProjectFileIsWriteProtected)
+        {
+            ret = make_ret(project::Err::ProjectFileIsWriteProtected, filePath.toString());
+        }
+        else
+        {
+            ret = make_ret(project::Err::DatabaseError, filePath.toString());
+        }
+        return ret;
     }
 
     muse::Defer([&conn]() {
@@ -103,6 +119,7 @@ bool Au3ProjectAccessor::load(const muse::io::path_t& filePath)
     const bool bParseSuccess = conn.has_value();
     if (!bParseSuccess) {
         LOGE() << "failed load project: " << filePath;
+        ret = make_ret(muse::Ret::Code::UnknownError, "Failed to load project: " + filePath.toString());
         return false;
     }
 
@@ -115,7 +132,7 @@ bool Au3ProjectAccessor::load(const muse::io::path_t& filePath)
 
     updateSavedState();
 
-    return true;
+    return ret;
 }
 
 bool Au3ProjectAccessor::save(const muse::io::path_t& filePath)

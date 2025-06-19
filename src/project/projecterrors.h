@@ -22,7 +22,8 @@
 #ifndef AU_PROJECT_PROJECTERRORS_H
 #define AU_PROJECT_PROJECTERRORS_H
 
-#include "types/ret.h"
+#include "global/io/path.h"
+#include "global/types/ret.h"
 #include "global/translation.h"
 
 namespace au::project {
@@ -36,6 +37,8 @@ enum class Err {
     CorruptionError,
     CorruptionUponOpeningError,
 
+    AudacityExceptionError,
+    DatabaseError,
     ProjectFileNotFound,
     ProjectFileIsReadProtected,
     ProjectFileIsWriteProtected,
@@ -52,26 +55,49 @@ inline muse::Ret make_ret(Err e)
 
 inline muse::Ret make_ret(Err err, const muse::io::path_t& filePath)
 {
-    muse::String text;
+    auto ret = muse::Ret(static_cast<int>(err));
+
+    muse::String title = muse::mtrc("project", "Cannot read file %1").arg(muse::io::toNativeSeparators(filePath).toString());
+    muse::String body;
+    muse::String path = muse::io::toNativeSeparators(filePath).toString();
 
     switch (err) {
     case Err::NoError:
         return muse::make_ok();
+    case Err::AudacityExceptionError:
+        title = muse::mtrc("project", "Audacity exception occurred");
+        body = muse::mtrc("project", "An Audacity exception occurred while trying to open the project file:\n“%1”").arg(muse::io::toNativeSeparators(filePath).toString());
+        break;
+    case Err::DatabaseError:
+        title = muse::mtrc("project", "Database error");
+        body = muse::mtrc("project",
+                         "An error occurred while trying to access the project database.\nFailed to load project: “%1”" ).arg(filePath.toString());
+        break;
     case Err::ProjectFileNotFound:
-        text = muse::mtrc("project", "Project “%1” not found").arg(filePath.toString());
+        body = muse::mtrc("project",
+                         "The file:\n“%1”\nCannot be found or accessed at this location. If it’s stored on an external or cloud drive, please verify that the drive is connected and syncing properly.").arg(muse::io::toNativeSeparators(filePath).toString());
         break;
     case Err::ProjectFileIsReadProtected:
-        text = muse::mtrc("project", "Project file “%1” is read-protected and cannot be opened").arg(filePath.toString());
+        title = muse::mtrc("project", "This file cannot be opened due to access restrictions");
+        body = muse::mtrc("project",
+                         "To open this file:\n“%1”\nPlease check the file’s properties and permissions, ensure it is not stored on a drive or folder with restricted access, or try running Audacity as an administrator.").arg(muse::io::toNativeSeparators(filePath).toString());
         break;
     case Err::ProjectFileIsWriteProtected:
-        text = muse::mtrc("project", "Project file “%1” is write-protected and cannot be opened").arg(filePath.toString());
+        title = muse::mtrc("project",
+                         "This file is write-protected and cannot be opened");
+        body = muse::mtrc("project",
+                         "To open this file:\n“%1”\nPlease remove the write protection by checking the file’s properties, ensuring it is not stored on a write-protected drive or folder, or by running Audacity as an administrator.").arg(muse::io::toNativeSeparators(filePath).toString());
         break;
     case Err::Undefined:
     case Err::UnknownError:
         break;
     }
 
-    return muse::Ret(static_cast<int>(err), text.toStdString());
+    ret.setData("title", title.toStdString());
+    ret.setData("body", body.toStdString());
+    ret.setData("path", path);
+
+    return ret;
 }
 }
 

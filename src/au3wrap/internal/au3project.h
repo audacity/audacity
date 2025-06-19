@@ -5,8 +5,9 @@
 
 #include <memory>
 
-#include "../iau3project.h"
-#include "Track.h"
+#include "global/types/ret.h"
+#include "au3wrap/iau3project.h"
+#include "libraries/lib-track/Track.h"
 #include "libraries/lib-utility/Observer.h"
 
 class TrackList;
@@ -21,7 +22,7 @@ public:
     Au3ProjectAccessor();
 
     void open() override;
-    bool load(const muse::io::path_t& filePath) override;
+    muse::Ret load(const muse::io::path_t& filePath) override;
     bool save(const muse::io::path_t& fileName) override;
     void close() override;
 

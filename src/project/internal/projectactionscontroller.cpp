@@ -166,7 +166,8 @@ void ProjectActionsController::openProject(const muse::actions::ActionData& args
     QUrl url = !args.empty() ? args.arg<QUrl>(0) : QUrl();
     QString displayNameOverride = args.count() >= 2 ? args.arg<QString>(1) : QString();
 
-    openProject(ProjectFile(url, displayNameOverride));
+    Ret ret = openProject(ProjectFile(url, displayNameOverride));
+
 }
 
 void ProjectActionsController::importFile()
@@ -580,14 +581,16 @@ Ret ProjectActionsController::loadWithFallback(const IAudacityProjectPtr& projec
                                                const muse::io::path_t& loadPath,
                                                const std::string& format)
 {
-    Ret result = project->load(loadPath, /*forceMode*/ false, format);
+    bool forceLoad = false;
+    Ret result = project->load(loadPath, forceLoad, format);
 
     if (result || result.code() == static_cast<int>(Ret::Code::Cancel)) {
         return result;
     }
 
-    if (const bool forceLoad = shouldRetryLoadAfterError(result, loadPath)) {
-        result = project->load(loadPath, /*forceMode*/ forceLoad, format);
+    forceLoad = shouldRetryLoadAfterError(result, loadPath);
+    if (forceLoad) {
+        result = project->load(loadPath, forceLoad, format);
     }
 
     return result;
@@ -635,30 +638,24 @@ bool ProjectActionsController::shouldRetryLoadAfterError(const Ret& ret, const m
     return false;
 }
 
-void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const muse::io::path_t& filepath)
+void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const muse::io::path_t& filepath) const
 {
-    std::string title = muse::mtrc("project", "Cannot read file %1").arg(io::toNativeSeparators(filepath).toString()).toStdString();
+    std::string title;
     std::string body;
-
-    switch (ret.code()) {
-    case int(Err::ProjectFileNotFound):
-        body = muse::trc("project",
-                         "The file cannot be found or accessed at this location. If it’s stored on an external or cloud drive, please verify that the drive is connected and syncing properly.");
-        break;
-    case int(Err::ProjectFileIsReadProtected):
-        title = muse::mtrc("project", "This file cannot be opened due to access restrictions").arg(io::toNativeSeparators(
-                                                                                                       filepath).toString()).toStdString();
-        body = muse::trc("project",
-                         "To open this file, please check the file’s properties and permissions, ensure it is not stored on a drive or folder with restricted access, or try running Audacity as an administrator.");
-        break;
-    case int(Err::ProjectFileIsWriteProtected):
-        title
-            = muse::mtrc("project",
-                         "This file is write-protected and cannot be opened").arg(io::toNativeSeparators(filepath).toString()).toStdString();
-        body = muse::trc("project",
-                         "To open this file, please remove the write protection by checking the file’s properties, ensuring it is not stored on a write-protected drive or folder, or by running Audacity as an administrator.");
-        break;
-    default:
+    if (const auto titleOpt = ret.data<std::string>("title"))
+    {
+        title = *titleOpt;
+    }
+    else
+    {
+        title = muse::mtrc("project", "Cannot read file %1").arg(io::toNativeSeparators(filepath).toString()).toStdString();
+    }
+    if (const auto bodyOpt = ret.data<std::string>("body"))
+    {
+        body = *bodyOpt;
+    }
+    else
+    {
         if (!ret.text().empty()) {
             body = ret.text();
         } else {
