@@ -97,6 +97,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/editpreferencesmodel.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/braillepreferencesmodel.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/braillepreferencesmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/exportpreferencesmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/exportpreferencesmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/framelesswindow/framelesswindowmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/framelesswindow/framelesswindowmodel.h
