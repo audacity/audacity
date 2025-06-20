@@ -186,7 +186,9 @@ if (WIN_PORTABLE)
     add_definitions(-DWIN_PORTABLE)
 endif()
 
-add_definitions(-DKORS_PROFILER_ENABLED)
+if (MUSE_APP_IS_PRERELEASE)
+    add_definitions(-DKORS_PROFILER_ENABLED)
+endif()
 
 if (MUE_ENABLE_LOAD_QML_FROM_SOURCE)
     add_definitions(-DMUE_ENABLE_LOAD_QML_FROM_SOURCE)
