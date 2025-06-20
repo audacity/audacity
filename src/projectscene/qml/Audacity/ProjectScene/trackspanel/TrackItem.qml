@@ -263,46 +263,62 @@ ListItemBlank {
             Layout.bottomMargin: 2 * bottomSeparator.thickness
         }
 
-        Row {
-            id: volumePressureContainer
-            Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
-            Layout.preferredWidth: 24
-            Layout.preferredHeight: root.height
-            topPadding: 5
+        Item {
+            Layout.fillHeight: true
+            Layout.topMargin: 5
+            Layout.bottomMargin: 5
+            width: 24
 
-            spacing: 2
+            Row {
+                id: volumePressureContainer
 
-            TapHandler {
-                id: volumePressureTapHandler
-                onTapped: {
-                    rightVolumePressureMeter.reset()
-                    rightVolumePressureMeter.resetClipped()
-                    leftOrMonoVolumePressureMeter.reset()
-                    leftOrMonoVolumePressureMeter.resetClipped()
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                property int indicatorWidth: 7
+
+                spacing: 2
+
+                TapHandler {
+                    id: volumePressureTapHandler
+                    onTapped: {
+                        rightVolumePressureMeter.reset()
+                        rightVolumePressureMeter.resetClipped()
+                        leftOrMonoVolumePressureMeter.reset()
+                        leftOrMonoVolumePressureMeter.resetClipped()
+                    }
                 }
-            }
 
-            VolumePressureMeter {
-                id: leftOrMonoVolumePressureMeter
+                VolumePressureMeter {
+                    id: leftOrMonoVolumePressureMeter
 
-                height: root.height
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
 
-                meterStyle: trackViewState.meterStyle
+                    indicatorWidth: parent.indicatorWidth
 
-                currentVolumePressure: root.item.leftChannelPressure
-                currentRMS: root.item.leftChannelRMS
-            }
+                    meterStyle: trackViewState.meterStyle
+                    meterModel: trackViewState.meterModel
 
-            VolumePressureMeter {
-                id: rightVolumePressureMeter
+                    currentVolumePressure: root.item.leftChannelPressure
+                    currentRMS: root.item.leftChannelRMS
+                }
 
-                visible: root.item.channelCount === 2
-                height: root.height
+                VolumePressureMeter {
+                    id: rightVolumePressureMeter
 
-                meterStyle: trackViewState.meterStyle
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
 
-                currentVolumePressure: root.item.rightChannelPressure
-                currentRMS: root.item.rightChannelRMS
+                    indicatorWidth: parent.indicatorWidth
+
+                    meterStyle: trackViewState.meterStyle
+                    meterModel: trackViewState.meterModel
+
+                    currentVolumePressure: root.item.rightChannelPressure
+                    currentRMS: root.item.rightChannelRMS
+                }
             }
 
             states: [
@@ -311,11 +327,11 @@ ListItemBlank {
                     name: "mono"
                     PropertyChanges {
                         target: volumePressureContainer
-                        leftPadding: 8
+                        indicatorWidth: 8
                     }
                     PropertyChanges {
-                        target: leftOrMonoVolumePressureMeter
-                        indicatorWidth: 8
+                        target: rightVolumePressureMeter
+                        visible: false
                     }
                 },
                 State {
@@ -323,15 +339,11 @@ ListItemBlank {
                     name: "stereo"
                     PropertyChanges {
                         target: volumePressureContainer
-                        leftPadding: 4
-                    }
-                    PropertyChanges {
-                        target: leftOrMonoVolumePressureMeter
                         indicatorWidth: 7
                     }
                     PropertyChanges {
                         target: rightVolumePressureMeter
-                        indicatorWidth: 7
+                        visible: true
                     }
                 }
             ]

@@ -17,6 +17,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iaudiooutput.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudiodevicesprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/iplaybackcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplaybackmeter.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplaybackmetercontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/iplaybackconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackplaybackcontrol.h
 
@@ -25,6 +27,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackmetercontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackmetercontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuiactions.h
 
@@ -36,10 +40,18 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiooutput.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackplaybackcontrol.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackplaybackcontrol.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/dblinearmeter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/dblinearmeter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/dblogmeter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/dblogmeter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/linearmeter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/linearmeter.h
 
 
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackmetermodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackmetermodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/panels/playbackmeterpanelmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/panels/playbackmeterpanelmodel.h

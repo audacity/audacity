@@ -3,6 +3,7 @@ module Audacity.Playback
 VerticalVolumeSlider 1.0 components/VerticalVolumeSlider.qml
 VolumeSlider 1.0 components/VolumeSlider.qml
 HorizontalVolumePressureMeter 1.0 components/HorizontalVolumePressureMeter.qml
+HorizontalVolumePressureRuler 1.0 components/HorizontalVolumePressureRuler.qml
 Timecode 1.0 components/Timecode.qml
 TimecodeStartEnd 1.0 components/TimecodeStartEnd.qml
 StyledGroupBox 1.0 components/StyledGroupBox.qml

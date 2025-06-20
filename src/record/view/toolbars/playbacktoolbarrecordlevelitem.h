@@ -9,6 +9,7 @@
 #include "modularity/ioc.h"
 #include "record/irecord.h"
 #include "record/irecordcontroller.h"
+#include "playback/iplaybackconfiguration.h"
 
 #include "uicomponents/view/toolbaritem.h"
 
@@ -27,8 +28,11 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
     Q_PROPERTY(float rightRecentPeak READ rightRecentPeak NOTIFY rightRecentPeakChanged FINAL)
     Q_PROPERTY(float rightMaxPeak READ rightMaxPeak NOTIFY rightMaxPeakChanged FINAL)
 
+    Q_PROPERTY(playback::PlaybackMeterStyle::MeterStyle meterStyle READ meterStyle NOTIFY meterStyleChanged FINAL)
+
     muse::Inject<record::IRecord> record;
     muse::Inject<record::IRecordController> recordController;
+    muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
 
 public:
     explicit PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
@@ -44,6 +48,8 @@ public:
     float rightChannelPressure() const;
     float rightRecentPeak() const;
     float rightMaxPeak() const;
+
+    playback::PlaybackMeterStyle::MeterStyle meterStyle() const;
 
 public slots:
     void setLeftChannelPressure(float leftChannelPressure);
@@ -64,6 +70,8 @@ signals:
     void rightChannelPressureChanged(float rightChannelPressure);
     void rightRecentPeakChanged();
     void rightMaxPeakChanged();
+
+    void meterStyleChanged();
 
 private:
     void setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue);

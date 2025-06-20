@@ -39,6 +39,10 @@ PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::U
         }
     });
 
+    playbackConfiguration()->playbackMeterStyleChanged().onNotify(this, [this]() {
+        emit meterStyleChanged();
+    });
+
     resetAudioChannelsVolumePressure();
 }
 
@@ -159,4 +163,9 @@ void PlaybackToolBarRecordLevelItem::setRightMaxPeak(float newRightMaxPeak)
 
     m_rightMaxPeak = newRightMaxPeak;
     emit rightMaxPeakChanged();
+}
+
+PlaybackMeterStyle::MeterStyle PlaybackToolBarRecordLevelItem::meterStyle() const
+{
+    return playbackConfiguration()->playbackMeterStyle();
 }

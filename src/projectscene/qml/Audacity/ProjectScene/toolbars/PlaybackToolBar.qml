@@ -97,7 +97,7 @@ Item {
             PlaybackLevel {
                 property var itemData: null
 
-                width: 240
+                width: 288
                 height: 28
 
                 volumeLevel: Boolean(itemData) ? itemData.level : 0
@@ -233,6 +233,10 @@ Item {
 
                 width: 28
                 height: width
+
+                meterStyle: {
+                    return Boolean(itemData) ? itemData.meterStyle : PlaybackMeterStyle.Default
+                }
 
                 icon: Boolean(itemData) ? itemData.icon : IconCode.NONE
 
