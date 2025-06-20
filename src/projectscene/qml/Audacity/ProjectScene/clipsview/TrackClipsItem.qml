@@ -24,7 +24,6 @@ Item {
     property bool isMultiSelectionActive: false
     property bool isTrackAudible: true
     property bool isStereo: clipsModel.isStereo
-    property double channelHeightRatio: 0.5
     property bool moveActive: false
     property bool altPressed: false
     property bool ctrlPressed: false
@@ -93,6 +92,12 @@ Item {
         anchors.bottomMargin: sep.height
         z: 1
 
+        property double targetHeightRatio: 0.5
+        property double channelHeightRatio: 0.5
+        readonly property int minChannelHeight: 20
+        readonly property int yMinValue: Math.min(root.height / 2, minChannelHeight)
+        readonly property int yMaxValue: Math.max(root.height / 2, root.height - minChannelHeight);
+
         property bool isNearSample: false
         property bool multiSampleEdit: false
         property bool isBrush: false
@@ -123,6 +128,19 @@ Item {
                 }
             }
             return false
+        }
+
+        function updateChannelHeightRatio(position) {
+            const newY = Math.min(Math.max(position, yMinValue), yMaxValue)
+            channelHeightRatio = newY / height
+        }
+
+        function resetTargetHeightRatio() {
+            targetHeightRatio = channelHeightRatio
+        }
+
+        onHeightChanged: {
+            updateChannelHeightRatio(clipsContainer.targetHeightRatio * clipsContainer.height)
         }
 
         MouseArea {
@@ -272,7 +290,7 @@ Item {
                 leftVisibleMargin: clipItem.leftVisibleMargin
                 rightVisibleMargin: clipItem.rightVisibleMargin
                 collapsed: trackViewState.isTrackCollapsed
-                channelHeightRatio: root.channelHeightRatio
+                channelHeightRatio: clipsContainer.channelHeightRatio
                 showChannelSplitter: isStereo
 
                 navigation.name: Boolean(clipItem) ? clipItem.title + clipItem.index : ""
@@ -418,8 +436,9 @@ Item {
                     clipsModel.resetSelectedClip()
                 }
 
-                onRatioChanged: function (ratio) {
-                    root.channelHeightRatio = ratio
+                onSplitterPositionChangeRequested: function (position) {
+                    clipsContainer.updateChannelHeightRatio(position)
+                    clipsContainer.resetTargetHeightRatio()
                 }
 
                 onPitchChangeRequested: {
@@ -563,13 +582,14 @@ Item {
         anchors.topMargin: trackViewState.isTrackCollapsed ? 1 : 21
         anchors.bottomMargin: 3
 
-        channelHeightRatio: root.channelHeightRatio
+        channelHeightRatio: clipsContainer.channelHeightRatio
         color: "#FFFFFF"
         opacity: 0.05
         visible: isStereo
 
-        onRatioChanged: function(ratio) {
-            root.channelHeightRatio = ratio
+        onPositionChangeRequested: function(position) {
+            clipsContainer.updateChannelHeightRatio(position)
+            clipsContainer.resetTargetHeightRatio()
         }
     }
 

@@ -62,7 +62,7 @@ Rectangle {
 
     signal requestSelected()
     signal requestSelectionReset()
-    signal ratioChanged(double val)
+    signal splitterPositionChangeRequested(int position)
 
     signal pitchChangeRequested()
     signal pitchResetRequested()
@@ -681,8 +681,8 @@ Rectangle {
                 color: "#000000"
                 opacity: 0.10
 
-                onRatioChanged: function (ratio) {
-                    root.ratioChanged(ratio)
+                onPositionChangeRequested: function (position) {
+                    root.splitterPositionChangeRequested(position)
                 }
             }
 
