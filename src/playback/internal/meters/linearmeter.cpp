@@ -4,7 +4,7 @@
 
 #include "linearmeter.h"
 
-#include "MemoryX.h"
+#include "global/types/ratio.h"
 
 #include <sstream>
 #include <iomanip>
@@ -13,8 +13,8 @@
 
 using namespace au::playback;
 
-static constexpr double MIN_VOLUME_DB = 0.0;
-static constexpr double MAX_VOLUME_DB = 1.0;
+static constexpr double MIN_VOLUME_LIN = 0.0;
+static constexpr double MAX_VOLUME_LIN = 1.0;
 
 static constexpr int LOW_RESOLUTION_METER_THRESHOLD = 400;
 static constexpr int HIGH_RESOLUTION_METER_THRESHOLD = 1500;
@@ -44,15 +44,13 @@ static StepValue roundUpToFixedValue(int meterSize)
 
 double LinearMeter::stepToPosition(double step) const
 {
-    const double clampedValue = std::clamp(step, MIN_VOLUME_DB, MAX_VOLUME_DB);
-    return (clampedValue - MIN_VOLUME_DB) / (MAX_VOLUME_DB - MIN_VOLUME_DB);
+    const double clampedValue = std::clamp(step, MIN_VOLUME_LIN, MAX_VOLUME_LIN);
+    return (clampedValue - MIN_VOLUME_LIN) / (MAX_VOLUME_LIN - MIN_VOLUME_LIN);
 }
 
 double LinearMeter::sampleToPosition(double sample) const
 {
-    const double linearValue = DB_TO_LINEAR(sample);
-    const double clampedValue = std::clamp(linearValue, MIN_VOLUME_DB, MAX_VOLUME_DB);
-    return (clampedValue - MIN_VOLUME_DB) / (MAX_VOLUME_DB - MIN_VOLUME_DB);
+    return stepToPosition(muse::db_to_linear(sample));
 }
 
 std::string LinearMeter::sampleToText(double sample) const
@@ -68,18 +66,18 @@ std::vector<double> LinearMeter::fullSteps(int meterSize) const
         return {};
     }
 
-    const StepValue stepValue = roundUpToFixedValue(meterSize);
+    const StepValue selectedStep = roundUpToFixedValue(meterSize);
 
-    if (stepValue.fullStep == 0) {
+    if (selectedStep.fullStep == 0) {
         return {};
     }
 
     std::vector<double> steps;
-    double value = MIN_VOLUME_DB;
+    double value = MIN_VOLUME_LIN;
 
-    while (value <= MAX_VOLUME_DB) {
+    while (value <= MAX_VOLUME_LIN) {
         steps.push_back(value);
-        value += stepValue.fullStep;
+        value += selectedStep.fullStep;
     }
 
     return steps;
@@ -91,22 +89,22 @@ std::vector<double> LinearMeter::smallSteps(int meterSize) const
         return {};
     }
 
-    const auto fullStepsValue = fullSteps(meterSize);
+    const auto fullSteps = this->fullSteps(meterSize);
 
-    const StepValue stepValue = roundUpToFixedValue(meterSize);
+    const StepValue selectedStep = roundUpToFixedValue(meterSize);
 
-    if (stepValue.smallStep == 0) {
+    if (selectedStep.smallStep == 0) {
         return {};
     }
 
     std::vector<double> steps;
-    double value = MIN_VOLUME_DB;
+    double value = MIN_VOLUME_LIN;
 
-    while (value < MAX_VOLUME_DB) {
-        if (std::find(fullStepsValue.begin(), fullStepsValue.end(), value) == fullStepsValue.end()) {
+    while (value < MAX_VOLUME_LIN) {
+        if (std::find(fullSteps.begin(), fullSteps.end(), value) == fullSteps.end()) {
             steps.push_back(value);
         }
-        value += stepValue.smallStep;
+        value += selectedStep.smallStep;
     }
 
     return steps;

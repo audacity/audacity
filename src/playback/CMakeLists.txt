@@ -17,7 +17,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iaudiooutput.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudiodevicesprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/iplaybackcontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/iplaybackmeterstrategy.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplaybackmeter.h
     ${CMAKE_CURRENT_LIST_DIR}/iplaybackmetercontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/iplaybackconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackplaybackcontrol.h
@@ -40,12 +40,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiooutput.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackplaybackcontrol.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackplaybackcontrol.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/meterstrategy/dblinearmeter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/meterstrategy/dblinearmeter.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/meterstrategy/dblogmeter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/meterstrategy/dblogmeter.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/meterstrategy/linearmeter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/meterstrategy/linearmeter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/dblinearmeter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/dblinearmeter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/dblogmeter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/dblogmeter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/linearmeter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/linearmeter.h
 
 
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.cpp

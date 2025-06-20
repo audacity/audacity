@@ -6,13 +6,14 @@
 
 #include <memory>
 
-#include "playback/internal/meterstrategy/dblogmeter.h"
-#include "playback/internal/meterstrategy/dblinearmeter.h"
-#include "playback/internal/meterstrategy/linearmeter.h"
+#include "playback/internal/meters/dblogmeter.h"
+#include "playback/internal/meters/dblinearmeter.h"
+#include "playback/internal/meters/linearmeter.h"
 
 using namespace au::playback;
 
-static std::shared_ptr<IPlaybackMeterStrategy> createMeterStrategy(PlaybackMeterType::MeterType meterType)
+namespace {
+std::shared_ptr<IPlaybackMeter> createMeter(PlaybackMeterType::MeterType meterType)
 {
     switch (meterType) {
     case PlaybackMeterType::MeterType::DbLinear:
@@ -25,40 +26,41 @@ static std::shared_ptr<IPlaybackMeterStrategy> createMeterStrategy(PlaybackMeter
         return std::make_shared<DbLogMeter>();
     }
 }
+}
 
 PlaybackMeterController::PlaybackMeterController()
 {
     configuration()->playbackMeterTypeChanged().onNotify(this, [this]() {
-        m_strategy = createMeterStrategy(configuration()->playbackMeterType());
+        m_meter = createMeter(configuration()->playbackMeterType());
         m_playbackMeterChanged.notify();
     });
 
-    m_strategy = createMeterStrategy(configuration()->playbackMeterType());
+    m_meter = createMeter(configuration()->playbackMeterType());
 }
 
 double PlaybackMeterController::stepToPosition(double step) const
 {
-    return m_strategy->stepToPosition(step);
+    return m_meter->stepToPosition(step);
 }
 
 double PlaybackMeterController::sampleToPosition(double sample) const
 {
-    return m_strategy->sampleToPosition(sample);
+    return m_meter->sampleToPosition(sample);
 }
 
 std::string PlaybackMeterController::sampleToText(double sample) const
 {
-    return m_strategy->sampleToText(sample);
+    return m_meter->sampleToText(sample);
 }
 
 std::vector<double> PlaybackMeterController::fullSteps(int meterSize) const
 {
-    return m_strategy->fullSteps(meterSize);
+    return m_meter->fullSteps(meterSize);
 }
 
 std::vector<double> PlaybackMeterController::smallSteps(int meterSize) const
 {
-    return m_strategy->smallSteps(meterSize);
+    return m_meter->smallSteps(meterSize);
 }
 
 muse::async::Notification PlaybackMeterController::playbackMeterChanged() const

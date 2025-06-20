@@ -7,10 +7,10 @@
 #include <vector>
 
 namespace au::playback {
-class IPlaybackMeterStrategy
+class IPlaybackMeter
 {
 public:
-    virtual ~IPlaybackMeterStrategy() = default;
+    virtual ~IPlaybackMeter() = default;
 
     virtual double stepToPosition(double sample) const = 0;
     virtual double sampleToPosition(double sample) const = 0;

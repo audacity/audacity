@@ -43,10 +43,6 @@ double DbLinearMeter::stepToPosition(double step) const
 
 double DbLinearMeter::sampleToPosition(double sample) const
 {
-    if (sample == MIN_VOLUME_DB) {
-        return 0.0;
-    }
-
     return stepToPosition(sample);
 }
 

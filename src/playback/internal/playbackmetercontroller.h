@@ -8,7 +8,7 @@
 
 #include "playback/iplaybackmetercontroller.h"
 #include "playback/iplaybackconfiguration.h"
-#include "playback/iplaybackmeterstrategy.h"
+#include "playback/iplaybackmeter.h"
 
 namespace au::playback {
 class PlaybackMeterController : public IPlaybackMeterController, public muse::async::Asyncable
@@ -28,7 +28,7 @@ public:
     muse::async::Notification playbackMeterChanged() const override;
 
 private:
-    std::shared_ptr<IPlaybackMeterStrategy> m_strategy;
+    std::shared_ptr<IPlaybackMeter> m_meter;
     muse::async::Notification m_playbackMeterChanged;
 };
 }

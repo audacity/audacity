@@ -3,13 +3,13 @@
 */
 #pragma once
 
-#include "iplaybackmeterstrategy.h"
+#include "iplaybackmeter.h"
 
 namespace au::playback {
-class DbLogMeter : public IPlaybackMeterStrategy
+class DbLinearMeter : public IPlaybackMeter
 {
 public:
-    DbLogMeter() = default;
+    DbLinearMeter() = default;
 
     double stepToPosition(double sample) const override;
     double sampleToPosition(double sample) const override;
