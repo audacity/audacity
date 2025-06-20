@@ -20,6 +20,8 @@ FlatButton {
     property alias rightCurrentVolumePressure: rightVolumePressure.currentVolumePressure
     property alias rightCurrentRMS: rightVolumePressure.currentRMS
 
+    property int meterStyle: PlaybackMeterStyle.Default
+
     property NavigationPanel navigationPanel: null
     property int navigationOrder: 0
 
@@ -63,6 +65,10 @@ FlatButton {
 
             root.togglePopupOpened()
         }
+    }
+
+    PlaybackMeterModel {
+        id: meterModel
     }
 
     StyledPopupView {
@@ -114,12 +120,30 @@ FlatButton {
 
                         HorizontalVolumePressureMeter {
                             id: leftVolumePressure
+
+                            meterModel: meterModel
+                            meterStyle: root.meterStyle
+
                             showOverload: false
                         }
 
                         HorizontalVolumePressureMeter {
                             id: rightVolumePressure
+
+                            meterModel: meterModel
+                            meterStyle: root.meterStyle
+
                             showOverload: false
+                        }
+
+                        HorizontalVolumePressureRuler {
+                            id: recordMeterRuler
+
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.rightMargin: leftVolumePressure.overloadWidth
+
+                            meterModel: meterModel
                         }
                     }
 

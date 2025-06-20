@@ -234,6 +234,10 @@ Item {
                 width: 28
                 height: width
 
+                meterStyle: {
+                    return Boolean(itemData) ? itemData.meterStyle : PlaybackMeterStyle.Default
+                }
+
                 icon: Boolean(itemData) ? itemData.icon : IconCode.NONE
 
                 toolTipTitle: Boolean(itemData) ? itemData.title : ""
