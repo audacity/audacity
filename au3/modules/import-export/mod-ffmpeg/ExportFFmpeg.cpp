@@ -36,20 +36,14 @@ function.
 #include "wxFileNameWrapper.h"
 
 #include "ExportFFmpegOptions.h"
-// #include "SelectFile.h"
 #if defined(__WXMSW__)
-// Note, on Windows we don't define an OSFILENAME() to prevent accidental use.
-// See VerifyFilename() for an explanation.
-#define OSINPUT(X) VerifyFilename(X, true)
-#define OSOUTPUT(X) VerifyFilename(X, false)
+#define OSINPUT(X) ((X).mb_str() ? (char*)(const char*)(X).mb_str() : "")
 #elif defined(__WXMAC__)
 #define OSFILENAME(X) ((char*)(const char*)(X).fn_str())
 #define OSINPUT(X) OSFILENAME(X)
-#define OSOUTPUT(X) OSFILENAME(X)
 #else
 #define OSFILENAME(X) ((char*)(const char*)(X).mb_str())
 #define OSINPUT(X) OSFILENAME(X)
-#define OSOUTPUT(X) OSFILENAME(X)
 #endif
 
 // #include "ShuttleGui.h"
@@ -806,7 +800,7 @@ ExportFFmpeg::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* lis
 //     case FMT_OTHER:
 //         return {};//std::make_unique<ExportOptionsFFmpegCustomEditor>(listener);
 //     }
-//     return {};
+    return {};
 }
 
 int ExportFFmpeg::GetFormatCount() const
