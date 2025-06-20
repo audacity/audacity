@@ -20,8 +20,7 @@
 #include "internal/effectpresetsscenario.h"
 #include "internal/effectviewlaunchregister.h"
 
-#include "view/effectsviewregister.h"
-#include "view/effectviewloader.h"
+#include "view/effectmanagemenu.h"
 #include "view/effectsuiengine.h"
 #include "view/realtimeeffectviewerdialogmodel.h"
 
@@ -46,7 +45,6 @@ void EffectsModule::registerExports()
 
     ioc()->registerExport<IEffectsProvider>(moduleName(), m_provider);
     ioc()->registerExport<IEffectsConfiguration>(moduleName(), m_configuration);
-    ioc()->registerExport<IEffectsViewRegister>(moduleName(), new EffectsViewRegister());
     ioc()->registerExport<IEffectsUiEngine>(moduleName(), new EffectsUiEngine());
     ioc()->registerExport<IEffectInstancesRegister>(moduleName(), new EffectInstancesRegister());
     ioc()->registerExport<IEffectExecutionScenario>(moduleName(), new EffectExecutionScenario());
@@ -73,7 +71,7 @@ void EffectsModule::registerResources()
 
 void EffectsModule::registerUiTypes()
 {
-    qmlRegisterType<EffectViewLoader>("Audacity.Effects", 1, 0, "EffectViewLoader");
+    qmlRegisterType<EffectManageMenu>("Audacity.Effects", 1, 0, "EffectManageMenu");
     qmlRegisterType<RealtimeEffectViewerDialogModel>("Audacity.Effects", 1, 0, "RealtimeEffectViewerDialogModel");
     qmlRegisterUncreatableType<EffectFamilies>("Audacity.Effects", 1, 0, "EffectFamily", "Not creatable from QML");
 }

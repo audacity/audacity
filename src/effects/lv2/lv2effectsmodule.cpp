@@ -12,7 +12,8 @@
 #include "internal/lv2pluginmetareader.h"
 #include "internal/lv2pluginsscanner.h"
 #include "internal/lv2viewlauncher.h"
-#include "view/lv2viewloader.h"
+
+#include "view/lv2viewmodel.h"
 
 #include "log.h"
 
@@ -71,7 +72,7 @@ void Lv2EffectsModule::registerResources()
 
 void Lv2EffectsModule::registerUiTypes()
 {
-    qmlRegisterType<Lv2ViewLoader>("Audacity.Lv2", 1, 0, "Lv2ViewLoader");
+    qmlRegisterType<Lv2ViewModel>("Audacity.Lv2", 1, 0, "Lv2ViewModel");
 }
 
 void Lv2EffectsModule::onInit(const muse::IApplication::RunMode& runMode)
