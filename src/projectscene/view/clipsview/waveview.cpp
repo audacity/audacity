@@ -16,7 +16,7 @@
 using namespace au::projectscene;
 
 static const QColor BACKGROUND_COLOR = QColor(255, 255, 255);
-static const QColor SAMPLES_BASE_COLOR = QColor(0, 0, 0);
+static const QColor SAMPLES_BASE_COLOR = QColor(0, 128, 255);// QColor(0, 0, 0);
 static const QColor SAMPLES_HIGHLIGHT_COLOR = QColor(255, 255, 255);
 static const QColor RMS_BASE_COLOR = QColor(255, 255, 255);
 static const QColor CENTER_LINE_COLOR = QColor(0, 0, 0);
@@ -24,7 +24,7 @@ static const QColor SAMPLE_HEAD_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_STALK_COLOR = QColor(0, 0, 0);
 
 static const QColor CLASSIC_BACKGROUND_COLOR = QColor(241, 243, 254);
-static const QColor CLASSIC_SAMPLES_BASE_COLOR = QColor(100, 100, 204);
+static const QColor CLASSIC_SAMPLES_BASE_COLOR = QColor(0, 128, 255); //QColor(100, 100, 204);
 
 static const QColor CLASSIC_BACKGROUND_SELECTED_COLOR = QColor(175, 194, 238);
 static const QColor CLASSIC_SAMPLES_BASE_SELECTED_COLOR = QColor(68, 71, 195);
@@ -98,10 +98,9 @@ void WaveView::applyColorfulStyle(IWavePainter::Params& params,
     params.style.blankBrush = muse::draw::blendQColors(BACKGROUND_COLOR, clipColor, bgAlpha);
     params.style.normalBackground = muse::draw::blendQColors(BACKGROUND_COLOR, clipColor, normalBgAlpha);
     params.style.selectedBackground = transformColor(params.style.normalBackground);
-
-    params.style.samplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.8);
+    params.style.samplePen = muse::draw::blendQColors(params.style.blankBrush, m_waveColor, 0.8);
     params.style.selectedSamplePen = muse::draw::blendQColors(params.style.blankBrush,
-                                                              selected ? SAMPLES_HIGHLIGHT_COLOR : SAMPLES_BASE_COLOR,
+                                                              selected ? SAMPLES_HIGHLIGHT_COLOR : m_waveColor,
                                                               0.75);
     params.style.rmsPen = muse::draw::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
     params.style.centerLine = muse::draw::blendQColors(params.style.samplePen, CENTER_LINE_COLOR, 0.2);
@@ -126,7 +125,7 @@ void WaveView::applyClassicStyle(IWavePainter::Params& params, bool selected) co
     params.style.normalBackground = params.style.blankBrush;
     params.style.selectedBackground = selected ? transformColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
 
-    QColor baseSampleColor = selected ? CLASSIC_SAMPLES_BASE_SELECTED_COLOR : CLASSIC_SAMPLES_BASE_COLOR;
+    QColor baseSampleColor = selected ? CLASSIC_SAMPLES_BASE_SELECTED_COLOR : m_waveColor;
     params.style.samplePen = baseSampleColor;
     params.style.selectedSamplePen = CLASSIC_SAMPLES_BASE_SELECTED_COLOR;
     params.style.rmsPen = baseSampleColor;
@@ -194,6 +193,11 @@ QColor WaveView::clipColor() const
     return m_clipColor;
 }
 
+QColor WaveView::waveColor() const
+{
+    return m_waveColor;
+}
+
 void WaveView::setClipColor(const QColor& newClipColor)
 {
     if (m_clipColor == newClipColor) {
@@ -201,6 +205,19 @@ void WaveView::setClipColor(const QColor& newClipColor)
     }
     m_clipColor = newClipColor;
     emit clipColorChanged();
+
+    update();
+}
+
+void WaveView::setWaveColor(const QColor& newWaveColor)
+{
+    if (m_waveColor == newWaveColor) 
+    {
+        return;
+    }
+
+    m_waveColor = newWaveColor;
+    emit waveColorChanged();
 
     update();
 }

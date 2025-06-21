@@ -247,11 +247,12 @@ Item {
         }
 
         Component {
-            id: clipSmallComp
+            id: clipSmallCompwave
 
             ClipItemSmall {
 
                 clipColor: clipItem.color
+                waveColor: clipItem.wave_color
                 collapsed: trackViewState.isTrackCollapsed
             }
         }
@@ -266,6 +267,7 @@ Item {
                 canvas: root.canvas
                 title: clipItem.title
                 clipColor: clipItem.color
+                waveColor: clipItem.wave_color
                 currentClipStyle: clipsModel.clipStyle
                 groupId: clipItem.groupId
                 clipKey: clipItem.key

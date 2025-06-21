@@ -123,6 +123,7 @@ private:
     void ungroupClips();
 
     void setClipColor(const muse::actions::ActionQuery& q);
+    void setWaveColor(const muse::actions::ActionQuery& q);
     void setTrackColor(const muse::actions::ActionQuery& q);
 
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;

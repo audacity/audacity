@@ -350,6 +350,10 @@ bool SetTrackVisualsCommand::ApplyInner(
         WaveformAppearance::Get(*wt).SetColorIndex(mColour);
     }
 
+    if (bHasWaveColour) {
+        WaveformAppearance::Get(wc).SetWaveColorIndex(mWaveColour);
+    }
+
     if (bHasHeight) {
         for (auto pChannel : t.Channels<WaveChannel>()) {
             ChannelView::Get(*pChannel).SetExpandedHeight(mHeight);

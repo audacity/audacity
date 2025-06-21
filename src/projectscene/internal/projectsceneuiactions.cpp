@@ -149,6 +149,13 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Follow track color"),
              Checkable::Yes
              ),
+    UiAction("action://trackedit/clip/change-wave-color-auto",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Follow track wave color"),
+             TranslatableString("action", "Follow track wave color"),
+             Checkable::Yes
+             ),
     UiAction("play-position-decrease",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_OPENED,
@@ -178,8 +185,10 @@ ProjectSceneUiActions::ProjectSceneUiActions(std::shared_ptr<ProjectSceneActions
 void ProjectSceneUiActions::init()
 {
     const auto& colors = configuration()->clipColors();
+    const auto& wave_colors = configuration()->waveColors();
+
     m_actions.clear();
-    m_actions.reserve(2 * colors.size() + STATIC_ACTIONS.size());
+    m_actions.reserve(2 * colors.size() + 1 * wave_colors.size() + STATIC_ACTIONS.size());
 
     for (const auto& color : colors) {
         UiAction clipColorAction;
@@ -205,6 +214,20 @@ void ProjectSceneUiActions::init()
         trackColorAction.checkable = Checkable::Yes;
 
         m_actions.push_back(std::move(trackColorAction));
+    }
+
+    for (const auto& color : wave_colors) {
+        UiAction waveColorAction;
+        waveColorAction.code = muse::actions::ActionQuery(makeWaveColorChangeAction(color.second)).toString();
+        waveColorAction.uiCtx = context::UiCtxProjectOpened;
+        waveColorAction.scCtx = context::CTX_PROJECT_FOCUSED;
+        waveColorAction.description = muse::TranslatableString("action", "Change wave color");
+        waveColorAction.title = muse::TranslatableString("action", "Change wave color");
+        waveColorAction.iconCode = IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED;
+        waveColorAction.iconColor = QString::fromStdString(color.second);
+        waveColorAction.checkable = Checkable::Yes;
+
+        m_actions.push_back(std::move(waveColorAction));
     }
 
     m_actions.insert(m_actions.end(), STATIC_ACTIONS.begin(), STATIC_ACTIONS.end());

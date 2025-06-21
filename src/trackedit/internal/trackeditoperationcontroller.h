@@ -40,6 +40,7 @@ public:
     bool changeClipSpeed(const ClipKey& clipKey, double speed) override;
     bool resetClipSpeed(const ClipKey& clipKey) override;
     bool changeClipColor(const ClipKey& clipKey, const std::string& color) override;
+    bool changeWaveColor(const ClipKey& clipKey, const std::string& wave_color) override;
     bool changeTrackColor(const TrackId trackId, const std::string& color) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;

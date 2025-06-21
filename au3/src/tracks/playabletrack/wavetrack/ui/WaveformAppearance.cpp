@@ -60,6 +60,7 @@ void WaveformAppearance::Subscribe(const std::shared_ptr<WaveTrack>& pTrack)
                 case WaveTrackMessage::New:
                 case WaveTrackMessage::Deserialized:
                     WaveColorAttachment::Get(*message.pClip).SetColorIndex(mColorIndex);
+                    WaveColorAttachment::Get(*message.pClip).SetWaveColorIndex(mWaveColorIndex);
                 default:
                     break;
             }
@@ -111,6 +112,21 @@ void WaveformAppearance::SetColorIndex(int colorIndex)
         for (const auto& pChannel : pInterval->Channels()) {
             WaveColorAttachment::Get(*pChannel)
             .SetColorIndex(colorIndex);
+        }
+    }
+}
+
+void WaveformAppearance::SetWaveColorIndex(int colorIndex)
+{
+    mWaveColorIndex = colorIndex;
+    const auto pTrack = mwTrack.lock();
+    if (!pTrack) {
+        return;
+    }
+    for (const auto& pInterval : pTrack->Intervals()) {
+        for (const auto& pChannel : pInterval->Channels()) {
+            WaveColorAttachment::Get(*pChannel)
+            .SetWaveColorIndex(colorIndex);
         }
     }
 }
@@ -174,5 +190,14 @@ bool WaveColorAttachment::HandleXMLAttribute(const std::string_view& attr,
         SetColorIndex(longValue);
         return true;
     }
+
+    if (attr == WaveColorIndex_attr) {
+        if (!valueView.TryGet(longValue)) {
+            return false;
+        }
+        SetWaveColorIndex(longValue);
+        return true;
+    }
+    
     return false;
 }
