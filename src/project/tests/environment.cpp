@@ -4,9 +4,9 @@
 
 #include "testing/environment.h"
 
-#include "au3wrap/au3wrapmodule.h"
 #include "trackedit/trackeditmodule.h"
 #include "trackedit/itrackeditproject.h"
+#include "au3wrap/au3wrapmodule.h"
 
 #include "projectscene/tests/mocks/projectsceneconfigurationmock.h"
 
@@ -14,31 +14,28 @@
 #include "project/tests/mocks/trackeditprojectcreatormock.h"
 #include "project/tests/mocks/projectviewstatecreatormock.h"
 
-using namespace ::testing;
-using namespace au::project;
-
+namespace au::project {
 static muse::testing::SuiteEnvironment audacityproject_se
     = muse::testing::SuiteEnvironment()
-      .setDependencyModules({ new au::au3::Au3WrapModule(),
-                              // new au::trackedit::TrackeditModule()
+      .setDependencyModules({ new au::au3::Au3WrapModule()
                             })
       .setPreInit([](){
     std::shared_ptr<ProjectConfigurationMock> projectConfigurator(new ProjectConfigurationMock(), [](ProjectConfigurationMock*){});
 
     ON_CALL(*projectConfigurator, temporaryDir())
-    .WillByDefault(Return(""));
+    .WillByDefault(::testing::Return(""));
 
     muse::modularity::globalIoc()->registerExport<IProjectConfiguration>("utests", projectConfigurator);
 
     // Create the mock instance with a no-op deleter (to avoid deletion)
-    std::shared_ptr<au::project::TrackeditProjectCreatorMock> trackeditProjectCreatorMock(
-        new au::project::TrackeditProjectCreatorMock(),
-        [](au::project::TrackeditProjectCreatorMock*) {} // no-op deleter
+    std::shared_ptr<TrackeditProjectCreatorMock> trackeditProjectCreatorMock(
+        new TrackeditProjectCreatorMock(),
+        [](TrackeditProjectCreatorMock*) {}     // no-op deleter
         );
 
     // Set up default behavior for 'create' method
     ON_CALL(*trackeditProjectCreatorMock, create(::testing::_))
-    .WillByDefault(::testing::Return(au::trackedit::ITrackeditProjectPtr {}));  // Return empty or dummy ptr
+    .WillByDefault(::testing::Return(au::trackedit::ITrackeditProjectPtr {}));
 
     // Register the mock with the global IOC container under the expected interface type
     muse::modularity::globalIoc()->registerExport<au::trackedit::ITrackeditProjectCreator>(
@@ -49,12 +46,12 @@ static muse::testing::SuiteEnvironment audacityproject_se
     // Create the mock instance with a no-op deleter (to avoid deletion)
     std::shared_ptr<au::projectscene::ProjectViewStateCreatorMock> projectViewStateCreatorMock(
         new au::projectscene::ProjectViewStateCreatorMock(),
-        [](au::projectscene::ProjectViewStateCreatorMock*) {}       // no-op deleter
+        [](au::projectscene::ProjectViewStateCreatorMock*) {}     // no-op deleter
         );
 
     // Set up default behavior for 'createViewState' method
     ON_CALL(*projectViewStateCreatorMock, createViewState(::testing::_))
-    .WillByDefault(::testing::Return(au::projectscene::IProjectViewStatePtr {}));          // return nullptr or dummy
+    .WillByDefault(::testing::Return(au::projectscene::IProjectViewStatePtr {}));
 
     // Register the mock with the global IOC container under the expected interface type
     muse::modularity::globalIoc()->registerExport<au::projectscene::IProjectViewStateCreator>(
@@ -62,11 +59,12 @@ static muse::testing::SuiteEnvironment audacityproject_se
         projectViewStateCreatorMock
         );
 
-    std::shared_ptr<NiceMock<au::projectscene::ProjectSceneConfigurationMock> > projectSceneConfigurator(new NiceMock<au::projectscene::ProjectSceneConfigurationMock>(),
-                                                                                                         [](au::projectscene::
-                                                                                                            ProjectSceneConfigurationMock*)
+    std::shared_ptr<::testing::NiceMock<au::projectscene::ProjectSceneConfigurationMock> > projectSceneConfigurator(new ::testing::NiceMock<au::projectscene::ProjectSceneConfigurationMock>(),
+                                                                                                                    [](au::projectscene::
+                                                                                                                       ProjectSceneConfigurationMock
+                                                                                                                       *)
     {
-    });                                                                                                                                                                  // no delete
+    });                                                                                                                                                                      // no delete
 
     static std::vector<std::pair<std::string /*name*/, std::string /*color*/> > colors = {
         { "blue", "#0000FF" },
@@ -74,16 +72,55 @@ static muse::testing::SuiteEnvironment audacityproject_se
     };
 
     ON_CALL(*projectSceneConfigurator, clipColors())
-    .WillByDefault(ReturnRef(colors));
+    .WillByDefault(::testing::ReturnRef(colors));
 
     muse::modularity::globalIoc()->unregister<au::projectscene::IProjectSceneConfiguration>("utests");
     muse::modularity::globalIoc()->registerExport<au::projectscene::IProjectSceneConfiguration>("utests", projectSceneConfigurator);
 }).setPostInit([]() {
-}).setDeInit([](){
-    std::shared_ptr<IProjectConfiguration> projectConfiguratorPtr
-        = muse::modularity::globalIoc()->resolve<IProjectConfiguration>("utests");
-    muse::modularity::globalIoc()->unregister<IProjectConfiguration>("utests");
+}).setDeInit([]()
+{
+    // Unregister and delete ProjectConfiguration
+    {
+        std::shared_ptr<IProjectConfiguration> projectConfiguratorPtr
+            =muse::modularity::globalIoc()->resolve<IProjectConfiguration>("utests");
+        muse::modularity::globalIoc()->unregister<IProjectConfiguration>("utests");
 
-    IProjectConfiguration* projectConfigurator = projectConfiguratorPtr.get();
-    delete projectConfigurator;
+        if (projectConfiguratorPtr) {
+            delete projectConfiguratorPtr.get();
+        }
+    }
+
+    // Unregister and delete TrackeditProjectCreator
+    {
+        std::shared_ptr<au::trackedit::ITrackeditProjectCreator> trackeditProjectCreatorPtr
+            =muse::modularity::globalIoc()->resolve<au::trackedit::ITrackeditProjectCreator>("utests");
+        muse::modularity::globalIoc()->unregister<au::trackedit::ITrackeditProjectCreator>("utests");
+
+        if (trackeditProjectCreatorPtr) {
+            delete static_cast<TrackeditProjectCreatorMock*>(trackeditProjectCreatorPtr.get());
+        }
+    }
+
+    // Unregister and delete ProjectViewStateCreator
+    {
+        std::shared_ptr<au::projectscene::IProjectViewStateCreator> projectViewStateCreatorPtr
+            =muse::modularity::globalIoc()->resolve<au::projectscene::IProjectViewStateCreator>("utests");
+        muse::modularity::globalIoc()->unregister<au::projectscene::IProjectViewStateCreator>("utests");
+
+        if (projectViewStateCreatorPtr) {
+            delete static_cast<au::projectscene::ProjectViewStateCreatorMock*>(projectViewStateCreatorPtr.get());
+        }
+    }
+
+    // Unregister and delete ProjectSceneConfiguration
+    {
+        std::shared_ptr<au::projectscene::IProjectSceneConfiguration> projectSceneConfigPtr
+            =muse::modularity::globalIoc()->resolve<au::projectscene::IProjectSceneConfiguration>("utests");
+        muse::modularity::globalIoc()->unregister<au::projectscene::IProjectSceneConfiguration>("utests");
+
+        if (projectSceneConfigPtr) {
+            delete static_cast<au::projectscene::ProjectSceneConfigurationMock*>(projectSceneConfigPtr.get());
+        }
+    }
 });
+} // namespace au::project
