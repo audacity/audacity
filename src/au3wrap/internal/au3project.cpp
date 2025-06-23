@@ -101,12 +101,9 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath)
         return ret;
     } catch (std::bad_optional_access)
     {
-        if (static_cast<project::Err>(projectFileIO.GetLastErrorCode()) == project::Err::ProjectFileIsWriteProtected)
-        {
+        if (static_cast<project::Err>(projectFileIO.GetLastErrorCode()) == project::Err::ProjectFileIsWriteProtected) {
             ret = make_ret(project::Err::ProjectFileIsWriteProtected, filePath.toString());
-        }
-        else
-        {
+        } else {
             ret = make_ret(project::Err::DatabaseError, filePath.toString());
         }
         return ret;

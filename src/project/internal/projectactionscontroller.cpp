@@ -167,7 +167,6 @@ void ProjectActionsController::openProject(const muse::actions::ActionData& args
     QString displayNameOverride = args.count() >= 2 ? args.arg<QString>(1) : QString();
 
     Ret ret = openProject(ProjectFile(url, displayNameOverride));
-
 }
 
 void ProjectActionsController::importFile()
@@ -642,20 +641,14 @@ void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const m
 {
     std::string title;
     std::string body;
-    if (const auto titleOpt = ret.data<std::string>("title"))
-    {
+    if (const auto titleOpt = ret.data<std::string>("title")) {
         title = *titleOpt;
-    }
-    else
-    {
+    } else {
         title = muse::mtrc("project", "Cannot read file %1").arg(io::toNativeSeparators(filepath).toString()).toStdString();
     }
-    if (const auto bodyOpt = ret.data<std::string>("body"))
-    {
+    if (const auto bodyOpt = ret.data<std::string>("body")) {
         body = *bodyOpt;
-    }
-    else
-    {
+    } else {
         if (!ret.text().empty()) {
             body = ret.text();
         } else {
