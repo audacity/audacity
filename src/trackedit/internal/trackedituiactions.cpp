@@ -178,44 +178,141 @@ const UiActionList TrackeditUiActions::m_actions = {
     UiAction("track-move-up",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Move up"),
+             TranslatableString("action", "Move track up"),
              TranslatableString("action", "Move track up")
              ),
     UiAction("track-move-down",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Move down"),
+             TranslatableString("action", "Move track down"),
              TranslatableString("action", "Move track down")
              ),
     UiAction("track-move-top",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Move to top"),
+             TranslatableString("action", "Move track to top"),
              TranslatableString("action", "Move track to top")
              ),
     UiAction("track-move-bottom",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Move to bottom"),
+             TranslatableString("action", "Move track to bottom"),
              TranslatableString("action", "Move track to bottom")
              ),
     UiAction("track-make-stereo",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Make stereo"),
-             TranslatableString("action", "Make stereo")
+             TranslatableString("action", "Make stereo track"),
+             TranslatableString("action", "Make stereo track")
              ),
     UiAction("track-swap-stereo",
-             au::context::UiCtxAny,
+             //! TODO: Change context when swapping stereo channels is implemented
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
-             TranslatableString("action", "Swap stereo"),
-             TranslatableString("action", "Swap stereo")
+             TranslatableString("action", "Swap stereo channels"),
+             TranslatableString("action", "Swap stereo channels")
              ),
     UiAction("track-split-stereo",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Split stereo"),
              TranslatableString("action", "Split stereo")
+             ),
+    UiAction("track-split-stereo-to-lr",
+             //! TODO: Change context when splitting stereo  to L/R mono is implemented
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Split stereo to L/R mono"),
+             TranslatableString("action", "Split stereo to L/R mono")
+             ),
+    UiAction("track-split-stereo-to-center",
+             //! TODO: Change context when splitting stereo to center mono is implemented
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Split stereo to center mono"),
+             TranslatableString("action", "Split stereo to center mono")
+             ),
+    UiAction("track-resample",
+             //! TODO: Change context when resampling is implemented
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Resample track"),
+             TranslatableString("action", "Resample track")
+             ),
+    UiAction("track-view-waveform",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Waveform"),
+             TranslatableString("action", "Waveform"),
+             Checkable::Yes
+             ),
+    UiAction("track-view-spectrogram",
+             //! TODO: Change context when spectrogram is implemented
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Spectogram"),
+             TranslatableString("action", "Spectogram"),
+             Checkable::Yes
+             ),
+    UiAction("track-view-multi",
+             //! TODO: Change context when multi-view is implemented
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Multi-view"),
+             TranslatableString("action", "Multi-view"),
+             Checkable::Yes
+             ),
+    UiAction("track-view-half-wave",
+             //! TODO: Change context when half-wave is implemented
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Half-wave"),
+             TranslatableString("action", "Half-wave"),
+             Checkable::Yes
+             ),
+    UiAction("track-ruler-enable-meter",
+             //! TODO: Change context when metering rulers are implemented
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Enable metering rulers"),
+             TranslatableString("action", "Enable metering rulers")
+             ),
+    UiAction("track-ruler-enable-vertical",
+             //!TODO: Change context when vertical rulers are implemented
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Enable vertical rulers"),
+             TranslatableString("action", "Enable vertical rulers")
+             ),
+    UiAction("track-format-16bit",
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "16-bit PCM"),
+             TranslatableString("action", "16-bit PCM")
+             ),
+    UiAction("track-format-24bit",
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "24-bit PCM"),
+             TranslatableString("action", "24-bit PCM")
+             ),
+    UiAction("track-format-32bit-float",
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "32-bit float"),
+             TranslatableString("action", "32-bit float")
+             ),
+    UiAction("track-rate-8000",
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "8000 Hz"),
+             TranslatableString("action", "8000 Hz")
+             ),
+    UiAction("track-rate-44100",
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "44100 Hz"),
+             TranslatableString("action", "44100 Hz")
              ),
     UiAction("paste",
              au::context::UiCtxAny,

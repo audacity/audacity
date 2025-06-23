@@ -17,38 +17,87 @@ bool containsAny(const ActionCodeList& list, const ActionCodeList& actionCodes)
 }
 }
 
-void TrackContextMenuModel::load()
+MenuItem* TrackContextMenuModel::makeItemWithArg(const ActionCode& actionCode)
 {
-    AbstractMenuModel::load();
+    MenuItem* item = makeMenuItem(actionCode);
+    item->setArgs(ActionData::make_arg1<trackedit::TrackId>(m_trackId));
+    return item;
+}
 
-    auto makeItemWithArg = [this](const ActionCode& actionCode) {
-        MenuItem* item = makeMenuItem(actionCode);
-        item->setArgs(ActionData::make_arg1<trackedit::TrackId>(m_trackId));
-        return item;
-    };
-
-    MenuItemList moveTrackItems {
-        makeItemWithArg("track-move-up"),
-        makeItemWithArg("track-move-down"),
-        makeItemWithArg("track-move-top"),
-        makeItemWithArg("track-move-bottom"),
-    };
-
+MenuItemList TrackContextMenuModel::makeStereoTrackItems()
+{
     MenuItemList items {
         makeItemWithArg("track-rename"),
         makeItemWithArg("track-duplicate"),
         makeItemWithArg("track-delete"),
         makeSeparator(),
-        makeMenu(muse::TranslatableString("track menu", "Move track"), moveTrackItems),
+        makeMenu(muse::TranslatableString("track menu", "Move track"), makeTrackMoveItems()),
+        makeMenu(muse::TranslatableString("track view", "Track view"), makeTrackViewItems()),
         makeMenu(muse::TranslatableString("track color", "Track color"), makeTrackColorItems(), "trackColorMenu"),
+        makeMenu(muse::TranslatableString("track ruler", "Rulers"), makeTrackRulerItems()),
         makeSeparator(),
-        makeItemWithArg("track-make-stereo"),
         makeItemWithArg("track-swap-stereo"),
-        makeItemWithArg("track-split-stereo"),
+        makeItemWithArg("track-split-stereo-to-lr"),
+        makeItemWithArg("track-split-stereo-to-center"),
+        makeSeparator(),
+        makeMenu(muse::TranslatableString("track format", "Format:"), makeTrackFormatItems()),
+        makeMenu(muse::TranslatableString("track rate", "Rate:"), makeTrackRateItems()),
+        makeItemWithArg("track-resample"),
     };
 
-    setItems(items);
+    return items;
+}
+
+MenuItemList TrackContextMenuModel::makeMonoTrackItems()
+{
+    MenuItemList items {
+        makeItemWithArg("track-rename"),
+        makeItemWithArg("track-duplicate"),
+        makeItemWithArg("track-delete"),
+        makeSeparator(),
+        makeMenu(muse::TranslatableString("track menu", "Move track"), makeTrackMoveItems()),
+        makeMenu(muse::TranslatableString("track view", "Track view"), makeTrackViewItems()),
+        makeMenu(muse::TranslatableString("track color", "Track color"), makeTrackColorItems(), "trackColorMenu"),
+        makeMenu(muse::TranslatableString("track ruler", "Rulers"), makeTrackRulerItems()),
+        makeSeparator(),
+        makeItemWithArg("track-make-stereo"),
+        makeSeparator(),
+        makeMenu(muse::TranslatableString("track format", "Format:"), makeTrackFormatItems()),
+        makeMenu(muse::TranslatableString("track rate", "Rate:"), makeTrackRateItems()),
+        makeItemWithArg("track-resample"),
+    };
+
+    return items;
+}
+
+void TrackContextMenuModel::load()
+{
+    AbstractMenuModel::load();
+
+    auto track = globalContext()->currentTrackeditProject()->track(m_trackId);
+    if (!track.has_value()) {
+        return;
+    }
+
+    switch (track.value().type) {
+    case trackedit::TrackType::Mono:
+        setItems(makeMonoTrackItems());
+        break;
+    case trackedit::TrackType::Stereo:
+        setItems(makeStereoTrackItems());
+        break;
+    case trackedit::TrackType::Label:
+        break;
+    default:
+        return;
+    }
+
     updateColorCheckedState();
+
+    MenuItem& waveformViewItem = findItem(ActionCode("track-view-waveform"));
+    auto state = waveformViewItem.state();
+    state.checked = true;
+    waveformViewItem.setState(state);
 }
 
 au::trackedit::TrackId TrackContextMenuModel::trackId() const
@@ -133,4 +182,51 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackColorItems()
     }
 
     return items;
+}
+
+muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackFormatItems()
+{
+    return {
+        makeItemWithArg("track-format-16bit"),
+        makeItemWithArg("track-format-24bit"),
+        makeItemWithArg("track-format-32bit-float"),
+    };
+}
+
+muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackRateItems()
+{
+    return {
+        makeItemWithArg("track-rate-8000"),
+        makeItemWithArg("track-rate-44100"),
+    };
+}
+
+muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackMoveItems()
+{
+    return {
+        makeItemWithArg("track-move-up"),
+        makeItemWithArg("track-move-down"),
+        makeSeparator(),
+        makeItemWithArg("track-move-top"),
+        makeItemWithArg("track-move-bottom"),
+    };
+}
+
+muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackViewItems()
+{
+    return {
+        makeItemWithArg("track-view-waveform"),
+        makeItemWithArg("track-view-spectrogram"),
+        makeItemWithArg("track-view-multi"),
+        makeSeparator(),
+        makeItemWithArg("track-view-half-wave"),
+    };
+}
+
+muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackRulerItems()
+{
+    return {
+        makeItemWithArg("track-ruler-enable-meter"),
+        makeItemWithArg("track-ruler-enable-vertical"),
+    };
 }
