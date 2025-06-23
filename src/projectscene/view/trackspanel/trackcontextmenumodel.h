@@ -33,7 +33,18 @@ signals:
 private:
     void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
 
+    muse::uicomponents::MenuItemList makeMonoTrackItems();
+    muse::uicomponents::MenuItemList makeStereoTrackItems();
+
     muse::uicomponents::MenuItemList makeTrackColorItems();
+    muse::uicomponents::MenuItemList makeTrackFormatItems();
+    muse::uicomponents::MenuItemList makeTrackRateItems();
+    muse::uicomponents::MenuItemList makeTrackMoveItems();
+    muse::uicomponents::MenuItemList makeTrackViewItems();
+    muse::uicomponents::MenuItemList makeTrackRulerItems();
+
+    muse::uicomponents::MenuItem* makeItemWithArg(const muse::actions::ActionCode& actionCode);
+
     void updateColorCheckedState();
 
     trackedit::TrackId m_trackId;
