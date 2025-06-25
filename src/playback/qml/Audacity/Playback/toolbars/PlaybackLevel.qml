@@ -43,8 +43,13 @@ Item {
         }
     }
 
+    PlaybackMeterModel {
+        id: playbackMeterModel
+    }
+
     RowLayout {
         anchors.fill: parent
+        spacing: 6
 
         FlatButton {
             Layout.preferredWidth: root.height
@@ -81,29 +86,45 @@ Item {
         Item {
             Layout.fillWidth: true
             Layout.preferredHeight: root.height
-            Layout.leftMargin: volumeSlider.handleWidth / 2
 
             Column {
                 id: volumePressureContainer
 
                 anchors.fill: parent
                 anchors.topMargin: 2
-                anchors.rightMargin: volumeSlider.handleWidth/2 - leftVolumePressure.overloadWidth
 
                 spacing: 2
 
                 HorizontalVolumePressureMeter {
                     id: leftVolumePressure
-                    meterStyle: root.meterStyle
 
+                    x: playbackMeterRuler.x + playbackMeterRuler.leftTextMargin
+                    width: playbackMeterRuler.effectiveWidth + leftVolumePressure.overloadTotalSpace
+
+                    meterStyle: root.meterStyle
+                    meterModel: playbackMeterModel
                     enabled: root.enabled
                 }
+
                 HorizontalVolumePressureMeter {
                     id: rightVolumePressure
-                    meterStyle: root.meterStyle
 
-                    showRuler: true
+                    x: playbackMeterRuler.x + playbackMeterRuler.leftTextMargin
+                    width: playbackMeterRuler.effectiveWidth +  leftVolumePressure.overloadTotalSpace
+
+                    meterStyle: root.meterStyle
+                    meterModel: playbackMeterModel
                     enabled: root.enabled
+                }
+
+                HorizontalVolumePressureRuler {
+                    id: playbackMeterRuler
+
+                    meterModel: playbackMeterModel
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.rightMargin: leftVolumePressure.overloadWidth
                 }
             }
 
@@ -111,8 +132,9 @@ Item {
                 id: volumeSlider
 
                 anchors.left: parent.left
-                anchors.leftMargin: -handleWidth/2
+                anchors.leftMargin: playbackMeterRuler.leftTextMargin - volumeSlider.handleWidth / 2
                 anchors.right: parent.right
+                anchors.rightMargin: leftVolumePressure.overloadTotalSpace
                 anchors.top: parent.top
                 anchors.topMargin: 1
 
@@ -143,14 +165,13 @@ Item {
 
                 anchors.top: volumePressureContainer.top
                 anchors.bottom: volumePressureContainer.bottom
-
                 anchors.right: volumePressureContainer.right
 
-                width: leftVolumePressure.overloadWidth + 2
+                width: volumeSlider.handleWidth
 
                 z: 10
 
-                enabled: (volumeSlider.handleX <= parent.width - leftVolumePressure.overloadWidth)
+                enabled:  volumeSlider.handleX < (volumeSlider.width - volumeSlider.handleWidth - leftVolumePressure.overloadWidth)
 
                 onClicked: {
                     leftVolumePressure.reset()

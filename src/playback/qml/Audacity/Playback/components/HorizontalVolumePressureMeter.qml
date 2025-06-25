@@ -18,15 +18,17 @@ Canvas {
     
     property int meterStyle: PlaybackMeterStyle.Default
 
-    property bool showRuler: false
-    property bool showClippedInfo: true
-
     property int recentPeakIntervalMiliseconds: 600
 
-    readonly property int overloadWidth: 8
+    property var meterModel: null
+
+    property bool showOverload: true
+    readonly property int overloadWidth: 6
+    readonly property int overloadSpacing: 2
+    readonly property int overloadTotalSpace: root.overloadWidth + root.overloadSpacing
 
     width: parent.width
-    height: root.showRuler ? prv.indicatorHeight + prv.unitsTextWidth : prv.indicatorHeight
+    height: prv.indicatorHeight
 
     opacity: enabled ? 1.0 : ui.theme.itemOpacityDisabled
 
@@ -47,7 +49,13 @@ Canvas {
 
         readonly property color meterBackgroundColor: Utils.colorWithAlpha(ui.theme.strokeColor, 0.7)
 
-        readonly property var maxPeakMarkerColor: "#14151A" 
+        readonly property var maxPeakMarkerColor: "#14151A"
+
+        readonly property var smallSteps: root.meterModel.smallSteps
+
+        onSmallStepsChanged: {
+            root.requestPaint()
+        }
 
         function getRecentPeakMarkerColor() {
             switch (root.meterStyle) {
@@ -86,31 +94,15 @@ Canvas {
         property bool isClipping: currentVolumePressure >= maxDisplayedVolumePressure
         property bool clipped: false
 
-        readonly property real indicatorWidth: root.width - root.overloadWidth
+        readonly property real indicatorWidth: root.width - root.overloadTotalSpace
         readonly property real indicatorHeight: 6
 
-        // value ranges
-        readonly property int fullValueRangeLength: root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure
-        readonly property real divisionPixels: prv.indicatorWidth / fullValueRangeLength
-
-        readonly property real leftStepMargin: 4
-
-        readonly property real unitsTextWidth: 14
-        readonly property color unitTextColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.8)
-        readonly property string unitTextFont: {
-            var pxSize = String('10px')
-            var family = String('\'' + ui.theme.bodyFont.family + '\'')
-
-            return pxSize + ' ' + family
-        }
+        readonly property real divisionPixels: prv.indicatorWidth
 
         property real updatedVolumePressure: -60.0
         property real maxPeak: -60.0
         property real recentPeak: -60.0
         property var recentVolumePressure: []
-
-        onUnitTextColorChanged: { root.requestPaint() }
-        onUnitTextFontChanged: { root.requestPaint() }
 
         function updateRecentPeak() {
             const now = Date.now()
@@ -137,9 +129,7 @@ Canvas {
         }
 
         function sampleValueToHeight(sampleValue) {
-            const clampedValue = Math.max(root.minDisplayedVolumePressure,
-                                    Math.min(sampleValue, root.maxDisplayedVolumePressure));
-            return prv.divisionPixels * (prv.fullValueRangeLength - Math.abs(clampedValue));
+            return Math.floor(prv.indicatorWidth * root.meterModel.sampleToPosition(sampleValue));
         }
 
         onIsClippingChanged: {
@@ -147,45 +137,6 @@ Canvas {
                 prv.clipped = true
                 root.requestPaint()
             }
-        }
-    }
-
-    QtObject {
-        id: ruler
-
-        function drawRuler(ctx) {
-            var originHPos = 0
-            var originVPos = root.height - 2
-
-            ctx.clearRect(0, prv.indicatorHeight, root.width, root.height - prv.indicatorHeight)
-            ctx.font = prv.unitTextFont
-
-            var currentStrokeHPos = 0
-            var fullStep = 12
-            var smallStep = 6
-            var division = prv.divisionPixels
-            var negativeMargin = 8
-
-
-            ctx.save()
-            ctx.fillStyle = prv.unitTextColor
-
-            for (var i = 0; i <= prv.fullValueRangeLength; i+=fullStep) {
-                var value = String(root.minDisplayedVolumePressure + i)
-
-                if (i === 0) { // first element
-                    value = root.minDisplayedVolumePressure + prv.leftStepMargin
-                    currentStrokeHPos = originHPos + negativeMargin
-                } else if (i === fullStep) { // second element
-                    currentStrokeHPos = originHPos + division * fullStep
-                } else {
-                    currentStrokeHPos += division * fullStep
-                }
-
-                ctx.fillStyle = prv.unitTextColor
-                ctx.fillText(value, currentStrokeHPos - (value <= -10 ? negativeMargin : 2), originVPos)
-            }
-            ctx.restore()
         }
     }
 
@@ -204,7 +155,7 @@ Canvas {
     }
 
     function drawBackground(ctx) {
-        ctx.clearRect(0, 0, prv.indicatorWidth, prv.indicatorHeight)
+        ctx.clearRect(0, 0, root.width, prv.indicatorHeight)
 
         ctx.fillStyle = meterStyle.meterBackgroundColor
         ctx.fillRect(0, 0, prv.indicatorWidth, prv.indicatorHeight)
@@ -212,7 +163,7 @@ Canvas {
 
     function drawClippedIndicator(ctx) {
         ctx.fillStyle = prv.clipped ? meterStyle.clippedColor : meterStyle.noClippedColor
-        ctx.fillRect(prv.indicatorWidth, 0, root.overloadWidth, prv.indicatorHeight)
+        ctx.fillRect(prv.indicatorWidth + root.overloadSpacing, 0, root.overloadWidth, prv.indicatorHeight)
     }
 
     function drawMeterBar(ctx) {
@@ -296,7 +247,7 @@ Canvas {
 
         drawBackground(ctx)
 
-        if (root.showClippedInfo)
+        if (root.showOverload)
         {
             drawClippedIndicator(ctx)
         }
@@ -307,10 +258,6 @@ Canvas {
             return
         }
         drawMeterBar(ctx)
-
-        if (root.showRuler) {
-            ruler.drawRuler(ctx)
-        }
     }
 
     onCurrentVolumePressureChanged: {

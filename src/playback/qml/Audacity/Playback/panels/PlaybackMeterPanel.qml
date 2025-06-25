@@ -72,7 +72,6 @@ Item {
 
             Layout.fillHeight: true
             Layout.preferredWidth: root.width
-            Layout.topMargin: 12
 
             Row {
                 id: meterChannelRow
@@ -82,10 +81,15 @@ Item {
                 anchors.fill: parent
                 anchors.leftMargin: 4
                 anchors.rightMargin: 4
-                anchors.topMargin: 2
+                anchors.topMargin: 14
+                anchors.bottomMargin: 11
 
                 VolumePressureMeter {
                     id: leftVolumePressure
+
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: ruler.bottomTextMargin
 
                     overloadHeight: 10
 
@@ -93,14 +97,18 @@ Item {
                     currentRMS: model.leftChannelRMS
 
                     meterStyle: model.meterStyle
+                    meterModel: model.meterModel
 
-                    textBottomMargin: 4
-                    height: parent.height - volumeSlider.handleWidth / 2 + textBottomMargin
                     indicatorWidth: 10
                 }
 
                 VolumePressureMeter {
                     id: rightVolumePressure
+
+
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: ruler.bottomTextMargin
 
                     overloadHeight: 10
 
@@ -108,11 +116,19 @@ Item {
                     currentRMS: model.rightChannelRMS
 
                     meterStyle: model.meterStyle
+                    meterModel: model.meterModel
 
-                    textBottomMargin: 4
-                    height: parent.height - volumeSlider.handleWidth / 2 + textBottomMargin
                     indicatorWidth: 10
-                    showRuler: true
+                }
+
+                VolumePressureRuler {
+                    id: ruler
+
+                    meterModel: model.meterModel
+
+                    anchors.top: parent.top
+                    anchors.topMargin: leftVolumePressure.overloadHeight - topTextMargin
+                    anchors.bottom: parent.bottom
                 }
             }
 
@@ -124,7 +140,9 @@ Item {
                 volumeLevel: model.level
 
                 anchors.top: parent.top
+                anchors.topMargin: 14  + leftVolumePressure.overloadHeight - (handleWidth / 2)
                 anchors.bottom: parent.bottom
+                anchors.bottomMargin: ruler.bottomTextMargin
                 anchors.left: parent.left
                 anchors.leftMargin: 3
 

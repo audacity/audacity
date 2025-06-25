@@ -32,6 +32,9 @@ PlaybackMeterPanelModel::PlaybackMeterPanelModel(QObject* parent)
     });
 
     resetAudioChannelsVolumePressure();
+
+    m_meterModel = new PlaybackMeterModel(this);
+    emit meterModelChanged();
 }
 
 float PlaybackMeterPanelModel::leftChannelPressure() const
@@ -135,6 +138,11 @@ au::playback::PlaybackMeterType::MeterType PlaybackMeterPanelModel::meterType() 
 au::playback::PlaybackMeterPosition::MeterPosition PlaybackMeterPanelModel::meterPosition() const
 {
     return configuration()->playbackMeterPosition();
+}
+
+au::playback::PlaybackMeterModel* PlaybackMeterPanelModel::meterModel() const
+{
+    return m_meterModel;
 }
 
 void PlaybackMeterPanelModel::positionChangeRequested(playback::PlaybackMeterPosition::MeterPosition position)
