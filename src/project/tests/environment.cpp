@@ -13,6 +13,7 @@
 #include "project/tests/mocks/projectconfigurationmock.h"
 #include "project/tests/mocks/trackeditprojectcreatormock.h"
 #include "project/tests/mocks/projectviewstatecreatormock.h"
+#include "project/tests/mocks/clipboardmock.h"
 
 namespace au::project {
 static muse::testing::SuiteEnvironment audacityproject_se
@@ -27,33 +28,27 @@ static muse::testing::SuiteEnvironment audacityproject_se
 
     muse::modularity::globalIoc()->registerExport<IProjectConfiguration>("utests", projectConfigurator);
 
-    // Create the mock instance with a no-op deleter (to avoid deletion)
     std::shared_ptr<TrackeditProjectCreatorMock> trackeditProjectCreatorMock(
         new TrackeditProjectCreatorMock(),
-        [](TrackeditProjectCreatorMock*) {}     // no-op deleter
+        [](TrackeditProjectCreatorMock*) {}
         );
 
-    // Set up default behavior for 'create' method
     ON_CALL(*trackeditProjectCreatorMock, create(::testing::_))
     .WillByDefault(::testing::Return(au::trackedit::ITrackeditProjectPtr {}));
 
-    // Register the mock with the global IOC container under the expected interface type
     muse::modularity::globalIoc()->registerExport<au::trackedit::ITrackeditProjectCreator>(
         "utests",
         trackeditProjectCreatorMock
         );
 
-    // Create the mock instance with a no-op deleter (to avoid deletion)
     std::shared_ptr<au::projectscene::ProjectViewStateCreatorMock> projectViewStateCreatorMock(
         new au::projectscene::ProjectViewStateCreatorMock(),
-        [](au::projectscene::ProjectViewStateCreatorMock*) {}     // no-op deleter
+        [](au::projectscene::ProjectViewStateCreatorMock*) {}
         );
 
-    // Set up default behavior for 'createViewState' method
     ON_CALL(*projectViewStateCreatorMock, createViewState(::testing::_))
     .WillByDefault(::testing::Return(au::projectscene::IProjectViewStatePtr {}));
 
-    // Register the mock with the global IOC container under the expected interface type
     muse::modularity::globalIoc()->registerExport<au::projectscene::IProjectViewStateCreator>(
         "utests",
         projectViewStateCreatorMock
@@ -64,7 +59,7 @@ static muse::testing::SuiteEnvironment audacityproject_se
                                                                                                                        ProjectSceneConfigurationMock
                                                                                                                        *)
     {
-    });                                                                                                                                                                      // no delete
+    });
 
     static std::vector<std::pair<std::string /*name*/, std::string /*color*/> > colors = {
         { "blue", "#0000FF" },
@@ -76,6 +71,16 @@ static muse::testing::SuiteEnvironment audacityproject_se
 
     muse::modularity::globalIoc()->unregister<au::projectscene::IProjectSceneConfiguration>("utests");
     muse::modularity::globalIoc()->registerExport<au::projectscene::IProjectSceneConfiguration>("utests", projectSceneConfigurator);
+
+    std::shared_ptr<au::trackedit::ClipboardMock> clipboardMock(
+        new au::trackedit::ClipboardMock(),
+        [](au::trackedit::ClipboardMock*) {}
+        );
+
+    muse::modularity::globalIoc()->registerExport<au::trackedit::ITrackeditClipboard>(
+        "utests",
+        clipboardMock
+        );
 }).setPostInit([]() {
 }).setDeInit([]()
 {
@@ -120,6 +125,18 @@ static muse::testing::SuiteEnvironment audacityproject_se
 
         if (projectSceneConfigPtr) {
             delete static_cast<au::projectscene::ProjectSceneConfigurationMock*>(projectSceneConfigPtr.get());
+        }
+    }
+
+    // Unregister and delete ClipboardMock
+    {
+        std::shared_ptr<au::trackedit::ITrackeditClipboard> clipboardPtr
+            =muse::modularity::globalIoc()->resolve<au::trackedit::ITrackeditClipboard>("utests");
+
+        muse::modularity::globalIoc()->unregister<au::trackedit::ITrackeditClipboard>("utests");
+
+        if (clipboardPtr) {
+            delete static_cast<au::trackedit::ClipboardMock*>(clipboardPtr.get());
         }
     }
 });
