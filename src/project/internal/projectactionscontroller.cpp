@@ -641,13 +641,14 @@ void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const m
 {
     std::string title;
     std::string body;
-    if (const auto titleOpt = ret.data<std::string>("title")) {
-        title = *titleOpt;
+
+    if (std::any retTitle = ret.data("title"); retTitle.has_value()) {
+        title = std::any_cast<std::string>(retTitle);
     } else {
         title = muse::mtrc("project", "Cannot read file %1").arg(io::toNativeSeparators(filepath).toString()).toStdString();
     }
-    if (const auto bodyOpt = ret.data<std::string>("body")) {
-        body = *bodyOpt;
+    if (std::any retBody = ret.data("body"); retBody.has_value()) {
+        body = std::any_cast<std::string>(retBody);
     } else {
         if (!ret.text().empty()) {
             body = ret.text();

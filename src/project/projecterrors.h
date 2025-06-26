@@ -93,8 +93,9 @@ inline muse::Ret make_ret(Err err, const muse::io::path_t& filePath)
                           "To open this file:\n“%1”\nPlease remove the write protection by checking the file’s properties, ensuring it is not stored on a write-protected drive or folder, or by running Audacity as an administrator.")
                .arg(muse::io::toNativeSeparators(filePath).toString());
         break;
-    case Err::Undefined:
     case Err::UnknownError:
+    case Err::Undefined:
+    default:
         break;
     }
 
