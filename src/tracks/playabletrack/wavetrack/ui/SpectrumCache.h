@@ -45,8 +45,8 @@ public:
       int dirty_, double samplesPerPixel,
       const SpectrogramSettings& settings) const;
 
-   // Grow the cache while preserving the (possibly now invalid!) contents
-   void Grow(
+   // Resize the cache, while preserving the (possibly now invalid!) contents if growing
+   void Resize(
       size_t len_, SpectrogramSettings& settings, double samplesPerPixel,
       double start /*relative to clip play start time*/);
 

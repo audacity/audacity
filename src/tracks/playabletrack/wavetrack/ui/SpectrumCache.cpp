@@ -315,7 +315,7 @@ bool SpecCache::CalculateOneSpectrum(
    return result;
 }
 
-void SpecCache::Grow(
+void SpecCache::Resize(
    size_t len_, SpectrogramSettings& settings, double samplesPerPixel,
    double start_)
 {
@@ -533,7 +533,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
    }
 
    // Resize the cache, keep the contents unchanged.
-   mSpecCache->Grow(numPixels, settings, samplesPerPixel, t0);
+   mSpecCache->Resize(numPixels, settings, samplesPerPixel, t0);
    mSpecCache->leftTrim = clip.GetTrimLeft();
    mSpecCache->rightTrim = clip.GetTrimRight();
 
