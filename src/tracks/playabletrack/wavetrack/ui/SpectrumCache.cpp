@@ -514,16 +514,11 @@ bool WaveClipSpectrumCache::GetSpectrogram(
       // Remember our first pixel maps to oldX0 in the old cache,
       // possibly out of bounds.
       // For what range of pixels can data be copied?
-      copyBegin = std::min((int)numPixels, std::max(0, -oldX0));
-      copyEnd = std::min((int)numPixels, std::max(0,
-         (int)mSpecCache->len - oldX0
-      ));
+      int copyLen = std::max(0, int(mSpecCache->len) - std::abs(oldX0));
+      copyBegin = oldX0 >= 0 ? 0 : std::abs(oldX0);
+      copyEnd = copyBegin + copyLen;
    }
 
-   // Resize the cache, keep the contents unchanged.
-   mSpecCache->Grow(numPixels, settings, samplesPerPixel, t0);
-   mSpecCache->leftTrim = clip.GetTrimLeft();
-   mSpecCache->rightTrim = clip.GetTrimRight();
    auto nBins = settings.NBins();
 
    // Optimization: if the old cache is good and overlaps
@@ -536,6 +531,11 @@ bool WaveClipSpectrumCache::GetSpectrogram(
                &mSpecCache->freq[nBins * (copyBegin + oldX0)],
                nBins * (copyEnd - copyBegin) * sizeof(float));
    }
+
+   // Resize the cache, keep the contents unchanged.
+   mSpecCache->Grow(numPixels, settings, samplesPerPixel, t0);
+   mSpecCache->leftTrim = clip.GetTrimLeft();
+   mSpecCache->rightTrim = clip.GetTrimRight();
 
    // Reassignment accumulates, so it needs a zeroed buffer
    if (settings.algorithm == SpectrogramSettings::algReassignment)
