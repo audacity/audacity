@@ -37,8 +37,7 @@ public:
     LV2EffectsModule();
     virtual ~LV2EffectsModule();
 
-    //! Execute eitehr InitializePluginRegistration() or Initialize()
-    bool InitializePluginRegistration();
+    void LoadBundle(const PluginPath&) const;
 
     // ComponentInterface implementation
 
@@ -76,7 +75,6 @@ public:
     static const LilvPlugin* GetPlugin(const PluginPath& path);
 
 private:
-
     //During initialization LV2 module will update LV2_PATH
     //environment variable, we need to preserve the its contents
     //on startup to avoid appended duplications

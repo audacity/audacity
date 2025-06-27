@@ -8,6 +8,7 @@ import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.Effects
+import Audacity.BuiltinEffects
 import Audacity.Lv2
 import Audacity.Vst
 
@@ -22,7 +23,7 @@ EffectStyledDialogView {
 
     implicitWidth: prv.viewItem ? Math.max(prv.viewItem.implicitWidth, headerBar.width) : headerBar.width
     implicitHeight: 2 * prv.padding + headerBar.height + (prv.viewItem ? prv.viewItem.implicitHeight : 0)
-    minimumWidth: 270
+    minimumWidth: viewerModel.effectFamily === EffectFamily.LV2 ? 500 : 270
 
     alwaysOnTop: true
 
@@ -74,7 +75,7 @@ EffectStyledDialogView {
             rightPadding: prv.padding
             bottomPadding: prv.padding
 
-            EffectsViewer {
+            BuiltinEffectViewer {
                 id: view
                 instanceId: root.instanceId
             }
@@ -87,6 +88,8 @@ EffectStyledDialogView {
         Lv2Viewer {
             id: view
             instanceId: root.instanceId
+            effectState: root.effectState
+            title: root.title
         }
     }
 

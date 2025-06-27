@@ -571,6 +571,8 @@ if (AU_MODULE_EFFECTS_LV2)
         ${AU3_LIBRARIES}/lib-lv2/lv2_external_ui.h
         ${AU3_LIBRARIES}/lib-lv2/LV2Instance.cpp
         ${AU3_LIBRARIES}/lib-lv2/LV2Instance.h
+        ${AU3_LIBRARIES}/lib-lv2/LV2PluginId.cpp
+        ${AU3_LIBRARIES}/lib-lv2/LV2PluginId.h
         ${AU3_LIBRARIES}/lib-lv2/LV2Ports.cpp
         ${AU3_LIBRARIES}/lib-lv2/LV2Ports.h
         ${AU3_LIBRARIES}/lib-lv2/LV2Preferences.cpp

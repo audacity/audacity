@@ -44,26 +44,27 @@ bool LV2UIFeaturesList::InitializeFeatures(const LilvNode* node,
 int LV2UIFeaturesList::ui_resize(LV2UI_Feature_Handle handle,
                                  int width, int height)
 {
-    return 0; // static_cast<UIHandler*>(handle)->ui_resize(width, height);
+    return static_cast<UIHandler*>(handle)->ui_resize(width, height);
 }
 
 void LV2UIFeaturesList::ui_closed(LV2UI_Controller controller)
 {
-    // return static_cast<UIHandler*>(controller)->ui_closed();
+    static_cast<UIHandler*>(controller)->ui_closed();
 }
 
 uint32_t LV2UIFeaturesList::suil_port_index(
     SuilController controller, const char* port_symbol)
 {
-    return 0; // static_cast<UIHandler*>(controller)->suil_port_index(port_symbol);
+    auto handler = static_cast<UIHandler*>(controller);
+    return handler->suil_port_index(port_symbol);
 }
 
 void LV2UIFeaturesList::suil_port_write(SuilController controller,
                                         uint32_t port_index, uint32_t buffer_size, uint32_t protocol,
                                         const void* buffer)
 {
-    // auto handler = static_cast<UIHandler*>(controller);
-    // return handler->suil_port_write(port_index, buffer_size, protocol, buffer);
+    auto handler = static_cast<UIHandler*>(controller);
+    handler->suil_port_write(port_index, buffer_size, protocol, buffer);
 }
 
 LV2UIFeaturesList::UIHandler::~UIHandler() = default;

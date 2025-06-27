@@ -63,7 +63,7 @@ public:
     // This function possibly has O(size) complexity as it may
     // require copying bytes to a linear chunk
     const void* GetData() const;
-    const size_t GetSize() const noexcept;
+    size_t GetSize() const noexcept;
 
     bool IsEmpty() const noexcept;
 

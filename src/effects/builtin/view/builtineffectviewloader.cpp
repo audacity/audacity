@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "effectviewloader.h"
-#include "effectstypes.h"
+#include "builtineffectviewloader.h"
+#include "effects/effects_base/effectstypes.h"
 
 #include <QQmlEngine>
 
@@ -33,11 +33,11 @@
 
 using namespace au::effects;
 
-EffectViewLoader::EffectViewLoader(QObject* parent)
+BuiltinEffectViewLoader::BuiltinEffectViewLoader(QObject* parent)
     : QObject(parent)
 {}
 
-EffectViewLoader::~EffectViewLoader()
+BuiltinEffectViewLoader::~BuiltinEffectViewLoader()
 {
     if (m_contentItem) {
         m_contentItem->deleteLater();
@@ -45,7 +45,7 @@ EffectViewLoader::~EffectViewLoader()
     }
 }
 
-void EffectViewLoader::load(const QString& instanceId, QObject* itemParent)
+void BuiltinEffectViewLoader::load(const QString& instanceId, QObject* itemParent)
 {
     LOGD() << "instanceId: " << instanceId;
 
@@ -108,7 +108,7 @@ void EffectViewLoader::load(const QString& instanceId, QObject* itemParent)
     emit contentItemChanged();
 }
 
-QQuickItem* EffectViewLoader::contentItem() const
+QQuickItem* BuiltinEffectViewLoader::contentItem() const
 {
     return m_contentItem;
 }

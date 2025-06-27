@@ -8,13 +8,14 @@ import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.Effects
+import Audacity.BuiltinEffects
 import Audacity.Lv2
 import Audacity.Vst
 
 EffectStyledDialogView {
     id: root
 
-    property var instanceId
+    property alias instanceId: viewerModel.instanceId
     property int effectFamily: EffectFamily.Unknown
 
     QtObject {
@@ -24,9 +25,9 @@ EffectStyledDialogView {
         property int separatorHeight: effectFamily == EffectFamily.Builtin ? separator.height + root.margins : 0
     }
 
-    title: prv.viewer ? prv.viewer.title : ""
+    title: viewerModel.title
 
-    minimumWidth: 250
+    minimumWidth: effectFamily === EffectFamily.LV2 ? 500 : 250
     implicitWidth: viewerLoader.width
     implicitHeight: presetsBar.height + viewerLoader.height + btnBarLoader.height + margins * 2 + prv.separatorHeight
 
@@ -55,6 +56,10 @@ EffectStyledDialogView {
         btnBarLoader.sourceComponent = bboxComponent
     }
 
+    EffectViewerDialogModel {
+        id: viewerModel
+    }
+
     Column {
         id: column
         anchors.fill: parent
@@ -77,7 +82,7 @@ EffectStyledDialogView {
 
         Component {
             id: builtinViewerComp
-            EffectsViewer {
+            BuiltinEffectViewer {
                 instanceId: root.instanceId
             }
         }
@@ -86,6 +91,7 @@ EffectStyledDialogView {
             id: lv2ViewerComp
             Lv2Viewer {
                 instanceId: root.instanceId
+                title: root.title
             }
         }
 

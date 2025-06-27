@@ -6,7 +6,6 @@
         <file>qml/Audacity/Effects/EffectsViewerDialog.qml</file>
         <file>qml/Audacity/Effects/EffectStyledDialogView.qml</file>
         <file>qml/Audacity/Effects/RealtimeEffectViewerDialog.qml</file>
-        <file>qml/Audacity/Effects/EffectsViewer.qml</file>
         <file>qml/Audacity/Effects/PresetNameDialog.qml</file>
     </qresource>
 </RCC>

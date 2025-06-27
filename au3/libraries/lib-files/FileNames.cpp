@@ -278,7 +278,7 @@ FilePath GetXDGTargetDir(DirTarget target)
 #ifdef AUDACITY_NAME
     newDir = newDir + wxT("/" AUDACITY_NAME);
 #else
-    newDir = newDir + wxT("/audacity");
+    newDir = newDir + wxT("/audacity4");
 #endif
 
     return newDir;

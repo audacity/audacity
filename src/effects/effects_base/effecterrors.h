@@ -20,6 +20,7 @@ enum class Err {
     EffectMultipleClipSelectionNotSupported,
     EffectProcessFailed,
     EffectProcessCancelled,
+    EffectLoadFailed,
 
     // presets
     PresetNotValid,
@@ -34,6 +35,8 @@ inline muse::Ret make_ret(Err e, std::string text = "")
     case Err::Undefined: return muse::Ret(retCode);
     case Err::NoError: return muse::Ret(retCode);
     case Err::EffectProcessCancelled: return muse::Ret(muse::Ret::Code::Cancel);
+    case Err::EffectLoadFailed:
+        return muse::Ret(retCode, text.empty() ? muse::trc("effects", "Effect load failed") : text);
     case Err::InternalError:
         return muse::Ret(retCode, muse::trc("effects", "Internal error"));
     case Err::UnknownError:
