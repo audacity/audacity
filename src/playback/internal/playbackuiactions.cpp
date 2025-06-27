@@ -29,14 +29,14 @@ static const ActionQuery CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-i
 const UiActionList PlaybackUiActions::m_mainActions = {
     UiAction(PLAY_ACTION_CODE,
              au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_FOCUSED,
+             au::context::CTX_PROJECT_PLAYBACK,
              TranslatableString("action", "Play"),
              TranslatableString("action", "Play"),
              IconCode::Code::PLAY_FILL
              ),
     UiAction(PAUSE_ACTION_CODE,
              au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_FOCUSED,
+             au::context::CTX_PROJECT_PLAYBACK,
              TranslatableString("action", "Pause"),
              TranslatableString("action", "Pause"),
              IconCode::Code::PAUSE_FILL
