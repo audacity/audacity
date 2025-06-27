@@ -28,7 +28,7 @@ public:
     muse::async::Channel<muse::actions::ActionCodeList> actionCheckedChanged() const override;
 
 private:
-    static const muse::ui::UiActionList m_actions;
+    muse::ui::UiActionList m_actions;
 
     std::shared_ptr<TrackeditActionsController> m_controller;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;

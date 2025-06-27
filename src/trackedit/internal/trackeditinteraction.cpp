@@ -348,6 +348,11 @@ ClipKeyList TrackeditInteraction::clipsInGroup(int64_t id) const
     return m_interaction->clipsInGroup(id);
 }
 
+bool TrackeditInteraction::changeTrackFormat(const TrackId trackId, trackedit::TrackFormat format)
+{
+    return withPlaybackStop(&ITrackeditInteraction::changeTrackFormat, trackId, format);
+}
+
 muse::ProgressPtr TrackeditInteraction::progress() const
 {
     return m_interaction->progress();
