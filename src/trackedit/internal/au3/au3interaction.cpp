@@ -1256,9 +1256,6 @@ bool Au3Interaction::removeClips(const ClipKeyList& clipKeyList, bool moveClips)
 
 bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
-    secs_t duration = end - begin;
-    secs_t start = begin;
-
     for (const TrackId& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -1826,8 +1823,6 @@ std::vector<ITrackDataPtr> Au3Interaction::splitCutSelectedOnTracks(const TrackI
 
 bool Au3Interaction::splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end)
 {
-    secs_t duration = end - begin;
-
     for (const auto& trackId : tracksIds) {
         bool ok = splitDeleteSelectedOnTrack(trackId, begin, end);
         if (!ok) {
@@ -2370,6 +2365,38 @@ ClipKeyList Au3Interaction::clipsInGroup(int64_t id) const
     }
 
     return groupedClips;
+}
+
+bool Au3Interaction::changeTrackFormat(const TrackId trackId, trackedit::TrackFormat format)
+{
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    sampleFormat newFormat;
+    switch (format) {
+    case au::trackedit::TrackFormat::Int16:
+        newFormat = sampleFormat::int16Sample;
+        break;
+    case au::trackedit::TrackFormat::Int24:
+        newFormat = sampleFormat::int24Sample;
+        break;
+    case au::trackedit::TrackFormat::Float32:
+        newFormat = sampleFormat::floatSample;
+        break;
+    case au::trackedit::TrackFormat::Undefined:
+    default:
+        return false;
+    }
+
+    if (!(waveTrack->GetSampleFormat() == newFormat)) {
+        waveTrack->ConvertToSampleFormat(newFormat);
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    }
+
+    return true;
 }
 
 muse::ProgressPtr Au3Interaction::progress() const

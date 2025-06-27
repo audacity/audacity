@@ -96,6 +96,8 @@ public:
     void ungroupClips(const trackedit::ClipKeyList& clipKeyList) override;
     ClipKeyList clipsInGroup(int64_t id) const override;
 
+    bool changeTrackFormat(const TrackId trackId, trackedit::TrackFormat format) override;
+
     muse::ProgressPtr progress() const override;
 
 private:

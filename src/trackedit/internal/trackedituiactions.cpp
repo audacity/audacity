@@ -7,13 +7,16 @@
 #include "context/uicontext.h"
 #include "context/shortcutcontext.h"
 #include "types/translatablestring.h"
+#include "dom/track.h"
 
 using namespace au::trackedit;
 using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
 
-const UiActionList TrackeditUiActions::m_actions = {
+constexpr static const char16_t* TRACK_FORMAT_CHANGE_ACTION = u"action://trackedit/track/change-format?format=%1";
+
+static UiActionList STATIC_ACTIONS = {
     UiAction("toggle-loop-region",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -200,7 +203,8 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Move track to bottom")
              ),
     UiAction("track-make-stereo",
-             au::context::UiCtxAny,
+             //! TODO: Change context when making stereo tracks is implemented
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Make stereo track"),
              TranslatableString("action", "Make stereo track")
@@ -283,24 +287,6 @@ const UiActionList TrackeditUiActions::m_actions = {
              au::context::CTX_ANY,
              TranslatableString("action", "Enable vertical rulers"),
              TranslatableString("action", "Enable vertical rulers")
-             ),
-    UiAction("track-format-16bit",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "16-bit PCM"),
-             TranslatableString("action", "16-bit PCM")
-             ),
-    UiAction("track-format-24bit",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "24-bit PCM"),
-             TranslatableString("action", "24-bit PCM")
-             ),
-    UiAction("track-format-32bit-float",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "32-bit float"),
-             TranslatableString("action", "32-bit float")
              ),
     UiAction("track-rate-8000",
              au::context::UiCtxUnknown,
@@ -437,12 +423,26 @@ const UiActionList TrackeditUiActions::m_actions = {
 };
 
 TrackeditUiActions::TrackeditUiActions(std::shared_ptr<TrackeditActionsController> controller)
-    : m_controller(controller)
+    : m_actions(STATIC_ACTIONS), m_controller(controller)
 {
 }
 
 void TrackeditUiActions::init()
 {
+    const std::vector<TrackFormat> formatList { TrackFormat::Int16, TrackFormat::Int24, TrackFormat::Float32 };
+    for (const auto& format : formatList) {
+        UiAction formatAction;
+        formatAction.code
+            = muse::actions::ActionQuery(muse::String(TRACK_FORMAT_CHANGE_ACTION).arg(muse::String::number(static_cast<int>(format)))).
+              toString();
+        formatAction.uiCtx = context::UiCtxAny;
+        formatAction.scCtx = context::CTX_ANY;
+        formatAction.description = muse::TranslatableString("action", "Change track format");
+        formatAction.title = muse::TranslatableString("action", "Change track format");
+        formatAction.checkable = Checkable::Yes;
+        m_actions.push_back(std::move(formatAction));
+    }
+
     m_controller->actionEnabledChanged().onReceive(this, [this](const ActionCode& code) {
         m_actionEnabledChanged.send({ code });
     });

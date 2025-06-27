@@ -7,6 +7,20 @@ using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace muse::actions;
 
+constexpr static const char* TRACK_FORMAT_CHANGE_ACTION = "action://trackedit/track/change-format?format=%1";
+constexpr static const char* TRACK_FORMAT_MENU_ID = "trackFormatMenu";
+
+struct TrackFormatInfo {
+    au::trackedit::TrackFormat format;
+    const char* description;
+};
+
+const TrackFormatInfo AVAILABLE_TRACK_FORMATS[] = {
+    { au::trackedit::TrackFormat::Int16, "16-bit PCM" },
+    { au::trackedit::TrackFormat::Int24, "24-bit PCM" },
+    { au::trackedit::TrackFormat::Float32, "32-bit Float" }
+};
+
 namespace {
 //! NOTE: can be moved to the framework
 bool containsAny(const ActionCodeList& list, const ActionCodeList& actionCodes)
@@ -14,6 +28,12 @@ bool containsAny(const ActionCodeList& list, const ActionCodeList& actionCodes)
     return std::any_of(actionCodes.begin(), actionCodes.end(), [&](ActionCode code) {
         return std::find(list.begin(), list.end(), code) != list.end();
     });
+}
+
+muse::actions::ActionQuery makeTrackFormatChangeAction(const au::trackedit::TrackFormat& format)
+{
+    return muse::actions::ActionQuery(muse::String(TRACK_FORMAT_CHANGE_ACTION).arg(
+                                          muse::String::number(static_cast<int>(format))));
 }
 }
 
@@ -40,7 +60,7 @@ MenuItemList TrackContextMenuModel::makeStereoTrackItems()
         makeItemWithArg("track-split-stereo-to-lr"),
         makeItemWithArg("track-split-stereo-to-center"),
         makeSeparator(),
-        makeMenu(muse::TranslatableString("track format", "Format:"), makeTrackFormatItems()),
+        makeMenu(muse::TranslatableString("track format", "Format:"), makeTrackFormatItems(), QString::fromUtf8(TRACK_FORMAT_MENU_ID)),
         makeMenu(muse::TranslatableString("track rate", "Rate:"), makeTrackRateItems()),
         makeItemWithArg("track-resample"),
     };
@@ -62,7 +82,7 @@ MenuItemList TrackContextMenuModel::makeMonoTrackItems()
         makeSeparator(),
         makeItemWithArg("track-make-stereo"),
         makeSeparator(),
-        makeMenu(muse::TranslatableString("track format", "Format:"), makeTrackFormatItems()),
+        makeMenu(muse::TranslatableString("track format", "Format:"), makeTrackFormatItems(), QString::fromUtf8(TRACK_FORMAT_MENU_ID)),
         makeMenu(muse::TranslatableString("track rate", "Rate:"), makeTrackRateItems()),
         makeItemWithArg("track-resample"),
     };
@@ -93,6 +113,7 @@ void TrackContextMenuModel::load()
     }
 
     updateColorCheckedState();
+    updateTrackFormatState();
 
     MenuItem& waveformViewItem = findItem(ActionCode("track-view-waveform"));
     auto state = waveformViewItem.state();
@@ -139,15 +160,17 @@ void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCod
     if (containsAny(codes, m_colorChangeActionCodeList)) {
         updateColorCheckedState();
     }
+
+    for (const auto& formatInfo : AVAILABLE_TRACK_FORMATS) {
+        if (std::find(codes.begin(), codes.end(), makeTrackFormatChangeAction(formatInfo.format).toString()) != codes.end()) {
+            updateTrackFormatState();
+        }
+    }
 }
 
 void TrackContextMenuModel::updateColorCheckedState()
 {
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    if (!project) {
-        return;
-    }
-    auto track = project->trackeditProject()->track(m_trackId);
+    auto track = globalContext()->currentTrackeditProject()->track(m_trackId);
     if (!track.has_value()) {
         return;
     }
@@ -169,6 +192,27 @@ void TrackContextMenuModel::updateColorCheckedState()
     }
 }
 
+void TrackContextMenuModel::updateTrackFormatState()
+{
+    auto track = globalContext()->currentTrackeditProject()->track(m_trackId);
+    if (!track.has_value()) {
+        return;
+    }
+
+    for (const auto& formatInfo : AVAILABLE_TRACK_FORMATS) {
+        MenuItem& item = findItem(makeTrackFormatChangeAction(formatInfo.format).toString());
+        if (track.value().format != formatInfo.format) {
+            item.setChecked(false);
+            continue;
+        }
+
+        item.setChecked(true);
+        MenuItem& menu = findMenu(QString::fromUtf8(TRACK_FORMAT_MENU_ID));
+        menu.setTitle(muse::TranslatableString("track format", "Format: %1")
+                      .arg(muse::String(formatInfo.description)));
+    }
+}
+
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackColorItems()
 {
     m_colorChangeActionCodeList.clear();
@@ -186,11 +230,12 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackColorItems()
 
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackFormatItems()
 {
-    return {
-        makeItemWithArg("track-format-16bit"),
-        makeItemWithArg("track-format-24bit"),
-        makeItemWithArg("track-format-32bit-float"),
-    };
+    muse::uicomponents::MenuItemList items;
+    for (const auto& formatInfo : AVAILABLE_TRACK_FORMATS) {
+        items << makeMenuItem(makeTrackFormatChangeAction(formatInfo.format).toString(),
+                              muse::TranslatableString("track", muse::String(formatInfo.description)));
+    }
+    return items;
 }
 
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackRateItems()

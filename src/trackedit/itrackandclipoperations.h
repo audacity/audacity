@@ -91,6 +91,8 @@ public:
     virtual void ungroupClips(const trackedit::ClipKeyList& clipKeyList) = 0;
     virtual ClipKeyList clipsInGroup(int64_t id) const = 0;
 
+    virtual bool changeTrackFormat(const TrackId trackId, trackedit::TrackFormat format) = 0;
+
     virtual muse::ProgressPtr progress() const = 0;
 };
 }

@@ -46,6 +46,7 @@ private:
     muse::uicomponents::MenuItem* makeItemWithArg(const muse::actions::ActionCode& actionCode);
 
     void updateColorCheckedState();
+    void updateTrackFormatState();
 
     trackedit::TrackId m_trackId;
     muse::actions::ActionCodeList m_colorChangeActionCodeList;

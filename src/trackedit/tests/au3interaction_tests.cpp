@@ -2263,4 +2263,32 @@ TEST_F(Au3InteractionTests, ResetClipSpeed)
     // Cleanup
     removeTrack(trackId);
 }
+
+TEST_F(Au3InteractionTests, changeTrackFormat)
+{
+    //! [GIVEN] There is a project with a track and a single clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_EQ(track->NChannels(), 1) << "The channel count of the new track is not 1";
+
+    //! [EXPECT] The project is notified about track changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(2);
+
+    //! [WHEN] Change the track format to 16-bit pcm
+    const bool ret = m_au3Interaction->changeTrackFormat(trackId, trackedit::TrackFormat::Int16);
+    ASSERT_TRUE(ret) << "Failed to change the track format";
+
+    ASSERT_TRUE(track->GetSampleFormat() == sampleFormat::int16Sample) << "The track sample format is not int16";
+
+    //! [WHEN] Change the track format to 24-bit pcm
+    const bool ret24 = m_au3Interaction->changeTrackFormat(trackId, trackedit::TrackFormat::Int24);
+    ASSERT_TRUE(ret24) << "Failed to change the track format to 24-bit";
+
+    ASSERT_TRUE(track->GetSampleFormat() == sampleFormat::int24Sample) << "The track sample format is not int24";
+
+    // Cleanup
+    removeTrack(trackId);
+}
 }

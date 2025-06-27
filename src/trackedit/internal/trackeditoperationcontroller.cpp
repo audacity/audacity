@@ -546,6 +546,15 @@ ClipKeyList TrackeditOperationController::clipsInGroup(int64_t id) const
     return trackAndClipOperations()->clipsInGroup(id);
 }
 
+bool TrackeditOperationController::changeTrackFormat(const TrackId trackId, trackedit::TrackFormat format)
+{
+    if (trackAndClipOperations()->changeTrackFormat(trackId, format)) {
+        projectHistory()->pushHistoryState("Changed track format", "Changed track format");
+        return true;
+    }
+    return false;
+}
+
 muse::ProgressPtr TrackeditOperationController::progress() const
 {
     return trackAndClipOperations()->progress();
