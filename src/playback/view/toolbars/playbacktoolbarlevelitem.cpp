@@ -60,6 +60,11 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
     });
 
     resetAudioChannelsVolumePressure();
+
+    playback()->audioOutput()->playbackVolume().onResolve(this, [this](float volume) {
+        m_level = volume;
+        emit levelChanged();
+    });
 }
 
 int PlaybackToolBarLevelItem::level() const
