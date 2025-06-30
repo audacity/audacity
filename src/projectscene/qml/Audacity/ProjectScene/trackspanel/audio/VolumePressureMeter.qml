@@ -231,7 +231,7 @@ Canvas {
         // On clipping draw full red rectangle
         if (prv.isClipping) {
             ctx.fillStyle = meterStyle.clippedColor
-            ctx.fillRect(0, 0, root.indicatorWidth, prv.indicatorHeight)
+            ctx.fillRect(0, 0, root.indicatorWidth, prv.indicatorHeight + root.overloadHeight)
             return
         }
 
@@ -248,7 +248,7 @@ Canvas {
         // On clipping draw full red rectangle
         if (prv.isClipping) {
             ctx.fillStyle = meterStyle.clippedColor
-            ctx.fillRect(0, 0, indicatorWidth, prv.indicatorHeight)
+            ctx.fillRect(0, 0, indicatorWidth, prv.indicatorHeight + root.overloadHeight)
             return
         }
 
