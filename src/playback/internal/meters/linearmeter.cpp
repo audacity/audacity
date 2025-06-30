@@ -52,8 +52,8 @@ double LinearMeter::stepToPosition(double step) const
 
 double LinearMeter::sampleToPosition(double sample) const
 {
-    if (sample == MIN_VOLUME_DB) {
-        return 0.0;
+    if ((sample < MIN_VOLUME_DB) || muse::is_equal(sample, MIN_VOLUME_DB)) {
+        return MIN_VOLUME_LIN;
     }
 
     return stepToPosition(muse::db_to_linear(sample));
