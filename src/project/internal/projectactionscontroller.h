@@ -1,8 +1,6 @@
 #ifndef AU_PROJECT_PROJECTACTIONSCONTROLLER_H
 #define AU_PROJECT_PROJECTACTIONSCONTROLLER_H
 
-#include "project/iprojectfilescontroller.h"
-
 #include "actions/actionable.h"
 #include "async/asyncable.h"
 
@@ -10,12 +8,12 @@
 #include "global/iinteractive.h"
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
-#include "global/iinteractive.h"
 #include "global/io/ifilesystem.h"
 #include "iopensaveprojectscenario.h"
 #include "record/irecordcontroller.h"
 #include "trackedit/iprojecthistory.h"
 
+#include "project/iprojectfilescontroller.h"
 #include "project/iprojectconfiguration.h"
 #include "project/irecentfilescontroller.h"
 #include "project/iprojectautosaver.h"

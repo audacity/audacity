@@ -719,7 +719,7 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/portmixer au3-portmixer)
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
 set(MODULE_SRC ${MODULE_SRC} ${AU3_SRC})
-set(MODULE_LINK ${AU3_LINK})
+set(MODULE_LINK ${AU3_LINK} project)
 
 if (AU_MODULE_EFFECTS_LV2)
     set(MODULE_LINK ${MODULE_LINK} lv2sdk)

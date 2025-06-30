@@ -13,7 +13,7 @@
 #include "project/tests/mocks/projectconfigurationmock.h"
 #include "project/tests/mocks/trackeditprojectcreatormock.h"
 #include "project/tests/mocks/projectviewstatecreatormock.h"
-#include "project/tests/mocks/clipboardmock.h"
+#include "trackedit/tests/mocks/clipboardmock.h"
 
 namespace au::project {
 static muse::testing::SuiteEnvironment audacityproject_se

@@ -97,14 +97,14 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath)
         conn.emplace(projectFileIO.LoadProject(fileName, false /*ignoreAutosave*/).value());
     } catch (AudacityException& exception) {
         LOGE() << "failed load project: " << filePath << ", exception received";
-        ret = make_ret(project::Err::AudacityExceptionError, filePath.toString());
+        ret = project::make_ret(project::Err::AudacityExceptionError, filePath.toString());
         return ret;
     } catch (std::bad_optional_access)
     {
         if (static_cast<project::Err>(projectFileIO.GetLastErrorCode()) == project::Err::ProjectFileIsWriteProtected) {
-            ret = make_ret(project::Err::ProjectFileIsWriteProtected, filePath.toString());
+            ret = project::make_ret(project::Err::ProjectFileIsWriteProtected, filePath.toString());
         } else {
-            ret = make_ret(project::Err::DatabaseError, filePath.toString());
+            ret = project::make_ret(project::Err::DatabaseError, filePath.toString());
         }
         return ret;
     }
