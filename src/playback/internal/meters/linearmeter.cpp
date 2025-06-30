@@ -16,6 +16,8 @@ using namespace au::playback;
 static constexpr double MIN_VOLUME_LIN = 0.0;
 static constexpr double MAX_VOLUME_LIN = 1.0;
 
+static constexpr double MIN_VOLUME_DB = -60.0;
+
 static constexpr int LOW_RESOLUTION_METER_THRESHOLD = 400;
 static constexpr int HIGH_RESOLUTION_METER_THRESHOLD = 1500;
 
@@ -50,6 +52,10 @@ double LinearMeter::stepToPosition(double step) const
 
 double LinearMeter::sampleToPosition(double sample) const
 {
+    if (sample == MIN_VOLUME_DB) {
+        return 0.0;
+    }
+
     return stepToPosition(muse::db_to_linear(sample));
 }
 
@@ -101,7 +107,12 @@ std::vector<double> LinearMeter::smallSteps(int meterSize) const
     double value = MIN_VOLUME_LIN;
 
     while (value < MAX_VOLUME_LIN) {
-        if (std::find(fullSteps.begin(), fullSteps.end(), value) == fullSteps.end()) {
+        bool isCloseToFullStep = std::any_of(fullSteps.begin(), fullSteps.end(),
+                                             [value](double fullStep) {
+            return std::abs(fullStep - value) < 0.001;
+        });
+
+        if (!isCloseToFullStep) {
             steps.push_back(value);
         }
         value += selectedStep.smallStep;

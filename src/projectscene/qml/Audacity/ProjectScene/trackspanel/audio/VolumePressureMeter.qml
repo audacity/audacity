@@ -255,10 +255,12 @@ Canvas {
         var yRMS = prv.sampleValueToHeight(root.currentRMS)
         var yPeak = prv.sampleValueToHeight(root.currentVolumePressure)
 
-        prv.drawRoundedRect(ctx, meterStyle.rmsColor, 0, root.height - yPeak, root.indicatorWidth, yPeak, 2, "bottom")
+        if (yRMS > 0) {
+            prv.drawRoundedRect(ctx, meterStyle.rmsColor, 0, root.height - yPeak, root.indicatorWidth, yPeak, 2, "bottom")
 
-        ctx.fillStyle = meterStyle.rmsOverlayColor
-        ctx.fillRect(0, root.height - yPeak, root.indicatorWidth, yPeak - yRMS)
+            ctx.fillStyle = meterStyle.rmsOverlayColor
+            ctx.fillRect(0, root.height - yPeak, root.indicatorWidth, yPeak - yRMS)
+        }
 
         drawPeakMarkers(ctx)
     }
