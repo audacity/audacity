@@ -231,7 +231,7 @@ Canvas {
         // On clipping draw full red rectangle
         if (prv.isClipping) {
             ctx.fillStyle = meterStyle.clippedColor
-            ctx.fillRect(0, 0, root.indicatorWidth, prv.indicatorHeight)
+            ctx.fillRect(0, 0, root.indicatorWidth, prv.indicatorHeight + root.overloadHeight)
             return
         }
 
@@ -248,17 +248,19 @@ Canvas {
         // On clipping draw full red rectangle
         if (prv.isClipping) {
             ctx.fillStyle = meterStyle.clippedColor
-            ctx.fillRect(0, 0, indicatorWidth, prv.indicatorHeight)
+            ctx.fillRect(0, 0, indicatorWidth, prv.indicatorHeight + root.overloadHeight)
             return
         }
 
         var yRMS = prv.sampleValueToHeight(root.currentRMS)
         var yPeak = prv.sampleValueToHeight(root.currentVolumePressure)
 
-        prv.drawRoundedRect(ctx, meterStyle.rmsColor, 0, root.height - yPeak, root.indicatorWidth, yPeak, 2, "bottom")
+        if (yRMS > 0) {
+            prv.drawRoundedRect(ctx, meterStyle.rmsColor, 0, root.height - yPeak, root.indicatorWidth, yPeak, 2, "bottom")
 
-        ctx.fillStyle = meterStyle.rmsOverlayColor
-        ctx.fillRect(0, root.height - yPeak, root.indicatorWidth, yPeak - yRMS)
+            ctx.fillStyle = meterStyle.rmsOverlayColor
+            ctx.fillRect(0, root.height - yPeak, root.indicatorWidth, yPeak - yRMS)
+        }
 
         drawPeakMarkers(ctx)
     }

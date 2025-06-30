@@ -79,6 +79,6 @@ Item {
         }
     }
     
-    Text { id: topText; text: "-60"; font.pixelSize: 10; visible: false }
-    Text { id: bottomText; text: "0"; font.pixelSize: 10; visible: false }
+    Text { id: topText; text: "0"; font.pixelSize: 10; visible: false }
+    Text { id: bottomText; text: "-60"; font.pixelSize: 10; visible: false }
 }

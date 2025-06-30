@@ -30,6 +30,7 @@ Item {
     ColumnLayout {
         anchors.fill: parent
         anchors.bottomMargin: 2
+        spacing: 0
 
         FlatButton {
             id: meterOptionsBtn
@@ -37,7 +38,8 @@ Item {
             Layout.preferredWidth: 28
             Layout.preferredHeight: 28
             Layout.alignment: Qt.AlignHCenter
-            Layout.topMargin: 6
+            Layout.topMargin: 12
+            Layout.bottomMargin: 12
 
             icon: IconCode.AUDIO
             accentButton: popup.isOpened
@@ -81,8 +83,8 @@ Item {
                 anchors.fill: parent
                 anchors.leftMargin: 4
                 anchors.rightMargin: 4
-                anchors.topMargin: 14
-                anchors.bottomMargin: 11
+                anchors.topMargin: 2
+                anchors.bottomMargin: 6
 
                 VolumePressureMeter {
                     id: leftVolumePressure
@@ -129,6 +131,7 @@ Item {
                     anchors.top: parent.top
                     anchors.topMargin: leftVolumePressure.overloadHeight - topTextMargin
                     anchors.bottom: parent.bottom
+                    anchors.bottomMargin: bottomTextMargin
                 }
             }
 
@@ -140,9 +143,8 @@ Item {
                 volumeLevel: model.level
 
                 anchors.top: parent.top
-                anchors.topMargin: 14  + leftVolumePressure.overloadHeight - (handleWidth / 2)
+                anchors.topMargin: 2  + leftVolumePressure.overloadHeight - (handleWidth / 2)
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: ruler.bottomTextMargin
                 anchors.left: parent.left
                 anchors.leftMargin: 3
 
