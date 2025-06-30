@@ -2,8 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 
-#ifndef TESTTOOLS_H
-#define TESTTOOLS_H
+#pragma once
 
 #include <fstream>
 #include <string>
@@ -143,5 +142,3 @@ inline bool copyFileAndRestrictWrite(const std::string& from, const std::string&
            && removeWritePermission(to);
 }
 } // namespace testtools
-
-#endif //TESTTOOLS_H
