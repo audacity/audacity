@@ -95,6 +95,16 @@ Item {
             id: playbackLevelComp
 
             PlaybackLevel {
+                id: playbackLevel
+
+                Connections {
+                    target: view
+
+                    onWidthChanged: {
+                        playbackLevel.width = Math.max(288, Math.min(playbackLevel.width, view.maximumWidth));
+                    }
+                }
+
                 property var itemData: null
 
                 width: 288
@@ -135,6 +145,17 @@ Item {
 
                 onTypeChangeRequested: function(type) {
                     itemData.meterType = type
+                }
+
+                onWidthChangeRequested: function(x, y) {
+                    let toolbarViewPosition = mapToItem(view, x, y);
+
+                    if (toolbarViewPosition.x > view.maximumWidth) {
+                        // Do not allow the component to exceed the maximum width of the toolbar view
+                        return
+                    }
+
+                    playbackLevel.width = Math.max(288, x)
                 }
             }
         }

@@ -26,6 +26,7 @@ Item {
     property int meterStyle: PlaybackMeterStyle.Default
     property int meterType: PlaybackMeterType.DbLog
     property int meterPosition: PlaybackMeterPosition.TopBar
+    property int resizeGripIconCode: 0xF347
 
     property bool isPlaying: false
 
@@ -33,6 +34,8 @@ Item {
     signal positionChangeRequested(int position)
     signal styleChangeRequested(int style)
     signal typeChangeRequested(int type)
+
+    signal widthChangeRequested(int x, int y)
 
     onIsPlayingChanged: {
         if (root.isPlaying) {
@@ -49,11 +52,12 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        spacing: 6
+        spacing: 0
 
         FlatButton {
             Layout.preferredWidth: root.height
             Layout.preferredHeight: root.height
+            Layout.rightMargin: 6
 
             icon: IconCode.AUDIO
             accentButton: popup.isOpened
@@ -179,6 +183,39 @@ Item {
                     rightVolumePressure.reset()
                     rightVolumePressure.resetClipped()
                 }
+            }
+        }
+
+        FlatButton {
+            id: resizeGrip
+
+            Layout.preferredWidth: 16
+            Layout.preferredHeight: root.height
+            Layout.leftMargin: 2
+
+            property bool isDragging: false
+
+            mouseArea.cursorShape: Qt.SizeAllCursor
+            mouseArea.onPressAndHold: function(e) {
+                resizeGrip.isDragging = true;
+            }
+
+            mouseArea.onPositionChanged: function(e) {
+                if (resizeGrip.isDragging) {
+                    let newPosition = mapToItem(root, e.x, e.y)
+                    root.widthChangeRequested(newPosition.x, newPosition.y)
+                }
+            }
+
+            mouseArea.onReleased: function(e) {
+                resizeGrip.isDragging = false;
+            }
+
+            transparent: true
+            icon: root.resizeGripIconCode
+
+            Component.onCompleted: {
+                root.setDraggableMouseArea(resizeGrip.mouseArea)
             }
         }
     }
