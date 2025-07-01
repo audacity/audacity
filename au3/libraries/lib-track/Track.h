@@ -626,7 +626,7 @@ public:
             // Other methods guarantee that the cast is correct
             // (provided no operations on the TrackList invalidated
             // underlying iterators or replaced the tracks there)
-            return static_cast< TrackType* >(&**this->mIter);
+            return static_cast< TrackType* >(&** this->mIter);
         }
     }
 
@@ -666,7 +666,7 @@ private:
     bool valid() const
     {
         // assume mIter != mEnd
-        const auto pTrack = track_cast< TrackType* >(&**this->mIter);
+        const auto pTrack = track_cast< TrackType* >(&** this->mIter);
         if (!pTrack) {
             return false;
         }
@@ -703,7 +703,7 @@ template<
         const auto& pred1 = this->first.GetPredicate();
         using Function = typename TrackIter<TrackType>::FunctionType;
         const auto& newPred = pred1
-                              ? Function{ [=] (typename Function::argument_type track) {
+                              ? Function{ [=](auto track) {
                 return pred1(track) && pred2(track);
             } }
         : Function { pred2 };
@@ -726,9 +726,7 @@ template<
     template< typename Predicate2 >
     TrackIterRange operator -(const Predicate2& pred2) const
     {
-        using ArgumentType
-            =typename TrackIterRange::iterator::FunctionType::argument_type;
-        auto neg = [=] (ArgumentType track) { return !pred2(track); };
+        auto neg = [=](auto track) { return !pred2(track); };
         return this->operator +(neg);
     }
 
@@ -737,7 +735,9 @@ template<
     template< typename R, typename C >
     TrackIterRange operator -(R (C ::* pmf) () const) const
     {
-        return this->operator +(std::not1(std::mem_fn(pmf)));
+        return this->operator +([pmf](const auto& obj) {
+            return !std::invoke(pmf, obj);
+        });
     }
 
     template< typename TrackType2 >

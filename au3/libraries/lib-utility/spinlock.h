@@ -20,7 +20,7 @@
  */
 class spinlock
 {
-    std::atomic_flag flag = ATOMIC_FLAG_INIT;
+    std::atomic_flag flag;
 public:
     ~spinlock() { }
 
