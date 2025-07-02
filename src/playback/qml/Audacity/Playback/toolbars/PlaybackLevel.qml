@@ -26,6 +26,7 @@ Item {
     property int meterStyle: PlaybackMeterStyle.Default
     property int meterType: PlaybackMeterType.DbLog
     property int meterPosition: PlaybackMeterPosition.TopBar
+
     property int resizeGripIconCode: 0xF347
 
     property bool isPlaying: false

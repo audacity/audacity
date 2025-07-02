@@ -100,12 +100,18 @@ Item {
                 Connections {
                     target: view
 
-                    onWidthChanged: {
+                    function onWidthChanged() {
                         playbackLevel.width = Math.max(288, Math.min(playbackLevel.width, view.maximumWidth));
                     }
                 }
 
                 property var itemData: null
+
+                onItemDataChanged: {
+                    if (itemData) {
+                        playbackLevel.width = Math.max(288, Math.min(itemData.meterSize, view.maximumWidth));
+                    }
+                }
 
                 width: 288
                 height: 28
@@ -117,17 +123,9 @@ Item {
                 rightCurrentRMS: Boolean(itemData) ? itemData.rightChannelRMS : -60
                 isPlaying: Boolean(itemData) ? itemData.isPlaying : false
 
-                meterStyle: {
-                    return Boolean(itemData) ? itemData.meterStyle : PlaybackMeterStyle.Default
-                }
-
-                meterType: {
-                    return Boolean(itemData) ? itemData.meterType : PlaybackMeterType.DbLog
-                }
-
-                meterPosition: {
-                    return Boolean(itemData) ? itemData.meterPosition : PlaybackMeterPosition.TopBar
-                }
+                meterStyle: Boolean(itemData) ? itemData.meterStyle : PlaybackMeterStyle.Default
+                meterType: Boolean(itemData) ? itemData.meterType : PlaybackMeterType.DbLog
+                meterPosition: Boolean(itemData) ? itemData.meterPosition : PlaybackMeterPosition.TopBar
 
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
@@ -156,6 +154,7 @@ Item {
                     }
 
                     playbackLevel.width = Math.max(288, x)
+                    itemData.meterSize = playbackLevel.width
                 }
             }
         }

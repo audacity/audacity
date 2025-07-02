@@ -34,6 +34,10 @@ public:
     void setPlaybackMeterPosition(PlaybackMeterPosition::MeterPosition position) override;
     muse::async::Notification playbackMeterPositionChanged() const override;
 
+    int playbackHorizontalMeterSize() const override;
+    void setPlaybackHorizontalMeterSize(int size) override;
+    muse::async::Notification playbackHorizontalMeterSizeChanged() const override;
+
     std::vector<PlaybackQualityPrefs::PlaybackQuality> playbackQualityList() const override;
     PlaybackQualityPrefs::PlaybackQuality currentPlaybackQuality() const override;
     void setPlaybackQuality(PlaybackQualityPrefs::PlaybackQuality quality) override;

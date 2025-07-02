@@ -36,6 +36,10 @@ public:
     virtual void setPlaybackMeterPosition(PlaybackMeterPosition::MeterPosition position) = 0;
     virtual muse::async::Notification playbackMeterPositionChanged() const = 0;
 
+    virtual int playbackHorizontalMeterSize() const = 0;
+    virtual void setPlaybackHorizontalMeterSize(int size) = 0;
+    virtual muse::async::Notification playbackHorizontalMeterSizeChanged() const = 0;
+
     virtual std::vector<PlaybackQualityPrefs::PlaybackQuality> playbackQualityList() const = 0;
     virtual PlaybackQualityPrefs::PlaybackQuality currentPlaybackQuality() const = 0;
     virtual void setPlaybackQuality(PlaybackQualityPrefs::PlaybackQuality quality) = 0;

@@ -33,6 +33,7 @@ class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
     Q_PROPERTY(PlaybackMeterType::MeterType meterType READ meterType WRITE setMeterType NOTIFY meterTypeChanged FINAL)
     Q_PROPERTY(
         PlaybackMeterPosition::MeterPosition meterPosition READ meterPosition WRITE setMeterPosition NOTIFY meterPositionChanged FINAL)
+    Q_PROPERTY(int meterSize READ meterSize WRITE setMeterSize NOTIFY meterSizeChanged FINAL)
 
     Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
 
@@ -60,6 +61,7 @@ public:
     PlaybackMeterStyle::MeterStyle meterStyle() const;
     PlaybackMeterType::MeterType meterType() const;
     PlaybackMeterPosition::MeterPosition meterPosition() const;
+    int meterSize() const;
 
     bool isPlaying() const;
 
@@ -77,6 +79,7 @@ public slots:
     void setMeterStyle(PlaybackMeterStyle::MeterStyle style);
     void setMeterType(PlaybackMeterType::MeterType type);
     void setMeterPosition(PlaybackMeterPosition::MeterPosition position);
+    void setMeterSize(int size);
 
 signals:
     void levelChanged();
@@ -94,6 +97,7 @@ signals:
     void meterStyleChanged();
     void meterTypeChanged();
     void meterPositionChanged();
+    void meterSizeChanged();
 
     void isPlayingChanged();
 
