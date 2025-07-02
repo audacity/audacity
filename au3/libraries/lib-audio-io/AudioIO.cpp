@@ -2254,17 +2254,26 @@ bool AudioIO::ProcessPlaybackSlices(
                         samplesAvailable, 0);
                 }
             } else if (numChannels == 1) {
-                const float volume = seq->GetChannelVolume(0);
-                for (unsigned i = 0; i < samplesAvailable; ++i) {
-                    mProcessingBuffers[bufferIndex][i] *= volume;
-                }
-    
-                //mono source is duplicated into every output channel
-                for (unsigned n = 0; n < mNumPlaybackChannels; ++n) {
-                    for (unsigned i = 0; i < samplesAvailable; ++i) {
-                        mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex][i];
-                    }
+                float maxVolume = 0.0f;
 
+                for (unsigned n = 0; n < mNumPlaybackChannels; ++n) {
+                    maxVolume = std::max(maxVolume, seq->GetChannelVolume(n));
+                }
+
+                // Mix mono source is duplicated into every output channel
+                // accounting for panning
+                for (unsigned n = 0; n < mNumPlaybackChannels; ++n) {
+                    const float volume = seq->GetChannelVolume(n);
+                    for (unsigned i = 0; i < samplesAvailable; ++i) {
+                        mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex][i] * volume;
+                    }
+                }
+
+                for (unsigned i = 0; i < samplesAvailable; ++i) {
+                    mProcessingBuffers[bufferIndex][i] *= maxVolume;
+                }
+
+                for (unsigned n = 0; n < mNumPlaybackChannels; ++n) {
                     //Copy per track data to ring buffers
                     buffers[n]->Put(
                         reinterpret_cast<constSamplePtr>(mProcessingBuffers[bufferIndex].data()),
