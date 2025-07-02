@@ -196,7 +196,7 @@ Item {
             property bool isDragging: false
 
             mouseArea.cursorShape: Qt.OpenHandCursor
-            mouseArea.onPressAndHold: function(e) {
+            mouseArea.onPressed: function(e) {
                 mouseArea.cursorShape = Qt.ClosedHandCursor;
                 resizeGrip.isDragging = true;
             }
@@ -215,10 +215,6 @@ Item {
 
             transparent: true
             icon: root.resizeGripIconCode
-
-            Component.onCompleted: {
-                root.setDraggableMouseArea(resizeGrip.mouseArea)
-            }
         }
     }
 }
