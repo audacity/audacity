@@ -19,8 +19,8 @@ public:
     virtual void setVolume(long trackId, au::audio::volume_dbfs_t volume, bool completed) = 0;
     virtual au::audio::volume_dbfs_t volume(long trackId) const = 0;
 
-    virtual void setBalance(long trackId, au::audio::balance_t balance, bool completed) = 0;
-    virtual au::audio::balance_t balance(long trackId) const = 0;
+    virtual void setPan(long trackId, au::audio::pan_t pan, bool completed) = 0;
+    virtual au::audio::pan_t pan(long trackId) const = 0;
 
     virtual void setSolo(long trackId, bool solo) = 0;
     virtual bool solo(long trackId) const = 0;

@@ -34,7 +34,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
     Q_PROPERTY(float rightChannelRMS READ rightChannelRMS NOTIFY rightChannelRMSChanged)
 
     Q_PROPERTY(float volumeLevel READ volumeLevel NOTIFY volumeLevelChanged)
-    Q_PROPERTY(int balance READ balance NOTIFY balanceChanged)
+    Q_PROPERTY(int pan READ pan NOTIFY panChanged)
     Q_PROPERTY(bool solo READ solo WRITE setSolo NOTIFY soloChanged)
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
 
@@ -66,8 +66,8 @@ public:
     float volumeLevel() const;
     Q_INVOKABLE void setVolumeLevel(float volumeLevel, bool completed);
 
-    int balance() const;
-    Q_INVOKABLE void setBalance(int balance, bool completed);
+    int pan() const;
+    Q_INVOKABLE void setPan(int pan, bool completed);
 
     bool solo() const;
     bool muted() const;
@@ -108,7 +108,7 @@ signals:
     void rightChannelRMSChanged(float rightChannelRMS);
 
     void volumeLevelChanged(float volumeLevel);
-    void balanceChanged(int balance);
+    void panChanged(int pan);
     void soloChanged();
     void mutedChanged();
     void channelCountChanged();

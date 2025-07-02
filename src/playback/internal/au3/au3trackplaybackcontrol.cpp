@@ -43,7 +43,7 @@ void Au3TrackPlaybackControl::setVolume(long trackId, volume_dbfs_t vol, bool co
     return;
 }
 
-balance_t Au3TrackPlaybackControl::balance(long trackId) const
+pan_t Au3TrackPlaybackControl::pan(long trackId) const
 {
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(track) {
@@ -53,14 +53,14 @@ balance_t Au3TrackPlaybackControl::balance(long trackId) const
     return track->GetPan();
 }
 
-void Au3TrackPlaybackControl::setBalance(long trackId, au::audio::balance_t balance, bool completed)
+void Au3TrackPlaybackControl::setPan(long trackId, au::audio::pan_t pan, bool completed)
 {
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(track) {
         return;
     }
 
-    track->SetPan(balance);
+    track->SetPan(pan);
 
     if (completed) {
         projectHistory()->pushHistoryState(muse::trc("playback", "Moved pan dial"),

@@ -10,18 +10,18 @@ import Muse.UiComponents 1.0
 KnobControl {
     id: root
 
-    isBalanceKnob: true
+    isPanKnob: true
     from: -100
     to: 100
     stepSize: 1
 
-    signal newBalanceRequested(real volume, bool completed)
+    signal newPanRequested(real pan, bool completed)
 
     onNewValueRequested: function(value) {
-        newBalanceRequested(value, false)
+        newPanRequested(value, false)
     }
 
-    BalanceTooltip {
+    PanTooltip {
         id: tooltip
         value: root.value
     }
@@ -39,6 +39,6 @@ KnobControl {
     }
 
     onMouseReleased: {
-        newBalanceRequested(root.value, true)
+        newPanRequested(root.value, true)
     }
 }

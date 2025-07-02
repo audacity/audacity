@@ -15,7 +15,7 @@ using audioch_t = uint8_t;
 using volume_db_t = float;
 using volume_dbfs_t = float;
 using gain_t = float;
-using balance_t = float;
+using pan_t = float;
 
 using TrackId = int64_t;
 constexpr TrackId INVALID_TRACK = -1;

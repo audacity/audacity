@@ -15,7 +15,7 @@ using namespace au::projectscene;
 using namespace au::trackedit;
 using namespace au::audio;
 
-static constexpr float BALANCE_SCALING_FACTOR = 100.f;
+static constexpr float PAN_SCALING_FACTOR = 100.f;
 static constexpr float MIN_ALLOWED_PRESSURE = -60.f;
 static constexpr float MAX_ALLOWED_PRESSURE = 0.f;
 
@@ -71,7 +71,7 @@ void TrackItem::init(const trackedit::Track& track)
     const auto ctrl = trackPlaybackControl();
     if (m_trackType != trackedit::TrackType::Label) {
         m_outParams.volume = ctrl->volume(m_trackId);
-        m_outParams.balance = ctrl->balance(m_trackId);
+        m_outParams.pan = ctrl->pan(m_trackId);
         m_outParams.solo = ctrl->solo(m_trackId);
         m_outParams.muted = ctrl->muted(m_trackId);
     }
@@ -148,9 +148,9 @@ float TrackItem::volumeLevel() const
     return m_outParams.volume;
 }
 
-int TrackItem::balance() const
+int TrackItem::pan() const
 {
-    return m_outParams.balance * BALANCE_SCALING_FACTOR;
+    return m_outParams.pan * PAN_SCALING_FACTOR;
 }
 
 bool TrackItem::solo() const
@@ -170,9 +170,9 @@ void TrackItem::loadOutputParams(const audio::AudioOutputParams& newParams)
         emit volumeLevelChanged(newParams.volume);
     }
 
-    if (!muse::RealIsEqual(m_outParams.balance, newParams.balance)) {
-        m_outParams.balance = newParams.balance;
-        emit balanceChanged(newParams.balance);
+    if (!muse::RealIsEqual(m_outParams.pan, newParams.pan)) {
+        m_outParams.pan = newParams.pan;
+        emit panChanged(newParams.pan);
     }
 
     if (m_outParams.solo != newParams.solo) {
@@ -271,16 +271,16 @@ void TrackItem::setVolumeLevel(float volumeLevel, bool completed)
     emit outputParamsChanged(m_outParams);
 }
 
-void TrackItem::setBalance(int balance, bool completed)
+void TrackItem::setPan(int pan, bool completed)
 {
-    const float scaled = balance / BALANCE_SCALING_FACTOR;
-    trackPlaybackControl()->setBalance(trackId(), scaled, completed);
+    const float scaled = pan / PAN_SCALING_FACTOR;
+    trackPlaybackControl()->setPan(trackId(), scaled, completed);
 
-    if (m_outParams.balance == scaled) {
+    if (m_outParams.pan == scaled) {
         return;
     }
-    m_outParams.balance = scaled;
-    emit balanceChanged(balance);
+    m_outParams.pan = scaled;
+    emit panChanged(pan);
     emit outputParamsChanged(m_outParams);
 }
 
