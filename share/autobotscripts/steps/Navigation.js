@@ -8,7 +8,7 @@ function doCheckControlIsActive(action)
         api.autobot.error("navigation error: no control after call: " + action)
     }
 }
-
+// Establish shortcuts for navigation in AU4
 module.exports = {
     nextPanel: function()
     {
