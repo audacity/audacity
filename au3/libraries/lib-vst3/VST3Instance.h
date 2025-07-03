@@ -25,7 +25,6 @@ class Module;
 }
 
 class VST3Wrapper;
-class VST3Effect;
 
 class VST3_API VST3Instance : public PerTrackEffect::Instance
 {

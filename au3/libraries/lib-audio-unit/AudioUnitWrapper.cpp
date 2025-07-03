@@ -159,7 +159,7 @@ bool AudioUnitWrapper::FetchSettings(
         if (!GetFixedSizeProperty(kAudioUnitProperty_PresentPreset, preset)) {
             // Only want factory preset number, not a user preset (<0)
             if (preset.presetNumber >= 0) {
-                settings.mPresetNumber = { preset.presetNumber }
+                settings.mPresetNumber = { preset.presetNumber };
             }
         }
     }
@@ -495,12 +495,12 @@ bool AudioUnitWrapper::SetRateAndChannels(
                 --nChannels;
                 streamFormat.mChannelsPerFrame = nChannels;
                 failed = SetProperty(kAudioUnitProperty_StreamFormat,
-                                        streamFormat, scope);
+                                     streamFormat, scope);
             } while (failed && nChannels > 0);
             if (failed) {
                 wxLogError("%ls didn't accept stream format on %s\n",
-                            // Exposing internal name only in logging
-                            identifier.wx_str(), msg);
+                           // Exposing internal name only in logging
+                           identifier.wx_str(), msg);
                 return false;
             }
         }

@@ -68,7 +68,7 @@ public:
 
     // AudioUnitEffectModule implementation
 
-    void LoadAudioUnitsOfType(OSType inAUType, PluginPaths& effects);
+    void LoadAudioUnitsOfType(OSType inAUType, PluginPaths& effects) const;
 };
 
 #endif
