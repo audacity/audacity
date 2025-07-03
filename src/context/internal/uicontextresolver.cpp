@@ -114,6 +114,8 @@ UiContext UiContextResolver::currentUiContext() const
         if (activePanel) {
             if (activePanel->name() == PROJECT_NAVIGATION_PANEL) {
                 return context::UiCtxProjectFocused;
+            } else if (activePanel->name() != "ToolBarView") {
+                return context::UiCtxProjectPlayback;
             }
         }
 
@@ -129,8 +131,14 @@ bool UiContextResolver::match(const ui::UiContext& currentCtx, const ui::UiConte
         return true;
     }
 
-    //! NOTE If the current context is `UiCtxProjectFocused`, then we allow `UiCtxProjectOpened` too
-    if (currentCtx == context::UiCtxProjectFocused && actCtx == context::UiCtxProjectOpened) {
+    //! NOTE If the current context is `UiCtxProjectFocused` or `UiCtxProjectPlayback`, then we allow `UiCtxProjectOpened` too
+    if ((currentCtx == context::UiCtxProjectFocused || currentCtx == context::UiCtxProjectPlayback)
+        && actCtx == context::UiCtxProjectOpened) {
+        return true;
+    }
+
+    //! NOTE If the current context is `UiCtxProjectPlayback`, then we allow `UiCtxProjectFocused` too
+    if (currentCtx == context::UiCtxProjectFocused && actCtx == context::UiCtxProjectPlayback) {
         return true;
     }
 
@@ -165,6 +173,8 @@ bool UiContextResolver::isShortcutContextAllowed(const std::string& scContext) c
 
     if (CTX_PROJECT_OPENED == scContext) {
         return matchWithCurrent(context::UiCtxProjectOpened);
+    } else if (CTX_PROJECT_PLAYBACK == scContext) {
+        return matchWithCurrent(context::UiCtxProjectPlayback);
     } else if (CTX_PROJECT_FOCUSED == scContext) {
         return matchWithCurrent(context::UiCtxProjectFocused);
     } else if (CTX_NOT_PROJECT_FOCUSED == scContext) {

@@ -36,6 +36,7 @@ static constexpr muse::ui::UiContext UiCtxProjectOpened = "UiCtxProjectOpened";
 static constexpr muse::ui::UiContext UiCtxHomeOpened = "UiCtxHomeOpened";
 
 // project detail
+static constexpr muse::ui::UiContext UiCtxProjectPlayback = "UiCtxProjectPlayback";
 static constexpr muse::ui::UiContext UiCtxProjectFocused = "UiCtxProjectFocused";
 }
 

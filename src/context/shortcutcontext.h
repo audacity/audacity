@@ -32,6 +32,7 @@ namespace au::context {
 // common shortcuts (re declared for convenience)
 static const std::string CTX_ANY = muse::shortcuts::CTX_ANY;
 static const std::string CTX_PROJECT_OPENED = muse::shortcuts::CTX_PROJECT_OPENED;
+static const std::string CTX_PROJECT_PLAYBACK = "project-playback";
 static const std::string CTX_PROJECT_FOCUSED = muse::shortcuts::CTX_PROJECT_FOCUSED;
 
 //! NOTE special context for navigation shortcuts because the notation has its own navigation system
@@ -48,6 +49,7 @@ public:
 
             CTX_PROJECT_OPENED,
             CTX_NOT_PROJECT_FOCUSED,
+            CTX_PROJECT_PLAYBACK,
             CTX_PROJECT_FOCUSED,
         };
 
