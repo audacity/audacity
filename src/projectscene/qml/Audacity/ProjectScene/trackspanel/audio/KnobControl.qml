@@ -15,7 +15,7 @@ Dial {
     property real radius: 16
     property real backgroundHeight: radius + radius * Math.sin(prv.startAngle)
 
-    property bool isBalanceKnob: false
+    property bool isPanKnob: false
 
     property bool accentControl: true
 
@@ -48,7 +48,7 @@ Dial {
     QtObject {
         id: prv
 
-        readonly property bool reversed: root.isBalanceKnob ? root.angle < 0 : false
+        readonly property bool reversed: root.isPanKnob ? root.angle < 0 : false
 
         readonly property real handlerHeight: radius / 2
         readonly property real handlerWidth: radius / 8
@@ -63,7 +63,7 @@ Dial {
         readonly property color outerArcColor: Utils.colorWithAlpha(ui.theme.buttonColor, 0.7)
         readonly property color innerArcColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.5)
 
-        readonly property real startValueArcAngle: root.isBalanceKnob ? 0 : -140
+        readonly property real startValueArcAngle: root.isPanKnob ? 0 : -140
 
         property real initialValue: 0
         property real dragStartX: 0

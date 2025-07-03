@@ -16,7 +16,7 @@
 
 namespace au::playback {
 using au::audio::volume_dbfs_t;
-using au::audio::balance_t;
+using au::audio::pan_t;
 
 class Au3TrackPlaybackControl : public ITrackPlaybackControl
 {
@@ -29,8 +29,8 @@ public:
     volume_dbfs_t volume(long trackId) const override;
     void setVolume(long trackId, volume_dbfs_t vol, bool completed) override;
 
-    balance_t balance(long trackId) const override;
-    void setBalance(long trackId, au::audio::balance_t balance, bool completed) override;
+    pan_t pan(long trackId) const override;
+    void setPan(long trackId, au::audio::pan_t pan, bool completed) override;
 
     bool solo(long trackId) const override;
     void setSolo(long trackId, bool solo) override;

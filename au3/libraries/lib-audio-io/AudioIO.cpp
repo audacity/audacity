@@ -948,7 +948,7 @@ int AudioIO::StartStream(const TransportSequences& sequences,
         sequences.playbackSequences.begin(),
         sequences.playbackSequences.end()
     };
-    
+
     bool commit = false;
     auto cleanupSequences = finally([&]{
         if (!commit) {
@@ -1388,7 +1388,8 @@ bool AudioIO::AllocateBuffers(
                 mPlaybackSchedule.mTimeQueue.Init(timeQueueSize);
             }
 
-            const size_t playbackBufferSize = std::max((size_t)lrint(mRate * mPlaybackRingBufferSecs.count()), mHardwarePlaybackLatencyFrames * 2);
+            const size_t playbackBufferSize = std::max((size_t)lrint(
+                                                           mRate * mPlaybackRingBufferSecs.count()), mHardwarePlaybackLatencyFrames * 2);
             for (auto& track : mPlaybackTracks) {
                 for (auto& buffer : track.mBuffers) {
                     buffer.reset();
@@ -2254,17 +2255,26 @@ bool AudioIO::ProcessPlaybackSlices(
                         samplesAvailable, 0);
                 }
             } else if (numChannels == 1) {
-                const float volume = seq->GetChannelVolume(0);
-                for (unsigned i = 0; i < samplesAvailable; ++i) {
-                    mProcessingBuffers[bufferIndex][i] *= volume;
-                }
-    
-                //mono source is duplicated into every output channel
-                for (unsigned n = 0; n < mNumPlaybackChannels; ++n) {
-                    for (unsigned i = 0; i < samplesAvailable; ++i) {
-                        mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex][i];
-                    }
+                float maxVolume = 0.0f;
 
+                for (unsigned n = 0; n < mNumPlaybackChannels; ++n) {
+                    maxVolume = std::max(maxVolume, seq->GetChannelVolume(n));
+                }
+
+                // Mix mono source is duplicated into every output channel
+                // accounting for panning
+                for (unsigned n = 0; n < mNumPlaybackChannels; ++n) {
+                    const float volume = seq->GetChannelVolume(n);
+                    for (unsigned i = 0; i < samplesAvailable; ++i) {
+                        mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex][i] * volume;
+                    }
+                }
+
+                for (unsigned i = 0; i < samplesAvailable; ++i) {
+                    mProcessingBuffers[bufferIndex][i] *= maxVolume;
+                }
+
+                for (unsigned n = 0; n < mNumPlaybackChannels; ++n) {
                     //Copy per track data to ring buffers
                     buffers[n]->Put(
                         reinterpret_cast<constSamplePtr>(mProcessingBuffers[bufferIndex].data()),
@@ -2638,12 +2648,12 @@ void AudioIoCallback::PurgeAfterPause(unsigned long framesPerBuffer, float** con
                 mPlaybackBuffers[n]->Get(reinterpret_cast<samplePtr>(sampleBuffer[n]),
                                          floatSample,
                                          framesPerBuffer);
-                        
+
                 for (auto& track : mPlaybackTracks) {
                     track.mBuffers[n]->Get(reinterpret_cast<samplePtr>(sampleBuffer[n]),
-                    floatSample,
-                    framesPerBuffer);
-                } 
+                                           floatSample,
+                                           framesPerBuffer);
+                }
 
                 totalPurged -= framesPerBuffer;
             }
@@ -3058,11 +3068,11 @@ void AudioIoCallback::SendVuOutputMeterData(
     }
 
     PushMainMeterValues(outputMeter, outputMeterFloats, mNumPlaybackChannels, framesPerBuffer);
-    PushTrackMeterValues(outputMeter,framesPerBuffer);
+    PushTrackMeterValues(outputMeter, framesPerBuffer);
     outputMeter->sendAll();
 }
 
-void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float * values, unsigned long frames)
+void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, unsigned long frames)
 {
     if ((mCaptureSequences.size() == 0) || (frames == 0)) {
         return;
@@ -3074,7 +3084,7 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& 
         auto nChannels = sequence->NChannels();
         const int64_t id = sequence->GetRecordableSequenceId();
         for (size_t ch = 0; ch < nChannels; ch++) {
-            sender->push(ch, {sptr + ch, frames, nChannels}, id);
+            sender->push(ch, { sptr + ch, frames, nChannels }, id);
         }
     }
 
@@ -3085,12 +3095,11 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& 
         const auto nChannels = mCaptureSequences[0]->NChannels();
         assert(nChannels <= 2);
         for (size_t ch = 0; ch < nChannels; ++ch) {
-            sender->push(ch, {sptr + ch, frames, nChannels});
+            sender->push(ch, { sptr + ch, frames, nChannels });
         }
-    }
-    else {
+    } else {
         assert(std::all_of(mCaptureSequences.begin(), mCaptureSequences.end(),
-            [](const auto& seq) { return seq->NChannels() == 1; }));
+                           [](const auto& seq) { return seq->NChannels() == 1; }));
 
         const auto mainTrackInput = stackAllocate(float, frames * maxMainTrackChannels);
         std::memset(mainTrackInput, 0, frames * maxMainTrackChannels * sizeof(float));
@@ -3099,25 +3108,25 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& 
                 const auto channel = seqNum % maxMainTrackChannels;
                 mainTrackInput[channel * frames + i] = std::max(
                     mainTrackInput[channel * frames + i], *sptr);
-                    sptr++;
+                sptr++;
             }
         }
 
         for (size_t ch = 0; ch < maxMainTrackChannels; ++ch) {
-            sender->push(ch, {mainTrackInput + ch * frames, frames, 1});
+            sender->push(ch, { mainTrackInput + ch * frames, frames, 1 });
         }
     }
 }
 
-void AudioIoCallback::PushMainMeterValues(const std::shared_ptr<IMeterSender>& sender, const float * values, uint8_t channels, unsigned long frames)
+void AudioIoCallback::PushMainMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, uint8_t channels,
+                                          unsigned long frames)
 {
     auto sptr = values;
     for (size_t ch = 0; ch < channels; ++ch) {
         auto sptr = values + ch;
-        sender->push(ch, {sptr, frames, channels});
+        sender->push(ch, { sptr, frames, channels });
     }
 }
-
 
 void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterSender>& sender, unsigned long frames)
 {
@@ -3131,9 +3140,9 @@ void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterSender>& 
                 reinterpret_cast<samplePtr>(stackBuffer),
                 floatSample,
                 frames
-            );
+                );
 
-            sender->push(nch, {stackBuffer, len, 1}, track.trackId());
+            sender->push(nch, { stackBuffer, len, 1 }, track.trackId());
         }
     }
 }

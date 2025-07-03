@@ -217,11 +217,11 @@ ListItemBlank {
                     }
                 }
 
-                BalanceKnob {
-                    value: root.item.balance
+                PanKnob {
+                    value: root.item.pan
 
-                    onNewBalanceRequested: function(newValue, completed) {
-                        root.item.setBalance(newValue, completed)
+                    onNewPanRequested: function(newValue, completed) {
+                        root.item.setPan(newValue, completed)
                     }
                 }
 
