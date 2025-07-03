@@ -1,0 +1,2 @@
+module Audacity.AudioUnit
+AudioUnitViewer 1.0 AudioUnitViewerStub.qml
