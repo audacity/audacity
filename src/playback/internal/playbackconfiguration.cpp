@@ -10,7 +10,7 @@ static const QString PLAYBACK_TIME_ITEM_FORMAT("playbackToolbar/playbackTimeItem
 static const QString PLAYBACK_METER_STYLE("playbackToolbar/playbackMeterStyle");
 static const QString PLAYBACK_METER_TYPE("playbackToolbar/playbackMeterType");
 static const QString PLAYBACK_METER_POSITION("playbackToolbar/playbackMeterPosition");
-static const QString PLAYBACK_METER_SIZE("playbackToolbar/playbackMeterSize");
+static const QString PLAYBACK_HORIZONTAL_METER_SIZE("playbackToolbar/playbackHorizontalMeterSize");
 
 using namespace muse;
 using namespace au::playback;
@@ -131,7 +131,7 @@ int PlaybackConfiguration::playbackHorizontalMeterSize() const
 {
     int result = 0;
 
-    QString sizeStr = uiConfiguration()->uiItemState(PLAYBACK_METER_SIZE);
+    QString sizeStr = uiConfiguration()->uiItemState(PLAYBACK_HORIZONTAL_METER_SIZE);
     if (!sizeStr.isEmpty()) {
         result = sizeStr.toInt();
     }
@@ -141,12 +141,12 @@ int PlaybackConfiguration::playbackHorizontalMeterSize() const
 
 void PlaybackConfiguration::setPlaybackHorizontalMeterSize(int size)
 {
-    uiConfiguration()->setUiItemState(PLAYBACK_METER_SIZE, QString::number(size));
+    uiConfiguration()->setUiItemState(PLAYBACK_HORIZONTAL_METER_SIZE, QString::number(size));
 }
 
 muse::async::Notification PlaybackConfiguration::playbackHorizontalMeterSizeChanged() const
 {
-    return uiConfiguration()->uiItemStateChanged(PLAYBACK_METER_SIZE);
+    return uiConfiguration()->uiItemStateChanged(PLAYBACK_HORIZONTAL_METER_SIZE);
 }
 
 void PlaybackConfiguration::init()

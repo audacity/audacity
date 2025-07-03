@@ -97,23 +97,9 @@ Item {
             PlaybackLevel {
                 id: playbackLevel
 
-                Connections {
-                    target: view
-
-                    function onWidthChanged() {
-                        playbackLevel.width = Math.max(288, Math.min(playbackLevel.width, view.maximumWidth));
-                    }
-                }
-
                 property var itemData: null
 
-                onItemDataChanged: {
-                    if (itemData) {
-                        playbackLevel.width = Math.max(288, Math.min(itemData.meterSize, view.maximumWidth));
-                    }
-                }
-
-                width: 288
+                width: Boolean(itemData) ? Math.max(288, Math.min(itemData.meterSize, view.maximumWidth)) : 288
                 height: 28
 
                 volumeLevel: Boolean(itemData) ? itemData.level : 0
@@ -153,8 +139,9 @@ Item {
                         return
                     }
 
-                    playbackLevel.width = Math.max(288, x)
-                    itemData.meterSize = playbackLevel.width
+                    if (itemData) {
+                        itemData.meterSize = x
+                    }
                 }
             }
         }
