@@ -200,14 +200,14 @@ size_t AudioUnitInstance::ProcessBlock(EffectSettings&,
     assert(Count(mInputList) >= mAudioIns);
     for (size_t i = 0; i < mAudioIns; ++i) {
         mInputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
-                          const_cast<float*>(inBlock[i]) }
+                          const_cast<float*>(inBlock[i]) };
     }
 
     // See previous comment
     assert(Count(mOutputList) >= mAudioOuts);
     for (size_t i = 0; i < mAudioOuts; ++i) {
         mOutputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
-                           outBlock[i] }
+                           outBlock[i] };
     }
 
     AudioUnitRenderActionFlags flags = 0;

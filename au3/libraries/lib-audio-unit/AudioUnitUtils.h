@@ -72,7 +72,7 @@ OSStatus GetVariableSizeProperty(AudioUnit unit, AudioUnitPropertyID inID,
         pObject = {
             static_cast<T*>(p), // the pointer
             size // the size that the deleter must remember
-        }
+        };
     }
     return result;
 }

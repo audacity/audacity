@@ -23,8 +23,8 @@ set(FETCHCONTENT_BASE_DIR ${CMAKE_CURRENT_LIST_DIR}/_deps)
 include(FetchContent)
 FetchContent_Declare(
   muse_framework
-  GIT_REPOSITORY https://github.com/musescore/framework_tmp.git
-  GIT_TAG        u250618_1
+  GIT_REPOSITORY https://github.com/kryksyh/framework_tmp.git
+  GIT_TAG        audiounit_support
 )
 
 FetchContent_GetProperties(muse_framework)
@@ -120,6 +120,10 @@ set(AU_MODULE_VST_VST3_SDK_PATH "" CACHE PATH "[optional] Path to VST3_SDK. SDK 
 if (OS_IS_LIN)
     option(AU_MODULE_EFFECTS_LV2 "Build audacity lv2 module" ON)
 endif(OS_IS_LIN)
+
+if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+    option(AU_MODULE_EFFECTS_AUDIO_UNIT "Build Audacity Audio Unit module" ON)
+endif()
 
 option(AU_USE_FFMPEG "Build mod-ffmpeg module" ON)
 if (AU_USE_FFMPEG)

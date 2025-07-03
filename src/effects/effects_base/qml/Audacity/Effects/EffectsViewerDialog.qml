@@ -11,6 +11,7 @@ import Audacity.Effects
 import Audacity.BuiltinEffects
 import Audacity.Lv2
 import Audacity.Vst
+import Audacity.AudioUnit
 
 EffectStyledDialogView {
     id: root
@@ -38,6 +39,9 @@ EffectStyledDialogView {
         switch (effectFamily) {
             case EffectFamily.Builtin:
                 viewerLoader.sourceComponent = builtinViewerComp
+                break
+            case EffectFamily.AudioUnit:
+                viewerLoader.sourceComponent = audioUnitViewerComp
                 break
             case EffectFamily.LV2:
                 viewerLoader.sourceComponent = lv2ViewerComp
@@ -92,6 +96,18 @@ EffectStyledDialogView {
             Lv2Viewer {
                 instanceId: root.instanceId
                 title: root.title
+            }
+        }
+
+        Component {
+            id: audioUnitViewerComp
+            AudioUnitViewer {
+                instanceId: root.instanceId
+                height: implicitHeight
+                topPadding: root.margins * 2 + presetsBar.height + prv.separatorHeight
+                bottomPadding: btnBarLoader.implicitHeight + 2 * root.margins
+                sidePadding: root.margins
+                minimumWidth: root.minimumWidth
             }
         }
 
