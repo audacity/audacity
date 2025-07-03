@@ -71,6 +71,11 @@ bool TrackeditInteraction::changeClipColor(const ClipKey& clipKey, const std::st
     return m_interaction->changeClipColor(clipKey, color);
 }
 
+bool TrackeditInteraction::changeWaveColor(const ClipKey& clipKey, const std::string& wave_color)
+{
+    return m_interaction->changeWaveColor(clipKey, wave_color);
+}
+
 bool TrackeditInteraction::changeTrackColor(const TrackId trackId, const std::string& color)
 {
     return m_interaction->changeTrackColor(trackId, color);

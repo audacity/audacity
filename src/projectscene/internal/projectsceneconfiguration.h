@@ -40,6 +40,7 @@ public:
     muse::async::Notification isEffectsPanelVisibleChanged() const override;
 
     const std::vector<std::pair<std::string, std::string> >& clipColors() const override;
+    const std::vector<std::pair<std::string, std::string> >& waveColors() const override;
 
     ClipStyles::Style clipStyle() const override;
     void setClipStyle(ClipStyles::Style style) override;

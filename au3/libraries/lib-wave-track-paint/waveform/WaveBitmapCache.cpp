@@ -47,6 +47,13 @@ struct Triplet final
         b = color.GetBlue();
     }
 
+    void SetWaveColor(graphics::Color color)
+    {
+        r = color.GetRed();
+        g = color.GetGreen();
+        b = color.GetBlue();
+    }
+
     Triplet(const Triplet&) = default;
     Triplet(Triplet&&) = default;
     Triplet& operator=(const Triplet&) = default;

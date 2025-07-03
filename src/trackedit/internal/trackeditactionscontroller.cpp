@@ -82,7 +82,9 @@ static const ActionCode GROUP_CLIPS_CODE("group-clips");
 static const ActionCode UNGROUP_CLIPS_CODE("ungroup-clips");
 
 static const ActionQuery AUTO_COLOR_QUERY("action://trackedit/clip/change-color-auto");
+static const ActionQuery AUTO_WAVE_COLOR_QUERY("action://trackedit/clip/change-wave-color-auto");
 static const ActionQuery CHANGE_COLOR_QUERY("action://trackedit/clip/change-color");
+static const ActionQuery CHANGE_WAVE_COLOR_QUERY("action://trackedit/clip/change-wave-color");
 static const ActionQuery TRACK_CHANGE_COLOR_QUERY("action://trackedit/track/change-color");
 
 // In principle, disabled are actions that modify the data involved in playback.
@@ -212,7 +214,9 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, UNGROUP_CLIPS_CODE, this, &TrackeditActionsController::ungroupClips);
 
     dispatcher()->reg(this, AUTO_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
+    dispatcher()->reg(this, AUTO_WAVE_COLOR_QUERY, this, &TrackeditActionsController::setWaveColor);
     dispatcher()->reg(this, CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
+    dispatcher()->reg(this, CHANGE_WAVE_COLOR_QUERY, this, &TrackeditActionsController::setWaveColor);
 
     dispatcher()->reg(this, TRACK_CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setTrackColor);
 
@@ -1184,6 +1188,25 @@ void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& 
 
     auto clipKey = selectionController()->selectedClips().front();
     trackeditInteraction()->changeClipColor(clipKey, newColor);
+    notifyActionCheckedChanged(q.toString());
+}
+
+void TrackeditActionsController::setWaveColor(const muse::actions::ActionQuery& q)
+{
+    if (!selectionController()->hasSelectedClips()) {
+        return;
+    }
+
+    std::string newWaveColor;
+    if (q.contains("wave_color")) {
+        newWaveColor = q.param("wave_color").toString();
+    } else {
+        newWaveColor = "";
+    }
+
+    auto clipKey = selectionController()->selectedClips().front();
+    trackeditInteraction()->changeWaveColor(clipKey, newWaveColor);
+
     notifyActionCheckedChanged(q.toString());
 }
 
