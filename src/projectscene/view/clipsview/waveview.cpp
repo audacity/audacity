@@ -95,28 +95,28 @@ void WaveView::applyColorfulStyle(IWavePainter::Params& params,
 {
     float bgAlpha = selected ? 0.8 : 0.9;
     float normalBgAlpha = 0.8;
-    params.style.blankBrush = muse::draw::blendQColors(BACKGROUND_COLOR, clipColor, bgAlpha);
-    params.style.normalBackground = muse::draw::blendQColors(BACKGROUND_COLOR, clipColor, normalBgAlpha);
+    params.style.blankBrush = muse::blendQColors(BACKGROUND_COLOR, clipColor, bgAlpha);
+    params.style.normalBackground = muse::blendQColors(BACKGROUND_COLOR, clipColor, normalBgAlpha);
     params.style.selectedBackground = transformColor(params.style.normalBackground);
 
-    params.style.samplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.8);
-    params.style.selectedSamplePen = muse::draw::blendQColors(params.style.blankBrush,
-                                                              selected ? SAMPLES_HIGHLIGHT_COLOR : SAMPLES_BASE_COLOR,
-                                                              0.75);
-    params.style.rmsPen = muse::draw::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
-    params.style.centerLine = muse::draw::blendQColors(params.style.samplePen, CENTER_LINE_COLOR, 0.2);
+    params.style.samplePen = muse::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.8);
+    params.style.selectedSamplePen = muse::blendQColors(params.style.blankBrush,
+                                                        selected ? SAMPLES_HIGHLIGHT_COLOR : SAMPLES_BASE_COLOR,
+                                                        0.75);
+    params.style.rmsPen = muse::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
+    params.style.centerLine = muse::blendQColors(params.style.samplePen, CENTER_LINE_COLOR, 0.2);
 
     float headAlpha = selected ? SAMPLE_HEAD_CLIP_SELECTED_ALPHA : SAMPLE_HEAD_DEFAULT_ALPHA;
     float stalkAlpha = selected ? SAMPLE_STALK_CLIP_SELECTED_ALPHA : SAMPLE_STALK_DEFAULT_ALPHA;
 
-    params.style.sampleHead = muse::draw::blendQColors(params.style.samplePen, SAMPLE_HEAD_COLOR, headAlpha);
-    params.style.sampleStalk = muse::draw::blendQColors(params.style.samplePen, SAMPLE_STALK_COLOR, stalkAlpha);
+    params.style.sampleHead = muse::blendQColors(params.style.samplePen, SAMPLE_HEAD_COLOR, headAlpha);
+    params.style.sampleStalk = muse::blendQColors(params.style.samplePen, SAMPLE_STALK_COLOR, stalkAlpha);
 
     if (!selected) {
-        params.style.sampleHeadSelection = muse::draw::blendQColors(params.style.samplePen, SAMPLE_HEAD_COLOR,
-                                                                    SAMPLE_HEAD_DATA_SELECTED_ALPHA);
+        params.style.sampleHeadSelection = muse::blendQColors(params.style.samplePen, SAMPLE_HEAD_COLOR,
+                                                              SAMPLE_HEAD_DATA_SELECTED_ALPHA);
         params.style.sampleStalkSelection
-            = muse::draw::blendQColors(params.style.samplePen, SAMPLE_STALK_COLOR, SAMPLE_STALK_DATA_SELECTED_ALPHA);
+            = muse::blendQColors(params.style.samplePen, SAMPLE_STALK_COLOR, SAMPLE_STALK_DATA_SELECTED_ALPHA);
     }
 }
 
