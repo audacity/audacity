@@ -21,6 +21,7 @@
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/trackcolor.h"
+#include "au3wrap/internal/progressdialog.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
@@ -2371,6 +2372,17 @@ ClipKeyList Au3Interaction::clipsInGroup(int64_t id) const
 
 bool Au3Interaction::changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format)
 {
+    const size_t totalSamples = std::accumulate(tracksIds.begin(), tracksIds.end(), 0u, [this](size_t sum, const TrackId& trackId) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return sum;
+        }
+        return sum + waveTrack->GetVisibleSampleCount().as_size_t();
+    });
+
+    ProgressDialog progressDialog;
+    size_t convertedSamples = 0;
+
     for (const TrackId& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -2394,7 +2406,11 @@ bool Au3Interaction::changeTracksFormat(const TrackIdList& tracksIds, trackedit:
         }
 
         if (!(waveTrack->GetSampleFormat() == newFormat)) {
-            waveTrack->ConvertToSampleFormat(newFormat);
+            waveTrack->ConvertToSampleFormat(newFormat,  [&](size_t progress) {
+                convertedSamples += progress;
+                progressDialog.Poll(convertedSamples, totalSamples);
+            });
+
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
         }
