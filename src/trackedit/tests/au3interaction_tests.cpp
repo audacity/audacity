@@ -422,7 +422,7 @@ TEST_F(Au3InteractionTests, ChangeTrackColor)
     })));
 
     //! [WHEN] Change the color of the track
-    m_au3Interaction->changeTrackColor(trackMinSilenceId, "#48BECF");
+    m_au3Interaction->changeTracksColor({ trackMinSilenceId }, "#48BECF");
 
     //! [THEN] Clip color is cleared to follow the track color
     const std::shared_ptr<Au3WaveClip> au3UpdatedClip = DomAccessor::findWaveClip(project, trackMinSilenceId, 0);
@@ -2277,13 +2277,13 @@ TEST_F(Au3InteractionTests, changeTrackFormat)
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(2);
 
     //! [WHEN] Change the track format to 16-bit pcm
-    const bool ret = m_au3Interaction->changeTrackFormat(trackId, trackedit::TrackFormat::Int16);
+    const bool ret = m_au3Interaction->changeTracksFormat({ trackId }, trackedit::TrackFormat::Int16);
     ASSERT_TRUE(ret) << "Failed to change the track format";
 
     ASSERT_TRUE(track->GetSampleFormat() == sampleFormat::int16Sample) << "The track sample format is not int16";
 
     //! [WHEN] Change the track format to 24-bit pcm
-    const bool ret24 = m_au3Interaction->changeTrackFormat(trackId, trackedit::TrackFormat::Int24);
+    const bool ret24 = m_au3Interaction->changeTracksFormat({ trackId }, trackedit::TrackFormat::Int24);
     ASSERT_TRUE(ret24) << "Failed to change the track format to 24-bit";
 
     ASSERT_TRUE(track->GetSampleFormat() == sampleFormat::int24Sample) << "The track sample format is not int24";

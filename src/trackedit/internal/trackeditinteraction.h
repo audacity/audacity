@@ -31,7 +31,7 @@ private:
     bool changeClipSpeed(const ClipKey& clipKey, double speed) override;
     bool resetClipSpeed(const ClipKey& clipKey) override;
     bool changeClipColor(const ClipKey& clipKey, const std::string& color) override;
-    bool changeTrackColor(const TrackId trackId, const std::string& color) override;
+    bool changeTracksColor(const TrackIdList& tracksIds, const std::string& color) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;
@@ -88,7 +88,7 @@ private:
     void ungroupClips(const trackedit::ClipKeyList& clipKeyList) override;
     ClipKeyList clipsInGroup(int64_t id) const override;
 
-    bool changeTrackFormat(const TrackId trackId, trackedit::TrackFormat format) override;
+    bool changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format) override;
 
     muse::ProgressPtr progress() const override;
 

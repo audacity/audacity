@@ -94,6 +94,11 @@ void TrackContextMenuModel::load()
 {
     AbstractMenuModel::load();
 
+    projectHistory()->historyChanged().onNotify(this, [this]() {
+        updateColorCheckedState();
+        updateTrackFormatState();
+    });
+
     auto track = globalContext()->currentTrackeditProject()->track(m_trackId);
     if (!track.has_value()) {
         return;

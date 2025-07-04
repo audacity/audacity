@@ -877,23 +877,25 @@ bool Au3Interaction::changeClipColor(const ClipKey& clipKey, const std::string& 
     return true;
 }
 
-bool Au3Interaction::changeTrackColor(const TrackId trackId, const std::string& color)
+bool Au3Interaction::changeTracksColor(const TrackIdList& tracksIds, const std::string& color)
 {
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
+    for (const TrackId& trackId : tracksIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
 
-    auto& trackColor = TrackColor::Get(waveTrack);
-    trackColor.SetColor(muse::draw::Color::fromString(color));
+        auto& trackColor = TrackColor::Get(waveTrack);
+        trackColor.SetColor(muse::draw::Color::fromString(color));
 
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 
-    for (auto& clips: DomAccessor::waveClipsAsList(waveTrack)) {
-        //Set it back to auto
-        clips->SetColor("");
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clips.get()));
+        for (auto& clips: DomAccessor::waveClipsAsList(waveTrack)) {
+            //Set it back to auto
+            clips->SetColor("");
+            prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clips.get()));
+        }
     }
 
     return true;
@@ -2367,33 +2369,35 @@ ClipKeyList Au3Interaction::clipsInGroup(int64_t id) const
     return groupedClips;
 }
 
-bool Au3Interaction::changeTrackFormat(const TrackId trackId, trackedit::TrackFormat format)
+bool Au3Interaction::changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format)
 {
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
+    for (const TrackId& trackId : tracksIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
 
-    sampleFormat newFormat;
-    switch (format) {
-    case au::trackedit::TrackFormat::Int16:
-        newFormat = sampleFormat::int16Sample;
-        break;
-    case au::trackedit::TrackFormat::Int24:
-        newFormat = sampleFormat::int24Sample;
-        break;
-    case au::trackedit::TrackFormat::Float32:
-        newFormat = sampleFormat::floatSample;
-        break;
-    case au::trackedit::TrackFormat::Undefined:
-    default:
-        return false;
-    }
+        sampleFormat newFormat;
+        switch (format) {
+        case au::trackedit::TrackFormat::Int16:
+            newFormat = sampleFormat::int16Sample;
+            break;
+        case au::trackedit::TrackFormat::Int24:
+            newFormat = sampleFormat::int24Sample;
+            break;
+        case au::trackedit::TrackFormat::Float32:
+            newFormat = sampleFormat::floatSample;
+            break;
+        case au::trackedit::TrackFormat::Undefined:
+        default:
+            return false;
+        }
 
-    if (!(waveTrack->GetSampleFormat() == newFormat)) {
-        waveTrack->ConvertToSampleFormat(newFormat);
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        if (!(waveTrack->GetSampleFormat() == newFormat)) {
+            waveTrack->ConvertToSampleFormat(newFormat);
+            trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        }
     }
 
     return true;

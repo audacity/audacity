@@ -1204,8 +1204,7 @@ void TrackeditActionsController::setTrackColor(const muse::actions::ActionQuery&
         color = "";
     }
 
-    const auto track = tracks.front();
-    trackeditInteraction()->changeTrackColor(track, color);
+    trackeditInteraction()->changeTracksColor(tracks, color);
     notifyActionCheckedChanged(q.toString());
 }
 
@@ -1221,8 +1220,7 @@ void TrackeditActionsController::setTrackFormat(const muse::actions::ActionQuery
     }
 
     const int format = q.param("format").toInt();
-    const auto track = tracks.front();
-    if (trackeditInteraction()->changeTrackFormat(track, static_cast<TrackFormat>(format))) {
+    if (trackeditInteraction()->changeTracksFormat(tracks, static_cast<TrackFormat>(format))) {
         notifyActionCheckedChanged(q.toString());
     }
 }
