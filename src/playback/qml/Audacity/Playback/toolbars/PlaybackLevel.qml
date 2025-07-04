@@ -152,7 +152,7 @@ Item {
                     rightVolumePressure.reset()
                     rightVolumePressure.resetClipped()
 
-                    root.volumeLevelChangeRequested(Math.round(level * 10) / 10)
+                    root.volumeLevelChangeRequested(Math.round(level * 100) / 100)
                 }
 
                 onHandlePressed: function() {

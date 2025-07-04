@@ -71,12 +71,12 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
     });
 }
 
-int PlaybackToolBarLevelItem::level() const
+float PlaybackToolBarLevelItem::level() const
 {
     return m_level;
 }
 
-void PlaybackToolBarLevelItem::setLevel(int newLevel)
+void PlaybackToolBarLevelItem::setLevel(float newLevel)
 {
     if (m_level == newLevel) {
         return;
