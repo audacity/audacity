@@ -1,6 +1,6 @@
 /*
-Helper functions that consolidate shortcuts. These helper functions are written in Pascal case (eg. NewProject, CutAndLeaveGap)
- */
+* Audacity: A Digital Audio Editor
+*/
 
 var Navigation = require("Navigation.js")
 
@@ -148,7 +148,7 @@ module.exports = {
     DeselectAll: function()
     {
         //This emulates the Deselect All command via Ctrl+Shift+A
-        api.keyboard.key("")
+        api.keyboard.key("Ctrl+Shift+A")
     },
     SelectAllTracks: function()
     {
