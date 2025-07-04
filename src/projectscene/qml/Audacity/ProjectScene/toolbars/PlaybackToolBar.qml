@@ -95,9 +95,11 @@ Item {
             id: playbackLevelComp
 
             PlaybackLevel {
+                id: playbackLevel
+
                 property var itemData: null
 
-                width: 288
+                width: Boolean(itemData) ? Math.max(288, Math.min(itemData.meterSize, view.maximumWidth)) : 288
                 height: 28
 
                 volumeLevel: Boolean(itemData) ? itemData.level : 0
@@ -107,17 +109,9 @@ Item {
                 rightCurrentRMS: Boolean(itemData) ? itemData.rightChannelRMS : -60
                 isPlaying: Boolean(itemData) ? itemData.isPlaying : false
 
-                meterStyle: {
-                    return Boolean(itemData) ? itemData.meterStyle : PlaybackMeterStyle.Default
-                }
-
-                meterType: {
-                    return Boolean(itemData) ? itemData.meterType : PlaybackMeterType.DbLog
-                }
-
-                meterPosition: {
-                    return Boolean(itemData) ? itemData.meterPosition : PlaybackMeterPosition.TopBar
-                }
+                meterStyle: Boolean(itemData) ? itemData.meterStyle : PlaybackMeterStyle.Default
+                meterType: Boolean(itemData) ? itemData.meterType : PlaybackMeterType.DbLog
+                meterPosition: Boolean(itemData) ? itemData.meterPosition : PlaybackMeterPosition.TopBar
 
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
@@ -135,6 +129,19 @@ Item {
 
                 onTypeChangeRequested: function(type) {
                     itemData.meterType = type
+                }
+
+                onWidthChangeRequested: function(x, y) {
+                    let toolbarViewPosition = mapToItem(view, x, y);
+
+                    if (toolbarViewPosition.x > view.maximumWidth) {
+                        // Do not allow the component to exceed the maximum width of the toolbar view
+                        return
+                    }
+
+                    if (itemData) {
+                        itemData.meterSize = x
+                    }
                 }
             }
         }

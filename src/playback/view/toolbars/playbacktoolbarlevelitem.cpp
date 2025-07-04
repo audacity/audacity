@@ -55,6 +55,10 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
         emit meterTypeChanged();
     });
 
+    configuration()->playbackHorizontalMeterSizeChanged().onNotify(this, [this]() {
+        emit meterSizeChanged();
+    });
+
     controller()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
     });
@@ -67,12 +71,12 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
     });
 }
 
-int PlaybackToolBarLevelItem::level() const
+float PlaybackToolBarLevelItem::level() const
 {
     return m_level;
 }
 
-void PlaybackToolBarLevelItem::setLevel(int newLevel)
+void PlaybackToolBarLevelItem::setLevel(float newLevel)
 {
     if (m_level == newLevel) {
         return;
@@ -264,4 +268,18 @@ void PlaybackToolBarLevelItem::setMeterPosition(PlaybackMeterPosition::MeterPosi
 PlaybackMeterPosition::MeterPosition PlaybackToolBarLevelItem::meterPosition() const
 {
     return configuration()->playbackMeterPosition();
+}
+
+void PlaybackToolBarLevelItem::setMeterSize(int size)
+{
+    if (meterSize() == size) {
+        return;
+    }
+
+    configuration()->setPlaybackHorizontalMeterSize(size);
+}
+
+int PlaybackToolBarLevelItem::meterSize() const
+{
+    return configuration()->playbackHorizontalMeterSize();
 }
