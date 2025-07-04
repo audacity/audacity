@@ -27,8 +27,6 @@ Item {
     property int meterType: PlaybackMeterType.DbLog
     property int meterPosition: PlaybackMeterPosition.TopBar
 
-    property int resizeGripIconCode: 0xF347
-
     property bool isPlaying: false
 
     signal volumeLevelChangeRequested(var level)
@@ -215,7 +213,7 @@ Item {
             }
 
             transparent: true
-            icon: root.resizeGripIconCode
+            icon: IconCode.DOUBLE_BAR_LINE
         }
     }
 }
