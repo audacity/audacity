@@ -21,7 +21,6 @@
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/trackcolor.h"
-#include "au3wrap/internal/progressdialog.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
@@ -2379,9 +2378,12 @@ bool Au3Interaction::changeTracksFormat(const TrackIdList& tracksIds, trackedit:
         }
         return sum + waveTrack->GetVisibleSampleCount().as_size_t();
     });
-
-    ProgressDialog progressDialog;
     size_t convertedSamples = 0;
+
+    progress()->start();
+    DEFER {
+        progress()->finish(muse::make_ok());
+    };
 
     for (const TrackId& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
@@ -2406,9 +2408,9 @@ bool Au3Interaction::changeTracksFormat(const TrackIdList& tracksIds, trackedit:
         }
 
         if (!(waveTrack->GetSampleFormat() == newFormat)) {
-            waveTrack->ConvertToSampleFormat(newFormat,  [&](size_t progress) {
-                convertedSamples += progress;
-                progressDialog.Poll(convertedSamples, totalSamples);
+            waveTrack->ConvertToSampleFormat(newFormat,  [&](size_t sampleCnt) {
+                convertedSamples += sampleCnt;
+                progress()->progress(convertedSamples, totalSamples, "");
             });
 
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
