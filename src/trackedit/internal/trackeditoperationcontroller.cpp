@@ -3,7 +3,6 @@
  */
 #include "trackeditoperationcontroller.h"
 #include "trackediterrors.h"
-#include "au3wrap/internal/progressdialog.h"
 
 namespace au::trackedit {
 TrackeditOperationController::TrackeditOperationController(std::unique_ptr<IUndoManager> undoManager)
@@ -547,12 +546,6 @@ ClipKeyList TrackeditOperationController::clipsInGroup(int64_t id) const
 
 bool TrackeditOperationController::changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format)
 {
-    auto progressDialog = std::make_unique<ProgressDialog>();
-    trackAndClipOperations()->progress()->progressChanged().onReceive(progressDialog.get(),
-                                                                      [&](int64_t current, int64_t total, const std::string&) {
-        progressDialog->Poll(current, total);
-    });
-
     if (trackAndClipOperations()->changeTracksFormat(tracksIds, format)) {
         projectHistory()->pushHistoryState("Changed track format", "Changed track format");
         return true;

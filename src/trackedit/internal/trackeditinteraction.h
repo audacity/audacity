@@ -7,6 +7,7 @@
 #include "global/types/secs.h"
 #include "modularity/ioc.h"
 #include "record/irecordcontroller.h"
+#include "au3wrap/internal/progressdialog.h"
 
 namespace au::trackedit {
 class TrackeditInteraction : public ITrackeditInteraction, public muse::Injectable
@@ -101,6 +102,18 @@ private:
         }
         playback()->player()->stop();
         return (m_interaction.get()->*method)(std::forward<Args>(args)...);
+    }
+
+    template<typename Func, typename ... Args>
+    muse::Ret withProgress(Func&& method, Args&&... args) const
+    {
+        auto progressDialog = std::make_unique<ProgressDialog>();
+        progress()->progressChanged().onReceive(progressDialog.get(),
+                                                [&](int64_t current, int64_t total, const std::string&) {
+            progressDialog->Poll(current, total);
+        });
+
+        return method(std::forward<Args>(args)...);
     }
 
     const std::unique_ptr<ITrackeditInteraction> m_interaction;
