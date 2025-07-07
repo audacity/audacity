@@ -7,21 +7,22 @@ using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace muse::actions;
 
-constexpr static const char* TRACK_FORMAT_CHANGE_ACTION = "action://trackedit/track/change-format?format=%1";
-constexpr static const char* TRACK_FORMAT_MENU_ID = "trackFormatMenu";
+namespace {
+constexpr const char* TRACK_FORMAT_CHANGE_ACTION = "action://trackedit/track/change-format?format=%1";
+constexpr const char* TRACK_FORMAT_MENU_ID = "trackFormatMenu";
+constexpr const char* TRACK_COLOR_MENU_ID = "trackColorMenu";
 
 struct TrackFormatInfo {
     au::trackedit::TrackFormat format;
     const char* description;
 };
 
-const TrackFormatInfo AVAILABLE_TRACK_FORMATS[] = {
+constexpr const TrackFormatInfo AVAILABLE_TRACK_FORMATS[] = {
     { au::trackedit::TrackFormat::Int16, "16-bit PCM" },
     { au::trackedit::TrackFormat::Int24, "24-bit PCM" },
     { au::trackedit::TrackFormat::Float32, "32-bit Float" }
 };
 
-namespace {
 //! NOTE: can be moved to the framework
 bool containsAny(const ActionCodeList& list, const ActionCodeList& actionCodes)
 {
@@ -53,7 +54,7 @@ MenuItemList TrackContextMenuModel::makeStereoTrackItems()
         makeSeparator(),
         makeMenu(muse::TranslatableString("track menu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("track view", "Track view"), makeTrackViewItems()),
-        makeMenu(muse::TranslatableString("track color", "Track color"), makeTrackColorItems(), "trackColorMenu"),
+        makeMenu(muse::TranslatableString("track color", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
         makeMenu(muse::TranslatableString("track ruler", "Rulers"), makeTrackRulerItems()),
         makeSeparator(),
         makeItemWithArg("track-swap-stereo"),
@@ -77,7 +78,7 @@ MenuItemList TrackContextMenuModel::makeMonoTrackItems()
         makeSeparator(),
         makeMenu(muse::TranslatableString("track menu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("track view", "Track view"), makeTrackViewItems()),
-        makeMenu(muse::TranslatableString("track color", "Track color"), makeTrackColorItems(), "trackColorMenu"),
+        makeMenu(muse::TranslatableString("track color", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
         makeMenu(muse::TranslatableString("track ruler", "Rulers"), makeTrackRulerItems()),
         makeSeparator(),
         makeItemWithArg("track-make-stereo"),

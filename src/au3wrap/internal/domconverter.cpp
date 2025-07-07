@@ -48,7 +48,6 @@ au::trackedit::TrackFormat trackFormat(const Au3Track* track)
         return au::trackedit::TrackFormat::Float32;
     default:
         return au::trackedit::TrackFormat::Undefined;
-        break;
     }
 }
 }
