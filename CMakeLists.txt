@@ -19,7 +19,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Muse Framework
 ###########################################
 set(FETCHCONTENT_QUIET OFF)
-set(FETCHCONTENT_BASE_DIR ${CMAKE_CURRENT_LIST_DIR}/_deps)
+set(FETCHCONTENT_BASE_DIR ${PROJECT_BINARY_DIR}/_deps)
 include(FetchContent)
 FetchContent_Declare(
   muse_framework
