@@ -17,7 +17,7 @@ class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(int level READ level WRITE setLevel NOTIFY levelChanged FINAL)
+    Q_PROPERTY(float level READ level WRITE setLevel NOTIFY levelChanged FINAL)
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float leftChannelRMS READ leftChannelRMS NOTIFY leftChannelRMSChanged)
@@ -33,6 +33,7 @@ class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
     Q_PROPERTY(PlaybackMeterType::MeterType meterType READ meterType WRITE setMeterType NOTIFY meterTypeChanged FINAL)
     Q_PROPERTY(
         PlaybackMeterPosition::MeterPosition meterPosition READ meterPosition WRITE setMeterPosition NOTIFY meterPositionChanged FINAL)
+    Q_PROPERTY(int meterSize READ meterSize WRITE setMeterSize NOTIFY meterSizeChanged FINAL)
 
     Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
 
@@ -44,8 +45,8 @@ public:
     explicit PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
                                       QObject* parent = nullptr);
 
-    int level() const;
-    void setLevel(int newLevel);
+    float level() const;
+    void setLevel(float newLevel);
 
     float leftChannelPressure() const;
     float leftChannelRMS() const;
@@ -60,6 +61,7 @@ public:
     PlaybackMeterStyle::MeterStyle meterStyle() const;
     PlaybackMeterType::MeterType meterType() const;
     PlaybackMeterPosition::MeterPosition meterPosition() const;
+    int meterSize() const;
 
     bool isPlaying() const;
 
@@ -77,6 +79,7 @@ public slots:
     void setMeterStyle(PlaybackMeterStyle::MeterStyle style);
     void setMeterType(PlaybackMeterType::MeterType type);
     void setMeterPosition(PlaybackMeterPosition::MeterPosition position);
+    void setMeterSize(int size);
 
 signals:
     void levelChanged();
@@ -94,6 +97,7 @@ signals:
     void meterStyleChanged();
     void meterTypeChanged();
     void meterPositionChanged();
+    void meterSizeChanged();
 
     void isPlayingChanged();
 
@@ -102,7 +106,7 @@ private:
     void setAudioChannelRMS(const audio::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
 
-    int m_level = 0;
+    float m_level = 0;
 
     float m_leftChannelPressure = -60.0;
     float m_leftChannelRMS = -60.0;

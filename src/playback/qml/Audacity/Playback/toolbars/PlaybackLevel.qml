@@ -34,6 +34,8 @@ Item {
     signal styleChangeRequested(int style)
     signal typeChangeRequested(int type)
 
+    signal widthChangeRequested(int x, int y)
+
     onIsPlayingChanged: {
         if (root.isPlaying) {
             leftVolumePressure.reset()
@@ -49,11 +51,12 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        spacing: 6
+        spacing: 0
 
         FlatButton {
             Layout.preferredWidth: root.height
             Layout.preferredHeight: root.height
+            Layout.rightMargin: 6
 
             icon: IconCode.AUDIO
             accentButton: popup.isOpened
@@ -149,7 +152,7 @@ Item {
                     rightVolumePressure.reset()
                     rightVolumePressure.resetClipped()
 
-                    root.volumeLevelChangeRequested(Math.round(level * 10) / 10)
+                    root.volumeLevelChangeRequested(Math.round(level * 100) / 100)
                 }
 
                 onHandlePressed: function() {
@@ -180,6 +183,37 @@ Item {
                     rightVolumePressure.resetClipped()
                 }
             }
+        }
+
+        FlatButton {
+            id: resizeGrip
+
+            Layout.preferredWidth: 16
+            Layout.preferredHeight: root.height
+            Layout.leftMargin: 2
+
+            property bool isDragging: false
+
+            mouseArea.cursorShape: Qt.OpenHandCursor
+            mouseArea.onPressed: function(e) {
+                mouseArea.cursorShape = Qt.ClosedHandCursor;
+                resizeGrip.isDragging = true;
+            }
+
+            mouseArea.onPositionChanged: function(e) {
+                if (resizeGrip.isDragging) {
+                    let newPosition = mapToItem(root, e.x, e.y)
+                    root.widthChangeRequested(newPosition.x, newPosition.y)
+                }
+            }
+
+            mouseArea.onReleased: function(e) {
+                mouseArea.cursorShape = Qt.OpenHandCursor;
+                resizeGrip.isDragging = false;
+            }
+
+            transparent: true
+            icon: IconCode.DOUBLE_BAR_LINE
         }
     }
 }
