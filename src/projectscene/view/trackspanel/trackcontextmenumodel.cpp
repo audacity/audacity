@@ -20,7 +20,7 @@ struct TrackFormatInfo {
 constexpr const TrackFormatInfo AVAILABLE_TRACK_FORMATS[] = {
     { au::trackedit::TrackFormat::Int16, "16-bit PCM" },
     { au::trackedit::TrackFormat::Int24, "24-bit PCM" },
-    { au::trackedit::TrackFormat::Float32, "32-bit Float" }
+    { au::trackedit::TrackFormat::Float32, "32-bit float" }
 };
 
 //! NOTE: can be moved to the framework
@@ -176,7 +176,12 @@ void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCod
 
 void TrackContextMenuModel::updateColorCheckedState()
 {
-    auto track = globalContext()->currentTrackeditProject()->track(m_trackId);
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+
+    auto track = project->trackeditProject()->track(m_trackId);
     if (!track.has_value()) {
         return;
     }
@@ -200,7 +205,12 @@ void TrackContextMenuModel::updateColorCheckedState()
 
 void TrackContextMenuModel::updateTrackFormatState()
 {
-    auto track = globalContext()->currentTrackeditProject()->track(m_trackId);
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+
+    auto track = project->trackeditProject()->track(m_trackId);
     if (!track.has_value()) {
         return;
     }
