@@ -8,6 +8,7 @@
 #include "TempoChange.h"
 #include "TimeWarper.h"
 #include "QualitySettings.h"
+#include "WaveTrackUtilities.h"
 
 #include "global/types/number.h"
 #include "global/concurrency/concurrent.h"
@@ -2376,13 +2377,15 @@ bool Au3Interaction::changeTracksFormat(const TrackIdList& tracksIds, trackedit:
         IF_ASSERT_FAILED(waveTrack) {
             return sum;
         }
-        return sum + waveTrack->GetVisibleSampleCount().as_size_t();
+        return sum + WaveTrackUtilities::GetSequenceSamplesCount(*waveTrack).as_size_t();
     });
     size_t convertedSamples = 0;
 
     progress()->start();
+
+    muse::ProgressResult result;
     DEFER {
-        progress()->finish(muse::make_ok());
+        progress()->finish(result);
     };
 
     for (const TrackId& trackId : tracksIds) {
