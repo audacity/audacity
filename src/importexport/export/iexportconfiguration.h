@@ -20,8 +20,8 @@ public:
 
     virtual ~IExportConfiguration() = default;
 
-    virtual ProcessType process() const = 0;
-    virtual void setProcess(ProcessType process) = 0;
+    virtual ExportProcessType processType() const = 0;
+    virtual void setProcess(ExportProcessType process) = 0;
     virtual muse::async::Notification processChanged() const = 0;
 
     virtual std::string filename() const = 0;
@@ -40,8 +40,8 @@ public:
     virtual void setExportChannels(ExportChannelsPref::ExportChannels channels) = 0;
     virtual muse::async::Notification exportChannelsChanged() const = 0;
 
-    virtual uint64_t exportSampleRate() const = 0;
-    virtual void setExportSampleRate(uint64_t newRate) = 0;
+    virtual int exportSampleRate() const = 0;
+    virtual void setExportSampleRate(int newRate) = 0;
     virtual muse::async::Notification exportSampleRateChanged() const = 0;
 
     virtual std::vector<std::string> exportSampleFormatList() const = 0;

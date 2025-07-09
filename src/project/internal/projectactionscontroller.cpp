@@ -525,7 +525,7 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
 
     projectHistory()->init();
 
-    exportConfiguration()->setFilename("untitled");
+    exportConfiguration()->setFilename(project->displayName().toStdString());
     exportConfiguration()->setDirectoryPath(dirpath(project->path()));
 
     return openPageIfNeed(PROJECT_PAGE_URI);
