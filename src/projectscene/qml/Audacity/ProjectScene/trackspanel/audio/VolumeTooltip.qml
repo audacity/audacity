@@ -11,7 +11,7 @@ StyledPopupView {
     contentWidth: contentRect.width
     contentHeight: contentRect.height
 
-    placement: PopupView.PreferAbove
+    placementPolicies: PopupView.PreferAbove
     openPolicies: PopupView.NoActivateFocus
     closePolicies: PopupView.NoAutoClose
 
