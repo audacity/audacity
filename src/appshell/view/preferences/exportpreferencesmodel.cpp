@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 
+#include "global/containers.h"
 #include "settings.h"
 #include "log.h"
 #include "types/translatablestring.h"
@@ -12,14 +13,32 @@
 
 using namespace au::importexport;
 
-std::map<ProcessType, muse::TranslatableString> EXPORT_PROCESS_MAPPING {
-    { ProcessType::FULL_PROJECT_AUDIO, muse::TranslatableString("export", "Export full project audio") },
-    { ProcessType::SELECTED_AUDIO, muse::TranslatableString("export", "Export selected audio") },
-    { ProcessType::AUDIO_IN_LOOP_REGION, muse::TranslatableString("export", "Export audio in loop region") },
-    { ProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES, muse::TranslatableString("export", "Export tracks as a separate audio files (Stems") },
-    { ProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE, muse::TranslatableString("export",
-                                                                               "Export each label as a separate audio file (Chapters)") },
-    { ProcessType::ALL_LABELS_AS_SUBTITLE_FILE, muse::TranslatableString("export", "Export all labels as a subtitle file") }
+std::map<ExportProcessType, muse::TranslatableString> EXPORT_PROCESS_MAPPING {
+    { ExportProcessType::FULL_PROJECT_AUDIO, muse::TranslatableString("export", "Export full project audio") },
+    { ExportProcessType::SELECTED_AUDIO, muse::TranslatableString("export", "Export selected audio") },
+    //! NOTE: not implemented yet
+    // { ExportProcessType::AUDIO_IN_LOOP_REGION, muse::TranslatableString("export", "Export audio in loop region") },
+    // { ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES,
+    //   muse::TranslatableString("export", "Export tracks as a separate audio files (Stems)") },
+    // { ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE, muse::TranslatableString("export",
+    //                                                                                  "Export each label as a separate audio file (Chapters)") },
+    // { ExportProcessType::ALL_LABELS_AS_SUBTITLE_FILE, muse::TranslatableString("export", "Export all labels as a subtitle file") }
+};
+
+const std::vector<int> DEFAULT_SAMPLE_RATE_LIST {
+    8000,
+    11025,
+    16000,
+    22050,
+    32000,
+    44100,
+    48000,
+    88200,
+    96000,
+    176400,
+    192000,
+    352800,
+    384000
 };
 
 namespace au::appshell {
@@ -49,6 +68,11 @@ void ExportPreferencesModel::init()
     exportConfiguration()->currentFormatChanged().onNotify(this, [this] {
         emit currentFormatChanged();
         emit fileExtensionChanged();
+
+        emit exportSampleRateListChanged();
+        emit maxExportChannelsChanged();
+        updateCurrentSampleRate();
+        updateExportChannels();
     });
 
     exportConfiguration()->exportChannelsChanged().onNotify(this, [this] {
@@ -62,12 +86,12 @@ void ExportPreferencesModel::init()
 
 QString ExportPreferencesModel::currentProcess() const
 {
-    return EXPORT_PROCESS_MAPPING[exportConfiguration()->process()].translated();
+    return EXPORT_PROCESS_MAPPING[exportConfiguration()->processType()].translated();
 }
 
 void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
 {
-    ProcessType type;
+    ExportProcessType type;
     for (auto process : EXPORT_PROCESS_MAPPING) {
         if (newProcess == process.second.translated()) {
             type = process.first;
@@ -134,10 +158,10 @@ void ExportPreferencesModel::setCurrentFormat(const QString& format)
     exportConfiguration()->setCurrentFormat(format.toStdString());
 }
 
-QVariantList ExportPreferencesModel::formatList() const
+QVariantList ExportPreferencesModel::formatsList() const
 {
     QVariantList result;
-    for (const auto& format : exporter()->formatList()) {
+    for (const auto& format : exporter()->formatsList()) {
         result << QString::fromStdString(format);
     }
 
@@ -154,6 +178,11 @@ void ExportPreferencesModel::setExportChannels(ExportChannelsPref::ExportChannel
     exportConfiguration()->setExportChannels(exportChannels);
 }
 
+int ExportPreferencesModel::maxExportChannels() const
+{
+    return exporter()->maxChannels();
+}
+
 QString ExportPreferencesModel::exportSampleRate() const
 {
     auto currentSampleRate = exportConfiguration()->exportSampleRate();
@@ -168,8 +197,11 @@ QString ExportPreferencesModel::exportSampleRate() const
 
 QVariantList ExportPreferencesModel::exportSampleRateList()
 {
-    //! NOTE: this list should be fetched based on selected plugin
-    std::vector<uint64_t> sampleRateList = { 8000, 11025, 16000, 22050, 44100 };
+    std::vector<int> sampleRateList = exporter()->sampleRateList();
+    if (sampleRateList.empty()) {
+        sampleRateList = DEFAULT_SAMPLE_RATE_LIST;
+    }
+
     QVariantList result;
     m_sampleRateMapping.clear();
     for (const auto& rate : sampleRateList) {
@@ -181,7 +213,7 @@ QVariantList ExportPreferencesModel::exportSampleRateList()
     return result;
 }
 
-void ExportPreferencesModel::exportSampleRateSelected(const QString& rateName)
+void ExportPreferencesModel::setExportSampleRate(const QString& rateName)
 {
     if (rateName == exportSampleRate()) {
         return;
@@ -191,10 +223,9 @@ void ExportPreferencesModel::exportSampleRateSelected(const QString& rateName)
                            [&rateName](const auto& rate) { return rateName == rate.second; });
     if (it != m_sampleRateMapping.end()) {
         exportConfiguration()->setExportSampleRate(it->first);
+        emit exportSampleRateChanged();
         return;
     }
-
-    emit exportSampleRateChanged();
 }
 
 QString ExportPreferencesModel::exportSampleFormat() const
@@ -209,9 +240,37 @@ QVariantList ExportPreferencesModel::exportSampleFormatList() const
     return {};
 }
 
-void ExportPreferencesModel::exportSampleFormatSelected(const QString& format)
+void ExportPreferencesModel::setExportSampleFormat(const QString& format)
 {
     Q_UNUSED(format);
     NOT_IMPLEMENTED;
+}
+
+void ExportPreferencesModel::updateCurrentSampleRate()
+{
+    int currentSampleRate = exportConfiguration()->exportSampleRate();
+    std::vector<int> sampleRateList = exporter()->sampleRateList();
+    for (const auto& rate : sampleRateList) {
+        if (rate == currentSampleRate) {
+            return;
+        }
+    }
+
+    //! NOTE: if current sample rate is not found within format's available sample rates
+    //! get the first one available
+    QVariantList stringSampleRateList = exportSampleRateList();
+    if (stringSampleRateList.empty()) {
+        return;
+    }
+    setExportSampleRate(stringSampleRateList[0].toString());
+}
+
+void ExportPreferencesModel::updateExportChannels()
+{
+    int maxChannels = exporter()->maxChannels();
+
+    if (static_cast<int>(exportChannels()) > maxChannels) {
+        setExportChannels(ExportChannelsPref::ExportChannels(maxChannels));
+    }
 }
 }

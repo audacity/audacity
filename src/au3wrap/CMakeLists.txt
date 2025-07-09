@@ -552,6 +552,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-import-export/ExportPluginHelpers.h
     ${AU3_LIBRARIES}/lib-import-export/PlainExportOptionsEditor.cpp
     ${AU3_LIBRARIES}/lib-import-export/PlainExportOptionsEditor.h
+    ${AU3_LIBRARIES}/lib-import-export/ExportOptionsEditor.cpp
+    ${AU3_LIBRARIES}/lib-import-export/ExportOptionsEditor.h
     ${AU3_LIBRARIES}/lib-import-export/ExportUtils.cpp
     ${AU3_LIBRARIES}/lib-import-export/ExportUtils.h
 

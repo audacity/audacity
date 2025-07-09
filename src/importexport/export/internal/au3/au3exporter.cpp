@@ -83,7 +83,7 @@ public:
     }
 };
 
-bool Au3Exporter::doExport()
+bool Au3Exporter::exportData()
 {
     muse::io::path_t directoryPath = exportConfiguration()->directoryPath();
     muse::io::path_t filePath = directoryPath.appendingComponent(exportConfiguration()->filename())
@@ -92,7 +92,7 @@ bool Au3Exporter::doExport()
     wxFileName filename = wxString(filePath.toStdString());
 
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
-    if (!project) {
+    IF_ASSERT_FAILED(project) {
         return false;
     }
 
@@ -107,8 +107,8 @@ bool Au3Exporter::doExport()
         return false;
     }
 
-    // TODO: implement other ProcessType's selections
-    if (exportConfiguration()->process() == ProcessType::SELECTED_AUDIO) {
+    // TODO: implement other ExportProcessType's selections
+    if (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO) {
         m_t0
             = selectionController()->timeSelectionIsNotEmpty() ? selectionController()->dataSelectedStartTime() : static_cast<trackedit::
                                                                                                                               secs_t>(
@@ -190,14 +190,18 @@ bool Au3Exporter::doExport()
     return true;
 }
 
-std::vector<std::string> Au3Exporter::formatList() const
+std::vector<std::string> Au3Exporter::formatsList() const
 {
-    std::vector<std::string> formatList;
+    std::vector<std::string> formatsList;
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        formatList.push_back(plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString());
+        //! NOTE: custom FFMPEG export not implemented yet
+        if (!plugin->CreateOptionsEditor(formatIndex, nullptr)) {
+            continue;
+        }
+        formatsList.push_back(plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString());
     }
 
-    return formatList;
+    return formatsList;
 }
 
 int Au3Exporter::formatIndex(const std::string& format) const
@@ -219,6 +223,36 @@ std::string Au3Exporter::formatExtension(const std::string& format) const
             if (!extensions.empty()) {
                 return extensions.front().ToStdString();
             }
+        }
+    }
+
+    return {};
+}
+
+int Au3Exporter::maxChannels() const
+{
+    int format = formatIndex(exportConfiguration()->currentFormat());
+
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        if (formatIndex == format) {
+            return plugin->GetFormatInfo(formatIndex).maxChannels;
+        }
+    }
+
+    return 1;
+}
+
+std::vector<int> Au3Exporter::sampleRateList() const
+{
+    int format = formatIndex(exportConfiguration()->currentFormat());
+
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        if (formatIndex == format) {
+            auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
+            if (!editor) {
+                return {};
+            }
+            return editor->GetSampleRateList();
         }
     }
 
