@@ -161,7 +161,7 @@ Ret Audacity4Project::doExport()
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    exporter()->doExport();
+    exporter()->exportData();
 
     return muse::make_ret(Ret::Code::Ok);
 }

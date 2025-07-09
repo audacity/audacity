@@ -13,10 +13,13 @@ class IExporter : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IExporter() = default;
 
-    virtual bool doExport() = 0;
+    virtual bool exportData() = 0;
 
-    virtual std::vector<std::string> formatList() const = 0;
+    virtual std::vector<std::string> formatsList() const = 0;
     virtual int formatIndex(const std::string& format) const = 0;
     virtual std::string formatExtension(const std::string& format) const = 0;
+
+    virtual int maxChannels() const = 0;
+    virtual std::vector<int> sampleRateList() const = 0;
 };
 }

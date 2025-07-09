@@ -18,6 +18,8 @@ function.
 
 *//*******************************************************************/
 
+#include <algorithm>
+
 #include "FFmpeg.h"
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
 #include "lib-ffmpeg-support/FifoBuffer.h"
@@ -400,19 +402,19 @@ const std::vector<ExportOption> FFmpegOptions {
     { FEFormatID, {}, std::string() }
 };
 
-// class ExportOptionsFFmpegCustomEditor : public ExportOptionsEditor//, public ExportOptionsUIServices
-// {
-//     std::unordered_map<int, ExportValue> mValues;
-//     std::shared_ptr<FFmpegFunctions> mFFmpeg;
-//     ExportOptionsEditor::Listener* mListener{};
+class ExportOptionsFFmpegCustomEditor : public ExportOptionsEditor//, public ExportOptionsUIServices
+{
+    std::unordered_map<int, ExportValue> mValues;
+    std::shared_ptr<FFmpegFunctions> mFFmpeg;
+    ExportOptionsEditor::Listener* mListener{};
 //     //created on-demand
-//     mutable std::unique_ptr<AVCodecWrapper> mAVCodec;
-// public:
+    mutable std::unique_ptr<AVCodecWrapper> mAVCodec;
+public:
 
-//     ExportOptionsFFmpegCustomEditor(ExportOptionsEditor::Listener* listener = nullptr)
-//         : mListener(listener)
-//     {
-//     }
+    ExportOptionsFFmpegCustomEditor(ExportOptionsEditor::Listener* listener = nullptr)
+        : mListener(listener)
+    {
+    }
 
 // void PopulateUI(ShuttleGui& S) override
 // {
@@ -480,28 +482,28 @@ const std::vector<ExportOption> FFmpegOptions {
 //     return false;
 // }
 
-// SampleRateList GetSampleRateList() const override
-// {
-//     if (!mAVCodec) {
-//         auto it = mValues.find(FECodecID);
-//         if (it == mValues.end()) {
-//             return {}
-//         }
+    SampleRateList GetSampleRateList() const override
+    {
+        if (!mAVCodec) {
+            auto it = mValues.find(FECodecID);
+            if (it == mValues.end()) {
+                return {};
+            }
 
-//         const auto codecId = *std::get_if<std::string>(&it->second);
-//         if (mFFmpeg) {
-//             mAVCodec = mFFmpeg->CreateEncoder(codecId.c_str());
-//         }
-//     }
-//     if (!mAVCodec) {
-//         return {}
-//     }
+            const auto codecId = *std::get_if<std::string>(&it->second);
+            if (mFFmpeg) {
+                mAVCodec = mFFmpeg->CreateEncoder(codecId.c_str());
+            }
+        }
+        if (!mAVCodec) {
+            return {};
+        }
 
-//     if (const auto rates = mAVCodec->GetSupportedSamplerates()) {
-//         return ToSampleRateList(rates);
-//     }
-//     return {};
-// }
+        if (const auto rates = mAVCodec->GetSupportedSamplerates()) {
+            return ToSampleRateList(rates);
+        }
+        return {};
+    }
 
 // void Load(const audacity::BasicSettings& config) override
 // {
@@ -585,7 +587,7 @@ const std::vector<ExportOption> FFmpegOptions {
 //     wxWindow* mParent { nullptr };
 //     wxTextCtrl* mFormat { nullptr };
 //     wxTextCtrl* mCodec { nullptr };
-// };
+};
 // }
 
 ///Performs actual export
@@ -775,31 +777,32 @@ ExportFFmpeg::~ExportFFmpeg() = default;
 std::unique_ptr<ExportOptionsEditor>
 ExportFFmpeg::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* listener) const
 {
-    // switch (AdjustFormatIndex(format)) {
-//     case FMT_M4A:
-//         return std::make_unique<PlainExportOptionsEditor>(AACOptions, listener);
-//     case FMT_AC3:
-//         return std::make_unique<PlainExportOptionsEditor>(
-//             AC3Options,
-//             ToSampleRateList(iAC3SampleRates),
-//             listener);
-//     case FMT_AMRNB:
-//         return std::make_unique<PlainExportOptionsEditor>(
-//             AMRNBOptions,
-//             ExportOptionsEditor::SampleRateList { 8000 },
-//             listener);
-// #ifdef SHOW_FFMPEG_OPUS_EXPORT
-//     case FMT_OPUS:
-//         return std::make_unique<PlainExportOptionsEditor>(OPUSOptions, listener);
-// #endif
-//     case FMT_WMA2:
-//         return std::make_unique<PlainExportOptionsEditor>(
-//             WMAOptions,
-//             ToSampleRateList(iWMASampleRates),
-//             listener);
-//     case FMT_OTHER:
-//         return {};//std::make_unique<ExportOptionsFFmpegCustomEditor>(listener);
-//     }
+    switch (AdjustFormatIndex(format)) {
+    case FMT_M4A:
+        return std::make_unique<PlainExportOptionsEditor>(AACOptions, listener);
+    case FMT_AC3:
+        return std::make_unique<PlainExportOptionsEditor>(
+            AC3Options,
+            ToSampleRateList(iAC3SampleRates),
+            listener);
+    case FMT_AMRNB:
+        return std::make_unique<PlainExportOptionsEditor>(
+            AMRNBOptions,
+            ExportOptionsEditor::SampleRateList { 8000 },
+            listener);
+#ifdef SHOW_FFMPEG_OPUS_EXPORT
+    case FMT_OPUS:
+        return std::make_unique<PlainExportOptionsEditor>(OPUSOptions, listener);
+#endif
+    case FMT_WMA2:
+        return std::make_unique<PlainExportOptionsEditor>(
+            WMAOptions,
+            ToSampleRateList(iWMASampleRates),
+            listener);
+    case FMT_OTHER:
+        // NOT IMPLEMENTED YET
+        return {};//return std::make_unique<ExportOptionsFFmpegCustomEditor>(listener);
+    }
     return {};
 }
 
@@ -978,7 +981,7 @@ bool FFmpegExporter::InitCodecs(int sampleRate,
     {
         int q = ExportPluginHelpers::GetParameterValue(parameters, AACOptionIDQuality, -99999);
 
-        // q = wxClip(q, 98 * mChannels, 160 * mChannels);
+        q = std::clamp(q, static_cast<int>(98 * mChannels), static_cast<int>(160 * mChannels));
         // Set bit rate to between 98 kbps and 320 kbps (if two channels)
         mEncAudioCodecCtx->SetBitRate(q * 1000);
         mEncAudioCodecCtx->SetProfile(AUDACITY_FF_PROFILE_AAC_LOW);

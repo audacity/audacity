@@ -159,14 +159,14 @@ StyledDialogView {
                 StyledDropdown {
                     id: formatDropdown
 
-                    Layout.preferredWidth: root.dropdownWidth
+                    Layout.preferredWidth: root.dropdownWidth * 0.6
 
                     textRole: "name"
                     valueRole: "code"
 
                     popupItemsCount: 11
                     currentIndex: indexOfValue(exportPreferencesModel.currentFormat)
-                    model: exportPreferencesModel.formatList
+                    model: exportPreferencesModel.formatsList
 
                     // navigation.name: "FormatBox"
                     // navigation.panel: root.navigation
@@ -209,6 +209,7 @@ StyledDialogView {
                             id: monoBtn
 
                             checked: exportPreferencesModel.exportChannels == ExportChannels.MONO
+                            enabled: exportPreferencesModel.maxExportChannels > 0
                             text: qsTrc("export", "Mono")
 
                             // navigation.name: "MonoBox"
@@ -224,6 +225,7 @@ StyledDialogView {
                         RoundedRadioButton {
 
                             checked: exportPreferencesModel.exportChannels == ExportChannels.STEREO
+                            enabled: exportPreferencesModel.maxExportChannels > 1
                             text: qsTrc("export", "Stereo")
 
                             // navigation.name: "StereoBox"
@@ -284,7 +286,7 @@ StyledDialogView {
                     indeterminateText: ""
 
                     onActivated: function(index, value) {
-                        exportPreferencesModel.exportSampleRateSelected(value)
+                        exportPreferencesModel.setExportSampleRate(value)
                     }
 
 
@@ -340,34 +342,6 @@ StyledDialogView {
                     // navigation.name: "TrimBlankSpaceBox"
                     // navigation.panel: root.navigation
                     // navigation.row: 1
-                    // navigation.column: 0
-
-                    onClicked: {}
-                }
-
-                CheckBox {
-                    width: parent.width
-
-                    text: qsTrc("export", "Include reverb tail after last clip")
-                    enabled: false
-
-                    // navigation.name: "IncludeReverbBox"
-                    // navigation.panel: root.navigation
-                    // navigation.row: 2
-                    // navigation.column: 0
-
-                    onClicked: {}
-                }
-
-                CheckBox {
-                    width: parent.width
-
-                    text: qsTrc("export", "Use dithering when converting between sample rates")
-                    enabled: false
-
-                    // navigation.name: "UseDitheringBox"
-                    // navigation.panel: root.navigation
-                    // navigation.row: 2
                     // navigation.column: 0
 
                     onClicked: {}

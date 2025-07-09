@@ -6,7 +6,7 @@
 #include <qobjectdefs.h>
 
 namespace au::importexport {
-enum class ProcessType {
+enum class ExportProcessType {
     FULL_PROJECT_AUDIO = 0,
     SELECTED_AUDIO,
     AUDIO_IN_LOOP_REGION,
@@ -20,7 +20,7 @@ class ExportChannelsPref
     Q_GADGET
 public:
     enum class ExportChannels {
-        MONO = 0,
+        MONO = 1,
         STEREO,
         CUSTOM
     };
