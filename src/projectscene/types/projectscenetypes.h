@@ -9,6 +9,7 @@
 #include "actions/actiontypes.h"
 #include "global/types/number.h"
 #include "trackedit/trackedittypes.h"
+#include "trackedit/dom/track.h"
 
 namespace au::projectscene {
 class TrackTypes

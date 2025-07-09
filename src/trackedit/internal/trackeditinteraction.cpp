@@ -71,9 +71,9 @@ bool TrackeditInteraction::changeClipColor(const ClipKey& clipKey, const std::st
     return m_interaction->changeClipColor(clipKey, color);
 }
 
-bool TrackeditInteraction::changeTrackColor(const TrackId trackId, const std::string& color)
+bool TrackeditInteraction::changeTracksColor(const TrackIdList& tracksIds, const std::string& color)
 {
-    return m_interaction->changeTrackColor(trackId, color);
+    return m_interaction->changeTracksColor(tracksIds, color);
 }
 
 bool TrackeditInteraction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
@@ -346,6 +346,13 @@ void TrackeditInteraction::ungroupClips(const ClipKeyList& clipKeyList)
 ClipKeyList TrackeditInteraction::clipsInGroup(int64_t id) const
 {
     return m_interaction->clipsInGroup(id);
+}
+
+bool TrackeditInteraction::changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format)
+{
+    return withProgress([&, this]() {
+        return withPlaybackStop(&ITrackeditInteraction::changeTracksFormat, tracksIds, format);
+    });
 }
 
 muse::ProgressPtr TrackeditInteraction::progress() const

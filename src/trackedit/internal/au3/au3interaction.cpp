@@ -8,6 +8,9 @@
 #include "TempoChange.h"
 #include "TimeWarper.h"
 #include "QualitySettings.h"
+#include "WaveTrackUtilities.h"
+#include "UserException.h"
+#include "PendingTracks.h"
 
 #include "global/types/number.h"
 #include "global/concurrency/concurrent.h"
@@ -877,23 +880,25 @@ bool Au3Interaction::changeClipColor(const ClipKey& clipKey, const std::string& 
     return true;
 }
 
-bool Au3Interaction::changeTrackColor(const TrackId trackId, const std::string& color)
+bool Au3Interaction::changeTracksColor(const TrackIdList& tracksIds, const std::string& color)
 {
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
+    for (const TrackId& trackId : tracksIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
 
-    auto& trackColor = TrackColor::Get(waveTrack);
-    trackColor.SetColor(muse::draw::Color::fromString(color));
+        auto& trackColor = TrackColor::Get(waveTrack);
+        trackColor.SetColor(muse::draw::Color::fromString(color));
 
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 
-    for (auto& clips: DomAccessor::waveClipsAsList(waveTrack)) {
-        //Set it back to auto
-        clips->SetColor("");
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clips.get()));
+        for (auto& clips: DomAccessor::waveClipsAsList(waveTrack)) {
+            //Set it back to auto
+            clips->SetColor("");
+            prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clips.get()));
+        }
     }
 
     return true;
@@ -1256,9 +1261,6 @@ bool Au3Interaction::removeClips(const ClipKeyList& clipKeyList, bool moveClips)
 
 bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
-    secs_t duration = end - begin;
-    secs_t start = begin;
-
     for (const TrackId& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -1826,8 +1828,6 @@ std::vector<ITrackDataPtr> Au3Interaction::splitCutSelectedOnTracks(const TrackI
 
 bool Au3Interaction::splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end)
 {
-    secs_t duration = end - begin;
-
     for (const auto& trackId : tracksIds) {
         bool ok = splitDeleteSelectedOnTrack(trackId, begin, end);
         if (!ok) {
@@ -2370,6 +2370,69 @@ ClipKeyList Au3Interaction::clipsInGroup(int64_t id) const
     }
 
     return groupedClips;
+}
+
+bool Au3Interaction::changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format)
+{
+    const size_t totalSamples = std::accumulate(tracksIds.begin(), tracksIds.end(), 0u, [this](size_t sum, const TrackId& trackId) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return sum;
+        }
+        return sum + WaveTrackUtilities::GetSequenceSamplesCount(*waveTrack).as_size_t();
+    });
+    size_t convertedSamples = 0;
+
+    progress()->start();
+
+    muse::ProgressResult result;
+    DEFER {
+        progress()->finish(result);
+    };
+
+    try {
+        for (const TrackId& trackId : tracksIds) {
+            Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+            IF_ASSERT_FAILED(waveTrack) {
+                return false;
+            }
+
+            sampleFormat newFormat;
+            switch (format) {
+            case au::trackedit::TrackFormat::Int16:
+                newFormat = sampleFormat::int16Sample;
+                break;
+            case au::trackedit::TrackFormat::Int24:
+                newFormat = sampleFormat::int24Sample;
+                break;
+            case au::trackedit::TrackFormat::Float32:
+                newFormat = sampleFormat::floatSample;
+                break;
+            case au::trackedit::TrackFormat::Undefined:
+            default:
+                return false;
+            }
+
+            if (!(waveTrack->GetSampleFormat() == newFormat)) {
+                waveTrack->ConvertToSampleFormat(newFormat,  [&](size_t sampleCnt) {
+                    if (progress()->isCanceled()) {
+                        throw UserException();
+                    }
+
+                    convertedSamples += sampleCnt;
+                    progress()->progress(convertedSamples, totalSamples, "");
+                });
+
+                trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+                prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+            }
+        }
+    }
+    catch (const UserException&) {
+        PendingTracks::Get(projectRef()).ClearPendingTracks();
+        return false;
+    }
+    return true;
 }
 
 muse::ProgressPtr Au3Interaction::progress() const

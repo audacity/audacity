@@ -109,9 +109,9 @@ bool TrackeditOperationController::changeClipColor(const ClipKey& clipKey, const
     return trackAndClipOperations()->changeClipColor(clipKey, color);
 }
 
-bool TrackeditOperationController::changeTrackColor(const TrackId trackId, const std::string& color)
+bool TrackeditOperationController::changeTracksColor(const TrackIdList& tracksIds, const std::string& color)
 {
-    if (trackAndClipOperations()->changeTrackColor(trackId, color)) {
+    if (trackAndClipOperations()->changeTracksColor(tracksIds, color)) {
         projectHistory()->pushHistoryState("Changed track color", "Changed track color");
         return true;
     }
@@ -215,8 +215,6 @@ bool TrackeditOperationController::copyContinuousTrackDataIntoClipboard(const Tr
 
 bool TrackeditOperationController::removeClip(const ClipKey& clipKey)
 {
-    secs_t begin = -1;
-    secs_t end = -1;
     if (const std::optional<TimeSpan> span = trackAndClipOperations()->removeClip(clipKey)) {
         pushProjectHistoryDeleteState(span->start(), span->duration());
         return true;
@@ -544,6 +542,15 @@ void TrackeditOperationController::ungroupClips(const trackedit::ClipKeyList& cl
 ClipKeyList TrackeditOperationController::clipsInGroup(int64_t id) const
 {
     return trackAndClipOperations()->clipsInGroup(id);
+}
+
+bool TrackeditOperationController::changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format)
+{
+    if (trackAndClipOperations()->changeTracksFormat(tracksIds, format)) {
+        projectHistory()->pushHistoryState("Changed track format", "Changed track format");
+        return true;
+    }
+    return false;
 }
 
 muse::ProgressPtr TrackeditOperationController::progress() const

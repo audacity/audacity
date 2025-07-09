@@ -7,6 +7,7 @@
 #include "global/types/secs.h"
 #include "modularity/ioc.h"
 #include "record/irecordcontroller.h"
+#include "au3wrap/internal/progressdialog.h"
 
 namespace au::trackedit {
 class TrackeditInteraction : public ITrackeditInteraction, public muse::Injectable
@@ -31,7 +32,7 @@ private:
     bool changeClipSpeed(const ClipKey& clipKey, double speed) override;
     bool resetClipSpeed(const ClipKey& clipKey) override;
     bool changeClipColor(const ClipKey& clipKey, const std::string& color) override;
-    bool changeTrackColor(const TrackId trackId, const std::string& color) override;
+    bool changeTracksColor(const TrackIdList& tracksIds, const std::string& color) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;
@@ -88,6 +89,8 @@ private:
     void ungroupClips(const trackedit::ClipKeyList& clipKeyList) override;
     ClipKeyList clipsInGroup(int64_t id) const override;
 
+    bool changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format) override;
+
     muse::ProgressPtr progress() const override;
 
 private:
@@ -99,6 +102,21 @@ private:
         }
         playback()->player()->stop();
         return (m_interaction.get()->*method)(std::forward<Args>(args)...);
+    }
+
+    template<typename Func, typename ... Args>
+    muse::Ret withProgress(Func&& method, Args&&... args) const
+    {
+        auto progressDialog = std::make_unique<ProgressDialog>();
+        progress()->progressChanged().onReceive(progressDialog.get(),
+                                                [&](int64_t current, int64_t total, const std::string&) {
+            const auto result = progressDialog->Poll(current, total);
+            if (result == ProgressResult::Cancelled) {
+                progress()->cancel();
+            }
+        });
+
+        return method(std::forward<Args>(args)...);
     }
 
     const std::unique_ptr<ITrackeditInteraction> m_interaction;

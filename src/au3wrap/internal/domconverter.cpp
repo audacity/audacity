@@ -14,7 +14,7 @@
 using namespace au::au3;
 
 namespace {
-static au::trackedit::TrackType trackType(const Au3Track* track)
+au::trackedit::TrackType trackType(const Au3Track* track)
 {
     if (dynamic_cast<const LabelTrack*>(track)) {
         return au::trackedit::TrackType::Label;
@@ -30,6 +30,25 @@ static au::trackedit::TrackType trackType(const Au3Track* track)
     }
 
     return au::trackedit::TrackType::Undefined;
+}
+
+au::trackedit::TrackFormat trackFormat(const Au3Track* track)
+{
+    const WaveTrack* waveTrack = dynamic_cast<const WaveTrack*>(track);
+    if (!waveTrack) {
+        return au::trackedit::TrackFormat::Undefined;
+    }
+
+    switch (waveTrack->GetSampleFormat()) {
+    case sampleFormat::int16Sample:
+        return au::trackedit::TrackFormat::Int16;
+    case sampleFormat::int24Sample:
+        return au::trackedit::TrackFormat::Int24;
+    case sampleFormat::floatSample:
+        return au::trackedit::TrackFormat::Float32;
+    default:
+        return au::trackedit::TrackFormat::Undefined;
+    }
 }
 }
 
@@ -65,6 +84,7 @@ au::trackedit::Track DomConverter::track(const Au3Track* waveTrack)
     au4t.title = wxToString(waveTrack->GetName());
     au4t.type = trackType(waveTrack);
     au4t.color = TrackColor::Get(waveTrack).GetColor();
+    au4t.format = trackFormat(waveTrack);
 
     return au4t;
 }

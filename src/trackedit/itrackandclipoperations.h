@@ -39,7 +39,7 @@ public:
     virtual bool changeClipSpeed(const ClipKey& clipKey, double speed) = 0;
     virtual bool resetClipSpeed(const ClipKey& clipKey) = 0;
     virtual bool changeClipColor(const ClipKey& clipKey, const std::string& color) = 0;
-    virtual bool changeTrackColor(const TrackId trackId, const std::string& color) = 0;
+    virtual bool changeTracksColor(const TrackIdList& trackId, const std::string& color) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
     virtual muse::Ret paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks,
@@ -90,6 +90,8 @@ public:
     virtual void groupClips(const trackedit::ClipKeyList& clipKeyList) = 0;
     virtual void ungroupClips(const trackedit::ClipKeyList& clipKeyList) = 0;
     virtual ClipKeyList clipsInGroup(int64_t id) const = 0;
+
+    virtual bool changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format) = 0;
 
     virtual muse::ProgressPtr progress() const = 0;
 };
