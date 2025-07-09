@@ -35,9 +35,10 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(QString directoryPath READ directoryPath NOTIFY directoryPathChanged)
 
     Q_PROPERTY(QString currentFormat READ currentFormat NOTIFY currentFormatChanged)
-    Q_PROPERTY(QVariantList formatList READ formatList NOTIFY formatListChanged)
+    Q_PROPERTY(QVariantList formatsList READ formatsList NOTIFY formatsListChanged)
 
     Q_PROPERTY(ExportChannelsPref::ExportChannels exportChannels READ exportChannels NOTIFY exportChannelsChanged)
+    Q_PROPERTY(int maxExportChannels READ maxExportChannels NOTIFY maxExportChannelsChanged)
     // TODO: add custom mapping as a separate property
 
     Q_PROPERTY(QString exportSampleRate READ exportSampleRate NOTIFY exportSampleRateChanged)
@@ -65,18 +66,19 @@ public:
 
     QString currentFormat() const;
     Q_INVOKABLE void setCurrentFormat(const QString& format);
-    QVariantList formatList() const;
+    QVariantList formatsList() const;
 
     ExportChannelsPref::ExportChannels exportChannels() const;
     Q_INVOKABLE void setExportChannels(ExportChannelsPref::ExportChannels exportChannels);
+    Q_INVOKABLE int maxExportChannels() const;
 
     QString exportSampleRate() const;
     QVariantList exportSampleRateList();
-    Q_INVOKABLE void exportSampleRateSelected(const QString& rate);
+    Q_INVOKABLE void setExportSampleRate(const QString& rate);
 
     QString exportSampleFormat() const;
     QVariantList exportSampleFormatList() const;
-    Q_INVOKABLE void exportSampleFormatSelected(const QString& format);
+    Q_INVOKABLE void setExportSampleFormat(const QString& format);
 
 signals:
     void currentProcessChanged();
@@ -85,14 +87,18 @@ signals:
     void fileExtensionChanged();
     void directoryPathChanged();
     void currentFormatChanged();
-    void formatListChanged();
+    void formatsListChanged();
     void exportChannelsChanged();
+    void maxExportChannelsChanged();
     void exportSampleRateChanged();
     void exportSampleRateListChanged();
     void exportSampleFormatChanged();
     void exportSampleFormatListChanged();
 
 private:
-    std::vector<std::pair<uint64_t, QString> > m_sampleRateMapping;
+    void updateCurrentSampleRate();
+    void updateExportChannels();
+
+    std::vector<std::pair<int, QString> > m_sampleRateMapping;
 };
 }

@@ -23,8 +23,8 @@ public:
 
     void init();
 
-    ProcessType process() const override;
-    void setProcess(ProcessType process) override;
+    ExportProcessType processType() const override;
+    void setProcess(ExportProcessType process) override;
     muse::async::Notification processChanged() const override;
 
     std::string filename() const override;
@@ -43,8 +43,8 @@ public:
     void setCurrentFormat(const std::string& format) override;
     muse::async::Notification currentFormatChanged() const override;
 
-    uint64_t exportSampleRate() const override;
-    void setExportSampleRate(uint64_t newRate) override;
+    int exportSampleRate() const override;
+    void setExportSampleRate(int newRate) override;
     muse::async::Notification exportSampleRateChanged() const override;
 
     std::vector<std::string> exportSampleFormatList() const override;

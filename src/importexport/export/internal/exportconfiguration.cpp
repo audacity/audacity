@@ -25,7 +25,7 @@ static const muse::Settings::Key EXPORT_ENCODING(module_name, "importexport/enco
 
 void ExportConfiguration::init()
 {
-    muse::settings()->setDefaultValue(EXPORT_PROCESS, muse::Val(ProcessType::FULL_PROJECT_AUDIO));
+    muse::settings()->setDefaultValue(EXPORT_PROCESS, muse::Val(ExportProcessType::FULL_PROJECT_AUDIO));
     muse::settings()->valueChanged(EXPORT_PROCESS).onReceive(nullptr, [this] (const muse::Val& val) {
         m_processChanged.notify();
     });
@@ -41,8 +41,8 @@ void ExportConfiguration::init()
         m_directoryPathChanged.notify();
     });
 
-    if (!exporter()->formatList().empty()) {
-        muse::settings()->setDefaultValue(EXPORT_FORMAT, muse::Val(exporter()->formatList().at(0)));
+    if (!exporter()->formatsList().empty()) {
+        muse::settings()->setDefaultValue(EXPORT_FORMAT, muse::Val(exporter()->formatsList().at(0)));
     }
     muse::settings()->valueChanged(EXPORT_FORMAT).onReceive(nullptr, [this] (const muse::Val& val) {
         m_currentFormatChanged.notify();
@@ -53,18 +53,18 @@ void ExportConfiguration::init()
         m_exportChannelsChanged.notify();
     });
 
-    muse::settings()->setDefaultValue(EXPORT_SAMPLE_RATE, muse::Val("44100"));
+    muse::settings()->setDefaultValue(EXPORT_SAMPLE_RATE, muse::Val(static_cast<int>(audioDevicesProvider()->defaultSampleRate())));
     muse::settings()->valueChanged(EXPORT_SAMPLE_RATE).onReceive(nullptr, [this] (const muse::Val& val) {
         m_exportSampleRateChanged.notify();
     });
 }
 
-ProcessType ExportConfiguration::process() const
+ExportProcessType ExportConfiguration::processType() const
 {
-    return muse::settings()->value(EXPORT_PROCESS).toEnum<ProcessType>();
+    return muse::settings()->value(EXPORT_PROCESS).toEnum<ExportProcessType>();
 }
 
-void ExportConfiguration::setProcess(ProcessType process)
+void ExportConfiguration::setProcess(ExportProcessType process)
 {
     muse::settings()->setSharedValue(EXPORT_PROCESS, muse::Val(process));
 }
@@ -134,12 +134,12 @@ muse::async::Notification ExportConfiguration::currentFormatChanged() const
     return m_currentFormatChanged;
 }
 
-uint64_t ExportConfiguration::exportSampleRate() const
+int ExportConfiguration::exportSampleRate() const
 {
     return muse::settings()->value(EXPORT_SAMPLE_RATE).toInt();
 }
 
-void ExportConfiguration::setExportSampleRate(uint64_t newRate)
+void ExportConfiguration::setExportSampleRate(int newRate)
 {
     muse::settings()->setSharedValue(EXPORT_SAMPLE_RATE, muse::Val(static_cast<int>(newRate)));
 }
