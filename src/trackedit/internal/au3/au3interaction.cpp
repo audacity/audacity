@@ -9,6 +9,8 @@
 #include "TimeWarper.h"
 #include "QualitySettings.h"
 #include "WaveTrackUtilities.h"
+#include "UserException.h"
+#include "PendingTracks.h"
 
 #include "global/types/number.h"
 #include "global/concurrency/concurrent.h"
@@ -2388,39 +2390,48 @@ bool Au3Interaction::changeTracksFormat(const TrackIdList& tracksIds, trackedit:
         progress()->finish(result);
     };
 
-    for (const TrackId& trackId : tracksIds) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            return false;
-        }
+    try {
+        for (const TrackId& trackId : tracksIds) {
+            Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+            IF_ASSERT_FAILED(waveTrack) {
+                return false;
+            }
 
-        sampleFormat newFormat;
-        switch (format) {
-        case au::trackedit::TrackFormat::Int16:
-            newFormat = sampleFormat::int16Sample;
-            break;
-        case au::trackedit::TrackFormat::Int24:
-            newFormat = sampleFormat::int24Sample;
-            break;
-        case au::trackedit::TrackFormat::Float32:
-            newFormat = sampleFormat::floatSample;
-            break;
-        case au::trackedit::TrackFormat::Undefined:
-        default:
-            return false;
-        }
+            sampleFormat newFormat;
+            switch (format) {
+            case au::trackedit::TrackFormat::Int16:
+                newFormat = sampleFormat::int16Sample;
+                break;
+            case au::trackedit::TrackFormat::Int24:
+                newFormat = sampleFormat::int24Sample;
+                break;
+            case au::trackedit::TrackFormat::Float32:
+                newFormat = sampleFormat::floatSample;
+                break;
+            case au::trackedit::TrackFormat::Undefined:
+            default:
+                return false;
+            }
 
-        if (!(waveTrack->GetSampleFormat() == newFormat)) {
-            waveTrack->ConvertToSampleFormat(newFormat,  [&](size_t sampleCnt) {
-                convertedSamples += sampleCnt;
-                progress()->progress(convertedSamples, totalSamples, "");
-            });
+            if (!(waveTrack->GetSampleFormat() == newFormat)) {
+                waveTrack->ConvertToSampleFormat(newFormat,  [&](size_t sampleCnt) {
+                    if (progress()->isCanceled()) {
+                        throw UserException();
+                    }
 
-            trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+                    convertedSamples += sampleCnt;
+                    progress()->progress(convertedSamples, totalSamples, "");
+                });
+
+                trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+                prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+            }
         }
     }
-
+    catch (const UserException&) {
+        PendingTracks::Get(projectRef()).ClearPendingTracks();
+        return false;
+    }
     return true;
 }
 

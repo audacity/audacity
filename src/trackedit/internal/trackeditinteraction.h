@@ -110,7 +110,10 @@ private:
         auto progressDialog = std::make_unique<ProgressDialog>();
         progress()->progressChanged().onReceive(progressDialog.get(),
                                                 [&](int64_t current, int64_t total, const std::string&) {
-            progressDialog->Poll(current, total);
+            const auto result = progressDialog->Poll(current, total);
+            if (result == ProgressResult::Cancelled) {
+                progress()->cancel();
+            }
         });
 
         return method(std::forward<Args>(args)...);
