@@ -49,6 +49,7 @@ private:
 
     void updateColorCheckedState();
     void updateTrackFormatState();
+    void updateTrackRateState();
 
     trackedit::TrackId m_trackId;
     muse::actions::ActionCodeList m_colorChangeActionCodeList;
