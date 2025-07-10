@@ -432,10 +432,11 @@ void TrackeditUiActions::init()
         m_actions.push_back(std::move(formatAction));
     }
 
-    for (const auto& sampleRate : availableTrackSampleRates()) {
+    for (const auto& sampleRate : audioDevicesProvider()->availableSampleRateList()) {
         UiAction rateAction;
         rateAction.code
-            = muse::actions::ActionQuery(muse::String(TRACK_RATE_CHANGE_ACTION).arg(muse::String::number(sampleRate))).toString();
+            = muse::actions::ActionQuery(muse::String(TRACK_RATE_CHANGE_ACTION).arg(muse::String::number(static_cast<int>(sampleRate)))).
+              toString();
         rateAction.uiCtx = context::UiCtxAny;
         rateAction.scCtx = context::CTX_ANY;
         rateAction.description = muse::TranslatableString("action", "Change track sample rate");

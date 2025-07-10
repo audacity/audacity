@@ -16,6 +16,8 @@ constexpr const char* TRACK_COLOR_MENU_ID = "trackColorMenu";
 constexpr const char* TRACK_FORMAT_MENU_ID = "trackFormatMenu";
 constexpr const char* TRACK_RATE_MENU_ID = "trackRateMenu";
 
+constexpr const char* TRANSLATABLE_STRING_CONTEXT = "trackcontextmenu";
+
 //! NOTE: can be moved to the framework
 bool containsAny(const ActionCodeList& list, const ActionCodeList& actionCodes)
 {
@@ -30,9 +32,9 @@ muse::actions::ActionQuery makeTrackFormatChangeAction(const au::trackedit::Trac
                                           muse::String::number(static_cast<int>(format))));
 }
 
-muse::actions::ActionQuery makeTrackRateChangeAction(int rate)
+muse::actions::ActionQuery makeTrackRateChangeAction(uint64_t rate)
 {
-    return muse::actions::ActionQuery(muse::String(TRACK_RATE_CHANGE_ACTION).arg(muse::String::number(rate)));
+    return muse::actions::ActionQuery(muse::String(TRACK_RATE_CHANGE_ACTION).arg(muse::String::number(static_cast<int>(rate))));
 }
 }
 
@@ -50,17 +52,17 @@ MenuItemList TrackContextMenuModel::makeStereoTrackItems()
         makeItemWithArg("track-duplicate"),
         makeItemWithArg("track-delete"),
         makeSeparator(),
-        makeMenu(muse::TranslatableString("track menu", "Move track"), makeTrackMoveItems()),
-        makeMenu(muse::TranslatableString("track view", "Track view"), makeTrackViewItems()),
-        makeMenu(muse::TranslatableString("track color", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
-        makeMenu(muse::TranslatableString("track ruler", "Rulers"), makeTrackRulerItems()),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Move track"), makeTrackMoveItems()),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track view"), makeTrackViewItems()),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Rulers"), makeTrackRulerItems()),
         makeSeparator(),
         makeItemWithArg("track-swap-channels"),
         makeItemWithArg("track-split-stereo-to-lr"),
         makeItemWithArg("track-split-stereo-to-center"),
         makeSeparator(),
-        makeMenu(muse::TranslatableString("track format", "Format:"), makeTrackFormatItems(), TRACK_FORMAT_MENU_ID),
-        makeMenu(muse::TranslatableString("track rate", "Rate:"), makeTrackRateItems(), TRACK_RATE_MENU_ID),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Format:"), makeTrackFormatItems(), TRACK_FORMAT_MENU_ID),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Rate:"), makeTrackRateItems(), TRACK_RATE_MENU_ID),
         makeItemWithArg("track-resample"),
     };
 
@@ -74,15 +76,15 @@ MenuItemList TrackContextMenuModel::makeMonoTrackItems()
         makeItemWithArg("track-duplicate"),
         makeItemWithArg("track-delete"),
         makeSeparator(),
-        makeMenu(muse::TranslatableString("track menu", "Move track"), makeTrackMoveItems()),
-        makeMenu(muse::TranslatableString("track view", "Track view"), makeTrackViewItems()),
-        makeMenu(muse::TranslatableString("track color", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
-        makeMenu(muse::TranslatableString("track ruler", "Rulers"), makeTrackRulerItems()),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Move track"), makeTrackMoveItems()),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track view"), makeTrackViewItems()),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Rulers"), makeTrackRulerItems()),
         makeSeparator(),
         makeItemWithArg("track-make-stereo"),
         makeSeparator(),
-        makeMenu(muse::TranslatableString("track format", "Format:"), makeTrackFormatItems(), TRACK_FORMAT_MENU_ID),
-        makeMenu(muse::TranslatableString("track rate", "Rate:"), makeTrackRateItems(), TRACK_RATE_MENU_ID),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Format:"), makeTrackFormatItems(), TRACK_FORMAT_MENU_ID),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Rate:"), makeTrackRateItems(), TRACK_RATE_MENU_ID),
         makeItemWithArg("track-resample"),
     };
 
@@ -173,7 +175,7 @@ void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCod
         }
     }
 
-    for (const int rate : trackedit::availableTrackSampleRates()) {
+    for (const auto& rate : audioDevicesProvider()->availableSampleRateList()) {
         if (std::find(codes.begin(), codes.end(), makeTrackRateChangeAction(rate).toString()) != codes.end()) {
             updateTrackRateState();
         }
@@ -230,7 +232,7 @@ void TrackContextMenuModel::updateTrackFormatState()
 
         item.setChecked(true);
         MenuItem& menu = findMenu(QString::fromUtf8(TRACK_FORMAT_MENU_ID));
-        menu.setTitle(muse::TranslatableString("track format", "Format: %1")
+        menu.setTitle(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Format: %1")
                       .arg(muse::String(formatInfo.description)));
     }
 }
@@ -248,7 +250,7 @@ void TrackContextMenuModel::updateTrackRateState()
     }
 
     bool isOnAvailableRates = false;
-    for (const int rate : trackedit::availableTrackSampleRates()) {
+    for (const auto& rate : audioDevicesProvider()->availableSampleRateList()) {
         MenuItem& item = findItem(makeTrackRateChangeAction(rate).toString());
         if (track.value().rate != rate) {
             item.setChecked(false);
@@ -263,8 +265,8 @@ void TrackContextMenuModel::updateTrackRateState()
     customRateItem.setChecked(!isOnAvailableRates);
 
     MenuItem& menu = findMenu(QString::fromUtf8(TRACK_RATE_MENU_ID));
-    menu.setTitle(muse::TranslatableString("track rate", "Rate: %1 Hz")
-                  .arg(muse::String::number(track.value().rate)));
+    menu.setTitle(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Rate: %1 Hz")
+                  .arg(muse::String::number(static_cast<int>(track.value().rate))));
 }
 
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackColorItems()
@@ -275,7 +277,7 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackColorItems()
     const auto& colors = projectSceneConfiguration()->clipColors();
     for (const auto& color : colors) {
         items << makeMenuItem(makeTrackColorChangeAction(color.second).toString(),
-                              muse::TranslatableString("track", muse::String::fromStdString(color.first)));
+                              muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, muse::String::fromStdString(color.first)));
         m_colorChangeActionCodeList.push_back(makeTrackColorChangeAction(color.second).toString());
     }
 
@@ -287,7 +289,7 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackFormatItems()
     muse::uicomponents::MenuItemList items;
     for (const auto& formatInfo : trackedit::availableTrackFormats()) {
         items << makeMenuItem(makeTrackFormatChangeAction(formatInfo.format).toString(),
-                              muse::TranslatableString("track", muse::String(formatInfo.description)));
+                              muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, muse::String(formatInfo.description)));
     }
     return items;
 }
@@ -295,9 +297,9 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackFormatItems()
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackRateItems()
 {
     muse::uicomponents::MenuItemList items;
-    for (const int rate : trackedit::availableTrackSampleRates()) {
+    for (const auto& rate : audioDevicesProvider()->availableSampleRateList()) {
         items << makeMenuItem(makeTrackRateChangeAction(rate).toString(),
-                              muse::TranslatableString("track", muse::String::number(rate) + " Hz"));
+                              muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, muse::String::number(static_cast<int>(rate)) + " Hz"));
     }
     items << makeSeparator();
     items << makeItemWithArg("track-change-rate-custom");
