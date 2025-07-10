@@ -247,6 +247,12 @@ void TracksListModel::requestTracksMove(QVariantList trackIndexes, int to)
 bool TracksListModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent,
                                int destinationChild)
 {
+    UNUSED(sourceParent);
+    UNUSED(sourceRow);
+    UNUSED(count);
+    UNUSED(destinationParent);
+    UNUSED(destinationChild);
+
     setLoadingBlocked(true);
 
     // todo: move
