@@ -498,7 +498,9 @@ void WaveClip::SwapChannels()
     for (auto& pCutline : mCutLines) {
         pCutline->SwapChannels();
     }
+    mVersion++;
     assert(CheckInvariants());
+    MarkChanged();
 }
 
 void WaveClip::TransferSequence(WaveClip& origClip, WaveClip& newClip)
