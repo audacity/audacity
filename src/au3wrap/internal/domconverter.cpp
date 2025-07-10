@@ -55,7 +55,7 @@ int trackRate(const Au3Track* track)
 {
     const WaveTrack* waveTrack = dynamic_cast<const WaveTrack*>(track);
     if (!waveTrack) {
-        return 1;
+        return -1;
     }
     return waveTrack->GetRate();
 }

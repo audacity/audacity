@@ -2310,7 +2310,7 @@ TEST_F(Au3InteractionTests, changeTrackRate)
     const bool ret = m_au3Interaction->changeTracksRate({ trackId }, SAMPLE_RATE / 10);
     ASSERT_TRUE(ret) << "Failed to change the track rate";
 
-    ASSERT_EQ(track->GetRate(), SAMPLE_RATE / 10) << "The track sample rate is not 44100 Hz";
+    ASSERT_EQ(track->GetRate(), SAMPLE_RATE / 10) << "The track sample rate is not 4410 Hz";
 
     //The start time and end time of the clip should be adjusted accordingly
     const WaveTrack::IntervalConstHolder firstClip = track->GetSortedClipByIndex(0);

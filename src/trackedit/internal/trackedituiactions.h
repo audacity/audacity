@@ -8,11 +8,13 @@
 #include "modularity/ioc.h"
 #include "context/iuicontextresolver.h"
 #include "async/asyncable.h"
+#include "playback/iaudiodevicesprovider.h"
 
 namespace au::trackedit {
 class TrackeditUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
 {
-    INJECT(context::IUiContextResolver, uicontextResolver)
+    muse::Inject<context::IUiContextResolver> uicontextResolver;
+    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     TrackeditUiActions(std::shared_ptr<TrackeditActionsController> controller);

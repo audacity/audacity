@@ -8,6 +8,7 @@
 #include "iprojectsceneconfiguration.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/iprojecthistory.h"
+#include "playback/iaudiodevicesprovider.h"
 
 namespace au::projectscene {
 class TrackContextMenuModel : public muse::uicomponents::AbstractMenuModel
@@ -16,6 +17,7 @@ class TrackContextMenuModel : public muse::uicomponents::AbstractMenuModel
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
     Q_PROPERTY(trackedit::TrackId trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
 
