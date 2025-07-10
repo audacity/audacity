@@ -2291,4 +2291,34 @@ TEST_F(Au3InteractionTests, changeTrackFormat)
     // Cleanup
     removeTrack(trackId);
 }
+
+TEST_F(Au3InteractionTests, changeTrackRate)
+{
+    static constexpr int SAMPLE_RATE = 44100;
+
+    //! [GIVEN] There is a project with a track and a single clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_EQ(track->GetRate(), SAMPLE_RATE) << "The sample rate of the new track is not the default";
+
+    //! [EXPECT] The project is notified about track changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(1);
+
+    //! [WHEN] Change the track rate to 1 / 10 of the original rate
+    const bool ret = m_au3Interaction->changeTracksRate({ trackId }, SAMPLE_RATE / 10);
+    ASSERT_TRUE(ret) << "Failed to change the track rate";
+
+    ASSERT_EQ(track->GetRate(), SAMPLE_RATE / 10) << "The track sample rate is not 44100 Hz";
+
+    //The start time and end time of the clip should be adjusted accordingly
+    const WaveTrack::IntervalConstHolder firstClip = track->GetSortedClipByIndex(0);
+    ASSERT_NE(firstClip, nullptr) << "The first clip is not found";
+    ValidateClipProperties(firstClip, TRACK_SILENCE_AT_END_CLIP_START, TRACK_SILENCE_AT_END_CLIP_END * 10,
+                           TRACK_SILENCE_AT_END_CLIP_START, TRACK_SILENCE_AT_END_CLIP_END * 10);
+
+    // Cleanup
+    removeTrack(trackId);
+}
 }
