@@ -173,7 +173,7 @@ void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCod
         }
     }
 
-    for (int rate : trackedit::availableTrackSampleRates()) {
+    for (const int rate : trackedit::availableTrackSampleRates()) {
         if (std::find(codes.begin(), codes.end(), makeTrackRateChangeAction(rate).toString()) != codes.end()) {
             updateTrackRateState();
         }
@@ -242,13 +242,13 @@ void TrackContextMenuModel::updateTrackRateState()
         return;
     }
 
-    auto track = project->trackeditProject()->track(m_trackId);
+    const auto track = project->trackeditProject()->track(m_trackId);
     if (!track.has_value()) {
         return;
     }
 
     bool isOnAvailableRates = false;
-    for (int rate : trackedit::availableTrackSampleRates()) {
+    for (const int rate : trackedit::availableTrackSampleRates()) {
         MenuItem& item = findItem(makeTrackRateChangeAction(rate).toString());
         if (track.value().rate != rate) {
             item.setChecked(false);
@@ -295,7 +295,7 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackFormatItems()
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackRateItems()
 {
     muse::uicomponents::MenuItemList items;
-    for (int rate : trackedit::availableTrackSampleRates()) {
+    for (const int rate : trackedit::availableTrackSampleRates()) {
         items << makeMenuItem(makeTrackRateChangeAction(rate).toString(),
                               muse::TranslatableString("track", muse::String::number(rate) + " Hz"));
     }

@@ -11,7 +11,6 @@
 #include "WaveTrackUtilities.h"
 #include "UserException.h"
 #include "PendingTracks.h"
-#include "SyncLock.h"
 
 #include "global/types/number.h"
 #include "global/concurrency/concurrent.h"

@@ -1079,7 +1079,7 @@ void TrackeditActionsController::moveTracksToBottom(const muse::actions::ActionD
 
 void TrackeditActionsController::swapStereoChannels(const muse::actions::ActionData&)
 {
-    TrackIdList trackIds = selectionController()->selectedTracks();
+    const TrackIdList trackIds = selectionController()->selectedTracks();
     if (trackIds.empty()) {
         return;
     }
@@ -1089,7 +1089,7 @@ void TrackeditActionsController::swapStereoChannels(const muse::actions::ActionD
 
 void TrackeditActionsController::splitStereoToLR(const muse::actions::ActionData&)
 {
-    TrackIdList trackIds = selectionController()->selectedTracks();
+    const TrackIdList trackIds = selectionController()->selectedTracks();
     if (trackIds.empty()) {
         return;
     }
@@ -1099,7 +1099,7 @@ void TrackeditActionsController::splitStereoToLR(const muse::actions::ActionData
 
 void TrackeditActionsController::splitStereoToCenter(const muse::actions::ActionData&)
 {
-    TrackIdList trackIds = selectionController()->selectedTracks();
+    const TrackIdList trackIds = selectionController()->selectedTracks();
     if (trackIds.empty()) {
         return;
     }
@@ -1270,17 +1270,22 @@ void TrackeditActionsController::setTrackFormat(const muse::actions::ActionQuery
 
 void TrackeditActionsController::setCustomTrackRate(const muse::actions::ActionData&)
 {
-    TrackIdList tracks = selectionController()->selectedTracks();
+    const TrackIdList tracks = selectionController()->selectedTracks();
     if (tracks.empty()) {
         return;
     }
 
     RetVal<Val> rv = interactive()->openSync("audacity://trackedit/custom_rate");
-    if (rv.ret.code() == static_cast<int>(Ret::Code::Cancel)) {
+    if (rv.ret.code() != static_cast<int>(Ret::Code::Ok)) {
         return;
     }
 
-    trackeditInteraction()->changeTracksRate(tracks, rv.val.toInt());
+    const auto customRate = rv.val.toInt();
+    if (customRate <= 0) {
+        return;
+    }
+
+    trackeditInteraction()->changeTracksRate(tracks, customRate);
 }
 
 void TrackeditActionsController::setTrackRate(const muse::actions::ActionQuery& q)
