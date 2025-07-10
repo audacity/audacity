@@ -553,6 +553,42 @@ bool TrackeditOperationController::changeTracksFormat(const TrackIdList& tracksI
     return false;
 }
 
+bool TrackeditOperationController::changeTracksRate(const TrackIdList& tracksIds, int rate)
+{
+    if (trackAndClipOperations()->changeTracksRate(tracksIds, rate)) {
+        projectHistory()->pushHistoryState("Changed track rate", "Changed track rate");
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::swapStereoChannels(const TrackIdList& tracksIds)
+{
+    if (trackAndClipOperations()->swapStereoChannels(tracksIds)) {
+        projectHistory()->pushHistoryState("Swapped stereo channels", "Swapped stereo channels");
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::splitStereoTracksToLRMono(const TrackIdList& tracksIds)
+{
+    if (trackAndClipOperations()->splitStereoTracksToLRMono(tracksIds)) {
+        projectHistory()->pushHistoryState("Split stereo tracks to L/R mono", "Split stereo tracks to L/R mono");
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::splitStereoTracksToCenterMono(const TrackIdList& tracksIds)
+{
+    if (trackAndClipOperations()->splitStereoTracksToCenterMono(tracksIds)) {
+        projectHistory()->pushHistoryState("Split stereo tracks to center mono", "Split stereo tracks to center mono");
+        return true;
+    }
+    return false;
+}
+
 muse::ProgressPtr TrackeditOperationController::progress() const
 {
     return trackAndClipOperations()->progress();

@@ -92,6 +92,11 @@ public:
     virtual ClipKeyList clipsInGroup(int64_t id) const = 0;
 
     virtual bool changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format) = 0;
+    virtual bool changeTracksRate(const TrackIdList& tracksIds, int rate) = 0;
+
+    virtual bool swapStereoChannels(const TrackIdList& tracksIds) = 0;
+    virtual bool splitStereoTracksToLRMono(const TrackIdList& tracksIds) = 0;
+    virtual bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) = 0;
 
     virtual muse::ProgressPtr progress() const = 0;
 };

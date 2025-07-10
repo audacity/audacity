@@ -119,12 +119,18 @@ private:
     void openClipPitchAndSpeed();
     void renderClipPitchAndSpeed(const muse::actions::ActionData& args);
 
+    void swapStereoChannels(const muse::actions::ActionData& args);
+    void splitStereoToLR(const muse::actions::ActionData& args);
+    void splitStereoToCenter(const muse::actions::ActionData& args);
+    void setCustomTrackRate(const muse::actions::ActionData& args);
+
     void groupClips();
     void ungroupClips();
 
     void setClipColor(const muse::actions::ActionQuery& q);
     void setTrackColor(const muse::actions::ActionQuery& q);
     void setTrackFormat(const muse::actions::ActionQuery& q);
+    void setTrackRate(const muse::actions::ActionQuery& q);
 
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;

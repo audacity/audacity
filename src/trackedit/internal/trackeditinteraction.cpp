@@ -355,6 +355,26 @@ bool TrackeditInteraction::changeTracksFormat(const TrackIdList& tracksIds, trac
     });
 }
 
+bool TrackeditInteraction::changeTracksRate(const TrackIdList& tracksIds, int rate)
+{
+    return withPlaybackStop(&ITrackeditInteraction::changeTracksRate, tracksIds, rate);
+}
+
+bool TrackeditInteraction::swapStereoChannels(const TrackIdList& tracksIds)
+{
+    return withPlaybackStop(&ITrackeditInteraction::swapStereoChannels, tracksIds);
+}
+
+bool TrackeditInteraction::splitStereoTracksToLRMono(const TrackIdList& tracksIds)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitStereoTracksToLRMono, tracksIds);
+}
+
+bool TrackeditInteraction::splitStereoTracksToCenterMono(const TrackIdList& tracksIds)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitStereoTracksToCenterMono, tracksIds);
+}
+
 muse::ProgressPtr TrackeditInteraction::progress() const
 {
     return m_interaction->progress();

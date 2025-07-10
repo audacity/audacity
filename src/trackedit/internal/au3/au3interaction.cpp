@@ -11,6 +11,7 @@
 #include "WaveTrackUtilities.h"
 #include "UserException.h"
 #include "PendingTracks.h"
+#include "SyncLock.h"
 
 #include "global/types/number.h"
 #include "global/concurrency/concurrent.h"
@@ -2432,6 +2433,103 @@ bool Au3Interaction::changeTracksFormat(const TrackIdList& tracksIds, trackedit:
         PendingTracks::Get(projectRef()).ClearPendingTracks();
         return false;
     }
+    return true;
+}
+
+bool Au3Interaction::changeTracksRate(const TrackIdList& tracksIds, int rate)
+{
+    for (const TrackId& trackId : tracksIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        if (waveTrack->GetRate() == rate) {
+            continue;
+        }
+        waveTrack->SetRate(rate);
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    }
+
+    return true;
+}
+
+bool Au3Interaction::swapStereoChannels(const TrackIdList& tracksIds)
+{
+    for (const TrackId& trackId : tracksIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        if (waveTrack->Channels().size() != 2) {
+            LOGW() << "Cannot swap stereo channels on a non-stereo track: " << trackId;
+            continue;
+        }
+
+        waveTrack->SwapChannels();
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    }
+
+    return true;
+}
+
+bool Au3Interaction::splitStereoTracksToLRMono(const TrackIdList& tracksIds)
+{
+    for (const TrackId& trackId : tracksIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        if (waveTrack->Channels().size() != 2) {
+            LOGW() << "Cannot split stereo channels on a non-stereo track: " << trackId;
+            continue;
+        }
+
+        const std::vector<WaveTrack::Holder> unlinkedTracks = waveTrack->SplitChannels();
+        IF_ASSERT_FAILED(unlinkedTracks.size() == 2) {
+            LOGW() << "Failed to split stereo channels on track: " << trackId;
+            continue;
+        }
+
+        unlinkedTracks[0]->SetPan(-1.0f);
+        unlinkedTracks[1]->SetPan(1.0f);
+
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackChanged(DomConverter::track(unlinkedTracks[0].get()));
+        prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[1].get()));
+    }
+
+    return true;
+}
+
+bool Au3Interaction::splitStereoTracksToCenterMono(const TrackIdList& tracksIds)
+{
+    for (const TrackId& trackId : tracksIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        if (waveTrack->Channels().size() != 2) {
+            LOGW() << "Cannot split stereo channels on a non-stereo track: " << trackId;
+            continue;
+        }
+
+        const std::vector<WaveTrack::Holder> unlinkedTracks = waveTrack->SplitChannels();
+        IF_ASSERT_FAILED(unlinkedTracks.size() == 2) {
+            LOGW() << "Failed to split stereo channels on track: " << trackId;
+            continue;
+        }
+
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackChanged(DomConverter::track(unlinkedTracks[0].get()));
+        prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[1].get()));
+    }
+
     return true;
 }
 
