@@ -14,9 +14,11 @@ using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
 
-constexpr static const char16_t* TRACK_FORMAT_CHANGE_ACTION = u"action://trackedit/track/change-format?format=%1";
+namespace {
+constexpr const char16_t* TRACK_FORMAT_CHANGE_ACTION = u"action://trackedit/track/change-format?format=%1";
+constexpr const char16_t* TRACK_RATE_CHANGE_ACTION = u"action://trackedit/track/change-rate?rate=%1";
 
-static UiActionList STATIC_ACTIONS = {
+UiActionList STATIC_ACTIONS = {
     UiAction("toggle-loop-region",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -202,6 +204,13 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Move track to bottom"),
              TranslatableString("action", "Move track to bottom")
              ),
+    UiAction("track-change-rate-custom",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Other"),
+             TranslatableString("action", "Other"),
+             Checkable::Yes
+             ),
     UiAction("track-make-stereo",
              //! TODO: Change context when making stereo tracks is implemented
              au::context::UiCtxUnknown,
@@ -209,29 +218,20 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Make stereo track"),
              TranslatableString("action", "Make stereo track")
              ),
-    UiAction("track-swap-stereo",
-             //! TODO: Change context when swapping stereo channels is implemented
-             au::context::UiCtxUnknown,
+    UiAction("track-swap-channels",
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Swap stereo channels"),
              TranslatableString("action", "Swap stereo channels")
              ),
-    UiAction("track-split-stereo",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Split stereo"),
-             TranslatableString("action", "Split stereo")
-             ),
     UiAction("track-split-stereo-to-lr",
-             //! TODO: Change context when splitting stereo  to L/R mono is implemented
-             au::context::UiCtxUnknown,
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Split stereo to L/R mono"),
              TranslatableString("action", "Split stereo to L/R mono")
              ),
     UiAction("track-split-stereo-to-center",
-             //! TODO: Change context when splitting stereo to center mono is implemented
-             au::context::UiCtxUnknown,
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Split stereo to center mono"),
              TranslatableString("action", "Split stereo to center mono")
@@ -287,18 +287,6 @@ static UiActionList STATIC_ACTIONS = {
              au::context::CTX_ANY,
              TranslatableString("action", "Enable vertical rulers"),
              TranslatableString("action", "Enable vertical rulers")
-             ),
-    UiAction("track-rate-8000",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "8000 Hz"),
-             TranslatableString("action", "8000 Hz")
-             ),
-    UiAction("track-rate-44100",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "44100 Hz"),
-             TranslatableString("action", "44100 Hz")
              ),
     UiAction("paste",
              au::context::UiCtxAny,
@@ -421,6 +409,7 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Ungroup clips")
              ),
 };
+}
 
 TrackeditUiActions::TrackeditUiActions(std::shared_ptr<TrackeditActionsController> controller)
     : m_actions(STATIC_ACTIONS), m_controller(controller)
@@ -429,18 +418,31 @@ TrackeditUiActions::TrackeditUiActions(std::shared_ptr<TrackeditActionsControlle
 
 void TrackeditUiActions::init()
 {
-    const std::vector<TrackFormat> formatList { TrackFormat::Int16, TrackFormat::Int24, TrackFormat::Float32 };
-    for (const auto& format : formatList) {
+    for (const auto& formatInfo : availableTrackFormats()) {
         UiAction formatAction;
         formatAction.code
-            = muse::actions::ActionQuery(muse::String(TRACK_FORMAT_CHANGE_ACTION).arg(muse::String::number(static_cast<int>(format)))).
-              toString();
+            = muse::actions::ActionQuery(muse::String(TRACK_FORMAT_CHANGE_ACTION).arg(muse::String::number(static_cast<int>(formatInfo.
+                                                                                                                            format))))
+              .toString();
         formatAction.uiCtx = context::UiCtxAny;
         formatAction.scCtx = context::CTX_ANY;
         formatAction.description = muse::TranslatableString("action", "Change track format");
         formatAction.title = muse::TranslatableString("action", "Change track format");
         formatAction.checkable = Checkable::Yes;
         m_actions.push_back(std::move(formatAction));
+    }
+
+    for (const auto& sampleRate : audioDevicesProvider()->availableSampleRateList()) {
+        UiAction rateAction;
+        rateAction.code
+            = muse::actions::ActionQuery(muse::String(TRACK_RATE_CHANGE_ACTION).arg(muse::String::number(static_cast<int>(sampleRate)))).
+              toString();
+        rateAction.uiCtx = context::UiCtxAny;
+        rateAction.scCtx = context::CTX_ANY;
+        rateAction.description = muse::TranslatableString("action", "Change track sample rate");
+        rateAction.title = muse::TranslatableString("action", "Change track sample rate");
+        rateAction.checkable = Checkable::Yes;
+        m_actions.push_back(std::move(rateAction));
     }
 
     m_controller->actionEnabledChanged().onReceive(this, [this](const ActionCode& code) {
