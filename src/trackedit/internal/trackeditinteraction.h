@@ -90,6 +90,11 @@ private:
     ClipKeyList clipsInGroup(int64_t id) const override;
 
     bool changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format) override;
+    bool changeTracksRate(const TrackIdList& tracksIds, int rate) override;
+
+    bool swapStereoChannels(const TrackIdList& tracksIds) override;
+    bool splitStereoTracksToLRMono(const TrackIdList& tracksIds) override;
+    bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) override;
 
     muse::ProgressPtr progress() const override;
 

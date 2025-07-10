@@ -69,6 +69,10 @@ static const ActionCode TRACK_MOVE_UP("track-move-up");
 static const ActionCode TRACK_MOVE_DOWN("track-move-down");
 static const ActionCode TRACK_MOVE_TOP("track-move-top");
 static const ActionCode TRACK_MOVE_BOTTOM("track-move-bottom");
+static const ActionCode TRACK_SWAP_CHANNELS("track-swap-channels");
+static const ActionCode TRACK_SPLIT_STEREO_TO_LR("track-split-stereo-to-lr");
+static const ActionCode TRACK_SPLIT_STEREO_TO_CENTER("track-split-stereo-to-center");
+static const ActionCode TRACK_CHANGE_RATE_CUSTOM("track-change-rate-custom");
 
 static const ActionCode TRIM_AUDIO_OUTSIDE_SELECTION("trim-audio-outside-selection");
 static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
@@ -85,6 +89,7 @@ static const ActionQuery AUTO_COLOR_QUERY("action://trackedit/clip/change-color-
 static const ActionQuery CHANGE_COLOR_QUERY("action://trackedit/clip/change-color");
 static const ActionQuery TRACK_CHANGE_COLOR_QUERY("action://trackedit/track/change-color");
 static const ActionQuery TRACK_CHANGE_FORMAT_QUERY("action://trackedit/track/change-format");
+static const ActionQuery TRACK_CHANGE_RATE_QUERY("action://trackedit/track/change-rate");
 
 // In principle, disabled are actions that modify the data involved in playback.
 static const std::vector<ActionCode> actionsDisabledDuringRecording {
@@ -132,8 +137,12 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     STRETCH_ENABLED_CODE,
     TRACK_DELETE,
     TRACK_DUPLICATE_CODE,
+    TRACK_SWAP_CHANNELS,
+    TRACK_SPLIT_STEREO_TO_LR,
+    TRACK_SPLIT_STEREO_TO_CENTER,
+    TRACK_CHANGE_RATE_CUSTOM,
     GROUP_CLIPS_CODE,
-    UNGROUP_CLIPS_CODE
+    UNGROUP_CLIPS_CODE,
 };
 
 void TrackeditActionsController::init()
@@ -203,6 +212,10 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, TRACK_MOVE_DOWN, this, &TrackeditActionsController::moveTracksDown);
     dispatcher()->reg(this, TRACK_MOVE_TOP, this, &TrackeditActionsController::moveTracksToTop);
     dispatcher()->reg(this, TRACK_MOVE_BOTTOM, this, &TrackeditActionsController::moveTracksToBottom);
+    dispatcher()->reg(this, TRACK_SWAP_CHANNELS, this, &TrackeditActionsController::swapStereoChannels);
+    dispatcher()->reg(this, TRACK_SPLIT_STEREO_TO_LR, this, &TrackeditActionsController::splitStereoToLR);
+    dispatcher()->reg(this, TRACK_SPLIT_STEREO_TO_CENTER, this, &TrackeditActionsController::splitStereoToCenter);
+    dispatcher()->reg(this, TRACK_CHANGE_RATE_CUSTOM, this, &TrackeditActionsController::setCustomTrackRate);
 
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
     dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::silenceAudioSelection);
@@ -216,8 +229,8 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
 
     dispatcher()->reg(this, TRACK_CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setTrackColor);
-
     dispatcher()->reg(this, TRACK_CHANGE_FORMAT_QUERY, this, &TrackeditActionsController::setTrackFormat);
+    dispatcher()->reg(this, TRACK_CHANGE_RATE_QUERY, this, &TrackeditActionsController::setTrackRate);
 
     projectHistory()->historyChanged().onNotify(this, [this]() {
         notifyActionEnabledChanged(UNDO);
@@ -1064,6 +1077,36 @@ void TrackeditActionsController::moveTracksToBottom(const muse::actions::ActionD
     trackeditInteraction()->moveTracks(trackIds, TrackMoveDirection::Bottom);
 }
 
+void TrackeditActionsController::swapStereoChannels(const muse::actions::ActionData&)
+{
+    TrackIdList trackIds = selectionController()->selectedTracks();
+    if (trackIds.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->swapStereoChannels(trackIds);
+}
+
+void TrackeditActionsController::splitStereoToLR(const muse::actions::ActionData&)
+{
+    TrackIdList trackIds = selectionController()->selectedTracks();
+    if (trackIds.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->splitStereoTracksToLRMono(trackIds);
+}
+
+void TrackeditActionsController::splitStereoToCenter(const muse::actions::ActionData&)
+{
+    TrackIdList trackIds = selectionController()->selectedTracks();
+    if (trackIds.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->splitStereoTracksToCenterMono(trackIds);
+}
+
 void TrackeditActionsController::trimAudioOutsideSelection()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
@@ -1221,6 +1264,38 @@ void TrackeditActionsController::setTrackFormat(const muse::actions::ActionQuery
 
     const int format = q.param("format").toInt();
     if (trackeditInteraction()->changeTracksFormat(tracks, static_cast<TrackFormat>(format))) {
+        notifyActionCheckedChanged(q.toString());
+    }
+}
+
+void TrackeditActionsController::setCustomTrackRate(const muse::actions::ActionData&)
+{
+    TrackIdList tracks = selectionController()->selectedTracks();
+    if (tracks.empty()) {
+        return;
+    }
+
+    RetVal<Val> rv = interactive()->openSync("audacity://trackedit/custom_rate");
+    if (rv.ret.code() == static_cast<int>(Ret::Code::Cancel)) {
+        return;
+    }
+
+    trackeditInteraction()->changeTracksRate(tracks, rv.val.toInt());
+}
+
+void TrackeditActionsController::setTrackRate(const muse::actions::ActionQuery& q)
+{
+    const auto tracks = selectionController()->selectedTracks();
+    if (tracks.empty()) {
+        return;
+    }
+
+    if (!q.contains("rate")) {
+        return;
+    }
+
+    const int rate = q.param("rate").toInt();
+    if (trackeditInteraction()->changeTracksRate(tracks, rate)) {
         notifyActionCheckedChanged(q.toString());
     }
 }
