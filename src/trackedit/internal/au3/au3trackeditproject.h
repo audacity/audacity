@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "../../itrackeditproject.h"
+#include "trackedit/itrackeditproject.h"
 
 #include "UndoManager.h"
 

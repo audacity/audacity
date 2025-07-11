@@ -24,9 +24,8 @@
 #define AU_PROJECT_IOPENSAVEPROJECTSCENARIO_H
 
 #include "modularity/imoduleinterface.h"
-#include "iaudacityproject.h"
-
-#include "types/retval.h"
+#include "global/types/retval.h"
+#include "project/iaudacityproject.h"
 
 namespace au::project {
 class IOpenSaveProjectScenario : MODULE_EXPORT_INTERFACE
