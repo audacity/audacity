@@ -124,7 +124,7 @@ static UiActionList STATIC_ACTIONS = {
     UiAction("split",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Split"),
+             TranslatableString("action", "Split clip"),
              TranslatableString("action", "Split")
              ),
     UiAction("join",
