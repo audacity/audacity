@@ -54,6 +54,7 @@ public:
 
     int trackYPosition(const trackedit::TrackId& trackId) const override;
     void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) override;
+    void setTrackHeight(const trackedit::TrackId& trackId, int height) override;
 
     void setClipEditStartTimeOffset(double val) override;
     double clipEditStartTimeOffset() const override;

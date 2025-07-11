@@ -1089,22 +1089,52 @@ void TrackeditActionsController::swapStereoChannels(const muse::actions::ActionD
 
 void TrackeditActionsController::splitStereoToLR(const muse::actions::ActionData&)
 {
-    const TrackIdList trackIds = selectionController()->selectedTracks();
-    if (trackIds.empty()) {
+    const auto project = globalContext()->currentProject();
+    if (!project) {
         return;
     }
 
-    trackeditInteraction()->splitStereoTracksToLRMono(trackIds);
+    const TrackIdList selectedTracks = selectionController()->selectedTracks();
+    if (selectedTracks.empty()) {
+        return;
+    }
+
+    auto tracks = project->trackeditProject()->trackList();
+    std::vector<TrackId> tracksIdsToSplit;
+    for (const auto& track : tracks) {
+        if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
+            continue;
+        }
+
+        tracksIdsToSplit.push_back(track.id);
+    }
+
+    trackeditInteraction()->splitStereoTracksToLRMono(tracksIdsToSplit);
 }
 
 void TrackeditActionsController::splitStereoToCenter(const muse::actions::ActionData&)
 {
-    const TrackIdList trackIds = selectionController()->selectedTracks();
-    if (trackIds.empty()) {
+    const auto project = globalContext()->currentProject();
+    if (!project) {
         return;
     }
 
-    trackeditInteraction()->splitStereoTracksToCenterMono(trackIds);
+    const TrackIdList selectedTracks = selectionController()->selectedTracks();
+    if (selectedTracks.empty()) {
+        return;
+    }
+
+    auto tracks = project->trackeditProject()->trackList();
+    std::vector<TrackId> tracksIdsToSplit;
+    for (const auto& track : tracks) {
+        if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
+            continue;
+        }
+
+        tracksIdsToSplit.push_back(track.id);
+    }
+
+    trackeditInteraction()->splitStereoTracksToCenterMono(tracksIdsToSplit);
 }
 
 void TrackeditActionsController::trimAudioOutsideSelection()
@@ -1270,12 +1300,26 @@ void TrackeditActionsController::setTrackFormat(const muse::actions::ActionQuery
 
 void TrackeditActionsController::setCustomTrackRate(const muse::actions::ActionData&)
 {
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+
     const TrackIdList tracks = selectionController()->selectedTracks();
     if (tracks.empty()) {
         return;
     }
 
-    RetVal<Val> rv = interactive()->openSync("audacity://trackedit/custom_rate");
+    const TrackId focusedTrackId = selectionController()->focusedTrack();
+    const std::optional<Track> focused = project->trackeditProject()->track(focusedTrackId);
+    if (!focused) {
+        return;
+    }
+
+    muse::UriQuery customRateUri("audacity://trackedit/custom_rate");
+    customRateUri.addParam("rate", muse::Val(static_cast<int>(focused.value().rate)));
+
+    RetVal<Val> rv = interactive()->openSync(customRateUri);
     if (rv.ret.code() != static_cast<int>(Ret::Code::Ok)) {
         return;
     }

@@ -181,6 +181,20 @@ void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int 
     d->collapsed.set(newVal < COLLAPSE_HEIGHT);
 }
 
+void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int height)
+{
+    TrackData* d = nullptr;
+    auto it = m_tracks.find(trackId);
+    if (it != m_tracks.end()) {
+        d = &it->second;
+    } else {
+        d = &makeTrackData(trackId);
+    }
+
+    d->height.set(std::max(height, MIN_HEIGHT));
+    d->collapsed.set(height < COLLAPSE_HEIGHT);
+}
+
 bool ProjectViewState::isSnapEnabled() const
 {
     return m_snap.val.enabled;

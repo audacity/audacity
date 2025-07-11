@@ -42,6 +42,7 @@ public:
 
     virtual int trackYPosition(const trackedit::TrackId& trackId) const = 0;
     virtual void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) = 0;
+    virtual void setTrackHeight(const trackedit::TrackId& trackId, int height) = 0;
 
     virtual void setClipEditStartTimeOffset(double val) = 0;
     virtual double clipEditStartTimeOffset() const = 0;

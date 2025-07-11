@@ -2498,8 +2498,24 @@ bool Au3Interaction::splitStereoTracksToLRMono(const TrackIdList& tracksIds)
         unlinkedTracks[1]->SetPan(1.0f);
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutTrackChanged(DomConverter::track(unlinkedTracks[0].get()));
+        prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[0].get()));
         prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[1].get()));
+
+        if (selectionController()->focusedTrack() == trackId) {
+            selectionController()->setFocusedTrack(unlinkedTracks[0]->GetId());
+        }
+
+        const auto viewState = globalContext()->currentProject()->viewState();
+        const int currentHeight = viewState->trackHeight(trackId).val;
+        viewState->setTrackHeight(unlinkedTracks[0]->GetId(), currentHeight / 2);
+        viewState->setTrackHeight(unlinkedTracks[1]->GetId(), currentHeight / 2);
+
+        moveTracksTo({ unlinkedTracks[0]->GetId(), unlinkedTracks[1]->GetId() }, trackPosition(trackId));
+
+        const auto originalTrack = DomConverter::track(waveTrack);
+        auto& tracks = Au3TrackList::Get(projectRef());
+        tracks.Remove(*waveTrack);
+        prj->notifyAboutTrackRemoved(originalTrack);
     }
 
     return true;
@@ -2525,8 +2541,24 @@ bool Au3Interaction::splitStereoTracksToCenterMono(const TrackIdList& tracksIds)
         }
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutTrackChanged(DomConverter::track(unlinkedTracks[0].get()));
+        prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[0].get()));
         prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[1].get()));
+
+        if (selectionController()->focusedTrack() == trackId) {
+            selectionController()->setFocusedTrack(unlinkedTracks[0]->GetId());
+        }
+
+        const auto viewState = globalContext()->currentProject()->viewState();
+        const int currentHeight = viewState->trackHeight(trackId).val;
+        viewState->setTrackHeight(unlinkedTracks[0]->GetId(), currentHeight / 2);
+        viewState->setTrackHeight(unlinkedTracks[1]->GetId(), currentHeight / 2);
+
+        moveTracksTo({ unlinkedTracks[0]->GetId(), unlinkedTracks[1]->GetId() }, trackPosition(trackId));
+
+        auto& tracks = Au3TrackList::Get(projectRef());
+        const auto originalTrack = DomConverter::track(waveTrack);
+        tracks.Remove(*waveTrack);
+        prj->notifyAboutTrackRemoved(originalTrack);
     }
 
     return true;

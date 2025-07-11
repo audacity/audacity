@@ -74,6 +74,11 @@ void TrackItem::init(const trackedit::Track& track)
         m_outParams.pan = ctrl->pan(m_trackId);
         m_outParams.solo = ctrl->solo(m_trackId);
         m_outParams.muted = ctrl->muted(m_trackId);
+        emit volumeLevelChanged(m_outParams.volume);
+        emit panChanged(m_outParams.pan);
+        emit soloChanged();
+        emit mutedChanged();
+        emit outputParamsChanged(m_outParams);
     }
     ctrl->muteOrSoloChanged().onReceive(this, [this](long trackId) {
         if (trackId != m_trackId) {

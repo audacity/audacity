@@ -101,10 +101,18 @@ void TrackContextMenuModel::load()
         updateTrackRateState();
     });
 
-    auto track = globalContext()->currentTrackeditProject()->track(m_trackId);
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    auto track = prj->track(m_trackId);
     if (!track.has_value()) {
         return;
     }
+
+    prj->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
+        if (track.id != m_trackId) {
+            return;
+        }
+        load();
+    });
 
     switch (track.value().type) {
     case trackedit::TrackType::Mono:

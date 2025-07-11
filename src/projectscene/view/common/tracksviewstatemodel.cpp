@@ -67,6 +67,9 @@ void TracksViewStateModel::init()
             m_isTrackCollapsed.val = v;
             emit isTrackCollapsedChanged();
         });
+
+        emit trackHeightChanged();
+        emit isTrackCollapsedChanged();
     }
 
     m_altPressed = vs->altPressed();

@@ -12,12 +12,13 @@ import Preferences
 StyledDialogView {
     id: root
 
-    title: qsTrc("effects", "Set Rate")
+    property int rate: 44100
+
+    title: qsTrc("effects", "Set rate")
 
     QtObject {
         id: prv
 
-        property int rate: 44100
         readonly property string measureUnitsSymbol: qsTrc("global", "Hz")
     }
 
@@ -49,7 +50,7 @@ StyledDialogView {
             id: control
             width: parent.width * .4
 
-            currentValue: prv.rate
+            currentValue: root.rate
 
             minValue: 1
             maxValue: 1000000
@@ -59,7 +60,7 @@ StyledDialogView {
             measureUnitsSymbol: prv.measureUnitsSymbol
 
             onValueEdited: function(newValue) {
-                prv.rate = newValue;
+                root.rate = newValue;
             }
         }        
     }
@@ -79,7 +80,7 @@ StyledDialogView {
             case ButtonBoxModel.Ok:
                 root.ret = {
                     errcode: 0,
-                    value: prv.rate
+                    value: root.rate
                 }
                 root.hide()
                 return
