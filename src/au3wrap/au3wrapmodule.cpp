@@ -6,6 +6,7 @@
 #include <wx/log.h>
 
 #include "FFmpeg.h"
+#include "modules/import-export/mod-mp3/ExportMP3.cpp"
 #include "FileNames.h"
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-import-export/Import.h"
@@ -66,6 +67,8 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 #ifdef AU_USE_FFMPEG
     FFmpegStartup();
 #endif
+    // call once so static variable sRegisteredPlugin gets created
+    ExportMP3();
 
     ModuleManager::Get().Initialize();
     Importer::Get().Initialize();

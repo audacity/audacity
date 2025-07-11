@@ -8,8 +8,7 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EXPORTMP3__
-#define __AUDACITY_EXPORTMP3__
+#pragma once
 
 /* --------------------------------------------------------------------------*/
 
@@ -27,11 +26,8 @@ enum MP3RateMode : unsigned {
 #endif
 
 class TranslatableString;
-class wxWindow;
 
 //----------------------------------------------------------------------------
 // Get MP3 library version
 //----------------------------------------------------------------------------
-TranslatableString GetMP3Version(wxWindow* parent, bool prompt);
-
-#endif
+TranslatableString GetMP3Version(bool prompt);

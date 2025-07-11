@@ -727,6 +727,12 @@ if(AU_USE_FFMPEG)
     )
 endif()
 
+set(MODULE_SRC ${MODULE_SRC}
+    ${AU3_MODULES}/import-export/mod-mp3/ExportMP3.cpp
+    ${AU3_MODULES}/import-export/mod-mp3/ExportMP3.h
+    ${AU3_MODULES}/import-export/mod-mp3/MP3.cpp
+)
+
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sqlite au3-sqlite)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soxr au3-soxr)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/pffft au3-pffft)
