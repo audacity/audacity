@@ -86,8 +86,9 @@ set(LINK_LIB
     appshell
     au3wrap
     context
-    effects_vst
+    effects_audio_unit
     effects_lv2
+    effects_vst
     project
     projectscene
     audio
@@ -106,6 +107,10 @@ endif()
 
 if (AU_MODULE_EFFECTS_LV2)
     add_definitions(-DAU_MODULE_EFFECTS_LV2)
+endif()
+
+if (AU_MODULE_EFFECTS_AUDIO_UNIT)
+    add_definitions(-DAU_MODULE_EFFECTS_AUDIO_UNIT)
 endif()
 
 if (MUSE_MODULE_AUTOBOT)

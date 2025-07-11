@@ -70,6 +70,11 @@
 #else
 #include "stubs/vst/vsteffectsstubmodule.h"
 #endif
+#ifdef AU_MODULE_EFFECTS_AUDIO_UNIT
+#include "effects/audio_unit/audiouniteffectsmodule.h"
+#else
+#include "stubs/audio_unit/audiouniteffectsstubmodule.h"
+#endif
 #include "effects/nyquist/nyquisteffectsmodule.h"
 #include "importexport/import/importermodule.h"
 
@@ -176,6 +181,7 @@ int main(int argc, char** argv)
 #ifdef MUSE_MODULE_AUTOBOT
     app.addModule(new muse::autobot::AutobotModule());
 #endif
+    app.addModule(new au::effects::AudioUnitEffectsModule());
     app.addModule(new au::effects::Lv2EffectsModule());
     app.addModule(new au::effects::VstEffectsModule());
 

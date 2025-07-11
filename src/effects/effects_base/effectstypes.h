@@ -57,6 +57,7 @@ public:
         Builtin,
         VST3,
         LV2,
+        AudioUnit,
     };
     Q_ENUM(EffectFamily)
 };

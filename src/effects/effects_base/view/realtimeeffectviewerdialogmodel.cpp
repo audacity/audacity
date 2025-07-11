@@ -115,6 +115,8 @@ EffectFamily RealtimeEffectViewerDialogModel::prop_effectFamily() const
         return EffectFamily::VST3;
     } else if (family == "LV2") {
         return EffectFamily::LV2;
+    } else if (family == "AudioUnit") {
+        return EffectFamily::AudioUnit;
     } else if (family == "Audacity") {
         return EffectFamily::Builtin;
     } else {

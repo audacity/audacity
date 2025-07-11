@@ -559,6 +559,30 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-ipc/internal/socket_guard.h
 )
 
+if (AU_MODULE_EFFECTS_AUDIO_UNIT)
+    set(MODULE_SRC ${MODULE_SRC}
+        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitEffectBase.cpp
+        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitEffectBase.h
+        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitEffectsModule.cpp
+        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitEffectsModule.h
+        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitInstance.cpp
+        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitInstance.h
+        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitUtils.cpp
+        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitUtils.h
+        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitWrapper.cpp
+        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitWrapper.h
+    )
+
+    set(AU3_DEF ${AU3_DEF}
+        USE_AUDIO_UNITS=1
+    )
+
+    set(AU3_LINK ${AU3_LINK}
+        "-framework AudioUnit"
+        "-framework AudioToolbox"
+    )
+endif()
+
 if (AU_MODULE_EFFECTS_LV2)
 
     add_subdirectory(lv2sdk)
@@ -590,6 +614,8 @@ if (AU_MODULE_EFFECTS_LV2)
         ${AU3_LIBRARIES}/lib-lv2/LV2UIFeaturesList.cpp
         ${AU3_LIBRARIES}/lib-lv2/LV2UIFeaturesList.h
     )
+
+    set(AU3_LINK ${AU3_LINK} lv2sdk)
 endif()
 
 if(AU_MODULE_EFFECTS_VST)
@@ -613,6 +639,10 @@ if(AU_MODULE_EFFECTS_VST)
         ${AU3_LIBRARIES}/lib-vst3/internal/ConnectionProxy.cpp
         ${AU3_LIBRARIES}/lib-vst3/internal/ConnectionProxy.h
     )
+
+    set(AU3_INCLUDE ${AU3_INCLUDE} ${AU_MODULE_VST_VST3_SDK_PATH})
+
+    set(AU3_LINK ${AU3_LINK} vst_sdk_3)
 endif()
 
 if(AU_USE_FFMPEG)
@@ -720,15 +750,6 @@ set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
 set(MODULE_SRC ${MODULE_SRC} ${AU3_SRC})
 set(MODULE_LINK ${AU3_LINK})
-
-if (AU_MODULE_EFFECTS_LV2)
-    set(MODULE_LINK ${MODULE_LINK} lv2sdk)
-endif()
-
-if (AU_MODULE_EFFECTS_VST)
-    set(MODULE_INCLUDE ${MODULE_INCLUDE} ${AU_MODULE_VST_VST3_SDK_PATH})
-    set(MODULE_LINK ${MODULE_LINK} vst_sdk_3)
-endif()
 
 set(MODULE_USE_PCH OFF)
 set(MODULE_USE_UNITY OFF)

@@ -86,6 +86,7 @@ constexpr const char* effectFamiliyString(EffectFamily family)
     case EffectFamily::Builtin: return "Audacity";
     case EffectFamily::VST3: return "VST3";
     case EffectFamily::LV2: return "LV2";
+    case EffectFamily::AudioUnit: return "AudioUnit";
     default:
         assert(false);
         return "Unknown";

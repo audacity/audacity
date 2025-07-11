@@ -366,7 +366,7 @@ OptionalMessage
 AudioUnitEffectBase::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
     if (AudioUnitWrapper::LoadFactoryPreset(*this, id, &settings)) {
-        return { nullptr }
+        return { nullptr };
     }
     return {};
 }
@@ -428,11 +428,11 @@ OptionalMessage AudioUnitEffectBase::LoadPreset(
     const RegistryPath& group, EffectSettings& settings) const
 {
     if (MigrateOldConfigFile(group, settings)) {
-        return { nullptr }
+        return { nullptr };
     }
 
     if (AudioUnitWrapper::LoadPreset(*this, group, settings)) {
-        return { nullptr }
+        return { nullptr };
     }
     return {};
 }

@@ -247,7 +247,7 @@ bool AudioUnitEffectsModule::CheckPluginExist(const PluginPath& path) const
 // ============================================================================
 
 void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
-                                                  PluginPaths& effects)
+                                                  PluginPaths& effects) const
 {
     AudioComponentDescription desc;
     AudioComponent component;
