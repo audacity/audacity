@@ -16,8 +16,6 @@ Canvas {
     property real minDisplayedVolumePressure: -60.0
     property real maxDisplayedVolumePressure: 0.0
 
-    property int meterStyle: PlaybackMeterStyle.Default
-
     property var meterModel: null
 
     property real indicatorWidth
@@ -59,7 +57,7 @@ Canvas {
         }
 
         function getRecentPeakMarkerColor() {
-            switch (root.meterStyle) {
+            switch (root.meterModel.meterStyle) {
                 case PlaybackMeterStyle.Default:
                     return meterStyle.defaultColor
                 case PlaybackMeterStyle.RMS:
@@ -204,11 +202,11 @@ Canvas {
     }
 
     function drawMeterBar(ctx) {
-        if (root.meterStyle == PlaybackMeterStyle.Default) {
+        if (root.meterModel.meterStyle == PlaybackMeterStyle.Default) {
             drawBarStyleDefault(ctx)
-        } else if (root.meterStyle == PlaybackMeterStyle.RMS) {
+        } else if (root.meterModel.meterStyle == PlaybackMeterStyle.RMS) {
             drawBarStyleRMS(ctx)
-        } else if (root.meterStyle == PlaybackMeterStyle.Gradient) {
+        } else if (root.meterModel.meterStyle == PlaybackMeterStyle.Gradient) {
             drawBarStyleGradient(ctx)
         }
     }
@@ -315,10 +313,6 @@ Canvas {
         prv.maxPeak = Math.max(prv.maxPeak, root.currentVolumePressure)
         prv.updatedVolumePressure = root.currentVolumePressure
         prv.updateRecentPeak()
-        requestPaint()
-    }
-
-    onMeterStyleChanged: {
         requestPaint()
     }
 

@@ -23,17 +23,9 @@ Item {
     property NavigationPanel navigationPanel: null
     property int navigationOrder: 0
 
-    property int meterStyle: PlaybackMeterStyle.Default
-    property int meterType: PlaybackMeterType.DbLog
-    property int meterPosition: PlaybackMeterPosition.TopBar
-
     property bool isPlaying: false
 
     signal volumeLevelChangeRequested(var level)
-    signal positionChangeRequested(int position)
-    signal styleChangeRequested(int style)
-    signal typeChangeRequested(int type)
-
     signal widthChangeRequested(int x, int y)
 
     onIsPlayingChanged: {
@@ -68,21 +60,7 @@ Item {
             PlaybackMeterCustomisePopup {
                 id: popup
 
-                meterStyle: root.meterStyle
-                meterType: root.meterType
-                meterPosition: root.meterPosition
-
-                onPositionChangeRequested: function (position) {
-                    root.positionChangeRequested(position)
-                }
-
-                onStyleChangeRequested: function (style) {
-                    root.styleChangeRequested(style)
-                }
-
-                onTypeChangeRequested: function (type) {
-                    root.typeChangeRequested(type)
-                }
+                model: playbackMeterModel
             }
         }
 
@@ -104,7 +82,6 @@ Item {
                     x: playbackMeterRuler.x + playbackMeterRuler.leftTextMargin
                     width: playbackMeterRuler.effectiveWidth + leftVolumePressure.overloadTotalSpace
 
-                    meterStyle: root.meterStyle
                     meterModel: playbackMeterModel
                     enabled: root.enabled
                 }
@@ -115,7 +92,6 @@ Item {
                     x: playbackMeterRuler.x + playbackMeterRuler.leftTextMargin
                     width: playbackMeterRuler.effectiveWidth +  leftVolumePressure.overloadTotalSpace
 
-                    meterStyle: root.meterStyle
                     meterModel: playbackMeterModel
                     enabled: root.enabled
                 }

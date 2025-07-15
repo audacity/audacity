@@ -13,16 +13,10 @@ import Audacity.Playback 1.0
 StyledPopupView {
     id: root
 
-    property int meterStyle: PlaybackMeterStyle.Default
-    property int meterType: PlaybackMeterType.DbLog
-    property int meterPosition: PlaybackMeterPosition.TopBar
+    property var model: null
 
-    signal positionChangeRequested(int position)
-    signal styleChangeRequested(int style)
-    signal typeChangeRequested(int type)
-
-    contentWidth: 336
-    contentHeight: 248
+    contentWidth: 360
+    contentHeight: 310
 
     margins: 12
 
@@ -30,9 +24,29 @@ StyledPopupView {
         anchors.fill: parent
         spacing: 12
 
+        StyledGroupBox {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 92
+
+            title: qsTrc("playback", "Position")
+
+            titleSpacing: 0
+
+            value: root.model.meterPosition
+
+            model: [
+                {label : qsTrc("playback","Top bar (horizontal)"), value: PlaybackMeterPosition.TopBar},
+                {label : qsTrc("playback","Side bar (vertical)"), value: PlaybackMeterPosition.SideBar}
+            ]
+
+            onValueChangeRequested: function(value) {
+                root.model.meterPosition = value
+            }
+        }
+
         RowLayout {
             Layout.fillWidth: true
-            Layout.preferredHeight: 124
+            Layout.preferredHeight: 120
             
             spacing: 12
 
@@ -42,14 +56,9 @@ StyledPopupView {
 
                 title: qsTrc("Playback", "Meter style")
 
-                titleSpacing: 12
-                itemSpacing: 8
-                itemMargin: 12
+                titleSpacing: 0
 
-                borderWidth: 1
-                boarderRadius: 2
-
-                value: root.meterStyle
+                value: root.model.meterStyle
 
                 model: [
                     {label : qsTrc("playback","Default"), value: PlaybackMeterStyle.Default},
@@ -58,7 +67,7 @@ StyledPopupView {
                 ]
 
                 onValueChangeRequested: function(value) {
-                    root.styleChangeRequested(value)
+                    root.model.meterStyle = value
                 }
             }
 
@@ -68,14 +77,9 @@ StyledPopupView {
 
                 title: qsTrc("Playback", "Meter type")
 
-                titleSpacing: 12
-                itemSpacing: 8
-                itemMargin: 12
+                titleSpacing: 0
 
-                borderWidth: 1
-                boarderRadius: 2
-
-                value: root.meterType
+                value: root.model.meterType
 
                 model: [
                     {label : qsTrc("playback","Logarithmic (dB)"), value: PlaybackMeterType.DbLog},
@@ -84,33 +88,44 @@ StyledPopupView {
                 ]
 
                 onValueChangeRequested: function(value) {
-                    root.typeChangeRequested(value)
+                    root.model.meterType = value
                 }
             }
         }
 
-        StyledGroupBox {
+        ColumnLayout {
+            id: dbRangeSection
+
             Layout.fillWidth: true
-            Layout.preferredHeight: 100
+            Layout.preferredHeight: 50
 
-            title: qsTrc("playback", "Position")
+            StyledTextLabel {
+                text: qsTrc("playback", "dB range")
+                horizontalAlignment: Text.AlignLeft
+                wrapMode: Text.WordWrap
+            }
 
-            titleSpacing: 12
-            itemSpacing: 8
-            itemMargin: 12
+            StyledDropdown {
+                id: dbRangeDropdown
 
-            borderWidth: 1
-            boarderRadius: 2
+                Layout.fillWidth: true
+                indeterminateText: ""
 
-            value: root.meterPosition
+                currentIndex: root.model.meterDbRange
+                model: [
+                    "-36 dB (shallow range for high-amplitude editing)",
+                    "-48 dB (PCM range of 8 bit samples)", 
+                    "-60 dB (PCM range of 10 bit samples)",
+                    "-72 dB (PCM range of 12 bit samples)",
+                    "-84 dB (PCM range of 14 bit samples)",
+                    "-96 dB (PCM range of 16 bit samples)",
+                    "-120 dB (approximate limit of human hearing)",
+                    "-145 dB (PCM range of 24 bit samples)"
+                ]
 
-            model: [
-                {label : qsTrc("playback","Top bar (horizontal)"), value: PlaybackMeterPosition.TopBar},
-                {label : qsTrc("playback","Side bar (vertical)"), value: PlaybackMeterPosition.SideBar}
-            ]
-
-            onValueChangeRequested: function(value) {
-                root.positionChangeRequested(value)
+                onActivated: function(newIndex, newValue) {
+                    root.model.meterDbRange = newIndex;
+                }
             }
         }
     }

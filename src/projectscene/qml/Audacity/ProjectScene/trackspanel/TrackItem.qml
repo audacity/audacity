@@ -299,7 +299,6 @@ ListItemBlank {
 
                     indicatorWidth: parent.indicatorWidth
 
-                    meterStyle: trackViewState.meterStyle
                     meterModel: trackViewState.meterModel
 
                     currentVolumePressure: root.item.leftChannelPressure
@@ -314,7 +313,6 @@ ListItemBlank {
 
                     indicatorWidth: parent.indicatorWidth
 
-                    meterStyle: trackViewState.meterStyle
                     meterModel: trackViewState.meterModel
 
                     currentVolumePressure: root.item.rightChannelPressure

@@ -43,18 +43,6 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
         setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
     });
 
-    configuration()->playbackMeterPositionChanged().onNotify(this, [this]() {
-        emit meterPositionChanged();
-    });
-
-    configuration()->playbackMeterStyleChanged().onNotify(this, [this]() {
-        emit meterStyleChanged();
-    });
-
-    configuration()->playbackMeterTypeChanged().onNotify(this, [this]() {
-        emit meterTypeChanged();
-    });
-
     configuration()->playbackHorizontalMeterSizeChanged().onNotify(this, [this]() {
         emit meterSizeChanged();
     });
@@ -226,48 +214,6 @@ void PlaybackToolBarLevelItem::setRightChannelRMS(float rightChannelRMS)
 
     m_rightChannelRMS = rightChannelRMS;
     emit rightChannelRMSChanged(m_rightChannelRMS);
-}
-
-void PlaybackToolBarLevelItem::setMeterStyle(PlaybackMeterStyle::MeterStyle style)
-{
-    if (meterStyle() == style) {
-        return;
-    }
-
-    configuration()->setPlaybackMeterStyle(style);
-}
-
-PlaybackMeterStyle::MeterStyle PlaybackToolBarLevelItem::meterStyle() const
-{
-    return configuration()->playbackMeterStyle();
-}
-
-void PlaybackToolBarLevelItem::setMeterType(PlaybackMeterType::MeterType type)
-{
-    if (meterType() == type) {
-        return;
-    }
-
-    configuration()->setPlaybackMeterType(type);
-}
-
-PlaybackMeterType::MeterType PlaybackToolBarLevelItem::meterType() const
-{
-    return configuration()->playbackMeterType();
-}
-
-void PlaybackToolBarLevelItem::setMeterPosition(PlaybackMeterPosition::MeterPosition position)
-{
-    if (meterPosition() == position) {
-        return;
-    }
-
-    configuration()->setPlaybackMeterPosition(position);
-}
-
-PlaybackMeterPosition::MeterPosition PlaybackToolBarLevelItem::meterPosition() const
-{
-    return configuration()->playbackMeterPosition();
 }
 
 void PlaybackToolBarLevelItem::setMeterSize(int size)

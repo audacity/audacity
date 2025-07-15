@@ -109,26 +109,10 @@ Item {
                 rightCurrentRMS: Boolean(itemData) ? itemData.rightChannelRMS : -60
                 isPlaying: Boolean(itemData) ? itemData.isPlaying : false
 
-                meterStyle: Boolean(itemData) ? itemData.meterStyle : PlaybackMeterStyle.Default
-                meterType: Boolean(itemData) ? itemData.meterType : PlaybackMeterType.DbLog
-                meterPosition: Boolean(itemData) ? itemData.meterPosition : PlaybackMeterPosition.TopBar
-
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
                 onVolumeLevelChangeRequested: function(level) {
                     itemData.level = level
-                }
-
-                onPositionChangeRequested: function(position) {
-                    itemData.meterPosition = position
-                }
-
-                onStyleChangeRequested: function(style) {
-                    itemData.meterStyle = style
-                }
-
-                onTypeChangeRequested: function(type) {
-                    itemData.meterType = type
                 }
 
                 onWidthChangeRequested: function(x, y) {

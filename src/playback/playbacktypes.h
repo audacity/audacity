@@ -136,4 +136,21 @@ public:
     };
     Q_ENUM(MeterPosition)
 };
+
+class PlaybackMeterDbRange
+{
+    Q_GADGET
+public:
+    enum class DbRange: int {
+        Range36 = 0,
+        Range48 = 1,
+        Range60 = 2,
+        Range72 = 3,
+        Range84 = 4,
+        Range96 = 5,
+        Range120 = 6,
+        Range145 = 7,
+    };
+    Q_ENUM(DbRange)
+};
 }
