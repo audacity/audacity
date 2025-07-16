@@ -385,7 +385,11 @@ StyledDialogView {
                 buttonId: ButtonBoxModel.Apply
                 minWidth: 80
                 accentButton: true
-                onClicked: root.accept()
+                onClicked: {
+                    if (exportPreferencesModel.verifyExportPossible()) {
+                        root.accept()
+                    }
+                }
             }
         }
 

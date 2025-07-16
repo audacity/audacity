@@ -9,6 +9,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "iinteractive.h"
 
 #include "importexport/export/iexporter.h"
 #include "importexport/export/internal/exportconfiguration.h"
@@ -22,6 +23,7 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable
     Q_OBJECT
 
     muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<muse::IInteractive> interactive;
     muse::Inject<au::importexport::ExportConfiguration> exportConfiguration;
     muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<au::importexport::IExporter> exporter;
@@ -79,6 +81,8 @@ public:
     QString exportSampleFormat() const;
     QVariantList exportSampleFormatList() const;
     Q_INVOKABLE void setExportSampleFormat(const QString& format);
+
+    Q_INVOKABLE bool verifyExportPossible();
 
 signals:
     void currentProcessChanged();
