@@ -111,6 +111,8 @@ StyledPopupView {
                 Layout.fillWidth: true
                 indeterminateText: ""
 
+                enabled: root.model.meterType !== PlaybackMeterType.Linear
+
                 currentIndex: root.model.meterDbRange
                 model: [
                     "-36 dB (shallow range for high-amplitude editing)",

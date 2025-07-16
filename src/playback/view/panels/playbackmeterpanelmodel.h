@@ -79,11 +79,10 @@ private:
 
     PlaybackMeterModel* m_meterModel = nullptr;
 
-    float m_leftChannelPressure = -60.0;
-    float m_leftChannelRMS = -60.0;
-
-    float m_rightChannelPressure = -60.0;
-    float m_rightChannelRMS = -60.0;
+    float m_leftChannelPressure = playback::MIN_DISPLAYED_DBFS;
+    float m_leftChannelRMS = playback::MIN_DISPLAYED_DBFS;
+    float m_rightChannelPressure = playback::MIN_DISPLAYED_DBFS;
+    float m_rightChannelRMS = playback::MIN_DISPLAYED_DBFS;
 
     float m_level = 0;
 };

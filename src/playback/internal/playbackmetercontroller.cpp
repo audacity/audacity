@@ -13,17 +13,17 @@
 using namespace au::playback;
 
 namespace {
-std::shared_ptr<IPlaybackMeter> createMeter(PlaybackMeterType::MeterType meterType)
+std::shared_ptr<IPlaybackMeter> createMeter(PlaybackMeterType::MeterType meterType, int meterSize, double dbRange)
 {
     switch (meterType) {
     case PlaybackMeterType::MeterType::DbLinear:
-        return std::make_shared<DbLinearMeter>();
+        return std::make_shared<DbLinearMeter>(meterSize, dbRange);
     case PlaybackMeterType::MeterType::DbLog:
-        return std::make_shared<DbLogMeter>();
+        return std::make_shared<DbLogMeter>(meterSize, dbRange);
     case PlaybackMeterType::MeterType::Linear:
-        return std::make_shared<LinearMeter>();
+        return std::make_shared<LinearMeter>(meterSize, dbRange);
     default:
-        return std::make_shared<DbLogMeter>();
+        return std::make_shared<DbLogMeter>(meterSize, dbRange);
     }
 }
 }
@@ -31,11 +31,25 @@ std::shared_ptr<IPlaybackMeter> createMeter(PlaybackMeterType::MeterType meterTy
 PlaybackMeterController::PlaybackMeterController()
 {
     configuration()->playbackMeterTypeChanged().onNotify(this, [this]() {
-        m_meter = createMeter(configuration()->playbackMeterType());
+        m_meter = createMeter(configuration()->playbackMeterType(),
+                              configuration()->playbackHorizontalMeterSize(),
+                              PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
         m_playbackMeterChanged.notify();
     });
 
-    m_meter = createMeter(configuration()->playbackMeterType());
+    configuration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
+        m_meter->setDbRange(PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
+        m_playbackMeterChanged.notify();
+    });
+
+    configuration()->playbackHorizontalMeterSizeChanged().onNotify(this, [this]() {
+        m_meter->setMeterSize(configuration()->playbackHorizontalMeterSize());
+        m_playbackMeterChanged.notify();
+    });
+
+    m_meter = createMeter(configuration()->playbackMeterType(),
+                          configuration()->playbackHorizontalMeterSize(),
+                          PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
 }
 
 double PlaybackMeterController::stepToPosition(double step) const
@@ -53,14 +67,14 @@ std::string PlaybackMeterController::sampleToText(double sample) const
     return m_meter->sampleToText(sample);
 }
 
-std::vector<double> PlaybackMeterController::fullSteps(int meterSize) const
+std::vector<double> PlaybackMeterController::fullSteps() const
 {
-    return m_meter->fullSteps(meterSize);
+    return m_meter->fullSteps();
 }
 
-std::vector<double> PlaybackMeterController::smallSteps(int meterSize) const
+std::vector<double> PlaybackMeterController::smallSteps() const
 {
-    return m_meter->smallSteps(meterSize);
+    return m_meter->smallSteps();
 }
 
 muse::async::Notification PlaybackMeterController::playbackMeterChanged() const

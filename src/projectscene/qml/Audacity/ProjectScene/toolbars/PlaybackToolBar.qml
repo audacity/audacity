@@ -103,10 +103,10 @@ Item {
                 height: 28
 
                 volumeLevel: Boolean(itemData) ? itemData.level : 0
-                leftCurrentVolumePressure: Boolean(itemData) ? itemData.leftChannelPressure : -60
-                leftCurrentRMS: Boolean(itemData) ? itemData.leftChannelRMS : -60
-                rightCurrentVolumePressure: Boolean(itemData) ? itemData.rightChannelPressure : -60
-                rightCurrentRMS: Boolean(itemData) ? itemData.rightChannelRMS : -60
+                leftCurrentVolumePressure: Boolean(itemData) ? itemData.leftChannelPressure : -145
+                leftCurrentRMS: Boolean(itemData) ? itemData.leftChannelRMS : -145
+                rightCurrentVolumePressure: Boolean(itemData) ? itemData.rightChannelPressure : -145
+                rightCurrentRMS: Boolean(itemData) ? itemData.rightChannelRMS : -145
                 isPlaying: Boolean(itemData) ? itemData.isPlaying : false
 
                 enabled: Boolean(itemData) ? itemData.enabled : false

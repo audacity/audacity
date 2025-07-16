@@ -95,14 +95,14 @@ private:
 
     float m_level = 0;
 
-    float m_leftChannelPressure = -60.0;
-    float m_leftChannelRMS = -60.0;
-    float m_leftRecentPeak = -60.0;
-    float m_leftMaxPeak = -60.0;
+    float m_leftChannelPressure = playback::MIN_DISPLAYED_DBFS;
+    float m_leftChannelRMS = playback::MIN_DISPLAYED_DBFS;
+    float m_leftRecentPeak = playback::MIN_DISPLAYED_DBFS;
+    float m_leftMaxPeak = playback::MIN_DISPLAYED_DBFS;
 
-    float m_rightChannelPressure = -60.0;
-    float m_rightChannelRMS = -60.0;
-    float m_rightRecentPeak = -60.0;
-    float m_rightMaxPeak = -60.0;
+    float m_rightChannelPressure = playback::MIN_DISPLAYED_DBFS;
+    float m_rightChannelRMS = playback::MIN_DISPLAYED_DBFS;
+    float m_rightRecentPeak = playback::MIN_DISPLAYED_DBFS;
+    float m_rightMaxPeak = playback::MIN_DISPLAYED_DBFS;
 };
 }

@@ -57,7 +57,7 @@ QString PlaybackMeterModel::sampleToText(double sample) const
 QVariantList PlaybackMeterModel::fullSteps() const
 {
     QVariantList steps;
-    for (const auto& step : meterController()->fullSteps(meterSize())) {
+    for (const auto& step : meterController()->fullSteps()) {
         steps.append(step);
     }
 
@@ -67,7 +67,7 @@ QVariantList PlaybackMeterModel::fullSteps() const
 QVariantList PlaybackMeterModel::smallSteps() const
 {
     QVariantList steps;
-    for (const auto& step : meterController()->smallSteps(meterSize())) {
+    for (const auto& step : meterController()->smallSteps()) {
         steps.append(step);
     }
 

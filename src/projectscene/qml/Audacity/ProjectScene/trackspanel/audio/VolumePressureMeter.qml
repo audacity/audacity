@@ -11,8 +11,8 @@ import Audacity.Playback 1.0
 Canvas {
     id: root
 
-    property real currentVolumePressure: -60.0
-    property real currentRMS: -60.0
+    property real currentVolumePressure: -145.0
+    property real currentRMS: -145.0
     property real minDisplayedVolumePressure: -60.0
     property real maxDisplayedVolumePressure: 0.0
 
@@ -92,9 +92,9 @@ Canvas {
 
         property bool needsClear: false
 
-        property real updatedVolumePressure: -60.0
-        property real maxPeak: -60.0
-        property real recentPeak: -60.0
+        property real updatedVolumePressure: -145.0
+        property real maxPeak: -145.0
+        property real recentPeak: -145.0
         property var recentVolumePressure: []
 
         property bool isClipping: updatedVolumePressure >= root.maxDisplayedVolumePressure
@@ -121,7 +121,7 @@ Canvas {
                 prv.recentVolumePressure.splice(0, cutoffIndex)
             }
 
-            prv.recentPeak = Math.max(-60, ...prv.recentVolumePressure.map(item => item.value))
+            prv.recentPeak = Math.max(-145, ...prv.recentVolumePressure.map(item => item.value))
         }
 
         function sampleValueToHeight(sampleValue) {
@@ -176,9 +176,9 @@ Canvas {
     }
 
     function reset() {
-        prv.maxPeak = -60
-        prv.recentPeak = -60
-        prv.updatedVolumePressure = -60
+        prv.maxPeak = -145
+        prv.recentPeak = -145
+        prv.updatedVolumePressure = -145
         prv.recentVolumePressure = []
 
         requestPaint()
