@@ -1,6 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
+#include <QDir>
 
 #include "global/containers.h"
 #include "settings.h"
@@ -272,5 +273,16 @@ void ExportPreferencesModel::updateExportChannels()
     if (static_cast<int>(exportChannels()) > maxChannels) {
         setExportChannels(ExportChannelsPref::ExportChannels(maxChannels));
     }
+}
+
+bool ExportPreferencesModel::verifyExportPossible()
+{
+    QDir directory(directoryPath());
+    if (!directory.exists() || directoryPath().isEmpty()) {
+        interactive()->error(muse::trc("export", "Export Audio"), muse::trc("export", "Unable to create destination folder"));
+        return false;
+    }
+
+    return true;
 }
 }

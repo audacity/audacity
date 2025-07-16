@@ -53,7 +53,7 @@ void ExportConfiguration::init()
         m_exportChannelsChanged.notify();
     });
 
-    muse::settings()->setDefaultValue(EXPORT_SAMPLE_RATE, muse::Val(static_cast<int>(audioDevicesProvider()->defaultSampleRate())));
+    muse::settings()->setDefaultValue(EXPORT_SAMPLE_RATE, muse::Val("44100"));
     muse::settings()->valueChanged(EXPORT_SAMPLE_RATE).onReceive(nullptr, [this] (const muse::Val& val) {
         m_exportSampleRateChanged.notify();
     });
