@@ -77,7 +77,7 @@ public:
 
     Q_INVOKABLE void changeTrackHeight(int deltaY);
 
-    Q_INVOKABLE bool snapEnabled();
+    Q_INVOKABLE bool snapEnabled() const;
 
 signals:
     // Context of elements
