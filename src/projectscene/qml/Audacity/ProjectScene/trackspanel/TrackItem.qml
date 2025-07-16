@@ -18,7 +18,8 @@ ListItemBlank {
     property var item: null
     property var container: null
     property bool dragged: false
-    property bool collapsed: height <= mapFromItem(trackControlsRow, 0, trackControlsRow.height + bottomSeparator.height).y
+    property bool collapsed: trackViewState.isTrackCollapsed
+
     property bool isFocused: false
 
     signal interactionStarted()

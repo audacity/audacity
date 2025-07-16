@@ -50,6 +50,15 @@ au::trackedit::TrackFormat trackFormat(const Au3Track* track)
         return au::trackedit::TrackFormat::Undefined;
     }
 }
+
+int trackRate(const Au3Track* track)
+{
+    const WaveTrack* waveTrack = dynamic_cast<const WaveTrack*>(track);
+    if (!waveTrack) {
+        return -1;
+    }
+    return waveTrack->GetRate();
+}
 }
 
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
@@ -85,6 +94,6 @@ au::trackedit::Track DomConverter::track(const Au3Track* waveTrack)
     au4t.type = trackType(waveTrack);
     au4t.color = TrackColor::Get(waveTrack).GetColor();
     au4t.format = trackFormat(waveTrack);
-
+    au4t.rate = trackRate(waveTrack);
     return au4t;
 }

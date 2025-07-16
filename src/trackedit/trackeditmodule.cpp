@@ -21,6 +21,8 @@
  */
 #include "trackeditmodule.h"
 
+#include <QtQml>
+
 #include "modularity/ioc.h"
 
 #include "internal/trackedituiactions.h"
@@ -37,12 +39,18 @@
 #include "internal/au3/au3trackeditclipboard.h"
 
 #include "ui/iuiactionsregister.h"
+#include "ui/iinteractiveuriregister.h"
 
 using namespace au::trackedit;
 using namespace muse;
 using namespace muse::modularity;
 using namespace muse::ui;
 using namespace muse::actions;
+
+static void trackedit_init_qrc()
+{
+    Q_INIT_RESOURCE(trackedit);
+}
 
 std::string TrackeditModule::moduleName() const
 {
@@ -74,6 +82,16 @@ void TrackeditModule::resolveImports()
     if (ar) {
         ar->reg(m_trackeditUiActions);
     }
+
+    auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
+    if (ir) {
+        ir->registerQmlUri(muse::Uri("audacity://trackedit/custom_rate"), "Audacity/TrackEdit/CustomRateDialog.qml");
+    }
+}
+
+void TrackeditModule::registerResources()
+{
+    trackedit_init_qrc();
 }
 
 void TrackeditModule::onInit(const muse::IApplication::RunMode&)

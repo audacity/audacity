@@ -1139,21 +1139,31 @@ auto WaveTrack::MonoToStereo() -> Holder
 
 auto WaveTrack::SplitChannels() -> std::vector<Holder>
 {
-    std::vector<Holder> result{ SharedPointer<WaveTrack>() };
+    std::vector<Holder> result;
     if (NChannels() == 2) {
         auto pOwner = GetOwner();
         assert(pOwner); // pre
-        auto pNewTrack = result.emplace_back(EmptyCopy(1));
+
+        auto pLeftTrack = EmptyCopy(1);
+        auto pRightTrack = EmptyCopy(1);
+
         for (auto& pClip : mClips) {
-            pNewTrack->mClips.emplace_back(pClip->SplitChannels());
+            auto pRightClip = pClip->SplitChannels();
+            pLeftTrack->mClips.emplace_back(pClip);
+            pRightTrack->mClips.emplace_back(pRightClip);
         }
-        this->mRightChannel.reset();
-        TrackList::AssignUniqueId(pNewTrack);
-        auto iter = pOwner->Find(this);
-        pOwner->Insert(*++iter, pNewTrack);
-        // Fix up the channel attachments to avoid waste of space
-        result[0]->EraseChannelAttachments(1);
-        result[1]->EraseChannelAttachments(0);
+
+        pOwner->Append(pLeftTrack, true);
+        pOwner->Append(pRightTrack, true);
+
+        pLeftTrack->EraseChannelAttachments(1);
+        pRightTrack->EraseChannelAttachments(0);
+
+        result.push_back(pLeftTrack);
+        result.push_back(pRightTrack);
+    } else {
+        // For mono tracks, just return the original track
+        result.push_back(SharedPointer<WaveTrack>());
     }
     return result;
 }
