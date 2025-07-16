@@ -180,7 +180,7 @@ class AudacityConan(ConanFile):
 
     # List of Audacity dependencies
     _dependencies = [
-        AudacityDependency("zlib", "1.2.13"),
+        AudacityDependency("zlib", "1.3.1"),
         AudacityDependency("libpng", "1.6.39"),
         AudacityDependency("expat", "2.5.0"),
         AudacityDependency("libjpeg-turbo", "2.1.5"),
