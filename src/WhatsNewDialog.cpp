@@ -24,6 +24,8 @@
 
 #include "HelpSystem.h"
 #include "HelpText.h"
+#include "ModuleManager.h"
+#include "PluginProvider.h"
 #include "ProjectWindows.h"
 #include "ShuttleGui.h"
 #include "Theme.h"
@@ -41,6 +43,7 @@
 #include "../images/AudacityPromo.h"
 #include "../images/AudacityFeatureSurvey.h"
 #include "../images/MuseHubPromo.h"
+#include "menus/CloudLoginHelper.h"
 
 namespace
 {
@@ -360,44 +363,56 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
    const int width = FromDIP(572);
    const int height = FromDIP(322);
 #endif
-   std::vector<CarouselSnapshot> snapshots {
-      {  XXO("Complete your Audacity cloud setup with audio.com"),
+
+   std::vector<CarouselSnapshot> snapshots;
+   snapshots.reserve(5);
+   if (ModuleManager::Get().CheckModuleLoaded("mod-cloud-audiocom")) {
+
+      auto displayLoginDialog = []() {
+         CloudLoginHelper::Get().ShowLoginDialog();
+      };
+
+      snapshots.push_back(CarouselSnapshot(
+         XXO("Complete your Audacity cloud setup with audio.com"),
          Rescale(LoadEmbeddedPNG(AudioDotComPromo_png, AudioDotComPromo_png_len), width, height),
-         AudioComURL,
+         displayLoginDialog,
          XXO("Continue"),
          XXO("")
-      },
-      {
-         XXO("What's new in Audacity"),
-         Rescale(LoadEmbeddedPNG(AudacityPromo_png, AudacityPromo_png_len), width, height),
-         WhatsNewURL,
-         XXO("Watch the release video"),
-         XXO("")
-      },
+      ));
+   }
+
+   snapshots.push_back(CarouselSnapshot(
+      XXO("What's new in Audacity"),
+      Rescale(LoadEmbeddedPNG(AudacityPromo_png, AudacityPromo_png_len), width, height),
+      WhatsNewURL,
+      XXO("Watch the release video"),
+      XXO("")
+   ));
 #if defined (__WXOSX__) || defined(__WXMSW__)
-      {
-         XXO("Soap Voice Cleaner: studio-quality voice-over sound"),
-         Rescale(LoadEmbeddedPNG(MuseHubPromo_png, MuseHubPromo_png_len), width, height),
-         MuseHubURL,
-         XXO("Get it on MuseHub"),
-         XXO("")
-      },
+   snapshots.push_back(CarouselSnapshot(
+      XXO("Soap Voice Cleaner: studio-quality voice-over sound"),
+      Rescale(LoadEmbeddedPNG(MuseHubPromo_png, MuseHubPromo_png_len), width, height),
+      MuseHubURL,
+      XXO("Get it on MuseHub"),
+      XXO("")
+   ));
 #endif
-      {
-         XXO("Help us decide the future of Audacity"),
-         Rescale(LoadEmbeddedPNG(AudacityFeatureSurvey_png, AudacityFeatureSurvey_png_len), width, height),
-         AudacitySurveyURL,
-         XXO("Take part in survey"),
-         XXO("Audacity feature survey")
-      },
-      {
-         XXO("25th Anniversary Merchandise!"),
-         Rescale(LoadEmbeddedPNG(AudacityMerchStore_png, AudacityMerchStore_png_len), width, height),
-         AudacityMerchStoreURL,
-         XXO("Visit now"),
-         XXO("Visit our new Audacity merch store")
-      }
-   };
+   snapshots.push_back(CarouselSnapshot(
+      XXO("Help us decide the future of Audacity"),
+      Rescale(LoadEmbeddedPNG(AudacityFeatureSurvey_png, AudacityFeatureSurvey_png_len), width, height),
+      AudacitySurveyURL,
+      XXO("Take part in survey"),
+      XXO("Audacity feature survey")
+   ));
+
+   snapshots.push_back(CarouselSnapshot(
+      XXO("25th Anniversary Merchandise!"),
+      Rescale(LoadEmbeddedPNG(AudacityMerchStore_png, AudacityMerchStore_png_len), width, height),
+      AudacityMerchStoreURL,
+      XXO("Visit now"),
+      XXO("Visit our new Audacity merch store")
+   ));
+
 
    S.StartVerticalLay(wxEXPAND);
    {
