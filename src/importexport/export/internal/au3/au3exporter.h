@@ -22,7 +22,7 @@ class Au3Exporter : public IExporter
 public:
     Au3Exporter() = default;
 
-    bool exportData() override;
+    muse::Ret exportData() override;
 
     std::vector<std::string> formatsList() const override;
     int formatIndex(const std::string& format) const override;

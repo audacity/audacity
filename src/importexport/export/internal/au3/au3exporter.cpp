@@ -10,6 +10,8 @@
 #include "libraries/lib-import-export/ExportPluginRegistry.h"
 #include "libraries/lib-import-export/ExportUtils.h"
 
+#include "translation.h"
+
 #include "au3exporter.h"
 
 using namespace au::au3;
@@ -83,7 +85,7 @@ public:
     }
 };
 
-bool Au3Exporter::exportData()
+muse::Ret Au3Exporter::exportData()
 {
     muse::io::path_t directoryPath = exportConfiguration()->directoryPath();
     muse::io::path_t filePath = directoryPath.appendingComponent(exportConfiguration()->filename())
@@ -93,18 +95,18 @@ bool Au3Exporter::exportData()
 
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     IF_ASSERT_FAILED(project) {
-        return false;
+        return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
     int format = formatIndex(exportConfiguration()->currentFormat());
     if (format == -1) {
-        return false;
+        return muse::make_ret(muse::Ret::Code::InternalError);
     }
     m_format = format;
 
     m_plugin = formatPlugin(exportConfiguration()->currentFormat());
     if (!m_plugin) {
-        return false;
+        return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
     // TODO: implement other ExportProcessType's selections
@@ -129,7 +131,7 @@ bool Au3Exporter::exportData()
     auto exportedTracks = ExportUtils::FindExportWaveTracks(TrackList::Get(*project), m_selectedOnly);
     if (exportedTracks.empty()) {
         //! NOTE: All selected audio is muted
-        return false;
+        return muse::make_ret(muse::Ret::Code::InternalError, muse::trc("export", "All selected audio is muted"));
     }
 
     m_mixerSpec = std::make_unique<MixerOptions::Downmix>(exportedTracks.size(), 2).get();
@@ -142,62 +144,63 @@ bool Au3Exporter::exportData()
         m_numChannels = 2;
     }
 
-    auto processor = m_plugin->CreateProcessor(m_format);
-    if (!processor->Initialize(*project,
-                               m_parameters,
-                               filename.GetFullPath(),
-                               m_t0, m_t1, m_selectedOnly,
-                               m_sampleRate, m_numChannels,
-                               m_mixerSpec,
-                               m_tags)) {
-        return false;
-    }
+    try {
+        auto processor = m_plugin->CreateProcessor(m_format);
+        if (!processor->Initialize(*project,
+                                   m_parameters,
+                                   filename.GetFullPath(),
+                                   m_t0, m_t1, m_selectedOnly,
+                                   m_sampleRate, m_numChannels,
+                                   m_mixerSpec,
+                                   m_tags)) {
+            return muse::make_ret(muse::Ret::Code::InternalError);
+        }
 
-    auto exportTask = ExportTask([actualFilename = filename,
-                                  targetFilename = filename,
-                                  processor = std::shared_ptr<ExportProcessor>(processor.release())]
-                                 (ExportProcessorDelegate& delegate)
-    {
-        auto result = ExportResult::Error;
-        auto cleanup = finally([&] {
-            if (result == ExportResult::Success || result == ExportResult::Stopped) {
-                if (actualFilename != targetFilename) {
-                    //may fail...
-                    ::wxRenameFile(actualFilename.GetFullPath(),
-                                   targetFilename.GetFullPath(),
-                                   true);
+        auto exportTask = ExportTask([actualFilename = filename,
+                                      targetFilename = filename,
+                                      processor = std::shared_ptr<ExportProcessor>(processor.release())]
+                                     (ExportProcessorDelegate& delegate)
+        {
+            auto result = ExportResult::Error;
+            auto cleanup = finally([&] {
+                if (result == ExportResult::Success || result == ExportResult::Stopped) {
+                    if (actualFilename != targetFilename) {
+                        //may fail...
+                        ::wxRenameFile(actualFilename.GetFullPath(),
+                                       targetFilename.GetFullPath(),
+                                       true);
+                    }
+                } else {
+                    ::wxRemoveFile(actualFilename.GetFullPath());
                 }
-            } else {
-                ::wxRemoveFile(actualFilename.GetFullPath());
-            }
+            });
+
+            result = processor->Process(delegate);
+            return result;
         });
 
-        result = processor->Process(delegate);
-        return result;
-    });
+        auto f = exportTask.get_future();
+        DialogExportProgressDelegate delegate;
+        std::thread(std::move(exportTask), std::ref(delegate)).detach();
+        auto result = ExportResult::Error;
+        while (f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready) {
+            delegate.UpdateUI();
+        }
 
-    auto f = exportTask.get_future();
-    DialogExportProgressDelegate delegate;
-    std::thread(std::move(exportTask), std::ref(delegate)).detach();
-    auto result = ExportResult::Error;
-    while (f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready) {
-        delegate.UpdateUI();
+        if (result == ExportResult::Error) {
+            return muse::make_ret(muse::Ret::Code::InternalError);
+        }
+    } catch (const ExportException& e) {
+        return muse::make_ret(muse::Ret::Code::InternalError, e.What().ToStdString());
     }
 
-    if (result == ExportResult::Error) {
-        return false;
-    }
-    return true;
+    return muse::make_ret(muse::Ret::Code::Ok);
 }
 
 std::vector<std::string> Au3Exporter::formatsList() const
 {
     std::vector<std::string> formatsList;
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        //! NOTE: custom FFMPEG export not implemented yet
-        if (!plugin->CreateOptionsEditor(formatIndex, nullptr)) {
-            continue;
-        }
         formatsList.push_back(plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString());
     }
 
