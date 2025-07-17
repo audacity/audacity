@@ -5,6 +5,8 @@
 
 #include "modularity/imoduleinterface.h"
 
+#include "types/ret.h"
+
 namespace au::importexport {
 class IExporter : MODULE_EXPORT_INTERFACE
 {
@@ -13,7 +15,7 @@ class IExporter : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IExporter() = default;
 
-    virtual bool exportData() = 0;
+    virtual muse::Ret exportData() = 0;
 
     virtual std::vector<std::string> formatsList() const = 0;
     virtual int formatIndex(const std::string& format) const = 0;
