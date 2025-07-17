@@ -65,6 +65,28 @@ module.exports = {
             api.autobot.error("navigation error: not found control: " + controlNameOrIndex)
         }
     },
+    checkControlsCount: function(sectionName, panelName, count)
+    {
+        var controls = api.navigation.controls(sectionName, panelName)
+        if (controls.length !== count) {
+            api.autobot.error("Control count is not " + count + ", section: " + sectionName + ", panel: " + panelName)
+        }
+    },
+    checkControlsEnabled: function(sectionName, panelName)
+    {
+        var controls = api.navigation.controls(sectionName, panelName)
+        if (controls[0].enabled === false) {
+            api.autobot.error("Control " + sectionName + ", panel: " + panelName + " is disabled.")
+        }
+    },
+    checkControlsDisabled: function(sectionName, panelName)
+    {
+        var controls = api.navigation.controls(sectionName, panelName)
+        if (controls[0].enabled === true) {
+            api.autobot.error("Control " + sectionName + ", panel: " + panelName + " is enabled.")
+        }
+    },
+    
     activeSection: api.navigation.activeSection,
     activePanel: api.navigation.activePanel,
     activeControl: api.navigation.activeControl,
