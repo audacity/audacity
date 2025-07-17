@@ -93,12 +93,7 @@ Ret Audacity4Project::import(const std::vector<muse::io::path_t>& paths, bool fo
 
 Ret Audacity4Project::exportAudio()
 {
-    muse::Ret ret = muse::make_ret(Ret::Code::Ok);
-    if (!doExport()) {
-        ret = muse::make_ret(Ret::Code::InternalError);
-    }
-
-    return ret;
+    return doExport();
 }
 
 muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const std::string& format)
@@ -161,9 +156,9 @@ Ret Audacity4Project::doExport()
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    exporter()->exportData();
+    Ret result = exporter()->exportData();
 
-    return muse::make_ret(Ret::Code::Ok);
+    return result;
 }
 
 void Audacity4Project::close()

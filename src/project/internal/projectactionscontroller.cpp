@@ -662,7 +662,11 @@ void ProjectActionsController::exportAudio()
     auto ret = interactive()->open(EXPORT_OPTIONS_URI);
 
     ret.onResolve(this, [=](Val ret){
-        project->exportAudio();
+        Ret result = project->exportAudio();
+
+        if (!result.success() && !result.text().empty()) {
+            interactive()->error(muse::trc("export", "Export error"), result.text());
+        }
     });
 }
 
