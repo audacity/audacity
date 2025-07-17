@@ -157,7 +157,7 @@ std::vector<double> DbLinearMeter::smallSteps() const
 
     constexpr std::array<double, 15> SMALL_STEP_36_DB = { -27, -21, -17, -16, -14, -13, -11, -10, -8, -7, -5, -4, -2, -1 };
     constexpr std::array<double,
-                         17> SMALL_STEP_48_DB = { -36, -28, -24, -22, -20, -18, -16.5, -15, -13.5, -11, -10, -8, -7, -5, -4, -2, -1 };
+                         15> SMALL_STEP_48_DB = { -36, -28, -24, -22, -18, -14, -11, -10, -8, -7, -5, -4, -3, -2, -1 };
     constexpr std::array<double,
                          17> SMALL_STEP_60_DB = { -45, -35, -28, -26, -22, -20, -16.5, -15, -13.5, -11, -10, -8, -7, -5, -4, -2, -1 };
     constexpr std::array<double, 21> SMALL_STEP_84_DB

@@ -32,6 +32,8 @@ StyledPopupView {
 
             titleSpacing: 0
 
+            backgroundColor: ui.theme.backgroundSecondaryColor
+
             value: root.model.meterPosition
 
             model: [
@@ -52,11 +54,13 @@ StyledPopupView {
 
             StyledGroupBox {
                 Layout.fillWidth: true
-                Layout.fillHeight: true
+                Layout.preferredHeight: 120
 
                 title: qsTrc("Playback", "Meter style")
 
                 titleSpacing: 0
+
+                backgroundColor: ui.theme.backgroundSecondaryColor
 
                 value: root.model.meterStyle
 
@@ -73,11 +77,13 @@ StyledPopupView {
 
             StyledGroupBox {
                 Layout.fillWidth: true
-                Layout.fillHeight: true
+                Layout.preferredHeight: 120
 
                 title: qsTrc("Playback", "Meter type")
 
                 titleSpacing: 0
+
+                backgroundColor: ui.theme.backgroundSecondaryColor
 
                 value: root.model.meterType
 

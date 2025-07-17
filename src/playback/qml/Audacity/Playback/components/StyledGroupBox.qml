@@ -24,9 +24,11 @@ Item {
 
     property bool enabled: true
 
-    signal valueChangeRequested(int value)
+    property color backgroundColor: ui.theme.backgroundPrimaryColor
 
     property var model: null
+
+    signal valueChangeRequested(int value)
 
     ColumnLayout {
         anchors.fill: parent
@@ -44,7 +46,7 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            color: ui.theme.backgroundPrimaryColor
+            color: root.backgroundColor
             border.width: root.borderWidth
             border.color: ui.theme.strokeColor
             radius: root.boarderRadius
