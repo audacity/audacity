@@ -19,6 +19,7 @@
 
 #include "view/common/tracksviewstatemodel.h"
 #include "view/common/customcursor.h"
+#include "view/common/notepad.h"
 
 #include "view/toolbars/audiosetupcontextmenumodel.h"
 #include "view/toolbars/projecttoolbarmodel.h"
@@ -128,6 +129,7 @@ void ProjectSceneModule::registerUiTypes()
     // common
     qmlRegisterType<TracksViewStateModel>("Audacity.ProjectScene", 1, 0, "TracksViewStateModel");
     qmlRegisterType<CustomCursor>("Audacity.ProjectScene", 1, 0, "CustomCursor");
+    qmlRegisterType<Notepad>("Audacity.ProjectScene", 1, 0, "Notepad");
 
     // toolbars
     qmlRegisterType<ProjectToolBarModel>("Audacity.ProjectScene", 1, 0, "ProjectToolBarModel");
