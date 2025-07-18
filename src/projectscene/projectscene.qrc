@@ -48,6 +48,7 @@
         <file>images/customCursorShapes/Smooth.png</file>
         <file>images/customCursorShapes/SelectionLeft.png</file>
         <file>images/customCursorShapes/SelectionRight.png</file>
+        <file>images/customCursorShapes/Split.png</file>
         <file>qml/Audacity/ProjectScene/clipsview/ClipItemPropertyButton.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/PitchAndSpeedChangeDialog.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/PropertyView.qml</file>

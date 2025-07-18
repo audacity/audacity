@@ -36,6 +36,7 @@ Item {
     property alias rightTrimPressedButtons: clipsContainer.rightTrimPressedButtons
     property bool selectionEditInProgress: false
     property bool selectionInProgress: false
+    property bool hover: false
 
     signal interactionStarted()
     signal interactionEnded()
@@ -326,6 +327,12 @@ Item {
                             clipsContainer.currentChannel = clipItem.currentChannel
                         }
                         return clipItem && clipItem.isNearSample
+                    })
+                }
+
+                onHoverChanged: function() {
+                    root.hover = clipsContainer.checkIfAnyClip(function(clipItem) {
+                        return clipItem && clipItem.hover
                     })
                 }
 

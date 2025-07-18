@@ -113,6 +113,12 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Split into new track"),
              TranslatableString("action", "Split into new track")
              ),
+    UiAction("split-tool",
+             au::context::UiCtxAny,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Split Tool"),
+             TranslatableString("action", "Split Tool")
+             ),
     UiAction("silence-audio",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
