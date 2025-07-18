@@ -2,6 +2,7 @@
 
 #include <wx/sizer.h>
 #include <wx/stattext.h>
+#include <wx/statline.h>
 #include <wx/button.h>
 #include <wx/textctrl.h>
 #include <wx/hyperlink.h>
@@ -148,6 +149,22 @@ void LoginDialog::LayoutControls()
       hSizer->AddSpacer(8);
       hSizer->Add(MakeLoginButton(this, ID_WITH_FACEBOOK, bmpFacebookLogo, XO("Continue with Facebook")), 1, wxEXPAND);
       title->Wrap(hSizer->GetMinSize().GetWidth());
+      topSizer->Add(hSizer.release(), 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 16);
+   }
+
+   {
+      auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+
+      wxStaticLine* leftLine = safenew wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxSize(-1, 1));
+      wxStaticLine* rightLine = safenew wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxSize(-1, 1));
+      wxStaticText* label = safenew wxStaticText(this, wxID_ANY, _("Or use email and password"));
+      leftLine->SetMinSize({ 10, 1 });
+      rightLine->SetMinSize({ 10, 1 });
+
+      hSizer->Add(leftLine, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, 8);
+      hSizer->Add(label, 0, wxALIGN_CENTER_VERTICAL);
+      hSizer->Add(rightLine, 1, wxALIGN_CENTER_VERTICAL | wxLEFT, 8);
+
       topSizer->Add(hSizer.release(), 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 16);
    }
 
