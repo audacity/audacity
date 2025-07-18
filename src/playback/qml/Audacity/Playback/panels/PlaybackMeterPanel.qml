@@ -51,21 +51,7 @@ Item {
             PlaybackMeterCustomisePopup {
                 id: popup
 
-                meterStyle: model.meterStyle
-                meterType: model.meterType
-                meterPosition: model.meterPosition
-
-                onPositionChangeRequested: function (position) {
-                    model.positionChangeRequested(position)
-                }
-
-                onStyleChangeRequested: function (style) {
-                    model.styleChangeRequested(style)
-                }
-
-                onTypeChangeRequested: function (type) {
-                    model.typeChangeRequested(type)
-                }
+                model: model.meterModel
             }
         }
 
@@ -98,7 +84,6 @@ Item {
                     currentVolumePressure: model.leftChannelPressure
                     currentRMS: model.leftChannelRMS
 
-                    meterStyle: model.meterStyle
                     meterModel: model.meterModel
 
                     indicatorWidth: 10
@@ -117,7 +102,6 @@ Item {
                     currentVolumePressure: model.rightChannelPressure
                     currentRMS: model.rightChannelRMS
 
-                    meterStyle: model.meterStyle
                     meterModel: model.meterModel
 
                     indicatorWidth: 10

@@ -16,7 +16,7 @@ using namespace au::trackedit;
 using namespace au::audio;
 
 static constexpr float PAN_SCALING_FACTOR = 100.f;
-static constexpr float MIN_ALLOWED_PRESSURE = -60.f;
+static constexpr float MIN_ALLOWED_PRESSURE = -145.f;
 static constexpr float MAX_ALLOWED_PRESSURE = 0.f;
 
 static const std::string TRACK_ID_KEY("trackId");

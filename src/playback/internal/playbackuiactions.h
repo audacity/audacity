@@ -40,6 +40,7 @@ private:
     static const muse::ui::UiActionList m_mainActions;
     static const muse::ui::UiActionList m_settingsActions;
     static const muse::ui::UiActionList m_loopBoundaryActions;
+    static const muse::ui::UiActionList m_meterDbRangeActions;
 
     std::shared_ptr<PlaybackController> m_controller;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;

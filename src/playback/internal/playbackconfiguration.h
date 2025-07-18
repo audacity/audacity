@@ -34,6 +34,10 @@ public:
     void setPlaybackMeterPosition(PlaybackMeterPosition::MeterPosition position) override;
     muse::async::Notification playbackMeterPositionChanged() const override;
 
+    PlaybackMeterDbRange::DbRange playbackMeterDbRange() const override;
+    void setPlaybackMeterDbRange(PlaybackMeterDbRange::DbRange range) override;
+    muse::async::Notification playbackMeterDbRangeChanged() const override;
+
     int playbackHorizontalMeterSize() const override;
     void setPlaybackHorizontalMeterSize(int size) override;
     muse::async::Notification playbackHorizontalMeterSizeChanged() const override;

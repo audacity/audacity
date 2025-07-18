@@ -10,6 +10,7 @@ static const QString PLAYBACK_TIME_ITEM_FORMAT("playbackToolbar/playbackTimeItem
 static const QString PLAYBACK_METER_STYLE("playbackToolbar/playbackMeterStyle");
 static const QString PLAYBACK_METER_TYPE("playbackToolbar/playbackMeterType");
 static const QString PLAYBACK_METER_POSITION("playbackToolbar/playbackMeterPosition");
+static const QString PLAYBACK_METER_DB_RANGE("playbackToolbar/playbackMeterDbRange");
 static const QString PLAYBACK_HORIZONTAL_METER_SIZE("playbackToolbar/playbackHorizontalMeterSize");
 
 using namespace muse;
@@ -125,6 +126,28 @@ void PlaybackConfiguration::setPlaybackMeterPosition(PlaybackMeterPosition::Mete
 muse::async::Notification PlaybackConfiguration::playbackMeterPositionChanged() const
 {
     return uiConfiguration()->uiItemStateChanged(PLAYBACK_METER_POSITION);
+}
+
+PlaybackMeterDbRange::DbRange PlaybackConfiguration::playbackMeterDbRange() const
+{
+    PlaybackMeterDbRange::DbRange result = PlaybackMeterDbRange::DbRange::Range60;
+
+    QString rangeStr = uiConfiguration()->uiItemState(PLAYBACK_METER_DB_RANGE);
+    if (!rangeStr.isEmpty()) {
+        result = static_cast<PlaybackMeterDbRange::DbRange>(rangeStr.toInt());
+    }
+
+    return result;
+}
+
+void PlaybackConfiguration::setPlaybackMeterDbRange(PlaybackMeterDbRange::DbRange range)
+{
+    uiConfiguration()->setUiItemState(PLAYBACK_METER_DB_RANGE, QString::number(static_cast<int>(range)));
+}
+
+muse::async::Notification PlaybackConfiguration::playbackMeterDbRangeChanged() const
+{
+    return uiConfiguration()->uiItemStateChanged(PLAYBACK_METER_DB_RANGE);
 }
 
 int PlaybackConfiguration::playbackHorizontalMeterSize() const

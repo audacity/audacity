@@ -122,7 +122,6 @@ FlatButton {
                             id: leftVolumePressure
 
                             meterModel: meterModel
-                            meterStyle: root.meterStyle
 
                             showOverload: false
                         }
@@ -131,7 +130,6 @@ FlatButton {
                             id: rightVolumePressure
 
                             meterModel: meterModel
-                            meterStyle: root.meterStyle
 
                             showOverload: false
                         }

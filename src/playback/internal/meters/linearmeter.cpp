@@ -13,13 +13,14 @@
 
 using namespace au::playback;
 
-static constexpr double MIN_VOLUME_LIN = 0.0;
-static constexpr double MAX_VOLUME_LIN = 1.0;
+namespace {
+constexpr double MIN_VOLUME_LIN = 0.0;
+constexpr double MAX_VOLUME_LIN = 1.0;
 
-static constexpr double MIN_VOLUME_DB = -60.0;
+constexpr int LOW_RESOLUTION_METER_THRESHOLD = 400;
+constexpr int HIGH_RESOLUTION_METER_THRESHOLD = 1500;
 
-static constexpr int LOW_RESOLUTION_METER_THRESHOLD = 400;
-static constexpr int HIGH_RESOLUTION_METER_THRESHOLD = 1500;
+constexpr int MIN_STEP_DISTANCE = 50;
 
 struct StepValue {
     int threshold;
@@ -27,21 +28,33 @@ struct StepValue {
     double smallStep;
 };
 
-static StepValue roundUpToFixedValue(int meterSize)
+StepValue roundUpToFixedValue(int meterSize)
 {
-    const std::vector<StepValue> steps = {
-        { HIGH_RESOLUTION_METER_THRESHOLD, 0.05, 0.05 / 2 },
-        { LOW_RESOLUTION_METER_THRESHOLD, 0.1, 0.1 / 3 },
-        { 0, 0.25, 0.25 / 3 }
-    };
+    const auto fullStepsInc = { 0.05, 0.1, 0.2, 0.25, 0.5 };
 
-    for (const auto& step : steps) {
-        if (meterSize >= step.threshold) {
-            return step;
+    for (const auto& step : fullStepsInc) {
+        if (meterSize / MIN_STEP_DISTANCE >= MAX_VOLUME_LIN / step) {
+            return { meterSize, step, 0.0 };
         }
     }
 
-    return steps.back();
+    return { meterSize, 0.1, 0.0 };
+}
+}
+
+LinearMeter::LinearMeter(int meterSize, double dbRange)
+    : m_meterSize(meterSize), m_dbRange(dbRange)
+{
+}
+
+void LinearMeter::setMeterSize(int meterSize)
+{
+    m_meterSize = meterSize;
+}
+
+void LinearMeter::setDbRange(double dbRange)
+{
+    m_dbRange = dbRange;
 }
 
 double LinearMeter::stepToPosition(double step) const
@@ -52,7 +65,7 @@ double LinearMeter::stepToPosition(double step) const
 
 double LinearMeter::sampleToPosition(double sample) const
 {
-    if ((sample < MIN_VOLUME_DB) || muse::is_equal(sample, MIN_VOLUME_DB)) {
+    if ((sample < m_dbRange) || muse::is_equal(sample, m_dbRange)) {
         return MIN_VOLUME_LIN;
     }
 
@@ -66,13 +79,13 @@ std::string LinearMeter::sampleToText(double sample) const
     return ss.str();
 }
 
-std::vector<double> LinearMeter::fullSteps(int meterSize) const
+std::vector<double> LinearMeter::fullSteps() const
 {
-    if (meterSize <= 0) {
+    if (m_meterSize <= 0) {
         return {};
     }
 
-    const StepValue selectedStep = roundUpToFixedValue(meterSize);
+    const StepValue selectedStep = roundUpToFixedValue(m_meterSize);
 
     if (selectedStep.fullStep == 0) {
         return {};
@@ -89,15 +102,15 @@ std::vector<double> LinearMeter::fullSteps(int meterSize) const
     return steps;
 }
 
-std::vector<double> LinearMeter::smallSteps(int meterSize) const
+std::vector<double> LinearMeter::smallSteps() const
 {
-    if (meterSize <= 0) {
+    if (m_meterSize <= 0) {
         return {};
     }
 
-    const auto fullSteps = this->fullSteps(meterSize);
+    const auto fullSteps = this->fullSteps();
 
-    const StepValue selectedStep = roundUpToFixedValue(meterSize);
+    const StepValue selectedStep = roundUpToFixedValue(m_meterSize);
 
     if (selectedStep.smallStep == 0) {
         return {};

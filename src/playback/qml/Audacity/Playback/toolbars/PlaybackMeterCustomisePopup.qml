@@ -13,16 +13,10 @@ import Audacity.Playback 1.0
 StyledPopupView {
     id: root
 
-    property int meterStyle: PlaybackMeterStyle.Default
-    property int meterType: PlaybackMeterType.DbLog
-    property int meterPosition: PlaybackMeterPosition.TopBar
-
-    signal positionChangeRequested(int position)
-    signal styleChangeRequested(int style)
-    signal typeChangeRequested(int type)
+    property var model: null
 
     contentWidth: 336
-    contentHeight: 248
+    contentHeight: 286
 
     margins: 12
 
@@ -30,26 +24,45 @@ StyledPopupView {
         anchors.fill: parent
         spacing: 12
 
+        StyledGroupBox {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 92
+
+            title: qsTrc("playback", "Position")
+
+            titleSpacing: 4
+
+            backgroundColor: ui.theme.backgroundSecondaryColor
+
+            value: root.model.meterPosition
+
+            model: [
+                {label : qsTrc("playback","Top bar (horizontal)"), value: PlaybackMeterPosition.TopBar},
+                {label : qsTrc("playback","Side bar (vertical)"), value: PlaybackMeterPosition.SideBar}
+            ]
+
+            onValueChangeRequested: function(value) {
+                root.model.meterPosition = value
+            }
+        }
+
         RowLayout {
             Layout.fillWidth: true
-            Layout.preferredHeight: 124
+            Layout.preferredHeight: 120
             
             spacing: 12
 
             StyledGroupBox {
                 Layout.fillWidth: true
-                Layout.fillHeight: true
+                Layout.preferredHeight: 120
 
                 title: qsTrc("Playback", "Meter style")
 
-                titleSpacing: 12
-                itemSpacing: 8
-                itemMargin: 12
+                titleSpacing: 4
 
-                borderWidth: 1
-                boarderRadius: 2
+                backgroundColor: ui.theme.backgroundSecondaryColor
 
-                value: root.meterStyle
+                value: root.model.meterStyle
 
                 model: [
                     {label : qsTrc("playback","Default"), value: PlaybackMeterStyle.Default},
@@ -58,24 +71,21 @@ StyledPopupView {
                 ]
 
                 onValueChangeRequested: function(value) {
-                    root.styleChangeRequested(value)
+                    root.model.meterStyle = value
                 }
             }
 
             StyledGroupBox {
                 Layout.fillWidth: true
-                Layout.fillHeight: true
+                Layout.preferredHeight: 120
 
                 title: qsTrc("Playback", "Meter type")
 
-                titleSpacing: 12
-                itemSpacing: 8
-                itemMargin: 12
+                titleSpacing: 4
 
-                borderWidth: 1
-                boarderRadius: 2
+                backgroundColor: ui.theme.backgroundSecondaryColor
 
-                value: root.meterType
+                value: root.model.meterType
 
                 model: [
                     {label : qsTrc("playback","Logarithmic (dB)"), value: PlaybackMeterType.DbLog},
@@ -84,33 +94,119 @@ StyledPopupView {
                 ]
 
                 onValueChangeRequested: function(value) {
-                    root.typeChangeRequested(value)
+                    root.model.meterType = value
                 }
             }
         }
 
-        StyledGroupBox {
+        ColumnLayout {
+            id: dbRangeSection
+
             Layout.fillWidth: true
-            Layout.preferredHeight: 100
+            Layout.preferredHeight: 50
 
-            title: qsTrc("playback", "Position")
+            spacing: 6
 
-            titleSpacing: 12
-            itemSpacing: 8
-            itemMargin: 12
+            StyledTextLabel {
+                text: qsTrc("playback", "dB range")
+                horizontalAlignment: Text.AlignLeft
+                wrapMode: Text.WordWrap
+            }
 
-            borderWidth: 1
-            boarderRadius: 2
+            Item {
+                id: dropdown
 
-            value: root.meterPosition
+                Layout.fillWidth: true
+                Layout.preferredHeight: 28
 
-            model: [
-                {label : qsTrc("playback","Top bar (horizontal)"), value: PlaybackMeterPosition.TopBar},
-                {label : qsTrc("playback","Side bar (vertical)"), value: PlaybackMeterPosition.SideBar}
-            ]
+                enabled: root.model.meterType !== PlaybackMeterType.Linear
 
-            onValueChangeRequested: function(value) {
-                root.positionChangeRequested(value)
+                function openMenu() {
+                    menuLoader.toggleOpened(root.model.dbRanges)
+                }
+
+                Rectangle {
+                    id: backgroundItem
+                    anchors.fill: parent
+ 
+                    color: ui.theme.textFieldColor
+                    border.color: ui.theme.strokeColor
+                    border.width: Math.max(ui.theme.borderWidth, 1)
+                    radius: 3
+                }
+
+                StyledTextLabel {
+                    id: labelItem
+
+                    anchors.left: parent.left
+                    anchors.leftMargin: 12
+                    anchors.right: dropIconItem.left
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: model.currentDbRange
+                    horizontalAlignment: Text.AlignLeft
+                    wrapMode: Text.Wrap
+                    maximumLineCount: 1
+                }
+
+                MouseArea {
+                    id: mouseAreaItem
+                    anchors.fill: parent
+                    hoverEnabled: dropdown.enabled
+
+                    onClicked: {
+                        dropdown.openMenu()
+                    }
+
+                    onPressed: {
+                        ui.tooltip.hide(dropdown, true)
+                    }
+
+                    onContainsMouseChanged: {
+                        if (!labelItem.truncated || menuLoader.isMenuOpened) {
+                            return
+                        }
+
+                        if (mouseAreaItem.containsMouse) {
+                            ui.tooltip.show(dropdown, labelItem.text)
+                        } else {
+                            ui.tooltip.hide(dropdown)
+                        }
+                    }
+                }
+
+                StyledIconLabel {
+                    id: dropIconItem
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 8
+
+                    iconCode: IconCode.SMALL_ARROW_DOWN
+                }
+
+                states: [
+                    State {
+                        name: "HOVERED"
+                        when: mouseAreaItem.containsMouse && !mouseAreaItem.pressed
+                        PropertyChanges { target: backgroundItem; border.color: Utils.colorWithAlpha(ui.theme.accentColor, 0.6) }
+                    },
+
+                    State {
+                        name: "OPENED"
+                        when: menuLoader.isMenuOpened
+                        PropertyChanges { target: backgroundItem; border.color: ui.theme.accentColor; width: 336 }
+                    }
+                ]
+
+                StyledMenuLoader {
+                    id: menuLoader
+
+                    anchors.top: parent.top
+
+                    onHandleMenuItem: function(itemId) {
+                        model.handleDbRangeChange(itemId)
+                    }
+                }
             }
         }
     }

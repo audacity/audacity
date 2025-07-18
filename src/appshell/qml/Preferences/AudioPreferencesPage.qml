@@ -23,6 +23,7 @@ import QtQuick 2.15
 
 import Muse.UiComponents 1.0
 import Audacity.Preferences 1.0
+import Audacity.Playback 1.0
 
 import "internal"
 
@@ -33,6 +34,10 @@ PreferencesPage {
 
     CommonAudioApiConfigurationModel {
         id: apiModel
+    }
+
+    PlaybackMeterModel {
+        id: playbackMeterModel
     }
 
     Component.onCompleted: {
@@ -72,6 +77,15 @@ PreferencesPage {
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 2
+        }
+
+        SeparatorLine {}
+
+        MeterDbRangeSection {
+           model: playbackMeterModel
+
+           navigation.section: root.navigationSection
+           navigation.order: root.navigationOrderStart + 3
         }
     }
 }

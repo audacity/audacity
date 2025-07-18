@@ -67,7 +67,7 @@ struct PlaybackRegion
 };
 
 static constexpr audio::volume_dbfs_t MAX_DISPLAYED_DBFS = 0.f; // 100%
-static constexpr audio::volume_dbfs_t MIN_DISPLAYED_DBFS = -60.f; // 0%
+static constexpr audio::volume_dbfs_t MIN_DISPLAYED_DBFS = -145.f; // 0%
 
 struct PlayTracksOptions {
     bool selectedOnly = false;
@@ -135,5 +135,38 @@ public:
         SideBar = 1,
     };
     Q_ENUM(MeterPosition)
+};
+
+class PlaybackMeterDbRange
+{
+    Q_GADGET
+public:
+    enum class DbRange: int {
+        Range36 = 0,
+        Range48 = 1,
+        Range60 = 2,
+        Range72 = 3,
+        Range84 = 4,
+        Range96 = 5,
+        Range120 = 6,
+        Range144 = 7,
+    };
+
+    static double toDouble(DbRange value)
+    {
+        switch (value) {
+        case DbRange::Range36: return -36.0;
+        case DbRange::Range48: return -48.0;
+        case DbRange::Range60: return -60.0;
+        case DbRange::Range72: return -72.0;
+        case DbRange::Range84: return -84.0;
+        case DbRange::Range96: return -96.0;
+        case DbRange::Range120: return -120.0;
+        case DbRange::Range144: return -144.0;
+        default: return -60.0;
+        }
+    }
+
+    Q_ENUM(DbRange)
 };
 }
