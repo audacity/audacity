@@ -15,8 +15,8 @@ StyledPopupView {
 
     property var model: null
 
-    contentWidth: 360
-    contentHeight: 310
+    contentWidth: 336
+    contentHeight: 286
 
     margins: 12
 
@@ -30,7 +30,7 @@ StyledPopupView {
 
             title: qsTrc("playback", "Position")
 
-            titleSpacing: 0
+            titleSpacing: 4
 
             backgroundColor: ui.theme.backgroundSecondaryColor
 
@@ -58,7 +58,7 @@ StyledPopupView {
 
                 title: qsTrc("Playback", "Meter style")
 
-                titleSpacing: 0
+                titleSpacing: 4
 
                 backgroundColor: ui.theme.backgroundSecondaryColor
 
@@ -81,7 +81,7 @@ StyledPopupView {
 
                 title: qsTrc("Playback", "Meter type")
 
-                titleSpacing: 0
+                titleSpacing: 4
 
                 backgroundColor: ui.theme.backgroundSecondaryColor
 
@@ -105,34 +105,107 @@ StyledPopupView {
             Layout.fillWidth: true
             Layout.preferredHeight: 50
 
+            spacing: 6
+
             StyledTextLabel {
                 text: qsTrc("playback", "dB range")
                 horizontalAlignment: Text.AlignLeft
                 wrapMode: Text.WordWrap
             }
 
-            StyledDropdown {
-                id: dbRangeDropdown
+            Item {
+                id: dropdown
 
                 Layout.fillWidth: true
-                indeterminateText: ""
+                Layout.preferredHeight: 28
 
                 enabled: root.model.meterType !== PlaybackMeterType.Linear
 
-                currentIndex: root.model.meterDbRange
-                model: [
-                    "-36 dB (shallow range for high-amplitude editing)",
-                    "-48 dB (PCM range of 8 bit samples)", 
-                    "-60 dB (PCM range of 10 bit samples)",
-                    "-72 dB (PCM range of 12 bit samples)",
-                    "-84 dB (PCM range of 14 bit samples)",
-                    "-96 dB (PCM range of 16 bit samples)",
-                    "-120 dB (approximate limit of human hearing)",
-                    "-145 dB (PCM range of 24 bit samples)"
+                function openMenu() {
+                    menuLoader.toggleOpened(root.model.dbRanges)
+                }
+
+                Rectangle {
+                    id: backgroundItem
+                    anchors.fill: parent
+ 
+                    color: ui.theme.textFieldColor
+                    border.color: ui.theme.strokeColor
+                    border.width: Math.max(ui.theme.borderWidth, 1)
+                    radius: 3
+                }
+
+                StyledTextLabel {
+                    id: labelItem
+
+                    anchors.left: parent.left
+                    anchors.leftMargin: 12
+                    anchors.right: dropIconItem.left
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: model.currentDbRange
+                    horizontalAlignment: Text.AlignLeft
+                    wrapMode: Text.Wrap
+                    maximumLineCount: 1
+                }
+
+                MouseArea {
+                    id: mouseAreaItem
+                    anchors.fill: parent
+                    hoverEnabled: dropdown.enabled
+
+                    onClicked: {
+                        dropdown.openMenu()
+                    }
+
+                    onPressed: {
+                        ui.tooltip.hide(dropdown, true)
+                    }
+
+                    onContainsMouseChanged: {
+                        if (!labelItem.truncated || menuLoader.isMenuOpened) {
+                            return
+                        }
+
+                        if (mouseAreaItem.containsMouse) {
+                            ui.tooltip.show(dropdown, labelItem.text)
+                        } else {
+                            ui.tooltip.hide(dropdown)
+                        }
+                    }
+                }
+
+                StyledIconLabel {
+                    id: dropIconItem
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 8
+
+                    iconCode: IconCode.SMALL_ARROW_DOWN
+                }
+
+                states: [
+                    State {
+                        name: "HOVERED"
+                        when: mouseAreaItem.containsMouse && !mouseAreaItem.pressed
+                        PropertyChanges { target: backgroundItem; border.color: Utils.colorWithAlpha(ui.theme.accentColor, 0.6) }
+                    },
+
+                    State {
+                        name: "OPENED"
+                        when: menuLoader.isMenuOpened
+                        PropertyChanges { target: backgroundItem; border.color: ui.theme.accentColor; width: 336 }
+                    }
                 ]
 
-                onActivated: function(newIndex, newValue) {
-                    root.model.meterDbRange = newIndex;
+                StyledMenuLoader {
+                    id: menuLoader
+
+                    anchors.top: parent.top
+
+                    onHandleMenuItem: function(itemId) {
+                        model.handleDbRangeChange(itemId)
+                    }
                 }
             }
         }

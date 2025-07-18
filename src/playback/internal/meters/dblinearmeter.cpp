@@ -100,11 +100,13 @@ std::vector<double> DbLinearMeter::fullSteps() const
     constexpr std::array<double, 7> FULL_STEP_60_DB_LOW = { -60, -30, -20, -15, -10, -5, 0 };
     constexpr std::array<double, 7> FULL_STEP_48_DB_LOW = { -48, -24, -16, -12, -9, -6, 0 };
     constexpr std::array<double, 7> FULL_STEP_84_DB_LOW = { -84, -42, -28, -21, -14, -7, 0 };
+    constexpr std::array<double, 7> FULL_STEP_145_DB_LOW = { -144, -72, -48, -36, -27, -18, 0 };
 
     constexpr std::array<double, 10> FULL_STEP_36_DB_HIGH = { -36, -30, -24, -18, -15, -12, -9, -6, -3, 0 };
     constexpr std::array<double, 10> FULL_STEP_48_DB_HIGH = { -48, -40, -32, -24, -20, -16, -12, -9, -6, 0 };
     constexpr std::array<double, 11> FULL_STEP_60_DB_HIGH = { -60, -50, -40, -30, -24, -18, -12, -9, -6, -3, 0 };
     constexpr std::array<double, 13> FULL_STEP_84_DB_HIGH = { -84, -72, -60, -48, -42, -36, -30, -24, -18, -12, -9, -6, 0 };
+    constexpr std::array<double, 9> FULL_STEP_145_DB_HIGH = { -144, -96, -72, -60, -48, -36, -27, -18, 0 };
 
     if (m_meterSize < LOW_RESOLUTION_METER_THRESHOLD) {
         if (muse::is_equal(m_dbRange, -36.0)) {
@@ -122,7 +124,7 @@ std::vector<double> DbLinearMeter::fullSteps() const
         } else if (muse::is_equal(m_dbRange, -120.0)) {
             return timesArray<2>(FULL_STEP_60_DB_LOW);
         } else if (muse::is_equal(m_dbRange, -145.0)) {
-            return timesArray<3>(FULL_STEP_48_DB_LOW);
+            return std::vector<double>(std::begin(FULL_STEP_145_DB_LOW), std::end(FULL_STEP_145_DB_LOW));
         }
 
         return std::vector<double>(std::begin(FULL_STEP_60_DB_LOW), std::end(FULL_STEP_60_DB_LOW));
@@ -143,7 +145,7 @@ std::vector<double> DbLinearMeter::fullSteps() const
     } else if (muse::is_equal(m_dbRange, -120.0)) {
         return timesArray<2>(FULL_STEP_60_DB_HIGH);
     } else if (muse::is_equal(m_dbRange, -145.0)) {
-        return timesArray<3>(FULL_STEP_48_DB_HIGH);
+        return std::vector<double>(std::begin(FULL_STEP_145_DB_HIGH), std::end(FULL_STEP_145_DB_HIGH));
     }
 
     return std::vector<double>(std::begin(FULL_STEP_60_DB_HIGH), std::end(FULL_STEP_60_DB_HIGH));
@@ -162,6 +164,8 @@ std::vector<double> DbLinearMeter::smallSteps() const
                          17> SMALL_STEP_60_DB = { -45, -35, -28, -26, -22, -20, -16.5, -15, -13.5, -11, -10, -8, -7, -5, -4, -2, -1 };
     constexpr std::array<double, 21> SMALL_STEP_84_DB
         = { -54, -44, -39, -32, -34, -26, -28, -22, -20, -16.5, -15, -13.5, -11, -10, -8, -7, -5, -4, -3, -2, -1 };
+    constexpr std::array<double,
+                         15> SMALL_STEP_145_DB = { -108, -84, -72, -66, -54, -42, -33, -30, -24, -21, -15, -12, -9, -6, -3 };
 
     if (muse::is_equal(m_dbRange, -36.0)) {
         return std::vector<double>(SMALL_STEP_36_DB.begin(), SMALL_STEP_36_DB.end());
@@ -178,7 +182,7 @@ std::vector<double> DbLinearMeter::smallSteps() const
     } else if (muse::is_equal(m_dbRange, -120.0)) {
         return timesArray<2>(SMALL_STEP_60_DB);
     } else if (muse::is_equal(m_dbRange, -145.0)) {
-        return timesArray<3>(SMALL_STEP_48_DB);
+        return std::vector<double>(std::begin(SMALL_STEP_145_DB), std::end(SMALL_STEP_145_DB));
     }
 
     return std::vector<double>(std::begin(SMALL_STEP_60_DB), std::end(SMALL_STEP_60_DB));

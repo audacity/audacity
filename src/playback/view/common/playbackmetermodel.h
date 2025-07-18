@@ -8,6 +8,7 @@
 
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackmetercontroller.h"
+#include "playback/view/common/playbackmeterdbrangemodel.h"
 
 namespace au::playback {
 class PlaybackMeterModel : public QObject, public muse::async::Asyncable
@@ -25,6 +26,9 @@ class PlaybackMeterModel : public QObject, public muse::async::Asyncable
         PlaybackMeterDbRange::DbRange meterDbRange READ meterDbRange WRITE setMeterDbRange NOTIFY meterDbRangeChanged FINAL)
     Q_PROPERTY(int meterSize READ meterSize WRITE setMeterSize NOTIFY meterSizeChanged FINAL)
 
+    Q_PROPERTY(muse::uicomponents::MenuItemList dbRanges READ dbRanges NOTIFY dbRangesChanged FINAL)
+    Q_PROPERTY(QString currentDbRange READ currentDbRange NOTIFY dbRangesChanged FINAL)
+
     muse::Inject<IPlaybackMeterController> meterController;
     muse::Inject<IPlaybackConfiguration> configuration;
 
@@ -34,12 +38,16 @@ public:
     Q_INVOKABLE double stepToPosition(double step);
     Q_INVOKABLE double sampleToPosition(double sample) const;
     Q_INVOKABLE QString sampleToText(double sample) const;
+    Q_INVOKABLE void handleDbRangeChange(const QString& itemId);
 
     PlaybackMeterStyle::MeterStyle meterStyle() const;
     PlaybackMeterType::MeterType meterType() const;
     PlaybackMeterPosition::MeterPosition meterPosition() const;
     PlaybackMeterDbRange::DbRange meterDbRange() const;
+    QString currentDbRange() const;
     int meterSize() const;
+
+    muse::uicomponents::MenuItemList dbRanges() const;
 
     void setMeterStyle(PlaybackMeterStyle::MeterStyle style);
     void setMeterType(PlaybackMeterType::MeterType type);
@@ -59,5 +67,10 @@ signals:
     void meterPositionChanged();
     void meterDbRangeChanged();
     void meterSizeChanged();
+
+    void dbRangesChanged();
+
+private:
+    PlaybackMeterDbRangeModel* m_dbRanges = nullptr;
 };
 }
