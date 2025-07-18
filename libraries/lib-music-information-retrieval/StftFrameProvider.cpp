@@ -21,7 +21,7 @@ namespace MIR
 {
 namespace
 {
-constexpr auto twoPi = 2 * 3.14159265358979323846;
+constexpr auto twoPi = 2 * M_PI;
 
 int GetFrameSize(int sampleRate)
 {
@@ -94,6 +94,8 @@ int StftFrameProvider::GetSampleRate() const
 
 double StftFrameProvider::GetFrameRate() const
 {
+   if (mHopSize <= 0)
+      return 0;
    return 1. * mAudio.GetSampleRate() / mHopSize;
 }
 
