@@ -74,19 +74,14 @@ std::vector<double> DbLogMeter::fullSteps() const
         return {};
     }
 
-    int dbRange = m_dbRange;
-    if (dbRange % 6 != 0) {
-        dbRange = 6 * (dbRange / 6);
-    }
-
-    const StepValues stepValues = roundUpToFixedValue(m_meterSize, dbRange);
+    const StepValues stepValues = roundUpToFixedValue(m_meterSize, m_dbRange);
 
     if (stepValues.fullStep == 0) {
         return {};
     }
 
     std::vector<double> steps;
-    int value = dbRange;
+    int value = m_dbRange;
     while (value <= MAX_VOLUME_DB) {
         steps.push_back(value);
         value += stepValues.fullStep;

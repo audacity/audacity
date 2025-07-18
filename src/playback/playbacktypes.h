@@ -149,7 +149,7 @@ public:
         Range84 = 4,
         Range96 = 5,
         Range120 = 6,
-        Range145 = 7,
+        Range144 = 7,
     };
 
     static double toDouble(DbRange value)
@@ -162,7 +162,7 @@ public:
         case DbRange::Range84: return -84.0;
         case DbRange::Range96: return -96.0;
         case DbRange::Range120: return -120.0;
-        case DbRange::Range145: return -145.0;
+        case DbRange::Range144: return -144.0;
         default: return -60.0;
         }
     }

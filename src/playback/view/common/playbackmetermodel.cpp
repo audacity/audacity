@@ -34,6 +34,7 @@ PlaybackMeterModel::PlaybackMeterModel(QObject* parent)
 
     configuration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
         emit meterDbRangeChanged();
+        emit dbRangesChanged();
     });
 
     m_dbRanges = new PlaybackMeterDbRangeModel(this);
@@ -140,6 +141,7 @@ void PlaybackMeterModel::setMeterSize(int size)
     configuration()->setPlaybackHorizontalMeterSize(size);
     emit smallStepsChanged();
     emit fullStepsChanged();
+    emit dbRangesChanged();
 }
 
 int PlaybackMeterModel::meterSize() const
@@ -155,79 +157,14 @@ muse::uicomponents::MenuItemList PlaybackMeterModel::dbRanges() const
 
 QString PlaybackMeterModel::currentDbRange() const
 {
-    switch (meterDbRange()) {
-    case PlaybackMeterDbRange::DbRange::Range36:
-        return QString::fromUtf8("-36 dB (shallow range for high-amplitude editing)");
-    case PlaybackMeterDbRange::DbRange::Range48:
-        return QString::fromUtf8("-48 dB (PCM range of 8 bit samples)");
-    case PlaybackMeterDbRange::DbRange::Range60:
-        return QString::fromUtf8("-60 dB (PCM range of 10 bit samples)");
-    case PlaybackMeterDbRange::DbRange::Range72:
-        return QString::fromUtf8("-72 dB (PCM range of 12 bit samples)");
-    case PlaybackMeterDbRange::DbRange::Range84:
-        return QString::fromUtf8("-84 dB (PCM range of 14 bit samples)");
-    case PlaybackMeterDbRange::DbRange::Range96:
-        return QString::fromUtf8("-96 dB (PCM range of 16 bit samples)");
-    case PlaybackMeterDbRange::DbRange::Range120:
-        return QString::fromUtf8("-120 dB (approximate limit of human hearing)");
-    case PlaybackMeterDbRange::DbRange::Range145:
-        return QString::fromUtf8("-145 dB (PCM range of 24 bit samples)");
-    default:
-        return QString::fromUtf8("");
-    }
+    return QString::fromUtf8(m_dbRanges->description(meterDbRange()));
 }
 
 void PlaybackMeterModel::handleDbRangeChange(const QString& itemId)
 {
-    if (itemId.isEmpty()) {
-        return;
-    }
-
-    if (itemId == "meter-db-range-36") {
-        setMeterDbRange(PlaybackMeterDbRange::DbRange::Range36);
-        emit dbRangesChanged();
-        return;
-    }
-
-    if (itemId == "meter-db-range-48") {
-        setMeterDbRange(PlaybackMeterDbRange::DbRange::Range48);
-        emit dbRangesChanged();
-        return;
-    }
-
-    if (itemId == "meter-db-range-60") {
-        setMeterDbRange(PlaybackMeterDbRange::DbRange::Range60);
-        emit dbRangesChanged();
-        return;
-    }
-
-    if (itemId == "meter-db-range-72") {
-        setMeterDbRange(PlaybackMeterDbRange::DbRange::Range72);
-        emit dbRangesChanged();
-        return;
-    }
-
-    if (itemId == "meter-db-range-84") {
-        setMeterDbRange(PlaybackMeterDbRange::DbRange::Range84);
-        emit dbRangesChanged();
-        return;
-    }
-
-    if (itemId == "meter-db-range-96") {
-        setMeterDbRange(PlaybackMeterDbRange::DbRange::Range96);
-        emit dbRangesChanged();
-        return;
-    }
-
-    if (itemId == "meter-db-range-120") {
-        setMeterDbRange(PlaybackMeterDbRange::DbRange::Range120);
-        emit dbRangesChanged();
-        return;
-    }
-
-    if (itemId == "meter-db-range-145") {
-        setMeterDbRange(PlaybackMeterDbRange::DbRange::Range145);
-        emit dbRangesChanged();
+    const auto range = m_dbRanges->rangeFromAction(itemId.toStdString());
+    if (range.has_value()) {
+        setMeterDbRange(range.value());
         return;
     }
 }
