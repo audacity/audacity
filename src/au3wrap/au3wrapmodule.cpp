@@ -6,9 +6,11 @@
 #include <wx/log.h>
 
 #include "FFmpeg.h"
+#include "modules/import-export/mod-mp3/ExportMP3.cpp"
 #include "FileNames.h"
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-import-export/Import.h"
+#include "libraries/lib-import-export/ExportPluginRegistry.h"
 #include "libraries/lib-preferences/Prefs.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
 #include "libraries/lib-module-manager/ModuleManager.h"
@@ -65,9 +67,12 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 #ifdef AU_USE_FFMPEG
     FFmpegStartup();
 #endif
+    // call once so static variable sRegisteredPlugin gets created
+    ExportMP3();
 
     ModuleManager::Get().Initialize();
     Importer::Get().Initialize();
+    ExportPluginRegistry::Get().Initialize();
 
     muse::String tempDir = projectConfiguration()->temporaryDir().toString();
     UpdateDefaultPath(FileNames::Operation::Temp, wxFromString(tempDir));
