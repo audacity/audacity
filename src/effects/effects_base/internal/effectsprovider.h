@@ -12,6 +12,7 @@
 #include "effects/lv2/ilv2effectsrepository.h"
 #include "effects/vst/ivsteffectsrepository.h"
 #include "effects/nyquist/inyquisteffectsrepository.h"
+#include "effects/audio_unit/iaudiouniteffectsrepository.h"
 #include "../ieffectsconfiguration.h"
 #include "../ieffectviewlaunchregister.h"
 
@@ -28,6 +29,7 @@ class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
     muse::Inject<ILv2EffectsRepository> lv2EffectsRepository;
     muse::Inject<IVstEffectsRepository> vstEffectsRepository;
     muse::Inject<INyquistEffectsRepository> nyquistEffectsRepository;
+    muse::Inject<IAudioUnitEffectsRepository> audioUnitEffectsRepository;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<playback::IPlayback> playback;
     muse::Inject<IEffectViewLaunchRegister> viewLaunchRegister;
@@ -61,6 +63,7 @@ private:
 
     bool isVstSupported() const;
     bool isNyquistSupported() const;
+    bool isAudioUnitSupported() const;
     bool isLv2Supported() const;
 
     muse::Ret doEffectPreview(EffectBase& effect, EffectSettings& settings);
