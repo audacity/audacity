@@ -200,7 +200,9 @@ ShareAudioDialog::ShareAudioDialog(
       }
       Disable();
       if(!GetOAuthService().HasAccessToken()) {
-         LoginDialog::SignIn(this, LoginDialog::Mode::Create);
+         CallAfter([this]() {
+            LoginDialog::SignIn(this, LoginDialog::Mode::Create);
+         });
       }
       Enable();
       if(GetOAuthService().HasAccessToken()) {

@@ -113,6 +113,7 @@ bool LoginDialog::SignIn(wxWindow* parent, Mode mode)
    {
       LoginDialog dialog(parent, wxID_ANY, mode);
       dialog.wxDialogWrapper::Center();
+      parent->SetFocus();
       auto result = dialog.wxDialogWrapper::ShowModal();
       if(result == ID_SIGNIN)
          mode = Mode::SignIn;
