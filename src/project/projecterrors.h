@@ -22,7 +22,11 @@
 #ifndef AU_PROJECT_PROJECTERRORS_H
 #define AU_PROJECT_PROJECTERRORS_H
 
-#include "types/ret.h"
+#include "global/types/ret.h"
+
+namespace muse::io {
+struct path_t;
+}
 
 namespace au::project {
 enum class Err {
@@ -33,9 +37,13 @@ enum class Err {
     NoProjectError,
     NoPartsError,
     CorruptionError,
-    CorruptionUponOpenningError,
+    CorruptionUponOpeningError,
 
-    FileOpenError,
+    AudacityExceptionError,
+    DatabaseError,
+    ProjectFileNotFound,
+    ProjectFileIsReadProtected,
+    ProjectFileIsWriteProtected,
     InvalidCloudProjectId,
 
     UnsupportedUrl,
@@ -46,6 +54,8 @@ inline muse::Ret make_ret(Err e)
 {
     return muse::Ret(static_cast<int>(e));
 }
+
+muse::Ret make_ret(Err err, const muse::io::path_t& filePath);
 }
 
 #endif // AU_PROJECT_PROJECTERRORS_H
