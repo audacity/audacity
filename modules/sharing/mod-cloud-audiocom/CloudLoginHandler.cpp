@@ -1,5 +1,6 @@
 #include <wx/app.h>
 #include <wx/event.h>
+#include <wx/window.h>
 
 #include "AppEvents.h"
 #include "BasicUI.h"
@@ -44,14 +45,22 @@ public:
          auto userId = audacity::ToUTF8(userService.GetUserId());
          auto url = oauthService.MakeAudioComAuthorizeURL(userId, AudioComTourURL);
          BasicUI::OpenInDefaultBrowser(url);
+         // One shot subscription
+         mUserServiceSubscription.Reset();
       });
 
       return true;
    }
 
+   wxWindow *GetParent() const {
+      if (wxTopLevelWindows.IsEmpty())
+         return nullptr;
+      return wxTopLevelWindows.GetLast()->GetData();
+   }
+
    bool ShowLoginDialog() {
       bool result = LoginDialog::SignIn(
-         wxTheApp->GetTopWindow(),
+         GetParent(),
          LoginDialog::Mode::Create);
       return result;
    }

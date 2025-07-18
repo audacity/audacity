@@ -192,6 +192,7 @@ ShareAudioDialog::ShareAudioDialog(
 
    SetMinSize({ size.x, std::min(250, size.y) });
    SetMaxSize({ size.x, -1 });
+   CentreOnParent();
 
    mContinueAction = [this]() {
       if (!mInitialStatePanel.root->IsShown())
