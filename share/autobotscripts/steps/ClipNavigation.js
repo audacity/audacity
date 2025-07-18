@@ -1,6 +1,7 @@
 /*
-Helper functions that allow to enter Clip Navigation Mode.
+ * Audacity: A Digital Audio Editor
  */
+
 
 var Navigation = require("Navigation.js")
 
@@ -13,5 +14,6 @@ module.exports = {
         api.navigation.nextPanel()
         api.navigation.nextPanel()
         api.navigation.nextPanel()
+        api.navigation.trigger()
     }
 }
