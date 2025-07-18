@@ -234,10 +234,10 @@ std::string Au3Exporter::formatExtension(const std::string& format) const
 
 int Au3Exporter::maxChannels() const
 {
-    int format = formatIndex(exportConfiguration()->currentFormat());
+    std::string format = exportConfiguration()->currentFormat();
 
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        if (formatIndex == format) {
+        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
             return plugin->GetFormatInfo(formatIndex).maxChannels;
         }
     }
@@ -247,10 +247,10 @@ int Au3Exporter::maxChannels() const
 
 std::vector<int> Au3Exporter::sampleRateList() const
 {
-    int format = formatIndex(exportConfiguration()->currentFormat());
+    std::string format = exportConfiguration()->currentFormat();
 
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        if (formatIndex == format) {
+        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
             auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
             if (!editor) {
                 return {};
