@@ -27,10 +27,6 @@ function.
 #include <wx/app.h>
 #include <wx/log.h>
 
-// #include <wx/window.h>
-// #include <wx/button.h>
-// #include <wx/textctrl.h>
-
 #include "BasicSettings.h"
 #include "Mix.h"
 #include "libraries/lib-tags/Tags.h"
@@ -48,12 +44,9 @@ function.
 #define OSINPUT(X) OSFILENAME(X)
 #endif
 
-// #include "ShuttleGui.h"
-
 #include "libraries/lib-import-export/ExportPluginHelpers.h"
 #include "libraries/lib-import-export/PlainExportOptionsEditor.h"
 #include "FFmpegDefines.h"
-// #include "ExportOptionsUIServices.h"
 #include "libraries/lib-import-export/ExportPluginRegistry.h"
 
 #if defined(WIN32) && _MSC_VER < 1900
@@ -65,18 +58,18 @@ function.
 
 static int AdjustFormatIndex(int format)
 {
-    // int subFormat = -1;
-    // for (int i = 0; i <= FMT_OTHER; i++) {
-    //     if (ExportFFmpegOptions::fmts[i].compiledIn) {
-    //         subFormat++;
-    //     }
-    //     if (subFormat == format || i == FMT_OTHER) {
-    //         subFormat = i;
-    //         break;
-    //     }
-    // }
-    // return subFormat;
-    return format;
+    int subFormat = -1;
+    for (int i = 0; i <= FMT_OTHER; i++) {
+        if (ExportFFmpegOptions::fmts[i].compiledIn) {
+            subFormat++;
+        }
+        if (subFormat == format || i == FMT_OTHER) {
+            subFormat = i;
+            break;
+        }
+    }
+
+    return subFormat;
 }
 
 namespace {
