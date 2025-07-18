@@ -539,16 +539,26 @@ std::unique_ptr<ComponentInterface> ModuleManager::LoadPlugin(
       return iter->second->LoadPlugin(path);
 }
 
-bool ModuleManager::CheckPluginExist(const PluginID& providerId, const PluginPath& path)
+bool ModuleManager::CheckPluginExist(const PluginID& providerId, const PluginPath& path) const
 {
    if(mProviders.find(providerId) == mProviders.end())
       return false;
 
-   return mProviders[providerId]->CheckPluginExist(path);
+   return mProviders.at(providerId)->CheckPluginExist(path);
+}
+
+bool ModuleManager::CheckModuleLoaded(const FilePath& moduleName) const
+{
+   for (const auto &module : mModules) {
+      if (wxFileName(module->GetName()).GetName() == wxFileName(moduleName).GetName()) {
+         return true;
+      }
+   }
+   return false;
 }
 
 bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
-                                    const PluginPath & path)
+                                    const PluginPath & path) const
 {
    // Builtin modules do not have a path
    if (path.empty())

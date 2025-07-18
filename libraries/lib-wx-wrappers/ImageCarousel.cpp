@@ -5,6 +5,8 @@
 **********************************************************************/
 
 #include "ImageCarousel.h"
+
+#include "BasicUI.h"
 #include "Prefs.h"
 #include "Theme.h"
 #include "AllThemeResources.h"
@@ -51,7 +53,7 @@ ImageCarousel::ImageCarousel(wxWindow* parent, const std::vector<CarouselSnapsho
    });
 #endif
    m_btnMiddle->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
-      OpenURL();
+      OnItemActivated();
    });
 
    Bind(wxEVT_PAINT, &ImageCarousel::OnPaint, this);
@@ -224,16 +226,19 @@ void ImageCarousel::OnMouseClick(wxMouseEvent& event)
 {
     wxPoint clickPos = event.GetPosition();
     if (m_imageRect.Contains(clickPos)) {
-       OpenURL();
+       OnItemActivated();
     }
 }
 
-void ImageCarousel::OpenURL()
+void ImageCarousel::OnItemActivated()
 {
    if (m_snapshots.empty()) {
       return;
    }
 
-   const wxString& url = m_snapshots[m_currentIndex].url;
-   wxLaunchDefaultBrowser(url);
+   if (m_snapshots[m_currentIndex].callback) {
+      m_snapshots[m_currentIndex].callback();
+   } else if (m_snapshots[m_currentIndex].url) {
+      BasicUI::OpenInDefaultBrowser(m_snapshots[m_currentIndex].url);
+   }
 }
