@@ -21,6 +21,7 @@ License: GPL v2 or later.  See License.txt.
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
 #include "ModuleConstants.h"
 #include "ImportFFmpeg.cpp"
+#include "ExportFFmpeg.cpp"
 
 #include <wx/log.h>
 
