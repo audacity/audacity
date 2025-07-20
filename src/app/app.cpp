@@ -63,11 +63,7 @@ void App::addModule(modularity::IModuleSetup* module)
     m_modules.push_back(module);
 }
 
-int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
-{
-    // ====================================================
-    // Setup global Qt application variables
-    // ====================================================
+void setupGlobalEnvironmentVariables() {
     app_init_qrc();
 
     qputenv("QT_STYLE_OVERRIDE", "Fusion");
@@ -112,16 +108,13 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
     QCoreApplication::setOrganizationDomain("audacityteam.org");
     // QCoreApplication::setApplicationVersion(QString::fromStdString(MUVersion::fullVersion().toStdString()));
 
-// #if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
-//     // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
-//     QGuiApplication::setDesktopFileName("org.musescore.MuseScore" MU_APP_INSTALL_SUFFIX ".desktop");
-// #endif
+    // #if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
+    //     // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
+    //     QGuiApplication::setDesktopFileName("org.musescore.MuseScore" MU_APP_INSTALL_SUFFIX ".desktop");
+    // #endif
+};
 
-    commandLineParser.processBuiltinArgs(app);
-
-    // ====================================================
-    // Setup modules: Resources, Exports, Imports, UiTypes
-    // ====================================================
+void App::setupModules() {
     globalModule.registerResources();
     globalModule.registerExports();
     globalModule.registerUiTypes();
@@ -142,51 +135,6 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
         m->resolveImports();
         m->registerApi();
     }
-
-    const IApplication::RunMode runMode = commandLineParser.runMode();
-
-    // ====================================================
-    // Setup modules: apply the command line options
-    // ====================================================
-    //! TODO Temporary fix
-    dynamic_cast<muse::BaseApplication*>(muapplication().get())->setRunMode(runMode);
-    applyCommandLineOptions(commandLineParser.options());
-
-    // ====================================================
-    // Setup modules: onPreInit
-    // ====================================================
-    globalModule.onPreInit(runMode);
-    for (modularity::IModuleSetup* m : m_modules) {
-        m->onPreInit(runMode);
-    }
-
-#ifdef AU_BUILD_APPSHELL_MODULE
-    au::appshell::SplashScreen* splashScreen = nullptr;
-    if (runMode == IApplication::RunMode::GuiApp) {
-        //splashScreen = new SplashScreen(SplashScreen::Default);
-
-        // if (multiInstancesProvider()->isMainInstance()) {
-        //     splashScreen = new SplashScreen(SplashScreen::Default);
-        // } else {
-        //     const project::ProjectFile& file = startupScenario()->startupScoreFile();
-        //     if (file.isValid()) {
-        //         if (file.hasDisplayName()) {
-        //             splashScreen = new SplashScreen(SplashScreen::ForNewInstance, false, file.displayName(true /* includingExtension */));
-        //         } else {
-        //             splashScreen = new SplashScreen(SplashScreen::ForNewInstance, false);
-        //         }
-        //     } else if (startupScenario()->isStartWithNewFileAsSecondaryInstance()) {
-        //         splashScreen = new SplashScreen(SplashScreen::ForNewInstance, true);
-        //     } else {
-        //         splashScreen = new SplashScreen(SplashScreen::Default);
-        //     }
-        // }
-    }
-
-    if (splashScreen) {
-        splashScreen->show();
-    }
-#endif
 
     // ====================================================
     // Setup modules: onInit
@@ -213,50 +161,30 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
             m->onStartApp();
         }
     }, Qt::QueuedConnection);
+};
 
-    // ====================================================
-    // Run
-    // ====================================================
+void App::deinitModules() {
+    globalModule.invokeQueuedCalls();
 
-    switch (runMode) {
-    case IApplication::RunMode::ConsoleApp: {
-        // // ====================================================
-        // // Process Autobot
-        // // ====================================================
-        // CommandLineParser::Autobot autobot = commandLineParser.autobot();
-        // if (!autobot.testCaseNameOrFile.isEmpty()) {
-        //     QMetaObject::invokeMethod(qApp, [this, autobot]() {
-        //             processAutobot(autobot);
-        //         }, Qt::QueuedConnection);
-        // } else {
-        //     // ====================================================
-        //     // Process Diagnostic
-        //     // ====================================================
-        //     CommandLineParser::Diagnostic diagnostic = commandLineParser.diagnostic();
-        //     if (diagnostic.type != CommandLineParser::DiagnosticType::Undefined) {
-        //         QMetaObject::invokeMethod(qApp, [this, diagnostic]() {
-        //                 int code = processDiagnostic(diagnostic);
-        //                 qApp->exit(code);
-        //             }, Qt::QueuedConnection);
-        //     } else {
-        //         // ====================================================
-        //         // Process Converter
-        //         // ====================================================
-        //         CommandLineParser::ConverterTask task = commandLineParser.converterTask();
-        //         QMetaObject::invokeMethod(qApp, [this, task]() {
-        //                 int code = processConverter(task);
-        //                 qApp->exit(code);
-        //             }, Qt::QueuedConnection);
-        //     }
-        // }
-    } break;
-    case IApplication::RunMode::GuiApp: {
-#ifdef AU_BUILD_APPSHELL_MODULE
-        // ====================================================
-        // Setup Qml Engine
-        // ====================================================
-        QQmlApplicationEngine* engine = modularity::_ioc()->resolve<muse::ui::IUiEngine>("app")->qmlAppEngine();
+    for (modularity::IModuleSetup* m : m_modules) {
+        m->onDeinit();
+    }
 
+    globalModule.onDeinit();
+
+    for (modularity::IModuleSetup* m : m_modules) {
+        m->onDestroy();
+    }
+
+    globalModule.onDestroy();
+
+    // Delete modules
+    qDeleteAll(m_modules);
+    m_modules.clear();
+    modularity::_ioc()->reset();
+};
+
+void App::loadApplicationContents(SplashScreen *splashScreen) {
 #if defined(Q_OS_WIN)
         const QString mainQmlFile = "/platform/win/Main.qml";
 #elif defined(Q_OS_MACOS)
@@ -313,6 +241,112 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
         QQuickWindow::setDefaultAlphaBuffer(true);
 
         engine->load(url);
+};
+
+int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
+{
+    // ====================================================
+    // Setup global Qt application variables
+    // ====================================================
+    setupGlobalEnvironmentVariables();
+
+    commandLineParser.processBuiltinArgs(app);
+
+    // ====================================================
+    // Setup modules: Resources, Exports, Imports, UiTypes
+    // ====================================================
+    setupModules();
+
+    const IApplication::RunMode runMode = commandLineParser.runMode();
+
+    // ====================================================
+    // Setup modules: apply the command line options
+    // ====================================================
+    //! TODO Temporary fix
+    dynamic_cast<muse::BaseApplication*>(muapplication().get())->setRunMode(runMode);
+    applyCommandLineOptions(commandLineParser.options());
+
+    // ====================================================
+    // Setup modules: onPreInit
+    // ====================================================
+    globalModule.onPreInit(runMode);
+    for (modularity::IModuleSetup* m : m_modules) {
+        m->onPreInit(runMode);
+    }
+
+#ifdef AU_BUILD_APPSHELL_MODULE
+    au::appshell::SplashScreen* splashScreen = nullptr;
+    if (runMode == IApplication::RunMode::GuiApp) {
+        //splashScreen = new SplashScreen(SplashScreen::Default);
+
+        // if (multiInstancesProvider()->isMainInstance()) {
+        //     splashScreen = new SplashScreen(SplashScreen::Default);
+        // } else {
+        //     const project::ProjectFile& file = startupScenario()->startupScoreFile();
+        //     if (file.isValid()) {
+        //         if (file.hasDisplayName()) {
+        //             splashScreen = new SplashScreen(SplashScreen::ForNewInstance, false, file.displayName(true /* includingExtension */));
+        //         } else {
+        //             splashScreen = new SplashScreen(SplashScreen::ForNewInstance, false);
+        //         }
+        //     } else if (startupScenario()->isStartWithNewFileAsSecondaryInstance()) {
+        //         splashScreen = new SplashScreen(SplashScreen::ForNewInstance, true);
+        //     } else {
+        //         splashScreen = new SplashScreen(SplashScreen::Default);
+        //     }
+        // }
+    }
+
+    if (splashScreen) {
+        splashScreen->show();
+    }
+#endif
+
+    // ====================================================
+    // Run
+    // ====================================================
+
+    switch (runMode) {
+    case IApplication::RunMode::ConsoleApp: {
+        // // ====================================================
+        // // Process Autobot
+        // // ====================================================
+        // CommandLineParser::Autobot autobot = commandLineParser.autobot();
+        // if (!autobot.testCaseNameOrFile.isEmpty()) {
+        //     QMetaObject::invokeMethod(qApp, [this, autobot]() {
+        //             processAutobot(autobot);
+        //         }, Qt::QueuedConnection);
+        // } else {
+        //     // ====================================================
+        //     // Process Diagnostic
+        //     // ====================================================
+        //     CommandLineParser::Diagnostic diagnostic = commandLineParser.diagnostic();
+        //     if (diagnostic.type != CommandLineParser::DiagnosticType::Undefined) {
+        //         QMetaObject::invokeMethod(qApp, [this, diagnostic]() {
+        //                 int code = processDiagnostic(diagnostic);
+        //                 qApp->exit(code);
+        //             }, Qt::QueuedConnection);
+        //     } else {
+        //         // ====================================================
+        //         // Process Converter
+        //         // ====================================================
+        //         CommandLineParser::ConverterTask task = commandLineParser.converterTask();
+        //         QMetaObject::invokeMethod(qApp, [this, task]() {
+        //                 int code = processConverter(task);
+        //                 qApp->exit(code);
+        //             }, Qt::QueuedConnection);
+        //     }
+        // }
+    } break;
+    case IApplication::RunMode::GuiApp: {
+#ifdef AU_BUILD_APPSHELL_MODULE
+        // ====================================================
+        // Setup Qml Engine
+        // ====================================================
+        QQmlApplicationEngine* engine = modularity::_ioc()->resolve<muse::ui::IUiEngine>("app")->qmlAppEngine();
+
+        loadApplicationContents(splashScreen);
+
 #endif // MUE_BUILD_APPSHELL_MODULE
     } break;
     case IApplication::RunMode::AudioPluginRegistration: {
@@ -351,26 +385,8 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
         modularity::_ioc()->resolve<muse::ui::IUiEngine>("app")->quit();
     }
 #endif
-    // Deinit
 
-    globalModule.invokeQueuedCalls();
-
-    for (modularity::IModuleSetup* m : m_modules) {
-        m->onDeinit();
-    }
-
-    globalModule.onDeinit();
-
-    for (modularity::IModuleSetup* m : m_modules) {
-        m->onDestroy();
-    }
-
-    globalModule.onDestroy();
-
-    // Delete modules
-    qDeleteAll(m_modules);
-    m_modules.clear();
-    modularity::_ioc()->reset();
+    deinitModules();
 
     return retCode;
 }
