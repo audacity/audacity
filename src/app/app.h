@@ -53,6 +53,12 @@ private:
     int processAudioPluginRegistration(const CommandLineParser::AudioPluginRegistration& task);
 
     QList<muse::modularity::IModuleSetup*> m_modules;
+
+    // Helper methods to make the code more legible
+
+    void setupModules();
+    void deinitModules();
+    void loadApplicationContents(SplashScreen *screen);
 };
 }
 
