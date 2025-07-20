@@ -192,7 +192,7 @@ class AudacityConan(ConanFile):
         AudacityDependency("wavpack", "5.6.0"),
         AudacityDependency("ogg", "1.3.5"),
         AudacityDependency("flac", "1.4.2"),
-        AudacityDependency("opus", "1.4.0", override=True),
+        AudacityDependency("opus", "1.5.2", override=True),
         AudacityDependency("opusfile", "0.12", package_options={ "shared": False, "http": False }),
         AudacityDependency("vorbis", "1.3.7"),
         AudacityDependency("libsndfile", "1.0.31", package_options={ "programs": False }),
