@@ -137,12 +137,12 @@ void UndoManager::RemoveStates(size_t begin, size_t end)
    TransactionScope trans{mProject, "DiscardingUndoStates"};
 
    for (size_t ii = begin; ii < end; ++ii) {
-      RemoveStateAt(begin);
-
       if (current > begin)
         --current;
       if (saved > static_cast<int>(begin))
         --saved;
+
+      RemoveStateAt(begin);
    }
 
    // Success, commit the savepoint
