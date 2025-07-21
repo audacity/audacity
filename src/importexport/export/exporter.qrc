@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Export/ExportDialog.qml</file>
+        <file>qml/Export/internal/BaseSection.qml</file>
+    </qresource>
+</RCC>
