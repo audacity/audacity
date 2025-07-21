@@ -8,25 +8,22 @@
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
 #include "iinteractive.h"
+#include "io/ifilesystem.h"
+#include "context/iglobalcontext.h"
+#include "iexportconfiguration.h"
+#include "iexporter.h"
 
-#include "importexport/export/iexporter.h"
-#include "importexport/export/internal/exportconfiguration.h"
-#include "playback/iaudiodevicesprovider.h"
-
-using namespace au::importexport;
-
-namespace au::appshell {
+namespace au::importexport {
 class ExportPreferencesModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<au::importexport::ExportConfiguration> exportConfiguration;
-    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
-    muse::Inject<au::importexport::IExporter> exporter;
+    muse::Inject<muse::io::IFileSystem> fileSystem;
+    muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<IExportConfiguration> exportConfiguration;
+    muse::Inject<IExporter> exporter;
 
     Q_PROPERTY(QString currentProcess READ currentProcess NOTIFY currentProcessChanged)
     Q_PROPERTY(QVariantList processList READ processList NOTIFY processListChanged)
@@ -39,7 +36,7 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(QString currentFormat READ currentFormat NOTIFY currentFormatChanged)
     Q_PROPERTY(QVariantList formatsList READ formatsList NOTIFY formatsListChanged)
 
-    Q_PROPERTY(ExportChannelsPref::ExportChannels exportChannels READ exportChannels NOTIFY exportChannelsChanged)
+    Q_PROPERTY(importexport::ExportChannelsPref::ExportChannels exportChannels READ exportChannels NOTIFY exportChannelsChanged)
     Q_PROPERTY(int maxExportChannels READ maxExportChannels NOTIFY maxExportChannelsChanged)
     // TODO: add custom mapping as a separate property
 
@@ -70,8 +67,8 @@ public:
     Q_INVOKABLE void setCurrentFormat(const QString& format);
     QVariantList formatsList() const;
 
-    ExportChannelsPref::ExportChannels exportChannels() const;
-    Q_INVOKABLE void setExportChannels(ExportChannelsPref::ExportChannels exportChannels);
+    importexport::ExportChannelsPref::ExportChannels exportChannels() const;
+    Q_INVOKABLE void setExportChannels(importexport::ExportChannelsPref::ExportChannels exportChannels);
     Q_INVOKABLE int maxExportChannels() const;
 
     QString exportSampleRate() const;
@@ -83,6 +80,7 @@ public:
     Q_INVOKABLE void setExportSampleFormat(const QString& format);
 
     Q_INVOKABLE bool verifyExportPossible();
+    Q_INVOKABLE void exportData();
 
 signals:
     void currentProcessChanged();
@@ -103,6 +101,7 @@ private:
     void updateCurrentSampleRate();
     void updateExportChannels();
 
+    QString m_filename;
     std::vector<std::pair<int, QString> > m_sampleRateMapping;
 };
 }

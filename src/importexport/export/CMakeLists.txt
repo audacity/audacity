@@ -4,6 +4,8 @@
 
 declare_module(exporter)
 
+set(MODULE_QRC exporter.qrc)
+
 set(MODULE_SRC
     # public
     ${CMAKE_CURRENT_LIST_DIR}/exportermodule.cpp
@@ -16,6 +18,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exporter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportconfiguration.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/exportpreferencesmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/exportpreferencesmodel.h
 
     #types
     ${CMAKE_CURRENT_LIST_DIR}/types/exporttypes.h

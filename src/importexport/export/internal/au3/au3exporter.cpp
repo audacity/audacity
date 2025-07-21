@@ -2,17 +2,18 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "BasicUI.h"
-#include "MixerOptions.h"
-#include "Track.h"
-#include "WaveTrack.h"
-#include "au3wrap/au3types.h"
+#include "au3exporter.h"
+
+#include "libraries/lib-basic-ui/BasicUI.h"
+#include "libraries/lib-mixer/MixerOptions.h"
+#include "libraries/lib-track/Track.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-import-export/ExportPluginRegistry.h"
 #include "libraries/lib-import-export/ExportUtils.h"
 
-#include "translation.h"
+#include "au3wrap/au3types.h"
 
-#include "au3exporter.h"
+#include "translation.h"
 
 using namespace au::au3;
 using namespace au::importexport;
@@ -85,13 +86,13 @@ public:
     }
 };
 
-muse::Ret Au3Exporter::exportData()
+muse::Ret Au3Exporter::exportData(std::string filename)
 {
     muse::io::path_t directoryPath = exportConfiguration()->directoryPath();
-    muse::io::path_t filePath = directoryPath.appendingComponent(exportConfiguration()->filename())
+    muse::io::path_t filePath = directoryPath.appendingComponent(filename)
                                 .appendingSuffix(formatExtension(exportConfiguration()->currentFormat()));
 
-    wxFileName filename = wxString(filePath.toStdString());
+    wxFileName wxfilename = wxString(filePath.toStdString());
 
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     IF_ASSERT_FAILED(project) {
@@ -138,7 +139,7 @@ muse::Ret Au3Exporter::exportData()
     m_sampleRate = exportConfiguration()->exportSampleRate();
 
     // TODO: update when custom mapping is implemented
-    if (exportConfiguration()->exportChannels() == ExportChannelsPref::ExportChannels::MONO) {
+    if (ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannels()) == ExportChannelsPref::ExportChannels::MONO) {
         m_numChannels = 1;
     } else {
         m_numChannels = 2;
@@ -148,7 +149,7 @@ muse::Ret Au3Exporter::exportData()
         auto processor = m_plugin->CreateProcessor(m_format);
         if (!processor->Initialize(*project,
                                    m_parameters,
-                                   filename.GetFullPath(),
+                                   wxfilename.GetFullPath(),
                                    m_t0, m_t1, m_selectedOnly,
                                    m_sampleRate, m_numChannels,
                                    m_mixerSpec,
@@ -156,8 +157,8 @@ muse::Ret Au3Exporter::exportData()
             return muse::make_ret(muse::Ret::Code::InternalError);
         }
 
-        auto exportTask = ExportTask([actualFilename = filename,
-                                      targetFilename = filename,
+        auto exportTask = ExportTask([actualFilename = wxfilename,
+                                      targetFilename = wxfilename,
                                       processor = std::shared_ptr<ExportProcessor>(processor.release())]
                                      (ExportProcessorDelegate& delegate)
         {
