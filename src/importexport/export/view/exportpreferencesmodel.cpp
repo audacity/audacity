@@ -1,29 +1,23 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include <QDir>
-
-#include "global/containers.h"
-#include "settings.h"
-#include "log.h"
-#include "types/translatablestring.h"
-
-#include "importexport/export/types/exporttypes.h"
 
 #include "exportpreferencesmodel.h"
 
+#include "translation.h"
+
 using namespace au::importexport;
 
-std::map<ExportProcessType, muse::TranslatableString> EXPORT_PROCESS_MAPPING {
-    { ExportProcessType::FULL_PROJECT_AUDIO, muse::TranslatableString("export", "Export full project audio") },
-    { ExportProcessType::SELECTED_AUDIO, muse::TranslatableString("export", "Export selected audio") },
+std::map<ExportProcessType, std::string> EXPORT_PROCESS_MAPPING {
+    { ExportProcessType::FULL_PROJECT_AUDIO, muse::trc("export", "Export full project audio") },
+    { ExportProcessType::SELECTED_AUDIO, muse::trc("export", "Export selected audio") },
     //! NOTE: not implemented yet
-    // { ExportProcessType::AUDIO_IN_LOOP_REGION, muse::TranslatableString("export", "Export audio in loop region") },
+    // { ExportProcessType::AUDIO_IN_LOOP_REGION, muse::trc("export", "Export audio in loop region") },
     // { ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES,
-    //   muse::TranslatableString("export", "Export tracks as a separate audio files (Stems)") },
-    // { ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE, muse::TranslatableString("export",
+    //   muse::trc("export", "Export tracks as a separate audio files (Stems)") },
+    // { ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE, muse::trc("export",
     //                                                                                  "Export each label as a separate audio file (Chapters)") },
-    // { ExportProcessType::ALL_LABELS_AS_SUBTITLE_FILE, muse::TranslatableString("export", "Export all labels as a subtitle file") }
+    // { ExportProcessType::ALL_LABELS_AS_SUBTITLE_FILE, muse::trc("export", "Export all labels as a subtitle file") }
 };
 
 const std::vector<int> DEFAULT_SAMPLE_RATE_LIST {
@@ -42,7 +36,6 @@ const std::vector<int> DEFAULT_SAMPLE_RATE_LIST {
     384000
 };
 
-namespace au::appshell {
 ExportPreferencesModel::ExportPreferencesModel(QObject* parent)
     : QObject(parent)
 {
@@ -54,13 +47,11 @@ void ExportPreferencesModel::init()
     //! NOTE: init m_sampleRateMapping
     exportSampleRateList();
 
-    exportConfiguration()->processChanged().onNotify(this, [this] {
+    exportConfiguration()->processTypeChanged().onNotify(this, [this] {
         emit currentProcessChanged();
     });
 
-    exportConfiguration()->filenameChanged().onNotify(this, [this] {
-        emit filenameChanged();
-    });
+    m_filename = globalContext()->currentProject()->displayName();
 
     exportConfiguration()->directoryPathChanged().onNotify(this, [this] {
         emit directoryPathChanged();
@@ -87,14 +78,14 @@ void ExportPreferencesModel::init()
 
 QString ExportPreferencesModel::currentProcess() const
 {
-    return EXPORT_PROCESS_MAPPING[exportConfiguration()->processType()].translated();
+    return QString::fromStdString(EXPORT_PROCESS_MAPPING[exportConfiguration()->processType()]);
 }
 
 void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
 {
     ExportProcessType type;
     for (auto process : EXPORT_PROCESS_MAPPING) {
-        if (newProcess == process.second.translated()) {
+        if (newProcess == QString::fromStdString(process.second)) {
             type = process.first;
         }
     }
@@ -103,14 +94,14 @@ void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
         return;
     }
 
-    exportConfiguration()->setProcess(type);
+    exportConfiguration()->setProcessType(type);
 }
 
 QVariantList ExportPreferencesModel::processList() const
 {
     QVariantList result;
     for (const auto& process : EXPORT_PROCESS_MAPPING) {
-        result << process.second.translated().toQString();
+        result << QString::fromStdString(process.second);
     }
 
     return result;
@@ -118,12 +109,17 @@ QVariantList ExportPreferencesModel::processList() const
 
 QString ExportPreferencesModel::filename() const
 {
-    return QString::fromStdString(exportConfiguration()->filename());
+    return m_filename;
 }
 
 void ExportPreferencesModel::setFilename(const QString& filename)
 {
-    exportConfiguration()->setFilename(filename.toStdString());
+    if (m_filename == filename) {
+        return;
+    }
+
+    m_filename = filename;
+    emit filenameChanged();
 }
 
 QString ExportPreferencesModel::fileExtension() const
@@ -147,7 +143,17 @@ void ExportPreferencesModel::setDirectoryPath(const QString& path)
 
 QString ExportPreferencesModel::currentFormat() const
 {
-    return QString::fromStdString(exportConfiguration()->currentFormat());
+    std::string currentFormat = exportConfiguration()->currentFormat();
+
+    if (!currentFormat.empty()) {
+        return QString::fromStdString(currentFormat);
+    } else {
+        if (!exporter()->formatsList().empty()) {
+            return QString::fromStdString(exporter()->formatsList().at(0));
+        }
+    }
+
+    return {};
 }
 
 void ExportPreferencesModel::setCurrentFormat(const QString& format)
@@ -171,12 +177,12 @@ QVariantList ExportPreferencesModel::formatsList() const
 
 ExportChannelsPref::ExportChannels ExportPreferencesModel::exportChannels() const
 {
-    return exportConfiguration()->exportChannels();
+    return ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannels());
 }
 
 void ExportPreferencesModel::setExportChannels(ExportChannelsPref::ExportChannels exportChannels)
 {
-    exportConfiguration()->setExportChannels(exportChannels);
+    exportConfiguration()->setExportChannels(static_cast<int>(exportChannels));
 }
 
 int ExportPreferencesModel::maxExportChannels() const
@@ -251,10 +257,8 @@ void ExportPreferencesModel::updateCurrentSampleRate()
 {
     int currentSampleRate = exportConfiguration()->exportSampleRate();
     std::vector<int> sampleRateList = exporter()->sampleRateList();
-    for (const auto& rate : sampleRateList) {
-        if (rate == currentSampleRate) {
-            return;
-        }
+    if (muse::contains(sampleRateList, currentSampleRate)) {
+        return;
     }
 
     //! NOTE: if current sample rate is not found within format's available sample rates
@@ -277,12 +281,19 @@ void ExportPreferencesModel::updateExportChannels()
 
 bool ExportPreferencesModel::verifyExportPossible()
 {
-    QDir directory(directoryPath());
-    if (!directory.exists() || directoryPath().isEmpty()) {
+    muse::Ret directoryExists = fileSystem()->makePath(directoryPath());
+    if (!directoryExists || directoryPath().isEmpty()) {
         interactive()->error(muse::trc("export", "Export Audio"), muse::trc("export", "Unable to create destination folder"));
         return false;
     }
 
     return true;
 }
+
+void ExportPreferencesModel::exportData()
+{
+    muse::Ret result = exporter()->exportData(filename().toStdString());
+    if (!result.success() && !result.text().empty()) {
+        interactive()->error(muse::trc("export", "Export error"), result.text());
+    }
 }

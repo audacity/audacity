@@ -185,6 +185,8 @@ int main(int argc, char** argv)
     app.addModule(new au::effects::AudioUnitEffectsModule());
     app.addModule(new au::effects::Lv2EffectsModule());
     app.addModule(new au::effects::VstEffectsModule());
+    app.addModule(new au::importexport::ExporterModule());
+    app.addModule(new au::importexport::ImporterModule());
 
     if (!isPluginRegistration) {
         app.addModule(new au::context::ContextModule());
@@ -198,8 +200,6 @@ int main(int argc, char** argv)
         app.addModule(new au::effects::EffectsModule());
         app.addModule(new au::effects::BuiltinEffectsModule());
         app.addModule(new au::effects::NyquistEffectsModule());
-        app.addModule(new au::importexport::ImporterModule());
-        app.addModule(new au::importexport::ExporterModule());
     }
 
 #if (defined (_MSCVER) || defined (_MSC_VER))

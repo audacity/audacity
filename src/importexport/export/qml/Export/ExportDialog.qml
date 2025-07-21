@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import Muse.Ui
 import Muse.UiComponents
 
-import Audacity.Preferences 1.0
+import Audacity.Export 1.0
 import "internal"
 
 StyledDialogView {
@@ -12,8 +12,13 @@ StyledDialogView {
 
     title: qsTrc("export", "Export audio")
 
-    contentWidth: 546
-    contentHeight: mainColumn.implicitHeight + 2 * mainColumn.anchors.margins
+    contentWidth: 480
+    // TODO: switch to mainColumn.implicitHeight when
+    // dynamic content is implemented
+    // contentHeight: mainColumn.implicitHeight
+    contentHeight: 495
+
+    margins: 20
 
     property int dropdownWidth: 354
     property int labelColumnWidth: 80
@@ -32,8 +37,6 @@ StyledDialogView {
     ColumnLayout {
         id: mainColumn
 
-        anchors.fill: parent
-        anchors.margins: 20
         spacing: 16
 
         BaseSection {
@@ -350,7 +353,7 @@ StyledDialogView {
         }
 
         SeparatorLine {
-            Layout.fillWidth: true
+            width: root.contentWidth
         }
 
         ButtonBox {
@@ -387,6 +390,7 @@ StyledDialogView {
                 accentButton: true
                 onClicked: {
                     if (exportPreferencesModel.verifyExportPossible()) {
+                        exportPreferencesModel.exportData()
                         root.accept()
                     }
                 }

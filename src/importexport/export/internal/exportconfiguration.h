@@ -7,7 +7,6 @@
 #include "global/iglobalconfiguration.h"
 
 #include "../iexporter.h"
-#include "playback/iaudiodevicesprovider.h"
 
 #include "../iexportconfiguration.h"
 
@@ -15,7 +14,6 @@ namespace au::importexport {
 class ExportConfiguration : public IExportConfiguration
 {
     muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
-    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<au::importexport::IExporter> exporter;
 
 public:
@@ -24,19 +22,15 @@ public:
     void init();
 
     ExportProcessType processType() const override;
-    void setProcess(ExportProcessType process) override;
-    muse::async::Notification processChanged() const override;
-
-    std::string filename() const override;
-    void setFilename(const std::string& filename) override;
-    muse::async::Notification filenameChanged() const override;
+    void setProcessType(ExportProcessType process) override;
+    muse::async::Notification processTypeChanged() const override;
 
     muse::io::path_t directoryPath() const override;
     void setDirectoryPath(const muse::io::path_t& path) override;
     muse::async::Notification directoryPathChanged() const override;
 
-    ExportChannelsPref::ExportChannels exportChannels() const override;
-    void setExportChannels(ExportChannelsPref::ExportChannels channels) override;
+    int exportChannels() const override;
+    void setExportChannels(int channels) override;
     muse::async::Notification exportChannelsChanged() const override;
 
     std::string currentFormat() const override;

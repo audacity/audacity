@@ -2,21 +2,17 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include <QDir>
+#include "exportconfiguration.h"
 
 #include "global/settings.h"
+
 #include "log.h"
-
-#include "types/exporttypes.h"
-
-#include "exportconfiguration.h"
 
 using namespace au::importexport;
 
 static const std::string module_name("export");
 
 static const muse::Settings::Key EXPORT_PROCESS(module_name, "importexport/process");
-static const muse::Settings::Key EXPORT_FILENAME(module_name, "importexport/filename");
 static const muse::Settings::Key EXPORT_DIRECTORY_PATH(module_name, "importexport/directoryPath");
 static const muse::Settings::Key EXPORT_FORMAT(module_name, "importexport/format");
 static const muse::Settings::Key EXPORT_CHANNELS(module_name, "importexport/channels");
@@ -30,20 +26,10 @@ void ExportConfiguration::init()
         m_processChanged.notify();
     });
 
-    //! NOTE: "untitled" filename is set on every project load
-    muse::settings()->setDefaultValue(EXPORT_FILENAME, muse::Val("untitled"));
-    muse::settings()->valueChanged(EXPORT_FILENAME).onReceive(nullptr, [this] (const muse::Val& val) {
-        m_filenameChanged.notify();
-    });
-
-    //! NOTE: export directory is set on every project load
     muse::settings()->valueChanged(EXPORT_DIRECTORY_PATH).onReceive(nullptr, [this] (const muse::Val& val) {
         m_directoryPathChanged.notify();
     });
 
-    if (!exporter()->formatsList().empty()) {
-        muse::settings()->setDefaultValue(EXPORT_FORMAT, muse::Val(exporter()->formatsList().at(0)));
-    }
     muse::settings()->valueChanged(EXPORT_FORMAT).onReceive(nullptr, [this] (const muse::Val& val) {
         m_currentFormatChanged.notify();
     });
@@ -64,29 +50,14 @@ ExportProcessType ExportConfiguration::processType() const
     return muse::settings()->value(EXPORT_PROCESS).toEnum<ExportProcessType>();
 }
 
-void ExportConfiguration::setProcess(ExportProcessType process)
+void ExportConfiguration::setProcessType(ExportProcessType process)
 {
     muse::settings()->setSharedValue(EXPORT_PROCESS, muse::Val(process));
 }
 
-muse::async::Notification ExportConfiguration::processChanged() const
+muse::async::Notification ExportConfiguration::processTypeChanged() const
 {
     return m_processChanged;
-}
-
-std::string ExportConfiguration::filename() const
-{
-    return muse::settings()->value(EXPORT_FILENAME).toString();
-}
-
-void ExportConfiguration::setFilename(const std::string& filename)
-{
-    muse::settings()->setSharedValue(EXPORT_FILENAME, muse::Val(filename));
-}
-
-muse::async::Notification ExportConfiguration::filenameChanged() const
-{
-    return m_filenameChanged;
 }
 
 muse::io::path_t ExportConfiguration::directoryPath() const
@@ -104,12 +75,12 @@ muse::async::Notification ExportConfiguration::directoryPathChanged() const
     return m_directoryPathChanged;
 }
 
-ExportChannelsPref::ExportChannels ExportConfiguration::exportChannels() const
+int ExportConfiguration::exportChannels() const
 {
-    return muse::settings()->value(EXPORT_CHANNELS).toEnum<ExportChannelsPref::ExportChannels>();
+    return muse::settings()->value(EXPORT_CHANNELS).toInt();
 }
 
-void ExportConfiguration::setExportChannels(ExportChannelsPref::ExportChannels channels)
+void ExportConfiguration::setExportChannels(int channels)
 {
     muse::settings()->setSharedValue(EXPORT_CHANNELS, muse::Val(channels));
 }

@@ -13,7 +13,6 @@
 #include "global/iinteractive.h"
 #include "global/io/ifilesystem.h"
 #include "../iprojectconfiguration.h"
-#include "importexport/export/iexportconfiguration.h"
 #include "irecentfilescontroller.h"
 #include "iprojectautosaver.h"
 #include "iopensaveprojectscenario.h"
@@ -35,7 +34,6 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<record::IRecordController> recordController;
-    muse::Inject<au::importexport::IExportConfiguration> exportConfiguration;
 
 public:
     ProjectActionsController() = default;

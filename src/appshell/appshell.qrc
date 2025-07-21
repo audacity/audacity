@@ -39,7 +39,6 @@
         <file>qml/Preferences/ScorePreferencesPage.qml</file>
         <file>qml/Preferences/ShortcutsPreferencesPage.qml</file>
         <file>qml/Preferences/ImportPreferencesPage.qml</file>
-        <file>qml/Preferences/ExportOptionsDialog.qml</file>
         <file>qml/Preferences/MidiDeviceMappingPreferencesPage.qml</file>
         <file>qml/Preferences/AudioPreferencesPage.qml</file>
         <file>qml/Preferences/PlaybackPreferencesPage.qml</file>

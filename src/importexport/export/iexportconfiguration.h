@@ -21,12 +21,8 @@ public:
     virtual ~IExportConfiguration() = default;
 
     virtual ExportProcessType processType() const = 0;
-    virtual void setProcess(ExportProcessType process) = 0;
-    virtual muse::async::Notification processChanged() const = 0;
-
-    virtual std::string filename() const = 0;
-    virtual void setFilename(const std::string& filename) = 0;
-    virtual muse::async::Notification filenameChanged() const = 0;
+    virtual void setProcessType(ExportProcessType process) = 0;
+    virtual muse::async::Notification processTypeChanged() const = 0;
 
     virtual muse::io::path_t directoryPath() const = 0;
     virtual void setDirectoryPath(const muse::io::path_t& path) = 0;
@@ -36,8 +32,8 @@ public:
     virtual void setCurrentFormat(const std::string& format) = 0;
     virtual muse::async::Notification currentFormatChanged() const = 0;
 
-    virtual ExportChannelsPref::ExportChannels exportChannels() const = 0;
-    virtual void setExportChannels(ExportChannelsPref::ExportChannels channels) = 0;
+    virtual int exportChannels() const = 0;
+    virtual void setExportChannels(int channels) = 0;
     virtual muse::async::Notification exportChannelsChanged() const = 0;
 
     virtual int exportSampleRate() const = 0;
