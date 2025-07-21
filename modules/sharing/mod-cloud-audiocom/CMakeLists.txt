@@ -74,6 +74,7 @@ set( SOURCES
    CloudProjectMixdownUtils.h
    CloudProjectOpenUtils.cpp
    CloudProjectOpenUtils.h
+   CloudLoginHandler.cpp
 )
 
 if(${_OPT}has_url_schemes_support)

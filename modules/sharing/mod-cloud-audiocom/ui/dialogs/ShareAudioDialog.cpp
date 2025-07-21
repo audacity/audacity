@@ -192,6 +192,7 @@ ShareAudioDialog::ShareAudioDialog(
 
    SetMinSize({ size.x, std::min(250, size.y) });
    SetMaxSize({ size.x, -1 });
+   CentreOnParent();
 
    mContinueAction = [this]() {
       if (!mInitialStatePanel.root->IsShown())
@@ -200,7 +201,9 @@ ShareAudioDialog::ShareAudioDialog(
       }
       Disable();
       if(!GetOAuthService().HasAccessToken()) {
-         LoginDialog::SignIn(this, LoginDialog::Mode::Create);
+         CallAfter([this]() {
+            LoginDialog::SignIn(this, LoginDialog::Mode::Create);
+         });
       }
       Enable();
       if(GetOAuthService().HasAccessToken()) {

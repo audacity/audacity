@@ -91,7 +91,7 @@ public:
    // -------------------------------------------------------------------------
 
    static ModuleManager & Get();
-   
+
    // This string persists in configuration files
    // So config compatibility will break if it is changed across Audacity versions
    static wxString GetPluginTypeString();
@@ -128,8 +128,9 @@ public:
    std::unique_ptr<ComponentInterface>
       LoadPlugin(const PluginID & provider, const PluginPath & path);
 
-   bool IsProviderValid(const PluginID & provider, const PluginPath & path);
-   bool CheckPluginExist(const PluginID& providerId, const PluginPath& path);
+   bool IsProviderValid(const PluginID & provider, const PluginPath & path) const;
+   bool CheckPluginExist(const PluginID& providerId, const PluginPath& path) const;
+   bool CheckModuleLoaded(const FilePath& moduleName) const;
 
 private:
    // I'm a singleton class

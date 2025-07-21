@@ -562,6 +562,7 @@ set( SOURCES
       menus/ExtraMenus.cpp
       menus/FileMenus.cpp
       menus/GetEffectsHelper.cpp
+      menus/CloudLoginHelper.cpp
       menus/HelpMenus.cpp
       menus/LabelMenus.cpp
       menus/MenuHelper.cpp
