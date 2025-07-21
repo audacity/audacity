@@ -589,6 +589,15 @@ bool TrackeditOperationController::splitStereoTracksToCenterMono(const TrackIdLi
     return false;
 }
 
+bool TrackeditOperationController::makeStereoTrack(const TrackId left, const TrackId right)
+{
+    if (trackAndClipOperations()->makeStereoTrack(left, right)) {
+        projectHistory()->pushHistoryState("Make stereo track", "Make stereo track");
+        return true;
+    }
+    return false;
+}
+
 muse::ProgressPtr TrackeditOperationController::progress() const
 {
     return trackAndClipOperations()->progress();

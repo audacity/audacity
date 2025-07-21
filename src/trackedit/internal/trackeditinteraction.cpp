@@ -375,6 +375,11 @@ bool TrackeditInteraction::splitStereoTracksToCenterMono(const TrackIdList& trac
     return withPlaybackStop(&ITrackeditInteraction::splitStereoTracksToCenterMono, tracksIds);
 }
 
+bool TrackeditInteraction::makeStereoTrack(const TrackId left, const TrackId right)
+{
+    return withPlaybackStop(&ITrackeditInteraction::makeStereoTrack, left, right);
+}
+
 muse::ProgressPtr TrackeditInteraction::progress() const
 {
     return m_interaction->progress();

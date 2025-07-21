@@ -73,6 +73,7 @@ static const ActionCode TRACK_SWAP_CHANNELS("track-swap-channels");
 static const ActionCode TRACK_SPLIT_STEREO_TO_LR("track-split-stereo-to-lr");
 static const ActionCode TRACK_SPLIT_STEREO_TO_CENTER("track-split-stereo-to-center");
 static const ActionCode TRACK_CHANGE_RATE_CUSTOM("track-change-rate-custom");
+static const ActionCode TRACK_MAKE_STEREO("track-make-stereo");
 
 static const ActionCode TRIM_AUDIO_OUTSIDE_SELECTION("trim-audio-outside-selection");
 static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
@@ -141,6 +142,7 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACK_SPLIT_STEREO_TO_LR,
     TRACK_SPLIT_STEREO_TO_CENTER,
     TRACK_CHANGE_RATE_CUSTOM,
+    TRACK_MAKE_STEREO,
     GROUP_CLIPS_CODE,
     UNGROUP_CLIPS_CODE,
 };
@@ -216,6 +218,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, TRACK_SPLIT_STEREO_TO_LR, this, &TrackeditActionsController::splitStereoToLR);
     dispatcher()->reg(this, TRACK_SPLIT_STEREO_TO_CENTER, this, &TrackeditActionsController::splitStereoToCenter);
     dispatcher()->reg(this, TRACK_CHANGE_RATE_CUSTOM, this, &TrackeditActionsController::setCustomTrackRate);
+    dispatcher()->reg(this, TRACK_MAKE_STEREO, this, &TrackeditActionsController::makeStereoTrack);
 
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
     dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::silenceAudioSelection);
@@ -1347,6 +1350,39 @@ void TrackeditActionsController::setTrackRate(const muse::actions::ActionQuery& 
     if (trackeditInteraction()->changeTracksRate(tracks, rate)) {
         notifyActionCheckedChanged(q.toString());
     }
+}
+
+void TrackeditActionsController::makeStereoTrack(const muse::actions::ActionData&)
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+
+    const auto selectedTracks = selectionController()->selectedTracks();
+    if (selectedTracks.size() != 1) {
+        return;
+    }
+
+    const std::optional<Track> selectedTrack = project->trackeditProject()->track(selectionController()->selectedTracks().front());
+    if (!selectedTrack || selectedTrack->type != TrackType::Mono) {
+        return;
+    }
+
+    const TrackList tracks = project->trackeditProject()->trackList();
+    const auto it = std::find_if(tracks.begin(), tracks.end(),
+                                 [&selectedTrack](const Track& track) { return track.id == selectedTrack->id; });
+
+    if (it == tracks.end()) {
+        return;
+    }
+
+    const auto nextTrack = std::next(it);
+    if ((nextTrack == tracks.end()) || nextTrack->type != TrackType::Mono) {
+        return;
+    }
+
+    trackeditInteraction()->makeStereoTrack(selectedTrack->id, nextTrack->id);
 }
 
 bool TrackeditActionsController::actionChecked(const ActionCode&) const

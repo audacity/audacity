@@ -99,6 +99,11 @@ void TrackContextMenuModel::load()
         updateColorCheckedState();
         updateTrackFormatState();
         updateTrackRateState();
+        updateTrackMonoState();
+    });
+
+    selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList&) {
+        updateTrackMonoState();
     });
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -130,6 +135,7 @@ void TrackContextMenuModel::load()
     updateColorCheckedState();
     updateTrackFormatState();
     updateTrackRateState();
+    updateTrackMonoState();
 
     MenuItem& waveformViewItem = findItem(ActionCode("track-view-waveform"));
     auto state = waveformViewItem.state();
@@ -275,6 +281,43 @@ void TrackContextMenuModel::updateTrackRateState()
     MenuItem& menu = findMenu(QString::fromUtf8(TRACK_RATE_MENU_ID));
     menu.setTitle(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Rate: %1 Hz")
                   .arg(muse::String::number(static_cast<int>(track.value().rate))));
+}
+
+void TrackContextMenuModel::updateTrackMonoState()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+
+    au::trackedit::ITrackeditProjectPtr trackeditProject = project->trackeditProject();
+    if (!trackeditProject) {
+        return;
+    }
+
+    const au::trackedit::TrackList trackList = trackeditProject->trackList();
+    const auto it = std::find_if(trackList.begin(), trackList.end(), [this](const au::trackedit::Track& t) {
+        return t.id == m_trackId;
+    });
+
+    if (it == trackList.end()) {
+        return;
+    }
+
+    MenuItem& makeStereoItem = findItem(ActionCode("track-make-stereo"));
+    if (!makeStereoItem.isValid()) {
+        return;
+    }
+
+    const auto selectedTracks = selectionController()->selectedTracks();
+    bool canMakeStereo = (selectedTracks.size() == 1)
+                         && (it + 1 != trackList.end())
+                         && (it->type == au::trackedit::TrackType::Mono)
+                         && (it + 1)->type == au::trackedit::TrackType::Mono;
+
+    auto state = makeStereoItem.state();
+    state.enabled = canMakeStereo;
+    makeStereoItem.setState(state);
 }
 
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackColorItems()

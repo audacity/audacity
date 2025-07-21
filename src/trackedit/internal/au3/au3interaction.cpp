@@ -20,6 +20,8 @@
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track/TimeStretching.h"
+#include "libraries/lib-effects/MixAndRender.h"
+#include "libraries/lib-realtime-effects/RealtimeEffectList.h"
 
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
@@ -2564,6 +2566,123 @@ bool Au3Interaction::splitStereoTracksToCenterMono(const TrackIdList& tracksIds)
     return true;
 }
 
+bool Au3Interaction::canMergeMonoTracksToStereo(const TrackId left, const TrackId right)
+{
+    const auto au3LeftTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(left));
+    IF_ASSERT_FAILED(au3LeftTrack) {
+        return false;
+    }
+
+    const auto au3RightTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(right));
+    IF_ASSERT_FAILED(au3RightTrack) {
+        return false;
+    }
+
+    const auto checkAligned = [](const WaveTrack& left, const WaveTrack& right)
+    {
+        auto eqTrims = [](double a, double b)
+        {
+            return std::abs(a - b)
+                   <= std::numeric_limits<double>::epsilon() * std::max(a, b);
+        };
+        const auto eps = 0.5 / left.GetRate();
+        const auto& rightIntervals = right.Intervals();
+        for (const auto& a : left.Intervals()) {
+            auto it = std::find_if(
+                rightIntervals.begin(),
+                rightIntervals.end(),
+                [&](const auto& b)
+            {
+                //Start() and End() are always snapped to a sample grid
+                return std::abs(a->Start() - b->Start()) < eps
+                       && std::abs(a->End() - b->End()) < eps
+                       && eqTrims(a->GetTrimLeft(), b->GetTrimLeft())
+                       && eqTrims(a->GetTrimRight(), b->GetTrimRight())
+                       && a->HasEqualPitchAndSpeed(*b);
+            });
+            if (it == rightIntervals.end()) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    return RealtimeEffectList::Get(*au3LeftTrack).GetStatesCount() == 0
+           && RealtimeEffectList::Get(*au3RightTrack).GetStatesCount() == 0
+           && checkAligned(*au3LeftTrack, *au3RightTrack);
+}
+
+bool Au3Interaction::makeStereoTrack(const TrackId left, const TrackId right)
+{
+    const auto au3LeftTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(left));
+    IF_ASSERT_FAILED(au3LeftTrack) {
+        return false;
+    }
+
+    const auto au3RightTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(right));
+    IF_ASSERT_FAILED(au3RightTrack) {
+        return false;
+    }
+
+    if (au3LeftTrack->Channels().size() != 1 || au3RightTrack->Channels().size() != 1) {
+        LOGW() << "Cannot combine non-mono tracks into stereo: " << left << ", " << right;
+        return false;
+    }
+
+    if (!canMergeMonoTracksToStereo(left, right)) {
+        if (!userIsOkCombineMonoToStereo()) {
+            return false;
+        }
+    }
+
+    float origPanLeft = au3LeftTrack->GetPan();
+    float origPanRight = au3RightTrack->GetPan();
+
+    au3LeftTrack->SetPan(-1.0f);
+    au3RightTrack->SetPan(1.0f);
+
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    const auto mix = MixAndRender(
+        TrackIterRange {
+        tracks.Any<const WaveTrack>().find(au3LeftTrack),
+        ++tracks.Any<const WaveTrack>().find(au3RightTrack)
+    },
+        Mixer::WarpOptions { tracks.GetOwner() },
+        au3LeftTrack->GetName(),
+        &WaveTrackFactory::Get(projectRef()),
+        //use highest sample rate
+        std::max(au3LeftTrack->GetRate(), au3RightTrack->GetRate()),
+        //use widest sample format
+        std::max(au3LeftTrack->GetSampleFormat(), au3RightTrack->GetSampleFormat()),
+        0.0, 0.0);
+
+    if (!mix) {
+        au3LeftTrack->SetPan(origPanLeft);
+        au3RightTrack->SetPan(origPanRight);
+        LOGW() << "Failed to mix and render stereo track from: " << left << ", " << right;
+        return false;
+    }
+
+    const projectscene::IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
+    const int newTrackHeight = viewState->trackHeight(left).val + viewState->trackHeight(right).val;
+
+    const Track leftTrack = DomConverter::track(au3LeftTrack);
+    const Track rightTrack = DomConverter::track(au3RightTrack);
+
+    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    tracks.Insert(au3LeftTrack, mix, true);
+    tracks.Remove(*au3LeftTrack);
+    tracks.Remove(*au3RightTrack);
+
+    viewState->setTrackHeight(mix->GetId(), newTrackHeight);
+
+    prj->notifyAboutTrackAdded(DomConverter::track(mix.get()));
+    prj->notifyAboutTrackRemoved(leftTrack);
+    prj->notifyAboutTrackRemoved(rightTrack);
+
+    return true;
+}
+
 muse::ProgressPtr Au3Interaction::progress() const
 {
     return m_progress;
@@ -2615,6 +2734,30 @@ bool Au3Interaction::userIsOkWithDownmixing() const
         configuration()->setAskBeforeConvertingToMonoOrStereo(true);
         return false;
     }
+
+    return result.standardButton() == muse::IInteractive::Button::Yes;
+}
+
+bool Au3Interaction::userIsOkCombineMonoToStereo() const
+{
+    if (!configuration()->askBeforeConvertingToMonoOrStereo()) {
+        return true;
+    }
+
+    const std::string title = muse::trc("trackedit", "Combine mono tracks to stereo");
+    const std::string body = muse::trc("trackedit",
+                                       "The tracks you are attempting to merge to stereo contain clips at "
+                                       "different positions, or otherwise mismatching clips. Merging them "
+                                       "will render the tracks.\n\n"
+                                       "This causes any realtime effects to be applied to the waveform and "
+                                       "hidden data to be removed. Additionally, the entire track will "
+                                       "become one large clip.\n\n"
+                                       "Do you wish to continue?");
+
+    const muse::IInteractive::Result result = interactive()->warningSync(title, body, {
+        muse::IInteractive::Button::Cancel,
+        muse::IInteractive::Button::Yes
+    }, muse::IInteractive::Button::Cancel);
 
     return result.standardButton() == muse::IInteractive::Button::Yes;
 }

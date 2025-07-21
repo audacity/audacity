@@ -103,6 +103,7 @@ public:
     virtual bool swapStereoChannels(const TrackIdList& tracksIds) = 0;
     virtual bool splitStereoTracksToLRMono(const TrackIdList& tracksIds) = 0;
     virtual bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) = 0;
+    virtual bool makeStereoTrack(const TrackId left, const TrackId right) = 0;
 
     virtual muse::ProgressPtr progress() const = 0;
 };

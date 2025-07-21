@@ -212,8 +212,7 @@ UiActionList STATIC_ACTIONS = {
              Checkable::Yes
              ),
     UiAction("track-make-stereo",
-             //! TODO: Change context when making stereo tracks is implemented
-             au::context::UiCtxUnknown,
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Make stereo track"),
              TranslatableString("action", "Make stereo track")
