@@ -31,9 +31,11 @@ set(AU3_DEF
     -DPROJECT_FILE_IO_API=
     -DPROJECT_HISTORY_API=
     -DMATH_API=
+    -DFFT_API=
     -DTRANSACTIONS_API=
     -DSTRETCHING_SEQUENCE_API=
     -DWAVE_TRACK_API=
+    -DWAVE_TRACK_FFT_API=
     -DSAMPLE_TRACK_API=
     -DMIXER_API=
     -DAUDIO_GRAPH_API=
@@ -117,10 +119,12 @@ set(AU3_INCLUDE
     # compile lib-project-file-io
     ${AU3_LIBRARIES}/lib-sentry-reporting
     ${AU3_LIBRARIES}/lib-math
+    ${AU3_LIBRARIES}/lib-fft
     ${AU3_LIBRARIES}/lib-project-history
     ${AU3_LIBRARIES}/lib-transactions
     ${AU3_LIBRARIES}/lib-stretching-sequence
     ${AU3_LIBRARIES}/lib-wave-track
+    ${AU3_LIBRARIES}/lib-wave-track-fft
     ${AU3_LIBRARIES}/lib-sample-track
     ${AU3_LIBRARIES}/lib-label-track
     ${AU3_LIBRARIES}/lib-mixer
