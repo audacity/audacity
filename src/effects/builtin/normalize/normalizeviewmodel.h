@@ -8,9 +8,8 @@
 
 #include "effects/effects_base/ieffectsprovider.h"
 
-class NormalizeBase;
-
 namespace au::effects {
+class NormalizeEffect;
 class NormalizeViewModel : public AbstractEffectModel
 {
     Q_OBJECT
@@ -47,6 +46,6 @@ signals:
 private:
     void doReload() override;
 
-    NormalizeBase* effect() const;
+    NormalizeEffect* effect() const;
 };
 }

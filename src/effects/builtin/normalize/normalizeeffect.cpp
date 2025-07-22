@@ -8,65 +8,67 @@
   Vaughan Johnson (Preview)
 
 ***********************************************************************/
-#include "NormalizeBase.h"
-#include "EffectOutputTracks.h"
-#include "ShuttleAutomation.h"
-#include "WaveChannelUtilities.h"
-#include "WaveTrack.h"
+#include "normalizeeffect.h"
+
+#include "libraries/lib-effects/EffectOutputTracks.h"
+#include "libraries/lib-command-parameters/ShuttleAutomation.h"
+#include "libraries/lib-wave-track/WaveChannelUtilities.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 #include <cmath>
 
-const EffectParameterMethods& NormalizeBase::Parameters() const
+namespace au::effects {
+const EffectParameterMethods& NormalizeEffect::Parameters() const
 {
     static CapturedParameters<
-        NormalizeBase, PeakLevel, ApplyVolume, RemoveDC, StereoInd>
+        NormalizeEffect, PeakLevel, ApplyVolume, RemoveDC, StereoInd>
     parameters;
     return parameters;
 }
 
-const ComponentInterfaceSymbol NormalizeBase::Symbol { XO("Normalize") };
+const ComponentInterfaceSymbol NormalizeEffect::Symbol { XO("Normalize") };
 
-NormalizeBase::NormalizeBase()
+NormalizeEffect::NormalizeEffect()
 {
     Parameters().Reset(*this);
     SetLinearEffectFlag(false);
 }
 
-NormalizeBase::~NormalizeBase()
+NormalizeEffect::~NormalizeEffect()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol NormalizeBase::GetSymbol() const
+ComponentInterfaceSymbol NormalizeEffect::GetSymbol() const
 {
     return Symbol;
 }
 
-TranslatableString NormalizeBase::GetDescription() const
+TranslatableString NormalizeEffect::GetDescription() const
 {
     return XO("Sets the peak amplitude of one or more tracks");
 }
 
-ManualPageID NormalizeBase::ManualPage() const
+ManualPageID NormalizeEffect::ManualPage() const
 {
     return L"Normalize";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType NormalizeBase::GetType() const
+EffectType NormalizeEffect::GetType() const
 {
     return EffectTypeProcess;
 }
 
 // Effect implementation
 
-bool NormalizeBase::CheckWhetherSkipEffect(const EffectSettings&) const
+bool NormalizeEffect::CheckWhetherSkipEffect(const EffectSettings&) const
 {
     return (mGain == false) && (mDC == false);
 }
 
-bool NormalizeBase::Process(EffectInstance&, EffectSettings&)
+bool NormalizeEffect::Process(EffectInstance&, EffectSettings&)
 {
     if (mGain == false && mDC == false) {
         return true;
@@ -197,7 +199,7 @@ break2:
     return bGoodResult;
 }
 
-bool NormalizeBase::AnalyseTrack(
+bool NormalizeEffect::AnalyseTrack(
     const WaveChannel& track, const ProgressReport& report, const bool gain,
     const bool dc, const double curT0, const double curT1, float& offset,
     float& extent)
@@ -231,7 +233,7 @@ bool NormalizeBase::AnalyseTrack(
 
 // AnalyseTrackData() takes a track, transforms it to bunch of buffer-blocks,
 // and executes selected AnalyseOperation on it...
-bool NormalizeBase::AnalyseTrackData(
+bool NormalizeEffect::AnalyseTrackData(
     const WaveChannel& track, const ProgressReport& report, const double curT0,
     const double curT1, float& offset)
 {
@@ -297,7 +299,7 @@ bool NormalizeBase::AnalyseTrackData(
 // and executes ProcessData, on it...
 // uses mMult and offset to normalize a track.
 // mMult must be set before this is called
-bool NormalizeBase::ProcessOne(
+bool NormalizeEffect::ProcessOne(
     WaveChannel& track, const TranslatableString& msg, double& progress,
     float offset)
 {
@@ -357,7 +359,7 @@ bool NormalizeBase::ProcessOne(
 }
 
 /// @see AnalyseDataLoudnessDC
-double NormalizeBase::AnalyseDataDC(float* buffer, size_t len, double sum)
+double NormalizeEffect::AnalyseDataDC(float* buffer, size_t len, double sum)
 {
     for (decltype(len) i = 0; i < len; i++) {
         sum += (double)buffer[i];
@@ -365,10 +367,11 @@ double NormalizeBase::AnalyseDataDC(float* buffer, size_t len, double sum)
     return sum;
 }
 
-void NormalizeBase::ProcessData(float* buffer, size_t len, float offset)
+void NormalizeEffect::ProcessData(float* buffer, size_t len, float offset)
 {
     for (decltype(len) i = 0; i < len; i++) {
         float adjFrame = (buffer[i] + offset) * mMult;
         buffer[i] = adjFrame;
     }
+}
 }
