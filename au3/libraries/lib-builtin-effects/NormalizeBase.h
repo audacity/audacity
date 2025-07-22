@@ -58,12 +58,13 @@ private:
     static double AnalyseDataDC(float* buffer, size_t len, double sum);
     void ProcessData(float* buffer, size_t len, float offset);
 
-protected:
+public:
     double mPeakLevel;
     bool mGain;
     bool mDC;
     bool mStereoInd;
 
+protected:
     double mCurT0;
     double mCurT1;
     float mMult;

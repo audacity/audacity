@@ -39,6 +39,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/amplify/amplifyviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/amplify/amplifyviewmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeviewmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/chirpeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/chirpeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneeffect.cpp
@@ -86,6 +89,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-effects/StatefulPerTrackEffect.h
     ${AU3_LIBRARIES}/lib-effects/StatefulEffect.cpp
     ${AU3_LIBRARIES}/lib-effects/StatefulEffect.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/NormalizeBase.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/NormalizeBase.h
     ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.h
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.cpp

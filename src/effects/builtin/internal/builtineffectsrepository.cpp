@@ -17,6 +17,8 @@
 
 #include "amplify/amplifyeffect.h"
 #include "amplify/amplifyviewmodel.h"
+#include "libraries/lib-builtin-effects/NormalizeBase.h" // TODO move source
+#include "normalize/normalizeviewmodel.h"
 #include "tonegen/chirpeffect.h"
 #include "tonegen/toneeffect.h"
 #include "reverb/reverbeffect.h"
@@ -96,6 +98,7 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< Repair > regRepair;
     static BuiltinEffectsModule::Registration< ReverseEffect > regReverse;
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
+    static BuiltinEffectsModule::Registration< NormalizeBase > regNormalize;
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
     static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
@@ -162,6 +165,15 @@ void BuiltinEffectsRepository::updateEffectMetaList()
             regMeta(desc,
                     muse::mtrc("effects", "Amplify"),
                     muse::mtrc("effects", "Increases or decreases the volume of the audio you have selected"),
+                    EffectCategoryId::VolumeAndCompression,
+                    false
+                    );
+        } else if (symbol == NormalizeBase::Symbol) {
+            qmlRegisterType<NormalizeViewModel>("Audacity.Effects", 1, 0, "NormalizeViewModel");
+            regView(NormalizeBase::Symbol, u"qrc:/normalize/NormalizeView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects", "Normalize"),
+                    muse::mtrc("effects", "Sets the peak amplitude of a one or more tracks"),
                     EffectCategoryId::VolumeAndCompression,
                     false
                     );
