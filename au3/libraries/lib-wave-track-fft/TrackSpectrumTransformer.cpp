@@ -62,7 +62,8 @@ bool TrackSpectrumTransformer::PostProcess(
     auto tLen = outputTrack.LongSamplesToTime(len);
     // Filtering effects always end up with more data than they started with.
     // Delete this 'tail'.
-    outputTrack.Clear(tLen, outputTrack.GetEndTime());
+    constexpr auto moveClips = false;
+    outputTrack.Clear(tLen, outputTrack.GetEndTime(), moveClips);
     return true;
 }
 
