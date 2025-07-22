@@ -39,6 +39,9 @@ Item {
     StyledToolBarView {
         id: view
 
+        navigationPanel.name: "PlaybackToolBar"
+        navigationPanel.accessible.name: qsTrc("projectscene", "Playback toolbar")
+
         anchors.verticalCenter: parent.verticalCenter
 
         rowHeight: isMultiline ? 32 : 48
