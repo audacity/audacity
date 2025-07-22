@@ -22,6 +22,8 @@
 #include "internal/au3commonsettings.h"
 #include "internal/au3basicui.h"
 
+#include "modules/import-export/RegisterExportPlugins.h"
+
 #include "au3wrap/internal/wxtypes_convert.h"
 
 #include <QStandardPaths>
@@ -62,10 +64,10 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 
     m_audioDevicesProvider->init();
 
-    // TODO: this is old way to load ffmpeg, should be automatically dispatched
 #ifdef AU_USE_FFMPEG
     FFmpegStartup();
 #endif
+    RegisterExportPlugins();
 
     ModuleManager::Get().Initialize();
     Importer::Get().Initialize();
