@@ -1389,7 +1389,7 @@ void TrackeditActionsController::makeStereoTrack(const muse::actions::ActionData
     trackeditInteraction()->makeStereoTrack(selectedTrack->id, nextTrack->id);
 }
 
-void TrackeditActionsController::resampleTracks(const muse::actions::ActionData& args)
+void TrackeditActionsController::resampleTracks(const muse::actions::ActionData&)
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     if (!project) {
@@ -1408,6 +1408,12 @@ void TrackeditActionsController::resampleTracks(const muse::actions::ActionData&
     }
 
     muse::UriQuery resampleUri("audacity://trackedit/custom_rate");
+
+    muse::ValList availableSampleRates;
+    for (const auto& rate : audioDevicesProvider()->availableSampleRateList()) {
+        availableSampleRates.push_back(muse::Val(static_cast<int>(rate)));
+    }
+    resampleUri.addParam("availableRates", muse::Val(availableSampleRates));
     resampleUri.addParam("title", muse::Val(muse::trc("trackedit", "Resample")));
     resampleUri.addParam("rate", muse::Val(static_cast<int>(focused.value().rate)));
 

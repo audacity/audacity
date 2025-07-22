@@ -2785,10 +2785,6 @@ bool Au3Interaction::userIsOkWithDownmixing() const
 
 bool Au3Interaction::userIsOkCombineMonoToStereo() const
 {
-    if (!configuration()->askBeforeConvertingToMonoOrStereo()) {
-        return true;
-    }
-
     const std::string title = muse::trc("trackedit", "Combine mono tracks to stereo");
     const std::string body = muse::trc("trackedit",
                                        "The tracks you are attempting to merge to stereo contain clips at "

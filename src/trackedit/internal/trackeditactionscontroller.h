@@ -12,6 +12,7 @@
 #include "iinteractive.h"
 
 #include "projectscene/iprojectsceneconfiguration.h"
+#include "playback/iaudiodevicesprovider.h"
 #include "iprojecthistory.h"
 #include "itrackeditinteraction.h"
 #include "iselectioncontroller.h"
@@ -28,6 +29,7 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     void init();
