@@ -11,6 +11,7 @@ Rectangle {
     id: root
 
     property var instanceId: null
+    property var dialogView: null
 
     property AbstractEffectModel model: null
 

@@ -88,6 +88,7 @@ EffectStyledDialogView {
             id: builtinViewerComp
             BuiltinEffectViewer {
                 instanceId: root.instanceId
+                dialogView: root
             }
         }
 

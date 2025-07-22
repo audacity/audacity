@@ -1,8 +1,12 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  NoiseReductionBase.cpp
+  NoiseReductionEffect.cpp
 
   Dominic Mazzoni
 
@@ -11,7 +15,7 @@
 
 *******************************************************************//**
 
-\class NoiseReductionBase
+\class NoiseReductionEffect
 \brief A two-pass effect to reduce background noise.
 
   The first pass is done over just noise.  For each windowed sample
@@ -34,12 +38,13 @@
   the output signal is then pieced together using overlap/add.
 
 *//********************************************************************/
-#include "NoiseReductionBase.h"
-#include "BasicUI.h"
-#include "EffectOutputTracks.h"
-#include "FFT.h"
-#include "TrackSpectrumTransformer.h"
-#include "WaveTrack.h"
+#include "noisereductioneffect.h"
+
+#include "libraries/lib-effects/EffectOutputTracks.h"
+#include "libraries/lib-fft/FFT.h"
+#include "libraries/lib-wave-track-fft/TrackSpectrumTransformer.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
+#include "libraries/lib-command-parameters/ShuttleAutomation.h"
 #include <algorithm>
 #include <cmath>
 
@@ -48,19 +53,10 @@
 // Bill].
 #undef SPECTRAL_EDIT_NOISE_REDUCTION
 
+namespace au::effects {
 typedef std::vector<float> FloatVector;
 
 namespace {
-enum DiscriminationMethod : size_t
-{
-    DM_MEDIAN,
-    DM_SECOND_GREATEST,
-    DM_OLD_METHOD,
-
-    DM_N_METHODS,
-    DM_DEFAULT_METHOD = DM_SECOND_GREATEST,
-};
-
 const struct DiscriminationMethodInfo
 {
     const TranslatableString name;
@@ -68,26 +64,11 @@ const struct DiscriminationMethodInfo
     // Experimental only, don't need translations
     { XO("Median") },
     { XO("Second greatest") },
-    { XO("Old") },
 };
 
 // magic number used only in the old statistics
 // and the old discrimination
 const float minSignalTime = 0.05f;
-
-enum WindowTypes : unsigned
-{
-    WT_RECTANGULAR_HANN = 0, // 2.0.6 behavior, requires 1/2 step
-    WT_HANN_RECTANGULAR,    // requires 1/2 step
-    WT_HANN_HANN,           // requires 1/4 step
-    WT_BLACKMAN_HANN,       // requires 1/4 step
-    WT_HAMMING_RECTANGULAR, // requires 1/2 step
-    WT_HAMMING_HANN,        // requires 1/4 step
-    // WT_HAMMING_INV_HAMMING, // requires 1/2 step
-
-    WT_N_WINDOW_TYPES,
-    WT_DEFAULT_WINDOW_TYPES = WT_HANN_HANN
-};
 
 const struct WindowTypesInfo
 {
@@ -109,67 +90,16 @@ const struct WindowTypesInfo
     /* i18n-hint: Hamming is a proper name */
     // { XO("Hamming, Reciprocal Hamming"),    2, }, // output window is special
 };
-
-enum
-{
-    DEFAULT_WINDOW_SIZE_CHOICE = 8, // corresponds to 2048
-    DEFAULT_STEPS_PER_WINDOW_CHOICE
-        =1 // corresponds to 4, minimum for WT_HANN_HANN
-};
 } // namespace
 
 //----------------------------------------------------------------------------
-// NoiseReductionBase::Statistics
+// NoiseReductionEffect::Statistics
 //----------------------------------------------------------------------------
-
-class NoiseReductionBase::Statistics
-{
-public:
-    Statistics(size_t spectrumSize, double rate, int windowTypes)
-        : mRate{rate}
-        , mWindowSize{(spectrumSize - 1) * 2}
-        , mWindowTypes{windowTypes}
-        , mTotalWindows{0}
-        , mTrackWindows{0}
-        , mSums(spectrumSize)
-        , mMeans(spectrumSize)
-#ifdef OLD_METHOD_AVAILABLE
-        , mNoiseThreshold(spectrumSize)
-#endif
-    {
-    }
-
-    // Noise profile statistics follow
-
-    double mRate; // Rate of profile track(s) -- processed tracks must match
-    size_t mWindowSize;
-    int mWindowTypes;
-
-    unsigned mTotalWindows;
-    unsigned mTrackWindows;
-    FloatVector mSums;
-    FloatVector mMeans;
-
-#ifdef OLD_METHOD_AVAILABLE
-    // Old statistics:
-    FloatVector mNoiseThreshold;
-#endif
-};
-
-//----------------------------------------------------------------------------
-// NoiseReductionBase::Settings
-//----------------------------------------------------------------------------
-
-NoiseReductionBase::Settings::Settings()
-    : mDoProfile{true}
-{
-    PrefsIO(true);
-}
 
 struct MyTransformer : TrackSpectrumTransformer
 {
     MyTransformer(
-        NoiseReductionBase::Worker& worker, WaveChannel* pOutputTrack,
+        NoiseReductionEffect::Worker& worker, WaveChannel* pOutputTrack,
         bool needsOutput, eWindowFunctions inWindowType,
         eWindowFunctions outWindowType, size_t windowSize,
         unsigned stepsPerWindow, bool leadingPadding, bool trailingPadding)
@@ -205,22 +135,21 @@ struct MyTransformer : TrackSpectrumTransformer
     bool DoStart() override;
     bool DoFinish() override;
 
-    NoiseReductionBase::Worker& mWorker;
+    NoiseReductionEffect::Worker& mWorker;
 };
 
 //----------------------------------------------------------------------------
-// NoiseReductionBase::Worker
+// NoiseReductionEffect::Worker
 //----------------------------------------------------------------------------
 
 // This object holds information needed only during effect calculation
-class NoiseReductionBase::Worker final
+class NoiseReductionEffect::Worker final
 {
 public:
-    typedef NoiseReductionBase::Settings Settings;
-    typedef NoiseReductionBase::Statistics Statistics;
+    typedef NoiseReductionEffect::Statistics Statistics;
 
     Worker(
-        NoiseReductionBase& effect, const Settings& settings, Statistics& statistics
+        NoiseReductionEffect& effect, const NoiseReductionSettings& settings, Statistics& statistics
 #ifdef SPECTRAL_EDIT_NOISE_REDUCTION
         , double f0, double f1
 #endif
@@ -228,7 +157,7 @@ public:
     ~Worker();
 
     bool Process(
-        eWindowFunctions inWindowType, eWindowFunctions outWindowType, TrackList& tracks, double mT0, double mT1);
+        eWindowFunctions inWindowType, eWindowFunctions outWindowType, TrackList& tracks, double mT0, double mT1, std::string& error);
 
     static bool Processor(SpectrumTransformer& transformer);
 
@@ -241,8 +170,8 @@ public:
 
     const bool mDoProfile;
 
-    NoiseReductionBase& mEffect;
-    const Settings& mSettings;
+    NoiseReductionEffect& mEffect;
+    const NoiseReductionSettings& mSettings;
     Statistics& mStatistics;
 
     FloatVector mFreqSmoothingScratch;
@@ -258,7 +187,6 @@ public:
     float mOneBlockAttack;
     float mOneBlockRelease;
     float mNoiseAttenFactor;
-    float mOldSensitivityFactor;
 
     unsigned mNWindowsToExamine;
     unsigned mCenter;
@@ -270,33 +198,33 @@ public:
     sampleCount mProgressWindowCount = 0;
 };
 
-const ComponentInterfaceSymbol NoiseReductionBase::Symbol { XO(
-                                                                "Noise Reduction") };
+const ComponentInterfaceSymbol NoiseReductionEffect::Symbol { XO(
+                                                                  "Noise Reduction") };
 
-NoiseReductionBase::NoiseReductionBase()
-    : mSettings(std::make_unique<NoiseReductionBase::Settings>())
+NoiseReductionEffect::~NoiseReductionEffect()
 {
 }
 
-NoiseReductionBase::~NoiseReductionBase()
+void NoiseReductionEffect::ResetLastError()
 {
+    mLastError.clear();
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol NoiseReductionBase::GetSymbol() const
+ComponentInterfaceSymbol NoiseReductionEffect::GetSymbol() const
 {
     return Symbol;
 }
 
-TranslatableString NoiseReductionBase::GetDescription() const
+TranslatableString NoiseReductionEffect::GetDescription() const
 {
     return XO("Removes background noise such as fans, tape noise, or hums");
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType NoiseReductionBase::GetType() const
+EffectType NoiseReductionEffect::GetType() const
 {
     return EffectTypeProcess;
 }
@@ -335,101 +263,6 @@ void writePrefs(
 }
 } // namespace
 
-bool NoiseReductionBase::Settings::PrefsIO(bool read)
-{
-    static const double DEFAULT_OLD_SENSITIVITY = 0.0;
-
-    static const PrefsTableEntry<Settings, double> doubleTable[] = {
-        { &Settings::mNewSensitivity, wxT("Sensitivity"), 6.0 },
-        { &Settings::mNoiseGain, wxT("Gain"), 6.0 },
-        { &Settings::mAttackTime, wxT("AttackTime"), 0.02 },
-        { &Settings::mReleaseTime, wxT("ReleaseTime"), 0.10 },
-        { &Settings::mFreqSmoothingBands, wxT("FreqSmoothing"), 6.0 },
-
-        // Advanced settings
-        { &Settings::mOldSensitivity, wxT("OldSensitivity"),
-          DEFAULT_OLD_SENSITIVITY },
-    };
-    static auto doubleTableSize = sizeof(doubleTable) / sizeof(doubleTable[0]);
-
-    static const PrefsTableEntry<Settings, int> intTable[] = {
-        { &Settings::mNoiseReductionChoice, wxT("ReductionChoice"),
-          NRC_REDUCE_NOISE },
-
-        // Advanced settings
-        { &Settings::mWindowTypes, wxT("WindowTypes"), WT_DEFAULT_WINDOW_TYPES },
-        { &Settings::mWindowSizeChoice, wxT("WindowSize"),
-          DEFAULT_WINDOW_SIZE_CHOICE },
-        { &Settings::mStepsPerWindowChoice, wxT("StepsPerWindow"),
-          DEFAULT_STEPS_PER_WINDOW_CHOICE },
-        { &Settings::mMethod, wxT("Method"), DM_DEFAULT_METHOD },
-    };
-    static auto intTableSize = sizeof(intTable) / sizeof(intTable[0]);
-
-    static const wxString prefix(wxT("/Effects/NoiseReduction/"));
-
-    if (read) {
-        readPrefs(this, prefix, doubleTable, doubleTableSize);
-        readPrefs(this, prefix, intTable, intTableSize);
-
-        // Ignore preferences for unavailable options.
-#if !(defined(RESIDUE_CHOICE) || defined(ISOLATE_CHOICE))
-        mNoiseReductionChoice == NRC_REDUCE_NOISE;
-#elif !(defined(RESIDUE_CHOICE))
-        if (mNoiseReductionChoice == NRC_LEAVE_RESIDUE) {
-            mNoiseReductionChoice = NRC_ISOLATE_NOISE;
-        }
-#elif !(defined(ISOLATE_CHOICE))
-        if (mNoiseReductionChoice == NRC_ISOLATE_NOISE) {
-            mNoiseReductionChoice = NRC_LEAVE_RESIDUE;
-        }
-#endif
-
-#ifndef ADVANCED_SETTINGS
-        // Initialize all hidden advanced settings to defaults.
-        mWindowTypes = WT_DEFAULT_WINDOW_TYPES;
-        mWindowSizeChoice = DEFAULT_WINDOW_SIZE_CHOICE;
-        mStepsPerWindowChoice = DEFAULT_STEPS_PER_WINDOW_CHOICE;
-        mMethod = DM_DEFAULT_METHOD;
-        mOldSensitivity = DEFAULT_OLD_SENSITIVITY;
-#endif
-
-#ifndef OLD_METHOD_AVAILABLE
-        if (mMethod == DM_OLD_METHOD) {
-            mMethod = DM_DEFAULT_METHOD;
-        }
-#endif
-
-        return true;
-    } else {
-        writePrefs(this, prefix, doubleTable, doubleTableSize);
-        writePrefs(this, prefix, intTable, intTableSize);
-        return gPrefs->Flush();
-    }
-}
-
-bool NoiseReductionBase::Settings::Validate(NoiseReductionBase* effect) const
-{
-    using namespace BasicUI;
-    if (StepsPerWindow() < windowTypesInfo[mWindowTypes].minSteps) {
-        ShowMessageBox(XO("Steps per block are too few for the window types."));
-        return false;
-    }
-
-    if (StepsPerWindow() > WindowSize()) {
-        ShowMessageBox(XO("Steps per block cannot exceed the window size."));
-        return false;
-    }
-
-    if (mMethod == DM_MEDIAN && StepsPerWindow() > 4) {
-        ShowMessageBox(XO(
-                           "Median method is not implemented for more than four steps per window."));
-        return false;
-    }
-
-    return true;
-}
-
 auto MyTransformer::NewWindow(size_t windowSize) -> std::unique_ptr<Window>
 {
     return std::make_unique<MyWindow>(windowSize);
@@ -439,7 +272,14 @@ MyTransformer::MyWindow::~MyWindow()
 {
 }
 
-bool NoiseReductionBase::Process(EffectInstance&, EffectSettings&)
+const EffectParameterMethods& NoiseReductionEffect::Parameters() const
+{
+    static CapturedParameters<NoiseReductionEffect,
+                              sensitivity, frequencySmoothingBands, noiseGain, noiseReductionChoice> parameters;
+    return parameters;
+}
+
+bool NoiseReductionEffect::Process(EffectInstance&, EffectSettings& s)
 {
     // This same code will either reduce noise or profile it
 
@@ -447,31 +287,28 @@ bool NoiseReductionBase::Process(EffectInstance&, EffectSettings&)
 
     auto track = *(outputs.Get().Selected<const WaveTrack>()).begin();
     if (!track) {
+        mLastError = XO("No audio selected.").Translation().ToStdString();
         return false;
     }
 
-    const auto stepsPerWindow = mSettings->StepsPerWindow();
-    const auto stepSize = mSettings->WindowSize() / stepsPerWindow;
+    auto& settings = GetSettings(s);
+    const auto stepsPerWindow = settings.StepsPerWindow();
+    const auto stepSize = settings.WindowSize() / stepsPerWindow;
 
     // Initialize statistics if gathering them, or check for mismatched
     // (advanced) settings if reducing noise.
-    if (mSettings->mDoProfile) {
-        const auto spectrumSize = mSettings->SpectrumSize();
-        mStatistics = std::make_unique<Statistics>(
-            spectrumSize, track->GetRate(), mSettings->mWindowTypes);
-    } else if (mStatistics->mWindowSize != mSettings->WindowSize()) {
+    if (settings.mDoProfile) {
+        const auto spectrumSize = settings.SpectrumSize();
+        mStatistics = std::make_unique<Statistics>(spectrumSize, track->GetRate(), settings.mWindowTypes);
+    } else if (mStatistics->mWindowSize != settings.WindowSize()) {
         // possible only with advanced settings
-        BasicUI::ShowMessageBox(
-            XO("You must specify the same window size for steps 1 and 2."));
+        mLastError
+            = XO("You must specify the same window size for steps 1 and 2.").Translation().ToStdString();
         return false;
-    } else if (mStatistics->mWindowTypes != mSettings->mWindowTypes) {
-        // A warning only
-        BasicUI::ShowMessageBox(
-            XO("Warning: window types are not the same as for profiling."));
     }
 
     eWindowFunctions inWindowType, outWindowType;
-    switch (mSettings->mWindowTypes) {
+    switch (settings.mWindowTypes) {
     case WT_RECTANGULAR_HANN:
         inWindowType = eWinFuncRectangular;
         outWindowType = eWinFuncHann;
@@ -499,18 +336,18 @@ bool NoiseReductionBase::Process(EffectInstance&, EffectSettings&)
         inWindowType = outWindowType = eWinFuncHann;
         break;
     }
-    Worker worker { *this, *mSettings, *mStatistics
+    Worker worker { *this, settings, *mStatistics
 #ifdef SPECTRAL_EDIT_NOISE_REDUCTION
                     ,
                     mF0, mF1
 #endif
     };
     bool bGoodResult
-        =worker.Process(inWindowType, outWindowType, outputs.Get(), mT0, mT1);
-    const auto wasProfile = mSettings->mDoProfile;
-    if (mSettings->mDoProfile) {
+        = worker.Process(inWindowType, outWindowType, outputs.Get(), mT0, mT1, mLastError);
+    const auto wasProfile = settings.mDoProfile;
+    if (settings.mDoProfile) {
         if (bGoodResult) {
-            mSettings->mDoProfile
+            settings.mDoProfile
                 =false; // So that "repeat last effect" will reduce noise
         } else {
             mStatistics.reset(); // So that profiling must be done again before
@@ -524,24 +361,23 @@ bool NoiseReductionBase::Process(EffectInstance&, EffectSettings&)
     return bGoodResult;
 }
 
-NoiseReductionBase::Worker::~Worker()
+NoiseReductionEffect::Worker::~Worker()
 {
 }
 
-bool NoiseReductionBase::Worker::Process(
+bool NoiseReductionEffect::Worker::Process(
     eWindowFunctions inWindowType, eWindowFunctions outWindowType,
-    TrackList& tracks, double inT0, double inT1)
+    TrackList& tracks, double inT0, double inT1, std::string& error)
 {
     mProgressTrackCount = 0;
     for (auto track : tracks.Selected<WaveTrack>()) {
         mProgressWindowCount = 0;
         if (track->GetRate() != mStatistics.mRate) {
             if (mDoProfile) {
-                BasicUI::ShowMessageBox(
-                    XO("All noise profile data must have the same sample rate."));
+                error = XO("All noise profile data must have the same sample rate.").Translation().ToStdString();
             } else {
-                BasicUI::ShowMessageBox(XO(
-                                            "The sample rate of the noise profile must match that of the sound to be processed."));
+                error
+                    = XO("The sample rate of the noise profile must match that of the sound to be processed.").Translation().ToStdString();
             }
             return false;
         }
@@ -606,7 +442,7 @@ bool NoiseReductionBase::Worker::Process(
 
     if (mDoProfile) {
         if (mStatistics.mTotalWindows == 0) {
-            BasicUI::ShowMessageBox(XO("Selected noise profile is too short."));
+            error = XO("Selected noise profile is too short.").Translation().ToStdString();
             return false;
         }
     }
@@ -614,7 +450,7 @@ bool NoiseReductionBase::Worker::Process(
     return true;
 }
 
-void NoiseReductionBase::Worker::ApplyFreqSmoothing(FloatVector& gains)
+void NoiseReductionEffect::Worker::ApplyFreqSmoothing(FloatVector& gains)
 {
     // Given an array of gain mutipliers, average them
     // GEOMETRICALLY.  Don't multiply and take nth root --
@@ -650,8 +486,8 @@ void NoiseReductionBase::Worker::ApplyFreqSmoothing(FloatVector& gains)
     }
 }
 
-NoiseReductionBase::Worker::Worker(
-    NoiseReductionBase& effect, const Settings& settings, Statistics& statistics
+NoiseReductionEffect::Worker::Worker(
+    NoiseReductionEffect& effect, const NoiseReductionSettings& settings, Statistics& statistics
 #ifdef SPECTRAL_EDIT_NOISE_REDUCTION
     ,
     double f0, double f1
@@ -664,7 +500,7 @@ NoiseReductionBase::Worker::Worker(
     , mStatistics{statistics}
 
     , mFreqSmoothingScratch(mSettings.SpectrumSize())
-    , mFreqSmoothingBins{size_t(std::max(0.0, settings.mFreqSmoothingBands))}
+    , mFreqSmoothingBins{size_t(std::max(0, settings.mFreqSmoothingBands))}
     , mBinLow{0}
     , mBinHigh{mSettings.SpectrumSize()}
 
@@ -701,13 +537,8 @@ NoiseReductionBase::Worker::Worker(
     // Apply to gain factors which apply to amplitudes, divide by 20:
     mOneBlockAttack = DB_TO_LINEAR(noiseGain / nAttackBlocks);
     mOneBlockRelease = DB_TO_LINEAR(noiseGain / nReleaseBlocks);
-    // Applies to power, divide by 10:
-    mOldSensitivityFactor = pow(10.0, settings.mOldSensitivity / 10.0);
 
-    mNWindowsToExamine
-        =(mMethod == DM_OLD_METHOD)
-          ? std::max(2, (int)(minSignalTime * sampleRate / mSettings.StepSize()))
-          : 1 + mSettings.StepsPerWindow();
+    mNWindowsToExamine = 1 + mSettings.StepsPerWindow();
 
     mCenter = mNWindowsToExamine / 2;
     wxASSERT(mCenter >= 1); // release depends on this assumption
@@ -741,7 +572,7 @@ bool MyTransformer::DoStart()
     return TrackSpectrumTransformer::DoStart();
 }
 
-bool NoiseReductionBase::Worker::Processor(SpectrumTransformer& trans)
+bool NoiseReductionEffect::Worker::Processor(SpectrumTransformer& trans)
 {
     auto& transformer = static_cast<MyTransformer&>(trans);
     auto& worker = transformer.mWorker;
@@ -775,7 +606,7 @@ bool NoiseReductionBase::Worker::Processor(SpectrumTransformer& trans)
             / worker.mLen.as_double()));
 }
 
-void NoiseReductionBase::Worker::FinishTrackStatistics()
+void NoiseReductionEffect::Worker::FinishTrackStatistics()
 {
     const auto windows = mStatistics.mTrackWindows;
 
@@ -796,7 +627,7 @@ void NoiseReductionBase::Worker::FinishTrackStatistics()
     }
 }
 
-void NoiseReductionBase::Worker::GatherStatistics(MyTransformer& transformer)
+void NoiseReductionEffect::Worker::GatherStatistics(MyTransformer& transformer)
 {
     ++mStatistics.mTrackWindows;
 
@@ -834,20 +665,10 @@ void NoiseReductionBase::Worker::GatherStatistics(MyTransformer& transformer)
 
 // Return true iff the given band of the "center" window looks like noise.
 // Examine the band in a few neighboring windows to decide.
-inline bool NoiseReductionBase::Worker::Classify(
+inline bool NoiseReductionEffect::Worker::Classify(
     MyTransformer& transformer, unsigned nWindows, int band)
 {
     switch (mMethod) {
-#ifdef OLD_METHOD_AVAILABLE
-    case DM_OLD_METHOD:
-    {
-        float min = NthWindow(0).mSpectrums[band];
-        for (unsigned ii = 1; ii < nWindows; ++ii) {
-            min = std::min(min, NthWindow(ii).mSpectrums[band]);
-        }
-        return min <= mOldSensitivityFactor * mStatistics.mNoiseThreshold[band];
-    }
-#endif
     // New methods suppose an exponential distribution of power values
     // in the noise; NEW sensitivity (which is nonnegative) is meant to be
     // the negative of a log of probability (so the log is nonpositive)
@@ -906,7 +727,7 @@ secondGreatest:
     }
 }
 
-void NoiseReductionBase::Worker::ReduceNoise(MyTransformer& transformer)
+void NoiseReductionEffect::Worker::ReduceNoise(MyTransformer& transformer)
 {
     auto historyLen = transformer.CurrentQueueSize();
     auto nWindows = std::min<unsigned>(mNWindowsToExamine, historyLen);
@@ -1036,4 +857,5 @@ bool MyTransformer::DoFinish()
         mWorker.FinishTrackStatistics();
     }
     return TrackSpectrumTransformer::DoFinish();
+}
 }

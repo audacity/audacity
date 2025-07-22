@@ -82,6 +82,9 @@ public:
     // defines an empty list of parameters.
     virtual const EffectParameterMethods& Parameters() const;
 
+    // If no audio is selected, the host may automatically select the whole project.
+    virtual bool applyEffectToAllAudio() const { return true; }
+
     bool CanExportPresets() const override;
     bool HasOptions() const override;
 
