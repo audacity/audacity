@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  NormalizeBase.h
+  NormalizeEffect.h
 
   Dominic Mazzoni
   Vaughan Johnson (Preview)
@@ -10,24 +10,25 @@
 **********************************************************************/
 #pragma once
 
-#include "SettingsVisitor.h"
-#include "StatefulEffect.h"
+#include "libraries/lib-effects/StatefulEffect.h"
+#include "libraries/lib-command-parameters/ShuttleAutomation.h"
 
 class WaveChannel;
 
-class BUILTIN_EFFECTS_API NormalizeBase : public StatefulEffect
+namespace au::effects {
+class NormalizeEffect : public StatefulEffect
 {
 public:
-    static inline NormalizeBase*
-    FetchParameters(NormalizeBase& e, EffectSettings&)
+    static inline NormalizeEffect*
+    FetchParameters(NormalizeEffect& e, EffectSettings&)
     {
         return &e;
     }
 
     static const ComponentInterfaceSymbol Symbol;
 
-    NormalizeBase();
-    virtual ~NormalizeBase();
+    NormalizeEffect();
+    virtual ~NormalizeEffect();
 
     // ComponentInterface implementation
 
@@ -37,15 +38,15 @@ public:
 
     // EffectDefinitionInterface implementation
 
-    EffectType GetType() const override;
+    ::EffectType GetType() const override;
 
     // Effect implementation
 
     bool CheckWhetherSkipEffect(const EffectSettings& settings) const override;
-    bool Process(EffectInstance& instance, EffectSettings& settings) override;
+    bool Process(::EffectInstance& instance, ::EffectSettings& settings) override;
 
 private:
-    // NormalizeBase implementation
+    // NormalizeEffect implementation
 
     bool ProcessOne(
         WaveChannel& track, const TranslatableString& msg, double& progress, float offset);
@@ -72,15 +73,16 @@ protected:
     const EffectParameterMethods& Parameters() const override;
 
     static constexpr EffectParameter PeakLevel {
-        &NormalizeBase::mPeakLevel, L"PeakLevel", -1.0, -145.0, 0.0, 1
+        &NormalizeEffect::mPeakLevel, L"PeakLevel", -1.0, -145.0, 0.0, 1
     };
     static constexpr EffectParameter RemoveDC {
-        &NormalizeBase::mDC, L"RemoveDcOffset", true, false, true, 1
+        &NormalizeEffect::mDC, L"RemoveDcOffset", true, false, true, 1
     };
     static constexpr EffectParameter ApplyVolume {
-        &NormalizeBase::mGain, L"ApplyVolume", true, false, true, 1
+        &NormalizeEffect::mGain, L"ApplyVolume", true, false, true, 1
     };
     static constexpr EffectParameter StereoInd {
-        &NormalizeBase::mStereoInd, L"StereoIndependent", false, false, true, 1
+        &NormalizeEffect::mStereoInd, L"StereoIndependent", false, false, true, 1
     };
 };
+}
