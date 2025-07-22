@@ -116,7 +116,7 @@ public:
     class Statistics;
     class Worker;
 
-protected:
+public:
     std::unique_ptr<Settings> mSettings;
     std::unique_ptr<Statistics> mStatistics;
 };
