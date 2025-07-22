@@ -87,6 +87,7 @@ set(AU3_INCLUDE
     ${wxwidgets_INCLUDE_DIRS}
     ${expat_INCLUDE_DIRS}
     ${PortAudio_INCLUDE_DIR}
+    ${libmp3lame_INCLUDE_DIRS}
 
     ${AUDACITY_ROOT}/lib-src/sqlite
     ${AUDACITY_ROOT}/lib-src/pffft
@@ -181,6 +182,7 @@ set(AU3_LINK
     wxwidgets::wxwidgets
     expat::expat
     portaudio::portaudio
+    libmp3lame::libmp3lame
     sqlite
     soxr
     pffft

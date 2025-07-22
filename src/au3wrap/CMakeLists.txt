@@ -532,6 +532,9 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-label-track/LabelTrack.cpp
     ${AU3_LIBRARIES}/lib-label-track/LabelTrack.h
 
+    ${AU3_MODULES}/import-export/RegisterExportPlugins.cpp
+    ${AU3_MODULES}/import-export/RegisterExportPlugins.h
+
     ${AU3_LIBRARIES}/lib-import-export/Import.cpp
     ${AU3_LIBRARIES}/lib-import-export/Import.h
     ${AU3_LIBRARIES}/lib-import-export/ImportUtils.cpp
@@ -572,6 +575,10 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-ipc/internal/BufferedIPCChannel.h
     ${AU3_LIBRARIES}/lib-ipc/internal/ipc-types.h
     ${AU3_LIBRARIES}/lib-ipc/internal/socket_guard.h
+
+    ${AU3_MODULES}/import-export/mod-mp3/ExportMP3.cpp
+    ${AU3_MODULES}/import-export/mod-mp3/ExportMP3.h
+    ${AU3_MODULES}/import-export/mod-mp3/MP3.cpp
 )
 
 if (AU_MODULE_EFFECTS_AUDIO_UNIT)
@@ -664,6 +671,7 @@ if(AU_USE_FFMPEG)
     set(MODULE_SRC ${MODULE_SRC}
         ${AU3_MODULES}/import-export/mod-ffmpeg/ImportFFmpeg.cpp
         ${AU3_MODULES}/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+        ${AU3_MODULES}/import-export/mod-ffmpeg/ExportFFmpeg.h
         ${AU3_MODULES}/import-export/mod-ffmpeg/FFmpegDefines.h
         ${AU3_MODULES}/import-export/mod-ffmpeg/FFmpeg.cpp
         ${AU3_MODULES}/import-export/mod-ffmpeg/FFmpeg.h
