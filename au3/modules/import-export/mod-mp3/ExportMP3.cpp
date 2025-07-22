@@ -69,23 +69,16 @@
 #include <wx/log.h>
 #include <wx/mimetype.h>
 
-#include <wx/textctrl.h>
-#include <wx/choice.h>
-
-#include <rapidjson/document.h>
-
 #include "FileNames.h"
 #include "float_cast.h"
-#include "HelpSystem.h"
 #include "Mix.h"
 #include "Prefs.h"
-#include "Tags.h"
+#include "libraries/lib-tags/Tags.h"
 #include "Track.h"
 #include "wxFileNameWrapper.h"
-#include "wxPanelWrapper.h"
 #include "Project.h"
 
-#include "Export.h"
+#include "libraries/lib-import-export/Export.h"
 #include "BasicUI.h"
 
 #include <lame/lame.h>
@@ -94,11 +87,14 @@
 #include <id3tag.h>
 #endif
 
-#include "ExportOptionsEditor.h"
-#include "ExportPluginHelpers.h"
-#include "ExportPluginRegistry.h"
-#include "SelectFile.h"
-#include "ShuttleGui.h"
+#include "libraries/lib-import-export/ExportOptionsEditor.h"
+#include "libraries/lib-import-export/ExportPluginHelpers.h"
+#include "libraries/lib-import-export/ExportPluginRegistry.h"
+
+#if defined(__WXMSW__)
+#include <winsock2.h>
+#include <windows.h>
+#endif
 
 //----------------------------------------------------------------------------
 // ExportMP3Options
@@ -116,8 +112,10 @@ enum : int {
     PRESET_MEDIUM = 3,
 };
 
+namespace {
 /* i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second*/
 inline TranslatableString n_kbps(int n) { return XO("%d kbps").Format(n); }
+}
 
 static const TranslatableStrings fixRateNames {
     n_kbps(320),
@@ -264,181 +262,171 @@ const std::initializer_list<ExportOption> MP3Options {
     }
 };
 
-class MP3ExportOptionsEditor final : public ExportOptionsEditor
+MP3ExportOptionsEditor::MP3ExportOptionsEditor(Listener* listener)
+    : mOptions(MP3Options)
+    , mListener(listener)
 {
-    std::vector<ExportOption> mOptions;
-    std::unordered_map<int, ExportValue> mValues;
-    Listener* mListener{ nullptr };
-public:
-
-    explicit MP3ExportOptionsEditor(Listener* listener)
-        : mOptions(MP3Options)
-        , mListener(listener)
-    {
-        mValues.reserve(mOptions.size());
-        for (auto& option : mOptions) {
-            mValues[option.id] = option.defaultValue;
-        }
+    mValues.reserve(mOptions.size());
+    for (auto& option : mOptions) {
+        mValues[option.id] = option.defaultValue;
     }
+}
 
-    int GetOptionsCount() const override
-    {
-        return static_cast<int>(mOptions.size());
-    }
+int MP3ExportOptionsEditor::GetOptionsCount() const
+{
+    return static_cast<int>(mOptions.size());
+}
 
-    bool GetOption(int index, ExportOption& option) const override
-    {
-        if (index >= 0 && index < static_cast<int>(mOptions.size())) {
-            option = mOptions[index];
-            return true;
-        }
-        return false;
-    }
-
-    bool SetValue(int id, const ExportValue& value) override
-    {
-        const auto it = mValues.find(id);
-        if (it == mValues.end()) {
-            return false;
-        }
-        if (value.index() != it->second.index()) {
-            return false;
-        }
-
-        it->second = value;
-
-        switch (id) {
-        case MP3OptionIDMode:
-        {
-            const auto mode = *std::get_if<std::string>(&value);
-            OnModeChange(mode);
-            if (mListener) {
-                mListener->OnExportOptionChangeBegin();
-                mListener->OnExportOptionChange(mOptions[MP3OptionIDQualitySET]);
-                mListener->OnExportOptionChange(mOptions[MP3OptionIDQualityABR]);
-                mListener->OnExportOptionChange(mOptions[MP3OptionIDQualityCBR]);
-                mListener->OnExportOptionChange(mOptions[MP3OptionIDQualityVBR]);
-                mListener->OnExportOptionChangeEnd();
-
-                mListener->OnSampleRateListChange();
-            }
-        } break;
-        case MP3OptionIDQualityABR:
-        case MP3OptionIDQualityCBR:
-        case MP3OptionIDQualitySET:
-        case MP3OptionIDQualityVBR:
-        {
-            if (mListener) {
-                mListener->OnSampleRateListChange();
-            }
-        } break;
-        default: break;
-        }
+bool MP3ExportOptionsEditor::GetOption(int index, ExportOption& option) const
+{
+    if (index >= 0 && index < static_cast<int>(mOptions.size())) {
+        option = mOptions[index];
         return true;
     }
+    return false;
+}
 
-    bool GetValue(int id, ExportValue& value) const override
-    {
-        const auto it = mValues.find(id);
-        if (it != mValues.end()) {
-            value = it->second;
-            return true;
-        }
+bool MP3ExportOptionsEditor::SetValue(int id, const ExportValue& value)
+{
+    const auto it = mValues.find(id);
+    if (it == mValues.end()) {
+        return false;
+    }
+    if (value.index() != it->second.index()) {
         return false;
     }
 
-    SampleRateList GetSampleRateList() const override
+    it->second = value;
+
+    switch (id) {
+    case MP3OptionIDMode:
     {
-        // Retrieve preferences
-        int highrate = 48000;
-        int lowrate = 8000;
+        const auto mode = *std::get_if<std::string>(&value);
+        OnModeChange(mode);
+        if (mListener) {
+            mListener->OnExportOptionChangeBegin();
+            mListener->OnExportOptionChange(mOptions[MP3OptionIDQualitySET]);
+            mListener->OnExportOptionChange(mOptions[MP3OptionIDQualityABR]);
+            mListener->OnExportOptionChange(mOptions[MP3OptionIDQualityCBR]);
+            mListener->OnExportOptionChange(mOptions[MP3OptionIDQualityVBR]);
+            mListener->OnExportOptionChangeEnd();
 
-        const auto rmode = *std::get_if<std::string>(&mValues.find(MP3OptionIDMode)->second);
-
-        if (rmode == "ABR") {
-            auto bitrate = *std::get_if<int>(&mValues.find(MP3OptionIDQualityABR)->second);
-            if (bitrate > 160) {
-                lowrate = 32000;
-            } else if (bitrate < 32 || bitrate == 144) {
-                highrate = 24000;
-            }
-        } else if (rmode == "CBR") {
-            auto bitrate = *std::get_if<int>(&mValues.find(MP3OptionIDQualityCBR)->second);
-
-            if (bitrate > 160) {
-                lowrate = 32000;
-            } else if (bitrate < 32 || bitrate == 144) {
-                highrate = 24000;
-            }
+            mListener->OnSampleRateListChange();
         }
-
-        SampleRateList result;
-        result.reserve(sampRates.size());
-        for (auto rate : sampRates) {
-            if (rate >= lowrate && rate <= highrate) {
-                result.push_back(rate);
-            }
+    } break;
+    case MP3OptionIDQualityABR:
+    case MP3OptionIDQualityCBR:
+    case MP3OptionIDQualitySET:
+    case MP3OptionIDQualityVBR:
+    {
+        if (mListener) {
+            mListener->OnSampleRateListChange();
         }
-
-        return result;
+    } break;
+    default: break;
     }
+    return true;
+}
 
-    void Load(const audacity::BasicSettings& config) override
-    {
-        wxString mode;
-        if (config.Read(wxT("/FileFormats/MP3RateModeChoice"), &mode)) {
-            mValues[MP3OptionIDMode] = mode.ToStdString();
-        } else {
-            //attempt to recover from old-style preference
-            int index;
-            if (config.Read(wxT("/FileFormats/MP3RateMode"), &index)) {
-                mValues[MP3OptionIDMode] = mOptions[MP3OptionIDMode].values[index];
-            }
+bool MP3ExportOptionsEditor::GetValue(int id, ExportValue& value) const
+{
+    const auto it = mValues.find(id);
+    if (it != mValues.end()) {
+        value = it->second;
+        return true;
+    }
+    return false;
+}
+
+MP3ExportOptionsEditor::SampleRateList MP3ExportOptionsEditor::GetSampleRateList() const
+{
+    // Retrieve preferences
+    int highrate = 48000;
+    int lowrate = 8000;
+
+    const auto rmode = *std::get_if<std::string>(&mValues.find(MP3OptionIDMode)->second);
+
+    if (rmode == "ABR") {
+        auto bitrate = *std::get_if<int>(&mValues.find(MP3OptionIDQualityABR)->second);
+        if (bitrate > 160) {
+            lowrate = 32000;
+        } else if (bitrate < 32 || bitrate == 144) {
+            highrate = 24000;
         }
+    } else if (rmode == "CBR") {
+        auto bitrate = *std::get_if<int>(&mValues.find(MP3OptionIDQualityCBR)->second);
 
-        config.Read(wxT("/FileFormats/MP3SetRate"), std::get_if<int>(&mValues[MP3OptionIDQualitySET]));
-        config.Read(wxT("/FileFormats/MP3AbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityABR]));
-        config.Read(wxT("/FileFormats/MP3CbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityCBR]));
-        config.Read(wxT("/FileFormats/MP3VbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityVBR]));
-
-        OnModeChange(*std::get_if<std::string>(&mValues[MP3OptionIDMode]));
-    }
-
-    void Store(audacity::BasicSettings& config) const override
-    {
-        auto it = mValues.find(MP3OptionIDMode);
-        config.Write(wxT("/FileFormats/MP3RateModeChoice"), wxString(*std::get_if<std::string>(&it->second)));
-
-        it = mValues.find(MP3OptionIDQualitySET);
-        config.Write(wxT("/FileFormats/MP3SetRate"), *std::get_if<int>(&it->second));
-        it = mValues.find(MP3OptionIDQualityABR);
-        config.Write(wxT("/FileFormats/MP3AbrRate"), *std::get_if<int>(&it->second));
-        it = mValues.find(MP3OptionIDQualityCBR);
-        config.Write(wxT("/FileFormats/MP3CbrRate"), *std::get_if<int>(&it->second));
-        it = mValues.find(MP3OptionIDQualityVBR);
-        config.Write(wxT("/FileFormats/MP3VbrRate"), *std::get_if<int>(&it->second));
-    }
-
-private:
-
-    void OnModeChange(const std::string& mode)
-    {
-        mOptions[MP3OptionIDQualitySET].flags |= ExportOption::Hidden;
-        mOptions[MP3OptionIDQualityABR].flags |= ExportOption::Hidden;
-        mOptions[MP3OptionIDQualityCBR].flags |= ExportOption::Hidden;
-        mOptions[MP3OptionIDQualityVBR].flags |= ExportOption::Hidden;
-
-        if (mode == "SET") {
-            mOptions[MP3OptionIDQualitySET].flags &= ~ExportOption::Hidden;
-        } else if (mode == "ABR") {
-            mOptions[MP3OptionIDQualityABR].flags &= ~ExportOption::Hidden;
-        } else if (mode == "CBR") {
-            mOptions[MP3OptionIDQualityCBR].flags &= ~ExportOption::Hidden;
-        } else if (mode == "VBR") {
-            mOptions[MP3OptionIDQualityVBR].flags &= ~ExportOption::Hidden;
+        if (bitrate > 160) {
+            lowrate = 32000;
+        } else if (bitrate < 32 || bitrate == 144) {
+            highrate = 24000;
         }
     }
-};
+
+    SampleRateList result;
+    result.reserve(sampRates.size());
+    for (auto rate : sampRates) {
+        if (rate >= lowrate && rate <= highrate) {
+            result.push_back(rate);
+        }
+    }
+
+    return result;
+}
+
+void MP3ExportOptionsEditor::Load(const audacity::BasicSettings& config)
+{
+    wxString mode;
+    if (config.Read(wxT("/FileFormats/MP3RateModeChoice"), &mode)) {
+        mValues[MP3OptionIDMode] = mode.ToStdString();
+    } else {
+        //attempt to recover from old-style preference
+        int index;
+        if (config.Read(wxT("/FileFormats/MP3RateMode"), &index)) {
+            mValues[MP3OptionIDMode] = mOptions[MP3OptionIDMode].values[index];
+        }
+    }
+
+    config.Read(wxT("/FileFormats/MP3SetRate"), std::get_if<int>(&mValues[MP3OptionIDQualitySET]));
+    config.Read(wxT("/FileFormats/MP3AbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityABR]));
+    config.Read(wxT("/FileFormats/MP3CbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityCBR]));
+    config.Read(wxT("/FileFormats/MP3VbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityVBR]));
+
+    OnModeChange(*std::get_if<std::string>(&mValues[MP3OptionIDMode]));
+}
+
+void MP3ExportOptionsEditor::Store(audacity::BasicSettings& config) const
+{
+    auto it = mValues.find(MP3OptionIDMode);
+    config.Write(wxT("/FileFormats/MP3RateModeChoice"), wxString(*std::get_if<std::string>(&it->second)));
+
+    it = mValues.find(MP3OptionIDQualitySET);
+    config.Write(wxT("/FileFormats/MP3SetRate"), *std::get_if<int>(&it->second));
+    it = mValues.find(MP3OptionIDQualityABR);
+    config.Write(wxT("/FileFormats/MP3AbrRate"), *std::get_if<int>(&it->second));
+    it = mValues.find(MP3OptionIDQualityCBR);
+    config.Write(wxT("/FileFormats/MP3CbrRate"), *std::get_if<int>(&it->second));
+    it = mValues.find(MP3OptionIDQualityVBR);
+    config.Write(wxT("/FileFormats/MP3VbrRate"), *std::get_if<int>(&it->second));
+}
+
+void MP3ExportOptionsEditor::OnModeChange(const std::string& mode)
+{
+    mOptions[MP3OptionIDQualitySET].flags |= ExportOption::Hidden;
+    mOptions[MP3OptionIDQualityABR].flags |= ExportOption::Hidden;
+    mOptions[MP3OptionIDQualityCBR].flags |= ExportOption::Hidden;
+    mOptions[MP3OptionIDQualityVBR].flags |= ExportOption::Hidden;
+
+    if (mode == "SET") {
+        mOptions[MP3OptionIDQualitySET].flags &= ~ExportOption::Hidden;
+    } else if (mode == "ABR") {
+        mOptions[MP3OptionIDQualityABR].flags &= ~ExportOption::Hidden;
+    } else if (mode == "CBR") {
+        mOptions[MP3OptionIDQualityCBR].flags &= ~ExportOption::Hidden;
+    } else if (mode == "VBR") {
+        mOptions[MP3OptionIDQualityVBR].flags &= ~ExportOption::Hidden;
+    }
+}
 
 namespace {
 int ValidateValue(int nValues, int value, int defaultValue)
@@ -462,344 +450,8 @@ int ValidateIndex(const std::vector<int>& values, int value, int defaultIndex)
 }
 
 //----------------------------------------------------------------------------
-// FindDialog
-//----------------------------------------------------------------------------
-
-#define ID_BROWSE 5000
-#define ID_DLOAD  5001
-
-class FindDialog final : public wxDialogWrapper
-{
-public:
-
-#ifndef DISABLE_DYNAMIC_LOADING_LAME
-
-    FindDialog(wxWindow* parent, wxString path, wxString name,
-               FileNames::FileTypes types)
-        :  wxDialogWrapper(parent, wxID_ANY,
-                           /* i18n-hint: LAME is the name of an MP3 converter and should not be translated*/
-                           XO("Locate LAME"))
-    {
-        SetName();
-        ShuttleGui S(this, eIsCreating);
-
-        mPath = path;
-        mName = name;
-        mTypes = std::move(types);
-
-        mLibPath.Assign(mPath, mName);
-
-        PopulateOrExchange(S);
-    }
-
-    void PopulateOrExchange(ShuttleGui& S)
-    {
-        S.SetBorder(10);
-        S.StartVerticalLay(true);
-        {
-            S.AddTitle(
-                XO("Audacity needs the file %s to create MP3s.")
-                .Format(mName));
-
-            S.SetBorder(3);
-            S.StartHorizontalLay(wxALIGN_LEFT, true);
-            {
-                S.AddTitle(XO("Location of %s:").Format(mName));
-            }
-            S.EndHorizontalLay();
-
-            S.StartMultiColumn(2, wxEXPAND);
-            S.SetStretchyCol(0);
-            {
-                if (mLibPath.GetFullPath().empty()) {
-                    mPathText = S.AddTextBox({},
-                                             /* i18n-hint: There is a  button to the right of the arrow.*/
-                                             wxString::Format(_("To find %s, click here -->"), mName), 0);
-                } else {
-                    mPathText = S.AddTextBox({}, mLibPath.GetFullPath(), 0);
-                }
-                S.Id(ID_BROWSE).AddButton(XXO("Browse..."), wxALIGN_RIGHT);
-                S.AddVariableText(
-                    /* i18n-hint: There is a  button to the right of the arrow.*/
-                    XO("To get a free copy of LAME, click here -->"), true);
-                /* i18n-hint: (verb)*/
-                S.Id(ID_DLOAD).AddButton(XXO("Download"), wxALIGN_RIGHT);
-            }
-            S.EndMultiColumn();
-
-            S.AddStandardButtons();
-        }
-        S.EndVerticalLay();
-
-        Layout();
-        Fit();
-        SetMinSize(GetSize());
-        Center();
-
-        return;
-    }
-
-    void OnBrowse(wxCommandEvent& WXUNUSED(event))
-    {
-        /* i18n-hint: It's asking for the location of a file, for
-         * example, "Where is lame_enc.dll?" - you could translate
-         * "Where would I find the file %s" instead if you want. */
-        auto question = XO("Where is %s?").Format(mName);
-
-        wxString path = SelectFile(FileNames::Operation::_None,
-                                   question,
-                                   mLibPath.GetPath(),
-                                   mLibPath.GetName(),
-                                   wxT(""),
-                                   mTypes,
-                                   wxFD_OPEN | wxRESIZE_BORDER,
-                                   this);
-        if (!path.empty()) {
-            mLibPath = path;
-            mPathText->SetValue(path);
-        }
-    }
-
-    void OnDownload(wxCommandEvent& WXUNUSED(event))
-    {
-        HelpSystem::ShowHelp(this, L"FAQ:Installing_the_LAME_MP3_Encoder");
-    }
-
-    wxString GetLibPath()
-    {
-        return mLibPath.GetFullPath();
-    }
-
-#endif // DISABLE_DYNAMIC_LOADING_LAME
-
-private:
-
-#ifndef DISABLE_DYNAMIC_LOADING_LAME
-    wxFileName mLibPath;
-
-    wxString mPath;
-    wxString mName;
-    FileNames::FileTypes mTypes;
-#endif // DISABLE_DYNAMIC_LOADING_LAME
-
-    wxTextCtrl* mPathText;
-
-    DECLARE_EVENT_TABLE()
-};
-
-#ifndef DISABLE_DYNAMIC_LOADING_LAME
-BEGIN_EVENT_TABLE(FindDialog, wxDialogWrapper)
-EVT_BUTTON(ID_BROWSE, FindDialog::OnBrowse)
-EVT_BUTTON(ID_DLOAD,  FindDialog::OnDownload)
-END_EVENT_TABLE()
-#endif // DISABLE_DYNAMIC_LOADING_LAME
-
-//----------------------------------------------------------------------------
 // MP3Exporter
 //----------------------------------------------------------------------------
-
-#ifndef DISABLE_DYNAMIC_LOADING_LAME
-
-typedef lame_global_flags* lame_init_t(void);
-typedef int lame_init_params_t(lame_global_flags*);
-typedef const char* get_lame_version_t(void);
-
-typedef int CDECL lame_encode_buffer_ieee_float_t(
-    lame_t gfp,
-    const float pcm_l[],
-    const float pcm_r[],
-    const int nsamples,
-    unsigned char* mp3buf,
-    const int mp3buf_size);
-
-typedef int CDECL lame_encode_buffer_interleaved_ieee_float_t(
-    lame_t gfp,
-    const float pcm[],
-    const int nsamples,
-    unsigned char* mp3buf,
-    const int mp3buf_size);
-
-typedef int lame_encode_flush_t(
-    lame_global_flags* gf,
-    unsigned char* mp3buf,
-    int size);
-
-typedef int lame_close_t(lame_global_flags*);
-
-typedef int lame_set_in_samplerate_t(lame_global_flags*, int);
-typedef int lame_set_out_samplerate_t(lame_global_flags*, int);
-typedef int lame_set_num_channels_t(lame_global_flags*, int);
-typedef int lame_set_quality_t(lame_global_flags*, int);
-typedef int lame_set_brate_t(lame_global_flags*, int);
-typedef int lame_set_VBR_t(lame_global_flags*, vbr_mode);
-typedef int lame_set_VBR_q_t(lame_global_flags*, int);
-typedef int lame_set_VBR_min_bitrate_kbps_t(lame_global_flags*, int);
-typedef int lame_set_mode_t(lame_global_flags*, MPEG_mode);
-typedef int lame_set_preset_t(lame_global_flags*, int);
-typedef int lame_set_error_protection_t(lame_global_flags*, int);
-typedef int lame_set_disable_reservoir_t(lame_global_flags*, int);
-typedef int lame_set_bWriteVbrTag_t(lame_global_flags*, int);
-typedef size_t lame_get_lametag_frame_t(const lame_global_flags*, unsigned char* buffer, size_t size);
-typedef void lame_mp3_tags_fid_t(lame_global_flags*, FILE*);
-
-#endif // DISABLE_DYNAMIC_LOADING_LAME
-
-#if defined(__WXMSW__)
-// An alternative solution to give Windows an additional chance of writing the tag before
-// falling bato to lame_mp3_tag_fid().  The latter can have DLL sharing issues when mixing
-// Debug/Release builds of Audacity and the lame DLL.
-typedef unsigned long beWriteInfoTag_t(lame_global_flags*, char*);
-
-// We use this to determine if the user has selected an older, Blade API only, lame_enc.dll
-// so we can be more specific about why their library isn't acceptable.
-typedef struct    {
-    // BladeEnc DLL Version number
-
-    BYTE byDLLMajorVersion;
-    BYTE byDLLMinorVersion;
-
-    // BladeEnc Engine Version Number
-
-    BYTE byMajorVersion;
-    BYTE byMinorVersion;
-
-    // DLL Release date
-
-    BYTE byDay;
-    BYTE byMonth;
-    WORD wYear;
-
-    // BladeEnc	Homepage URL
-
-    CHAR zHomepage[129];
-
-    BYTE byAlphaLevel;
-    BYTE byBetaLevel;
-    BYTE byMMXEnabled;
-
-    BYTE btReserved[125];
-} be_version;
-typedef void beVersion_t(be_version*);
-#endif
-
-class MP3Exporter
-{
-public:
-    enum AskUser
-    {
-        No,
-        Maybe,
-        Yes
-    };
-
-    MP3Exporter();
-    ~MP3Exporter();
-
-#ifndef DISABLE_DYNAMIC_LOADING_LAME
-    bool FindLibrary(wxWindow* parent);
-    bool LoadLibrary(wxWindow* parent, AskUser askuser);
-    bool ValidLibraryLoaded();
-#endif // DISABLE_DYNAMIC_LOADING_LAME
-
-    /* These global settings keep state over the life of the object */
-    void SetMode(int mode);
-    void SetBitrate(int rate);
-    void SetQuality(int q /*, int r*/);
-
-    /* Virtual methods that must be supplied by library interfaces */
-
-    /* initialize the library interface */
-    bool InitLibrary(wxString libpath);
-    bool InitLibraryInternal();
-    bool InitLibraryExternal(wxString libpath);
-    void FreeLibrary();
-
-    /* get library info */
-    wxString GetLibraryVersion();
-    wxString GetLibraryName();
-    wxString GetLibraryPath();
-    FileNames::FileTypes GetLibraryTypes();
-
-    /* returns the number of samples PER CHANNEL to send for each call to EncodeBuffer */
-    int InitializeStream(unsigned channels, int sampleRate);
-
-    /* In bytes. must be called AFTER InitializeStream */
-    int GetOutBufferSize();
-
-    /* returns the number of bytes written. input is interleaved if stereo*/
-    int EncodeBuffer(float inbuffer[], unsigned char outbuffer[]);
-    int EncodeRemainder(float inbuffer[], int nSamples, unsigned char outbuffer[]);
-
-    int EncodeBufferMono(float inbuffer[], unsigned char outbuffer[]);
-    int EncodeRemainderMono(float inbuffer[], int nSamples, unsigned char outbuffer[]);
-
-    int FinishStream(unsigned char outbuffer[]);
-    void CancelEncoding();
-
-    bool PutInfoTag(wxFFile& f, wxFileOffset off);
-
-private:
-    bool mLibIsExternal;
-
-#ifndef DISABLE_DYNAMIC_LOADING_LAME
-    wxString mLibPath;
-    wxDynamicLibrary lame_lib;
-    bool mLibraryLoaded;
-#endif // DISABLE_DYNAMIC_LOADING_LAME
-
-#if defined(__WXMSW__)
-    TranslatableString mBladeVersion;
-#endif
-
-    bool mEncoding;
-    int mMode;
-    int mBitrate;
-    int mQuality;
-    //int mRoutine;
-
-#ifndef DISABLE_DYNAMIC_LOADING_LAME
-    /* function pointers to the symbols we get from the library */
-    lame_init_t* lame_init;
-    lame_init_params_t* lame_init_params;
-    lame_encode_buffer_ieee_float_t* lame_encode_buffer_ieee_float;
-    lame_encode_buffer_interleaved_ieee_float_t* lame_encode_buffer_interleaved_ieee_float;
-    lame_encode_flush_t* lame_encode_flush;
-    lame_close_t* lame_close;
-    get_lame_version_t* get_lame_version;
-
-    lame_set_in_samplerate_t* lame_set_in_samplerate;
-    lame_set_out_samplerate_t* lame_set_out_samplerate;
-    lame_set_num_channels_t* lame_set_num_channels;
-    lame_set_quality_t* lame_set_quality;
-    lame_set_brate_t* lame_set_brate;
-    lame_set_VBR_t* lame_set_VBR;
-    lame_set_VBR_q_t* lame_set_VBR_q;
-    lame_set_VBR_min_bitrate_kbps_t* lame_set_VBR_min_bitrate_kbps;
-    lame_set_mode_t* lame_set_mode;
-    lame_set_preset_t* lame_set_preset;
-    lame_set_error_protection_t* lame_set_error_protection;
-    lame_set_disable_reservoir_t* lame_set_disable_reservoir;
-    lame_set_bWriteVbrTag_t* lame_set_bWriteVbrTag;
-    lame_get_lametag_frame_t* lame_get_lametag_frame;
-    lame_mp3_tags_fid_t* lame_mp3_tags_fid;
-#if defined(__WXMSW__)
-    beWriteInfoTag_t* beWriteInfoTag;
-    beVersion_t* beVersion;
-#endif
-#endif // DISABLE_DYNAMIC_LOADING_LAME
-
-    lame_global_flags* mGF;
-
-    static const int mSamplesPerChunk = 220500;
-    // See lame.h/lame_encode_buffer() for further explanation
-    // As coded here, this should be the worst case.
-    static const int mOutBufferSize
-        =mSamplesPerChunk * (320 / 8) / 8 + 4 * 1152 * (320 / 8) / 8 + 512;
-
-    // See MAXFRAMESIZE in libmp3lame/VbrTag.c for explanation of 2880.
-    unsigned char mInfoTagBuf[2880];
-    size_t mInfoTagLen;
-};
 
 MP3Exporter::MP3Exporter()
 {
@@ -839,41 +491,7 @@ MP3Exporter::~MP3Exporter()
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
 
-bool MP3Exporter::FindLibrary(wxWindow* parent)
-{
-    wxString path;
-    wxString name;
-
-    if (!mLibPath.empty()) {
-        wxFileName fn = mLibPath;
-        path = fn.GetPath();
-        name = fn.GetFullName();
-    } else {
-        path = GetLibraryPath();
-        name = GetLibraryName();
-    }
-
-    FindDialog fd(parent,
-                  path,
-                  name,
-                  GetLibraryTypes());
-
-    if (fd.ShowModal() == wxID_CANCEL) {
-        return false;
-    }
-
-    path = fd.GetLibPath();
-
-    if (!::wxFileExists(path)) {
-        return false;
-    }
-
-    mLibPath = path;
-
-    return gPrefs->Write(wxT("/MP3/MP3LibPath"), mLibPath) && gPrefs->Flush();
-}
-
-bool MP3Exporter::LoadLibrary(wxWindow* parent, AskUser askuser)
+bool MP3Exporter::LoadEncoderLibrary(AskUser askuser)
 {
     if (ValidLibraryLoaded()) {
         FreeLibrary();
@@ -911,12 +529,13 @@ bool MP3Exporter::LoadLibrary(wxWindow* parent, AskUser askuser)
     }
 
     // If not successful, must ask the user
-    if (!ValidLibraryLoaded()) {
-        wxLogMessage(wxT("(Maybe) ask user for library"));
-        if (askuser == MP3Exporter::Maybe && FindLibrary(parent)) {
-            mLibraryLoaded = InitLibrary(mLibPath);
-        }
-    }
+    // TODO: need to ask on QT side
+    // if (!ValidLibraryLoaded()) {
+    //     wxLogMessage(wxT("(Maybe) ask user for library"));
+    //     if (askuser == MP3Exporter::Maybe && FindLibrary(parent)) {
+    //         mLibraryLoaded = InitLibrary(mLibPath);
+    //     }
+    // }
 
     // Oh well, just give up
     if (!ValidLibraryLoaded()) {
@@ -1346,7 +965,9 @@ bool MP3Exporter::PutInfoTag(wxFFile& f, wxFileOffset off)
                 return false;
             }
             // PRL:  What is the correct error check on the return value?
-            beWriteInfoTag(mGF, OSOUTPUT(f.GetName()));
+            wxCharBuffer utf8 = f.GetName().ToUTF8();
+            char* filename = utf8.data();
+            beWriteInfoTag(mGF, filename);
             mGF = NULL;
         }
 #endif
@@ -1367,19 +988,22 @@ bool MP3Exporter::PutInfoTag(wxFFile& f, wxFileOffset off)
 
 wxString MP3Exporter::GetLibraryPath()
 {
-    wxRegKey reg(wxT("HKEY_LOCAL_MACHINE\\Software\\Lame for Audacity"));
-    wxString path;
+    HKEY hKey;
+    const wchar_t* subkey = L"Software\\Lame for Audacity";
+    const wchar_t* valueName = L"InstallPath";
+    wchar_t pathBuffer[MAX_PATH];
+    DWORD pathBufferSize = sizeof(pathBuffer);
 
-    if (reg.Exists()) {
-        wxLogMessage(wxT("LAME registry key exists."));
-        reg.QueryValue(wxT("InstallPath"), path);
-    } else {
-        wxLogMessage(wxT("LAME registry key does not exist."));
+    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, subkey, 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
+        if (RegQueryValueExW(hKey, valueName, nullptr, nullptr,
+                             reinterpret_cast<LPBYTE>(pathBuffer), &pathBufferSize) == ERROR_SUCCESS) {
+            RegCloseKey(hKey);
+            return wxString(pathBuffer);
+        }
+        RegCloseKey(hKey);
     }
 
-    wxLogMessage(wxT("Library path is: ") + path);
-
-    return path;
+    return wxString{};
 }
 
 wxString MP3Exporter::GetLibraryName()
@@ -1586,63 +1210,9 @@ static void dump_config(lame_global_flags* gfp)
 
 #endif
 
-class MP3ExportProcessor final : public ExportProcessor
-{
-    struct
-    {
-        TranslatableString status;
-        unsigned channels;
-        double t0;
-        double t1;
-        MP3Exporter exporter;
-        wxFFile outFile;
-        ArrayOf<char> id3buffer;
-        unsigned long id3len;
-        wxFileOffset infoTagPos;
-        size_t bufferSize;
-        int inSamples;
-        std::unique_ptr<Mixer> mixer;
-    } context;
-
-public:
-    bool Initialize(AudacityProject& project, const Parameters& parameters, const wxFileNameWrapper& filename, double t0, double t1,
-                    bool selectedOnly, double sampleRate, unsigned channels, MixerOptions::Downmix* mixerSpec, const Tags* tags) override;
-
-    ExportResult Process(ExportProcessorDelegate& delegate) override;
-
-private:
-
-    static int AskResample(int bitrate, int rate, int lowrate, int highrate);
-    static unsigned long AddTags(ArrayOf<char>& buffer, bool* endOfFile, const Tags* tags);
-#ifdef USE_LIBID3TAG
-    static void AddFrame(struct id3_tag* tp, const wxString& n, const wxString& v, const char* name);
-#endif
-};
-
 //----------------------------------------------------------------------------
 // ExportMP3
 //----------------------------------------------------------------------------
-
-class ExportMP3 final : public ExportPlugin
-{
-public:
-
-    ExportMP3();
-    bool CheckFileName(wxFileName& filename, int format) const override;
-
-    int GetFormatCount() const override;
-    FormatInfo GetFormatInfo(int) const override;
-
-    std::unique_ptr<ExportOptionsEditor>
-    CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const override;
-
-    std::unique_ptr<ExportProcessor> CreateProcessor(int format) const override;
-
-    std::vector<std::string> GetMimeTypes(int) const override;
-
-    bool ParseConfig(
-        int formatIndex, const rapidjson::Value& document, ExportProcessor::Parameters& parameters) const override;
-};
 
 ExportMP3::ExportMP3() = default;
 
@@ -1674,85 +1244,85 @@ std::vector<std::string> ExportMP3::GetMimeTypes(int) const
     return { "audio/mpeg" };
 }
 
-bool ExportMP3::ParseConfig(
-    int formatIndex, const rapidjson::Value& document,
-    ExportProcessor::Parameters& parameters) const
-{
-    if (!document.IsObject()) {
-        return false;
-    }
+// bool ExportMP3::ParseConfig(
+//     int formatIndex, const rapidjson::Value& document,
+//     ExportProcessor::Parameters& parameters) const
+// {
+//     if (!document.IsObject()) {
+//         return false;
+//     }
 
-    MP3OptionID qualityMode;
+//     MP3OptionID qualityMode;
 
-    if (document.HasMember("mode")) {
-        auto& mode = document["mode"];
-        if (!mode.IsString()) {
-            return false;
-        }
+//     if (document.HasMember("mode")) {
+//         auto& mode = document["mode"];
+//         if (!mode.IsString()) {
+//             return false;
+//         }
 
-        auto value = mode.GetString();
+//         auto value = mode.GetString();
 
-        if (value == std::string_view { "SET" }) {
-            qualityMode = MP3OptionIDQualitySET;
-        } else if (value == std::string_view { "VBR" }) {
-            qualityMode = MP3OptionIDQualityVBR;
-        } else if (value == std::string_view { "ABR" }) {
-            qualityMode = MP3OptionIDQualityABR;
-        } else if (value == std::string_view { "CBR" }) {
-            qualityMode = MP3OptionIDQualityCBR;
-        } else {
-            return false;
-        }
+//         if (value == std::string_view { "SET" }) {
+//             qualityMode = MP3OptionIDQualitySET;
+//         } else if (value == std::string_view { "VBR" }) {
+//             qualityMode = MP3OptionIDQualityVBR;
+//         } else if (value == std::string_view { "ABR" }) {
+//             qualityMode = MP3OptionIDQualityABR;
+//         } else if (value == std::string_view { "CBR" }) {
+//             qualityMode = MP3OptionIDQualityCBR;
+//         } else {
+//             return false;
+//         }
 
-        parameters.push_back(std::make_tuple(MP3OptionIDMode, value));
-    } else {
-        return false;
-    }
+//         parameters.push_back(std::make_tuple(MP3OptionIDMode, value));
+//     } else {
+//         return false;
+//     }
 
-    if (document.HasMember("quality")) {
-        auto& qualityMember = document["quality"];
+//     if (document.HasMember("quality")) {
+//         auto& qualityMember = document["quality"];
 
-        if (!qualityMember.IsInt()) {
-            return false;
-        }
+//         if (!qualityMember.IsInt()) {
+//             return false;
+//         }
 
-        const auto quality = qualityMember.GetInt();
+//         const auto quality = qualityMember.GetInt();
 
-        if (qualityMode == MP3OptionIDQualitySET && (quality < 0 || quality > 3)) {
-            return false;
-        } else if (
-            qualityMode == MP3OptionIDQualityVBR && (quality < 0 || quality > 9)) {
-            return false;
-        } else if (
-            qualityMode == MP3OptionIDQualityABR
-            && std::find(
-                fixRateValues.begin(), fixRateValues.end(),
-                ExportValue { quality })
-            == fixRateValues.end()) {
-            return false;
-        } else if (
-            qualityMode == MP3OptionIDQualityCBR
-            && std::find(
-                fixRateValues.begin(), fixRateValues.end(),
-                ExportValue { quality })
-            == fixRateValues.end()) {
-            return false;
-        }
+//         if (qualityMode == MP3OptionIDQualitySET && (quality < 0 || quality > 3)) {
+//             return false;
+//         } else if (
+//             qualityMode == MP3OptionIDQualityVBR && (quality < 0 || quality > 9)) {
+//             return false;
+//         } else if (
+//             qualityMode == MP3OptionIDQualityABR
+//             && std::find(
+//                 fixRateValues.begin(), fixRateValues.end(),
+//                 ExportValue { quality })
+//             == fixRateValues.end()) {
+//             return false;
+//         } else if (
+//             qualityMode == MP3OptionIDQualityCBR
+//             && std::find(
+//                 fixRateValues.begin(), fixRateValues.end(),
+//                 ExportValue { quality })
+//             == fixRateValues.end()) {
+//             return false;
+//         }
 
-        parameters.push_back(std::make_tuple(qualityMode, quality));
-    } else {
-        return false;
-    }
+//         parameters.push_back(std::make_tuple(qualityMode, quality));
+//     } else {
+//         return false;
+//     }
 
-    return true;
-}
+//     return true;
+// }
 
 bool ExportMP3::CheckFileName(wxFileName& WXUNUSED(filename), int WXUNUSED(format)) const
 {
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
     MP3Exporter exporter;
 
-    if (!exporter.LoadLibrary(wxTheApp->GetTopWindow(), MP3Exporter::Maybe)) {
+    if (!exporter.LoadEncoderLibrary(MP3Exporter::Maybe)) {
         BasicUI::ShowMessageBox(XO("Could not open MP3 encoding library!"),
                                 BasicUI::MessageBoxOptions()
                                 .IconStyle(BasicUI::Icon::Error)
@@ -1789,7 +1359,7 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
         throw ExportException(_("Could not initialize MP3 encoding library!"));
     }
 #else
-    if (!exporter.LoadLibrary(nullptr, MP3Exporter::Maybe)) {
+    if (!exporter.LoadEncoderLibrary(MP3Exporter::Maybe)) {
         gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
         gPrefs->Flush();
         throw ExportException(_("Could not open MP3 encoding library!"));
@@ -1873,7 +1443,7 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
                 || (rate < lowrate) || (rate > highrate)) {
                 //This call should go away once export project rate option
                 //is available as an export dialog option
-                rate = AskResample(bitrate, rate, lowrate, highrate);
+                // TODO: implement AskResample
             }
             if (rate == 0) {
                 return false;
@@ -2033,70 +1603,8 @@ ExportResult MP3ExportProcessor::Process(ExportProcessorDelegate& delegate)
 
 int MP3ExportProcessor::AskResample(int bitrate, int rate, int lowrate, int highrate)
 {
-    wxDialogWrapper d(nullptr, wxID_ANY, XO("Invalid sample rate"));
-    d.SetName();
-    wxChoice* choice;
-    ShuttleGui S(&d, eIsCreating);
-
-    int selected = -1;
-
-    S.StartVerticalLay();
-    {
-        S.SetBorder(10);
-        S.StartStatic(XO("Resample"));
-        {
-            S.StartHorizontalLay(wxALIGN_CENTER, false);
-            {
-                S.AddTitle(
-                    ((bitrate == 0)
-                     ? XO(
-                         "The project sample rate (%d) is not supported by the MP3\nfile format. ")
-                     .Format(rate)
-                     : XO(
-                         "The project sample rate (%d) and bit rate (%d kbps) combination is not\nsupported by the MP3 file format. ")
-                     .Format(rate, bitrate))
-                    + XO("You may resample to one of the rates below.")
-                    );
-            }
-            S.EndHorizontalLay();
-
-            S.StartHorizontalLay(wxALIGN_CENTER, false);
-            {
-                choice = S.AddChoice(XXO("Sample Rates"),
-                                     [&]{
-                    TranslatableStrings choices;
-                    for (size_t ii = 0, nn = sampRates.size(); ii < nn; ++ii) {
-                        int label = sampRates[ii];
-                        if (label >= lowrate && label <= highrate) {
-                            choices.push_back(Verbatim("%d").Format(label));
-                            if (label <= rate) {
-                                selected = ii;
-                            }
-                        }
-                    }
-                    return choices;
-                }(),
-                                     std::max(0, selected)
-                                     );
-            }
-            S.EndHorizontalLay();
-        }
-        S.EndStatic();
-
-        S.AddStandardButtons();
-    }
-    S.EndVerticalLay();
-
-    d.Layout();
-    d.Fit();
-    d.SetMinSize(d.GetSize());
-    d.Center();
-
-    if (d.ShowModal() == wxID_CANCEL) {
-        return 0;
-    }
-
-    return wxAtoi(choice->GetStringSelection());
+    // NOT_IMPLEMENTED;
+    return rate;
 }
 
 #ifdef USE_LIBID3TAG
@@ -2210,25 +1718,17 @@ void MP3ExportProcessor::AddFrame(struct id3_tag* tp, const wxString& n, const w
 
 #endif
 
-static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "MP3",
-                                                                 []{ return std::make_unique< ExportMP3 >(); }
-};
-
 //----------------------------------------------------------------------------
 // Return library version
 //----------------------------------------------------------------------------
 
-TranslatableString GetMP3Version(wxWindow* parent, bool prompt)
+TranslatableString GetMP3Version(bool prompt)
 {
     MP3Exporter exporter;
     auto versionString = XO("MP3 export library not found");
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
-    if (prompt) {
-        exporter.FindLibrary(parent);
-    }
-
-    if (exporter.LoadLibrary(parent, prompt ? MP3Exporter::Yes : MP3Exporter::No)) {
+    if (exporter.LoadEncoderLibrary(prompt ? MP3Exporter::Yes : MP3Exporter::No)) {
 #endif // DISABLE_DYNAMIC_LOADING_LAME
     versionString = Verbatim(exporter.GetLibraryVersion());
 #ifdef MP3_EXPORT_BUILT_IN
