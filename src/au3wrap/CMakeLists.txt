@@ -300,6 +300,16 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-math/Matrix.cpp
     ${AU3_LIBRARIES}/lib-math/Matrix.h
 
+    ${AU3_LIBRARIES}/lib-fft/FFT.cpp
+    ${AU3_LIBRARIES}/lib-fft/FFT.h
+    ${AU3_LIBRARIES}/lib-fft/SpectrumTransformer.cpp
+    ${AU3_LIBRARIES}/lib-fft/SpectrumTransformer.h
+    ${AU3_LIBRARIES}/lib-fft/RealFFTf.cpp
+    ${AU3_LIBRARIES}/lib-fft/RealFFTf.h
+
+    ${AU3_LIBRARIES}/lib-wave-track-fft/TrackSpectrumTransformer.cpp
+    ${AU3_LIBRARIES}/lib-wave-track-fft/TrackSpectrumTransformer.h
+
     ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentSampleView.cpp
     ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentSampleView.h
     ${AU3_LIBRARIES}/lib-stretching-sequence/ClipInterface.cpp
