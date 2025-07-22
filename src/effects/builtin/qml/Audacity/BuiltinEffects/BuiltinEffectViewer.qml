@@ -10,6 +10,7 @@ Rectangle {
     id: root
 
     property string instanceId: ""
+    property var dialogView: null
 
     property string title: builder.contentItem ? builder.contentItem.title : ""
     property bool isApplyAllowed: builder.contentItem ? builder.contentItem.isApplyAllowed : false
@@ -25,7 +26,7 @@ Rectangle {
     height: implicitHeight
 
     Component.onCompleted: {
-        builder.load(root.instanceId, root)
+        builder.load(root.instanceId, root, dialogView)
     }
 
     function manage(parent) {

@@ -28,12 +28,14 @@ EffectBase {
 
     Column {
         id: column
+
         topPadding: 2
         bottomPadding: 2
         spacing: 10
 
         CheckBox {
             id: removeDcCheckbox
+
             text: qsTrc("effects/normalize", "Remove DC offset (center on 0.0 vertically)")
 
             onClicked: {
@@ -48,10 +50,11 @@ EffectBase {
 
             CheckBox {
                 id: normalizePeakAmplitudeCheckbox
-                text: qsTrc("effects/normalize", "Normalize peak amplitude to")
+
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                 Layout.fillWidth: true
 
+                text: qsTrc("effects/normalize", "Normalize peak amplitude to")
                 onClicked: {
                     normalize.normalizePeakAmplitude = !checked
                 }
@@ -59,14 +62,14 @@ EffectBase {
             }
 
             IncrementalPropertyControl {
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                Layout.preferredWidth: 100
+
                 measureUnitsSymbol: qsTrc("global", "dB")
                 decimals: 2
                 step: 0.1
                 maxValue: 0
                 enabled: normalizePeakAmplitudeCheckbox.checked
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                Layout.preferredWidth: 100
-
                 currentValue: normalize.peakAmplitudeTarget
                 onValueEdited: function(newValue) {
                     if (newValue !== normalize.peakAmplitudeTarget) {

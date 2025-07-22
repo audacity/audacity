@@ -34,16 +34,13 @@ EffectBase {
         id: column
 
         width: parent.width
-
         spacing: 16
 
         ComboBoxWithTitle {
             id: typeSelector
 
             columnWidth: parent.width
-
             title: qsTrc("effects/noise", "Type")
-
             model: noise.types
             textRole: "text"
             valueRole: "value"
@@ -66,7 +63,6 @@ EffectBase {
             maxValue: 1
             decimals: 4
             step: 0.01
-
             currentValue: noise.amplitude
 
             onValueEdited: function(newValue) {
@@ -98,7 +94,6 @@ EffectBase {
                 arrowSpacing: -2
                 backgroundColor: ui.theme.backgroundSecondaryColor
                 textColor: ui.theme.fontPrimaryColor
-
                 value: noise.duration
                 mode: TimecodeModeSelector.Duration
                 currentFormatStr: noise.durationFormat
