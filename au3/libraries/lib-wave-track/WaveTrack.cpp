@@ -3416,10 +3416,10 @@ void WaveTrack::ReplaceInterval(
 
 /*! @excsafety{Weak} -- Partial completion may leave clips at differing sample rates!
 */
-void WaveTrack::Resample(int rate, BasicUI::ProgressDialog* progress)
+void WaveTrack::Resample(int rate, const std::function<void(size_t)>& progressReport)
 {
     for (const auto& pClip : Intervals()) {
-        pClip->Resample(rate, progress);
+        pClip->Resample(rate, progressReport);
     }
     DoSetRate(rate);
 }

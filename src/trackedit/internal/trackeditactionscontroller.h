@@ -124,6 +124,7 @@ private:
     void splitStereoToCenter(const muse::actions::ActionData& args);
     void setCustomTrackRate(const muse::actions::ActionData& args);
     void makeStereoTrack(const muse::actions::ActionData& args);
+    void resampleTracks(const muse::actions::ActionData& args);
 
     void groupClips();
     void ungroupClips();

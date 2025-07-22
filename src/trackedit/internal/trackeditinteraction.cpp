@@ -380,6 +380,13 @@ bool TrackeditInteraction::makeStereoTrack(const TrackId left, const TrackId rig
     return withPlaybackStop(&ITrackeditInteraction::makeStereoTrack, left, right);
 }
 
+bool TrackeditInteraction::resampleTracks(const TrackIdList& tracksIds, int rate)
+{
+    return withProgress([&, this]() {
+        return withPlaybackStop(&ITrackeditInteraction::resampleTracks, tracksIds, rate);
+    });
+}
+
 muse::ProgressPtr TrackeditInteraction::progress() const
 {
     return m_interaction->progress();

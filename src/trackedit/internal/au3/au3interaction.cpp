@@ -2683,6 +2683,51 @@ bool Au3Interaction::makeStereoTrack(const TrackId left, const TrackId right)
     return true;
 }
 
+bool Au3Interaction::resampleTracks(const TrackIdList& tracksIds, int rate)
+{
+    size_t convertedSamples = 0;
+    const size_t totalSamples = std::accumulate(tracksIds.begin(), tracksIds.end(), 0u, [this](size_t sum, const TrackId& trackId) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return sum;
+        }
+        return sum + WaveTrackUtilities::GetSequenceSamplesCount(*waveTrack).as_size_t();
+    });
+
+    progress()->start();
+
+    muse::ProgressResult result;
+    DEFER {
+        progress()->finish(result);
+    };
+
+    try {
+        for (const TrackId& trackId : tracksIds) {
+            Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+            IF_ASSERT_FAILED(waveTrack) {
+                return false;
+            }
+
+            waveTrack->Resample(rate, [&](size_t sampleCnt) {
+                if (progress()->isCanceled()) {
+                    throw UserException();
+                }
+
+                convertedSamples += sampleCnt;
+                progress()->progress(convertedSamples, totalSamples, "");
+            });
+            trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        }
+    }
+    catch (const UserException&) {
+        PendingTracks::Get(projectRef()).ClearPendingTracks();
+        return false;
+    }
+
+    return true;
+}
+
 muse::ProgressPtr Au3Interaction::progress() const
 {
     return m_progress;

@@ -13,8 +13,7 @@ StyledDialogView {
     id: root
 
     property int rate: 44100
-
-    title: qsTrc("effects", "Set rate")
+    property string title: ""
 
     QtObject {
         id: prv

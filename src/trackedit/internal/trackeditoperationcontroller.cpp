@@ -598,6 +598,15 @@ bool TrackeditOperationController::makeStereoTrack(const TrackId left, const Tra
     return false;
 }
 
+bool TrackeditOperationController::resampleTracks(const TrackIdList& tracksIds, int rate)
+{
+    if (trackAndClipOperations()->resampleTracks(tracksIds, rate)) {
+        projectHistory()->pushHistoryState("Resampled audio track(s)", "Resample track");
+        return true;
+    }
+    return false;
+}
+
 muse::ProgressPtr TrackeditOperationController::progress() const
 {
     return trackAndClipOperations()->progress();
