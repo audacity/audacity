@@ -70,6 +70,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noiseviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noiseviewmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/noisereduction/noisereductionviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/noisereduction/noisereductionviewmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/fade/fadeeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/fade/fadeeffect.h
 
@@ -97,6 +100,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.h
     ${AU3_LIBRARIES}/lib-builtin-effects/SilenceBase.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/SilenceBase.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/NoiseReductionBase.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/NoiseReductionBase.h
 )
 
 set(AU3_DEF ${AU3_DEF}
