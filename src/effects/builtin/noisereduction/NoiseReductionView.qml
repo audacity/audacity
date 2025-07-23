@@ -67,7 +67,11 @@ EffectBase {
                     FlatButton {
                         id: getNoiseProfileButton
                         text: qsTrc("effects/noisereduction", "Get noise profile")
-                        onClicked: noiseReduction.getNoiseProfile()
+                        onClicked: {
+                            if (noiseReduction.getNoiseProfile()) {
+                                root.dialogView.reject()
+                            }
+                        }
                         height: 28
                         Layout.fillWidth: true
                         Layout.margins: 16
@@ -84,11 +88,6 @@ EffectBase {
                 ColumnLayout {
                     id: noiseReductionColumn
                     width: parent.width
-
-                    QtObject {
-                        id: prv
-                        property int availableWidth: parent.width - 32
-                    }
 
                     Text {
                         text: qsTrc("effects/noisereduction", "Step 2")

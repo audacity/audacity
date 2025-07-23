@@ -7,6 +7,7 @@
 #include "../common/params.h"
 
 #include "effects/effects_base/ieffectsprovider.h"
+#include "effects/effects_base/ieffectinstancesregister.h"
 
 class NoiseReductionBase;
 
@@ -27,6 +28,7 @@ class NoiseReductionViewModel : public AbstractEffectModel
     Q_PROPERTY(NoiseReductionMode reductionMode READ reductionMode WRITE setReductionMode NOTIFY reductionModeChanged FINAL)
 
     muse::Inject<IEffectsProvider> effectsProvider;
+    muse::Inject<IEffectInstancesRegister> instancesRegister;
 
 public:
     NoiseReductionViewModel() = default;
@@ -46,7 +48,7 @@ public:
     NoiseReductionMode reductionMode() const;
     void setReductionMode(NoiseReductionMode mode);
 
-    Q_INVOKABLE void getNoiseProfile();
+    Q_INVOKABLE bool getNoiseProfile();
 
 signals:
     void isApplyAllowedChanged();

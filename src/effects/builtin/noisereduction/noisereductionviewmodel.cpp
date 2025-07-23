@@ -129,10 +129,27 @@ bool NoiseReductionViewModel::isApplyAllowed() const
     return fx->mStatistics != nullptr;
 }
 
-void NoiseReductionViewModel::getNoiseProfile()
+bool NoiseReductionViewModel::getNoiseProfile()
 {
     NoiseReductionBase* const fx = effect();
     IF_ASSERT_FAILED(fx) {
-        return;
+        return false;
     }
+
+    const std::shared_ptr<EffectInstance> instance = instancesRegister()->instanceById(instanceId());
+    IF_ASSERT_FAILED(instance) {
+        return false;
+    }
+
+    const auto wasAllowed = isApplyAllowed();
+    fx->mSettings->mDoProfile = true;
+    auto success = false;
+    modifySettings([&](EffectSettings& settings) {
+        success = fx->Process(*instance, settings);
+    });
+    if (isApplyAllowed() && !wasAllowed) {
+        emit isApplyAllowedChanged();
+    }
+
+    return success;
 }

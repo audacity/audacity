@@ -39,10 +39,9 @@ Row {
         minValue: root.from
         maxValue: root.to
         step: 1
-        currentValue: root.value.toFixed(decimals)
+        currentValue: root.value
         onValueEdited: function(newValue) {
-            newValue = +(newValue.toFixed(decimals))
-            if (newValue !== root.value) {
+            if (root.value !== newValue) {
                 root.value = newValue
             }
         }
