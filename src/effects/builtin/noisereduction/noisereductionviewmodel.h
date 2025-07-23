@@ -9,9 +9,9 @@
 #include "effects/effects_base/ieffectsprovider.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
 
-class NoiseReductionBase;
-
 namespace au::effects {
+class NoiseReductionEffect;
+
 enum class NoiseReductionMode {
     ReduceNoise = 0,
     LeaveResidue
@@ -60,6 +60,6 @@ signals:
 private:
     void doReload() override;
 
-    NoiseReductionBase* effect() const;
+    NoiseReductionEffect* effect() const;
 };
 }

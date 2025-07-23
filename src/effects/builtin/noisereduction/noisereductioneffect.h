@@ -1,17 +1,22 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#pragma once
+
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  NoiseReductionBase.h
+  NoiseReductionEffect.h
 
   Dominic Mazzoni
   Paul Licameli
 
 **********************************************************************/
-#pragma once
 
-#include "StatefulEffect.h"
+#include "libraries/lib-effects/StatefulEffect.h"
 
+namespace au::effects {
 // Define both of these to make the radio button three-way
 #define RESIDUE_CHOICE
 //#define ISOLATE_CHOICE
@@ -25,7 +30,6 @@
 // Define to make the old statistical methods an available choice
 //#define OLD_METHOD_AVAILABLE
 
-
 enum NoiseReductionChoice
 {
     NRC_REDUCE_NOISE,
@@ -33,13 +37,13 @@ enum NoiseReductionChoice
     NRC_LEAVE_RESIDUE,
 };
 
-class BUILTIN_EFFECTS_API NoiseReductionBase : public StatefulEffect
+class NoiseReductionEffect : public StatefulEffect
 {
 public:
     static const ComponentInterfaceSymbol Symbol;
 
-    NoiseReductionBase();
-    virtual ~NoiseReductionBase();
+    NoiseReductionEffect();
+    virtual ~NoiseReductionEffect();
 
     using Effect::TrackProgress;
 
@@ -50,15 +54,15 @@ public:
 
     // EffectDefinitionInterface implementation
 
-    EffectType GetType() const override;
+    ::EffectType GetType() const override;
 
     // Effect implementation
 
-    bool Process(EffectInstance& instance, EffectSettings& settings) override;
+    bool Process(::EffectInstance& instance, ::EffectSettings& settings) override;
 
     // This object is the memory of the effect between uses
     // (other than noise profile statistics)
-    class BUILTIN_EFFECTS_API Settings
+    class Settings
     {
     public:
         Settings();
@@ -67,7 +71,7 @@ public:
         }
 
         bool PrefsIO(bool read);
-        bool Validate(NoiseReductionBase* effect) const;
+        bool Validate(NoiseReductionEffect* effect) const;
 
         size_t WindowSize() const
         {
@@ -120,3 +124,4 @@ public:
     std::unique_ptr<Settings> mSettings;
     std::unique_ptr<Statistics> mStatistics;
 };
+}

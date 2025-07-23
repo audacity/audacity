@@ -1,22 +1,21 @@
 /*
  * Audacity: A Digital Audio Editor
  */
+#include "noisereductioneffect.h"
 #include "noisereductionviewmodel.h"
-
-#include "libraries/lib-builtin-effects/NoiseReductionBase.h"
 
 #include "log.h"
 
 using namespace au::effects;
 
-NoiseReductionBase* NoiseReductionViewModel::effect() const
+NoiseReductionEffect* NoiseReductionViewModel::effect() const
 {
     EffectId effectId = this->effectId();
     if (effectId.isEmpty()) {
         return nullptr;
     }
     Effect* e = effectsProvider()->effect(effectId);
-    return dynamic_cast<NoiseReductionBase*>(e);
+    return dynamic_cast<NoiseReductionEffect*>(e);
 }
 
 void NoiseReductionViewModel::doReload()
@@ -30,7 +29,7 @@ void NoiseReductionViewModel::doReload()
 
 int NoiseReductionViewModel::reduction() const
 {
-    const NoiseReductionBase* const fx = effect();
+    const NoiseReductionEffect* const fx = effect();
     if (!fx) {
         return 0;
     }
@@ -42,7 +41,7 @@ void NoiseReductionViewModel::setReduction(int newReduction)
     if (reduction() == newReduction) {
         return;
     }
-    NoiseReductionBase* const fx = effect();
+    NoiseReductionEffect* const fx = effect();
     IF_ASSERT_FAILED(fx) {
         return;
     }
@@ -52,7 +51,7 @@ void NoiseReductionViewModel::setReduction(int newReduction)
 
 float NoiseReductionViewModel::sensitivity() const
 {
-    const NoiseReductionBase* const fx = effect();
+    const NoiseReductionEffect* const fx = effect();
     if (!fx) {
         return 0.0f;
     }
@@ -64,7 +63,7 @@ void NoiseReductionViewModel::setSensitivity(float newSensitivity)
     if (muse::is_equal(sensitivity(), newSensitivity)) {
         return;
     }
-    NoiseReductionBase* const fx = effect();
+    NoiseReductionEffect* const fx = effect();
     IF_ASSERT_FAILED(fx) {
         return;
     }
@@ -74,7 +73,7 @@ void NoiseReductionViewModel::setSensitivity(float newSensitivity)
 
 int NoiseReductionViewModel::frequencySmoothingBands() const
 {
-    const NoiseReductionBase* const fx = effect();
+    const NoiseReductionEffect* const fx = effect();
     if (!fx) {
         return 0;
     }
@@ -86,7 +85,7 @@ void NoiseReductionViewModel::setFrequencySmoothingBands(int newFrequencySmoothi
     if (frequencySmoothingBands() == newFrequencySmoothingBands) {
         return;
     }
-    NoiseReductionBase* const fx = effect();
+    NoiseReductionEffect* const fx = effect();
     IF_ASSERT_FAILED(fx) {
         return;
     }
@@ -96,7 +95,7 @@ void NoiseReductionViewModel::setFrequencySmoothingBands(int newFrequencySmoothi
 
 NoiseReductionMode NoiseReductionViewModel::reductionMode() const
 {
-    const NoiseReductionBase* const fx = effect();
+    const NoiseReductionEffect* const fx = effect();
     if (!fx) {
         return NoiseReductionMode::ReduceNoise;
     }
@@ -110,7 +109,7 @@ void NoiseReductionViewModel::setReductionMode(NoiseReductionMode mode)
         return;
     }
 
-    const NoiseReductionBase* const fx = effect();
+    const NoiseReductionEffect* const fx = effect();
     IF_ASSERT_FAILED(fx) {
         return;
     }
@@ -122,7 +121,7 @@ void NoiseReductionViewModel::setReductionMode(NoiseReductionMode mode)
 
 bool NoiseReductionViewModel::isApplyAllowed() const
 {
-    const NoiseReductionBase* const fx = effect();
+    const NoiseReductionEffect* const fx = effect();
     if (!fx) {
         return false;
     }
@@ -131,7 +130,7 @@ bool NoiseReductionViewModel::isApplyAllowed() const
 
 bool NoiseReductionViewModel::getNoiseProfile()
 {
-    NoiseReductionBase* const fx = effect();
+    NoiseReductionEffect* const fx = effect();
     IF_ASSERT_FAILED(fx) {
         return false;
     }
