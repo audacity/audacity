@@ -551,7 +551,7 @@ bool ProjectSerializer::Decode(BufferedStreamReader& in, XMLTagHandler* handler)
 
     auto ReadString = [&mCharSize, &in, &bytes, &stringsCount, &stringsLength](int len) -> std::string
     {
-        bytes.reserve(len);
+        bytes.resize(len);
         auto data = bytes.data();
         in.Read(data, len);
 
