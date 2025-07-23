@@ -1865,7 +1865,6 @@ void WaveClip::Resample(int rate, const std::function<void(size_t)>& progressRep
                 progressReport(results->first);
             }
         }
-
     }
 
     if (error) {
@@ -2182,7 +2181,7 @@ bool WaveClip::CheckInvariants() const
          end = mSequences.end();
     // There must be at least one pointer
     if (iter != end) {
-        // All pointers mut be non-null
+        // All pointers must be non-null
         auto& pFirst = *iter++;
         if (pFirst) {
             // All sequences must have the same sample formats, and sample block
