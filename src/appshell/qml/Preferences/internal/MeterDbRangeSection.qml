@@ -25,17 +25,10 @@ BaseSection {
         columnWidth: 320
 
         currentIndex: root.model.meterDbRange
-        model: [
-            "-36 dB (shallow range for high-amplitude editing)",
-            "-48 dB (PCM range of 8 bit samples)", 
-            "-60 dB (PCM range of 10 bit samples)",
-            "-72 dB (PCM range of 12 bit samples)",
-            "-84 dB (PCM range of 14 bit samples)",
-            "-96 dB (PCM range of 16 bit samples)",
-            "-120 dB (approximate limit of human hearing)",
-            "-145 dB (PCM range of 24 bit samples)"
-        ]
-        
+        model: playbackMeterModel.dbRanges.map(function(item) {
+            return item.title;
+        })
+
         navigation.name: "MeterDbRangeBox"
         navigation.panel: root.navigation
         navigation.row: 1

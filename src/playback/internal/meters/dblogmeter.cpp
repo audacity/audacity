@@ -24,9 +24,9 @@ StepValues roundUpToFixedValue(int meterSize, double dbRange)
 {
     const std::array<std::array<int, 2>, 7> fullStepsInc = { { { 1, 0 }, { 2, 1 }, { 3, 1 }, { 6, 2 }, { 12, 3 }, { 24, 6 }, { 48, 6 } } };
 
-    for (const auto& step : fullStepsInc) {
-        if (meterSize / MIN_STEP_DISTANCE >= std::abs(dbRange) / step[0]) {
-            return { meterSize, step[0], step[1] };
+    for (const auto& [fullStep, smallStep] : fullStepsInc) {
+        if (meterSize / MIN_STEP_DISTANCE >= std::abs(dbRange) / fullStep) {
+            return { meterSize, fullStep, smallStep };
         }
     }
 

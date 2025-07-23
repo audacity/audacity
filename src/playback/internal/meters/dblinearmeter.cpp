@@ -27,34 +27,34 @@ constexpr std::array<double, N> timesArray(const std::array<double, N>& input)
     return result;
 }
 
+struct DbSection {
+    double multiplier;
+    double percentage;
+};
+
+constexpr std::array<DbSection, 6> DB_SECTIONS = { {
+    { 0.0, 1.0 },
+    { 1.0 / 3.0, 0.5 },
+    { 1.0 / 2.0, 0.3 },
+    { 2.0 / 3.0, 0.15 },
+    { 5.0 / 6.0, 0.075 },
+    { 1.0, 0.05 }
+} };
+
 double dbToValuePercentage(double dbValue, double dbRange)
 {
-    double m, b;
-
     if (dbValue > 0) {
         return 1.0;
     }
 
-    if (dbValue > dbRange / 3.0) {
-        m = (1 - 0.5) / (0 - dbRange / 3.0);
-        b = 0.5 - m * (dbRange / 3.0);
-        return m * dbValue + b;
-    } else if (dbValue > dbRange / 2.0) {
-        m = (0.5 - 0.3) / (dbRange / 3.0 - dbRange / 2.0);
-        b = 0.3 - m * (dbRange / 2.0);
-        return m * dbValue + b;
-    } else if (dbValue > ((2.0 / 3.0) * dbRange)) {
-        m = (0.3 - 0.15) / (dbRange / 2.0 - (2.0 / 3.0) * dbRange);
-        b = 0.15 - m * ((2.0 / 3.0) * dbRange);
-        return m * dbValue + b;
-    } else if (dbValue > ((5.0 / 6.0) * dbRange)) {
-        m = (0.15 - 0.075) / ((2.0 / 3.0) * dbRange - (5.0 / 6.0) * dbRange);
-        b = 0.075 - m * ((5.0 / 6.0) * dbRange);
-        return m * dbValue + b;
-    } else if (dbValue > dbRange) {
-        m = (0.075 - 0.05) / ((5.0 / 6.0) * dbRange - dbRange);
-        b = 0.05 - m * dbRange;
-        return m * dbValue + b;
+    for (size_t i = 0; i < DB_SECTIONS.size() - 1; ++i) {
+        const DbSection& left = DB_SECTIONS[i];
+        const DbSection& right = DB_SECTIONS[i + 1];
+
+        if ((dbValue <= left.multiplier * dbRange) && (dbValue > right.multiplier * dbRange)) {
+            double t = (dbValue - right.multiplier * dbRange) / (left.multiplier * dbRange - right.multiplier * dbRange);
+            return right.percentage + t * (left.percentage - right.percentage);
+        }
     }
 
     return 0.0;
