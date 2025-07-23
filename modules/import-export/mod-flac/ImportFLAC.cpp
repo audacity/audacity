@@ -172,9 +172,8 @@ void MyFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
          // Widen mFormat after examining the file header
          if (mFile->mBitsPerSample<=16) {
             mFile->mFormat=int16Sample;
-         } else if (mFile->mBitsPerSample<=24) {
-            mFile->mFormat=int24Sample;
          } else {
+            // Promote anything >16b to float
             mFile->mFormat=floatSample;
          }
          mFile->mStreamInfoDone=true;
@@ -221,12 +220,12 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
 {
    // Don't let C++ exceptions propagate through libflac
    return GuardedCall< FLAC__StreamDecoderWriteStatus > ( [&] {
-      auto tmp = ArrayOf< short >{ frame->header.blocksize };
 
       unsigned chn = 0;
       ImportUtils::ForEachChannel(*mFile->mTrack, [&](auto& channel)
       {
          if (frame->header.bits_per_sample <= 16) {
+            auto tmp = ArrayOf< short >{ frame->header.blocksize };
             if (frame->header.bits_per_sample == 8) {
                for (unsigned int s = 0; s < frame->header.blocksize; s++) {
                   tmp[s] = buffer[chn][s] << 8;
@@ -243,10 +242,16 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
                      int16Sample);
          }
          else {
-            channel.AppendBuffer((samplePtr)buffer[chn],
-                     int24Sample,
+            auto tmp = ArrayOf<float>{ frame->header.blocksize };
+            // handles both 24/32bit PCM. Divide by 2^n-1 to form -1-1 scaled floats
+            float divisor  = static_cast<float>( 1 << (frame->header.bits_per_sample-1) );
+            for (unsigned int s = 0; s < frame->header.blocksize; s++) {
+               tmp[s] = static_cast<float>(buffer[chn][s]) / divisor;
+            }
+            channel.AppendBuffer((samplePtr)tmp.get(),
+                     floatSample,
                      frame->header.blocksize, 1,
-                     int24Sample);
+                     floatSample);
          }
          ++chn;
       });
