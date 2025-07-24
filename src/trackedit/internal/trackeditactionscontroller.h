@@ -12,6 +12,7 @@
 #include "iinteractive.h"
 
 #include "projectscene/iprojectsceneconfiguration.h"
+#include "playback/iaudiodevicesprovider.h"
 #include "iprojecthistory.h"
 #include "itrackeditinteraction.h"
 #include "iselectioncontroller.h"
@@ -28,6 +29,7 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     void init();
@@ -123,6 +125,8 @@ private:
     void splitStereoToLR(const muse::actions::ActionData& args);
     void splitStereoToCenter(const muse::actions::ActionData& args);
     void setCustomTrackRate(const muse::actions::ActionData& args);
+    void makeStereoTrack(const muse::actions::ActionData& args);
+    void resampleTracks(const muse::actions::ActionData& args);
 
     void groupClips();
     void ungroupClips();

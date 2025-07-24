@@ -207,13 +207,12 @@ UiActionList STATIC_ACTIONS = {
     UiAction("track-change-rate-custom",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Other"),
-             TranslatableString("action", "Other"),
+             TranslatableString("action", "Other..."),
+             TranslatableString("action", "Other..."),
              Checkable::Yes
              ),
     UiAction("track-make-stereo",
-             //! TODO: Change context when making stereo tracks is implemented
-             au::context::UiCtxUnknown,
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Make stereo track"),
              TranslatableString("action", "Make stereo track")
@@ -237,11 +236,10 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Split stereo to center mono")
              ),
     UiAction("track-resample",
-             //! TODO: Change context when resampling is implemented
-             au::context::UiCtxUnknown,
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Resample track"),
-             TranslatableString("action", "Resample track")
+             TranslatableString("action", "Resample track..."),
+             TranslatableString("action", "Resample track...")
              ),
     UiAction("track-view-waveform",
              au::context::UiCtxAny,

@@ -95,6 +95,8 @@ private:
     bool swapStereoChannels(const TrackIdList& tracksIds) override;
     bool splitStereoTracksToLRMono(const TrackIdList& tracksIds) override;
     bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) override;
+    bool makeStereoTrack(const TrackId left, const TrackId right) override;
+    bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
 
     muse::ProgressPtr progress() const override;
 

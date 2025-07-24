@@ -35,10 +35,6 @@ class SampleBlockFactory;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 class Sequence;
 class wxFileNameWrapper;
-namespace BasicUI {
-class ProgressDialog;
-}
-
 class WaveClip;
 
 // Array of pointers that assume ownership
@@ -445,7 +441,7 @@ public:
 
     // Resample clip. This also will set the rate, but without changing
     // the length of the clip
-    void Resample(int rate, BasicUI::ProgressDialog* progress = nullptr);
+    void Resample(int rate, const std::function<void(size_t)>& progressReport = {});
 
     double GetSequenceStartTime() const noexcept;
     void SetSequenceStartTime(double startTime);

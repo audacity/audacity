@@ -102,6 +102,8 @@ public:
     bool swapStereoChannels(const TrackIdList& tracksIds) override;
     bool splitStereoTracksToLRMono(const TrackIdList& tracksIds) override;
     bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) override;
+    bool makeStereoTrack(const TrackId left, const TrackId right) override;
+    bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
 
     muse::ProgressPtr progress() const override;
 
@@ -121,6 +123,8 @@ private:
     NeedsDownmixing moveSelectedClipsUpOrDown(int offset);
     bool clipTransferNeedsDownmixing(const std::vector<Au3TrackDataPtr>& srcTracks, const TrackIdList& dstTracks) const;
     bool userIsOkWithDownmixing() const;
+    bool userIsOkCombineMonoToStereo() const;
+    bool canMergeMonoTracksToStereo(const TrackId left, const TrackId right);
     muse::Ret canPasteTrackData(const TrackIdList& tracksIds, const std::vector<Au3TrackDataPtr>& clipsToPaste) const;
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey);
     muse::Ret makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<Au3TrackDataPtr>& trackData, secs_t begin);

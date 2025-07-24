@@ -12,9 +12,9 @@ import Preferences
 StyledDialogView {
     id: root
 
+    property var availableRates: []
     property int rate: 44100
-
-    title: qsTrc("effects", "Set rate")
+    property string title: ""
 
     QtObject {
         id: prv
@@ -46,23 +46,79 @@ StyledDialogView {
             text: qsTrc("trackedit/rate", "New sample rate (Hz):")
         }
 
-        IncrementalPropertyControl {
-            id: control
-            width: parent.width * .4
+        Item {
+            id: dropdown
+            width: parent.width *.5
+            height: 30
 
-            currentValue: root.rate
+            TextInputField {
+                id: inputItem
 
-            minValue: 1
-            maxValue: 1000000
-            step: 1
-            decimals: 0
+                anchors.fill: parent
 
-            measureUnitsSymbol: prv.measureUnitsSymbol
+                currentText: root.rate > 0 ? root.rate.toString() : ""
 
-            onValueEdited: function(newValue) {
-                root.rate = newValue;
+                validator: IntValidator { bottom: 1 }
+
+                onTextChanged: function(newValue) {
+                    var val = parseInt(newValue)
+                    root.rate = (val > 0) ? val : 1
+                }
+
             }
-        }        
+
+            StyledIconLabel {
+                id: dropIconItem
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 8
+
+                iconCode: IconCode.SMALL_ARROW_DOWN
+
+                visible: root.availableRates && root.availableRates.length > 0
+
+                MouseArea {
+                    id: mouseAreaItem
+                    anchors.fill: parent
+
+                    onClicked: {
+                        menuLoader.toggleOpened(availableRates.map(function(rate) {
+                            return {"title": rate.toString(), "id": rate.toString()}
+                        }))
+                    }
+
+                    onPressed: {
+                        ui.tooltip.hide(dropdown, true)
+                    }
+
+                    onContainsMouseChanged: {
+                        if (!inputItem.truncated || menuLoader.isMenuOpened) {
+                            return
+                        }
+
+                        if (mouseAreaItem.containsMouse) {
+                            ui.tooltip.show(dropdown, inputItem.text)
+                        } else {
+                            ui.tooltip.hide(dropdown)
+                        }
+                    }
+                }
+            }
+
+            StyledMenuLoader {
+                id: menuLoader
+                width: parent.width
+
+                onHandleMenuItem: function(itemId) {
+                    if (itemId === null) {
+                        return
+                    }
+
+                    inputItem.currentText = itemId
+                }
+            }
+        }
+
     }
 
     ButtonBox {

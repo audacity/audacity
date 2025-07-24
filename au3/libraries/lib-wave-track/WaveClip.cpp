@@ -1784,7 +1784,7 @@ PitchAndSpeedPreset WaveClip::GetPitchAndSpeedPreset() const
 }
 
 /*! @excsafety{Strong} */
-void WaveClip::Resample(int rate, BasicUI::ProgressDialog* progress)
+void WaveClip::Resample(int rate, const std::function<void(size_t)>& progressReport)
 {
     // This mutator does not require the strong invariant.
 
@@ -1861,18 +1861,11 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog* progress)
         }
         if (results) {
             pos += results->first;
-        }
-
-        if (progress) {
-            auto updateResult = progress->Poll(
-                pos.as_long_long(),
-                numSamples.as_long_long()
-                );
-            error = (updateResult != BasicUI::ProgressResult::Success);
-            if (error) {
-                throw UserException{};
+            if (progressReport) {
+                progressReport(results->first);
             }
         }
+
     }
 
     if (error) {

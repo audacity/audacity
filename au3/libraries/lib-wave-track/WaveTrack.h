@@ -671,7 +671,7 @@ public:
     bool MergeClips(int clipidx1, int clipidx2);
 
     // Resample track (i.e. all clips in the track)
-    void Resample(int rate, BasicUI::ProgressDialog* progress = NULL);
+    void Resample(int rate, const std::function<void(size_t)>& progressReport = {});
 
     //! Random-access assignment of a range of samples
     /*!

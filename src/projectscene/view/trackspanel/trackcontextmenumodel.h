@@ -8,6 +8,7 @@
 #include "iprojectsceneconfiguration.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/iprojecthistory.h"
+#include "trackedit/iselectioncontroller.h"
 #include "playback/iaudiodevicesprovider.h"
 
 namespace au::projectscene {
@@ -18,6 +19,7 @@ class TrackContextMenuModel : public muse::uicomponents::AbstractMenuModel
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<trackedit::ISelectionController> selectionController;
 
     Q_PROPERTY(trackedit::TrackId trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
 
@@ -52,6 +54,7 @@ private:
     void updateColorCheckedState();
     void updateTrackFormatState();
     void updateTrackRateState();
+    void updateTrackMonoState();
 
     trackedit::TrackId m_trackId;
     muse::actions::ActionCodeList m_colorChangeActionCodeList;

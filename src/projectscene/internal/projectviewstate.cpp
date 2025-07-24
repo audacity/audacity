@@ -360,6 +360,11 @@ muse::ValCh<bool> ProjectViewState::ctrlPressed() const
     return m_ctrlPressed;
 }
 
+int ProjectViewState::trackDefaultHeight() const
+{
+    return DEFAULT_HEIGHT;
+}
+
 bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
 {
     if (event->type() == QEvent::KeyPress) {
