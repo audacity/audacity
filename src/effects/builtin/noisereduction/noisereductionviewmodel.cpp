@@ -33,7 +33,7 @@ int NoiseReductionViewModel::reduction() const
     if (!fx) {
         return 0;
     }
-    return static_cast<int>(fx->mSettings->mNoiseGain);
+    return settings<NoiseReductionSettings>().mNoiseGain;
 }
 
 void NoiseReductionViewModel::setReduction(int newReduction)
@@ -45,8 +45,20 @@ void NoiseReductionViewModel::setReduction(int newReduction)
     IF_ASSERT_FAILED(fx) {
         return;
     }
-    fx->mSettings->mNoiseGain = newReduction;
+    modifySettings([&](EffectSettings& settings) {
+        settings.cast<NoiseReductionSettings>()->mNoiseGain = newReduction;
+    });
     emit reductionChanged();
+}
+
+int NoiseReductionViewModel::reductionMin() const
+{
+    return NoiseReductionEffect::noiseGain.min;
+}
+
+int NoiseReductionViewModel::reductionMax() const
+{
+    return NoiseReductionEffect::noiseGain.max;
 }
 
 double NoiseReductionViewModel::sensitivity() const
@@ -55,7 +67,7 @@ double NoiseReductionViewModel::sensitivity() const
     if (!fx) {
         return 0.0f;
     }
-    return fx->mSettings->mNewSensitivity;
+    return settings<NoiseReductionSettings>().mNewSensitivity;
 }
 
 void NoiseReductionViewModel::setSensitivity(double newSensitivity)
@@ -70,8 +82,20 @@ void NoiseReductionViewModel::setSensitivity(double newSensitivity)
     IF_ASSERT_FAILED(fx) {
         return;
     }
-    fx->mSettings->mNewSensitivity = newSensitivity;
+    modifySettings([&](EffectSettings& settings) {
+        settings.cast<NoiseReductionSettings>()->mNewSensitivity = newSensitivity;
+    });
     emit sensitivityChanged();
+}
+
+double NoiseReductionViewModel::sensitivityMin() const
+{
+    return NoiseReductionEffect::sensitivity.min;
+}
+
+double NoiseReductionViewModel::sensitivityMax() const
+{
+    return NoiseReductionEffect::sensitivity.max;
 }
 
 int NoiseReductionViewModel::frequencySmoothingBands() const
@@ -80,7 +104,7 @@ int NoiseReductionViewModel::frequencySmoothingBands() const
     if (!fx) {
         return 0;
     }
-    return static_cast<int>(fx->mSettings->mFreqSmoothingBands);
+    return static_cast<int>(settings<NoiseReductionSettings>().mFreqSmoothingBands);
 }
 
 void NoiseReductionViewModel::setFrequencySmoothingBands(int newFrequencySmoothingBands)
@@ -95,21 +119,32 @@ void NoiseReductionViewModel::setFrequencySmoothingBands(int newFrequencySmoothi
     IF_ASSERT_FAILED(fx) {
         return;
     }
-    fx->mSettings->mFreqSmoothingBands = static_cast<double>(newFrequencySmoothingBands);
+    modifySettings([&](EffectSettings& settings) {
+        settings.cast<NoiseReductionSettings>()->mFreqSmoothingBands = static_cast<double>(newFrequencySmoothingBands);
+    });
     emit frequencySmoothingBandsChanged();
 }
 
-NoiseReductionMode NoiseReductionViewModel::reductionMode() const
+int NoiseReductionViewModel::frequencySmoothingBandsMin()
+{
+    return NoiseReductionEffect::frequencySmoothingBands.min;
+}
+
+int NoiseReductionViewModel::frequencySmoothingBandsMax() const
+{
+    return NoiseReductionEffect::frequencySmoothingBands.max;
+}
+
+int NoiseReductionViewModel::reductionMode() const
 {
     const NoiseReductionEffect* const fx = effect();
     if (!fx) {
-        return NoiseReductionMode::ReduceNoise;
+        return 0;
     }
-    return fx->mSettings->mNoiseReductionChoice == ::NoiseReductionChoice::NRC_REDUCE_NOISE
-           ? NoiseReductionMode::ReduceNoise : NoiseReductionMode::LeaveResidue;
+    return settings<NoiseReductionSettings>().mNoiseReductionChoice;
 }
 
-void NoiseReductionViewModel::setReductionMode(NoiseReductionMode mode)
+void NoiseReductionViewModel::setReductionMode(int mode)
 {
     if (!m_inited) {
         return;
@@ -123,9 +158,9 @@ void NoiseReductionViewModel::setReductionMode(NoiseReductionMode mode)
     IF_ASSERT_FAILED(fx) {
         return;
     }
-    fx->mSettings->mNoiseReductionChoice = mode == NoiseReductionMode::ReduceNoise
-                                           ? ::NoiseReductionChoice::NRC_REDUCE_NOISE
-                                           : ::NoiseReductionChoice::NRC_LEAVE_RESIDUE;
+    modifySettings([&](EffectSettings& settings) {
+        settings.cast<NoiseReductionSettings>()->mNoiseReductionChoice = static_cast<NoiseReductionChoice>(mode);
+    });
     emit reductionModeChanged();
 }
 
@@ -151,7 +186,9 @@ void NoiseReductionViewModel::getNoiseProfile()
     }
 
     const auto wasAllowed = isApplyAllowed();
-    fx->mSettings->mDoProfile = true;
+    modifySettings([&](EffectSettings& settings) {
+        settings.cast<NoiseReductionSettings>()->mDoProfile = true;
+    });
     auto success = false;
     modifySettings([&](EffectSettings& settings) {
         fx->ResetLastError();
