@@ -114,8 +114,8 @@ EffectBase {
                             noiseReduction.reduction = value
                         }
                         measureUnitsSymbol: qsTrc("global", "dB")
-                        from: 0
-                        to: 48
+                        from: noiseReduction.reductionMin
+                        to: noiseReduction.reductionMax
                         isInt: true
                     }
 
@@ -137,8 +137,8 @@ EffectBase {
                         onValueChanged: {
                             noiseReduction.sensitivity = value
                         }
-                        from: 0.01
-                        to: 24
+                        from: noiseReduction.sensitivityMin
+                        to: noiseReduction.sensitivityMax
                         isInt: false
                     }
 
@@ -161,8 +161,8 @@ EffectBase {
                             noiseReduction.frequencySmoothingBands = value
                         }
                         measureUnitsSymbol: qsTrc("effects/noisereduction", "bands")
-                        from: 0
-                        to: 12
+                        from: noiseReduction.frequencySmoothingBandsMin
+                        to: noiseReduction.frequencySmoothingBandsMax
                         isInt: true
                     }
 
@@ -197,9 +197,10 @@ EffectBase {
                             spacing: 8
 
                             RoundedRadioButton {
+                                id: audioWithNoiseRemovedRadioButton
                                 width: parent.width
 
-                                checked: noiseReduction.reductionMode === 0
+                                checked: noiseReduction.reductionMode == 0
                                 text: qsTrc("effects/noisereduction", "Audio with noise removed")
 
                                 onToggled: {
@@ -210,7 +211,7 @@ EffectBase {
                             RoundedRadioButton {
                                 width: parent.width
 
-                                checked: noiseReduction.noiseReductionMode === 1
+                                checked: !audioWithNoiseRemovedRadioButton.checked
                                 text: qsTrc("effects/noisereduction", "Noise only")
 
                                 onToggled: {
