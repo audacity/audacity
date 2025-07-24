@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.4\n"
+"Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-06-10 14:25+0300\n"
+"POT-Creation-Date: 2025-07-24 12:44+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Thomas De Rocker, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/audacity/teams/164520/nl/)\n"
@@ -7510,8 +7510,8 @@ msgstr ""
 "Controleer uw gegevens en probeer het opnieuw!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create an account to save to the cloud"
-msgstr "Een account aanmaken om naar de cloud op te slaan"
+msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7524,6 +7524,11 @@ msgstr "Doorgaan met Google"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
 msgstr "Doorgaan met Facebook"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Or use email and password"
+msgstr "Ruisverwijdering en herstel"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -21714,3 +21719,6 @@ msgstr "Spectraal gereedschap"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Oud"
+
+#~ msgid "Create an account to save to the cloud"
+#~ msgstr "Een account aanmaken om naar de cloud op te slaan"

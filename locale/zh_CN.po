@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.4\n"
+"Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-06-10 14:25+0300\n"
+"POT-Creation-Date: 2025-07-24 12:44+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: 王晨旭 <wcxu21@126.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/audacity/teams/164520/zh_CN/)\n"
@@ -7507,8 +7507,8 @@ msgstr ""
 "请仔细检查您的凭据并重试！"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create an account to save to the cloud"
-msgstr "创建帐户以保存到云端"
+msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7521,6 +7521,11 @@ msgstr "继续使用 Google"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
 msgstr "继续使用 Facebook"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Or use email and password"
+msgstr "噪音移除与修复"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -21704,6 +21709,9 @@ msgstr "频谱工具"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "传统"
+
+#~ msgid "Create an account to save to the cloud"
+#~ msgstr "创建帐户以保存到云端"
 
 #~ msgid "Get AI effects..."
 #~ msgstr "获得 AI 效果器…"

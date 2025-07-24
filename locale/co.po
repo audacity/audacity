@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.4\n"
+"Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-06-10 14:25+0300\n"
+"POT-Creation-Date: 2025-07-24 12:44+0200\n"
 "PO-Revision-Date: 2025-06-05 14:48+0200\n"
 "Last-Translator: Patriccollu di Santa Maria è Sichè <https://github.com/Patriccollu/Lingua_Corsa-Infurmatica/#readme>\n"
 "Language-Team: Corsican (https://app.transifex.com/audacity/teams/164520/co/)\n"
@@ -7517,8 +7517,8 @@ msgstr ""
 "Ci vole à verificà e vostre infurmazioni di cunnessione è pruvà torna."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create an account to save to the cloud"
-msgstr "Create un contu per arregistrà in u nivulu"
+msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7531,6 +7531,11 @@ msgstr "Cuntinuà cù Google"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
 msgstr "Cuntinuà cù Facebook"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Or use email and password"
+msgstr "Cacciatura di trostu è riparazione"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -21729,6 +21734,9 @@ msgstr "Attrezzi spettrali"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Classicu"
+
+#~ msgid "Create an account to save to the cloud"
+#~ msgstr "Create un contu per arregistrà in u nivulu"
 
 #~ msgid "Get AI effects..."
 #~ msgstr "Ottene effetti da l’IA…"

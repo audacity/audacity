@@ -12,9 +12,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.4\n"
+"Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-06-10 14:25+0300\n"
+"POT-Creation-Date: 2025-07-24 12:44+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Victor Alonso Barberan, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/audacity/teams/164520/es/)\n"
@@ -7518,8 +7518,8 @@ msgstr ""
 "¡Por favor revise sus credenciales e intente otra vez!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create an account to save to the cloud"
-msgstr "Cree una cuenta para guardar en la nube"
+msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7532,6 +7532,11 @@ msgstr "Continuar con Google"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
 msgstr "Continuar con Facebook"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Or use email and password"
+msgstr "Reducción de ruido y reparación"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -21734,3 +21739,6 @@ msgstr "Herramientas espectrales"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Heredado"
+
+#~ msgid "Create an account to save to the cloud"
+#~ msgstr "Cree una cuenta para guardar en la nube"
