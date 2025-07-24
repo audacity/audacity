@@ -19,14 +19,6 @@ PlaybackMeterPanelModel::PlaybackMeterPanelModel(QObject* parent)
         emit levelChanged();
     });
 
-    configuration()->playbackMeterStyleChanged().onNotify(this, [this]() {
-        emit meterStyleChanged();
-    });
-
-    configuration()->playbackMeterTypeChanged().onNotify(this, [this]() {
-        emit meterTypeChanged();
-    });
-
     controller()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
     });
@@ -130,51 +122,9 @@ void PlaybackMeterPanelModel::setRightChannelRMS(float rightChannelRMS)
     emit rightChannelRMSChanged(m_rightChannelRMS);
 }
 
-au::playback::PlaybackMeterStyle::MeterStyle PlaybackMeterPanelModel::meterStyle() const
-{
-    return configuration()->playbackMeterStyle();
-}
-
-au::playback::PlaybackMeterType::MeterType PlaybackMeterPanelModel::meterType() const
-{
-    return configuration()->playbackMeterType();
-}
-
-au::playback::PlaybackMeterPosition::MeterPosition PlaybackMeterPanelModel::meterPosition() const
-{
-    return configuration()->playbackMeterPosition();
-}
-
 au::playback::PlaybackMeterModel* PlaybackMeterPanelModel::meterModel() const
 {
     return m_meterModel;
-}
-
-void PlaybackMeterPanelModel::positionChangeRequested(playback::PlaybackMeterPosition::MeterPosition position)
-{
-    if (configuration()->playbackMeterPosition() == position) {
-        return;
-    }
-
-    configuration()->setPlaybackMeterPosition(position);
-}
-
-void PlaybackMeterPanelModel::styleChangeRequested(playback::PlaybackMeterStyle::MeterStyle style)
-{
-    if (configuration()->playbackMeterStyle() == style) {
-        return;
-    }
-
-    configuration()->setPlaybackMeterStyle(style);
-}
-
-void PlaybackMeterPanelModel::typeChangeRequested(playback::PlaybackMeterType::MeterType type)
-{
-    if (configuration()->playbackMeterType() == type) {
-        return;
-    }
-
-    configuration()->setPlaybackMeterType(type);
 }
 
 void PlaybackMeterPanelModel::volumeLevelChangeRequested(float level)

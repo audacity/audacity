@@ -22,8 +22,8 @@ public:
     double sampleToPosition(double sample) const override;
     std::string sampleToText(double sample) const override;
 
-    std::vector<double> smallSteps(int meterSize) const override;
-    std::vector<double> fullSteps(int meterSize) const override;
+    std::vector<double> smallSteps() const override;
+    std::vector<double> fullSteps() const override;
 
     muse::async::Notification playbackMeterChanged() const override;
 

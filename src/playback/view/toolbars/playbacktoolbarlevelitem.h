@@ -29,10 +29,6 @@ class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
     Q_PROPERTY(float rightRecentPeak READ rightRecentPeak NOTIFY rightRecentPeakChanged FINAL)
     Q_PROPERTY(float rightMaxPeak READ rightMaxPeak NOTIFY rightMaxPeakChanged FINAL)
 
-    Q_PROPERTY(PlaybackMeterStyle::MeterStyle meterStyle READ meterStyle WRITE setMeterStyle NOTIFY meterStyleChanged FINAL)
-    Q_PROPERTY(PlaybackMeterType::MeterType meterType READ meterType WRITE setMeterType NOTIFY meterTypeChanged FINAL)
-    Q_PROPERTY(
-        PlaybackMeterPosition::MeterPosition meterPosition READ meterPosition WRITE setMeterPosition NOTIFY meterPositionChanged FINAL)
     Q_PROPERTY(int meterSize READ meterSize WRITE setMeterSize NOTIFY meterSizeChanged FINAL)
 
     Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
@@ -58,9 +54,6 @@ public:
     float rightRecentPeak() const;
     float rightMaxPeak() const;
 
-    PlaybackMeterStyle::MeterStyle meterStyle() const;
-    PlaybackMeterType::MeterType meterType() const;
-    PlaybackMeterPosition::MeterPosition meterPosition() const;
     int meterSize() const;
 
     bool isPlaying() const;
@@ -76,9 +69,6 @@ public slots:
     void setRightRecentPeak(float newRightRecentPeak);
     void setRightMaxPeak(float newRightMaxPeak);
 
-    void setMeterStyle(PlaybackMeterStyle::MeterStyle style);
-    void setMeterType(PlaybackMeterType::MeterType type);
-    void setMeterPosition(PlaybackMeterPosition::MeterPosition position);
     void setMeterSize(int size);
 
 signals:
@@ -94,9 +84,6 @@ signals:
     void rightRecentPeakChanged();
     void rightMaxPeakChanged();
 
-    void meterStyleChanged();
-    void meterTypeChanged();
-    void meterPositionChanged();
     void meterSizeChanged();
 
     void isPlayingChanged();
@@ -108,14 +95,14 @@ private:
 
     float m_level = 0;
 
-    float m_leftChannelPressure = -60.0;
-    float m_leftChannelRMS = -60.0;
-    float m_leftRecentPeak = -60.0;
-    float m_leftMaxPeak = -60.0;
+    float m_leftChannelPressure = playback::MIN_DISPLAYED_DBFS;
+    float m_leftChannelRMS = playback::MIN_DISPLAYED_DBFS;
+    float m_leftRecentPeak = playback::MIN_DISPLAYED_DBFS;
+    float m_leftMaxPeak = playback::MIN_DISPLAYED_DBFS;
 
-    float m_rightChannelPressure = -60.0;
-    float m_rightChannelRMS = -60.0;
-    float m_rightRecentPeak = -60.0;
-    float m_rightMaxPeak = -60.0;
+    float m_rightChannelPressure = playback::MIN_DISPLAYED_DBFS;
+    float m_rightChannelRMS = playback::MIN_DISPLAYED_DBFS;
+    float m_rightRecentPeak = playback::MIN_DISPLAYED_DBFS;
+    float m_rightMaxPeak = playback::MIN_DISPLAYED_DBFS;
 };
 }

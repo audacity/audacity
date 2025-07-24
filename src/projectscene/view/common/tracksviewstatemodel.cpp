@@ -92,10 +92,6 @@ void TracksViewStateModel::init()
         emit isRecordingChanged();
     });
 
-    playbackConfiguration()->playbackMeterStyleChanged().onNotify(this, [this]() {
-        emit meterStyleChanged();
-    });
-
     m_meterModel = new playback::PlaybackMeterModel(this);
     emit meterModelChanged();
 }
@@ -210,11 +206,6 @@ bool TracksViewStateModel::isPlaying() const
 bool TracksViewStateModel::isRecording() const
 {
     return recordController()->isRecording();
-}
-
-au::playback::PlaybackMeterStyle::MeterStyle TracksViewStateModel::meterStyle() const
-{
-    return playbackConfiguration()->playbackMeterStyle();
 }
 
 au::playback::PlaybackMeterModel* TracksViewStateModel::meterModel() const

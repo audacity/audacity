@@ -29,10 +29,6 @@ class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(float rightChannelPressure READ rightChannelPressure NOTIFY rightChannelPressureChanged)
     Q_PROPERTY(float rightChannelRMS READ rightChannelRMS NOTIFY rightChannelRMSChanged)
 
-    Q_PROPERTY(PlaybackMeterStyle::MeterStyle meterStyle READ meterStyle NOTIFY meterStyleChanged FINAL)
-    Q_PROPERTY(PlaybackMeterType::MeterType meterType READ meterType NOTIFY meterTypeChanged FINAL)
-    Q_PROPERTY(PlaybackMeterPosition::MeterPosition meterPosition READ meterPosition NOTIFY meterPositionChanged FINAL)
-
     Q_PROPERTY(PlaybackMeterModel * meterModel READ meterModel NOTIFY meterModelChanged FINAL)
 
     Q_PROPERTY(float level READ level NOTIFY levelChanged FINAL)
@@ -48,18 +44,12 @@ public:
     float rightChannelPressure() const;
     float rightChannelRMS() const;
 
-    PlaybackMeterStyle::MeterStyle meterStyle() const;
-    PlaybackMeterType::MeterType meterType() const;
-    PlaybackMeterPosition::MeterPosition meterPosition() const;
     PlaybackMeterModel* meterModel() const;
 
     float level() const;
 
     bool isPlaying() const;
 
-    Q_INVOKABLE void positionChangeRequested(PlaybackMeterPosition::MeterPosition position);
-    Q_INVOKABLE void styleChangeRequested(PlaybackMeterStyle::MeterStyle style);
-    Q_INVOKABLE void typeChangeRequested(PlaybackMeterType::MeterType type);
     Q_INVOKABLE void volumeLevelChangeRequested(float level);
 
 public slots:
@@ -76,9 +66,6 @@ signals:
     void rightChannelPressureChanged(float rightChannelPressure);
     void rightChannelRMSChanged(float rightChannelRMS);
 
-    void meterStyleChanged();
-    void meterTypeChanged();
-    void meterPositionChanged();
     void meterModelChanged();
 
     void levelChanged();
@@ -92,11 +79,10 @@ private:
 
     PlaybackMeterModel* m_meterModel = nullptr;
 
-    float m_leftChannelPressure = -60.0;
-    float m_leftChannelRMS = -60.0;
-
-    float m_rightChannelPressure = -60.0;
-    float m_rightChannelRMS = -60.0;
+    float m_leftChannelPressure = playback::MIN_DISPLAYED_DBFS;
+    float m_leftChannelRMS = playback::MIN_DISPLAYED_DBFS;
+    float m_rightChannelPressure = playback::MIN_DISPLAYED_DBFS;
+    float m_rightChannelRMS = playback::MIN_DISPLAYED_DBFS;
 
     float m_level = 0;
 };

@@ -11,42 +11,49 @@
 
 using namespace au::playback;
 
-static constexpr double MIN_VOLUME_DB = -60.0;
-static constexpr double MAX_VOLUME_DB = 0.0;
-
-static constexpr int LOW_RESOLUTION_METER_THRESHOLD = 400;
-static constexpr int HIGH_RESOLUTION_METER_THRESHOLD = 1500;
-static constexpr int MEDIUM_RESOLUTION_METER_THRESHOLD = 700;
-
+namespace {
+constexpr double MAX_VOLUME_DB = 0.0;
+constexpr int MIN_STEP_DISTANCE = 30;
 struct StepValues {
     int threshold;
     int fullStep;
     int smallStep;
 };
 
-static StepValues roundUpToFixedValue(int meterSize)
+StepValues roundUpToFixedValue(int meterSize, double dbRange)
 {
-    const std::vector<StepValues> steps = {
-        { HIGH_RESOLUTION_METER_THRESHOLD, 1, 0 },
-        { MEDIUM_RESOLUTION_METER_THRESHOLD, 3, 1 },
-        { LOW_RESOLUTION_METER_THRESHOLD, 6, 2 },
-        { 0, 12, 3 }
-    };
+    const std::array<std::array<int, 2>, 7> fullStepsInc = { { { 1, 0 }, { 2, 1 }, { 3, 1 }, { 6, 2 }, { 12, 3 }, { 24, 6 }, { 48, 6 } } };
 
-    for (const auto& step : steps) {
-        if (meterSize >= step.threshold) {
-            return step;
+    for (const auto& [fullStep, smallStep] : fullStepsInc) {
+        if (meterSize / MIN_STEP_DISTANCE >= std::abs(dbRange) / fullStep) {
+            return { meterSize, fullStep, smallStep };
         }
     }
 
-    return steps.back();
+    return {};
+}
+}
+
+DbLogMeter::DbLogMeter(int meterSize, double dbRange)
+    : m_meterSize(meterSize), m_dbRange(dbRange)
+{
+}
+
+void DbLogMeter::setMeterSize(int meterSize)
+{
+    m_meterSize = meterSize;
+}
+
+void DbLogMeter::setDbRange(double dbRange)
+{
+    m_dbRange = dbRange;
 }
 
 double DbLogMeter::stepToPosition(double step) const
 {
-    const double clampedValue = std::clamp(step, MIN_VOLUME_DB, MAX_VOLUME_DB);
+    const double clampedValue = std::clamp(step, m_dbRange, MAX_VOLUME_DB);
 
-    return (clampedValue - MIN_VOLUME_DB) / (MAX_VOLUME_DB - MIN_VOLUME_DB);
+    return (clampedValue - m_dbRange) / (MAX_VOLUME_DB - m_dbRange);
 }
 
 double DbLogMeter::sampleToPosition(double sample) const
@@ -61,21 +68,20 @@ std::string DbLogMeter::sampleToText(double sample) const
     return ss.str();
 }
 
-std::vector<double> DbLogMeter::fullSteps(int meterSize) const
+std::vector<double> DbLogMeter::fullSteps() const
 {
-    if (meterSize <= 0) {
+    if (m_meterSize <= 0) {
         return {};
     }
 
-    const StepValues stepValues = roundUpToFixedValue(meterSize);
+    const StepValues stepValues = roundUpToFixedValue(m_meterSize, m_dbRange);
 
     if (stepValues.fullStep == 0) {
         return {};
     }
 
     std::vector<double> steps;
-    int value = MIN_VOLUME_DB;
-
+    int value = m_dbRange;
     while (value <= MAX_VOLUME_DB) {
         steps.push_back(value);
         value += stepValues.fullStep;
@@ -84,20 +90,20 @@ std::vector<double> DbLogMeter::fullSteps(int meterSize) const
     return steps;
 }
 
-std::vector<double> DbLogMeter::smallSteps(int meterSize) const
+std::vector<double> DbLogMeter::smallSteps() const
 {
-    if (meterSize <= 0) {
+    if (m_meterSize <= 0) {
         return {};
     }
 
-    const StepValues stepValues = roundUpToFixedValue(meterSize);
+    const StepValues stepValues = roundUpToFixedValue(m_meterSize, m_dbRange);
 
     if (stepValues.smallStep == 0) {
         return {};
     }
 
     std::vector<double> steps;
-    int value = MIN_VOLUME_DB;
+    int value = m_dbRange;
 
     while (value < MAX_VOLUME_DB) {
         if (value % stepValues.fullStep != 0) {
