@@ -122,12 +122,12 @@ TEST_F(Project_Audacity4ProjectTests, Load_FileDoesNotExist_ReturnsProjectFileNo
     EXPECT_FALSE(ret.success());
     EXPECT_EQ(ret.code(), static_cast<int>(Err::ProjectFileNotFound));
 
-    const auto title = ret.data("title");
-    const auto body  = ret.data("body");
+    const auto title = ret.data<std::string>("title", std::string(""));
+    const auto body  = ret.data<std::string>("body", std::string(""));
 
-    ASSERT_TRUE(title.has_value());
-    ASSERT_TRUE(body.has_value());
-    EXPECT_THAT(std::any_cast<std::string>(title), ::testing::HasSubstr("Cannot read file"));
+    ASSERT_TRUE(!title.empty());
+    ASSERT_TRUE(!body.empty());
+    EXPECT_THAT(title, ::testing::HasSubstr("Cannot read file"));
     //can't close m_currentProject->close();
 }
 
@@ -142,7 +142,7 @@ TEST_F(Project_Audacity4ProjectTests, Load_FileCannotBeOpened_ReturnsReadProtect
 
     EXPECT_FALSE(ret.success());
     EXPECT_EQ(ret.code(), static_cast<int>(Err::ProjectFileIsReadProtected));
-    EXPECT_TRUE(ret.data("body").has_value());
+    EXPECT_TRUE(!ret.data<std::string>("body", std::string("")).empty());
     //can't close m_currentProject->close();
 }
 
@@ -171,7 +171,7 @@ TEST_F(Project_Audacity4ProjectTests, Load_NonEmptyFileIsWriteProtected_ReturnsW
 
     EXPECT_FALSE(ret.success());
     EXPECT_EQ(ret.code(), static_cast<int>(Err::ProjectFileIsWriteProtected));
-    EXPECT_TRUE(ret.data("body").has_value());
+    EXPECT_TRUE(!ret.data<std::string>("body", std::string("")).empty());
     m_currentProject->close();
 }
 } // namespace au::project
