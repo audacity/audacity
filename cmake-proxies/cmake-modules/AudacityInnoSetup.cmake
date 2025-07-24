@@ -2,10 +2,10 @@
 # The target will be only generated if InnoSetup 6 is installed.
 
 find_program(
-    INNO_SETUP_COMPILER 
+    INNO_SETUP_COMPILER
     NAMES iscc ISCC
-    HINTS 
-        "C:/Program Files (x86)/Inno Setup 6" 
+    HINTS
+        "C:/Program Files (x86)/Inno Setup 6"
         "C:/Program Files/Inno Setup 6"
 )
 
@@ -24,6 +24,7 @@ if( INNO_SETUP_COMPILER )
                 -DINNO_SETUP_COMPILER=${INNO_SETUP_COMPILER}
                 -DEMBED_MANUAL=${${_OPT}package_manual}
                 -DBUILDING_64_BIT=${IS_64BIT}
+                -DBUILDING_ARM64=${IS_ARM64}
                 -DSIGN=${${_OPT}perform_codesign}
                 -D CONFIG=$<CONFIG>
                 -D USE_GPL3=${${_OPT}bundle_gplv3}
