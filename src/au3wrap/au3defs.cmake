@@ -88,6 +88,7 @@ set(AU3_INCLUDE
     ${expat_INCLUDE_DIRS}
     ${PortAudio_INCLUDE_DIR}
     ${libmp3lame_INCLUDE_DIRS}
+    ${wavpack_INCLUDE_DIRS}
 
     ${AUDACITY_ROOT}/lib-src/sqlite
     ${AUDACITY_ROOT}/lib-src/pffft
@@ -183,6 +184,7 @@ set(AU3_LINK
     expat::expat
     portaudio::portaudio
     libmp3lame::libmp3lame
+    wavpack::wavpack
     sqlite
     soxr
     pffft

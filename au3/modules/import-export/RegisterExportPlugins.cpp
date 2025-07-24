@@ -4,6 +4,7 @@
 
 #include "modules/import-export/mod-mp3/ExportMP3.h"
 #include "ExportFFmpeg.h"
+#include "modules/import-export/mod-wavpack/ExportWavPack.h"
 #include "libraries/lib-import-export/ExportPluginRegistry.h"
 
 #include "RegisterExportPlugins.h"
@@ -21,4 +22,9 @@ void RegisterExportPlugins()
         [] { return std::make_unique<ExportFFmpeg>(); }
     };
 #endif
+
+    static ExportPluginRegistry::RegisteredPlugin sWavPackPlugin{
+        "WavPack",
+        []{ return std::make_unique< ExportWavPack >(); }
+    };
 }
