@@ -2508,9 +2508,9 @@ bool Au3Interaction::splitStereoTracksToLRMono(const TrackIdList& tracksIds)
         }
 
         const auto viewState = globalContext()->currentProject()->viewState();
-        const int currentHeight = viewState->trackHeight(trackId).val;
-        viewState->setTrackHeight(unlinkedTracks[0]->GetId(), currentHeight / 2);
-        viewState->setTrackHeight(unlinkedTracks[1]->GetId(), currentHeight / 2);
+        const int newHeight = std::max(viewState->trackHeight(trackId).val / 2, viewState->trackDefaultHeight());
+        viewState->setTrackHeight(unlinkedTracks[0]->GetId(), newHeight);
+        viewState->setTrackHeight(unlinkedTracks[1]->GetId(), newHeight);
 
         moveTracksTo({ unlinkedTracks[0]->GetId(), unlinkedTracks[1]->GetId() }, trackPosition(trackId));
 
@@ -2551,9 +2551,9 @@ bool Au3Interaction::splitStereoTracksToCenterMono(const TrackIdList& tracksIds)
         }
 
         const auto viewState = globalContext()->currentProject()->viewState();
-        const int currentHeight = viewState->trackHeight(trackId).val;
-        viewState->setTrackHeight(unlinkedTracks[0]->GetId(), currentHeight / 2);
-        viewState->setTrackHeight(unlinkedTracks[1]->GetId(), currentHeight / 2);
+        const int newHeight = std::max(viewState->trackHeight(trackId).val / 2, viewState->trackDefaultHeight());
+        viewState->setTrackHeight(unlinkedTracks[0]->GetId(), newHeight);
+        viewState->setTrackHeight(unlinkedTracks[1]->GetId(), newHeight);
 
         moveTracksTo({ unlinkedTracks[0]->GetId(), unlinkedTracks[1]->GetId() }, trackPosition(trackId));
 
@@ -2670,13 +2670,16 @@ bool Au3Interaction::makeStereoTrack(const TrackId left, const TrackId right)
     const Track rightTrack = DomConverter::track(au3RightTrack);
 
     ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    tracks.Insert(au3LeftTrack, mix, true);
+    tracks.Append(mix, true);
+    prj->notifyAboutTrackAdded(DomConverter::track(mix.get()));
+
+    moveTracksTo({ mix->GetId() }, trackPosition(left));
+
     tracks.Remove(*au3LeftTrack);
     tracks.Remove(*au3RightTrack);
 
     viewState->setTrackHeight(mix->GetId(), newTrackHeight);
 
-    prj->notifyAboutTrackAdded(DomConverter::track(mix.get()));
     prj->notifyAboutTrackRemoved(leftTrack);
     prj->notifyAboutTrackRemoved(rightTrack);
 

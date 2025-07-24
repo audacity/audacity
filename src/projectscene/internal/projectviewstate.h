@@ -78,6 +78,8 @@ public:
     muse::ValCh<bool> altPressed() const override;
     muse::ValCh<bool> ctrlPressed() const override;
 
+    int trackDefaultHeight() const override;
+
 private:
     struct TrackData {
         muse::ValCh<int> height;

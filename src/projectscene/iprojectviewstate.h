@@ -65,6 +65,8 @@ public:
 
     virtual muse::ValCh<bool> altPressed() const = 0;
     virtual muse::ValCh<bool> ctrlPressed() const = 0;
+
+    virtual int trackDefaultHeight() const = 0;
 };
 
 using IProjectViewStatePtr = std::shared_ptr<IProjectViewState>;
