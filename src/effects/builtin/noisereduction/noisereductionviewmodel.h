@@ -24,7 +24,7 @@ class NoiseReductionViewModel : public AbstractEffectModel
     Q_OBJECT
     Q_PROPERTY(bool isApplyAllowed READ isApplyAllowed NOTIFY isApplyAllowedChanged FINAL)
     Q_PROPERTY(int reduction READ reduction WRITE setReduction NOTIFY reductionChanged FINAL)
-    Q_PROPERTY(float sensitivity READ sensitivity WRITE setSensitivity NOTIFY sensitivityChanged FINAL)
+    Q_PROPERTY(double sensitivity READ sensitivity WRITE setSensitivity NOTIFY sensitivityChanged FINAL)
     Q_PROPERTY(
         int frequencySmoothingBands READ frequencySmoothingBands WRITE setFrequencySmoothingBands NOTIFY frequencySmoothingBandsChanged FINAL)
     Q_PROPERTY(NoiseReductionMode reductionMode READ reductionMode WRITE setReductionMode NOTIFY reductionModeChanged FINAL)
@@ -41,9 +41,8 @@ public:
 
     int reduction() const;
     void setReduction(int reduction);
-
-    float sensitivity() const;
-    void setSensitivity(float sensitivity);
+    double sensitivity() const;
+    void setSensitivity(double sensitivity);
 
     int frequencySmoothingBands() const;
     void setFrequencySmoothingBands(int frequencySmoothingBands);

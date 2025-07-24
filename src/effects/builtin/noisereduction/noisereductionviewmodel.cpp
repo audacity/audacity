@@ -49,7 +49,7 @@ void NoiseReductionViewModel::setReduction(int newReduction)
     emit reductionChanged();
 }
 
-float NoiseReductionViewModel::sensitivity() const
+double NoiseReductionViewModel::sensitivity() const
 {
     const NoiseReductionEffect* const fx = effect();
     if (!fx) {
@@ -58,8 +58,11 @@ float NoiseReductionViewModel::sensitivity() const
     return fx->mSettings->mNewSensitivity;
 }
 
-void NoiseReductionViewModel::setSensitivity(float newSensitivity)
+void NoiseReductionViewModel::setSensitivity(double newSensitivity)
 {
+    if (!m_inited) {
+        return;
+    }
     if (muse::is_equal(sensitivity(), newSensitivity)) {
         return;
     }
@@ -82,6 +85,9 @@ int NoiseReductionViewModel::frequencySmoothingBands() const
 
 void NoiseReductionViewModel::setFrequencySmoothingBands(int newFrequencySmoothingBands)
 {
+    if (!m_inited) {
+        return;
+    }
     if (frequencySmoothingBands() == newFrequencySmoothingBands) {
         return;
     }
@@ -105,6 +111,10 @@ NoiseReductionMode NoiseReductionViewModel::reductionMode() const
 
 void NoiseReductionViewModel::setReductionMode(NoiseReductionMode mode)
 {
+    if (!m_inited) {
+        return;
+    }
+
     if (reductionMode() == mode) {
         return;
     }

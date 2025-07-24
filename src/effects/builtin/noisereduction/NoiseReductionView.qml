@@ -8,7 +8,7 @@ import "../common"
 EffectBase {
     id: root
 
-    property string title: qsTrc("effects/noisereduction", "Amplify")
+    property string title: qsTrc("effects/noisereduction", "Noise Reduction")
     property bool isApplyAllowed: noiseReduction.isApplyAllowed
 
     width: row.width
@@ -44,21 +44,18 @@ EffectBase {
                     id: getNoiseProfileBox
                     width: parent.width
 
-                    Text {
+                    StyledTextLabel {
                         text: qsTrc("effects/noisereduction", "Step 1")
-                        font.family: ui.theme.bodyFont.family
-                        font.pixelSize: ui.theme.bodyFont.pixelSize
+                        horizontalAlignment: Text.AlignLeft
                         font.bold: true
-                        color: ui.theme.fontPrimaryColor
                         Layout.fillWidth: true
                         Layout.margins: 16
                     }
 
-                    Text {
+                    StyledTextLabel {
                         text: qsTrc("effects/noisereduction", "Select a few seconds of isolated noise so Audacity knows what to filter out, then click Get noise profile.")
-                        font.family: ui.theme.bodyFont.family
-                        font.pixelSize: ui.theme.bodyFont.pixelSize
                         wrapMode: Text.Wrap
+                        horizontalAlignment: Text.AlignLeft
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
@@ -90,12 +87,10 @@ EffectBase {
                     id: noiseReductionColumn
                     width: parent.width
 
-                    Text {
+                    StyledTextLabel {
                         text: qsTrc("effects/noisereduction", "Step 2")
-                        font.family: ui.theme.bodyFont.family
-                        font.pixelSize: ui.theme.bodyFont.pixelSize
+                        horizontalAlignment: Text.AlignLeft
                         font.bold: true
-                        color: ui.theme.fontPrimaryColor
                         Layout.fillWidth: true
                         Layout.margins: 16
                     }
@@ -115,6 +110,9 @@ EffectBase {
                         Layout.bottomMargin: 16
 
                         value: noiseReduction.reduction
+                        onValueChanged: {
+                            noiseReduction.reduction = value
+                        }
                         measureUnitsSymbol: qsTrc("global", "dB")
                         from: 0
                         to: 48
@@ -136,13 +134,16 @@ EffectBase {
                         Layout.bottomMargin: 16
 
                         value: noiseReduction.sensitivity
+                        onValueChanged: {
+                            noiseReduction.sensitivity = value
+                        }
                         from: 0.01
                         to: 24
                         isInt: false
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/noisereduction", "Freequency smoothing")
+                        text: qsTrc("effects/noisereduction", "Frequency smoothing")
                         horizontalAlignment: Text.AlignLeft
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
@@ -156,6 +157,9 @@ EffectBase {
                         Layout.bottomMargin: 16
 
                         value: noiseReduction.frequencySmoothingBands
+                        onValueChanged: {
+                            noiseReduction.frequencySmoothingBands = value
+                        }
                         measureUnitsSymbol: qsTrc("effects/noisereduction", "bands")
                         from: 0
                         to: 12

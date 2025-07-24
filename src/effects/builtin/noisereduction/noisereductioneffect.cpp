@@ -435,6 +435,7 @@ bool NoiseReductionEffect::Process(EffectInstance&, EffectSettings&)
 
     auto track = *(outputs.Get().Selected<const WaveTrack>()).begin();
     if (!track) {
+        mLastError = XO("No audio selected.").Translation().ToStdString();
         return false;
     }
 
