@@ -128,27 +128,32 @@ bool NoiseReductionViewModel::isApplyAllowed() const
     return fx->mStatistics != nullptr;
 }
 
-bool NoiseReductionViewModel::getNoiseProfile()
+void NoiseReductionViewModel::getNoiseProfile()
 {
     NoiseReductionEffect* const fx = effect();
     IF_ASSERT_FAILED(fx) {
-        return false;
+        return;
     }
 
     const std::shared_ptr<EffectInstance> instance = instancesRegister()->instanceById(instanceId());
     IF_ASSERT_FAILED(instance) {
-        return false;
+        return;
     }
 
     const auto wasAllowed = isApplyAllowed();
     fx->mSettings->mDoProfile = true;
     auto success = false;
     modifySettings([&](EffectSettings& settings) {
+        fx->ResetLastError();
         success = fx->Process(*instance, settings);
     });
+
     if (isApplyAllowed() && !wasAllowed) {
         emit isApplyAllowedChanged();
     }
 
-    return success;
+    if (!fx->GetLastError().empty()) {
+        success ? interactive()->warningSync(muse::trc("effects/noisereduction", "Warning"), fx->GetLastError())
+        : interactive()->errorSync(muse::trc("effects/noisereduction", "Error"), fx->GetLastError());
+    }
 }

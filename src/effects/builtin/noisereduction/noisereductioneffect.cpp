@@ -40,7 +40,6 @@
 *//********************************************************************/
 #include "noisereductioneffect.h"
 
-#include "libraries/lib-basic-ui/BasicUI.h"
 #include "libraries/lib-effects/EffectOutputTracks.h"
 #include "libraries/lib-fft/FFT.h"
 #include "libraries/lib-wave-track-fft/TrackSpectrumTransformer.h"
@@ -234,7 +233,7 @@ public:
     ~Worker();
 
     bool Process(
-        eWindowFunctions inWindowType, eWindowFunctions outWindowType, TrackList& tracks, double mT0, double mT1);
+        eWindowFunctions inWindowType, eWindowFunctions outWindowType, TrackList& tracks, double mT0, double mT1, std::string& error);
 
     static bool Processor(SpectrumTransformer& transformer);
 
@@ -286,6 +285,11 @@ NoiseReductionEffect::NoiseReductionEffect()
 
 NoiseReductionEffect::~NoiseReductionEffect()
 {
+}
+
+void NoiseReductionEffect::ResetLastError()
+{
+    mLastError.clear();
 }
 
 // ComponentInterface implementation
@@ -414,28 +418,6 @@ bool NoiseReductionEffect::Settings::PrefsIO(bool read)
     }
 }
 
-bool NoiseReductionEffect::Settings::Validate(NoiseReductionEffect* effect) const
-{
-    using namespace BasicUI;
-    if (StepsPerWindow() < windowTypesInfo[mWindowTypes].minSteps) {
-        ShowMessageBox(XO("Steps per block are too few for the window types."));
-        return false;
-    }
-
-    if (StepsPerWindow() > WindowSize()) {
-        ShowMessageBox(XO("Steps per block cannot exceed the window size."));
-        return false;
-    }
-
-    if (mMethod == DM_MEDIAN && StepsPerWindow() > 4) {
-        ShowMessageBox(XO(
-                           "Median method is not implemented for more than four steps per window."));
-        return false;
-    }
-
-    return true;
-}
-
 auto MyTransformer::NewWindow(size_t windowSize) -> std::unique_ptr<Window>
 {
     return std::make_unique<MyWindow>(windowSize);
@@ -467,13 +449,13 @@ bool NoiseReductionEffect::Process(EffectInstance&, EffectSettings&)
             spectrumSize, track->GetRate(), mSettings->mWindowTypes);
     } else if (mStatistics->mWindowSize != mSettings->WindowSize()) {
         // possible only with advanced settings
-        BasicUI::ShowMessageBox(
-            XO("You must specify the same window size for steps 1 and 2."));
+        mLastError
+            = XO("You must specify the same window size for steps 1 and 2.").Translation().ToStdString();
         return false;
     } else if (mStatistics->mWindowTypes != mSettings->mWindowTypes) {
         // A warning only
-        BasicUI::ShowMessageBox(
-            XO("Warning: window types are not the same as for profiling."));
+        mLastError
+            = XO("Warning: window types are not the same as for profiling.").Translation().ToStdString();
     }
 
     eWindowFunctions inWindowType, outWindowType;
@@ -512,7 +494,7 @@ bool NoiseReductionEffect::Process(EffectInstance&, EffectSettings&)
 #endif
     };
     bool bGoodResult
-        =worker.Process(inWindowType, outWindowType, outputs.Get(), mT0, mT1);
+        = worker.Process(inWindowType, outWindowType, outputs.Get(), mT0, mT1, mLastError);
     const auto wasProfile = mSettings->mDoProfile;
     if (mSettings->mDoProfile) {
         if (bGoodResult) {
@@ -536,18 +518,17 @@ NoiseReductionEffect::Worker::~Worker()
 
 bool NoiseReductionEffect::Worker::Process(
     eWindowFunctions inWindowType, eWindowFunctions outWindowType,
-    TrackList& tracks, double inT0, double inT1)
+    TrackList& tracks, double inT0, double inT1, std::string& error)
 {
     mProgressTrackCount = 0;
     for (auto track : tracks.Selected<WaveTrack>()) {
         mProgressWindowCount = 0;
         if (track->GetRate() != mStatistics.mRate) {
             if (mDoProfile) {
-                BasicUI::ShowMessageBox(
-                    XO("All noise profile data must have the same sample rate."));
+                error = XO("All noise profile data must have the same sample rate.").Translation().ToStdString();
             } else {
-                BasicUI::ShowMessageBox(XO(
-                                            "The sample rate of the noise profile must match that of the sound to be processed."));
+                error
+                    = XO("The sample rate of the noise profile must match that of the sound to be processed.").Translation().ToStdString();
             }
             return false;
         }
@@ -612,7 +593,7 @@ bool NoiseReductionEffect::Worker::Process(
 
     if (mDoProfile) {
         if (mStatistics.mTotalWindows == 0) {
-            BasicUI::ShowMessageBox(XO("Selected noise profile is too short."));
+            error = XO("Selected noise profile is too short.").Translation().ToStdString();
             return false;
         }
     }

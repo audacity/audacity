@@ -45,6 +45,8 @@ public:
     NoiseReductionEffect();
     virtual ~NoiseReductionEffect();
 
+    void ResetLastError();
+
     using Effect::TrackProgress;
 
     // ComponentInterface implementation
@@ -71,7 +73,6 @@ public:
         }
 
         bool PrefsIO(bool read);
-        bool Validate(NoiseReductionEffect* effect) const;
 
         size_t WindowSize() const
         {

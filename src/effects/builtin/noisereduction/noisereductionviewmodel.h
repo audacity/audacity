@@ -9,6 +9,8 @@
 #include "effects/effects_base/ieffectsprovider.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
 
+#include "global/iinteractive.h"
+
 namespace au::effects {
 class NoiseReductionEffect;
 
@@ -29,6 +31,7 @@ class NoiseReductionViewModel : public AbstractEffectModel
 
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectInstancesRegister> instancesRegister;
+    muse::Inject<muse::IInteractive> interactive;
 
 public:
     NoiseReductionViewModel() = default;
@@ -48,7 +51,7 @@ public:
     NoiseReductionMode reductionMode() const;
     void setReductionMode(NoiseReductionMode mode);
 
-    Q_INVOKABLE bool getNoiseProfile();
+    Q_INVOKABLE void getNoiseProfile();
 
 signals:
     void isApplyAllowedChanged();

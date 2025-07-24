@@ -68,9 +68,10 @@ EffectBase {
                         id: getNoiseProfileButton
                         text: qsTrc("effects/noisereduction", "Get noise profile")
                         onClicked: {
-                            if (noiseReduction.getNoiseProfile()) {
-                                root.dialogView.reject()
-                            }
+                            noiseReduction.getNoiseProfile()
+                            // The user has taken the profile of a small selection of noise.
+                            // Close the dialog to make clearer that now, the audio to be processed must be selected.
+                            root.dialogView.reject()
                         }
                         height: 28
                         Layout.fillWidth: true
