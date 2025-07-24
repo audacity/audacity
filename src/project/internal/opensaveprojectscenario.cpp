@@ -456,11 +456,10 @@ static std::string cloudStatusCodeErrorMessage(const Ret& ret, bool withHelp = f
                   .arg("500 Internal server error").toStdString();
         break;
     case int(cloud::Err::UnknownStatusCode): {
-        std::any status = ret.data("status");
-        if (status.has_value()) {
+        if (const auto status = ret.data<int>("status", -1); status != -1) {
             //: %1 will be replaced with the error code that MuseScore.com returned, which is a number.
             message = muse::qtrc("project/cloud", "MuseScore.com returned an unknown error code: %1.")
-                      .arg(std::any_cast<int>(status)).toStdString();
+                      .arg(status).toStdString();
         } else {
             message = muse::trc("project/cloud", "MuseScore.com returned an unknown error code.");
         }
@@ -638,11 +637,10 @@ Ret OpenSaveProjectScenario::showAudioCloudShareError(const Ret& ret) const
                                          "Please activate your account via the link in the activation email.");
         break;
     case int(cloud::Err::UnknownStatusCode): {
-        std::any status = ret.data("status");
-        if (status.has_value()) {
+        if (const auto status = ret.data<int>("status", -1); status != -1) {
             //: %1 will be replaced with the error code that audio.com returned, which is a number.
             msg = muse::qtrc("project/share", "Audio.com returned an unknown error code: %1.")
-                  .arg(std::any_cast<int>(status)).toStdString();
+                  .arg(status).toStdString();
         } else {
             msg = muse::trc("project/share", "Audio.com returned an unknown error code.");
         }

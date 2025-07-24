@@ -639,24 +639,15 @@ bool ProjectActionsController::shouldRetryLoadAfterError(const Ret& ret, const m
 
 void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const muse::io::path_t& filepath) const
 {
-    std::string title;
-    std::string body;
+    const std::string title
+        = ret.data<std::string>("title",
+                                muse::mtrc("project", "Cannot read file %1")
+                                .arg(io::toNativeSeparators(filepath).toString())
+                                .toStdString());
 
-    if (std::any retTitle = ret.data("title"); retTitle.has_value()) {
-        title = std::any_cast<std::string>(retTitle);
-    } else {
-        title = muse::mtrc("project", "Cannot read file %1").arg(io::toNativeSeparators(filepath).toString()).toStdString();
-    }
-    if (std::any retBody = ret.data("body"); retBody.has_value()) {
-        body = std::any_cast<std::string>(retBody);
-    } else {
-        if (!ret.text().empty()) {
-            body = ret.text();
-        } else {
-            body = muse::trc("project", "An error occurred while reading this file.");
-        }
-    }
-
+    const std::string body
+        = ret.data<std::string>("body", !ret.text().empty() ? ret.text() : muse::trc("project",
+                                                                                     "An error occurred while reading this file."));
     interactive()->error(title, body);
 }
 
