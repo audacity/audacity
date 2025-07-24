@@ -66,6 +66,7 @@ populate(wxwidgets "wxwidgets/3.1.3.6")
 populate(expat "expat/2.0.5")
 populate(portaudio "portaudio/19.7.0")
 populate(libmp3lame "libmp3lame/3.100")
+populate(wavpack "wavpack/5.7.0")
 
 if (NOT OS_IS_LIN)
     populate(zlib "zlib/1.2.13")

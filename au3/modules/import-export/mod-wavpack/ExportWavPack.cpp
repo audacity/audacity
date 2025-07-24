@@ -14,278 +14,134 @@
 
 **********************************************************************/
 
-#include "Export.h"
+#include "libraries/lib-import-export/Export.h"
 #include "wxFileNameWrapper.h"
 #include "Mix.h"
 
 #include <wavpack/wavpack.h>
 
-#include <rapidjson/document.h>
-
 #include "Track.h"
-#include "Tags.h"
+#include "libraries/lib-tags/Tags.h"
 
-#include "ExportPluginHelpers.h"
-#include "ExportOptionsEditor.h"
-#include "ExportPluginRegistry.h"
+#include "libraries/lib-import-export/ExportPluginHelpers.h"
+#include "libraries/lib-import-export/ExportOptionsEditor.h"
+#include "libraries/lib-import-export/ExportPluginRegistry.h"
 
-namespace {
-enum : int {
-    OptionIDQuality = 0,
-    OptionIDBitDepth,
-    OptionIDHybridMode,
-    OptionIDCreateCorrection,
-    OptionIDBitRate
-};
+#include "ExportWavPack.h"
 
-const TranslatableStrings ExportQualityNames{
-    XO("Low Quality (Fast)"),
-    XO("Normal Quality"),
-    XO("High Quality (Slow)"),
-    XO("Very High Quality (Slowest)"),
-};
-
-const TranslatableStrings ExportBitDepthNames {
-    XO("16 bit"),
-    XO("24 bit"),
-    XO("32 bit float"),
-};
-
-/*
-Copied from ExportMP2.cpp by
-   Joshua Haberman
-   Markus Meyer
-*/
-
-// i18n-hint bps abbreviates "bits per sample"
-inline TranslatableString n_bps(int n) { return XO("%.1f bps").Format(n / 10.0); }
-
-const TranslatableStrings BitRateNames {
-    n_bps(22),
-    n_bps(25),
-    n_bps(30),
-    n_bps(35),
-    n_bps(40),
-    n_bps(45),
-    n_bps(50),
-    n_bps(60),
-    n_bps(70),
-    n_bps(80),
-};
-
-const std::initializer_list<ExportOption> ExportWavPackOptions {
-    {
-        OptionIDQuality, XO("Quality"),
-        1,
-        ExportOption::TypeEnum,
-        { 0, 1, 2, 3 },
-        ExportQualityNames
-    },
-    {
-        OptionIDBitDepth, XO("Bit Depth"),
-        16,
-        ExportOption::TypeEnum,
-        { 16, 24, 32 },
-        ExportBitDepthNames
-    },
-    {
-        OptionIDHybridMode, XO("Hybrid Mode"),
-        false
-    },
-    {
-        OptionIDCreateCorrection, XO("Create Correction(.wvc) File"),
-        false,
-        ExportOption::ReadOnly
-    },
-    {
-        OptionIDBitRate, XO("Bit Rate"),
-        40,
-        ExportOption::TypeEnum,
-        { 22, 25, 30, 35, 40, 45, 50, 60, 70, 80 },
-        BitRateNames
-    }
-};
-
-class ExportOptionsWavPackEditor final : public ExportOptionsEditor
+ExportOptionsWavPackEditor::ExportOptionsWavPackEditor(Listener* listener)
+    : mListener(listener)
 {
-    Listener* mListener{ nullptr };
-    std::vector<ExportOption> mOptions = ExportWavPackOptions;
-    std::unordered_map<ExportOptionID, ExportValue> mValues;
-public:
-
-    ExportOptionsWavPackEditor(Listener* listener)
-        : mListener(listener)
-    {
-        for (const auto& option : mOptions) {
-            mValues[option.id] = option.defaultValue;
-        }
+    for (const auto& option : mOptions) {
+        mValues[option.id] = option.defaultValue;
     }
-
-    int GetOptionsCount() const override
-    {
-        return static_cast<int>(mOptions.size());
-    }
-
-    bool GetOption(int index, ExportOption& option) const override
-    {
-        if (index >= 0 && index < mOptions.size()) {
-            option = mOptions[index];
-            return true;
-        }
-        return false;
-    }
-
-    bool GetValue(ExportOptionID id, ExportValue& value) const override
-    {
-        const auto it = mValues.find(id);
-        if (it != mValues.end()) {
-            value = it->second;
-            return true;
-        }
-        return false;
-    }
-
-    bool SetValue(ExportOptionID id, const ExportValue& value) override
-    {
-        auto it = mValues.find(id);
-        if (it == mValues.end() || value.index() != it->second.index()) {
-            return false;
-        }
-
-        it->second = value;
-        if (id == OptionIDHybridMode) {
-            OnHybridModeChange(*std::get_if<bool>(&value));
-
-            if (mListener) {
-                mListener->OnExportOptionChangeBegin();
-                mListener->OnExportOptionChange(mOptions[OptionIDCreateCorrection]);
-                mListener->OnExportOptionChange(mOptions[OptionIDBitRate]);
-                mListener->OnExportOptionChangeEnd();
-            }
-        }
-        return true;
-    }
-
-    SampleRateList GetSampleRateList() const override
-    {
-        return {};
-    }
-
-    void Load(const audacity::BasicSettings& config) override
-    {
-        auto quality = std::get_if<int>(&mValues[OptionIDQuality]);
-        auto bitDepth = std::get_if<int>(&mValues[OptionIDBitDepth]);
-        auto hybridMode = std::get_if<bool>(&mValues[OptionIDHybridMode]);
-        auto createCorrection = std::get_if<bool>(&mValues[OptionIDCreateCorrection]);
-        auto bitRate = std::get_if<int>(&mValues[OptionIDBitRate]);
-
-        config.Read(L"/FileFormats/WavPackEncodeQuality", quality);
-        config.Read(L"/FileFormats/WavPackBitDepth", bitDepth);
-        config.Read(L"/FileFormats/WavPackHybridMode", hybridMode);
-        config.Read(L"/FileFormats/WavPackCreateCorrectionFile", createCorrection);
-        config.Read(L"/FileFormats/WavPackBitrate", bitRate);
-
-        OnHybridModeChange(*hybridMode);
-    }
-
-    void Store(audacity::BasicSettings& config) const override
-    {
-        auto it = mValues.find(OptionIDQuality);
-        if (it != mValues.end()) {
-            config.Write(L"/FileFormats/WavPackEncodeQuality", *std::get_if<int>(&it->second));
-        }
-
-        it = mValues.find(OptionIDBitDepth);
-        if (it != mValues.end()) {
-            config.Write(L"/FileFormats/WavPackBitDepth", *std::get_if<int>(&it->second));
-        }
-
-        it = mValues.find(OptionIDHybridMode);
-        if (it != mValues.end()) {
-            config.Write(L"/FileFormats/WavPackHybridMode", *std::get_if<bool>(&it->second));
-        }
-
-        it = mValues.find(OptionIDCreateCorrection);
-        if (it != mValues.end()) {
-            config.Write(L"/FileFormats/WavPackCreateCorrectionFile", *std::get_if<bool>(&it->second));
-        }
-
-        it = mValues.find(OptionIDBitRate);
-        if (it != mValues.end()) {
-            config.Write(L"/FileFormats/WavPackBitrate", *std::get_if<int>(&it->second));
-        }
-    }
-
-private:
-    void OnHybridModeChange(bool hybridMode)
-    {
-        if (hybridMode) {
-            mOptions[OptionIDCreateCorrection].flags &= ~ExportOption::Flags::ReadOnly;
-            mOptions[OptionIDBitRate].flags &= ~ExportOption::Flags::ReadOnly;
-        } else {
-            mOptions[OptionIDCreateCorrection].flags |= ExportOption::Flags::ReadOnly;
-            mOptions[OptionIDBitRate].flags |= ExportOption::Flags::ReadOnly;
-        }
-    }
-};
 }
 
-struct WriteId final
+int ExportOptionsWavPackEditor::GetOptionsCount() const
 {
-    uint32_t bytesWritten {};
-    uint32_t firstBlockSize {};
-    std::unique_ptr<wxFile> file;
-};
+    return static_cast<int>(mOptions.size());
+}
 
-class WavPackExportProcessor final : public ExportProcessor
+bool ExportOptionsWavPackEditor::GetOption(int index, ExportOption& option) const
 {
-    // Samples to write per run
-    static constexpr size_t SAMPLES_PER_RUN = 8192u;
+    if (index >= 0 && index < mOptions.size()) {
+        option = mOptions[index];
+        return true;
+    }
+    return false;
+}
 
-    struct
-    {
-        TranslatableString status;
-        double t0;
-        double t1;
-        unsigned numChannels;
-        wxFileNameWrapper fName;
-        sampleFormat format;
-        WriteId outWvFile, outWvcFile;
-        WavpackContext* wpc{};
-        std::unique_ptr<Mixer> mixer;
-        std::unique_ptr<Tags> metadata;
-    } context;
-public:
-
-    ~WavPackExportProcessor();
-
-    bool Initialize(AudacityProject& project, const Parameters& parameters, const wxFileNameWrapper& filename, double t0, double t1,
-                    bool selectedOnly, double sampleRate, unsigned channels, MixerOptions::Downmix* mixerSpec, const Tags* tags) override;
-
-    ExportResult Process(ExportProcessorDelegate& delegate) override;
-
-private:
-    static int WriteBlock(void* id, void* data, int32_t length);
-};
-
-class ExportWavPack final : public ExportPlugin
+bool ExportOptionsWavPackEditor::GetValue(ExportOptionID id, ExportValue& value) const
 {
-public:
+    const auto it = mValues.find(id);
+    if (it != mValues.end()) {
+        value = it->second;
+        return true;
+    }
+    return false;
+}
 
-    ExportWavPack();
+bool ExportOptionsWavPackEditor::SetValue(ExportOptionID id, const ExportValue& value)
+{
+    auto it = mValues.find(id);
+    if (it == mValues.end() || value.index() != it->second.index()) {
+        return false;
+    }
 
-    int GetFormatCount() const override;
-    FormatInfo GetFormatInfo(int) const override;
+    it->second = value;
+    if (id == OptionIDHybridMode) {
+        OnHybridModeChange(*std::get_if<bool>(&value));
 
-    std::vector<std::string> GetMimeTypes(int) const override;
+        if (mListener) {
+            mListener->OnExportOptionChangeBegin();
+            mListener->OnExportOptionChange(mOptions[OptionIDCreateCorrection]);
+            mListener->OnExportOptionChange(mOptions[OptionIDBitRate]);
+            mListener->OnExportOptionChangeEnd();
+        }
+    }
+    return true;
+}
 
-    bool ParseConfig(int formatIndex, const rapidjson::Value& document, ExportProcessor::Parameters& parameters) const override;
+ExportOptionsWavPackEditor::SampleRateList ExportOptionsWavPackEditor::GetSampleRateList() const
+{
+    return {};
+}
 
-    std::unique_ptr<ExportOptionsEditor>
-    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
+void ExportOptionsWavPackEditor::Load(const audacity::BasicSettings& config)
+{
+    auto quality = std::get_if<int>(&mValues[OptionIDQuality]);
+    auto bitDepth = std::get_if<int>(&mValues[OptionIDBitDepth]);
+    auto hybridMode = std::get_if<bool>(&mValues[OptionIDHybridMode]);
+    auto createCorrection = std::get_if<bool>(&mValues[OptionIDCreateCorrection]);
+    auto bitRate = std::get_if<int>(&mValues[OptionIDBitRate]);
 
-    std::unique_ptr<ExportProcessor> CreateProcessor(int format) const override;
-};
+    config.Read(L"/FileFormats/WavPackEncodeQuality", quality);
+    config.Read(L"/FileFormats/WavPackBitDepth", bitDepth);
+    config.Read(L"/FileFormats/WavPackHybridMode", hybridMode);
+    config.Read(L"/FileFormats/WavPackCreateCorrectionFile", createCorrection);
+    config.Read(L"/FileFormats/WavPackBitrate", bitRate);
+
+    OnHybridModeChange(*hybridMode);
+}
+
+void ExportOptionsWavPackEditor::Store(audacity::BasicSettings& config) const
+{
+    auto it = mValues.find(OptionIDQuality);
+    if (it != mValues.end()) {
+        config.Write(L"/FileFormats/WavPackEncodeQuality", *std::get_if<int>(&it->second));
+    }
+
+    it = mValues.find(OptionIDBitDepth);
+    if (it != mValues.end()) {
+        config.Write(L"/FileFormats/WavPackBitDepth", *std::get_if<int>(&it->second));
+    }
+
+    it = mValues.find(OptionIDHybridMode);
+    if (it != mValues.end()) {
+        config.Write(L"/FileFormats/WavPackHybridMode", *std::get_if<bool>(&it->second));
+    }
+
+    it = mValues.find(OptionIDCreateCorrection);
+    if (it != mValues.end()) {
+        config.Write(L"/FileFormats/WavPackCreateCorrectionFile", *std::get_if<bool>(&it->second));
+    }
+
+    it = mValues.find(OptionIDBitRate);
+    if (it != mValues.end()) {
+        config.Write(L"/FileFormats/WavPackBitrate", *std::get_if<int>(&it->second));
+    }
+}
+
+void ExportOptionsWavPackEditor::OnHybridModeChange(bool hybridMode)
+{
+    if (hybridMode) {
+        mOptions[OptionIDCreateCorrection].flags &= ~ExportOption::Flags::ReadOnly;
+        mOptions[OptionIDBitRate].flags &= ~ExportOption::Flags::ReadOnly;
+    } else {
+        mOptions[OptionIDCreateCorrection].flags |= ExportOption::Flags::ReadOnly;
+        mOptions[OptionIDBitRate].flags |= ExportOption::Flags::ReadOnly;
+    }
+}
 
 ExportWavPack::ExportWavPack() = default;
 
@@ -306,49 +162,49 @@ std::vector<std::string> ExportWavPack::GetMimeTypes(int) const
     return { "audio/x-wavpack" };
 }
 
-bool ExportWavPack::ParseConfig(int formatIndex, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const
-{
-    if (!config.IsObject()
-        || !config.HasMember("quality") || !config["quality"].IsNumber()
-        || !config.HasMember("bit_rate") || !config["bit_rate"].IsNumber()
-        || !config.HasMember("bit_depth") || !config["bit_depth"].IsNumber()
-        || !config.HasMember("hybrid_mode") || !config["hybrid_mode"].IsBool()) {
-        return false;
-    }
+// bool ExportWavPack::ParseConfig(int formatIndex, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const
+// {
+//     if (!config.IsObject()
+//         || !config.HasMember("quality") || !config["quality"].IsNumber()
+//         || !config.HasMember("bit_rate") || !config["bit_rate"].IsNumber()
+//         || !config.HasMember("bit_depth") || !config["bit_depth"].IsNumber()
+//         || !config.HasMember("hybrid_mode") || !config["hybrid_mode"].IsBool()) {
+//         return false;
+//     }
 
-    const auto quality = ExportValue(config["quality"].GetInt());
-    const auto bitRate = ExportValue(config["bit_rate"].GetInt());
-    const auto bitDepth = ExportValue(config["bit_depth"].GetInt());
-    const auto hybridMode = ExportValue(config["hybrid_mode"].GetBool());
+//     const auto quality = ExportValue(config["quality"].GetInt());
+//     const auto bitRate = ExportValue(config["bit_rate"].GetInt());
+//     const auto bitDepth = ExportValue(config["bit_depth"].GetInt());
+//     const auto hybridMode = ExportValue(config["hybrid_mode"].GetBool());
 
-    for (const auto& option : ExportWavPackOptions) {
-        if ((option.id == OptionIDQuality
-             && std::find(option.values.begin(),
-                          option.values.end(),
-                          quality) == option.values.end())
-            ||
-            (option.id == OptionIDBitRate
-             && std::find(option.values.begin(),
-                          option.values.end(),
-                          bitRate) == option.values.end())
-            ||
-            (option.id == OptionIDBitDepth
-             && std::find(option.values.begin(),
-                          option.values.end(),
-                          bitDepth) == option.values.end())) {
-            return false;
-        }
-    }
-    ExportProcessor::Parameters result {
-        { OptionIDQuality, quality },
-        { OptionIDBitRate, bitRate },
-        { OptionIDBitDepth, bitDepth },
-        { OptionIDHybridMode, hybridMode },
-        { OptionIDCreateCorrection, false }
-    };
-    std::swap(parameters, result);
-    return true;
-}
+//     for (const auto& option : ExportWavPackOptions) {
+//         if ((option.id == OptionIDQuality
+//              && std::find(option.values.begin(),
+//                           option.values.end(),
+//                           quality) == option.values.end())
+//             ||
+//             (option.id == OptionIDBitRate
+//              && std::find(option.values.begin(),
+//                           option.values.end(),
+//                           bitRate) == option.values.end())
+//             ||
+//             (option.id == OptionIDBitDepth
+//              && std::find(option.values.begin(),
+//                           option.values.end(),
+//                           bitDepth) == option.values.end())) {
+//             return false;
+//         }
+//     }
+//     ExportProcessor::Parameters result {
+//         { OptionIDQuality, quality },
+//         { OptionIDBitRate, bitRate },
+//         { OptionIDBitDepth, bitDepth },
+//         { OptionIDHybridMode, hybridMode },
+//         { OptionIDCreateCorrection, false }
+//     };
+//     std::swap(parameters, result);
+//     return true;
+// }
 
 std::unique_ptr<ExportOptionsEditor>
 ExportWavPack::CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const
@@ -597,7 +453,3 @@ int WavPackExportProcessor::WriteBlock(void* id, void* data, int32_t length)
 
     return true;
 }
-
-static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "WavPack",
-                                                                 []{ return std::make_unique< ExportWavPack >(); }
-};
