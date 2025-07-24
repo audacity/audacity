@@ -1,5 +1,17 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.7.5
+
+This is a patch release. It contains the following changes:
+
+   * #8942 Windows on ARM support (Thanks, Vasanth K (@vask2108) and Linaro!)
+   * #9121 FLAC importer now supports 32-bit PCM (Thanks, Dr. K. D. Murray (@kdm9)!)
+   * #8851 Fixed crash when rendering spectrum view (Thanks, Hailey Somerville (@haileys)!)
+   * #9097 Fixed lost focus when registration window was closed
+   * #8932 Fixed crash on wav import (when audio file is up to 7 ms long)
+   * #4444 Fixed crash when using Macro Wizard
+   * #9100, #8890 Updated libopus to 1.5.2, updated libcurl to 8.12.1, updated libpng to 1.6.50
+
 Changes in version 3.7.4
 
 This is a patch release. It contains the following changes:
