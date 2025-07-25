@@ -153,7 +153,7 @@ EqualizationBase::LoadFactoryDefaults(EffectSettings& settings) const
 {
     // To do: externalize state so const_cast isn't needed
     if (!const_cast<EqualizationBase&>(*this).DoLoadFactoryDefaults(settings)) {
-        return {}
+        return {};
     }
     return { nullptr };
 }
@@ -236,7 +236,7 @@ EqualizationBase::LoadFactoryPreset(int id, EffectSettings& settings) const
         }
     }
     if (index < 0) {
-        return {}
+        return {};
     }
 
     // mParams =
@@ -247,7 +247,7 @@ EqualizationBase::LoadFactoryPreset(int id, EffectSettings& settings) const
     S.SetForWriting(&eap);
     // To do: externalize state so const_cast isn't needed
     if (!const_cast<EqualizationBase*>(this)->VisitSettings(S, settings)) {
-        return {}
+        return {};
     }
     return { nullptr };
 }
@@ -345,7 +345,8 @@ bool EqualizationBase::Process(EffectInstance&, EffectSettings&)
             }
             pTempTrack->Flush();
             // Remove trailing data from the temp track
-            pTempTrack->Clear(t1 - t0, pTempTrack->GetEndTime());
+            constexpr auto moveClips = false;
+            pTempTrack->Clear(t1 - t0, pTempTrack->GetEndTime(), moveClips);
             track->ClearAndPaste(t0, t1, *pTempTrack, true, true);
         }
 
