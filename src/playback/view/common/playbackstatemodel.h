@@ -13,7 +13,7 @@ namespace au::playback {
 class PlaybackStateModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
-    Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChange)
+    Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged)
     muse::Inject<au::playback::IPlaybackController> controller;
 
 public:
