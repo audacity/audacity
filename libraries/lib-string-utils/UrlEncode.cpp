@@ -9,11 +9,12 @@
  **********************************************************************/
 
 #include "UrlEncode.h"
+#include <string_view>
 
 namespace audacity
 {
 
-std::string UrlEncode (const std::string& url)
+std::string UrlEncode (const std::string_view url)
 {
     std::string escaped;
 

@@ -371,7 +371,7 @@ std::string OAuthService::MakeAudioComAuthorizeURL(std::string_view userId, std:
       GetServiceConfig().GetAuthWithRedirectURL(), "?",
       tokenPrefix, token, "&",
       userPrefix, userId, "&",
-      urlPrefix, redirectUrl
+      urlPrefix, audacity::UrlEncode(redirectUrl)
    );
 
    if (SendAnonymousUsageInfo->Read()) {
