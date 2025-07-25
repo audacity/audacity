@@ -7,18 +7,22 @@
 
 #include "iplaybackcontroller.h"
 #include "modularity/ioc.h"
+#include "async/asyncable.h"
 
 namespace au::playback {
-class PlaybackStateModel : public QObject
+class PlaybackStateModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
-
+    Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChange)
     muse::Inject<au::playback::IPlaybackController> controller;
 
 public:
     explicit PlaybackStateModel(QObject* parent = nullptr);
 
-    Q_INVOKABLE bool isPlaying();
-    Q_INVOKABLE bool isPaused();
+    Q_INVOKABLE bool isPlaying() const;
+    Q_INVOKABLE bool isPaused() const;
+
+signals:
+    void isPlayingChanged();
 };
 }

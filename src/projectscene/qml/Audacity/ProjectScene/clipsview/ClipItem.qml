@@ -6,6 +6,7 @@ import Muse.UiComponents
 import Muse.GraphicalEffects
 
 import Audacity.ProjectScene
+import Audacity.Playback
 
 Rectangle {
 
@@ -103,6 +104,10 @@ Rectangle {
     property bool rightTrimContainsMouse: false
     property alias leftTrimPressedButtons: leftTrimStretchEdgeHover.pressedButtons
     property alias rightTrimPressedButtons: rightTrimStretchEdgeHover.pressedButtons
+
+    PlaybackStateModel {
+        id: playbackState
+    }
 
     // for navigating between clips
     NavigationControl {
@@ -252,7 +257,13 @@ Rectangle {
         anchors.fill: parent
 
         hoverEnabled: true
-        cursorShape: Qt.IBeamCursor
+        cursorShape: {
+            // Show forbidden cursor during playback for sample editing
+            if ((root.isNearSample || root.isIsolationMode) && playbackState.isPlaying) {
+                return Qt.ForbiddenCursor
+            }
+            return Qt.IBeamCursor
+        }
         acceptedButtons: Qt.RightButton
 
         visible: root.enableCursorInteraction
