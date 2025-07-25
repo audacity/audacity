@@ -5,6 +5,7 @@
 #include "au3audiooutput.h"
 
 #include "global/async/async.h"
+#include "global/types/ratio.h"
 
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
@@ -76,7 +77,7 @@ void Au3AudioOutput::setPlaybackVolume(float volume)
         auto gAudioIO = AudioIO::Get();
         gAudioIO->GetMixer(&inputSource, &inputVolume, &outputVolume);
 
-        gAudioIO->SetMixer(inputSource, inputVolume, localVolumeToAu3(volume));
+        gAudioIO->SetMixer(inputSource, inputVolume, muse::db_to_linear(volume));
 
         m_playbackVolumeChanged.send(volume);
     });

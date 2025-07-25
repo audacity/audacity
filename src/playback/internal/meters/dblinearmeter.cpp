@@ -38,7 +38,7 @@ constexpr std::array<DbSection, 6> DB_SECTIONS = { {
     { 1.0 / 2.0, 0.3 },
     { 2.0 / 3.0, 0.15 },
     { 5.0 / 6.0, 0.075 },
-    { 1.0, 0.05 }
+    { 1.0, 0.00 }
 } };
 
 double dbToValuePercentage(double dbValue, double dbRange)
@@ -58,6 +58,25 @@ double dbToValuePercentage(double dbValue, double dbRange)
     }
 
     return 0.0;
+}
+
+double percentageToDbValue(double percentage, double dbRange)
+{
+    if (percentage >= 1.0) {
+        return 0.0;
+    }
+
+    for (size_t i = 0; i < DB_SECTIONS.size() - 1; ++i) {
+        const DbSection& left = DB_SECTIONS[i];
+        const DbSection& right = DB_SECTIONS[i + 1];
+
+        if ((percentage <= left.percentage) && (percentage > right.percentage)) {
+            double t = (percentage - right.percentage) / (left.percentage - right.percentage);
+            return right.multiplier * dbRange + t * (left.multiplier * dbRange - right.multiplier * dbRange);
+        }
+    }
+
+    return dbRange;
 }
 }
 
@@ -85,6 +104,12 @@ double DbLinearMeter::stepToPosition(double step) const
 double DbLinearMeter::sampleToPosition(double sample) const
 {
     return stepToPosition(sample);
+}
+
+double DbLinearMeter::positionToSample(double position) const
+{
+    std::clamp(position, 0.0, 1.0);
+    return percentageToDbValue(position, m_dbRange);
 }
 
 std::string DbLinearMeter::sampleToText(double sample) const

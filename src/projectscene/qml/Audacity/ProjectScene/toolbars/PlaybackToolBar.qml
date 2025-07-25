@@ -127,7 +127,7 @@ Item {
                     }
 
                     if (itemData) {
-                        itemData.meterSize = x
+                        itemData.meterSize = Math.max(288, x)
                     }
                 }
             }

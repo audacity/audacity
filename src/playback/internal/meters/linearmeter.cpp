@@ -72,6 +72,18 @@ double LinearMeter::sampleToPosition(double sample) const
     return stepToPosition(muse::db_to_linear(sample));
 }
 
+double LinearMeter::positionToSample(double position) const
+{
+    double value = muse::linear_to_db(position);
+    if (value < m_dbRange) {
+        value = m_dbRange;
+    }
+    if (value > 0.0) {
+        value = 0.0;
+    }
+    return value;
+}
+
 std::string LinearMeter::sampleToText(double sample) const
 {
     std::stringstream ss;

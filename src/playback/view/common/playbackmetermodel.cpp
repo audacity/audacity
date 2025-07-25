@@ -14,6 +14,7 @@ PlaybackMeterModel::PlaybackMeterModel(QObject* parent)
     meterController()->playbackMeterChanged().onNotify(this, [this]() {
         emit smallStepsChanged();
         emit fullStepsChanged();
+        emit positionChanged();
     });
 
     configuration()->playbackMeterPositionChanged().onNotify(this, [this]() {
@@ -26,6 +27,7 @@ PlaybackMeterModel::PlaybackMeterModel(QObject* parent)
 
     configuration()->playbackMeterTypeChanged().onNotify(this, [this]() {
         emit meterTypeChanged();
+        emit positionChanged();
     });
 
     configuration()->playbackHorizontalMeterSizeChanged().onNotify(this, [this]() {
@@ -35,6 +37,8 @@ PlaybackMeterModel::PlaybackMeterModel(QObject* parent)
     configuration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
         emit meterDbRangeChanged();
         emit dbRangesChanged();
+        emit dbRangeChanged();
+        emit positionChanged();
     });
 
     m_dbRanges = new PlaybackMeterDbRangeModel(this);
@@ -49,6 +53,11 @@ double PlaybackMeterModel::stepToPosition(double step)
 double PlaybackMeterModel::sampleToPosition(double sample) const
 {
     return meterController()->sampleToPosition(sample);
+}
+
+double PlaybackMeterModel::positionToSample(double position) const
+{
+    return meterController()->positionToSample(position);
 }
 
 QString PlaybackMeterModel::sampleToText(double sample) const
@@ -118,20 +127,6 @@ PlaybackMeterPosition::MeterPosition PlaybackMeterModel::meterPosition() const
     return configuration()->playbackMeterPosition();
 }
 
-void PlaybackMeterModel::setMeterDbRange(PlaybackMeterDbRange::DbRange range)
-{
-    if (meterDbRange() == range) {
-        return;
-    }
-
-    configuration()->setPlaybackMeterDbRange(range);
-}
-
-PlaybackMeterDbRange::DbRange PlaybackMeterModel::meterDbRange() const
-{
-    return configuration()->playbackMeterDbRange();
-}
-
 void PlaybackMeterModel::setMeterSize(int size)
 {
     if (meterSize() == size) {
@@ -147,6 +142,20 @@ void PlaybackMeterModel::setMeterSize(int size)
 int PlaybackMeterModel::meterSize() const
 {
     return configuration()->playbackHorizontalMeterSize();
+}
+
+void PlaybackMeterModel::setMeterDbRange(PlaybackMeterDbRange::DbRange range)
+{
+    if (meterDbRange() == range) {
+        return;
+    }
+
+    configuration()->setPlaybackMeterDbRange(range);
+}
+
+PlaybackMeterDbRange::DbRange PlaybackMeterModel::meterDbRange() const
+{
+    return configuration()->playbackMeterDbRange();
 }
 
 muse::uicomponents::MenuItemList PlaybackMeterModel::dbRanges() const
@@ -167,4 +176,24 @@ void PlaybackMeterModel::handleDbRangeChange(const QString& itemId)
         setMeterDbRange(range.value());
         return;
     }
+}
+
+float PlaybackMeterModel::dbRange() const
+{
+    if (meterType() == PlaybackMeterType::MeterType::Linear) {
+        return -60.0;
+    }
+
+    return PlaybackMeterDbRange::toDouble(meterDbRange());
+}
+
+float PlaybackMeterModel::position() const
+{
+    return sampleToPosition(m_volume);
+}
+
+void PlaybackMeterModel::volumeChangeRequested(float volume)
+{
+    m_volume = volume;
+    emit positionChanged();
 }
