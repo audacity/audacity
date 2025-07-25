@@ -104,7 +104,7 @@ void TracksViewStateModel::changeTrackHeight(int deltaY)
     }
 }
 
-bool TracksViewStateModel::snapEnabled()
+bool TracksViewStateModel::snapEnabled() const
 {
     IProjectViewStatePtr vs = viewState();
     if (vs) {

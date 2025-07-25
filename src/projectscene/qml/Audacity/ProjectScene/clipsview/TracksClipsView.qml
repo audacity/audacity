@@ -23,6 +23,7 @@ Rectangle {
 
     readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
     readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
+    readonly property string splitShape: ":/images/customCursorShapes/Split.png"
     readonly property string leftTrimShape: ":/images/customCursorShapes/ClipTrimLeft.png"
     readonly property string leftStretchShape: ":/images/customCursorShapes/ClipStretchLeft.png"
     readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
@@ -246,7 +247,7 @@ Rectangle {
     CustomCursor {
         id: customCursor
         active: (content.isIsolationMode || content.isBrush || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse
-            || content.leftTrimPressedButtons || content.rightTrimPressedButtons)
+            || content.leftTrimPressedButtons || content.rightTrimPressedButtons || (tracksModel.isSplitMode && root.clipHovered))
         source: {
             if (content.isBrush) {
                 return smoothShape
@@ -254,6 +255,10 @@ Rectangle {
 
             if (content.isNearSample || content.isIsolationMode) {
                 return pencilShape
+            }
+
+            if (tracksModel.isSplitMode) {
+                return splitShape
             }
 
             return content.leftTrimContainsMouse || content.leftTrimPressedButtons ? leftTrimShape : rightTrimShape
@@ -309,13 +314,18 @@ Rectangle {
                     if (root.clipHeaderHovered) {
                         tracksClipsView.clipStartEditRequested(hoveredClipKey)
                     } else {
-                        if (!(e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))) {
+                        if (! ((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) && tracksModel.isSplitMode)) {
                             playCursorController.seekToX(e.x)
                         }
+
                         selectionController.onPressed(e.x, e.y)
                         selectionController.resetSelectedClip()
                         clipsSelection.visible = true
                         handleGuideline(e.x, false)
+
+                        if (tracksModel.isSplitMode) {
+                            tracksModel.splitAt(timeline.context.positionToTime(e.x))
+                        }
                     }
                 } else if (e.button === Qt.RightButton) {
                     if (tracksHovered) {
@@ -334,10 +344,6 @@ Rectangle {
                 } else {
                     selectionController.onPositionChanged(e.x, e.y)
                     handleGuideline(e.x, false)
-
-                    if (root.clipHovered && !tracksClipsView.moveActive) {
-                        root.clipHovered = false
-                    }
                 }
             }
             onReleased: e => {
@@ -512,6 +518,11 @@ Rectangle {
                     ctrlPressed: root.ctrlPressed
                     selectionEditInProgress: selectionController.selectionEditInProgress
                     selectionInProgress: selectionController.selectionInProgress
+                    onHoverChanged: function() {
+                        root.clipHovered = tracksClipsView.checkIfAnyTrack(function(trackItem) {
+                            return trackItem && trackItem.hover
+                        })
+                    }
 
                     trackIdx: model.index
                     navigationSection: root.navigationSection
@@ -522,9 +533,6 @@ Rectangle {
                         let yGlobalPosition = y + yWithinTrack - tracksClipsView.contentY
                         timeline.updateCursorPosition(xGlobalPosition, yGlobalPosition)
 
-                        if (!root.clipHovered) {
-                            root.clipHovered = true
-                        }
                         root.hoveredClipKey = clipKey
                     }
 

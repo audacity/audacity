@@ -90,7 +90,7 @@ Rectangle {
     opacity: root.moveActive && clipSelected ? 0.5 : isAudible ? 1.0 : 0.3
 
     property int borderWidth: 1
-    property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse
+    property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse || leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
     property bool headerHovered: headerDragArea.containsMouse
     property var lastSample: undefined
     property bool altPressed: false
