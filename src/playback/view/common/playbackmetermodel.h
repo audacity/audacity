@@ -32,6 +32,10 @@ class PlaybackMeterModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(float position READ position NOTIFY positionChanged FINAL)
 
+    Q_PROPERTY(float dbRange READ dbRange NOTIFY dbRangeChanged FINAL)
+
+    Q_PROPERTY(float position READ position NOTIFY positionChanged FINAL)
+
     muse::Inject<IPlaybackMeterController> meterController;
     muse::Inject<IPlaybackConfiguration> configuration;
     muse::Inject<IPlayback> playback;

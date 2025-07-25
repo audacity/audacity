@@ -132,6 +132,7 @@ Slider {
             onDoubleClicked: {
                 // Double click resets the volume
                 root.volumeLevelMoved(0.0)
+                root.meterModel.volumeChangeRequested(0.0)
             }
 
             // The MouseArea steals mouse press events from the slider.
@@ -200,5 +201,6 @@ Slider {
     onMoved: {
         navigation.requestActiveByInteraction()
         root.volumeLevelMoved(value)
+        root.meterModel.volumeChangeRequested(value)
     }
 }
