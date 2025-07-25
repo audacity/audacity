@@ -15,6 +15,6 @@
 namespace audacity
 {
 
-STRING_UTILS_API std::string UrlEncode (const std::string& url);
+STRING_UTILS_API std::string UrlEncode (const std::string_view url);
 
 }
