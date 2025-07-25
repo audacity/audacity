@@ -110,7 +110,8 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
 
         isSelection = t1 > t0;
 
-        if (!isSelection && effectsConfiguration()->applyEffectToAllAudio() && effect->GetType() != EffectTypeGenerate) {
+        if (!isSelection && effectsConfiguration()->applyEffectToAllAudio() && effect->applyEffectToAllAudio()
+            && effect->GetType() != EffectTypeGenerate) {
             selectionController()->setSelectedAllAudioData();
 
             t0 = selectionController()->dataSelectedStartTime();
