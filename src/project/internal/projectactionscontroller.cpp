@@ -166,7 +166,7 @@ void ProjectActionsController::openProject(const muse::actions::ActionData& args
     QUrl url = !args.empty() ? args.arg<QUrl>(0) : QUrl();
     QString displayNameOverride = args.count() >= 2 ? args.arg<QString>(1) : QString();
 
-    openProject(ProjectFile(url, displayNameOverride));
+    Ret ret = openProject(ProjectFile(url, displayNameOverride));
 }
 
 void ProjectActionsController::importFile()
@@ -551,25 +551,12 @@ RetVal<IAudacityProjectPtr> ProjectActionsController::loadProject(const io::path
     //! TODO AU4
     // bool hasUnsavedChanges = projectAutoSaver()->projectHasUnsavedChanges(filePath);
     // io::path_t loadPath = hasUnsavedChanges ? projectAutoSaver()->projectAutoSavePath(filePath) : filePath;
-    io::path_t loadPath = filePath;
 
-    std::string format = io::suffix(filePath);
+    const io::path_t loadPath = filePath;
+    const std::string format = io::suffix(filePath);
 
-    Ret ret = project->load(loadPath, false /*forceMode*/, format);
-
-    if (!ret) {
-        if (ret.code() == static_cast<int>(Ret::Code::Cancel)) {
-            return ret;
-        }
-
-        //! TODO AU4
-        // if (checkCanIgnoreError(ret, loadPath)) {
-        //     ret = project->load(loadPath, "" /*stylePath*/, true /*forceMode*/, format);
-        // }
-
-        if (!ret) {
-            return ret;
-        }
+    if (Ret result = loadWithFallback(project, loadPath, format); !result) {
+        return result;
     }
 
     //! TODO AU4
@@ -587,6 +574,25 @@ RetVal<IAudacityProjectPtr> ProjectActionsController::loadProject(const io::path
     // }
 
     return RetVal<IAudacityProjectPtr>::make_ok(project);
+}
+
+Ret ProjectActionsController::loadWithFallback(const IAudacityProjectPtr& project,
+                                               const muse::io::path_t& loadPath,
+                                               const std::string& format)
+{
+    bool forceLoad = false;
+    Ret result = project->load(loadPath, forceLoad, format);
+
+    if (result || result.code() == static_cast<int>(Ret::Code::Cancel)) {
+        return result;
+    }
+
+    forceLoad = shouldRetryLoadAfterError(result, loadPath);
+    if (forceLoad) {
+        result = project->load(loadPath, forceLoad, format);
+    }
+
+    return result;
 }
 
 bool ProjectActionsController::isProjectOpened(const muse::io::path_t& projectPath) const
@@ -620,6 +626,29 @@ RecentFile ProjectActionsController::makeRecentFile(IAudacityProjectPtr project)
 void ProjectActionsController::clearRecentProjects()
 {
     recentFilesController()->clearRecentFiles();
+}
+
+bool ProjectActionsController::shouldRetryLoadAfterError(const Ret& ret, const muse::io::path_t& filepath)
+{
+    if (ret) {
+        return true;
+    }
+    warnProjectCannotBeOpened(ret, filepath);
+    return false;
+}
+
+void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const muse::io::path_t& filepath) const
+{
+    const std::string title
+        = ret.data<std::string>("title",
+                                muse::mtrc("project", "Cannot read file %1")
+                                .arg(io::toNativeSeparators(filepath).toString())
+                                .toStdString());
+
+    const std::string body
+        = ret.data<std::string>("body", !ret.text().empty() ? ret.text() : muse::trc("project",
+                                                                                     "An error occurred while reading this file."));
+    interactive()->error(title, body);
 }
 
 void ProjectActionsController::exportAudio()

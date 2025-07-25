@@ -1,11 +1,12 @@
 #include "audacityproject.h"
 
 #include "au3wrap/iau3project.h"
-#include "iprojectautosaver.h"
-#include "projecterrors.h"
+#include "project/iprojectautosaver.h"
+#include "project/projecterrors.h"
+#include "global/log.h"
+#include "global/io/file.h"
+#include "global/io/fileinfo.h"
 #include "global/io/ioretcodes.h"
-
-#include "log.h"
 
 using namespace muse;
 using namespace au::project;
@@ -92,16 +93,29 @@ Ret Audacity4Project::import(const std::vector<muse::io::path_t>& paths, bool fo
 
 muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const std::string& format)
 {
+    muse::Ret ret = muse::make_ret(Ret::Code::Ok);
     TRACEFUNC;
 
     UNUSED(forceMode);
     UNUSED(format);
 
+    if (!io::FileInfo::exists(path)) {
+        LOGE() << "file does not exist at path: \"" << path << "\"";
+        return make_ret(Err::ProjectFileNotFound, path);
+    }
+
+    io::File file(path);
+    if (!file.open(io::IODevice::ReadOnly)) {
+        LOGE() << "failed open file (Can't Read): " << path;
+        return make_ret(Err::ProjectFileIsReadProtected, path);
+    }
+    file.close();
+
     m_au3Project = au3ProjectCreator()->create();
-    bool isLoaded = m_au3Project->load(path);
-    if (!isLoaded) {
+    ret = m_au3Project->load(path);
+    if (!ret) {
         LOGE() << "Failed load:" << path;
-        return muse::make_ret(muse::Ret::Code::UnknownError);
+        return ret;
     }
 
     LOGI() << "success loaded au3 project: " << m_au3Project->title();
@@ -110,7 +124,7 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
 
     m_viewState = viewStateCreator()->createViewState(m_au3Project);
 
-    return muse::make_ret(Ret::Code::Ok);
+    return ret;
 }
 
 Ret Audacity4Project::doImport(const muse::io::path_t& path, bool forceMode)
@@ -215,7 +229,7 @@ Ret Audacity4Project::canSave() const
 
     // Ret ret = m_engravingProject->checkCorrupted();
     // if (!ret) {
-    //     Err errorCode = m_engravingProject->isCorruptedUponLoading() ? Err::CorruptionUponOpenningError : Err::CorruptionError;
+    //     Err errorCode = m_engravingProject->isCorruptedUponLoading() ? Err::CorruptionUponOpeningError : Err::CorruptionError;
     //     ret.setCode(static_cast<int>(errorCode));
     // }
 

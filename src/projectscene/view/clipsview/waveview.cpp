@@ -7,11 +7,11 @@
 #include <QElapsedTimer>
 
 #include "draw/types/color.h"
-#include "log.h"
+#include "global/log.h"
 
 #include "au3/wavepainterutils.h"
 #include "au3/samplespainterutils.h"
-#include "../timeline/timelinecontext.h"
+#include "view/timeline/timelinecontext.h"
 
 using namespace au::projectscene;
 
