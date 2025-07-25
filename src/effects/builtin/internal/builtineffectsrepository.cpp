@@ -31,6 +31,8 @@
 #include "noisegen/noisegenerator.h"
 #include "noisegen/noiseviewmodel.h"
 #include "fade/fadeeffect.h"
+#include "graphiceq/graphiceq.h"
+#include "graphiceq/graphiceqviewmodel.h"
 #include "invert/inverteffect.h"
 #include "reverse/reverseeffect.h"
 #include "repair/repaireffect.h"
@@ -98,6 +100,7 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< Repair > regRepair;
     static BuiltinEffectsModule::Registration< ReverseEffect > regReverse;
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
+    static BuiltinEffectsModule::Registration< GraphicEq > regGraphicEq;
     static BuiltinEffectsModule::Registration< NormalizeEffect > regNormalize;
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
@@ -167,6 +170,15 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     muse::mtrc("effects", "Increases or decreases the volume of the audio you have selected"),
                     EffectCategoryId::VolumeAndCompression,
                     false
+                    );
+        } else if (symbol == GraphicEq::Symbol) {
+            qmlRegisterType<GraphicEqViewModel>("Audacity.Effects", 1, 0, "GraphicEqViewModel");
+            regView(GraphicEq::Symbol, u"qrc:/graphiceq/GraphicEqView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects", "Graphic EQ"),
+                    muse::mtrc("effects", "Adjusts the balance between frequency components"),
+                    EffectCategoryId::EqAndFilters,
+                    true
                     );
         } else if (symbol == NormalizeEffect::Symbol) {
             qmlRegisterType<NormalizeViewModel>("Audacity.Effects", 1, 0, "NormalizeViewModel");
