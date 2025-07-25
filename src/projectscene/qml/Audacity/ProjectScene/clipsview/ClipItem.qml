@@ -16,7 +16,7 @@ Rectangle {
     property alias clipTime: waveView.clipTime
     property alias title: titleLabel.text
     property int pitch: 0
-    property int speedPercentage: 0
+    property real speedPercentage: 0.0
     property alias showChannelSplitter: channelSplitter.visible
     property alias channelHeightRatio: channelSplitter.channelHeightRatio
     property var canvas: null
@@ -598,7 +598,16 @@ Rectangle {
                     mouseArea.visible: root.enableCursorInteraction
 
                     icon: IconCode.CLOCK
-                    text: root.speedPercentage + "%"
+                    text: {
+                        var speed = root.speedPercentage
+
+                        if (Math.abs(speed - 100) < 0.95) {
+                            var adjusted = speed > 100 ? Math.max(speed, 100.1) : Math.min(speed, 99.9)
+                            return adjusted.toFixed(1) + "%"
+                        } else {
+                            return Math.round(speed) + "%"
+                        }
+                    }
 
                     visible: root.speedPercentage !== 100.0
 
