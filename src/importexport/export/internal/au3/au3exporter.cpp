@@ -135,15 +135,15 @@ muse::Ret Au3Exporter::exportData(std::string filename)
         return muse::make_ret(muse::Ret::Code::InternalError, muse::trc("export", "All selected audio is muted"));
     }
 
-    m_mixerSpec = std::make_unique<MixerOptions::Downmix>(exportedTracks.size(), 2).get();
-    m_sampleRate = exportConfiguration()->exportSampleRate();
-
     // TODO: update when custom mapping is implemented
     if (ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannels()) == ExportChannelsPref::ExportChannels::MONO) {
         m_numChannels = 1;
     } else {
         m_numChannels = 2;
     }
+
+    m_mixerSpec = std::make_unique<MixerOptions::Downmix>(exportedTracks.size(), m_numChannels).get();
+    m_sampleRate = exportConfiguration()->exportSampleRate();
 
     try {
         auto processor = m_plugin->CreateProcessor(m_format);
