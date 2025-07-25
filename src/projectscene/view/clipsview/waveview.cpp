@@ -370,6 +370,12 @@ void WaveView::setLastClickPos(const unsigned lastX, const unsigned lastY, const
         return;
     }
 
+    // Prevent sample editing during playback
+    bool isPlaying = globalContext()->playbackState()->playbackStatus() == playback::PlaybackStatus::Running;
+    if (isPlaying) {
+        return;
+    }
+
     const auto currentPosition = QPoint(x, y);
     const auto lastPosition = QPoint(lastX, lastY);
 
@@ -390,6 +396,12 @@ void WaveView::setLastClickPos(const unsigned lastX, const unsigned lastY, const
 void WaveView::smoothLastClickPos(unsigned int x, const unsigned int y)
 {
     if (!m_isStemPlot) {
+        return;
+    }
+
+    // Prevent sample editing during playback
+    bool isPlaying = globalContext()->playbackState()->playbackStatus() == playback::PlaybackStatus::Running;
+    if (isPlaying) {
         return;
     }
 
@@ -418,6 +430,12 @@ void WaveView::setIsolatedPoint(const unsigned int x, const unsigned int y)
     }
 
     if (!m_isIsolationMode) {
+        return;
+    }
+
+    // Prevent sample editing during playback
+    bool isPlaying = globalContext()->playbackState()->playbackStatus() == playback::PlaybackStatus::Running;
+    if (isPlaying) {
         return;
     }
 
