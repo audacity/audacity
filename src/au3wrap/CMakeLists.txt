@@ -276,6 +276,15 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-audio-devices/DeviceManager.cpp
     ${AU3_LIBRARIES}/lib-audio-devices/DeviceManager.h
 
+    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationCurves.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationCurves.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationCurvesList.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationCurvesList.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationFilter.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationFilter.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationParameters.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationParameters.h
+
     ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphChannel.cpp
     ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphChannel.h
     ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphBuffers.cpp
