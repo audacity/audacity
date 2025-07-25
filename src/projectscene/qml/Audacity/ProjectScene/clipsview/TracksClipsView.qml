@@ -6,6 +6,7 @@ import Muse.UiComponents
 
 import Audacity.ProjectScene
 import Audacity.Project
+import Audacity.Playback
 
 Rectangle {
 
@@ -31,6 +32,10 @@ Rectangle {
     color: ui.theme.backgroundPrimaryColor
 
     clip: true
+
+    PlaybackStateModel {
+        id: playbackState
+    }
 
     TracksListClipsModel {
         id: tracksModel
@@ -245,8 +250,15 @@ Rectangle {
 
     CustomCursor {
         id: customCursor
-        active: (content.isIsolationMode || content.isBrush || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse
-            || content.leftTrimPressedButtons || content.rightTrimPressedButtons)
+        active: {
+            // Don't show custom cursor during playback for sample editing
+            if ((content.isNearSample || content.isIsolationMode) && playbackState.isPlaying) {
+                return false
+            }
+
+            return (content.isIsolationMode || content.isBrush || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse
+                || content.leftTrimPressedButtons || content.rightTrimPressedButtons)
+        }
         source: {
             if (content.isBrush) {
                 return smoothShape
