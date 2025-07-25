@@ -9,14 +9,17 @@ using namespace au::playback;
 PlaybackStateModel::PlaybackStateModel(QObject* parent)
     : QObject(parent)
 {
+    controller()->isPlayingChanged().onNotify(this, [this]() {
+        emit isPlayingChanged();
+    });
 }
 
-bool PlaybackStateModel::isPlaying()
+bool PlaybackStateModel::isPlaying() const
 {
     return controller()->isPlaying();
 }
 
-bool PlaybackStateModel::isPaused()
+bool PlaybackStateModel::isPaused() const
 {
     return controller()->isPaused();
 }
