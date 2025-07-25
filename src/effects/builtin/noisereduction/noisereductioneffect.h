@@ -142,6 +142,8 @@ public:
     // Effect implementation
 
     const EffectParameterMethods& Parameters() const override;
+    // In case the user intends to get a noise profile, selecting the whole project makes little sense.
+    bool applyEffectToAllAudio() const override { return false; }
     bool Process(::EffectInstance& instance, ::EffectSettings& settings) override;
 
     static constexpr EffectParameter sensitivity {
