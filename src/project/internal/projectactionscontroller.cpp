@@ -20,6 +20,8 @@ static const muse::Uri PROJECT_PAGE_URI("audacity://project");
 static const muse::Uri HOME_PAGE_URI("musescore://home");
 static const muse::Uri NEW_PROJECT_URI("audacity://project/new");
 
+static const muse::Uri EXPORT_URI("audacity://project/export");
+
 static const QString AUDACITY_URL_SCHEME("AUDACITY");
 static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
 
@@ -624,7 +626,7 @@ void ProjectActionsController::clearRecentProjects()
 
 void ProjectActionsController::exportAudio()
 {
-    NOT_IMPLEMENTED;
+    interactive()->open(EXPORT_URI);
 }
 
 void ProjectActionsController::exportLabels()

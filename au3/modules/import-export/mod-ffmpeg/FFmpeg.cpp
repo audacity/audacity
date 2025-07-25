@@ -21,6 +21,7 @@ License: GPL v2 or later.  See License.txt.
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
 #include "ModuleConstants.h"
 #include "ImportFFmpeg.cpp"
+#include "ExportFFmpeg.cpp"
 
 #include <wx/log.h>
 
@@ -54,10 +55,6 @@ void FFmpegStartup()
         //          \nbut this time Audacity failed to load it at startup. \
         //          \n\nYou may want to go back to Preferences > Libraries and re-configure it."),
         //!             XO("FFmpeg startup failed")
-    } else {
-        // calling it manually because static initialization in
-        // FFmpegImportPlugin.cpp doesn't work for some reason
-        FFmpegImportPlugin();
     }
 }
 

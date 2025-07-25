@@ -9,6 +9,7 @@
 #include "FileNames.h"
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-import-export/Import.h"
+#include "libraries/lib-import-export/ExportPluginRegistry.h"
 #include "libraries/lib-preferences/Prefs.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
 #include "libraries/lib-module-manager/ModuleManager.h"
@@ -20,6 +21,8 @@
 #include "internal/au3audiodevicesprovider.h"
 #include "internal/au3commonsettings.h"
 #include "internal/au3basicui.h"
+
+#include "modules/import-export/RegisterExportPlugins.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 
@@ -61,13 +64,14 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 
     m_audioDevicesProvider->init();
 
-    // TODO: this is old way to load ffmpeg, should be automatically dispatched
 #ifdef AU_USE_FFMPEG
     FFmpegStartup();
 #endif
+    RegisterExportPlugins();
 
     ModuleManager::Get().Initialize();
     Importer::Get().Initialize();
+    ExportPluginRegistry::Get().Initialize();
 
     muse::String tempDir = projectConfiguration()->temporaryDir().toString();
     UpdateDefaultPath(FileNames::Operation::Temp, wxFromString(tempDir));

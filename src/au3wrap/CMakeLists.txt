@@ -532,6 +532,9 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-label-track/LabelTrack.cpp
     ${AU3_LIBRARIES}/lib-label-track/LabelTrack.h
 
+    ${AU3_MODULES}/import-export/RegisterExportPlugins.cpp
+    ${AU3_MODULES}/import-export/RegisterExportPlugins.h
+
     ${AU3_LIBRARIES}/lib-import-export/Import.cpp
     ${AU3_LIBRARIES}/lib-import-export/Import.h
     ${AU3_LIBRARIES}/lib-import-export/ImportUtils.cpp
@@ -541,6 +544,21 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-import-export/ImportPlugin.cpp
     ${AU3_LIBRARIES}/lib-import-export/ImportPlugin.h
     ${AU3_LIBRARIES}/lib-import-export/ImportForwards.h
+
+    ${AU3_LIBRARIES}/lib-import-export/Export.cpp
+    ${AU3_LIBRARIES}/lib-import-export/Export.h
+    ${AU3_LIBRARIES}/lib-import-export/ExportPlugin.cpp
+    ${AU3_LIBRARIES}/lib-import-export/ExportPlugin.h
+    ${AU3_LIBRARIES}/lib-import-export/ExportPluginRegistry.cpp
+    ${AU3_LIBRARIES}/lib-import-export/ExportPluginRegistry.h
+    ${AU3_LIBRARIES}/lib-import-export/ExportPluginHelpers.cpp
+    ${AU3_LIBRARIES}/lib-import-export/ExportPluginHelpers.h
+    ${AU3_LIBRARIES}/lib-import-export/PlainExportOptionsEditor.cpp
+    ${AU3_LIBRARIES}/lib-import-export/PlainExportOptionsEditor.h
+    ${AU3_LIBRARIES}/lib-import-export/ExportOptionsEditor.cpp
+    ${AU3_LIBRARIES}/lib-import-export/ExportOptionsEditor.h
+    ${AU3_LIBRARIES}/lib-import-export/ExportUtils.cpp
+    ${AU3_LIBRARIES}/lib-import-export/ExportUtils.h
 
     ${AU3_LIBRARIES}/lib-file-formats/AcidizerTags.h
 
@@ -557,6 +575,10 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-ipc/internal/BufferedIPCChannel.h
     ${AU3_LIBRARIES}/lib-ipc/internal/ipc-types.h
     ${AU3_LIBRARIES}/lib-ipc/internal/socket_guard.h
+
+    ${AU3_MODULES}/import-export/mod-mp3/ExportMP3.cpp
+    ${AU3_MODULES}/import-export/mod-mp3/ExportMP3.h
+    ${AU3_MODULES}/import-export/mod-mp3/MP3.cpp
 )
 
 if (AU_MODULE_EFFECTS_AUDIO_UNIT)
@@ -648,9 +670,13 @@ endif()
 if(AU_USE_FFMPEG)
     set(MODULE_SRC ${MODULE_SRC}
         ${AU3_MODULES}/import-export/mod-ffmpeg/ImportFFmpeg.cpp
+        ${AU3_MODULES}/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+        ${AU3_MODULES}/import-export/mod-ffmpeg/ExportFFmpeg.h
         ${AU3_MODULES}/import-export/mod-ffmpeg/FFmpegDefines.h
         ${AU3_MODULES}/import-export/mod-ffmpeg/FFmpeg.cpp
         ${AU3_MODULES}/import-export/mod-ffmpeg/FFmpeg.h
+        ${AU3_MODULES}/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
+        ${AU3_MODULES}/import-export/mod-ffmpeg/ExportFFmpegOptions.h
 
         ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/FFmpegTypes.h
         ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/FFmpegFunctions.cpp
