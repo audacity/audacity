@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #pragma once
 
 #include "EqualizationCurvesList.h"
@@ -19,7 +22,7 @@ public:
 
     static const ComponentInterfaceSymbol Symbol;
 
-    EqualizationBase(int Options = kEqLegacy);
+    EqualizationBase(int Options);
 
     virtual ~EqualizationBase();
 
@@ -92,9 +95,11 @@ protected:
         Task& task, int count, const WaveChannel& t, sampleCount start, sampleCount len);
 
     EqualizationFilter mParameters;
+
 public:
     EqualizationCurvesList mCurvesList { mParameters };
-private:
+
+protected:
     const int mOptions;
 
     const EffectParameterMethods& Parameters() const override;
