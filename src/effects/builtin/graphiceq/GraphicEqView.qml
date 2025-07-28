@@ -76,7 +76,7 @@ EffectBase {
                 text: qsTrc("effects/graphiceq", "Flatten")
                 width: 64
                 height: 28
-                onClicked: graphicEq.flatten()
+                onClicked: graphicEq.bandsModel.flatten()
             }
 
             FlatButton {
@@ -84,7 +84,7 @@ EffectBase {
                 text: qsTrc("effects/graphiceq", "Invert")
                 width: 64
                 height: 28
-                onClicked: graphicEq.invert()
+                onClicked: graphicEq.bandsModel.invert()
             }
         }
     }
