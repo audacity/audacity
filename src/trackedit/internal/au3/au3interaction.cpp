@@ -51,7 +51,7 @@ TrackIdList Au3Interaction::pasteIntoNewTracks(const std::vector<Au3TrackDataPtr
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
     auto prj = globalContext()->currentTrackeditProject();
-    secs_t selectedStartTime = globalContext()->playbackState()->playbackPosition();
+    const muse::secs_t selectedStartTime = globalContext()->playbackPosition();
 
     TrackIdList tracksIdsPastedInto;
 

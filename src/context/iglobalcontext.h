@@ -26,6 +26,8 @@ public:
 
     virtual void setPlayer(const au::playback::IPlayerPtr& player) = 0;
     virtual IPlaybackStatePtr playbackState() const = 0;
+    virtual bool isPlaying() const = 0;
+    virtual muse::secs_t playbackPosition() const = 0;
 
     virtual bool isRecording() const = 0;
     virtual muse::async::Notification isRecordingChanged() const = 0;

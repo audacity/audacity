@@ -371,8 +371,7 @@ void WaveView::setLastClickPos(const unsigned lastX, const unsigned lastY, const
     }
 
     // Prevent sample editing during playback
-    bool isPlaying = globalContext()->playbackState()->playbackStatus() == playback::PlaybackStatus::Running;
-    if (isPlaying) {
+    if (globalContext()->isPlaying()) {
         return;
     }
 
@@ -400,8 +399,7 @@ void WaveView::smoothLastClickPos(unsigned int x, const unsigned int y)
     }
 
     // Prevent sample editing during playback
-    bool isPlaying = globalContext()->playbackState()->playbackStatus() == playback::PlaybackStatus::Running;
-    if (isPlaying) {
+    if (globalContext()->isPlaying()) {
         return;
     }
 
@@ -434,8 +432,7 @@ void WaveView::setIsolatedPoint(const unsigned int x, const unsigned int y)
     }
 
     // Prevent sample editing during playback
-    bool isPlaying = globalContext()->playbackState()->playbackStatus() == playback::PlaybackStatus::Running;
-    if (isPlaying) {
+    if (globalContext()->isPlaying()) {
         return;
     }
 
