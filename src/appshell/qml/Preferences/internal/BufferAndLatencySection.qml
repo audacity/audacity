@@ -42,7 +42,7 @@ BaseSection {
 
         currentValue: apiModel.bufferLength
 
-        enabled: !playbackState.isPlaying()
+        enabled: !playbackState.isPlaying
 
         columnWidth: root.columnWidth
         spacing: root.columnSpacing
@@ -64,7 +64,7 @@ BaseSection {
 
         currentValue: apiModel.latencyCompensation
 
-        enabled: !playbackState.isPlaying()
+        enabled: !playbackState.isPlaying
 
         columnWidth: root.columnWidth
         spacing: root.columnSpacing
