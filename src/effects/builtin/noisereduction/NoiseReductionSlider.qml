@@ -6,15 +6,19 @@ import Audacity.Effects
 Row {
     id: root
 
-    property alias value: slider.value
+    property double value: 0
     property bool isInt: false
     property alias from: slider.from
     property alias to: slider.to
     property alias measureUnitsSymbol: textControl.measureUnitsSymbol
 
-    QtObject {
-        id: prv
-        property int decimals: root.isInt ? 0 : 2
+    signal newValueRequested(double newValue)
+
+    onValueChanged: {
+        const newValue = root.value.toFixed(textControl.decimals)
+        if (root.value !== newValue) {
+            newValueRequested(newValue)
+        }
     }
 
     spacing: 16
@@ -23,8 +27,12 @@ Row {
         id: slider
         width: (root.width - root.spacing) * 0.6
         anchors.verticalCenter: root.verticalCenter
+        value: root.value
         onMoved: {
-            slider.value = prv.decimals === 0 ? Math.round(slider.value) : parseFloat(slider.value.toFixed(prv.decimals));
+            const newValue = slider.value.toFixed(textControl.decimals)
+            if (root.value !== newValue) {
+                newValueRequested(newValue)
+            }
         }
     }
 
@@ -35,10 +43,10 @@ Row {
         minValue: root.from
         maxValue: root.to
         step: 1
-        currentValue: slider.value
+        currentValue: root.value
         onValueEdited: function(newValue) {
-            if (slider.value !== newValue) {
-                slider.value = newValue
+            if (root.value !== newValue) {
+                newValueRequested(newValue)
             }
         }
     }

@@ -110,8 +110,8 @@ EffectBase {
                         Layout.bottomMargin: 16
 
                         value: noiseReduction.reduction
-                        onValueChanged: {
-                            noiseReduction.reduction = value
+                        onNewValueRequested: function(newValue) {
+                            noiseReduction.reduction = newValue;
                         }
                         measureUnitsSymbol: qsTrc("global", "dB")
                         from: noiseReduction.reductionMin
@@ -134,8 +134,8 @@ EffectBase {
                         Layout.bottomMargin: 16
 
                         value: noiseReduction.sensitivity
-                        onValueChanged: {
-                            noiseReduction.sensitivity = value
+                        onNewValueRequested: function(newValue) {
+                            noiseReduction.sensitivity = newValue;
                         }
                         from: noiseReduction.sensitivityMin
                         to: noiseReduction.sensitivityMax
@@ -157,8 +157,8 @@ EffectBase {
                         Layout.bottomMargin: 16
 
                         value: noiseReduction.frequencySmoothingBands
-                        onValueChanged: {
-                            noiseReduction.frequencySmoothingBands = value
+                        onNewValueRequested: function(newValue) {
+                            noiseReduction.frequencySmoothingBands = newValue;
                         }
                         measureUnitsSymbol: qsTrc("effects/noisereduction", "bands")
                         from: noiseReduction.frequencySmoothingBandsMin
