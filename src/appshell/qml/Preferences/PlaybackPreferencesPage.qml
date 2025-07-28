@@ -33,7 +33,7 @@ PreferencesPage {
         PlaybackPerformanceSection {
             playbackPreferencesModel: playbackPreferencesModel
 
-            enabled: !(playbackState.isPaused() || playbackState.isPlaying())
+            enabled: !(playbackState.isPaused || playbackState.isPlaying)
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart
@@ -53,7 +53,7 @@ PreferencesPage {
         CursorSection {
             playbackPreferencesModel: playbackPreferencesModel
 
-            enabled: !(playbackState.isPaused() || playbackState.isPlaying())
+            enabled: !(playbackState.isPaused || playbackState.isPlaying)
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 2

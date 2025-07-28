@@ -48,7 +48,7 @@ BaseSection {
         title: qsTrc("appshell/preferences", "Host")
         columnWidth: root.columnWidth
 
-        enabled: !playbackState.isPlaying()
+        enabled: !playbackState.isPlaying
 
         currentIndex: apiModel.currentAudioApiIndex
         model: root.audioApiList
@@ -66,7 +66,7 @@ BaseSection {
     CommonAudioApiConfiguration {
         columnWidth: Math.max(apiModel.longestDeviceNameLength, root.columnWidth)
 
-        enabled: !playbackState.isPlaying()
+        enabled: !playbackState.isPlaying
 
         navigation: root.navigation
         navigationOrderStart: 2
