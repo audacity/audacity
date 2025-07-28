@@ -254,7 +254,7 @@ void TimelineContext::autoScrollView(double scrollStep)
 
 void TimelineContext::startAutoScroll(double posSec)
 {
-    if (globalContext()->playbackState()->playbackStatus() == playback::PlaybackStatus::Running
+    if (globalContext()->isPlaying()
         || globalContext()->isRecording()) {
         return;
     }
@@ -480,7 +480,7 @@ void TimelineContext::updateViewOnProjectTempoChange(double ratio)
     setFrameEndTime(m_frameEndTime / ratio);
 
     dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1<double>(
-                               globalContext()->playbackState()->playbackPosition() / ratio));
+                               globalContext()->playbackPosition() / ratio));
 }
 
 void TimelineContext::shiftFrameTimeOnStep(int direction)

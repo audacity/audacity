@@ -5,7 +5,7 @@
 
 #include "global/async/asyncable.h"
 
-#include "../iplaybackstate.h"
+#include "context/iplaybackstate.h"
 #include "playback/iplayer.h"
 
 namespace au::context {
@@ -17,6 +17,7 @@ public:
     void setPlayer(playback::IPlayerPtr player);
 
     playback::PlaybackStatus playbackStatus() const override;
+    bool isPlaying() const override;
     muse::async::Channel<playback::PlaybackStatus> playbackStatusChanged() const override;
 
     muse::secs_t playbackPosition() const override;
