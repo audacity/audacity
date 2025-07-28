@@ -534,6 +534,8 @@ set(AU3_SRC
 
     ${AU3_MODULES}/import-export/RegisterExportPlugins.cpp
     ${AU3_MODULES}/import-export/RegisterExportPlugins.h
+    ${AU3_MODULES}/import-export/RegisterImportPlugins.cpp
+    ${AU3_MODULES}/import-export/RegisterImportPlugins.h
 
     ${AU3_LIBRARIES}/lib-import-export/Import.cpp
     ${AU3_LIBRARIES}/lib-import-export/Import.h
@@ -582,6 +584,9 @@ set(AU3_SRC
 
     ${AU3_MODULES}/import-export/mod-wavpack/ExportWavPack.cpp
     ${AU3_MODULES}/import-export/mod-wavpack/ExportWavPack.h
+
+    ${AU3_MODULES}/import-export/mod-wavpack/ImportWavPack.cpp
+    ${AU3_MODULES}/import-export/mod-wavpack/ImportWavPack.h
 )
 
 if (AU_MODULE_EFFECTS_AUDIO_UNIT)

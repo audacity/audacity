@@ -11,6 +11,7 @@
 #include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
 #include "libraries/lib-tags/Tags.h"
+#include "modules/import-export/RegisterImportPlugins.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
@@ -66,6 +67,11 @@ private:
     ImportFileHandle* mImportFileHandle { nullptr };
     std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
 };
+
+void au::importexport::Au3Importer::init()
+{
+    RegisterImportPlugins();
+}
 
 bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
 {

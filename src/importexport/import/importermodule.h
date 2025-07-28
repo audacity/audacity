@@ -16,6 +16,8 @@ public:
     std::string moduleName() const override;
     void registerExports() override;
 
+    void onInit(const muse::IApplication::RunMode& mode) override;
+
 private:
     std::shared_ptr<Au3Importer> m_importer;
 };

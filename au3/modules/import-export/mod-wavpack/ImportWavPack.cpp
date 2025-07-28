@@ -20,61 +20,26 @@
 
 *//*******************************************************************/
 
-#include "Import.h"
-#include "ImportPlugin.h"
+#include "libraries/lib-import-export/Import.h"
+#include "libraries/lib-import-export/ImportPlugin.h"
 
 #include <wx/string.h>
 #include <wx/log.h>
 #include <stdlib.h>
 #include <wavpack/wavpack.h>
 
-#include "Tags.h"
+#include "libraries/lib-tags/Tags.h"
 #include "WaveTrack.h"
 #include "CodeConversions.h"
-#include "ImportUtils.h"
-#include "ImportProgressListener.h"
+#include "libraries/lib-import-export/ImportUtils.h"
+#include "libraries/lib-import-export/ImportProgressListener.h"
+
+#include "ImportWavPack.h"
 
 #define DESC XO("WavPack files")
 
 static const auto exts = {
     wxT("wv")
-};
-
-class WavPackImportPlugin final : public ImportPlugin
-{
-public:
-    WavPackImportPlugin();
-    ~WavPackImportPlugin();
-
-    wxString GetPluginStringID() override;
-    TranslatableString GetPluginFormatDescription() override;
-    std::unique_ptr<ImportFileHandle> Open(
-        const FilePath& Filename, AudacityProject*) override;
-};
-
-class WavPackImportFileHandle final : public ImportFileHandleEx
-{
-public:
-    WavPackImportFileHandle(const FilePath& filename, WavpackContext* wavpackContext);
-    ~WavPackImportFileHandle();
-
-    TranslatableString GetFileDescription() override;
-    ByteCount GetFileUncompressedBytes() override;
-    void Import(ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
-                std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
-
-    wxInt32 GetStreamCount() override;
-    const TranslatableStrings& GetStreamInfo() override;
-    void SetStreamUsage(wxInt32 StreamID, bool Use) override;
-
-private:
-    WavpackContext* mWavPackContext;
-    int mNumChannels;
-    uint32_t mSampleRate;
-    int mBitsPerSample;
-    int mBytesPerSample;
-    int64_t mNumSamples;
-    sampleFormat mFormat;
 };
 
 // ============================================================================
@@ -116,10 +81,6 @@ std::unique_ptr<ImportFileHandle> WavPackImportPlugin::Open(const FilePath& file
 
     return std::move(handle);
 }
-
-static Importer::RegisteredImportPlugin registered{ "WavPack",
-                                                    std::make_unique< WavPackImportPlugin >()
-};
 
 // ============================================================================
 // WavPackImportFileHandle
