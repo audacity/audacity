@@ -83,6 +83,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/fade/fadeeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/fade/fadeeffect.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/graphiceq/equalizationbandsliders.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/graphiceq/equalizationbandsliders.h
     ${CMAKE_CURRENT_LIST_DIR}/graphiceq/graphiceq.cpp
     ${CMAKE_CURRENT_LIST_DIR}/graphiceq/graphiceq.h
     ${CMAKE_CURRENT_LIST_DIR}/graphiceq/graphiceqbandsmodel.cpp

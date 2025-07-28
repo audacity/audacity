@@ -1,3 +1,8 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#pragma once
+
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
@@ -10,24 +15,20 @@
   Paul Licameli split from Equalization.h
 
 ***********************************************************************/
-#ifndef __AUDACITY_EQUALIZATION_BAND_SLIDERS__
-#define __AUDACITY_EQUALIZATION_BAND_SLIDERS__
 
 #define NUMBER_OF_BANDS 31
 #define NUM_PTS 180
 
-#include "EqualizationCurvesList.h"
-#include "EqualizationFilter.h"
-#include <wx/event.h>
+#include "libraries/lib-builtin-effects/EqualizationCurvesList.h"
+#include "libraries/lib-builtin-effects/EqualizationFilter.h"
 
-class wxSlider;
+#include <functional>
 
-struct EqualizationBandSliders : public wxEvtHandler
+struct EqualizationBandSliders
 {
 public:
-    EqualizationBandSliders(EqualizationCurvesList& curvesList);
+    EqualizationBandSliders(std::function<EqualizationCurvesList* ()> getCurvesList);
     void Init();
-    void AddBandSliders(ShuttleGui& S);
     void Flatten();
     void GraphicEQ(Envelope& env);
     void Invert();
@@ -35,31 +36,23 @@ public:
     void EnvLinToLog();
     void ErrMin();
 
+    double GetSliderValue(int index) const;
+    void SetSliderValue(int index, double db);
+
 private:
+    const std::function<EqualizationCurvesList* ()> m_getCurvesList;
+
     double mWhens[NUM_PTS]{};
     double mWhenSliders[NUMBER_OF_BANDS + 1]{};
     size_t mBandsInUse{ NUMBER_OF_BANDS };
 
-    int mSlidersOld[NUMBER_OF_BANDS]{};
     double mEQVals[NUMBER_OF_BANDS + 1]{};
 
-    wxSlider* mSliders[NUMBER_OF_BANDS]{};
-
-    EqualizationCurvesList& mCurvesList;
+    std::string mSliderTooltips[NUMBER_OF_BANDS]{};
 
     static void spline(double x[], double y[], size_t n, double y2[]);
     static
     double splint(double x[], double y[], size_t n, double y2[], double xr);
 
-    // Convenience function template for binding event handler functions
-    template<typename EventTag, typename Class, typename Event>
-    void BindTo(
-        wxEvtHandler& src, const EventTag& eventType, void (Class::*pmf)(Event&))
-    {
-        src.Bind(eventType, pmf, static_cast<Class*>(this));
-    }
-
-    void OnErase(wxEvent& event);
-    void OnSlider(wxCommandEvent& event);
+    void OnSliderUpdated(int index);
 };
-#endif
