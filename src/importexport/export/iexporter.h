@@ -15,6 +15,7 @@ class IExporter : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IExporter() = default;
 
+    virtual void init() = 0;
     virtual muse::Ret exportData(std::string filename) = 0;
 
     virtual std::vector<std::string> formatsList() const = 0;
