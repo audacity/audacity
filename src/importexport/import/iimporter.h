@@ -11,6 +11,7 @@ class IImporter : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IImporter() = default;
 
+    virtual void init() = 0;
     virtual bool import(const muse::io::path_t& filePath) = 0;
 };
 }
