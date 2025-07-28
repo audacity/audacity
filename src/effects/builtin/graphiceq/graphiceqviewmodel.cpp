@@ -1,13 +1,19 @@
 /*
-* Audacity: A Digital Audio Editor
-*/
+ * Audacity: A Digital Audio Editor
+ */
 #include "graphiceqviewmodel.h"
 
 #include "graphiceq.h"
+#include "graphiceqbandsmodel.h"
 
 #include "log.h"
 
 namespace au::effects {
+GraphicEqViewModel::GraphicEqViewModel()
+    : mBandsModel(new GraphicEqBandsModel(this))
+{
+}
+
 GraphicEq* GraphicEqViewModel::effect() const
 {
     const EffectId effectId = this->effectId();
@@ -20,5 +26,21 @@ GraphicEq* GraphicEqViewModel::effect() const
 
 void GraphicEqViewModel::doReload()
 {
+    emit bandsModelChanged();
+}
+
+GraphicEqBandsModel* GraphicEqViewModel::bandsModel() const
+{
+    return mBandsModel;
+}
+
+void GraphicEqViewModel::flatten()
+{
+    // Implement flatten logic
+}
+
+void GraphicEqViewModel::invert()
+{
+    // Implement invert logic
 }
 }

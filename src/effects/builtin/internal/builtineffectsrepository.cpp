@@ -36,6 +36,7 @@
 #include "noisereduction/noisereductionviewmodel.h"
 #include "fade/fadeeffect.h"
 #include "graphiceq/graphiceq.h"
+#include "graphiceq/graphiceqbandsmodel.h"
 #include "graphiceq/graphiceqviewmodel.h"
 #include "invert/inverteffect.h"
 #include "reverse/reverseeffect.h"
@@ -179,6 +180,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     );
         } else if (symbol == GraphicEq::Symbol) {
             qmlRegisterType<GraphicEqViewModel>("Audacity.Effects", 1, 0, "GraphicEqViewModel");
+            qmlRegisterType<GraphicEqBandsModel>("Audacity.Effects", 1, 0, "GraphicEqBandsModel");
             regView(GraphicEq::Symbol, u"qrc:/graphiceq/GraphicEqView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Graphic EQ"),
