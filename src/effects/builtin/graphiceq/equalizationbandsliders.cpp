@@ -1,3 +1,7 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+
 /**********************************************************************
 
    Audacity: A Digital Audio Editor
@@ -11,13 +15,10 @@
    Paul Licameli split from Equalization.cpp
 
 **********************************************************************/
-#include "EqualizationBandSliders.h"
-#include "SampleFormat.h"
-#include "ShuttleGui.h"
+#include "equalizationbandsliders.h"
+#include "libraries/lib-math/SampleFormat.h"
 
-#if wxUSE_ACCESSIBILITY
-#include "WindowAccessible.h"
-#endif
+#include "log.h"
 
 static const double kThirdOct[] =
 {
@@ -27,8 +28,8 @@ static const double kThirdOct[] =
 };
 
 EqualizationBandSliders::
-EqualizationBandSliders(EqualizationCurvesList& curvesList)
-    : mCurvesList{curvesList}
+EqualizationBandSliders(std::function<EqualizationCurvesList* ()> getCurvesList)
+    : m_getCurvesList(std::move(getCurvesList))
 {
     for (size_t i = 0; i < NUM_PTS - 1; ++i) {
         mWhens[i] = (double)i / (NUM_PTS - 1.);
@@ -40,8 +41,12 @@ EqualizationBandSliders(EqualizationCurvesList& curvesList)
 
 void EqualizationBandSliders::Init()
 {
+    const EqualizationCurvesList* curvesList = m_getCurvesList();
+    IF_ASSERT_FAILED(curvesList) {
+        return;
+    }
     mBandsInUse = 0;
-    while (kThirdOct[mBandsInUse] <= mCurvesList.mParameters.mHiFreq) {
+    while (kThirdOct[mBandsInUse] <= curvesList->mParameters.mHiFreq) {
         ++mBandsInUse;
         if (mBandsInUse == NUMBER_OF_BANDS) {
             break;
@@ -49,44 +54,18 @@ void EqualizationBandSliders::Init()
     }
 }
 
-void EqualizationBandSliders::AddBandSliders(ShuttleGui& S)
+double EqualizationBandSliders::GetSliderValue(int index) const
 {
-    wxWindow* pParent = S.GetParent();
-
-    // for (int i = 0; (i < NUMBER_OF_BANDS) && (kThirdOct[i] <= hiFreq ); ++i)
-    // May show more sliders than needed.  Fixes Bug 2269
-    for (int i = 0; i < NUMBER_OF_BANDS; ++i) {
-        TranslatableString freq = kThirdOct[i] < 1000.
-                                  ? XO("%d Hz").Format((int)kThirdOct[i])
-                                  : XO("%g kHz").Format(kThirdOct[i] / 1000.);
-        TranslatableString fNum = kThirdOct[i] < 1000.
-                                  ? Verbatim("%d").Format((int)kThirdOct[i])
-                                  /* i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation. */
-                                  : XO("%gk").Format(kThirdOct[i] / 1000.);
-        S.StartVerticalLay();
-        {
-            S.AddFixedText(fNum);
-            mSliders[i] = safenew wxSliderWrapper(pParent, wxID_ANY, 0, -20, +20,
-                                                  wxDefaultPosition, wxSize(-1, 50), wxSL_VERTICAL | wxSL_INVERSE);
-
-   #if wxUSE_ACCESSIBILITY
-            mSliders[i]->SetAccessible(safenew SliderAx(mSliders[i], XO("%d dB")));
-   #endif
-            BindTo(*mSliders[i], wxEVT_SLIDER,
-                   &EqualizationBandSliders::OnSlider);
-
-            mSlidersOld[i] = 0;
-            mEQVals[i] = 0.;
-            S.Prop(1)
-            .Name(freq)
-            .ConnectRoot(
-                wxEVT_ERASE_BACKGROUND, &EqualizationBandSliders::OnErase)
-            .Position(wxEXPAND)
-            .Size({ -1, 50 })
-            .AddWindow(mSliders[i]);
-        }
-        S.EndVerticalLay();
+    IF_ASSERT_FAILED(index >= 0 && index < NUMBER_OF_BANDS) {
+        return 0.0;
     }
+    return mEQVals[index];
+}
+
+void EqualizationBandSliders::SetSliderValue(int index, double dbValue)
+{
+    mEQVals[index] = dbValue;
+    OnSliderUpdated(index);
 }
 
 //
@@ -94,7 +73,11 @@ void EqualizationBandSliders::AddBandSliders(ShuttleGui& S)
 //
 void EqualizationBandSliders::Flatten()
 {
-    auto& parameters = mCurvesList.mParameters;
+    EqualizationCurvesList* const curvesList = m_getCurvesList();
+    IF_ASSERT_FAILED(curvesList) {
+        return;
+    }
+    auto& parameters = curvesList->mParameters;
     const auto& drawMode = parameters.mDrawMode;
     auto& linEnvelope = parameters.mLinEnvelope;
     auto& logEnvelope = parameters.mLogEnvelope;
@@ -103,11 +86,9 @@ void EqualizationBandSliders::Flatten()
     logEnvelope.SetTrackLen(1.0);
     linEnvelope.Flatten(0.);
     linEnvelope.SetTrackLen(1.0);
-    mCurvesList.ForceRecalc();
+    curvesList->ForceRecalc();
     if (!drawMode) {
         for ( size_t i = 0; i < mBandsInUse; i++) {
-            mSliders[i]->SetValue(0);
-            mSlidersOld[i] = 0;
             mEQVals[i] = 0.;
 
             wxString tip;
@@ -116,15 +97,19 @@ void EqualizationBandSliders::Flatten()
             } else {
                 tip.Printf(wxT("%gkHz\n%.1fdB"), kThirdOct[i] / 1000., 0.);
             }
-            mSliders[i]->SetToolTip(tip);
+            mSliderTooltips[i] = tip.ToStdString();
         }
     }
-    mCurvesList.EnvelopeUpdated();
+    curvesList->EnvelopeUpdated();
 }
 
-void EqualizationBandSliders::EnvLogToLin(void)
+void EqualizationBandSliders::EnvLogToLin()
 {
-    auto& parameters = mCurvesList.mParameters;
+    EqualizationCurvesList* const curvesList = m_getCurvesList();
+    IF_ASSERT_FAILED(curvesList) {
+        return;
+    }
+    auto& parameters = curvesList->mParameters;
     auto& linEnvelope = parameters.mLinEnvelope;
     auto& logEnvelope = parameters.mLogEnvelope;
     const auto& hiFreq = parameters.mHiFreq;
@@ -151,9 +136,13 @@ void EqualizationBandSliders::EnvLogToLin(void)
     linEnvelope.Reassign(1., value[numPoints - 1]);
 }
 
-void EqualizationBandSliders::EnvLinToLog(void)
+void EqualizationBandSliders::EnvLinToLog()
 {
-    auto& parameters = mCurvesList.mParameters;
+    EqualizationCurvesList* const curvesList = m_getCurvesList();
+    IF_ASSERT_FAILED(curvesList) {
+        return;
+    }
+    auto& parameters = curvesList->mParameters;
     auto& linEnvelope = parameters.mLinEnvelope;
     auto& logEnvelope = parameters.mLogEnvelope;
     const auto& hiFreq = parameters.mHiFreq;
@@ -190,15 +179,19 @@ void EqualizationBandSliders::EnvLinToLog(void)
     logEnvelope.Reassign(1., value[numPoints - 1]);
 
     if (changed) {
-        mCurvesList.EnvelopeUpdated(logEnvelope, false);
+        curvesList->EnvelopeUpdated(logEnvelope, false);
     }
 }
 
-void EqualizationBandSliders::ErrMin(void)
+void EqualizationBandSliders::ErrMin()
 {
-    const auto& parameters = mCurvesList.mParameters;
+    EqualizationCurvesList* const curvesList = m_getCurvesList();
+    IF_ASSERT_FAILED(curvesList) {
+        return;
+    }
+    const auto& parameters = curvesList->mParameters;
     const auto& logEnvelope = parameters.mLogEnvelope;
-    const auto& curves = mCurvesList.mCurves;
+    const auto& curves = curvesList->mCurves;
     const auto& loFreq = parameters.mLoFreq;
     const auto& hiFreq = parameters.mHiFreq;
 
@@ -280,27 +273,28 @@ void EqualizationBandSliders::ErrMin(void)
         j++; //try next slider
     }
     if (error > .0025 * mBandsInUse) { // not within 0.05dB on each slider, on average
-        mCurvesList.Select((int)curves.size() - 1);
-        mCurvesList.EnvelopeUpdated(testEnvelope, false);
+        curvesList->Select((int)curves.size() - 1);
+        curvesList->EnvelopeUpdated(testEnvelope, false);
     }
 
     for (size_t i = 0; i < mBandsInUse; ++i) {
-        // actually set slider positions
-        mSliders[i]->SetValue(lrint(mEQVals[i]));
-        mSlidersOld[i] = mSliders[i]->GetValue();
         wxString tip;
         if (kThirdOct[i] < 1000.) {
             tip.Printf(wxT("%dHz\n%.1fdB"), (int)kThirdOct[i], mEQVals[i]);
         } else {
             tip.Printf(wxT("%gkHz\n%.1fdB"), kThirdOct[i] / 1000., mEQVals[i]);
         }
-        mSliders[i]->SetToolTip(tip);
+        mSliderTooltips[i] = tip.ToStdString();
     }
 }
 
 void EqualizationBandSliders::GraphicEQ(Envelope& env)
 {
-    const auto& parameters = mCurvesList.mParameters;
+    EqualizationCurvesList* const curvesList = m_getCurvesList();
+    IF_ASSERT_FAILED(curvesList) {
+        return;
+    }
+    const auto& parameters = curvesList->mParameters;
     const auto& interp = parameters.mInterp;
 
     // JKC: 'value' is for height of curve.
@@ -429,7 +423,7 @@ void EqualizationBandSliders::GraphicEQ(Envelope& env)
     }
     }
 
-    mCurvesList.ForceRecalc();
+    curvesList->ForceRecalc();
 }
 
 void EqualizationBandSliders::spline(
@@ -479,63 +473,40 @@ double EqualizationBandSliders::splint(
     return a * y[k] + b * y[k + 1] + ((a * a * a - a) * y2[k] + (b * b * b - b) * y2[k + 1]) * h * h / 6.;
 }
 
-void EqualizationBandSliders::OnErase(wxEvent&)
+void EqualizationBandSliders::OnSliderUpdated(int i)
 {
-}
-
-void EqualizationBandSliders::OnSlider(wxCommandEvent& event)
-{
-    auto& parameters = mCurvesList.mParameters;
+    EqualizationCurvesList* const curvesList = m_getCurvesList();
+    IF_ASSERT_FAILED(curvesList) {
+        return;
+    }
+    auto& parameters = curvesList->mParameters;
     auto& logEnvelope = parameters.mLogEnvelope;
 
-    wxSlider* s = (wxSlider*)event.GetEventObject();
-    for (size_t i = 0; i < mBandsInUse; i++) {
-        if (s == mSliders[i]) {
-            int posn = mSliders[i]->GetValue();
-            if (wxGetKeyState(WXK_SHIFT)) {
-                if (posn > mSlidersOld[i]) {
-                    mEQVals[i] += (float).1;
-                } else if (posn < mSlidersOld[i]) {
-                    mEQVals[i] -= .1f;
-                }
-            } else {
-                mEQVals[i] += (posn - mSlidersOld[i]);
-            }
-            if (mEQVals[i] > 20.) {
-                mEQVals[i] = 20.;
-            }
-            if (mEQVals[i] < -20.) {
-                mEQVals[i] = -20.;
-            }
-            int newPosn = (int)mEQVals[i];
-            mSliders[i]->SetValue(newPosn);
-            mSlidersOld[i] = newPosn;
-            wxString tip;
-            if (kThirdOct[i] < 1000.) {
-                tip.Printf(wxT("%dHz\n%.1fdB"), (int)kThirdOct[i], mEQVals[i]);
-            } else {
-                tip.Printf(wxT("%gkHz\n%.1fdB"), kThirdOct[i] / 1000., mEQVals[i]);
-            }
-            s->SetToolTip(tip);
-            break;
-        }
+    wxString tip;
+    if (kThirdOct[i] < 1000.) {
+        tip.Printf(wxT("%dHz\n%.1fdB"), (int)kThirdOct[i], mEQVals[i]);
+    } else {
+        tip.Printf(wxT("%gkHz\n%.1fdB"), kThirdOct[i] / 1000., mEQVals[i]);
     }
+    mSliderTooltips[i] = tip.ToStdString();
+
     GraphicEQ(logEnvelope);
-    mCurvesList.EnvelopeUpdated();
+    curvesList->EnvelopeUpdated();
 }
 
 void EqualizationBandSliders::Invert() // Inverts any curve
 {
-    auto& parameters = mCurvesList.mParameters;
+    EqualizationCurvesList* const curvesList = m_getCurvesList();
+    IF_ASSERT_FAILED(curvesList) {
+        return;
+    }
+    auto& parameters = curvesList->mParameters;
     auto& linEnvelope = parameters.mLinEnvelope;
     auto& logEnvelope = parameters.mLogEnvelope;
 
     if (!parameters.mDrawMode) { // Graphic (Slider) mode. Invert the sliders.
         for (size_t i = 0; i < mBandsInUse; i++) {
             mEQVals[i] = -mEQVals[i];
-            int newPosn = (int)mEQVals[i];
-            mSliders[i]->SetValue(newPosn);
-            mSlidersOld[i] = newPosn;
 
             wxString tip;
             if (kThirdOct[i] < 1000.) {
@@ -543,7 +514,7 @@ void EqualizationBandSliders::Invert() // Inverts any curve
             } else {
                 tip.Printf(wxT("%gkHz\n%.1fdB"), kThirdOct[i] / 1000., mEQVals[i]);
             }
-            mSliders[i]->SetToolTip(tip);
+            mSliderTooltips[i] = tip.ToStdString();
         }
         GraphicEQ(logEnvelope);
     } else { // Draw mode.  Invert the points.
@@ -589,6 +560,6 @@ void EqualizationBandSliders::Invert() // Inverts any curve
     }
 
     // and update the display etc
-    mCurvesList.ForceRecalc();
-    mCurvesList.EnvelopeUpdated();
+    curvesList->ForceRecalc();
+    curvesList->EnvelopeUpdated();
 }

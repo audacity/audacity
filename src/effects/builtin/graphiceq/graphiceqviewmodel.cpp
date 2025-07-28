@@ -10,7 +10,7 @@
 
 namespace au::effects {
 GraphicEqViewModel::GraphicEqViewModel()
-    : mBandsModel(new GraphicEqBandsModel(this))
+    : mBandsModel(new GraphicEqBandsModel(this, [this] { return effect(); }))
 {
 }
 
@@ -26,21 +26,12 @@ GraphicEq* GraphicEqViewModel::effect() const
 
 void GraphicEqViewModel::doReload()
 {
+    mBandsModel->reload();
     emit bandsModelChanged();
 }
 
 GraphicEqBandsModel* GraphicEqViewModel::bandsModel() const
 {
     return mBandsModel;
-}
-
-void GraphicEqViewModel::flatten()
-{
-    // Implement flatten logic
-}
-
-void GraphicEqViewModel::invert()
-{
-    // Implement invert logic
 }
 }

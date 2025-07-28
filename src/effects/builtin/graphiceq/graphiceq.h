@@ -9,10 +9,12 @@ namespace au::effects {
 class GraphicEq : public EqualizationBase
 {
 public:
-    using EqualizationBase::EqualizationBase;
+    GraphicEq();
 
     static const ComponentInterfaceSymbol Symbol;
 
     ComponentInterfaceSymbol GetSymbol() const override;
+
+    int GetOptions() const;
 };
 }

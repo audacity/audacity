@@ -23,9 +23,6 @@ public:
 
     GraphicEqBandsModel* bandsModel() const;
 
-    Q_INVOKABLE void flatten();
-    Q_INVOKABLE void invert();
-
 signals:
     void bandsModelChanged();
 
@@ -33,6 +30,6 @@ private:
     GraphicEq* effect() const;
     void doReload() override;
 
-    GraphicEqBandsModel* mBandsModel;
+    GraphicEqBandsModel* const mBandsModel;
 };
 }
