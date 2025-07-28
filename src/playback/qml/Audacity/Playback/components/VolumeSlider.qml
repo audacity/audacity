@@ -26,7 +26,7 @@ Slider {
     signal volumeLevelMoved(var level)
     signal handlePressed()
 
-    from: meterModel.dbRange
+    from: meterModel ? meterModel.dbRange : 0
     to: 0
     value: root.volumeLevel
     stepSize: 0.1
@@ -65,12 +65,10 @@ Slider {
         id: tooltip
 
         parent: root.handle
-        decimalPlaces: root.meterModel.meterType == PlaybackMeterType.Linear ? 2 : 1
-        minValue: root.meterModel.meterType == PlaybackMeterType.Linear ? 1.0 : meterModel.dbRange
-        unitText: root.meterModel.meterType == PlaybackMeterType.Linear ? "" : "dB"
-        volume: {
-            root.meterModel.meterType ==  PlaybackMeterType.Linear ? root.meterModel.position : root.volumeLevel
-        }
+        decimalPlaces: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 2 : 1) : 1
+        minValue: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 1.0 : meterModel.dbRange) : 0
+        unitText: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? "" : "dB") : ""
+        volume: root.meterModel ? (root.meterModel.meterType ==  PlaybackMeterType.Linear ? root.meterModel.position : root.volumeLevel) : 0
     }
 
     NavigationControl {
@@ -114,7 +112,7 @@ Slider {
     handle: Item {
         id: handleItem
 
-        x:  root.meterModel.position * prv.rulerLineWidth
+        x: root.meterModel ? (root.meterModel.position * prv.rulerLineWidth) : 0
         y: prv.rulerYPos - root.handleHeight / 2
         implicitWidth: root.handleWidth
         implicitHeight: root.handleHeight

@@ -115,7 +115,9 @@ Item {
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
                 onVolumeLevelChangeRequested: function(level) {
-                    itemData.level = level
+                    if (itemData) {
+                        itemData.level = level
+                    }
                 }
 
                 onWidthChangeRequested: function(x, y) {

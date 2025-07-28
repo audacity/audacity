@@ -25,15 +25,15 @@ BaseSection {
         columnWidth: 320
 
         currentIndex: root.model.meterDbRange
-        model: playbackMeterModel.dbRanges.map(function(item) {
-            return item.title;
+        model: playbackMeterModel.dbRangeList.map(function(id) {
+            return playbackMeterModel.description(id);
         })
 
         navigation.name: "MeterDbRangeBox"
         navigation.panel: root.navigation
         navigation.row: 1
 
-        onValueEdited: function(newIndex, newValue) {
+        onValueEdited: function(newIndex, _) {
             root.model.meterDbRange = newIndex;
         }
     }

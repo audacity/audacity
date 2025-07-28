@@ -8,6 +8,17 @@
 
 using namespace au::playback;
 
+namespace {
+constexpr const char* DB36_DESCRIPTION = "-36 dB (shallow range for high-amplitude editing)";
+constexpr const char* DB48_DESCRIPTION = "-48 dB (PCM range of 8 bit samples)";
+constexpr const char* DB60_DESCRIPTION = "-60 dB (PCM range of 10 bit samples)";
+constexpr const char* DB72_DESCRIPTION = "-72 dB (PCM range of 12 bit samples)";
+constexpr const char* DB84_DESCRIPTION = "-84 dB (PCM range of 14 bit samples)";
+constexpr const char* DB96_DESCRIPTION = "-96 dB (PCM range of 16 bit samples)";
+constexpr const char* DB120_DESCRIPTION = "-120 dB (approximate limit of human hearing)";
+constexpr const char* DB144_DESCRIPTION = "-145 dB (PCM range of 24 bit samples)";
+}
+
 PlaybackMeterModel::PlaybackMeterModel(QObject* parent)
     : QObject(parent)
 {
@@ -36,13 +47,9 @@ PlaybackMeterModel::PlaybackMeterModel(QObject* parent)
 
     configuration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
         emit meterDbRangeChanged();
-        emit dbRangesChanged();
         emit dbRangeChanged();
         emit positionChanged();
     });
-
-    m_dbRanges = new PlaybackMeterDbRangeModel(this);
-    emit dbRangesChanged();
 }
 
 double PlaybackMeterModel::stepToPosition(double step)
@@ -136,7 +143,6 @@ void PlaybackMeterModel::setMeterSize(int size)
     configuration()->setPlaybackHorizontalMeterSize(size);
     emit smallStepsChanged();
     emit fullStepsChanged();
-    emit dbRangesChanged();
 }
 
 int PlaybackMeterModel::meterSize() const
@@ -158,26 +164,6 @@ PlaybackMeterDbRange::DbRange PlaybackMeterModel::meterDbRange() const
     return configuration()->playbackMeterDbRange();
 }
 
-muse::uicomponents::MenuItemList PlaybackMeterModel::dbRanges() const
-{
-    m_dbRanges->load();
-    return m_dbRanges->items();
-}
-
-QString PlaybackMeterModel::currentDbRange() const
-{
-    return QString::fromUtf8(m_dbRanges->description(meterDbRange()));
-}
-
-void PlaybackMeterModel::handleDbRangeChange(const QString& itemId)
-{
-    const auto range = m_dbRanges->rangeFromAction(itemId.toStdString());
-    if (range.has_value()) {
-        setMeterDbRange(range.value());
-        return;
-    }
-}
-
 float PlaybackMeterModel::dbRange() const
 {
     if (meterType() == PlaybackMeterType::MeterType::Linear) {
@@ -185,6 +171,22 @@ float PlaybackMeterModel::dbRange() const
     }
 
     return PlaybackMeterDbRange::toDouble(meterDbRange());
+}
+
+std::vector<PlaybackMeterDbRange::DbRange> PlaybackMeterModel::dbRangeList() const
+{
+    std::vector<PlaybackMeterDbRange::DbRange> ranges;
+
+    ranges.push_back(PlaybackMeterDbRange::DbRange::Range36);
+    ranges.push_back(PlaybackMeterDbRange::DbRange::Range48);
+    ranges.push_back(PlaybackMeterDbRange::DbRange::Range60);
+    ranges.push_back(PlaybackMeterDbRange::DbRange::Range72);
+    ranges.push_back(PlaybackMeterDbRange::DbRange::Range84);
+    ranges.push_back(PlaybackMeterDbRange::DbRange::Range96);
+    ranges.push_back(PlaybackMeterDbRange::DbRange::Range120);
+    ranges.push_back(PlaybackMeterDbRange::DbRange::Range144);
+
+    return ranges;
 }
 
 float PlaybackMeterModel::position() const
@@ -196,4 +198,28 @@ void PlaybackMeterModel::volumeChangeRequested(float volume)
 {
     m_volume = volume;
     emit positionChanged();
+}
+
+QString PlaybackMeterModel::description(PlaybackMeterDbRange::DbRange range) const
+{
+    switch (range) {
+    case PlaybackMeterDbRange::DbRange::Range36:
+        return DB36_DESCRIPTION;
+    case PlaybackMeterDbRange::DbRange::Range48:
+        return DB48_DESCRIPTION;
+    case PlaybackMeterDbRange::DbRange::Range60:
+        return DB60_DESCRIPTION;
+    case PlaybackMeterDbRange::DbRange::Range72:
+        return DB72_DESCRIPTION;
+    case PlaybackMeterDbRange::DbRange::Range84:
+        return DB84_DESCRIPTION;
+    case PlaybackMeterDbRange::DbRange::Range96:
+        return DB96_DESCRIPTION;
+    case PlaybackMeterDbRange::DbRange::Range120:
+        return DB120_DESCRIPTION;
+    case PlaybackMeterDbRange::DbRange::Range144:
+        return DB144_DESCRIPTION;
+    }
+
+    return "";
 }

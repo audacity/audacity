@@ -8,7 +8,6 @@
 
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackmetercontroller.h"
-#include "playback/view/common/playbackmeterdbrangemodel.h"
 
 namespace au::playback {
 class PlaybackMeterModel : public QObject, public muse::async::Asyncable
@@ -26,9 +25,8 @@ class PlaybackMeterModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(
         PlaybackMeterDbRange::DbRange meterDbRange READ meterDbRange WRITE setMeterDbRange NOTIFY meterDbRangeChanged FINAL)
-    Q_PROPERTY(muse::uicomponents::MenuItemList dbRanges READ dbRanges NOTIFY dbRangesChanged FINAL)
-    Q_PROPERTY(QString currentDbRange READ currentDbRange NOTIFY dbRangesChanged FINAL)
 
+    Q_PROPERTY(std::vector<PlaybackMeterDbRange::DbRange> dbRangeList READ dbRangeList CONSTANT)
     Q_PROPERTY(float dbRange READ dbRange NOTIFY dbRangeChanged FINAL)
 
     Q_PROPERTY(float position READ position NOTIFY positionChanged FINAL)
@@ -43,8 +41,8 @@ public:
     Q_INVOKABLE double sampleToPosition(double sample) const;
     Q_INVOKABLE double positionToSample(double position) const;
     Q_INVOKABLE QString sampleToText(double sample) const;
-    Q_INVOKABLE void handleDbRangeChange(const QString& itemId);
     Q_INVOKABLE void volumeChangeRequested(float volume);
+    Q_INVOKABLE QString description(PlaybackMeterDbRange::DbRange range) const;
 
     PlaybackMeterStyle::MeterStyle meterStyle() const;
     PlaybackMeterType::MeterType meterType() const;
@@ -53,7 +51,7 @@ public:
 
     PlaybackMeterDbRange::DbRange meterDbRange() const;
     QString currentDbRange() const;
-    muse::uicomponents::MenuItemList dbRanges() const;
+    std::vector<PlaybackMeterDbRange::DbRange> dbRangeList() const;
     float dbRange() const;
 
     float position() const;
@@ -78,13 +76,11 @@ signals:
     void meterSizeChanged();
 
     void meterDbRangeChanged();
-    void dbRangesChanged();
     void dbRangeChanged();
 
     void positionChanged();
 
 private:
-    PlaybackMeterDbRangeModel* m_dbRanges = nullptr;
     float m_volume = 0.0f;
 };
 }
