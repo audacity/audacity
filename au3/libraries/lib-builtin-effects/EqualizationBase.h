@@ -92,7 +92,9 @@ protected:
         Task& task, int count, const WaveChannel& t, sampleCount start, sampleCount len);
 
     EqualizationFilter mParameters;
+public:
     EqualizationCurvesList mCurvesList { mParameters };
+private:
     const int mOptions;
 
     const EffectParameterMethods& Parameters() const override;
