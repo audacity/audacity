@@ -59,4 +59,5 @@ void ExporterModule::registerUiTypes()
 void ExporterModule::onInit(const muse::IApplication::RunMode& mode)
 {
     m_configuration->init();
+    m_exporter->init();
 }

@@ -10,6 +10,7 @@
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-import-export/ExportPluginRegistry.h"
 #include "libraries/lib-import-export/ExportUtils.h"
+#include "modules/import-export/RegisterExportPlugins.h"
 
 #include "au3wrap/au3types.h"
 
@@ -85,6 +86,11 @@ public:
         }
     }
 };
+
+void Au3Exporter::init()
+{
+    RegisterExportPlugins();
+}
 
 muse::Ret Au3Exporter::exportData(std::string filename)
 {
