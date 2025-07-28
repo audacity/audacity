@@ -8,6 +8,8 @@
 
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackmetercontroller.h"
+#include "playback/iaudiooutput.h"
+#include "playback/iplayback.h"
 
 namespace au::playback {
 class PlaybackMeterModel : public QObject, public muse::async::Asyncable
@@ -33,6 +35,7 @@ class PlaybackMeterModel : public QObject, public muse::async::Asyncable
 
     muse::Inject<IPlaybackMeterController> meterController;
     muse::Inject<IPlaybackConfiguration> configuration;
+    muse::Inject<IPlayback> playback;
 
 public:
     explicit PlaybackMeterModel(QObject* parent = nullptr);
@@ -41,7 +44,6 @@ public:
     Q_INVOKABLE double sampleToPosition(double sample) const;
     Q_INVOKABLE double positionToSample(double position) const;
     Q_INVOKABLE QString sampleToText(double sample) const;
-    Q_INVOKABLE void volumeChangeRequested(float volume);
     Q_INVOKABLE QString description(PlaybackMeterDbRange::DbRange range) const;
 
     PlaybackMeterStyle::MeterStyle meterStyle() const;
@@ -50,7 +52,6 @@ public:
     int meterSize() const;
 
     PlaybackMeterDbRange::DbRange meterDbRange() const;
-    QString currentDbRange() const;
     std::vector<PlaybackMeterDbRange::DbRange> dbRangeList() const;
     float dbRange() const;
 

@@ -63,7 +63,7 @@ muse::async::Promise<float> Au3AudioOutput::playbackVolume() const
         auto gAudioIO = AudioIO::Get();
         gAudioIO->GetMixer(&inputSource, &inputVolume, &outputVolume);
 
-        return resolve(au3VolumeToLocal(outputVolume));
+        return resolve(muse::linear_to_db(outputVolume));
     });
 }
 

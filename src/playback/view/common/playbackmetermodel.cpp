@@ -50,6 +50,16 @@ PlaybackMeterModel::PlaybackMeterModel(QObject* parent)
         emit dbRangeChanged();
         emit positionChanged();
     });
+
+    playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume) {
+        m_volume = volume;
+        emit positionChanged();
+    });
+
+    playback()->audioOutput()->playbackVolume().onResolve(this, [this](float volume) {
+        m_volume = volume;
+        emit positionChanged();
+    });
 }
 
 double PlaybackMeterModel::stepToPosition(double step)
@@ -192,12 +202,6 @@ std::vector<PlaybackMeterDbRange::DbRange> PlaybackMeterModel::dbRangeList() con
 float PlaybackMeterModel::position() const
 {
     return sampleToPosition(m_volume);
-}
-
-void PlaybackMeterModel::volumeChangeRequested(float volume)
-{
-    m_volume = volume;
-    emit positionChanged();
 }
 
 QString PlaybackMeterModel::description(PlaybackMeterDbRange::DbRange range) const

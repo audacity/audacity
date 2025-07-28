@@ -30,7 +30,7 @@ StyledPopupView {
         StyledTextLabel {
             id: label
 
-            anchors.right: parent.right
+            anchors.horizontalCenter: parent.horizontalCenter
             text: {
                 let value = root.volume.toFixed(root.decimalPlaces);
                 return `${value}${root.unitText}`;

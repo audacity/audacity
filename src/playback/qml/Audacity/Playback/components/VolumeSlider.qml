@@ -55,11 +55,7 @@ Slider {
         property bool dragActive: false
     }
 
-    onFromChanged: {
-        let newVolume = Math.max(root.from, root.volumeLevel)
-        root.volumeLevelMoved(newVolume)
-        root.meterModel.volumeChangeRequested(newVolume)
-    }
+    onFromChanged: () => root.volumeLevelMoved(Math.max(root.from, root.volumeLevel))
 
     VolumeTooltip {
         id: tooltip
@@ -125,7 +121,6 @@ Slider {
             onDoubleClicked: {
                 // Double click resets the volume
                 root.volumeLevelMoved(0.0)
-                root.meterModel.volumeChangeRequested(0.0)
             }
 
             // The MouseArea steals mouse press events from the slider.
@@ -152,9 +147,7 @@ Slider {
                 let newPosZeroToOne = mousePosInRoot / prv.rulerLineWidth
 
                 let newPosClamped = Math.max(0.0, Math.min(newPosZeroToOne, 1.0))
-                let localNewValue = root.meterModel.positionToSample(newPosClamped)
-                root.volumeLevelMoved(localNewValue)
-                root.meterModel.volumeChangeRequested(localNewValue)
+                root.volumeLevelMoved(root.meterModel.positionToSample(newPosClamped))
             }
 
             onReleased: function() {
@@ -196,6 +189,5 @@ Slider {
     onMoved: {
         navigation.requestActiveByInteraction()
         root.volumeLevelMoved(value)
-        root.meterModel.volumeChangeRequested(value)
     }
 }
