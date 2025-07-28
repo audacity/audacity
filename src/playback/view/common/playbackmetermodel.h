@@ -32,6 +32,7 @@ class PlaybackMeterModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(float position READ position NOTIFY positionChanged FINAL)
 
+    Q_PROPERTY(std::vector<PlaybackMeterDbRange::DbRange> dbRangeList READ dbRangeList CONSTANT)
     Q_PROPERTY(float dbRange READ dbRange NOTIFY dbRangeChanged FINAL)
 
     Q_PROPERTY(float position READ position NOTIFY positionChanged FINAL)
