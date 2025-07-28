@@ -19,6 +19,7 @@ public:
     virtual ~IPlaybackState() = default;
 
     virtual playback::PlaybackStatus playbackStatus() const = 0;
+    virtual bool isPlaying() const = 0;
     virtual muse::async::Channel<playback::PlaybackStatus> playbackStatusChanged() const = 0;
 
     virtual muse::secs_t playbackPosition() const = 0;

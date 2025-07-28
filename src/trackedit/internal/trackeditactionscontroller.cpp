@@ -728,7 +728,7 @@ void TrackeditActionsController::paste()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
-    double selectedStartTime = globalContext()->playbackState()->playbackPosition();
+    const double selectedStartTime = globalContext()->playbackPosition();
 
     if (!tracks.empty() && selectedStartTime >= 0) {
         auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, false);
@@ -742,7 +742,7 @@ void TrackeditActionsController::pasteInsert()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
-    double selectedStartTime = globalContext()->playbackState()->playbackPosition();
+    const double selectedStartTime = globalContext()->playbackPosition();
 
     if (!tracks.empty() && selectedStartTime >= 0) {
         auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, true);
@@ -756,7 +756,7 @@ void TrackeditActionsController::pasteInsertRipple()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
-    double selectedStartTime = globalContext()->playbackState()->playbackPosition();
+    const double selectedStartTime = globalContext()->playbackPosition();
 
     if (!tracks.empty() && selectedStartTime >= 0) {
         auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, false, true);
@@ -777,7 +777,7 @@ void TrackeditActionsController::trackSplit(const ActionData& args)
         return;
     }
 
-    secs_t playbackPosition = globalContext()->playbackState()->playbackPosition();
+    const secs_t playbackPosition = globalContext()->playbackPosition();
 
     dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<TrackIdList, secs_t>({ trackIdToSplit }, playbackPosition));
 }
