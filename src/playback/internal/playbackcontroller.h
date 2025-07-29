@@ -46,6 +46,7 @@ public:
     muse::async::Notification isPlayingChanged() const override;
 
     bool isPaused() const override;
+    bool isStopped() const override;
 
     void reset() override;
 
@@ -74,8 +75,6 @@ private:
     IPlayerPtr player() const;
 
     bool isLoaded() const;
-
-    bool isStoped() const;
 
     bool isLoopEnabled() const;
     bool loopBoundariesSet() const;

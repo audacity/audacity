@@ -27,6 +27,7 @@ public:
     virtual muse::async::Notification isPlayingChanged() const = 0;
 
     virtual bool isPaused() const = 0;
+    virtual bool isStopped() const = 0;
 
     virtual void reset() = 0;
 
