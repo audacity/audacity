@@ -70,16 +70,6 @@ IPlaybackStatePtr GlobalContext::playbackState() const
     return m_playbackState;
 }
 
-bool GlobalContext::isPlaying() const
-{
-    return playbackState()->isPlaying();
-}
-
-muse::secs_t GlobalContext::playbackPosition() const
-{
-    return playbackState()->playbackPosition();
-}
-
 bool GlobalContext::isRecording() const
 {
     return recordController()->isRecording();

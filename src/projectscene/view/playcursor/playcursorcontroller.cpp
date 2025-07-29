@@ -45,7 +45,7 @@ void PlayCursorController::init()
 
 void PlayCursorController::seekToX(double x, bool triggerPlay)
 {
-    if (globalContext()->isPlaying() && !triggerPlay) {
+    if (playbackState()->isPlaying() && !triggerPlay) {
         //! NOTE: Ignore all seeks in play mode unless it is an activation of play or resume from a new position
         return;
     }
