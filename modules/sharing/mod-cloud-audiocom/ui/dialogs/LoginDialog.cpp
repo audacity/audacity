@@ -1,5 +1,6 @@
 #include "LoginDialog.h"
 
+#include <wx/app.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/statline.h>
@@ -110,11 +111,14 @@ LoginDialog::LoginDialog(wxWindow* parent, wxWindowID id, Mode mode)
 
 bool LoginDialog::SignIn(wxWindow* parent, Mode mode)
 {
+   if (!parent)
+      parent = wxTheApp->GetTopWindow();
    while(true)
    {
       LoginDialog dialog(parent, wxID_ANY, mode);
       dialog.wxDialogWrapper::Center();
-      parent->SetFocus();
+      if (parent)
+         parent->SetFocus();
       auto result = dialog.wxDialogWrapper::ShowModal();
       if(result == ID_SIGNIN)
          mode = Mode::SignIn;
