@@ -474,7 +474,7 @@ void TrackeditActionsController::doGlobalSplit()
         pivots.push_back(selectionController()->dataSelectedStartTime());
         pivots.push_back(selectionController()->dataSelectedEndTime());
     } else {
-        pivots.push_back(globalContext()->playbackState()->playbackPosition());
+        pivots.push_back(playbackState()->playbackPosition());
     }
 
     dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<TrackIdList, std::vector<secs_t> >(tracksIdsToSplit, pivots));
@@ -728,7 +728,7 @@ void TrackeditActionsController::paste()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
-    const double selectedStartTime = globalContext()->playbackPosition();
+    const double selectedStartTime = playbackState()->playbackPosition();
 
     if (!tracks.empty() && selectedStartTime >= 0) {
         auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, false);
@@ -742,7 +742,7 @@ void TrackeditActionsController::pasteInsert()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
-    const double selectedStartTime = globalContext()->playbackPosition();
+    const double selectedStartTime = playbackState()->playbackPosition();
 
     if (!tracks.empty() && selectedStartTime >= 0) {
         auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, true);
@@ -756,7 +756,7 @@ void TrackeditActionsController::pasteInsertRipple()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
-    const double selectedStartTime = globalContext()->playbackPosition();
+    const double selectedStartTime = playbackState()->playbackPosition();
 
     if (!tracks.empty() && selectedStartTime >= 0) {
         auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, false, true);
@@ -777,7 +777,7 @@ void TrackeditActionsController::trackSplit(const ActionData& args)
         return;
     }
 
-    const secs_t playbackPosition = globalContext()->playbackPosition();
+    const secs_t playbackPosition = playbackState()->playbackPosition();
 
     dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<TrackIdList, secs_t>({ trackIdToSplit }, playbackPosition));
 }
@@ -1458,4 +1458,9 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
     }
 
     return true;
+}
+
+au::context::IPlaybackStatePtr TrackeditActionsController::playbackState() const
+{
+    return globalContext()->playbackState();
 }

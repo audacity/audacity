@@ -254,7 +254,7 @@ void TimelineContext::autoScrollView(double scrollStep)
 
 void TimelineContext::startAutoScroll(double posSec)
 {
-    if (globalContext()->isPlaying()
+    if (playbackState()->isPlaying()
         || globalContext()->isRecording()) {
         return;
     }
@@ -426,7 +426,7 @@ qreal TimelineContext::findZoomFocusPosition() const
 
     if (!hasSelection()) {
         // No selection: zoom at the current playback position
-        result = timeToPosition(globalContext()->playbackState()->playbackPosition());
+        result = timeToPosition(playbackState()->playbackPosition());
     } else {
         // Selection: zoom at the center of the selection
         result = selectionCenterPosition();
@@ -480,7 +480,7 @@ void TimelineContext::updateViewOnProjectTempoChange(double ratio)
     setFrameEndTime(m_frameEndTime / ratio);
 
     dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1<double>(
-                               globalContext()->playbackPosition() / ratio));
+                               playbackState()->playbackPosition() / ratio));
 }
 
 void TimelineContext::shiftFrameTimeOnStep(int direction)
@@ -965,4 +965,9 @@ void TimelineContext::setStartVerticalScrollPosition(qreal position)
 
     m_startVerticalScrollPosition = position;
     emit verticalScrollChanged();
+}
+
+au::context::IPlaybackStatePtr TimelineContext::playbackState() const
+{
+    return globalContext()->playbackState();
 }
