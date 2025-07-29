@@ -582,6 +582,9 @@ set(AU3_SRC
     ${AU3_MODULES}/import-export/mod-mp3/ExportMP3.h
     ${AU3_MODULES}/import-export/mod-mp3/MP3.cpp
 
+    ${AU3_MODULES}/import-export/mod-mpg123/ImportMP3_MPG123.cpp
+    ${AU3_MODULES}/import-export/mod-mpg123/ImportMP3_MPG123.h
+
     ${AU3_MODULES}/import-export/mod-wavpack/ExportWavPack.cpp
     ${AU3_MODULES}/import-export/mod-wavpack/ExportWavPack.h
 
