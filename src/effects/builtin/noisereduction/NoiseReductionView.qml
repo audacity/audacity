@@ -48,6 +48,7 @@ EffectBase {
                         text: qsTrc("effects/noisereduction", "Step 1")
                         horizontalAlignment: Text.AlignLeft
                         font.bold: true
+
                         Layout.fillWidth: true
                         Layout.margins: 16
                     }
@@ -56,6 +57,7 @@ EffectBase {
                         text: qsTrc("effects/noisereduction", "Select a few seconds of isolated noise so Audacity knows what to filter out, then click Get noise profile.")
                         wrapMode: Text.Wrap
                         horizontalAlignment: Text.AlignLeft
+
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
@@ -63,6 +65,7 @@ EffectBase {
 
                     FlatButton {
                         id: getNoiseProfileButton
+
                         text: qsTrc("effects/noisereduction", "Get noise profile")
                         onClicked: {
                             noiseReduction.getNoiseProfile()
@@ -71,6 +74,7 @@ EffectBase {
                             root.dialogView.reject()
                         }
                         height: 28
+
                         Layout.fillWidth: true
                         Layout.margins: 16
                     }
@@ -91,6 +95,7 @@ EffectBase {
                         text: qsTrc("effects/noisereduction", "Step 2")
                         horizontalAlignment: Text.AlignLeft
                         font.bold: true
+
                         Layout.fillWidth: true
                         Layout.margins: 16
                     }
@@ -98,6 +103,7 @@ EffectBase {
                     StyledTextLabel {
                         text: qsTrc("effects/noisereduction", "Noise reduction")
                         horizontalAlignment: Text.AlignLeft
+
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
@@ -122,6 +128,7 @@ EffectBase {
                     StyledTextLabel {
                         text: qsTrc("effects/noisereduction", "Sensitivity")
                         horizontalAlignment: Text.AlignLeft
+
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
@@ -176,6 +183,7 @@ EffectBase {
                     StyledTextLabel {
                         text: qsTrc("effects/noisereduction", "Output")
                         horizontalAlignment: Text.AlignLeft
+
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
