@@ -13,30 +13,27 @@
 #include <cstddef>
 #include <cstring>
 
-#include "Import.h"
-#include "BasicUI.h"
-#include "ImportPlugin.h"
-#include "ImportUtils.h"
-#include "ImportProgressListener.h"
+#include "libraries/lib-import-export/Import.h"
+#include "libraries/lib-import-export/ImportUtils.h"
+#include "libraries/lib-import-export/ImportProgressListener.h"
 #include "Project.h"
 
 #define DESC XO("MP3 files")
 
-#include <wx/file.h>
 #include <wx/string.h>
 #include <wx/log.h>
 
 #include <mpg123.h>
 
-#include "Tags.h"
+#include "libraries/lib-tags/Tags.h"
 #include "WaveTrack.h"
 
 #include "CodeConversions.h"
 #include "FromChars.h"
 
-namespace {
-const auto exts = { wxT("mp3"), wxT("mp2"), wxT("mpa") };
+#include "ImportMP3_MPG123.h"
 
+namespace {
 // ID2V2 genre can be quite complex:
 // (from https://id3.org/id3v2.3.0)
 // References to the ID3v1 genres can be made by, as first byte, enter
@@ -48,7 +45,7 @@ const auto exts = { wxT("mp3"), wxT("mp2"), wxT("mpa") };
 wxString GetId3v2Genre(Tags& tags, const char* genre)
 {
     if (genre == nullptr) {
-        return {}
+        return {};
     }
 
     // It was observed, however, that Genre can use a different format
@@ -97,74 +94,28 @@ wxString GetId3v2Genre(Tags& tags, const char* genre)
 
     return audacity::ToWXString(genre);
 }
+}
 
-class MP3ImportPlugin final : public ImportPlugin
+MP3ImportPlugin::MP3ImportPlugin()
+    : ImportPlugin(
+        FileExtensions(exts.begin(), exts.end()))
 {
-public:
-    MP3ImportPlugin()
-        : ImportPlugin(
-            FileExtensions(exts.begin(), exts.end()))
-    {
 #if MPG123_API_VERSION < 46
-        // Newer versions of the library don't need that anymore, but it is safe
-        // to have the no-op call present for compatibility with old versions.
-        mpg123_init();
+    // Newer versions of the library don't need that anymore, but it is safe
+    // to have the no-op call present for compatibility with old versions.
+    mpg123_init();
 #endif
-    }
+}
 
-    wxString GetPluginStringID() override
-    {
-        return wxT("libmpg123");
-    }
-
-    TranslatableString GetPluginFormatDescription() override
-    {
-        return DESC;
-    }
-
-    std::unique_ptr<ImportFileHandle> Open(const FilePath& Filename, AudacityProject*) override;
-}; // class MP3ImportPlugin
-
-class MP3ImportFileHandle final : public ImportFileHandleEx
+wxString MP3ImportPlugin::GetPluginStringID()
 {
-public:
-    MP3ImportFileHandle(const FilePath& filename);
-    ~MP3ImportFileHandle();
+    return wxT("libmpg123");
+}
 
-    TranslatableString GetFileDescription() override;
-    ByteCount GetFileUncompressedBytes() override;
-    void Import(
-        ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
-        std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
-
-    bool SetupOutputFormat();
-
-    void ReadTags(Tags* tags);
-
-    wxInt32 GetStreamCount() override;
-    const TranslatableStrings& GetStreamInfo() override;
-    void SetStreamUsage(wxInt32 StreamID, bool Use) override;
-
-private:
-    bool Open();
-
-private:
-    static ptrdiff_t ReadCallback(void* handle, void* buffer, size_t size);
-    static off_t SeekCallback(void* handle, off_t offset, int whence);
-
-    wxFile mFile;
-    wxFileOffset mFileLen { 0 };
-
-    WaveTrackFactory* mTrackFactory { nullptr };
-    WaveTrack::Holder mTrack;
-    unsigned mNumChannels { 0 };
-
-    mpg123_handle* mHandle { nullptr };
-
-    bool mFloat64Output {};
-
-    friend MP3ImportPlugin;
-}; // class MP3ImportFileHandle
+TranslatableString MP3ImportPlugin::GetPluginFormatDescription()
+{
+    return DESC;
+}
 
 std::unique_ptr<ImportFileHandle> MP3ImportPlugin::Open(
     const FilePath& Filename, AudacityProject*)
@@ -177,12 +128,6 @@ std::unique_ptr<ImportFileHandle> MP3ImportPlugin::Open(
 
     return handle;
 }
-
-static Importer::RegisteredImportPlugin registered
-{
-    "MP3",
-    std::make_unique<MP3ImportPlugin>()
-};
 
 // ============================================================================
 // MP3ImportFileHandle
@@ -527,4 +472,3 @@ off_t MP3ImportFileHandle::SeekCallback(
     return static_cast<MP3ImportFileHandle*>(handle)->mFile.Seek(
         offset, GetWXSeekMode(whence));
 }
-} // namespace

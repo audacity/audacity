@@ -185,6 +185,7 @@ set(AU3_LINK
     portaudio::portaudio
     libmp3lame::libmp3lame
     wavpack::wavpack
+    mpg123::libmpg123
     sqlite
     soxr
     pffft
