@@ -75,13 +75,7 @@ double LinearMeter::sampleToPosition(double sample) const
 double LinearMeter::positionToSample(double position) const
 {
     double value = muse::linear_to_db(position);
-    if (value < m_dbRange) {
-        value = m_dbRange;
-    }
-    if (value > 0.0) {
-        value = 0.0;
-    }
-    return value;
+    return std::clamp(value, m_dbRange, 0.0);
 }
 
 std::string LinearMeter::sampleToText(double sample) const

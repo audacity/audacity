@@ -8,7 +8,6 @@
 
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackmetercontroller.h"
-#include "playback/iaudiooutput.h"
 #include "playback/iplayback.h"
 
 namespace au::playback {

@@ -32,6 +32,9 @@ struct DbSection {
     double percentage;
 };
 
+// The idea here is to implement something closer to IEC-60268
+// 50% of the scale is allocated to the first 1/3 of the dB range,
+// the next 20% to the following 1/6, and so on.
 constexpr std::array<DbSection, 6> DB_SECTIONS = { {
     { 0.0, 1.0 },
     { 1.0 / 3.0, 0.5 },
@@ -41,6 +44,7 @@ constexpr std::array<DbSection, 6> DB_SECTIONS = { {
     { 1.0, 0.00 }
 } };
 
+// A piecewise linear linear interpolation to map dB values to percentage of the meter scale
 double dbToValuePercentage(double dbValue, double dbRange)
 {
     if (dbValue > 0) {
@@ -60,6 +64,7 @@ double dbToValuePercentage(double dbValue, double dbRange)
     return 0.0;
 }
 
+// A piecewise linear interpolation to map percentage of the meter scale to dB values
 double percentageToDbValue(double percentage, double dbRange)
 {
     if (percentage >= 1.0) {
@@ -72,7 +77,7 @@ double percentageToDbValue(double percentage, double dbRange)
 
         if ((percentage <= left.percentage) && (percentage > right.percentage)) {
             double t = (percentage - right.percentage) / (left.percentage - right.percentage);
-            return right.multiplier * dbRange + t * (left.multiplier * dbRange - right.multiplier * dbRange);
+            return (right.multiplier + t * (left.multiplier - right.multiplier)) * dbRange;
         }
     }
 
@@ -108,8 +113,8 @@ double DbLinearMeter::sampleToPosition(double sample) const
 
 double DbLinearMeter::positionToSample(double position) const
 {
-    std::clamp(position, 0.0, 1.0);
-    return percentageToDbValue(position, m_dbRange);
+    const double clampedPosition = std::clamp(position, 0.0, 1.0);
+    return percentageToDbValue(clampedPosition, m_dbRange);
 }
 
 std::string DbLinearMeter::sampleToText(double sample) const

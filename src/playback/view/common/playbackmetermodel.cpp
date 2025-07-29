@@ -4,6 +4,8 @@
 
 #include "playbackmetermodel.h"
 
+#include "playback/iaudiooutput.h"
+
 #include <memory>
 
 using namespace au::playback;

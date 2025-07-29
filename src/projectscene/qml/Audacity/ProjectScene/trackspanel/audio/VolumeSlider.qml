@@ -33,6 +33,17 @@ StyledSlider {
         property real startFineValue: 0.0
     }
 
+    Connections {
+        target: Qt.application
+
+        function onStateChanged() {
+            if (Qt.application.state !== Qt.ApplicationActive) {
+                prv.dragActive = false
+                tooltip.hide(true)
+            }
+        }
+    }
+
     VolumeTooltip {
         id: tooltip
 

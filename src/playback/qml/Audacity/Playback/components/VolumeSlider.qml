@@ -55,6 +55,17 @@ Slider {
         property bool dragActive: false
     }
 
+    Connections {
+        target: Qt.application
+
+        function onStateChanged() {
+            if (Qt.application.state !== Qt.ApplicationActive) {
+                prv.dragActive = false
+                tooltip.hide(true)
+            }
+        }
+    }
+
     onFromChanged: () => root.volumeLevelMoved(Math.max(root.from, root.volumeLevel))
 
     VolumeTooltip {
