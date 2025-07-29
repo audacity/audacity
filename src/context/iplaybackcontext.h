@@ -13,10 +13,10 @@ namespace au::context {
 //! We need to get the current state from it (playing position, status)
 //! But direct manage (play, seek..) is bad idea, need send actions (to playback controller)
 //! So, this interface limits the player interface to the context so that it cannot be misused.
-class IPlaybackState
+class IPlaybackContext
 {
 public:
-    virtual ~IPlaybackState() = default;
+    virtual ~IPlaybackContext() = default;
 
     virtual playback::PlaybackStatus playbackStatus() const = 0;
     virtual bool isPlaying() const = 0;
@@ -26,5 +26,5 @@ public:
     virtual muse::async::Channel<muse::secs_t> playbackPositionChanged() const = 0;
 };
 
-using IPlaybackStatePtr = std::shared_ptr<IPlaybackState>;
+using IPlaybackContextPtr = std::shared_ptr<IPlaybackContext>;
 }

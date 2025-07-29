@@ -61,7 +61,7 @@ void PitchAndSpeedChangeModel::load(const QString& trackIdStr, const QString& cl
         setClip(clip);
     });
 
-    playbackState()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus){
+    playbackContext()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus){
         emit canChangeSpeedChanged();
     });
 
@@ -116,9 +116,9 @@ au::trackedit::ITrackeditProjectPtr PitchAndSpeedChangeModel::trackeditProject()
     return globalContext()->currentTrackeditProject();
 }
 
-au::context::IPlaybackStatePtr PitchAndSpeedChangeModel::playbackState() const
+au::context::IPlaybackContextPtr PitchAndSpeedChangeModel::playbackContext() const
 {
-    return globalContext()->playbackState();
+    return globalContext()->playbackContext();
 }
 
 void PitchAndSpeedChangeModel::setClip(const trackedit::Clip& clip)
@@ -133,12 +133,12 @@ void PitchAndSpeedChangeModel::setClip(const trackedit::Clip& clip)
 
 bool PitchAndSpeedChangeModel::canChangeSpeed() const
 {
-    context::IPlaybackStatePtr playbackState = this->playbackState();
-    if (!playbackState) {
+    context::IPlaybackContextPtr playbackContext = this->playbackContext();
+    if (!playbackContext) {
         return false;
     }
 
-    return playbackState->playbackStatus() != playback::PlaybackStatus::Running;
+    return playbackContext->playbackStatus() != playback::PlaybackStatus::Running;
 }
 
 QString PitchAndSpeedChangeModel::clipTitle() const

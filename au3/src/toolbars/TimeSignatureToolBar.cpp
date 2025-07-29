@@ -69,7 +69,7 @@ TimeSignatureToolBar::TimeSignatureToolBar(AudacityProject& project)
         mLowerSignatureControl->SetValue(
             wxString::Format("%d", settings.newLowerTimeSignature));
 })),
-    mPlaybackStateChangedSubscription(AudioIO::Get()->Subscribe(*this, &TimeSignatureToolBar::OnAudioIOEvent))
+    mPlaybackContextChangedSubscription(AudioIO::Get()->Subscribe(*this, &TimeSignatureToolBar::OnAudioIOEvent))
 {
 }
 

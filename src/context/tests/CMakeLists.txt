@@ -6,7 +6,7 @@ set(MODULE_TEST context_tests)
 
 set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/globalcontextmock.h
-    ${CMAKE_CURRENT_LIST_DIR}/mocks/playbackstatemock.h
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/playbackcontextmock.h
     )
 
 set(MODULE_TEST_LINK

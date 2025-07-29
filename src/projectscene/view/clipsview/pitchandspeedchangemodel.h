@@ -59,7 +59,7 @@ signals:
 
 private:
     trackedit::ITrackeditProjectPtr trackeditProject() const;
-    context::IPlaybackStatePtr playbackState() const;
+    context::IPlaybackContextPtr playbackContext() const;
 
     void setClip(const trackedit::Clip& clip);
 

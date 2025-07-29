@@ -1,9 +1,9 @@
-#include "playbackstate.h"
+#include "playbackcontext.h"
 
 using namespace au::context;
 using namespace au::playback;
 
-void PlaybackState::setPlayer(playback::IPlayerPtr player)
+void PlaybackContext::setPlayer(playback::IPlayerPtr player)
 {
     if (m_player) {
         m_player->playbackStatusChanged().resetOnReceive(this);
@@ -22,27 +22,27 @@ void PlaybackState::setPlayer(playback::IPlayerPtr player)
     });
 }
 
-PlaybackStatus PlaybackState::playbackStatus() const
+PlaybackStatus PlaybackContext::playbackStatus() const
 {
     return m_player ? m_player->playbackStatus() : PlaybackStatus::Stopped;
 }
 
-bool PlaybackState::isPlaying() const
+bool PlaybackContext::isPlaying() const
 {
     return playbackStatus() == playback::PlaybackStatus::Running;
 }
 
-muse::async::Channel<PlaybackStatus> PlaybackState::playbackStatusChanged() const
+muse::async::Channel<PlaybackStatus> PlaybackContext::playbackStatusChanged() const
 {
     return m_playbackStatusChanged;
 }
 
-muse::secs_t PlaybackState::playbackPosition() const
+muse::secs_t PlaybackContext::playbackPosition() const
 {
     return m_player ? m_player->playbackPosition() : muse::secs_t(0.0);
 }
 
-muse::async::Channel<muse::secs_t> PlaybackState::playbackPositionChanged() const
+muse::async::Channel<muse::secs_t> PlaybackContext::playbackPositionChanged() const
 {
     return m_playbackPositionChanged;
 }

@@ -5,14 +5,14 @@
 
 #include "global/async/asyncable.h"
 
-#include "context/iplaybackstate.h"
+#include "context/iplaybackcontext.h"
 #include "playback/iplayer.h"
 
 namespace au::context {
-class PlaybackState : public IPlaybackState, public muse::async::Asyncable
+class PlaybackContext : public IPlaybackContext, public muse::async::Asyncable
 {
 public:
-    PlaybackState() = default;
+    PlaybackContext() = default;
 
     void setPlayer(playback::IPlayerPtr player);
 

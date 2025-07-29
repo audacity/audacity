@@ -34,7 +34,7 @@ PlayCursorController::PlayCursorController(QObject* parent)
 
 void PlayCursorController::init()
 {
-    playbackState()->playbackPositionChanged().onReceive(this, [this](muse::secs_t secs) {
+    playbackContext()->playbackPositionChanged().onReceive(this, [this](muse::secs_t secs) {
         updatePositionX(secs);
     });
 
@@ -45,7 +45,7 @@ void PlayCursorController::init()
 
 void PlayCursorController::seekToX(double x, bool triggerPlay)
 {
-    if (playbackState()->isPlaying() && !triggerPlay) {
+    if (playbackContext()->isPlaying() && !triggerPlay) {
         //! NOTE: Ignore all seeks in play mode unless it is an activation of play or resume from a new position
         return;
     }
@@ -56,7 +56,7 @@ void PlayCursorController::seekToX(double x, bool triggerPlay)
     double secs = m_context->positionToTime(x, snapEnabled);
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
         dispatcher()->dispatch("playback-seek", ActionData::make_arg2<double, bool>(secs, triggerPlay));
-    } else if (!muse::RealIsEqual(playbackState()->playbackPosition(), 0.0)) {
+    } else if (!muse::RealIsEqual(playbackContext()->playbackPosition(), 0.0)) {
         dispatcher()->dispatch("playback-seek", ActionData::make_arg2<double, bool>(0.0, triggerPlay));
     }
 }
@@ -79,9 +79,9 @@ void PlayCursorController::setPlaybackRegion(double x1, double x2)
     dispatcher()->dispatch("playback-play-region-change", ActionData::make_arg2<double, double>(start, end));
 }
 
-au::context::IPlaybackStatePtr PlayCursorController::playbackState() const
+au::context::IPlaybackContextPtr PlayCursorController::playbackContext() const
 {
-    return globalContext()->playbackState();
+    return globalContext()->playbackContext();
 }
 
 IProjectViewStatePtr PlayCursorController::projectViewState() const
@@ -108,7 +108,7 @@ void PlayCursorController::onFrameTimeChanged()
     if (globalContext()->isRecording()) {
         newPosition = m_context->timeToPosition(globalContext()->recordPosition());
     } else {
-        newPosition = m_context->timeToPosition(playbackState()->playbackPosition());
+        newPosition = m_context->timeToPosition(playbackContext()->playbackPosition());
     }
 
     if (m_positionX != newPosition) {

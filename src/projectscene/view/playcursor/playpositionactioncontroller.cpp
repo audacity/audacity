@@ -74,7 +74,7 @@ void PlayPositionActionController::playPositionIncrease()
 
 void PlayPositionActionController::snapCurrentPosition()
 {
-    const muse::secs_t currentPlaybackPosition = playbackState()->playbackPosition();
+    const muse::secs_t currentPlaybackPosition = playbackContext()->playbackPosition();
     const double currentXPosition = m_context->timeToPosition(currentPlaybackPosition);
     const muse::secs_t secs = m_context->positionToTime(currentXPosition, true);
     if (muse::RealIsEqualOrMore(secs, 0.0) || !muse::RealIsEqual(secs, currentPlaybackPosition)) {
@@ -87,7 +87,7 @@ void PlayPositionActionController::applySingleStep(Direction direction)
     IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
     bool snapEnabled = viewState->isSnapEnabled();
 
-    const muse::secs_t currentPlaybackPosition = playbackState()->playbackPosition();
+    const muse::secs_t currentPlaybackPosition = playbackContext()->playbackPosition();
     muse::secs_t secs = 0;
 
     if (snapEnabled) {
@@ -125,7 +125,7 @@ void PlayPositionActionController::onProjectChanged()
     });
 }
 
-au::context::IPlaybackStatePtr PlayPositionActionController::playbackState() const
+au::context::IPlaybackContextPtr PlayPositionActionController::playbackContext() const
 {
-    return globalContext()->playbackState();
+    return globalContext()->playbackContext();
 }

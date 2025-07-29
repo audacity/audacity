@@ -51,7 +51,7 @@ TrackIdList Au3Interaction::pasteIntoNewTracks(const std::vector<Au3TrackDataPtr
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
     auto prj = globalContext()->currentTrackeditProject();
-    const muse::secs_t selectedStartTime = playbackState()->playbackPosition();
+    const muse::secs_t selectedStartTime = playbackContext()->playbackPosition();
 
     TrackIdList tracksIdsPastedInto;
 
@@ -2806,7 +2806,7 @@ bool Au3Interaction::userIsOkCombineMonoToStereo() const
     return result.standardButton() == muse::IInteractive::Button::Yes;
 }
 
-au::context::IPlaybackStatePtr Au3Interaction::playbackState() const
+au::context::IPlaybackContextPtr Au3Interaction::playbackContext() const
 {
-    return globalContext()->playbackState();
+    return globalContext()->playbackContext();
 }

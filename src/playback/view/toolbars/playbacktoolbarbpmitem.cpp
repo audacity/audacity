@@ -14,7 +14,7 @@ PlaybackToolBarBPMItem::PlaybackToolBarBPMItem(const muse::ui::UiAction& action,
         onProjectChanged();
     });
 
-    playbackState()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus status) {
+    playbackContext()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus status) {
         if (status == PlaybackStatus::Stopped) {
             setState(muse::ui::UiActionState::make_enabled());
         } else {
@@ -73,7 +73,7 @@ void PlaybackToolBarBPMItem::updateValues()
     emit currentValueChanged();
 }
 
-au::context::IPlaybackStatePtr PlaybackToolBarBPMItem::playbackState() const
+au::context::IPlaybackContextPtr PlaybackToolBarBPMItem::playbackContext() const
 {
-    return globalContext()->playbackState();
+    return globalContext()->playbackContext();
 }

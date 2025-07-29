@@ -5,10 +5,10 @@
 
 #include <gmock/gmock.h>
 
-#include "context/iplaybackstate.h"
+#include "context/iplaybackcontext.h"
 
 namespace au::context {
-class PlaybackStateMock : public IPlaybackState
+class PlaybackContextMock : public IPlaybackContext
 {
 public:
     MOCK_METHOD(playback::PlaybackStatus, playbackStatus, (), (const, override));
