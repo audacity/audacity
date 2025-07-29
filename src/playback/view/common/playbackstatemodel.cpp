@@ -23,3 +23,8 @@ bool PlaybackStateModel::isPaused() const
 {
     return controller()->isPaused();
 }
+
+bool PlaybackStateModel::isStopped() const
+{
+    return controller()->isStopped();
+}
