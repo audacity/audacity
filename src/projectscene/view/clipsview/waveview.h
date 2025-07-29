@@ -96,6 +96,8 @@ private:
     void applyClassicStyle(IWavePainter::Params& params, bool selected) const;
     void pushProjectHistorySampleEdit();
 
+    context::IPlaybackStatePtr playbackState() const;
+
     TimelineContext* m_context = nullptr;
     ClipKey m_clipKey;
     QColor m_clipColor;
