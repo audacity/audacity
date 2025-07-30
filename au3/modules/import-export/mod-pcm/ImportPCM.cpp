@@ -19,8 +19,8 @@
 
 *//*******************************************************************/
 
-#include "Import.h"
-#include "Tags.h"
+#include "libraries/lib-import-export/Import.h"
+#include "libraries/lib-tags/Tags.h"
 
 #include <wx/wx.h>
 #include <wx/ffile.h>
@@ -31,14 +31,16 @@
 #error Requires libsndfile 1.0 or higher
 #endif
 
-#include "FileFormats.h"
-#include "GetAcidizerTags.h"
-#include "ImportPlugin.h"
-#include "ImportProgressListener.h"
-#include "ImportUtils.h"
+#include "libraries/lib-file-formats/FileFormats.h"
+#include "libraries/lib-import-export/GetAcidizerTags.h"
+#include "libraries/lib-import-export/ImportPlugin.h"
+#include "libraries/lib-import-export/ImportProgressListener.h"
+#include "libraries/lib-import-export/ImportUtils.h"
 #include "WaveTrack.h"
 
 #include <algorithm>
+
+#include "ImportPCM.h"
 
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
@@ -54,51 +56,31 @@ void id3_latin1_decode(id3_latin1_t const*, id3_ucs4_t*);
 
 #define DESC XO("WAV, AIFF, and other uncompressed types")
 
-class PCMImportPlugin final : public ImportPlugin
+PCMImportPlugin::PCMImportPlugin()
+    :  ImportPlugin(sf_get_all_extensions())
 {
-public:
-    PCMImportPlugin()
-        :  ImportPlugin(sf_get_all_extensions())
-    {
-    }
+}
 
-    ~PCMImportPlugin() { }
+PCMImportPlugin::~PCMImportPlugin() {}
 
-    wxString GetPluginStringID() override { return wxT("libsndfile"); }
-    TranslatableString GetPluginFormatDescription() override;
-    std::unique_ptr<ImportFileHandle> Open(
-        const FilePath& Filename, AudacityProject*) override;
-};
-
-class PCMImportFileHandle final : public ImportFileHandleEx
+wxString PCMImportPlugin::GetPluginStringID()
 {
-public:
-    PCMImportFileHandle(const FilePath& name, SFFile&& file, SF_INFO info);
-    ~PCMImportFileHandle();
+    return wxT("libsndfile");
+}
 
-    TranslatableString GetFileDescription() override;
-    ByteCount GetFileUncompressedBytes() override;
-    void Import(
-        ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
-        std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
+wxInt32 PCMImportFileHandle::GetStreamCount()
+{
+    return 1;
+}
 
-    wxInt32 GetStreamCount() override { return 1; }
+const TranslatableStrings& PCMImportFileHandle::GetStreamInfo()
+{
+    static TranslatableStrings empty;
+    return empty;
+}
 
-    const TranslatableStrings& GetStreamInfo() override
-    {
-        static TranslatableStrings empty;
-        return empty;
-    }
-
-    void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)) override
-    {}
-
-private:
-    SFFile mFile;
-    const SF_INFO mInfo;
-    sampleFormat mEffectiveFormat;
-    sampleFormat mFormat;
-};
+void PCMImportFileHandle::SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use))
+{}
 
 TranslatableString PCMImportPlugin::GetPluginFormatDescription()
 {
@@ -167,10 +149,6 @@ std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(
     // Success, so now transfer the duty to close the file from "file".
     return std::make_unique<PCMImportFileHandle>(filename, std::move(file), info);
 }
-
-static Importer::RegisteredImportPlugin registered{ "PCM",
-                                                    std::make_unique< PCMImportPlugin >()
-};
 
 PCMImportFileHandle::PCMImportFileHandle(const FilePath& name,
                                          SFFile&& file, SF_INFO info)
