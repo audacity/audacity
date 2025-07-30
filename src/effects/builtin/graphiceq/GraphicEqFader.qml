@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import Audacity.ProjectScene
 
 Item {
   id: root
@@ -10,6 +11,11 @@ Item {
   signal newValueRequested(double newValue)
 
   width: eqFaderHandle.width
+
+  QtObject {
+    id: prv
+    property bool dragActive: false
+  }
 
   Rectangle {
     id: faderTrack
@@ -24,11 +30,17 @@ Item {
 
       y: faderTrack.height * (1 - (value - min) / (max - min)) - eqFaderHandle.height / 2
 
+      VolumeTooltip {
+          id: tooltip
+          volume: root.value
+      }
+
       MouseArea {
         anchors.fill: parent
         drag.target: eqFaderHandle
         drag.minimumY: -eqFaderHandle.height / 2
         drag.maximumY: faderTrack.height - eqFaderHandle.height / 2
+        hoverEnabled: true
 
         onPositionChanged: {
           const newValue = min + (max - min) * (1 - (eqFaderHandle.y + eqFaderHandle.height / 2) / faderTrack.height)
@@ -37,6 +49,28 @@ Item {
 
         onDoubleClicked: {
           newValueRequested(0)
+        }
+
+        onPressed: {
+            prv.dragActive = true
+            tooltip.show(true)
+        }
+
+        onReleased: {
+            prv.dragActive = false
+            if (!containsMouse) {
+                tooltip.hide(true)
+            }
+        }
+
+        onEntered: {
+            tooltip.show()
+        }
+
+        onExited: {
+            if (!prv.dragActive) {
+                tooltip.hide(true)
+            }
         }
       }
     }
