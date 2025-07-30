@@ -12,6 +12,7 @@ Item {
 
     QtObject {
         id: prv
+
         readonly property int minDdBain: -20
         readonly property int maxDdBain: 20
         readonly property int faderHeight: 352
@@ -22,6 +23,7 @@ Item {
 
     GraphicEqGridLines {
         id: gridLines
+
         min: prv.minDdBain
         max: prv.maxDdBain
         lineWidth: faderRow.width + faderRow.spacing
@@ -33,6 +35,7 @@ Item {
 
     Row {
         id: faderRow
+
         spacing: 16
         x: gridLines.gridlineHorizontalCenter - width / 2
         height: prv.faderHeight + prv.labelHeight + prv.labelBottomMargin
@@ -57,6 +60,7 @@ Item {
 
                 GraphicEqFader {
                     id: fader
+
                     height: prv.faderHeight
                     min: prv.minDdBain
                     max: prv.maxDdBain
