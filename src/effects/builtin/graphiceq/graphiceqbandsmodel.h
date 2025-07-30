@@ -26,14 +26,7 @@ public:
     Q_INVOKABLE void invert();
 
 private:
-    static constexpr std::array<double, NUM_BANDS> kThirdOct =
-    {
-        20., 25., 31., 40., 50., 63., 80., 100., 125., 160., 200.,
-        250., 315., 400., 500., 630., 800., 1000., 1250., 1600., 2000.,
-        2500., 3150., 4000., 5000., 6300., 8000., 10000., 12500., 16000., 20000.,
-    };
-
-    enum RoleNames
+    enum EqDataRoles
     {
         rDbGain = Qt::UserRole + 1,
         rCenterFreq,

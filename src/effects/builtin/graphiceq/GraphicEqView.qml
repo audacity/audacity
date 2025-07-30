@@ -45,6 +45,8 @@ EffectBase {
                 id: board
                 anchors.horizontalCenter: parent.horizontalCenter
                 bandsModel: graphicEq.bandsModel
+                minDbGain: graphicEq.minDbGain
+                maxDbGain: graphicEq.maxDbGain
             }
 
             Row {
@@ -61,7 +63,6 @@ EffectBase {
                 }
 
                 FlatButton {
-                    id: cancelBtn
                     text: qsTrc("effects/graphiceq", "Invert")
                     width: 64
                     height: 28
