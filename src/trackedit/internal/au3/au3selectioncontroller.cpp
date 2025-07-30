@@ -151,8 +151,8 @@ TrackIdList Au3SelectionController::determinateTracks(double y1, double y2) cons
     trackedit::TrackIdList tracks = prj->trackIdList();
     trackedit::TrackIdList result;
 
-    int tracksVericalY = vs->tracksVericalY().val;
-    int trackTop = -tracksVericalY;
+    int tracksVerticalOffset = vs->tracksVerticalOffset().val;
+    int trackTop = -tracksVerticalOffset;
     int trackBottom = trackTop;
 
     for (trackedit::TrackId trackId : tracks) {
@@ -197,8 +197,8 @@ std::optional<au::trackedit::TrackId> Au3SelectionController::determinePointedTr
 
     trackedit::TrackIdList tracks = prj->trackIdList();
 
-    int tracksVericalY = vs->tracksVericalY().val;
-    int trackTop = -tracksVericalY;
+    int tracksVerticalOffset = vs->tracksVerticalOffset().val;
+    int trackTop = -tracksVerticalOffset;
     int trackBottom = trackTop;
 
     for (trackedit::TrackId trackId : tracks) {

@@ -43,7 +43,7 @@ void saveProjectZoomState(au::au3::Au3Project* au3Project, const ZoomState& zoom
 {
     auto& projectZoomState = au::au3::ViewInfo::Get(*au3Project);
     projectZoomState.setZoom(zoomState.zoom);
-    projectZoomState.setVPos(zoomState.tracksVerticalY);
+    projectZoomState.setVPos(zoomState.tracksVerticalOffset);
     projectZoomState.setHPos(zoomState.frameStart);
 }
 
@@ -73,22 +73,22 @@ ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project
         return;
     }
 
-    m_tracksVericalY.set(getProjectZoomState(au3Project).tracksVerticalY);
-    m_tracksVericalY.ch.onReceive(this, [au3Project](const int y) {
+    m_tracksVerticalOffset.set(getProjectZoomState(au3Project).tracksVerticalOffset);
+    m_tracksVerticalOffset.ch.onReceive(this, [au3Project](const int y) {
         ZoomState zoomState = getProjectZoomState(au3Project);
-        zoomState.tracksVerticalY = y;
+        zoomState.tracksVerticalOffset = y;
         saveProjectZoomState(au3Project, zoomState);
     });
 }
 
-muse::ValCh<int> ProjectViewState::tracksVericalY() const
+muse::ValCh<int> ProjectViewState::tracksVerticalOffset() const
 {
-    return m_tracksVericalY;
+    return m_tracksVerticalOffset;
 }
 
-void ProjectViewState::changeTracksVericalY(int deltaY)
+void ProjectViewState::changeTracksVerticalOffset(int deltaY)
 {
-    m_tracksVericalY.set(deltaY);
+    m_tracksVerticalOffset.set(deltaY);
 }
 
 double ProjectViewState::mousePositionY() const
@@ -120,8 +120,8 @@ int ProjectViewState::trackYPosition(const trackedit::TrackId& trackId) const
 
     trackedit::TrackIdList tracks = prj->trackIdList();
 
-    int tracksVericalY = this->tracksVericalY().val;
-    int trackTop = -tracksVericalY;
+    int tracksVerticalOffset = this->tracksVerticalOffset().val;
+    int trackTop = -tracksVerticalOffset;
     int trackBottom = trackTop;
 
     for (trackedit::TrackId id : tracks) {
@@ -204,8 +204,8 @@ au::trackedit::TrackId ProjectViewState::trackAtPosition(double y) const
 
     trackedit::TrackIdList tracks = prj->trackIdList();
 
-    int tracksVericalY = this->tracksVericalY().val;
-    int trackTop = -tracksVericalY;
+    int tracksVerticalOffset = this->tracksVerticalOffset().val;
+    int trackTop = -tracksVerticalOffset;
     int trackBottom = trackTop;
 
     for (trackedit::TrackId id : tracks) {

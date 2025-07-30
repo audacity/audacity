@@ -65,7 +65,7 @@ Item {
         id: clipsModel
     }
 
-    TracksViewStateModel {
+    TrackViewStateModel {
         id: trackViewState
         trackId: root.trackId
     }

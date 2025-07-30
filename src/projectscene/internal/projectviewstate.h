@@ -47,8 +47,8 @@ public:
     double mousePositionY() const override;
     void setMousePositionY(double y) override;
 
-    muse::ValCh<int> tracksVericalY() const override;
-    void changeTracksVericalY(int deltaY) override;
+    muse::ValCh<int> tracksVerticalOffset() const override;
+    void changeTracksVerticalOffset(int deltaY) override;
     virtual muse::ValCh<bool> tracksVerticalScrollLocked() const override;
     virtual void setTracksVerticalScrollLocked(bool lock) override;
 
@@ -92,7 +92,7 @@ private:
 
     bool eventFilter(QObject* watched, QEvent* event) override;
 
-    muse::ValCh<int> m_tracksVericalY;
+    muse::ValCh<int> m_tracksVerticalOffset;
     muse::ValCh<bool> m_tracksVerticalScrollLocked;
 
     mutable std::map<trackedit::TrackId, TrackData> m_tracks;

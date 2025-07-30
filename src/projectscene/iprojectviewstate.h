@@ -35,8 +35,8 @@ public:
     virtual double mousePositionY() const = 0;
     virtual void setMousePositionY(double y) = 0;
 
-    virtual muse::ValCh<int> tracksVericalY() const = 0;
-    virtual void changeTracksVericalY(int deltaY) = 0;
+    virtual muse::ValCh<int> tracksVerticalOffset() const = 0;
+    virtual void changeTracksVerticalOffset(int deltaY) = 0;
     virtual muse::ValCh<bool> tracksVerticalScrollLocked() const = 0;
     virtual void setTracksVerticalScrollLocked(bool lock) = 0;
 

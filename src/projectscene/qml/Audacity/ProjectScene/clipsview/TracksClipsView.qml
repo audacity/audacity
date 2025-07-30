@@ -88,8 +88,8 @@ Rectangle {
     //! NOTE Sync with TracksPanel
     TracksViewStateModel {
         id: tracksViewState
-        onTracksVericalYChanged: {
-            tracksClipsView.contentY = tracksViewState.tracksVericalY
+        onTracksVerticalOffsetChanged: {
+            tracksClipsView.contentY = tracksViewState.tracksVerticalOffset
         }
     }
 
@@ -136,7 +136,7 @@ Rectangle {
 
         //! NOTE setting verticalY has to be done after tracks are loaded,
         // otherwise project always starts at the very top
-        Qt.callLater(() => tracksClipsView.contentY = tracksViewState.tracksVericalY)
+        Qt.callLater(() => tracksClipsView.contentY = tracksViewState.tracksVerticalOffset)
     }
 
     Rectangle {
@@ -491,7 +491,7 @@ Rectangle {
                         contentY = lockedVerticalScrollPosition
                     }
                     else {
-                        tracksViewState.changeTracksVericalY(tracksClipsView.contentY)
+                        tracksViewState.changeTracksVerticalOffset(tracksClipsView.contentY)
                         timeline.context.startVerticalScrollPosition = tracksClipsView.contentY
                     }
                 }
@@ -602,11 +602,11 @@ Rectangle {
                     }
 
                     onInsureVerticallyVisible: function(clipTop, clipBottom) {
-                        var delta = calculateVerticalScrollDelta(tracksViewState.tracksVericalY, tracksViewState.tracksVericalY + content.height, clipTop, clipBottom)
-                        if (tracksViewState.tracksVericalY + delta < 0) {
-                            tracksViewState.changeTracksVericalY(0)
+                        var delta = calculateVerticalScrollDelta(tracksViewState.tracksVerticalOffset, tracksViewState.tracksVerticalOffset + content.height, clipTop, clipBottom)
+                        if (tracksViewState.tracksVerticalOffset + delta < 0) {
+                            tracksViewState.changeTracksVerticalOffset(0)
                         } else {
-                            tracksViewState.changeTracksVericalY(tracksViewState.tracksVericalY + delta)
+                            tracksViewState.changeTracksVerticalOffset(tracksViewState.tracksVerticalOffset + delta)
                         }
                     }
 
