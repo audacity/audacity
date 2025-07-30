@@ -28,9 +28,7 @@ ClipsListModel::ClipsListModel(QObject* parent)
 
 ClipsListModel::~ClipsListModel()
 {
-    if (m_autoScrollConnection) {
-        disconnect(m_autoScrollConnection);
-    }
+    disconnectAutoScroll();
 }
 
 void ClipsListModel::init()
@@ -88,6 +86,8 @@ void ClipsListModel::reload()
     if (m_trackId < 0) {
         return;
     }
+
+    disconnectAutoScroll();
 
     ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
@@ -502,9 +502,17 @@ void ClipsListModel::handleAutoScroll(bool ok,
     }
 
     if ((completed && m_autoScrollConnection) || !ok) {
-        disconnect(m_autoScrollConnection);
+        disconnectAutoScroll();
     } else if (!m_autoScrollConnection && !completed) {
         m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, onAutoScrollFrame);
+    }
+}
+
+void ClipsListModel::disconnectAutoScroll()
+{
+    if (m_autoScrollConnection) {
+        disconnect(m_autoScrollConnection);
+        m_autoScrollConnection = QMetaObject::Connection();
     }
 }
 
@@ -682,6 +690,8 @@ void ClipsListModel::endEditClip(const ClipKey& key)
         return;
     }
 
+    disconnectAutoScroll();
+
     vs->setClipEditStartTimeOffset(-1.0);
     vs->setClipEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
@@ -719,7 +729,7 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     }
 
     if ((completed && m_autoScrollConnection)) {
-        disconnect(m_autoScrollConnection);
+        disconnectAutoScroll();
     } else if (!m_autoScrollConnection && !completed) {
         m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedClips(key, false); });
     }
