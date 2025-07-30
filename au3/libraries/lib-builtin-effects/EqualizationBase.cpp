@@ -262,14 +262,12 @@ bool EqualizationBase::Init()
     auto& loFreq = mParameters.mLoFreq;
     auto& hiFreq = mParameters.mHiFreq;
 
-    int selcount = 0;
     double rate = 0.0;
 
     if (const auto project = FindProject()) {
         auto trackRange = TrackList::Get(*project).Selected<const WaveTrack>();
         if (trackRange) {
             rate = (*(trackRange.first++))->GetRate();
-            ++selcount;
 
             for (auto track : trackRange) {
                 if (track->GetRate() != rate) {
@@ -277,8 +275,10 @@ bool EqualizationBase::Init()
                         = XO("To apply Equalization, all selected tracks must have the same sample rate.").Translation().ToStdString();
                     return false;
                 }
-                ++selcount;
             }
+        } else {
+            mLastError = XO("To apply Equalization, select one or more audio tracks.").Translation().ToStdString();
+            return false;
         }
     } else {
         // Editing macro parameters, use this default
