@@ -229,7 +229,9 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     {
         pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(effect->MakeInstance());
         if (!pInstanceEx || !pInstanceEx->Init()) {
-            return make_ret(Err::UnknownError);
+            return pInstanceEx
+                   && !pInstanceEx->GetLastError().empty() ? make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError()) : make_ret(
+                Err::UnknownError);
         }
     }
 
