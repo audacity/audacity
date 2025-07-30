@@ -16,12 +16,7 @@
 
 bool StatefulEffect::Instance::Process(EffectSettings& settings)
 {
-    auto& effect = GetEffect();
-    if (!effect.Process(*this, settings)) {
-        mLastError = effect.GetLastError();
-        return false;
-    }
-    return true;
+    return GetEffect().Process(*this, settings);
 }
 
 auto StatefulEffect::Instance::GetLatency(const EffectSettings&, double) const
@@ -38,7 +33,7 @@ size_t StatefulEffect::Instance::ProcessBlock(EffectSettings&,
 
 std::string StatefulEffect::Instance::GetLastError() const
 {
-    return mLastError;
+    return GetEffect().GetLastError();
 }
 
 StatefulEffect::~StatefulEffect() = default;
