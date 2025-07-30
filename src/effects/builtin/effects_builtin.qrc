@@ -7,6 +7,10 @@
         <file>amplify/AmplifyView.qml</file>
         <file>clickremoval/ClickRemovalView.qml</file>
         <file>normalize/NormalizeView.qml</file>
+        <file>graphiceq/GraphicEqBoard.qml</file>
+        <file>graphiceq/GraphicEqFader.qml</file>
+        <file>graphiceq/GraphicEqFaderHandle.qml</file>
+        <file>graphiceq/GraphicEqGridLines.qml</file>
         <file>graphiceq/GraphicEqView.qml</file>
         <file>tonegen/ChirpView.qml</file>
         <file>tonegen/ToneView.qml</file>
