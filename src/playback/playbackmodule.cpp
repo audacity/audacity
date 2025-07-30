@@ -11,7 +11,7 @@
 #include "internal/playbackuiactions.h"
 #include "internal/au3/au3playback.h"
 #include "internal/au3/au3trackplaybackcontrol.h"
-#include "view/common/playbackstatemodel.h"
+#include "view/common/playbackmodel.h"
 #include "view/common/playbackmetermodel.h"
 #include "view/common/playbackmeterdbrangemodel.h"
 #include "view/toolbars/components/timecodemodeselector.h"
@@ -69,7 +69,7 @@ void PlaybackModule::registerUiTypes()
     qmlRegisterUncreatableType<TimecodeModeSelector>("Audacity.Playback", 1, 0, "TimecodeModeSelector",
                                                      "TimecodeModeSelector is a simple enum");
     qmlRegisterType<TimecodeModel>("Audacity.Playback", 1, 0, "TimecodeModel");
-    qmlRegisterType<PlaybackStateModel>("Audacity.Playback", 1, 0, "PlaybackStateModel");
+    qmlRegisterType<PlaybackModel>("Audacity.Playback", 1, 0, "PlaybackModel");
     qmlRegisterType<BPMModel>("Audacity.Playback", 1, 0, "BPMModel");
     qmlRegisterType<PlaybackMeterPanelModel>("Audacity.Playback", 1, 0, "PlaybackMeterPanelModel");
     qmlRegisterType<PlaybackMeterModel>("Audacity.Playback", 1, 0, "PlaybackMeterModel");

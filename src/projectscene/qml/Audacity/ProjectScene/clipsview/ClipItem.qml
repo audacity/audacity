@@ -104,8 +104,8 @@ Rectangle {
     property alias leftTrimPressedButtons: leftTrimStretchEdgeHover.pressedButtons
     property alias rightTrimPressedButtons: rightTrimStretchEdgeHover.pressedButtons
 
-    PlaybackStateModel {
-        id: playbackState
+    PlaybackModel {
+        id: playbackModel
     }
 
     // for navigating between clips
@@ -253,7 +253,7 @@ Rectangle {
         hoverEnabled: true
         cursorShape: {
             // Show forbidden cursor during playback for sample editing
-            if ((root.isNearSample || root.isIsolationMode) && playbackState.isPlaying) {
+            if ((root.isNearSample || root.isIsolationMode) && playbackModel.isPlaying) {
                 return Qt.ForbiddenCursor
             }
             return Qt.IBeamCursor

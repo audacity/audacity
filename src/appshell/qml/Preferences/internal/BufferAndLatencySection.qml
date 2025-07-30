@@ -33,8 +33,8 @@ BaseSection {
 
     property var apiModel: null
 
-    PlaybackStateModel {
-        id: playbackState
+    PlaybackModel {
+        id: playbackModel
     }
 
     IncrementalPropertyControlWithTitle {
@@ -42,7 +42,7 @@ BaseSection {
 
         currentValue: apiModel.bufferLength
 
-        enabled: !playbackState.isPlaying
+        enabled: !playbackModel.isPlaying
 
         columnWidth: root.columnWidth
         spacing: root.columnSpacing
@@ -64,7 +64,7 @@ BaseSection {
 
         currentValue: apiModel.latencyCompensation
 
-        enabled: !playbackState.isPlaying
+        enabled: !playbackModel.isPlaying
 
         columnWidth: root.columnWidth
         spacing: root.columnSpacing

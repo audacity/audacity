@@ -18,8 +18,8 @@ PreferencesPage {
         id: playbackPreferencesModel
     }
 
-    PlaybackStateModel {
-        id: playbackState
+    PlaybackModel {
+        id: playbackModel
     }
 
     Component.onCompleted: {
@@ -33,7 +33,7 @@ PreferencesPage {
         PlaybackPerformanceSection {
             playbackPreferencesModel: playbackPreferencesModel
 
-            enabled: !(playbackState.isPaused || playbackState.isPlaying)
+            enabled: !(playbackModel.isPaused || playbackModel.isPlaying)
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart
@@ -53,7 +53,7 @@ PreferencesPage {
         CursorSection {
             playbackPreferencesModel: playbackPreferencesModel
 
-            enabled: !(playbackState.isPaused || playbackState.isPlaying)
+            enabled: !(playbackModel.isPaused || playbackModel.isPlaying)
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 2

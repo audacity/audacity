@@ -33,8 +33,8 @@ Rectangle {
 
     clip: true
 
-    PlaybackStateModel {
-        id: playbackState
+    PlaybackModel {
+        id: playbackModel
     }
 
     TracksListClipsModel {
@@ -252,7 +252,7 @@ Rectangle {
         id: customCursor
         active: {
             // Don't show custom cursor during playback for sample editing
-            if ((content.isNearSample || content.isIsolationMode) && playbackState.isPlaying) {
+            if ((content.isNearSample || content.isIsolationMode) && playbackModel.isPlaying) {
                 return false
             }
 

@@ -48,8 +48,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/meters/linearmeter.h
 
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackmetermodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackmetermodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackmeterdbrangemodel.cpp
