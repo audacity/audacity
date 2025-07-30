@@ -258,7 +258,6 @@ bool EqualizationBase::Init()
 {
     constexpr auto loFreqI = EqualizationFilter::loFreqI;
 
-    const auto& lin = mParameters.mLin;
     const auto& curveName = mParameters.mCurveName;
     auto& loFreq = mParameters.mLoFreq;
     auto& hiFreq = mParameters.mHiFreq;
@@ -375,14 +374,10 @@ bool EqualizationBase::ProcessOne(
     auto s = start;
 
     auto& buffer = task.buffer;
-    auto& window1 = task.window1;
-    auto& window2 = task.window2;
     auto& thisWindow = task.thisWindow;
     auto& lastWindow = task.lastWindow;
 
     auto originalLen = len;
-
-    auto& output = task.output;
 
     TrackProgress(count, 0.);
     bool bLoopSuccess = true;
