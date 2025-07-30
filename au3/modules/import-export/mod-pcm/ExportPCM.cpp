@@ -17,18 +17,20 @@
 #include <sndfile.h>
 
 #include "Dither.h"
-#include "FileFormats.h"
+#include "libraries/lib-file-formats/FileFormats.h"
 #include "Mix.h"
 #include "Prefs.h"
-#include "Tags.h"
+#include "libraries/lib-tags/Tags.h"
 #include "Track.h"
 #include "wxFileNameWrapper.h"
 
-#include "Export.h"
-#include "ExportOptionsEditor.h"
+#include "libraries/lib-import-export/Export.h"
+#include "libraries/lib-import-export/ExportOptionsEditor.h"
 
-#include "ExportPluginHelpers.h"
-#include "ExportPluginRegistry.h"
+#include "libraries/lib-import-export/ExportPluginHelpers.h"
+#include "libraries/lib-import-export/ExportPluginRegistry.h"
+
+#include "ExportPCM.h"
 
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
@@ -42,7 +44,6 @@ void id3_latin1_decode(id3_latin1_t const*, id3_ucs4_t*);
 }
 #endif
 
-namespace {
 struct
 {
     int format;
@@ -119,327 +120,247 @@ enum : int
     OptionIDSFType = 0
 };
 
-class ExportOptionsSFTypedEditor final : public ExportOptionsEditor
+ExportOptionsSFTypedEditor::ExportOptionsSFTypedEditor(int type)
+    : mType(type)
 {
-    const int mType;
-    ExportOption mEncodingOption;
-    int mEncoding;
-public:
+    GetEncodings(type, mEncodingOption.values, mEncodingOption.names);
 
-    explicit ExportOptionsSFTypedEditor(int type)
-        : mType(type)
-    {
-        GetEncodings(type, mEncodingOption.values, mEncodingOption.names);
+    mEncodingOption.id = type;
+    mEncodingOption.title = XO("Encoding");
+    mEncodingOption.flags = ExportOption::TypeEnum;
+    mEncodingOption.defaultValue = mEncodingOption.values[0];
 
-        mEncodingOption.id = type;
-        mEncodingOption.title = XO("Encoding");
-        mEncodingOption.flags = ExportOption::TypeEnum;
-        mEncodingOption.defaultValue = mEncodingOption.values[0];
+    mEncoding = *std::get_if<int>(&mEncodingOption.defaultValue);
+}
 
-        mEncoding = *std::get_if<int>(&mEncodingOption.defaultValue);
-    }
+int ExportOptionsSFTypedEditor::GetOptionsCount() const
+{
+    return 1;
+}
 
-    int GetOptionsCount() const override
-    {
-        return 1;
-    }
+bool ExportOptionsSFTypedEditor::GetOption(int, ExportOption& option) const
+{
+    option = mEncodingOption;
+    return true;
+}
 
-    bool GetOption(int, ExportOption& option) const override
-    {
-        option = mEncodingOption;
+bool ExportOptionsSFTypedEditor::GetValue(ExportOptionID, ExportValue& value) const
+{
+    value = mEncoding;
+    return true;
+}
+
+bool ExportOptionsSFTypedEditor::SetValue(ExportOptionID, const ExportValue& value)
+{
+    if (std::find(mEncodingOption.values.begin(),
+                  mEncodingOption.values.end(), value) != mEncodingOption.values.end()) {
+        mEncoding = *std::get_if<int>(&value);
         return true;
     }
+    return false;
+}
 
-    bool GetValue(ExportOptionID, ExportValue& value) const override
-    {
-        value = mEncoding;
-        return true;
-    }
-
-    bool SetValue(ExportOptionID, const ExportValue& value) override
-    {
-        if (std::find(mEncodingOption.values.begin(),
-                      mEncodingOption.values.end(), value) != mEncodingOption.values.end()) {
-            mEncoding = *std::get_if<int>(&value);
-            return true;
-        }
-        return false;
-    }
-
-    SampleRateList GetSampleRateList() const override
-    {
-        return {};
-    }
-
-    void Load(const audacity::BasicSettings& config) override
-    {
-        mEncoding = LoadEncoding(config, mType, mEncoding);
-    }
-
-    void Store(audacity::BasicSettings& config) const override
-    {
-        SaveEncoding(config, mType, mEncoding);
-    }
-};
-
-class ExportOptionsSFEditor final : public ExportOptionsEditor
+ExportOptionsSFTypedEditor::SampleRateList ExportOptionsSFTypedEditor::GetSampleRateList() const
 {
-    Listener* const mListener;
-    int mType;
-    std::unordered_map<int, int> mEncodings;
+    return {};
+}
 
-    std::vector<ExportOption> mOptions;
+void ExportOptionsSFTypedEditor::Load(const audacity::BasicSettings& config)
+{
+    mEncoding = LoadEncoding(config, mType, mEncoding);
+}
 
-    bool IsValidType(const ExportValue& typeValue) const
-    {
-        if (std::holds_alternative<int>(typeValue)) {
-            const auto& typeOption = mOptions.front();
-            return std::find(typeOption.values.begin(),
-                             typeOption.values.end(),
-                             typeValue) != typeOption.values.end();
-        }
-        return false;
+void ExportOptionsSFTypedEditor::Store(audacity::BasicSettings& config) const
+{
+    SaveEncoding(config, mType, mEncoding);
+}
+
+bool ExportOptionsSFEditor::IsValidType(const ExportValue& typeValue) const
+{
+    if (std::holds_alternative<int>(typeValue)) {
+        const auto& typeOption = mOptions.front();
+        return std::find(typeOption.values.begin(),
+                         typeOption.values.end(),
+                         typeValue) != typeOption.values.end();
     }
+    return false;
+}
 
-public:
+ExportOptionsSFEditor::ExportOptionsSFEditor(Listener* listener)
+    : mListener(listener)
+{
+    ExportOption typeOption {
+        OptionIDSFType, XO("Header"),
+        0,
+        ExportOption::TypeEnum
+    };
 
-    explicit ExportOptionsSFEditor(Listener* listener)
-        : mListener(listener)
-    {
-        ExportOption typeOption {
-            OptionIDSFType, XO("Header"),
-            0,
-            ExportOption::TypeEnum
-        };
-
-        auto hasDefaultType = false;
-        for (int i = 0, num = sf_num_headers(); i < num; ++i) {
-            const auto type = static_cast<int>(sf_header_index_to_type(i));
-            switch (type) {
-            // On the Mac, do not include in header list
+    auto hasDefaultType = false;
+    for (int i = 0, num = sf_num_headers(); i < num; ++i) {
+        const auto type = static_cast<int>(sf_header_index_to_type(i));
+        switch (type) {
+        // On the Mac, do not include in header list
 #if defined(__WXMAC__)
-            case SF_FORMAT_AIFF: break;
+        case SF_FORMAT_AIFF: break;
 #endif
-            // Do not include in header list
-            case SF_FORMAT_WAV: break;
-            default:
-            {
-                typeOption.values.emplace_back(type);
-                typeOption.names.push_back(Verbatim(sf_header_index_name(i)));
-                ExportOption encodingOption {
-                    type,
-                    XO("Encoding"),
-                    0,
-                    ExportOption::TypeEnum
-                };
-                GetEncodings(type, encodingOption.values, encodingOption.names);
-                encodingOption.defaultValue = encodingOption.values[0];
-                if (!hasDefaultType) {
-                    mType = type;
-                    typeOption.defaultValue = type;
-                    hasDefaultType = true;
-                } else {
-                    encodingOption.flags |= ExportOption::Hidden;
-                }
-                mOptions.push_back(std::move(encodingOption));
-                mEncodings[type] = *std::get_if<int>(&encodingOption.defaultValue);
-            } break;
+        // Do not include in header list
+        case SF_FORMAT_WAV: break;
+        default:
+        {
+            typeOption.values.emplace_back(type);
+            typeOption.names.push_back(Verbatim(sf_header_index_name(i)));
+            ExportOption encodingOption {
+                type,
+                XO("Encoding"),
+                0,
+                ExportOption::TypeEnum
+            };
+            GetEncodings(type, encodingOption.values, encodingOption.names);
+            encodingOption.defaultValue = encodingOption.values[0];
+            if (!hasDefaultType) {
+                mType = type;
+                typeOption.defaultValue = type;
+                hasDefaultType = true;
+            } else {
+                encodingOption.flags |= ExportOption::Hidden;
             }
+            mOptions.push_back(std::move(encodingOption));
+            mEncodings[type] = *std::get_if<int>(&encodingOption.defaultValue);
+        } break;
         }
-        typeOption.defaultValue = typeOption.values[0];
-        mOptions.insert(mOptions.begin(), std::move(typeOption));
     }
+    typeOption.defaultValue = typeOption.values[0];
+    mOptions.insert(mOptions.begin(), std::move(typeOption));
+}
 
-    int GetOptionsCount() const override
-    {
-        return static_cast<int>(mOptions.size());
+int ExportOptionsSFEditor::GetOptionsCount() const
+{
+    return static_cast<int>(mOptions.size());
+}
+
+bool ExportOptionsSFEditor::GetOption(int index, ExportOption& option) const
+{
+    if (index >= 0 && index < static_cast<int>(mOptions.size())) {
+        option = mOptions[index];
+        return true;
     }
+    return false;
+}
 
-    bool GetOption(int index, ExportOption& option) const override
-    {
-        if (index >= 0 && index < static_cast<int>(mOptions.size())) {
-            option = mOptions[index];
-            return true;
-        }
-        return false;
+bool ExportOptionsSFEditor::GetValue(ExportOptionID id, ExportValue& value) const
+{
+    if (id == OptionIDSFType) {
+        value = mType;
+        return true;
     }
-
-    bool GetValue(ExportOptionID id, ExportValue& value) const override
-    {
-        if (id == OptionIDSFType) {
-            value = mType;
-            return true;
-        }
-        auto it = mEncodings.find(id);
-        if (it != mEncodings.end()) {
-            value = it->second;
-            return true;
-        }
-        return false;
+    auto it = mEncodings.find(id);
+    if (it != mEncodings.end()) {
+        value = it->second;
+        return true;
     }
+    return false;
+}
 
-    bool SetValue(ExportOptionID id, const ExportValue& value) override
-    {
-        if (id == OptionIDSFType && IsValidType(value)) {
-            const auto newType = *std::get_if<int>(&value);
-            if (newType == mType) {
-                return true;
-            }
-
-            if (mListener) {
-                mListener->OnExportOptionChangeBegin();
-            }
-
-            for (auto& option : mOptions) {
-                if (option.id == mType) {
-                    option.flags |= ExportOption::Hidden;
-                    if (mListener) {
-                        mListener->OnExportOptionChange(option);
-                    }
-                } else if (option.id == newType) {
-                    option.flags &= ~ExportOption::Hidden;
-                    if (mListener) {
-                        mListener->OnExportOptionChange(option);
-                    }
-                }
-            }
-            mType = newType;
-            Store(*gPrefs);
-            if (mListener) {
-                mListener->OnExportOptionChangeEnd();
-                mListener->OnFormatInfoChange();
-            }
+bool ExportOptionsSFEditor::SetValue(ExportOptionID id, const ExportValue& value)
+{
+    if (id == OptionIDSFType && IsValidType(value)) {
+        const auto newType = *std::get_if<int>(&value);
+        if (newType == mType) {
             return true;
         }
 
-        auto it = mEncodings.find(id);
-        if (it != mEncodings.end() && std::holds_alternative<int>(value)) {
-            it->second = *std::get_if<int>(&value);
-            Store(*gPrefs);
-            return true;
-        }
-        return false;
-    }
-
-    SampleRateList GetSampleRateList() const override
-    {
-        return {};
-    }
-
-    void Load(const audacity::BasicSettings& config) override
-    {
-        mType = LoadOtherFormat(config, mType);
-        for (auto& p : mEncodings) {
-            p.second = LoadEncoding(config, p.first, p.second);
-        }
-
-        // Prior to v2.4.0, sf_format will include the subtype.
-        if (mType & SF_FORMAT_SUBMASK) {
-            const auto type = mType & SF_FORMAT_TYPEMASK;
-            const auto enc = mType & SF_FORMAT_SUBMASK;
-            mEncodings[type] = enc;
-            mType = type;
+        if (mListener) {
+            mListener->OnExportOptionChangeBegin();
         }
 
         for (auto& option : mOptions) {
-            const auto it = mEncodings.find(option.id);
-            if (it == mEncodings.end()) {
-                continue;
-            }
-
-            if (mType == it->first) {
-                option.flags &= ~ExportOption::Hidden;
-            } else {
+            if (option.id == mType) {
                 option.flags |= ExportOption::Hidden;
+                if (mListener) {
+                    mListener->OnExportOptionChange(option);
+                }
+            } else if (option.id == newType) {
+                option.flags &= ~ExportOption::Hidden;
+                if (mListener) {
+                    mListener->OnExportOptionChange(option);
+                }
             }
         }
+        mType = newType;
+        Store(*gPrefs);
+        if (mListener) {
+            mListener->OnExportOptionChangeEnd();
+            mListener->OnFormatInfoChange();
+        }
+        return true;
     }
 
-    void Store(audacity::BasicSettings& config) const override
-    {
-        SaveOtherFormat(config, mType);
-        for (auto& [type, encoding] : mEncodings) {
-            SaveEncoding(config, type, encoding);
-        }
+    auto it = mEncodings.find(id);
+    if (it != mEncodings.end() && std::holds_alternative<int>(value)) {
+        it->second = *std::get_if<int>(&value);
+        Store(*gPrefs);
+        return true;
     }
-};
+    return false;
 }
 
-class PCMExportProcessor final : public ExportProcessor
+ExportOptionsSFEditor::SampleRateList ExportOptionsSFEditor::GetSampleRateList() const
 {
-    constexpr static size_t maxBlockLen = 44100 * 5;
+    return {};
+}
 
-    struct
-    {
-        int subformat;
-        double t0;
-        double t1;
-        std::unique_ptr<Mixer> mixer;
-        TranslatableString status;
-        SF_INFO info;
-        sampleFormat format;
-        wxFile f;
-        SNDFILE* sf;
-        int sf_format;
-        wxFileNameWrapper fName;
-        int fileFormat;
-        std::unique_ptr<Tags> metadata;
-    } context;
-
-public:
-
-    PCMExportProcessor(int subformat)
-    {
-        context.sf = nullptr;
-        context.subformat = subformat;
+void ExportOptionsSFEditor::Load(const audacity::BasicSettings& config)
+{
+    mType = LoadOtherFormat(config, mType);
+    for (auto& p : mEncodings) {
+        p.second = LoadEncoding(config, p.first, p.second);
     }
 
-    ~PCMExportProcessor() override
-    {
-        if (context.f.IsOpened()) {
-            if (context.sf != nullptr) {
-                sf_close(context.sf);
-            }
-            context.f.Close();
+    // Prior to v2.4.0, sf_format will include the subtype.
+    if (mType & SF_FORMAT_SUBMASK) {
+        const auto type = mType & SF_FORMAT_TYPEMASK;
+        const auto enc = mType & SF_FORMAT_SUBMASK;
+        mEncodings[type] = enc;
+        mType = type;
+    }
+
+    for (auto& option : mOptions) {
+        const auto it = mEncodings.find(option.id);
+        if (it == mEncodings.end()) {
+            continue;
+        }
+
+        if (mType == it->first) {
+            option.flags &= ~ExportOption::Hidden;
+        } else {
+            option.flags |= ExportOption::Hidden;
         }
     }
+}
 
-    bool Initialize(AudacityProject& project, const Parameters& parameters, const wxFileNameWrapper& filename, double t0, double t1,
-                    bool selectedOnly, double sampleRate, unsigned channels, MixerOptions::Downmix* mixerSpec, const Tags* tags) override;
-
-    ExportResult Process(ExportProcessorDelegate& delegate) override;
-
-private:
-
-    static ArrayOf<char> AdjustString(const wxString& wxStr, int sf_format);
-    static void AddStrings(SNDFILE* sf, const Tags* tags, int sf_format);
-    static bool AddID3Chunk(
-        const wxFileNameWrapper& fName, const Tags* tags, int sf_format);
-};
-
-class ExportPCM final : public ExportPlugin
+void ExportOptionsSFEditor::Store(audacity::BasicSettings& config) const
 {
-public:
+    SaveOtherFormat(config, mType);
+    for (auto& [type, encoding] : mEncodings) {
+        SaveEncoding(config, type, encoding);
+    }
+}
 
-    ExportPCM();
+PCMExportProcessor::PCMExportProcessor(int subformat)
+{
+    context.sf = nullptr;
+    context.subformat = subformat;
+}
 
-    int GetFormatCount() const override;
-    FormatInfo GetFormatInfo(int index) const override;
-
-    std::vector<std::string> GetMimeTypes(int formatIndex) const override;
-
-    bool ParseConfig(int formatIndex, const rapidjson::Value&, ExportProcessor::Parameters& parameters) const override;
-
-    std::unique_ptr<ExportOptionsEditor>
-    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
-
-    /**
-     *
-     * @param format Control whether we are doing a "preset" export to a popular
-     * file type, or giving the user full control over libsndfile.
-     */
-    std::unique_ptr<ExportProcessor> CreateProcessor(int format) const override;
-};
+PCMExportProcessor::~PCMExportProcessor()
+{
+    if (context.f.IsOpened()) {
+        if (context.sf != nullptr) {
+            sf_close(context.sf);
+        }
+        context.f.Close();
+    }
+}
 
 ExportPCM::ExportPCM() = default;
 
@@ -487,20 +408,20 @@ FormatInfo ExportPCM::GetFormatInfo(int index) const
 std::vector<std::string> ExportPCM::GetMimeTypes(int formatIndex) const
 {
     if (formatIndex == FMT_WAV) {
-        return { "audio/x-wav" }
+        return { "audio/x-wav" };
     }
     return {};
 }
 
-bool ExportPCM::ParseConfig(int formatIndex, const rapidjson::Value&, ExportProcessor::Parameters& parameters) const
-{
-    if (formatIndex == FMT_WAV) {
-        //no parameters available...
-        parameters = {};
-        return true;
-    }
-    return false;
-}
+// bool ExportPCM::ParseConfig(int formatIndex, const rapidjson::Value&, ExportProcessor::Parameters& parameters) const
+// {
+//     if (formatIndex == FMT_WAV) {
+//         //no parameters available...
+//         parameters = {};
+//         return true;
+//     }
+//     return false;
+// }
 
 std::unique_ptr<ExportOptionsEditor>
 ExportPCM::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* listener) const
@@ -780,18 +701,18 @@ ArrayOf<char> PCMExportProcessor::AdjustString(const wxString& wxStr, int sf_for
     // We must convert the string to 7 bit ASCII
     size_t sz = wxStr.length();
     if (sz == 0) {
-        return {}
+        return {};
     }
     // Size for secure allocation in case of local wide char usage
     size_t sr = (sz + 4) * 2;
 
     ArrayOf<char> pDest{ sr, true };
     if (!pDest) {
-        return {}
+        return {};
     }
     ArrayOf<char> pSrc{ sr, true };
     if (!pSrc) {
-        return {}
+        return {};
     }
 
     if (wxStr.mb_str(wxConvISO8859_1)) {
@@ -799,7 +720,7 @@ ArrayOf<char> PCMExportProcessor::AdjustString(const wxString& wxStr, int sf_for
     } else if (wxStr.mb_str()) {
         strncpy(pSrc.get(), wxStr.mb_str(), sz);
     } else {
-        return {}
+        return {};
     }
 
     char* pD = pDest.get();
@@ -1084,7 +1005,3 @@ bool PCMExportProcessor::AddID3Chunk(
 #endif
     return true;
 }
-
-static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "PCM",
-                                                                 []{ return std::make_unique< ExportPCM >(); }
-};
