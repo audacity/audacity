@@ -56,13 +56,13 @@ void PlaybackController::init()
     });
 
     m_player = playback()->player();
-    globalContext()->setPlayer(m_player);
+    globalContext()->setPlayer(player());
 
-    m_player->playbackStatusChanged().onReceive(this, [this](PlaybackStatus) {
+    player()->playbackStatusChanged().onReceive(this, [this](PlaybackStatus) {
         m_isPlayingChanged.notify();
     });
 
-    m_player->playbackPositionChanged().onReceive(this, [this](const muse::secs_t&) {
+    player()->playbackPositionChanged().onReceive(this, [this](const muse::secs_t&) {
         if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
             //! NOTE: just stop, without seek
             player()->stop();
@@ -222,7 +222,7 @@ void PlaybackController::togglePlay()
             play();
         } else if (isShiftPressed) {
             //! NOTE: set the current position as start position
-            doSeek(m_player->playbackPosition());
+            doSeek(player()->playbackPosition());
             play(true /* ignoreSelection */);
         } else {
             resume();
