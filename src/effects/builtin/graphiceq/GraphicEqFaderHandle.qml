@@ -1,18 +1,21 @@
 import QtQuick 2.15
+import Muse.Ui
 
 Rectangle {
-  width: 16
-  height: 32
-  radius: 2
-  color: "white"
-  border.color: "darkgray"
-  border.width: 1
+    width: 16
+    height: 32
+    radius: 2
+    color: ui.theme.backgroundPrimaryColor
+    border.color: "#868689"
+    border.width: 1
 
-  Rectangle {
-    width: 10
-    height: 1
-    color: "black"
-    y: 16
-    anchors.horizontalCenter: parent.horizontalCenter
-  }
+    Rectangle {
+        id: fingerGrip // That horizontal dent in the middle of the fader handle
+
+        width: 10
+        height: 1
+        color: ui.theme.fontPrimaryColor
+        y: 16
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
 }

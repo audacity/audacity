@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import Muse.UiComponents 1.0
 
 Item {
     id: board
@@ -43,7 +44,7 @@ Item {
                 width: fader.width
                 spacing: prv.labelBottomMargin
 
-                Text {
+                StyledTextLabel {
                     width: 16
                     height: prv.labelHeight
                     font.pixelSize: prv.fontSize
@@ -51,6 +52,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     text: model.centerFreq
                     anchors.horizontalCenter: parent.horizontalCenter
+                    elide: Text.ElideNone
                 }
 
                 GraphicEqFader {

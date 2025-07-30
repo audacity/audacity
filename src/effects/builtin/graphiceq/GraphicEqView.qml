@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import Muse.Ui
 import Muse.UiComponents
 import Audacity.Effects
 
@@ -30,8 +31,8 @@ EffectBase {
         anchors.centerIn: parent
 
         radius: 8
-        color: "lightgray"
-        border.color: "darkgray"
+        color: ui.theme.backgroundSecondaryColor
+        border.color: ui.theme.strokeColor
 
         Column {
             id: boardAndButtons

@@ -1,4 +1,6 @@
 import QtQuick 2.15
+import Muse.Ui
+import Muse.UiComponents 1.0
 
 Item {
   id: root
@@ -34,7 +36,7 @@ Item {
       width: root.lineWidth
       height: 1
 
-      Text {
+      StyledTextLabel {
         id: label
         width: prv.labelWidth
         y: line.y - 6
@@ -50,7 +52,7 @@ Item {
         width: root.lineWidth
         height: 1
         y: root.height * (1 - (modelData - root.min) / (root.max - root.min))
-        color: "darkgray"
+        color: ui.theme.strokeColor
       }
     }
   }
