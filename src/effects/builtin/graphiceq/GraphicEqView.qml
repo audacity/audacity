@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import Muse.Ui
 import Muse.UiComponents
 import Audacity.Effects
 
@@ -11,8 +12,8 @@ EffectBase {
     property string title: qsTrc("effects/graphiceq", "Graphic EQ")
     property bool isApplyAllowed: true
 
-    width: bandsRow.width
-    implicitHeight: 428
+    width: boardRectangle.width
+    implicitHeight: boardRectangle.height
 
     model: graphicEq
 
@@ -22,69 +23,50 @@ EffectBase {
         instanceId: root.instanceId
     }
 
-    Column {
-        spacing: 16
-        Row {
-            id: bandsRow
+    Rectangle {
+        id: boardRectangle
 
-            spacing: 8
+        width: boardAndButtons.width
+        height: boardAndButtons.height
+        anchors.centerIn: parent
 
-            Repeater {
-                model: graphicEq.bandsModel
+        radius: 8
+        color: ui.theme.backgroundSecondaryColor
+        border.color: ui.theme.strokeColor
 
-                Column {
-                    spacing: 16
-                    width: 32
-                    padding: 4
+        Column {
+            id: boardAndButtons
 
-                    Text {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        height: 16
+            padding: 16
+            spacing: 16
+            width: board.width + 2 * padding
 
-                        text: model.centerFreq
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        font.pixelSize: 12
-                        elide: Text.ElideNone
-                        wrapMode: Text.NoWrap
-                        clip: false
-                    }
+            GraphicEqBoard {
+                id: board
+                anchors.horizontalCenter: parent.horizontalCenter
+                bandsModel: graphicEq.bandsModel
+            }
 
-                    Slider {
-                        id: slider
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        width: parent.width
-                        height: 352
+            Row {
+                id: buttons
 
-                        orientation: Qt.Vertical
-                        from: -20
-                        to: 20
-                        value: model.dbGain
-                        onValueChanged: {
-                            model.dbGain = value
-                        }
-                    }
+                spacing: 8
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                FlatButton {
+                    text: qsTrc("effects/graphiceq", "Flatten")
+                    width: 64
+                    height: 28
+                    onClicked: graphicEq.bandsModel.flatten()
                 }
-            }
-        }
 
-        Row {
-            spacing: 8
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            FlatButton {
-                text: qsTrc("effects/graphiceq", "Flatten")
-                width: 64
-                height: 28
-                onClicked: graphicEq.bandsModel.flatten()
-            }
-
-            FlatButton {
-                id: cancelBtn
-                text: qsTrc("effects/graphiceq", "Invert")
-                width: 64
-                height: 28
-                onClicked: graphicEq.bandsModel.invert()
+                FlatButton {
+                    id: cancelBtn
+                    text: qsTrc("effects/graphiceq", "Invert")
+                    width: 64
+                    height: 28
+                    onClicked: graphicEq.bandsModel.invert()
+                }
             }
         }
     }
