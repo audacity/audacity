@@ -274,8 +274,8 @@ bool EqualizationBase::Init()
 
             for (auto track : trackRange) {
                 if (track->GetRate() != rate) {
-                    BasicUI::ShowMessageBox(XO(
-                                                "To apply Equalization, all selected tracks must have the same sample rate."));
+                    mLastError
+                        = XO("To apply Equalization, all selected tracks must have the same sample rate.").Translation().ToStdString();
                     return false;
                 }
                 ++selcount;
@@ -289,8 +289,7 @@ bool EqualizationBase::Init()
     hiFreq = rate / 2.0;
     // Unlikely, but better than crashing.
     if (hiFreq <= loFreqI) {
-        BasicUI::ShowMessageBox(
-            XO("Track sample rate is too low for this effect."));
+        mLastError = XO("Track sample rate is too low for this effect.").Translation().ToStdString();
         return false;
     }
 
