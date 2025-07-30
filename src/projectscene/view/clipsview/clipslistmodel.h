@@ -139,6 +139,7 @@ private:
     bool isKeyboardTriggered() const;
 
     void handleAutoScroll(bool ok, bool completed, const std::function<void()>& onAutoScrollFrame);
+    void disconnectAutoScroll();
 
     Qt::KeyboardModifiers keyboardModifiers() const;
 
