@@ -14,6 +14,7 @@ public:
 
     virtual double stepToPosition(double sample) const = 0;
     virtual double sampleToPosition(double sample) const = 0;
+    virtual double positionToSample(double position) const = 0;
     virtual std::string sampleToText(double sample) const = 0;
 
     virtual void setMeterSize(int meterSize) = 0;

@@ -16,7 +16,11 @@ StyledPopupView {
     closePolicies: PopupView.NoAutoClose
 
     property double volume
-    property rect contentRect: fontMetrics.boundingRect("-60.0dB")
+    property rect contentRect: fontMetrics.boundingRect(minValue.toFixed(root.decimalPlaces) + unitText)
+
+    property int decimalPlaces: 1
+    property string unitText: "dB"
+    property real minValue: -60.0
 
     Item {
         id: content
@@ -26,10 +30,10 @@ StyledPopupView {
         StyledTextLabel {
             id: label
 
-            anchors.right: parent.right
+            anchors.horizontalCenter: parent.horizontalCenter
             text: {
-                let value = root.volume.toFixed(1);
-                return `${value}dB`
+                let value = root.volume.toFixed(root.decimalPlaces);
+                return `${value}${root.unitText}`;
             }
         }
     }

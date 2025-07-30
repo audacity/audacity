@@ -61,6 +61,12 @@ double DbLogMeter::sampleToPosition(double sample) const
     return stepToPosition(sample);
 }
 
+double DbLogMeter::positionToSample(double position) const
+{
+    const double clampedValue = std::clamp(position, 0.0, 1.0);
+    return m_dbRange * (1.0 - clampedValue);
+}
+
 std::string DbLogMeter::sampleToText(double sample) const
 {
     std::stringstream ss;

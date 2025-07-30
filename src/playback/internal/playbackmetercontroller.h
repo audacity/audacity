@@ -20,6 +20,7 @@ public:
 
     double stepToPosition(double sample) const override;
     double sampleToPosition(double sample) const override;
+    double positionToSample(double position) const override;
     std::string sampleToText(double sample) const override;
 
     std::vector<double> smallSteps() const override;

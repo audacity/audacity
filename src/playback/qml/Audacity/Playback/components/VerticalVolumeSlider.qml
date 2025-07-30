@@ -11,6 +11,8 @@ import Muse.UiComponents 1.0
 Slider {
     id: root
 
+    property var meterModel: null
+
     property real volumeLevel: 0.0
     property real readableVolumeLevel: Math.round(root.volumeLevel * 10) / 10
 
@@ -22,7 +24,7 @@ Slider {
     signal volumeLevelMoved(var level)
     signal handlePressed()
 
-    from: -60
+    from: meterModel ? meterModel.dbRange : 0
     to: 0
     value: root.volumeLevel
     stepSize: 0.1
@@ -49,6 +51,8 @@ Slider {
 
         property real dragStartOffset: 0.0
     }
+
+    onFromChanged: () => root.volumeLevelMoved(Math.max(root.from, root.volumeLevel))
 
     NavigationControl {
         id: navCtrl
@@ -92,7 +96,7 @@ Slider {
         id: handleItem
 
         x: prv.rulerXPos - root.handleWidth / 2
-        y: (1.0 - root.position) * prv.rulerLineHeight
+        y: (1.0 - root.meterModel.position) * prv.rulerLineHeight
         implicitWidth: root.handleWidth
         implicitHeight: root.handleHeight
 
@@ -124,10 +128,7 @@ Slider {
                 }
                 let proportionFromTop = mousePosInRoot / prv.rulerLineHeight
                 let clampedProportion = Math.max(0.0, Math.min(proportionFromTop, 1.0))
-                let newRootPosition = 1.0 - clampedProportion
-
-                let localNewValue = root.valueAt(newRootPosition)
-                root.volumeLevelMoved(localNewValue)
+                root.volumeLevelMoved(root.meterModel.positionToSample(1.0 - clampedProportion))
             }
         }
 

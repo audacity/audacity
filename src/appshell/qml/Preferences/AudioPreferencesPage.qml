@@ -36,10 +36,6 @@ PreferencesPage {
         id: apiModel
     }
 
-    PlaybackMeterModel {
-        id: playbackMeterModel
-    }
-
     Component.onCompleted: {
         apiModel.load()
     }
@@ -82,8 +78,6 @@ PreferencesPage {
         SeparatorLine {}
 
         MeterDbRangeSection {
-           model: playbackMeterModel
-
            navigation.section: root.navigationSection
            navigation.order: root.navigationOrderStart + 3
         }

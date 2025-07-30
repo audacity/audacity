@@ -62,6 +62,11 @@ double PlaybackMeterController::sampleToPosition(double sample) const
     return m_meter->sampleToPosition(sample);
 }
 
+double PlaybackMeterController::positionToSample(double position) const
+{
+    return m_meter->positionToSample(position);
+}
+
 std::string PlaybackMeterController::sampleToText(double sample) const
 {
     return m_meter->sampleToText(sample);

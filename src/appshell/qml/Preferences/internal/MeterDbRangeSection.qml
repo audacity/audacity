@@ -13,10 +13,8 @@ BaseSection {
     title: qsTrc("appshell/preferences", "Meter dB range")
     spacing: 16
 
-    property var model: null
-
-    PlaybackStateModel {
-        id: playbackState
+    PlaybackMeterModel {
+        id: playbackMeterModel
     }
 
     ComboBoxWithTitle {
@@ -24,17 +22,17 @@ BaseSection {
 
         columnWidth: 320
 
-        currentIndex: root.model.meterDbRange
-        model: playbackMeterModel.dbRanges.map(function(item) {
-            return item.title;
+        currentIndex: playbackMeterModel.meterDbRange
+        model: playbackMeterModel.dbRangeList.map(function(id) {
+            return playbackMeterModel.description(id);
         })
 
         navigation.name: "MeterDbRangeBox"
         navigation.panel: root.navigation
         navigation.row: 1
 
-        onValueEdited: function(newIndex, newValue) {
-            root.model.meterDbRange = newIndex;
+        onValueEdited: function(newIndex, _) {
+            playbackMeterModel.meterDbRange = newIndex;
         }
     }
 }

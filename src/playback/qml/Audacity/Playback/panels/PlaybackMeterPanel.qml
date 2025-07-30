@@ -124,6 +124,8 @@ Item {
 
                 orientation: Qt.Vertical
 
+                meterModel: model.meterModel
+
                 volumeLevel: model.level
 
                 anchors.top: parent.top

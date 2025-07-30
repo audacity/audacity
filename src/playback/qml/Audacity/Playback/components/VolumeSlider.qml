@@ -7,8 +7,13 @@ import QtQuick.Controls 2.15
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 
+import Audacity.ProjectScene 1.0
+import Audacity.Playback 1.0
+
 Slider {
     id: root
+
+    property var meterModel: null
 
     property real volumeLevel: 0.0
     property real readableVolumeLevel: Math.round(root.volumeLevel * 10) / 10
@@ -21,7 +26,7 @@ Slider {
     signal volumeLevelMoved(var level)
     signal handlePressed()
 
-    from: -60
+    from: meterModel ? meterModel.dbRange : 0
     to: 0
     value: root.volumeLevel
     stepSize: 0.1
@@ -47,6 +52,30 @@ Slider {
         readonly property int rulerYPos: root.height / 2
 
         property real dragStartOffset: 0.0
+        property bool dragActive: false
+    }
+
+    Connections {
+        target: Qt.application
+
+        function onStateChanged() {
+            if (Qt.application.state !== Qt.ApplicationActive) {
+                prv.dragActive = false
+                tooltip.hide(true)
+            }
+        }
+    }
+
+    onFromChanged: () => root.volumeLevelMoved(Math.max(root.from, root.volumeLevel))
+
+    VolumeTooltip {
+        id: tooltip
+
+        parent: root.handle
+        decimalPlaces: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 2 : 1) : 1
+        minValue: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 1.0 : meterModel.dbRange) : 0
+        unitText: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? "" : "dB") : ""
+        volume: root.meterModel ? (root.meterModel.meterType ==  PlaybackMeterType.Linear ? root.meterModel.position : root.volumeLevel) : 0
     }
 
     NavigationControl {
@@ -90,13 +119,15 @@ Slider {
     handle: Item {
         id: handleItem
 
-        x: root.position * prv.rulerLineWidth
+        x: root.meterModel ? (root.meterModel.position * prv.rulerLineWidth) : 0
         y: prv.rulerYPos - root.handleHeight / 2
         implicitWidth: root.handleWidth
         implicitHeight: root.handleHeight
 
         MouseArea {
             anchors.fill: parent
+
+            hoverEnabled: true
 
             onDoubleClicked: {
                 // Double click resets the volume
@@ -112,17 +143,39 @@ Slider {
             preventStealing: true // Don't let a Flickable steal the mouse
 
             onPressed: function(mouse) {
+                prv.dragActive = true
                 prv.dragStartOffset = mouse.x
                 root.handlePressed()
+                tooltip.show(true)
             }
 
             onPositionChanged: function(mouse)  {
+                if (!prv.dragActive) {
+                    return
+                }
+
                 let mousePosInRoot = mapToItem(root, mouse.x - prv.dragStartOffset, 0).x
                 let newPosZeroToOne = mousePosInRoot / prv.rulerLineWidth
 
                 let newPosClamped = Math.max(0.0, Math.min(newPosZeroToOne, 1.0))
-                let localNewValue = root.valueAt(newPosClamped)
-                root.volumeLevelMoved(localNewValue)
+                root.volumeLevelMoved(root.meterModel.positionToSample(newPosClamped))
+            }
+
+            onReleased: function() {
+                prv.dragActive = false
+                if (!containsMouse) {
+                    tooltip.hide(true)
+                }
+            }
+
+            onEntered: function() {
+                tooltip.show()
+            }
+
+            onExited: function() {
+                if (!prv.dragActive) {
+                    tooltip.hide(true)
+                }
             }
         }
 

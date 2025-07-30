@@ -122,7 +122,13 @@ StyledPopupView {
                 enabled: root.model.meterType !== PlaybackMeterType.Linear
 
                 function openMenu() {
-                    menuLoader.toggleOpened(root.model.dbRanges)
+                    let rangeList = root.model.dbRangeList.map(function(range) {
+                        return {
+                            id: range,
+                            title: root.model.description(range)
+                        };
+                    });
+                    menuLoader.toggleOpened(rangeList)
                 }
 
                 Rectangle {
@@ -143,7 +149,7 @@ StyledPopupView {
                     anchors.right: dropIconItem.left
                     anchors.verticalCenter: parent.verticalCenter
 
-                    text: model.currentDbRange
+                    text: model.description(root.model.meterDbRange)
                     horizontalAlignment: Text.AlignLeft
                     wrapMode: Text.Wrap
                     maximumLineCount: 1
@@ -204,7 +210,7 @@ StyledPopupView {
                     anchors.top: parent.top
 
                     onHandleMenuItem: function(itemId) {
-                        model.handleDbRangeChange(itemId)
+                        root.model.meterDbRange = itemId
                     }
                 }
             }

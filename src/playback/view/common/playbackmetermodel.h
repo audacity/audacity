@@ -8,7 +8,7 @@
 
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackmetercontroller.h"
-#include "playback/view/common/playbackmeterdbrangemodel.h"
+#include "playback/iplayback.h"
 
 namespace au::playback {
 class PlaybackMeterModel : public QObject, public muse::async::Asyncable
@@ -22,38 +22,46 @@ class PlaybackMeterModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(PlaybackMeterType::MeterType meterType READ meterType WRITE setMeterType NOTIFY meterTypeChanged FINAL)
     Q_PROPERTY(
         PlaybackMeterPosition::MeterPosition meterPosition READ meterPosition WRITE setMeterPosition NOTIFY meterPositionChanged FINAL)
-    Q_PROPERTY(
-        PlaybackMeterDbRange::DbRange meterDbRange READ meterDbRange WRITE setMeterDbRange NOTIFY meterDbRangeChanged FINAL)
     Q_PROPERTY(int meterSize READ meterSize WRITE setMeterSize NOTIFY meterSizeChanged FINAL)
 
-    Q_PROPERTY(muse::uicomponents::MenuItemList dbRanges READ dbRanges NOTIFY dbRangesChanged FINAL)
-    Q_PROPERTY(QString currentDbRange READ currentDbRange NOTIFY dbRangesChanged FINAL)
+    Q_PROPERTY(
+        PlaybackMeterDbRange::DbRange meterDbRange READ meterDbRange WRITE setMeterDbRange NOTIFY meterDbRangeChanged FINAL)
+
+    Q_PROPERTY(std::vector<PlaybackMeterDbRange::DbRange> dbRangeList READ dbRangeList CONSTANT)
+    Q_PROPERTY(float dbRange READ dbRange NOTIFY dbRangeChanged FINAL)
+
+    Q_PROPERTY(float position READ position NOTIFY positionChanged FINAL)
 
     muse::Inject<IPlaybackMeterController> meterController;
     muse::Inject<IPlaybackConfiguration> configuration;
+    muse::Inject<IPlayback> playback;
 
 public:
     explicit PlaybackMeterModel(QObject* parent = nullptr);
 
     Q_INVOKABLE double stepToPosition(double step);
     Q_INVOKABLE double sampleToPosition(double sample) const;
+    Q_INVOKABLE double positionToSample(double position) const;
     Q_INVOKABLE QString sampleToText(double sample) const;
-    Q_INVOKABLE void handleDbRangeChange(const QString& itemId);
+    Q_INVOKABLE QString description(PlaybackMeterDbRange::DbRange range) const;
 
     PlaybackMeterStyle::MeterStyle meterStyle() const;
     PlaybackMeterType::MeterType meterType() const;
     PlaybackMeterPosition::MeterPosition meterPosition() const;
-    PlaybackMeterDbRange::DbRange meterDbRange() const;
-    QString currentDbRange() const;
     int meterSize() const;
 
-    muse::uicomponents::MenuItemList dbRanges() const;
+    PlaybackMeterDbRange::DbRange meterDbRange() const;
+    std::vector<PlaybackMeterDbRange::DbRange> dbRangeList() const;
+    float dbRange() const;
+
+    float position() const;
 
     void setMeterStyle(PlaybackMeterStyle::MeterStyle style);
     void setMeterType(PlaybackMeterType::MeterType type);
     void setMeterPosition(PlaybackMeterPosition::MeterPosition position);
-    void setMeterDbRange(PlaybackMeterDbRange::DbRange range);
     void setMeterSize(int size);
+
+    void setMeterDbRange(PlaybackMeterDbRange::DbRange range);
 
     QVariantList smallSteps() const;
     QVariantList fullSteps() const;
@@ -65,12 +73,14 @@ signals:
     void meterStyleChanged();
     void meterTypeChanged();
     void meterPositionChanged();
-    void meterDbRangeChanged();
     void meterSizeChanged();
 
-    void dbRangesChanged();
+    void meterDbRangeChanged();
+    void dbRangeChanged();
+
+    void positionChanged();
 
 private:
-    PlaybackMeterDbRangeModel* m_dbRanges = nullptr;
+    float m_volume = 0.0f;
 };
 }

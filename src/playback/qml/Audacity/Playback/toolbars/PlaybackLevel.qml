@@ -110,6 +110,8 @@ Item {
             VolumeSlider {
                 id: volumeSlider
 
+                meterModel: playbackMeterModel
+
                 anchors.left: parent.left
                 anchors.leftMargin: playbackMeterRuler.leftTextMargin - volumeSlider.handleWidth / 2
                 anchors.right: parent.right

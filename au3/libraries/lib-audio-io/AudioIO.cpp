@@ -2731,7 +2731,7 @@ bool AudioIoCallback::FillOutputBuffers(
     }
     // ------ End of MEMORY ALLOCATION ---------------
 
-    auto playbackVolume = ExpGain(GetMixerOutputVol());
+    auto playbackVolume = GetMixerOutputVol();
     if (mForceFadeOut.load(std::memory_order_relaxed) || IsPaused()) {
         playbackVolume = 0.0;
     }

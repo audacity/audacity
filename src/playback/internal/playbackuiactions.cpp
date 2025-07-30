@@ -191,57 +191,6 @@ const UiActionList PlaybackUiActions::m_loopBoundaryActions = {
              ),
 };
 
-const UiActionList PlaybackUiActions::m_meterDbRangeActions = {
-    UiAction("meter-db-range-36",
-             au::context::UiCtxAny,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "shallow range for high-amplitude editing"),
-             TranslatableString("action", "shallow range for high-amplitude editing")
-             ),
-    UiAction("meter-db-range-48",
-             au::context::UiCtxAny,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "-48 dB (PCM range of 8 bit samples)"),
-             TranslatableString("action", "-48 dB (PCM range of 8 bit samples)")
-             ),
-    UiAction("meter-db-range-60",
-             au::context::UiCtxAny,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "-60 dB (PCM range of 10 bit samples)"),
-             TranslatableString("action", "-60 dB (PCM range of 10 bit samples)")
-             ),
-    UiAction("meter-db-range-72",
-             au::context::UiCtxAny,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "-72 dB (PCM range of 12 bit samples)"),
-             TranslatableString("action", "-72 dB (PCM range of 12 bit samples)")
-             ),
-    UiAction("meter-db-range-84",
-             au::context::UiCtxAny,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "-84 dB (PCM range of 14 bit samples)"),
-             TranslatableString("action", "-84 dB (PCM range of 14 bit samples)")
-             ),
-    UiAction("meter-db-range-96",
-             au::context::UiCtxAny,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "-96 dB (PCM range of 16 bit samples)"),
-             TranslatableString("action", "-96 dB (PCM range of 16 bit samples)")
-             ),
-    UiAction("meter-db-range-120",
-             au::context::UiCtxAny,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "-120 dB (approximate limit of human hearing)"),
-             TranslatableString("action", "-120 dB (approximate limit of human hearing)")
-             ),
-    UiAction("meter-db-range-145",
-             au::context::UiCtxAny,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "-145 dB (PCM range of 24 bit samples)"),
-             TranslatableString("action", "-145 dB (PCM range of 24 bit samples)")
-             ),
-};
-
 PlaybackUiActions::PlaybackUiActions(std::shared_ptr<PlaybackController> controller)
     : m_controller(controller)
 {
@@ -300,7 +249,6 @@ const UiActionList& PlaybackUiActions::actionsList() const
         alist.insert(alist.end(), m_mainActions.cbegin(), m_mainActions.cend());
         alist.insert(alist.end(), m_settingsActions.cbegin(), m_settingsActions.cend());
         alist.insert(alist.end(), m_loopBoundaryActions.cbegin(), m_loopBoundaryActions.cend());
-        alist.insert(alist.end(), m_meterDbRangeActions.cbegin(), m_meterDbRangeActions.cend());
     }
     return alist;
 }
