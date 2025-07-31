@@ -45,6 +45,8 @@ EffectBase {
                 id: board
                 anchors.horizontalCenter: parent.horizontalCenter
                 bandsModel: graphicEq.bandsModel
+                minDbGain: graphicEq.minDbGain
+                maxDbGain: graphicEq.maxDbGain
             }
 
             Row {

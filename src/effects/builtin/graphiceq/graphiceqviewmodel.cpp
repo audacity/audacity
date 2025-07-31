@@ -34,4 +34,14 @@ GraphicEqBandsModel* GraphicEqViewModel::bandsModel() const
 {
     return mBandsModel;
 }
+
+double GraphicEqViewModel::minDbGain() const
+{
+    return EqualizationBandSliders::minDbGain;
+}
+
+double GraphicEqViewModel::maxDbGain() const
+{
+    return EqualizationBandSliders::maxDbGain;
+}
 }
