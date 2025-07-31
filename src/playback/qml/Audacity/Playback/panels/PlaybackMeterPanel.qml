@@ -51,6 +51,9 @@ Item {
             PlaybackMeterCustomisePopup {
                 id: popup
 
+                placementPolicies: PopupView.PreferLeft
+                y: -32
+
                 model: model.meterModel
             }
         }
@@ -76,8 +79,7 @@ Item {
                     id: leftVolumePressure
 
                     anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: ruler.bottomTextMargin
+                    height: parent.height - ruler.bottomTextMargin
 
                     overloadHeight: 10
 
@@ -94,8 +96,7 @@ Item {
 
 
                     anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: ruler.bottomTextMargin
+                    height: parent.height - ruler.bottomTextMargin
 
                     overloadHeight: 10
 
@@ -115,7 +116,6 @@ Item {
                     anchors.top: parent.top
                     anchors.topMargin: leftVolumePressure.overloadHeight - topTextMargin
                     anchors.bottom: parent.bottom
-                    anchors.bottomMargin: bottomTextMargin
                 }
             }
 

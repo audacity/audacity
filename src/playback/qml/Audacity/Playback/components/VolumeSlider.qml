@@ -72,6 +72,7 @@ Slider {
         id: tooltip
 
         parent: root.handle
+
         decimalPlaces: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 2 : 1) : 1
         minValue: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 1.0 : meterModel.dbRange) : 0
         unitText: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? "" : "dB") : ""
@@ -194,6 +195,15 @@ Slider {
                 opacity: 0.7
             }
 
+        }
+    }
+
+    onPressedChanged: {
+        prv.dragActive = root.pressed
+        if (root.pressed) {
+            tooltip.show(true)
+        } else {
+            tooltip.hide(true)
         }
     }
 
