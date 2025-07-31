@@ -16,9 +16,9 @@ Item {
 
     Rectangle {
         id: faderTrack
-        width: 2
+        width: 4
         height: root.height
-        color: ui.theme.isDark ? "#191F24" : "#CFCFD9"
+        color: ui.theme.isDark ? "#191F24" : "#B8BBCC"
         anchors.horizontalCenter: parent.horizontalCenter
 
         GraphicEqFaderHandle {

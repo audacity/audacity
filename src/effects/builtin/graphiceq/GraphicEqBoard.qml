@@ -27,7 +27,7 @@ Item {
         min: root.minDbGain
         max: root.maxDbGain
         lineWidth: faderRow.width + faderRow.spacing
-        height: prv.faderHeight - 1 // -1 so that the fader tracks bite into the bottom line
+        height: prv.faderHeight
         anchors.horizontalCenter: parent.horizontalCenter
         fontSize: prv.fontSize
         y: faderRow.y + prv.labelHeight + prv.labelBottomMargin
