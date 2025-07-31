@@ -45,26 +45,29 @@ EffectBase {
                     width: parent.width
 
                     StyledTextLabel {
+                        Layout.fillWidth: true
+                        Layout.margins: 16
+
                         text: qsTrc("effects/noisereduction", "Step 1")
                         horizontalAlignment: Text.AlignLeft
                         font.bold: true
-
-                        Layout.fillWidth: true
-                        Layout.margins: 16
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/noisereduction", "Select a few seconds of isolated noise so Audacity knows what to filter out, then click Get noise profile.")
-                        wrapMode: Text.Wrap
-                        horizontalAlignment: Text.AlignLeft
-
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
+
+                        text: qsTrc("effects/noisereduction", "Select a few seconds of isolated noise so Audacity knows what to filter out, then click Get noise profile.")
+                        wrapMode: Text.Wrap
+                        horizontalAlignment: Text.AlignLeft
                     }
 
                     FlatButton {
                         id: getNoiseProfileButton
+
+                        Layout.fillWidth: true
+                        Layout.margins: 16
 
                         text: qsTrc("effects/noisereduction", "Get noise profile")
                         onClicked: {
@@ -74,9 +77,6 @@ EffectBase {
                             root.dialogView.reject()
                         }
                         height: 28
-
-                        Layout.fillWidth: true
-                        Layout.margins: 16
                     }
                 }
             }
@@ -92,21 +92,21 @@ EffectBase {
                     width: parent.width
 
                     StyledTextLabel {
+                        Layout.fillWidth: true
+                        Layout.margins: 16
+
                         text: qsTrc("effects/noisereduction", "Step 2")
                         horizontalAlignment: Text.AlignLeft
                         font.bold: true
-
-                        Layout.fillWidth: true
-                        Layout.margins: 16
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/noisereduction", "Noise reduction")
-                        horizontalAlignment: Text.AlignLeft
-
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
+
+                        text: qsTrc("effects/noisereduction", "Noise reduction")
+                        horizontalAlignment: Text.AlignLeft
                     }
 
                     NoiseReductionSlider {
@@ -126,12 +126,12 @@ EffectBase {
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/noisereduction", "Sensitivity")
-                        horizontalAlignment: Text.AlignLeft
-
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
+
+                        text: qsTrc("effects/noisereduction", "Sensitivity")
+                        horizontalAlignment: Text.AlignLeft
                     }
 
                     NoiseReductionSlider {
@@ -150,11 +150,12 @@ EffectBase {
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/noisereduction", "Frequency smoothing")
-                        horizontalAlignment: Text.AlignLeft
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
+
+                        text: qsTrc("effects/noisereduction", "Frequency smoothing")
+                        horizontalAlignment: Text.AlignLeft
                     }
 
                     NoiseReductionSlider {
@@ -181,23 +182,23 @@ EffectBase {
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/noisereduction", "Output")
-                        horizontalAlignment: Text.AlignLeft
-
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
                         Layout.bottomMargin: 10
+
+                        text: qsTrc("effects/noisereduction", "Output")
+                        horizontalAlignment: Text.AlignLeft
                     }
 
                     RadioButtonGroup {
-                        orientation: Qt.Vertical
-
                         Layout.fillWidth: true
                         Layout.preferredHeight: radioButtonColumn.height
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
                         Layout.bottomMargin: 16
+
+                        orientation: Qt.Vertical
 
                         Column {
                             id: radioButtonColumn
