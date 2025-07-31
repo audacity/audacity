@@ -9,7 +9,7 @@
 
 **********************************************************************/
 #include "CompressorInstance.h"
-#include "CompressorProcessor.h"
+#include "libraries/lib-dynamic-range-processor/CompressorProcessor.h"
 #include "MathApprox.h"
 #include <numeric>
 

@@ -7,6 +7,8 @@
         <file>amplify/AmplifyView.qml</file>
         <file>clickremoval/ClickRemovalView.qml</file>
         <file>loudness/NormalizeLoudnessView.qml</file>
+        <file>compressor/CompressorView.qml</file>
+        <file>limiter/LimiterView.qml</file>
         <file>normalize/NormalizeView.qml</file>
         <file>graphiceq/GraphicEqBoard.qml</file>
         <file>graphiceq/GraphicEqFader.qml</file>
