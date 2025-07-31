@@ -113,7 +113,7 @@ QVariant GraphicEqBandsModel::data(const QModelIndex& index, int role) const
     case rDbGain:
         return mSliders.GetSliderValue(index.row());
     case rCenterFreq:
-        return centerFrequencyToString(kThirdOct.at(index.row()));
+        return centerFrequencyToString(EqualizationBandSliders::kThirdOct[index.row()]);
     default:
         assert(false && "Invalid role in GraphicEqBandsModel::data");
         break;
