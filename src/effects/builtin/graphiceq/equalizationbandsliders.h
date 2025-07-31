@@ -27,6 +27,9 @@
 struct EqualizationBandSliders
 {
 public:
+    static constexpr auto maxDbGain = 24.0;
+    static constexpr auto minDbGain = -24.0;
+
     EqualizationBandSliders(std::function<EqualizationCurvesList* ()> getCurvesList);
     void Init();
     void Flatten();

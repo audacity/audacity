@@ -206,8 +206,7 @@ void EqualizationBandSliders::ErrMin()
             mWhenSliders[i] = (log10(kThirdOct[i]) - loLog) / denom;
         }
         // set initial values of sliders
-        mEQVals[i]
-            =std::clamp(logEnvelope.GetValue(mWhenSliders[i]), -20., 20.);
+        mEQVals[i] = std::clamp(logEnvelope.GetValue(mWhenSliders[i]), minDbGain, maxDbGain);
     }
 
     double vals[NUM_PTS];
@@ -246,12 +245,12 @@ void EqualizationBandSliders::ErrMin()
             oldError = error;
             mEQValsOld = mEQVals[i];
             mEQVals[i] += correction; //move fader value
-            if (mEQVals[i] > 20.) {
-                mEQVals[i] = 20.;
+            if (mEQVals[i] > maxDbGain) {
+                mEQVals[i] = maxDbGain;
                 flag = false;
             }
-            if (mEQVals[i] < -20.) {
-                mEQVals[i] = -20.;
+            if (mEQVals[i] < minDbGain) {
+                mEQVals[i] = minDbGain;
                 flag = false;
             }
             GraphicEQ(testEnvelope);      //calculate envelope
