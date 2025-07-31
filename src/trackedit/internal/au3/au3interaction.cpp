@@ -1816,7 +1816,8 @@ bool Au3Interaction::clipSplitDelete(const ClipKey& clipKey)
 
 std::vector<ITrackDataPtr> Au3Interaction::splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end)
 {
-    std::vector<ITrackDataPtr> dataVector(tracksIds.size());
+    std::vector<ITrackDataPtr> dataVector;
+    dataVector.reserve(tracksIds.size());
     for (const auto& trackId : tracksIds) {
         auto data = splitCutSelectedOnTrack(trackId, begin, end);
         if (!data) {
