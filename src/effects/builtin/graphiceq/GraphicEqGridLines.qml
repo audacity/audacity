@@ -50,7 +50,7 @@ Item {
                 width: root.lineWidth
                 height: 1
                 y: root.height * (1 - (modelData - root.min) / (root.max - root.min))
-                color: ui.theme.strokeColor
+                color: ui.theme.isDark ? "#3E4449" : "#D9DADE"
             }
         }
     }

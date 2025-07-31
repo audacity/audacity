@@ -27,8 +27,8 @@
 struct EqualizationBandSliders
 {
 public:
-    static constexpr auto maxDbGain = 24.0;
-    static constexpr auto minDbGain = -24.0;
+    static constexpr auto maxDbGain = 25.0;
+    static constexpr auto minDbGain = -25.0;
     static constexpr double kThirdOct[] =
     {
         20., 25., 31., 40., 50., 63., 80., 100., 125., 160., 200.,
