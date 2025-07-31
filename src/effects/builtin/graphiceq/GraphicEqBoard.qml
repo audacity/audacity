@@ -13,8 +13,8 @@ Item {
     QtObject {
         id: prv
 
-        readonly property int minDdBain: -20
-        readonly property int maxDdBain: 20
+        readonly property int minDbGain: -24
+        readonly property int maxDbGain: 24
         readonly property int faderHeight: 352
         readonly property int labelHeight: 16
         readonly property int labelBottomMargin: 16
@@ -24,10 +24,10 @@ Item {
     GraphicEqGridLines {
         id: gridLines
 
-        min: prv.minDdBain
-        max: prv.maxDdBain
+        min: prv.minDbGain
+        max: prv.maxDbGain
         lineWidth: faderRow.width + faderRow.spacing
-        height: prv.faderHeight
+        height: prv.faderHeight - 1 // -1 so that the fader tracks bite into the bottom line
         anchors.horizontalCenter: parent.horizontalCenter
         fontSize: prv.fontSize
         y: faderRow.y + prv.labelHeight + prv.labelBottomMargin
@@ -62,8 +62,8 @@ Item {
                     id: fader
 
                     height: prv.faderHeight
-                    min: prv.minDdBain
-                    max: prv.maxDdBain
+                    min: prv.minDbGain
+                    max: prv.maxDbGain
                     value: model.dbGain
                     anchors.horizontalCenter: parent.horizontalCenter
                     onNewValueRequested: function(newValue) {

@@ -18,7 +18,7 @@ Item {
         id: faderTrack
         width: 2
         height: root.height
-        color: "#C0C5CE"
+        color: ui.theme.isDark ? "#191F24" : "#CFCFD9"
         anchors.horizontalCenter: parent.horizontalCenter
 
         GraphicEqFaderHandle {

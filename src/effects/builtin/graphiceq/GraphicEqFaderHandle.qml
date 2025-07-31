@@ -6,7 +6,7 @@ Rectangle {
     height: 32
     radius: 2
     color: ui.theme.backgroundPrimaryColor
-    border.color: "#868689"
+    border.color: ui.theme.isDark ? "#8C9196" : "#5B5B5F"
     border.width: 1
 
     Rectangle {
