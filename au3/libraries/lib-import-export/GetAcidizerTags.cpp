@@ -8,8 +8,8 @@
   Matthieu Hodgkinson
 
 **********************************************************************/
-#include "GetAcidizerTags.h"
-#include "AcidizerTags.h"
+#include "libraries/lib-import-export/GetAcidizerTags.h"
+#include "libraries/lib-file-formats/AcidizerTags.h"
 
 #include <algorithm>
 #include <array>
@@ -24,18 +24,18 @@ std::optional<LibFileFormats::AcidizerTags> GetAcidizerTags(
     if (
         sf_command(&file, SFC_GET_LOOP_INFO, &loopInfo, sizeof(loopInfo))
         == SF_FALSE) {
-        return {}
+        return {};
     }
 
     if (
         loopInfo.loop_mode == SF_LOOP_BACKWARD
         || loopInfo.loop_mode == SF_LOOP_ALTERNATING) {
         // Don't know what that is:
-        return {}
+        return {};
     }
 
     if (loopInfo.loop_mode == SF_LOOP_NONE) {
-        return LibFileFormats::AcidizerTags::OneShot {}
+        return LibFileFormats::AcidizerTags::OneShot {};
     }
 
     if (loopInfo.num_beats != 0) {
@@ -45,7 +45,7 @@ std::optional<LibFileFormats::AcidizerTags> GetAcidizerTags(
         std::memset(&info, 0, sizeof(info));
         sf_command(&file, SFC_GET_CURRENT_SF_INFO, &info, sizeof(info));
         if (info.samplerate == 0 || info.frames == 0) {
-            return {}
+            return {};
         }
         const auto duration = 1. * info.frames / info.samplerate;
         return LibFileFormats::AcidizerTags::Loop { 60. * loopInfo.num_beats
@@ -107,7 +107,7 @@ std::optional<LibFileFormats::AcidizerTags> GetAcidizerTags(
         if (isTrusted) {
             // Later we may want to get the key, too, but for now we're only
             // interested in BPM.
-            return LibFileFormats::AcidizerTags::Loop { loopInfo.bpm }
+            return LibFileFormats::AcidizerTags::Loop { loopInfo.bpm };
         }
     }
 

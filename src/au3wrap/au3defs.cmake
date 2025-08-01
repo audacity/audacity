@@ -77,6 +77,7 @@ set(AU3_DEF
 
     -DIMPORT_EXPORT_API=
     -DTAGS_API=
+    -DFILE_FORMATS_API=
 
     -DFFMPEG_SUPPORT_API=
 )
@@ -89,6 +90,11 @@ set(AU3_INCLUDE
     ${PortAudio_INCLUDE_DIR}
     ${libmp3lame_INCLUDE_DIRS}
     ${wavpack_INCLUDE_DIRS}
+    ${libsndfile_INCLUDE_DIRS}
+    ${vorbis_INCLUDE_DIRS}
+    ${flac_INCLUDE_DIRS}
+    ${ogg_INCLUDE_DIRS}
+    ${opus_INCLUDE_DIRS}
 
     ${AUDACITY_ROOT}/lib-src/sqlite
     ${AUDACITY_ROOT}/lib-src/pffft
@@ -186,6 +192,11 @@ set(AU3_LINK
     libmp3lame::libmp3lame
     wavpack::wavpack
     mpg123::libmpg123
+    SndFile::sndfile
+    Vorbis::vorbis
+    FLAC::FLAC
+    Ogg::ogg
+    Opus::opus
     sqlite
     soxr
     pffft

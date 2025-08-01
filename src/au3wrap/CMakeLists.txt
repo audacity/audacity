@@ -562,7 +562,12 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-import-export/ExportUtils.cpp
     ${AU3_LIBRARIES}/lib-import-export/ExportUtils.h
 
+    ${AU3_LIBRARIES}/lib-import-export/GetAcidizerTags.cpp
+    ${AU3_LIBRARIES}/lib-import-export/GetAcidizerTags.h
+
     ${AU3_LIBRARIES}/lib-file-formats/AcidizerTags.h
+    ${AU3_LIBRARIES}/lib-file-formats/FileFormats.cpp
+    ${AU3_LIBRARIES}/lib-file-formats/FileFormats.h
 
     ${AU3_LIBRARIES}/lib-tags/Tags.cpp
     ${AU3_LIBRARIES}/lib-tags/Tags.h
@@ -590,6 +595,12 @@ set(AU3_SRC
 
     ${AU3_MODULES}/import-export/mod-wavpack/ImportWavPack.cpp
     ${AU3_MODULES}/import-export/mod-wavpack/ImportWavPack.h
+
+    ${AU3_MODULES}/import-export/mod-pcm/ExportPCM.cpp
+    ${AU3_MODULES}/import-export/mod-pcm/ExportPCM.h
+
+    ${AU3_MODULES}/import-export/mod-pcm/ImportPCM.cpp
+    ${AU3_MODULES}/import-export/mod-pcm/ImportPCM.h
 )
 
 if (AU_MODULE_EFFECTS_AUDIO_UNIT)
