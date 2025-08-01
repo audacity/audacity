@@ -23,8 +23,8 @@ set(FETCHCONTENT_BASE_DIR ${PROJECT_BINARY_DIR}/_deps)
 include(FetchContent)
 FetchContent_Declare(
   muse_framework
-  GIT_REPOSITORY https://github.com/musescore/framework_tmp.git
-  GIT_TAG        u250724
+  GIT_REPOSITORY https://github.com/kryksyh/framework_tmp.git
+  GIT_TAG        split_tool
 )
 
 FetchContent_GetProperties(muse_framework)

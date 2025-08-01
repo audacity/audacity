@@ -36,6 +36,8 @@ Item {
     property alias rightTrimPressedButtons: clipsContainer.rightTrimPressedButtons
     property bool selectionEditInProgress: false
     property bool selectionInProgress: false
+    property bool hover: false
+    property double splitGuidelinePosition
 
     signal interactionStarted()
     signal interactionEnded()
@@ -329,6 +331,12 @@ Item {
                     })
                 }
 
+                onHoverChanged: function() {
+                    root.hover = clipsContainer.checkIfAnyClip(function(clipItem) {
+                        return clipItem && clipItem.hover
+                    })
+                }
+
                 onIsBrushChanged: function() {
                     clipsContainer.isBrush = clipsContainer.checkIfAnyClip(function(clipItem) {
                         return clipItem && clipItem.isBrush
@@ -408,6 +416,7 @@ Item {
                 onClipItemMousePositionChanged: function(xWithinClip, yWithinClip) {
                     var yWithinTrack = yWithinClip
                     var xWithinTrack = xWithinClip + clipItem.x
+
                     trackItemMousePositionChanged(xWithinTrack, yWithinTrack, clipItem.key)
 
                     let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))

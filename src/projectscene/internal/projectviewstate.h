@@ -55,6 +55,7 @@ public:
     int trackYPosition(const trackedit::TrackId& trackId) const override;
     void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) override;
     void setTrackHeight(const trackedit::TrackId& trackId, int height) override;
+    trackedit::TrackId trackAtPosition(double y) const override;
 
     void setClipEditStartTimeOffset(double val) override;
     double clipEditStartTimeOffset() const override;
@@ -77,6 +78,7 @@ public:
 
     muse::ValCh<bool> altPressed() const override;
     muse::ValCh<bool> ctrlPressed() const override;
+    muse::ValCh<bool> escPressed() const override;
 
     int trackDefaultHeight() const override;
 
@@ -113,5 +115,6 @@ private:
 
     muse::ValCh<bool> m_altPressed;
     muse::ValCh<bool> m_ctrlPressed;
+    muse::ValCh<bool> m_escPressed;
 };
 }

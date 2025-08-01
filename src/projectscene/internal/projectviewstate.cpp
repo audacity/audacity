@@ -195,6 +195,31 @@ void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int hei
     d->collapsed.set(height < COLLAPSE_HEIGHT);
 }
 
+au::trackedit::TrackId ProjectViewState::trackAtPosition(double y) const
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return -1;
+    }
+
+    trackedit::TrackIdList tracks = prj->trackIdList();
+
+    int tracksVericalY = this->tracksVericalY().val;
+    int trackTop = -tracksVericalY;
+    int trackBottom = trackTop;
+
+    for (trackedit::TrackId id : tracks) {
+        trackTop = trackBottom;
+        trackBottom = trackTop + trackHeight(id).val;
+
+        if (trackTop <= y && trackBottom >= y) {
+            return id;
+        }
+    }
+
+    return -1;
+}
+
 bool ProjectViewState::isSnapEnabled() const
 {
     return m_snap.val.enabled;
@@ -360,6 +385,11 @@ muse::ValCh<bool> ProjectViewState::ctrlPressed() const
     return m_ctrlPressed;
 }
 
+muse::ValCh<bool> ProjectViewState::escPressed() const
+{
+    return m_escPressed;
+}
+
 int ProjectViewState::trackDefaultHeight() const
 {
     return DEFAULT_HEIGHT;
@@ -367,7 +397,7 @@ int ProjectViewState::trackDefaultHeight() const
 
 bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
 {
-    if (event->type() == QEvent::KeyPress) {
+    if (event->type() == QEvent::KeyPress || event->type() == QEvent::ShortcutOverride) {
         if (static_cast<QKeyEvent*>(event)->key() == 0 || static_cast<QKeyEvent*>(event)->key() == Qt::Key_unknown) {
             return QObject::eventFilter(watched, event);
         }
@@ -382,6 +412,10 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
             if (!m_ctrlPressed.val) {
                 m_ctrlPressed.set(true);
             }
+        } else if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Escape) {
+            if (!m_escPressed.val) {
+                m_escPressed.set(true);
+            }
         } else {
             // We only want to process single ALT and CTRL key presses
             if (m_altPressed.val) {
@@ -390,6 +424,10 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
 
             if (m_ctrlPressed.val) {
                 m_ctrlPressed.set(false);
+            }
+
+            if (m_escPressed.val) {
+                m_escPressed.set(false);
             }
         }
     } else if (event->type() == QEvent::KeyRelease) {
@@ -405,6 +443,10 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
             || (static_cast<QKeyEvent*>(event)->modifiers() & Qt::ControlModifier)) {
             m_ctrlPressed.set(false);
         }
+
+        if (m_escPressed.val) {
+            m_escPressed.set(false);
+        }
     } else if (event->type() == QEvent::ApplicationStateChange) {
         if (qApp->applicationState() != Qt::ApplicationState::ApplicationActive) {
             if (m_altPressed.val) {
@@ -413,6 +455,10 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
 
             if (m_ctrlPressed.val) {
                 m_ctrlPressed.set(false);
+            }
+
+            if (m_escPressed.val) {
+                m_escPressed.set(false);
             }
         }
     }

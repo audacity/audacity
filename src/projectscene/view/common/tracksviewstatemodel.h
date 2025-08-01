@@ -30,10 +30,11 @@ class TracksViewStateModel : public QObject, public muse::async::Asyncable
     // Context of user interaction
     Q_PROPERTY(int tracksVericalY READ tracksVericalY NOTIFY tracksVericalYChanged FINAL)
     Q_PROPERTY(bool tracksVerticalScrollLocked READ tracksVerticalScrollLocked NOTIFY tracksVerticalScrollLockedChanged FINAL)
-    Q_PROPERTY(int tracksVerticalScrollPadding READ tracksVerticalScrollPadding FINAL)
+    Q_PROPERTY(int tracksVerticalScrollPadding READ tracksVerticalScrollPadding FINAL CONSTANT)
 
     Q_PROPERTY(bool altPressed READ altPressed NOTIFY altPressedChanged FINAL)
     Q_PROPERTY(bool ctrlPressed READ ctrlPressed NOTIFY ctrlPressedChanged FINAL)
+    Q_PROPERTY(bool escPressed READ escPressed NOTIFY escPressedChanged FINAL)
 
     Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
     Q_PROPERTY(bool isRecording READ isRecording NOTIFY isRecordingChanged FINAL)
@@ -55,6 +56,8 @@ public:
     QVariant trackId() const;
     void setTrackId(const QVariant& newTrackId);
     int trackHeight() const;
+    Q_INVOKABLE int trackHeightX(trackedit::TrackId trackId);
+    Q_INVOKABLE int trackVerticalPosition(trackedit::TrackId trackId);
     bool isTrackCollapsed() const;
     bool tracksVerticalScrollLocked() const;
     int tracksVerticalScrollPadding() const;
@@ -64,6 +67,7 @@ public:
     int tracksVericalY() const;
     bool altPressed() const;
     bool ctrlPressed() const;
+    bool escPressed() const;
     bool isPlaying() const;
     bool isRecording() const;
 
@@ -75,7 +79,8 @@ public:
 
     Q_INVOKABLE void changeTrackHeight(int deltaY);
 
-    Q_INVOKABLE bool snapEnabled();
+    Q_INVOKABLE bool snapEnabled() const;
+    Q_INVOKABLE trackedit::TrackId trackAtPosition(double x, double y) const;
 
 signals:
     // Context of elements
@@ -88,6 +93,7 @@ signals:
     void tracksVerticalScrollLockedChanged();
     void altPressedChanged();
     void ctrlPressedChanged();
+    void escPressedChanged();
     void isPlayingChanged();
     void isRecordingChanged();
 
@@ -110,6 +116,7 @@ private:
 
     muse::ValCh<bool> m_altPressed;
     muse::ValCh<bool> m_ctrlPressed;
+    muse::ValCh<bool> m_escPressed;
 
     playback::PlaybackMeterModel* m_meterModel = nullptr;
 
