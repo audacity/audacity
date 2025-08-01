@@ -179,6 +179,7 @@ void WaveView::setTimelineContext(TimelineContext* newContext)
         connect(m_context, &TimelineContext::frameTimeChanged, this, &WaveView::updateView);
         connect(m_context, &TimelineContext::selectionStartTimeChanged, this, &WaveView::updateView);
         connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &WaveView::updateView);
+        connect(m_context, &TimelineContext::zoomChanged, this, &WaveView::onWaveZoomChanged);
     }
 
     emit timelineContextChanged();
@@ -456,6 +457,26 @@ void WaveView::setIsolatedPoint(const unsigned int x, const unsigned int y)
     samplespainterutils::setIsolatedPoint(
         m_currentChannel.value(),
         m_clipKey.key, globalContext()->currentProject(), m_lastClickedPoint.value(), currentPosition, params);
+}
+
+void WaveView::onWaveZoomChanged()
+{
+    const IWavePainter::PlotType currentPlotType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key,
+                                                                                 m_context->zoom());
+    const bool wasStemPlot = m_isStemPlot;
+    const bool isStemPlot = currentPlotType == IWavePainter::PlotType::Stem;
+
+    if (wasStemPlot != isStemPlot) {
+        setIsStemPlot(isStemPlot);
+        if (!isStemPlot && m_isNearSample) {
+            // force isNearSample to false when transitioning away from stem plot mode
+            setIsNearSample(false);
+        }
+        // Note: When transitioning TO stem plot mode, ClipItem.qml onIsStemPlotChanged
+        // will trigger mouse position update to force isNearSample to be set correctly
+    }
+
+    update();
 }
 
 void WaveView::pushProjectHistorySampleEdit()

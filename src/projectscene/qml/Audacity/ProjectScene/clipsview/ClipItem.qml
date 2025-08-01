@@ -740,6 +740,13 @@ Rectangle {
                     waveView.forceActiveFocus()
                 }
             }
+
+            onIsStemPlotChanged: {
+                if (waveView.isStemPlot && hoverArea.containsMouse) {
+                    // force mouse position update will update isNearSample
+                    waveView.onWaveViewPositionChanged(hoverArea.mouseX, hoverArea.mouseY - header.height)
+                }
+            }
         }
 
         RoundedRectangle {
