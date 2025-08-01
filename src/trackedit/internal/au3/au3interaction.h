@@ -162,6 +162,8 @@ private:
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
 
+    context::IPlaybackContextPtr playbackContext() const;
+
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 
     muse::ProgressPtr m_progress;

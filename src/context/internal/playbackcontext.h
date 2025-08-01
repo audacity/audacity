@@ -5,18 +5,19 @@
 
 #include "global/async/asyncable.h"
 
-#include "../iplaybackstate.h"
+#include "context/iplaybackcontext.h"
 #include "playback/iplayer.h"
 
 namespace au::context {
-class PlaybackState : public IPlaybackState, public muse::async::Asyncable
+class PlaybackContext : public IPlaybackContext, public muse::async::Asyncable
 {
 public:
-    PlaybackState() = default;
+    PlaybackContext() = default;
 
     void setPlayer(playback::IPlayerPtr player);
 
     playback::PlaybackStatus playbackStatus() const override;
+    bool isPlaying() const override;
     muse::async::Channel<playback::PlaybackStatus> playbackStatusChanged() const override;
 
     muse::secs_t playbackPosition() const override;

@@ -60,6 +60,8 @@ private:
     void snapCurrentPosition();
     void applySingleStep(Direction direction);
 
+    context::IPlaybackContextPtr playbackContext() const;
+
     TimelineContext* m_context = nullptr;
 };
 }

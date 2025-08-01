@@ -26,7 +26,7 @@ using namespace au::project;
 
 GlobalContext::GlobalContext()
 {
-    m_playbackState = std::make_shared<PlaybackState>();
+    m_playbackContext = std::make_shared<PlaybackContext>();
 }
 
 void GlobalContext::setCurrentProject(const IAudacityProjectPtr& project)
@@ -62,12 +62,12 @@ muse::async::Notification GlobalContext::currentTrackeditProjectChanged() const
 
 void GlobalContext::setPlayer(const au::playback::IPlayerPtr& player)
 {
-    m_playbackState->setPlayer(player);
+    m_playbackContext->setPlayer(player);
 }
 
-IPlaybackStatePtr GlobalContext::playbackState() const
+IPlaybackContextPtr GlobalContext::playbackContext() const
 {
-    return m_playbackState;
+    return m_playbackContext;
 }
 
 bool GlobalContext::isRecording() const

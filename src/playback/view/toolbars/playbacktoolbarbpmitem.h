@@ -32,6 +32,8 @@ private:
 
     void updateValues();
 
+    context::IPlaybackContextPtr playbackContext() const;
+
     double m_currentValue = 0.0;
 };
 }
