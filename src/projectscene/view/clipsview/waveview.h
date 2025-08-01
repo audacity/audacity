@@ -91,6 +91,7 @@ signals:
 private:
 
     void updateView();
+    void onWaveZoomChanged();
     IWavePainter::Params getWavePainterParams() const;
     void applyColorfulStyle(IWavePainter::Params& params, const QColor& clipColor, bool selected) const;
     void applyClassicStyle(IWavePainter::Params& params, bool selected) const;
