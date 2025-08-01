@@ -9,6 +9,7 @@ Item {
     required property var parameter
 
     property alias value: knob.value
+    property alias radius: knob.radius
 
     implicitWidth: content.implicitWidth
     implicitHeight: content.implicitHeight
@@ -21,16 +22,19 @@ Item {
             knob.from = parameter["min"]
             knob.to = parameter["max"]
             knob.value = parameter["value"]
+            knob.stepSize = parameter["step"] || 1;
+            textEdit.measureUnitsSymbol = parameter["unit"] || "";
         }
     }
 
     Column {
         id: content
 
-        spacing: 8
+        spacing: 6
 
         StyledTextLabel {
             text:  parameter["title"]
+            height: 16
             horizontalAlignment: Qt.AlignLeft
         }
 
@@ -39,8 +43,6 @@ Item {
 
             KnobControl {
                 id: knob
-
-                stepSize: 1
 
                 onNewValueRequested: function (value) {
                     root.newValueRequested(root.parameter["key"], value)
@@ -52,6 +54,8 @@ Item {
             }
 
             IncrementalPropertyControl {
+                id: textEdit
+
                 width: 80
 
                 minValue: knob.from

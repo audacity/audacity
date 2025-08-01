@@ -151,10 +151,12 @@ private:
 
 //! Convenience for generating EffectDefinitionInterface overrides
 //! and static down-casting functions
-template<typename Settings, typename Base>
+template<typename SettingsType, typename Base>
 class EffectWithSettings : public Base
 {
 public:
+    using Settings = SettingsType;
+
     EffectSettings MakeSettings() const override
     {
         return EffectSettings::Make<Settings>();

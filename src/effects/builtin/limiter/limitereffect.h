@@ -8,6 +8,8 @@
 #include "libraries/lib-components/SettingsVisitor.h"
 
 namespace au::effects {
+using LimiterParameter = EffectParameter<LimiterSettings, double, double, double>;
+
 class LimiterEffect : public EffectWithSettings<LimiterSettings, PerTrackEffect>
 {
 public:
@@ -32,7 +34,7 @@ public:
 
     static constexpr auto dbStep = 0.1;
 
-    static constexpr EffectParameter thresholdDb {
+    static constexpr LimiterParameter thresholdDb {
         &LimiterSettings::thresholdDb,
         L"thresholdDb",
         limiterThresholdDbDefault,
@@ -41,7 +43,7 @@ public:
         1 / dbStep
     };
 
-    static constexpr EffectParameter makeupTargetDb {
+    static constexpr LimiterParameter makeupTargetDb {
         &LimiterSettings::makeupTargetDb,
         L"makeupTargetDb",
         limiterMakeupTargetDbDefault,
@@ -50,7 +52,7 @@ public:
         1 / dbStep
     };
 
-    static constexpr EffectParameter kneeWidthDb {
+    static constexpr LimiterParameter kneeWidthDb {
         &LimiterSettings::kneeWidthDb,
         L"kneeWidthDb",
         limiterKneeWidthDbDefault,
@@ -59,29 +61,29 @@ public:
         1 / dbStep
     };
 
-    static constexpr EffectParameter lookaheadMs {
+    static constexpr LimiterParameter lookaheadMs {
         &LimiterSettings::lookaheadMs, L"lookaheadMs",
         limiterLookaheadMsDefault,     0,
         limiterMaxLookaheadMs,         1
     };
 
-    static constexpr EffectParameter releaseMs { &LimiterSettings::releaseMs,
+    static constexpr LimiterParameter releaseMs { &LimiterSettings::releaseMs,
                                                   L"releaseMs",
                                                   limiterReleaseMsDefault,
                                                   0,
                                                   1000,
-                                                  1 };
+                                                  10 };
 
-    static constexpr EffectParameter showInput {
+    static constexpr LimiterParameter showInput {
         &LimiterSettings::showInput, L"showInput", showInputDefault, 0, 1, 1
     };
-    static constexpr EffectParameter showOutput {
+    static constexpr LimiterParameter showOutput {
         &LimiterSettings::showOutput, L"showOutput", showOutputDefault, 0, 1, 1
     };
-    static constexpr EffectParameter showActual {
+    static constexpr LimiterParameter showActual {
         &LimiterSettings::showActual, L"showActual", showActualDefault, 0, 1, 1
     };
-    static constexpr EffectParameter showTarget {
+    static constexpr LimiterParameter showTarget {
         &LimiterSettings::showTarget, L"showTarget", showTargetDefault, 0, 1, 1
     };
 };

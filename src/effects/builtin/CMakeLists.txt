@@ -20,6 +20,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/common/params.h
     ${CMAKE_CURRENT_LIST_DIR}/common/abstracteffectmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/abstracteffectmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/common/abstracteffectsettingmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/common/abstracteffectsettingmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffect.h
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.cpp

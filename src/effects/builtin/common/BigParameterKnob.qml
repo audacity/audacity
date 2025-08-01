@@ -10,6 +10,7 @@ Item {
 
     property alias value: knob.value
     property alias stepSize: knob.stepSize
+    property alias radius: knob.radius
 
     implicitWidth: content.implicitWidth
     implicitHeight: content.implicitHeight
@@ -22,22 +23,20 @@ Item {
             knob.from = parameter["min"]
             knob.to = parameter["max"]
             knob.value = parameter["value"]
-            textEdit.measureUnitsSymbol = parameter["unit"]
+            knob.stepSize = parameter["step"] || 1;
+            textEdit.measureUnitsSymbol = parameter["unit"] || "";
         }
     }
 
     Column {
         id: content
 
-        spacing: 8
+        spacing: 6
 
         KnobControl {
             id: knob
 
             anchors.horizontalCenter: parent.horizontalCenter
-
-            stepSize: 1
-            radius: 24
 
             onNewValueRequested: function (value) {
                 root.newValueRequested(root.parameter["key"], value)
@@ -52,6 +51,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
 
             text:  parameter["title"]
+            height: 16
             horizontalAlignment: Qt.AlignHCenter
         }
 
