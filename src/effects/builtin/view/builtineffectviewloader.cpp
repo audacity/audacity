@@ -45,7 +45,7 @@ BuiltinEffectViewLoader::~BuiltinEffectViewLoader()
     }
 }
 
-void BuiltinEffectViewLoader::load(const QString& instanceId, QObject* itemParent)
+void BuiltinEffectViewLoader::load(const QString& instanceId, QObject* itemParent, QObject* dialogView)
 {
     LOGD() << "instanceId: " << instanceId;
 
@@ -81,7 +81,8 @@ void BuiltinEffectViewLoader::load(const QString& instanceId, QObject* itemParen
     QObject* obj = component.createWithInitialProperties(
     {
         { "parent", QVariant::fromValue(itemParent) },
-        { "instanceId", QVariant::fromValue(instanceId) }
+        { "instanceId", QVariant::fromValue(instanceId) },
+        { "dialogView", QVariant::fromValue(dialogView) }
     });
 
     m_contentItem = qobject_cast<QQuickItem*>(obj);

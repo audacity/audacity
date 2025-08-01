@@ -33,7 +33,7 @@ public:
 
     QQuickItem* contentItem() const;
 
-    Q_INVOKABLE void load(const QString& instanceId, QObject* itemParent);
+    Q_INVOKABLE void load(const QString& instanceId, QObject* itemParent, QObject* dialogView);
 
 signals:
     void titleChanged();

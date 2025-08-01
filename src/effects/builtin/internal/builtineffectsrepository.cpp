@@ -30,6 +30,8 @@
 #include "silencegen/silenceviewmodel.h"
 #include "noisegen/noisegenerator.h"
 #include "noisegen/noiseviewmodel.h"
+#include "noisereduction/noisereductioneffect.h"
+#include "noisereduction/noisereductionviewmodel.h"
 #include "fade/fadeeffect.h"
 #include "invert/inverteffect.h"
 #include "reverse/reverseeffect.h"
@@ -104,6 +106,7 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
     static BuiltinEffectsModule::Registration< SilenceGenerator > regSilence;
     static BuiltinEffectsModule::Registration< NoiseGenerator > regNoise;
+    static BuiltinEffectsModule::Registration< NoiseReductionEffect > regNoiseReduction;
     static BuiltinEffectsModule::Registration< DtmfGenerator > regDtmf;
 }
 
@@ -245,6 +248,15 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     muse::mtrc("effects/noise", "Noise"),
                     muse::mtrc("effects/noise", "Generates noise"),
                     EffectCategoryId::None,
+                    false
+                    );
+        } else if (symbol == NoiseReductionEffect::Symbol) {
+            qmlRegisterType<NoiseReductionViewModel>("Audacity.Effects", 1, 0, "NoiseReductionViewModel");
+            regView(NoiseReductionEffect::Symbol, u"qrc:/noisereduction/NoiseReductionView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects/noisereduction", "Noise Reduction"),
+                    muse::mtrc("effects/noisereduction", "Reduces noise in the audio"),
+                    EffectCategoryId::NoiseRemovalAndRepair,
                     false
                     );
         } else if (symbol == DtmfGenerator::Symbol) {
