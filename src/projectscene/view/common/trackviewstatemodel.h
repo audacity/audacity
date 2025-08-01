@@ -11,8 +11,9 @@
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
 #include "playback/iplaybackconfiguration.h"
-#include "playback/view/common/playbackmetermodel.h"
 #include "record/irecordcontroller.h"
+
+#include "playback/view/common/playbackmetermodel.h"
 
 namespace au::projectscene {
 class TrackViewStateModel : public QObject, public muse::async::Asyncable

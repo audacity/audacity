@@ -133,7 +133,7 @@ int TracksViewStateModel::tracksVerticalScrollPadding() const
     return m_tracksVerticalScrollPadding;
 }
 
-int TracksViewStateModel::trackHeight(trackedit::TrackId trackId)
+int TracksViewStateModel::trackHeight(trackedit::TrackId trackId) const
 {
     IProjectViewStatePtr vs = viewState();
     if (vs) {
@@ -142,11 +142,11 @@ int TracksViewStateModel::trackHeight(trackedit::TrackId trackId)
     return {};
 }
 
-int TracksViewStateModel::trackVerticalPosition(trackedit::TrackId trackId)
+int TracksViewStateModel::trackVerticalPosition(trackedit::TrackId trackId) const
 {
     IProjectViewStatePtr vs = viewState();
     if (vs) {
-        return vs->trackYPosition(trackId);
+        return vs->trackVerticalPosition(trackId);
     }
     return {};
 }

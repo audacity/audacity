@@ -111,7 +111,7 @@ void ProjectViewState::setTracksVerticalScrollLocked(bool lock)
     m_tracksVerticalScrollLocked.set(lock);
 }
 
-int ProjectViewState::trackYPosition(const trackedit::TrackId& trackId) const
+int ProjectViewState::trackVerticalPosition(const trackedit::TrackId& trackId) const
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
@@ -218,6 +218,55 @@ au::trackedit::TrackId ProjectViewState::trackAtPosition(double y) const
     }
 
     return -1;
+}
+
+au::trackedit::TrackIdList ProjectViewState::tracksInRange(double y1, double y2) const
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return {};
+    }
+
+    if (y1 < 0 && y2 < 0) {
+        return {};
+    }
+
+    if (y1 > y2) {
+        std::swap(y1, y2);
+    }
+
+    if (y1 < 1) {
+        y1 = 1;
+    }
+
+    trackedit::TrackIdList tracks = prj->trackIdList();
+    trackedit::TrackIdList result;
+
+    int trackTop = -m_tracksVerticalOffset.val;
+    int trackBottom = trackTop;
+
+    for (trackedit::TrackId trackId : tracks) {
+        trackTop = trackBottom;
+        trackBottom = trackTop + trackHeight(trackId).val;
+
+        if (muse::RealIsEqualOrMore(y1, trackTop) && !muse::RealIsEqualOrMore(y1, trackBottom)) {
+            result.push_back(trackId);
+        }
+
+        if (muse::RealIsEqualOrMore(y2, trackTop) && !muse::RealIsEqualOrMore(y2, trackBottom)) {
+            if (!result.empty() && result.back() != trackId) {
+                result.push_back(trackId);
+            }
+            break;
+        }
+
+        if (!result.empty() && result.back() != trackId) {
+            result.push_back(trackId);
+            continue;
+        }
+    }
+
+    return result;
 }
 
 bool ProjectViewState::isSnapEnabled() const

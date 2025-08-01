@@ -51,8 +51,8 @@ public:
     Q_INVOKABLE bool snapEnabled() const;
     Q_INVOKABLE trackedit::TrackId trackAtPosition(double x, double y) const;
 
-    Q_INVOKABLE int trackHeight(trackedit::TrackId trackId);
-    Q_INVOKABLE int trackVerticalPosition(trackedit::TrackId trackId);
+    Q_INVOKABLE int trackHeight(trackedit::TrackId trackId) const;
+    Q_INVOKABLE int trackVerticalPosition(trackedit::TrackId trackId) const;
 
 signals:
     void tracksVerticalOffsetChanged();

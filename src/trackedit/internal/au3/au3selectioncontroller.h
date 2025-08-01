@@ -32,8 +32,6 @@ public:
     trackedit::TrackIdList selectedTracks() const override;
     void setSelectedTracks(const trackedit::TrackIdList& trackIds, bool complete) override;
     muse::async::Channel<trackedit::TrackIdList> tracksSelected() const override;
-    std::optional<TrackId> determinePointedTrack(double y) const override;
-    trackedit::TrackIdList determinateTracks(double y1, double y2) const override;
 
     // clip selection
     void resetSelectedClips() override;

@@ -52,10 +52,11 @@ public:
     virtual muse::ValCh<bool> tracksVerticalScrollLocked() const override;
     virtual void setTracksVerticalScrollLocked(bool lock) override;
 
-    int trackYPosition(const trackedit::TrackId& trackId) const override;
+    int trackVerticalPosition(const trackedit::TrackId& trackId) const override;
     void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) override;
     void setTrackHeight(const trackedit::TrackId& trackId, int height) override;
     trackedit::TrackId trackAtPosition(double y) const override;
+    trackedit::TrackIdList tracksInRange(double y1, double y2) const override;
 
     void setClipEditStartTimeOffset(double val) override;
     double clipEditStartTimeOffset() const override;

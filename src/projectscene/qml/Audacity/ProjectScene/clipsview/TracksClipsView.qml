@@ -25,7 +25,7 @@ Rectangle {
     property alias ctrlPressed: tracksViewState.ctrlPressed
     property alias isSplitMode: tracksModel.isSplitMode
     property alias escPressed: tracksViewState.escPressed
-    property double splitGuidelinePosition
+    property double splitGuidelinePosition: -1
 
     readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
     readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"

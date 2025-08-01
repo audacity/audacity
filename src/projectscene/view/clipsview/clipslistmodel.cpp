@@ -453,15 +453,13 @@ int ClipsListModel::calculateTrackPositionOffset(const ClipKey& key, bool comple
     auto vs = prj->viewState();
     auto yPos = vs->mousePositionY();
 
-    auto tracks = selectionController()->determinateTracks(vs->trackYPosition(key.key.trackId) + 2, yPos);
-    auto pointedTrack = selectionController()->determinePointedTrack(yPos);
-    if (!pointedTrack.has_value()) {
-        return 0;
-    }
+    auto tracks = vs->tracksInRange(vs->trackVerticalPosition(key.key.trackId) + 2, yPos);
+    auto pointedTrack = vs->trackAtPosition(yPos);
+
     bool pointingAtEmptySpace = (pointedTrack == INVALID_TRACK);
     int trackPositionOffset = pointingAtEmptySpace ? tracks.size() : tracks.size() - 1;
 
-    if (!muse::RealIsEqualOrMore(yPos, vs->trackYPosition(key.key.trackId))) {
+    if (!muse::RealIsEqualOrMore(yPos, vs->trackVerticalPosition(key.key.trackId))) {
         trackPositionOffset = -trackPositionOffset;
     }
 

@@ -37,7 +37,6 @@ Item {
     property bool selectionEditInProgress: false
     property bool selectionInProgress: false
     property bool hover: false
-    property double splitGuidelinePosition
 
     signal interactionStarted()
     signal interactionEnded()
