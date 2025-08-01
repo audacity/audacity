@@ -36,6 +36,7 @@ Item {
     property alias rightTrimPressedButtons: clipsContainer.rightTrimPressedButtons
     property bool selectionEditInProgress: false
     property bool selectionInProgress: false
+    property bool hover: false
 
     signal interactionStarted()
     signal interactionEnded()
@@ -63,7 +64,7 @@ Item {
         id: clipsModel
     }
 
-    TracksViewStateModel {
+    TrackViewStateModel {
         id: trackViewState
         trackId: root.trackId
     }
@@ -158,7 +159,7 @@ Item {
             }
 
             onPressAndHold: function(e) {
-                if (clipsContainer.isNearSample) {
+                if (clipsContainer.isNearSample || root.altPressed) {
 
                     if (root.ctrlPressed) {
                         clipsContainer.isIsolationMode = true
@@ -329,6 +330,12 @@ Item {
                     })
                 }
 
+                onHoverChanged: function() {
+                    root.hover = clipsContainer.checkIfAnyClip(function(clipItem) {
+                        return clipItem && clipItem.hover
+                    })
+                }
+
                 onIsBrushChanged: function() {
                     clipsContainer.isBrush = clipsContainer.checkIfAnyClip(function(clipItem) {
                         return clipItem && clipItem.isBrush
@@ -408,6 +415,7 @@ Item {
                 onClipItemMousePositionChanged: function(xWithinClip, yWithinClip) {
                     var yWithinTrack = yWithinClip
                     var xWithinTrack = xWithinClip + clipItem.x
+
                     trackItemMousePositionChanged(xWithinTrack, yWithinTrack, clipItem.key)
 
                     let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))

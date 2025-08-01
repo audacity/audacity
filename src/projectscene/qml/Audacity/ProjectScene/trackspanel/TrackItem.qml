@@ -75,7 +75,7 @@ ListItemBlank {
 
     signal openEffectsRequested()
 
-    TracksViewStateModel {
+    TrackViewStateModel {
         id: trackViewState
         trackId: root.item ? root.item.trackId : -1
 

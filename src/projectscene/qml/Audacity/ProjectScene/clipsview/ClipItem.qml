@@ -90,12 +90,13 @@ Rectangle {
     opacity: root.moveActive && clipSelected ? 0.5 : isAudible ? 1.0 : 0.3
 
     property int borderWidth: 1
-    property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse
+    property bool hover: root.containsMouse || headerDragArea.containsMouse
     property bool headerHovered: headerDragArea.containsMouse
     property var lastSample: undefined
     property bool altPressed: false
     property bool isBrush: waveView.isStemPlot && root.altPressed
     property bool isIsolationMode: false
+    property bool containsMouse: false
     property alias isNearSample: waveView.isNearSample
     property alias currentChannel: waveView.currentChannel
     property bool leftTrimContainsMouse: false
@@ -187,8 +188,13 @@ Rectangle {
         lastSample = {x: x, y: y - header.height}
     }
 
-    function containsMouseChanged(containsMouse) {
-        if (!containsMouse && !root.multiSampleEdit) {
+    function setContainsMouse(containsMouse) {
+        if (!root.enableCursorInteraction) {
+            return;
+        }
+
+        root.containsMouse = containsMouse
+        if (!root.containsMouse && !root.multiSampleEdit) {
             waveView.isNearSample = false
         }
     }
@@ -268,7 +274,7 @@ Rectangle {
         }
 
         onContainsMouseChanged: {
-            root.containsMouseChanged(containsMouse)
+            root.setContainsMouse(containsMouse)
         }
     }
 

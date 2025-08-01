@@ -16,13 +16,20 @@ Rectangle {
     property bool clipHovered: false
     property bool clipHeaderHovered: false
     property var hoveredClipKey: null
+    property var hoveredTrackId: null
+    property double hoveredTrackVerticalPosition
+    property double hoveredTrackHeight
     property bool tracksHovered: false
     property bool guidelineActive: false
     property alias altPressed: tracksViewState.altPressed
     property alias ctrlPressed: tracksViewState.ctrlPressed
+    property alias isSplitMode: tracksModel.isSplitMode
+    property alias escPressed: tracksViewState.escPressed
+    property double splitGuidelinePosition: -1
 
     readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
     readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
+    readonly property string splitShape: ":/images/customCursorShapes/Split.png"
     readonly property string leftTrimShape: ":/images/customCursorShapes/ClipTrimLeft.png"
     readonly property string leftStretchShape: ":/images/customCursorShapes/ClipStretchLeft.png"
     readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
@@ -81,8 +88,8 @@ Rectangle {
     //! NOTE Sync with TracksPanel
     TracksViewStateModel {
         id: tracksViewState
-        onTracksVericalYChanged: {
-            tracksClipsView.contentY = tracksViewState.tracksVericalY
+        onTracksVerticalOffsetChanged: {
+            tracksClipsView.contentY = tracksViewState.tracksVerticalOffset
         }
     }
 
@@ -99,6 +106,12 @@ Rectangle {
     SelectionViewController {
         id: selectionController
         context: timeline.context
+    }
+
+    onEscPressedChanged: {
+        if (escPressed) {
+            tracksModel.isSplitMode = false
+        }
     }
 
     Component.onCompleted: {
@@ -123,7 +136,7 @@ Rectangle {
 
         //! NOTE setting verticalY has to be done after tracks are loaded,
         // otherwise project always starts at the very top
-        Qt.callLater(() => tracksClipsView.contentY = tracksViewState.tracksVericalY)
+        Qt.callLater(() => tracksClipsView.contentY = tracksViewState.tracksVerticalOffset)
     }
 
     Rectangle {
@@ -245,8 +258,10 @@ Rectangle {
 
     CustomCursor {
         id: customCursor
-        active: (content.isIsolationMode || content.isBrush || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse
-            || content.leftTrimPressedButtons || content.rightTrimPressedButtons)
+        active: (content.isIsolationMode || content.isNearSample
+                || content.leftTrimContainsMouse  || content.rightTrimContainsMouse
+                || content.leftTrimPressedButtons || content.rightTrimPressedButtons
+                || (root.isSplitMode && root.clipHovered) || (content.isBrush && root.clipHovered) )
         source: {
             if (content.isBrush) {
                 return smoothShape
@@ -254,6 +269,10 @@ Rectangle {
 
             if (content.isNearSample || content.isIsolationMode) {
                 return pencilShape
+            }
+
+            if (root.isSplitMode) {
+                return splitShape
             }
 
             return content.leftTrimContainsMouse || content.leftTrimPressedButtons ? leftTrimShape : rightTrimShape
@@ -309,13 +328,20 @@ Rectangle {
                     if (root.clipHeaderHovered) {
                         tracksClipsView.clipStartEditRequested(hoveredClipKey)
                     } else {
-                        if (!(e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))) {
+                        if (! ((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
                             playCursorController.seekToX(e.x)
                         }
+                        // Hover status will reset after the selection reset
+                        let clipWasHovered = root.clipHovered
+
                         selectionController.onPressed(e.x, e.y)
                         selectionController.resetSelectedClip()
                         clipsSelection.visible = true
                         handleGuideline(e.x, false)
+
+                        if (clipWasHovered && root.isSplitMode) {
+                            tracksModel.splitAt(root.hoveredTrackId, timeline.context.positionToTime(splitGuideline.x))
+                        }
                     }
                 } else if (e.button === Qt.RightButton) {
                     if (tracksHovered) {
@@ -333,11 +359,9 @@ Rectangle {
                     tracksClipsView.startAutoScroll()
                 } else {
                     selectionController.onPositionChanged(e.x, e.y)
-                    handleGuideline(e.x, false)
+                    let trackId = tracksViewState.trackAtPosition(e.x, e.y);
 
-                    if (root.clipHovered && !tracksClipsView.moveActive) {
-                        root.clipHovered = false
-                    }
+                    handleGuideline(e.x, false)
                 }
             }
             onReleased: e => {
@@ -387,6 +411,11 @@ Rectangle {
                 if (e.button !== Qt.LeftButton) {
                     return
                 }
+
+                if (root.isSplitMode) {
+                    return
+                }
+
                 if (root.clipHovered) {
                     selectionController.selectClipAudioData(root.hoveredClipKey)
                     playCursorController.setPlaybackRegion(timeline.context.selectedClipStartPosition, timeline.context.selectedClipEndPosition)
@@ -462,7 +491,7 @@ Rectangle {
                         contentY = lockedVerticalScrollPosition
                     }
                     else {
-                        tracksViewState.changeTracksVericalY(tracksClipsView.contentY)
+                        tracksViewState.changeTracksVerticalOffset(tracksClipsView.contentY)
                         timeline.context.startVerticalScrollPosition = tracksClipsView.contentY
                     }
                 }
@@ -512,6 +541,11 @@ Rectangle {
                     ctrlPressed: root.ctrlPressed
                     selectionEditInProgress: selectionController.selectionEditInProgress
                     selectionInProgress: selectionController.selectionInProgress
+                    onHoverChanged: function() {
+                        root.clipHovered = tracksClipsView.checkIfAnyTrack(function(trackItem) {
+                            return trackItem && trackItem.hover
+                        })
+                    }
 
                     trackIdx: model.index
                     navigationSection: root.navigationSection
@@ -520,12 +554,15 @@ Rectangle {
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
                         let xGlobalPosition = xWithinTrack
                         let yGlobalPosition = y + yWithinTrack - tracksClipsView.contentY
+
                         timeline.updateCursorPosition(xGlobalPosition, yGlobalPosition)
 
-                        if (!root.clipHovered) {
-                            root.clipHovered = true
-                        }
+                        root.hoveredTrackId = trackId
                         root.hoveredClipKey = clipKey
+                        root.hoveredTrackHeight = tracksViewState.trackHeight(trackId)
+                        root.hoveredTrackVerticalPosition = tracksViewState.trackVerticalPosition(trackId)
+
+                        root.splitGuidelinePosition = xWithinTrack
                     }
 
                     onSetHoveredClipKey: function(clipKey) {
@@ -565,11 +602,11 @@ Rectangle {
                     }
 
                     onInsureVerticallyVisible: function(clipTop, clipBottom) {
-                        var delta = calculateVerticalScrollDelta(tracksViewState.tracksVericalY, tracksViewState.tracksVericalY + content.height, clipTop, clipBottom)
-                        if (tracksViewState.tracksVericalY + delta < 0) {
-                            tracksViewState.changeTracksVericalY(0)
+                        var delta = calculateVerticalScrollDelta(tracksViewState.tracksVerticalOffset, tracksViewState.tracksVerticalOffset + content.height, clipTop, clipBottom)
+                        if (tracksViewState.tracksVerticalOffset + delta < 0) {
+                            tracksViewState.changeTracksVerticalOffset(0)
                         } else {
-                            tracksViewState.changeTracksVericalY(tracksViewState.tracksVericalY + delta)
+                            tracksViewState.changeTracksVerticalOffset(tracksViewState.tracksVerticalOffset + delta)
                         }
                     }
 
@@ -623,13 +660,13 @@ Rectangle {
                         })
                     }
 
-                    onTriggerClipGuideline: function(x, completed) {
-                        clipGuideline.x = timeline.context.timeToPosition(x)
-                        root.guidelineActive = x != -1 && !completed
+                    onTriggerClipGuideline: function(time, completed) {
+                        clipGuideline.x = timeline.context.timeToPosition(time)
+                        root.guidelineActive = clipGuideline.x >= 0 && !completed
                     }
 
                     onHandleTimeGuideline: function(x) {
-                        root.handleGuideline(x,)
+                        root.handleGuideline(x)
                     }
 
                     function calculateVerticalScrollDelta(viewTop, viewBottom, clipTop, clipBottom, padding = 10) {
@@ -703,6 +740,19 @@ Rectangle {
             visible: root.guidelineActive
         }
 
+        Rectangle {
+            id: splitGuideline
+
+            x: root.guidelineActive ? clipGuideline.x : splitGuidelinePosition
+            y: hoveredTrackVerticalPosition
+            width: 1
+            height: hoveredTrackHeight
+
+            color: "#0121C0"
+
+            visible: root.isSplitMode && root.clipHovered
+        }
+
         VerticalRulersPanel {
             id: verticalRulers
 
@@ -725,12 +775,15 @@ Rectangle {
     }
 
     function handleGuideline(x, completed) {
+
         let time = timeline.context.positionToTime(x)
         time = timeline.context.applyDetectedSnap(time)
         let guidelineTimePos = timeline.context.findGuideline(time)
-        if (guidelineTimePos != -1) {
+
+        if (guidelineTimePos !== -1) {
             clipGuideline.x = timeline.context.timeToPosition(guidelineTimePos)
-            root.guidelineActive = !completed
+
+            root.guidelineActive = clipGuideline.x >= 0 ? !completed : false
         } else {
             root.guidelineActive = false
         }

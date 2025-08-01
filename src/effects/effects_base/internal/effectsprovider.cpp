@@ -135,21 +135,24 @@ bool EffectsProvider::loadEffect(const EffectId& effectId) const
         return true;
     }
     switch (it->family) {
-    case EffectFamily::AudioUnit:
+    case EffectFamily::AudioUnit: {
         IF_ASSERT_FAILED(audioUnitEffectsRepository()) {
             return false;
         }
         return audioUnitEffectsRepository()->ensurePluginIsLoaded(effectId);
-    case EffectFamily::LV2:
+    }
+    case EffectFamily::LV2: {
         IF_ASSERT_FAILED(lv2EffectsRepository()) {
             return false;
         }
         return lv2EffectsRepository()->ensurePluginIsLoaded(effectId);
-    case EffectFamily::VST3:
+    }
+    case EffectFamily::VST3: {
         IF_ASSERT_FAILED(vstEffectsRepository()) {
             return false;
         }
         return vstEffectsRepository()->ensurePluginIsLoaded(effectId);
+    }
     default:
         LOGE() << "unknown family: " << static_cast<int>(it->family);
         return false;

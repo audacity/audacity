@@ -5,6 +5,9 @@
 
 #include <QAbstractListModel>
 
+#include <actions/actionable.h>
+#include <actions/iactionsdispatcher.h>
+
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
@@ -17,11 +20,12 @@
 #include "trackedit/dom/track.h"
 
 namespace au::projectscene {
-class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyncable
+class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
 {
     Q_OBJECT
 
     Q_PROPERTY(bool isVerticalRulersVisible READ isVerticalRulersVisible NOTIFY isVerticalRulersVisibleChanged)
+    Q_PROPERTY(bool isSplitMode READ isSplitMode WRITE setIsSplitMode NOTIFY isSplitModeChanged FINAL)
 
     Q_PROPERTY(int totalTracksHeight READ totalTracksHeight NOTIFY totalTracksHeightChanged FINAL)
 
@@ -30,6 +34,7 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
     explicit TracksListClipsModel(QObject* parent = nullptr);
@@ -38,15 +43,17 @@ public:
     Q_INVOKABLE void startUserInteraction();
     Q_INVOKABLE void endUserInteraction();
     Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);
+    Q_INVOKABLE void splitAt(trackedit::TrackId, double t);
 
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
 
     bool isVerticalRulersVisible() const;
-
     int totalTracksHeight() const;
-    void setTotalTracksHeight(int height);
+
+    bool isSplitMode() const;
+    void setIsSplitMode(bool newIsSplitMode);
 
 signals:
     void dataSelectedTracksChanged();
@@ -54,6 +61,8 @@ signals:
     void isVerticalRulersVisibleChanged(bool isVerticalRulersVisible);
 
     void totalTracksHeightChanged();
+
+    void isSplitModeChanged();
 
 private:
     void setIsVerticalRulersVisible(bool isVerticalRulersVisible);
@@ -68,12 +77,10 @@ private:
         IsTrackAudibleRole,
     };
 
-    void updateTotalTracksHeight();
-    void subscribeOnTrackHeightChanges(const trackedit::TrackId trackId);
-    void unsubscribeFromTrackHeightChanges(const trackedit::TrackId trackId);
+    void toggleSplitTool();
 
     std::vector<trackedit::Track> m_trackList;
     bool m_isVerticalRulersVisible = false;
-    int m_totalTracksHeight = 0;
+    bool m_isSplitMode = false;
 };
 }

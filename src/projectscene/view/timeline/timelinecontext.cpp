@@ -907,7 +907,7 @@ void TimelineContext::saveViewState() const
 {
     auto vs = this->viewState();
     ZoomState state = {
-        m_zoom, m_frameStartTime, vs->tracksVericalY().val
+        m_zoom, m_frameStartTime, vs->tracksVerticalOffset().val
     };
 
     vs->setZoomState(state);

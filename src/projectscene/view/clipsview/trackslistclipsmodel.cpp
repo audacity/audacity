@@ -15,6 +15,8 @@ TracksListClipsModel::TracksListClipsModel(QObject* parent)
     configuration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool isVerticalRulersVisible) {
         setIsVerticalRulersVisible(isVerticalRulersVisible);
     });
+
+    dispatcher()->reg(this, "split-tool", this, &TracksListClipsModel::toggleSplitTool);
 }
 
 void TracksListClipsModel::load()
@@ -98,9 +100,6 @@ void TracksListClipsModel::load()
         beginInsertRows(QModelIndex(), size, size);
         m_trackList.push_back(track);
         endInsertRows();
-
-        subscribeOnTrackHeightChanges(track.id);
-        updateTotalTracksHeight();
     });
 
     prj->trackInserted().onReceive(this, [this](const trackedit::Track& track, const int pos) {
@@ -111,9 +110,6 @@ void TracksListClipsModel::load()
         m_trackList.insert(m_trackList.begin() + index, track);
 
         endInsertRows();
-
-        subscribeOnTrackHeightChanges(track.id);
-        updateTotalTracksHeight();
     });
 
     prj->trackMoved().onReceive(this, [this](const trackedit::Track& track, const int pos) {
@@ -133,9 +129,6 @@ void TracksListClipsModel::load()
         m_trackList.erase(iterator);
         m_trackList.insert(m_trackList.begin() + to, track);
         endMoveRows();
-
-        subscribeOnTrackHeightChanges(track.id);
-        updateTotalTracksHeight();
     });
 
     prj->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
@@ -147,9 +140,6 @@ void TracksListClipsModel::load()
                 break;
             }
         }
-
-        unsubscribeFromTrackHeightChanges(track.id);
-        updateTotalTracksHeight();
     });
 
     prj->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
@@ -165,11 +155,15 @@ void TracksListClipsModel::load()
 
     endResetModel();
 
-    for (const trackedit::Track& track : m_trackList) {
-        subscribeOnTrackHeightChanges(track.id);
+    const IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
+
+    if (!viewState) {
+        return;
     }
 
-    updateTotalTracksHeight();
+    viewState->totalTrackHeight().ch.onReceive(this, [this](int value) {
+        emit totalTracksHeightChanged();
+    });
 }
 
 void TracksListClipsModel::startUserInteraction()
@@ -192,6 +186,19 @@ void TracksListClipsModel::handleDroppedFiles(const QStringList& fileUrls)
 
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     prj->import(localPaths);
+}
+
+void TracksListClipsModel::splitAt(trackedit::TrackId id, double t)
+{
+    if (id < 0) {
+        return;
+    }
+    std::vector<muse::secs_t> pivots { t };
+
+    LOGD() << "Splitting track at " << t;
+    dispatcher()->dispatch("track-split-at",
+                           muse::actions::ActionData::make_arg2<trackedit::TrackIdList, std::vector<muse::secs_t> >({ id },
+                                                                                                                    pivots));
 }
 
 int TracksListClipsModel::rowCount(const QModelIndex&) const
@@ -270,52 +277,33 @@ void TracksListClipsModel::setIsVerticalRulersVisible(bool isVerticalRulersVisib
     emit isVerticalRulersVisibleChanged(m_isVerticalRulersVisible);
 }
 
-void TracksListClipsModel::updateTotalTracksHeight()
+void TracksListClipsModel::toggleSplitTool()
 {
-    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
-    if (!viewState) {
+    setIsSplitMode(!isSplitMode());
+}
+
+bool TracksListClipsModel::isSplitMode() const
+{
+    return m_isSplitMode;
+}
+
+void TracksListClipsModel::setIsSplitMode(bool newIsSplitMode)
+{
+    if (m_isSplitMode == newIsSplitMode) {
         return;
     }
-
-    int height = 0;
-
-    for (const trackedit::Track& track : m_trackList) {
-        height += viewState->trackHeight(track.id).val;
-    }
-
-    setTotalTracksHeight(height);
-}
-
-void TracksListClipsModel::subscribeOnTrackHeightChanges(const trackedit::TrackId trackId)
-{
-    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
-
-    muse::ValCh<int> trackHeightCh = viewState->trackHeight(trackId);
-    trackHeightCh.ch.onReceive(this, [this](int) {
-        updateTotalTracksHeight();
-    });
-}
-
-void TracksListClipsModel::unsubscribeFromTrackHeightChanges(const trackedit::TrackId trackId)
-{
-    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
-    viewState->trackHeight(trackId).ch.resetOnReceive(this);
+    m_isSplitMode = newIsSplitMode;
+    emit isSplitModeChanged();
 }
 
 int TracksListClipsModel::totalTracksHeight() const
 {
-    return m_totalTracksHeight;
-}
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
 
-void TracksListClipsModel::setTotalTracksHeight(int height)
-{
-    if (m_totalTracksHeight == height) {
-        return;
+    if (!viewState) {
+        return 0;
     }
 
-    m_totalTracksHeight = height;
-    emit totalTracksHeightChanged();
+    return viewState->totalTrackHeight().val;
 }

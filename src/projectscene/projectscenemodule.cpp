@@ -18,6 +18,7 @@
 #include "internal/realtimeeffectpaneltrackselection.h"
 
 #include "view/common/tracksviewstatemodel.h"
+#include "view/common/trackviewstatemodel.h"
 #include "view/common/customcursor.h"
 
 #include "view/toolbars/audiosetupcontextmenumodel.h"
@@ -127,6 +128,7 @@ void ProjectSceneModule::registerUiTypes()
 
     // common
     qmlRegisterType<TracksViewStateModel>("Audacity.ProjectScene", 1, 0, "TracksViewStateModel");
+    qmlRegisterType<TrackViewStateModel>("Audacity.ProjectScene", 1, 0, "TrackViewStateModel");
     qmlRegisterType<CustomCursor>("Audacity.ProjectScene", 1, 0, "CustomCursor");
 
     // toolbars

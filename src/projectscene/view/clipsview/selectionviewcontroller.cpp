@@ -23,6 +23,11 @@ void SelectionViewController::onPressed(double x, double y)
         return;
     }
 
+    IProjectViewStatePtr vs = viewState();
+    if (!vs) {
+        return;
+    }
+
     m_lastPoint = QPointF(x, y);
 
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
@@ -40,14 +45,14 @@ void SelectionViewController::onPressed(double x, double y)
     TrackIdList tracks;
     if (modifiers.testFlag(Qt::ControlModifier)) {
         tracks = selectionController()->selectedTracks();
-        TrackIdList newTracks = selectionController()->determinateTracks(y, y);
+        TrackIdList newTracks = vs->tracksInRange(y, y);
         if (!newTracks.empty()) {
             if (!muse::contains(tracks, newTracks.at(0))) {
                 tracks.push_back(newTracks.at(0));
             }
         }
     } else {
-        tracks = selectionController()->determinateTracks(m_startPoint.y(), y);
+        tracks = vs->tracksInRange(m_startPoint.y(), y);
     }
 
     if (!tracks.empty()) {
@@ -81,6 +86,11 @@ void SelectionViewController::onPositionChanged(double x, double y)
         return;
     }
 
+    IProjectViewStatePtr vs = viewState();
+    if (!vs) {
+        return;
+    }
+
     if (!m_selectionStarted) {
         return;
     }
@@ -102,7 +112,7 @@ void SelectionViewController::onPositionChanged(double x, double y)
     if (modifiers.testFlag(Qt::ControlModifier)) {
         tracks = selectionController()->selectedTracks();
     } else {
-        tracks = selectionController()->determinateTracks(m_startPoint.y(), y);
+        tracks = vs->tracksInRange(m_startPoint.y(), y);
     }
     selectionController()->setSelectedTracks(tracks, false);
 
@@ -119,6 +129,11 @@ void SelectionViewController::onPositionChanged(double x, double y)
 void SelectionViewController::onReleased(double x, double y)
 {
     if (!isProjectOpened()) {
+        return;
+    }
+
+    IProjectViewStatePtr vs = viewState();
+    if (!vs) {
         return;
     }
 
@@ -149,7 +164,7 @@ void SelectionViewController::onReleased(double x, double y)
     if (modifiers.testFlag(Qt::ControlModifier)) {
         tracks = selectionController()->selectedTracks();
     } else {
-        tracks = selectionController()->determinateTracks(m_startPoint.y(), y);
+        tracks = vs->tracksInRange(m_startPoint.y(), y);
     }
 
     if ((x2 - x1) < MIN_SELECTION_PX) {
@@ -204,7 +219,12 @@ void SelectionViewController::selectTrackAudioData(double y)
         return;
     }
 
-    const std::vector<TrackId> tracks = selectionController()->determinateTracks(m_startPoint.y(), y);
+    IProjectViewStatePtr vs = viewState();
+    if (!vs) {
+        return;
+    }
+
+    const std::vector<TrackId> tracks = vs->tracksInRange(m_startPoint.y(), y);
     if (tracks.empty()) {
         return;
     }

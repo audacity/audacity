@@ -1374,12 +1374,31 @@ bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, std::vector<sec
             return false;
         }
 
+        bool didAnySplitOccur = false;
+
         for (const auto& pivot : pivots) {
-            waveTrack->SplitAt(pivot);
+            if (waveTrack->GetIntervalAtTime(pivot)) {
+                waveTrack->SplitAt(pivot);
+                didAnySplitOccur = true;
+            }
         }
 
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        if (didAnySplitOccur) {
+            auto vs = globalContext()->currentProject()->viewState();
+            if (vs) {
+                vs->updateClipsBoundaries(false);
+            }
+
+            auto clip = waveTrack->NewestOrNewClip();
+
+            if (clip) {
+                ClipKey clipKey = DomConverter::clip(waveTrack, clip.get()).key;
+                selectionController()->setSelectedClips({ clipKey }, true);
+            }
+
+            trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        }
     }
 
     return true;

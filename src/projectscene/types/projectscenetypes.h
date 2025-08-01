@@ -114,7 +114,7 @@ struct Snap {
 struct ZoomState {
     double zoom = 0.0;
     double frameStart = 0.0;
-    int tracksVerticalY = 0;
+    int tracksVerticalOffset = 0;
 };
 
 enum class TimelineRulerMode {

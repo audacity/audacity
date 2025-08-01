@@ -23,6 +23,13 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Automation"),
              IconCode::Code::AUTOMATION
              ),
+    UiAction("split-tool",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Split Tool"),
+             TranslatableString("action", "Split Tool"),
+             IconCode::Code::SPLIT_TOOL
+             ),
     UiAction("zoom",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
@@ -256,7 +263,7 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "loop", true },
             { "", true },
             { "automation", true },
-            { "", true },
+            { "split-tool", true },
             { "zoom-in", true },
             { "zoom-out", true },
             { "fit-selection", true },

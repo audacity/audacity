@@ -33,9 +33,9 @@ Item {
     //! NOTE Sync with TracksClipsView
     TracksViewStateModel {
         id: tracksViewState
-        onTracksVericalYChanged: {
+        onTracksVerticalOffsetChanged: {
             let headerHeight = view.header.height ? view.header.height : 0
-            view.contentY = tracksViewState.tracksVericalY
+            view.contentY = tracksViewState.tracksVerticalOffset
         }
     }
 
@@ -162,7 +162,7 @@ Item {
                         view.contentY = lockedVerticalScrollPosition
                     }
                     else {
-                        tracksViewState.changeTracksVericalY(view.contentY)
+                        tracksViewState.changeTracksVerticalOffset(view.contentY)
                     }
                 }
 
