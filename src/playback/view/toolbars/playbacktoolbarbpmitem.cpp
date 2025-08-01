@@ -14,7 +14,7 @@ PlaybackToolBarBPMItem::PlaybackToolBarBPMItem(const muse::ui::UiAction& action,
         onProjectChanged();
     });
 
-    globalContext()->playbackState()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus status) {
+    playbackState()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus status) {
         if (status == PlaybackStatus::Stopped) {
             setState(muse::ui::UiActionState::make_enabled());
         } else {
@@ -71,4 +71,9 @@ void PlaybackToolBarBPMItem::updateValues()
 
     m_currentValue = timeSignature.tempo;
     emit currentValueChanged();
+}
+
+au::context::IPlaybackStatePtr PlaybackToolBarBPMItem::playbackState() const
+{
+    return globalContext()->playbackState();
 }

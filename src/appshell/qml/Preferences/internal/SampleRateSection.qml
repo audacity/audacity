@@ -44,7 +44,7 @@ BaseSection {
             title: qsTrc("appshell/preferences", "Default sample rate")
             columnWidth: root.columnWidth
 
-            enabled: !playbackState.isPlaying()
+            enabled: !playbackState.isPlaying
 
             currentIndex: indexOfValue(apiModel.defaultSampleRate)
             model: apiModel.defaultSampleRateList
@@ -62,7 +62,7 @@ BaseSection {
         IncrementalPropertyControlWithTitle {
             currentValue: apiModel.defaultSampleRateValue
 
-            enabled: !playbackState.isPlaying()
+            enabled: !playbackState.isPlaying
             visible: apiModel.otherSampleRate
 
             minValue: 1
@@ -85,7 +85,7 @@ BaseSection {
         title: qsTrc("appshell/preferences", "Default sample format")
         columnWidth: root.columnWidth
 
-        enabled: !playbackState.isPlaying()
+        enabled: !playbackState.isPlaying
 
         currentIndex: indexOfValue(apiModel.defaultSampleFormat)
         model: apiModel.defaultSampleFormatList

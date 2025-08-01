@@ -4,7 +4,7 @@
 #pragma once
 
 #include "modularity/ioc.h"
-#include "../iglobalcontext.h"
+#include "context/iglobalcontext.h"
 #include "playbackstate.h"
 #include "record/irecordcontroller.h"
 

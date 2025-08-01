@@ -179,6 +179,7 @@ void WaveView::setTimelineContext(TimelineContext* newContext)
         connect(m_context, &TimelineContext::frameTimeChanged, this, &WaveView::updateView);
         connect(m_context, &TimelineContext::selectionStartTimeChanged, this, &WaveView::updateView);
         connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &WaveView::updateView);
+        connect(m_context, &TimelineContext::zoomChanged, this, &WaveView::onWaveZoomChanged);
     }
 
     emit timelineContextChanged();
@@ -370,6 +371,11 @@ void WaveView::setLastClickPos(const unsigned lastX, const unsigned lastY, const
         return;
     }
 
+    // Prevent sample editing during playback
+    if (playbackState()->isPlaying()) {
+        return;
+    }
+
     const auto currentPosition = QPoint(x, y);
     const auto lastPosition = QPoint(lastX, lastY);
 
@@ -390,6 +396,11 @@ void WaveView::setLastClickPos(const unsigned lastX, const unsigned lastY, const
 void WaveView::smoothLastClickPos(unsigned int x, const unsigned int y)
 {
     if (!m_isStemPlot) {
+        return;
+    }
+
+    // Prevent sample editing during playback
+    if (playbackState()->isPlaying()) {
         return;
     }
 
@@ -421,6 +432,11 @@ void WaveView::setIsolatedPoint(const unsigned int x, const unsigned int y)
         return;
     }
 
+    // Prevent sample editing during playback
+    if (playbackState()->isPlaying()) {
+        return;
+    }
+
     if (!m_lastClickedPoint.has_value()) {
         return;
     }
@@ -438,7 +454,32 @@ void WaveView::setIsolatedPoint(const unsigned int x, const unsigned int y)
         m_clipKey.key, globalContext()->currentProject(), m_lastClickedPoint.value(), currentPosition, params);
 }
 
+void WaveView::onWaveZoomChanged()
+{
+    const IWavePainter::PlotType currentPlotType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key,
+                                                                                 m_context->zoom());
+    const bool wasStemPlot = m_isStemPlot;
+    const bool isStemPlot = currentPlotType == IWavePainter::PlotType::Stem;
+
+    if (wasStemPlot != isStemPlot) {
+        setIsStemPlot(isStemPlot);
+        if (!isStemPlot && m_isNearSample) {
+            // force isNearSample to false when transitioning away from stem plot mode
+            setIsNearSample(false);
+        }
+        // Note: When transitioning TO stem plot mode, ClipItem.qml onIsStemPlotChanged
+        // will trigger mouse position update to force isNearSample to be set correctly
+    }
+
+    update();
+}
+
 void WaveView::pushProjectHistorySampleEdit()
 {
     projectHistory()->pushHistoryState("Moved Samples", "Sample Edit", trackedit::UndoPushType::CONSOLIDATE);
+}
+
+au::context::IPlaybackStatePtr WaveView::playbackState() const
+{
+    return globalContext()->playbackState();
 }

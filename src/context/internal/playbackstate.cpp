@@ -27,6 +27,11 @@ PlaybackStatus PlaybackState::playbackStatus() const
     return m_player ? m_player->playbackStatus() : PlaybackStatus::Stopped;
 }
 
+bool PlaybackState::isPlaying() const
+{
+    return playbackStatus() == playback::PlaybackStatus::Running;
+}
+
 muse::async::Channel<PlaybackStatus> PlaybackState::playbackStatusChanged() const
 {
     return m_playbackStatusChanged;

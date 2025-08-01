@@ -103,14 +103,14 @@ bool PlaybackController::isPaused() const
     return player()->playbackStatus() == PlaybackStatus::Paused;
 }
 
+bool PlaybackController::isStopped() const
+{
+    return player()->playbackStatus() == PlaybackStatus::Stopped;
+}
+
 bool PlaybackController::isLoaded() const
 {
     return m_loadingTrackCount == 0;
-}
-
-bool PlaybackController::isStoped() const
-{
-    return player()->playbackStatus() == PlaybackStatus::Stopped;
 }
 
 bool PlaybackController::isLoopEnabled() const
@@ -335,7 +335,7 @@ void PlaybackController::doChangePlaybackRegion(const PlaybackRegion& region)
 {
     m_lastPlaybackRegion = region;
 
-    if (isStoped()) {
+    if (isStopped()) {
         player()->setPlaybackRegion(m_lastPlaybackRegion);
     }
 

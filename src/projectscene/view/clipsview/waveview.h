@@ -91,10 +91,13 @@ signals:
 private:
 
     void updateView();
+    void onWaveZoomChanged();
     IWavePainter::Params getWavePainterParams() const;
     void applyColorfulStyle(IWavePainter::Params& params, const QColor& clipColor, bool selected) const;
     void applyClassicStyle(IWavePainter::Params& params, bool selected) const;
     void pushProjectHistorySampleEdit();
+
+    context::IPlaybackStatePtr playbackState() const;
 
     TimelineContext* m_context = nullptr;
     ClipKey m_clipKey;
