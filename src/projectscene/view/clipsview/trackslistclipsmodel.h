@@ -50,9 +50,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     bool isVerticalRulersVisible() const;
-
     int totalTracksHeight() const;
-    void setTotalTracksHeight(int height);
 
     bool isSplitMode() const;
     void setIsSplitMode(bool newIsSplitMode);
@@ -79,14 +77,10 @@ private:
         IsTrackAudibleRole,
     };
 
-    void updateTotalTracksHeight();
-    void subscribeOnTrackHeightChanges(const trackedit::TrackId trackId);
-    void unsubscribeFromTrackHeightChanges(const trackedit::TrackId trackId);
     void toggleSplitTool();
 
     std::vector<trackedit::Track> m_trackList;
     bool m_isVerticalRulersVisible = false;
-    int m_totalTracksHeight = 0;
     bool m_isSplitMode = false;
 };
 }

@@ -79,6 +79,27 @@ ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project
         zoomState.tracksVerticalOffset = y;
         saveProjectZoomState(au3Project, zoomState);
     });
+
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
+        auto prj = globalContext()->currentTrackeditProject();
+        if (!prj) {
+            return;
+        }
+
+        prj->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
+            auto it = m_tracks.find(track.id);
+            if (it == m_tracks.end()) {
+                return;
+            }
+            m_totalTracksHeight.set(m_totalTracksHeight.val - it->second.height.val);
+            m_tracks.erase(it);
+        });
+    });
+}
+
+muse::ValCh<int> ProjectViewState::totalTrackHeight() const
+{
+    return m_totalTracksHeight;
 }
 
 muse::ValCh<int> ProjectViewState::tracksVerticalOffset() const
@@ -141,6 +162,8 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
     TrackData d;
     d.height.val = DEFAULT_HEIGHT;
     d.collapsed.val = false;
+    m_totalTracksHeight.set(m_totalTracksHeight.val + d.height.val);
+
     return m_tracks.insert({ trackId, d }).first->second;
 }
 
@@ -166,7 +189,7 @@ muse::ValCh<bool> ProjectViewState::isTrackCollapsed(const trackedit::TrackId& t
     return d.collapsed;
 }
 
-void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int deltaY)
+void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int delta)
 {
     TrackData* d = nullptr;
     auto it = m_tracks.find(trackId);
@@ -176,9 +199,13 @@ void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int 
         d = &makeTrackData(trackId);
     }
 
-    int newVal = std::max(d->height.val + deltaY, MIN_HEIGHT);
-    d->height.set(newVal);
-    d->collapsed.set(newVal < COLLAPSE_HEIGHT);
+    int oldHeight = d->height.val;
+    int newHeight = std::max(oldHeight + delta, MIN_HEIGHT);
+
+    d->height.set(newHeight);
+    d->collapsed.set(newHeight < COLLAPSE_HEIGHT);
+
+    m_totalTracksHeight.set(m_totalTracksHeight.val + (newHeight - oldHeight));
 }
 
 void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int height)
@@ -191,15 +218,19 @@ void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int hei
         d = &makeTrackData(trackId);
     }
 
-    d->height.set(std::max(height, MIN_HEIGHT));
+    int oldHeight = d->height.val;
+    int newHeight = std::max(height, MIN_HEIGHT);
+    d->height.set(newHeight);
     d->collapsed.set(height < COLLAPSE_HEIGHT);
+
+    m_totalTracksHeight.set(m_totalTracksHeight.val + (newHeight - oldHeight));
 }
 
 au::trackedit::TrackId ProjectViewState::trackAtPosition(double y) const
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
-        return -1;
+        return trackedit::INVALID_TRACK;
     }
 
     trackedit::TrackIdList tracks = prj->trackIdList();
@@ -212,12 +243,12 @@ au::trackedit::TrackId ProjectViewState::trackAtPosition(double y) const
         trackTop = trackBottom;
         trackBottom = trackTop + trackHeight(id).val;
 
-        if (trackTop <= y && trackBottom >= y) {
+        if (muse::RealIsEqualOrMore(y, trackTop) && muse::RealIsEqualOrLess(y, trackBottom)) {
             return id;
         }
     }
 
-    return -1;
+    return trackedit::INVALID_TRACK;
 }
 
 au::trackedit::TrackIdList ProjectViewState::tracksInRange(double y1, double y2) const

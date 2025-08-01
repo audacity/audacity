@@ -426,7 +426,7 @@ ClipsListModel::MoveOffset ClipsListModel::calculateMoveOffset(const ClipListIte
 
     MoveOffset moveOffset {
         calculateTimePositionOffset(item),
-        calculateTrackPositionOffset(key, completed)
+        completed ? 0 : calculateTrackPositionOffset(key)
     };
 
     secs_t positionOffsetX = moveOffset.timeOffset * m_context->zoom();
@@ -439,27 +439,26 @@ ClipsListModel::MoveOffset ClipsListModel::calculateMoveOffset(const ClipListIte
     return moveOffset;
 }
 
-int ClipsListModel::calculateTrackPositionOffset(const ClipKey& key, bool completed) const
+int ClipsListModel::calculateTrackPositionOffset(const ClipKey& key) const
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj) {
         return 0;
     }
 
-    if (completed) {
+    IProjectViewStatePtr vs = prj->viewState();
+    double yPos = vs->mousePositionY();
+    int trackVerticalPosition = vs->trackVerticalPosition(key.key.trackId);
+    TrackIdList tracks = vs->tracksInRange(trackVerticalPosition + 2, yPos);
+
+    if (!tracks.size()) {
         return 0;
     }
 
-    auto vs = prj->viewState();
-    auto yPos = vs->mousePositionY();
-
-    auto tracks = vs->tracksInRange(vs->trackVerticalPosition(key.key.trackId) + 2, yPos);
-    auto pointedTrack = vs->trackAtPosition(yPos);
-
-    bool pointingAtEmptySpace = (pointedTrack == INVALID_TRACK);
+    bool pointingAtEmptySpace = yPos > vs->totalTrackHeight().val - vs->tracksVerticalOffset().val;
     int trackPositionOffset = pointingAtEmptySpace ? tracks.size() : tracks.size() - 1;
 
-    if (!muse::RealIsEqualOrMore(yPos, vs->trackVerticalPosition(key.key.trackId))) {
+    if (!muse::RealIsEqualOrMore(yPos, trackVerticalPosition)) {
         trackPositionOffset = -trackPositionOffset;
     }
 

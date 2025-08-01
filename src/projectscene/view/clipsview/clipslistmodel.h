@@ -135,7 +135,7 @@ private:
 
     MoveOffset calculateMoveOffset(const ClipListItem* item, const ClipKey& key, bool completed) const;
     trackedit::secs_t calculateTimePositionOffset(const ClipListItem* item) const;
-    int calculateTrackPositionOffset(const ClipKey& key, bool completed) const;
+    int calculateTrackPositionOffset(const ClipKey& key) const;
     bool isKeyboardTriggered() const;
 
     void handleAutoScroll(bool ok, bool completed, const std::function<void()>& onAutoScrollFrame);
