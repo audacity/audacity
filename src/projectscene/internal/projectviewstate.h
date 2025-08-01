@@ -27,8 +27,15 @@ public:
     ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project);
 
     // State of elements
+    muse::ValCh<int> totalTrackHeight() const override;
     muse::ValCh<int> trackHeight(const trackedit::TrackId& trackId) const override;
     muse::ValCh<bool> isTrackCollapsed(const trackedit::TrackId& trackId) const override;
+
+    int trackVerticalPosition(const trackedit::TrackId& trackId) const override;
+    void changeTrackHeight(const trackedit::TrackId& trackId, int delta) override;
+    void setTrackHeight(const trackedit::TrackId& trackId, int height) override;
+    trackedit::TrackId trackAtPosition(double y) const override;
+    trackedit::TrackIdList tracksInRange(double y1, double y2) const override;
 
     bool isSnapEnabled() const override;
     void setIsSnapEnabled(bool enabled) override;
@@ -51,12 +58,6 @@ public:
     void changeTracksVerticalOffset(int deltaY) override;
     virtual muse::ValCh<bool> tracksVerticalScrollLocked() const override;
     virtual void setTracksVerticalScrollLocked(bool lock) override;
-
-    int trackVerticalPosition(const trackedit::TrackId& trackId) const override;
-    void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) override;
-    void setTrackHeight(const trackedit::TrackId& trackId, int height) override;
-    trackedit::TrackId trackAtPosition(double y) const override;
-    trackedit::TrackIdList tracksInRange(double y1, double y2) const override;
 
     void setClipEditStartTimeOffset(double val) override;
     double clipEditStartTimeOffset() const override;
@@ -88,6 +89,8 @@ private:
         muse::ValCh<int> height;
         muse::ValCh<bool> collapsed;
     };
+
+    mutable muse::ValCh<int> m_totalTracksHeight;
 
     TrackData& makeTrackData(const trackedit::TrackId& trackId) const;
 

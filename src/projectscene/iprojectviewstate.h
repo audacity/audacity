@@ -15,8 +15,15 @@ public:
     virtual ~IProjectViewState() = default;
 
     //State of elements
+    virtual muse::ValCh<int> totalTrackHeight() const = 0;
     virtual muse::ValCh<int> trackHeight(const trackedit::TrackId& trackId) const = 0;
     virtual muse::ValCh<bool> isTrackCollapsed(const trackedit::TrackId& trackId) const = 0;
+
+    virtual int trackVerticalPosition(const trackedit::TrackId& trackId) const = 0;
+    virtual void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) = 0;
+    virtual void setTrackHeight(const trackedit::TrackId& trackId, int height) = 0;
+    virtual trackedit::TrackId trackAtPosition(double y) const = 0;
+    virtual trackedit::TrackIdList tracksInRange(double y1, double y2) const = 0;
 
     virtual bool isSnapEnabled() const = 0;
     virtual void setIsSnapEnabled(bool enabled) = 0;
@@ -39,12 +46,6 @@ public:
     virtual void changeTracksVerticalOffset(int deltaY) = 0;
     virtual muse::ValCh<bool> tracksVerticalScrollLocked() const = 0;
     virtual void setTracksVerticalScrollLocked(bool lock) = 0;
-
-    virtual int trackVerticalPosition(const trackedit::TrackId& trackId) const = 0;
-    virtual void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) = 0;
-    virtual void setTrackHeight(const trackedit::TrackId& trackId, int height) = 0;
-    virtual trackedit::TrackId trackAtPosition(double y) const = 0;
-    virtual trackedit::TrackIdList tracksInRange(double y1, double y2) const = 0;
 
     virtual void setClipEditStartTimeOffset(double val) = 0;
     virtual double clipEditStartTimeOffset() const = 0;
