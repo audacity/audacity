@@ -160,7 +160,7 @@ Item {
             }
 
             onPressAndHold: function(e) {
-                if (clipsContainer.isNearSample) {
+                if (clipsContainer.isNearSample || root.altPressed) {
 
                     if (root.ctrlPressed) {
                         clipsContainer.isIsolationMode = true
