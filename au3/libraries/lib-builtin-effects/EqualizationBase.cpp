@@ -153,7 +153,7 @@ EqualizationBase::LoadFactoryDefaults(EffectSettings& settings) const
 {
     // To do: externalize state so const_cast isn't needed
     if (!const_cast<EqualizationBase&>(*this).DoLoadFactoryDefaults(settings)) {
-        return {}
+        return {};
     }
     return { nullptr };
 }
@@ -236,7 +236,7 @@ EqualizationBase::LoadFactoryPreset(int id, EffectSettings& settings) const
         }
     }
     if (index < 0) {
-        return {}
+        return {};
     }
 
     // mParams =
@@ -247,7 +247,7 @@ EqualizationBase::LoadFactoryPreset(int id, EffectSettings& settings) const
     S.SetForWriting(&eap);
     // To do: externalize state so const_cast isn't needed
     if (!const_cast<EqualizationBase*>(this)->VisitSettings(S, settings)) {
-        return {}
+        return {};
     }
     return { nullptr };
 }
@@ -258,28 +258,27 @@ bool EqualizationBase::Init()
 {
     constexpr auto loFreqI = EqualizationFilter::loFreqI;
 
-    const auto& lin = mParameters.mLin;
     const auto& curveName = mParameters.mCurveName;
     auto& loFreq = mParameters.mLoFreq;
     auto& hiFreq = mParameters.mHiFreq;
 
-    int selcount = 0;
     double rate = 0.0;
 
     if (const auto project = FindProject()) {
         auto trackRange = TrackList::Get(*project).Selected<const WaveTrack>();
         if (trackRange) {
             rate = (*(trackRange.first++))->GetRate();
-            ++selcount;
 
             for (auto track : trackRange) {
                 if (track->GetRate() != rate) {
-                    BasicUI::ShowMessageBox(XO(
-                                                "To apply Equalization, all selected tracks must have the same sample rate."));
+                    mLastError
+                        = XO("To apply Equalization, all selected tracks must have the same sample rate.").Translation().ToStdString();
                     return false;
                 }
-                ++selcount;
             }
+        } else {
+            mLastError = XO("To apply Equalization, select one or more audio tracks.").Translation().ToStdString();
+            return false;
         }
     } else {
         // Editing macro parameters, use this default
@@ -289,8 +288,7 @@ bool EqualizationBase::Init()
     hiFreq = rate / 2.0;
     // Unlikely, but better than crashing.
     if (hiFreq <= loFreqI) {
-        BasicUI::ShowMessageBox(
-            XO("Track sample rate is too low for this effect."));
+        mLastError = XO("Track sample rate is too low for this effect.").Translation().ToStdString();
         return false;
     }
 
@@ -345,7 +343,8 @@ bool EqualizationBase::Process(EffectInstance&, EffectSettings&)
             }
             pTempTrack->Flush();
             // Remove trailing data from the temp track
-            pTempTrack->Clear(t1 - t0, pTempTrack->GetEndTime());
+            constexpr auto moveClips = false;
+            pTempTrack->Clear(t1 - t0, pTempTrack->GetEndTime(), moveClips);
             track->ClearAndPaste(t0, t1, *pTempTrack, true, true);
         }
 
@@ -375,14 +374,10 @@ bool EqualizationBase::ProcessOne(
     auto s = start;
 
     auto& buffer = task.buffer;
-    auto& window1 = task.window1;
-    auto& window2 = task.window2;
     auto& thisWindow = task.thisWindow;
     auto& lastWindow = task.lastWindow;
 
     auto originalLen = len;
-
-    auto& output = task.output;
 
     TrackProgress(count, 0.);
     bool bLoopSuccess = true;

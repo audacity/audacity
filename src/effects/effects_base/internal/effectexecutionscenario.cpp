@@ -82,7 +82,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
 
     secs_t t0;
     secs_t t1;
-    bool isSelection = false;
+    bool isTimeSelection = false;
 
     const trackedit::ClipKeyList selectedClips = selectionController()->selectedClips();
     const auto numSelectedClips = selectedClips.size();
@@ -108,17 +108,32 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             t1 = selectionController()->dataSelectedEndTime();
         }
 
-        isSelection = t1 > t0;
+        isTimeSelection = t1 > t0;
+        auto isTrackSelection = !selectionController()->selectedTracks().empty();
 
-        if (!isSelection && effectsConfiguration()->applyEffectToAllAudio() && effect->GetType() != EffectTypeGenerate) {
-            selectionController()->setSelectedAllAudioData();
-
-            t0 = selectionController()->dataSelectedStartTime();
-            t1 = selectionController()->dataSelectedEndTime();
-            isSelection = selectionController()->timeSelectionIsNotEmpty();
+        if (effectsConfiguration()->applyEffectToAllAudio() && effect->GetType() != EffectTypeGenerate) {
+            if (!isTimeSelection) {
+                if (!isTrackSelection) {
+                    // Select everything
+                    selectionController()->setSelectedAllAudioData();
+                } else {
+                    // Select all time without modifying track selection
+                    const auto prj = globalContext()->currentTrackeditProject();
+                    selectionController()->setDataSelectedStartTime(0.0, true);
+                    selectionController()->setDataSelectedEndTime(prj->totalTime(), true);
+                }
+                t0 = selectionController()->dataSelectedStartTime();
+                t1 = selectionController()->dataSelectedEndTime();
+                isTimeSelection = selectionController()->timeSelectionIsNotEmpty();
+            } else if (!isTrackSelection) {
+                // Select all tracks without modifying time selection
+                const auto prj = globalContext()->currentTrackeditProject();
+                selectionController()->setSelectedTracks(prj->trackIdList());
+            }
+            isTrackSelection = !selectionController()->selectedTracks().empty();
         }
 
-        if (!isSelection && effect->GetType() != EffectTypeGenerate) {
+        if ((!isTimeSelection || !isTrackSelection) && effect->GetType() != EffectTypeGenerate) {
             return make_ret(Err::EffectNoAudioSelected);
         }
 
@@ -183,7 +198,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         //   tp.f1 = f1;
 
         //! NOTE Step 2.4 - update settings
-        wxString newFormat = (isSelection
+        wxString newFormat = (isTimeSelection
                               ? NumericConverterFormats::TimeAndSampleFormat()
                               : NumericConverterFormats::DefaultSelectionFormat()
                               ).Internal();
@@ -228,7 +243,9 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     {
         pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(effect->MakeInstance());
         if (!pInstanceEx || !pInstanceEx->Init()) {
-            return make_ret(Err::UnknownError);
+            return pInstanceEx
+                   && !pInstanceEx->GetLastError().empty() ? make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError()) : make_ret(
+                Err::UnknownError);
         }
     }
 
