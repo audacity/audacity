@@ -163,6 +163,7 @@ void ExportPreferencesModel::setCurrentFormat(const QString& format)
     }
 
     exportConfiguration()->setCurrentFormat(format.toStdString());
+    emit customFFmpegOptionsVisibleChanged();
 }
 
 QVariantList ExportPreferencesModel::formatsList() const
@@ -253,6 +254,11 @@ void ExportPreferencesModel::setExportSampleFormat(const QString& format)
     NOT_IMPLEMENTED;
 }
 
+void ExportPreferencesModel::openCustomFFmpegDialog()
+{
+    dispatcher()->dispatch("open-custom-ffmpeg-options");
+}
+
 void ExportPreferencesModel::updateCurrentSampleRate()
 {
     int currentSampleRate = exportConfiguration()->exportSampleRate();
@@ -296,4 +302,9 @@ void ExportPreferencesModel::exportData()
     if (!result.success() && !result.text().empty()) {
         interactive()->error(muse::trc("export", "Export error"), result.text());
     }
+}
+
+bool ExportPreferencesModel::customFFmpegOptionsVisible()
+{
+    return currentFormat() == "Custom FFmpeg Export";
 }
