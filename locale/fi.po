@@ -7517,7 +7517,7 @@ msgstr ""
 "Tarkista vielä kerran tietosi ja yritä uudelleen!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr "Luo ilmainen pilvitallennustili ja käytä projektejasi ja ääntäsi miltä tahansa laitteelta"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp

@@ -140,7 +140,7 @@ void LoginDialog::LayoutControls()
 
    title = MakeLabel(this,
                      mMode == Mode::Create
-                        ? _("Create free Cloud Storage account and access your projects and audio from any device")
+                        ? _("Create a free cloud storage account to access your projects and audio from any device")
                         : _("Sign in to save to the cloud")),
 
    title->SetFont(titleFont);

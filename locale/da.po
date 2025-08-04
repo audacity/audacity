@@ -7510,7 +7510,7 @@ msgstr ""
 "Kontrollér venligst, hvad du har tastet ind, og forsøg igen!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr "Opret en gratis Cloud Storage-konto, og tilgå dine projekter og din lyd fra enhver enhed"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp

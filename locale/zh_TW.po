@@ -7502,7 +7502,7 @@ msgid ""
 msgstr "抱歉，您輸入的電子郵件地址或密碼似乎不正確。 請仔細檢查並重試！"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp

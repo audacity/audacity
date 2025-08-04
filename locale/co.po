@@ -7516,7 +7516,7 @@ msgstr ""
 "Ci vole à verificà e vostre infurmazioni di cunnessione è pruvà torna."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr "Creà un contu Cloud Storage di rigalu è accede à i vostri prughjetti è a u vostru audio da ogni apparechju"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp

@@ -7519,7 +7519,7 @@ msgstr ""
 "Compruebe con cuidado las credenciales e inténtelo de nuevo."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr "Crea una cuenta gratuita de Cloud Storage y accede a tus proyectos y archivos de audio desde cualquier dispositivo."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp

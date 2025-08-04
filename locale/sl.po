@@ -7515,7 +7515,7 @@ msgstr ""
 "Ponovno preverite svoje poverilnice in poskusite znonva!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr "Ustvarite brezplačni račun Cloud Storage in dostopajte do svojih projektov in zvokov s poljubne naprave."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp

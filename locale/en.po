@@ -7715,10 +7715,10 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
-"Create free Cloud Storage account and access your projects and audio from "
+"Create a free cloud storage account to access your projects and audio from "
 "any device"
 msgstr ""
-"Create free Cloud Storage account and access your projects and audio from "
+"Create a free cloud storage account to access your projects and audio from "
 "any device"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp

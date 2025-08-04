@@ -7519,7 +7519,7 @@ msgstr ""
 "Будь ласка, перевірте, чи усе правильно, і повторіть спробу!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr "Створіть безкоштовний облікових запис хмарного сховища даних і отримайте доступ до ваших проєктів та звукових даних з будь-якого пристрою"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp

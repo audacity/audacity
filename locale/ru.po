@@ -7522,7 +7522,7 @@ msgstr ""
 "Пожалуйста, перепроверьте свои учётные данные и повторите попытку!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr "Создайте бесплатный аккаунт облачного хранилища и получите доступ к своим проектам и аудио с любого устройства"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp

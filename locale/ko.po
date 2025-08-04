@@ -7519,7 +7519,7 @@ msgstr ""
 "인증 정보를 다시한번 확인하고 재시도해 보세요!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr "무료 클라우드 스토리지 계정을 생성하고 모든 장치에서 프로젝트와 오디오에 액세스하세요"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
