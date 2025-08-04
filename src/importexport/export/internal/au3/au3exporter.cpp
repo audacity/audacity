@@ -116,6 +116,10 @@ muse::Ret Au3Exporter::exportData(std::string filename)
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
+    auto editor = m_plugin->CreateOptionsEditor(m_format, nullptr);
+    editor->Load(*gPrefs);
+    m_parameters = ExportUtils::ParametersFromEditor(*editor);
+
     // TODO: implement other ExportProcessType's selections
     if (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO) {
         m_t0
@@ -208,7 +212,7 @@ std::vector<std::string> Au3Exporter::formatsList() const
 {
     std::vector<std::string> formatsList;
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        formatsList.push_back(plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString());
+        formatsList.push_back(plugin->GetFormatInfo(formatIndex).description.MSGID().GET().ToStdString());
     }
 
     return formatsList;
@@ -217,7 +221,7 @@ std::vector<std::string> Au3Exporter::formatsList() const
 int Au3Exporter::formatIndex(const std::string& format) const
 {
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
+        if (plugin->GetFormatInfo(formatIndex).description.MSGID().GET().ToStdString() == format) {
             return formatIndex;
         }
     }
@@ -237,6 +241,23 @@ std::string Au3Exporter::formatExtension(const std::string& format) const
     }
 
     return {};
+}
+
+bool Au3Exporter::isCustomFFmpegExportFormat() const
+{
+    std::string format = exportConfiguration()->currentFormat();
+
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
+            auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
+            if (!editor) {
+                return false;
+            }
+            return editor->GetName() == "custom_ffmpeg";
+        }
+    }
+
+    return false;
 }
 
 int Au3Exporter::maxChannels() const

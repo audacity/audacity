@@ -15,34 +15,9 @@
 
 #include "ExportFFmpegOptions.h"
 
-// #include <wx/listbox.h>
-// #include <wx/combobox.h>
-// #include <wx/stattext.h>
-
-// #include "ShuttleGui.h"
 #include "FFmpegPresets.h"
 #include "FFmpegDefines.h"
-// #include "AudacityMessageBox.h"
-// #include "HelpSystem.h"
 #include "Prefs.h"
-
-// #if wxUSE_ACCESSIBILITY
-// #include "WindowAccessible.h"
-// #endif
-
-// BEGIN_EVENT_TABLE(ExportFFmpegOptions, wxDialogWrapper)
-// EVT_BUTTON(wxID_OK, ExportFFmpegOptions::OnOK)
-// EVT_BUTTON(wxID_HELP, ExportFFmpegOptions::OnGetURL)
-// EVT_LISTBOX(FEFormatID, ExportFFmpegOptions::OnFormatList)
-// EVT_LISTBOX(FECodecID, ExportFFmpegOptions::OnCodecList)
-// EVT_BUTTON(FEAllFormatsID, ExportFFmpegOptions::OnAllFormats)
-// EVT_BUTTON(FEAllCodecsID, ExportFFmpegOptions::OnAllCodecs)
-// EVT_BUTTON(FESavePresetID, ExportFFmpegOptions::OnSavePreset)
-// EVT_BUTTON(FELoadPresetID, ExportFFmpegOptions::OnLoadPreset)
-// EVT_BUTTON(FEDeletePresetID, ExportFFmpegOptions::OnDeletePreset)
-// EVT_BUTTON(FEImportPresetsID, ExportFFmpegOptions::OnImportPresets)
-// EVT_BUTTON(FEExportPresetsID, ExportFFmpegOptions::OnExportPresets)
-// END_EVENT_TABLE()
 
 /// Format-codec compatibility list
 /// Must end with NULL entry
@@ -497,89 +472,109 @@ const TranslatableStrings PredictionOrderMethodNames {
 };
 }
 
-// ExportFFmpegOptions::~ExportFFmpegOptions()
-// {
-// }
+ExportFFmpegOptions::~ExportFFmpegOptions()
+{
+}
 
-// ExportFFmpegOptions::ExportFFmpegOptions(wxWindow* parent)
-//     :  wxDialogWrapper(parent, wxID_ANY,
-//                        XO("Configure custom FFmpeg options"))
-// {
-//     SetName();
-//     ShuttleGui S(this, eIsCreatingFromPrefs);
-//     mFFmpeg = FFmpegFunctions::Load();
-//     //FFmpegLibsInst()->LoadLibs(NULL,true); //Loaded at startup or from Prefs now
+ExportFFmpegOptions::ExportFFmpegOptions()
+{
+    mFFmpeg = FFmpegFunctions::Load();
+//    //FFmpegLibsInst()->LoadLibs(NULL,true); //Loaded at startup or from Prefs now
 
 //     mPresets = std::make_unique<FFmpegPresets>();
 //     mPresets->GetPresetList(mPresetNames);
-
-//     if (mFFmpeg) {
-//         FetchFormatList();
-//         FetchCodecList();
-
-//         PopulateOrExchange(S);
-
-//         //Select the format that was selected last time this dialog was closed
-//         mFormatList->Select(mFormatList->FindString(gPrefs->Read(wxT("/FileFormats/FFmpegFormat"))));
-//         DoOnFormatList();
-
-//         //Select the codec that was selected last time this dialog was closed
-//         auto codec = mFFmpeg->CreateEncoder(gPrefs->Read(wxT("/FileFormats/FFmpegCodec")).ToUTF8());
-
-//         if (codec != nullptr) {
-//             mCodecList->Select(mCodecList->FindString(wxString::FromUTF8(codec->GetName())));
-//         }
-
-//         DoOnCodecList();
-//     }
-// }
+    if (mFFmpeg) {
+        FetchFormatList();
+        FetchCodecList();
+    }
+}
 
 ///
 ///
-// void ExportFFmpegOptions::FetchFormatList()
-// {
-//     if (!mFFmpeg) {
-//         return;
-//     }
+void ExportFFmpegOptions::FetchFormatList()
+{
+    if (!mFFmpeg) {
+        return;
+    }
 
-//     for (auto ofmt : mFFmpeg->GetOutputFormats()) {
-//         // Any audio-capable format has default audio codec.
-//         // If it doesn't, then it doesn't supports any audio codecs
-//         if (ofmt->GetAudioCodec() != AUDACITY_AV_CODEC_ID_NONE) {
-//             mFormatNames.push_back(wxString::FromUTF8(ofmt->GetName()));
-//             mFormatLongNames.push_back(wxString::Format(wxT("%s - %s"), mFormatNames.back(), wxString::FromUTF8(ofmt->GetLongName())));
-//         }
-//     }
-//     // Show all formats
-//     mShownFormatNames = mFormatNames;
-//     mShownFormatLongNames =  mFormatLongNames;
-// }
+    for (auto ofmt : mFFmpeg->GetOutputFormats()) {
+        // Any audio-capable format has default audio codec.
+        // If it doesn't, then it doesn't supports any audio codecs
+        if (ofmt->GetAudioCodec() != AUDACITY_AV_CODEC_ID_NONE) {
+            mFormatNames.push_back(wxString::FromUTF8(ofmt->GetName()));
+            mFormatLongNames.push_back(wxString::Format(wxT("%s - %s"), mFormatNames.back(), wxString::FromUTF8(ofmt->GetLongName())));
+        }
+    }
+    // Show all formats
+    mShownFormatNames = mFormatNames;
+    mShownFormatLongNames =  mFormatLongNames;
+}
+
+std::vector<std::string> ExportFFmpegOptions::GetFormatNames() const
+{
+    std::vector<std::string> list;
+    for (const auto& format : mShownFormatNames) {
+        list.push_back(format.ToStdString());
+    }
+
+    return list;
+}
 
 ///
 ///
-// void ExportFFmpegOptions::FetchCodecList()
-// {
-//     if (!mFFmpeg) {
-//         return;
-//     }
-//     // Enumerate all codecs
-//     std::unique_ptr<AVCodecWrapper> codec;
-//     for (auto codec : mFFmpeg->GetCodecs()) {
-//         // We're only interested in audio and only in encoders
-//         if (codec->IsAudio() && mFFmpeg->av_codec_is_encoder(codec->GetWrappedValue())) {
-//             // MP2 Codec is broken.  Don't allow it.
-//             if (codec->GetId() == mFFmpeg->GetAVCodecID(AUDACITY_AV_CODEC_ID_MP2)) {
-//                 continue;
-//             }
+void ExportFFmpegOptions::FetchCodecList()
+{
+    if (!mFFmpeg) {
+        return;
+    }
+    // Enumerate all codecs
+    std::unique_ptr<AVCodecWrapper> codec;
+    for (auto codec : mFFmpeg->GetCodecs()) {
+        // We're only interested in audio and only in encoders
+        if (codec->IsAudio() && mFFmpeg->av_codec_is_encoder(codec->GetWrappedValue())) {
+            // MP2 Codec is broken.  Don't allow it.
+            if (codec->GetId() == mFFmpeg->GetAVCodecID(AUDACITY_AV_CODEC_ID_MP2)) {
+                continue;
+            }
 
-//             mCodecNames.push_back(wxString::FromUTF8(codec->GetName()));
-//             mCodecLongNames.push_back(wxString::Format(wxT("%s - %s"), mCodecNames.back(), wxString::FromUTF8(codec->GetLongName())));
-//         }
-//     }
-//     // Show all codecs
-//     mShownCodecNames = mCodecNames;
-//     mShownCodecLongNames = mCodecLongNames;
-// }
+            mCodecNames.push_back(wxString::FromUTF8(codec->GetName()));
+            mCodecLongNames.push_back(wxString::Format(wxT("%s - %s"), mCodecNames.back(), wxString::FromUTF8(codec->GetLongName())));
+        }
+    }
+    // Show all codecs
+    mShownCodecNames = mCodecNames;
+    mShownCodecLongNames = mCodecLongNames;
+}
+
+std::vector<std::string> ExportFFmpegOptions::GetCodecNames() const
+{
+    std::vector<std::string> list;
+    for (const auto& codec : mShownCodecNames) {
+        list.push_back(codec.ToStdString());
+    }
+
+    return list;
+}
+
+std::vector<std::string> ExportFFmpegOptions::GetProfiles() const
+{
+    std::vector<std::string> list;
+    for (const auto& profile : AACProfiles.GetSymbols().GetMsgids()) {
+        list.push_back(profile.Translation().ToStdString());
+    }
+
+    return list;
+}
+
+std::vector<std::string> ExportFFmpegOptions::GetPredictionOrderMethods() const
+{
+    std::vector<std::string> list;
+    for (const auto& method : PredictionOrderMethodNames) {
+        list.push_back(method.Translation().ToStdString());
+    }
+
+    return list;
+}
 
 ///
 ///
@@ -789,222 +784,199 @@ const TranslatableStrings PredictionOrderMethodNames {
 
 ///
 ///
-// void ExportFFmpegOptions::FindSelectedFormat(wxString** name, wxString** longname)
-// {
-//     // Get current selection
-//     wxArrayInt selections;
-//     int n = mFormatList->GetSelections(selections);
-//     if (n <= 0) {
-//         return;
-//     }
+int ExportFFmpegOptions::FetchCompatibleCodecList(AudacityAVCodecID id, const wxChar* fmt)
+{
+    const auto ffmpegId = mFFmpeg->GetAVCodecID(id);
 
-//     // Get selected format short name
-//     wxString selfmt = mFormatList->GetString(selections[0]);
+    // By default assume that id is not in the list
+    int index = -1;
+    // By default no codecs are compatible (yet)
+    mShownCodecNames.clear();
+    mShownCodecLongNames.clear();
 
-//     // Find its index
-//     int nFormat = make_iterator_range(mFormatNames).index(selfmt);
-//     if (nFormat == wxNOT_FOUND) {
-//         return;
-//     }
+    // Zero - format is not found at all
+    int found = 0;
+    wxString str(fmt);
+    for (int i = 0; CompatibilityList[i].fmt != NULL; i++) {
+        if (str == CompatibilityList[i].fmt) {
+            // Format is found in the list
+            found = 1;
+            if (CompatibilityList[i].codec.value == AUDACITY_AV_CODEC_ID_NONE) {
+                // Format is found in the list and it is compatible with AUDACITY_AV_CODEC_ID_NONE (means that it is compatible to anything)
+                found = 2;
+                break;
+            }
+            // Find the codec, that is claimed to be compatible
+            std::unique_ptr<AVCodecWrapper> codec = mFFmpeg->CreateEncoder(mFFmpeg->GetAVCodecID(CompatibilityList[i].codec));
+            // If it exists, is audio and has encoder
+            if (codec != NULL && codec->IsAudio() && mFFmpeg->av_codec_is_encoder(codec->GetWrappedValue())) {
+                // If it was selected - remember its NEW index
+                if ((ffmpegId >= 0) && codec->GetId() == ffmpegId) {
+                    index = mShownCodecNames.size();
+                }
 
-//     // Return short name and description
-//     if (name != NULL) {
-//         *name = &mFormatNames[nFormat];
-//     }
-//     if (longname != NULL) {
-//         *longname = &mFormatLongNames[nFormat];
-//     }
-//     return;
-// }
+                mShownCodecNames.push_back(wxString::FromUTF8(codec->GetName()));
+                mShownCodecLongNames.push_back(wxString::Format(wxT("%s - %s"), mShownCodecNames.back(),
+                                                                wxString::FromUTF8(codec->GetLongName())));
+            }
+        }
+    }
+    // All codecs are compatible with this format
+    if (found == 2) {
+        std::unique_ptr<AVCodecWrapper> codec;
+        for (auto codec : mFFmpeg->GetCodecs()) {
+            if (codec->IsAudio() && mFFmpeg->av_codec_is_encoder(codec->GetWrappedValue())) {
+                // MP2 is broken.
+                if (codec->GetId() == mFFmpeg->GetAVCodecID(AUDACITY_AV_CODEC_ID_MP2)) {
+                    continue;
+                }
 
-///
-///
-// void ExportFFmpegOptions::FindSelectedCodec(wxString** name, wxString** longname)
-// {
-//     // Get current selection
-//     wxArrayInt selections;
-//     int n = mCodecList->GetSelections(selections);
-//     if (n <= 0) {
-//         return;
-//     }
+                if (!make_iterator_range(mShownCodecNames)
+                    .contains(wxString::FromUTF8(codec->GetName()))) {
+                    if ((ffmpegId >= 0) && codec->GetId() == ffmpegId) {
+                        index = mShownCodecNames.size();
+                    }
 
-//     // Get selected codec short name
-//     wxString selcdc = mCodecList->GetString(selections[0]);
+                    mShownCodecNames.push_back(wxString::FromUTF8(codec->GetName()));
+                    mShownCodecLongNames.push_back(wxString::Format(wxT("%s - %s"), mShownCodecNames.back(),
+                                                                    wxString::FromUTF8(codec->GetLongName())));
+                }
+            }
+        }
+    }
+    // Format is not found - find format in libavformat and add its default audio codec
+    // This allows us to provide limited support for NEW formats without modifying the compatibility list
+    else if (found == 0) {
+        wxCharBuffer buf = str.ToUTF8();
+        auto format = mFFmpeg->GuessOutputFormat(buf, nullptr, nullptr);
 
-//     // Find its index
-//     int nCodec = make_iterator_range(mCodecNames).index(selcdc);
-//     if (nCodec == wxNOT_FOUND) {
-//         return;
-//     }
+        if (format != nullptr) {
+            auto codec = mFFmpeg->CreateEncoder(format->GetAudioCodec());
 
-//     // Return short name and description
-//     if (name != NULL) {
-//         *name = &mCodecNames[nCodec];
-//     }
-//     if (longname != NULL) {
-//         *longname = &mCodecLongNames[nCodec];
-//     }
-// }
+            if (
+                codec != nullptr && codec->IsAudio() && mFFmpeg->av_codec_is_encoder(codec->GetWrappedValue())) {
+                if ((ffmpegId >= 0) && codec->GetId() == ffmpegId) {
+                    index = mShownCodecNames.size();
+                }
 
-///
-///
-// int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar* fmt, AudacityAVCodecID id)
-// {
-//     const auto ffmpegId = mFFmpeg->GetAVCodecID(id);
+                mShownCodecNames.push_back(wxString::FromUTF8(codec->GetName()));
+                mShownCodecLongNames.push_back(wxString::Format(wxT("%s - %s"), mShownCodecNames.back(),
+                                                                wxString::FromUTF8(codec->GetLongName())));
+            }
+        }
+    }
 
-//     // By default assume that id is not in the list
-//     int index = -1;
-//     // By default no codecs are compatible (yet)
-//     mShownCodecNames.clear();
-//     mShownCodecLongNames.clear();
-//     // Clear the listbox
-//     mCodecList->Clear();
-//     // Zero - format is not found at all
-//     int found = 0;
-//     wxString str(fmt);
-//     for (int i = 0; CompatibilityList[i].fmt != NULL; i++) {
-//         if (str == CompatibilityList[i].fmt) {
-//             // Format is found in the list
-//             found = 1;
-//             if (CompatibilityList[i].codec.value == AUDACITY_AV_CODEC_ID_NONE) {
-//                 // Format is found in the list and it is compatible with AUDACITY_AV_CODEC_ID_NONE (means that it is compatible to anything)
-//                 found = 2;
-//                 break;
-//             }
-//             // Find the codec, that is claimed to be compatible
-//             std::unique_ptr<AVCodecWrapper> codec = mFFmpeg->CreateEncoder(mFFmpeg->GetAVCodecID(CompatibilityList[i].codec));
-//             // If it exists, is audio and has encoder
-//             if (codec != NULL && codec->IsAudio() && mFFmpeg->av_codec_is_encoder(codec->GetWrappedValue())) {
-//                 // If it was selected - remember its NEW index
-//                 if ((ffmpegId >= 0) && codec->GetId() == ffmpegId) {
-//                     index = mShownCodecNames.size();
-//                 }
+    return index;
+}
 
-//                 mShownCodecNames.push_back(wxString::FromUTF8(codec->GetName()));
-//                 mShownCodecLongNames.push_back(wxString::Format(wxT("%s - %s"), mShownCodecNames.back(),
-//                                                                 wxString::FromUTF8(codec->GetLongName())));
-//             }
-//         }
-//     }
-//     // All codecs are compatible with this format
-//     if (found == 2) {
-//         std::unique_ptr<AVCodecWrapper> codec;
-//         for (auto codec : mFFmpeg->GetCodecs()) {
-//             if (codec->IsAudio() && mFFmpeg->av_codec_is_encoder(codec->GetWrappedValue())) {
-//                 // MP2 is broken.
-//                 if (codec->GetId() == mFFmpeg->GetAVCodecID(AUDACITY_AV_CODEC_ID_MP2)) {
-//                     continue;
-//                 }
+void ExportFFmpegOptions::FetchCompatibleCodecList(const std::string& format,
+                                                   const std::string& codec)
+{
+    auto fmt = mFFmpeg->GuessOutputFormat(wxString(format).ToUTF8(), NULL, NULL);
+    if (fmt == NULL) {
+        // This shouldn't really happen
+        assert(false);
+        return;
+    }
 
-//                 if (!make_iterator_range(mShownCodecNames)
-//                     .contains(wxString::FromUTF8(codec->GetName()))) {
-//                     if ((ffmpegId >= 0) && codec->GetId() == ffmpegId) {
-//                         index = mShownCodecNames.size();
-//                     }
+    AudacityAVCodecID selcdcid = AUDACITY_AV_CODEC_ID_NONE;
 
-//                     mShownCodecNames.push_back(wxString::FromUTF8(codec->GetName()));
-//                     mShownCodecLongNames.push_back(wxString::Format(wxT("%s - %s"), mShownCodecNames.back(),
-//                                                                     wxString::FromUTF8(codec->GetLongName())));
-//                 }
-//             }
-//         }
-//     }
-//     // Format is not found - find format in libavformat and add its default audio codec
-//     // This allows us to provide limited support for NEW formats without modifying the compatibility list
-//     else if (found == 0) {
-//         wxCharBuffer buf = str.ToUTF8();
-//         auto format = mFFmpeg->GuessOutputFormat(buf, nullptr, nullptr);
+    if (!codec.empty()) {
+        auto cdc = mFFmpeg->CreateEncoder(wxString(codec).ToUTF8());
 
-//         if (format != nullptr) {
-//             auto codec = mFFmpeg->CreateEncoder(format->GetAudioCodec());
+        if (cdc != nullptr) {
+            selcdcid = mFFmpeg->GetAudacityCodecID(cdc->GetId());
+        }
+    }
 
-//             if (
-//                 codec != nullptr && codec->IsAudio() && mFFmpeg->av_codec_is_encoder(codec->GetWrappedValue())) {
-//                 if ((ffmpegId >= 0) && codec->GetId() == ffmpegId) {
-//                     index = mShownCodecNames.size();
-//                 }
+    FetchCompatibleCodecList(selcdcid, wxString(format));
 
-//                 mShownCodecNames.push_back(wxString::FromUTF8(codec->GetName()));
-//                 mShownCodecLongNames.push_back(wxString::Format(wxT("%s - %s"), mShownCodecNames.back(),
-//                                                                 wxString::FromUTF8(codec->GetLongName())));
-//             }
-//         }
-//     }
-//     // Show NEW codec list
-//     mCodecList->Append(mShownCodecNames);
-
-//     return index;
-// }
+    return;
+}
 
 ///
 ///
-// int ExportFFmpegOptions::FetchCompatibleFormatList(
-//     AudacityAVCodecID id, wxString* selfmt)
-// {
-//     int index = -1;
-//     mShownFormatNames.clear();
-//     mShownFormatLongNames.clear();
-//     mFormatList->Clear();
+int ExportFFmpegOptions::FetchCompatibleFormatList(AudacityAVCodecID id, const wxString* selfmt)
+{
+    int index = -1;
+    mShownFormatNames.clear();
+    mShownFormatLongNames.clear();
 
-//     wxArrayString FromList;
-//     // Find all formats compatible to this codec in compatibility list
-//     for (int i = 0; CompatibilityList[i].fmt != NULL; i++) {
-//         if (CompatibilityList[i].codec == id || (CompatibilityList[i].codec.value == AUDACITY_AV_CODEC_ID_NONE)) {
-//             if ((selfmt != NULL) && (*selfmt == CompatibilityList[i].fmt)) {
-//                 index = mShownFormatNames.size();
-//             }
-//             FromList.push_back(CompatibilityList[i].fmt);
-//             mShownFormatNames.push_back(CompatibilityList[i].fmt);
-//             auto tofmt = mFFmpeg->GuessOutputFormat(
-//                 wxString(CompatibilityList[i].fmt).ToUTF8(), nullptr, nullptr);
+    wxArrayString FromList;
+    // Find all formats compatible to this codec in compatibility list
+    for (int i = 0; CompatibilityList[i].fmt != NULL; i++) {
+        if (CompatibilityList[i].codec == id || (CompatibilityList[i].codec.value == AUDACITY_AV_CODEC_ID_NONE)) {
+            if ((selfmt != NULL) && (*selfmt == CompatibilityList[i].fmt)) {
+                index = mShownFormatNames.size();
+            }
+            FromList.push_back(CompatibilityList[i].fmt);
+            mShownFormatNames.push_back(CompatibilityList[i].fmt);
+            auto tofmt = mFFmpeg->GuessOutputFormat(
+                wxString(CompatibilityList[i].fmt).ToUTF8(), nullptr, nullptr);
 
-//             if (tofmt != NULL) {
-//                 mShownFormatLongNames.push_back(wxString::Format(
-//                                                     wxT("%s - %s"), CompatibilityList[i].fmt,
-//                                                     wxString::FromUTF8(tofmt->GetLongName())));
-//             }
-//         }
-//     }
-//     bool found = false;
-//     if (selfmt != NULL) {
-//         for (int i = 0; CompatibilityList[i].fmt != NULL; i++) {
-//             if (*selfmt == CompatibilityList[i].fmt) {
-//                 found = true;
-//                 break;
-//             }
-//         }
-//     }
-//     // Format was in the compatibility list
-//     if (found) {
-//         // Find all formats which have this codec as default and which are not in the list yet and add them too
-//         for (auto ofmt  : mFFmpeg->GetOutputFormats()) {
-//             if (ofmt->GetAudioCodec() == mFFmpeg->GetAVCodecID(id)) {
-//                 wxString ofmtname = wxString::FromUTF8(ofmt->GetName());
-//                 found = false;
-//                 for (unsigned int i = 0; i < FromList.size(); i++) {
-//                     if (ofmtname == FromList[i]) {
-//                         found = true;
-//                         break;
-//                     }
-//                 }
-//                 if (!found) {
-//                     if ((selfmt != NULL)
-//                         && (*selfmt == wxString::FromUTF8(ofmt->GetName()))) {
-//                         index = mShownFormatNames.size();
-//                     }
+            if (tofmt != NULL) {
+                mShownFormatLongNames.push_back(wxString::Format(
+                                                    wxT("%s - %s"), CompatibilityList[i].fmt,
+                                                    wxString::FromUTF8(tofmt->GetLongName())));
+            }
+        }
+    }
+    bool found = false;
+    if (selfmt != NULL) {
+        for (int i = 0; CompatibilityList[i].fmt != NULL; i++) {
+            if (*selfmt == CompatibilityList[i].fmt) {
+                found = true;
+                break;
+            }
+        }
+    }
+    // Format was in the compatibility list
+    if (found) {
+        // Find all formats which have this codec as default and which are not in the list yet and add them too
+        for (auto ofmt  : mFFmpeg->GetOutputFormats()) {
+            if (ofmt->GetAudioCodec() == mFFmpeg->GetAVCodecID(id)) {
+                wxString ofmtname = wxString::FromUTF8(ofmt->GetName());
+                found = false;
+                for (unsigned int i = 0; i < FromList.size(); i++) {
+                    if (ofmtname == FromList[i]) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    if ((selfmt != NULL)
+                        && (*selfmt == wxString::FromUTF8(ofmt->GetName()))) {
+                        index = mShownFormatNames.size();
+                    }
 
-//                     mShownFormatNames.push_back(wxString::FromUTF8(ofmt->GetName()));
+                    mShownFormatNames.push_back(wxString::FromUTF8(ofmt->GetName()));
 
-//                     mShownFormatLongNames.push_back(wxString::Format(
-//                                                         wxT("%s - %s"), mShownFormatNames.back(),
-//                                                         wxString::FromUTF8(ofmt->GetLongName())));
-//                 }
-//             }
-//         }
-//     }
-//     mFormatList->Append(mShownFormatNames);
-//     return index;
-// }
+                    mShownFormatLongNames.push_back(wxString::Format(
+                                                        wxT("%s - %s"), mShownFormatNames.back(),
+                                                        wxString::FromUTF8(ofmt->GetLongName())));
+                }
+            }
+        }
+    }
+
+    return index;
+}
+
+void ExportFFmpegOptions::FetchCompatibleFormatList(const std::string& format,
+                                                    const std::string& codec)
+{
+    auto cdc = mFFmpeg->CreateEncoder(wxString(codec).ToUTF8());
+    if (cdc == nullptr) {
+        //This shouldn't really happen
+        /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
+        return;
+    }
+
+    wxString selfmt(format);
+    FetchCompatibleFormatList(mFFmpeg->GetAudacityCodecID(cdc->GetId()), &selfmt);
+
+    return;
+}
 
 ///
 ///

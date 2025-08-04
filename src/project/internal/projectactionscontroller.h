@@ -92,6 +92,8 @@ private:
 
     muse::Ret openPageIfNeed(muse::Uri pageUri);
 
+    void openCustomFFmpegOptions();
+
     bool m_isProjectSaving = false;
     bool m_isProjectClosing = false;
     bool m_isProjectProcessing = false;

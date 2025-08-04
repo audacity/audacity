@@ -17,12 +17,10 @@ void RegisterExportPlugins()
         [] { return std::make_unique<ExportMP3>(); }
     };
 
-#ifdef AU_USE_FFMPEG
     static ExportPluginRegistry::RegisteredPlugin sFFmpegPlugin{
         "FFmpeg",
         [] { return std::make_unique<ExportFFmpeg>(); }
     };
-#endif
 
     static ExportPluginRegistry::RegisteredPlugin sWavPackPlugin{
         "WavPack",

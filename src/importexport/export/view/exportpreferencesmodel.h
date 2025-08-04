@@ -8,6 +8,7 @@
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
+#include "actions/iactionsdispatcher.h"
 #include "iinteractive.h"
 #include "io/ifilesystem.h"
 #include "context/iglobalcontext.h"
@@ -19,6 +20,7 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<muse::io::IFileSystem> fileSystem;
     muse::Inject<context::IGlobalContext> globalContext;
@@ -45,6 +47,9 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(QString exportSampleFormat READ exportSampleFormat NOTIFY exportSampleFormatChanged)
     Q_PROPERTY(QVariantList exportSampleFormatList READ exportSampleFormatList NOTIFY exportSampleFormatListChanged)
+
+    // dynamic inputs section
+    Q_PROPERTY(bool customFFmpegOptionsVisible READ customFFmpegOptionsVisible NOTIFY customFFmpegOptionsVisibleChanged)
 
 public:
     explicit ExportPreferencesModel(QObject* parent = nullptr);
@@ -79,8 +84,12 @@ public:
     QVariantList exportSampleFormatList() const;
     Q_INVOKABLE void setExportSampleFormat(const QString& format);
 
+    Q_INVOKABLE void openCustomFFmpegDialog();
     Q_INVOKABLE bool verifyExportPossible();
     Q_INVOKABLE void exportData();
+
+    // dynamic inputs
+    bool customFFmpegOptionsVisible();
 
 signals:
     void currentProcessChanged();
@@ -96,6 +105,8 @@ signals:
     void exportSampleRateListChanged();
     void exportSampleFormatChanged();
     void exportSampleFormatListChanged();
+
+    void customFFmpegOptionsVisibleChanged();
 
 private:
     void updateCurrentSampleRate();

@@ -133,6 +133,11 @@ ExportOptionsSFTypedEditor::ExportOptionsSFTypedEditor(int type)
     mEncoding = *std::get_if<int>(&mEncodingOption.defaultValue);
 }
 
+std::string ExportOptionsSFTypedEditor::GetName() const
+{
+    return "pcm_sf_typed";
+}
+
 int ExportOptionsSFTypedEditor::GetOptionsCount() const
 {
     return 1;
@@ -231,6 +236,11 @@ ExportOptionsSFEditor::ExportOptionsSFEditor(Listener* listener)
     }
     typeOption.defaultValue = typeOption.values[0];
     mOptions.insert(mOptions.begin(), std::move(typeOption));
+}
+
+std::string ExportOptionsSFEditor::GetName() const
+{
+    return "pcm_sf";
 }
 
 int ExportOptionsSFEditor::GetOptionsCount() const

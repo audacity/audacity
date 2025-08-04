@@ -18,13 +18,9 @@
 #include "Identifier.h"
 #include "TranslatableString.h"
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
-// #include "wxPanelWrapper.h"
+#include "wxArrayStringEx.h"
 
 class FFmpegPresets;
-class ShuttleGui;
-class wxListBox;
-class wxStaticText;
-class wxComboBox;
 
 /// Identifiers for pre-set export types.
 enum FFmpegExposedFormat
@@ -72,12 +68,37 @@ struct ExposedFormat
 };
 
 /// Custom FFmpeg export dialog
-class ExportFFmpegOptions final //: public wxDialogWrapper
+class ExportFFmpegOptions final
 {
 public:
 
-//     ExportFFmpegOptions(wxWindow* parent);
-//     ~ExportFFmpegOptions();
+    //     /// Retrieves format list from libavformat
+    void FetchFormatList();
+    std::vector<std::string> GetFormatNames() const;
+
+    //     /// Retrieves a list of formats compatible to codec
+    //     ///\param id Codec ID
+    //     ///\param selfmt format selected at the moment
+    //     ///\return index of the selfmt in NEW format list or -1 if it is not in the list
+    int FetchCompatibleFormatList(AudacityAVCodecID id, const wxString* selfmt);
+    void FetchCompatibleFormatList(const std::string& format, const std::string& codec);
+
+    //     /// Retrieves codec list from libavcodec
+    void FetchCodecList();
+
+    std::vector<std::string> GetCodecNames() const;
+
+    //     /// Retrieves a list of codecs compatible to format
+    //     ///\param fmt Format short name
+    //     ///\param id id of the codec selected at the moment
+    //     ///\return index of the id in NEW codec list or -1 if it is not in the list
+    int FetchCompatibleCodecList(AudacityAVCodecID id, const wxChar* fmt);
+    void FetchCompatibleCodecList(const std::string& format, const std::string& codec);
+
+    std::vector<std::string> GetProfiles() const;
+    std::vector<std::string> GetPredictionOrderMethods() const;
+    ExportFFmpegOptions();
+    ~ExportFFmpegOptions();
 //     void PopulateOrExchange(ShuttleGui& S);
 //     void OnOK(wxCommandEvent& event);
 //     void OnGetURL(wxCommandEvent& event);
@@ -94,63 +115,28 @@ public:
 //     void OnExportPresets(wxCommandEvent& event);
 //     bool SavePreset(bool bCheckForOverwrite);
 
-//     // Static tables
+// Static tables
     static CompatibilityEntry CompatibilityList[];
     static ExposedFormat fmts[];
     static const int iAACSampleRates[];
     static ApplicableFor apptable[];
 
-// private:
+private:
 
-//     wxArrayString mShownFormatNames;
-//     wxArrayString mShownFormatLongNames;
-//     wxArrayString mShownCodecNames;
-//     wxArrayString mShownCodecLongNames;
-//     wxArrayStringEx mFormatNames;
-//     wxArrayString mFormatLongNames;
-//     wxArrayStringEx mCodecNames;
-//     wxArrayString mCodecLongNames;
-
-//     wxListBox* mFormatList;
-//     wxListBox* mCodecList;
-
-//     wxStaticText* mFormatName;
-//     wxStaticText* mCodecName;
-
-//     wxComboBox* mPresetCombo;
-
-//     int mBitRateFromChoice;
-//     int mSampleRateFromChoice;
+    wxArrayString mShownFormatNames;
+    wxArrayString mShownFormatLongNames;
+    wxArrayString mShownCodecNames;
+    wxArrayString mShownCodecLongNames;
+    wxArrayStringEx mFormatNames;
+    wxArrayString mFormatLongNames;
+    wxArrayStringEx mCodecNames;
+    wxArrayString mCodecLongNames;
 
 //     std::unique_ptr<FFmpegPresets> mPresets;
 
 //     wxArrayStringEx mPresetNames;
 
-//     std::shared_ptr<FFmpegFunctions> mFFmpeg;
-
-//     /// Finds the format currently selected and returns its name and description
-//     void FindSelectedFormat(wxString** name, wxString** longname);
-
-//     /// Finds the codec currently selected and returns its name and description
-//     void FindSelectedCodec(wxString** name, wxString** longname);
-
-//     /// Retrieves format list from libavformat
-//     void FetchFormatList();
-
-//     /// Retrieves a list of formats compatible to codec
-//     ///\param id Codec ID
-//     ///\param selfmt format selected at the moment
-//     ///\return index of the selfmt in NEW format list or -1 if it is not in the list
-//     int FetchCompatibleFormatList(AudacityAVCodecID id, wxString* selfmt);
-
-//     /// Retrieves codec list from libavcodec
-//     void FetchCodecList();
-
-//     /// Retrieves a list of codecs compatible to format
-//     ///\param fmt Format short name
-//     ///\param id id of the codec selected at the moment
-//     ///\return index of the id in NEW codec list or -1 if it is not in the list
-//     int FetchCompatibleCodecList(const wxChar* fmt, AudacityAVCodecID id);
+    std::shared_ptr<FFmpegFunctions> mFFmpeg;
 
 //     /// Retrieves list of presets from configuration file
 //     void FetchPresetList();
@@ -162,5 +148,4 @@ public:
 //     // Hiding the controls may have been a better idea,
 //     // but it's hard to hide their text labels too
 //     void EnableDisableControls(AVCodecWrapper* cdc, wxString* selfmt);
-//     DECLARE_EVENT_TABLE()
 };

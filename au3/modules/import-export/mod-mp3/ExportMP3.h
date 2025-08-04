@@ -71,6 +71,7 @@ public:
 
     explicit MP3ExportOptionsEditor(Listener* listener);
 
+    std::string GetName() const override;
     int GetOptionsCount() const override;
     bool GetOption(int index, ExportOption& option) const override;
     bool SetValue(int id, const ExportValue& value) override;

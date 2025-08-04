@@ -44,6 +44,8 @@ public:
 
     virtual ~ExportOptionsEditor();
 
+    virtual std::string GetName() const = 0;
+
     virtual int GetOptionsCount() const = 0;
     virtual bool GetOption(int index, ExportOption& option) const = 0;
 

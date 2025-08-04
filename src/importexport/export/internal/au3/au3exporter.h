@@ -28,6 +28,7 @@ public:
     std::vector<std::string> formatsList() const override;
     int formatIndex(const std::string& format) const override;
     std::string formatExtension(const std::string& format) const override;
+    bool isCustomFFmpegExportFormat() const override;
 
     int maxChannels() const override;
     std::vector<int> sampleRateList() const override;

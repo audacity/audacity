@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -12,16 +15,18 @@ StyledDialogView {
 
     title: qsTrc("export", "Export audio")
 
-    contentWidth: 480
+    contentWidth: 490
     // TODO: switch to mainColumn.implicitHeight when
     // dynamic content is implemented
     // contentHeight: mainColumn.implicitHeight
-    contentHeight: 495
+    contentHeight: baseExportDialogHeight
 
     margins: 20
 
-    property int dropdownWidth: 354
+    property int dropdownWidth: 364
+    property int smallDropdownWidth: 364 * 0.65
     property int labelColumnWidth: 80
+    property int baseExportDialogHeight: 450
 
     // property NavigationPanel navigation: NavigationPanel {
     //     name: root.title
@@ -32,6 +37,15 @@ StyledDialogView {
 
     ExportPreferencesModel {
         id: exportPreferencesModel
+    }
+
+    CustomFFmpegPreferencesModel {
+        id: ffmpegPrefModel
+    }
+
+    Component.onCompleted: {
+        exportPreferencesModel.init()
+        ffmpegPrefModel.init()
     }
 
     ColumnLayout {
@@ -162,7 +176,7 @@ StyledDialogView {
                 StyledDropdown {
                     id: formatDropdown
 
-                    Layout.preferredWidth: root.dropdownWidth * 0.6
+                    Layout.preferredWidth: root.smallDropdownWidth
 
                     textRole: "name"
                     valueRole: "code"
@@ -198,7 +212,6 @@ StyledDialogView {
                 RadioButtonGroup {
                     id: channelsGroup
 
-                    spacing: root.rowSpacing
                     orientation: Qt.Horizontal
 
                     Layout.preferredWidth: root.dropdownWidth
@@ -273,7 +286,7 @@ StyledDialogView {
                 StyledDropdown {
                     id: sampleRateDropdown
 
-                    Layout.preferredWidth: root.dropdownWidth * 0.6
+                    Layout.preferredWidth: root.smallDropdownWidth
 
                     textRole: "name"
                     valueRole: "code"
@@ -291,25 +304,112 @@ StyledDialogView {
                     onActivated: function(index, value) {
                         exportPreferencesModel.setExportSampleRate(value)
                     }
+                }
+            }
 
+            ColumnLayout {
 
+                visible: exportPreferencesModel.customFFmpegOptionsVisible
+
+                RowLayout {
+
+                    Item {
+                        width: root.labelColumnWidth
+                    }
+
+                    FlatButton {
+
+                        Layout.preferredWidth: root.smallDropdownWidth
+
+                        text: qsTrc("export", "Open custom FFmpeg format options")
+
+                        onClicked: {
+                            exportPreferencesModel.openCustomFFmpegDialog()
+                        }
+                    }
+                }
+
+                RowLayout {
+
+                    Item {
+
+                        width: root.labelColumnWidth
+
+                        StyledTextLabel {
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            text: qsTrc("export", "Format: ")
+                        }
+                    }
+
+                    TextInputField {
+                        id: formatField
+
+                        implicitWidth: root.smallDropdownWidth
+
+                        currentText: ffmpegPrefModel.ffmpegFormat
+
+                        readOnly: true
+                    }
+                }
+
+                RowLayout {
+
+                    Item {
+
+                        width: root.labelColumnWidth
+
+                        StyledTextLabel {
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            text: qsTrc("export", "Codec:")
+                        }
+                    }
+
+                    TextInputField {
+                        id: codecField
+
+                        implicitWidth: root.smallDropdownWidth
+
+                        currentText: ffmpegPrefModel.ffmpegCodec
+
+                        readOnly: true
+                    }
+                }
+
+                onVisibleChanged: {
+                    if (visible) {
+                        root.contentHeight = root.baseExportDialogHeight + 110
+                    } else { // TODO 'else' to be removed when all dynamic dialogs are implemented
+                        root.contentHeight = root.baseExportDialogHeight
+                    }
+                }
+
+                Component.onCompleted: {
+                    if (visible) {
+                        root.contentHeight = root.baseExportDialogHeight + 110
+                    }
                 }
             }
 
             RowLayout {
 
+                visible: false
+
                 Item {
                     width: root.labelColumnWidth
+
                     StyledTextLabel {
-                        text: qsTrc("export", "Encoding")
                         anchors.verticalCenter: parent.verticalCenter
+
+                        text: qsTrc("export", "Encoding")
                     }
                 }
 
                 StyledDropdown {
                     id: encodingDropdown
 
-                    Layout.preferredWidth: root.dropdownWidth * 0.6
+                    Layout.preferredWidth: root.smallDropdownWidth
 
                     textRole: "name"
                     valueRole: "code"
