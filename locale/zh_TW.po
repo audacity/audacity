@@ -5,7 +5,7 @@
 #
 # Translators:
 # Link Winterberg, 2024
-# taijuin lee, 2024
+# taijuin lee, 2025
 # Jesse Lin <jesselin.com@gmail.com>, 2025
 #
 #, fuzzy
@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Jesse Lin <jesselin.com@gmail.com>, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/audacity/teams/164520/zh_TW/)\n"
@@ -2069,9 +2069,8 @@ msgid "WebVTT file"
 msgstr "WebVTT 檔案"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "匯出的標籤樣式："
+msgstr "支援的標籤檔案"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4634,24 +4633,22 @@ msgid "File type:"
 msgstr "檔案類型："
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "前一個片段(&U)"
+msgstr "上一個畫面"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "下一個片段(&E)"
+msgstr "下面一個畫面"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "%s, %d 之%d 片段 %s"
+msgstr "畫面  %d 之 %d, %s. %s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr ""
+msgstr "畫面 %d 之 %d, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7465,9 +7462,8 @@ msgid "Enter token to link your account"
 msgstr "輸入 Token 以連結您的帳號"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
 msgid "Sign-in and get the token"
-msgstr "登入以儲存到雲端"
+msgstr "登入取得金鑰"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -7522,9 +7518,8 @@ msgid "Continue with Facebook"
 msgstr "繼續使用 Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Or use email and password"
-msgstr "移除噪音及修復"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -8090,8 +8085,8 @@ msgstr ""
 "<li>pan93412, 2019, 2020.</li>\n"
 "<li>Walter Cheuk, 2019.</li>\n"
 "<li>Bill, 2021</li>\n"
-"<li>傑西大叔 x 這裡胡說PODCAST,  2021-2023.</li>\n"
-"\n"
+"<li>傑西大叔 x 這裡胡說PODCAST, 2021-2023.</li>\n"
+"<li>taijuin, 2024.</li>\n"
 "</ul>"
 
 #: src/AboutDialog.cpp
@@ -11649,12 +11644,11 @@ msgstr "歡迎使用 Audacity！"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
+msgstr "使用audio.com完成你的Audacity 雲端設定"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "What's new in Audacity"
-msgstr "Audacity %s 版本的新功能"
+msgstr "Audacity 的新功能"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11662,33 +11656,31 @@ msgstr "觀看發布影片"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner: 錄音室等級的配音"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "幫我們決定AUDACITY的未來"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "參加問卷調查"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "Audacity 啟動失敗"
+msgstr "Audacity 功能問卷調查"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
-msgstr ""
+msgstr "二十五周年紀念商品"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit now"
-msgstr ""
+msgstr "立即拜訪"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our new Audacity merch store"
-msgstr "這不是 Audacity 專案檔案"
+msgstr "參觀新的AUDACITY 周邊商品小舖"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11699,9 +11691,8 @@ msgid "Visit our forum"
 msgstr "造訪我們的論壇"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "啟動時不再顯示本視窗"
+msgstr "啟動時不再顯示此內容（&D）"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -16767,7 +16758,7 @@ msgstr "偏好設定"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "更新通知"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16777,22 +16768,22 @@ msgstr "自動檢查更新(&C)"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "程式更新檢查需要網路存取。為了保護您的隱私，Audacity 不會儲存任何個人資訊。"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr ""
+msgstr "使用資訊 (UUID)(&U)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr ""
+msgstr "為了幫助我們了解使用者使用 Audacity 的頻率，我們會為每個安裝程式產生一個隨機 ID (UUID)。這有助於我們改善功能和規劃未來的更新。此 ID 不包含任何個人識別資訊。"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19822,7 +19813,7 @@ msgstr "下載中 %s"
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates & usage info"
-msgstr ""
+msgstr "程式更新與使用資訊"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19837,7 +19828,7 @@ msgstr "當有新版本可供下載時，Audacity 會在應用程式內通知您
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr ""
+msgstr "使用資訊"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
@@ -21712,12 +21703,3 @@ msgstr "頻譜工具"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "傳統"
-
-#~ msgid "Create an account to save to the cloud"
-#~ msgstr "建立一個帳號以儲存到雲端"
-
-#~ msgid "Get AI effects..."
-#~ msgstr "取得 AI 效果器..."
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "可在 MuseHub 找到"

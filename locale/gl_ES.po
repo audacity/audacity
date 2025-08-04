@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-    "Project-Id-Version: audacity 3.7.4\n"
+    "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-29 17:54+0300\n"
+"POT-Creation-Date: 2025-07-24 12:44+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: nin hum <ninhum@gmx.com>, 2025\n"
 "Language-Team: Galician (Spain) (https://app.transifex.com/audacity/teams/164520/gl_ES/)\n"
@@ -7783,8 +7783,12 @@ msgstr ""
 "Comproba as túas credenciais e téntao de novo."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create an account to save to the cloud"
-msgstr "Crea unha conta para gardar na nube"
+msgid ""
+"Create free Cloud Storage account and access your projects and audio from "
+"any device"
+msgstr ""
+"Crea unha conta de almacenamento na nube gratuíta e accede aos teus "
+"proxectos e audio desde calquera dispositivo"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7797,6 +7801,10 @@ msgstr "Continúa con Google"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
 msgstr "Continúa con Facebook"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Or use email and password"
+msgstr "Ou usa o correo electrónico e o contrasinal"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"

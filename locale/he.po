@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Kfir Pshititsky, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/audacity/teams/164520/he/)\n"
@@ -7520,9 +7520,8 @@ msgid "Continue with Facebook"
 msgstr "המשך עם פייסבוק"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Or use email and password"
-msgstr "הסרת רעש ותיקונים"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -20993,7 +20992,7 @@ msgid ""
 "               Track sample rate is ~a Hz.~%~\n"
 "               Frequency must be less than ~a Hz."
 msgstr ""
-"שגיאה:~%~%התדירות %F (~a הרץ) גבוהה מדי עבור קצב דגימת הרצועה.~%~%~\n"
+"שגיאה:~%~התדירות %F (~a הרץ) גבוהה מדי עבור קצב דגימת הרצועה.~%~%~\n"
 "               קצב דגימת הרצועה הוא ~a הרץ.~%~\n"
 "               התדר חייב להיות פחות מ־~a הרץ."
 
@@ -21720,6 +21719,3 @@ msgstr "כלים ספקטראליים"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
-
-#~ msgid "Create an account to save to the cloud"
-#~ msgstr "יש ליצור משתמש כדי לשמור בענן"

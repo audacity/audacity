@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Tadahisa Sugisaki, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/audacity/teams/164520/ja/)\n"
@@ -832,7 +832,7 @@ msgstr "ラウドネスノーマライズ"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 msgid "Sets the loudness of one or more tracks"
-msgstr "1 トラック以上に対してラウドネスを設定"
+msgstr "1 つまたは複数のトラックに対してラウドネスを設定"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 msgid "Normalizing Loudness...\n"
@@ -7507,11 +7507,11 @@ msgid ""
 "Please double-check your credentials and try again!"
 msgstr ""
 "申し訳ありませんが、入力されたメールアドレスまたはパスワードが正しくありません。\n"
-"視覚情報を再度確認のうえ、もう一度行なってください!"
+"認証情報を再確認して、もう一度お試しください!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create free Cloud Storage account and access your projects and audio from any device"
-msgstr ""
+msgstr "無料のクラウドストレージアカウントを作成し、あらゆるデバイスからプロジェクトとオーディオにアクセス"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7526,9 +7526,8 @@ msgid "Continue with Facebook"
 msgstr "Facebook で続ける"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Or use email and password"
-msgstr "ノイズ除去と修復"
+msgstr "または電子メールとパスワードを使用"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -21748,6 +21747,3 @@ msgstr "スペクトルツール"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "レガシー"
-
-#~ msgid "Create an account to save to the cloud"
-#~ msgstr "アカウントを作成してクラウドに保存"

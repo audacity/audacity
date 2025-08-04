@@ -9,9 +9,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-    "Project-Id-Version: audacity 3.7.4\n"
+    "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-05-29 17:54+0300\n"
+"POT-Creation-Date: 2025-07-24 12:44+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Peeter Ramst <peeter.ramst@aste.edu.ee>, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/audacity/teams/164520/et/)\n"
@@ -7730,8 +7730,10 @@ msgstr ""
 "Palun kontrollige oma mandaati ja proovige uuesti!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create an account to save to the cloud"
-msgstr "Looge pilve salvestamiseks konto"
+msgid ""
+"Create free Cloud Storage account and access your projects and audio from "
+"any device"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7744,6 +7746,10 @@ msgstr "Jätkake Googlega"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
 msgstr "Jätkake Facebookiga"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Or use email and password"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"

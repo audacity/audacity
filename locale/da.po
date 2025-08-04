@@ -1,25 +1,22 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Audacity Team
-# This file is distributed under the same license as the audacity package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-# Translators:
-# Link Winterberg, 2025
-#
-#, fuzzy
+# Danish translation for Audacity | Traduction danese de Audacity | Dansk oversættelse af Audacity
+# Copyright (C) 2015-2025 Audacity Team
+# This file is distributed under the same license as the Audacity package. Denne fil distribueres under samme licens som Audacity-pakken.
+# Thomas Breinstrup <info@interlingua.dk>, 2012-2015 + 2022-2025.
+# scootergrisen, 2015-2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
-"PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Link Winterberg, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/audacity/teams/164520/da/)\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
+"PO-Revision-Date: 2025-07-27 16:43+0200\n"
+"Last-Translator: Thomas Breinstrup\n"
+"Language-Team: Danish\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.6\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -2068,7 +2065,7 @@ msgstr "WebVTT-fil"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
-msgstr ""
+msgstr "Understøttet etiketfil"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4635,21 +4632,21 @@ msgstr "Filtype:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 msgid "Previous slide"
-msgstr ""
+msgstr "Forrige side"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 msgid "Next slide"
-msgstr ""
+msgstr "Næste side"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr ""
+msgstr "Side %d af %d, %s, %s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr ""
+msgstr "Side %d af %d, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -5356,11 +5353,11 @@ msgstr "Vis alle codec"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Formats"
-msgstr "Formater:"
+msgstr "Formater"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Codecs"
-msgstr "Codec:"
+msgstr "Codec"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "General Options"
@@ -7472,7 +7469,7 @@ msgstr "Indsæt godkendelseskoden for at koble din konto til"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Sign-in and get the token"
-msgstr ""
+msgstr "Log ind for at få godkendelseskoden"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -7514,7 +7511,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create free Cloud Storage account and access your projects and audio from any device"
-msgstr ""
+msgstr "Opret en gratis Cloud Storage-konto, og tilgå dine projekter og din lyd fra enhver enhed"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7529,9 +7526,8 @@ msgid "Continue with Facebook"
 msgstr "Fortsæt med Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Or use email and password"
-msgstr "Fjern støj og reparér"
+msgstr "Eller brug e-mail og kodeord"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -7547,7 +7543,7 @@ msgstr "Har du glemt dit kodeord?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr "Har du allerede en konto?"
+msgstr "Har du allerede en konto? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in here"
@@ -7555,7 +7551,7 @@ msgstr "Log ind her"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Need an account? "
-msgstr "Har du brug for en konto?"
+msgstr "Har du brug for en konto? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -7569,7 +7565,7 @@ msgstr "Dette projekt gemmes ikke længere på netdrevet"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
-msgstr "Dette projekt blev fjernet fra audio.com og kan derfor ikke gemmes lige nu"
+msgstr "Dette projekt blev fjernet fra audio.com og kan derfor ikke gemmes lige nu."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "You can either save it to the Cloud as a new project, or save it to your computer."
@@ -8083,6 +8079,7 @@ msgstr "%s (med %s, %s, %s, %s og %s)"
 msgid "About %s"
 msgstr "Om %s"
 
+# Dette er en ny sætning og skal derfor med stort begyndelsesbogstav
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
 #. *  your own name(s) to the credits.
@@ -8837,6 +8834,9 @@ msgstr ""
 msgid "Recoverable &projects"
 msgstr "&Projekter, der kan gendannes"
 
+# scootergrisen: samme ord virker ikke alle steder
+# scootergrisen: "Markering/Markér"
+# scootergrisen: har skrevet til malingslisten om det
 #. i18n-hint: (verb).  It instruct the user to select items.
 #: src/AutoRecoveryDialog.cpp src/commands/SelectCommand.cpp
 msgid "Select"
@@ -11658,11 +11658,11 @@ msgstr "Velkommen til Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
+msgstr "Gennemfør din opsætning af Audacity på netdrevet med audio.com"
 
 #: src/WhatsNewDialog.cpp
 msgid "What's new in Audacity"
-msgstr ""
+msgstr "Nyt i Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11670,31 +11670,31 @@ msgstr "Se video om den nye udgave"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner: tale over lyd i studiekvalitet"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Hjælp os med at afgøre Audacitys fremtid"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Deltag i undersøgelsen"
 
 #: src/WhatsNewDialog.cpp
 msgid "Audacity feature survey"
-msgstr ""
+msgstr "Undersøgelse af ønsker til Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
-msgstr ""
+msgstr "25-års jubilæumsprodukter"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit now"
-msgstr ""
+msgstr "Besøg nu"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit our new Audacity merch store"
-msgstr ""
+msgstr "Besøg vores nye butik med Audacity-produkter"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11706,7 +11706,7 @@ msgstr "Besøg vores forum"
 
 #: src/WhatsNewDialog.cpp
 msgid "&Don't show this again at start up"
-msgstr ""
+msgstr "&Vis ikke dette igen ved opstart"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -18508,6 +18508,7 @@ msgstr "S&ænk lydstyrke for optagelse"
 msgid "Length"
 msgstr "Længde"
 
+# scootergrisen: der står "Balance: centreret" så det skal vel være med småt på dansk
 #. i18n-hint noun
 #: src/toolbars/SelectionBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -18879,7 +18880,7 @@ msgstr "Stræk"
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
 msgid "Click to open clip context menu."
-msgstr "Klik for at redigere etikettens tekst:"
+msgstr "Klik for at redigere etikettens tekst."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Reset Clip Pitch"
@@ -19392,6 +19393,7 @@ msgstr "&Stereospor"
 msgid "%+.1f dB"
 msgstr "%+.1f dB"
 
+# scootergrisen: der står "Balance: X% venstre" så det skal vel være med småt på dansk
 #. i18n-hint: Stereo pan setting
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
@@ -19399,6 +19401,7 @@ msgstr "%+.1f dB"
 msgid "%.0f%% Left"
 msgstr "%.0f%% venstre"
 
+# scootergrisen: der står "Balance: % højre" så det skal vel være med småt på dansk
 #. i18n-hint: Stereo pan setting
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
@@ -21732,3 +21735,2485 @@ msgstr "Klassisk"
 
 #~ msgid "Create an account to save to the cloud"
 #~ msgstr "Opret en konto for at kunne gemme på netdrevet"
+
+#~ msgid "Available on MuseHub"
+#~ msgstr "Tilgængelig på MuseHub"
+
+#~ msgid "Get AI effects..."
+#~ msgstr "Hent KI-effekter..."
+
+#~ msgid "Network communications"
+#~ msgstr "Netværkskommunikation"
+
+#~ msgid "Requires network access."
+#~ msgstr "Kræver netværksadgang."
+
+#~ msgctxt "application preferences"
+#~ msgid "&Send anonymous usage info"
+#~ msgstr "&Send anonyme brugerdata"
+
+#~ msgid "We create a random ID to track how often Audacity is used."
+#~ msgstr "Vi opretter en tilfældig ID til at spore, hvor ofte Audacity bliver anvendt."
+
+#~ msgid "In order to protect your privacy, Audacity does not collect any personally identifiable information about you."
+#~ msgstr "For at beskytte dit privatliv indsamler Audacity ingen personlige oplysninger, der kan identificere dig."
+
+#~ msgid "Stay Updated & Anonymous Usage Info"
+#~ msgstr "Forbliv opdateret & Anonym brugerinformation"
+
+#~ msgid "Open trace audio.com"
+#~ msgstr "Åbner fra audio.com"
+
+#~ msgid "Account not linked"
+#~ msgstr "Kontoen er ikke tilkoblet"
+
+#~ msgid "Anonymous"
+#~ msgstr "Anonym"
+
+#~ msgid "&Link Account"
+#~ msgstr "Tilkob&l konto"
+
+#~ msgid "&Unlink Account"
+#~ msgstr "Frakobl konto"
+
+#, c-format
+#~ msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
+#~ msgstr "Det kræver en gratis konto %s koblet til Audacity at kunne dele lys. %%Tryk på \"Tilkobl konto\" ovenfor for at fortsætte."
+
+#~ msgid "audio.com"
+#~ msgstr "audio.com"
+
+#~ msgid "Press \"Continue\" to upload to audio.com"
+#~ msgstr "Tryk \"Fortsæt\" for at uploade til audio.com"
+
+#~ msgid "When Audacity detects music in file imported on empty project"
+#~ msgstr "Når Audacity opdager musik i filer, som importeres til et tomt projekt"
+
+#~ msgid "Insane"
+#~ msgstr "Vanvittig"
+
+#~ msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
+#~ msgstr "Det kræver en gratis audio.com koblet til Audacity for at kunne gemme på netdrev. Tryk på \"Tilkobl konto\" ovenfor for at fortsætte."
+
+#~ msgid "Moved gain slider"
+#~ msgstr "Ændrede på forstærkning"
+
+#, c-format
+#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+#~ msgstr "Se [[%s|videoen om denne version]] eller læs [[https://support.audacityteam.org/additional-resources/changelog|listen over ændringer]] for at få mere at vide!</p>"
+
+#~ msgid "Gain:"
+#~ msgstr "Forstærkning:"
+
+#, c-format
+#~ msgid "Applied command: %s"
+#~ msgstr "Anvendte kommando: %s"
+
+#, c-format
+#~ msgid ""
+#~ "Attempting to initialize the following effect failed:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "More information may be available in 'Help > Diagnostics > Show Log'"
+#~ msgstr ""
+#~ "Forsøget på at initiere den følgende effekt mislykkedes:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "Mere information kan findes i 'Hjælp > Diagnostik > Vis log'"
+
+#~ msgid "Effect failed to initialize"
+#~ msgstr "Effekt kunne ikke initiere"
+
+#~ msgid "Effect Unavailable"
+#~ msgstr "Effekt utilgængelig"
+
+#~ msgid "Error Loading EQ Curves"
+#~ msgstr "Fejl ved indlæsning af equaliserkurver"
+
+#~ msgid ""
+#~ "To use this filter curve in a macro, please choose a new name for it.\n"
+#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
+#~ msgstr ""
+#~ "Vælg venligst et nyt navn til filterkurven, for at bruge den i en makro.\n"
+#~ "Vælg 'Gem/håndtér kurver...'-knappen og omdøb kurven 'unavngiven' og brug den så."
+
+#~ msgid "Filter Curve EQ needs a different name"
+#~ msgstr "Filterkurve-EQ skal have et andet navn"
+
+#~ msgid "Curve not found"
+#~ msgstr "Kurven blev ikke fundet"
+
+#~ msgid "Nyquist Error"
+#~ msgstr "Nyquist-fejl"
+
+#~ msgid "Error in Nyquist code"
+#~ msgstr "Fejl i Nyquist-kode"
+
+#~ msgid "Split-cut to the clipboard"
+#~ msgstr "Klip til udklipsholder og opdel"
+
+#~ msgid "Split Cut"
+#~ msgstr "Klip og opdel"
+
+#~ msgid "Spl&it Cut"
+#~ msgstr "&Klip og opdel"
+
+#~ msgid "Split D&elete"
+#~ msgstr "Sl&et og opdel"
+
+#~ msgid "E&xit"
+#~ msgstr "A&fslut"
+
+#~ msgid "Split Cut labeled audio regions to clipboard"
+#~ msgstr "Klippede og opdelte lydområder med etiketter i udklipsholder"
+
+#~ msgid "Split Cut Labeled Audio"
+#~ msgstr "Klip og opdel lydområder med etiketter"
+
+#~ msgid "Label Cut"
+#~ msgstr "Etiket klip"
+
+#~ msgid "Label Delete"
+#~ msgstr "Etiket slet"
+
+#~ msgid "&Split Cut"
+#~ msgstr "&Klip og opdel"
+
+#~ msgid "Label Split Cut"
+#~ msgstr "Etiket klip og opdel"
+
+#~ msgid "Sp&lit Delete"
+#~ msgstr "&Slet og opdel"
+
+#~ msgid "Label Split Delete"
+#~ msgstr "Etiket slet og opdel"
+
+#, c-format
+#~ msgctxt "clip name template"
+#~ msgid "%s %i"
+#~ msgstr "%s %i"
+
+#, c-format
+#~ msgctxt "clip name template"
+#~ msgid "%s #%d"
+#~ msgstr "%s #%d"
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "Ret øverste hastighedsgrænse (%) til:"
+
+#~ msgid "This version of Audacity only allows one time track for each project window."
+#~ msgstr "Denne version af Audacity tillader kun én tidslinje for hvert projektvindue."
+
+#~ msgid "Files are saved on your device."
+#~ msgstr "Filer gemmes på din enhed."
+
+#~ msgid "View online"
+#~ msgstr "Se online"
+
+#~ msgid "Input gain (dB)"
+#~ msgstr "Inputforstærkning (dB)"
+
+#~ msgid "Ceiling (dB)"
+#~ msgstr "Loft (dB)"
+
+#~ msgid "Attenuation"
+#~ msgstr "Dæmpning"
+
+#~ msgid "Limiter (beta)"
+#~ msgstr "Begrænser (beta)"
+
+#~ msgid "Compressor (beta)"
+#~ msgstr "Kompressor (beta)"
+
+#~ msgid "&Show graph (beta)"
+#~ msgstr "Vi&s graf (beta)"
+
+#~ msgid ""
+#~ "Your project is now empty.\n"
+#~ "If saved, the project will have no tracks.\n"
+#~ "\n"
+#~ "To save any previously open tracks:\n"
+#~ "Click 'No', Edit > Undo until all tracks\n"
+#~ "are open, then File > Save Project.\n"
+#~ "\n"
+#~ "Save anyway?"
+#~ msgstr ""
+#~ "Dit projekt er nu tomt.\n"
+#~ "Hvis det gemmes, vil projektet ikke have nogen spor.\n"
+#~ "\n"
+#~ "For at gemme tidligere åbne spor:\n"
+#~ "Klik på 'Nej', Redigér > Fortryd, indtil alle\n"
+#~ "spor er åbne, vælg så Fil > Gem projekt.\n"
+#~ "\n"
+#~ "Gem alligevel?"
+
+#~ msgid "Warning - Empty Project"
+#~ msgstr "Advarsel - tomt projekt"
+
+#~ msgid ""
+#~ "'Save Project' is for an Audacity project, not an audio file.\n"
+#~ "For an audio file that will open in other apps, use 'Export'.\n"
+#~ msgstr ""
+#~ "'Gem projekt' gælder et Audacity-projekt, ikke en lydfil.\n"
+#~ "Brug 'Eksportér' til en lydfil, der skal åbnes i andre programmer.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "If saved, the project will have no tracks.\n"
+#~ "\n"
+#~ "To save any previously open tracks:\n"
+#~ "Cancel, Edit > Undo until all tracks\n"
+#~ "are open, then File > Save Project."
+#~ msgstr ""
+#~ "\n"
+#~ "Hvis det gemmes, vil projektet ikke have nogen spor.\n"
+#~ "\n"
+#~ "For at gemme tidligere åbne spor:\n"
+#~ "Klik på 'Nej', Redigér > Fortryd, indtil alle\n"
+#~ "spor er åbne, vælg så Fil > Gem projekt."
+
+#~ msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
+#~ msgstr "<br><br>Den version, du bruger af Audacity, er en <b>Alpha-testversion</b>."
+
+#~ msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
+#~ msgstr "<br><br>Den version af Audacity, du bruger, er en <b>Beta-testversion</b>."
+
+#~ msgid "Get the Official Released Version of Audacity"
+#~ msgstr "Hent den officielt udgivne version af Audacity"
+
+#~ msgid "Check Online"
+#~ msgstr "Søg online"
+
+#~ msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br/><br/>"
+#~ msgstr "Vi anbefaler på det kraftigste, at du bruger vores seneste stabile, udgivne version, som har fuld dokumentation og support.<br/><br/>"
+
+#~ msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>"
+#~ msgstr "Du kan hjælpe os med at få Audacity klar til udgivelse ved at deltage i vores [[https://www.audacityteam.org/community/|fællesskab]].<hr/><br/><br/>"
+
+#~ msgid "<p>In this release we added Beats & Measures, Time Stretching and more.<br/>"
+#~ msgstr "<p>I denne udgave har vi tilføjet Taktslag og takter, Tidsudstrækning og mere til.<br/>"
+
+#~ msgid "How to get help"
+#~ msgstr "Sådan får du hjælp"
+
+#~ msgid "These are our support methods:"
+#~ msgstr "Du kan få hjælp på følgende måder:"
+
+#~ msgid "[[help:Quick_Help|Quick Help]]"
+#~ msgstr "[[hjælp:Hurtig_hjælp|Hurtig hjælp]]"
+
+#~ msgid " [[help:Main_Page|Manual]]"
+#~ msgstr " [[hjælp:Startside|Manual]]"
+
+#~ msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
+#~ msgstr "[[https://support.audacityteam.org/|Vejledninger & Hvordan gør man]]"
+
+#~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
+#~ msgstr " [[https://forum.audacityteam.org/|Forum]] - stil dit spørgsmål online."
+
+#~ msgid "Warnings"
+#~ msgstr "Advarsler"
+
+#~ msgid "Preferences for Warnings"
+#~ msgstr "Indstillinger for advarsler"
+
+#~ msgid "Show Warnings/Prompts for"
+#~ msgstr "Vis advarsler/forespørgsler, når"
+
+#~ msgid "Saving &projects versus exporting audio"
+#~ msgstr "der gemmes &projekter i stedet for at eksportere lyd"
+
+#~ msgid "Saving &empty project"
+#~ msgstr "&tomme projekter gemmes"
+
+#, c-format
+#~ msgid "Stereo, %dHz"
+#~ msgstr "Stereo, %d Hz"
+
+#, c-format
+#~ msgid "Mono, %dHz"
+#~ msgstr "Mono, %d Hz"
+
+#~ msgid "&Ok"
+#~ msgstr "&OK"
+
+#~ msgid "Stereo, 999999Hz"
+#~ msgstr "Stereo, 999.999 Hz"
+
+#~ msgid "Noise Removal"
+#~ msgstr "Støjfjernelse"
+
+#~ msgid "Removes constant background noise such as fans, tape noise, or hums"
+#~ msgstr "Fjerner konstant baggrundsstøj, såsom blæsere, båndstøj, eller brummen"
+
+#~ msgid ""
+#~ "Select all of the audio you want filtered, choose how much noise you want\n"
+#~ "filtered out, and then click 'OK' to remove noise.\n"
+#~ msgstr ""
+#~ "Markér al den lyd, som du ønsker filtreret. Vælg, hvor megen støj du ønsker filtreret bort.\n"
+#~ "Klik så på 'OK' for at fjerne støjen.\n"
+
+#~ msgid "Noise re&duction (dB):"
+#~ msgstr "Støjre&duktion (dB):"
+
+#~ msgid "&Sensitivity (dB):"
+#~ msgstr "Føl&somhed (dB):"
+
+#~ msgid "Fr&equency smoothing (Hz):"
+#~ msgstr "Fr&ekvensudjævning (Hz):"
+
+#~ msgid "Attac&k/decay time (secs):"
+#~ msgstr "Rea&ktions-/fratagningstid (sekunder):"
+
+#~ msgid "Attack/decay time"
+#~ msgstr "Reaktions-/fratagningstid"
+
+#~ msgid "Re&move"
+#~ msgstr "Fje&rn"
+
+#~ msgid "Show Track &Name as overlay"
+#~ msgstr "Vis spor&navn som overlægning"
+
+#~ msgid "B&lend system and Audacity theme"
+#~ msgstr "&Bland system- og Audacity-tema"
+
+#~ msgid "Sho&w track name as overlay"
+#~ msgstr "&Vis spornavn som overlægning"
+
+#~ msgid "Command+Click to deselect"
+#~ msgstr "Kommando+Klik for at fravælge"
+
+#~ msgid "Select track"
+#~ msgstr "Vælg spor"
+
+#~ msgid "Ctrl+Click to deselect"
+#~ msgstr "Ctrl+Klik for at fravælge"
+
+#~ msgid "%.2fx"
+#~ msgstr "%.2fx"
+
+#~ msgid ""
+#~ "\"%s\" \n"
+#~ "is a MIDI file, not an audio file. \n"
+#~ "Audacity cannot open this type of file for playing, but you can\n"
+#~ "edit it by clicking File > Import > MIDI."
+#~ msgstr ""
+#~ "\"%s\" \n"
+#~ "er en MIDI-fil, ikke en lydfil. \n"
+#~ "Audacity kan ikke åbne denne filtype til afspilning, men du kan\n"
+#~ "redigere den ved at vælge Fil > Importér > MIDI."
+
+#~ msgid "Rendering Time-Stretched Audio"
+#~ msgstr "Arbejder på at tidsjustere lydklip"
+
+#~ msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+#~ msgstr "Manualen ser ikke ud til at være installeret. [[*URL*|Se manualen online]]<br><br>Hvis manualen altid skal ses online, så skift \"Manualens placering\" til \"Fra internet\", i Brugerflade-indstillingerne."
+
+#~ msgid "You've specified a file name without an extension. Are you sure?"
+#~ msgstr "Du har angivet et filnavn uden en endelse. Er du sikker?"
+
+#~ msgid "Update display while playing"
+#~ msgstr "Opdater visning under afspilning"
+
+#~ msgid "Pinned Play Head"
+#~ msgstr "Fasthold afspilningspunkt"
+
+#~ msgid "Enable pinned play &head"
+#~ msgstr "Fasthold afspilningspunkt"
+
+#~ msgid ""
+#~ "Reset Preferences?\n"
+#~ "\n"
+#~ "This is a one-time question, after an 'install' where you asked to have the Preferences reset."
+#~ msgstr ""
+#~ "Nulstil indstillinger?\n"
+#~ "\n"
+#~ "Dette er et engangsspørgsmål efter en 'installation', hvor du anmodede om at få indstillingerne nulstillet."
+
+#~ msgid "Reset Audacity Preferences"
+#~ msgstr "Nulstil Audacity-indstillinger"
+
+#~ msgid ""
+#~ "You must first select some audio for '%s' to act on.\n"
+#~ "\n"
+#~ "Ctrl + A selects all audio."
+#~ msgstr ""
+#~ "Du skal først markere noget lyd som \"%s\" kan udføre denne handling på.\n"
+#~ "\n"
+#~ "Ctrl + A vælger al lyd."
+
+#~ msgid "Audacity Karaoke%s"
+#~ msgstr "Audacity-karaoke%s"
+
+#~ msgid "&Karaoke"
+#~ msgstr "&Karaoke"
+
+#~ msgid "Select effects, click the Enable or Disable button, then click OK."
+#~ msgstr "Vælg effekter, klik på Aktivér- eller Deaktivér-knappen, og klik så på OK."
+
+#~ msgid "Show all"
+#~ msgstr "Vis alle"
+
+#~ msgid "Show disabled"
+#~ msgstr "Vis deaktiveret"
+
+#~ msgid "D&isabled"
+#~ msgstr "&Deaktiveret"
+
+#~ msgid "Show enabled"
+#~ msgstr "Vis aktiveret"
+
+#~ msgid "E&nabled"
+#~ msgstr "&Aktiveret"
+
+#~ msgid "Show new"
+#~ msgstr "Vis nye"
+
+#~ msgid "Ne&w"
+#~ msgstr "&Nye"
+
+#~ msgid "State"
+#~ msgstr "Tilstand"
+
+#~ msgid "&Select All"
+#~ msgstr "&Vælg alle"
+
+#~ msgid "C&lear All"
+#~ msgstr "&Fravælg alle"
+
+#~ msgid "&Disable"
+#~ msgstr "&Deaktivér"
+
+#~ msgid ""
+#~ "Enabling effects or commands:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Aktiverer effekter eller kommandoer:\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid ""
+#~ "Enabling effect or command:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Aktiverer effekt eller kommando:\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "There was a problem printing."
+#~ msgstr "Der opstod et problem med udskrivningen."
+
+#~ msgid "Print"
+#~ msgstr "Udskriv"
+
+#~ msgid "Pa&ge Setup..."
+#~ msgstr "Sideopsætnin&g..."
+
+#~ msgid "&Print..."
+#~ msgstr "&Udskriv..."
+
+#~ msgid "Screen Capture Frame"
+#~ msgstr "Gem skærmbillede"
+
+#~ msgid "Choose location to save files"
+#~ msgstr "Vælg placering til gemte filer"
+
+#~ msgid "Save images to:"
+#~ msgstr "Gem billeder i:"
+
+#~ msgid "Choose..."
+#~ msgstr "Vælg..."
+
+#~ msgid "Capture entire window or screen"
+#~ msgstr "Gem hele vinduet eller hele skærmen"
+
+#~ msgid "Resize Small"
+#~ msgstr "Lille vindue"
+
+#~ msgid "Resize Large"
+#~ msgstr "Stort vindue"
+
+#~ msgid "Blue Bkgnd"
+#~ msgstr "Blå baggrund"
+
+#~ msgid "White Bkgnd"
+#~ msgstr "Hvid baggrund"
+
+#~ msgid "Capture Window Only"
+#~ msgstr "Gem kun vinduet"
+
+#~ msgid "Capture Full Window"
+#~ msgstr "Gem hele vinduet"
+
+#~ msgid "Capture Window Plus"
+#~ msgstr "Gem vinduet plus"
+
+#~ msgid "Capture Full Screen"
+#~ msgstr "Gem hele skærmen"
+
+#~ msgid "Wait 5 seconds and capture frontmost window/dialog"
+#~ msgstr "Vent 5 sekunder og gem forreste vindue/dialog"
+
+#~ msgid "Capture part of a project window"
+#~ msgstr "Gem en del af et projektvindue"
+
+#~ msgid "All Toolbars"
+#~ msgstr "Alle værktøjslinjer"
+
+#~ msgid "All Effects"
+#~ msgstr "Alle effekter"
+
+#~ msgid "All Scriptables"
+#~ msgstr "Alle scripts"
+
+#~ msgid "All Preferences"
+#~ msgstr "Alle indstillinger"
+
+#~ msgid "Ruler"
+#~ msgstr "Lineal"
+
+#~ msgid "First Track"
+#~ msgstr "Første spor"
+
+#~ msgid "Second Track"
+#~ msgstr "Andet spor"
+
+#~ msgid "One Sec"
+#~ msgstr "Et sekund"
+
+#~ msgid "Ten Sec"
+#~ msgstr "Ti sekunder"
+
+#~ msgid "One Min"
+#~ msgstr "Et minut"
+
+#~ msgid "Five Min"
+#~ msgstr "Fem minutter"
+
+#~ msgid "One Hour"
+#~ msgstr "En time"
+
+#~ msgid "Short Tracks"
+#~ msgstr "Lave spor"
+
+#~ msgid "Medium Tracks"
+#~ msgstr "Medium spor"
+
+#~ msgid "Tall Tracks"
+#~ msgstr "Høje spor"
+
+#~ msgid "Choose a location to save screenshot images"
+#~ msgstr "Vælg en placering til at gemme skærmbilleder"
+
+#~ msgid "Capture failed!"
+#~ msgstr "Kunne ikke gemme!"
+
+#~ msgid "&Screenshot..."
+#~ msgstr "&Skærmbillede..."
+
+#~ msgid "Screenshot"
+#~ msgstr "Skærmbillede"
+
+#~ msgid "Window"
+#~ msgstr "Vindue"
+
+#~ msgid "Full Window"
+#~ msgstr "Fuldt vindue"
+
+#~ msgid "Window Plus"
+#~ msgstr "Vindue plus"
+
+#~ msgid "Fullscreen"
+#~ msgstr "Fuldskærm"
+
+#~ msgid "Toolbars"
+#~ msgstr "Værktøjslinjer"
+
+#~ msgid "Scriptables"
+#~ msgstr "Script"
+
+#~ msgid "Trackpanel"
+#~ msgstr "Sporpanel"
+
+#~ msgid "First Two Tracks"
+#~ msgstr "Første to spor"
+
+#~ msgid "First Three Tracks"
+#~ msgstr "Første tre spor"
+
+#~ msgid "First Four Tracks"
+#~ msgstr "Første fire spor"
+
+#~ msgid "Tracks Plus"
+#~ msgstr "Spor plus"
+
+#~ msgid "First Track Plus"
+#~ msgstr "Første spor plus"
+
+#~ msgid "All Tracks"
+#~ msgstr "Alle spor"
+
+#~ msgid "All Tracks Plus"
+#~ msgstr "Alle spor plus"
+
+#~ msgid "Blue"
+#~ msgstr "Blå"
+
+#~ msgctxt "color"
+#~ msgid "White"
+#~ msgstr "Hvid"
+
+#~ msgid "Path:"
+#~ msgstr "Sti:"
+
+#~ msgid "Capture What:"
+#~ msgstr "Det som skal gemmes:"
+
+#~ msgid "Background:"
+#~ msgstr "Baggrund:"
+
+#~ msgid "Bring To Top"
+#~ msgstr "Bring øverst"
+
+#~ msgid "Error trying to save file: %s"
+#~ msgstr "Fejl ved forsøg på at gemme filen: %s"
+
+#~ msgid "Screenshot (short format)..."
+#~ msgstr "Skærmbillede (kort format)..."
+
+#~ msgid "Takes screenshots."
+#~ msgstr "Tager skærmbilleder."
+
+#~ msgid "Stop &Preview"
+#~ msgstr "Sto&p forhåndslytning"
+
+#~ msgid "Hidden File Menu"
+#~ msgstr "Skjult filmenu"
+
+#~ msgid "&Quick Fix..."
+#~ msgstr "&Hurtig rettelse..."
+
+#~ msgid "&Getting Started"
+#~ msgstr "&Kom godt i gang"
+
+#~ msgid "Audacity &Manual"
+#~ msgstr "Audacity-&manual"
+
+#~ msgid "&Timeline"
+#~ msgstr "&Tidslinje"
+
+#~ msgid "Advanced &Vertical Zooming"
+#~ msgstr "Avanceret &lodret zoomning"
+
+#~ msgid "Show Timeline Tooltips"
+#~ msgstr "Vis værktøjstips på tidslinje"
+
+#~ msgid "Show Scrub Ruler"
+#~ msgstr "Vis lynlytningslineal"
+
+#~ msgid ""
+#~ "These are experimental modules. Enable them only if you've read the Audacity Manual\n"
+#~ "and know what you are doing."
+#~ msgstr ""
+#~ "Disse er forsøgsmoduler. Aktivér dem kun, hvis du har læst Audacity-manualen\n"
+#~ "og ved, hvad du har med at gøre."
+
+#~ msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
+#~ msgstr "  'Spørg' betyder, at Audacity vil spørge, om du vil indlæse modulet, hver gang programmet starter."
+
+#~ msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
+#~ msgstr "  'Mislykkedes' betyder, at Audacity tror, at modulet er ødelagt, og derfor ikke starter det."
+
+#~ msgid "  'New' means no choice has been made yet."
+#~ msgstr "  'Ny' betyder, at der ikke er foretaget noget valg."
+
+#~ msgid "Ask"
+#~ msgstr "Spørg"
+
+#~ msgid "No modules were found"
+#~ msgstr "Ingen moduler fundet"
+
+#~ msgid "Ctrl"
+#~ msgstr "Ctrl"
+
+#~ msgid "Mouse"
+#~ msgstr "Mus"
+
+#~ msgid "Mouse Bindings (default values, not configurable)"
+#~ msgstr "Musebindinger (standardværdier, kan ikke ændres)"
+
+#~ msgid "Command Action"
+#~ msgstr "Kommandohandling"
+
+#~ msgid "Buttons"
+#~ msgstr "Knapper"
+
+#~ msgid "Left-Click"
+#~ msgstr "Venstreklik"
+
+#~ msgid "Set Selection Point"
+#~ msgstr "Sæt markeringspunkt"
+
+#~ msgid "Left-Drag"
+#~ msgstr "Træk med venstre museknap"
+
+#~ msgid "Set Selection Range"
+#~ msgstr "Sæt markeringsområde"
+
+#~ msgid "Extend Selection Range"
+#~ msgstr "Udvid markeringen"
+
+#~ msgid "Left-Double-Click"
+#~ msgstr "Venstre dobbeltklik"
+
+#~ msgid "Select Clip or Entire Track"
+#~ msgstr "Vælg klip eller hele sporet"
+
+#~ msgid "Wheel-Rotate"
+#~ msgstr "Drej musehjul"
+
+#~ msgid "Change scrub speed"
+#~ msgstr "Skift lynlytningshastighed"
+
+#~ msgid "Zoom in on Point"
+#~ msgstr "Zoom ind på et punkt"
+
+#~ msgid "Zoom in on a Range"
+#~ msgstr "Zoom ind på et område"
+
+#~ msgid "same as right-drag"
+#~ msgstr "samme om at trække med højre museknap"
+
+#~ msgid "Right-Click"
+#~ msgstr "Højreklik"
+
+#~ msgid "Zoom out one step"
+#~ msgstr "Zoom ét trin ud"
+
+#~ msgid "Right-Drag"
+#~ msgstr "Træk med højre museknap"
+
+#~ msgid "same as left-drag"
+#~ msgstr "samme som at trække med venstre museknap"
+
+#~ msgid "Shift-Drag"
+#~ msgstr "Skift+Træk"
+
+#~ msgid "Zoom out on a Range"
+#~ msgstr "Zoom ud på et område"
+
+#~ msgid "Middle-Click"
+#~ msgstr "Midterklik"
+
+#~ msgid "Zoom default"
+#~ msgstr "Standardzoom"
+
+#~ msgid "Change Amplification Envelope"
+#~ msgstr "Ret forstærkningsniveau"
+
+#~ msgid "Pencil"
+#~ msgstr "Blyant"
+
+#~ msgid "Change Sample"
+#~ msgstr "Ret datapunkt"
+
+#~ msgid "Alt-Left-Click"
+#~ msgstr "Alt+Venstreklik"
+
+#~ msgid "Smooth at Sample"
+#~ msgstr "Udjævn ved punkt"
+
+#~ msgid "Change Several Samples"
+#~ msgstr "Ret adskillige datapunkter"
+
+#~ msgid "-Left-Drag"
+#~ msgstr "+Træk med venstre museknap"
+
+#~ msgid "Change ONE Sample only"
+#~ msgstr "Lav kun om på ét datapunkt"
+
+#~ msgid "Multi"
+#~ msgstr "Multi"
+
+#~ msgid "same as select tool"
+#~ msgstr "samme som markeringsværktøj"
+
+#~ msgid "same as zoom tool"
+#~ msgstr "samme som zoomværktøj"
+
+#~ msgid "Any"
+#~ msgstr "Alle"
+
+#~ msgid "Scroll tracks up or down"
+#~ msgstr "Rul spor op eller ned"
+
+#~ msgid "Shift-Wheel-Rotate"
+#~ msgstr "Skift+Drej musehjul"
+
+#~ msgid "Scroll waveform"
+#~ msgstr "Rul bølgeform"
+
+#~ msgid "-Wheel-Rotate"
+#~ msgstr "+Drej musehjul"
+
+#~ msgid "Zoom waveform in or out"
+#~ msgstr "Zoom bølgeform ind eller ud"
+
+#~ msgid "-Shift-Wheel-Rotate"
+#~ msgstr "-Skift-Drej musehjul"
+
+#~ msgid "Vertical Scale Waveform (dB) range"
+#~ msgstr "Lodret skala af bølgeformens dB-område"
+
+#~ msgid "Shift-Left-Drag"
+#~ msgstr "Skift+Træk med venstre museknap"
+
+#~ msgid "Move all clips in track left/right"
+#~ msgstr "Flyt alle klip i spor til venstre/højre"
+
+#~ msgid "using clip handles"
+#~ msgstr "anvender kliphåndtag"
+
+#~ msgid "Move clip up/down between tracks"
+#~ msgstr "Flyt klip op/ned mellem spor"
+
+#~ msgid "Move clip left/right or between tracks"
+#~ msgstr "Flyt klip til venstre/højre eller mellem spor"
+
+#~ msgid "Enable &dragging selection edges"
+#~ msgstr "Aktivér &træk af markeringens kanter"
+
+#~ msgid "Enable scrolling left of &zero"
+#~ msgstr "&Aktivér rulning til venstre for nul"
+
+#~ msgid "Advanced &vertical zooming"
+#~ msgstr "Avanceret &lodret zoomning"
+
+# Sætningen fuldfører "Vis advarsler/forespørgsler når" og skal derfor med lille begyndelsesbogstav
+#~ msgid "Mixing down to &mono during export"
+#~ msgstr "der mixes ned til &mono ved eksport"
+
+# Sætningen fuldfører "Vis advarsler/forespørgsler når" og skal derfor med lille begyndelsesbogstav
+#~ msgid "Mixing down to &stereo during export"
+#~ msgstr "der mixes ned til &stereo ved eksport"
+
+# Sætningen fuldfører "Vis advarsler/forespørgsler når" og skal derfor med lille begyndelsesbogstav
+#~ msgid "Mixing down on export (&Custom FFmpeg or external program)"
+#~ msgstr "der mixes ned ved eksport (&tilpasset FFmpeg eller eksternt program)"
+
+# Sætningen fuldfører "Vis advarsler/forespørgsler når" og skal derfor med lille begyndelsesbogstav
+#~ msgid "Missing file &name extension during export"
+#~ msgstr "der mangler &endelse på filnavn ved eksport"
+
+#~ msgid "Scrub"
+#~ msgstr "Lynlytning"
+
+#~ msgid "Seek"
+#~ msgstr "Søg"
+
+#~ msgid "Scrub Ruler"
+#~ msgstr "Lynlytningslineal"
+
+#~ msgid "Stop Scrubbing"
+#~ msgstr "Stop lynlytning"
+
+#~ msgid "Start Scrubbing"
+#~ msgstr "Start lynlytning"
+
+#~ msgid "Stop Seeking"
+#~ msgstr "Stop søgning"
+
+#~ msgid "Start Seeking"
+#~ msgstr "Start søgning"
+
+#~ msgid "Hide Scrub Ruler"
+#~ msgstr "Skjul lynlytningslineal"
+
+#~ msgid "Scru&b Toolbar"
+#~ msgstr "&Lynlytning"
+
+#~ msgid "Invalid clip speed"
+#~ msgstr "Ugyldig kliphastighed"
+
+#~ msgid "Clip speed must be a positive value"
+#~ msgstr "Kliphastigheden skal have en positiv værdi"
+
+#~ msgid "Change &Speed..."
+#~ msgstr "Ju&stér hastighed..."
+
+#~ msgid "Render Clip S&tretching"
+#~ msgstr "Anvend uds&trækning af klip"
+
+#~ msgid "Zoom x1/2"
+#~ msgstr "Zoom x1/2"
+
+#~ msgid "Zoom x2"
+#~ msgstr "Zoom x2"
+
+#~ msgid "&Name..."
+#~ msgstr "&Navn..."
+
+#~ msgid "EQ XML to TXT Converter"
+#~ msgstr "EQ XML- til TXT-konverter"
+
+#~ msgid "Select target EQ effect"
+#~ msgstr "Vælg målets EQ-effekt"
+
+#~ msgid "Equalization XML file"
+#~ msgstr "Equaliserings XML-fil"
+
+#~ msgid "XML file"
+#~ msgstr "XML-fil"
+
+#~ msgid "If output text file exists"
+#~ msgstr "Hvis der findes outputtekstfil"
+
+#~ msgid "Append number"
+#~ msgstr "Tilføj tal"
+
+#~ msgid "Overwrite"
+#~ msgstr "Overskriv"
+
+#~ msgid "Error.~%Unable to open file~%~s"
+#~ msgstr "Fejl.~%Kan ikke åbne fil~%~s"
+
+#~ msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
+#~ msgstr "Fejl.~%Overskrivning af fil forbudt:~%\"~a.txt\""
+
+#~ msgid "Error.~%File cannot be written:~%\"~a.txt\""
+#~ msgstr "Fejl.~%Filen kan ikke skrives:~%\"~a.txt\""
+
+#~ msgid "Robert Haenggi"
+#~ msgstr "Robert Haenggi"
+
+#~ msgid "Remove Vocals: to mono"
+#~ msgstr "Fjern vokaler: til mono"
+
+#~ msgid "Isolate Vocals and Invert"
+#~ msgstr "Isolér vokaler og omvend"
+
+#~ msgid "Remove Center: to mono"
+#~ msgstr "Fjern center: til mono"
+
+#~ msgid "Remove Center"
+#~ msgstr "Fjern center"
+
+#~ msgid "Isolate Center"
+#~ msgstr "Isolér center"
+
+#~ msgid "Isolate Center and Invert"
+#~ msgstr "Isolér center og omvend"
+
+#~ msgid "Strength"
+#~ msgstr "Styrke"
+
+#~ msgid "Low Cut for Vocals (Hz)"
+#~ msgstr "Nedre grænse for vokaler (Hz)"
+
+#~ msgid "High Cut for Vocals (Hz)"
+#~ msgstr "Øvre grænse for vokaler (Hz)"
+
+#~ msgid ""
+#~ "Average x: ~a, y: ~a\n"
+#~ "                    Covariance x y: ~a\n"
+#~ "                    Average variance x: ~a, y: ~a\n"
+#~ "                    Standard deviation x: ~a, y: ~a\n"
+#~ "                    Coefficient of correlation: ~a\n"
+#~ "                    Coefficient of determination: ~a\n"
+#~ "                    Variation of residuals: ~a\n"
+#~ "                    y equals ~a plus ~a times x~%"
+#~ msgstr ""
+#~ "Gennemsnitlig x: ~a, y: ~a\n"
+#~ "                    Kovarians x y: ~a\n"
+#~ "                    Gennemsnitlig varians x: ~a, y: ~a\n"
+#~ "                    Standard afvigelse x: ~a, y: ~a\n"
+#~ "                    Koefficienter af korrelation: ~a\n"
+#~ "                    Koefficienter af beslutning: ~a \n"
+#~ "                    Variationer af rester: ~a\n"
+#~ "                    y er ~a plus ~a gange x~%"
+
+#~ msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
+#~ msgstr "Balanceposition: ~a~%De venstre og højre kanaler korreleres af omkring ~a %. Det betyder:~%~a~%"
+
+#~ msgid ""
+#~ " - The two channels are identical, i.e. dual mono.\n"
+#~ "                The center can't be removed.\n"
+#~ "                Any remaining difference may be caused by lossy encoding."
+#~ msgstr ""
+#~ " - De to kanaler er identiske, dvs. dobbelt mono.\n"
+#~ "                Centeret kan ikke fjernes.\n"
+#~ "                Tilbageværende forskelle kan være forårsaget af kodning med tab."
+
+#~ msgid ""
+#~ " - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
+#~ "                Most likely, the center extraction will be poor."
+#~ msgstr ""
+#~ " - De to kanaler er stærkt relateret, dvs. næsten mono eller ekstremt balanceret.\n"
+#~ "                Centerudtrækningen vil højst sandsynligt være ringe."
+
+#~ msgid " - A fairly good value, at least stereo in average and not too wide spread."
+#~ msgstr " - En rimelig god værdi, mindst stereo i gennemsnit og ikke for bred spredning."
+
+#~ msgid ""
+#~ " - An ideal value for Stereo.\n"
+#~ "                However, the center extraction depends also on the used reverb."
+#~ msgstr ""
+#~ " - En ideel værdi til stereo.\n"
+#~ "                Dog afhænger centerudtrækningen også af den brugte rumklang."
+
+#~ msgid ""
+#~ " - The two channels are almost not related.\n"
+#~ "                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
+#~ "                The center extraction can still be good though."
+#~ msgstr ""
+#~ " - De to kanaler er næsten ikke relateret.\n"
+#~ "                Du kan enten have kun støj eller stykket er mastered på en ubalanceret måde.\n"
+#~ "                Centerudtrækningen kan dog stadig være god."
+
+#~ msgid ""
+#~ " - Although the Track is stereo, the field is obviously extra wide.\n"
+#~ "                This can cause strange effects.\n"
+#~ "                Especially when played by only one speaker."
+#~ msgstr ""
+#~ " - Selvom sporet er stereo, så er feltet sandsynligvist ekstra bredt.\n"
+#~ "                Det kan forårsage underlige effekter.\n"
+#~ "                Specielt når der kun afspilles på én højttaler."
+
+#~ msgid ""
+#~ " - The two channels are nearly identical.\n"
+#~ "                  Obviously, a pseudo stereo effect has been used\n"
+#~ "                  to spread the signal over the physical distance between the speakers.\n"
+#~ "                  Don't expect good results from a center removal."
+#~ msgstr ""
+#~ " - De to kanaler er næsten identiske.\n"
+#~ "                  En pseudo-stereo-effekt er sandsynligvist blevet brugt\n"
+#~ "                  til at sprede signalet over den fysiske afstand mellem højttalerne.\n"
+#~ "                  Forvent ikke gode resultater fra en centerfjernelse."
+
+#~ msgid "This plug-in works only with stereo tracks."
+#~ msgstr "Pluginet virker kun på stereospor."
+
+#~ msgid ""
+#~ "Disk is full.\n"
+#~ "%s\n"
+#~ "For tips on freeing up space, click the help button."
+#~ msgstr ""
+#~ "Disken er fuld.\n"
+#~ "%s\n"
+#~ "Klik på knappen Hjælp for at få tips til at frigive plads."
+
+#~ msgid "&Loop On/Off"
+#~ msgstr "S&lå sløjfe til/fra"
+
+#~ msgid "Import via QuickTime"
+#~ msgstr "Import gennem QuickTime"
+
+#~ msgid "Import via GStreamer"
+#~ msgstr "Import gennem GStreamer"
+
+#~ msgid "Enable dragging selection"
+#~ msgstr "Aktivér træk af markering"
+
+#~ msgid "Pinned Play/Record &Head (on/off)"
+#~ msgstr "Fastgjort optagelses-/afspilnings&hoved"
+
+#~ msgid "FFmpeg support not compiled in"
+#~ msgstr "Understøttelse af FFmpeg er ikke lagt med ind"
+
+#~ msgid "&Copy uncompressed files into the project (safer)"
+#~ msgstr "&Kopiér ukomprimerede filer ind i projektet (sikrere)"
+
+#~ msgid "&Read uncompressed files from original location (faster)"
+#~ msgstr "&Læs ukomprimerede lydfiler direkte fra originalen (hurtigere)"
+
+#~ msgid "&Copy all audio into project (safest)"
+#~ msgstr "Kopiér &al lyd ind i projektet (sikrest)"
+
+#~ msgid "Do &not copy any audio"
+#~ msgstr "Kopiér ikke lyde&n"
+
+#~ msgid "As&k"
+#~ msgstr "&Spørg"
+
+#~ msgid "&Go to my file"
+#~ msgstr "&Gå til min fil"
+
+#~ msgid "Upload complete!"
+#~ msgstr "Upload er fuldført!"
+
+#~ msgid ""
+#~ "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use.\n"
+#~ "\n"
+#~ "If you have problems uploading, try the Link Account button."
+#~ msgstr ""
+#~ "Din lyd vil blive uploadet til vores deletjeneste: %s,%%som kræver oprettelse af en gratis konto.\n"
+#~ "\n"
+#~ "Hvis du oplever problemer med at uploade, brug da knappen Tilkobl konto."
+
+#~ msgid "Shareable link"
+#~ msgstr "Link, som kan deles"
+
+#~ msgid "Track Index:"
+#~ msgstr "Sporindeks:"
+
+#~ msgid "Channel Index:"
+#~ msgstr "Kanalindeks:"
+
+#~ msgid "Change Pitch without Changing Tempo"
+#~ msgstr "Justér tonehøjde uden at ændre tempo"
+
+#~ msgid "Change Speed, affecting both Tempo and Pitch"
+#~ msgstr "Justér hastighed – med ændring af både tempo og tonehøjde"
+
+#~ msgid "Change Tempo without Changing Pitch"
+#~ msgstr "Justér tempo uden at ændre tonehøjde"
+
+#~ msgid "Start and stop preview"
+#~ msgstr "Start og stop forhåndslytning"
+
+#~ msgid "Resampling left channel"
+#~ msgstr "Resampling af venstre kanal"
+
+#~ msgid "Resampling right channel"
+#~ msgstr "Resampling af højre kanal"
+
+#~ msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
+#~ msgstr "Beklager, kan ikke bruge effekten på stereospor, hvor de enkelte kanaler fra sporet ikke passer til hinanden."
+
+#~ msgid ""
+#~ "Selection too long for Nyquist code.\n"
+#~ "Maximum allowed selection is %ld samples\n"
+#~ "(about %.1f hours at 44100 Hz sample rate)."
+#~ msgstr ""
+#~ "Markeringen er for lang til Nyquist-kode.\n"
+#~ "Maksimale tilladte markering er %ld datapunkter\n"
+#~ "(omkring %.1f timer ved 44100 Hz samplingshastighed)."
+
+#~ msgid "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."
+#~ msgstr "Beklager, Vamp-plugins kan ikke køres på stereospor, hvor sporets enkelte kanaler ikke passer sammen."
+
+#~ msgid "Are you sure you want to export the file as \"%s\"?\n"
+#~ msgstr "Er du sikker på, at du vil eksportere filen som \"%s\"?\n"
+
+#~ msgid ""
+#~ "You are about to export a %s file with the name \"%s\".\n"
+#~ "\n"
+#~ "Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
+#~ "\n"
+#~ "Are you sure you want to export the file under this name?"
+#~ msgstr ""
+#~ "Du er i færd med at eksportere en %s-fil under navnet \"%s\".\n"
+#~ "\n"
+#~ "Normalt ender disse filer på \".%s\", og visse programmer kan ikke åbne filer med ikke-standardendelser.\n"
+#~ "\n"
+#~ "Er du sikker på, at du vil eksportere filen under dette navn?"
+
+#~ msgid "Sorry, pathnames longer than 256 characters not supported."
+#~ msgstr "Beklager, stinavnet må maksimalt være 256 karakterer langt."
+
+#~ msgid "Your tracks will be mixed down and exported as one mono file."
+#~ msgstr "Dine spor vil blive mixet ned og eksporteret som en mono-fil."
+
+#~ msgid "Your tracks will be mixed down and exported as one stereo file."
+#~ msgstr "Dine spor vil blive mixet ned og eksporteret som en stereo-fil."
+
+#~ msgid "Your tracks will be mixed down to one exported file according to the encoder settings."
+#~ msgstr "Dine spor vil blive mixet ned til en eksporteret fil i henhold til koderens indstillinger."
+
+#~ msgid "Format Options"
+#~ msgstr "Valgmuligheder for format"
+
+#~ msgid "FFmpeg Error"
+#~ msgstr "FFmpeg-fejl"
+
+#~ msgid "FFmpeg : ERROR - Can't encode audio frame."
+#~ msgstr "FFmpeg : FEJL - kan ikke kode lydramme."
+
+#~ msgid "0"
+#~ msgstr "0"
+
+#~ msgid "9"
+#~ msgstr "9"
+
+#~ msgid "10"
+#~ msgstr "10"
+
+#~ msgid "Application:"
+#~ msgstr "Program:"
+
+#~ msgid "Level:"
+#~ msgstr "Niveau:"
+
+#~ msgid "Bit depth:"
+#~ msgstr "Antal bit:"
+
+#~ msgid "Joint Stereo"
+#~ msgstr "Sammenføjet stereo"
+
+#~ msgid "Channel Mode:"
+#~ msgstr "Kanaltilstand:"
+
+#~ msgid "Force export to mono"
+#~ msgstr "Tving eksport til mono"
+
+#~ msgid "Cannot Export Multiple"
+#~ msgstr "Kan ikke eksportere flere"
+
+#~ msgid ""
+#~ "You have no unmuted Audio Tracks and no applicable \n"
+#~ "labels, so you cannot export to separate audio files."
+#~ msgstr ""
+#~ "Der er ikke nogen lydspor hvor lyden er slået til, og ikke nogen \n"
+#~ "påsatte etiketter, så du kan ikke eksportere til separate lydfiler."
+
+#~ msgid "Create"
+#~ msgstr "Opret"
+
+#~ msgid "Options:"
+#~ msgstr "Valgmuligheder:"
+
+#~ msgid "First file name:"
+#~ msgstr "Første filnavn:"
+
+#~ msgid "First file name"
+#~ msgstr "Første filnavn"
+
+#~ msgid "File name prefix"
+#~ msgstr "Filnavnet"
+
+#~ msgid "\"%s\" successfully created."
+#~ msgstr "\"%s\" blev oprettet."
+
+#~ msgid ""
+#~ "\"%s\" doesn't exist.\n"
+#~ "\n"
+#~ "Would you like to create it?"
+#~ msgstr ""
+#~ "\"%s\" findes ikke.\n"
+#~ "\n"
+#~ "Vil du oprette den?"
+
+#~ msgid ""
+#~ "Label or track \"%s\" is not a legal file name.\n"
+#~ "You cannot use any of these characters:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "Suggested replacement:"
+#~ msgstr ""
+#~ "Etiketten eller sporet \"%s\" har ikke et gyldigt navn.\n"
+#~ "Du må ikke bruge nogle af disse tegn:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "Forslag til nyt navn:"
+
+#~ msgid ""
+#~ "Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\n"
+#~ "\n"
+#~ "Suggested replacement:"
+#~ msgstr ""
+#~ "Etiketten eller sporet \"%s\" er ikke et gyldigt navn. Du må ikke bruge \"%s\".\n"
+#~ "\n"
+#~ "Forslag til nyt navn:"
+
+#~ msgid "Unable to export - problem with metadata"
+#~ msgstr "Kan ikke eksportere - problem med metadata"
+
+#~ msgid "Error Exporting"
+#~ msgstr "Fejl ved eksport"
+
+#~ msgid ""
+#~ "Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+#~ "files bigger than 4GB."
+#~ msgstr ""
+#~ "Din eksporterede WAV-fil er blevet afkortet eftersom Audacity ikke kan\n"
+#~ "eksportere WAV-filer som er større end 4 GB."
+
+#~ msgid "32 bit float "
+#~ msgstr "32 bit float "
+
+#~ msgid "FFmpeg support is not compiled in"
+#~ msgstr "Understøttelse af FFmpeg er ikke kompileret ind"
+
+#~ msgid "Project Import"
+#~ msgstr "Import af projektet"
+
+#~ msgid "GStreamer-compatible files"
+#~ msgstr "GStreamer-kompatible filer"
+
+#~ msgid "Unable to add decoder to pipeline"
+#~ msgstr "Kan ikke tilføj afkoder til pipeline"
+
+#~ msgid "GStreamer Importer"
+#~ msgstr "GStreamer-importør"
+
+#~ msgid "Index[%02d], Type[%s], Channels[%d], Rate[%d]"
+#~ msgstr "Indeks[%02d], Type[%s], Kanaler[%d], Hastighed[%d]"
+
+#~ msgid "File doesn't contain any audio streams."
+#~ msgstr "Filen indeholder ikke nogen lydstrømme."
+
+#~ msgid "Unable to import file, state change failed."
+#~ msgstr "Kan ikke importere fil, ændring af tilstand mislykkedes."
+
+#~ msgid "GStreamer Error: %s"
+#~ msgstr "GStreamer-fejl: %s"
+
+#~ msgid "LOF Error"
+#~ msgstr "LOF-fejl"
+
+#~ msgid ""
+#~ "Import failed\n"
+#~ "\n"
+#~ "This is likely caused by a malformed MP3.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Fejl ved importen\n"
+#~ "\n"
+#~ "Dette skyldes mest sandsynligt en fejlbehæftet MP3.\n"
+#~ "\n"
+
+#~ msgid "QuickTime files"
+#~ msgstr "QuickTime-file"
+
+#~ msgid "Unable to start QuickTime extraction"
+#~ msgstr "Kan ikke starte QuickTime-udtræk"
+
+#~ msgid "Unable to set QuickTime render quality"
+#~ msgstr "Kan ikke sætte QuickTime-renderingskvalitet"
+
+#~ msgid "Unable to set QuickTime discrete channels property"
+#~ msgstr "Kan ikke sætte regulere egenskaberne for QuickTime-kanalerne"
+
+#~ msgid "Unable to get QuickTime sample size property"
+#~ msgstr "Kan ikke hente egenskaberne for størrelsen af QuickTime-eksemplerne"
+
+#~ msgid "Unable to retrieve stream description"
+#~ msgstr "Kan ikke modtage strømbeskrivelse"
+
+#~ msgid "WavPack Importer"
+#~ msgstr "Import af WavPack"
+
+#~ msgid "%s left"
+#~ msgstr "%s venstre"
+
+#~ msgid "%s right"
+#~ msgstr "%s højre"
+
+#~ msgid "Time shifted clips to the right"
+#~ msgstr "Tidsforskød klip til højre"
+
+#~ msgid "Time shifted clips to the left"
+#~ msgstr "Tidsforskød klip til venstre"
+
+#~ msgid "Time-Shift"
+#~ msgstr "Tidsforskydning"
+
+#~ msgid "Pasting one type of track into another is not allowed."
+#~ msgstr "Det er ikke tilladt at indsætte en type spor i et andet."
+
+#~ msgid "Copying stereo audio into a mono track is not allowed."
+#~ msgstr "Det er ikke tilladt at kopiere stereolyd ind i et monospor."
+
+#~ msgid "&Full Screen (on/off)"
+#~ msgstr "&Fuldskærm (til/fra)"
+
+#~ msgid "Export &Multiple..."
+#~ msgstr "Eksportér &flere..."
+
+#~ msgid "&Edit Labels..."
+#~ msgstr "R&ediger etiketter..."
+
+#~ msgid "&Type to Create a Label (on/off)"
+#~ msgstr "&Skriv for at oprette en etiket (til/fra)"
+
+#~ msgid "Sync-&Lock Tracks (on/off)"
+#~ msgstr "&Lås spor synkront (til/fra)"
+
+#~ msgid "Sound A&ctivated Recording (on/off)"
+#~ msgstr "Lyda&ktiveret optagelse (til/fra)"
+
+#~ msgid "&Overdub (on/off)"
+#~ msgstr "&Afspil under optagelse (til/fra)"
+
+#~ msgid "So&ftware Playthrough (on/off)"
+#~ msgstr "Softwarea&fspil optagelse under optagelse (til/fra)"
+
+#~ msgid "&Extra Menus (on/off)"
+#~ msgstr "&Ekstra menuer (til/fra)"
+
+#~ msgid "Track &Name (on/off)"
+#~ msgstr "&Navn på spor (til/fra)"
+
+#~ msgid "&Mix down to Stereo or Mono"
+#~ msgstr "&Mix ned til stereo eller mono"
+
+#~ msgid "&Use Advanced Mixing Options"
+#~ msgstr "&Brug avancerede valgmuligheder for mixer"
+
+#~ msgid "When exporting tracks to an audio file"
+#~ msgstr "Når spor eksporteres til en lydfil"
+
+#~ msgid "S&how Metadata Tags editor before export"
+#~ msgstr "V&is Redigering af metadatamærkater før eksport"
+
+#~ msgid "&Ignore blank space at the beginning"
+#~ msgstr "&Ignorer stilhed ved begyndelsen"
+
+#~ msgid "Keyboard"
+#~ msgstr "Tastatur"
+
+#~ msgid "&Software playthrough of input"
+#~ msgstr "&Softwareafspil optagelse under optagelse"
+
+#~ msgid "1024 - default"
+#~ msgstr "1024 - standard"
+
+#~ msgid "Merged Clips"
+#~ msgstr "Forenede klip"
+
+#~ msgid "Merge"
+#~ msgstr "Forén"
+
+#~ msgid "Clip-Trim-Left"
+#~ msgstr "Trim klip til venstre"
+
+#~ msgid "Clip-Trim-Right"
+#~ msgstr "Trim klip til højre"
+
+#~ msgid "Clip-Trim-Between"
+#~ msgstr "Trim klip i midten"
+
+#~ msgid "Mono"
+#~ msgstr "Mono"
+
+#~ msgid "Left Channel"
+#~ msgstr "Venstre kanal"
+
+#~ msgid "Right Channel"
+#~ msgstr "Højre kanal"
+
+#~ msgid "Channel"
+#~ msgstr "Kanal"
+
+#~ msgid "Left, %dHz"
+#~ msgstr "Venstre, %d Hz"
+
+#~ msgid "Right, %dHz"
+#~ msgstr "Højre, %d Hz"
+
+#~ msgid "Start Monitoring"
+#~ msgstr "Start overvågning"
+
+#~ msgid "Fade type"
+#~ msgstr "Fadetype"
+
+#~ msgid ""
+#~ "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
+#~ "                   Track sample rate is ~a Hz~%~\n"
+#~ "                   Frequency must be less than ~a Hz."
+#~ msgstr ""
+#~ "Fejl:~%~%Frekvensen (~a Hz) er for høj til sporets samplingshastighed.~%~%~\n"
+#~ "                   Sporets samplingshastighed er ~a Hz~%~\n"
+#~ "                   Frekvensen skal være mindre end ~a Hz."
+
+#~ msgid "Error.~%Selection must be less than ~a."
+#~ msgstr "Fejl.~%Markeringen skal være mindre end ~a."
+
+#~ msgid ""
+#~ "Error.\n"
+#~ "Selection too long.\n"
+#~ "Maximum length is ~a."
+#~ msgstr ""
+#~ "Fejl.\n"
+#~ "Markering er for lang.\n"
+#~ "Max.-længden er ~a."
+
+#~ msgid "Exception code 0x%x"
+#~ msgstr "Undtagelseskode 0x%x"
+
+#~ msgid "Unknown exception"
+#~ msgstr "Ukendt undtagelse"
+
+#~ msgid "Problem Report for Audacity"
+#~ msgstr "Rapport over problemer i Audacity"
+
+#~ msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
+#~ msgstr "Klik \"Send\" for at sende denne rapport til Audacity. Alle oplysninger indsamles anonymt."
+
+#~ msgid "Failed to send crash report"
+#~ msgstr "Kunne ikke sende rapporten"
+
+#~ msgid "Former Musers"
+#~ msgstr "Tidligere medarbejdere ved Muse Group"
+
+#~ msgid "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]"
+#~ msgstr "[[help:Quick_Help|Hurtig hjælp]] - hvis den ikke er installeret lokalt, [[https://manual.audacityteam.org/quick_help.html|vis online]]"
+
+#~ msgid " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]"
+#~ msgstr " [[help:Main_Page|Manual]] - hvis den ikke er installeret lokalt, [[https://manual.audacityteam.org/|vis online]]"
+
+#~ msgid "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins."
+#~ msgstr "Mere:</b> Besøg vores [[https://wiki.audacityteam.org/index.php|wiki]] for tips, tricks, ekstra vejledninger og plugins til effekter."
+
+#~ msgid "SelectionBar"
+#~ msgstr "Markeringslinje"
+
+#~ msgid "Timer"
+#~ msgstr "Tidsindstillet"
+
+#~ msgid "Play Meter"
+#~ msgstr "Afspilningsmåler"
+
+#~ msgid "Nearest"
+#~ msgstr "Nærmeste"
+
+#~ msgid "Prior"
+#~ msgstr "Foregående"
+
+#~ msgid "Selectionbar"
+#~ msgstr "Markeringslinje"
+
+#~ msgid "D&efault"
+#~ msgstr "Stan&dard"
+
+#~ msgid "&SSE"
+#~ msgstr "&SSE"
+
+#~ msgid "SSE &Threaded"
+#~ msgstr "&SSE-trådet"
+
+#~ msgid "A&VX"
+#~ msgstr "A&VX"
+
+#~ msgid "AV&X Threaded"
+#~ msgstr "AV&X-trådet"
+
+#~ msgid "&Bench"
+#~ msgstr "&Mål og sammenlign"
+
+#~ msgid "Cannot open file"
+#~ msgstr "Kan ikke åbne filen"
+
+#~ msgid "Cannot open VST3 preset file %s"
+#~ msgstr "Kan ikke åbne VST3-forudinstillingsfilen %s"
+
+#~ msgid "Plugin %d to %d"
+#~ msgstr "Plugin %d til %d"
+
+#~ msgid "&Window"
+#~ msgstr "&Vindue"
+
+#~ msgid "&Minimize"
+#~ msgstr "&Minimer"
+
+#~ msgid "&Bring All to Front"
+#~ msgstr "&Send alle forrest"
+
+#~ msgid "Minimize All Projects"
+#~ msgstr "Minimer alle projekter"
+
+#~ msgid "Devices"
+#~ msgstr "Enheder"
+
+#~ msgid "Preferences for Device"
+#~ msgstr "Indstillinger for enhed"
+
+#~ msgid "Default"
+#~ msgstr "Standard"
+
+#~ msgid "&LADSPA"
+#~ msgstr "&LADSPA"
+
+#~ msgid "LV&2"
+#~ msgstr "LV&2"
+
+#~ msgid "N&yquist"
+#~ msgstr "N&yquist"
+
+#~ msgid "&Vamp"
+#~ msgstr "&Vamp"
+
+#~ msgid "V&ST"
+#~ msgstr "V&ST"
+
+#~ msgid "Enable Effects"
+#~ msgstr "Aktivér effekter"
+
+#~ msgid "S&ort or Group:"
+#~ msgstr "&Sortér eller gruppér:"
+
+#~ msgid "&Maximum effects per group (0 to disable):"
+#~ msgstr "&Højeste antal effekter pr. gruppe (0 for at deaktivere):"
+
+#~ msgid "&Vari-Speed Play"
+#~ msgstr "Afspil ved &variabel hastighed"
+
+#~ msgid "Sampling"
+#~ msgstr "Sampling"
+
+#~ msgid "Project Rate (Hz)"
+#~ msgstr "Projekthastighed (Hz)"
+
+#~ msgid "Snap To"
+#~ msgstr "Fastgør til"
+
+#~ msgid "Snap Clicks/Selections to %s"
+#~ msgstr "Fastgør klik/markeringer til %s"
+
+#~ msgid "%s - driven"
+#~ msgstr "%s - drevet"
+
+#~ msgid "Selection %s. %s won't change."
+#~ msgstr "Markering %s. %s vil ikke blive ændret."
+
+#~ msgid "Rename clip..."
+#~ msgstr "Omdøb klip..."
+
+#~ msgid "Only ffmpeg.*.dylib"
+#~ msgstr "Kun ffmpeg.*.dylib"
+
+#~ msgid "Mixer"
+#~ msgstr "Mixer"
+
+#~ msgid "Location of &Manual:"
+#~ msgstr "&Manualens placering:"
+
+#~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
+#~ msgstr "%s er et frit program skrevet af et verdensomspændende team af %s. %s %s til Windows, Mac, og GNU/Linux (og andre Unix-lignende systemer)."
+
+#~ msgid "volunteers"
+#~ msgstr "frivillige"
+
+#~ msgid "available"
+#~ msgstr "fås"
+
+#~ msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
+#~ msgstr "Hvis du finder en fejl eller har et forslag til os, skriv da venligst på engelsk i vores %s. For at få hjælp, se tips og tricks på vores %s, eller besøg vores %s."
+
+#~ msgctxt "dative"
+#~ msgid "forum"
+#~ msgstr "forum"
+
+#~ msgid "wiki"
+#~ msgstr "wiki"
+
+#~ msgctxt "accusative"
+#~ msgid "forum"
+#~ msgstr "forum"
+
+#~ msgid "DarkAudacity Customisation"
+#~ msgstr "DarkAudacity-tilpasning"
+
+#~ msgid "Dark Theme Extras"
+#~ msgstr "Ekstra til mørkt tema"
+
+#~ msgid "Clear Looping Region"
+#~ msgstr "Fjern sløjfemarkering"
+
+#~ msgid "&History..."
+#~ msgstr "&Historik..."
+
+#~ msgid "&Mixer Board..."
+#~ msgstr "&Mixerpult..."
+
+#~ msgid ""
+#~ "Failed to retrieve data from the project file.\n"
+#~ "The following command failed:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Fejl ved hentning af data fra projektfilen.\n"
+#~ "Den følgende kommando gik galt:\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "Unable to decode project document"
+#~ msgstr "Kan ikke afkode projektdokumentet"
+
+#~ msgid "Main Mix"
+#~ msgstr "Hovedmix"
+
+#~ msgid ""
+#~ "Cannot lock region beyond\n"
+#~ "end of project."
+#~ msgstr ""
+#~ "Kan ikke låse område udover\n"
+#~ "slutningen af projektet."
+
+#~ msgid "Effects Rack"
+#~ msgstr "Effektudvalg"
+
+#~ msgid "Latency: 0"
+#~ msgstr "Forsinkelse: 0"
+
+#~ msgid "&Bypass"
+#~ msgstr "&Bypass"
+
+#~ msgid "Active State"
+#~ msgstr "Aktiv status"
+
+#~ msgid "Set effect active state"
+#~ msgstr "Giv effekt aktiv status"
+
+#~ msgid "Show/Hide Editor"
+#~ msgstr "Vis/skjul redigeringsprogram"
+
+#~ msgid "Open/close effect editor"
+#~ msgstr "Åbn/luk effektredigeringsprogram"
+
+#~ msgid "Move effect up in the rack"
+#~ msgstr "Flyt effekten op i udvalget"
+
+#~ msgid "Move Down"
+#~ msgstr "Flyt ned"
+
+#~ msgid "Move effect down in the rack"
+#~ msgstr "Flyt effekten ned i udvalget"
+
+#~ msgid "Favorite"
+#~ msgstr "Favorit"
+
+#~ msgid "Mark effect as a favorite"
+#~ msgstr "Markér effekt som favorit"
+
+#~ msgid "Remove effect from the rack"
+#~ msgstr "Fjern effekt fra listen"
+
+#~ msgid "Name of the effect"
+#~ msgstr "Navn på effekten"
+
+#~ msgid "Latency: %4d"
+#~ msgstr "Forsinkelse: %4d"
+
+#~ msgid "Some Command"
+#~ msgstr "En kommando"
+
+#~ msgid "&Preview effect"
+#~ msgstr "&Forhåndslyt effekt"
+
+#~ msgid "Skip backward"
+#~ msgstr "Spring bagud"
+
+#~ msgid "Skip &Backward"
+#~ msgstr "Spring &bagud"
+
+#~ msgid "Skip forward"
+#~ msgstr "Spring fremad"
+
+#~ msgid "Skip &Forward"
+#~ msgstr "Spring &fremad"
+
+#~ msgid "Stop &Playback"
+#~ msgstr "Sto&p afspilning"
+
+#~ msgid "Reverb: %s"
+#~ msgstr "Rumklang: %s"
+
+#~ msgid "Scanning Shell VST"
+#~ msgstr "Skanner Shell VST"
+
+#~ msgid "Registering %d of %d: %-64.64s"
+#~ msgstr "Registrerer %d af %d: %-64.64s"
+
+#~ msgid "Presets (may select multiple)"
+#~ msgstr "Forudindstillinger (flere kan vælges)"
+
+#~ msgid "Location"
+#~ msgstr "Placering"
+
+#~ msgid "%s requires unsupported feature %s\n"
+#~ msgstr "%s kræver ikke-understøttet funktionalitet %s\n"
+
+#~ msgid "%s requires unsupported option %s\n"
+#~ msgstr "%s kræver ikke-understøttet valgmulighed %s\n"
+
+#~ msgid "Invalid project '%s' attribute."
+#~ msgstr "Ugyldig egenskab for projektet '%s'."
+
+#~ msgid "Clip B&oundaries"
+#~ msgstr "&Klipgrænser"
+
+#~ msgid "Pre&ferences..."
+#~ msgstr "&Indstillinger..."
+
+#~ msgid "Add / Remove Plug-ins..."
+#~ msgstr "Tilføj/fjern plugins..."
+
+#~ msgid "&Macros..."
+#~ msgstr "&Makroer..."
+
+#~ msgid "Show Effects Rack"
+#~ msgstr "Vis effektliste"
+
+#~ msgid "Check for updated plugins when Audacity starts"
+#~ msgstr "Søg efter opdateret plugins, når Audacity starter"
+
+#~ msgid "Rescan plugins next time Audacity is started"
+#~ msgstr "Genskan plugins, næste gang Audacity startes"
+
+#~ msgid "Copy selection"
+#~ msgstr "Kopiér markering"
+
+#~ msgid "Open Effects Rack"
+#~ msgstr "Åbn effektliste"
+
+#~ msgid "Recording Volume"
+#~ msgstr "Lydstyrke for optagelse"
+
+#~ msgid "Playback Volume"
+#~ msgstr "Lydstyrke for afspilning"
+
+#~ msgid "Recording Volume: %.2f"
+#~ msgstr "Lydstyrke for optagelse: %.2f"
+
+#~ msgid "Recording Volume (Unavailable; use system mixer.)"
+#~ msgstr "Lydstyrke for optagelse (utilgængelig. Brug systemets mixer)."
+
+#~ msgid "Playback Volume: %.2f"
+#~ msgstr "Lydstyrke for afspilning: %.2f"
+
+#~ msgid "Playback Volume (Unavailable; use system mixer.)"
+#~ msgstr "Lydstyrke for afspilning (utilgængelig. Brug systemets mixer)."
+
+#~ msgid "Mi&xer Toolbar"
+#~ msgstr "Mi&xerlinje"
+
+#~ msgid "Zoom Tool"
+#~ msgstr "Zoomværktøj"
+
+#~ msgid "&Zoom Tool"
+#~ msgstr "&Zoomværktøj"
+
+#~ msgid "Click to Start Monitoring"
+#~ msgstr "Klik for at starte overvågning"
+
+#~ msgid "Click for Monitoring"
+#~ msgstr "Klik for overvågning"
+
+#~ msgid "Click to Start"
+#~ msgstr "Klik for at starte"
+
+#~ msgid "Click"
+#~ msgstr "Klik"
+
+#~ msgid "Please select an action"
+#~ msgstr "Vælg venligst en handling"
+
+#~ msgid "Filtering..."
+#~ msgstr "Filtrerer..."
+
+#~ msgid "Released under terms of the GNU General Public License version 2"
+#~ msgstr "Udgivet under vilkårene i GNU General Public License version 2"
+
+#~ msgid "Applying Fade..."
+#~ msgstr "Anvender fade..."
+
+#~ msgid "Finding beats..."
+#~ msgstr "Finder taktslag..."
+
+#~ msgid "Reconstructing clips..."
+#~ msgstr "Rekonstruerer klip..."
+
+#~ msgid "Licensing confirmed under terms of the GNU General Public License version 2"
+#~ msgstr "Licensering bekræftet under vilkårene i GNU General Public License version 2"
+
+#~ msgid "Crossfading..."
+#~ msgstr "Krydsfader..."
+
+#~ msgid "Applying Delay Effect..."
+#~ msgstr "Anvender forsinkelse-effekt..."
+
+#~ msgid "Adding equally-spaced labels to the label track..."
+#~ msgstr "Tilføjer etikker med ens mellemrum til etiketsporet..."
+
+#~ msgid "Performing High-Pass Filter..."
+#~ msgstr "Udfører high-pass-filter..."
+
+#~ msgid "Limiting..."
+#~ msgstr "Begrænser..."
+
+#~ msgid "Performing Low-Pass Filter..."
+#~ msgstr "Udfører low-pass-filter..."
+
+#~ msgid "Applying Notch Filter..."
+#~ msgstr "Anvender Notch-filter..."
+
+#~ msgid "Generating pluck sound..."
+#~ msgstr "Genererer guitarstrengelyd..."
+
+#~ msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+#~ msgstr "MIDI-værdier til C-toner: 36, 48, 60 [mellem C], 72, 84, 96."
+
+#~ msgid "Generating Rhythm..."
+#~ msgstr "Genererer rytme..."
+
+#~ msgid "Analyzing..."
+#~ msgstr "Analyserer..."
+
+#~ msgid "Reading and rendering samples..."
+#~ msgstr "Læser og renderer datapunkter..."
+
+#~ msgid "Applying Tremolo..."
+#~ msgstr "Anvender tremolo..."
+
+#~ msgid "Applying Action..."
+#~ msgstr "Anvender handling..."
+
+#~ msgid "Processing Vocoder..."
+#~ msgstr "Bearbejder Vocoder..."
+
+#~ msgid "Edgar-RFT"
+#~ msgstr "Edgar-RFT"
+
+#~ msgid "Amplitude of original audio (percent)"
+#~ msgstr "Amplitude af original lyd (procent)"
+
+#~ msgid "Error.~%Stereo track required."
+#~ msgstr "Fejl.~%Stereospor kræves."
+
+#~ msgid "Enable Quick-Play"
+#~ msgstr "Aktivér hurtig-afspil"
+
+#~ msgid "Lock Play Region"
+#~ msgstr "Lås afspilningsområde"
+
+#~ msgid "Playback volume is emulated\n"
+#~ msgstr "Lydstyrke for afspilning er emuleret\n"
+
+#~ msgid "Playback volume is native\n"
+#~ msgstr "Lydstyrke for afspilning er systemets\n"
+
+#~ msgid "Failed to find compatible FFmpeg libraries."
+#~ msgstr "Kunne ikke finde kompatible FFmpeg-biblioteker."
+
+#~ msgid "This operation cannot be done until importation of %s completes."
+#~ msgstr "Denne handling kan ikke foretages før importering af %s fuldføres."
+
+#~ msgid "none, Hann (2.0.6 behavior)"
+#~ msgstr "ingen, Hann (2.0.6 opførsel)"
+
+#~ msgid "Hann, none"
+#~ msgstr "Hann, ingen"
+
+#~ msgid "Hann, Hann (default)"
+#~ msgstr "Hann, Hann (standard)"
+
+#~ msgid "Blackman, Hann"
+#~ msgstr "Blackman, Hann"
+
+#~ msgid "Hamming, none"
+#~ msgstr "Hamming, ingen"
+
+#~ msgid "Hamming, Hann"
+#~ msgstr "Hamming, Hann"
+
+#~ msgid "Hamming, Reciprocal Hamming"
+#~ msgstr "Hamming, gensidig Hamming"
+
+#~ msgid "&Loop Play"
+#~ msgstr "&Afspil i sløjfe"
+
+#~ msgid "Pla&y Region"
+#~ msgstr "Afs&pilningsområde"
+
+#~ msgid "&Lock"
+#~ msgstr "&Lås"
+
+#~ msgid "&Unlock"
+#~ msgstr "L&ås op"
+
+#~ msgid "Pl&ay"
+#~ msgstr "&Afspil"
+
+#~ msgid "Normal Pl&ay-at-Speed"
+#~ msgstr "&Normal Afspilningshastighed"
+
+#~ msgid "&Loop Play-at-Speed"
+#~ msgstr "&Afspilningshastighed i sløjfe"
+
+#~ msgid "Import complete. Calculating waveform"
+#~ msgstr "Import fuldført. Beregner bølgeform"
+
+#~ msgid "Decoding Waveform"
+#~ msgstr "Afkoder bølgeform"
+
+#~ msgid "%s %2.0f%% complete. Click to change task focal point."
+#~ msgstr "%s %2.0f%% fuldført. Klik for at ændre opgavens brændpunkt."
+
+#~ msgid "New Temporary Directory"
+#~ msgstr "Ny midlertidig mappe"
+
+#~ msgid "Loop Play"
+#~ msgstr "Afspil i sløjfe"
+
+#~ msgid "Playback Volume: %.2f (emulated)"
+#~ msgstr "Lydstyrke for afspilning: %.2f (emuleret)"
+
+#~ msgid "Time Shift Tool"
+#~ msgstr "Tidsforskydningsværktøj"
+
+#~ msgid "Slide Tool"
+#~ msgstr "Justeringsværktøj"
+
+#~ msgid "&Time Shift Tool"
+#~ msgstr "&Tidsforskydningsværktøj"
+
+#~ msgid "Looped-Play-at-Speed"
+#~ msgstr "Sløjfet afspilningshastighed"
+
+#, fuzzy
+#~ msgid "Unknown assertion"
+#~ msgstr "Ukendt format"
+
+#, fuzzy
+#~ msgid "Can't open new empty project"
+#~ msgstr "Kan ikke åbne projektfilen"
+
+#, fuzzy
+#~ msgid "Error opening a new empty project"
+#~ msgstr "Fejl ved åbning af fil eller projekt"
+
+#~ msgid "Gray Scale"
+#~ msgstr "Gråtone"
+
+#~ msgid "Menu Tree"
+#~ msgstr "Menutræ"
+
+#~ msgid "Menu Tree..."
+#~ msgstr "Menutræ..."
+
+#~ msgid "Gra&yscale"
+#~ msgstr "&Gråtone"
+
+#~ msgid "Fast"
+#~ msgstr "Hurtig"
+
+#~ msgid "Variable Speed:"
+#~ msgstr "Variabel hastighed:"
+
+#, fuzzy
+#~ msgid "Free Space"
+#~ msgstr "Ledig plads:"
+
+#~ msgid "Master Gain Control"
+#~ msgstr "Masterforstærkning"
+
+#~ msgid "LAME MP3 Library:"
+#~ msgstr "LAME MP3-bibliotek:"
+
+#~ msgid "&Locate..."
+#~ msgstr "&Find..."
+
+#~ msgid "&Download"
+#~ msgstr "&Download"
+
+#~ msgid "Error.n"
+#~ msgstr "Fejl.n"
+
+#, fuzzy
+#~ msgid "Failed to copy tags"
+#~ msgstr "Kunne ikke fjerne %s"
+
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Vælg en ukomprimeret lydfil"
+
+#~ msgid ""
+#~ "One or more external audio files could not be found.\n"
+#~ "It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
+#~ "Silence is being substituted for the affected audio.\n"
+#~ "The first detected missing file is:\n"
+#~ "%s\n"
+#~ "There may be additional missing files.\n"
+#~ "Choose Help > Diagnostics > Check Dependencies to view a list of locations of the missing files."
+#~ msgstr ""
+#~ "En eller flere eksterne lydfiler blev ikke fundet.\n"
+#~ "Det er muligt, at de er blevet flyttet, slettet, eller at det drev, de var på, blev afmonteret.\n"
+#~ "Lyden erstattes med stilhed de berørte steder.\n"
+#~ "Den første fil, der mangler, er:\n"
+#~ "%s\n"
+#~ "Der kan være yderligere manglende filer.\n"
+#~ "Vælg Hjælp > Diagnostik > Afhængighedskontrol for at vise en liste med placeringer, for de manglende filer."
+
+#~ msgid "decode an autosave file"
+#~ msgstr "afkod en automatisk gemt fil"
+
+#~ msgid "After recovery, save the project to save the changes to disk."
+#~ msgstr "Gem projektet efter gendannelsen for at gemme ændringerne på disken."
+
+#~ msgid "Discard Projects"
+#~ msgstr "Forkast projekter"
+
+#~ msgid "Recover Projects"
+#~ msgstr "Gendan projekter"
+
+#~ msgid "Confirm Discard Projects"
+#~ msgstr "Bekræft, at projekter skal forkastes"
+
+#~ msgid "Could not enumerate files in auto save directory."
+#~ msgstr "Kan ikke optælle filer i mappen, hvori de gemmes automatisk."
+
+#~ msgid "No Action"
+#~ msgstr "Ingen handling"
+
+#~ msgid "Export as MP3 56k before"
+#~ msgstr "Eksportér som MP3 56k før"
+
+#~ msgid "Export as MP3 56k after"
+#~ msgstr "Eksportér som MP3 56k efter"
+
+#~ msgid "Export as MP3"
+#~ msgstr "Eksportér som MP3"
+
+#~ msgid "Export as WAV"
+#~ msgstr "Eksportér som WAV"
+
+#~ msgid "Select to Ends"
+#~ msgstr "Markér til slutninger"
+
+#~ msgid ""
+#~ "Export recording to %s\n"
+#~ "/%s/%s.%s"
+#~ msgstr ""
+#~ "Eksportér optagelse til %s\n"
+#~ "/%s/%s.%s"
+
+#~ msgid "Export recording"
+#~ msgstr "Eksportér optagelse"
+
+#~ msgid "Ogg Vorbis support is not included in this build of Audacity"
+#~ msgstr "Understøttelse af Ogg Vorbis er ikke med i denne byg af Audacity"
+
+#~ msgid "FLAC support is not included in this build of Audacity"
+#~ msgstr "Understøttelse af FLAC er ikke med i denne byg af Audacity"
+
+#~ msgid ""
+#~ "Your project is currently self-contained; it does not depend on any external audio files. \n"
+#~ "\n"
+#~ "If you change the project to a state that has external dependencies on imported files, it will no longer be self-contained. If you then Save without copying those files in, you may lose data."
+#~ msgstr ""
+#~ "Dit projekt er på nuværende tidspunkt selvstændigt. Det afhænger ikke af eksterne lydfiler.\n"
+#~ "\n"
+#~ "Hvis du ændrer projektet til at være afhængig af eksterne, importerede filer, vil det ikke længere være selvstændigt. Hvis du gemmer uden at kopiere disse filer ind, kan du miste data."
+
+#~ msgid "Cleaning project temporary files"
+#~ msgstr "Rydder op i projektets midlertidige filer"
+
+#~ msgid "Cleaning up temporary files"
+#~ msgstr "Rydder op i midlertidige filer"
+
+#~ msgid "Cleaning up after failed save"
+#~ msgstr "Rydder op efter mislykkedet gem"
+
+#~ msgid "Cleaning up cache directories"
+#~ msgstr "Rydder op i mellemlageringsmapper"
+
+#~ msgid "%s-old%d"
+#~ msgstr "%s-gammel%d"
+
+#~ msgid "Renamed file: %s\n"
+#~ msgstr "Omdøbte fil: %s\n"
+
+#~ msgid "Changed block %s to new alias name\n"
+#~ msgstr "Ændrede blokken %s til nyt aliasnavn\n"
+
+#~ msgid "Caching audio"
+#~ msgstr "Gemmer lyd midlertidigt"
+
+#~ msgid "Caching audio into memory"
+#~ msgstr "Gemmer lyd i hukommelsen"
+
+#~ msgid "Saving recorded audio to disk"
+#~ msgstr "Gemmer optaget lyd på disken"
+
+#~ msgid "Reclaimable Space"
+#~ msgstr "Genvindelig plads"
+
+#~ msgid "Audacity cannot start because the settings file at %s is not writable."
+#~ msgstr "Audacity kan ikke starte fordi der ikke kan skrives til indstillingsfilen i %s."
+
+#~ msgid ""
+#~ "This file was saved by Audacity version %s. The format has changed. \n"
+#~ "\n"
+#~ "Audacity can try to open and save this file, but saving it in this \n"
+#~ "version will then prevent any 1.2 or earlier version opening it. \n"
+#~ "\n"
+#~ "Audacity might corrupt the file in opening it, so you should back it up first. \n"
+#~ "\n"
+#~ "Open this file now?"
+#~ msgstr ""
+#~ "Denne fil blev gemt i Audacity version %s. Formatet er blevet ændret. \n"
+#~ "\n"
+#~ "Audacity kan forsøge at åbne og gemme denne fil, men ved at gemme den\n"
+#~ "i denne version kan den ikke åbnes i 1.2 eller tidligere.\n"
+#~ "\n"
+#~ "Audacity kan måske ødelægge filen, når den åbnes, så du bør tage en sikkerhedskopi først. \n"
+#~ "\n"
+#~ "Vil du åbne denne fil nu?"
+
+#~ msgid "1.0 or earlier"
+#~ msgstr "1.0 eller tidligere"
+
+#~ msgid "Warning - Opening Old Project File"
+#~ msgstr "Advarsel - åbner gammel projektfil"
+
+#~ msgid "<unrecognized version -- possibly corrupt project file>"
+#~ msgstr "<ukendt version -- projektfilen er måske ødelagt>"
+
+#~ msgid "Could not create autosave file: %s"
+#~ msgstr "Kunne ikke oprette automatisk gemt fil: %s"
+
+#~ msgid "Could not remove old autosave file: %s"
+#~ msgstr "Kunne ikke fjerne gammel automatisk gemt fil: %s"
+
+#~ msgid ""
+#~ "Could not save project. Perhaps %s \n"
+#~ "is not writable or the disk is full."
+#~ msgstr ""
+#~ "Kunne ikke gemme projektet. Måske kan der ikke skrives til \n"
+#~ "%s, eller disken er fuld."
+
+#~ msgid ""
+#~ "Could not save project. Path not found. Try creating \n"
+#~ "directory \"%s\" before saving project with this name."
+#~ msgstr ""
+#~ "Kunne ikke gemme projektet. Stien blev ikke fundet. Forsøg at \n"
+#~ "oprette mappen \"%s\", inden projektet gemmes med dette navn."
+
+#~ msgid ""
+#~ "'Save Lossless Copy of Project' is for an Audacity project, not an audio file.\n"
+#~ "For an audio file that will open in other apps, use 'Export'.\n"
+#~ "\n"
+#~ "Lossless copies of project are a good way to backup your project, \n"
+#~ "with no loss of quality, but the projects are large.\n"
+#~ msgstr ""
+#~ "'Gem tabsfri kopi af projekt' er til et Audacity-projekt, ikke en lydfil.\n"
+#~ "Brug 'Eksportér' til en lydfil, der skal åbnes i andre programmer.\n"
+#~ "\n"
+#~ "Tabsfrie kopier af projekt er en god måde til at foretage sikkerhedskopiering \n"
+#~ "af dit projekt, uden kvalitetstab, men projekterne er større.\n"
+
+#~ msgid "%sSave Compressed Copy of Project \"%s\" As..."
+#~ msgstr "%sGem komprimeret kopi af projekt \"%s\" som..."
+
+#~ msgid ""
+#~ "'Save Compressed Copy of Project' is for an Audacity project, not an audio file.\n"
+#~ "For an audio file that will open in other apps, use 'Export'.\n"
+#~ "\n"
+#~ "Compressed project files are a good way to transmit your project online, \n"
+#~ "but they have some loss of fidelity.\n"
+#~ msgstr ""
+#~ "'Gem komprimeret kopi af projekt' er til et Audacity-projekt, ikke en lydfil.\n"
+#~ "Brug 'Eksportér' til en lydfil, der skal åbnes i andre programmer.\n"
+#~ "\n"
+#~ "Komprimerede projektfiler er en god måde til at overføre dit projekt \n"
+#~ "online, men der sker et kvalitetstab.\n"
+
+#~ msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
+#~ msgstr "Audacity var ikke i stand til at konvertere dette Audacity 1.0 projekt til det nye format."
+
+#~ msgid "Could not remove old auto save file"
+#~ msgstr "Kunne ikke fjerne gamle, automatisk gemte filer"
+
+#~ msgid "On-demand import and waveform calculation complete."
+#~ msgstr "Ønsket import og beregning af bølgeform fuldført."
+
+#~ msgid "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete."
+#~ msgstr "Import fuldført. Beregner nu %d bølgeform. I alt %2.0f% % fuldført."
+
+#~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
+#~ msgstr "Import fuldført. Beregner nu bølgeform. %2.0f% % fuldført."
+
+#~ msgid "Waiting for waveform to finish computing..."
+#~ msgstr "Venter på at bølgeform bliver færdigudregnet..."
+
+#~ msgid "&Use legacy (version 3) syntax."
+#~ msgstr "Br&ug forældet (version 3) syntaks."
+
+#~ msgid ""
+#~ "You are attempting to overwrite an aliased file that is missing.\n"
+#~ "The file cannot be written because the path is needed to restore the original audio to the project.\n"
+#~ "Choose Help > Diagnostics > Check Dependencies to view the locations of all missing files.\n"
+#~ "If you still wish to export, please choose a different filename or folder."
+#~ msgstr ""
+#~ "Du forsøger at overskrive en aliasfil, som mangler.\n"
+#~ "Filen kan ikke skrives, fordi stien er nødvendig for at genskabe den originale lyd i projektet.\n"
+#~ "Vælg Hjælp > Diagnostik > Afhængighedskontrol for at se placeringerne, af alle manglende filer.\n"
+#~ "Hvis du stadig ønsker at eksportere, så vælg venligst et andet filnavn eller en anden mappe."
+
+#~ msgid "FFmpeg : ERROR - Failed to write audio frame to file."
+#~ msgstr "FFmpeg : FEJL - kunne ikke skrive lydramme til fil."
+
+#~ msgid ""
+#~ "\"%s\" is an Audacity Project file. \n"
+#~ "Use the 'File > Open' command to open Audacity Projects."
+#~ msgstr ""
+#~ "\"%s\" er en Audacity-projektfil. \n"
+#~ "Brug kommandoen Fil > Åbn for at åbne Audacity-projekter."
+
+#~ msgid ""
+#~ "MP3 Decoding Failed:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "MP3-afkodning mislykkedes:\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid ""
+#~ "When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Ved importering af ukomprimerede lydfiler kan du enten kopiere dem ind i projektet eller læse dem direkte fra deres nuværende placering (uden at kopiere).\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "Your current preference is set to copy in.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Din nuværende præference er sat til at kopiere ind.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "Your current preference is set to read directly.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Din nuværende præference er sat til at læse direkte.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "Reading the files directly allows you to play or edit them almost immediately. This is less safe than copying in, because you must retain the files with their original names in their original locations.\n"
+#~ "Help > Diagnostics > Check Dependencies will show the original names and locations of any files that you are reading directly.\n"
+#~ "\n"
+#~ "How do you want to import the current file(s)?"
+#~ msgstr ""
+#~ "Læses filerne direkte, kan du afspille eller redigere dem næsten øjeblikkeligt. Dette er mindre sikkert end at kopiere dem, fordi det kræver, at filerne bliver på deres oprindelige placering med deres oprindelige navn.\n"
+#~ "Hjælp > Diagnostik > Afhængighedskontrol vil vise de oprindelige navne og placeringer på filer som indlæses direkte.\n"
+#~ "\n"
+#~ "Hvordan vil du importere de(n) nuværende fil(er)?"
+
+#~ msgid "Choose an import method"
+#~ msgstr "Vælg en måde at importere på"
+
+#~ msgid "Make a &copy of the files before editing (safer)"
+#~ msgstr "Opret en &kopi af filerne inden redigering (sikrere)"
+
+#~ msgid "Read the files &directly from the original (faster)"
+#~ msgstr "Læs filerne &direkte fra originalen (hurtigere)"
+
+#~ msgid "Don't &warn again and always use my choice above"
+#~ msgstr "Ad&var mig ikke igen og brug altid mit valg ovenfor"
+
+#~ msgid "Bad data size"
+#~ msgstr "Dårlig datastørrelse"
+
+#~ msgid "Save Lossless Copy of Project..."
+#~ msgstr "Gem tabsfri kopi af projekt..."
+
+#~ msgid "&Save Compressed Copy of Project..."
+#~ msgstr "Gem k&omprimeret kopi af projekt..."
+
+#~ msgid "Chec&k Dependencies..."
+#~ msgstr "Afhængigheds&kontrol..."
+
+#~ msgid "C&hoose..."
+#~ msgstr "Væl&g..."
+
+#~ msgid "Audio cache"
+#~ msgstr "Lyd-mellemlager"
+
+#~ msgid "Play and/or record using &RAM (useful for slow drives)"
+#~ msgstr "Afspil og/eller optag ved at bruge &RAM (nyttigt ved langsomme drev)"
+
+#~ msgid "Mi&nimum Free Memory (MB):"
+#~ msgstr "Mi&n. ledig hukommelse (MB):"
+
+#~ msgid ""
+#~ "If the available system memory falls below this value, audio will no longer\n"
+#~ "be cached in memory and will be written to disk."
+#~ msgstr ""
+#~ "Hvis den tilgængelige systemhukommelse når under denne grænse, vil lyd ikke længere\n"
+#~ "blive mellemlagret i hukommelsen og vil derfor blive gemt på disken."
+
+#~ msgid "When importing audio files"
+#~ msgstr "Når lydfiler importeres"
+
+#~ msgid "Allow &background on-demand loading"
+#~ msgstr "Tillad indlæsning i &baggrunden"
+
+#~ msgid "Projects"
+#~ msgstr "Projekter"
+
+#~ msgid "Preferences for Projects"
+#~ msgstr "Præferencer for projekter"
+
+#~ msgid "When saving a project that depends on other audio files"
+#~ msgstr "Når et projekt, der er afhængig af andre lydfiler, gemmes"
+
+#~ msgid "&Low disk space at launch or new project"
+#~ msgstr "&Lav diskplads ved programstart eller nyt projekt"
+
+#~ msgid "&Importing uncompressed audio files"
+#~ msgstr "Ukomprimerede lydfiler &importeres"
+
+#~ msgid "Silence Finder"
+#~ msgstr "Stilhedsfinder"
+
+#~ msgid "Treat audio below this level as silence (dB)"
+#~ msgstr "Behandl lyd under dette niveau som stilhed (dB)"
+
+#~ msgid "Minimum duration of silence (seconds)"
+#~ msgstr "Minimum varighed af stilhed (sekunder)"
+
+#~ msgid "Label placement (seconds before silence ends)"
+#~ msgstr "Placering af etiket (sekunder inden stilhed slutter)"
+
+#~ msgid "S"
+#~ msgstr "S"
+
+#~ msgid ""
+#~ "No silences found.\n"
+#~ "Try reducing the silence level and\n"
+#~ "the minimum silence duration."
+#~ msgstr ""
+#~ "Ingen stilheder fundet.\n"
+#~ "Prøv at reducere stilhedensniveauet og\n"
+#~ "stilhedens minimum varighed."
+
+#~ msgid "Sound Finder"
+#~ msgstr "Lydfinder"
+
+#~ msgid "Jeremy R. Brown"
+#~ msgstr "Jeremy R. Brown"
+
+#~ msgid "Treat audio below this level as silence [ -dB]"
+#~ msgstr "Behandl lyd under dette niveau som stilhed [ -dB]"
+
+#~ msgid "Minimum duration of silence between sounds [seconds]"
+#~ msgstr "Minimum varighed af stilhed mellem lyde [sekunder]"
+
+#~ msgid "Label starting point [seconds before sound starts]"
+#~ msgstr "Etiekttens startpunkt [sekunder inden lyden starter]"
+
+#~ msgid "Label ending point [seconds after sound ends]"
+#~ msgstr "Etiekttens slutpunkt [sekunder inden lyden slutter]"
+
+#~ msgid "Add a label at the end of the track? [No=0, Yes=1]"
+#~ msgstr "Tilføj en etiket til slutningen af sporet? [Nej=0, Ja=1]"
+
+#~ msgid "[End]"
+#~ msgstr "[Slutning]"
+
+#~ msgid "Apply Low-Cut filter"
+#~ msgstr "Anvend Low-Cut-filter"
+
+#~ msgid "10Hz 6dB/octave"
+#~ msgstr "10 Hz 6 dB/oktav"
+
+#~ msgid "20Hz 6dB/octave"
+#~ msgstr "20 Hz 6 dB/oktav"
