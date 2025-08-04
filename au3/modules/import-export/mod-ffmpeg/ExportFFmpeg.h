@@ -40,6 +40,7 @@ public:
 
     ExportOptionsFFmpegCustomEditor(ExportOptionsEditor::Listener* listener = nullptr);
 
+    std::string GetName() const override;
     int GetOptionsCount() const override;
     bool GetOption(int index, ExportOption& option) const override;
     bool GetValue(int id, ExportValue& value) const override;

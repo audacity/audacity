@@ -19,9 +19,12 @@ static const muse::Uri HOME_PAGE_URI("musescore://home");
 static const muse::Uri NEW_PROJECT_URI("audacity://project/new");
 
 static const muse::Uri EXPORT_URI("audacity://project/export");
+static const muse::Uri CUSTOM_FFMPEG_OPTIONS("audacity://project/export/ffmpeg");
 
 static const QString AUDACITY_URL_SCHEME("AUDACITY");
 static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
+
+static const muse::actions::ActionCode OPEN_CUSTOM_FFMPEG_OPTIONS("open-custom-ffmpeg-options");
 
 void ProjectActionsController::init()
 {
@@ -46,6 +49,8 @@ void ProjectActionsController::init()
         bool quitApp = false; //multiInstancesProvider()->instances().size() > 1;
         closeOpenedProject(quitApp);
     });
+
+    dispatcher()->reg(this, OPEN_CUSTOM_FFMPEG_OPTIONS, this, &ProjectActionsController::openCustomFFmpegOptions);
 }
 
 const muse::actions::ActionCodeList& ProjectActionsController::prohibitedActionsWhileRecording() const
@@ -682,4 +687,9 @@ muse::Ret ProjectActionsController::openPageIfNeed(muse::Uri pageUri)
 
     interactive()->open(pageUri);
     return muse::make_ok();
+}
+
+void ProjectActionsController::openCustomFFmpegOptions()
+{
+    interactive()->open(CUSTOM_FFMPEG_OPTIONS);
 }

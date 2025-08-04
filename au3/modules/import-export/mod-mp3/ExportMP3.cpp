@@ -272,6 +272,11 @@ MP3ExportOptionsEditor::MP3ExportOptionsEditor(Listener* listener)
     }
 }
 
+std::string MP3ExportOptionsEditor::GetName() const
+{
+    return "mp3";
+}
+
 int MP3ExportOptionsEditor::GetOptionsCount() const
 {
     return static_cast<int>(mOptions.size());

@@ -15,6 +15,7 @@ class ExportOptionsSFTypedEditor final : public ExportOptionsEditor
 public:
     explicit ExportOptionsSFTypedEditor(int type);
 
+    std::string GetName() const override;
     int GetOptionsCount() const override;
     bool GetOption(int, ExportOption& option) const override;
     bool GetValue(ExportOptionID, ExportValue& value) const override;
@@ -98,6 +99,7 @@ class ExportOptionsSFEditor final : public ExportOptionsEditor
 public:
     explicit ExportOptionsSFEditor(Listener* listener);
 
+    std::string GetName() const override;
     int GetOptionsCount() const override;
     bool GetOption(int index, ExportOption& option) const override;
     bool GetValue(ExportOptionID id, ExportValue& value) const override;

@@ -34,6 +34,8 @@ public:
     explicit PlainExportOptionsEditor(std::initializer_list<OptionDesc> options, Listener* listener = nullptr);
     explicit PlainExportOptionsEditor(std::initializer_list<OptionDesc> options, SampleRateList samplerates, Listener* listener = nullptr);
 
+    std::string GetName() const override;
+
     int GetOptionsCount() const override;
     bool GetOption(int index, ExportOption& option) const override;
 

@@ -88,6 +88,7 @@ public:
 
     ExportOptionsWavPackEditor(Listener* listener);
 
+    std::string GetName() const override;
     int GetOptionsCount() const override;
     bool GetOption(int index, ExportOption& option) const override;
     bool GetValue(ExportOptionID id, ExportValue& value) const override;

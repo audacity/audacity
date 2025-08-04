@@ -29,6 +29,11 @@ PlainExportOptionsEditor::PlainExportOptionsEditor(std::initializer_list<OptionD
     InitOptions(options);
 }
 
+std::string PlainExportOptionsEditor::GetName() const
+{
+    return "plain";
+}
+
 int PlainExportOptionsEditor::GetOptionsCount() const
 {
     return static_cast<int>(mOptions.size());

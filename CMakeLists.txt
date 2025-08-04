@@ -125,11 +125,6 @@ if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
     option(AU_MODULE_EFFECTS_AUDIO_UNIT "Build Audacity Audio Unit module" ON)
 endif()
 
-option(AU_USE_FFMPEG "Build mod-ffmpeg module" ON)
-if (AU_USE_FFMPEG)
-    add_definitions(-DAU_USE_FFMPEG)
-endif()
-
 # === Setup ===
 
 # === Pack ===

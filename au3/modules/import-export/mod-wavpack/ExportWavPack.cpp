@@ -37,6 +37,11 @@ ExportOptionsWavPackEditor::ExportOptionsWavPackEditor(Listener* listener)
     }
 }
 
+std::string ExportOptionsWavPackEditor::GetName() const
+{
+    return "wavpack";
+}
+
 int ExportOptionsWavPackEditor::GetOptionsCount() const
 {
     return static_cast<int>(mOptions.size());

@@ -496,8 +496,7 @@ ExportFFmpeg::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* lis
             ToSampleRateList(iWMASampleRates),
             listener);
     case FMT_OTHER:
-        // NOT IMPLEMENTED YET
-        return {};//return std::make_unique<ExportOptionsFFmpegCustomEditor>(listener);
+        return std::make_unique<ExportOptionsFFmpegCustomEditor>(listener);
     }
     return {};
 }
@@ -539,6 +538,11 @@ std::unique_ptr<ExportProcessor> ExportFFmpeg::CreateProcessor(int format) const
 ExportOptionsFFmpegCustomEditor::ExportOptionsFFmpegCustomEditor(ExportOptionsEditor::Listener* listener)
     : mListener(listener)
 {
+}
+
+std::string ExportOptionsFFmpegCustomEditor::GetName() const
+{
+    return "custom_ffmpeg";
 }
 
 int ExportOptionsFFmpegCustomEditor::GetOptionsCount() const

@@ -39,19 +39,18 @@ const std::vector<int> DEFAULT_SAMPLE_RATE_LIST {
 ExportPreferencesModel::ExportPreferencesModel(QObject* parent)
     : QObject(parent)
 {
-    init();
+    //! NOTE: init m_sampleRateMapping
+    exportSampleRateList();
 }
 
 void ExportPreferencesModel::init()
 {
-    //! NOTE: init m_sampleRateMapping
-    exportSampleRateList();
-
     exportConfiguration()->processTypeChanged().onNotify(this, [this] {
         emit currentProcessChanged();
     });
 
     m_filename = globalContext()->currentProject()->displayName();
+    emit filenameChanged();
 
     exportConfiguration()->directoryPathChanged().onNotify(this, [this] {
         emit directoryPathChanged();
@@ -163,6 +162,7 @@ void ExportPreferencesModel::setCurrentFormat(const QString& format)
     }
 
     exportConfiguration()->setCurrentFormat(format.toStdString());
+    emit customFFmpegOptionsVisibleChanged();
 }
 
 QVariantList ExportPreferencesModel::formatsList() const
@@ -253,6 +253,11 @@ void ExportPreferencesModel::setExportSampleFormat(const QString& format)
     NOT_IMPLEMENTED;
 }
 
+void ExportPreferencesModel::openCustomFFmpegDialog()
+{
+    dispatcher()->dispatch("open-custom-ffmpeg-options");
+}
+
 void ExportPreferencesModel::updateCurrentSampleRate()
 {
     int currentSampleRate = exportConfiguration()->exportSampleRate();
@@ -296,4 +301,9 @@ void ExportPreferencesModel::exportData()
     if (!result.success() && !result.text().empty()) {
         interactive()->error(muse::trc("export", "Export error"), result.text());
     }
+}
+
+bool ExportPreferencesModel::customFFmpegOptionsVisible()
+{
+    return exporter()->isCustomFFmpegExportFormat();
 }
