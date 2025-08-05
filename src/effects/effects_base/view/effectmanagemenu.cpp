@@ -174,6 +174,11 @@ void EffectManageMenu::setPreset(QString presetId)
     emit presetChanged();
 }
 
+bool EffectManageMenu::enabled() const
+{
+    return m_presets.size() > 1; // Do not take default preset into account
+}
+
 void EffectManageMenu::resetPreset()
 {
     const EffectInstanceId instanceId = m_instanceId.toULongLong();

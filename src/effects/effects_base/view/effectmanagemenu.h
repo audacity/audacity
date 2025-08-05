@@ -13,6 +13,7 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
     Q_PROPERTY(QString instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)
     Q_PROPERTY(QVariantList presets READ presets NOTIFY presetsChanged FINAL)
     Q_PROPERTY(QString preset READ preset WRITE setPreset NOTIFY presetChanged FINAL)
+    Q_PROPERTY(bool enabled READ enabled NOTIFY presetsChanged FINAL)
 
     muse::Inject<IEffectPresetsProvider> presetsController;
     muse::Inject<IEffectInstancesRegister> instancesRegister;
@@ -25,6 +26,7 @@ public:
     QVariantList presets();
     QString preset() const;
     void setPreset(QString presetId);
+    bool enabled() const;
 
     Q_INVOKABLE void resetPreset();
     Q_INVOKABLE void savePresetAs();
