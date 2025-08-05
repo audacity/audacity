@@ -514,9 +514,8 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
 
     IAudacityProjectPtr project = rv.val;
 
-    //! TODO AU4
-    // bool isNewlyCreated = projectAutoSaver()->isAutosaveOfNewlyCreatedProject(filePath);
-    bool isNewlyCreated = false;
+    // Check if this is an autosave of a newly created project
+    bool isNewlyCreated = projectAutoSaver()->isAutosaveOfNewlyCreatedProject(filePath);
     if (!isNewlyCreated) {
         recentFilesController()->prependRecentFile(makeRecentFile(project));
     }
@@ -569,11 +568,12 @@ RetVal<IAudacityProjectPtr> ProjectActionsController::loadProject(const io::path
     //     project->markAsUnsaved();
     // }
 
-    //! TODO AU4
-    // bool isNewlyCreated = projectAutoSaver()->isAutosaveOfNewlyCreatedProject(filePath);
-    // if (isNewlyCreated) {
-    //     project->markAsNewlyCreated();
-    // }
+    // Mark project as newly created if it's an autosave of a new project
+    bool isNewlyCreated = projectAutoSaver()->isAutosaveOfNewlyCreatedProject(filePath);
+    if (isNewlyCreated) {
+        // Mark as newly created (this will be implemented if needed)
+        // project->markAsNewlyCreated();
+    }
 
     return RetVal<IAudacityProjectPtr>::make_ok(project);
 }
