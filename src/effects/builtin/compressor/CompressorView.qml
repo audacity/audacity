@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Muse.UiComponents
 import Audacity.Effects
+import Audacity.BuiltinEffects
 
 import "../common"
 
@@ -19,7 +20,6 @@ EffectBase {
     CompressorViewModel {
         id: compressor
 
-        instanceId: root.instanceId
         onCompressionCurveChanged: {
             compressionCurve.requestPaint()
         }
@@ -52,19 +52,35 @@ EffectBase {
 
                 Repeater {
                     model: [
-                        { id: "attackMs", title: qsTrc("effects/compressor", "Attack"), unit: "ms" },
-                        { id: "releaseMs", title: qsTrc("effects/compressor", "Release"), unit: "ms" },
-                        { id: "lookaheadMs", title: qsTrc("effects/compressor", "Lookahead"), unit: "ms" },
+                        {
+                            id: "attackMs",
+                            title: qsTrc("effects/compressor", "Attack"),
+                            unit: "ms",
+                            warpingType: ValueWarpingType.Soft
+                        },
+                        {
+                            id: "releaseMs",
+                            title: qsTrc("effects/compressor", "Release"),
+                            unit: "ms",
+                            warpingType: ValueWarpingType.Soft
+                        },
+                        {
+                            id: "lookaheadMs",
+                            title: qsTrc("effects/compressor", "Lookahead"),
+                            unit: "ms",
+                            warpingType: ValueWarpingType.Soft
+                        },
                     ]
 
                     delegate: SettingKnob {
                         required property var modelData
                         isVertical: true
+                        knobFirst: false
                         title: modelData.title
                         unit: modelData.unit
+                        warpingType: modelData.warpingType
                         model: CompressorSettingModel {
                             paramId: modelData.id
-                            instanceId: root.instanceId
                         }
                     }
                 }
@@ -83,20 +99,41 @@ EffectBase {
 
                 Repeater {
                     model: [
-                        { id: "thresholdDb", title: qsTrc("effects/compressor", "Threshold"), unit: "dB" },
-                        { id: "compressionRatio", title: qsTrc("effects/compressor", "Ratio"), unit: "" },
-                        { id: "kneeWidthDb", title: qsTrc("effects/compressor", "Knee width"), unit: "dB" },
-                        { id: "makeupGainDb", title: qsTrc("effects/compressor", "Make-up gain"), unit: "dB" }
+                        {
+                            id: "thresholdDb",
+                            title: qsTrc("effects/compressor", "Threshold"),
+                            unit: "dB",
+                            warpingType: ValueWarpingType.None
+                        },
+                        {
+                            id: "compressionRatio",
+                            title: qsTrc("effects/compressor", "Ratio"),
+                            unit: "",
+                            warpingType: ValueWarpingType.Aggressive
+                        },
+                        {
+                            id: "kneeWidthDb",
+                            title: qsTrc("effects/compressor", "Knee width"),
+                            unit: "dB",
+                            warpingType: ValueWarpingType.None
+                        },
+                        {
+                            id: "makeupGainDb",
+                            title: qsTrc("effects/compressor", "Make-up gain"),
+                            unit: "dB",
+                            warpingType: ValueWarpingType.None
+                        }
                     ]
 
                     delegate: SettingKnob {
                         required property var modelData
                         isVertical: true
+                        knobFirst: false
                         title: modelData.title
                         unit: modelData.unit
+                        warpingType: modelData.warpingType
                         model: CompressorSettingModel {
                             paramId: modelData.id
-                            instanceId: root.instanceId
                             onValueChanged: {
                                 compressionCurve.requestPaint()
                             }

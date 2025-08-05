@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Muse.UiComponents
 import Audacity.Effects
 import Audacity.ProjectScene
+import Audacity.BuiltinEffects
 
 import "../common"
 
@@ -19,8 +20,6 @@ EffectBase {
 
     LimiterViewModel {
         id: limiter
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {
@@ -56,7 +55,6 @@ EffectBase {
                     unit: "dB"
                     model: LimiterSettingModel {
                         paramId: "thresholdDb"
-                        instanceId: root.instanceId
                     }
                 }
             }
@@ -74,7 +72,6 @@ EffectBase {
                     unit: "dB"
                     model: LimiterSettingModel {
                         paramId: "makeupTargetDb"
-                        instanceId: root.instanceId
                     }
                 }
             }
@@ -88,19 +85,37 @@ EffectBase {
 
             Repeater {
                 model: [
-                    { id: "lookaheadMs", title: qsTrc("effects/limiter", "Lookahead"), unit: "ms" },
-                    { id: "kneeWidthDb", title: qsTrc("effects/limiter", "Knee width"), unit: "dB" },
-                    { id: "releaseMs", title: qsTrc("effects/limiter", "Release"), unit: "ms" },
+                    {
+                        id: "lookaheadMs",
+                        title: qsTrc("effects/limiter", "Lookahead"),
+                        unit: "ms",
+                        warpingType: ValueWarpingType.Aggressive
+                    },
+                    {
+                        id: "kneeWidthDb",
+                        title: qsTrc("effects/limiter", "Knee width"),
+                        unit: "dB",
+                        warpingType: ValueWarpingType.None
+                    },
+                    {
+                        id: "releaseMs",
+                        title: qsTrc("effects/limiter", "Release"),
+                        unit: "ms",
+                        warpingType: ValueWarpingType.Soft
+                    },
                 ]
 
                 delegate: SettingKnob {
+                    anchors.verticalCenter: parent.verticalCenter
                     required property var modelData
-                    isVertical: false
+                    isVertical: true
+                    knobFirst: false
+                    radius: 16
                     title: modelData.title
                     unit: modelData.unit
+                    warpingType: modelData.warpingType
                     model: LimiterSettingModel {
                         paramId: modelData.id
-                        instanceId: root.instanceId
                     }
                 }
             }

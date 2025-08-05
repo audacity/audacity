@@ -10,7 +10,7 @@ Item {
     required property int availableHeight
 
     function requestPaint() {
-        painter.requestPaint();
+        painter.requestPaint()
     }
 
     width: prv.labelWidth + prv.labelMargin + background.width + prv.extraLabelSpace
@@ -22,14 +22,14 @@ Item {
         readonly property int max: 0
         readonly property int step: 12
         readonly property int tickLength: 4
-        readonly property var ticks: (function() {
-            var result = [];
-            for (var i = prv.min; i <= prv.max; i += prv.step) {
-                result.push(i);
-            }
-            return result;
-        })()
-        readonly property color lineColor: Qt.rgba(123/255, 123/255, 129/255, 1)
+        readonly property var ticks: (function () {
+                var result = []
+                for (var i = prv.min; i <= prv.max; i += prv.step) {
+                    result.push(i)
+                }
+                return result
+            })()
+        readonly property color lineColor: "#7B7B81"
 
         property int labelWidth: fontMetrics.boundingRect("-000").width
         property int labelHeight: fontMetrics.boundingRect("0").height
@@ -91,7 +91,7 @@ Item {
                     horizontalAlignment: Text.AlignRight
                     anchors.left: hLine.right
                     anchors.leftMargin: prv.labelMargin
-                    y: hLine.y - 7 // So the minus sign is centered
+                    y: hLine.y - (fontMetrics.ascent + fontMetrics.descent) / 2
                     text: modelData
                 }
 
@@ -108,6 +108,8 @@ Item {
         CompressionCurvePainter {
             id: painter
             anchors.fill: parent
+            min: prv.min
+            max: prv.max
         }
     }
 }

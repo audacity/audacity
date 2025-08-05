@@ -15,15 +15,15 @@ Item {
     implicitHeight: content.implicitHeight
 
     signal newValueRequested(string key, real newValue)
-    signal commitRequested()
+    signal commitRequested
 
     onParameterChanged: {
         if (parameter) {
             knob.from = parameter["min"]
             knob.to = parameter["max"]
             knob.value = parameter["value"]
-            knob.stepSize = parameter["step"] || 1;
-            textEdit.measureUnitsSymbol = parameter["unit"] || "";
+            knob.stepSize = parameter["step"] || 1
+            textEdit.measureUnitsSymbol = parameter["unit"] || ""
         }
     }
 
@@ -33,7 +33,7 @@ Item {
         spacing: 6
 
         StyledTextLabel {
-            text:  parameter["title"]
+            text: parameter["title"]
             height: 16
             horizontalAlignment: Qt.AlignLeft
         }
@@ -48,7 +48,7 @@ Item {
                     root.newValueRequested(root.parameter["key"], value)
                 }
 
-                mouseArea.onReleased: function() {
+                mouseArea.onReleased: function () {
                     root.commitRequested()
                 }
             }
@@ -61,20 +61,20 @@ Item {
                 minValue: knob.from
                 maxValue: knob.to
                 decimals: {
-                    let s = knob.stepSize.toString();
+                    let s = knob.stepSize.toString()
                     if (s.indexOf('.') >= 0)
-                        return s.split('.')[1].length;
-                    return 0;
+                        return s.split('.')[1].length
+                    return 0
                 }
                 step: knob.stepSize
 
                 currentValue: +knob.value.toFixed(decimals)
 
-                onValueEdited: function(value) {
+                onValueEdited: function (value) {
                     root.newValueRequested(root.parameter["key"], value)
                 }
 
-                onValueEditingFinished: function(value) {
+                onValueEditingFinished: function (value) {
                     root.commitRequested()
                 }
             }

@@ -63,7 +63,7 @@ public:
         compressorCompressionRatioDefault,
         1,
         100,
-        0.1
+        0.01
     };
 
     static constexpr EffectParameter lookaheadMs {

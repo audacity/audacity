@@ -4,7 +4,6 @@
 #pragma once
 
 #include "abstracteffectmodel.h"
-#include "effects/effects_base/ieffectsprovider.h"
 
 namespace au::effects {
 class AbstractEffectSettingModel : public AbstractEffectModel
@@ -13,11 +12,9 @@ class AbstractEffectSettingModel : public AbstractEffectModel
     Q_PROPERTY(QString paramId READ paramId WRITE setParamId NOTIFY paramIdChanged FINAL)
     Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged FINAL)
 
-    Q_PROPERTY(double min READ min NOTIFY minChanged FINAL)
-    Q_PROPERTY(double max READ max NOTIFY maxChanged FINAL)
-    Q_PROPERTY(double step READ step NOTIFY stepChanged FINAL)
-
-    muse::Inject<IEffectsProvider> effectsProvider;
+    Q_PROPERTY(double min READ min CONSTANT FINAL)
+    Q_PROPERTY(double max READ max CONSTANT FINAL)
+    Q_PROPERTY(double step READ step CONSTANT FINAL)
 
 public:
     AbstractEffectSettingModel(QObject* parent);
@@ -36,13 +33,8 @@ public:
 signals:
     void paramIdChanged();
     void valueChanged();
-    void labelChanged();
-    void minChanged();
-    void maxChanged();
-    void stepChanged();
 
 protected:
-    const Effect* effect() const;
     QString m_paramId;
 
 private:

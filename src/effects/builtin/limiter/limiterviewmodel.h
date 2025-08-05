@@ -14,8 +14,6 @@ class LimiterViewModel : public AbstractEffectModel
 {
     Q_OBJECT
 
-    muse::Inject<IEffectsProvider> effectsProvider;
-
 public:
     LimiterViewModel(QObject* parent = nullptr);
 

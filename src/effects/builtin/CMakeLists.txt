@@ -27,6 +27,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/valuewarper.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/valuewarper.h
+    ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/valuewarpertypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/warpingtransformer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/warpingtransformer.h
+
     ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectviewloader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectviewloader.h
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewregister.cpp

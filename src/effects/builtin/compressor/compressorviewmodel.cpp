@@ -13,15 +13,16 @@ CompressorViewModel::CompressorViewModel(QObject* parent)
 {
 }
 
-QList<float> CompressorViewModel::compressionCurve(const QList<float>& dbIn) const
+QList<QVariantMap> CompressorViewModel::compressionCurve(int from, int to, int count) const
 {
     const auto& s = settings<CompressorSettings>();
-    QList<float> dbOut;
-    dbOut.reserve(dbIn.size());
-    for (const auto db : dbIn) {
-        dbOut.append(CompressorProcessor::EvaluateTransferFunction(s, db));
+    QList<QVariantMap> points;
+    points.reserve(count);
+    for (int i = 0; i < count; ++i) {
+        const float db = from + (to - from) * i / (count - 1);
+        points.append({ { "x", db }, { "y", CompressorProcessor::EvaluateTransferFunction(s, db) } });
     }
-    return dbOut;
+    return points;
 }
 
 void CompressorViewModel::doReload()

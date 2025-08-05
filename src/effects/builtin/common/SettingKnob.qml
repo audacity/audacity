@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import Audacity.BuiltinEffects
 
 Item {
     id: root
@@ -6,7 +7,9 @@ Item {
     required property var model
     required property string title
     property string unit: ""
+    property int warpingType: ValueWarpingType.None
     property bool isVertical: false
+    property bool knobFirst: true // Only relevant is `isVertical` is true
     property int radius: 16
 
     Component.onCompleted: {
@@ -28,6 +31,8 @@ Item {
 
         BigParameterKnob {
             radius: root.radius
+            warpingType: root.warpingType
+            knobFirst: root.knobFirst
             parameter: {
                 "title": root.title,
                 "unit": root.unit,
@@ -37,7 +42,7 @@ Item {
                 "step": root.model.step
             }
 
-            onNewValueRequested: function(_, newValue) {
+            onNewValueRequested: function (_, newValue) {
                 root.model.value = newValue
             }
 
@@ -61,7 +66,7 @@ Item {
                 "step": root.model.step
             }
 
-            onNewValueRequested: function(_, newValue) {
+            onNewValueRequested: function (_, newValue) {
                 root.model.value = newValue
             }
 

@@ -6,19 +6,15 @@
 #include "../common/effectsettingmodelimpl.h"
 #include "compressoreffect.h"
 
-#include "effects/effects_base/ieffectsprovider.h"
-
 namespace au::effects {
 class CompressorViewModel : public AbstractEffectModel
 {
     Q_OBJECT
 
-    muse::Inject<IEffectsProvider> effectsProvider;
-
 public:
     CompressorViewModel(QObject* parent = nullptr);
 
-    Q_INVOKABLE QList<float> compressionCurve(const QList<float>& dbIn) const;
+    Q_INVOKABLE QList<QVariantMap> compressionCurve(int from, int to, int count) const;
 
 signals:
     void compressionCurveChanged();

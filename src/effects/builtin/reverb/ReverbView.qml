@@ -76,7 +76,7 @@ EffectBase {
                     parameter: reverb.paramsList["RoomSize"]
                     radius: 24
 
-                    onNewValueRequested: function(key, newValue) {
+                    onNewValueRequested: function (key, newValue) {
                         newParameterValueRequested(key, newValue)
                         value = newValue
                     }
@@ -90,7 +90,7 @@ EffectBase {
                     parameter: reverb.paramsList["StereoWidth"]
                     radius: 24
 
-                    onNewValueRequested: function(key, newValue) {
+                    onNewValueRequested: function (key, newValue) {
                         newParameterValueRequested(key, newValue)
                         value = newValue
                     }
@@ -104,7 +104,7 @@ EffectBase {
                     parameter: reverb.paramsList["PreDelay"]
                     radius: 24
 
-                    onNewValueRequested: function(key, newValue) {
+                    onNewValueRequested: function (key, newValue) {
                         newParameterValueRequested(key, newValue)
                         value = newValue
                     }
@@ -137,7 +137,7 @@ EffectBase {
 
                 parameter: reverb.paramsList["HfDamping"]
 
-                onNewValueRequested: function(key, newValue) {
+                onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
@@ -151,7 +151,7 @@ EffectBase {
 
                 parameter: reverb.paramsList["Reverberance"]
 
-                onNewValueRequested: function(key, newValue) {
+                onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
@@ -165,7 +165,7 @@ EffectBase {
 
                 parameter: reverb.paramsList["ToneLow"]
 
-                onNewValueRequested: function(key, newValue) {
+                onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
@@ -179,7 +179,7 @@ EffectBase {
 
                 parameter: reverb.paramsList["ToneHigh"]
 
-                onNewValueRequested: function(key, newValue) {
+                onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
@@ -197,7 +197,7 @@ EffectBase {
 
                 parameter: reverb.paramsList["WetGain"]
 
-                onNewValueRequested: function(key, newValue) {
+                onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
@@ -211,7 +211,7 @@ EffectBase {
 
                 parameter: reverb.paramsList["DryGain"]
 
-                onNewValueRequested: function(key, newValue) {
+                onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
@@ -224,7 +224,7 @@ EffectBase {
 
                 text: qsTrc("effects/reverb", "Wet only")
                 checked: reverb.wetOnly
-                onClicked: function() {
+                onClicked: function () {
                     reverb.wetOnly = !reverb.wetOnly
                     reverb.commitSettings()
                 }
