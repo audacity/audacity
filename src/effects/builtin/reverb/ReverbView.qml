@@ -219,7 +219,7 @@ EffectBase {
             CheckBox {
                 id: wetOnly
 
-                text: qsTrc("effects/reverb", "Wet Only")
+                text: qsTrc("effects/reverb", "Wet only")
                 checked: reverb.wetOnly
                 onClicked: function() {
                     reverb.wetOnly = !reverb.wetOnly
