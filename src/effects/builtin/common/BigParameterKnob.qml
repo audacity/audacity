@@ -64,7 +64,12 @@ Item {
 
             minValue: knob.from
             maxValue: knob.to
-            decimals: 0
+            decimals: {
+                let s = knob.stepSize.toString();
+                if (s.indexOf('.') >= 0)
+                    return s.split('.')[1].length;
+                return 0;
+            }
             step: knob.stepSize
 
             currentValue: +knob.value.toFixed(decimals)

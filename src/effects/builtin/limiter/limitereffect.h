@@ -32,24 +32,22 @@ public:
     bool CheckWhetherSkipEffect(const EffectSettings& settings) const override;
     const EffectParameterMethods& Parameters() const override;
 
-    static constexpr auto dbStep = 0.1;
-
     static constexpr LimiterParameter thresholdDb {
         &LimiterSettings::thresholdDb,
         L"thresholdDb",
         limiterThresholdDbDefault,
-        -30 / dbStep,
+        -30,
         0,
-        1 / dbStep
+        0.1
     };
 
     static constexpr LimiterParameter makeupTargetDb {
         &LimiterSettings::makeupTargetDb,
         L"makeupTargetDb",
         limiterMakeupTargetDbDefault,
-        -30 / dbStep,
+        -30,
         0,
-        1 / dbStep
+        0.1
     };
 
     static constexpr LimiterParameter kneeWidthDb {
@@ -57,14 +55,16 @@ public:
         L"kneeWidthDb",
         limiterKneeWidthDbDefault,
         0,
-        10 / dbStep,
-        1 / dbStep
+        10,
+        0.1
     };
 
     static constexpr LimiterParameter lookaheadMs {
         &LimiterSettings::lookaheadMs, L"lookaheadMs",
-        limiterLookaheadMsDefault,     0,
-        limiterMaxLookaheadMs,         1
+        limiterLookaheadMsDefault,
+        0,
+        limiterMaxLookaheadMs,
+        0.1
     };
 
     static constexpr LimiterParameter releaseMs { &LimiterSettings::releaseMs,
@@ -72,7 +72,7 @@ public:
                                                   limiterReleaseMsDefault,
                                                   0,
                                                   1000,
-                                                  10 };
+                                                  0.1 };
 
     static constexpr LimiterParameter showInput {
         &LimiterSettings::showInput, L"showInput", showInputDefault, 0, 1, 1

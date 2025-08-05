@@ -30,24 +30,22 @@ public:
     bool CheckWhetherSkipEffect(const EffectSettings& settings) const override;
     const EffectParameterMethods& Parameters() const override;
 
-    static constexpr auto dbStep = 0.1;
-
     static constexpr EffectParameter thresholdDb {
         &CompressorSettings::thresholdDb,
         L"thresholdDb",
         compressorThresholdDbDefault,
-        -60 / dbStep,
+        -60,
         0,
-        1 / dbStep
+        0.1
     };
 
     static constexpr EffectParameter makeupGainDb {
         &CompressorSettings::makeupGainDb,
         L"makeupGainDb",
         compressorMakeupGainDbDefault,
-        -30 / dbStep,
-        30 / dbStep,
-        1 / dbStep
+        -30,
+        30,
+        0.1
     };
 
     static constexpr EffectParameter kneeWidthDb {
@@ -55,8 +53,8 @@ public:
         L"kneeWidthDb",
         compressorKneeWidthDbDefault,
         0,
-        30 / dbStep,
-        1 / dbStep
+        30,
+        0.1
     };
 
     static constexpr EffectParameter compressionRatio {
@@ -65,13 +63,15 @@ public:
         compressorCompressionRatioDefault,
         1,
         100,
-        1
+        0.1
     };
 
     static constexpr EffectParameter lookaheadMs {
         &CompressorSettings::lookaheadMs, L"lookaheadMs",
-        compressorLookaheadMsDefault,     0,
-        compressorMaxLookaheadMs,         1
+        compressorLookaheadMsDefault,
+        0,
+        compressorMaxLookaheadMs,
+        0.1
     };
 
     static constexpr EffectParameter attackMs {
@@ -80,7 +80,7 @@ public:
         compressorAttackMsDefault,
         0,
         200,
-        1
+        0.1
     };
 
     static constexpr EffectParameter releaseMs {
@@ -89,7 +89,7 @@ public:
         compressorReleaseMsDefault,
         0,
         1000,
-        1
+        0.1
     };
 
     static constexpr EffectParameter showInput {

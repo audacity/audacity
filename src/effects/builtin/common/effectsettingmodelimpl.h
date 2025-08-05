@@ -60,7 +60,7 @@ public:
             return 0.0;
         }
         const auto& param = m_getter(*effect);
-        return param.min / param.scale;
+        return param.min;
     }
 
     double max() const override
@@ -70,7 +70,7 @@ public:
             return 1.0;
         }
         const auto& param = m_getter(*effect);
-        return param.max / param.scale;
+        return param.max;
     }
 
     double step() const override
@@ -80,7 +80,7 @@ public:
             return 1.0;
         }
         const auto& param = m_getter(*effect);
-        return 1. / param.scale;
+        return param.step;
     }
 
 private:
