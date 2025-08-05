@@ -55,6 +55,8 @@ RowLayout {
         textRole: "name"
         valueRole: "id"
 
+        enabled: manageMenuModel.enabled
+
         indeterminateText: qsTrc("effects", "Select preset")
 
         model: manageMenuModel.presets
