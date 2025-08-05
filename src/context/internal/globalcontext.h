@@ -4,8 +4,8 @@
 #pragma once
 
 #include "modularity/ioc.h"
-#include "../iglobalcontext.h"
-#include "playbackstate.h"
+#include "context/iglobalcontext.h"
+#include "playbackcontext.h"
 #include "record/irecordcontroller.h"
 
 namespace au::context {
@@ -25,7 +25,7 @@ public:
     muse::async::Notification currentTrackeditProjectChanged() const override;
 
     void setPlayer(const au::playback::IPlayerPtr& player) override;
-    IPlaybackStatePtr playbackState() const override;
+    IPlaybackContextPtr playbackContext() const override;
 
     bool isRecording() const override;
     muse::async::Notification isRecordingChanged() const override;
@@ -36,6 +36,6 @@ private:
     au::project::IAudacityProjectPtr m_currentProject;
     muse::async::Notification m_currentProjectChanged;
 
-    std::shared_ptr<PlaybackState> m_playbackState;
+    std::shared_ptr<PlaybackContext> m_playbackContext;
 };
 }

@@ -198,6 +198,8 @@ private:
 
     void saveViewState() const;
 
+    context::IPlaybackContextPtr playbackContext() const;
+
     double m_frameWidth = 0.0;
     double m_frameHeight = 0.0;
     double m_frameContentHeight = 0.0;

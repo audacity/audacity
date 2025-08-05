@@ -7,7 +7,7 @@
 #include "../internal/au3/au3trackdata.h"
 
 #include "context/tests/mocks/globalcontextmock.h"
-#include "context/tests/mocks/playbackstatemock.h"
+#include "context/tests/mocks/playbackcontextmock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
 #include "mocks/trackeditprojectmock.h"
 #include "mocks/selectioncontrollermock.h"
@@ -165,7 +165,7 @@ public:
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();
         m_interactive = std::make_shared<NiceMock<muse::InteractiveMock> >();
-        m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
+        m_playbackContext = std::make_shared<NiceMock<context::PlaybackContextMock> >();
 
         m_au3Interaction->globalContext.set(m_globalContext);
         m_au3Interaction->selectionController.set(m_selectionController);
@@ -178,8 +178,8 @@ public:
         m_currentProject = std::make_shared<NiceMock<project::AudacityProjectMock> >();
         ON_CALL(*m_globalContext, currentProject())
         .WillByDefault(Return(m_currentProject));
-        ON_CALL(*m_globalContext, playbackState())
-        .WillByDefault(Return(m_playbackState));
+        ON_CALL(*m_globalContext, playbackContext())
+        .WillByDefault(Return(m_playbackContext));
 
         ON_CALL(*m_currentProject, trackeditProject())
         .WillByDefault(Return(m_trackEditProject));
@@ -333,7 +333,7 @@ public:
     std::shared_ptr<TrackeditProjectMock> m_trackEditProject;
     std::shared_ptr<SelectionControllerMock> m_selectionController;
     std::shared_ptr<muse::IInteractive> m_interactive;
-    std::shared_ptr<context::PlaybackStateMock> m_playbackState;
+    std::shared_ptr<context::PlaybackContextMock> m_playbackContext;
 
     std::shared_ptr<au3::Au3ProjectAccessor> m_au3ProjectAccessor;
 };
@@ -381,7 +381,7 @@ TEST_F(Au3InteractionTests, ClipColorRetainedWhenClipIsCopied)
     const ITrackDataPtr trackData = std::make_shared<Au3TrackData>(trackCopy);
 
     //! [EXPECT] The playback is asked for its position
-    EXPECT_CALL(*m_playbackState, playbackPosition()).Times(1).WillOnce(Return(0.0));
+    EXPECT_CALL(*m_playbackContext, playbackPosition()).Times(1).WillOnce(Return(0.0));
 
     //! [WHEN] Making a clip copy to a new track
     const ClipKey clipKey { track->GetId(), clip->GetId() };
@@ -2106,7 +2106,7 @@ TEST_F(Au3InteractionTests, PasteOnEmptyTrack)
     const ITrackDataPtr trackData = std::make_shared<Au3TrackData>(trackCopy);
 
     //! [EXPECT] The playback is asked for its position
-    EXPECT_CALL(*m_playbackState, playbackPosition()).Times(1).WillOnce(Return(0.0));
+    EXPECT_CALL(*m_playbackContext, playbackPosition()).Times(1).WillOnce(Return(0.0));
 
     //! [WHEN] Paste from clipboard
     constexpr auto moveClips = true;

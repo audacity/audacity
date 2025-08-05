@@ -16,7 +16,7 @@ PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& actio
                                                  QObject* parent)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
-    playbackState()->playbackPositionChanged().onReceive(this, [this](muse::secs_t) {
+    playbackContext()->playbackPositionChanged().onReceive(this, [this](muse::secs_t) {
         emit currentValueChanged();
     });
 
@@ -58,7 +58,7 @@ void PlaybackToolBarTimeItem::setCurrentFormat(int format)
 
 double PlaybackToolBarTimeItem::currentValue() const
 {
-    return playbackState()->playbackPosition();
+    return playbackContext()->playbackPosition();
 }
 
 void PlaybackToolBarTimeItem::setCurrentValue(double value)
@@ -70,9 +70,9 @@ void PlaybackToolBarTimeItem::setCurrentValue(double value)
     dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1(value));
 }
 
-au::context::IPlaybackStatePtr PlaybackToolBarTimeItem::playbackState() const
+au::context::IPlaybackContextPtr PlaybackToolBarTimeItem::playbackContext() const
 {
-    return globalContext()->playbackState();
+    return globalContext()->playbackContext();
 }
 
 double PlaybackToolBarTimeItem::sampleRate() const

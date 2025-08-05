@@ -9,7 +9,6 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "playback/iplayback.h"
 #include "trackedit/iprojecthistory.h"
 #include "global/async/asyncable.h"
 
@@ -30,7 +29,6 @@ class AudioUnitViewModel : public QObject, public muse::async::Asyncable
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IRealtimeEffectService> realtimeEffectService;
     muse::Inject<IEffectExecutionScenario> executionScenario;
-    muse::Inject<au::playback::IPlayback> playback;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:

@@ -7,7 +7,7 @@
 #include "global/async/notification.h"
 #include "project/iaudacityproject.h"
 #include "playback/iplayer.h"
-#include "iplaybackstate.h"
+#include "iplaybackcontext.h"
 
 namespace au::context {
 class IGlobalContext : MODULE_EXPORT_INTERFACE
@@ -25,7 +25,7 @@ public:
     virtual muse::async::Notification currentTrackeditProjectChanged() const = 0;
 
     virtual void setPlayer(const au::playback::IPlayerPtr& player) = 0;
-    virtual IPlaybackStatePtr playbackState() const = 0;
+    virtual IPlaybackContextPtr playbackContext() const = 0;
 
     virtual bool isRecording() const = 0;
     virtual muse::async::Notification isRecordingChanged() const = 0;
