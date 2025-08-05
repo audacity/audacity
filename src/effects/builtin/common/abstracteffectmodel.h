@@ -22,6 +22,7 @@ class AbstractEffectModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(QString instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)
 
     Q_PROPERTY(QString effectId READ effectId_prop NOTIFY effectIdChanged FINAL)
+    Q_PROPERTY(bool usesPresets READ usesPresets CONSTANT FINAL)
 
 public:
     muse::Inject<IEffectInstancesRegister> instancesRegister;
@@ -42,6 +43,7 @@ public:
 
     EffectInstanceId instanceId() const;
     EffectId effectId() const;
+    virtual bool usesPresets() const { return true; }
     bool inited() const;
 
 signals:

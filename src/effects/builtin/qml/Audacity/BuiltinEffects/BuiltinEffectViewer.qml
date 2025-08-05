@@ -14,6 +14,7 @@ Rectangle {
 
     property string title: builder.contentItem ? builder.contentItem.title : ""
     property bool isApplyAllowed: builder.contentItem ? builder.contentItem.isApplyAllowed : false
+    property bool usesPresets: builder.contentItem ? builder.contentItem.usesPresets : false
 
     signal closeRequested()
 

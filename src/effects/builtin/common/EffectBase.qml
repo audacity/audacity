@@ -14,6 +14,7 @@ Rectangle {
     property var dialogView: null
 
     property AbstractEffectModel model: null
+    property bool usesPresets: model ? model.usesPresets : true
 
     color: ui.theme.backgroundPrimaryColor
 
