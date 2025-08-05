@@ -36,8 +36,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
-"PO-Revision-Date: 2025-05-30 20:37-0300\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
+"PO-Revision-Date: 2025-07-24 23:12-0300\n"
 "Last-Translator: Fúlvio Alves <fga.fulvio@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/audacity/teams/164520/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -4672,12 +4672,12 @@ msgstr "Próximo slide"
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "Slide %d sw %d, %s. %s"
+msgstr "Slide %d de %d, %s. %s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr "Slide %d sw %d, %s, %s. %s"
+msgstr "Slide %d de %d, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7499,7 +7499,7 @@ msgstr "Digite o token para vincular sua conta"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Sign-in and get the token"
-msgstr "Entre e obtenha o token"
+msgstr "Faça login e obtenha o token"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -7540,8 +7540,8 @@ msgstr ""
 "Verifique novamente suas credenciais e tente novamente!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
-msgstr ""
+msgid "Create a free cloud storage account to access your projects and audio from any device"
+msgstr "Crie uma conta gratuita de armazenamento em nuvem e acesse seus projetos e áudios em qualquer dispositivo"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7556,9 +7556,8 @@ msgid "Continue with Facebook"
 msgstr "Continuar com o Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Or use email and password"
-msgstr "Remoção e Reparação de Ruído"
+msgstr "Ou use e-mail e senha"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -8120,7 +8119,7 @@ msgstr "Sobre o %s"
 #: src/AboutDialog.cpp
 msgid "translator_credits"
 msgstr ""
-"Tradução para português do Brasil por Cleber Tavano (2002-2023), com contribuições, atualizações e revisões de Djavan Fagundes (2010), Paulo Castro (2013), Rogênio Belém (2013), Flávio Salgado Moreira (2014), Marcelo Thomaz de Aquino Filho (2014), Victor Westmann (2014-2015), Gutem (2015), Henrique Terto de Souza (2015-2017), Igor Rückert (2015-2020), Marcos Nakamine (2015), Pablo do Amaral Ferreira (2015), Thales Alexander Barné Peres (2015), Ciro (2016), J.Nylson (2016), Lourenço Schmid (2016), millemiglia (2016), Rodrigo de Araújo (2016), Diego Medeiros (2016-2017), Thomas De Rocker (2017), Bruno Ramalhete (2019), Aline Furlanetto Viero (2021), Link Winterberg (2024), Rodrigo Fontanella (2024), Victoria Pelegrini Thobias (2024), Fúlvio Alves (2024-2025). \n"
+"Tradução para português do Brasil por Cleber Tavano (2002-2023), com contribuições, atualizações e revisões de Djavan Fagundes (2010), Paulo Castro (2013), Rogênio Belém (2013), Flávio Salgado Moreira (2014), Marcelo Thomaz de Aquino Filho (2014), Victor Westmann (2014-2015), Gutem (2015), Henrique Terto de Souza (2015-2017), Igor Rückert, (2015-2020), Marcos Nakamine, (2015), Pablo do Amaral Ferreira (2015), Thales Alexander Barné Peres (2015), Ciro (2016), J.Nylson (2016), Lourenço Schmid (2016), millemiglia (2016), Rodrigo de Araújo (2016), Diego Medeiros (2016-2017), Thomas De Rocker (2017), Bruno Ramalhete (2019), Aline Furlanetto Viero (2021), Fúlvio Alves (2024-2025). \n"
 "Comentários e sugestões são bem-vindos."
 
 #: src/AboutDialog.cpp
@@ -11707,7 +11706,7 @@ msgstr "Bem-vindo ao Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr "Complete a configuração de sua nuvem Audacity em audio.com"
+msgstr "Conclua a configuração da sua nuvem do Audacity com audio.com"
 
 #: src/WhatsNewDialog.cpp
 msgid "What's new in Audacity"
@@ -11755,7 +11754,7 @@ msgstr "Visite nosso fórum"
 
 #: src/WhatsNewDialog.cpp
 msgid "&Don't show this again at start up"
-msgstr "Não exibir novamente ao iniciar"
+msgstr "&Não mostrar isso novamente ao iniciar"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -21783,12 +21782,3 @@ msgstr "Ferramentas Espectrais"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Legado"
-
-#~ msgid "Create an account to save to the cloud"
-#~ msgstr "Crie uma conta para salvar na nuvem"
-
-#~ msgid "Get AI effects..."
-#~ msgstr "Obter efeitos de IA..."
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "Disponível no MuseHub"

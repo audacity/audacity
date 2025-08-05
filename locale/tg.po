@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Link Winterberg, 2024\n"
 "Language-Team: Tajik (https://app.transifex.com/audacity/teams/164520/tg/)\n"
@@ -1964,9 +1964,8 @@ msgid "WebVTT file"
 msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "Воридоти нишонаҳо аз '%s'"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -7180,7 +7179,7 @@ msgid ""
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
@@ -11129,9 +11128,8 @@ msgid "Take part in survey"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "Қисматҳои Audacity"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -11154,9 +11152,8 @@ msgid "Visit our forum"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "Ин огоҳиро дигар нишон надиҳед"
+msgstr ""
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp

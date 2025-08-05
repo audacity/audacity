@@ -28,7 +28,7 @@ On Linux, `cmake` is usually available from the system package manager. Alternat
 
 ### Windows
 
-We build Audacity using [Microsoft Visual Studio](https://visualstudio.microsoft.com/vs/community/) 2019 and 2022. In order to build Audacity **Desktop development with C++** workload is required.
+We build Audacity using [Microsoft Visual Studio](https://visualstudio.microsoft.com/vs/community/) 2022. In order to build Audacity **Desktop development with C++** workload is required.
 
 ### macOS
 

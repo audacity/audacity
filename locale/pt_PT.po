@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Bruno Santos Ramalhete <bram.512@gmail.com>, 2025\n"
 "Language-Team: Portuguese (Portugal) (https://app.transifex.com/audacity/teams/164520/pt_PT/)\n"
@@ -2072,9 +2072,8 @@ msgid "WebVTT file"
 msgstr "Ficheiro WebVTT"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "Estilo de Rótulo Exportado:"
+msgstr "Ficheiro de rótulo suportado"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4644,24 +4643,22 @@ msgid "File type:"
 msgstr "Tipo de ficheiro:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "Clipe A&nterior"
+msgstr "Anterior slide"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "Clipe Se&guinte"
+msgstr "Próximo slide"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "%s, %d de %d clip %s"
+msgstr "Slide %d de %d, %s. %s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr ""
+msgstr "Slide %d de %d, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7483,9 +7480,8 @@ msgid "Enter token to link your account"
 msgstr "Introduzir token para ligar à sua conta"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
 msgid "Sign-in and get the token"
-msgstr "Iniciar sessão para guardar na cloud"
+msgstr "Faça o login e obtenha o token"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -7526,7 +7522,7 @@ msgstr ""
 "Por favor verifique novamente as suas credenciais e tente de novo!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
@@ -7542,9 +7538,8 @@ msgid "Continue with Facebook"
 msgstr "Continuar com Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Or use email and password"
-msgstr "Remoção do Ruído e Repação"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -11683,12 +11678,11 @@ msgstr "Bem-vindo ao Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
+msgstr "Conclua a sua configuração de cloud do Audacity em audio.com"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "What's new in Audacity"
-msgstr "O que há de novo no Audacity %s"
+msgstr "O que há de novo no Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11696,33 +11690,31 @@ msgstr "Veja o vídeo de lançamento"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner: som de locução com qualidade de estúdio"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Ajude-nos a decidir o futuro do Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Participe no inquérito"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "Arranque do Audacity Falhou"
+msgstr "Inquérito de recursos do Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
-msgstr ""
+msgstr "Produtos do 25º Aniversário!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit now"
-msgstr ""
+msgstr "Visite agora"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our new Audacity merch store"
-msgstr "Isto não é um ficheiro de projeto Audacity"
+msgstr "Visite a nossa nova loja de produtos do Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11733,9 +11725,8 @@ msgid "Visit our forum"
 msgstr "Visitar o nosso fórum"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "Não mostrar novamente ao iniciar"
+msgstr "&Não mostrar isto novamente ao iniciar"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -21762,12 +21753,3 @@ msgstr "Ferramentas Espectrais"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Legado"
-
-#~ msgid "Create an account to save to the cloud"
-#~ msgstr "Criar uma conta para guardar na cloud"
-
-#~ msgid "Get AI effects..."
-#~ msgstr "Obter efeitos IA..."
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "Disponível no MuseHub"

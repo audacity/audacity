@@ -5,16 +5,16 @@
 #
 # Translators:
 # Link Winterberg, 2024
-# 王晨旭 <wcxu21@126.com>, 2024
+# 王晨旭 <wcxu21@126.com>, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: 王晨旭 <wcxu21@126.com>, 2024\n"
+"Last-Translator: 王晨旭 <wcxu21@126.com>, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/audacity/teams/164520/zh_CN/)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -2068,9 +2068,8 @@ msgid "WebVTT file"
 msgstr "WebVTT 文件"
 
 #: libraries/lib-label-track/LabelTrack.cpp
-#, fuzzy
 msgid "Supported label file"
-msgstr "导出标签样式："
+msgstr "支持的标签文件"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -3260,11 +3259,11 @@ msgstr ""
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
 msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
-msgstr ""
+msgstr "此项目是使用旧版 Audacity 创建的。保存后，仅可使用 Audacity %s 或更新版本打开该项目。"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Project update required"
-msgstr ""
+msgstr "需要更新项目"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4631,24 +4630,22 @@ msgid "File type:"
 msgstr "文件类型："
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Previous slide"
-msgstr "上一个片段(&U)"
+msgstr "上一张幻灯片"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy
 msgid "Next slide"
-msgstr "下一个片段(&E)"
+msgstr "下一张幻灯片"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr "%s, %d of %d 个片段 %s"
+msgstr "幻灯片 %d 共计 %d, %s. %s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr ""
+msgstr "幻灯片 %d 共计 %d, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -4778,7 +4775,7 @@ msgstr "找不到项目数据目录：\"%s\""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'rate' attribute."
-msgstr ""
+msgstr "项目‘速率’属性无效。"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
@@ -7303,7 +7300,7 @@ msgstr "分享音频"
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Get Effects"
-msgstr ""
+msgstr "获取效果"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7464,9 +7461,8 @@ msgid "Enter token to link your account"
 msgstr "输入关联账户用的口令"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
 msgid "Sign-in and get the token"
-msgstr "登录以保存到云"
+msgstr "登录并获取令牌"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
@@ -7507,7 +7503,7 @@ msgstr ""
 "请仔细检查您的凭据并重试！"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
@@ -7523,9 +7519,8 @@ msgid "Continue with Facebook"
 msgstr "继续使用 Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Or use email and password"
-msgstr "噪音移除与修复"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -7840,39 +7835,39 @@ msgstr "需要在 audio.com 上进行操作后才能继续。完成后请点击�
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Loading..."
-msgstr ""
+msgstr "正在加载..."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Please wait..."
-msgstr ""
+msgstr "请稍候..."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Connection error"
-msgstr ""
+msgstr "连接错误"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
-msgstr ""
+msgstr "Audacity 无法连接到 MuseHub.com。请检查您的连接并重试。"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Try again"
-msgstr ""
+msgstr "再试一次"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
-msgstr ""
+msgstr "从 MuseHub 获取"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a partner"
-msgstr ""
+msgstr "成为合作伙伴"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a MuseHub partner"
-msgstr ""
+msgstr "成为 MuseHub 合作伙伴"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
-msgstr ""
+msgstr "通过在 MuseHub 上发布您的应用程序、效果和声音，您可以接触到数百万音乐创作者。如果您是一名开发者并且有兴趣在 MuseHub 上发布您的产品，您可以立即申请。"
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -10721,7 +10716,7 @@ msgstr "开关"
 #: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
 #, c-format
 msgid "Change settings for realtime effect %s on %s"
-msgstr ""
+msgstr "更改 %s 上的实时效果 %s 的设置"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -10729,7 +10724,7 @@ msgstr ""
 #: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
 #, c-format
 msgid "Change realtime effect %s on %s"
-msgstr ""
+msgstr "更改 %s 上的实时效果 %s"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
@@ -11547,19 +11542,19 @@ msgstr "校准完成"
 
 #: src/WhatsNewDialog.cpp
 msgid "<font color=\"#000000\">"
-msgstr ""
+msgstr "<font color=\"#000000\">"
 
 #: src/WhatsNewDialog.cpp
 msgid "Sign up to Audacity's cloud saving platform"
-msgstr ""
+msgstr "注册 Audacity 的云储蓄平台"
 
 #: src/WhatsNewDialog.cpp
 msgid "and access your projects from anywhere!"
-msgstr ""
+msgstr "并从任何地方访问您的项目！"
 
 #: src/WhatsNewDialog.cpp
 msgid "</font>"
-msgstr ""
+msgstr "</font>"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
@@ -11574,7 +11569,7 @@ msgstr "观看 [[%s发布视频]] 或阅读 [[%s变更日志]] 以了解我们�
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "You can also read the [[%s|changelog]]</p>"
-msgstr ""
+msgstr "您还可以阅读[[%s|changelog]]1"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11632,11 +11627,11 @@ msgstr "多频段压缩器可对频率进行精确控制。"
 
 #: src/WhatsNewDialog.cpp
 msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-msgstr ""
+msgstr "Ace Studio - 世界第一的 AI 歌唱声音生成器。"
 
 #: src/WhatsNewDialog.cpp
 msgid "Continue for Cloud Storage"
-msgstr ""
+msgstr "继续云存储"
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
@@ -11644,12 +11639,11 @@ msgstr "欢迎使用 Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
-msgstr ""
+msgstr "使用 audio.com 完成您的 Audacity 云设置"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "What's new in Audacity"
-msgstr "Audacity %s 版本的新功能"
+msgstr "Audacity 的新功能"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11657,33 +11651,31 @@ msgstr "观看发布视频"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner：录音室品质的画外音"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "帮助我们决定 Audacity 的未来"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "参与调查"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Audacity feature survey"
-msgstr "Audacity 启动失败"
+msgstr "Audacity 功能调查"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
-msgstr ""
+msgstr "25 周年纪念商品！"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit now"
-msgstr ""
+msgstr "立即访问"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our new Audacity merch store"
-msgstr "这不是 Audacity 项目文件"
+msgstr "访问我们新的 Audacity 商品商店"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11694,9 +11686,8 @@ msgid "Visit our forum"
 msgstr "访问我们的论坛"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "&Don't show this again at start up"
-msgstr "启动时不再显示"
+msgstr "启动时不再显示此内容(&D)"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -12264,7 +12255,7 @@ msgstr "设置项目"
 
 #: src/commands/SetProjectCommand.cpp
 msgid "Rate:"
-msgstr "率："
+msgstr "速率："
 
 #: src/commands/SetProjectCommand.cpp
 msgid "Resize:"
@@ -12569,7 +12560,7 @@ msgstr "从 (Hz)"
 
 #: src/effects/ChangePitch.cpp
 msgid "f&rom"
-msgstr "自(&R)"
+msgstr "从(&R)"
 
 #: src/effects/ChangePitch.cpp
 msgid "to (Hz)"
@@ -15442,15 +15433,15 @@ msgstr "音频设备信息"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help"
-msgstr ""
+msgstr "快速帮助(&Q)"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Manual"
-msgstr ""
+msgstr "手册(&M)"
 
 #: src/menus/HelpMenus.cpp
 msgid "Audacity &Support"
-msgstr ""
+msgstr "Audacity 支持(&S)"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -16766,7 +16757,7 @@ msgstr "应用首选项"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "更新通知"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16776,22 +16767,22 @@ msgstr "检查更新 (&C)"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "检查应用更新需要网络访问。为了保护您的隐私，Audacity 不会存储任何个人信息。"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr ""
+msgstr "使用信息(UUID)(&U)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr ""
+msgstr "为了帮助我们了解人们使用 Audacity 的频率，我们会为每个安装生成一个随机 ID (UUID)。这有助于我们改进功能并规划未来的更新。此 ID 不包含任何个人身份信息。"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19818,7 +19809,7 @@ msgstr "正在下载 %s"
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates & usage info"
-msgstr ""
+msgstr "应用程序更新和使用信息"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19828,36 +19819,36 @@ msgstr "应用更新"
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Audacity notifies you in-app when a new version is available to download."
-msgstr ""
+msgstr "当有新版本可供下载时，Audacity 会在应用程序内通知您。"
 
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr ""
+msgstr "使用信息"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn this off anytime in %s."
-msgstr ""
+msgstr "您可以在 %s 内随时关闭此功能。"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can disable this anytime in %s."
-msgstr ""
+msgstr "您可以在 %s 内随时禁用此功能。"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "View privacy policy"
-msgstr ""
+msgstr "查看隐私政策"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Disable UUID"
-msgstr ""
+msgstr "禁用 UUID"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Accept && continue"
-msgstr ""
+msgstr "接受并继续"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -21709,12 +21700,3 @@ msgstr "频谱工具"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "传统"
-
-#~ msgid "Create an account to save to the cloud"
-#~ msgstr "创建帐户以保存到云端"
-
-#~ msgid "Get AI effects..."
-#~ msgstr "获得 AI 效果器…"
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "在 MuseHub 上可用"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Link Winterberg, 2025\n"
 "Language-Team: German (https://app.transifex.com/audacity/teams/164520/de/)\n"
@@ -7519,7 +7519,7 @@ msgstr ""
 "Bitte überprüfen Sie Ihre Anmeldedaten und versuchen Sie es erneut. "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
@@ -7535,9 +7535,8 @@ msgid "Continue with Facebook"
 msgstr "Mit Facebook fortfahren"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Or use email and password"
-msgstr "Geräuschentfernung und Reparatur"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -21740,6 +21739,3 @@ msgstr "Spektralwerkzeuge"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Legacy"
-
-#~ msgid "Create an account to save to the cloud"
-#~ msgstr "Accounterstellung um in die Cloud zu speichern"

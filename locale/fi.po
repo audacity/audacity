@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Heino Keränen, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/audacity/teams/164520/fi/)\n"
@@ -7517,8 +7517,8 @@ msgstr ""
 "Tarkista vielä kerran tietosi ja yritä uudelleen!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
-msgstr ""
+msgid "Create a free cloud storage account to access your projects and audio from any device"
+msgstr "Luo ilmainen pilvitallennustili ja käytä projektejasi ja ääntäsi miltä tahansa laitteelta"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7533,9 +7533,8 @@ msgid "Continue with Facebook"
 msgstr "Jatka Facebookilla"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Or use email and password"
-msgstr "Melunpoisto ja korjaus"
+msgstr "Tai käytä sähköpostiosoitetta ja salasanaa"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -21734,6 +21733,3 @@ msgstr "Spektrityökalut"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Perinteinen"
-
-#~ msgid "Create an account to save to the cloud"
-#~ msgstr "Luo tili pilveen tallentamista varten"

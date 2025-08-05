@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/audacity/teams/164520/sl/)\n"
@@ -7515,8 +7515,8 @@ msgstr ""
 "Ponovno preverite svoje poverilnice in poskusite znonva!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
-msgstr ""
+msgid "Create a free cloud storage account to access your projects and audio from any device"
+msgstr "Ustvarite brezplačni račun Cloud Storage in dostopajte do svojih projektov in zvokov s poljubne naprave."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7531,9 +7531,8 @@ msgid "Continue with Facebook"
 msgstr "Nadaljuj s Facebookom"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Or use email and password"
-msgstr "Odstranjevanje šuma in popravki"
+msgstr "Ali uporabite e-naslov in geslo"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -21745,6 +21744,3 @@ msgstr "Spektralna orodja"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Opuščeno"
-
-#~ msgid "Create an account to save to the cloud"
-#~ msgstr "Ustvarite račun za shranjevanje v oblak"

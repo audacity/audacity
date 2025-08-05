@@ -26,7 +26,7 @@ namespace audacity::cloud::audiocom
 LinkSucceededDialog::LinkSucceededDialog(wxWindow* parent)
     : wxDialogWrapper(
          parent, wxID_ANY, XO("Link account"), wxDefaultPosition, { 442, -1 },
-         wxDEFAULT_DIALOG_STYLE)
+         wxDEFAULT_DIALOG_STYLE | wxSTAY_ON_TOP)
 {
    SetMinSize({ 442, -1 });
 

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Alexander Gabilondo <alexgabi@disroot.org>, 2025\n"
 "Language-Team: Basque (https://app.transifex.com/audacity/teams/164520/eu/)\n"
@@ -1485,7 +1485,7 @@ msgstr "Gitarra baxua"
 #. i18n-hint: This is the name of an effect preset. Strings is violins, etc
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Strings"
-msgstr ""
+msgstr "Kateak"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -7486,7 +7486,7 @@ msgid ""
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
+msgid "Create a free cloud storage account to access your projects and audio from any device"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
@@ -7583,11 +7583,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Save this project"
-msgstr ""
+msgstr "Gorde proiektu hau"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Discard and open latest version"
-msgstr ""
+msgstr "Baztertu eta ireki azken bertsioa"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
@@ -7595,7 +7595,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Open local project"
-msgstr ""
+msgstr "Ireki proiektu lokala"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Cloud project conflict"
@@ -7611,29 +7611,29 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Open new version"
-msgstr ""
+msgstr "Ireki bertsio berri bat"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Open from Cloud"
-msgstr ""
+msgstr "Ireki hodeitik"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "less than 1 minute"
-msgstr ""
+msgstr "minutu 1 baino gutxiago"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "one minutes ago"
 msgid_plural "%d minutes ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "duela minutu bat"
+msgstr[1] "Duela %d minutu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "one hour ago"
 msgid_plural "%d hours ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "duela ordu bat"
+msgstr[1] "Duela %d ordu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Modified"
@@ -7645,7 +7645,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Loading projects list..."
-msgstr ""
+msgstr "Proiektuen zerrenda kargatzen..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Failed to get projects list"
@@ -7653,11 +7653,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Cloud saved projects"
-msgstr ""
+msgstr "Hodeian gordetako proiektuak"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Search:"
-msgstr ""
+msgstr "Bilatu:"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Prev"
@@ -7665,40 +7665,40 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "View in audio.com"
-msgstr ""
+msgstr "Ikusi audio.com-en"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "Page %d of %d"
-msgstr ""
+msgstr " %d/%d orrialdea"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Anyone will be able to listen to this audio."
-msgstr ""
+msgstr "Edonork audio hau entzuteko gai izango da."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr ""
+msgstr "Bakarri zuk eta zure esteka jaso dutenek entzun ahal izango dute audio hau."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Are you sure you want to cancel?"
-msgstr ""
+msgstr "Ziur zaude utzi nahi duzula?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Cancel upload to Audio.com"
-msgstr ""
+msgstr "Bertan behera utzi Audio.com-era igotzea"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Uploading audio..."
-msgstr ""
+msgstr "Audioa igotzen..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr ""
+msgstr "Ezin dugu audio hau igo. Saia zaitez berriro eta igo ondoren ziurtatu zure audio.com-eko esteka."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Upload error"
-msgstr ""
+msgstr "Igotzeak huts egin du"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "We are unable to prepare this file for uploading."
@@ -7706,7 +7706,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Finalizing upload..."
-msgstr ""
+msgstr "Igoera bukatzen..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #: src/TagsEditor.cpp
@@ -7715,11 +7715,11 @@ msgstr "Pistaren titulua"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Preparing audio..."
-msgstr ""
+msgstr "Audioa prestatzen..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "You are not authorized to access this project."
-msgstr ""
+msgstr "Ez daukazu proiektu honetan sartzeko baimenik."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "You tried to access a project that has expired."
@@ -7950,19 +7950,19 @@ msgstr "%s, sistemaren administrazioa"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, co-founder and developer"
-msgstr ""
+msgstr "%s, kofundatzailea eta garatzailea"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, designer"
-msgstr ""
+msgstr "%s, diseinatzailea"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer"
-msgstr ""
+msgstr "%s, garatzailea"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -8124,7 +8124,7 @@ msgstr "Itzultzaileak"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s includes code from the following projects:"
-msgstr ""
+msgstr "%s-k  barnean du honako proiektuen kodea:"
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
@@ -8161,11 +8161,11 @@ msgstr "Gaituta"
 #. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
 msgid "The Build"
-msgstr ""
+msgstr "Konpilazioa"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
-msgstr ""
+msgstr "Programaren konpilazio data:"
 
 #: src/AboutDialog.cpp
 msgid "Commit Id:"
@@ -8184,12 +8184,12 @@ msgstr ""
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, 64 bits"
-msgstr ""
+msgstr "%s, 64 bit"
 
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, 32 bits"
-msgstr ""
+msgstr "%s, 32 bit"
 
 #: src/AboutDialog.cpp
 msgid "Build type:"
@@ -8243,7 +8243,7 @@ msgstr "Fitxategi-formatuen euskarria"
 
 #: src/AboutDialog.cpp
 msgid "MP3 Import"
-msgstr ""
+msgstr "MP3 inportazioa"
 
 #. i18n-hint: LAME is the codec name. This name should not be translated
 #.
@@ -8321,7 +8321,7 @@ msgstr "PRIBATUTASUN POLITIKA"
 
 #: src/AboutDialog.cpp
 msgid "App update checking and error reporting require network access. These features are optional."
-msgstr ""
+msgstr "Aplikazioen eguneraketa egiaztatzeak eta akatsen berri emateak sareko konexioa eskatzen dute. Ezaugarri horiek aukerakoak dira."
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
@@ -8339,13 +8339,13 @@ msgstr "Denbora-lerroaren ekintzak desgaituta grabazioan zehar"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to adjust, double-click to reset"
-msgstr ""
+msgstr "Klikatu eta arrastatu doitzeko, klik bikoitza berrezartzeko"
 
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
 #: src/AdornedRulerPanel.cpp
 msgid "Record/Playhead"
-msgstr ""
+msgstr "Grabazio/Erreprodukzio burua"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline"
@@ -8440,7 +8440,7 @@ msgstr "Ezarri begizta hautapenean"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Scroll view to playhead"
-msgstr ""
+msgstr "Joan erreprodukzio-bururaino"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Continuous scrolling"
@@ -8740,6 +8740,8 @@ msgid ""
 "Selected audio only.\n"
 "Only the selected portion of the source clip will be pasted."
 msgstr ""
+"Bakarrik hautatutako audioa.\n"
+"Bakarrik hautatutako jatorriko kliparen zatia itsatsiko da."
 
 #: src/AudioPasteDialog.cpp
 msgid "Paste audio"
@@ -9462,7 +9464,7 @@ msgstr "EZ DAGO %s"
 
 #: src/Dependencies.cpp
 msgid "&Copy Names to Clipboard"
-msgstr ""
+msgstr "&Kopiatu izenak arbelean"
 
 #: src/Dependencies.cpp
 #, c-format
@@ -9742,7 +9744,7 @@ msgstr "&Baztertu"
 
 #: src/HistoryWindow.cpp
 msgid "Clip&board space used"
-msgstr ""
+msgstr "Arbelean erabilitako tokia"
 
 #: src/HistoryWindow.cpp
 msgid "D&iscard"
@@ -12083,7 +12085,7 @@ msgstr "Audioa Hautatzen du."
 
 #: src/commands/SetClipCommand.cpp
 msgid "Set Clip"
-msgstr ""
+msgstr "Ezarri klipa"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Color 0"
@@ -12119,7 +12121,7 @@ msgstr "Ezarri Ebaketa..."
 
 #: src/commands/SetClipCommand.h
 msgid "Sets various values for a clip."
-msgstr ""
+msgstr "Ezartzen ditu kliparen hainbat balio."
 
 #: src/commands/SetEnvelopeCommand.cpp
 msgid "Set Envelope"
@@ -14713,19 +14715,19 @@ msgstr ""
 
 #: src/export/ExportFilePanel.cpp
 msgid "&Format:"
-msgstr ""
+msgstr "&Formatua:"
 
 #: src/export/ExportFilePanel.cpp
 msgid "Audio options"
-msgstr ""
+msgstr "Audio aukerak"
 
 #: src/export/ExportFilePanel.cpp
 msgid "Channels"
-msgstr ""
+msgstr "Kanalak"
 
 #: src/export/ExportFilePanel.cpp
 msgid "M&ono"
-msgstr ""
+msgstr "M&ono"
 
 #: src/export/ExportFilePanel.cpp
 msgid "&Stereo"
@@ -16433,12 +16435,12 @@ msgstr "etiketarik ez etiketa-pistan"
 #. i18n-hint Sets a starting point for looping play
 #: src/menus/TransportMenus.cpp
 msgid "Set Loop &In"
-msgstr ""
+msgstr "Ezarri begiztaren hasiera"
 
 #. i18n-hint Sets an ending point for looping play
 #: src/menus/TransportMenus.cpp
 msgid "Set Loop &Out"
-msgstr ""
+msgstr "Ezarri begiztaren bukaera"
 
 #: src/menus/TransportMenus.cpp
 msgid "Please select in a mono track."
@@ -18781,7 +18783,7 @@ msgstr "Luzatu"
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
 msgid "Click to open clip context menu."
-msgstr ""
+msgstr "Egin klik irekitzeko kliparen alboko menua."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Reset Clip Pitch"
@@ -18797,7 +18799,7 @@ msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Reset Clip Speed"
-msgstr ""
+msgstr "Berrezarri kliparen abiadura"
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Click to reset clip pitch."
@@ -18813,7 +18815,7 @@ msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Click to reset clip speed."
-msgstr ""
+msgstr "Egin klik berrezartzeko kliparen abiadura."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Click to change clip speed, Cmd + click to reset."
@@ -18858,7 +18860,7 @@ msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
 msgid "Clip Speed"
-msgstr ""
+msgstr "Kliparen abiadura"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
 msgid "&speed %: "
@@ -19618,7 +19620,7 @@ msgstr "Denbora aldatutako pistak/klipak utzi %.02f segundo"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Move Clip"
-msgstr ""
+msgstr "Mugitu klipa"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Collapse"

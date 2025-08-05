@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
@@ -1874,8 +1874,8 @@ msgid ""
 msgstr ""
 "„%s” jest ścieżką Audio CD.\n"
 "Audacity nie może otworzyć bezpośrednio ścieżek Audio CD. \n"
-"Wypakuj ścieżki do formatu, który \n"
-"Audacity może importować, takich jak WAV lub AIFF."
+"Wypakuj (zgraj) ścieżki do formatu, który Audacity \n"
+"może importować, takiego jak WAV lub AIFF."
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -1968,7 +1968,8 @@ msgstr ""
 "„%s” jest plikiem dźwiękowym Musepack.\n"
 "Audacity nie może otworzyć tego typu pliku. \n"
 "Jeśli myślisz, że może to być plik mp3, to zmień jego nazwę na zakończoną „.mp3” \n"
-"i spróbuj ponownie go importować. W przeciwnym razie musisz przekonwertować plik do obsługiwanego formatu, takiego jak WAV lub AIFF."
+"i spróbuj ponownie go importować. W przeciwnym razie musisz przekonwertować plik \n"
+"do obsługiwanego formatu, takiego jak WAV lub AIFF."
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -7517,8 +7518,8 @@ msgstr ""
 "Sprawdź ponownie swoje dane uwierzytelniające i spróbuj ponownie!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
-msgstr ""
+msgid "Create a free cloud storage account to access your projects and audio from any device"
+msgstr "Utwórz darmowe konto przechowywania w chmurze i uzyskaj dostęp do swoich projektów i nagrań z dowolnego urządzenia"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7533,9 +7534,8 @@ msgid "Continue with Facebook"
 msgstr "Kontynuuj z Facebookiem"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Or use email and password"
-msgstr "Usuwanie szumu i naprawa"
+msgstr "Lub użyj e-maila i hasła"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -8716,9 +8716,9 @@ msgid ""
 "Associate them, so they open on double-click?"
 msgstr ""
 "Pliki projektów Audacity (.aup3) nie są \n"
-"obecnie przypisane do programu Audacity. \n"
+"obecnie przypisane do Audacity. \n"
 "\n"
-"Przypisać je, aby móc otworzyć je programem przez dwukrotne kliknięcie przyciskiem myszki?"
+"Przypisać je, aby móc otworzyć je przez dwukrotne kliknięcie przyciskiem myszki?"
 
 #: src/AudacityApp.cpp
 msgid "Audacity Project Files"
@@ -9932,7 +9932,7 @@ msgstr "Wprowadź nazwę ścieżki"
 #. * time Audacity has been run.
 #: src/LangChoice.cpp
 msgid "Audacity First Run"
-msgstr "Pierwsze uruchomienie programu Audacity"
+msgstr "Pierwsze uruchomienie Audacity"
 
 #: src/LangChoice.cpp
 msgid "Choose Language for Audacity to use:"
@@ -11662,7 +11662,7 @@ msgstr "Ace Studio - wiodący na świecie generator głosu wokalnego oparty na s
 
 #: src/WhatsNewDialog.cpp
 msgid "Continue for Cloud Storage"
-msgstr "Kontynuuj dla pamięci masowej w chmurze"
+msgstr "Kontynuuj dla przechowywania w chmurze"
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
@@ -17433,7 +17433,7 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
-msgstr "Wybierz plik XML zawierający skróty klawiaturowe programu Audacity..."
+msgstr "Wybierz plik XML zawierający skróty klawiaturowe Audacity..."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Error Importing Keyboard Shortcuts"
@@ -17915,7 +17915,7 @@ msgstr "&Kwantyzacja nut"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Global settings"
-msgstr "Ustawienia ogólne"
+msgstr "Ustawienia główne"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble spectral selection"
@@ -21749,6 +21749,3 @@ msgstr "Narzędzia widma"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Stare"
-
-#~ msgid "Create an account to save to the cloud"
-#~ msgstr "Utwórz konto, aby zapisać w chmurze"

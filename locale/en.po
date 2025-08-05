@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-    "Project-Id-Version: audacity 3.7.2\n"
+    "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-07-24 12:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2129,6 +2129,10 @@ msgstr "SubRip text file"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "WebVTT file"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Supported label file"
+msgstr "Supported label file"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4770,6 +4774,24 @@ msgstr "Please choose an existing file."
 #: libraries/lib-wx-wrappers/FileDialog/mac/FileDialogPrivate.mm
 msgid "File type:"
 msgstr "File type:"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+msgid "Previous slide"
+msgstr "Previous slide"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+msgid "Next slide"
+msgstr "Next slide"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s. %s"
+msgstr "Slide %d of %d, %s. %s"
+
+#: libraries/lib-wx-wrappers/ImageCarousel.cpp
+#, c-format
+msgid "Slide %d of %d, %s, %s. %s"
+msgstr "Slide %d of %d, %s, %s. %s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -7650,6 +7672,10 @@ msgid "Enter token to link your account"
 msgstr "Enter token to link your account"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Sign-in and get the token"
+msgstr "Sign-in and get the token"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
 msgstr "Token"
 
@@ -7688,8 +7714,12 @@ msgstr ""
 "Please double-check your credentials and try again!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create an account to save to the cloud"
-msgstr "Create an account to save to the cloud"
+msgid ""
+"Create a free cloud storage account to access your projects and audio from "
+"any device"
+msgstr ""
+"Create a free cloud storage account to access your projects and audio from "
+"any device"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7702,6 +7732,10 @@ msgstr "Continue with Google"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
 msgstr "Continue with Facebook"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Or use email and password"
+msgstr "Or use email and password"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -7729,7 +7763,7 @@ msgstr "Need an account? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: src/AudioPasteDialog.cpp src/WhatsNewDialog.cpp
 msgid "Continue"
 msgstr "Continue"
 
@@ -8096,7 +8130,7 @@ msgstr ""
 msgid "Try again"
 msgstr "Try again"
 
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
 msgstr "Get it on MuseHub"
 
@@ -12019,12 +12053,44 @@ msgid "Welcome to Audacity!"
 msgstr "Welcome to Audacity!"
 
 #: src/WhatsNewDialog.cpp
+msgid "Complete your Audacity cloud setup with audio.com"
+msgstr "Complete your Audacity cloud setup with audio.com"
+
+#: src/WhatsNewDialog.cpp
+msgid "What's new in Audacity"
+msgstr "What's new in Audacity"
+
+#: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
 msgstr "Watch the release video"
 
 #: src/WhatsNewDialog.cpp
-msgid "Available on MuseHub"
-msgstr "Available on MuseHub"
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr "Soap Voice Cleaner: studio-quality voice-over sound"
+
+#: src/WhatsNewDialog.cpp
+msgid "Help us decide the future of Audacity"
+msgstr "Help us decide the future of Audacity"
+
+#: src/WhatsNewDialog.cpp
+msgid "Take part in survey"
+msgstr "Take part in survey"
+
+#: src/WhatsNewDialog.cpp
+msgid "Audacity feature survey"
+msgstr "Audacity feature survey"
+
+#: src/WhatsNewDialog.cpp
+msgid "25th Anniversary Merchandise!"
+msgstr "25th Anniversary Merchandise!"
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit now"
+msgstr "Visit now"
+
+#: src/WhatsNewDialog.cpp
+msgid "Visit our new Audacity merch store"
+msgstr "Visit our new Audacity merch store"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12034,9 +12100,9 @@ msgstr "View tutorials"
 msgid "Visit our forum"
 msgstr "Visit our forum"
 
-#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
-msgstr "Don't show this again at start up"
+#: src/WhatsNewDialog.cpp
+msgid "&Don't show this again at start up"
+msgstr "&Don't show this again at start up"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating
 #. punctuation
@@ -16214,10 +16280,6 @@ msgstr "Effe&ct"
 #: src/menus/PluginMenus.cpp
 msgid "Add Realtime Effects"
 msgstr "Add Realtime Effects"
-
-#: src/menus/PluginMenus.cpp
-msgid "Get AI effects..."
-msgstr "Get AI effects..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -20404,6 +20466,10 @@ msgstr "Accept && continue"
 msgctxt "update dialog"
 msgid "Update Audacity"
 msgstr "Update Audacity"
+
+#: src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "Don't show this again at start up"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"

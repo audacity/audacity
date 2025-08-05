@@ -1,5 +1,6 @@
 #include "LoginDialog.h"
 
+#include <wx/app.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/statline.h>
@@ -110,11 +111,14 @@ LoginDialog::LoginDialog(wxWindow* parent, wxWindowID id, Mode mode)
 
 bool LoginDialog::SignIn(wxWindow* parent, Mode mode)
 {
+   if (!parent)
+      parent = wxTheApp->GetTopWindow();
    while(true)
    {
       LoginDialog dialog(parent, wxID_ANY, mode);
       dialog.wxDialogWrapper::Center();
-      parent->SetFocus();
+      if (parent)
+         parent->SetFocus();
       auto result = dialog.wxDialogWrapper::ShowModal();
       if(result == ID_SIGNIN)
          mode = Mode::SignIn;
@@ -136,7 +140,7 @@ void LoginDialog::LayoutControls()
 
    title = MakeLabel(this,
                      mMode == Mode::Create
-                        ? _("Create free Cloud Storage account and access your projects and audio from any device")
+                        ? _("Create a free cloud storage account to access your projects and audio from any device")
                         : _("Sign in to save to the cloud")),
 
    title->SetFont(titleFont);

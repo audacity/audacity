@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Jean-Louis Waltener, 2025\n"
 "Language-Team: French (https://app.transifex.com/audacity/teams/164520/fr/)\n"
@@ -425,7 +425,7 @@ msgstr "Contrôle du rendu-Temps de piste-Audio étirée"
 #: libraries/lib-builtin-effects/BassTrebleBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Bass and Treble"
-msgstr "Basse et Aïgu"
+msgstr "Basses et Aigus"
 
 #: libraries/lib-builtin-effects/BassTrebleBase.cpp
 msgid "Simple tone control effect"
@@ -585,7 +585,7 @@ msgstr "Overdrive lourd"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "3rd Harmonic (Perfect Fifth)"
-msgstr "3ème harmonique (cinquième parfaite)"
+msgstr "3ème harmonique (Quinte juste)"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Valve Overdrive"
@@ -593,7 +593,7 @@ msgstr "Overdrive à lampe"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "2nd Harmonic (Octave)"
-msgstr "2nde harmonique (octave)"
+msgstr "2nde harmonique (Octave)"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Gated Expansion Distortion"
@@ -772,7 +772,7 @@ msgstr "Fondu en ouverture"
 
 #: libraries/lib-builtin-effects/Fade.cpp
 msgid "Applies a linear fade-in to the selected audio"
-msgstr "Applique un fondu à l’ouverture linéaire à l’audio sélectionné"
+msgstr "Applique un fondu linéaire en ouverture à l’audio sélectionné"
 
 #: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade Out"
@@ -780,7 +780,7 @@ msgstr "Fondu en fermeture"
 
 #: libraries/lib-builtin-effects/Fade.cpp
 msgid "Applies a linear fade-out to the selected audio"
-msgstr "Applique un fondu à la fermeture linéaire à l’audio sélectionné"
+msgstr "Applique un fondu  linéaire en fermeture à l’audio sélectionné"
 
 #: libraries/lib-builtin-effects/FindClippingBase.cpp
 msgid "Find Clipping"
@@ -955,7 +955,7 @@ msgstr "Normalisation sans suppression de décalage CC…\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Not doing anything...\n"
-msgstr "Ne rien faire…\n"
+msgstr "Ne rien faire...\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #, c-format
@@ -1280,7 +1280,7 @@ msgstr "Convertit des pistes stéréo en mono"
 
 #: libraries/lib-builtin-effects/StereoToMono.cpp
 msgid "Mixing down to mono"
-msgstr "Mise à plat en mono"
+msgstr "Réduction mono"
 
 #: libraries/lib-builtin-effects/TimeScaleBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -7516,8 +7516,8 @@ msgstr ""
 "Vérifiez vos identifiants et réessayez !"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
-msgstr ""
+msgid "Create a free cloud storage account to access your projects and audio from any device"
+msgstr "Créez un compte Cloud Storage gratuit et accédez à vos projets et à votre audio depuis n'importe quel appareil"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7532,9 +7532,8 @@ msgid "Continue with Facebook"
 msgstr "Continuer avec Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Or use email and password"
-msgstr "Réduction du bruit et réparation"
+msgstr "Ou utilisez votre e-mail et mot de passe"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -8293,7 +8292,7 @@ msgstr "Export MP3"
 #.
 #: src/AboutDialog.cpp
 msgid "Opus Import and Export"
-msgstr "Import et export Opus"
+msgstr "Import et Export Opus"
 
 #. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
 #. * Both are proper nouns and shouldn't be translated
@@ -8309,7 +8308,7 @@ msgstr "Support des balises ID3"
 #. * a proper noun and so shouldn't be translated
 #: src/AboutDialog.cpp
 msgid "FLAC import and export"
-msgstr "Import et export FLAC"
+msgstr "Import et Export FLAC"
 
 #: src/AboutDialog.cpp
 msgid "MP2 export"
@@ -8317,7 +8316,7 @@ msgstr "Export MP2"
 
 #: src/AboutDialog.cpp
 msgid "FFmpeg Import/Export"
-msgstr "Import/export FFmpeg"
+msgstr "Import et Export FFmpeg"
 
 #: src/AboutDialog.cpp
 msgid "Features"
@@ -8400,7 +8399,7 @@ msgstr "Cliquer ou glisser pour démarrer la recherche"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Scrub"
-msgstr "Cliquer ou glisser pour démarrer le frottement"
+msgstr "Cliquer ou glisser pour démarrer le repérage"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -8408,7 +8407,7 @@ msgstr "Cliquer ou glisser pour démarrer le frottement"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "Cliquez et déplacez pour le frottement. Cliquez et glissez-tirez pour la recherche."
+msgstr "Cliquez et déplacez pour repérer. Cliquez et glissez / tirez pour rechercher à vitesse normale."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -8424,7 +8423,7 @@ msgstr "Déplacer vers la recherche"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub"
-msgstr "Déplacer pour le frottement"
+msgstr "Déplacer pour repérer"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release to stop seeking."
@@ -8432,11 +8431,11 @@ msgstr "Cliquez-tirez pour la recherche. Relâchez pour arrêter de rechercher."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release and move to Scrub."
-msgstr "Cliquez-tirez pour la recherche. Relâcher et déplacer pour le frottement."
+msgstr "Tirez pour rechercher. Relâcher et déplacer pour repérer."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub. Drag to Seek."
-msgstr "Déplacez pour le frottement. Cliquez-tirez pour la recherche."
+msgstr "Déplacez pour repérer. Tirez pour rechercher."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Quick-Play disabled"
@@ -8529,7 +8528,7 @@ msgstr "Ouvrir un fichier &récent…"
 
 #: src/AudacityApp.cpp
 msgid "&About Audacity..."
-msgstr "À propos d’&Audacity…"
+msgstr "À propos d’&Audacity..."
 
 #: src/AudacityApp.cpp
 msgid "&Preferences..."
@@ -10853,17 +10852,17 @@ msgstr "Ajouter %s"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects"
-msgstr "Effets temps-réel"
+msgstr "Effets temps réel"
 
 #. i18n-hint: argument - track name
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Realtime effects for %s"
-msgstr "Effets temps-réel pour %s"
+msgstr "Effets temps réel pour %s"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime Effects"
-msgstr "Effets temps-réel"
+msgstr "Effets temps réel"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
@@ -10887,7 +10886,7 @@ msgstr "Position"
 
 #: src/SoundActivatedRecord.cpp
 msgid "Sound Activated Record"
-msgstr "Enregistrement automatique"
+msgstr "Enregistrement activé par le son"
 
 #: src/SoundActivatedRecord.cpp
 msgid "Activation level (dB):"
@@ -11962,7 +11961,7 @@ msgstr "Nombre de canaux :"
 
 #: src/commands/ImportExportCommands.cpp src/effects/EffectUI.cpp
 msgid "Import..."
-msgstr "Importer…"
+msgstr "Importer..."
 
 #: src/commands/ImportExportCommands.cpp src/effects/EffectUI.cpp
 msgid "Export..."
@@ -15805,7 +15804,7 @@ msgstr "&Effets"
 
 #: src/menus/PluginMenus.cpp
 msgid "Add Realtime Effects"
-msgstr "Ajouter les effets temps-réel"
+msgstr "Ajouter les effets temps réel"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -16625,7 +16624,7 @@ msgstr "Enregistrer une &nouvelle piste"
 
 #: src/menus/TransportMenus.cpp
 msgid "Punch and Rol&l Record"
-msgstr "Enregistrement punch & roll"
+msgstr "Enregistrement Punch and Rol&l"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Looping"
@@ -17657,7 +17656,7 @@ msgstr "&Micro-fondus"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
-msgstr "Toujours un frottement non-punaisé"
+msgstr "Toujours repérer non fixé"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
@@ -17686,7 +17685,7 @@ msgstr "Con&vertisseur de taux d’échantillonnage :"
 #. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "&Dither:"
-msgstr "&Lissage :"
+msgstr "&Dither :"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "High-quality Conversion"
@@ -17699,7 +17698,7 @@ msgstr "Conver&tisseur de taux d’échantillonnage :"
 #. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
-msgstr "Li&ssage :"
+msgstr "Dit&her :"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Preferences for Recording"
@@ -17728,11 +17727,11 @@ msgstr "Détecter les désynchronisations"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Sound Activated Recording"
-msgstr "Enregistrement automatique"
+msgstr "Enregistrement activé par le son"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "&Enable"
-msgstr "activé (&e)"
+msgstr "Activ&é"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Le&vel (dB):"
@@ -17746,7 +17745,7 @@ msgstr "Nommer les pistes nouvellement enregistrées"
 #. i18n-hint: end of two-part phrase, "Name newly recorded tracks with:"
 #: src/prefs/RecordingPrefs.cpp
 msgid "With:"
-msgstr "Compris dans :"
+msgstr "Inclure :"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Custom Track &Name"
@@ -17770,7 +17769,7 @@ msgstr "&Date du système"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "System T&ime"
-msgstr "Temps du système (&i)"
+msgstr "Heure du système (&i)"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Automated Recording Level Adjustment"
@@ -17807,7 +17806,7 @@ msgstr "0 pour illimité"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Punch and Roll Recording"
-msgstr "Enregistrement punch & roll"
+msgstr "Enregistrement Punch and Roll"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Pre-ro&ll:"
@@ -19630,11 +19629,11 @@ msgstr "Enveloppe ajustée."
 #.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
-msgstr "Frottement (&s)"
+msgstr "Repérer (&s)"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrubbing"
-msgstr "Frottement"
+msgstr "Repérage"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Seeking"
@@ -19646,7 +19645,7 @@ msgstr "En recherche"
 #.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub &Ruler"
-msgstr "&Règle de frottement"
+msgstr "&Règle du repérage"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Playing at Speed"
@@ -19658,7 +19657,7 @@ msgstr "Déplacer le pointeur de souris vers la recherche"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Move mouse pointer to Scrub"
-msgstr "Déplacer le pointeur de la souris au frottement"
+msgstr "Déplacer le pointeur de la souris pour repérer"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scru&bbing"
@@ -19666,11 +19665,11 @@ msgstr "Frottement (&b)"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub Bac&kwards"
-msgstr "Frottement arrière (&k)"
+msgstr "Repérer vers l'arrière (&k)"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub For&wards"
-msgstr "Frottement avant (&w)"
+msgstr "Repérer vers l'avant (&w)"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move left selection boundary."
@@ -19913,7 +19912,7 @@ msgstr "Accepter && continuer"
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "Update Audacity"
-msgstr "Mettre Audacity à jour"
+msgstr "Mettre à jour Audacity"
 
 #: src/update/UpdatePopupDialog.cpp
 msgid "Don't show this again at start up"
@@ -21761,6 +21760,3 @@ msgstr "Outils spectraux"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Classique"
-
-#~ msgid "Create an account to save to the cloud"
-#~ msgstr "Créez un compte pour enregistrer dans le cloud"

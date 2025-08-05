@@ -167,18 +167,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - name: Windows MSVC 2019 (x86)
-          os: windows-2019
-          arch: x32
-          generator: Visual Studio 16 2019
-          postfix: '-msvc2019'
-          windows_sdk: '10.0.18362.0'
-        - name: Windows MSVC 2019 (x86_64)
-          os: windows-2019
-          arch: x64
-          generator: Visual Studio 16 2019
-          postfix: '-msvc2019'
-          windows_sdk: '10.0.18362.0'
         - name: Windows MSVC 2022 (x86)
           os: windows-2022
           arch: x32

@@ -5,16 +5,20 @@
 # OUTPUT_DIR - directory, where installer will be built
 # INNO_SETUP_COMPILER - InnoSetup compiler executable
 # BUILDING_64_BIT - Flag, that indicates that we are building a 64-bit installer
+# BUILDING_ARM64 - Flag, that indicates that we are building an ARM64 installer
 # EMBED_MANUAL - embed a fresh copy of manual
 # SIGN - sign the installer
 # USE_GPL3 - set the license to GPLv3 in the installer
 
-if( BUILDING_64_BIT )
-    set( INSTALLER_SUFFIX "x64" )
-    set( INSTALLER_X64_MODE "ArchitecturesInstallIn64BitMode=x64" )
+if(BUILDING_ARM64)
+    set(INSTALLER_SUFFIX "arm64")
+    set(INSTALLER_X64_MODE "ArchitecturesInstallIn64BitMode=arm64")
+elseif(BUILDING_64_BIT)
+    set(INSTALLER_SUFFIX "x64")
+    set(INSTALLER_X64_MODE "ArchitecturesInstallIn64BitMode=x64")
 else()
-    set( INSTALLER_SUFFIX "x86" )
-    set( INSTALLER_X64_MODE "" )
+    set(INSTALLER_SUFFIX "x86")
+    set(INSTALLER_X64_MODE "")
 endif()
 
 if( SIGN )

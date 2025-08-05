@@ -1,27 +1,26 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2025 Audacity Team
+# Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
-# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2021.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
 # Link Winterberg, 2024
-# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2021-2025
+# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-07-24 12:44+0200\n"
-"PO-Revision-Date: 2025-06-05 14:48+0200\n"
-"Last-Translator: Patriccollu di Santa Maria è Sichè <https://github.com/Patriccollu/Lingua_Corsa-Infurmatica/#readme>\n"
+"POT-Creation-Date: 2025-08-04 17:39+0200\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"Last-Translator: Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2025\n"
 "Language-Team: Corsican (https://app.transifex.com/audacity/teams/164520/co/)\n"
 "Language: co\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.6.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -7517,8 +7516,8 @@ msgstr ""
 "Ci vole à verificà e vostre infurmazioni di cunnessione è pruvà torna."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-msgid "Create free Cloud Storage account and access your projects and audio from any device"
-msgstr ""
+msgid "Create a free cloud storage account to access your projects and audio from any device"
+msgstr "Creà un contu Cloud Storage di rigalu è accede à i vostri prughjetti è a u vostru audio da ogni apparechju"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7533,9 +7532,8 @@ msgid "Continue with Facebook"
 msgstr "Cuntinuà cù Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Or use email and password"
-msgstr "Cacciatura di trostu è riparazione"
+msgstr "Osinnò, impiegà un indirizzu elettronicu è una parolla d’intesa"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -21734,12 +21732,3 @@ msgstr "Attrezzi spettrali"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Classicu"
-
-#~ msgid "Create an account to save to the cloud"
-#~ msgstr "Create un contu per arregistrà in u nivulu"
-
-#~ msgid "Get AI effects..."
-#~ msgstr "Ottene effetti da l’IA…"
-
-#~ msgid "Available on MuseHub"
-#~ msgstr "Dispunibule nant’à MuseHub"
