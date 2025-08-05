@@ -24,13 +24,20 @@ EffectStyledDialogView {
         property alias viewer: viewerLoader.item
         property bool isApplyAllowed: effectFamily != EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
         property int separatorHeight: effectFamily == EffectFamily.Builtin ? separator.height + root.margins : 0
+        property bool showPresets: effectFamily != EffectFamily.Builtin || viewer.usesPresets
     }
 
     title: viewerModel.title
 
     minimumWidth: effectFamily === EffectFamily.LV2 ? 500 : 250
     implicitWidth: viewerLoader.width
-    implicitHeight: presetsBar.height + viewerLoader.height + btnBarLoader.height + margins * 2 + prv.separatorHeight
+    implicitHeight: {
+        let height = viewerLoader.height + btnBarLoader.height + margins
+        if (prv.showPresets) {
+            height += presetsBar.height + margins + prv.separatorHeight
+        }
+        return height
+    }
 
     margins: effectFamily == EffectFamily.Builtin ? 16 : 4
 
@@ -72,6 +79,7 @@ EffectStyledDialogView {
 
         EffectPresetsBar {
             id: presetsBar
+            visible: prv.showPresets
             navigationPanel: root.navigationPanel
             navigationOrder: 0
             instanceId: root.instanceId
@@ -81,7 +89,7 @@ EffectStyledDialogView {
 
         SeparatorLine {
             id: separator
-            visible: effectFamily == EffectFamily.Builtin
+            visible: effectFamily == EffectFamily.Builtin && prv.showPresets
         }
 
         Component {
