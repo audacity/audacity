@@ -39,6 +39,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/amplify/amplifyviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/amplify/amplifyviewmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/clickremoval/clickremovalviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/clickremoval/clickremovalviewmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeviewmodel.cpp

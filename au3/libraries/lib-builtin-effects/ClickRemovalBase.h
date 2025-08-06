@@ -15,7 +15,7 @@
 class Envelope;
 class WaveChannel;
 
-class BUILTIN_EFFECTS_API ClickRemovalBase : public StatefulEffect
+class ClickRemovalBase : public StatefulEffect
 {
 public:
     static inline ClickRemovalBase*
@@ -54,7 +54,6 @@ protected:
     Envelope* mEnvelope;
 
     bool mbDidSomething; // This effect usually does nothing on real-world data.
-    size_t windowSize;
     int mThresholdLevel;
     int mClickWidth;
     int sep;
