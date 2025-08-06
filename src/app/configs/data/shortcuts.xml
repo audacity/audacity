@@ -279,6 +279,10 @@
         <seq>Ctrl+Alt+J</seq>
     </SC>
     <SC>
+        <key>split-tool</key>
+        <seq>S</seq>
+    </SC>
+    <SC>
         <key>preferences</key>
         <seq>Ctrl+,</seq>
     </SC>

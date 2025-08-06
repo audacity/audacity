@@ -789,13 +789,14 @@ void TrackeditActionsController::tracksSplitAt(const ActionData& args)
     }
 
     TrackIdList tracksIds = args.arg<TrackIdList>(0);
+
     if (tracksIds.empty()) {
         return;
     }
 
-    auto pivots = args.arg<std::vector<secs_t> >(1);
+    auto pivot = args.arg<std::vector<secs_t> >(1);
 
-    trackeditInteraction()->splitTracksAt(tracksIds, pivots);
+    trackeditInteraction()->splitTracksAt(tracksIds, pivot);
 }
 
 void TrackeditActionsController::splitClipsAtSilences(const ActionData& args)

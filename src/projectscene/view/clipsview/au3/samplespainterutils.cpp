@@ -257,8 +257,37 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
     return SampleData(ypos, xpos);
 }
 
-std::optional<int> hitChannelIndex(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
+std::optional<int> hitChannelIndex(std::shared_ptr<project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
                                    const QPoint& position, const IWavePainter::Params& params)
+{
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
+    if (!track) {
+        return std::nullopt;
+    }
+
+    const std::vector<double> channelHeights {
+        params.geometry.height * params.channelHeightRatio,
+        params.geometry.height * (1 - params.channelHeightRatio),
+    };
+
+    int top = 0;
+    for (size_t i = 0; i < track->NChannels(); ++i) {
+        const int bottom = top + static_cast<int>(channelHeights[i]);
+        const int y = position.y();
+
+        if (y >= top && y <= bottom) {
+            return i;
+        }
+
+        top = bottom;
+    }
+
+    return std::nullopt;
+}
+
+std::optional<int> hitNearestSampleChannelIndex(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
+                                                const QPoint& position, const IWavePainter::Params& params)
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
     WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));

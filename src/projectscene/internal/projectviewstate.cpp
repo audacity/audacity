@@ -43,7 +43,7 @@ void saveProjectZoomState(au::au3::Au3Project* au3Project, const ZoomState& zoom
 {
     auto& projectZoomState = au::au3::ViewInfo::Get(*au3Project);
     projectZoomState.setZoom(zoomState.zoom);
-    projectZoomState.setVPos(zoomState.tracksVerticalY);
+    projectZoomState.setVPos(zoomState.tracksVerticalOffset);
     projectZoomState.setHPos(zoomState.frameStart);
 }
 
@@ -73,22 +73,43 @@ ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project
         return;
     }
 
-    m_tracksVericalY.set(getProjectZoomState(au3Project).tracksVerticalY);
-    m_tracksVericalY.ch.onReceive(this, [au3Project](const int y) {
+    m_tracksVerticalOffset.set(getProjectZoomState(au3Project).tracksVerticalOffset);
+    m_tracksVerticalOffset.ch.onReceive(this, [au3Project](const int y) {
         ZoomState zoomState = getProjectZoomState(au3Project);
-        zoomState.tracksVerticalY = y;
+        zoomState.tracksVerticalOffset = y;
         saveProjectZoomState(au3Project, zoomState);
+    });
+
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
+        auto prj = globalContext()->currentTrackeditProject();
+        if (!prj) {
+            return;
+        }
+
+        prj->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
+            auto it = m_tracks.find(track.id);
+            if (it == m_tracks.end()) {
+                return;
+            }
+            m_totalTracksHeight.set(m_totalTracksHeight.val - it->second.height.val);
+            m_tracks.erase(it);
+        });
     });
 }
 
-muse::ValCh<int> ProjectViewState::tracksVericalY() const
+muse::ValCh<int> ProjectViewState::totalTrackHeight() const
 {
-    return m_tracksVericalY;
+    return m_totalTracksHeight;
 }
 
-void ProjectViewState::changeTracksVericalY(int deltaY)
+muse::ValCh<int> ProjectViewState::tracksVerticalOffset() const
 {
-    m_tracksVericalY.set(deltaY);
+    return m_tracksVerticalOffset;
+}
+
+void ProjectViewState::changeTracksVerticalOffset(int deltaY)
+{
+    m_tracksVerticalOffset.set(deltaY);
 }
 
 double ProjectViewState::mousePositionY() const
@@ -111,7 +132,7 @@ void ProjectViewState::setTracksVerticalScrollLocked(bool lock)
     m_tracksVerticalScrollLocked.set(lock);
 }
 
-int ProjectViewState::trackYPosition(const trackedit::TrackId& trackId) const
+int ProjectViewState::trackVerticalPosition(const trackedit::TrackId& trackId) const
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
@@ -120,8 +141,8 @@ int ProjectViewState::trackYPosition(const trackedit::TrackId& trackId) const
 
     trackedit::TrackIdList tracks = prj->trackIdList();
 
-    int tracksVericalY = this->tracksVericalY().val;
-    int trackTop = -tracksVericalY;
+    int tracksVerticalOffset = this->tracksVerticalOffset().val;
+    int trackTop = -tracksVerticalOffset;
     int trackBottom = trackTop;
 
     for (trackedit::TrackId id : tracks) {
@@ -141,6 +162,8 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
     TrackData d;
     d.height.val = DEFAULT_HEIGHT;
     d.collapsed.val = false;
+    m_totalTracksHeight.set(m_totalTracksHeight.val + d.height.val);
+
     return m_tracks.insert({ trackId, d }).first->second;
 }
 
@@ -166,7 +189,7 @@ muse::ValCh<bool> ProjectViewState::isTrackCollapsed(const trackedit::TrackId& t
     return d.collapsed;
 }
 
-void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int deltaY)
+void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int delta)
 {
     TrackData* d = nullptr;
     auto it = m_tracks.find(trackId);
@@ -176,9 +199,13 @@ void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int 
         d = &makeTrackData(trackId);
     }
 
-    int newVal = std::max(d->height.val + deltaY, MIN_HEIGHT);
-    d->height.set(newVal);
-    d->collapsed.set(newVal < COLLAPSE_HEIGHT);
+    int oldHeight = d->height.val;
+    int newHeight = std::max(oldHeight + delta, MIN_HEIGHT);
+
+    d->height.set(newHeight);
+    d->collapsed.set(newHeight < COLLAPSE_HEIGHT);
+
+    m_totalTracksHeight.set(m_totalTracksHeight.val + (newHeight - oldHeight));
 }
 
 void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int height)
@@ -191,8 +218,86 @@ void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int hei
         d = &makeTrackData(trackId);
     }
 
-    d->height.set(std::max(height, MIN_HEIGHT));
+    int oldHeight = d->height.val;
+    int newHeight = std::max(height, MIN_HEIGHT);
+    d->height.set(newHeight);
     d->collapsed.set(height < COLLAPSE_HEIGHT);
+
+    m_totalTracksHeight.set(m_totalTracksHeight.val + (newHeight - oldHeight));
+}
+
+au::trackedit::TrackId ProjectViewState::trackAtPosition(double y) const
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return trackedit::INVALID_TRACK;
+    }
+
+    trackedit::TrackIdList tracks = prj->trackIdList();
+
+    int tracksVerticalOffset = this->tracksVerticalOffset().val;
+    int trackTop = -tracksVerticalOffset;
+    int trackBottom = trackTop;
+
+    for (trackedit::TrackId id : tracks) {
+        trackTop = trackBottom;
+        trackBottom = trackTop + trackHeight(id).val;
+
+        if (muse::RealIsEqualOrMore(y, trackTop) && muse::RealIsEqualOrLess(y, trackBottom)) {
+            return id;
+        }
+    }
+
+    return trackedit::INVALID_TRACK;
+}
+
+au::trackedit::TrackIdList ProjectViewState::tracksInRange(double y1, double y2) const
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return {};
+    }
+
+    if (y1 < 0 && y2 < 0) {
+        return {};
+    }
+
+    if (y1 > y2) {
+        std::swap(y1, y2);
+    }
+
+    if (y1 < 1) {
+        y1 = 1;
+    }
+
+    trackedit::TrackIdList tracks = prj->trackIdList();
+    trackedit::TrackIdList result;
+
+    int trackTop = -m_tracksVerticalOffset.val;
+    int trackBottom = trackTop;
+
+    for (trackedit::TrackId trackId : tracks) {
+        trackTop = trackBottom;
+        trackBottom = trackTop + trackHeight(trackId).val;
+
+        if (muse::RealIsEqualOrMore(y1, trackTop) && !muse::RealIsEqualOrMore(y1, trackBottom)) {
+            result.push_back(trackId);
+        }
+
+        if (muse::RealIsEqualOrMore(y2, trackTop) && !muse::RealIsEqualOrMore(y2, trackBottom)) {
+            if (!result.empty() && result.back() != trackId) {
+                result.push_back(trackId);
+            }
+            break;
+        }
+
+        if (!result.empty() && result.back() != trackId) {
+            result.push_back(trackId);
+            continue;
+        }
+    }
+
+    return result;
 }
 
 bool ProjectViewState::isSnapEnabled() const
@@ -360,6 +465,11 @@ muse::ValCh<bool> ProjectViewState::ctrlPressed() const
     return m_ctrlPressed;
 }
 
+muse::ValCh<bool> ProjectViewState::escPressed() const
+{
+    return m_escPressed;
+}
+
 int ProjectViewState::trackDefaultHeight() const
 {
     return DEFAULT_HEIGHT;
@@ -367,7 +477,7 @@ int ProjectViewState::trackDefaultHeight() const
 
 bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
 {
-    if (event->type() == QEvent::KeyPress) {
+    if (event->type() == QEvent::KeyPress || event->type() == QEvent::ShortcutOverride) {
         if (static_cast<QKeyEvent*>(event)->key() == 0 || static_cast<QKeyEvent*>(event)->key() == Qt::Key_unknown) {
             return QObject::eventFilter(watched, event);
         }
@@ -382,6 +492,10 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
             if (!m_ctrlPressed.val) {
                 m_ctrlPressed.set(true);
             }
+        } else if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Escape) {
+            if (!m_escPressed.val) {
+                m_escPressed.set(true);
+            }
         } else {
             // We only want to process single ALT and CTRL key presses
             if (m_altPressed.val) {
@@ -390,6 +504,10 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
 
             if (m_ctrlPressed.val) {
                 m_ctrlPressed.set(false);
+            }
+
+            if (m_escPressed.val) {
+                m_escPressed.set(false);
             }
         }
     } else if (event->type() == QEvent::KeyRelease) {
@@ -405,6 +523,10 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
             || (static_cast<QKeyEvent*>(event)->modifiers() & Qt::ControlModifier)) {
             m_ctrlPressed.set(false);
         }
+
+        if (m_escPressed.val) {
+            m_escPressed.set(false);
+        }
     } else if (event->type() == QEvent::ApplicationStateChange) {
         if (qApp->applicationState() != Qt::ApplicationState::ApplicationActive) {
             if (m_altPressed.val) {
@@ -413,6 +535,10 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
 
             if (m_ctrlPressed.val) {
                 m_ctrlPressed.set(false);
+            }
+
+            if (m_escPressed.val) {
+                m_escPressed.set(false);
             }
         }
     }

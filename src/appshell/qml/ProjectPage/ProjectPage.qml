@@ -33,7 +33,7 @@ import Audacity.Playback
 DockPage {
     id: root
 
-    objectName: "ProjecPage"
+    objectName: "ProjectPage"
     uri: "audacity://project"
 
     property var topToolKeyNavSec

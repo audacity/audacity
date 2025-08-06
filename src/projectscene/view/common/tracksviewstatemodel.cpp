@@ -28,10 +28,10 @@ void TracksViewStateModel::init()
         return;
     }
 
-    m_tracksVericalY = vs->tracksVericalY();
-    m_tracksVericalY.ch.onReceive(this, [this](int y) {
-        m_tracksVericalY.val = y;
-        emit tracksVericalYChanged();
+    m_tracksVerticalOffset = vs->tracksVerticalOffset();
+    m_tracksVerticalOffset.ch.onReceive(this, [this](int y) {
+        m_tracksVerticalOffset.val = y;
+        emit tracksVerticalOffsetChanged();
     });
 
     m_tracksVerticalScrollLocked = vs->tracksVerticalScrollLocked();
@@ -48,30 +48,6 @@ void TracksViewStateModel::init()
         }
     });
 
-    if (m_trackId != -1) {
-        m_trackHeight = vs->trackHeight(m_trackId);
-        m_trackHeight.ch.onReceive(this, [this](int h) {
-            if (m_trackHeight.val == h) {
-                return;
-            }
-            m_trackHeight.val = h;
-            emit trackHeightChanged();
-        });
-
-        m_isTrackCollapsed = vs->isTrackCollapsed(m_trackId);
-        m_isTrackCollapsed.ch.onReceive(this, [this](bool v) {
-            if (m_isTrackCollapsed.val == v) {
-                return;
-            }
-
-            m_isTrackCollapsed.val = v;
-            emit isTrackCollapsedChanged();
-        });
-
-        emit trackHeightChanged();
-        emit isTrackCollapsedChanged();
-    }
-
     m_altPressed = vs->altPressed();
     m_altPressed.ch.onReceive(this, [this](bool v) {
         m_altPressed.val = v;
@@ -84,27 +60,14 @@ void TracksViewStateModel::init()
         emit ctrlPressedChanged();
     });
 
-    playbackController()->isPlayingChanged().onNotify(this, [this]() {
-        emit isPlayingChanged();
+    m_escPressed = vs->escPressed();
+    m_escPressed.ch.onReceive(this, [this](bool v) {
+        m_escPressed.val = v;
+        emit escPressedChanged();
     });
-
-    recordController()->isRecordingChanged().onNotify(this, [this]() {
-        emit isRecordingChanged();
-    });
-
-    m_meterModel = new playback::PlaybackMeterModel(this);
-    emit meterModelChanged();
 }
 
-void TracksViewStateModel::changeTrackHeight(int deltaY)
-{
-    IProjectViewStatePtr vs = viewState();
-    if (vs) {
-        vs->changeTrackHeight(m_trackId, deltaY);
-    }
-}
-
-bool TracksViewStateModel::snapEnabled()
+bool TracksViewStateModel::snapEnabled() const
 {
     IProjectViewStatePtr vs = viewState();
     if (vs) {
@@ -114,11 +77,20 @@ bool TracksViewStateModel::snapEnabled()
     return false;
 }
 
-void TracksViewStateModel::changeTracksVericalY(int deltaY)
+au::trackedit::TrackId TracksViewStateModel::trackAtPosition(double x, double y) const
 {
     IProjectViewStatePtr vs = viewState();
     if (vs) {
-        vs->changeTracksVericalY(deltaY);
+        return vs->trackAtPosition(y);
+    }
+    return {};
+}
+
+void TracksViewStateModel::changeTracksVerticalOffset(int deltaY)
+{
+    IProjectViewStatePtr vs = viewState();
+    if (vs) {
+        vs->changeTracksVerticalOffset(deltaY);
     }
 }
 
@@ -146,26 +118,9 @@ void TracksViewStateModel::requestVerticalScrollUnlock()
     }
 }
 
-QVariant TracksViewStateModel::trackId() const
+int TracksViewStateModel::tracksVerticalOffset() const
 {
-    return QVariant::fromValue(m_trackId);
-}
-
-void TracksViewStateModel::setTrackId(const QVariant& _newTrackId)
-{
-    trackedit::TrackId newTrackId = _newTrackId.toInt();
-    if (m_trackId == newTrackId) {
-        return;
-    }
-    m_trackId = newTrackId;
-    emit trackIdChanged();
-
-    init();
-}
-
-int TracksViewStateModel::tracksVericalY() const
-{
-    return m_tracksVericalY.val;
+    return m_tracksVerticalOffset.val;
 }
 
 bool TracksViewStateModel::tracksVerticalScrollLocked() const
@@ -178,14 +133,22 @@ int TracksViewStateModel::tracksVerticalScrollPadding() const
     return m_tracksVerticalScrollPadding;
 }
 
-int TracksViewStateModel::trackHeight() const
+int TracksViewStateModel::trackHeight(trackedit::TrackId trackId) const
 {
-    return m_trackHeight.val;
+    IProjectViewStatePtr vs = viewState();
+    if (vs) {
+        return vs->trackHeight(trackId).val;
+    }
+    return {};
 }
 
-bool TracksViewStateModel::isTrackCollapsed() const
+int TracksViewStateModel::trackVerticalPosition(trackedit::TrackId trackId) const
 {
-    return m_isTrackCollapsed.val;
+    IProjectViewStatePtr vs = viewState();
+    if (vs) {
+        return vs->trackVerticalPosition(trackId);
+    }
+    return {};
 }
 
 bool TracksViewStateModel::altPressed() const
@@ -198,17 +161,7 @@ bool TracksViewStateModel::ctrlPressed() const
     return m_ctrlPressed.val;
 }
 
-bool TracksViewStateModel::isPlaying() const
+bool TracksViewStateModel::escPressed() const
 {
-    return playbackController()->isPlaying();
-}
-
-bool TracksViewStateModel::isRecording() const
-{
-    return recordController()->isRecording();
-}
-
-au::playback::PlaybackMeterModel* TracksViewStateModel::meterModel() const
-{
-    return m_meterModel;
+    return m_escPressed.val;
 }
