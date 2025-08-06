@@ -6,9 +6,18 @@ Column {
     id: root
 
     required property double value
+    required property int decimals
     property alias to: slider.to
     property alias from: slider.from
     property alias text: label.text
+    property alias measureUnitsSymbol: incrementalPropertyControl.measureUnitsSymbol
+    property double step: {
+        if (decimals <= 0) {
+            return 1;
+        }
+        const val = "0." + "0".repeat(decimals - 1) + "1";
+        return parseFloat(val);
+    }
 
     signal newValueRequested(double newValue)
 
@@ -32,7 +41,7 @@ Column {
             width: parent.width * .65
 
             value: root.value
-            stepSize: 0.01
+            stepSize: root.step
 
             onMoved: {
                 if (root.value !== slider.value) {
@@ -42,14 +51,14 @@ Column {
         }
 
         IncrementalPropertyControl {
+            id: incrementalPropertyControl
 
             width: parent.width * .35
 
-            measureUnitsSymbol: qsTrc("global", "dB")
             minValue: root.from
             maxValue: root.to
-            decimals: 4
-            step: 0.01
+            decimals: root.decimals
+            step: root.step
 
             currentValue: (slider.value).toFixed(decimals)
 

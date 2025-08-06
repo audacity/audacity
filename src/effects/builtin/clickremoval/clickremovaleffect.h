@@ -55,10 +55,12 @@ private:
 
     bool RemoveClicks(size_t len, float* buffer);
 
-protected:
+private:
     Envelope* mEnvelope;
 
     bool mbDidSomething; // This effect usually does nothing on real-world data.
+
+public:
     int mThresholdLevel;
     int mClickWidth;
     int sep;
@@ -66,10 +68,10 @@ protected:
     const EffectParameterMethods& Parameters() const override;
 
     static constexpr EffectParameter Threshold {
-        &ClickRemovalEffect::mThresholdLevel, L"Threshold", 200, 0, 900, 1
+        &ClickRemovalEffect::mThresholdLevel, L"Threshold", 200, 0, 900, 10
     };
     static constexpr EffectParameter Width {
-        &ClickRemovalEffect::mClickWidth, L"Width", 20, 0, 40, 1
+        &ClickRemovalEffect::mClickWidth, L"Width", 20, 0, 40, 10
     };
 };
 }

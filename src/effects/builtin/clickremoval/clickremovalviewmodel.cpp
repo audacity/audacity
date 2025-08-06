@@ -17,7 +17,75 @@ ClickRemovalEffect* ClickRemovalViewModel::effect() const
     return dynamic_cast<ClickRemovalEffect*>(e);
 }
 
+int ClickRemovalViewModel::threshold() const
+{
+    ClickRemovalEffect* const ce = effect();
+    return ce ? ce->mThresholdLevel : 0;
+}
+
+void ClickRemovalViewModel::setThreshold(int newThreshold)
+{
+    ClickRemovalEffect* const ce = effect();
+    IF_ASSERT_FAILED(ce) {
+        return;
+    }
+    if (!muse::is_equal(ce->mThresholdLevel, newThreshold)) {
+        ce->mThresholdLevel = newThreshold;
+        emit thresholdChanged();
+    }
+}
+
+int ClickRemovalViewModel::thresholdMin() const
+{
+    return ClickRemovalEffect::Threshold.min;
+}
+
+int ClickRemovalViewModel::thresholdMax() const
+{
+    return ClickRemovalEffect::Threshold.max;
+}
+
+int ClickRemovalViewModel::thresholdStep() const
+{
+    return ClickRemovalEffect::Threshold.scale;
+}
+
+int ClickRemovalViewModel::width() const
+{
+    ClickRemovalEffect* const ce = effect();
+    return ce ? ce->mClickWidth : 0;
+}
+
+void ClickRemovalViewModel::setWidth(int newWidth)
+{
+    ClickRemovalEffect* const ce = effect();
+    IF_ASSERT_FAILED(ce) {
+        return;
+    }
+    if (!muse::is_equal(ce->mClickWidth, newWidth)) {
+        ce->mClickWidth = newWidth;
+        emit widthChanged();
+    }
+}
+
+int ClickRemovalViewModel::widthMin() const
+{
+    return ClickRemovalEffect::Width.min;
+}
+
+int ClickRemovalViewModel::widthMax() const
+{
+    return ClickRemovalEffect::Width.max;
+}
+
+int ClickRemovalViewModel::widthStep() const
+{
+    return ClickRemovalEffect::Width.scale;
+}
+
 void ClickRemovalViewModel::doReload()
 {
+    emit thresholdChanged();
+    emit widthChanged();
 }
 }
