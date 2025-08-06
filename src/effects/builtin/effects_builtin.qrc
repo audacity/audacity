@@ -3,6 +3,7 @@
         <file>qml/Audacity/BuiltinEffects/qmldir</file>
         <file>qml/Audacity/BuiltinEffects/BuiltinEffectViewer.qml</file>
         <file>common/EffectBase.qml</file>
+        <file>common/SliderWithTextInput.qml</file>
         <file>amplify/AmplifyView.qml</file>
         <file>clickremoval/ClickRemovalView.qml</file>
         <file>normalize/NormalizeView.qml</file>
