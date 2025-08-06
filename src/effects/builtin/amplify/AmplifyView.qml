@@ -40,9 +40,12 @@ EffectBase {
 
             width: parent.width
             text: qsTrc("effects/amplify", "Amplification")
+            measureUnitsSymbol: qsTrc("global", "dB")
             value: amplify.amp
             from: amplify.ampMin
             to: amplify.ampMax
+            decimals: 4
+            step: 0.02
 
             onNewValueRequested: function(newValue) {
                 amplify.amp = newValue
@@ -53,9 +56,12 @@ EffectBase {
 
             width: parent.width
             text: qsTrc("effects/amplify", "New peak amplitude")
+            measureUnitsSymbol: qsTrc("global", "dB")
             value: amplify.newPeak
             from: amplify.newPeakMin
             to: amplify.newPeakMax
+            decimals: 4
+            step: 0.02
 
             onNewValueRequested: function(newValue) {
                 amplify.newPeak = newValue
