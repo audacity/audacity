@@ -16,7 +16,13 @@ Item {
     QtObject {
         id: prv
         readonly property int labelLineSpacing: 8
-        readonly property int labelWidth: 16
+        property int labelWidth: fontMetrics.boundingRect("-000").width
+    }
+
+    FontMetrics {
+        id: fontMetrics
+        font.family: ui.theme.bodyFont.family
+        font.pixelSize: root.fontSize
     }
 
     Repeater {
