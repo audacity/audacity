@@ -4,6 +4,7 @@
         <file>qml/Audacity/BuiltinEffects/BuiltinEffectViewer.qml</file>
         <file>common/EffectBase.qml</file>
         <file>amplify/AmplifyView.qml</file>
+        <file>clickremoval/ClickRemovalView.qml</file>
         <file>normalize/NormalizeView.qml</file>
         <file>tonegen/ChirpView.qml</file>
         <file>tonegen/ToneView.qml</file>

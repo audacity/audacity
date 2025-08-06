@@ -24,12 +24,15 @@
 
 *//*******************************************************************/
 #include "ClickRemovalBase.h"
-#include "BasicUI.h"
 #include "EffectOutputTracks.h"
 #include "Prefs.h"
 #include "ShuttleAutomation.h"
 #include "WaveTrack.h"
 #include <cmath>
+
+namespace {
+constexpr size_t windowSize = 8192;
+}
 
 const EffectParameterMethods& ClickRemovalBase::Parameters() const
 {
@@ -45,7 +48,6 @@ ClickRemovalBase::ClickRemovalBase()
 
     SetLinearEffectFlag(false);
 
-    windowSize = 8192;
     sep = 2049;
 }
 
@@ -112,10 +114,8 @@ bool ClickRemovalBase::Process(EffectInstance&, EffectSettings&)
 done:
     if (bGoodResult && !mbDidSomething) { // Processing successful, but
                                           // ineffective.
-        using namespace BasicUI;
-        ShowMessageBox(
-            XO("Algorithm not effective on this audio. Nothing changed."),
-            MessageBoxOptions {}.IconStyle(Icon::Error));
+        mLastError = XO("Algorithm not effective on this audio. Nothing changed.").Translation().ToStdString();
+        return false;
     }
 
     if (bGoodResult && mbDidSomething) {
@@ -129,10 +129,8 @@ bool ClickRemovalBase::ProcessOne(
     int count, WaveChannel& track, sampleCount start, sampleCount len)
 {
     if (len <= windowSize / 2) {
-        using namespace BasicUI;
-        ShowMessageBox(
-            XO("Selection must be larger than %d samples.").Format(windowSize / 2),
-            MessageBoxOptions {}.IconStyle(Icon::Error));
+        static_assert(windowSize / 2 == 4096);
+        mLastError = XO("Selection must be larger than 4096 samples.").Translation().ToStdString();
         return false;
     }
 

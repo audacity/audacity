@@ -17,6 +17,8 @@
 
 #include "amplify/amplifyeffect.h"
 #include "amplify/amplifyviewmodel.h"
+#include "libraries/lib-builtin-effects/ClickRemovalBase.h"
+#include "clickremoval/clickremovalviewmodel.h"
 #include "normalize/normalizeeffect.h"
 #include "normalize/normalizeviewmodel.h"
 #include "tonegen/chirpeffect.h"
@@ -100,6 +102,7 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< Repair > regRepair;
     static BuiltinEffectsModule::Registration< ReverseEffect > regReverse;
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
+    static BuiltinEffectsModule::Registration< ClickRemovalBase > regClickRemoval;
     static BuiltinEffectsModule::Registration< NormalizeEffect > regNormalize;
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
@@ -170,6 +173,15 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     muse::mtrc("effects", "Increases or decreases the volume of the audio you have selected"),
                     EffectCategoryId::VolumeAndCompression,
                     false
+                    );
+        } else if (symbol == ClickRemovalBase::Symbol) {
+            qmlRegisterType<ClickRemovalViewModel>("Audacity.Effects", 1, 0, "ClickRemovalViewModel");
+            regView(ClickRemovalBase::Symbol, u"qrc:/clickremoval/ClickRemovalView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects", "Click Removal"),
+                    muse::mtrc("effects", "Click Removal is designed to remove clicks on audio tracks"),
+                    EffectCategoryId::NoiseRemovalAndRepair,
+                    true
                     );
         } else if (symbol == NormalizeEffect::Symbol) {
             qmlRegisterType<NormalizeViewModel>("Audacity.Effects", 1, 0, "NormalizeViewModel");
