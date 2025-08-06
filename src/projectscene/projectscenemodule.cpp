@@ -65,6 +65,8 @@
 
 #include "view/historypanel/historypanelmodel.h"
 
+#include "view/trackruler/trackrulermodel.h"
+
 using namespace au::projectscene;
 using namespace muse::modularity;
 using namespace muse::ui;
@@ -179,6 +181,9 @@ void ProjectSceneModule::registerUiTypes()
 
     // history panel
     qmlRegisterType<HistoryPanelModel>("Audacity.ProjectScene", 1, 0, "HistoryPanelModel");
+
+    //track ruler
+    qmlRegisterType<TrackRulerModel>("Audacity.ProjectScene", 1, 0, "TrackRulerModel");
 }
 
 void ProjectSceneModule::onInit(const muse::IApplication::RunMode& mode)
