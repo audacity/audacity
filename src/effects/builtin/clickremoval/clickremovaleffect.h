@@ -1,8 +1,12 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  ClickRemovalBase.h
+  ClickRemovalEffect.h
 
   Craig DeForest
 
@@ -15,19 +19,20 @@
 class Envelope;
 class WaveChannel;
 
-class ClickRemovalBase : public StatefulEffect
+namespace au::effects {
+class ClickRemovalEffect : public StatefulEffect
 {
 public:
-    static inline ClickRemovalBase*
-    FetchParameters(ClickRemovalBase& e, EffectSettings&)
+    static inline ClickRemovalEffect*
+    FetchParameters(ClickRemovalEffect& e, EffectSettings&)
     {
         return &e;
     }
 
     static const ComponentInterfaceSymbol Symbol;
 
-    ClickRemovalBase();
-    virtual ~ClickRemovalBase();
+    ClickRemovalEffect();
+    virtual ~ClickRemovalEffect();
 
     // ComponentInterface implementation
 
@@ -37,12 +42,12 @@ public:
 
     // EffectDefinitionInterface implementation
 
-    EffectType GetType() const override;
+    ::EffectType GetType() const override;
 
     // Effect implementation
 
     bool CheckWhetherSkipEffect(const EffectSettings& settings) const override;
-    bool Process(EffectInstance& instance, EffectSettings& settings) override;
+    bool Process(::EffectInstance& instance, EffectSettings& settings) override;
 
 private:
     bool ProcessOne(
@@ -61,9 +66,10 @@ protected:
     const EffectParameterMethods& Parameters() const override;
 
     static constexpr EffectParameter Threshold {
-        &ClickRemovalBase::mThresholdLevel, L"Threshold", 200, 0, 900, 1
+        &ClickRemovalEffect::mThresholdLevel, L"Threshold", 200, 0, 900, 1
     };
     static constexpr EffectParameter Width {
-        &ClickRemovalBase::mClickWidth, L"Width", 20, 0, 40, 1
+        &ClickRemovalEffect::mClickWidth, L"Width", 20, 0, 40, 1
     };
 };
+}
