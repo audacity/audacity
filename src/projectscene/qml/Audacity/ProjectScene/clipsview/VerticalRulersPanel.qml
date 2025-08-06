@@ -226,6 +226,7 @@ Rectangle {
 
                             anchors.verticalCenter: modelData.alignment == 0 ? parent.verticalCenter : undefined
                             anchors.bottom: modelData.alignment == 1 ? parent.bottom : undefined
+                            anchors.bottomMargin: modelData.alignment == 1 ? 1 : undefined
                             anchors.top: modelData.alignment == -1 ? parent.top : undefined
 
                             height: aLabelMetrics.ascent
