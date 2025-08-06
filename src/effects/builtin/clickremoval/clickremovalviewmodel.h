@@ -1,15 +1,14 @@
 /*
-* Audacity: A Digital Audio Editor
-*/
+ * Audacity: A Digital Audio Editor
+ */
 #pragma once
 
 #include "../common/abstracteffectmodel.h"
 
 #include "effects/effects_base/ieffectsprovider.h"
 
-class ClickRemovalBase;
-
 namespace au::effects {
+class ClickRemovalEffect;
 class ClickRemovalViewModel : public AbstractEffectModel
 {
     Q_OBJECT
@@ -22,6 +21,6 @@ public:
 private:
     void doReload() override;
 
-    ClickRemovalBase* effect() const;
+    ClickRemovalEffect* effect() const;
 };
 }
