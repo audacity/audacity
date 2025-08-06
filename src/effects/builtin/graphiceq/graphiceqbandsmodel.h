@@ -26,7 +26,7 @@ public:
     Q_INVOKABLE void invert();
 
 private:
-    enum RoleNames
+    enum EqDataRoles
     {
         rDbGain = Qt::UserRole + 1,
         rCenterFreq,
