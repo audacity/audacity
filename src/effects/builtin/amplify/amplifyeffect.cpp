@@ -8,6 +8,8 @@
 
 #include "au3wrap/au3types.h"
 
+#include "global/realfn.h"
+
 using namespace au::effects;
 using namespace au::au3;
 
@@ -181,6 +183,10 @@ OptionalMessage AmplifyEffect::DoLoadFactoryDefaults(EffectSettings& /*settings*
 bool AmplifyEffect::Init()
 {
     auto range = inputTracks()->Selected<const Au3WaveTrack>();
+    if (range.empty() || muse::RealIsEqualOrMore(mT0, mT1)) {
+        mLastError = XO("No audio selected").Translation().ToStdString();
+        return false;
+    }
     bool hasPitchOrSpeed = any_of(begin(range), end(range), [this](auto* pTrack) {
         return TimeStretching::HasPitchOrSpeed(*pTrack, mT0, mT1);
     });
@@ -196,7 +202,7 @@ bool AmplifyEffect::Init()
             mPeak = std::max<double>(mPeak, newpeak);
         }
     }
-    return true;
+    return !muse::RealIsEqualOrMore(0.0, mPeak);
 }
 
 std::any AmplifyEffect::BeginPreview(const EffectSettings& /*settings*/)
