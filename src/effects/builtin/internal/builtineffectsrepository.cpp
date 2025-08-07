@@ -73,19 +73,19 @@ muse::String categoryIdString(EffectCategoryId category)
         // (and analyzers).
         return muse::String{ "Audacity" };
     case EffectCategoryId::VolumeAndCompression:
-        return muse::String{ "Volume and Compression" };
+        return muse::String{ "Volume and compression" };
     case EffectCategoryId::Fading:
         return muse::String{ "Fading" };
     case EffectCategoryId::PitchAndTempo:
-        return muse::String{ "Pitch and Tempo" };
+        return muse::String{ "Pitch and tempo" };
     case EffectCategoryId::EqAndFilters:
-        return muse::String{ "EQ and Filters" };
+        return muse::String{ "EQ and filters" };
     case EffectCategoryId::NoiseRemovalAndRepair:
-        return muse::String{ "Noise Removal and Repair" };
+        return muse::String{ "Noise removal and repair" };
     case EffectCategoryId::DelayAndReverb:
-        return muse::String{ "Delay and Reverb" };
+        return muse::String{ "Delay and reverb" };
     case EffectCategoryId::DistortionAndModulation:
-        return muse::String{ "Distortion and Modulation" };
+        return muse::String{ "Distortion and modulation" };
     case EffectCategoryId::Special:
         return muse::String{ "Special" };
     case EffectCategoryId::Legacy:
@@ -208,14 +208,14 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     );
         } else if (symbol == FadeInEffect::Symbol) {
             regMeta(desc,
-                    muse::mtrc("effects", "Fade In"),
+                    muse::mtrc("effects", "Fade in"),
                     muse::mtrc("effects", "Applies a linear fade-in to the selected audio"),
                     EffectCategoryId::Fading,
                     true
                     );
         } else if (symbol == FadeOutEffect::Symbol) {
             regMeta(desc,
-                    muse::mtrc("effects", "Fade Out"),
+                    muse::mtrc("effects", "Fade out"),
                     muse::mtrc("effects", "Applies a linear fade-out to the selected audio"),
                     EffectCategoryId::Fading,
                     true
@@ -289,7 +289,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
             qmlRegisterType<DtmfViewModel>("Audacity.Effects", 1, 0, "DtmfViewModel");
             regView(DtmfGenerator::Symbol, u"qrc:/dtmfgen/DtmfView.qml");
             regMeta(desc,
-                    muse::mtrc("effects/dtmf", "DTMF Tones"),
+                    muse::mtrc("effects/dtmf", "DTMF tones"),
                     muse::mtrc("effects/dtmf", "Generates DTMF signal"),
                     EffectCategoryId::None,
                     false
