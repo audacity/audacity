@@ -17,6 +17,8 @@
 
 #include "amplify/amplifyeffect.h"
 #include "amplify/amplifyviewmodel.h"
+#include "libraries/lib-builtin-effects/LoudnessBase.h"
+#include "loudness/normalizeloudnessviewmodel.h"
 #include "clickremoval/clickremovaleffect.h"
 #include "clickremoval/clickremovalviewmodel.h"
 #include "normalize/normalizeeffect.h"
@@ -105,6 +107,7 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< Repair > regRepair;
     static BuiltinEffectsModule::Registration< ReverseEffect > regReverse;
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
+    static BuiltinEffectsModule::Registration< LoudnessBase > regLoudness;
     static BuiltinEffectsModule::Registration< GraphicEq > regGraphicEq;
     static BuiltinEffectsModule::Registration< ClickRemovalEffect > regClickRemoval;
     static BuiltinEffectsModule::Registration< NormalizeEffect > regNormalize;
@@ -177,6 +180,15 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     muse::mtrc("effects", "Increases or decreases the volume of the audio you have selected"),
                     EffectCategoryId::VolumeAndCompression,
                     false
+                    );
+        } else if (symbol == LoudnessBase::Symbol) {
+            qmlRegisterType<NormalizeLoudnessViewModel>("Audacity.Effects", 1, 0, "NormalizeLoudnessViewModel");
+            regView(LoudnessBase::Symbol, u"qrc:/loudness/NormalizeLoudnessView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects", "Loudness normalization"),
+                    muse::mtrc("effects", "Sets the loudness of one or more tracks"),
+                    EffectCategoryId::VolumeAndCompression,
+                    true
                     );
         } else if (symbol == GraphicEq::Symbol) {
             qmlRegisterType<GraphicEqViewModel>("Audacity.Effects", 1, 0, "GraphicEqViewModel");
