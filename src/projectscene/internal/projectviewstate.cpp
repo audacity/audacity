@@ -162,8 +162,16 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
     TrackData d;
     d.height.val = DEFAULT_HEIGHT;
     d.collapsed.val = false;
+    d.channelHeightRatio.val = 1.0;
     m_totalTracksHeight.set(m_totalTracksHeight.val + d.height.val);
 
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        std::optional<trackedit::Track> track = prj->track(trackId);
+        if (track) {
+            d.channelHeightRatio.val = track->type == trackedit::TrackType::Stereo ? 0.5 : 1.0;
+        }
+    }
     return m_tracks.insert({ trackId, d }).first->second;
 }
 
@@ -187,6 +195,17 @@ muse::ValCh<bool> ProjectViewState::isTrackCollapsed(const trackedit::TrackId& t
 
     const ProjectViewState::TrackData& d = makeTrackData(trackId);
     return d.collapsed;
+}
+
+muse::ValCh<double> ProjectViewState::channelHeightRatio(const trackedit::TrackId& trackId) const
+{
+    auto it = m_tracks.find(trackId);
+    if (it != m_tracks.end()) {
+        return it->second.channelHeightRatio;
+    }
+
+    const ProjectViewState::TrackData& d = makeTrackData(trackId);
+    return d.channelHeightRatio;
 }
 
 void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int delta)
@@ -298,6 +317,19 @@ au::trackedit::TrackIdList ProjectViewState::tracksInRange(double y1, double y2)
     }
 
     return result;
+}
+
+void ProjectViewState::setChannelHeightRatio(const trackedit::TrackId& trackId, double ratio)
+{
+    TrackData* d = nullptr;
+    auto it = m_tracks.find(trackId);
+    if (it != m_tracks.end()) {
+        d = &it->second;
+    } else {
+        d = &makeTrackData(trackId);
+    }
+
+    d->channelHeightRatio.set(ratio);
 }
 
 bool ProjectViewState::isSnapEnabled() const
