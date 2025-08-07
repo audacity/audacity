@@ -7,7 +7,7 @@ import "../common"
 EffectBase {
     id: root
 
-    property string title: qsTrc("effects/amplify", "Amplify")
+    property string title: amplify.title
     property alias isApplyAllowed: amplify.isApplyAllowed
 
     width: 320
@@ -20,12 +20,12 @@ EffectBase {
 
         instanceId: root.instanceId
 
-        onAmpChanged: slider.value = amp
+        onAmpChanged: ampSlider.value = amp
     }
 
     Component.onCompleted: {
         amplify.init()
-        slider.value = amplify.amp
+        ampSlider.value = amplify.amp
     }
 
     Column {
@@ -36,16 +36,16 @@ EffectBase {
         spacing: 16
 
         SliderWithTextInput {
-            id: slider
+            id: ampSlider
 
             width: parent.width
-            text: qsTrc("effects/amplify", "Amplification")
-            measureUnitsSymbol: qsTrc("global", "dB")
+            text: amplify.ampLabel
+            measureUnitsSymbol: amplify.ampMeasureUnitsSymbol
             value: amplify.amp
             from: amplify.ampMin
             to: amplify.ampMax
-            decimals: 4
-            step: 0.02
+            decimals: amplify.ampDecimals
+            step: amplify.ampStep
 
             onNewValueRequested: function(newValue) {
                 amplify.amp = newValue
@@ -53,15 +53,16 @@ EffectBase {
         }
 
         SliderWithTextInput {
+            id: newPeakSlider
 
             width: parent.width
-            text: qsTrc("effects/amplify", "New peak amplitude")
-            measureUnitsSymbol: qsTrc("global", "dB")
+            text: amplify.newPeakLabel
+            measureUnitsSymbol: amplify.newPeakMeasureUnitsSymbol
             value: amplify.newPeak
             from: amplify.newPeakMin
             to: amplify.newPeakMax
-            decimals: 4
-            step: 0.02
+            decimals: amplify.newPeakDecimals
+            step: amplify.newPeakStep
 
             onNewValueRequested: function(newValue) {
                 amplify.newPeak = newValue
@@ -70,7 +71,7 @@ EffectBase {
 
         CheckBox {
 
-            text: qsTrc("effects/amplify", "Allow clipping")
+            text: amplify.canClipLabel
             checked: amplify.canClip
 
             onClicked: {

@@ -5,7 +5,8 @@
 
 #include "amplifyeffect.h"
 
-#include "log.h"
+#include "global/log.h"
+#include "global/translation.h"
 
 using namespace au::effects;
 
@@ -58,6 +59,16 @@ void AmplifyViewModel::update()
     setIsApplyAllowed(isApplyAllowed);
 }
 
+QString AmplifyViewModel::title() const
+{
+    return muse::qtrc("effects/amplify", "Amplify");
+}
+
+QString AmplifyViewModel::ampLabel() const
+{
+    return muse::qtrc("effects/amplify", "Amplification");
+}
+
 float AmplifyViewModel::amp() const
 {
     return m_amp.val;
@@ -88,6 +99,26 @@ float AmplifyViewModel::ampMin() const
 float AmplifyViewModel::ampMax() const
 {
     return m_amp.max;
+}
+
+QString AmplifyViewModel::ampMeasureUnitsSymbol() const
+{
+    return muse::qtrc("global", "dB");
+}
+
+int AmplifyViewModel::ampDecimals() const
+{
+    return 4;
+}
+
+double AmplifyViewModel::ampStep() const
+{
+    return 0.02;
+}
+
+QString AmplifyViewModel::newPeakLabel() const
+{
+    return muse::qtrc("effects/amplify", "New peak amplitude");
 }
 
 float AmplifyViewModel::newPeak() const
@@ -132,6 +163,26 @@ float AmplifyViewModel::newPeakMax() const
     }
 
     return m_amp.max + muse::linear_to_db(ae->peak());
+}
+
+QString AmplifyViewModel::newPeakMeasureUnitsSymbol() const
+{
+    return muse::qtrc("global", "dB");
+}
+
+int AmplifyViewModel::newPeakDecimals() const
+{
+    return 4;
+}
+
+double AmplifyViewModel::newPeakStep() const
+{
+    return 0.02;
+}
+
+QString AmplifyViewModel::canClipLabel() const
+{
+    return muse::qtrc("effects/amplify", "Allow clipping");
 }
 
 bool AmplifyViewModel::canClip() const
