@@ -7,8 +7,8 @@
 
 #include "effects/effects_base/ieffectsprovider.h"
 
-class LoudnessBase;
 namespace au::effects {
+class NormalizeLoudnessEffect;
 class NormalizeLoudnessViewModel : public AbstractEffectModel
 {
     Q_OBJECT
@@ -21,6 +21,6 @@ public:
 private:
     void doReload() override;
 
-    LoudnessBase* effect() const;
+    NormalizeLoudnessEffect* effect() const;
 };
 }
