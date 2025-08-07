@@ -5,9 +5,9 @@
 
 namespace au::projectscene {
 struct TrackRulerFullStep {
-    int alignment;
     double value;
     size_t channel;
+    int alignment;
     bool isBold;
     bool fullWidthTick;
 };

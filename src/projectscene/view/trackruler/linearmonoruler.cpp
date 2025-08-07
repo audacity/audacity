@@ -4,11 +4,11 @@ using namespace au::projectscene;
 
 namespace {
 constexpr std::array<TrackRulerFullStep, 5> FULL_STEPS = { {
-    TrackRulerFullStep{ -1, 1.0, 0, true, false },
-    TrackRulerFullStep{ 0, 0.5, 0, false, false },
-    TrackRulerFullStep{ 0, 0.0, 0, true, true },
-    TrackRulerFullStep{ 0, -0.5, 0, false, false },
-    TrackRulerFullStep{ 1, -1.0, 0, true, false }
+    TrackRulerFullStep{ 1.0, 0, -1, true, false },
+    TrackRulerFullStep{ 0.5, 0, 0, false, false },
+    TrackRulerFullStep{ 0.0, 0, 0, true, true },
+    TrackRulerFullStep{ -0.5, 0, 0, false, false },
+    TrackRulerFullStep{ -1.0, 0, 1, true, false }
 } };
 
 constexpr std::array<TrackRulerSmallStep, 16> SMALL_STEPS = { {
@@ -31,7 +31,7 @@ constexpr std::array<TrackRulerSmallStep, 16> SMALL_STEPS = { {
 } };
 
 constexpr std::array<TrackRulerFullStep, 1> COLLAPSED_FULL_STEPS = { {
-    TrackRulerFullStep{ 0, 0.0, 0, true, true },
+    TrackRulerFullStep{ 0.0, 0, 0, true, true },
 } };
 
 constexpr std::array<TrackRulerSmallStep, 2> COLLAPSED_SMALL_STEPS = { {
