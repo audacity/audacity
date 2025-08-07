@@ -4,15 +4,15 @@ using namespace au::projectscene;
 
 namespace {
 constexpr std::array<TrackRulerFullStep, 3> FULL_STEPS_CH_0 = { {
-    TrackRulerFullStep{ -1, 1.0, 0, true, false },
-    TrackRulerFullStep{ 0, 0.0, 0, true, true },
-    TrackRulerFullStep{ 1, -1.0, 0, true, true }
+    TrackRulerFullStep{ 1.0, 0, -1, true, false },
+    TrackRulerFullStep{ 0.0, 0, 0, true, true },
+    TrackRulerFullStep{ -1.0, 0, 1, true, true }
 } };
 
 constexpr std::array<TrackRulerFullStep, 3> FULL_STEPS_CH_1 = { {
-    TrackRulerFullStep{ -1, 1.0, 1, true, true },
-    TrackRulerFullStep{ 0, 0.0, 1, true, true },
-    TrackRulerFullStep{ 1, -1.0, 1, true, false },
+    TrackRulerFullStep{ 1.0, 1, -1, true, true },
+    TrackRulerFullStep{ 0.0, 1, 0, true, true },
+    TrackRulerFullStep{ -1.0, 1, 1, true, false },
 } };
 
 constexpr std::array<TrackRulerSmallStep, 2> SMALL_STEPS_CH_0 = { {
@@ -26,11 +26,11 @@ constexpr std::array<TrackRulerSmallStep, 2> SMALL_STEPS_CH_1 = { {
 } };
 
 constexpr std::array<TrackRulerFullStep, 2> COLLAPSED_FULL_STEPS_CH_0 = { {
-    TrackRulerFullStep{ 0, 0.0, 0, true, true },
+    TrackRulerFullStep{ 0.0, 0, 0, true, true },
 } };
 
 constexpr std::array<TrackRulerFullStep, 2> COLLAPSED_FULL_STEPS_CH_1 = { {
-    TrackRulerFullStep{ 0, 0.0, 1, true, true },
+    TrackRulerFullStep{ 0.0, 1, 0, true, true },
 } };
 
 constexpr std::array<TrackRulerSmallStep, 1> COLLAPSED_SMALL_STEPS_CH_0 = { {

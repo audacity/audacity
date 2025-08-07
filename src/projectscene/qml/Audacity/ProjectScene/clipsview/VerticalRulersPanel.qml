@@ -81,8 +81,6 @@ Rectangle {
 
             color: ui.theme.backgroundQuarternaryColor
 
-            z: model.isTrackFocused ? 10 : 0
-
             Component.onCompleted: {
                 trackViewState.init()
                 clipsModel.init()
@@ -119,10 +117,9 @@ Rectangle {
                 anchors.right: parent.right
 
                 width: parent.width
-                height: trackViewState.isTrackCollapsed ? 1 : 20
+                height: trackViewState.isTrackCollapsed ? 0 : 20
                 color: "#000000"
                 opacity: 0.20
-                visible: !trackViewState.isTrackCollapsed
             }
 
             Rectangle {
@@ -180,9 +177,10 @@ Rectangle {
 
                 anchors.top: header.bottom
                 anchors.bottom: sep.top
-                anchors.bottomMargin: 1
                 anchors.left: leftBorder.right
                 anchors.right: parent.right
+
+                anchors.bottomMargin: 1
 
                 Repeater {
                     id: fullStepsRepeater
@@ -204,7 +202,7 @@ Rectangle {
 
                             width: 7
                             height: 1
-                            color: ui.theme.strokeColor
+                            color: ui.theme.isDark ? "#F4F7F9" : "#F4F5F9"
                         }
 
                         Rectangle {
@@ -222,13 +220,13 @@ Rectangle {
                         }
 
                         Item {
-                            anchors.right: parent.right
-                            anchors.rightMargin: 4
-
-                            anchors.verticalCenter: modelData.alignment == 0 ? parent.verticalCenter : undefined
-                            anchors.bottom: modelData.alignment == 1 ? parent.bottom : undefined
-                            anchors.bottomMargin: modelData.alignment == 1 ? 1 : undefined
                             anchors.top: modelData.alignment == -1 ? parent.top : undefined
+                            anchors.bottom: modelData.alignment == 1 ? parent.bottom : undefined
+                            anchors.right: parent.right
+
+                            anchors.rightMargin: 3
+                            anchors.bottomMargin: modelData.alignment == 1 ? 1 : undefined
+                            anchors.verticalCenter: modelData.alignment == 0 ? parent.verticalCenter : undefined
 
                             height: aLabelMetrics.ascent
                             width: parent.width - tick.width - 4
@@ -255,12 +253,12 @@ Rectangle {
                                 id: minusIndicator
 
                                 anchors.right: aLabel.left
-                                anchors.rightMargin: 1
+                                anchors.rightMargin: 2
                                 anchors.verticalCenter: aLabel.verticalCenter
 
                                 width: 3
                                 height: 1
-                                color: "#F9F9FA"
+                                color: "#F4F5F9"
 
                                 visible: modelData.value < 0
                             }
@@ -283,7 +281,7 @@ Rectangle {
                         Rectangle {
                             width: 3
                             height: 1
-                            color: "#A9B0BD"
+                            color: ui.theme.isDark ? "#868B8E": "#8B8C96"
                             anchors.verticalCenter: parent.verticalCenter
                         }
                     }
