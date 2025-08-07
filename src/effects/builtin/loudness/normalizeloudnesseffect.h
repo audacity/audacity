@@ -73,13 +73,14 @@ private:
     [[nodiscard]] bool StoreBufferBlock(
         WaveChannel& track, size_t nChannels, sampleCount pos, size_t len);
 
-protected:
+public:
     bool mStereoInd;
     double mLUFSLevel;
     double mRMSLevel;
     bool mDualMono;
     int mNormalizeTo;
 
+private:
     double mProgressVal;
     int mSteps;
     TranslatableString mProgressMsg;
@@ -94,6 +95,7 @@ protected:
 
     const EffectParameterMethods& Parameters() const override;
 
+public:
     static constexpr EffectParameter StereoInd {
         &NormalizeLoudnessEffect::mStereoInd, L"StereoIndependent", false, false, true, 1
     };
