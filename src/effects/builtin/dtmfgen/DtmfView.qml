@@ -13,7 +13,7 @@ import Preferences
 EffectBase {
     id: root
 
-    property string title: qsTrc("effects/dtmf", "DTMF Tones")
+    property string title: qsTrc("effects/dtmf", "DTMF tones")
     property alias isApplyAllowed: dtmf.isApplyAllowed
 
     width: 550
