@@ -20,7 +20,7 @@ std::vector<QVariantMap> TrackRulerModel::fullSteps() const
         return {};
     }
 
-    const std::vector<TrackRulerFullStep>& steps = m_isCollapsed ? m_model->collapsedFullSteps() : m_model->fullSteps();
+    const std::vector<TrackRulerFullStep>& steps = m_model->fullSteps();
     std::vector<QVariantMap> variantSteps;
     std::transform(steps.begin(), steps.end(), std::back_inserter(variantSteps),
                    [&](const TrackRulerFullStep& step) {
@@ -43,7 +43,7 @@ std::vector<QVariantMap> TrackRulerModel::smallSteps() const
         return {};
     }
 
-    const std::vector<TrackRulerSmallStep>& steps = m_isCollapsed ? m_model->collapsedSmallSteps() : m_model->smallSteps();
+    const std::vector<TrackRulerSmallStep>& steps = m_model->smallSteps();
     std::vector<QVariantMap> variantSteps;
     std::transform(steps.begin(), steps.end(), std::back_inserter(variantSteps),
                    [&](const TrackRulerSmallStep& step) {
@@ -72,10 +72,12 @@ void TrackRulerModel::setIsStereo(bool isStereo)
             m_model = std::make_shared<LinearMonoRuler>();
         }
 
-        emit isStereoChanged();
+        m_model->setHeight(m_height);
+        m_model->setChannelHeightRatio(m_channelHeightRatio);
+        m_model->setCollapsed(m_isCollapsed);
+
         emit fullStepsChanged();
         emit smallStepsChanged();
-        emit heightChanged();
     }
 }
 
@@ -88,10 +90,9 @@ void TrackRulerModel::setIsCollapsed(bool isCollapsed)
 {
     if (m_isCollapsed != isCollapsed) {
         m_isCollapsed = isCollapsed;
-        emit isCollapsedChanged();
+        m_model->setCollapsed(isCollapsed);
         emit fullStepsChanged();
         emit smallStepsChanged();
-        emit heightChanged();
     }
 }
 
@@ -104,7 +105,7 @@ void TrackRulerModel::setHeight(int height)
 {
     if (m_height != height) {
         m_height = height;
-        emit heightChanged();
+        m_model->setHeight(height);
         emit fullStepsChanged();
         emit smallStepsChanged();
     }
@@ -116,5 +117,20 @@ double TrackRulerModel::stepToPosition(double step, int channel) const
         return 0.0;
     }
 
-    return m_model->stepToPosition(step, channel, m_height);
+    return m_model->stepToPosition(step, channel);
+}
+
+double TrackRulerModel::channelHeightRatio() const
+{
+    return m_channelHeightRatio;
+}
+
+void TrackRulerModel::setChannelHeightRatio(double channelHeightRatio)
+{
+    if (m_channelHeightRatio != channelHeightRatio) {
+        m_channelHeightRatio = channelHeightRatio;
+        m_model->setChannelHeightRatio(channelHeightRatio);
+        emit fullStepsChanged();
+        emit smallStepsChanged();
+    }
 }

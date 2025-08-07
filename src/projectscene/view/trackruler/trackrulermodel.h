@@ -20,6 +20,8 @@ class TrackRulerModel : public QObject
     Q_PROPERTY(bool isCollapsed READ isCollapsed WRITE setIsCollapsed NOTIFY isCollapsedChanged FINAL)
     Q_PROPERTY(int height READ height WRITE setHeight NOTIFY heightChanged FINAL)
 
+    Q_PROPERTY(double channelHeightRatio READ channelHeightRatio WRITE setChannelHeightRatio NOTIFY channelHeightRatioChanged FINAL)
+
 public:
     explicit TrackRulerModel(QObject* parent = nullptr);
 
@@ -35,7 +37,9 @@ public:
     int height() const;
     void setHeight(int height);
 
-    Q_INVOKABLE double stepToPosition(double step, int channel) const;
+    double channelHeightRatio() const;
+    void setChannelHeightRatio(double channelHeightRatio);
+
 signals:
     void fullStepsChanged();
     void smallStepsChanged();
@@ -44,11 +48,15 @@ signals:
     void isCollapsedChanged();
     void heightChanged();
 
+    void channelHeightRatioChanged();
 private:
     std::shared_ptr<ITrackRulerModel> m_model =  nullptr;
+
+    double stepToPosition(double step, int channel) const;
 
     bool m_isStereo = false;
     bool m_isCollapsed = false;
     int m_height = 0;
+    double m_channelHeightRatio = 0.5;
 };
 }

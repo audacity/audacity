@@ -37,8 +37,8 @@ Rectangle {
         //! NOTE Sync with TracksClipsView
         TracksViewStateModel {
             id: tracksViewState
-            onTracksVericalYChanged: {
-                verticalRulersListView.contentY = tracksViewState.tracksVericalY
+            onTracksVerticalOffsetChanged: {
+                verticalRulersListView.contentY = tracksViewState.tracksVerticalOffset
             }
         }
 
@@ -67,7 +67,7 @@ Rectangle {
             if (verticalScrollLocked) {
                 verticalRulersListView.contentY = lockedVerticalScrollPosition
             } else {
-                tracksViewState.changeTracksVericalY(verticalRulersListView.contentY)
+                tracksViewState.changeTracksVerticalOffset(verticalRulersListView.contentY)
             }
         }
 
@@ -88,7 +88,7 @@ Rectangle {
                 clipsModel.init()
             }
 
-            TracksViewStateModel {
+            TrackViewStateModel {
                 id: trackViewState
                 trackId: model.trackId
             }
@@ -175,6 +175,7 @@ Rectangle {
                     isStereo: clipsModel.isStereo
                     height: ruler.height
                     isCollapsed: trackViewState.isTrackCollapsed
+                    channelHeightRatio: trackViewState.channelHeightRatio
                 }
 
                 anchors.top: header.bottom
