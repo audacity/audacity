@@ -2,10 +2,10 @@
  * Audacity: A Digital Audio Editor
  */
 #include "normalizeloudnessviewmodel.h"
-
 #include "normalizeloudnesseffect.h"
 
-#include "log.h"
+#include "global/log.h"
+#include "global/translation.h"
 
 namespace au::effects {
 NormalizeLoudnessEffect* NormalizeLoudnessViewModel::effect() const
@@ -27,6 +27,19 @@ void NormalizeLoudnessViewModel::doReload()
     emit dualMonoChanged();
 }
 
+QString NormalizeLoudnessViewModel::title() const
+{
+    return muse::qtrc("effects/loudness", "Normalize loudness");
+}
+
+QStringList NormalizeLoudnessViewModel::algorithmOptions() const
+{
+    return {
+        muse::qtrc("effects/loudness", "RMS"),
+        muse::qtrc("effects/loudness", "Perceived loudness")
+    };
+}
+
 bool NormalizeLoudnessViewModel::useRmsAlgorithm() const
 {
     const NormalizeLoudnessEffect* e = effect();
@@ -46,6 +59,16 @@ void NormalizeLoudnessViewModel::setUseRmsAlgorithm(bool useRmsAlgorithm)
         e->mNormalizeTo = useRmsAlgorithm ? NormalizeLoudnessEffect::kRMS : NormalizeLoudnessEffect::kLoudness;
     });
     emit useRmsAlgorithmChanged();
+}
+
+QString NormalizeLoudnessViewModel::toLabel() const
+{
+    return muse::qtrc("effects/loudness", "to");
+}
+
+QString NormalizeLoudnessViewModel::currentMeasureUnitsSymbol() const
+{
+    return useRmsAlgorithm() ? "dB" : "LUFS";
 }
 
 double NormalizeLoudnessViewModel::perceivedLoudnessTarget() const
@@ -104,6 +127,21 @@ double NormalizeLoudnessViewModel::targetMax() const
     return NormalizeLoudnessEffect::LUFSLevel.max;
 }
 
+int NormalizeLoudnessViewModel::targetStep() const
+{
+    return 1;
+}
+
+int NormalizeLoudnessViewModel::targetDecimals() const
+{
+    return 1;
+}
+
+QString NormalizeLoudnessViewModel::normalizeLabel() const
+{
+    return muse::qtrc("effects/loudness", "Normalize");
+}
+
 bool NormalizeLoudnessViewModel::normalizeStereoChannelsIndependently() const
 {
     const NormalizeLoudnessEffect* e = effect();
@@ -123,6 +161,16 @@ void NormalizeLoudnessViewModel::setNormalizeStereoChannelsIndependently(bool no
         e->mStereoInd = normalizeStereoChannelsIndependently;
     });
     emit normalizeStereoChannelsIndependentlyChanged();
+}
+
+QString NormalizeLoudnessViewModel::independentStereoLabel() const
+{
+    return muse::qtrc("effects/loudness", "Normalize stereo channels independently");
+}
+
+QString NormalizeLoudnessViewModel::dualMonoLabel() const
+{
+    return muse::qtrc("effects/loudness", "Treat mono as dual mono (recommended)");
 }
 
 bool NormalizeLoudnessViewModel::dualMono() const
