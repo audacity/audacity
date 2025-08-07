@@ -7,7 +7,7 @@ import "../common"
 EffectBase {
     id: root
 
-    property string title: qsTrc("effects/clickremoval", "Click Removal")
+    property string title: clickRemoval.title
     property bool isApplyAllowed: true
 
     width: 328
@@ -33,15 +33,15 @@ EffectBase {
         spacing: 16
 
         SliderWithTextInput {
-            id: slider
+            id: thresholdSlider
 
             width: parent.width
-            text: qsTrc("effects/clickremoval", "Threshold (lower is more sensitive)")
+            text: clickRemoval.thresholdLabel
             value: clickRemoval.threshold
             from: clickRemoval.thresholdMin
             to: clickRemoval.thresholdMax
             step: clickRemoval.thresholdStep
-            decimals: 0
+            decimals: clickRemoval.thresholdDecimals
 
             onNewValueRequested: function(newValue) {
                 clickRemoval.threshold = newValue
@@ -49,14 +49,15 @@ EffectBase {
         }
 
         SliderWithTextInput {
+            id: widthSlider
 
             width: parent.width
-            text: qsTrc("effects/clickRemoval", "Max spike width (higher is more sensitive)")
+            text: clickRemoval.widthLabel
             value: clickRemoval.width
             from: clickRemoval.widthMin
             to: clickRemoval.widthMax
             step: clickRemoval.widthStep
-            decimals: 0
+            decimals: clickRemoval.widthDecimals
 
             onNewValueRequested: function(newValue) {
                 clickRemoval.width = newValue

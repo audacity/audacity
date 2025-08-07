@@ -4,7 +4,8 @@
 #include "clickremovalviewmodel.h"
 #include "clickremovaleffect.h"
 
-#include "log.h"
+#include "global/log.h"
+#include "global/translation.h"
 
 namespace au::effects {
 ClickRemovalEffect* ClickRemovalViewModel::effect() const
@@ -15,6 +16,16 @@ ClickRemovalEffect* ClickRemovalViewModel::effect() const
     }
     Effect* const e = effectsProvider()->effect(effectId);
     return dynamic_cast<ClickRemovalEffect*>(e);
+}
+
+QString ClickRemovalViewModel::title() const
+{
+    return muse::qtrc("effects/clickremoval", "Click Removal");
+}
+
+QString ClickRemovalViewModel::thresholdLabel() const
+{
+    return muse::qtrc("effects/clickremoval", "Threshold (lower is more sensitive)");
 }
 
 int ClickRemovalViewModel::threshold() const
@@ -50,6 +61,16 @@ int ClickRemovalViewModel::thresholdStep() const
     return ClickRemovalEffect::Threshold.scale;
 }
 
+int ClickRemovalViewModel::thresholdDecimals() const
+{
+    return 0;
+}
+
+QString ClickRemovalViewModel::widthLabel() const
+{
+    return muse::qtrc("effects/clickremoval", "Max spike width (higher is more sensitive)");
+}
+
 int ClickRemovalViewModel::width() const
 {
     ClickRemovalEffect* const ce = effect();
@@ -81,6 +102,11 @@ int ClickRemovalViewModel::widthMax() const
 int ClickRemovalViewModel::widthStep() const
 {
     return ClickRemovalEffect::Width.scale;
+}
+
+int ClickRemovalViewModel::widthDecimals() const
+{
+    return 0;
 }
 
 void ClickRemovalViewModel::doReload()
