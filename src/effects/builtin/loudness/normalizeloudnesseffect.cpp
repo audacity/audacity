@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
@@ -12,62 +15,65 @@
 \brief An Effect to bring the loudness level up to a chosen level.
 
 *//*******************************************************************/
-#include "LoudnessBase.h"
-#include "EffectOutputTracks.h"
-#include "EBUR128.h"
+#include "normalizeloudnesseffect.h"
+
+#include "libraries/lib-effects/EffectOutputTracks.h"
+#include "libraries/lib-math/EBUR128.h"
+#include "libraries/lib-wave-track/WaveChannelUtilities.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
+#include "libraries/lib-command-parameters/ShuttleAutomation.h"
+
 #include <cmath>
-#include "WaveChannelUtilities.h"
-#include "WaveTrack.h"
-#include "ShuttleAutomation.h"
 
-const ComponentInterfaceSymbol LoudnessBase::Symbol { XO(
-                                                          "Loudness Normalization") };
+namespace au::effects {
+const ComponentInterfaceSymbol NormalizeLoudnessEffect::Symbol { XO(
+                                                                     "Loudness Normalization") };
 
-const EffectParameterMethods& LoudnessBase::Parameters() const
+const EffectParameterMethods& NormalizeLoudnessEffect::Parameters() const
 {
     static CapturedParameters<
-        LoudnessBase, StereoInd, LUFSLevel, RMSLevel, DualMono, NormalizeTo>
+        NormalizeLoudnessEffect, StereoInd, LUFSLevel, RMSLevel, DualMono, NormalizeTo>
     parameters;
     return parameters;
 }
 
-LoudnessBase::LoudnessBase()
+NormalizeLoudnessEffect::NormalizeLoudnessEffect()
 {
     Parameters().Reset(*this);
     SetLinearEffectFlag(false);
 }
 
-LoudnessBase::~LoudnessBase()
+NormalizeLoudnessEffect::~NormalizeLoudnessEffect()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol LoudnessBase::GetSymbol() const
+ComponentInterfaceSymbol NormalizeLoudnessEffect::GetSymbol() const
 {
     return Symbol;
 }
 
-TranslatableString LoudnessBase::GetDescription() const
+TranslatableString NormalizeLoudnessEffect::GetDescription() const
 {
     return XO("Sets the loudness of one or more tracks");
 }
 
-ManualPageID LoudnessBase::ManualPage() const
+ManualPageID NormalizeLoudnessEffect::ManualPage() const
 {
     return L"Loudness_Normalization";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType LoudnessBase::GetType() const
+::EffectType NormalizeLoudnessEffect::GetType() const
 {
     return EffectTypeProcess;
 }
 
 // Effect implementation
 
-bool LoudnessBase::Process(EffectInstance&, EffectSettings&)
+bool NormalizeLoudnessEffect::Process(::EffectInstance&, EffectSettings&)
 {
     const float ratio = DB_TO_LINEAR(
         (mNormalizeTo == kLoudness) // LU use 10*log10(...) instead of
@@ -201,11 +207,11 @@ done:
     return bGoodResult;
 }
 
-// LoudnessBase implementation
+// NormalizeLoudnessEffect implementation
 
 /// Get required buffer size for the largest whole track and allocate buffers.
 /// This reduces the amount of allocations required.
-void LoudnessBase::AllocBuffers(TrackList& outputs)
+void NormalizeLoudnessEffect::AllocBuffers(TrackList& outputs)
 {
     mTrackBufferCapacity = 0;
     bool stereoTrackFound = false;
@@ -232,13 +238,13 @@ void LoudnessBase::AllocBuffers(TrackList& outputs)
     }
 }
 
-void LoudnessBase::FreeBuffers()
+void NormalizeLoudnessEffect::FreeBuffers()
 {
     mTrackBuffer[0].reset();
     mTrackBuffer[1].reset();
 }
 
-bool LoudnessBase::GetTrackRMS(
+bool NormalizeLoudnessEffect::GetTrackRMS(
     WaveChannel& track, const double curT0, const double curT1, float& rms)
 {
     // set mRMS.  No progress bar here as it's fast.
@@ -253,7 +259,7 @@ bool LoudnessBase::GetTrackRMS(
 ///  mMult must be set before this is called
 /// In analyse mode, it executes the selected analyse operation on it...
 ///  mMult does not have to be set before this is called
-bool LoudnessBase::ProcessOne(
+bool NormalizeLoudnessEffect::ProcessOne(
     WaveChannel& track, size_t nChannels, const double curT0, const double curT1,
     const float mult, EBUR128* pLoudnessProcessor)
 {
@@ -307,7 +313,7 @@ bool LoudnessBase::ProcessOne(
     return true;
 }
 
-void LoudnessBase::LoadBufferBlock(
+void NormalizeLoudnessEffect::LoadBufferBlock(
     WaveChannel& track, size_t nChannels, sampleCount pos, size_t len)
 {
     size_t idx = 0;
@@ -329,7 +335,7 @@ void LoudnessBase::LoadBufferBlock(
 
 /// Calculates sample sum (for DC) and EBU R128 weighted square sum
 /// (for loudness).
-bool LoudnessBase::AnalyseBufferBlock(EBUR128& loudnessProcessor)
+bool NormalizeLoudnessEffect::AnalyseBufferBlock(EBUR128& loudnessProcessor)
 {
     for (size_t i = 0; i < mTrackBufferLen; i++) {
         loudnessProcessor.ProcessSampleFromChannel(mTrackBuffer[0][i], 0);
@@ -345,7 +351,7 @@ bool LoudnessBase::AnalyseBufferBlock(EBUR128& loudnessProcessor)
     return true;
 }
 
-bool LoudnessBase::ProcessBufferBlock(const float mult)
+bool NormalizeLoudnessEffect::ProcessBufferBlock(const float mult)
 {
     for (size_t i = 0; i < mTrackBufferLen; i++) {
         mTrackBuffer[0][i] = mTrackBuffer[0][i] * mult;
@@ -360,7 +366,7 @@ bool LoudnessBase::ProcessBufferBlock(const float mult)
     return true;
 }
 
-bool LoudnessBase::StoreBufferBlock(
+bool NormalizeLoudnessEffect::StoreBufferBlock(
     WaveChannel& track, size_t nChannels, sampleCount pos, size_t len)
 {
     size_t idx = 0;
@@ -382,10 +388,11 @@ bool LoudnessBase::StoreBufferBlock(
     }
 }
 
-bool LoudnessBase::UpdateProgress()
+bool NormalizeLoudnessEffect::UpdateProgress()
 {
     mProgressVal
         +=(double(1 + mProcStereo) * double(mTrackBufferLen)
            / (double(GetNumWaveTracks()) * double(mSteps) * mTrackLen));
     return !TotalProgress(mProgressVal, mProgressMsg);
+}
 }

@@ -1,23 +1,28 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  LoudnessBase.h
+  NormalizeLoudnessEffect.h
 
   Max Maisel (based on Normalize effect)
 
 **********************************************************************/
 #pragma once
 
-#include "MemoryX.h"
-#include "SettingsVisitor.h"
-#include "StatefulEffect.h"
+#include "libraries/lib-utility/MemoryX.h"
+#include "libraries/lib-components/SettingsVisitor.h"
+#include "libraries/lib-effects/StatefulEffect.h"
 
 class WaveChannel;
 class EBUR128;
+
+namespace au::effects {
 using Floats = ArrayOf<float>;
 
-class LoudnessBase : public StatefulEffect
+class NormalizeLoudnessEffect : public StatefulEffect
 {
 public:
     enum kNormalizeTargets
@@ -27,15 +32,15 @@ public:
         nAlgos
     };
 
-    static inline LoudnessBase* FetchParameters(LoudnessBase& e, EffectSettings&)
+    static inline NormalizeLoudnessEffect* FetchParameters(NormalizeLoudnessEffect& e, EffectSettings&)
     {
         return &e;
     }
 
     static const ComponentInterfaceSymbol Symbol;
 
-    LoudnessBase();
-    virtual ~LoudnessBase();
+    NormalizeLoudnessEffect();
+    virtual ~NormalizeLoudnessEffect();
 
     // ComponentInterface implementation
 
@@ -45,15 +50,15 @@ public:
 
     // EffectDefinitionInterface implementation
 
-    EffectType GetType() const override;
+    ::EffectType GetType() const override;
 
     // Effect implementation
 
-    bool Process(EffectInstance& instance, EffectSettings& settings) override;
+    bool Process(::EffectInstance& instance, EffectSettings& settings) override;
     bool UpdateProgress();
 
 private:
-    // LoudnessBase implementation
+    // NormalizeLoudnessEffect implementation
 
     void AllocBuffers(TrackList& outputs);
     void FreeBuffers();
@@ -90,21 +95,22 @@ protected:
     const EffectParameterMethods& Parameters() const override;
 
     static constexpr EffectParameter StereoInd {
-        &LoudnessBase::mStereoInd, L"StereoIndependent", false, false, true, 1
+        &NormalizeLoudnessEffect::mStereoInd, L"StereoIndependent", false, false, true, 1
     };
     static constexpr EffectParameter LUFSLevel {
-        &LoudnessBase::mLUFSLevel, L"LUFSLevel", -23.0, -145.0, 0.0, 1
+        &NormalizeLoudnessEffect::mLUFSLevel, L"LUFSLevel", -23.0, -145.0, 0.0, 1
     };
     static constexpr EffectParameter RMSLevel {
-        &LoudnessBase::mRMSLevel, L"RMSLevel", -20.0, -145.0, 0.0, 1
+        &NormalizeLoudnessEffect::mRMSLevel, L"RMSLevel", -20.0, -145.0, 0.0, 1
     };
     static constexpr EffectParameter DualMono {
-        &LoudnessBase::mDualMono, L"DualMono", true, false, true, 1
+        &NormalizeLoudnessEffect::mDualMono, L"DualMono", true, false, true, 1
     };
-    static constexpr EffectParameter NormalizeTo { &LoudnessBase::mNormalizeTo,
+    static constexpr EffectParameter NormalizeTo { &NormalizeLoudnessEffect::mNormalizeTo,
                                                    L"NormalizeTo",
                                                    (int)kLoudness,
                                                    0,
                                                    nAlgos - 1,
                                                    1 };
 };
+}
