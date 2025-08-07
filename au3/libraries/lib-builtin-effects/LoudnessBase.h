@@ -17,7 +17,7 @@ class WaveChannel;
 class EBUR128;
 using Floats = ArrayOf<float>;
 
-class BUILTIN_EFFECTS_API LoudnessBase : public StatefulEffect
+class LoudnessBase : public StatefulEffect
 {
 public:
     enum kNormalizeTargets
