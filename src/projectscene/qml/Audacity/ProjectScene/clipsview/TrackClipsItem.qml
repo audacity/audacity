@@ -94,7 +94,6 @@ Item {
         z: 1
 
         property double targetHeightRatio: 0.5
-        property double channelHeightRatio: 0.5
         readonly property int minChannelHeight: 20
         readonly property int yMinValue: Math.min(root.height / 2, minChannelHeight)
         readonly property int yMaxValue: Math.max(root.height / 2, root.height - minChannelHeight);
@@ -133,11 +132,11 @@ Item {
 
         function updateChannelHeightRatio(position) {
             const newY = Math.min(Math.max(position, yMinValue), yMaxValue)
-            channelHeightRatio = newY / height
+            trackViewState.changeChannelHeightRatio(newY / height)
         }
 
         function resetTargetHeightRatio() {
-            targetHeightRatio = channelHeightRatio
+            targetHeightRatio = trackViewState.channelHeightRatio
         }
 
         onHeightChanged: {
@@ -291,7 +290,7 @@ Item {
                 leftVisibleMargin: clipItem.leftVisibleMargin
                 rightVisibleMargin: clipItem.rightVisibleMargin
                 collapsed: trackViewState.isTrackCollapsed
-                channelHeightRatio: clipsContainer.channelHeightRatio
+                channelHeightRatio: trackViewState.channelHeightRatio
                 showChannelSplitter: isStereo
 
                 navigation.name: Boolean(clipItem) ? clipItem.title + clipItem.index : ""
@@ -590,7 +589,7 @@ Item {
         anchors.topMargin: trackViewState.isTrackCollapsed ? 1 : 21
         anchors.bottomMargin: 3
 
-        channelHeightRatio: clipsContainer.channelHeightRatio
+        channelHeightRatio: trackViewState.channelHeightRatio
         color: "#FFFFFF"
         opacity: 0.05
         visible: isStereo

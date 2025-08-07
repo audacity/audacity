@@ -30,10 +30,12 @@ public:
     muse::ValCh<int> totalTrackHeight() const override;
     muse::ValCh<int> trackHeight(const trackedit::TrackId& trackId) const override;
     muse::ValCh<bool> isTrackCollapsed(const trackedit::TrackId& trackId) const override;
+    muse::ValCh<double> channelHeightRatio(const trackedit::TrackId& trackId) const override;
 
     int trackVerticalPosition(const trackedit::TrackId& trackId) const override;
     void changeTrackHeight(const trackedit::TrackId& trackId, int delta) override;
     void setTrackHeight(const trackedit::TrackId& trackId, int height) override;
+    void setChannelHeightRatio(const trackedit::TrackId& trackId, double ratio) override;
     trackedit::TrackId trackAtPosition(double y) const override;
     trackedit::TrackIdList tracksInRange(double y1, double y2) const override;
 
@@ -88,6 +90,7 @@ private:
     struct TrackData {
         muse::ValCh<int> height;
         muse::ValCh<bool> collapsed;
+        muse::ValCh<double> channelHeightRatio;
     };
 
     mutable muse::ValCh<int> m_totalTracksHeight;

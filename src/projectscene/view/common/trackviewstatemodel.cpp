@@ -48,8 +48,18 @@ void TrackViewStateModel::init()
             emit isTrackCollapsedChanged();
         });
 
+        m_channelHeightRatio = vs->channelHeightRatio(m_trackId);
+        m_channelHeightRatio.ch.onReceive(this, [this](double ratio) {
+            if (m_channelHeightRatio.val == ratio) {
+                return;
+            }
+            m_channelHeightRatio.val = ratio;
+            emit channelHeightRatioChanged();
+        });
+
         emit trackHeightChanged();
         emit isTrackCollapsedChanged();
+        emit channelHeightRatioChanged();
     }
 
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
@@ -69,6 +79,14 @@ void TrackViewStateModel::changeTrackHeight(int deltaY)
     IProjectViewStatePtr vs = viewState();
     if (vs) {
         vs->changeTrackHeight(m_trackId, deltaY);
+    }
+}
+
+void TrackViewStateModel::changeChannelHeightRatio(double ratio)
+{
+    IProjectViewStatePtr vs = viewState();
+    if (vs) {
+        vs->setChannelHeightRatio(m_trackId, ratio);
     }
 }
 
@@ -97,6 +115,11 @@ int TrackViewStateModel::trackHeight() const
 bool TrackViewStateModel::isTrackCollapsed() const
 {
     return m_isTrackCollapsed.val;
+}
+
+double TrackViewStateModel::channelHeightRatio() const
+{
+    return m_channelHeightRatio.val;
 }
 
 bool TrackViewStateModel::isPlaying() const
