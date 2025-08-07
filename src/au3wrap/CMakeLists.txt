@@ -360,9 +360,6 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-audio-io/RingBuffer.cpp
     ${AU3_LIBRARIES}/lib-audio-io/RingBuffer.h
 
-    ${AU3_LIBRARIES}/lib-builtin-effects/LoudnessBase.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/LoudnessBase.h
-
     # begin dependencies of lib-audio-io
     ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectList.cpp
     ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectList.h
