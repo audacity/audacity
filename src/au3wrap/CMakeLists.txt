@@ -296,6 +296,10 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphTask.cpp
     ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphTask.h
 
+    ${AU3_LIBRARIES}/lib-math/Biquad.cpp
+    ${AU3_LIBRARIES}/lib-math/Biquad.h
+    ${AU3_LIBRARIES}/lib-math/EBUR128.cpp
+    ${AU3_LIBRARIES}/lib-math/EBUR128.h
     ${AU3_LIBRARIES}/lib-math/SampleFormat.cpp
     ${AU3_LIBRARIES}/lib-math/SampleFormat.h
     ${AU3_LIBRARIES}/lib-math/SampleCount.cpp
