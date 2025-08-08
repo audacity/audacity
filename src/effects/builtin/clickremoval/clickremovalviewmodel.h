@@ -13,17 +13,17 @@ class ClickRemovalViewModel : public AbstractEffectModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString title READ title CONSTANT FINAL)
+    Q_PROPERTY(QString effectTitle READ effectTitle CONSTANT FINAL)
 
     Q_PROPERTY(QString thresholdLabel READ thresholdLabel CONSTANT FINAL)
-    Q_PROPERTY(int threshold READ threshold WRITE setThreshold NOTIFY thresholdChanged FINAL)
+    Q_PROPERTY(int thresholdValue READ thresholdValue WRITE setThresholdValue NOTIFY thresholdValueChanged FINAL)
     Q_PROPERTY(int thresholdMin READ thresholdMin CONSTANT FINAL)
     Q_PROPERTY(int thresholdMax READ thresholdMax CONSTANT FINAL)
     Q_PROPERTY(int thresholdStep READ thresholdStep CONSTANT FINAL)
     Q_PROPERTY(int thresholdDecimals READ thresholdDecimals CONSTANT FINAL)
 
     Q_PROPERTY(QString widthLabel READ widthLabel CONSTANT FINAL)
-    Q_PROPERTY(int width READ width WRITE setWidth NOTIFY widthChanged FINAL)
+    Q_PROPERTY(int widthValue READ widthValue WRITE setWidthValue NOTIFY widthValueChanged FINAL)
     Q_PROPERTY(int widthMin READ widthMin CONSTANT FINAL)
     Q_PROPERTY(int widthMax READ widthMax CONSTANT FINAL)
     Q_PROPERTY(int widthStep READ widthStep CONSTANT FINAL)
@@ -34,27 +34,27 @@ class ClickRemovalViewModel : public AbstractEffectModel
 public:
     ClickRemovalViewModel() = default;
 
-    QString title() const;
+    QString effectTitle() const;
 
     QString thresholdLabel() const;
-    int threshold() const;
-    void setThreshold(int newThreshold);
+    int thresholdValue() const;
+    void setThresholdValue(int newThreshold);
     int thresholdMin() const;
     int thresholdMax() const;
     int thresholdStep() const;
     int thresholdDecimals() const;
 
     QString widthLabel() const;
-    int width() const;
-    void setWidth(int newWidth);
+    int widthValue() const;
+    void setWidthValue(int newWidth);
     int widthMin() const;
     int widthMax() const;
     int widthStep() const;
     int widthDecimals() const;
 
 signals:
-    void thresholdChanged();
-    void widthChanged();
+    void thresholdValueChanged();
+    void widthValueChanged();
 
 private:
     void doReload() override;
