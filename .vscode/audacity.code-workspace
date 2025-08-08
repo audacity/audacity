@@ -28,5 +28,8 @@
         "uncrustify.configPath.osx": "${workspaceFolder}/build/Debug/_deps/muse_framework-src/buildscripts/ci/checkcodestyle/uncrustify_muse.cfg",
         "editor.defaultFormatter": "zachflower.uncrustify",
         "cmake.useVsDeveloperEnvironment": "auto",
+        "[cpp]": {
+            "editor.defaultFormatter": "zachflower.uncrustify"
+        },
     }
 }
