@@ -7,7 +7,7 @@ import "../common"
 EffectBase {
     id: root
 
-    property string title: qsTrc("effects/amplify", "Amplify")
+    property string title: amplify.effectTitle
     property alias isApplyAllowed: amplify.isApplyAllowed
 
     width: 320
@@ -20,12 +20,12 @@ EffectBase {
 
         instanceId: root.instanceId
 
-        onAmpChanged: slider.value = amp
+        onAmpValueChanged: ampSlider.value = ampValue
     }
 
     Component.onCompleted: {
         amplify.init()
-        slider.value = amplify.amp
+        ampSlider.value = amplify.ampValue
     }
 
     Column {
@@ -35,122 +35,43 @@ EffectBase {
         width: parent.width
         spacing: 16
 
-        Column {
+        SliderWithTextInput {
+            id: ampSlider
 
-            height: implicitHeight
             width: parent.width
-            spacing: 8
+            text: amplify.ampLabel
+            measureUnitsSymbol: amplify.ampMeasureUnitsSymbol
+            value: amplify.ampValue
+            from: amplify.ampMin
+            to: amplify.ampMax
+            decimals: amplify.ampDecimals
+            step: amplify.ampStep
 
-            StyledTextLabel {
-                text: qsTrc("effects/amplify", "Amplification")
-            }
-
-            Row {
-
-                width: parent.width - spacing
-                spacing: 16
-
-                StyledSlider {
-                    id: slider
-
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    width: parent.width * .65
-
-                    value: amplify.amp
-                    to: amplify.ampMax
-                    from: amplify.ampMin
-                    stepSize: 0.01
-
-                    onMoved: {
-                        if (value !== amplify.amp) {
-                            amplify.amp = value
-                        }
-                    }
-                }
-
-                IncrementalPropertyControl {
-
-                    width: parent.width * .35
-
-                    measureUnitsSymbol: qsTrc("global", "dB")
-                    minValue: amplify.ampMin
-                    maxValue: amplify.ampMax
-                    decimals: 4
-                    step: 0.01
-
-                    currentValue: (amplify.amp).toFixed(decimals)
-
-                    onValueEdited: function(newValue) {
-                        newValue = +(newValue.toFixed(decimals))
-                        if (newValue !== amplify.amp) {
-                            amplify.amp = newValue
-                        }
-                    }
-                }
+            onNewValueRequested: function(newValue) {
+                amplify.ampValue = newValue
             }
         }
 
-        Column {
+        SliderWithTextInput {
+            id: newPeakSlider
 
-            height: implicitHeight
             width: parent.width
-            spacing: 8
+            text: amplify.newPeakLabel
+            measureUnitsSymbol: amplify.newPeakMeasureUnitsSymbol
+            value: amplify.newPeakValue
+            from: amplify.newPeakMin
+            to: amplify.newPeakMax
+            decimals: amplify.newPeakDecimals
+            step: amplify.newPeakStep
 
-            StyledTextLabel {
-
-                text: qsTrc("effects/amplify", "New peak amplitude")
-            }
-
-            Row {
-
-                width: parent.width - spacing
-
-                spacing: 16
-
-                StyledSlider {
-
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    width: parent.width * .65
-
-                    value: amplify.newPeak
-                    to: amplify.newPeakMax
-                    from: amplify.newPeakMin
-                    stepSize: 0.01
-
-                    onMoved: {
-                        if (value !== amplify.newPeak) {
-                            amplify.newPeak = value
-                        }
-                    }
-                }
-
-                IncrementalPropertyControl {
-
-                    width: parent.width * .35
-
-                    measureUnitsSymbol: qsTrc("global", "dB")
-                    minValue: amplify.newPeakMin
-                    maxValue: amplify.newPeakMax
-                    decimals: 4
-                    step: 0.01
-
-                    currentValue: +(amplify.newPeak).toFixed(decimals)
-
-                    onValueEdited: function(newValue) {
-                        newValue = +(newValue.toFixed(decimals))
-                        if (newValue !== amplify.newPeak) {
-                            amplify.newPeak = newValue
-                        }
-                    }
-                }
+            onNewValueRequested: function(newValue) {
+                amplify.newPeakValue = newValue
             }
         }
 
         CheckBox {
 
-            text: qsTrc("effects/amplify", "Allow clipping")
+            text: amplify.canClipLabel
             checked: amplify.canClip
 
             onClicked: {

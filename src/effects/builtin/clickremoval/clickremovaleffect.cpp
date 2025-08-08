@@ -1,14 +1,18 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  ClickRemovalBase.cpp
+  ClickRemovalEffect.cpp
 
   Craig DeForest
 
 *******************************************************************//**
 
-\class ClickRemovalBase
+\class ClickRemovalEffect
 \brief An Effect for removing clicks.
 
   Clicks are identified as small regions of high amplitude compared
@@ -23,68 +27,71 @@
   and/or distribute it under the same terms as Audacity itself.
 
 *//*******************************************************************/
-#include "ClickRemovalBase.h"
-#include "BasicUI.h"
+#include "clickremovaleffect.h"
 #include "EffectOutputTracks.h"
 #include "Prefs.h"
 #include "ShuttleAutomation.h"
 #include "WaveTrack.h"
 #include <cmath>
 
-const EffectParameterMethods& ClickRemovalBase::Parameters() const
+namespace au::effects {
+namespace {
+constexpr size_t windowSize = 8192;
+}
+
+const EffectParameterMethods& ClickRemovalEffect::Parameters() const
 {
-    static CapturedParameters<ClickRemovalBase, Threshold, Width> parameters;
+    static CapturedParameters<ClickRemovalEffect, Threshold, Width> parameters;
     return parameters;
 }
 
-const ComponentInterfaceSymbol ClickRemovalBase::Symbol { XO("Click Removal") };
+const ComponentInterfaceSymbol ClickRemovalEffect::Symbol { XO("Click Removal") };
 
-ClickRemovalBase::ClickRemovalBase()
+ClickRemovalEffect::ClickRemovalEffect()
 {
     Parameters().Reset(*this);
 
     SetLinearEffectFlag(false);
 
-    windowSize = 8192;
     sep = 2049;
 }
 
-ClickRemovalBase::~ClickRemovalBase()
+ClickRemovalEffect::~ClickRemovalEffect()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol ClickRemovalBase::GetSymbol() const
+ComponentInterfaceSymbol ClickRemovalEffect::GetSymbol() const
 {
     return Symbol;
 }
 
-TranslatableString ClickRemovalBase::GetDescription() const
+TranslatableString ClickRemovalEffect::GetDescription() const
 {
     return XO("Click Removal is designed to remove clicks on audio tracks");
 }
 
-ManualPageID ClickRemovalBase::ManualPage() const
+ManualPageID ClickRemovalEffect::ManualPage() const
 {
     return L"Click_Removal";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType ClickRemovalBase::GetType() const
+EffectType ClickRemovalEffect::GetType() const
 {
     return EffectTypeProcess;
 }
 
 // Effect implementation
 
-bool ClickRemovalBase::CheckWhetherSkipEffect(const EffectSettings&) const
+bool ClickRemovalEffect::CheckWhetherSkipEffect(const EffectSettings&) const
 {
     return (mClickWidth == 0) || (mThresholdLevel == 0);
 }
 
-bool ClickRemovalBase::Process(EffectInstance&, EffectSettings&)
+bool ClickRemovalEffect::Process(::EffectInstance&, EffectSettings&)
 {
     EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
     bool bGoodResult = true;
@@ -112,10 +119,8 @@ bool ClickRemovalBase::Process(EffectInstance&, EffectSettings&)
 done:
     if (bGoodResult && !mbDidSomething) { // Processing successful, but
                                           // ineffective.
-        using namespace BasicUI;
-        ShowMessageBox(
-            XO("Algorithm not effective on this audio. Nothing changed."),
-            MessageBoxOptions {}.IconStyle(Icon::Error));
+        mLastError = XO("Algorithm not effective on this audio. Nothing changed.").Translation().ToStdString();
+        return false;
     }
 
     if (bGoodResult && mbDidSomething) {
@@ -125,14 +130,12 @@ done:
     return bGoodResult && mbDidSomething;
 }
 
-bool ClickRemovalBase::ProcessOne(
+bool ClickRemovalEffect::ProcessOne(
     int count, WaveChannel& track, sampleCount start, sampleCount len)
 {
     if (len <= windowSize / 2) {
-        using namespace BasicUI;
-        ShowMessageBox(
-            XO("Selection must be larger than %d samples.").Format(windowSize / 2),
-            MessageBoxOptions {}.IconStyle(Icon::Error));
+        static_assert(windowSize / 2 == 4096);
+        mLastError = XO("Selection must be larger than 4096 samples.").Translation().ToStdString();
         return false;
     }
 
@@ -180,7 +183,7 @@ bool ClickRemovalBase::ProcessOne(
     return bResult;
 }
 
-bool ClickRemovalBase::RemoveClicks(size_t len, float* buffer)
+bool ClickRemovalEffect::RemoveClicks(size_t len, float* buffer)
 {
     bool bResult = false; // This effect usually does nothing.
     size_t i;
@@ -252,4 +255,5 @@ bool ClickRemovalBase::RemoveClicks(size_t len, float* buffer)
         }
     }
     return bResult;
+}
 }
