@@ -56,19 +56,17 @@ protected:
     virtual void doUpdateSettings() {}
 
     std::shared_ptr<effects::EffectInstance> instance() const;
-    const EffectSettings* settings() const;
+    const EffectSettings& settings() const;
     void modifySettings(const std::function<void(EffectSettings& settings)>&);
 
     template<typename T>
     const T& settings() const
     {
-        const EffectSettings* s = this->settings();
-        if (!s) {
+        const T* st = settings().cast<T>();
+        IF_ASSERT_FAILED(st) {
             static T null;
             return null;
         }
-        const T* st = s->cast<T>();
-        assert(st);
         return *st;
     }
 
