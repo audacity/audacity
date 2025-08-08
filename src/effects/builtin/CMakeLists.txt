@@ -78,6 +78,15 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/fade/fadeeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/fade/fadeeffect.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/graphiceq/equalizationbandsliders.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/graphiceq/equalizationbandsliders.h
+    ${CMAKE_CURRENT_LIST_DIR}/graphiceq/graphiceq.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/graphiceq/graphiceq.h
+    ${CMAKE_CURRENT_LIST_DIR}/graphiceq/graphiceqbandsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/graphiceq/graphiceqbandsmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/graphiceq/graphiceqviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/graphiceq/graphiceqviewmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/invert/inverteffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/invert/inverteffect.h
 
@@ -102,6 +111,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.h
     ${AU3_LIBRARIES}/lib-builtin-effects/SilenceBase.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/SilenceBase.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationBase.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationBase.h
 )
 
 set(AU3_DEF ${AU3_DEF}
