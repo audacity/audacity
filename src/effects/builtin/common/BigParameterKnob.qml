@@ -10,6 +10,9 @@ Item {
 
     property alias value: knob.value
     property alias stepSize: knob.stepSize
+    property alias radius: knob.radius
+    property alias exponential: knob.exponential
+    property bool knobFirst: true
 
     implicitWidth: content.implicitWidth
     implicitHeight: content.implicitHeight
@@ -22,22 +25,29 @@ Item {
             knob.from = parameter["min"]
             knob.to = parameter["max"]
             knob.value = parameter["value"]
-            textEdit.measureUnitsSymbol = parameter["unit"]
+            knob.stepSize = parameter["step"] || 1;
+            textEdit.measureUnitsSymbol = parameter["unit"] || "";
         }
     }
 
     Column {
         id: content
 
-        spacing: 8
+        spacing: 6
+
+        StyledTextLabel {
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            visible: !root.knobFirst
+            text:  parameter["title"]
+            height: 16
+            horizontalAlignment: Qt.AlignHCenter
+        }
 
         KnobControl {
             id: knob
 
             anchors.horizontalCenter: parent.horizontalCenter
-
-            stepSize: 1
-            radius: 24
 
             onNewValueRequested: function (value) {
                 root.newValueRequested(root.parameter["key"], value)
@@ -51,7 +61,9 @@ Item {
         StyledTextLabel {
             anchors.horizontalCenter: parent.horizontalCenter
 
+            visible: root.knobFirst
             text:  parameter["title"]
+            height: 16
             horizontalAlignment: Qt.AlignHCenter
         }
 
@@ -64,7 +76,12 @@ Item {
 
             minValue: knob.from
             maxValue: knob.to
-            decimals: 0
+            decimals: {
+                let s = knob.stepSize.toString();
+                if (s.indexOf('.') >= 0)
+                    return s.split('.')[1].length;
+                return 0;
+            }
             step: knob.stepSize
 
             currentValue: +knob.value.toFixed(decimals)

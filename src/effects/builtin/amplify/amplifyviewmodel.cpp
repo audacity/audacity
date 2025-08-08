@@ -9,20 +9,14 @@
 
 using namespace au::effects;
 
-AmplifyEffect* AmplifyViewModel::effect() const
+AmplifyEffect* AmplifyViewModel::amplifyEffect() const
 {
-    EffectId effectId = this->effectId();
-    if (effectId.isEmpty()) {
-        return nullptr;
-    }
-    Effect* e = effectsProvider()->effect(effectId);
-    AmplifyEffect* ae = dynamic_cast<AmplifyEffect*>(e);
-    return ae;
+    return dynamic_cast<AmplifyEffect*>(effect());
 }
 
 void AmplifyViewModel::doReload()
 {
-    AmplifyEffect* ae = effect();
+    AmplifyEffect* ae = amplifyEffect();
     IF_ASSERT_FAILED(ae) {
         return;
     }
@@ -39,7 +33,7 @@ void AmplifyViewModel::doReload()
 
 void AmplifyViewModel::update()
 {
-    AmplifyEffect* ae = effect();
+    AmplifyEffect* ae = amplifyEffect();
     IF_ASSERT_FAILED(ae) {
         return;
     }
@@ -70,7 +64,7 @@ void AmplifyViewModel::setAmp(float newAmp_)
         return;
     }
 
-    AmplifyEffect* ae = effect();
+    AmplifyEffect* ae = amplifyEffect();
     IF_ASSERT_FAILED(ae) {
         return;
     }
@@ -102,7 +96,7 @@ void AmplifyViewModel::setNewPeak(float newNewPeak_)
         return;
     }
 
-    AmplifyEffect* ae = effect();
+    AmplifyEffect* ae = amplifyEffect();
     IF_ASSERT_FAILED(ae) {
         return;
     }
@@ -116,7 +110,7 @@ void AmplifyViewModel::setNewPeak(float newNewPeak_)
 
 float AmplifyViewModel::newPeakMin() const
 {
-    AmplifyEffect* ae = effect();
+    AmplifyEffect* ae = amplifyEffect();
     if (!ae) {
         return 0.0;
     }
@@ -126,7 +120,7 @@ float AmplifyViewModel::newPeakMin() const
 
 float AmplifyViewModel::newPeakMax() const
 {
-    AmplifyEffect* ae = effect();
+    AmplifyEffect* ae = amplifyEffect();
     if (!ae) {
         return 0.0;
     }
@@ -145,7 +139,7 @@ void AmplifyViewModel::setCanClip(bool newCliping)
         return;
     }
 
-    AmplifyEffect* ae = effect();
+    AmplifyEffect* ae = amplifyEffect();
     IF_ASSERT_FAILED(ae) {
         return;
     }

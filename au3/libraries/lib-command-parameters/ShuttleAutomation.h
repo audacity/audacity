@@ -184,7 +184,7 @@ private:
                        static_cast<Member>(param.def),
                        static_cast<Member>(param.min),
                        static_cast<Member>(param.max),
-                       static_cast<Member>(param.scale));
+                       static_cast<Member>(param.step));
     }
 
     // More specific overload for enumeration parameters

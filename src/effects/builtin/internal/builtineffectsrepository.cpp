@@ -17,6 +17,10 @@
 
 #include "amplify/amplifyeffect.h"
 #include "amplify/amplifyviewmodel.h"
+#include "compressor/compressoreffect.h"
+#include "compressor/compressorviewmodel.h"
+#include "limiter/limitereffect.h"
+#include "limiter/limiterviewmodel.h"
 #include "normalize/normalizeeffect.h"
 #include "normalize/normalizeviewmodel.h"
 #include "tonegen/chirpeffect.h"
@@ -105,6 +109,8 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< SilenceGenerator > regSilence;
     static BuiltinEffectsModule::Registration< NoiseGenerator > regNoise;
     static BuiltinEffectsModule::Registration< DtmfGenerator > regDtmf;
+    static BuiltinEffectsModule::Registration< CompressorEffect > regCompressor;
+    static BuiltinEffectsModule::Registration< LimiterEffect > regLimiter;
 }
 
 void BuiltinEffectsRepository::init()
@@ -167,6 +173,26 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     muse::mtrc("effects", "Increases or decreases the volume of the audio you have selected"),
                     EffectCategoryId::VolumeAndCompression,
                     false
+                    );
+        } else if (symbol == CompressorEffect::Symbol) {
+            qmlRegisterType<CompressorViewModel>("Audacity.Effects", 1, 0, "CompressorViewModel");
+            qmlRegisterType<CompressorSettingModel>("Audacity.Effects", 1, 0, "CompressorSettingModel");
+            regView(CompressorEffect::Symbol, u"qrc:/compressor/CompressorView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects", "Compressor"),
+                    muse::mtrc("effects", "Reduces \"dynamic range\", or differences between loud and quiet parts"),
+                    EffectCategoryId::VolumeAndCompression,
+                    true
+                    );
+        } else if (symbol == LimiterEffect::Symbol) {
+            qmlRegisterType<LimiterViewModel>("Audacity.Effects", 1, 0, "LimiterViewModel");
+            qmlRegisterType<LimiterSettingModel>("Audacity.Effects", 1, 0, "LimiterSettingModel");
+            regView(LimiterEffect::Symbol, u"qrc:/limiter/LimiterView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects", "Limiter"),
+                    muse::mtrc("effects", "Augments loudness while minimizing distortion"),
+                    EffectCategoryId::VolumeAndCompression,
+                    true
                     );
         } else if (symbol == NormalizeEffect::Symbol) {
             qmlRegisterType<NormalizeViewModel>("Audacity.Effects", 1, 0, "NormalizeViewModel");

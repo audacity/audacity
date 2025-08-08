@@ -10,8 +10,8 @@
 **********************************************************************/
 #pragma once
 
-#include "CompressorProcessor.h"
-#include "DynamicRangeProcessorTypes.h"
+#include "libraries/lib-dynamic-range-processor/CompressorProcessor.h"
+#include "libraries/lib-dynamic-range-processor/DynamicRangeProcessorTypes.h"
 #include "EffectInterface.h"
 #include "Observer.h"
 #include "PerTrackEffect.h"

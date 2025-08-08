@@ -134,7 +134,5 @@ void GeneratorEffectModel::update()
 
 GeneratorEffect* GeneratorEffectModel::generatorEffect() const
 {
-    EffectId effectId = this->effectId();
-    Effect* e = effectsProvider()->effect(effectId);
-    return dynamic_cast<GeneratorEffect*>(e);
+    return dynamic_cast<GeneratorEffect*>(effect());
 }

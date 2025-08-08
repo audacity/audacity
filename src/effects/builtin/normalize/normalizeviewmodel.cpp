@@ -8,19 +8,14 @@
 #include "log.h"
 
 namespace au::effects {
-NormalizeEffect* NormalizeViewModel::effect() const
+NormalizeEffect* NormalizeViewModel::normalizeEffect() const
 {
-    const EffectId effectId = this->effectId();
-    if (effectId.isEmpty()) {
-        return nullptr;
-    }
-    Effect* const e = effectsProvider()->effect(effectId);
-    return dynamic_cast<NormalizeEffect*>(e);
+    return dynamic_cast<NormalizeEffect*>(effect());
 }
 
 bool NormalizeViewModel::removeDC() const
 {
-    const NormalizeEffect* const fx = effect();
+    const NormalizeEffect* const fx = normalizeEffect();
     if (!fx) {
         return false;
     }
@@ -29,7 +24,7 @@ bool NormalizeViewModel::removeDC() const
 
 void NormalizeViewModel::setRemoveDC(bool removeDC)
 {
-    NormalizeEffect* const fx = effect();
+    NormalizeEffect* const fx = normalizeEffect();
     IF_ASSERT_FAILED(fx) {
         return;
     }
@@ -44,7 +39,7 @@ void NormalizeViewModel::setRemoveDC(bool removeDC)
 
 bool NormalizeViewModel::normalizePeakAmplitude() const
 {
-    const NormalizeEffect* const fx = effect();
+    const NormalizeEffect* const fx = normalizeEffect();
     if (!fx) {
         return false;
     }
@@ -53,7 +48,7 @@ bool NormalizeViewModel::normalizePeakAmplitude() const
 
 void NormalizeViewModel::setNormalizePeakAmplitude(bool normalizePeakAmplitude)
 {
-    NormalizeEffect* const fx = effect();
+    NormalizeEffect* const fx = normalizeEffect();
     IF_ASSERT_FAILED(fx) {
         return;
     }
@@ -68,7 +63,7 @@ void NormalizeViewModel::setNormalizePeakAmplitude(bool normalizePeakAmplitude)
 
 double NormalizeViewModel::peakAmplitudeTarget() const
 {
-    const NormalizeEffect* const fx = effect();
+    const NormalizeEffect* const fx = normalizeEffect();
     if (!fx) {
         return 0.0f;
     }
@@ -77,7 +72,7 @@ double NormalizeViewModel::peakAmplitudeTarget() const
 
 void NormalizeViewModel::setPeakAmplitudeTarget(double peakAmplitudeTarget)
 {
-    NormalizeEffect* const fx = effect();
+    NormalizeEffect* const fx = normalizeEffect();
     IF_ASSERT_FAILED(fx) {
         return;
     }
@@ -93,7 +88,7 @@ void NormalizeViewModel::setPeakAmplitudeTarget(double peakAmplitudeTarget)
 
 bool NormalizeViewModel::normalizeStereoChannelsIndependently() const
 {
-    const NormalizeEffect* const fx = this->effect();
+    const NormalizeEffect* const fx = this->normalizeEffect();
     if (!fx) {
         return false;
     }
@@ -102,7 +97,7 @@ bool NormalizeViewModel::normalizeStereoChannelsIndependently() const
 
 void NormalizeViewModel::setNormalizeStereoChannelsIndependently(bool normalizeStereoChannelsIndependently)
 {
-    NormalizeEffect* const fx = effect();
+    NormalizeEffect* const fx = normalizeEffect();
     IF_ASSERT_FAILED(fx) {
         return;
     }

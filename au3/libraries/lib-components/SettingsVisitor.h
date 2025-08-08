@@ -28,7 +28,7 @@ template<
     const Type def{};         //!< Default value
     const Type min{};         //!< Minimum value
     const Type max{};         //!< Maximum value
-    const Type scale{};       //!< Scaling factor, for slider control
+    const Type step{};       //!< Step
 };
 
 // Deduction guides
@@ -49,10 +49,10 @@ template<typename Structure, typename Member>
 struct EnumParameter : EffectParameter<Structure, Member, int>
 {
     constexpr EnumParameter(Member Structure::* const mem,
-                            const wxChar* key, int def, int min, int max, int scale,
+                            const wxChar* key, int def, int min, int max, int step,
                             const EnumValueSymbol* symbols_, size_t nSymbols_)
         : EffectParameter<Structure, Member, int>{
-                                                  mem, key, def, min, max, scale}
+                                                  mem, key, def, min, max, step}
         , symbols{symbols_}
         , nSymbols{nSymbols_}
     {}

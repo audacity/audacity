@@ -10,6 +10,7 @@
 #include "modularity/ioc.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectexecutionscenario.h"
+#include "effects/effects_base/ieffectsprovider.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "trackedit/iprojecthistory.h"
 
@@ -26,6 +27,7 @@ class AbstractEffectModel : public QObject, public muse::async::Asyncable
 public:
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectExecutionScenario> executionScenario;
+    muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IRealtimeEffectService> realtimeEffectService;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
 
@@ -42,7 +44,6 @@ public:
 
     EffectInstanceId instanceId() const;
     EffectId effectId() const;
-    bool inited() const;
 
 signals:
     void instanceIdChanged();
@@ -54,6 +55,7 @@ protected:
     virtual void doUpdateSettings() {}
 
     std::shared_ptr<effects::EffectInstance> instance() const;
+    Effect* effect() const;
     const EffectSettings* settings() const;
     void modifySettings(const std::function<void(EffectSettings& settings)>&);
 

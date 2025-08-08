@@ -35,11 +35,6 @@ void AbstractEffectModel::init()
     m_inited = true;
 }
 
-bool AbstractEffectModel::inited() const
-{
-    return m_inited;
-}
-
 std::shared_ptr<au::effects::EffectInstance> AbstractEffectModel::instance() const
 {
     EffectInstanceId id = this->instanceId();
@@ -48,6 +43,11 @@ std::shared_ptr<au::effects::EffectInstance> AbstractEffectModel::instance() con
     }
 
     return instancesRegister()->instanceById(id);
+}
+
+Effect* AbstractEffectModel::effect() const
+{
+    return effectsProvider()->effect(effectId());
 }
 
 const EffectSettings* AbstractEffectModel::settings() const
