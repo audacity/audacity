@@ -18,9 +18,9 @@ ClickRemovalEffect* ClickRemovalViewModel::effect() const
     return dynamic_cast<ClickRemovalEffect*>(e);
 }
 
-QString ClickRemovalViewModel::title() const
+QString ClickRemovalViewModel::effectTitle() const
 {
-    return muse::qtrc("effects/clickremoval", "Click Removal");
+    return muse::qtrc("effects/clickremoval", "Click removal");
 }
 
 QString ClickRemovalViewModel::thresholdLabel() const
@@ -28,21 +28,21 @@ QString ClickRemovalViewModel::thresholdLabel() const
     return muse::qtrc("effects/clickremoval", "Threshold (lower is more sensitive)");
 }
 
-int ClickRemovalViewModel::threshold() const
+int ClickRemovalViewModel::thresholdValue() const
 {
     ClickRemovalEffect* const ce = effect();
     return ce ? ce->mThresholdLevel : 0;
 }
 
-void ClickRemovalViewModel::setThreshold(int newThreshold)
+void ClickRemovalViewModel::setThresholdValue(int newThresholdValue)
 {
     ClickRemovalEffect* const ce = effect();
     IF_ASSERT_FAILED(ce) {
         return;
     }
-    if (!muse::is_equal(ce->mThresholdLevel, newThreshold)) {
-        ce->mThresholdLevel = newThreshold;
-        emit thresholdChanged();
+    if (!muse::is_equal(ce->mThresholdLevel, newThresholdValue)) {
+        ce->mThresholdLevel = newThresholdValue;
+        emit thresholdValueChanged();
     }
 }
 
@@ -71,21 +71,21 @@ QString ClickRemovalViewModel::widthLabel() const
     return muse::qtrc("effects/clickremoval", "Max spike width (higher is more sensitive)");
 }
 
-int ClickRemovalViewModel::width() const
+int ClickRemovalViewModel::widthValue() const
 {
     ClickRemovalEffect* const ce = effect();
     return ce ? ce->mClickWidth : 0;
 }
 
-void ClickRemovalViewModel::setWidth(int newWidth)
+void ClickRemovalViewModel::setWidthValue(int newWidthValue)
 {
     ClickRemovalEffect* const ce = effect();
     IF_ASSERT_FAILED(ce) {
         return;
     }
-    if (!muse::is_equal(ce->mClickWidth, newWidth)) {
-        ce->mClickWidth = newWidth;
-        emit widthChanged();
+    if (!muse::is_equal(ce->mClickWidth, newWidthValue)) {
+        ce->mClickWidth = newWidthValue;
+        emit widthValueChanged();
     }
 }
 
@@ -111,7 +111,7 @@ int ClickRemovalViewModel::widthDecimals() const
 
 void ClickRemovalViewModel::doReload()
 {
-    emit thresholdChanged();
-    emit widthChanged();
+    emit thresholdValueChanged();
+    emit widthValueChanged();
 }
 }

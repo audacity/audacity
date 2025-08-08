@@ -7,7 +7,7 @@ import "../common"
 EffectBase {
     id: root
 
-    property string title: clickRemoval.title
+    property string title: clickRemoval.effectTitle
     property bool isApplyAllowed: true
 
     width: 328
@@ -37,14 +37,14 @@ EffectBase {
 
             width: parent.width
             text: clickRemoval.thresholdLabel
-            value: clickRemoval.threshold
+            value: clickRemoval.thresholdValue
             from: clickRemoval.thresholdMin
             to: clickRemoval.thresholdMax
             step: clickRemoval.thresholdStep
             decimals: clickRemoval.thresholdDecimals
 
             onNewValueRequested: function(newValue) {
-                clickRemoval.threshold = newValue
+                clickRemoval.thresholdValue = newValue
             }
         }
 
@@ -53,14 +53,14 @@ EffectBase {
 
             width: parent.width
             text: clickRemoval.widthLabel
-            value: clickRemoval.width
+            value: clickRemoval.widthValue
             from: clickRemoval.widthMin
             to: clickRemoval.widthMax
             step: clickRemoval.widthStep
             decimals: clickRemoval.widthDecimals
 
             onNewValueRequested: function(newValue) {
-                clickRemoval.width = newValue
+                clickRemoval.widthValue = newValue
             }
         }
     }
