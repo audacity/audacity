@@ -51,15 +51,15 @@ void AmplifyViewModel::update()
     if (!muse::is_equal(m_amp.val, amp.val)) {
         m_amp = amp;
         m_newPeak = newPeak;
-        emit ampChanged();
-        emit newPeakChanged();
+        emit ampValueChanged();
+        emit newPeakValueChanged();
     }
 
     bool isApplyAllowed = ae->isApplyAllowed();
     setIsApplyAllowed(isApplyAllowed);
 }
 
-QString AmplifyViewModel::title() const
+QString AmplifyViewModel::effectTitle() const
 {
     return muse::qtrc("effects/amplify", "Amplify");
 }
@@ -69,14 +69,14 @@ QString AmplifyViewModel::ampLabel() const
     return muse::qtrc("effects/amplify", "Amplification");
 }
 
-float AmplifyViewModel::amp() const
+float AmplifyViewModel::ampValue() const
 {
     return m_amp.val;
 }
 
-void AmplifyViewModel::setAmp(float newAmp_)
+void AmplifyViewModel::setAmpValue(float newAmpValue)
 {
-    db_t newAmp = newAmp_;
+    db_t newAmp = newAmpValue;
     if (muse::is_equal(m_amp.val, newAmp)) {
         return;
     }
@@ -121,14 +121,14 @@ QString AmplifyViewModel::newPeakLabel() const
     return muse::qtrc("effects/amplify", "New peak amplitude");
 }
 
-float AmplifyViewModel::newPeak() const
+float AmplifyViewModel::newPeakValue() const
 {
     return m_newPeak;
 }
 
-void AmplifyViewModel::setNewPeak(float newNewPeak_)
+void AmplifyViewModel::setNewPeakValue(float newNewPeakValue)
 {
-    db_t newNewPeak = newNewPeak_;
+    db_t newNewPeak = newNewPeakValue;
     if (muse::is_equal(m_newPeak, newNewPeak)) {
         return;
     }
@@ -190,9 +190,9 @@ bool AmplifyViewModel::canClip() const
     return m_canClip;
 }
 
-void AmplifyViewModel::setCanClip(bool newCliping)
+void AmplifyViewModel::setCanClip(bool newClipping)
 {
-    if (m_canClip == newCliping) {
+    if (m_canClip == newClipping) {
         return;
     }
 
@@ -202,9 +202,9 @@ void AmplifyViewModel::setCanClip(bool newCliping)
     }
 
     //! NOTE
-    ae->setCanClip(newCliping);
+    ae->setCanClip(newClipping);
 
-    m_canClip = newCliping;
+    m_canClip = newClipping;
     emit canClipChanged();
 
     update();

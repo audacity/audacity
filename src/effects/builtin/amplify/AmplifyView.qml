@@ -7,7 +7,7 @@ import "../common"
 EffectBase {
     id: root
 
-    property string title: amplify.title
+    property string title: amplify.effectTitle
     property alias isApplyAllowed: amplify.isApplyAllowed
 
     width: 320
@@ -20,12 +20,12 @@ EffectBase {
 
         instanceId: root.instanceId
 
-        onAmpChanged: ampSlider.value = amp
+        onAmpValueChanged: ampSlider.value = ampValue
     }
 
     Component.onCompleted: {
         amplify.init()
-        ampSlider.value = amplify.amp
+        ampSlider.value = amplify.ampValue
     }
 
     Column {
@@ -41,14 +41,14 @@ EffectBase {
             width: parent.width
             text: amplify.ampLabel
             measureUnitsSymbol: amplify.ampMeasureUnitsSymbol
-            value: amplify.amp
+            value: amplify.ampValue
             from: amplify.ampMin
             to: amplify.ampMax
             decimals: amplify.ampDecimals
             step: amplify.ampStep
 
             onNewValueRequested: function(newValue) {
-                amplify.amp = newValue
+                amplify.ampValue = newValue
             }
         }
 
@@ -58,14 +58,14 @@ EffectBase {
             width: parent.width
             text: amplify.newPeakLabel
             measureUnitsSymbol: amplify.newPeakMeasureUnitsSymbol
-            value: amplify.newPeak
+            value: amplify.newPeakValue
             from: amplify.newPeakMin
             to: amplify.newPeakMax
             decimals: amplify.newPeakDecimals
             step: amplify.newPeakStep
 
             onNewValueRequested: function(newValue) {
-                amplify.newPeak = newValue
+                amplify.newPeakValue = newValue
             }
         }
 
