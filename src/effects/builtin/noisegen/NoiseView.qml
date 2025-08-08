@@ -12,6 +12,8 @@ import Preferences
 EffectBase {
     id: root
 
+    property alias instanceId: noise.instanceId
+
     property string title: qsTrc("effects", "Noise")
     property alias isApplyAllowed: noise.isApplyAllowed
 
@@ -22,8 +24,6 @@ EffectBase {
 
     NoiseViewModel {
         id: noise
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

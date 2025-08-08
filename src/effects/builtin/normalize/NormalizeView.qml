@@ -8,6 +8,8 @@ import "../common"
 EffectBase {
     id: root
 
+    property alias instanceId: normalize.instanceId
+
     property string title: qsTrc("effects/normalize", "Normalize")
     property bool isApplyAllowed: removeDcCheckbox.checked || normalizePeakAmplitudeCheckbox.checked
 
@@ -18,8 +20,6 @@ EffectBase {
 
     NormalizeViewModel {
         id: normalize
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

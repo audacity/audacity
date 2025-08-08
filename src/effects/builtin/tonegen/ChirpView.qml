@@ -13,6 +13,8 @@ import Preferences
 EffectBase {
     id: root
 
+    property alias instanceId: chirp.instanceId
+
     property string title: qsTrc("effects", "Chirp")
     property alias isApplyAllowed: chirp.isApplyAllowed
 
@@ -32,8 +34,6 @@ EffectBase {
 
     ToneViewModel {
         id: chirp
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

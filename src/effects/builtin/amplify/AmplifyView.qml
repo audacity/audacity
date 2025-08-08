@@ -7,6 +7,8 @@ import "../common"
 EffectBase {
     id: root
 
+    property alias instanceId: amplify.instanceId
+
     property string title: qsTrc("effects/amplify", "Amplify")
     property alias isApplyAllowed: amplify.isApplyAllowed
 
@@ -17,8 +19,6 @@ EffectBase {
 
     AmplifyViewModel {
         id: amplify
-
-        instanceId: root.instanceId
 
         onAmpChanged: slider.value = amp
     }
