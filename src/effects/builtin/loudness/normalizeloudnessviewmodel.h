@@ -15,7 +15,7 @@ class NormalizeLoudnessViewModel : public AbstractEffectModel
 
     muse::Inject<IEffectsProvider> effectsProvider;
 
-    Q_PROPERTY(QString title READ title CONSTANT FINAL)
+    Q_PROPERTY(QString effectTitle READ effectTitle CONSTANT FINAL)
     Q_PROPERTY(QStringList algorithmOptions READ algorithmOptions CONSTANT FINAL)
     Q_PROPERTY(bool useRmsAlgorithm READ useRmsAlgorithm WRITE setUseRmsAlgorithm NOTIFY useRmsAlgorithmChanged FINAL)
     Q_PROPERTY(QString toLabel READ toLabel CONSTANT FINAL)
@@ -31,13 +31,13 @@ class NormalizeLoudnessViewModel : public AbstractEffectModel
     Q_PROPERTY(
         bool normalizeStereoChannelsIndependently READ normalizeStereoChannelsIndependently WRITE setNormalizeStereoChannelsIndependently NOTIFY normalizeStereoChannelsIndependentlyChanged FINAL)
     Q_PROPERTY(QString independentStereoLabel READ independentStereoLabel CONSTANT FINAL)
-    Q_PROPERTY(QString dualMonoLabel READ dualMonoLabel CONSTANT FINAL)
-    Q_PROPERTY(bool dualMono READ dualMono WRITE setDualMono NOTIFY dualMonoChanged FINAL)
+    Q_PROPERTY(QString useDualMonoLabel READ useDualMonoLabel CONSTANT FINAL)
+    Q_PROPERTY(bool useDualMono READ useDualMono WRITE setUseDualMono NOTIFY useDualMonoChanged FINAL)
 
 public:
     NormalizeLoudnessViewModel() = default;
 
-    QString title() const;
+    QString effectTitle() const;
 
     QStringList algorithmOptions() const;
     bool useRmsAlgorithm() const;
@@ -62,16 +62,16 @@ public:
     void setNormalizeStereoChannelsIndependently(bool normalizeStereoChannelsIndependently);
 
     QString independentStereoLabel() const;
-    QString dualMonoLabel() const;
-    bool dualMono() const;
-    void setDualMono(bool dualMono);
+    QString useDualMonoLabel() const;
+    bool useDualMono() const;
+    void setUseDualMono(bool newUseDualMono);
 
 signals:
     void useRmsAlgorithmChanged();
     void perceivedLoudnessTargetChanged();
     void rmsTargetChanged();
     void normalizeStereoChannelsIndependentlyChanged();
-    void dualMonoChanged();
+    void useDualMonoChanged();
 
 private:
     void doReload() override;

@@ -24,10 +24,10 @@ void NormalizeLoudnessViewModel::doReload()
     emit perceivedLoudnessTargetChanged();
     emit rmsTargetChanged();
     emit normalizeStereoChannelsIndependentlyChanged();
-    emit dualMonoChanged();
+    emit useDualMonoChanged();
 }
 
-QString NormalizeLoudnessViewModel::title() const
+QString NormalizeLoudnessViewModel::effectTitle() const
 {
     return muse::qtrc("effects/loudness", "Normalize loudness");
 }
@@ -168,12 +168,12 @@ QString NormalizeLoudnessViewModel::independentStereoLabel() const
     return muse::qtrc("effects/loudness", "Normalize stereo channels independently");
 }
 
-QString NormalizeLoudnessViewModel::dualMonoLabel() const
+QString NormalizeLoudnessViewModel::useDualMonoLabel() const
 {
     return muse::qtrc("effects/loudness", "Treat mono as dual mono (recommended)");
 }
 
-bool NormalizeLoudnessViewModel::dualMono() const
+bool NormalizeLoudnessViewModel::useDualMono() const
 {
     const NormalizeLoudnessEffect* e = effect();
     if (!e) {
@@ -182,15 +182,15 @@ bool NormalizeLoudnessViewModel::dualMono() const
     return e->mDualMono;
 }
 
-void NormalizeLoudnessViewModel::setDualMono(bool dualMono)
+void NormalizeLoudnessViewModel::setUseDualMono(bool newUseDualMono)
 {
     NormalizeLoudnessEffect* const e = effect();
     if (!e) {
         return;
     }
-    modifySettings([e, dualMono](EffectSettings&) {
-        e->mDualMono = dualMono;
+    modifySettings([e, newUseDualMono](EffectSettings&) {
+        e->mDualMono = newUseDualMono;
     });
-    emit dualMonoChanged();
+    emit useDualMonoChanged();
 }
 }
