@@ -7,7 +7,7 @@ import "../common"
 EffectBase {
     id: root
 
-    property string title: normalizeLoudness.title
+    property string title: normalizeLoudness.effectTitle
     property bool isApplyAllowed: true
 
     width: 400
@@ -94,15 +94,15 @@ EffectBase {
 
             CheckBox {
                 enabled: !root.model.useRmsAlgorithm
-                checked: root.model.dualMono
+                checked: root.model.useDualMono
                 onClicked: {
-                    root.model.dualMono = !checked;
+                    root.model.useDualMono = !checked;
                 }
             }
 
             StyledTextLabel {
                 anchors.verticalCenter: parent.verticalCenter
-                text: normalizeLoudness.dualMonoLabel
+                text: normalizeLoudness.useDualMonoLabel
             }
         }
     }
