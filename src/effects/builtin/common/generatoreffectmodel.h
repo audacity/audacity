@@ -5,8 +5,6 @@
 
 #include "../common/abstracteffectmodel.h"
 
-#include "effects/effects_base/ieffectsprovider.h"
-
 namespace au::effects {
 class GeneratorEffect;
 class ToneEffect;
@@ -21,8 +19,6 @@ class GeneratorEffectModel : public AbstractEffectModel
     Q_PROPERTY(int upperTimeSignature READ upperTimeSignature NOTIFY upperTimeSignatureChanged FINAL)
     Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature NOTIFY lowerTimeSignatureChanged FINAL)
     Q_PROPERTY(bool isApplyAllowed READ isApplyAllowed NOTIFY isApplyAllowedChanged FINAL)
-
-    muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
 
