@@ -39,6 +39,11 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/amplify/amplifyviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/amplify/amplifyviewmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/loudness/normalizeloudnesseffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/loudness/normalizeloudnesseffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/loudness/normalizeloudnessviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/loudness/normalizeloudnessviewmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeviewmodel.cpp
