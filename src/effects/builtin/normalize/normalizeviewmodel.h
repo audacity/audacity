@@ -6,8 +6,6 @@
 #include "../common/abstracteffectmodel.h"
 #include "../common/params.h"
 
-#include "effects/effects_base/ieffectsprovider.h"
-
 namespace au::effects {
 class NormalizeEffect;
 class NormalizeViewModel : public AbstractEffectModel
@@ -19,8 +17,6 @@ class NormalizeViewModel : public AbstractEffectModel
     Q_PROPERTY(
         bool normalizeStereoChannelsIndependently READ normalizeStereoChannelsIndependently WRITE setNormalizeStereoChannelsIndependently NOTIFY normalizeStereoChannelsIndependentlyChanged FINAL)
     Q_PROPERTY(double peakAmplitudeTarget READ peakAmplitudeTarget WRITE setPeakAmplitudeTarget NOTIFY peakAmplitudeTargetChanged FINAL)
-
-    muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
     NormalizeViewModel() = default;
@@ -45,7 +41,5 @@ signals:
 
 private:
     void doReload() override;
-
-    NormalizeEffect* effect() const;
 };
 }

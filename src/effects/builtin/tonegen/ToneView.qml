@@ -12,6 +12,8 @@ import Preferences
 EffectBase {
     id: root
 
+    property alias instanceId: tone.instanceId
+
     property string title: qsTrc("effects/tone", "Tone")
     property alias isApplyAllowed: tone.isApplyAllowed
 
@@ -31,8 +33,6 @@ EffectBase {
 
     ToneViewModel {
         id: tone
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

@@ -8,6 +8,8 @@ import "../common"
 EffectBase {
     id: root
 
+    property alias instanceId: noiseReduction.instanceId
+
     property string title: qsTrc("effects/noisereduction", "Noise Reduction")
     property bool isApplyAllowed: noiseReduction.isApplyAllowed
 
@@ -18,8 +20,6 @@ EffectBase {
 
     NoiseReductionViewModel {
         id: noiseReduction
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

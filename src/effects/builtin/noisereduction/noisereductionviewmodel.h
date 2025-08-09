@@ -6,9 +6,6 @@
 #include "../common/abstracteffectmodel.h"
 #include "../common/params.h"
 
-#include "effects/effects_base/ieffectsprovider.h"
-#include "effects/effects_base/ieffectinstancesregister.h"
-
 #include "global/iinteractive.h"
 
 namespace au::effects {
@@ -34,8 +31,6 @@ class NoiseReductionViewModel : public AbstractEffectModel
 
     Q_PROPERTY(int reductionMode READ reductionMode WRITE setReductionMode NOTIFY reductionModeChanged FINAL)
 
-    muse::Inject<IEffectsProvider> effectsProvider;
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<muse::IInteractive> interactive;
 
 public:
@@ -74,7 +69,5 @@ signals:
 private:
     void doReload() override;
     bool usesPresets() const override { return false; }
-
-    NoiseReductionEffect* effect() const;
 };
 }

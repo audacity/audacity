@@ -10,6 +10,8 @@ import "../common"
 EffectBase {
     id: root
 
+    property alias instanceId: reverb.instanceId
+
     property string title: qsTrc("effects/reverb", "Reverb")
     property bool isApplyAllowed: true
 
@@ -28,8 +30,6 @@ EffectBase {
 
     ReverbViewModel {
         id: reverb
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

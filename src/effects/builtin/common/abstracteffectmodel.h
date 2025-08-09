@@ -10,6 +10,7 @@
 #include "modularity/ioc.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectexecutionscenario.h"
+#include "effects/effects_base/ieffectsprovider.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "trackedit/iprojecthistory.h"
 
@@ -29,6 +30,7 @@ public:
     muse::Inject<IEffectExecutionScenario> executionScenario;
     muse::Inject<IRealtimeEffectService> realtimeEffectService;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
     AbstractEffectModel(QObject* parent = nullptr);
@@ -56,27 +58,37 @@ protected:
     virtual void doUpdateSettings() {}
 
     std::shared_ptr<effects::EffectInstance> instance() const;
-    const EffectSettings* settings() const;
+    const EffectSettings& settings() const;
     void modifySettings(const std::function<void(EffectSettings& settings)>&);
 
     template<typename T>
     const T& settings() const
     {
-        const EffectSettings* s = this->settings();
-        if (!s) {
+        const T* st = settings().cast<T>();
+        IF_ASSERT_FAILED(st) {
             static T null;
             return null;
         }
-        const T* st = s->cast<T>();
-        assert(st);
         return *st;
     }
 
-protected:
-    bool m_inited = false;
+    template<typename EffectType>
+    const EffectType& effect() const
+    {
+        const EffectId effectId = this->effectId();
+        const Effect* e = effectsProvider()->effect(effectId);
+        return *dynamic_cast<const EffectType*>(e);
+    }
+
+    template<typename EffectType>
+    EffectType& effect()
+    {
+        return const_cast<EffectType&>(static_cast<const AbstractEffectModel*>(this)->effect<EffectType>());
+    }
 
 private:
     EffectSettingsAccessPtr settingsAccess() const;
+    bool m_inited = false;
     QString m_instanceId;
 };
 }

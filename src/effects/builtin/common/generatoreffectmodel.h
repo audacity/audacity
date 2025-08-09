@@ -5,8 +5,6 @@
 
 #include "../common/abstracteffectmodel.h"
 
-#include "effects/effects_base/ieffectsprovider.h"
-
 namespace au::effects {
 class GeneratorEffect;
 class ToneEffect;
@@ -21,8 +19,6 @@ class GeneratorEffectModel : public AbstractEffectModel
     Q_PROPERTY(int upperTimeSignature READ upperTimeSignature NOTIFY upperTimeSignatureChanged FINAL)
     Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature NOTIFY lowerTimeSignatureChanged FINAL)
     Q_PROPERTY(bool isApplyAllowed READ isApplyAllowed NOTIFY isApplyAllowedChanged FINAL)
-
-    muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
 
@@ -50,28 +46,20 @@ protected:
     T& mutSettings()
     {
         // Generators have singleton usage ; no risk of concurrency, settings may be returned without protection.
-        EffectSettings* s = const_cast<EffectSettings*>(this->settings());
-        assert(s);
-        if (!s) {
-            static T null;
-            return null;
-        }
-        T* st = s->cast<T>();
+        const T* st = settings().cast<T>();
         assert(st);
-        return *st;
+        return const_cast<T&>(*st);
     }
 
     EffectSettings& mutSettings()
     {
-        return *const_cast<EffectSettings*>(this->settings());
+        return const_cast<EffectSettings&>(settings());
     }
 
 private:
     void doReload() final override;
     virtual void doEmitSignals() = 0;
     void update();
-
-    GeneratorEffect* generatorEffect() const;
 
     bool m_isApplyAllowed = false;
 };

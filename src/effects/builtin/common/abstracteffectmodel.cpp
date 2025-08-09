@@ -43,27 +43,34 @@ bool AbstractEffectModel::inited() const
 std::shared_ptr<au::effects::EffectInstance> AbstractEffectModel::instance() const
 {
     EffectInstanceId id = this->instanceId();
-    if (id == 0) {
+    IF_ASSERT_FAILED(id != 0) {
         return nullptr;
     }
 
     return instancesRegister()->instanceById(id);
 }
 
-const EffectSettings* AbstractEffectModel::settings() const
+const EffectSettings& AbstractEffectModel::settings() const
 {
     EffectInstanceId id = this->instanceId();
-    if (id == 0) {
-        return nullptr;
+    IF_ASSERT_FAILED(id != 0) {
+        static EffectSettings null;
+        return null;
     }
 
-    return instancesRegister()->settingsById(id);
+    const EffectSettings* s = instancesRegister()->settingsById(id);
+    IF_ASSERT_FAILED(s) {
+        static EffectSettings null;
+        return null;
+    }
+
+    return *s;
 }
 
 EffectSettingsAccessPtr AbstractEffectModel::settingsAccess() const
 {
     EffectInstanceId id = this->instanceId();
-    if (id == 0) {
+    IF_ASSERT_FAILED(id != 0) {
         return nullptr;
     }
 
@@ -131,7 +138,7 @@ void AbstractEffectModel::setInstanceId_prop(const QString& newInstanceId)
 QString AbstractEffectModel::effectId_prop() const
 {
     EffectInstanceId id = this->instanceId();
-    if (id == 0) {
+    IF_ASSERT_FAILED(id != 0) {
         return QString();
     }
 

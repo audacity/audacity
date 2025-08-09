@@ -9,6 +9,8 @@ import "../common"
 EffectBase {
     id: root
 
+    property alias instanceId: silence.instanceId
+
     property string title: qsTrc("projectscene/silence", "Silence")
     property alias isApplyAllowed: silence.isApplyAllowed
 
@@ -17,8 +19,6 @@ EffectBase {
 
     SilenceViewModel {
         id: silence
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {
