@@ -41,7 +41,5 @@ signals:
 
 private:
     void doReload() override;
-
-    NormalizeEffect* effect() const;
 };
 }

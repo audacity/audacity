@@ -37,10 +37,6 @@ QString DtmfViewModel::sequence() const
 
 void DtmfViewModel::prop_setSequence(const QString& newSequence)
 {
-    if (!m_inited) {
-        return;
-    }
-
     if (settings<DtmfSettings>().dtmfSequence == newSequence.toStdString()) {
         return;
     }
@@ -63,10 +59,6 @@ double DtmfViewModel::amplitude() const
 
 void DtmfViewModel::prop_setAmplitude(double newAmplitude)
 {
-    if (!m_inited) {
-        return;
-    }
-
     if (settings<DtmfSettings>().dtmfAmplitude == newAmplitude) {
         return;
     }
@@ -88,10 +80,6 @@ double DtmfViewModel::dutyCycle() const
 
 void DtmfViewModel::prop_setDutyCycle(double newDutyCycle)
 {
-    if (!m_inited) {
-        return;
-    }
-
     if (settings<DtmfSettings>().dtmfDutyCycle == newDutyCycle) {
         return;
     }

@@ -69,7 +69,5 @@ signals:
 private:
     void doReload() override;
     bool usesPresets() const override { return false; }
-
-    NoiseReductionEffect* effect() const;
 };
 }

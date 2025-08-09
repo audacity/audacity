@@ -62,10 +62,6 @@ double ToneViewModel::amplitudeStart() const
 
 void ToneViewModel::prop_setAmplitudeStart(double newAmplitude)
 {
-    if (!m_inited) {
-        return;
-    }
-
     const auto wasAllowed = isApplyAllowed();
 
     ToneEffect* const te = effect();
@@ -99,10 +95,6 @@ double ToneViewModel::amplitudeEnd() const
 
 void ToneViewModel::prop_setAmplitudeEnd(double newAmplitude)
 {
-    if (!m_inited) {
-        return;
-    }
-
     const auto wasAllowed = isApplyAllowed();
 
     ToneEffect* const te = effect();
@@ -136,10 +128,6 @@ double ToneViewModel::frequencyStart() const
 
 void ToneViewModel::prop_setFrequencyStart(double newFrequency)
 {
-    if (!m_inited) {
-        return;
-    }
-
     const auto wasAllowed = isApplyAllowed();
 
     ToneEffect* const te = effect();
@@ -173,10 +161,6 @@ double ToneViewModel::frequencyEnd() const
 
 void ToneViewModel::prop_setFrequencyEnd(double newFrequency)
 {
-    if (!m_inited) {
-        return;
-    }
-
     const auto wasAllowed = isApplyAllowed();
 
     ToneEffect* const te = effect();
@@ -210,10 +194,6 @@ int ToneViewModel::waveform() const
 
 void ToneViewModel::prop_setWaveform(int newWaveform)
 {
-    if (!m_inited) {
-        return;
-    }
-
     ToneEffect* const te = effect();
 
     IF_ASSERT_FAILED(te) {
@@ -241,10 +221,6 @@ int ToneViewModel::interpolation() const
 
 void ToneViewModel::prop_setInterpolation(int newInterpolation)
 {
-    if (!m_inited) {
-        return;
-    }
-
     ToneEffect* const te = effect();
 
     IF_ASSERT_FAILED(te) {

@@ -61,8 +61,6 @@ private:
     virtual void doEmitSignals() = 0;
     void update();
 
-    GeneratorEffect* generatorEffect() const;
-
     bool m_isApplyAllowed = false;
 };
 } // namespace au::effects

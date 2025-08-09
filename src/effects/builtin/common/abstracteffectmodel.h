@@ -72,11 +72,23 @@ protected:
         return *st;
     }
 
-protected:
-    bool m_inited = false;
+    template<typename EffectType>
+    const EffectType& effect() const
+    {
+        const EffectId effectId = this->effectId();
+        const Effect* e = effectsProvider()->effect(effectId);
+        return *dynamic_cast<const EffectType*>(e);
+    }
+
+    template<typename EffectType>
+    EffectType& effect()
+    {
+        return const_cast<EffectType&>(static_cast<const AbstractEffectModel*>(this)->effect<EffectType>());
+    }
 
 private:
     EffectSettingsAccessPtr settingsAccess() const;
+    bool m_inited = false;
     QString m_instanceId;
 };
 }

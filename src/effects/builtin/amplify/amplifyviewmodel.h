@@ -51,8 +51,6 @@ signals:
 private:
     void doReload() override;
 
-    AmplifyEffect* effect() const;
-
     void update();
 
     Param<db_t> m_amp;
