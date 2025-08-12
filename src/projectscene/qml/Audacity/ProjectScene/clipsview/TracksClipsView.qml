@@ -191,7 +191,7 @@ Rectangle {
 
             anchors.top: parent.top
             anchors.left: timelineIndent.right
-            anchors.right: parent.right
+            anchors.right: verticalRulerPanelHeader.left
 
             height: 40
 
@@ -257,6 +257,37 @@ Rectangle {
                 onPlayCursorMousePositionChanged: function(ix) {
                     timeline.updateCursorPosition(ix, -1)
                 }
+            }
+        }
+
+        Rectangle {
+            id: verticalRulerPanelHeader
+
+            anchors.top: parent.top
+            anchors.right: parent.right
+            height: timeline.height
+            width: tracksModel.isVerticalRulersVisible ? 32 : 0
+
+            color: ui.theme.backgroundSecondaryColor
+
+            SeparatorLine {
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
+
+                width: parent.width
+
+                color: ui.theme.strokeColor
+            }
+
+            SeparatorLine {
+                anchors.top: parent.top
+                anchors.left: parent.left
+
+                orientation: Qt.Vertical
+
+                height: parent.height
+
+                color: ui.theme.strokeColor
             }
         }
     }
@@ -443,6 +474,7 @@ Rectangle {
             id: tracksClipsViewArea
 
             anchors.fill: parent
+            anchors.rightMargin: tracksModel.isVerticalRulersVisible ? verticalRulerPanelHeader.width : 0
 
             view: tracksClipsView
 
@@ -768,9 +800,13 @@ Rectangle {
         VerticalRulersPanel {
             id: verticalRulers
 
-            height: parent.height - timelineHeader.height
-            anchors.right: tracksClipsViewArea.right
-            anchors.bottom: tracksClipsViewArea.bottom
+            model: tracksModel
+            context: timeline.context
+
+            height: parent.height
+            width: verticalRulerPanelHeader.width
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
 
             visible: tracksModel.isVerticalRulersVisible
         }

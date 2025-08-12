@@ -23,6 +23,7 @@ class TrackViewStateModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
     Q_PROPERTY(int trackHeight READ trackHeight NOTIFY trackHeightChanged FINAL)
     Q_PROPERTY(bool isTrackCollapsed READ isTrackCollapsed NOTIFY isTrackCollapsedChanged FINAL)
+    Q_PROPERTY(double channelHeightRatio READ channelHeightRatio NOTIFY channelHeightRatioChanged FINAL)
 
     Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
     Q_PROPERTY(bool isRecording READ isRecording NOTIFY isRecordingChanged FINAL)
@@ -46,6 +47,8 @@ public:
     Q_INVOKABLE void changeTrackHeight(int deltaY);
 
     bool isTrackCollapsed() const;
+    double channelHeightRatio() const;
+    Q_INVOKABLE void changeChannelHeightRatio(double ratio);
 
     playback::PlaybackMeterModel* meterModel() const;
 
@@ -56,6 +59,7 @@ signals:
     void trackIdChanged();
     void trackHeightChanged();
     void isTrackCollapsedChanged();
+    void channelHeightRatioChanged();
     void meterModelChanged();
     void isPlayingChanged();
     void isRecordingChanged();
@@ -66,6 +70,7 @@ private:
     trackedit::TrackId m_trackId = -1;
     muse::ValCh<int> m_trackHeight;
     muse::ValCh<bool> m_isTrackCollapsed;
+    muse::ValCh<double> m_channelHeightRatio;
 
     playback::PlaybackMeterModel* m_meterModel = nullptr;
 };
