@@ -231,27 +231,3 @@ QString PlaybackMeterModel::description(PlaybackMeterDbRange::DbRange range) con
 
     return "";
 }
-
-QString PlaybackMeterModel::description(PlaybackMeterDbRange::DbRange range) const
-{
-    switch (range) {
-    case PlaybackMeterDbRange::DbRange::Range36:
-        return DB36_DESCRIPTION;
-    case PlaybackMeterDbRange::DbRange::Range48:
-        return DB48_DESCRIPTION;
-    case PlaybackMeterDbRange::DbRange::Range60:
-        return DB60_DESCRIPTION;
-    case PlaybackMeterDbRange::DbRange::Range72:
-        return DB72_DESCRIPTION;
-    case PlaybackMeterDbRange::DbRange::Range84:
-        return DB84_DESCRIPTION;
-    case PlaybackMeterDbRange::DbRange::Range96:
-        return DB96_DESCRIPTION;
-    case PlaybackMeterDbRange::DbRange::Range120:
-        return DB120_DESCRIPTION;
-    case PlaybackMeterDbRange::DbRange::Range144:
-        return DB144_DESCRIPTION;
-    }
-
-    return "";
-}

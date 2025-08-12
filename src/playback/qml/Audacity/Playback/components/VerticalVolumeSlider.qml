@@ -63,8 +63,6 @@ Slider {
 
         parent: root.handle
 
-        y: (parent.height - height) / 2
-
         placementPolicies: PopupView.PreferLeft
         decimalPlaces: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 2 : 1) : 1
         minValue: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 1.0 : meterModel.dbRange) : 0

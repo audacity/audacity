@@ -52,7 +52,7 @@ Item {
                 id: popup
 
                 placementPolicies: PopupView.PreferLeft
-                y: -32
+                y: -28
 
                 model: model.meterModel
             }
