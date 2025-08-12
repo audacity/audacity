@@ -6,7 +6,7 @@
 #include <thread>
 
 // from muse
-#include "audio/iaudiothreadsecurer.h"
+#include "audio/common/iaudiothreadsecurer.h"
 
 namespace au::audio {
 class AudioThreadSecurer : public muse::audio::IAudioThreadSecurer
