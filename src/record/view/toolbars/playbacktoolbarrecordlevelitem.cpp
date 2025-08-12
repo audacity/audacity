@@ -46,14 +46,14 @@ PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::U
     resetAudioChannelsVolumePressure();
 }
 
-int PlaybackToolBarRecordLevelItem::level() const
+float PlaybackToolBarRecordLevelItem::level() const
 {
     return m_level;
 }
 
-void PlaybackToolBarRecordLevelItem::setLevel(int newLevel)
+void PlaybackToolBarRecordLevelItem::setLevel(float newLevel)
 {
-    if (m_level == newLevel) {
+    if (qFuzzyCompare(m_level, newLevel)) {
         return;
     }
 

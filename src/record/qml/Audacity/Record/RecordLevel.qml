@@ -67,17 +67,31 @@ FlatButton {
         }
     }
 
+    QtObject {
+        id: viewModel
+
+        readonly property int contentWidth: 456
+        readonly property int contentHeight: 142
+
+        readonly property int margins: 12
+        readonly property int spacing: 8
+
+        readonly property int meterHeight: 50
+    }
+
     PlaybackMeterModel {
         id: meterModel
+
+        meterInputSource: MeterInputSource.Record
     }
 
     StyledPopupView {
         id: popup
 
-        margins: 12
+        margins: viewModel.margins
 
-        contentWidth: 232
-        contentHeight: 108
+        contentWidth: viewModel.contentWidth
+        contentHeight: viewModel.contentHeight
 
         onOpened: {
             leftVolumePressure.requestPaint()
@@ -89,7 +103,7 @@ FlatButton {
 
             anchors.fill: parent
 
-            spacing: 12
+            spacing: viewModel.spacing
 
             StyledTextLabel {
                 Layout.fillWidth: true
@@ -100,9 +114,9 @@ FlatButton {
 
             Rectangle {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 44
+                Layout.preferredHeight: viewModel.meterHeight
 
-                color: ui.theme.backgroundPrimaryColor
+                color: "#EBEDF0"
                 border.width: 1
                 border.color: ui.theme.strokeColor
                 radius: 2
@@ -148,6 +162,8 @@ FlatButton {
                     VolumeSlider {
                         id: volumeSlider
 
+                        meterModel: meterModel
+
                         anchors.left: parent.left
                         anchors.leftMargin: -handleWidth/2
                         anchors.right: parent.right
@@ -156,7 +172,7 @@ FlatButton {
                         anchors.topMargin: -1
 
                         onVolumeLevelMoved: function(level) {
-                            root.volumeLevelChangeRequested(Math.round(level * 10) / 10)
+                            root.volumeLevelChangeRequested(Math.round(level * 100) / 100)
                         }
                     }
                 }
@@ -168,6 +184,27 @@ FlatButton {
                 text: qsTrc("record", "Adjust the level of your OS configured microphone")
                 horizontalAlignment: Text.AlignLeft
                 wrapMode: Text.WordWrap
+            }
+
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 2
+
+                color: ui.theme.strokeColor
+            }
+
+            CheckBox {
+                id: checkbox
+
+                Layout.fillWidth: true
+
+                text: qsTrc("record", "Enable audible input monitoring")
+
+                checked: false
+
+                onClicked: {
+                    console.log("Input monitoring toggled: " + checked)
+                }
             }
         }
     }

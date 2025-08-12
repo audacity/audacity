@@ -9,6 +9,7 @@
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackmetercontroller.h"
 #include "playback/iplayback.h"
+#include "record/irecord.h"
 
 namespace au::playback {
 class PlaybackMeterModel : public QObject, public muse::async::Asyncable
@@ -30,11 +31,15 @@ class PlaybackMeterModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(std::vector<PlaybackMeterDbRange::DbRange> dbRangeList READ dbRangeList CONSTANT)
     Q_PROPERTY(float dbRange READ dbRange NOTIFY dbRangeChanged FINAL)
 
+    Q_PROPERTY(
+        MeterInputSource::Source meterInputSource READ meterInputSource WRITE setMeterInputSource NOTIFY meterInputSourceChanged FINAL)
+
     Q_PROPERTY(float position READ position NOTIFY positionChanged FINAL)
 
     muse::Inject<IPlaybackMeterController> meterController;
     muse::Inject<IPlaybackConfiguration> configuration;
     muse::Inject<IPlayback> playback;
+    muse::Inject<record::IRecord> record;
 
 public:
     explicit PlaybackMeterModel(QObject* parent = nullptr);
@@ -54,6 +59,8 @@ public:
     std::vector<PlaybackMeterDbRange::DbRange> dbRangeList() const;
     float dbRange() const;
 
+    MeterInputSource::Source meterInputSource() const;
+
     float position() const;
 
     void setMeterStyle(PlaybackMeterStyle::MeterStyle style);
@@ -62,6 +69,8 @@ public:
     void setMeterSize(int size);
 
     void setMeterDbRange(PlaybackMeterDbRange::DbRange range);
+
+    void setMeterInputSource(MeterInputSource::Source source);
 
     QVariantList smallSteps() const;
     QVariantList fullSteps() const;
@@ -78,9 +87,12 @@ signals:
     void meterDbRangeChanged();
     void dbRangeChanged();
 
+    void meterInputSourceChanged();
+
     void positionChanged();
 
 private:
     float m_volume = 0.0f;
+    MeterInputSource::Source m_meterInputSource = MeterInputSource::Source::Playback;
 };
 }

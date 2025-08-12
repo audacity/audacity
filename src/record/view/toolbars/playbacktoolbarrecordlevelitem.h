@@ -18,7 +18,7 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(int level READ level WRITE setLevel NOTIFY levelChanged FINAL)
+    Q_PROPERTY(float level READ level WRITE setLevel NOTIFY levelChanged FINAL)
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float leftRecentPeak READ leftRecentPeak NOTIFY leftRecentPeakChanged FINAL)
@@ -38,8 +38,8 @@ public:
     explicit PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
                                             QObject* parent = nullptr);
 
-    int level() const;
-    void setLevel(int newLevel);
+    float level() const;
+    void setLevel(float newLevel);
 
     float leftChannelPressure() const;
     float leftRecentPeak() const;

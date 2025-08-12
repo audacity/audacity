@@ -5,6 +5,7 @@
 #include "playbackmetermodel.h"
 
 #include "playback/iaudiooutput.h"
+#include "record/iaudioinput.h"
 
 #include <memory>
 
@@ -56,11 +57,37 @@ PlaybackMeterModel::PlaybackMeterModel(QObject* parent)
     });
 
     playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume) {
+        if (m_meterInputSource != MeterInputSource::Source::Playback) {
+            return;
+        }
+
         m_volume = volume;
         emit positionChanged();
     });
 
     playback()->audioOutput()->playbackVolume().onResolve(this, [this](float volume) {
+        if (m_meterInputSource != MeterInputSource::Source::Playback) {
+            return;
+        }
+
+        m_volume = volume;
+        emit positionChanged();
+    });
+
+    record()->audioInput()->recordVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
+        if (m_meterInputSource != MeterInputSource::Source::Record) {
+            return;
+        }
+
+        m_volume = volume;
+        emit positionChanged();
+    });
+
+    record()->audioInput()->recordVolume().onResolve(this, [this](float volume) {
+        if (m_meterInputSource != MeterInputSource::Source::Record) {
+            return;
+        }
+
         m_volume = volume;
         emit positionChanged();
     });
@@ -230,4 +257,20 @@ QString PlaybackMeterModel::description(PlaybackMeterDbRange::DbRange range) con
     }
 
     return "";
+}
+
+MeterInputSource::Source PlaybackMeterModel::meterInputSource() const
+{
+    return m_meterInputSource;
+}
+
+void PlaybackMeterModel::setMeterInputSource(MeterInputSource::Source source)
+{
+    if (m_meterInputSource == source) {
+        return;
+    }
+
+    m_meterInputSource = source;
+    emit meterInputSourceChanged();
+    emit positionChanged();
 }

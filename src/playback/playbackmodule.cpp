@@ -79,6 +79,7 @@ void PlaybackModule::registerUiTypes()
     qmlRegisterUncreatableType<PlaybackMeterStyle>("Audacity.Playback", 1, 0, "PlaybackMeterStyle", "Not creatable from QML");
     qmlRegisterUncreatableType<PlaybackMeterPosition>("Audacity.Playback", 1, 0, "PlaybackMeterPosition", "Not creatable from QML");
     qmlRegisterUncreatableType<PlaybackMeterDbRange>("Audacity.Playback", 1, 0, "PlaybackMeterDbRange", "Not creatable from QML");
+    qmlRegisterUncreatableType<MeterInputSource>("Audacity.Playback", 1, 0, "MeterInputSource", "Not creatable from QML");
 }
 
 void PlaybackModule::onInit(const IApplication::RunMode& mode)
