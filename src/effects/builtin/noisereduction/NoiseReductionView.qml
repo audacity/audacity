@@ -36,6 +36,8 @@ EffectBase {
 
             RoundedRectangle {
                 color: ui.theme.backgroundSecondaryColor
+                border.color: ui.theme.strokeColor
+                border.width: 1
                 radius: 4
                 width: 211
                 height: getNoiseProfileBox.height
@@ -83,6 +85,8 @@ EffectBase {
 
             RoundedRectangle {
                 color: ui.theme.backgroundSecondaryColor
+                border.color: ui.theme.strokeColor
+                border.width: 1
                 radius: 4
                 width: 301
                 height: noiseReductionColumn.height
@@ -98,6 +102,17 @@ EffectBase {
                         text: qsTrc("effects/noisereduction", "Step 2")
                         horizontalAlignment: Text.AlignLeft
                         font.bold: true
+                    }
+
+                    StyledTextLabel {
+                        Layout.fillWidth: true
+                        Layout.leftMargin: 16
+                        Layout.rightMargin: 16
+                        Layout.bottomMargin: 16
+
+                        text: qsTrc("effects/noisereduction", "Select all of the audio you want filtered, choose how much noise you want filtered out, and then click “Apply” to reduce noise.")
+                        wrapMode: Text.Wrap
+                        horizontalAlignment: Text.AlignLeft
                     }
 
                     StyledTextLabel {
