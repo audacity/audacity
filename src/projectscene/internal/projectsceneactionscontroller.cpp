@@ -10,6 +10,7 @@ using namespace muse::async;
 using namespace muse::actions;
 
 static const ActionCode VERTICAL_RULERS_CODE("toggle-vertical-rulers");
+static const ActionCode RMS_IN_WAVEFORM_CODE("toggle-rms-in-waveform");
 static const ActionCode MINUTES_SECONDS_RULER("minutes-seconds-ruler");
 static const ActionCode BEATS_MEASURES_RULER("beats-measures-ruler");
 static const ActionCode CLIP_PITCH_AND_SPEED_CODE("clip-pitch-speed");
@@ -19,6 +20,7 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, MINUTES_SECONDS_RULER, this, &ProjectSceneActionsController::toggleMinutesSecondsRuler);
     dispatcher()->reg(this, BEATS_MEASURES_RULER, this, &ProjectSceneActionsController::toggleBeatsMeasuresRuler);
     dispatcher()->reg(this, VERTICAL_RULERS_CODE, this, &ProjectSceneActionsController::toggleVerticalRulers);
+    dispatcher()->reg(this, RMS_IN_WAVEFORM_CODE, this, &ProjectSceneActionsController::toggleRMSInWaveform);
     dispatcher()->reg(this, "update-display-while-playing", this, &ProjectSceneActionsController::updateDisplayWhilePlaying);
     dispatcher()->reg(this, "pinned-play-head", this, &ProjectSceneActionsController::pinnedPlayHead);
     dispatcher()->reg(this, CLIP_PITCH_AND_SPEED_CODE, this, &ProjectSceneActionsController::openClipPitchAndSpeedEdit);
@@ -58,6 +60,13 @@ void ProjectSceneActionsController::toggleVerticalRulers()
     notifyActionCheckedChanged(VERTICAL_RULERS_CODE);
 }
 
+void ProjectSceneActionsController::toggleRMSInWaveform()
+{
+    bool rmsVisible = configuration()->isRMSInWaveformVisible();
+    configuration()->setRMSInWaveformVisible(!rmsVisible);
+    notifyActionCheckedChanged(RMS_IN_WAVEFORM_CODE);
+}
+
 void ProjectSceneActionsController::updateDisplayWhilePlaying()
 {
     NOT_IMPLEMENTED;
@@ -91,6 +100,7 @@ bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) 
 {
     QMap<std::string, bool> isChecked {
         { VERTICAL_RULERS_CODE, configuration()->isVerticalRulersVisible() },
+        { RMS_IN_WAVEFORM_CODE, configuration()->isRMSInWaveformVisible() },
         { MINUTES_SECONDS_RULER, configuration()->timelineRulerMode() == TimelineRulerMode::MINUTES_AND_SECONDS },
         { BEATS_MEASURES_RULER, configuration()->timelineRulerMode() == TimelineRulerMode::BEATS_AND_MEASURES }
     };

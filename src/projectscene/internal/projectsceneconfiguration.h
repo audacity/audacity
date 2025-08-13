@@ -26,6 +26,10 @@ public:
     void setVerticalRulersVisible(bool visible) override;
     muse::async::Channel<bool> isVerticalRulersVisibleChanged() const override;
 
+    bool isRMSInWaveformVisible() const override;
+    void setRMSInWaveformVisible(bool visible) override;
+    muse::async::Channel<bool> isRMSInWaveformVisibleChanged() const override;
+
     double zoom() const override;
 
     int mouseZoomPrecision() const override;
@@ -55,6 +59,7 @@ public:
 
 private:
     muse::async::Channel<bool> m_isVerticalRulersVisibleChanged;
+    muse::async::Channel<bool> m_isRMSInWaveformVisibleChanged;
     muse::async::Channel<ClipStyles::Style> m_clipStyleChanged;
     muse::async::Notification m_effectsPanelVisible;
     muse::async::Notification m_asymmetricStereoHeightsChanged;

@@ -306,6 +306,7 @@ MenuItem* AppMenuModel::makeViewMenu()
         << makeSeparator()
 #endif
         << makeMenuItem("toggle-clipping-in-waveform")
+        << makeMenuItem("toggle-rms-in-waveform")
         << makeMenuItem("toggle-vertical-rulers")
         << makeSeparator()
         << makeMenuItem("dock-restore-default-layout");

@@ -17,6 +17,7 @@ using namespace au::projectscene;
 static const std::string moduleName("projectscene");
 
 static const muse::Settings::Key IS_VERTICAL_RULERS_VISIBLE(moduleName, "projectscene/verticalRulersVisible");
+static const muse::Settings::Key IS_RMS_IN_WAVEFORM_VISIBLE(moduleName, "projectscene/rmsInWaveformVisible");
 static const muse::Settings::Key MOUSE_ZOOM_PRECISION(moduleName, "projectscene/zoomPrecisionMouse");
 static const muse::Settings::Key CLIP_STYLE(moduleName, "projectscene/clipStyle");
 static const muse::Settings::Key STEREO_HEIGHTS_PREF(moduleName, "projectscene/asymmetricStereoHeights");
@@ -30,6 +31,11 @@ void ProjectSceneConfiguration::init()
     muse::settings()->setDefaultValue(IS_VERTICAL_RULERS_VISIBLE, muse::Val(false));
     muse::settings()->valueChanged(IS_VERTICAL_RULERS_VISIBLE).onReceive(nullptr, [this](const muse::Val& val) {
         m_isVerticalRulersVisibleChanged.send(val.toBool());
+    });
+
+    muse::settings()->setDefaultValue(IS_RMS_IN_WAVEFORM_VISIBLE, muse::Val(false));
+    muse::settings()->valueChanged(IS_RMS_IN_WAVEFORM_VISIBLE).onReceive(nullptr, [this](const muse::Val& val) {
+        m_isRMSInWaveformVisibleChanged.send(val.toBool());
     });
 
     muse::settings()->setDefaultValue(MOUSE_ZOOM_PRECISION, muse::Val(6));
@@ -65,6 +71,21 @@ void ProjectSceneConfiguration::setVerticalRulersVisible(bool visible)
 muse::async::Channel<bool> ProjectSceneConfiguration::isVerticalRulersVisibleChanged() const
 {
     return m_isVerticalRulersVisibleChanged;
+}
+
+bool ProjectSceneConfiguration::isRMSInWaveformVisible() const
+{
+    return muse::settings()->value(IS_RMS_IN_WAVEFORM_VISIBLE).toBool();
+}
+
+void ProjectSceneConfiguration::setRMSInWaveformVisible(bool visible)
+{
+    muse::settings()->setSharedValue(IS_RMS_IN_WAVEFORM_VISIBLE, muse::Val(visible));
+}
+
+muse::async::Channel<bool> ProjectSceneConfiguration::isRMSInWaveformVisibleChanged() const
+{
+    return m_isRMSInWaveformVisibleChanged;
 }
 
 double ProjectSceneConfiguration::zoom() const

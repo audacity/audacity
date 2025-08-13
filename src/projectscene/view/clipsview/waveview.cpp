@@ -19,6 +19,7 @@ static const QColor BACKGROUND_COLOR = QColor(255, 255, 255);
 static const QColor SAMPLES_BASE_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLES_HIGHLIGHT_COLOR = QColor(255, 255, 255);
 static const QColor RMS_BASE_COLOR = QColor(255, 255, 255);
+static const QColor CLASSIC_RMS_COLOR = QColor(107, 154, 247);
 static const QColor CENTER_LINE_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_HEAD_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_STALK_COLOR = QColor(0, 0, 0);
@@ -51,6 +52,10 @@ WaveView::WaveView(QQuickItem* parent)
             pushProjectHistorySampleEdit();
         }
     });
+
+    configuration()->isRMSInWaveformVisibleChanged().onReceive(this, [this](bool) {
+        update();
+    });
 }
 
 WaveView::~WaveView()
@@ -78,6 +83,7 @@ IWavePainter::Params WaveView::getWavePainterParams() const
     params.selectionStartTime = m_clipTime.selectionStartTime;
     params.selectionEndTime = m_clipTime.selectionEndTime;
     params.channelHeightRatio = m_channelHeightRatio;
+    params.showRMS = configuration()->isRMSInWaveformVisible();
 
     projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
     if (clipStyle == projectscene::ClipStyles::Style::COLORFUL) {
@@ -129,7 +135,7 @@ void WaveView::applyClassicStyle(IWavePainter::Params& params, bool selected) co
     QColor baseSampleColor = selected ? CLASSIC_SAMPLES_BASE_SELECTED_COLOR : CLASSIC_SAMPLES_BASE_COLOR;
     params.style.samplePen = baseSampleColor;
     params.style.selectedSamplePen = CLASSIC_SAMPLES_BASE_SELECTED_COLOR;
-    params.style.rmsPen = baseSampleColor;
+    params.style.rmsPen = CLASSIC_RMS_COLOR;
     params.style.centerLine = baseSampleColor;
     params.style.sampleHead = baseSampleColor;
     params.style.sampleStalk = baseSampleColor;
