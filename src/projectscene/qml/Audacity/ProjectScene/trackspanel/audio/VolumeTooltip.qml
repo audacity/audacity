@@ -22,6 +22,9 @@ StyledPopupView {
     property string unitText: "dB"
     property real minValue: -60.0
 
+    property int showDelay: ui.theme.tooltipDelay
+    property int hideDelay: ui.theme.tooltipDelay
+
     Item {
         id: content
 
@@ -47,7 +50,7 @@ StyledPopupView {
     Timer {
         id: openTimer
 
-        interval: ui.theme.tooltipDelay
+        interval: root.showDelay
         repeat: false
 
         onTriggered: {
@@ -58,7 +61,7 @@ StyledPopupView {
     Timer {
         id: closeTimer
 
-        interval: ui.theme.tooltipDelay
+        interval: root.hideDelay
         repeat: false
 
         onTriggered: {
