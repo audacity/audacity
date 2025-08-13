@@ -3074,7 +3074,7 @@ void AudioIoCallback::SendVuOutputMeterData(
 
 void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, unsigned long frames)
 {
-    if ((mCaptureSequences.size() == 0) || (frames == 0)) {
+    if (frames == 0) {
         return;
     }
 
@@ -3088,21 +3088,17 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& 
         }
     }
 
-    constexpr size_t maxMainTrackChannels = 2;
     // Update main meter
     // If the input source has more than 2 channels it will be splitted on multiple mono sequences
-    if (mCaptureSequences.size() == 1) {
-        const auto nChannels = mCaptureSequences[0]->NChannels();
-        assert(nChannels <= 2);
-        for (size_t ch = 0; ch < nChannels; ++ch) {
-            sender->push(ch, { sptr + ch, frames, nChannels });
+    if (mNumCaptureChannels <= 2) {
+        for (size_t ch = 0; ch < mNumCaptureChannels; ++ch) {
+            sender->push(ch, { sptr + ch, frames, mNumCaptureChannels });
         }
     } else {
-        assert(std::all_of(mCaptureSequences.begin(), mCaptureSequences.end(),
-                           [](const auto& seq) { return seq->NChannels() == 1; }));
-
+        constexpr size_t maxMainTrackChannels = 2;
         const auto mainTrackInput = stackAllocate(float, frames * maxMainTrackChannels);
         std::memset(mainTrackInput, 0, frames * maxMainTrackChannels * sizeof(float));
+
         for (size_t i = 0; i < frames; ++i) {
             for (size_t seqNum = 0; seqNum < mCaptureSequences.size(); seqNum++) {
                 const auto channel = seqNum % maxMainTrackChannels;

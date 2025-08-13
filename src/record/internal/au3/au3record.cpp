@@ -347,6 +347,8 @@ muse::Ret Au3Record::stop()
         captureMeter->reset();
     }
 
+    gAudioIO->StartMonitoring(ProjectAudioIO::GetDefaultOptions(project));
+
     return make_ok();
 }
 

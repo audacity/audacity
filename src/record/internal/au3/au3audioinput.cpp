@@ -41,6 +41,9 @@ void Au3AudioInput::initMeter()
 
     auto& projectAudioIO = ProjectAudioIO::Get(project);
     projectAudioIO.SetCaptureMeter(m_inputMeter);
+
+    const auto gAudioIO = AudioIO::Get();
+    gAudioIO->StartMonitoring(ProjectAudioIO::GetDefaultOptions(project));
 }
 
 muse::async::Promise<float> Au3AudioInput::recordVolume() const

@@ -246,6 +246,8 @@ void Au3Player::stop()
         captureMeter->reset();
     }
 
+    gAudioIO->StartMonitoring(ProjectAudioIO::GetDefaultOptions(project));
+
     while (isBusy()) {
         using namespace std::chrono;
         std::this_thread::sleep_for(100ms);

@@ -15,20 +15,12 @@ PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::U
                                                                muse::uicomponents::ToolBarItemType::Type type, QObject* parent)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
-    recordController()->isRecordingChanged().onNotify(this, [this]() {
-        m_active = recordController()->isRecording();
-    });
-
     record()->audioInput()->recordVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
         m_level = volume;
         emit levelChanged();
     });
 
     record()->audioInput()->recordSignalChanges().onReceive(this, [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
-        if (!m_active) {
-            return;
-        }
-
         if (meterSignal.peak.pressure < MIN_DISPLAYED_DBFS) {
             setAudioChannelVolumePressure(audioChNum,
                                           MIN_DISPLAYED_DBFS);
