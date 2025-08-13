@@ -27,6 +27,9 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
     Q_PROPERTY(float rightRecentPeak READ rightRecentPeak NOTIFY rightRecentPeakChanged FINAL)
     Q_PROPERTY(float rightMaxPeak READ rightMaxPeak NOTIFY rightMaxPeakChanged FINAL)
 
+    Q_PROPERTY(
+        bool audibleInputMonitoring READ audibleInputMonitoring WRITE setAudibleInputMonitoring NOTIFY audibleInputMonitoringChanged FINAL)
+
     Q_PROPERTY(playback::PlaybackMeterStyle::MeterStyle meterStyle READ meterStyle NOTIFY meterStyleChanged FINAL)
 
     muse::Inject<record::IRecord> record;
@@ -47,6 +50,8 @@ public:
     float rightRecentPeak() const;
     float rightMaxPeak() const;
 
+    bool audibleInputMonitoring() const;
+
     playback::PlaybackMeterStyle::MeterStyle meterStyle() const;
 
 public slots:
@@ -58,6 +63,8 @@ public slots:
     void setRightRecentPeak(float newRightRecentPeak);
     void setRightMaxPeak(float newRightMaxPeak);
 
+    void setAudibleInputMonitoring(bool enable);
+
 signals:
     void levelChanged();
 
@@ -68,6 +75,8 @@ signals:
     void rightChannelPressureChanged(float rightChannelPressure);
     void rightRecentPeakChanged();
     void rightMaxPeakChanged();
+
+    void audibleInputMonitoringChanged();
 
     void meterStyleChanged();
 

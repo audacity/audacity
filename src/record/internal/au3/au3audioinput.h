@@ -28,6 +28,9 @@ public:
     muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordSignalChanges() const override;
     muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> recordTrackSignalChanges(int64_t key) const;
 
+    void setAudibleInputMonitoring(bool enable) override;
+    bool audibleInputMonitoring() const override;
+
 private:
     au3::Au3Project& projectRef() const;
 

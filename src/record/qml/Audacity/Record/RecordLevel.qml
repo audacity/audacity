@@ -25,7 +25,10 @@ FlatButton {
     property NavigationPanel navigationPanel: null
     property int navigationOrder: 0
 
+    property bool audibleInputMonitoring: false
+
     signal volumeLevelChangeRequested(var level)
+    signal audibleInputMonitoringChangeRequested(bool enable)
 
     accentButton: popup.isOpened
 
@@ -200,10 +203,10 @@ FlatButton {
 
                 text: qsTrc("record", "Enable audible input monitoring")
 
-                checked: false
+                checked: root.audibleInputMonitoring
 
                 onClicked: {
-                    console.log("Input monitoring toggled: " + checked)
+                    audibleInputMonitoringChangeRequested(!root.audibleInputMonitoring)
                 }
             }
         }

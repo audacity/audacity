@@ -92,6 +92,29 @@ muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioInput
     return m_inputMeter->dataChanged(key);
 }
 
+bool Au3AudioInput::audibleInputMonitoring() const
+{
+    bool swPlaythrough = false;
+    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &swPlaythrough, false);
+    return swPlaythrough;
+}
+
+void Au3AudioInput::setAudibleInputMonitoring(bool enable)
+{
+    gPrefs->Write(wxT("/AudioIO/SWPlaythrough"), enable);
+    gPrefs->Flush();
+
+    muse::async::Async::call(this, [this, enable]() {
+        auto gAudioIO = AudioIO::Get();
+        if (!gAudioIO) {
+            return;
+        }
+
+        gAudioIO->StopStream();
+        gAudioIO->StartMonitoring(ProjectAudioIO::GetDefaultOptions(projectRef()));
+    });
+}
+
 Au3Project& Au3AudioInput::projectRef() const
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());

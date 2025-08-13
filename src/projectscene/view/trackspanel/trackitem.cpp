@@ -37,25 +37,32 @@ TrackItem::TrackItem(QObject* parent)
 
 TrackItem::~TrackItem()
 {
-    m_playbackTrackSignalChanged.close();
-    m_recordTrackSignalChanged.close();
 }
 
 void TrackItem::init(const trackedit::Track& track)
 {
     m_trackId = track.id;
 
-    m_playbackTrackSignalChanged = playback()->audioOutput()->playbackTrackSignalChanges(m_trackId);
-    m_playbackTrackSignalChanged.onReceive(this, [this](au::audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
+    playback()->audioOutput()->playbackTrackSignalChanges(m_trackId)
+    .onReceive(this, [this](au::audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
         setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
         setAudioChannelRMS(channel, meterSignal.rms.pressure);
     });
 
-    m_recordTrackSignalChanged = record()->audioInput()->recordTrackSignalChanges(m_trackId);
-    m_recordTrackSignalChanged.onReceive(this,
-                                         [this](au::audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
+    record()->audioInput()->recordTrackSignalChanges(m_trackId)
+    .onReceive(this, [this](au::audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
         setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
         setAudioChannelRMS(channel, meterSignal.rms.pressure);
+    });
+
+    record()->audioInput()->recordSignalChanges().onReceive(this, [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
+        if (!m_isFocused) {
+            return;
+        }
+
+        setAudioChannelVolumePressure(audioChNum,
+                                      meterSignal.peak.pressure);
+        setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
     });
 
     if (m_title != track.title) {
