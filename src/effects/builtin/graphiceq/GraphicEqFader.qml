@@ -3,60 +3,67 @@ import Audacity.ProjectScene
 
 Item {
     id: root
+
     property double min: 0
     property double max: 0
     property double value: 0
-    signal newValueRequested(double newValue)
-    width: eqFaderHandle.width
+    property alias handle: eqFaderHandle
 
-    QtObject {
-        id: prv
-        property bool dragActive: false
+    function showTooltip() {
+        // The user just clicked the effect's window.
+        // If the tooltip has already appeared due to `onEntered`,
+        // the tooltip gets hidden, probably because the effect's
+        // window comes into focus. This seems to be a bug in the
+        // framework.
+        // I also tried Qt.callLater(function() { tooltip.forceActiveFocus() }),
+        // without success.
+        // For now, we close the tooltip and re-opening. It's better than no
+        // tooltip at all.
+        if (tooltip.isOpened) {
+            tooltip.hide(true)
+        }
+
+        tooltip.show(true)
     }
+
+    function hideTooltip() {
+        tooltip.hide(true)
+    }
+
+    width: eqFaderHandle.width
 
     Rectangle {
         id: faderTrack
+
         width: 4
         height: root.height
-        color: ui.theme.isDark ? "#191F24" : "#B8BBCC"
         anchors.horizontalCenter: parent.horizontalCenter
+
+        color: ui.theme.isDark ? "#191F24" : "#B8BBCC"
 
         GraphicEqFaderHandle {
             id: eqFaderHandle
+
             anchors.horizontalCenter: parent.horizontalCenter
             y: faderTrack.height * (1 - (value - min) / (max - min)) - eqFaderHandle.height / 2
 
             VolumeTooltip {
                 id: tooltip
                 volume: root.value
+
+                // A rather long showDelay, so that the user falls less often
+                // in the situation described above - if the tooltip hasn't yet
+                // appear, we won't have to close it and reopen it when the user
+                // presses the fader and we won't get that ugly blinking.
+                showDelay: 1000
             }
 
             MouseArea {
                 anchors.fill: parent
-                drag.target: eqFaderHandle
-                drag.minimumY: -eqFaderHandle.height / 2
-                drag.maximumY: faderTrack.height - eqFaderHandle.height / 2
                 hoverEnabled: true
 
-                onPositionChanged: {
-                    const newValue = min + (max - min) * (1 - (eqFaderHandle.y + eqFaderHandle.height / 2) / faderTrack.height)
-                    newValueRequested(Math.max(min, Math.min(max, newValue)))
-                }
-
-                onDoubleClicked: {
-                    newValueRequested(0)
-                }
-
-                onPressed: {
-                    prv.dragActive = true
-                    tooltip.show(true)
-                }
-
-                onReleased: {
-                    prv.dragActive = false
-                    if (!containsMouse) {
-                        tooltip.hide(true)
-                    }
+                onPressed: function(mouse) {
+                    mouse.accepted = false
                 }
 
                 onEntered: {
@@ -64,9 +71,7 @@ Item {
                 }
 
                 onExited: {
-                    if (!prv.dragActive) {
-                        tooltip.hide(true)
-                    }
+                    tooltip.hide()
                 }
             }
         }
