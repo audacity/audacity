@@ -46,6 +46,7 @@ public:
         double selectionEndTime = 0.0;
         double channelHeightRatio = 0.5;
         bool showRMS = false;
+        bool showClipping = false;
         Style style;
     };
 

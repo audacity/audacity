@@ -18,6 +18,7 @@ static const std::string moduleName("projectscene");
 
 static const muse::Settings::Key IS_VERTICAL_RULERS_VISIBLE(moduleName, "projectscene/verticalRulersVisible");
 static const muse::Settings::Key IS_RMS_IN_WAVEFORM_VISIBLE(moduleName, "projectscene/rmsInWaveformVisible");
+static const muse::Settings::Key IS_CLIPPING_IN_WAVEFORM_VISIBLE(moduleName, "projectscene/clippingInWaveformVisible");
 static const muse::Settings::Key MOUSE_ZOOM_PRECISION(moduleName, "projectscene/zoomPrecisionMouse");
 static const muse::Settings::Key CLIP_STYLE(moduleName, "projectscene/clipStyle");
 static const muse::Settings::Key STEREO_HEIGHTS_PREF(moduleName, "projectscene/asymmetricStereoHeights");
@@ -36,6 +37,11 @@ void ProjectSceneConfiguration::init()
     muse::settings()->setDefaultValue(IS_RMS_IN_WAVEFORM_VISIBLE, muse::Val(false));
     muse::settings()->valueChanged(IS_RMS_IN_WAVEFORM_VISIBLE).onReceive(nullptr, [this](const muse::Val& val) {
         m_isRMSInWaveformVisibleChanged.send(val.toBool());
+    });
+
+    muse::settings()->setDefaultValue(IS_CLIPPING_IN_WAVEFORM_VISIBLE, muse::Val(false));
+    muse::settings()->valueChanged(IS_CLIPPING_IN_WAVEFORM_VISIBLE).onReceive(nullptr, [this](const muse::Val& val) {
+        m_isClippingInWaveformVisibleChanged.send(val.toBool());
     });
 
     muse::settings()->setDefaultValue(MOUSE_ZOOM_PRECISION, muse::Val(6));
@@ -86,6 +92,21 @@ void ProjectSceneConfiguration::setRMSInWaveformVisible(bool visible)
 muse::async::Channel<bool> ProjectSceneConfiguration::isRMSInWaveformVisibleChanged() const
 {
     return m_isRMSInWaveformVisibleChanged;
+}
+
+bool ProjectSceneConfiguration::isClippingInWaveformVisible() const
+{
+    return muse::settings()->value(IS_CLIPPING_IN_WAVEFORM_VISIBLE).toBool();
+}
+
+void ProjectSceneConfiguration::setClippingInWaveformVisible(bool visible)
+{
+    muse::settings()->setSharedValue(IS_CLIPPING_IN_WAVEFORM_VISIBLE, muse::Val(visible));
+}
+
+muse::async::Channel<bool> ProjectSceneConfiguration::isClippingInWaveformVisibleChanged() const
+{
+    return m_isClippingInWaveformVisibleChanged;
 }
 
 double ProjectSceneConfiguration::zoom() const

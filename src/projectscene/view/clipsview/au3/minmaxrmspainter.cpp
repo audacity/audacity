@@ -49,8 +49,7 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
         metrics.height = channelHeight[index];
         paintParameters
         .SetDisplayParameters(
-            //TODO: uncomment and fix
-            metrics.height, zoomMin, zoomMax, false /*artist->mShowClipping*/)
+            metrics.height, zoomMin, zoomMax, params.showClipping)
         .SetDBParameters(dbRange, dB)
         .SetBlankColor(ColorFromQColor(params.style.blankBrush))
         .SetSampleColors(

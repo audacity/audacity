@@ -22,6 +22,10 @@ public:
     virtual void setRMSInWaveformVisible(bool visible) = 0;
     virtual muse::async::Channel<bool> isRMSInWaveformVisibleChanged() const = 0;
 
+    virtual bool isClippingInWaveformVisible() const = 0;
+    virtual void setClippingInWaveformVisible(bool visible) = 0;
+    virtual muse::async::Channel<bool> isClippingInWaveformVisibleChanged() const = 0;
+
     virtual double zoom() const = 0;
 
     virtual int mouseZoomPrecision() const = 0;
