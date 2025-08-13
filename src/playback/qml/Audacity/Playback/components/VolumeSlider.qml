@@ -197,6 +197,15 @@ Slider {
         }
     }
 
+    onPressedChanged: {
+        prv.dragActive = root.pressed
+        if (root.pressed) {
+            tooltip.show(true)
+        } else {
+            tooltip.hide(true)
+        }
+    }
+
     onMoved: {
         navigation.requestActiveByInteraction()
         root.volumeLevelMoved(value)

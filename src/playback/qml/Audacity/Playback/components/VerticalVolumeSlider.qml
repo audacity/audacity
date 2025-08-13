@@ -8,6 +8,9 @@ import QtQuick.Controls 2.15
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 
+import Audacity.ProjectScene 1.0
+import Audacity.Playback 1.0
+
 Slider {
     id: root
 
@@ -50,9 +53,22 @@ Slider {
         readonly property int rulerXPos: root.width / 2
 
         property real dragStartOffset: 0.0
+        property bool dragActive: false
     }
 
     onFromChanged: () => root.volumeLevelMoved(Math.max(root.from, root.volumeLevel))
+
+    VolumeTooltip {
+        id: tooltip
+
+        parent: root.handle
+
+        placementPolicies: PopupView.PreferLeft
+        decimalPlaces: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 2 : 1) : 1
+        minValue: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 1.0 : meterModel.dbRange) : 0
+        unitText: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? "" : "dB") : ""
+        volume: root.meterModel ? (root.meterModel.meterType ==  PlaybackMeterType.Linear ? root.meterModel.position : root.volumeLevel) : 0
+    }
 
     NavigationControl {
         id: navCtrl
@@ -103,6 +119,8 @@ Slider {
         MouseArea {
             anchors.fill: parent
 
+            hoverEnabled: true
+
             onDoubleClicked: {
                 // Double click resets the volume
                 root.volumeLevelMoved(0.0)
@@ -117,11 +135,17 @@ Slider {
             preventStealing: true // Don't let a Flickable steal the mouse
 
             onPressed: function(mouse) {
+                prv.dragActive = true
                 prv.dragStartOffset = mouse.y
                 root.handlePressed()
+                tooltip.show(true)
             }
 
             onPositionChanged: function(mouse)  {
+                if (!prv.dragActive) {
+                    return;
+                }
+
                 let mousePosInRoot = mapToItem(root, 0, mouse.y - prv.dragStartOffset).y
                 if (prv.rulerLineHeight === 0) {
                     return;
@@ -129,6 +153,21 @@ Slider {
                 let proportionFromTop = mousePosInRoot / prv.rulerLineHeight
                 let clampedProportion = Math.max(0.0, Math.min(proportionFromTop, 1.0))
                 root.volumeLevelMoved(root.meterModel.positionToSample(1.0 - clampedProportion))
+            }
+
+            onReleased: function(mouse) {
+                prv.dragActive = false
+                tooltip.hide(true)
+            }
+
+            onEntered: function() {
+                tooltip.show()
+            }
+
+            onExited: function() {
+                if (!prv.dragActive) {
+                    tooltip.hide(true)
+                }
             }
         }
 

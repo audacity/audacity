@@ -19,6 +19,8 @@ constexpr const char* DB84_DESCRIPTION = "-84 dB (PCM range of 14 bit samples)";
 constexpr const char* DB96_DESCRIPTION = "-96 dB (PCM range of 16 bit samples)";
 constexpr const char* DB120_DESCRIPTION = "-120 dB (approximate limit of human hearing)";
 constexpr const char* DB144_DESCRIPTION = "-145 dB (PCM range of 24 bit samples)";
+
+constexpr float LINEAR_METER_MIN_VOLUME = -60.0f;
 }
 
 PlaybackMeterModel::PlaybackMeterModel(QObject* parent)
@@ -179,7 +181,7 @@ PlaybackMeterDbRange::DbRange PlaybackMeterModel::meterDbRange() const
 float PlaybackMeterModel::dbRange() const
 {
     if (meterType() == PlaybackMeterType::MeterType::Linear) {
-        return -60.0;
+        return LINEAR_METER_MIN_VOLUME;
     }
 
     return PlaybackMeterDbRange::toDouble(meterDbRange());
