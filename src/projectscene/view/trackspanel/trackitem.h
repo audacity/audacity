@@ -10,6 +10,7 @@
 #include "playback/itrackplaybackcontrol.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "playback/iplayback.h"
+#include "playback/iaudiodevicesprovider.h"
 #include "record/irecord.h"
 
 #include "async/asyncable.h"
@@ -45,6 +46,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<playback::IPlayback> playback;
     muse::Inject<record::IRecord> record;
+    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     explicit TrackItem(QObject* parent = nullptr);
@@ -145,6 +147,7 @@ protected:
 
     bool m_isSelected = false;
     bool m_isFocused = false;
+    int m_inputChannelsCount = 0;
 };
 }
 

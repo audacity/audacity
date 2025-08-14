@@ -9,6 +9,7 @@
 #include "modularity/ioc.h"
 #include "record/irecord.h"
 #include "playback/iplaybackconfiguration.h"
+#include "playback/iaudiodevicesprovider.h"
 
 #include "uicomponents/view/toolbaritem.h"
 
@@ -27,6 +28,8 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
     Q_PROPERTY(float rightRecentPeak READ rightRecentPeak NOTIFY rightRecentPeakChanged FINAL)
     Q_PROPERTY(float rightMaxPeak READ rightMaxPeak NOTIFY rightMaxPeakChanged FINAL)
 
+    Q_PROPERTY(int recordingChannelsCount READ recordingChannelsCount NOTIFY recordingChannelsCountChanged FINAL)
+
     Q_PROPERTY(
         bool audibleInputMonitoring READ audibleInputMonitoring WRITE setAudibleInputMonitoring NOTIFY audibleInputMonitoringChanged FINAL)
 
@@ -34,6 +37,7 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
 
     muse::Inject<record::IRecord> record;
     muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
+    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     explicit PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
@@ -49,6 +53,8 @@ public:
     float rightChannelPressure() const;
     float rightRecentPeak() const;
     float rightMaxPeak() const;
+
+    int recordingChannelsCount() const;
 
     bool audibleInputMonitoring() const;
 
@@ -75,6 +81,8 @@ signals:
     void rightChannelPressureChanged(float rightChannelPressure);
     void rightRecentPeakChanged();
     void rightMaxPeakChanged();
+
+    void recordingChannelsCountChanged();
 
     void audibleInputMonitoringChanged();
 

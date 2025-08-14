@@ -35,7 +35,12 @@ PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::U
         emit meterStyleChanged();
     });
 
+    audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
+        recordingChannelsCountChanged();
+    });
+
     resetAudioChannelsVolumePressure();
+    emit recordingChannelsCountChanged();
     emit audibleInputMonitoringChanged();
 }
 
@@ -156,6 +161,11 @@ void PlaybackToolBarRecordLevelItem::setRightMaxPeak(float newRightMaxPeak)
 
     m_rightMaxPeak = newRightMaxPeak;
     emit rightMaxPeakChanged();
+}
+
+int PlaybackToolBarRecordLevelItem::recordingChannelsCount() const
+{
+    return audioDevicesProvider()->currentInputChannelsCount();
 }
 
 bool PlaybackToolBarRecordLevelItem::audibleInputMonitoring() const

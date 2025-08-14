@@ -55,8 +55,21 @@ void TrackItem::init(const trackedit::Track& track)
         setAudioChannelRMS(channel, meterSignal.rms.pressure);
     });
 
+    audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
+        m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
+    });
+    m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
+
     record()->audioInput()->recordSignalChanges().onReceive(this, [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
         if (!m_isFocused) {
+            return;
+        }
+
+        if (m_trackType == trackedit::TrackType::Mono && m_inputChannelsCount != 1) {
+            return;
+        }
+
+        if (m_trackType == trackedit::TrackType::Stereo && m_inputChannelsCount != 2) {
             return;
         }
 

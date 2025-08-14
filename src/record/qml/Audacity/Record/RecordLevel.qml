@@ -25,6 +25,7 @@ FlatButton {
     property NavigationPanel navigationPanel: null
     property int navigationOrder: 0
 
+    property int recordingChannelsCount: 0
     property bool audibleInputMonitoring: false
 
     signal volumeLevelChangeRequested(var level)
@@ -138,6 +139,8 @@ FlatButton {
                         HorizontalVolumePressureMeter {
                             id: leftVolumePressure
 
+                            height: recordingChannelsCount > 1 ? 6 : 14
+
                             meterModel: meterModel
 
                             showOverload: false
@@ -149,6 +152,8 @@ FlatButton {
                             meterModel: meterModel
 
                             showOverload: false
+
+                            visible: recordingChannelsCount > 1
                         }
 
                         HorizontalVolumePressureRuler {

@@ -43,6 +43,7 @@ public:
 
     std::vector<std::string> inputChannelsList() const override;
     std::string currentInputChannels() const override;
+    int currentInputChannelsCount() const override;
     void setInputChannels(const std::string& channels) override;
     muse::async::Notification inputChannelsChanged() const override;
     muse::async::Notification inputChannelsListChanged() const override;

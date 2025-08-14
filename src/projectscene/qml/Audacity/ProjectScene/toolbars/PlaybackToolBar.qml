@@ -243,6 +243,8 @@ Item {
                 leftCurrentVolumePressure: Boolean(itemData) ? itemData.leftChannelPressure : 0
                 rightCurrentVolumePressure: Boolean(itemData) ? itemData.rightChannelPressure : 0
 
+                recordingChannelsCount: Boolean(itemData) ? itemData.recordingChannelsCount : 0
+
                 audibleInputMonitoring: Boolean(itemData) ? itemData.audibleInputMonitoring : false
 
                 enabled: Boolean(itemData) ? itemData.enabled : false
