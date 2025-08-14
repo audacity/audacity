@@ -173,6 +173,20 @@ static UiActionList STATIC_ACTIONS = {
              au::context::CTX_ANY,
              TranslatableString("action", "Pitch and speed"),
              TranslatableString("action", "Pitch and speed")
+             ),
+    UiAction("toggle-rms-in-waveform",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Show RMS in waveform"),
+             TranslatableString("action", "Show RMS in waveform"),
+             Checkable::Yes
+             ),
+    UiAction("toggle-clipping-in-waveform",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Show clipping in waveform"),
+             TranslatableString("action", "Show clipping in waveform"),
+             Checkable::Yes
              )
 };
 

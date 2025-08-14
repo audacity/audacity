@@ -19,15 +19,18 @@ static const QColor BACKGROUND_COLOR = QColor(255, 255, 255);
 static const QColor SAMPLES_BASE_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLES_HIGHLIGHT_COLOR = QColor(255, 255, 255);
 static const QColor RMS_BASE_COLOR = QColor(255, 255, 255);
+static const QColor CLIPPING_SOLID_COLOR = QColor(239, 71, 111);
 static const QColor CENTER_LINE_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_HEAD_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_STALK_COLOR = QColor(0, 0, 0);
 
-static const QColor CLASSIC_BACKGROUND_COLOR = QColor(241, 243, 254);
-static const QColor CLASSIC_SAMPLES_BASE_COLOR = QColor(100, 100, 204);
-
-static const QColor CLASSIC_BACKGROUND_SELECTED_COLOR = QColor(175, 194, 238);
-static const QColor CLASSIC_SAMPLES_BASE_SELECTED_COLOR = QColor(68, 71, 195);
+// AU3 colors from au3/libraries/lib-theme-resources/light/Components/Colors.txt
+static const QColor CLASSIC_BACKGROUND_COLOR = QColor(240, 243, 255);               // Unselected: #f0f3ff
+static const QColor CLASSIC_BACKGROUND_SELECTED_COLOR = QColor(170, 195, 242);      // Selected: #aac3f2
+static const QColor CLASSIC_SAMPLES_BASE_COLOR = QColor(100, 100, 211);             // Sample: #6464D3
+static const QColor CLASSIC_SAMPLES_BASE_SELECTED_COLOR = QColor(103, 124, 228);    // SelSample: #677ce4
+static const QColor CLASSIC_RMS_COLOR = QColor(151, 151, 253);                      // Rms: #9797FD
+static const QColor CLASSIC_CLIPPING_COLOR = QColor(239, 71, 111);                  // Clipped: #ef476f
 
 static const float SAMPLE_HEAD_DEFAULT_ALPHA= 0.6;
 static const float SAMPLE_HEAD_CLIP_SELECTED_ALPHA = 0.8;
@@ -50,6 +53,14 @@ WaveView::WaveView(QQuickItem* parent)
         if (!m_multiSampleEdit) {
             pushProjectHistorySampleEdit();
         }
+    });
+
+    configuration()->isRMSInWaveformVisibleChanged().onReceive(this, [this](bool) {
+        update();
+    });
+
+    configuration()->isClippingInWaveformVisibleChanged().onReceive(this, [this](bool) {
+        update();
     });
 }
 
@@ -78,6 +89,8 @@ IWavePainter::Params WaveView::getWavePainterParams() const
     params.selectionStartTime = m_clipTime.selectionStartTime;
     params.selectionEndTime = m_clipTime.selectionEndTime;
     params.channelHeightRatio = m_channelHeightRatio;
+    params.showRMS = configuration()->isRMSInWaveformVisible();
+    params.showClipping = configuration()->isClippingInWaveformVisible();
 
     projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
     if (clipStyle == projectscene::ClipStyles::Style::COLORFUL) {
@@ -103,7 +116,8 @@ void WaveView::applyColorfulStyle(IWavePainter::Params& params,
     params.style.selectedSamplePen = muse::blendQColors(params.style.blankBrush,
                                                         selected ? SAMPLES_HIGHLIGHT_COLOR : SAMPLES_BASE_COLOR,
                                                         0.75);
-    params.style.rmsPen = muse::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
+    params.style.rmsPen = muse::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.25);
+    params.style.clippedPen = CLIPPING_SOLID_COLOR;
     params.style.centerLine = muse::blendQColors(params.style.samplePen, CENTER_LINE_COLOR, 0.2);
 
     float headAlpha = selected ? SAMPLE_HEAD_CLIP_SELECTED_ALPHA : SAMPLE_HEAD_DEFAULT_ALPHA;
@@ -129,7 +143,8 @@ void WaveView::applyClassicStyle(IWavePainter::Params& params, bool selected) co
     QColor baseSampleColor = selected ? CLASSIC_SAMPLES_BASE_SELECTED_COLOR : CLASSIC_SAMPLES_BASE_COLOR;
     params.style.samplePen = baseSampleColor;
     params.style.selectedSamplePen = CLASSIC_SAMPLES_BASE_SELECTED_COLOR;
-    params.style.rmsPen = baseSampleColor;
+    params.style.rmsPen = CLASSIC_RMS_COLOR;
+    params.style.clippedPen = CLASSIC_CLIPPING_COLOR;
     params.style.centerLine = baseSampleColor;
     params.style.sampleHead = baseSampleColor;
     params.style.sampleStalk = baseSampleColor;

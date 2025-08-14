@@ -35,6 +35,8 @@ private:
     void toggleMinutesSecondsRuler();
     void toggleBeatsMeasuresRuler();
     void toggleVerticalRulers();
+    void toggleRMSInWaveform();
+    void toggleClippingInWaveform();
     void updateDisplayWhilePlaying();
     void pinnedPlayHead();
 

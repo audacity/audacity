@@ -16,6 +16,14 @@ public:
     MOCK_METHOD(void, setVerticalRulersVisible, (bool visible), (override));
     MOCK_METHOD(muse::async::Channel<bool>, isVerticalRulersVisibleChanged, (), (const, override));
 
+    MOCK_METHOD(bool, isRMSInWaveformVisible, (), (const, override));
+    MOCK_METHOD(void, setRMSInWaveformVisible, (bool visible), (override));
+    MOCK_METHOD(muse::async::Channel<bool>, isRMSInWaveformVisibleChanged, (), (const, override));
+
+    MOCK_METHOD(bool, isClippingInWaveformVisible, (), (const, override));
+    MOCK_METHOD(void, setClippingInWaveformVisible, (bool visible), (override));
+    MOCK_METHOD(muse::async::Channel<bool>, isClippingInWaveformVisibleChanged, (), (const, override));
+
     MOCK_METHOD(double, zoom, (), (const, override));
 
     MOCK_METHOD(int, mouseZoomPrecision, (), (const, override));

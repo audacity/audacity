@@ -8,6 +8,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/iprojecthistory.h"
+#include "global/async/asyncable.h"
 
 #include "iwavepainter.h"
 #include "../timeline/timelinecontext.h"
@@ -15,7 +16,7 @@
 
 class WaveClipItem;
 namespace au::projectscene {
-class WaveView : public QQuickPaintedItem
+class WaveView : public QQuickPaintedItem, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
