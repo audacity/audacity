@@ -39,7 +39,7 @@ PreferencesPage {
         DeleteBehaviorSection {
             id: deleteBehaviorSection
 
-            // editPreferencesModel: editPreferencesModel
+            editPreferencesModel: editPreferencesModel
 
             navigation.section: root.navigationSection
             navigation.order: effectBehaviorSection.navigationOrderEnd + 1

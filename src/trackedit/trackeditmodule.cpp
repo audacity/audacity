@@ -76,6 +76,12 @@ void TrackeditModule::registerExports()
     ioc()->registerExport<ITrackeditConfiguration>(moduleName(), m_configuration);
 }
 
+void TrackeditModule::registerUiTypes()
+{
+    qmlRegisterUncreatableType<DeleteBehaviors>("Audacity.TrackEdit", 1, 0, "DeleteBehavior", "Not creatable from QML");
+    qmlRegisterUncreatableType<CloseGapBehaviors>("Audacity.TrackEdit", 1, 0, "CloseGapBehavior", "Not creatable from QML");
+}
+
 void TrackeditModule::resolveImports()
 {
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());

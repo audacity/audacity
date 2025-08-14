@@ -6,6 +6,8 @@ import QtQuick 2.15
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 
+import Audacity.TrackEdit 1.0
+
 import "../../shared/internal"
 
 BaseSection {
@@ -14,6 +16,8 @@ BaseSection {
     title: qsTrc("appshell/preferences", "Choose behavior when deleting a portion of a clip")
 
     navigationOrderEnd: root.navigation.order
+
+    required property var editPreferencesModel
 
     Column {
         width: parent.width
@@ -34,14 +38,13 @@ BaseSection {
                     source: "qrc:/resources/Colorful.svg"
 
                     onClipStyleChangeRequested: {
-                        root.clipStyleChangeRequested(ClipStyle.COLORFUL)
                     }
                 }
 
                 RoundedRadioButton {
                     id: closeGapRadioBtn
 
-                    checked: true
+                    checked: editPreferencesModel.deleteBehavior === DeleteBehavior.CloseGap
                     text: qsTrc("appshell/preferences", "Close gap (ripple)")
 
                     navigation.name: "CloseGapRadioBtn"
@@ -49,7 +52,7 @@ BaseSection {
                     // navigation.row: 3 What's that?
 
                     onToggled: {
-                        //
+                        editPreferencesModel.setDeleteBehavior(DeleteBehavior.CloseGap)
                     }
                 }
             }
@@ -71,7 +74,7 @@ BaseSection {
                 }
 
                 RoundedRadioButton {
-                    checked: false
+                    checked: editPreferencesModel.deleteBehavior === DeleteBehavior.LeaveGap
                     text: qsTrc("appshell/preferences", "Leave gap")
 
                     navigation.name: "LeaveGapRadioBtn"
@@ -79,7 +82,7 @@ BaseSection {
                     // navigation.row: 3 What's that?
 
                     onToggled: {
-                        //
+                        editPreferencesModel.setDeleteBehavior(DeleteBehavior.LeaveGap)
                     }
                 }
             }
@@ -112,7 +115,7 @@ BaseSection {
                 }
 
                 RoundedRadioButton {
-                    checked: false
+                    checked: editPreferencesModel.closeGapBehavior === CloseGapBehavior.ClipRipple
                     text: qsTrc("appshell/preferences", "The selected clip moves back to fill the gap")
 
                     navigation.name: "ClipMovesBackRadioBtn"
@@ -120,12 +123,12 @@ BaseSection {
                     // navigation.row: 3 What's that?
 
                     onToggled: {
-                        //
+                        editPreferencesModel.setCloseGapBehavior(CloseGapBehavior.ClipRipple)
                     }
                 }
 
                 RoundedRadioButton {
-                    checked: true
+                    checked: editPreferencesModel.closeGapBehavior === CloseGapBehavior.TrackRipple
                     text: qsTrc("appshell/preferences", "All clips on the same track move back to fill the gap")
 
                     navigation.name: "TrackMovesBackRadioBtn"
@@ -133,12 +136,12 @@ BaseSection {
                     // navigation.row: 3 What's that?
 
                     onToggled: {
-                        //
+                        editPreferencesModel.setCloseGapBehavior(CloseGapBehavior.TrackRipple)
                     }
                 }
 
                 RoundedRadioButton {
-                    checked: false
+                    checked: editPreferencesModel.closeGapBehavior === CloseGapBehavior.AllTracksRipple
                     text: qsTrc("appshell/preferences", "All clips on all tracks move back to fill the gap")
 
                     navigation.name: "AllTracksMoveBackRadioBtn"
@@ -146,7 +149,7 @@ BaseSection {
                     // navigation.row: 3 What's that?
 
                     onToggled: {
-                        //
+                        editPreferencesModel.setCloseGapBehavior(CloseGapBehavior.AllTracksRipple)
                     }
                 }
             }

@@ -370,6 +370,34 @@ void TrackeditActionsController::doGlobalCutAllTracksRipple()
 
 void TrackeditActionsController::doGlobalDelete()
 {
+    if (configuration()->deleteBehavior() == DeleteBehavior::NotSet) {
+        // Here will come the dialog. For now simulate that the user chose the close-gap option.
+        configuration()->setDeleteBehavior(DeleteBehavior::CloseGap);
+    }
+
+    const DeleteBehavior deleteBehavior = configuration()->deleteBehavior();
+    IF_ASSERT_FAILED(deleteBehavior != DeleteBehavior::NotSet) {
+        return;
+    }
+
+    if (deleteBehavior != DeleteBehavior::LeaveGap) {
+        switch (configuration()->closeGapBehavior()) {
+        case CloseGapBehavior::ClipRipple:
+            doGlobalDeletePerClipRipple();
+            break;
+        case CloseGapBehavior::TrackRipple:
+            doGlobalDeletePerTrackRipple();
+            break;
+        case CloseGapBehavior::AllTracksRipple:
+            doGlobalDeleteAllTracksRipple();
+            break;
+        default:
+            LOGE() << "Unexpected close gap behavior: " << static_cast<int>(configuration()->closeGapBehavior());
+            assert(false);
+        }
+        return;
+    }
+
     if (selectionController()->timeSelectionIsNotEmpty()) {
         auto selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
