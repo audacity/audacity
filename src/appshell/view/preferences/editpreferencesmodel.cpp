@@ -21,6 +21,14 @@ void EditPreferencesModel::init()
         emit stereoHeightsPrefChanged();
     });
 
+    trackeditConfiguration()->deleteBehaviorChanged().onNotify(this, [this] {
+        emit deleteBehaviorPrefChanged();
+    });
+
+    trackeditConfiguration()->closeGapBehaviorChanged().onNotify(this, [this] {
+        emit closeGapBehaviorChanged();
+    });
+
     projectsceneConfiguration()->asymmetricStereoHeightsWorkspacesChanged().onNotify(this, [this] {
         emit asymmetricWorkspacesChanged();
     });
@@ -97,6 +105,32 @@ void EditPreferencesModel::setStereoHeightsPref(
         return;
     }
     projectsceneConfiguration()->setStereoHeightsPref(pref);
+}
+
+int EditPreferencesModel::deleteBehavior() const
+{
+    return static_cast<int>(trackeditConfiguration()->deleteBehavior());
+}
+
+void EditPreferencesModel::setDeleteBehavior(int pref)
+{
+    if (deleteBehavior() == pref) {
+        return;
+    }
+    trackeditConfiguration()->setDeleteBehavior(static_cast<au::trackedit::DeleteBehavior>(pref));
+}
+
+int EditPreferencesModel::closeGapBehavior() const
+{
+    return static_cast<int>(trackeditConfiguration()->closeGapBehavior());
+}
+
+void EditPreferencesModel::setCloseGapBehavior(int pref)
+{
+    if (closeGapBehavior() == pref) {
+        return;
+    }
+    trackeditConfiguration()->setCloseGapBehavior(static_cast<au::trackedit::CloseGapBehavior>(pref));
 }
 
 QVariantList EditPreferencesModel::asymmetricWorkspaces() const

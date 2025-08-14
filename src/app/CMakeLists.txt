@@ -260,6 +260,7 @@ if (OS_IS_WIN)
             DESTINATION bin/iconengines)
 
     install(FILES
+            ${QT_INSTALL_PLUGINS}/imageformats/qgif${DLL_SUFFIX}.dll
             ${QT_INSTALL_PLUGINS}/imageformats/qjpeg${DLL_SUFFIX}.dll
             ${QT_INSTALL_PLUGINS}/imageformats/qsvg${DLL_SUFFIX}.dll
             DESTINATION bin/imageformats)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "trackedittypes.h"
+
 #include "modularity/imoduleinterface.h"
 
 #include "async/channel.h"
@@ -21,5 +23,13 @@ public:
     virtual bool askBeforeConvertingToMonoOrStereo() const = 0;
     virtual void setAskBeforeConvertingToMonoOrStereo(bool value) = 0;
     virtual muse::async::Notification askBeforeConvertingToMonoOrStereoChanged() const = 0;
+
+    virtual DeleteBehavior deleteBehavior() const = 0;
+    virtual void setDeleteBehavior(DeleteBehavior value) = 0;
+    virtual muse::async::Notification deleteBehaviorChanged() const = 0;
+
+    virtual CloseGapBehavior closeGapBehavior() const = 0;
+    virtual void setCloseGapBehavior(CloseGapBehavior value) = 0;
+    virtual muse::async::Notification closeGapBehaviorChanged() const = 0;
 };
 }

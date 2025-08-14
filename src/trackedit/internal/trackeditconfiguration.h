@@ -21,8 +21,18 @@ public:
     void setAskBeforeConvertingToMonoOrStereo(bool value) override;
     muse::async::Notification askBeforeConvertingToMonoOrStereoChanged() const override;
 
+    DeleteBehavior deleteBehavior() const override;
+    void setDeleteBehavior(DeleteBehavior value) override;
+    muse::async::Notification deleteBehaviorChanged() const override;
+
+    CloseGapBehavior closeGapBehavior() const override;
+    void setCloseGapBehavior(CloseGapBehavior value) override;
+    muse::async::Notification closeGapBehaviorChanged() const override;
+
 private:
     muse::async::Notification m_pasteAsNewClipChanged;
     muse::async::Notification m_askBeforeConvertingToMonoOrStereoChanged;
+    muse::async::Notification m_deleteBehaviorChanged;
+    muse::async::Notification m_closeGapBehaviorChanged;
 };
 }

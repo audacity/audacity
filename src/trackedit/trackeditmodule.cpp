@@ -32,6 +32,8 @@
 #include "internal/trackeditoperationcontroller.h"
 #include "internal/undomanager.h"
 
+#include "view/deletebehaviorpanelmodel.h"
+
 #include "internal/au3/au3trackeditproject.h"
 #include "internal/au3/au3interaction.h"
 #include "internal/au3/au3selectioncontroller.h"
@@ -76,6 +78,11 @@ void TrackeditModule::registerExports()
     ioc()->registerExport<ITrackeditConfiguration>(moduleName(), m_configuration);
 }
 
+void TrackeditModule::registerUiTypes()
+{
+    qmlRegisterType<DeleteBehaviorPanelModel>("Audacity.TrackEdit", 1, 0, "DeleteBehaviorPanelModel");
+}
+
 void TrackeditModule::resolveImports()
 {
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
@@ -86,6 +93,10 @@ void TrackeditModule::resolveImports()
     auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://trackedit/custom_rate"), "Audacity/TrackEdit/CustomRateDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://trackedit/delete_behavior"), "Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml");
+        ir->registerQmlUri(muse::Uri(
+                               "audacity://trackedit/delete_behavior_followup"),
+                           "Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml");
     }
 }
 

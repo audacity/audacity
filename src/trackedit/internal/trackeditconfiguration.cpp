@@ -10,17 +10,29 @@ static const std::string moduleName("trackedit");
 
 static const muse::Settings::Key ASK_BEFORE_CONVERTING_TO_MONO_OR_STEREO(moduleName, "trackedit/askBeforeConvertingToMonoOrStereo");
 static const muse::Settings::Key PASTE_AS_NEW_CLIP(moduleName, "trackedit/pasteAsNewClip");
+static const muse::Settings::Key DELETE_BEHAVIOR(moduleName, "trackedit/deleteBehavior");
+static const muse::Settings::Key CLOSE_GAP_BEHAVIOR(moduleName, "trackedit/closeGapBehavior");
 
 void TrackeditConfiguration::init()
 {
     muse::settings()->setDefaultValue(PASTE_AS_NEW_CLIP, muse::Val(true));
-    muse::settings()->valueChanged(PASTE_AS_NEW_CLIP).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(PASTE_AS_NEW_CLIP).onReceive(nullptr, [this](const muse::Val&) {
         m_pasteAsNewClipChanged.notify();
     });
 
     muse::settings()->setDefaultValue(ASK_BEFORE_CONVERTING_TO_MONO_OR_STEREO, muse::Val(true));
-    muse::settings()->valueChanged(ASK_BEFORE_CONVERTING_TO_MONO_OR_STEREO).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(ASK_BEFORE_CONVERTING_TO_MONO_OR_STEREO).onReceive(nullptr, [this](const muse::Val&) {
         m_askBeforeConvertingToMonoOrStereoChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(DELETE_BEHAVIOR, muse::Val(DeleteBehavior::NotSet));
+    muse::settings()->valueChanged(DELETE_BEHAVIOR).onReceive(nullptr, [this](const muse::Val&) {
+        m_deleteBehaviorChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(CLOSE_GAP_BEHAVIOR, muse::Val(CloseGapBehavior::ClipRipple));
+    muse::settings()->valueChanged(CLOSE_GAP_BEHAVIOR).onReceive(nullptr, [this](const muse::Val&) {
+        m_closeGapBehaviorChanged.notify();
     });
 }
 
@@ -40,6 +52,44 @@ void TrackeditConfiguration::setAskBeforeConvertingToMonoOrStereo(bool ask)
 muse::async::Notification TrackeditConfiguration::askBeforeConvertingToMonoOrStereoChanged() const
 {
     return m_askBeforeConvertingToMonoOrStereoChanged;
+}
+
+DeleteBehavior TrackeditConfiguration::deleteBehavior() const
+{
+    return muse::settings()->value(muse::Settings::Key(moduleName, "trackedit/deleteBehavior")).toEnum<DeleteBehavior>();
+}
+
+void TrackeditConfiguration::setDeleteBehavior(DeleteBehavior value)
+{
+    if (deleteBehavior() == value) {
+        return;
+    }
+    muse::settings()->setSharedValue(muse::Settings::Key(moduleName, "trackedit/deleteBehavior"), muse::Val(value));
+    m_deleteBehaviorChanged.notify();
+}
+
+muse::async::Notification TrackeditConfiguration::deleteBehaviorChanged() const
+{
+    return m_deleteBehaviorChanged;
+}
+
+CloseGapBehavior TrackeditConfiguration::closeGapBehavior() const
+{
+    return muse::settings()->value(muse::Settings::Key(moduleName, "trackedit/closeGapBehavior")).toEnum<CloseGapBehavior>();
+}
+
+void TrackeditConfiguration::setCloseGapBehavior(CloseGapBehavior value)
+{
+    if (closeGapBehavior() == value) {
+        return;
+    }
+    muse::settings()->setSharedValue(muse::Settings::Key(moduleName, "trackedit/closeGapBehavior"), muse::Val(value));
+    m_closeGapBehaviorChanged.notify();
+}
+
+muse::async::Notification TrackeditConfiguration::closeGapBehaviorChanged() const
+{
+    return m_closeGapBehaviorChanged;
 }
 
 bool TrackeditConfiguration::pasteAsNewClip() const
