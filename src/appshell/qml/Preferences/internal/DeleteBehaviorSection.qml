@@ -29,7 +29,7 @@ BaseSection {
             Column {
                 spacing: 16
 
-                ClipStyleSample {
+                ClipImageButton {
                     width: 196
                     height: 88
 
@@ -37,7 +37,8 @@ BaseSection {
 
                     source: "qrc:/resources/Colorful.svg"
 
-                    onClipStyleChangeRequested: {
+                    onClicked: {
+                        editPreferencesModel.setDeleteBehavior(DeleteBehavior.CloseGap)
                     }
                 }
 
@@ -60,7 +61,7 @@ BaseSection {
             Column {
                 spacing: 16
 
-                ClipStyleSample {
+                ClipImageButton {
                     width: 196
                     height: 88
 
@@ -68,8 +69,8 @@ BaseSection {
 
                     source: "qrc:/resources/Colorful.svg"
 
-                    onClipStyleChangeRequested: {
-                        root.clipStyleChangeRequested(ClipStyle.COLORFUL)
+                    onClicked: {
+                        editPreferencesModel.setDeleteBehavior(DeleteBehavior.LeaveGap)
                     }
                 }
 

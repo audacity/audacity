@@ -31,7 +31,7 @@ Rectangle {
 
     property string source: ""
 
-    signal clipStyleChangeRequested()
+    signal clicked()
 
     layer.enabled: true
     layer.effect: EffectOpacityMask {
@@ -67,7 +67,7 @@ Rectangle {
         hoverEnabled: true
 
         onClicked: {
-            root.clipStyleChangeRequested()
+            root.clicked()
         }
     }
 }

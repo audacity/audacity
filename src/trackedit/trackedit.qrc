@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>qml/Audacity/TrackEdit/qmldir</file>
         <file>qml/Audacity/TrackEdit/CustomRateDialog.qml</file>
+        <file>qml/Audacity/TrackEdit/ClipImageButton.qml</file>
     </qresource>
 </RCC>

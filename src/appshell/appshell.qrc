@@ -16,7 +16,6 @@
         <file>qml/shared/AccentColorsList.qml</file>
         <file>qml/shared/ThemeSamplesList.qml</file>
         <file>qml/shared/internal/ThemeSample.qml</file>
-        <file>qml/shared/internal/ClipStyleSample.qml</file>
         <file>qml/FirstLaunchSetup/FirstLaunchSetupDialog.qml</file>
         <file>qml/FirstLaunchSetup/Page.qml</file>
         <file>qml/FirstLaunchSetup/ThemesPage.qml</file>
