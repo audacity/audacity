@@ -116,7 +116,7 @@ void WaveView::applyColorfulStyle(IWavePainter::Params& params,
     params.style.selectedSamplePen = muse::blendQColors(params.style.blankBrush,
                                                         selected ? SAMPLES_HIGHLIGHT_COLOR : SAMPLES_BASE_COLOR,
                                                         0.75);
-    params.style.rmsPen = muse::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
+    params.style.rmsPen = muse::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.25);
     params.style.clippedPen = CLIPPING_SOLID_COLOR;
     params.style.centerLine = muse::blendQColors(params.style.samplePen, CENTER_LINE_COLOR, 0.2);
 
