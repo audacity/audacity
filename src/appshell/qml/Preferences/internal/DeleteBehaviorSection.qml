@@ -22,5 +22,6 @@ BaseSection {
     DeleteBehaviorPanel {
         id: deleteBehaviorPanel
         width: parent.width
+        navigation: root.navigation
     }
 }

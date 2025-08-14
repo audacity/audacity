@@ -12,6 +12,7 @@ Column {
     id: root
 
     required property var editPreferencesModel
+    required property NavigationPanel navigation
 
     spacing: 16
 

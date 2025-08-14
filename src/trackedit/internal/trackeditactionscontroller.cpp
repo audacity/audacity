@@ -370,9 +370,15 @@ void TrackeditActionsController::doGlobalCutAllTracksRipple()
 
 void TrackeditActionsController::doGlobalDelete()
 {
+    // For now, to test.
+    configuration()->setDeleteBehavior(DeleteBehavior::NotSet);
+
     if (configuration()->deleteBehavior() == DeleteBehavior::NotSet) {
-        // Here will come the dialog. For now simulate that the user chose the close-gap option.
-        configuration()->setDeleteBehavior(DeleteBehavior::CloseGap);
+        const muse::UriQuery uri("audacity://trackedit/delete_behavior");
+        const RetVal<Val> rv = interactive()->openSync(uri);
+        if (rv.ret.code() != static_cast<int>(Ret::Code::Ok)) {
+            return;
+        }
     }
 
     const DeleteBehavior deleteBehavior = configuration()->deleteBehavior();
