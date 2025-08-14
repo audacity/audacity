@@ -24,12 +24,13 @@ static const QColor CENTER_LINE_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_HEAD_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_STALK_COLOR = QColor(0, 0, 0);
 
-static const QColor CLASSIC_BACKGROUND_COLOR = QColor(241, 243, 254);
-static const QColor CLASSIC_BACKGROUND_SELECTED_COLOR = QColor(175, 194, 238);
-static const QColor CLASSIC_SAMPLES_BASE_COLOR = QColor(100, 100, 204);
-static const QColor CLASSIC_SAMPLES_BASE_SELECTED_COLOR = QColor(68, 71, 195);
-static const QColor CLASSIC_RMS_COLOR = QColor(107, 154, 247);
-static const QColor CLASSIC_CLIPPING_COLOR = QColor(255, 0, 0);
+// AU3 colors from au3/libraries/lib-theme-resources/light/Components/Colors.txt
+static const QColor CLASSIC_BACKGROUND_COLOR = QColor(240, 243, 255);               // Unselected: #f0f3ff
+static const QColor CLASSIC_BACKGROUND_SELECTED_COLOR = QColor(170, 195, 242);      // Selected: #aac3f2
+static const QColor CLASSIC_SAMPLES_BASE_COLOR = QColor(100, 100, 211);             // Sample: #6464D3
+static const QColor CLASSIC_SAMPLES_BASE_SELECTED_COLOR = QColor(103, 124, 228);    // SelSample: #677ce4
+static const QColor CLASSIC_RMS_COLOR = QColor(151, 151, 253);                      // Rms: #9797FD
+static const QColor CLASSIC_CLIPPING_COLOR = QColor(239, 71, 111);                  // Clipped: #ef476f
 
 static const float SAMPLE_HEAD_DEFAULT_ALPHA= 0.6;
 static const float SAMPLE_HEAD_CLIP_SELECTED_ALPHA = 0.8;
