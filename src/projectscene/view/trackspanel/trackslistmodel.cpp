@@ -627,7 +627,10 @@ void TracksListModel::onTrackRemoved(const trackedit::Track& track)
     for (int i = 0; i < m_trackList.size(); ++i) {
         if (m_trackList.at(i)->trackId() == track.id) {
             beginRemoveRows(QModelIndex(), i, i);
-            m_trackList.erase(m_trackList.begin() + i);
+            const auto it = m_trackList.begin() + i;
+            const auto item = *it;
+            m_trackList.erase(it);
+            item->deleteLater();
             endRemoveRows();
             break;
         }
