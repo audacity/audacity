@@ -225,7 +225,7 @@ bool TrackeditOperationController::removeClip(const ClipKey& clipKey)
 bool TrackeditOperationController::removeClips(const ClipKeyList& clipKeyList, bool moveClips)
 {
     if (trackAndClipOperations()->removeClips(clipKeyList, moveClips)) {
-        projectHistory()->pushHistoryState("Delete", "Deleted multiple clips");
+        projectHistory()->pushHistoryState("Delete", "Delete multiple clips");
         return true;
     }
     return false;
@@ -233,7 +233,11 @@ bool TrackeditOperationController::removeClips(const ClipKeyList& clipKeyList, b
 
 bool TrackeditOperationController::removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
-    return trackAndClipOperations()->removeTracksData(tracksIds, begin, end, moveClips);
+    if (trackAndClipOperations()->removeTracksData(tracksIds, begin, end, moveClips)) {
+        projectHistory()->pushHistoryState("Delete", "Delete and close gap");
+        return true;
+    }
+    return false;
 }
 
 bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed,
