@@ -19,18 +19,17 @@ static const QColor BACKGROUND_COLOR = QColor(255, 255, 255);
 static const QColor SAMPLES_BASE_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLES_HIGHLIGHT_COLOR = QColor(255, 255, 255);
 static const QColor RMS_BASE_COLOR = QColor(255, 255, 255);
-static const QColor CLASSIC_RMS_COLOR = QColor(107, 154, 247);
 static const QColor CLIPPING_SOLID_COLOR = QColor(239, 71, 111);
-static const QColor CLASSIC_CLIPPING_COLOR = QColor(255, 0, 0);
 static const QColor CENTER_LINE_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_HEAD_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_STALK_COLOR = QColor(0, 0, 0);
 
 static const QColor CLASSIC_BACKGROUND_COLOR = QColor(241, 243, 254);
-static const QColor CLASSIC_SAMPLES_BASE_COLOR = QColor(100, 100, 204);
-
 static const QColor CLASSIC_BACKGROUND_SELECTED_COLOR = QColor(175, 194, 238);
+static const QColor CLASSIC_SAMPLES_BASE_COLOR = QColor(100, 100, 204);
 static const QColor CLASSIC_SAMPLES_BASE_SELECTED_COLOR = QColor(68, 71, 195);
+static const QColor CLASSIC_RMS_COLOR = QColor(107, 154, 247);
+static const QColor CLASSIC_CLIPPING_COLOR = QColor(255, 0, 0);
 
 static const float SAMPLE_HEAD_DEFAULT_ALPHA= 0.6;
 static const float SAMPLE_HEAD_CLIP_SELECTED_ALPHA = 0.8;
