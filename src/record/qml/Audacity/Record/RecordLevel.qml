@@ -127,7 +127,7 @@ FlatButton {
 
                 Item {
                     anchors.fill: parent
-                    anchors.margins: 8
+                    anchors.margins: 12
 
                     Column {
                         id: volumePressureContainer
