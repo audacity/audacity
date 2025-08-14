@@ -58,7 +58,7 @@ Item {
         color: ui.theme.backgroundPrimaryColor
     }
 
-    TreeView {
+    LegacyTreeView {
         id: treeView
 
         anchors.fill: parent
@@ -72,7 +72,7 @@ Item {
             role: "itemRole"
         }
 
-        style: TreeViewStyle {
+        style: LegacyTreeViewStyle {
             indentation: 0
 
             frame: Item {}
