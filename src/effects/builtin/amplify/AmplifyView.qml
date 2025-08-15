@@ -18,8 +18,6 @@ EffectBase {
     AmplifyViewModel {
         id: amplify
 
-        instanceId: root.instanceId
-
         onAmpValueChanged: ampSlider.value = ampValue
     }
 

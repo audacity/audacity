@@ -18,8 +18,6 @@ EffectBase {
 
     NormalizeViewModel {
         id: normalize
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

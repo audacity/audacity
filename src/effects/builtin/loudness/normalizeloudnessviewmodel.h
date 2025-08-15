@@ -5,15 +5,11 @@
 
 #include "../common/abstracteffectmodel.h"
 
-#include "effects/effects_base/ieffectsprovider.h"
-
 namespace au::effects {
 class NormalizeLoudnessEffect;
 class NormalizeLoudnessViewModel : public AbstractEffectModel
 {
     Q_OBJECT
-
-    muse::Inject<IEffectsProvider> effectsProvider;
 
     Q_PROPERTY(QString effectTitle READ effectTitle CONSTANT FINAL)
     Q_PROPERTY(QStringList algorithmOptions READ algorithmOptions CONSTANT FINAL)
@@ -75,7 +71,5 @@ signals:
 
 private:
     void doReload() override;
-
-    NormalizeLoudnessEffect* effect() const;
 };
 }

@@ -8,16 +8,6 @@
 #include "global/translation.h"
 
 namespace au::effects {
-NormalizeLoudnessEffect* NormalizeLoudnessViewModel::effect() const
-{
-    const EffectId effectId = this->effectId();
-    if (effectId.isEmpty()) {
-        return nullptr;
-    }
-    Effect* const e = effectsProvider()->effect(effectId);
-    return dynamic_cast<NormalizeLoudnessEffect*>(e);
-}
-
 void NormalizeLoudnessViewModel::doReload()
 {
     emit useRmsAlgorithmChanged();
@@ -42,21 +32,15 @@ QStringList NormalizeLoudnessViewModel::algorithmOptions() const
 
 bool NormalizeLoudnessViewModel::useRmsAlgorithm() const
 {
-    const NormalizeLoudnessEffect* e = effect();
-    if (!e) {
-        return false;
-    }
-    return e->mNormalizeTo == NormalizeLoudnessEffect::kRMS;
+    const auto& e = effect<NormalizeLoudnessEffect>();
+    return e.mNormalizeTo == NormalizeLoudnessEffect::kRMS;
 }
 
 void NormalizeLoudnessViewModel::setUseRmsAlgorithm(bool useRmsAlgorithm)
 {
-    NormalizeLoudnessEffect* const e = effect();
-    if (!e) {
-        return;
-    }
-    modifySettings([e, useRmsAlgorithm](EffectSettings&) {
-        e->mNormalizeTo = useRmsAlgorithm ? NormalizeLoudnessEffect::kRMS : NormalizeLoudnessEffect::kLoudness;
+    auto& e = effect<NormalizeLoudnessEffect>();
+    modifySettings([&e, useRmsAlgorithm](EffectSettings&) {
+        e.mNormalizeTo = useRmsAlgorithm ? NormalizeLoudnessEffect::kRMS : NormalizeLoudnessEffect::kLoudness;
     });
     emit useRmsAlgorithmChanged();
 }
@@ -73,42 +57,30 @@ QString NormalizeLoudnessViewModel::currentMeasureUnitsSymbol() const
 
 double NormalizeLoudnessViewModel::perceivedLoudnessTarget() const
 {
-    const NormalizeLoudnessEffect* e = effect();
-    if (!e) {
-        return 0.0;
-    }
-    return e->mLUFSLevel;
+    const auto& e = effect<NormalizeLoudnessEffect>();
+    return e.mLUFSLevel;
 }
 
 void NormalizeLoudnessViewModel::setPerceivedLoudnessTarget(double perceivedLoudnessTarget)
 {
-    NormalizeLoudnessEffect* const e = effect();
-    if (!e) {
-        return;
-    }
-    modifySettings([e, perceivedLoudnessTarget](EffectSettings&) {
-        e->mLUFSLevel = perceivedLoudnessTarget;
+    auto& e = effect<NormalizeLoudnessEffect>();
+    modifySettings([&e, perceivedLoudnessTarget](EffectSettings&) {
+        e.mLUFSLevel = perceivedLoudnessTarget;
     });
     emit perceivedLoudnessTargetChanged();
 }
 
 double NormalizeLoudnessViewModel::rmsTarget() const
 {
-    const NormalizeLoudnessEffect* e = effect();
-    if (!e) {
-        return 0.0;
-    }
-    return e->mRMSLevel;
+    const auto& e = effect<NormalizeLoudnessEffect>();
+    return e.mRMSLevel;
 }
 
 void NormalizeLoudnessViewModel::setRmsTarget(double rmsTarget)
 {
-    NormalizeLoudnessEffect* const e = effect();
-    if (!e) {
-        return;
-    }
-    modifySettings([e, rmsTarget](EffectSettings&) {
-        e->mRMSLevel = rmsTarget;
+    auto& e = effect<NormalizeLoudnessEffect>();
+    modifySettings([&e, rmsTarget](EffectSettings&) {
+        e.mRMSLevel = rmsTarget;
     });
     emit rmsTargetChanged();
 }
@@ -144,21 +116,15 @@ QString NormalizeLoudnessViewModel::normalizeLabel() const
 
 bool NormalizeLoudnessViewModel::normalizeStereoChannelsIndependently() const
 {
-    const NormalizeLoudnessEffect* e = effect();
-    if (!e) {
-        return false;
-    }
-    return e->mStereoInd;
+    const auto& e = effect<NormalizeLoudnessEffect>();
+    return e.mStereoInd;
 }
 
 void NormalizeLoudnessViewModel::setNormalizeStereoChannelsIndependently(bool normalizeStereoChannelsIndependently)
 {
-    NormalizeLoudnessEffect* const e = effect();
-    if (!e) {
-        return;
-    }
-    modifySettings([e, normalizeStereoChannelsIndependently](EffectSettings&) {
-        e->mStereoInd = normalizeStereoChannelsIndependently;
+    auto& e = effect<NormalizeLoudnessEffect>();
+    modifySettings([&e, normalizeStereoChannelsIndependently](EffectSettings&) {
+        e.mStereoInd = normalizeStereoChannelsIndependently;
     });
     emit normalizeStereoChannelsIndependentlyChanged();
 }
@@ -175,21 +141,15 @@ QString NormalizeLoudnessViewModel::useDualMonoLabel() const
 
 bool NormalizeLoudnessViewModel::useDualMono() const
 {
-    const NormalizeLoudnessEffect* e = effect();
-    if (!e) {
-        return false;
-    }
-    return e->mDualMono;
+    const auto& e = effect<NormalizeLoudnessEffect>();
+    return e.mDualMono;
 }
 
 void NormalizeLoudnessViewModel::setUseDualMono(bool newUseDualMono)
 {
-    NormalizeLoudnessEffect* const e = effect();
-    if (!e) {
-        return;
-    }
-    modifySettings([e, newUseDualMono](EffectSettings&) {
-        e->mDualMono = newUseDualMono;
+    auto& e = effect<NormalizeLoudnessEffect>();
+    modifySettings([&e, newUseDualMono](EffectSettings&) {
+        e.mDualMono = newUseDualMono;
     });
     emit useDualMonoChanged();
 }

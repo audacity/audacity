@@ -28,8 +28,6 @@ EffectBase {
 
     ReverbViewModel {
         id: reverb
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

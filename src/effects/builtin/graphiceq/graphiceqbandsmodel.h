@@ -7,8 +7,6 @@
 
 #include <QAbstractListModel>
 
-#include <functional>
-
 namespace au::effects {
 class GraphicEq;
 
@@ -17,7 +15,7 @@ class GraphicEqBandsModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    GraphicEqBandsModel(QObject* parent, std::function<GraphicEq* ()> eqGetter);
+    GraphicEqBandsModel(QObject* parent, GraphicEq& eq);
 
     static constexpr auto NUM_BANDS = 31;
     void reload();
@@ -40,7 +38,7 @@ private:
     void doReload();
     void updateGraphic();
 
-    const std::function<GraphicEq* ()> m_getEq;
+    GraphicEq& m_eq;
     EqualizationBandSliders mSliders;
     bool m_inited = false;
 };

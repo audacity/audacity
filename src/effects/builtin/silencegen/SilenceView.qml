@@ -17,8 +17,6 @@ EffectBase {
 
     SilenceViewModel {
         id: silence
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

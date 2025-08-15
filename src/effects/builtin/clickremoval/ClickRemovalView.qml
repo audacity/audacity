@@ -17,8 +17,6 @@ EffectBase {
 
     ClickRemovalViewModel {
         id: clickRemoval
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

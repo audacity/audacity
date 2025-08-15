@@ -10,18 +10,8 @@
 
 namespace au::effects {
 GraphicEqViewModel::GraphicEqViewModel()
-    : mBandsModel(new GraphicEqBandsModel(this, [this] { return effect(); }))
+    : mBandsModel(new GraphicEqBandsModel(this, effect<GraphicEq>()))
 {
-}
-
-GraphicEq* GraphicEqViewModel::effect() const
-{
-    const EffectId effectId = this->effectId();
-    if (effectId.isEmpty()) {
-        return nullptr;
-    }
-    Effect* const e = effectsProvider()->effect(effectId);
-    return dynamic_cast<GraphicEq*>(e);
 }
 
 void GraphicEqViewModel::doReload()

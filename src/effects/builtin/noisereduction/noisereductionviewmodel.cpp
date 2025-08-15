@@ -8,16 +8,6 @@
 
 using namespace au::effects;
 
-NoiseReductionEffect* NoiseReductionViewModel::effect() const
-{
-    EffectId effectId = this->effectId();
-    if (effectId.isEmpty()) {
-        return nullptr;
-    }
-    Effect* e = effectsProvider()->effect(effectId);
-    return dynamic_cast<NoiseReductionEffect*>(e);
-}
-
 void NoiseReductionViewModel::doReload()
 {
     emit isApplyAllowedChanged();
@@ -29,20 +19,12 @@ void NoiseReductionViewModel::doReload()
 
 int NoiseReductionViewModel::reduction() const
 {
-    const NoiseReductionEffect* const fx = effect();
-    if (!fx) {
-        return 0;
-    }
     return settings<NoiseReductionSettings>().mNoiseGain;
 }
 
 void NoiseReductionViewModel::setReduction(int newReduction)
 {
     if (reduction() == newReduction) {
-        return;
-    }
-    NoiseReductionEffect* const fx = effect();
-    IF_ASSERT_FAILED(fx) {
         return;
     }
     modifySettings([&](EffectSettings& settings) {
@@ -63,23 +45,12 @@ int NoiseReductionViewModel::reductionMax() const
 
 double NoiseReductionViewModel::sensitivity() const
 {
-    const NoiseReductionEffect* const fx = effect();
-    if (!fx) {
-        return 0.0f;
-    }
     return settings<NoiseReductionSettings>().mNewSensitivity;
 }
 
 void NoiseReductionViewModel::setSensitivity(double newSensitivity)
 {
-    if (!m_inited) {
-        return;
-    }
     if (muse::is_equal(sensitivity(), newSensitivity)) {
-        return;
-    }
-    NoiseReductionEffect* const fx = effect();
-    IF_ASSERT_FAILED(fx) {
         return;
     }
     modifySettings([&](EffectSettings& settings) {
@@ -100,23 +71,12 @@ double NoiseReductionViewModel::sensitivityMax() const
 
 int NoiseReductionViewModel::frequencySmoothingBands() const
 {
-    const NoiseReductionEffect* const fx = effect();
-    if (!fx) {
-        return 0;
-    }
     return static_cast<int>(settings<NoiseReductionSettings>().mFreqSmoothingBands);
 }
 
 void NoiseReductionViewModel::setFrequencySmoothingBands(int newFrequencySmoothingBands)
 {
-    if (!m_inited) {
-        return;
-    }
     if (frequencySmoothingBands() == newFrequencySmoothingBands) {
-        return;
-    }
-    NoiseReductionEffect* const fx = effect();
-    IF_ASSERT_FAILED(fx) {
         return;
     }
     modifySettings([&](EffectSettings& settings) {
@@ -137,25 +97,12 @@ int NoiseReductionViewModel::frequencySmoothingBandsMax() const
 
 int NoiseReductionViewModel::reductionMode() const
 {
-    const NoiseReductionEffect* const fx = effect();
-    if (!fx) {
-        return 0;
-    }
     return settings<NoiseReductionSettings>().mNoiseReductionChoice;
 }
 
 void NoiseReductionViewModel::setReductionMode(int mode)
 {
-    if (!m_inited) {
-        return;
-    }
-
     if (reductionMode() == mode) {
-        return;
-    }
-
-    const NoiseReductionEffect* const fx = effect();
-    IF_ASSERT_FAILED(fx) {
         return;
     }
     modifySettings([&](EffectSettings& settings) {
@@ -166,20 +113,12 @@ void NoiseReductionViewModel::setReductionMode(int mode)
 
 bool NoiseReductionViewModel::isApplyAllowed() const
 {
-    const NoiseReductionEffect* const fx = effect();
-    if (!fx) {
-        return false;
-    }
-    return fx->mStatistics != nullptr;
+    const auto& fx = effect<NoiseReductionEffect>();
+    return fx.mStatistics != nullptr;
 }
 
 void NoiseReductionViewModel::getNoiseProfile()
 {
-    NoiseReductionEffect* const fx = effect();
-    IF_ASSERT_FAILED(fx) {
-        return;
-    }
-
     const std::shared_ptr<EffectInstance> instance = instancesRegister()->instanceById(instanceId());
     IF_ASSERT_FAILED(instance) {
         return;
@@ -189,18 +128,21 @@ void NoiseReductionViewModel::getNoiseProfile()
     modifySettings([&](EffectSettings& settings) {
         settings.cast<NoiseReductionSettings>()->mDoProfile = true;
     });
+
+    auto& fx = effect<NoiseReductionEffect>();
     auto success = false;
+
     modifySettings([&](EffectSettings& settings) {
-        fx->ResetLastError();
-        success = fx->Process(*instance, settings);
+        fx.ResetLastError();
+        success = fx.Process(*instance, settings);
     });
 
     if (isApplyAllowed() && !wasAllowed) {
         emit isApplyAllowedChanged();
     }
 
-    if (!fx->GetLastError().empty()) {
-        success ? interactive()->warningSync(muse::trc("effects/noisereduction", "Warning"), fx->GetLastError())
-        : interactive()->errorSync(muse::trc("effects/noisereduction", "Error"), fx->GetLastError());
+    if (!fx.GetLastError().empty()) {
+        success ? interactive()->warningSync(muse::trc("effects/noisereduction", "Warning"), fx.GetLastError())
+        : interactive()->errorSync(muse::trc("effects/noisereduction", "Error"), fx.GetLastError());
     }
 }

@@ -3,27 +3,21 @@
 */
 #include "abstracteffectmodel.h"
 
+#include "../view/builtineffectviewloader.h"
+
 #include "log.h"
 
 using namespace au::effects;
 
 AbstractEffectModel::AbstractEffectModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), m_instanceId(BuiltinEffectViewLoader::initializationInstanceId())
 {
+    assert(m_instanceId != -1);
 }
 
 void AbstractEffectModel::init()
 {
-    if (m_inited) {
-        return;
-    }
-
-    EffectInstanceId id = this->instanceId();
-    IF_ASSERT_FAILED(id != 0) {
-        return;
-    }
-
-    instancesRegister()->settingsChanged(id).onNotify(this, [this]() {
+    instancesRegister()->settingsChanged(m_instanceId).onNotify(this, [this]() {
         doReload();
     });
 
@@ -32,59 +26,39 @@ void AbstractEffectModel::init()
     });
 
     doReload();
-    m_inited = true;
-}
-
-bool AbstractEffectModel::inited() const
-{
-    return m_inited;
 }
 
 std::shared_ptr<au::effects::EffectInstance> AbstractEffectModel::instance() const
 {
-    EffectInstanceId id = this->instanceId();
-    if (id == 0) {
-        return nullptr;
-    }
-
-    return instancesRegister()->instanceById(id);
+    return instancesRegister()->instanceById(m_instanceId);
 }
 
-const EffectSettings* AbstractEffectModel::settings() const
+const EffectSettings& AbstractEffectModel::settings() const
 {
-    EffectInstanceId id = this->instanceId();
-    if (id == 0) {
-        return nullptr;
+    const EffectSettings* s = instancesRegister()->settingsById(m_instanceId);
+    IF_ASSERT_FAILED(s) {
+        static EffectSettings null;
+        return null;
     }
 
-    return instancesRegister()->settingsById(id);
+    return *s;
 }
 
 EffectSettingsAccessPtr AbstractEffectModel::settingsAccess() const
 {
-    EffectInstanceId id = this->instanceId();
-    if (id == 0) {
-        return nullptr;
-    }
-
-    return instancesRegister()->settingsAccessById(id);
+    return instancesRegister()->settingsAccessById(m_instanceId);
 }
 
 EffectInstanceId AbstractEffectModel::instanceId() const
 {
-    return m_instanceId.toULongLong();
-}
-
-EffectId AbstractEffectModel::effectId() const
-{
-    return instancesRegister()->effectIdByInstanceId(this->instanceId());
+    return m_instanceId;
 }
 
 void AbstractEffectModel::preview()
 {
     if (const EffectSettingsAccessPtr access = this->settingsAccess()) {
         access->ModifySettings([this](EffectSettings& settings) {
-            executionScenario()->previewEffect(instanceId(), settings);
+            executionScenario()->previewEffect(m_instanceId, settings);
             return nullptr;
         });
     }
@@ -113,27 +87,7 @@ void AbstractEffectModel::commitSettings()
     projectHistory()->markUnsaved();
 }
 
-QString AbstractEffectModel::instanceId_prop() const
+QString AbstractEffectModel::effectId() const
 {
-    return m_instanceId;
-}
-
-void AbstractEffectModel::setInstanceId_prop(const QString& newInstanceId)
-{
-    if (m_instanceId == newInstanceId) {
-        return;
-    }
-    m_instanceId = newInstanceId;
-    emit instanceIdChanged();
-    emit effectIdChanged();
-}
-
-QString AbstractEffectModel::effectId_prop() const
-{
-    EffectInstanceId id = this->instanceId();
-    if (id == 0) {
-        return QString();
-    }
-
-    return instancesRegister()->effectIdByInstanceId(id);
+    return instancesRegister()->effectIdByInstanceId(m_instanceId);
 }

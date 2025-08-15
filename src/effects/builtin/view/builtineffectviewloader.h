@@ -35,6 +35,8 @@ public:
 
     Q_INVOKABLE void load(const QString& instanceId, QObject* itemParent, QObject* dialogView);
 
+    static int initializationInstanceId();
+
 signals:
     void titleChanged();
     void contentItemChanged();

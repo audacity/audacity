@@ -32,8 +32,6 @@ EffectBase {
 
     ToneViewModel {
         id: chirp
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

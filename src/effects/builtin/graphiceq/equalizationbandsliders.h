@@ -22,8 +22,6 @@
 #include "libraries/lib-builtin-effects/EqualizationCurvesList.h"
 #include "libraries/lib-builtin-effects/EqualizationFilter.h"
 
-#include <functional>
-
 struct EqualizationBandSliders
 {
 public:
@@ -36,7 +34,7 @@ public:
         2500., 3150., 4000., 5000., 6300., 8000., 10000., 12500., 16000., 20000.,
     };
 
-    EqualizationBandSliders(std::function<EqualizationCurvesList* ()> getCurvesList);
+    EqualizationBandSliders(EqualizationCurvesList&);
     void Init();
     void Flatten();
     void GraphicEQ(Envelope& env);
@@ -49,7 +47,7 @@ public:
     void SetSliderValue(int index, double db);
 
 private:
-    const std::function<EqualizationCurvesList* ()> m_getCurvesList;
+    EqualizationCurvesList& m_curvesList;
 
     double mWhens[NUM_PTS]{};
     double mWhenSliders[NUMBER_OF_BANDS + 1]{};
