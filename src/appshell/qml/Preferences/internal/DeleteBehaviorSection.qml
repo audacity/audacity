@@ -13,15 +13,29 @@ import "../../shared/internal"
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Choose behavior when deleting a portion of a clip")
+    title: deleteBehaviorPanel.title
 
     navigationOrderEnd: root.navigation.order
 
-    property alias editPreferencesModel: deleteBehaviorPanel.editPreferencesModel
+    required property var editPreferencesModel
+    property alias parentBackgroundColor: deleteBehaviorPanel.parentBackgroundColor
 
     DeleteBehaviorPanel {
         id: deleteBehaviorPanel
+
         width: parent.width
+
         navigation: root.navigation
+
+        deleteBehavior: editPreferencesModel.deleteBehavior
+        closeGapBehavior: editPreferencesModel.closeGapBehavior
+
+        onNewDeleteBehaviorRequested: function(deleteBehavior) {
+            editPreferencesModel.setDeleteBehavior(deleteBehavior)
+        }
+
+        onNewCloseGapBehaviorRequested: function(closeGapBehavior) {
+            editPreferencesModel.setCloseGapBehavior(closeGapBehavior)
+        }
     }
 }

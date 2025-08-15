@@ -7,7 +7,6 @@ import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import Preferences
 
 import Audacity.TrackEdit 1.0
 import Audacity.Preferences 1.0
@@ -15,22 +14,78 @@ import Audacity.Preferences 1.0
 StyledDialogView {
     id: root
 
-    contentWidth: 880
-    contentHeight: 880
+    contentWidth: column.implicitWidth
+    contentHeight: applyButtonRow.y + applyButtonRow.height
+    frameless: true
 
     NavigationPanel {
         id: navigationPanel
         section: root.navigationSection
     }
 
-    EditPreferencesModel {
-        id: editPreferencesModel
+    required property int deleteBehavior
+    required property int closeGapBehavior
+
+    Column {
+        id: column
+
+        width: deleteBehaviorPanel.width
+
+        padding: 24
+        spacing: 16
+
+        StyledTextLabel {
+            text: deleteBehaviorPanel.title
+            font.bold: true
+        }
+
+        DeleteBehaviorPanel {
+            id: deleteBehaviorPanel
+
+            navigation: navigationPanel
+
+            parentBackgroundColor: ui.theme.backgroundPrimaryColor
+            deleteBehavior: root.deleteBehavior
+            closeGapBehavior: root.closeGapBehavior
+
+            onNewDeleteBehaviorRequested: function(newDeleteBehavior) {
+                root.deleteBehavior = newDeleteBehavior;
+            }
+
+            onNewCloseGapBehaviorRequested: function(newCloseGapBehavior) {
+                root.closeGapBehavior = newCloseGapBehavior;
+            }
+        }
     }
 
-    DeleteBehaviorPanel {
-        id: deleteBehaviorPanel
+    SeparatorLine {
+        id: separatorLine
+        anchors.top: column.bottom
         width: parent.width
-        navigation: navigationPanel
-        editPreferencesModel: editPreferencesModel
+    }
+
+    Row {
+        id: applyButtonRow
+
+        padding: 12
+        anchors.top: separatorLine.bottom
+        anchors.right: parent.right
+
+        FlatButton {
+            text: qsTrc("global", "Apply")
+            height: 28
+            minWidth: 80
+            accentButton: true
+            onClicked: function() {
+                root.ret = {
+                    errcode: 0,
+                    value: {
+                        deleteBehavior: root.deleteBehavior,
+                        closeGapBehavior: root.closeGapBehavior
+                    }
+                }
+                root.hide()
+            }
+        }
     }
 }
