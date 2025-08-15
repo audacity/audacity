@@ -5,6 +5,7 @@
         <file>qml/Audacity/TrackEdit/ClipImageButton.qml</file>
         <file>qml/Audacity/TrackEdit/DeleteBehaviorChoice.qml</file>
         <file>qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml</file>
+        <file>qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml</file>
         <file>qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml</file>
     </qresource>
 </RCC>

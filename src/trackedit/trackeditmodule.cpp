@@ -93,6 +93,7 @@ void TrackeditModule::resolveImports()
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://trackedit/custom_rate"), "Audacity/TrackEdit/CustomRateDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://trackedit/delete_behavior"), "Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://trackedit/delete_behavior_followup"), "Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml");
     }
 }
 

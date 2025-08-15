@@ -392,6 +392,9 @@ void TrackeditActionsController::doGlobalDelete()
         const auto closeGapBehavior = static_cast<CloseGapBehavior>(map.at("closeGapBehavior").toInt());
         configuration()->setDeleteBehavior(deleteBehavior);
         configuration()->setCloseGapBehavior(closeGapBehavior);
+
+        const muse::UriQuery followupUri("audacity://trackedit/delete_behavior_followup");
+        interactive()->openSync(followupUri);
     }
 
     const DeleteBehavior deleteBehavior = configuration()->deleteBehavior();
