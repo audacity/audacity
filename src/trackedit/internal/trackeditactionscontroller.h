@@ -15,6 +15,7 @@
 #include "playback/iaudiodevicesprovider.h"
 #include "iprojecthistory.h"
 #include "itrackeditinteraction.h"
+#include "itrackeditconfiguration.h"
 #include "iselectioncontroller.h"
 
 #include "../itrackeditactionscontroller.h"
@@ -27,6 +28,7 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
+    muse::Inject<trackedit::ITrackeditConfiguration> configuration;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;

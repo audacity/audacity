@@ -38,6 +38,8 @@
 #include "internal/au3/au3projecthistory.h"
 #include "internal/au3/au3trackeditclipboard.h"
 
+#include "view/deletebehavioronboardingfollowupdialogmodel.h"
+
 #include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
 
@@ -76,6 +78,13 @@ void TrackeditModule::registerExports()
     ioc()->registerExport<ITrackeditConfiguration>(moduleName(), m_configuration);
 }
 
+void TrackeditModule::registerUiTypes()
+{
+    qmlRegisterUncreatableType<DeleteBehaviors>("Audacity.TrackEdit", 1, 0, "DeleteBehavior", "Not creatable from QML");
+    qmlRegisterUncreatableType<CloseGapBehaviors>("Audacity.TrackEdit", 1, 0, "CloseGapBehavior", "Not creatable from QML");
+    qmlRegisterType<DeleteBehaviorOnboardingFollowupDialogModel>("Audacity.TrackEdit", 1, 0, "DeleteBehaviorOnboardingFollowupDialogModel");
+}
+
 void TrackeditModule::resolveImports()
 {
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
@@ -86,6 +95,8 @@ void TrackeditModule::resolveImports()
     auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://trackedit/custom_rate"), "Audacity/TrackEdit/CustomRateDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://trackedit/delete_behavior"), "Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://trackedit/delete_behavior_followup"), "Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml");
     }
 }
 

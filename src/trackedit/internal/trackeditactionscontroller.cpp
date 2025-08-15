@@ -370,6 +370,56 @@ void TrackeditActionsController::doGlobalCutAllTracksRipple()
 
 void TrackeditActionsController::doGlobalDelete()
 {
+    // For now, to test.
+    configuration()->setDeleteBehavior(DeleteBehavior::NotSet);
+
+    if (configuration()->deleteBehavior() == DeleteBehavior::NotSet) {
+        muse::UriQuery uri("audacity://trackedit/delete_behavior");
+        uri.addParam("deleteBehavior", muse::Val(static_cast<int>(DeleteBehavior::LeaveGap)));
+        uri.addParam("closeGapBehavior", muse::Val(static_cast<int>(configuration()->closeGapBehavior())));
+        const RetVal<Val> rv = interactive()->openSync(uri);
+        if (rv.ret.code() != static_cast<int>(Ret::Code::Ok)) {
+            return;
+        }
+        const ValMap map = rv.val.toMap();
+        IF_ASSERT_FAILED(map.count("deleteBehavior") && map.count("closeGapBehavior")) {
+            return;
+        }
+        const auto deleteBehavior = static_cast<DeleteBehavior>(map.at("deleteBehavior").toInt());
+        IF_ASSERT_FAILED(deleteBehavior != DeleteBehavior::NotSet) {
+            return;
+        }
+        const auto closeGapBehavior = static_cast<CloseGapBehavior>(map.at("closeGapBehavior").toInt());
+        configuration()->setDeleteBehavior(deleteBehavior);
+        configuration()->setCloseGapBehavior(closeGapBehavior);
+
+        const muse::UriQuery followupUri("audacity://trackedit/delete_behavior_followup");
+        interactive()->openSync(followupUri);
+    }
+
+    const DeleteBehavior deleteBehavior = configuration()->deleteBehavior();
+    IF_ASSERT_FAILED(deleteBehavior != DeleteBehavior::NotSet) {
+        return;
+    }
+
+    if (deleteBehavior != DeleteBehavior::LeaveGap) {
+        switch (configuration()->closeGapBehavior()) {
+        case CloseGapBehavior::ClipRipple:
+            doGlobalDeletePerClipRipple();
+            break;
+        case CloseGapBehavior::TrackRipple:
+            doGlobalDeletePerTrackRipple();
+            break;
+        case CloseGapBehavior::AllTracksRipple:
+            doGlobalDeleteAllTracksRipple();
+            break;
+        default:
+            LOGE() << "Unexpected close gap behavior: " << static_cast<int>(configuration()->closeGapBehavior());
+            assert(false);
+        }
+        return;
+    }
+
     if (selectionController()->timeSelectionIsNotEmpty()) {
         auto selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();

@@ -36,6 +36,18 @@ PreferencesPage {
 
         SeparatorLine { }
 
+        DeleteBehaviorSection {
+            id: deleteBehaviorSection
+
+            editPreferencesModel: editPreferencesModel
+            parentBackgroundColor: root.color
+
+            navigation.section: root.navigationSection
+            navigation.order: effectBehaviorSection.navigationOrderEnd + 1
+        }
+
+        SeparatorLine { }
+
         AsymmetricStereoHeightsSection {
             id: asymmetricStereoHeightsSection
 

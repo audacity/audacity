@@ -1,0 +1,4 @@
+module Audacity.TrackEdit
+ClipImageButton 1.0 ClipImageButton.qml
+DeleteBehaviorChoice 1.0 DeleteBehaviorChoice.qml
+DeleteBehaviorPanel 1.0 DeleteBehaviorPanel.qml

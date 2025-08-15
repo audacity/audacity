@@ -61,6 +61,33 @@ enum class TrackMoveDirection {
     Top,
     Bottom
 };
+
+class DeleteBehaviors
+{
+    Q_GADGET
+public:
+    enum class DeleteBehavior {
+        NotSet = -1,
+        CloseGap,
+        LeaveGap,
+    };
+    Q_ENUM(DeleteBehavior)
+};
+
+class CloseGapBehaviors
+{
+    Q_GADGET
+public:
+    enum class CloseGapBehavior {
+        ClipRipple,
+        TrackRipple,
+        AllTracksRipple,
+    };
+    Q_ENUM(CloseGapBehavior)
+};
+
+using DeleteBehavior = DeleteBehaviors::DeleteBehavior;
+using CloseGapBehavior = CloseGapBehaviors::CloseGapBehavior;
 }
 
 inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::trackedit::ClipKey& k)
