@@ -38,6 +38,8 @@
 #include "internal/au3/au3projecthistory.h"
 #include "internal/au3/au3trackeditclipboard.h"
 
+#include "view/deletebehavioronboardingfollowupdialogmodel.h"
+
 #include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
 
@@ -80,6 +82,7 @@ void TrackeditModule::registerUiTypes()
 {
     qmlRegisterUncreatableType<DeleteBehaviors>("Audacity.TrackEdit", 1, 0, "DeleteBehavior", "Not creatable from QML");
     qmlRegisterUncreatableType<CloseGapBehaviors>("Audacity.TrackEdit", 1, 0, "CloseGapBehavior", "Not creatable from QML");
+    qmlRegisterType<DeleteBehaviorOnboardingFollowupDialogModel>("Audacity.TrackEdit", 1, 0, "DeleteBehaviorOnboardingFollowupDialogModel");
 }
 
 void TrackeditModule::resolveImports()

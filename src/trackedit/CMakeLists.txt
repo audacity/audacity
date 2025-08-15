@@ -65,6 +65,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/iundomanager.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/undomanager.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/undomanager.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/deletebehavioronboardingfollowupdialogmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/deletebehavioronboardingfollowupdialogmodel.h
     )
 
 # AU3

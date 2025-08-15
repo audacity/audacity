@@ -11,6 +11,8 @@ import Muse.UiComponents 1.0
 import Audacity.TrackEdit 1.0
 import Audacity.Preferences 1.0
 
+import "."
+
 StyledDialogView {
     id: root
 
@@ -19,6 +21,10 @@ StyledDialogView {
     contentHeight: okButtonRow.y + okButtonRow.height
 
     title: qsTrc("trackedit/preferences", "Delete preference")
+
+    DeleteBehaviorOnboardingFollowupDialogModel {
+        id: model
+    }
 
     Column {
         id: column
@@ -37,11 +43,19 @@ StyledDialogView {
             font.bold: true
         }
 
-        StyledTextLabel {
+        StyledTextLabelWithCustomLinkActivatedSignal {
             id: descriptionLabel
             width: parent.width - 32
-            text: qsTrc("trackedit/preferences", "You can change this at any time in <a href=\"https://www.audacityteam.org/realtime-video\">Preferences</a>.<br/><br/>" +
-                        "There are also a variety of new shortcuts that let you quickly access different delete behaviours. Go to <a href=\"https://www.audacityteam.org/realtime-video\">Shortcuts</a> to learn more.")
+            text: qsTrc("trackedit/preferences", "You can change this at any time in %1.<br/><br/>" +
+                        "There are also a variety of new shortcuts that let you quickly access different delete behaviours. Go to %2 to learn more.").arg("<a href=\"link1\">Preferences</a>").arg("<a href=\"link2\">Shortcuts</a>")
+            autoOpenLinks: false
+            onLinkActivated: (link) => {
+                if (link === "link1") {
+                    model.openDeleteBehaviorPreferences()
+                } else if (link === "link2") {
+                    model.openShortcutsPreferences()
+                }
+            }
             horizontalAlignment: Text.AlignLeft
             wrapMode: Text.WordWrap
         }
