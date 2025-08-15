@@ -32,10 +32,10 @@
 #include "iappshellconfiguration.h"
 #include "isessionsmanager.h"
 #include "audioplugins/iregisteraudiopluginsscenario.h"
+#include "project/iprojectautosaver.h"
 
 //! TODO AU4
 // #include "multiinstances/imultiinstancesprovider.h"
-// #include "project/iprojectautosaver.h"
 
 namespace au::appshell {
 class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable
@@ -45,10 +45,10 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
     muse::Inject<IAppShellConfiguration> configuration;
     muse::Inject<ISessionsManager> sessionsManager;
     muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario;
+    muse::Inject<au::project::IProjectAutoSaver> projectAutoSaver;
 
 //! TODO AU4
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
-    // INJECT(project::IProjectAutoSaver, projectAutoSaver)
 public:
 
     void setStartupType(const std::optional<std::string>& type) override;
