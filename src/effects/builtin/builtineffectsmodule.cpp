@@ -7,6 +7,7 @@
 #include "internal/builtinviewlauncher.h"
 
 #include "common/abstracteffectmodel.h"
+#include "common/controlwarper/controlwarper.h"
 
 #include "view/builtineffectviewloader.h"
 #include "view/effectsviewregister.h"
@@ -50,6 +51,8 @@ void BuiltinEffectsModule::registerUiTypes()
 {
     qmlRegisterUncreatableType<AbstractEffectModel>("Audacity.BuiltinEffects", 1, 0, "AbstractEffectModel", "Not creatable abstract type");
     qmlRegisterType<BuiltinEffectViewLoader>("Audacity.BuiltinEffects", 1, 0, "BuiltinEffectViewLoader");
+    qmlRegisterType<ControlWarper>("Audacity.BuiltinEffects", 1, 0, "ControlWarper");
+    qmlRegisterUncreatableType<ControlWarpingTypes>("Audacity.BuiltinEffects", 1, 0, "ControlWarpingType", "Not creatable from QML");
 }
 
 void BuiltinEffectsModule::onPreInit(const muse::IApplication::RunMode&)

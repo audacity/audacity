@@ -45,7 +45,7 @@ int ClickRemovalViewModel::thresholdMax() const
 
 int ClickRemovalViewModel::thresholdStep() const
 {
-    return ClickRemovalEffect::Threshold.scale;
+    return ClickRemovalEffect::Threshold.step;
 }
 
 int ClickRemovalViewModel::thresholdDecimals() const
@@ -85,7 +85,7 @@ int ClickRemovalViewModel::widthMax() const
 
 int ClickRemovalViewModel::widthStep() const
 {
-    return ClickRemovalEffect::Width.scale;
+    return ClickRemovalEffect::Width.step;
 }
 
 int ClickRemovalViewModel::widthDecimals() const

@@ -21,10 +21,6 @@ Dial {
 
     property alias mouseArea: mouseArea
 
-    property alias currentValue: root.value
-
-    property bool shiftPressed: false
-
     implicitWidth: root.radius * 2
     implicitHeight: implicitWidth
 
@@ -65,9 +61,11 @@ Dial {
 
         readonly property real startValueArcAngle: root.isPanKnob ? 0 : -140
 
-        property real initialValue: 0
-        property real dragStartX: 0
-        property real dragStartY: 0
+        property real prevX: 0
+        property real prevY: 0
+        property real unclampedValue: -1
+
+        property bool shiftPressed: false
         property bool dragActive: false
 
         function requestNewValue(newValue) {
@@ -202,9 +200,8 @@ Dial {
         preventStealing: true // Don't let a Flickable steal the mouse
 
         onPressed: function(mouse) {
-            prv.initialValue = root.value
-            prv.dragStartX = mouse.x
-            prv.dragStartY = mouse.y
+            prv.prevX = mouse.x
+            prv.prevY = mouse.y
             prv.dragActive = true
             mousePressed()
         }
@@ -223,6 +220,7 @@ Dial {
 
         onReleased: {
             prv.dragActive = false
+            prv.unclampedValue = -1
             if (!containsMouse) {
                 mouseExited()
             }
@@ -231,30 +229,33 @@ Dial {
 
         onPositionChanged: function(mouse)  {
             if (prv.dragActive) {
+
                 if ((mouse.modifiers & (Qt.ShiftModifier))) {
-                    if (!root.shiftPressed) {
-                        root.shiftPressed = true
-                        prv.initialValue = root.value
-                        prv.dragStartX = mouse.x
-                        prv.dragStartY = mouse.y
+                    if (!prv.shiftPressed) {
+                        prv.shiftPressed = true
+                        prv.unclampedValue = -1
                     }
                 } else {
-                    if (root.shiftPressed) {
-                        root.shiftPressed = false
-                        prv.initialValue = root.value
-                        prv.dragStartX = mouse.x
-                        prv.dragStartY = mouse.y
+                    if (prv.shiftPressed) {
+                        prv.shiftPressed = false
+                        prv.unclampedValue = -1
                     }
                 }
 
-                let dx = mouse.x - prv.dragStartX
-                let dy = mouse.y - prv.dragStartY
+                const dx = mouse.x - prv.prevX
+                const dy = mouse.y - prv.prevY
                 let dist = Math.sqrt(dx * dx + dy * dy)
                 if ((mouse.modifiers & (Qt.ShiftModifier))) {
                     dist /= 3
                 }
-                let sgn = (dy < dx) ? 1 : -1
-                let newValue = prv.initialValue + dist * root.stepSize * sgn
+                const sgn = (dy < dx) ? 1 : -1
+                const span = root.to - root.from
+                const newValue = (prv.unclampedValue === -1 ? root.value : prv.unclampedValue) + span * dist / 200 * sgn
+
+                prv.prevX = mouse.x
+                prv.prevY = mouse.y
+                prv.unclampedValue = newValue
+
                 prv.requestNewValue(newValue)
             }
         }
