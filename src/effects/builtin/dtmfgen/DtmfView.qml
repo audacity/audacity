@@ -13,6 +13,8 @@ import Preferences
 EffectBase {
     id: root
 
+    property alias instanceId: dtmf.instanceId
+
     property string title: qsTrc("effects/dtmf", "DTMF tones")
     property alias isApplyAllowed: dtmf.isApplyAllowed
 
@@ -29,8 +31,6 @@ EffectBase {
 
     DtmfViewModel {
         id: dtmf
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

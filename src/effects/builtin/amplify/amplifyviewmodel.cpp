@@ -10,29 +10,15 @@
 
 using namespace au::effects;
 
-AmplifyEffect* AmplifyViewModel::effect() const
-{
-    EffectId effectId = this->effectId();
-    if (effectId.isEmpty()) {
-        return nullptr;
-    }
-    Effect* e = effectsProvider()->effect(effectId);
-    AmplifyEffect* ae = dynamic_cast<AmplifyEffect*>(e);
-    return ae;
-}
-
 void AmplifyViewModel::doReload()
 {
-    AmplifyEffect* ae = effect();
-    IF_ASSERT_FAILED(ae) {
-        return;
-    }
+    auto& ae = effect<AmplifyEffect>();
 
-    const db_t initAmp = ae->defaultAmp();
-    ae->setAmp(initAmp);
+    const db_t initAmp = ae.defaultAmp();
+    ae.setAmp(initAmp);
     m_amp.val = std::numeric_limits<float>::lowest();
 
-    m_canClip = ae->canClip();
+    m_canClip = ae.canClip();
     emit canClipChanged();
 
     update();
@@ -40,13 +26,10 @@ void AmplifyViewModel::doReload()
 
 void AmplifyViewModel::update()
 {
-    AmplifyEffect* ae = effect();
-    IF_ASSERT_FAILED(ae) {
-        return;
-    }
+    const auto& ae = effect<AmplifyEffect>();
 
-    Param<db_t> amp = ae->amp();
-    db_t newPeak = muse::linear_to_db(ae->ratio() * ae->peak());
+    Param<db_t> amp = ae.amp();
+    db_t newPeak = muse::linear_to_db(ae.ratio() * ae.peak());
 
     if (!muse::is_equal(m_amp.val, amp.val)) {
         m_amp = amp;
@@ -55,7 +38,7 @@ void AmplifyViewModel::update()
         emit newPeakValueChanged();
     }
 
-    bool isApplyAllowed = ae->isApplyAllowed();
+    bool isApplyAllowed = ae.isApplyAllowed();
     setIsApplyAllowed(isApplyAllowed);
 }
 
@@ -81,12 +64,8 @@ void AmplifyViewModel::setAmpValue(float newAmpValue)
         return;
     }
 
-    AmplifyEffect* ae = effect();
-    IF_ASSERT_FAILED(ae) {
-        return;
-    }
-
-    ae->setAmp(newAmp);
+    auto& ae = effect<AmplifyEffect>();
+    ae.setAmp(newAmp);
 
     update();
 }
@@ -133,36 +112,25 @@ void AmplifyViewModel::setNewPeakValue(float newNewPeakValue)
         return;
     }
 
-    AmplifyEffect* ae = effect();
-    IF_ASSERT_FAILED(ae) {
-        return;
-    }
+    auto& ae = effect<AmplifyEffect>();
 
-    ratio_t ratio = muse::db_to_linear(newNewPeak) / ae->peak();
+    ratio_t ratio = muse::db_to_linear(newNewPeak) / ae.peak();
     db_t amp = muse::linear_to_db(ratio);
-    ae->setAmp(amp);
+    ae.setAmp(amp);
 
     update();
 }
 
 float AmplifyViewModel::newPeakMin() const
 {
-    AmplifyEffect* ae = effect();
-    if (!ae) {
-        return 0.0;
-    }
-
-    return m_amp.min + muse::linear_to_db(ae->peak());
+    const auto& ae = effect<AmplifyEffect>();
+    return m_amp.min + muse::linear_to_db(ae.peak());
 }
 
 float AmplifyViewModel::newPeakMax() const
 {
-    AmplifyEffect* ae = effect();
-    if (!ae) {
-        return 0.0;
-    }
-
-    return m_amp.max + muse::linear_to_db(ae->peak());
+    const auto& ae = effect<AmplifyEffect>();
+    return m_amp.max + muse::linear_to_db(ae.peak());
 }
 
 QString AmplifyViewModel::newPeakMeasureUnitsSymbol() const
@@ -196,13 +164,9 @@ void AmplifyViewModel::setCanClip(bool newClipping)
         return;
     }
 
-    AmplifyEffect* ae = effect();
-    IF_ASSERT_FAILED(ae) {
-        return;
-    }
+    auto& ae = effect<AmplifyEffect>();
 
-    //! NOTE
-    ae->setCanClip(newClipping);
+    ae.setCanClip(newClipping);
 
     m_canClip = newClipping;
     emit canClipChanged();

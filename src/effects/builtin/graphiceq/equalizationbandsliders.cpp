@@ -21,8 +21,8 @@
 #include "log.h"
 
 EqualizationBandSliders::
-EqualizationBandSliders(std::function<EqualizationCurvesList* ()> getCurvesList)
-    : m_getCurvesList(std::move(getCurvesList))
+EqualizationBandSliders(EqualizationCurvesList& curvesList)
+    : m_curvesList(curvesList)
 {
     for (size_t i = 0; i < NUM_PTS - 1; ++i) {
         mWhens[i] = (double)i / (NUM_PTS - 1.);
@@ -34,12 +34,8 @@ EqualizationBandSliders(std::function<EqualizationCurvesList* ()> getCurvesList)
 
 void EqualizationBandSliders::Init()
 {
-    const EqualizationCurvesList* curvesList = m_getCurvesList();
-    IF_ASSERT_FAILED(curvesList) {
-        return;
-    }
     mBandsInUse = 0;
-    while (kThirdOct[mBandsInUse] <= curvesList->mParameters.mHiFreq) {
+    while (kThirdOct[mBandsInUse] <= m_curvesList.mParameters.mHiFreq) {
         ++mBandsInUse;
         if (mBandsInUse == NUMBER_OF_BANDS) {
             break;
@@ -66,11 +62,7 @@ void EqualizationBandSliders::SetSliderValue(int index, double dbValue)
 //
 void EqualizationBandSliders::Flatten()
 {
-    EqualizationCurvesList* const curvesList = m_getCurvesList();
-    IF_ASSERT_FAILED(curvesList) {
-        return;
-    }
-    auto& parameters = curvesList->mParameters;
+    auto& parameters = m_curvesList.mParameters;
     const auto& drawMode = parameters.mDrawMode;
     auto& linEnvelope = parameters.mLinEnvelope;
     auto& logEnvelope = parameters.mLogEnvelope;
@@ -79,7 +71,7 @@ void EqualizationBandSliders::Flatten()
     logEnvelope.SetTrackLen(1.0);
     linEnvelope.Flatten(0.);
     linEnvelope.SetTrackLen(1.0);
-    curvesList->ForceRecalc();
+    m_curvesList.ForceRecalc();
     if (!drawMode) {
         for ( size_t i = 0; i < mBandsInUse; i++) {
             mEQVals[i] = 0.;
@@ -93,16 +85,12 @@ void EqualizationBandSliders::Flatten()
             mSliderTooltips[i] = tip.ToStdString();
         }
     }
-    curvesList->EnvelopeUpdated();
+    m_curvesList.EnvelopeUpdated();
 }
 
 void EqualizationBandSliders::EnvLogToLin()
 {
-    EqualizationCurvesList* const curvesList = m_getCurvesList();
-    IF_ASSERT_FAILED(curvesList) {
-        return;
-    }
-    auto& parameters = curvesList->mParameters;
+    auto& parameters = m_curvesList.mParameters;
     auto& linEnvelope = parameters.mLinEnvelope;
     auto& logEnvelope = parameters.mLogEnvelope;
     const auto& hiFreq = parameters.mHiFreq;
@@ -131,11 +119,7 @@ void EqualizationBandSliders::EnvLogToLin()
 
 void EqualizationBandSliders::EnvLinToLog()
 {
-    EqualizationCurvesList* const curvesList = m_getCurvesList();
-    IF_ASSERT_FAILED(curvesList) {
-        return;
-    }
-    auto& parameters = curvesList->mParameters;
+    auto& parameters = m_curvesList.mParameters;
     auto& linEnvelope = parameters.mLinEnvelope;
     auto& logEnvelope = parameters.mLogEnvelope;
     const auto& hiFreq = parameters.mHiFreq;
@@ -172,19 +156,15 @@ void EqualizationBandSliders::EnvLinToLog()
     logEnvelope.Reassign(1., value[numPoints - 1]);
 
     if (changed) {
-        curvesList->EnvelopeUpdated(logEnvelope, false);
+        m_curvesList.EnvelopeUpdated(logEnvelope, false);
     }
 }
 
 void EqualizationBandSliders::ErrMin()
 {
-    EqualizationCurvesList* const curvesList = m_getCurvesList();
-    IF_ASSERT_FAILED(curvesList) {
-        return;
-    }
-    const auto& parameters = curvesList->mParameters;
+    const auto& parameters = m_curvesList.mParameters;
     const auto& logEnvelope = parameters.mLogEnvelope;
-    const auto& curves = curvesList->mCurves;
+    const auto& curves = m_curvesList.mCurves;
     const auto& loFreq = parameters.mLoFreq;
     const auto& hiFreq = parameters.mHiFreq;
 
@@ -265,8 +245,8 @@ void EqualizationBandSliders::ErrMin()
         j++; //try next slider
     }
     if (error > .0025 * mBandsInUse) { // not within 0.05dB on each slider, on average
-        curvesList->Select((int)curves.size() - 1);
-        curvesList->EnvelopeUpdated(testEnvelope, false);
+        m_curvesList.Select((int)curves.size() - 1);
+        m_curvesList.EnvelopeUpdated(testEnvelope, false);
     }
 
     for (size_t i = 0; i < mBandsInUse; ++i) {
@@ -282,11 +262,7 @@ void EqualizationBandSliders::ErrMin()
 
 void EqualizationBandSliders::GraphicEQ(Envelope& env)
 {
-    EqualizationCurvesList* const curvesList = m_getCurvesList();
-    IF_ASSERT_FAILED(curvesList) {
-        return;
-    }
-    const auto& parameters = curvesList->mParameters;
+    const auto& parameters = m_curvesList.mParameters;
     const auto& interp = parameters.mInterp;
 
     // JKC: 'value' is for height of curve.
@@ -415,7 +391,7 @@ void EqualizationBandSliders::GraphicEQ(Envelope& env)
     }
     }
 
-    curvesList->ForceRecalc();
+    m_curvesList.ForceRecalc();
 }
 
 void EqualizationBandSliders::spline(
@@ -467,11 +443,7 @@ double EqualizationBandSliders::splint(
 
 void EqualizationBandSliders::OnSliderUpdated(int i)
 {
-    EqualizationCurvesList* const curvesList = m_getCurvesList();
-    IF_ASSERT_FAILED(curvesList) {
-        return;
-    }
-    auto& parameters = curvesList->mParameters;
+    auto& parameters = m_curvesList.mParameters;
     auto& logEnvelope = parameters.mLogEnvelope;
 
     wxString tip;
@@ -483,16 +455,12 @@ void EqualizationBandSliders::OnSliderUpdated(int i)
     mSliderTooltips[i] = tip.ToStdString();
 
     GraphicEQ(logEnvelope);
-    curvesList->EnvelopeUpdated();
+    m_curvesList.EnvelopeUpdated();
 }
 
 void EqualizationBandSliders::Invert() // Inverts any curve
 {
-    EqualizationCurvesList* const curvesList = m_getCurvesList();
-    IF_ASSERT_FAILED(curvesList) {
-        return;
-    }
-    auto& parameters = curvesList->mParameters;
+    auto& parameters = m_curvesList.mParameters;
     auto& linEnvelope = parameters.mLinEnvelope;
     auto& logEnvelope = parameters.mLogEnvelope;
 
@@ -552,6 +520,6 @@ void EqualizationBandSliders::Invert() // Inverts any curve
     }
 
     // and update the display etc
-    curvesList->ForceRecalc();
-    curvesList->EnvelopeUpdated();
+    m_curvesList.ForceRecalc();
+    m_curvesList.EnvelopeUpdated();
 }

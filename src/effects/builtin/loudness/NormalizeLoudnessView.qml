@@ -17,8 +17,6 @@ EffectBase {
 
     NormalizeLoudnessViewModel {
         id: normalizeLoudness
-
-        instanceId: root.instanceId
     }
 
     Column {

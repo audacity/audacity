@@ -19,8 +19,6 @@ EffectBase {
 
     GraphicEqViewModel {
         id: graphicEq
-
-        instanceId: root.instanceId
     }
 
     Rectangle {

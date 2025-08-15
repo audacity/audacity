@@ -5,8 +5,6 @@
 
 #include "../common/abstracteffectmodel.h"
 
-#include "effects/effects_base/ieffectsprovider.h"
-
 namespace au::effects {
 class ClickRemovalEffect;
 class ClickRemovalViewModel : public AbstractEffectModel
@@ -28,8 +26,6 @@ class ClickRemovalViewModel : public AbstractEffectModel
     Q_PROPERTY(int widthMax READ widthMax CONSTANT FINAL)
     Q_PROPERTY(int widthStep READ widthStep CONSTANT FINAL)
     Q_PROPERTY(int widthDecimals READ widthDecimals CONSTANT FINAL)
-
-    muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
     ClickRemovalViewModel() = default;
@@ -58,7 +54,5 @@ signals:
 
 private:
     void doReload() override;
-
-    ClickRemovalEffect* effect() const;
 };
 }

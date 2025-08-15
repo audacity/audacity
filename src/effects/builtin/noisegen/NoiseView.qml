@@ -22,8 +22,6 @@ EffectBase {
 
     NoiseViewModel {
         id: noise
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

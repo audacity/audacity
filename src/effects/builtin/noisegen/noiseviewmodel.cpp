@@ -48,10 +48,6 @@ double NoiseViewModel::amplitude() const
 
 void NoiseViewModel::prop_setAmplitude(double newAmplitude)
 {
-    if (!m_inited) {
-        return;
-    }
-
     bool wasAllowed = isApplyAllowed();
 
     if (settings<NoiseSettings>().amplitude == newAmplitude) {
@@ -73,10 +69,6 @@ int NoiseViewModel::type() const
 
 void NoiseViewModel::prop_setType(int type)
 {
-    if (!m_inited) {
-        return;
-    }
-
     bool wasAllowed = isApplyAllowed();
 
     NoiseSettings::Type noiseType = static_cast<NoiseSettings::Type>(type);

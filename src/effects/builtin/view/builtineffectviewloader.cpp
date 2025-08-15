@@ -33,6 +33,10 @@
 
 using namespace au::effects;
 
+namespace {
+static int gInitializationInstanceId = -1;
+}
+
 BuiltinEffectViewLoader::BuiltinEffectViewLoader(QObject* parent)
     : QObject(parent)
 {}
@@ -78,12 +82,14 @@ void BuiltinEffectViewLoader::load(const QString& instanceId, QObject* itemParen
         return;
     }
 
+    gInitializationInstanceId = instanceId.toInt();
     QObject* obj = component.createWithInitialProperties(
     {
         { "parent", QVariant::fromValue(itemParent) },
         { "instanceId", QVariant::fromValue(instanceId) },
         { "dialogView", QVariant::fromValue(dialogView) }
     });
+    gInitializationInstanceId = -1;
 
     m_contentItem = qobject_cast<QQuickItem*>(obj);
     if (!m_contentItem) {
@@ -107,6 +113,11 @@ void BuiltinEffectViewLoader::load(const QString& instanceId, QObject* itemParen
     }
 
     emit contentItemChanged();
+}
+
+int BuiltinEffectViewLoader::initializationInstanceId()
+{
+    return gInitializationInstanceId;
 }
 
 QQuickItem* BuiltinEffectViewLoader::contentItem() const

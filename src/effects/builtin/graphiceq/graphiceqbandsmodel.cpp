@@ -20,11 +20,8 @@ QString centerFrequencyToString(double frequency)
 }
 }
 
-GraphicEqBandsModel::GraphicEqBandsModel(QObject* parent, std::function<GraphicEq* ()> eqGetter)
-    : QAbstractListModel(parent),  m_getEq(std::move(eqGetter)), mSliders([this]() -> EqualizationCurvesList* {
-    GraphicEq* const eq = m_getEq();
-    return eq ? &eq->mCurvesList : nullptr;
-})
+GraphicEqBandsModel::GraphicEqBandsModel(QObject* parent, GraphicEq& eq)
+    : QAbstractListModel(parent),  m_eq(eq), mSliders(eq.mCurvesList)
 {
 }
 
@@ -42,17 +39,12 @@ void GraphicEqBandsModel::doReload()
 {
     // Adapted from EqualizationUI::TransferDataToWindow
 
-    GraphicEq* const eq = m_getEq();
-    IF_ASSERT_FAILED(eq) {
-        return;
-    }
-
-    auto& drawMode = eq->mCurvesList.mParameters.mDrawMode;
+    auto& drawMode = m_eq.mCurvesList.mParameters.mDrawMode;
 
     // Override draw mode, if we're not displaying the radio buttons.
-    if (eq->GetOptions() == kEqOptionCurve) {
+    if (m_eq.GetOptions() == kEqOptionCurve) {
         drawMode = true;
-    } else if (eq->GetOptions() == kEqOptionGraphic) {
+    } else if (m_eq.GetOptions() == kEqOptionGraphic) {
         drawMode = false;
     }
 
@@ -66,11 +58,7 @@ void GraphicEqBandsModel::doReload()
 
 void GraphicEqBandsModel::updateGraphic()
 {
-    GraphicEq* const eq = m_getEq();
-    IF_ASSERT_FAILED(eq) {
-        return;
-    }
-    auto& parameters = eq->mCurvesList.mParameters;
+    auto& parameters = m_eq.mCurvesList.mParameters;
     const auto& lin = parameters.mLin;
     auto& linEnvelope = parameters.mLinEnvelope;
     auto& logEnvelope = parameters.mLogEnvelope;

@@ -31,8 +31,6 @@ EffectBase {
 
     ToneViewModel {
         id: tone
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

@@ -18,8 +18,6 @@ EffectBase {
 
     NoiseReductionViewModel {
         id: noiseReduction
-
-        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

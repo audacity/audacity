@@ -6,8 +6,6 @@
 #include "../common/abstracteffectmodel.h"
 #include "../common/params.h"
 
-#include "effects/effects_base/ieffectsprovider.h"
-
 namespace au::effects {
 class AmplifyEffect;
 class AmplifyViewModel : public AbstractEffectModel
@@ -36,8 +34,6 @@ class AmplifyViewModel : public AbstractEffectModel
     Q_PROPERTY(bool canClip READ canClip WRITE setCanClip NOTIFY canClipChanged FINAL)
 
     Q_PROPERTY(bool isApplyAllowed READ isApplyAllowed NOTIFY isApplyAllowedChanged FINAL)
-
-    muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
     AmplifyViewModel() = default;
@@ -77,8 +73,6 @@ signals:
 
 private:
     void doReload() override;
-
-    AmplifyEffect* effect() const;
 
     void update();
 

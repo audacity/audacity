@@ -12,11 +12,8 @@ using namespace au::effects;
 
 void GeneratorEffectModel::doReload()
 {
-    GeneratorEffect* const ge = generatorEffect();
-    IF_ASSERT_FAILED(ge) {
-        return;
-    }
-    ge->init(&mutSettings());
+    auto& ge = effect<GeneratorEffect>();
+    ge.init(&mutSettings());
     emit sampleRateChanged();
     emit tempoChanged();
     emit upperTimeSignatureChanged();
@@ -30,60 +27,38 @@ void GeneratorEffectModel::doReload()
 
 double GeneratorEffectModel::sampleRate() const
 {
-    const auto e = generatorEffect();
-    if (!e) {
-        return 1.0;
-    }
-    return e->sampleRate();
+    const auto& e = effect<GeneratorEffect>();
+    return e.sampleRate();
 }
 
 double GeneratorEffectModel::tempo() const
 {
-    const auto e = generatorEffect();
-    if (!e) {
-        return 120.0;
-    }
-    return e->tempo();
+    const auto& e = effect<GeneratorEffect>();
+    return e.tempo();
 }
 
 int GeneratorEffectModel::upperTimeSignature() const
 {
-    const auto e = generatorEffect();
-    if (!e) {
-        return 4;
-    }
-    return e->upperTimeSignature();
+    const auto& e = effect<GeneratorEffect>();
+    return e.upperTimeSignature();
 }
 
 int GeneratorEffectModel::lowerTimeSignature() const
 {
-    const auto e = generatorEffect();
-    if (!e) {
-        return 4;
-    }
-    return e->lowerTimeSignature();
+    const auto& e = effect<GeneratorEffect>();
+    return e.lowerTimeSignature();
 }
 
 double GeneratorEffectModel::duration() const
 {
-    const auto e = generatorEffect();
-    if (!e) {
-        return 0.0;
-    }
-    return e->duration();
+    const auto& e = effect<GeneratorEffect>();
+    return e.duration();
 }
 
 void GeneratorEffectModel::prop_setDuration(double newDuration)
 {
-    if (!m_inited) {
-        return;
-    }
-
-    auto e = generatorEffect();
-    IF_ASSERT_FAILED(e) {
-        return;
-    }
-    e->setDuration(newDuration);
+    auto& e = effect<GeneratorEffect>();
+    e.setDuration(newDuration);
     emit durationChanged();
 
     update();
@@ -91,24 +66,14 @@ void GeneratorEffectModel::prop_setDuration(double newDuration)
 
 QString GeneratorEffectModel::durationFormat() const
 {
-    const auto e = generatorEffect();
-    if (!e) {
-        return "";
-    }
-    return e->durationFormat();
+    const auto& e = effect<GeneratorEffect>();
+    return e.durationFormat();
 }
 
 void GeneratorEffectModel::prop_setDurationFormat(const QString& newDurationFormat)
 {
-    if (!m_inited) {
-        return;
-    }
-
-    auto e = generatorEffect();
-    IF_ASSERT_FAILED(e) {
-        return;
-    }
-    e->setDurationFormat(newDurationFormat);
+    auto& e = effect<GeneratorEffect>();
+    e.setDurationFormat(newDurationFormat);
     emit durationFormatChanged();
 
     update();
@@ -116,11 +81,8 @@ void GeneratorEffectModel::prop_setDurationFormat(const QString& newDurationForm
 
 bool GeneratorEffectModel::isApplyAllowed() const
 {
-    const auto e = generatorEffect();
-    if (!e) {
-        return false;
-    }
-    return e->isApplyAllowed();
+    const auto& e = effect<GeneratorEffect>();
+    return e.isApplyAllowed();
 }
 
 void GeneratorEffectModel::update()
@@ -130,11 +92,4 @@ void GeneratorEffectModel::update()
     if (m_isApplyAllowed != wasAllowed) {
         emit isApplyAllowedChanged();
     }
-}
-
-GeneratorEffect* GeneratorEffectModel::generatorEffect() const
-{
-    EffectId effectId = this->effectId();
-    Effect* e = effectsProvider()->effect(effectId);
-    return dynamic_cast<GeneratorEffect*>(e);
 }

@@ -8,16 +8,6 @@
 #include "global/translation.h"
 
 namespace au::effects {
-ClickRemovalEffect* ClickRemovalViewModel::effect() const
-{
-    const EffectId effectId = this->effectId();
-    if (effectId.isEmpty()) {
-        return nullptr;
-    }
-    Effect* const e = effectsProvider()->effect(effectId);
-    return dynamic_cast<ClickRemovalEffect*>(e);
-}
-
 QString ClickRemovalViewModel::effectTitle() const
 {
     return muse::qtrc("effects/clickremoval", "Click removal");
@@ -30,18 +20,15 @@ QString ClickRemovalViewModel::thresholdLabel() const
 
 int ClickRemovalViewModel::thresholdValue() const
 {
-    ClickRemovalEffect* const ce = effect();
-    return ce ? ce->mThresholdLevel : 0;
+    const auto& ce = effect<ClickRemovalEffect>();
+    return ce.mThresholdLevel;
 }
 
 void ClickRemovalViewModel::setThresholdValue(int newThresholdValue)
 {
-    ClickRemovalEffect* const ce = effect();
-    IF_ASSERT_FAILED(ce) {
-        return;
-    }
-    if (!muse::is_equal(ce->mThresholdLevel, newThresholdValue)) {
-        ce->mThresholdLevel = newThresholdValue;
+    auto& ce = effect<ClickRemovalEffect>();
+    if (!muse::is_equal(ce.mThresholdLevel, newThresholdValue)) {
+        ce.mThresholdLevel = newThresholdValue;
         emit thresholdValueChanged();
     }
 }
@@ -73,18 +60,15 @@ QString ClickRemovalViewModel::widthLabel() const
 
 int ClickRemovalViewModel::widthValue() const
 {
-    ClickRemovalEffect* const ce = effect();
-    return ce ? ce->mClickWidth : 0;
+    const auto& ce = effect<ClickRemovalEffect>();
+    return ce.mClickWidth;
 }
 
 void ClickRemovalViewModel::setWidthValue(int newWidthValue)
 {
-    ClickRemovalEffect* const ce = effect();
-    IF_ASSERT_FAILED(ce) {
-        return;
-    }
-    if (!muse::is_equal(ce->mClickWidth, newWidthValue)) {
-        ce->mClickWidth = newWidthValue;
+    auto& ce = effect<ClickRemovalEffect>();
+    if (!muse::is_equal(ce.mClickWidth, newWidthValue)) {
+        ce.mClickWidth = newWidthValue;
         emit widthValueChanged();
     }
 }
