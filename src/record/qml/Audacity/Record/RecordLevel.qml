@@ -27,9 +27,11 @@ FlatButton {
 
     property int recordingChannelsCount: 0
     property bool audibleInputMonitoring: false
+    property bool micMonitoring: false
 
     signal volumeLevelChangeRequested(var level)
     signal audibleInputMonitoringChangeRequested(bool enable)
+    signal micMonitoringChangeRequested(bool enable)
 
     accentButton: popup.isOpened
 
@@ -202,19 +204,37 @@ FlatButton {
                 color: ui.theme.strokeColor
             }
 
-            CheckBox {
-                id: checkbox
-
+            Row {
                 Layout.fillWidth: true
+                Layout.fillHeight: true
 
-                text: qsTrc("record", "Enable audible input monitoring")
+                spacing: 16
 
-                checked: root.audibleInputMonitoring
+                CheckBox {
+                    id: showMeterMeteringCheckbox
 
-                onClicked: {
-                    audibleInputMonitoringChangeRequested(!root.audibleInputMonitoring)
+                    text: qsTrc("record", "Show mic metering")
+
+                    checked: root.micMonitoring
+
+                    onClicked: {
+                        micMonitoringChangeRequested(!root.micMonitoring)
+                    }
+                }
+
+                CheckBox {
+                    id: enableMonitoringCheckbox
+
+                    text: qsTrc("record", "Enable input monitoring")
+
+                    checked: root.audibleInputMonitoring
+
+                    onClicked: {
+                        audibleInputMonitoringChangeRequested(!root.audibleInputMonitoring)
+                    }
                 }
             }
+
         }
     }
 }

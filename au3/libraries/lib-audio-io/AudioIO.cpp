@@ -1632,6 +1632,7 @@ void AudioIO::StopStream()
     mScratchPointers.clear();
     mPlaybackMixers.clear();
     mPlaybackSchedule.mTimeQueue.Clear();
+    mPlaybackTracks.clear();
 
     if (mStreamToken > 0) {
         //
@@ -3036,6 +3037,10 @@ void AudioIoCallback::SendVuInputMeterData(
     const float* inputSamples,
     unsigned long framesPerBuffer)
 {
+    if (framesPerBuffer == 0) {
+        return;
+    }
+
     auto inputMeter = mInputMeter.lock();
     if (!inputMeter) {
         return;

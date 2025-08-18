@@ -30,6 +30,19 @@ ListItemBlank {
     signal mouseReleased(var item, double x, double y)
     signal mouseMoved(var item, double x, double y)
 
+    function clearMeters() {
+        leftOrMonoVolumePressureMeter.reset()
+        leftOrMonoVolumePressureMeter.resetClipped()
+        rightVolumePressureMeter.reset()
+        rightVolumePressureMeter.resetClipped()
+    }
+
+    onIsFocusedChanged: {
+        if (!root.isFocused) {
+            root.clearMeters()
+        }
+    }
+
     mouseArea.onPressed: {
         root.mousePressed(this, mouseArea.mouseX, mouseArea.mouseY)
     }
@@ -81,10 +94,7 @@ ListItemBlank {
 
         onIsPlayingChanged: {
             if (trackViewState.isPlaying) {
-                leftOrMonoVolumePressureMeter.reset()
-                leftOrMonoVolumePressureMeter.resetClipped()
-                rightVolumePressureMeter.reset()
-                rightVolumePressureMeter.resetClipped()
+                root.clearMeters()
             }
         }
 
@@ -284,10 +294,7 @@ ListItemBlank {
                 TapHandler {
                     id: volumePressureTapHandler
                     onTapped: {
-                        rightVolumePressureMeter.reset()
-                        rightVolumePressureMeter.resetClipped()
-                        leftOrMonoVolumePressureMeter.reset()
-                        leftOrMonoVolumePressureMeter.resetClipped()
+                        root.clearMeters()
                     }
                 }
 

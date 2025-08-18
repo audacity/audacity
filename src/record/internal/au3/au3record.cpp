@@ -299,6 +299,11 @@ muse::Ret Au3Record::start()
     std::copy(existingTracks.begin(), existingTracks.end(),
               back_inserter(transportTracks.captureSequences));
 
+    auto gAudioIO = AudioIO::Get();
+    if (gAudioIO->IsMonitoring()) {
+        gAudioIO->StopStream();
+    }
+
     return doRecord(project, transportTracks, t0, t1, altAppearance, options);
 }
 
@@ -346,8 +351,6 @@ muse::Ret Au3Record::stop()
     if (captureMeter) {
         captureMeter->reset();
     }
-
-    gAudioIO->StartMonitoring(ProjectAudioIO::GetDefaultOptions(project));
 
     return make_ok();
 }

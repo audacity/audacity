@@ -1,13 +1,14 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_RECORD_PLAYBACKTOOLBARRECORDLEVELITEM_H
-#define AU_RECORD_PLAYBACKTOOLBARRECORDLEVELITEM_H
+#pragma once
 
 #include <QString>
 
 #include "modularity/ioc.h"
 #include "record/irecord.h"
+#include "record/irecordconfiguration.h"
+#include "record/irecordcontroller.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iaudiodevicesprovider.h"
 
@@ -32,10 +33,13 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
 
     Q_PROPERTY(
         bool audibleInputMonitoring READ audibleInputMonitoring WRITE setAudibleInputMonitoring NOTIFY audibleInputMonitoringChanged FINAL)
+    Q_PROPERTY(bool micMonitoring READ micMonitoring WRITE setMicMonitoring NOTIFY micMonitoringChanged FINAL)
 
     Q_PROPERTY(playback::PlaybackMeterStyle::MeterStyle meterStyle READ meterStyle NOTIFY meterStyleChanged FINAL)
 
     muse::Inject<record::IRecord> record;
+    muse::Inject<record::IRecordConfiguration> recordConfiguration;
+    muse::Inject<record::IRecordController> recordController;
     muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
     muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
@@ -57,6 +61,7 @@ public:
     int recordingChannelsCount() const;
 
     bool audibleInputMonitoring() const;
+    bool micMonitoring() const;
 
     playback::PlaybackMeterStyle::MeterStyle meterStyle() const;
 
@@ -70,6 +75,7 @@ public slots:
     void setRightMaxPeak(float newRightMaxPeak);
 
     void setAudibleInputMonitoring(bool enable);
+    void setMicMonitoring(bool enable);
 
 signals:
     void levelChanged();
@@ -85,6 +91,7 @@ signals:
     void recordingChannelsCountChanged();
 
     void audibleInputMonitoringChanged();
+    void micMonitoringChanged();
 
     void meterStyleChanged();
 
@@ -103,5 +110,3 @@ private:
     float m_rightMaxPeak = 0.0;
 };
 }
-
-#endif // AU_RECORD_PLAYBACKTOOLBARRECORDLEVELITEM_H

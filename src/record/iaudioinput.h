@@ -26,6 +26,9 @@ public:
 
     virtual void setAudibleInputMonitoring(bool enable) = 0;
     virtual bool audibleInputMonitoring() const = 0;
+
+    virtual muse::async::Notification monitoringChanged() const = 0;
+    virtual bool isMonitoring() const = 0;
 };
 
 using IAudioInputPtr = std::shared_ptr<IAudioInput>;

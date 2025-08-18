@@ -150,6 +150,7 @@ protected:
     bool m_isSelected = false;
     bool m_isFocused = false;
     int m_inputChannelsCount = 0;
+    bool m_isMonitoring = false;
 };
 }
 

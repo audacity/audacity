@@ -11,12 +11,19 @@
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometer.h"
+#include "playback/iplaybackcontroller.h"
 
 #include "../../iaudioinput.h"
+#include "record/irecordconfiguration.h"
+#include "record/irecordcontroller.h"
+
 namespace au::record {
 class Au3AudioInput : public IAudioInput, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<record::IRecordConfiguration> configuration;
+    muse::Inject<record::IRecordController> controller;
+    muse::Inject<playback::IPlaybackController> playbackController;
 
 public:
     Au3AudioInput();
@@ -31,12 +38,19 @@ public:
     void setAudibleInputMonitoring(bool enable) override;
     bool audibleInputMonitoring() const override;
 
+    muse::async::Notification monitoringChanged() const override;
+    bool isMonitoring() const override;
+
 private:
     au3::Au3Project& projectRef() const;
 
     void initMeter();
+    void startMonitoring();
+    void stopMonitoring();
+    void restartMonitoring();
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
+    muse::async::Notification m_monitoringChanged;
 
     std::shared_ptr<au::au3::Meter> m_inputMeter;
 };

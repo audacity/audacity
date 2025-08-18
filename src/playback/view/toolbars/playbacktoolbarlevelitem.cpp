@@ -39,8 +39,21 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
 
     playback()->audioOutput()->playbackSignalChanges().onReceive(this,
                                                                  [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
+        if (!controller()->isPlaying() && !record()->audioInput()->audibleInputMonitoring()) {
+            return;
+        }
+
         setAudioChannelVolumePressure(audioChNum, meterSignal.peak.pressure);
         setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
+    });
+
+    playback()->audioOutput()->playbackVolume().onResolve(this, [this](float volume) {
+        m_level = volume;
+        emit levelChanged();
+    });
+
+    record()->audioInput()->monitoringChanged().onNotify(this, [this]() {
+        resetAudioChannelsVolumePressure();
     });
 
     configuration()->playbackHorizontalMeterSizeChanged().onNotify(this, [this]() {
@@ -52,11 +65,6 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
     });
 
     resetAudioChannelsVolumePressure();
-
-    playback()->audioOutput()->playbackVolume().onResolve(this, [this](float volume) {
-        m_level = volume;
-        emit levelChanged();
-    });
 }
 
 float PlaybackToolBarLevelItem::level() const

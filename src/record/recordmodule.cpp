@@ -65,6 +65,7 @@ void RecordModule::onInit(const IApplication::RunMode& mode)
     m_controller->init();
     m_uiActions->init();
     m_record->init();
+    m_configuration->init();
 }
 
 void RecordModule::onDeinit()
