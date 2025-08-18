@@ -120,7 +120,7 @@ FlatButton {
                 Layout.fillWidth: true
                 Layout.preferredHeight: viewModel.meterHeight
 
-                color: "#EBEDF0"
+                color: ui.theme.backgroundSecondaryColor
                 border.width: 1
                 border.color: ui.theme.strokeColor
                 radius: 2
@@ -190,6 +190,7 @@ FlatButton {
                 Layout.fillWidth: true
 
                 text: qsTrc("record", "Adjust the level of your OS configured microphone")
+                font.italic: true
                 horizontalAlignment: Text.AlignLeft
                 wrapMode: Text.WordWrap
             }
