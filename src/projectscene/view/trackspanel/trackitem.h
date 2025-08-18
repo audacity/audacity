@@ -17,6 +17,7 @@
 
 #include "trackedit/trackedittypes.h"
 #include "trackedit/dom/track.h"
+#include "trackedit/iselectioncontroller.h"
 
 namespace au::projectscene {
 class TrackItem : public QObject, public muse::async::Asyncable
@@ -47,6 +48,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
     muse::Inject<playback::IPlayback> playback;
     muse::Inject<record::IRecord> record;
     muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<trackedit::ISelectionController> selectionController;
 
 public:
     explicit TrackItem(QObject* parent = nullptr);

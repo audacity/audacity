@@ -119,6 +119,9 @@ void TrackItem::init(const trackedit::Track& track)
             emit outputParamsChanged(m_outParams);
         }
     });
+
+    m_isFocused = selectionController()->focusedTrack() == m_trackId;
+    emit isFocusedChanged();
 }
 
 au::trackedit::TrackId TrackItem::trackId() const
