@@ -3,6 +3,7 @@
         "ms-vscode.cmake-tools",
         "ms-vscode.cpptools",
         "zachflower.uncrustify", // for code formatting
-        "vadimcn.vscode-lldb", // provides a fast debugger (tried on Linux)
+        "vadimcn.vscode-lldb", // provides a fast debugger (tried on Linux),
+        "emeraldwalk.RunOnSave"
     ],
 }
