@@ -118,8 +118,8 @@ endif()
 include(SetupCompileWarnings)
 
 # Common
-string(TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE)
-if(CMAKE_BUILD_TYPE MATCHES "DEBUG") #Debug
+string(TOUPPER ${CMAKE_BUILD_TYPE} _BUILD_TYPE)
+if(_BUILD_TYPE MATCHES "DEBUG") #Debug
 
     add_definitions(-DQT_QML_DEBUG)
 

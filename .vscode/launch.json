@@ -1,21 +1,20 @@
 {
     "configurations": [
         {
-            "name": "Launch",
+            "name": "Launch (cdb - Windows)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/${command:cmake.buildType}/install/bin/audacity.exe",
+            "preLaunchTask": "CMake: install",
+            "cwd": "${workspaceFolder}",
+            "program": "${command:cmake.launchTargetPath}",
             "args": [
                 // Comment this out to run audacity in plugin registration mode
                 // "--register-audio-plugin", "C:/Program Files/Common Files/VST3/Your plugin.vst3"
             ],
-            "preLaunchTask": "CMake: install",
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
             "environment": [
                 {
-                    "name": "QTDIR",
-                    "value": "C:/Qt/6.2.4/msvc2019_64"
+                    "name": "PATH",
+                    "value": "${env:PATH};${command:cmake.launchTargetDirectory}\\bin"
                 }
             ],
             "sourceFileMap": {
@@ -29,55 +28,50 @@
         },
         {
             // Requires CodeLLDB extension
-            // Doesn't support visualizerFile but is much faster than cppvsdbg
-            "name": "Launch (Linux - lldb)",
+            // Doesn't support visualizerFile but is much faster than cppdbg
+            "name": "Launch (lldb - macOS/Linux)",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/${command:cmake.buildType}/src/app/audacity",
-            "preLaunchTask": "CMake: build",
+            "preLaunchTask": "CMake: install",
+            "cwd": "${workspaceFolder}",
+            "program": "${command:cmake.launchTargetPath}",
             "args": [
                 // "--register-audio-plugin",
                 // "https://wasted.audio/software/wstd_flangr"
             ],
-            // If you need to debug a plugin, you can do something like this.
-            // (If you don't have these plugins, you'll only get a harmless warning.)
             "initCommands": [
                 "settings set target.load-cwd-lldbinit true"
             ],
+            // If you need to debug a plugin, you can do something like this.
+            // (If you don't have these plugins, you'll only get a harmless warning.)
             "postRunCommands": [
                 "target symbols add /usr/lib/lv2/meters.lv2/meters.so",
                 "target symbols add /usr/lib/lv2/meters.lv2/meters_glui.so",
             ],
-            "cwd": "${workspaceFolder}"
+            "env": {
+                "LD_LIBRARY_PATH": "${command:cmake.launchTargetDirectory}/lib"
+            }
         },
         {
-            "name": "Launch (Linux - cppdbg)",
+            "name": "Launch (gdb - Linux)",
             "type": "cppdbg",
             "MIMode": "gdb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/${command:cmake.buildType}/src/app/audacity",
-            "preLaunchTask": "CMake: build",
+            "preLaunchTask": "CMake: install",
+            "cwd": "${workspaceFolder}",
+            "program": "${command:cmake.launchTargetPath}",
             "args": [
                 // "--register-audio-plugin",
                 // "https://wasted.audio/software/wstd_flangr"
             ],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/${command:cmake.buildType}/src/app",
             "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis",
-            "showDisplayString": true
-        },
-        {
-            "name": "run audacity (MacOS)",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/${command:cmake.buildType}/src/app/audacity.app/Contents/MacOS/audacity",
-            "args": [],
-            "preLaunchTask": "CMake: install",
-            "stopAtEntry": false,
-            "cwd": "${fileDirname}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "lldb"
+            "showDisplayString": true,
+            "environment": [
+                {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "${env:LD_LIBRARY_PATH}:${command:cmake.launchTargetDirectory}/lib"
+                }
+            ]
         }
     ]
 }

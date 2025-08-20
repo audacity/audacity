@@ -163,6 +163,8 @@ endif()
 
 include(SetupBuildEnvironment)
 include(GetPlatformInfo)
+include(SetupDevEnvironment)
+
 if (MUE_COMPILE_USE_CCACHE)
     include(TryUseCcache)
 endif(MUE_COMPILE_USE_CCACHE)
