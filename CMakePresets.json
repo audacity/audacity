@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "displayName": "Base Configuration",
+      "description": "Base configuration for all presets.",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "hidden": true,
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_INSTALL_PREFIX": "src/app"
+      }
+    },
+    {
+      "name": "audacity-debug",
+      "displayName": "Audacity [Debug]",
+      "description": "Debug profile with debug symbols and no optimizations.",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS": "-DQT_QML_DEBUG"
+      }
+    },
+    {
+      "name": "audacity-asan",
+      "displayName": "Audacity [ASan]",
+      "description": "Debug profile with AddressSanitizer enabled.",
+      "inherits": "audacity-debug",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-fsanitize=address -fno-omit-frame-pointer",
+        "CMAKE_LINK_FLAGS": "-fsanitize=address -fno-omit-frame-pointer",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address",
+        "CMAKE_MODULE_LINKER_FLAGS": "-fsanitize=address",
+        "CMAKE_SHARED_LINKER_FLAGS": "-fsanitize=address"
+      }
+    },
+    {
+      "name": "audacity-release",
+      "displayName": "Audacity [RelWithDebInfo]",
+      "description": "Release profile with optimizations and debug information.",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    }
+  ]
+}

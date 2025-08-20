@@ -5,29 +5,6 @@
         }
     ],
     "settings": {
-        "cmake.generator": "Ninja",
-        "cmake.buildDirectory": "${workspaceFolder}/build/${buildType}",
-        "cmake.installPrefix": "${workspaceFolder}/build/${buildType}/install",
-        "cmake.configureArgs": [
-            // "-DAU_MODULE_EFFECTS_VST=ON"
-        ],
-        "editor.guides.indentation": true,
-        "editor.detectIndentation": true,
-        "editor.guides.highlightActiveIndentation": true,
-        "editor.autoIndent": "full",
-        "editor.tabSize": 4,
-        "explorer.excludeGitIgnore": false,
-        "search.useIgnoreFiles": false,
-        "files.exclude": {
-            "build": true,
-            "builds": true
-        },
-        "C_Cpp.autoAddFileAssociations": false,
-        "uncrustify.configPath.windows": "${workspaceFolder}/build/Debug/_deps/muse_framework-src/buildscripts/ci/checkcodestyle/uncrustify_muse.cfg",
-        "uncrustify.configPath.linux": "${workspaceFolder}/build/Debug/_deps/muse_framework-src/buildscripts/ci/checkcodestyle/uncrustify_muse.cfg",
-        "uncrustify.configPath.osx": "${workspaceFolder}/build/Debug/_deps/muse_framework-src/buildscripts/ci/checkcodestyle/uncrustify_muse.cfg",
-        "editor.defaultFormatter": "zachflower.uncrustify",
-        "cmake.useVsDeveloperEnvironment": "auto",
         "[cpp]": {
             "editor.defaultFormatter": "zachflower.uncrustify"
         },
@@ -35,12 +12,12 @@
             "commands": [
                 {
                     "match": "\\.qml$",
-                    // Requires Qt 6.10.0 (at least the qmlformat tool) to be installed.
-                    // We don't want to use this command for an earlier version, because the semicolon-rule option
-                    // isn't available and running it without would add semicolons after each statement.
-                    "cmd": "C:/Qt/6.10.0/msvc2022_64/bin/qmlformat.exe -i --semicolon-rule=essential ${file}",
+                    "cmd": "${workspaceFolder}/.tools/qmlformat/bin/qmlformat -i --semicolon-rule=essential ${file}"
                 }
             ]
-        }
+        },
+        "search.useIgnoreFiles": false,
+        "C_Cpp.autoAddFileAssociations": false,
+        "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
     }
 }
