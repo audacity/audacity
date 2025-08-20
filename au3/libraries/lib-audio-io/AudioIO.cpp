@@ -591,6 +591,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
 
         const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(playbackDeviceInfo->hostApi);
         bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
+        bool isMME = (hostInfo && hostInfo->type == paMME);
 
       #ifdef __WXMSW__
         // If the host API is WASAPI, the stream is bidirectional and there is no
@@ -606,7 +607,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         }
       #endif
 
-        if (mSoftwarePlaythrough) {
+        if (mSoftwarePlaythrough && !isMME) {
             playbackParameters.suggestedLatency
                 =playbackDeviceInfo->defaultLowOutputLatency;
         } else {
@@ -637,6 +638,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
 
         const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(captureDeviceInfo->hostApi);
         bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
+        bool isMME = (hostInfo && hostInfo->type == paMME);
 
         // If the stream is bidirectional and there is no supported sample rate
         // set mRate to the value supported by the capture device.
@@ -650,7 +652,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         captureParameters.hostApiSpecificStreamInfo = NULL;
         captureParameters.channelCount = mNumCaptureChannels;
 
-        if (mSoftwarePlaythrough) {
+        if (mSoftwarePlaythrough && !isMME) {
             captureParameters.suggestedLatency
                 =captureDeviceInfo->defaultHighInputLatency;
         } else {
