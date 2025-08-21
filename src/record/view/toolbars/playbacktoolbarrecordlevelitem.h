@@ -33,7 +33,7 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
 
     Q_PROPERTY(
         bool audibleInputMonitoring READ audibleInputMonitoring WRITE setAudibleInputMonitoring NOTIFY audibleInputMonitoringChanged FINAL)
-    Q_PROPERTY(bool micMonitoring READ micMonitoring WRITE setMicMonitoring NOTIFY micMonitoringChanged FINAL)
+    Q_PROPERTY(bool micMetering READ micMetering WRITE setMicMetering NOTIFY micMeteringChanged FINAL)
 
     Q_PROPERTY(playback::PlaybackMeterStyle::MeterStyle meterStyle READ meterStyle NOTIFY meterStyleChanged FINAL)
 
@@ -61,7 +61,7 @@ public:
     int recordingChannelsCount() const;
 
     bool audibleInputMonitoring() const;
-    bool micMonitoring() const;
+    bool micMetering() const;
 
     playback::PlaybackMeterStyle::MeterStyle meterStyle() const;
 
@@ -75,7 +75,7 @@ public slots:
     void setRightMaxPeak(float newRightMaxPeak);
 
     void setAudibleInputMonitoring(bool enable);
-    void setMicMonitoring(bool enable);
+    void setMicMetering(bool enable);
 
 signals:
     void levelChanged();
@@ -91,7 +91,7 @@ signals:
     void recordingChannelsCountChanged();
 
     void audibleInputMonitoringChanged();
-    void micMonitoringChanged();
+    void micMeteringChanged();
 
     void meterStyleChanged();
 

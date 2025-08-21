@@ -13,23 +13,40 @@ BaseSection {
 
     property var recordingPreferencesModel: null
 
-    navigationOrderEnd: root.navigation.order
-
     Column {
         width: parent.width
-        spacing: 24
+        spacing: 12
 
         CheckBox {
-            id: checkbox
+            id: micMeteringCheckBox
 
             width: parent.width
 
-            text: qsTrc("appshell/preferences", "Enable audible input monitoring")
+            text: qsTrc("appshell/preferences", "Show mic metering")
+
+            checked: recordingPreferencesModel.micMetering
+
+            navigation.name: "MicMeteringCheckBox"
+            navigation.panel: root.navigation
+            navigation.order: 1
+
+            onClicked: {
+                recordingPreferencesModel.micMetering = !checked
+            }
+        }
+
+        CheckBox {
+            id: inputMonitoringCheckBox
+
+            width: parent.width
+
+            text: qsTrc("appshell/preferences", "Enable input monitoring")
 
             checked: recordingPreferencesModel.audibleInputMonitoring
 
-            navigation.name: "AudibleInputMonitoringBox"
+            navigation.name: "InputMonitoringCheckBox"
             navigation.panel: root.navigation
+            navigation.order: 2
 
             onClicked: {
                 recordingPreferencesModel.audibleInputMonitoring = !checked

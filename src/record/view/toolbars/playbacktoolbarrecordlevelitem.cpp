@@ -44,7 +44,7 @@ PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::U
     emit audibleInputMonitoringChanged();
 
     recordConfiguration()->micMeteringChanged().onNotify(this, [this]() {
-        emit micMonitoringChanged();
+        emit micMeteringChanged();
     });
 }
 
@@ -183,12 +183,12 @@ void PlaybackToolBarRecordLevelItem::setAudibleInputMonitoring(bool enable)
     emit audibleInputMonitoringChanged();
 }
 
-bool PlaybackToolBarRecordLevelItem::micMonitoring() const
+bool PlaybackToolBarRecordLevelItem::micMetering() const
 {
     return recordConfiguration()->micMetering();
 }
 
-void PlaybackToolBarRecordLevelItem::setMicMonitoring(bool enable)
+void PlaybackToolBarRecordLevelItem::setMicMetering(bool enable)
 {
     recordConfiguration()->setMicMetering(enable);
 }

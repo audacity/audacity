@@ -48,7 +48,7 @@ void Meter::push(uint8_t channel, const IMeterSender::Sample& sample, int64_t ke
 
 void Meter::reset()
 {
-    // The reset is deferred to ensure that these zeroed values are the last ones processed
+    // The reset is deferred to ensure these zeroed values are the last ones processed
     muse::async::Async::call(this, [this]() {
         for (auto& [key, _] : m_channels) {
             push(0, { 0.0, 0.0 }, key);

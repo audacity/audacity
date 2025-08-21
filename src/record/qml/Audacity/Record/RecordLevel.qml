@@ -27,11 +27,11 @@ FlatButton {
 
     property int recordingChannelsCount: 0
     property bool audibleInputMonitoring: false
-    property bool micMonitoring: false
+    property bool micMetering: false
 
     signal volumeLevelChangeRequested(var level)
     signal audibleInputMonitoringChangeRequested(bool enable)
-    signal micMonitoringChangeRequested(bool enable)
+    signal micMeteringChangeRequested(bool enable)
 
     accentButton: popup.isOpened
 
@@ -215,10 +215,10 @@ FlatButton {
 
                     text: qsTrc("record", "Show mic metering")
 
-                    checked: root.micMonitoring
+                    checked: root.micMetering
 
                     onClicked: {
-                        micMonitoringChangeRequested(!root.micMonitoring)
+                        micMeteringChangeRequested(!root.micMetering)
                     }
                 }
 

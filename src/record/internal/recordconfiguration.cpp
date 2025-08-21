@@ -9,13 +9,13 @@ using namespace muse;
 using namespace au::record;
 
 namespace {
-const muse::Settings::Key MIC_MONITORING_KEY("record", "record/micMonitoring");
+const muse::Settings::Key MIC_METERING_KEY("record", "record/micMetering");
 }
 
 void RecordConfiguration::init()
 {
-    muse::settings()->setDefaultValue(MIC_MONITORING_KEY, muse::Val(true));
-    muse::settings()->valueChanged(MIC_MONITORING_KEY).onReceive(nullptr, [this](const muse::Val&) {
+    muse::settings()->setDefaultValue(MIC_METERING_KEY, muse::Val(true));
+    muse::settings()->valueChanged(MIC_METERING_KEY).onReceive(nullptr, [this](const muse::Val&) {
         m_micMeteringChanged.notify();
     });
 }
@@ -27,12 +27,12 @@ draw::Color RecordConfiguration::recordColor() const
 
 bool RecordConfiguration::micMetering() const
 {
-    return muse::settings()->value(MIC_MONITORING_KEY).toBool();
+    return muse::settings()->value(MIC_METERING_KEY).toBool();
 }
 
 void RecordConfiguration::setMicMetering(bool enable)
 {
-    muse::settings()->setSharedValue(MIC_MONITORING_KEY, muse::Val(enable));
+    muse::settings()->setSharedValue(MIC_METERING_KEY, muse::Val(enable));
 }
 
 muse::async::Notification RecordConfiguration::micMeteringChanged() const
