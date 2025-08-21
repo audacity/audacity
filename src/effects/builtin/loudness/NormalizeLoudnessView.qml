@@ -4,7 +4,7 @@ import Audacity.Effects
 
 import "../common"
 
-EffectBase {
+BuiltinEffectBase {
     id: root
 
     property string title: normalizeLoudness.effectTitle
@@ -41,8 +41,8 @@ EffectBase {
 
                 model: normalizeLoudness.algorithmOptions
                 currentIndex: root.model.useRmsAlgorithm ? 0 : 1
-                onActivated: function(index) {
-                    root.model.useRmsAlgorithm = index === 0;
+                onActivated: function (index) {
+                    root.model.useRmsAlgorithm = index === 0
                 }
             }
 
@@ -61,11 +61,11 @@ EffectBase {
                 minValue: root.model.targetMin
                 maxValue: root.model.targetMax
                 currentValue: root.model.useRmsAlgorithm ? root.model.rmsTarget : root.model.perceivedLoudnessTarget
-                onValueEdited: function(newValue) {
+                onValueEdited: function (newValue) {
                     if (root.model.useRmsAlgorithm) {
-                        root.model.rmsTarget = newValue;
+                        root.model.rmsTarget = newValue
                     } else {
-                        root.model.perceivedLoudnessTarget = newValue;
+                        root.model.perceivedLoudnessTarget = newValue
                     }
                 }
             }
@@ -77,7 +77,7 @@ EffectBase {
             CheckBox {
                 checked: root.model.normalizeStereoChannelsIndependently
                 onClicked: {
-                    root.model.normalizeStereoChannelsIndependently = !checked;
+                    root.model.normalizeStereoChannelsIndependently = !checked
                 }
             }
 
@@ -94,7 +94,7 @@ EffectBase {
                 enabled: !root.model.useRmsAlgorithm
                 checked: root.model.useDualMono
                 onClicked: {
-                    root.model.useDualMono = !checked;
+                    root.model.useDualMono = !checked
                 }
             }
 

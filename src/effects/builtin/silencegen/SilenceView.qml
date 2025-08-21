@@ -6,7 +6,7 @@ import Audacity.Playback
 import Audacity.Effects
 import "../common"
 
-EffectBase {
+BuiltinEffectBase {
     id: root
 
     property string title: qsTrc("projectscene/silence", "Silence")

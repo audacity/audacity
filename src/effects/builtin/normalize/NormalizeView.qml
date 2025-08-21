@@ -5,7 +5,7 @@ import Audacity.Effects
 
 import "../common"
 
-EffectBase {
+BuiltinEffectBase {
     id: root
 
     property string title: qsTrc("effects/normalize", "Normalize")
@@ -69,7 +69,7 @@ EffectBase {
                 maxValue: 0
                 enabled: normalizePeakAmplitudeCheckbox.checked
                 currentValue: normalize.peakAmplitudeTarget
-                onValueEdited: function(newValue) {
+                onValueEdited: function (newValue) {
                     if (newValue !== normalize.peakAmplitudeTarget) {
                         normalize.peakAmplitudeTarget = newValue
                     }

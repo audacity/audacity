@@ -6,7 +6,7 @@ import Audacity.BuiltinEffects
 
 import "../common"
 
-EffectBase {
+BuiltinEffectBase {
     id: root
 
     property string title: qsTrc("effects/compressor", "Compressor")

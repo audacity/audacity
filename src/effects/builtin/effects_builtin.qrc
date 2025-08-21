@@ -2,7 +2,7 @@
     <qresource prefix="/">
         <file>qml/Audacity/BuiltinEffects/qmldir</file>
         <file>qml/Audacity/BuiltinEffects/BuiltinEffectViewer.qml</file>
-        <file>common/EffectBase.qml</file>
+        <file>common/BuiltinEffectBase.qml</file>
         <file>common/SliderWithTextInput.qml</file>
         <file>common/ParameterKnob.qml</file>
         <file>common/BigParameterKnob.qml</file>

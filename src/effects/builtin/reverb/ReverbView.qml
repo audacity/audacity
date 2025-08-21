@@ -7,7 +7,7 @@ import Audacity.Effects
 
 import "../common"
 
-EffectBase {
+BuiltinEffectBase {
     id: root
 
     property string title: qsTrc("effects/reverb", "Reverb")

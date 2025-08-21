@@ -10,7 +10,7 @@ import "../common"
 // TODO: move to common controls
 import Preferences
 
-EffectBase {
+BuiltinEffectBase {
     id: root
 
     property alias instanceId: dtmf.instanceId
@@ -80,9 +80,7 @@ EffectBase {
                 verticalAlignment: Text.AlignTop
                 horizontalAlignment: Text.AlignLeft
 
-                text: qsTrc(
-                          "effects/dtmf",
-                          "For each tone you wish to generate, enter numbers from 0 to 9, lower case letters from a to z, and the * and # characters.")
+                text: qsTrc("effects/dtmf", "For each tone you wish to generate, enter numbers from 0 to 9, lower case letters from a to z, and the * and # characters.")
 
                 wrapMode: Text.WordWrap
                 font.italic: true
@@ -218,8 +216,7 @@ EffectBase {
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/dtmf",
-                                    "%1%").arg(dtmf.dutyCycle.toFixed(1))
+                        text: qsTrc("effects/dtmf", "%1%").arg(dtmf.dutyCycle.toFixed(1))
                         font.bold: true
                     }
                 }
@@ -233,8 +230,7 @@ EffectBase {
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/dtmf", "%1 ms").arg(
-                                  Math.round(dtmf.toneDuration * 1000))
+                        text: qsTrc("effects/dtmf", "%1 ms").arg(Math.round(dtmf.toneDuration * 1000))
                         font.bold: true
                     }
                 }
@@ -248,8 +244,7 @@ EffectBase {
                     }
 
                     StyledTextLabel {
-                        text: qsTrc("effects/dtmf", "%1 ms").arg(
-                                  Math.round(dtmf.silenceDuration * 1000))
+                        text: qsTrc("effects/dtmf", "%1 ms").arg(Math.round(dtmf.silenceDuration * 1000))
                         font.bold: true
                     }
                 }

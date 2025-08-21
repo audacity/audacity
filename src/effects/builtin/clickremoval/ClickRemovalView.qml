@@ -4,7 +4,7 @@ import Audacity.Effects
 
 import "../common"
 
-EffectBase {
+BuiltinEffectBase {
     id: root
 
     property string title: clickRemoval.effectTitle
@@ -41,7 +41,7 @@ EffectBase {
             step: clickRemoval.thresholdStep
             decimals: clickRemoval.thresholdDecimals
 
-            onNewValueRequested: function(newValue) {
+            onNewValueRequested: function (newValue) {
                 clickRemoval.thresholdValue = newValue
             }
         }
@@ -57,7 +57,7 @@ EffectBase {
             step: clickRemoval.widthStep
             decimals: clickRemoval.widthDecimals
 
-            onNewValueRequested: function(newValue) {
+            onNewValueRequested: function (newValue) {
                 clickRemoval.widthValue = newValue
             }
         }

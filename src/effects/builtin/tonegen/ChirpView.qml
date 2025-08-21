@@ -10,7 +10,7 @@ import "../common"
 // TODO: move to common controls
 import Preferences
 
-EffectBase {
+BuiltinEffectBase {
     id: root
 
     property string title: qsTrc("effects", "Chirp")
@@ -57,7 +57,7 @@ EffectBase {
             currentIndex: chirp.waveform
             model: chirp.waveforms
 
-            onValueEdited: function(newIndex, newValue) {
+            onValueEdited: function (newIndex, newValue) {
                 chirp.waveform = newIndex
             }
         }
@@ -102,7 +102,7 @@ EffectBase {
 
                             onToggled: {
                                 if (chirp.interpolation != prv.interpolationLinear) {
-                                    chirp.interpolation = prv.interpolationLinear;
+                                    chirp.interpolation = prv.interpolationLinear
                                 }
                             }
                         }
@@ -114,7 +114,7 @@ EffectBase {
 
                             onToggled: {
                                 if (chirp.interpolation != prv.interpolationLogarithmic) {
-                                    chirp.interpolation = prv.interpolationLogarithmic;
+                                    chirp.interpolation = prv.interpolationLogarithmic
                                 }
                             }
                         }
@@ -139,7 +139,7 @@ EffectBase {
 
                         measureUnitsSymbol: qsTrc("global", "Hz")
 
-                        onValueEdited: function(newValue) {
+                        onValueEdited: function (newValue) {
                             if (chirp.frequencyStart !== newValue) {
                                 chirp.frequencyStart = newValue
                             }
@@ -159,7 +159,7 @@ EffectBase {
 
                         measureUnitsSymbol: qsTrc("global", "Hz")
 
-                        onValueEdited: function(newValue) {
+                        onValueEdited: function (newValue) {
                             if (chirp.frequencyEnd !== newValue) {
                                 chirp.frequencyEnd = newValue
                             }
@@ -204,7 +204,7 @@ EffectBase {
                     decimals: 4
                     step: 0.01
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         if (chirp.amplitudeStart !== newValue) {
                             chirp.amplitudeStart = newValue
                         }
@@ -224,7 +224,7 @@ EffectBase {
                     decimals: 4
                     step: 0.01
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         if (chirp.amplitudeEnd !== newValue) {
                             chirp.amplitudeEnd = newValue
                         }

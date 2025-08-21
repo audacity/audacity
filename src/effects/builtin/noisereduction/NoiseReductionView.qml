@@ -5,7 +5,7 @@ import Audacity.Effects
 
 import "../common"
 
-EffectBase {
+BuiltinEffectBase {
     id: root
 
     property string title: qsTrc("effects/noisereduction", "Noise Reduction")
@@ -129,8 +129,8 @@ EffectBase {
                         Layout.bottomMargin: 16
 
                         value: noiseReduction.reduction
-                        onNewValueRequested: function(newValue) {
-                            noiseReduction.reduction = newValue;
+                        onNewValueRequested: function (newValue) {
+                            noiseReduction.reduction = newValue
                         }
                         measureUnitsSymbol: qsTrc("global", "dB")
                         from: noiseReduction.reductionMin
@@ -154,8 +154,8 @@ EffectBase {
                         Layout.bottomMargin: 16
 
                         value: noiseReduction.sensitivity
-                        onNewValueRequested: function(newValue) {
-                            noiseReduction.sensitivity = newValue;
+                        onNewValueRequested: function (newValue) {
+                            noiseReduction.sensitivity = newValue
                         }
                         from: noiseReduction.sensitivityMin
                         to: noiseReduction.sensitivityMax
@@ -178,8 +178,8 @@ EffectBase {
                         Layout.bottomMargin: 16
 
                         value: noiseReduction.frequencySmoothingBands
-                        onNewValueRequested: function(newValue) {
-                            noiseReduction.frequencySmoothingBands = newValue;
+                        onNewValueRequested: function (newValue) {
+                            noiseReduction.frequencySmoothingBands = newValue
                         }
                         measureUnitsSymbol: qsTrc("effects/noisereduction", "bands")
                         from: noiseReduction.frequencySmoothingBandsMin

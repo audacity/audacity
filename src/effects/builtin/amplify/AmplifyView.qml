@@ -4,7 +4,7 @@ import Audacity.Effects
 
 import "../common"
 
-EffectBase {
+BuiltinEffectBase {
     id: root
 
     property string title: amplify.effectTitle
@@ -45,7 +45,7 @@ EffectBase {
             decimals: amplify.ampDecimals
             step: amplify.ampStep
 
-            onNewValueRequested: function(newValue) {
+            onNewValueRequested: function (newValue) {
                 amplify.ampValue = newValue
             }
         }
@@ -62,7 +62,7 @@ EffectBase {
             decimals: amplify.newPeakDecimals
             step: amplify.newPeakStep
 
-            onNewValueRequested: function(newValue) {
+            onNewValueRequested: function (newValue) {
                 amplify.newPeakValue = newValue
             }
         }
