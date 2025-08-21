@@ -9,7 +9,6 @@
 #include "playback/iplayback.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackcontroller.h"
-#include "record/irecord.h"
 
 #include "uicomponents/view/toolbaritem.h"
 
@@ -37,7 +36,6 @@ class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
     muse::Inject<IPlayback> playback;
     muse::Inject<IPlaybackConfiguration> configuration;
     muse::Inject<IPlaybackController> controller;
-    muse::Inject<record::IRecord> record;
 
 public:
     explicit PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,

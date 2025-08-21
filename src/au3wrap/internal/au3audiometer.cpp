@@ -7,6 +7,8 @@
 
 #include "au3audiometer.h"
 
+#include "global/async/async.h"
+
 #include "libraries/lib-utility/MemoryX.h"
 
 namespace {
@@ -29,20 +31,6 @@ IMeterSender::Sample GetAbsValue(const float* buffer, size_t frames, size_t step
 }
 
 namespace au::au3 {
-Meter::Meter()
-{
-    m_audioSignalChanges.onReceive(this,
-                                   [this](const std::vector<Meter::Data>& data) {
-        for (const Meter::Data& item : data) {
-            const auto it = m_channels.find(item.key);
-            if (it != m_channels.end()) {
-                const au::audio::MeterSignal signal { item.peak, item.rms };
-                it->second.send(item.channel, signal);
-            }
-        }
-    });
-}
-
 void Meter::push(uint8_t channel, const IMeterSender::InterleavedSampleData& sampleData, int64_t key)
 {
     const auto value = GetAbsValue(sampleData.buffer, sampleData.frames, sampleData.nChannels);
@@ -60,11 +48,14 @@ void Meter::push(uint8_t channel, const IMeterSender::Sample& sample, int64_t ke
 
 void Meter::reset()
 {
-    for (auto& [key, _] : m_channels) {
-        push(0, { 0.0, 0.0 }, key);
-        push(1, { 0.0, 0.0 }, key);
-    }
-    sendAll();
+    // The reset is deferred to ensure that these zeroed values are the last ones processed
+    muse::async::Async::call(this, [this]() {
+        for (auto& [key, _] : m_channels) {
+            push(0, { 0.0, 0.0 }, key);
+            push(1, { 0.0, 0.0 }, key);
+        }
+        sendAll();
+    });
 }
 
 void Meter::reserve(size_t size)
@@ -74,7 +65,13 @@ void Meter::reserve(size_t size)
 
 void Meter::sendAll()
 {
-    m_audioSignalChanges.send(std::move(m_trackData));
+    for (const auto& item : m_trackData) {
+        const auto it = m_channels.find(item.key);
+        if (it != m_channels.end()) {
+            const au::audio::MeterSignal signal { item.peak, item.rms };
+            it->second.send(item.channel, signal);
+        }
+    }
     m_trackData = {};
 }
 

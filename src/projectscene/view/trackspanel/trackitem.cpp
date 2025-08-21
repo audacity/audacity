@@ -55,23 +55,13 @@ void TrackItem::init(const trackedit::Track& track)
         setAudioChannelRMS(channel, meterSignal.rms.pressure);
     });
 
-    record()->audioInput()->monitoringChanged().onNotify(this, [this]() {
-        setAudioChannelVolumePressure(0, playback::MIN_DISPLAYED_DBFS);
-        setAudioChannelRMS(0, playback::MIN_DISPLAYED_DBFS);
-        setAudioChannelVolumePressure(1, playback::MIN_DISPLAYED_DBFS);
-        setAudioChannelRMS(1, playback::MIN_DISPLAYED_DBFS);
-
-        m_isMonitoring = record()->audioInput()->isMonitoring();
-    });
-    m_isMonitoring = record()->audioInput()->isMonitoring();
-
     audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
         m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
     });
     m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
 
     record()->audioInput()->recordSignalChanges().onReceive(this, [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
-        if (!m_isFocused || !m_isMonitoring) {
+        if (!m_isFocused) {
             return;
         }
 

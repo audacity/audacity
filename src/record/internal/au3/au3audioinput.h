@@ -6,6 +6,8 @@
 
 #include "global/async/asyncable.h"
 
+#include "libraries/lib-audio-io/AudioIO.h"
+
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
@@ -38,9 +40,6 @@ public:
     void setAudibleInputMonitoring(bool enable) override;
     bool audibleInputMonitoring() const override;
 
-    muse::async::Notification monitoringChanged() const override;
-    bool isMonitoring() const override;
-
 private:
     au3::Au3Project& projectRef() const;
 
@@ -50,7 +49,6 @@ private:
     void restartMonitoring();
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
-    muse::async::Notification m_monitoringChanged;
 
     std::shared_ptr<au::au3::Meter> m_inputMeter;
 };

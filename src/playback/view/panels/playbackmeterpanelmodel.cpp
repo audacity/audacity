@@ -10,10 +10,6 @@ PlaybackMeterPanelModel::PlaybackMeterPanelModel(QObject* parent)
     playback()->audioOutput()->playbackSignalChanges().onReceive(this,
                                                                  [this](const trackedit::audioch_t audioChNum,
                                                                         const audio::MeterSignal& meterSignal) {
-        if (!isPlaying() && !record()->audioInput()->audibleInputMonitoring()) {
-            return;
-        }
-
         setAudioChannelVolumePressure(audioChNum, meterSignal.peak.pressure);
         setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
     });
@@ -26,10 +22,6 @@ PlaybackMeterPanelModel::PlaybackMeterPanelModel(QObject* parent)
     playback()->audioOutput()->playbackVolume().onResolve(this, [this](float volume) {
         m_level = volume;
         emit levelChanged();
-    });
-
-    record()->audioInput()->monitoringChanged().onNotify(this, [this]() {
-        resetAudioChannelsVolumePressure();
     });
 
     controller()->isPlayingChanged().onNotify(this, [this]() {

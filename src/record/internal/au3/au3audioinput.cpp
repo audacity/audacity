@@ -140,7 +140,6 @@ void Au3AudioInput::startMonitoring()
         }
 
         gAudioIO->StartMonitoring(ProjectAudioIO::GetDefaultOptions(projectRef()));
-        m_monitoringChanged.notify();
     });
 }
 
@@ -161,7 +160,6 @@ void Au3AudioInput::stopMonitoring()
         while (gAudioIO->IsBusy()) {
             std::this_thread::sleep_for(100ms);
         }
-        m_monitoringChanged.notify();
     });
 }
 
@@ -174,20 +172,6 @@ void Au3AudioInput::restartMonitoring()
     }
 
     startMonitoring();
-}
-
-muse::async::Notification Au3AudioInput::monitoringChanged() const
-{
-    return m_monitoringChanged;
-}
-
-bool Au3AudioInput::isMonitoring() const
-{
-    auto gAudioIO = AudioIO::Get();
-    if (!gAudioIO) {
-        return false;
-    }
-    return gAudioIO->IsMonitoring();
 }
 
 Au3Project& Au3AudioInput::projectRef() const
