@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "abstracteffectsettingmodel.h"
+#include "builtineffectsettingmodel.h"
 #include "libraries/lib-components/SettingsVisitor.h"
 
 #include <functional>
@@ -13,13 +13,13 @@ template<typename EffectType>
 using ParamGetter = std::function<EffectParameter<typename EffectType::Settings, double, double, double>(const EffectType&)>;
 
 template<typename EffectType>
-class EffectSettingModelImpl : public AbstractEffectSettingModel
+class EffectSettingModelImpl : public BuiltinEffectSettingModel
 {
 public:
     using SettingsType = typename EffectType::Settings;
 
     EffectSettingModelImpl(QObject* parent, ParamGetter<EffectType> getter)
-        : AbstractEffectSettingModel{parent}, m_getter(std::move(getter)) {}
+        : BuiltinEffectSettingModel{parent}, m_getter(std::move(getter)) {}
 
     double value() const override
     {

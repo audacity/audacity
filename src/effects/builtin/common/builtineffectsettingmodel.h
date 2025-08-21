@@ -3,10 +3,10 @@
  */
 #pragma once
 
-#include "abstracteffectmodel.h"
+#include "builtineffectmodel.h"
 
 namespace au::effects {
-class AbstractEffectSettingModel : public AbstractEffectModel
+class BuiltinEffectSettingModel : public BuiltinEffectModel
 {
     Q_OBJECT
     Q_PROPERTY(QString paramId READ paramId WRITE setParamId NOTIFY paramIdChanged FINAL)
@@ -17,8 +17,8 @@ class AbstractEffectSettingModel : public AbstractEffectModel
     Q_PROPERTY(double step READ step CONSTANT FINAL)
 
 public:
-    AbstractEffectSettingModel(QObject* parent);
-    ~AbstractEffectSettingModel() override = default;
+    BuiltinEffectSettingModel(QObject* parent);
+    ~BuiltinEffectSettingModel() override = default;
 
     QString paramId() const;
     void setParamId(const QString& newParamId);

@@ -9,7 +9,7 @@
 
 namespace au::effects {
 CompressorViewModel::CompressorViewModel(QObject* parent)
-    : AbstractEffectModel{parent}
+    : BuiltinEffectModel{parent}
 {
 }
 

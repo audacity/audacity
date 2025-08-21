@@ -17,7 +17,7 @@
 #include "global/async/asyncable.h"
 
 namespace au::effects {
-class AbstractEffectModel : public QObject, public muse::async::Asyncable
+class BuiltinEffectModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId CONSTANT FINAL)
@@ -33,7 +33,7 @@ public:
     muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
-    AbstractEffectModel(QObject* parent = nullptr);
+    BuiltinEffectModel(QObject* parent = nullptr);
 
     int instanceId() const;
     QString effectId() const;
@@ -78,7 +78,7 @@ protected:
     template<typename EffectType>
     EffectType& effect()
     {
-        return const_cast<EffectType&>(static_cast<const AbstractEffectModel*>(this)->effect<EffectType>());
+        return const_cast<EffectType&>(static_cast<const BuiltinEffectModel*>(this)->effect<EffectType>());
     }
 
 private:

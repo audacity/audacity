@@ -7,7 +7,7 @@
 #include "compressoreffect.h"
 
 namespace au::effects {
-class CompressorViewModel : public AbstractEffectModel
+class CompressorViewModel : public BuiltinEffectModel
 {
     Q_OBJECT
 

@@ -3,12 +3,12 @@
 */
 #pragma once
 
-#include "../common/abstracteffectmodel.h"
+#include "../common/builtineffectmodel.h"
 #include "../common/params.h"
 
 namespace au::effects {
 class AmplifyEffect;
-class AmplifyViewModel : public AbstractEffectModel
+class AmplifyViewModel : public BuiltinEffectModel
 {
     Q_OBJECT
 

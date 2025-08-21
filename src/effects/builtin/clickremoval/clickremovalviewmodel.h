@@ -3,11 +3,11 @@
  */
 #pragma once
 
-#include "../common/abstracteffectmodel.h"
+#include "../common/builtineffectmodel.h"
 
 namespace au::effects {
 class ClickRemovalEffect;
-class ClickRemovalViewModel : public AbstractEffectModel
+class ClickRemovalViewModel : public BuiltinEffectModel
 {
     Q_OBJECT
 

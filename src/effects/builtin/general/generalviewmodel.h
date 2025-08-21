@@ -3,10 +3,10 @@
 */
 #pragma once
 
-#include "../common/abstracteffectmodel.h"
+#include "../common/builtineffectmodel.h"
 
 namespace au::effects {
-class GeneralViewModel : public AbstractEffectModel
+class GeneralViewModel : public BuiltinEffectModel
 {
     Q_OBJECT
 public:

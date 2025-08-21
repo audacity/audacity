@@ -6,7 +6,7 @@
 #include "internal/builtineffectsrepository.h"
 #include "internal/builtinviewlauncher.h"
 
-#include "common/abstracteffectmodel.h"
+#include "common/builtineffectmodel.h"
 #include "common/valuewarper/valuewarper.h"
 
 #include "view/builtineffectviewloader.h"
@@ -49,7 +49,7 @@ void BuiltinEffectsModule::registerResources()
 
 void BuiltinEffectsModule::registerUiTypes()
 {
-    qmlRegisterUncreatableType<AbstractEffectModel>("Audacity.BuiltinEffects", 1, 0, "AbstractEffectModel", "Not creatable abstract type");
+    qmlRegisterUncreatableType<BuiltinEffectModel>("Audacity.BuiltinEffects", 1, 0, "BuiltinEffectModel", "Not creatable abstract type");
     qmlRegisterType<BuiltinEffectViewLoader>("Audacity.BuiltinEffects", 1, 0, "BuiltinEffectViewLoader");
     qmlRegisterType<ValueWarper>("Audacity.BuiltinEffects", 1, 0, "ValueWarper");
     qmlRegisterUncreatableType<ValueWarpingTypes>("Audacity.BuiltinEffects", 1, 0, "ValueWarpingType", "Not creatable from QML");

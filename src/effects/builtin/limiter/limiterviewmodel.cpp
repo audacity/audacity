@@ -7,7 +7,7 @@
 
 namespace au::effects {
 LimiterViewModel::LimiterViewModel(QObject* parent)
-    : AbstractEffectModel{parent}
+    : BuiltinEffectModel{parent}
 {
 }
 

@@ -3,13 +3,13 @@
  */
 #pragma once
 
-#include "../common/abstracteffectmodel.h"
+#include "../common/builtineffectmodel.h"
 #include "../common/params.h"
 
 namespace au::effects {
 class GraphicEq;
 class GraphicEqBandsModel;
-class GraphicEqViewModel : public AbstractEffectModel
+class GraphicEqViewModel : public BuiltinEffectModel
 {
     Q_OBJECT
     Q_PROPERTY(GraphicEqBandsModel * bandsModel READ bandsModel NOTIFY bandsModelChanged FINAL)

@@ -7,12 +7,11 @@ import Muse.UiComponents
 import Audacity.BuiltinEffects
 
 Rectangle {
-
     id: root
 
     property var dialogView: null
 
-    property AbstractEffectModel model: null
+    property BuiltinEffectModel model: null
     property bool usesPresets: model ? model.usesPresets : true
 
     color: ui.theme.backgroundPrimaryColor

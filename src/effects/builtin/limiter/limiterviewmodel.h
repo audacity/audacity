@@ -10,7 +10,7 @@
 #include <functional>
 
 namespace au::effects {
-class LimiterViewModel : public AbstractEffectModel
+class LimiterViewModel : public BuiltinEffectModel
 {
     Q_OBJECT
 
