@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../common/abstracteffectmodel.h"
+#include "../common/builtineffectmodel.h"
 
 namespace au::effects {
 class ReverbEffect;
 struct ReverbSettings;
-class ReverbViewModel : public AbstractEffectModel
+class ReverbViewModel : public BuiltinEffectModel
 {
     Q_OBJECT
     Q_PROPERTY(QVariantMap paramsList READ paramsList NOTIFY paramsListChanged FINAL)

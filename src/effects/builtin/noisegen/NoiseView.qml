@@ -9,7 +9,7 @@ import "../common"
 // TODO: move to common controls
 import Preferences
 
-EffectBase {
+BuiltinEffectBase {
     id: root
 
     property string title: qsTrc("effects", "Noise")
@@ -63,7 +63,7 @@ EffectBase {
             step: 0.01
             currentValue: noise.amplitude
 
-            onValueEdited: function(newValue) {
+            onValueEdited: function (newValue) {
                 if (noise.amplitude !== newValue) {
                     noise.amplitude = newValue
                 }

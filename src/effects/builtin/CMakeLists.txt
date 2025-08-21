@@ -18,12 +18,20 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/builtinviewlauncher.h
 
     ${CMAKE_CURRENT_LIST_DIR}/common/params.h
-    ${CMAKE_CURRENT_LIST_DIR}/common/abstracteffectmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/common/abstracteffectmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/common/builtineffectmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/common/builtineffectmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/common/builtineffectsettingmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/common/builtineffectsettingmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffect.h
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/valuewarper.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/valuewarper.h
+    ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/valuewarpertypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/warpingtransformer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/warpingtransformer.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectviewloader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectviewloader.h
@@ -48,6 +56,16 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/clickremoval/clickremovaleffect.h
     ${CMAKE_CURRENT_LIST_DIR}/clickremoval/clickremovalviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/clickremoval/clickremovalviewmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/compressor/compressoreffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/compressor/compressoreffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/compressor/compressorviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/compressor/compressorviewmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/limiter/limiterviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/limiter/limiterviewmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/limiter/limitereffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/limiter/limitereffect.h
 
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeeffect.h

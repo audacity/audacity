@@ -532,6 +532,9 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-effects/StatefulEffectBase.cpp
     ${AU3_LIBRARIES}/lib-effects/StatefulEffectBase.h
 
+    ${AU3_LIBRARIES}/lib-builtin-effects/CompressorInstance.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/CompressorInstance.h
+
     ${AU3_LIBRARIES}/lib-dynamic-range-processor/CompressorProcessor.cpp
     ${AU3_LIBRARIES}/lib-dynamic-range-processor/CompressorProcessor.h
     ${AU3_LIBRARIES}/lib-dynamic-range-processor/DownwardMeterValueProvider.cpp

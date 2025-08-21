@@ -1,7 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "abstracteffectmodel.h"
+#include "builtineffectmodel.h"
 
 #include "../view/builtineffectviewloader.h"
 
@@ -9,13 +9,13 @@
 
 using namespace au::effects;
 
-AbstractEffectModel::AbstractEffectModel(QObject* parent)
+BuiltinEffectModel::BuiltinEffectModel(QObject* parent)
     : QObject(parent), m_instanceId(BuiltinEffectViewLoader::initializationInstanceId())
 {
     assert(m_instanceId != -1);
 }
 
-void AbstractEffectModel::init()
+void BuiltinEffectModel::init()
 {
     instancesRegister()->settingsChanged(m_instanceId).onNotify(this, [this]() {
         doReload();
@@ -28,12 +28,12 @@ void AbstractEffectModel::init()
     doReload();
 }
 
-std::shared_ptr<au::effects::EffectInstance> AbstractEffectModel::instance() const
+std::shared_ptr<au::effects::EffectInstance> BuiltinEffectModel::instance() const
 {
     return instancesRegister()->instanceById(m_instanceId);
 }
 
-const EffectSettings& AbstractEffectModel::settings() const
+const EffectSettings& BuiltinEffectModel::settings() const
 {
     const EffectSettings* s = instancesRegister()->settingsById(m_instanceId);
     IF_ASSERT_FAILED(s) {
@@ -44,17 +44,17 @@ const EffectSettings& AbstractEffectModel::settings() const
     return *s;
 }
 
-EffectSettingsAccessPtr AbstractEffectModel::settingsAccess() const
+EffectSettingsAccessPtr BuiltinEffectModel::settingsAccess() const
 {
     return instancesRegister()->settingsAccessById(m_instanceId);
 }
 
-EffectInstanceId AbstractEffectModel::instanceId() const
+EffectInstanceId BuiltinEffectModel::instanceId() const
 {
     return m_instanceId;
 }
 
-void AbstractEffectModel::preview()
+void BuiltinEffectModel::preview()
 {
     if (const EffectSettingsAccessPtr access = this->settingsAccess()) {
         access->ModifySettings([this](EffectSettings& settings) {
@@ -64,7 +64,7 @@ void AbstractEffectModel::preview()
     }
 }
 
-void AbstractEffectModel::modifySettings(const std::function<void(EffectSettings& settings)>& modifier)
+void BuiltinEffectModel::modifySettings(const std::function<void(EffectSettings& settings)>& modifier)
 {
     const EffectSettingsAccessPtr access = this->settingsAccess();
     IF_ASSERT_FAILED(access) {
@@ -76,7 +76,7 @@ void AbstractEffectModel::modifySettings(const std::function<void(EffectSettings
     });
 }
 
-void AbstractEffectModel::commitSettings()
+void BuiltinEffectModel::commitSettings()
 {
     const EffectSettingsAccessPtr access = this->settingsAccess();
     IF_ASSERT_FAILED(access) {
@@ -87,7 +87,7 @@ void AbstractEffectModel::commitSettings()
     projectHistory()->markUnsaved();
 }
 
-QString AbstractEffectModel::effectId() const
+QString BuiltinEffectModel::effectId() const
 {
     return instancesRegister()->effectIdByInstanceId(m_instanceId);
 }

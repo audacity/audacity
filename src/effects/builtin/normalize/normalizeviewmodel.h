@@ -3,12 +3,12 @@
 */
 #pragma once
 
-#include "../common/abstracteffectmodel.h"
+#include "../common/builtineffectmodel.h"
 #include "../common/params.h"
 
 namespace au::effects {
 class NormalizeEffect;
-class NormalizeViewModel : public AbstractEffectModel
+class NormalizeViewModel : public BuiltinEffectModel
 {
     Q_OBJECT
     Q_PROPERTY(bool removeDC READ removeDC WRITE setRemoveDC NOTIFY removeDCChanged FINAL)

@@ -3,11 +3,11 @@
  */
 #pragma once
 
-#include "../common/abstracteffectmodel.h"
+#include "../common/builtineffectmodel.h"
 
 namespace au::effects {
 class NormalizeLoudnessEffect;
-class NormalizeLoudnessViewModel : public AbstractEffectModel
+class NormalizeLoudnessViewModel : public BuiltinEffectModel
 {
     Q_OBJECT
 

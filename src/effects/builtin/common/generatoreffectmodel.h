@@ -3,13 +3,13 @@
  */
 #pragma once
 
-#include "../common/abstracteffectmodel.h"
+#include "../common/builtineffectmodel.h"
 
 namespace au::effects {
 class GeneratorEffect;
 class ToneEffect;
 
-class GeneratorEffectModel : public AbstractEffectModel
+class GeneratorEffectModel : public BuiltinEffectModel
 {
     Q_OBJECT
     Q_PROPERTY(double duration READ duration WRITE prop_setDuration NOTIFY durationChanged)

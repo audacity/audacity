@@ -31,5 +31,16 @@
         "[cpp]": {
             "editor.defaultFormatter": "zachflower.uncrustify"
         },
+        "emeraldwalk.runonsave": {
+            "commands": [
+                {
+                    "match": "\\.qml$",
+                    // Requires Qt 6.10.0 (at least the qmlformat tool) to be installed.
+                    // We don't want to use this command for an earlier version, because the semicolon-rule option
+                    // isn't available and running it without would add semicolons after each statement.
+                    "cmd": "C:/Qt/6.10.0/msvc2022_64/bin/qmlformat.exe -i --semicolon-rule=essential ${file}",
+                }
+            ]
+        }
     }
 }

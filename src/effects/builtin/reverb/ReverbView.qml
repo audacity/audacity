@@ -7,7 +7,7 @@ import Audacity.Effects
 
 import "../common"
 
-EffectBase {
+BuiltinEffectBase {
     id: root
 
     property string title: qsTrc("effects/reverb", "Reverb")
@@ -74,8 +74,9 @@ EffectBase {
                     Layout.fillWidth: true
 
                     parameter: reverb.paramsList["RoomSize"]
+                    radius: 24
 
-                    onNewValueRequested: function(key, newValue) {
+                    onNewValueRequested: function (key, newValue) {
                         newParameterValueRequested(key, newValue)
                         value = newValue
                     }
@@ -87,8 +88,9 @@ EffectBase {
                     Layout.fillWidth: true
 
                     parameter: reverb.paramsList["StereoWidth"]
+                    radius: 24
 
-                    onNewValueRequested: function(key, newValue) {
+                    onNewValueRequested: function (key, newValue) {
                         newParameterValueRequested(key, newValue)
                         value = newValue
                     }
@@ -100,8 +102,9 @@ EffectBase {
                     Layout.fillWidth: true
 
                     parameter: reverb.paramsList["PreDelay"]
+                    radius: 24
 
-                    onNewValueRequested: function(key, newValue) {
+                    onNewValueRequested: function (key, newValue) {
                         newParameterValueRequested(key, newValue)
                         value = newValue
                     }
@@ -134,7 +137,7 @@ EffectBase {
 
                 parameter: reverb.paramsList["HfDamping"]
 
-                onNewValueRequested: function(key, newValue) {
+                onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
@@ -148,7 +151,7 @@ EffectBase {
 
                 parameter: reverb.paramsList["Reverberance"]
 
-                onNewValueRequested: function(key, newValue) {
+                onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
@@ -162,7 +165,7 @@ EffectBase {
 
                 parameter: reverb.paramsList["ToneLow"]
 
-                onNewValueRequested: function(key, newValue) {
+                onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
@@ -176,7 +179,7 @@ EffectBase {
 
                 parameter: reverb.paramsList["ToneHigh"]
 
-                onNewValueRequested: function(key, newValue) {
+                onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
@@ -194,7 +197,7 @@ EffectBase {
 
                 parameter: reverb.paramsList["WetGain"]
 
-                onNewValueRequested: function(key, newValue) {
+                onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
@@ -208,7 +211,7 @@ EffectBase {
 
                 parameter: reverb.paramsList["DryGain"]
 
-                onNewValueRequested: function(key, newValue) {
+                onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
@@ -219,9 +222,9 @@ EffectBase {
             CheckBox {
                 id: wetOnly
 
-                text: qsTrc("effects/reverb", "Wet Only")
+                text: qsTrc("effects/reverb", "Wet only")
                 checked: reverb.wetOnly
-                onClicked: function() {
+                onClicked: function () {
                     reverb.wetOnly = !reverb.wetOnly
                     reverb.commitSettings()
                 }

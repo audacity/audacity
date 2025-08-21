@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "../common/abstracteffectmodel.h"
+#include "../common/builtineffectmodel.h"
 #include "../common/params.h"
 
 #include "global/iinteractive.h"
@@ -11,7 +11,7 @@
 namespace au::effects {
 class NoiseReductionEffect;
 
-class NoiseReductionViewModel : public AbstractEffectModel
+class NoiseReductionViewModel : public BuiltinEffectModel
 {
     Q_OBJECT
     Q_PROPERTY(bool isApplyAllowed READ isApplyAllowed NOTIFY isApplyAllowedChanged FINAL)

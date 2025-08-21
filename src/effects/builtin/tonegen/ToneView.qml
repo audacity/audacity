@@ -9,7 +9,7 @@ import "../common"
 // TODO: move to common controls
 import Preferences
 
-EffectBase {
+BuiltinEffectBase {
     id: root
 
     property string title: qsTrc("effects/tone", "Tone")
@@ -27,7 +27,6 @@ EffectBase {
         readonly property int interpolationLinear: 0
         readonly property int interpolationLogarithmic: 1
     }
-
 
     ToneViewModel {
         id: tone
@@ -56,7 +55,7 @@ EffectBase {
             currentIndex: tone.waveform
             model: tone.waveforms
 
-            onValueEdited: function(newIndex, newValue) {
+            onValueEdited: function (newIndex, newValue) {
                 tone.waveform = newIndex
             }
         }
@@ -74,7 +73,7 @@ EffectBase {
 
             measureUnitsSymbol: qsTrc("global", "Hz")
 
-            onValueEdited: function(newValue) {
+            onValueEdited: function (newValue) {
                 if (tone.frequencyStart !== newValue) {
                     tone.frequencyStart = newValue
                 }
@@ -94,7 +93,7 @@ EffectBase {
             decimals: 4
             step: 0.01
 
-            onValueEdited: function(newValue) {
+            onValueEdited: function (newValue) {
                 if (tone.amplitudeStart !== newValue) {
                     tone.amplitudeStart = newValue
                 }

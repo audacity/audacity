@@ -2,11 +2,18 @@
     <qresource prefix="/">
         <file>qml/Audacity/BuiltinEffects/qmldir</file>
         <file>qml/Audacity/BuiltinEffects/BuiltinEffectViewer.qml</file>
-        <file>common/EffectBase.qml</file>
+        <file>common/BuiltinEffectBase.qml</file>
         <file>common/SliderWithTextInput.qml</file>
+        <file>common/ParameterKnob.qml</file>
+        <file>common/BigParameterKnob.qml</file>
+        <file>common/SettingKnob.qml</file>
         <file>amplify/AmplifyView.qml</file>
         <file>clickremoval/ClickRemovalView.qml</file>
         <file>loudness/NormalizeLoudnessView.qml</file>
+        <file>compressor/CompressorView.qml</file>
+        <file>compressor/CompressionCurve.qml</file>
+        <file>compressor/CompressionCurvePainter.qml</file>
+        <file>limiter/LimiterView.qml</file>
         <file>normalize/NormalizeView.qml</file>
         <file>graphiceq/GraphicEqBoard.qml</file>
         <file>graphiceq/GraphicEqFader.qml</file>
@@ -22,7 +29,5 @@
         <file>noisegen/NoiseView.qml</file>
         <file>noisereduction/NoiseReductionSlider.qml</file>
         <file>noisereduction/NoiseReductionView.qml</file>
-        <file>reverb/ParameterKnob.qml</file>
-        <file>reverb/BigParameterKnob.qml</file>
     </qresource>
 </RCC>

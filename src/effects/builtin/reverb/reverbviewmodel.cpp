@@ -34,7 +34,7 @@ void ReverbViewModel::doReload()
     m_paramsList.clear();
 
     m_paramsList["RoomSize"] = makeItem("RoomSize",
-                                        muse::qtrc("effects/reverb", "Room Size"),
+                                        muse::qtrc("effects/reverb", "Room size"),
                                         muse::qtrc("global", "%"),
                                         rs.mRoomSize,
                                         ReverbEffect::RoomSize.min,
@@ -70,7 +70,7 @@ void ReverbViewModel::doReload()
                                          );
 
     m_paramsList["ToneLow"] = makeItem("ToneLow",
-                                       muse::qtrc("effects/reverb", "Tone Low"),
+                                       muse::qtrc("effects/reverb", "Low tone"),
                                        muse::qtrc("global", "%"),
                                        rs.mToneLow,
                                        ReverbEffect::ToneLow.min,
@@ -79,7 +79,7 @@ void ReverbViewModel::doReload()
                                        );
 
     m_paramsList["ToneHigh"] = makeItem("ToneHigh",
-                                        muse::qtrc("effects/reverb", "Tone High"),
+                                        muse::qtrc("effects/reverb", "High tone"),
                                         muse::qtrc("global", "%"),
                                         rs.mToneHigh,
                                         ReverbEffect::ToneHigh.min,
@@ -88,7 +88,7 @@ void ReverbViewModel::doReload()
                                         );
 
     m_paramsList["WetGain"] = makeItem("WetGain",
-                                       muse::qtrc("effects/reverb", "Wet Gain"),
+                                       muse::qtrc("effects/reverb", "Wet gain"),
                                        muse::qtrc("global", "dB"),
                                        rs.mWetGain,
                                        ReverbEffect::WetGain.min,
@@ -97,7 +97,7 @@ void ReverbViewModel::doReload()
                                        );
 
     m_paramsList["DryGain"] = makeItem("DryGain",
-                                       muse::qtrc("effects/reverb", "Dry Gain"),
+                                       muse::qtrc("effects/reverb", "Dry gain"),
                                        muse::qtrc("global", "dB"),
                                        rs.mDryGain,
                                        ReverbEffect::DryGain.min,
@@ -106,7 +106,7 @@ void ReverbViewModel::doReload()
                                        );
 
     m_paramsList["StereoWidth"] = makeItem("StereoWidth",
-                                           muse::qtrc("effects/reverb", "Stereo Width"),
+                                           muse::qtrc("effects/reverb", "Stereo width"),
                                            muse::qtrc("global", "%"),
                                            rs.mStereoWidth,
                                            ReverbEffect::StereoWidth.min,
