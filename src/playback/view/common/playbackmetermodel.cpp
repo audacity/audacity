@@ -46,10 +46,6 @@ PlaybackMeterModel::PlaybackMeterModel(QObject* parent)
         emit positionChanged();
     });
 
-    configuration()->playbackHorizontalMeterSizeChanged().onNotify(this, [this]() {
-        emit meterSizeChanged();
-    });
-
     configuration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
         emit meterDbRangeChanged();
         emit dbRangeChanged();
@@ -116,7 +112,7 @@ QString PlaybackMeterModel::sampleToText(double sample) const
 QVariantList PlaybackMeterModel::fullSteps() const
 {
     QVariantList steps;
-    for (const auto& step : meterController()->fullSteps()) {
+    for (const auto& step : meterController()->fullSteps(m_meterSize)) {
         steps.append(step);
     }
 
@@ -126,7 +122,7 @@ QVariantList PlaybackMeterModel::fullSteps() const
 QVariantList PlaybackMeterModel::smallSteps() const
 {
     QVariantList steps;
-    for (const auto& step : meterController()->smallSteps()) {
+    for (const auto& step : meterController()->smallSteps(m_meterSize)) {
         steps.append(step);
     }
 
@@ -177,18 +173,18 @@ PlaybackMeterPosition::MeterPosition PlaybackMeterModel::meterPosition() const
 
 void PlaybackMeterModel::setMeterSize(int size)
 {
-    if (meterSize() == size) {
+    if (m_meterSize == size) {
         return;
     }
 
-    configuration()->setPlaybackHorizontalMeterSize(size);
+    m_meterSize = size;
     emit smallStepsChanged();
     emit fullStepsChanged();
 }
 
 int PlaybackMeterModel::meterSize() const
 {
-    return configuration()->playbackHorizontalMeterSize();
+    return m_meterSize;
 }
 
 void PlaybackMeterModel::setMeterDbRange(PlaybackMeterDbRange::DbRange range)

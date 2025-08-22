@@ -191,8 +191,7 @@ FlatButton {
             StyledTextLabel {
                 Layout.fillWidth: true
 
-                text: qsTrc("record", "Adjust the level of your OS configured microphone")
-                font.italic: true
+                text: qsTrc("record", "Note: this control is tied to your computer’s main mic volume")
                 horizontalAlignment: Text.AlignLeft
                 wrapMode: Text.WordWrap
             }

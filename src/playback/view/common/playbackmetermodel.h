@@ -93,6 +93,7 @@ signals:
 
 private:
     float m_volume = 0.0f;
+    int m_meterSize = 0;
     MeterInputSource::Source m_meterInputSource = MeterInputSource::Source::Playback;
 };
 }

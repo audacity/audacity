@@ -34,14 +34,9 @@ StepValues roundUpToFixedValue(int meterSize, double dbRange)
 }
 }
 
-DbLogMeter::DbLogMeter(int meterSize, double dbRange)
-    : m_meterSize(meterSize), m_dbRange(dbRange)
+DbLogMeter::DbLogMeter(double dbRange)
+    :  m_dbRange(dbRange)
 {
-}
-
-void DbLogMeter::setMeterSize(int meterSize)
-{
-    m_meterSize = meterSize;
 }
 
 void DbLogMeter::setDbRange(double dbRange)
@@ -74,13 +69,13 @@ std::string DbLogMeter::sampleToText(double sample) const
     return ss.str();
 }
 
-std::vector<double> DbLogMeter::fullSteps() const
+std::vector<double> DbLogMeter::fullSteps(int meterSize) const
 {
-    if (m_meterSize <= 0) {
+    if (meterSize <= 0) {
         return {};
     }
 
-    const StepValues stepValues = roundUpToFixedValue(m_meterSize, m_dbRange);
+    const StepValues stepValues = roundUpToFixedValue(meterSize, m_dbRange);
 
     if (stepValues.fullStep == 0) {
         return {};
@@ -96,13 +91,13 @@ std::vector<double> DbLogMeter::fullSteps() const
     return steps;
 }
 
-std::vector<double> DbLogMeter::smallSteps() const
+std::vector<double> DbLogMeter::smallSteps(int meterSize) const
 {
-    if (m_meterSize <= 0) {
+    if (meterSize <= 0) {
         return {};
     }
 
-    const StepValues stepValues = roundUpToFixedValue(m_meterSize, m_dbRange);
+    const StepValues stepValues = roundUpToFixedValue(meterSize, m_dbRange);
 
     if (stepValues.smallStep == 0) {
         return {};
