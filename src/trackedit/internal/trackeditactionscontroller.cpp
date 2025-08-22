@@ -4,7 +4,9 @@
 #include "trackeditactionscontroller.h"
 #include "project/internal/audacityproject.h"
 #include "trackediterrors.h"
-#include "translation.h"
+
+#include "global/translation.h"
+#include "global/defer.h"
 
 using namespace muse;
 using namespace au::trackedit;
@@ -370,6 +372,41 @@ void TrackeditActionsController::doGlobalCutAllTracksRipple()
 
 void TrackeditActionsController::doGlobalDelete()
 {
+    const bool wasSet = configuration()->deleteBehavior() != DeleteBehavior::NotSet;
+
+    if (!wasSet && !m_deleteBehaviorOnboardingScenario.showOnboardingDialog()) {
+        return;
+    }
+
+    muse::Defer showFollowup([this, wasSet]() {
+        if (!wasSet) {
+            m_deleteBehaviorOnboardingScenario.showFollowupDialog();
+        }
+    });
+
+    const DeleteBehavior deleteBehavior = configuration()->deleteBehavior();
+    IF_ASSERT_FAILED(deleteBehavior != DeleteBehavior::NotSet) {
+        return;
+    }
+
+    if (deleteBehavior != DeleteBehavior::LeaveGap) {
+        switch (configuration()->closeGapBehavior()) {
+        case CloseGapBehavior::ClipRipple:
+            doGlobalDeletePerClipRipple();
+            break;
+        case CloseGapBehavior::TrackRipple:
+            doGlobalDeletePerTrackRipple();
+            break;
+        case CloseGapBehavior::AllTracksRipple:
+            doGlobalDeleteAllTracksRipple();
+            break;
+        default:
+            LOGE() << "Unexpected close gap behavior: " << static_cast<int>(configuration()->closeGapBehavior());
+            assert(false);
+        }
+        return;
+    }
+
     if (selectionController()->timeSelectionIsNotEmpty()) {
         auto selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
@@ -391,8 +428,8 @@ void TrackeditActionsController::doGlobalDelete()
         return;
     }
 
-    interactive()->error(muse::trc("trackedit", "No audio selected"),
-                         muse::trc("trackedit", "Select the audio for Delete then try again."));
+    interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
+                             muse::trc("trackedit", "Select the audio for Delete then try again."));
 }
 
 void TrackeditActionsController::doGlobalDeletePerClipRipple()
@@ -409,8 +446,8 @@ void TrackeditActionsController::doGlobalDeletePerClipRipple()
         return;
     }
 
-    interactive()->error(muse::trc("trackedit", "No audio selected"),
-                         muse::trc("trackedit", "Select the audio for Delete then try again."));
+    interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
+                             muse::trc("trackedit", "Select the audio for Delete then try again."));
 }
 
 void TrackeditActionsController::doGlobalDeletePerTrackRipple()
@@ -426,8 +463,8 @@ void TrackeditActionsController::doGlobalDeletePerTrackRipple()
         dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, moveClips);
         return;
     }
-    interactive()->error(muse::trc("trackedit", "No audio selected"),
-                         muse::trc("trackedit", "Select the audio for Delete then try again."));
+    interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
+                             muse::trc("trackedit", "Select the audio for Delete then try again."));
 }
 
 void TrackeditActionsController::doGlobalDeleteAllTracksRipple()
@@ -457,8 +494,8 @@ void TrackeditActionsController::doGlobalDeleteAllTracksRipple()
         return;
     }
 
-    interactive()->error(muse::trc("trackedit", "No audio selected"),
-                         muse::trc("trackedit", "Select the audio for Delete then try again."));
+    interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
+                             muse::trc("trackedit", "Select the audio for Delete then try again."));
 }
 
 void TrackeditActionsController::doGlobalSplit()

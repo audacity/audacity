@@ -31,7 +31,7 @@ Rectangle {
 
     property string source: ""
 
-    signal clipStyleChangeRequested()
+    signal clicked
 
     layer.enabled: true
     layer.effect: EffectOpacityMask {
@@ -42,8 +42,9 @@ Rectangle {
         }
     }
 
-    Image {
+    AnimatedImage {
         source: root.source
+        playing: true
 
         width: root.width
         height: root.height
@@ -67,7 +68,7 @@ Rectangle {
         hoverEnabled: true
 
         onClicked: {
-            root.clipStyleChangeRequested()
+            root.clicked();
         }
     }
 }

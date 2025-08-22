@@ -65,7 +65,7 @@ getCrossPlatformDependencies() {
   #copyLib libicudata.so #icudt53.dll # Needed by Ubuntu 12.04
   #copyLib libicui18n.so #libicuin53.so.5 # Needed by Ubuntu 12.04
   #copyLib libicuuc.so #libicuuc53.so.5 # Needed by Ubuntu 12.04
-  
+
   copyLib libQt5CLucene.so.5
   copyLib libQt5Core.so.5
   copyLib libQt5Gui.so.5
@@ -91,6 +91,7 @@ getCrossPlatformDependencies() {
   # Qt components (see "mscore/CMakeLists.txt")
   copyQt plugins/iconengines/libqsvgicon.so
 
+  copyQt plugins/imageformats/libqgif.so
   copyQt plugins/imageformats/libqjpeg.so
   copyQt plugins/imageformats/libqmng.so
   copyQt plugins/imageformats/libqsvg.so

@@ -27,6 +27,7 @@ import Muse.UiComponents 1.0
 import Muse.GraphicalEffects
 
 import Audacity.ProjectScene
+import Audacity.TrackEdit
 
 import "../../shared/internal"
 
@@ -50,7 +51,7 @@ BaseSection {
         Column {
             spacing: 8
 
-            ClipStyleSample {
+            ClipImageButton {
                 width: root.imgWidth
                 height: root.imgHeight
 
@@ -58,7 +59,7 @@ BaseSection {
 
                 source: "qrc:/resources/Colorful.svg"
 
-                onClipStyleChangeRequested: {
+                onClicked: {
                     root.clipStyleChangeRequested(ClipStyle.COLORFUL)
                 }
             }
@@ -81,7 +82,7 @@ BaseSection {
         Column {
             spacing: 8
 
-            ClipStyleSample {
+            ClipImageButton {
                 width: root.imgWidth
                 height: root.imgHeight
 
@@ -89,7 +90,7 @@ BaseSection {
 
                 source: "qrc:/resources/Classic.svg"
 
-                onClipStyleChangeRequested: {
+                onClicked: {
                     root.clipStyleChangeRequested(ClipStyle.CLASSIC)
                 }
             }

@@ -91,6 +91,8 @@ private:
     void openAskForHelpPage();
     void openPreferencesDialog();
     void openAudioSettingsDialog();
+    void openShortcutsPreferencesDialog();
+    void openEditingPreferencesDialog();
 
     void revertToFactorySettings();
 
