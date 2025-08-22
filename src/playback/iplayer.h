@@ -34,8 +34,17 @@ public:
     virtual PlaybackRegion playbackRegion() const = 0;
     virtual void setPlaybackRegion(const PlaybackRegion& region) = 0;
 
-    virtual muse::async::Promise<bool> setLoop(const muse::secs_t from, const muse::secs_t to) = 0;
-    virtual void resetLoop() = 0;
+    virtual muse::async::Notification loopRegionChanged() const = 0;
+    virtual PlaybackRegion loopRegion() const = 0;
+    virtual void setLoopRegion(const PlaybackRegion& region) = 0;
+    virtual void setLoopRegionStart(const muse::secs_t time) = 0;
+    virtual void setLoopRegionEnd(const muse::secs_t time) = 0;
+
+    virtual void clearLoopRegion() = 0;
+    virtual bool isLoopRegionClear() const = 0;
+
+    virtual void setLoopRegionActive(const bool active) = 0;
+    virtual bool isLoopRegionActive() const = 0;
 
     virtual muse::secs_t playbackPosition() const = 0;
     virtual muse::async::Channel<muse::secs_t> playbackPositionChanged() const = 0;

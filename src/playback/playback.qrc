@@ -17,5 +17,6 @@
         <file>qml/Audacity/Playback/toolbars/BPM.qml</file>
         <file>qml/Audacity/Playback/toolbars/internal/TimeSignaturePopup.qml</file>
         <file>qml/Audacity/Playback/panels/PlaybackMeterPanel.qml</file>
+        <file>qml/Audacity/Playback/dialogs/LoopRegionInOut.qml</file>
     </qresource>
 </RCC>

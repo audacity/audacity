@@ -8,7 +8,9 @@
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
+
 #include "context/iglobalcontext.h"
+#include "iprojectsceneconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
 #include "playback/iplayback.h"
 
@@ -32,6 +34,7 @@ class SelectionStatusModel : public QObject, public muse::async::Asyncable
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<playback::IPlayback> playback;
+    muse::Inject<IProjectSceneConfiguration> configuration;
 
 public:
     Q_INVOKABLE void init();

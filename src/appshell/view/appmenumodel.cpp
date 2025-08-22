@@ -595,8 +595,8 @@ MenuItemList AppMenuModel::makeLoopingItems()
         makeMenuItem("toggle-loop-region"),
         makeMenuItem("clear-loop-region"),
         makeMenuItem("set-loop-region-to-selection"),
-        makeMenuItem("set-loop-region-in"),
-        makeMenuItem("set-loop-region-out")
+        makeMenuItem("set-selection-to-loop"),
+        makeMenuItem("set-loop-region-in-out"),
     };
 
     return items;
