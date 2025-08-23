@@ -162,7 +162,6 @@ void TimecodeModel::setValue(double value)
     m_value = value;
 
     updateValueString();
-
     emit valueChanged();
 }
 
@@ -272,12 +271,21 @@ void TimecodeModel::initFieldInteractionController()
 
 void TimecodeModel::updateValueString()
 {
-    constexpr auto toNearest = true;
+    constexpr bool toNearest = true;
     QString newValueString = m_formatter->valueToString(m_value, toNearest).valueString;
 
-    beginResetModel();
-    m_valueString = newValueString;
-    endResetModel();
+    if (newValueString.size() != m_valueString.size()) {
+        beginResetModel();
+        m_valueString = newValueString;
+        endResetModel();
+    } else {
+        m_valueString = newValueString;
+
+        QModelIndex topLeft = index(0, 0);
+        QModelIndex bottomRight = index(rowCount() - 1, 0);
+
+        emit dataChanged(topLeft, bottomRight, { rSymbol });
+    }
 
     m_fieldsInteractionController->setValueString(m_valueString);
 }
