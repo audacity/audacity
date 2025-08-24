@@ -173,7 +173,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
     };
 
     // General
-    qmlRegisterType<GeneralViewModel>("Audacity.Effects", 1, 0, "GeneralViewModel");
+    qmlRegisterUncreatableType<GeneralViewModel>("Audacity.Effects", 1, 0, "GeneralViewModel", "Not creatable from QML");
     effectsViewRegister()->setDefaultUrl(u"qrc:/general/GeneralEffectView.qml");
 
     for (const PluginDescriptor& desc : PluginManager::Get().PluginsOfType(PluginTypeEffect)) {
