@@ -12,7 +12,7 @@ Item {
     property NavigationSection navigationSection: null
     property NavigationPanel navigationPanel: null
 
-    property int trackIdx: null
+    property int trackIdx: -1
     property alias trackId: clipsModel.trackId
     property alias context: clipsModel.context
     property var canvas: null

@@ -33,23 +33,36 @@ using namespace au::appshell;
 using namespace muse::ui;
 using namespace muse::uicomponents;
 
+QSet<int> convertToSet(QList<int> keys)
+{
+    return QSet<int>(keys.cbegin(), keys.cend());
+}
+
+QSet<int> convertToSet(QList<QKeyCombination> keys)
+{
+    QSet<int> keyset;
+    for (const auto& key : keys) {
+        keyset << key.toCombined();
+    }
+    return keyset;
+}
+
 QSet<int> possibleKeys(QKeyEvent* keyEvent)
 {
     QKeyEvent* correctedKeyEvent = keyEvent;
     //! NOTE: correct work only with alt modifier
     correctedKeyEvent->setModifiers(Qt::AltModifier);
 
-    QList<int> keys = QKeyMapper::possibleKeys(correctedKeyEvent);
-
-    return QSet<int>(keys.cbegin(), keys.cend());
+    auto keys = QKeyMapper::possibleKeys(correctedKeyEvent);
+    return convertToSet(keys);
 }
 
 QSet<int> possibleKeys(const QChar& keySymbol)
 {
     QKeyEvent fakeKey(QKeyEvent::KeyRelease, Qt::Key_unknown, Qt::AltModifier, keySymbol);
-    QList<int> keys = QKeyMapper::possibleKeys(&fakeKey);
+    auto keys = QKeyMapper::possibleKeys(&fakeKey);
 
-    return QSet<int>(keys.cbegin(), keys.cend());
+    return convertToSet(keys);
 }
 
 NavigableAppMenuModel::NavigableAppMenuModel(QObject* parent)
