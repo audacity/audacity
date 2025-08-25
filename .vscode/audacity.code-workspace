@@ -17,6 +17,11 @@
             ]
         },
         "search.useIgnoreFiles": false,
+        "search.exclude": {
+            "**/build.ninja": true,
+            "**/*.depends": true,
+            "**/qrc_*.cpp": true,
+        },
         "C_Cpp.autoAddFileAssociations": false,
         "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
     }
