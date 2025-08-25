@@ -259,6 +259,11 @@ std::string Au3AudioDevicesProvider::currentInputChannels() const
     return name.ToStdString();
 }
 
+int Au3AudioDevicesProvider::currentInputChannelsCount() const
+{
+    return muse::settings()->value(INPUT_CHANNELS).toInt();
+}
+
 void Au3AudioDevicesProvider::setInputChannels(const std::string& newChannels)
 {
     std::optional<int> channelsToWrite;

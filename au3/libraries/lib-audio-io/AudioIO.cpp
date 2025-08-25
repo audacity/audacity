@@ -591,6 +591,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
 
         const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(playbackDeviceInfo->hostApi);
         bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
+        bool isMME = (hostInfo && hostInfo->type == paMME);
 
       #ifdef __WXMSW__
         // If the host API is WASAPI, the stream is bidirectional and there is no
@@ -606,7 +607,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         }
       #endif
 
-        if (mSoftwarePlaythrough) {
+        if (mSoftwarePlaythrough && !isMME) {
             playbackParameters.suggestedLatency
                 =playbackDeviceInfo->defaultLowOutputLatency;
         } else {
@@ -637,6 +638,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
 
         const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(captureDeviceInfo->hostApi);
         bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
+        bool isMME = (hostInfo && hostInfo->type == paMME);
 
         // If the stream is bidirectional and there is no supported sample rate
         // set mRate to the value supported by the capture device.
@@ -650,7 +652,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         captureParameters.hostApiSpecificStreamInfo = NULL;
         captureParameters.channelCount = mNumCaptureChannels;
 
-        if (mSoftwarePlaythrough) {
+        if (mSoftwarePlaythrough && !isMME) {
             captureParameters.suggestedLatency
                 =captureDeviceInfo->defaultHighInputLatency;
         } else {
@@ -1632,6 +1634,7 @@ void AudioIO::StopStream()
     mScratchPointers.clear();
     mPlaybackMixers.clear();
     mPlaybackSchedule.mTimeQueue.Clear();
+    mPlaybackTracks.clear();
 
     if (mStreamToken > 0) {
         //
@@ -3036,6 +3039,10 @@ void AudioIoCallback::SendVuInputMeterData(
     const float* inputSamples,
     unsigned long framesPerBuffer)
 {
+    if (framesPerBuffer == 0) {
+        return;
+    }
+
     auto inputMeter = mInputMeter.lock();
     if (!inputMeter) {
         return;
@@ -3074,7 +3081,7 @@ void AudioIoCallback::SendVuOutputMeterData(
 
 void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, unsigned long frames)
 {
-    if ((mCaptureSequences.size() == 0) || (frames == 0)) {
+    if (frames == 0) {
         return;
     }
 
@@ -3088,21 +3095,17 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& 
         }
     }
 
-    constexpr size_t maxMainTrackChannels = 2;
     // Update main meter
     // If the input source has more than 2 channels it will be splitted on multiple mono sequences
-    if (mCaptureSequences.size() == 1) {
-        const auto nChannels = mCaptureSequences[0]->NChannels();
-        assert(nChannels <= 2);
-        for (size_t ch = 0; ch < nChannels; ++ch) {
-            sender->push(ch, { sptr + ch, frames, nChannels });
+    if (mNumCaptureChannels <= 2) {
+        for (size_t ch = 0; ch < mNumCaptureChannels; ++ch) {
+            sender->push(ch, { sptr + ch, frames, mNumCaptureChannels });
         }
     } else {
-        assert(std::all_of(mCaptureSequences.begin(), mCaptureSequences.end(),
-                           [](const auto& seq) { return seq->NChannels() == 1; }));
-
+        constexpr size_t maxMainTrackChannels = 2;
         const auto mainTrackInput = stackAllocate(float, frames * maxMainTrackChannels);
         std::memset(mainTrackInput, 0, frames * maxMainTrackChannels * sizeof(float));
+
         for (size_t i = 0; i < frames; ++i) {
             for (size_t seqNum = 0; seqNum < mCaptureSequences.size(); seqNum++) {
                 const auto channel = seqNum % maxMainTrackChannels;

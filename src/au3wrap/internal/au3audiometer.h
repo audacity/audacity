@@ -15,7 +15,6 @@ namespace au::au3 {
 class Meter : public IMeterSender, public muse::async::Asyncable
 {
 public:
-    Meter();
     void push(uint8_t channel, const IMeterSender::InterleavedSampleData& sampleData, int64_t key) override;
     void push(uint8_t channel, const IMeterSender::Sample& sample, int64_t key) override;
     void sendAll() override;
@@ -32,7 +31,6 @@ private:
         au::audio::AudioSignalVal rms;
     };
 
-    muse::async::Channel <std::vector<Data> > m_audioSignalChanges;
     std::vector<Data> m_trackData;
     std::map<int64_t, muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> > m_channels;
 };

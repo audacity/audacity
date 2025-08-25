@@ -71,6 +71,7 @@
         <file>qml/Preferences/internal/PlaybackPerformanceSection.qml</file>
         <file>qml/Preferences/internal/SoloButtonSection.qml</file>
         <file>qml/Preferences/internal/CursorSection.qml</file>
+        <file>qml/Preferences/internal/RecordingBehaviorSection.qml</file>
         <file>qml/Preferences/internal/CommonAudioApiConfiguration.qml</file>
         <file>qml/Preferences/internal/ComboBoxWithTitle.qml</file>
         <file>qml/Preferences/internal/IncrementalPropertyControlWithTitle.qml</file>

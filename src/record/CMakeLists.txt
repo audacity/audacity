@@ -33,6 +33,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarrecordlevelitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarrecordlevelitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/recordmetermodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/recordmetermodel.h
     )
 
 # AU3

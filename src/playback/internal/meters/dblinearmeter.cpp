@@ -85,14 +85,9 @@ double percentageToDbValue(double percentage, double dbRange)
 }
 }
 
-DbLinearMeter::DbLinearMeter(int meterSize, double dbRange)
-    : m_meterSize(meterSize), m_dbRange(dbRange)
+DbLinearMeter::DbLinearMeter(double dbRange)
+    : m_dbRange(dbRange)
 {
-}
-
-void DbLinearMeter::setMeterSize(int meterSize)
-{
-    m_meterSize = meterSize;
 }
 
 void DbLinearMeter::setDbRange(double dbRange)
@@ -124,7 +119,7 @@ std::string DbLinearMeter::sampleToText(double sample) const
     return ss.str();
 }
 
-std::vector<double> DbLinearMeter::fullSteps() const
+std::vector<double> DbLinearMeter::fullSteps(int meterSize) const
 {
     constexpr std::array<double, 7> FULL_STEP_36_DB_LOW = { -36, -18, -12, -9, -6, -3, 0 };
     constexpr std::array<double, 7> FULL_STEP_60_DB_LOW = { -60, -30, -20, -15, -10, -5, 0 };
@@ -138,7 +133,7 @@ std::vector<double> DbLinearMeter::fullSteps() const
     constexpr std::array<double, 13> FULL_STEP_84_DB_HIGH = { -84, -72, -60, -48, -42, -36, -30, -24, -18, -12, -9, -6, 0 };
     constexpr std::array<double, 9> FULL_STEP_144_DB_HIGH = { -144, -96, -72, -60, -48, -36, -27, -18, 0 };
 
-    if (m_meterSize < LOW_RESOLUTION_METER_THRESHOLD) {
+    if (meterSize < LOW_RESOLUTION_METER_THRESHOLD) {
         if (muse::is_equal(m_dbRange, -36.0)) {
             return std::vector<double>(std::begin(FULL_STEP_36_DB_LOW), std::end(FULL_STEP_36_DB_LOW));
         } else if (muse::is_equal(m_dbRange, -48.0)) {
@@ -187,9 +182,9 @@ std::vector<double> DbLinearMeter::fullSteps() const
     return {};
 }
 
-std::vector<double> DbLinearMeter::smallSteps() const
+std::vector<double> DbLinearMeter::smallSteps(int meterSize) const
 {
-    if (m_meterSize < LOW_RESOLUTION_METER_THRESHOLD) {
+    if (meterSize < LOW_RESOLUTION_METER_THRESHOLD) {
         return {};
     }
 

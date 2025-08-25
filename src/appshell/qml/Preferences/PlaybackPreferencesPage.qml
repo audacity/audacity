@@ -18,6 +18,10 @@ PreferencesPage {
         id: playbackPreferencesModel
     }
 
+    RecordingPreferencesModel {
+        id: recordingPreferencesModel
+    }
+
     PlaybackStateModel {
         id: playbackState
     }
@@ -57,6 +61,17 @@ PreferencesPage {
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 2
+        }
+
+        SeparatorLine {}
+
+        RecordingBehaviorSection {
+            recordingPreferencesModel: recordingPreferencesModel
+
+            enabled: !(playbackState.isPaused || playbackState.isPlaying)
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 3
         }
     }
 }

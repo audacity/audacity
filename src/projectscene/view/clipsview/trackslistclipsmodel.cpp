@@ -161,7 +161,7 @@ void TracksListClipsModel::load()
         return;
     }
 
-    viewState->totalTrackHeight().ch.onReceive(this, [this](int value) {
+    viewState->totalTrackHeight().ch.onReceive(this, [this](int) {
         emit totalTracksHeightChanged();
     });
 }

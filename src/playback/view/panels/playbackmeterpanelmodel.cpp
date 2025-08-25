@@ -19,6 +19,11 @@ PlaybackMeterPanelModel::PlaybackMeterPanelModel(QObject* parent)
         emit levelChanged();
     });
 
+    playback()->audioOutput()->playbackVolume().onResolve(this, [this](float volume) {
+        m_level = volume;
+        emit levelChanged();
+    });
+
     controller()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
     });
@@ -27,11 +32,6 @@ PlaybackMeterPanelModel::PlaybackMeterPanelModel(QObject* parent)
 
     m_meterModel = new PlaybackMeterModel(this);
     emit meterModelChanged();
-
-    playback()->audioOutput()->playbackVolume().onResolve(this, [this](float volume) {
-        m_level = volume;
-        emit levelChanged();
-    });
 }
 
 float PlaybackMeterPanelModel::leftChannelPressure() const

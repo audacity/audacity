@@ -26,7 +26,7 @@ Canvas {
     readonly property int overloadTotalSpace: root.overloadWidth + root.overloadSpacing
 
     width: parent.width
-    height: prv.indicatorHeight
+    height: 6
 
     opacity: enabled ? 1.0 : ui.theme.itemOpacityDisabled
 
@@ -93,7 +93,6 @@ Canvas {
         property bool clipped: false
 
         readonly property real indicatorWidth: root.width - root.overloadTotalSpace
-        readonly property real indicatorHeight: 6
 
         readonly property real divisionPixels: prv.indicatorWidth
 
@@ -153,15 +152,15 @@ Canvas {
     }
 
     function drawBackground(ctx) {
-        ctx.clearRect(0, 0, root.width, prv.indicatorHeight)
+        ctx.clearRect(0, 0, root.width, root.height)
 
         ctx.fillStyle = meterStyle.meterBackgroundColor
-        ctx.fillRect(0, 0, prv.indicatorWidth, prv.indicatorHeight)
+        ctx.fillRect(0, 0, prv.indicatorWidth, root.height)
     }
 
     function drawClippedIndicator(ctx) {
         ctx.fillStyle = prv.clipped ? meterStyle.clippedColor : meterStyle.noClippedColor
-        ctx.fillRect(prv.indicatorWidth + root.overloadSpacing, 0, root.overloadWidth, prv.indicatorHeight)
+        ctx.fillRect(prv.indicatorWidth + root.overloadSpacing, 0, root.overloadWidth, root.height)
     }
 
     function drawMeterBar(ctx) {
@@ -178,13 +177,13 @@ Canvas {
         const recentPeakWidth = prv.sampleValueToHeight(prv.recentPeak)
         if (recentPeakWidth > 0) {
             ctx.fillStyle = meterStyle.getRecentPeakMarkerColor()
-            ctx.fillRect(recentPeakWidth, 0, 1, prv.indicatorHeight)
+            ctx.fillRect(recentPeakWidth, 0, 1, root.height)
         }
         
         const maxPeakWidth = prv.sampleValueToHeight(prv.maxPeak)
         if (maxPeakWidth > 0) {
             ctx.fillStyle = meterStyle.maxPeakMarkerColor
-            ctx.fillRect(maxPeakWidth, 0, 1, prv.indicatorHeight)
+            ctx.fillRect(maxPeakWidth, 0, 1, root.height)
         }
     }
 
@@ -192,7 +191,7 @@ Canvas {
         // On clipping draw full red rectangle   
         if (prv.isClipping) {
             ctx.fillStyle = meterStyle.clippedColor
-            ctx.fillRect(0, 0, prv.indicatorWidth, prv.indicatorHeight)
+            ctx.fillRect(0, 0, prv.indicatorWidth, root.height)
             return
         }
 
@@ -200,7 +199,7 @@ Canvas {
         const meterHeight = prv.sampleValueToHeight(root.currentVolumePressure)
         if (meterHeight > 0) {
             ctx.fillStyle = meterStyle.defaultColor
-            ctx.fillRect(0, 0, meterHeight, prv.indicatorHeight)
+            ctx.fillRect(0, 0, meterHeight, root.height)
         }
 
         drawPeakMarkers(ctx)
@@ -210,7 +209,7 @@ Canvas {
         // On clipping draw full red rectangle
         if (prv.isClipping) {
             ctx.fillStyle = meterStyle.clippedColor
-            ctx.fillRect(0, 0, prv.indicatorWidth , prv.indicatorHeight)
+            ctx.fillRect(0, 0, prv.indicatorWidth , root.height)
             return
         }
 
@@ -218,10 +217,10 @@ Canvas {
         var xPeak = prv.sampleValueToHeight(root.currentVolumePressure)
 
         ctx.fillStyle = meterStyle.rmsColor
-        ctx.fillRect(0, 0, xPeak, prv.indicatorHeight)
+        ctx.fillRect(0, 0, xPeak, root.height)
 
         ctx.fillStyle = meterStyle.rmsOverlayColor
-        ctx.fillRect(xRMS, 0, xPeak - xRMS, prv.indicatorHeight)
+        ctx.fillRect(xRMS, 0, xPeak - xRMS, root.height)
 
         drawPeakMarkers(ctx)
     }
@@ -230,7 +229,7 @@ Canvas {
         const meterHeight = prv.sampleValueToHeight(root.currentVolumePressure)
         if (meterHeight > 0) {
             ctx.fillStyle = meterStyle.createGradient(ctx, prv.indicatorWidth, 0)
-            ctx.fillRect(0, 0, meterHeight, prv.indicatorHeight)
+            ctx.fillRect(0, 0, meterHeight, root.height)
         }
 
         drawPeakMarkers(ctx)

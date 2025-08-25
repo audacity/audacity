@@ -14,6 +14,7 @@
 #include "internal/recordcontroller.h"
 #include "internal/recorduiactions.h"
 #include "internal/au3/au3record.h"
+#include "view/common/recordmetermodel.h"
 
 using namespace au::record;
 using namespace muse;
@@ -56,6 +57,11 @@ void RecordModule::registerResources()
     record_init_qrc();
 }
 
+void RecordModule::registerUiTypes()
+{
+    qmlRegisterType<RecordMeterModel>("Audacity.Record", 1, 0, "RecordMeterModel");
+}
+
 void RecordModule::onInit(const IApplication::RunMode& mode)
 {
     if (mode == IApplication::RunMode::AudioPluginRegistration) {
@@ -65,6 +71,7 @@ void RecordModule::onInit(const IApplication::RunMode& mode)
     m_controller->init();
     m_uiActions->init();
     m_record->init();
+    m_configuration->init();
 }
 
 void RecordModule::onDeinit()

@@ -42,14 +42,9 @@ StepValue roundUpToFixedValue(int meterSize)
 }
 }
 
-LinearMeter::LinearMeter(int meterSize, double dbRange)
-    : m_meterSize(meterSize), m_dbRange(dbRange)
+LinearMeter::LinearMeter(double dbRange)
+    : m_dbRange(dbRange)
 {
-}
-
-void LinearMeter::setMeterSize(int meterSize)
-{
-    m_meterSize = meterSize;
 }
 
 void LinearMeter::setDbRange(double dbRange)
@@ -85,13 +80,13 @@ std::string LinearMeter::sampleToText(double sample) const
     return ss.str();
 }
 
-std::vector<double> LinearMeter::fullSteps() const
+std::vector<double> LinearMeter::fullSteps(int meterSize) const
 {
-    if (m_meterSize <= 0) {
+    if (meterSize <= 0) {
         return {};
     }
 
-    const StepValue selectedStep = roundUpToFixedValue(m_meterSize);
+    const StepValue selectedStep = roundUpToFixedValue(meterSize);
 
     if (selectedStep.fullStep == 0) {
         return {};
@@ -108,15 +103,15 @@ std::vector<double> LinearMeter::fullSteps() const
     return steps;
 }
 
-std::vector<double> LinearMeter::smallSteps() const
+std::vector<double> LinearMeter::smallSteps(int meterSize) const
 {
-    if (m_meterSize <= 0) {
+    if (meterSize <= 0) {
         return {};
     }
 
-    const auto fullSteps = this->fullSteps();
+    const auto fullSteps = this->fullSteps(meterSize);
 
-    const StepValue selectedStep = roundUpToFixedValue(m_meterSize);
+    const StepValue selectedStep = roundUpToFixedValue(meterSize);
 
     if (selectedStep.smallStep == 0) {
         return {};
