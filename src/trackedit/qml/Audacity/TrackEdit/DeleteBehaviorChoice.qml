@@ -13,18 +13,20 @@ Column {
     property alias text: radioBtn.text
     property alias checked: radioBtn.checked
     property alias navigation: radioBtn.navigation
+    property bool addBorderToClipImageButton: false
 
-    signal toggled()
+    signal toggled
 
     spacing: 16
 
     ClipImageButton {
         id: imageBtn
 
-        width: 196
-        height: 88
+        width: 200
+        height: 113
 
         radius: 5
+        unaccentedBorderColor: addBorderToClipImageButton ? ui.theme.strokeColor : "transparent"
 
         onClicked: {
             root.toggled()
