@@ -21,6 +21,7 @@
  */
 
 #include <QApplication>
+#include <QStyleHints>
 #include <QTextCodec>
 
 #include <csignal>
@@ -98,6 +99,11 @@
 #include <shellapi.h>
 #endif
 
+static void app_init_qrc()
+{
+    Q_INIT_RESOURCE(app);
+}
+
 #ifndef MU_BUILD_CRASHPAD_CLIENT
 static void crashCallback(int signum)
 {
@@ -138,6 +144,73 @@ int main(int argc, char** argv)
     signal(SIGILL, crashCallback);
     signal(SIGFPE, crashCallback);
 #endif
+
+    // ====================================================
+    // Setup global Qt application variables
+    // ====================================================
+    app_init_qrc();
+
+    qputenv("QT_STYLE_OVERRIDE", "Fusion");
+    qputenv("QML_DISABLE_DISK_CACHE", "true");
+
+    // HACK: Workaround for crash MuseScore #28840. This disables the incremental GC
+    if (!qEnvironmentVariableIsSet("QV4_GC_TIMELIMIT")) {
+        qputenv("QV4_GC_TIMELIMIT", "0");
+    }
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+    if (!qEnvironmentVariableIsSet("QT_QUICK_FLICKABLE_WHEEL_DECELERATION")) {
+        qputenv("QT_QUICK_FLICKABLE_WHEEL_DECELERATION", "5000");
+    }
+#endif
+
+#ifdef Q_OS_LINUX
+    if (qEnvironmentVariable("QT_QPA_PLATFORM") != "offscreen") {
+        qputenv("QT_QPA_PLATFORMTHEME", "gtk3");
+    }
+
+    //! NOTE Forced X11, with Wayland there are a number of problems now
+    if (qEnvironmentVariable("QT_QPA_PLATFORM") == "") {
+        qputenv("QT_QPA_PLATFORM", "xcb");
+    }
+#endif
+    const char* appName;
+    if (true /*MUVersion::unstable()*/) {
+        appName  = "Audacity4Development";
+    } else {
+        appName  = "Audacity4";
+    }
+
+#ifdef Q_OS_WIN
+    // NOTE: There are some problems with rendering the application window on some integrated graphics processors
+    //       see https://github.com/musescore/MuseScore/issues/8270
+    QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
+
+    if (!qEnvironmentVariableIsSet("QT_OPENGL_BUGLIST")) {
+        qputenv("QT_OPENGL_BUGLIST", ":/resources/win_opengl_buglist.json");
+    }
+#endif
+
+    //! NOTE: For unknown reasons, Linux scaling for 1 is defined as 1.003 in fractional scaling.
+    //!       Because of this, some elements are drawn with a shift on the score.
+    //!       Let's make a Linux hack and round values above 0.75(see RoundPreferFloor)
+#ifdef Q_OS_LINUX
+    QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::RoundPreferFloor);
+#elif defined(Q_OS_WIN)
+    QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+#endif
+
+    QGuiApplication::styleHints()->setMousePressAndHoldInterval(250);
+
+    QCoreApplication::setApplicationName(appName);
+    QCoreApplication::setOrganizationName("Audacity");
+    QCoreApplication::setOrganizationDomain("audacityteam.org");
+    // QCoreApplication::setApplicationVersion(QString::fromStdString(MUVersion::fullVersion().toStdString()));
+
+// #if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
+//     // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
+//     QGuiApplication::setDesktopFileName("org.musescore.MuseScore" MU_APP_INSTALL_SUFFIX ".desktop");
+// #endif
 
     // ====================================================
     // Parse command line options
@@ -240,6 +313,8 @@ int main(int argc, char** argv)
     } else {
         qApplication = new QApplication(argc, argv);
     }
+
+    commandLineParser.processBuiltinArgs(*qApplication);
 
     int code = app.run(*qApplication, commandLineParser);
 
