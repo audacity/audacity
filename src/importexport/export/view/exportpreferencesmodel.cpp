@@ -65,6 +65,12 @@ void ExportPreferencesModel::init()
         updateCurrentSampleRate();
         updateExportChannels();
     });
+    if (exportConfiguration()->currentFormat().empty()) {
+        const std::vector<std::string> formats = exporter()->formatsList();
+        if (!formats.empty()) {
+            setCurrentFormat(QString::fromStdString(formats.front()));
+        }
+    }
 
     exportConfiguration()->exportChannelsChanged().onNotify(this, [this] {
         emit exportChannelsChanged();
@@ -157,7 +163,7 @@ QString ExportPreferencesModel::currentFormat() const
 
 void ExportPreferencesModel::setCurrentFormat(const QString& format)
 {
-    if (format == currentFormat()) {
+    if (format == QString::fromStdString(exportConfiguration()->currentFormat())) {
         return;
     }
 
@@ -306,4 +312,9 @@ void ExportPreferencesModel::exportData()
 bool ExportPreferencesModel::customFFmpegOptionsVisible()
 {
     return exporter()->isCustomFFmpegExportFormat();
+}
+
+int ExportPreferencesModel::optionsCount()
+{
+    return exporter()->optionsCount();
 }

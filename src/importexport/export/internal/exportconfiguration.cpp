@@ -50,6 +50,7 @@ void ExportConfiguration::init()
         m_processChanged.notify();
     });
 
+    muse::settings()->setDefaultValue(EXPORT_DIRECTORY_PATH, muse::Val(globalConfiguration()->userDataPath()));
     muse::settings()->valueChanged(EXPORT_DIRECTORY_PATH).onReceive(nullptr, [this] (const muse::Val& val) {
         m_directoryPathChanged.notify();
     });
