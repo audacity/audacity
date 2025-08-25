@@ -5,6 +5,7 @@
 
 #include "modularity/imoduleinterface.h"
 
+#include "types/exporttypes.h"
 #include "types/ret.h"
 
 namespace au::importexport {
@@ -25,5 +26,10 @@ public:
 
     virtual int maxChannels() const = 0;
     virtual std::vector<int> sampleRateList() const = 0;
+    virtual int optionsCount() const = 0;
+
+    virtual std::optional<ExportOption> option(int i) const = 0;
+    virtual std::optional<OptionValue> value(int id) const = 0;
+    virtual void setValue(int id, const OptionValue&) = 0;
 };
 }

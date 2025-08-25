@@ -6,8 +6,10 @@
 
 #include "internal/au3/au3exporter.h"
 #include "internal/au3/au3ffmpegoptionsaccessor.h"
-#include "view/customffmpegpreferencesmodel.h"
+
 #include "view/exportpreferencesmodel.h"
+#include "view/dynamicexportoptionsmodel.h"
+#include "view/customffmpegpreferencesmodel.h"
 
 #include "exportermodule.h"
 
@@ -56,9 +58,11 @@ void ExporterModule::registerResources()
 void ExporterModule::registerUiTypes()
 {
     qmlRegisterType<ExportPreferencesModel>("Audacity.Export", 1, 0, "ExportPreferencesModel");
+    qmlRegisterType<DynamicExportOptionsModel>("Audacity.Export", 1, 0, "DynamicExportOptionsModel");
     qmlRegisterType<CustomFFmpegPreferencesModel>("Audacity.Export", 1, 0, "CustomFFmpegPreferencesModel");
 
     qmlRegisterUncreatableType<importexport::ExportChannelsPref>("Audacity.Export", 1, 0, "ExportChannels", "Not creatable from QML");
+    qmlRegisterUncreatableType<ExportOptionType>("Audacity.Export", 1, 0, "ExportOptionType", "Not creatable from QML");
 }
 
 void ExporterModule::onInit(const muse::IApplication::RunMode&)

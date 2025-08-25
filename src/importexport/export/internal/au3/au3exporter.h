@@ -13,6 +13,8 @@
 #include "trackedit/iselectioncontroller.h"
 
 namespace au::importexport {
+using OptionsEditorUPtr = std::unique_ptr<ExportOptionsEditor>;
+
 class Au3Exporter : public IExporter
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -32,6 +34,13 @@ public:
 
     int maxChannels() const override;
     std::vector<int> sampleRateList() const override;
+    int optionsCount() const override;
+
+    std::optional<ExportOption> option(int i) const override;
+    std::optional<OptionValue> value(int id) const override;
+    void setValue(int id, const OptionValue&) override;
+
+    OptionsEditorUPtr optionsEditor() const;
 
 private:
     double m_t0 {};

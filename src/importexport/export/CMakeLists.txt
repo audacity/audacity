@@ -24,6 +24,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/exportpreferencesmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/exportpreferencesmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/dynamicexportoptionsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/dynamicexportoptionsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/customffmpegpreferencesmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/customffmpegpreferencesmodel.h
 
