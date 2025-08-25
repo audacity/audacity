@@ -63,17 +63,18 @@ const std::initializer_list<ExportOption> ExportWavPackOptions {
     },
     {
         OptionIDHybridMode, XO("Hybrid Mode"),
-        false
+        false,
+        ExportOption::Hidden
     },
     {
         OptionIDCreateCorrection, XO("Create Correction(.wvc) File"),
         false,
-        ExportOption::ReadOnly
+        ExportOption::ReadOnly | ExportOption::Hidden
     },
     {
         OptionIDBitRate, XO("Bit Rate"),
         40,
-        ExportOption::TypeEnum,
+        ExportOption::TypeEnum | ExportOption::Hidden,
         { 22, 25, 30, 35, 40, 45, 50, 60, 70, 80 },
         BitRateNames
     }
