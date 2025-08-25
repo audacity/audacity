@@ -131,7 +131,8 @@ qt_add_resources(APP_RCC_SOURCES app.qrc)
 # Executable declaration
 ###########################################
 
-add_executable(${EXECUTABLE_NAME}
+qt_add_executable(audacity
+    WIN32 MACOSX_BUNDLE
     ${APP_RCC_SOURCES}
     main.cpp
     app.cpp
@@ -192,8 +193,8 @@ endif(CC_IS_MSVC)
 
 ###########################################
 # Link
-###########################################
-target_link_libraries(audacity ${LINK_LIB}  ${COVERAGE_LINK_FLAGS})
+##########################################
+target_link_libraries(audacity PRIVATE ${LINK_LIB}  ${COVERAGE_LINK_FLAGS})
 
 ###########################################
 # INSTALL
@@ -221,68 +222,16 @@ if (OS_IS_WIN)
     endif(CC_IS_MINGW)
 
     # Install Qt
-    foreach (QtLibrary ${QT_LIBRARIES})
-        # message(STATUS "Library ${QtLibrary}")
-        # always use release libs
-        # set_target_properties(${QtLibrary} PROPERTIES MAP_IMPORTED_CONFIG_DEBUG "RELEASE")
-        if (BUILD_IS_DEBUG)
-            get_target_property(QtSharedLibrary ${QtLibrary} LOCATION_DEBUG)
-        else()
-            get_target_property(QtSharedLibrary ${QtLibrary} LOCATION_RELEASE)
-        endif()
+    set(deploy_tool_options_arg "--plugindir bin --qmldir ${PROJECT_SOURCE_DIR}")
 
-        if (EXISTS ${QtSharedLibrary})
-            list (APPEND QtInstallLibraries ${QtSharedLibrary})
-        endif (EXISTS ${QtSharedLibrary})
-    endforeach()
-    list(REMOVE_DUPLICATES QtInstallLibraries)
+    qt_generate_deploy_qml_app_script(
+        TARGET audacity
+        OUTPUT_SCRIPT deploy_script
+        NO_UNSUPPORTED_PLATFORM_ERROR
+        DEPLOY_TOOL_OPTIONS ${deploy_tool_options_arg}
+    )
 
-
-    if (BUILD_IS_DEBUG)
-        set(DLL_SUFFIX "d")
-    endif()
-
-    install(FILES
-            #${PROJECT_SOURCE_DIR}/build/qt.conf
-            ${QtInstallLibraries}
-            #${QT_INSTALL_BINS}/libEGL.dll
-            #${QT_INSTALL_BINS}/libGLESv2.dll
-            ${QT_INSTALL_BINS}/opengl32sw.dll
-            ${QT_INSTALL_BINS}/d3dcompiler_47.dll
-            ${QT_INSTALL_BINS}/Qt6QuickControls2Impl${DLL_SUFFIX}.dll
-            ${QT_INSTALL_BINS}/Qt6QuickLayouts${DLL_SUFFIX}.dll
-            ${QT_INSTALL_BINS}/Qt6QmlModels${DLL_SUFFIX}.dll
-            ${QT_INSTALL_BINS}/Qt6QmlWorkerScript${DLL_SUFFIX}.dll
-            DESTINATION bin)
-
-    install(FILES
-            ${QT_INSTALL_PLUGINS}/iconengines/qsvgicon${DLL_SUFFIX}.dll
-            DESTINATION bin/iconengines)
-
-    install(FILES
-            ${QT_INSTALL_PLUGINS}/imageformats/qgif${DLL_SUFFIX}.dll
-            ${QT_INSTALL_PLUGINS}/imageformats/qjpeg${DLL_SUFFIX}.dll
-            ${QT_INSTALL_PLUGINS}/imageformats/qsvg${DLL_SUFFIX}.dll
-            DESTINATION bin/imageformats)
-
-    install(FILES
-            ${QT_INSTALL_PLUGINS}/platforms/qwindows${DLL_SUFFIX}.dll
-            ${QT_INSTALL_PLUGINS}/platforms/qoffscreen${DLL_SUFFIX}.dll
-            DESTINATION bin/platforms)
-
-    install(FILES
-            ${QT_INSTALL_PLUGINS}/tls/qopensslbackend.dll
-            DESTINATION bin/tls)
-
-    install(DIRECTORY
-            ${QT_INSTALL_QML}
-            DESTINATION .
-            REGEX ".pdb" EXCLUDE
-            REGEX ".*QtMultimedia.*" EXCLUDE
-            REGEX ".*QtSensors.*" EXCLUDE
-            REGEX ".*QtTest.*" EXCLUDE
-            REGEX ".*QtWebkit.*" EXCLUDE
-            )
+    install(SCRIPT ${deploy_script})
 
     if (SNDFILE_DLL)
         install(FILES ${SNDFILE_DLL} DESTINATION bin)

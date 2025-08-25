@@ -49,11 +49,6 @@ using namespace au::appshell;
 //! NOTE Separately to initialize logger and profiler as early as possible
 static GlobalModule globalModule;
 
-static void app_init_qrc()
-{
-    Q_INIT_RESOURCE(app);
-}
-
 App::App()
 {
 }
@@ -65,60 +60,6 @@ void App::addModule(modularity::IModuleSetup* module)
 
 int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
 {
-    // ====================================================
-    // Setup global Qt application variables
-    // ====================================================
-    app_init_qrc();
-
-    qputenv("QT_STYLE_OVERRIDE", "Fusion");
-    qputenv("QML_DISABLE_DISK_CACHE", "true");
-
-#ifdef Q_OS_LINUX
-    if (qEnvironmentVariable("QT_QPA_PLATFORM") != "offscreen") {
-        qputenv("QT_QPA_PLATFORMTHEME", "gtk3");
-    }
-#endif
-
-    const char* appName;
-    if (true /*MUVersion::unstable()*/) {
-        appName  = "Audacity4Development";
-    } else {
-        appName  = "Audacity4";
-    }
-
-#ifdef Q_OS_WIN
-    // NOTE: There are some problems with rendering the application window on some integrated graphics processors
-    //       see https://github.com/musescore/MuseScore/issues/8270
-    QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
-
-    if (!qEnvironmentVariableIsSet("QT_OPENGL_BUGLIST")) {
-        qputenv("QT_OPENGL_BUGLIST", ":/resources/win_opengl_buglist.json");
-    }
-#endif
-
-    //! NOTE: For unknown reasons, Linux scaling for 1 is defined as 1.003 in fractional scaling.
-    //!       Because of this, some elements are drawn with a shift on the score.
-    //!       Let's make a Linux hack and round values above 0.75(see RoundPreferFloor)
-#ifdef Q_OS_LINUX
-    QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::RoundPreferFloor);
-#elif defined(Q_OS_WIN)
-    QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
-#endif
-
-    QGuiApplication::styleHints()->setMousePressAndHoldInterval(250);
-
-    QCoreApplication::setApplicationName(appName);
-    QCoreApplication::setOrganizationName("Audacity");
-    QCoreApplication::setOrganizationDomain("audacityteam.org");
-    // QCoreApplication::setApplicationVersion(QString::fromStdString(MUVersion::fullVersion().toStdString()));
-
-// #if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
-//     // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
-//     QGuiApplication::setDesktopFileName("org.musescore.MuseScore" MU_APP_INSTALL_SUFFIX ".desktop");
-// #endif
-
-    commandLineParser.processBuiltinArgs(app);
-
     // ====================================================
     // Setup modules: Resources, Exports, Imports, UiTypes
     // ====================================================
