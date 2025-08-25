@@ -176,6 +176,7 @@ int DBConnection::OpenStepByStep(const FilePath fileName)
                      sqlite3_errstr(rc));
         return rc;
     }
+    wxLogDebug("Opened primary connection to %s\n", fileName.ToStdString());
 
     rc = SetPageSize();
 

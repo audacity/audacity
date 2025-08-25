@@ -22,9 +22,9 @@
 
 #include "startupscenario.h"
 
-#include "async/async.h"
-#include "translation.h"
-#include "log.h"
+#include "global/async/async.h"
+#include "global/translation.h"
+#include "global/log.h"
 
 using namespace au::appshell;
 using namespace muse::actions;

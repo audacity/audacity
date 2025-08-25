@@ -8,6 +8,9 @@
 #include "global/io/fileinfo.h"
 #include "global/io/ioretcodes.h"
 
+#include "libraries/lib-project-file-io/ProjectFileIO.h"
+#include "libraries/lib-project-history/UndoManager.h"
+
 using namespace muse;
 using namespace au::project;
 using namespace au::trackedit;
@@ -124,6 +127,35 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
 
     m_viewState = viewStateCreator()->createViewState(m_au3Project);
 
+    // Set up notification for save status changes
+    auto* au3Project = reinterpret_cast<AudacityProject*>(m_au3Project->au3ProjectPtr());
+    if (au3Project) {
+        // Subscribe to AU3 undo manager changes to trigger needSave notifications
+        m_undoSubscription = UndoManager::Get(*au3Project).Subscribe(
+            [this](const UndoRedoMessage& message) {
+            // Trigger needSave notification for relevant undo/redo events
+            switch (message.type) {
+                case UndoRedoMessage::Pushed:
+                case UndoRedoMessage::Modified:
+                case UndoRedoMessage::UndoOrRedo:
+                case UndoRedoMessage::Reset:
+                    // Mark project as needing save and autosave
+                    setNeedSave(true);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        // For restored never-saved projects, ensure proper initialization
+        // by calling reload() to trigger tracksChanged notifications.
+        // This fixes issues with recording in restored projects.
+        auto& projectFileIO = ProjectFileIO::Get(*au3Project);
+        if (projectFileIO.IsRecovered()) {
+            m_trackeditProject->reload();
+        }
+    }
+
     return ret;
 }
 
@@ -209,15 +241,23 @@ bool Audacity4Project::isImported() const
 
 ValNt<bool> Audacity4Project::needSave() const
 {
-    //! TODO AU4
-    // const mu::engraving::MasterScore* score = m_masterNotation->masterScore();
+    ValNt<bool> needSave;
 
-    // ValNt<bool> needSave;
-    // needSave.val = score && !score->saved();
-    // needSave.notification = m_needSaveNotification;
+    if (m_au3Project) {
+        // Check if the underlying AU3 project has unsaved changes
+        auto* au3Project = reinterpret_cast<AudacityProject*>(m_au3Project->au3ProjectPtr());
+        if (au3Project) {
+            auto& undoManager = UndoManager::Get(*au3Project);
+            needSave.val = undoManager.UnsavedChanges();
+        } else {
+            needSave.val = false;
+        }
+    } else {
+        needSave.val = false;
+    }
 
-    // return needSave;
-    return muse::ValNt<bool>();
+    needSave.notification = m_needSaveNotification;
+    return needSave;
 }
 
 Ret Audacity4Project::canSave() const
@@ -244,6 +284,7 @@ bool Audacity4Project::needAutoSave() const
 
 void Audacity4Project::setNeedAutoSave(bool val)
 {
+    LOGD() << "[project] setNeedAutoSave: " << val;
     m_needAutoSave = val;
 }
 
@@ -426,7 +467,6 @@ Ret Audacity4Project::doSave(const muse::io::path_t& savePath, bool generateBack
 
 void Audacity4Project::markAsSaved(const muse::io::path_t& path)
 {
-    //! TODO AU4
     TRACEFUNC;
 
     //! NOTE: order is important
@@ -436,32 +476,25 @@ void Audacity4Project::markAsSaved(const muse::io::path_t& path)
 
     setPath(path);
 
-    // m_masterNotation->notation()->undoStack()->stackChanged().notify();
+    // Mark the AU3 project as saved
+    if (m_au3Project) {
+        auto* au3Project = reinterpret_cast<AudacityProject*>(m_au3Project->au3ProjectPtr());
+        if (au3Project) {
+            auto& undoManager = UndoManager::Get(*au3Project);
+            undoManager.StateSaved();
+        }
+    }
 }
 
 void Audacity4Project::setNeedSave(bool needSave)
 {
-    Q_UNUSED(needSave);
-    //! TODO AU4
-    // mu::engraving::MasterScore* score = m_masterNotation->masterScore();
-    // if (!score) {
-    //     return;
-    // }
+    LOGD() << "[project] setNeedSave: " << needSave;
 
-    // setNeedAutoSave(needSave);
+    // Set autosave flag when project needs saving
+    setNeedAutoSave(needSave);
 
-    // bool saved = !needSave;
-
-    // if (saved) {
-    //     m_hasNonUndoStackChanges = false;
-    // }
-
-    // if (score->saved() == saved) {
-    //     return;
-    // }
-
-    // score->setSaved(saved);
-    // m_needSaveNotification.notify();
+    // Trigger save notification
+    m_needSaveNotification.notify();
 }
 
 const ITrackeditProjectPtr Audacity4Project::trackeditProject() const

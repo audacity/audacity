@@ -13,6 +13,8 @@
 #include "trackedit/itrackeditproject.h"
 #include "importexport/import/iimporter.h"
 
+#include "libraries/lib-utility/Observer.h"
+
 namespace au::au3 {
 class Au3ProjectAccessor;
 }
@@ -109,6 +111,7 @@ private:
     muse::io::path_t m_path;
     muse::async::Notification m_pathChanged;
     muse::async::Notification m_displayNameChanged;
+    muse::async::Notification m_needSaveNotification;
 
     bool m_isNewlyCreated = false; /// true if the file has never been saved yet
     bool m_isImported = false;
@@ -119,6 +122,8 @@ private:
     trackedit::ITrackeditProjectPtr m_trackeditProject;
 
     projectscene::IProjectViewStatePtr m_viewState;
+
+    Observer::Subscription m_undoSubscription;
 };
 }
 
