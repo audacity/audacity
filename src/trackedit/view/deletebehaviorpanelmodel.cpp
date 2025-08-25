@@ -7,6 +7,13 @@ DeleteBehaviorPanelModel::DeleteBehaviorPanelModel(QObject* parent)
 {
 }
 
+void DeleteBehaviorPanelModel::init()
+{
+    uiConfiguration()->currentThemeChanged().onNotify(this, [this] {
+        emit uiThemeChanged();
+    });
+}
+
 int DeleteBehaviorPanelModel::deleteBehavior() const
 {
     return static_cast<int>(m_deleteBehavior);
@@ -21,6 +28,11 @@ void DeleteBehaviorPanelModel::setDeleteBehavior(int value)
     m_deleteBehavior = newBehavior;
     emit deleteBehaviorChanged();
     emit userMustChooseCloseGapBehaviorChanged();
+}
+
+bool DeleteBehaviorPanelModel::addBorderToClipImageButtons() const
+{
+    return uiConfiguration()->isDarkMode();
 }
 
 int DeleteBehaviorPanelModel::closeGapBehavior() const
@@ -57,12 +69,16 @@ QVariantList DeleteBehaviorPanelModel::closeGapBehaviors() const
 
 QVariantList DeleteBehaviorPanelModel::deleteBehaviors() const
 {
+    const bool dark = uiConfiguration()->isDarkMode();
+    const auto leaveGapImage = dark ? "qrc:/resources/DarkMode_DeleteAndLeaveGap.gif" : "qrc:/resources/LightMode_DeleteAndLeaveGap.gif";
+    const auto rippleImage = dark ? "qrc:/resources/DarkMode_RippleDelete.gif" : "qrc:/resources/LightMode_RippleDelete.gif";
+
     QVariantList behaviors;
-    behaviors.append(QVariantMap { { "text", muse::qtrc("trackedit/preferences", "Leave gap") },
-                         { "imageSource", "qrc:/resources/Leave_Gap.gif" },
+    behaviors.append(QVariantMap { { "text", muse::qtrc("trackedit/preferences",
+                                                        "Leave gap") }, { "imageSource", leaveGapImage },
                          { "value", static_cast<int>(DeleteBehavior::LeaveGap) } });
-    behaviors.append(QVariantMap { { "text", muse::qtrc("trackedit/preferences", "Close gap (ripple)") },
-                         { "imageSource", "qrc:/resources/Ripple.gif" },
+    behaviors.append(QVariantMap { { "text", muse::qtrc("trackedit/preferences",
+                                                        "Close gap (ripple)") }, { "imageSource", rippleImage },
                          { "value", static_cast<int>(DeleteBehavior::CloseGap) } });
     return behaviors;
 }

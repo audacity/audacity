@@ -8,7 +8,9 @@
         <file>qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml</file>
         <file>qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml</file>
         <file>qml/Audacity/TrackEdit/StyledTextLabelWithCustomLinkActivatedSignal.qml</file>
-        <file>resources/Ripple.gif</file>
-        <file>resources/Leave_Gap.gif</file>
+        <file>resources/DarkMode_RippleDelete.gif</file>
+        <file>resources/DarkMode_DeleteAndLeaveGap.gif</file>
+        <file>resources/LightMode_RippleDelete.gif</file>
+        <file>resources/LightMode_DeleteAndLeaveGap.gif</file>
     </qresource>
 </RCC>

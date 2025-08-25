@@ -30,6 +30,7 @@ Rectangle {
     id: root
 
     property string source: ""
+    property color unaccentedBorderColor: "transparent"
 
     signal clicked
 
@@ -54,10 +55,9 @@ Rectangle {
         anchors.fill: parent
 
         color: "transparent"
-        border.color: ui.theme.accentColor
+        border.color: mouseArea.containsMouse ? ui.theme.accentColor : root.unaccentedBorderColor
         border.width: 1
         radius: root.radius
-        visible: mouseArea.containsMouse
     }
 
     MouseArea {
@@ -68,7 +68,7 @@ Rectangle {
         hoverEnabled: true
 
         onClicked: {
-            root.clicked();
+            root.clicked()
         }
     }
 }

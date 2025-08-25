@@ -26,6 +26,7 @@ Column {
 
     Component.onCompleted: {
         root.navigation.direction = NavigationPanel.Both
+        deleteBehaviorModel.init()
     }
 
     DeleteBehaviorPanelModel {
@@ -44,6 +45,7 @@ Column {
             delegate: DeleteBehaviorChoice {
                 text: modelData.text
                 imageSource: modelData.imageSource
+                addBorderToClipImageButton: deleteBehaviorModel.addBorderToClipImageButtons
                 checked: root.deleteBehavior === modelData.value
 
                 navigation.name: modelData.text
