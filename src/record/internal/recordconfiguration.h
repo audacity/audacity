@@ -13,11 +13,11 @@ public:
 
     muse::draw::Color recordColor() const override;
 
-    bool micMetering() const override;
-    void setMicMetering(bool enable) override;
-    muse::async::Notification micMeteringChanged() const override;
+    bool isMicMeteringOn() const override;
+    void setIsMicMeteringOn(bool enable) override;
+    muse::async::Notification isMicMeteringOnChanged() const override;
 
 private:
-    muse::async::Notification m_micMeteringChanged;
+    muse::async::Notification m_isMicMeteringOnChanged;
 };
 }

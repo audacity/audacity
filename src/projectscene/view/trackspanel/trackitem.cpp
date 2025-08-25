@@ -56,24 +56,16 @@ void TrackItem::init(const trackedit::Track& track)
     });
 
     audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
-        m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
+        const int inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
+        m_recordStreamChannelsMatch = (m_trackType == trackedit::TrackType::Mono && inputChannelsCount == 1)
+                                      || (m_trackType == trackedit::TrackType::Stereo && inputChannelsCount == 2);
+        checkMainAudioInput();
     });
-    m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
 
-    record()->audioInput()->recordSignalChanges().onReceive(this, [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
-        if (!m_isFocused) {
-            return;
-        }
-
-        if ((m_trackType == trackedit::TrackType::Mono && m_inputChannelsCount != 1)
-            || (m_trackType == trackedit::TrackType::Stereo && m_inputChannelsCount != 2)) {
-            return;
-        }
-
-        setAudioChannelVolumePressure(audioChNum,
-                                      meterSignal.peak.pressure);
-        setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
-    });
+    const int inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
+    m_recordStreamChannelsMatch = (m_trackType == trackedit::TrackType::Mono && inputChannelsCount == 1)
+                                  || (m_trackType == trackedit::TrackType::Stereo && inputChannelsCount == 2);
+    checkMainAudioInput();
 
     if (m_title != track.title) {
         m_title = track.title;
@@ -210,28 +202,6 @@ void TrackItem::loadOutputParams(const audio::AudioOutputParams& newParams)
         emit mutedChanged();
     }
 }
-
-// void TrackItem::subscribeOnAudioSignalChanges(AudioSignalChanges&& audioSignalChanges)
-// {
-//     m_audioSignalChanges = audioSignalChanges;
-
-//     m_audioSignalChanges.onReceive(this, [this](const audioch_t audioChNum, const AudioSignalVal& newValue) {
-//         //!Note There should be no signal changes when the mixer channel is muted.
-//         //!     But some audio signal changes still might be "on the way" from the times when the mixer channel wasn't muted
-//         //!     So that we have to just ignore them
-//         if (muted()) {
-//             return;
-//         }
-
-//         if (newValue.pressure < MIN_DISPLAYED_DBFS) {
-//             setAudioChannelVolumePressure(audioChNum, MIN_DISPLAYED_DBFS);
-//         } else if (newValue.pressure > MAX_DISPLAYED_DBFS) {
-//             setAudioChannelVolumePressure(audioChNum, MAX_DISPLAYED_DBFS);
-//         } else {
-//             setAudioChannelVolumePressure(audioChNum, newValue.pressure);
-//         }
-//     });
-// }
 
 void TrackItem::setTitle(QString title)
 {
@@ -375,4 +345,19 @@ void TrackItem::setIsFocused(bool focused)
 
     m_isFocused = focused;
     emit isFocusedChanged();
+    checkMainAudioInput();
+}
+
+void TrackItem::checkMainAudioInput()
+{
+    if (m_isFocused && m_recordStreamChannelsMatch) {
+        record()->audioInput()->recordSignalChanges().onReceive(this,
+                                                                [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
+            setAudioChannelVolumePressure(audioChNum,
+                                          meterSignal.peak.pressure);
+            setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
+        });
+    } else {
+        record()->audioInput()->recordSignalChanges().resetOnReceive(this);
+    }
 }

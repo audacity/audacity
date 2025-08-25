@@ -169,15 +169,4 @@ public:
 
     Q_ENUM(DbRange)
 };
-
-class MeterInputSource
-{
-    Q_GADGET
-public:
-    enum class Source {
-        Playback = 0,
-        Record = 1,
-    };
-    Q_ENUM(Source)
-};
 }

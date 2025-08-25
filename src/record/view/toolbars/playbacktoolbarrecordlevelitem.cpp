@@ -20,17 +20,6 @@ PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::U
         emit levelChanged();
     });
 
-    record()->audioInput()->recordSignalChanges().onReceive(this, [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
-        if (meterSignal.peak.pressure < MIN_DISPLAYED_DBFS) {
-            setAudioChannelVolumePressure(audioChNum,
-                                          MIN_DISPLAYED_DBFS);
-        } else if (meterSignal.peak.pressure > MAX_DISPLAYED_DBFS) {
-            setAudioChannelVolumePressure(audioChNum, MAX_DISPLAYED_DBFS);
-        } else {
-            setAudioChannelVolumePressure(audioChNum, meterSignal.peak.pressure);
-        }
-    });
-
     playbackConfiguration()->playbackMeterStyleChanged().onNotify(this, [this]() {
         emit meterStyleChanged();
     });
@@ -39,13 +28,13 @@ PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::U
         recordingChannelsCountChanged();
     });
 
+    recordConfiguration()->isMicMeteringOnChanged().onNotify(this, [this]() {
+        emit isMicMeteringOnChanged();
+    });
+
     resetAudioChannelsVolumePressure();
     emit recordingChannelsCountChanged();
     emit audibleInputMonitoringChanged();
-
-    recordConfiguration()->micMeteringChanged().onNotify(this, [this]() {
-        emit micMeteringChanged();
-    });
 }
 
 float PlaybackToolBarRecordLevelItem::level() const
@@ -183,17 +172,36 @@ void PlaybackToolBarRecordLevelItem::setAudibleInputMonitoring(bool enable)
     emit audibleInputMonitoringChanged();
 }
 
-bool PlaybackToolBarRecordLevelItem::micMetering() const
+bool PlaybackToolBarRecordLevelItem::isMicMeteringOn() const
 {
-    return recordConfiguration()->micMetering();
+    return recordConfiguration()->isMicMeteringOn();
 }
 
-void PlaybackToolBarRecordLevelItem::setMicMetering(bool enable)
+void PlaybackToolBarRecordLevelItem::setIsMicMeteringOn(bool enable)
 {
-    recordConfiguration()->setMicMetering(enable);
+    recordConfiguration()->setIsMicMeteringOn(enable);
 }
 
 PlaybackMeterStyle::MeterStyle PlaybackToolBarRecordLevelItem::meterStyle() const
 {
     return playbackConfiguration()->playbackMeterStyle();
+}
+
+void PlaybackToolBarRecordLevelItem::listenMainAudioInput(bool listen)
+{
+    if (listen) {
+        record()->audioInput()->recordSignalChanges().onReceive(this,
+                                                                [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
+            if (meterSignal.peak.pressure < MIN_DISPLAYED_DBFS) {
+                setAudioChannelVolumePressure(audioChNum,
+                                              MIN_DISPLAYED_DBFS);
+            } else if (meterSignal.peak.pressure > MAX_DISPLAYED_DBFS) {
+                setAudioChannelVolumePressure(audioChNum, MAX_DISPLAYED_DBFS);
+            } else {
+                setAudioChannelVolumePressure(audioChNum, meterSignal.peak.pressure);
+            }
+        });
+    } else {
+        record()->audioInput()->recordSignalChanges().resetOnReceive(this);
+    }
 }

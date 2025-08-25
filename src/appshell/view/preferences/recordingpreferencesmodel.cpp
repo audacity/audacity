@@ -9,8 +9,8 @@ using namespace au::appshell;
 RecordingPreferencesModel::RecordingPreferencesModel(QObject* parent)
     : QObject(parent)
 {
-    recordConfiguration()->micMeteringChanged().onNotify(this, [this]() {
-        emit micMeteringChanged();
+    recordConfiguration()->isMicMeteringOnChanged().onNotify(this, [this]() {
+        emit isMicMeteringOnChanged();
     });
 }
 
@@ -27,14 +27,14 @@ void RecordingPreferencesModel::setAudibleInputMonitoring(bool enabled)
     }
 }
 
-bool RecordingPreferencesModel::micMetering() const
+bool RecordingPreferencesModel::isMicMeteringOn() const
 {
-    return recordConfiguration()->micMetering();
+    return recordConfiguration()->isMicMeteringOn();
 }
 
-void RecordingPreferencesModel::setMicMetering(bool enabled)
+void RecordingPreferencesModel::setIsMicMeteringOn(bool enabled)
 {
-    if (micMetering() != enabled) {
-        recordConfiguration()->setMicMetering(enabled);
+    if (isMicMeteringOn() != enabled) {
+        recordConfiguration()->setIsMicMeteringOn(enabled);
     }
 }

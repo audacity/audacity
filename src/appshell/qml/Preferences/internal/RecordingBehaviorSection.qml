@@ -24,14 +24,14 @@ BaseSection {
 
             text: qsTrc("appshell/preferences", "Show mic metering")
 
-            checked: recordingPreferencesModel.micMetering
+            checked: recordingPreferencesModel.isMicMeteringOn
 
             navigation.name: "MicMeteringCheckBox"
             navigation.panel: root.navigation
             navigation.order: 1
 
             onClicked: {
-                recordingPreferencesModel.micMetering = !checked
+                recordingPreferencesModel.isMicMeteringOn = !checked
             }
         }
 

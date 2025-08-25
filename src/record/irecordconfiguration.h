@@ -17,8 +17,8 @@ public:
 
     virtual muse::draw::Color recordColor() const = 0;
 
-    virtual bool micMetering() const = 0;
-    virtual void setMicMetering(bool enable) = 0;
-    virtual muse::async::Notification micMeteringChanged() const = 0;
+    virtual bool isMicMeteringOn() const = 0;
+    virtual void setIsMicMeteringOn(bool enable) = 0;
+    virtual muse::async::Notification isMicMeteringOnChanged() const = 0;
 };
 }

@@ -34,7 +34,7 @@ Au3AudioInput::Au3AudioInput()
         initMeter();
         restartMonitoring();
 
-        configuration()->micMeteringChanged().onNotify(this, [this]() {
+        configuration()->isMicMeteringOnChanged().onNotify(this, [this]() {
             restartMonitoring();
         });
 
@@ -54,9 +54,12 @@ Au3AudioInput::Au3AudioInput()
 
 void Au3AudioInput::initMeter()
 {
-    Au3Project& project = projectRef();
+    Au3Project* project = projectRef();
+    if (!project) {
+        return;
+    }
 
-    auto& projectAudioIO = ProjectAudioIO::Get(project);
+    auto& projectAudioIO = ProjectAudioIO::Get(*project);
     projectAudioIO.SetCaptureMeter(m_inputMeter);
 }
 
@@ -129,6 +132,11 @@ void Au3AudioInput::startMonitoring()
             return;
         }
 
+        Au3Project* project = projectRef();
+        if (!project) {
+            return;
+        }
+
         if (gAudioIO->IsMonitoring()) {
             return;
         }
@@ -139,7 +147,7 @@ void Au3AudioInput::startMonitoring()
             std::this_thread::sleep_for(100ms);
         }
 
-        gAudioIO->StartMonitoring(ProjectAudioIO::GetDefaultOptions(projectRef()));
+        gAudioIO->StartMonitoring(ProjectAudioIO::GetDefaultOptions(*project));
     });
 }
 
@@ -167,15 +175,24 @@ void Au3AudioInput::restartMonitoring()
 {
     stopMonitoring();
 
-    if (!configuration()->micMetering() && !audibleInputMonitoring()) {
+    if (!configuration()->isMicMeteringOn() && !audibleInputMonitoring()) {
         return;
     }
 
     startMonitoring();
 }
 
-Au3Project& Au3AudioInput::projectRef() const
+Au3Project* Au3AudioInput::projectRef() const
 {
-    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
-    return *project;
+    const auto context = globalContext();
+    if (!context) {
+        return nullptr;
+    }
+
+    const auto currentProject = context->currentProject();
+    if (!currentProject) {
+        return nullptr;
+    }
+
+    return reinterpret_cast<Au3Project*>(currentProject->au3ProjectPtr());
 }

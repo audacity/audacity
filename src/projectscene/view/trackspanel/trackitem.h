@@ -132,6 +132,7 @@ protected:
     void setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue);
     void setAudioChannelRMS(const trackedit::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
+    void checkMainAudioInput();
 
     audio::AudioOutputParams m_outParams;
 
@@ -149,7 +150,7 @@ protected:
 
     bool m_isSelected = false;
     bool m_isFocused = false;
-    int m_inputChannelsCount = 0;
+    bool m_recordStreamChannelsMatch = 0;
 };
 }
 

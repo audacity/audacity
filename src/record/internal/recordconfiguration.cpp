@@ -16,7 +16,7 @@ void RecordConfiguration::init()
 {
     muse::settings()->setDefaultValue(MIC_METERING_KEY, muse::Val(true));
     muse::settings()->valueChanged(MIC_METERING_KEY).onReceive(nullptr, [this](const muse::Val&) {
-        m_micMeteringChanged.notify();
+        m_isMicMeteringOnChanged.notify();
     });
 }
 
@@ -25,17 +25,17 @@ draw::Color RecordConfiguration::recordColor() const
     return "#EF476F";
 }
 
-bool RecordConfiguration::micMetering() const
+bool RecordConfiguration::isMicMeteringOn() const
 {
     return muse::settings()->value(MIC_METERING_KEY).toBool();
 }
 
-void RecordConfiguration::setMicMetering(bool enable)
+void RecordConfiguration::setIsMicMeteringOn(bool enable)
 {
     muse::settings()->setSharedValue(MIC_METERING_KEY, muse::Val(enable));
 }
 
-muse::async::Notification RecordConfiguration::micMeteringChanged() const
+muse::async::Notification RecordConfiguration::isMicMeteringOnChanged() const
 {
-    return m_micMeteringChanged;
+    return m_isMicMeteringOnChanged;
 }

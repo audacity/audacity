@@ -13,7 +13,6 @@
 #include "playback/playbacktypes.h"
 #include "playback/iaudiooutput.h"
 #include "playback/iplaybackcontroller.h"
-#include "record/irecord.h"
 
 namespace au::playback {
 class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable
@@ -23,7 +22,6 @@ class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable
     muse::Inject<IPlayback> playback;
     muse::Inject<IPlaybackConfiguration> configuration;
     muse::Inject<IPlaybackController> controller;
-    muse::Inject<record::IRecord> record;
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float leftChannelRMS READ leftChannelRMS NOTIFY leftChannelRMSChanged)

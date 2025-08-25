@@ -230,9 +230,7 @@ Item {
                 width: 28
                 height: width
 
-                meterStyle: {
-                    return Boolean(itemData) ? itemData.meterStyle : PlaybackMeterStyle.Default
-                }
+                meterStyle: Boolean(itemData) ? itemData.meterStyle : PlaybackMeterStyle.Default
 
                 icon: Boolean(itemData) ? itemData.icon : IconCode.NONE
 
@@ -246,7 +244,7 @@ Item {
                 recordingChannelsCount: Boolean(itemData) ? itemData.recordingChannelsCount : 0
 
                 audibleInputMonitoring: Boolean(itemData) ? itemData.audibleInputMonitoring : false
-                micMetering: Boolean(itemData) ? itemData.micMetering : false
+                isMicMeteringOn: Boolean(itemData) ? itemData.isMicMeteringOn : false
 
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
@@ -258,8 +256,12 @@ Item {
                     itemData.audibleInputMonitoring = enable
                 }
 
-                onMicMeteringChangeRequested: function(enable) {
-                    itemData.micMetering = enable
+                onIsMicMeteringOnChangeRequested: function(enable) {
+                    itemData.isMicMeteringOn = enable
+                }
+
+                onIsPopupOpened: function(opened) {
+                    itemData.listenMainAudioInput(opened)
                 }
             }
         }

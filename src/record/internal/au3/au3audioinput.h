@@ -41,7 +41,7 @@ public:
     bool audibleInputMonitoring() const override;
 
 private:
-    au3::Au3Project& projectRef() const;
+    au3::Au3Project* projectRef() const;
 
     void initMeter();
     void startMonitoring();

@@ -7,6 +7,7 @@ import QtQuick.Layouts 1.15
 import Muse.UiComponents 1.0
 import Muse.Ui 1.0
 
+import Audacity.Record 1.0
 import Audacity.Playback 1.0
 
 FlatButton {
@@ -27,11 +28,12 @@ FlatButton {
 
     property int recordingChannelsCount: 0
     property bool audibleInputMonitoring: false
-    property bool micMetering: false
+    property bool isMicMeteringOn: false
 
     signal volumeLevelChangeRequested(var level)
     signal audibleInputMonitoringChangeRequested(bool enable)
-    signal micMeteringChangeRequested(bool enable)
+    signal isMicMeteringOnChangeRequested(bool enable)
+    signal isPopupOpened(bool opened)
 
     accentButton: popup.isOpened
 
@@ -53,6 +55,8 @@ FlatButton {
         } else {
             popup.open()
         }
+
+        root.isPopupOpened(popup.isOpened)
     }
 
     onClicked: function(mouse) {
@@ -76,19 +80,24 @@ FlatButton {
     QtObject {
         id: viewModel
 
-        readonly property int contentWidth: 456
-        readonly property int contentHeight: 142
+        readonly property int contentWidth: 480 - 2 * margins
+        readonly property int contentHeight: 174 - 2 * margins
 
         readonly property int margins: 12
         readonly property int spacing: 8
+        readonly property int checkboxSpacing: 20
 
         readonly property int meterHeight: 50
+        readonly property int textHeight: 16
+        readonly property int checkboxHeight: 28
     }
 
-    PlaybackMeterModel {
+    RecordMeterModel {
         id: meterModel
+    }
 
-        meterInputSource: MeterInputSource.Record
+    Component.onCompleted: {
+        meterModel.init();
     }
 
     StyledPopupView {
@@ -104,7 +113,7 @@ FlatButton {
             rightVolumePressure.requestPaint()
         }
 
-        ColumnLayout {
+        Column {
             id: content
 
             anchors.fill: parent
@@ -112,15 +121,20 @@ FlatButton {
             spacing: viewModel.spacing
 
             StyledTextLabel {
-                Layout.fillWidth: true
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                height: viewModel.textHeight
 
                 text: qsTrc("record", "Microphone level")
                 horizontalAlignment: Text.AlignLeft
             }
 
             Rectangle {
-                Layout.fillWidth: true
-                Layout.preferredHeight: viewModel.meterHeight
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                height: viewModel.meterHeight
 
                 color: ui.theme.backgroundSecondaryColor
                 border.width: 1
@@ -189,7 +203,10 @@ FlatButton {
             }
 
             StyledTextLabel {
-                Layout.fillWidth: true
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                height: viewModel.textHeight
 
                 text: qsTrc("record", "Note: this control is tied to your computer’s main mic volume")
                 horizontalAlignment: Text.AlignLeft
@@ -197,32 +214,44 @@ FlatButton {
             }
 
             Rectangle {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 2
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-                color: ui.theme.strokeColor
+                height: 8
+
+                color: ui.theme.backgroundPrimaryColor
+
+                SeparatorLine {
+                    anchors.verticalCenter: parent.verticalCenter
+                }
             }
 
             Row {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-                spacing: 16
+                height: viewModel.checkboxHeight
+
+                spacing: viewModel.checkboxSpacing
 
                 CheckBox {
                     id: showMeterMeteringCheckbox
 
+                    anchors.verticalCenter: parent.verticalCenter
+
                     text: qsTrc("record", "Show mic metering")
 
-                    checked: root.micMetering
+                    checked: root.isMicMeteringOn
 
                     onClicked: {
-                        micMeteringChangeRequested(!root.micMetering)
+                        isMicMeteringOnChangeRequested(!root.isMicMeteringOn)
                     }
                 }
 
                 CheckBox {
                     id: enableMonitoringCheckbox
+
+                    anchors.verticalCenter: parent.verticalCenter
 
                     text: qsTrc("record", "Enable input monitoring")
 
