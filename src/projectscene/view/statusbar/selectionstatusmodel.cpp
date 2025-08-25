@@ -9,6 +9,9 @@ using namespace au::projectscene;
 
 void SelectionStatusModel::init()
 {
+    m_currentFormat = configuration()->selectionTimecodeFormat();
+    emit currentFormatChanged();
+
     m_startTime = selectionController()->dataSelectedStartTime();
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t time) {
         m_startTime = !time.is_negative() ? time : trackedit::secs_t(0.0);
@@ -61,7 +64,7 @@ void SelectionStatusModel::setEndTime(double time)
 
 int SelectionStatusModel::currentFormat() const
 {
-    return m_currentFormat; // from settings
+    return m_currentFormat;
 }
 
 void SelectionStatusModel::setCurrentFormat(int format)
@@ -72,6 +75,7 @@ void SelectionStatusModel::setCurrentFormat(int format)
 
     m_currentFormat = format;
     emit currentFormatChanged();
+    configuration()->setSelectionTimecodeFormat(format);
 }
 
 double SelectionStatusModel::sampleRate() const

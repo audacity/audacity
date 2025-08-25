@@ -64,11 +64,16 @@ public:
     void setLongSkip(trackedit::secs_t seconds) override;
     muse::async::Notification longSkipChanged() const override;
 
+    bool selectionFollowsLoopRegion() const override;
+    void setSelectionFollowsLoopRegion(bool follows) override;
+    muse::async::Notification selectionFollowsLoopRegionChanged() const override;
+
 private:
     muse::async::Notification m_playbackQualityChanged;
     muse::async::Notification m_ditheringChanged;
     muse::async::Notification m_soloBehaviorChanged;
     muse::async::Notification m_shortSkipChanged;
     muse::async::Notification m_longSkipChanged;
+    muse::async::Notification m_selectionFollowsLoopRegionChanged;
 };
 }

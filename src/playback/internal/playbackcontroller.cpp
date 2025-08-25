@@ -18,9 +18,6 @@ static const ActionCode REWIND_START_CODE("rewind-start");
 static const ActionCode REWIND_END_CODE("rewind-end");
 static const ActionCode SEEK_CODE("playback-seek");
 static const ActionCode CHANGE_PLAY_REGION_CODE("playback-play-region-change");
-static const ActionCode LOOP_CODE("loop");
-static const ActionCode LOOP_IN_CODE("loop-in");
-static const ActionCode LOOP_OUT_CODE("loop-out");
 static const ActionCode PAN_CODE("pan");
 static const ActionCode REPEAT_CODE("repeat");
 
@@ -40,9 +37,14 @@ void PlaybackController::init()
     dispatcher()->reg(this, REWIND_END_CODE, this, &PlaybackController::rewindToEnd);
     dispatcher()->reg(this, SEEK_CODE, this, &PlaybackController::onSeekAction);
     dispatcher()->reg(this, CHANGE_PLAY_REGION_CODE, this, &PlaybackController::onChangePlaybackRegionAction);
-    dispatcher()->reg(this, LOOP_CODE, this, &PlaybackController::toggleLoopPlayback);
-    // dispatcher()->reg(this, LOOP_IN_CODE, [this]() { addLoopBoundary(LoopBoundaryType::LoopIn); });
-    // dispatcher()->reg(this, LOOP_OUT_CODE, [this]() { addLoopBoundary(LoopBoundaryType::LoopOut); });
+
+    dispatcher()->reg(this, "toggle-loop-region", this, &PlaybackController::toggleLoopPlayback);
+    dispatcher()->reg(this, "clear-loop-region", this, &PlaybackController::clearLoopRegion);
+    dispatcher()->reg(this, "set-loop-region-to-selection", this, &PlaybackController::setLoopRegionToSelection);
+    dispatcher()->reg(this, "set-selection-to-loop", this, &PlaybackController::setSelectionToLoop);
+    dispatcher()->reg(this, "set-loop-region-in-out", this, &PlaybackController::setLoopRegionInOut);
+    dispatcher()->reg(this, "toggle-selection-follows-loop-region", this, &PlaybackController::setSelectionFollowsLoopRegion);
+
     dispatcher()->reg(this, REPEAT_CODE, this, &PlaybackController::togglePlayRepeats);
     dispatcher()->reg(this, PAN_CODE, this, &PlaybackController::toggleAutomaticallyPan);
 
@@ -67,6 +69,17 @@ void PlaybackController::init()
             //! NOTE: just stop, without seek
             player()->stop();
         }
+    });
+
+    m_player->loopRegionChanged().onNotify(this, [this](){
+        m_actionCheckedChanged.send("toggle-loop-region");
+        if (playbackConfiguration()->selectionFollowsLoopRegion()) {
+            setSelectionToLoop();
+        }
+    });
+
+    playbackConfiguration()->selectionFollowsLoopRegionChanged().onNotify(this, [this]() {
+        m_actionCheckedChanged.send("toggle-selection-follows-loop-region");
     });
 
     recordController()->isRecordingChanged().onNotify(this, [this]() {
@@ -113,16 +126,11 @@ bool PlaybackController::isLoaded() const
     return m_loadingTrackCount == 0;
 }
 
-bool PlaybackController::isLoopEnabled() const
+bool PlaybackController::isLoopActive() const
 {
-    NOT_IMPLEMENTED;
-    return false;
-}
+    au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
 
-bool PlaybackController::loopBoundariesSet() const
-{
-    NOT_IMPLEMENTED;
-    return false;
+    return prj ? player()->isLoopRegionActive() : false;
 }
 
 PlaybackRegion PlaybackController::selectionPlaybackRegion() const
@@ -252,11 +260,6 @@ void PlaybackController::play(bool ignoreSelection)
         doSeek(m_lastPlaybackSeekTime);
     }
 
-    if (isLoopEnabled()) {
-        // msecs_t startMsecs = playbackStartMsecs();
-        // seek(startMsecs);
-    }
-
     if (!isPlaybackStartPositionValid()) {
         return;
     }
@@ -361,9 +364,9 @@ void PlaybackController::stop()
 
     player()->stop();
 
-    PlaybackRegion selectionRegion = selectionPlaybackRegion();
-    if (selectionRegion.isValid()) {
-        seek(selectionRegion.start);
+    PlaybackRegion loopRegion = player()->playbackRegion();
+    if (loopRegion.isValid()) {
+        seek(loopRegion.start);
     } else {
         seek(m_lastPlaybackSeekTime);
     }
@@ -398,7 +401,58 @@ void PlaybackController::toggleAutomaticallyPan()
 
 void PlaybackController::toggleLoopPlayback()
 {
-    NOT_IMPLEMENTED;
+    player()->setLoopRegionActive(!player()->isLoopRegionActive());
+    notifyActionCheckedChanged("toggle-loop-region");
+}
+
+void PlaybackController::clearLoopRegion()
+{
+    player()->clearLoopRegion();
+}
+
+void PlaybackController::setLoopRegionToSelection()
+{
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        player()->setLoopRegion({ selectionController()->dataSelectedStartTime(), selectionController()->dataSelectedEndTime() });
+    } else {
+        player()->clearLoopRegion();
+    }
+}
+
+void PlaybackController::setSelectionToLoop()
+{
+    PlaybackRegion loopRegion = player()->loopRegion();
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    trackedit::TrackIdList tracks = prj->trackIdList();
+
+    selectionController()->setSelectedTracks(tracks, false);
+    selectionController()->setDataSelectedStartTime(loopRegion.start, false);
+    selectionController()->setDataSelectedEndTime(loopRegion.end, true);
+}
+
+void PlaybackController::setLoopRegionInOut()
+{
+    PlaybackRegion region = m_player->loopRegion();
+
+    muse::UriQuery loopRegionInOutUri("audacity://playback/loop_region_in_out");
+    loopRegionInOutUri.addParam("title", muse::Val(muse::trc("trackedit", "Set looping region in/out")));
+    loopRegionInOutUri.addParam("start", muse::Val(static_cast<double>(region.start)));
+    loopRegionInOutUri.addParam("end", muse::Val(static_cast<double>(region.end)));
+
+    RetVal<Val> rv = interactive()->openSync(loopRegionInOutUri);
+    if (!rv.ret.success()) {
+        return;
+    }
+
+    QVariantMap vals = rv.val.toQVariant().toMap();
+
+    m_player->setLoopRegion({ vals["start"].toDouble(), vals["end"].toDouble() });
+}
+
+void PlaybackController::setSelectionFollowsLoopRegion()
+{
+    playbackConfiguration()->setSelectionFollowsLoopRegion(!playbackConfiguration()->selectionFollowsLoopRegion());
 }
 
 void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
@@ -444,26 +498,6 @@ void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
 
     audioDevicesProvider()->setInputChannels(audioDevicesProvider()->inputChannelsList().at(index));
 }
-
-// void PlaybackController::addLoopBoundary(LoopBoundaryType type)
-// {
-// }
-
-// void PlaybackController::addLoopBoundaryToTick(LoopBoundaryType type, int tick)
-// {
-// }
-
-// void PlaybackController::updateLoop()
-// {
-// }
-
-// void PlaybackController::enableLoop()
-// {
-// }
-
-// void PlaybackController::disableLoop()
-// {
-// }
 
 void PlaybackController::notifyActionCheckedChanged(const ActionCode& actionCode)
 {
@@ -520,9 +554,8 @@ bool PlaybackController::isPlaybackStartPositionValid() const
 bool PlaybackController::actionChecked(const ActionCode& actionCode) const
 {
     QMap<std::string, bool> isChecked {
-        { LOOP_CODE, isLoopEnabled() },
-        // { REPEAT_CODE, configuration()->isPlayRepeatsEnabled() },
-        // { PAN_CODE, configuration()->isAutomaticallyPanEnabled() },
+        { "toggle-loop-region", isLoopActive() },
+        { "toggle-selection-follows-loop-region", playbackConfiguration()->selectionFollowsLoopRegion() }
     };
 
     return isChecked[actionCode];
@@ -559,7 +592,7 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
         return false;
     }
 
-    if (code == PLAY_CODE || code == LOOP_CODE) {
+    if (code == PLAY_CODE) {
         return !recordController()->isRecording();
     }
 

@@ -32,14 +32,12 @@ public:
     muse::async::Channel<muse::actions::ActionCodeList> actionCheckedChanged() const override;
 
     static const muse::ui::UiActionList& settingsActions();
-    static const muse::ui::UiActionList& loopBoundaryActions();
     void registerActions();
 
 private:
     muse::ui::UiActionList m_actions;
     static const muse::ui::UiActionList m_mainActions;
     static const muse::ui::UiActionList m_settingsActions;
-    static const muse::ui::UiActionList m_loopBoundaryActions;
     static const muse::ui::UiActionList m_meterDbRangeActions;
 
     std::shared_ptr<PlaybackController> m_controller;

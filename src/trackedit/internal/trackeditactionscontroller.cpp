@@ -203,12 +203,6 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, CLIP_SPLIT_DELETE, this, &TrackeditActionsController::clipSplitDelete);
     dispatcher()->reg(this, RANGE_SELECTION_SPLIT_CUT, this, &TrackeditActionsController::splitCutSelected);
     dispatcher()->reg(this, RANGE_SELECTION_SPLIT_DELETE, this, &TrackeditActionsController::splitDeleteSelected);
-    dispatcher()->reg(this, "toggle-loop-region", this, &TrackeditActionsController::toggleLoopRegion);
-    dispatcher()->reg(this, "clear-loop-region", this, &TrackeditActionsController::clearLoopRegion);
-    dispatcher()->reg(this, "set-loop-region-to-selection", this, &TrackeditActionsController::setLoopRegionToSelection);
-    dispatcher()->reg(this, "set-selection-to-loop", this, &TrackeditActionsController::setSelectionToLoop);
-    dispatcher()->reg(this, "set-loop-region-in", this, &TrackeditActionsController::setLoopRegionIn);
-    dispatcher()->reg(this, "set-loop-region-out", this, &TrackeditActionsController::setLoopRegionOut);
     dispatcher()->reg(this, NEW_MONO_TRACK, this, &TrackeditActionsController::newMonoTrack);
     dispatcher()->reg(this, NEW_STEREO_TRACK, this, &TrackeditActionsController::newStereoTrack);
     dispatcher()->reg(this, NEW_LABEL_TRACK, this, &TrackeditActionsController::newLabelTrack);
@@ -1008,36 +1002,6 @@ void TrackeditActionsController::splitDeleteSelected(const muse::actions::Action
     trackeditInteraction()->splitDeleteSelectedOnTracks(tracksIds, begin, end);
 
     selectionController()->resetDataSelection();
-}
-
-void TrackeditActionsController::toggleLoopRegion()
-{
-    NOT_IMPLEMENTED;
-}
-
-void TrackeditActionsController::clearLoopRegion()
-{
-    NOT_IMPLEMENTED;
-}
-
-void TrackeditActionsController::setLoopRegionToSelection()
-{
-    NOT_IMPLEMENTED;
-}
-
-void TrackeditActionsController::setSelectionToLoop()
-{
-    NOT_IMPLEMENTED;
-}
-
-void TrackeditActionsController::setLoopRegionIn()
-{
-    NOT_IMPLEMENTED;
-}
-
-void TrackeditActionsController::setLoopRegionOut()
-{
-    NOT_IMPLEMENTED;
 }
 
 void TrackeditActionsController::newMonoTrack()

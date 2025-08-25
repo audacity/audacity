@@ -32,6 +32,7 @@ MenuItemList TimelineContextMenuModel::makeRulerItems()
         makeMenuItem("clear-loop-region"),
         makeMenuItem("set-loop-region-to-selection"),
         makeMenuItem("set-selection-to-loop"),
+        makeMenuItem("toggle-selection-follows-loop-region"),
         makeSeparator(),
         makeMenuItem("toggle-vertical-rulers"),
     };
