@@ -31,6 +31,11 @@ public:
 
     int maxChannels() const override;
     std::vector<int> sampleRateList() const override;
+    int optionsCount() const override;
+
+    std::optional<ExportOption> option(int i) const override;
+    std::optional<ExportValue> value(int id) const override;
+    void setValue(int id, const ExportValue&) override;
 
 private:
     double m_t0 {};

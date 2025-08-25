@@ -308,3 +308,8 @@ bool ExportPreferencesModel::customFFmpegOptionsVisible()
 {
     return currentFormat() == "Custom FFmpeg Export";
 }
+
+int ExportPreferencesModel::optionsCount()
+{
+    return exporter()->optionsCount();
+}

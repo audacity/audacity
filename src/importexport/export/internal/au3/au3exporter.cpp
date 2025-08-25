@@ -272,3 +272,94 @@ std::vector<int> Au3Exporter::sampleRateList() const
 
     return {};
 }
+
+int Au3Exporter::optionsCount() const
+{
+    std::string format = exportConfiguration()->currentFormat();
+
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
+            auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
+            if (!editor) {
+                return 0;
+            }
+            return editor->GetOptionsCount();
+        }
+    }
+
+    return 0;
+}
+
+std::optional<au::importexport::ExportOption> Au3Exporter::option(int i) const
+{
+    std::string format = exportConfiguration()->currentFormat();
+
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
+            auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
+            if (!editor) {
+                return std::nullopt;
+            }
+            editor->Load(*gPrefs);
+            ::ExportOption opt;
+
+            if (editor->GetOption(i, opt)) {
+                std::string title = opt.title.Translation().ToStdString();
+                std::vector<std::string> names;
+                for (const auto& name : opt.names) {
+                    names.push_back(name.Translation().ToStdString());
+                }
+
+                return ExportOption { opt.id,
+                                      title,
+                                      opt.defaultValue,
+                                      opt.flags,
+                                      opt.values,
+                                      names };
+            }
+        }
+    }
+
+    return std::nullopt;
+}
+
+std::optional<au::importexport::ExportValue> Au3Exporter::value(int id) const
+{
+    std::string format = exportConfiguration()->currentFormat();
+
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
+            auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
+            if (!editor) {
+                return std::nullopt;
+            }
+            editor->Load(*gPrefs);
+            ::ExportValue val;
+
+            if (editor->GetValue(id, val)) {
+                return val;
+            }
+        }
+    }
+
+    return std::nullopt;
+}
+
+void Au3Exporter::setValue(int id, const ExportValue& value)
+{
+    std::string format = exportConfiguration()->currentFormat();
+
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
+            auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
+            if (!editor) {
+                return;
+            }
+            editor->Load(*gPrefs);
+            ::ExportValue val = value;
+
+            editor->SetValue(id, val);
+            editor->Store(*gPrefs);
+        }
+    }
+}
