@@ -8,9 +8,6 @@
 #include "global/io/fileinfo.h"
 #include "global/io/ioretcodes.h"
 
-#include "libraries/lib-project-file-io/ProjectFileIO.h"
-#include "libraries/lib-project-history/UndoManager.h"
-
 using namespace muse;
 using namespace au::project;
 using namespace au::trackedit;
@@ -128,32 +125,16 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
     m_viewState = viewStateCreator()->createViewState(m_au3Project);
 
     // Set up notification for save status changes
-    auto* au3Project = reinterpret_cast<AudacityProject*>(m_au3Project->au3ProjectPtr());
-    if (au3Project) {
-        // Subscribe to AU3 undo manager changes to trigger needSave notifications
-        m_undoSubscription = UndoManager::Get(*au3Project).Subscribe(
-            [this](const UndoRedoMessage& message) {
-            // Trigger needSave notification for relevant undo/redo events
-            switch (message.type) {
-                case UndoRedoMessage::Pushed:
-                case UndoRedoMessage::Modified:
-                case UndoRedoMessage::UndoOrRedo:
-                case UndoRedoMessage::Reset:
-                    // Mark project as needing save and autosave
-                    setNeedSave(true);
-                    break;
-                default:
-                    break;
-            }
-        });
+    m_au3Project->projectChanged().onNotify(this, [this]() {
+        // Mark project as needing save and autosave
+        setNeedSave(true);
+    });
 
-        // For restored never-saved projects, ensure proper initialization
-        // by calling reload() to trigger tracksChanged notifications.
-        // This fixes issues with recording in restored projects.
-        auto& projectFileIO = ProjectFileIO::Get(*au3Project);
-        if (projectFileIO.IsRecovered()) {
-            m_trackeditProject->reload();
-        }
+    // For restored never-saved projects, ensure proper initialization
+    // by calling reload() to trigger tracksChanged notifications.
+    // This fixes issues with recording in restored projects.
+    if (m_au3Project->isRecovered()) {
+        m_trackeditProject->reload();
     }
 
     return ret;
@@ -244,14 +225,7 @@ ValNt<bool> Audacity4Project::needSave() const
     ValNt<bool> needSave;
 
     if (m_au3Project) {
-        // Check if the underlying AU3 project has unsaved changes
-        auto* au3Project = reinterpret_cast<AudacityProject*>(m_au3Project->au3ProjectPtr());
-        if (au3Project) {
-            auto& undoManager = UndoManager::Get(*au3Project);
-            needSave.val = undoManager.UnsavedChanges();
-        } else {
-            needSave.val = false;
-        }
+        needSave.val = m_au3Project->hasUnsavedChanges();
     } else {
         needSave.val = false;
     }
@@ -478,11 +452,7 @@ void Audacity4Project::markAsSaved(const muse::io::path_t& path)
 
     // Mark the AU3 project as saved
     if (m_au3Project) {
-        auto* au3Project = reinterpret_cast<AudacityProject*>(m_au3Project->au3ProjectPtr());
-        if (au3Project) {
-            auto& undoManager = UndoManager::Get(*au3Project);
-            undoManager.StateSaved();
-        }
+        m_au3Project->markAsSaved();
     }
 }
 

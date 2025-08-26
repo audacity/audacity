@@ -6,6 +6,7 @@
 #include "global/defer.h"
 
 #include "libraries/lib-project-history/ProjectHistory.h"
+#include "libraries/lib-project-history/UndoManager.h"
 #include "libraries/lib-realtime-effects/SavedMasterEffectList.h"
 #include "libraries/lib-file-formats/AcidizerTags.h"
 #include "libraries/lib-import-export/Import.h"
@@ -72,6 +73,20 @@ Au3ProjectAccessor::Au3ProjectAccessor()
             if (const auto track = event.mpTrack.lock()) {
                 DoProjectTempoChange(*track, tempo);
             }
+        }
+    });
+
+    // Subscribe to undo manager changes for save status notifications
+    mUndoSubscription = UndoManager::Get(m_data->projectRef()).Subscribe([this](const UndoRedoMessage& message) {
+        switch (message.type) {
+            case UndoRedoMessage::Pushed:
+            case UndoRedoMessage::Modified:
+            case UndoRedoMessage::UndoOrRedo:
+            case UndoRedoMessage::Reset:
+                m_projectChanged.notify();
+                break;
+            default:
+                break;
         }
     });
 }
@@ -241,4 +256,27 @@ std::string Au3ProjectAccessor::title() const
 uintptr_t Au3ProjectAccessor::au3ProjectPtr() const
 {
     return reinterpret_cast<uintptr_t>(m_data->project.get());
+}
+
+bool Au3ProjectAccessor::hasUnsavedChanges() const
+{
+    const auto& undoManager = UndoManager::Get(m_data->projectRef());
+    return undoManager.UnsavedChanges();
+}
+
+void Au3ProjectAccessor::markAsSaved()
+{
+    auto& undoManager = UndoManager::Get(m_data->projectRef());
+    undoManager.StateSaved();
+}
+
+bool Au3ProjectAccessor::isRecovered() const
+{
+    const auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
+    return projectFileIO.IsRecovered();
+}
+
+muse::async::Notification Au3ProjectAccessor::projectChanged() const
+{
+    return m_projectChanged;
 }

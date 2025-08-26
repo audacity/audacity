@@ -13,8 +13,6 @@
 #include "trackedit/itrackeditproject.h"
 #include "importexport/import/iimporter.h"
 
-#include "libraries/lib-utility/Observer.h"
-
 namespace au::au3 {
 class Au3ProjectAccessor;
 }
@@ -122,8 +120,6 @@ private:
     trackedit::ITrackeditProjectPtr m_trackeditProject;
 
     projectscene::IProjectViewStatePtr m_viewState;
-
-    Observer::Subscription m_undoSubscription;
 };
 }
 

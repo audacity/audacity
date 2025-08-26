@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "global/types/ret.h"
+#include "global/async/notification.h"
 #include "au3wrap/iau3project.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-utility/Observer.h"
@@ -28,6 +29,13 @@ public:
 
     std::string title() const override;
 
+    // Save status management
+    [[nodiscard]] bool hasUnsavedChanges() const override;
+    void markAsSaved() override;
+    [[nodiscard]] bool isRecovered() const override;
+
+    muse::async::Notification projectChanged() const override;
+
     // internal
     uintptr_t au3ProjectPtr() const override;
 
@@ -37,7 +45,9 @@ private:
 
     const std::shared_ptr<Au3ProjectData> m_data;
     Observer::Subscription mTrackListSubstription;
+    Observer::Subscription mUndoSubscription;
     std::shared_ptr<TrackList> m_lastSavedTracks;
+    muse::async::Notification m_projectChanged;
 };
 
 class Au3ProjectCreator : public IAu3ProjectCreator

@@ -7,8 +7,6 @@
 #include "audacityproject.h"
 #include "projecterrors.h"
 
-#include "UndoManager.h"
-
 #include "au3wrap/au3types.h"
 
 #include "log.h"
@@ -208,9 +206,7 @@ bool ProjectActionsController::closeOpenedProject(bool quitApp)
 
     bool result = true;
 
-    au3::Au3Project* internalAu3Project = reinterpret_cast<au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
-
-    if (UndoManager::Get(*internalAu3Project).UnsavedChanges()) {
+    if (project->needSave().val) {
         IInteractive::Button btn = askAboutSavingProject(project);
 
         if (btn == IInteractive::Button::Cancel) {
