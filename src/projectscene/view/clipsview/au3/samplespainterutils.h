@@ -15,6 +15,8 @@ int getWaveYPos(float value, float min, float max, int height, bool dB, bool out
 void drawBackground(QPainter& painter, const au::projectscene::WaveMetrics& metrics, const IWavePainter::Style& style,
                     const double trimLeft);
 void drawBaseLine(QPainter& painter, const au::projectscene::WaveMetrics& metrics, const IWavePainter::Style& style);
+void drawClippedSamples(const au::projectscene::SampleData& samples, const au::projectscene::WaveMetrics& metrics, QPainter& painter,
+                        const au::projectscene::IWavePainter::Style& style);
 SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, const au::projectscene::WaveMetrics& metrics, bool dB,
                          float dBRange, float zoomMax, float zoomMin);
 std::optional<int> hitChannelIndex(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,

@@ -1,5 +1,7 @@
 #include "samplespainter.h"
 
+#include <set>
+
 #include "au3wrap/internal/domaccessor.h"
 #include "Envelope.h"
 #include "sampledata.h"
@@ -43,15 +45,23 @@ void drawSampleHead(const au::projectscene::SampleData& samples, const au::proje
 }
 
 void drawSampleStalk(const au::projectscene::SampleData& samples, int yZero, const au::projectscene::WaveMetrics& metrics,
-                     QPainter& painter, const au::projectscene::IWavePainter::Style& style)
+                     QPainter& painter, const au::projectscene::IWavePainter::Style& style, const bool showClipping)
 {
-    painter.setPen(style.sampleStalk);
-
     const size_t slen = samples.size();
+
+    std::set<int> clippedXSet;
+    if (showClipping && !samples.clippedX.empty()) {
+        clippedXSet = std::set<int>(samples.clippedX.begin(), samples.clippedX.end());
+    }
+
+    painter.setPen(style.sampleStalk);
     for (size_t s = 0; s < slen; s++) {
-        QPointF p1(metrics.left + samples.x[s], metrics.top + samples.y[s]);
-        QPointF p2(metrics.left + samples.x[s], yZero);
-        painter.drawLine(p1, p2);
+        const int sampleX = static_cast<int>(samples.x[s]);
+        if (!showClipping || clippedXSet.count(sampleX) == 0) {
+            QPointF p1(metrics.left + samples.x[s], metrics.top + samples.y[s]);
+            QPointF p2(metrics.left + samples.x[s], yZero);
+            painter.drawLine(p1, p2);
+        }
     }
 }
 }
@@ -99,7 +109,12 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
         yZero = waveMetrics.top + std::max(-1, std::min(static_cast<int>(waveMetrics.height + waveMetrics.top), yZero));
 
         drawSampleHead(samples, waveMetrics, painter, params.style);
-        drawSampleStalk(samples, yZero, waveMetrics, painter, params.style);
+
+        if (params.showClipping) {
+            samplespainterutils::drawClippedSamples(samples, waveMetrics, painter, params.style);
+        }
+
+        drawSampleStalk(samples, yZero, waveMetrics, painter, params.style, params.showClipping);
         waveMetrics.top += waveMetrics.height;
     }
 }
