@@ -257,7 +257,7 @@ Rectangle {
                 x: timeline.context.singleClipSelected ? timeline.context.selectedClipStartPosition : timeline.context.selectionStartPosition
                 width: timeline.context.singleClipSelected ? timeline.context.selectedClipEndPosition - x : timeline.context.selectionEndPosition - x
 
-                anchors.top: parent.top
+                anchors.top: parent.verticalCenter
                 anchors.bottom: parent.bottom
 
                 color: "#ABE7FF"
