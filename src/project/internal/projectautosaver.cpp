@@ -60,12 +60,14 @@ void ProjectAutoSaver::init()
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         if (auto project = currentProject()) {
             if (project->isNewlyCreated() && !project->isImported()) {
-                //! TODO AU4
-                // Ret ret = project->save(configuration()->newProjectTemporaryPath(), SaveMode::AutoSave);
-                // if (!ret) {
-                //     LOGE() << "[autosave] failed to save project, err: " << ret.toString();
-                //     return;
-                // }
+                // Autosave newly created projects to enable session restoration
+                Ret ret = project->save(configuration()->newProjectTemporaryPath(), SaveMode::AutoSave);
+                if (!ret) {
+                    LOGE() << "[autosave] failed to save project, err: " << ret.toString();
+                    return;
+                }
+                // Mark as needing autosave so future changes trigger saves
+                project->setNeedAutoSave(true);
                 return;
             }
 
@@ -105,6 +107,7 @@ bool ProjectAutoSaver::isAutosaveOfNewlyCreatedProject(const muse::io::path_t& p
 
 muse::io::path_t ProjectAutoSaver::projectOriginalPath(const muse::io::path_t& projectAutoSavePath) const
 {
+    // TODO AU4 create new methods using the DB autosave table instead of relying on autosave files
 //     IF_ASSERT_FAILED(io::suffix(projectAutoSavePath) == AUTOSAVE_SUFFIX) {
 //         return engraving::mainFilePath(projectAutoSavePath);
 //     }
@@ -117,6 +120,7 @@ muse::io::path_t ProjectAutoSaver::projectOriginalPath(const muse::io::path_t& p
 
 muse::io::path_t ProjectAutoSaver::projectAutoSavePath(const muse::io::path_t& projectPath) const
 {
+    // TODO AU4 create new methods using the DB autosave table instead of relying on autosave files
     // return engraving::containerPath(projectPath).appendingSuffix(AUTOSAVE_SUFFIX);
     return muse::io::path_t();
 }
@@ -174,13 +178,12 @@ void ProjectAutoSaver::onTrySave()
     muse::io::path_t projectPath = this->projectPath(project);
     muse::io::path_t savePath = project->isNewlyCreated() ? projectPath : projectAutoSavePath(projectPath);
 
-    //! TODO AU4
-    // Ret ret = project->save(savePath, SaveMode::AutoSave);
-    // if (!ret) {
-    //     LOGE() << "[autosave] failed to save project, err: " << ret.toString();
-    //     return;
-    // }
-    return;
+    // Perform autosave to enable session restoration
+    Ret ret = project->save(savePath, SaveMode::AutoSave);
+    if (!ret) {
+        LOGE() << "[autosave] failed to save project, err: " << ret.toString();
+        return;
+    }
 
     project->setNeedAutoSave(false);
 
