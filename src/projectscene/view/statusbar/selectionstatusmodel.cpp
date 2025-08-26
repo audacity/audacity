@@ -32,6 +32,10 @@ void SelectionStatusModel::init()
         emit timeSignatureChanged();
         emit isEnabledChanged();
     });
+
+    configuration()->selectionTimecodeFormatChanged().onNotify(this, [this](){
+        setCurrentFormat(configuration()->selectionTimecodeFormat());
+    });
 }
 
 double SelectionStatusModel::startTime() const

@@ -22,6 +22,11 @@ StyledDialogView {
 
     SelectionStatusModel {
         id: selectionModel
+
+        onCurrentFormatChanged: {
+            timeIn.currentFormat = currentFormat
+            timeOut.currentFormat = currentFormat
+        }
     }
 
     PlayRegionController {
@@ -60,6 +65,8 @@ StyledDialogView {
             }
 
             Timecode {
+                id: timeIn
+
                 Layout.fillWidth: true
                 Layout.fillHeight: false
 
@@ -83,6 +90,10 @@ StyledDialogView {
                 onValueChanged: {
                     root.start = value
                 }
+
+                onCurrentFormatChanged: {
+                    selectionModel.currentFormat = currentFormat
+                }
             }
         }
 
@@ -100,6 +111,8 @@ StyledDialogView {
             }
 
             Timecode {
+                id: timeOut
+
                 Layout.fillWidth: true
                 Layout.fillHeight: false
 
@@ -122,6 +135,10 @@ StyledDialogView {
 
                 onValueChanged: {
                     root.end = value
+                }
+
+                onCurrentFormatChanged: {
+                    selectionModel.currentFormat = currentFormat
                 }
             }
         }
