@@ -77,6 +77,9 @@ public:
     void setFocusedTrack(TrackId trackId) override;
     muse::async::Channel<trackedit::TrackId> focusedTrackChanged() const override;
 
+    void focusPreviousTrack() override;
+    void focusNextTrack() override;
+
 private:
     void addSelectedTrack(const trackedit::TrackId& trackId);
     void updateSelectionController();
