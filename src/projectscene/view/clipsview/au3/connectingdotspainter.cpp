@@ -62,6 +62,10 @@ void ConnectingDotsPainter::paint(QPainter& painter, const trackedit::ClipKey& c
         if (samples.size() == 0) {
             continue;
         }
+        if (params.showClipping) {
+            samplespainterutils::drawClippedSamples(samples, waveMetrics, painter, params.style);
+        }
+
         drawConnectingPoints(samples, waveMetrics, painter, params.style);
         waveMetrics.top += waveMetrics.height;
     }
