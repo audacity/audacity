@@ -28,6 +28,8 @@ public:
     MOCK_METHOD(void, setPlaybackRegion, (const PlaybackRegion&), (override));
 
     MOCK_METHOD(PlaybackRegion, loopRegion, (), (const, override));
+    MOCK_METHOD(void, loopEditingBegin, (), (override));
+    MOCK_METHOD(void, loopEditingEnd, (), (override));
     MOCK_METHOD(void, setLoopRegion, (const PlaybackRegion&), (override));
     MOCK_METHOD(void, setLoopRegionStart, (const muse::secs_t time), (override));
     MOCK_METHOD(void, setLoopRegionEnd, (const muse::secs_t time), (override));

@@ -345,10 +345,21 @@ PlaybackRegion Au3Player::loopRegion() const
     return { std::isinf(start) ? 0 : start, std::isinf(end) ? 0 : end };
 }
 
+void Au3Player::loopEditingBegin()
+{
+}
+
+void Au3Player::loopEditingEnd()
+{
+    Au3Project& project = projectRef();
+    auto& playRegion = ViewInfo::Get(project).playRegion;
+    playRegion.Order();
+
+    m_playbackPosition.set(std::max(loopRegion().start.raw(), 0.0));
+}
+
 void Au3Player::setLoopRegion(const PlaybackRegion& region)
 {
-    m_playbackPosition.set(std::max(0.0, region.start.raw()));
-
     Au3Project& project = projectRef();
     auto& playRegion = ViewInfo::Get(project).playRegion;
 

@@ -36,6 +36,10 @@ void PlayRegionController::mouseDown(double pos)
         m_action = UserInputAction::CreateRegion;
         QGuiApplication::setOverrideCursor(QCursor(Qt::SizeHorCursor));
     }
+
+    if (m_action != UserInputAction::None) {
+        playback()->player()->loopEditingBegin();
+    }
 }
 
 void PlayRegionController::mouseMove(double pos)
@@ -54,7 +58,10 @@ void PlayRegionController::mouseMove(double pos)
     auto player = playback()->player();
     player->setLoopRegionActive(true);
 
-    pos = std::max(0.0, pos);
+    double visibleStartPos = context()->timeToPosition(context()->frameStartTime());
+    double visibleEndPos = context()->timeToPosition(context()->frameEndTime());
+
+    pos = std::clamp(pos, visibleStartPos, visibleEndPos);
 
     switch (m_action) {
     case UserInputAction::CreateRegion:
@@ -102,6 +109,7 @@ void PlayRegionController::mouseUp(double pos)
     }
 
     QGuiApplication::restoreOverrideCursor();
+    player->loopEditingEnd();
     m_action = UserInputAction::None;
 }
 

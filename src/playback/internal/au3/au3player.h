@@ -44,6 +44,8 @@ public:
     void setPlaybackRegion(const PlaybackRegion& region) override;
 
     PlaybackRegion loopRegion() const override;
+    void loopEditingBegin() override;
+    void loopEditingEnd() override;
     void setLoopRegion(const PlaybackRegion& region) override;
     void setLoopRegionStart(const muse::secs_t time) override;
     void setLoopRegionEnd(const muse::secs_t time) override;

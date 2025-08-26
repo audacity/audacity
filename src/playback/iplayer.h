@@ -36,6 +36,8 @@ public:
 
     virtual muse::async::Notification loopRegionChanged() const = 0;
     virtual PlaybackRegion loopRegion() const = 0;
+    virtual void loopEditingBegin() = 0;
+    virtual void loopEditingEnd() = 0;
     virtual void setLoopRegion(const PlaybackRegion& region) = 0;
     virtual void setLoopRegionStart(const muse::secs_t time) = 0;
     virtual void setLoopRegionEnd(const muse::secs_t time) = 0;
