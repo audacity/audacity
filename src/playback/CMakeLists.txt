@@ -52,6 +52,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackmetermodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackmetermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/metermodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/metermodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/panels/playbackmeterpanelmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/panels/playbackmeterpanelmodel.h

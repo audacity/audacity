@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#include "modularity/imoduleinterface.h"
-
+#include "global/modularity/imoduleinterface.h"
+#include "global/async/notification.h"
 #include "draw/types/color.h"
 
 namespace au::record {
@@ -16,5 +16,9 @@ public:
     virtual ~IRecordConfiguration() = default;
 
     virtual muse::draw::Color recordColor() const = 0;
+
+    virtual bool isMicMeteringOn() const = 0;
+    virtual void setIsMicMeteringOn(bool enable) = 0;
+    virtual muse::async::Notification isMicMeteringOnChanged() const = 0;
 };
 }

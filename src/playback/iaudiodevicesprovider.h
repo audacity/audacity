@@ -32,6 +32,7 @@ public:
 
     virtual std::vector<std::string> inputChannelsList() const = 0;
     virtual std::string currentInputChannels() const = 0;
+    virtual int currentInputChannelsCount() const = 0;
     virtual void setInputChannels(const std::string& channels) = 0;
     virtual muse::async::Notification inputChannelsChanged() const = 0;
     virtual muse::async::Notification inputChannelsListChanged() const = 0;

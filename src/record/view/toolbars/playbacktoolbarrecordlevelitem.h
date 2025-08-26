@@ -1,15 +1,16 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_RECORD_PLAYBACKTOOLBARRECORDLEVELITEM_H
-#define AU_RECORD_PLAYBACKTOOLBARRECORDLEVELITEM_H
+#pragma once
 
 #include <QString>
 
 #include "modularity/ioc.h"
 #include "record/irecord.h"
+#include "record/irecordconfiguration.h"
 #include "record/irecordcontroller.h"
 #include "playback/iplaybackconfiguration.h"
+#include "playback/iaudiodevicesprovider.h"
 
 #include "uicomponents/view/toolbaritem.h"
 
@@ -18,7 +19,7 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(int level READ level WRITE setLevel NOTIFY levelChanged FINAL)
+    Q_PROPERTY(float level READ level WRITE setLevel NOTIFY levelChanged FINAL)
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float leftRecentPeak READ leftRecentPeak NOTIFY leftRecentPeakChanged FINAL)
@@ -28,18 +29,26 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
     Q_PROPERTY(float rightRecentPeak READ rightRecentPeak NOTIFY rightRecentPeakChanged FINAL)
     Q_PROPERTY(float rightMaxPeak READ rightMaxPeak NOTIFY rightMaxPeakChanged FINAL)
 
+    Q_PROPERTY(int recordingChannelsCount READ recordingChannelsCount NOTIFY recordingChannelsCountChanged FINAL)
+
+    Q_PROPERTY(
+        bool audibleInputMonitoring READ audibleInputMonitoring WRITE setAudibleInputMonitoring NOTIFY audibleInputMonitoringChanged FINAL)
+    Q_PROPERTY(bool isMicMeteringOn READ isMicMeteringOn WRITE setIsMicMeteringOn NOTIFY isMicMeteringOnChanged FINAL)
+
     Q_PROPERTY(playback::PlaybackMeterStyle::MeterStyle meterStyle READ meterStyle NOTIFY meterStyleChanged FINAL)
 
     muse::Inject<record::IRecord> record;
+    muse::Inject<record::IRecordConfiguration> recordConfiguration;
     muse::Inject<record::IRecordController> recordController;
     muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
+    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     explicit PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
                                             QObject* parent = nullptr);
 
-    int level() const;
-    void setLevel(int newLevel);
+    float level() const;
+    void setLevel(float newLevel);
 
     float leftChannelPressure() const;
     float leftRecentPeak() const;
@@ -49,7 +58,14 @@ public:
     float rightRecentPeak() const;
     float rightMaxPeak() const;
 
+    int recordingChannelsCount() const;
+
+    bool audibleInputMonitoring() const;
+    bool isMicMeteringOn() const;
+
     playback::PlaybackMeterStyle::MeterStyle meterStyle() const;
+
+    Q_INVOKABLE void listenMainAudioInput(bool listen);
 
 public slots:
     void setLeftChannelPressure(float leftChannelPressure);
@@ -59,6 +75,9 @@ public slots:
     void setRightChannelPressure(float rightChannelPressure);
     void setRightRecentPeak(float newRightRecentPeak);
     void setRightMaxPeak(float newRightMaxPeak);
+
+    void setAudibleInputMonitoring(bool enable);
+    void setIsMicMeteringOn(bool enable);
 
 signals:
     void levelChanged();
@@ -71,13 +90,16 @@ signals:
     void rightRecentPeakChanged();
     void rightMaxPeakChanged();
 
+    void recordingChannelsCountChanged();
+
+    void audibleInputMonitoringChanged();
+    void isMicMeteringOnChanged();
+
     void meterStyleChanged();
 
 private:
     void setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
-
-    bool m_active = false;
 
     int m_level = 0;
 
@@ -90,5 +112,3 @@ private:
     float m_rightMaxPeak = 0.0;
 };
 }
-
-#endif // AU_RECORD_PLAYBACKTOOLBARRECORDLEVELITEM_H

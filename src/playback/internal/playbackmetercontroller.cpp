@@ -13,17 +13,17 @@
 using namespace au::playback;
 
 namespace {
-std::shared_ptr<IPlaybackMeter> createMeter(PlaybackMeterType::MeterType meterType, int meterSize, double dbRange)
+std::shared_ptr<IPlaybackMeter> createMeter(PlaybackMeterType::MeterType meterType, double dbRange)
 {
     switch (meterType) {
     case PlaybackMeterType::MeterType::DbLinear:
-        return std::make_shared<DbLinearMeter>(meterSize, dbRange);
+        return std::make_shared<DbLinearMeter>(dbRange);
     case PlaybackMeterType::MeterType::DbLog:
-        return std::make_shared<DbLogMeter>(meterSize, dbRange);
+        return std::make_shared<DbLogMeter>(dbRange);
     case PlaybackMeterType::MeterType::Linear:
-        return std::make_shared<LinearMeter>(meterSize, dbRange);
+        return std::make_shared<LinearMeter>(dbRange);
     default:
-        return std::make_shared<DbLogMeter>(meterSize, dbRange);
+        return std::make_shared<DbLogMeter>(dbRange);
     }
 }
 }
@@ -32,7 +32,6 @@ PlaybackMeterController::PlaybackMeterController()
 {
     configuration()->playbackMeterTypeChanged().onNotify(this, [this]() {
         m_meter = createMeter(configuration()->playbackMeterType(),
-                              configuration()->playbackHorizontalMeterSize(),
                               PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
         m_playbackMeterChanged.notify();
     });
@@ -42,13 +41,7 @@ PlaybackMeterController::PlaybackMeterController()
         m_playbackMeterChanged.notify();
     });
 
-    configuration()->playbackHorizontalMeterSizeChanged().onNotify(this, [this]() {
-        m_meter->setMeterSize(configuration()->playbackHorizontalMeterSize());
-        m_playbackMeterChanged.notify();
-    });
-
     m_meter = createMeter(configuration()->playbackMeterType(),
-                          configuration()->playbackHorizontalMeterSize(),
                           PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
 }
 
@@ -72,14 +65,14 @@ std::string PlaybackMeterController::sampleToText(double sample) const
     return m_meter->sampleToText(sample);
 }
 
-std::vector<double> PlaybackMeterController::fullSteps() const
+std::vector<double> PlaybackMeterController::fullSteps(int meterSize) const
 {
-    return m_meter->fullSteps();
+    return m_meter->fullSteps(meterSize);
 }
 
-std::vector<double> PlaybackMeterController::smallSteps() const
+std::vector<double> PlaybackMeterController::smallSteps(int meterSize) const
 {
-    return m_meter->smallSteps();
+    return m_meter->smallSteps(meterSize);
 }
 
 muse::async::Notification PlaybackMeterController::playbackMeterChanged() const

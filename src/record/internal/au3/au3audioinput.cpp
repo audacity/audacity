@@ -32,14 +32,34 @@ Au3AudioInput::Au3AudioInput()
         }
 
         initMeter();
+        restartMonitoring();
+
+        configuration()->isMicMeteringOnChanged().onNotify(this, [this]() {
+            restartMonitoring();
+        });
+
+        controller()->isRecordingChanged().onNotify(this, [this]() {
+            if (!controller()->isRecording()) {
+                restartMonitoring();
+            }
+        });
+
+        playbackController()->isPlayingChanged().onNotify(this, [this]() {
+            if (!playbackController()->isPlaying()) {
+                restartMonitoring();
+            }
+        });
     });
 }
 
 void Au3AudioInput::initMeter()
 {
-    Au3Project& project = projectRef();
+    Au3Project* project = projectRef();
+    if (!project) {
+        return;
+    }
 
-    auto& projectAudioIO = ProjectAudioIO::Get(project);
+    auto& projectAudioIO = ProjectAudioIO::Get(*project);
     projectAudioIO.SetCaptureMeter(m_inputMeter);
 }
 
@@ -89,8 +109,90 @@ muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioInput
     return m_inputMeter->dataChanged(key);
 }
 
-Au3Project& Au3AudioInput::projectRef() const
+bool Au3AudioInput::audibleInputMonitoring() const
 {
-    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
-    return *project;
+    bool swPlaythrough = false;
+    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &swPlaythrough, false);
+    return swPlaythrough;
+}
+
+void Au3AudioInput::setAudibleInputMonitoring(bool enable)
+{
+    gPrefs->Write(wxT("/AudioIO/SWPlaythrough"), enable);
+    gPrefs->Flush();
+
+    restartMonitoring();
+}
+
+void Au3AudioInput::startMonitoring()
+{
+    muse::async::Async::call(this, [this]() {
+        auto gAudioIO = AudioIO::Get();
+        if (!gAudioIO) {
+            return;
+        }
+
+        Au3Project* project = projectRef();
+        if (!project) {
+            return;
+        }
+
+        if (gAudioIO->IsMonitoring()) {
+            return;
+        }
+
+        gAudioIO->StopStream();
+        using namespace std::chrono;
+        while (gAudioIO->IsBusy()) {
+            std::this_thread::sleep_for(100ms);
+        }
+
+        gAudioIO->StartMonitoring(ProjectAudioIO::GetDefaultOptions(*project));
+    });
+}
+
+void Au3AudioInput::stopMonitoring()
+{
+    muse::async::Async::call(this, [this]() {
+        auto gAudioIO = AudioIO::Get();
+        if (!gAudioIO) {
+            return;
+        }
+
+        if (!gAudioIO->IsMonitoring()) {
+            return;
+        }
+
+        gAudioIO->StopStream();
+        using namespace std::chrono;
+        while (gAudioIO->IsBusy()) {
+            std::this_thread::sleep_for(100ms);
+        }
+    });
+}
+
+void Au3AudioInput::restartMonitoring()
+{
+    stopMonitoring();
+
+    if (!configuration()->isMicMeteringOn() && !audibleInputMonitoring()) {
+        return;
+    }
+
+    startMonitoring();
+}
+
+Au3Project* Au3AudioInput::projectRef() const
+{
+    const auto context = globalContext();
+    if (!context) {
+        return nullptr;
+    }
+
+    const auto currentProject = context->currentProject();
+    if (!currentProject) {
+        return nullptr;
+    }
+
+    return reinterpret_cast<Au3Project*>(currentProject->au3ProjectPtr());
 }

@@ -10,12 +10,14 @@
 #include "playback/itrackplaybackcontrol.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "playback/iplayback.h"
+#include "playback/iaudiodevicesprovider.h"
 #include "record/irecord.h"
 
 #include "async/asyncable.h"
 
 #include "trackedit/trackedittypes.h"
 #include "trackedit/dom/track.h"
+#include "trackedit/iselectioncontroller.h"
 
 namespace au::projectscene {
 class TrackItem : public QObject, public muse::async::Asyncable
@@ -45,6 +47,8 @@ class TrackItem : public QObject, public muse::async::Asyncable
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<playback::IPlayback> playback;
     muse::Inject<record::IRecord> record;
+    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<trackedit::ISelectionController> selectionController;
 
 public:
     explicit TrackItem(QObject* parent = nullptr);
@@ -128,9 +132,8 @@ protected:
     void setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue);
     void setAudioChannelRMS(const trackedit::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
+    void checkMainAudioInput();
 
-    muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> m_playbackTrackSignalChanged;
-    muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> m_recordTrackSignalChanged;
     audio::AudioOutputParams m_outParams;
 
     trackedit::TrackId m_trackId = -1;
@@ -147,6 +150,7 @@ protected:
 
     bool m_isSelected = false;
     bool m_isFocused = false;
+    bool m_recordStreamChannelsMatch = 0;
 };
 }
 

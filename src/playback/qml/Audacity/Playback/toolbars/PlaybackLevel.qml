@@ -41,6 +41,10 @@ Item {
         id: playbackMeterModel
     }
 
+    Component.onCompleted: {
+        playbackMeterModel.init();
+    }
+
     RowLayout {
         anchors.fill: parent
         spacing: 0
