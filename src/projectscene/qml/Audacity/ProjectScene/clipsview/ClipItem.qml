@@ -91,8 +91,8 @@ Rectangle {
     opacity: root.moveActive && clipSelected ? 0.5 : isAudible ? 1.0 : 0.3
 
     property int borderWidth: 1
-    property bool hover: root.containsMouse || headerDragArea.containsMouse
-    property bool headerHovered: headerDragArea.containsMouse
+    property bool hover: root.containsMouse || root.headerHovered
+    property bool headerHovered: false
     property var lastSample: undefined
     property bool altPressed: false
     property bool isBrush: waveView.isStemPlot && root.altPressed
@@ -285,6 +285,10 @@ Rectangle {
         }
 
         onContainsMouseChanged: {
+            if (!root.visible) {
+                return
+            }
+
             root.setContainsMouse(containsMouse)
         }
     }
@@ -445,6 +449,14 @@ Rectangle {
             MouseArea {
                 id: headerDragArea
                 anchors.fill: parent
+
+                onContainsMouseChanged: {
+                    if (!root.visible) {
+                        return
+                    }
+
+                    root.headerHovered = containsMouse
+                }
 
                 visible: root.enableCursorInteraction
 
