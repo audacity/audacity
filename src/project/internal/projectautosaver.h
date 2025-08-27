@@ -52,9 +52,6 @@ public:
 
     bool isAutosaveOfNewlyCreatedProject(const muse::io::path_t& projectPath) const override;
 
-    muse::io::path_t projectOriginalPath(const muse::io::path_t& projectAutoSavePath) const override;
-    muse::io::path_t projectAutoSavePath(const muse::io::path_t& projectPath) const override;
-
 private:
     IAudacityProjectPtr currentProject() const;
 
