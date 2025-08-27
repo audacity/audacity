@@ -97,7 +97,11 @@ bool ProjectAutoSaver::projectHasUnsavedChanges(const muse::io::path_t& projectP
 
 void ProjectAutoSaver::removeProjectUnsavedChanges(const muse::io::path_t& projectPath)
 {
-    au3ProjectCreator()->removeAutosaveDataFromFile(projectPath);
+    const bool success = au3ProjectCreator()->removeAutosaveDataFromFile(projectPath);
+
+    if (!success) {
+        LOGE() << "[autosave] failed to remove autosave data for project: " << projectPath;
+    }
 
     // For newly created projects, also remove the temporary file
     if (isAutosaveOfNewlyCreatedProject(projectPath)) {
@@ -108,16 +112,6 @@ void ProjectAutoSaver::removeProjectUnsavedChanges(const muse::io::path_t& proje
 bool ProjectAutoSaver::isAutosaveOfNewlyCreatedProject(const muse::io::path_t& projectPath) const
 {
     return projectPath == configuration()->newProjectTemporaryPath();
-}
-
-muse::io::path_t ProjectAutoSaver::projectOriginalPath(const muse::io::path_t& projectAutoSavePath) const
-{
-    return projectAutoSavePath;
-}
-
-muse::io::path_t ProjectAutoSaver::projectAutoSavePath(const muse::io::path_t& projectPath) const
-{
-    return projectPath;
 }
 
 IAudacityProjectPtr ProjectAutoSaver::currentProject() const
@@ -170,8 +164,8 @@ void ProjectAutoSaver::onTrySave()
         return;
     }
 
-    muse::io::path_t projectPath = this->projectPath(project);
-    muse::io::path_t savePath = project->isNewlyCreated() ? projectPath : projectAutoSavePath(projectPath);
+    const muse::io::path_t projectPath = this->projectPath(project);
+    const muse::io::path_t savePath = project->isNewlyCreated() ? projectPath : muse::io::path_t();
 
     // Perform autosave to enable session restoration
     Ret ret = project->save(savePath, SaveMode::AutoSave);
