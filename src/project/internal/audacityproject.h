@@ -3,6 +3,7 @@
 
 #include "../iaudacityproject.h"
 #include "../ithumbnailcreator.h"
+#include "../iprojectconfiguration.h"
 #include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
 #include "au3wrap/iau3project.h"
@@ -51,6 +52,7 @@ class Audacity4Project : public IAudacityProject, public muse::async::Asyncable
     muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
     muse::Inject<IThumbnailCreator> thumbnailCreator;
     muse::Inject<importexport::IImporter> importer;
+    muse::Inject<IProjectConfiguration> configuration;
 
 public:
     Audacity4Project();
