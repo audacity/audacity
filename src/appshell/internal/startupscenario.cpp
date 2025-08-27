@@ -235,8 +235,7 @@ void StartupScenario::restoreLastSession()
 
 void StartupScenario::removeProjectsUnsavedChanges(const muse::io::paths_t& projectsPaths)
 {
-    //! TODO AU4
-    // for (const io::path_t& path : projectsPaths) {
-    //     projectAutoSaver()->removeProjectUnsavedChanges(path);
-    // }
+    for (const muse::io::path_t& path : projectsPaths) {
+        projectAutoSaver()->removeProjectUnsavedChanges(path);
+    }
 }
