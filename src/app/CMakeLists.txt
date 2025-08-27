@@ -228,7 +228,14 @@ if (OS_IS_WIN)
         TARGET audacity
         OUTPUT_SCRIPT deploy_script
         NO_UNSUPPORTED_PLATFORM_ERROR
+        ${NO_TRANSLATIONS_OPTION} # Even with NO_OVERWRITE set, the translations get re-generated each time ...
         DEPLOY_TOOL_OPTIONS ${deploy_tool_options_arg}
+    )
+
+    add_custom_command(
+        TARGET audacity PRE_LINK
+        COMMAND ${CMAKE_COMMAND} -DSCRIPT_PATH=${deploy_script} -P ${CMAKE_CURRENT_SOURCE_DIR}/add_NO_OVERWRITE_option.cmake
+        COMMENT "Injecting NO_OVERWRITE into Qt deploy script"
     )
 
     install(SCRIPT ${deploy_script})
