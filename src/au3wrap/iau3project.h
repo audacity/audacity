@@ -31,6 +31,10 @@ public:
     virtual void markAsSaved() = 0;
     [[nodiscard]] virtual bool isRecovered() const = 0;
 
+    // Autosave management
+    [[nodiscard]] virtual bool hasAutosaveData() const = 0;
+    virtual bool removeAutosaveData() = 0;
+
     virtual muse::async::Notification projectChanged() const = 0;
 
     // internal
@@ -44,5 +48,8 @@ public:
     virtual ~IAu3ProjectCreator() = default;
 
     virtual std::shared_ptr<IAu3Project> create() const = 0;
+
+    // Helper method to remove autosave data from a project file without keeping it open
+    virtual bool removeAutosaveDataFromFile(const muse::io::path_t& projectPath) const = 0;
 };
 }

@@ -135,6 +135,12 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
     // This fixes issues with recording in restored projects.
     if (m_au3Project->isRecovered()) {
         m_trackeditProject->reload();
+
+        // Restore "newly created" state for never-saved recovered projects
+        if (path == configuration()->newProjectTemporaryPath()) {
+            m_isNewlyCreated = true;
+            LOGD() << "[project] Restored never-saved project, marked as newly created";
+        }
     }
 
     return ret;
@@ -231,6 +237,10 @@ ValNt<bool> Audacity4Project::needSave() const
 
     if (m_au3Project) {
         needSave.val = m_au3Project->hasUnsavedChanges();
+
+        if (m_isNewlyCreated) {
+            needSave.val = true;
+        }
     } else {
         needSave.val = false;
     }

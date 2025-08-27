@@ -34,6 +34,10 @@ public:
     void markAsSaved() override;
     [[nodiscard]] bool isRecovered() const override;
 
+    // Autosave management
+    [[nodiscard]] bool hasAutosaveData() const override;
+    bool removeAutosaveData() override;
+
     muse::async::Notification projectChanged() const override;
 
     // internal
@@ -55,5 +59,6 @@ class Au3ProjectCreator : public IAu3ProjectCreator
 public:
 
     std::shared_ptr<IAu3Project> create() const override;
+    bool removeAutosaveDataFromFile(const muse::io::path_t& projectPath) const override;
 };
 }
