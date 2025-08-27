@@ -22,6 +22,7 @@ EffectStyledDialogView {
     QtObject {
         id: prv
         property alias viewer: viewerLoader.item
+        property int minimumWidth: effectFamily === EffectFamily.LV2 ? 500 : 250
         property bool isApplyAllowed: effectFamily != EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
         property int separatorHeight: effectFamily == EffectFamily.Builtin ? separator.height + root.margins : 0
         property bool showPresets: effectFamily != EffectFamily.Builtin || viewer.usesPresets
@@ -29,9 +30,8 @@ EffectStyledDialogView {
 
     title: viewerModel.title
 
-    minimumWidth: effectFamily === EffectFamily.LV2 ? 500 : 250
-    implicitWidth: viewerLoader.width
-    implicitHeight: {
+    contentWidth: Math.max(viewerLoader.width, prv.minimumWidth)
+    contentHeight: {
         let height = viewerLoader.height + btnBarLoader.height + margins
         if (prv.showPresets) {
             height += presetsBar.height + margins + prv.separatorHeight
@@ -44,20 +44,20 @@ EffectStyledDialogView {
     onWindowChanged: {
         // Wait until the window is set: VstView needs it for intialization
         switch (effectFamily) {
-            case EffectFamily.Builtin:
-                viewerLoader.sourceComponent = builtinViewerComp
-                break
-            case EffectFamily.AudioUnit:
-                viewerLoader.sourceComponent = audioUnitViewerComp
-                break
-            case EffectFamily.LV2:
-                viewerLoader.sourceComponent = lv2ViewerComp
-                break
-            case EffectFamily.VST3:
-                viewerLoader.sourceComponent = vstViewerComp
-                break
-            default:
-                viewerLoader.sourceComponent = null
+        case EffectFamily.Builtin:
+            viewerLoader.sourceComponent = builtinViewerComp
+            break
+        case EffectFamily.AudioUnit:
+            viewerLoader.sourceComponent = audioUnitViewerComp
+            break
+        case EffectFamily.LV2:
+            viewerLoader.sourceComponent = lv2ViewerComp
+            break
+        case EffectFamily.VST3:
+            viewerLoader.sourceComponent = vstViewerComp
+            break
+        default:
+            viewerLoader.sourceComponent = null
         }
     }
 
@@ -116,7 +116,7 @@ EffectStyledDialogView {
                 topPadding: root.margins * 2 + presetsBar.height + prv.separatorHeight
                 bottomPadding: btnBarLoader.implicitHeight + 2 * root.margins
                 sidePadding: root.margins
-                minimumWidth: root.minimumWidth
+                minimumWidth: prv.minimumWidth
             }
         }
 
@@ -128,7 +128,7 @@ EffectStyledDialogView {
                 topPadding: root.margins * 2 + presetsBar.height + prv.separatorHeight
                 bottomPadding: btnBarLoader.implicitHeight + 2 * root.margins
                 sidePadding: root.margins
-                minimumWidth: root.minimumWidth
+                minimumWidth: prv.minimumWidth
             }
         }
 

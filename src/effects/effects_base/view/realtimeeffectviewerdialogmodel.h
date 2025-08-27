@@ -74,8 +74,6 @@ signals:
 private:
     void subscribe();
     void unregisterState();
-    void restoreFocusToMainToolBar();
-    bool eventFilter(QObject* obj, QEvent* event) override;
 
     RealtimeEffectStatePtr m_effectState;
     muse::uicomponents::DialogView* m_dialogView = nullptr;
