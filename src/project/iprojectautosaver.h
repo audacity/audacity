@@ -38,11 +38,6 @@ public:
     virtual void removeProjectUnsavedChanges(const muse::io::path_t& projectPath) = 0;
 
     virtual bool isAutosaveOfNewlyCreatedProject(const muse::io::path_t& projectPath) const = 0;
-
-    virtual muse::io::path_t projectOriginalPath(const muse::io::path_t& projectAutoSavePath) const = 0;
-    virtual muse::io::path_t projectAutoSavePath(const muse::io::path_t& projectPath) const = 0;
-
-    static inline const std::string AUTOSAVE_SUFFIX = "autosave";
 };
 }
 

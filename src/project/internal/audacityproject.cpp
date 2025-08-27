@@ -296,9 +296,7 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
             savePath = m_path;
         }
 
-        std::string suffix = io::suffix(savePath);
-
-        Ret ret = saveProject(savePath, suffix);
+        Ret ret = saveProject(savePath);
         if (ret) {
             if (saveMode != SaveMode::SaveCopy) {
                 markAsSaved(savePath);
@@ -308,25 +306,14 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
         return ret;
     }
     case SaveMode::AutoSave:
-        std::string suffix = io::suffix(path);
-        if (suffix == IProjectAutoSaver::AUTOSAVE_SUFFIX) {
-            suffix = io::suffix(io::completeBasename(path));
-        }
-
-        // if (suffix.empty()) {
-        //     // Then it must be a MSCX folder
-        //     suffix = engraving::MSCX;
-        // }
-
-        return saveProject(path, suffix, false /*generateBackup*/, false /*createThumbnail*/);
+        return saveProject(path, false /*generateBackup*/, false /*createThumbnail*/);
     }
 
     return make_ret(Err::UnknownError);
 }
 
-Ret Audacity4Project::saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup, bool createThumbnail)
+Ret Audacity4Project::saveProject(const muse::io::path_t& path, bool generateBackup, bool createThumbnail)
 {
-    Q_UNUSED(fileSuffix);
     return doSave(path, generateBackup, createThumbnail);
 }
 
