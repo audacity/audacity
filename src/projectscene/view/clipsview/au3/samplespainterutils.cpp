@@ -213,6 +213,23 @@ void drawBaseLine(QPainter& painter, const au::projectscene::WaveMetrics& metric
                      metrics.left + metrics.width, metrics.top + metrics.height / 2);
 }
 
+void drawClippedSamples(const au::projectscene::SampleData& samples,
+                        const au::projectscene::WaveMetrics& metrics,
+                        QPainter& painter,
+                        const au::projectscene::IWavePainter::Style& style)
+{
+    if (samples.clippedX.empty()) {
+        return;
+    }
+
+    painter.setPen(style.clippedPen);
+    for (const int clippedX : samples.clippedX) {
+        QPointF p1(metrics.left + clippedX, metrics.top);
+        QPointF p2(metrics.left + clippedX, metrics.top + metrics.height);
+        painter.drawLine(p1, p2);
+    }
+}
+
 SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, const au::projectscene::WaveMetrics& metrics,
                          bool dB, float dBRange, float zoomMax, float zoomMin)
 {
@@ -240,6 +257,7 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
 
     auto xpos = std::vector<double>(slen);
     auto ypos = std::vector<double>(slen);
+    auto clippedX = std::vector<int>();
     const auto invRate = 1.0 / rate;
 
     for (size_t s = 0; s < slen; s++) {
@@ -250,11 +268,15 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
         const double value = clip.GetEnvelope().GetValue(time, invRate);
         const double tt = buffer[s] * value;
 
+        if ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)) {
+            clippedX.push_back(static_cast<int>(xx));
+        }
+
         ypos[s] = std::max(-1, std::min(static_cast<int>(metrics.height),
                                         samplespainterutils::getWaveYPos(tt, zoomMin, zoomMax, metrics.height, dB, true, dBRange, false)));
     }
 
-    return SampleData(ypos, xpos);
+    return SampleData(ypos, xpos, clippedX);
 }
 
 std::optional<int> hitChannelIndex(std::shared_ptr<project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
