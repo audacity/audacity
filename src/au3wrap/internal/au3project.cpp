@@ -57,6 +57,7 @@ std::shared_ptr<IAu3Project> Au3ProjectCreator::create() const
 
 bool Au3ProjectCreator::removeAutosaveDataFromFile(const muse::io::path_t& projectPath) const
 {
+    // Helper method to remove autosave data from a project file without keeping it open
     const auto tempProject = create();
     if (!tempProject) {
         return false;
@@ -313,7 +314,6 @@ muse::async::Notification Au3ProjectAccessor::projectChanged() const
 bool Au3ProjectAccessor::hasAutosaveData() const
 {
     const auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
-    // Autosave data exists if project is recovered and modified
     return projectFileIO.IsRecovered() && projectFileIO.IsModified();
 }
 

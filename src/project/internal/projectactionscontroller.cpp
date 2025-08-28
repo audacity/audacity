@@ -211,7 +211,7 @@ bool ProjectActionsController::closeOpenedProject(bool quitApp)
 
     bool result = true;
 
-    if (project->needSave().val) {
+    if (projectAutoSaver()->projectHasUnsavedChanges(project)) {
         IInteractive::Button btn = askAboutSavingProject(project);
 
         if (btn == IInteractive::Button::Cancel) {
@@ -516,7 +516,7 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
     IAudacityProjectPtr project = rv.val;
 
     // Check if this is an autosave of a newly created project
-    bool isNewlyCreated = projectAutoSaver()->isAutosaveOfNewlyCreatedProject(filePath);
+    bool isNewlyCreated = projectAutoSaver()->isNewlyCreatedProject(project);
     if (!isNewlyCreated) {
         recentFilesController()->prependRecentFile(makeRecentFile(project));
     }
@@ -570,7 +570,7 @@ RetVal<IAudacityProjectPtr> ProjectActionsController::loadProject(const io::path
     // }
 
     // Mark project as newly created if it's an autosave of a new project
-    bool isNewlyCreated = projectAutoSaver()->isAutosaveOfNewlyCreatedProject(filePath);
+    bool isNewlyCreated = projectAutoSaver()->isNewlyCreatedProject(project);
     if (isNewlyCreated) {
         // Mark as newly created (this will be implemented if needed)
         // project->markAsNewlyCreated();
