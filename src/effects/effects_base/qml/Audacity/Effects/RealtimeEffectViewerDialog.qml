@@ -87,7 +87,7 @@ EffectStyledDialogView {
             id: view
             instanceId: root.instanceId
             topPadding: headerBar.y + headerBar.height + prv.padding
-            minimumWidth: root.minimumWidth
+            minimumWidth: prv.minimumWidth
         }
     }
 
