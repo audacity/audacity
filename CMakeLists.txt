@@ -23,7 +23,7 @@ set(FETCHCONTENT_BASE_DIR ${PROJECT_BINARY_DIR}/_deps)
 include(FetchContent)
 FetchContent_Declare(
   muse_framework
-  GIT_REPOSITORY https://github.com/kryksyh/framework_tmp.git
+  GIT_REPOSITORY https://github.com/saintmatthieu/framework_tmp.git
   GIT_TAG        main
 )
 
