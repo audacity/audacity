@@ -206,44 +206,65 @@ Qt::KeyboardModifiers ClipsListModel::keyboardModifiers() const
 
 void ClipsListModel::update()
 {
-    //! NOTE First we form a new list, and then we delete old objects,
-    //! otherwise there will be errors in Qml
-    QList<ClipListItem*> oldList = m_clipList;
+    std::unordered_map<ClipId, ClipListItem*> oldItems;
+    for (int row = 0; row < m_clipList.size(); ++row) {
+        oldItems.emplace(m_clipList[row]->key().key.clipId, m_clipList[row]);
+    }
+
+    QList<ClipListItem*> newList;
     bool isStereo = false;
-    beginResetModel();
 
-    m_clipList.clear();
-
+    // Building a new list, reusing exiting clips
     for (const au::trackedit::Clip& c : m_allClipList) {
-        auto* item = new ClipListItem(this);
+        auto it = oldItems.find(c.key.clipId);
+        ClipListItem* item = nullptr;
+
+        if (it != oldItems.end()) {
+            item = it->second;
+            oldItems.erase(it);
+        } else {
+            item = new ClipListItem(this);
+        }
+
         item->setClip(c);
-        m_clipList.append(item);
+        newList.append(item);
         isStereo |= c.stereo;
     }
 
-    if (m_clipList.empty()) {
-        // TODO: This addresses a symptom stemming from an inconsistency in the DOM.
-        //       We should remove the bool stereo field from trackedit::Clip.
-        //       At the moment, a project with a stereo/mono track
-        //       with one or more mono/stereo clips is not supported by the AU3 backend.
-        //       In the future, we ambition not to distinguish mono from stereo tracks,
-        //       Likely we should instead query what track the clip belongs to using the track's type instead,
-        //       but it'd solve this ambiguity.
-        //       With the above fixed, this code and TODO should be removed.
-        auto prj = globalContext()->currentTrackeditProject();
-        auto track = prj->track(m_trackId);
-        if (track.has_value()) {
-            if (track.value().type == TrackType::Stereo) {
-                isStereo = true;
-                m_isStereo = isStereo;
-                emit isStereoChanged();
+    // Removing deleted or moved clips
+    // Item deletion should be postponed, so QML is updated correctly
+    QList<ClipListItem*> cleanupList;
+    for (auto& [id, item] : oldItems) {
+        int row = m_clipList.indexOf(item);
+        if (row >= 0) {
+            beginRemoveRows(QModelIndex(), row, row);
+            m_clipList.removeAt(row);
+            endRemoveRows();
+        }
+        cleanupList.append(item);
+    }
+
+    // Sorting clips with a notification for each moved clip
+    for (int i = 0; i < newList.size(); ++i) {
+        ClipListItem* item = newList[i];
+        if (i < m_clipList.size() && m_clipList[i] == item) {
+            // TODO: is it possible to know if update is neccessary?
+            QModelIndex idx = index(i);
+            emit dataChanged(idx, idx);
+        } else {
+            // If the clip was already present, then moving
+            int oldIndex = m_clipList.indexOf(item);
+            if (oldIndex >= 0) {
+                beginMoveRows(QModelIndex(), oldIndex, oldIndex, QModelIndex(), i > oldIndex ? i + 1 : i);
+                m_clipList.move(oldIndex, i);
+                endMoveRows();
+            } else {
+                beginInsertRows(QModelIndex(), i, i);
+                m_clipList.insert(i, item);
+                endInsertRows();
             }
         }
     }
-
-    std::sort(m_clipList.begin(), m_clipList.end(), [](ClipListItem* a, ClipListItem* b) {
-        return a->time().clipStartTime < b->time().clipStartTime;
-    });
 
     updateItemsMetrics();
 
@@ -252,15 +273,13 @@ void ClipsListModel::update()
     m_selectedItems.clear();
     onSelectedClips(selectionController()->selectedClips());
 
-    endResetModel();
-
     if (m_isStereo != isStereo) {
         m_isStereo = isStereo;
         emit isStereoChanged();
     }
 
-    muse::async::Async::call(this, [oldList]() {
-        qDeleteAll(oldList);
+    muse::async::Async::call(this, [cleanupList]() {
+        qDeleteAll(cleanupList);
     });
 }
 

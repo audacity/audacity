@@ -24,5 +24,9 @@
         },
         "C_Cpp.autoAddFileAssociations": false,
         "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
+        "cmake.configureArgs": [
+            "-DNO_TRANSLATIONS_OPTION=NO_TRANSLATIONS", // Comment out to compile translations
+        ],
+        "cmake.buildBeforeRun": false, // Useful if you are running the "audacity (install)" target :
     }
 }

@@ -16,9 +16,15 @@
 #include "view/audiounitview.h"
 #include "view/audiounitviewmodel.h"
 
+static void AudioUnitInitQrc()
+{
+    Q_INIT_RESOURCE(audiounit);
+}
+
 au::effects::AudioUnitEffectsModule::AudioUnitEffectsModule()
     : m_metaReader(std::make_shared<AudioUnitPluginsMetaReader>())
 {
+    AudioUnitInitQrc();
 }
 
 std::string au::effects::AudioUnitEffectsModule::moduleName() const

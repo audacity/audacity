@@ -52,6 +52,15 @@ jobs:
         sudo docker system prune -a -f
         sudo rm -rf /usr/local/lib/android
 
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.9.1'
+        host: 'linux'
+        target: 'desktop'
+        arch: 'linux_gcc_64'
+        modules: 'qt5compat qtnetworkauth qtscxml qtshadertools qtwebsockets'
+
     - name: Setup environment
       run: |
         bash ./buildscripts/ci/linux/setup.sh
