@@ -453,10 +453,13 @@ void setIsolatedPoint(const unsigned int currentChannel, const trackedit::ClipKe
     }
 
     const auto y = std::min(
-        static_cast<int>(currentPosition.y() - (currentChannel * waveMetrics.height)), static_cast<int>(waveMetrics.height - 2));
-    const auto yy = std::max(y, 2);
+        static_cast<int>(currentPosition.y() - (currentChannel * waveMetrics.height)), static_cast<int>(waveMetrics.height - 1)); // Allow bottom edge
+    const auto yy = std::max(y, 0); // Allow top edge
 
     float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
+
+    // Ensure value stays within valid audio range
+    newValue = std::max(-1.0f, std::min(1.0f, newValue));
 
     WaveChannelUtilities::SetFloatAtTime(*waveChannel, isolatedPointTime + clip->GetPlayStartTime(), newValue, narrowestSampleFormat);
 }
@@ -539,10 +542,14 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
         }
 
         const auto y = std::min(
-            static_cast<int>(point.y() - (currentChannel * waveMetrics.height)), static_cast<int>(waveMetrics.height - 2));
-        const auto yy = std::max(y, 2);
+            static_cast<int>(point.y() - (currentChannel * waveMetrics.height)), static_cast<int>(waveMetrics.height - 1)); // Allow bottom edge
+        const auto yy = std::max(y, 0); // Allow top edge
 
         float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
+
+        // Ensure value stays within valid audio range
+        newValue = std::max(-1.0f, std::min(1.0f, newValue));
+
         samples.push_back(newValue);
     }
 
