@@ -84,14 +84,11 @@ void ProjectAutoSaver::init()
     });
 }
 
-bool ProjectAutoSaver::projectHasUnsavedChanges(const muse::io::path_t& projectPath) const
+bool ProjectAutoSaver::projectHasUnsavedChanges(IAudacityProjectPtr project) const
 {
-    auto project = currentProject();
-    if (project && (project->path() == projectPath
-                    || (project->isNewlyCreated() && projectPath == configuration()->newProjectTemporaryPath()))) {
+    if (project) {
         return project->needSave().val;
     }
-
     return false;
 }
 
@@ -104,14 +101,22 @@ void ProjectAutoSaver::removeProjectUnsavedChanges(const muse::io::path_t& proje
     }
 
     // For newly created projects, also remove the temporary file
-    if (isAutosaveOfNewlyCreatedProject(projectPath)) {
+    if (isPathToNewlyCreatedProject(projectPath)) {
         fileSystem()->remove(projectPath);
     }
 }
 
-bool ProjectAutoSaver::isAutosaveOfNewlyCreatedProject(const muse::io::path_t& projectPath) const
+bool ProjectAutoSaver::isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const
 {
     return projectPath == configuration()->newProjectTemporaryPath();
+}
+
+bool ProjectAutoSaver::isNewlyCreatedProject(IAudacityProjectPtr project) const
+{
+    if (project) {
+        return project->isNewlyCreated();
+    }
+    return false;
 }
 
 IAudacityProjectPtr ProjectAutoSaver::currentProject() const

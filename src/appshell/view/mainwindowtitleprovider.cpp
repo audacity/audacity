@@ -105,5 +105,5 @@ void MainWindowTitleProvider::update()
     setTitle(project->title());
 
     setFilePath(project->path().toQString());
-    setFileModified(project->needSave().val);
+    setFileModified(projectAutoSaver()->projectHasUnsavedChanges(project));
 }

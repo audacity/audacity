@@ -49,7 +49,6 @@ public:
 
     virtual std::shared_ptr<IAu3Project> create() const = 0;
 
-    // Helper method to remove autosave data from a project file without keeping it open
     virtual bool removeAutosaveDataFromFile(const muse::io::path_t& projectPath) const = 0;
 };
 }
