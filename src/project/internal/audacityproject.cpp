@@ -136,7 +136,6 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
     if (m_au3Project->isRecovered()) {
         m_trackeditProject->reload();
 
-        // Restore "newly created" state for never-saved recovered projects
         if (path == configuration()->newProjectTemporaryPath()) {
             m_isNewlyCreated = true;
             LOGD() << "[project] Restored never-saved project, marked as newly created";

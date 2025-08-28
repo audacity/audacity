@@ -47,10 +47,11 @@ public:
 
     void init();
 
-    bool projectHasUnsavedChanges(const muse::io::path_t& projectPath) const override;
+    bool projectHasUnsavedChanges(IAudacityProjectPtr project) const override;
     void removeProjectUnsavedChanges(const muse::io::path_t& projectPath) override;
 
-    bool isAutosaveOfNewlyCreatedProject(const muse::io::path_t& projectPath) const override;
+    bool isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const override;
+    bool isNewlyCreatedProject(IAudacityProjectPtr project) const override;
 
 private:
     IAudacityProjectPtr currentProject() const;
