@@ -23,7 +23,7 @@
                 "C:/Users/qt/work/qt": "${env:QTDIR}/../Src",
                 "Q:/qt_workdir/w/s": "${env:QTDIR}/../Src",
             },
-            "symbolSearchPath": "${env:QTDIR}/bin",
+            "symbolSearchPath": "${env:QTDIR}/bin;${env:QTDIR}/plugins/platforms",
             "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis",
         },
         {
