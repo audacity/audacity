@@ -511,6 +511,46 @@ muse::async::Channel<au::trackedit::TrackId> Au3SelectionController::focusedTrac
     return m_focusedTrack.changed;
 }
 
+void Au3SelectionController::focusPreviousTrack()
+{
+    const au::trackedit::TrackId currentFocusedTrack = focusedTrack();
+
+    Au3Track* au3FocusedTrack = au3::DomAccessor::findTrack(projectRef(), ::TrackId(currentFocusedTrack));
+    if (!au3FocusedTrack) {
+        return;
+    }
+
+    auto& tracks = Au3TrackList::Get(projectRef());
+    auto currentIter = tracks.Find(au3FocusedTrack);
+    if (currentIter != tracks.begin()) {
+        --currentIter;
+        if (*currentIter) {
+            const TrackId trackId = TrackId((*currentIter)->GetId());
+            setFocusedTrack(trackId);
+        }
+    }
+}
+
+void Au3SelectionController::focusNextTrack()
+{
+    const au::trackedit::TrackId currentFocusedTrack = focusedTrack();
+
+    Au3Track* au3FocusedTrack = au3::DomAccessor::findTrack(projectRef(), ::TrackId(currentFocusedTrack));
+    if (!au3FocusedTrack) {
+        return;
+    }
+
+    auto& tracks = Au3TrackList::Get(projectRef());
+    auto currentIter = tracks.Find(au3FocusedTrack);
+    if (currentIter != tracks.end()) {
+        ++currentIter;
+        if (currentIter != tracks.end() && *currentIter) {
+            const TrackId trackId = TrackId((*currentIter)->GetId());
+            setFocusedTrack(trackId);
+        }
+    }
+}
+
 muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedEndTimeChanged() const
 {
     return m_selectedEndTime.changed;

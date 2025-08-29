@@ -30,6 +30,7 @@
 #include "internal/trackeditinteraction.h"
 #include "internal/trackeditconfiguration.h"
 #include "internal/trackeditoperationcontroller.h"
+#include "internal/tracknavigationcontroller.h"
 #include "internal/undomanager.h"
 
 #include "view/deletebehaviorpanelmodel.h"
@@ -65,6 +66,7 @@ void TrackeditModule::registerExports()
     m_trackeditUiActions = std::make_shared<TrackeditUiActions>(m_trackeditController);
     m_selectionController = std::make_shared<Au3SelectionController>();
     m_configuration = std::make_shared<TrackeditConfiguration>();
+    m_trackNavigationController = std::make_shared<TrackNavigationController>();
 
     ioc()->registerExport<ITrackeditActionsController>(moduleName(), m_trackeditController);
     ioc()->registerExport<ITrackeditProjectCreator>(moduleName(), new Au3TrackeditProjectCreator());
@@ -76,6 +78,7 @@ void TrackeditModule::registerExports()
     ioc()->registerExport<IProjectHistory>(moduleName(), new Au3ProjectHistory());
     ioc()->registerExport<ITrackeditClipboard>(moduleName(), new Au3TrackeditClipboard());
     ioc()->registerExport<ITrackeditConfiguration>(moduleName(), m_configuration);
+    ioc()->registerExport<ITrackNavigationController>(moduleName(), m_trackNavigationController);
 }
 
 void TrackeditModule::registerUiTypes()
@@ -111,6 +114,7 @@ void TrackeditModule::onInit(const muse::IApplication::RunMode&)
     m_trackeditUiActions->init();
     m_selectionController->init();
     m_configuration->init();
+    m_trackNavigationController->init();
 
     TimeSignatureRestorer::reg();
 
