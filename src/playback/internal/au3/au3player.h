@@ -43,8 +43,18 @@ public:
     PlaybackRegion playbackRegion() const override;
     void setPlaybackRegion(const PlaybackRegion& region) override;
 
-    muse::async::Promise<bool> setLoop(const muse::secs_t from, const muse::secs_t toM) override;
-    void resetLoop() override;
+    PlaybackRegion loopRegion() const override;
+    void loopEditingBegin() override;
+    void loopEditingEnd() override;
+    void setLoopRegion(const PlaybackRegion& region) override;
+    void setLoopRegionStart(const muse::secs_t time) override;
+    void setLoopRegionEnd(const muse::secs_t time) override;
+    void clearLoopRegion() override;
+    bool isLoopRegionClear() const override;
+    muse::async::Notification loopRegionChanged() const override;
+
+    bool isLoopRegionActive() const override;
+    void setLoopRegionActive(const bool active) override;
 
     muse::secs_t playbackPosition() const override;
     muse::async::Channel<muse::secs_t> playbackPositionChanged() const override;
@@ -61,6 +71,8 @@ private:
     muse::Ret doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {});
 
     void updatePlaybackState();
+
+    muse::async::Notification m_loopRegionChanged;
 
     muse::ValCh<PlaybackStatus> m_playbackStatus;
     muse::ValNt<bool> m_reachedEnd;

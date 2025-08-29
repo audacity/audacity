@@ -144,6 +144,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/gridlines.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/gridlines.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/playregioncontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/playregioncontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/playregionmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/playregionmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/snaptimeformatter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/snaptimeformatter.h
 

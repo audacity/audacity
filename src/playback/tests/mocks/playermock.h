@@ -27,8 +27,20 @@ public:
     MOCK_METHOD(PlaybackRegion, playbackRegion, (), (const, override));
     MOCK_METHOD(void, setPlaybackRegion, (const PlaybackRegion&), (override));
 
-    MOCK_METHOD(muse::async::Promise<bool>, setLoop, (const muse::secs_t from, const muse::secs_t to), (override));
-    MOCK_METHOD(void, resetLoop, (), (override));
+    MOCK_METHOD(PlaybackRegion, loopRegion, (), (const, override));
+    MOCK_METHOD(void, loopEditingBegin, (), (override));
+    MOCK_METHOD(void, loopEditingEnd, (), (override));
+    MOCK_METHOD(void, setLoopRegion, (const PlaybackRegion&), (override));
+    MOCK_METHOD(void, setLoopRegionStart, (const muse::secs_t time), (override));
+    MOCK_METHOD(void, setLoopRegionEnd, (const muse::secs_t time), (override));
+
+    MOCK_METHOD(void, clearLoopRegion, (), (override));
+    MOCK_METHOD(muse::async::Notification, loopRegionChanged, (), (const, override));
+
+    MOCK_METHOD(bool, isLoopRegionClear, (), (const, override));
+
+    MOCK_METHOD(void, setLoopRegionActive, (const bool), (override));
+    MOCK_METHOD(bool, isLoopRegionActive, (), (const, override));
 
     MOCK_METHOD(muse::secs_t, playbackPosition, (), (const, override));
     MOCK_METHOD(muse::async::Channel<muse::secs_t>, playbackPositionChanged, (), (const, override));

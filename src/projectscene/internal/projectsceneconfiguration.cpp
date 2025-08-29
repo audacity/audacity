@@ -2,6 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 
+#include "playback/playbacktypes.h"
 #include "settings.h"
 
 #include "global/stringutils.h"
@@ -23,6 +24,7 @@ static const muse::Settings::Key MOUSE_ZOOM_PRECISION(moduleName, "projectscene/
 static const muse::Settings::Key CLIP_STYLE(moduleName, "projectscene/clipStyle");
 static const muse::Settings::Key STEREO_HEIGHTS_PREF(moduleName, "projectscene/asymmetricStereoHeights");
 static const muse::Settings::Key ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES(moduleName, "projectscene/asymmetricStereoHeightsWorkspaces");
+static const muse::Settings::Key SELECTION_TIMECODE_FORMAT(moduleName, "projectscene/selectionTimecodeFormat");
 
 static const QString TIMELINE_RULER_MODE("projectscene/timelineRulerMode");
 static const QString EFFECTS_PANEL_VISIBILITY("projectscene/effectsPanelVisible");
@@ -61,6 +63,12 @@ void ProjectSceneConfiguration::init()
                                       muse::Val("Advanced audio editing"));
     muse::settings()->valueChanged(ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES).onReceive(nullptr, [this](const muse::Val& val) {
         m_asymmetricStereoHeightsWorkspacesChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(SELECTION_TIMECODE_FORMAT, muse::Val(playback::TimecodeFormatType::HHMMSSHundredths));
+    muse::settings()->valueChanged(SELECTION_TIMECODE_FORMAT).onReceive(nullptr, [this](const muse::Val& val) {
+        UNUSED(val);
+        m_selectionTimecodeFormatChanged.notify();
     });
 }
 
@@ -240,4 +248,19 @@ void ProjectSceneConfiguration::setAsymmetricStereoHeightsWorkspaces(std::vector
 muse::async::Notification ProjectSceneConfiguration::asymmetricStereoHeightsWorkspacesChanged() const
 {
     return m_asymmetricStereoHeightsWorkspacesChanged;
+}
+
+int ProjectSceneConfiguration::selectionTimecodeFormat() const
+{
+    return muse::settings()->value(SELECTION_TIMECODE_FORMAT).toInt();
+}
+
+void ProjectSceneConfiguration::setSelectionTimecodeFormat(int format)
+{
+    muse::settings()->setSharedValue(SELECTION_TIMECODE_FORMAT, muse::Val(format));
+}
+
+muse::async::Notification ProjectSceneConfiguration::selectionTimecodeFormatChanged() const
+{
+    return m_selectionTimecodeFormatChanged;
 }

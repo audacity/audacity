@@ -62,7 +62,12 @@ Rectangle {
 
     TimelineRuler {
         id: timelineRuler
+
         anchors.fill: parent
+
+        // Ensure the ruler is drawn on top of selection and play region
+        z: 42
+
         context: timelineContext
     }
 

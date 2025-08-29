@@ -23,6 +23,7 @@ static const muse::Settings::Key DITHERING("au3wrap", "Quality/DitherAlgorithmCh
 static const muse::Settings::Key SOLO_BEHAVIOR(moduleName, "playback/soloBehavior");
 static const muse::Settings::Key SEEK_SHORT_PERIOD(moduleName, "playback/seekShortPeriod");
 static const muse::Settings::Key SEEK_LONG_PERIOD(moduleName, "playback/seekLongPeriod");
+static const muse::Settings::Key SELECTION_FOLLOWS_LOOP_REGION(moduleName, "playback/selectionFollowsLoopRegion");
 
 // quality/dithering settings are stored as string in audacity.cfg
 // we need to convert these when reading/writing
@@ -198,6 +199,11 @@ void PlaybackConfiguration::init()
     muse::settings()->valueChanged(SEEK_LONG_PERIOD).onReceive(nullptr, [this](const muse::Val&) {
         m_longSkipChanged.notify();
     });
+
+    muse::settings()->setDefaultValue(SELECTION_FOLLOWS_LOOP_REGION, muse::Val(false));
+    muse::settings()->valueChanged(SELECTION_FOLLOWS_LOOP_REGION).onReceive(nullptr, [this](const muse::Val&) {
+        m_selectionFollowsLoopRegionChanged.notify();
+    });
 }
 
 std::vector<au::playback::PlaybackQualityPrefs::PlaybackQuality> PlaybackConfiguration::playbackQualityList() const
@@ -299,4 +305,19 @@ void PlaybackConfiguration::setLongSkip(trackedit::secs_t seconds)
 async::Notification PlaybackConfiguration::longSkipChanged() const
 {
     return m_longSkipChanged;
+}
+
+bool PlaybackConfiguration::selectionFollowsLoopRegion() const
+{
+    return muse::settings()->value(SELECTION_FOLLOWS_LOOP_REGION).toBool();
+}
+
+void PlaybackConfiguration::setSelectionFollowsLoopRegion(bool follows)
+{
+    muse::settings()->setSharedValue(SELECTION_FOLLOWS_LOOP_REGION, muse::Val(follows));
+}
+
+async::Notification PlaybackConfiguration::selectionFollowsLoopRegionChanged() const
+{
+    return m_selectionFollowsLoopRegionChanged;
 }

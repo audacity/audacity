@@ -108,6 +108,11 @@ Rectangle {
         context: timeline.context
     }
 
+    PlayRegionController {
+        id: playRegionController
+        context: timeline.context
+    }
+
     SelectionViewController {
         id: selectionController
         context: timeline.context
@@ -206,14 +211,33 @@ Rectangle {
                 anchors.fill: parent
                 hoverEnabled: true
 
+                QtObject {
+                    id: prv
+
+                    property bool playRegionActivated: false
+                }
+
                 onPositionChanged: function(e) {
                     timeline.updateCursorPosition(e.x, e.y)
+                    playRegionController.mouseMove(e.x)
+                }
+
+                onPressed: function (e) {
+                    if (timeline.isMajorSection(e.y)) {
+                        playRegionController.mouseDown(e.x)
+                        prv.playRegionActivated = true
+                    }
+                }
+
+                onReleased: function (e) {
+                    playRegionController.mouseUp(e.x)
                 }
 
                 onClicked: function (e) {
-                    if (!timeline.isMajorSection(e.y)) {
+                    if (!prv.playRegionActivated) {
                         playCursorController.seekToX(e.x, true /* triggerPlay */)
                     }
+                    prv.playRegionActivated = false
                 }
             }
 
@@ -233,11 +257,17 @@ Rectangle {
                 x: timeline.context.singleClipSelected ? timeline.context.selectedClipStartPosition : timeline.context.selectionStartPosition
                 width: timeline.context.singleClipSelected ? timeline.context.selectedClipEndPosition - x : timeline.context.selectionEndPosition - x
 
-                anchors.top: parent.top
+                anchors.top: parent.verticalCenter
                 anchors.bottom: parent.bottom
 
                 color: "#ABE7FF"
                 opacity: 0.3
+            }
+
+            PlayRegion {
+                id: playRegion
+
+                context: timeline.context
             }
 
             PlayCursorHead {

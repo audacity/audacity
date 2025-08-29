@@ -36,7 +36,7 @@ static const ActionCode STOP_RECORD_ACTION_CODE("stop-record");
 
 static const ActionCode REWIND_START_ACTION_CODE("rewind-start");
 static const ActionCode REWIND_END_ACTION_CODE("rewind-end");
-static const ActionCode LOOP_ACTION_CODE("loop");
+static const ActionCode LOOP_ACTION_CODE("toggle-loop-region");
 
 static const ActionCode PLAYBACK_LEVEL_CODE("playback-level");
 static const ActionCode PLAYBACK_LEVEL("playback-level");
@@ -118,7 +118,7 @@ void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCode
         updateRecordState();
     }
 
-    if (containsAction(codes, LOOP_ACTION_CODE)) {
+    if (containsAction(codes, "toggle-loop-region")) {
         updateLoopState();
     }
 
@@ -220,7 +220,7 @@ void PlaybackToolBarModel::updateLoopState()
         return;
     }
 
-    bool isLooping = false; // todo: from controller
+    bool isLooping = controller()->isLoopActive();
     item->setSelected(isLooping);
 
     QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());

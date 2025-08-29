@@ -7,26 +7,36 @@
 #include "au3wrap/au3wrapmodule.h"
 
 #include "project/tests/mocks/projectconfigurationmock.h"
+#include "mocks/playbackconfigurationmock.h"
 
 using namespace ::testing;
-using namespace au::project;
 
 static muse::testing::SuiteEnvironment playback_se
     = muse::testing::SuiteEnvironment()
       .setDependencyModules({ new au::au3::Au3WrapModule() })
       .setPreInit([](){
-    std::shared_ptr<ProjectConfigurationMock> projectConfigurator(new ProjectConfigurationMock(), [](ProjectConfigurationMock*){});
+    std::shared_ptr<au::playback::PlaybackConfigurationMock> playbackConfigurator(new au::playback::PlaybackConfigurationMock(),
+                                                                                  [](au::playback::PlaybackConfigurationMock*){});
+    std::shared_ptr<au::project::ProjectConfigurationMock> projectConfigurator(new au::project::ProjectConfigurationMock(),
+                                                                               [](au::project::ProjectConfigurationMock*){});
 
     ON_CALL(*projectConfigurator, temporaryDir())
     .WillByDefault(Return(""));
 
-    muse::modularity::globalIoc()->registerExport<IProjectConfiguration>("utests", projectConfigurator);
+    muse::modularity::globalIoc()->registerExport<au::playback::IPlaybackConfiguration>("utests", playbackConfigurator);
+    muse::modularity::globalIoc()->registerExport<au::project::IProjectConfiguration>("utests", projectConfigurator);
 }).setPostInit([]() {
 }).setDeInit([](){
-    std::shared_ptr<IProjectConfiguration> projectConfiguratorPtr
-        = muse::modularity::globalIoc()->resolve<IProjectConfiguration>("utests");
-    muse::modularity::globalIoc()->unregister<IProjectConfiguration>("utests");
+    std::shared_ptr<au::playback::IPlaybackConfiguration> playbackConfiguratorPtr
+        = muse::modularity::globalIoc()->resolve<au::playback::IPlaybackConfiguration>("utests");
+    muse::modularity::globalIoc()->unregister<au::playback::IPlaybackConfiguration>("utests");
 
-    IProjectConfiguration* projectConfigurator = projectConfiguratorPtr.get();
+    std::shared_ptr<au::project::IProjectConfiguration> projectConfiguratorPtr
+        = muse::modularity::globalIoc()->resolve<au::project::IProjectConfiguration>("utests");
+    muse::modularity::globalIoc()->unregister<au::project::IProjectConfiguration>("utests");
+
+    au::playback::IPlaybackConfiguration* playbackConfigurator = playbackConfiguratorPtr.get();
+    au::project::IProjectConfiguration* projectConfigurator = projectConfiguratorPtr.get();
+    delete playbackConfigurator;
     delete projectConfigurator;
 });

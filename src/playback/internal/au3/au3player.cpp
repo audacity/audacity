@@ -17,6 +17,7 @@
 #include "au3wrap/au3types.h"
 
 #include "log.h"
+#include <algorithm>
 
 using namespace au::playback;
 using namespace au::au3;
@@ -192,19 +193,21 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
 void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
 {
     LOGD() << "newPosition: " << newPosition;
+    auto pos = std::max(0.0, newPosition.raw());
 
     Au3Project& project = projectRef();
 
     auto& playRegion = ViewInfo::Get(project).playRegion;
-    playRegion.Clear();
-    playRegion.SetStart(newPosition);
+    if (!playRegion.Active()) {
+        playRegion.SetStart(pos);
+    }
 
     if (applyIfPlaying && m_playbackStatus.val == PlaybackStatus::Running) {
         auto gAudioIO = AudioIO::Get();
-        gAudioIO->SeekStream(newPosition - gAudioIO->GetStreamTime());
+        gAudioIO->SeekStream(pos - gAudioIO->GetStreamTime());
     }
 
-    m_playbackPosition.set(newPosition);
+    m_playbackPosition.set(pos);
 }
 
 void Au3Player::rewind()
@@ -303,14 +306,24 @@ PlaybackRegion Au3Player::playbackRegion() const
     Au3Project& project = projectRef();
     auto& playRegion = ViewInfo::Get(project).playRegion;
 
-    return { playRegion.GetStart(), playRegion.GetEnd() };
+    double start = playRegion.GetStart();
+    double end = playRegion.GetEnd();
+
+    return { std::isinf(start) ? 0 : start, std::isinf(end) ? 0 : end };
 }
 
 void Au3Player::setPlaybackRegion(const PlaybackRegion& region)
 {
+    m_playbackPosition.set(std::max(0.0, region.start.raw()));
+
     Au3Project& project = projectRef();
 
     auto& playRegion = ViewInfo::Get(project).playRegion;
+
+    if (playRegion.Active()) {
+        return;
+    }
+
     playRegion.SetStart(region.start);
 
     if (region.start == region.end) {
@@ -319,25 +332,110 @@ void Au3Player::setPlaybackRegion(const PlaybackRegion& region)
     } else {
         playRegion.SetEnd(region.end);
     }
-
-    m_playbackPosition.set(region.start);
 }
 
-muse::async::Promise<bool> Au3Player::setLoop(const muse::secs_t from, const muse::secs_t to)
+PlaybackRegion Au3Player::loopRegion() const
 {
-    UNUSED(from);
-    UNUSED(to);
-    NOT_IMPLEMENTED;
+    Au3Project& project = projectRef();
+    auto& playRegion = ViewInfo::Get(project).playRegion;
 
-    return muse::async::Promise<bool>([](auto, auto reject) {
-        muse::Ret ret = make_ret(muse::Ret::Code::NotImplemented);
-        return reject(ret.code(), ret.text());
-    });
+    double start = playRegion.GetLastActiveStart();
+    double end = playRegion.GetLastActiveEnd();
+
+    return { std::isinf(start) ? 0 : start, std::isinf(end) ? 0 : end };
 }
 
-void Au3Player::resetLoop()
+void Au3Player::loopEditingBegin()
 {
-    NOT_IMPLEMENTED;
+}
+
+void Au3Player::loopEditingEnd()
+{
+    Au3Project& project = projectRef();
+    auto& playRegion = ViewInfo::Get(project).playRegion;
+    playRegion.Order();
+
+    m_playbackPosition.set(std::max(loopRegion().start.raw(), 0.0));
+}
+
+void Au3Player::setLoopRegion(const PlaybackRegion& region)
+{
+    Au3Project& project = projectRef();
+    auto& playRegion = ViewInfo::Get(project).playRegion;
+
+    playRegion.SetActive(true);
+    playRegion.SetAllTimes(region.start, region.end);
+
+    m_loopRegionChanged.notify();
+}
+
+void Au3Player::setLoopRegionStart(const muse::secs_t time)
+{
+    Au3Project& project = projectRef();
+    auto& playRegion = ViewInfo::Get(project).playRegion;
+
+    playRegion.SetStart(time);
+
+    m_loopRegionChanged.notify();
+}
+
+void Au3Player::setLoopRegionEnd(const muse::secs_t time)
+{
+    Au3Project& project = projectRef();
+    auto& playRegion = ViewInfo::Get(project).playRegion;
+
+    playRegion.SetEnd(time);
+
+    m_loopRegionChanged.notify();
+}
+
+void Au3Player::clearLoopRegion()
+{
+    Au3Project& project = projectRef();
+    auto& playRegion = ViewInfo::Get(project).playRegion;
+    playRegion.SetActive(false);
+    playRegion.Clear();
+
+    m_loopRegionChanged.notify();
+}
+
+bool Au3Player::isLoopRegionClear() const
+{
+    Au3Project& project = projectRef();
+    auto& playRegion = ViewInfo::Get(project).playRegion;
+
+    return playRegion.IsLastActiveRegionClear();
+}
+
+bool Au3Player::isLoopRegionActive() const
+{
+    Au3Project& project = projectRef();
+    auto& playRegion = ViewInfo::Get(project).playRegion;
+
+    return playRegion.Active();
+}
+
+void Au3Player::setLoopRegionActive(const bool active)
+{
+    Au3Project& project = projectRef();
+    auto& playRegion = ViewInfo::Get(project).playRegion;
+
+    if (playRegion.IsLastActiveRegionClear()) {
+        // Default length is 2 bars
+        au::trackedit::TimeSignature ts = globalContext()->currentTrackeditProject()->timeSignature();
+        double secs = 2 * ts.upper * (4.0 / ts.lower) * (60.0 / ts.tempo);
+
+        playRegion.SetAllTimes(0, secs);
+    }
+
+    playRegion.SetActive(active);
+
+    m_loopRegionChanged.notify();
+}
+
+muse::async::Notification Au3Player::loopRegionChanged() const
+{
+    return m_loopRegionChanged;
 }
 
 void Au3Player::updatePlaybackState()

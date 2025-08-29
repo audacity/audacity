@@ -16,6 +16,7 @@
 #include "trackedit/iselectioncontroller.h"
 
 #include "playback/iaudiodevicesprovider.h"
+#include "playback/iplaybackconfiguration.h"
 #include "playback/iplayback.h"
 #include "playback/iplayer.h"
 
@@ -34,6 +35,7 @@ public:
     muse::Inject<record::IRecordController> recordController;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
 public:
     void init();
@@ -44,6 +46,8 @@ public:
 
     bool isPlaying() const override;
     muse::async::Notification isPlayingChanged() const override;
+
+    bool isLoopActive() const override;
 
     bool isPaused() const override;
     bool isStopped() const override;
@@ -76,7 +80,6 @@ private:
 
     bool isLoaded() const;
 
-    bool isLoopEnabled() const;
     bool loopBoundariesSet() const;
 
     PlaybackRegion selectionPlaybackRegion() const;
@@ -103,7 +106,13 @@ private:
 
     void togglePlayRepeats();
     void toggleAutomaticallyPan();
+
     void toggleLoopPlayback();
+    void clearLoopRegion();
+    void setLoopRegionToSelection();
+    void setSelectionToLoop();
+    void setLoopRegionInOut();
+    void setSelectionFollowsLoopRegion();
 
     void openPlaybackSetupDialog();
 
@@ -111,13 +120,6 @@ private:
     void setAudioOutputDevice(const muse::actions::ActionQuery& q);
     void setAudioInputDevice(const muse::actions::ActionQuery& q);
     void setInputChannels(const muse::actions::ActionQuery& q);
-
-    // void addLoopBoundary(LoopBoundaryType type);
-    // void addLoopBoundaryToTick(LoopBoundaryType type, int tick);
-    // void updateLoop();
-
-    void enableLoop();
-    void disableLoop();
 
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
 

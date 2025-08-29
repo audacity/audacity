@@ -51,5 +51,9 @@ public:
     virtual std::vector<std::string> asymmetricStereoHeightsWorkspaces() const = 0;
     virtual void setAsymmetricStereoHeightsWorkspaces(std::vector<std::string>& workspaces) = 0;
     virtual muse::async::Notification asymmetricStereoHeightsWorkspacesChanged() const = 0;
+
+    virtual int selectionTimecodeFormat() const = 0;
+    virtual void setSelectionTimecodeFormat(int) = 0;
+    virtual muse::async::Notification selectionTimecodeFormatChanged() const = 0;
 };
 }

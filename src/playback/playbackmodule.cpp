@@ -11,6 +11,9 @@
 #include "internal/playbackuiactions.h"
 #include "internal/au3/au3playback.h"
 #include "internal/au3/au3trackplaybackcontrol.h"
+
+#include "ui/iinteractiveuriregister.h"
+
 #include "view/common/playbackstatemodel.h"
 #include "view/common/playbackmetermodel.h"
 #include "view/common/metermodel.h"
@@ -56,6 +59,10 @@ void PlaybackModule::resolveImports()
     auto ar = ioc()->resolve<IUiActionsRegister>(moduleName());
     if (ar) {
         ar->reg(m_uiActions);
+    }
+    auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
+    if (ir) {
+        ir->registerQmlUri(muse::Uri("audacity://playback/loop_region_in_out"), "Audacity/Playback/dialogs/LoopRegionInOut.qml");
     }
 }
 
