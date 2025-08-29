@@ -25,6 +25,7 @@
 #include "io/path.h"
 
 #include "modularity/imoduleinterface.h"
+#include "iaudacityproject.h"
 
 namespace au::project {
 class IProjectAutoSaver : MODULE_EXPORT_INTERFACE
@@ -34,15 +35,11 @@ class IProjectAutoSaver : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IProjectAutoSaver() = default;
 
-    virtual bool projectHasUnsavedChanges(const muse::io::path_t& projectPath) const = 0;
+    virtual bool projectHasUnsavedChanges(IAudacityProjectPtr project) const = 0;
     virtual void removeProjectUnsavedChanges(const muse::io::path_t& projectPath) = 0;
 
-    virtual bool isAutosaveOfNewlyCreatedProject(const muse::io::path_t& projectPath) const = 0;
-
-    virtual muse::io::path_t projectOriginalPath(const muse::io::path_t& projectAutoSavePath) const = 0;
-    virtual muse::io::path_t projectAutoSavePath(const muse::io::path_t& projectPath) const = 0;
-
-    static inline const std::string AUTOSAVE_SUFFIX = "autosave";
+    virtual bool isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const = 0;
+    virtual bool isNewlyCreatedProject(IAudacityProjectPtr project) const = 0;
 };
 }
 
