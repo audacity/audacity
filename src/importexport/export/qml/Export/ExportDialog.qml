@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -12,15 +15,13 @@ StyledDialogView {
 
     title: qsTrc("export", "Export audio")
 
-    contentWidth: 480
-    // TODO: switch to mainColumn.implicitHeight when
-    // dynamic content is implemented
-    // contentHeight: mainColumn.implicitHeight
-    contentHeight: 495
+    contentWidth: 490
+    contentHeight: mainColumn.implicitHeight
 
-    margins: 20
+    margins: 10
 
-    property int dropdownWidth: 354
+    property int dropdownWidth: 364
+    property int smallDropdownWidth: 364 * 0.65
     property int labelColumnWidth: 80
 
     // property NavigationPanel navigation: NavigationPanel {
@@ -30,8 +31,21 @@ StyledDialogView {
     //     section: root.navigationSection
     // }
 
+    // NOTE: position dialog so entire content is visible
+    Component.onCompleted: {
+        y = -250
+    }
+
     ExportPreferencesModel {
         id: exportPreferencesModel
+    }
+
+    CustomFFmpegPreferencesModel {
+        id: ffmpegPrefModel
+    }
+
+    DynamicExportOptionsModel {
+        id: dynamicOptionsModel
     }
 
     ColumnLayout {
@@ -162,7 +176,7 @@ StyledDialogView {
                 StyledDropdown {
                     id: formatDropdown
 
-                    Layout.preferredWidth: root.dropdownWidth * 0.6
+                    Layout.preferredWidth: root.smallDropdownWidth
 
                     textRole: "name"
                     valueRole: "code"
@@ -273,7 +287,7 @@ StyledDialogView {
                 StyledDropdown {
                     id: sampleRateDropdown
 
-                    Layout.preferredWidth: root.dropdownWidth * 0.6
+                    Layout.preferredWidth: root.smallDropdownWidth
 
                     textRole: "name"
                     valueRole: "code"
@@ -291,41 +305,145 @@ StyledDialogView {
                     onActivated: function(index, value) {
                         exportPreferencesModel.setExportSampleRate(value)
                     }
-
-
                 }
             }
 
-            RowLayout {
+            ColumnLayout {
 
-                Item {
-                    width: root.labelColumnWidth
-                    StyledTextLabel {
-                        text: qsTrc("export", "Encoding")
-                        anchors.verticalCenter: parent.verticalCenter
+                visible: exportPreferencesModel.customFFmpegOptionsVisible
+
+                RowLayout {
+
+                    Item {
+                        width: root.labelColumnWidth
+                    }
+
+                    FlatButton {
+
+                        Layout.preferredWidth: root.smallDropdownWidth
+
+                        text: qsTrc("export", "Open custom FFmpeg format options")
+
+                        onClicked: {
+                            exportPreferencesModel.openCustomFFmpegDialog()
+                        }
                     }
                 }
 
-                StyledDropdown {
-                    id: encodingDropdown
+                RowLayout {
 
-                    Layout.preferredWidth: root.dropdownWidth * 0.6
+                    Item {
 
-                    textRole: "name"
-                    valueRole: "code"
+                        width: root.labelColumnWidth
 
-                    popupItemsCount: 11
-                    currentIndex: 2
-                    model: [ "16-bit", "24-bit", "32-bit float"]
-                    enabled: false
+                        StyledTextLabel {
+                            anchors.verticalCenter: parent.verticalCenter
 
-                    // navigation.name: "ProcessBox"
-                    // navigation.panel: root.navigation
-                    // navigation.column: 1
+                            text: qsTrc("export", "Format: ")
+                        }
+                    }
 
-                    indeterminateText: ""
+                    TextInputField {
+                        id: formatField
 
-                    onActivated: function(index, value) {
+                        implicitWidth: root.smallDropdownWidth
+
+                        currentText: ffmpegPrefModel.ffmpegFormat
+
+                        readOnly: true
+                    }
+                }
+
+                RowLayout {
+
+                    Item {
+
+                        width: root.labelColumnWidth
+
+                        StyledTextLabel {
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            text: qsTrc("export", "Codec:")
+                        }
+                    }
+
+                    TextInputField {
+                        id: codecField
+
+                        implicitWidth: root.smallDropdownWidth
+
+                        currentText: ffmpegPrefModel.ffmpegCodec
+
+                        readOnly: true
+                    }
+                }
+            }
+
+            ColumnLayout {
+                id: dynamicSection
+
+                spacing: 10
+
+                visible: !exportPreferencesModel.customFFmpegOptionsVisible
+
+                Repeater {
+
+                    model: dynamicOptionsModel
+
+                    delegate: RowLayout {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 30
+
+                        visible: !hidden
+                        enabled: !readOnly
+
+                        Item {
+                            width: root.labelColumnWidth
+
+                            StyledTextLabel {
+                                id: label
+
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                text: title
+                            }
+                        }
+
+                        Loader {
+                            id: control
+
+                            Layout.preferredWidth: root.smallDropdownWidth
+
+                            property int rIndex: index
+                            property int rType: type
+                            property var rValue: value
+                            property var rValues: values
+                            property var rNames: names
+                            property int rMin: min
+                            property int rMax: max
+
+                            sourceComponent: {
+                                switch (type) {
+                                case ExportOptionType.TypeEnum:   return enumComp
+                                case ExportOptionType.TypeBool:   return boolComp
+                                case ExportOptionType.TypeRange:  return rangeComp
+                                case ExportOptionType.TypeString: return strComp
+                                }
+                            }
+
+                            onLoaded: {
+                                // push props into the created item explicitly
+                                if (!item) {
+                                    return
+                                }
+                                item.rIndex = rIndex
+                                item.rValue = rValue
+                                item.rValues = rValues
+                                item.rNames = rNames
+                                item.rMin   = rMin
+                                item.rMax   = rMax
+                            }
+                        }
                     }
                 }
             }
@@ -399,4 +517,135 @@ StyledDialogView {
 
     }
 
+    // dynamic export controls
+
+    Component {
+        id: enumComp
+        StyledDropdown {
+            property int rIndex: -1
+            property var rValue: -1
+            property var rValues: []
+            property var rNames: []
+            property int rMin: 0
+            property int rMax: 0
+
+            model: rNames
+            currentIndex: rValue
+
+            onActivated: function(index, value) {
+                dynamicOptionsModel.setData(dynamicOptionsModel.index(rIndex, 0),
+                                            rValues[index],
+                                            ExportOptionType.ValueRole)
+            }
+        }
+    }
+
+    Component {
+        id: boolComp
+        CheckBox {
+            property int rIndex: -1
+            property var rValue: -1
+            property var rValues: []
+            property var rNames: []
+            property int rMin: 0
+            property int rMax: 0
+
+            checked: Boolean(rValue)
+            onClicked: dynamicOptionsModel.setData(
+                           dynamicOptionsModel.index(rIndex, 0),
+                           checked,
+                           ExportOptionType.ValueRole)
+        }
+    }
+
+    Component {
+        id: rangeComp
+
+        Loader {
+            property int rIndex: -1
+            property var rValue: -1
+            property var rValues: []
+            property var rNames: []
+            property int rMin: 0
+            property int rMax: 0
+
+            sourceComponent: (rMax - rMin < 20) ? sliderComp : spinComp
+
+            onLoaded: {
+                if (!item) {
+                    return
+                }
+
+                item.rIndex = rIndex
+                item.rValue = rValue
+                item.rValues = rValues
+                item.rNames = rNames
+                item.rMin   = rMin
+                item.rMax   = rMax
+            }
+        }
+    }
+
+    Component {
+        id: sliderComp
+        // TODO: test it when Ogg/Opus is supported
+        // TODO: add tooltip
+        StyledSlider {
+            property int rIndex: -1
+            property var rValue: -1
+            property var rValues: []
+            property var rNames: []
+            property int rMin: 0
+            property int rMax: 0
+
+            from: rMin; to: rMax; stepSize: 1
+            value: Number(dynamicOptionsModel.data(dynamicOptionsModel.index(rIndex,0),
+                                           ExportOptionType.ValueRole))
+            onValueChanged: dynamicOptionsModel.setData(
+                                dynamicOptionsModel.index(rIndex,0),
+                                Math.round(rValue),
+                                ExportOptionType.ValueRole)
+            Layout.minimumWidth: 180
+        }
+    }
+
+    Component {
+        id: spinComp
+
+        IncrementalPropertyControl {
+            property int rIndex: -1
+            property var rValue: -1
+            property var rValues: []
+            property var rNames: []
+            property int rMin: 0
+            property int rMax: 0
+
+            decimals: 0
+            step: 1
+            minValue: rMin
+            maxValue: rMax
+            currentValue: rValue
+            onValueEdited: function(newValue) {
+                dynamicOptionsModel.setData(
+                    dynamicOptionsModel.index(rIndex,0),
+                    newValue,
+                    ExportOptionType.ValueRole)
+            }
+        }
+    }
+
+    Component {
+        id: strComp
+        // StyledTextLabel for external program export description
+        StyledTextLabel {
+            property int rIndex: -1
+            property var rValue: -1
+            property var rValues: []
+            property var rNames: []
+            property int rMin: 0
+            property int rMax: 0
+
+            // TODO
+        }
+    }
 }

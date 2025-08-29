@@ -10,6 +10,7 @@
 
 namespace au::importexport {
 class Au3Exporter;
+class Au3FFmpegOptionsAccessor;
 class ExporterModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -28,5 +29,6 @@ public:
 private:
     std::shared_ptr<Au3Exporter> m_exporter;
     std::shared_ptr<ExportConfiguration> m_configuration;
+    std::shared_ptr<Au3FFmpegOptionsAccessor> m_ffmpegOptionsAccessor;
 };
 }
