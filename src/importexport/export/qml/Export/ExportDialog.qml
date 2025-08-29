@@ -120,7 +120,6 @@ StyledDialogView {
                     Layout.minimumWidth: implicitWidth
 
                     currentText: exportPreferencesModel.filename
-                    measureUnitsSymbol: "." + exportPreferencesModel.fileExtension
 
                     implicitWidth: root.dropdownWidth
 
