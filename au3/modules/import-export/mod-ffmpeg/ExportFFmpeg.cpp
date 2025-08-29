@@ -496,8 +496,7 @@ ExportFFmpeg::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* lis
             ToSampleRateList(iWMASampleRates),
             listener);
     case FMT_OTHER:
-        // NOT IMPLEMENTED YET
-        return {};//return std::make_unique<ExportOptionsFFmpegCustomEditor>(listener);
+        return std::make_unique<ExportOptionsFFmpegCustomEditor>(listener);
     }
     return {};
 }
