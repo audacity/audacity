@@ -274,7 +274,7 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "record", true },
             { "rewind-start", true },
             { "rewind-end", true },
-            { "loop", true },
+            { "toggle-loop-region", true },
             { "", true },
             { "automation", true },
             { "split-tool", true },

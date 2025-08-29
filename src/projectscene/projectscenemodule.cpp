@@ -51,6 +51,8 @@
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
 #include "view/timeline/timelinecontextmenumodel.h"
+#include "view/timeline/playregioncontroller.h"
+#include "view/timeline/playregionmodel.h"
 
 #include "view/timeline/gridlines.h"
 
@@ -168,6 +170,8 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");
     qmlRegisterType<TimelineRuler>("Audacity.ProjectScene", 1, 0, "TimelineRuler");
     qmlRegisterType<TimelineContextMenuModel>("Audacity.ProjectScene", 1, 0, "TimelineContextMenuModel");
+    qmlRegisterType<PlayRegionController>("Audacity.ProjectScene", 1, 0, "PlayRegionController");
+    qmlRegisterType<PlayRegionModel>("Audacity.ProjectScene", 1, 0, "PlayRegionModel");
 
     // gridlines
     qmlRegisterType<GridLines>("Audacity.ProjectScene", 1, 0, "GridLines");

@@ -61,6 +61,10 @@ public:
     void setAsymmetricStereoHeightsWorkspaces(std::vector<std::string>& workspaces) override;
     muse::async::Notification asymmetricStereoHeightsWorkspacesChanged() const override;
 
+    int selectionTimecodeFormat() const override;
+    void setSelectionTimecodeFormat(int format) override;
+    muse::async::Notification selectionTimecodeFormatChanged() const override;
+
 private:
     muse::async::Channel<bool> m_isVerticalRulersVisibleChanged;
     muse::async::Channel<bool> m_isRMSInWaveformVisibleChanged;
@@ -69,5 +73,6 @@ private:
     muse::async::Notification m_effectsPanelVisible;
     muse::async::Notification m_asymmetricStereoHeightsChanged;
     muse::async::Notification m_asymmetricStereoHeightsWorkspacesChanged;
+    muse::async::Notification m_selectionTimecodeFormatChanged;
 };
 }

@@ -98,13 +98,6 @@ private:
     void splitCutSelected(const muse::actions::ActionData& args);
     void splitDeleteSelected(const muse::actions::ActionData& args);
 
-    void toggleLoopRegion();
-    void clearLoopRegion();
-    void setLoopRegionToSelection();
-    void setSelectionToLoop();
-    void setLoopRegionIn();
-    void setLoopRegionOut();
-
     void newMonoTrack();
     void newStereoTrack();
     void newLabelTrack();

@@ -19,7 +19,6 @@ static const ActionCode STOP_ACTION_CODE("stop");
 
 static const ActionCode REWIND_START_ACTION_CODE("rewind-start");
 static const ActionCode REWIND_END_ACTION_CODE("rewind-end");
-static const ActionCode LOOP_ACTION_CODE("loop");
 
 static const ActionQuery CHANGE_AUDIO_API_QUERY("action://playback/change-api");
 static const ActionQuery CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
@@ -62,7 +61,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              TranslatableString("action", "Rewind to end"),
              IconCode::Code::REWIND_END_FILL
              ),
-    UiAction(LOOP_ACTION_CODE,
+    UiAction("toggle-loop-region",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Loop playback"),
@@ -153,6 +152,44 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              TranslatableString("action", "Change input channels"),
              Checkable::Yes
              ),
+    UiAction("toggle-loop-region",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Toggle loop region"),
+             TranslatableString("action", "Toggle loop region"),
+             IconCode::Code::LOOP
+             ),
+    UiAction("clear-loop-region",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Clear loop region"),
+             TranslatableString("action", "Clear loop region")
+             ),
+    UiAction("set-loop-region-to-selection",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Set loop region to selection"),
+             TranslatableString("action", "Set loop region to selection")
+             ),
+    UiAction("set-selection-to-loop",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Set selection to loop"),
+             TranslatableString("action", "Set selection to loop")
+             ),
+    UiAction("set-loop-region-in-out",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Set loop region in out"),
+             TranslatableString("action", "Set loop region in out")
+             ),
+    UiAction("toggle-selection-follows-loop-region",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Creating a loop also selects audio"),
+             TranslatableString("action", "Creating a loop also selects audio"),
+             Checkable::Yes
+             ),
 };
 
 const UiActionList PlaybackUiActions::m_settingsActions = {
@@ -171,23 +208,6 @@ const UiActionList PlaybackUiActions::m_settingsActions = {
              TranslatableString("action", "Pan score automatically during playback"),
              IconCode::Code::PAN_SCORE,
              Checkable::Yes
-             ),
-};
-
-const UiActionList PlaybackUiActions::m_loopBoundaryActions = {
-    UiAction("loop-in",
-             au::context::UiCtxAny,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Set loop marker left"),
-             TranslatableString("action", "Set loop marker left"),
-             IconCode::Code::LOOP_IN
-             ),
-    UiAction("loop-out",
-             au::context::UiCtxAny,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Set loop marker right"),
-             TranslatableString("action", "Set loop marker right"),
-             IconCode::Code::LOOP_OUT
              ),
 };
 
@@ -248,7 +268,6 @@ const UiActionList& PlaybackUiActions::actionsList() const
     if (alist.empty()) {
         alist.insert(alist.end(), m_mainActions.cbegin(), m_mainActions.cend());
         alist.insert(alist.end(), m_settingsActions.cbegin(), m_settingsActions.cend());
-        alist.insert(alist.end(), m_loopBoundaryActions.cbegin(), m_loopBoundaryActions.cend());
     }
     return alist;
 }
@@ -273,7 +292,6 @@ void PlaybackUiActions::registerActions()
 
     m_actions.insert(m_actions.end(), m_mainActions.begin(), m_mainActions.end());
     m_actions.insert(m_actions.end(), m_settingsActions.begin(), m_settingsActions.end());
-    m_actions.insert(m_actions.end(), m_loopBoundaryActions.begin(), m_loopBoundaryActions.end());
 }
 
 muse::async::Channel<ActionCodeList> PlaybackUiActions::actionEnabledChanged() const
@@ -289,9 +307,4 @@ muse::async::Channel<ActionCodeList> PlaybackUiActions::actionCheckedChanged() c
 const UiActionList& PlaybackUiActions::settingsActions()
 {
     return m_settingsActions;
-}
-
-const UiActionList& PlaybackUiActions::loopBoundaryActions()
-{
-    return m_loopBoundaryActions;
 }

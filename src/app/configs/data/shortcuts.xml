@@ -283,6 +283,10 @@
         <seq>S</seq>
     </SC>
     <SC>
+        <key>toggle-loop-region</key>
+        <seq>L</seq>
+    </SC>
+    <SC>
         <key>preferences</key>
         <seq>Ctrl+,</seq>
     </SC>

@@ -58,5 +58,6 @@
         <file>qml/Audacity/ProjectScene/historypanel/HistoryPanel.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/DropdownWithTitle.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview/PlayRegion.qml</file>
     </qresource>
 </RCC>

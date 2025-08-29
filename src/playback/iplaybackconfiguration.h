@@ -65,5 +65,9 @@ public:
     virtual trackedit::secs_t longSkip() const = 0;
     virtual void setLongSkip(trackedit::secs_t seconds) = 0;
     virtual muse::async::Notification longSkipChanged() const = 0;
+
+    virtual bool selectionFollowsLoopRegion() const = 0;
+    virtual void setSelectionFollowsLoopRegion(bool follows) = 0;
+    virtual muse::async::Notification selectionFollowsLoopRegionChanged() const = 0;
 };
 }
