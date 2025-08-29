@@ -441,8 +441,15 @@ void setIsolatedPoint(const unsigned int currentChannel, const trackedit::ClipKe
     auto& cache = WaveformScale::Get(*track);
     cache.GetDisplayBounds(zoomMin, zoomMax);
 
+    const std::vector<double> channelHeights {
+        params.geometry.height * params.channelHeightRatio,
+        params.geometry.height * (1 - params.channelHeightRatio),
+    };
+
+    const int channelTopOffset = (currentChannel == 0) ? 0 : static_cast<int>(channelHeights[0]);
+
     auto waveMetrics = wavepainterutils::getWaveMetrics(project, clipKey, params);
-    waveMetrics.height = channelHeight[currentChannel];
+    waveMetrics.height = channelHeights[currentChannel];
 
     const ZoomInfo zoomInfo { waveMetrics.fromTime, waveMetrics.zoom };
 
@@ -454,7 +461,7 @@ void setIsolatedPoint(const unsigned int currentChannel, const trackedit::ClipKe
     }
 
     const auto y = std::min(
-        static_cast<int>(currentPosition.y() - (currentChannel * waveMetrics.height)), static_cast<int>(waveMetrics.height - 1)); // Allow bottom edge
+        static_cast<int>(currentPosition.y() - channelTopOffset), static_cast<int>(waveMetrics.height - 1)); // Allow bottom edge
     const auto yy = std::max(y, 0); // Allow top edge
 
     float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
@@ -491,10 +498,12 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
 
     const std::vector<QPoint> points = interpolatePoints(lastPosition, currentPosition);
 
-    const std::vector<double> channelHeight {
+    const std::vector<double> channelHeights {
         params.geometry.height * params.channelHeightRatio,
         params.geometry.height * (1 - params.channelHeightRatio),
     };
+
+    const int channelTopOffset = (currentChannel == 0) ? 0 : static_cast<int>(channelHeights[0]);
 
     auto& settings = WaveformSettings::Get(*track);
     const float dBRange = settings.dBRange;
@@ -505,7 +514,7 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
     cache.GetDisplayBounds(zoomMin, zoomMax);
 
     auto waveMetrics = wavepainterutils::getWaveMetrics(project, clipKey, params);
-    waveMetrics.height = channelHeight[currentChannel];
+    waveMetrics.height = channelHeights[currentChannel];
 
     const ZoomInfo zoomInfo { waveMetrics.fromTime, waveMetrics.zoom };
 
@@ -543,7 +552,7 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
         }
 
         const auto y = std::min(
-            static_cast<int>(point.y() - (currentChannel * waveMetrics.height)), static_cast<int>(waveMetrics.height - 1)); // Allow bottom edge
+            static_cast<int>(point.y() - channelTopOffset), static_cast<int>(waveMetrics.height - 1)); // Allow bottom edge
         const auto yy = std::max(y, 0); // Allow top edge
 
         float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
