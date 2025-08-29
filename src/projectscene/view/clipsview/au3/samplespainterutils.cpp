@@ -223,10 +223,11 @@ void drawClippedSamples(const au::projectscene::SampleData& samples,
     }
 
     painter.setPen(style.clippedPen);
-    for (const int clippedX : samples.clippedX) {
-        QPointF p1(metrics.left + clippedX, metrics.top);
-        QPointF p2(metrics.left + clippedX, metrics.top + metrics.height);
-        painter.drawLine(p1, p2);
+    for (const double clippedX : samples.clippedX) {
+        const int x = static_cast<int>(std::round(metrics.left + clippedX));
+        const int y1 = static_cast<int>(std::round(metrics.top));
+        const int y2 = static_cast<int>(std::round(metrics.top + metrics.height));
+        painter.drawLine(x, y1, x, y2);
     }
 }
 
@@ -257,7 +258,7 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
 
     auto xpos = std::vector<double>(slen);
     auto ypos = std::vector<double>(slen);
-    auto clippedX = std::vector<int>();
+    auto clippedX = std::vector<double>();
     const auto invRate = 1.0 / rate;
 
     for (size_t s = 0; s < slen; s++) {
@@ -269,7 +270,7 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
         const double tt = buffer[s] * value;
 
         if ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)) {
-            clippedX.push_back(static_cast<int>(xx));
+            clippedX.push_back(xx);
         }
 
         ypos[s] = std::max(-1, std::min(static_cast<int>(metrics.height),
@@ -459,7 +460,7 @@ void setIsolatedPoint(const unsigned int currentChannel, const trackedit::ClipKe
     float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
 
     // Ensure value stays within valid audio range
-    newValue = std::max(-1.0f, std::min(1.0f, newValue));
+    newValue = std::clamp(newValue, -1.0f, 1.0f);
 
     WaveChannelUtilities::SetFloatAtTime(*waveChannel, isolatedPointTime + clip->GetPlayStartTime(), newValue, narrowestSampleFormat);
 }
@@ -548,7 +549,7 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
         float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
 
         // Ensure value stays within valid audio range
-        newValue = std::max(-1.0f, std::min(1.0f, newValue));
+        newValue = std::clamp(newValue, -1.0f, 1.0f);
 
         samples.push_back(newValue);
     }
