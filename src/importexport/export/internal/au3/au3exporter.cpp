@@ -95,8 +95,17 @@ void Au3Exporter::init()
 muse::Ret Au3Exporter::exportData(std::string filename)
 {
     muse::io::path_t directoryPath = exportConfiguration()->directoryPath();
-    muse::io::path_t filePath = directoryPath.appendingComponent(filename)
-                                .appendingSuffix(formatExtension(exportConfiguration()->currentFormat()));
+    muse::io::path_t filePath = directoryPath.appendingComponent(filename);
+
+    if (suffix(filePath).empty()) {
+        auto extensions = formatExtensions(exportConfiguration()->currentFormat());
+        std::string defaultExtension = "";
+        if (!extensions.empty()) {
+            defaultExtension = extensions.front();
+        }
+
+        filePath = filePath.appendingSuffix(defaultExtension);
+    }
 
     wxFileName wxfilename = wxString(filePath.toStdString());
 
@@ -229,13 +238,17 @@ int Au3Exporter::formatIndex(const std::string& format) const
     return -1;
 }
 
-std::string Au3Exporter::formatExtension(const std::string& format) const
+std::vector<std::string> Au3Exporter::formatExtensions(const std::string& format) const
 {
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
         if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
             auto extensions = plugin->GetFormatInfo(formatIndex).extensions;
             if (!extensions.empty()) {
-                return extensions.front().ToStdString();
+                std::vector<std::string> result;
+                for (const auto& ext : extensions) {
+                    result.push_back(ext.ToStdString());
+                }
+                return result;
             }
         }
     }
