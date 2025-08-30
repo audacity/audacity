@@ -4,9 +4,32 @@
 
 #include "exportpreferencesmodel.h"
 
+#include "io/fileinfo.h"
 #include "translation.h"
 
 using namespace au::importexport;
+
+namespace {
+QString prepareExtensionsString(const QStringList& extensionList)
+{
+    QString result;
+    QTextStream stream(&result);
+
+    for (const auto& ext : extensionList) {
+        if (ext.isEmpty()) {
+            continue;
+        }
+
+        if (!result.isEmpty()) {
+            stream << " ";
+        }
+
+        stream << "*." << ext;
+    }
+
+    return result;
+}
+}
 
 std::map<ExportProcessType, std::string> EXPORT_PROCESS_MAPPING {
     { ExportProcessType::FULL_PROJECT_AUDIO, muse::trc("export", "Export full project audio") },
@@ -127,9 +150,25 @@ void ExportPreferencesModel::setFilename(const QString& filename)
     emit filenameChanged();
 }
 
-QString ExportPreferencesModel::fileExtension() const
+QStringList ExportPreferencesModel::formatExtensions(const QString& format) const
 {
-    return QString::fromStdString(exporter()->formatExtension(currentFormat().toStdString()));
+    QStringList result;
+    for (const auto& ext : exporter()->formatExtensions(format.toStdString())) {
+        result.append(QString::fromStdString(ext));
+    }
+    return result;
+}
+
+QStringList ExportPreferencesModel::supportedExtensionsList() const
+{
+    QStringList extensions;
+    for (const std::string& format : exporter()->formatsList()) {
+        for (const QString& ext : formatExtensions(QString::fromStdString(format))) {
+            extensions.push_back(ext);
+        }
+    }
+
+    return extensions;
 }
 
 QString ExportPreferencesModel::directoryPath() const
@@ -171,9 +210,9 @@ void ExportPreferencesModel::setCurrentFormat(const QString& format)
     emit customFFmpegOptionsVisibleChanged();
 }
 
-QVariantList ExportPreferencesModel::formatsList() const
+QStringList ExportPreferencesModel::formatsList() const
 {
-    QVariantList result;
+    QStringList result;
     for (const auto& format : exporter()->formatsList()) {
         result << QString::fromStdString(format);
     }
@@ -241,27 +280,17 @@ void ExportPreferencesModel::setExportSampleRate(const QString& rateName)
     }
 }
 
-QString ExportPreferencesModel::exportSampleFormat() const
-{
-    NOT_IMPLEMENTED;
-    return {};
-}
-
-QVariantList ExportPreferencesModel::exportSampleFormatList() const
-{
-    NOT_IMPLEMENTED;
-    return {};
-}
-
-void ExportPreferencesModel::setExportSampleFormat(const QString& format)
-{
-    Q_UNUSED(format);
-    NOT_IMPLEMENTED;
-}
-
 void ExportPreferencesModel::openCustomFFmpegDialog()
 {
     dispatcher()->dispatch("open-custom-ffmpeg-options");
+}
+
+void ExportPreferencesModel::setFilePickerPath(const QString& path)
+{
+    muse::io::FileInfo info(path);
+
+    setDirectoryPath(info.absolutePath());
+    setFilename(info.fileName());
 }
 
 void ExportPreferencesModel::updateCurrentSampleRate()
@@ -299,6 +328,23 @@ bool ExportPreferencesModel::verifyExportPossible()
     }
 
     return true;
+}
+
+QStringList ExportPreferencesModel::fileFilter()
+{
+    QString allExt = prepareExtensionsString(supportedExtensionsList());
+    QStringList filter { muse::qtrc("project", "All supported files") + " (" + allExt + ")" };
+
+    for (const auto& format : formatsList()) {
+        QString extensionString = prepareExtensionsString(formatExtensions(format));
+        if (extensionString.isEmpty()) {
+            filter.append(muse::qtrc("project", format));
+        } else {
+            filter.append(muse::qtrc("project", format + " (" + prepareExtensionsString(formatExtensions(format)) + ")"));
+        }
+    }
+
+    return filter;
 }
 
 void ExportPreferencesModel::exportData()

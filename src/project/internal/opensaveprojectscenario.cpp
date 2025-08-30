@@ -89,7 +89,7 @@ RetVal<SaveLocation> OpenSaveProjectScenario::askSaveLocation(IAudacityProjectPt
 
 RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectPtr project, SaveMode saveMode) const
 {
-    std::string dialogTitle = muse::trc("project/save", "Save score");
+    std::string dialogTitle = muse::trc("project/save", "Save project");
     std::string filenameAddition;
 
     if (saveMode == SaveMode::SaveCopy) {
