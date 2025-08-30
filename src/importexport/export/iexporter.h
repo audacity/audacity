@@ -21,7 +21,7 @@ public:
 
     virtual std::vector<std::string> formatsList() const = 0;
     virtual int formatIndex(const std::string& format) const = 0;
-    virtual std::string formatExtension(const std::string& format) const = 0;
+    virtual std::vector<std::string> formatExtensions(const std::string& format) const = 0;
     virtual bool isCustomFFmpegExportFormat() const = 0;
 
     virtual int maxChannels() const = 0;
