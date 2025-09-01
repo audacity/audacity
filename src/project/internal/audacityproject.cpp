@@ -322,8 +322,13 @@ Ret Audacity4Project::doSave(const muse::io::path_t& savePath, bool generateBack
 
     UNUSED(generateBackup);
 
-    if ((fileSystem()->exists(savePath) && !fileSystem()->isWritable(savePath))) {
-        LOGE() << "failed save, not writable path: " << savePath;
+    if (!fileSystem()->exists(savePath)) {
+        LOGE() << "failed save, path doesn't exist: \"" << savePath << "\"";
+        return make_ret(io::Err::FSNotExist);
+    }
+
+    if (!fileSystem()->isWritable(savePath)) {
+        LOGE() << "failed save, not writable path: \"" << savePath << "\"";
         return make_ret(io::Err::FSWriteError);
     }
 
