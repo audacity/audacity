@@ -51,7 +51,7 @@ private:
     std::shared_ptr<RecentFilesController> m_recentFilesController;
     std::shared_ptr<ThumbnailCreator> m_thumbnailCreator;
     std::shared_ptr<ProjectUiActions> m_uiActions;
-    std::shared_ptr<ProjectAutoSaver> m_projectAutoSaver;
+    // std::shared_ptr<ProjectAutoSaver> m_projectAutoSaver;
 };
 }
 

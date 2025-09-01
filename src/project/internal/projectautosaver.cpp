@@ -84,14 +84,6 @@ void ProjectAutoSaver::init()
     });
 }
 
-bool ProjectAutoSaver::projectHasUnsavedChanges(IAudacityProjectPtr project) const
-{
-    if (project) {
-        return project->needSave().val;
-    }
-    return false;
-}
-
 void ProjectAutoSaver::removeProjectUnsavedChanges(const muse::io::path_t& projectPath)
 {
     const bool success = au3ProjectCreator()->removeAutosaveDataFromFile(projectPath);
@@ -109,14 +101,6 @@ void ProjectAutoSaver::removeProjectUnsavedChanges(const muse::io::path_t& proje
 bool ProjectAutoSaver::isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const
 {
     return projectPath == configuration()->newProjectTemporaryPath();
-}
-
-bool ProjectAutoSaver::isNewlyCreatedProject(IAudacityProjectPtr project) const
-{
-    if (project) {
-        return project->isNewlyCreated();
-    }
-    return false;
 }
 
 IAudacityProjectPtr ProjectAutoSaver::currentProject() const

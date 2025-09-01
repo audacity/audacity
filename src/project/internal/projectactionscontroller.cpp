@@ -206,7 +206,7 @@ bool ProjectActionsController::closeOpenedProject(bool quitApp)
 
     bool result = true;
 
-    if (projectAutoSaver()->projectHasUnsavedChanges(project)) {
+    if (project->hasUnsavedChanges()) {
         IInteractive::Button btn = askAboutSavingProject(project);
 
         if (btn == IInteractive::Button::Cancel) {
@@ -511,8 +511,7 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
     IAudacityProjectPtr project = rv.val;
 
     // Check if this is an autosave of a newly created project
-    bool isNewlyCreated = projectAutoSaver()->isNewlyCreatedProject(project);
-    if (!isNewlyCreated) {
+    if (!project->isNewlyCreated()) {
         recentFilesController()->prependRecentFile(makeRecentFile(project));
     }
 
@@ -546,8 +545,8 @@ RetVal<IAudacityProjectPtr> ProjectActionsController::loadProject(const io::path
     IAudacityProjectPtr project = std::make_shared<Audacity4Project>();
 
     //! TODO AU4
-    // bool hasUnsavedChanges = projectAutoSaver()->projectHasUnsavedChanges(filePath);
-    // io::path_t loadPath = hasUnsavedChanges ? projectAutoSaver()->projectAutoSavePath(filePath) : filePath;
+    // bool hasUnsavedChanges = project->hasUnsavedChanges();
+    // io::path_t loadPath = hasUnsavedChanges ? project->autoSavePath(filePath) : filePath;
 
     const io::path_t loadPath = filePath;
     const std::string format = io::suffix(filePath);
@@ -565,8 +564,7 @@ RetVal<IAudacityProjectPtr> ProjectActionsController::loadProject(const io::path
     // }
 
     // Mark project as newly created if it's an autosave of a new project
-    bool isNewlyCreated = projectAutoSaver()->isNewlyCreatedProject(project);
-    if (isNewlyCreated) {
+    if (project->isNewlyCreated()) {
         // Mark as newly created (this will be implemented if needed)
         // project->markAsNewlyCreated();
     }
