@@ -38,6 +38,9 @@
             "stopAtEntry": false,
             "externalConsole": false,
             "environment": [],
+            "sourceFileMap": {
+                "/Users/qt/work/qt": "${env:QTDIR}/../Src"
+            }
         },
         {
             // Requires CodeLLDB extension
