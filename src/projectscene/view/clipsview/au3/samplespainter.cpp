@@ -70,17 +70,20 @@ void drawSampleStalk(const au::projectscene::SampleData& samples, int yZero, con
         clippedXSet = std::set<double>(samples.clippedX.begin(), samples.clippedX.end());
     }
 
-    painter.setPen(style.sampleStalk);
     for (size_t s = 0; s < slen; s++) {
-        // Only draw normal stalk if this sample is not clipped
-        if (!showClipping || clippedXSet.count(samples.x[s]) == 0) {
-            const int x = static_cast<int>(std::round(metrics.left + samples.x[s]));
-            const int y1 = static_cast<int>(std::round(metrics.top + samples.y[s]));
+        const int x = static_cast<int>(std::round(metrics.left + samples.x[s]));
+        const int y1 = static_cast<int>(std::round(metrics.top + samples.y[s]));
 
-            QPoint p1(x, y1);
-            QPoint p2(x, yZero);
-            painter.drawLine(p1, p2);
+        // Use clipped pen color for clipped samples, normal stalk color for others
+        if (showClipping && clippedXSet.count(samples.x[s]) > 0) {
+            painter.setPen(style.clippedPen);
+        } else {
+            painter.setPen(style.sampleStalk);
         }
+
+        QPoint p1(x, y1);
+        QPoint p2(x, yZero);
+        painter.drawLine(p1, p2);
     }
 }
 }
@@ -136,19 +139,18 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
 
         int yZero = samplespainterutils::getWaveYPos(0.0, zoomMin, zoomMax, paddedMetrics.height, dB, true, dBRange, false);
         yZero = paddedMetrics.top + std::max(-1, std::min(static_cast<int>(paddedMetrics.height + paddedMetrics.top), yZero));
+        drawSampleStalk(samples, yZero, paddedMetrics, painter, params.style, params.showClipping);
 
+        // draw baseline after the sample stalk to ensure it's on top of it
         auto baselineMetrics = waveMetrics;
         baselineMetrics.top = yZero;
         baselineMetrics.height = 0; // Trick to force sample center calculation to use yZero
         samplespainterutils::drawBaseLine(painter, baselineMetrics, params.style);
 
-        if (params.showClipping) {
-            samplespainterutils::drawClippedSamples(samples, paddedMetrics, painter, params.style);
-        }
-        drawSampleStalk(samples, yZero, paddedMetrics, painter, params.style, params.showClipping);
         // drawSampleHead must be called after drawSampleStalk for the selection effect to work correctly
         drawSampleHead(samples, paddedMetrics, painter, params.style, params.showClipping);
         waveMetrics.top += waveMetrics.height;
+        // Check if we should also maybe add the channel separator size here if we have more than one channel to draw
     }
     painter.restore();
 }
