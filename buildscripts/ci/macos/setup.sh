@@ -18,9 +18,10 @@ export MACOSX_DEPLOYMENT_TARGET=10.14
 
 # fixing install python 3.9 error (it is a dependency for ninja)
 rm '/usr/local/bin/2to3'
-brew install ninja pkg-config
-
-brew install cmake
+if ! command -v cmake >/dev/null 2>&1
+then
+    brew install cmake ninja pkg-config --formula --quiet
+fi
 
 # Qt
 QT_SHORT_VERSION=6.2.4
