@@ -169,8 +169,7 @@ void ProjectAutoSaver::onTrySave()
         return;
     }
 
-    const muse::io::path_t projectPath = this->projectPath(project);
-    const muse::io::path_t savePath = project->isNewlyCreated() ? projectPath : muse::io::path_t();
+    const muse::io::path_t savePath = this->projectPath(project);
 
     // Perform autosave to enable session restoration
     Ret ret = project->save(savePath, SaveMode::AutoSave);

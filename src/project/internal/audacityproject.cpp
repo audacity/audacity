@@ -305,7 +305,7 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
         return ret;
     }
     case SaveMode::AutoSave:
-        return saveProject(path, false /*generateBackup*/, false /*createThumbnail*/);
+        return saveProject(path, false /*generateBackup*/, true /*createThumbnail*/);
     }
 
     return make_ret(Err::UnknownError);
