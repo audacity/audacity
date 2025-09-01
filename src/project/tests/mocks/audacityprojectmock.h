@@ -33,6 +33,7 @@ public:
     MOCK_METHOD(muse::Ret, canSave, (), (const, override));
     MOCK_METHOD(bool, needAutoSave, (), (const, override));
     MOCK_METHOD(void, setNeedAutoSave, (bool val), (override));
+    MOCK_METHOD(bool, hasUnsavedChanges, (), (override));
     MOCK_METHOD(muse::async::Notification, needSaveChanged, (), (const, override));
     MOCK_METHOD(muse::Ret, save, (const muse::io::path_t& path, SaveMode saveMode), (override));
 

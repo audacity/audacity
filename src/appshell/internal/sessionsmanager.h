@@ -32,6 +32,7 @@
 #include "iappshellconfiguration.h"
 #include "multiinstances/imultiinstancesprovider.h"
 #include "isessionsmanager.h"
+#include "au3wrap/iau3project.h"
 
 #include "project/iprojectconfiguration.h"
 
@@ -43,6 +44,9 @@ class SessionsManager : public ISessionsManager, public muse::async::Asyncable
     INJECT(IAppShellConfiguration, configuration)
     INJECT(muse::mi::IMultiInstancesProvider, multiInstancesProvider)
     INJECT(project::IProjectConfiguration, projectConfiguration)
+    INJECT(muse::io::IFileSystem, fileSystem)
+    INJECT(au::au3::IAu3ProjectCreator, au3ProjectCreator)
+
 public:
     void init();
     void deinit();
@@ -57,6 +61,10 @@ private:
 
     void removeProjectFromSession(const muse::io::path_t& projectPath);
     void addProjectToSession(const muse::io::path_t& projectPath);
+
+    void removeProjectsUnsavedChanges(const muse::io::paths_t& projectsPaths);
+    void removeUnsavedChanges(const muse::io::path_t& projectPath);
+    bool isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const;
 
     muse::io::path_t m_lastOpenedProjectPath;
 };

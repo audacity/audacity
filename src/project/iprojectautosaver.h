@@ -28,6 +28,7 @@
 #include "iaudacityproject.h"
 
 namespace au::project {
+// we don't use at the moment 01/09/2025 the project auto saver as we already have the autosave table
 class IProjectAutoSaver : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IProjectAutoSaver)
@@ -35,11 +36,9 @@ class IProjectAutoSaver : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IProjectAutoSaver() = default;
 
-    virtual bool projectHasUnsavedChanges(IAudacityProjectPtr project) const = 0;
     virtual void removeProjectUnsavedChanges(const muse::io::path_t& projectPath) = 0;
 
     virtual bool isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const = 0;
-    virtual bool isNewlyCreatedProject(IAudacityProjectPtr project) const = 0;
 };
 }
 

@@ -82,6 +82,7 @@ public:
 
     bool needAutoSave() const override;
     void setNeedAutoSave(bool val) override;
+    bool hasUnsavedChanges() override;
 
     muse::Ret save(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
 

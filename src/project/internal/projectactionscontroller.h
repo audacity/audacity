@@ -11,7 +11,6 @@
 #include "global/io/ifilesystem.h"
 #include "../iprojectconfiguration.h"
 #include "irecentfilescontroller.h"
-#include "iprojectautosaver.h"
 #include "iopensaveprojectscenario.h"
 #include "record/irecordcontroller.h"
 #include "trackedit/iprojecthistory.h"
@@ -19,7 +18,6 @@
 #include "project/iprojectfilescontroller.h"
 #include "project/iprojectconfiguration.h"
 #include "project/irecentfilescontroller.h"
-#include "project/iprojectautosaver.h"
 #include "project/iaudacityproject.h"
 
 namespace au::project {
@@ -31,7 +29,6 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::Inject<IProjectConfiguration> configuration;
     muse::Inject<muse::io::IFileSystem> fileSystem;
     muse::Inject<IRecentFilesController> recentFilesController;
-    muse::Inject<IProjectAutoSaver> projectAutoSaver;
     muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<record::IRecordController> recordController;

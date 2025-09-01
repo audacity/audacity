@@ -1,7 +1,6 @@
 #include "audacityproject.h"
 
 #include "au3wrap/iau3project.h"
-#include "project/iprojectautosaver.h"
 #include "project/projecterrors.h"
 #include "global/log.h"
 #include "global/io/file.h"
@@ -274,6 +273,11 @@ void Audacity4Project::setNeedAutoSave(bool val)
 {
     LOGD() << "[project] setNeedAutoSave: " << val;
     m_needAutoSave = val;
+}
+
+bool Audacity4Project::hasUnsavedChanges()
+{
+    return needSave().val;
 }
 
 Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
