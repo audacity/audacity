@@ -47,7 +47,7 @@ Item {
                 return 0
             }
 
-            return Math.round(root.channelHeightRatio * root.height)
+            return Math.round(root.channelHeightRatio * root.height) - 1
         }
     }
 }

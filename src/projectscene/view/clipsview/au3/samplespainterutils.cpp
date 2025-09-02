@@ -206,11 +206,10 @@ void drawBackground(QPainter& painter, const au::projectscene::WaveMetrics& metr
     }
 }
 
-void drawBaseLine(QPainter& painter, const au::projectscene::WaveMetrics& metrics, const IWavePainter::Style& style)
+void drawCenterLine(QPainter& painter, const au::projectscene::WaveMetrics& metrics, const IWavePainter::Style& style, const int y)
 {
     painter.setPen(style.centerLine);
-    painter.drawLine(metrics.left, metrics.top + metrics.height / 2,
-                     metrics.left + metrics.width, metrics.top + metrics.height / 2);
+    painter.drawLine(metrics.left, y, metrics.left + metrics.width, y);
 }
 
 void drawClippedSamples(const au::projectscene::SampleData& samples,
@@ -223,10 +222,11 @@ void drawClippedSamples(const au::projectscene::SampleData& samples,
     }
 
     painter.setPen(style.clippedPen);
-    for (const int clippedX : samples.clippedX) {
-        QPointF p1(metrics.left + clippedX, metrics.top);
-        QPointF p2(metrics.left + clippedX, metrics.top + metrics.height);
-        painter.drawLine(p1, p2);
+    for (const double clippedX : samples.clippedX) {
+        const int x = static_cast<int>(std::round(metrics.left + clippedX));
+        const int y1 = static_cast<int>(std::round(metrics.top));
+        const int y2 = static_cast<int>(std::round(metrics.top + metrics.height));
+        painter.drawLine(x, y1, x, y2);
     }
 }
 
@@ -257,7 +257,7 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
 
     auto xpos = std::vector<double>(slen);
     auto ypos = std::vector<double>(slen);
-    auto clippedX = std::vector<int>();
+    auto clippedX = std::vector<double>();
     const auto invRate = 1.0 / rate;
 
     for (size_t s = 0; s < slen; s++) {
@@ -269,7 +269,7 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
         const double tt = buffer[s] * value;
 
         if ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)) {
-            clippedX.push_back(static_cast<int>(xx));
+            clippedX.push_back(xx);
         }
 
         ypos[s] = std::max(-1, std::min(static_cast<int>(metrics.height),
@@ -440,8 +440,15 @@ void setIsolatedPoint(const unsigned int currentChannel, const trackedit::ClipKe
     auto& cache = WaveformScale::Get(*track);
     cache.GetDisplayBounds(zoomMin, zoomMax);
 
+    const std::vector<double> channelHeights {
+        params.geometry.height * params.channelHeightRatio,
+        params.geometry.height * (1 - params.channelHeightRatio),
+    };
+
+    const int channelTopOffset = (currentChannel == 0) ? 0 : static_cast<int>(channelHeights[0]);
+
     auto waveMetrics = wavepainterutils::getWaveMetrics(project, clipKey, params);
-    waveMetrics.height = channelHeight[currentChannel];
+    waveMetrics.height = channelHeights[currentChannel];
 
     const ZoomInfo zoomInfo { waveMetrics.fromTime, waveMetrics.zoom };
 
@@ -453,10 +460,13 @@ void setIsolatedPoint(const unsigned int currentChannel, const trackedit::ClipKe
     }
 
     const auto y = std::min(
-        static_cast<int>(currentPosition.y() - (currentChannel * waveMetrics.height)), static_cast<int>(waveMetrics.height - 2));
-    const auto yy = std::max(y, 2);
+        static_cast<int>(currentPosition.y() - channelTopOffset), static_cast<int>(waveMetrics.height - 1)); // Allow bottom edge
+    const auto yy = std::max(y, 0); // Allow top edge
 
     float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
+
+    // Ensure value stays within valid audio range
+    newValue = std::clamp(newValue, -1.0f, 1.0f);
 
     WaveChannelUtilities::SetFloatAtTime(*waveChannel, isolatedPointTime + clip->GetPlayStartTime(), newValue, narrowestSampleFormat);
 }
@@ -487,10 +497,12 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
 
     const std::vector<QPoint> points = interpolatePoints(lastPosition, currentPosition);
 
-    const std::vector<double> channelHeight {
+    const std::vector<double> channelHeights {
         params.geometry.height * params.channelHeightRatio,
         params.geometry.height * (1 - params.channelHeightRatio),
     };
+
+    const int channelTopOffset = (currentChannel == 0) ? 0 : static_cast<int>(channelHeights[0]);
 
     auto& settings = WaveformSettings::Get(*track);
     const float dBRange = settings.dBRange;
@@ -501,7 +513,7 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
     cache.GetDisplayBounds(zoomMin, zoomMax);
 
     auto waveMetrics = wavepainterutils::getWaveMetrics(project, clipKey, params);
-    waveMetrics.height = channelHeight[currentChannel];
+    waveMetrics.height = channelHeights[currentChannel];
 
     const ZoomInfo zoomInfo { waveMetrics.fromTime, waveMetrics.zoom };
 
@@ -539,10 +551,14 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
         }
 
         const auto y = std::min(
-            static_cast<int>(point.y() - (currentChannel * waveMetrics.height)), static_cast<int>(waveMetrics.height - 2));
-        const auto yy = std::max(y, 2);
+            static_cast<int>(point.y() - channelTopOffset), static_cast<int>(waveMetrics.height - 1)); // Allow bottom edge
+        const auto yy = std::max(y, 0); // Allow top edge
 
         float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
+
+        // Ensure value stays within valid audio range
+        newValue = std::clamp(newValue, -1.0f, 1.0f);
+
         samples.push_back(newValue);
     }
 
