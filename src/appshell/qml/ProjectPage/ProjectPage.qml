@@ -234,7 +234,6 @@ DockPage {
                 navigationPanel.order: 1
 
                 function relayout() {
-                    visible = false
                     playbackToolBarRelayoutTimer.start()
                 }
 
