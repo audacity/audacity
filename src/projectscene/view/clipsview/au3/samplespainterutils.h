@@ -14,7 +14,7 @@ float ValueOfPixel(int yy, int height, bool offset, bool dB, double dBRange, flo
 int getWaveYPos(float value, float min, float max, int height, bool dB, bool outer, float dBr, bool clip);
 void drawBackground(QPainter& painter, const au::projectscene::WaveMetrics& metrics, const IWavePainter::Style& style,
                     const double trimLeft);
-void drawBaseLine(QPainter& painter, const au::projectscene::WaveMetrics& metrics, const IWavePainter::Style& style);
+void drawCenterLine(QPainter& painter, const au::projectscene::WaveMetrics& metrics, const IWavePainter::Style& style, int y);
 void drawClippedSamples(const au::projectscene::SampleData& samples, const au::projectscene::WaveMetrics& metrics, QPainter& painter,
                         const au::projectscene::IWavePainter::Style& style);
 SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, const au::projectscene::WaveMetrics& metrics, bool dB,

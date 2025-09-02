@@ -206,11 +206,10 @@ void drawBackground(QPainter& painter, const au::projectscene::WaveMetrics& metr
     }
 }
 
-void drawBaseLine(QPainter& painter, const au::projectscene::WaveMetrics& metrics, const IWavePainter::Style& style)
+void drawCenterLine(QPainter& painter, const au::projectscene::WaveMetrics& metrics, const IWavePainter::Style& style, const int y)
 {
     painter.setPen(style.centerLine);
-    painter.drawLine(metrics.left, metrics.top + metrics.height / 2,
-                     metrics.left + metrics.width, metrics.top + metrics.height / 2);
+    painter.drawLine(metrics.left, y, metrics.left + metrics.width, y);
 }
 
 void drawClippedSamples(const au::projectscene::SampleData& samples,

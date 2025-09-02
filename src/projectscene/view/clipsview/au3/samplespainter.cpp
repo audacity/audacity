@@ -142,15 +142,11 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
         drawSampleStalk(samples, yZero, paddedMetrics, painter, params.style, params.showClipping);
 
         // draw baseline after the sample stalk to ensure it's on top of it
-        auto baselineMetrics = waveMetrics;
-        baselineMetrics.top = yZero;
-        baselineMetrics.height = 0; // Trick to force sample center calculation to use yZero
-        samplespainterutils::drawBaseLine(painter, baselineMetrics, params.style);
+        samplespainterutils::drawCenterLine(painter, waveMetrics, params.style, yZero);
 
         // drawSampleHead must be called after drawSampleStalk for the selection effect to work correctly
         drawSampleHead(samples, paddedMetrics, painter, params.style, params.showClipping);
         waveMetrics.top += waveMetrics.height;
-        // Check if we should also maybe add the channel separator size here if we have more than one channel to draw
     }
     painter.restore();
 }
