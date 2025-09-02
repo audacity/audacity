@@ -83,11 +83,15 @@ DockPage {
     }
 
     function navigationPanelSec(location) {
-        switch(location) {
-        case Location.Top: return keynavTopPanelSec
-        case Location.Left: return keynavLeftPanelSec
-        case Location.Right: return keynavRightPanelSec
-        case Location.Bottom: return keynavBottomPanelSec
+        switch (location) {
+        case Location.Top:
+            return keynavTopPanelSec
+        case Location.Left:
+            return keynavLeftPanelSec
+        case Location.Right:
+            return keynavRightPanelSec
+        case Location.Bottom:
+            return keynavBottomPanelSec
         }
 
         return null
@@ -106,14 +110,19 @@ DockPage {
     readonly property string horizontalPanelsGroup: "HORIZONTAL_PANELS"
 
     readonly property var verticalPanelDropDestinations: [
-        { "dock": root.centralDock, "dropLocation": Location.Left, "dropDistance": root.verticalPanelDefaultWidth },
-        { "dock": root.centralDock, "dropLocation": Location.Right, "dropDistance": root.verticalPanelDefaultWidth }
+        {
+            "dock": root.centralDock,
+            "dropLocation": Location.Left,
+            "dropDistance": root.verticalPanelDefaultWidth
+        },
+        {
+            "dock": root.centralDock,
+            "dropLocation": Location.Right,
+            "dropDistance": root.verticalPanelDefaultWidth
+        }
     ]
 
-    readonly property var horizontalPanelDropDestinations: [
-        root.panelTopDropDestination,
-        root.panelBottomDropDestination
-    ]
+    readonly property var horizontalPanelDropDestinations: [root.panelTopDropDestination, root.panelBottomDropDestination]
 
     mainToolBars: [
         DockToolBar {
@@ -139,7 +148,6 @@ DockPage {
                 navigationPanel.order: 2
             }
         },
-
         DockToolBar {
             id: workspacesToolBar
 
@@ -163,7 +171,6 @@ DockPage {
                 navigationPanel.order: 3
             }
         },
-
         DockToolBar {
             id: undoRedoToolBar
 
@@ -192,10 +199,7 @@ DockPage {
             objectName: pageModel.playbackToolBarName()
             title: qsTrc("appshell", "Play toolbar")
 
-            dropDestinations: [
-                root.toolBarTopDropDestination,
-                root.toolBarBottomDropDestination
-            ]
+            dropDestinations: [root.toolBarTopDropDestination, root.toolBarBottomDropDestination]
 
             minimumWidth: 300
             resizable: true
@@ -280,7 +284,7 @@ DockPage {
                 showEffectsSection: tracksPanel.showEffectsSection
                 implicitHeight: tracksPanel.titleBarHeight
 
-                onAddRequested: function(type) {
+                onAddRequested: function (type) {
                     tracksPanel.add(type)
                 }
 
@@ -319,7 +323,6 @@ DockPage {
                 }
             }
         },
-
         DockPanel {
             objectName: pageModel.playbackMeterPanelName()
             title: qsTrc("appshell", "Playback meter")
@@ -337,7 +340,6 @@ DockPage {
 
             PlaybackMeterPanel {}
         },
-
         DockPanel {
             id: historyPanel
 
