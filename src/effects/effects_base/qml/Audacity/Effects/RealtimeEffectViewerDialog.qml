@@ -110,37 +110,49 @@ EffectStyledDialogView {
         spacing: 0
         anchors.fill: parent
 
-        RowLayout {
-            id: headerBar
-
+        WindowContainer {
             Layout.fillWidth: true
-            Layout.margins: prv.padding
-            spacing: presetsBar.spacing
 
-            BypassEffectButton {
-                id: bypassBtn
+            window: Window {
 
-                navigation.panel: root.navigationPanel
-                navigation.order: 0
-                navigation.name: "Bypass effect"
-                size: presetsBar.implicitHeight
-                isMasterEffect: viewerModel.isMasterEffect
-                accentButton: viewerModel.isActive
+                id: win
 
-                onClicked: {
-                    viewerModel.isActive = !viewerModel.isActive
+                color: ui.theme.backgroundPrimaryColor
+
+                height: headerBar.implicitHeight + prv.padding * 2
+                width: headerBar.implicitWidth
+
+                RowLayout {
+                    id: headerBar
+                    anchors.fill: parent
+                    anchors.margins: prv.padding
+                    spacing: presetsBar.spacing
+
+                    BypassEffectButton {
+                        id: bypassBtn
+
+                        navigation.panel: root.navigationPanel
+                        navigation.order: 0
+                        navigation.name: "Bypass effect"
+                        size: presetsBar.implicitHeight
+                        isMasterEffect: viewerModel.isMasterEffect
+                        accentButton: viewerModel.isActive
+
+                        onClicked: viewerModel.isActive = !viewerModel.isActive
+                    }
+
+                    EffectPresetsBar {
+                        id: presetsBar
+
+                        parentWindow: root.window
+                        navigationPanel: root.navigationPanel
+                        navigationOrder: 1
+                        instanceId: root.instanceId
+                        Layout.fillWidth: true
+                    }
                 }
             }
-
-            EffectPresetsBar {
-                id: presetsBar
-                navigationPanel: root.navigationPanel
-                navigationOrder: 1
-                instanceId: root.instanceId
-                Layout.fillWidth: true
-            }
         }
-
         Loader {
             id: viewLoader
         }

@@ -22,24 +22,25 @@ EffectStyledDialogView {
     QtObject {
         id: prv
         property alias viewer: viewerLoader.item
-        property int minimumWidth: effectFamily === EffectFamily.LV2 ? 500 : 250
         property bool isApplyAllowed: effectFamily != EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
-        property int separatorHeight: effectFamily == EffectFamily.Builtin ? separator.height + root.margins : 0
         property bool showPresets: effectFamily != EffectFamily.Builtin || viewer.usesPresets
+
+        property int minimumWidth: effectFamily === EffectFamily.LV2 ? 500 : 250
+        property int panelMargins: effectFamily == EffectFamily.Builtin ? 16 : 4
+        property int viewMargins: effectFamily == EffectFamily.Builtin ? 16 : 0
+        property int separatorHeight: effectFamily == EffectFamily.Builtin ? separator.height + prv.panelMargins : 0
     }
 
     title: viewerModel.title
 
-    contentWidth: Math.max(viewerLoader.width, prv.minimumWidth)
+    contentWidth: Math.max(viewerLoader.width + prv.viewMargins * 2, prv.minimumWidth)
     contentHeight: {
-        let height = viewerLoader.height + btnBarLoader.height + margins
+        let height = viewerLoader.height + bottomPanel.height
         if (prv.showPresets) {
-            height += presetsBar.height + margins + prv.separatorHeight
+            height += topPanel.height
         }
         return height
     }
-
-    margins: effectFamily == EffectFamily.Builtin ? 16 : 4
 
     onWindowChanged: {
         // Wait until the window is set: VstView needs it for intialization
@@ -61,12 +62,6 @@ EffectStyledDialogView {
         }
     }
 
-    Component.onCompleted: {
-        // Delay loading of ButtonBox because it needs to know the final width before executing its layout
-        // (which it only does once)
-        btnBarLoader.sourceComponent = bboxComponent
-    }
-
     EffectViewerDialogModel {
         id: viewerModel
     }
@@ -75,125 +70,170 @@ EffectStyledDialogView {
         id: column
         anchors.fill: parent
 
-        spacing: root.margins
+        WindowContainer {
+            window: Window {
+                id: topPanel
 
-        EffectPresetsBar {
-            id: presetsBar
-            visible: prv.showPresets
-            navigationPanel: root.navigationPanel
-            navigationOrder: 0
-            instanceId: root.instanceId
-            anchors.left: parent.left
-            anchors.right: parent.right
-        }
+                width: root.contentWidth
+                height: presetsBar.height + prv.separatorHeight + prv.panelMargins * 2
 
-        SeparatorLine {
-            id: separator
-            visible: effectFamily == EffectFamily.Builtin && prv.showPresets
-        }
+                color: ui.theme.backgroundPrimaryColor
 
-        Component {
-            id: builtinViewerComp
-            BuiltinEffectViewer {
-                instanceId: root.instanceId
-                dialogView: root
-            }
-        }
+                Column {
 
-        Component {
-            id: lv2ViewerComp
-            Lv2Viewer {
-                instanceId: root.instanceId
-                title: root.title
-            }
-        }
+                    anchors.fill: parent
+                    anchors.margins: prv.panelMargins
 
-        Component {
-            id: audioUnitViewerComp
-            AudioUnitViewer {
-                instanceId: root.instanceId
-                height: implicitHeight
-                topPadding: root.margins * 2 + presetsBar.height + prv.separatorHeight
-                bottomPadding: btnBarLoader.implicitHeight + 2 * root.margins
-                sidePadding: root.margins
-                minimumWidth: prv.minimumWidth
-            }
-        }
+                    spacing: prv.panelMargins
 
-        Component {
-            id: vstViewerComp
-            VstViewer {
-                instanceId: root.instanceId
-                height: implicitHeight
-                topPadding: root.margins * 2 + presetsBar.height + prv.separatorHeight
-                bottomPadding: btnBarLoader.implicitHeight + 2 * root.margins
-                sidePadding: root.margins
-                minimumWidth: prv.minimumWidth
+                    EffectPresetsBar {
+                        id: presetsBar
+
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
+                        navigationPanel: root.navigationPanel
+                        navigationOrder: 0
+
+                        parentWindow: root.window
+                        instanceId: root.instanceId
+
+                        visible: prv.showPresets
+                    }
+
+                    SeparatorLine {
+                        id: separator
+
+                        visible: effectFamily == EffectFamily.Builtin && prv.showPresets
+                    }
+                }
             }
         }
 
         Loader {
             id: viewerLoader
+
+            anchors.left: parent.left
+            anchors.margins: prv.viewMargins
         }
 
-        Component {
-            id: bboxComponent
-            ButtonBox {
-                id: bbox
+        WindowContainer {
+            window: Window {
+                id: bottomPanel
 
                 width: root.contentWidth
-                spacing: root.margins
+                height: prv.panelMargins * 2 + bbox.height
 
-                //! TODO Move function to ButtonBox (Muse framework)
-                function buttonById(id) {
-                    for (var i = 0; i < bbox.count; i++) {
-                        var btn = bbox.itemAt(i)
-                        if (btn.buttonId === id) {
-                            return btn
+                color: ui.theme.backgroundPrimaryColor
+
+                Item {
+
+                    anchors.fill: parent
+                    anchors.margins: prv.panelMargins
+
+                    ButtonBox {
+                        id: bbox
+
+                        width: root.contentWidth - prv.panelMargins * 2
+                        spacing: prv.panelMargins
+
+                        //! TODO Move function to ButtonBox (Muse framework)
+                        function buttonById(id) {
+                            for (var i = 0; i < bbox.count; i++) {
+                                var btn = bbox.itemAt(i)
+                                if (btn.buttonId === id) {
+                                    return btn
+                                }
+                            }
+
+                            return null
+                        }
+
+                        FlatButton {
+                            id: previewBtn
+
+                            height: presetsBar.height
+                            minWidth: 80
+                            isLeftSide: true
+
+                            text: qsTrc("effects", "Preview")
+                            buttonRole: ButtonBoxModel.CustomRole
+                            buttonId: ButtonBoxModel.CustomButton + 2
+                            enabled: prv.isApplyAllowed
+
+                            onClicked: prv.viewer.preview()
+                        }
+
+                        FlatButton {
+                            id: cancelBtn
+
+                            height: presetsBar.height
+                            minWidth: 80
+
+                            text: qsTrc("global", "Cancel")
+                            buttonRole: ButtonBoxModel.RejectRole
+                            buttonId: ButtonBoxModel.Cancel
+
+                            onClicked: root.reject()
+                        }
+
+                        FlatButton {
+                            id: okBtn
+
+                            height: presetsBar.height
+                            minWidth: 80
+
+                            text: qsTrc("global", "Apply")
+                            buttonRole: ButtonBoxModel.AcceptRole
+                            buttonId: ButtonBoxModel.Apply
+                            accentButton: true
+                            enabled: prv.isApplyAllowed
+
+                            onClicked: root.accept()
                         }
                     }
-
-                    return null
-                }
-
-                FlatButton {
-                    id: previewBtn
-                    text: qsTrc("effects", "Preview")
-                    buttonRole: ButtonBoxModel.CustomRole
-                    buttonId: ButtonBoxModel.CustomButton + 2
-                    isLeftSide: true
-                    minWidth: 80
-                    onClicked: prv.viewer.preview()
-                    enabled: prv.isApplyAllowed
-                    height: presetsBar.height
-                }
-
-                FlatButton {
-                    id: cancelBtn
-                    text: qsTrc("global", "Cancel")
-                    buttonRole: ButtonBoxModel.RejectRole
-                    buttonId: ButtonBoxModel.Cancel
-                    minWidth: 80
-                    onClicked: root.reject()
-                    height: presetsBar.height
-                }
-
-                FlatButton {
-                    id: okBtn
-                    text: qsTrc("global", "Apply")
-                    buttonRole: ButtonBoxModel.AcceptRole
-                    buttonId: ButtonBoxModel.Apply
-                    minWidth: 80
-                    accentButton: true
-                    onClicked: root.accept()
-                    enabled: prv.isApplyAllowed
-                    height: presetsBar.height
                 }
             }
         }
+    }
 
-        Loader {
-            id: btnBarLoader
+    Component {
+        id: builtinViewerComp
+        BuiltinEffectViewer {
+            instanceId: root.instanceId
+            dialogView: root
+        }
+    }
+
+    Component {
+        id: lv2ViewerComp
+        Lv2Viewer {
+            instanceId: root.instanceId
+            title: root.title
+        }
+    }
+
+    Component {
+        id: audioUnitViewerComp
+        AudioUnitViewer {
+            instanceId: root.instanceId
+            height: implicitHeight
+            topPadding: topPanel.height
+            bottomPadding: bbox.implicitHeight + prv.panelMargins * 2
+            sidePadding: prv.viewMargins
+            minimumWidth: prv.minimumWidth
+        }
+    }
+
+    Component {
+        id: vstViewerComp
+        VstViewer {
+            instanceId: root.instanceId
+            height: implicitHeight
+            topPadding: topPanel.height
+            bottomPadding: bbox.implicitHeight + prv.panelMargins * 2
+            sidePadding: prv.viewMargins
+            minimumWidth: prv.minimumWidth
         }
     }
 }
