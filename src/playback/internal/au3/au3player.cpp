@@ -217,6 +217,10 @@ void Au3Player::rewind()
 
 void Au3Player::stop()
 {
+    if (m_playbackStatus.val == PlaybackStatus::Stopped) {
+        return;
+    }
+
     m_playbackStatus.set(PlaybackStatus::Stopped);
 
     //! NOTE: copied from ProjectAudioManager::Stop
