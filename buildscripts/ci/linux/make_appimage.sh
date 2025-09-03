@@ -9,7 +9,7 @@ source $ENV
 
 if [ -z "$INSTALL_DIR" ]; then echo "error: not set INSTALL_DIR"; exit 1; fi
 if [ -z "$APPIMAGE_NAME" ]; then echo "error: not set APPIMAGE_NAME"; exit 1; fi
-if [ -z "$PACKARCH" ]; then 
+if [ -z "$PACKARCH" ]; then
   PACKARCH="x86_64"
 elif [ "$PACKARCH" == "armv7l" ]; then
   PACKARCH="armhf"
@@ -54,7 +54,7 @@ function extract_appimage()
   mv squashfs-root "${appdir}" # rename folder to avoid collisions
   # wrapper script for convenience
   printf '#!/bin/sh\nexec "%s/AppRun" "$@"\n' "$(readlink -f "${appdir}")" > "${binary_name}"
-  chmod +x "${binary_name}"  
+  chmod +x "${binary_name}"
   rm -f "${appimage}"
 }
 
@@ -166,24 +166,24 @@ echo "end linuxdeploy: $?"
 linuxdeploy-plugin-qt --appdir "${appdir}" # adds all Qt dependencies
 echo "end linuxdeploy-plugin-qt: $?"
 
-# Approximately on June 1, the QtQuick/Controls.2 stopped being deploying 
-# (at that time the linux deploy was updated). 
-# This is a hack, for the deployment of QtQuick/Controls.2 
+# Approximately on June 1, the QtQuick/Controls.2 stopped being deploying
+# (at that time the linux deploy was updated).
+# This is a hack, for the deployment of QtQuick/Controls.2
 if [ ! -f ${appdir}/usr/lib/libQt5QuickControls2.so.5 ]; then
     cp -r ${QT_PATH}/qml/QtQuick/Controls.2 ${appdir}/usr/qml/QtQuick/Controls.2
     cp -r ${QT_PATH}/qml/QtQuick/Templates.2 ${appdir}/usr/qml/QtQuick/Templates.2
-    cp ${QT_PATH}/lib/libQt5QuickControls2.so.5 ${appdir}/usr/lib/libQt5QuickControls2.so.5 
-    cp ${QT_PATH}/lib/libQt5QuickTemplates2.so.5 ${appdir}/usr/lib/libQt5QuickTemplates2.so.5 
+    cp ${QT_PATH}/lib/libQt5QuickControls2.so.5 ${appdir}/usr/lib/libQt5QuickControls2.so.5
+    cp ${QT_PATH}/lib/libQt5QuickTemplates2.so.5 ${appdir}/usr/lib/libQt5QuickTemplates2.so.5
 fi
 
 # At an unknown point in time, the libqgtk3 plugin stopped being deployed
 if [ ! -f ${appdir}/plugins/platformthemes/libqgtk3.so ]; then
-  cp ${QT_PATH}/plugins/platformthemes/libqgtk3.so ${appdir}/plugins/platformthemes/libqgtk3.so 
+  cp ${QT_PATH}/plugins/platformthemes/libqgtk3.so ${appdir}/plugins/platformthemes/libqgtk3.so
 fi
 
 # The system must be used
 if [ -f ${appdir}/lib/libglib-2.0.so.0 ]; then
-  rm -f ${appdir}/lib/libglib-2.0.so.0 
+  rm -f ${appdir}/lib/libglib-2.0.so.0
 fi
 
 unset QML_SOURCES_PATHS EXTRA_PLATFORM_PLUGINS
@@ -234,6 +234,9 @@ unwanted_files=(
 # additions at https://github.com/linuxdeploy/linuxdeploy-plugin-qt/issues
 additional_qt_components=(
   plugins/printsupport/libcupsprintersupport.so
+
+  # At an unknown point in time, the libqgtk3 plugin stopped being deployed
+  plugins/platformthemes/libqgtk3.so
 
   # Wayland support (run with QT_QPA_PLATFORM=wayland to use)
   plugins/wayland-decoration-client
