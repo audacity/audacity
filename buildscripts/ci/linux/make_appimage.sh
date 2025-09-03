@@ -144,8 +144,8 @@ mv "${appdir}/bin/findlib" "${appdir}/../findlib"
 # Remove Qt plugins for MySQL and PostgreSQL to prevent
 # linuxdeploy-plugin-qt from failing due to missing dependencies.
 # SQLite plugin alone should be enough for our AppImage.
-# rm -f ${QT_PATH}/plugins/sqldrivers/libqsql{mysql,psql}.so
-qt_sql_drivers_path="${QT_PATH}/plugins/sqldrivers"
+# rm -f ${QT_ROOT_DIR}/plugins/sqldrivers/libqsql{mysql,psql}.so
+qt_sql_drivers_path="${QT_ROOT_DIR}/plugins/sqldrivers"
 qt_sql_drivers_tmp="/tmp/qtsqldrivers"
 mkdir -p "$qt_sql_drivers_tmp"
 mv "${qt_sql_drivers_path}/libqsqlmysql.so" "${qt_sql_drivers_tmp}/libqsqlmysql.so"
@@ -170,15 +170,15 @@ echo "end linuxdeploy-plugin-qt: $?"
 # (at that time the linux deploy was updated).
 # This is a hack, for the deployment of QtQuick/Controls.2
 if [ ! -f ${appdir}/usr/lib/libQt5QuickControls2.so.5 ]; then
-    cp -r ${QT_PATH}/qml/QtQuick/Controls.2 ${appdir}/usr/qml/QtQuick/Controls.2
-    cp -r ${QT_PATH}/qml/QtQuick/Templates.2 ${appdir}/usr/qml/QtQuick/Templates.2
-    cp ${QT_PATH}/lib/libQt5QuickControls2.so.5 ${appdir}/usr/lib/libQt5QuickControls2.so.5
-    cp ${QT_PATH}/lib/libQt5QuickTemplates2.so.5 ${appdir}/usr/lib/libQt5QuickTemplates2.so.5
+    cp -r ${QT_ROOT_DIR}/qml/QtQuick/Controls.2 ${appdir}/usr/qml/QtQuick/Controls.2
+    cp -r ${QT_ROOT_DIR}/qml/QtQuick/Templates.2 ${appdir}/usr/qml/QtQuick/Templates.2
+    cp ${QT_ROOT_DIR}/lib/libQt5QuickControls2.so.5 ${appdir}/usr/lib/libQt5QuickControls2.so.5
+    cp ${QT_ROOT_DIR}/lib/libQt5QuickTemplates2.so.5 ${appdir}/usr/lib/libQt5QuickTemplates2.so.5
 fi
 
 # At an unknown point in time, the libqgtk3 plugin stopped being deployed
 if [ ! -f ${appdir}/plugins/platformthemes/libqgtk3.so ]; then
-  cp ${QT_PATH}/plugins/platformthemes/libqgtk3.so ${appdir}/plugins/platformthemes/libqgtk3.so
+  cp ${QT_ROOT_DIR}/plugins/platformthemes/libqgtk3.so ${appdir}/plugins/platformthemes/libqgtk3.so
 fi
 
 # The system must be used
@@ -283,7 +283,7 @@ done
 
 for file in "${additional_qt_components[@]}"; do
   mkdir -p "${appdir}/$(dirname "${file}")"
-  cp -Lr "${QT_PATH}/${file}" "${appdir}/${file}"
+  cp -Lr "${QT_ROOT_DIR}/${file}" "${appdir}/${file}"
 done
 
 for lib in "${additional_libraries[@]}"; do
