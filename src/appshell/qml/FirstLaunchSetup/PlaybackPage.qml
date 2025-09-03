@@ -29,7 +29,7 @@ import Audacity.AppShell 1.0
 
 Page {
     title: qsTrc("appshell/gettingstarted", "Playback")
-    explanation: qsTrc("appshell/gettingstarted", "Enjoy realistic playback for free by downloading our new Muse Sounds library")
+    //explanation: qsTrc("appshell/gettingstarted", "Enjoy realistic playback for free by downloading our new Muse Sounds library")
 
     titleContentSpacing: 12
 

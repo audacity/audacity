@@ -1,25 +1,8 @@
 /*
- * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
- *
- * MuseScore
- * Music Composition & Notation
- *
- * Copyright (C) 2021 MuseScore BVBA and others
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Audacity: A Digital Audio Editor
  */
 import QtQuick 2.15
+import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
@@ -34,9 +17,9 @@ Item {
     property NavigationSection navigationSection: null
     property int navigationStartRow: 2
     property string activeButtonTitle: ""
-    default property alias content: contentItem.data
-    property real titleContentSpacing: 24
-    property string extraButtonTitle: ""
+    property alias leftContent: leftContentItem.data
+    property alias rightContent: rightContentItem.data
+    property bool showRightContent: true
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "ContentPanel"
@@ -45,8 +28,6 @@ Item {
         order: root.navigationStartRow
         direction: NavigationPanel.Vertical
     }
-
-    signal extraButtonClicked
 
     function readInfo() {
         accessibleInfo.readInfo()
@@ -77,35 +58,53 @@ Item {
         }
     }
 
-    Column {
-        id: header
-
+    RowLayout {
         anchors.top: parent.top
-        anchors.topMargin: 39
-        anchors.left: parent.left
-        anchors.right: parent.right
-
-        height: childrenRect.height
-
-        StyledTextLabel {
-            id: titleLabel
-
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            width: parent.width
-
-            font: ui.theme.largeBodyBoldFont
-            wrapMode: Text.Wrap
-        }
-    }
-
-    Item {
-        id: contentItem
-
-        anchors.top: header.bottom
-        anchors.topMargin: root.titleContentSpacing
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+
+        spacing: 0
+
+        // Left side - Controls
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignTop
+
+            Column {
+                anchors.fill: parent
+                anchors.margins: 24
+
+                spacing: 24
+
+                StyledTextLabel {
+                    id: titleLabel
+
+                    width: parent.width
+
+                    horizontalAlignment: Qt.AlignLeft
+                    font: ui.theme.largeBodyBoldFont
+                    wrapMode: Text.Wrap
+                }
+
+                Item {
+                    id: leftContentItem
+
+                    width: parent.width
+                    height: parent.height - titleLabel.height - parent.spacing
+                }
+            }
+        }
+
+        // Right side - Preview/Image
+        Item {
+            id: rightContentItem
+
+            Layout.fillWidth: root.showRightContent
+            Layout.fillHeight: true
+
+            visible: root.showRightContent
+        }
     }
 }

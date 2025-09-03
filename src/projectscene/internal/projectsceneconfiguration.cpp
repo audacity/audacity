@@ -17,33 +17,33 @@ using namespace au::projectscene;
 
 static const std::string moduleName("projectscene");
 
-static const muse::Settings::Key IS_VERTICAL_RULERS_VISIBLE(moduleName, "projectscene/verticalRulersVisible");
-static const muse::Settings::Key IS_RMS_IN_WAVEFORM_VISIBLE(moduleName, "projectscene/rmsInWaveformVisible");
-static const muse::Settings::Key IS_CLIPPING_IN_WAVEFORM_VISIBLE(moduleName, "projectscene/clippingInWaveformVisible");
+static const QString IS_VERTICAL_RULERS_VISIBLE("projectscene/verticalRulersVisible");
+static constexpr bool DEFAULT_VERTICAL_RULERS_VISIBILITY = false;
+static const QString IS_RMS_IN_WAVEFORM_VISIBLE("projectscene/rmsInWaveformVisible");
+static constexpr bool DEFAULT_RMS_IN_WAVEFORM_VISIBILITY = false;
+static const QString IS_CLIPPING_IN_WAVEFORM_VISIBLE("projectscene/clippingInWaveformVisible");
+static constexpr bool DEFAULT_CLIPPING_IN_WAVEFORM_VISIBILITY = false;
+static const QString TIMELINE_RULER_MODE("projectscene/timelineRulerMode");
+static const QString EFFECTS_PANEL_VISIBILITY("projectscene/effectsPanelVisible");
+
 static const muse::Settings::Key MOUSE_ZOOM_PRECISION(moduleName, "projectscene/zoomPrecisionMouse");
 static const muse::Settings::Key CLIP_STYLE(moduleName, "projectscene/clipStyle");
 static const muse::Settings::Key STEREO_HEIGHTS_PREF(moduleName, "projectscene/asymmetricStereoHeights");
 static const muse::Settings::Key ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES(moduleName, "projectscene/asymmetricStereoHeightsWorkspaces");
 static const muse::Settings::Key SELECTION_TIMECODE_FORMAT(moduleName, "projectscene/selectionTimecodeFormat");
 
-static const QString TIMELINE_RULER_MODE("projectscene/timelineRulerMode");
-static const QString EFFECTS_PANEL_VISIBILITY("projectscene/effectsPanelVisible");
-
 void ProjectSceneConfiguration::init()
 {
-    muse::settings()->setDefaultValue(IS_VERTICAL_RULERS_VISIBLE, muse::Val(false));
-    muse::settings()->valueChanged(IS_VERTICAL_RULERS_VISIBLE).onReceive(nullptr, [this](const muse::Val& val) {
-        m_isVerticalRulersVisibleChanged.send(val.toBool());
+    uiConfiguration()->isVisibleChanged(IS_VERTICAL_RULERS_VISIBLE).onNotify(nullptr, [this](){
+        m_isVerticalRulersVisibleChanged.send(isVerticalRulersVisible());
     });
 
-    muse::settings()->setDefaultValue(IS_RMS_IN_WAVEFORM_VISIBLE, muse::Val(false));
-    muse::settings()->valueChanged(IS_RMS_IN_WAVEFORM_VISIBLE).onReceive(nullptr, [this](const muse::Val& val) {
-        m_isRMSInWaveformVisibleChanged.send(val.toBool());
+    uiConfiguration()->isVisibleChanged(IS_RMS_IN_WAVEFORM_VISIBLE).onNotify(nullptr, [this](){
+        m_isRMSInWaveformVisibleChanged.send(isRMSInWaveformVisible());
     });
 
-    muse::settings()->setDefaultValue(IS_CLIPPING_IN_WAVEFORM_VISIBLE, muse::Val(false));
-    muse::settings()->valueChanged(IS_CLIPPING_IN_WAVEFORM_VISIBLE).onReceive(nullptr, [this](const muse::Val& val) {
-        m_isClippingInWaveformVisibleChanged.send(val.toBool());
+    uiConfiguration()->isVisibleChanged(IS_CLIPPING_IN_WAVEFORM_VISIBLE).onNotify(nullptr, [this](){
+        m_isClippingInWaveformVisibleChanged.send(isClippingInWaveformVisible());
     });
 
     muse::settings()->setDefaultValue(MOUSE_ZOOM_PRECISION, muse::Val(6));
@@ -60,7 +60,7 @@ void ProjectSceneConfiguration::init()
     });
 
     muse::settings()->setDefaultValue(ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES,
-                                      muse::Val("Advanced audio editing"));
+                                      muse::Val("Modern"));
     muse::settings()->valueChanged(ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES).onReceive(nullptr, [this](const muse::Val&) {
         m_asymmetricStereoHeightsWorkspacesChanged.notify();
     });
@@ -74,12 +74,12 @@ void ProjectSceneConfiguration::init()
 
 bool ProjectSceneConfiguration::isVerticalRulersVisible() const
 {
-    return muse::settings()->value(IS_VERTICAL_RULERS_VISIBLE).toBool();
+    return uiConfiguration()->isVisible(IS_VERTICAL_RULERS_VISIBLE, DEFAULT_VERTICAL_RULERS_VISIBILITY);
 }
 
 void ProjectSceneConfiguration::setVerticalRulersVisible(bool visible)
 {
-    muse::settings()->setSharedValue(IS_VERTICAL_RULERS_VISIBLE, muse::Val(visible));
+    uiConfiguration()->setIsVisible(IS_VERTICAL_RULERS_VISIBLE, visible);
 }
 
 muse::async::Channel<bool> ProjectSceneConfiguration::isVerticalRulersVisibleChanged() const
@@ -89,12 +89,12 @@ muse::async::Channel<bool> ProjectSceneConfiguration::isVerticalRulersVisibleCha
 
 bool ProjectSceneConfiguration::isRMSInWaveformVisible() const
 {
-    return muse::settings()->value(IS_RMS_IN_WAVEFORM_VISIBLE).toBool();
+    return uiConfiguration()->isVisible(IS_RMS_IN_WAVEFORM_VISIBLE, DEFAULT_RMS_IN_WAVEFORM_VISIBILITY);
 }
 
 void ProjectSceneConfiguration::setRMSInWaveformVisible(bool visible)
 {
-    muse::settings()->setSharedValue(IS_RMS_IN_WAVEFORM_VISIBLE, muse::Val(visible));
+    uiConfiguration()->setIsVisible(IS_RMS_IN_WAVEFORM_VISIBLE, visible);
 }
 
 muse::async::Channel<bool> ProjectSceneConfiguration::isRMSInWaveformVisibleChanged() const
@@ -104,12 +104,12 @@ muse::async::Channel<bool> ProjectSceneConfiguration::isRMSInWaveformVisibleChan
 
 bool ProjectSceneConfiguration::isClippingInWaveformVisible() const
 {
-    return muse::settings()->value(IS_CLIPPING_IN_WAVEFORM_VISIBLE).toBool();
+    return uiConfiguration()->isVisible(IS_CLIPPING_IN_WAVEFORM_VISIBLE, DEFAULT_CLIPPING_IN_WAVEFORM_VISIBILITY);
 }
 
 void ProjectSceneConfiguration::setClippingInWaveformVisible(bool visible)
 {
-    muse::settings()->setSharedValue(IS_CLIPPING_IN_WAVEFORM_VISIBLE, muse::Val(visible));
+    uiConfiguration()->setIsVisible(IS_CLIPPING_IN_WAVEFORM_VISIBLE, visible);
 }
 
 muse::async::Channel<bool> ProjectSceneConfiguration::isClippingInWaveformVisibleChanged() const
@@ -224,7 +224,7 @@ muse::async::Notification ProjectSceneConfiguration::stereoHeightsPrefChanged() 
 std::vector<std::string> ProjectSceneConfiguration::asymmetricStereoHeightsWorkspaces() const
 {
     // workspaces that have asymmetricStereoHeights enabled are stored as a string in muse::settings
-    // "Classic|Music|Advanced audio editing"
+    // "Classic|Music|Modern"
     std::vector<std::string> result;
     std::string combinedString = muse::settings()->value(ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES).toString();
 

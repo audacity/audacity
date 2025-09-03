@@ -42,6 +42,10 @@ class FirstLaunchSetupModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool canGoBack READ canGoBack NOTIFY currentPageChanged)
     Q_PROPERTY(bool canGoForward READ canGoForward NOTIFY currentPageChanged)
     Q_PROPERTY(bool canFinish READ canFinish NOTIFY currentPageChanged)
+    Q_PROPERTY(QString dialogTitle READ dialogTitle CONSTANT)
+    Q_PROPERTY(QString backButtonText READ backButtonText CONSTANT)
+    Q_PROPERTY(QString nextButtonText READ nextButtonText CONSTANT)
+    Q_PROPERTY(QString doneButtonText READ doneButtonText CONSTANT)
 
     INJECT(IAppShellConfiguration, configuration)
     INJECT(muse::IInteractive, interactive)
@@ -59,7 +63,11 @@ public:
     bool canGoForward() const;
     bool canFinish() const;
 
-    Q_INVOKABLE bool askAboutClosingEarly();
+    static QString dialogTitle();
+    static QString backButtonText();
+    static QString nextButtonText();
+    static QString doneButtonText();
+    Q_INVOKABLE QString formatPageProgress(int current, int total) const;
 
     Q_INVOKABLE void finish();
 
@@ -71,10 +79,10 @@ signals:
 
 private:
     struct Page {
-        QString url;
-        std::string backgroundUri;
+        QString m_url;
+        std::string m_backgroundUri;
 
-        QVariantMap toMap() const;
+        [[nodiscard]] QVariantMap toMap() const;
     };
 
     QList<Page> m_pages;

@@ -35,7 +35,7 @@ RadioButtonGroup {
         enabled: root.enabled && root.visible
         direction: NavigationPanel.Horizontal
 
-        onNavigationEvent: function(event) {
+        onNavigationEvent: function (event) {
             if (event.type === NavigationEvent.AboutActive) {
                 event.setData("controlIndex", [navigationRow, navigationColumnStart + root.currentIndex])
             }
@@ -46,14 +46,14 @@ RadioButtonGroup {
     property int navigationColumnStart: 0
     property int navigationColumnEnd: navigationColumnStart + count
 
-    property real sampleSize: 30
-    readonly property real totalSampleSize: sampleSize + 6
+    property real sampleSize: 20
+    readonly property real totalSampleSize: sampleSize + 2
 
     signal accentColorChangeRequested(var newColorIndex)
 
     implicitWidth: count * totalSampleSize + (count - 1) * spacing
     implicitHeight: totalSampleSize
-    spacing: 10
+    spacing: 6
 
     delegate: RoundedRadioButton {
         id: button
@@ -65,7 +65,7 @@ RadioButtonGroup {
 
         property color accentColor: modelData
 
-        navigation.name: "AccentColourButton"
+        navigation.name: "AccentColorButton"
         navigation.panel: root.navigationPanel
         navigation.row: root.navigationRow
         navigation.column: root.navigationColumnStart + model.index
@@ -83,7 +83,9 @@ RadioButtonGroup {
             border.width: parent.checked ? 1 : 0
             radius: width / 2
 
-            NavigationFocusBorder { navigationCtrl: button.navigation }
+            NavigationFocusBorder {
+                navigationCtrl: button.navigation
+            }
 
             Rectangle {
                 anchors.centerIn: parent
