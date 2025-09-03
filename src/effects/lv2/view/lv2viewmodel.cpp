@@ -178,7 +178,10 @@ void Lv2ViewModel::init()
 void Lv2ViewModel::deinit()
 {
     if (std::holds_alternative<ILv2IdleUiUPtr>(m_pluginUi)) {
-        std::get<ILv2IdleUiUPtr>(m_pluginUi)->hideExternalUi();
+        auto& ptr = std::get<ILv2IdleUiUPtr>(m_pluginUi);
+        if (ptr) {
+            ptr->hideExternalUi();
+        }
     }
 }
 
