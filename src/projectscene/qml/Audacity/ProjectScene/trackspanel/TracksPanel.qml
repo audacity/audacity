@@ -13,8 +13,7 @@ import Audacity.ProjectScene
 Item {
     id: root
 
-    property NavigationSection navigationSection: null
-    property NavigationPanel navigationPanel: view.count > 0 ? view.itemAtIndex(0).navigationPanel : null // first panel
+    property var navpanels: null
     property alias tracksModel: tracksModel
     signal openEffectsRequested()
 
@@ -25,6 +24,8 @@ Item {
     property int effectsSectionWidth: 240 // TODO: can this be set as a constant that can be imported?
     property alias showEffectsSection: effectSectionModel.showEffectsSection
     property int selectedTrackIndex: -1
+
+    signal setDefaultNavigationControl(var ctrl)
 
     TracksListModel {
         id: tracksModel
@@ -180,20 +181,20 @@ Item {
                     height: tracksViewState.tracksVerticalScrollPadding
                 }
 
-                navigation.section: root.navigationSection
-                navigation.order: 1
                 delegate: TrackItem {
                     item: itemData
                     isSelected: Boolean(item) ? item.isSelected : false
                     isFocused: Boolean(item) ? item.isFocused : false
+
                     container: view
 
                     navigation.name: Boolean(item) ? item.title + item.index : ""
-                    navigation.panel: view.navigation
+                    navigation.panel: root.navpanels && root.navpanels[model.index] ? root.navpanels[model.index] : null
                     navigation.row: model.index
                     navigation.accessible.name: Boolean(item) ? item.title : ""
                     navigation.onActiveChanged: {
                         if (navigation.active) {
+                            tracksModel.moveFocusTo(model.index)
                             prv.currentItemNavigationName = navigation.name
                             view.positionViewAtIndex(index, ListView.Contain)
                         }
@@ -209,6 +210,7 @@ Item {
 
                     onSelectionRequested: function (exclusive) {
                         tracksModel.selectRow(model.index, exclusive)
+                        tracksModel.setHighlight()
                     }
 
                     onOpenEffectsRequested: {
@@ -224,6 +226,15 @@ Item {
                         mousePressed.connect(dragHandler.startDrag)
                         mouseReleased.connect(dragHandler.endDrag)
                         mouseMoved.connect(dragHandler.onMouseMove)
+                    }
+
+                    Connections {
+                        target: root
+                        function onNavpanelsChanged() {
+                            if (root.navpanels && root.navpanels[model.index]) {
+                                navigation.panel = root.navpanels[model.index]
+                            }
+                        }
                     }
                 }
 

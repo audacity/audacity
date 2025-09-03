@@ -295,8 +295,7 @@ Item {
 
                 navigation.name: Boolean(clipItem) ? clipItem.title + clipItem.index : ""
                 navigation.panel: root.navigationPanel
-                navigation.column: index
-                navigation.row: root.trackIdx
+                navigation.column: clipItem ? Math.floor(clipItem.x) : 0
                 navigation.accessible.name: Boolean(clipItem) ? clipItem.title : ""
                 navigation.onActiveChanged: {
                     if (navigation.active) {

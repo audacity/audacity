@@ -156,18 +156,18 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Follow track color"),
              Checkable::Yes
              ),
-    UiAction("play-position-decrease",
-             au::context::UiCtxProjectOpened,
-             muse::shortcuts::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Move play cursor left"),
-             TranslatableString("action", "Move play cursor left")
-             ),
-    UiAction("play-position-increase",
-             au::context::UiCtxProjectOpened,
-             muse::shortcuts::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Move play cursor right"),
-             TranslatableString("action", "Move play cursor right")
-             ),
+    // UiAction("play-position-decrease",
+    //          au::context::UiCtxProjectOpened,
+    //          muse::shortcuts::CTX_PROJECT_OPENED,
+    //          TranslatableString("action", "Move play cursor left"),
+    //          TranslatableString("action", "Move play cursor left")
+    //          ),
+    // UiAction("play-position-increase",
+    //          au::context::UiCtxProjectOpened,
+    //          muse::shortcuts::CTX_PROJECT_OPENED,
+    //          TranslatableString("action", "Move play cursor right"),
+    //          TranslatableString("action", "Move play cursor right")
+    //          ),
     UiAction("clip-pitch-speed",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

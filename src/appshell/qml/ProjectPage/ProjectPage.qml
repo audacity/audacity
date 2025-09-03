@@ -40,6 +40,95 @@ DockPage {
 
     property ProjectPageModel pageModel: ProjectPageModel {}
 
+    property int tracksCount: 0
+
+    NavigationControl {
+        id: fakeNavCtrl
+        name: "Main"
+
+        panel: NavigationPanel {
+            id: fakeNavPanel
+            name: "MainPanel"
+            section: NavigationSection {
+                id: fakeNavSection
+                name: "MainSection"
+                order: 0
+            }
+        }
+        order: 0
+
+        onActiveChanged: {}
+
+        onNavigationEvent: function(event) {
+            if (event.type === NavigationEvent.Up) {
+                tracksModel.moveFocusPrevious();
+                event.accepted = true
+            } else if (event.type === NavigationEvent.Down) {
+                tracksModel.moveFocusNext();
+                event.accepted = true
+            } else if (event.type === NavigationEvent.Trigger) {
+                tracksModel.toggleSelectionOnFocusedTrack();
+                event.accepted = true
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        root.setDefaultNavigationControl(fakeNavCtrl)
+        tracksModel.requestActiveByName("MainSection", "MainPanel", "Main");
+    }
+
+    TracksListModel {
+        id: tracksModel
+    }
+
+    QtObject {
+        id: tracksNavModel
+        property int order: keynavLeftPanelSec.order + 1
+        property var tracksPanels: []
+    }
+
+    Instantiator {
+        id: tracksPanelInstantiator
+        model: root.tracksCount
+        delegate: NavigationPanel {
+            name: "TrackPanel_" + index
+            section: NavigationSection {
+                name: "TrackSection_" + index
+                order: tracksNavModel.order + index * 2
+            }
+
+            order: 1
+
+            onNavigationEvent: function(event) {
+                if (event.type === NavigationEvent.Up) {
+                    tracksModel.requestActivateByIndex(index > 0 ? index - 1 : 0);
+                    event.accepted = true
+                } else if (event.type === NavigationEvent.Down) {
+                    tracksModel.requestActivateByIndex(index < tracksModel.rowCount() - 1 ? index + 1 : tracksModel.rowCount() - 1);
+                    event.accepted = true
+                } else if (event.type === NavigationEvent.Trigger) {
+                    tracksModel.toggleSelectionOnFocusedTrack();
+                    event.accepted = true
+                }
+            }
+        }
+
+        onObjectAdded: function(index, object) {
+            tracksNavModel.tracksPanels.splice(index, 0, object)
+            Qt.callLater(() => {
+                tracksNavModel.tracksPanelsChanged()
+            })
+        }
+
+        onObjectRemoved: function(index, object) {
+            tracksNavModel.tracksPanels.splice(index, 1)
+            Qt.callLater(() => {
+                tracksNavModel.tracksPanelsChanged()
+            })
+        }
+    }
+
     property NavigationSection playbackToolBarKeyNavSec: NavigationSection {
         id: keynavSec
         name: "PlaybackSection"
@@ -70,17 +159,17 @@ DockPage {
         order: keynavTopPanelSec.order + 1
     }
 
-    property NavigationSection keynavRightPanelSec: NavigationSection {
-        name: "NavigationRightPanel"
-        enabled: root.visible
-        order: keynavLeftPanelSec.order + 1
-    }
+    // property NavigationSection keynavRightPanelSec: NavigationSection {
+    //     name: "NavigationRightPanel"
+    //     enabled: root.visible
+    //     order: keynavLeftPanelSec.order + 1
+    // }
 
-    property NavigationSection keynavBottomPanelSec: NavigationSection {
-        name: "NavigationBottomPanel"
-        enabled: root.visible
-        order: keynavRightPanelSec.order + 1
-    }
+    // property NavigationSection keynavBottomPanelSec: NavigationSection {
+    //     name: "NavigationBottomPanel"
+    //     enabled: root.visible
+    //     order: keynavRightPanelSec.order + 1
+    // }
 
     function navigationPanelSec(location) {
         switch (location) {
@@ -88,10 +177,10 @@ DockPage {
             return keynavTopPanelSec
         case Location.Left:
             return keynavLeftPanelSec
-        case Location.Right:
-            return keynavRightPanelSec
-        case Location.Bottom:
-            return keynavBottomPanelSec
+        //case Location.Right:
+        //    return keynavRightPanelSec
+        //case Location.Bottom:
+        //    return keynavBottomPanelSec
         }
 
         return null
@@ -264,7 +353,7 @@ DockPage {
             objectName: pageModel.tracksPanelName()
             title: qsTrc("appshell", "Tracks")
 
-            navigationSection: root.navigationPanelSec(tracksPanel.location)
+            //navigationSection: root.navigationPanelSec(tracksPanel.location)
 
             width: panelWidth
             minimumWidth: panelWidth
@@ -295,7 +384,7 @@ DockPage {
             TracksPanel {
                 id: tracksPanelContent
 
-                navigationSection: tracksPanel.navigationSection
+                navpanels: tracksNavModel.tracksPanels
                 effectsSectionWidth: tracksPanel.effectsSectionWidth
 
                 trackEffectsNavigationSection: root.trackEffectsKeyNavSec
@@ -318,6 +407,28 @@ DockPage {
 
                     function onShowEffectsSectionChanged() {
                         tracksPanelContent.showEffectsSection = tracksPanel.showEffectsSection
+                    }
+                }
+
+                Connections {
+                    target: tracksPanelContent.tracksModel
+
+                    function onModelReset() {
+                        root.tracksCount = tracksPanelContent.tracksModel.rowCount()
+                    }
+
+                    function onRowsInserted() {
+                        root.tracksCount = tracksPanelContent.tracksModel.rowCount()
+                    }
+
+                    function onRowsRemoved() {
+                        root.tracksCount = tracksPanelContent.tracksModel.rowCount()
+                    }
+                }
+
+                Component.onCompleted: {
+                    if (tracksModel) {
+                        root.tracksCount = tracksModel.rowCount()
                     }
                 }
             }
@@ -369,7 +480,8 @@ DockPage {
     central: TracksClipsView {
         id: clipsView
 
-        navigationSection: tracksPanel.navigationSection
+        //navigationSection: tracksPanel.navigationSection
+        order: keynavLeftPanelSec.order + 2
     }
 
     statusBar: DockStatusBar {
