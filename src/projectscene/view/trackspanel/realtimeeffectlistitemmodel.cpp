@@ -49,7 +49,16 @@ QString RealtimeEffectListItemModel::effectName() const
     return QString::fromStdString(effectsProvider()->effectName(*state));
 }
 
-effects::RealtimeEffectStatePtr RealtimeEffectListItemModel::effectState() const
+QString RealtimeEffectListItemModel::effectState() const
+{
+    const auto state = m_effectState.lock();
+    IF_ASSERT_FAILED(state) {
+        return QString();
+    }
+    return QString::number(reinterpret_cast<uintptr_t>(state.get()));
+}
+
+effects::RealtimeEffectStatePtr RealtimeEffectListItemModel::effectStatePtr() const
 {
     return m_effectState.lock();
 }

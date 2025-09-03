@@ -81,7 +81,11 @@ void RealtimeEffectListItemMenuModel::prop_setEffectState(const QString& state)
     if (state == prop_effectState()) {
         return;
     }
-    m_effectState = reinterpret_cast<RealtimeEffectState*>(state.toULongLong())->shared_from_this();
+    if (state.isEmpty()) {
+        m_effectState.reset();
+    } else {
+        m_effectState = reinterpret_cast<RealtimeEffectState*>(state.toLongLong())->shared_from_this();
+    }
     updateEffectCheckmarks();
     emit effectStateChanged();
 }
