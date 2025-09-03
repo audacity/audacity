@@ -15,7 +15,7 @@ StyledDialogView {
 
     title: qsTrc("export", "Export audio")
 
-    contentWidth: 490
+    contentWidth: 550
     contentHeight: mainColumn.implicitHeight
 
     margins: 10
@@ -151,6 +151,9 @@ StyledDialogView {
                     pickerType: FilePicker.PickerType.Directory
                     pathFieldWidth: root.dropdownWidth
                     spacing: 10
+
+                    buttonType: FlatButton.Horizontal
+                    orientation: Qt.Horizontal
 
                     path: exportPreferencesModel.directoryPath
                     dir: exportPreferencesModel.directoryPath
