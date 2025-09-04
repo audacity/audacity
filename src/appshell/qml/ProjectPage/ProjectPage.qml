@@ -374,9 +374,11 @@ DockPage {
     statusBar: DockStatusBar {
         objectName: pageModel.statusBarName()
 
-        height: 40
-        minimumHeight: height
-        maximumHeight: height
+        Component.onCompleted: {
+            height = 40
+            minimumHeight = height
+            maximumHeight = height
+        }
 
         ProjectStatusBar {}
     }
