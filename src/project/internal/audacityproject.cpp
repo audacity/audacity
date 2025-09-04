@@ -220,6 +220,11 @@ bool Audacity4Project::isImported() const
     return m_isImported;
 }
 
+String Audacity4Project::title() const
+{
+    return String::fromStdString(m_au3Project->title());
+}
+
 ValNt<bool> Audacity4Project::needSave() const
 {
     ValNt<bool> needSave;
