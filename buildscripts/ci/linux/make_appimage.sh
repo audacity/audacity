@@ -176,11 +176,6 @@ if [ ! -f ${appdir}/usr/lib/libQt5QuickControls2.so.5 ]; then
     cp ${QT_ROOT_DIR}/lib/libQt5QuickTemplates2.so.5 ${appdir}/usr/lib/libQt5QuickTemplates2.so.5
 fi
 
-# At an unknown point in time, the libqgtk3 plugin stopped being deployed
-if [ ! -f ${appdir}/plugins/platformthemes/libqgtk3.so ]; then
-  cp ${QT_ROOT_DIR}/plugins/platformthemes/libqgtk3.so ${appdir}/plugins/platformthemes/libqgtk3.so
-fi
-
 # The system must be used
 if [ -f ${appdir}/lib/libglib-2.0.so.0 ]; then
   rm -f ${appdir}/lib/libglib-2.0.so.0
@@ -235,8 +230,9 @@ unwanted_files=(
 additional_qt_components=(
   plugins/printsupport/libcupsprintersupport.so
 
-  # At an unknown point in time, the libqgtk3 plugin stopped being deployed
-  plugins/platformthemes/libqgtk3.so
+# TODO: uncomment when #9308 is solved
+#   # At an unknown point in time, the libqgtk3 plugin stopped being deployed
+#   plugins/platformthemes/libqgtk3.so
 
   # Wayland support (run with QT_QPA_PLATFORM=wayland to use)
   plugins/wayland-decoration-client
