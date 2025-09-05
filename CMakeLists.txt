@@ -20,20 +20,9 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 ###########################################
 set(FETCHCONTENT_QUIET OFF)
 set(FETCHCONTENT_BASE_DIR ${PROJECT_BINARY_DIR}/_deps)
-include(FetchContent)
-FetchContent_Declare(
-  muse_framework
-  GIT_REPOSITORY https://github.com/musescore/framework_tmp.git
-  GIT_TAG        u250905_2
-)
 
-FetchContent_GetProperties(muse_framework)
-if(NOT muse_framework_POPULATED)
-  FetchContent_Populate(muse_framework)
-endif()
-
-set(MUSE_FRAMEWORK_PATH ${muse_framework_SOURCE_DIR})
-set(MUSE_FRAMEWORK_SRC_PATH ${muse_framework_SOURCE_DIR}/framework)
+set(MUSE_FRAMEWORK_PATH ${CMAKE_SOURCE_DIR}/muse_framework)
+set(MUSE_FRAMEWORK_SRC_PATH ${MUSE_FRAMEWORK_PATH}/framework)
 
 set(CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_LIST_DIR}
@@ -179,7 +168,7 @@ if (MUSE_ENABLE_UNIT_TESTS)
     message(STATUS "Enabled testing")
 endif()
 
-add_subdirectory(${muse_framework_SOURCE_DIR}/framework ${muse_framework_BINARY_DIR})
+add_subdirectory(${MUSE_FRAMEWORK_SRC_PATH})
 add_subdirectory(src)
 add_subdirectory(share)
 
