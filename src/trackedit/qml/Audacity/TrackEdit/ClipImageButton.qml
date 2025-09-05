@@ -35,12 +35,8 @@ Rectangle {
     signal clicked
 
     layer.enabled: true
-    layer.effect: EffectOpacityMask {
-        maskSource: RoundedRectangle {
-            width: root.width
-            height: root.height
-            radius: root.radius
-        }
+    layer.effect: RoundedCornersEffect {
+        radius: root.radius
     }
 
     AnimatedImage {

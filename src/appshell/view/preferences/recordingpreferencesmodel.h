@@ -6,7 +6,7 @@
 #include "modularity/ioc.h"
 
 #include "async/asyncable.h"
-#include "audio/iaudioconfiguration.h"
+#include "audio/main/iaudioconfiguration.h"
 
 #include "record/irecord.h"
 #include "record/irecordconfiguration.h"

@@ -73,12 +73,8 @@ ListItemBlank {
                 }
 
                 layer.enabled: true
-                layer.effect: EffectOpacityMask {
-                    maskSource: Rectangle {
-                        width: thumbnailLoader.width
-                        height: thumbnailLoader.height
-                        radius: 2
-                    }
+                layer.effect: RoundedCornersEffect {
+                    radius: 2
                 }
             }
 

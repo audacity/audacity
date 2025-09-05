@@ -42,9 +42,9 @@ void GeneralPreferencesModel::load()
         emit currentLanguageCodeChanged(languageCode);
     });
 
-    setIsNeedRestart(languagesService()->needRestartToApplyLanguageChange());
-    languagesService()->needRestartToApplyLanguageChangeChanged().onReceive(this, [this](bool need) {
-        setIsNeedRestart(need);
+    setRestartRequired(languagesService()->restartRequiredToApplyLanguage());
+    languagesService()->restartRequiredToApplyLanguageChanged().onReceive(this, [this](bool required) {
+        setRestartRequired(required);
     });
 
     projectConfiguration()->temporaryDirChanged().onReceive(this, [this](muse::io::path_t) {
@@ -161,9 +161,18 @@ void GeneralPreferencesModel::setOscPort(int oscPort)
     emit oscPortChanged(oscPort);
 }
 
-bool GeneralPreferencesModel::isNeedRestart() const
+bool GeneralPreferencesModel::restartRequired() const
 {
-    return m_isNeedRestart;
+    return m_restartRequired;
+}
+
+void GeneralPreferencesModel::setRestartRequired(bool restartRequired)
+{
+    if (m_restartRequired == restartRequired) {
+        return;
+    }
+    m_restartRequired = restartRequired;
+    emit restartRequiredChanged();
 }
 
 QString GeneralPreferencesModel::availableSpace() const
@@ -175,15 +184,6 @@ QString GeneralPreferencesModel::availableSpace() const
                   .arg(QString::number(storage.bytesAvailable() / (1024 * 1024 * 1024)));
 
     return msg;
-}
-
-void GeneralPreferencesModel::setIsNeedRestart(bool newIsNeedRestart)
-{
-    if (m_isNeedRestart == newIsNeedRestart) {
-        return;
-    }
-    m_isNeedRestart = newIsNeedRestart;
-    emit isNeedRestartChanged();
 }
 
 QString GeneralPreferencesModel::temporaryDir() const

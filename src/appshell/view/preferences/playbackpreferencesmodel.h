@@ -9,7 +9,7 @@
 #include "modularity/ioc.h"
 
 #include "async/asyncable.h"
-#include "audio/iaudioconfiguration.h"
+#include "audio/main/iaudioconfiguration.h"
 
 #include "playback/iaudiodevicesprovider.h"
 #include "playback/iplaybackconfiguration.h"

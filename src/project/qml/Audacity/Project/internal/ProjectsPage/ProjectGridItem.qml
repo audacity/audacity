@@ -42,7 +42,7 @@ FocusScope {
 
     property alias navigation: navCtrl
 
-    signal clicked()
+    signal clicked
 
     NavigationControl {
         id: navCtrl
@@ -52,7 +52,7 @@ FocusScope {
         accessible.role: MUAccessible.Button
         accessible.name: root.name
 
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }
@@ -109,12 +109,8 @@ FocusScope {
                     }
 
                     layer.enabled: true
-                    layer.effect: EffectOpacityMask {
-                        maskSource: Rectangle {
-                            width: thumbnail.width
-                            height: thumbnail.height
-                            radius: thumbnail.radius
-                        }
+                    layer.effect: RoundedCornersEffect {
+                        radius: thumbnail.radius
                     }
                 }
 
@@ -144,7 +140,6 @@ FocusScope {
                             borderWidth: ui.theme.borderWidth
                         }
                     },
-
                     State {
                         name: "HOVERED"
                         when: mouseArea.containsMouse && !mouseArea.pressed
@@ -155,7 +150,6 @@ FocusScope {
                             borderWidth: 1
                         }
                     },
-
                     State {
                         name: "PRESSED"
                         when: mouseArea.pressed
