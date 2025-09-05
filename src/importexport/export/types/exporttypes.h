@@ -26,4 +26,45 @@ public:
     };
     Q_ENUM(ExportChannels)
 };
+
+class ExportOptionType
+{
+    Q_GADGET
+public:
+    enum Type {
+        TypeEnum,
+        TypeBool,
+        TypeRange,
+        TypeString
+    };
+    Q_ENUM(Type)
+};
+
+using ExportValue = std::variant<
+    bool,
+    int,
+    double,
+    std::string>;
+
+struct ExportOption
+{
+    enum Flags : int
+    {
+        TypeMask         = 0xff,
+        TypeRange        = 1,
+        TypeEnum         = 2,
+
+        ReadOnly         = 0x100,
+        Hidden           = 0x200,
+
+        Default          = 0
+    };
+
+    int id = -1;
+    std::string title;
+    ExportValue defaultValue;
+    int flags { Default };
+    std::vector<ExportValue> values;
+    std::vector<std::string> names;
+};
 }

@@ -31,12 +31,11 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(QVariantList processList READ processList NOTIFY processListChanged)
 
     Q_PROPERTY(QString filename READ filename NOTIFY filenameChanged)
-    Q_PROPERTY(QString fileExtension READ fileExtension NOTIFY fileExtensionChanged)
 
     Q_PROPERTY(QString directoryPath READ directoryPath NOTIFY directoryPathChanged)
 
     Q_PROPERTY(QString currentFormat READ currentFormat NOTIFY currentFormatChanged)
-    Q_PROPERTY(QVariantList formatsList READ formatsList NOTIFY formatsListChanged)
+    Q_PROPERTY(QStringList formatsList READ formatsList NOTIFY formatsListChanged)
 
     Q_PROPERTY(importexport::ExportChannelsPref::ExportChannels exportChannels READ exportChannels NOTIFY exportChannelsChanged)
     Q_PROPERTY(int maxExportChannels READ maxExportChannels NOTIFY maxExportChannelsChanged)
@@ -45,11 +44,9 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(QString exportSampleRate READ exportSampleRate NOTIFY exportSampleRateChanged)
     Q_PROPERTY(QVariantList exportSampleRateList READ exportSampleRateList NOTIFY exportSampleRateListChanged)
 
-    Q_PROPERTY(QString exportSampleFormat READ exportSampleFormat NOTIFY exportSampleFormatChanged)
-    Q_PROPERTY(QVariantList exportSampleFormatList READ exportSampleFormatList NOTIFY exportSampleFormatListChanged)
-
     // dynamic inputs section
     Q_PROPERTY(bool customFFmpegOptionsVisible READ customFFmpegOptionsVisible NOTIFY customFFmpegOptionsVisibleChanged)
+    Q_PROPERTY(int optionsCount READ optionsCount NOTIFY optionsCountChanged)
 
 public:
     explicit ExportPreferencesModel(QObject* parent = nullptr);
@@ -63,14 +60,12 @@ public:
     QString filename() const;
     Q_INVOKABLE void setFilename(const QString& filename);
 
-    QString fileExtension() const;
-
     QString directoryPath() const;
     Q_INVOKABLE void setDirectoryPath(const QString& path);
 
     QString currentFormat() const;
     Q_INVOKABLE void setCurrentFormat(const QString& format);
-    QVariantList formatsList() const;
+    QStringList formatsList() const;
 
     importexport::ExportChannelsPref::ExportChannels exportChannels() const;
     Q_INVOKABLE void setExportChannels(importexport::ExportChannelsPref::ExportChannels exportChannels);
@@ -80,16 +75,17 @@ public:
     QVariantList exportSampleRateList();
     Q_INVOKABLE void setExportSampleRate(const QString& rate);
 
-    QString exportSampleFormat() const;
-    QVariantList exportSampleFormatList() const;
-    Q_INVOKABLE void setExportSampleFormat(const QString& format);
-
     Q_INVOKABLE void openCustomFFmpegDialog();
+    Q_INVOKABLE void setFilePickerPath(const QString& path);
     Q_INVOKABLE bool verifyExportPossible();
+    Q_INVOKABLE QStringList fileFilter();
+    QStringList formatExtensions(const QString& format) const;
+    QStringList supportedExtensionsList() const;
     Q_INVOKABLE void exportData();
 
     // dynamic inputs
     bool customFFmpegOptionsVisible();
+    int optionsCount();
 
 signals:
     void currentProcessChanged();
@@ -103,10 +99,10 @@ signals:
     void maxExportChannelsChanged();
     void exportSampleRateChanged();
     void exportSampleRateListChanged();
-    void exportSampleFormatChanged();
-    void exportSampleFormatListChanged();
 
     void customFFmpegOptionsVisibleChanged();
+    void optionsCountChanged();
+    void optionTitleListChanged();
 
 private:
     void updateCurrentSampleRate();
