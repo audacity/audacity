@@ -98,7 +98,7 @@ jobs:
         host: 'linux'
         target: 'desktop'
         arch: 'linux_gcc_64'
-        modules: 'qt5compat qtnetworkauth qtscxml qtshadertools qtwebsockets'
+        modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets'
 
     - name: Setup environment
       if: env.DO_BUILD == 'true'
