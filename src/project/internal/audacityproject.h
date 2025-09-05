@@ -73,6 +73,8 @@ public:
     bool isNewlyCreated() const override;
     bool isImported() const override;
 
+    muse::String title() const override;
+
     muse::ValNt<bool> needSave() const override;
     muse::Ret canSave() const override;
 

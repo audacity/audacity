@@ -9,7 +9,7 @@ source $ENV
 
 if [ -z "$INSTALL_DIR" ]; then echo "error: not set INSTALL_DIR"; exit 1; fi
 if [ -z "$APPIMAGE_NAME" ]; then echo "error: not set APPIMAGE_NAME"; exit 1; fi
-if [ -z "$PACKARCH" ]; then 
+if [ -z "$PACKARCH" ]; then
   PACKARCH="x86_64"
 elif [ "$PACKARCH" == "armv7l" ]; then
   PACKARCH="armhf"
@@ -54,7 +54,7 @@ function extract_appimage()
   mv squashfs-root "${appdir}" # rename folder to avoid collisions
   # wrapper script for convenience
   printf '#!/bin/sh\nexec "%s/AppRun" "$@"\n' "$(readlink -f "${appdir}")" > "${binary_name}"
-  chmod +x "${binary_name}"  
+  chmod +x "${binary_name}"
   rm -f "${appimage}"
 }
 
@@ -144,8 +144,8 @@ mv "${appdir}/bin/findlib" "${appdir}/../findlib"
 # Remove Qt plugins for MySQL and PostgreSQL to prevent
 # linuxdeploy-plugin-qt from failing due to missing dependencies.
 # SQLite plugin alone should be enough for our AppImage.
-# rm -f ${QT_PATH}/plugins/sqldrivers/libqsql{mysql,psql}.so
-qt_sql_drivers_path="${QT_PATH}/plugins/sqldrivers"
+# rm -f ${QT_ROOT_DIR}/plugins/sqldrivers/libqsql{mysql,psql}.so
+qt_sql_drivers_path="${QT_ROOT_DIR}/plugins/sqldrivers"
 qt_sql_drivers_tmp="/tmp/qtsqldrivers"
 mkdir -p "$qt_sql_drivers_tmp"
 mv "${qt_sql_drivers_path}/libqsqlmysql.so" "${qt_sql_drivers_tmp}/libqsqlmysql.so"
@@ -166,24 +166,19 @@ echo "end linuxdeploy: $?"
 linuxdeploy-plugin-qt --appdir "${appdir}" # adds all Qt dependencies
 echo "end linuxdeploy-plugin-qt: $?"
 
-# Approximately on June 1, the QtQuick/Controls.2 stopped being deploying 
-# (at that time the linux deploy was updated). 
-# This is a hack, for the deployment of QtQuick/Controls.2 
+# Approximately on June 1, the QtQuick/Controls.2 stopped being deploying
+# (at that time the linux deploy was updated).
+# This is a hack, for the deployment of QtQuick/Controls.2
 if [ ! -f ${appdir}/usr/lib/libQt5QuickControls2.so.5 ]; then
-    cp -r ${QT_PATH}/qml/QtQuick/Controls.2 ${appdir}/usr/qml/QtQuick/Controls.2
-    cp -r ${QT_PATH}/qml/QtQuick/Templates.2 ${appdir}/usr/qml/QtQuick/Templates.2
-    cp ${QT_PATH}/lib/libQt5QuickControls2.so.5 ${appdir}/usr/lib/libQt5QuickControls2.so.5 
-    cp ${QT_PATH}/lib/libQt5QuickTemplates2.so.5 ${appdir}/usr/lib/libQt5QuickTemplates2.so.5 
-fi
-
-# At an unknown point in time, the libqgtk3 plugin stopped being deployed
-if [ ! -f ${appdir}/plugins/platformthemes/libqgtk3.so ]; then
-  cp ${QT_PATH}/plugins/platformthemes/libqgtk3.so ${appdir}/plugins/platformthemes/libqgtk3.so 
+    cp -r ${QT_ROOT_DIR}/qml/QtQuick/Controls.2 ${appdir}/usr/qml/QtQuick/Controls.2
+    cp -r ${QT_ROOT_DIR}/qml/QtQuick/Templates.2 ${appdir}/usr/qml/QtQuick/Templates.2
+    cp ${QT_ROOT_DIR}/lib/libQt5QuickControls2.so.5 ${appdir}/usr/lib/libQt5QuickControls2.so.5
+    cp ${QT_ROOT_DIR}/lib/libQt5QuickTemplates2.so.5 ${appdir}/usr/lib/libQt5QuickTemplates2.so.5
 fi
 
 # The system must be used
 if [ -f ${appdir}/lib/libglib-2.0.so.0 ]; then
-  rm -f ${appdir}/lib/libglib-2.0.so.0 
+  rm -f ${appdir}/lib/libglib-2.0.so.0
 fi
 
 unset QML_SOURCES_PATHS EXTRA_PLATFORM_PLUGINS
@@ -235,6 +230,10 @@ unwanted_files=(
 additional_qt_components=(
   plugins/printsupport/libcupsprintersupport.so
 
+# TODO: uncomment when #9308 is solved
+#   # At an unknown point in time, the libqgtk3 plugin stopped being deployed
+#   plugins/platformthemes/libqgtk3.so
+
   # Wayland support (run with QT_QPA_PLATFORM=wayland to use)
   plugins/wayland-decoration-client
   plugins/wayland-graphics-integration-client
@@ -280,7 +279,7 @@ done
 
 for file in "${additional_qt_components[@]}"; do
   mkdir -p "${appdir}/$(dirname "${file}")"
-  cp -Lr "${QT_PATH}/${file}" "${appdir}/${file}"
+  cp -Lr "${QT_ROOT_DIR}/${file}" "${appdir}/${file}"
 done
 
 for lib in "${additional_libraries[@]}"; do

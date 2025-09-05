@@ -22,14 +22,14 @@ EffectStyledDialogView {
     title: viewerModel.title + " - " + viewerModel.trackName
     navigationSection.name: title
 
-    implicitWidth: prv.viewItem ? Math.max(prv.viewItem.implicitWidth, headerBar.width) : headerBar.width
-    implicitHeight: 2 * prv.padding + headerBar.height + (prv.viewItem ? prv.viewItem.implicitHeight : 0)
-    minimumWidth: viewerModel.effectFamily === EffectFamily.LV2 ? 500 : 270
+    contentWidth: Math.max(viewLoader.width, prv.minimumWidth)
+    contentHeight: 2 * prv.padding + viewLoader.height + presetsBar.height
 
     alwaysOnTop: true
 
     QtObject {
         id: prv
+        property int minimumWidth: viewerModel.effectFamily === EffectFamily.LV2 ? 500 : 270
         property int padding: viewerModel.effectFamily == EffectFamily.Builtin ? 16 : 4
         property alias viewItem: viewLoader.item
     }
@@ -37,20 +37,20 @@ EffectStyledDialogView {
     Component.onCompleted: {
         viewerModel.load()
         switch (viewerModel.effectFamily) {
-            case EffectFamily.Builtin:
-                viewLoader.sourceComponent = builtinViewerComponent
-                break
-            case EffectFamily.AudioUnit:
-                viewLoader.sourceComponent = audioUnitViewerComponent
-                break
-            case EffectFamily.LV2:
-                viewLoader.sourceComponent = lv2ViewerComponent
-                break
-            case EffectFamily.VST3:
-                viewLoader.sourceComponent = vstViewerComponent
-                break
-            default:
-                viewLoader.sourceComponent = null
+        case EffectFamily.Builtin:
+            viewLoader.sourceComponent = builtinViewerComponent
+            break
+        case EffectFamily.AudioUnit:
+            viewLoader.sourceComponent = audioUnitViewerComponent
+            break
+        case EffectFamily.LV2:
+            viewLoader.sourceComponent = lv2ViewerComponent
+            break
+        case EffectFamily.VST3:
+            viewLoader.sourceComponent = vstViewerComponent
+            break
+        default:
+            viewLoader.sourceComponent = null
         }
     }
 
@@ -67,7 +67,7 @@ EffectStyledDialogView {
             id: view
             instanceId: root.instanceId
             topPadding: headerBar.y + headerBar.height + prv.padding
-            minimumWidth: root.minimumWidth
+            minimumWidth: prv.minimumWidth
         }
     }
 
@@ -87,7 +87,7 @@ EffectStyledDialogView {
             id: view
             instanceId: root.instanceId
             topPadding: headerBar.y + headerBar.height + prv.padding
-            minimumWidth: root.minimumWidth
+            minimumWidth: prv.minimumWidth
         }
     }
 
@@ -110,40 +110,51 @@ EffectStyledDialogView {
         spacing: 0
         anchors.fill: parent
 
-        RowLayout {
-            id: headerBar
-
+        WindowContainer {
             Layout.fillWidth: true
-            Layout.margins: prv.padding
-            spacing: presetsBar.spacing
 
-            BypassEffectButton {
-                id: bypassBtn
+            window: Window {
 
-                navigation.panel: root.navigationPanel
-                navigation.order: 0
-                navigation.name: "Bypass effect"
-                size: presetsBar.implicitHeight
-                isMasterEffect: viewerModel.isMasterEffect
-                accentButton: viewerModel.isActive
+                id: win
 
-                onClicked: {
-                    viewerModel.isActive = !viewerModel.isActive
+                color: ui.theme.backgroundPrimaryColor
+
+                height: headerBar.implicitHeight + prv.padding * 2
+                width: headerBar.implicitWidth
+
+                RowLayout {
+                    id: headerBar
+                    anchors.fill: parent
+                    anchors.margins: prv.padding
+                    spacing: presetsBar.spacing
+
+                    BypassEffectButton {
+                        id: bypassBtn
+
+                        navigation.panel: root.navigationPanel
+                        navigation.order: 0
+                        navigation.name: "Bypass effect"
+                        size: presetsBar.implicitHeight
+                        isMasterEffect: viewerModel.isMasterEffect
+                        accentButton: viewerModel.isActive
+
+                        onClicked: viewerModel.isActive = !viewerModel.isActive
+                    }
+
+                    EffectPresetsBar {
+                        id: presetsBar
+
+                        parentWindow: root.window
+                        navigationPanel: root.navigationPanel
+                        navigationOrder: 1
+                        instanceId: root.instanceId
+                        Layout.fillWidth: true
+                    }
                 }
             }
-
-            EffectPresetsBar {
-                id: presetsBar
-                navigationPanel: root.navigationPanel
-                navigationOrder: 1
-                instanceId: root.instanceId
-                Layout.fillWidth: true
-            }
         }
-
         Loader {
             id: viewLoader
-            Layout.fillWidth: true
         }
     }
 }

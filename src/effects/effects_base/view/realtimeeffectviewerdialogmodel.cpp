@@ -18,36 +18,6 @@ RealtimeEffectViewerDialogModel::RealtimeEffectViewerDialogModel(QObject* parent
 RealtimeEffectViewerDialogModel::~RealtimeEffectViewerDialogModel()
 {
     unregisterState();
-    restoreFocusToMainToolBar();
-}
-
-void RealtimeEffectViewerDialogModel::restoreFocusToMainToolBar()
-{
-    // At the time of writing, only when the "MainToolBar" panel (with the "Home", "Project", etc. tabs) is active
-    // is the context resolved to "UiCtxProjectFocused". This should probably be reviewed and set to all sections
-    // declared in `ProjectPage.qml` ("PlaybackSection", "TrackEffectsSection", etc.). Since that'd be a change of
-    // potentially large impact, we leave it as is for now. Before 4.0 we will likely have to rework navigation anyway.
-    const bool success = navigationController()->requestActivateByIndex("TopTool", "MainToolBar", { 0 });
-    IF_ASSERT_FAILED(success) {
-        LOGE() << "Failed to activate TopTool MainToolBar";
-    }
-}
-
-bool RealtimeEffectViewerDialogModel::eventFilter(QObject* obj, QEvent* event)
-{
-    if (m_dialogView && obj == m_dialogView->window()) {
-        switch (event->type()) {
-        case QEvent::FocusIn:
-            if (m_navigationPanel) {
-                m_navigationPanel->requestActive();
-            }
-            break;
-        case QEvent::FocusOut:
-            restoreFocusToMainToolBar();
-            break;
-        }
-    }
-    return QObject::eventFilter(obj, event);
 }
 
 muse::ui::NavigationPanel* RealtimeEffectViewerDialogModel::prop_navigationPanel() const

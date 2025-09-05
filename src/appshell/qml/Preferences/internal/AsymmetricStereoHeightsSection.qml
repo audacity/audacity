@@ -28,12 +28,8 @@ BaseSection {
         height: 64
 
         layer.enabled: true
-        layer.effect: EffectOpacityMask {
-            maskSource: RoundedRectangle {
-                width: svgImg.width
-                height: svgImg.height
-                radius: 5
-            }
+        layer.effect: RoundedCornersEffect {
+            radius: 5
         }
 
         Image {

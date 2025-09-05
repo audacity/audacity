@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
     - master
-    
+
   schedule:
     - cron: '0 3 */1 */1 *' # At 03:00 on every day-of-month for master
   #   - cron: '0 5 */1 */1 *' # At 05:00 on every day-of-month for current release branch
@@ -25,11 +25,11 @@ env:
   DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
 
 jobs:
-  au4_build_macos:    
+  au4_build_macos:
     runs-on: macos-13
     steps:
-    - name: Clone repository 
-      uses: actions/checkout@v4      
+    - name: Clone repository
+      uses: actions/checkout@v4
     - name: "Configure workflow"
       env:
         pull_request_title: ${{ github.event.pull_request.title }}
@@ -46,7 +46,7 @@ jobs:
         cmake -DEVENT=${{ github.event_name }} \
               -DBUILD_MODE=${BUILD_MODE} \
               -DARTIFACT_INFO="Mac_${ADD_INFO}" \
-              -P ${CI_DIR}/common/ci_configure.cmake 
+              -P ${CI_DIR}/common/ci_configure.cmake
 
         DO_BUILD='true'
         UPLOAD_ARTIFACT_NAME=$(cat ./build.artifacts/env/artifact_name.env)
@@ -86,6 +86,15 @@ jobs:
         echo "SENTRY_URL=$SENTRY_URL" >> $GITHUB_ENV
         echo "SENTRY_URL: $SENTRY_URL"
 
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.9.2'
+        host: 'mac'
+        target: 'desktop'
+        arch: 'clang_64'
+        modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets'
+
     - name: Setup environment
       if: env.DO_BUILD == 'true'
       run: |
@@ -94,12 +103,12 @@ jobs:
       if: env.DO_BUILD == 'true'
       run: |
         source $HOME/build_tools/environment.sh
-        cmake -P ${CI_DIR}/macos/ci_build.cmake 
-    - name: Package 
+        cmake -P ${CI_DIR}/macos/ci_build.cmake
+    - name: Package
       if: env.DO_BUILD == 'true'
       run: |
         source $HOME/build_tools/environment.sh
-        cmake -P ${CI_DIR}/macos/package.cmake 
+        cmake -P ${CI_DIR}/macos/package.cmake
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash

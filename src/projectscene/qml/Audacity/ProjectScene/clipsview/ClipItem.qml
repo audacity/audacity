@@ -9,7 +9,6 @@ import Audacity.ProjectScene
 import Audacity.Playback
 
 Rectangle {
-
     id: root
 
     property alias context: waveView.context
@@ -53,30 +52,30 @@ Rectangle {
 
     property bool asymmetricStereoHeightsPossible: false
 
-    signal clipStartEditRequested()
-    signal clipEndEditRequested()
+    signal clipStartEditRequested
+    signal clipEndEditRequested
 
     signal clipLeftTrimRequested(bool completed, int action)
     signal clipRightTrimRequested(bool completed, int action)
-    signal clipLeftStretchRequested(bool completed, int action);
-    signal clipRightStretchRequested(bool completed, int action);
+    signal clipLeftStretchRequested(bool completed, int action)
+    signal clipRightStretchRequested(bool completed, int action)
 
-    signal requestSelected()
-    signal requestSelectionReset()
+    signal requestSelected
+    signal requestSelectionReset
     signal splitterPositionChangeRequested(int position)
 
-    signal pitchChangeRequested()
-    signal pitchResetRequested()
+    signal pitchChangeRequested
+    signal pitchResetRequested
 
-    signal speedChangeRequested()
-    signal speedResetRequested()
+    signal speedChangeRequested
+    signal speedResetRequested
 
-    signal titleEditStarted()
+    signal titleEditStarted
     signal titleEditAccepted(var newTitle)
-    signal titleEditCanceled()
+    signal titleEditCanceled
 
-    signal startAutoScroll()
-    signal stopAutoScroll()
+    signal startAutoScroll
+    signal stopAutoScroll
 
     // mouse position event is not propagated on overlapping mouse areas
     // so we are handling it manually
@@ -91,8 +90,8 @@ Rectangle {
     opacity: root.moveActive && clipSelected ? 0.5 : isAudible ? 1.0 : 0.3
 
     property int borderWidth: 1
-    property bool hover: root.containsMouse || headerDragArea.containsMouse
-    property bool headerHovered: headerDragArea.containsMouse
+    property bool hover: root.containsMouse || root.headerHovered
+    property bool headerHovered: false
     property var lastSample: undefined
     property bool altPressed: false
     property bool isBrush: waveView.isStemPlot && root.altPressed
@@ -118,7 +117,7 @@ Rectangle {
         accessible.role: MUAccessible.Button
         accessible.name: root.name
 
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }
@@ -139,16 +138,14 @@ Rectangle {
         enabled: navCtrl.active
         direction: NavigationPanel.Horizontal
         section: navigation.panel.section
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }
         }
 
-        onNavigationEvent: function(event) {
-            if (event.type === NavigationEvent.Escape && !clipHandles.leftTrimActive
-                    && !clipHandles.rightTrimActive && !clipHandles.leftStretchActive
-                    && !clipHandles.rightStretchActive) {
+        onNavigationEvent: function (event) {
+            if (event.type === NavigationEvent.Escape && !clipHandles.leftTrimActive && !clipHandles.rightTrimActive && !clipHandles.leftStretchActive && !clipHandles.rightStretchActive) {
                 navCtrl.requestActive()
             }
         }
@@ -178,9 +175,7 @@ Rectangle {
     }
 
     function mousePressAndHold(x, y) {
-        root.altPressed
-            ? waveView.smoothLastClickPos(x, y - header.height)
-            : waveView.setLastClickPos(x, y - header.height, x, y - header.height)
+        root.altPressed ? waveView.smoothLastClickPos(x, y - header.height) : waveView.setLastClickPos(x, y - header.height, x, y - header.height)
         waveView.update()
     }
 
@@ -190,12 +185,15 @@ Rectangle {
     }
 
     function setLastSample(x, y) {
-        lastSample = {x: x, y: y - header.height}
+        lastSample = {
+            x: x,
+            y: y - header.height
+        }
     }
 
     function setContainsMouse(containsMouse) {
         if (!root.enableCursorInteraction) {
-            return;
+            return
         }
 
         root.containsMouse = containsMouse
@@ -220,7 +218,7 @@ Rectangle {
     ContextMenuLoader {
         id: singleClipContextMenuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             singleClipContextMenuModel.handleMenuItem(itemId)
         }
     }
@@ -232,7 +230,7 @@ Rectangle {
     ContextMenuLoader {
         id: multiClipContextMenuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             multiClipContextMenuModel.handleMenuItem(itemId)
         }
     }
@@ -268,7 +266,7 @@ Rectangle {
 
         visible: root.enableCursorInteraction
 
-        onClicked: function(e) {
+        onClicked: function (e) {
             if (root.multiClipsSelected) {
                 multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
             } else {
@@ -278,13 +276,17 @@ Rectangle {
         }
 
         onPositionChanged: function (e) {
-            clipItemMousePositionChanged(e.x, e.y)
+            clipItemMousePositionChanged(e.x, e.y);
 
             // propagate mouse position to the wave view adjusting the y position
             waveView.onWaveViewPositionChanged(e.x, e.y - header.height)
         }
 
         onContainsMouseChanged: {
+            if (!root.visible) {
+                return
+            }
+
             root.setContainsMouse(containsMouse)
         }
     }
@@ -314,11 +316,11 @@ Rectangle {
             }
         }
 
-        onPressed: function(e) {
+        onPressed: function (e) {
             root.clipStartEditRequested()
         }
 
-        onReleased: function(e) {
+        onReleased: function (e) {
             if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
                 root.clipLeftStretchRequested(true, ClipBoundaryAction.Shrink)
             } else {
@@ -330,7 +332,7 @@ Rectangle {
             root.clipEndEditRequested()
         }
 
-        onPositionChanged: function(e) {
+        onPositionChanged: function (e) {
             let mousePos = mapToItem(root, e.x, e.y)
             clipItemMousePositionChanged(mousePos.x, mousePos.y)
 
@@ -351,7 +353,7 @@ Rectangle {
 
         x: root.width - 5
         z: headerDragArea.z + 1
-        width: distanceToRightNeighbor >= -0.5 && distanceToRightNeighbor <= 10 ? 6 + Math.min(distanceToRightNeighbor / 2, 5): 11
+        width: distanceToRightNeighbor >= -0.5 && distanceToRightNeighbor <= 10 ? 6 + Math.min(distanceToRightNeighbor / 2, 5) : 11
         height: !root.collapsed ? root.height / 3 : root.height / 2
 
         anchors.top: root.top
@@ -371,11 +373,11 @@ Rectangle {
             }
         }
 
-        onPressed: function(e) {
+        onPressed: function (e) {
             root.clipStartEditRequested()
         }
 
-        onReleased: function(e) {
+        onReleased: function (e) {
             if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
                 root.clipRightStretchRequested(true, ClipBoundaryAction.Shrink)
             } else {
@@ -387,7 +389,7 @@ Rectangle {
             root.clipEndEditRequested()
         }
 
-        onPositionChanged: function(e) {
+        onPositionChanged: function (e) {
             let mousePos = mapToItem(root, e.x, e.y)
             clipItemMousePositionChanged(mousePos.x, mousePos.y)
 
@@ -409,12 +411,8 @@ Rectangle {
         anchors.fill: parent
 
         layer.enabled: true
-        layer.effect: EffectOpacityMask {
-            maskSource: RoundedRectangle {
-                width: inner.width
-                height: inner.height
-                radius: root.radius
-            }
+        layer.effect: RoundedCornersEffect {
+            radius: root.radius
         }
 
         Rectangle {
@@ -446,6 +444,14 @@ Rectangle {
                 id: headerDragArea
                 anchors.fill: parent
 
+                onContainsMouseChanged: {
+                    if (!root.visible) {
+                        return
+                    }
+
+                    root.headerHovered = containsMouse
+                }
+
                 visible: root.enableCursorInteraction
 
                 acceptedButtons: Qt.LeftButton
@@ -460,8 +466,8 @@ Rectangle {
                 // to the other track and we're gonna loose the ability to handle this MouseArea's events)
                 // hence we need to let simple events pass (e.accepted = false). Unfortunately this breaks
                 // detecting composed events like doubleClick so we need to take care of it manually.
-                onPressed: function(e) {
-                    var currentTime = Date.now();
+                onPressed: function (e) {
+                    var currentTime = Date.now()
                     if (currentTime - lastClickTime < doubleClickInterval) {
                         //! NOTE Handle doubleClick logic
                         root.editTitle()
@@ -471,19 +477,19 @@ Rectangle {
                             root.requestSelected()
                         }
 
-                        lastClickTime = currentTime;
+                        lastClickTime = currentTime
                     }
 
                     e.accepted = false
                 }
 
-                onPositionChanged: function(e) {
+                onPositionChanged: function (e) {
                     root.clipItemMousePositionChanged(e.x, e.y)
 
                     e.accepted = false
                 }
 
-                onReleased: function(e) {
+                onReleased: function (e) {
                     e.accepted = false
                 }
             }
@@ -555,7 +561,7 @@ Rectangle {
                     textSidePadding: 0
                     visible: false
 
-                    onTextChanged: function(text) {
+                    onTextChanged: function (text) {
                         titleEdit.newTitle = text
                     }
 
@@ -600,7 +606,7 @@ Rectangle {
 
                     visible: root.pitch !== 0
 
-                    onClicked: function(mouse){
+                    onClicked: function (mouse) {
                         if (mouse.modifiers & Qt.ControlModifier) {
                             root.pitchResetRequested()
                         } else {
@@ -619,7 +625,7 @@ Rectangle {
 
                     visible: root.speedPercentage !== 100.0
 
-                    onClicked: function(mouse){
+                    onClicked: function (mouse) {
                         if (mouse.modifiers & Qt.ControlModifier) {
                             root.speedResetRequested()
                         } else {
@@ -642,7 +648,7 @@ Rectangle {
                     navigation.panel: root.clipNavigationPanel
                     navigation.column: 4
 
-                    onHandleMenuItem: function(itemId) {
+                    onHandleMenuItem: function (itemId) {
                         Qt.callLater(menuModel.handleMenuItem, itemId)
                     }
 
@@ -675,7 +681,7 @@ Rectangle {
 
             function onWaveViewPositionChanged(x, y) {
                 if (waveView.isIsolationMode) {
-                    waveView.setIsolatedPoint(x,y)
+                    waveView.setIsolatedPoint(x, y)
                     waveView.update()
                 } else if (root.multiSampleEdit && !root.altPressed) {
                     var lastX = root.lastSample.x
@@ -730,7 +736,7 @@ Rectangle {
             }
 
             onIsNearSampleChanged: {
-                if(root.isNearSample) {
+                if (root.isNearSample) {
                     waveView.forceActiveFocus()
                 }
             }
@@ -780,33 +786,33 @@ Rectangle {
 
         clipNavigationPanel: root.clipNavigationPanel
 
-        onClipHandlesMousePositionChanged: function(xWithinClipHandles, yWithinClipHandles) {
+        onClipHandlesMousePositionChanged: function (xWithinClipHandles, yWithinClipHandles) {
             var xWithinClipItem = xWithinClipHandles
             var yWithinClipItem = header.height + 1 + yWithinClipHandles
             clipItemMousePositionChanged(xWithinClipItem, yWithinClipItem)
         }
 
-        onClipStartEditRequested: function() {
+        onClipStartEditRequested: function () {
             root.clipStartEditRequested()
         }
 
-        onClipEndEditRequested: function() {
+        onClipEndEditRequested: function () {
             root.clipEndEditRequested()
         }
 
-        onTrimLeftRequested: function(completed, action) {
+        onTrimLeftRequested: function (completed, action) {
             root.clipLeftTrimRequested(completed, action)
         }
 
-        onTrimRightRequested: function(completed, action) {
+        onTrimRightRequested: function (completed, action) {
             root.clipRightTrimRequested(completed, action)
         }
 
-        onStretchLeftRequested: function(completed, action) {
+        onStretchLeftRequested: function (completed, action) {
             root.clipLeftStretchRequested(completed, action)
         }
 
-        onStretchRightRequested: function(completed, action) {
+        onStretchRightRequested: function (completed, action) {
             root.clipRightStretchRequested(completed, action)
         }
 
@@ -820,41 +826,106 @@ Rectangle {
         State {
             name: "NORMAL"
             when: !root.clipSelected && !headerDragArea.containsMouse
-            PropertyChanges { target: header; color: root.normalHeaderColor}
-            PropertyChanges { target: titleLabel; color: "#000000"}
-            PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
-            PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
-            PropertyChanges { target: menuBtn; iconColor: "#000000"}
+            PropertyChanges {
+                target: header
+                color: root.normalHeaderColor
+            }
+            PropertyChanges {
+                target: titleLabel
+                color: "#000000"
+            }
+            PropertyChanges {
+                target: pitchBtn
+                textColor: "#000000"
+                iconColor: "#000000"
+            }
+            PropertyChanges {
+                target: speedBtn
+                textColor: "#000000"
+                iconColor: "#000000"
+            }
+            PropertyChanges {
+                target: menuBtn
+                iconColor: "#000000"
+            }
         },
-
         State {
             name: "SELECTED"
             when: root.clipSelected && !headerDragArea.containsMouse
-            PropertyChanges { target: header; color: root.selectedHeaderColor }
-            PropertyChanges { target: titleLabel; color: "#000000" }
-            PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
-            PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
-            PropertyChanges { target: menuBtn; iconColor: "#000000"}
+            PropertyChanges {
+                target: header
+                color: root.selectedHeaderColor
+            }
+            PropertyChanges {
+                target: titleLabel
+                color: "#000000"
+            }
+            PropertyChanges {
+                target: pitchBtn
+                textColor: "#000000"
+                iconColor: "#000000"
+            }
+            PropertyChanges {
+                target: speedBtn
+                textColor: "#000000"
+                iconColor: "#000000"
+            }
+            PropertyChanges {
+                target: menuBtn
+                iconColor: "#000000"
+            }
         },
-
         State {
             name: "NORMAL_HEADER_HOVERED"
             when: !root.clipSelected && headerDragArea.containsMouse
-            PropertyChanges { target: header; color: root.normalHeaderHoveredColor }
-            PropertyChanges { target: titleLabel; color: "#000000"}
-            PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
-            PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
-            PropertyChanges { target: menuBtn; iconColor: "#000000"}
+            PropertyChanges {
+                target: header
+                color: root.normalHeaderHoveredColor
+            }
+            PropertyChanges {
+                target: titleLabel
+                color: "#000000"
+            }
+            PropertyChanges {
+                target: pitchBtn
+                textColor: "#000000"
+                iconColor: "#000000"
+            }
+            PropertyChanges {
+                target: speedBtn
+                textColor: "#000000"
+                iconColor: "#000000"
+            }
+            PropertyChanges {
+                target: menuBtn
+                iconColor: "#000000"
+            }
         },
-
         State {
             name: "SELECTED_HEADER_HOVERED"
             when: root.clipSelected && headerDragArea.containsMouse
-            PropertyChanges { target: header; color: root.selectedHeaderHoveredColor }
-            PropertyChanges { target: titleLabel; color: "#000000"}
-            PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
-            PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
-            PropertyChanges { target: menuBtn; iconColor: "#000000"}
+            PropertyChanges {
+                target: header
+                color: root.selectedHeaderHoveredColor
+            }
+            PropertyChanges {
+                target: titleLabel
+                color: "#000000"
+            }
+            PropertyChanges {
+                target: pitchBtn
+                textColor: "#000000"
+                iconColor: "#000000"
+            }
+            PropertyChanges {
+                target: speedBtn
+                textColor: "#000000"
+                iconColor: "#000000"
+            }
+            PropertyChanges {
+                target: menuBtn
+                iconColor: "#000000"
+            }
         }
     ]
 }

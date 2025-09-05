@@ -57,7 +57,7 @@ class GeneralPreferencesModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool isOSCRemoteControl READ isOSCRemoteControl WRITE setIsOSCRemoteControl NOTIFY isOSCRemoteControlChanged)
     Q_PROPERTY(int oscPort READ oscPort WRITE setOscPort NOTIFY oscPortChanged)
 
-    Q_PROPERTY(bool isNeedRestart READ isNeedRestart WRITE setIsNeedRestart NOTIFY isNeedRestartChanged)
+    Q_PROPERTY(bool restartRequired READ restartRequired WRITE setRestartRequired NOTIFY restartRequiredChanged)
 
     Q_PROPERTY(QString temporaryDir READ temporaryDir NOTIFY temporaryDirChanged)
     Q_PROPERTY(QString availableSpace READ availableSpace NOTIFY availableSpaceChanged)
@@ -81,7 +81,7 @@ public:
 
     bool isOSCRemoteControl() const;
     int oscPort() const;
-    bool isNeedRestart() const;
+    bool restartRequired() const;
 
     QString availableSpace() const;
 
@@ -90,7 +90,7 @@ public slots:
     void setCurrentKeyboardLayout(const QString& keyboardLayout);
     void setIsOSCRemoteControl(bool isOSCRemoteControl);
     void setOscPort(int oscPort);
-    void setIsNeedRestart(bool newIsNeedRestart);
+    void setRestartRequired(bool restartRequired);
 
 signals:
     void languagesChanged(QVariantList languages);
@@ -100,7 +100,7 @@ signals:
     void oscPortChanged(int oscPort);
 
     void receivingUpdateForCurrentLanguage(int current, int total, QString status);
-    void isNeedRestartChanged();
+    void restartRequiredChanged();
 
     void temporaryDirChanged();
     void availableSpaceChanged();
@@ -108,7 +108,7 @@ signals:
 private:
     muse::Progress m_languageUpdateProgress;
 
-    bool m_isNeedRestart = false;
+    bool m_restartRequired = false;
 };
 }
 

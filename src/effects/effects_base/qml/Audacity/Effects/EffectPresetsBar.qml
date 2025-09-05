@@ -16,6 +16,8 @@ RowLayout {
     property int navigationOrder: 0
     property var navigationPanel: null
 
+    property var parentWindow: null
+
     spacing: 4
 
     function manage(button) {
@@ -34,6 +36,10 @@ RowLayout {
 
     ContextMenuLoader {
         id: menuLoader
+
+        visible: false
+
+        parentWindow: root.parentWindow
 
         onHandleMenuItem: function (itemId) {
             manageMenuModel.handleMenuItem(itemId)
@@ -55,6 +61,7 @@ RowLayout {
         textRole: "name"
         valueRole: "id"
 
+        parentWindow: root.parentWindow
         enabled: manageMenuModel.enabled
 
         indeterminateText: qsTrc("effects", "Select preset")

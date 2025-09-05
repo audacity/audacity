@@ -74,7 +74,9 @@ Item {
         anchors.fill: parent
         radius: width / 2
 
-        NavigationFocusBorder { navigationCtrl: navCtrl }
+        NavigationFocusBorder {
+            navigationCtrl: navCtrl
+        }
     }
 
     states: [
@@ -92,7 +94,6 @@ Item {
                 color: ui.theme.accentColor
             }
         },
-
         State {
             name: "pressed"
             when: mouseArea.pressed
@@ -104,7 +105,6 @@ Item {
                 border.width: 1
             }
         },
-
         State {
             name: "hovered"
             when: mouseArea.containsMouse && !mouseArea.pressed
@@ -116,7 +116,6 @@ Item {
                 border.width: 1
             }
         },
-
         State {
             name: "normal"
             when: true
@@ -130,16 +129,11 @@ Item {
         }
     ]
 
-
-    ItemWithDropShadow {
+    StyledRectangularShadow {
         anchors.centerIn: parent
 
         implicitWidth: icon.implicitWidth
         implicitHeight: icon.implicitHeight
-
-        shadow.horizontalOffset: 0
-        shadow.verticalOffset: 1
-        shadow.radius: 4
 
         StyledIconLabel {
             id: icon

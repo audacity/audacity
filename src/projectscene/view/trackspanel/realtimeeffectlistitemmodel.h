@@ -24,7 +24,8 @@ public:
     RealtimeEffectListItemModel(QObject* parent, effects::RealtimeEffectStatePtr effectState);
     ~RealtimeEffectListItemModel();
 
-    Q_INVOKABLE effects::RealtimeEffectStatePtr effectState() const;
+    Q_INVOKABLE QString effectState() const;
+    effects::RealtimeEffectStatePtr effectStatePtr() const;
     Q_INVOKABLE QString effectName() const;
     Q_INVOKABLE void showEffectDialog();
 

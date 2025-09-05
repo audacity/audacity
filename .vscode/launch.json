@@ -23,13 +23,29 @@
                 "C:/Users/qt/work/qt": "${env:QTDIR}/../Src",
                 "Q:/qt_workdir/w/s": "${env:QTDIR}/../Src",
             },
-            "symbolSearchPath": "${env:QTDIR}/bin",
-            "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis",
+            "symbolSearchPath": "${env:QTDIR}/bin;${env:QTDIR}/plugins/platforms",
+            "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis"
+        },
+        {
+            "name": "run audacity (MacOS)",
+            "type": "cppdbg",
+            "MIMode": "lldb",
+            "request": "launch",
+            "preLaunchTask": "CMake: install",
+            "cwd": "${fileDirname}",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "environment": [],
+            "sourceFileMap": {
+                "/Users/qt/work/qt": "${env:QTDIR}/../Src"
+            }
         },
         {
             // Requires CodeLLDB extension
             // Doesn't support visualizerFile but is much faster than cppdbg
-            "name": "Launch (lldb - macOS/Linux)",
+            "name": "Launch (lldb - Linux)",
             "type": "lldb",
             "request": "launch",
             "preLaunchTask": "CMake: install",

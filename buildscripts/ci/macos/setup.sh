@@ -14,7 +14,7 @@ rm -f $ENV_FILE
 
 echo "echo 'Setup build environment'" >> $ENV_FILE
 
-export MACOSX_DEPLOYMENT_TARGET=10.14
+export MACOSX_DEPLOYMENT_TARGET=10.15
 
 # fixing install python 3.9 error (it is a dependency for ninja)
 rm '/usr/local/bin/2to3'
@@ -22,17 +22,6 @@ if ! command -v cmake >/dev/null 2>&1
 then
     brew install cmake ninja pkg-config --formula --quiet
 fi
-
-# Qt
-QT_SHORT_VERSION=6.2.4
-echo "Download Qt $QT_SHORT_VERSION"
-export QT_PATH=$BUILD_TOOLS/Qt/$QT_SHORT_VERSION/
-wget -nv -O qt.7z https://s3.amazonaws.com/utils.musescore.org/Qt624_mac.7z
-mkdir -p $QT_PATH
-7z x -y qt.7z -o$QT_PATH
-rm qt.7z
-echo "export QT_PATH=$QT_PATH" >> $ENV_FILE
-echo "export PATH=$PATH:$QT_PATH/macos/bin" >> $ENV_FILE
 
 # Dump syms
 wget -q --show-progress -O dump_syms.7z "https://s3.amazonaws.com/utils.musescore.org/breakpad/macos/x86-64/dump_syms.7z"

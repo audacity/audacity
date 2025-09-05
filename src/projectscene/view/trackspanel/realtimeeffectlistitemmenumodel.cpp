@@ -68,17 +68,24 @@ QVariantList RealtimeEffectListItemMenuModel::availableEffects() const
     return menuItemListToVariantList(items());
 }
 
-au::effects::RealtimeEffectStatePtr RealtimeEffectListItemMenuModel::prop_effectState() const
+QString RealtimeEffectListItemMenuModel::prop_effectState() const
 {
-    return m_effectState;
+    if (!m_effectState) {
+        return {};
+    }
+    return QString::number(reinterpret_cast<uintptr_t>(m_effectState.get()));
 }
 
-void RealtimeEffectListItemMenuModel::prop_setEffectState(effects::RealtimeEffectStatePtr effectState)
+void RealtimeEffectListItemMenuModel::prop_setEffectState(const QString& state)
 {
-    if (m_effectState == effectState) {
+    if (state == prop_effectState()) {
         return;
     }
-    m_effectState = effectState;
+    if (state.isEmpty()) {
+        m_effectState.reset();
+    } else {
+        m_effectState = reinterpret_cast<RealtimeEffectState*>(state.toLongLong())->shared_from_this();
+    }
     updateEffectCheckmarks();
     emit effectStateChanged();
 }
@@ -104,6 +111,9 @@ bool updateCheckmarks(MenuItem& item, const au::effects::EffectId& selectedEffec
 
 void RealtimeEffectListItemMenuModel::updateEffectCheckmarks()
 {
+    if (m_effectState == nullptr) {
+        return;
+    }
     const MenuItemList& itemList = items();
     const auto myEffectId = muse::String::fromStdString(m_effectState->GetID().ToStdString());
     for (MenuItem* category : itemList) {

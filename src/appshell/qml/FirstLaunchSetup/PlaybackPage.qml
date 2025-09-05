@@ -47,12 +47,8 @@ Page {
         sourceSize: Qt.size(width * Screen.devicePixelRatio, height * Screen.devicePixelRatio)
 
         layer.enabled: true
-        layer.effect: EffectOpacityMask {
-            maskSource: Rectangle {
-                width: image.width
-                height: image.height
-                radius: 3
-            }
+        layer.effect: RoundedCornersEffect {
+            radius: 3
         }
     }
 }

@@ -33,13 +33,13 @@ Item {
         name: "PreferencesMenuPanel"
         enabled: root.enabled && root.visible
         direction: NavigationPanel.Both
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }
         }
 
-        onNavigationEvent: function(event) {
+        onNavigationEvent: function (event) {
             if (event.type === NavigationEvent.AboutActive) {
                 event.setData("controlIndex", prv.currentItemNavigationIndex)
             }
@@ -66,7 +66,6 @@ Item {
 
         alternatingRowColors: false
         headerVisible: false
-        frameVisible: false
 
         TableViewColumn {
             role: "itemRole"
@@ -74,22 +73,15 @@ Item {
 
         style: LegacyTreeViewStyle {
             indentation: 0
-
-            frame: Item {}
-            incrementControl: Item {}
-            decrementControl: Item {}
-            handle: Item {}
-            scrollBarBackground: Item {}
-            branchDelegate: Item {}
+            branchDelegate: null
 
             backgroundColor: background.color
 
-            rowDelegate: Rectangle {
+            rowDelegate: Item {
                 id: rowTreeDelegate
 
                 height: 36
                 width: parent.width
-                color: background.color
             }
         }
 
