@@ -71,7 +71,7 @@ void ProjectModule::registerExports()
     m_actionsController = std::make_shared<ProjectActionsController>();
     m_uiActions = std::make_shared<ProjectUiActions>(m_actionsController);
     m_thumbnailCreator = std::make_shared<ThumbnailCreator>();
-    m_projectAutoSaver = std::make_shared<ProjectAutoSaver>();
+    // m_projectAutoSaver = std::make_shared<ProjectAutoSaver>(); // we don't use at the moment 01/09/2025 the project auto saver as we already have the autosave table
 
 #ifdef Q_OS_MAC
     m_recentFilesController = std::make_shared<MacOSRecentFilesController>();
@@ -86,7 +86,7 @@ void ProjectModule::registerExports()
     ioc()->registerExport<IOpenSaveProjectScenario>(moduleName(), new OpenSaveProjectScenario());
     ioc()->registerExport<IProjectFilesController>(moduleName(), m_actionsController);
     ioc()->registerExport<IThumbnailCreator>(moduleName(), m_thumbnailCreator);
-    ioc()->registerExport<IProjectAutoSaver>(moduleName(), m_projectAutoSaver);
+    // ioc()->registerExport<IProjectAutoSaver>(moduleName(), m_projectAutoSaver);
 }
 
 void ProjectModule::resolveImports()
@@ -129,7 +129,7 @@ void ProjectModule::onInit(const muse::IApplication::RunMode&)
     m_actionsController->init();
     m_uiActions->init();
     m_recentFilesController->init();
-    m_projectAutoSaver->init();
+    // m_projectAutoSaver->init();
 }
 
 void ProjectModule::onDeinit()

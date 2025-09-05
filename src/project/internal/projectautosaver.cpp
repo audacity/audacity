@@ -84,45 +84,23 @@ void ProjectAutoSaver::init()
     });
 }
 
-bool ProjectAutoSaver::projectHasUnsavedChanges(const muse::io::path_t& projectPath) const
-{
-    muse::io::path_t autoSavePath = projectAutoSavePath(projectPath);
-    return fileSystem()->exists(autoSavePath);
-}
-
 void ProjectAutoSaver::removeProjectUnsavedChanges(const muse::io::path_t& projectPath)
 {
-    muse::io::path_t path = projectPath;
-    if (!isAutosaveOfNewlyCreatedProject(projectPath)) {
-        path = projectAutoSavePath(projectPath);
+    const bool success = au3ProjectCreator()->removeAutosaveDataFromFile(projectPath);
+
+    if (!success) {
+        LOGE() << "[autosave] failed to remove autosave data for project: " << projectPath;
     }
 
-    fileSystem()->remove(path);
+    // For newly created projects, also remove the temporary file
+    if (isPathToNewlyCreatedProject(projectPath)) {
+        fileSystem()->remove(projectPath);
+    }
 }
 
-bool ProjectAutoSaver::isAutosaveOfNewlyCreatedProject(const muse::io::path_t& projectPath) const
+bool ProjectAutoSaver::isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const
 {
     return projectPath == configuration()->newProjectTemporaryPath();
-}
-
-muse::io::path_t ProjectAutoSaver::projectOriginalPath(const muse::io::path_t& projectAutoSavePath) const
-{
-    // TODO AU4 create new methods using the DB autosave table instead of relying on autosave files
-//     IF_ASSERT_FAILED(io::suffix(projectAutoSavePath) == AUTOSAVE_SUFFIX) {
-//         return engraving::mainFilePath(projectAutoSavePath);
-//     }
-
-//     muse::io::path_t withoutAutosaveSuffix = io::filename(projectAutoSavePath, false);
-
-//     return engraving::mainFilePath(io::absoluteDirpath(projectAutoSavePath).appendingComponent(withoutAutosaveSuffix));
-    return muse::io::path_t();
-}
-
-muse::io::path_t ProjectAutoSaver::projectAutoSavePath(const muse::io::path_t& projectPath) const
-{
-    // TODO AU4 create new methods using the DB autosave table instead of relying on autosave files
-    // return engraving::containerPath(projectPath).appendingSuffix(AUTOSAVE_SUFFIX);
-    return muse::io::path_t();
 }
 
 IAudacityProjectPtr ProjectAutoSaver::currentProject() const
@@ -175,8 +153,7 @@ void ProjectAutoSaver::onTrySave()
         return;
     }
 
-    muse::io::path_t projectPath = this->projectPath(project);
-    muse::io::path_t savePath = project->isNewlyCreated() ? projectPath : projectAutoSavePath(projectPath);
+    const muse::io::path_t savePath = this->projectPath(project);
 
     // Perform autosave to enable session restoration
     Ret ret = project->save(savePath, SaveMode::AutoSave);

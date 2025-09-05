@@ -105,5 +105,5 @@ void MainWindowTitleProvider::update()
     setTitle((muse::qtrc("appshell", "%1 - Audacity 4").arg(project->title())));
 
     setFilePath(project->path().toQString());
-    setFileModified(project->needSave().val);
+    setFileModified(project->hasUnsavedChanges());
 }
