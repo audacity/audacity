@@ -78,6 +78,7 @@ StyledListView {
         navigation.row: model.index
         navigation.column: 0
         navigation.accessible.name: item.title
+        navigation.enabled: !loader.isSeparator
         navigation.onActiveChanged: {
             if (navigation.active) {
                 prv.currentItemNavigationName = navigation.name
