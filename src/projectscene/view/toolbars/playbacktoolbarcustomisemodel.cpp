@@ -34,14 +34,21 @@ void PlaybackToolBarCustomiseModel::load()
 
     QList<Item*> items;
 
-    ToolConfig noteInputConfig = uiConfiguration()->toolConfig(TOOLBAR_NAME,
-                                                               projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+    ToolConfig toolConfig = uiConfiguration()->toolConfig(TOOLBAR_NAME,
+                                                          projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
 
-    for (const ToolConfig::Item& configItem : noteInputConfig.items) {
+    auto isSeparator = [](const UiAction& a) { return a.code.empty(); };
+
+    bool lastWasSeparator = false;
+    for (const auto& configItem : toolConfig.items) {
         UiAction action = actionsRegister()->action(configItem.action);
-        Item* item = makeItem(action, configItem.show);
 
-        items << item;
+        if (isSeparator(action) && lastWasSeparator) {
+            continue;
+        }
+        lastWasSeparator = isSeparator(action);
+
+        items << makeItem(action, configItem.show);
     }
 
     setItems(items);
