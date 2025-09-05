@@ -37,6 +37,14 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/musevstmodulesrepository.h
 )
 
+if (OS_IS_WIN)
+    set(MODULE_SRC
+        ${MODULE_SRC}
+        ${CMAKE_CURRENT_LIST_DIR}/view/platform/windows/flickeringworkaround.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/view/platform/windows/flickeringworkaround.h
+    )
+endif()
+
 if(OS_IS_LIN OR OS_IS_FBSD)
     set(MODULE_SRC
         ${MODULE_SRC}
