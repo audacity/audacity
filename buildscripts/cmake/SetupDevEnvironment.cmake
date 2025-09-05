@@ -38,7 +38,7 @@ endfunction()
 populate(qmlformat "qmlformat/6.10")
 
 configure_file(
-    ${CMAKE_BINARY_DIR}/_deps/muse_framework-src/buildscripts/ci/checkcodestyle/uncrustify_muse.cfg
+    ${CMAKE_SOURCE_DIR}/muse_framework/buildscripts/ci/checkcodestyle/uncrustify_muse.cfg
     ${CMAKE_SOURCE_DIR}/uncrustify.cfg
     COPYONLY
 )

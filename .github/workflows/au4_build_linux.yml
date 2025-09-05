@@ -28,6 +28,8 @@ jobs:
     steps:
     - name: Clone repository
       uses: actions/checkout@v4
+    - name: Update submodules
+      run: git submodule update --init --recursive
     - name: "Configure workflow"
       env:
         pull_request_title: ${{ github.event.pull_request.title }}

@@ -3,6 +3,7 @@
 #
 declare_module(lv2sdk)
 
+include(FetchContent)
 FetchContent_Declare(
    lv2
    GIT_REPOSITORY https://gitlab.com/lv2/lv2.git
@@ -26,7 +27,7 @@ FetchContent_Declare(
    GIT_TAG v0.6.2
 )
 FetchContent_MakeAvailable(zix)
-   
+
 set( SORD_VERSION 0.16.18 )
 FetchContent_Declare(
    sord

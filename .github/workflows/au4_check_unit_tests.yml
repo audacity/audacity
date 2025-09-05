@@ -26,6 +26,9 @@ jobs:
     - name: Clone repository
       uses: actions/checkout@v4
 
+    - name: Update submodules
+      run: git submodule update --init --recursive
+
     - name: "Configure workflow"
       run: |
         echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_ENV

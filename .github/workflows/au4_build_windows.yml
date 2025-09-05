@@ -29,6 +29,8 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 3
+    - name: Update submodules
+      run: git submodule update --init --recursive
     - name: "Configure workflow"
       shell: bash
       env:
