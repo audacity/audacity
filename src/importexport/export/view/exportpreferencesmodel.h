@@ -50,6 +50,7 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable
 
     // dynamic inputs section
     Q_PROPERTY(bool customFFmpegOptionsVisible READ customFFmpegOptionsVisible NOTIFY customFFmpegOptionsVisibleChanged)
+    Q_PROPERTY(int optionsCount READ optionsCount NOTIFY optionsCountChanged)
 
 public:
     explicit ExportPreferencesModel(QObject* parent = nullptr);
@@ -90,6 +91,7 @@ public:
 
     // dynamic inputs
     bool customFFmpegOptionsVisible();
+    int optionsCount();
 
 signals:
     void currentProcessChanged();
@@ -107,6 +109,8 @@ signals:
     void exportSampleFormatListChanged();
 
     void customFFmpegOptionsVisibleChanged();
+    void optionsCountChanged();
+    void optionTitleListChanged();
 
 private:
     void updateCurrentSampleRate();

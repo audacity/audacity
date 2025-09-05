@@ -245,19 +245,12 @@ std::string Au3Exporter::formatExtension(const std::string& format) const
 
 bool Au3Exporter::isCustomFFmpegExportFormat() const
 {
-    std::string format = exportConfiguration()->currentFormat();
-
-    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
-            auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
-            if (!editor) {
-                return false;
-            }
-            return editor->GetName() == "custom_ffmpeg";
-        }
+    OptionsEditorPtr editor = optionsEditor();
+    if (!editor) {
+        return false;
     }
 
-    return false;
+    return editor->GetName() == "custom_ffmpeg";
 }
 
 int Au3Exporter::maxChannels() const
@@ -275,17 +268,96 @@ int Au3Exporter::maxChannels() const
 
 std::vector<int> Au3Exporter::sampleRateList() const
 {
+    OptionsEditorPtr editor = optionsEditor();
+    if (!editor) {
+        return {};
+    }
+
+    return editor->GetSampleRateList();
+}
+
+int Au3Exporter::optionsCount() const
+{
+    OptionsEditorPtr editor = optionsEditor();
+    if (!editor) {
+        return 0;
+    }
+
+    return editor->GetOptionsCount();
+}
+
+std::optional<au::importexport::ExportOption> Au3Exporter::option(int i) const
+{
+    OptionsEditorPtr editor = optionsEditor();
+    if (!editor) {
+        return std::nullopt;
+    }
+
+    ::ExportOption opt;
+
+    if (editor->GetOption(i, opt)) {
+        std::string title = opt.title.Translation().ToStdString();
+        std::vector<std::string> names;
+        for (const auto& name : opt.names) {
+            names.push_back(name.Translation().ToStdString());
+        }
+
+        return ExportOption { opt.id,
+                              title,
+                              opt.defaultValue,
+                              opt.flags,
+                              opt.values,
+                              names };
+    }
+
+    return std::nullopt;
+}
+
+std::optional<au::importexport::ExportValue> Au3Exporter::value(int id) const
+{
+    OptionsEditorPtr editor = optionsEditor();
+    if (!editor) {
+        return std::nullopt;
+    }
+
+    ::ExportValue val;
+
+    if (editor->GetValue(id, val)) {
+        return val;
+    }
+
+    return std::nullopt;
+}
+
+void Au3Exporter::setValue(int id, const ExportValue& value)
+{
+    OptionsEditorPtr editor = optionsEditor();
+    if (!editor) {
+        return;
+    }
+
+    ::ExportValue val = value;
+
+    editor->SetValue(id, val);
+    editor->Store(*gPrefs);
+}
+
+OptionsEditorPtr Au3Exporter::optionsEditor() const
+{
     std::string format = exportConfiguration()->currentFormat();
 
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
         if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
             auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
             if (!editor) {
-                return {};
+                return nullptr;
             }
-            return editor->GetSampleRateList();
+
+            editor->Load(*gPrefs);
+
+            return editor;
         }
     }
 
-    return {};
+    return nullptr;
 }
