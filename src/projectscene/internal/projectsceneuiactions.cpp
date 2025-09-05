@@ -156,18 +156,18 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Follow track color"),
              Checkable::Yes
              ),
-    UiAction("play-position-decrease",
-             au::context::UiCtxProjectOpened,
-             muse::shortcuts::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Move play cursor left"),
-             TranslatableString("action", "Move play cursor left")
-             ),
-    UiAction("play-position-increase",
-             au::context::UiCtxProjectOpened,
-             muse::shortcuts::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Move play cursor right"),
-             TranslatableString("action", "Move play cursor right")
-             ),
+    // UiAction("play-position-decrease",
+    //          au::context::UiCtxProjectOpened,
+    //          muse::shortcuts::CTX_PROJECT_OPENED,
+    //          TranslatableString("action", "Move play cursor left"),
+    //          TranslatableString("action", "Move play cursor left")
+    //          ),
+    // UiAction("play-position-increase",
+    //          au::context::UiCtxProjectOpened,
+    //          muse::shortcuts::CTX_PROJECT_OPENED,
+    //          TranslatableString("action", "Move play cursor right"),
+    //          TranslatableString("action", "Move play cursor right")
+    //          ),
     UiAction("clip-pitch-speed",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -187,6 +187,24 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Show clipping in waveform"),
              TranslatableString("action", "Show clipping in waveform"),
              Checkable::Yes
+             ),
+    UiAction("prev-track",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Previous track"),
+             TranslatableString("action", "Previous track")
+             ),
+    UiAction("next-track",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Next track"),
+             TranslatableString("action", "Next track")
+             ),
+    UiAction("track-toggle-focused-selection",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Select track"),
+             TranslatableString("action", "Select track")
              )
 };
 

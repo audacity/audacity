@@ -42,6 +42,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackedituiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/tracknavigationcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/tracknavigationcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/itracknavigationcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/deletebehavioronboardingscenario.cpp

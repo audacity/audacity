@@ -11,6 +11,7 @@
 #include "types/projectscenetypes.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/iprojecthistory.h"
+#include "ui/inavigationcontroller.h"
 
 #include "trackitem.h"
 
@@ -37,6 +38,7 @@ class TracksListModel : public QAbstractListModel, public muse::async::Asyncable
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<muse::ui::INavigationController> navigationController;
 
 public:
     explicit TracksListModel(QObject* parent = nullptr);
@@ -54,11 +56,20 @@ public:
     Q_INVOKABLE void moveSelectedRowsDown();
     Q_INVOKABLE void removeSelectedRows();
     Q_INVOKABLE void removeSelection();
+    Q_INVOKABLE void moveFocusTo(int row);
+    Q_INVOKABLE void moveFocusNext();
+    Q_INVOKABLE void moveFocusPrevious();
+    Q_INVOKABLE void requestActivateByIndex(int row);
+    Q_INVOKABLE void toggleSelectionOnFocusedTrack();
+    Q_INVOKABLE void resetNavigation();
+    Q_INVOKABLE void requestActiveByName(const QString& section, const QString& panel, const QString& control);
 
     Q_INVOKABLE void requestTracksMove(QVariantList trackIndexes, int to);
 
     Q_INVOKABLE bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent,
                               int destinationChild) override;
+
+    Q_INVOKABLE void setHighlight();
 
     Q_INVOKABLE void startActiveDrag();
     Q_INVOKABLE void endActiveDrag();

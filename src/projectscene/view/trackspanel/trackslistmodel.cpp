@@ -595,6 +595,23 @@ void TracksListModel::onSelectedTracks(const TrackIdList& trackIds)
 
 void TracksListModel::onFocusedTrack(const trackedit::TrackId& trackId)
 {
+    int trackIndex = -1;
+    for (int i = 0; i < m_trackList.size(); ++i) {
+        if (m_trackList.at(i)->trackId() == trackId) {
+            trackIndex = i;
+            break;
+        }
+    }
+
+    if (trackIndex == -1) {
+        return;
+    }
+
+    const auto activeSection = navigationController()->activeSection();
+    if (activeSection && activeSection->name() != QString::fromStdString("TrackSection_" + std::to_string(trackIndex))) {
+        navigationController()->requestActivateByName("MainSection", "MainPanel", "Main");
+    }
+
     for (int i = 0; i < m_trackList.size(); ++i) {
         auto& track = m_trackList.at(i);
         track->setIsFocused(track->trackId() == trackId);
@@ -677,4 +694,63 @@ void TracksListModel::onTrackMoved(const trackedit::Track& track, int pos)
     onTrackChanged(track);
 
     endMoveRows();
+}
+
+void TracksListModel::moveFocusTo(int row)
+{
+    if (row < 0 || row >= m_trackList.size()) {
+        return;
+    }
+
+    const auto& trackId = m_trackList.at(row)->trackId();
+    selectionController()->setFocusedTrack(trackId);
+}
+
+void TracksListModel::requestActivateByIndex(int row)
+{
+    muse::ui::INavigation::Index index;
+    index.column = -1;
+    index.row = row;
+    navigationController()->requestActivateByIndex("TrackSection_" + std::to_string(row), "TrackPanel_" + std::to_string(
+                                                       row), index);
+}
+
+void TracksListModel::toggleSelectionOnFocusedTrack()
+{
+    const au::trackedit::TrackId focusedTrack = selectionController()->focusedTrack();
+    au::trackedit::TrackIdList selectedTracks = selectionController()->selectedTracks();
+
+    if (muse::contains(selectedTracks, focusedTrack)) {
+        selectedTracks.erase(std::remove(selectedTracks.begin(), selectedTracks.end(), focusedTrack), selectedTracks.end());
+    } else {
+        selectedTracks.push_back(focusedTrack);
+    }
+
+    selectionController()->setSelectedTracks(selectedTracks);
+}
+
+void TracksListModel::moveFocusNext()
+{
+    selectionController()->focusNextTrack();
+}
+
+void TracksListModel::moveFocusPrevious()
+{
+    selectionController()->focusPreviousTrack();
+}
+
+void TracksListModel::resetNavigation()
+{
+    navigationController()->resetNavigation();
+}
+
+void TracksListModel::requestActiveByName(const QString& section, const QString& panel, const QString& control)
+{
+    navigationController()->requestActivateByName(section.toStdString(), panel.toStdString(), control.toStdString());
+}
+
+void TracksListModel::setHighlight()
+{
+    navigationController()->setIsResetOnMousePress(false);
+    navigationController()->setIsHighlight(true);
 }

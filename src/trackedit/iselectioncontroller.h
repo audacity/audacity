@@ -80,5 +80,8 @@ public:
     virtual TrackId focusedTrack() const = 0;
     virtual void setFocusedTrack(TrackId trackId) = 0;
     virtual muse::async::Channel<trackedit::TrackId> focusedTrackChanged() const = 0;
+
+    virtual void focusPreviousTrack() = 0;
+    virtual void focusNextTrack() = 0;
 };
 }

@@ -63,19 +63,28 @@ ListItemBlank {
         }
     }
 
-    property NavigationPanel navigationPanel: NavigationPanel {
-        name: "Track" + root.item.title + "Panel"
-        enabled: root.enabled && root.visible
-        direction: NavigationPanel.Horizontal
-        onActiveChanged: function(active) {
-            if (active) {
-                root.forceActiveFocus()
-            }
-        }
-    }
+    // property NavigationPanel navigationPanel: NavigationPanel {
+    //     name: "Track" + root.item.title + "Panel"
+    //     enabled: root.enabled && root.visible
+    //     direction: NavigationPanel.Horizontal
+    //     onActiveChanged: function(active) {
+    //         console.log("TrackItem NavigationPanel Active Changed:" + active);
+    //         if (active) {
+    //             root.forceActiveFocus()
+    //         }
+    //     }
+    //     onNavigationEvent: function(event) {
+    //         console.log("TrackItem Navigation Event:" + event);
+    //     }
+    // }
 
     height: trackViewState.trackHeight
     opacity: dragged ? 0.5 : 1
+
+    //focusBorder.visible: false
+    focusBorder.anchors.leftMargin: spacer.width + 2
+    focusBorder.anchors.rightMargin: volumePressureContainer.width + separatorLine.width + 10
+    focusBorder.anchors.bottomMargin: 2
 
     background.color: (root.isSelected || hoverHandler.hovered) ?
                    ui.theme.backgroundPrimaryColor : ui.theme.backgroundSecondaryColor
@@ -271,6 +280,7 @@ ListItemBlank {
         }
 
         SeparatorLine {
+            id: separatorLine
             Layout.bottomMargin: 2 * bottomSeparator.thickness
         }
 
@@ -366,6 +376,7 @@ ListItemBlank {
                 e.accepted = false
                 if(!root.isSelected) {
                     root.selectionRequested(false)
+                    navigation.requestActive(true)
                 }
             }
         }
