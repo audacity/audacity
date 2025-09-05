@@ -40,8 +40,8 @@ set(MODULE_SRC
 if (OS_IS_WIN)
     set(MODULE_SRC
         ${MODULE_SRC}
-        ${CMAKE_CURRENT_LIST_DIR}/view/platform/windows/flickeringworkaround.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/view/platform/windows/flickeringworkaround.h
+       ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/platform/windows/flickeringworkaround.cpp
+       ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/platform/windows/flickeringworkaround.h
     )
 endif()
 
