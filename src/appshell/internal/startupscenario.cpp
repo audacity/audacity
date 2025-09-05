@@ -91,9 +91,23 @@ void StartupScenario::runOnSplashScreen()
     //! (Thanks to the splashscreen, but this is not an obvious detail)
     qApp->setQuitLockEnabled(false);
 
-    muse::Ret ret = registerAudioPluginsScenario()->registerNewPlugins();
-    if (!ret) {
-        LOGE() << ret.toString();
+    muse::io::paths_t newPluginPaths = registerAudioPluginsScenario()->scanForNewPluginPaths();
+
+    if (!newPluginPaths.empty()) {
+        auto ret = interactive()->questionSync(muse::trc("appshell", "Scanning audio plugins"),
+                                               muse::trc(
+                                                   "appshell",
+                                                   "Audacity has found plugins that need to be scanned before use. Would you like to scan them now or skip?"),
+                                               { muse::IInteractive::ButtonData(
+                                                     muse::IInteractive::Button::Cancel, muse::trc("appshell", "Skip this time"), false),
+                                                 muse::IInteractive::ButtonData(
+                                                     muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"), true) });
+        if (ret.standardButton() == muse::IInteractive::Button::Apply) {
+            muse::Ret ret = registerAudioPluginsScenario()->registerNewPlugins(newPluginPaths);
+            if (!ret) {
+                LOGE() << ret.toString();
+            }
+        }
     }
 
     qApp->setQuitLockEnabled(true);
