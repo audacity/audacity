@@ -1,0 +1,3 @@
+[submodule "src/muse_framework"]
+	path = src/muse_framework
+	url = https://github.com/musescore/framework_tmp.git
