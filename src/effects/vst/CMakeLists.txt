@@ -40,8 +40,8 @@ set(MODULE_SRC
 if(OS_IS_LIN OR OS_IS_FBSD)
     set(MODULE_SRC
         ${MODULE_SRC}
-        ${MUSE_FRAMEWORK_SRC_PATH}/vst/internal/platform/linux/runloop.cpp
-        ${MUSE_FRAMEWORK_SRC_PATH}/vst/internal/platform/linux/runloop.h
+        ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/platform/linux/runloop.cpp
+        ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/platform/linux/runloop.h
     )
 endif()
 
