@@ -375,11 +375,11 @@ DockPage {
     statusBar: DockStatusBar {
         objectName: pageModel.statusBarName()
 
-        Component.onCompleted: {
-            height = 40
-            minimumHeight = height
-            maximumHeight = height
-        }
+        property int thickness: 40
+
+        height: thickness
+        minimumHeight: thickness
+        maximumHeight: thickness
 
         ProjectStatusBar {}
     }
