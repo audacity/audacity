@@ -202,6 +202,7 @@ DockPage {
             dropDestinations: [root.toolBarTopDropDestination, root.toolBarBottomDropDestination]
 
             minimumWidth: 300
+            thickness: 48 /* see PlaybackToolBar rowHeight */
             resizable: true
 
             PlaybackToolBar {
