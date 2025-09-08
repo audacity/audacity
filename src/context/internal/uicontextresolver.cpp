@@ -112,11 +112,11 @@ UiContext UiContextResolver::currentUiContext() const
 
         INavigationPanel* activePanel = navigationController()->activePanel();
         if (activePanel) {
-            if (activePanel->name() == PROJECT_NAVIGATION_PANEL) {
-                return context::UiCtxProjectFocused;
-            } else {
-                return context::UiCtxProjectPlayback;
-            }
+            //if (activePanel->name() == PROJECT_NAVIGATION_PANEL) {
+            //    return context::UiCtxProjectFocused;
+            //} else {
+            return context::UiCtxProjectPlayback;
+            //}
         }
 
         return context::UiCtxProjectOpened;

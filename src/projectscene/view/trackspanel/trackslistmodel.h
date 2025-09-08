@@ -11,6 +11,7 @@
 #include "types/projectscenetypes.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/iprojecthistory.h"
+#include "ui/inavigationcontroller.h"
 
 #include "trackitem.h"
 
@@ -37,6 +38,7 @@ class TracksListModel : public QAbstractListModel, public muse::async::Asyncable
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<muse::ui::INavigationController> navigationController;
 
 public:
     explicit TracksListModel(QObject* parent = nullptr);

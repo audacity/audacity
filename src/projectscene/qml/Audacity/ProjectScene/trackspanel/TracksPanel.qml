@@ -13,10 +13,11 @@ import Audacity.ProjectScene
 Item {
     id: root
 
-    property NavigationSection navigationSection: null
-    property NavigationPanel navigationPanel: view.count > 0 ? view.itemAtIndex(0).navigationPanel : null // first panel
+    property var navpanels: null
     property alias tracksModel: tracksModel
+
     signal openEffectsRequested()
+    signal panelActive(int index)
 
     property NavigationSection trackEffectsNavigationSection: null
     property NavigationSection masterEffectsNavigationSection: null
@@ -180,8 +181,6 @@ Item {
                     height: tracksViewState.tracksVerticalScrollPadding
                 }
 
-                navigation.section: root.navigationSection
-                navigation.order: 1
                 delegate: TrackItem {
                     item: itemData
                     isSelected: Boolean(item) ? item.isSelected : false
@@ -189,11 +188,12 @@ Item {
                     container: view
 
                     navigation.name: Boolean(item) ? item.title + item.index : ""
-                    navigation.panel: view.navigation
+                    navigation.panel: root.navpanels && root.navpanels[model.index] ? root.navpanels[model.index] : null
                     navigation.row: model.index
                     navigation.accessible.name: Boolean(item) ? item.title : ""
                     navigation.onActiveChanged: {
                         if (navigation.active) {
+                            root.panelActive(model.index)
                             prv.currentItemNavigationName = navigation.name
                             view.positionViewAtIndex(index, ListView.Contain)
                         }
@@ -224,6 +224,15 @@ Item {
                         mousePressed.connect(dragHandler.startDrag)
                         mouseReleased.connect(dragHandler.endDrag)
                         mouseMoved.connect(dragHandler.onMouseMove)
+                    }
+
+                    Connections {
+                        target: root
+                        function onNavpanelsChanged() {
+                            if (root.navpanels && root.navpanels[model.index]) {
+                                navigation.panel = root.navpanels[model.index]
+                            }
+                        }
                     }
                 }
 
