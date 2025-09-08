@@ -67,7 +67,7 @@ ListItemBlank {
     opacity: dragged ? 0.5 : 1
 
     focusBorder.anchors.leftMargin: spacer.width + 2
-    focusBorder.anchors.rightMargin: volumePressureContainer.width + separatorLine.width + 10
+    focusBorder.anchors.rightMargin: 24 + separatorLine.width
     focusBorder.anchors.bottomMargin: 2
 
     background.color: (root.isSelected || hoverHandler.hovered) ?
@@ -361,7 +361,6 @@ ListItemBlank {
                 if(!root.isSelected) {
                     root.selectionRequested(false)
                 }
-                navigation.requestActive(true)
             }
         }
 
