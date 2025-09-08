@@ -250,8 +250,6 @@ int main(int argc, char** argv)
     app.addModule(new au::effects::AudioUnitEffectsModule());
     app.addModule(new au::effects::Lv2EffectsModule());
     app.addModule(new au::effects::VstEffectsModule());
-    app.addModule(new au::importexport::ExporterModule());
-    app.addModule(new au::importexport::ImporterModule());
 
     if (!isPluginRegistration) {
         app.addModule(new au::context::ContextModule());
@@ -261,6 +259,8 @@ int main(int argc, char** argv)
         app.addModule(new au::record::RecordModule());
         app.addModule(new au::trackedit::TrackeditModule());
         app.addModule(new au::project::ProjectModule());
+        app.addModule(new au::importexport::ExporterModule());
+        app.addModule(new au::importexport::ImporterModule());
         app.addModule(new au::au3::Au3WrapModule());
         app.addModule(new au::effects::EffectsModule());
         app.addModule(new au::effects::BuiltinEffectsModule());
