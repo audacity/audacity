@@ -36,6 +36,13 @@ signals:
     void clipItemPanelsChanged();
 
 private:
+    void load();
+    void cleanup();
+
+    void addPanels(trackedit::TrackId trackId, int pos);
+    void resetPanelOrder();
+    void addDefaultNavigation();
+
     muse::ui::NavigationControl* m_default_control = nullptr;
     muse::ui::NavigationPanel* m_default_panel = nullptr;
     muse::ui::NavigationSection* m_default_section = nullptr;

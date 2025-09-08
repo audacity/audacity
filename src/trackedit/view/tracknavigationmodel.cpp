@@ -5,61 +5,26 @@ TrackNavigationModel::TrackNavigationModel(QObject* parent)
     : QObject(parent)
 {
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
-        init();
+        cleanup();
+        load();
     });
 }
 
 void TrackNavigationModel::init(muse::ui::NavigationSection* section)
 {
-    if (section) {
-        m_section = section;
-    }
+    m_section = section;
+}
 
+void TrackNavigationModel::load()
+{
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
     }
 
-    prj->tracksChanged().onReceive(this, [this](std::vector<au::trackedit::Track>) {
-    });
-
     prj->trackAdded().onReceive(this, [this](const Track& track) {
         const int pos = m_trackItemPanels.size();
-
-        muse::ui::NavigationPanel* trackPanel = new muse::ui::NavigationPanel(this);
-        trackPanel->setName(QString("Track %1 Panel").arg(track.id));
-        trackPanel->setIndex({ 2 * pos, 0 });
-        trackPanel->setOrder(2 * pos);
-        trackPanel->setSection(m_section);
-
-        connect(trackPanel, &muse::ui::NavigationPanel::navigationEvent, this, [this, pos](QVariant event) {
-            muse::ui::NavigationEvent navEvent = event.value<muse::ui::NavigationEvent>();
-
-            if (navEvent.type() == muse::ui::NavigationEvent::Type::Up) {
-                const auto args = muse::actions::ActionData::make_arg1<int>(pos);
-                dispatcher()->dispatch("prev-track", args);
-                navEvent.setAccepted(true);
-            } else if (navEvent.type() == muse::ui::NavigationEvent::Type::Down) {
-                const auto args = muse::actions::ActionData::make_arg1<int>(pos);
-                dispatcher()->dispatch("next-track", args);
-                navEvent.setAccepted(true);
-            } else if (navEvent.type() == muse::ui::NavigationEvent::Type::Trigger) {
-                dispatcher()->dispatch("track-toggle-focused-selection");
-                navEvent.setAccepted(true);
-            }
-        });
-
-        muse::ui::NavigationPanel* clipPanel = new muse::ui::NavigationPanel(this);
-        clipPanel->setName(QString("Clip %1 Panel").arg(track.id));
-        clipPanel->setIndex({ 2 * pos + 1, 0 });
-        clipPanel->setOrder(2 * pos + 1);
-        clipPanel->setSection(m_section);
-
-        m_trackItemPanels.append(trackPanel);
-        m_clipItemPanels.append(clipPanel);
-
-        emit trackItemPanelsChanged();
-        emit clipItemPanelsChanged();
+        addPanels(track.id, pos);
     });
 
     prj->trackRemoved().onReceive(this, [this](const Track& track) {
@@ -79,30 +44,12 @@ void TrackNavigationModel::init(muse::ui::NavigationSection* section)
             }
         }
 
-        emit trackItemPanelsChanged();
-        emit clipItemPanelsChanged();
+        resetPanelOrder();
     });
 
-    prj->trackChanged().onReceive(this, [this](const Track&) {});
-
     prj->trackInserted().onReceive(this, [this](const Track& track, int pos) {
-        muse::ui::NavigationPanel* trackPanel = new muse::ui::NavigationPanel(this);
-        trackPanel->setName(QString("Track %1 Panel").arg(track.id));
-        trackPanel->setIndex({ 2 * pos, 0 });
-        trackPanel->setOrder(pos);
-        trackPanel->setSection(m_section);
-
-        muse::ui::NavigationPanel* clipPanel = new muse::ui::NavigationPanel(this);
-        clipPanel->setName(QString("Clip %1 Panel").arg(track.id));
-        clipPanel->setIndex({ 2 * pos + 1, 1 });
-        clipPanel->setOrder(pos);
-        clipPanel->setSection(m_section);
-
-        m_trackItemPanels.append(trackPanel);
-        m_clipItemPanels.append(clipPanel);
-
-        emit trackItemPanelsChanged();
-        emit clipItemPanelsChanged();
+        addPanels(track.id, pos);
+        resetPanelOrder();
     });
 
     prj->trackMoved().onReceive(this, [this](const Track& track, int pos) {
@@ -122,85 +69,39 @@ void TrackNavigationModel::init(muse::ui::NavigationSection* section)
             }
         }
 
-        for (int i = 0; i < m_trackItemPanels.size(); ++i) {
-            m_trackItemPanels.at(i)->setOrder(i);
-        }
-
-        for (int i = 0; i < m_clipItemPanels.size(); ++i) {
-            m_clipItemPanels.at(i)->setOrder(i);
-        }
-
-        emit trackItemPanelsChanged();
-        emit clipItemPanelsChanged();
+        resetPanelOrder();
     });
 
     const auto trackList = prj->trackList();
     for (const auto& track : trackList) {
         const int pos = m_trackItemPanels.size();
-        muse::ui::NavigationPanel* trackPanel = new muse::ui::NavigationPanel(this);
-        trackPanel->setName(QString("Track %1 Panel").arg(track.id));
-        trackPanel->setIndex({ 2 * pos, 0 });
-        trackPanel->setOrder(2 * pos);
-        trackPanel->setSection(m_section);
-
-        connect(trackPanel, &muse::ui::NavigationPanel::navigationEvent, this, [this, pos](QVariant event) {
-            muse::ui::NavigationEvent navEvent = event.value<muse::ui::NavigationEvent>();
-
-            if (navEvent.type() == muse::ui::NavigationEvent::Type::Up) {
-                const auto args = muse::actions::ActionData::make_arg1<int>(pos);
-                dispatcher()->dispatch("prev-track", args);
-                navEvent.setAccepted(true);
-            } else if (navEvent.type() == muse::ui::NavigationEvent::Type::Down) {
-                const auto args = muse::actions::ActionData::make_arg1<int>(pos);
-                dispatcher()->dispatch("next-track", args);
-                navEvent.setAccepted(true);
-            } else if (navEvent.type() == muse::ui::NavigationEvent::Type::Trigger) {
-                dispatcher()->dispatch("track-toggle-focused-selection");
-                navEvent.setAccepted(true);
-            }
-        });
-
-        m_trackItemPanels.append(trackPanel);
+        addPanels(track.id, pos);
     }
 
-    for (const auto& track : trackList) {
-        const int pos = m_clipItemPanels.size();
-        muse::ui::NavigationPanel* clipPanel = new muse::ui::NavigationPanel(this);
-        clipPanel->setName(QString("Clip %1 Panel").arg(track.id));
-        clipPanel->setIndex({ 2 * pos + 1, 0 });
-        clipPanel->setOrder(2 * pos + 1);
-        clipPanel->setSection(m_section);
+    addDefaultNavigation();
 
-        m_clipItemPanels.append(clipPanel);
-    }
-    emit trackItemPanelsChanged();
-    emit clipItemPanelsChanged();
+    navigationController()->requestActivateByName(m_default_section->name().toStdString(),
+                                                  m_default_panel->name().toStdString(), m_default_control->name().toStdString());
+}
 
-    m_default_section = new muse::ui::NavigationSection(this);
-    m_default_section->setName("Main Section");
-    m_default_section->setIndex({ 0, 0 });
-    m_default_section->setOrder(0);
+void TrackNavigationModel::addPanels(trackedit::TrackId trackId, int pos)
+{
+    muse::ui::NavigationPanel* trackPanel = new muse::ui::NavigationPanel(this);
+    trackPanel->setName(QString("Track %1 Panel").arg(trackId));
+    trackPanel->setIndex({ 2 * pos, 0 });
+    trackPanel->setOrder(2 * pos);
+    trackPanel->setSection(m_section);
 
-    m_default_panel = new muse::ui::NavigationPanel(this);
-    m_default_panel->setName("Main Panel");
-    m_default_panel->setIndex({ 0, 0 });
-    m_default_panel->setOrder(0);
-    m_default_panel->setSection(m_default_section);
-
-    m_default_control = new muse::ui::NavigationControl(this);
-    m_default_control->setName("Main Control");
-    m_default_control->setIndex({ 0, 0 });
-    m_default_control->setOrder(0);
-    m_default_control->setPanel(m_default_panel);
-
-    connect(m_default_control, &muse::ui::NavigationControl::navigationEvent, this, [this](QVariant event) {
+    connect(trackPanel, &muse::ui::NavigationPanel::navigationEvent, this, [this, pos](QVariant event) {
         muse::ui::NavigationEvent navEvent = event.value<muse::ui::NavigationEvent>();
 
         if (navEvent.type() == muse::ui::NavigationEvent::Type::Up) {
-            dispatcher()->dispatch("focus-prev-track");
+            const auto args = muse::actions::ActionData::make_arg1<int>(pos);
+            dispatcher()->dispatch("prev-track", args);
             navEvent.setAccepted(true);
         } else if (navEvent.type() == muse::ui::NavigationEvent::Type::Down) {
-            dispatcher()->dispatch("focus-next-track");
+            const auto args = muse::actions::ActionData::make_arg1<int>(pos);
+            dispatcher()->dispatch("next-track", args);
             navEvent.setAccepted(true);
         } else if (navEvent.type() == muse::ui::NavigationEvent::Type::Trigger) {
             dispatcher()->dispatch("track-toggle-focused-selection");
@@ -208,10 +109,31 @@ void TrackNavigationModel::init(muse::ui::NavigationSection* section)
         }
     });
 
-    navigationController()->reg(m_default_section);
-    navigationController()->requestActivateByName(m_default_section->name().toStdString(),
-                                                  m_default_panel->name().toStdString(), m_default_control->name().toStdString());
-    navigationController()->setDefaultNavigationControl(m_default_control);
+    muse::ui::NavigationPanel* clipPanel = new muse::ui::NavigationPanel(this);
+    clipPanel->setName(QString("Clip %1 Panel").arg(trackId));
+    clipPanel->setIndex({ 2 * pos + 1, 0 });
+    clipPanel->setOrder(2 * pos + 1);
+    clipPanel->setSection(m_section);
+
+    m_trackItemPanels.append(trackPanel);
+    m_clipItemPanels.append(clipPanel);
+
+    emit trackItemPanelsChanged();
+    emit clipItemPanelsChanged();
+}
+
+void TrackNavigationModel::resetPanelOrder()
+{
+    for (int i = 0; i < m_trackItemPanels.size(); ++i) {
+        m_trackItemPanels.at(i)->setOrder(i);
+    }
+
+    for (int i = 0; i < m_clipItemPanels.size(); ++i) {
+        m_clipItemPanels.at(i)->setOrder(i);
+    }
+
+    emit trackItemPanelsChanged();
+    emit clipItemPanelsChanged();
 }
 
 void TrackNavigationModel::requestActivateByIndex(int index)
@@ -240,6 +162,65 @@ void TrackNavigationModel::moveFocusTo(int index)
     }
 
     dispatcher()->dispatch("focus-track-index", muse::actions::ActionData::make_arg1<int>(index));
+}
+
+void TrackNavigationModel::addDefaultNavigation()
+{
+    if (!m_default_section) {
+        m_default_section = new muse::ui::NavigationSection(this);
+        m_default_section->setName("Main Section");
+        m_default_section->setIndex({ 0, 0 });
+        m_default_section->setOrder(0);
+
+        m_default_panel = new muse::ui::NavigationPanel(this);
+        m_default_panel->setName("Main Panel");
+        m_default_panel->setIndex({ 0, 0 });
+        m_default_panel->setOrder(0);
+        m_default_panel->setSection(m_default_section);
+
+        m_default_control = new muse::ui::NavigationControl(this);
+        m_default_control->setName("Main Control");
+        m_default_control->setIndex({ 0, 0 });
+        m_default_control->setOrder(0);
+        m_default_control->setPanel(m_default_panel);
+
+        connect(m_default_control, &muse::ui::NavigationControl::navigationEvent, this, [this](QVariant event) {
+            muse::ui::NavigationEvent navEvent = event.value<muse::ui::NavigationEvent>();
+
+            if (navEvent.type() == muse::ui::NavigationEvent::Type::Up) {
+                dispatcher()->dispatch("focus-prev-track");
+                navEvent.setAccepted(true);
+            } else if (navEvent.type() == muse::ui::NavigationEvent::Type::Down) {
+                dispatcher()->dispatch("focus-next-track");
+                navEvent.setAccepted(true);
+            } else if (navEvent.type() == muse::ui::NavigationEvent::Type::Trigger) {
+                dispatcher()->dispatch("track-toggle-focused-selection");
+                navEvent.setAccepted(true);
+            }
+        });
+        navigationController()->reg(m_default_section);
+    }
+
+    navigationController()->setDefaultNavigationControl(m_default_control);
+}
+
+void TrackNavigationModel::cleanup()
+{
+    if (m_default_section) {
+        navigationController()->setDefaultNavigationControl(nullptr);
+    }
+
+    navigationController()->resetNavigation();
+
+    for (auto panel : m_trackItemPanels) {
+        panel->deleteLater();
+    }
+    m_trackItemPanels.clear();
+
+    for (auto panel : m_clipItemPanels) {
+        panel->deleteLater();
+    }
+    m_clipItemPanels.clear();
 }
 
 QList<muse::ui::NavigationPanel*> TrackNavigationModel::trackItemPanels() const
