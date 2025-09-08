@@ -595,23 +595,6 @@ void TracksListModel::onSelectedTracks(const TrackIdList& trackIds)
 
 void TracksListModel::onFocusedTrack(const trackedit::TrackId& trackId)
 {
-    int trackIndex = -1;
-    for (int i = 0; i < m_trackList.size(); ++i) {
-        if (m_trackList.at(i)->trackId() == trackId) {
-            trackIndex = i;
-            break;
-        }
-    }
-
-    if (trackIndex == -1) {
-        return;
-    }
-
-    const auto activePanel = navigationController()->activePanel();
-    if (activePanel && activePanel->name() != QString("Track %1 Panel").arg(trackId)) {
-        navigationController()->requestActivateByName("Main Section", "Main Panel", "Main Control");
-    }
-
     for (int i = 0; i < m_trackList.size(); ++i) {
         auto& track = m_trackList.at(i);
         track->setIsFocused(track->trackId() == trackId);

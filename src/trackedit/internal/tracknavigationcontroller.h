@@ -5,6 +5,7 @@
 #pragma once
 
 #include "framework/actions/actionable.h"
+#include "async/asyncable.h"
 
 #include "framework/global/modularity/ioc.h"
 #include "trackedit/iselectioncontroller.h"
@@ -14,7 +15,7 @@
 #include "trackedit/internal/itracknavigationcontroller.h"
 
 namespace au::trackedit {
-class TrackNavigationController : public ITrackNavigationController, public muse::actions::Actionable
+class TrackNavigationController : public ITrackNavigationController, public muse::actions::Actionable, public muse::async::Asyncable
 {
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::trackedit::ISelectionController> selectionController;

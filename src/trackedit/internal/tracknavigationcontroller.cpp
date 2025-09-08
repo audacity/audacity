@@ -23,6 +23,13 @@ void TrackNavigationController::init()
     dispatcher()->reg(this, PREV_TRACK_CODE, this, &TrackNavigationController::navigateUp);
     dispatcher()->reg(this, NEXT_TRACK_CODE, this, &TrackNavigationController::navigateDown);
     dispatcher()->reg(this, TRACK_TOGGLE_SELECTION_CODE, this, &TrackNavigationController::toggleSelectionOnFocusedTrack);
+
+    selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& trackId) {
+        const auto activePanel = navigationController()->activePanel();
+        if (activePanel && activePanel->name() != QString("Track %1 Panel").arg(trackId)) {
+            navigationController()->requestActivateByName("Main Section", "Main Panel", "Main Control");
+        }
+    });
 }
 
 void TrackNavigationController::focusTrackByIndex(const muse::actions::ActionData& args)
