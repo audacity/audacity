@@ -9,17 +9,19 @@
 * A package manager (tested: Choco on Windows, homebrew on macOS)
 * A CMake generator (tested: Ninja)
 * A C++ compiler (tested: MSVC on Windows, g++ on Linux)
-* Qt 6.2.4, with modules:
-  * Qt Network Authorization
+* Qt 6.9.1, 'Desktop' with 'Additional Libraries':
   * Qt 5 Compatibility Module
+  * Qt Network Authorization
+  * Qt Shader Tools
   * Qt State Machines
+
 
 ## Setup
 
 As large parts of Audacity 4 are based on MuseScore Studio, the general setup steps from it are applicable here too:
 
 1. [Set up a developer environment](https://github.com/musescore/MuseScore/wiki/Set-up-developer-environment)
-2. [Install Qt and Qt Creator](https://github.com/musescore/MuseScore/wiki/Install-Qt-and-Qt-Creator) (with Qt version 6.2.4; not the latest version)
+2. [Install Qt and Qt Creator](https://github.com/musescore/MuseScore/wiki/Install-Qt-and-Qt-Creator)
 
 ### Get the Audacity source and its submodules
 
@@ -43,7 +45,7 @@ Git, CMake, Ninja, Package manager, Compiler and Qt should all be added to the P
 
 Using QtCreator to edit and compile the will provide the best intellisense and debugging support when interacting with QML. Nevertheless, debugging on Windows is slow, and if you mostly interact with the C++ code, you might want to other options, such as those listed below.
 
-To compile, just open CMakeLists.txt with QtCreator, configure the project with the auto-detected Qt 6.2.4 kit, and hit Build.
+To compile, just open CMakeLists.txt with QtCreator, configure the project with the auto-detected Qt kit, and hit Build.
 
 ### From the command line
 
