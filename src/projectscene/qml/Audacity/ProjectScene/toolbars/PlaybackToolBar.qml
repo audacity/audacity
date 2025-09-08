@@ -249,19 +249,27 @@ Item {
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
                 onVolumeLevelChangeRequested: function(level) {
-                    itemData.level = level
+                    if (itemData) {
+                        itemData.level = level
+                    }
                 }
 
                 onAudibleInputMonitoringChangeRequested: function(enable) {
-                    itemData.audibleInputMonitoring = enable
+                    if (itemData) {
+                        itemData.audibleInputMonitoring = enable
+                    }
                 }
 
                 onIsMicMeteringOnChangeRequested: function(enable) {
-                    itemData.isMicMeteringOn = enable
+                    if (itemData) {
+                        itemData.isMicMeteringOn = enable
+                    }
                 }
 
                 onIsPopupOpened: function(opened) {
-                    itemData.listenMainAudioInput(opened)
+                    if (itemData) {
+                        itemData.listenMainAudioInput(opened)
+                    }
                 }
             }
         }
