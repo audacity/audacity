@@ -238,8 +238,6 @@ void PlaybackToolBarModel::updateActions()
 {
     ToolBarItemList items;
 
-    beginResetModel();
-
     muse::ui::ToolConfig playbackConfig = uiConfiguration()->toolConfig(TOOLBAR_NAME,
                                                                         ProjectSceneUiActions::defaultPlaybackToolBarConfig());
 
@@ -279,8 +277,6 @@ void PlaybackToolBarModel::updateActions()
     }
 
     setItems(items);
-
-    endResetModel();
 }
 
 ToolBarItem* PlaybackToolBarModel::makeLocalItem(const ActionCode& actionCode)
