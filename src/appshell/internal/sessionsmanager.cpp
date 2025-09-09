@@ -22,6 +22,8 @@
 
 #include "sessionsmanager.h"
 
+#include "appshell/appshelltypes.h"
+
 using namespace au::appshell;
 using namespace muse;
 
