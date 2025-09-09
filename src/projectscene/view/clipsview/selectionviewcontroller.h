@@ -32,6 +32,8 @@ public:
     TimelineContext* timelineContext() const;
     void setTimelineContext(TimelineContext* newContext);
 
+    Q_INVOKABLE void load();
+
     //! NOTE The x coordinates must match the timeline.
     //! The y coordinates must match the track view
     //! If this is not the case, then appropriate adjustments must be made.
