@@ -358,7 +358,7 @@ std::string ServiceConfig::GetProjectPagePath(
    AudiocomTrace trace) const
 {
    return Substitute(
-      "/{user_slug}/projects/{project_slug}&" MTM_CAMPAIGN,
+      "/{user_slug}/projects/{project_slug}?" MTM_CAMPAIGN,
       {
          { "user_slug", userSlug },
          { "project_slug", projectSlug },
