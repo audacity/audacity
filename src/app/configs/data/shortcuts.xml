@@ -467,16 +467,16 @@
         <seq>Ctrl+Shift+F6</seq>
     </SC>
     <SC>
-        <key>next-frame</key>
-        <seq>Ctrl+F6</seq>
-    </SC>
-    <SC>
         <key>focus-prev-track</key>
         <seq>Up</seq>
     </SC>
     <SC>
         <key>focus-next-track</key>
         <seq>Down</seq>
+    </SC>
+    <SC>
+        <key>next-frame</key>
+        <seq>Ctrl+F6</seq>
     </SC>
     <SC>
         <key>prev-track</key>

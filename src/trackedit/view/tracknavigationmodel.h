@@ -24,7 +24,7 @@ class TrackNavigationModel : public QObject, public muse::async::Asyncable
 public:
     explicit TrackNavigationModel(QObject* parent = nullptr);
 
-    Q_INVOKABLE void init(muse::ui::NavigationSection* section = nullptr);
+    Q_INVOKABLE void init(muse::ui::NavigationSection* section);
     Q_INVOKABLE void requestActivateByIndex(int index);
     Q_INVOKABLE void moveFocusTo(int index);
 
@@ -38,6 +38,7 @@ signals:
 private:
     void load();
     void cleanup();
+    void clearPanels();
 
     void addPanels(trackedit::TrackId trackId, int pos);
     void resetPanelOrder();

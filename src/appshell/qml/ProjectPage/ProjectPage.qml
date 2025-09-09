@@ -303,7 +303,7 @@ DockPage {
             TracksPanel {
                 id: tracksPanelContent
 
-                navpanels: tracksNavModel.trackItemPanels
+                navPanels: tracksNavModel.trackItemPanels
                 effectsSectionWidth: tracksPanel.effectsSectionWidth
 
                 trackEffectsNavigationSection: root.trackEffectsKeyNavSec
@@ -381,7 +381,7 @@ DockPage {
     central: TracksClipsView {
         id: clipsView
 
-        navpanels: tracksNavModel.clipItemPanels
+        navPanels: tracksNavModel.clipItemPanels
     }
 
     statusBar: DockStatusBar {

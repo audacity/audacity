@@ -81,7 +81,15 @@ void TrackNavigationController::navigateUp(const muse::actions::ActionData& args
         return p->index().order() == 2 * position;
     });
 
+    if (panel == panels.end()) {
+        return;
+    }
+
     const auto firstControl = (*panel)->controls().begin();
+    if (!(*firstControl)) {
+        return;
+    }
+
     navigationController()->setIsResetOnMousePress(false);
     navigationController()->setIsHighlight(true);
     navigationController()->requestActivateByName(section->name().toStdString(),
@@ -114,6 +122,10 @@ void TrackNavigationController::navigateDown(const muse::actions::ActionData& ar
     }
 
     const auto firstControl = (*panel)->controls().begin();
+    if (!(*firstControl)) {
+        return;
+    }
+
     navigationController()->setIsResetOnMousePress(false);
     navigationController()->setIsHighlight(true);
     navigationController()->requestActivateByName(section->name().toStdString(),

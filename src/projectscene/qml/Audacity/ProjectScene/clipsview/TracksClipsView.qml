@@ -12,7 +12,7 @@ Rectangle {
 
     id: root
 
-    property var navpanels: null
+    property var navPanels: null
 
     property bool clipHovered: false
     property bool clipHeaderHovered: false
@@ -619,17 +619,7 @@ Rectangle {
                     }
 
                     trackIdx: model.index
-                    navigationPanel: navpanels && navpanels[model.index] ? navpanels[model.index] : null
-
-                    Connections {
-                        target: root
-
-                        function onNavpanelsChanged() {
-                            if (root.navpanels && root.navpanels[model.index]) {
-                                navigationPanel = root.navpanels[model.index]
-                            }
-                        }
-                    }
+                    navigationPanel: navPanels && navPanels[model.index] ? navPanels[model.index] : null
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
                         let xGlobalPosition = xWithinTrack

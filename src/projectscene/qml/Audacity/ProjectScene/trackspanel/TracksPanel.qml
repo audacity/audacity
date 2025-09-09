@@ -13,7 +13,7 @@ import Audacity.ProjectScene
 Item {
     id: root
 
-    property var navpanels: null
+    property var navPanels: null
     property alias tracksModel: tracksModel
 
     signal openEffectsRequested()
@@ -188,7 +188,7 @@ Item {
                     container: view
 
                     navigation.name: Boolean(item) ? item.title + item.index : ""
-                    navigation.panel: root.navpanels && root.navpanels[model.index] ? root.navpanels[model.index] : null
+                    navigation.panel: root.navPanels && root.navPanels[model.index] ? root.navPanels[model.index] : null
                     navigation.row: model.index
                     navigation.accessible.name: Boolean(item) ? item.title : ""
                     navigation.onActiveChanged: {
@@ -224,15 +224,6 @@ Item {
                         mousePressed.connect(dragHandler.startDrag)
                         mouseReleased.connect(dragHandler.endDrag)
                         mouseMoved.connect(dragHandler.onMouseMove)
-                    }
-
-                    Connections {
-                        target: root
-                        function onNavpanelsChanged() {
-                            if (root.navpanels && root.navpanels[model.index]) {
-                                navigation.panel = root.navpanels[model.index]
-                            }
-                        }
                     }
                 }
 
