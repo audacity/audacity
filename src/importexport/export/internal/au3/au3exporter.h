@@ -13,6 +13,8 @@
 #include "trackedit/iselectioncontroller.h"
 
 namespace au::importexport {
+using OptionsEditorPtr = std::unique_ptr<ExportOptionsEditor>;
+
 class Au3Exporter : public IExporter
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -27,11 +29,18 @@ public:
 
     std::vector<std::string> formatsList() const override;
     int formatIndex(const std::string& format) const override;
-    std::string formatExtension(const std::string& format) const override;
+    std::vector<std::string> formatExtensions(const std::string& format) const override;
     bool isCustomFFmpegExportFormat() const override;
 
     int maxChannels() const override;
     std::vector<int> sampleRateList() const override;
+    int optionsCount() const override;
+
+    std::optional<ExportOption> option(int i) const override;
+    std::optional<ExportValue> value(int id) const override;
+    void setValue(int id, const ExportValue&) override;
+
+    OptionsEditorPtr optionsEditor() const;
 
 private:
     double m_t0 {};
