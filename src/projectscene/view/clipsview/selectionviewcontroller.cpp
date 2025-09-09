@@ -17,6 +17,16 @@ SelectionViewController::SelectionViewController(QObject* parent)
 {
 }
 
+void SelectionViewController::load()
+{
+    connect(qApp, &QApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
+        if (state != Qt::ApplicationActive) {
+            //Application lost focus, end any selection in progress
+            onReleased(m_startPoint.x(), m_startPoint.y());
+        }
+    });
+}
+
 void SelectionViewController::onPressed(double x, double y)
 {
     if (!isProjectOpened()) {
