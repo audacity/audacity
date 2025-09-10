@@ -206,6 +206,11 @@ void MeterModel::setVolume(float volume)
     emit positionChanged();
 }
 
+float MeterModel::volume() const
+{
+    return m_volume;
+}
+
 QString MeterModel::description(PlaybackMeterDbRange::DbRange range) const
 {
     switch (range) {

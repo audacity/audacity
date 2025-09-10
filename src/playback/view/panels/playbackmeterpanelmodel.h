@@ -38,6 +38,9 @@ class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable
 public:
     explicit PlaybackMeterPanelModel(QObject* parent = nullptr);
 
+    Q_INVOKABLE void init();
+    Q_INVOKABLE void volumeLevelChangeRequested(float level);
+
     float leftChannelPressure() const;
     float leftChannelRMS() const;
 
@@ -49,8 +52,6 @@ public:
     float level() const;
 
     bool isPlaying() const;
-
-    Q_INVOKABLE void volumeLevelChangeRequested(float level);
 
 public slots:
     void setLeftChannelPressure(float leftChannelPressure);
@@ -83,7 +84,5 @@ private:
     float m_leftChannelRMS = playback::MIN_DISPLAYED_DBFS;
     float m_rightChannelPressure = playback::MIN_DISPLAYED_DBFS;
     float m_rightChannelRMS = playback::MIN_DISPLAYED_DBFS;
-
-    float m_level = 0;
 };
 }
