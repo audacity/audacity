@@ -89,6 +89,9 @@ static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
 static const ActionCode GROUP_CLIPS_CODE("group-clips");
 static const ActionCode UNGROUP_CLIPS_CODE("ungroup-clips");
 
+static const ActionCode SELECT_ALL("select-all");
+static const ActionCode SELECT_NONE("select-none");
+
 static const ActionQuery AUTO_COLOR_QUERY("action://trackedit/clip/change-color-auto");
 static const ActionQuery CHANGE_COLOR_QUERY("action://trackedit/clip/change-color");
 static const ActionQuery TRACK_CHANGE_COLOR_QUERY("action://trackedit/track/change-color");
@@ -226,6 +229,9 @@ void TrackeditActionsController::init()
 
     dispatcher()->reg(this, GROUP_CLIPS_CODE, this, &TrackeditActionsController::groupClips);
     dispatcher()->reg(this, UNGROUP_CLIPS_CODE, this, &TrackeditActionsController::ungroupClips);
+
+    dispatcher()->reg(this, SELECT_ALL, this, &TrackeditActionsController::selectAll);
+    dispatcher()->reg(this, SELECT_NONE, this, &TrackeditActionsController::selectNone);
 
     dispatcher()->reg(this, AUTO_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
     dispatcher()->reg(this, CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
@@ -1251,6 +1257,19 @@ void TrackeditActionsController::ungroupClips()
 
     notifyActionEnabledChanged(GROUP_CLIPS_CODE);
     notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
+}
+
+void TrackeditActionsController::selectAll()
+{
+    selectionController()->setSelectedAllAudioData();
+}
+
+void TrackeditActionsController::selectNone()
+{
+    selectionController()->resetTimeSelection();
+    selectionController()->resetDataSelection();
+    selectionController()->resetSelectedClips();
+    selectionController()->resetSelectedTracks();
 }
 
 void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& q)
