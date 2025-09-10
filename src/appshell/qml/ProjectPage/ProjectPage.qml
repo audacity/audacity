@@ -29,6 +29,7 @@ import Muse.Dock
 import Audacity.AppShell
 import Audacity.ProjectScene
 import Audacity.Playback
+import Audacity.TrackEdit
 
 DockPage {
     id: root
@@ -39,6 +40,15 @@ DockPage {
     property var topToolKeyNavSec
 
     property ProjectPageModel pageModel: ProjectPageModel {}
+
+    TrackNavigationModel {
+        id: tracksNavModel
+
+        Component.onCompleted: {
+            var section = root.navigationPanelSec(tracksPanel.location)
+            tracksNavModel.init(section)
+        }
+    }
 
     property NavigationSection playbackToolBarKeyNavSec: NavigationSection {
         id: keynavSec
@@ -265,8 +275,6 @@ DockPage {
             objectName: pageModel.tracksPanelName()
             title: qsTrc("appshell", "Tracks")
 
-            navigationSection: root.navigationPanelSec(tracksPanel.location)
-
             width: panelWidth
             minimumWidth: panelWidth
             maximumWidth: panelWidth
@@ -296,7 +304,7 @@ DockPage {
             TracksPanel {
                 id: tracksPanelContent
 
-                navigationSection: tracksPanel.navigationSection
+                navPanels: tracksNavModel.trackItemPanels
                 effectsSectionWidth: tracksPanel.effectsSectionWidth
 
                 trackEffectsNavigationSection: root.trackEffectsKeyNavSec
@@ -308,6 +316,10 @@ DockPage {
 
                 onShowEffectsSectionChanged: {
                     tracksPanel.showEffectsSection = showEffectsSection
+                }
+
+                onPanelActive: function (index) {
+                    tracksNavModel.moveFocusTo(index)
                 }
 
                 Connections {
@@ -370,7 +382,7 @@ DockPage {
     central: TracksClipsView {
         id: clipsView
 
-        navigationSection: tracksPanel.navigationSection
+        navPanels: tracksNavModel.clipItemPanels
     }
 
     statusBar: DockStatusBar {

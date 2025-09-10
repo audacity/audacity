@@ -12,7 +12,7 @@ Rectangle {
 
     id: root
 
-    property NavigationSection navigationSection: null
+    property var navPanels: null
 
     property bool clipHovered: false
     property bool clipHeaderHovered: false
@@ -521,9 +521,6 @@ Rectangle {
                 anchors.fill: parent
                 clip: false // do not clip so clip handles are visible
 
-                navigation.section: root.navigationSection
-                navigation.order: 3
-
                 property bool moveActive: false
 
                 ScrollBar.horizontal: null
@@ -623,8 +620,7 @@ Rectangle {
                     }
 
                     trackIdx: model.index
-                    navigationSection: root.navigationSection
-                    navigationPanel: tracksClipsView.navigation
+                    navigationPanel: navPanels && navPanels[model.index] ? navPanels[model.index] : null
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
                         let xGlobalPosition = xWithinTrack

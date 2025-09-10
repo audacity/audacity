@@ -187,6 +187,24 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Show clipping in waveform"),
              TranslatableString("action", "Show clipping in waveform"),
              Checkable::Yes
+             ),
+    UiAction("track-toggle-focused-selection",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Select track"),
+             TranslatableString("action", "Select track")
+             ),
+    UiAction("focus-prev-track",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Focus previous track"),
+             TranslatableString("action", "Focus previous track")
+             ),
+    UiAction("focus-next-track",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Focus next track"),
+             TranslatableString("action", "Focus next track")
              )
 };
 

@@ -63,19 +63,12 @@ ListItemBlank {
         }
     }
 
-    property NavigationPanel navigationPanel: NavigationPanel {
-        name: "Track" + root.item.title + "Panel"
-        enabled: root.enabled && root.visible
-        direction: NavigationPanel.Horizontal
-        onActiveChanged: function(active) {
-            if (active) {
-                root.forceActiveFocus()
-            }
-        }
-    }
-
     height: trackViewState.trackHeight
     opacity: dragged ? 0.5 : 1
+
+    focusBorder.anchors.leftMargin: spacer.width + 2
+    focusBorder.anchors.rightMargin: 24 + separatorLine.width
+    focusBorder.anchors.bottomMargin: 2
 
     background.color: (root.isSelected || hoverHandler.hovered) ?
                    ui.theme.backgroundPrimaryColor : ui.theme.backgroundSecondaryColor
@@ -271,6 +264,7 @@ ListItemBlank {
         }
 
         SeparatorLine {
+            id: separatorLine
             Layout.bottomMargin: 2 * bottomSeparator.thickness
         }
 
