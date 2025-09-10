@@ -372,39 +372,44 @@ void TrackeditActionsController::doGlobalCutAllTracksRipple()
 
 void TrackeditActionsController::doGlobalDelete()
 {
+    const bool isTrackSelected = !selectionController()->timeSelectionIsNotEmpty() && !selectionController()->selectedTracks().empty()
+                                 && !selectionController()->hasSelectedClips();
+
     const bool wasSet = configuration()->deleteBehavior() != DeleteBehavior::NotSet;
 
-    if (!wasSet && !m_deleteBehaviorOnboardingScenario.showOnboardingDialog()) {
-        return;
-    }
-
-    muse::Defer showFollowup([this, wasSet]() {
-        if (!wasSet) {
-            m_deleteBehaviorOnboardingScenario.showFollowupDialog();
+    if (!isTrackSelected) {
+        if (!wasSet && !m_deleteBehaviorOnboardingScenario.showOnboardingDialog()) {
+            return;
         }
-    });
 
-    const DeleteBehavior deleteBehavior = configuration()->deleteBehavior();
-    IF_ASSERT_FAILED(deleteBehavior != DeleteBehavior::NotSet) {
-        return;
-    }
+        muse::Defer showFollowup([this, wasSet]() {
+            if (!wasSet) {
+                m_deleteBehaviorOnboardingScenario.showFollowupDialog();
+            }
+        });
 
-    if (deleteBehavior != DeleteBehavior::LeaveGap) {
-        switch (configuration()->closeGapBehavior()) {
-        case CloseGapBehavior::ClipRipple:
-            doGlobalDeletePerClipRipple();
-            break;
-        case CloseGapBehavior::TrackRipple:
-            doGlobalDeletePerTrackRipple();
-            break;
-        case CloseGapBehavior::AllTracksRipple:
-            doGlobalDeleteAllTracksRipple();
-            break;
-        default:
-            LOGE() << "Unexpected close gap behavior: " << static_cast<int>(configuration()->closeGapBehavior());
-            assert(false);
+        const DeleteBehavior deleteBehavior = configuration()->deleteBehavior();
+        IF_ASSERT_FAILED(deleteBehavior != DeleteBehavior::NotSet) {
+            return;
         }
-        return;
+
+        if (deleteBehavior != DeleteBehavior::LeaveGap) {
+            switch (configuration()->closeGapBehavior()) {
+            case CloseGapBehavior::ClipRipple:
+                doGlobalDeletePerClipRipple();
+                break;
+            case CloseGapBehavior::TrackRipple:
+                doGlobalDeletePerTrackRipple();
+                break;
+            case CloseGapBehavior::AllTracksRipple:
+                doGlobalDeleteAllTracksRipple();
+                break;
+            default:
+                LOGE() << "Unexpected close gap behavior: " << static_cast<int>(configuration()->closeGapBehavior());
+                assert(false);
+            }
+            return;
+        }
     }
 
     if (selectionController()->timeSelectionIsNotEmpty()) {
