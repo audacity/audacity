@@ -243,15 +243,15 @@ int main(int argc, char** argv)
 
     // modules
     app.addModule(new au::appshell::AppShellModule());
-    app.addModule(new muse::extensions::ExtensionsModule());
-#ifdef MUSE_MODULE_AUTOBOT
-    app.addModule(new muse::autobot::AutobotModule());
-#endif
     app.addModule(new au::effects::AudioUnitEffectsModule());
     app.addModule(new au::effects::Lv2EffectsModule());
     app.addModule(new au::effects::VstEffectsModule());
 
     if (!isPluginRegistration) {
+        app.addModule(new muse::extensions::ExtensionsModule());
+#ifdef MUSE_MODULE_AUTOBOT
+        app.addModule(new muse::autobot::AutobotModule());
+#endif
         app.addModule(new au::context::ContextModule());
         app.addModule(new au::audio::AudioModule());
         app.addModule(new au::projectscene::ProjectSceneModule());

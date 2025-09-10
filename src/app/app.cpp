@@ -58,6 +58,34 @@ void App::addModule(modularity::IModuleSetup* module)
     m_modules.push_back(module);
 }
 
+namespace {
+void assertIfUnnecessaryModules(const QList<muse::modularity::IModuleSetup*>& modules)
+{
+    const std::vector<std::string> pluginRegistrationModules {
+        "diagnostics",
+        "audioplugins",
+        "appshell",
+        "effects_vst",
+        "effects_vst_stub",
+        "effects_lv2",
+        "effects_lv2_stub",
+        "effects_audio_unit",
+        "effects_audio_unit_stub",
+    };
+    std::vector<std::string> nonEssentialModules;
+    for (const modularity::IModuleSetup* m : modules) {
+        if (!muse::contains(pluginRegistrationModules, m->moduleName())) {
+            nonEssentialModules.push_back(m->moduleName());
+        }
+    }
+    // To keep plugin registration as fast as possible, it is important that only the modules that are strictly necessary are loaded.
+    // If you add a new module and get this assert, please try to run the app with the `--register-audio-plugin <some plugin path>` option *without* your new module.
+    // If it works, then move the app.addModule(...) statement inside the appropriate `if (!isPluginRegistration) {` branch in main.cpp.
+    // If it doesn't and your module really is needed for plugin registration, then add its name to the `pluginRegistrationModules` list above.
+    assert(nonEssentialModules.empty());
+}
+}
+
 int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
 {
     // ====================================================
@@ -85,6 +113,12 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
     }
 
     const IApplication::RunMode runMode = commandLineParser.runMode();
+
+#ifdef QT_DEBUG
+    if (runMode == IApplication::RunMode::AudioPluginRegistration) {
+        assertIfUnnecessaryModules(m_modules);
+    }
+#endif
 
     // ====================================================
     // Setup modules: apply the command line options
