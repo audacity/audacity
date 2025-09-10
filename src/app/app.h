@@ -32,6 +32,7 @@
 #include "appshell/iappshellconfiguration.h"
 
 #include "commandlineparser.h"
+#include "ineededmodulesetup.h"
 
 namespace au::app {
 class App
@@ -44,7 +45,7 @@ class App
 public:
     App();
 
-    void addModule(muse::modularity::IModuleSetup* module);
+    void addModule(au::INeededModuleSetup* module);
 
     int run(QCoreApplication& app, CommandLineParser& parser);
 
@@ -52,7 +53,7 @@ private:
     void applyCommandLineOptions(const CommandLineParser::Options& options);
     int processAudioPluginRegistration(const CommandLineParser::AudioPluginRegistration& task);
 
-    QList<muse::modularity::IModuleSetup*> m_modules;
+    QList<au::INeededModuleSetup*> m_modules;
 };
 }
 

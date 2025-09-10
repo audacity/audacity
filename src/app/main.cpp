@@ -29,68 +29,7 @@
 #include "app.h"
 #include "commandlineparser.h"
 #include "log.h"
-
-// Framework
-#include "muse_framework_config.h"
-#include "diagnostics/diagnosticsmodule.h"
-#include "framework/draw/drawmodule.h"
-#include "framework/actions/actionsmodule.h"
-#include "framework/audioplugins/audiopluginsmodule.h"
-#include "framework/ui/uimodule.h"
-#include "framework/shortcuts/shortcutsmodule.h"
-#include "framework/accessibility/accessibilitymodule.h"
-#include "framework/uicomponents/uicomponentsmodule.h"
-#include "framework/dockwindow/dockmodule.h"
-#include "framework/cloud/cloudmodule.h"
-#include "framework/network/networkmodule.h"
-#include "framework/learn/learnmodule.h"
-#include "framework/languages/languagesmodule.h"
-#include "framework/workspace/workspacemodule.h"
-
-// need stubs
-#include "framework/stubs/multiinstances/multiinstancesstubmodule.h"
-
-// -----
-#include "appshell/appshellmodule.h"
-#include "context/contextmodule.h"
-#include "project/projectmodule.h"
-#include "projectscene/projectscenemodule.h"
-#include "au3audio/audiomodule.h"
-#include "playback/playbackmodule.h"
-#include "trackedit/trackeditmodule.h"
-#include "record/recordmodule.h"
-#include "effects/effects_base/effectsmodule.h"
-#include "effects/builtin/builtineffectsmodule.h"
-#ifdef AU_MODULE_EFFECTS_LV2
-#include "effects/lv2/lv2effectsmodule.h"
-#else
-#include "stubs/lv2/lv2effectsstubmodule.h"
-#endif
-#ifdef AU_MODULE_EFFECTS_VST
-#include "effects/vst/vsteffectsmodule.h"
-#else
-#include "stubs/vst/vsteffectsstubmodule.h"
-#endif
-#ifdef AU_MODULE_EFFECTS_AUDIO_UNIT
-#include "effects/audio_unit/audiouniteffectsmodule.h"
-#else
-#include "stubs/audio_unit/audiouniteffectsstubmodule.h"
-#endif
-#include "effects/nyquist/nyquisteffectsmodule.h"
-#include "importexport/import/importermodule.h"
-#include "importexport/export/exportermodule.h"
-
-#ifdef MUSE_MODULE_AUTOBOT
-#include "autobot/autobotmodule.h"
-#endif
-
-#ifdef MUSE_MODULE_EXTENSIONS
-#include "framework/extensions/extensionsmodule.h"
-#else
-#include "framework/stubs/extensions/extensionsstubmodule.h"
-#endif
-
-#include "au3wrap/au3wrapmodule.h"
+#include "neededmodulesetups.h"
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
 #include <vector>
@@ -219,52 +158,52 @@ int main(int argc, char** argv)
 
     au::app::App app;
 
-//! NOTE `diagnostics` must be first, because it installs the crash handler.
-//! For other modules, the order is (an should be) unimportant.
-    app.addModule(new muse::diagnostics::DiagnosticsModule());
+    //! NOTE `diagnostics` must be first, because it installs the crash handler.
+    //! For other modules, the order is (an should be) unimportant.
+    app.addModule(new au::NeededDiagnosticsModule());
 
 // framework
-    app.addModule(new muse::audioplugins::AudioPluginsModule());
+    app.addModule(new au::NeededAudioPluginsModule());
     if (!isPluginRegistration) {
-        app.addModule(new muse::draw::DrawModule());
-        app.addModule(new muse::actions::ActionsModule());
-        app.addModule(new muse::workspace::WorkspaceModule());
-        app.addModule(new muse::accessibility::AccessibilityModule());
-        app.addModule(new muse::mi::MultiInstancesModule());
-        app.addModule(new muse::learn::LearnModule());
-        app.addModule(new muse::languages::LanguagesModule());
-        app.addModule(new muse::ui::UiModule());
-        app.addModule(new muse::uicomponents::UiComponentsModule());
-        app.addModule(new muse::dock::DockModule());
-        app.addModule(new muse::shortcuts::ShortcutsModule());
-        app.addModule(new muse::cloud::CloudModule());
-        app.addModule(new muse::network::NetworkModule());
+        app.addModule(new au::NeededDrawModule());
+        app.addModule(new au::NeededActionsModule());
+        app.addModule(new au::NeededWorkspaceModule());
+        app.addModule(new au::NeededAccessibilityModule());
+        app.addModule(new au::NeededMultiInstancesModule());
+        app.addModule(new au::NeededLearnModule());
+        app.addModule(new au::NeededLanguagesModule());
+        app.addModule(new au::NeededUiModule());
+        app.addModule(new au::NeededUiComponentsModule());
+        app.addModule(new au::NeededDockModule());
+        app.addModule(new au::NeededShortcutsModule());
+        app.addModule(new au::NeededCloudModule());
+        app.addModule(new au::NeededNetworkModule());
     }
 
     // modules
-    app.addModule(new au::appshell::AppShellModule());
-    app.addModule(new au::effects::AudioUnitEffectsModule());
-    app.addModule(new au::effects::Lv2EffectsModule());
-    app.addModule(new au::effects::VstEffectsModule());
+    app.addModule(new au::NeededAppShellModule());
+    app.addModule(new au::NeededAudioUnitEffectsModule());
+    app.addModule(new au::NeededLv2EffectsModule());
+    app.addModule(new au::NeededVstEffectsModule());
 
     if (!isPluginRegistration) {
-        app.addModule(new muse::extensions::ExtensionsModule());
+        app.addModule(new au::NeededExtensionsModule());
 #ifdef MUSE_MODULE_AUTOBOT
-        app.addModule(new muse::autobot::AutobotModule());
+        app.addModule(new au::NeededAutobotModule());
 #endif
-        app.addModule(new au::context::ContextModule());
-        app.addModule(new au::audio::AudioModule());
-        app.addModule(new au::projectscene::ProjectSceneModule());
-        app.addModule(new au::playback::PlaybackModule());
-        app.addModule(new au::record::RecordModule());
-        app.addModule(new au::trackedit::TrackeditModule());
-        app.addModule(new au::project::ProjectModule());
-        app.addModule(new au::importexport::ExporterModule());
-        app.addModule(new au::importexport::ImporterModule());
-        app.addModule(new au::au3::Au3WrapModule());
-        app.addModule(new au::effects::EffectsModule());
-        app.addModule(new au::effects::BuiltinEffectsModule());
-        app.addModule(new au::effects::NyquistEffectsModule());
+        app.addModule(new au::NeededContextModule());
+        app.addModule(new au::NeededAudioModule());
+        app.addModule(new au::NeededProjectSceneModule());
+        app.addModule(new au::NeededPlaybackModule());
+        app.addModule(new au::NeededRecordModule());
+        app.addModule(new au::NeededTrackeditModule());
+        app.addModule(new au::NeededProjectModule());
+        app.addModule(new au::NeededExporterModule());
+        app.addModule(new au::NeededImporterModule());
+        app.addModule(new au::NeededAu3WrapModule());
+        app.addModule(new au::NeededEffectsModule());
+        app.addModule(new au::NeededBuiltinEffectsModule());
+        app.addModule(new au::NeededNyquistEffectsModule());
     }
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
