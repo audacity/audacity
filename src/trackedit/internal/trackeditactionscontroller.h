@@ -127,6 +127,9 @@ private:
     void groupClips();
     void ungroupClips();
 
+    void selectAll();
+    void selectNone();
+
     void setClipColor(const muse::actions::ActionQuery& q);
     void setTrackColor(const muse::actions::ActionQuery& q);
     void setTrackFormat(const muse::actions::ActionQuery& q);
