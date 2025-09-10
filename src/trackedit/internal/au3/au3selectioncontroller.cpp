@@ -360,6 +360,26 @@ bool Au3SelectionController::timeSelectionIsNotEmpty() const
         m_selectedEndTime.val, m_selectedStartTime.val);
 }
 
+bool au::trackedit::Au3SelectionController::timeSelectionHasAudioData() const
+{
+    if (!timeSelectionIsNotEmpty() || m_selectedTracks.val.empty()) {
+        return false;
+    }
+
+    for (const auto& trackId : m_selectedTracks.val) {
+        WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        if (!waveTrack->IsEmpty(m_selectedStartTime.val, m_selectedEndTime.val)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool Au3SelectionController::isDataSelectedOnTrack(TrackId trackId) const
 {
     return muse::contains(m_selectedTracks.val, trackId) && timeSelectionIsNotEmpty();
