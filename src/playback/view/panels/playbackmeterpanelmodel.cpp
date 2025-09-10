@@ -7,6 +7,14 @@ using namespace au::playback;
 PlaybackMeterPanelModel::PlaybackMeterPanelModel(QObject* parent)
     : QObject(parent)
 {
+    m_meterModel = new PlaybackMeterModel(this);
+}
+
+void PlaybackMeterPanelModel::init()
+{
+    m_meterModel->init();
+    emit meterModelChanged();
+
     playback()->audioOutput()->playbackSignalChanges().onReceive(this,
                                                                  [this](const trackedit::audioch_t audioChNum,
                                                                         const audio::MeterSignal& meterSignal) {
@@ -15,12 +23,12 @@ PlaybackMeterPanelModel::PlaybackMeterPanelModel(QObject* parent)
     });
 
     playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
-        m_level = volume;
+        m_meterModel->setVolume(volume);
         emit levelChanged();
     });
 
     playback()->audioOutput()->playbackVolume().onResolve(this, [this](float volume) {
-        m_level = volume;
+        m_meterModel->setVolume(volume);
         emit levelChanged();
     });
 
@@ -29,9 +37,6 @@ PlaybackMeterPanelModel::PlaybackMeterPanelModel(QObject* parent)
     });
 
     resetAudioChannelsVolumePressure();
-
-    m_meterModel = new PlaybackMeterModel(this);
-    emit meterModelChanged();
 }
 
 float PlaybackMeterPanelModel::leftChannelPressure() const
@@ -46,7 +51,7 @@ float PlaybackMeterPanelModel::rightChannelPressure() const
 
 float PlaybackMeterPanelModel::level() const
 {
-    return m_level;
+    return m_meterModel->volume();
 }
 
 bool PlaybackMeterPanelModel::isPlaying() const
@@ -129,7 +134,7 @@ au::playback::PlaybackMeterModel* PlaybackMeterPanelModel::meterModel() const
 
 void PlaybackMeterPanelModel::volumeLevelChangeRequested(float level)
 {
-    if (qFuzzyCompare(m_level, level)) {
+    if (qFuzzyCompare(m_meterModel->volume(), level)) {
         return;
     }
 

@@ -27,6 +27,10 @@ Item {
         }
     }
 
+    Component.onCompleted: {
+        model.init()
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.bottomMargin: 2

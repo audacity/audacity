@@ -66,6 +66,7 @@ public:
     void setMeterDbRange(PlaybackMeterDbRange::DbRange range);
 
     void setVolume(float volume);
+    float volume() const;
 
     QVariantList smallSteps() const;
     QVariantList fullSteps() const;
