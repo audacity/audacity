@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "../common/effectsettingmodelimpl.h"
+#include "effects/builtin/common/effectsettingmodelimpl.h"
 #include "limitereffect.h"
 
 #include <cassert>

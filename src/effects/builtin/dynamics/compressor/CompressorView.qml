@@ -4,7 +4,7 @@ import Muse.UiComponents
 import Audacity.Effects
 import Audacity.BuiltinEffects
 
-import "../common"
+import "../../common"
 
 BuiltinEffectBase {
     id: root

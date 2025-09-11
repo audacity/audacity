@@ -21,10 +21,10 @@
 #include "loudness/normalizeloudnessviewmodel.h"
 #include "clickremoval/clickremovaleffect.h"
 #include "clickremoval/clickremovalviewmodel.h"
-#include "compressor/compressoreffect.h"
-#include "compressor/compressorviewmodel.h"
-#include "limiter/limitereffect.h"
-#include "limiter/limiterviewmodel.h"
+#include "dynamics/compressor/compressoreffect.h"
+#include "dynamics/compressor/compressorviewmodel.h"
+#include "dynamics/limiter/limitereffect.h"
+#include "dynamics/limiter/limiterviewmodel.h"
 #include "normalize/normalizeeffect.h"
 #include "normalize/normalizeviewmodel.h"
 #include "tonegen/chirpeffect.h"
@@ -218,7 +218,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
         } else if (symbol == CompressorEffect::Symbol) {
             qmlRegisterType<CompressorViewModel>("Audacity.Effects", 1, 0, "CompressorViewModel");
             qmlRegisterType<CompressorSettingModel>("Audacity.Effects", 1, 0, "CompressorSettingModel");
-            regView(CompressorEffect::Symbol, u"qrc:/compressor/CompressorView.qml");
+            regView(CompressorEffect::Symbol, u"qrc:/dynamics/compressor/CompressorView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Compressor"),
                     muse::mtrc("effects", "Reduces \"dynamic range\", or differences between loud and quiet parts"),
@@ -228,7 +228,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
         } else if (symbol == LimiterEffect::Symbol) {
             qmlRegisterType<LimiterViewModel>("Audacity.Effects", 1, 0, "LimiterViewModel");
             qmlRegisterType<LimiterSettingModel>("Audacity.Effects", 1, 0, "LimiterSettingModel");
-            regView(LimiterEffect::Symbol, u"qrc:/limiter/LimiterView.qml");
+            regView(LimiterEffect::Symbol, u"qrc:/dynamics/limiter/LimiterView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Limiter"),
                     muse::mtrc("effects", "Augments loudness while minimizing distortion"),
