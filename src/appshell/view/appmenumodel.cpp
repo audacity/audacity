@@ -257,15 +257,13 @@ MenuItem* AppMenuModel::makeSelectMenu()
     MenuItemList selectItems {
         makeMenuItem("select-all"),
         makeMenuItem("select-none"),
+        makeMenuItem("select-all-tracks"),
         makeSeparator(),
-        makeMenuItem("select-entire-track"),
-        makeMenuItem("select-from-start-to-cursor"),
-        makeMenuItem("select-from-cursor-end"),
+        makeMenu(TranslatableString("appshell/menu/select", "Region"), makeRegionSelectionItems(), "menu-selection-region"),
+        makeMenu(TranslatableString("appshell/menu/select", "Audio clips"), makeAudioClipsSelectionItems(), "menu-selection-audio-clips"),
+        makeMenu(TranslatableString("appshell/menu/select", "Spectral"), makeSpectralSelectionItems(), "menu-selection-spectral"),
         makeSeparator(),
-        makeMenuItem("select-previous-item"),
-        makeMenuItem("select-next-item"),
-        makeSeparator(),
-        makeMenu(TranslatableString("appshell/menu/looping", "Looping"), makeLoopingItems(), "menu-looping"),
+        makeMenu(TranslatableString("appshell/menu/select", "Looping"), makeLoopingItems(), "menu-looping"),
         makeMenuItem("select-near-zero-crossings"),
     };
 
@@ -589,14 +587,50 @@ MenuItemList AppMenuModel::makeAudioActionsItems()
     return items;
 }
 
+MenuItemList AppMenuModel::makeSpectralSelectionItems()
+{
+    MenuItemList items {
+        makeMenuItem("toggle-spectral-selection")
+    };
+
+    return items;
+}
+
+MenuItemList AppMenuModel::makeAudioClipsSelectionItems()
+{
+    MenuItemList items {
+        makeMenuItem("select-previous-clip-boundary-to-cursor"),
+        makeMenuItem("select-cursor-to-next-clip-boundary"),
+        makeMenuItem("select-previous-clip"),
+        makeMenuItem("select-next-clip"),
+    };
+
+    return items;
+}
+
+MenuItemList AppMenuModel::makeRegionSelectionItems()
+{
+    MenuItemList items {
+        makeMenuItem("select-from-start-to-cursor"),
+        makeMenuItem("select-from-cursor-to-end"),
+        makeMenuItem("select-track-start-to-cursor"),
+        makeMenuItem("select-cursor-to-track-end"),
+        makeMenuItem("select-track-start-to-end"),
+    };
+
+    return items;
+}
+
 MenuItemList AppMenuModel::makeLoopingItems()
 {
     MenuItemList items {
-        makeMenuItem("toggle-loop-region"),
+        makeMenuItem("enable-looping"),
         makeMenuItem("clear-loop-region"),
+        makeSeparator(),
         makeMenuItem("set-loop-region-to-selection"),
-        makeMenuItem("set-selection-to-loop"),
-        makeMenuItem("set-loop-region-in-out"),
+        makeSeparator(),
+        makeMenuItem("set-loop-region-in"),
+        makeMenuItem("set-loop-region-out"),
     };
 
     return items;

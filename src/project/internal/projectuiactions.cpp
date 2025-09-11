@@ -211,36 +211,103 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Select none"),
              TranslatableString("action", "Select none")
              ),
-    UiAction("select-entire-track",
+    UiAction("select-all-tracks",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select entire track"),
-             TranslatableString("action", "Select entire track")
+             TranslatableString("action", "Select all tracks"),
+             TranslatableString("action", "Select all tracks")
              ),
     UiAction("select-from-start-to-cursor",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select from start to cursor"),
-             TranslatableString("action", "Select from start to cursor")
+             TranslatableString("action", "Left of playback position"),
+             TranslatableString("action", "Left of playback position")
              ),
-    UiAction("select-from-cursor-end",
+    UiAction("select-from-cursor-to-end",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select from cursor end"),
-             TranslatableString("action", "Select from cursor end")
+             TranslatableString("action", "Right of playback position"),
+             TranslatableString("action", "Right of playback position")
              ),
-    UiAction("select-previous-item",
+    UiAction("select-track-start-to-cursor",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select previous item"),
-             TranslatableString("action", "Select previous item")
+             TranslatableString("action", "Track start to cursor"),
+             TranslatableString("action", "Track start to cursor")
              ),
-    UiAction("select-next-item",
+    UiAction("select-cursor-to-track-end",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select next item"),
-             TranslatableString("action", "Select next item")
+             TranslatableString("action", "Cursor to track end"),
+             TranslatableString("action", "Cursor to track end")
              ),
+    UiAction("select-track-start-to-end",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Track start to end"),
+             TranslatableString("action", "Track start to end")
+             ),
+    UiAction("select-previous-clip-boundary-to-cursor",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Previous clip boundary to cursor"),
+             TranslatableString("action", "Previous clip boundary to cursor")
+             ),
+    UiAction("select-cursor-to-next-clip-boundary",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Cursor to next clip boundary"),
+             TranslatableString("action", "Cursor to next clip boundary")
+             ),
+    UiAction("select-previous-clip",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Previous clip"),
+             TranslatableString("action", "Previous clip")
+             ),
+    UiAction("select-next-clip",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Next clip"),
+             TranslatableString("action", "Next clip")
+             ),
+    UiAction("toggle-spectral-selection",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Toggle spectral selection"),
+             TranslatableString("action", "Toggle spectral selection")
+             ),
+    UiAction("enable-looping",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Enable looping"),
+             TranslatableString("action", "Enable looping")
+             ),
+    UiAction("clear-loop-region",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Clear loop region"),
+             TranslatableString("action", "Clear loop region")
+             ),
+    UiAction("set-loop-region-to-selection",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Set loop region to selection"),
+             TranslatableString("action", "Set loop region to selection")
+             ),
+    UiAction("set-loop-region-in",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Set loop region in"),
+             TranslatableString("action", "Set loop region in")
+             ),
+    UiAction("set-loop-region-out",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Set loop region out"),
+             TranslatableString("action", "Set loop region out")
+             ),
+
     UiAction("select-near-zero-crossings",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
