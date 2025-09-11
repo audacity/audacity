@@ -36,6 +36,26 @@ Au3Player::Au3Player()
             m_positionUpdateTimer.stop();
         }
     });
+
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        auto project = globalContext()->currentTrackeditProject();
+        if (!project) {
+            return;
+        }
+
+        static double oldTempo = project->timeSignature().tempo;
+        project->timeSignatureChanged().onReceive(this, [this](trackedit::TimeSignature ts){
+            auto tempoChange = oldTempo / ts.tempo;
+
+            Au3Project& project = projectRef();
+            auto& playRegion = ViewInfo::Get(project).playRegion;
+
+            playRegion.SetAllTimes(playRegion.GetStart() * tempoChange, playRegion.GetEnd() * tempoChange);
+
+            oldTempo = ts.tempo;
+            m_loopRegionChanged.notify();
+        });
+    });
 }
 
 bool Au3Player::isBusy() const
