@@ -21,6 +21,11 @@
 #include "loudness/normalizeloudnessviewmodel.h"
 #include "clickremoval/clickremovaleffect.h"
 #include "clickremoval/clickremovalviewmodel.h"
+#include "dynamics/draft/meters/compressionmetermodel.h"
+#include "dynamics/draft/meters/dynamicseffectoutputmetermodel.h"
+#include "dynamics/draft/dynamicstimeline.h"
+#include "dynamics/draft/dynamicstimelinemodel.h"
+#include "dynamics/draft/stopwatch.h"
 #include "dynamics/compressor/compressoreffect.h"
 #include "dynamics/compressor/compressorviewmodel.h"
 #include "dynamics/limiter/limitereffect.h"
@@ -176,6 +181,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
     qmlRegisterUncreatableType<GeneralViewModel>("Audacity.Effects", 1, 0, "GeneralViewModel", "Not creatable from QML");
     effectsViewRegister()->setDefaultUrl(u"qrc:/general/GeneralEffectView.qml");
 
+    bool hasDynamicRangeProcessor = false;
     for (const PluginDescriptor& desc : PluginManager::Get().PluginsOfType(PluginTypeEffect)) {
         const auto& symbol = desc.GetSymbol();
         if (symbol == AmplifyEffect::Symbol) {
@@ -216,6 +222,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     true
                     );
         } else if (symbol == CompressorEffect::Symbol) {
+            hasDynamicRangeProcessor = true;
             qmlRegisterType<CompressorViewModel>("Audacity.Effects", 1, 0, "CompressorViewModel");
             qmlRegisterType<CompressorSettingModel>("Audacity.Effects", 1, 0, "CompressorSettingModel");
             regView(CompressorEffect::Symbol, u"qrc:/dynamics/compressor/CompressorView.qml");
@@ -226,6 +233,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     true
                     );
         } else if (symbol == LimiterEffect::Symbol) {
+            hasDynamicRangeProcessor = true;
             qmlRegisterType<LimiterViewModel>("Audacity.Effects", 1, 0, "LimiterViewModel");
             qmlRegisterType<LimiterSettingModel>("Audacity.Effects", 1, 0, "LimiterSettingModel");
             regView(LimiterEffect::Symbol, u"qrc:/dynamics/limiter/LimiterView.qml");
@@ -344,6 +352,15 @@ void BuiltinEffectsRepository::updateEffectMetaList()
         } else {
             LOGW() << "effect not found for symbol: " << au3::wxToStdSting(symbol.Internal());
         }
+    }
+
+    if (hasDynamicRangeProcessor) {
+        // These types are used by both Compressor and Limiter, so register them only if at least one of these effects is present.
+        qmlRegisterType<DynamicsTimeline>("Audacity.BuiltinEffects", 1, 0, "DynamicsTimeline");
+        qmlRegisterType<DynamicsTimelineModel>("Audacity.BuiltinEffects", 1, 0, "DynamicsTimelineModel");
+        qmlRegisterType<CompressionMeterModel>("Audacity.BuiltinEffects", 1, 0, "CompressionMeterModel");
+        qmlRegisterType<DynamicsEffectOutputMeterModel>("Audacity.BuiltinEffects", 1, 0, "DynamicsEffectOutputMeterModel");
+        qmlRegisterType<Stopwatch>("Audacity.BuiltinEffects", 1, 0, "Stopwatch");
     }
 
     m_effectMetaListUpdated.notify();
