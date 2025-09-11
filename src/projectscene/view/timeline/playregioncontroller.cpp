@@ -102,6 +102,11 @@ void au::projectscene::PlayRegionController::handleDrag(double pos)
     const auto& ctx = context();
     double deltaTime = ctx->positionToTime(pos) - ctx->positionToTime(m_dragStartPos);
 
+    // Prevent dragging before time 0
+    if (muse::RealIsEqualOrLess(pr.start + deltaTime, 0.0)) {
+        deltaTime = -pr.start;
+    }
+
     const double newStartTime = pr.start + deltaTime;
     const double newEndTime = pr.end + deltaTime;
 
