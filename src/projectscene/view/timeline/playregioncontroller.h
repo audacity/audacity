@@ -17,6 +17,8 @@ class PlayRegionController : public QObject
     Q_OBJECT
 
     Q_PROPERTY(TimelineContext * context READ context WRITE setContext NOTIFY contextChanged FINAL)
+    Q_PROPERTY(double guidelinePosition READ guidelinePosition NOTIFY guidelinePositionChanged FINAL)
+    Q_PROPERTY(bool guidelineVisible READ guidelineVisible NOTIFY guidelineVisibleChanged FINAL)
 
     muse::Inject<playback::IPlayback> playback;
 
@@ -43,26 +45,40 @@ public:
     TimelineContext* context() const;
     void setContext(TimelineContext* newContext);
 
+    double guidelinePosition() const;
+    bool guidelineVisible() const;
+
 signals:
-    void contextChanged();
+    void contextChanged() const;
+    void guidelinePositionChanged() const;
+    void guidelineVisibleChanged() const;
 
 private:
     static constexpr int RESIZE_AREA_WIDTH_PX = 5;
     static constexpr int MINIMUM_DRAG_LENGTH_PX = 2;
 
+    double startPos() const;
+    double endPos() const;
+
+    void setStartPos(double pos);
+    void setEndPos(double pos);
+
+    void updateSnapGuideline(double pos);
+    void resetSnapGuideline();
+    double calculateSnappedPosition(double pos) const;
+    double setGuidelinePosition(double pos) const;
+
+    void handleDrag(double pos);
+
     TimelineContext* m_context = nullptr;
-
-    double startTimePos() const;
-    double endTimePos() const;
-
-    void setStartTime(double pos);
-    void setEndTime(double pos);
 
     playback::PlaybackRegion m_initialRegion;
     bool m_initialState;
 
     double m_dragStartPos = 0;
     double m_lastPos = 0;
+    double m_snapGuidelinePos = 0;
+
     bool m_dragStarted = false;
     UserInputAction m_action;
 };
