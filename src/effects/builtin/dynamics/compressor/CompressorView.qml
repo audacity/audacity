@@ -5,6 +5,7 @@ import Audacity.Effects
 import Audacity.BuiltinEffects
 
 import "../../common"
+import "../draft"
 
 BuiltinEffectBase {
     id: root
@@ -12,8 +13,8 @@ BuiltinEffectBase {
     property string title: qsTrc("effects/compressor", "Compressor")
     property bool isApplyAllowed: true
 
-    width: row.width
-    implicitHeight: row.height
+    width: rootColumn.width
+    implicitHeight: rootColumn.height
 
     model: compressor
 
@@ -29,125 +30,134 @@ BuiltinEffectBase {
         compressor.init()
     }
 
-    Rectangle {
-        width: row.width
-        height: row.height
+    Column {
+        id: rootColumn
 
-        radius: 4
+        DynamicsPanel {
+            id: timeline
+            width: root.width
+        }
 
-        color: ui.theme.backgroundSecondaryColor
-        border.color: ui.theme.strokeColor
+        Rectangle {
+            width: row.width
+            height: row.height
 
-        Row {
-            id: row
+            radius: 4
 
-            padding: 16
-            spacing: 24
+            color: ui.theme.backgroundSecondaryColor
+            border.color: ui.theme.strokeColor
 
-            Grid {
-                id: leftGrid
+            Row {
+                id: row
 
-                columns: 2
+                padding: 16
                 spacing: 24
 
-                Repeater {
-                    model: [
-                        {
-                            id: "attackMs",
-                            title: qsTrc("effects/compressor", "Attack"),
-                            unit: "ms",
-                            warpingType: ValueWarpingType.Soft
-                        },
-                        {
-                            id: "releaseMs",
-                            title: qsTrc("effects/compressor", "Release"),
-                            unit: "ms",
-                            warpingType: ValueWarpingType.Soft
-                        },
-                        {
-                            id: "lookaheadMs",
-                            title: qsTrc("effects/compressor", "Lookahead"),
-                            unit: "ms",
-                            warpingType: ValueWarpingType.Soft
-                        },
-                    ]
+                Grid {
+                    id: leftGrid
 
-                    delegate: SettingKnob {
-                        required property var modelData
-                        isVertical: true
-                        knobFirst: false
-                        title: modelData.title
-                        unit: modelData.unit
-                        warpingType: modelData.warpingType
-                        model: CompressorSettingModel {
-                            paramId: modelData.id
-                        }
-                    }
-                }
-            }
+                    columns: 2
+                    spacing: 24
 
-            // Can't use a SeparatorLine in a Row or Column, or we get an infinite loop.
-            Rectangle {
-                width: 1
-                height: leftGrid.height
-                color: ui.theme.strokeColor
-            }
+                    Repeater {
+                        model: [
+                            {
+                                id: "attackMs",
+                                title: qsTrc("effects/compressor", "Attack"),
+                                unit: "ms",
+                                warpingType: ValueWarpingType.Soft
+                            },
+                            {
+                                id: "releaseMs",
+                                title: qsTrc("effects/compressor", "Release"),
+                                unit: "ms",
+                                warpingType: ValueWarpingType.Soft
+                            },
+                            {
+                                id: "lookaheadMs",
+                                title: qsTrc("effects/compressor", "Lookahead"),
+                                unit: "ms",
+                                warpingType: ValueWarpingType.Soft
+                            },
+                        ]
 
-            Grid {
-                columns: 2
-                spacing: 24
-
-                Repeater {
-                    model: [
-                        {
-                            id: "thresholdDb",
-                            title: qsTrc("effects/compressor", "Threshold"),
-                            unit: "dB",
-                            warpingType: ValueWarpingType.None
-                        },
-                        {
-                            id: "compressionRatio",
-                            title: qsTrc("effects/compressor", "Ratio"),
-                            unit: "",
-                            warpingType: ValueWarpingType.Aggressive
-                        },
-                        {
-                            id: "kneeWidthDb",
-                            title: qsTrc("effects/compressor", "Knee width"),
-                            unit: "dB",
-                            warpingType: ValueWarpingType.None
-                        },
-                        {
-                            id: "makeupGainDb",
-                            title: qsTrc("effects/compressor", "Make-up gain"),
-                            unit: "dB",
-                            warpingType: ValueWarpingType.None
-                        }
-                    ]
-
-                    delegate: SettingKnob {
-                        required property var modelData
-                        isVertical: true
-                        knobFirst: false
-                        title: modelData.title
-                        unit: modelData.unit
-                        warpingType: modelData.warpingType
-                        model: CompressorSettingModel {
-                            paramId: modelData.id
-                            onValueChanged: {
-                                compressionCurve.requestPaint()
+                        delegate: SettingKnob {
+                            required property var modelData
+                            isVertical: true
+                            knobFirst: false
+                            title: modelData.title
+                            unit: modelData.unit
+                            warpingType: modelData.warpingType
+                            model: CompressorSettingModel {
+                                paramId: modelData.id
                             }
                         }
                     }
                 }
-            }
 
-            CompressionCurve {
-                id: compressionCurve
+                // Can't use a SeparatorLine in a Row or Column, or we get an infinite loop.
+                Rectangle {
+                    width: 1
+                    height: leftGrid.height
+                    color: ui.theme.strokeColor
+                }
 
-                model: compressor
-                anchors.bottom: leftGrid.bottom
-                availableHeight: leftGrid.height
+                Grid {
+                    columns: 2
+                    spacing: 24
+
+                    Repeater {
+                        model: [
+                            {
+                                id: "thresholdDb",
+                                title: qsTrc("effects/compressor", "Threshold"),
+                                unit: "dB",
+                                warpingType: ValueWarpingType.None
+                            },
+                            {
+                                id: "compressionRatio",
+                                title: qsTrc("effects/compressor", "Ratio"),
+                                unit: "",
+                                warpingType: ValueWarpingType.Aggressive
+                            },
+                            {
+                                id: "kneeWidthDb",
+                                title: qsTrc("effects/compressor", "Knee width"),
+                                unit: "dB",
+                                warpingType: ValueWarpingType.None
+                            },
+                            {
+                                id: "makeupGainDb",
+                                title: qsTrc("effects/compressor", "Make-up gain"),
+                                unit: "dB",
+                                warpingType: ValueWarpingType.None
+                            }
+                        ]
+
+                        delegate: SettingKnob {
+                            required property var modelData
+                            isVertical: true
+                            knobFirst: false
+                            title: modelData.title
+                            unit: modelData.unit
+                            warpingType: modelData.warpingType
+                            model: CompressorSettingModel {
+                                paramId: modelData.id
+                                onValueChanged: {
+                                    compressionCurve.requestPaint()
+                                }
+                            }
+                        }
+                    }
+                }
+
+                CompressionCurve {
+                    id: compressionCurve
+
+                    model: compressor
+                    anchors.bottom: leftGrid.bottom
+                    availableHeight: leftGrid.height
+                }
             }
         }
     }
