@@ -129,6 +129,7 @@ private:
 
     void selectAll();
     void selectNone();
+    void selectAllTracks();
 
     void setClipColor(const muse::actions::ActionQuery& q);
     void setTrackColor(const muse::actions::ActionQuery& q);

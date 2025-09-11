@@ -91,6 +91,7 @@ static const ActionCode UNGROUP_CLIPS_CODE("ungroup-clips");
 
 static const ActionCode SELECT_ALL("select-all");
 static const ActionCode SELECT_NONE("select-none");
+static const ActionCode SELECT_ALL_TRACKS("select-all-tracks");
 
 static const ActionQuery AUTO_COLOR_QUERY("action://trackedit/clip/change-color-auto");
 static const ActionQuery CHANGE_COLOR_QUERY("action://trackedit/clip/change-color");
@@ -232,6 +233,7 @@ void TrackeditActionsController::init()
 
     dispatcher()->reg(this, SELECT_ALL, this, &TrackeditActionsController::selectAll);
     dispatcher()->reg(this, SELECT_NONE, this, &TrackeditActionsController::selectNone);
+    dispatcher()->reg(this, SELECT_ALL_TRACKS, this, &TrackeditActionsController::selectAllTracks);
 
     dispatcher()->reg(this, AUTO_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
     dispatcher()->reg(this, CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
@@ -1275,6 +1277,16 @@ void TrackeditActionsController::selectNone()
     selectionController()->resetDataSelection();
     selectionController()->resetSelectedClips();
     selectionController()->resetSelectedTracks();
+}
+
+void TrackeditActionsController::selectAllTracks()
+{
+    auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    selectionController()->setSelectedTracks(prj->trackIdList());
 }
 
 void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& q)
