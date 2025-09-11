@@ -71,20 +71,20 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeviewmodel.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/abstractdynamicsmetermodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/abstractdynamicsmetermodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/abstractsampledrawer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/abstractsampledrawer.h
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/areadrawer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/areadrawer.h
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/compressionmetermodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/dynamicseffectoutputmetermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/meters/abstractdynamicsmetermodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/meters/abstractdynamicsmetermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/meters/compressionmetermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/meters/dynamicseffectoutputmetermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/painters/abstractsequencepainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/painters/abstractsequencepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/painters/areasequencepainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/painters/areasequencepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/painters/linesequencepainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/painters/linesequencepainter.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/dynamicstimeline.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/dynamicstimeline.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/dynamicstimelinemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/dynamicstimelinemodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/linedrawer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/linedrawer.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/profiler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/profiler.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/stopwatch.cpp
