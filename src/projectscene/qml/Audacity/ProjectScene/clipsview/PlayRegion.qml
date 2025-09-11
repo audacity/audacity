@@ -52,6 +52,21 @@ Rectangle {
     MouseArea {
         anchors.verticalCenter: parent.verticalCenter
 
+        anchors.left: mouseAreaResizeLeft.right
+        anchors.right: mouseAreaResizeRight.left
+
+        width: 6
+        height: parent.height
+
+        cursorShape: Qt.OpenHandCursor
+        acceptedButtons: Qt.NoButton
+    }
+
+    MouseArea {
+        id: mouseAreaResizeLeft
+
+        anchors.verticalCenter: parent.verticalCenter
+
         x: -width / 2
         width: 6
         height: parent.height
@@ -61,6 +76,8 @@ Rectangle {
     }
 
     MouseArea {
+        id: mouseAreaResizeRight
+
         anchors.verticalCenter: parent.verticalCenter
 
         x: parent.width - width / 2
