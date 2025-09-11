@@ -178,3 +178,5 @@ set(MODULE_LINK au3wrap)
 set(MODULE_USE_UNITY OFF)
 
 setup_module()
+
+add_subdirectory(dynamics/draft)
