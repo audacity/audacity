@@ -20,7 +20,8 @@ Rectangle {
     property double hoveredTrackVerticalPosition
     property double hoveredTrackHeight
     property bool tracksHovered: false
-    property bool guidelineActive: false
+    property bool guidelineVisible: false
+    property double guidelinePos: -1
     property alias altPressed: tracksViewState.altPressed
     property alias ctrlPressed: tracksViewState.ctrlPressed
     property alias isSplitMode: tracksModel.isSplitMode
@@ -726,8 +727,8 @@ Rectangle {
                     }
 
                     onTriggerClipGuideline: function (time, completed) {
-                        clipGuideline.x = timeline.context.timeToPosition(time)
-                        root.guidelineActive = clipGuideline.x >= 0 && !completed
+                        root.guidelinePos = timeline.context.timeToPosition(time)
+                        root.guidelineVisible = root.guidelinePos >= 0 && !completed
                     }
 
                     onHandleTimeGuideline: function (x) {
@@ -799,16 +800,17 @@ Rectangle {
             anchors.bottom: content.bottom
 
             width: 1
+            x: playRegionController.guidelineVisible ? playRegionController.guidelinePosition : (root.guidelineVisible ? root.guidelinePos : -1)
 
             color: tracksViewState.snapEnabled ? "#00E5FF" : "#FFF200"
 
-            visible: root.guidelineActive
+            visible: root.guidelineVisible || playRegionController.guidelineVisible
         }
 
         Rectangle {
             id: splitGuideline
 
-            x: root.guidelineActive ? clipGuideline.x : splitGuidelinePosition
+            x: root.guidelineVisible ? clipGuideline.x : splitGuidelinePosition
             y: hoveredTrackVerticalPosition
             width: 1
             height: hoveredTrackHeight
@@ -836,7 +838,7 @@ Rectangle {
     DropArea {
         anchors.fill: parent
         onDropped: drop => {
-            let urls = drop.urls.concat([])
+            let urls = drop.urls.concat([]);
             // Forces conversion to a compatible array
             tracksModel.handleDroppedFiles(urls)
 
@@ -850,11 +852,11 @@ Rectangle {
         let guidelineTimePos = timeline.context.findGuideline(time)
 
         if (guidelineTimePos !== -1) {
-            clipGuideline.x = timeline.context.timeToPosition(guidelineTimePos)
+            root.guidelinePos = timeline.context.timeToPosition(guidelineTimePos)
 
-            root.guidelineActive = clipGuideline.x >= 0 ? !completed : false
+            root.guidelineVisible = root.guidelinePos >= 0 ? !completed : false
         } else {
-            root.guidelineActive = false
+            root.guidelineVisible = false
         }
     }
 }
