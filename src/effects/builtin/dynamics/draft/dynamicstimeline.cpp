@@ -1,0 +1,281 @@
+#include "dynamicstimeline.h"
+#include "painters/areasequencepainter.h"
+#include "painters/linesequencepainter.h"
+
+#include <QLineSeries>
+#include <QSGTransformNode>
+#include <QTimer>
+#include <QtQuick/qsgflatcolormaterial.h>
+
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+
+namespace au::effects {
+namespace {
+constexpr auto dataPointPeriodMs = 10;
+} // namespace
+
+DynamicsTimeline::DynamicsTimeline(QQuickItem* parent)
+    : QQuickItem{parent}
+{
+    setFlag(ItemHasContents, true);
+
+    connect(this, &QQuickItem::widthChanged, this,
+            [this]() { m_drawerViewport.setWidth(width()); });
+    connect(this, &QQuickItem::heightChanged, this,
+            [this]() { m_drawerViewport.setHeight(height()); });
+    connect(this, &DynamicsTimeline::tChanged, this,
+            [this]() { m_drawerViewport.setX(drawerViewportX()); });
+}
+
+void DynamicsTimeline::componentComplete()
+{
+    QQuickItem::componentComplete();
+    assert(m_samplePeriod > 0);
+    assert(m_duration > 0);
+}
+
+double DynamicsTimeline::t() const { return m_t; }
+
+void DynamicsTimeline::setT(double t)
+{
+    if (m_t == t) {
+        return;
+    }
+
+    m_t = t;
+    emit tChanged();
+    update();
+}
+
+void DynamicsTimeline::clear()
+{
+    m_reset = true;
+    update();
+}
+
+double DynamicsTimeline::dbMin() const { return m_dbMin; }
+
+void DynamicsTimeline::setDbMin(double dbMin)
+{
+    if (m_dbMin == dbMin) {
+        return;
+    }
+    m_dbMin = dbMin;
+
+    emit dbMinChanged();
+}
+
+double DynamicsTimeline::duration() const { return m_duration; }
+
+void DynamicsTimeline::setDuration(double duration)
+{
+    if (m_duration == duration) {
+        return;
+    }
+    m_duration = duration;
+
+    emit durationChanged();
+}
+
+double DynamicsTimeline::samplePeriod() const { return m_samplePeriod; }
+
+void DynamicsTimeline::setSamplePeriod(double period)
+{
+    if (m_samplePeriod == period) {
+        return;
+    }
+    m_samplePeriod = period;
+    emit samplePeriodChanged();
+}
+
+bool DynamicsTimeline::showInputDb() const
+{
+    return m_sequences[eInputDb].visible;
+}
+
+void DynamicsTimeline::setShowInputDb(bool show)
+{
+    if (m_sequences[eInputDb].visible == show) {
+        return;
+    }
+    m_sequences[eInputDb].visible = show;
+    emit showInputDbChanged();
+}
+
+bool DynamicsTimeline::showOutputDb() const
+{
+    return m_sequences[eOutputDb].visible;
+}
+
+void DynamicsTimeline::setShowOutputDb(bool show)
+{
+    if (m_sequences[eOutputDb].visible == show) {
+        return;
+    }
+    m_sequences[eOutputDb].visible = m_sequences[eOutputDbLine].visible = show;
+    emit showOutputDbChanged();
+}
+
+bool DynamicsTimeline::showCompressionDb() const
+{
+    return m_sequences[eCompressionDb].visible;
+}
+
+void DynamicsTimeline::setShowCompressionDb(bool show)
+{
+    if (m_sequences[eCompressionDb].visible == show) {
+        return;
+    }
+    m_sequences[eCompressionDb].visible = show;
+    emit showCompressionDbChanged();
+}
+
+namespace {
+QSGGeometryNode* createGeometryNode(QColor color)
+{
+    auto node = new QSGGeometryNode();
+
+    auto material = new QSGFlatColorMaterial();
+    // color.setAlphaF(0.5);
+    material->setColor(color);
+    node->setMaterial(material);
+    node->setFlag(QSGNode::OwnsMaterial);
+
+    return node;
+}
+} // namespace
+
+DynamicsTimeline::SequenceData
+DynamicsTimeline::createSequenceData(const QColor& color,
+                                     DrawerType drawerType) const
+{
+    const auto maxNumSamples
+        =static_cast<int>(std::ceil(m_duration / m_samplePeriod));
+    std::unique_ptr<AbstractSequencePainter> drawer;
+    if (drawerType == DrawerType::Area) {
+        drawer
+            =std::make_unique<AreaSequencePainter>(m_drawerViewport, maxNumSamples);
+    } else {
+        drawer = std::make_unique<LineSequencePainter>(m_drawerViewport);
+    }
+    auto node = createGeometryNode(std::move(color));
+    node->setGeometry(&drawer->geometry());
+    return { true, std::move(drawer), node };
+}
+
+void DynamicsTimeline::resetSequences()
+{
+    QColor areaColor("#565695");
+    areaColor.setAlphaF(0.5);
+    QColor lineColor("white");
+    lineColor.setAlphaF(0.5);
+    auto inputDb = createSequenceData(areaColor, DrawerType::Area);
+    auto outputDb = createSequenceData(areaColor, DrawerType::Area);
+    auto outputDbLine = createSequenceData(lineColor, DrawerType::Line);
+    auto compressionDb = createSequenceData("#FFD12C", DrawerType::Line);
+
+    std::lock_guard<std::mutex> lock{ m_sampleMutex };
+    m_sequences[eInputDb] = std::move(inputDb);
+    m_sequences[eOutputDb] = std::move(outputDb);
+    m_sequences[eOutputDbLine] = std::move(outputDbLine);
+    m_sequences[eCompressionDb] = std::move(compressionDb);
+    m_pendingXValues.clear();
+}
+
+QSGNode* DynamicsTimeline::updatePaintNode(QSGNode* oldNode,
+                                           UpdatePaintNodeData*)
+{
+    Profiler::Scope profilerScope(m_profiler);
+
+    QSGTransformNode* transformNode = nullptr;
+
+    if (!oldNode || m_reset) {
+        resetSequences();
+        m_reset = false;
+    }
+
+    if (!oldNode) {
+        transformNode = new QSGTransformNode();
+    } else {
+        transformNode = static_cast<QSGTransformNode*>(oldNode);
+    }
+
+    const auto someVisibilityChanged = std::any_of(
+        m_sequences.begin(), m_sequences.end(), [](const SequenceData& seq) {
+        return seq.visible != (seq.geometryNode->parent() != nullptr);
+    });
+    if (someVisibilityChanged) {
+        // Brute-force visibility toggling to preserve order, since rendering
+        // depends on it.
+        transformNode->removeAllChildNodes();
+        for (auto& seq : m_sequences) {
+            if (seq.visible) {
+                transformNode->appendChildNode(seq.geometryNode);
+            }
+        }
+    }
+
+    {
+        std::lock_guard<std::mutex> lock{ m_sampleMutex };
+        if (!m_pendingXValues.empty()) {
+            std::vector<SequenceSample> drawerSamples;
+            drawerSamples.reserve(m_pendingXValues.size());
+            for (auto& seq : m_sequences) {
+                for (auto i = 0; i < m_pendingXValues.size(); ++i) {
+                    drawerSamples.push_back({ m_pendingXValues[i], seq.pendingYValues[i] });
+                }
+                seq.drawer->append(std::move(drawerSamples));
+                seq.geometryNode->markDirty(QSGNode::DirtyGeometry);
+                seq.pendingYValues.clear();
+                drawerSamples.clear();
+            }
+            m_pendingXValues.clear();
+        }
+    }
+
+    QMatrix4x4 matrix;
+    matrix.translate(-drawerViewportX(), 0);
+    transformNode->setMatrix(matrix);
+    transformNode->markDirty(QSGNode::DirtyMatrix);
+
+    return transformNode;
+}
+
+double DynamicsTimeline::drawerViewportX() const
+{
+    return timeToX(m_t - m_duration);
+}
+
+double DynamicsTimeline::timeToX(double time) const
+{
+    // t = 0 means on the right of the graph.
+    return width() * (1 + time / m_duration);
+}
+
+double DynamicsTimeline::xToTime(double x) const
+{
+    return (x / width() - 1) * m_duration;
+}
+
+double DynamicsTimeline::dbToY(double db) const
+{
+    return db / m_dbMin * this->height();
+}
+
+void DynamicsTimeline::onNewSample(double inputDb, double outputDb,
+                                   double compressionDb)
+{
+    std::lock_guard<std::mutex> lock{ m_sampleMutex };
+    // Delay by m_samplePeriod because two samples are needed for one vertical
+    // strip, and otherwise we'd get ugly updates on the right side of the graph.
+    const auto time = m_t + m_samplePeriod * 1.1;
+    m_pendingXValues.push_back(timeToX(time));
+
+    m_sequences[eInputDb].pendingYValues.push_back(dbToY(inputDb));
+    m_sequences[eOutputDb].pendingYValues.push_back(dbToY(outputDb));
+    m_sequences[eOutputDbLine].pendingYValues.push_back(dbToY(outputDb));
+    m_sequences[eCompressionDb].pendingYValues.push_back(dbToY(compressionDb));
+}
+} // namespace au::effects
