@@ -15,6 +15,8 @@
         <file>dynamics/compressor/CompressionCurve.qml</file>
         <file>dynamics/compressor/CompressionCurvePainter.qml</file>
         <file>dynamics/limiter/LimiterView.qml</file>
+        <file>dynamics/draft/DynamicsMeter.qml</file>
+        <file>dynamics/draft/DynamicsPanel.qml</file>
 
         <file>normalize/NormalizeView.qml</file>
         <file>graphiceq/GraphicEqBoard.qml</file>
