@@ -9,6 +9,8 @@
 #include "global/types/retval.h"
 #include "global/timer.h"
 
+#include "trackedit/iselectioncontroller.h"
+
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "au3audio/iaudioengine.h"
@@ -20,6 +22,7 @@ namespace au::playback {
 class Au3Player : public IPlayer, public muse::async::Asyncable
 {
     muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<au::trackedit::ISelectionController> selectionController;
     muse::Inject<au::audio::IAudioEngine> audioEngine;
 
 public:

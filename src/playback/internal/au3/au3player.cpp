@@ -425,11 +425,22 @@ void Au3Player::setLoopRegionActive(const bool active)
     auto& playRegion = ViewInfo::Get(project).playRegion;
 
     if (playRegion.IsLastActiveRegionClear()) {
-        // Default length is 2 bars
-        au::trackedit::TimeSignature ts = globalContext()->currentTrackeditProject()->timeSignature();
-        double secs = 2 * ts.upper * (4.0 / ts.lower) * (60.0 / ts.tempo);
+        double start = 0;
+        double end = 0;
 
-        playRegion.SetAllTimes(0, secs);
+        if (selectionController()->timeSelectionIsNotEmpty()) {
+            start = selectionController()->dataSelectedStartTime();
+            end = selectionController()->dataSelectedEndTime();
+        } else if (selectionController()->hasSelectedClips()) {
+            start = selectionController()->leftMostSelectedClipStartTime();
+            end = selectionController()->rightMostSelectedClipEndTime();
+        } else {
+            // Default length is 4 bars
+            au::trackedit::TimeSignature ts = globalContext()->currentTrackeditProject()->timeSignature();
+            end = 4 * ts.upper * (4.0 / ts.lower) * (60.0 / ts.tempo);
+        }
+
+        playRegion.SetAllTimes(start, end);
     }
 
     playRegion.SetActive(active);
