@@ -412,11 +412,21 @@ void PlaybackController::clearLoopRegion()
 
 void PlaybackController::setLoopRegionToSelection()
 {
+    double start = 0;
+    double end = 0;
+
     if (selectionController()->timeSelectionIsNotEmpty()) {
-        player()->setLoopRegion({ selectionController()->dataSelectedStartTime(), selectionController()->dataSelectedEndTime() });
+        start = selectionController()->dataSelectedStartTime();
+        end = selectionController()->dataSelectedEndTime();
+    } else if (selectionController()->hasSelectedClips()) {
+        start = selectionController()->leftMostSelectedClipStartTime();
+        end = selectionController()->rightMostSelectedClipEndTime();
     } else {
         player()->clearLoopRegion();
+        return;
     }
+
+    player()->setLoopRegion({ start, end });
 }
 
 void PlaybackController::setSelectionToLoop()
