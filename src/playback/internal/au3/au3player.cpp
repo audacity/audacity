@@ -122,6 +122,9 @@ void Au3Player::play()
     }
 
     double latestEnd = tracks.GetEndTime();
+    if (playRegion.Active()) {
+        latestEnd = std::max(tracks.GetEndTime(), playRegion.GetEnd());
+    }
 
     if (!hasaudio) {
         return /*-1*/;  // No need to continue without audio tracks
