@@ -288,10 +288,6 @@
         <seq>S</seq>
     </SC>
     <SC>
-        <key>toggle-loop-region</key>
-        <seq>L</seq>
-    </SC>
-    <SC>
         <key>preferences</key>
         <seq>Ctrl+,</seq>
     </SC>
@@ -844,22 +840,20 @@
         <seq>P</seq>
     </SC>
     <SC>
-        <key>toggle-play-region</key>
+        <key>toggle-loop-region</key>
         <seq>L</seq>
     </SC>
     <SC>
-        <key>clear-play-region</key>
+        <key>clear-loop-region</key>
         <seq>Shift+Alt+L</seq>
     </SC>
     <SC>
-        <key>set-play-region-to-selection</key>
+        <key>set-loop-region-to-selection</key>
         <seq>Shift+L</seq>
     </SC>
     <SC>
-        <key>set-play-region-in</key>
-    </SC>
-    <SC>
-        <key>set-play-region-out</key>
+        <key>set-loop-region-in-out</key>
+        <seq>I</seq>
     </SC>
     <SC>
         <key>rescan-devices</key>

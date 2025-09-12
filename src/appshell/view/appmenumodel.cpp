@@ -254,6 +254,11 @@ MenuItem* AppMenuModel::makeEditMenu()
 
 MenuItem* AppMenuModel::makeSelectMenu()
 {
+    //! NOTE: audio sub-menu to be implemented
+    auto audioClipsMenu = makeMenu(TranslatableString("appshell/menu/select", "Audio clips"),
+                                   makeAudioClipsSelectionItems(), "menu-selection-audio-clips");
+    audioClipsMenu->setState(audioClipsMenu->state().make_disabled());
+
     //! NOTE: spectral tools are not implemented yet
     auto spectralMenu = makeMenu(TranslatableString("appshell/menu/select", "Spectral"),
                                  makeSpectralSelectionItems(), "menu-selection-spectral");
@@ -265,7 +270,7 @@ MenuItem* AppMenuModel::makeSelectMenu()
         makeMenuItem("select-all-tracks"),
         makeSeparator(),
         makeMenu(TranslatableString("appshell/menu/select", "Region"), makeRegionSelectionItems(), "menu-selection-region"),
-        makeMenu(TranslatableString("appshell/menu/select", "Audio clips"), makeAudioClipsSelectionItems(), "menu-selection-audio-clips"),
+        audioClipsMenu,
         spectralMenu,
         makeSeparator(),
         makeMenu(TranslatableString("appshell/menu/select", "Looping"), makeLoopingItems(), "menu-looping"),
@@ -629,13 +634,12 @@ MenuItemList AppMenuModel::makeRegionSelectionItems()
 MenuItemList AppMenuModel::makeLoopingItems()
 {
     MenuItemList items {
-        makeMenuItem("enable-looping"),
+        makeMenuItem("toggle-loop-region"),
         makeMenuItem("clear-loop-region"),
         makeSeparator(),
         makeMenuItem("set-loop-region-to-selection"),
         makeSeparator(),
-        makeMenuItem("set-loop-region-in"),
-        makeMenuItem("set-loop-region-out"),
+        makeMenuItem("set-loop-region-in-out"),
     };
 
     return items;
