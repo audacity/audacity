@@ -16,20 +16,22 @@ PlayRegionController::PlayRegionController(QObject* parent)
 
 void PlayRegionController::mouseDown(double pos)
 {
-    m_lastPos = pos;
-    m_dragStartPos = pos;
+    m_initialRegion = playback()->player()->loopRegion();
+    m_dragStartPos = calculateSnappedPosition(pos);
     m_dragStarted = false;
+    m_lastPos = m_dragStartPos;
+    updateSnapGuideline(m_dragStartPos);
 
     if (playback()->player()->isLoopRegionClear()) {
         m_action = UserInputAction::CreateRegion;
         QGuiApplication::setOverrideCursor(QCursor(Qt::SizeHorCursor));
-    } else if (std::abs(startTimePos() - pos) < RESIZE_AREA_WIDTH_PX) {
+    } else if (std::abs(startPos() - pos) < RESIZE_AREA_WIDTH_PX) {
         m_action = UserInputAction::ResizeStart;
         QGuiApplication::setOverrideCursor(QCursor(Qt::SizeHorCursor));
-    } else if (std::abs(endTimePos() - pos) < RESIZE_AREA_WIDTH_PX) {
+    } else if (std::abs(endPos() - pos) < RESIZE_AREA_WIDTH_PX) {
         m_action = UserInputAction::ResizeEnd;
         QGuiApplication::setOverrideCursor(QCursor(Qt::SizeHorCursor));
-    } else if (pos > startTimePos() && pos < endTimePos()) {
+    } else if (pos > startPos() && pos < endPos()) {
         m_action = UserInputAction::Drag;
         QGuiApplication::setOverrideCursor(QCursor(Qt::ClosedHandCursor));
     } else {
@@ -63,33 +65,70 @@ void PlayRegionController::mouseMove(double pos)
 
     pos = std::clamp(pos, visibleStartPos, visibleEndPos);
 
+    double snappedPos = calculateSnappedPosition(pos);
+    updateSnapGuideline(pos);
+
     switch (m_action) {
     case UserInputAction::CreateRegion:
         // Have to clear the loop if we are replacing existing
         player->clearLoopRegion();
         // Clearing the loop automatically disables it, reactivating
         player->setLoopRegionActive(true);
-        setStartTime(m_dragStartPos);
-        setEndTime(pos);
+        setStartPos(m_dragStartPos);
+        setEndPos(snappedPos);
         m_action = UserInputAction::ResizeEnd;
         break;
     case UserInputAction::ResizeStart:
-        setStartTime(pos);
+        setStartPos(snappedPos);
         break;
     case UserInputAction::ResizeEnd:
-        setEndTime(pos);
+        setEndPos(snappedPos);
         break;
-    case UserInputAction::Drag: {
-        auto pr = player->loopRegion();
-        double deltaTime = context()->positionToTime(pos) - context()->positionToTime(m_lastPos);
-        player->setLoopRegion({ pr.start + deltaTime, pr.end + deltaTime });
+    case UserInputAction::Drag:
+        // Passing raw pos here, when dragging we snap region start or region end
+        handleDrag(pos);
         break;
-    }
     case UserInputAction::None:
         break;
     }
 
     m_lastPos = pos;
+}
+
+void au::projectscene::PlayRegionController::handleDrag(double pos)
+{
+    auto player = playback()->player();
+    const auto& pr = m_initialRegion;
+    const auto& ctx = context();
+    double deltaTime = ctx->positionToTime(pos) - ctx->positionToTime(m_dragStartPos);
+
+    // Prevent dragging before time 0
+    if (muse::RealIsEqualOrLess(pr.start + deltaTime, 0.0)) {
+        deltaTime = -pr.start;
+    }
+
+    const double newStartTime = pr.start + deltaTime;
+    const double newEndTime = pr.end + deltaTime;
+
+    double startPos = ctx->timeToPosition(newStartTime);
+    double endPos = ctx->timeToPosition(newEndTime);
+
+    double snappedStart = calculateSnappedPosition(startPos);
+    double snappedEnd = calculateSnappedPosition(endPos);
+
+    const double regionLength = pr.end - pr.start;
+
+    if (!muse::is_equal(snappedStart, startPos)) {
+        snappedEnd = ctx->timeToPosition(ctx->positionToTime(snappedStart) + regionLength);
+        updateSnapGuideline(snappedStart);
+    } else if (!muse::is_equal(snappedEnd, endPos)) {
+        snappedStart = ctx->timeToPosition(ctx->positionToTime(snappedEnd) - regionLength);
+        updateSnapGuideline(snappedEnd);
+    } else {
+        resetSnapGuideline();
+    }
+
+    player->setLoopRegion({ ctx->positionToTime(snappedStart), ctx->positionToTime(snappedEnd) });
 }
 
 void PlayRegionController::mouseUp(double pos)
@@ -109,6 +148,7 @@ void PlayRegionController::mouseUp(double pos)
     }
 
     QGuiApplication::restoreOverrideCursor();
+    resetSnapGuideline();
     player->loopEditingEnd();
     m_action = UserInputAction::None;
 }
@@ -118,22 +158,22 @@ TimelineContext* PlayRegionController::context() const
     return m_context;
 }
 
-double PlayRegionController::startTimePos() const
+double PlayRegionController::startPos() const
 {
     return context()->timeToPosition(playback()->player()->loopRegion().start);
 }
 
-double PlayRegionController::endTimePos() const
+double PlayRegionController::endPos() const
 {
     return context()->timeToPosition(playback()->player()->loopRegion().end);
 }
 
-void PlayRegionController::setStartTime(double pos)
+void PlayRegionController::setStartPos(double pos)
 {
     playback()->player()->setLoopRegionStart(context()->positionToTime(pos));
 }
 
-void PlayRegionController::setEndTime(double pos)
+void PlayRegionController::setEndPos(double pos)
 {
     playback()->player()->setLoopRegionEnd(context()->positionToTime(pos));
 }
@@ -164,5 +204,53 @@ void PlayRegionController::endPreview()
 void PlayRegionController::setContext(TimelineContext* newContext)
 {
     m_context = newContext;
+    emit contextChanged();
+
+    resetSnapGuideline();
+}
+
+void PlayRegionController::updateSnapGuideline(double pos)
+{
+    bool snapEnabled = true;
+    double guideline = context()->findGuideline(context()->positionToTime(pos, snapEnabled));
+
+    double newPos = context()->timeToPosition(guideline);
+    if (muse::is_equal(newPos, m_snapGuidelinePos)) {
+        return;
+    }
+    bool wasVisible = guidelineVisible();
+
+    m_snapGuidelinePos = newPos;
+    emit guidelinePositionChanged();
+
+    if (wasVisible != guidelineVisible()) {
+        emit guidelineVisibleChanged();
+    }
+}
+
+void PlayRegionController::resetSnapGuideline()
+{
+    updateSnapGuideline(-1e9);
+}
+
+double PlayRegionController::calculateSnappedPosition(double pos) const
+{
+    bool snapEnabled = true;
+    double guideline = context()->findGuideline(context()->positionToTime(pos, snapEnabled));
+
+    if (muse::RealIsEqualOrMore(guideline, 0)) {
+        return context()->timeToPosition(guideline);
+    }
+    return pos;
+}
+
+double PlayRegionController::guidelinePosition() const
+{
+    return m_snapGuidelinePos;
+}
+
+bool PlayRegionController::guidelineVisible() const
+{
+    return muse::RealIsEqualOrMore(m_snapGuidelinePos, 0);
 }
 }

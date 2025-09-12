@@ -226,7 +226,7 @@ void PlaybackToolBarModel::updateLoopState()
     QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
     QColor backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BUTTON_COLOR).toString());
     if (isLooping) {
-        iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BACKGROUND_PRIMARY_COLOR).toString());
+        iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
         backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::ACCENT_COLOR).toString());
     }
 

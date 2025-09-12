@@ -9,7 +9,6 @@ import Audacity.Project
 import Audacity.Playback
 
 Rectangle {
-
     id: root
 
     property var navPanels: null
@@ -21,7 +20,8 @@ Rectangle {
     property double hoveredTrackVerticalPosition
     property double hoveredTrackHeight
     property bool tracksHovered: false
-    property bool guidelineActive: false
+    property bool guidelineVisible: false
+    property double guidelinePos: -1
     property alias altPressed: tracksViewState.altPressed
     property alias ctrlPressed: tracksViewState.ctrlPressed
     property alias isSplitMode: tracksModel.isSplitMode
@@ -58,7 +58,7 @@ Rectangle {
         onCaptureThumbnail: function captureThumbnail(thumbnailUrl) {
             // hide playCursor for the time grabbing image
             playCursor.visible = false
-            content.grabToImage(function(result) {
+            content.grabToImage(function (result) {
                 playCursor.visible = true
                 var success = result.saveToFile(thumbnailUrl)
                 project.onThumbnailCreated(success)
@@ -73,7 +73,7 @@ Rectangle {
     ContextMenuLoader {
         id: selectionContextMenuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             selectionContextMenuModel.handleMenuItem(itemId)
         }
     }
@@ -85,7 +85,7 @@ Rectangle {
     ContextMenuLoader {
         id: canvasContextMenuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             canvasContextMenuModel.handleMenuItem(itemId)
         }
     }
@@ -138,12 +138,12 @@ Rectangle {
         playCursorController.init()
         playPositionActionController.init()
         tracksViewState.init()
-        project.init()
+        project.init();
 
         //! NOTE Loading tracks, or rather clips, is the most havy operation.
         // Let's make sure that everything is loaded and initialized before this,
         // to avoid double loading at the beginning, when some parameters are initialized.
-        Qt.callLater(tracksModel.load)
+        Qt.callLater(tracksModel.load);
 
         //! NOTE setting verticalY has to be done after tracks are loaded,
         // otherwise project always starts at the very top
@@ -204,7 +204,7 @@ Rectangle {
             function updateCursorPosition(x, y) {
                 lineCursor.x = x
                 timeline.context.updateMousePositionTime(x)
-                tracksViewState.setMouseY(Math.max(0, Math.min(y, mainMouseArea.height)));
+                tracksViewState.setMouseY(Math.max(0, Math.min(y, mainMouseArea.height)))
             }
 
             MouseArea {
@@ -218,7 +218,7 @@ Rectangle {
                     property bool playRegionActivated: false
                 }
 
-                onPositionChanged: function(e) {
+                onPositionChanged: function (e) {
                     timeline.updateCursorPosition(e.x, e.y)
                     playRegionController.mouseMove(e.x)
                 }
@@ -281,11 +281,11 @@ Rectangle {
 
                 timelinePressed: timelineMouseArea.pressed
 
-                onSetPlaybackPosition: function(ix) {
+                onSetPlaybackPosition: function (ix) {
                     playCursorController.seekToX(ix)
                 }
 
-                onPlayCursorMousePositionChanged: function(ix) {
+                onPlayCursorMousePositionChanged: function (ix) {
                     timeline.updateCursorPosition(ix, -1)
                 }
             }
@@ -331,10 +331,7 @@ Rectangle {
                 return false
             }
 
-            return (content.isIsolationMode || content.isNearSample
-                || content.leftTrimContainsMouse || content.rightTrimContainsMouse
-                || content.leftTrimPressedButtons || content.rightTrimPressedButtons
-                || (root.isSplitMode && root.clipHovered) || (content.isBrush && root.clipHovered))
+            return (content.isIsolationMode || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse || content.leftTrimPressedButtons || content.rightTrimPressedButtons || (root.isSplitMode && root.clipHovered) || (content.isBrush && root.clipHovered))
         }
         source: {
             if (content.isBrush) {
@@ -386,23 +383,22 @@ Rectangle {
 
             hoverEnabled: true
 
-            onWheel: function(wheelEvent) {
+            onWheel: function (wheelEvent) {
                 timeline.onWheel(wheelEvent.x, wheelEvent.pixelDelta, wheelEvent.angleDelta)
             }
 
-            onPressed: function(e) {
+            onPressed: function (e) {
                 if (root.altPressed) {
                     return
                 }
 
                 if (e.button === Qt.LeftButton) {
-
                     tracksModel.startUserInteraction()
 
                     if (root.clipHeaderHovered) {
                         tracksClipsView.clipStartEditRequested(hoveredClipKey)
                     } else {
-                        if (! ((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
+                        if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
                             playCursorController.seekToX(e.x)
                         }
                         // Hover status will reset after the selection reset
@@ -418,14 +414,14 @@ Rectangle {
                         }
                     }
                 } else if (e.button === Qt.RightButton) {
-                    if (tracksHovered) {
-                        //! TODO AU4: handle context menu over empty track area
-                    } else {
+                    if (tracksHovered)
+                    //! TODO AU4: handle context menu over empty track area
+                    {} else {
                         canvasContextMenuLoader.show(Qt.point(e.x + timelineIndent.width, e.y + timelineHeader.height), canvasContextMenuModel.items)
                     }
                 }
             }
-            onPositionChanged: function(e) {
+            onPositionChanged: function (e) {
                 timeline.updateCursorPosition(e.x, e.y)
 
                 if (root.clipHeaderHovered && pressed) {
@@ -433,7 +429,7 @@ Rectangle {
                     tracksClipsView.startAutoScroll()
                 } else {
                     selectionController.onPositionChanged(e.x, e.y)
-                    let trackId = tracksViewState.trackAtPosition(e.x, e.y);
+                    let trackId = tracksViewState.trackAtPosition(e.x, e.y)
 
                     handleGuideline(e.x, false)
                 }
@@ -541,8 +537,8 @@ Rectangle {
                 signal clipMoveRequested(var clipKey, bool completed)
                 signal clipStartEditRequested(var clipKey)
                 signal clipEndEditRequested(var clipKey)
-                signal startAutoScroll()
-                signal stopAutoScroll()
+                signal startAutoScroll
+                signal stopAutoScroll
 
                 header: Rectangle {
                     height: 2
@@ -561,8 +557,7 @@ Rectangle {
                 onContentYChanged: {
                     if (verticalScrollLocked) {
                         contentY = lockedVerticalScrollPosition
-                    }
-                    else {
+                    } else {
                         tracksViewState.changeTracksVerticalOffset(tracksClipsView.contentY)
                         timeline.context.startVerticalScrollPosition = tracksClipsView.contentY
                     }
@@ -613,8 +608,8 @@ Rectangle {
                     ctrlPressed: root.ctrlPressed
                     selectionEditInProgress: selectionController.selectionEditInProgress
                     selectionInProgress: selectionController.selectionInProgress
-                    onHoverChanged: function() {
-                        root.clipHovered = tracksClipsView.checkIfAnyTrack(function(trackItem) {
+                    onHoverChanged: function () {
+                        root.clipHovered = tracksClipsView.checkIfAnyTrack(function (trackItem) {
                             return trackItem && trackItem.hover
                         })
                     }
@@ -622,7 +617,7 @@ Rectangle {
                     trackIdx: model.index
                     navigationPanel: navPanels && navPanels[model.index] ? navPanels[model.index] : null
 
-                    onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
+                    onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, clipKey) {
                         let xGlobalPosition = xWithinTrack
                         let yGlobalPosition = y + yWithinTrack - tracksClipsView.contentY
 
@@ -636,11 +631,11 @@ Rectangle {
                         root.splitGuidelinePosition = xWithinTrack
                     }
 
-                    onSetHoveredClipKey: function(clipKey) {
+                    onSetHoveredClipKey: function (clipKey) {
                         root.hoveredClipKey = clipKey
                     }
 
-                    onClipHeaderHoveredChanged: function(val) {
+                    onClipHeaderHoveredChanged: function (val) {
                         root.clipHeaderHovered = val
                     }
 
@@ -653,26 +648,26 @@ Rectangle {
                         selectionController.resetDataSelection()
                     }
 
-                    onUpdateMoveActive: function(completed) {
+                    onUpdateMoveActive: function (completed) {
                         if (tracksClipsView.moveActive !== completed) {
-                            return;
+                            return
                         }
-                        tracksClipsView.moveActive = !completed;
+                        tracksClipsView.moveActive = !completed
                     }
 
-                    onRequestSelectionContextMenu: function(x, y) {
+                    onRequestSelectionContextMenu: function (x, y) {
                         selectionContextMenuLoader.show(Qt.point(x + canvasIndent.width, y + timelineHeader.height), selectionContextMenuModel.items)
                     }
 
-                    onSelectionDraged: function(x1, x2, completed) {
+                    onSelectionDraged: function (x1, x2, completed) {
                         selectionController.onSelectionDraged(x1, x2, completed)
                     }
 
-                    onSeekToX: function(x) {
+                    onSeekToX: function (x) {
                         playCursorController.seekToX(x)
                     }
 
-                    onInsureVerticallyVisible: function(clipTop, clipBottom) {
+                    onInsureVerticallyVisible: function (clipTop, clipBottom) {
                         var delta = calculateVerticalScrollDelta(tracksViewState.tracksVerticalOffset, tracksViewState.tracksVerticalOffset + content.height, clipTop, clipBottom)
                         if (tracksViewState.tracksVerticalOffset + delta < 0) {
                             tracksViewState.changeTracksVerticalOffset(0)
@@ -689,54 +684,54 @@ Rectangle {
                         tracksViewState.requestVerticalScrollUnlock()
                     }
 
-                    onIsBrushChanged: function() {
-                        content.isBrush = tracksClipsView.checkIfAnyTrack(function(track) {
+                    onIsBrushChanged: function () {
+                        content.isBrush = tracksClipsView.checkIfAnyTrack(function (track) {
                             return track && track.isBrush
                         })
                     }
 
-                    onIsIsolationModeChanged: function() {
-                        content.isIsolationMode = tracksClipsView.checkIfAnyTrack(function(track){
+                    onIsIsolationModeChanged: function () {
+                        content.isIsolationMode = tracksClipsView.checkIfAnyTrack(function (track) {
                             return track && track.isIsolationMode
                         })
                     }
 
-                    onIsNearSampleChanged: function() {
-                        content.isNearSample = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track &&track.isNearSample
+                    onIsNearSampleChanged: function () {
+                        content.isNearSample = tracksClipsView.checkIfAnyTrack(function (track) {
+                            return track && track.isNearSample
                         })
                     }
 
-                    onLeftTrimContainsMouseChanged: function() {
-                        content.leftTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function(track){
+                    onLeftTrimContainsMouseChanged: function () {
+                        content.leftTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function (track) {
                             return track && track.leftTrimContainsMouse
                         })
                     }
 
-                    onRightTrimContainsMouseChanged: function() {
-                        content.rightTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function(track){
+                    onRightTrimContainsMouseChanged: function () {
+                        content.rightTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function (track) {
                             return track && track.rightTrimContainsMouse
                         })
                     }
 
-                    onLeftTrimPressedButtonsChanged: function() {
-                        content.leftTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function(track){
+                    onLeftTrimPressedButtonsChanged: function () {
+                        content.leftTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function (track) {
                             return track && track.leftTrimPressedButtons
                         })
                     }
 
-                    onRightTrimPressedButtonsChanged: function() {
-                        content.rightTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function(track){
+                    onRightTrimPressedButtonsChanged: function () {
+                        content.rightTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function (track) {
                             return track && track.rightTrimPressedButtons
                         })
                     }
 
-                    onTriggerClipGuideline: function(time, completed) {
-                        clipGuideline.x = timeline.context.timeToPosition(time)
-                        root.guidelineActive = clipGuideline.x >= 0 && !completed
+                    onTriggerClipGuideline: function (time, completed) {
+                        root.guidelinePos = timeline.context.timeToPosition(time)
+                        root.guidelineVisible = root.guidelinePos >= 0 && !completed
                     }
 
-                    onHandleTimeGuideline: function(x) {
+                    onHandleTimeGuideline: function (x) {
                         root.handleGuideline(x)
                     }
 
@@ -756,20 +751,20 @@ Rectangle {
                             return clipBottom - (viewBottom - padding)
                         }
 
-                        return 0;
+                        return 0
                     }
                 }
             }
 
-            onPinchToZoom: function(scale, pos) {
+            onPinchToZoom: function (scale, pos) {
                 timeline.context.pinchToZoom(scale, pos)
             }
 
-            onScrollHorizontal: function(newPos) {
+            onScrollHorizontal: function (newPos) {
                 timeline.context.scrollHorizontal(newPos)
             }
 
-            onScrollVertical: function(newPos) {
+            onScrollVertical: function (newPos) {
                 timeline.context.scrollVertical(newPos)
             }
         }
@@ -805,16 +800,17 @@ Rectangle {
             anchors.bottom: content.bottom
 
             width: 1
+            x: playRegionController.guidelineVisible ? playRegionController.guidelinePosition : (root.guidelineVisible ? root.guidelinePos : -1)
 
             color: tracksViewState.snapEnabled ? "#00E5FF" : "#FFF200"
 
-            visible: root.guidelineActive
+            visible: root.guidelineVisible || playRegionController.guidelineVisible
         }
 
         Rectangle {
             id: splitGuideline
 
-            x: root.guidelineActive ? clipGuideline.x : splitGuidelinePosition
+            x: root.guidelineVisible ? clipGuideline.x : splitGuidelinePosition
             y: hoveredTrackVerticalPosition
             width: 1
             height: hoveredTrackHeight
@@ -841,26 +837,26 @@ Rectangle {
 
     DropArea {
         anchors.fill: parent
-        onDropped: (drop) => {
-            let urls = drop.urls.concat([]); // Forces conversion to a compatible array
-            tracksModel.handleDroppedFiles(urls);
+        onDropped: drop => {
+            let urls = drop.urls.concat([]);
+            // Forces conversion to a compatible array
+            tracksModel.handleDroppedFiles(urls)
 
             drop.acceptProposedAction()
         }
     }
 
     function handleGuideline(x, completed) {
-
         let time = timeline.context.positionToTime(x)
         time = timeline.context.applyDetectedSnap(time)
         let guidelineTimePos = timeline.context.findGuideline(time)
 
         if (guidelineTimePos !== -1) {
-            clipGuideline.x = timeline.context.timeToPosition(guidelineTimePos)
+            root.guidelinePos = timeline.context.timeToPosition(guidelineTimePos)
 
-            root.guidelineActive = clipGuideline.x >= 0 ? !completed : false
+            root.guidelineVisible = root.guidelinePos >= 0 ? !completed : false
         } else {
-            root.guidelineActive = false
+            root.guidelineVisible = false
         }
     }
 }

@@ -36,6 +36,26 @@ Au3Player::Au3Player()
             m_positionUpdateTimer.stop();
         }
     });
+
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        auto project = globalContext()->currentTrackeditProject();
+        if (!project) {
+            return;
+        }
+
+        static double oldTempo = project->timeSignature().tempo;
+        project->timeSignatureChanged().onReceive(this, [this](trackedit::TimeSignature ts){
+            auto tempoChange = oldTempo / ts.tempo;
+
+            Au3Project& project = projectRef();
+            auto& playRegion = ViewInfo::Get(project).playRegion;
+
+            playRegion.SetAllTimes(playRegion.GetStart() * tempoChange, playRegion.GetEnd() * tempoChange);
+
+            oldTempo = ts.tempo;
+            m_loopRegionChanged.notify();
+        });
+    });
 }
 
 bool Au3Player::isBusy() const
@@ -102,6 +122,9 @@ void Au3Player::play()
     }
 
     double latestEnd = tracks.GetEndTime();
+    if (playRegion.Active()) {
+        latestEnd = std::max(tracks.GetEndTime(), playRegion.GetEnd());
+    }
 
     if (!hasaudio) {
         return /*-1*/;  // No need to continue without audio tracks
@@ -425,11 +448,22 @@ void Au3Player::setLoopRegionActive(const bool active)
     auto& playRegion = ViewInfo::Get(project).playRegion;
 
     if (playRegion.IsLastActiveRegionClear()) {
-        // Default length is 2 bars
-        au::trackedit::TimeSignature ts = globalContext()->currentTrackeditProject()->timeSignature();
-        double secs = 2 * ts.upper * (4.0 / ts.lower) * (60.0 / ts.tempo);
+        double start = 0;
+        double end = 0;
 
-        playRegion.SetAllTimes(0, secs);
+        if (selectionController()->timeSelectionIsNotEmpty()) {
+            start = selectionController()->dataSelectedStartTime();
+            end = selectionController()->dataSelectedEndTime();
+        } else if (selectionController()->hasSelectedClips()) {
+            start = selectionController()->leftMostSelectedClipStartTime();
+            end = selectionController()->rightMostSelectedClipEndTime();
+        } else {
+            // Default length is 4 bars
+            au::trackedit::TimeSignature ts = globalContext()->currentTrackeditProject()->timeSignature();
+            end = 4 * ts.upper * (4.0 / ts.lower) * (60.0 / ts.tempo);
+        }
+
+        playRegion.SetAllTimes(start, end);
     }
 
     playRegion.SetActive(active);
