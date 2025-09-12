@@ -57,20 +57,39 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/clickremoval/clickremovalviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/clickremoval/clickremovalviewmodel.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/compressor/compressoreffect.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/compressor/compressoreffect.h
-    ${CMAKE_CURRENT_LIST_DIR}/compressor/compressorviewmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/compressor/compressorviewmodel.h
-
-    ${CMAKE_CURRENT_LIST_DIR}/limiter/limiterviewmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/limiter/limiterviewmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/limiter/limitereffect.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/limiter/limitereffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/compressor/compressoreffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/compressor/compressoreffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/compressor/compressorviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/compressor/compressorviewmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/limiter/limiterviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/limiter/limiterviewmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/limiter/limitereffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/limiter/limitereffect.h
 
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeviewmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/meters/abstractdynamicsmetermodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/meters/abstractdynamicsmetermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/meters/compressionmetermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/meters/dynamicseffectoutputmetermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/painters/abstractsequencepainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/painters/abstractsequencepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/painters/areasequencepainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/painters/areasequencepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/painters/linesequencepainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/painters/linesequencepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/dynamicstimeline.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/dynamicstimeline.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/dynamicstimelinemodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/dynamicstimelinemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/profiler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/profiler.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/stopwatch.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/draft/stopwatch.h
+
 
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/chirpeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/chirpeffect.h
@@ -159,3 +178,5 @@ set(MODULE_LINK au3wrap)
 set(MODULE_USE_UNITY OFF)
 
 setup_module()
+
+add_subdirectory(dynamics/draft)
