@@ -32,7 +32,7 @@
 #include "iappshellconfiguration.h"
 #include "isessionsmanager.h"
 #include "audioplugins/iregisteraudiopluginsscenario.h"
-#include "project/iprojectautosaver.h"
+// #include "project/iprojectautosaver.h"
 
 //! TODO AU4
 // #include "multiinstances/imultiinstancesprovider.h"
@@ -45,7 +45,7 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
     muse::Inject<IAppShellConfiguration> configuration;
     muse::Inject<ISessionsManager> sessionsManager;
     muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario;
-    muse::Inject<au::project::IProjectAutoSaver> projectAutoSaver;
+    // muse::Inject<au::project::IProjectAutoSaver> projectAutoSaver; // we don't use at the moment 01/09/2025 the project auto saver as we already have the autosave table
 
 //! TODO AU4
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
@@ -71,7 +71,6 @@ private:
     void openScore(const au::project::ProjectFile& file);
 
     void restoreLastSession();
-    void removeProjectsUnsavedChanges(const muse::io::paths_t& projectsPaths);
 
     std::string m_startupTypeStr;
     au::project::ProjectFile m_startupScoreFile;
