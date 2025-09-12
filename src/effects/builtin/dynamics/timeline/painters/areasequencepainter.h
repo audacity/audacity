@@ -6,7 +6,7 @@ namespace au::effects {
 class AreaSequencePainter : public AbstractSequencePainter
 {
 public:
-    AreaSequencePainter(const QRectF& viewport, int maxNumSamples);
+    AreaSequencePainter(const std::atomic<double>& viewport, int maxNumSamples);
 
     void append(std::vector<SequenceSample> samples) override;
 

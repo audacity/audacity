@@ -12,6 +12,7 @@ class Stopwatch : public QObject
 {
     Q_OBJECT
 
+public:
     Q_ENUMS(PlayState)
     enum PlayState {
         Stopped, Playing, Paused
@@ -21,7 +22,6 @@ class Stopwatch : public QObject
                playStateChanged)
     Q_PROPERTY(double elapsedTime READ elapsedTime NOTIFY elapsedTimeChanged)
 
-public:
     Stopwatch(QObject* parent = nullptr);
 
     void setPlaystate(PlayState state);

@@ -2,6 +2,8 @@
 #include "painters/areasequencepainter.h"
 #include "painters/linesequencepainter.h"
 
+#include "global/log.h"
+
 #include <QLineSeries>
 #include <QSGTransformNode>
 #include <QTimer>
@@ -21,31 +23,26 @@ DynamicsTimeline::DynamicsTimeline(QQuickItem* parent)
 {
     setFlag(ItemHasContents, true);
 
-    connect(this, &QQuickItem::widthChanged, this,
-            [this]() { m_drawerViewport.setWidth(width()); });
-    connect(this, &QQuickItem::heightChanged, this,
-            [this]() { m_drawerViewport.setHeight(height()); });
-    connect(this, &DynamicsTimeline::tChanged, this,
-            [this]() { m_drawerViewport.setX(drawerViewportX()); });
+    connect(this, &DynamicsTimeline::stopwatchTimeChanged, this, [this] { updateDrawerViewportX(); });
 }
 
 void DynamicsTimeline::componentComplete()
 {
     QQuickItem::componentComplete();
-    assert(m_samplePeriod > 0);
+    assert(m_dataPointRate > 0);
     assert(m_duration > 0);
 }
 
-double DynamicsTimeline::t() const { return m_t; }
+double DynamicsTimeline::stopwatchTime() const { return m_stopwatchTime; }
 
-void DynamicsTimeline::setT(double t)
+void DynamicsTimeline::setStopwatchTime(double stopwatchTime)
 {
-    if (m_t == t) {
+    if (m_stopwatchTime == stopwatchTime) {
         return;
     }
 
-    m_t = t;
-    emit tChanged();
+    m_stopwatchTime = stopwatchTime;
+    emit stopwatchTimeChanged();
     update();
 }
 
@@ -79,15 +76,15 @@ void DynamicsTimeline::setDuration(double duration)
     emit durationChanged();
 }
 
-double DynamicsTimeline::samplePeriod() const { return m_samplePeriod; }
+double DynamicsTimeline::dataPointRate() const { return m_dataPointRate; }
 
-void DynamicsTimeline::setSamplePeriod(double period)
+void DynamicsTimeline::setDataPointRate(double rate)
 {
-    if (m_samplePeriod == period) {
+    if (m_dataPointRate == rate) {
         return;
     }
-    m_samplePeriod = period;
-    emit samplePeriodChanged();
+    m_dataPointRate = rate;
+    emit dataPointRateChanged();
 }
 
 bool DynamicsTimeline::showInputDb() const
@@ -148,21 +145,23 @@ QSGGeometryNode* createGeometryNode(QColor color)
 } // namespace
 
 DynamicsTimeline::SequenceData
-DynamicsTimeline::createSequenceData(const QColor& color,
-                                     DrawerType drawerType) const
+DynamicsTimeline::createSequenceData(const QColor& color, DrawerType drawerType, bool visible) const
 {
-    const auto maxNumSamples
-        =static_cast<int>(std::ceil(m_duration / m_samplePeriod));
+    const auto maxNumSamples = static_cast<int>(std::ceil(m_duration * m_dataPointRate));
     std::unique_ptr<AbstractSequencePainter> drawer;
     if (drawerType == DrawerType::Area) {
-        drawer
-            =std::make_unique<AreaSequencePainter>(m_drawerViewport, maxNumSamples);
+        drawer = std::make_unique<AreaSequencePainter>(m_drawerViewportX, maxNumSamples);
     } else {
-        drawer = std::make_unique<LineSequencePainter>(m_drawerViewport);
+        drawer = std::make_unique<LineSequencePainter>(m_drawerViewportX);
     }
     auto node = createGeometryNode(std::move(color));
     node->setGeometry(&drawer->geometry());
-    return { true, std::move(drawer), node };
+    return { visible, std::move(drawer), node };
+}
+
+void DynamicsTimeline::updateDrawerViewportX()
+{
+    m_drawerViewportX = timeToX(m_stopwatchTime - m_duration - m_timeDiff.load());
 }
 
 void DynamicsTimeline::resetSequences()
@@ -171,10 +170,11 @@ void DynamicsTimeline::resetSequences()
     areaColor.setAlphaF(0.5);
     QColor lineColor("white");
     lineColor.setAlphaF(0.5);
-    auto inputDb = createSequenceData(areaColor, DrawerType::Area);
-    auto outputDb = createSequenceData(areaColor, DrawerType::Area);
-    auto outputDbLine = createSequenceData(lineColor, DrawerType::Line);
-    auto compressionDb = createSequenceData("#FFD12C", DrawerType::Line);
+    constexpr auto outputDbVisibleByDefault = true;
+    auto inputDb = createSequenceData(areaColor, DrawerType::Area, true);
+    auto outputDb = createSequenceData(areaColor, DrawerType::Area, outputDbVisibleByDefault);
+    auto outputDbLine = createSequenceData(lineColor, DrawerType::Line, outputDbVisibleByDefault);
+    auto compressionDb = createSequenceData("#FFD12C", DrawerType::Line, true);
 
     std::lock_guard<std::mutex> lock{ m_sampleMutex };
     m_sequences[eInputDb] = std::move(inputDb);
@@ -182,6 +182,7 @@ void DynamicsTimeline::resetSequences()
     m_sequences[eOutputDbLine] = std::move(outputDbLine);
     m_sequences[eCompressionDb] = std::move(compressionDb);
     m_pendingXValues.clear();
+    m_timeDiff.store(std::numeric_limits<float>::lowest());
 }
 
 QSGNode* DynamicsTimeline::updatePaintNode(QSGNode* oldNode,
@@ -236,16 +237,11 @@ QSGNode* DynamicsTimeline::updatePaintNode(QSGNode* oldNode,
     }
 
     QMatrix4x4 matrix;
-    matrix.translate(-drawerViewportX(), 0);
+    matrix.translate(-m_drawerViewportX, 0);
     transformNode->setMatrix(matrix);
     transformNode->markDirty(QSGNode::DirtyMatrix);
 
     return transformNode;
-}
-
-double DynamicsTimeline::drawerViewportX() const
-{
-    return timeToX(m_t - m_duration);
 }
 
 double DynamicsTimeline::timeToX(double time) const
@@ -264,18 +260,34 @@ double DynamicsTimeline::dbToY(double db) const
     return db / m_dbMin * this->height();
 }
 
-void DynamicsTimeline::onNewSample(double inputDb, double outputDb,
-                                   double compressionDb)
+void DynamicsTimeline::onNewSamples(const QVariantList& variants)
 {
-    std::lock_guard<std::mutex> lock{ m_sampleMutex };
-    // Delay by m_samplePeriod because two samples are needed for one vertical
-    // strip, and otherwise we'd get ugly updates on the right side of the graph.
-    const auto time = m_t + m_samplePeriod * 1.1;
-    m_pendingXValues.push_back(timeToX(time));
+    if (variants.empty()) {
+        return;
+    }
 
-    m_sequences[eInputDb].pendingYValues.push_back(dbToY(inputDb));
-    m_sequences[eOutputDb].pendingYValues.push_back(dbToY(outputDb));
-    m_sequences[eOutputDbLine].pendingYValues.push_back(dbToY(outputDb));
-    m_sequences[eCompressionDb].pendingYValues.push_back(dbToY(compressionDb));
+    QList<DynamicsSample> samples;
+    samples.reserve(variants.size());
+    for (const auto& variant : variants) {
+        samples.push_back(variant.value<DynamicsSample>());
+    }
+
+    std::lock_guard<std::mutex> lock{ m_sampleMutex };
+    // Delay by m_dataPointRate because two samples are needed for one vertical
+    // strip, and otherwise we'd get ugly updates on the right side of the graph.
+
+    const double newDiff = m_stopwatchTime - samples.front().time;
+    if (m_timeDiff.load() < newDiff) {
+        m_timeDiff.store(newDiff);
+        updateDrawerViewportX();
+    }
+
+    for (const auto& sample : samples) {
+        m_pendingXValues.push_back(timeToX(sample.time));
+        m_sequences[eInputDb].pendingYValues.push_back(dbToY(sample.inputDb));
+        m_sequences[eOutputDb].pendingYValues.push_back(dbToY(sample.outputDb));
+        m_sequences[eOutputDbLine].pendingYValues.push_back(dbToY(sample.outputDb));
+        m_sequences[eCompressionDb].pendingYValues.push_back(dbToY(sample.compressionDb));
+    }
 }
 } // namespace au::effects

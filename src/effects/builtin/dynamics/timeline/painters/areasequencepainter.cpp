@@ -1,5 +1,7 @@
 #include "areasequencepainter.h"
 
+#include "global/log.h"
+
 namespace au::effects {
 namespace {
 constexpr auto getNumVertices(int numSamples) { return 2 * numSamples; }
@@ -17,8 +19,7 @@ static_assert(getVertexIndex(1) == 2);
 static_assert(getVertexIndex(2) == 4);
 } // namespace
 
-AreaSequencePainter::AreaSequencePainter(const QRectF& viewport,
-                                         int maxNumSamples)
+AreaSequencePainter::AreaSequencePainter(const std::atomic<double>& viewport, int maxNumSamples)
     : AbstractSequencePainter{viewport}
 {
     m_buffer.reserve(getNumVertices(maxNumSamples + 10));
@@ -46,16 +47,9 @@ void AreaSequencePainter::append(std::vector<SequenceSample> newSamples)
     QSGGeometry::Point2D* vertex = m_geometry.vertexDataAsPoint2D();
     std::copy(m_buffer.begin(), m_buffer.end(), vertex);
     vertex += m_buffer.size();
-    auto isEven = true;
     for (const auto& sample : newSamples) {
-        if (isEven) {
-            (vertex++)->set(sample.x, sample.y);
-            (vertex++)->set(sample.x, std::numeric_limits<float>::max());
-        } else {
-            (vertex++)->set(sample.x, std::numeric_limits<float>::max());
-            (vertex++)->set(sample.x, sample.y);
-        }
-        isEven = !isEven;
+        (vertex++)->set(sample.x, sample.y);
+        (vertex++)->set(sample.x, std::numeric_limits<float>::max());
     }
 }
 
@@ -65,7 +59,7 @@ int AreaSequencePainter::numSamplesToDiscard() const
     const QSGGeometry::Point2D* const vertices = m_geometry.vertexDataAsPoint2D();
     for (auto i = 0; i < numSamples; ++i) {
         const auto vertexIndex = getVertexIndex(i);
-        if (vertices[vertexIndex].x < m_viewport.left()) {
+        if (vertices[vertexIndex].x < m_viewportX.load()) {
             continue;
         } else {
             return std::max(0, i - 1);

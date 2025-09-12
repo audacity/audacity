@@ -13,6 +13,7 @@ set(PROJECT_SOURCES
     meters/dynamicseffectoutputmetermodel.h
     dynamicstimeline.cpp
     dynamicstimeline.h
+    dynamicstimelinetypes.h
     profiler.cpp
     profiler.h
     stopwatch.cpp
@@ -41,11 +42,16 @@ set_target_properties(dynamics_timeline_testapp
 )
 
 target_link_libraries(dynamics_timeline_testapp
-    PUBLIC
+    PRIVATE
         Qt::Quick
         Qt6::Widgets
         Qt6::Graphs
+
+        muse::global
 )
 
+target_include_directories(dynamics_timeline_testapp
+    PRIVATE
+        ${MUSE_FRAMEWORK_SRC_PATH})
 
 qt_import_qml_plugins(dynamics_timeline_testapp)

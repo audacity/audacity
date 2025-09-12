@@ -29,6 +29,8 @@ Window {
             DynamicsPanel {
                 id: timeline
                 width: container.width - 32
+                instanceId: 42
+                playState: Stopwatch.Playing
             }
 
             Row {

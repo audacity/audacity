@@ -1,8 +1,8 @@
 #include "linesequencepainter.h"
 
 namespace au::effects {
-LineSequencePainter::LineSequencePainter(const QRectF& viewport)
-    : AbstractSequencePainter{viewport}
+LineSequencePainter::LineSequencePainter(const double& viewportX)
+    : AbstractSequencePainter{viewportX}
 {
     m_geometry.setDrawingMode(QSGGeometry::DrawLineStrip);
     m_geometry.setLineWidth(1);
@@ -33,7 +33,7 @@ int LineSequencePainter::numSamplesToDiscard() const
     const auto numSamples = m_geometry.vertexCount();
     const QSGGeometry::Point2D* const vertices = m_geometry.vertexDataAsPoint2D();
     for (auto i = 0; i < numSamples; ++i) {
-        if (vertices[i].x < m_viewport.left()) {
+        if (vertices[i].x < m_viewportX.load()) {
             continue;
         } else {
             return std::max(0, -1);

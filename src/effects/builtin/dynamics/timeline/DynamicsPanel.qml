@@ -7,6 +7,8 @@ import "./meters"
 Item {
     id: root
 
+    required property int instanceId
+
     property alias playState: stopwatch.playState
     onPlayStateChanged: {
         if (playState === Stopwatch.Playing && prv.prevPlayState === Stopwatch.Stopped) {
@@ -54,8 +56,7 @@ Item {
     }
 
     Component.onCompleted: {
-        timelineModel.init()
-        stopwatch.playState = Stopwatch.Playing
+        timelineSourceModel.init()
     }
 
     Stopwatch {
@@ -63,10 +64,11 @@ Item {
     }
 
     TimelineSourceModel {
-        id: timelineModel
+        id: timelineSourceModel
 
-        onNewSample: function (inputDb, outputDb, compressionDb) {
-            timeline.onNewSample(inputDb, outputDb, compressionDb)
+        instanceId: root.instanceId
+        onNewSamples: function (samples) {
+            timeline.onNewSamples(samples)
         }
     }
 
@@ -161,11 +163,11 @@ Item {
                     id: timeline
 
                     anchors.fill: parent
-                    t: stopwatch.elapsedTime
+                    stopwatchTime: stopwatch.elapsedTime
 
                     dbMin: prv.dbMin
                     duration: prv.duration
-                    samplePeriod: timelineModel.samplePeriod
+                    dataPointRate: timelineSourceModel.dataPointRate
                 }
 
                 Rectangle {
@@ -213,12 +215,12 @@ Item {
                         height: 10
                         radius: 3
 
-                        color: timelineModel.isClipping ? "darkred" : "lightgray"
+                        color: timelineSourceModel.isClipping ? "darkred" : "lightgray"
 
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: timelineModel.isClipping = false
+                            onClicked: timelineSourceModel.isClipping = false
                         }
                     }
                 }
