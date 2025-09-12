@@ -432,6 +432,11 @@ std::optional<secs_t> TrackeditOperationController::getRightmostClipEndTime(cons
     return trackAndClipOperations()->getRightmostClipEndTime(clipKeys);
 }
 
+double TrackeditOperationController::nearestZeroCrossing(double t0) const
+{
+    return trackAndClipOperations()->nearestZeroCrossing(t0);
+}
+
 bool TrackeditOperationController::newMonoTrack()
 {
     if (trackAndClipOperations()->newMonoTrack()) {

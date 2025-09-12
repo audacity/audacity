@@ -66,6 +66,7 @@ private:
     muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
     std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const override;
     std::optional<secs_t> getRightmostClipEndTime(const ClipKeyList& clipKeys) const override;
+    double nearestZeroCrossing(double time) const override;
     bool newMonoTrack() override;
     bool newStereoTrack() override;
     bool newLabelTrack() override;

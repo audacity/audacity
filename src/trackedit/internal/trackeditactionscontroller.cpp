@@ -97,6 +97,7 @@ static const ActionCode SELECT_RIGHT_OF_PLAYBACK_POS("select-right-of-playback-p
 static const ActionCode SELECT_TRACK_START_TO_CURSOR("select-track-start-to-cursor");
 static const ActionCode SELECT_CURSOR_TO_TRACK_END("select-cursor-to-track-end");
 static const ActionCode SELECT_TRACK_START_TO_END("select-track-start-to-end");
+static const ActionCode SELECT_ZERO_CROSSING("zero-cross");
 
 static const ActionQuery AUTO_COLOR_QUERY("action://trackedit/clip/change-color-auto");
 static const ActionQuery CHANGE_COLOR_QUERY("action://trackedit/clip/change-color");
@@ -244,6 +245,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, SELECT_TRACK_START_TO_CURSOR, this, &TrackeditActionsController::selectTrackStartToCursor);
     dispatcher()->reg(this, SELECT_CURSOR_TO_TRACK_END, this, &TrackeditActionsController::selectCursorToTrackEnd);
     dispatcher()->reg(this, SELECT_TRACK_START_TO_END, this, &TrackeditActionsController::selectTrackStartToEnd);
+    dispatcher()->reg(this, SELECT_ZERO_CROSSING, this, &TrackeditActionsController::moveCursorToClosestZeroCrossing);
 
     dispatcher()->reg(this, AUTO_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
     dispatcher()->reg(this, CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
@@ -1396,6 +1398,14 @@ void TrackeditActionsController::selectTrackStartToEnd()
         selectionController()->setDataSelectedStartTime(leftmostClipStartTime.value(), true);
         selectionController()->setDataSelectedEndTime(rightmostClipEndTime.value(), true);
     }
+}
+
+void TrackeditActionsController::moveCursorToClosestZeroCrossing()
+{
+    secs_t zeroCrossing = trackeditInteraction()->nearestZeroCrossing(playbackState()->playbackPosition());
+    zeroCrossing = std::max(zeroCrossing.to_double(), 0.0);
+
+    dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1<double>(zeroCrossing));
 }
 
 void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& q)
