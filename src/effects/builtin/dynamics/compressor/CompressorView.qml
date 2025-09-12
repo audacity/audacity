@@ -5,7 +5,7 @@ import Audacity.Effects
 import Audacity.BuiltinEffects
 
 import "../../common"
-import "../draft"
+import "../timeline"
 
 BuiltinEffectBase {
     id: root
