@@ -277,37 +277,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Toggle spectral selection"),
              TranslatableString("action", "Toggle spectral selection")
              ),
-    UiAction("enable-looping",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Enable looping"),
-             TranslatableString("action", "Enable looping")
-             ),
-    UiAction("clear-loop-region",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Clear loop region"),
-             TranslatableString("action", "Clear loop region")
-             ),
-    UiAction("set-loop-region-to-selection",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Set loop region to selection"),
-             TranslatableString("action", "Set loop region to selection")
-             ),
-    UiAction("set-loop-region-in",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Set loop region in"),
-             TranslatableString("action", "Set loop region in")
-             ),
-    UiAction("set-loop-region-out",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Set loop region out"),
-             TranslatableString("action", "Set loop region out")
-             ),
-
     UiAction("select-near-zero-crossings",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
