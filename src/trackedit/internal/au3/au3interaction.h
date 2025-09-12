@@ -77,6 +77,7 @@ public:
     bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
     muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
     std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const override;
+    std::optional<secs_t> getRightmostClipEndTime(const ClipKeyList& clipKeys) const override;
 
     bool newMonoTrack() override;
     bool newStereoTrack() override;
@@ -85,6 +86,7 @@ public:
     bool duplicateTracks(const TrackIdList& trackIds) override;
     bool moveTracks(const TrackIdList& trackIds, const TrackMoveDirection direction) override;
     bool moveTracksTo(const TrackIdList& trackIds, int to) override;
+    ClipKeyList clipsOnTrack(const trackedit::TrackId trackId) override;
 
     bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) override;
 

@@ -73,6 +73,7 @@ public:
     bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
     secs_t clipDuration(const ClipKey& clipKey) const override;
     std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const override;
+    std::optional<secs_t> getRightmostClipEndTime(const ClipKeyList& clipKeys) const override;
 
     bool newMonoTrack() override;
     bool newStereoTrack() override;
@@ -81,6 +82,7 @@ public:
     bool duplicateTracks(const TrackIdList& trackIds) override;
     void moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) override;
     void moveTracksTo(const TrackIdList& trackIds, int pos) override;
+    ClipKeyList clipsOnTrack(const trackedit::TrackId trackId) override;
 
     bool undo() override;
     bool canUndo() override;

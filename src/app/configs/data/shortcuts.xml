@@ -557,7 +557,7 @@
         <seq>Ctrl+Shift+A</seq>
     </SC>
     <SC>
-        <key>sel-all-tracks</key>
+        <key>select-all-tracks</key>
         <seq>Ctrl+Shift+K</seq>
     </SC>
     <SC>
@@ -565,19 +565,19 @@
         <seq>Ctrl+Shift+Y</seq>
     </SC>
     <SC>
-        <key>set-left-selection</key>
+        <key>select-left-of-playback-position</key>
         <seq>[</seq>
     </SC>
     <SC>
-        <key>set-right-selection</key>
+        <key>select-right-of-playback-position</key>
         <seq>]</seq>
     </SC>
     <SC>
-        <key>sel-track-start-to-cursor</key>
+        <key>select-track-start-to-cursor</key>
         <seq>Shift+J</seq>
     </SC>
     <SC>
-        <key>sel-cursor-to-track-end</key>
+        <key>select-cursor-to-track-end</key>
         <seq>Shift+K</seq>
     </SC>
     <SC>

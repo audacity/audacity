@@ -253,6 +253,11 @@ std::optional<secs_t> TrackeditInteraction::getLeftmostClipStartTime(const ClipK
     return m_interaction->getLeftmostClipStartTime(clipKeys);
 }
 
+std::optional<secs_t> TrackeditInteraction::getRightmostClipEndTime(const ClipKeyList& clipKeys) const
+{
+    return m_interaction->getRightmostClipEndTime(clipKeys);
+}
+
 bool TrackeditInteraction::newMonoTrack()
 {
     return withPlaybackStop(&ITrackeditInteraction::newMonoTrack);
@@ -286,6 +291,11 @@ void TrackeditInteraction::moveTracks(const TrackIdList& trackIds, const TrackMo
 void TrackeditInteraction::moveTracksTo(const TrackIdList& trackIds, int to)
 {
     return m_interaction->moveTracksTo(trackIds, to);
+}
+
+ClipKeyList TrackeditInteraction::clipsOnTrack(const TrackId trackId)
+{
+    return m_interaction->clipsOnTrack(trackId);
 }
 
 bool TrackeditInteraction::undo()

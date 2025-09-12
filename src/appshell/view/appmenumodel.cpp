@@ -611,8 +611,8 @@ MenuItemList AppMenuModel::makeAudioClipsSelectionItems()
 MenuItemList AppMenuModel::makeRegionSelectionItems()
 {
     MenuItemList items {
-        makeMenuItem("select-from-start-to-cursor"),
-        makeMenuItem("select-from-cursor-to-end"),
+        makeMenuItem("select-left-of-playback-position"),
+        makeMenuItem("select-right-of-playback-position"),
         makeMenuItem("select-track-start-to-cursor"),
         makeMenuItem("select-cursor-to-track-end"),
         makeMenuItem("select-track-start-to-end"),
