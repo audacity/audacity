@@ -258,6 +258,11 @@ std::optional<secs_t> TrackeditInteraction::getRightmostClipEndTime(const ClipKe
     return m_interaction->getRightmostClipEndTime(clipKeys);
 }
 
+double TrackeditInteraction::nearestZeroCrossing(double time) const
+{
+    return m_interaction->nearestZeroCrossing(time);
+}
+
 bool TrackeditInteraction::newMonoTrack()
 {
     return withPlaybackStop(&ITrackeditInteraction::newMonoTrack);

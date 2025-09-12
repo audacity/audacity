@@ -274,7 +274,7 @@ MenuItem* AppMenuModel::makeSelectMenu()
         spectralMenu,
         makeSeparator(),
         makeMenu(TranslatableString("appshell/menu/select", "Looping"), makeLoopingItems(), "menu-looping"),
-        makeMenuItem("select-near-zero-crossings"),
+        makeMenuItem("zero-cross"),
     };
 
     return makeMenu(TranslatableString("appshell/menu/select", "&Select"), selectItems, "menu-select");

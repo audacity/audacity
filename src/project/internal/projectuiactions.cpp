@@ -277,11 +277,11 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Toggle spectral selection"),
              TranslatableString("action", "Toggle spectral selection")
              ),
-    UiAction("select-near-zero-crossings",
+    UiAction("zero-cross",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select near zero crossings"),
-             TranslatableString("action", "Select near zero crossings")
+             TranslatableString("action", "Move cursor to closest zero crossing"),
+             TranslatableString("action", "Move cursor to closest zero crossing")
              ),
 
     // view menu
