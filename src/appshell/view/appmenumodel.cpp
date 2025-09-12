@@ -254,6 +254,11 @@ MenuItem* AppMenuModel::makeEditMenu()
 
 MenuItem* AppMenuModel::makeSelectMenu()
 {
+    //! NOTE: spectral tools are not implemented yet
+    auto spectralMenu = makeMenu(TranslatableString("appshell/menu/select", "Spectral"),
+                                 makeSpectralSelectionItems(), "menu-selection-spectral");
+    spectralMenu->setState(spectralMenu->state().make_disabled());
+
     MenuItemList selectItems {
         makeMenuItem("select-all"),
         makeMenuItem("select-none"),
@@ -261,7 +266,7 @@ MenuItem* AppMenuModel::makeSelectMenu()
         makeSeparator(),
         makeMenu(TranslatableString("appshell/menu/select", "Region"), makeRegionSelectionItems(), "menu-selection-region"),
         makeMenu(TranslatableString("appshell/menu/select", "Audio clips"), makeAudioClipsSelectionItems(), "menu-selection-audio-clips"),
-        makeMenu(TranslatableString("appshell/menu/select", "Spectral"), makeSpectralSelectionItems(), "menu-selection-spectral"),
+        spectralMenu,
         makeSeparator(),
         makeMenu(TranslatableString("appshell/menu/select", "Looping"), makeLoopingItems(), "menu-looping"),
         makeMenuItem("select-near-zero-crossings"),
