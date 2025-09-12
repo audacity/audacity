@@ -24,7 +24,7 @@
 #include "dynamics/timeline/meters/compressionmetermodel.h"
 #include "dynamics/timeline/meters/dynamicseffectoutputmetermodel.h"
 #include "dynamics/timeline/dynamicstimeline.h"
-#include "dynamics/timeline/dynamicstimelinemodel.h"
+#include "dynamics/timeline/timelinesourcemodel.h"
 #include "dynamics/timeline/stopwatch.h"
 #include "dynamics/compressor/compressoreffect.h"
 #include "dynamics/compressor/compressorviewmodel.h"
@@ -357,7 +357,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
     if (hasDynamicRangeProcessor) {
         // These types are used by both Compressor and Limiter, so register them only if at least one of these effects is present.
         qmlRegisterType<DynamicsTimeline>("Audacity.BuiltinEffects", 1, 0, "DynamicsTimeline");
-        qmlRegisterType<DynamicsTimelineModel>("Audacity.BuiltinEffects", 1, 0, "DynamicsTimelineModel");
+        qmlRegisterType<TimelineSourceModel>("Audacity.BuiltinEffects", 1, 0, "TimelineSourceModel");
         qmlRegisterType<CompressionMeterModel>("Audacity.BuiltinEffects", 1, 0, "CompressionMeterModel");
         qmlRegisterType<DynamicsEffectOutputMeterModel>("Audacity.BuiltinEffects", 1, 0, "DynamicsEffectOutputMeterModel");
         qmlRegisterType<Stopwatch>("Audacity.BuiltinEffects", 1, 0, "Stopwatch");

@@ -1,5 +1,5 @@
 #include "dynamicstimeline.h"
-#include "dynamicstimelinemodel.h"
+#include "timelinesourcetestmodel.h"
 #include "meters/compressionmetermodel.h"
 #include "meters/dynamicseffectoutputmetermodel.h"
 #include "stopwatch.h"
@@ -23,8 +23,8 @@ int main(int argc, char* argv[])
 
     qmlRegisterType<au::effects::DynamicsTimeline>("Audacity.BuiltinEffects", 1,
                                                    0, "DynamicsTimeline");
-    qmlRegisterType<au::effects::DynamicsTimelineModel>(
-        "Audacity.BuiltinEffects", 1, 0, "DynamicsTimelineModel");
+    qmlRegisterType<au::effects::TimelineSourceTestModel>(
+        "Audacity.BuiltinEffects", 1, 0, "TimelineSourceModel");
     qmlRegisterType<au::effects::Stopwatch>("Audacity.BuiltinEffects", 1, 0,
                                             "Stopwatch");
     qmlRegisterType<au::effects::DynamicsEffectOutputMeterModel>(

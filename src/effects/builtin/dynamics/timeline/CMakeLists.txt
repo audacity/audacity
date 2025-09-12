@@ -18,8 +18,8 @@ set(PROJECT_SOURCES
     stopwatch.cpp
     stopwatch.h
 
-    ${TEST_DIR}/dynamicstimelinemodel.cpp
-    ${TEST_DIR}/dynamicstimelinemodel.h
+    ${TEST_DIR}/timelinesourcetestmodel.cpp
+    ${TEST_DIR}/timelinesourcetestmodel.h
     ${TEST_DIR}/main.cpp
 )
 

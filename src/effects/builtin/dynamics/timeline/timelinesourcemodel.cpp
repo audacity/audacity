@@ -1,4 +1,4 @@
-#include "dynamicstimelinemodel.h"
+#include "timelinesourcemodel.h"
 
 #include <QLineSeries>
 #include <QSGGeometryNode>
@@ -14,10 +14,10 @@ namespace {
 constexpr auto samplePeriodMs = 250;
 } // namespace
 
-DynamicsTimelineModel::DynamicsTimelineModel(QObject* parent)
+TimelineSourceModel::TimelineSourceModel(QObject* parent)
     : QObject(parent) {}
 
-void DynamicsTimelineModel::init()
+void TimelineSourceModel::init()
 {
     m_sampleTimer = new QTimer(this);
     connect(m_sampleTimer, &QTimer::timeout, this, [this] { addDataPoint(); });
@@ -31,12 +31,12 @@ void DynamicsTimelineModel::init()
     m_clippingTimer->start(3000);
 }
 
-double DynamicsTimelineModel::samplePeriod() const
+double TimelineSourceModel::samplePeriod() const
 {
     return samplePeriodMs / 1000.0;
 }
 
-void DynamicsTimelineModel::addDataPoint()
+void TimelineSourceModel::addDataPoint()
 {
     static auto i = 0;
     constexpr std::array<double, 4> period{ 0.0, -15.0, -10.0, -20.0 };
@@ -47,7 +47,7 @@ void DynamicsTimelineModel::addDataPoint()
     emit newSample(inputDb, outputDb, compressionDb);
 }
 
-void DynamicsTimelineModel::setIsClipping(bool clipping)
+void TimelineSourceModel::setIsClipping(bool clipping)
 {
     if (m_isClipping == clipping) {
         return;
