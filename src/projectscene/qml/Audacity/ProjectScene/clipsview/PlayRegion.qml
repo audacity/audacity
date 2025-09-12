@@ -19,9 +19,9 @@ Rectangle {
     height: parent.height / 2
 
     color: if (ui.theme.isDark)
-               return active ? "#5d6ca5" : "#4b535b"
+               return active ? ui.theme.accentColor : "#4b535b"
            else
-               return active ? "#A0A9DC" : "#d0d0d7"
+               return active ? ui.theme.accentColor : "#d0d0d7"
 
     function updatePosition() {
         let newX = context.timeToPosition(start)
