@@ -1,3 +1,5 @@
+set(TEST_DIR ${CMAKE_CURRENT_LIST_DIR}/test)
+
 set(PROJECT_SOURCES
     painters/abstractsequencepainter.cpp
     painters/abstractsequencepainter.h
@@ -5,22 +7,20 @@ set(PROJECT_SOURCES
     painters/areasequencepainter.h
     painters/linesequencepainter.cpp
     painters/linesequencepainter.h
-    main.cpp
-
     meters/abstractdynamicsmetermodel.cpp
     meters/abstractdynamicsmetermodel.h
     meters/compressionmetermodel.h
     meters/dynamicseffectoutputmetermodel.h
-
     dynamicstimeline.cpp
     dynamicstimeline.h
-    dynamicstimelinemodel.cpp
-    dynamicstimelinemodel.h
-
     profiler.cpp
     profiler.h
     stopwatch.cpp
     stopwatch.h
+
+    ${TEST_DIR}/dynamicstimelinemodel.cpp
+    ${TEST_DIR}/dynamicstimelinemodel.h
+    ${TEST_DIR}/main.cpp
 )
 
 qt_add_executable(dynamics_timeline_testapp ${PROJECT_SOURCES})
@@ -30,7 +30,7 @@ qt_add_qml_module(dynamics_timeline_testapp
     VERSION 1.0
     RESOURCE_PREFIX "/qt/qml/"
     QML_FILES
-        main.qml
+        test/main.qml
         DynamicsPanel.qml
         meters/DynamicsMeter.qml
 )
