@@ -427,6 +427,16 @@ std::optional<secs_t> TrackeditOperationController::getLeftmostClipStartTime(con
     return trackAndClipOperations()->getLeftmostClipStartTime(clipKeys);
 }
 
+std::optional<secs_t> TrackeditOperationController::getRightmostClipEndTime(const ClipKeyList& clipKeys) const
+{
+    return trackAndClipOperations()->getRightmostClipEndTime(clipKeys);
+}
+
+double TrackeditOperationController::nearestZeroCrossing(double t0) const
+{
+    return trackAndClipOperations()->nearestZeroCrossing(t0);
+}
+
 bool TrackeditOperationController::newMonoTrack()
 {
     if (trackAndClipOperations()->newMonoTrack()) {
@@ -480,6 +490,11 @@ void TrackeditOperationController::moveTracksTo(const TrackIdList& trackIds, int
     if (trackAndClipOperations()->moveTracksTo(trackIds, pos)) {
         projectHistory()->pushHistoryState("Move track", "Move track");
     }
+}
+
+ClipKeyList TrackeditOperationController::clipsOnTrack(const TrackId trackId)
+{
+    return trackAndClipOperations()->clipsOnTrack(trackId);
 }
 
 bool TrackeditOperationController::undo()

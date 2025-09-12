@@ -254,19 +254,27 @@ MenuItem* AppMenuModel::makeEditMenu()
 
 MenuItem* AppMenuModel::makeSelectMenu()
 {
+    //! NOTE: audio sub-menu to be implemented
+    auto audioClipsMenu = makeMenu(TranslatableString("appshell/menu/select", "Audio clips"),
+                                   makeAudioClipsSelectionItems(), "menu-selection-audio-clips");
+    audioClipsMenu->setState(audioClipsMenu->state().make_disabled());
+
+    //! NOTE: spectral tools are not implemented yet
+    auto spectralMenu = makeMenu(TranslatableString("appshell/menu/select", "Spectral"),
+                                 makeSpectralSelectionItems(), "menu-selection-spectral");
+    spectralMenu->setState(spectralMenu->state().make_disabled());
+
     MenuItemList selectItems {
         makeMenuItem("select-all"),
         makeMenuItem("select-none"),
+        makeMenuItem("select-all-tracks"),
         makeSeparator(),
-        makeMenuItem("select-entire-track"),
-        makeMenuItem("select-from-start-to-cursor"),
-        makeMenuItem("select-from-cursor-end"),
+        makeMenu(TranslatableString("appshell/menu/select", "Region"), makeRegionSelectionItems(), "menu-selection-region"),
+        audioClipsMenu,
+        spectralMenu,
         makeSeparator(),
-        makeMenuItem("select-previous-item"),
-        makeMenuItem("select-next-item"),
-        makeSeparator(),
-        makeMenu(TranslatableString("appshell/menu/looping", "Looping"), makeLoopingItems(), "menu-looping"),
-        makeMenuItem("select-near-zero-crossings"),
+        makeMenu(TranslatableString("appshell/menu/select", "Looping"), makeLoopingItems(), "menu-looping"),
+        makeMenuItem("zero-cross"),
     };
 
     return makeMenu(TranslatableString("appshell/menu/select", "&Select"), selectItems, "menu-select");
@@ -589,13 +597,48 @@ MenuItemList AppMenuModel::makeAudioActionsItems()
     return items;
 }
 
+MenuItemList AppMenuModel::makeSpectralSelectionItems()
+{
+    MenuItemList items {
+        makeMenuItem("toggle-spectral-selection")
+    };
+
+    return items;
+}
+
+MenuItemList AppMenuModel::makeAudioClipsSelectionItems()
+{
+    MenuItemList items {
+        makeMenuItem("select-previous-clip-boundary-to-cursor"),
+        makeMenuItem("select-cursor-to-next-clip-boundary"),
+        makeMenuItem("select-previous-clip"),
+        makeMenuItem("select-next-clip"),
+    };
+
+    return items;
+}
+
+MenuItemList AppMenuModel::makeRegionSelectionItems()
+{
+    MenuItemList items {
+        makeMenuItem("select-left-of-playback-position"),
+        makeMenuItem("select-right-of-playback-position"),
+        makeMenuItem("select-track-start-to-cursor"),
+        makeMenuItem("select-cursor-to-track-end"),
+        makeMenuItem("select-track-start-to-end"),
+    };
+
+    return items;
+}
+
 MenuItemList AppMenuModel::makeLoopingItems()
 {
     MenuItemList items {
         makeMenuItem("toggle-loop-region"),
         makeMenuItem("clear-loop-region"),
+        makeSeparator(),
         makeMenuItem("set-loop-region-to-selection"),
-        makeMenuItem("set-selection-to-loop"),
+        makeSeparator(),
         makeMenuItem("set-loop-region-in-out"),
     };
 

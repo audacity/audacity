@@ -112,6 +112,9 @@ private:
     muse::uicomponents::MenuItemList makeExportItems();
     muse::uicomponents::MenuItemList makeClipItems();
     muse::uicomponents::MenuItemList makeAudioActionsItems();
+    muse::uicomponents::MenuItemList makeRegionSelectionItems();
+    muse::uicomponents::MenuItemList makeAudioClipsSelectionItems();
+    muse::uicomponents::MenuItemList makeSpectralSelectionItems();
     muse::uicomponents::MenuItemList makeLoopingItems();
     muse::uicomponents::MenuItemList makeZoomItems();
     muse::uicomponents::MenuItemList makeSkipToItems();

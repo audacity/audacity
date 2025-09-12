@@ -129,6 +129,13 @@ private:
 
     void selectAll();
     void selectNone();
+    void selectAllTracks();
+    void selectLeftOfPlaybackPos();
+    void selectRightOfPlaybackPos();
+    void selectTrackStartToCursor();
+    void selectCursorToTrackEnd();
+    void selectTrackStartToEnd();
+    void moveCursorToClosestZeroCrossing();
 
     void setClipColor(const muse::actions::ActionQuery& q);
     void setTrackColor(const muse::actions::ActionQuery& q);

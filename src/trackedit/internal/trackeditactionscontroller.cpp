@@ -91,6 +91,13 @@ static const ActionCode UNGROUP_CLIPS_CODE("ungroup-clips");
 
 static const ActionCode SELECT_ALL("select-all");
 static const ActionCode SELECT_NONE("select-none");
+static const ActionCode SELECT_ALL_TRACKS("select-all-tracks");
+static const ActionCode SELECT_LEFT_OF_PLAYBACK_POS("select-left-of-playback-position");
+static const ActionCode SELECT_RIGHT_OF_PLAYBACK_POS("select-right-of-playback-position");
+static const ActionCode SELECT_TRACK_START_TO_CURSOR("select-track-start-to-cursor");
+static const ActionCode SELECT_CURSOR_TO_TRACK_END("select-cursor-to-track-end");
+static const ActionCode SELECT_TRACK_START_TO_END("select-track-start-to-end");
+static const ActionCode SELECT_ZERO_CROSSING("zero-cross");
 
 static const ActionQuery AUTO_COLOR_QUERY("action://trackedit/clip/change-color-auto");
 static const ActionQuery CHANGE_COLOR_QUERY("action://trackedit/clip/change-color");
@@ -232,6 +239,13 @@ void TrackeditActionsController::init()
 
     dispatcher()->reg(this, SELECT_ALL, this, &TrackeditActionsController::selectAll);
     dispatcher()->reg(this, SELECT_NONE, this, &TrackeditActionsController::selectNone);
+    dispatcher()->reg(this, SELECT_ALL_TRACKS, this, &TrackeditActionsController::selectAllTracks);
+    dispatcher()->reg(this, SELECT_LEFT_OF_PLAYBACK_POS, this, &TrackeditActionsController::selectLeftOfPlaybackPos);
+    dispatcher()->reg(this, SELECT_RIGHT_OF_PLAYBACK_POS, this, &TrackeditActionsController::selectRightOfPlaybackPos);
+    dispatcher()->reg(this, SELECT_TRACK_START_TO_CURSOR, this, &TrackeditActionsController::selectTrackStartToCursor);
+    dispatcher()->reg(this, SELECT_CURSOR_TO_TRACK_END, this, &TrackeditActionsController::selectCursorToTrackEnd);
+    dispatcher()->reg(this, SELECT_TRACK_START_TO_END, this, &TrackeditActionsController::selectTrackStartToEnd);
+    dispatcher()->reg(this, SELECT_ZERO_CROSSING, this, &TrackeditActionsController::moveCursorToClosestZeroCrossing);
 
     dispatcher()->reg(this, AUTO_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
     dispatcher()->reg(this, CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
@@ -1275,6 +1289,123 @@ void TrackeditActionsController::selectNone()
     selectionController()->resetDataSelection();
     selectionController()->resetSelectedClips();
     selectionController()->resetSelectedTracks();
+}
+
+void TrackeditActionsController::selectAllTracks()
+{
+    auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    selectionController()->setSelectedTracks(prj->trackIdList());
+}
+
+void TrackeditActionsController::selectLeftOfPlaybackPos()
+{
+    RetVal<Val> rv = interactive()->openSync("audacity://trackedit/custom_time");
+    if (!rv.ret) {
+        return;
+    }
+
+    secs_t playbackTime = playbackState()->playbackPosition();
+
+    if (muse::RealIsEqualOrMore(rv.val.toDouble(), playbackTime)) {
+        return;
+    }
+
+    selectionController()->setDataSelectedStartTime(rv.val.toDouble(), true);
+    selectionController()->setDataSelectedEndTime(playbackTime, true);
+}
+
+void TrackeditActionsController::selectRightOfPlaybackPos()
+{
+    RetVal<Val> rv = interactive()->openSync("audacity://trackedit/custom_time");
+    if (!rv.ret) {
+        return;
+    }
+
+    secs_t playbackTime = playbackState()->playbackPosition();
+    secs_t rightOfPlaybackValue = rv.val.toDouble();
+    if (muse::RealIsEqualOrLess(rightOfPlaybackValue, playbackTime)) {
+        return;
+    }
+
+    //! NOTE: clamp to 2x size of project
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj) {
+        return;
+    }
+
+    secs_t maxTime = prj->trackeditProject()->totalTime().to_double() * 2;
+    rightOfPlaybackValue = std::min(rightOfPlaybackValue, maxTime);
+
+    selectionController()->setDataSelectedStartTime(playbackTime, true);
+    selectionController()->setDataSelectedEndTime(rightOfPlaybackValue, true);
+}
+
+void TrackeditActionsController::selectTrackStartToCursor()
+{
+    ClipKeyList clipsOnSelectedTracks;
+    for (const auto& track : selectionController()->selectedTracks()) {
+        for (const auto& clip : trackeditInteraction()->clipsOnTrack(track)) {
+            clipsOnSelectedTracks.push_back(clip);
+        }
+    }
+
+    std::optional<secs_t> leftmostClipStartTime = trackeditInteraction()->getLeftmostClipStartTime(clipsOnSelectedTracks);
+    if (leftmostClipStartTime.has_value()) {
+        selectionController()->setDataSelectedStartTime(leftmostClipStartTime.value(), true);
+    } else {
+        selectionController()->setDataSelectedStartTime(0.0, true);
+    }
+
+    selectionController()->setDataSelectedEndTime(playbackState()->playbackPosition(), true);
+}
+
+void TrackeditActionsController::selectCursorToTrackEnd()
+{
+    ClipKeyList clipsOnSelectedTracks;
+    for (const auto& track : selectionController()->selectedTracks()) {
+        for (const auto& clip : trackeditInteraction()->clipsOnTrack(track)) {
+            clipsOnSelectedTracks.push_back(clip);
+        }
+    }
+
+    std::optional<secs_t> rightmostClipEndTime = trackeditInteraction()->getRightmostClipEndTime(clipsOnSelectedTracks);
+    if (rightmostClipEndTime.has_value()) {
+        selectionController()->setDataSelectedStartTime(playbackState()->playbackPosition(), true);
+        selectionController()->setDataSelectedEndTime(rightmostClipEndTime.value(), true);
+    } else {
+        //! NOTE: AU3 behavior
+        selectTrackStartToCursor();
+    }
+}
+
+void TrackeditActionsController::selectTrackStartToEnd()
+{
+    ClipKeyList clipsOnSelectedTracks;
+    for (const auto& track : selectionController()->selectedTracks()) {
+        for (const auto& clip : trackeditInteraction()->clipsOnTrack(track)) {
+            clipsOnSelectedTracks.push_back(clip);
+        }
+    }
+
+    std::optional<secs_t> leftmostClipStartTime = trackeditInteraction()->getLeftmostClipStartTime(clipsOnSelectedTracks);
+    std::optional<secs_t> rightmostClipEndTime = trackeditInteraction()->getRightmostClipEndTime(clipsOnSelectedTracks);
+
+    if (leftmostClipStartTime.has_value() && rightmostClipEndTime.has_value()) {
+        selectionController()->setDataSelectedStartTime(leftmostClipStartTime.value(), true);
+        selectionController()->setDataSelectedEndTime(rightmostClipEndTime.value(), true);
+    }
+}
+
+void TrackeditActionsController::moveCursorToClosestZeroCrossing()
+{
+    secs_t zeroCrossing = trackeditInteraction()->nearestZeroCrossing(playbackState()->playbackPosition());
+    zeroCrossing = std::max(zeroCrossing.to_double(), 0.0);
+
+    dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1<double>(zeroCrossing));
 }
 
 void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& q)

@@ -208,44 +208,80 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("select-none",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select none"),
-             TranslatableString("action", "Select none")
+             TranslatableString("action", "Clear selection"),
+             TranslatableString("action", "Clear selection")
              ),
-    UiAction("select-entire-track",
+    UiAction("select-all-tracks",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select entire track"),
-             TranslatableString("action", "Select entire track")
+             TranslatableString("action", "Select all tracks"),
+             TranslatableString("action", "Select all tracks")
              ),
-    UiAction("select-from-start-to-cursor",
+    UiAction("select-left-of-playback-position",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select from start to cursor"),
-             TranslatableString("action", "Select from start to cursor")
+             TranslatableString("action", "Left of playback position"),
+             TranslatableString("action", "Left of playback position")
              ),
-    UiAction("select-from-cursor-end",
+    UiAction("select-right-of-playback-position",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select from cursor end"),
-             TranslatableString("action", "Select from cursor end")
+             TranslatableString("action", "Right of playback position"),
+             TranslatableString("action", "Right of playback position")
              ),
-    UiAction("select-previous-item",
+    UiAction("select-track-start-to-cursor",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select previous item"),
-             TranslatableString("action", "Select previous item")
+             TranslatableString("action", "Track start to cursor"),
+             TranslatableString("action", "Track start to cursor")
              ),
-    UiAction("select-next-item",
+    UiAction("select-cursor-to-track-end",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select next item"),
-             TranslatableString("action", "Select next item")
+             TranslatableString("action", "Cursor to track end"),
+             TranslatableString("action", "Cursor to track end")
              ),
-    UiAction("select-near-zero-crossings",
+    UiAction("select-track-start-to-end",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select near zero crossings"),
-             TranslatableString("action", "Select near zero crossings")
+             TranslatableString("action", "Track start to end"),
+             TranslatableString("action", "Track start to end")
+             ),
+    UiAction("select-previous-clip-boundary-to-cursor",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Previous clip boundary to cursor"),
+             TranslatableString("action", "Previous clip boundary to cursor")
+             ),
+    UiAction("select-cursor-to-next-clip-boundary",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Cursor to next clip boundary"),
+             TranslatableString("action", "Cursor to next clip boundary")
+             ),
+    UiAction("select-previous-clip",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Previous clip"),
+             TranslatableString("action", "Previous clip")
+             ),
+    UiAction("select-next-clip",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Next clip"),
+             TranslatableString("action", "Next clip")
+             ),
+    UiAction("toggle-spectral-selection",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Toggle spectral selection"),
+             TranslatableString("action", "Toggle spectral selection")
+             ),
+    UiAction("zero-cross",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Move cursor to closest zero crossing"),
+             TranslatableString("action", "Move cursor to closest zero crossing")
              ),
 
     // view menu
