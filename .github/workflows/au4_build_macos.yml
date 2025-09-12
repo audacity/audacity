@@ -99,7 +99,7 @@ jobs:
         host: 'mac'
         target: 'desktop'
         arch: 'clang_64'
-        modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs'
+        modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
 
     - name: Setup environment
       if: env.DO_BUILD == 'true'
