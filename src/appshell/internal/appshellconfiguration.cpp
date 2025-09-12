@@ -24,11 +24,11 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 
-#include "settings.h"
+#include "global/settings.h"
+#include "global/log.h"
+#include "appshell/appshelltypes.h"
 
 // #include "multiinstances/resourcelockguard.h"
-
-#include "log.h"
 
 using namespace mu;
 using namespace muse;

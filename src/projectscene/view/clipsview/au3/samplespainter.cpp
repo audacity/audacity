@@ -42,7 +42,7 @@ void drawSampleHead(const au::projectscene::SampleData& samples, const au::proje
                 pen = style.sampleHead;
                 brush = style.sampleBrush;
             }
-            // selection with change the colour of the pen (the outside of the head)
+            // selection with change the color of the pen (the outside of the head)
             if (selectedStartPosition <= samples.x[s] && samples.x[s] <= selectedEndPosition) {
                 pen = style.sampleHeadSelection;
             }

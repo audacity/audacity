@@ -190,7 +190,7 @@ void RecentFilesController::removeNonexistentFiles()
     if (removed) {
         setRecentFilesList(newList, false);
 
-        async::Async::call(nullptr, [this, newList]() {
+        async::Async::call(nullptr, [this]() {
             saveRecentFilesList();
 
             m_recentFilesListChanged.notify();
@@ -198,7 +198,7 @@ void RecentFilesController::removeNonexistentFiles()
     }
 }
 
-void RecentFilesController::setRecentFilesList(const RecentFilesList& list, bool saveAndNotify)
+void RecentFilesController::setRecentFilesList(const RecentFilesList& list, const bool saveAndNotify)
 {
     if (m_recentFilesList == list) {
         return;
@@ -215,7 +215,7 @@ void RecentFilesController::setRecentFilesList(const RecentFilesList& list, bool
     }
 }
 
-void RecentFilesController::saveRecentFilesList()
+void RecentFilesController::saveRecentFilesList() const
 {
     TRACEFUNC;
 
@@ -248,9 +248,9 @@ void RecentFilesController::saveRecentFilesList()
 
 Promise<QPixmap> RecentFilesController::thumbnail(const muse::io::path_t& filePath) const
 {
-    return Promise<QPixmap>([this, filePath](auto resolve, auto reject) {
+    return Promise<QPixmap>([this, filePath](const auto& resolve, const auto& reject) {
         if (filePath.empty()) {
-            return reject(int(Ret::Code::UnknownError), "Invalid file specified");
+            return reject(static_cast<int>(Ret::Code::UnknownError), "Invalid file specified");
         }
 
         Concurrent::run([this, filePath, resolve, reject]() {
@@ -280,7 +280,7 @@ Promise<QPixmap> RecentFilesController::thumbnail(const muse::io::path_t& filePa
     }, PromiseType::AsyncByBody);
 }
 
-void RecentFilesController::cleanUpThumbnailCache(const RecentFilesList& files)
+void RecentFilesController::cleanUpThumbnailCache(const RecentFilesList& files) const
 {
     Concurrent::run([this, files] {
         std::lock_guard lock(m_thumbnailCacheMutex);

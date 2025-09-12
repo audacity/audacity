@@ -52,8 +52,8 @@ ListView {
 
     signal themeChangeRequested(var newThemeCode)
 
-    readonly property int sampleWidth: 112
-    readonly property int sampleHeight: 120
+    readonly property int sampleWidth: 88
+    readonly property int sampleHeight: 98
 
     implicitWidth: count * sampleWidth + (count - 1) * spacing
     height: contentHeight
@@ -62,13 +62,13 @@ ListView {
     orientation: Qt.Horizontal
     interactive: false
 
-    spacing: 64
+    spacing: 24
 
     delegate: Column {
         width: sampleWidth
         height: sampleHeight
 
-        spacing: 16
+        spacing: 10
 
         ThemeSample {
             theme: modelData
@@ -87,6 +87,14 @@ ListView {
             navigation.panel: root.navigationPanel
             navigation.row: root.navigationRow
             navigation.column: root.navigationColumnStart + model.index
+            navigation.accessible.name: modelData.title + " " + qsTrc("appshell/gettingstarted", "theme")
+            navigation.accessible.description: {
+                var desc = qsTrc("appshell/gettingstarted", "Select ") + modelData.title + " " + qsTrc("appshell/gettingstarted", "theme")
+                if (checked) {
+                    desc += ". " + qsTrc("appshell/gettingstarted", "Currently selected")
+                }
+                return desc
+            }
 
             onToggled: {
                 root.themeChangeRequested(modelData.codeKey)

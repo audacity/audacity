@@ -29,16 +29,16 @@ Rectangle {
 
     signal clicked
 
-    width: 112
-    height: 84
+    width: 88
+    height: 64
 
-    radius: 4
+    radius: 2
     color: theme.backgroundPrimaryColor
 
     RoundedRectangle {
         anchors.fill: parent
-        anchors.topMargin: 12
-        anchors.leftMargin: 16
+        anchors.topMargin: 8
+        anchors.leftMargin: 12
 
         color: root.theme.backgroundSecondaryColor
 
@@ -49,18 +49,18 @@ Rectangle {
 
         Column {
             anchors.fill: parent
-            anchors.topMargin: 6
-            anchors.bottomMargin: 6
-            anchors.leftMargin: 10
-            anchors.rightMargin: 10
+            anchors.topMargin: 4
+            anchors.bottomMargin: 20
+            anchors.leftMargin: 4
+            anchors.rightMargin: 4
 
-            spacing: 8
+            spacing: 4
 
             Rectangle {
-                height: 38
+                height: 32
                 width: parent.width
 
-                radius: 3
+                radius: 2
                 color: root.theme.backgroundPrimaryColor
 
                 border.color: root.theme.strokeColor
@@ -70,29 +70,29 @@ Rectangle {
                     anchors.fill: parent
                     anchors.margins: 7
 
-                    spacing: 6
+                    spacing: 4
 
                     Rectangle {
                         width: parent.width
-                        height: 4
+                        height: 3
 
-                        radius: 3
+                        radius: 4
                         color: root.theme.fontPrimaryColor
                     }
 
                     Rectangle {
                         width: parent.width
-                        height: 4
+                        height: 3
 
-                        radius: 3
+                        radius: 4
                         color: root.theme.fontPrimaryColor
                     }
 
                     Rectangle {
-                        width: parent.width / 2
-                        height: 4
+                        width: (parent.width * 2) / 3
+                        height: 3
 
-                        radius: 3
+                        radius: 4
                         color: root.theme.fontPrimaryColor
                     }
                 }
@@ -102,22 +102,26 @@ Rectangle {
                 width: parent.width
                 height: 12
 
-                spacing: 6
+                spacing: 4
 
                 Rectangle {
                     height: parent.height
-                    width: 34
+                    width: 32
 
-                    radius: 3
-                    color: Utils.colorWithAlpha(root.theme.accentColor, root.theme.buttonOpacityNormal)
+                    radius: 2
+                    color: Utils.colorWithAlpha(root.theme.buttonColor, root.theme.buttonOpacityNormal)
+                    border.color: root.theme.strokeColor
+                    border.width: root.theme.borderWidth
                 }
 
                 Rectangle {
                     height: parent.height
-                    width: 34
+                    width: 32
 
-                    radius: 3
-                    color: Utils.colorWithAlpha(root.theme.buttonColor, root.theme.buttonOpacityNormal)
+                    radius: 2
+                    color: Utils.colorWithAlpha(root.theme.accentColor, root.theme.buttonOpacityNormal)
+                    border.color: root.theme.strokeColor
+                    border.width: root.theme.borderWidth
                 }
             }
         }
@@ -127,7 +131,7 @@ Rectangle {
         id: borderRect
         anchors.fill: parent
         color: "transparent"
-        radius: 4
+        radius: 2
         border.width: 1
         border.color: mouseArea.containsMouse ? root.theme.accentColor : root.theme.strokeColor
     }

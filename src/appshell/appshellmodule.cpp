@@ -42,6 +42,8 @@
 #include "view/aboutmodel.h"
 #include "view/firstlaunchsetup/firstlaunchsetupmodel.h"
 #include "view/firstlaunchsetup/themespagemodel.h"
+#include "view/firstlaunchsetup/clipvisualizationpagemodel.h"
+#include "view/firstlaunchsetup/workspacelayoutpagemodel.h"
 #include "view/preferences/preferencesmodel.h"
 #include "view/preferences/generalpreferencesmodel.h"
 #include "view/preferences/editpreferencesmodel.h"
@@ -179,6 +181,8 @@ void AppShellModule::registerUiTypes()
     qmlRegisterType<AboutModel>("Audacity.AppShell", 1, 0, "AboutModel");
     qmlRegisterType<FirstLaunchSetupModel>("Audacity.AppShell", 1, 0, "FirstLaunchSetupModel");
     qmlRegisterType<ThemesPageModel>("Audacity.AppShell", 1, 0, "ThemesPageModel");
+    qmlRegisterType<ClipVisualizationPageModel>("Audacity.AppShell", 1, 0, "ClipVisualizationPageModel");
+    qmlRegisterType<WorkspaceLayoutPageModel>("Audacity.AppShell", 1, 0, "WorkspaceLayoutPageModel");
     qmlRegisterType<FramelessWindowModel>("Audacity.AppShell", 1, 0, "FramelessWindowModel");
     qmlRegisterType<PublishToolBarModel>("Audacity.AppShell", 1, 0, "PublishToolBarModel");
     qmlRegisterType<MainToolBarModel>("Audacity.AppShell", 1, 0, "MainToolBarModel");

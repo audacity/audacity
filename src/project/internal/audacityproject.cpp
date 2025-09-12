@@ -19,8 +19,7 @@ static QString projectDefaultTitle()
 }
 
 Audacity4Project::Audacity4Project()
-{
-}
+= default;
 
 Ret Audacity4Project::createNew()
 {
@@ -33,11 +32,11 @@ Ret Audacity4Project::createNew()
     return muse::make_ret(Ret::Code::Ok);
 }
 
-muse::Ret Audacity4Project::load(const muse::io::path_t& path, bool forceMode, const std::string& format_)
+muse::Ret Audacity4Project::load(const muse::io::path_t& path, const bool forceMode, const std::string& format_)
 {
     TRACEFUNC;
 
-    std::string format = format_.empty() ? io::suffix(path) : format_;
+    const std::string format = format_.empty() ? io::suffix(path) : format_;
 
     LOGD() << "try load: " << path << ", format: " << format;
 
@@ -66,10 +65,10 @@ muse::Ret Audacity4Project::load(const muse::io::path_t& path, bool forceMode, c
     return ret;
 }
 
-Ret Audacity4Project::import(const muse::io::path_t& path, bool forceMode)
+Ret Audacity4Project::import(const muse::io::path_t& path, const bool forceMode)
 {
-    std::string importInfo = muse::qtrc("project", "Imported file “%1”?")
-                             .arg(path.toString()).toStdString();
+    const std::string importInfo = muse::qtrc("project", "Imported file “%1”?")
+                                   .arg(path.toString()).toStdString();
 
     Ret ok = doImport(path, forceMode);
     projectHistory()->pushHistoryState(importInfo, muse::trc("project", "Import"));
@@ -91,7 +90,7 @@ Ret Audacity4Project::import(const std::vector<muse::io::path_t>& paths, bool fo
     return ret;
 }
 
-muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const std::string& format)
+muse::Ret Audacity4Project::doLoad(const io::path_t& path, const bool forceMode, const std::string& format)
 {
     muse::Ret ret = muse::make_ret(Ret::Code::Ok);
     TRACEFUNC;
@@ -140,7 +139,7 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
     return ret;
 }
 
-Ret Audacity4Project::doImport(const muse::io::path_t& path, bool forceMode)
+Ret Audacity4Project::doImport(const muse::io::path_t& path, const bool forceMode) const
 {
     TRACEFUNC;
 

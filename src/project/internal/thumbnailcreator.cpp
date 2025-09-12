@@ -6,7 +6,7 @@ using namespace au::project;
 
 constexpr auto FILE_SUFFIX = ".png";
 
-void ThumbnailCreator::onThumbnailCreated(bool success)
+void ThumbnailCreator::onThumbnailCreated(const bool success)
 {
     m_thumbnailCreated.send(success);
 }
@@ -20,7 +20,7 @@ muse::Ret ThumbnailCreator::createThumbnail(const muse::io::path_t& path)
 {
     muse::Ret ret;
     QEventLoop loop;
-    m_thumbnailCreated.onReceive(this, [&loop, &ret](bool ok) {
+    m_thumbnailCreated.onReceive(this, [&loop, &ret](const bool ok) {
         ret = ok ? muse::make_ok() : muse::make_ret(muse::Ret::Code::UnknownError);
         loop.quit();
     });
@@ -32,9 +32,9 @@ muse::Ret ThumbnailCreator::createThumbnail(const muse::io::path_t& path)
     return ret;
 }
 
-muse::io::path_t ThumbnailCreator::thumbnailPath(const muse::io::path_t& path) const
+muse::io::path_t ThumbnailCreator::thumbnailPath(const muse::io::path_t& path)
 {
-    muse::io::FileInfo fileInfo(path);
+    const muse::io::FileInfo fileInfo(path);
     muse::io::path_t completePath = fileInfo.dirPath()
                                     .appendingComponent(fileInfo.baseName())
                                     .appendingSuffix(FILE_SUFFIX);

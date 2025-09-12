@@ -52,7 +52,7 @@ bool ThemesPageModel::isFollowSystemTheme() const
     return uiConfiguration()->isFollowSystemTheme().val;
 }
 
-void ThemesPageModel::setFollowSystemTheme(bool enabled)
+void ThemesPageModel::setFollowSystemTheme(const bool enabled)
 {
     if (enabled == isFollowSystemTheme()) {
         return;
@@ -97,7 +97,7 @@ bool ThemesPageModel::highContrastEnabled() const
     return uiConfiguration()->isHighContrast();
 }
 
-void ThemesPageModel::setHighContrastEnabled(bool enabled)
+void ThemesPageModel::setHighContrastEnabled(const bool enabled)
 {
     if (highContrastEnabled() == enabled) {
         return;
@@ -134,7 +134,7 @@ QStringList ThemesPageModel::accentColors() const
 int ThemesPageModel::currentAccentColorIndex() const
 {
     QStringList allColors = accentColors();
-    QString color = currentTheme().values[ACCENT_COLOR].toString().toLower();
+    const QString color = currentTheme().values[ACCENT_COLOR].toString().toLower();
 
     for (int i = 0; i < static_cast<int>(allColors.size()); ++i) {
         if (allColors[i].toLower() == color) {
@@ -145,7 +145,7 @@ int ThemesPageModel::currentAccentColorIndex() const
     return -1;
 }
 
-void ThemesPageModel::setCurrentAccentColorIndex(int index)
+void ThemesPageModel::setCurrentAccentColorIndex(const int index)
 {
     if (index < 0 || index >= accentColors().size()) {
         return;
@@ -155,6 +155,6 @@ void ThemesPageModel::setCurrentAccentColorIndex(int index)
         return;
     }
 
-    QColor color = accentColors().at(index);
+    const QColor color = accentColors().at(index);
     uiConfiguration()->setCurrentThemeStyleValue(ThemeStyleKey::ACCENT_COLOR, muse::Val(color));
 }

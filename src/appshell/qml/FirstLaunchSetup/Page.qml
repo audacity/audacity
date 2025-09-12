@@ -28,29 +28,15 @@ import Audacity.AppShell 1.0
 Item {
     id: root
 
-    property alias title: titleLabel.text
-    property alias explanation: explanationLabel.text
+    anchors.fill: parent
 
+    property alias title: titleLabel.text
     property NavigationSection navigationSection: null
     property int navigationStartRow: 2
     property string activeButtonTitle: ""
-
     default property alias content: contentItem.data
-
     property real titleContentSpacing: 24
-
     property string extraButtonTitle: ""
-    signal extraButtonClicked()
-
-    anchors.fill: parent
-
-    function readInfo() {
-        accessibleInfo.readInfo()
-    }
-
-    function resetFocus() {
-        accessibleInfo.resetFocus()
-    }
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "ContentPanel"
@@ -60,13 +46,24 @@ Item {
         direction: NavigationPanel.Vertical
     }
 
+    signal extraButtonClicked
+
+    function readInfo() {
+        accessibleInfo.readInfo()
+    }
+
+    function resetFocus() {
+        accessibleInfo.resetFocus()
+    }
+
     AccessibleItem {
         id: accessibleInfo
 
         accessibleParent: root.navigationPanel.accessible
         visualItem: root
         role: MUAccessible.Button
-        name: root.title + ". " + root.explanation + " " + root.activeButtonTitle
+
+        name: qsTrc("appshell/gettingstarted", "%1. %2").arg(root.title).arg(root.activeButtonTitle)
 
         function readInfo() {
             accessibleInfo.ignored = false
@@ -83,28 +80,20 @@ Item {
         id: header
 
         anchors.top: parent.top
+        anchors.topMargin: 39
         anchors.left: parent.left
         anchors.right: parent.right
 
         height: childrenRect.height
-        spacing: 6
 
         StyledTextLabel {
             id: titleLabel
 
             anchors.horizontalCenter: parent.horizontalCenter
+
             width: parent.width
 
             font: ui.theme.largeBodyBoldFont
-            wrapMode: Text.Wrap
-        }
-
-        StyledTextLabel {
-            id: explanationLabel
-
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width
-
             wrapMode: Text.Wrap
         }
     }

@@ -59,8 +59,6 @@ public:
     bool canGoForward() const;
     bool canFinish() const;
 
-    Q_INVOKABLE bool askAboutClosingEarly();
-
     Q_INVOKABLE void finish();
 
 public slots:
@@ -71,10 +69,10 @@ signals:
 
 private:
     struct Page {
-        QString url;
-        std::string backgroundUri;
+        QString m_url;
+        std::string m_backgroundUri;
 
-        QVariantMap toMap() const;
+        [[nodiscard]] QVariantMap toMap() const;
     };
 
     QList<Page> m_pages;
