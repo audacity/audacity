@@ -6,7 +6,7 @@ namespace au::effects {
 class LineSequencePainter : public AbstractSequencePainter
 {
 public:
-    LineSequencePainter(const QRectF& viewport);
+    LineSequencePainter(const double& viewportX);
 
     void append(std::vector<SequenceSample> samples) override;
 

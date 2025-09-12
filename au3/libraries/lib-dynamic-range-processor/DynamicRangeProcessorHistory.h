@@ -32,18 +32,36 @@ public:
     static constexpr auto maxTimeSeconds = 2.5f;
 
     using Segment = std::vector<Packet>;
+    using Segments = std::vector<Segment>;
+
+    class PacketView
+    {
+    public:
+        int numPackets() const;
+        const Packet& at(int i) const;
+
+    private:
+        friend class DynamicRangeProcessorHistory;
+        PacketView(const DynamicRangeProcessorHistory& history, int numViewedPackets);
+
+        const int m_numViewedPackets;
+        const DynamicRangeProcessorHistory& m_history;
+    };
 
     void Push(const std::vector<DynamicRangeProcessorOutputPacket>& packets);
     void BeginNewSegment();
-    const std::vector<Segment>& GetSegments() const;
+    PacketView GetViewOnNewPackets();
+    const Segments& GetSegments() const;
     bool IsEmpty() const;
 
 private:
     float GetPacketTime(const DynamicRangeProcessorOutputPacket& packet) const;
+    int TotalNumPackets() const;
 
     const double mSampleRate;
     bool mBeginNewSegment = true;
-    std::vector<Segment> mSegments;
+    Segments mSegments;
+    int m_numViewedPackets = 0;
     std::optional<long long> mFirstPacketFirstSampleIndex;
     std::optional<long long> mExpectedNextPacketFirstSampleIndex;
 };

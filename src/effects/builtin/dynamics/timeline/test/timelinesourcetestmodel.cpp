@@ -1,4 +1,5 @@
 #include "timelinesourcetestmodel.h"
+#include "dynamicstimelinetypes.h"
 
 #include <QLineSeries>
 #include <QSGGeometryNode>
@@ -11,7 +12,8 @@
 
 namespace au::effects {
 namespace {
-constexpr auto samplePeriodMs = 250;
+constexpr auto deliveryIntervalMs = 250;
+constexpr auto dataPointPeriodMs = 50;
 } // namespace
 
 TimelineSourceTestModel::TimelineSourceTestModel(QObject* parent)
@@ -19,9 +21,9 @@ TimelineSourceTestModel::TimelineSourceTestModel(QObject* parent)
 
 void TimelineSourceTestModel::init()
 {
-    m_sampleTimer = new QTimer(this);
-    connect(m_sampleTimer, &QTimer::timeout, this, [this] { addDataPoint(); });
-    m_sampleTimer->start(samplePeriodMs);
+    m_deliveryTimer = new QTimer(this);
+    connect(m_deliveryTimer, &QTimer::timeout, this, [this] { addDataPoints(); });
+    m_deliveryTimer->start(deliveryIntervalMs);
 
     m_clippingTimer = new QTimer(this);
     connect(m_clippingTimer, &QTimer::timeout, this, [this] {
@@ -31,20 +33,34 @@ void TimelineSourceTestModel::init()
     m_clippingTimer->start(3000);
 }
 
-double TimelineSourceTestModel::samplePeriod() const
+double TimelineSourceTestModel::dataPointRate() const
 {
-    return samplePeriodMs / 1000.0;
+    return 1000.0 / dataPointPeriodMs;
 }
 
-void TimelineSourceTestModel::addDataPoint()
+double TimelineSourceTestModel::latency() const
+{
+    return deliveryIntervalMs / 1000.0;
+}
+
+void TimelineSourceTestModel::addDataPoints()
 {
     static auto i = 0;
-    constexpr std::array<double, 4> period{ 0.0, -15.0, -10.0, -20.0 };
-    const double inputDb = period[i++ % period.size()];
-    const double outputDb = inputDb - (rand() % 100 / 10.0);
-    const double compressionDb = -(rand() % 100 / 20.0);
 
-    emit newSample(inputDb, outputDb, compressionDb);
+    QVariantList samples;
+    constexpr auto pointsPerDelivery = deliveryIntervalMs / dataPointPeriodMs;
+    samples.reserve(pointsPerDelivery);
+
+    for (auto j = 0; j < pointsPerDelivery; ++j) {
+        constexpr std::array<double, 4> period{ 0.0, -15.0, -10.0, -20.0 };
+        const double inputDb = period[i++ % period.size()];
+        const double outputDb = inputDb - (rand() % 100 / 10.0);
+        const double compressionDb = -(rand() % 100 / 20.0);
+        const double time = m_dataPointCount++ *dataPointPeriodMs / 1000.0;
+        samples.append(QVariant::fromValue(DynamicsSample { time, inputDb, outputDb, compressionDb }));
+    }
+
+    emit newSamples(samples);
 }
 
 void TimelineSourceTestModel::setIsClipping(bool clipping)
@@ -54,5 +70,14 @@ void TimelineSourceTestModel::setIsClipping(bool clipping)
     }
     m_isClipping = clipping;
     emit isClippingChanged();
+}
+
+void TimelineSourceTestModel::setInstanceId(int id)
+{
+    if (m_instanceId == id) {
+        return;
+    }
+    m_instanceId = id;
+    emit instanceIdChanged();
 }
 } // namespace au::effects

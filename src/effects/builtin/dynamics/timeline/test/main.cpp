@@ -1,4 +1,5 @@
 #include "dynamicstimeline.h"
+#include "dynamicstimelinetypes.h"
 #include "timelinesourcetestmodel.h"
 #include "meters/compressionmetermodel.h"
 #include "meters/dynamicseffectoutputmetermodel.h"
@@ -9,11 +10,6 @@
 
 int main(int argc, char* argv[])
 {
-#if defined(Q_OS_WIN) && QT_VERSION_CHECK(5, 6, 0) <= QT_VERSION &&            \
-    QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
-
     // Enabling anti-aliasing
     QSurfaceFormat fmt;
     fmt.setSamples(4); // Request 4x multisampling
@@ -23,6 +19,8 @@ int main(int argc, char* argv[])
 
     qmlRegisterType<au::effects::DynamicsTimeline>("Audacity.BuiltinEffects", 1,
                                                    0, "DynamicsTimeline");
+    qmlRegisterType<au::effects::DynamicsSample>("Audacity.BuiltinEffects", 1, 0,
+                                                 "DynamicsSample");
     qmlRegisterType<au::effects::TimelineSourceTestModel>(
         "Audacity.BuiltinEffects", 1, 0, "TimelineSourceModel");
     qmlRegisterType<au::effects::Stopwatch>("Audacity.BuiltinEffects", 1, 0,

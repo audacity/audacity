@@ -33,9 +33,16 @@ BuiltinEffectBase {
     Column {
         id: rootColumn
 
+        StopwatchModel {
+            id: stopwatchModel
+        }
+
         DynamicsPanel {
             id: timeline
             width: root.width
+
+            instanceId: compressor.instanceId
+            playState: stopwatchModel.playState
         }
 
         Rectangle {
