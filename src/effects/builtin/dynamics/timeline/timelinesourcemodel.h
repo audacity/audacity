@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 namespace au::effects {
-class DynamicsTimelineModel : public QObject
+class TimelineSourceModel : public QObject
 {
     Q_OBJECT
 
@@ -15,7 +15,7 @@ class DynamicsTimelineModel : public QObject
     Q_PROPERTY(double samplePeriod READ samplePeriod CONSTANT)
 
 public:
-    explicit DynamicsTimelineModel(QObject* parent = nullptr);
+    explicit TimelineSourceModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
 

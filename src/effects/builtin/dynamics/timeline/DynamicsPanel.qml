@@ -62,7 +62,7 @@ Item {
         id: stopwatch
     }
 
-    DynamicsTimelineModel {
+    TimelineSourceModel {
         id: timelineModel
 
         onNewSample: function (inputDb, outputDb, compressionDb) {
