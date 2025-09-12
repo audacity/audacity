@@ -208,8 +208,8 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("select-none",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select none"),
-             TranslatableString("action", "Select none")
+             TranslatableString("action", "Clear selection"),
+             TranslatableString("action", "Clear selection")
              ),
     UiAction("select-all-tracks",
              au::context::UiCtxAny,
@@ -217,13 +217,13 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Select all tracks"),
              TranslatableString("action", "Select all tracks")
              ),
-    UiAction("select-from-start-to-cursor",
+    UiAction("select-left-of-playback-position",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Left of playback position"),
              TranslatableString("action", "Left of playback position")
              ),
-    UiAction("select-from-cursor-to-end",
+    UiAction("select-right-of-playback-position",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Right of playback position"),

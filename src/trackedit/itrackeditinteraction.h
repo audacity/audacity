@@ -72,6 +72,7 @@ public:
     virtual bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) = 0;
     virtual secs_t clipDuration(const ClipKey& clipKey) const = 0;
     virtual std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const = 0;
+    virtual std::optional<secs_t> getRightmostClipEndTime(const ClipKeyList& clipKeys) const = 0;
 
     virtual bool newMonoTrack() = 0;
     virtual bool newStereoTrack() = 0;
@@ -80,6 +81,7 @@ public:
     virtual bool duplicateTracks(const TrackIdList& trackIds) = 0;
     virtual void moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) = 0;
     virtual void moveTracksTo(const TrackIdList& trackIds, int pos) = 0;
+    virtual ClipKeyList clipsOnTrack(const trackedit::TrackId trackId) = 0;
 
     virtual bool undo() = 0;
     virtual bool canUndo() = 0;
