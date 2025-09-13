@@ -1,7 +1,30 @@
 #include "reverbeffect.h"
 #include "ShuttleAutomation.h"
-
+#include "Reverb_libSoX.h"
 #include "global/types/number.h"
+#include "global/log.h"
+
+namespace au::effects {
+struct Reverb_priv_t
+{
+    reverb_t reverb;
+    float* dry;
+    float* wet[2];
+};
+
+struct Reverb_priv_ex : Reverb_priv_t
+{
+    Reverb_priv_ex()
+        : Reverb_priv_t{}
+    {
+    }
+
+    ~Reverb_priv_ex()
+    {
+        reverb_delete(&reverb);
+    }
+};
+}
 
 using namespace au::effects;
 
