@@ -92,6 +92,7 @@ ProjectCreateOptions NewProjectModel::parseOptions(const QVariantMap& info) cons
 
 void NewProjectModel::updatePreferredProjectCreationMode(bool isProjectCreatedFromInstruments)
 {
+    UNUSED(isProjectCreatedFromInstruments);
     // if (isScoreCreatedFromInstruments) {
     //     configuration()->setPreferredScoreCreationMode(PreferredScoreCreationMode::FromInstruments);
     // } else {

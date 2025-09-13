@@ -131,3 +131,17 @@ target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE On)
+
+target_compile_options( ${TARGET}
+   PRIVATE
+        $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:
+            -Wno-unused-parameter;
+            -Wno-unused-variable;
+            -Wno-unused-function;
+        >
+        $<$<CXX_COMPILER_ID:MSVC>:
+            /wd4100 # unreferenced formal parameter
+            /wd4505 # unreferenced function removed
+        >
+)
+

@@ -55,13 +55,13 @@ void ProjectSceneConfiguration::init()
 
     muse::settings()->setDefaultValue(STEREO_HEIGHTS_PREF,
                                       muse::Val(StereoHeightsPref::AsymmetricStereoHeights::WORKSPACE_DEPENDENT));
-    muse::settings()->valueChanged(STEREO_HEIGHTS_PREF).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(STEREO_HEIGHTS_PREF).onReceive(nullptr, [this](const muse::Val&) {
         m_asymmetricStereoHeightsChanged.notify();
     });
 
     muse::settings()->setDefaultValue(ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES,
                                       muse::Val("Advanced audio editing"));
-    muse::settings()->valueChanged(ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES).onReceive(nullptr, [this](const muse::Val& val) {
+    muse::settings()->valueChanged(ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES).onReceive(nullptr, [this](const muse::Val&) {
         m_asymmetricStereoHeightsWorkspacesChanged.notify();
     });
 

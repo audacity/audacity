@@ -17,9 +17,6 @@ namespace {
 constexpr double MIN_VOLUME_LIN = 0.0;
 constexpr double MAX_VOLUME_LIN = 1.0;
 
-constexpr int LOW_RESOLUTION_METER_THRESHOLD = 400;
-constexpr int HIGH_RESOLUTION_METER_THRESHOLD = 1500;
-
 constexpr int MIN_STEP_DISTANCE = 50;
 
 struct StepValue {

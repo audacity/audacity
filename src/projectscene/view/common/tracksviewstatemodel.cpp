@@ -79,6 +79,7 @@ bool TracksViewStateModel::snapEnabled() const
 
 au::trackedit::TrackId TracksViewStateModel::trackAtPosition(double x, double y) const
 {
+    UNUSED(x);
     IProjectViewStatePtr vs = viewState();
     if (vs) {
         return vs->trackAtPosition(y);

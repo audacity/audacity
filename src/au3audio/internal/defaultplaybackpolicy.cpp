@@ -6,6 +6,7 @@
 #include "ProjectAudioIO.h"
 #include "SampleCount.h"
 #include "ViewInfo.h"
+#include "log.h"
 
 DefaultPlaybackPolicy::DefaultPlaybackPolicy(AudacityProject& project,
                                              double trackEndTime, double loopEndTime, std::optional<double> pStartTime,
@@ -65,6 +66,7 @@ bool DefaultPlaybackPolicy::RevertToOldDefault(const PlaybackSchedule& schedule)
 bool DefaultPlaybackPolicy::Done(
     PlaybackSchedule& schedule, unsigned long outputFrames)
 {
+    UNUSED(outputFrames);
     if (RevertToOldDefault(schedule)) {
         auto diff = schedule.GetSequenceTime() - schedule.mT1;
         if (schedule.ReversedTime()) {
@@ -111,7 +113,7 @@ DefaultPlaybackPolicy::GetPlaybackSlice(
 
     if (deltat > realTimeRemaining) {
         toProduce = frames = 0.5 + (realTimeRemaining * mRate) / mLastPlaySpeed;
-        auto realTime = realTimeRemaining;
+
         double extra = 0;
         if (RevertToOldDefault(schedule)) {
             // Produce some extra silence so that the time queue consumer can

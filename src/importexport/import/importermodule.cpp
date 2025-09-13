@@ -24,7 +24,7 @@ void ImporterModule::registerExports()
     ioc()->registerExport<IImporter>(moduleName(), m_importer);
 }
 
-void ImporterModule::onInit(const muse::IApplication::RunMode& mode)
+void ImporterModule::onInit(const muse::IApplication::RunMode&)
 {
     m_importer->init();
 }

@@ -205,7 +205,8 @@ muse::Ret Au3Record::start()
     //! TODO: should be configurable
     bool altAppearance = false;
 
-    bool bPreferNewTrack = false;
+    // TODO: should preferNewTrack be an option?
+    // bool bPreferNewTrack = false;
     // gPrefs->Read("/GUI/PreferNewTrackRecord", &bPreferNewTrack, false);
     const bool appendRecord = true;//(altAppearance == bPreferNewTrack);
 
@@ -390,7 +391,9 @@ Ret Au3Record::doRecord(Au3Project& project,
         return make_ret(Ret::Code::InternalError);
     }
 
+    // TODO: what is the meaning of the next line, do we need it?
     // projectAudioManager.SetAppending(!altAppearance);
+    UNUSED(altAppearance);
 
     bool success = false;
 

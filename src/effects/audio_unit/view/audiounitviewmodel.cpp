@@ -150,6 +150,8 @@ void au::effects::AudioUnitViewModel::checkSettingChangesFromUi()
 void AudioUnitViewModel::EventListenerCallback(void* inCallbackRefCon, void* inObject, const AudioUnitEvent* inEvent,
                                                UInt64 inEventHostTime, AudioUnitParameterValue inParameterValue)
 {
+    UNUSED(inObject);
+    UNUSED(inEventHostTime);
     static_cast<AudioUnitViewModel*>(inCallbackRefCon)->EventListener(inEvent, inParameterValue);
 }
 

@@ -194,6 +194,7 @@ bool ReverbEffect::Instance::RealtimeAddProcessor(
 
 bool ReverbEffect::Instance::RealtimeFinalize(EffectSettings& settings) noexcept
 {
+    UNUSED(settings);
     mSlaves.clear();
     return true;
 }

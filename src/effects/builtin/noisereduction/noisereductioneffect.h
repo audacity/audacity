@@ -180,16 +180,13 @@ public:
     class Statistics
     {
     public:
-        Statistics(size_t spectrumSize, double rate, int windowTypes)
+        Statistics(size_t spectrumSize, double rate)
             : mRate{rate}
             , mWindowSize{(spectrumSize - 1) * 2}
             , mTotalWindows{0}
             , mTrackWindows{0}
             , mSums(spectrumSize)
             , mMeans(spectrumSize)
-#ifdef OLD_METHOD_AVAILABLE
-            , mNoiseThreshold(spectrumSize)
-#endif
         {
         }
 
@@ -202,11 +199,6 @@ public:
         unsigned mTrackWindows;
         std::vector<float> mSums;
         std::vector<float> mMeans;
-
-#ifdef OLD_METHOD_AVAILABLE
-        // Old statistics:
-        std::vector<float> mNoiseThreshold;
-#endif
     };
 
     class Worker;

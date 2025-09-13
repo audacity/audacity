@@ -15,6 +15,7 @@ const EffectParameterMethods& EqualizationBase::Parameters() const
         EqualizationParameters::InterpMeth>
     parameters { [](EqualizationBase& effect, EffectSettings&,
                     EqualizationParameters& params, bool updating) {
+            (void)effect;
             constexpr auto nInterpolations
                 =EqualizationParameters::nInterpolations;
             if (updating) {
@@ -329,7 +330,6 @@ bool EqualizationBase::Process(EffectInstance&, EffectSettings&)
 
                 wxASSERT(M - 1 < windowSize);
                 size_t L = windowSize - (M - 1); // Process L samples at a go
-                auto s = start;
                 auto idealBlockLen = pChannel->GetMaxBlockSize() * 4;
                 if (idealBlockLen % L != 0) {
                     idealBlockLen += (L - (idealBlockLen % L));

@@ -22,7 +22,7 @@ private:
         return std::make_unique<DynamicRangeProcessorDummyOutputs>();
     }
 
-    void Assign(EffectOutputs&& src) override
+    void Assign(EffectOutputs&&) override
     {
     }
 };

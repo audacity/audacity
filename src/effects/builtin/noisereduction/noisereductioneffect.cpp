@@ -66,10 +66,6 @@ const struct DiscriminationMethodInfo
     { XO("Second greatest") },
 };
 
-// magic number used only in the old statistics
-// and the old discrimination
-const float minSignalTime = 0.05f;
-
 const struct WindowTypesInfo
 {
     const TranslatableString name;
@@ -292,14 +288,12 @@ bool NoiseReductionEffect::Process(EffectInstance&, EffectSettings& s)
     }
 
     auto& settings = GetSettings(s);
-    const auto stepsPerWindow = settings.StepsPerWindow();
-    const auto stepSize = settings.WindowSize() / stepsPerWindow;
 
     // Initialize statistics if gathering them, or check for mismatched
     // (advanced) settings if reducing noise.
     if (settings.mDoProfile) {
         const auto spectrumSize = settings.SpectrumSize();
-        mStatistics = std::make_unique<Statistics>(spectrumSize, track->GetRate(), settings.mWindowTypes);
+        mStatistics = std::make_unique<Statistics>(spectrumSize, track->GetRate());
     } else if (mStatistics->mWindowSize != settings.WindowSize()) {
         // possible only with advanced settings
         mLastError
@@ -543,17 +537,9 @@ NoiseReductionEffect::Worker::Worker(
     mCenter = mNWindowsToExamine / 2;
     wxASSERT(mCenter >= 1); // release depends on this assumption
 
-    if (mDoProfile)
-#ifdef OLD_METHOD_AVAILABLE
-    {
-        mHistoryLen = mNWindowsToExamine;
-    }
-#else
-    {
+    if (mDoProfile) {
         mHistoryLen = 1;
-    }
-#endif
-    else {
+    } else {
         // Allow long enough queue for sufficient inspection of the middle
         // and for attack processing
         // See ReduceNoise()
@@ -639,28 +625,6 @@ void NoiseReductionEffect::Worker::GatherStatistics(MyTransformer& transformer)
             *pSum++ += *pPower++;
         }
     }
-
-#ifdef OLD_METHOD_AVAILABLE
-    // The noise threshold for each frequency is the maximum
-    // level achieved at that frequency for a minimum of
-    // mMinSignalBlocks blocks in a row - the max of a min.
-
-    auto finish = mHistoryLen;
-
-    {
-        // old statistics
-        auto pPower = NthWindow(0).mSpectrums.data();
-        auto pThreshold = mStatistics.mNoiseThreshold.data();
-        for (size_t jj = 0; jj < mSpectrumSize; ++jj) {
-            float min = *pPower++;
-            for (unsigned ii = 1; ii < finish; ++ii) {
-                min = std::min(min, NthWindow(ii).mSpectrums[jj]);
-            }
-            *pThreshold = std::max(*pThreshold, min);
-            ++pThreshold;
-        }
-    }
-#endif
 }
 
 // Return true iff the given band of the "center" window looks like noise.

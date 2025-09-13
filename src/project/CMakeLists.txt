@@ -103,6 +103,24 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/projectpropertiesmodel.h
 )
 
+# TODO: Warnings suppression. Remove once all functionality is implemented
+set_source_files_properties(
+    ${CMAKE_CURRENT_LIST_DIR}/internal/opensaveprojectscenario.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectautosaver.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/newprojectmodel.cpp
+    PROPERTIES COMPILE_OPTIONS "
+        $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:
+            -Wno-unused-parameter;
+            -Wno-unused-function;
+        >
+        $<$<CXX_COMPILER_ID:MSVC>:
+            /wd4100 # unreferenced formal parameter
+            /wd4505 # unreferenced function removed
+        >
+    "
+)
+
 set(MODULE_LINK au3wrap)
 
 set(MODULE_USE_UNITY OFF)

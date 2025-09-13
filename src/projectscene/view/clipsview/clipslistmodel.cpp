@@ -14,8 +14,6 @@ using namespace au::projectscene;
 using namespace au::trackedit;
 
 constexpr int CACHE_BUFFER_PX = 200;
-constexpr double MOVE_MAX = 100000.0;
-constexpr double MOVE_MIN = 0.0;
 constexpr double MIN_CLIP_WIDTH = 3.0;
 constexpr double MOVE_THRESHOLD = 3.0;
 

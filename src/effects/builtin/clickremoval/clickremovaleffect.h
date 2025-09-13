@@ -56,8 +56,6 @@ private:
     bool RemoveClicks(size_t len, float* buffer);
 
 private:
-    Envelope* mEnvelope;
-
     bool mbDidSomething; // This effect usually does nothing on real-world data.
 
 public:
