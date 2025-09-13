@@ -524,11 +524,13 @@ struct VisitorFunctions : std::variant<
         if constexpr (size == 1) {
             this->template emplace<0>(
                 MakeVisitorFunction<LeafTypes, Reference>(forwarded));
-        } else if constexpr (size == 3) {
-            this->template emplace<1>(
-                MakeVisitorFunction<NodeTypes, Reference>(get<0>(forwarded)),
-                MakeVisitorFunction<LeafTypes, Reference>(get<1>(forwarded)),
-                MakeVisitorFunction<NodeTypes, Reference>(get<2>(forwarded)));
+        } else {
+            if constexpr (size == 3) {
+                this->template emplace<1>(
+                    MakeVisitorFunction<NodeTypes, Reference>(get<0>(forwarded)),
+                    MakeVisitorFunction<LeafTypes, Reference>(get<1>(forwarded)),
+                    MakeVisitorFunction<NodeTypes, Reference>(get<2>(forwarded)));
+            }
         }
     }
 
