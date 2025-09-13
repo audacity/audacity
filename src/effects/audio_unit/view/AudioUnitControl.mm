@@ -8,6 +8,8 @@
 #include <CoreAudioKit/CoreAudioKit.h>
 #include <QTimer>
 
+#include <AudioUnit/AUCocoaUIView.h>
+
 #include "AudioUnitUtils.h"
 
 @interface AUView : NSView
@@ -24,9 +26,11 @@
 {
     NSParameterAssert(control);
 
+    self = [super init];
+    if (!self) {
+        return nil;
+    }
     mControl = control;
-
-    [super init];
 
     return self;
 }
@@ -153,7 +157,7 @@ void AUControl::createCocoa()
                 // Load the class from the bundle
                 if (auto factoryClass = [bundle classNamed:viewClass]) {
                     // Create an instance of the class
-                    if (id factoryInst = [[[factoryClass alloc] init] autorelease]) {
+                    if (id<AUCocoaUIBase> factoryInst = [[[factoryClass alloc] init] autorelease]) {
                         // Create the view, suggesting a reasonable size
                         try {
                             if ((mView = [factoryInst uiViewForAudioUnit:mUnit

@@ -11,7 +11,7 @@ EffectInstanceId EffectInstancesRegister::regInstance(const EffectId& effectId, 
                                                       EffectSettingsAccessPtr s)
 {
     EffectInstanceId id = i->id();
-    m_data.insert({ id, { effectId, i, s, muse::async::Notification() } });
+    m_data.insert({ id, { effectId, i, s, muse::async::Notification(), muse::async::Notification() } });
     return id;
 }
 

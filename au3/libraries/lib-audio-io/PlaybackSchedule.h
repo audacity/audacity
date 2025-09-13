@@ -259,7 +259,7 @@ struct AUDIO_IO_API PlaybackSchedule {
             ///@brief Flag is set when used by at least consumer thread.
             ///Once node is not used by neither it's flag is cleared making it available
             ///for recycling.
-            std::atomic_flag active { ATOMIC_FLAG_INIT };
+            std::atomic_flag active = ATOMIC_FLAG_INIT;
 
             ///@brief Number of samples advanced from the beginning of the current head. Accessed only by consumer thread.
             size_t offset { 0 };

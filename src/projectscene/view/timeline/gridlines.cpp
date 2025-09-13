@@ -7,6 +7,7 @@
 using namespace au::projectscene;
 
 GridLines::GridLines(QQuickItem* parent)
+    : QQuickPaintedItem(parent)
 {
 }
 

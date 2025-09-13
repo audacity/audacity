@@ -27,9 +27,9 @@
 class wxCFStringRef;
 class wxMemoryBuffer;
 class EffectDefinitionInterface;
-class EffectSettings;
 class TranslatableString;
-class AudioUnitWrapper;
+struct EffectSettings;
+struct AudioUnitWrapper;
 
 /**
  * @struct AudioUnitEffectSettings
