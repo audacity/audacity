@@ -1,7 +1,6 @@
 #pragma once
 
 #include "PerTrackEffect.h"
-#include "Reverb_libSoX.h"
 #include "SettingsVisitor.h"
 
 namespace au::effects {
@@ -35,25 +34,7 @@ struct ReverbSettings
         const ReverbSettings& a, const ReverbSettings& b);
 };
 
-struct Reverb_priv_t
-{
-    reverb_t reverb;
-    float* dry;
-    float* wet[2];
-};
-
-struct Reverb_priv_ex : Reverb_priv_t
-{
-    Reverb_priv_ex()
-        : Reverb_priv_t{}
-    {
-    }
-
-    ~Reverb_priv_ex()
-    {
-        reverb_delete(&reverb);
-    }
-};
+struct Reverb_priv_ex;
 
 struct ReverbState
 {
