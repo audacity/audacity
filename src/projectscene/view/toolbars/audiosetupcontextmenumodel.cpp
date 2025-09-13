@@ -63,7 +63,7 @@ MenuItemList AudioSetupContextMenuModel::makeHostItems()
     };
 
     const auto& apiList = audioDevicesProvider()->audioApiList();
-    for (int i = 0; i < apiList.size(); ++i) {
+    for (size_t i = 0; i < apiList.size(); ++i) {
         MenuItem* item = makeMenuItem(makeChangeApiAction(i).toString(),
                                       muse::TranslatableString::untranslatable(muse::String::fromStdString(apiList.at(i))));
         item->setId(QString::fromStdString(item->query().toString()));
@@ -88,7 +88,7 @@ MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
     };
 
     const auto& outputDevicesList = audioDevicesProvider()->audioOutputDevices();
-    for (int i = 0; i < outputDevicesList.size(); ++i) {
+    for (size_t i = 0; i < outputDevicesList.size(); ++i) {
         MenuItem* item = makeMenuItem(makeChangePlaybackDeviceAction(i).toString(),
                                       muse::TranslatableString::untranslatable(muse::String::fromStdString(outputDevicesList.at(i))));
         item->setId(QString::fromStdString(item->query().toString()));
@@ -113,7 +113,7 @@ MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
     };
 
     const auto& inputDevicesList = audioDevicesProvider()->audioInputDevices();
-    for (int i = 0; i < inputDevicesList.size(); ++i) {
+    for (size_t i = 0; i < inputDevicesList.size(); ++i) {
         MenuItem* item = makeMenuItem(makeChangeRecordingDeviceAction(i).toString(),
                                       muse::TranslatableString::untranslatable(muse::String::fromStdString(inputDevicesList.at(i))));
         item->setId(QString::fromStdString(item->query().toString()));
@@ -138,7 +138,7 @@ MenuItemList AudioSetupContextMenuModel::makeInputChannelsItems()
     };
 
     const auto& inputChannelsList = audioDevicesProvider()->inputChannelsList();
-    for (int i = 0; i < inputChannelsList.size(); ++i) {
+    for (size_t i = 0; i < inputChannelsList.size(); ++i) {
         MenuItem* item = makeMenuItem(makeChangeInputChannelsAction(i).toString(),
                                       muse::TranslatableString::untranslatable(muse::String::fromStdString(inputChannelsList.at(i))));
         item->setId(QString::fromStdString(item->query().toString()));
