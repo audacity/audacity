@@ -272,8 +272,6 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
     TRACEFUNC;
 
     switch (saveMode) {
-    // case SaveMode::SaveSelection:
-    //     return saveSelectionOnScore(path);
     case SaveMode::Save:
     case SaveMode::SaveAs:
     case SaveMode::SaveCopy: {
@@ -297,18 +295,16 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
 
         return ret;
     }
-    case SaveMode::AutoSave:
+    case SaveMode::AutoSave: {
         std::string suffix = io::suffix(path);
         if (suffix == IProjectAutoSaver::AUTOSAVE_SUFFIX) {
             suffix = io::suffix(io::completeBasename(path));
         }
 
-        // if (suffix.empty()) {
-        //     // Then it must be a MSCX folder
-        //     suffix = engraving::MSCX;
-        // }
-
         return saveProject(path, suffix, false /*generateBackup*/, false /*createThumbnail*/);
+    }
+    case SaveMode::SaveSelection:
+        return make_ret(Err::UnknownError);
     }
 
     return make_ret(Err::UnknownError);

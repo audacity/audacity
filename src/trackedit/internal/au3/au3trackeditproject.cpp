@@ -131,6 +131,8 @@ static std::string eventTypeToString(const TrackListEvent& e)
     case TrackListEvent::RESIZING: return "RESIZING";
     case TrackListEvent::ADDITION: return "ADDITION";
     case TrackListEvent::DELETION: return e.mExtra ? "REPLACING" : "DELETION";
+    case TrackListEvent::UNDO_REDO_BEGIN: return "UNDO_REDO_BEGIN";
+    case TrackListEvent::UNDO_REDO_END: return "UNDO_REDO_BEGIN";
     }
 }
 
