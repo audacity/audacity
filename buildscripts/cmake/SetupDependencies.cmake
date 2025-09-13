@@ -25,7 +25,7 @@ else()
     set(LIB_BUILD_TYPE "debug")
 endif()
 
-set(REMOTE_ROOT_URL https://raw.githubusercontent.com/musescore/muse_deps/main)
+set(REMOTE_ROOT_URL https://raw.githubusercontent.com/kryksyh/muse_deps/main)
 set(LOCAL_ROOT_PATH ${FETCHCONTENT_BASE_DIR})
 
 function(populate name remote_suffix)
@@ -62,7 +62,7 @@ function(populate name remote_suffix)
 
 endfunction()
 
-populate(wxwidgets "wxwidgets/3.1.3.6")
+populate(wxwidgets "wxwidgets/3.1.3.9")
 populate(expat "expat/2.0.5")
 populate(portaudio "portaudio/19.7.0")
 populate(libmp3lame "libmp3lame/3.100")
