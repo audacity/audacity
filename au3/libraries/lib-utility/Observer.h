@@ -153,7 +153,7 @@ public:
 
     struct Record : detail::RecordBase {
         explicit Record(Callback callback)
-            : callback{move(callback)} {}
+            : callback{std::move(callback)} {}
         Callback callback;
     };
 
@@ -192,8 +192,8 @@ Publisher<Message, NotifyAll>::Publisher(ExceptionPolicy* pPolicy, Alloc a)
         }
     }
                                                       )},
-    m_factory([a = move(a)](Callback callback) {
-    return std::allocate_shared<Record>(a, move(callback));
+    m_factory([a = std::move(a)](Callback callback) {
+    return std::allocate_shared<Record>(a, std::move(callback));
 })
 {
 }
@@ -205,7 +205,7 @@ auto Publisher<Message, NotifyAll>::Subscribe(Callback callback)
 -> Subscription
 {
     assert(callback); // precondition
-    return m_list->Subscribe(m_factory(move(callback)));
+    return m_list->Subscribe(m_factory(std::move(callback)));
 }
 
 template<typename Message, bool NotifyAll> inline

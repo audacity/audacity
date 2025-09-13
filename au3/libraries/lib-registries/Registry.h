@@ -185,7 +185,7 @@ struct REGISTRIES_API ComputedItemBase : BaseItem {
 
     explicit ComputedItemBase(const TypeErasedFactory& factory)
         : BaseItem(wxEmptyString)
-        , factory{move(factory)}
+        , factory{std::move(factory)}
     {}
     ~ComputedItemBase() override;
 
