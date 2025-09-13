@@ -80,7 +80,7 @@ OptionalMessage
 LimiterEffect::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
     const auto presets = DynamicRangeProcessorUtils::GetLimiterPresets();
-    if (id < 0 || id >= presets.size()) {
+    if (id < 0 || static_cast<size_t>(id) >= presets.size()) {
         return {};
     }
     LimiterEffect::GetSettings(settings) = presets[id].preset;

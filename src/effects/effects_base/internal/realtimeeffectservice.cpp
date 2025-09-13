@@ -236,7 +236,7 @@ RealtimeEffectStatePtr RealtimeEffectService::effect(TrackId trackId, EffectChai
     if (!data) {
         return nullptr;
     }
-    if (index < 0 || index >= data->effectList->GetStatesCount()) {
+    if (index < 0 || static_cast<size_t>(index) >= data->effectList->GetStatesCount()) {
         return nullptr;
     }
     return data->effectList->GetStateAt(index);
@@ -263,7 +263,7 @@ RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(TrackId trackId,
 namespace {
 std::shared_ptr<RealtimeEffectState> findEffectState(RealtimeEffectList& effectList, RealtimeEffectStatePtr effectStateId)
 {
-    for (auto i = 0; i < effectList.GetStatesCount(); ++i) {
+    for (size_t i = 0; i < effectList.GetStatesCount(); ++i) {
         const auto state = effectList.GetStateAt(i);
         if (state == effectStateId) {
             return state;

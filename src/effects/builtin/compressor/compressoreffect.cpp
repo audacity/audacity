@@ -88,7 +88,7 @@ OptionalMessage
 CompressorEffect::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
     const auto presets = DynamicRangeProcessorUtils::GetCompressorPresets();
-    if (id < 0 || id >= presets.size()) {
+    if (id < 0 || static_cast<size_t>(id) >= presets.size()) {
         return {};
     }
     CompressorEffect::GetSettings(settings) = presets[id].preset;

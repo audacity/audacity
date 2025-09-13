@@ -89,10 +89,10 @@ std::vector<int64_t> Au3TrackeditClipboard::createNewGroupIDs(const std::set<int
 
     auto prj = globalContext()->currentTrackeditProject();
 
-    int64_t startingID = 0;
-    for (auto id : groupIDs) {
-        newGroupIds.push_back(prj->createNewGroupID(startingID));
-        startingID = newGroupIds.back() + 1; // + 1 or it would return the same repeatedly.
+    int64_t newId = 0;
+    for (size_t i = 0; i < groupIDs.size(); i++) {
+        newGroupIds.push_back(prj->createNewGroupID(newId));
+        newId = newGroupIds.back() + 1; // + 1 or it would return the same repeatedly.
     }
 
     return newGroupIds;
