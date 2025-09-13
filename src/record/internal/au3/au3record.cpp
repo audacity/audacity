@@ -509,10 +509,10 @@ Ret Au3Record::doRecord(Au3Project& project,
         wxString baseTrackName = recordingNameCustom ? defaultRecordingTrackName : defaultTrackName;
 
         std::vector<WaveTrack::Holder> newTracks;
-        if (recordingChannels == 2) {
+        if (recordingChannels == 2u) {
             newTracks.push_back(WaveTrackFactory::Get(*p).Create(2));
         } else {
-            for (size_t i = 0; i < recordingChannels; ++i) {
+            for (int i = 0; i < recordingChannels; ++i) {
                 newTracks.push_back(WaveTrackFactory::Get(*p).Create(1));
             }
         }

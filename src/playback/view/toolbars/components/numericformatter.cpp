@@ -395,7 +395,7 @@ NumericFormatter::ConversionResult NumericFormatter::valueToString(double value,
         char field[10];
 
         if (value < 0) {
-            for (int ii = 0; ii < m_fields[i].digits; ++ii) {
+            for (size_t ii = 0; ii < m_fields[i].digits; ++ii) {
                 field[0] = '-';
             }
         } else {
@@ -421,8 +421,8 @@ std::optional<double> NumericFormatter::stringToValue(const QString& value) cons
     }
 
     for (i = 0; i < m_fields.size(); i++) {
-        const auto pos = m_fields[i].pos;
-        const auto digits = m_fields[i].digits;
+        const int pos = m_fields[i].pos;
+        const int digits = m_fields[i].digits;
 
         if (pos >= value.size() || pos + digits > value.size()) {
             return std::nullopt;
@@ -430,8 +430,7 @@ std::optional<double> NumericFormatter::stringToValue(const QString& value) cons
 
         long val;
 
-        const auto fieldStringValue
-            =value.mid(m_fields[i].pos, m_fields[i].digits);
+        const auto fieldStringValue =value.mid(m_fields[i].pos, m_fields[i].digits);
 
         bool ok = false;
         val = fieldStringValue.toLong(&ok);
