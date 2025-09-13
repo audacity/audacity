@@ -173,8 +173,8 @@ template<typename MenuTraits> struct Visitor : VisitorFunctions<MenuTraits>, det
                 }
             }
             }},
-        mWrapped{ move(functions) },
-    mDoSeparator{ move(doSeparator) }
+        mWrapped{ std::move(functions) },
+    mDoSeparator{ std::move(doSeparator) }
     {}
 
 private:
@@ -343,7 +343,7 @@ struct MENUS_API CommandGroupItem final : SingleItem {
                      CommandFlag flags_,
                      bool isEffect_,
                      CommandHandlerFinder finder = FinderScope::DefaultFinder())
-        : CommandGroupItem(name_, move(items_),
+        : CommandGroupItem(name_, std::move(items_),
                            CommandFunctorPointer {
             static_cast<CommandFunctorPointer::MemberFn>(pmf) },
                            flags_, isEffect_, finder)
@@ -356,7 +356,7 @@ struct MENUS_API CommandGroupItem final : SingleItem {
                      CommandFunctorPointer::NonMemberFn fn,
                      CommandFlag flags,
                      bool isEffect = false)
-        : CommandGroupItem(name, move(items),
+        : CommandGroupItem(name, std::move(items),
                            CommandFunctorPointer { fn },
                            flags, isEffect, nullptr)
     {}
