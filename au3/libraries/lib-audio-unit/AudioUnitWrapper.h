@@ -27,9 +27,9 @@
 class wxCFStringRef;
 class wxMemoryBuffer;
 class EffectDefinitionInterface;
-class EffectSettings;
 class TranslatableString;
-class AudioUnitWrapper;
+struct EffectSettings;
+struct AudioUnitWrapper;
 
 /**
  * @struct AudioUnitEffectSettings
@@ -62,7 +62,7 @@ struct AudioUnitEffectSettings {
 
     AudioUnitEffectSettings() = default;
     AudioUnitEffectSettings(Map map)
-        : values{move(map)} {}
+        : values{std::move(map)} {}
 
     //! Get a pointer to a durable copy of `name`
     //! May allocate memory

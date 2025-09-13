@@ -153,7 +153,7 @@ void Au3AudioInput::startMonitoring()
 
 void Au3AudioInput::stopMonitoring()
 {
-    muse::async::Async::call(this, [this]() {
+    muse::async::Async::call(this, []() {
         auto gAudioIO = AudioIO::Get();
         if (!gAudioIO) {
             return;

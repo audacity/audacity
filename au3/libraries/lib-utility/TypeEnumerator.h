@@ -75,10 +75,10 @@ struct TypeCounter {
  */
 #define BEGIN_TYPE_ENUMERATION(Tag) namespace { \
     struct Tag {}; \
-    auto enumerateTypes(Tag, Tag, ...)->TypeEnumerator::detail::Unenumerated; }
+    [[maybe_unused]] auto enumerateTypes(Tag, Tag, ...)->TypeEnumerator::detail::Unenumerated; }
 
 //! This macro must occur at file scope, not within any other namespace
-#define ENUMERATE_TYPE(Tag, T) namespace { auto enumerateTypes( \
+#define ENUMERATE_TYPE(Tag, T) namespace { [[maybe_unused]] auto enumerateTypes( \
                                                Tag, Tag, std::integral_constant<unsigned, \
                                                                                 TypeEnumerator::detail::TypeCounter<Tag, T>::value>) \
                                            ->TypeEnumerator::detail::type_identity<T>; }

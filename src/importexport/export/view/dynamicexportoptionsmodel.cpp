@@ -104,6 +104,8 @@ QVariant DynamicExportOptionsModel::data(const QModelIndex& idx, int role) const
 
 bool DynamicExportOptionsModel::setData(const QModelIndex& idx, const QVariant& v, int role)
 {
+    //! TODO: @Grzegorz do we need to check for a role here?
+    //!
     if (!idx.isValid()) {
         return false;
     }

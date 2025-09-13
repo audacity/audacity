@@ -36,7 +36,7 @@ class StringSetting;
 
 extern FFMPEG_SUPPORT_API StringSetting AVFormatPath;
 
-class FFmpegFunctions;
+struct FFmpegFunctions;
 template<typename T>
 class AVAllocator : public std::allocator<T>
 {

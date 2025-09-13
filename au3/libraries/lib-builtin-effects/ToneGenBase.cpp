@@ -95,6 +95,7 @@ unsigned ToneGenBase::GetAudioOutCount() const
 bool ToneGenBase::ProcessInitialize(
     EffectSettings&, double sampleRate, ChannelNames chanMap)
 {
+    (void)chanMap;
     mSampleRate = sampleRate;
     mPositionInCycles = 0.0;
     mSample = 0;

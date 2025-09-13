@@ -172,6 +172,7 @@ bool AppShellConfiguration::isNotationNavigatorVisible() const
 
 void AppShellConfiguration::setIsNotationNavigatorVisible(bool visible) const
 {
+    UNUSED(visible);
     //uiConfiguration()->setIsVisible(NOTATION_NAVIGATOR_VISIBLE_KEY, visible);
 }
 
@@ -263,6 +264,7 @@ async::Notification AppShellConfiguration::isEffectsPanelVisibleChanged() const
 
 std::string AppShellConfiguration::utmParameters(const std::string& utmMedium) const
 {
+    UNUSED(utmMedium);
     return std::string();
     // return "utm_source=desktop&utm_medium=" + utmMedium
     //        + "&utm_content=" + MUSESCORE_REVISION

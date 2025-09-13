@@ -60,6 +60,8 @@ RegistryPaths NoiseGenerator::GetFactoryPresets() const
 
 OptionalMessage NoiseGenerator::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
+    UNUSED(id);
+    UNUSED(settings);
     return {};
 }
 
@@ -98,6 +100,8 @@ size_t NoiseGenerator::Instance::ProcessBlock(EffectSettings& settings, const fl
 bool NoiseGenerator::Instance::InstanceInit(EffectSettings& settings, double sampleRate, ChannelNames chanMap)
 {
     UNUSED(settings);
+    UNUSED(chanMap);
+
     mSampleRate = sampleRate;
     y = z = buf0 = buf1 = buf2 = buf3 = buf4 = buf5 = buf6 = 0;
     return true;

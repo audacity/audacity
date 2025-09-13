@@ -21,7 +21,7 @@ void notifier(const std::vector<TYPE>& first,
               const std::function<void(const TYPE& item, int)>& notification,
               const std::function<bool(const TYPE& first, const TYPE& second)>& comparison)
 {
-    for (int i = 0; i < second.size(); i++) {
+    for (size_t i = 0; i < second.size(); i++) {
         bool found = false;
         for (auto it = first.begin(); it != first.end(); ++it) {
             if (comparison(*it, second[i])) {
@@ -43,8 +43,8 @@ void clipsMatcher(const TrackList& first,
                   const TrackList& second,
                   const std::function<void(int, int)>& action)
 {
-    for (int i = 0; i < second.size(); i++) {
-        for (int j = 0; j < first.size(); j++) {
+    for (size_t i = 0; i < second.size(); i++) {
+        for (size_t j = 0; j < first.size(); j++) {
             if (second[i].id == first[j].id) {
                 action(i, j);
             }

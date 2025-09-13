@@ -52,6 +52,7 @@ void MuseVstModulesRepository::addPluginModule(const muse::audio::AudioResourceI
 
 void MuseVstModulesRepository::removePluginModule(const muse::audio::AudioResourceId& resourceId)
 {
+    UNUSED(resourceId);
 }
 
 muse::audio::AudioResourceMetaList MuseVstModulesRepository::instrumentModulesMeta() const

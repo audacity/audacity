@@ -40,7 +40,7 @@ public:
         Input(
             std::shared_ptr<const WideSampleSequence> pSequence = {},
             Stages stages = {})
-            : pSequence{move(pSequence)}, stages{move(stages)}
+            : pSequence{std::move(pSequence)}, stages{std::move(stages)}
         {}
 
         std::shared_ptr<const WideSampleSequence> pSequence;

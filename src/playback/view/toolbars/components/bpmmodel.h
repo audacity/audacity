@@ -19,7 +19,7 @@ class BPMModel : public QAbstractListModel
     Q_PROPERTY(int currentEditedFieldIndex READ currentEditedFieldIndex
                WRITE setCurrentEditedFieldIndex NOTIFY currentEditedFieldIndexChanged FINAL)
 
-    Q_PROPERTY(QQuickItem * visualItem READ visualItem WRITE setVisualItem CONSTANT)
+    Q_PROPERTY(QQuickItem * visualItem READ visualItem WRITE setVisualItem)
 
 public:
     explicit BPMModel(QObject* parent = nullptr);

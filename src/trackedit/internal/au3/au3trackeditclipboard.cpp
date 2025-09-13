@@ -89,10 +89,10 @@ std::vector<int64_t> Au3TrackeditClipboard::createNewGroupIDs(const std::set<int
 
     auto prj = globalContext()->currentTrackeditProject();
 
-    int64_t startingID = 0;
-    for (auto id : groupIDs) {
-        newGroupIds.push_back(prj->createNewGroupID(startingID));
-        startingID = newGroupIds.back() + 1; // + 1 or it would return the same repeatedly.
+    int64_t newId = 0;
+    for (size_t i = 0; i < groupIDs.size(); i++) {
+        newGroupIds.push_back(prj->createNewGroupID(newId));
+        newId = newGroupIds.back() + 1; // + 1 or it would return the same repeatedly.
     }
 
     return newGroupIds;
@@ -102,7 +102,7 @@ void Au3TrackeditClipboard::updateTracksDataWithIDs(const std::vector<Au3TrackDa
                                                     const std::set<int64_t>& groupIDs,
                                                     const std::vector<int64_t>& newGroupIDs)
 {
-    IF_ASSERT_FAILED(groupIDs.size() == newGroupIDs.size());
+    DO_ASSERT(groupIDs.size() == newGroupIDs.size());
 
     for (const Au3TrackDataPtr& data : tracksData) {
         auto waveTrack = dynamic_cast<au3::Au3WaveTrack*>(data->track().get());
@@ -117,7 +117,7 @@ void Au3TrackeditClipboard::updateTracksDataWithIDs(const std::vector<Au3TrackDa
 
                 // This private method should only be called from the same context as getGroupIDs and createGroupIDs
                 // Or the data will not match.
-                IF_ASSERT_FAILED(index >= 0);
+                DO_ASSERT(index >= 0);
 
                 (*it).get()->SetGroupId(newGroupIDs[index]);
             }

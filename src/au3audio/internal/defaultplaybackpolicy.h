@@ -63,7 +63,6 @@ private:
     double mLoopEndTime;
     std::optional<double> mpStartTime;
     size_t mRemaining{ 0 };
-    bool mProgress{ true };
     bool mLoopEnabled{ true };
     bool mVariableSpeed{ false };
 };

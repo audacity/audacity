@@ -185,7 +185,7 @@ struct REGISTRIES_API ComputedItemBase : BaseItem {
 
     explicit ComputedItemBase(const TypeErasedFactory& factory)
         : BaseItem(wxEmptyString)
-        , factory{move(factory)}
+        , factory{std::move(factory)}
     {}
     ~ComputedItemBase() override;
 
@@ -524,11 +524,13 @@ struct VisitorFunctions : std::variant<
         if constexpr (size == 1) {
             this->template emplace<0>(
                 MakeVisitorFunction<LeafTypes, Reference>(forwarded));
-        } else if constexpr (size == 3) {
-            this->template emplace<1>(
-                MakeVisitorFunction<NodeTypes, Reference>(get<0>(forwarded)),
-                MakeVisitorFunction<LeafTypes, Reference>(get<1>(forwarded)),
-                MakeVisitorFunction<NodeTypes, Reference>(get<2>(forwarded)));
+        } else {
+            if constexpr (size == 3) {
+                this->template emplace<1>(
+                    MakeVisitorFunction<NodeTypes, Reference>(get<0>(forwarded)),
+                    MakeVisitorFunction<LeafTypes, Reference>(get<1>(forwarded)),
+                    MakeVisitorFunction<NodeTypes, Reference>(get<2>(forwarded)));
+            }
         }
     }
 

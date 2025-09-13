@@ -46,33 +46,6 @@ extern STRINGS_API const wxString& GetCustomSubstitution(const wxString& str1);
 // Corresponds to XC as XXO does to XO
 #define XXC(s, c) XC(s, c)
 
-#ifdef _
-   #undef _
-#endif
-
-#if defined(_DEBUG)
-// Force a crash if you misuse _ in a static initializer, so that translation
-// is looked up too early and not found.
-
-   #ifdef __WXMSW__
-
-extern "C" __declspec(dllimport) void __stdcall DebugBreak();
-   #define _(s) ((wxTranslations::Get() || (DebugBreak(), true)), \
-                 GetCustomTranslation((s)))
-
-   #else
-
-   #include <signal.h>
-// Raise a signal because it's even too early to use wxASSERT for this.
-   #define _(s) ((wxTranslations::Get() || raise(SIGTRAP)), \
-                 GetCustomTranslation((s)))
-
-   #endif
-
-#else
-   #define _(s) GetCustomTranslation((s))
-#endif
-
 #ifdef XP
    #undef XP
 #endif

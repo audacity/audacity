@@ -396,10 +396,11 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeStereo)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
+    // TODO: double check what this code is doing
     if (after.tracks.back().type == TrackType::Stereo) {
-        after.tracks.back().type == TrackType::Mono;
+        after.tracks.back().type = TrackType::Mono;
     } else {
-        after.tracks.back().type == TrackType::Stereo;
+        after.tracks.back().type = TrackType::Stereo;
     }
 
     for (auto& clip : after.clips.back()) {
