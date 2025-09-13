@@ -140,8 +140,8 @@ target_compile_options( ${TARGET}
             -Wno-unused-function;
         >
         $<$<CXX_COMPILER_ID:MSVC>:
-            /wd4100 # unreferenced formal parameter
-            /wd4505 # unreferenced function removed
+            /wd4100;
+            /wd4505
         >
 )
 

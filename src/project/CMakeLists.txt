@@ -115,8 +115,8 @@ set_source_files_properties(
             -Wno-unused-function;
         >
         $<$<CXX_COMPILER_ID:MSVC>:
-            /wd4100 # unreferenced formal parameter
-            /wd4505 # unreferenced function removed
+            /wd4100;
+            /wd4505
         >
     "
 )
