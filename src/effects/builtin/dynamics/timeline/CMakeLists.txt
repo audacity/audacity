@@ -7,10 +7,6 @@ set(PROJECT_SOURCES
     painters/areasequencepainter.h
     painters/linesequencepainter.cpp
     painters/linesequencepainter.h
-    meters/abstractdynamicsmetermodel.cpp
-    meters/abstractdynamicsmetermodel.h
-    meters/compressionmetermodel.h
-    meters/dynamicseffectoutputmetermodel.h
     dynamicstimeline.cpp
     dynamicstimeline.h
     dynamicstimelinetypes.h
@@ -21,6 +17,10 @@ set(PROJECT_SOURCES
 
     ${TEST_DIR}/timelinesourcetestmodel.cpp
     ${TEST_DIR}/timelinesourcetestmodel.h
+    ${TEST_DIR}/meters/abstractdynamicsmetertestmodel.cpp
+    ${TEST_DIR}/meters/abstractdynamicsmetertestmodel.h
+    ${TEST_DIR}/meters/compressionmetertestmodel.h
+    ${TEST_DIR}/meters/dynamicseffectoutputmetertestmodel.h
     ${TEST_DIR}/main.cpp
 )
 
