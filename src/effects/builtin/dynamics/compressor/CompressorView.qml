@@ -28,14 +28,14 @@ BuiltinEffectBase {
 
     Component.onCompleted: {
         compressor.init()
-        stopwatchModel.init()
+        playStateModel.init()
     }
 
     Column {
         id: rootColumn
 
-        StopwatchModel {
-            id: stopwatchModel
+        DynamicsPlayStateModel {
+            id: playStateModel
         }
 
         DynamicsPanel {
@@ -43,7 +43,7 @@ BuiltinEffectBase {
             width: root.width
 
             instanceId: compressor.instanceId
-            playState: stopwatchModel.playState
+            playState: playStateModel.playState
         }
 
         Rectangle {
