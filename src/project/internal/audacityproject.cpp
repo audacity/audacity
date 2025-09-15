@@ -331,6 +331,11 @@ Ret Audacity4Project::doSave(const muse::io::path_t& savePath, bool generateBack
         return make_ret(io::Err::FSWriteError);
     }
 
+    if (savePath.empty()) {
+        LOGE() << "failed save, path is empty";
+        return make_ret(io::Err::FSNotExist);
+    }
+
     auto ret = m_au3Project->save(savePath);
     if (!ret) {
         return make_ret(Ret::Code::UnknownError);
