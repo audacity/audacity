@@ -17,7 +17,7 @@ if (NOT BUILD_MODE)
 endif()
 
 if (NOT BUILD_VERSION)
-    set(BUILD_VERSION 4.0.0.1234) # TODO
+    set(BUILD_VERSION 4.0.0-alpha)
     #file (STRINGS "${ARTIFACTS_DIR}/env/build_version.env" BUILD_VERSION)
 endif()
 

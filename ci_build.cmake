@@ -168,7 +168,7 @@ elseif(BUILD_TYPE STREQUAL "APPIMAGE")
     )
 
     file(COPY
-        ${BUILD_DIR}/org.musescore.MuseScore${INSTALL_SUFFIX}.desktop
+        ${BUILD_DIR}/org.audacity.Audacity${INSTALL_SUFFIX}.desktop
         DESTINATION ${INSTALL_DIR}
     )
 
@@ -177,9 +177,9 @@ elseif(BUILD_TYPE STREQUAL "APPIMAGE")
         DESTINATION ${INSTALL_DIR}
     )
 
-    # mscore="mscore${MUSE_APP_INSTALL_SUFFIX}"
-    # desktop="org.musescore.MuseScore${MUSE_APP_INSTALL_SUFFIX}.desktop"
-    # icon="${mscore}.png"
+    # audacity="audacity${MUSE_APP_INSTALL_SUFFIX}"
+    # desktop="org.audacity.Audacity${MUSE_APP_INSTALL_SUFFIX}.desktop"
+    # icon="${audacity}.png"
     # mani="install_manifest.txt"
     # cp "share/applications/${desktop}" "${desktop}"
     # cp "share/icons/hicolor/128x128/apps/${icon}" "${icon}"
