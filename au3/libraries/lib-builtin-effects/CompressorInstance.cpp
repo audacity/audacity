@@ -26,7 +26,8 @@ CompressorInstance::CompressorInstance(CompressorInstance&& other)
     , mSampleCounter{std::move(other.mSampleCounter)}
     , mSampleRate{std::move(other.mSampleRate)}
     , mOutputQueue{std::move(other.mOutputQueue)}
-    , mCompressionValueQueue{std::move(other.mCompressionValueQueue)}
+    , mCompressionGainDbQueue{std::move(other.mCompressionGainDbQueue)}
+    , mOutputDbQueue{std::move(other.mOutputDbQueue)}
 {
 }
 
@@ -51,12 +52,19 @@ void CompressorInstance::SetOutputQueue(
     }
 }
 
-void CompressorInstance::SetMeterValuesQueue(
-    std::weak_ptr<DynamicRangeProcessorMeterValuesQueue> queue)
+void CompressorInstance::SetCompressionGainDbQueue(std::weak_ptr<LockFreeQueue<float> > queue)
 {
-    mCompressionValueQueue = queue;
+    mCompressionGainDbQueue = queue;
     for (auto& slave : mSlaves) {
-        slave.mCompressionValueQueue = queue;
+        slave.mCompressionGainDbQueue = queue;
+    }
+}
+
+void CompressorInstance::SetOutputDbQueue(std::weak_ptr<LockFreeQueue<float> > queue)
+{
+    mOutputDbQueue = queue;
+    for (auto& slave : mSlaves) {
+        slave.mOutputDbQueue = queue;
     }
 }
 
@@ -184,11 +192,12 @@ size_t CompressorInstance::RealtimeProcess(
         queue->Put(newPacket);
     }
 
-    if (const auto queue = slave.mCompressionValueQueue.lock()) {
-        queue->Put(MeterValues {
-            compressor.GetLastFrameStats().dbGainOfMaxInputSample,
-            GetOutputDb(
-                compressor.GetLastFrameStats(), compressor.GetSettings()) });
+    if (const auto queue = slave.mCompressionGainDbQueue.lock()) {
+        queue->Put(compressor.GetLastFrameStats().dbGainOfMaxInputSample);
+    }
+
+    if (const auto queue = slave.mOutputDbQueue.lock()) {
+        queue->Put(GetOutputDb(compressor.GetLastFrameStats(), compressor.GetSettings()));
     }
 
     slave.mSampleCounter += numProcessedSamples;
@@ -212,7 +221,8 @@ void CompressorInstance::InstanceInit(
     float sampleRate)
 {
     instance.mOutputQueue = mOutputQueue;
-    instance.mCompressionValueQueue = mCompressionValueQueue;
+    instance.mCompressionGainDbQueue = mCompressionGainDbQueue;
+    instance.mOutputDbQueue = mOutputDbQueue;
     instance.mCompressor->ApplySettingsIfNeeded(
         GetDynamicRangeProcessorSettings(settings));
     instance.mCompressor->Init(sampleRate, numChannels, GetBlockSize());
