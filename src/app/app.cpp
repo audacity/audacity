@@ -104,7 +104,7 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
 #ifdef AU_BUILD_APPSHELL_MODULE
     au::appshell::SplashScreen* splashScreen = nullptr;
     if (runMode == IApplication::RunMode::GuiApp) {
-        //splashScreen = new SplashScreen(SplashScreen::Default);
+        splashScreen = new SplashScreen(SplashScreen::Default);
 
         // if (multiInstancesProvider()->isMainInstance()) {
         //     splashScreen = new SplashScreen(SplashScreen::Default);
