@@ -1,5 +1,6 @@
 #include "projectuiactions.h"
 
+#include "context/uicontext.h"
 #include "types/translatablestring.h"
 #include "context/shortcutcontext.h"
 
@@ -102,7 +103,7 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Rename clip")
              ),
     UiAction("trim-clip",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Trim clip"),
              TranslatableString("action", "Trim clip")
@@ -114,19 +115,19 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Split into new track")
              ),
     UiAction("silence-audio",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Silence audio"),
              TranslatableString("action", "Silence audio")
              ),
     UiAction("add-label",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Add label"),
              TranslatableString("action", "Add label")
              ),
     UiAction("paste-new-label",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Paste new label"),
              TranslatableString("action", "Paste new label")
@@ -186,13 +187,13 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Disjoin labels")
              ),
     UiAction("manage-labels",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Manage labels"),
              TranslatableString("action", "Manage labels")
              ),
     UiAction("manage-metadata",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Manage metadata"),
              TranslatableString("action", "Manage metadata")
@@ -359,14 +360,14 @@ const UiActionList ProjectUiActions::m_actions = {
              Checkable::Yes
              ),
     UiAction("toggle-label-editor",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Show label editor"),
              TranslatableString("action", "Show label editor"),
              Checkable::Yes
              ),
     UiAction("toggle-metadata-editor",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Show metadata editor"),
              TranslatableString("action", "Show metadata editor"),
@@ -382,37 +383,37 @@ const UiActionList ProjectUiActions::m_actions = {
 
     // record menu
     UiAction("record-on-current-track",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Record on current track"),
              TranslatableString("action", "Record on current track")
              ),
     UiAction("record-on-new-track",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Record on new track"),
              TranslatableString("action", "Record on new track")
              ),
     UiAction("set-up-timed-recording",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Set up timed recording"),
              TranslatableString("action", "Set up timed recording")
              ),
     UiAction("punch-and-roll-record",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Punch and roll record"),
              TranslatableString("action", "Punch and roll record")
              ),
     UiAction("toggle-sound-activated-recording",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Enable sound activating recording"),
              TranslatableString("action", "Enable sound activating recording")
              ),
     UiAction("set-sound-activation-level",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Set sound activation level"),
              TranslatableString("action", "Set sound activation level")
@@ -426,13 +427,13 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Duplicate")
              ),
     UiAction("remove-tracks",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Remove tracks"),
              TranslatableString("action", "Remove tracks")
              ),
     UiAction("mixdown-to",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Mix-down to…"),
              TranslatableString("action", "Mix-down to…")
@@ -500,7 +501,7 @@ const UiActionList ProjectUiActions::m_actions = {
 
     // generate menu
     UiAction("generate-plugin-manager",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
@@ -514,7 +515,7 @@ const UiActionList ProjectUiActions::m_actions = {
 
     // effects menu
     UiAction("effect-plugin-manager",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
@@ -552,25 +553,25 @@ const UiActionList ProjectUiActions::m_actions = {
 
     // analyze menu
     UiAction("analyze-plugin-manager",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
              ),
     UiAction("contrast-analyzer",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Contrast analyzer"),
              TranslatableString("action", "Contrast analyzer")
              ),
     UiAction("plot-spectrum",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Plot spectrum"),
              TranslatableString("action", "Plot spectrum")
              ),
     UiAction("analyzer-omitted",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "(Omitted)"),
              TranslatableString("action", "(Omitted)")
@@ -578,13 +579,13 @@ const UiActionList ProjectUiActions::m_actions = {
 
     // tools menu
     UiAction("tools-plugin-manager",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
              ),
     UiAction("manage-macros",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Manage macros"),
              TranslatableString("action", "Manage macros")
@@ -608,37 +609,37 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Macro MP3 conversion")
              ),
     UiAction("nyquist-plugin-installer",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Nyquist plugin installer"),
              TranslatableString("action", "Nyquist plugin installer")
              ),
     UiAction("nyquist-prompt",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Nyquist prompt"),
              TranslatableString("action", "Nyquist prompt")
              ),
     UiAction("sample-data-export",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Sample data export"),
              TranslatableString("action", "Sample data export")
              ),
     UiAction("sample-data-import",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Sample data import"),
              TranslatableString("action", "Sample data import")
              ),
     UiAction("raw-data-import",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Raw data import"),
              TranslatableString("action", "Raw data import")
              ),
     UiAction("reset-configuration",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Reset configuration"),
              TranslatableString("action", "Reset configuration")
@@ -646,31 +647,25 @@ const UiActionList ProjectUiActions::m_actions = {
 
     // extra menu
     UiAction("prev-window",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Previous window"),
              TranslatableString("action", "Previous window")
              ),
     UiAction("next-window",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Next window"),
              TranslatableString("action", "Next window")
              ),
-    UiAction("karaoke",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Karaoke"),
-             TranslatableString("action", "Karaoke")
-             ),
     UiAction("benchmark",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Benchmark"),
              TranslatableString("action", "Benchmark")
              ),
     UiAction("regular-interval-labels",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Regular interval labels"),
              TranslatableString("action", "Regular interval labels")
@@ -678,7 +673,7 @@ const UiActionList ProjectUiActions::m_actions = {
 
     // help menu
     UiAction("tutorials",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Tutorials"),
              TranslatableString("action", "Tutorials")
@@ -738,19 +733,19 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Frame statistics")
              ),
     UiAction("link-account",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Link account"),
              TranslatableString("action", "Link account")
              ),
     UiAction("updates",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Updates"),
              TranslatableString("action", "Updates")
              ),
     UiAction("about-audacity",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "About Audacity"),
              TranslatableString("action", "About Audacity")

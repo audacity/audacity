@@ -31,6 +31,7 @@ ColumnLayout {
     property alias title: titleLabel.text
     property alias description: descriptionLabel.text
     property alias buttonText: button.text
+    property alias buttonEnabled: button.enabled
 
     property alias imageSource: image.source
 

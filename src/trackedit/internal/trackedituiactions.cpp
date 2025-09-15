@@ -339,7 +339,7 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "New stereo track")
              ),
     UiAction("new-label-track",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "New label track"),
              TranslatableString("action", "New label track")

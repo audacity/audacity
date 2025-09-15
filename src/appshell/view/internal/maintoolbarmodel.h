@@ -52,7 +52,8 @@ private:
     enum Roles {
         TitleRole = Qt::UserRole + 1,
         UriRole,
-        IsTitleBoldRole
+        IsTitleBoldRole,
+        EnabledRole
     };
 
     void updateNotationPageItem();
