@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #include "stopwatch.h"
 
 namespace au::effects {

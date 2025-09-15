@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 import QtQuick
 import QtQuick.Controls
 import Audacity.BuiltinEffects

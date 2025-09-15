@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #include "abstractdynamicseffectinstancemodel.h"
 
 #include "libraries/lib-builtin-effects/CompressorInstance.h"

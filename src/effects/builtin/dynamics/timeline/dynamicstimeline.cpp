@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #include "dynamicstimeline.h"
 #include "painters/areasequencepainter.h"
 #include "painters/linesequencepainter.h"

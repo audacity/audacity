@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #include "areasequencepainter.h"
 
 #include "global/log.h"
