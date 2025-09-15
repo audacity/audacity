@@ -14,6 +14,8 @@ static const muse::actions::ActionCode FOCUS_NEXT_TRACK_CODE("focus-next-track")
 static const muse::actions::ActionCode PREV_TRACK_CODE("prev-track");
 static const muse::actions::ActionCode NEXT_TRACK_CODE("next-track");
 static const muse::actions::ActionCode TRACK_TOGGLE_SELECTION_CODE("track-toggle-focused-selection");
+static const muse::actions::ActionCode MULTI_TRACK_SELECTION_PREV_CODE("shift-up");
+static const muse::actions::ActionCode MULTI_TRACK_SELECTION_NEXT_CODE("shift-down");
 
 void TrackNavigationController::init()
 {
@@ -23,6 +25,8 @@ void TrackNavigationController::init()
     dispatcher()->reg(this, PREV_TRACK_CODE, this, &TrackNavigationController::navigateUp);
     dispatcher()->reg(this, NEXT_TRACK_CODE, this, &TrackNavigationController::navigateDown);
     dispatcher()->reg(this, TRACK_TOGGLE_SELECTION_CODE, this, &TrackNavigationController::toggleSelectionOnFocusedTrack);
+    dispatcher()->reg(this, MULTI_TRACK_SELECTION_PREV_CODE, this, &TrackNavigationController::multiSelectionUp);
+    dispatcher()->reg(this, MULTI_TRACK_SELECTION_NEXT_CODE, this, &TrackNavigationController::multiSelectionDown);
 
     selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& trackId) {
         const auto activePanel = navigationController()->activePanel();
@@ -30,6 +34,9 @@ void TrackNavigationController::init()
             navigationController()->requestActivateByName("Main Section", "Main Panel", "Main Control");
         }
     });
+
+    m_selectionStart = std::nullopt;
+    qApp->installEventFilter(this);
 }
 
 void TrackNavigationController::focusTrackByIndex(const muse::actions::ActionData& args)
@@ -144,4 +151,67 @@ void TrackNavigationController::toggleSelectionOnFocusedTrack()
     }
 
     selectionController()->setSelectedTracks(selectedTracks);
+}
+
+void TrackNavigationController::multiSelectionUp()
+{
+    updateSelectionStart();
+
+    au::trackedit::TrackIdList selectedTracks = selectionController()->selectedTracks();
+    const au::trackedit::TrackId focusedTrack = selectionController()->focusedTrack();
+
+    focusPrevTrack();
+    updateTrackSelection(selectedTracks, focusedTrack);
+}
+
+void TrackNavigationController::multiSelectionDown()
+{
+    updateSelectionStart();
+
+    const au::trackedit::TrackId focusedTrack = selectionController()->focusedTrack();
+    au::trackedit::TrackIdList selectedTracks = selectionController()->selectedTracks();
+
+    focusNextTrack();
+    updateTrackSelection(selectedTracks, focusedTrack);
+}
+
+void TrackNavigationController::updateSelectionStart()
+{
+    const au::trackedit::TrackId focusedTrack = selectionController()->focusedTrack();
+
+    if (!m_selectionStart) {
+        m_selectionStart = focusedTrack;
+        selectionController()->setSelectedTracks({ focusedTrack });
+    }
+}
+
+void TrackNavigationController::updateTrackSelection(TrackIdList& selectedTracks,
+                                                     const TrackId& previousFocusedTrack)
+{
+    const TrackId newFocusedTrack = selectionController()->focusedTrack();
+    const int startDistance = selectionController()->trackDistance(*m_selectionStart, previousFocusedTrack);
+    const int endDistance = selectionController()->trackDistance(*m_selectionStart, newFocusedTrack);
+
+    if (startDistance == endDistance) {
+        return;
+    }
+
+    if (std::abs(startDistance) < std::abs(endDistance)) {
+        selectedTracks.push_back(newFocusedTrack);
+    } else {
+        selectedTracks.erase(std::remove(selectedTracks.begin(), selectedTracks.end(), previousFocusedTrack), selectedTracks.end());
+    }
+
+    selectionController()->setSelectedTracks(selectedTracks);
+}
+
+bool TrackNavigationController::eventFilter(QObject* watched, QEvent* event)
+{
+    if (event->type() == QEvent::KeyRelease) {
+        QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+        if (keyEvent->key() == Qt::Key_Shift) {
+            m_selectionStart = std::nullopt;
+        }
+    }
+    return QObject::eventFilter(watched, event);
 }

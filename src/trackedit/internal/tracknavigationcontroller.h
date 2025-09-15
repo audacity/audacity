@@ -15,8 +15,11 @@
 #include "trackedit/internal/itracknavigationcontroller.h"
 
 namespace au::trackedit {
-class TrackNavigationController : public ITrackNavigationController, public muse::actions::Actionable, public muse::async::Asyncable
+class TrackNavigationController : public QObject, public ITrackNavigationController, public muse::actions::Actionable,
+    public muse::async::Asyncable
 {
+    Q_OBJECT
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::trackedit::ISelectionController> selectionController;
     muse::Inject<muse::ui::INavigationController> navigationController;
@@ -29,5 +32,14 @@ public:
     void navigateUp(const muse::actions::ActionData& args) override;
     void navigateDown(const muse::actions::ActionData& args) override;
     void toggleSelectionOnFocusedTrack() override;
+    void multiSelectionUp() override;
+    void multiSelectionDown() override;
+
+private:
+    bool eventFilter(QObject* watched, QEvent* event) override;
+    void updateSelectionStart();
+    void updateTrackSelection(TrackIdList& selectedTracks, const TrackId& previousFocusedTrack);
+
+    std::optional<TrackId> m_selectionStart;
 };
 }

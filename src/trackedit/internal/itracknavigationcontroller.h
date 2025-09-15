@@ -18,5 +18,7 @@ public:
     virtual void navigateUp(const muse::actions::ActionData& args) = 0;
     virtual void navigateDown(const muse::actions::ActionData& args) = 0;
     virtual void toggleSelectionOnFocusedTrack() = 0;
+    virtual void multiSelectionUp() = 0;
+    virtual void multiSelectionDown() = 0;
 };
 }

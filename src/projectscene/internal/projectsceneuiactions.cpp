@@ -205,6 +205,18 @@ static UiActionList STATIC_ACTIONS = {
              muse::shortcuts::CTX_PROJECT_OPENED,
              TranslatableString("action", "Focus next track"),
              TranslatableString("action", "Focus next track")
+             ),
+    UiAction("shift-up",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Multi track selection previous"),
+             TranslatableString("action", "Multi track selection previous")
+             ),
+    UiAction("shift-down",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Multi track selection next"),
+             TranslatableString("action", "Multi track selection next")
              )
 };
 

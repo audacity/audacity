@@ -85,5 +85,7 @@ public:
     virtual void focusPreviousTrack() = 0;
     virtual void focusNextTrack() = 0;
     virtual void focusTrackByIndex(int index) = 0;
+
+    virtual int trackDistance(TrackId previous, TrackId next) const = 0;
 };
 }
