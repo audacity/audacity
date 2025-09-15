@@ -114,13 +114,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/internal/maintoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/internal/maintoolbarmodel.h
 
-    # TODO AU4
-    #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/splashscreen.cpp
-    #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/splashscreen.h
-    #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/loadingscreenview.cpp
-    #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/loadingscreenview.h
-    #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.cpp
-    #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/splashscreen.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/splashscreen.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/loadingscreenview.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/loadingscreenview.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.h
     )
 
 set(MODULE_LINK
