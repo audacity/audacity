@@ -86,7 +86,6 @@ void BuiltinEffectViewLoader::load(const QString& instanceId, QObject* itemParen
     QObject* obj = component.createWithInitialProperties(
     {
         { "parent", QVariant::fromValue(itemParent) },
-        { "instanceId", QVariant::fromValue(instanceId) },
         { "dialogView", QVariant::fromValue(dialogView) }
     });
     gInitializationInstanceId = -1;
