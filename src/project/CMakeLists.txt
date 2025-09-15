@@ -109,16 +109,17 @@ set_source_files_properties(
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectautosaver.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/newprojectmodel.cpp
-    PROPERTIES COMPILE_OPTIONS "
-        $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:
-            -Wno-unused-parameter;
-            -Wno-unused-function;
-        >
-        $<$<CXX_COMPILER_ID:MSVC>:
-            /wd4100;
-            /wd4505
-        >
-    "
+    PROPERTIES COMPILE_OPTIONS "$<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Wno-unused-parameter;-Wno-unused-function> $<$<CXX_COMPILER_ID:MSVC>:/wd4100;/wd4505>"
+    # PROPERTIES COMPILE_OPTIONS "
+    #     $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:
+    #         -Wno-unused-parameter;
+    #         -Wno-unused-function;
+    #     >
+    #     $<$<CXX_COMPILER_ID:MSVC>:
+    #         /wd4100;
+    #         /wd4505
+    #     >
+    # "
 )
 
 set(MODULE_LINK au3wrap)
