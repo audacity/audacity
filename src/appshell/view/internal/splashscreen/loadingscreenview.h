@@ -27,6 +27,7 @@
 
 #include "modularity/ioc.h"
 #include "ui/iuiconfiguration.h"
+#include "global/iapplication.h"
 
 //! TODO AU4
 //#include "languages/ilanguagesservice.h"
@@ -38,7 +39,8 @@ class LoadingScreenView : public QWidget
 {
     Q_OBJECT
 
-    INJECT(ui::IUiConfiguration, uiConfiguration)
+    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::Inject<muse::IApplication> application;
 //! TODO AU4
 //    INJECT(languages::ILanguagesService, languagesService)
 
