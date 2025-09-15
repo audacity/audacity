@@ -81,6 +81,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/painters/areasequencepainter.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/painters/linesequencepainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/painters/linesequencepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/abstractdynamicseffectinstancemodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/abstractdynamicseffectinstancemodel.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/dynamicstimeline.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/dynamicstimeline.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/timelinesourcemodel.cpp

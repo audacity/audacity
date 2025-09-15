@@ -15,21 +15,16 @@ namespace {
 constexpr auto deliveryPeriodMs = 50;
 }
 
-TimelineSourceModel::TimelineSourceModel(QObject* parent)
-    : QObject(parent) {}
-
-void TimelineSourceModel::init()
+void TimelineSourceModel::doInit()
 {
     m_deliveryTimer = new QTimer(this);
     connect(m_deliveryTimer, &QTimer::timeout, this, [this] { pullData(); });
     m_deliveryTimer->setInterval(deliveryPeriodMs);
 
-    const auto instance = std::dynamic_pointer_cast<::CompressorInstance>(instancesRegister()->instanceById(m_instanceId));
+    const std::shared_ptr<CompressorInstance> instance = m_instance.lock();
     IF_ASSERT_FAILED(instance) {
-        LOGW() << "Could not find instance for id " << m_instanceId;
         return;
     }
-    m_instance = instance;
 
     mInitializeProcessingSettingsSubscription
         = static_cast<InitializeProcessingSettingsPublisher&>(*instance).Subscribe([&](const std::optional<InitializeProcessingSettings>&
@@ -51,15 +46,6 @@ double TimelineSourceModel::latency() const
 double TimelineSourceModel::dataPointRate() const
 {
     return 44100.0 / 512; // TODO query from the instance
-}
-
-void TimelineSourceModel::setInstanceId(int id)
-{
-    if (m_instanceId == id) {
-        return;
-    }
-    m_instanceId = id;
-    emit effectIdChanged();
 }
 
 void TimelineSourceModel::pullData()
