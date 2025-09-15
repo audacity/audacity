@@ -49,10 +49,10 @@ jobs:
         sudo apt-get update && sudo apt-get install -y ccache
         cmake -P ${CI_DIR}/tools/setup_ccache_config.cmake
 
-    - name: Free up disk space
-      run: |
-        sudo docker system prune -a -f
-        sudo rm -rf /usr/local/lib/android
+    # - name: Free up disk space
+    #   run: |
+    #     sudo docker system prune -a -f
+    #     sudo rm -rf /usr/local/lib/android
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
