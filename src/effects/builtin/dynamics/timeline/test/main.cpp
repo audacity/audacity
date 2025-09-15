@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #include "dynamicstimeline.h"
 #include "dynamicstimelinetypes.h"
 #include "timelinesourcetestmodel.h"

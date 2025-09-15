@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #include "timelinesourcemodel.h"
 
 #include "libraries/lib-builtin-effects/CompressorInstance.h"

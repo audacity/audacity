@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #include "profiler.h"
 
 #include <QDebug>

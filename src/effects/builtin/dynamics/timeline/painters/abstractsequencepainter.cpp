@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #include "abstractsequencepainter.h"
 
 namespace au::effects {

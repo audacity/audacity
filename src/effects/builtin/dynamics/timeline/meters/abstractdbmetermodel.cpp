@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #include "abstractdbmetermodel.h"
 #include "playback/iplayer.h"
 
