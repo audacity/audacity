@@ -28,6 +28,7 @@ BuiltinEffectBase {
 
     Component.onCompleted: {
         compressor.init()
+        stopwatchModel.init()
     }
 
     Column {
