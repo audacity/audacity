@@ -41,17 +41,17 @@ function set_bundle_display_options() {
                 set statusbar visible to false
                 set current view to icon view
                 delay 1 -- sync
-                set the bounds to {0, 0, 720, 524}
+                set the bounds to {0, 0, 589, 435}
             end tell
             delay 1 -- sync
             set icon size of the icon view options of container window to 120
             set arrangement of the icon view options of container window to not arranged
-            set position of item "${LONGER_NAME}.app" to {184, 320}
+            set position of item "${LONGER_NAME}.app" to {150, 200}
             close
-            set position of item "Applications" to {536, 320}
+            set position of item "Applications" to {439, 200}
             open
             set background picture of the icon view options of container window to file "background.tiff" of folder "Pictures"
-            set the bounds of the container window to {0, 0, 720, 524}
+            set the bounds of the container window to {0, 0, 589, 435}
             update without registering applications
             delay 5 -- sync
             close
