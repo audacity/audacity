@@ -26,7 +26,7 @@ void TimelineSourceModel::doInit()
         return;
     }
 
-    mInitializeProcessingSettingsSubscription
+    m_initializeProcessingSettingsSubscription
         = static_cast<InitializeProcessingSettingsPublisher&>(*instance).Subscribe([&](const std::optional<InitializeProcessingSettings>&
                                                                                        evt) {
         if (evt) {
@@ -55,14 +55,14 @@ void TimelineSourceModel::pullData()
         return;
     }
 
-    mPacketBuffer.clear();
+    m_packetBuffer.clear();
     ::DynamicRangeProcessorOutputPacket packet;
-    while (mOutputQueue->Get(packet)) {
-        mPacketBuffer.push_back(packet);
+    while (m_outputQueue->Get(packet)) {
+        m_packetBuffer.push_back(packet);
     }
-    mHistory->Push(mPacketBuffer);
+    m_history->Push(m_packetBuffer);
 
-    const DynamicRangeProcessorHistory::PacketView view = mHistory->GetViewOnNewPackets();
+    const DynamicRangeProcessorHistory::PacketView view = m_history->GetViewOnNewPackets();
     if (view.numPackets() == 0) {
         return;
     }
@@ -71,7 +71,6 @@ void TimelineSourceModel::pullData()
     samples.reserve(view.numPackets());
     for (auto i = 0; i < view.numPackets(); ++i) {
         const DynamicRangeProcessorHistory::Packet& p = view.at(i);
-        LOGI() << "time: " << p.time;
         samples.append(QVariant::fromValue<DynamicsSample>({ p.time,
                                                              p.input,
                                                              p.output,
@@ -96,23 +95,23 @@ void TimelineSourceModel::initializeForPlayback(double sampleRate)
         return;
     }
 
-    mHistory.emplace(sampleRate);
+    m_history.emplace(sampleRate);
 
     // We don't know for sure the least packet size (which is variable). 100
     // samples per packet at a rate of 8kHz is 12.5ms, which is quite low
     // latency. For higher sample rates that will be less.
     constexpr auto leastPacketSize = 100;
     const size_t maxQueueSize = DynamicRangeProcessorHistory::maxTimeSeconds * sampleRate / leastPacketSize;
-    mPacketBuffer.reserve(maxQueueSize);
+    m_packetBuffer.reserve(maxQueueSize);
 
-    // Although `mOutputQueue` is a shared_ptr, we construct a unique_ptr and
+    // Although `m_outputQueue` is a shared_ptr, we construct a unique_ptr and
     // invoke the shared_ptr ctor overload that takes a unique_ptr.
     // This way, we avoid the `error: aligned deallocation function of type
     // 'void (void *, std::align_val_t) noexcept' is only available on
     // macOS 10.13 or newer` compilation error.
-    mOutputQueue = std::make_unique<DynamicRangeProcessorOutputPacketQueue>(maxQueueSize);
+    m_outputQueue = std::make_unique<DynamicRangeProcessorOutputPacketQueue>(maxQueueSize);
 
-    instance->SetOutputQueue(mOutputQueue);
+    instance->SetOutputQueue(m_outputQueue);
     m_deliveryTimer->start();
 }
 } // namespace au::effects

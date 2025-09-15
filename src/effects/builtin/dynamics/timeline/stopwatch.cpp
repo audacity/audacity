@@ -67,6 +67,6 @@ void Stopwatch::onTick()
     const auto now = steady_clock::now();
     const auto elapsed = duration_cast<microseconds>(now - *m_startTime).count();
     m_elapsedTime = elapsed / 1'000'000.0;
-    emit elapsedTimeChanged();
+    emit tick();
 }
 } // namespace au::effects
