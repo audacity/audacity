@@ -21,8 +21,8 @@
 #include "loudness/normalizeloudnessviewmodel.h"
 #include "clickremoval/clickremovaleffect.h"
 #include "clickremoval/clickremovalviewmodel.h"
-#include "dynamics/timeline/meters/compressionmetermodel.h"
-#include "dynamics/timeline/meters/dynamicseffectoutputmetermodel.h"
+#include "dynamics/timeline/meters/compressiondbmetermodel.h"
+#include "dynamics/timeline/meters/outputdbmetermodel.h"
 #include "dynamics/timeline/dynamicstimeline.h"
 #include "dynamics/timeline/timelinesourcemodel.h"
 #include "dynamics/timeline/stopwatch.h"
@@ -359,8 +359,8 @@ void BuiltinEffectsRepository::updateEffectMetaList()
         // These types are used by both Compressor and Limiter, so register them only if at least one of these effects is present.
         qmlRegisterType<DynamicsTimeline>("Audacity.BuiltinEffects", 1, 0, "DynamicsTimeline");
         qmlRegisterType<TimelineSourceModel>("Audacity.BuiltinEffects", 1, 0, "TimelineSourceModel");
-        qmlRegisterType<CompressionMeterModel>("Audacity.BuiltinEffects", 1, 0, "CompressionMeterModel");
-        qmlRegisterType<DynamicsEffectOutputMeterModel>("Audacity.BuiltinEffects", 1, 0, "DynamicsEffectOutputMeterModel");
+        qmlRegisterType<CompressionDbMeterModel>("Audacity.BuiltinEffects", 1, 0, "CompressionDbMeterModel");
+        qmlRegisterType<OutputDbMeterModel>("Audacity.BuiltinEffects", 1, 0, "OutputDbMeterModel");
         qmlRegisterType<Stopwatch>("Audacity.BuiltinEffects", 1, 0, "Stopwatch");
         qmlRegisterType<DynamicsPlayStateModel>("Audacity.BuiltinEffects", 1, 0, "DynamicsPlayStateModel");
     }

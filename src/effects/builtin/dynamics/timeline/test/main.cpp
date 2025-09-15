@@ -22,8 +22,8 @@ int main(int argc, char* argv[])
     qmlRegisterType<DynamicsSample>("Audacity.BuiltinEffects", 1, 0, "DynamicsSample");
     qmlRegisterType<TimelineSourceTestModel>("Audacity.BuiltinEffects", 1, 0, "TimelineSourceModel");
     qmlRegisterType<Stopwatch>("Audacity.BuiltinEffects", 1, 0, "Stopwatch");
-    qmlRegisterType<DynamicsEffectOutputMeterTestModel>("Audacity.BuiltinEffects", 1, 0, "DynamicsEffectOutputMeterModel");
-    qmlRegisterType<CompressionMeterTestModel>("Audacity.BuiltinEffects", 1, 0, "CompressionMeterModel");
+    qmlRegisterType<DynamicsEffectOutputMeterTestModel>("Audacity.BuiltinEffects", 1, 0, "OutputDbMeterModel");
+    qmlRegisterType<CompressionMeterTestModel>("Audacity.BuiltinEffects", 1, 0, "CompressionDbMeterModel");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/qt/qml/dynamics_timeline_testapp/test/main.qml")));

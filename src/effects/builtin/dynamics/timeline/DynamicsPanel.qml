@@ -57,10 +57,17 @@ Item {
 
     Component.onCompleted: {
         timelineSourceModel.init()
+        compressionDbMeterModel.init()
+        outputDbMeterModel.init()
     }
 
     Stopwatch {
         id: stopwatch
+
+        onTick: {
+            compressionDbMeterModel.update()
+            outputDbMeterModel.update()
+        }
     }
 
     TimelineSourceModel {
@@ -257,15 +264,16 @@ Item {
                         DynamicsMeter {
                             id: compressionMeter
 
-                            CompressionMeterModel {
-                                id: compressionMeterModel
+                            CompressionDbMeterModel {
+                                id: compressionDbMeterModel
+                                instanceId: root.instanceId
                             }
 
                             width: prv.meterWidth
                             height: parent.height
 
-                            currentMax: compressionMeterModel.currentMax
-                            fiveSecMax: compressionMeterModel.fiveSecMax
+                            currentMax: compressionDbMeterModel.currentMax
+                            fiveSecMax: compressionDbMeterModel.fiveSecMax
 
                             upwards: false
                             dbMin: prv.dbMin
@@ -277,15 +285,16 @@ Item {
                         DynamicsMeter {
                             id: outputMeter
 
-                            DynamicsEffectOutputMeterModel {
-                                id: outputMeterModel
+                            OutputDbMeterModel {
+                                id: outputDbMeterModel
+                                instanceId: root.instanceId
                             }
 
                             width: prv.meterWidth
                             height: parent.height
 
-                            currentMax: outputMeterModel.currentMax
-                            fiveSecMax: outputMeterModel.fiveSecMax
+                            currentMax: outputDbMeterModel.currentMax
+                            fiveSecMax: outputDbMeterModel.fiveSecMax
 
                             upwards: true
                             dbMin: prv.dbMin

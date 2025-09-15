@@ -5,6 +5,11 @@
 #include "global/log.h"
 
 namespace au::effects {
+AbstractDynamicsEffectInstanceModel::AbstractDynamicsEffectInstanceModel(QObject* parent)
+    : QObject{parent}
+{
+}
+
 void AbstractDynamicsEffectInstanceModel::init()
 {
     const auto instance = std::dynamic_pointer_cast<::CompressorInstance>(instancesRegister()->instanceById(m_instanceId));

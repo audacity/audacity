@@ -18,8 +18,6 @@ class TimelineSourceModel : public AbstractDynamicsEffectInstanceModel
     Q_PROPERTY(double dataPointRate READ dataPointRate NOTIFY dataPointRateChanged)
     Q_PROPERTY(double latency READ latency CONSTANT)
 
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
-
 public:
     bool isClipping() const { return m_isClipping; }
     void setIsClipping(bool clipping);

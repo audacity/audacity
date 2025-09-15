@@ -71,10 +71,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeviewmodel.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/meters/abstractdynamicsmetermodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/meters/abstractdynamicsmetermodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/meters/compressionmetermodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/meters/dynamicseffectoutputmetermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/meters/abstractdbmetermodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/meters/abstractdbmetermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/meters/compressiondbmetermodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/meters/compressiondbmetermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/meters/outputdbmetermodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/meters/outputdbmetermodel.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/painters/abstractsequencepainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/painters/abstractsequencepainter.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/painters/areasequencepainter.cpp
