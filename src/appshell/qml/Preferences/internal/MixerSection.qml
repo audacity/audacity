@@ -27,6 +27,8 @@ import Muse.UiComponents 1.0
 BaseSection {
     id: root
 
+    enabled: false
+
     title: qsTrc("appshell/preferences", "Mixer")
 
     property alias muteHiddenInstruments: muteHiddenInstrumentsCheckBox.checked

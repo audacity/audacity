@@ -33,9 +33,9 @@ StyledPopupView {
 
             Repeater {
                 model: [
-                    { type: TrackType.MONO, icon: IconCode.MICROPHONE, text: qsTrc("projectscene", "Mono") },
-                    { type: TrackType.STEREO, icon: IconCode.MICROPHONE, text: qsTrc("projectscene", "Stereo") },
-                    { type: TrackType.LABEL, icon: IconCode.LOOP_IN, text: qsTrc("projectscene", "Label") }
+                    { type: TrackType.MONO, icon: IconCode.MICROPHONE, text: qsTrc("projectscene", "Mono"), enabled: true },
+                    { type: TrackType.STEREO, icon: IconCode.MICROPHONE, text: qsTrc("projectscene", "Stereo"), enabled: true },
+                    { type: TrackType.LABEL, icon: IconCode.LOOP_IN, text: qsTrc("projectscene", "Label"), enabled: false }
                 ]
 
                 FlatButton {
@@ -44,7 +44,7 @@ StyledPopupView {
                     Layout.fillHeight: true
 
                     accentButton: false
-                    enabled: true
+                    enabled: modelData.enabled
                     icon: modelData.icon
                     text: modelData.text
                     onClicked: {
@@ -52,16 +52,6 @@ StyledPopupView {
                     }
                 }
             }
-        }
-
-        SeparatorLine {}
-
-        // Currently doesn't do anything
-        CheckBox {
-            id: showMasterTrack
-            text: qsTrc("projectscene", "Show master track")
-            enabled: true
-            checked: false
         }
     }
 }

@@ -90,40 +90,9 @@ KDDW.TitleBarBase {
         SeparatorLine { }
 
         FlatButton {
-            id: gripButton
-
-            Layout.preferredHeight: root.implicitHeight
-            Layout.preferredWidth: 28
-            backgroundRadius: 0
-
-            visible: true
-            normalColor: ui.theme.backgroundSecondaryColor
-            hoverHitColor: ui.theme.buttonColor
-
-            mouseArea.objectName: root.objectName + "_gripButton"
-            mouseArea.cursorShape: Qt.SizeAllCursor
-            // do not accept buttons as FlatButton's mouseArea will override
-            // DockTitleBar mouseArea and panel will not be draggable
-            mouseArea.acceptedButtons: Qt.NoButton
-
-            transparent: false
-            contentItem: StyledIconLabel {
-                iconCode: IconCode.TOOLBAR_GRIP
-            }
-
-            backgroundItem: TracksTitleBarBackground {
-                mouseArea: gripButton.mouseArea
-                color: gripButton.normalColor
-                baseColor: gripButton.normalColor
-            }
-        }
-
-        SeparatorLine { }
-
-        FlatButton {
             id: addNewTrackBtn
 
-            width: root.verticalPanelDefaultWidth - gripButton.width
+            width: root.verticalPanelDefaultWidth
             Layout.fillWidth: true
             Layout.preferredHeight: root.implicitHeight
 

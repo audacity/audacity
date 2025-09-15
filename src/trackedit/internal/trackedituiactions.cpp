@@ -26,7 +26,7 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Select all")
              ),
     UiAction("clear-selection",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Clear selection"),
              TranslatableString("action", "Clear selection")
@@ -302,7 +302,7 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Duplicate clip")
              ),
     UiAction("clip-export",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Export clip"),
              TranslatableString("action", "Export clip")
