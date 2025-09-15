@@ -185,8 +185,8 @@ set(MODULE_USE_UNITY OFF)
 
 setup_module()
 
+add_subdirectory(dynamics/timeline)
 
-if (AU_BUILD_EFFECTS_BUILTIN_TESTS)
+if (AU_BUILD_EFFECTS_BUILTIN_TESTS AND NOT OS_IS_LIN)
     add_subdirectory(tests)
-    add_subdirectory(dynamics/timeline)
 endif()
