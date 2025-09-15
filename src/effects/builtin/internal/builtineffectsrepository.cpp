@@ -26,7 +26,7 @@
 #include "dynamics/timeline/dynamicstimeline.h"
 #include "dynamics/timeline/timelinesourcemodel.h"
 #include "dynamics/timeline/stopwatch.h"
-#include "dynamics/timeline/stopwatchmodel.h"
+#include "dynamics/timeline/dynamicsplaystatemodel.h"
 #include "dynamics/compressor/compressoreffect.h"
 #include "dynamics/compressor/compressorviewmodel.h"
 #include "dynamics/limiter/limitereffect.h"
@@ -362,7 +362,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
         qmlRegisterType<CompressionMeterModel>("Audacity.BuiltinEffects", 1, 0, "CompressionMeterModel");
         qmlRegisterType<DynamicsEffectOutputMeterModel>("Audacity.BuiltinEffects", 1, 0, "DynamicsEffectOutputMeterModel");
         qmlRegisterType<Stopwatch>("Audacity.BuiltinEffects", 1, 0, "Stopwatch");
-        qmlRegisterType<StopwatchModel>("Audacity.BuiltinEffects", 1, 0, "StopwatchModel");
+        qmlRegisterType<DynamicsPlayStateModel>("Audacity.BuiltinEffects", 1, 0, "DynamicsPlayStateModel");
     }
 
     m_effectMetaListUpdated.notify();

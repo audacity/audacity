@@ -1,19 +1,19 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "stopwatchmodel.h"
+#include "dynamicsplaystatemodel.h"
 
 #include "playback/iplayer.h"
 
 namespace au::effects {
-void StopwatchModel::init()
+void DynamicsPlayStateModel::init()
 {
     playback()->player()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus) {
         emit playStateChanged();
     });
 }
 
-Stopwatch::PlayState StopwatchModel::playState() const
+Stopwatch::PlayState DynamicsPlayStateModel::playState() const
 {
     switch (playback()->player()->playbackStatus()) {
     case playback::PlaybackStatus::Running:

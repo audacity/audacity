@@ -12,7 +12,7 @@
 #include <QObject>
 
 namespace au::effects {
-class StopwatchModel : public QObject, public muse::async::Asyncable
+class DynamicsPlayStateModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
