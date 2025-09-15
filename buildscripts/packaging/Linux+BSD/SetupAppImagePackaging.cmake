@@ -28,8 +28,8 @@ install(FILES ${CMAKE_CURRENT_LIST_DIR}/portable/qt.conf DESTINATION bin COMPONE
 set(WINDOW_MANAGER_CLASS ${MUSE_APP_NAME_VERSION})
 
 # Install desktop file (perform variable substitution first)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/org.musescore.MuseScore.desktop.in org.musescore.MuseScore${MUSE_APP_INSTALL_SUFFIX}.desktop)
-install(FILES ${PROJECT_BINARY_DIR}/org.musescore.MuseScore${MUSE_APP_INSTALL_SUFFIX}.desktop DESTINATION share/applications)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/org.audacity.Audacity.desktop.in org.audacity.Audacity${MUSE_APP_INSTALL_SUFFIX}.desktop)
+install(FILES ${PROJECT_BINARY_DIR}/org.audacity.Audacity${MUSE_APP_INSTALL_SUFFIX}.desktop DESTINATION share/applications)
 
 # Install appdata file (perform variable substitution first)
 if("${MUSE_APP_INSTALL_SUFFIX}" MATCHES "-")
@@ -40,11 +40,11 @@ if("${MUSE_APP_INSTALL_SUFFIX}" MATCHES "-")
     )
 endif()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/org.musescore.MuseScore.appdata.xml.in org.musescore.MuseScore${MUSE_APP_INSTALL_SUFFIX}.appdata.xml)
-install(FILES ${PROJECT_BINARY_DIR}/org.musescore.MuseScore${MUSE_APP_INSTALL_SUFFIX}.appdata.xml DESTINATION share/metainfo)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/org.audacity.Audacity.appdata.xml.in org.audacity.Audacity${MUSE_APP_INSTALL_SUFFIX}.appdata.xml)
+install(FILES ${PROJECT_BINARY_DIR}/org.audacity.Audacity${MUSE_APP_INSTALL_SUFFIX}.appdata.xml DESTINATION share/metainfo)
 
-# Add .MSCZ, .MSCX and .MSCS to MIME database (informs system that filetypes .MSCZ, .MSCX and .MSCS are MuseScore files)
-#configure_file(${CMAKE_CURRENT_LIST_DIR}/musescore.xml.in musescore${MUSE_APP_INSTALL_SUFFIX}.xml)
-#install(FILES ${PROJECT_BINARY_DIR}/musescore${MUSE_APP_INSTALL_SUFFIX}.xml DESTINATION share/mime/packages COMPONENT doc)
+# Add .AUP4 to MIME database (informs system that filetypes .AUP4 are Audacity files)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/audacity.xml.in audacity${MUSE_APP_INSTALL_SUFFIX}.xml)
+install(FILES ${PROJECT_BINARY_DIR}/audacity${MUSE_APP_INSTALL_SUFFIX}.xml DESTINATION share/mime/packages COMPONENT doc)
 
 # Note: Must now run "update-mime-database" to apply changes.

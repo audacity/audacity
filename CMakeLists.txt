@@ -183,3 +183,7 @@ endif()
 if (OS_IS_LIN)
     include(${CMAKE_CURRENT_LIST_DIR}/buildscripts/packaging/Linux+BSD/SetupAppImagePackaging.cmake)
 endif(OS_IS_LIN)
+
+if (OS_IS_WIN)
+    include(${CMAKE_CURRENT_LIST_DIR}/buildscripts/packaging/Windows/SetupWindowsPackaging.cmake)
+endif(OS_IS_WIN)

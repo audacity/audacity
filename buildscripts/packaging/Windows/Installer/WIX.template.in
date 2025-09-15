@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?include "cpack_variables.wxi"?>
+
+<?define ProdName="$(var.MUSE_APP_TITLE_VERSION)"?>
+<?define ShortProdName="$(var.MUSE_APP_TITLE) $(var.CPACK_PACKAGE_VERSION_MAJOR) $(var.MUSE_APP_RELEASE_CHANNEL)"?>
+<?define ExeKey="$(var.ShortProdName).exe"?>
+<?define ExeName="$(var.AUDACITY_EXECUTABLE_NAME).exe"?>
+<?define RegistryRoot="HKMU"?> <!--HKCU / HKLM-->
+
+<?if "$(var.MUSE_APP_RELEASE_CHANNEL)" != ""?>
+<?define ProgIdSuffix="$(var.CPACK_PACKAGE_VERSION_MAJOR).$(var.MUSE_APP_RELEASE_CHANNEL)"?>
+<?else?>
+<?define ProgIdSuffix="$(var.CPACK_PACKAGE_VERSION_MAJOR)"?>
+<?endif?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" RequiredVersion="3.6.3303.0">
+
+    <Product Id="$(var.CPACK_WIX_PRODUCT_GUID)"
+        Name="$(var.ProdName)"
+        Language="1033"
+        Version="$(var.CPACK_PACKAGE_VERSION)"
+        Manufacturer="$(var.CPACK_PACKAGE_VENDOR)"
+        UpgradeCode="$(var.CPACK_WIX_UPGRADE_GUID)">
+
+        <Package InstallerVersion="301" Compressed="yes" />
+
+        <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" CompressionLevel="high" />
+
+        <MajorUpgrade
+            AllowSameVersionUpgrades="yes"
+            DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
+
+        <WixVariable Id="WixUILicenseRtf" Value="$(var.CPACK_WIX_LICENSE_RTF)" />
+        <Property Id="WIXUI_INSTALLDIR" Value="INSTALL_ROOT" />
+
+        <!-- See https://docs.microsoft.com/ru-ru/windows/win32/msi/reinstallmode that explains different modes -->
+        <Property Id='REINSTALLMODE' Value='dmus' />
+
+        <?ifdef CPACK_WIX_PRODUCT_ICON?>
+        <Property Id="ARPPRODUCTICON">ProductIcon.ico</Property>
+        <Icon Id="ProductIcon.ico" SourceFile="$(var.CPACK_WIX_PRODUCT_ICON)" />
+        <?endif?>
+
+        <?ifdef CPACK_WIX_UI_BANNER?>
+        <WixVariable Id="WixUIBannerBmp" Value="$(var.CPACK_WIX_UI_BANNER)" />
+        <?endif?>
+
+        <?ifdef CPACK_WIX_UI_DIALOG?>
+        <WixVariable Id="WixUIDialogBmp" Value="$(var.CPACK_WIX_UI_DIALOG)" />
+        <?endif?>
+
+        <Property Id='ARPHELPLINK'>https://audacityteam.org</Property>
+        <Property Id='ARPURLINFOABOUT'>https://audacityteam.org</Property>
+        <!-- Properties from CMake -->
+        <?include "properties.wxi"?>
+
+        <!-- Add to checkbox to launch program after install ²-->
+        <UI>
+            <UIRef Id='WixUI_InstallDir' />
+            <Publish Dialog="ExitDialog"
+                Control="Finish"
+                Event="DoAction"
+                Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+        </UI>
+        <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch $(var.ProdName)" />
+        <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+        <Property Id="WixShellExecTarget" Value="[#CM_FP_bin.$(var.ExeName)]" />
+        <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
+
+        <Component Id="RegisterTypes" Directory="TARGETDIR" Guid="76707452-ee26-4f9a-9650-2cf2c70a6448">
+            <!-- In order to work with Default Programs -->
+            <?define CapabilitiesKey="SOFTWARE\$(var.ShortProdName)\Capabilities"?>
+            <RegistryKey Root="$(var.RegistryRoot)" Key="$(var.CapabilitiesKey)">
+                <!-- Application info -->
+                <RegistryValue Name="ApplicationDescription" Value="$(var.ProdName)" Type="string" KeyPath="yes" />
+                <RegistryValue Name="ApplicationIcon" Value="[INSTALL_ROOT]bin\$(var.ExeName),0" Type="string" />
+                <RegistryValue Name="ApplicationName" Value="$(var.ProdName)" Type="string" />
+                <RegistryValue Key="DefaultIcon" Value="[INSTALL_ROOT]bin\$(var.ExeName),1" Type="string" />
+
+                <!-- File associations -->
+                <RegistryKey Key="FileAssociations">
+                    <RegistryValue Name=".aup4" Value="Audacity.aup4.$(var.ProgIdSuffix)" Type="string" />
+                    <!-- TODO: Add other file types here too? -->
+                </RegistryKey>
+
+                <!-- MIME associations -->
+                <RegistryKey Key="MIMEAssociations">
+                    <RegistryValue Name="application/x-audacity" Value="Audacity.aup4.$(var.ProgIdSuffix)" Type="string" />
+                </RegistryKey>
+
+                <!-- URL associations -->
+                <RegistryKey Key="UrlAssociations">
+                    <RegistryValue Name="audacity" Value="Audacity.Url.audacity.$(var.ProgIdSuffix)" Type="string" />
+                </RegistryKey>
+
+                <!-- Open verb (TODO: this entry does not seem to be mentioned anywhere in the documentation, so does it make sense?) -->
+                <RegistryValue Key="shell\open\command" Value="&quot;[INSTALL_ROOT]bin\$(var.ExeName)&quot; &quot;%1&quot;" Type="string" />
+            </RegistryKey>
+
+            <RegistryValue Root="$(var.RegistryRoot)" Key="SOFTWARE\RegisteredApplications" Name="$(var.ProdName)" Value="$(var.CapabilitiesKey)" Type="string" />
+
+            <!-- App Paths to support Start,Run -> "myapp" -->
+            <RegistryKey Root="$(var.RegistryRoot)" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\$(var.ExeKey)">
+                <RegistryValue Value="[INSTALL_ROOT]bin\$(var.ExeName)" Type="string" />
+                <RegistryValue Name="Path" Value="[INSTALL_ROOT]bin" Type="string" />
+            </RegistryKey>
+
+            <!-- Extend to the "open with" list + Win7 jump menu pinning  -->
+            <RegistryKey Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\Applications\$(var.ExeKey)">
+                <RegistryKey Key="SupportedTypes">
+                    <RegistryValue Name=".mscz" Value="" Type="string" />
+                    <RegistryValue Name=".mscx" Value="" Type="string" />
+                    <RegistryValue Name=".mscs" Value="" Type="string" />
+                    <RegistryValue Name=".xml" Value="" Type="string" />
+                    <RegistryValue Name=".musicxml" Value="" Type="string" />
+                    <RegistryValue Name=".mxl" Value="" Type="string" />
+                    <RegistryValue Name=".mei" Value="" Type="string" />
+                    <RegistryValue Name=".cap" Value="" Type="string" />
+                    <RegistryValue Name=".capx" Value="" Type="string" />
+                    <RegistryValue Name=".scw" Value="" Type="string" />
+                    <RegistryValue Name=".bww" Value="" Type="string" />
+                    <RegistryValue Name=".mid" Value="" Type="string" />
+                    <RegistryValue Name=".midi" Value="" Type="string" />
+                    <RegistryValue Name=".kar" Value="" Type="string" />
+                    <RegistryValue Name=".ove" Value="" Type="string" />
+                    <RegistryValue Name=".sgu" Value="" Type="string" />
+                    <RegistryValue Name=".mgu" Value="" Type="string" />
+                    <RegistryValue Name=".md" Value="" Type="string" />
+                    <RegistryValue Name=".gtp" Value="" Type="string" />
+                    <RegistryValue Name=".gp3" Value="" Type="string" />
+                    <RegistryValue Name=".gp4" Value="" Type="string" />
+                    <RegistryValue Name=".gp5" Value="" Type="string" />
+                    <RegistryValue Name=".gpx" Value="" Type="string" />
+                    <RegistryValue Name=".gp" Value="" Type="string" />
+                    <RegistryValue Name=".ptb" Value="" Type="string" />
+                    <RegistryValue Name=".sf2" Value="" Type="string" />
+                    <RegistryValue Name=".sf3" Value="" Type="string" />
+                </RegistryKey>
+
+                <RegistryValue Name="FriendlyAppName" Value="$(var.ProdName)" Type="string" />
+                <RegistryValue Key="shell\open" Name="FriendlyAppName" Value="$(var.ProdName)" Type="string" />
+                <RegistryValue Key="shell\open\command" Value="&quot;[INSTALL_ROOT]bin\$(var.ExeName)&quot; &quot;%1&quot;" Type="string" />
+            </RegistryKey>
+
+            <!-- Register ProgIDs -->
+            <!-- Instead of using WiX's/MSI's ProgId functionality, we use the registry directly for more control -->
+            <!-- MSCZ -->
+            <RegistryKey Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\Audacity.aup4.$(var.ProgIdSuffix)">
+                <RegistryValue Value="Audacity File" Type="string" />
+                <RegistryValue Key="DefaultIcon" Value="[INSTALL_ROOT]bin\$(var.ExeName),1" Type="string" />
+                <RegistryValue Key="shell\open\command" Value="&quot;[INSTALL_ROOT]bin\$(var.ExeName)&quot; &quot;%1&quot;" Type="string" />
+            </RegistryKey>
+            <?ifndef MUSE_APP_IS_PRERELEASE?>
+            <RegistryValue Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\Audacity.aup4\CurVer" Value="Audacity.aup4.$(var.ProgIdSuffix)" Type="string" />
+            <?endif?>
+
+            <RegistryKey Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\.mscz">
+                <?ifndef MUSE_APP_IS_PRERELEASE?>
+                <RegistryValue Value="Audacity.aup4.$(var.ProgIdSuffix)" Type="string" />
+                <?endif?>
+                <RegistryValue Name="Content Type" Value="application/x-audacity" Type="string" />
+            </RegistryKey>
+
+            <!-- audacity URL scheme -->
+            <RegistryKey Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\Audacity.Url.audacity.$(var.ProgIdSuffix)">
+                <RegistryValue Value="Audacity URL" Type="string" />
+                <RegistryValue Key="DefaultIcon" Value="[INSTALL_ROOT]bin\$(var.ExeName),1" Type="string" />
+                <RegistryValue Key="shell\open\command" Value="&quot;[INSTALL_ROOT]bin\$(var.ExeName)&quot; &quot;%1&quot;" Type="string" />
+            </RegistryKey>
+            <?ifndef MUSE_APP_IS_PRERELEASE?>
+            <RegistryValue Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\Audacity.Url.audacity\CurVer" Value="Audacity.Url.audacity.$(var.ProgIdSuffix)" Type="string" />
+            <?endif?>
+
+            <RegistryKey Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\audacity">
+                <RegistryValue Name="URL Protocol" Value="" Type="string" />
+                <RegistryValue Value="URL:Audacity URL" Type="string" />
+            </RegistryKey>
+        </Component>
+
+        <FeatureRef Id="ProductFeature">
+            <!-- Step 3: Tell WiX to install the shortcut and types -->
+            <ComponentRef Id="RegisterTypes" />
+        </FeatureRef>
+
+        <!-- Something from CMake-->
+        <?include "product_fragment.wxi"?>
+    </Product>
+</Wix>

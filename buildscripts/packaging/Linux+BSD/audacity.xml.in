@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>@Variables_substituted_by_CMAKE_on_installation@
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+
+    <!-- Audacity documents -->
+
+    <mime-type type="application/x-audacity">
+        <comment>Audacity File</comment>
+        <glob pattern="*.aup4"/>
+        <sub-class-of type="application/zip"/>
+        <icon name="application-x-audacity@MUSE_APP_INSTALL_SUFFIX@"/>
+    </mime-type>
+
+    <!-- Audacity URL Protocol -->
+
+    <mime-type type="x-scheme-handler/audacity">
+        <comment>Audacity URL Protocol</comment>
+    </mime-type>
+</mime-info>
