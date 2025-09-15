@@ -22,7 +22,7 @@ echo "LONGER_NAME: $LONGER_NAME"
 echo "VERSION: $VERSION"
 
 WORKING_DIRECTORY=${INSTALL_DIR}
-BACKGROUND=$HERE/musescore-dmg-background.tiff
+BACKGROUND=$HERE/audacity-dmg-background.tiff
 APP_PATH=${INSTALL_DIR}/${APPNAME}.app
 
 VOLNAME=${LONG_NAME}-${VERSION}
