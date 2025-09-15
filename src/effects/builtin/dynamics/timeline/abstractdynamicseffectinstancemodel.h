@@ -20,6 +20,8 @@ class AbstractDynamicsEffectInstanceModel : public QObject
     muse::Inject<IEffectInstancesRegister> instancesRegister;
 
 public:
+    AbstractDynamicsEffectInstanceModel(QObject* parent = nullptr);
+
     Q_INVOKABLE void init();
 
     int instanceId() const { return m_instanceId; }

@@ -26,4 +26,15 @@ double AbstractDynamicsMeterTestModel::currentMax() const { return m_currentMax;
 double AbstractDynamicsMeterTestModel::globalMax() const { return m_globalMax; }
 
 double AbstractDynamicsMeterTestModel::fiveSecMax() const { return m_fiveSecMax; }
+
+int AbstractDynamicsMeterTestModel::instanceId() const { return m_instanceId; }
+
+void AbstractDynamicsMeterTestModel::setInstanceId(int id)
+{
+    if (m_instanceId == id) {
+        return;
+    }
+    m_instanceId = id;
+    emit instanceIdChanged();
+}
 } // namespace au::effects
