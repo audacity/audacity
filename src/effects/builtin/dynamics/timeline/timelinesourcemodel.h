@@ -37,10 +37,10 @@ private:
     void pullData();
     void initializeForPlayback(double sampleRate);
 
-    std::shared_ptr<::DynamicRangeProcessorOutputPacketQueue> mOutputQueue;
-    std::optional<::DynamicRangeProcessorHistory> mHistory;
-    std::vector<::DynamicRangeProcessorOutputPacket> mPacketBuffer;
-    ::Observer::Subscription mInitializeProcessingSettingsSubscription;
+    std::shared_ptr<::DynamicRangeProcessorOutputPacketQueue> m_outputQueue;
+    std::optional<::DynamicRangeProcessorHistory> m_history;
+    std::vector<::DynamicRangeProcessorOutputPacket> m_packetBuffer;
+    ::Observer::Subscription m_initializeProcessingSettingsSubscription;
 
     bool m_isClipping = false;
     QTimer* m_deliveryTimer = nullptr;
