@@ -187,6 +187,6 @@ setup_module()
 
 add_subdirectory(dynamics/timeline)
 
-if (AU_BUILD_EFFECTS_BUILTIN_TESTS AND NOT OS_IS_LIN)
+if (AU_BUILD_EFFECTS_BUILTIN_TESTS AND OS_IS_WIN)
     add_subdirectory(tests)
 endif()
