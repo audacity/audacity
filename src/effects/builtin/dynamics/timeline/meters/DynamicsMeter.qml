@@ -25,7 +25,7 @@ Rectangle {
         }
 
         property color semiTransparentColor: Qt.rgba(areaColor.r, areaColor.g, areaColor.b, 0.5)
-        property color almostTransparentColor: Qt.rgba(areaColor.r, areaColor.g, areaColor.b, 0.3)
+        property color almostTransparentColor: Qt.rgba(areaColor.r, areaColor.g, areaColor.b, 0.25)
     }
 
     Rectangle {
