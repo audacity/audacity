@@ -3,6 +3,8 @@
  */
 #include "stopwatch.h"
 
+#include "global/log.h"
+
 namespace au::effects {
 Stopwatch::Stopwatch(QObject* parent)
     : QObject{parent}
@@ -20,7 +22,6 @@ void Stopwatch::setPlaystate(PlayState state)
 
     switch (state) {
     case Stopped:
-        doStop();
         break;
     case Playing:
         doPlay();
@@ -37,8 +38,9 @@ void Stopwatch::setPlaystate(PlayState state)
 void Stopwatch::doPlay()
 {
     const auto now = std::chrono::steady_clock::now();
-    if (!m_startTime) {
+    if (m_playState == Stopped || !m_startTime) {
         m_startTime = now;
+        m_pauseTime.reset();
     } else if (m_pauseTime) {
         const auto pausedDuration = now - *m_pauseTime;
         m_startTime = *m_startTime + pausedDuration;
@@ -53,23 +55,18 @@ void Stopwatch::doPause()
     m_pauseTime = std::chrono::steady_clock::now();
 }
 
-void Stopwatch::doStop()
-{
-    m_timer.stop();
-    m_startTime.reset();
-    m_pauseTime.reset();
-}
-
 void Stopwatch::onTick()
 {
-    assert(m_startTime);
-    if (!m_startTime) {
+    IF_ASSERT_FAILED(m_startTime) {
         return;
     }
-    using namespace std::chrono;
-    const auto now = steady_clock::now();
-    const auto elapsed = duration_cast<microseconds>(now - *m_startTime).count();
-    m_elapsedTime = elapsed / 1'000'000.0;
+    if (m_playState == Playing) {
+        using namespace std::chrono;
+        const auto now = steady_clock::now();
+        const auto elapsed = duration_cast<microseconds>(now - *m_startTime).count();
+        m_elapsedTime = elapsed / 1'000'000.0;
+        emit elapsedTimeChanged();
+    }
     emit tick();
 }
 } // namespace au::effects
