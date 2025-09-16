@@ -30,6 +30,7 @@ public:
     [[nodiscard]] virtual bool hasUnsavedChanges() const = 0;
     virtual void markAsSaved() = 0;
     [[nodiscard]] virtual bool isRecovered() const = 0;
+    [[nodiscard]] virtual bool isTemporary() const = 0;
 
     // Autosave management
     [[nodiscard]] virtual bool hasAutosaveData() const = 0;

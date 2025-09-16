@@ -306,6 +306,12 @@ bool Au3ProjectAccessor::isRecovered() const
     return projectFileIO.IsRecovered();
 }
 
+bool Au3ProjectAccessor::isTemporary() const
+{
+    const auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
+    return projectFileIO.IsTemporary();
+}
+
 muse::async::Notification Au3ProjectAccessor::projectChanged() const
 {
     return m_projectChanged;

@@ -33,6 +33,7 @@ public:
     [[nodiscard]] bool hasUnsavedChanges() const override;
     void markAsSaved() override;
     [[nodiscard]] bool isRecovered() const override;
+    [[nodiscard]] bool isTemporary() const override;
 
     // Autosave management
     [[nodiscard]] bool hasAutosaveData() const override;

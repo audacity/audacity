@@ -103,12 +103,14 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
         return make_ret(Err::ProjectFileNotFound, path);
     }
 
-    io::File file(path);
-    if (!file.open(io::IODevice::ReadOnly)) {
-        LOGE() << "failed open file (Can't Read): " << path;
-        return make_ret(Err::ProjectFileIsReadProtected, path);
+    {
+        io::File file(path);
+        if (!file.open(io::IODevice::ReadOnly)) {
+            LOGE() << "failed open file (Can't Read): " << path;
+            return make_ret(Err::ProjectFileIsReadProtected, path);
+        }
+        file.close();
     }
-    file.close();
 
     m_au3Project = au3ProjectCreator()->create();
     ret = m_au3Project->load(path);
@@ -135,7 +137,7 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
     if (m_au3Project->isRecovered()) {
         m_trackeditProject->reload();
 
-        if (path == configuration()->newProjectTemporaryPath()) {
+        if (m_au3Project->isTemporary()) {
             m_isNewlyCreated = true;
             LOGD() << "[project] Restored never-saved project, marked as newly created";
         }
