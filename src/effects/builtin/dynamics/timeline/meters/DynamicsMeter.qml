@@ -46,7 +46,7 @@ Rectangle {
         height: upwards ? root.height - y : prv.dbToY(root.currentMax)
         y: upwards ? prv.dbToY(root.currentMax) : 0
 
-        color: prv.semiTransparentColor
+        color: root.areaColor
     }
 
     MouseArea {
