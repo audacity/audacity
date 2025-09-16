@@ -102,6 +102,9 @@ void RealtimeEffectService::registerRealtimeEffectList(TrackId trackId, Realtime
             case RealtimeEffectListMessage::Type::Move:
                 m_realtimeEffectMoved.send(trackId, msg.srcIndex, msg.dstIndex);
                 return;
+            case RealtimeEffectListMessage::Type::WillReplace:
+                // Do nothing, wait for DidReplace
+                break;
         }
     });
 
@@ -156,6 +159,12 @@ void RealtimeEffectService::onTrackListEvent(const TrackListEvent& e)
         }
         m_modifiedTracks.clear();
         m_trackUndoRedoOngoing = false;
+        break;
+    case TrackListEvent::SELECTION_CHANGE:
+    case TrackListEvent::TRACK_DATA_CHANGE:
+    case TrackListEvent::PERMUTED:
+    case TrackListEvent::RESIZING:
+        // Not interested in these events
         break;
     }
 }
