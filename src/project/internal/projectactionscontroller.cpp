@@ -327,16 +327,24 @@ muse::io::path_t ProjectActionsController::selectOpeningFile()
 
 io::path_t ProjectActionsController::selectImportFile()
 {
-    std::string allExt = "*.4xm *.MTV *.roq *.aac *.ac3 *.aif *.aiff *.afc *.aifc *.al *.amr *.apc *.ape *.apl *.mac "
-                         "*.asf *.wmv *.wma *.au *.avi *.avs *.bethsoftvid *.c93 *.302 *.daud *.dsicin *.dts *.dv *.dxa "
-                         "*.ea *.cdata *.ffm *.film_cpk *.flac *.flic *.flv *.gif *.gxf *.idcin *.image2 *.image2pipe "
-                         "*.cgi *.ipmovie *.nut *.lmlm4 *.m4v *.mkv *.mm *.mmf *.mov *.mp4 *.m4a *.m4r *.3gp *.3g2 *.mj2 "
-                         "*.mp3 *.mpc *.mpc8 *.mpg *.mpeg *.ts *.mpegtsraw *.mpegvideo *.msnwctcp *.ul *.mxf *.nsv *.nuv "
-                         "*.ogg *.opus *.psxstr *.pva *.redir *.rl2 *.rm *.ra *.rv *.rtsp *.s16be *.sw *.s8 *.sb *.sdp "
-                         "*.shn *.siff *.vb *.son *.smk *.sol *.swf *.thp *.tiertexseq *.tta *.txd *.u16be *.uw *.ub *.u8 "
-                         "*.vfwcap *.vmd *.voc *.wav *.wc3movie *.wsaud *.wsvqa *.wv";
-
-    std::vector<std::string> filter { trc("project", "All supported files") + " (" + allExt + ")" };
+    std::vector<std::string> filter {
+        trc("project",
+            "Video files")
+        + "(*.avi *.mp4 *.mkv *.mov *.flv *.wmv *.asf *.webm *.mpg *.mpeg *.m4v *.ts *.gxf *.mxf *.nut *.dv *.3gp *.3g2 *.mj2)",
+        trc("project",
+            "Audio files")
+        + "(*.aac *.ac3 *.mp3 *.wma *.wav *.flac *.ogg *.opus *.aif *.aiff *.amr *.ape *.au *.dts *.mpc *.tta *.wv *.shn *.voc *.mmf)",
+        trc("project",
+            "Game media files")
+        +
+        "(*.roq *.bethsoftvid *.c93 *.dsicin *.dxa *.ea *.cdata *.film_cpk *.idcin *.ipmovie *.psxstr *.rl2 *.siff *.smk *.thp *.tiertexseq *.vmd *.wc3movie *.wsaud *.wsvqa *.txd)",
+        trc("project", "Streaming files") + "(*.rtsp *.sdp *.nsv *.pva *.msnwctcp *.lmlm4 *.redir)",
+        trc("project", "Animation and image files") + "(*.gif *.flic *.swf *.image2 *.image2pipe)",
+        trc("project",
+            "Raw files")
+        +
+        "(*.al *.ul *.s16be *.u16be *.s8 *.u8 *.ub *.uw *.4xm *.MTV *.afc *.aifc *.apc *.apl *.mac *.avs *.302 *.daud *.ffm *.cgi *.mm *.mpegtsraw *.mpegvideo *.nuv *.sw *.sb *.son *.sol *.vfwcap)"
+    };
 
     io::path_t defaultDir = configuration()->lastOpenedProjectsPath();
 
