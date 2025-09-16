@@ -5,7 +5,7 @@
 #include "dynamicstimelinetypes.h"
 #include "timelinesourcetestmodel.h"
 #include "meters/compressionmetertestmodel.h"
-#include "meters/dynamicseffectoutputmetertestmodel.h"
+#include "meters/outputdbmetertestmodel.h"
 #include "stopwatch.h"
 #include <QApplication>
 #include <QQmlApplicationEngine>
@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     qmlRegisterType<DynamicsSample>("Audacity.BuiltinEffects", 1, 0, "DynamicsSample");
     qmlRegisterType<TimelineSourceTestModel>("Audacity.BuiltinEffects", 1, 0, "TimelineSourceModel");
     qmlRegisterType<Stopwatch>("Audacity.BuiltinEffects", 1, 0, "Stopwatch");
-    qmlRegisterType<DynamicsEffectOutputMeterTestModel>("Audacity.BuiltinEffects", 1, 0, "OutputDbMeterModel");
+    qmlRegisterType<OutputDbMeterTestModel>("Audacity.BuiltinEffects", 1, 0, "OutputDbMeterModel");
     qmlRegisterType<CompressionMeterTestModel>("Audacity.BuiltinEffects", 1, 0, "CompressionDbMeterModel");
 
     QQmlApplicationEngine engine;

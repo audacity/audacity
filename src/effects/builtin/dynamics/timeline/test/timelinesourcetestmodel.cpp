@@ -27,13 +27,6 @@ void TimelineSourceTestModel::init()
     m_deliveryTimer = new QTimer(this);
     connect(m_deliveryTimer, &QTimer::timeout, this, [this] { addDataPoints(); });
     m_deliveryTimer->start(deliveryIntervalMs);
-
-    m_clippingTimer = new QTimer(this);
-    connect(m_clippingTimer, &QTimer::timeout, this, [this] {
-        m_isClipping = !m_isClipping;
-        emit isClippingChanged();
-    });
-    m_clippingTimer->start(3000);
 }
 
 double TimelineSourceTestModel::dataPointRate() const
@@ -64,15 +57,6 @@ void TimelineSourceTestModel::addDataPoints()
     }
 
     emit newSamples(samples);
-}
-
-void TimelineSourceTestModel::setIsClipping(bool clipping)
-{
-    if (m_isClipping == clipping) {
-        return;
-    }
-    m_isClipping = clipping;
-    emit isClippingChanged();
 }
 
 void TimelineSourceTestModel::setInstanceId(int id)

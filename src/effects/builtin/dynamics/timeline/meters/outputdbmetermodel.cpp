@@ -30,6 +30,20 @@ float OutputDbMeterModel::latestValue()
     while (m_valueQueue->Get(tmp)) {
         highestOutputGain = std::max(highestOutputGain, tmp);
     }
+    if (!m_isClipping && highestOutputGain > 0.f) {
+        m_isClipping = true;
+        emit isClippingChanged();
+    }
     return highestOutputGain;
+}
+
+void OutputDbMeterModel::setIsClipping(bool isClipping)
+{
+    if (m_isClipping == isClipping) {
+        return;
+    }
+
+    m_isClipping = isClipping;
+    emit isClippingChanged();
 }
 }

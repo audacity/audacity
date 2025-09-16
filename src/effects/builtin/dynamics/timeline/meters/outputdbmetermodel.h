@@ -10,10 +10,21 @@ class OutputDbMeterModel : public AbstractDbMeterModel
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool isClipping READ isClipping WRITE setIsClipping NOTIFY isClippingChanged)
+
 public:
     explicit OutputDbMeterModel(QObject* parent = nullptr);
 
     void doInit() override;
+
+    bool isClipping() const { return m_isClipping; }
+    void setIsClipping(bool isClipping);
+
+signals:
+    void isClippingChanged();
+
+private:
+    bool m_isClipping = false;
     float latestValue() override;
 };
 } // namespace au::effects

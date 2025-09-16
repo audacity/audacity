@@ -21,7 +21,7 @@ set(PROJECT_SOURCES
     ${TEST_DIR}/meters/abstractdynamicsmetertestmodel.cpp
     ${TEST_DIR}/meters/abstractdynamicsmetertestmodel.h
     ${TEST_DIR}/meters/compressionmetertestmodel.h
-    ${TEST_DIR}/meters/dynamicseffectoutputmetertestmodel.h
+    ${TEST_DIR}/meters/outputdbmetertestmodel.h
     ${TEST_DIR}/main.cpp
 )
 
