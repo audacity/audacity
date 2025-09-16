@@ -96,8 +96,8 @@ UiActionList STATIC_ACTIONS = {
     UiAction("join",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Merge selected clips"),
-             TranslatableString("action", "Merge selected clips")
+             TranslatableString("action", "Join selected clips"),
+             TranslatableString("action", "Join selected clips")
              ),
     UiAction("disjoin",
              au::context::UiCtxAny,

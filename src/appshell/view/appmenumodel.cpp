@@ -295,7 +295,7 @@ MenuItem* AppMenuModel::makeViewMenu()
 
     MenuItemList viewItems {
         makeMenu(TranslatableString("appshell/menu/zoom", "Zoom"), makeZoomItems(), "menu-zoom"),
-        makeMenu(TranslatableString("appshell/menu/skip", "Skip to "), makeSkipToItems(), "menu-skip"),
+        makeMenu(TranslatableString("appshell/menu/skip", "Skip to "), makeSkipToItems(), "menu-skip", false),
         makeSeparator(),
         makeMenuItem("toggle-mixer")
     };
@@ -656,7 +656,7 @@ MenuItemList AppMenuModel::makeZoomItems()
         makeMenuItem("zoom-toggle"),
         makeMenuItem("zoom-reset"),
         makeSeparator(),
-        makeMenuItem("fit-project-to-window"),
+        makeMenuItem("zoom-to-fit-project"),
         makeMenuItem("fit-view-to-project"),
         makeMenuItem("collapse-all-tracks"),
         makeMenuItem("expand-all-tracks")

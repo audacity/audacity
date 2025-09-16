@@ -302,16 +302,17 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Zoom to selection"),
-             TranslatableString("action", "Zoom to selection")
+             TranslatableString("action", "Zoom to selection"),
+             IconCode::Code::FIT_SELECTION
              ),
     UiAction("zoom-toggle",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Zoom toggle"),
              TranslatableString("action", "Zoom toggle")
              ),
     UiAction("zoom-reset",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Zoom reset"),
              TranslatableString("action", "Zoom reset")
@@ -323,19 +324,19 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Fit project to window")
              ),
     UiAction("fit-view-to-project",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Fit view to project"),
              TranslatableString("action", "Fit view to project")
              ),
     UiAction("collapse-all-tracks",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Collapse all tracks"),
              TranslatableString("action", "Collapse all tracks")
              ),
     UiAction("expand-all-tracks",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Expand all tracks"),
              TranslatableString("action", "Expand all tracks")
