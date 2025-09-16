@@ -17,18 +17,14 @@ class TimelineSourceModel : public AbstractDynamicsEffectInstanceModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool isClipping READ isClipping WRITE setIsClipping NOTIFY isClippingChanged)
     Q_PROPERTY(double dataPointRate READ dataPointRate NOTIFY dataPointRateChanged)
     Q_PROPERTY(double latency READ latency CONSTANT)
 
 public:
-    bool isClipping() const { return m_isClipping; }
-    void setIsClipping(bool clipping);
     double dataPointRate() const;
     double latency() const;
 
 signals:
-    void isClippingChanged();
     void newSamples(const QVariantList& samples);
     void tChanged();
     void dataPointRateChanged();
@@ -43,7 +39,6 @@ private:
     std::vector<::DynamicRangeProcessorOutputPacket> m_packetBuffer;
     ::Observer::Subscription m_initializeProcessingSettingsSubscription;
 
-    bool m_isClipping = false;
     QTimer* m_deliveryTimer = nullptr;
 };
 } // namespace au::effects

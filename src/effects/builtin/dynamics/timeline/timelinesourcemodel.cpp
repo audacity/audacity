@@ -86,15 +86,6 @@ void TimelineSourceModel::pullData()
     emit newSamples(samples);
 }
 
-void TimelineSourceModel::setIsClipping(bool clipping)
-{
-    if (m_isClipping == clipping) {
-        return;
-    }
-    m_isClipping = clipping;
-    emit isClippingChanged();
-}
-
 void TimelineSourceModel::initializeForPlayback(double sampleRate)
 {
     const auto instance = m_instance.lock();

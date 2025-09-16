@@ -224,12 +224,12 @@ Item {
                         height: 10
                         radius: 3
 
-                        color: timelineSourceModel.isClipping ? "darkred" : "lightgray"
+                        color: outputDbMeterModel.isClipping ? "darkred" : "lightgray"
 
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: timelineSourceModel.isClipping = false
+                            onClicked: outputDbMeterModel.isClipping = false
                         }
                     }
                 }
