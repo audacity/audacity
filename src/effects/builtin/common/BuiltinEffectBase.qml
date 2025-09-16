@@ -13,6 +13,7 @@ Rectangle {
 
     property BuiltinEffectModel model: null
     property bool usesPresets: model ? model.usesPresets : true
+    property bool usedDestructively: true
 
     color: ui.theme.backgroundPrimaryColor
 

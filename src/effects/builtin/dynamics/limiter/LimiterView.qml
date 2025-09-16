@@ -37,6 +37,7 @@ BuiltinEffectBase {
 
         DynamicsPanel {
             width: root.width
+            visible: !root.usedDestructively
 
             instanceId: limiter.instanceId
             playState: playStateModel.playState

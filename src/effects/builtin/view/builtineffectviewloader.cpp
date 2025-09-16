@@ -49,7 +49,7 @@ BuiltinEffectViewLoader::~BuiltinEffectViewLoader()
     }
 }
 
-void BuiltinEffectViewLoader::load(const QString& instanceId, QObject* itemParent, QObject* dialogView)
+void BuiltinEffectViewLoader::load(const QString& instanceId, QObject* itemParent, QObject* dialogView, bool usedDestructively)
 {
     LOGD() << "instanceId: " << instanceId;
 
@@ -86,7 +86,8 @@ void BuiltinEffectViewLoader::load(const QString& instanceId, QObject* itemParen
     QObject* obj = component.createWithInitialProperties(
     {
         { "parent", QVariant::fromValue(itemParent) },
-        { "dialogView", QVariant::fromValue(dialogView) }
+        { "dialogView", QVariant::fromValue(dialogView) },
+        { "usedDestructively", usedDestructively }
     });
     gInitializationInstanceId = -1;
 

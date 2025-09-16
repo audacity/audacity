@@ -44,6 +44,7 @@ BuiltinEffectBase {
         DynamicsPanel {
             id: timeline
             width: root.width
+            visible: !root.usedDestructively
 
             instanceId: compressor.instanceId
             playState: playStateModel.playState
