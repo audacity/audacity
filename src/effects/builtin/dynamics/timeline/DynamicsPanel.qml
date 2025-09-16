@@ -25,7 +25,6 @@ Item {
     QtObject {
         id: prv
 
-        readonly property color gridColor: "#666666"
         readonly property int timelineHeight: 280
 
         readonly property int meterWidth: 11
@@ -137,7 +136,7 @@ Item {
             Rectangle {
                 id: timelineArea
 
-                color: "#212433"
+                color: DynamicsColors.backgroundColor
                 width: root.width - meterGrid.width - 24 // TODO font metrics
                 height: prv.timelineHeight
                 radius: 10
@@ -152,7 +151,7 @@ Item {
                         width: timeline.width
                         height: 1
                         y: modelData / prv.dbMin * prv.timelineHeight
-                        color: prv.gridColor
+                        color: DynamicsColors.gridColor
                     }
                 }
 
@@ -165,7 +164,7 @@ Item {
                         width: 1
                         height: timeline.height
                         x: (modelData + prv.duration) / prv.duration * timeline.width
-                        color: prv.gridColor
+                        color: DynamicsColors.gridColor
                     }
                 }
 
@@ -252,7 +251,7 @@ Item {
                             height: 1
                             y: prv.dbToY(modelData)
 
-                            color: prv.gridColor
+                            color: DynamicsColors.gridColor
                         }
                     }
 
@@ -280,8 +279,8 @@ Item {
 
                             upwards: false
                             dbMin: prv.dbMin
-                            areaColor: "#80FFD12C" // TODO sync with timeline
-                            lineColor: "#FFD12C" // TODO sync with timeline
+                            areaColor: DynamicsColors.timelineCompressionDbColorSemiTransparent
+                            lineColor: DynamicsColors.timelineCompressionDbColor
                             clipIndicatorHeight: clipIndicator.height
                         }
 
@@ -301,8 +300,8 @@ Item {
 
                             upwards: true
                             dbMin: prv.dbMin
-                            areaColor: "#80565695" // TODO sync with timeline
-                            lineColor: "#80FFFFFF" // TODO sync with timeline
+                            areaColor: DynamicsColors.timelineDataFillColorSemiTransparent
+                            lineColor: DynamicsColors.timelineOutputDbLineColor
                             clipIndicatorHeight: clipIndicator.height
                         }
                     }
