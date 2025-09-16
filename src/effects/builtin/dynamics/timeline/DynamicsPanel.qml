@@ -30,9 +30,9 @@ Item {
         readonly property int meterWidth: 11
         readonly property int meterSpacing: 4
 
-        readonly property int dbMin: -20
-        readonly property int duration: 5
-        readonly property int dbStep: 3
+        readonly property int dbMin: -48
+        readonly property int duration: 3
+        readonly property int dbStep: 6
 
         function dbToY(db) {
             return db / dbMin * timelineHeight
@@ -95,7 +95,7 @@ Item {
             spacing: 16
 
             Text {
-                text: "Show:"
+                text: qsTrc("effects/compressor", "Show:")
                 anchors.verticalCenter: parent.verticalCenter
 
                 font.bold: true
@@ -104,15 +104,15 @@ Item {
             Repeater {
                 model: [
                     {
-                        text: "Input",
+                        text: qsTrc("effects/compressor", "Input"),
                         property: "showInputDb"
                     },
                     {
-                        text: "Output",
+                        text: qsTrc("effects/compressor", "Output"),
                         property: "showOutputDb"
                     },
                     {
-                        text: "Compression",
+                        text: qsTrc("effects/compressor", "Compression"),
                         property: "showCompressionDb"
                     }
                 ]
@@ -177,24 +177,6 @@ Item {
                     dbMin: prv.dbMin
                     duration: prv.duration
                     dataPointRate: timelineSourceModel.dataPointRate
-                }
-
-                Rectangle {
-                    id: awaitingPlaybackMessageBackground
-
-                    anchors.fill: parent
-
-                    visible: stopwatch.playState === Stopwatch.Stopped
-                    opacity: 0.75
-                    color: "white"
-                    radius: 3
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "Awaiting playback"
-                        font.pixelSize: 24
-                        color: "gray"
-                    }
                 }
             }
 
