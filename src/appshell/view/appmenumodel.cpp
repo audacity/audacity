@@ -270,7 +270,7 @@ MenuItem* AppMenuModel::makeSelectMenu()
 
     MenuItemList selectItems {
         makeMenuItem("select-all"),
-        makeMenuItem("select-none"),
+        makeMenuItem("clear-selection"),
         makeMenuItem("select-all-tracks"),
         makeSeparator(),
         makeMenu(TranslatableString("appshell/menu/select", "Region"), makeRegionSelectionItems(), "menu-selection-region"),

@@ -26,7 +26,7 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Select all")
              ),
     UiAction("clear-selection",
-             au::context::UiCtxUnknown,
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Clear selection"),
              TranslatableString("action", "Clear selection")

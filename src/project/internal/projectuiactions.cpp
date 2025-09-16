@@ -206,12 +206,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Select all"),
              TranslatableString("action", "Select all")
              ),
-    UiAction("select-none",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Clear selection"),
-             TranslatableString("action", "Clear selection")
-             ),
     UiAction("select-all-tracks",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
