@@ -23,7 +23,7 @@ public:
 
     Q_PROPERTY(PlayState playState READ playState WRITE setPlaystate NOTIFY
                playStateChanged)
-    Q_PROPERTY(double elapsedTime READ elapsedTime NOTIFY tick)
+    Q_PROPERTY(double elapsedTime READ elapsedTime NOTIFY elapsedTimeChanged)
 
     Stopwatch(QObject* parent = nullptr);
 
@@ -34,12 +34,12 @@ public:
 
 signals:
     void playStateChanged();
+    void elapsedTimeChanged();
     void tick();
 
 private:
     void doPlay();
     void doPause();
-    void doStop();
     void onTick();
 
     const std::function<void(double elapsedSeconds)> m_cb;
