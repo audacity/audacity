@@ -110,7 +110,7 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("split-into-new-track",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Split into new track"),
+             TranslatableString("action", "Move selection to new track"),
              TranslatableString("action", "Split into new track")
              ),
     UiAction("silence-audio",
