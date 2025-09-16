@@ -7,6 +7,7 @@ set(PROJECT_SOURCES
     painters/areasequencepainter.h
     painters/linesequencepainter.cpp
     painters/linesequencepainter.h
+    dynamicscolors.h
     dynamicstimeline.cpp
     dynamicstimeline.h
     dynamicstimelinetypes.h

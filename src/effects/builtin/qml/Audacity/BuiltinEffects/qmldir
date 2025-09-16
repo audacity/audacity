@@ -1,2 +1,3 @@
 module Audacity.BuiltinEffects
 BuiltinEffectViewer 1.0 BuiltinEffectViewer.qml
+singleton DynamicsColors 1.0 DynamicsColors.qml

@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "dynamicstimeline.h"
+#include "dynamicscolors.h"
 #include "painters/areasequencepainter.h"
 #include "painters/linesequencepainter.h"
 
@@ -169,15 +170,17 @@ void DynamicsTimeline::updateDrawerViewportX()
 
 void DynamicsTimeline::resetSequences()
 {
-    QColor areaColor("#565695");
+    QColor areaColor = DynamicsColors::timelineDataFillColor();
     areaColor.setAlphaF(0.5);
-    QColor lineColor("white");
+    QColor lineColor = DynamicsColors::timelineOutputDbLineColor();
     lineColor.setAlphaF(0.5);
+    QColor compressionDbLineColor = DynamicsColors::timelineCompressionDbColor();
+    compressionDbLineColor.setAlphaF(0.5);
     constexpr auto outputDbVisibleByDefault = true;
     auto inputDb = createSequenceData(areaColor, DrawerType::Area, true);
     auto outputDb = createSequenceData(areaColor, DrawerType::Area, outputDbVisibleByDefault);
     auto outputDbLine = createSequenceData(lineColor, DrawerType::Line, outputDbVisibleByDefault);
-    auto compressionDb = createSequenceData("#FFD12C", DrawerType::Line, true);
+    auto compressionDb = createSequenceData(compressionDbLineColor, DrawerType::Line, true);
 
     std::lock_guard<std::mutex> lock{ m_sampleMutex };
     m_sequences[eInputDb] = std::move(inputDb);
