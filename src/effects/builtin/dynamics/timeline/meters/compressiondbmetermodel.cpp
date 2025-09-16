@@ -8,14 +8,9 @@
 #include "libraries/lib-builtin-effects/CompressorInstance.h"
 
 namespace au::effects {
-void CompressionDbMeterModel::doInit()
+CompressionDbMeterModel::CompressionDbMeterModel(QObject* parent)
+    : AbstractDbMeterModel{MeterValueProvider::Direction::Downwards, parent}
 {
-    const auto instance = m_instance.lock();
-    IF_ASSERT_FAILED(instance) {
-        return;
-    }
-    instance->SetCompressionGainDbQueue(m_valueQueue);
-    m_meter = MeterValueProvider::Create(MeterValueProvider::Direction::Downwards);
 }
 
 float CompressionDbMeterModel::latestValue()

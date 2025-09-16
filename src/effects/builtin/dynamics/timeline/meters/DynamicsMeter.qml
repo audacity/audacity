@@ -1,17 +1,20 @@
 import QtQuick 2.15
-import Audacity.BuiltinEffects 1.0
+import Muse.Ui
 
-Item {
+Rectangle {
     id: root
 
     required property real dbMin
     required property color areaColor
-    required property color lineColor
-    required property int clipIndicatorHeight
     required property double currentMax
-    required property double fiveSecMax
+    required property double globalMax
     required property bool upwards
 
+    signal clicked
+
+    color: ui.theme.backgroundSecondaryColor
+    border.color: ui.theme.strokeColor
+    border.width: 1
     clip: true
 
     QtObject {
@@ -20,28 +23,35 @@ Item {
         function dbToY(db) {
             return db / root.dbMin * root.height
         }
+
+        property color semiTransparentColor: Qt.rgba(areaColor.r, areaColor.g, areaColor.b, 0.5)
+        property color almostTransparentColor: Qt.rgba(areaColor.r, areaColor.g, areaColor.b, 0.3)
     }
 
-    Repeater {
-        model: [currentMax, fiveSecMax]
+    Rectangle {
+        id: globalMaxOutline
 
-        Rectangle {
-            id: bar
+        width: root.width
+        height: upwards ? root.height - y : prv.dbToY(root.globalMax)
+        y: upwards ? prv.dbToY(root.globalMax) : 0
 
-            width: root.width
-            height: upwards ? root.height - y : prv.dbToY(modelData)
-            y: upwards ? prv.dbToY(modelData) : 0
+        color: prv.almostTransparentColor
+        border.color: "transparent"
+    }
 
-            color: root.areaColor
+    Rectangle {
+        id: currentMaxBar
 
-            Rectangle {
-                width: parent.width
-                height: clipIndicatorHeight
-                y: upwards ? 0 : bar.height - clipIndicatorHeight
+        width: root.width
+        height: upwards ? root.height - y : prv.dbToY(root.currentMax)
+        y: upwards ? prv.dbToY(root.currentMax) : 0
 
-                color: root.lineColor
-                radius: 3
-            }
-        }
+        color: prv.semiTransparentColor
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: root.clicked()
     }
 }

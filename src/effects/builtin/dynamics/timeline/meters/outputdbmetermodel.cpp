@@ -9,18 +9,8 @@
 
 namespace au::effects {
 OutputDbMeterModel::OutputDbMeterModel(QObject* parent)
-    : AbstractDbMeterModel{-100.0, parent}
+    : AbstractDbMeterModel{MeterValueProvider::Direction::Upwards, parent}
 {
-}
-
-void OutputDbMeterModel::doInit()
-{
-    const auto instance = m_instance.lock();
-    IF_ASSERT_FAILED(instance) {
-        return;
-    }
-    m_meter = MeterValueProvider::Create(MeterValueProvider::Direction::Upwards);
-    instance->SetOutputDbQueue(m_valueQueue);
 }
 
 float OutputDbMeterModel::latestValue()

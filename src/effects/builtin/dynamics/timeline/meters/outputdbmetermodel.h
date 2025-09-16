@@ -15,8 +15,6 @@ class OutputDbMeterModel : public AbstractDbMeterModel
 public:
     explicit OutputDbMeterModel(QObject* parent = nullptr);
 
-    void doInit() override;
-
     bool isClipping() const { return m_isClipping; }
     void setIsClipping(bool isClipping);
 

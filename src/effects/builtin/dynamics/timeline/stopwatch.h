@@ -21,8 +21,7 @@ public:
         Stopped, Playing, Paused
     };
 
-    Q_PROPERTY(PlayState playState READ playState WRITE setPlaystate NOTIFY
-               playStateChanged)
+    Q_PROPERTY(PlayState playState READ playState WRITE setPlaystate NOTIFY playStateChanged)
     Q_PROPERTY(double elapsedTime READ elapsedTime NOTIFY elapsedTimeChanged)
 
     Stopwatch(QObject* parent = nullptr);

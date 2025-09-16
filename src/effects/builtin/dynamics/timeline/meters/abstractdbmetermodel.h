@@ -4,6 +4,7 @@
 #pragma once
 
 #include "../abstractdynamicseffectinstancemodel.h"
+#include "../stopwatch.h"
 
 #include "libraries/lib-dynamic-range-processor/MeterValueProvider.h"
 #include "libraries/lib-utility/LockFreeQueue.h"
@@ -13,14 +14,19 @@ class AbstractDbMeterModel : public AbstractDynamicsEffectInstanceModel
 {
     Q_OBJECT
 
+    Q_PROPERTY(au::effects::Stopwatch::PlayState playState READ playState WRITE setPlaystate NOTIFY playStateChanged)
     Q_PROPERTY(double currentMax READ currentMax NOTIFY valueChanged)
     Q_PROPERTY(double globalMax READ globalMax NOTIFY valueChanged)
     Q_PROPERTY(double fiveSecMax READ fiveSecMax NOTIFY valueChanged)
 
 public:
-    explicit AbstractDbMeterModel(double defaultValue = 0.0, QObject* parent = nullptr);
+    explicit AbstractDbMeterModel(MeterValueProvider::Direction, QObject* parent = nullptr);
 
     Q_INVOKABLE void update();
+    Q_INVOKABLE void reset();
+
+    Stopwatch::PlayState playState() const;
+    void setPlaystate(Stopwatch::PlayState state);
 
     double currentMax() const;
     double globalMax() const;
@@ -28,20 +34,16 @@ public:
 
 signals:
     void valueChanged();
-
-protected:
-    enum class MeterType {
-        OutputDb, CompressionDb
-    };
-
-    const std::shared_ptr<LockFreeQueue<float> > m_valueQueue;
-    std::unique_ptr<MeterValueProvider> m_meter;
+    void playStateChanged();
 
 private:
     virtual float latestValue() = 0;
+    void doInit() final override;
 
-    double m_currentMax;
-    double m_globalMax;
-    double m_fiveSecMax;
+    Stopwatch::PlayState m_playState = Stopwatch::Stopped;
+
+protected:
+    const std::shared_ptr<LockFreeQueue<float> > m_valueQueue;
+    std::unique_ptr<MeterValueProvider> m_meter;
 };
 } // namespace au::effects

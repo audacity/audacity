@@ -11,7 +11,8 @@ class CompressionDbMeterModel : public AbstractDbMeterModel
     Q_OBJECT
 
 public:
-    void doInit() override;
+    explicit CompressionDbMeterModel(QObject* parent = nullptr);
+
     float latestValue() override;
 };
 } // namespace au::effects

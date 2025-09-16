@@ -154,7 +154,7 @@ DynamicsTimeline::createSequenceData(const QColor& color, DrawerType drawerType,
     const auto maxNumSamples = static_cast<int>(std::ceil(m_duration * m_dataPointRate));
     std::unique_ptr<AbstractSequencePainter> drawer;
     if (drawerType == DrawerType::Area) {
-        drawer = std::make_unique<AreaSequencePainter>(m_drawerViewportX, maxNumSamples);
+        drawer = std::make_unique<AreaSequencePainter>(height(), m_drawerViewportX, maxNumSamples);
     } else {
         drawer = std::make_unique<LineSequencePainter>(m_drawerViewportX);
     }

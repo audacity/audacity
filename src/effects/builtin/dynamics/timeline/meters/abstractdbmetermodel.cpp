@@ -18,10 +18,30 @@ constexpr auto ticksPerSec = 1000 / compressorMeterUpdatePeriodMs;
 constexpr auto audioFramesPerTick = audioFramePerSec / ticksPerSec;
 } // namespace
 
-AbstractDbMeterModel::AbstractDbMeterModel(double defaultValue, QObject* parent)
-    : AbstractDynamicsEffectInstanceModel{parent}, m_valueQueue{std::make_shared<LockFreeQueue<float> >(audioFramesPerTick)},
-    m_currentMax{defaultValue}, m_globalMax{defaultValue}, m_fiveSecMax{defaultValue}
+AbstractDbMeterModel::AbstractDbMeterModel(MeterValueProvider::Direction direction, QObject* parent)
+    : AbstractDynamicsEffectInstanceModel{parent},
+    m_valueQueue{std::make_shared<LockFreeQueue<float> >(audioFramesPerTick)},
+    m_meter{MeterValueProvider::Create(direction)}
 {
+}
+
+void AbstractDbMeterModel::doInit()
+{
+    const auto instance = m_instance.lock();
+    IF_ASSERT_FAILED(instance) {
+        return;
+    }
+    if (m_meter->GetDirection() == MeterValueProvider::Direction::Downwards) {
+        instance->SetCompressionGainDbQueue(m_valueQueue);
+    } else {
+        instance->SetOutputDbQueue(m_valueQueue);
+    }
+}
+
+void AbstractDbMeterModel::reset()
+{
+    m_meter = MeterValueProvider::Create(m_meter->GetDirection());
+    emit valueChanged();
 }
 
 void AbstractDbMeterModel::update()
@@ -29,16 +49,32 @@ void AbstractDbMeterModel::update()
     constexpr auto updateFiveSecondMax = true;
     m_meter->Update(latestValue(), updateFiveSecondMax);
 
-    m_currentMax = m_meter->GetCurrentMax();
-    m_globalMax = m_meter->GetGlobalMax();
-    m_fiveSecMax = m_meter->GetFiveSecMax();
-
     emit valueChanged();
 }
 
-double AbstractDbMeterModel::currentMax() const { return m_currentMax; }
+double AbstractDbMeterModel::currentMax() const { return m_meter->GetCurrentMax(); }
 
-double AbstractDbMeterModel::globalMax() const { return m_globalMax; }
+double AbstractDbMeterModel::globalMax() const { return m_meter->GetGlobalMax(); }
 
-double AbstractDbMeterModel::fiveSecMax() const { return m_fiveSecMax; }
+double AbstractDbMeterModel::fiveSecMax() const { return m_meter->GetFiveSecMax(); }
+
+Stopwatch::PlayState AbstractDbMeterModel::playState() const
+{
+    return m_playState;
+}
+
+void AbstractDbMeterModel::setPlaystate(Stopwatch::PlayState state)
+{
+    if (m_playState == state) {
+        return;
+    }
+
+    if (state == Stopwatch::Playing) {
+        m_meter = MeterValueProvider::Create(m_meter->GetDirection());
+        emit valueChanged();
+    }
+
+    m_playState = state;
+    emit playStateChanged();
+}
 } // namespace au::effects

@@ -22,8 +22,8 @@ static_assert(getVertexIndex(1) == 2);
 static_assert(getVertexIndex(2) == 4);
 } // namespace
 
-AreaSequencePainter::AreaSequencePainter(const std::atomic<double>& viewport, int maxNumSamples)
-    : AbstractSequencePainter{viewport}
+AreaSequencePainter::AreaSequencePainter(double viewportHeight, const std::atomic<double>& viewportX, int maxNumSamples)
+    : AbstractSequencePainter{viewportX}, m_viewportHeight{viewportHeight}
 {
     m_buffer.reserve(getNumVertices(maxNumSamples + 10));
     m_geometry.setDrawingMode(QSGGeometry::DrawTriangleStrip);
@@ -51,8 +51,8 @@ void AreaSequencePainter::append(std::vector<SequenceSample> newSamples)
     std::copy(m_buffer.begin(), m_buffer.end(), vertex);
     vertex += m_buffer.size();
     for (const auto& sample : newSamples) {
-        (vertex++)->set(sample.x, sample.y);
-        (vertex++)->set(sample.x, std::numeric_limits<float>::max());
+        (vertex++)->set(sample.x, std::min(sample.y, m_viewportHeight));
+        (vertex++)->set(sample.x, m_viewportHeight);
     }
 }
 

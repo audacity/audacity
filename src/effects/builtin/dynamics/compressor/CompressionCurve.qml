@@ -73,7 +73,7 @@ Item {
 
                     width: 1
                     height: background.height + prv.tickLength
-                    color: DynamicsColors.gridColor
+                    color: ui.theme.strokeColor
                 }
             }
         }
@@ -99,7 +99,7 @@ Item {
 
                     width: background.width + prv.tickLength
                     height: 1
-                    color: DynamicsColors.gridColor
+                    color: ui.theme.strokeColor
                 }
             }
         }

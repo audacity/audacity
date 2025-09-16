@@ -15,7 +15,6 @@ class DynamicsColors : public QObject
     QML_SINGLETON
 
 public:
-    static QColor gridColor() { return QColor("#7B7B81"); }
     static QColor backgroundColor() { return QColor("#313147"); }
 
     static QColor timelineDataFillColor() { return QColor("#565695"); }
@@ -26,7 +25,6 @@ public:
 
     static QColor timelineOutputDbLineColor() { return QColor("white"); }
 
-    Q_PROPERTY(QColor gridColor READ gridColor CONSTANT)
     Q_PROPERTY(QColor backgroundColor READ backgroundColor CONSTANT)
 
     Q_PROPERTY(QColor timelineDataFillColor READ timelineDataFillColor CONSTANT)
