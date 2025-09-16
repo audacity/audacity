@@ -39,6 +39,10 @@ void TimelineSourceModel::doInit()
             m_deliveryTimer->stop();
         }
     });
+
+    if (const auto& sampleRate = instance->GetSampleRate(); sampleRate.has_value()) {
+        initializeForPlayback(*sampleRate);
+    }
 }
 
 double TimelineSourceModel::latency() const
