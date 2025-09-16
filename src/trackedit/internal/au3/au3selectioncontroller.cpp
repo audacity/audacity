@@ -621,7 +621,7 @@ void Au3SelectionController::updateSelectionController()
     }
 }
 
-int Au3SelectionController::trackDistance(TrackId previous, TrackId next) const
+int Au3SelectionController::trackDistance(const TrackId previous, const TrackId next) const
 {
     if (previous == next) {
         return 0;

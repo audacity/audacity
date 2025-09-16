@@ -17,6 +17,8 @@ static const muse::actions::ActionCode TRACK_TOGGLE_SELECTION_CODE("track-toggle
 static const muse::actions::ActionCode MULTI_TRACK_SELECTION_PREV_CODE("shift-up");
 static const muse::actions::ActionCode MULTI_TRACK_SELECTION_NEXT_CODE("shift-down");
 
+static const muse::actions::ActionCode PLAYBACK_SEEK_CODE("playback-seek");
+
 void TrackNavigationController::init()
 {
     dispatcher()->reg(this, FOCUS_TRACK_INDEX_CODE, this, &TrackNavigationController::focusTrackByIndex);
@@ -28,6 +30,10 @@ void TrackNavigationController::init()
     dispatcher()->reg(this, MULTI_TRACK_SELECTION_PREV_CODE, this, &TrackNavigationController::multiSelectionUp);
     dispatcher()->reg(this, MULTI_TRACK_SELECTION_NEXT_CODE, this, &TrackNavigationController::multiSelectionDown);
 
+    dispatcher()->reg(this, PLAYBACK_SEEK_CODE, [this] {
+        m_selectionStart = std::nullopt;
+    });
+
     selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& trackId) {
         const auto activePanel = navigationController()->activePanel();
         if (activePanel && activePanel->name() != QString("Track %1 Panel").arg(trackId)) {
@@ -36,7 +42,6 @@ void TrackNavigationController::init()
     });
 
     m_selectionStart = std::nullopt;
-    qApp->installEventFilter(this);
 }
 
 void TrackNavigationController::focusTrackByIndex(const muse::actions::ActionData& args)
@@ -55,11 +60,13 @@ void TrackNavigationController::focusTrackByIndex(const muse::actions::ActionDat
 
 void TrackNavigationController::focusPrevTrack()
 {
+    m_selectionStart = std::nullopt;
     selectionController()->focusPreviousTrack();
 }
 
 void TrackNavigationController::focusNextTrack()
 {
+    m_selectionStart = std::nullopt;
     selectionController()->focusNextTrack();
 }
 
@@ -160,7 +167,7 @@ void TrackNavigationController::multiSelectionUp()
     au::trackedit::TrackIdList selectedTracks = selectionController()->selectedTracks();
     const au::trackedit::TrackId focusedTrack = selectionController()->focusedTrack();
 
-    focusPrevTrack();
+    selectionController()->focusPreviousTrack();
     updateTrackSelection(selectedTracks, focusedTrack);
 }
 
@@ -171,7 +178,7 @@ void TrackNavigationController::multiSelectionDown()
     const au::trackedit::TrackId focusedTrack = selectionController()->focusedTrack();
     au::trackedit::TrackIdList selectedTracks = selectionController()->selectedTracks();
 
-    focusNextTrack();
+    selectionController()->focusNextTrack();
     updateTrackSelection(selectedTracks, focusedTrack);
 }
 
@@ -203,15 +210,4 @@ void TrackNavigationController::updateTrackSelection(TrackIdList& selectedTracks
     }
 
     selectionController()->setSelectedTracks(selectedTracks);
-}
-
-bool TrackNavigationController::eventFilter(QObject* watched, QEvent* event)
-{
-    if (event->type() == QEvent::KeyRelease) {
-        QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
-        if (keyEvent->key() == Qt::Key_Shift) {
-            m_selectionStart = std::nullopt;
-        }
-    }
-    return QObject::eventFilter(watched, event);
 }
