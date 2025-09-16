@@ -46,136 +46,136 @@ static const muse::Settings::Key FFMPEG_FORMAT("au3wrap", "FileFormats/FFmpegFor
 void ExportConfiguration::init()
 {
     muse::settings()->setDefaultValue(EXPORT_PROCESS, muse::Val(ExportProcessType::FULL_PROJECT_AUDIO));
-    muse::settings()->valueChanged(EXPORT_PROCESS).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(EXPORT_PROCESS).onReceive(nullptr, [this] (const muse::Val&) {
         m_processChanged.notify();
     });
 
     muse::settings()->setDefaultValue(EXPORT_DIRECTORY_PATH, muse::Val(globalConfiguration()->userDataPath()));
-    muse::settings()->valueChanged(EXPORT_DIRECTORY_PATH).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(EXPORT_DIRECTORY_PATH).onReceive(nullptr, [this] (const muse::Val&) {
         m_directoryPathChanged.notify();
     });
 
-    muse::settings()->valueChanged(EXPORT_FORMAT).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(EXPORT_FORMAT).onReceive(nullptr, [this] (const muse::Val&) {
         m_currentFormatChanged.notify();
     });
 
     muse::settings()->setDefaultValue(EXPORT_CHANNELS, muse::Val(ExportChannelsPref::ExportChannels::STEREO));
-    muse::settings()->valueChanged(EXPORT_CHANNELS).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(EXPORT_CHANNELS).onReceive(nullptr, [this] (const muse::Val&) {
         m_exportChannelsChanged.notify();
     });
 
     muse::settings()->setDefaultValue(EXPORT_SAMPLE_RATE, muse::Val("44100"));
-    muse::settings()->valueChanged(EXPORT_SAMPLE_RATE).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(EXPORT_SAMPLE_RATE).onReceive(nullptr, [this] (const muse::Val&) {
         m_exportSampleRateChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_FORMAT, muse::Val(""));
-    muse::settings()->valueChanged(FFMPEG_FORMAT).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_FORMAT).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegFormatChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_CODEC, muse::Val(""));
-    muse::settings()->valueChanged(FFMPEG_CODEC).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_CODEC).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegCodecChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_LANGUAGE, muse::Val(""));
-    muse::settings()->valueChanged(FFMPEG_LANGUAGE).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_LANGUAGE).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegLanguageChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_TAG, muse::Val(""));
-    muse::settings()->valueChanged(FFMPEG_TAG).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_TAG).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegTagChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_QUALITY, muse::Val(0));
-    muse::settings()->valueChanged(FFMPEG_QUALITY).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_QUALITY).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegQualityChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_CUTOFF, muse::Val(0));
-    muse::settings()->valueChanged(FFMPEG_CUTOFF).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_CUTOFF).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegCutoffChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_BIT_RATE, muse::Val(0));
-    muse::settings()->valueChanged(FFMPEG_BIT_RATE).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_BIT_RATE).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegBitrateChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_SAMPLE_RATE, muse::Val(0));
-    muse::settings()->valueChanged(FFMPEG_SAMPLE_RATE).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_SAMPLE_RATE).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegSampleRateChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_PROFILE, muse::Val(""));
-    muse::settings()->valueChanged(FFMPEG_PROFILE).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_PROFILE).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegProfileChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_BIT_RESERVOIR, muse::Val(true));
-    muse::settings()->valueChanged(FFMPEG_BIT_RESERVOIR).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_BIT_RESERVOIR).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegBitReservoirChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_VARIABLE_BLOCK_LEN, muse::Val(true));
-    muse::settings()->valueChanged(FFMPEG_VARIABLE_BLOCK_LEN).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_VARIABLE_BLOCK_LEN).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegVblChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_COMP_LEVEL, muse::Val(0));
-    muse::settings()->valueChanged(FFMPEG_COMP_LEVEL).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_COMP_LEVEL).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegCompressionChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_LPC_COEFF_PRECISION, muse::Val(0));
-    muse::settings()->valueChanged(FFMPEG_LPC_COEFF_PRECISION).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_LPC_COEFF_PRECISION).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegLpcCoeffPrecisionChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_FRAME_SIZE, muse::Val(0));
-    muse::settings()->valueChanged(FFMPEG_FRAME_SIZE).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_FRAME_SIZE).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegFrameSizeChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_PRED_ORDER_METHOD, muse::Val(0));
-    muse::settings()->valueChanged(FFMPEG_PRED_ORDER_METHOD).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_PRED_ORDER_METHOD).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegPredictionOrderMethodChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_MIN_PREDICTION_ORDER, muse::Val(-1));
-    muse::settings()->valueChanged(FFMPEG_MIN_PREDICTION_ORDER).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_MIN_PREDICTION_ORDER).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegMinPredictionOrderChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_MAX_PREDICTION_ORDER, muse::Val(-1));
-    muse::settings()->valueChanged(FFMPEG_MAX_PREDICTION_ORDER).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_MAX_PREDICTION_ORDER).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegMaxPredictionOrderChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_MIN_PARTITION_ORDER, muse::Val(-1));
-    muse::settings()->valueChanged(FFMPEG_MIN_PARTITION_ORDER).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_MIN_PARTITION_ORDER).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegMinPartitionOrderChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_MAX_PARTITION_ORDER, muse::Val(-1));
-    muse::settings()->valueChanged(FFMPEG_MAX_PARTITION_ORDER).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_MAX_PARTITION_ORDER).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegMaxPartitionOrderChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_USE_LPC, muse::Val(true));
-    muse::settings()->valueChanged(FFMPEG_USE_LPC).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_USE_LPC).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegUseLpcChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_MUX_RATE, muse::Val(0));
-    muse::settings()->valueChanged(FFMPEG_MUX_RATE).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_MUX_RATE).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegMuxRateChanged.notify();
     });
 
     muse::settings()->setDefaultValue(FFMPEG_PACKET_SIZE, muse::Val(0));
-    muse::settings()->valueChanged(FFMPEG_PACKET_SIZE).onReceive(nullptr, [this] (const muse::Val& val) {
+    muse::settings()->valueChanged(FFMPEG_PACKET_SIZE).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegPacketSizeChanged.notify();
     });
 }

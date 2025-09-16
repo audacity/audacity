@@ -104,6 +104,7 @@ QVariant DynamicExportOptionsModel::data(const QModelIndex& idx, int role) const
 
 bool DynamicExportOptionsModel::setData(const QModelIndex& idx, const QVariant& v, int role)
 {
+    UNUSED(role);
     if (!idx.isValid()) {
         return false;
     }

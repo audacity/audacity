@@ -36,7 +36,7 @@ template<typename T> static constexpr auto is_tuple_like_v
 template<typename Tuple> constexpr bool Empty_v
     =(0 == size_t(std::tuple_size_v<Tuple>));
 
-template<typename Tuple> [[nodiscard]] constexpr bool Empty(const Tuple& tuple)
+template<typename Tuple> [[nodiscard]] constexpr bool Empty(const Tuple&)
 {
     return Empty_v<Tuple>;
 }

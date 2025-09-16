@@ -301,9 +301,9 @@ int main(int argc, char** argv)
     QCoreApplication* qApplication = nullptr;
 
     if (commandLineParser.runMode() == muse::IApplication::RunMode::AudioPluginRegistration) {
-        qApplication = new QCoreApplication(argc, argv);
+        qApplication = new QCoreApplication(argcFinal, argvFinal);
     } else {
-        qApplication = new QApplication(argc, argv);
+        qApplication = new QApplication(argcFinal, argvFinal);
     }
 
     commandLineParser.processBuiltinArgs(*qApplication);

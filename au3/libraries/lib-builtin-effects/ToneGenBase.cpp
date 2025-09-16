@@ -93,7 +93,7 @@ unsigned ToneGenBase::GetAudioOutCount() const
 }
 
 bool ToneGenBase::ProcessInitialize(
-    EffectSettings&, double sampleRate, ChannelNames chanMap)
+    EffectSettings&, double sampleRate, ChannelNames)
 {
     mSampleRate = sampleRate;
     mPositionInCycles = 0.0;

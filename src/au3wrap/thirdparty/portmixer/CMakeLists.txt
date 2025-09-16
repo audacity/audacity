@@ -131,3 +131,19 @@ target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE On)
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
+    target_compile_options(${TARGET}
+        PRIVATE
+            -Wno-unused-parameter
+            -Wno-unused-variable
+            -Wno-unused-function
+    )
+else() # MSVC
+    target_compile_options(${TARGET}
+        PRIVATE
+            /wd4100
+            /wd4505
+    )
+endif()
+

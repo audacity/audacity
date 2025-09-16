@@ -13,7 +13,7 @@ const EffectParameterMethods& EqualizationBase::Parameters() const
         // Pretty sure the interpolation name shouldn't have been interpreted when
         // specified in chains, but must keep it that way for compatibility.
         EqualizationParameters::InterpMeth>
-    parameters { [](EqualizationBase& effect, EffectSettings&,
+    parameters { [](EqualizationBase&, EffectSettings&,
                     EqualizationParameters& params, bool updating) {
             constexpr auto nInterpolations
                 =EqualizationParameters::nInterpolations;
@@ -329,7 +329,6 @@ bool EqualizationBase::Process(EffectInstance&, EffectSettings&)
 
                 wxASSERT(M - 1 < windowSize);
                 size_t L = windowSize - (M - 1); // Process L samples at a go
-                auto s = start;
                 auto idealBlockLen = pChannel->GetMaxBlockSize() * 4;
                 if (idealBlockLen % L != 0) {
                     idealBlockLen += (L - (idealBlockLen % L));

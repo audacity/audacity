@@ -169,7 +169,7 @@ struct Invoker {
 private:
    struct Base {
       template<typename Object, typename Functions, typename... Args>
-      R operator ()(Object &object, const Functions &functions, Args&&...)
+      R operator ()(Object &, const Functions &, Args&&...)
       const {
          // This should never be reached at run-time, because an Executor
          // generated for (const) Object should have been the catch-all.

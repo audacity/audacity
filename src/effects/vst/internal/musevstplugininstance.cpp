@@ -80,6 +80,7 @@ muse::vst::PluginMidiMappingPtr MuseVstPluginInstance::midiMapping() const
 
 void MuseVstPluginInstance::updatePluginConfig(const muse::audio::AudioUnitConfig& config)
 {
+    UNUSED(config);
 }
 
 void MuseVstPluginInstance::refreshConfig()
