@@ -16,6 +16,7 @@ Item {
     property int dbStep: 12
     property int timelineHeight: 280
     property int duration: 3
+    property bool needsClipIndicator: true
 
     property alias playState: stopwatch.playState
     onPlayStateChanged: {
@@ -213,12 +214,19 @@ Item {
 
                         width: prv.meterWidth
                         height: 10
+                        visible: root.needsClipIndicator
 
                         isClipping: outputDbMeterModel.isClipping
                         onClicked: {
                             outputDbMeterModel.isClipping = false
                             outputDbMeterModel.reset()
                         }
+                    }
+
+                    Item {
+                        width: clipIndicator.width
+                        height: clipIndicator.height
+                        visible: !clipIndicator.visible
                     }
                 }
 
