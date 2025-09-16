@@ -188,8 +188,7 @@ public:
 
     struct Interval final : WideChannelGroupInterval {
         Interval(const LabelTrack& track, size_t index)
-            : mpTrack{track.SharedPointer<const LabelTrack>()}
-            , index{index}
+            : index{index}, mpTrack{track.SharedPointer<const LabelTrack>()}
         {}
 
         ~Interval() override;

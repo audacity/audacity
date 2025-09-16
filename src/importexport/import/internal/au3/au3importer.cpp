@@ -24,6 +24,8 @@ public:
 
     ImportProgress(AudacityProject& project)
     {
+        //! TODO: AU4
+        UNUSED(project);
     }
 
     bool OnImportFileOpened(ImportFileHandle& importFileHandle) override
@@ -60,7 +62,11 @@ public:
         }
     }
 
-    void OnImportResult(ImportResult result) override {}
+    void OnImportResult(ImportResult result) override
+    {
+        //! TODO: AU4
+        UNUSED(result);
+    }
 
 private:
 

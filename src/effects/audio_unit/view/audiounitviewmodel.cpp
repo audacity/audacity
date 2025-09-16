@@ -150,6 +150,8 @@ void au::effects::AudioUnitViewModel::checkSettingChangesFromUi()
 void AudioUnitViewModel::EventListenerCallback(void* inCallbackRefCon, void* inObject, const AudioUnitEvent* inEvent,
                                                UInt64 inEventHostTime, AudioUnitParameterValue inParameterValue)
 {
+    UNUSED(inObject);
+    UNUSED(inEventHostTime);
     static_cast<AudioUnitViewModel*>(inCallbackRefCon)->EventListener(inEvent, inParameterValue);
 }
 
@@ -204,7 +206,8 @@ au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewMode
     result.reset(eventListenerRef);
 
     // AudioUnitEvent is a struct with a discriminator field and a union
-    AudioUnitEvent event{ kAudioUnitEvent_ParameterValueChange };
+    AudioUnitEvent event;
+    event.mEventType = kAudioUnitEvent_ParameterValueChange;
     // Initialize union member -- the ID (second field) reassigned later
     auto& parameter = event.mArgument.mParameter;
     parameter = AudioUnitUtils::Parameter{ unit, kAudioUnitScope_Global };
@@ -220,7 +223,7 @@ au::effects::AudioUnitViewModel::EventListenerPtr au::effects::AudioUnitViewMode
     }
 
     // Now set up the other union member
-    event = { kAudioUnitEvent_PropertyChange };
+    event.mEventType = kAudioUnitEvent_PropertyChange;
     // And bind the listener function to certain property changes
     for (auto type : {
             kAudioUnitProperty_Latency,

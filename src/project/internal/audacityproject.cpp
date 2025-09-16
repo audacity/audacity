@@ -285,8 +285,6 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
     TRACEFUNC;
 
     switch (saveMode) {
-    // case SaveMode::SaveSelection:
-    //     return saveSelectionOnScore(path);
     case SaveMode::Save:
     case SaveMode::SaveAs:
     case SaveMode::SaveCopy: {
@@ -310,6 +308,8 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
     }
     case SaveMode::AutoSave:
         return saveProject(path, false /*generateBackup*/, true /*createThumbnail*/);
+    case SaveMode::SaveSelection:
+        return make_ret(Err::UnknownError);
     }
 
     return make_ret(Err::UnknownError);

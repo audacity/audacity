@@ -102,6 +102,9 @@ void RealtimeEffectService::registerRealtimeEffectList(TrackId trackId, Realtime
             case RealtimeEffectListMessage::Type::Move:
                 m_realtimeEffectMoved.send(trackId, msg.srcIndex, msg.dstIndex);
                 return;
+            case RealtimeEffectListMessage::Type::WillReplace:
+                // Do nothing, wait for DidReplace
+                break;
         }
     });
 
@@ -156,6 +159,12 @@ void RealtimeEffectService::onTrackListEvent(const TrackListEvent& e)
         }
         m_modifiedTracks.clear();
         m_trackUndoRedoOngoing = false;
+        break;
+    case TrackListEvent::SELECTION_CHANGE:
+    case TrackListEvent::TRACK_DATA_CHANGE:
+    case TrackListEvent::PERMUTED:
+    case TrackListEvent::RESIZING:
+        // Not interested in these events
         break;
     }
 }
@@ -236,7 +245,7 @@ RealtimeEffectStatePtr RealtimeEffectService::effect(TrackId trackId, EffectChai
     if (!data) {
         return nullptr;
     }
-    if (index < 0 || index >= data->effectList->GetStatesCount()) {
+    if (index < 0 || static_cast<size_t>(index) >= data->effectList->GetStatesCount()) {
         return nullptr;
     }
     return data->effectList->GetStateAt(index);
@@ -263,7 +272,7 @@ RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(TrackId trackId,
 namespace {
 std::shared_ptr<RealtimeEffectState> findEffectState(RealtimeEffectList& effectList, RealtimeEffectStatePtr effectStateId)
 {
-    for (auto i = 0; i < effectList.GetStatesCount(); ++i) {
+    for (size_t i = 0; i < effectList.GetStatesCount(); ++i) {
         const auto state = effectList.GetStateAt(i);
         if (state == effectStateId) {
             return state;

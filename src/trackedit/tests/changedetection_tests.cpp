@@ -397,23 +397,24 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeStereo)
     TracksAndClips after = buildTracksAndClips();
 
     if (after.tracks.back().type == TrackType::Stereo) {
-        after.tracks.back().type == TrackType::Mono;
+        after.tracks.back().type = TrackType::Mono;
     } else {
-        after.tracks.back().type == TrackType::Stereo;
+        after.tracks.back().type = TrackType::Stereo;
     }
 
     for (auto& clip : after.clips.back()) {
         clip.stereo = !clip.stereo;
     }
 
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(5);
+
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
 
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
-    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(5);
 
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }

@@ -215,7 +215,7 @@ static void filter_array_init(filter_array_t* p, double rate,
     }
 }
 
-static void filter_array_create(filter_array_t* p, double rate,
+[[maybe_unused]] static void filter_array_create(filter_array_t* p, double rate,
                                 double scale, double offset)
 {
     size_t i;
@@ -233,7 +233,7 @@ static void filter_array_create(filter_array_t* p, double rate,
     }
 }
 
-static void filter_array_process(filter_array_t* p,
+[[maybe_unused]] static void filter_array_process(filter_array_t* p,
                                  size_t length, float const* input, float* output,
                                  float const* feedback, float const* hf_damping, float const* gain)
 {
@@ -288,7 +288,7 @@ static void filter_t_resize_resetting(filter_t* p, size_t newSize)
 }
 
 // Resizes a filter, trying to keep as much of its history as possible.
-static void filter_t_resize_preserving(filter_t* p, size_t newSize)
+[[maybe_unused]] static void filter_t_resize_preserving(filter_t* p, size_t newSize)
 {
     // Imagine we have this filter_t as input:
     //
