@@ -26,8 +26,8 @@ public:
 
 signals:
     void newSamples(const QVariantList& samples);
-    void tChanged();
     void dataPointRateChanged();
+    void newDataSequence();
 
 private:
     void doInit() override;
@@ -38,6 +38,7 @@ private:
     std::optional<::DynamicRangeProcessorHistory> m_history;
     std::vector<::DynamicRangeProcessorOutputPacket> m_packetBuffer;
     ::Observer::Subscription m_initializeProcessingSettingsSubscription;
+    ::Observer::Subscription m_realtimeResumeSubscription;
 
     QTimer* m_deliveryTimer = nullptr;
 };

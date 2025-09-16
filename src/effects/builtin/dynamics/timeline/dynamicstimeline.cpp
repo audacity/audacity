@@ -102,6 +102,7 @@ void DynamicsTimeline::setShowInputDb(bool show)
         return;
     }
     m_sequences[eInputDb].visible = show;
+    update();
     emit showInputDbChanged();
 }
 
@@ -116,6 +117,7 @@ void DynamicsTimeline::setShowOutputDb(bool show)
         return;
     }
     m_sequences[eOutputDb].visible = m_sequences[eOutputDbLine].visible = show;
+    update();
     emit showOutputDbChanged();
 }
 
@@ -130,6 +132,7 @@ void DynamicsTimeline::setShowCompressionDb(bool show)
         return;
     }
     m_sequences[eCompressionDb].visible = show;
+    update();
     emit showCompressionDbChanged();
 }
 

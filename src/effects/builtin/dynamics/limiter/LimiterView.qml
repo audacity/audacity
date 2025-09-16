@@ -40,6 +40,10 @@ BuiltinEffectBase {
 
             instanceId: limiter.instanceId
             playState: playStateModel.playState
+            dbMin: -12
+            dbStep: 3
+            duration: 2
+            timelineHeight: knobRow.height
         }
 
         Rectangle {

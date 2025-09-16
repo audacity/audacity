@@ -12,11 +12,16 @@ Item {
     id: root
 
     required property int instanceId
+    property int dbMin: -48
+    property int dbStep: 12
+    property int timelineHeight: 280
+    property int duration: 3
 
     property alias playState: stopwatch.playState
     onPlayStateChanged: {
         if (playState === Stopwatch.Playing && prv.prevPlayState === Stopwatch.Stopped) {
             timeline.clear()
+            outputDbMeterModel.isClipping = false
         }
         prv.prevPlayState = playState
     }
@@ -26,22 +31,16 @@ Item {
     QtObject {
         id: prv
 
-        readonly property int timelineHeight: 280
-
         readonly property int meterWidth: 11
         readonly property int meterSpacing: 4
 
-        readonly property int dbMin: -48
-        readonly property int duration: 3
-        readonly property int dbStep: 6
-
         function dbToY(db) {
-            return db / dbMin * timelineHeight
+            return db / root.dbMin * root.timelineHeight
         }
 
         readonly property var dbSteps: {
             let arr = []
-            for (let v = 0; v >= dbMin; v -= dbStep) {
+            for (let v = 0; v >= root.dbMin; v -= root.dbStep) {
                 arr.push(v)
             }
             return arr
@@ -79,6 +78,9 @@ Item {
         instanceId: root.instanceId
         onNewSamples: function (samples) {
             timeline.onNewSamples(samples)
+        }
+        onNewDataSequence: function () {
+            timeline.clear()
         }
     }
 
@@ -146,7 +148,7 @@ Item {
                 border.color: ui.theme.strokeColor
                 border.width: 1
                 width: root.width - meterGrid.width - 24 // TODO font metrics
-                height: prv.timelineHeight
+                height: root.timelineHeight
                 clip: true
 
                 Repeater {
@@ -157,7 +159,7 @@ Item {
                     delegate: Rectangle {
                         width: timeline.width
                         height: 1
-                        y: modelData / prv.dbMin * prv.timelineHeight
+                        y: modelData / root.dbMin * root.timelineHeight
                         color: ui.theme.strokeColor
                     }
                 }
@@ -170,7 +172,7 @@ Item {
                     delegate: Rectangle {
                         width: 1
                         height: timeline.height
-                        x: (modelData + prv.duration) / prv.duration * timeline.width
+                        x: (modelData + root.duration) / root.duration * timeline.width
                         color: ui.theme.strokeColor
                     }
                 }
@@ -181,8 +183,8 @@ Item {
                     anchors.fill: parent
                     stopwatchTime: stopwatch.elapsedTime
 
-                    dbMin: prv.dbMin
-                    duration: prv.duration
+                    dbMin: root.dbMin
+                    duration: root.duration
                     dataPointRate: timelineSourceModel.dataPointRate
                 }
             }
@@ -223,7 +225,7 @@ Item {
                 Row {
                     id: meterRow
 
-                    height: prv.timelineHeight
+                    height: root.timelineHeight
 
                     spacing: prv.meterSpacing
                     leftPadding: prv.meterSpacing
@@ -245,7 +247,7 @@ Item {
                         globalMax: compressionDbMeterModel.globalMax
 
                         upwards: false
-                        dbMin: prv.dbMin
+                        dbMin: root.dbMin
                         areaColor: DynamicsColors.timelineCompressionDbColor
                         onClicked: {
                             compressionDbMeterModel.reset()
@@ -268,7 +270,7 @@ Item {
                         globalMax: outputDbMeterModel.globalMax
 
                         upwards: true
-                        dbMin: prv.dbMin
+                        dbMin: root.dbMin
                         areaColor: DynamicsColors.timelineDataFillColor
                         onClicked: {
                             outputDbMeterModel.reset()
@@ -284,15 +286,20 @@ Item {
                 width: 1
                 height: 1
 
+                FontMetrics {
+                    id: fontMetrics
+                    font.family: ui.theme.bodyFont.family
+                    font.pixelSize: ui.theme.bodyFont.pixelSize
+                }
+
                 Repeater {
                     model: prv.dbSteps
 
-                    Text {
-                        y: timeline.y + prv.dbToY(modelData) - 8 // todo font metrics trick
+                    StyledTextLabel {
+                        y: timeline.y + prv.dbToY(modelData) - (fontMetrics.ascent + fontMetrics.descent) / 2
 
                         text: modelData
                         font.pixelSize: 12
-                        color: "black"
                     }
                 }
             }

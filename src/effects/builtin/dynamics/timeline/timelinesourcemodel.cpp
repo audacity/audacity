@@ -40,6 +40,10 @@ void TimelineSourceModel::doInit()
         }
     });
 
+    m_realtimeResumeSubscription = static_cast<RealtimeResumePublisher&>(*instance).Subscribe([this](auto) {
+        emit newDataSequence();
+    });
+
     if (const auto& sampleRate = instance->GetSampleRate(); sampleRate.has_value()) {
         initializeForPlayback(*sampleRate);
     }
