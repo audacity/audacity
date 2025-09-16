@@ -18,7 +18,7 @@ class AbstractDbMeterModel : public AbstractDynamicsEffectInstanceModel
     Q_PROPERTY(double fiveSecMax READ fiveSecMax NOTIFY valueChanged)
 
 public:
-    explicit AbstractDbMeterModel(QObject* parent = nullptr);
+    explicit AbstractDbMeterModel(double defaultValue = 0.0, QObject* parent = nullptr);
 
     Q_INVOKABLE void update();
 
@@ -40,8 +40,8 @@ protected:
 private:
     virtual float latestValue() = 0;
 
-    double m_currentMax = 0;
-    double m_globalMax = 0;
-    double m_fiveSecMax = 0;
+    double m_currentMax;
+    double m_globalMax;
+    double m_fiveSecMax;
 };
 } // namespace au::effects

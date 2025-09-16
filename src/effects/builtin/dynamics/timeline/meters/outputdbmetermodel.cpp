@@ -8,6 +8,11 @@
 #include "libraries/lib-builtin-effects/CompressorInstance.h"
 
 namespace au::effects {
+OutputDbMeterModel::OutputDbMeterModel(QObject* parent)
+    : AbstractDbMeterModel{-100.0, parent}
+{
+}
+
 void OutputDbMeterModel::doInit()
 {
     const auto instance = m_instance.lock();

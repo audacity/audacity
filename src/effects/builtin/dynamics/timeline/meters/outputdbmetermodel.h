@@ -11,6 +11,8 @@ class OutputDbMeterModel : public AbstractDbMeterModel
     Q_OBJECT
 
 public:
+    explicit OutputDbMeterModel(QObject* parent = nullptr);
+
     void doInit() override;
     float latestValue() override;
 };

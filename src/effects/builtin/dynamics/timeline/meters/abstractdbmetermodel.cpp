@@ -18,8 +18,9 @@ constexpr auto ticksPerSec = 1000 / compressorMeterUpdatePeriodMs;
 constexpr auto audioFramesPerTick = audioFramePerSec / ticksPerSec;
 } // namespace
 
-AbstractDbMeterModel::AbstractDbMeterModel(QObject* parent)
-    : AbstractDynamicsEffectInstanceModel{parent}, m_valueQueue{std::make_shared<LockFreeQueue<float> >(audioFramesPerTick)}
+AbstractDbMeterModel::AbstractDbMeterModel(double defaultValue, QObject* parent)
+    : AbstractDynamicsEffectInstanceModel{parent}, m_valueQueue{std::make_shared<LockFreeQueue<float> >(audioFramesPerTick)},
+    m_currentMax{defaultValue}, m_globalMax{defaultValue}, m_fiveSecMax{defaultValue}
 {
 }
 
