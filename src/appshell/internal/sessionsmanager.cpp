@@ -73,6 +73,7 @@ void SessionsManager::restore()
 
 void SessionsManager::reset()
 {
+    removeProjectsUnsavedChanges(configuration()->sessionProjectsPaths());
     configuration()->setSessionProjectsPaths({});
 }
 
@@ -119,4 +120,30 @@ void SessionsManager::addProjectToSession(const io::path_t& projectPath)
     }
 
     configuration()->setSessionProjectsPaths(projects);
+}
+
+void SessionsManager::removeProjectsUnsavedChanges(const muse::io::paths_t& projectsPaths)
+{
+    for (const muse::io::path_t& path : projectsPaths) {
+        removeUnsavedChanges(path);
+    }
+}
+
+void SessionsManager::removeUnsavedChanges(const muse::io::path_t& projectPath)
+{
+    const bool success = au3ProjectCreator()->removeAutosaveDataFromFile(projectPath);
+
+    if (!success) {
+        LOGE() << "[project] failed to remove autosave data for project: " << projectPath;
+    }
+
+    // For newly created projects, also remove the temporary file
+    if (isPathToNewlyCreatedProject(projectPath)) {
+        fileSystem()->remove(projectPath);
+    }
+}
+
+bool SessionsManager::isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const
+{
+    return projectPath == projectConfiguration()->newProjectTemporaryPath();
 }

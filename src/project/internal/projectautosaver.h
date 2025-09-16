@@ -32,6 +32,7 @@
 #include "iprojectconfiguration.h"
 
 #include "../iprojectautosaver.h"
+#include "au3wrap/iau3project.h"
 
 namespace au::project {
 class ProjectAutoSaver : public IProjectAutoSaver, public muse::async::Asyncable
@@ -39,19 +40,16 @@ class ProjectAutoSaver : public IProjectAutoSaver, public muse::async::Asyncable
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<muse::io::IFileSystem> fileSystem;
     muse::Inject<IProjectConfiguration> configuration;
+    muse::Inject<au::au3::IAu3ProjectCreator> au3ProjectCreator;
 
 public:
     ProjectAutoSaver() = default;
 
     void init();
 
-    bool projectHasUnsavedChanges(const muse::io::path_t& projectPath) const override;
     void removeProjectUnsavedChanges(const muse::io::path_t& projectPath) override;
 
-    bool isAutosaveOfNewlyCreatedProject(const muse::io::path_t& projectPath) const override;
-
-    muse::io::path_t projectOriginalPath(const muse::io::path_t& projectAutoSavePath) const override;
-    muse::io::path_t projectAutoSavePath(const muse::io::path_t& projectPath) const override;
+    bool isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const override;
 
 private:
     IAudacityProjectPtr currentProject() const;

@@ -228,15 +228,6 @@ void StartupScenario::restoreLastSession()
     if (result.button() == static_cast<int>(muse::IInteractive::Button::Yes)) {
         sessionsManager()->restore();
     } else {
-        removeProjectsUnsavedChanges(configuration()->sessionProjectsPaths());
         sessionsManager()->reset();
     }
-}
-
-void StartupScenario::removeProjectsUnsavedChanges(const muse::io::paths_t& projectsPaths)
-{
-    //! TODO AU4
-    // for (const io::path_t& path : projectsPaths) {
-    //     projectAutoSaver()->removeProjectUnsavedChanges(path);
-    // }
 }

@@ -3,6 +3,7 @@
 
 #include "../iaudacityproject.h"
 #include "../ithumbnailcreator.h"
+#include "../iprojectconfiguration.h"
 #include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
 #include "au3wrap/iau3project.h"
@@ -51,6 +52,7 @@ class Audacity4Project : public IAudacityProject, public muse::async::Asyncable
     muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
     muse::Inject<IThumbnailCreator> thumbnailCreator;
     muse::Inject<importexport::IImporter> importer;
+    muse::Inject<IProjectConfiguration> configuration;
 
 public:
     Audacity4Project();
@@ -80,6 +82,7 @@ public:
 
     bool needAutoSave() const override;
     void setNeedAutoSave(bool val) override;
+    bool hasUnsavedChanges() override;
 
     muse::Ret save(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
 
@@ -97,8 +100,7 @@ private:
     muse::Ret doLoad(const muse::io::path_t& path, bool forceMode, const std::string& format);
     muse::Ret doImport(const muse::io::path_t& path, bool forceMode);
 
-    muse::Ret saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup = true,
-                          bool createThumbnail = true);
+    muse::Ret saveProject(const muse::io::path_t& path, bool generateBackup = true, bool createThumbnail = true);
     muse::Ret doSave(const muse::io::path_t& path, /*engraving::MscIoMode ioMode,*/ bool generateBackup = true,
                      bool createThumbnail = true);
 

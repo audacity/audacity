@@ -25,8 +25,10 @@
 #include "io/path.h"
 
 #include "modularity/imoduleinterface.h"
+#include "iaudacityproject.h"
 
 namespace au::project {
+// we don't use at the moment 01/09/2025 the project auto saver as we already have the autosave table
 class IProjectAutoSaver : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IProjectAutoSaver)
@@ -34,15 +36,9 @@ class IProjectAutoSaver : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IProjectAutoSaver() = default;
 
-    virtual bool projectHasUnsavedChanges(const muse::io::path_t& projectPath) const = 0;
     virtual void removeProjectUnsavedChanges(const muse::io::path_t& projectPath) = 0;
 
-    virtual bool isAutosaveOfNewlyCreatedProject(const muse::io::path_t& projectPath) const = 0;
-
-    virtual muse::io::path_t projectOriginalPath(const muse::io::path_t& projectAutoSavePath) const = 0;
-    virtual muse::io::path_t projectAutoSavePath(const muse::io::path_t& projectPath) const = 0;
-
-    static inline const std::string AUTOSAVE_SUFFIX = "autosave";
+    virtual bool isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const = 0;
 };
 }
 

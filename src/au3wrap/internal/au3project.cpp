@@ -55,6 +55,25 @@ std::shared_ptr<IAu3Project> Au3ProjectCreator::create() const
     return std::make_shared<Au3ProjectAccessor>();
 }
 
+bool Au3ProjectCreator::removeAutosaveDataFromFile(const muse::io::path_t& projectPath) const
+{
+    // Helper method to remove autosave data from a project file without keeping it open
+    const auto tempProject = create();
+    if (!tempProject) {
+        return false;
+    }
+
+    tempProject->open();
+    auto ret = tempProject->load(projectPath);
+    if (ret) {
+        const bool success = tempProject->removeAutosaveData();
+        tempProject->close();
+        return success;
+    }
+    tempProject->close();
+    return false;
+}
+
 struct au::au3::Au3ProjectData
 {
     std::shared_ptr<Au3Project> project;
@@ -261,7 +280,18 @@ uintptr_t Au3ProjectAccessor::au3ProjectPtr() const
 bool Au3ProjectAccessor::hasUnsavedChanges() const
 {
     const auto& undoManager = UndoManager::Get(m_data->projectRef());
-    return undoManager.UnsavedChanges();
+
+    // Check UndoManager for regular changes
+    if (undoManager.UnsavedChanges()) {
+        return true;
+    }
+
+    // Check for autosave data (recovered projects with modifications)
+    if (hasAutosaveData()) {
+        return true;
+    }
+
+    return false;
 }
 
 void Au3ProjectAccessor::markAsSaved()
@@ -279,4 +309,16 @@ bool Au3ProjectAccessor::isRecovered() const
 muse::async::Notification Au3ProjectAccessor::projectChanged() const
 {
     return m_projectChanged;
+}
+
+bool Au3ProjectAccessor::hasAutosaveData() const
+{
+    const auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
+    return projectFileIO.IsRecovered() && projectFileIO.IsModified();
+}
+
+bool Au3ProjectAccessor::removeAutosaveData()
+{
+    auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
+    return projectFileIO.AutoSaveDelete();
 }
