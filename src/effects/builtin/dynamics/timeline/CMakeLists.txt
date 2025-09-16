@@ -33,6 +33,7 @@ qt_add_qml_module(dynamics_timeline_testapp
     RESOURCE_PREFIX "/qt/qml/"
     QML_FILES
         test/main.qml
+        ClipIndicator.qml
         DynamicsPanel.qml
         meters/DynamicsMeter.qml
 )

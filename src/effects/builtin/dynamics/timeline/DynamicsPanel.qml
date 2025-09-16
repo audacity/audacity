@@ -3,6 +3,7 @@
  */
 import QtQuick
 import QtQuick.Controls
+import Muse.UiComponents
 import Audacity.BuiltinEffects
 
 import "./meters"
@@ -94,7 +95,7 @@ Item {
 
             spacing: 16
 
-            Text {
+            StyledTextLabel {
                 text: qsTrc("effects/compressor", "Show:")
                 anchors.verticalCenter: parent.verticalCenter
 
@@ -120,7 +121,6 @@ Item {
                 delegate: CheckBox {
                     anchors.verticalCenter: parent.verticalCenter
 
-                    spacing: 16
                     text: modelData.text
                     checked: timeline[modelData.property]
                     onClicked: timeline[modelData.property] = !timeline[modelData.property]
@@ -136,10 +136,17 @@ Item {
             Rectangle {
                 id: timelineArea
 
+                // Not sure why, but adding this effect causes the UI not to update properly.
+                // layer.enabled: true
+                // layer.effect: RoundedCornersEffect {
+                //     radius: 3
+                // }
+
                 color: DynamicsColors.backgroundColor
+                border.color: ui.theme.strokeColor
+                border.width: 1
                 width: root.width - meterGrid.width - 24 // TODO font metrics
                 height: prv.timelineHeight
-                radius: 10
                 clip: true
 
                 Repeater {
@@ -151,7 +158,7 @@ Item {
                         width: timeline.width
                         height: 1
                         y: modelData / prv.dbMin * prv.timelineHeight
-                        color: DynamicsColors.gridColor
+                        color: ui.theme.strokeColor
                     }
                 }
 
@@ -164,7 +171,7 @@ Item {
                         width: 1
                         height: timeline.height
                         x: (modelData + prv.duration) / prv.duration * timeline.width
-                        color: DynamicsColors.gridColor
+                        color: ui.theme.strokeColor
                     }
                 }
 
@@ -199,92 +206,73 @@ Item {
                         height: 1
                     }
 
-                    Rectangle {
+                    ClipIndicator {
                         id: clipIndicator
 
                         width: prv.meterWidth
                         height: 10
-                        radius: 3
 
-                        color: outputDbMeterModel.isClipping ? "darkred" : "lightgray"
-
-                        MouseArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: outputDbMeterModel.isClipping = false
+                        isClipping: outputDbMeterModel.isClipping
+                        onClicked: {
+                            outputDbMeterModel.isClipping = false
+                            outputDbMeterModel.reset()
                         }
                     }
                 }
 
-                Rectangle {
-                    id: meterBackground
+                Row {
+                    id: meterRow
 
-                    width: meterRow.width
-                    height: timelineArea.height
-                    color: timelineArea.color
-                    radius: 3
+                    height: prv.timelineHeight
 
-                    Repeater {
-                        id: meterBackgroundGridlines
+                    spacing: prv.meterSpacing
+                    leftPadding: prv.meterSpacing
+                    rightPadding: prv.meterSpacing
 
-                        model: prv.dbSteps
-                        delegate: Rectangle {
-                            width: meterBackground.width
-                            height: 1
-                            y: prv.dbToY(modelData)
+                    DynamicsMeter {
+                        id: compressionMeter
 
-                            color: DynamicsColors.gridColor
+                        CompressionDbMeterModel {
+                            id: compressionDbMeterModel
+                            instanceId: root.instanceId
+                            playState: root.playState
+                        }
+
+                        width: prv.meterWidth
+                        height: parent.height
+
+                        currentMax: compressionDbMeterModel.currentMax
+                        globalMax: compressionDbMeterModel.globalMax
+
+                        upwards: false
+                        dbMin: prv.dbMin
+                        areaColor: DynamicsColors.timelineCompressionDbColor
+                        onClicked: {
+                            compressionDbMeterModel.reset()
                         }
                     }
 
-                    Row {
-                        id: meterRow
+                    DynamicsMeter {
+                        id: outputMeter
 
-                        height: prv.timelineHeight
-                        spacing: prv.meterSpacing
-                        leftPadding: prv.meterSpacing
-                        rightPadding: prv.meterSpacing
-
-                        DynamicsMeter {
-                            id: compressionMeter
-
-                            CompressionDbMeterModel {
-                                id: compressionDbMeterModel
-                                instanceId: root.instanceId
-                            }
-
-                            width: prv.meterWidth
-                            height: parent.height
-
-                            currentMax: compressionDbMeterModel.currentMax
-                            fiveSecMax: compressionDbMeterModel.fiveSecMax
-
-                            upwards: false
-                            dbMin: prv.dbMin
-                            areaColor: DynamicsColors.timelineCompressionDbColorSemiTransparent
-                            lineColor: DynamicsColors.timelineCompressionDbColor
-                            clipIndicatorHeight: clipIndicator.height
+                        OutputDbMeterModel {
+                            id: outputDbMeterModel
+                            instanceId: root.instanceId
+                            playState: root.playState
                         }
 
-                        DynamicsMeter {
-                            id: outputMeter
+                        width: prv.meterWidth
+                        height: parent.height
 
-                            OutputDbMeterModel {
-                                id: outputDbMeterModel
-                                instanceId: root.instanceId
-                            }
+                        currentMax: outputDbMeterModel.currentMax
+                        globalMax: outputDbMeterModel.globalMax
 
-                            width: prv.meterWidth
-                            height: parent.height
-
-                            currentMax: outputDbMeterModel.currentMax
-                            fiveSecMax: outputDbMeterModel.fiveSecMax
-
-                            upwards: true
-                            dbMin: prv.dbMin
-                            areaColor: DynamicsColors.timelineDataFillColorSemiTransparent
-                            lineColor: DynamicsColors.timelineOutputDbLineColor
-                            clipIndicatorHeight: clipIndicator.height
+                        upwards: true
+                        dbMin: prv.dbMin
+                        areaColor: DynamicsColors.timelineDataFillColor
+                        onClicked: {
+                            outputDbMeterModel.reset()
+                            outputDbMeterModel.isClipping = false
                         }
                     }
                 }
