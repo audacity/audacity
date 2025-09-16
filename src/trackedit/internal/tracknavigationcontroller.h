@@ -15,6 +15,11 @@
 #include "trackedit/internal/itracknavigationcontroller.h"
 
 namespace au::trackedit {
+enum class SelectionDirection {
+    Up,
+    Down
+};
+
 class TrackNavigationController : public ITrackNavigationController, public muse::actions::Actionable, public muse::async::Asyncable
 {
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
@@ -33,7 +38,7 @@ public:
     void multiSelectionDown() override;
 
 private:
-    void updateSelectionStart();
+    void updateSelectionStart(SelectionDirection direction);
     void updateTrackSelection(TrackIdList& selectedTracks, const TrackId& previousFocusedTrack);
 
     std::optional<TrackId> m_selectionStart;

@@ -162,7 +162,7 @@ void TrackNavigationController::toggleSelectionOnFocusedTrack()
 
 void TrackNavigationController::multiSelectionUp()
 {
-    updateSelectionStart();
+    updateSelectionStart(SelectionDirection::Up);
 
     au::trackedit::TrackIdList selectedTracks = selectionController()->selectedTracks();
     const au::trackedit::TrackId focusedTrack = selectionController()->focusedTrack();
@@ -173,7 +173,7 @@ void TrackNavigationController::multiSelectionUp()
 
 void TrackNavigationController::multiSelectionDown()
 {
-    updateSelectionStart();
+    updateSelectionStart(SelectionDirection::Down);
 
     const au::trackedit::TrackId focusedTrack = selectionController()->focusedTrack();
     au::trackedit::TrackIdList selectedTracks = selectionController()->selectedTracks();
@@ -182,13 +182,41 @@ void TrackNavigationController::multiSelectionDown()
     updateTrackSelection(selectedTracks, focusedTrack);
 }
 
-void TrackNavigationController::updateSelectionStart()
+void TrackNavigationController::updateSelectionStart(SelectionDirection direction)
 {
     const au::trackedit::TrackId focusedTrack = selectionController()->focusedTrack();
 
     if (!m_selectionStart) {
-        m_selectionStart = focusedTrack;
-        selectionController()->setSelectedTracks({ focusedTrack });
+        const auto orderedTracks = selectionController()->orderedTrackList();
+        const auto selectedTracks = selectionController()->selectedTracks();
+
+        std::vector<TrackId> orderedSelectedTracks;
+        for (const auto& trackId : orderedTracks) {
+            if (muse::contains(selectedTracks, trackId)) {
+                orderedSelectedTracks.push_back(trackId);
+            }
+        }
+
+        if (orderedSelectedTracks.empty()) {
+            return;
+        }
+
+        if (muse::contains(orderedSelectedTracks, focusedTrack)) {
+            const auto& firstTrack = orderedSelectedTracks.front();
+            const auto& lastTrack = orderedSelectedTracks.back();
+
+            if (focusedTrack == firstTrack && direction == SelectionDirection::Down) {
+                m_selectionStart = lastTrack;
+            } else if (focusedTrack == lastTrack && direction == SelectionDirection::Up) {
+                m_selectionStart = firstTrack;
+            } else {
+                m_selectionStart = focusedTrack;
+                selectionController()->setSelectedTracks({ focusedTrack });
+            }
+        } else {
+            m_selectionStart = focusedTrack;
+            selectionController()->setSelectedTracks({ focusedTrack });
+        }
     }
 }
 

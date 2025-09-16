@@ -649,6 +649,16 @@ int Au3SelectionController::trackDistance(const TrackId previous, const TrackId 
     }
 }
 
+TrackIdList Au3SelectionController::orderedTrackList() const
+{
+    TrackIdList trackIds;
+    auto& tracks = Au3TrackList::Get(projectRef());
+    for (const auto& track : tracks) {
+        trackIds.push_back(track->GetId());
+    }
+    return trackIds;
+}
+
 Au3Project& Au3SelectionController::projectRef() const
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
