@@ -45,6 +45,7 @@ BuiltinEffectBase {
             dbStep: 3
             duration: 2
             timelineHeight: knobRow.height
+            needsClipIndicator: false // Clipping with the limiter is impossible.
         }
 
         Rectangle {
