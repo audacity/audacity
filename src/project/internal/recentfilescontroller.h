@@ -64,9 +64,9 @@ private:
     void loadRecentFilesList();
     void removeNonexistentFiles();
     void setRecentFilesList(const RecentFilesList& list, bool saveAndNotify);
-    void saveRecentFilesList();
+    void saveRecentFilesList() const;
 
-    void cleanUpThumbnailCache(const RecentFilesList& files);
+    void cleanUpThumbnailCache(const RecentFilesList& files) const;
 
     mutable bool m_dirty = true;
     mutable RecentFilesList m_recentFilesList;

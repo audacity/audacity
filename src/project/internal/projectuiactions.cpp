@@ -769,7 +769,7 @@ const UiActionList ProjectUiActions::m_actions = {
              )
 };
 
-ProjectUiActions::ProjectUiActions(std::shared_ptr<ProjectActionsController> controller)
+ProjectUiActions::ProjectUiActions(const std::shared_ptr<ProjectActionsController>& controller)
     : m_controller(controller)
 {
 }

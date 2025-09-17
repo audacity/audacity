@@ -29,12 +29,17 @@ import Audacity.AppShell 1.0
 StyledDialogView {
     id: root
 
-    title: qsTrc("appshell/gettingstarted", "Getting started")
+    objectName: "FirstLaunchSetupDialog"
+    title: model.dialogTitle
 
-    contentWidth: 576
-    contentHeight: 384
+    contentWidth: 560
+    contentHeight: 442
 
-    margins: 20
+    modal: true
+    frameless: true
+    closeOnEscape: false
+
+    margins: 0
 
     readonly property Page currentPage: pageLoader.item as Page
 
@@ -46,41 +51,32 @@ StyledDialogView {
         model.load()
     }
 
-    onAboutToClose: function(closeEvent) {
-        if (model.canFinish) {
-            model.finish()
-            return
-        }
-
-        let shouldClose = model.askAboutClosingEarly()
-        if (!shouldClose) {
-            closeEvent.accepted = false
-            return
-        }
-
-        model.finish()
-    }
-
     ColumnLayout {
         id: content
 
         anchors.fill: parent
-        anchors.leftMargin: 28
-        anchors.rightMargin: 28
-        spacing: 24
+        spacing: 0
+        Layout.margins: 0
 
-        PageIndicator {
-            Layout.alignment: Qt.AlignCenter
-            count: model.numberOfPages
-            currentIndex: model.currentPageIndex
+        StyledTextLabel {
+            Layout.preferredHeight: 27 // 28 - 1 for the SeparatorLine
+            Layout.leftMargin: 8
+            Layout.alignment: Qt.AlignLeft
+            text: title
+            font: ui.theme.bodyFont
+        }
+
+        SeparatorLine {
+            Layout.fillWidth: true
+            Layout.margins: 0
+            Layout.preferredHeight: 1
         }
 
         Loader {
             id: pageLoader
 
             Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.topMargin: -8
+            Layout.preferredHeight: 366
             source: model.currentPage.url
 
             onLoaded: {
@@ -104,10 +100,34 @@ StyledDialogView {
             }
         }
 
+        SeparatorLine {
+            Layout.fillWidth: true
+            Layout.margins: 0
+            Layout.preferredHeight: 1
+        }
+
         RowLayout {
             id: buttons
+            Layout.preferredHeight: 47 // 48 - 1 for the SeparatorLine
 
-            spacing: 12
+            Layout.fillWidth: true
+            Layout.leftMargin: 12
+            Layout.rightMargin: 12
+            Layout.topMargin: 9 // 10 - 1 for the SeparatorLine
+            Layout.bottomMargin: 10
+            spacing: 8
+
+            StyledTextLabel {
+                Layout.topMargin: 6
+                Layout.bottomMargin: 6
+                Layout.alignment: Qt.AlignLeft
+                text: model.formatPageProgress(model.currentPageIndex + 1, model.numberOfPages)
+                font: ui.theme.bodyFont
+            }
+
+            Item {
+                Layout.fillWidth: true // spacer to push buttons to the right
+            }
 
             property var lastPressedButton: null
             property var activeButton: {
@@ -132,8 +152,11 @@ StyledDialogView {
                 id: backButton
 
                 Layout.alignment: Qt.AlignLeft
+                Layout.preferredHeight: 28
+                Layout.preferredWidth: 80
 
-                text: qsTrc("global", "Back")
+                text: model.backButtonText
+                enabled: model.canGoBack
                 visible: model.canGoBack
 
                 navigation.name: "BackButton"
@@ -148,6 +171,8 @@ StyledDialogView {
                 }
 
                 onClicked: {
+                    if (!enabled)
+                        return
                     if (Boolean(buttons.lastPressedButton)) {
                         buttons.lastPressedButton.navigation.accessible.ignored = true
                     }
@@ -158,14 +183,12 @@ StyledDialogView {
                 }
             }
 
-            Item {
-                Layout.fillWidth: true // spacer
-            }
-
             FlatButton {
                 id: extraButton
 
                 Layout.alignment: Qt.AlignRight
+                Layout.preferredHeight: 28
+                Layout.preferredWidth: 80
 
                 visible: root.currentPage ? Boolean(root.currentPage.extraButtonTitle) : false
                 accentButton: true
@@ -187,9 +210,10 @@ StyledDialogView {
                 id: nextStepButton
 
                 Layout.alignment: Qt.AlignRight
+                Layout.preferredHeight: 28
+                Layout.preferredWidth: 80
 
-                text: model.canFinish ? qsTrc("appshell/gettingstarted", "Finish")
-                                      : qsTrc("global", "Next")
+                text: model.canFinish ? model.doneButtonText : model.nextButtonText
                 accentButton: !extraButton.visible
 
                 navigation.name: "NextButton"

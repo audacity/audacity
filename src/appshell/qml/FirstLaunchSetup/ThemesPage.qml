@@ -31,10 +31,17 @@ import "../shared"
 Page {
     id: root
 
-    title: qsTrc("appshell/gettingstarted", "Welcome to Audacity 4")
-    explanation: qsTrc("appshell/gettingstarted", "Let’s get started by choosing a theme.")
+    title: model.pageTitle
 
-    titleContentSpacing: model.isFollowSystemThemeAvailable ? 24 : 28
+    property NavigationPanel checkboxesPanel: NavigationPanel {
+        name: "CheckboxesPanel"
+        enabled: root.enabled && root.visible
+        section: root.navigationSection
+        order: root.navigationStartRow + 2
+        direction: NavigationPanel.Vertical
+        accessible.name: model.checkboxesPanelAccessibleName
+        accessible.description: model.checkboxesPanelAccessibleDescription
+    }
 
     ThemesPageModel {
         id: model
@@ -44,68 +51,123 @@ Page {
         model.load()
     }
 
+    // Page-level accessibility information
+    AccessibleItem {
+        id: pageAccessibleInfo
+
+        accessibleParent: root.navigationSection.accessible
+        visualItem: root
+        role: MUAccessible.Panel
+
+        name: root.title
+        description: model.pageDescription
+    }
+
     ColumnLayout {
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
-        spacing: model.isFollowSystemThemeAvailable ? 20 : 28
 
-        CheckBox {
-            visible: model.isFollowSystemThemeAvailable
-            Layout.alignment: Qt.AlignCenter
-
-            text: qsTrc("appshell/gettingstarted", "Follow system theme")
-
-            checked: model.isFollowSystemTheme
-
-            navigation.name: "FollowSystemThemeBox"
-            navigation.order: 1
-            navigation.panel: NavigationPanel {
-                name: "FollowSystemThemeBox"
-                enabled: parent.enabled && parent.visible
-                section: root.navigationSection
-                order: root.navigationStartRow + 1
-                direction: NavigationPanel.Horizontal
-            }
-
-            onClicked: {
-                model.isFollowSystemTheme = !checked
-            }
-        }
+        spacing: 24
 
         ThemeSamplesList {
             id: themeSamplesList
+
             Layout.alignment: Qt.AlignCenter
 
             themes: model.highContrastEnabled ? model.highContrastThemes : model.generalThemes
             currentThemeCode: model.currentThemeCode
-
-            spacing: 48
+            spacing: 24
 
             navigationPanel.section: root.navigationSection
-            navigationPanel.order: root.navigationStartRow + 2
+            navigationPanel.order: root.navigationStartRow + 1
+            navigationPanel.accessible.name: model.themeSelectionAccessibleName
+            navigationPanel.accessible.description: model.themeSelectionAccessibleDescription
 
-            onThemeChangeRequested: function(newThemeCode) {
+            onThemeChangeRequested: function (newThemeCode) {
                 model.currentThemeCode = newThemeCode
             }
         }
 
-        AccentColorsList {
-            id: accentColorsList
+        Column {
+            id: checkboxesColumn
+
             Layout.alignment: Qt.AlignCenter
-            Layout.preferredHeight: Math.max(implicitHeight, highContrastPreferencesHintLabel.implicitHeight)
+
+            height: childrenRect.height
+            spacing: 16
+
+            CheckBox {
+                Layout.alignment: Qt.AlignCenter
+
+                enabled: model.isFollowSystemThemeAvailable
+                text: model.followSystemThemeText
+                checked: model.isFollowSystemTheme
+
+                navigation.name: "FollowSystemThemeBox"
+                navigation.panel: root.checkboxesPanel
+                navigation.row: 0
+                navigation.column: 0
+                navigation.accessible.description: model.followSystemThemeDescription
+
+                onClicked: {
+                    model.isFollowSystemTheme = !checked
+                }
+            }
+
+            CheckBox {
+                Layout.alignment: Qt.AlignCenter
+
+                text: model.enableHighContrastText
+                checked: model.highContrastEnabled
+
+                navigation.name: "EnableHighContrastCheckbox"
+                navigation.panel: root.checkboxesPanel
+                navigation.row: 1
+                navigation.column: 0
+                navigation.accessible.description: model.enableHighContrastDescription
+
+                onClicked: {
+                    model.highContrastEnabled = !checked
+                }
+            }
+        }
+
+        Column {
+            id: accentColorColumn
             visible: !model.highContrastEnabled
 
-            colors: model.accentColors
-            currentColorIndex: model.currentAccentColorIndex
+            height: childrenRect.height
 
-            sampleSize: 20
-            spacing: 4
+            spacing: 6
+            StyledTextLabel {
+                id: accentColorTitleLabel
+                Layout.alignment: Qt.AlignCenter
+                anchors.horizontalCenter: parent.horizontalCenter
 
-            navigationPanel.section: root.navigationSection
-            navigationPanel.order: root.navigationStartRow + 3
+                text: model.accentColorText
+                font: ui.theme.bodyFont
+            }
 
-            onAccentColorChangeRequested: function(newColorIndex) {
-                model.currentAccentColorIndex = newColorIndex
+            AccentColorsList {
+                id: accentColorsList
+
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredHeight: Math.max(implicitHeight, highContrastPreferencesHintLabel.implicitHeight)
+
+                colors: model.accentColors
+                currentColorIndex: model.currentAccentColorIndex
+
+                sampleSize: 22
+                spacing: 6
+
+                navigationPanel.section: root.navigationSection
+                navigationPanel.order: root.navigationStartRow + 3
+                navigationPanel.accessible.name: model.accentColorText
+                navigationPanel.accessible.description: model.accentColorDescription
+
+                onAccentColorChangeRequested: function (newColorIndex) {
+                    model.currentAccentColorIndex = newColorIndex
+                }
             }
         }
 
@@ -113,30 +175,21 @@ Page {
             id: highContrastPreferencesHintLabel
             visible: model.highContrastEnabled
             Layout.fillWidth: true
+            Layout.topMargin: 15
             Layout.preferredHeight: Math.max(implicitHeight, accentColorsList.implicitHeight)
-            text: qsTrc("appshell/gettingstarted", "Further high contrast settings are available in Preferences.")
+            text: model.highContrastPreferencesHint
         }
 
-        CheckBox {
-            Layout.alignment: Qt.AlignCenter
+        // Accessibility group for the entire page content
+        AccessibleItem {
+            id: contentAccessibleGroup
 
-            text: qsTrc("appshell/gettingstarted", "Enable high contrast")
-            checked: model.highContrastEnabled
+            accessibleParent: pageAccessibleInfo
+            visualItem: root
+            role: MUAccessible.Group
 
-            navigation.name: "EnableHighContrastCheckbox"
-            navigation.order: 1
-            navigation.panel: NavigationPanel {
-                name: "EnableHighContrast"
-                enabled: parent.enabled && parent.visible
-                section: root.navigationSection
-                order: root.navigationStartRow + 4
-                direction: NavigationPanel.Horizontal
-            }
-            navigation.accessible.description: highContrastPreferencesHintLabel.text
-
-            onClicked: {
-                model.highContrastEnabled = !checked
-            }
+            name: model.themeConfigurationText
+            description: model.formatThemeConfigurationDescription()
         }
     }
 }

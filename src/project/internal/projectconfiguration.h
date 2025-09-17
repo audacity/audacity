@@ -9,7 +9,7 @@
 #include "../iprojectconfiguration.h"
 
 namespace au::project {
-class ProjectConfiguration : public IProjectConfiguration
+class ProjectConfiguration final : public IProjectConfiguration
 {
     muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
 

@@ -52,7 +52,7 @@ bool ThemesPageModel::isFollowSystemTheme() const
     return uiConfiguration()->isFollowSystemTheme().val;
 }
 
-void ThemesPageModel::setFollowSystemTheme(bool enabled)
+void ThemesPageModel::setFollowSystemTheme(const bool enabled)
 {
     if (enabled == isFollowSystemTheme()) {
         return;
@@ -97,7 +97,7 @@ bool ThemesPageModel::highContrastEnabled() const
     return uiConfiguration()->isHighContrast();
 }
 
-void ThemesPageModel::setHighContrastEnabled(bool enabled)
+void ThemesPageModel::setHighContrastEnabled(const bool enabled)
 {
     if (highContrastEnabled() == enabled) {
         return;
@@ -134,7 +134,7 @@ QStringList ThemesPageModel::accentColors() const
 int ThemesPageModel::currentAccentColorIndex() const
 {
     QStringList allColors = accentColors();
-    QString color = currentTheme().values[ACCENT_COLOR].toString().toLower();
+    const QString color = currentTheme().values[ACCENT_COLOR].toString().toLower();
 
     for (int i = 0; i < static_cast<int>(allColors.size()); ++i) {
         if (allColors[i].toLower() == color) {
@@ -145,7 +145,7 @@ int ThemesPageModel::currentAccentColorIndex() const
     return -1;
 }
 
-void ThemesPageModel::setCurrentAccentColorIndex(int index)
+void ThemesPageModel::setCurrentAccentColorIndex(const int index)
 {
     if (index < 0 || index >= accentColors().size()) {
         return;
@@ -155,6 +155,107 @@ void ThemesPageModel::setCurrentAccentColorIndex(int index)
         return;
     }
 
-    QColor color = accentColors().at(index);
+    const QColor color = accentColors().at(index);
     uiConfiguration()->setCurrentThemeStyleValue(ThemeStyleKey::ACCENT_COLOR, muse::Val(color));
+}
+
+QString ThemesPageModel::pageTitle()
+{
+    return muse::qtrc("appshell/gettingstarted", "Select a theme");
+}
+
+QString ThemesPageModel::pageDescription()
+{
+    return muse::qtrc("appshell/gettingstarted", "Choose your preferred theme, follow system theme option, and accent color");
+}
+
+QString ThemesPageModel::checkboxesPanelAccessibleName()
+{
+    return muse::qtrc("appshell/gettingstarted", "Theme options");
+}
+
+QString ThemesPageModel::checkboxesPanelAccessibleDescription()
+{
+    return muse::qtrc("appshell/gettingstarted", "Additional theme configuration options");
+}
+
+QString ThemesPageModel::themeSelectionAccessibleName()
+{
+    return muse::qtrc("appshell/gettingstarted", "Theme selection");
+}
+
+QString ThemesPageModel::themeSelectionAccessibleDescription()
+{
+    return muse::qtrc("appshell/gettingstarted", "Choose between light, dark, or system theme");
+}
+
+QString ThemesPageModel::followSystemThemeText()
+{
+    return muse::qtrc("appshell/gettingstarted", "Follow system theme");
+}
+
+QString ThemesPageModel::followSystemThemeDescription()
+{
+    return muse::qtrc("appshell/gettingstarted", "When enabled, the theme will automatically match your system's theme setting");
+}
+
+QString ThemesPageModel::enableHighContrastText()
+{
+    return muse::qtrc("appshell/gettingstarted", "Enable high-contrast");
+}
+
+QString ThemesPageModel::enableHighContrastDescription() const
+{
+    //: here %1 represent the written text for the high contrast preferences hint "Further options for high contrast mode can be found in Preferences"
+    return muse::qtrc("appshell/gettingstarted", "Enable high contrast mode for better visibility. %1").arg(highContrastPreferencesHint());
+}
+
+QString ThemesPageModel::accentColorText()
+{
+    return muse::qtrc("project", "Accent color");
+}
+
+QString ThemesPageModel::accentColorDescription()
+{
+    return muse::qtrc("appshell/gettingstarted", "Choose an accent color for the interface");
+}
+
+QString ThemesPageModel::highContrastPreferencesHint()
+{
+    return muse::qtrc("appshell/gettingstarted", "Further options for high contrast mode can be found in Preferences");
+}
+
+QString ThemesPageModel::themeConfigurationText()
+{
+    return muse::qtrc("appshell/gettingstarted", "Theme configuration");
+}
+
+QString ThemesPageModel::formatThemeConfigurationDescription() const
+{
+    QString themeName;
+    if (currentThemeCode() == "light") {
+        themeName = muse::qtrc("appshell/gettingstarted", "Light");
+    } else if (currentThemeCode() == "dark") {
+        themeName = muse::qtrc("appshell/gettingstarted", "Dark");
+    } else {
+        themeName = muse::qtrc("appshell/gettingstarted", "System");
+    }
+
+    //: %1 is the current theme name (Light, Dark, or System)
+    QString baseDesc = muse::qtrc("appshell/gettingstarted", "Current theme: %1").arg(themeName);
+
+    if (isFollowSystemTheme()) {
+        //: %1 is the base description with current theme
+        baseDesc = muse::qtrc("appshell/gettingstarted", "%1. Following system theme").arg(baseDesc);
+    }
+
+    if (highContrastEnabled()) {
+        //: %1 is the base description with current theme and system theme status
+        baseDesc = muse::qtrc("appshell/gettingstarted", "%1. High contrast enabled").arg(baseDesc);
+    } else {
+        //: %1 is the base description with current theme and system theme status
+        baseDesc = muse::qtrc("appshell/gettingstarted", "%1. Accent color selected").arg(baseDesc);
+    }
+
+    return baseDesc;
 }

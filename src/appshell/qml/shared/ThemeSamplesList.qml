@@ -32,14 +32,14 @@ ListView {
     property alias themes: root.model
     property string currentThemeCode
 
-    currentIndex: model.findIndex((theme) => theme.codeKey === currentThemeCode)
+    currentIndex: model.findIndex(theme => theme.codeKey === currentThemeCode)
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "ThemeSamplesList"
         enabled: root.enabled && root.visible
         direction: NavigationPanel.Horizontal
 
-        onNavigationEvent: function(event) {
+        onNavigationEvent: function (event) {
             if (event.type === NavigationEvent.AboutActive) {
                 event.setData("controlIndex", [navigationRow, navigationColumnStart + root.currentIndex])
             }
@@ -52,8 +52,8 @@ ListView {
 
     signal themeChangeRequested(var newThemeCode)
 
-    readonly property int sampleWidth: 112
-    readonly property int sampleHeight: 120
+    readonly property int sampleWidth: 88
+    readonly property int sampleHeight: 98
 
     implicitWidth: count * sampleWidth + (count - 1) * spacing
     height: contentHeight
@@ -62,13 +62,13 @@ ListView {
     orientation: Qt.Horizontal
     interactive: false
 
-    spacing: 64
+    spacing: 24
 
     delegate: Column {
         width: sampleWidth
         height: sampleHeight
 
-        spacing: 16
+        spacing: 10
 
         ThemeSample {
             theme: modelData
@@ -87,6 +87,17 @@ ListView {
             navigation.panel: root.navigationPanel
             navigation.row: root.navigationRow
             navigation.column: root.navigationColumnStart + model.index
+            //: %1 is the theme name (e.g. "Light", "Dark")
+            navigation.accessible.name: qsTrc("appshell/gettingstarted", "%1 theme").arg(modelData.title)
+            navigation.accessible.description: {
+                //: %1 is the theme name (e.g. "Light", "Dark")
+                var desc = qsTrc("appshell/gettingstarted", "Select %1 theme").arg(modelData.title)
+                if (checked) {
+                    //: %1 is the base description with theme selection
+                    desc = qsTrc("appshell/gettingstarted", "%1. Currently selected").arg(desc)
+                }
+                return desc
+            }
 
             onToggled: {
                 root.themeChangeRequested(modelData.codeKey)

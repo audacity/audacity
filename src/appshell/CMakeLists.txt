@@ -61,6 +61,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/firstlaunchsetupmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/themespagemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/themespagemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/clipvisualizationpagemodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/clipvisualizationpagemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/workspacelayoutpagemodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/workspacelayoutpagemodel.h
 
     # TODO AU4
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencesmodel.cpp

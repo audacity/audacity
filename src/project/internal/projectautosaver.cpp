@@ -58,7 +58,7 @@ void ProjectAutoSaver::init()
     update();
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
-        if (auto project = currentProject()) {
+        if (const auto project = currentProject()) {
             if (project->isNewlyCreated() && !project->isImported()) {
                 // Autosave newly created projects to enable session restoration
                 Ret ret = project->save(configuration()->newProjectTemporaryPath(), SaveMode::AutoSave);

@@ -98,7 +98,7 @@ private:
     void setPath(const muse::io::path_t& path);
 
     muse::Ret doLoad(const muse::io::path_t& path, bool forceMode, const std::string& format);
-    muse::Ret doImport(const muse::io::path_t& path, bool forceMode);
+    muse::Ret doImport(const muse::io::path_t& path, bool forceMode) const;
 
     muse::Ret saveProject(const muse::io::path_t& path, bool generateBackup = true, bool createThumbnail = true);
     muse::Ret doSave(const muse::io::path_t& path, /*engraving::MscIoMode ioMode,*/ bool generateBackup = true,

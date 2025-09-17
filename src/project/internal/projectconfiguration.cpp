@@ -57,7 +57,7 @@ muse::ByteArray ProjectConfiguration::compatRecentFilesData() const
 {
     std::string data = muse::settings()->value(COMPAT_RECENT_FILES_DATA).toString();
 
-    return muse::ByteArray(data.data(), data.size());
+    return { data.data(), data.size() };
 }
 
 muse::io::path_t ProjectConfiguration::userProjectsPath() const
@@ -113,11 +113,12 @@ muse::io::path_t ProjectConfiguration::defaultSavingFilePath(IAudacityProjectPtr
     muse::io::path_t filename;
     std::string theSuffix = suffix;
 
-    muse::io::path_t projectPath = project->path();
+    const muse::io::path_t projectPath = project->path();
     //! TODO AU4
     // bool isLocalProject = !project->isCloudProject();
+    // NOLINTNEXTLINE
     bool isLocalProject = true;
-
+    // NOLINTNEXTLINE
     if (isLocalProject) {
         if (project->isNewlyCreated()) {
             if (muse::io::isAbsolute(projectPath)) {

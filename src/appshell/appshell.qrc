@@ -18,13 +18,18 @@
         <file>qml/shared/internal/ThemeSample.qml</file>
         <file>qml/FirstLaunchSetup/FirstLaunchSetupDialog.qml</file>
         <file>qml/FirstLaunchSetup/Page.qml</file>
+        <file>qml/FirstLaunchSetup/DoublePage.qml</file>
         <file>qml/FirstLaunchSetup/ThemesPage.qml</file>
+        <file>qml/FirstLaunchSetup/ClipVisualizationPage.qml</file>
+        <file>qml/FirstLaunchSetup/WorkspaceLayoutPage.qml</file>
         <file>qml/FirstLaunchSetup/PlaybackPage.qml</file>
         <file>qml/FirstLaunchSetup/TutorialsPage.qml</file>
         <file>qml/FirstLaunchSetup/UnderConstructionPage.qml</file>
         <file>qml/FirstLaunchSetup/resources/MuseSounds.png</file>
         <file>qml/FirstLaunchSetup/resources/VideoTutorials.png</file>
         <file>qml/FirstLaunchSetup/resources/UnderConstruction.png</file>
+        <file>qml/FirstLaunchSetup/resources/ClipVisuals_ClassicClips.png</file>
+        <file>qml/FirstLaunchSetup/resources/ClipVisuals_ColorfulClips.png</file>
         <file>qml/Preferences/PreferencesPage.qml</file>
         <file>qml/Preferences/GeneralPreferencesPage.qml</file>
         <file>qml/Preferences/UpdatePreferencesPage.qml</file>

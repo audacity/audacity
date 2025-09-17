@@ -168,32 +168,32 @@ void ProjectActionsController::newProject()
 void ProjectActionsController::openProject(const muse::actions::ActionData& args)
 {
     UNUSED(args);
-    QUrl url = !args.empty() ? args.arg<QUrl>(0) : QUrl();
-    QString displayNameOverride = args.count() >= 2 ? args.arg<QString>(1) : QString();
+    const QUrl url = !args.empty() ? args.arg<QUrl>(0) : QUrl();
+    const QString displayNameOverride = args.count() >= 2 ? args.arg<QString>(1) : QString();
 
     Ret ret = openProject(ProjectFile(url, displayNameOverride));
 }
 
 void ProjectActionsController::importFile()
 {
-    muse::io::path_t askedPath = selectImportFile();
-    IAudacityProjectPtr project = globalContext()->currentProject();
+    const muse::io::path_t askedPath = selectImportFile();
+    const IAudacityProjectPtr project = globalContext()->currentProject();
     project->import(askedPath);
 }
 
-bool ProjectActionsController::isUrlSupported(const QUrl& url) const
+bool ProjectActionsController::isUrlSupported([[maybe_unused]] const QUrl& url) const
 {
     //! TODO AU4
     return false;
 }
 
-bool ProjectActionsController::isFileSupported(const muse::io::path_t& path) const
+bool ProjectActionsController::isFileSupported([[maybe_unused]] const muse::io::path_t& path) const
 {
     //! TODO AU4
     return false;
 }
 
-bool ProjectActionsController::closeOpenedProject(bool quitApp)
+bool ProjectActionsController::closeOpenedProject(const bool quitApp)
 {
     if (m_isProjectClosing) {
         return false;
@@ -204,7 +204,7 @@ bool ProjectActionsController::closeOpenedProject(bool quitApp)
         m_isProjectClosing = false;
     };
 
-    IAudacityProjectPtr project = globalContext()->currentProject();
+    const IAudacityProjectPtr project = globalContext()->currentProject();
     if (!project) {
         return true;
     }
