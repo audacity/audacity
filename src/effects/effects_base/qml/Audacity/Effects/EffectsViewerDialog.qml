@@ -80,6 +80,7 @@ EffectStyledDialogView {
                 color: ui.theme.backgroundPrimaryColor
 
                 Column {
+                    id: presetsBarContainer
 
                     anchors.fill: parent
                     anchors.margins: prv.panelMargins
@@ -100,12 +101,16 @@ EffectStyledDialogView {
 
                         visible: prv.showPresets
                     }
+                }
 
-                    SeparatorLine {
-                        id: separator
+                SeparatorLine {
+                    id: separator
 
-                        visible: effectFamily == EffectFamily.Builtin && prv.showPresets
-                    }
+                    anchors.top: presetsBarContainer.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    visible: effectFamily == EffectFamily.Builtin && prv.showPresets
                 }
             }
         }
