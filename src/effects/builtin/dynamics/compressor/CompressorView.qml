@@ -41,6 +41,7 @@ DynamicsEffectBase {
 
             instanceId: compressor.instanceId
             playState: root.playState
+            gridColor: root.gridColor
         }
 
         Rectangle {
@@ -159,9 +160,11 @@ DynamicsEffectBase {
                 CompressionCurve {
                     id: compressionCurve
 
-                    model: compressor
                     anchors.bottom: leftGrid.bottom
                     availableHeight: leftGrid.height
+
+                    model: compressor
+                    gridColor: root.gridColor
                 }
             }
         }

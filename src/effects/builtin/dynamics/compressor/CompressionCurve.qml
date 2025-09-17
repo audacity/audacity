@@ -8,6 +8,7 @@ Item {
 
     property alias model: painter.model
     required property int availableHeight
+    required property color gridColor
 
     function requestPaint() {
         painter.requestPaint()
@@ -73,7 +74,7 @@ Item {
 
                     width: 1
                     height: background.height + prv.tickLength
-                    color: ui.theme.strokeColor
+                    color: root.gridColor
                 }
             }
         }
@@ -99,7 +100,7 @@ Item {
 
                     width: background.width + prv.tickLength
                     height: 1
-                    color: ui.theme.strokeColor
+                    color: root.gridColor
                 }
             }
         }
