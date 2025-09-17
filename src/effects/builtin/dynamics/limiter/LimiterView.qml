@@ -5,7 +5,6 @@ import Audacity.Effects
 import Audacity.ProjectScene
 import Audacity.BuiltinEffects
 
-import "../../common"
 import "../timeline"
 
 BuiltinEffectBase {
