@@ -1,7 +1,7 @@
 module Audacity.BuiltinEffects
 BuiltinEffectViewer 1.0 BuiltinEffectViewer.qml
 BuiltinEffectBase 1.0 BuiltinEffectBase.qml
-singleton DynamicsColors 1.0 DynamicsColors.qml
+DynamicsEffectBase 1.0 DynamicsEffectBase.qml
 SettingKnob 1.0 SettingKnob.qml
 BigParameterKnob 1.0 BigParameterKnob.qml
 ParameterKnob 1.0 ParameterKnob.qml

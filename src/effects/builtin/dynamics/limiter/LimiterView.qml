@@ -7,7 +7,7 @@ import Audacity.BuiltinEffects
 
 import "../timeline"
 
-BuiltinEffectBase {
+DynamicsEffectBase {
     id: root
 
     property string title: qsTrc("effects/limiter", "Limiter")
@@ -24,11 +24,6 @@ BuiltinEffectBase {
 
     Component.onCompleted: {
         limiter.init()
-        playStateModel.init()
-    }
-
-    DynamicsPlayStateModel {
-        id: playStateModel
     }
 
     Column {
@@ -39,7 +34,7 @@ BuiltinEffectBase {
             visible: !root.usedDestructively
 
             instanceId: limiter.instanceId
-            playState: playStateModel.playState
+            playState: root.playState
             dbMin: -12
             dbStep: 3
             duration: 2

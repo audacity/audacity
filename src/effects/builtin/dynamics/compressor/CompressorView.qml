@@ -9,7 +9,7 @@ import Audacity.BuiltinEffects
 
 import "../timeline"
 
-BuiltinEffectBase {
+DynamicsEffectBase {
     id: root
 
     property string title: qsTrc("effects/compressor", "Compressor")
@@ -30,23 +30,17 @@ BuiltinEffectBase {
 
     Component.onCompleted: {
         compressor.init()
-        playStateModel.init()
     }
 
     Column {
         id: rootColumn
 
-        DynamicsPlayStateModel {
-            id: playStateModel
-        }
-
         DynamicsPanel {
-            id: timeline
             width: root.width
             visible: !root.usedDestructively
 
             instanceId: compressor.instanceId
-            playState: playStateModel.playState
+            playState: root.playState
         }
 
         Rectangle {
