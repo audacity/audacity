@@ -17,7 +17,7 @@ using namespace muse::actions;
 
 static UiActionList STATIC_ACTIONS = {
     UiAction("automation",
-             au::context::UiCtxProjectOpened,
+             au::context::UiCtxUnknown,
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Automation"),
              TranslatableString("action", "Automation"),
@@ -31,7 +31,7 @@ static UiActionList STATIC_ACTIONS = {
              IconCode::Code::SPLIT_TOOL
              ),
     UiAction("zoom",
-             au::context::UiCtxProjectOpened,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Zoom toggle"),
              TranslatableString("action", "Zoom toggle"),
@@ -294,13 +294,13 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "rewind-end", true },
             { "toggle-loop-region", true },
             { "", true },
-            //{ "automation", true },
+            { "automation", true },
             { "split-tool", true },
             { "zoom-in", true },
             { "zoom-out", true },
             { "zoom-to-selection", true },
             { "zoom-to-fit-project", true },
-            //{ "zoom", true },
+            { "zoom", true },
             { "", true },
             // { "spectral-editing", false },
             // { "spectral-box-select", false },
