@@ -2,11 +2,13 @@
     <qresource prefix="/">
         <file>qml/Audacity/BuiltinEffects/qmldir</file>
         <file>qml/Audacity/BuiltinEffects/BuiltinEffectViewer.qml</file>
-        <file>common/BuiltinEffectBase.qml</file>
-        <file>common/SliderWithTextInput.qml</file>
-        <file>common/ParameterKnob.qml</file>
-        <file>common/BigParameterKnob.qml</file>
-        <file>common/SettingKnob.qml</file>
+        <file>qml/Audacity/BuiltinEffects/DynamicsEffectBase.qml</file>
+        <file>qml/Audacity/BuiltinEffects/BuiltinEffectBase.qml</file>
+        <file>qml/Audacity/BuiltinEffects/SliderWithTextInput.qml</file>
+        <file>qml/Audacity/BuiltinEffects/ParameterKnob.qml</file>
+        <file>qml/Audacity/BuiltinEffects/BigParameterKnob.qml</file>
+        <file>qml/Audacity/BuiltinEffects/SettingKnob.qml</file>
+
         <file>amplify/AmplifyView.qml</file>
         <file>clickremoval/ClickRemovalView.qml</file>
         <file>loudness/NormalizeLoudnessView.qml</file>
