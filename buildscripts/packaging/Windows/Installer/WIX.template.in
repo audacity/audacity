@@ -109,33 +109,8 @@
             <!-- Extend to the "open with" list + Win7 jump menu pinning  -->
             <RegistryKey Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\Applications\$(var.ExeKey)">
                 <RegistryKey Key="SupportedTypes">
-                    <RegistryValue Name=".mscz" Value="" Type="string" />
-                    <RegistryValue Name=".mscx" Value="" Type="string" />
-                    <RegistryValue Name=".mscs" Value="" Type="string" />
-                    <RegistryValue Name=".xml" Value="" Type="string" />
-                    <RegistryValue Name=".musicxml" Value="" Type="string" />
-                    <RegistryValue Name=".mxl" Value="" Type="string" />
-                    <RegistryValue Name=".mei" Value="" Type="string" />
-                    <RegistryValue Name=".cap" Value="" Type="string" />
-                    <RegistryValue Name=".capx" Value="" Type="string" />
-                    <RegistryValue Name=".scw" Value="" Type="string" />
-                    <RegistryValue Name=".bww" Value="" Type="string" />
-                    <RegistryValue Name=".mid" Value="" Type="string" />
-                    <RegistryValue Name=".midi" Value="" Type="string" />
-                    <RegistryValue Name=".kar" Value="" Type="string" />
-                    <RegistryValue Name=".ove" Value="" Type="string" />
-                    <RegistryValue Name=".sgu" Value="" Type="string" />
-                    <RegistryValue Name=".mgu" Value="" Type="string" />
-                    <RegistryValue Name=".md" Value="" Type="string" />
-                    <RegistryValue Name=".gtp" Value="" Type="string" />
-                    <RegistryValue Name=".gp3" Value="" Type="string" />
-                    <RegistryValue Name=".gp4" Value="" Type="string" />
-                    <RegistryValue Name=".gp5" Value="" Type="string" />
-                    <RegistryValue Name=".gpx" Value="" Type="string" />
-                    <RegistryValue Name=".gp" Value="" Type="string" />
-                    <RegistryValue Name=".ptb" Value="" Type="string" />
-                    <RegistryValue Name=".sf2" Value="" Type="string" />
-                    <RegistryValue Name=".sf3" Value="" Type="string" />
+                    <RegistryValue Name=".aup4" Value="" Type="string" />
+                    <RegistryValue Name=".aup3" Value="" Type="string" />
                 </RegistryKey>
 
                 <RegistryValue Name="FriendlyAppName" Value="$(var.ProdName)" Type="string" />
@@ -145,7 +120,6 @@
 
             <!-- Register ProgIDs -->
             <!-- Instead of using WiX's/MSI's ProgId functionality, we use the registry directly for more control -->
-            <!-- MSCZ -->
             <RegistryKey Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\Audacity.aup4.$(var.ProgIdSuffix)">
                 <RegistryValue Value="Audacity File" Type="string" />
                 <RegistryValue Key="DefaultIcon" Value="[INSTALL_ROOT]bin\$(var.ExeName),1" Type="string" />
@@ -155,7 +129,7 @@
             <RegistryValue Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\Audacity.aup4\CurVer" Value="Audacity.aup4.$(var.ProgIdSuffix)" Type="string" />
             <?endif?>
 
-            <RegistryKey Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\.mscz">
+            <RegistryKey Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\.aup4">
                 <?ifndef MUSE_APP_IS_PRERELEASE?>
                 <RegistryValue Value="Audacity.aup4.$(var.ProgIdSuffix)" Type="string" />
                 <?endif?>
