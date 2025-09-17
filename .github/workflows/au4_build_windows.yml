@@ -18,6 +18,11 @@ on:
         description: 'Upload symbols and dumps to Sentry (choose a project): audacity-4(default for stable build), audacity-4-sandbox'
         required: false
         default: ''
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   CI_DIR: buildscripts/ci
 

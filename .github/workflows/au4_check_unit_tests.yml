@@ -11,6 +11,10 @@ on:
   schedule:
     - cron: "0 3 * * 4" # Every Thursday night at 03:00 for master branch
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   CI_DIR: buildscripts/ci
 
@@ -18,11 +22,6 @@ jobs:
   run_tests:
     runs-on: ubuntu-22.04
     steps:
-    - name: Cancel Previous Runs
-      uses: styfle/cancel-workflow-action@0.12.1
-      with:
-        access_token: ${{ github.token }}
-
     - name: Clone repository
       uses: actions/checkout@v4
       with:
