@@ -1,0 +1,1 @@
+The source code for the base application in this package is available from the portable applications website mentioned in the help.html file.

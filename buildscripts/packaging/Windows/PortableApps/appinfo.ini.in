@@ -1,0 +1,33 @@
+[Format]
+Type=PortableApps.comFormat
+Version=3.7 # Version of the PortableApps format, not of MuseScore
+
+[Details]
+Name=Audacity Portable
+AppId=AudacityPortable
+Publisher=Audacity BVBA and Others
+Homepage=PortableApps.com/AudacityPortable
+Category=Music & Video
+Description=Audacity: A Digital Audio Editor packaged with a PortableApps.com Launcher as a portable app.
+Language=Multilingual
+
+[License]
+Shareable=true
+OpenSource=true
+Freeware=true
+CommercialUse=true
+
+[Version]
+PackageVersion=@MUSE_APP_VERSION@.1
+DisplayVersion=@MUSE_APP_VERSION@
+
+[Control]
+Icons=1
+Start=MuseScorePortable.exe
+
+[Associations]
+FileTypes=aup4
+Protocols=audacity
+
+[FileTypeIcons]
+aup4=custom
