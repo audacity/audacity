@@ -12,6 +12,7 @@ Item {
     id: root
 
     required property int instanceId
+    required property color gridColor
     property int dbMin: -48
     property int dbStep: 12
     property int timelineHeight: 280
@@ -47,7 +48,7 @@ Item {
             return arr
         }
         readonly property var timeSteps: {
-            const step = 1
+            const step = 0.5
             let arr = []
             for (let t = -duration; t <= 0; t += step) {
                 arr.push(t)
@@ -161,7 +162,7 @@ Item {
                         width: timeline.width
                         height: 1
                         y: modelData / root.dbMin * root.timelineHeight
-                        color: ui.theme.strokeColor
+                        color: root.gridColor
                     }
                 }
 
@@ -174,7 +175,7 @@ Item {
                         width: 1
                         height: timeline.height
                         x: (modelData + root.duration) / root.duration * timeline.width
-                        color: ui.theme.strokeColor
+                        color: root.gridColor
                     }
                 }
 

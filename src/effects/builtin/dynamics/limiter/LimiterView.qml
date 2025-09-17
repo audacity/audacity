@@ -35,6 +35,9 @@ DynamicsEffectBase {
 
             instanceId: limiter.instanceId
             playState: root.playState
+            gridColor: root.gridColor
+
+            // Specific to limiter
             dbMin: -12
             dbStep: 3
             duration: 2
