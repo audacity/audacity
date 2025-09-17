@@ -64,7 +64,6 @@ private:
 
     void removeProjectsUnsavedChanges(const muse::io::paths_t& projectsPaths);
     void removeUnsavedChanges(const muse::io::path_t& projectPath);
-    bool isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const;
 
     muse::io::path_t m_lastOpenedProjectPath;
 };

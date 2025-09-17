@@ -136,8 +136,3 @@ void SessionsManager::removeUnsavedChanges(const muse::io::path_t& projectPath)
         LOGE() << "Failed remove autosave data for project: " << projectPath << ", err: " << ret.toString();
     }
 }
-
-bool SessionsManager::isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const
-{
-    return projectPath == projectConfiguration()->newProjectTemporaryPath();
-}

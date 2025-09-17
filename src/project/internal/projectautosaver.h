@@ -24,15 +24,15 @@
 
 #include <QTimer>
 
-#include "async/asyncable.h"
-
-#include "modularity/ioc.h"
+#include "global/async/asyncable.h"
+#include "global/modularity/ioc.h"
+#include "global/io/ifilesystem.h"
 #include "context/iglobalcontext.h"
-#include "io/ifilesystem.h"
-#include "iprojectconfiguration.h"
 
+#include "iprojectconfiguration.h"
 #include "../iprojectautosaver.h"
 #include "au3wrap/iau3project.h"
+// maybe use the #include "appshell/internal/isessionsmanager.h"
 
 namespace au::project {
 class ProjectAutoSaver : public IProjectAutoSaver, public muse::async::Asyncable
@@ -41,15 +41,12 @@ class ProjectAutoSaver : public IProjectAutoSaver, public muse::async::Asyncable
     muse::Inject<muse::io::IFileSystem> fileSystem;
     muse::Inject<IProjectConfiguration> configuration;
     muse::Inject<au::au3::IAu3ProjectCreator> au3ProjectCreator;
+    // maybe use the muse::Inject<au::appshell::ISessionsManager> sessionsManager;
 
 public:
     ProjectAutoSaver() = default;
 
     void init();
-
-    void removeProjectUnsavedChanges(const muse::io::path_t& projectPath) override;
-
-    bool isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const override;
 
 private:
     IAudacityProjectPtr currentProject() const;
@@ -57,8 +54,6 @@ private:
     void update();
 
     void onTrySave();
-
-    muse::io::path_t projectPath(IAudacityProjectPtr project) const;
 
     QTimer m_timer;
     muse::io::path_t m_lastProjectPathNeedingAutosave;

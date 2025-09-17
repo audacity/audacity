@@ -38,8 +38,6 @@ public:
     MOCK_METHOD(void, setTemporaryDir, (const muse::io::path_t& path), (override));
     MOCK_METHOD(muse::async::Channel<muse::io::path_t>, temporaryDirChanged, (), (const, override));
 
-    MOCK_METHOD(muse::io::path_t, newProjectTemporaryPath, (), (const, override));
-
     MOCK_METHOD(int, homeProjectsPageTabIndex, (), (const, override));
     MOCK_METHOD(void, setHomeProjectsPageTabIndex, (int index), (override));
 

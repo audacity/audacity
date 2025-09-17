@@ -101,11 +101,6 @@ void ProjectConfiguration::setLastSavedProjectsPath(const muse::io::path_t& path
     muse::settings()->setSharedValue(LAST_SAVED_PROJECTS_PATH, muse::Val(path));
 }
 
-muse::io::path_t ProjectConfiguration::newProjectTemporaryPath() const
-{
-    return temporaryDir() + "/new_project" + DEFAULT_FILE_SUFFIX;
-}
-
 muse::io::path_t ProjectConfiguration::defaultSavingFilePath(IAudacityProjectPtr project, const std::string& filenameAddition,
                                                              const std::string& suffix) const
 {
