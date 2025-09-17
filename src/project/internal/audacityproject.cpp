@@ -24,7 +24,10 @@ Audacity4Project::Audacity4Project()
 Ret Audacity4Project::createNew()
 {
     m_au3Project = au3ProjectCreator()->create();
-    m_au3Project->open();
+    if (!m_au3Project->open()) {
+        return muse::make_ret(static_cast<Ret::Code>(au::project::Err::NoProjectError));
+    }
+    setPath(m_au3Project->getFileName());
     m_trackeditProject = trackeditProjectCreator()->create(m_au3Project);
     m_isNewlyCreated = true;
     m_viewState = viewStateCreator()->createViewState(m_au3Project);

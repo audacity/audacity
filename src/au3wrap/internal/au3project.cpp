@@ -55,23 +55,26 @@ std::shared_ptr<IAu3Project> Au3ProjectCreator::create() const
     return std::make_shared<Au3ProjectAccessor>();
 }
 
-bool Au3ProjectCreator::removeAutosaveDataFromFile(const muse::io::path_t& projectPath) const
+muse::Ret Au3ProjectCreator::removeUnsavedData(const muse::io::path_t& projectPath) const
 {
     // Helper method to remove autosave data from a project file without keeping it open
     const auto tempProject = create();
     if (!tempProject) {
-        return false;
+        return muse::make_ret(static_cast<muse::Ret::Code>(au::project::Err::NoProjectError));
     }
-
-    tempProject->open();
     auto ret = tempProject->load(projectPath);
     if (ret) {
-        const bool success = tempProject->removeAutosaveData();
-        tempProject->close();
-        return success;
+        if (tempProject->isTemporary()) {
+            tempProject->close();
+            ret = fileSystem()->remove(projectPath);
+        } else if (tempProject->hasAutosaveData()) {
+            ret = tempProject->removeAutosaveData();
+            tempProject->close();
+        } else {
+            tempProject->close();
+        }
     }
-    tempProject->close();
-    return false;
+    return ret;
 }
 
 struct au::au3::Au3ProjectData
@@ -110,10 +113,10 @@ Au3ProjectAccessor::Au3ProjectAccessor()
     });
 }
 
-void Au3ProjectAccessor::open()
+muse::Ret Au3ProjectAccessor::open()
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
-    projectFileIO.OpenProject();
+    return projectFileIO.OpenProject() ? muse::make_ok() : muse::make_ret(static_cast<muse::Ret::Code>(project::Err::DatabaseError));
 }
 
 muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath)
@@ -323,8 +326,14 @@ bool Au3ProjectAccessor::hasAutosaveData() const
     return projectFileIO.IsRecovered() && projectFileIO.IsModified();
 }
 
-bool Au3ProjectAccessor::removeAutosaveData()
+muse::Ret Au3ProjectAccessor::removeAutosaveData()
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
-    return projectFileIO.AutoSaveDelete();
+    return projectFileIO.AutoSaveDelete() ? muse::make_ok() : muse::make_ret(static_cast<muse::Ret::Code>(project::Err::DatabaseError));
+}
+
+muse::io::path_t Au3ProjectAccessor::getFileName() const
+{
+    auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
+    return projectFileIO.GetFileName().ToStdString();
 }

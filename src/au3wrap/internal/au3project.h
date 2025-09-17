@@ -7,6 +7,9 @@
 
 #include "global/types/ret.h"
 #include "global/async/notification.h"
+#include "global/io/ifilesystem.h"
+#include "global/modularity/ioc.h"
+
 #include "au3wrap/iau3project.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-utility/Observer.h"
@@ -22,12 +25,13 @@ public:
 
     Au3ProjectAccessor();
 
-    void open() override;
-    muse::Ret load(const muse::io::path_t& filePath) override;
+    [[nodiscard]] muse::Ret open() override;
+    [[nodiscard]] muse::Ret load(const muse::io::path_t& filePath) override;
     bool save(const muse::io::path_t& fileName) override;
     void close() override;
 
     std::string title() const override;
+    [[nodiscard]] muse::io::path_t getFileName() const override;
 
     // Save status management
     [[nodiscard]] bool hasUnsavedChanges() const override;
@@ -37,7 +41,7 @@ public:
 
     // Autosave management
     [[nodiscard]] bool hasAutosaveData() const override;
-    bool removeAutosaveData() override;
+    [[nodiscard]] muse::Ret removeAutosaveData() override;
 
     muse::async::Notification projectChanged() const override;
 
@@ -57,9 +61,11 @@ private:
 
 class Au3ProjectCreator : public IAu3ProjectCreator
 {
+    muse::Inject<muse::io::IFileSystem> fileSystem;
+
 public:
 
     std::shared_ptr<IAu3Project> create() const override;
-    bool removeAutosaveDataFromFile(const muse::io::path_t& projectPath) const override;
+    [[nodiscard]] muse::Ret removeUnsavedData(const muse::io::path_t& projectPath) const override;
 };
 }

@@ -19,12 +19,13 @@ public:
 
     virtual ~IAu3Project() = default;
 
-    virtual void open() = 0;
-    virtual muse::Ret load(const muse::io::path_t& filePath) = 0;
+    [[nodiscard]] virtual muse::Ret open() = 0;
+    [[nodiscard]] virtual muse::Ret load(const muse::io::path_t& filePath) = 0;
     virtual bool save(const muse::io::path_t& fileName) = 0;
     virtual void close() = 0;
 
     virtual std::string title() const = 0;
+    [[nodiscard]] virtual muse::io::path_t getFileName() const = 0;
 
     // Save status management
     [[nodiscard]] virtual bool hasUnsavedChanges() const = 0;
@@ -34,7 +35,7 @@ public:
 
     // Autosave management
     [[nodiscard]] virtual bool hasAutosaveData() const = 0;
-    virtual bool removeAutosaveData() = 0;
+    [[nodiscard]] virtual muse::Ret removeAutosaveData() = 0;
 
     virtual muse::async::Notification projectChanged() const = 0;
 
@@ -50,6 +51,6 @@ public:
 
     virtual std::shared_ptr<IAu3Project> create() const = 0;
 
-    virtual bool removeAutosaveDataFromFile(const muse::io::path_t& projectPath) const = 0;
+    [[nodiscard]] virtual muse::Ret removeUnsavedData(const muse::io::path_t& projectPath) const = 0;
 };
 }

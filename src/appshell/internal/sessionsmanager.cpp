@@ -131,15 +131,9 @@ void SessionsManager::removeProjectsUnsavedChanges(const muse::io::paths_t& proj
 
 void SessionsManager::removeUnsavedChanges(const muse::io::path_t& projectPath)
 {
-    const bool success = au3ProjectCreator()->removeAutosaveDataFromFile(projectPath);
-
-    if (!success) {
-        LOGE() << "[project] failed to remove autosave data for project: " << projectPath;
-    }
-
-    // For newly created projects, also remove the temporary file
-    if (isPathToNewlyCreatedProject(projectPath)) {
-        fileSystem()->remove(projectPath);
+    const Ret ret = au3ProjectCreator()->removeUnsavedData(projectPath);
+    if (!ret) {
+        LOGE() << "Failed remove autosave data for project: " << projectPath << ", err: " << ret.toString();
     }
 }
 

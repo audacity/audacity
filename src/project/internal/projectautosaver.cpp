@@ -86,7 +86,7 @@ void ProjectAutoSaver::init()
 
 void ProjectAutoSaver::removeProjectUnsavedChanges(const muse::io::path_t& projectPath)
 {
-    const bool success = au3ProjectCreator()->removeAutosaveDataFromFile(projectPath);
+    const bool success = au3ProjectCreator()->removeUnsavedData(projectPath);
 
     if (!success) {
         LOGE() << "[autosave] failed to remove autosave data for project: " << projectPath;
