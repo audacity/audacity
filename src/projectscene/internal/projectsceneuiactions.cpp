@@ -17,7 +17,7 @@ using namespace muse::actions;
 
 static UiActionList STATIC_ACTIONS = {
     UiAction("automation",
-             au::context::UiCtxProjectOpened,
+             au::context::UiCtxUnknown,
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Automation"),
              TranslatableString("action", "Automation"),
@@ -31,7 +31,7 @@ static UiActionList STATIC_ACTIONS = {
              IconCode::Code::SPLIT_TOOL
              ),
     UiAction("zoom",
-             au::context::UiCtxProjectOpened,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Zoom toggle"),
              TranslatableString("action", "Zoom toggle"),
@@ -58,11 +58,11 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Fit selection to width"),
              IconCode::Code::FIT_SELECTION
              ),
-    UiAction("fit-project",
+    UiAction("zoom-to-fit-project",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
-             TranslatableString("action", "Fit project to width"),
-             TranslatableString("action", "Fit project to width"),
+             TranslatableString("action", "Zoom to fit project"),
+             TranslatableString("action", "Zoom to fit project"),
              IconCode::Code::FIT_PROJECT
              ),
     UiAction("spectral-editing",
@@ -122,14 +122,14 @@ static UiActionList STATIC_ACTIONS = {
              Checkable::Yes
              ),
     UiAction("update-display-while-playing",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Update display while playing"),
              TranslatableString("action", "Update display while playing"),
              Checkable::Yes
              ),
     UiAction("pinned-play-head",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Pinned play head"),
              TranslatableString("action", "Pinned play head"),
@@ -137,7 +137,7 @@ static UiActionList STATIC_ACTIONS = {
              ),
     // clip
     UiAction("clip-properties",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Clip properties"),
              TranslatableString("action", "Show clip properties")
@@ -298,8 +298,8 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "split-tool", true },
             { "zoom-in", true },
             { "zoom-out", true },
-            { "fit-selection", true },
-            { "fit-project", true },
+            { "zoom-to-selection", true },
+            { "zoom-to-fit-project", true },
             { "zoom", true },
             { "", true },
             // { "spectral-editing", false },

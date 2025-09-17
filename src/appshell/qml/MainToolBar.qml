@@ -73,6 +73,8 @@ Item {
         delegate: PageTabButton {
             id: radioButtonDelegate
 
+            enabled: model.enabled
+
             ButtonGroup.group: radioButtonList.radioButtonGroup
 
             spacing: 0

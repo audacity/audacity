@@ -96,8 +96,8 @@ UiActionList STATIC_ACTIONS = {
     UiAction("join",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Merge selected clips"),
-             TranslatableString("action", "Merge selected clips")
+             TranslatableString("action", "Join selected clips"),
+             TranslatableString("action", "Join selected clips")
              ),
     UiAction("disjoin",
              au::context::UiCtxAny,
@@ -302,7 +302,7 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Duplicate clip")
              ),
     UiAction("clip-export",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Export clip"),
              TranslatableString("action", "Export clip")
@@ -339,7 +339,7 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "New stereo track")
              ),
     UiAction("new-label-track",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "New label track"),
              TranslatableString("action", "New label track")

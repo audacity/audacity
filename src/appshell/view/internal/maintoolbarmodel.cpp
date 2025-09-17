@@ -34,13 +34,15 @@ static const QString DEVTOOLS_PAGE("musescore://devtools");
 static const QString TITLE_KEY("title");
 static const QString URI_KEY("uri");
 static const QString IS_TITLE_BOLD_KEY("isTitleBold");
+static const QString ENABLED_KEY("enabled");
 
-inline QVariantMap buildItem(const QString& title, const QString& uri)
+inline QVariantMap buildItem(const QString& title, const QString& uri, const bool enabled)
 {
     QVariantMap item;
     item[TITLE_KEY] = title;
     item[URI_KEY] = uri;
     item[IS_TITLE_BOLD_KEY] = false;
+    item[ENABLED_KEY] = enabled;
 
     return item;
 }
@@ -61,6 +63,7 @@ QVariant MainToolBarModel::data(const QModelIndex& index, int role) const
     case TitleRole: return item[TITLE_KEY];
     case UriRole: return item[URI_KEY];
     case IsTitleBoldRole: return item[IS_TITLE_BOLD_KEY];
+    case EnabledRole: return item[ENABLED_KEY];
     }
 
     return QVariant();
@@ -77,6 +80,7 @@ QHash<int, QByteArray> MainToolBarModel::roleNames() const
         { TitleRole, TITLE_KEY.toUtf8() },
         { UriRole, URI_KEY.toUtf8() },
         { IsTitleBoldRole, IS_TITLE_BOLD_KEY.toUtf8() },
+        { EnabledRole, ENABLED_KEY.toUtf8() },
     };
 
     return roles;
@@ -87,12 +91,12 @@ void MainToolBarModel::load()
     beginResetModel();
 
     m_items.clear();
-    m_items << buildItem(muse::qtrc("appshell", "Home"), HOME_PAGE);
-    m_items << buildItem(muse::qtrc("appshell", "Project"), PROJECT_PAGE);
-    m_items << buildItem(muse::qtrc("appshell", "Publish"), PUBLISH_PAGE);
+    m_items << buildItem(muse::qtrc("appshell", "Home"), HOME_PAGE, true);
+    m_items << buildItem(muse::qtrc("appshell", "Project"), PROJECT_PAGE, true);
+    m_items << buildItem(muse::qtrc("appshell", "Publish"), PUBLISH_PAGE, false);
 
     if (globalConfiguration()->devModeEnabled()) {
-        m_items << buildItem(muse::qtrc("appshell", "DevTools"), DEVTOOLS_PAGE);
+        m_items << buildItem(muse::qtrc("appshell", "DevTools"), DEVTOOLS_PAGE, true);
     }
 
     endResetModel();

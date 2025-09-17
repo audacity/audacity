@@ -26,8 +26,6 @@ MenuItemList CanvasContextMenuModel::makeItems()
         makeMenuItem("new-stereo-track"),
         makeMenuItem("new-label-track"),
         makeSeparator(),
-        makeMenuItem("show-master-track"),
-        makeSeparator(),
         makeMenuItem("select-all"),
         makeMenuItem("clear-selection")
     };

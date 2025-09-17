@@ -67,7 +67,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              TranslatableString("action", "&About MuseScore…")
              ),
     UiAction("about-qt",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "About &Qt…")
              ),
@@ -77,7 +77,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              TranslatableString("action", "About &MusicXML…")
              ),
     UiAction("online-handbook",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Online &handbook"),
              TranslatableString("action", "Open online handbook")
@@ -96,7 +96,7 @@ const UiActionList ApplicationUiActions::m_actions = {
 
     // Docking
     UiAction("dock-restore-default-layout",
-             au::context::UiCtxAny,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Restore the &default layout"),
              TranslatableString("action", "Restore the default layout")
@@ -175,7 +175,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              Checkable::Yes
              ),
     UiAction("toggle-mixer",
-             au::context::UiCtxProjectOpened,
+             au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Mixer"),
              TranslatableString("action", "Show/hide mixer"),

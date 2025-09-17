@@ -90,7 +90,7 @@ static const ActionCode GROUP_CLIPS_CODE("group-clips");
 static const ActionCode UNGROUP_CLIPS_CODE("ungroup-clips");
 
 static const ActionCode SELECT_ALL("select-all");
-static const ActionCode SELECT_NONE("select-none");
+static const ActionCode SELECT_CLEAR("clear-selection");
 static const ActionCode SELECT_ALL_TRACKS("select-all-tracks");
 static const ActionCode SELECT_LEFT_OF_PLAYBACK_POS("select-left-of-playback-position");
 static const ActionCode SELECT_RIGHT_OF_PLAYBACK_POS("select-right-of-playback-position");
@@ -238,7 +238,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, UNGROUP_CLIPS_CODE, this, &TrackeditActionsController::ungroupClips);
 
     dispatcher()->reg(this, SELECT_ALL, this, &TrackeditActionsController::selectAll);
-    dispatcher()->reg(this, SELECT_NONE, this, &TrackeditActionsController::selectNone);
+    dispatcher()->reg(this, SELECT_CLEAR, this, &TrackeditActionsController::selectNone);
     dispatcher()->reg(this, SELECT_ALL_TRACKS, this, &TrackeditActionsController::selectAllTracks);
     dispatcher()->reg(this, SELECT_LEFT_OF_PLAYBACK_POS, this, &TrackeditActionsController::selectLeftOfPlaybackPos);
     dispatcher()->reg(this, SELECT_RIGHT_OF_PLAYBACK_POS, this, &TrackeditActionsController::selectRightOfPlaybackPos);
