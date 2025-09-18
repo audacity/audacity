@@ -61,14 +61,6 @@ StyledPopupView {
                 onClicked: {
                     createTrack(modelData.type)
                 }
-
-                navigation.onNavigationEvent: function(event) {
-                    if (event.type === NavigationEvent.Trigger) {
-                        createTrack(modelData.type)
-                        event.accepted = true
-                        root.close()
-                    }
-                }
             }
         }
     }

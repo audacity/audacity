@@ -97,11 +97,11 @@ Item {
             Layout.preferredHeight: root.implicitHeight
 
             property NavigationPanel navigation: NavigationPanel {
-                name: "AddNewPanel"
+                name: "AddTrackPanel"
                 enabled: root.enabled && root.visible
                 order: 1
 
-                accessible.name: qsTrc("projectscene", "Add new")
+                accessible.name: qsTrc("projectscene", "Add track")
             }
 
             StyledTextLabel {
@@ -122,13 +122,13 @@ Item {
                 anchors.rightMargin: root.buttonRightMargin
                 anchors.verticalCenter: buttonContainer.verticalCenter
 
-                navigation.name: "AddNew"
+                navigation.name: "AddTrack"
                 navigation.panel: buttonContainer.navigation
 
                 backgroundRadius: 0
                 normalColor: ui.theme.buttonColor
 
-                text: qsTrc("projectscene", "Add new")
+                text: qsTrc("projectscene", "Add track")
 
                 enabled: true
 
@@ -154,6 +154,5 @@ Item {
             }
 
         }
-
     }
 }

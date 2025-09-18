@@ -36,7 +36,7 @@ void TrackNavigationController::init()
 
     selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& trackId) {
         const auto activePanel = navigationController()->activePanel();
-        if (activePanel && activePanel->name() != QString("Track %1 Panel").arg(trackId)) {
+        if (activePanel && activePanel->name() != "AddNewTrackPopup" && activePanel->name() != QString("Track %1 Panel").arg(trackId)) {
             navigationController()->requestActivateByName("Main Section", "Main Panel", "Main Control");
         }
     });
