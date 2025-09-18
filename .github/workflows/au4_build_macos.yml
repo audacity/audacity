@@ -32,10 +32,16 @@ jobs:
   au4_build_macos:
     runs-on: macos-13
     steps:
+    - name: Cancel Previous Runs
+      uses: styfle/cancel-workflow-action@0.12.1
+      with:
+        access_token: ${{ github.token }}
+
     - name: Clone repository
       uses: actions/checkout@v4
       with:
         submodules: recursive
+
     - name: "Configure workflow"
       env:
         pull_request_title: ${{ github.event.pull_request.title }}
@@ -91,6 +97,22 @@ jobs:
         echo "SENTRY_PROJECT: $SENTRY_PROJECT"
         echo "SENTRY_URL=$SENTRY_URL" >> $GITHUB_ENV
         echo "SENTRY_URL: $SENTRY_URL"
+
+        echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_ENV
+
+    - name: Restore ccache files
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: ${{runner.os}}-${{runner.arch}}-ccache-${{ env.CCACHE_TIMESTAMP }}
+        restore-keys: ${{runner.os}}-${{runner.arch}}-ccache-
+    - name: Setup ccache
+      run: |
+        brew install ccache
+        cmake -DBUILD_ENABLE_CODE_COVERAGE=${ENABLE_CODE_COVERAGE} -P ${CI_DIR}/linux/ci_build_utests.cmake
+
+        echo "============== ccache ==============="
+        ccache -s
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
