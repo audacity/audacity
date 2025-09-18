@@ -19,10 +19,10 @@ set(INSTALL_DIR "../build.install" CACHE STRING "Build install dir")
 set(INSTALL_SUFFIX "" CACHE STRING "Install suffix")
 set(BUILD_NUMBER "12345678" CACHE STRING "Build number")
 set(BUILD_REVISION "" CACHE STRING "Build revision")
-set(BUILD_USE_UNITY "" CACHE STRING "Build use unity")
 set(BUILD_ENABLE_CODE_COVERAGE "" CACHE STRING "Build with code coverage")
 
 option(SKIP_RPATH "Skip rpath" OFF)
+set(BUILD_USE_UNITY ON)
 
 # CPUS
 cmake_host_system_information(RESULT CPUS QUERY NUMBER_OF_LOGICAL_CORES)
@@ -64,7 +64,7 @@ macro(do_build build_type build_dir)
         -DMUSE_APP_INSTALL_SUFFIX=${INSTALL_SUFFIX}
         -DCMAKE_BUILD_NUMBER=${BUILD_NUMBER}
         -DAU4_REVISION=${BUILD_REVISION}
-        -DMUE_COMPILE_USE_UNITY=${BUILD_USE_UNITY}
+        -DMUSE_COMPILE_USE_UNITY=${BUILD_USE_UNITY}
         -DCMAKE_SKIP_RPATH=${SKIP_RPATH}
         -DMUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE=${BUILD_ENABLE_CODE_COVERAGE}
     )
