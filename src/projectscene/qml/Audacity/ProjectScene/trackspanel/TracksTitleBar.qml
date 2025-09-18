@@ -41,7 +41,7 @@ Item {
             property int padding: parent.height / 4
 
             Layout.preferredWidth: root.effectsSectionWidth
-            Layout.preferredHeight: root.implicitHeight
+            Layout.preferredHeight: root.height
 
             color: ui.theme.backgroundPrimaryColor
             border.color: "transparent"
@@ -63,8 +63,8 @@ Item {
 
             Rectangle {
                 anchors.right: parent.right
-                width: root.implicitHeight
-                height: root.implicitHeight
+                width: root.height
+                height: root.height
 
                 color: effectsTitleBar.color
 
@@ -94,7 +94,7 @@ Item {
 
             width: root.verticalPanelDefaultWidth
             Layout.fillWidth: true
-            Layout.preferredHeight: root.implicitHeight
+            Layout.preferredHeight: root.height
 
             property NavigationPanel navigation: NavigationPanel {
                 name: "AddTrackPanel"
@@ -125,7 +125,7 @@ Item {
                 navigation.name: "AddTrack"
                 navigation.panel: buttonContainer.navigation
 
-                backgroundRadius: 0
+                backgroundRadius: 3
                 normalColor: ui.theme.buttonColor
 
                 text: qsTrc("projectscene", "Add track")
