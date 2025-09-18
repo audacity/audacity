@@ -59,12 +59,6 @@ void TracksViewStateModel::init()
         m_ctrlPressed.val = v;
         emit ctrlPressedChanged();
     });
-
-    m_escPressed = vs->escPressed();
-    m_escPressed.ch.onReceive(this, [this](bool v) {
-        m_escPressed.val = v;
-        emit escPressedChanged();
-    });
 }
 
 bool TracksViewStateModel::snapEnabled() const
@@ -160,9 +154,4 @@ bool TracksViewStateModel::altPressed() const
 bool TracksViewStateModel::ctrlPressed() const
 {
     return m_ctrlPressed.val;
-}
-
-bool TracksViewStateModel::escPressed() const
-{
-    return m_escPressed.val;
 }

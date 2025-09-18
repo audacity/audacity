@@ -30,7 +30,6 @@ Rectangle {
 
     readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
     readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
-    readonly property string splitShape: ":/images/customCursorShapes/Split.png"
     readonly property string leftTrimShape: ":/images/customCursorShapes/ClipTrimLeft.png"
     readonly property string leftStretchShape: ":/images/customCursorShapes/ClipStretchLeft.png"
     readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
@@ -116,12 +115,6 @@ Rectangle {
     SelectionViewController {
         id: selectionController
         context: timeline.context
-    }
-
-    onEscPressedChanged: {
-        if (escPressed) {
-            tracksModel.isSplitMode = false
-        }
     }
 
     Component.onCompleted: {
@@ -331,7 +324,7 @@ Rectangle {
                 return false
             }
 
-            return (content.isIsolationMode || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse || content.leftTrimPressedButtons || content.rightTrimPressedButtons || (root.isSplitMode && root.clipHovered) || (content.isBrush && root.clipHovered))
+            return (content.isIsolationMode || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse || content.leftTrimPressedButtons || content.rightTrimPressedButtons || (content.isBrush && root.clipHovered))
         }
         source: {
             if (content.isBrush) {
@@ -340,10 +333,6 @@ Rectangle {
 
             if (content.isNearSample || content.isIsolationMode) {
                 return pencilShape
-            }
-
-            if (root.isSplitMode) {
-                return splitShape
             }
 
             return content.leftTrimContainsMouse || content.leftTrimPressedButtons ? leftTrimShape : rightTrimShape
