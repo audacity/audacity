@@ -230,7 +230,7 @@ TimerRecordDialog::TimerRecordDialog(
 
 TimerRecordDialog::~TimerRecordDialog() = default;
 
-void TimerRecordDialog::OnTimer(wxTimerEvent& WXUNUSED(event))
+void TimerRecordDialog::UpdateStart()
 {
    wxDateTime dateTime_UNow = wxDateTime::UNow();
    if (m_DateTime_Start < dateTime_UNow) {
@@ -239,6 +239,11 @@ void TimerRecordDialog::OnTimer(wxTimerEvent& WXUNUSED(event))
       m_pTimeTextCtrl_Start->SetValue(wxDateTime_to_AudacityTime(m_DateTime_Start));
       this->UpdateEnd(); // Keep Duration constant and update End for changed Start.
    }
+}
+
+void TimerRecordDialog::OnTimer(wxTimerEvent& WXUNUSED(event))
+{
+   this->UpdateStart();
 }
 
 void TimerRecordDialog::OnDatePicker_Start(wxDateEvent& WXUNUSED(event))
@@ -254,12 +259,11 @@ void TimerRecordDialog::OnDatePicker_Start(wxDateEvent& WXUNUSED(event))
 
    // User might have had the dialog up for a while, or
    // had a future day, set hour of day less than now's, then changed day to today.
-   wxTimerEvent dummyTimerEvent;
-   this->OnTimer(dummyTimerEvent);
+   this->UpdateStart();
 
    // Always update End for changed Start, keeping Duration constant.
-   // Note that OnTimer sometimes calls UpdateEnd, so sometimes this is redundant,
-   // but OnTimer doesn't need to always call UpdateEnd, but we must here.
+   // Note that UpdateStart sometimes calls UpdateEnd, so sometimes this is redundant,
+   // but UpdateStart doesn't need to always call UpdateEnd, but we must here.
    this->UpdateEnd();
 }
 
@@ -572,8 +576,7 @@ int TimerRecordDialog::RunWaitDialog()
 
          // Make sure that start and end time are updated, so we always get the full
          // duration, even if there's some delay getting here.
-         wxTimerEvent dummyTimerEvent;
-         this->OnTimer(dummyTimerEvent);
+         this->UpdateStart();
 
          // Loop for progress display during recording.
          while (bIsRecording && (updateResult == ProgressResult::Success)) {
