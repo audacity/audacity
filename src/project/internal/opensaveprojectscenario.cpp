@@ -102,9 +102,7 @@ RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectP
 
     muse::io::path_t defaultPath = configuration()->defaultSavingFilePath(project, filenameAddition);
 
-    //! TODO AU4
     std::vector<std::string> filter {
-        muse::trc("project", "Audacity3 files") + " (*.aup3)",
         muse::trc("project", "Audacity4 files") + " (*.aup4)"
 
 #ifdef Q_OS_MAC
@@ -115,6 +113,22 @@ RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectP
     };
 
     muse::io::path_t selectedPath = interactive()->selectSavingFileSync(dialogTitle, defaultPath, filter);
+
+    // force save to aup4 format
+    std::string suffix = muse::io::suffix(selectedPath);
+    std::string correctedPath = selectedPath.toStdString();
+    if (!suffix.empty()) {
+        qDebug() << suffix;
+        correctedPath = correctedPath.substr(0, correctedPath.size() - (suffix.size() + 1));
+    }
+
+    // check if there's a dot at the end; add one if not
+    if (!correctedPath.empty() && correctedPath.back() != '.') {
+        correctedPath += ".";
+    }
+    correctedPath += "aup4";
+
+    selectedPath = correctedPath;
 
     if (selectedPath.empty()) {
         return make_ret(Ret::Code::Cancel);
