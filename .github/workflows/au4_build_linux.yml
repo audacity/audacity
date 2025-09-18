@@ -15,7 +15,7 @@ on:
         required: true
         default: 'devel_build'
       sentry_project:
-        description: 'Upload symbols and dumps to Sentry (choose a project): audacity-4(default for stable build), audacity-4-sandbox'
+        description: 'Upload symbols and dumps to Sentry (choose a project): au4(default for stable build), au4-sandbox'
         required: false
         default: ''
 
@@ -38,7 +38,7 @@ jobs:
       env:
         pull_request_title: ${{ github.event.pull_request.title }}
         SENTRY_SERVER_AU4_KEY: ${{ secrets.SENTRY_SERVER_AU4_KEY }}
-        SENTRY_SERVER_SANDBOX_KEY: ${{ secrets.SENTRY_SERVER_SANDBOX_KEY }}
+        SENTRY_SERVER_AU4_SANDBOX_KEY: ${{ secrets.SENTRY_SERVER_AU4_SANDBOX_KEY }}
         SENTRY_PROJECT: ${{ github.event.inputs.sentry_project }}
       run: |
 
@@ -61,22 +61,22 @@ jobs:
 
         if [ "$SENTRY_SERVER_AU4_KEY" != "" ]; then
           if [ -z "$SENTRY_PROJECT" ] && [ "$BUILD_MODE" == "stable_build" ]; then
-            SENTRY_PROJECT="audacity-4"
+            SENTRY_PROJECT="au4"
           fi
 
-          if [ "$SENTRY_PROJECT" == "audacity-4" ]; then
+          if [ "$SENTRY_PROJECT" == "au4" ]; then
             DO_UPLOAD_SYMBOLS='true'
             SENTRY_URL=https://sentry.audacityteam.org/api/5/minidump/?sentry_key=$SENTRY_SERVER_AU4_KEY
           fi
         fi
 
         if [ -z "$SENTRY_PROJECT" ] && [ "$BUILD_MODE" == "nightly_build" ]; then
-          SENTRY_PROJECT="audacity-4-sandbox"
+          SENTRY_PROJECT="au4-sandbox"
         fi
 
-        if [ "$SENTRY_PROJECT" == "audacity-4-sandbox" ] && [ "$SENTRY_SERVER_SANDBOX_KEY" != "" ]; then
+        if [ "$SENTRY_PROJECT" == "au4-sandbox" ] && [ "$SENTRY_SERVER_AU4_SANDBOX_KEY" != "" ]; then
           DO_UPLOAD_SYMBOLS='true'
-          SENTRY_URL=https://sentry.audacityteam.org/api/5/minidump/?sentry_key=$SENTRY_SERVER_SANDBOX_KEY
+          SENTRY_URL=https://sentry.audacityteam.org/api/5/minidump/?sentry_key=$SENTRY_SERVER_AU4_SANDBOX_KEY
         fi
 
         echo "DO_BUILD=$DO_BUILD" >> $GITHUB_ENV
