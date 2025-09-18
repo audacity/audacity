@@ -8,6 +8,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/iprojecthistory.h"
 #include "../iprojectsceneconfiguration.h"
 
 #include "au3wrap/iau3project.h"
@@ -22,6 +23,7 @@ class ProjectViewState : public QObject, public IProjectViewState, public muse::
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<IProjectSceneConfiguration> configuration;
     muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project);
@@ -51,6 +53,9 @@ public:
     void setSnap(const Snap& s) override;
     Snap getSnap() const override;
     muse::ValCh<Snap> snap() const override;
+
+    void setSplitToolEnabled(const bool enabled) override;
+    muse::ValCh<bool> splitToolEnabled() override;
 
     // State of user interaction
     double mousePositionY() const override;
@@ -103,6 +108,8 @@ private:
 
     mutable std::map<trackedit::TrackId, TrackData> m_tracks;
     muse::ValCh<Snap> m_snap;
+
+    muse::ValCh<bool> m_splitToolEnabled;
 
     muse::ValCh<double> m_mouseYPosition;
 

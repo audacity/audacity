@@ -63,6 +63,7 @@ private:
     void updateStopState();
     void updateRecordState();
     void updateLoopState();
+    void updateSplitState();
 
     void setupConnections();
 

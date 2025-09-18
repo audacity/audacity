@@ -32,6 +32,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.h
     
+    ${CMAKE_CURRENT_LIST_DIR}/internal/tapholdshortcut.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/tapholdshortcut.h
+
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/viewinfo.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/viewinfo.h
 
@@ -130,6 +133,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/selectioncontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/canvascontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/canvascontextmenumodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/splittoolcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/splittoolcontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.h

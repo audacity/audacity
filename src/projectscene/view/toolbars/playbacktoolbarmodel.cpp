@@ -38,6 +38,8 @@ static const ActionCode REWIND_START_ACTION_CODE("rewind-start");
 static const ActionCode REWIND_END_ACTION_CODE("rewind-end");
 static const ActionCode LOOP_ACTION_CODE("toggle-loop-region");
 
+static const ActionCode SPLIT_TOOL_ACTION_CODE("split-tool");
+
 static const ActionCode PLAYBACK_LEVEL_CODE("playback-level");
 static const ActionCode PLAYBACK_LEVEL("playback-level");
 static const ActionCode PLAYBACK_TIME("playback-time");
@@ -61,6 +63,7 @@ static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
         { REWIND_START_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { REWIND_END_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { LOOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { SPLIT_TOOL_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { SNAP_ACTION_CODE, PlaybackToolBarModel::SNAP }
     };
 
@@ -84,8 +87,10 @@ void PlaybackToolBarModel::load()
 
     context()->currentProjectChanged().onNotify(this, [this]() {
         reload();
-
         emit isEnabledChanged();
+        if (context()->currentProject()) {
+            context()->currentProject()->viewState()->splitToolEnabled().ch.onReceive(this, [this](bool){ updateSplitState(); });
+        }
     });
 
     configuration()->playbackMeterPositionChanged().onNotify(this, [this]() {
@@ -131,6 +136,7 @@ void PlaybackToolBarModel::updateStates()
     updateStopState();
     updateRecordState();
     updateLoopState();
+    updateSplitState();
 }
 
 void PlaybackToolBarModel::updatePlayState()
@@ -226,6 +232,36 @@ void PlaybackToolBarModel::updateLoopState()
     QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
     QColor backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BUTTON_COLOR).toString());
     if (isLooping) {
+        iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
+        backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::ACCENT_COLOR).toString());
+    }
+
+    item->setIconColor(iconColor);
+    item->setBackgroundColor(backgroundColor);
+}
+
+void PlaybackToolBarModel::updateSplitState()
+{
+    auto prj = context()->currentProject();
+
+    if (!prj) {
+        return;
+    }
+
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(SPLIT_TOOL_ACTION_CODE));
+
+    if (item == nullptr) {
+        return;
+    }
+
+    auto vs = prj->viewState();
+
+    bool splitToolEnabled = vs->splitToolEnabled().val;
+    item->setSelected(splitToolEnabled);
+
+    QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
+    QColor backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BUTTON_COLOR).toString());
+    if (splitToolEnabled) {
         iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
         backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::ACCENT_COLOR).toString());
     }
