@@ -271,18 +271,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Insert and Preserve Sync"),
              IconCode::Code::PASTE
              ),
-    UiAction("track-split",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Split"),
-             TranslatableString("action", "Split")
-             ),
-    UiAction("track-split-at",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Split at"),
-             TranslatableString("action", "Split at")
-             ),
     UiAction("merge-selected-on-tracks",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
