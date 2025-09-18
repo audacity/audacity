@@ -198,6 +198,8 @@ void TrackNavigationController::updateSelectionStart(SelectionDirection directio
         }
 
         if (orderedSelectedTracks.empty()) {
+            m_selectionStart = focusedTrack;
+            selectionController()->setSelectedTracks({ focusedTrack });
             return;
         }
 
