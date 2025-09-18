@@ -18,6 +18,7 @@ class SplitToolController : public QObject, public muse::actions::Actionable
 
     Q_PROPERTY(TimelineContext * context READ context WRITE setContext NOTIFY contextChanged FINAL)
     Q_PROPERTY(bool active READ active NOTIFY activeChanged FINAL)
+    Q_PROPERTY(bool singleTrack READ singleTrack NOTIFY singleTrackChanged FINAL)
     Q_PROPERTY(int hoveredTrack READ hoveredTrack WRITE setHoveredTrack NOTIFY hoveredTrackChanged FINAL)
     Q_PROPERTY(bool clipHovered READ clipHovered WRITE setClipHovered NOTIFY clipHoveredChanged FINAL)
     Q_PROPERTY(double guidelinePosition READ guidelinePosition NOTIFY guidelinePositionChanged FINAL)
@@ -51,6 +52,9 @@ public:
     int hoveredTrack() const;
     void setHoveredTrack(int newHoveredTrack);
 
+    bool singleTrack() const;
+    void setSingleTrack(bool enabled);
+
 signals:
     void contextChanged();
     void guidelinePositionChanged();
@@ -58,6 +62,8 @@ signals:
     void activeChanged();
     void clipHoveredChanged();
     void hoveredTrackChanged();
+
+    void singleTrackChanged();
 
 private:
     const int MIN_DOUBLE_SPLIT_DISTANCE = 10;
@@ -72,6 +78,7 @@ private:
 
     void splitTrackAt(trackedit::TrackId id, double t);
     void splitTracksAt(trackedit::TrackIdList ids, double t);
+    void doSplit();
 
     std::unique_ptr<TapHoldShortcut> m_shortcut;
 
@@ -85,7 +92,7 @@ private:
     bool m_prePressState = false;
     bool m_cursorOverriden = false;
     bool m_clipHovered = false;
+    bool m_singleTrack = true;
     int m_hoveredTrack = -1;
-    void doSplit();
 };
 }
