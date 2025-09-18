@@ -63,10 +63,6 @@ void PlayCursorController::seekToX(double x, bool triggerPlay)
 
 void PlayCursorController::setPlaybackRegion(double x1, double x2)
 {
-    if (muse::RealIsEqual(x1, x2)) {
-        return;
-    }
-
     IProjectViewStatePtr viewState = projectViewState();
     bool snapEnabled = viewState ? viewState->isSnapEnabled() : false;
 
