@@ -5,23 +5,21 @@ import QtQuick.Layouts
 import Muse.Ui
 import Muse.UiComponents
 
-import "qrc:/kddockwidgets/private/quick/qml/" as KDDW
-
-KDDW.TitleBarBase {
+Item {
     id: root
 
-    property var navigationPanel
-    property var navigationOrder
-    property var contextMenuModel
+    property alias navigation: buttonContainer.navigation
 
     property int effectsSectionWidth: 0
     property bool showEffectsSection: false
 
+    property int buttonWidth: 97
+    property int buttonHeight: 28
+    property int buttonRightMargin: 8
+    property int textLeftMargin: 12
+
     signal effectsSectionCloseRequested()
     signal addRequested(type: int)
-
-    anchors.fill: parent
-    heightWhenVisible: implicitHeight
 
     Component.onCompleted: {
         if (effectsSectionWidth == 0) {
@@ -89,52 +87,73 @@ KDDW.TitleBarBase {
 
         SeparatorLine { }
 
-        FlatButton {
-            id: addNewTrackBtn
+        Rectangle {
+            id: buttonContainer
+
+            color: ui.theme.backgroundPrimaryColor
 
             width: root.verticalPanelDefaultWidth
             Layout.fillWidth: true
             Layout.preferredHeight: root.implicitHeight
 
-            accessible.name: qsTrc("projectscene", "Add Track")
-            backgroundRadius: 0
-            normalColor: ui.theme.backgroundSecondaryColor
-            hoverHitColor: ui.theme.buttonColor
+            property NavigationPanel navigation: NavigationPanel {
+                name: "AddNewPanel"
+                enabled: root.enabled && root.visible
+                order: 1
 
-            text: qsTrc("projectscene", "Add new track")
-
-            //! TODO AU4
-            enabled: true //root.isAddingAvailable
-
-            icon: IconCode.PLUS
-
-            orientation: Qt.Horizontal
-
-            backgroundItem: TracksTitleBarBackground {
-                mouseArea: addNewTrackBtn.mouseArea
-                color: addNewTrackBtn.normalColor
-                baseColor: addNewTrackBtn.normalColor
+                accessible.name: qsTrc("projectscene", "Add new")
             }
 
-            onClicked: {
-                if (addNewTrack.isOpened) {
-                    addNewTrack.close()
-                } else {
-                    addNewTrack.open()
+            StyledTextLabel {
+                anchors.left: buttonContainer.left
+                anchors.leftMargin: root.textLeftMargin
+                anchors.verticalCenter: buttonContainer.verticalCenter
+
+                text: qsTrc("projectscene", "Tracks")
+            }
+
+            FlatButton {
+                id: addNewTrackBtn
+
+                width: root.buttonWidth
+                height: root.buttonHeight
+
+                anchors.right: buttonContainer.right
+                anchors.rightMargin: root.buttonRightMargin
+                anchors.verticalCenter: buttonContainer.verticalCenter
+
+                navigation.name: "AddNew"
+                navigation.panel: buttonContainer.navigation
+
+                backgroundRadius: 0
+                normalColor: ui.theme.buttonColor
+
+                text: qsTrc("projectscene", "Add new")
+
+                enabled: true
+
+                icon: IconCode.PLUS
+
+                orientation: Qt.Horizontal
+
+                onClicked: {
+                    if (addNewTrack.isOpened) {
+                        addNewTrack.close()
+                    } else {
+                        addNewTrack.open()
+                    }
+                }
+
+                AddNewTrackPopup {
+                    id: addNewTrack
+
+                    onCreateTrack: (type) => {
+                        root.addRequested(type)
+                    }
                 }
             }
 
-            AddNewTrackPopup {
-                id: addNewTrack
-
-                onCreateTrack: (type) => {
-                    root.addRequested(type)
-                }
-            }
         }
-    }
 
-    SeparatorLine {
-        anchors.top: rowLayout.bottom
     }
 }
