@@ -375,7 +375,6 @@ Rectangle {
             preventStealing: true
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             cursorShape: Qt.IBeamCursor
-            property real splitStartAt: 0
 
             hoverEnabled: true
 
@@ -812,10 +811,10 @@ Rectangle {
             id: splitGuideline
 
             x: splitToolController.guidelinePosition
-            y: hoveredTrackVerticalPosition
+            y: splitToolController.singleTrack ? hoveredTrackVerticalPosition : 0
 
             width: 1
-            height: hoveredTrackHeight
+            height: splitToolController.singleTrack ? hoveredTrackHeight : content.height
 
             color: "#0121C0"
 

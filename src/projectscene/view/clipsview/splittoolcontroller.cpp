@@ -262,7 +262,35 @@ bool SplitToolController::eventFilter(QObject* obj, QEvent* event)
             event->accept();
             return true;
         }
+    } else if (event->type() == QEvent::KeyPress) {
+        auto* ke = static_cast<QKeyEvent*>(event);
+        if (ke->key() == Qt::Key_Shift) {
+            setSingleTrack(false);
+            return true;
+        }
+    } else if (event->type() == QEvent::KeyRelease) {
+        auto* ke = static_cast<QKeyEvent*>(event);
+        if (ke->key() == Qt::Key_Shift) {
+            setSingleTrack(true);
+            return true;
+        }
     }
     return QObject::eventFilter(obj, event);
+}
+
+bool SplitToolController::singleTrack() const
+{
+    return m_singleTrack;
+}
+
+void SplitToolController::setSingleTrack(bool enabled)
+{
+    if (enabled == m_singleTrack) {
+        return;
+    }
+
+    m_singleTrack = enabled;
+
+    emit singleTrackChanged();
 }
 }
