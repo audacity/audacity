@@ -94,6 +94,23 @@ ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project
             m_totalTracksHeight.set(m_totalTracksHeight.val - it->second.height.val);
             m_tracks.erase(it);
         });
+
+        updateClipsBoundaries(false);
+        prj->trackChanged().onReceive(this, [this](const trackedit::Track&) {
+            updateClipsBoundaries(false);
+        });
+
+        prj->trackAdded().onReceive(this, [this](const trackedit::Track&) {
+            updateClipsBoundaries(false);
+        });
+
+        prj->trackInserted().onReceive(this, [this](const trackedit::Track&, int) {
+            updateClipsBoundaries(false);
+        });
+    });
+
+    projectHistory()->historyChanged().onNotify(this, [this]() {
+        updateClipsBoundaries(false);
     });
 }
 
