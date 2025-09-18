@@ -266,6 +266,10 @@ Rectangle {
 
         visible: root.enableCursorInteraction
 
+        onVisibleChanged: {
+            root.setContainsMouse(containsMouse)
+        }
+
         onClicked: function (e) {
             if (root.multiClipsSelected) {
                 multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)

@@ -400,6 +400,20 @@ muse::ValCh<Snap> ProjectViewState::snap() const
     return m_snap;
 }
 
+void ProjectViewState::setSplitToolEnabled(const bool enabled)
+{
+    if (m_splitToolEnabled.val == enabled) {
+        return;
+    }
+
+    m_splitToolEnabled.set(enabled);
+}
+
+muse::ValCh<bool> ProjectViewState::splitToolEnabled()
+{
+    return m_splitToolEnabled;
+}
+
 void ProjectViewState::setClipEditStartTimeOffset(double val)
 {
     if (m_clipEditStartTimeOffset == val) {

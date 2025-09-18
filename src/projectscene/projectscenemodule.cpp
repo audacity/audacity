@@ -42,6 +42,7 @@
 #include "view/clipsview/canvascontextmenumodel.h"
 #include "view/clipsview/selectioncontextmenumodel.h"
 #include "view/clipsview/selectionviewcontroller.h"
+#include "view/clipsview/splittoolcontroller.h"
 #include "view/clipsview/pitchandspeedchangemodel.h"
 #include "view/clipsview/wavepainterproxy.h"
 #include "view/clipsview/au3/connectingdotspainter.h"
@@ -165,6 +166,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<CanvasContextMenuModel>("Audacity.ProjectScene", 1, 0, "CanvasContextMenuModel");
     qmlRegisterType<SelectionViewController>("Audacity.ProjectScene", 1, 0, "SelectionViewController");
     qmlRegisterType<PitchAndSpeedChangeModel>("Audacity.ProjectScene", 1, 0, "PitchAndSpeedChangeModel");
+    qmlRegisterType<SplitToolController>("Audacity.ProjectScene", 1, 0, "SplitToolController");
 
     // timeline
     qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");

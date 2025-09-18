@@ -24,9 +24,7 @@ Rectangle {
     property double guidelinePos: -1
     property alias altPressed: tracksViewState.altPressed
     property alias ctrlPressed: tracksViewState.ctrlPressed
-    property alias isSplitMode: tracksModel.isSplitMode
-    property alias escPressed: tracksViewState.escPressed
-    property double splitGuidelinePosition: -1
+    property alias isSplitMode: splitToolController.active
 
     readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
     readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
@@ -110,6 +108,14 @@ Rectangle {
     PlayRegionController {
         id: playRegionController
         context: timeline.context
+    }
+
+    SplitToolController {
+        id: splitToolController
+        context: timeline.context
+
+        clipHovered: root.clipHovered && !root.clipHeaderHovered
+        hoveredTrack: root.hoveredTrackId
     }
 
     SelectionViewController {
@@ -369,6 +375,7 @@ Rectangle {
             preventStealing: true
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             cursorShape: Qt.IBeamCursor
+            property real splitStartAt: 0
 
             hoverEnabled: true
 
@@ -390,17 +397,15 @@ Rectangle {
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
                             playCursorController.seekToX(e.x)
                         }
-                        // Hover status will reset after the selection reset
-                        let clipWasHovered = root.clipHovered
 
-                        selectionController.onPressed(e.x, e.y)
-                        selectionController.resetSelectedClip()
-                        clipsSelection.visible = true
+                        if (!splitToolController.active) {
+                            selectionController.onPressed(e.x, e.y)
+                            selectionController.resetSelectedClip()
+                            clipsSelection.visible = true
+                        }
                         handleGuideline(e.x, false)
 
-                        if (clipWasHovered && root.isSplitMode) {
-                            tracksModel.splitAt(root.hoveredTrackId, timeline.context.positionToTime(splitGuideline.x))
-                        }
+                        splitToolController.mouseDown(e.x)
                     }
                 } else if (e.button === Qt.RightButton) {
                     if (tracksHovered)
@@ -410,8 +415,10 @@ Rectangle {
                     }
                 }
             }
+
             onPositionChanged: function (e) {
                 timeline.updateCursorPosition(e.x, e.y)
+                splitToolController.mouseMove(e.x)
 
                 if (root.clipHeaderHovered && pressed) {
                     tracksClipsView.clipMoveRequested(hoveredClipKey, false)
@@ -423,6 +430,7 @@ Rectangle {
                     handleGuideline(e.x, false)
                 }
             }
+
             onReleased: e => {
                 if (e.button !== Qt.LeftButton) {
                     return
@@ -433,19 +441,23 @@ Rectangle {
                     tracksClipsView.stopAutoScroll()
                     tracksClipsView.clipEndEditRequested(hoveredClipKey)
                     root.clipHeaderHovered = false
-                } else {
+                }
+                else {
+                    splitToolController.mouseUp(e.x)
+
                     if (selectionController.isLeftSelection(e.x)) {
                         playCursorController.seekToX(e.x)
                     }
-                    selectionController.onReleased(e.x, e.y)
+                    if (!splitToolController.active) {
+                        selectionController.onReleased(e.x, e.y)
+                        clipsSelection.visible = false
+                    }
                     handleGuideline(e.x, true)
                     if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
                         playCursorController.seekToX(timeline.context.selectionStartPosition)
                     }
 
                     playCursorController.setPlaybackRegion(timeline.context.selectionStartPosition, timeline.context.selectionEndPosition)
-
-                    clipsSelection.visible = false
                 }
 
                 tracksModel.endUserInteraction()
@@ -617,7 +629,7 @@ Rectangle {
                         root.hoveredTrackHeight = tracksViewState.trackHeight(trackId)
                         root.hoveredTrackVerticalPosition = tracksViewState.trackVerticalPosition(trackId)
 
-                        root.splitGuidelinePosition = xWithinTrack
+                        splitToolController.mouseMove(xWithinTrack)
                     }
 
                     onSetHoveredClipKey: function (clipKey) {
@@ -799,14 +811,15 @@ Rectangle {
         Rectangle {
             id: splitGuideline
 
-            x: root.guidelineVisible ? clipGuideline.x : splitGuidelinePosition
+            x: splitToolController.guidelinePosition
             y: hoveredTrackVerticalPosition
+
             width: 1
             height: hoveredTrackHeight
 
             color: "#0121C0"
 
-            visible: root.isSplitMode && root.clipHovered
+            visible: splitToolController.guidelineVisible
         }
 
         VerticalRulersPanel {

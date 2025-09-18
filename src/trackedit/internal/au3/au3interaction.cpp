@@ -1368,6 +1368,8 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
 
 bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
 {
+    selectionController()->resetSelectedClips();
+
     for (const auto& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
         IF_ASSERT_FAILED(waveTrack) {
