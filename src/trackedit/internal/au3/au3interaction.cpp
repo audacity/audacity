@@ -1384,11 +1384,6 @@ bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, std::vector<sec
         }
 
         if (didAnySplitOccur) {
-            auto vs = globalContext()->currentProject()->viewState();
-            if (vs) {
-                vs->updateClipsBoundaries(false);
-            }
-
             auto clip = waveTrack->NewestOrNewClip();
 
             if (clip) {
