@@ -64,7 +64,7 @@ public:
         limiterLookaheadMsDefault,
         0,
         limiterMaxLookaheadMs,
-        0.1
+        0.01
     };
 
     static constexpr LimiterParameter releaseMs { &LimiterSettings::releaseMs,

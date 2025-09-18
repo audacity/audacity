@@ -15,6 +15,7 @@ class BuiltinEffectSettingModel : public BuiltinEffectModel
     Q_PROPERTY(double min READ min CONSTANT FINAL)
     Q_PROPERTY(double max READ max CONSTANT FINAL)
     Q_PROPERTY(double step READ step CONSTANT FINAL)
+    Q_PROPERTY(double defaultValue READ defaultValue CONSTANT FINAL)
 
 public:
     BuiltinEffectSettingModel(QObject* parent);
@@ -29,6 +30,7 @@ public:
     virtual double min() const = 0;
     virtual double max() const = 0;
     virtual double step() const = 0;
+    virtual double defaultValue() const = 0;
 
 signals:
     void paramIdChanged();

@@ -26,42 +26,46 @@ struct Expanded {
  * We use a warping function that maps f(min) = min and f(max) = max.
  * For simpler maths, we first normalize the warped value to [0, 1] range.
  * Then we use `y(x) = (exp(C * x) - 1) / (exp(C) - 1)`.
- * `softC` is solving this equation for `y(1/2) = 1/4`, meaning that when the control is at 50%, the warped value is at 25%.
- * `aggressiveC` is solving this equation so that when the control is at 50%, the warped value is at 12.5%.
+ * Now we let y(1/2) = middle, i.e., the value when in the middle, and solve the equation for C:
+ * C = 2 * log((1 - u) / u)
  */
-constexpr double softC = 2.1972245773362196;
-constexpr double aggressiveC = 3.8918202981106265;
-static const double softExpC = std::exp(softC);
-static const double aggressiveExpC = std::exp(aggressiveC);
+double solveC(double min, double middle, double max)
+{
+    const double u = Normalized{ middle, min, max }.value;
+    const auto C = 2 * std::log((1 - u) / u);
+    return C;
+}
 }
 
-WarpingTransformer::WarpingTransformer(ValueWarpingType warpingType)
-    : m_C{warpingType == ValueWarpingType::Aggressive ? aggressiveC : softC}
-    , m_expC{warpingType == ValueWarpingType::Aggressive ? aggressiveExpC : softExpC}
+WarpingTransformer::WarpingTransformer(double min, double middle, double max)
+    : m_C{solveC(min, middle, max)}
+    , m_expC{std::exp(m_C)},
+    m_min{min},
+    m_max{max}
 {}
 
-double WarpingTransformer::forward(double x, double min, double max) const
+double WarpingTransformer::forward(double x) const
 {
-    if (muse::is_equal(min, max)) {
+    if (muse::is_equal(m_min, m_max)) {
         return 0.0;
     }
 
-    const Normalized u{ x, min, max };
+    const Normalized u{ x, m_min, m_max };
     const auto v = 1 / m_C * std::log(u.value * (m_expC - 1.0) + 1.0);
-    const Expanded y{ v, min, max };
+    const Expanded y{ v, m_min, m_max };
 
     return y.value;
 }
 
-double WarpingTransformer::inverse(double y, double min, double max) const
+double WarpingTransformer::inverse(double y) const
 {
-    if (muse::is_equal(min, max)) {
+    if (muse::is_equal(m_min, m_max)) {
         return 0.0;
     }
 
-    const Normalized v{ y, min, max };
+    const Normalized v{ y, m_min, m_max };
     const auto u = (std::exp(m_C * v.value) - 1.0) / (m_expC - 1.0);
-    const Expanded x{ u, min, max };
+    const Expanded x{ u, m_min, m_max };
 
     return x.value;
 }

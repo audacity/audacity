@@ -63,6 +63,12 @@ public:
         return param.step;
     }
 
+    double defaultValue() const override
+    {
+        const auto& param = m_getter(effect<EffectType>());
+        return param.def;
+    }
+
 private:
     const ParamGetter<EffectType> m_getter;
 };
