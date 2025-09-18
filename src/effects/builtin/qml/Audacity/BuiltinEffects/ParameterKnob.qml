@@ -9,6 +9,7 @@ Item {
     required property var parameter
 
     property alias value: knob.value
+    property double defaultValue: 0
     property alias radius: knob.radius
 
     implicitWidth: content.implicitWidth
@@ -50,6 +51,10 @@ Item {
 
                 mouseArea.onReleased: function () {
                     root.commitRequested()
+                }
+
+                mouseArea.onDoubleClicked: function () {
+                    root.newValueRequested(root.parameter["key"], root.defaultValue)
                 }
             }
 

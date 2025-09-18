@@ -72,6 +72,7 @@ DynamicsEffectBase {
                         radius: 24
                         title: qsTrc("effects/limiter", "Threshold")
                         unit: "dB"
+                        warp: true
                         model: LimiterSettingModel {
                             paramId: "thresholdDb"
                         }
@@ -89,6 +90,7 @@ DynamicsEffectBase {
                         radius: 24
                         title: qsTrc("effects/limiter", "Make-up gain")
                         unit: "dB"
+                        warp: true
                         model: LimiterSettingModel {
                             paramId: "makeupTargetDb"
                         }
@@ -107,20 +109,17 @@ DynamicsEffectBase {
                         {
                             id: "lookaheadMs",
                             title: qsTrc("effects/limiter", "Lookahead"),
-                            unit: "ms",
-                            warpingType: ValueWarpingType.Aggressive
+                            unit: "ms"
                         },
                         {
                             id: "kneeWidthDb",
                             title: qsTrc("effects/limiter", "Knee width"),
-                            unit: "dB",
-                            warpingType: ValueWarpingType.None
+                            unit: "dB"
                         },
                         {
                             id: "releaseMs",
                             title: qsTrc("effects/limiter", "Release"),
-                            unit: "ms",
-                            warpingType: ValueWarpingType.Soft
+                            unit: "ms"
                         },
                     ]
 
@@ -132,7 +131,7 @@ DynamicsEffectBase {
                         radius: 16
                         title: modelData.title
                         unit: modelData.unit
-                        warpingType: modelData.warpingType
+                        warp: true
                         model: LimiterSettingModel {
                             paramId: modelData.id
                         }

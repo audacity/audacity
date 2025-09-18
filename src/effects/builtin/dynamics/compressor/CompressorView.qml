@@ -70,20 +70,17 @@ DynamicsEffectBase {
                             {
                                 id: "attackMs",
                                 title: qsTrc("effects/compressor", "Attack"),
-                                unit: "ms",
-                                warpingType: ValueWarpingType.Soft
+                                unit: "ms"
                             },
                             {
                                 id: "releaseMs",
                                 title: qsTrc("effects/compressor", "Release"),
-                                unit: "ms",
-                                warpingType: ValueWarpingType.Soft
+                                unit: "ms"
                             },
                             {
                                 id: "lookaheadMs",
                                 title: qsTrc("effects/compressor", "Lookahead"),
-                                unit: "ms",
-                                warpingType: ValueWarpingType.Soft
+                                unit: "ms"
                             },
                         ]
 
@@ -93,7 +90,7 @@ DynamicsEffectBase {
                             knobFirst: false
                             title: modelData.title
                             unit: modelData.unit
-                            warpingType: modelData.warpingType
+                            warp: true
                             model: CompressorSettingModel {
                                 paramId: modelData.id
                             }
@@ -117,26 +114,22 @@ DynamicsEffectBase {
                             {
                                 id: "thresholdDb",
                                 title: qsTrc("effects/compressor", "Threshold"),
-                                unit: "dB",
-                                warpingType: ValueWarpingType.None
+                                unit: "dB"
                             },
                             {
                                 id: "compressionRatio",
                                 title: qsTrc("effects/compressor", "Ratio"),
-                                unit: "",
-                                warpingType: ValueWarpingType.Aggressive
+                                unit: ""
                             },
                             {
                                 id: "kneeWidthDb",
                                 title: qsTrc("effects/compressor", "Knee width"),
-                                unit: "dB",
-                                warpingType: ValueWarpingType.None
+                                unit: "dB"
                             },
                             {
                                 id: "makeupGainDb",
                                 title: qsTrc("effects/compressor", "Make-up gain"),
-                                unit: "dB",
-                                warpingType: ValueWarpingType.None
+                                unit: "dB"
                             }
                         ]
 
@@ -146,7 +139,7 @@ DynamicsEffectBase {
                             knobFirst: false
                             title: modelData.title
                             unit: modelData.unit
-                            warpingType: modelData.warpingType
+                            warp: true
                             model: CompressorSettingModel {
                                 paramId: modelData.id
                                 onValueChanged: {

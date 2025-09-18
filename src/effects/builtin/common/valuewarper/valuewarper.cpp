@@ -14,24 +14,62 @@ namespace {
 class PassthroughTransformer : public IValueTransformer
 {
 public:
-    double forward(double x, double /* min */, double /* max */) const override { return x; }
-    double inverse(double y, double /* min */, double /* max */) const override { return y; }
+    double forward(double x) const override { return x; }
+    double inverse(double y) const override { return y; }
 };
 }
 
-void ValueWarper::init()
+bool ValueWarper::useWarper() const
+{
+    if (m_middle.isNull()) {
+        return false;
+    }
+    const double mid = m_middle.toDouble();
+    // Special cases to avoid, or we'll be getting NaNs.
+    return m_min < mid && mid < m_max && !muse::is_equal(mid, (m_min + m_max) / 2.0);
+}
+
+void ValueWarper::componentComplete()
 {
     IF_ASSERT_FAILED(!m_transformer) {
         LOGW() << "ValueWarper already initialized";
     }
 
-    if (m_warpingType == ValueWarpingType::None) {
+    if (!useWarper()) {
         m_transformer = std::make_unique<PassthroughTransformer>();
     } else {
-        m_transformer = std::make_unique<WarpingTransformer>(m_warpingType);
+        m_transformer = std::make_unique<WarpingTransformer>(m_min, m_middle.toDouble(), m_max);
     }
 
-    m_warpedValue = m_transformer->forward(m_value, m_min, m_max);
+    m_warpedValue = m_transformer->forward(m_value);
+    emit warpedValueChanged();
+}
+
+QVariant ValueWarper::middle() const
+{
+    return m_middle;
+}
+
+void ValueWarper::setMiddle(const QVariant& value)
+{
+    if (m_middle == value) {
+        return;
+    }
+
+    m_middle = value;
+    emit middleChanged();
+
+    if (!m_transformer) {
+        return;
+    }
+
+    if (useWarper()) {
+        m_transformer = std::make_unique<WarpingTransformer>(m_min, m_middle.toDouble(), m_max);
+    } else {
+        m_transformer = std::make_unique<PassthroughTransformer>();
+    }
+
+    m_warpedValue = m_transformer->forward(m_value);
     emit warpedValueChanged();
 }
 
@@ -50,7 +88,7 @@ void ValueWarper::setValue(double value)
     emit valueChanged();
 
     if (m_transformer) {
-        m_warpedValue = m_transformer->forward(m_value, m_min, m_max);
+        m_warpedValue = m_transformer->forward(m_value);
         emit warpedValueChanged();
     }
 }
@@ -70,36 +108,8 @@ void ValueWarper::setWarpedValue(double value)
     m_warpedValue = value;
     emit warpedValueChanged();
 
-    m_value = m_transformer->inverse(m_warpedValue, m_min, m_max);
+    m_value = m_transformer->inverse(m_warpedValue);
     emit valueChanged();
-}
-
-ValueWarpingType ValueWarper::warpingType() const
-{
-    return m_warpingType;
-}
-
-void ValueWarper::setWarpingType(ValueWarpingType type)
-{
-    if (m_warpingType == type) {
-        return;
-    }
-
-    m_warpingType = type;
-    emit warpingTypeChanged();
-
-    if (!m_transformer) {
-        // Not initialized yet, no need to change the impl on the fly.
-        return;
-    }
-
-    if (type == ValueWarpingType::None) {
-        m_transformer = std::make_unique<PassthroughTransformer>();
-    } else {
-        m_transformer = std::make_unique<WarpingTransformer>(type);
-    }
-    m_warpedValue = m_transformer->forward(m_value, m_min, m_max);
-    emit warpedValueChanged();
 }
 
 double ValueWarper::min() const
@@ -116,10 +126,16 @@ void ValueWarper::setMin(double value)
     m_min = value;
     emit minChanged();
 
-    if (m_transformer) {
-        m_warpedValue = m_transformer->forward(m_value, m_min, m_max);
-        emit warpedValueChanged();
+    if (!m_transformer) {
+        return;
     }
+
+    if (useWarper()) {
+        m_transformer = std::make_unique<WarpingTransformer>(m_min, m_middle.toDouble(), m_max);
+    }
+
+    m_warpedValue = m_transformer->forward(m_value);
+    emit warpedValueChanged();
 }
 
 double ValueWarper::max() const
@@ -136,9 +152,15 @@ void ValueWarper::setMax(double value)
     m_max = value;
     emit maxChanged();
 
-    if (m_transformer) {
-        m_warpedValue = m_transformer->forward(m_value, m_min, m_max);
-        emit warpedValueChanged();
+    if (!m_transformer) {
+        return;
     }
+
+    if (useWarper()) {
+        m_transformer = std::make_unique<WarpingTransformer>(m_min, m_middle.toDouble(), m_max);
+    }
+
+    m_warpedValue = m_transformer->forward(m_value);
+    emit warpedValueChanged();
 }
 }

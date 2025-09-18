@@ -13,14 +13,14 @@ namespace au::effects {
  * The `warpedValue` of `ValueWarper` and the value of the control to be warped must be bound together and to nothing else.
  * `min` and `max` are the limits of the control.
  */
-class ValueWarper : public QObject
+class ValueWarper : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
 
     Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged FINAL)
     Q_PROPERTY(double min READ min WRITE setMin NOTIFY minChanged FINAL)
     Q_PROPERTY(double max READ max WRITE setMax NOTIFY maxChanged FINAL)
-    Q_PROPERTY(ValueWarpingType warpingType READ warpingType WRITE setWarpingType NOTIFY warpingTypeChanged FINAL)
+    Q_PROPERTY(QVariant middle READ middle WRITE setMiddle NOTIFY middleChanged FINAL)
 
     // Bind this to the control value you want to warp.
     Q_PROPERTY(double warpedValue READ warpedValue WRITE setWarpedValue NOTIFY warpedValueChanged FINAL)
@@ -28,11 +28,6 @@ class ValueWarper : public QObject
 public:
     explicit ValueWarper(QObject* parent = nullptr)
         : QObject(parent) {}
-
-    Q_INVOKABLE void init();
-
-    ValueWarpingType warpingType() const;
-    void setWarpingType(ValueWarpingType type);
 
     double value() const;
     void setValue(double value);
@@ -46,19 +41,27 @@ public:
     double max() const;
     void setMax(double value);
 
+    QVariant middle() const;
+    void setMiddle(const QVariant& value);
+
 signals:
     void valueChanged();
     void warpedValueChanged();
     void minChanged();
     void maxChanged();
+    void middleChanged();
     void warpingTypeChanged();
 
 private:
+    void classBegin() override {}
+    void componentComplete() override;
+    bool useWarper() const;
+
     double m_value = 0.0;
     double m_warpedValue = 0.0;
     double m_min = 0.0;
     double m_max = 1.0;
-    ValueWarpingType m_warpingType = ValueWarpingType::None;
+    QVariant m_middle; // null would mean passthrough
     std::unique_ptr<IValueTransformer> m_transformer;
 };
 } // namespace au::effects

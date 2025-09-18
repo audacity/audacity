@@ -52,7 +52,6 @@ void BuiltinEffectsModule::registerUiTypes()
     qmlRegisterUncreatableType<BuiltinEffectModel>("Audacity.BuiltinEffects", 1, 0, "BuiltinEffectModel", "Not creatable abstract type");
     qmlRegisterType<BuiltinEffectViewLoader>("Audacity.BuiltinEffects", 1, 0, "BuiltinEffectViewLoader");
     qmlRegisterType<ValueWarper>("Audacity.BuiltinEffects", 1, 0, "ValueWarper");
-    qmlRegisterUncreatableType<ValueWarpingTypes>("Audacity.BuiltinEffects", 1, 0, "ValueWarpingType", "Not creatable from QML");
 }
 
 void BuiltinEffectsModule::onPreInit(const muse::IApplication::RunMode&)
