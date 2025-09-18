@@ -20,10 +20,6 @@ on:
         required: false
         default: ''
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 env:
   CI_DIR: buildscripts/ci
   DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
