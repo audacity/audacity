@@ -25,8 +25,6 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
     Q_OBJECT
 
     Q_PROPERTY(bool isVerticalRulersVisible READ isVerticalRulersVisible NOTIFY isVerticalRulersVisibleChanged)
-    Q_PROPERTY(bool isSplitMode READ isSplitMode WRITE setIsSplitMode NOTIFY isSplitModeChanged FINAL)
-
     Q_PROPERTY(int totalTracksHeight READ totalTracksHeight NOTIFY totalTracksHeightChanged FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -34,7 +32,6 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
     explicit TracksListClipsModel(QObject* parent = nullptr);
@@ -43,7 +40,6 @@ public:
     Q_INVOKABLE void startUserInteraction();
     Q_INVOKABLE void endUserInteraction();
     Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);
-    Q_INVOKABLE void splitAt(trackedit::TrackId, double t);
 
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -52,17 +48,12 @@ public:
     bool isVerticalRulersVisible() const;
     int totalTracksHeight() const;
 
-    bool isSplitMode() const;
-    void setIsSplitMode(bool newIsSplitMode);
-
 signals:
     void dataSelectedTracksChanged();
     void selectedTracksChanged();
     void isVerticalRulersVisibleChanged(bool isVerticalRulersVisible);
 
     void totalTracksHeightChanged();
-
-    void isSplitModeChanged();
 
 private:
     void setIsVerticalRulersVisible(bool isVerticalRulersVisible);
@@ -77,10 +68,7 @@ private:
         IsTrackAudibleRole,
     };
 
-    void toggleSplitTool();
-
     std::vector<trackedit::Track> m_trackList;
     bool m_isVerticalRulersVisible = false;
-    bool m_isSplitMode = false;
 };
 }

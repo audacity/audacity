@@ -15,8 +15,6 @@ TracksListClipsModel::TracksListClipsModel(QObject* parent)
     configuration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool isVerticalRulersVisible) {
         setIsVerticalRulersVisible(isVerticalRulersVisible);
     });
-
-    dispatcher()->reg(this, "split-tool", this, &TracksListClipsModel::toggleSplitTool);
 }
 
 void TracksListClipsModel::load()
@@ -188,19 +186,6 @@ void TracksListClipsModel::handleDroppedFiles(const QStringList& fileUrls)
     prj->import(localPaths);
 }
 
-void TracksListClipsModel::splitAt(trackedit::TrackId id, double t)
-{
-    if (id < 0) {
-        return;
-    }
-    std::vector<muse::secs_t> pivots { t };
-
-    LOGD() << "Splitting track at " << t;
-    dispatcher()->dispatch("track-split-at",
-                           muse::actions::ActionData::make_arg2<trackedit::TrackIdList, std::vector<muse::secs_t> >({ id },
-                                                                                                                    pivots));
-}
-
 int TracksListClipsModel::rowCount(const QModelIndex&) const
 {
     return static_cast<int>(m_trackList.size());
@@ -275,25 +260,6 @@ void TracksListClipsModel::setIsVerticalRulersVisible(bool isVerticalRulersVisib
 
     m_isVerticalRulersVisible = isVerticalRulersVisible;
     emit isVerticalRulersVisibleChanged(m_isVerticalRulersVisible);
-}
-
-void TracksListClipsModel::toggleSplitTool()
-{
-    setIsSplitMode(!isSplitMode());
-}
-
-bool TracksListClipsModel::isSplitMode() const
-{
-    return m_isSplitMode;
-}
-
-void TracksListClipsModel::setIsSplitMode(bool newIsSplitMode)
-{
-    if (m_isSplitMode == newIsSplitMode) {
-        return;
-    }
-    m_isSplitMode = newIsSplitMode;
-    emit isSplitModeChanged();
 }
 
 int TracksListClipsModel::totalTracksHeight() const

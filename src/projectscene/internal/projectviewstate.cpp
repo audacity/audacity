@@ -514,11 +514,6 @@ muse::ValCh<bool> ProjectViewState::ctrlPressed() const
     return m_ctrlPressed;
 }
 
-muse::ValCh<bool> ProjectViewState::escPressed() const
-{
-    return m_escPressed;
-}
-
 int ProjectViewState::trackDefaultHeight() const
 {
     return DEFAULT_HEIGHT;
@@ -541,10 +536,6 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
             if (!m_ctrlPressed.val) {
                 m_ctrlPressed.set(true);
             }
-        } else if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Escape) {
-            if (!m_escPressed.val) {
-                m_escPressed.set(true);
-            }
         } else {
             // We only want to process single ALT and CTRL key presses
             if (m_altPressed.val) {
@@ -553,10 +544,6 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
 
             if (m_ctrlPressed.val) {
                 m_ctrlPressed.set(false);
-            }
-
-            if (m_escPressed.val) {
-                m_escPressed.set(false);
             }
         }
     } else if (event->type() == QEvent::KeyRelease) {
@@ -572,10 +559,6 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
             || (static_cast<QKeyEvent*>(event)->modifiers() & Qt::ControlModifier)) {
             m_ctrlPressed.set(false);
         }
-
-        if (m_escPressed.val) {
-            m_escPressed.set(false);
-        }
     } else if (event->type() == QEvent::ApplicationStateChange) {
         if (qApp->applicationState() != Qt::ApplicationState::ApplicationActive) {
             if (m_altPressed.val) {
@@ -584,10 +567,6 @@ bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
 
             if (m_ctrlPressed.val) {
                 m_ctrlPressed.set(false);
-            }
-
-            if (m_escPressed.val) {
-                m_escPressed.set(false);
             }
         }
     }
