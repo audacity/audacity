@@ -14,6 +14,10 @@ static const muse::actions::ActionCode FOCUS_NEXT_TRACK_CODE("focus-next-track")
 static const muse::actions::ActionCode PREV_TRACK_CODE("prev-track");
 static const muse::actions::ActionCode NEXT_TRACK_CODE("next-track");
 static const muse::actions::ActionCode TRACK_TOGGLE_SELECTION_CODE("track-toggle-focused-selection");
+static const muse::actions::ActionCode MULTI_TRACK_SELECTION_PREV_CODE("shift-up");
+static const muse::actions::ActionCode MULTI_TRACK_SELECTION_NEXT_CODE("shift-down");
+
+static const muse::actions::ActionCode PLAYBACK_SEEK_CODE("playback-seek");
 
 void TrackNavigationController::init()
 {
@@ -23,6 +27,12 @@ void TrackNavigationController::init()
     dispatcher()->reg(this, PREV_TRACK_CODE, this, &TrackNavigationController::navigateUp);
     dispatcher()->reg(this, NEXT_TRACK_CODE, this, &TrackNavigationController::navigateDown);
     dispatcher()->reg(this, TRACK_TOGGLE_SELECTION_CODE, this, &TrackNavigationController::toggleSelectionOnFocusedTrack);
+    dispatcher()->reg(this, MULTI_TRACK_SELECTION_PREV_CODE, this, &TrackNavigationController::multiSelectionUp);
+    dispatcher()->reg(this, MULTI_TRACK_SELECTION_NEXT_CODE, this, &TrackNavigationController::multiSelectionDown);
+
+    dispatcher()->reg(this, PLAYBACK_SEEK_CODE, [this] {
+        m_selectionStart = std::nullopt;
+    });
 
     selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& trackId) {
         const auto activePanel = navigationController()->activePanel();
@@ -30,6 +40,8 @@ void TrackNavigationController::init()
             navigationController()->requestActivateByName("Main Section", "Main Panel", "Main Control");
         }
     });
+
+    m_selectionStart = std::nullopt;
 }
 
 void TrackNavigationController::focusTrackByIndex(const muse::actions::ActionData& args)
@@ -48,11 +60,13 @@ void TrackNavigationController::focusTrackByIndex(const muse::actions::ActionDat
 
 void TrackNavigationController::focusPrevTrack()
 {
+    m_selectionStart = std::nullopt;
     selectionController()->focusPreviousTrack();
 }
 
 void TrackNavigationController::focusNextTrack()
 {
+    m_selectionStart = std::nullopt;
     selectionController()->focusNextTrack();
 }
 
@@ -141,6 +155,88 @@ void TrackNavigationController::toggleSelectionOnFocusedTrack()
         selectedTracks.erase(std::remove(selectedTracks.begin(), selectedTracks.end(), focusedTrack), selectedTracks.end());
     } else {
         selectedTracks.push_back(focusedTrack);
+    }
+
+    selectionController()->setSelectedTracks(selectedTracks);
+}
+
+void TrackNavigationController::multiSelectionUp()
+{
+    updateSelectionStart(SelectionDirection::Up);
+
+    au::trackedit::TrackIdList selectedTracks = selectionController()->selectedTracks();
+    const au::trackedit::TrackId focusedTrack = selectionController()->focusedTrack();
+
+    selectionController()->focusPreviousTrack();
+    updateTrackSelection(selectedTracks, focusedTrack);
+}
+
+void TrackNavigationController::multiSelectionDown()
+{
+    updateSelectionStart(SelectionDirection::Down);
+
+    const au::trackedit::TrackId focusedTrack = selectionController()->focusedTrack();
+    au::trackedit::TrackIdList selectedTracks = selectionController()->selectedTracks();
+
+    selectionController()->focusNextTrack();
+    updateTrackSelection(selectedTracks, focusedTrack);
+}
+
+void TrackNavigationController::updateSelectionStart(SelectionDirection direction)
+{
+    const au::trackedit::TrackId focusedTrack = selectionController()->focusedTrack();
+
+    if (!m_selectionStart) {
+        const auto orderedTracks = selectionController()->orderedTrackList();
+        const auto selectedTracks = selectionController()->selectedTracks();
+
+        std::vector<TrackId> orderedSelectedTracks;
+        for (const auto& trackId : orderedTracks) {
+            if (muse::contains(selectedTracks, trackId)) {
+                orderedSelectedTracks.push_back(trackId);
+            }
+        }
+
+        if (orderedSelectedTracks.empty()) {
+            m_selectionStart = focusedTrack;
+            selectionController()->setSelectedTracks({ focusedTrack });
+            return;
+        }
+
+        if (muse::contains(orderedSelectedTracks, focusedTrack)) {
+            const auto& firstTrack = orderedSelectedTracks.front();
+            const auto& lastTrack = orderedSelectedTracks.back();
+
+            if (focusedTrack == firstTrack && direction == SelectionDirection::Down) {
+                m_selectionStart = lastTrack;
+            } else if (focusedTrack == lastTrack && direction == SelectionDirection::Up) {
+                m_selectionStart = firstTrack;
+            } else {
+                m_selectionStart = focusedTrack;
+                selectionController()->setSelectedTracks({ focusedTrack });
+            }
+        } else {
+            m_selectionStart = focusedTrack;
+            selectionController()->setSelectedTracks({ focusedTrack });
+        }
+    }
+}
+
+void TrackNavigationController::updateTrackSelection(TrackIdList& selectedTracks,
+                                                     const TrackId& previousFocusedTrack)
+{
+    const TrackId newFocusedTrack = selectionController()->focusedTrack();
+    const int startDistance = selectionController()->trackDistance(*m_selectionStart, previousFocusedTrack);
+    const int endDistance = selectionController()->trackDistance(*m_selectionStart, newFocusedTrack);
+
+    if (startDistance == endDistance) {
+        return;
+    }
+
+    if (std::abs(startDistance) < std::abs(endDistance)) {
+        selectedTracks.push_back(newFocusedTrack);
+    } else {
+        selectedTracks.erase(std::remove(selectedTracks.begin(), selectedTracks.end(), previousFocusedTrack), selectedTracks.end());
     }
 
     selectionController()->setSelectedTracks(selectedTracks);

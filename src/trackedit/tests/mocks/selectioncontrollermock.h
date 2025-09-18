@@ -61,5 +61,8 @@ public:
     MOCK_METHOD(void, focusPreviousTrack, (), (override));
     MOCK_METHOD(void, focusNextTrack, (), (override));
     MOCK_METHOD(void, focusTrackByIndex, (int index), (override));
+
+    MOCK_METHOD(int, trackDistance, (TrackId previous, TrackId next), (const, override));
+    MOCK_METHOD(TrackIdList, orderedTrackList, (), (const, override));
 };
 }

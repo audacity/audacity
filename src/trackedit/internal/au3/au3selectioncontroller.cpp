@@ -621,6 +621,44 @@ void Au3SelectionController::updateSelectionController()
     }
 }
 
+int Au3SelectionController::trackDistance(const TrackId previous, const TrackId next) const
+{
+    if (previous == next) {
+        return 0;
+    }
+
+    const auto& tracks = Au3TrackList::Get(projectRef());
+    auto prevIter = tracks.Find(au3::DomAccessor::findTrack(projectRef(), ::TrackId(previous)));
+    auto nextIter = tracks.Find(au3::DomAccessor::findTrack(projectRef(), ::TrackId(next)));
+
+    if (prevIter == tracks.end() || nextIter == tracks.end()) {
+        return 0;
+    }
+
+    auto tempIter = prevIter;
+    int forwardDistance = 0;
+    while (tempIter != tracks.end() && tempIter != nextIter) {
+        ++tempIter;
+        ++forwardDistance;
+    }
+
+    if (tempIter == nextIter) {
+        return forwardDistance;
+    } else {
+        return -std::distance(nextIter, prevIter);
+    }
+}
+
+TrackIdList Au3SelectionController::orderedTrackList() const
+{
+    TrackIdList trackIds;
+    auto& tracks = Au3TrackList::Get(projectRef());
+    for (const auto& track : tracks) {
+        trackIds.push_back(track->GetId());
+    }
+    return trackIds;
+}
+
 Au3Project& Au3SelectionController::projectRef() const
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());

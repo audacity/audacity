@@ -82,6 +82,9 @@ public:
     void focusNextTrack() override;
     void focusTrackByIndex(int index) override;
 
+    int trackDistance(const TrackId previous, const TrackId next) const override;
+    TrackIdList orderedTrackList() const override;
+
 private:
     void addSelectedTrack(const trackedit::TrackId& trackId);
     void updateSelectionController();
