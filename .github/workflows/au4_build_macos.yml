@@ -121,7 +121,14 @@ jobs:
       run: |
         APP_BIN=$(pwd)/applebuild/audacity.app/Contents/MacOS/audacity
         GENERATE_ARCHS=("x86_64 arm64")
+
         BUILD_DIR=$(pwd)/applebuild
+        echo "applebuild"
+        ls -la "$BUILD_DIR"
+
+        echo "build.artifacts"
+        ls -la build.artifacts
+
         cmake -DAPP_BIN=${APP_BIN} \
               -DGENERATE_ARCHS="${GENERATE_ARCHS}" \
               -DBUILD_DIR=${BUILD_DIR} \
