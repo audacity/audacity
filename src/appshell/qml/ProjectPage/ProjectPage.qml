@@ -68,10 +68,16 @@ DockPage {
         order: trackEffectsKeyNavSec.order + 1
     }
 
+    property NavigationSection addNewTrackKeyNavSec: NavigationSection {
+        name: "AddNewTrackSection"
+        enabled: root.visible
+        order: masterEffectsKeyNavSec.order + 1
+    }
+
     property NavigationSection keynavTopPanelSec: NavigationSection {
         name: "NavigationTopPanel"
         enabled: root.visible
-        order: masterEffectsKeyNavSec.order + 1
+        order: addNewTrackKeyNavSec.order + 1
     }
 
     property NavigationSection keynavLeftPanelSec: NavigationSection {
@@ -275,6 +281,9 @@ DockPage {
             objectName: pageModel.tracksPanelName()
             title: qsTrc("appshell", "Tracks")
 
+            closable: false
+            floatable: false
+
             width: panelWidth
             minimumWidth: panelWidth
             maximumWidth: panelWidth
@@ -283,54 +292,66 @@ DockPage {
 
             groupName: root.verticalPanelsGroup
 
-            dropDestinations: root.verticalPanelDropDestinations
+            location: Location.Left
 
-            titleBar: TracksTitleBar {
-                id: trackstitleBarItem
+            Column {
+                anchors.fill: parent
+                spacing: 0
 
-                effectsSectionWidth: tracksPanel.effectsSectionWidth
-                showEffectsSection: tracksPanel.showEffectsSection
-                implicitHeight: tracksPanel.titleBarHeight
+                TracksTitleBar {
+                    id: trackstitleBarItem
 
-                onAddRequested: function (type) {
-                    tracksPanel.add(type)
-                }
+                    navigation.section: root.addNewTrackKeyNavSec
 
-                onEffectsSectionCloseRequested: {
-                    tracksPanel.showEffectsSection = false
-                }
-            }
+                    effectsSectionWidth: tracksPanel.effectsSectionWidth
+                    showEffectsSection: tracksPanel.showEffectsSection
 
-            TracksPanel {
-                id: tracksPanelContent
+                    height: tracksPanel.titleBarHeight
+                    width: parent.width
 
-                navPanels: tracksNavModel.trackItemPanels
-                effectsSectionWidth: tracksPanel.effectsSectionWidth
-
-                trackEffectsNavigationSection: root.trackEffectsKeyNavSec
-                masterEffectsNavigationSection: root.masterEffectsKeyNavSec
-
-                onOpenEffectsRequested: {
-                    tracksPanel.showEffectsSection = true
-                }
-
-                onShowEffectsSectionChanged: {
-                    tracksPanel.showEffectsSection = showEffectsSection
-                }
-
-                onPanelActive: function (index) {
-                    tracksNavModel.moveFocusTo(index)
-                }
-
-                Connections {
-                    target: tracksPanel
-
-                    function onAdd(type) {
-                        tracksPanelContent.tracksModel.addTrack(type)
+                    onAddRequested: function (type) {
+                        tracksPanel.add(type)
                     }
 
-                    function onShowEffectsSectionChanged() {
-                        tracksPanelContent.showEffectsSection = tracksPanel.showEffectsSection
+                    onEffectsSectionCloseRequested: {
+                        tracksPanel.showEffectsSection = false
+                    }
+                }
+
+                TracksPanel {
+                    id: tracksPanelContent
+
+                    width: parent.width
+                    height: parent.height - trackstitleBarItem.height
+
+                    navPanels: tracksNavModel.trackItemPanels
+                    effectsSectionWidth: tracksPanel.effectsSectionWidth
+
+                    trackEffectsNavigationSection: root.trackEffectsKeyNavSec
+                    masterEffectsNavigationSection: root.masterEffectsKeyNavSec
+
+                    onOpenEffectsRequested: {
+                        tracksPanel.showEffectsSection = true
+                    }
+
+                    onShowEffectsSectionChanged: {
+                        tracksPanel.showEffectsSection = showEffectsSection
+                    }
+
+                    onPanelActive: function (index) {
+                        tracksNavModel.moveFocusTo(index)
+                    }
+
+                    Connections {
+                        target: tracksPanel
+
+                        function onAdd(type) {
+                            tracksPanelContent.tracksModel.addTrack(type)
+                        }
+
+                        function onShowEffectsSectionChanged() {
+                            tracksPanelContent.showEffectsSection = tracksPanel.showEffectsSection
+                        }
                     }
                 }
             }

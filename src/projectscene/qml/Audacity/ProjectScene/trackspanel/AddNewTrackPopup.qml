@@ -11,8 +11,8 @@ StyledPopupView {
     id: root
     objectName: "AddNewTrackPanel"
 
-    contentWidth: content.width
-    contentHeight: content.height
+    contentWidth: trackTypeOpts.width
+    contentHeight: trackTypeOpts.height
 
     modal: true
 
@@ -20,36 +20,46 @@ StyledPopupView {
 
     signal createTrack(type : int)
 
-    ColumnLayout {
-        id: content
+    NavigationPanel {
+        id: navPanel
+        name: "AddNewTrackPopup"
+        enabled: root.isOpened
+        direction: NavigationPanel.Horizontal
+        section: root.navigationSection
+    }
 
-        spacing: 12
+    onOpened: {
+        navPanel.requestActive()
+    }
 
-        RowLayout {
+    RowLayout {
+        id: trackTypeOpts
 
-            width: parent.width
-            height: 72
-            spacing: 12
+        spacing: 10
 
-            Repeater {
-                model: [
-                    { type: TrackType.MONO, icon: IconCode.MICROPHONE, text: qsTrc("projectscene", "Mono"), enabled: true },
-                    { type: TrackType.STEREO, icon: IconCode.MICROPHONE, text: qsTrc("projectscene", "Stereo"), enabled: true },
-                    { type: TrackType.LABEL, icon: IconCode.LOOP_IN, text: qsTrc("projectscene", "Label"), enabled: false }
-                ]
+        Repeater {
+            model: [
+                { type: TrackType.MONO, icon: IconCode.MICROPHONE, text: qsTrc("projectscene", "Mono"), enabled: true },
+                { type: TrackType.STEREO, icon: IconCode.MICROPHONE, text: qsTrc("projectscene", "Stereo"), enabled: true },
+                { type: TrackType.LABEL, icon: IconCode.LOOP_IN, text: qsTrc("projectscene", "Label"), enabled: false }
+            ]
 
-                FlatButton {
-                    Layout.preferredWidth: 80
-                    Layout.preferredHeight: 72
-                    Layout.fillHeight: true
+            FlatButton {
+                Layout.preferredWidth: 80
+                Layout.preferredHeight: 72
+                Layout.fillHeight: true
+                Layout.margins: 2
 
-                    accentButton: false
-                    enabled: modelData.enabled
-                    icon: modelData.icon
-                    text: modelData.text
-                    onClicked: {
-                        createTrack(modelData.type)
-                    }
+                navigation.name: "TrackType" + index
+                navigation.panel: navPanel
+                navigation.column: index
+
+                accentButton: false
+                enabled: modelData.enabled
+                icon: modelData.icon
+                text: modelData.text
+                onClicked: {
+                    createTrack(modelData.type)
                 }
             }
         }
