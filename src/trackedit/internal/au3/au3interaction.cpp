@@ -1386,7 +1386,12 @@ bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, std::vector<sec
         }
 
         if (didAnySplitOccur) {
-            auto clip = waveTrack->NewestOrNewClip();
+            // Select the leftmost clip
+            secs_t time = pivots.front();
+            const auto sampleLength = 1. / waveTrack->GetRate();
+            time -= sampleLength;
+
+            auto clip = waveTrack->GetClipAtTime(time);
 
             if (clip) {
                 ClipKey clipKey = DomConverter::clip(waveTrack, clip.get()).key;
