@@ -134,15 +134,15 @@ jobs:
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
       run: |
-        APP_BIN=$(pwd)/applebuild/audacity.app/Contents/MacOS/audacity
+        APP_BIN=$(pwd)/build.install/audacity.app/Contents/MacOS/audacity
         GENERATE_ARCHS=("x86_64 arm64")
 
-        BUILD_DIR=$(pwd)/applebuild
-        echo "applebuild"
+        BUILD_DIR=$(pwd)/build.install
+        echo "build.install"
         ls -la "$BUILD_DIR"
 
         echo "build.artifacts"
-        ls -la build.artifacts
+        ls -la $(pwd)/build.artifacts
 
         cmake -DAPP_BIN=${APP_BIN} \
               -DGENERATE_ARCHS="${GENERATE_ARCHS}" \
