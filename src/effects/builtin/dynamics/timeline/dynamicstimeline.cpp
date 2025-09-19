@@ -8,7 +8,6 @@
 
 #include "global/log.h"
 
-#include <QLineSeries>
 #include <QSGTransformNode>
 #include <QTimer>
 #include <QtQuick/qsgflatcolormaterial.h>
