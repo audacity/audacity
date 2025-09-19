@@ -51,12 +51,21 @@ SplitToolController::SplitToolController(QObject* parent)
             setClipHovered(false);
         }
     });
+    uicontextResolver()->currentUiContextChanged().onNotify(nullptr, [this]() {
+        setActive(false);
+        setSingleTrack(true);
+        setClipHovered(false);
+    });
 }
 
 SplitToolController::~SplitToolController() = default;
 
 void au::projectscene::SplitToolController::doSplit()
 {
+    if (!m_clipHovered) {
+        return;
+    }
+
     Qt::KeyboardModifiers mods = QGuiApplication::queryKeyboardModifiers();
 
     if (mods & Qt::ShiftModifier) {
@@ -74,6 +83,7 @@ void SplitToolController::mouseDown(double pos)
     }
     updateGuideline(pos);
     m_splitStartPos = m_guidelinePos;
+
     doSplit();
 }
 
@@ -198,19 +208,6 @@ void SplitToolController::restoreCursor()
         m_cursorOverriden = false;
         QGuiApplication::restoreOverrideCursor();
     }
-}
-
-void SplitToolController::splitTrackAt(trackedit::TrackId id, double t)
-{
-    if (id < 0) {
-        return;
-    }
-    std::vector<muse::secs_t> pivots { t };
-
-    LOGD() << "Splitting track at " << t;
-    dispatcher()->dispatch("track-split-at",
-                           muse::actions::ActionData::make_arg2<trackedit::TrackIdList, std::vector<muse::secs_t> >({ id },
-                                                                                                                    pivots));
 }
 
 void SplitToolController::splitTracksAt(trackedit::TrackIdList ids, double t)

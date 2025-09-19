@@ -7,6 +7,7 @@
 #include <QObject>
 
 #include "modularity/ioc.h"
+#include "context/iuicontextresolver.h"
 #include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
@@ -26,6 +27,7 @@ class SplitToolController : public QObject, public muse::actions::Actionable
 
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<context::IUiContextResolver> uicontextResolver;
 
 public:
     SplitToolController(QObject* parent = nullptr);
@@ -76,7 +78,6 @@ private:
     void overrideCursor();
     void restoreCursor();
 
-    void splitTrackAt(trackedit::TrackId id, double t);
     void splitTracksAt(trackedit::TrackIdList ids, double t);
     void doSplit();
 

@@ -48,6 +48,10 @@ void PlayRegionController::mouseDown(double pos)
             mouseUp(m_dragStartPos);
         }
     });
+
+    uicontextResolver()->currentUiContextChanged().onNotify(nullptr, [this]() {
+        mouseUp(m_dragStartPos);
+    });
 }
 
 void PlayRegionController::mouseMove(double pos)
