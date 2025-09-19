@@ -42,6 +42,12 @@ void PlayRegionController::mouseDown(double pos)
     if (m_action != UserInputAction::None) {
         playback()->player()->loopEditingBegin();
     }
+
+    connect(qApp, &QApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
+        if (state != Qt::ApplicationActive) {
+            mouseUp(m_dragStartPos);
+        }
+    });
 }
 
 void PlayRegionController::mouseMove(double pos)

@@ -43,6 +43,14 @@ SplitToolController::SplitToolController(QObject* parent)
     });
 
     qApp->installEventFilter(this);
+
+    connect(qApp, &QApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
+        if (state != Qt::ApplicationActive) {
+            setActive(false);
+            setSingleTrack(true);
+            setClipHovered(false);
+        }
+    });
 }
 
 SplitToolController::~SplitToolController() = default;
@@ -71,9 +79,6 @@ void SplitToolController::mouseDown(double pos)
 
 void SplitToolController::mouseMove(double pos)
 {
-    if (!active()) {
-        return;
-    }
     updateGuideline(pos);
 }
 
