@@ -45,23 +45,26 @@ struct Unbypassed
 
 static constexpr auto compressorMeterUpdatePeriodMs = 1000 / 30;
 
-constexpr double compressorThresholdDbDefault = -10;
-constexpr double compressorMakeupGainDbDefault = 0;
-constexpr double compressorKneeWidthDbDefault = 5;
+constexpr double compressorThresholdDbDefault = -12;
+constexpr double compressorKneeWidthDbDefault = 6;
 constexpr double compressorCompressionRatioDefault = 4;
-constexpr double compressorLookaheadMsDefault = 1;
-constexpr double compressorAttackMsDefault = 30;
-constexpr double compressorReleaseMsDefault = 150;
-constexpr double compressorMaxLookaheadMs = 1000.;
+// Setup the default makeup gain so that the transfer function yields 0 output at 0 input.
+constexpr double compressorMakeupGainDbDefault = compressorThresholdDbDefault / compressorCompressionRatioDefault
+                                                 - compressorThresholdDbDefault;
+constexpr double compressorLookaheadMsDefault = 3;
+constexpr double compressorAttackMsDefault = 3;
+constexpr double compressorReleaseMsDefault = 100;
 
-constexpr double limiterThresholdDbDefault = -5;
+constexpr double compressorMaxLookaheadMs = 100.;
+
+constexpr double limiterThresholdDbDefault = -6;
 constexpr double limiterMakeupTargetDbDefault = -1;
 constexpr double limiterKneeWidthDbDefault = 2;
 constexpr double limiterLookaheadMsDefault = 1;
 constexpr double limiterReleaseMsDefault = 20;
 constexpr double limiterMaxLookaheadMs = 50;
 
-constexpr double showInputDefault = 0;
+constexpr double showInputDefault = 1;
 constexpr double showOutputDefault = 1;
 constexpr double showActualDefault = 1;
 constexpr double showTargetDefault = 0;

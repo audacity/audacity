@@ -65,6 +65,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/limiter/limiterviewmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/limiter/limitereffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/limiter/limitereffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/dynamicseffectsmacros.h
 
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeeffect.h
@@ -96,7 +97,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/stopwatch.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/dynamicsplaystatemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/dynamicsplaystatemodel.h
-
 
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/chirpeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/chirpeffect.h

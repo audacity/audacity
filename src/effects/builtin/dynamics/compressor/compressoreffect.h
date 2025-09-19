@@ -6,6 +6,7 @@
 #include "libraries/lib-dynamic-range-processor/DynamicRangeProcessorTypes.h"
 #include "libraries/lib-effects/PerTrackEffect.h"
 #include "libraries/lib-components/SettingsVisitor.h"
+#include "dynamics/dynamicseffectsmacros.h"
 
 namespace au::effects {
 class CompressorEffect : public EffectWithSettings<CompressorSettings, PerTrackEffect>
@@ -30,79 +31,19 @@ public:
     bool CheckWhetherSkipEffect(const EffectSettings& settings) const override;
     const EffectParameterMethods& Parameters() const override;
 
-    static constexpr EffectParameter thresholdDb {
-        &CompressorSettings::thresholdDb,
-        L"thresholdDb",
-        compressorThresholdDbDefault,
-        -60,
-        0,
-        0.1
-    };
+#define COMPRESSOR_PARAM(paramName, paramMin, paramDefault, paramMax, paramStep) \
+    DYNAMICS_EFFECT_PARAM(CompressorSettings, paramName, paramMin, paramDefault, paramMax, paramStep)
 
-    static constexpr EffectParameter makeupGainDb {
-        &CompressorSettings::makeupGainDb,
-        L"makeupGainDb",
-        compressorMakeupGainDbDefault,
-        -30,
-        30,
-        0.1
-    };
-
-    static constexpr EffectParameter kneeWidthDb {
-        &CompressorSettings::kneeWidthDb,
-        L"kneeWidthDb",
-        compressorKneeWidthDbDefault,
-        0,
-        30,
-        0.1
-    };
-
-    static constexpr EffectParameter compressionRatio {
-        &CompressorSettings::compressionRatio,
-        L"compressionRatio",
-        compressorCompressionRatioDefault,
-        1,
-        100,
-        0.01
-    };
-
-    static constexpr EffectParameter lookaheadMs {
-        &CompressorSettings::lookaheadMs, L"lookaheadMs",
-        compressorLookaheadMsDefault,
-        0,
-        compressorMaxLookaheadMs,
-        0.1
-    };
-
-    static constexpr EffectParameter attackMs {
-        &CompressorSettings::attackMs,
-        L"attackMs",
-        compressorAttackMsDefault,
-        0,
-        200,
-        0.1
-    };
-
-    static constexpr EffectParameter releaseMs {
-        &CompressorSettings::releaseMs,
-        L"releaseMs",
-        compressorReleaseMsDefault,
-        0,
-        1000,
-        0.1
-    };
-
-    static constexpr EffectParameter showInput {
-        &CompressorSettings::showInput, L"showInput", showInputDefault, 0, 1, 1
-    };
-    static constexpr EffectParameter showOutput {
-        &CompressorSettings::showOutput, L"showOutput", showOutputDefault, 0, 1, 1
-    };
-    static constexpr EffectParameter showActual {
-        &CompressorSettings::showActual, L"showActual", showActualDefault, 0, 1, 1
-    };
-    static constexpr EffectParameter showTarget {
-        &CompressorSettings::showTarget, L"showTarget", showTargetDefault, 0, 1, 1
-    };
+    COMPRESSOR_PARAM(thresholdDb, -30, compressorThresholdDbDefault, 0, 0.1);
+    COMPRESSOR_PARAM(makeupGainDb, 0, compressorMakeupGainDbDefault, 30, 0.1);
+    COMPRESSOR_PARAM(kneeWidthDb, 0, compressorKneeWidthDbDefault, 30, 0.1);
+    COMPRESSOR_PARAM(compressionRatio, 1, compressorCompressionRatioDefault, 20, 0.01);
+    COMPRESSOR_PARAM(lookaheadMs, 0, compressorLookaheadMsDefault, compressorMaxLookaheadMs, 0.1);
+    COMPRESSOR_PARAM(attackMs, 0.1, compressorAttackMsDefault, 100, 0.01);
+    COMPRESSOR_PARAM(releaseMs, 10, compressorReleaseMsDefault, 1000, 0.1);
+    COMPRESSOR_PARAM(showInput, 0, showInputDefault, 1, 1);
+    COMPRESSOR_PARAM(showOutput, 0, showOutputDefault, 1, 1);
+    COMPRESSOR_PARAM(showActual, 0, showActualDefault, 1, 1);
+    COMPRESSOR_PARAM(showTarget, 0, showTargetDefault, 1, 1);
 };
 }
