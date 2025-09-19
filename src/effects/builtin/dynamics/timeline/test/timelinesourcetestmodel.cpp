@@ -4,9 +4,9 @@
 #include "timelinesourcetestmodel.h"
 #include "dynamicstimelinetypes.h"
 
-#include <QLineSeries>
 #include <QSGGeometryNode>
 #include <QTimer>
+#include <QVariant>
 #include <QtQuick/qsgflatcolormaterial.h>
 
 #include <algorithm>

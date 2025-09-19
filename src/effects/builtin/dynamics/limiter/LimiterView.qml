@@ -76,8 +76,6 @@ DynamicsEffectBase {
 
                         isVertical: true
                         radius: 24
-                        title: qsTrc("effects/limiter", "Threshold")
-                        unit: "dB"
                         warp: true
                         model: LimiterSettingModel {
                             paramId: "thresholdDb"
@@ -94,8 +92,6 @@ DynamicsEffectBase {
 
                         isVertical: true
                         radius: 24
-                        title: qsTrc("effects/limiter", "Make-up gain")
-                        unit: "dB"
                         warp: true
                         model: LimiterSettingModel {
                             paramId: "makeupTargetDb"
@@ -111,35 +107,17 @@ DynamicsEffectBase {
                 }
 
                 Repeater {
-                    model: [
-                        {
-                            id: "lookaheadMs",
-                            title: qsTrc("effects/limiter", "Lookahead"),
-                            unit: "ms"
-                        },
-                        {
-                            id: "kneeWidthDb",
-                            title: qsTrc("effects/limiter", "Knee width"),
-                            unit: "dB"
-                        },
-                        {
-                            id: "releaseMs",
-                            title: qsTrc("effects/limiter", "Release"),
-                            unit: "ms"
-                        },
-                    ]
+                    model: ["lookaheadMs", "kneeWidthDb", "releaseMs"]
 
                     delegate: SettingKnob {
+                        required property string modelData
                         anchors.verticalCenter: parent.verticalCenter
-                        required property var modelData
                         isVertical: true
                         knobFirst: false
                         radius: 16
-                        title: modelData.title
-                        unit: modelData.unit
                         warp: true
                         model: LimiterSettingModel {
-                            paramId: modelData.id
+                            paramId: modelData
                         }
                     }
                 }

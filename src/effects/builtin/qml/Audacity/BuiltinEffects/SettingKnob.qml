@@ -5,8 +5,6 @@ Item {
     id: root
 
     required property var model
-    required property string title
-    property string unit: ""
     property bool warp: false
     property bool isVertical: false
     property bool knobFirst: true // Only relevant is `isVertical` is true
@@ -31,8 +29,8 @@ Item {
             middle: root.warp ? root.model.defaultValue : null
             knobFirst: root.knobFirst
             parameter: {
-                "title": root.title,
-                "unit": root.unit,
+                "title": root.model.title,
+                "unit": root.model.unit,
                 "min": root.model.min,
                 "max": root.model.max,
                 "value": root.model.value,
