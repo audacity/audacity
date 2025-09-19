@@ -19,9 +19,9 @@ Item {
 
     QtObject {
         id: prv
-        readonly property int min: -60
+        readonly property int min: -36
         readonly property int max: 0
-        readonly property int step: 12
+        readonly property int step: 6
         readonly property int tickLength: 4
         readonly property var ticks: (function () {
                 var result = []
