@@ -12,10 +12,6 @@ Item {
     property bool knobFirst: true // Only relevant is `isVertical` is true
     property int radius: 16
 
-    Component.onCompleted: {
-        model.init()
-    }
-
     Loader {
         id: knobLoader
 

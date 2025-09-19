@@ -103,8 +103,4 @@ BuiltinEffectBase {
             }
         }
     }
-
-    Component.onCompleted: {
-        root.model.init()
-    }
 }

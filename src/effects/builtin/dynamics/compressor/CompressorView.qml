@@ -28,10 +28,6 @@ DynamicsEffectBase {
         }
     }
 
-    Component.onCompleted: {
-        compressor.init()
-    }
-
     Column {
         id: rootColumn
 

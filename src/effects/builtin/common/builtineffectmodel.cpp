@@ -15,7 +15,7 @@ BuiltinEffectModel::BuiltinEffectModel(QObject* parent)
     assert(m_instanceId != -1);
 }
 
-void BuiltinEffectModel::init()
+void BuiltinEffectModel::componentComplete()
 {
     instancesRegister()->settingsChanged(m_instanceId).onNotify(this, [this]() {
         doReload();

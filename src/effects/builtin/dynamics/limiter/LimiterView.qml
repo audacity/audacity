@@ -22,10 +22,6 @@ DynamicsEffectBase {
         id: limiter
     }
 
-    Component.onCompleted: {
-        limiter.init()
-    }
-
     Column {
         id: rootColumn
 

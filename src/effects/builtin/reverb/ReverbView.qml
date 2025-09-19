@@ -29,10 +29,6 @@ BuiltinEffectBase {
         id: reverb
     }
 
-    Component.onCompleted: {
-        reverb.init()
-    }
-
     function newParameterValueRequested(key, value) {
         reverb.setParam(key, value)
     }
