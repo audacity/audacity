@@ -105,7 +105,7 @@ jobs:
     - name: Setup ccache
       run: |
         brew install ccache
-        bash ${CI_DIR}/tools/setup_ccache_config.sh
+        cmake -P ${CI_DIR}/tools/setup_ccache_config.cmake
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
