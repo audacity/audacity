@@ -23,7 +23,10 @@ Audacity4Project::Audacity4Project()
 Ret Audacity4Project::createNew()
 {
     m_au3Project = au3ProjectCreator()->create();
-    m_au3Project->open();
+    if (!m_au3Project->open()) {
+        return muse::make_ret(static_cast<Ret::Code>(au::project::Err::NoProjectError));
+    }
+    setPath(m_au3Project->getFileName());
     m_trackeditProject = trackeditProjectCreator()->create(m_au3Project);
     m_isNewlyCreated = true;
     m_viewState = viewStateCreator()->createViewState(m_au3Project);
@@ -102,12 +105,14 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, const bool forceMode,
         return make_ret(Err::ProjectFileNotFound, path);
     }
 
-    io::File file(path);
-    if (!file.open(io::IODevice::ReadOnly)) {
-        LOGE() << "failed open file (Can't Read): " << path;
-        return make_ret(Err::ProjectFileIsReadProtected, path);
+    {
+        io::File file(path);
+        if (!file.open(io::IODevice::ReadOnly)) {
+            LOGE() << "failed open file (Can't Read): " << path;
+            return make_ret(Err::ProjectFileIsReadProtected, path);
+        }
+        file.close();
     }
-    file.close();
 
     m_au3Project = au3ProjectCreator()->create();
     ret = m_au3Project->load(path);
@@ -134,7 +139,7 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, const bool forceMode,
     if (m_au3Project->isRecovered()) {
         m_trackeditProject->reload();
 
-        if (path == configuration()->newProjectTemporaryPath()) {
+        if (m_au3Project->isTemporary()) {
             m_isNewlyCreated = true;
             LOGD() << "[project] Restored never-saved project, marked as newly created";
         }

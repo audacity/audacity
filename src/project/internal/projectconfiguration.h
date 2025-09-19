@@ -45,8 +45,6 @@ public:
     void setTemporaryDir(const muse::io::path_t& path) override;
     muse::async::Channel<muse::io::path_t> temporaryDirChanged() const override;
 
-    muse::io::path_t newProjectTemporaryPath() const override;
-
     int homeProjectsPageTabIndex() const override;
     void setHomeProjectsPageTabIndex(int index) override;
 

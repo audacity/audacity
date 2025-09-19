@@ -45,8 +45,6 @@ public:
     virtual void setTemporaryDir(const muse::io::path_t& path) = 0;
     virtual muse::async::Channel<muse::io::path_t> temporaryDirChanged() const = 0;
 
-    virtual muse::io::path_t newProjectTemporaryPath() const = 0;
-
     virtual int homeProjectsPageTabIndex() const = 0;
     virtual void setHomeProjectsPageTabIndex(int index) = 0;
 

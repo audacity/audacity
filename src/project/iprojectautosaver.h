@@ -35,10 +35,6 @@ class IProjectAutoSaver : MODULE_EXPORT_INTERFACE
 
 public:
     virtual ~IProjectAutoSaver() = default;
-
-    virtual void removeProjectUnsavedChanges(const muse::io::path_t& projectPath) = 0;
-
-    virtual bool isPathToNewlyCreatedProject(const muse::io::path_t& projectPath) const = 0;
 };
 }
 
