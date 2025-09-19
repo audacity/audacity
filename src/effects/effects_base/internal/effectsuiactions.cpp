@@ -8,8 +8,6 @@
 #include "types/translatablestring.h"
 #include "log.h"
 
-#include <unordered_map>
-
 using namespace au::effects;
 using namespace muse;
 using namespace muse::ui;
@@ -67,10 +65,10 @@ EffectsUiActions::EffectsUiActions(std::shared_ptr<EffectsActionsController> con
 }
 
 namespace {
-UiAction makeUiAction(const char16_t* uri, const EffectMeta& meta)
+UiAction makeUiAction(const std::string& uri, const EffectMeta& meta)
 {
     UiAction action;
-    action.code = makeEffectAction(uri, meta.id).toString();
+    action.code = makeEffectAction(uri, meta.id);
     action.uiCtx = au::context::UiCtxProjectOpened;
     action.scCtx = au::context::CTX_PROJECT_FOCUSED;
     action.description = TranslatableString::untranslatable(meta.description);
@@ -114,7 +112,7 @@ void EffectsUiActions::makeActions(EffectMetaList effects)
     for (const EffectMeta& e : effects) {
         m_actions.push_back(makeUiAction(EFFECT_OPEN_ACTION, e));
         if (e.isRealtimeCapable) {
-            for (const auto uri : { REALTIME_EFFECT_ADD_ACTION, REALTIME_EFFECT_REPLACE_ACTION }) {
+            for (const auto& uri : { REALTIME_EFFECT_ADD_ACTION, REALTIME_EFFECT_REPLACE_ACTION }) {
                 m_actions.push_back(makeUiAction(uri, e));
             }
         }

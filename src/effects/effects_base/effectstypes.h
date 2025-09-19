@@ -90,15 +90,15 @@ struct EffectMeta {
 
 using EffectMetaList = std::vector<EffectMeta>;
 
-constexpr const char16_t* EFFECT_OPEN_ACTION = u"action://effects/open?effectId=%1";
-constexpr const char16_t* REALTIME_EFFECT_ADD_ACTION = u"action://effects/realtime-add?effectId=%1";
-constexpr const char16_t* REALTIME_EFFECT_REPLACE_ACTION = u"action://effects/realtime-replace?effectId=%1";
+const std::string EFFECT_OPEN_ACTION = "action://effects/open?effectId=%1";
+const std::string REALTIME_EFFECT_ADD_ACTION = "action://effects/realtime-add?effectId=%1";
+const std::string REALTIME_EFFECT_REPLACE_ACTION = "action://effects/realtime-replace?effectId=%1";
 
-constexpr const char16_t* EFFECT_VIEWER_URI = u"audacity://effects/effect_viewer?instanceId=%1&effectFamily=%2";
+const std::string EFFECT_VIEWER_URI = "audacity://effects/effect_viewer?instanceId=%1&effectFamily=%2";
 
-inline muse::actions::ActionQuery makeEffectAction(const char16_t* action, const EffectId id)
+inline std::string makeEffectAction(const std::string& action, const EffectId& id)
 {
-    return muse::actions::ActionQuery(muse::String(action).arg(id));
+    return QString::fromStdString(action).arg(id).toStdString();
 }
 
 inline EffectId effectIdFromAction(const muse::actions::ActionQuery& action)

@@ -123,7 +123,7 @@ void RealtimeEffectListItemMenuModel::updateEffectCheckmarks()
 
 muse::uicomponents::MenuItem* RealtimeEffectListItemMenuModel::makeMenuEffectItem(const effects::EffectId& effectId)
 {
-    auto item = makeMenuItem(effects::makeEffectAction(effects::REALTIME_EFFECT_REPLACE_ACTION, effectId).toString());
+    auto item = makeMenuItem(effects::makeEffectAction(effects::REALTIME_EFFECT_REPLACE_ACTION, effectId));
     item->setCheckable(true);
     return item;
 }
