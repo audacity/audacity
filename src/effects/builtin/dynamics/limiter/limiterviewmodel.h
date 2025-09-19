@@ -3,11 +3,7 @@
  */
 #pragma once
 
-#include "effects/builtin/common/effectsettingmodelimpl.h"
-#include "limitereffect.h"
-
-#include <cassert>
-#include <functional>
+#include "effects/builtin/common/builtineffectmodel.h"
 
 namespace au::effects {
 class LimiterViewModel : public BuiltinEffectModel
@@ -19,11 +15,5 @@ public:
 
 private:
     void doReload() override;
-};
-
-class LimiterSettingModel : public EffectSettingModelImpl<LimiterEffect>
-{
-public:
-    LimiterSettingModel(QObject* parent = nullptr);
 };
 }
