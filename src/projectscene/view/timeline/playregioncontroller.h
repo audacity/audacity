@@ -7,6 +7,7 @@
 #include <QObject>
 
 #include "modularity/ioc.h"
+#include "context/iuicontextresolver.h"
 #include "playback/iplayback.h"
 
 #include "timelinecontext.h"
@@ -21,6 +22,7 @@ class PlayRegionController : public QObject
     Q_PROPERTY(bool guidelineVisible READ guidelineVisible NOTIFY guidelineVisibleChanged FINAL)
 
     muse::Inject<playback::IPlayback> playback;
+    muse::Inject<context::IUiContextResolver> uicontextResolver;
 
     enum class UserInputAction {
         None,
