@@ -120,16 +120,22 @@ jobs:
       if: env.DO_BUILD == 'true'
       run: |
         bash ${CI_DIR}/macos/setup.sh
+
     - name: Build
       if: env.DO_BUILD == 'true'
       run: |
         source $HOME/build_tools/environment.sh
         cmake -P ${CI_DIR}/macos/ci_build.cmake
+
+        echo "============== ccache ==============="
+        ccache -sv
+
     - name: Package
       if: env.DO_BUILD == 'true'
       run: |
         source $HOME/build_tools/environment.sh
         cmake -P ${CI_DIR}/macos/package.cmake
+
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
@@ -152,6 +158,7 @@ jobs:
               -DSENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
               -DSENTRY_PROJECT=${SENTRY_PROJECT} \
               -P ${CI_DIR}/crashdumps/ci_generate_and_upload.cmake
+
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v4
