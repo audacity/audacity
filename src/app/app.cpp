@@ -21,6 +21,7 @@
  */
 
 #include "app.h"
+#include "../ineededmodulesetup.h"
 
 #include <QApplication>
 #include <QQmlApplicationEngine>
@@ -53,7 +54,7 @@ App::App()
 {
 }
 
-void App::addModule(modularity::IModuleSetup* module)
+void App::addModule(au::INeededModuleSetup* module)
 {
     m_modules.push_back(module);
 }
@@ -85,6 +86,10 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
     }
 
     const IApplication::RunMode runMode = commandLineParser.runMode();
+
+    assert(std::all_of(m_modules.begin(), m_modules.end(), [runMode](au::INeededModuleSetup* m) {
+        return m->isNeededForRunMode(runMode);
+    }));
 
     // ====================================================
     // Setup modules: apply the command line options
