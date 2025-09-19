@@ -42,7 +42,7 @@ void AddEffectMenuModel::handleMenuItem(const QString& itemId)
 
 muse::uicomponents::MenuItem* AddEffectMenuModel::makeMenuEffectItem(const effects::EffectId& effectId)
 {
-    return makeMenuItem(effects::makeEffectAction(effects::REALTIME_EFFECT_ADD_ACTION, effectId).toString());
+    return makeMenuItem(effects::makeEffectAction(effects::REALTIME_EFFECT_ADD_ACTION, effectId));
 }
 
 muse::uicomponents::MenuItem* AddEffectMenuModel::makeMenuEffect(const muse::String& title,

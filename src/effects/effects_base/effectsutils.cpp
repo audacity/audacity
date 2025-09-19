@@ -14,12 +14,23 @@ using namespace au::effects;
 class CiString : public String
 {
 public:
-    bool operator<(const CiString& other) const
+    CiString() = default;
+    CiString(const String& s)
+        : String(s), m_cache(toLower(s)) {}
+
+    bool operator<(const CiString& other) const noexcept
     {
-        const auto lhs = this->toStdString();
-        const auto rhs = other.toStdString();
-        return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(),
-                                            [](char a, char b) { return std::tolower(a) < std::tolower(b); });
+        return m_cache < other.m_cache;
+    }
+
+private:
+    std::string m_cache;
+
+    static std::string toLower(const String& s)
+    {
+        auto u8 = s.toStdString();
+        std::transform(u8.begin(), u8.end(), u8.begin(), [](unsigned char c){ return std::tolower(c); });
+        return u8;
     }
 };
 
@@ -116,15 +127,23 @@ MenuItemList makeNonBuiltinEffectSubmenus(const EffectMetaList& effects, IEffect
 
     for (const auto& [family, publishers] : families) {
         MenuItemList publisherMenus;
+        publisherMenus.reserve(publishers.size());
+
         for (const auto& [publisher, titles] : publishers) {
             AmbiguousTitleEntries publisherEffects;
+
             for (const auto& [title, effectMetas] : titles) {
+                const CiString ciTitle{ title };
+                auto& ids = publisherEffects[ciTitle];
+
                 for (const EffectMeta* meta : effectMetas) {
-                    publisherEffects[CiString{ meta->title }].insert(CiString { meta->id });
+                    ids.insert(CiString { meta->id });
                 }
             }
+
             publisherMenus << effectMenu.makeMenuEffect(publisher, makeItemsOrDisambiguationSubmenus(publisherEffects, effectMenu));
         }
+
         items << effectMenu.makeMenuEffect(family, publisherMenus);
     }
 

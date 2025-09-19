@@ -34,7 +34,7 @@ void EffectsActionsController::registerActions()
 
     EffectMetaList effects = effectsProvider()->effectMetaList();
     for (const EffectMeta& e : effects) {
-        dispatcher()->reg(this, makeEffectAction(EFFECT_OPEN_ACTION, e.id), [this](const ActionQuery& q) {
+        dispatcher()->reg(this, ActionQuery(makeEffectAction(EFFECT_OPEN_ACTION, e.id)), [this](const ActionQuery& q) {
             onEffectTriggered(q);
         });
     }
