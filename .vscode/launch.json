@@ -14,7 +14,7 @@
             "environment": [
                 {
                     "name": "PATH",
-                    "value": "${env:PATH};${command:cmake.launchTargetDirectory}\\bin"
+                    "value": "${env:PATH};${command:cmake.launchTargetDirectory}"
                 }
             ],
             "sourceFileMap": {

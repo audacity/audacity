@@ -17,7 +17,7 @@
 #include "global/async/asyncable.h"
 
 namespace au::effects {
-class BuiltinEffectModel : public QObject, public muse::async::Asyncable
+class BuiltinEffectModel : public QObject, public QQmlParserStatus, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId CONSTANT FINAL)
@@ -38,7 +38,6 @@ public:
     int instanceId() const;
     QString effectId() const;
 
-    Q_INVOKABLE void init();
     Q_INVOKABLE void preview();
     Q_INVOKABLE void commitSettings();
 
@@ -82,6 +81,9 @@ protected:
     }
 
 private:
+    void classBegin() override {}
+    void componentComplete() override;
+
     EffectSettingsAccessPtr settingsAccess() const;
     const int m_instanceId;
 };

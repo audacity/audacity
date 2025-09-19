@@ -102,6 +102,7 @@ EffectStyledDialogView {
             BuiltinEffectViewer {
                 id: view
                 instanceId: root.instanceId
+                usedDestructively: false
             }
         }
     }

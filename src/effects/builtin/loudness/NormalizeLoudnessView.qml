@@ -1,8 +1,7 @@
 import QtQuick
 import Muse.UiComponents
 import Audacity.Effects
-
-import "../common"
+import Audacity.BuiltinEffects
 
 BuiltinEffectBase {
     id: root
@@ -103,9 +102,5 @@ BuiltinEffectBase {
                 text: normalizeLoudness.useDualMonoLabel
             }
         }
-    }
-
-    Component.onCompleted: {
-        root.model.init()
     }
 }

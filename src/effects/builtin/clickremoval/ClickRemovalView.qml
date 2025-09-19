@@ -1,8 +1,7 @@
 import QtQuick
 import Muse.UiComponents
 import Audacity.Effects
-
-import "../common"
+import Audacity.BuiltinEffects
 
 BuiltinEffectBase {
     id: root
@@ -17,10 +16,6 @@ BuiltinEffectBase {
 
     ClickRemovalViewModel {
         id: clickRemoval
-    }
-
-    Component.onCompleted: {
-        clickRemoval.init()
     }
 
     Column {
