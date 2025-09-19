@@ -833,7 +833,7 @@ MenuItemList AppMenuModel::makeShowItems()
 muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffectItem(const effects::EffectId& effectId)
 {
     return makeMenuItem(effects::makeEffectAction(effects::EFFECT_OPEN_ACTION,
-                                                  effectId).toString());
+                                                  effectId));
 }
 
 muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffect(const muse::String& title, const muse::uicomponents::MenuItemList& items)
