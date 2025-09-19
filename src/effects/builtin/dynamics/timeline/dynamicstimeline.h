@@ -24,16 +24,12 @@ class DynamicsTimeline : public QQuickItem
     Q_OBJECT
 
     Q_PROPERTY(double dbMin READ dbMin WRITE setDbMin NOTIFY dbMinChanged)
-    Q_PROPERTY(
-        double duration READ duration WRITE setDuration NOTIFY durationChanged)
+    Q_PROPERTY(double duration READ duration WRITE setDuration NOTIFY durationChanged)
     Q_PROPERTY(double dataPointRate READ dataPointRate WRITE setDataPointRate NOTIFY dataPointRateChanged)
 
-    Q_PROPERTY(bool showInputDb READ showInputDb WRITE setShowInputDb NOTIFY
-               showInputDbChanged)
-    Q_PROPERTY(bool showOutputDb READ showOutputDb WRITE setShowOutputDb NOTIFY
-               showOutputDbChanged)
-    Q_PROPERTY(bool showCompressionDb READ showCompressionDb WRITE
-               setShowCompressionDb NOTIFY showCompressionDbChanged)
+    Q_PROPERTY(bool showInputDb READ showInputDb WRITE setShowInputDb NOTIFY showInputDbChanged)
+    Q_PROPERTY(bool showOutputDb READ showOutputDb WRITE setShowOutputDb NOTIFY showOutputDbChanged)
+    Q_PROPERTY(bool showCompressionDb READ showCompressionDb WRITE setShowCompressionDb NOTIFY showCompressionDbChanged)
 
     Q_PROPERTY(double stopwatchTime READ stopwatchTime WRITE setStopwatchTime NOTIFY stopwatchTimeChanged)
 
