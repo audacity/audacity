@@ -3,9 +3,26 @@
  */
 #include "compressorsettingmodel.h"
 
+#include "global/translation.h"
+
+#include <unordered_map>
+
 namespace au::effects {
+namespace {
+const CompressorSettingModel::LabelMap labelMap = {
+    { "thresholdDb", { muse::qtrc("effects", "Threshold"), muse::qtrc("effects", "dB") } },
+    { "makeupGainDb", { muse::qtrc("effects", "Make-up gain"), muse::qtrc("effects", "dB") } },
+    { "kneeWidthDb", { muse::qtrc("effects", "Knee width"), muse::qtrc("effects", "dB") } },
+    { "compressionRatio", { muse::qtrc("effects", "Ratio"), QString() } },
+    { "lookaheadMs", { muse::qtrc("effects", "Lookahead"), muse::qtrc("effects", "ms") } },
+    { "attackMs", { muse::qtrc("effects", "Attack"), muse::qtrc("effects", "ms") } },
+    { "releaseMs", { muse::qtrc("effects", "Release"), muse::qtrc("effects", "ms") } },
+    // We deliberately leave out the "show" parameters: these are overridden in the UI anyway.
+};
+}
+
 CompressorSettingModel::CompressorSettingModel(QObject* parent)
-    : EffectSettingModelImpl<CompressorEffect>(parent, [this](const CompressorEffect& effect) {
+    : EffectSettingModelImpl<CompressorEffect>(parent, labelMap, [this](const CompressorEffect& effect) {
     if (m_paramId == "thresholdDb") {
         return effect.thresholdDb;
     } else if (m_paramId == "makeupGainDb") {

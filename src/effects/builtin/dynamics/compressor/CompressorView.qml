@@ -72,33 +72,15 @@ DynamicsEffectBase {
                     spacing: 24
 
                     Repeater {
-                        model: [
-                            {
-                                id: "attackMs",
-                                title: qsTrc("effects/compressor", "Attack"),
-                                unit: "ms"
-                            },
-                            {
-                                id: "releaseMs",
-                                title: qsTrc("effects/compressor", "Release"),
-                                unit: "ms"
-                            },
-                            {
-                                id: "lookaheadMs",
-                                title: qsTrc("effects/compressor", "Lookahead"),
-                                unit: "ms"
-                            },
-                        ]
+                        model: ["attackMs", "releaseMs", "lookaheadMs"]
 
                         delegate: SettingKnob {
-                            required property var modelData
+                            required property string modelData
                             isVertical: true
                             knobFirst: false
-                            title: modelData.title
-                            unit: modelData.unit
                             warp: true
                             model: CompressorSettingModel {
-                                paramId: modelData.id
+                                paramId: modelData
                             }
                         }
                     }
@@ -116,38 +98,15 @@ DynamicsEffectBase {
                     spacing: 24
 
                     Repeater {
-                        model: [
-                            {
-                                id: "thresholdDb",
-                                title: qsTrc("effects/compressor", "Threshold"),
-                                unit: "dB"
-                            },
-                            {
-                                id: "compressionRatio",
-                                title: qsTrc("effects/compressor", "Ratio"),
-                                unit: ""
-                            },
-                            {
-                                id: "kneeWidthDb",
-                                title: qsTrc("effects/compressor", "Knee width"),
-                                unit: "dB"
-                            },
-                            {
-                                id: "makeupGainDb",
-                                title: qsTrc("effects/compressor", "Make-up gain"),
-                                unit: "dB"
-                            }
-                        ]
+                        model: ["thresholdDb", "compressionRatio", "kneeWidthDb", "makeupGainDb"]
 
                         delegate: SettingKnob {
-                            required property var modelData
+                            required property string modelData
                             isVertical: true
                             knobFirst: false
-                            title: modelData.title
-                            unit: modelData.unit
                             warp: true
                             model: CompressorSettingModel {
-                                paramId: modelData.id
+                                paramId: modelData
                                 onValueChanged: {
                                     compressionCurve.requestPaint()
                                 }
