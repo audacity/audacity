@@ -61,10 +61,14 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/compressor/compressoreffect.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/compressor/compressorviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/compressor/compressorviewmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/compressor/compressorsettingmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/compressor/compressorsettingmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/limiter/limiterviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/limiter/limiterviewmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/limiter/limitereffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/limiter/limitereffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/limiter/limitersettingmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dynamics/limiter/limitersettingmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/dynamicseffectsmacros.h
 
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeeffect.cpp
