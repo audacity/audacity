@@ -68,8 +68,4 @@ BuiltinEffectBase {
             }
         }
     }
-
-    Component.onCompleted: {
-        graphicEq.init()
-    }
 }

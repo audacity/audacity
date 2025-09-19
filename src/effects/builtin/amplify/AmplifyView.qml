@@ -21,7 +21,6 @@ BuiltinEffectBase {
     }
 
     Component.onCompleted: {
-        amplify.init()
         ampSlider.value = amplify.ampValue
     }
 

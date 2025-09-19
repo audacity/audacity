@@ -33,10 +33,6 @@ BuiltinEffectBase {
         id: dtmf
     }
 
-    Component.onCompleted: {
-        dtmf.init()
-    }
-
     RowLayout {
         id: row
 

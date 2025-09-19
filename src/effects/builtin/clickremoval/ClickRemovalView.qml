@@ -18,10 +18,6 @@ BuiltinEffectBase {
         id: clickRemoval
     }
 
-    Component.onCompleted: {
-        clickRemoval.init()
-    }
-
     Column {
         id: column
 

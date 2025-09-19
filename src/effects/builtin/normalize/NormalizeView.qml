@@ -19,10 +19,6 @@ BuiltinEffectBase {
         id: normalize
     }
 
-    Component.onCompleted: {
-        normalize.init()
-    }
-
     Column {
         id: column
 

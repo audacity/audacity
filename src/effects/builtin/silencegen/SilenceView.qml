@@ -19,10 +19,6 @@ BuiltinEffectBase {
         id: silence
     }
 
-    Component.onCompleted: {
-        silence.init()
-    }
-
     Row {
         id: row
 

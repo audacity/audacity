@@ -32,10 +32,6 @@ BuiltinEffectBase {
         id: tone
     }
 
-    Component.onCompleted: {
-        tone.init()
-    }
-
     Column {
         id: column
 

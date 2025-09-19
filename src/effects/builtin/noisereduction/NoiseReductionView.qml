@@ -19,10 +19,6 @@ BuiltinEffectBase {
         id: noiseReduction
     }
 
-    Component.onCompleted: {
-        noiseReduction.init()
-    }
-
     Column {
         id: column
         spacing: 0

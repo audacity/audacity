@@ -34,10 +34,6 @@ BuiltinEffectBase {
         id: chirp
     }
 
-    Component.onCompleted: {
-        chirp.init()
-    }
-
     ColumnLayout {
         id: column
 

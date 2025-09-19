@@ -24,10 +24,6 @@ BuiltinEffectBase {
         id: noise
     }
 
-    Component.onCompleted: {
-        noise.init()
-    }
-
     Column {
         id: column
 
