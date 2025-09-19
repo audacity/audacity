@@ -38,6 +38,16 @@ DynamicsEffectBase {
             instanceId: compressor.instanceId
             playState: root.playState
             gridColor: root.gridColor
+
+            showInputDbModel: CompressorSettingModel {
+                paramId: "showInput"
+            }
+            showOutputDbModel: CompressorSettingModel {
+                paramId: "showOutput"
+            }
+            showCompressionDbModel: CompressorSettingModel {
+                paramId: "showActual"
+            }
         }
 
         Rectangle {

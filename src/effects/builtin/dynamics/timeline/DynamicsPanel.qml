@@ -13,6 +13,10 @@ Item {
 
     required property int instanceId
     required property color gridColor
+    required property var showInputDbModel
+    required property var showOutputDbModel
+    required property var showCompressionDbModel
+
     property int dbMin: -48
     property int dbStep: 12
     property int timelineHeight: 280
@@ -110,15 +114,18 @@ Item {
                 model: [
                     {
                         text: qsTrc("effects/compressor", "Input"),
-                        property: "showInputDb"
+                        property: "showInputDb",
+                        settingModel: showInputDbModel
                     },
                     {
                         text: qsTrc("effects/compressor", "Output"),
-                        property: "showOutputDb"
+                        property: "showOutputDb",
+                        settingModel: showOutputDbModel
                     },
                     {
                         text: qsTrc("effects/compressor", "Compression"),
-                        property: "showCompressionDb"
+                        property: "showCompressionDb",
+                        settingModel: showCompressionDbModel
                     }
                 ]
 
@@ -126,8 +133,11 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: modelData.text
-                    checked: timeline[modelData.property]
-                    onClicked: timeline[modelData.property] = !timeline[modelData.property]
+                    checked: modelData.settingModel.value === 1
+                    onClicked: {
+                        modelData.settingModel.value = modelData.settingModel.value === 1 ? 0 : 1
+                        modelData.settingModel.commitSettings()
+                    }
                 }
             }
         }
@@ -188,6 +198,10 @@ Item {
                     dbMin: root.dbMin
                     duration: root.duration
                     dataPointRate: timelineSourceModel.dataPointRate
+
+                    showInputDb: root.showInputDbModel.value === 1
+                    showOutputDb: root.showOutputDbModel.value === 1
+                    showCompressionDb: root.showCompressionDbModel.value === 1
                 }
             }
 

@@ -33,6 +33,16 @@ DynamicsEffectBase {
             playState: root.playState
             gridColor: root.gridColor
 
+            showInputDbModel: LimiterSettingModel {
+                paramId: "showInput"
+            }
+            showOutputDbModel: LimiterSettingModel {
+                paramId: "showOutput"
+            }
+            showCompressionDbModel: LimiterSettingModel {
+                paramId: "showActual"
+            }
+
             // Specific to limiter
             dbMin: -12
             dbStep: 3

@@ -179,11 +179,10 @@ void DynamicsTimeline::resetSequences()
     lineColor.setAlphaF(0.5);
     QColor compressionDbLineColor = DynamicsColors::timelineCompressionDbColor();
     compressionDbLineColor.setAlphaF(0.5);
-    constexpr auto outputDbVisibleByDefault = true;
-    auto inputDb = createSequenceData(areaColor, DrawerType::Area, true);
-    auto outputDb = createSequenceData(areaColor, DrawerType::Area, outputDbVisibleByDefault);
-    auto outputDbLine = createSequenceData(lineColor, DrawerType::Line, outputDbVisibleByDefault);
-    auto compressionDb = createSequenceData(compressionDbLineColor, DrawerType::Line, true);
+    auto inputDb = createSequenceData(areaColor, DrawerType::Area, showInputDb());
+    auto outputDb = createSequenceData(areaColor, DrawerType::Area, showOutputDb());
+    auto outputDbLine = createSequenceData(lineColor, DrawerType::Line, showOutputDb());
+    auto compressionDb = createSequenceData(compressionDbLineColor, DrawerType::Line, showCompressionDb());
 
     std::lock_guard<std::mutex> lock{ m_sampleMutex };
     m_sequences[eInputDb] = std::move(inputDb);
