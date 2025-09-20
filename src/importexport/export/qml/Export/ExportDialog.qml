@@ -120,7 +120,6 @@ StyledDialogView {
                     Layout.minimumWidth: implicitWidth
 
                     currentText: exportPreferencesModel.filename
-                    measureUnitsSymbol: "." + exportPreferencesModel.fileExtension
 
                     implicitWidth: root.dropdownWidth
 
@@ -148,9 +147,10 @@ StyledDialogView {
                 FilePicker {
                     id: dirPicker
 
-                    pickerType: FilePicker.PickerType.Directory
+                    pickerType: FilePicker.PickerType.Any
                     pathFieldWidth: root.dropdownWidth
                     spacing: 10
+                    filter: exportPreferencesModel.fileFilter()
 
                     path: exportPreferencesModel.directoryPath
                     dir: exportPreferencesModel.directoryPath
@@ -161,8 +161,7 @@ StyledDialogView {
                     // navigation.order: filenameField.navigation.order + 1
 
                     onPathEdited: function(newPath) {
-                        path = newPath
-                        exportPreferencesModel.setDirectoryPath(newPath)
+                        exportPreferencesModel.setFilePickerPath(newPath)
                     }
                 }
             }
