@@ -152,6 +152,9 @@ StyledDialogView {
                     pathFieldWidth: root.dropdownWidth
                     spacing: 10
 
+                    buttonType: FlatButton.Horizontal
+                    orientation: Qt.Horizontal
+
                     path: exportPreferencesModel.directoryPath
                     dir: exportPreferencesModel.directoryPath
 
