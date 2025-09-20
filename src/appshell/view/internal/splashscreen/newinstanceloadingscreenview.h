@@ -33,7 +33,7 @@ class NewInstanceLoadingScreenView : public QWidget
 {
     Q_OBJECT
 
-    INJECT(ui::IUiConfiguration, uiConfiguration)
+    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
     explicit NewInstanceLoadingScreenView(bool forNewScore, const QString& openingFileName, QWidget* parent = nullptr);

@@ -176,12 +176,13 @@ int main(int argc, char** argv)
         qputenv("QT_QPA_PLATFORM", "xcb");
     }
 #endif
+
     const char* appName;
-    if (true /*MUVersion::unstable()*/) {
-        appName  = "Audacity4Development";
-    } else {
-        appName  = "Audacity4";
-    }
+#ifdef MUSE_APP_UNSTABLE
+    appName  = "Audacity4Development";
+#else
+    appName  = "Audacity4";
+#endif
 
 #ifdef Q_OS_WIN
     // NOTE: There are some problems with rendering the application window on some integrated graphics processors
@@ -197,12 +198,15 @@ int main(int argc, char** argv)
     QCoreApplication::setApplicationName(appName);
     QCoreApplication::setOrganizationName("Audacity");
     QCoreApplication::setOrganizationDomain("audacityteam.org");
-    // QCoreApplication::setApplicationVersion(QString::fromStdString(MUVersion::fullVersion().toStdString()));
+    QCoreApplication::setApplicationVersion(MUSE_APP_VERSION);
 
-// #if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
-//     // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
-//     QGuiApplication::setDesktopFileName("org.musescore.MuseScore" MU_APP_INSTALL_SUFFIX ".desktop");
-// #endif
+#if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
+#ifndef MUSE_APP_INSTALL_SUFFIX
+#define MUSE_APP_INSTALL_SUFFIX ""
+#endif
+    // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
+    QGuiApplication::setDesktopFileName("org.audacity.Audacity" MUSE_APP_INSTALL_SUFFIX ".desktop");
+#endif
 
     // ====================================================
     // Parse command line options

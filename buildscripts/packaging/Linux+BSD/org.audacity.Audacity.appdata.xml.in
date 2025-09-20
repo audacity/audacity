@@ -13,7 +13,7 @@
     <metadata_license>CC0-1.0</metadata_license><!-- License of this file. See <project_license> for MuseScore license. -->
     <name>MuseScore</name>
     <summary>Create, play and print beautiful sheet music</summary>
-    <icon type="stock">mscore@MUSE_APP_INSTALL_SUFFIX@</icon>
+    <icon type="stock">audacity@MUSE_APP_INSTALL_SUFFIX@</icon>
     <description>
         <p>MuseScore is cross-platform, multi-lingual, open source music notation software. It features an easy to use WYSIWYG editor with audio score playback for results that look and sound beautiful. It supports unlimited staves with up to four voices each, dynamics, articulations, lyrics, chords, lead sheet notation, import/export of MIDI and MusicXML, export to PDF and WAV, plus online score sharing.</p>
         <p>MuseScore can upload scores directly to the score sharing site musescore.com. Program support is provided on musescore.org.</p>
@@ -58,7 +58,7 @@
     <launchable type="desktop-id">org.musescore.MuseScore@MUSE_APP_INSTALL_SUFFIX@.desktop</launchable>
     <provides>
         <!-- <mediatype> in .desktop file as MimeType -->
-        <binary>mscore@MUSE_APP_INSTALL_SUFFIX@</binary>
+        <binary>audacity@MUSE_APP_INSTALL_SUFFIX@</binary>
         <id>org.musescore.MuseScore@MUSE_APP_INSTALL_SUFFIX@.desktop</id>
     </provides>
     <!-- <releases> moved to bottom of this file to keep it out the way -->
@@ -101,10 +101,10 @@
             <image>https://raw.githubusercontent.com/flathub/org.musescore.MuseScore/master/screenshots/07-new-score-wizard.png</image>
         </screenshot>
     </screenshots>
-    <translation type="qt">mscore@MUSE_APP_INSTALL_SUFFIX@-@MUSE_APP_VERSION_MAJ_MIN@/locale/instruments</translation>
-    <translation type="qt">mscore@MUSE_APP_INSTALL_SUFFIX@-@MUSE_APP_VERSION_MAJ_MIN@/locale/musescore</translation>
-    <translation type="qt">mscore@MUSE_APP_INSTALL_SUFFIX@-@MUSE_APP_VERSION_MAJ_MIN@/locale/qt</translation>
-    <translation type="qt">mscore@MUSE_APP_INSTALL_SUFFIX@-@MUSE_APP_VERSION_MAJ_MIN@/locale/qtbase</translation>
+    <translation type="qt">audacity@MUSE_APP_INSTALL_SUFFIX@-@MUSE_APP_VERSION_MAJ_MIN@/locale/instruments</translation>
+    <translation type="qt">audacity@MUSE_APP_INSTALL_SUFFIX@-@MUSE_APP_VERSION_MAJ_MIN@/locale/musescore</translation>
+    <translation type="qt">audacity@MUSE_APP_INSTALL_SUFFIX@-@MUSE_APP_VERSION_MAJ_MIN@/locale/qt</translation>
+    <translation type="qt">audacity@MUSE_APP_INSTALL_SUFFIX@-@MUSE_APP_VERSION_MAJ_MIN@/locale/qtbase</translation>
     <content_rating type="oars-1.1"/>
     <!-- GNOME extensions -->
     <kudos>

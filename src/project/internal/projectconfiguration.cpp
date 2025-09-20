@@ -25,8 +25,7 @@ static const muse::Settings::Key HOME_PROJECTS_PAGE_VIEW_TYPE(module_name, "proj
 static const muse::Settings::Key AUTOSAVE_ENABLED_KEY(module_name, "project/autoSaveEnabled");
 static const muse::Settings::Key AUTOSAVE_INTERVAL_KEY(module_name, "project/autoSaveInterval");
 
-//! TODO AU4: new format for AU4?
-static const std::string DEFAULT_FILE_SUFFIX(".aup3");
+static const std::string DEFAULT_FILE_SUFFIX(".aup4");
 
 void ProjectConfiguration::init()
 {

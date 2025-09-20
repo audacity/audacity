@@ -32,7 +32,7 @@ execute_process(
 message(STATUS "~~Package~~")
 
 set(PACK_ARGS
-    -DBUILD_VERSION=4.0.0.1234
+    -DBUILD_VERSION=4.0.0-alpha
 )
 
 execute_process(

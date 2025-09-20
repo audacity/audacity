@@ -14,7 +14,7 @@ set(EXECUTABLE_NAME audacity)
 include(GetPlatformInfo)
 
 if (OS_IS_WIN)
-    set(APP_OUTPUT_NAME ${MUSESCORE_NAME}${MUSESCORE_VERSION_MAJOR})
+    set(APP_OUTPUT_NAME ${MUSE_APP_NAME}${MUSE_APP_VERSION_MAJOR})
 
     include(GetCompilerInfo)
 
@@ -122,6 +122,12 @@ if (MUSE_MODULE_EXTENSIONS)
     list(APPEND LINK_LIB muse::extensions)
 endif()
 
+set (AUDACITY_APPEND_SRC)
+
+if (OS_IS_WIN)
+    list(APPEND AUDACITY_APPEND_SRC ${WINDOWS_ICONS_RC})
+endif()
+
 ###########################################
 # Resources
 ###########################################
@@ -131,9 +137,10 @@ qt_add_resources(APP_RCC_SOURCES app.qrc)
 # Executable declaration
 ###########################################
 
-qt_add_executable(audacity
+qt_add_executable(${EXECUTABLE_NAME}
     WIN32 MACOSX_BUNDLE
     ${APP_RCC_SOURCES}
+    ${AUDACITY_APPEND_SRC}
     main.cpp
     app.cpp
     app.h
