@@ -195,8 +195,6 @@ void DynamicsTimeline::resetSequences()
 QSGNode* DynamicsTimeline::updatePaintNode(QSGNode* oldNode,
                                            UpdatePaintNodeData*)
 {
-    Profiler::Scope profilerScope(m_profiler);
-
     QSGTransformNode* transformNode = nullptr;
 
     if (!oldNode || m_reset) {

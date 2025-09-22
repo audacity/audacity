@@ -11,8 +11,6 @@ set(PROJECT_SOURCES
     dynamicstimeline.cpp
     dynamicstimeline.h
     dynamicstimelinetypes.h
-    profiler.cpp
-    profiler.h
     stopwatch.cpp
     stopwatch.h
 

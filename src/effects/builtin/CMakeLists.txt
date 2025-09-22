@@ -95,8 +95,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/dynamicstimeline.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/timelinesourcemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/timelinesourcemodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/profiler.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/profiler.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/stopwatch.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/stopwatch.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/dynamicsplaystatemodel.cpp

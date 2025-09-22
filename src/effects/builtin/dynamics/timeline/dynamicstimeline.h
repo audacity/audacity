@@ -5,7 +5,6 @@
 
 #include "dynamicstimelinetypes.h"
 #include "painters/abstractsequencepainter.h"
-#include "profiler.h"
 
 #include <QQmlParserStatus>
 #include <QQuickItem>
@@ -114,7 +113,5 @@ private:
     std::array<SequenceData, _eSequenceCount> m_sequences;
     std::vector<double> m_pendingXValues;
     std::mutex m_sampleMutex; // TODO consider using a ring buffer
-
-    Profiler m_profiler;
 };
 } // namespace au::effects
