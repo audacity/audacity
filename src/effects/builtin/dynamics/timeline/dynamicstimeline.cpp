@@ -18,10 +18,6 @@
 #include <cmath>
 
 namespace au::effects {
-namespace {
-constexpr auto dataPointPeriodMs = 10;
-} // namespace
-
 DynamicsTimeline::DynamicsTimeline(QQuickItem* parent)
     : QQuickItem{parent}
 {
