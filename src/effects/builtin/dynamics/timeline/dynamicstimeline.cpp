@@ -7,6 +7,7 @@
 #include "painters/linesequencepainter.h"
 
 #include "global/log.h"
+#include "global/types/number.h"
 
 #include <QSGTransformNode>
 #include <QTimer>
@@ -41,7 +42,7 @@ double DynamicsTimeline::stopwatchTime() const { return m_stopwatchTime; }
 
 void DynamicsTimeline::setStopwatchTime(double stopwatchTime)
 {
-    if (m_stopwatchTime == stopwatchTime) {
+    if (muse::is_equal(m_stopwatchTime, stopwatchTime)) {
         return;
     }
 
@@ -60,7 +61,7 @@ double DynamicsTimeline::dbMin() const { return m_dbMin; }
 
 void DynamicsTimeline::setDbMin(double dbMin)
 {
-    if (m_dbMin == dbMin) {
+    if (muse::is_equal(m_dbMin, dbMin)) {
         return;
     }
     m_dbMin = dbMin;
@@ -72,7 +73,7 @@ double DynamicsTimeline::duration() const { return m_duration; }
 
 void DynamicsTimeline::setDuration(double duration)
 {
-    if (m_duration == duration) {
+    if (muse::is_equal(m_duration, duration)) {
         return;
     }
     m_duration = duration;
@@ -84,7 +85,7 @@ double DynamicsTimeline::dataPointRate() const { return m_dataPointRate; }
 
 void DynamicsTimeline::setDataPointRate(double rate)
 {
-    if (m_dataPointRate == rate) {
+    if (muse::is_equal(m_dataPointRate, rate)) {
         return;
     }
     m_dataPointRate = rate;
