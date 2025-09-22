@@ -211,13 +211,14 @@ public:
         unsigned long framesPerBuffer);
     void DoPlaythrough(
         constSamplePtr inputBuffer, float* outputBuffer, unsigned long framesPerBuffer, float* outputMeterFloats);
-    void SendVuInputMeterData(
-        const float* inputSamples, unsigned long framesPerBuffer);
+    void SendVuInputMeterData(const float* inputSamples, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo);
     void SendVuOutputMeterData(
-        const float* outputMeterFloats, unsigned long framesPerBuffer);
-    void PushMainMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, uint8_t channels, unsigned long frames);
-    void PushTrackMeterValues(const std::shared_ptr<IMeterSender>& sender, unsigned long frames);
-    void PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, unsigned long frames);
+        const float* outputMeterFloats, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo);
+    void PushMainMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, uint8_t channels, unsigned long frames,
+                             const PaStreamCallbackTimeInfo* timeInfo);
+    void PushTrackMeterValues(const std::shared_ptr<IMeterSender>& sender, unsigned long frames, const PaStreamCallbackTimeInfo* timeInfo);
+    void PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, unsigned long frames,
+                              const PaStreamCallbackTimeInfo* timeInfo);
 
     /** \brief Get the number of audio samples ready in all of the playback
     * buffers.

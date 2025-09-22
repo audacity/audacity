@@ -12,7 +12,12 @@
 #include "libraries/lib-utility/MemoryX.h"
 
 namespace {
-IMeterSender::Sample GetAbsValue(const float* buffer, size_t frames, size_t step)
+constexpr double METER_SAMPLE_PERIOD = 0.10;
+constexpr double MAX_ALLOWED_TIMESTAMP_DIFF = 1.0;
+}
+
+namespace au::au3 {
+Meter::Sample Meter::getSamplesMaxValue(const float* buffer, size_t frames, size_t step)
 {
     auto sptr = buffer;
     float peak = 0.0f;
@@ -26,18 +31,39 @@ IMeterSender::Sample GetAbsValue(const float* buffer, size_t frames, size_t step
 
     rms = std::sqrt(rms / static_cast<float>(frames));
 
-    return IMeterSender::Sample{ std::min(peak, 1.0f), std::min(rms, 1.0f) };
-}
+    return Meter::Sample{ std::min(peak, 1.0f), std::min(rms, 1.0f) };
 }
 
-namespace au::au3 {
 void Meter::push(uint8_t channel, const IMeterSender::InterleavedSampleData& sampleData, int64_t key)
 {
-    const auto value = GetAbsValue(sampleData.buffer, sampleData.frames, sampleData.nChannels);
-    push(channel, value, key);
+    if (m_lastSampleTimestamp.find(channel) == m_lastSampleTimestamp.end()) {
+        // First time seeing this channel, initialize the timestamp and max values.
+        m_lastSampleTimestamp[channel] = sampleData.firstSampleTimestamp;
+        m_maxValue[channel] = Sample{ 0.0, 0.0 };
+    }
+
+    if (std::abs(sampleData.firstSampleTimestamp - *m_lastSampleTimestamp[channel]) > MAX_ALLOWED_TIMESTAMP_DIFF) {
+        // If the timestamp difference is too large the stream has likely been stopped and restarted.
+        // Reset the peak and RMS values to avoid displaying old data.
+        m_lastSampleTimestamp[channel] = sampleData.firstSampleTimestamp;
+        m_maxValue[channel] = Sample{ 0.0, 0.0 };
+    }
+
+    const auto value = getSamplesMaxValue(sampleData.buffer, sampleData.frames, sampleData.nChannels);
+    if (value.peak > m_maxValue[channel].peak) {
+        m_maxValue[channel] = value;
+    }
+
+    const double lastSampleTimestamp = sampleData.firstSampleTimestamp + sampleData.frames * (1 / m_sampleRate);
+    if (lastSampleTimestamp > *m_lastSampleTimestamp[channel] + METER_SAMPLE_PERIOD) {
+        // Send data every METER_SAMPLE_PERIOD seconds approximately.
+        push(channel, m_maxValue[channel], key);
+        m_maxValue[channel] = Sample{ 0.0, 0.0 };
+        m_lastSampleTimestamp[channel] = lastSampleTimestamp;
+    }
 }
 
-void Meter::push(uint8_t channel, const IMeterSender::Sample& sample, int64_t key)
+void Meter::push(uint8_t channel, const Sample& sample, int64_t key)
 {
     m_trackData.push_back(Data { key, channel,
                                  au::audio::AudioSignalVal { sample.peak, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(
@@ -73,6 +99,11 @@ void Meter::sendAll()
         }
     }
     m_trackData = {};
+}
+
+void Meter::setSampleRate(double rate)
+{
+    m_sampleRate = rate;
 }
 
 muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Meter::dataChanged(int64_t key)
