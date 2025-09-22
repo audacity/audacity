@@ -18,11 +18,9 @@ class TimelineSourceModel : public AbstractDynamicsEffectInstanceModel
     Q_OBJECT
 
     Q_PROPERTY(double dataPointRate READ dataPointRate NOTIFY dataPointRateChanged)
-    Q_PROPERTY(double latency READ latency CONSTANT)
 
 public:
     double dataPointRate() const;
-    double latency() const;
 
 signals:
     void newSamples(const QVariantList& samples);

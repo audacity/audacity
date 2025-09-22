@@ -48,11 +48,6 @@ void TimelineSourceModel::doInit()
     }
 }
 
-double TimelineSourceModel::latency() const
-{
-    return deliveryPeriodMs / 1000.0;
-}
-
 double TimelineSourceModel::dataPointRate() const
 {
     return m_dataPointRate;
