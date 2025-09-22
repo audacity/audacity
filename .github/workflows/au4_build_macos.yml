@@ -49,6 +49,18 @@ jobs:
 
         BUILD_MODE=${{ github.event.inputs.build_mode }}
 
+        DO_NOTARIZE='false'
+        if [ "$BUILD_MODE" != "devel_build" ]; then
+          DO_NOTARIZE='true'
+          if [ -z "${{ secrets.APPLE_USERNAME }}" ]; then
+            echo "::warning::APPLE_USERNAME is empty; notarization disabled"
+            DO_NOTARIZE='false'
+          elif [ -z "${{ secrets.APPLE_PASSWORD }}" ]; then
+            echo "::warning::APPLE_PASSWORD is empty, notarization disabled"
+            DO_NOTARIZE='false'
+          fi 
+        fi
+
         cmake -DEVENT=${{ github.event_name }} \
               -DBUILD_MODE=${BUILD_MODE} \
               -DARTIFACT_INFO="Mac_${ADD_INFO}" \
@@ -85,6 +97,8 @@ jobs:
         echo "UPLOAD_ARTIFACT_NAME=$UPLOAD_ARTIFACT_NAME" >> $GITHUB_ENV
         echo "UPLOAD_ARTIFACT_NAME: $UPLOAD_ARTIFACT_NAME"
 
+        echo "DO_NOTARIZE=$DO_NOTARIZE" | tee -a $GITHUB_ENV
+
         echo "DO_UPLOAD_SYMBOLS=$DO_UPLOAD_SYMBOLS" >> $GITHUB_ENV
         echo "DO_UPLOAD_SYMBOLS: $DO_UPLOAD_SYMBOLS"
         echo "SENTRY_PROJECT=$SENTRY_PROJECT" >> $GITHUB_ENV
@@ -111,10 +125,19 @@ jobs:
         source $HOME/build_tools/environment.sh
         cmake -P ${CI_DIR}/macos/ci_build.cmake
     - name: Package
+      env:
+        SIGN_CERTIFICATE_ENCRYPT_SECRET: ${{ secrets.MAC_SIGN_CERTIFICATE_ENCRYPT_SECRET }}
+        SIGN_CERTIFICATE_PASSWORD: ${{ secrets.MAC_SIGN_CERTIFICATE_PASSWORD }} 
       if: env.DO_BUILD == 'true'
       run: |
         source $HOME/build_tools/environment.sh
         cmake -P ${CI_DIR}/macos/package.cmake
+    - name: Notarize
+      if: env.DO_NOTARIZE == 'true'
+      run: |
+        USER=${{ secrets.APPLE_USERNAME }}; if [ -z "$USER" ]; then USER=""; fi
+        PW=${{ secrets.APPLE_PASSWORD }}; if [ -z "$PW" ]; then PW=""; fi
+        bash ./buildscripts/ci/macos/notarize.sh -u $USER -p $PW
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
