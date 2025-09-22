@@ -87,6 +87,7 @@ void DynamicsTimeline::setDataPointRate(double rate)
         return;
     }
     m_dataPointRate = rate;
+    m_reset = true;
     emit dataPointRateChanged();
 }
 

@@ -40,6 +40,10 @@ private:
     ::Observer::Subscription m_initializeProcessingSettingsSubscription;
     ::Observer::Subscription m_realtimeResumeSubscription;
 
+    // Some plausible non-zero default, to make the initialization of the view simpler
+    // even if playback hasn't started (and hence we don't know block size or sample rate) yet.
+    double m_dataPointRate = 44100.0 / 512;
+
     QTimer* m_deliveryTimer = nullptr;
 };
 } // namespace au::effects

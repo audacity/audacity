@@ -55,7 +55,7 @@ double TimelineSourceModel::latency() const
 
 double TimelineSourceModel::dataPointRate() const
 {
-    return 44100.0 / 512; // TODO query from the instance
+    return m_dataPointRate;
 }
 
 void TimelineSourceModel::pullData()
@@ -113,6 +113,13 @@ void TimelineSourceModel::initializeForPlayback(double sampleRate)
     m_outputQueue = std::make_unique<DynamicRangeProcessorOutputPacketQueue>(maxQueueSize);
 
     instance->SetOutputQueue(m_outputQueue);
+
+    assert(instance->GetBlockSize() > 0);
+    if (instance->GetBlockSize() > 0) {
+        m_dataPointRate = sampleRate / instance->GetBlockSize();
+        emit dataPointRateChanged();
+    }
+
     m_deliveryTimer->start();
 }
 } // namespace au::effects
