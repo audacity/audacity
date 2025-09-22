@@ -28,8 +28,8 @@ install(FILES ${CMAKE_CURRENT_LIST_DIR}/portable/qt.conf DESTINATION bin COMPONE
 set(WINDOW_MANAGER_CLASS ${MUSE_APP_NAME_VERSION})
 
 # Install desktop file (perform variable substitution first)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/org.audacity.Audacity.desktop.in org.audacity.Audacity${MUSE_APP_INSTALL_SUFFIX}.desktop)
-install(FILES ${PROJECT_BINARY_DIR}/org.audacity.Audacity${MUSE_APP_INSTALL_SUFFIX}.desktop DESTINATION share/applications)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/org.audacityteam.Audacity.desktop.in org.audacityteam.Audacity${MUSE_APP_INSTALL_SUFFIX}.desktop)
+install(FILES ${PROJECT_BINARY_DIR}/org.audacityteam.Audacity${MUSE_APP_INSTALL_SUFFIX}.desktop DESTINATION share/applications)
 
 # Install appdata file (perform variable substitution first)
 if("${MUSE_APP_INSTALL_SUFFIX}" MATCHES "-")
@@ -40,8 +40,8 @@ if("${MUSE_APP_INSTALL_SUFFIX}" MATCHES "-")
     )
 endif()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/org.audacity.Audacity.appdata.xml.in org.audacity.Audacity${MUSE_APP_INSTALL_SUFFIX}.appdata.xml)
-install(FILES ${PROJECT_BINARY_DIR}/org.audacity.Audacity${MUSE_APP_INSTALL_SUFFIX}.appdata.xml DESTINATION share/metainfo)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/org.audacityteam.Audacity.appdata.xml.in org.audacityteam.Audacity${MUSE_APP_INSTALL_SUFFIX}.appdata.xml)
+install(FILES ${PROJECT_BINARY_DIR}/org.audacityteam.Audacity${MUSE_APP_INSTALL_SUFFIX}.appdata.xml DESTINATION share/metainfo)
 
 # Add .AUP4 to MIME database (informs system that filetypes .AUP4 are Audacity files)
 configure_file(${CMAKE_CURRENT_LIST_DIR}/audacity.xml.in audacity${MUSE_APP_INSTALL_SUFFIX}.xml)

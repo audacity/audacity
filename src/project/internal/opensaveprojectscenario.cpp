@@ -118,7 +118,6 @@ RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectP
     std::string suffix = muse::io::suffix(selectedPath);
     std::string correctedPath = selectedPath.toStdString();
     if (!suffix.empty()) {
-        qDebug() << suffix;
         correctedPath = correctedPath.substr(0, correctedPath.size() - (suffix.size() + 1));
     }
 

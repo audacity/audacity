@@ -33,27 +33,27 @@ function showHelp() {
 cat <<EOF
 $(printVersion centered)
 
- This portable version of MuseScore has all of MuseScore's normal features, but
+ This portable version of Audacity has all of Audacity's normal features, but
 it does not need to be installed. There is an option to install it if you would
 like full integration with other applications and the desktop environment.
 
 Usage: $(basename "${APPIMAGE}") [options] [scorefile]
 
-Special options for MuseScore Portable AppImage:
+Special options for Audacity Portable AppImage:
   -h, --help                    Displays this help and the normal help (below).
-  man, manual, manpage          Displays MuseScore's man page.
+  man, manual, manpage          Displays Audacity's man page.
   install [-i] [PREFIX]         Installs resources for desktop integration.
-  update, upgrade [-i] [PREFIX] Update MuseScore to the latest version.
+  update, upgrade [-i] [PREFIX] Update Audacity to the latest version.
   remove, uninstall [PREFIX]    Removes resources from desktop environment.
   check-depends [exes-only]     Displays system information for developers.
 
-Ordinary MuseScore options:
+Ordinary Audacity options:
 $("${APPDIR}/bin/audacity@MUSE_APP_INSTALL_SUFFIX@" --help | tail -n +5)
 EOF
 }
 
 function printVersion() {
-  local pretty=$(sed -rn "s|^Name=([^#]*)|\1|p" "${APPDIR}/org.audacity.Audacity@MUSE_APP_INSTALL_SUFFIX@.desktop")
+  local pretty=$(sed -rn "s|^Name=([^#]*)|\1|p" "${APPDIR}/org.audacityteam.Audacity@MUSE_APP_INSTALL_SUFFIX@.desktop")
   local long=$("${APPDIR}/bin/audacity@MUSE_APP_INSTALL_SUFFIX@" --long-version 2>&1 | tail -n 1)
   if [ "$1" == "centered" ]; then
     printf "%*s\n" "$(((${#pretty}+80)/2))" "$pretty"
@@ -125,7 +125,7 @@ EOF
   echo "Resources installed to '$PWD'."
 cat <<EOF
 Step 2 of 3.
-MuseScore is at: ${APPIMAGE}
+Audacity is at: ${APPIMAGE}
 EOF
   name="$(basename "${APPIMAGE}")"
   dest="${bin}/${name}"
@@ -136,7 +136,7 @@ EOF
   elif [ ! "${APPIMAGE}" -ef "${dest}" ]; then
 cat <<EOF
 You can leave it there, but it is recommended that you move it to 'PREFIX/bin'.
-Options: move (m) or copy (c) MuseScore, do nothing (n), or show help (h)?
+Options: move (m) or copy (c) Audacity, do nothing (n), or show help (h)?
 EOF
     local answer
     while [ true ]; do
@@ -159,19 +159,19 @@ EOF
           ;;
         H|h )
 less <<EOF
-Moving or copying MuseScore to 'PREFIX/bin' has these benefits:
+Moving or copying Audacity to 'PREFIX/bin' has these benefits:
 
  1) It will have the same permissions as the resources. (I.e. it will be
     available to the same user(s) as the resources were installed for.)
 
  2) If 'PREFIX/bin' is in your PATH environment variable then you can launch
-    MuseScore by typing '${name}' instead of the full path.
+    Audacity by typing '${name}' instead of the full path.
     The default locations for PREFIX are in PATH on most systems.
 
 You should move rather than copy unless you want to keep another copy at the
-current location. (E.g if you're installing MuseScore from a USB stick.)
+current location. (E.g if you're installing Audacity from a USB stick.)
 
-If you choose not to move or copy MuseScore then you will still be able to
+If you choose not to move or copy Audacity then you will still be able to
 launch it by clicking on its icon or by typing the full path
 
   '${APPIMAGE}'
@@ -183,11 +183,11 @@ EOF
       echo "Please enter 'm', 'c', 'n', or 'h'. ('h' shows help)"
     done
   fi
-  sed -ri "s|^Exec=[^#%]*(.*)\$|Exec=${APPIMAGE} \1|" "share/applications/org.audacity.Audacity@MUSE_APP_INSTALL_SUFFIX@.desktop"
-  echo "Finished installing MuseScore to $prefix"
+  sed -ri "s|^Exec=[^#%]*(.*)\$|Exec=${APPIMAGE} \1|" "share/applications/org.audacityteam.Audacity@MUSE_APP_INSTALL_SUFFIX@.desktop"
+  echo "Finished installing Audacity to $prefix"
 cat <<EOF
 Step 3 of 3.
-Symlinks can be created to make it easier to launch MuseScore from
+Symlinks can be created to make it easier to launch Audacity from
 the command line. (Symlinks are like shortcuts or aliases.)
 EOF
   [ "$interactive" ] && printf "Create symlinks 'audacity@MUSE_APP_INSTALL_SUFFIX@' [Y/n]?"
@@ -197,12 +197,12 @@ EOF
   fi
   if ! which "${name}" >/dev/null; then
 cat <<EOF
-INFORMATION: MuseScore is not in PATH. If you want to run MuseScore from
+INFORMATION: Audacity is not in PATH. If you want to run Audacity from
 the command line you will have to type the full file path, like this:
 
   ${APPIMAGE}
 
-This does not affect you if you launch MuseScore by clicking on the icon.
+This does not affect you if you launch Audacity by clicking on the icon.
 EOF
   fi
 }
@@ -268,13 +268,13 @@ function removeResources() {
   if [ "$1" != "" ]; then
     # User specified a directory
     prefix="$1"
-    echo -n "Remove MuseScore resources from ${prefix} [Y/n]?"
+    echo -n "Remove Audacity resources from ${prefix} [Y/n]?"
   elif [ "${EUID}" == "0" ]; then
     prefix=/usr/local
-    echo -n "Running as root. Remove MuseScore resources from '$prefix' for all users [Y/n]?"
+    echo -n "Running as root. Remove Audacity resources from '$prefix' for all users [Y/n]?"
   else
     prefix=~/.local
-    echo -n "Not running as root. Remove MuseScore resources from '$prefix' for current user only [Y/n]?"
+    echo -n "Not running as root. Remove Audacity resources from '$prefix' for current user only [Y/n]?"
   fi
   readYes || return 0
   cd "$prefix" && <"${APPDIR}/install_manifest.txt" xargs rm || return 1
@@ -282,9 +282,9 @@ function removeResources() {
   rm "bin/audacity@MUSE_APP_INSTALL_SUFFIX@"
   <"${APPDIR}/install_manifest.txt" xargs "${APPDIR}/bin/rm-empty-dirs"
   updateCache "${prefix}"
-  echo -ne "Resources removed from ${PWD}.\nRemove MuseScore itself (delete ${actual_location}) [Y/n]?"
-  readYes || { echo -e "MuseScore remains at ${actual_location}.\nYou may delete it yourself or install again at any time." && return 0 ; }
-  rm "${actual_location}" && echo "Successfully removed MuseScore from $prefix"
+  echo -ne "Resources removed from ${PWD}.\nRemove Audacity itself (delete ${actual_location}) [Y/n]?"
+  readYes || { echo -e "Audacity remains at ${actual_location}.\nYou may delete it yourself or install again at any time." && return 0 ; }
+  rm "${actual_location}" && echo "Successfully removed Audacity from $prefix"
   "${APPDIR}/bin/rm-empty-dirs" bin "${APPIMAGE}" "${actual_location}"
   return 0
 }
@@ -328,8 +328,8 @@ function checkDependencies() {
   # Remaining dependencies must be system:
   sed -ri 's/^(.*[^(not found|package|both)])$/\1 => system/' "${tmp}/deps.txt"
 
-  # TODO: Might want to ignore some indirect dependencies. E.g. MuseScore depends on libX.so,
-  # and libX.so depends on libY.so, but MuseScore doesn't need any features from libY.so.
+  # TODO: Might want to ignore some indirect dependencies. E.g. Audacity depends on libX.so,
+  # and libX.so depends on libY.so, but Audacity doesn't need any features from libY.so.
 
   num_package=$(prepResult "${tmp}/deps.txt" ' => package$'   "${tmp}/package.txt")
   num_system=$(prepResult  "${tmp}/deps.txt" ' => system$'    "${tmp}/system.txt")

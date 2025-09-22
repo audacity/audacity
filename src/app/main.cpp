@@ -205,7 +205,7 @@ int main(int argc, char** argv)
 #define MUSE_APP_INSTALL_SUFFIX ""
 #endif
     // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
-    QGuiApplication::setDesktopFileName("org.audacity.Audacity" MUSE_APP_INSTALL_SUFFIX ".desktop");
+    QGuiApplication::setDesktopFileName("org.audacityteam.Audacity" MUSE_APP_INSTALL_SUFFIX ".desktop");
 #endif
 
     // ====================================================

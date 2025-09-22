@@ -24,4 +24,4 @@ sed \
     -e 's!@CMAKE_INSTALL_PREFIX@!/usr!g' \
     -e 's!@Audacity_SHARE_NAME@!share/!g' \
     -e 's!@Audacity_INSTALL_NAME@!audacity-4.0/!g' \
-    <mscore.1.in | man -l -
+    <audacity.1.in | man -l -

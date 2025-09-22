@@ -6,7 +6,6 @@
     <mime-type type="application/x-audacity">
         <comment>Audacity File</comment>
         <glob pattern="*.aup4"/>
-        <sub-class-of type="application/zip"/>
         <icon name="application-x-audacity@MUSE_APP_INSTALL_SUFFIX@"/>
     </mime-type>
 

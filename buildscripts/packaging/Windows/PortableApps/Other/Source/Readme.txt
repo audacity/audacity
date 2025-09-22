@@ -1,8 +1,8 @@
 Audacity Portable Launcher
 ============================
-Website: https://portableapps.com/apps/music_video/musescore_portable
+Website: https://portableapps.com/apps/music_video/audacity_portable
 
-ABOUT MUSESCORE PORTABLE
+ABOUT AUDACITY PORTABLE
 =========================
 The Audacity Portable Launcher allows you to run Audacity from a removable drive whose 
 letter changes as you move it to another computer, or from a local folder. The program can 
@@ -10,8 +10,8 @@ be entirely self-contained on the drive and then used on any Windows computer.
 
 LICENSE
 =======
-Audacity is released under the GNU GPLv2 license: https://musescore.org/about/gpl
-The source code for Audacity is available from Audacity website: https://musescore.org/download
+Audacity is released under the GNU GPLv2 license: https://github.com/audacity/audacity/blob/master/LICENSE.txt
+The source code for Audacity is available from Audacity website: https://www.audacityteam.org/download/
 
 This package's installer and launcher are released under the GPL. The launcher is generated 
 by the PortableApps.com Launcher Generator, available with full source and documentation 
@@ -45,7 +45,7 @@ autosaved and recovered files. It also contains AudacityPortable specific settin
 can be deleted to revert Audacity to factory settings (note: any customization will be lost in 
 that case).
 
-MUSESCOREPORTABLE.INI CONFIGURATION
+AUDACITYPORTABLE.INI CONFIGURATION
 ====================================
 Some configuration in the PortableApps.com Launcher can be overridden by the user in an INI file 
 next to AudacityPortable.exe called AudacityPortable.ini.
@@ -59,11 +59,6 @@ The options in the INI file are as follows:
    RunLocally=false
 
 (There is no need for an INI header in this file; if you have one, though, it won't damage anything.)
-
-The AdditionalParameters entry allows you to pass additional command-line parameters to the 
-application. Whatever you enter here will be appended to the call to Audacity.exe. The full 
-list of available options is here:
-https://handbook.musescore.org/appendix/command-line-usage
 
 The DisableSplashScreen entry allows you to run the launcher without the PortableApps.com splash 
 screen (if present in -\App\AppInfo\Launcher) showing up. The default is false.

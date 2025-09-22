@@ -1,11 +1,11 @@
 [Format]
 Type=PortableApps.comFormat
-Version=3.7 # Version of the PortableApps format, not of MuseScore
+Version=3.7 # Version of the PortableApps format, not of Audacity
 
 [Details]
 Name=Audacity Portable
 AppId=AudacityPortable
-Publisher=Audacity BVBA and Others
+Publisher=Audacity
 Homepage=PortableApps.com/AudacityPortable
 Category=Music & Video
 Description=Audacity: A Digital Audio Editor packaged with a PortableApps.com Launcher as a portable app.
@@ -23,7 +23,7 @@ DisplayVersion=@MUSE_APP_VERSION@
 
 [Control]
 Icons=1
-Start=MuseScorePortable.exe
+Start=AudacityPortable.exe
 
 [Associations]
 FileTypes=aup4

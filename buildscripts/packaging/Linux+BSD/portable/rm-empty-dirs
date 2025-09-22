@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Use this script to tidy up a directory tree after deleting files (e.g.
-# when uninstalling MuseScore). The script takes as argument a path (or
+# when uninstalling Audacity). The script takes as argument a path (or
 # a space-delimited list of paths) to recently deleted files:
 #   e.g. "/usr/local/share/mscore-dev-2.1/manual/plugins/harmony.html"
 # If the file still exists nothing happens. If it's parent directory is

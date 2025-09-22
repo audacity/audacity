@@ -5,6 +5,7 @@ message(STATUS "Package")
 set(ARTIFACTS_DIR "build.artifacts")
 set(INSTALL_DIR "build.install")
 set(PACKAGING_DIR ${CMAKE_CURRENT_LIST_DIR}/../../packaging/MacOS)
+set(ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../../..)
 
 # Options
 set(BUILD_MODE "" CACHE STRING "Build mode")
@@ -16,8 +17,10 @@ if (NOT BUILD_MODE)
     file (STRINGS "${ARTIFACTS_DIR}/env/build_mode.env" BUILD_MODE)
 endif()
 
+include(${ROOT_DIR}/version.cmake)
+
 if (NOT BUILD_VERSION)
-    set(BUILD_VERSION 4.0.0-alpha)
+    set(BUILD_VERSION ${MUSE_APP_VERSION})
     #file (STRINGS "${ARTIFACTS_DIR}/env/build_version.env" BUILD_VERSION)
 endif()
 
