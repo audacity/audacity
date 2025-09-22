@@ -22,7 +22,7 @@ SplitToolController::SplitToolController(QObject* parent)
 
     m_shortcut = std::make_unique<TapHoldShortcut>("split-tool");
 
-    m_shortcut->pressed().onNotify(nullptr, [this]() {
+    m_shortcut->pressed().onNotify(this, [this]() {
         m_prePressState = active();
         if (active()) {
             return;
@@ -30,15 +30,15 @@ SplitToolController::SplitToolController(QObject* parent)
         setActive(true);
     });
 
-    m_shortcut->tapped().onNotify(nullptr, [this]() {
+    m_shortcut->tapped().onNotify(this, [this]() {
         setActive(!m_prePressState);
     });
 
-    m_shortcut->holdStarted().onNotify(nullptr, [this]() {
+    m_shortcut->holdStarted().onNotify(this, [this]() {
         setActive(true);
     });
 
-    m_shortcut->holdEnded().onNotify(nullptr, [this]() {
+    m_shortcut->holdEnded().onNotify(this, [this]() {
         setActive(false);
     });
 
@@ -51,7 +51,7 @@ SplitToolController::SplitToolController(QObject* parent)
             setClipHovered(false);
         }
     });
-    uicontextResolver()->currentUiContextChanged().onNotify(nullptr, [this]() {
+    uicontextResolver()->currentUiContextChanged().onNotify(this, [this]() {
         setActive(false);
         setSingleTrack(true);
         setClipHovered(false);
