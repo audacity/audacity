@@ -89,7 +89,7 @@ private:
     double xToTime(double x) const;
     double dbToY(double db) const;
 
-    enum SequenceId {
+    enum DynamicsDataId {
         eInputDb,
         eOutputDb,
         eOutputDbLine,
@@ -99,8 +99,8 @@ private:
 
     QSGNode* updatePaintNode(QSGNode*, UpdatePaintNodeData*) override;
 
-    double m_dbMin = -60;
-    double m_duration = 5;
+    double m_dbMin = 0;
+    double m_duration = 0;
     double m_dataPointRate = 0;
     int m_prevSampleIndex = -1;
     double m_stopwatchTime = 0;

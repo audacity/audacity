@@ -34,6 +34,7 @@ void DynamicsTimeline::componentComplete()
     QQuickItem::componentComplete();
     assert(m_dataPointRate > 0);
     assert(m_duration > 0);
+    assert(m_dbMin < 0);
 }
 
 double DynamicsTimeline::stopwatchTime() const { return m_stopwatchTime; }

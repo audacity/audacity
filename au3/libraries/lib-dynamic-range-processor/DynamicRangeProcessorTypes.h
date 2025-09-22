@@ -43,7 +43,7 @@ struct Unbypassed
 {
 };
 
-static constexpr auto compressorMeterUpdatePeriodMs = 1000 / 30;
+static constexpr int compressorMeterUpdatePeriodMs = 1000 / 30;
 
 constexpr double compressorThresholdDbDefault = -12;
 constexpr double compressorKneeWidthDbDefault = 6;

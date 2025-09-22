@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 import QtQuick 2.15
 import QtQuick.Shapes 1.15
 import Muse.Ui
