@@ -13,7 +13,7 @@
 namespace au::projectscene {
 class TapHoldShortcut;
 
-class SplitToolController : public QObject, public muse::actions::Actionable
+class SplitToolController : public QObject, public muse::actions::Actionable, public muse::async::Asyncable
 {
     Q_OBJECT
 
