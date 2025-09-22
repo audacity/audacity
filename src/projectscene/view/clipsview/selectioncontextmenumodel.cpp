@@ -27,7 +27,13 @@ MenuItemList SelectionContextMenuModel::makeItems()
         makeMenuItem("duplicate"),
         makeMenuItem("paste"),
         makeSeparator(),
-        makeMenuItem("split")
+        makeMenuItem("silence-audio-selection"),
+        makeMenuItem("delete-per-track-ripple"),
+        makeSeparator(),
+        makeMenuItem("split"),
+        makeMenuItem("split-into-new-track"),
+        makeMenuItem("disjoin"),
+        makeMenuItem("join"),
     };
 
     return items;
