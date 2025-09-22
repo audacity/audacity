@@ -116,6 +116,9 @@ jobs:
         source /c/build_tools/environment.sh
         cmake -P ${CI_DIR}/windows/ci_build.cmake
     - name: Package
+      env:
+        SIGN_KEY:    ${{ secrets.WINDOWS_CODE_SIGNING_ACCESS_KEY_ID }}
+        SIGN_SECRET: ${{ secrets.WINDOWS_CODE_SIGNING_SECRET_ACCESS_KEY }}
       if: env.DO_BUILD == 'true'
       shell: bash
       run: |

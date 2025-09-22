@@ -40,6 +40,16 @@ elseif(BUILD_MODE STREQUAL "stable_build")
     set(PACK_TYPE "msi")
 endif()
 
+# Setup signing
+set(SIGN_KEY    "$ENV{SIGN_KEY}")
+set(SIGN_SECRET "$ENV{SIGN_SECRET}")
+
+if(NOT DEFINED SIGN_ENABLE AND SIGN_KEY AND SIGN_SECRET)
+  set(SIGN_ENABLE ON)
+endif()
+
+set(SIGN_SERVICE_SH "${CMAKE_SOURCE_DIR}/buildscripts/ci/windows/sign_service_aws.sh")
+
 file(MAKE_DIRECTORY "${ARTIFACTS_DIR}")
 
 # PACK 7z
@@ -88,6 +98,39 @@ if(PACK_TYPE STREQUAL "msi")
     set(_cfg_arg "--config" "${BUILD_MODE}")
   else()
     set(_cfg_arg "--config" "Release")
+  endif()
+
+  set(_app_target "audacity")
+  execute_process(
+    COMMAND "${CMAKE_COMMAND}" --build "${BUILD_DIR}" --target ${_app_target} ${_cfg_arg}
+    RESULT_VARIABLE _rc_build_app
+  )
+  if(NOT _rc_build_app EQUAL 0)
+    message(FATAL_ERROR "Failed to build target ${_app_target} for signing")
+  endif()
+
+  if(SIGN_ENABLE AND SIGN_KEY AND SIGN_SECRET)
+    set(_app_exe "${BUILD_DIR}/Audacity4.exe")
+
+    if(EXISTS "${_app_exe}")
+      message(STATUS "[sign-prepack] exe: ${_app_exe}")
+      find_program(BASH_EXECUTABLE bash REQUIRED)
+      execute_process(
+        COMMAND "${BASH_EXECUTABLE}" "${SIGN_SERVICE_SH}"
+                --s3_key     "${SIGN_KEY}"
+                --s3_secret  "${SIGN_SECRET}"
+                --file_path  "${_app_exe}"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        RESULT_VARIABLE _rc_exe
+      )
+      if(NOT _rc_exe EQUAL 0)
+        message(WARNING "[sign-prepack] failed to sign ${_app_exe} (rc=${_rc_exe})")
+      endif()
+    else()
+      message(WARNING "[sign-prepack] exe not found at ${_app_exe}")
+    endif()
+  else()
+    message(STATUS "[sign-prepack] disabled or credentials missing; skipping exe signing")
   endif()
 
   execute_process(
@@ -143,12 +186,12 @@ if(PACK_TYPE STREQUAL "msi")
 
   if(BUILD_MODE STREQUAL "nightly_build")
     if(BUILD_NUMBER AND BUILD_BRANCH AND BUILD_REVISION)
-      set(ARTIFACT_NAME "Audacity-Nightly-${BUILD_NUMBER}-${BUILD_BRANCH}-${BUILD_REVISION}-${TARGET_PROCESSOR_ARCH}.msi")
+      set(ARTIFACT_NAME "Audacity-Nightly-${BUILD_NUMBER}-${BUILD_BRANCH}-${BUILD_REVISION}-x86_64.msi")
     else()
-      set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-${TARGET_PROCESSOR_ARCH}.msi")
+      set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-x86_64.msi")
     endif()
   else()
-    set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-${TARGET_PROCESSOR_ARCH}.msi")
+    set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-x86_64.msi")
   endif()
 
   set(ARTIFACT_PATH "${ARTIFACTS_DIR}/${ARTIFACT_NAME}")
@@ -156,6 +199,28 @@ if(PACK_TYPE STREQUAL "msi")
   get_filename_component(_copied_name "${MSI_FILE}" NAME)
   file(RENAME "${ARTIFACTS_DIR}/${_copied_name}" "${ARTIFACT_PATH}")
   message(STATUS "Copied installer to ${ARTIFACT_PATH}")
+
+  if(SIGN_ENABLE)
+    if(NOT EXISTS "${SIGN_SERVICE_SH}")
+      message(FATAL_ERROR "Signing script not found: ${SIGN_SERVICE_SH}")
+    endif()
+
+    find_program(BASH_EXECUTABLE bash)
+
+    message(STATUS "Signing MSI: ${ARTIFACT_PATH}")
+    execute_process(
+      COMMAND "${BASH_EXECUTABLE}" "${SIGN_SERVICE_SH}"
+              --s3_key "${SIGN_KEY}"
+              --s3_secret "${SIGN_SECRET}"
+              --file_path "${ARTIFACT_PATH}"
+      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+      RESULT_VARIABLE _sign_rc
+    )
+    if(NOT _sign_rc EQUAL 0)
+      message(FATAL_ERROR "Code signing failed (exit ${_sign_rc})")
+    endif()
+    message(STATUS "Signing complete: ${ARTIFACT_PATH}")
+  endif()
 
   message(STATUS "Finished MSI packing")
   return()
