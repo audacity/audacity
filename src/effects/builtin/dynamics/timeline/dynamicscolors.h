@@ -17,6 +17,7 @@ class DynamicsColors : public QObject
 public:
     static QColor backgroundColor() { return QColor("#313147"); }
     static QColor gridColor() { return QColor("#4A4D5D"); }
+    static QColor clippingColor() { return QColor("#FF1C1C"); } // Same as color used in VolumePressureMeter.qml.
 
     static QColor timelineDataFillColor() { return QColor("#565695"); }
     static QColor timelineDataFillColorSemiTransparent() { return QColor("#80565695"); }
@@ -28,6 +29,7 @@ public:
 
     Q_PROPERTY(QColor backgroundColor READ backgroundColor CONSTANT)
     Q_PROPERTY(QColor gridColor READ gridColor CONSTANT)
+    Q_PROPERTY(QColor clippingColor READ clippingColor CONSTANT)
 
     Q_PROPERTY(QColor timelineDataFillColor READ timelineDataFillColor CONSTANT)
     Q_PROPERTY(QColor timelineDataFillColorSemiTransparent READ timelineDataFillColorSemiTransparent CONSTANT)

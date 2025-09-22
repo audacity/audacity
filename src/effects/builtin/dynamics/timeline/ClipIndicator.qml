@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Shapes 1.15
 import Muse.Ui
+import Audacity.BuiltinEffects
 
 /*
  * A rectangle with upper rounded corners
@@ -17,7 +18,7 @@ Shape {
         id: prv
 
         readonly property int radius: 2
-        property color color: root.isClipping ? "#FF1C1C" : ui.theme.backgroundSecondaryColor
+        property color color: root.isClipping ? DynamicsColors.clippingColor : ui.theme.backgroundSecondaryColor
     }
 
     MouseArea {
