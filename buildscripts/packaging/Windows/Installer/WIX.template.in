@@ -5,7 +5,7 @@
 <?define ProdName="$(var.MUSE_APP_TITLE_VERSION)"?>
 <?define ShortProdName="$(var.MUSE_APP_TITLE) $(var.CPACK_PACKAGE_VERSION_MAJOR) $(var.MUSE_APP_RELEASE_CHANNEL)"?>
 <?define ExeKey="$(var.ShortProdName).exe"?>
-<?define ExeName="$(var.AUDACITY_EXECUTABLE_NAME).exe"?>
+<?define ExeName="$(var.MUSE_EXECUTABLE_NAME).exe"?>
 <?define RegistryRoot="HKMU"?> <!--HKCU / HKLM-->
 
 <?if "$(var.MUSE_APP_RELEASE_CHANNEL)" != ""?>

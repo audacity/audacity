@@ -12,7 +12,7 @@
 		<!-- Audacity documents -->
 		<dict>
 			<key>UTTypeIdentifier</key>
-			<string>org.audacity.aup4</string>
+			<string>org.audacityteam.aup4</string>
 			<key>UTTypeDescription</key>
 			<string>Audacity File</string>
 			<key>UTTypeConformsTo</key>
@@ -65,7 +65,7 @@
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
             <key>CFBundleURLName</key>
-            <string>org.audacity.audacity.audacityurl</string>
+            <string>org.audacityteam.audacity.audacityurl</string>
             <key>CFBundleURLSchemes</key>
             <array>
                 <string>audacity</string>

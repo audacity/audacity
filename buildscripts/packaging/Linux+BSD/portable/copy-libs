@@ -325,7 +325,7 @@ locateQt() {
     [ "$path" ] && break
     # Still not found... Look everywhere except places that might give false
     # positive. Probably best not enable this as as it might find the wrong Qt.
-    # path="$(locate "$file" | grep -vEm1 "MuseScore|QtCreator")"
+    # path="$(locate "$file" | grep -vEm1 "Audacity|QtCreator")"
     # [ "$path" ] && break
     echo "$0: Couldn't find Qt." >&2
     return 1
