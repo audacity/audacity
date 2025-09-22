@@ -12,7 +12,6 @@ Item {
     id: root
 
     required property int instanceId
-    required property color gridColor
     required property var showInputDbModel
     required property var showOutputDbModel
     required property var showCompressionDbModel
@@ -157,7 +156,7 @@ Item {
                 // }
 
                 color: DynamicsColors.backgroundColor
-                border.color: ui.theme.strokeColor
+                border.color: DynamicsColors.gridColor
                 border.width: 1
                 width: root.width - meterGrid.width - 24 // TODO font metrics
                 height: root.timelineHeight
@@ -172,7 +171,7 @@ Item {
                         width: timeline.width
                         height: 1
                         y: modelData / root.dbMin * root.timelineHeight
-                        color: root.gridColor
+                        color: DynamicsColors.gridColor
                     }
                 }
 
@@ -185,7 +184,7 @@ Item {
                         width: 1
                         height: timeline.height
                         x: (modelData + root.duration) / root.duration * timeline.width
-                        color: root.gridColor
+                        color: DynamicsColors.gridColor
                     }
                 }
 

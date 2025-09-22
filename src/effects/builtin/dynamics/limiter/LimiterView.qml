@@ -31,7 +31,6 @@ DynamicsEffectBase {
 
             instanceId: limiter.instanceId
             playState: root.playState
-            gridColor: root.gridColor
 
             showInputDbModel: LimiterSettingModel {
                 paramId: "showInput"

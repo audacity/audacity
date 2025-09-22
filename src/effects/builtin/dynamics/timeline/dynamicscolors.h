@@ -16,6 +16,7 @@ class DynamicsColors : public QObject
 
 public:
     static QColor backgroundColor() { return QColor("#313147"); }
+    static QColor gridColor() { return QColor("#4A4D5D"); }
 
     static QColor timelineDataFillColor() { return QColor("#565695"); }
     static QColor timelineDataFillColorSemiTransparent() { return QColor("#80565695"); }
@@ -26,6 +27,7 @@ public:
     static QColor timelineOutputDbLineColor() { return QColor("white"); }
 
     Q_PROPERTY(QColor backgroundColor READ backgroundColor CONSTANT)
+    Q_PROPERTY(QColor gridColor READ gridColor CONSTANT)
 
     Q_PROPERTY(QColor timelineDataFillColor READ timelineDataFillColor CONSTANT)
     Q_PROPERTY(QColor timelineDataFillColorSemiTransparent READ timelineDataFillColorSemiTransparent CONSTANT)

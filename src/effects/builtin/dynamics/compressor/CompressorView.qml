@@ -37,7 +37,6 @@ DynamicsEffectBase {
 
             instanceId: compressor.instanceId
             playState: root.playState
-            gridColor: root.gridColor
 
             showInputDbModel: CompressorSettingModel {
                 paramId: "showInput"
@@ -122,7 +121,6 @@ DynamicsEffectBase {
                     availableHeight: leftGrid.height
 
                     model: compressor
-                    gridColor: root.gridColor
                 }
             }
         }
