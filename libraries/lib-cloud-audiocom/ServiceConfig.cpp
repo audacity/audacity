@@ -54,6 +54,11 @@ StringSetting audioComFinishUploadPage {
    L"https://audio.com/audacity/upload?audioId={audio_id}&token={auth_token}&clientId={auth_client_id}&" MTM_CAMPAIGN
 };
 
+StringSetting audioComTourPage {
+   L"/CloudServices/AudioCom/TourPage",
+   L"https://audio.com/tour?mtm_campaign=audacitydesktop&mtm_content=app_launch_reg"
+};
+
 StringSetting audioComAuthWithRedirectURL {
    L"/CloudServices/AudioCom/AuthWithRedirectURL",
    L"https://audio.com/auth/check-and-redirect"
@@ -131,6 +136,7 @@ ServiceConfig::ServiceConfig()
    mOAuthClientSecret   = audacity::ToUTF8(audioComOAuthClientSecret.Read());
    mOAuthRedirectURL    = audacity::ToUTF8(audioComOAuthRedirectURL.Read());
    mAuthWithRedirectURL = audacity::ToUTF8(audioComAuthWithRedirectURL.Read());
+   mTourPage            = audacity::ToUTF8(audioComTourPage.Read());
    mOAuthLoginPage      = audacity::ToUTF8(audioComOAuthLoginPage.Read());
    mFinishUploadPage    = audacity::ToUTF8(audioComFinishUploadPage.Read());
    mFrontendURL         = audacity::ToUTF8(audioComFrontendURL.Read());
@@ -164,6 +170,11 @@ std::string ServiceConfig::GetOAuthClientSecret() const
 std::string ServiceConfig::GetOAuthRedirectURL() const
 {
    return mOAuthRedirectURL;
+}
+
+std::string ServiceConfig::GetTourPage() const
+{
+   return mTourPage;
 }
 
 std::string ServiceConfig::GetAuthWithRedirectURL() const
