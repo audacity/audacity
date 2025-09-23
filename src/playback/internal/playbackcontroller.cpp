@@ -68,6 +68,7 @@ void PlaybackController::init()
         if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
             //! NOTE: just stop, without seek
             player()->stop();
+            player()->setPlaybackRegion(m_lastPlaybackRegion);
         }
     });
 
