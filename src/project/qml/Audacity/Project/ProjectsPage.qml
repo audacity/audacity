@@ -161,6 +161,8 @@ FocusScope {
             StyledTabButton {
                 text: qsTrc("project", "My online projects")
 
+                visible: false
+
                 navigation.name: "MyOnlineProjects"
                 navigation.panel: navTabPanel
                 navigation.column: 2
