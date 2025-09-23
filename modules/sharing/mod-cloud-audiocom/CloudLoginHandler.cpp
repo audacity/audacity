@@ -8,9 +8,8 @@
 #include "ui/dialogs/LoginDialog.h"
 #include "OAuthService.h"
 #include "UserService.h"
+#include "ServiceConfig.h"
 #include "menus/CloudLoginHelper.h"
-
-constexpr auto AudioComTourURL = "https://audio.com/tour?mtm_campaign=audacitydesktop&mtm_content=app_launch_reg";
 
 class CloudLoginHandler
 {
@@ -42,8 +41,11 @@ public:
          if (userService.GetUserSlug().empty() && !ShowLoginDialog())
             return;
 
-         auto userId = audacity::ToUTF8(userService.GetUserId());
-         auto url = oauthService.MakeAudioComAuthorizeURL(userId, AudioComTourURL);
+         auto& serviceConfig = GetServiceConfig();
+
+         const auto userId = audacity::ToUTF8(userService.GetUserId());
+         const auto tourPage = serviceConfig.GetTourPage();
+         const auto url = oauthService.MakeAudioComAuthorizeURL(userId, tourPage);
          BasicUI::OpenInDefaultBrowser(url);
          // One shot subscription
          mUserServiceSubscription.Reset();
