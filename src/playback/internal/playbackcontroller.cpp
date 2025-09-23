@@ -255,6 +255,10 @@ void PlaybackController::play(bool ignoreSelection)
         PlaybackRegion selectionRegion = selectionPlaybackRegion();
         if (selectionRegion.isValid()) {
             doChangePlaybackRegion(selectionRegion);
+        } else {
+            // update the playback region "manually" even when not paused
+            // (that's why we aren't using the doChangePlaybackRegion)
+            player()->setPlaybackRegion(m_lastPlaybackRegion);
         }
     } else {
         doChangePlaybackRegion({});
