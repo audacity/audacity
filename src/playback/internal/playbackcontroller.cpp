@@ -68,7 +68,9 @@ void PlaybackController::init()
         if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
             //! NOTE: just stop, without seek
             player()->stop();
-            player()->setPlaybackRegion(m_lastPlaybackRegion);
+            if (player()->playbackRegion() != m_lastPlaybackRegion) {
+                player()->setPlaybackRegion(m_lastPlaybackRegion);
+            }
         }
     });
 
@@ -255,6 +257,11 @@ void PlaybackController::play(bool ignoreSelection)
         PlaybackRegion selectionRegion = selectionPlaybackRegion();
         if (selectionRegion.isValid()) {
             doChangePlaybackRegion(selectionRegion);
+        } else {
+            LOGW() << "playback region is not valid";
+            // update the playback region "manually" even when not paused
+            // (that's why we aren't using the doChangePlaybackRegion)
+            player()->setPlaybackRegion(m_lastPlaybackRegion);
         }
     } else {
         doChangePlaybackRegion({});
