@@ -96,7 +96,7 @@ const UiActionList ApplicationUiActions::m_actions = {
 
     // Docking
     UiAction("dock-restore-default-layout",
-             au::context::UiCtxUnknown,
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Restore the &default layout"),
              TranslatableString("action", "Restore the default layout")
