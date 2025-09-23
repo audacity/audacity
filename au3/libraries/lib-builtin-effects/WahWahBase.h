@@ -91,7 +91,7 @@ public:
 
         // bool ProcessFinalize() noexcept override;
 
-        bool RealtimeInitialize(EffectSettings& settings, double) override;
+        bool RealtimeInitialize(EffectSettings& settings, double, size_t) override;
 
         bool RealtimeAddProcessor(
             EffectSettings& settings, EffectOutputs* pOutputs, unsigned numChannels, float sampleRate) override;

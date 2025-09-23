@@ -187,7 +187,7 @@ bool ReverbEffect::Instance::ProcessFinalize() noexcept
 }
 
 bool ReverbEffect::Instance::RealtimeInitialize(
-    EffectSettings& settings, double sampleRate)
+    EffectSettings& settings, double sampleRate, size_t)
 {
     SetBlockSize(512);
     mSlaves.clear();

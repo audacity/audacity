@@ -26,7 +26,13 @@ Item {
     onPlayStateChanged: {
         if (playState === Stopwatch.Playing && prv.prevPlayState === Stopwatch.Stopped) {
             timeline.clear()
-            outputDbMeterModel.isClipping = false
+            outputDbMeterModel.isClipping = false;
+
+            // We happen to know that, when this statement is reached, AudioIO has "primed" the audio buffers,
+            // meaning it already has processed several hundreds of milliseconds.
+            // Hence there already is data available in the lock-free queue to be displayed,
+            // and there is no need to wait for a timer's cycle.
+            timelineSourceModel.pullData()
         }
         prv.prevPlayState = playState
     }
@@ -197,6 +203,7 @@ Item {
                     dbMin: root.dbMin
                     duration: root.duration
                     dataPointRate: timelineSourceModel.dataPointRate
+                    audioThreadBufferDuration: timelineSourceModel.audioThreadBufferDuration
 
                     showInputDb: root.showInputDbModel.value === 1
                     showOutputDb: root.showOutputDbModel.value === 1

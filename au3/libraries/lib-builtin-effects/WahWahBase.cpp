@@ -92,7 +92,7 @@ size_t WahWahBase::Instance::ProcessBlock(
     return InstanceProcess(settings, mState, inBlock, outBlock, blockLen);
 }
 
-bool WahWahBase::Instance::RealtimeInitialize(EffectSettings&, double)
+bool WahWahBase::Instance::RealtimeInitialize(EffectSettings&, double, size_t)
 {
     SetBlockSize(512);
     mSlaves.clear();

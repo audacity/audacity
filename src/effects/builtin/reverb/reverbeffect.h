@@ -80,7 +80,7 @@ public:
 
         // Realtime section
 
-        bool RealtimeInitialize(EffectSettings& settings, double sampleRate) override;
+        bool RealtimeInitialize(EffectSettings& settings, double sampleRate, size_t audioThreadBufferSize) override;
 
         bool RealtimeAddProcessor(
             EffectSettings& settings, EffectOutputs*, unsigned numChannels, float sampleRate) override;

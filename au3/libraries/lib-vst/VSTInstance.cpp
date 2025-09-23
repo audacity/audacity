@@ -143,7 +143,7 @@ size_t VSTInstance::ProcessBlock(EffectSettings&,
     return blockLen;
 }
 
-bool VSTInstance::RealtimeInitialize(EffectSettings& settings, double sampleRate)
+bool VSTInstance::RealtimeInitialize(EffectSettings& settings, double sampleRate, size_t)
 {
     // Temporarily disconnect from any validator, so that setting the chunk
     // does not cause Automate() callbacks (as some effects will do) that then

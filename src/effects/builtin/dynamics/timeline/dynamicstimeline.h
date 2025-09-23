@@ -25,6 +25,8 @@ class DynamicsTimeline : public QQuickItem
     Q_PROPERTY(double dbMin READ dbMin WRITE setDbMin NOTIFY dbMinChanged)
     Q_PROPERTY(double duration READ duration WRITE setDuration NOTIFY durationChanged)
     Q_PROPERTY(double dataPointRate READ dataPointRate WRITE setDataPointRate NOTIFY dataPointRateChanged)
+    Q_PROPERTY(
+        double audioThreadBufferDuration READ audioThreadBufferDuration WRITE setAudioThreadBufferDuration NOTIFY audioThreadBufferDurationChanged)
 
     Q_PROPERTY(bool showInputDb READ showInputDb WRITE setShowInputDb NOTIFY showInputDbChanged)
     Q_PROPERTY(bool showOutputDb READ showOutputDb WRITE setShowOutputDb NOTIFY showOutputDbChanged)
@@ -43,6 +45,9 @@ public:
 
     double dataPointRate() const;
     void setDataPointRate(double rate);
+
+    double audioThreadBufferDuration() const;
+    void setAudioThreadBufferDuration(double duration);
 
     bool showInputDb() const;
     void setShowInputDb(bool show);
@@ -63,6 +68,7 @@ signals:
     void dbMinChanged();
     void durationChanged();
     void dataPointRateChanged();
+    void audioThreadBufferDurationChanged();
     void showInputDbChanged();
     void showOutputDbChanged();
     void showCompressionDbChanged();
@@ -102,6 +108,7 @@ private:
     double m_dbMin = 0;
     double m_duration = 0;
     double m_dataPointRate = 0;
+    double m_audioThreadBufferDuration = 0;
     int m_prevSampleIndex = -1;
     double m_stopwatchTime = 0;
     bool m_reset = false;

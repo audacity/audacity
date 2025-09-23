@@ -31,12 +31,13 @@ using DynamicRangeProcessorOutputPacketQueue
 
 struct InitializeProcessingSettings
 {
-    explicit InitializeProcessingSettings(double sampleRate)
-        : sampleRate{sampleRate}
+    explicit InitializeProcessingSettings(double sampleRate, size_t audioThreadBufferSize)
+        : sampleRate{sampleRate}, audioThreadBufferSize{audioThreadBufferSize}
     {
     }
 
     double sampleRate;
+    size_t audioThreadBufferSize;
 };
 
 struct Unbypassed

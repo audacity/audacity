@@ -54,7 +54,7 @@ public:
     unsigned GetAudioInCount() const override;
     unsigned GetAudioOutCount() const override;
 
-    bool RealtimeInitialize(EffectSettings& settings, double sampleRate)
+    bool RealtimeInitialize(EffectSettings& settings, double sampleRate, size_t audioThreadBufferSize)
     override;
     bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs* pOutputs, unsigned numChannels, float sampleRate) override;
     bool RealtimeFinalize(EffectSettings& settings) noexcept override;

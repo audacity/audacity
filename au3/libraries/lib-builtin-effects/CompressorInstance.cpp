@@ -25,6 +25,7 @@ CompressorInstance::CompressorInstance(CompressorInstance&& other)
     , mSlaves{std::move(other.mSlaves)}
     , mSampleCounter{std::move(other.mSampleCounter)}
     , mSampleRate{std::move(other.mSampleRate)}
+    , mAudioThreadBufferSize{std::move(other.mAudioThreadBufferSize)}
     , mOutputQueue{std::move(other.mOutputQueue)}
     , mCompressionGainDbQueue{std::move(other.mCompressionGainDbQueue)}
     , mOutputDbQueue{std::move(other.mOutputDbQueue)}
@@ -34,6 +35,11 @@ CompressorInstance::CompressorInstance(CompressorInstance&& other)
 const std::optional<double>& CompressorInstance::GetSampleRate() const
 {
     return mSampleRate;
+}
+
+const std::optional<size_t>& CompressorInstance::GetAudioThreadBufferSize() const
+{
+    return mAudioThreadBufferSize;
 }
 
 float CompressorInstance::GetLatencyMs() const
@@ -114,14 +120,15 @@ size_t CompressorInstance::ProcessBlock(
     return InstanceProcess(settings, *mCompressor, inBlock, outBlock, blockLen);
 }
 
-bool CompressorInstance::RealtimeInitialize(EffectSettings&, double sampleRate)
+bool CompressorInstance::RealtimeInitialize(EffectSettings&, double sampleRate, size_t audioThreadBufferSize)
 {
     SetBlockSize(512);
     mSlaves.clear();
     mSampleCounter = 0;
     mSampleRate = sampleRate;
+    mAudioThreadBufferSize = audioThreadBufferSize;
     InitializeProcessingSettingsPublisher::Publish(
-        std::make_optional(InitializeProcessingSettings { sampleRate }));
+        std::make_optional(InitializeProcessingSettings { sampleRate, audioThreadBufferSize }));
     return true;
 }
 

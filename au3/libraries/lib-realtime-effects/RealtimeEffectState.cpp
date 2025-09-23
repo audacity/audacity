@@ -421,7 +421,7 @@ std::shared_ptr<EffectInstance> RealtimeEffectState::MakeInstance()
 }
 
 std::shared_ptr<EffectInstance>
-RealtimeEffectState::EnsureInstance(double sampleRate)
+RealtimeEffectState::EnsureInstance(double sampleRate, size_t audioThreadBufferSize)
 {
     if (!mPlugin) {
         return {};
@@ -445,7 +445,7 @@ RealtimeEffectState::EnsureInstance(double sampleRate)
         // number was important
         pInstance->SetBlockSize(512);
 
-        if (!pInstance->RealtimeInitialize(mMainSettings.settings, sampleRate)) {
+        if (!pInstance->RealtimeInitialize(mMainSettings.settings, sampleRate, audioThreadBufferSize)) {
             return {};
         }
         mInitialized = true;
@@ -465,7 +465,7 @@ std::shared_ptr<EffectInstance> RealtimeEffectState::GetInstance()
 }
 
 std::shared_ptr<EffectInstance>
-RealtimeEffectState::Initialize(double sampleRate)
+RealtimeEffectState::Initialize(double sampleRate, size_t audioThreadBufferSize)
 {
     if (!mPlugin) {
         return {};
@@ -474,7 +474,7 @@ RealtimeEffectState::Initialize(double sampleRate)
     mCurrentProcessor = 0;
     mGroups.clear();
     mLatency = {};
-    return EnsureInstance(sampleRate);
+    return EnsureInstance(sampleRate, audioThreadBufferSize);
 }
 
 namespace {
@@ -508,9 +508,9 @@ void AllocateChannelsToProcessors(
 /*! The iteration over channels in AddGroup and Process must be the same */
 std::shared_ptr<EffectInstance>
 RealtimeEffectState::AddGroup(
-    const ChannelGroup* group, unsigned chans, float sampleRate)
+    const ChannelGroup* group, unsigned chans, float sampleRate, size_t audioThreadBufferSize)
 {
-    auto pInstance = EnsureInstance(sampleRate);
+    auto pInstance = EnsureInstance(sampleRate, audioThreadBufferSize);
     if (!pInstance) {
         return {};
     }

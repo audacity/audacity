@@ -53,7 +53,7 @@ bool RealtimeEffectManager::IsActive() const noexcept
 void RealtimeEffectManager::Initialize(
     RealtimeEffects::InitializationScope& scope,
     unsigned numPlaybackChannels,
-    double sampleRate)
+    double sampleRate, size_t audioThreadBufferSize)
 {
     // (Re)Set processor parameters
     mRates.clear();
@@ -64,28 +64,28 @@ void RealtimeEffectManager::Initialize(
     mActive = true;
 
     // Tell each state to get ready for action
-    VisitAll([&scope, sampleRate](RealtimeEffectState& state, bool) {
-        scope.mInstances.push_back(state.Initialize(sampleRate));
+    VisitAll([&scope, sampleRate, audioThreadBufferSize](RealtimeEffectState& state, bool) {
+        scope.mInstances.push_back(state.Initialize(sampleRate, audioThreadBufferSize));
     });
 
     // Leave suspended state
     SetSuspended(false);
 
     VisitGroup(MasterGroup, [&](RealtimeEffectState& state, bool) {
-        scope.mInstances.push_back(state.AddGroup(MasterGroup, numPlaybackChannels, sampleRate));
+        scope.mInstances.push_back(state.AddGroup(MasterGroup, numPlaybackChannels, sampleRate, audioThreadBufferSize));
     });
 }
 
 void RealtimeEffectManager::AddGroup(
     RealtimeEffects::InitializationScope& scope,
-    const ChannelGroup& group, unsigned chans, float rate)
+    const ChannelGroup& group, unsigned chans, float rate, size_t audioThreadBufferSize)
 {
     mGroups.push_back(&group);
     mRates.insert({ &group, rate });
 
     VisitGroup(&group,
                [&](RealtimeEffectState& state, bool) {
-        scope.mInstances.push_back(state.AddGroup(&group, chans, rate));
+        scope.mInstances.push_back(state.AddGroup(&group, chans, rate, audioThreadBufferSize));
     }
                );
 }
@@ -204,11 +204,11 @@ RealtimeEffectManager::MakeNewState(
     auto& state = *pNewState;
     if (pScope && mActive) {
         // Adding a state while playback is in-flight
-        auto pInstance = state.Initialize(pScope->mSampleRate);
+        auto pInstance = state.Initialize(pScope->mSampleRate, pScope->mAudioThreadBufferSize);
         pScope->mInstances.push_back(pInstance);
 
         if (pGroup == MasterGroup) {
-            auto pInstance2 = state.AddGroup(MasterGroup, pScope->mNumPlaybackChannels, pScope->mSampleRate);
+            auto pInstance2 = state.AddGroup(MasterGroup, pScope->mNumPlaybackChannels, pScope->mSampleRate, pScope->mAudioThreadBufferSize);
             if (pInstance2 != pInstance) {
                 pScope->mInstances.push_back(pInstance2);
             }
@@ -218,7 +218,7 @@ RealtimeEffectManager::MakeNewState(
                     continue;
                 }
                 auto pInstance2
-                    =state.AddGroup(group, pScope->mNumPlaybackChannels, mRates[group]);
+                    =state.AddGroup(group, pScope->mNumPlaybackChannels, mRates[group], pScope->mAudioThreadBufferSize);
                 if (pInstance2 != pInstance) {
                     pScope->mInstances.push_back(pInstance2);
                 }

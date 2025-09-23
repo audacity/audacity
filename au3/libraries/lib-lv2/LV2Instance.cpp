@@ -149,7 +149,7 @@ size_t LV2Instance::ProcessBlock(EffectSettings&,
     return size;
 }
 
-bool LV2Instance::RealtimeInitialize(EffectSettings&, double)
+bool LV2Instance::RealtimeInitialize(EffectSettings&, double, size_t)
 {
     for (auto& state : mPortStates.mCVPortStates) {
         state.mBuffer.reinit(GetBlockSize(), state.mpPort->mIsInput);

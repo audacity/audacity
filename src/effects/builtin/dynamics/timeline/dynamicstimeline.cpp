@@ -85,8 +85,21 @@ void DynamicsTimeline::setDataPointRate(double rate)
         return;
     }
     m_dataPointRate = rate;
+    updateDrawerViewportX();
     m_reset = true;
     emit dataPointRateChanged();
+}
+
+double DynamicsTimeline::audioThreadBufferDuration() const { return m_audioThreadBufferDuration; }
+
+void DynamicsTimeline::setAudioThreadBufferDuration(double duration)
+{
+    if (muse::is_equal(m_audioThreadBufferDuration, duration)) {
+        return;
+    }
+    m_audioThreadBufferDuration = duration;
+    m_reset = true;
+    emit audioThreadBufferDurationChanged();
 }
 
 bool DynamicsTimeline::showInputDb() const
@@ -166,7 +179,7 @@ DynamicsTimeline::createSequenceData(const QColor& color, DrawerType drawerType,
 
 void DynamicsTimeline::updateDrawerViewportX()
 {
-    m_drawerViewportX = timeToX(m_stopwatchTime - m_duration - m_timeDiff.load());
+    m_drawerViewportX = timeToX(m_stopwatchTime - m_duration - m_audioThreadBufferDuration - m_timeDiff.load());
 }
 
 void DynamicsTimeline::resetSequences()
@@ -293,5 +306,7 @@ void DynamicsTimeline::onNewSamples(const QVariantList& variants)
         m_sequences[eOutputDbLine].pendingYValues.push_back(dbToY(sample.outputDb));
         m_sequences[eCompressionDb].pendingYValues.push_back(dbToY(sample.compressionDb));
     }
+
+    update();
 }
 } // namespace au::effects

@@ -113,7 +113,7 @@ size_t PhaserBase::Instance::ProcessBlock(
     return InstanceProcess(settings, mState, inBlock, outBlock, blockLen);
 }
 
-bool PhaserBase::Instance::RealtimeInitialize(EffectSettings&, double)
+bool PhaserBase::Instance::RealtimeInitialize(EffectSettings&, double, size_t)
 {
     SetBlockSize(512);
     mSlaves.clear();

@@ -14,7 +14,7 @@
 
 namespace au::effects {
 namespace {
-constexpr auto deliveryPeriodMs = 50;
+constexpr auto deliveryPeriodMs = 10;
 }
 
 void TimelineSourceModel::doInit()
@@ -32,7 +32,7 @@ void TimelineSourceModel::doInit()
         = static_cast<InitializeProcessingSettingsPublisher&>(*instance).Subscribe([&](const std::optional<InitializeProcessingSettings>&
                                                                                        evt) {
         if (evt) {
-            initializeForPlayback(evt->sampleRate);
+            initializeForPlayback(evt->sampleRate, evt->audioThreadBufferSize);
         } else {
             // Stop the timer-based update but keep the history until playback is resumed.
             m_deliveryTimer->stop();
@@ -43,14 +43,21 @@ void TimelineSourceModel::doInit()
         emit newDataSequence();
     });
 
-    if (const auto& sampleRate = instance->GetSampleRate(); sampleRate.has_value()) {
-        initializeForPlayback(*sampleRate);
+    const auto& sampleRate = instance->GetSampleRate();
+    const auto& audioThreadBufferSize = instance->GetAudioThreadBufferSize();
+    if (sampleRate.has_value() && audioThreadBufferSize.has_value()) {
+        initializeForPlayback(*sampleRate, *audioThreadBufferSize);
     }
 }
 
 double TimelineSourceModel::dataPointRate() const
 {
     return m_dataPointRate;
+}
+
+double TimelineSourceModel::audioThreadBufferDuration() const
+{
+    return m_audioThreadBufferDuration;
 }
 
 void TimelineSourceModel::pullData()
@@ -84,7 +91,7 @@ void TimelineSourceModel::pullData()
     emit newSamples(samples);
 }
 
-void TimelineSourceModel::initializeForPlayback(double sampleRate)
+void TimelineSourceModel::initializeForPlayback(double sampleRate, int audioThreadBufferSize)
 {
     const auto instance = m_instance.lock();
     IF_ASSERT_FAILED(instance) {
@@ -112,6 +119,7 @@ void TimelineSourceModel::initializeForPlayback(double sampleRate)
     assert(instance->GetBlockSize() > 0);
     if (instance->GetBlockSize() > 0) {
         m_dataPointRate = sampleRate / instance->GetBlockSize();
+        m_audioThreadBufferDuration = audioThreadBufferSize / sampleRate;
         emit dataPointRateChanged();
     }
 

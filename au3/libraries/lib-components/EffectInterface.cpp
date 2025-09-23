@@ -144,7 +144,7 @@ int EffectInstance::id() const
     return m_id;
 }
 
-bool EffectInstance::RealtimeInitialize(EffectSettings&, double)
+bool EffectInstance::RealtimeInitialize(EffectSettings&, double, size_t )
 {
     return false;
 }

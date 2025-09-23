@@ -18,9 +18,12 @@ class TimelineSourceModel : public AbstractDynamicsEffectInstanceModel
     Q_OBJECT
 
     Q_PROPERTY(double dataPointRate READ dataPointRate NOTIFY dataPointRateChanged)
+    Q_PROPERTY(double audioThreadBufferDuration READ audioThreadBufferDuration NOTIFY dataPointRateChanged)
 
 public:
     double dataPointRate() const;
+    double audioThreadBufferDuration() const;
+    Q_INVOKABLE void pullData();
 
 signals:
     void newSamples(const QVariantList& samples);
@@ -29,8 +32,7 @@ signals:
 
 private:
     void doInit() override;
-    void pullData();
-    void initializeForPlayback(double sampleRate);
+    void initializeForPlayback(double sampleRate, int audioThreadBufferSize);
 
     std::shared_ptr<::DynamicRangeProcessorOutputPacketQueue> m_outputQueue;
     std::optional<::DynamicRangeProcessorHistory> m_history;
@@ -41,6 +43,7 @@ private:
     // Some plausible non-zero default, to make the initialization of the view simpler
     // even if playback hasn't started (and hence we don't know block size or sample rate) yet.
     double m_dataPointRate = 44100.0 / 512;
+    double m_audioThreadBufferDuration = 0;
 
     QTimer* m_deliveryTimer = nullptr;
 };

@@ -480,7 +480,7 @@ public:
      Other member functions related to realtime return true or zero, but will not
      be called, unless a derived class overrides RealtimeInitialize.
      */
-    virtual bool RealtimeInitialize(EffectSettings& settings, double sampleRate);
+    virtual bool RealtimeInitialize(EffectSettings& settings, double sampleRate, size_t audioThreadBufferSize);
 
     /*!
      @return success

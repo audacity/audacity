@@ -49,7 +49,7 @@ private:
     size_t ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen)
     override;
 
-    bool RealtimeInitialize(EffectSettings& settings, double sampleRate)
+    bool RealtimeInitialize(EffectSettings& settings, double sampleRate, size_t audioThreadBufferSize)
     override;
     bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs* pOutputs, unsigned numChannels, float sampleRate) override;
     bool RealtimeFinalize(EffectSettings& settings) noexcept override;

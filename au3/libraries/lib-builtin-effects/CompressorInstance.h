@@ -31,6 +31,7 @@ public:
     explicit CompressorInstance(CompressorInstance&& other);
 
     const std::optional<double>& GetSampleRate() const;
+    const std::optional<size_t>& GetAudioThreadBufferSize() const;
     float GetLatencyMs() const;
     void SetOutputQueue(std::weak_ptr<DynamicRangeProcessorOutputPacketQueue>);
     void SetCompressionGainDbQueue(std::weak_ptr<LockFreeQueue<float> > queue);
@@ -46,7 +47,7 @@ private:
         EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen) override;
 
     bool
-    RealtimeInitialize(EffectSettings& settings, double sampleRate) override;
+    RealtimeInitialize(EffectSettings& settings, double sampleRate, size_t audioThreadBufferSize) override;
 
     bool RealtimeResume() override;
 
@@ -77,6 +78,7 @@ private:
     std::vector<CompressorInstance> mSlaves;
     long long mSampleCounter = 0;
     std::optional<double> mSampleRate;
+    std::optional<size_t> mAudioThreadBufferSize;
     std::weak_ptr<DynamicRangeProcessorOutputPacketQueue> mOutputQueue;
     std::weak_ptr<LockFreeQueue<float> > mCompressionGainDbQueue;
     std::weak_ptr<LockFreeQueue<float> > mOutputDbQueue;
