@@ -329,21 +329,21 @@ io::path_t ProjectActionsController::selectImportFile()
 {
     std::vector<std::string> filter {
         trc("project",
-            "Video files")
-        + "(*.avi *.mp4 *.mkv *.mov *.flv *.wmv *.asf *.webm *.mpg *.mpeg *.m4v *.ts *.gxf *.mxf *.nut *.dv *.3gp *.3g2 *.mj2)",
-        trc("project",
             "Audio files")
-        + "(*.aac *.ac3 *.mp3 *.wma *.wav *.flac *.ogg *.opus *.aif *.aiff *.amr *.ape *.au *.dts *.mpc *.tta *.wv *.shn *.voc *.mmf)",
+        + " (*.aac *.ac3 *.mp3 *.wma *.wav *.flac *.ogg *.opus *.aif *.aiff *.amr *.ape *.au *.dts *.mpc *.tta *.wv *.shn *.voc *.mmf)",
+        trc("project",
+            "Video files")
+        + " (*.avi *.mp4 *.mkv *.mov *.flv *.wmv *.asf *.webm *.mpg *.mpeg *.m4v *.ts *.gxf *.mxf *.nut *.dv *.3gp *.3g2 *.mj2)",
         trc("project",
             "Game media files")
         +
-        "(*.roq *.bethsoftvid *.c93 *.dsicin *.dxa *.ea *.cdata *.film_cpk *.idcin *.ipmovie *.psxstr *.rl2 *.siff *.smk *.thp *.tiertexseq *.vmd *.wc3movie *.wsaud *.wsvqa *.txd)",
-        trc("project", "Streaming files") + "(*.rtsp *.sdp *.nsv *.pva *.msnwctcp *.lmlm4 *.redir)",
-        trc("project", "Animation and image files") + "(*.gif *.flic *.swf *.image2 *.image2pipe)",
+        " (*.roq *.bethsoftvid *.c93 *.dsicin *.dxa *.ea *.cdata *.film_cpk *.idcin *.ipmovie *.psxstr *.rl2 *.siff *.smk *.thp *.tiertexseq *.vmd *.wc3movie *.wsaud *.wsvqa *.txd)",
+        trc("project", "Streaming files") + " (*.rtsp *.sdp *.nsv *.pva *.msnwctcp *.lmlm4 *.redir)",
+        trc("project", "Animation and image files") + " (*.gif *.flic *.swf *.image2 *.image2pipe)",
         trc("project",
             "Raw files")
         +
-        "(*.al *.ul *.s16be *.u16be *.s8 *.u8 *.ub *.uw *.4xm *.MTV *.afc *.aifc *.apc *.apl *.mac *.avs *.302 *.daud *.ffm *.cgi *.mm *.mpegtsraw *.mpegvideo *.nuv *.sw *.sb *.son *.sol *.vfwcap)"
+        " (*.al *.ul *.s16be *.u16be *.s8 *.u8 *.ub *.uw *.4xm *.MTV *.afc *.aifc *.apc *.apl *.mac *.avs *.302 *.daud *.ffm *.cgi *.mm *.mpegtsraw *.mpegvideo *.nuv *.sw *.sb *.son *.sol *.vfwcap)"
     };
 
     io::path_t defaultDir = configuration()->lastOpenedProjectsPath();
