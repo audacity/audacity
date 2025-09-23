@@ -40,12 +40,14 @@ void Stopwatch::doPlay()
     const auto now = std::chrono::steady_clock::now();
     if (m_playState == Stopped || !m_startTime) {
         m_startTime = now;
+        m_elapsedTime = 0;
         m_pauseTime.reset();
     } else if (m_pauseTime) {
         const auto pausedDuration = now - *m_pauseTime;
         m_startTime = *m_startTime + pausedDuration;
         m_pauseTime.reset();
     }
+    emit elapsedTimeChanged();
     m_timer.start(std::chrono::milliseconds(10));
 }
 
