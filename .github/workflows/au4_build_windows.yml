@@ -119,6 +119,8 @@ jobs:
       env:
         SIGN_KEY:    ${{ secrets.WINDOWS_CODE_SIGNING_ACCESS_KEY_ID }}
         SIGN_SECRET: ${{ secrets.WINDOWS_CODE_SIGNING_SECRET_ACCESS_KEY }}
+        WIN_MSI_TESTING_AU4_GUID: ${{ secrets.WIN_MSI_TESTING_AU4_GUID }}
+        WIN_MSI_STABLE_AU4_GUID: ${{ secrets.WIN_MSI_STABLE_AU4_GUID }}
       if: env.DO_BUILD == 'true'
       shell: bash
       run: |

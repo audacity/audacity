@@ -16,28 +16,34 @@ set(BUILD_REVISION "" CACHE STRING "Nightly revision (short SHA)")
 set(UPGRADE_UUID "11111111-1111-1111-1111-111111111111" CACHE STRING "WiX Upgrade GUID")
 
 if (NOT BUILD_MODE)
-    file (STRINGS "${ARTIFACTS_DIR}/env/build_mode.env" BUILD_MODE)
+  file (STRINGS "${ARTIFACTS_DIR}/env/build_mode.env" BUILD_MODE)
 endif()
 
 # Check options
 if (NOT BUILD_MODE)
-    message(FATAL_ERROR "not set BUILD_MODE")
+  message(FATAL_ERROR "not set BUILD_MODE")
 endif()
 
 if (NOT BUILD_VERSION)
-    file (STRINGS "${ARTIFACTS_DIR}/env/build_version.env" BUILD_VERSION)
+  file (STRINGS "${ARTIFACTS_DIR}/env/build_version.env" BUILD_VERSION)
 endif()
 
 # Setup package type
 set(PACK_TYPE "7z")
 if (BUILD_MODE STREQUAL "devel_build")
-    set(PACK_TYPE "7z")
+  set(PACK_TYPE "7z")
 elseif(BUILD_MODE STREQUAL "nightly_build")
-    set(PACK_TYPE "7z")
+  set(PACK_TYPE "7z")
 elseif(BUILD_MODE STREQUAL "testing_build")
-    set(PACK_TYPE "msi")
+  set(PACK_TYPE "msi")
+  if(DEFINED ENV{WIN_MSI_TESTING_AU4_GUID} AND NOT "$ENV{WIN_MSI_TESTING_AU4_GUID}" STREQUAL "")
+    set(UPGRADE_UUID "$ENV{WIN_MSI_TESTING_AU4_GUID}" CACHE STRING "WiX Upgrade GUID" FORCE)
+  endif()
 elseif(BUILD_MODE STREQUAL "stable_build")
-    set(PACK_TYPE "msi")
+  set(PACK_TYPE "msi")
+  if(DEFINED ENV{WIN_MSI_STABLE_AU4_GUID} AND NOT "$ENV{WIN_MSI_STABLE_AU4_GUID}" STREQUAL "")
+    set(UPGRADE_UUID "$ENV{WIN_MSI_STABLE_AU4_GUID}" CACHE STRING "WiX Upgrade GUID" FORCE)
+  endif()
 endif()
 
 # Setup signing
@@ -80,7 +86,6 @@ if(PACK_TYPE STREQUAL "msi")
     message(FATAL_ERROR "Could not generate PACKAGE_UUID")
   endif()
   message(STATUS "PACKAGE_UUID: ${PACKAGE_UUID}")
-  message(STATUS "UPGRADE_UUID: ${UPGRADE_UUID}")
 
   execute_process(
     COMMAND "${CMAKE_COMMAND}"
