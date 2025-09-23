@@ -369,6 +369,7 @@ void PlaybackController::stop()
         seek(loopRegion.start);
     } else {
         seek(m_lastPlaybackSeekTime);
+        player()->setPlaybackRegion(m_lastPlaybackRegion);
     }
 }
 
