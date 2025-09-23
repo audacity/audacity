@@ -57,7 +57,8 @@ bool VST3Instance::RealtimeAddProcessor(EffectSettings& settings,
     auto& effect = static_cast<const PerTrackEffect&>(mProcessor);
     auto uProcessor
         =std::make_unique<VST3Instance>(effect, mWrapper->GetModule(), mWrapper->GetEffectClassInfo());
-    if (!uProcessor->RealtimeInitialize(settings, sampleRate)) {
+    assert(m_audioThreadBufferSize > 0);
+    if (!uProcessor->RealtimeInitialize(settings, sampleRate, m_audioThreadBufferSize)) {
         return false;
     }
     mProcessors.push_back(move(uProcessor));
@@ -77,10 +78,11 @@ bool VST3Instance::RealtimeFinalize(EffectSettings& settings) noexcept
     });
 }
 
-bool VST3Instance::RealtimeInitialize(EffectSettings& settings, double sampleRate)
+bool VST3Instance::RealtimeInitialize(EffectSettings& settings, double sampleRate, size_t audioThreadBufferSize)
 {
     if (mWrapper->Initialize(settings, sampleRate, Steinberg::Vst::kRealtime, mProcessingBlockSize)) {
         mInitialDelay = mWrapper->GetLatencySamples();
+        m_audioThreadBufferSize = audioThreadBufferSize;
         return true;
     }
     return false;

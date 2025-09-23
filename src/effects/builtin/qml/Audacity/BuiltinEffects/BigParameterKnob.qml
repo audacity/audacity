@@ -9,9 +9,10 @@ Item {
 
     required property var parameter
 
+    property double defaultValue: 0
     property alias stepSize: knob.stepSize
     property alias radius: knob.radius
-    property alias warpingType: warper.warpingType
+    property alias middle: warper.middle
     property bool knobFirst: true
 
     implicitWidth: content.implicitWidth
@@ -28,10 +29,6 @@ Item {
             knob.stepSize = parameter["step"] || 1
             textEdit.measureUnitsSymbol = parameter["unit"] || ""
         }
-    }
-
-    Component.onCompleted: {
-        warper.init()
     }
 
     ValueWarper {
@@ -68,6 +65,10 @@ Item {
 
             onNewValueRequested: function (value) {
                 warper.warpedValue = value
+            }
+
+            mouseArea.onDoubleClicked: function () {
+                root.newValueRequested(root.parameter["key"], root.defaultValue)
             }
 
             mouseArea.onReleased: function () {

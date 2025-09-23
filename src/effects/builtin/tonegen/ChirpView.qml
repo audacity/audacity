@@ -4,8 +4,8 @@ import QtQuick.Layouts
 import Muse.Ui
 import Muse.UiComponents
 import Audacity.Effects
+import Audacity.BuiltinEffects
 import Audacity.Playback
-import "../common"
 
 // TODO: move to common controls
 import Preferences
@@ -32,10 +32,6 @@ BuiltinEffectBase {
 
     ToneViewModel {
         id: chirp
-    }
-
-    Component.onCompleted: {
-        chirp.init()
     }
 
     ColumnLayout {

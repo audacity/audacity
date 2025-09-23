@@ -230,7 +230,7 @@ size_t AudioUnitInstance::ProcessBlock(EffectSettings&,
 }
 
 bool AudioUnitInstance::RealtimeInitialize(
-    EffectSettings& settings, double sampleRate)
+    EffectSettings& settings, double sampleRate, size_t)
 {
     return ProcessInitialize(settings, sampleRate, nullptr);
 }

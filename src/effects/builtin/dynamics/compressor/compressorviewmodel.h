@@ -3,8 +3,7 @@
 */
 #pragma once
 
-#include "../common/effectsettingmodelimpl.h"
-#include "compressoreffect.h"
+#include "effects/builtin/common/builtineffectmodel.h"
 
 namespace au::effects {
 class CompressorViewModel : public BuiltinEffectModel
@@ -21,11 +20,5 @@ signals:
 
 private:
     void doReload() override;
-};
-
-class CompressorSettingModel : public EffectSettingModelImpl<CompressorEffect>
-{
-public:
-    CompressorSettingModel(QObject* parent = nullptr);
 };
 }

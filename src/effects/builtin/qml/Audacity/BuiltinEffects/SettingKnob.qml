@@ -5,16 +5,10 @@ Item {
     id: root
 
     required property var model
-    required property string title
-    property string unit: ""
-    property int warpingType: ValueWarpingType.None
+    property bool warp: false
     property bool isVertical: false
     property bool knobFirst: true // Only relevant is `isVertical` is true
     property int radius: 16
-
-    Component.onCompleted: {
-        model.init()
-    }
 
     Loader {
         id: knobLoader
@@ -31,11 +25,12 @@ Item {
 
         BigParameterKnob {
             radius: root.radius
-            warpingType: root.warpingType
+            defaultValue: root.model.defaultValue
+            middle: root.warp ? root.model.defaultValue : null
             knobFirst: root.knobFirst
             parameter: {
-                "title": root.title,
-                "unit": root.unit,
+                "title": root.model.title,
+                "unit": root.model.unit,
                 "min": root.model.min,
                 "max": root.model.max,
                 "value": root.model.value,
@@ -57,6 +52,7 @@ Item {
 
         ParameterKnob {
             radius: root.radius
+            defaultValue: root.model.defaultValue
             parameter: {
                 "title": root.title,
                 "unit": root.unit,

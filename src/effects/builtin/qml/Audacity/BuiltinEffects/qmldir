@@ -1,2 +1,8 @@
 module Audacity.BuiltinEffects
 BuiltinEffectViewer 1.0 BuiltinEffectViewer.qml
+BuiltinEffectBase 1.0 BuiltinEffectBase.qml
+DynamicsEffectBase 1.0 DynamicsEffectBase.qml
+SettingKnob 1.0 SettingKnob.qml
+BigParameterKnob 1.0 BigParameterKnob.qml
+ParameterKnob 1.0 ParameterKnob.qml
+SliderWithTextInput 1.0 SliderWithTextInput.qml

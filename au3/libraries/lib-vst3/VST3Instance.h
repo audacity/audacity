@@ -48,7 +48,7 @@ public:
     size_t GetTailSize() const override;
     bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs* pOutputs, unsigned numChannels, float sampleRate) override;
     bool RealtimeFinalize(EffectSettings& settings) noexcept override;
-    bool RealtimeInitialize(EffectSettings& settings, double sampleRate) override;
+    bool RealtimeInitialize(EffectSettings& settings, double sampleRate, size_t audioThreadBufferSize) override;
     bool RealtimeProcessStart(MessagePackage& package) override;
     size_t RealtimeProcess(size_t group, EffectSettings& settings, const float* const* inBuf, float* const* outBuf,
                            size_t numSamples) override;
@@ -73,4 +73,7 @@ public:
     //! NOTE For AU4
     Steinberg::IPtr<Steinberg::Vst::IEditController> vstEditController() const;
     Steinberg::IPtr<Steinberg::Vst::IComponent> effectComponent() const;
+
+private:
+    size_t m_audioThreadBufferSize{ 0 };
 };

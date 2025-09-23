@@ -25,14 +25,21 @@ CompressorInstance::CompressorInstance(CompressorInstance&& other)
     , mSlaves{std::move(other.mSlaves)}
     , mSampleCounter{std::move(other.mSampleCounter)}
     , mSampleRate{std::move(other.mSampleRate)}
+    , mAudioThreadBufferSize{std::move(other.mAudioThreadBufferSize)}
     , mOutputQueue{std::move(other.mOutputQueue)}
-    , mCompressionValueQueue{std::move(other.mCompressionValueQueue)}
+    , mCompressionGainDbQueue{std::move(other.mCompressionGainDbQueue)}
+    , mOutputDbQueue{std::move(other.mOutputDbQueue)}
 {
 }
 
 const std::optional<double>& CompressorInstance::GetSampleRate() const
 {
     return mSampleRate;
+}
+
+const std::optional<size_t>& CompressorInstance::GetAudioThreadBufferSize() const
+{
+    return mAudioThreadBufferSize;
 }
 
 float CompressorInstance::GetLatencyMs() const
@@ -51,12 +58,19 @@ void CompressorInstance::SetOutputQueue(
     }
 }
 
-void CompressorInstance::SetMeterValuesQueue(
-    std::weak_ptr<DynamicRangeProcessorMeterValuesQueue> queue)
+void CompressorInstance::SetCompressionGainDbQueue(std::weak_ptr<LockFreeQueue<float> > queue)
 {
-    mCompressionValueQueue = queue;
+    mCompressionGainDbQueue = queue;
     for (auto& slave : mSlaves) {
-        slave.mCompressionValueQueue = queue;
+        slave.mCompressionGainDbQueue = queue;
+    }
+}
+
+void CompressorInstance::SetOutputDbQueue(std::weak_ptr<LockFreeQueue<float> > queue)
+{
+    mOutputDbQueue = queue;
+    for (auto& slave : mSlaves) {
+        slave.mOutputDbQueue = queue;
     }
 }
 
@@ -106,14 +120,15 @@ size_t CompressorInstance::ProcessBlock(
     return InstanceProcess(settings, *mCompressor, inBlock, outBlock, blockLen);
 }
 
-bool CompressorInstance::RealtimeInitialize(EffectSettings&, double sampleRate)
+bool CompressorInstance::RealtimeInitialize(EffectSettings&, double sampleRate, size_t audioThreadBufferSize)
 {
     SetBlockSize(512);
     mSlaves.clear();
     mSampleCounter = 0;
     mSampleRate = sampleRate;
+    mAudioThreadBufferSize = audioThreadBufferSize;
     InitializeProcessingSettingsPublisher::Publish(
-        std::make_optional(InitializeProcessingSettings { sampleRate }));
+        std::make_optional(InitializeProcessingSettings { sampleRate, audioThreadBufferSize }));
     return true;
 }
 
@@ -184,11 +199,12 @@ size_t CompressorInstance::RealtimeProcess(
         queue->Put(newPacket);
     }
 
-    if (const auto queue = slave.mCompressionValueQueue.lock()) {
-        queue->Put(MeterValues {
-            compressor.GetLastFrameStats().dbGainOfMaxInputSample,
-            GetOutputDb(
-                compressor.GetLastFrameStats(), compressor.GetSettings()) });
+    if (const auto queue = slave.mCompressionGainDbQueue.lock()) {
+        queue->Put(compressor.GetLastFrameStats().dbGainOfMaxInputSample);
+    }
+
+    if (const auto queue = slave.mOutputDbQueue.lock()) {
+        queue->Put(GetOutputDb(compressor.GetLastFrameStats(), compressor.GetSettings()));
     }
 
     slave.mSampleCounter += numProcessedSamples;
@@ -212,7 +228,8 @@ void CompressorInstance::InstanceInit(
     float sampleRate)
 {
     instance.mOutputQueue = mOutputQueue;
-    instance.mCompressionValueQueue = mCompressionValueQueue;
+    instance.mCompressionGainDbQueue = mCompressionGainDbQueue;
+    instance.mOutputDbQueue = mOutputDbQueue;
     instance.mCompressor->ApplySettingsIfNeeded(
         GetDynamicRangeProcessorSettings(settings));
     instance.mCompressor->Init(sampleRate, numChannels, GetBlockSize());

@@ -71,11 +71,10 @@ public:
     const EffectOutputs* GetOutputs() const { return mMovedOutputs.get(); }
 
     //! Main thread sets up for playback
-    std::shared_ptr<EffectInstance> Initialize(double rate);
+    std::shared_ptr<EffectInstance> Initialize(double rate, size_t audioThreadBufferSize);
     //! Main thread sets up this state before adding it to lists
     std::shared_ptr<EffectInstance>
-    AddGroup(
-        const ChannelGroup* group, unsigned chans, float sampleRate);
+    AddGroup(const ChannelGroup* group, unsigned chans, float sampleRate, size_t audioThreadBufferSize);
     //! Worker thread begins a batch of samples
     /*! @param running means no pause or deactivation of containing list */
     bool ProcessStart(bool running);
@@ -122,7 +121,7 @@ public:
 private:
 
     std::shared_ptr<EffectInstance> MakeInstance();
-    std::shared_ptr<EffectInstance> EnsureInstance(double rate);
+    std::shared_ptr<EffectInstance> EnsureInstance(double rate, size_t audioThreadBufferSize);
 
     struct Access;
     struct AccessState;

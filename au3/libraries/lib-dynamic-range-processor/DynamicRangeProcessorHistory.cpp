@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <cassert>
 #include <iterator>
+#include <numeric>
 
 DynamicRangeProcessorHistory::DynamicRangeProcessorHistory(double sampleRate)
     : mSampleRate{sampleRate}
@@ -30,7 +31,6 @@ void DynamicRangeProcessorHistory::Push(
         mFirstPacketFirstSampleIndex = packets.front().indexOfFirstSample;
     }
 
-    const int numNewPackets = packets.size();
     const auto lastPacketTime = !mSegments.empty() && !mSegments[0].empty()
                                 ? std::make_optional(mSegments[0].back().time)
                                 : std::nullopt;
@@ -54,7 +54,7 @@ void DynamicRangeProcessorHistory::Push(
         mBeginNewSegment = false;
     }
     mExpectedNextPacketFirstSampleIndex
-        =packets.back().indexOfFirstSample + packets.back().numSamples;
+        = packets.back().indexOfFirstSample + packets.back().numSamples;
 
     auto& lastSegment = mSegments.back();
 
@@ -79,6 +79,8 @@ void DynamicRangeProcessorHistory::Push(
         // display to tremble.
         return lastTime - packet.time < maxTimeSeconds + 1.f;
     });
+    const int numErased = std::distance(firstSegment.begin(), it);
+    m_numViewedPackets = std::max(0, m_numViewedPackets - numErased);
     firstSegment.erase(firstSegment.begin(), it);
 
     if (firstSegment.empty()) {
@@ -111,4 +113,43 @@ float DynamicRangeProcessorHistory::GetPacketTime(
     return (packet.indexOfFirstSample
             - mFirstPacketFirstSampleIndex.value_or(0))
            / mSampleRate;
+}
+
+DynamicRangeProcessorHistory::PacketView DynamicRangeProcessorHistory::GetViewOnNewPackets()
+{
+    PacketView view(*this, m_numViewedPackets);
+    m_numViewedPackets = TotalNumPackets();
+    return view;
+}
+
+int DynamicRangeProcessorHistory::TotalNumPackets() const
+{
+    return std::accumulate(
+        mSegments.begin(), mSegments.end(), 0,
+        [](int sum, const auto& segment) { return sum + static_cast<int>(segment.size()); });
+}
+
+DynamicRangeProcessorHistory::PacketView::PacketView(const DynamicRangeProcessorHistory& history, int numViewedPackets)
+    : m_numViewedPackets{numViewedPackets}, m_history{history}
+{
+}
+
+int DynamicRangeProcessorHistory::PacketView::numPackets() const
+{
+    const auto total = m_history.TotalNumPackets();
+    return total - m_numViewedPackets;
+}
+
+const DynamicRangeProcessorHistory::Packet&
+DynamicRangeProcessorHistory::PacketView::at(int i) const
+{
+    int idx = i + m_numViewedPackets;
+    for (const auto& segment : m_history.mSegments) {
+        if (idx < static_cast<int>(segment.size())) {
+            return segment[idx];
+        }
+        idx -= static_cast<int>(segment.size());
+    }
+    static Packet null;
+    return null;
 }

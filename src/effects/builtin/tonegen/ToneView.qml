@@ -3,8 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Muse.UiComponents
 import Audacity.Effects
+import Audacity.BuiltinEffects
 import Audacity.Playback
-import "../common"
 
 // TODO: move to common controls
 import Preferences
@@ -30,10 +30,6 @@ BuiltinEffectBase {
 
     ToneViewModel {
         id: tone
-    }
-
-    Component.onCompleted: {
-        tone.init()
     }
 
     Column {

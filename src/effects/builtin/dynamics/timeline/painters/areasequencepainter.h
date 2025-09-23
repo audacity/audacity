@@ -1,0 +1,22 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#include "abstractsequencepainter.h"
+
+#include <vector>
+
+namespace au::effects {
+class AreaSequencePainter : public AbstractSequencePainter
+{
+public:
+    AreaSequencePainter(double viewportHeight, const std::atomic<double>& viewportX, int maxNumSamples);
+
+    void append(std::vector<SequenceSample> samples) override;
+
+private:
+    int numSamplesToDiscard() const;
+
+    const double m_viewportHeight;
+    std::vector<QSGGeometry::Point2D> m_buffer;
+};
+} // namespace au::effects

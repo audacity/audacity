@@ -9,13 +9,15 @@ namespace au::effects {
 class WarpingTransformer : public IValueTransformer
 {
 public:
-    WarpingTransformer(ValueWarpingType warpingType);
+    WarpingTransformer(double min, double middle, double max);
 
-    double forward(double x, double min, double max) const override;
-    double inverse(double y, double min, double max) const override;
+    double forward(double x) const override;
+    double inverse(double y) const override;
 
 private:
     const double m_C;
     const double m_expC;
+    const double m_min;
+    const double m_max;
 };
 } // namespace au::effects

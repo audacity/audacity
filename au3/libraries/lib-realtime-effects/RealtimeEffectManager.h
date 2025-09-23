@@ -124,10 +124,12 @@ private:
     MakeNewState(RealtimeEffects::InitializationScope* pScope, ChannelGroup* pGroup, const PluginID& id);
 
     //! Main thread begins to define a set of groups for playback
-    void Initialize(RealtimeEffects::InitializationScope& scope, unsigned numPlaybackChannels, double sampleRate);
+    void Initialize(RealtimeEffects::InitializationScope& scope, unsigned numPlaybackChannels, double sampleRate,
+                    size_t audioThreadBufferSize);
     //! Main thread adds one group (passing the first of one or more
     //! channels), still before playback
-    void AddGroup(RealtimeEffects::InitializationScope& scope, const ChannelGroup& group, unsigned chans, float rate);
+    void AddGroup(RealtimeEffects::InitializationScope& scope, const ChannelGroup& group, unsigned chans, float rate,
+                  size_t audioThreadBufferSize);
     //! Main thread cleans up after playback
     void Finalize() noexcept;
 
@@ -202,17 +204,14 @@ public:
     InitializationScope() {}
     explicit InitializationScope(
         std::weak_ptr<AudacityProject> wProject, double sampleRate,
-        unsigned numPlaybackChannels)
+        unsigned numPlaybackChannels, size_t audioThreadBufferSize)
         : mSampleRate{sampleRate}
         , mwProject{move(wProject)}
         , mNumPlaybackChannels{numPlaybackChannels}
+        , mAudioThreadBufferSize{audioThreadBufferSize}
     {
         if (const auto pProject = mwProject.lock()) {
-            RealtimeEffectManager::Get(*pProject).Initialize(
-                *this,
-                numPlaybackChannels,
-                sampleRate
-                );
+            RealtimeEffectManager::Get(*pProject).Initialize(*this, numPlaybackChannels, sampleRate, audioThreadBufferSize);
         }
     }
 
@@ -226,17 +225,18 @@ public:
     }
 
     void AddGroup(const ChannelGroup& group,
-                  unsigned chans, float rate)
+                  unsigned chans, float rate, size_t audioThreadBufferSize)
     {
         if (auto pProject = mwProject.lock()) {
             RealtimeEffectManager::Get(*pProject)
-            .AddGroup(*this, group, chans, rate);
+            .AddGroup(*this, group, chans, rate, audioThreadBufferSize);
         }
     }
 
     std::vector<std::shared_ptr<EffectInstance> > mInstances;
     double mSampleRate;
     unsigned mNumPlaybackChannels;
+    size_t mAudioThreadBufferSize;
 
 private:
     std::weak_ptr<AudacityProject> mwProject;

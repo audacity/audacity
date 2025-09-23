@@ -4,9 +4,11 @@
 #include "effectsmodule.h"
 
 #include "libraries/lib-module-manager/PluginManager.h"
+#include "libraries/lib-files/FileNames.h"
 
 #include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
+#include "diagnostics/idiagnosticspathsregister.h"
 
 #include "internal/effectconfigsettings.h"
 #include "internal/effectsprovider.h"
@@ -87,6 +89,12 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     m_configuration->init();
     m_actionsController->init();
     m_realtimeEffectService->init();
+
+    //! --- Diagnostics ---
+    auto pr = ioc()->resolve<muse::diagnostics::IDiagnosticsPathsRegister>(moduleName());
+    if (pr) {
+        pr->reg("pluginsettings", FileNames::PluginSettings().ToStdString());
+    }
 }
 
 void EffectsModule::onDelayedInit()

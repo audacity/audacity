@@ -7,6 +7,7 @@
 #include "libraries/lib-components/SettingsVisitor.h"
 
 #include <functional>
+#include <unordered_map>
 
 namespace au::effects {
 template<typename EffectType>
@@ -18,10 +19,17 @@ class EffectSettingModelImpl : public BuiltinEffectSettingModel
 public:
     using SettingsType = typename EffectType::Settings;
 
-    EffectSettingModelImpl(QObject* parent, ParamGetter<EffectType> getter)
-        : BuiltinEffectSettingModel{parent}, m_getter(std::move(getter)) {}
+    struct Labels {
+        const QString title;
+        const QString unit;
+    };
 
-    double value() const override
+    using LabelMap = std::unordered_map<QString /*param ID*/, Labels>;
+
+    EffectSettingModelImpl(QObject* parent, LabelMap labelMap, ParamGetter<EffectType> getter)
+        : BuiltinEffectSettingModel{parent}, m_labelMap{std::move(labelMap)}, m_getter{std::move(getter)} {}
+
+    double value() const final override
     {
         const auto& s = settings<SettingsType>();
         const auto& param = m_getter(effect<EffectType>());
@@ -29,7 +37,7 @@ public:
         return v;
     }
 
-    void setValue(double newValue) override
+    void setValue(double newValue) final override
     {
         if (muse::is_equal(value(), newValue)) {
             return;
@@ -45,25 +53,50 @@ public:
         emit valueChanged();
     }
 
-    double min() const override
+    double min() const final override
     {
         const auto& param = m_getter(effect<EffectType>());
         return param.min;
     }
 
-    double max() const override
+    double max() const final override
     {
         const auto& param = m_getter(effect<EffectType>());
         return param.max;
     }
 
-    double step() const override
+    double step() const final override
     {
         const auto& param = m_getter(effect<EffectType>());
         return param.step;
     }
 
+    double defaultValue() const final override
+    {
+        const auto& param = m_getter(effect<EffectType>());
+        return param.def;
+    }
+
+    QString title() const final override
+    {
+        const auto it = m_labelMap.find(m_paramId);
+        IF_ASSERT_FAILED(it != m_labelMap.end()) {
+            return {};
+        }
+        return it->second.title;
+    }
+
+    QString unit() const final override
+    {
+        const auto it = m_labelMap.find(m_paramId);
+        IF_ASSERT_FAILED(it != m_labelMap.end()) {
+            return {};
+        }
+        return it->second.unit;
+    }
+
 private:
+    const LabelMap m_labelMap;
     const ParamGetter<EffectType> m_getter;
 };
 }

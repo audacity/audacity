@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import Muse.Ui
 import Muse.UiComponents
-import Audacity.Effects
+import Audacity.BuiltinEffects
 
 Item {
     id: root
@@ -18,9 +18,9 @@ Item {
 
     QtObject {
         id: prv
-        readonly property int min: -60
+        readonly property int min: -36
         readonly property int max: 0
-        readonly property int step: 12
+        readonly property int step: 6
         readonly property int tickLength: 4
         readonly property var ticks: (function () {
                 var result = []
@@ -29,7 +29,6 @@ Item {
                 }
                 return result
             })()
-        readonly property color lineColor: "#7B7B81"
 
         property int labelWidth: fontMetrics.boundingRect("-000").width
         property int labelHeight: fontMetrics.boundingRect("0").height
@@ -49,7 +48,7 @@ Item {
         y: prv.labelHeight + prv.labelMargin
         width: 312
         height: availableHeight - prv.labelHeight - prv.labelMargin - prv.extraLabelSpace
-        color: "#313147"
+        color: DynamicsColors.backgroundColor
 
         Repeater {
             id: verticalLines
@@ -74,7 +73,7 @@ Item {
 
                     width: 1
                     height: background.height + prv.tickLength
-                    color: prv.lineColor
+                    color: DynamicsColors.gridColor
                 }
             }
         }
@@ -100,7 +99,7 @@ Item {
 
                     width: background.width + prv.tickLength
                     height: 1
-                    color: prv.lineColor
+                    color: DynamicsColors.gridColor
                 }
             }
         }

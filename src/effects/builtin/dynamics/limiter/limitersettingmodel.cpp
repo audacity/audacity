@@ -1,22 +1,27 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "limiterviewmodel.h"
+#include "limitersettingmodel.h"
 
-#include "log.h"
+#include "global/log.h"
+#include "global/translation.h"
+
+#include <unordered_map>
 
 namespace au::effects {
-LimiterViewModel::LimiterViewModel(QObject* parent)
-    : BuiltinEffectModel{parent}
-{
-}
-
-void LimiterViewModel::doReload()
-{
+namespace {
+const LimiterSettingModel::LabelMap labelMap = {
+    { "thresholdDb", { muse::qtrc("effects", "Threshold"), muse::qtrc("effects", "dB") } },
+    { "makeupTargetDb", { muse::qtrc("effects", "Output"), muse::qtrc("effects", "dB") } },
+    { "kneeWidthDb", { muse::qtrc("effects", "Knee width"), muse::qtrc("effects", "dB") } },
+    { "lookaheadMs", { muse::qtrc("effects", "Lookahead"), muse::qtrc("effects", "ms") } },
+    { "releaseMs", { muse::qtrc("effects", "Release"), muse::qtrc("effects", "ms") } },
+    // We deliberately leave out the "show" parameters: these are overridden in the UI anyway.
+};
 }
 
 LimiterSettingModel::LimiterSettingModel(QObject* parent)
-    : EffectSettingModelImpl<LimiterEffect>(parent, [this](const LimiterEffect& effect) {
+    : EffectSettingModelImpl<LimiterEffect>(parent, labelMap, [this](const LimiterEffect& effect) {
     if (m_paramId == "thresholdDb") {
         return effect.thresholdDb;
     } else if (m_paramId == "makeupTargetDb") {

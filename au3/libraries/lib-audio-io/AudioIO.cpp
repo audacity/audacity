@@ -157,14 +157,14 @@ int64_t AudioIoCallback::Track::trackId() const
 struct AudioIoCallback::TransportState {
     TransportState(std::weak_ptr<AudacityProject> wOwningProject,
                    const ConstPlayableSequences& playbackSequences,
-                   unsigned numPlaybackChannels, double sampleRate)
+                   unsigned numPlaybackChannels, double sampleRate, size_t audioThreadBufferSize)
     {
         if (auto pOwningProject = wOwningProject.lock();
             pOwningProject && numPlaybackChannels > 0) {
             // Setup for realtime playback at the rate of the realtime
             // stream, not the rate of the sample sequence.
             mpRealtimeInitialization.emplace(
-                move(wOwningProject), sampleRate, numPlaybackChannels);
+                move(wOwningProject), sampleRate, numPlaybackChannels, audioThreadBufferSize);
             // The following adds a new effect processor for each logical sequence.
             for (size_t i = 0, cnt = playbackSequences.size(); i < cnt; ++i) {
                 // An array only of non-null pointers should be given to us
@@ -175,7 +175,7 @@ struct AudioIoCallback::TransportState {
                     continue;
                 }
                 mpRealtimeInitialization
-                ->AddGroup(*pGroup, numPlaybackChannels, sampleRate);
+                ->AddGroup(*pGroup, numPlaybackChannels, sampleRate, audioThreadBufferSize);
             }
         }
     }
@@ -1059,8 +1059,8 @@ int AudioIO::StartStream(const TransportSequences& sequences,
         }
     }
 
-    mpTransportState = std::make_unique<TransportState>(mOwningProject,
-                                                        mPlaybackSequences, mNumPlaybackChannels, mRate);
+    mpTransportState = std::make_unique<TransportState>(mOwningProject, mPlaybackSequences, mNumPlaybackChannels, mRate,
+                                                        mPlaybackSamplesToCopy);
 
     if (pStartTime) {
         // Calculate the NEW time position

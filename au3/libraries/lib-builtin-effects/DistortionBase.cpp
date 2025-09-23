@@ -148,7 +148,7 @@ size_t DistortionBase::Instance::ProcessBlock(
     return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool DistortionBase::Instance::RealtimeInitialize(EffectSettings&, double)
+bool DistortionBase::Instance::RealtimeInitialize(EffectSettings&, double, size_t)
 {
     SetBlockSize(512);
     mSlaves.clear();

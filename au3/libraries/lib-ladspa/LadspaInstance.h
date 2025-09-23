@@ -70,7 +70,7 @@ struct LADSPA_API LadspaInstance : PerTrackEffect::Instance, EffectInstanceWithB
     SampleCount GetLatency(const EffectSettings& settings, double sampleRate)
     const override;
 
-    bool RealtimeInitialize(EffectSettings& settings, double sampleRate)
+    bool RealtimeInitialize(EffectSettings& settings, double sampleRate, size_t audioThreadBufferSize)
     override;
     bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs* pOutputs, unsigned numChannels, float sampleRate)
     override;

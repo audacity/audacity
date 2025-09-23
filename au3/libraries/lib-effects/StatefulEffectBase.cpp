@@ -27,9 +27,9 @@ bool StatefulEffectBase::Instance::Init()
 }
 
 bool StatefulEffectBase::Instance::RealtimeInitialize(
-    EffectSettings& settings, double sampleRate)
+    EffectSettings& settings, double sampleRate, size_t audioThreadBufferSize)
 {
-    return GetEffect().RealtimeInitialize(settings, sampleRate);
+    return GetEffect().RealtimeInitialize(settings, sampleRate, audioThreadBufferSize);
 }
 
 bool StatefulEffectBase::Instance::
@@ -132,7 +132,7 @@ unsigned StatefulEffectBase::GetAudioOutCount() const
     return 0;
 }
 
-bool StatefulEffectBase::RealtimeInitialize(EffectSettings&, double)
+bool StatefulEffectBase::RealtimeInitialize(EffectSettings&, double, size_t)
 {
     return false;
 }

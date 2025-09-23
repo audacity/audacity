@@ -82,7 +82,7 @@ size_t BassTrebleBase::Instance::ProcessBlock(
     return InstanceProcess(settings, mState, inBlock, outBlock, blockLen);
 }
 
-bool BassTrebleBase::Instance::RealtimeInitialize(EffectSettings&, double)
+bool BassTrebleBase::Instance::RealtimeInitialize(EffectSettings&, double, size_t)
 {
     SetBlockSize(512);
     mSlaves.clear();

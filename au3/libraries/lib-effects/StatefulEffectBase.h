@@ -35,7 +35,7 @@ public:
         size_t GetBlockSize() const override;
         size_t SetBlockSize(size_t maxBlockSize) override;
 
-        bool RealtimeInitialize(EffectSettings& settings, double sampleRate)
+        bool RealtimeInitialize(EffectSettings& settings, double sampleRate, size_t audioThreadBufferSize)
         override;
         bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs* pOutputs, unsigned numChannels, float sampleRate) override;
         bool RealtimeSuspend() override;
@@ -75,7 +75,7 @@ public:
       @copydoc StatefulEffectBase::Instance::RealtimeInitialize()
       Default implementation does nothing, returns false
     */
-    virtual bool RealtimeInitialize(EffectSettings& settings, double sampleRate);
+    virtual bool RealtimeInitialize(EffectSettings& settings, double sampleRate, size_t audioThreadBufferSize);
 
     /*!
       @copydoc StatefulEffectBase::Instance::RealtimeAddProcessor()

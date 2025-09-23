@@ -194,7 +194,7 @@ size_t LadspaInstance::ProcessBlock(EffectSettings&,
     return blockLen;
 }
 
-bool LadspaInstance::RealtimeInitialize(EffectSettings&, double)
+bool LadspaInstance::RealtimeInitialize(EffectSettings&, double, size_t)
 {
     return true;
 }
