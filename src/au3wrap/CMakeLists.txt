@@ -24,6 +24,8 @@ declare_module(au3wrap)
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/au3wraputils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/au3wraputils.h
     ${CMAKE_CURRENT_LIST_DIR}/au3types.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3project.h
 
@@ -36,8 +38,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/domconverter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/progressdialog.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/progressdialog.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/nonblockingprogressdialog.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/nonblockingprogressdialog.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/domaccessor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/domaccessor.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3project.cpp

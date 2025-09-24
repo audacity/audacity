@@ -7,7 +7,7 @@
 #include "global/translation.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/wxtypes_convert.h"
-#include "au3wrap/internal/nonblockingprogressdialog.h"
+#include "au3wrap/au3wraputils.h"
 
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-components/EffectInterface.h"
@@ -18,7 +18,6 @@
 #include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-transactions/TransactionScope.h"
-#include "libraries/lib-exceptions/AudacityException.h"
 
 #include "libraries/lib-module-manager/PluginManager.h" // for NYQUIST_PROMPT_ID
 #include "libraries/lib-basic-ui/BasicUI.h"
@@ -325,7 +324,7 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
             auto name = effect->GetName();
 
             assert(pInstanceEx); // null check above
-            NonBlockingProgressDialog::execute([&] (BasicUI::ProgressDialog& au3dialog, const bool& canceled) {
+            auto task = [&] (BasicUI::ProgressDialog& au3dialog) -> bool {
                 auto vr = valueRestorer<BasicUI::ProgressDialog*>(effect->mProgress, &au3dialog);
 
                 // The list of tracks is that of the project and was created in the main thread.
@@ -336,24 +335,20 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
                         effect->mTracks->SetCtorThreadIsBlocked(false);
                     } };
 
-                try {
-                    if (pInstanceEx->Process(settings) == false) {
-                        if (canceled) {
-                            success = make_ret(Err::EffectProcessCanceled);
-                        } else {
-                            success = make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError());
-                        }
-                    }
-                } catch (::AudacityException& e) {
-                    success = make_ret(Err::EffectProcessFailed);
-                    if (const auto box = dynamic_cast<MessageBoxException*>(&e)) {
-                        std::string message = box->ErrorMessage().Translation().ToStdString();
-                        if (!message.empty()) {
-                            success.setText(message);
-                        }
-                    }
-                }
-            });
+                return pInstanceEx->Process(settings);
+            };
+
+            const std::string title
+                = (effect->GetType()
+                   == EffectTypeGenerate ? muse::qtrc("effects", "Generating %1 ...") : muse::qtrc("effects", "Applying %1 ...")).arg(
+                      name.Translation().ToStdString()).toStdString();
+
+            constexpr auto errorCode = static_cast<muse::Ret::Code>(Err::EffectProcessFailed);
+            success = au3::executeInBackground(task, title, errorCode);
+            if (!success && success.text().empty()) {
+                // Maybe we can get more information this way ...
+                success.setText(pInstanceEx->GetLastError());
+            }
         }
 
         //! NOTE Step 2.5 - commit transaction on success
