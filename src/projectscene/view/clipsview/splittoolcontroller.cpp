@@ -13,6 +13,10 @@ namespace au::projectscene {
 SplitToolController::SplitToolController(QObject* parent)
     : QObject(parent)
 {
+}
+
+void SplitToolController::init(QObject* root)
+{
     QPixmap pixmap(":/images/customCursorShapes/Split.png");
     m_cursor = QCursor(pixmap.scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
@@ -20,7 +24,7 @@ SplitToolController::SplitToolController(QObject* parent)
         setActive(!active());
     });
 
-    m_shortcut = std::make_unique<TapHoldShortcut>("split-tool");
+    m_shortcut = std::make_unique<TapHoldShortcut>("split-tool", root);
 
     m_shortcut->pressed().onNotify(this, [this]() {
         m_prePressState = active();

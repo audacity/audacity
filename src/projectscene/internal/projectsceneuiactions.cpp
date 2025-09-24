@@ -25,7 +25,7 @@ static UiActionList STATIC_ACTIONS = {
              ),
     UiAction("split-tool",
              au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_OPENED,
+             au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Split Tool"),
              TranslatableString("action", "Split Tool"),
              IconCode::Code::SPLIT_TOOL

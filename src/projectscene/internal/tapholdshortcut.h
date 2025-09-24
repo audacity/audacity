@@ -20,7 +20,7 @@ class TapHoldShortcut : public QObject
     muse::Inject<context::IUiContextResolver> uicontextResolver;
 
 public:
-    explicit TapHoldShortcut(const std::string& action);
+    explicit TapHoldShortcut(const std::string& action, QObject* target = nullptr);
 
     void setAction(const std::string& action);
 

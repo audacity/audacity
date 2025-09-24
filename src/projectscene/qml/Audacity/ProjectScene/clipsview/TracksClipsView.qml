@@ -130,6 +130,8 @@ Rectangle {
         selectionController.load()
         selectionContextMenuModel.load()
         canvasContextMenuModel.load()
+
+        splitToolController.init(root)
     }
 
     function init() {

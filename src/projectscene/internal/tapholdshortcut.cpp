@@ -7,7 +7,7 @@
 #include <QKeyEvent>
 
 namespace au::projectscene {
-TapHoldShortcut::TapHoldShortcut(const std::string& action)
+TapHoldShortcut::TapHoldShortcut(const std::string& action, QObject* target)
     : QObject(nullptr), m_action(action)
 {
     connect(&m_holdTimer, &QTimer::timeout, this, &TapHoldShortcut::onHoldTimeout);
@@ -19,7 +19,11 @@ TapHoldShortcut::TapHoldShortcut(const std::string& action)
 
     updateShortcut(m_action);
 
-    qApp->installEventFilter(this);
+    if (target) {
+        target->installEventFilter(this);
+    } else {
+        qApp->installEventFilter(this);
+    }
 }
 
 void TapHoldShortcut::setAction(const std::string& action)
