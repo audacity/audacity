@@ -10,6 +10,7 @@ set(ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../../..)
 set(BUILD_NUMBER "" CACHE STRING "Build number")
 set(BUILD_MODE "" CACHE STRING "Build mode")
 set(BUILD_REVISION "" CACHE STRING "Build revision")
+set(CRASH_REPORT_URL "" CACHE STRING "Crash report url")
 
 if (NOT BUILD_NUMBER)
     file (STRINGS "${ARTIFACTS_DIR}/env/build_number.env" BUILD_NUMBER)
@@ -47,6 +48,7 @@ set(CONFIG
     -DBUILD_NUMBER=${BUILD_NUMBER}
     -DBUILD_REVISION=${BUILD_REVISION}
     -DINSTALL_SUFFIX=${APP_SUFFIX}
+    -DCRASH_REPORT_URL=${CRASH_REPORT_URL}
 )
 
 execute_process(
