@@ -19,6 +19,10 @@ TracksListClipsModel::TracksListClipsModel(QObject* parent)
 
 void TracksListClipsModel::load()
 {
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
+        load();
+    });
+
     au::trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
