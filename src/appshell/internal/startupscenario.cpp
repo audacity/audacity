@@ -31,6 +31,7 @@ using namespace muse::actions;
 using namespace au::project;
 
 static const muse::UriQuery FIRST_LAUNCH_SETUP_URI("musescore://firstLaunchSetup?floating=true");
+static const muse::Uri ALPHA_WELCOME_POPUP("audacity://alphaWelcomePopup");
 static const muse::Uri HOME_URI("musescore://home");
 static const muse::Uri PROJECT_URI("audacity://project");
 
@@ -122,7 +123,7 @@ void StartupScenario::runAfterSplashScreen()
     }
 
     StartupModeType modeType = resolveStartupModeType();
-//! TODO AU4
+    //! TODO AU4
     // bool isMainInstance = multiInstancesProvider()->isMainInstance();
     if (/*isMainInstance && */ sessionsManager()->hasProjectsForRestore()) {
         modeType = StartupModeType::Recovery;
@@ -175,6 +176,12 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
 {
     TRACEFUNC;
 
+#ifndef MUSE_APP_UNSTABLE
+    if (modeType != StartupModeType::FirstLaunch) {
+        interactive()->openSync(ALPHA_WELCOME_POPUP);
+    }
+#endif
+
     switch (modeType) {
     case StartupModeType::StartEmpty:
         break;
@@ -195,7 +202,10 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
     } break;
     case StartupModeType::FirstLaunch: {
         dispatcher()->dispatch("file-new");
-        interactive()->open(FIRST_LAUNCH_SETUP_URI);
+        interactive()->openSync(FIRST_LAUNCH_SETUP_URI);
+#ifndef MUSE_APP_UNSTABLE
+        interactive()->openSync(ALPHA_WELCOME_POPUP);
+#endif
     } break;
     }
 }
