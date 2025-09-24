@@ -1,13 +1,10 @@
 #include "tracknavigationmodel.h"
 
 using namespace au::trackedit;
+
 TrackNavigationModel::TrackNavigationModel(QObject* parent)
     : QObject(parent)
 {
-    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
-        cleanup();
-        load();
-    });
 }
 
 void TrackNavigationModel::init(muse::ui::NavigationSection* section)
@@ -17,6 +14,11 @@ void TrackNavigationModel::init(muse::ui::NavigationSection* section)
     }
 
     m_section = section;
+
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
+        cleanup();
+        load();
+    });
 }
 
 void TrackNavigationModel::load()
@@ -245,9 +247,9 @@ void TrackNavigationModel::cleanup()
         navigationController()->setDefaultNavigationControl(nullptr);
     }
 
-    navigationController()->resetNavigation();
-
     clearPanels();
+
+    navigationController()->resetNavigation();
 }
 
 void TrackNavigationModel::clearPanels()
