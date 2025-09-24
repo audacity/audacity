@@ -132,6 +132,14 @@ Rectangle {
         navigationCtrl: navCtrl
     }
 
+    QtObject {
+        id: prv
+
+        readonly property int doubleClickInterval: 400
+        readonly property int doubleClickMaxDistance: 5
+    }
+
+
     // panel for navigating within the clip's items
     property NavigationPanel clipNavigationPanel: NavigationPanel {
         name: "ClipNavigationPanel"
@@ -463,7 +471,7 @@ Rectangle {
                 cursorShape: Qt.OpenHandCursor
 
                 property var lastClickTime: 0
-                property int doubleClickInterval: 400
+                property point doubleClickStartPosition
 
                 //! IMPORTANT NOTE: clip moving is handled in TracksClipsView (because
                 // Clip UI element will be destroyed along with its MouseArea if the clip is moved
@@ -472,7 +480,7 @@ Rectangle {
                 // detecting composed events like doubleClick so we need to take care of it manually.
                 onPressed: function (e) {
                     var currentTime = Date.now()
-                    if (currentTime - lastClickTime < doubleClickInterval) {
+                    if (currentTime - lastClickTime < prv.doubleClickInterval) {
                         //! NOTE Handle doubleClick logic
                         root.editTitle()
                     } else {
@@ -482,12 +490,21 @@ Rectangle {
                         }
 
                         lastClickTime = currentTime
+                        doubleClickStartPosition = Qt.point(e.x, e.y)
                     }
 
                     e.accepted = false
                 }
 
                 onPositionChanged: function (e) {
+                    // Reset double click timer if the mouse has moved,
+                    // to prevent rapid clip movement activate title editing
+                    if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance ||
+                        Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
+
+                        lastClickTime = 0
+                    }
+
                     root.clipItemMousePositionChanged(e.x, e.y)
 
                     e.accepted = false

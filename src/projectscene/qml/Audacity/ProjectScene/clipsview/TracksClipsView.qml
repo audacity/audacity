@@ -439,7 +439,6 @@ Rectangle {
                     tracksClipsView.clipMoveRequested(hoveredClipKey, true)
                     tracksClipsView.stopAutoScroll()
                     tracksClipsView.clipEndEditRequested(hoveredClipKey)
-                    root.clipHeaderHovered = false
                 }
                 else {
                     splitToolController.mouseUp(e.x)
