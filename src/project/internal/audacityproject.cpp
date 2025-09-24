@@ -105,15 +105,6 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, const bool forceMode,
         return make_ret(Err::ProjectFileNotFound, path);
     }
 
-    {
-        io::File file(path);
-        if (!file.open(io::IODevice::ReadOnly)) {
-            LOGE() << "failed open file (Can't Read): " << path;
-            return make_ret(Err::ProjectFileIsReadProtected, path);
-        }
-        file.close();
-    }
-
     m_au3Project = au3ProjectCreator()->create();
     ret = m_au3Project->load(path);
     if (!ret) {

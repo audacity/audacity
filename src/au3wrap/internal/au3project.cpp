@@ -26,6 +26,7 @@
 //! so, to fix it, included this file here
 #include "libraries/lib-project-file-io/SqliteSampleBlock.cpp"
 
+#include "translation.h"
 #include "wxtypes_convert.h"
 #include "../au3types.h"
 #include "domconverter.h"
@@ -133,16 +134,15 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath)
     try {
         conn.emplace(projectFileIO.LoadProject(fileName, false /*ignoreAutosave*/).value());
     } catch (AudacityException& exception) {
-        LOGE() << "failed load project: " << filePath << ", exception received";
+        LOGE() << "Project loading failed: " << filePath << " with exception";
         ret = project::make_ret(project::Err::AudacityExceptionError, filePath.toString());
         return ret;
     } catch (std::bad_optional_access)
     {
-        if (static_cast<project::Err>(projectFileIO.GetLastErrorCode()) == project::Err::ProjectFileIsWriteProtected) {
-            ret = project::make_ret(project::Err::ProjectFileIsWriteProtected, filePath.toString());
-        } else {
-            ret = project::make_ret(project::Err::DatabaseError, filePath.toString());
-        }
+        auto ret = muse::Ret(projectFileIO.GetLastErrorCode());
+        ret.setData("title", muse::mtrc("project", "Project loading failed").toStdString());
+        ret.setData("body", projectFileIO.GetLastError().Translation().ToStdString());
+        ret.setData("path", filePath);
         return ret;
     }
 
