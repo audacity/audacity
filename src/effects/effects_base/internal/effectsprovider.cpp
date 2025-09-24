@@ -7,7 +7,7 @@
 #include "global/translation.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/wxtypes_convert.h"
-#include "au3wrap/internal/progressdialog.h"
+#include "au3wrap/internal/nonblockingprogressdialog.h"
 
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-components/EffectInterface.h"
@@ -28,7 +28,8 @@
 #include "au3wrap/au3types.h"
 #include "playback/iplayer.h"
 
-#include "log.h"
+#include "global/log.h"
+#include "global/defer.h"
 
 using namespace muse;
 using namespace au::effects;
@@ -322,27 +323,37 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
         if (skipFlag == false) {
             using namespace BasicUI;
             auto name = effect->GetName();
-            ::ProgressDialog progress{};
-            auto vr = valueRestorer<BasicUI::ProgressDialog*>(effect->mProgress, &progress);
 
             assert(pInstanceEx); // null check above
-            try {
-                if (pInstanceEx->Process(settings) == false) {
-                    if (progress.cancelled()) {
-                        success = make_ret(Err::EffectProcessCancelled);
-                    } else {
-                        success = make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError());
+            NonBlockingProgressDialog::execute([&] (BasicUI::ProgressDialog& au3dialog, const bool& canceled) {
+                auto vr = valueRestorer<BasicUI::ProgressDialog*>(effect->mProgress, &au3dialog);
+
+                // The list of tracks is that of the project and was created in the main thread.
+                // The main thread will only be doing Au4 progress dialog updates while this lambda is
+                // exected on the worker thread, so it's safe to send track-list updates from there.
+                effect->mTracks->SetCtorThreadIsBlocked(true);
+                muse::Defer restore { [effect] {
+                        effect->mTracks->SetCtorThreadIsBlocked(false);
+                    } };
+
+                try {
+                    if (pInstanceEx->Process(settings) == false) {
+                        if (canceled) {
+                            success = make_ret(Err::EffectProcessCanceled);
+                        } else {
+                            success = make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError());
+                        }
+                    }
+                } catch (::AudacityException& e) {
+                    success = make_ret(Err::EffectProcessFailed);
+                    if (const auto box = dynamic_cast<MessageBoxException*>(&e)) {
+                        std::string message = box->ErrorMessage().Translation().ToStdString();
+                        if (!message.empty()) {
+                            success.setText(message);
+                        }
                     }
                 }
-            } catch (::AudacityException& e) {
-                success = make_ret(Err::EffectProcessFailed);
-                if (const auto box = dynamic_cast<MessageBoxException*>(&e)) {
-                    std::string message = box->ErrorMessage().Translation().ToStdString();
-                    if (!message.empty()) {
-                        success.setText(message);
-                    }
-                }
-            }
+            });
         }
 
         //! NOTE Step 2.5 - commit transaction on success
