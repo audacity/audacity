@@ -94,6 +94,7 @@ jobs:
     - name: Install Conan
       id: conan
       uses: turtlebrowser/get-conan@main
+
     - name: Register gcc problem matcher
       run: echo "::add-matcher::.github/problem_matchers/gcc.json"
 
@@ -110,15 +111,19 @@ jobs:
       if: env.DO_BUILD == 'true'
       run: |
         bash ${CI_DIR}/linux/setup.sh
+
     - name: Build
       if: env.DO_BUILD == 'true'
       run: |
+        C_URL=${SENTRY_URL}; if [ -z "$C_URL" ]; then C_URL="''"; fi
         source $HOME/build_tools/environment.sh
-        cmake -P ${CI_DIR}/linux/ci_build.cmake
+        cmake -DCRASH_REPORT_URL=$C_URL -P ${CI_DIR}/linux/ci_build.cmake
+
     - name: Package
       if: env.DO_BUILD == 'true'
       run: |
         cmake -P ${CI_DIR}/linux/package.cmake
+
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
@@ -132,6 +137,7 @@ jobs:
                    -DSENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
                    -DSENTRY_PROJECT=${SENTRY_PROJECT} \
                    -P ${CI_DIR}/crashdumps/ci_generate_and_upload.cmake
+
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v4

@@ -36,6 +36,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         submodules: recursive
+
     - name: "Configure workflow"
       env:
         pull_request_title: ${{ github.event.pull_request.title }}
@@ -119,11 +120,14 @@ jobs:
       if: env.DO_BUILD == 'true'
       run: |
         bash ${CI_DIR}/macos/setup.sh
+
     - name: Build
       if: env.DO_BUILD == 'true'
       run: |
+        C_URL=${SENTRY_URL}; if [ -z "$C_URL" ]; then C_URL="''"; fi
         source $HOME/build_tools/environment.sh
-        cmake -P ${CI_DIR}/macos/ci_build.cmake
+        cmake -DCRASH_REPORT_URL=$C_URL -P ${CI_DIR}/macos/ci_build.cmake
+
     - name: Package
       env:
         SIGN_CERTIFICATE_ENCRYPT_SECRET: ${{ secrets.MAC_SIGN_CERTIFICATE_ENCRYPT_SECRET }}

@@ -35,6 +35,7 @@ jobs:
       with:
         fetch-depth: 3
         submodules: recursive
+
     - name: "Configure workflow"
       shell: bash
       env:
@@ -113,8 +114,10 @@ jobs:
       if: env.DO_BUILD == 'true'
       shell: bash
       run: |
+        C_URL=${SENTRY_URL}; if [ -z "$C_URL" ]; then C_URL="''"; fi
         source /c/build_tools/environment.sh
-        cmake -P ${CI_DIR}/windows/ci_build.cmake
+        cmake -DCRASH_REPORT_URL=$C_URL -P ${CI_DIR}/windows/ci_build.cmake
+
     - name: Package
       env:
         SIGN_KEY:    ${{ secrets.WINDOWS_CODE_SIGNING_ACCESS_KEY_ID }}
@@ -125,6 +128,7 @@ jobs:
       shell: bash
       run: |
         cmake -P ${CI_DIR}/windows/package.cmake
+
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
@@ -136,6 +140,7 @@ jobs:
               -DSENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
               -DSENTRY_PROJECT=${SENTRY_PROJECT} \
               -P ${CI_DIR}/crashdumps/ci_generate_and_upload.cmake
+
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v4
