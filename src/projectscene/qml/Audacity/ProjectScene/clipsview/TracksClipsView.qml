@@ -134,6 +134,7 @@ Rectangle {
 
     function init() {
         timeline.init()
+        playRegionController.init()
         playCursorController.init()
         playPositionActionController.init()
         tracksViewState.init()

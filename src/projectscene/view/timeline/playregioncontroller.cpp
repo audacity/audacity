@@ -14,8 +14,21 @@ PlayRegionController::PlayRegionController(QObject* parent)
 {
 }
 
+void PlayRegionController::init()
+{
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        updateIsActive();
+    });
+
+    updateIsActive();
+}
+
 void PlayRegionController::mouseDown(double pos)
 {
+    if (!m_isActive) {
+        return;
+    }
+
     m_initialRegion = playback()->player()->loopRegion();
     m_dragStartPos = calculateSnappedPosition(pos);
     m_dragStarted = false;
@@ -56,6 +69,10 @@ void PlayRegionController::mouseDown(double pos)
 
 void PlayRegionController::mouseMove(double pos)
 {
+    if (!m_isActive) {
+        return;
+    }
+
     if (m_action == UserInputAction::None) {
         return;
     }
@@ -107,6 +124,10 @@ void PlayRegionController::mouseMove(double pos)
 
 void au::projectscene::PlayRegionController::handleDrag(double pos)
 {
+    if (!m_isActive) {
+        return;
+    }
+
     auto player = playback()->player();
     const auto& pr = m_initialRegion;
     const auto& ctx = context();
@@ -144,6 +165,10 @@ void au::projectscene::PlayRegionController::handleDrag(double pos)
 void PlayRegionController::mouseUp(double pos)
 {
     UNUSED(pos);
+
+    if (!m_isActive) {
+        return;
+    }
 
     auto player = playback()->player();
     auto region = player->loopRegion();
@@ -262,5 +287,11 @@ double PlayRegionController::guidelinePosition() const
 bool PlayRegionController::guidelineVisible() const
 {
     return muse::RealIsEqualOrMore(m_snapGuidelinePos, 0);
+}
+
+void PlayRegionController::updateIsActive()
+{
+    auto currentProject = globalContext()->currentProject();
+    m_isActive = currentProject != nullptr;
 }
 }
