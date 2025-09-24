@@ -50,8 +50,6 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "sqlite/SQLiteUtils.h"
 
-#include "project/projecterrors.h"
-
 // Don't change this unless the file format changes
 // in an irrevocable way
 #define AUDACITY_FILE_FORMAT_VERSION "1.3.0"
@@ -849,9 +847,7 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs& blockids, bool complement)
 
         if (rc == SQLITE_READONLY) {
             /* i18n-hint: An error message.  Don't translate blockfiles.*/
-            SetDBError(XO("Project is read only\n(Unable to work with the blockfiles)"), TranslatableString(sqlite3_errmsg(
-                                                                                                                db), {}),
-                       static_cast<int>(au::project::Err::ProjectFileIsWriteProtected));
+            SetDBError(XO("Project is read only\n(Unable to work with the blockfiles)"));
         } else if (rc == SQLITE_LOCKED) {
             /* i18n-hint: An error message.  Don't translate blockfiles.*/
             SetDBError(XO("Project is locked\n(Unable to work with the blockfiles)"));

@@ -23,6 +23,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include "sqlite3.h"
+
 #include "global/io/fileinfo.h"
 #include "global/types/ret.h"
 #include "project/projecterrors.h"
@@ -131,7 +133,7 @@ TEST_F(Project_Audacity4ProjectTests, Load_FileDoesNotExist_ReturnsProjectFileNo
     //can't close m_currentProject->close();
 }
 
-TEST_F(Project_Audacity4ProjectTests, Load_FileCannotBeOpened_ReturnsReadProtected)
+TEST_F(Project_Audacity4ProjectTests, Load_FileCannotBeOpened_ReturnsCantOpen)
 {
     const std::string srcPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup3").toStdString();
     const std::string dstPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty_read_protected.aup3").toStdString();
@@ -141,7 +143,7 @@ TEST_F(Project_Audacity4ProjectTests, Load_FileCannotBeOpened_ReturnsReadProtect
     const muse::Ret ret = m_currentProject->load(muse::io::path_t(tempFile.getPath()), false, "");
 
     EXPECT_FALSE(ret.success());
-    EXPECT_EQ(ret.code(), static_cast<int>(Err::ProjectFileIsReadProtected));
+    EXPECT_EQ(ret.code(), SQLITE_CANTOPEN);
     EXPECT_TRUE(!ret.data<std::string>("body", std::string("")).empty());
     //can't close m_currentProject->close();
 }
@@ -160,7 +162,7 @@ TEST_F(Project_Audacity4ProjectTests, Load_EmptyFileIsWriteProtected_ReturnsSucc
     m_currentProject->close();
 }
 
-TEST_F(Project_Audacity4ProjectTests, Load_NonEmptyFileIsWriteProtected_ReturnsWriteProtected)
+TEST_F(Project_Audacity4ProjectTests, Load_NonEmptyFileIsWriteProtected_ReturnsReadOnly)
 {
     const std::string srcPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/test.aup3").toStdString();
     const std::string dstPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/test_write_protected.aup3").toStdString();
@@ -170,7 +172,7 @@ TEST_F(Project_Audacity4ProjectTests, Load_NonEmptyFileIsWriteProtected_ReturnsW
     const muse::Ret ret = m_currentProject->load(muse::io::path_t(tempFile.getPath()), false, "");
 
     EXPECT_FALSE(ret.success());
-    EXPECT_EQ(ret.code(), static_cast<int>(Err::ProjectFileIsWriteProtected));
+    EXPECT_EQ(ret.code(), SQLITE_READONLY);
     EXPECT_TRUE(!ret.data<std::string>("body", std::string("")).empty());
     m_currentProject->close();
 }
