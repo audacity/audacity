@@ -35,23 +35,15 @@ ProjectPropertiesModel::ProjectPropertiesModel(QObject* parent)
 
 void ProjectPropertiesModel::init()
 {
-    m_project = globalContext()->currentProject();
-
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
-        m_project = globalContext()->currentProject();
+        init();
     });
-
-    if (!m_project) {
-        return;
-    }
-
-    // if (project) {
-    //     m_projectMetaInfo = project->metaInfo();
-    // }
 
     thumbnailCreator()->captureThumbnailRequested().onReceive(this, [this](const muse::io::path_t& response) {
         captureThumbnail(response.toQString());
     });
+
+    m_project = globalContext()->currentProject();
 
     load();
 }
