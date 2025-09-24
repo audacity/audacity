@@ -132,6 +132,7 @@ jobs:
       run: |
         source $HOME/build_tools/environment.sh
         cmake -P ${CI_DIR}/macos/package.cmake
+
     - name: Notarize
       if: env.DO_NOTARIZE == 'true'
       run: |
@@ -142,9 +143,10 @@ jobs:
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
       run: |
-        APP_BIN=$(pwd)/applebuild/audacity.app/Contents/MacOS/audacity
+        APP_BIN=$(pwd)/build.install/audacity.app/Contents/MacOS/audacity
         GENERATE_ARCHS=("x86_64 arm64")
-        BUILD_DIR=$(pwd)/applebuild
+        BUILD_DIR=$(pwd)/build.install
+
         cmake -DAPP_BIN=${APP_BIN} \
               -DGENERATE_ARCHS="${GENERATE_ARCHS}" \
               -DBUILD_DIR=${BUILD_DIR} \
@@ -153,6 +155,7 @@ jobs:
               -DSENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
               -DSENTRY_PROJECT=${SENTRY_PROJECT} \
               -P ${CI_DIR}/crashdumps/ci_generate_and_upload.cmake
+
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v4

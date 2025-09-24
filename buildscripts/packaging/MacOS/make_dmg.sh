@@ -80,6 +80,25 @@ function change_rpath() {
                    install_name_tool -change $P1 $PSLASH1 $FNAME
                fi
             done
+         elif [[ "$P" == *libwx_* ]]
+         then
+            PSLASH=$(echo $P | sed 's,@rpath,@loader_path/../Frameworks,g')
+            FNAME=$(echo $P | sed "s,@rpath,${VOLUME}/${APPNAME}.app/Contents/Frameworks,g")
+            install_name_tool -change $P $PSLASH $1
+            if [[ -f "$FNAME" ]]
+            then
+               install_name_tool -add_rpath @loader_path/../Frameworks $FNAME 2>/dev/null || true
+               install_name_tool -add_rpath @executable_path/../Frameworks $FNAME 2>/dev/null || true
+ 
+               for WX_DEP in `otool -L $FNAME | awk '{print $1}' | grep libwx_`
+               do
+                  if [[ "$WX_DEP" == *@rpath* ]]
+                  then
+                     WX_PSLASH=$(echo $WX_DEP | sed 's,@rpath,@loader_path/../Frameworks,g')
+                     install_name_tool -change $WX_DEP $WX_PSLASH $FNAME 2>/dev/null || true
+                  fi
+               done
+            fi
          else
             PSLASH=$(echo $P | sed 's,@rpath,@executable_path/../Frameworks,g')
             FNAME=$(echo $P | sed "s,@rpath,${VOLUME}/${APPNAME}.app/Contents/Frameworks,g")
@@ -241,5 +260,24 @@ hdiutil convert ${WORKING_DIRECTORY}/${DMGNAME} -format UDBZ -o ${WORKING_DIRECT
 shasum -a 256 ${WORKING_DIRECTORY}/${COMPRESSEDDMGNAME}
 
 rm ${WORKING_DIRECTORY}/${DMGNAME}
+
+# Fix rpath after packaging, needed for generating dump symbols
+SOURCE_BIN_FILE=${APP_PATH}/Contents/MacOS/${APPNAME}
+if [[ -f "$SOURCE_BIN_FILE" ]]
+then
+    change_rpath "$SOURCE_BIN_FILE"
+fi
+
+SOURCE_FRAMEWORKS=${APP_PATH}/Contents/Frameworks
+if [[ -d "$SOURCE_FRAMEWORKS" ]]
+then
+    for LIB_FILE in $SOURCE_FRAMEWORKS/*.dylib
+    do
+        if [[ -f "$LIB_FILE" ]]
+        then
+            change_rpath "$LIB_FILE"
+        fi
+    done
+fi
 
 ls ${WORKING_DIRECTORY}
