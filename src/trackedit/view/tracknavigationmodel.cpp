@@ -204,7 +204,7 @@ void TrackNavigationModel::addDefaultNavigation()
         m_default_section = new muse::ui::NavigationSection(this);
         m_default_section->setName("Main Section");
         m_default_section->setIndex({ 0, 0 });
-        m_default_section->setOrder(0);
+        m_default_section->setOrder(1000); //! so as not to conflict with other sections
         m_default_section->componentComplete();
 
         m_default_panel = new muse::ui::NavigationPanel(this);
