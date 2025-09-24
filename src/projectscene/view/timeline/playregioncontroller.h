@@ -8,6 +8,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iuicontextresolver.h"
+#include "context/iglobalcontext.h"
 #include "playback/iplayback.h"
 
 #include "timelinecontext.h"
@@ -23,6 +24,7 @@ class PlayRegionController : public QObject, public muse::async::Asyncable
 
     muse::Inject<playback::IPlayback> playback;
     muse::Inject<context::IUiContextResolver> uicontextResolver;
+    muse::Inject<context::IGlobalContext> globalContext;
 
     enum class UserInputAction {
         None,
@@ -34,6 +36,8 @@ class PlayRegionController : public QObject, public muse::async::Asyncable
 
 public:
     PlayRegionController(QObject* parent = nullptr);
+
+    Q_INVOKABLE void init();
 
     Q_INVOKABLE void mouseDown(double pos);
     Q_INVOKABLE void mouseUp(double pos);
@@ -59,6 +63,8 @@ private:
     static constexpr int RESIZE_AREA_WIDTH_PX = 5;
     static constexpr int MINIMUM_DRAG_LENGTH_PX = 2;
 
+    void updateIsActive();
+
     double startPos() const;
     double endPos() const;
 
@@ -83,5 +89,7 @@ private:
 
     bool m_dragStarted = false;
     UserInputAction m_action;
+
+    bool m_isActive = false;
 };
 }
