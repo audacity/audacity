@@ -33,6 +33,8 @@ public:
     SplitToolController(QObject* parent = nullptr);
     ~SplitToolController();
 
+    Q_INVOKABLE void init(QObject* root);
+
     Q_INVOKABLE void mouseDown(double pos);
     Q_INVOKABLE void mouseUp(double pos);
     Q_INVOKABLE void mouseMove(double pos);
