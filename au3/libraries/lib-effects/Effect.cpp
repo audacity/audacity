@@ -338,7 +338,7 @@ bool Effect::TrackProgress(
 {
     auto updateResult = (mProgress
                          ? mProgress->Poll((whichTrack + frac) * 1000,
-                                           (double)mNumTracks * 1000, msg)
+                                           (double)std::max(mNumTracks, 1) * 1000, msg)
                          : BasicUI::ProgressResult::Success);
     return updateResult != BasicUI::ProgressResult::Success;
 }
