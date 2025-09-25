@@ -12,7 +12,7 @@ constexpr int FONT_SIZE = 12;
 constexpr double TICK_ALPHA_MAJOR = 1.0;
 constexpr double TICK_ALPHA_MINOR = 0.5;
 constexpr double LABEL_ALPHA_MAJOR = 1.0;
-constexpr double LABEL_ALPHA_MINOR = 0.75;
+constexpr double LABEL_ALPHA_MINOR = 0.90;
 constexpr int LABEL_OFFSET = 2;
 }
 

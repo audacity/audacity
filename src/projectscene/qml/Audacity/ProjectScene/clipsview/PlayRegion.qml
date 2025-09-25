@@ -23,6 +23,8 @@ Rectangle {
            else
                return active ? ui.theme.accentColor : "#d0d0d7"
 
+    opacity: 0.7
+
     function updatePosition() {
         let newX = context.timeToPosition(start)
         x = newX > 0 ? newX : 0
