@@ -89,28 +89,8 @@ void StartupScenario::runOnSplashScreen()
     //! After closing it, the application may in a state where there are no open windows,
     //! which leads to automatic exit from the application.
     //! (Thanks to the splashscreen, but this is not an obvious detail)
-    qApp->setQuitLockEnabled(false);
-
-    muse::io::paths_t newPluginPaths = registerAudioPluginsScenario()->scanForNewPluginPaths();
-
-    if (!newPluginPaths.empty()) {
-        auto ret = interactive()->questionSync(muse::trc("appshell", "Scanning audio plugins"),
-                                               muse::trc(
-                                                   "appshell",
-                                                   "Audacity has found plugins that need to be scanned before use. Would you like to scan them now or skip?"),
-                                               { muse::IInteractive::ButtonData(
-                                                     muse::IInteractive::Button::Cancel, muse::trc("appshell", "Skip this time"), false),
-                                                 muse::IInteractive::ButtonData(
-                                                     muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"), true) });
-        if (ret.standardButton() == muse::IInteractive::Button::Apply) {
-            muse::Ret ret = registerAudioPluginsScenario()->registerNewPlugins(newPluginPaths);
-            if (!ret) {
-                LOGE() << ret.toString();
-            }
-        }
-    }
-
-    qApp->setQuitLockEnabled(true);
+    // qApp->setQuitLockEnabled(false);
+    // qApp->setQuitLockEnabled(true);
 }
 
 void StartupScenario::runAfterSplashScreen()
@@ -140,6 +120,26 @@ void StartupScenario::runAfterSplashScreen()
             return;
         }
         once = true;
+
+        muse::io::paths_t newPluginPaths = registerAudioPluginsScenario()->scanForNewPluginPaths();
+
+        if (!newPluginPaths.empty()) {
+            auto ret = interactive()->questionSync(muse::trc("appshell", "Scanning audio plugins"),
+                                                   muse::trc(
+                                                       "appshell",
+                                                       "Audacity has found plugins that need to be scanned before use. Would you like to scan them now or skip?"),
+                                                   { muse::IInteractive::ButtonData(
+                                                         muse::IInteractive::Button::Cancel, muse::trc("appshell", "Skip this time"),
+                                                         false),
+                                                     muse::IInteractive::ButtonData(
+                                                         muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"), true) });
+            if (ret.standardButton() == muse::IInteractive::Button::Apply) {
+                muse::Ret ret = registerAudioPluginsScenario()->registerNewPlugins(newPluginPaths);
+                if (!ret) {
+                    LOGE() << ret.toString();
+                }
+            }
+        }
 
         onStartupPageOpened(modeType);
 
