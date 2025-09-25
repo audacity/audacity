@@ -12,11 +12,23 @@
 #include "libraries/lib-utility/MemoryX.h"
 
 namespace {
-constexpr double METER_SAMPLE_PERIOD = 0.10;
+constexpr double METER_SAMPLE_PERIOD = 1 / 30.0;
 constexpr double MAX_ALLOWED_TIMESTAMP_DIFF = 1.0;
+
+auto calculateCoef()
+{
+    // Calibrate so that the meter falls by -48dB in 1 second.
+    constexpr auto minus48dB = 0.003981071705534973f;
+    return 1 - powf(minus48dB, METER_SAMPLE_PERIOD);
+}
 }
 
 namespace au::au3 {
+Meter::Meter()
+    : m_smoothingCoef{calculateCoef()}
+{
+}
+
 Meter::Sample Meter::getSamplesMaxValue(const float* buffer, size_t frames, size_t step)
 {
     auto sptr = buffer;
@@ -58,7 +70,9 @@ void Meter::push(uint8_t channel, const IMeterSender::InterleavedSampleData& sam
     if (lastSampleTimestamp > *m_lastSampleTimestamp[channel] + METER_SAMPLE_PERIOD) {
         // Send data every METER_SAMPLE_PERIOD seconds approximately.
         push(channel, m_maxValue[channel], key);
-        m_maxValue[channel] = Sample{ 0.0, 0.0 };
+        auto& maxValue = m_maxValue[channel];
+        maxValue.peak *= 1.f - m_smoothingCoef;
+        maxValue.rms *= 1.f - m_smoothingCoef;
         m_lastSampleTimestamp[channel] = lastSampleTimestamp;
     }
 }
