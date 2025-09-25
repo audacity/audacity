@@ -333,6 +333,8 @@ FocusScope {
             anchors.leftMargin: prv.sideMargin
             anchors.verticalCenter: parent.verticalCenter
 
+            visible: false
+
             navigation.name: "ProjectManager"
             navigation.panel: navBottomPanel
             navigation.column: 1
