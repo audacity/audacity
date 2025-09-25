@@ -66,8 +66,20 @@ ExportPreferencesModel::ExportPreferencesModel(QObject* parent)
     exportSampleRateList();
 }
 
+ExportPreferencesModel::~ExportPreferencesModel()
+{
+    cancel();
+    if (m_resetSampleRate) {
+        setExportSampleRate("");
+    } else {
+        m_resetSampleRate = true;
+    }
+}
+
 void ExportPreferencesModel::init()
 {
+    configuration()->startEditSettings();
+
     exportConfiguration()->processTypeChanged().onNotify(this, [this] {
         emit currentProcessChanged();
     });
@@ -107,6 +119,19 @@ void ExportPreferencesModel::init()
     exportConfiguration()->exportSampleRateChanged().onNotify(this, [this](){
         emit exportSampleRateChanged();
     });
+
+    updateCurrentSampleRate();
+}
+
+void ExportPreferencesModel::apply()
+{
+    configuration()->applySettings();
+    m_resetSampleRate = false;
+}
+
+void ExportPreferencesModel::cancel()
+{
+    configuration()->rollbackSettings();
 }
 
 QString ExportPreferencesModel::currentProcess() const
@@ -276,6 +301,12 @@ void ExportPreferencesModel::setExportSampleRate(const QString& rateName)
         return;
     }
 
+    if (rateName.isEmpty()) {
+        // special case, reset sample rate so it gets
+        // calculated based on tracks' sample rates
+        exportConfiguration()->setExportSampleRate(-1);
+    }
+
     auto it = std::find_if(m_sampleRateMapping.begin(), m_sampleRateMapping.end(),
                            [&rateName](const auto& rate) { return rateName == rate.second; });
     if (it != m_sampleRateMapping.end()) {
@@ -300,19 +331,51 @@ void ExportPreferencesModel::setFilePickerPath(const QString& path)
 
 void ExportPreferencesModel::updateCurrentSampleRate()
 {
-    int currentSampleRate = exportConfiguration()->exportSampleRate();
-    std::vector<int> sampleRateList = exporter()->sampleRateList();
-    if (muse::contains(sampleRateList, currentSampleRate)) {
+    auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
         return;
     }
 
-    //! NOTE: if current sample rate is not found within format's available sample rates
-    //! get the first one available
-    QVariantList stringSampleRateList = exportSampleRateList();
-    if (stringSampleRateList.empty()) {
-        return;
+    int sampleRate = exportConfiguration()->exportSampleRate();
+
+    std::vector<int> sampleRateList = exporter()->sampleRateList();
+    if (sampleRateList.empty()) {
+        // TODO: if sampleRateList is empty - means that codec accepts any sampleRate,
+        // so no need to update, can return - but first "Other" sampleRate needs
+        // to be implemented
+        // return;
+        sampleRateList = DEFAULT_SAMPLE_RATE_LIST;
     }
-    setExportSampleRate(stringSampleRateList[0].toString());
+
+    if (!muse::contains(sampleRateList, sampleRate)) {
+        auto trackList = project->trackList();
+        for (const auto& track : trackList) {
+            sampleRate = std::max(sampleRate, static_cast<int>(track.rate));
+        }
+    }
+
+    std::sort(sampleRateList.begin(), sampleRateList.end());
+    auto it = std::find(sampleRateList.begin(), sampleRateList.end(), sampleRate);
+    int index = -1;
+
+    if (it != sampleRateList.end()) {
+        // expected sampleRate is available
+        index = static_cast<int>(std::distance(sampleRateList.begin(), it));
+    } else {
+        // check for sampleRate bigger than the preferred one
+        auto upper = std::upper_bound(sampleRateList.begin(), sampleRateList.end(), sampleRate);
+        if (upper != sampleRateList.end()) {
+            index = static_cast<int>(std::distance(sampleRateList.begin(), upper));
+        } else {
+            // no higher found, fallback to the highest available
+            index = static_cast<int>(sampleRateList.size()) - 1;
+        }
+    }
+
+    QVariantList stringSampleRateList = exportSampleRateList();
+    if (!stringSampleRateList.empty() && index >= 0 && index < stringSampleRateList.size()) {
+        setExportSampleRate(stringSampleRateList[index].toString());
+    }
 }
 
 void ExportPreferencesModel::updateExportChannels()
