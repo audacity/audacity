@@ -68,7 +68,7 @@ void PlaybackController::init()
         if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
             //! NOTE: just stop, without seek
             player()->stop();
-            if (player()->playbackRegion() != m_lastPlaybackRegion) {
+            if (player()->playbackRegion() != m_lastPlaybackRegion && !isEqualToPlaybackPosition(m_lastPlaybackRegion.end)) {
                 player()->setPlaybackRegion(m_lastPlaybackRegion);
             }
         }
@@ -282,7 +282,7 @@ void PlaybackController::rewindToStart()
     //! NOTE: In Audacity 3 we can't rewind while playing
     stop();
 
-    seek(0.0);
+    doSeek(0.0);
 
     selectionController()->resetTimeSelection();
 }
