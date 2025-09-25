@@ -31,12 +31,12 @@ Meter::Meter()
 
 Meter::Sample Meter::getSamplesMaxValue(const float* buffer, size_t frames, size_t step)
 {
-    auto sptr = buffer;
+    const auto* sptr = buffer;
     float peak = 0.0f;
     float rms = 0.0f;
 
     for (unsigned long i = 0; i < frames; i++) {
-        peak = std::max(peak, static_cast<float>(std::fabs(*sptr)));
+        peak = std::max(peak, std::fabs(*sptr));
         rms += (*sptr) * (*sptr);
         sptr += step;
     }
@@ -51,14 +51,14 @@ void Meter::push(uint8_t channel, const IMeterSender::InterleavedSampleData& sam
     if (m_lastSampleTimestamp.find(channel) == m_lastSampleTimestamp.end()) {
         // First time seeing this channel, initialize the timestamp and max values.
         m_lastSampleTimestamp[channel] = sampleData.firstSampleTimestamp;
-        m_maxValue[channel] = Sample{ 0.0, 0.0 };
+        m_maxValue[channel] = Sample{};
     }
 
-    if (std::abs(sampleData.firstSampleTimestamp - *m_lastSampleTimestamp[channel]) > MAX_ALLOWED_TIMESTAMP_DIFF) {
+    if (std::abs(sampleData.firstSampleTimestamp - m_lastSampleTimestamp[channel]) > MAX_ALLOWED_TIMESTAMP_DIFF) {
         // If the timestamp difference is too large the stream has likely been stopped and restarted.
         // Reset the peak and RMS values to avoid displaying old data.
         m_lastSampleTimestamp[channel] = sampleData.firstSampleTimestamp;
-        m_maxValue[channel] = Sample{ 0.0, 0.0 };
+        m_maxValue[channel] = Sample{};
     }
 
     const auto value = getSamplesMaxValue(sampleData.buffer, sampleData.frames, sampleData.nChannels);
@@ -66,8 +66,8 @@ void Meter::push(uint8_t channel, const IMeterSender::InterleavedSampleData& sam
         m_maxValue[channel] = value;
     }
 
-    const double lastSampleTimestamp = sampleData.firstSampleTimestamp + sampleData.frames * (1 / m_sampleRate);
-    if (lastSampleTimestamp > *m_lastSampleTimestamp[channel] + METER_SAMPLE_PERIOD) {
+    const double lastSampleTimestamp = sampleData.firstSampleTimestamp + (static_cast<double>(sampleData.frames) * (1 / m_sampleRate));
+    if (lastSampleTimestamp > m_lastSampleTimestamp[channel] + METER_SAMPLE_PERIOD) {
         // Send data every METER_SAMPLE_PERIOD seconds approximately.
         push(channel, m_maxValue[channel], key);
         auto& maxValue = m_maxValue[channel];
@@ -91,8 +91,8 @@ void Meter::reset()
     // The reset is deferred to ensure these zeroed values are the last ones processed
     muse::async::Async::call(this, [this]() {
         for (auto& [key, _] : m_channels) {
-            push(0, { 0.0, 0.0 }, key);
-            push(1, { 0.0, 0.0 }, key);
+            push(0, Sample {}, key);
+            push(1, Sample {}, key);
         }
         sendAll();
     });
