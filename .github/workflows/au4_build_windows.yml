@@ -15,7 +15,7 @@ on:
         required: true
         default: 'devel_build'
       sentry_project:
-        description: 'Upload symbols and dumps to Sentry (choose a project): audacity-4(default for stable build), audacity-4-sandbox'
+        description: 'Upload symbols and dumps to Sentry (choose a project): au4(default for stable build), au4-sandbox'
         required: false
         default: ''
 
@@ -35,12 +35,13 @@ jobs:
       with:
         fetch-depth: 3
         submodules: recursive
+
     - name: "Configure workflow"
       shell: bash
       env:
         pull_request_title: ${{ github.event.pull_request.title }}
         SENTRY_SERVER_AU4_KEY: ${{ secrets.SENTRY_SERVER_AU4_KEY }}
-        SENTRY_SERVER_SANDBOX_KEY: ${{ secrets.SENTRY_SERVER_SANDBOX_KEY }}
+        SENTRY_SERVER_AU4_SANDBOX_KEY: ${{ secrets.SENTRY_SERVER_AU4_SANDBOX_KEY }}
         SENTRY_PROJECT: ${{ github.event.inputs.sentry_project }}
       run: |
         ADD_INFO="_${GITHUB_REF#refs/heads/}"
@@ -62,22 +63,22 @@ jobs:
 
         if [ "$SENTRY_SERVER_AU4_KEY" != "" ]; then
           if [ -z "$SENTRY_PROJECT" ] && [ "$BUILD_MODE" == "stable_build" ]; then
-            SENTRY_PROJECT="audacity-4"
+            SENTRY_PROJECT="au4"
           fi
 
-          if [ "$SENTRY_PROJECT" == "audacity-4" ]; then
+          if [ "$SENTRY_PROJECT" == "au4" ]; then
             DO_UPLOAD_SYMBOLS='true'
             SENTRY_URL=https://sentry.audacityteam.org/api/5/minidump/?sentry_key=$SENTRY_SERVER_AU4_KEY
           fi
         fi
 
         if [ -z "$SENTRY_PROJECT" ] && [ "$BUILD_MODE" == "nightly_build" ]; then
-          SENTRY_PROJECT="audacity-4-sandbox"
+          SENTRY_PROJECT="au4-sandbox"
         fi
 
-        if [ "$SENTRY_PROJECT" == "audacity-4-sandbox" ] && [ "$SENTRY_SERVER_SANDBOX_KEY" != "" ]; then
+        if [ "$SENTRY_PROJECT" == "au4-sandbox" ] && [ "$SENTRY_SERVER_AU4_SANDBOX_KEY" != "" ]; then
           DO_UPLOAD_SYMBOLS='true'
-          SENTRY_URL=https://sentry.audacityteam.org/api/5/minidump/?sentry_key=$SENTRY_SERVER_SANDBOX_KEY
+          SENTRY_URL=https://sentry.audacityteam.org/api/5/minidump/?sentry_key=$SENTRY_SERVER_AU4_SANDBOX_KEY
         fi
 
         echo "DO_BUILD=$DO_BUILD" >> $GITHUB_ENV
@@ -113,24 +114,28 @@ jobs:
       if: env.DO_BUILD == 'true'
       shell: bash
       run: |
+        C_URL=${SENTRY_URL}; if [ -z "$C_URL" ]; then C_URL="''"; fi
         source /c/build_tools/environment.sh
-        cmake -P ${CI_DIR}/windows/ci_build.cmake
+        cmake -DCRASH_REPORT_URL=$C_URL -P ${CI_DIR}/windows/ci_build.cmake
+
     - name: Package
       if: env.DO_BUILD == 'true'
       shell: bash
       run: |
         cmake -P ${CI_DIR}/windows/package.cmake
+
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
       run: |
-        APP_BIN=$(pwd)/build.release/src/app/audacity.pdb
+        APP_BIN=$(pwd)/build.release/audacity.pdb
         cmake -DAPP_BIN=${APP_BIN} \
               -DSENTRY_URL=https://sentry.audacityteam.org \
               -DSENTRY_ORG=sentry \
               -DSENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
               -DSENTRY_PROJECT=${SENTRY_PROJECT} \
               -P ${CI_DIR}/crashdumps/ci_generate_and_upload.cmake
+
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v4
