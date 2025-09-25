@@ -286,25 +286,11 @@ async::Notification ProjectActionsController::projectBeingDownloadedChanged() co
 
 muse::io::path_t ProjectActionsController::selectOpeningFile()
 {
-    //! TODO AU4
-    std::string allExt = "*.aup3 *.mxl *.musicxml *.xml *.mid *.midi *.kar *.md *.mgu *.sgu *.cap *.capx "
-                         "*.ove *.scw *.bmw *.bww *.gtp *.gp3 *.gp4 *.gp5 *.gpx *.gp *.ptb *.mei *.mscx *.mscs *.mscz~";
+    std::string allExt = "*.aup3 *.aup4";
 
     std::vector<std::string> filter { trc("project", "All supported files") + " (" + allExt + ")",
-                                      trc("project", "Audacity files") + " (*.aup3)",
-                                      trc("project", "MusicXML files") + " (*.mxl *.musicxml *.xml)",
-                                      trc("project", "MIDI files") + " (*.mid *.midi *.kar)",
-                                      trc("project", "MuseData files") + " (*.md)",
-                                      trc("project", "Capella files") + " (*.cap *.capx)",
-                                      trc("project", "BB files (experimental)") + " (*.mgu *.sgu)",
-                                      trc("project", "Overture / Score Writer files (experimental)") + " (*.ove *.scw)",
-                                      trc("project", "Bagpipe Music Writer files (experimental)") + " (*.bmw *.bww)",
-                                      trc("project", "Guitar Pro files") + " (*.gtp *.gp3 *.gp4 *.gp5 *.gpx *.gp)",
-                                      trc("project", "Power Tab Editor files (experimental)") + " (*.ptb)",
-                                      trc("project", "MEI files") + " (*.mei)",
-                                      trc("project", "Uncompressed MuseScore folders (experimental)") + " (*.mscx)",
-                                      trc("project", "MuseScore developer files") + " (*.mscs)",
-                                      trc("project", "MuseScore backup files") + " (*.mscz~)" };
+                                      trc("project", "Audacity 3 files") + " (*.aup3)",
+                                      trc("project", "Audacity 4 files") + " (*.aup4)" };
 
     io::path_t defaultDir = configuration()->lastOpenedProjectsPath();
 
