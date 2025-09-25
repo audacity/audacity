@@ -734,7 +734,7 @@ wxString FileNames::CreateUniqueName(const wxString& prefix,
 
 wxString FileNames::UnsavedProjectExtension()
 {
-    return wxT("aup3unsaved");
+    return wxT("aup4unsaved");
 }
 
 // How to detect whether the file system of a path is FAT

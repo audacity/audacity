@@ -72,7 +72,12 @@ void ExportPreferencesModel::init()
         emit currentProcessChanged();
     });
 
-    m_filename = globalContext()->currentProject()->displayName();
+    muse::io::path_t displayName = globalContext()->currentProject()->displayName();
+    if (muse::io::suffix(displayName) == "aup4unsaved") {
+        m_filename = "Untitled";
+    } else {
+        m_filename = globalContext()->currentProject()->displayName();
+    }
     emit filenameChanged();
 
     exportConfiguration()->directoryPathChanged().onNotify(this, [this] {
