@@ -511,13 +511,6 @@ au::trackedit::TrackId Au3SelectionController::focusedTrack() const
 
 void Au3SelectionController::setFocusedTrack(TrackId trackId)
 {
-    Au3Track* track = au3::DomAccessor::findTrack(projectRef(), ::TrackId(trackId));
-    IF_ASSERT_FAILED(track) {
-        return;
-    }
-    auto& trackFocus = TrackFocus::Get(projectRef());
-    trackFocus.SetFocus(track->shared_from_this());
-
     m_focusedTrack.set(trackId, true);
 }
 

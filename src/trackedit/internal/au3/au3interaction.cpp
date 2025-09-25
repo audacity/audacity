@@ -15,6 +15,7 @@
 #include "global/types/number.h"
 #include "global/concurrency/concurrent.h"
 
+#include "itrackeditproject.h"
 #include "libraries/lib-project/Project.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-track/Track.h"
@@ -1946,6 +1947,8 @@ bool Au3Interaction::deleteTracks(const TrackIdList& trackIds)
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
 
+    TrackId focusedTrack = selectionController()->focusedTrack();
+
     for (const auto& trackId : trackIds) {
         Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
         IF_ASSERT_FAILED(au3Track) {
@@ -1957,6 +1960,12 @@ bool Au3Interaction::deleteTracks(const TrackIdList& trackIds)
 
         trackedit::ITrackeditProjectPtr trackEdit = globalContext()->currentTrackeditProject();
         trackEdit->notifyAboutTrackRemoved(track);
+    }
+
+    if (muse::contains(trackIds, focusedTrack)) {
+        trackedit::ITrackeditProjectPtr trackEdit = globalContext()->currentTrackeditProject();
+        const auto trackIds = trackEdit->trackIdList();
+        selectionController()->setFocusedTrack(trackIds.empty() ? -1 : trackIds.front());
     }
 
     return true;
