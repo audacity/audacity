@@ -492,7 +492,11 @@ StyledDialogView {
                 buttonRole: ButtonBoxModel.RejectRole
                 buttonId: ButtonBoxModel.Cancel
                 minWidth: 80
-                onClicked: root.reject()
+                onClicked: {
+                    exportPreferencesModel.cancel()
+                    exportPreferencesModel.setExportSampleRate("")
+                    root.reject()
+                }
             }
 
             FlatButton {
@@ -504,6 +508,7 @@ StyledDialogView {
                 accentButton: true
                 onClicked: {
                     if (exportPreferencesModel.verifyExportPossible()) {
+                        exportPreferencesModel.apply()
                         exportPreferencesModel.exportData()
                         root.accept()
                     }
