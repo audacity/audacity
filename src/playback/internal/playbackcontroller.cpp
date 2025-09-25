@@ -288,9 +288,9 @@ void PlaybackController::rewindToStart()
 void PlaybackController::rewindToEnd()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
+    m_lastPlaybackSeekTime = totalPlayTime();
+    m_lastPlaybackRegion = { totalPlayTime(), totalPlayTime() };
     stop();
-
-    seek(totalPlayTime());
 
     selectionController()->resetTimeSelection();
 }
