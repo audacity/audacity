@@ -9,6 +9,7 @@
 #include "record/irecord.h"
 #include "record/irecordconfiguration.h"
 #include "record/irecordcontroller.h"
+#include "record/irecordmetercontroller.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iaudiodevicesprovider.h"
 
@@ -40,6 +41,7 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
     muse::Inject<record::IRecord> record;
     muse::Inject<record::IRecordConfiguration> recordConfiguration;
     muse::Inject<record::IRecordController> recordController;
+    muse::Inject<record::IRecordMeterController> recordMeterController;
     muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
     muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 

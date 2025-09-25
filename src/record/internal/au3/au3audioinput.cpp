@@ -13,8 +13,6 @@
 
 #include "au3audio/audiotypes.h"
 
-#include "log.h"
-
 using namespace muse;
 using namespace muse::async;
 using namespace au::record;
@@ -30,6 +28,9 @@ Au3AudioInput::Au3AudioInput()
         if (!currentProject) {
             return;
         }
+
+        m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
+        m_focusedTrackId = selectionController()->focusedTrack();
 
         initMeter();
         restartMonitoring();
@@ -48,6 +49,20 @@ Au3AudioInput::Au3AudioInput()
             if (playbackController()->isStopped()) {
                 restartMonitoring();
             }
+        });
+
+        audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
+            m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
+            restartMonitoring();
+        });
+
+        selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& trackId) {
+            m_focusedTrackId = trackId;
+            restartMonitoring();
+        });
+
+        meterController()->isRecordMeterVisibleChanged().onNotify(this, [this]() {
+            restartMonitoring();
         });
     });
 }
@@ -179,7 +194,32 @@ void Au3AudioInput::restartMonitoring()
         return;
     }
 
+    if (!audibleInputMonitoring() && configuration()->isMicMeteringOn() && !isTrackMeterMonitoring()
+        && !meterController()->isRecordMeterVisible()) {
+        return;
+    }
+
     startMonitoring();
+}
+
+bool Au3AudioInput::isTrackMeterMonitoring() const
+{
+    auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return false;
+    }
+
+    std::optional<trackedit::Track> track = prj->track(m_focusedTrackId);
+    if (!track) {
+        return false;
+    }
+
+    if ((track->type == trackedit::TrackType::Mono && m_inputChannelsCount == 1)
+        || (track->type == trackedit::TrackType::Stereo && m_inputChannelsCount == 2)) {
+        return true;
+    }
+
+    return false;
 }
 
 Au3Project* Au3AudioInput::projectRef() const

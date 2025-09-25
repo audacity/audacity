@@ -6,18 +6,18 @@
 
 #include "global/async/asyncable.h"
 
-#include "libraries/lib-audio-io/AudioIO.h"
-
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "playback/iplaybackcontroller.h"
+#include "playback/iaudiodevicesprovider.h"
+#include "record/irecordconfiguration.h"
+#include "record/irecordcontroller.h"
+#include "record/irecordmetercontroller.h"
+#include "trackedit/iselectioncontroller.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometer.h"
-#include "playback/iplaybackcontroller.h"
-
-#include "../../iaudioinput.h"
-#include "record/irecordconfiguration.h"
-#include "record/irecordcontroller.h"
+#include "record/iaudioinput.h"
 
 namespace au::record {
 class Au3AudioInput : public IAudioInput, public muse::async::Asyncable
@@ -25,7 +25,10 @@ class Au3AudioInput : public IAudioInput, public muse::async::Asyncable
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<record::IRecordConfiguration> configuration;
     muse::Inject<record::IRecordController> controller;
+    muse::Inject<record::IRecordMeterController> meterController;
     muse::Inject<playback::IPlaybackController> playbackController;
+    muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     Au3AudioInput();
@@ -47,9 +50,12 @@ private:
     void startMonitoring();
     void stopMonitoring();
     void restartMonitoring();
+    bool isTrackMeterMonitoring() const;
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
 
     std::shared_ptr<au::au3::Meter> m_inputMeter;
+    int m_inputChannelsCount{};
+    trackedit::TrackId m_focusedTrackId{};
 };
 }

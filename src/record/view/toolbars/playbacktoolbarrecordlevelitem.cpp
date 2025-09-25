@@ -189,6 +189,7 @@ PlaybackMeterStyle::MeterStyle PlaybackToolBarRecordLevelItem::meterStyle() cons
 
 void PlaybackToolBarRecordLevelItem::listenMainAudioInput(bool listen)
 {
+    recordMeterController()->setRecordMeterVisible(listen);
     if (listen) {
         record()->audioInput()->recordSignalChanges().onReceive(this,
                                                                 [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {

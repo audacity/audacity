@@ -12,6 +12,7 @@
 
 #include "internal/recordconfiguration.h"
 #include "internal/recordcontroller.h"
+#include "internal/recordmetercontroller.h"
 #include "internal/recorduiactions.h"
 #include "internal/au3/au3record.h"
 #include "view/common/recordmetermodel.h"
@@ -36,11 +37,13 @@ void RecordModule::registerExports()
 {
     m_configuration = std::make_shared<RecordConfiguration>();
     m_controller = std::make_shared<RecordController>();
+    m_meterController = std::make_shared<RecordMeterController>();
     m_uiActions = std::make_shared<RecordUiActions>(m_controller);
     m_record = std::make_shared<Au3Record>();
 
     ioc()->registerExport<IRecordConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IRecordController>(moduleName(), m_controller);
+    ioc()->registerExport<IRecordMeterController>(moduleName(), m_meterController);
     ioc()->registerExport<IRecord>(moduleName(), m_record);
 }
 
