@@ -267,12 +267,6 @@ Rectangle {
                 opacity: 0.3
             }
 
-            PlayRegion {
-                id: playRegion
-
-                context: timeline.context
-            }
-
             PlayCursorHead {
                 id: head
 
