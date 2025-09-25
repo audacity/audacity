@@ -295,7 +295,7 @@ void ExportPreferencesModel::setFilePickerPath(const QString& path)
     muse::io::FileInfo info(path);
 
     setDirectoryPath(info.absolutePath());
-    setFilename(info.fileName());
+    setFilename(info.baseName());
 }
 
 void ExportPreferencesModel::updateCurrentSampleRate()
