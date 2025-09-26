@@ -88,6 +88,20 @@ void PlaybackController::init()
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         m_isPlayAllowedChanged.notify();
     });
+
+    selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList& clipKeyList) {
+        if (clipKeyList.empty()) {
+            return;
+        }
+        if (!isPlaying()) {
+            player()->stop();
+            PlaybackRegion selectionRegion = selectionPlaybackRegion();
+            if (selectionRegion.isValid()) {
+                doChangePlaybackRegion(selectionRegion);
+            }
+            doSeek(m_lastPlaybackSeekTime);
+        }
+    });
 }
 
 void PlaybackController::deinit()
