@@ -223,6 +223,7 @@ void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
     auto& playRegion = ViewInfo::Get(project).playRegion;
     if (!playRegion.Active()) {
         playRegion.SetStart(pos);
+        playRegion.SetEnd(pos);
     }
 
     if (applyIfPlaying && m_playbackStatus.val == PlaybackStatus::Running) {
