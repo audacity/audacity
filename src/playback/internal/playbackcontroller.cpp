@@ -387,13 +387,8 @@ void PlaybackController::stop()
 
     player()->stop();
 
-    PlaybackRegion loopRegion = player()->playbackRegion();
-    if (loopRegion.isValid()) {
-        seek(loopRegion.start);
-    } else {
-        seek(m_lastPlaybackSeekTime);
-        player()->setPlaybackRegion(m_lastPlaybackRegion);
-    }
+    seek(m_lastPlaybackSeekTime);
+    player()->setPlaybackRegion(m_lastPlaybackRegion);
 }
 
 void PlaybackController::resume()
