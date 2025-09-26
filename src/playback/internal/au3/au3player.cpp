@@ -341,8 +341,6 @@ PlaybackRegion Au3Player::playbackRegion() const
 
 void Au3Player::setPlaybackRegion(const PlaybackRegion& region)
 {
-    m_playbackPosition.set(std::max(0.0, region.start.raw()));
-
     Au3Project& project = projectRef();
 
     auto& playRegion = ViewInfo::Get(project).playRegion;
