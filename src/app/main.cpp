@@ -139,7 +139,7 @@ int main(int argc, char** argv)
     _CrtSetDbgFlag(enableMemoryLeakReport ? _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF : _CRTDBG_ALLOC_MEM_DF);
 #endif
 
-#ifndef MUE_BUILD_CRASHPAD_CLIENT
+#ifndef MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT
     signal(SIGSEGV, crashCallback);
     signal(SIGILL, crashCallback);
     signal(SIGFPE, crashCallback);
