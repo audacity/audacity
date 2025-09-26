@@ -40,15 +40,11 @@ Au3AudioInput::Au3AudioInput()
         });
 
         controller()->isRecordingChanged().onNotify(this, [this]() {
-            if (!controller()->isRecording()) {
-                restartMonitoring();
-            }
+            restartMonitoring();
         });
 
         playbackController()->isPlayingChanged().onNotify(this, [this]() {
-            if (playbackController()->isStopped()) {
-                restartMonitoring();
-            }
+            restartMonitoring();
         });
 
         audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
@@ -236,6 +232,10 @@ int Au3AudioInput::getFocusedTrackChannels() const
 
 void Au3AudioInput::restartMonitoring()
 {
+    if (controller()->isRecording() || playbackController()->isPlaying()) {
+        return;
+    }
+
     stopMonitoring();
 
     if (shouldRestartMonitoring()) {
