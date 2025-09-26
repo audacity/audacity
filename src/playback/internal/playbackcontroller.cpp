@@ -567,7 +567,7 @@ bool PlaybackController::isPlaybackPositionOnTheEndOfProject() const
 bool PlaybackController::isPlaybackPositionOnTheEndOfPlaybackRegion() const
 {
     PlaybackRegion playbackRegion = player()->playbackRegion();
-    return playbackRegion.isValid() && isEqualToPlaybackPosition(playbackRegion.end);
+    return playbackRegion.isValid() && isEqualToPlaybackPosition(playbackRegion.end) && !player()->isLoopRegionActive();
 }
 
 bool PlaybackController::isPlaybackStartPositionValid() const
