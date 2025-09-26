@@ -8,11 +8,12 @@
 #include <QTimer>
 
 #include "modularity/ioc.h"
+#include "async/asyncable.h"
 #include "context/iuicontextresolver.h"
 #include "shortcuts/ishortcutsregister.h"
 
 namespace au::projectscene {
-class TapHoldShortcut : public QObject
+class TapHoldShortcut : public QObject, muse::async::Asyncable
 {
     Q_OBJECT
 

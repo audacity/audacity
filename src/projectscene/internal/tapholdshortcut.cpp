@@ -13,7 +13,7 @@ TapHoldShortcut::TapHoldShortcut(const std::string& action, QObject* target)
     connect(&m_holdTimer, &QTimer::timeout, this, &TapHoldShortcut::onHoldTimeout);
     m_holdTimer.setSingleShot(true);
 
-    shortcutsRegister()->shortcutsChanged().onNotify(nullptr, [this]() {
+    shortcutsRegister()->shortcutsChanged().onNotify(this, [this]() {
         updateShortcut(m_action);
     });
 
