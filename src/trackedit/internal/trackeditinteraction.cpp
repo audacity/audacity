@@ -402,7 +402,7 @@ bool TrackeditInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
     });
 }
 
-muse::ProgressPtr TrackeditInteraction::progress() const
+muse::Progress TrackeditInteraction::progress() const
 {
     return m_interaction->progress();
 }

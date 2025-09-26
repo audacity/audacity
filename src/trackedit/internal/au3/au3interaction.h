@@ -108,7 +108,7 @@ public:
     bool makeStereoTrack(const TrackId left, const TrackId right) override;
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
 
-    muse::ProgressPtr progress() const override;
+    muse::Progress progress() const override;
 
 private:
     friend class Au3InteractionTests;
@@ -169,7 +169,7 @@ private:
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 
-    muse::ProgressPtr m_progress;
+    muse::Progress m_progress;
     std::atomic<bool> m_busy = false;
 
     std::optional<TrackListInfo> m_startTracklistInfo;

@@ -626,7 +626,7 @@ bool TrackeditOperationController::resampleTracks(const TrackIdList& tracksIds, 
     return false;
 }
 
-muse::ProgressPtr TrackeditOperationController::progress() const
+muse::Progress TrackeditOperationController::progress() const
 {
     return trackAndClipOperations()->progress();
 }

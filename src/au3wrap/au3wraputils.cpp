@@ -31,7 +31,7 @@ public:
         });
 
         // Make sure that the progress is started before the thread starts being executed.
-        interactive()->showProgress(title, &m_museProgress);
+        interactive()->showProgress(title, m_museProgress);
 
         std::thread thread([&] {
             DialogImpl::Au3Progress au3Progress { m_museProgress };
