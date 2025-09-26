@@ -85,7 +85,6 @@ void PlayRegionController::mouseMove(double pos)
     }
 
     auto player = playback()->player();
-    player->setLoopRegionActive(true);
 
     double visibleStartPos = context()->timeToPosition(context()->frameStartTime());
     double visibleEndPos = context()->timeToPosition(context()->frameEndTime());
