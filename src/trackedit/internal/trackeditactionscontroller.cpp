@@ -1255,7 +1255,7 @@ void TrackeditActionsController::renderClipPitchAndSpeed(const muse::actions::Ac
         return;
     }
 
-    interactive()->showProgress(muse::trc("trackedit", "Applying"), trackeditInteraction()->progress().get());
+    interactive()->showProgress(muse::trc("trackedit", "Applying"), trackeditInteraction()->progress());
 
     trackeditInteraction()->renderClipPitchAndSpeed(clipKey);
 }

@@ -626,7 +626,7 @@ public:
             // Other methods guarantee that the cast is correct
             // (provided no operations on the TrackList invalidated
             // underlying iterators or replaced the tracks there)
-            return static_cast< TrackType* >(&** this->mIter);
+            return static_cast< TrackType* >(&**this->mIter);
         }
     }
 
@@ -666,7 +666,7 @@ private:
     bool valid() const
     {
         // assume mIter != mEnd
-        const auto pTrack = track_cast< TrackType* >(&** this->mIter);
+        const auto pTrack = track_cast< TrackType* >(&**this->mIter);
         if (!pTrack) {
             return false;
         }
@@ -919,6 +919,8 @@ public:
     // Find the owning project, which may be null
     AudacityProject* GetOwner() { return mOwner; }
     const AudacityProject* GetOwner() const { return mOwner; }
+
+    void SetCtorThreadIsBlocked(bool value) { mCtorThreadIsBlocked = value; }
 
     /**
      * \brief Returns string that contains baseTrackName,
@@ -1267,6 +1269,7 @@ private:
     //! Whether the list assigns unique ids to added tracks;
     //! false for temporaries
     bool mAssignsIds{ true };
+    bool mCtorThreadIsBlocked { false };
 };
 
 #endif

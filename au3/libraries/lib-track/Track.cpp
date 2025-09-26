@@ -423,7 +423,7 @@ void TrackList::QueueEvent(TrackListEvent event)
     // and then we can consider that the responsible action itself gets called asynchronously on the main thread.
     // TODO by the time we release AU4, if we are confident in this change, we can clean up the code removing all the
     // mechanics for asynchronous event publication.
-    assert(mCtorThread == std::this_thread::get_id());
+    assert(mCtorThreadIsBlocked || mCtorThread == std::this_thread::get_id());
     Publish(event);
     // BasicUI::CallAfter([wThis = weak_from_this(), event = std::move(event)]{
     //     if (auto pThis = wThis.lock()) {
