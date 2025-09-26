@@ -15,6 +15,11 @@ elseif(OS_IS_FBSD)
     set(LIB_OS "linux")
 elseif(OS_IS_MAC)
     set(LIB_OS "macos")
+    list(LENGTH CMAKE_OSX_ARCHITECTURES arch_count)
+    if(arch_count GREATER 1)
+        set(ARCH "universal")
+    endif()
+    message(STATUS "CMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES}")
 endif()
 
 set(LIB_ARCH ${ARCH})
@@ -25,7 +30,7 @@ else()
     set(LIB_BUILD_TYPE "debug")
 endif()
 
-set(REMOTE_ROOT_URL https://raw.githubusercontent.com/musescore/muse_deps/main)
+set(REMOTE_ROOT_URL https://raw.githubusercontent.com/kryksyh/muse_deps/main)
 set(LOCAL_ROOT_PATH ${FETCHCONTENT_BASE_DIR})
 
 function(populate name remote_suffix)
@@ -73,6 +78,19 @@ populate(vorbis "vorbis/1.3.7")
 populate(flac "flac/1.4.2")
 populate(ogg "ogg/1.3.5")
 populate(opus "opus/1.5.2")
+
+execute_process(
+    COMMAND file ${wxwidgets_INSTALL_LIBRARIES}
+    OUTPUT_VARIABLE WX_FILE_INFO
+)
+
+execute_process(
+    COMMAND file ${wxwidgets_INSTALL_LIBRARIES}
+    OUTPUT_VARIABLE WX_FILE_INFO
+)
+
+message(STATUS "---------------------- Output: ${WX_FILE_INFO}")
+
 
 if (NOT OS_IS_LIN)
     populate(zlib "zlib/1.2.13")

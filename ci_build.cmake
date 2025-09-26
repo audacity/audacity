@@ -126,7 +126,6 @@ macro(do_install build_dir)
     else()
         message(STATUS "========= Success install =========")
     endif()
-
 endmacro()
 
 # Configure and build
