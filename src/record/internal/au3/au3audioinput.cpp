@@ -30,7 +30,7 @@ Au3AudioInput::Au3AudioInput()
         }
 
         m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
-        m_focusedTrackId = selectionController()->focusedTrack();
+        m_focusedTrackChannels = getFocusedTrackChannels();
 
         initMeter();
         restartMonitoring();
@@ -56,9 +56,12 @@ Au3AudioInput::Au3AudioInput()
             restartMonitoring();
         });
 
-        selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& trackId) {
-            m_focusedTrackId = trackId;
-            restartMonitoring();
+        selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId&) {
+            const int focusedTrackChannels = getFocusedTrackChannels();
+            if (focusedTrackChannels != m_focusedTrackChannels) {
+                m_focusedTrackChannels = focusedTrackChannels;
+                restartMonitoring();
+            }
         });
 
         meterController()->isRecordMeterVisibleChanged().onNotify(this, [this]() {
@@ -203,6 +206,34 @@ bool Au3AudioInput::shouldRestartMonitoring() const
     return false;
 }
 
+int Au3AudioInput::getFocusedTrackChannels() const
+{
+    if (globalContext() == nullptr) {
+        return 0;
+    }
+
+    auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return 0;
+    }
+
+    const auto trackId = selectionController()->focusedTrack();
+
+    std::optional<au::trackedit::Track> track = prj->track(trackId);
+    if (!track) {
+        return 0;
+    }
+
+    int channels = 0;
+    if (track->type == au::trackedit::TrackType::Mono) {
+        channels = 1;
+    } else if (track->type == au::trackedit::TrackType::Stereo) {
+        channels = 2;
+    }
+
+    return channels;
+}
+
 void Au3AudioInput::restartMonitoring()
 {
     stopMonitoring();
@@ -214,22 +245,7 @@ void Au3AudioInput::restartMonitoring()
 
 bool Au3AudioInput::isTrackMeterMonitoring() const
 {
-    auto prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
-        return false;
-    }
-
-    std::optional<trackedit::Track> track = prj->track(m_focusedTrackId);
-    if (!track) {
-        return false;
-    }
-
-    if ((track->type == trackedit::TrackType::Mono && m_inputChannelsCount == 1)
-        || (track->type == trackedit::TrackType::Stereo && m_inputChannelsCount == 2)) {
-        return true;
-    }
-
-    return false;
+    return m_inputChannelsCount == m_focusedTrackChannels;
 }
 
 Au3Project* Au3AudioInput::projectRef() const

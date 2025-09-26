@@ -51,12 +51,13 @@ private:
     void stopMonitoring();
     void restartMonitoring();
     bool isTrackMeterMonitoring() const;
+    int getFocusedTrackChannels() const;
     bool shouldRestartMonitoring() const;
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
 
     std::shared_ptr<au::au3::Meter> m_inputMeter;
     int m_inputChannelsCount{};
-    trackedit::TrackId m_focusedTrackId{};
+    int m_focusedTrackChannels{};
 };
 }
