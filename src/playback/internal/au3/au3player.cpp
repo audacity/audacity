@@ -362,8 +362,6 @@ void Au3Player::loopEditingEnd()
     Au3Project& project = projectRef();
     auto& playRegion = ViewInfo::Get(project).playRegion;
     playRegion.Order();
-
-    m_playbackPosition.set(std::max(loopRegion().start.raw(), 0.0));
 }
 
 void Au3Player::setLoopRegion(const PlaybackRegion& region)
