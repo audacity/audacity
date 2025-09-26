@@ -51,6 +51,7 @@ private:
     void stopMonitoring();
     void restartMonitoring();
     bool isTrackMeterMonitoring() const;
+    bool shouldRestartMonitoring() const;
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
 

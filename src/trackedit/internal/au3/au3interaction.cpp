@@ -1964,8 +1964,8 @@ bool Au3Interaction::deleteTracks(const TrackIdList& trackIds)
 
     if (muse::contains(trackIds, focusedTrack)) {
         trackedit::ITrackeditProjectPtr trackEdit = globalContext()->currentTrackeditProject();
-        const auto trackIds = trackEdit->trackIdList();
-        selectionController()->setFocusedTrack(trackIds.empty() ? -1 : trackIds.front());
+        const auto notRemovedTracks = trackEdit->trackIdList();
+        selectionController()->setFocusedTrack(notRemovedTracks.empty() ? -1 : notRemovedTracks.front());
     }
 
     return true;

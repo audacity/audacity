@@ -55,8 +55,6 @@ FlatButton {
         } else {
             popup.open()
         }
-
-        root.isPopupOpened(popup.isOpened)
     }
 
     onClicked: function(mouse) {
@@ -111,6 +109,12 @@ FlatButton {
         onOpened: {
             leftVolumePressure.requestPaint()
             rightVolumePressure.requestPaint()
+
+            root.isPopupOpened(true)
+        }
+
+        onClosed: {
+            root.isPopupOpened(false)
         }
 
         Column {

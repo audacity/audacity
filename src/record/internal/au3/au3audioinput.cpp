@@ -186,20 +186,30 @@ void Au3AudioInput::stopMonitoring()
     });
 }
 
+bool Au3AudioInput::shouldRestartMonitoring() const
+{
+    if (audibleInputMonitoring()) {
+        return true;
+    }
+
+    if (!configuration()->isMicMeteringOn()) {
+        return false;
+    }
+
+    if (isTrackMeterMonitoring() || meterController()->isRecordMeterVisible()) {
+        return true;
+    }
+
+    return false;
+}
+
 void Au3AudioInput::restartMonitoring()
 {
     stopMonitoring();
 
-    if (!configuration()->isMicMeteringOn() && !audibleInputMonitoring()) {
-        return;
+    if (shouldRestartMonitoring()) {
+        startMonitoring();
     }
-
-    if (!audibleInputMonitoring() && configuration()->isMicMeteringOn() && !isTrackMeterMonitoring()
-        && !meterController()->isRecordMeterVisible()) {
-        return;
-    }
-
-    startMonitoring();
 }
 
 bool Au3AudioInput::isTrackMeterMonitoring() const
