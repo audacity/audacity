@@ -15,6 +15,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+if(APPLE)
+    if(NOT CMAKE_OSX_ARCHITECTURES)
+        set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Build architectures" FORCE)
+    endif()
+endif()
+
 ###########################################
 # Muse Framework
 ###########################################
@@ -175,6 +181,8 @@ if (MSVC)
     # Now that the `audacity` target is defined, we can set it as the startup project in Visual Studio.
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT audacity)
 endif()
+
+
 
 ###########################################
 # Setup Packaging

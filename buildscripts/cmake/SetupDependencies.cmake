@@ -19,6 +19,7 @@ elseif(OS_IS_MAC)
     if(arch_count GREATER 1)
         set(ARCH "universal")
     endif()
+    message(STATUS "CMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES}")
 endif()
 
 set(LIB_ARCH ${ARCH})
@@ -77,6 +78,19 @@ populate(vorbis "vorbis/1.3.7")
 populate(flac "flac/1.4.2")
 populate(ogg "ogg/1.3.5")
 populate(opus "opus/1.5.2")
+
+execute_process(
+    COMMAND file ${wxwidgets_INSTALL_LIBRARIES}
+    OUTPUT_VARIABLE WX_FILE_INFO
+)
+
+execute_process(
+    COMMAND file ${wxwidgets_INSTALL_LIBRARIES}
+    OUTPUT_VARIABLE WX_FILE_INFO
+)
+
+message(STATUS "---------------------- Output: ${WX_FILE_INFO}")
+
 
 if (NOT OS_IS_LIN)
     populate(zlib "zlib/1.2.13")
