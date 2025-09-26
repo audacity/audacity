@@ -349,14 +349,13 @@ void Au3Player::setPlaybackRegion(const PlaybackRegion& region)
         return;
     }
 
-    playRegion.SetStart(region.start);
-
+    double end = region.end;
     if (region.start == region.end) {
-        auto& tracks = Au3TrackList::Get(project);
-        playRegion.SetEnd(tracks.GetEndTime());
-    } else {
-        playRegion.SetEnd(region.end);
+        const auto& tracks = Au3TrackList::Get(project);
+        end = tracks.GetEndTime();
     }
+    playRegion.SetStart(region.start);
+    playRegion.SetEnd(end);
 }
 
 PlaybackRegion Au3Player::loopRegion() const
