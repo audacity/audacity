@@ -15,7 +15,7 @@ while [[ "$#" -gt 0 ]]; do
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
-done  
+done
 
 echo "LONG_NAME: $LONG_NAME"
 echo "LONGER_NAME: $LONGER_NAME"
@@ -182,11 +182,25 @@ find ${VOLUME}/${APPNAME}.app/Contents -type d -name "*.dSYM" -exec rm -r {} +
 #codesign
 echo "Codesign"
 # `codesign --deep` doesn't seem to search for code in Contents/Resources directory so sign libraries in it manually
-find "${VOLUME}/${APPNAME}.app/Contents/Resources" -name '*.dylib' -exec codesign --force --options runtime --deep -s "Developer ID Application: MuseScore" '{}' ';'
-# Sign code in other (more conventional) locations
-codesign --force --options runtime --entitlements "${HERE}/macosx_entitlements.plist" --deep -s "Developer ID Application: MuseScore" "${VOLUME}/${APPNAME}.app"
+SIGN_IDENTITY="Developer ID Application: MuseScore"
+
+if security find-identity -v -p codesigning | grep -q "$SIGN_IDENTITY"; then
+  echo "Using signing identity: $SIGN_IDENTITY"
+else
+  echo "Falling back to ad-hoc signing"
+  SIGN_IDENTITY="-"
+fi
+
+find "${VOLUME}/${APPNAME}.app/Contents/Resources" -name '*.dylib' \
+  -exec codesign --force --options runtime --deep -s "$SIGN_IDENTITY" '{}' ';'
+
+codesign --force --options runtime \
+  --entitlements "${HERE}/macosx_entitlements.plist" \
+  --deep -s "$SIGN_IDENTITY" "${VOLUME}/${APPNAME}.app"
+
 echo "Codesign verify"
 codesign --verify --deep --strict --verbose=2 "${VOLUME}/${APPNAME}.app"
+
 echo "spctl"
 spctl --assess --type execute "${VOLUME}/${APPNAME}.app"
 
