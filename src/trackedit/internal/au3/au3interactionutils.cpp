@@ -246,13 +246,15 @@ muse::Ret au::trackedit::utils::withProgress(muse::IInteractive& interactive, co
                                                                                                                                  CancelCb)>& action)
 {
     muse::Progress progress;
+    progress.setMaxNumIncrements(200);
     interactive.showProgress(title, progress);
     progress.started();
 
     ProgressCb progressCb = [&](double progressFraction)
     {
-        progress.progress(progressFraction * 1000, 1000, "");
-        QCoreApplication::processEvents();
+        if (progress.progress(progressFraction * 1000, 1000, "")) {
+            QCoreApplication::processEvents();
+        }
         return !progress.isCanceled();
     };
 

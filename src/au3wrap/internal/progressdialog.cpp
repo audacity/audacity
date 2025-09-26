@@ -8,6 +8,9 @@
 
 ProgressDialog::ProgressDialog()
 {
+    // Of course, the least number of increments to yield a smooth animation depends on the width of the progress bar,
+    // yet 300 increments should be enough to provide a smooth animation in most cases.
+    m_progress.setMaxNumIncrements(200);
 }
 
 ProgressDialog::~ProgressDialog()
@@ -36,8 +39,9 @@ ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long 
         m_progress.start();
     }
 
-    m_progress.progress(numerator, denominator, message.Translation().ToStdString());
-    QCoreApplication::processEvents();
+    if (m_progress.progress(numerator, denominator, message.Translation().ToStdString())) {
+        QCoreApplication::processEvents();
+    }
 
     if (m_cancelled) {
         return ProgressResult::Cancelled;
