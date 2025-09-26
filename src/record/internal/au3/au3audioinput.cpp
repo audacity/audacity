@@ -13,8 +13,6 @@
 
 #include "au3audio/audiotypes.h"
 
-#include "log.h"
-
 using namespace muse;
 using namespace muse::async;
 using namespace au::record;
@@ -30,6 +28,9 @@ Au3AudioInput::Au3AudioInput()
         if (!currentProject) {
             return;
         }
+
+        m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
+        m_focusedTrackChannels = getFocusedTrackChannels();
 
         initMeter();
         restartMonitoring();
@@ -48,6 +49,23 @@ Au3AudioInput::Au3AudioInput()
             if (playbackController()->isStopped()) {
                 restartMonitoring();
             }
+        });
+
+        audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
+            m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
+            restartMonitoring();
+        });
+
+        selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId&) {
+            const int focusedTrackChannels = getFocusedTrackChannels();
+            if (focusedTrackChannels != m_focusedTrackChannels) {
+                m_focusedTrackChannels = focusedTrackChannels;
+                restartMonitoring();
+            }
+        });
+
+        meterController()->isRecordMeterVisibleChanged().onNotify(this, [this]() {
+            restartMonitoring();
         });
     });
 }
@@ -171,15 +189,63 @@ void Au3AudioInput::stopMonitoring()
     });
 }
 
+bool Au3AudioInput::shouldRestartMonitoring() const
+{
+    if (audibleInputMonitoring()) {
+        return true;
+    }
+
+    if (!configuration()->isMicMeteringOn()) {
+        return false;
+    }
+
+    if (isTrackMeterMonitoring() || meterController()->isRecordMeterVisible()) {
+        return true;
+    }
+
+    return false;
+}
+
+int Au3AudioInput::getFocusedTrackChannels() const
+{
+    if (globalContext() == nullptr) {
+        return 0;
+    }
+
+    auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return 0;
+    }
+
+    const auto trackId = selectionController()->focusedTrack();
+
+    std::optional<au::trackedit::Track> track = prj->track(trackId);
+    if (!track) {
+        return 0;
+    }
+
+    int channels = 0;
+    if (track->type == au::trackedit::TrackType::Mono) {
+        channels = 1;
+    } else if (track->type == au::trackedit::TrackType::Stereo) {
+        channels = 2;
+    }
+
+    return channels;
+}
+
 void Au3AudioInput::restartMonitoring()
 {
     stopMonitoring();
 
-    if (!configuration()->isMicMeteringOn() && !audibleInputMonitoring()) {
-        return;
+    if (shouldRestartMonitoring()) {
+        startMonitoring();
     }
+}
 
-    startMonitoring();
+bool Au3AudioInput::isTrackMeterMonitoring() const
+{
+    return m_inputChannelsCount == m_focusedTrackChannels;
 }
 
 Au3Project* Au3AudioInput::projectRef() const

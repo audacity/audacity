@@ -14,6 +14,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/recorderrors.h
     ${CMAKE_CURRENT_LIST_DIR}/irecordconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/irecordcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/irecordmetercontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/irecord.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudioinput.h
 
@@ -22,6 +23,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/recordconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/recordcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/recordcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/recordmetercontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/recordmetercontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/recorduiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/recorduiactions.h
 
