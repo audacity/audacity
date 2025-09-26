@@ -274,7 +274,6 @@ void PlaybackController::play(bool ignoreSelection)
             doChangePlaybackRegion(selectionRegion);
         } else {
             LOGW() << "playback region is not valid";
-            // here check if we should use the doSeek(m_lastPlaybackSeekTime); when not valid?
             // update the playback region "manually" even when not paused
             // (that's why we aren't using the doChangePlaybackRegion)
             player()->setPlaybackRegion(m_lastPlaybackRegion);
