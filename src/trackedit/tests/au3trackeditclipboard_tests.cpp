@@ -55,7 +55,8 @@ public:
     {
         m_au3ProjectAccessor = std::make_shared<au3::Au3ProjectAccessor>();
         const muse::io::path_t TEST_PROJECT_PATH = muse::String::fromUtf8(trackedit_tests_DATA_ROOT) + "/data/testClipboard.aup3";
-        muse::Ret ret = m_au3ProjectAccessor->load(TEST_PROJECT_PATH);
+        constexpr auto discardAutosave = false;
+        muse::Ret ret = m_au3ProjectAccessor->load(TEST_PROJECT_PATH, discardAutosave);
 
         ON_CALL(*m_currentProject, au3ProjectPtr())
         .WillByDefault(Return(m_au3ProjectAccessor->au3ProjectPtr()));

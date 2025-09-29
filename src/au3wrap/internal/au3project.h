@@ -26,7 +26,7 @@ public:
     Au3ProjectAccessor();
 
     [[nodiscard]] muse::Ret open() override;
-    [[nodiscard]] muse::Ret load(const muse::io::path_t& filePath) override;
+    [[nodiscard]] muse::Ret load(const muse::io::path_t& filePath, bool ignoreAutosave) override;
     bool save(const muse::io::path_t& fileName) override;
     void close() override;
 

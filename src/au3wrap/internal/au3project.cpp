@@ -63,7 +63,8 @@ muse::Ret Au3ProjectCreator::removeUnsavedData(const muse::io::path_t& projectPa
     if (!tempProject) {
         return muse::make_ret(static_cast<muse::Ret::Code>(au::project::Err::NoProjectError));
     }
-    auto ret = tempProject->load(projectPath);
+    constexpr auto ignoreAutosave = true;
+    auto ret = tempProject->load(projectPath, ignoreAutosave);
     if (ret) {
         if (tempProject->isTemporary()) {
             tempProject->close();
@@ -120,7 +121,7 @@ muse::Ret Au3ProjectAccessor::open()
     return projectFileIO.OpenProject() ? muse::make_ok() : muse::make_ret(static_cast<muse::Ret::Code>(project::Err::DatabaseError));
 }
 
-muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath)
+muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignoreAutosave)
 {
     muse::Ret ret = muse::make_ok();
 
@@ -132,7 +133,7 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath)
     std::optional<ProjectFileIO::TentativeConnection> conn;
 
     try {
-        conn.emplace(projectFileIO.LoadProject(fileName, false /*ignoreAutosave*/).value());
+        conn.emplace(projectFileIO.LoadProject(fileName, ignoreAutosave).value());
     } catch (AudacityException& exception) {
         LOGE() << "Project loading failed: " << filePath << " with exception";
         ret = project::make_ret(project::Err::AudacityExceptionError, filePath.toString());
