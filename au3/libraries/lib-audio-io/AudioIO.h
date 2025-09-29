@@ -558,9 +558,10 @@ public:
 private:
     bool DelayingActions() const;
 
-    /** \brief Set the current VU meters - this should be done once after
-     * each call to StartStream currently */
-    void SetMeters();
+    /**
+     * \brief Start the current VU meters
+     */
+    void StartMeters();
 
     /** \brief Opens the portaudio stream(s) used to do playback or recording
      * (or both) through.

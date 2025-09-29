@@ -318,7 +318,6 @@ void AudioIOBase::SetCaptureMeter(
     auto meter = wMeter.lock();
     if (meter) {
         mInputMeter = meter;
-        meter->reset();
     } else {
         mInputMeter.reset();
     }
@@ -335,7 +334,6 @@ void AudioIOBase::SetPlaybackMeter(
     auto meter = wMeter.lock();
     if (meter) {
         mOutputMeter = meter;
-        meter->reset();
     } else {
         mOutputMeter.reset();
     }

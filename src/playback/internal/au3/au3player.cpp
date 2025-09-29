@@ -268,12 +268,12 @@ void Au3Player::stop()
     auto& projectAudioIO = ProjectAudioIO::Get(project);
     auto playbackMeter = projectAudioIO.GetPlaybackMeter();
     if (playbackMeter) {
-        playbackMeter->reset();
+        playbackMeter->stop();
     }
 
     auto captureMeter= projectAudioIO.GetCaptureMeter();
     if (captureMeter) {
-        captureMeter->reset();
+        captureMeter->stop();
     }
 
     while (isBusy()) {

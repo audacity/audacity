@@ -684,7 +684,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         }
     }
 
-    SetMeters();
+    StartMeters();
 
 #ifdef USE_PORTMIXER
 #ifdef __WXMSW__
@@ -1318,12 +1318,6 @@ bool AudioIO::AllocateBuffers(
                                 reinterpret_cast<float*>(buffer.ptr()));
                         }
                     }
-
-                    auto outputMeter = mOutputMeter.lock();
-                    if (outputMeter) {
-                        // Reserve space for all tracks and master
-                        outputMeter->reserve((mPlaybackSequences.size() + 1) * mNumPlaybackChannels);
-                    }
                 }
 
                 std::generate(
@@ -1495,18 +1489,27 @@ bool AudioIO::IsAvailable(AudacityProject& project) const
     return !pOwningProject || pOwningProject.get() == &project;
 }
 
-void AudioIO::SetMeters()
+void AudioIO::StartMeters()
 {
     if (auto pInputMeter = mInputMeter.lock()) {
-        pInputMeter->reset();
+        pInputMeter->start();
     }
     if (auto pOutputMeter = mOutputMeter.lock()) {
-        pOutputMeter->reset();
+        pOutputMeter->start();
     }
 }
 
 void AudioIO::StopStream()
 {
+    if (auto pInputMeter = mInputMeter.lock()) {
+        pInputMeter->stop();
+    }
+    mInputMeter.reset();
+    if (auto pOutputMeter = mOutputMeter.lock()) {
+        pOutputMeter->stop();
+    }
+    mOutputMeter.reset();
+
     mPurgeIsNeeded.store(false, std::memory_order_relaxed);
 
     auto cleanup = finally([this] {
@@ -1707,17 +1710,6 @@ void AudioIO::StopStream()
             }
         }
     }
-
-    if (auto pInputMeter = mInputMeter.lock()) {
-        pInputMeter->reset();
-    }
-
-    if (auto pOutputMeter = mOutputMeter.lock()) {
-        pOutputMeter->reset();
-    }
-
-    mInputMeter.reset();
-    mOutputMeter.reset();
 
     if (pListener && mNumCaptureChannels > 0) {
         pListener->OnAudioIOStopRecording();
@@ -3044,7 +3036,8 @@ void AudioIoCallback::DoPlaythrough(
 
 /* Send data to recording VU meter if applicable */
 // Also computes rms
-void AudioIoCallback::SendVuInputMeterData(const float* inputSamples, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo)
+void AudioIoCallback::SendVuInputMeterData(const float* inputSamples, unsigned long framesPerBuffer,
+                                           const PaStreamCallbackTimeInfo* timeInfo)
 {
     if (framesPerBuffer == 0) {
         return;
@@ -3060,11 +3053,11 @@ void AudioIoCallback::SendVuInputMeterData(const float* inputSamples, unsigned l
     }
 
     PushInputMeterValues(inputMeter, inputSamples, framesPerBuffer, timeInfo);
-    inputMeter->sendAll();
 }
 
 /* Send data to playback VU meter if applicable */
-void AudioIoCallback::SendVuOutputMeterData(const float* outputMeterFloats, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo)
+void AudioIoCallback::SendVuOutputMeterData(const float* outputMeterFloats, unsigned long framesPerBuffer,
+                                            const PaStreamCallbackTimeInfo* timeInfo)
 {
     if (framesPerBuffer == 0) {
         return;
@@ -3081,10 +3074,10 @@ void AudioIoCallback::SendVuOutputMeterData(const float* outputMeterFloats, unsi
 
     PushMainMeterValues(outputMeter, outputMeterFloats, mNumPlaybackChannels, framesPerBuffer, timeInfo);
     PushTrackMeterValues(outputMeter, framesPerBuffer, timeInfo);
-    outputMeter->sendAll();
 }
 
-void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, unsigned long frames, const PaStreamCallbackTimeInfo* timeInfo)
+void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, unsigned long frames,
+                                           const PaStreamCallbackTimeInfo* timeInfo)
 {
     if (frames == 0) {
         return;
@@ -3096,7 +3089,7 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& 
         auto nChannels = sequence->NChannels();
         const int64_t id = sequence->GetRecordableSequenceId();
         for (size_t ch = 0; ch < nChannels; ch++) {
-            sender->push(ch, { sptr + ch, frames, nChannels, timeInfo->inputBufferAdcTime }, id);
+            sender->push(ch, { sptr + ch, frames, nChannels, timeInfo->inputBufferAdcTime }, IMeterSender::TrackId { id });
         }
     }
 
@@ -3121,7 +3114,7 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& 
         }
 
         for (size_t ch = 0; ch < maxMainTrackChannels; ++ch) {
-            sender->push(ch, { mainTrackInput + ch * frames, frames, 1, timeInfo->inputBufferAdcTime});
+            sender->push(ch, { mainTrackInput + ch * frames, frames, 1, timeInfo->inputBufferAdcTime });
         }
     }
 }
@@ -3132,11 +3125,12 @@ void AudioIoCallback::PushMainMeterValues(const std::shared_ptr<IMeterSender>& s
     auto sptr = values;
     for (size_t ch = 0; ch < channels; ++ch) {
         auto sptr = values + ch;
-        sender->push(ch, { sptr, frames, channels , timeInfo->outputBufferDacTime});
+        sender->push(ch, { sptr, frames, channels, timeInfo->outputBufferDacTime });
     }
 }
 
-void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterSender>& sender, unsigned long frames, const PaStreamCallbackTimeInfo* timeInfo)
+void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterSender>& sender, unsigned long frames,
+                                           const PaStreamCallbackTimeInfo* timeInfo)
 {
     auto stackBuffer = stackAllocate(float, frames);
 
@@ -3150,7 +3144,7 @@ void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterSender>& 
                 frames
                 );
 
-            sender->push(nch, { stackBuffer, len, 1, timeInfo->outputBufferDacTime}, track.trackId());
+            sender->push(nch, { stackBuffer, len, 1, timeInfo->outputBufferDacTime }, IMeterSender::TrackId { track.trackId() });
         }
     }
 }
@@ -3262,7 +3256,7 @@ int AudioIoCallback::AudioCallback(
             inputSamples = tempFloats;
         }
 
-        SendVuInputMeterData(inputSamples,framesPerBuffer,timeInfo);
+        SendVuInputMeterData(inputSamples, framesPerBuffer, timeInfo);
 
         // This function may queue up a pause or resume.
         // TODO this is a bit dodgy as it toggles the Pause, and
