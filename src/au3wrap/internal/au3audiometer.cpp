@@ -8,28 +8,79 @@
 #include "au3audiometer.h"
 
 #include "global/async/async.h"
+#include "global/log.h"
 
+#include "libraries/lib-utility/MathApprox.h"
 #include "libraries/lib-utility/MemoryX.h"
 
-namespace {
-constexpr double METER_SAMPLE_PERIOD = 1 / 30.0;
-constexpr double MAX_ALLOWED_TIMESTAMP_DIFF = 1.0;
+#include "global/types/ratio.h" // muse::linear_to_db
 
-auto calculateCoef()
-{
-    // Calibrate so that the meter falls by -48dB in 1 second.
-    constexpr auto minus48dB = 0.003981071705534973f;
-    return 1 - powf(minus48dB, METER_SAMPLE_PERIOD);
-}
-}
+#include <cmath> // std::ceil
 
 namespace au::au3 {
-Meter::Meter()
-    : m_smoothingCoef{calculateCoef()}
-{
+namespace {
+constexpr double updatePeriod = 1 / 30.0;
+constexpr auto decayDbPerSecond = 36.0f;
 }
 
-Meter::Sample Meter::getSamplesMaxValue(const float* buffer, size_t frames, size_t step)
+void Meter::decay(LevelState& level)
+{
+    constexpr float decayDb = decayDbPerSecond * updatePeriod;
+    if (level.hangover == 0) {
+        level.db = std::max(level.db - decayDb, leastDb);
+    } else {
+        --level.hangover;
+    }
+}
+
+void Meter::maybeBumpUp(LevelState& level, float newLinValue, int hangover)
+{
+    const auto newPeakDb = muse::linear_to_db(newLinValue);
+    if (level.db < newPeakDb) {
+        level.db = newPeakDb;
+        level.hangover = hangover;
+    }
+}
+
+Meter::Meter()
+{
+    constexpr int letRingMs = -1000 * leastDb / decayDbPerSecond;
+    static_assert(letRingMs > 0);
+    m_stopTimer.setSingleShot(true);
+    m_stopTimer.setInterval(letRingMs);
+    m_stopTimer.callOnTimeout([this]() {
+        m_meterUpdateTimer.stop();
+        for (auto& [_, trackData] : m_trackData) {
+            trackData.channelLevels.clear();
+        }
+    });
+
+    m_meterUpdateTimer.setInterval(static_cast<int>(updatePeriod * 1000));
+
+    m_meterUpdateTimer.callOnTimeout([this]() {
+        for (auto& [_, trackData] : m_trackData) {
+            for (auto& [_, levels] : trackData.channelLevels) {
+                decay(levels.peak);
+                decay(levels.rms);
+            }
+        }
+
+        QueueItem item;
+        while (m_queue.Get(item)) {
+            auto& levels = m_trackData[item.trackId].channelLevels[item.channel];
+            maybeBumpUp(levels.peak, item.sample.peak, m_hangoverCount.load());
+            maybeBumpUp(levels.rms, item.sample.rms, m_hangoverCount.load());
+        }
+
+        for (auto& [_, trackData] : m_trackData) {
+            for (const auto& [channel, levels] : trackData.channelLevels) {
+                trackData.notificationChannel.send(channel, audio::MeterSignal { levels.peak.db, levels.rms.db });
+            }
+        }
+    });
+}
+
+Meter::QueueSample Meter::getSamplesMaxValue(const float* buffer, size_t frames, size_t step)
 {
     const auto* sptr = buffer;
     float peak = 0.0f;
@@ -43,76 +94,43 @@ Meter::Sample Meter::getSamplesMaxValue(const float* buffer, size_t frames, size
 
     rms = std::sqrt(rms / static_cast<float>(frames));
 
-    return Meter::Sample{ std::min(peak, 1.0f), std::min(rms, 1.0f) };
+    return Meter::QueueSample{ std::min(peak, 1.0f), std::min(rms, 1.0f) };
 }
 
-void Meter::push(uint8_t channel, const IMeterSender::InterleavedSampleData& sampleData, int64_t key)
+void Meter::push(uint8_t channel, const IMeterSender::InterleavedSampleData& sampleData, TrackId trackId)
 {
-    if (m_lastSampleTimestamp.find(channel) == m_lastSampleTimestamp.end()) {
-        // First time seeing this channel, initialize the timestamp and max values.
-        m_lastSampleTimestamp[channel] = sampleData.firstSampleTimestamp;
-        m_maxValue[channel] = Sample{};
-    }
-
-    if (std::abs(sampleData.firstSampleTimestamp - m_lastSampleTimestamp[channel]) > MAX_ALLOWED_TIMESTAMP_DIFF) {
-        // If the timestamp difference is too large the stream has likely been stopped and restarted.
-        // Reset the peak and RMS values to avoid displaying old data.
-        m_lastSampleTimestamp[channel] = sampleData.firstSampleTimestamp;
-        m_maxValue[channel] = Sample{};
-    }
-
-    const auto value = getSamplesMaxValue(sampleData.buffer, sampleData.frames, sampleData.nChannels);
-    if (value.peak > m_maxValue[channel].peak) {
-        m_maxValue[channel] = value;
-    }
-
-    const double lastSampleTimestamp = sampleData.firstSampleTimestamp + (static_cast<double>(sampleData.frames) * (1 / m_sampleRate));
-    if (lastSampleTimestamp > m_lastSampleTimestamp[channel] + METER_SAMPLE_PERIOD) {
-        // Send data every METER_SAMPLE_PERIOD seconds approximately.
-        push(channel, m_maxValue[channel], key);
-        auto& maxValue = m_maxValue[channel];
-        maxValue.peak *= 1.f - m_smoothingCoef;
-        maxValue.rms *= 1.f - m_smoothingCoef;
-        m_lastSampleTimestamp[channel] = lastSampleTimestamp;
-    }
-}
-
-void Meter::push(uint8_t channel, const Sample& sample, int64_t key)
-{
-    m_trackData.push_back(Data { key, channel,
-                                 au::audio::AudioSignalVal { sample.peak, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(
-                                                                                                                    sample.peak)) },
-                                 au::audio::AudioSignalVal { sample.rms,
-                                                             static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(sample.rms)) } });
-}
-
-void Meter::reset()
-{
-    // The reset is deferred to ensure these zeroed values are the last ones processed
-    muse::async::Async::call(this, [this]() {
-        for (auto& [key, _] : m_channels) {
-            push(0, Sample {}, key);
-            push(1, Sample {}, key);
+    if (!m_running.load()) {
+        if (!m_warningIssued) {
+            m_warningIssued = true;
+            LOGW() << "Meter::push called while not running";
         }
-        sendAll();
-    });
-}
-
-void Meter::reserve(size_t size)
-{
-    m_trackData.reserve(size);
-}
-
-void Meter::sendAll()
-{
-    for (const auto& item : m_trackData) {
-        const auto it = m_channels.find(item.key);
-        if (it != m_channels.end()) {
-            const au::audio::MeterSignal signal { item.peak, item.rms };
-            it->second.send(item.channel, signal);
-        }
+        return;
     }
-    m_trackData = {};
+    if (static_cast<int>(sampleData.frames) > m_maxFramesPerPush) {
+        m_maxFramesPerPush = sampleData.frames;
+        const auto hangoverTime = m_maxFramesPerPush / m_sampleRate;
+        m_hangoverCount.store(std::ceil(hangoverTime / updatePeriod));
+    }
+    const QueueSample value = getSamplesMaxValue(sampleData.buffer, sampleData.frames, sampleData.nChannels);
+    m_queue.Put(QueueItem { trackId, channel, value });
+}
+
+void Meter::start()
+{
+    if (!m_meterUpdateTimer.isActive()) {
+        m_meterUpdateTimer.start();
+    }
+    m_stopTimer.stop();
+    m_running.store(true);
+    m_maxFramesPerPush = 0;
+}
+
+void Meter::stop()
+{
+    m_warningIssued = false;
+    m_running.store(false);
+    m_queue.Clear();
+    m_stopTimer.start();
 }
 
 void Meter::setSampleRate(double rate)
@@ -120,11 +138,11 @@ void Meter::setSampleRate(double rate)
     m_sampleRate = rate;
 }
 
-muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Meter::dataChanged(int64_t key)
+muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Meter::dataChanged(TrackId trackId)
 {
-    auto channel = m_channels[key];
-    channel.onClose(this, [this, key]() {
-        m_channels.erase(key);
+    auto& channel = m_trackData[trackId].notificationChannel;
+    channel.onClose(this, [this, trackId]() {
+        m_trackData.erase(trackId);
     });
 
     return channel;

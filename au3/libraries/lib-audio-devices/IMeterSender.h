@@ -16,10 +16,17 @@ public:
         const double firstSampleTimestamp;
     };
 
+    struct TrackId {
+        TrackId() = default;
+        explicit TrackId(int64_t v)
+            : value(v) {}
+        int64_t value = -1;
+        bool operator<(const TrackId& other) const { return value < other.value; }
+    };
+
     virtual ~IMeterSender() = default;
-    virtual void push(uint8_t channel, const InterleavedSampleData& sampleData, int64_t key = MASTER_TRACK_ID) = 0;
-    virtual void sendAll() = 0;
-    virtual void reset() = 0;
-    virtual void reserve(size_t size) = 0;
+    virtual void push(uint8_t channel, const InterleavedSampleData& sampleData, TrackId = TrackId { MASTER_TRACK_ID }) = 0;
+    virtual void start() = 0;
+    virtual void stop() = 0;
     virtual void setSampleRate(double rate) = 0;
 };

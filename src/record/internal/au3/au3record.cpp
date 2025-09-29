@@ -345,12 +345,12 @@ muse::Ret Au3Record::stop()
     auto& projectAudioIO = ProjectAudioIO::Get(project);
     auto playbackMeter = projectAudioIO.GetPlaybackMeter();
     if (playbackMeter) {
-        playbackMeter->reset();
+        playbackMeter->stop();
     }
 
     auto captureMeter = projectAudioIO.GetCaptureMeter();
     if (captureMeter) {
-        captureMeter->reset();
+        captureMeter->stop();
     }
 
     return make_ok();

@@ -10,10 +10,13 @@
 #include "au3audio/audiotypes.h"
 
 #include "libraries/lib-audio-devices/IMeterSender.h"
+#include "libraries/lib-utility/LockFreeQueue.h"
 
-namespace {
-constexpr double DEFAULT_SAMPLE_RATE = 44100.0;
-}
+#include <QTimer>
+
+#include <atomic>
+#include <map>
+#include <unordered_map>
 
 namespace au::au3 {
 class Meter : public IMeterSender, public muse::async::Asyncable
@@ -21,37 +24,58 @@ class Meter : public IMeterSender, public muse::async::Asyncable
 public:
     Meter();
 
-    void push(uint8_t channel, const IMeterSender::InterleavedSampleData& sampleData, int64_t key) override;
-    void sendAll() override;
-    void reset() override;
-    void reserve(size_t size) override;
+    void push(uint8_t channel, const IMeterSender::InterleavedSampleData& sampleData, TrackId) override;
+    void start() override;
+    void stop() override;
     void setSampleRate(double rate) override;
 
-    muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> dataChanged(int64_t key = MASTER_TRACK_ID);
+    muse::async::Channel<audio::audioch_t, audio::MeterSignal> dataChanged(TrackId key = TrackId { MASTER_TRACK_ID });
 
 private:
-    struct Sample
+    struct QueueSample
     {
-        float peak = 0.0f;
-        float rms = 0.0f;
+        float peak = 0.f;
+        float rms = 0.f;
     };
 
-    struct Data
+    struct QueueItem
     {
-        int64_t key;
-        au::audio::audioch_t channel;
-        au::audio::AudioSignalVal peak;
-        au::audio::AudioSignalVal rms;
+        TrackId trackId;
+        audio::audioch_t channel;
+        QueueSample sample;
     };
 
-    Sample getSamplesMaxValue(const float* buffer, size_t frames, size_t step);
-    void push(uint8_t channel, const Sample& sample, int64_t key);
+    static constexpr auto leastDb = -100.0f;
 
-    double m_sampleRate{ DEFAULT_SAMPLE_RATE };
-    const float m_smoothingCoef;
-    std::vector<Data> m_trackData;
-    std::map<int64_t, muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> > m_channels;
-    std::map<int64_t, Sample> m_maxValue{};
-    std::map<int64_t, double> m_lastSampleTimestamp{};
+    struct LevelState {
+        float db = leastDb;
+        int hangover = 0;
+    };
+
+    struct Levels
+    {
+        LevelState peak;
+        LevelState rms;
+    };
+
+    struct TrackData {
+        muse::async::Channel<audio::audioch_t, audio::MeterSignal> notificationChannel;
+        std::unordered_map<audio::audioch_t, Levels> channelLevels;
+    };
+
+    static QueueSample getSamplesMaxValue(const float* buffer, size_t frames, size_t step);
+    static void decay(LevelState&);
+    static void maybeBumpUp(LevelState&, float newLinValue, int hangover);
+
+    double m_sampleRate{ 44100.0 };
+    std::atomic<int> m_hangoverCount = 0;
+    int m_maxFramesPerPush = 0;
+    LockFreeQueue<QueueItem> m_queue{ 1024 };
+    std::map<TrackId, TrackData> m_trackData;
+    QTimer m_meterUpdateTimer;
+    QTimer m_stopTimer;
+    std::atomic<bool> m_running { false };
+    bool m_stopPending = true;
+    bool m_warningIssued = false;
 };
 }

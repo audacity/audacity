@@ -111,7 +111,7 @@ muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioOutpu
 muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioOutput::playbackTrackSignalChanges(
     int64_t key) const
 {
-    return m_outputMeter->dataChanged(key);
+    return m_outputMeter->dataChanged(IMeterSender::TrackId { key });
 }
 
 Au3Project* Au3AudioOutput::projectRef() const
