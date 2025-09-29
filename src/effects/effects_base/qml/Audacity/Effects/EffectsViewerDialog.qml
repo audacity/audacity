@@ -36,9 +36,7 @@ EffectStyledDialogView {
     contentWidth: Math.max(viewerLoader.width + prv.viewMargins * 2, prv.minimumWidth)
     contentHeight: {
         let height = viewerLoader.height + bottomPanel.height
-        if (prv.showPresets) {
-            height += topPanel.height
-        }
+        height += prv.showPresets ? topPanel.height : prv.viewMargins
         return height
     }
 
@@ -71,6 +69,8 @@ EffectStyledDialogView {
         anchors.fill: parent
 
         WindowContainer {
+            visible: prv.showPresets
+
             window: Window {
                 id: topPanel
 
@@ -98,8 +98,6 @@ EffectStyledDialogView {
 
                         parentWindow: root.window
                         instanceId: root.instanceId
-
-                        visible: prv.showPresets
                     }
                 }
 
@@ -110,9 +108,18 @@ EffectStyledDialogView {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    visible: effectFamily == EffectFamily.Builtin && prv.showPresets
+                    visible: effectFamily == EffectFamily.Builtin
                 }
             }
+        }
+
+        Item {
+            id: spacer
+
+            visible: !prv.showPresets
+
+            width: parent.width
+            height: prv.viewMargins
         }
 
         Loader {
