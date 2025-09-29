@@ -15,6 +15,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+if(APPLE)
+    if(NOT CMAKE_OSX_ARCHITECTURES)
+        set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "macOS build architectures" FORCE)
+    endif()
+endif()
+
 ###########################################
 # Muse Framework
 ###########################################
@@ -121,11 +127,9 @@ endif()
 option(MU_RUN_LRELEASE "Generate .qm files" ON)
 
 # === Compile ===
-option(MU_COMPILE_BUILD_MACOS_APPLE_SILICON "Build for Apple Silicon architecture. Only applicable on Macs with Apple Silicon, and requires suitable Qt version." OFF)
 option(MU_COMPILE_INSTALL_QTQML_FILES "Whether to bundle qml files along with the installation (relevant on MacOS only)" ON)
 option(MUSE_COMPILE_USE_UNITY "Use unity build." ON)
 option(MUSE_COMPILE_USE_CCACHE "Try use ccache" ON)
-
 
 ###########################################
 # Setup Configure
