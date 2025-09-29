@@ -11,6 +11,7 @@
 #include "ui/iinteractiveuriregister.h"
 #include "ui/uitypes.h"
 
+#include "internal/audiometeritem.h"
 #include "internal/projectsceneuiactions.h"
 #include "internal/projectsceneactionscontroller.h"
 #include "internal/projectsceneconfiguration.h"
@@ -190,6 +191,9 @@ void ProjectSceneModule::registerUiTypes()
 
     //track ruler
     qmlRegisterType<TrackRulerModel>("Audacity.ProjectScene", 1, 0, "TrackRulerModel");
+
+    // audio meter
+    qmlRegisterType<AudioMeterItem>("Audacity.ProjectScene", 1, 0, "AudioMeterItem");
 }
 
 void ProjectSceneModule::onInit(const muse::IApplication::RunMode& mode)

@@ -112,6 +112,8 @@ ListItemBlank {
     Component.onCompleted: {
         trackViewState.init()
         contextMenuModel.load()
+        leftOrMonoVolumePressureMeter.load()
+        rightVolumePressureMeter.load()
         // Disable ancestor's states
         // to provide custom styling
         states = []
@@ -292,28 +294,26 @@ ListItemBlank {
                     }
                 }
 
-                VolumePressureMeter {
+                AudioMeterItem {
                     id: leftOrMonoVolumePressureMeter
 
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
 
-                    indicatorWidth: parent.indicatorWidth
-
+                    width: parent.indicatorWidth
                     meterModel: trackViewState.meterModel
 
                     currentVolumePressure: root.item.leftChannelPressure
                     currentRMS: root.item.leftChannelRMS
                 }
 
-                VolumePressureMeter {
+                AudioMeterItem {
                     id: rightVolumePressureMeter
 
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
 
-                    indicatorWidth: parent.indicatorWidth
-
+                    width: parent.indicatorWidth
                     meterModel: trackViewState.meterModel
 
                     currentVolumePressure: root.item.rightChannelPressure

@@ -29,6 +29,8 @@ Item {
 
     Component.onCompleted: {
         model.init()
+        leftVolumePressure.load()
+        rightVolumePressure.load()
     }
 
     ColumnLayout {
@@ -79,37 +81,34 @@ Item {
                 anchors.topMargin: 2
                 anchors.bottomMargin: 6
 
-                VolumePressureMeter {
+                AudioMeterItem {
                     id: leftVolumePressure
 
                     anchors.top: parent.top
                     height: parent.height - ruler.bottomTextMargin
 
                     overloadHeight: 10
+                    width: 10
 
                     currentVolumePressure: model.leftChannelPressure
                     currentRMS: model.leftChannelRMS
 
                     meterModel: model.meterModel
-
-                    indicatorWidth: 10
                 }
 
-                VolumePressureMeter {
+                AudioMeterItem {
                     id: rightVolumePressure
-
 
                     anchors.top: parent.top
                     height: parent.height - ruler.bottomTextMargin
 
                     overloadHeight: 10
+                    width: 10
 
                     currentVolumePressure: model.rightChannelPressure
                     currentRMS: model.rightChannelRMS
 
                     meterModel: model.meterModel
-
-                    indicatorWidth: 10
                 }
 
                 VolumePressureRuler {

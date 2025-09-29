@@ -16,6 +16,9 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projectscenetypes.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audiometeritem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audiometeritem.h
+
     ${CMAKE_CURRENT_LIST_DIR}/internal/irealtimeeffectpaneltrackselection.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectpaneltrackselection.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectpaneltrackselection.h
