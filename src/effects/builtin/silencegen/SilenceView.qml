@@ -12,29 +12,28 @@ BuiltinEffectBase {
     property string title: qsTrc("projectscene/silence", "Silence")
     property alias isApplyAllowed: silence.isApplyAllowed
 
-    implicitHeight: 60
+    implicitWidth: 300
+    implicitHeight: column.implicitHeight
+
     model: silence
 
     SilenceViewModel {
         id: silence
     }
 
-    Row {
-        id: row
+    Column {
+        id: column
 
         anchors.fill: parent
-        anchors.margins: 0
+
         spacing: 16
 
         StyledTextLabel {
             text: qsTrc("projectscene/silence", "Duration:")
-            anchors.verticalCenter: parent.verticalCenter
         }
 
         Timecode {
             id: timecode
-
-            anchors.verticalCenter: parent.verticalCenter
 
             value: silence.duration
             mode: TimecodeModeSelector.Duration

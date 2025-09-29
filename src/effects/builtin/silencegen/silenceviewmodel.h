@@ -18,5 +18,6 @@ public:
 
 private:
     void doEmitSignals() override {}
+    bool usesPresets() const override { return false; }
 };
 }

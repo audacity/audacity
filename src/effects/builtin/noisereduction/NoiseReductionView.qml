@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
+
 import Muse.UiComponents
+
 import Audacity.Effects
 import Audacity.BuiltinEffects
 
@@ -10,8 +12,8 @@ BuiltinEffectBase {
     property string title: qsTrc("effects/noisereduction", "Noise Reduction")
     property bool isApplyAllowed: noiseReduction.isApplyAllowed
 
-    width: row.width
-    implicitHeight: column.height
+    implicitHeight: column.implicitHeight
+    implicitWidth: row.implicitWidth
 
     model: noiseReduction
 
