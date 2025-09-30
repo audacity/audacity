@@ -950,13 +950,20 @@ bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
     }
 
     auto progressCallBack = [this](double progressFraction) {
+        if (m_progress.isCanceled()) {
+            throw std::runtime_error("");
+        }
         if (m_progress.progress(progressFraction * 1000, 1000, "")) {
             QCoreApplication::processEvents();
         }
     };
 
-    waveTrack->ApplyPitchAndSpeed({ { clip->GetPlayStartTime(), clip->GetPlayEndTime() } }, progressCallBack);
-    LOGD() << "apply pitch and speed for clip: " << clipKey.clipId << ", track: " << clipKey.trackId;
+    try {
+        waveTrack->ApplyPitchAndSpeed({ { clip->GetPlayStartTime(), clip->GetPlayEndTime() } }, progressCallBack);
+    } catch (const std::runtime_error&) {
+        result = muse::ProgressResult::make_ret(muse::Ret::Code::Cancel);
+        return false;
+    }
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));         //! todo: replace with onClipChanged
