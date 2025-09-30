@@ -23,20 +23,13 @@ bool RealtimeEffectListItemMenuModel::belongsWithMe(effects::TrackId trackId) co
     return isMasterTrack() == (trackId == IRealtimeEffectService::masterTrackId);
 }
 
-void RealtimeEffectListItemMenuModel::doLoad()
-{
-    doPopulateMenu();
-}
-
 void RealtimeEffectListItemMenuModel::doPopulateMenu()
 {
     MenuItemList items;
 
     items << makeMenuItem("realtimeeffect-remove", muse::TranslatableString("projectscene", "No effect")) << makeSeparator();
 
-    const auto effectMenus = effects::utils::realtimeEffectMenu(
-        effectsConfiguration()->effectMenuOrganization(),
-        effectsProvider()->effectMetaList(), m_effectFilter, *this);
+    const auto effectMenus = this->effectMenus();
     if (!effectMenus.empty()) {
         items << makeSeparator() << effectMenus;
     }

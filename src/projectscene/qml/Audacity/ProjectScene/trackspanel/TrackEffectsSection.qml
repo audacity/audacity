@@ -21,6 +21,10 @@ Rectangle {
 
     color: ui.theme.backgroundPrimaryColor
 
+    Component.onCompleted: {
+        menuModel.init()
+    }
+
     QtObject {
         id: prv
         property bool enabled: effectList.trackName !== ""

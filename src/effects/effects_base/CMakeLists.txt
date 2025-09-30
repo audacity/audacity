@@ -16,6 +16,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/effectsutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/effectstypes.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsprovider.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectsmenuprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsuiengine.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectinstancesregister.h
@@ -41,6 +42,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsmenuprovider.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsmenuprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsrepositoryhelper.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsrepositoryhelper.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectinstancesregister.cpp

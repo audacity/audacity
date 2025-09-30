@@ -11,13 +11,11 @@ RealtimeEffectMenuModelBase::RealtimeEffectMenuModelBase(QObject* parent)
 {
 }
 
-void RealtimeEffectMenuModelBase::load()
+void RealtimeEffectMenuModelBase::init()
 {
-    AbstractMenuModel::load();
-
-    effectsProvider()->effectMetaListChanged().onNotify(this, [this] { doPopulateMenu(); });
-
-    effectsConfiguration()->effectMenuOrganizationChanged().onNotify(this, [this]{ doPopulateMenu(); });
+    effectsMenuProvider()->effectMenusChanged().onNotify(this, [this] {
+        m_menuIsUpToDate = false;
+    });
 
     trackSelection()->selectedTrackIdChanged().onNotify(this, [this]
     {
@@ -25,8 +23,20 @@ void RealtimeEffectMenuModelBase::load()
         endResetModel();
         onSelectedTrackIdChanged();
     });
+}
 
-    doLoad();
+void RealtimeEffectMenuModelBase::load()
+{
+    if (!m_menuIsUpToDate) {
+        doPopulateMenu();
+        m_menuIsUpToDate = true;
+    }
+    AbstractMenuModel::load();
+}
+
+muse::uicomponents::MenuItemList RealtimeEffectMenuModelBase::effectMenus()
+{
+    return effectsMenuProvider()->realtimeEffectMenu(*this);
 }
 
 std::optional<au::trackedit::TrackId> RealtimeEffectMenuModelBase::trackId() const

@@ -42,6 +42,7 @@ Q_MOC_INCLUDE(< QWindow >)
 #include "effects/effects_base/ieffectsprovider.h"
 #include "effects/effects_base/ieffectsconfiguration.h"
 #include "effects/effects_base/effectstypes.h"
+#include "effects/effects_base/ieffectsmenuprovider.h"
 #include "trackedit/iprojecthistory.h"
 
 //! TODO AU4
@@ -65,6 +66,7 @@ public:
     muse::Inject<IAppShellConfiguration> configuration = { this };
     muse::Inject<IAppMenuModelHook> appMenuModelHook = { this };
     muse::Inject<effects::IEffectsProvider> effectsProvider = { this };
+    muse::Inject<effects::IEffectsMenuProvider> effectsMenuProvider = { this };
     muse::Inject<effects::IEffectsConfiguration> effectsConfiguration = { this };
     muse::Inject<trackedit::IProjectHistory> projectHistory = { this };
 

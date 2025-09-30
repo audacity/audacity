@@ -8,6 +8,7 @@
 #include "trackedit/trackedittypes.h"
 #include "effects/effects_base/ieffectsconfiguration.h"
 #include "effects/effects_base/ieffectsprovider.h"
+#include "effects/effects_base/ieffectsmenuprovider.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "effects/effects_base/effectstypes.h"
 #include "effects/effects_base/effectsutils.h"
@@ -19,19 +20,22 @@ class RealtimeEffectMenuModelBase : public muse::uicomponents::AbstractMenuModel
     Q_OBJECT
     Q_PROPERTY(bool isMasterTrack READ isMasterTrack WRITE prop_setIsMasterTrack NOTIFY isMasterTrackChanged)
 
+    muse::Inject<effects::IEffectsMenuProvider> effectsMenuProvider;
     muse::Inject<IRealtimeEffectPanelTrackSelection> trackSelection;
+
 public:
     explicit RealtimeEffectMenuModelBase(QObject* parent = nullptr);
 
+    Q_INVOKABLE void init();
     Q_INVOKABLE void load() final override;
 
 protected:
     std::optional<au::trackedit::TrackId> trackId() const;
     bool isMasterTrack() const { return m_isMasterTrack; }
+    muse::uicomponents::MenuItemList effectMenus();
 
     muse::Inject<effects::IEffectsProvider> effectsProvider;
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
-    muse::Inject<effects::IEffectsConfiguration> effectsConfiguration;
 
     const effects::utils::EffectFilter m_effectFilter = [](const effects::EffectMeta& meta) {
         return !(meta.type == effects::EffectType::Processor && meta.isRealtimeCapable);
@@ -43,12 +47,12 @@ signals:
 private:
     void prop_setIsMasterTrack(bool isMasterTrack);
 
-    virtual void doLoad() = 0;
-    virtual void doPopulateMenu() = 0;
+    virtual void doPopulateMenu() { setItems(effectMenus()); }
     virtual void onSelectedTrackIdChanged() {}
 
-    muse::uicomponents::MenuItem* makeMenuSeparator() override { return makeSeparator(); }
+    muse::uicomponents::MenuItem* makeMenuSeparator() final override { return makeSeparator(); }
 
     bool m_isMasterTrack = false;
+    bool m_menuIsUpToDate = false;
 };
 }

@@ -13,19 +13,6 @@ using namespace muse::uicomponents;
 AddEffectMenuModel::AddEffectMenuModel(QObject* parent)
     : RealtimeEffectMenuModelBase(parent) {}
 
-void AddEffectMenuModel::doLoad()
-{
-    doPopulateMenu();
-}
-
-void AddEffectMenuModel::doPopulateMenu()
-{
-    const MenuItemList items
-        = au::effects::utils::realtimeEffectMenu(effectsConfiguration()->effectMenuOrganization(),
-                                                 effectsProvider()->effectMetaList(), m_effectFilter, *this);
-    setItems(items);
-}
-
 void AddEffectMenuModel::handleMenuItem(const QString& itemId)
 {
     const MenuItem& menuItem = findItem(itemId);
