@@ -258,7 +258,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             }
          );
 
-         S.Id(ID_WINDOW_TYPE).TieChoice(XXO("Window &type:"),
+         mWindowTypeChoiceCtrl = S.Id(ID_WINDOW_TYPE).TieChoice(XXO("Window &type:"),
             mTempSettings.windowType,
             mTypeChoices);
 
@@ -540,6 +540,23 @@ void SpectrumPrefs::OnDefaults(wxCommandEvent &)
 void SpectrumPrefs::OnAlgorithm(wxCommandEvent &evt)
 {
    EnableDisableSTFTOnlyControls();
+ 
+   // Adjust choices according to wavelet or not
+   wxChoice *const pPaddingSizeControl =
+       static_cast<wxChoice*>(wxWindow::FindWindowById(ID_PADDING_SIZE, this));
+   wxChoice *const pAlgorithmControl =
+       static_cast<wxChoice*>(wxWindow::FindWindowById(ID_ALGORITHM, this));
+    wxChoice *const pWindowControl =
+        static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_TYPE, this));
+    wxChoice *const pWindowSizeControl =
+        static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_SIZE, this));
+
+   if (pPaddingSizeControl && pAlgorithmControl && pAlgorithmControl->GetSelection() == SpectrogramSettings::algWavelet)
+   {
+      pPaddingSizeControl->SetSelection(0);
+      if (pWindowControl) pWindowControl->SetSelection(eWinFuncHann);
+      if (pWindowSizeControl && !mPopulating) pWindowSizeControl->SetSelection(11);
+   }
    OnControl(evt);
 }
 
@@ -548,10 +565,12 @@ void SpectrumPrefs::EnableDisableSTFTOnlyControls()
    // Enable or disable other controls that are applicable only to STFT.
    const bool STFT =
       (mAlgorithmChoice->GetSelection() != SpectrogramSettings::algPitchEAC);
+   const bool WAVELET = (mAlgorithmChoice->GetSelection() == SpectrogramSettings::algWavelet);
    mGain->Enable(STFT);
    mRange->Enable(STFT);
    mFrequencyGain->Enable(STFT);
-   mZeroPaddingChoiceCtrl->Enable(STFT);
+   mZeroPaddingChoiceCtrl->Enable(STFT && ! WAVELET);
+   mWindowTypeChoiceCtrl->Enable(!WAVELET);
 }
 
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)

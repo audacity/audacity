@@ -74,6 +74,9 @@ public:
    static const EnumValueSymbols &GetScaleNames();
    static const EnumValueSymbols &GetColorSchemeNames();
    static const TranslatableStrings &GetAlgorithmNames();
+    
+   static constexpr double MinimumWaveletFrequency = 20.0;
+   static constexpr int NumberOfWaveletsPerOctave = 12;
 
    //! Return either the track's independent settings or global defaults
    //! Mutative access to attachment even if the track argument is const
@@ -111,7 +114,7 @@ public:
 
    void InvalidateCaches();
    void DestroyWindows();
-   void CacheWindows();
+   void CacheWindows(double sampleFrequency);
    void ConvertToEnumeratedWindowSizes();
    void ConvertToActualWindowSizes();
 
@@ -177,7 +180,7 @@ public:
       algSTFT = 0,
       algReassignment,
       algPitchEAC,
-
+      algWavelet,
       algNumAlgorithms,
    };
    Algorithm algorithm;
@@ -198,6 +201,10 @@ public:
    // Variables used for computing the spectrum
    HFFT           hFFT;
    Floats         window;
+   FloatBuffers   waveletsRe;
+   FloatBuffers   waveletsIm;
+   ArrayOf<size_t>   waveletSizes;
+   size_t         waveletMaxLength;
 
    // Two other windows for computing reassigned spectrogram
    Floats         tWindow; // Window times time parameter

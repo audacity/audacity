@@ -171,6 +171,10 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
    // Do not copy these!
    , hFFT{}
    , window{}
+   , waveletsRe{}
+   , waveletsIm{}
+   , waveletSizes{}
+   , waveletMaxLength(0)
    , tWindow{}
    , dWindow{}
 {
@@ -284,6 +288,7 @@ const TranslatableStrings &SpectrogramSettings::GetAlgorithmNames()
       XO("Reassignment") ,
       /* i18n-hint: EAC abbreviates "Enhanced Autocorrelation" */
       XO("Pitch (EAC)") ,
+      XO("Wavelet (1/6 Octave Hann)") ,
    };
    return results;
 }
@@ -527,6 +532,10 @@ void SpectrogramSettings::DestroyWindows()
 {
    hFFT.reset();
    window.reset();
+   waveletsRe.reset();
+   waveletsIm.reset();
+   waveletSizes.reset();
+   waveletMaxLength = 0;
    dWindow.reset();
    tWindow.reset();
 }
@@ -585,24 +594,105 @@ namespace
       }
       for (ii = padding; ii < endOfWindow; ++ii)
          window[ii] *= scale;
-   }
 }
 
-void SpectrogramSettings::CacheWindows()
+size_t RecreateWavelet(size_t &size, Floats &waveletRe, Floats &waveletIm, double frequency, double samplingFrequency, size_t bins)
 {
-   if (hFFT == NULL || window == NULL) {
+    // Skip low frequencies since resolution is not good enough. Also this presents an optimisation
+    // When doing wavelet analysis we simulate an FFT with sufficient resolution to contain the finest resolution downto 20 Hz
+    // This is really a waste of memory and could be optimised
+    // On the other hand, we do not offer sufficient resolution below 20 Hz which could maybe be challenged
+    // Directly using minFreq to govern resolution seems to be too demanding given the defaults
+    //float calculationStartFrequency = delta / (exp((log(2.0) / SpectrogramSettings::NumberOfWaveletsPerOctave)) - 1.0);
 
-      double scale;
-      auto factor = ZeroPaddingFactor();
-      const auto fftLen = WindowSize() * factor;
-      const auto padding = (WindowSize() * (factor - 1)) / 2;
+    if (frequency == 0)
+    {
+        size = 0;
+        waveletRe = Floats{};
+        waveletIm = Floats{};
+        return 0;
+    }
+    
+    // We will then create a modulated Hann window at the given frequency
+    // Window length must be chosen such that spectral power bandwidth is 1/6th of an octave
+    // This bandwidth constraint then in return governs the duration of the hann window
+    // The EQNBW of Hann window is 1.5 times 1/T
+    // Formula to obtain duration is thus
+    // RMSBW = sqrt(1.5) / T
+    // T = sqrt(1.5) / RMSBW
+    // RMSBW = 1/6th octave, ie factor 2^0.16667 = 1.122 between bands
+    // T = sqrt(1.5) / (sqrt(1.122) * Fc - Fc / sqrt(1.122)) = sqrt(1.5) / (sqrt(1.122) - 1/sqrt(1.122) / Fc = 10.6 / Fc
+    const double bwFactor = pow(2, 1.0/6.0);
+    const double durationFactor = sqrt(1.5) / (sqrt(bwFactor) - sqrt(1/bwFactor));
+    const double PI = 4.0 * atan(1);
 
-      hFFT = GetFFT(fftLen);
-      RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
-      if (algorithm == algReassignment) {
-         RecreateWindow(tWindow, TWINDOW, fftLen, padding, windowType, windowSize, scale);
-         RecreateWindow(dWindow, DWINDOW, fftLen, padding, windowType, windowSize, scale);
-      }
+    double waveletDurationHalf = 0.5 * durationFactor / frequency; // in seconds
+    size = (int) (waveletDurationHalf * samplingFrequency); // in samples
+    if (size > bins)
+    {
+        // There is no point in using wavelets that exceed resolution in our frequency array (under sampling, really)
+        size = 0;
+        waveletRe = Floats{};
+        waveletIm = Floats{};
+        return 0;
+    }
+
+
+    waveletRe = Floats{size};
+    waveletIm = Floats{size};
+    
+    for (int i = 0; i < size; i++)
+    {
+        double dt = i / samplingFrequency;
+        double relative_dt = dt / waveletDurationHalf;
+        double angle = PI + relative_dt * PI;
+        double envelope = (1 - cos(angle)) / (waveletDurationHalf * samplingFrequency * 2.0);
+        waveletRe[i] = envelope * cos(2 * PI * frequency * dt);
+        waveletIm[i] = envelope * sin(2 * PI * frequency * dt);
+    }
+    
+    return size;
+}
+}
+
+void SpectrogramSettings::CacheWindows(double sampleFrequency)
+{
+   if (algorithm == algWavelet)
+   {
+       if (waveletsRe == NULL || waveletsIm == NULL)
+       {
+           size_t num = NBins();
+           waveletsRe = FloatBuffers {num};
+           waveletsIm = FloatBuffers {num};
+           waveletSizes = ArrayOf<size_t> {num};
+           waveletMaxLength = 0;
+           double delta = double(sampleFrequency/2) / num;
+           for (int i = 0; i < num; i++)
+           {
+               size_t len = RecreateWavelet(waveletSizes[i], waveletsRe[i], waveletsIm[i], i * delta, sampleFrequency, num);
+               if (len > waveletMaxLength)
+               {
+                   waveletMaxLength = len;
+               }
+           }
+       }
+   }
+   else
+   {
+       if (hFFT == NULL || window == NULL) {
+           
+           double scale;
+           auto factor = ZeroPaddingFactor();
+           const auto fftLen = WindowSize() * factor;
+           const auto padding = (WindowSize() * (factor - 1)) / 2;
+           
+           hFFT = GetFFT(fftLen);
+           RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
+           if (algorithm == algReassignment) {
+               RecreateWindow(tWindow, TWINDOW, fftLen, padding, windowType, windowSize, scale);
+               RecreateWindow(dWindow, DWINDOW, fftLen, padding, windowType, windowSize, scale);
+           }
+       }
    }
 }
 
@@ -648,7 +738,7 @@ size_t SpectrogramSettings::GetFFTLength() const
 //#ifndef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
   // return windowSize;
 //#else
-   return windowSize * ((algorithm != algPitchEAC) ? zeroPaddingFactor : 1);
+   return windowSize * ((algorithm != algPitchEAC && algorithm != algWavelet) ? zeroPaddingFactor : 1);
 //#endif
 }
 
