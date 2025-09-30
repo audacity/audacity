@@ -83,6 +83,7 @@ class SpectrumPrefs final : public PrefsPanel
     spectrograms by interpolating in frequency domain. */
    int mZeroPaddingChoice;
    wxChoice *mZeroPaddingChoiceCtrl;
+   wxChoice *mWindowTypeChoiceCtrl;
    TranslatableStrings mZeroPaddingChoices;
 
    TranslatableStrings mTypeChoices;

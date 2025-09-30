@@ -258,7 +258,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             }
          );
 
-         S.Id(ID_WINDOW_TYPE).TieChoice(XXO("Window &type:"),
+         mWindowTypeChoiceCtrl = S.Id(ID_WINDOW_TYPE).TieChoice(XXO("Window &type:"),
             mTempSettings.windowType,
             mTypeChoices);
 
@@ -540,6 +540,35 @@ void SpectrumPrefs::OnDefaults(wxCommandEvent &)
 void SpectrumPrefs::OnAlgorithm(wxCommandEvent &evt)
 {
    EnableDisableSTFTOnlyControls();
+ 
+   // Adjust choices according to wavelet or not
+   wxChoice *const pAlgorithmControl =
+      static_cast<wxChoice*>(wxWindow::FindWindowById(ID_ALGORITHM, this));
+
+   assert(pAlgorithmControl);
+   if (pAlgorithmControl->GetSelection() == SpectrogramSettings::algWavelet)
+   {
+      wxChoice *const pPaddingSizeControl =
+         static_cast<wxChoice*>(wxWindow::FindWindowById(ID_PADDING_SIZE, this));
+      wxChoice *const pWindowControl =
+         static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_TYPE, this));
+      wxChoice *const pWindowSizeControl =
+         static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_SIZE, this));
+      assert(pPaddingSizeControl);
+      assert(pWindowControl);
+      assert(pWindowSizeControl);
+      pPaddingSizeControl->SetSelection(0); // Assumption is here that no zeropadding is the first choice. This assumption is logically built into code
+      pWindowControl->SetSelection(eWinFuncHann);
+
+      // Assure that we will use a default maximum window size which is valid
+      // We use size with index 11, we assure  11 which is
+      static const int LogWaveletWindowSize = 14; // Prefere default of 16384 window length (1<<14)
+      static_assert(LogWaveletWindowSize >= SpectrogramSettings::LogMinWindowSize);
+      static_assert(LogWaveletWindowSize <= SpectrogramSettings::LogMaxWindowSize);
+
+      // Find the selection index for window length 16384 now that we know it is a valid choice
+      if (!mPopulating) pWindowSizeControl->SetSelection(LogWaveletWindowSize - SpectrogramSettings::LogMinWindowSize);
+   }
    OnControl(evt);
 }
 
@@ -548,10 +577,12 @@ void SpectrumPrefs::EnableDisableSTFTOnlyControls()
    // Enable or disable other controls that are applicable only to STFT.
    const bool STFT =
       (mAlgorithmChoice->GetSelection() != SpectrogramSettings::algPitchEAC);
+   const bool WAVELET = (mAlgorithmChoice->GetSelection() == SpectrogramSettings::algWavelet);
    mGain->Enable(STFT);
    mRange->Enable(STFT);
    mFrequencyGain->Enable(STFT);
-   mZeroPaddingChoiceCtrl->Enable(STFT);
+   mZeroPaddingChoiceCtrl->Enable(STFT && ! WAVELET);
+   mWindowTypeChoiceCtrl->Enable(!WAVELET);
 }
 
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
