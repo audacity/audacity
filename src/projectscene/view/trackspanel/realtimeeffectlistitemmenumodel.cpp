@@ -63,11 +63,6 @@ void RealtimeEffectListItemMenuModel::handleMenuItem(const QString& itemId)
     }
 }
 
-QVariantList RealtimeEffectListItemMenuModel::availableEffects() const
-{
-    return menuItemListToVariantList(items());
-}
-
 QString RealtimeEffectListItemMenuModel::prop_effectState() const
 {
     if (!m_effectState) {

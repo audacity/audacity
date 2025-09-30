@@ -12,13 +12,10 @@ class RealtimeEffectListItemMenuModel : public RealtimeEffectMenuModelBase
 {
     Q_OBJECT
 
-    Q_PROPERTY(QVariantList availableEffects READ availableEffects)
     Q_PROPERTY(QString effectState READ prop_effectState WRITE prop_setEffectState NOTIFY effectStateChanged)
 
 public:
     explicit RealtimeEffectListItemMenuModel(QObject* parent = nullptr);
-
-    QVariantList availableEffects() const;
 
     QString prop_effectState() const;
     void prop_setEffectState(const QString&);

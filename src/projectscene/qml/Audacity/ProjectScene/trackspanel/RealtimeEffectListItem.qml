@@ -13,7 +13,6 @@ ListItemBlank {
 
     property var item: null
     property var listView: null
-    property var availableEffects: null
     property int index: -1
     property int scrollOffset: 0
     property int topMargin: 0
@@ -41,7 +40,7 @@ ListItemBlank {
     hoverHitColor: "transparent"
 
     Component.onCompleted: {
-        menuModel.load()
+        menuModel.init()
     }
 
     Behavior on y {
@@ -231,7 +230,8 @@ ListItemBlank {
             }
 
             onClicked: {
-                effectMenuLoader.toggleOpened(menuModel.availableEffects)
+                menuModel.load()
+                effectMenuLoader.toggleOpened(menuModel)
             }
 
             StyledMenuLoader {
