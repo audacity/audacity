@@ -21,17 +21,79 @@ void Au3BasicUI::DoShowErrorDialog(const BasicUI::WindowPlacement& placement, co
                                    const BasicUI::ErrorDialogOptions& options)
 {
     Q_UNUSED(placement);
-    Q_UNUSED(dlogTitle);
-    Q_UNUSED(message);
     Q_UNUSED(helpPage);
-    Q_UNUSED(options);
+
+    LOGE() << dlogTitle.Translation().ToStdString();
+    LOGE() << message.Translation().ToStdString();
+
+    if (!options.log.empty()) {
+        LOGE() << QString::fromStdWString(options.log);
+    }
+
+    interactive()->error(dlogTitle.Translation().ToStdString(), message.Translation().ToStdString());
 }
 
 BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const TranslatableString& message, BasicUI::MessageBoxOptions options)
 {
-    Q_UNUSED(message);
-    Q_UNUSED(options);
-    return BasicUI::MessageBoxResult::None;
+    LOGI() << message.Translation().ToStdString();
+
+    muse::IInteractive::ButtonDatas buttons;
+
+    if (options.cancelButton) {
+        buttons.push_back(interactive()->buttonData(muse::IInteractive::Button::Cancel));
+    }
+
+    switch (options.buttonStyle) {
+    case BasicUI::Button::Default:
+    case BasicUI::Button::Ok:
+        buttons.push_back(interactive()->buttonData(muse::IInteractive::Button::Ok));
+        break;
+    case BasicUI::Button::YesNo:
+        buttons.push_back(interactive()->buttonData(muse::IInteractive::Button::Yes));
+        buttons.push_back(interactive()->buttonData(muse::IInteractive::Button::No));
+    }
+
+    muse::IInteractive::Result iret;
+
+    switch (options.iconStyle) {
+    case BasicUI::Icon::Information:
+        iret = interactive()->infoSync("", message.Translation().ToStdString(), buttons);
+        break;
+    case BasicUI::Icon::Question:
+        iret = interactive()->questionSync("", message.Translation().ToStdString(), buttons);
+        break;
+    case BasicUI::Icon::Error:
+        iret = interactive()->errorSync("", message.Translation().ToStdString(), buttons);
+        break;
+    case BasicUI::Icon::Warning:
+        iret = interactive()->warningSync("", message.Translation().ToStdString(), buttons);
+        break;
+    default:
+        iret = { static_cast<int>(muse::IInteractive::Button::NoButton) };
+        break;
+    }
+
+    BasicUI::MessageBoxResult ret;
+
+    switch (iret.standardButton()) {
+    case muse::IInteractive::Button::Ok:
+        ret = BasicUI::MessageBoxResult::Ok;
+        break;
+    case muse::IInteractive::Button::Cancel:
+        ret = BasicUI::MessageBoxResult::Cancel;
+        break;
+    case muse::IInteractive::Button::Yes:
+        ret = BasicUI::MessageBoxResult::Yes;
+        break;
+    case muse::IInteractive::Button::No:
+        ret = BasicUI::MessageBoxResult::No;
+        break;
+    default:
+        ret = BasicUI::MessageBoxResult::None;
+        break;
+    }
+
+    return ret;
 }
 
 std::unique_ptr<BasicUI::ProgressDialog> Au3BasicUI::DoMakeProgress(const TranslatableString& title, const TranslatableString& message,

@@ -5,11 +5,15 @@
 #pragma once
 
 #include "global/async/asyncable.h"
+#include "modularity/ioc.h"
+#include "iinteractive.h"
 
 #include "BasicUI.h"
 
 class Au3BasicUI final : public BasicUI::Services, public muse::async::Asyncable
 {
+    muse::Inject<muse::IInteractive> interactive;
+
 protected:
     void DoCallAfter(const BasicUI::Action& action) override;
     void DoYield() override;
