@@ -137,7 +137,7 @@ Rectangle {
                 isMasterTrack: effectList.isMasterTrack
             }
 
-            onClicked: function() {
+            onClicked: function () {
                 menuModel.load()
                 effectMenuLoader.toggleOpened(menuModel)
             }
@@ -145,7 +145,7 @@ Rectangle {
             StyledMenuLoader {
                 id: effectMenuLoader
 
-                onHandleMenuItem: function(itemId) {
+                onHandleMenuItem: function (itemId) {
                     menuModel.handleMenuItem(itemId)
                 }
             }
