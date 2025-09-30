@@ -55,6 +55,12 @@ void Au3SelectionController::init()
             restorer.selectionSetter = [this](const ClipAndTimeSelection& selection) {
                 restoreSelection(selection);
             };
+
+            auto& tracks = ::TrackList::Get(projectRef());
+            if (!tracks.empty()) {
+                const auto it = tracks.begin();
+                setFocusedTrack(TrackId((*it)->GetId()));
+            }
         } else {
             m_tracksSubc.Reset();
         }

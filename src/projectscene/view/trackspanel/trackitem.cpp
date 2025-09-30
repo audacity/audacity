@@ -43,6 +43,11 @@ void TrackItem::init(const trackedit::Track& track)
 {
     m_trackId = track.id;
 
+    if (m_trackType != track.type) {
+        m_trackType = track.type;
+        emit channelCountChanged();
+    }
+
     playback()->audioOutput()->playbackTrackSignalChanges(m_trackId)
     .onReceive(this, [this](au::audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
         setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
@@ -62,19 +67,9 @@ void TrackItem::init(const trackedit::Track& track)
         checkMainAudioInput();
     });
 
-    const int inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
-    m_recordStreamChannelsMatch = (m_trackType == trackedit::TrackType::Mono && inputChannelsCount == 1)
-                                  || (m_trackType == trackedit::TrackType::Stereo && inputChannelsCount == 2);
-    checkMainAudioInput();
-
     if (m_title != track.title) {
         m_title = track.title;
         emit titleChanged(m_title);
-    }
-
-    if (m_trackType != track.type) {
-        m_trackType = track.type;
-        emit channelCountChanged();
     }
 
     const auto ctrl = trackPlaybackControl();
@@ -109,8 +104,14 @@ void TrackItem::init(const trackedit::Track& track)
         }
     });
 
+    const int inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
+    m_recordStreamChannelsMatch = (m_trackType == trackedit::TrackType::Mono && inputChannelsCount == 1)
+                                  || (m_trackType == trackedit::TrackType::Stereo && inputChannelsCount == 2);
+
     m_isFocused = selectionController()->focusedTrack() == m_trackId;
     emit isFocusedChanged();
+
+    checkMainAudioInput();
 }
 
 au::trackedit::TrackId TrackItem::trackId() const

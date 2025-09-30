@@ -13,6 +13,7 @@
 #include "Track.h"
 
 #include "au3wrap/au3types.h"
+#include "trackedittypes.h"
 
 namespace au::trackedit {
 struct ClipAndTimeSelection;
@@ -95,7 +96,11 @@ private:
 
     template<typename T>
     struct Val {
-        T val = T();
+        Val()
+            : val(T()) {}
+        Val(const T& val)
+            : val(val) {}
+        T val;
         muse::async::Channel<T> changed;
         muse::async::Channel<T> selected;
 
@@ -125,6 +130,6 @@ private:
     Val<trackedit::secs_t> m_selectionStartTime; // indicates where user started selection
 
     // track focus state
-    Val<TrackId> m_focusedTrack;
+    Val<TrackId> m_focusedTrack = Val<TrackId> { TrackId(-1) };
 };
 }
