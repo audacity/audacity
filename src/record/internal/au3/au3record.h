@@ -4,15 +4,16 @@
 
 #pragma once
 
-#include "modularity/ioc.h"
-
-#include "actions/iactionsdispatcher.h"
-#include "context/iglobalcontext.h"
 #include "global/async/asyncable.h"
 
+#include "modularity/ioc.h"
+#include "context/iglobalcontext.h"
 #include "au3audio/iaudioengine.h"
-#include "au3wrap/au3types.h"
+#include "actions/iactionsdispatcher.h"
 #include "trackedit/iprojecthistory.h"
+#include "playback/iplayback.h"
+
+#include "au3wrap/au3types.h"
 
 #include "../../irecord.h"
 #include "irecordcontroller.h"
@@ -27,6 +28,7 @@ class Au3Record : public IRecord, public muse::async::Asyncable
     muse::Inject<au::audio::IAudioEngine> audioEngine;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
+    muse::Inject<au::playback::IPlayback> playback;
 
 public:
     void init();
