@@ -242,13 +242,8 @@ muse::Ret Au3Record::start()
 
     Au3Project& project = projectRef();
 
-    const auto& selectedRegion = ViewInfo::Get(project).selectedRegion;
-    double t0 = selectedRegion.t0();
-    double t1 = selectedRegion.t1();
-    // When no time selection, recording duration is 'unlimited'.
-    if (t1 == t0) {
-        t1 = DBL_MAX;
-    }
+    double t0 = playback()->player()->playbackPosition();
+    double t1 = DBL_MAX;
 
     auto options = ProjectAudioIO::GetDefaultOptions(project);
     WritableSampleTrackArray existingTracks;
@@ -294,13 +289,6 @@ muse::Ret Au3Record::start()
             }
             // If suitable tracks still not found, will record into NEW ones,
             // starting with t0
-        }
-
-        // Whether we decided on NEW tracks or not:
-        if (t1 <= selectedRegion.t0() && selectedRegion.t1() > selectedRegion.t0()) {
-            t1 = selectedRegion.t1();   // record within the selection
-        } else {
-            t1 = DBL_MAX;        // record for a long, long time
         }
     }
 
