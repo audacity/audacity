@@ -6,8 +6,11 @@
 #include "global/timer.h"
 #include "global/async/asyncable.h"
 #include "global/async/notification.h"
+#include "global/async/channel.h"
 
 #include "libraries/lib-audio-io/AudioIOListener.h"
+
+#include "au3wrap/au3types.h"
 
 namespace au::audio {
 class Au3AudioIOListener : public AudioIOListener, public muse::async::Asyncable
@@ -36,10 +39,14 @@ public:
     muse::async::Notification commitRequested() const { return m_commitRequested; }
     muse::async::Notification finished() const { return m_finished; }
 
+    muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const { return m_recordingClipChanged; }
+
 private:
     muse::async::Notification m_updateRequested;
     muse::async::Notification m_commitRequested;
     muse::async::Notification m_finished;
+
+    muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> m_recordingClipChanged;
 
     muse::Timer m_timer;
 };

@@ -40,7 +40,7 @@ public:
      tracks, and in the sequence that they were added.  They can be
      distinguished from actual tracks because they have default TrackId.
      */
-    void RegisterPendingNewTracks(TrackList&& list);
+    void RegisterPendingNewTracks(TrackList& list);
 
     //! Find anything registered with TrackList::RegisterPendingChangedTrack and
     //! not yet cleared or applied; if no such exists, return the given channel

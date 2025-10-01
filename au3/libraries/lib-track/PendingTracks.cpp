@@ -50,7 +50,7 @@ PendingTracks::PendingTracks(AudacityProject& project)
 
 PendingTracks::~PendingTracks() = default;
 
-void PendingTracks::RegisterPendingNewTracks(TrackList&& list)
+void PendingTracks::RegisterPendingNewTracks(TrackList& list)
 {
     mTracks.Append(std::move(list), false);
 }
