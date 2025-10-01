@@ -10,6 +10,7 @@
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
 #include "libraries/lib-track-selection/TrackFocus.h"
 #include "libraries/lib-track/Track.h"
+#include "libraries/lib-track/PendingTracks.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-stretching-sequence/StretchingSequence.h"
@@ -178,23 +179,52 @@ void Au3Record::init()
     m_audioInput = std::make_shared<Au3AudioInput>();
 
     audioEngine()->updateRequested().onNotify(this, [this]() {
-        if (m_recordData.clipsKeys.empty()) {
+        auto& pendingTracks = PendingTracks::Get(projectRef());
+        pendingTracks.UpdatePendingTracks();
+    });
+
+    audioEngine()->recordingClipChanged().onReceive(this, [this](const au3::Au3TrackId& trackId, const au3::Au3ClipId& clipId) {
+        Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), trackId);
+
+        Au3Track* pendingTrack = &PendingTracks::Get(projectRef())
+                                 .SubstitutePendingChangedTrack(*origWaveTrack);
+
+        Au3WaveTrack* pendingWaveTrack = dynamic_cast<Au3WaveTrack*>(pendingTrack);
+        IF_ASSERT_FAILED(pendingWaveTrack) {
             return;
         }
 
-        notifyAboutRecordClipsChanged();
+        auto pendingClipId = DomAccessor::findMatchedClip(pendingWaveTrack, origWaveTrack, clipId);
+        if (pendingClipId == -1) {
+            return;
+        }
+
+        std::shared_ptr<Au3WaveClip> pendingClip = DomAccessor::findWaveClip(pendingWaveTrack, pendingClipId);
+        IF_ASSERT_FAILED(pendingClip) {
+            return;
+        }
+
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+        // IMPORTANT: getting pending clip and assigning it to the clip from original track
+        // to make that possible we need to assign orignal clip's ID to the pending clip
+        // so onClipChanged accepts it
+        auto pendingClipWithFakeId = DomConverter::clip(pendingWaveTrack, pendingClip.get());
+        pendingClipWithFakeId.key.clipId = clipId;
+        prj->notifyAboutClipChanged(pendingClipWithFakeId);
+
+        m_recordPosition.set(pendingClip->GetPlayEndTime());
     });
 
     audioEngine()->commitRequested().onNotify(this, [this]() {
+        auto& pendingTracks = PendingTracks::Get(projectRef());
+        pendingTracks.ApplyPendingTracks();
         commitRecording();
 
         dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1<double>(globalContext()->recordPosition()));
     });
 
     audioEngine()->finished().onNotify(this, [this]() {
-        notifyAboutRecordClipsChanged();
-
-        m_recordData.clear();
     });
 }
 
@@ -429,6 +459,7 @@ Ret Au3Record::doRecord(Au3Project& project,
         return clip;
     };
 
+    auto& pendingTracks = PendingTracks::Get(project);
     if (appendRecord) {
         // Append recording:
         // Pad selected/all wave tracks to make them all the same length
@@ -438,6 +469,7 @@ Ret Au3Record::doRecord(Au3Project& project,
                 assert(false);
                 continue;
             }
+
             // If the track was chosen for recording and playback both,
             // remember the original in preroll tracks, before making the
             // pending replacement.
@@ -467,29 +499,44 @@ Ret Au3Record::doRecord(Au3Project& project,
             // - or the check for creating a new clip or not should be more
             // general than that ...
             assert(!recordingStartsBeforeTrackEnd || lastClip->WithinPlayRegion(recordingStart));
-
             Au3WaveTrack::IntervalHolder newClip{};
             if (!recordingStartsBeforeTrackEnd
                 || lastClip->HasPitchOrSpeed()) {
                 newClip = insertEmptyInterval(*wt, t0, true);
             }
 
+            // A function that copies all the non-sample data between
+            // wave tracks; in case the track recorded to changes scale
+            // type (for instance), during the recording.
+            auto updater = [this, trackId = wt->GetId(), clipId = newClip->GetId()](Au3Track& d, const Au3Track& s){
+                assert(d.NChannels() == s.NChannels());
+                auto& dst = static_cast<Au3WaveTrack&>(d);
+                auto& src = static_cast<const Au3WaveTrack&>(s);
+                dst.Init(src);
+
+                audioEngine()->recordingClipChanged().send(trackId, clipId);
+            };
+
+            // Get a copy of the track to be appended, to be pushed into
+            // undo history only later.
+            const auto pending = static_cast<Au3WaveTrack*>(
+                pendingTracks.RegisterPendingChangedTrack(updater, wt)
+                );
             // Source clip was marked as placeholder so that it would not be
             // skipped in clip copying.  Un-mark it and its copy now
             if (newClip) {
                 newClip->SetIsPlaceholder(false);
             }
-            if (auto copiedClip = wt->NewestOrNewClip()) {
+            if (auto copiedClip = pending->NewestOrNewClip()) {
                 copiedClip->SetIsPlaceholder(false);
             }
-            transportSequences.captureSequences.push_back(sequence);
+            transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
 
-            m_recordData.clipsKeys.push_back({ wt->GetId(), newClip->GetId() });
-
-            trackedit::Clip _newClip = DomConverter::clip(wt, newClip.get());
+            trackedit::Clip _newClip = DomConverter::clip(pending, newClip.get());
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutClipAdded(_newClip);
         }
+        pendingTracks.UpdatePendingTracks();
     }
 
     if (transportSequences.captureSequences.empty()) {
@@ -521,7 +568,7 @@ Ret Au3Record::doRecord(Au3Project& project,
         }
 
         int trackCounter = 0;
-        for (auto& newTrack : newTracks) {
+        for (auto newTrack : newTracks) {
             // Quantize bounds to the rate of the new track.
             if (t0 < DBL_MAX) {
                 t0 = newTrack->SnapToSample(t0);
@@ -563,20 +610,42 @@ Ret Au3Record::doRecord(Au3Project& project,
             }
 
             //create a new clip with a proper name before recording is started
-            Au3WaveTrack::IntervalHolder newClip = insertEmptyInterval(*newTrack, t0, false);
+            auto newClip = insertEmptyInterval(*newTrack, t0, false);
 
-            transportSequences.captureSequences.push_back(
-                std::static_pointer_cast<Au3WaveTrack>(newTrack->shared_from_this())
+            auto list = TrackList::Create(p);
+
+            for (auto& w : newTracks) {
+                list->Add(std::static_pointer_cast<Track>(std::move(w)));
+            }
+
+            pendingTracks.RegisterPendingNewTracks(*list);
+
+            auto updater = [this, trackId = newTrack->GetId(), clipId = newClip->GetId()](Au3Track& d, const Au3Track& s){
+                assert(d.NChannels() == s.NChannels());
+                auto& dst = static_cast<Au3WaveTrack&>(d);
+                auto& src = static_cast<const Au3WaveTrack&>(s);
+                dst.Init(src);
+
+                audioEngine()->recordingClipChanged().send(trackId, clipId);
+            };
+
+            const auto pending = static_cast<Au3WaveTrack*>(
+                pendingTracks.RegisterPendingChangedTrack(updater, newTrack.get())
                 );
-
-            trackList.Append(std::static_pointer_cast<Au3WaveTrack>(newTrack->shared_from_this()));
-
-            m_recordData.tracksIds.push_back(newTrack->GetId());
-            m_recordData.clipsKeys.push_back({ newTrack->GetId(), newClip->GetId() });
+            // Source clip was marked as placeholder so that it would not be
+            // skipped in clip copying.  Un-mark it and its copy now
+            if (newClip) {
+                newClip->SetIsPlaceholder(false);
+            }
+            if (auto copiedClip = pending->NewestOrNewClip()) {
+                copiedClip->SetIsPlaceholder(false);
+            }
+            transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
 
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
         }
+        pendingTracks.UpdatePendingTracks();
     }
 
     int token = gAudioIO->StartStream(transportSequences, t0, t1, t1, options);
@@ -600,31 +669,7 @@ Ret Au3Record::doRecord(Au3Project& project,
 void Au3Record::cancelRecording()
 {
     Au3Project& project = projectRef();
-
-    for (const trackedit::ClipKey& clipKey : m_recordData.clipsKeys) {
-        Au3WaveTrack* track = DomAccessor::findWaveTrack(project, Au3TrackId(clipKey.trackId));
-        IF_ASSERT_FAILED(track) {
-            return;
-        }
-
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(track, Au3ClipId(clipKey.clipId));
-        IF_ASSERT_FAILED(clip) {
-            return;
-        }
-
-        track->RemoveInterval(clip);
-    }
-
-    auto& trackList = Au3TrackList::Get(project);
-
-    for (const trackedit::TrackId& trackId : m_recordData.tracksIds) {
-        Au3WaveTrack* track = DomAccessor::findWaveTrack(project, Au3TrackId(trackId));
-        IF_ASSERT_FAILED(track) {
-            return;
-        }
-
-        trackList.Remove(*track);
-    }
+    PendingTracks::Get(project).ClearPendingTracks();
 }
 
 void Au3Record::commitRecording()
