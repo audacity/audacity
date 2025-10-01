@@ -6,11 +6,17 @@
 
 #include "progressdialog.h"
 
-ProgressDialog::ProgressDialog()
+ProgressDialog::ProgressDialog(const std::string& title)
+    : m_progressTitle{title}
 {
     // Of course, the least number of increments to yield a smooth animation depends on the width of the progress bar,
     // yet 300 increments should be enough to provide a smooth animation in most cases.
     m_progress.setMaxNumIncrements(200);
+}
+
+ProgressDialog::ProgressDialog(const TranslatableString& title)
+    : ProgressDialog{title.Translation().ToStdString()}
+{
 }
 
 ProgressDialog::~ProgressDialog()

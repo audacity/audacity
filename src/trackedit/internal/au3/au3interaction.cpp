@@ -41,6 +41,10 @@
 using namespace au::trackedit;
 using namespace au::au3;
 
+namespace {
+static const std::string mixingDownToMonoLabel = muse::trc("trackedit", "Mixing down to mono...");
+}
+
 Au3Project& Au3Interaction::projectRef() const
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
@@ -1077,9 +1081,7 @@ muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t b
         } else if (trackToPaste->NChannels() == 1 && dstWaveTrack->NChannels() == 2) {
             trackToPaste->MonoToStereo();
         } else if (trackToPaste->NChannels() == 2 && dstWaveTrack->NChannels() == 1) {
-            ok = utils::withProgress(*interactive(),
-                                     muse::trc("trackedit", "Mixing down to mono"),
-                                     [&](utils::ProgressCb progressCb, utils::CancelCb cancelCb)
+            ok = utils::withProgress(*interactive(), mixingDownToMonoLabel, [&](utils::ProgressCb progressCb, utils::CancelCb cancelCb)
             {
                 return trackToPaste->MixDownToMono(progressCb, cancelCb);
             });
@@ -1350,9 +1352,7 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
 
         //! TODO AU4: later when having keyboard arrow shortcut for moving clips
         //! make use of UndoPush::CONSOLIDATE arg in UndoManager
-        return utils::withProgress(*interactive(),
-                                   muse::trc("trackedit", "Rendering clips"),
-                                   [&](utils::ProgressCb progressCb, utils::CancelCb cancelCb)
+        return utils::withProgress(*interactive(), mixingDownToMonoLabel, [&](utils::ProgressCb progressCb, utils::CancelCb cancelCb)
         {
             std::vector<std::pair<WaveTrack*, std::shared_ptr<WaveTrack> > > toReplace;
             for (const trackedit::TrackId track : selectionController()->selectedTracks()) {

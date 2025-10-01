@@ -17,7 +17,8 @@ class ProgressDialog : public BasicUI::ProgressDialog, public muse::async::Async
     muse::Inject<muse::IInteractive> interactive;
 
 public:
-    ProgressDialog();
+    ProgressDialog(const TranslatableString& title = {});
+    ProgressDialog(const std::string& title);
 
 public:
     virtual ~ProgressDialog();
