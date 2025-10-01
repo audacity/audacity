@@ -89,6 +89,7 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     m_configuration->init();
     m_actionsController->init();
     m_realtimeEffectService->init();
+    m_provider->init();
 
     //! --- Diagnostics ---
     auto pr = ioc()->resolve<muse::diagnostics::IDiagnosticsPathsRegister>(moduleName());
