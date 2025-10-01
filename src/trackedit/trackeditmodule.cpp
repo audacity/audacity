@@ -68,13 +68,12 @@ void TrackeditModule::registerExports()
     m_selectionController = std::make_shared<Au3SelectionController>();
     m_configuration = std::make_shared<TrackeditConfiguration>();
     m_trackNavigationController = std::make_shared<TrackNavigationController>();
+    m_trackeditOperationController = std::make_shared<TrackeditOperationController>(std::make_unique<UndoManager>());
 
     ioc()->registerExport<ITrackeditActionsController>(moduleName(), m_trackeditController);
     ioc()->registerExport<ITrackeditProjectCreator>(moduleName(), new Au3TrackeditProjectCreator());
     ioc()->registerExport<ITrackAndClipOperations>(moduleName(), new Au3Interaction());
-    ioc()->registerExport<ITrackeditInteraction>(moduleName(),
-                                                 new TrackeditInteraction(std::make_unique<TrackeditOperationController>(
-                                                                              std::make_unique<UndoManager>())));
+    ioc()->registerExport<ITrackeditInteraction>(moduleName(), new TrackeditInteraction(m_trackeditOperationController));
     ioc()->registerExport<ISelectionController>(moduleName(), m_selectionController);
     ioc()->registerExport<IProjectHistory>(moduleName(), new Au3ProjectHistory());
     ioc()->registerExport<ITrackeditClipboard>(moduleName(), new Au3TrackeditClipboard());
@@ -118,6 +117,7 @@ void TrackeditModule::onInit(const muse::IApplication::RunMode&)
     m_selectionController->init();
     m_configuration->init();
     m_trackNavigationController->init();
+    m_trackeditOperationController->init();
 
     TimeSignatureRestorer::reg();
 

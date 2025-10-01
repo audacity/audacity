@@ -1,7 +1,7 @@
 #include "trackeditinteraction.h"
 
 namespace au::trackedit {
-TrackeditInteraction::TrackeditInteraction(std::unique_ptr<ITrackeditInteraction> interaction)
+TrackeditInteraction::TrackeditInteraction(std::shared_ptr<ITrackeditInteraction> interaction)
     : m_interaction(std::move(interaction))
 {
 }
