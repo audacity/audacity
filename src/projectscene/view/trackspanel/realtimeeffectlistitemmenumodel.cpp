@@ -3,7 +3,6 @@
  */
 #include "realtimeeffectlistitemmenumodel.h"
 #include "effects/effects_base/effectstypes.h"
-#include "effects/effects_base/effectsutils.h"
 #include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "global/defer.h"
 #include "log.h"

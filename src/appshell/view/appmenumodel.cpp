@@ -22,7 +22,6 @@
 #include "appmenumodel.h"
 
 #include "types/translatablestring.h"
-#include "effects/effects_base/effectsutils.h"
 
 #include "muse_framework_config.h"
 

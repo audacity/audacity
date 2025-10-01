@@ -11,7 +11,6 @@
 #include "effects/effects_base/ieffectsmenuprovider.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "effects/effects_base/effectstypes.h"
-#include "effects/effects_base/effectsutils.h"
 #include <QObject>
 
 namespace au::projectscene {
@@ -36,10 +35,6 @@ protected:
 
     muse::Inject<effects::IEffectsProvider> effectsProvider;
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
-
-    const effects::utils::EffectFilter m_effectFilter = [](const effects::EffectMeta& meta) {
-        return !(meta.type == effects::EffectType::Processor && meta.isRealtimeCapable);
-    };
 
 signals:
     void isMasterTrackChanged();

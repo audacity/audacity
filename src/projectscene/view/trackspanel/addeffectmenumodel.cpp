@@ -3,7 +3,6 @@
  */
 #include "addeffectmenumodel.h"
 #include "effects/effects_base/effectstypes.h"
-#include "effects/effects_base/effectsutils.h"
 #include "log.h"
 
 using namespace muse;
