@@ -6,11 +6,20 @@
 #include <QtQuick/QSGVertexColorMaterial>
 #include <QDateTime>
 #include <qcolor.h>
+#include <qopengl.h>
 
 using namespace au::projectscene;
 
 namespace {
-const char* CLIPPED_COLOR = "#EF476F";
+constexpr float BACKGROUND_ALPHA = 0.7f;
+
+constexpr const char* CLIPPED_COLOR = "#EF476F";
+constexpr const char* PEAK_COLOR = "#14151A";
+constexpr const char* RMS_OVERLAY_COLOR = "#66000000";
+
+constexpr const char* GRADIENT_GREEN_COLOR = "#50DF46";
+constexpr const char* GRADIENT_YELLOW_COLOR = "#FFE100";
+constexpr const char* GRADIENT_RED_COLOR = "#EF476F";
 }
 
 AudioMeterItem::AudioMeterItem(QQuickItem* parent)
@@ -30,6 +39,11 @@ void AudioMeterItem::load()
         update();
     });
 
+    connect(m_meterModel, &au::playback::PlaybackMeterModel::meterStyleChanged, this, [this] {
+        m_fullRedrawNeeded = true;
+        update();
+    });
+
     connect(this, &QQuickItem::heightChanged, this, [this] { m_fullRedrawNeeded = true; update(); });
     connect(this, &QQuickItem::widthChanged, this, [this] { m_fullRedrawNeeded = true; update(); });
 
@@ -44,7 +58,6 @@ QSGNode* AudioMeterItem::createNodes()
     auto* rootNode = new QSGNode();
 
     QColor bgColor = m_strokeColor;
-    static constexpr auto BACKGROUND_ALPHA = 0.7;
     bgColor.setAlphaF(BACKGROUND_ALPHA);
     m_backgroundNode = new QSGSimpleRectNode(QRectF(0, 0, width(), height()), bgColor);
     rootNode->appendChildNode(m_backgroundNode);
@@ -62,9 +75,23 @@ QSGNode* AudioMeterItem::createNodes()
     rootNode->appendChildNode(m_recentPeakNode);
     m_recentPeakNode->setFlag(QSGNode::OwnedByParent);
 
-    m_maxPeakNode = new QSGSimpleRectNode(QRectF(0, 0, 0, 0), QColor("#14151A"));
+    m_maxPeakNode = new QSGSimpleRectNode(QRectF(0, 0, 0, 0), QColor(PEAK_COLOR));
     rootNode->appendChildNode(m_maxPeakNode);
     m_maxPeakNode->setFlag(QSGNode::OwnedByParent);
+
+    m_rmsNode = new QSGSimpleRectNode(QRectF(0, 0, 0, 0), QColor(RMS_OVERLAY_COLOR));
+    rootNode->appendChildNode(m_rmsNode);
+    m_rmsNode->setFlag(QSGNode::OwnedByParent);
+
+    m_gradientNode = new QSGGeometryNode();
+    auto* geometry = new QSGGeometry(QSGGeometry::defaultAttributes_ColoredPoint2D(), 6);
+    geometry->setDrawingMode(GL_TRIANGLE_STRIP);
+    m_gradientNode->setGeometry(geometry);
+    m_gradientNode->setFlag(QSGNode::OwnsGeometry);
+    auto* material = new QSGVertexColorMaterial;
+    m_gradientNode->setMaterial(material);
+    m_gradientNode->setFlag(QSGNode::OwnsMaterial);
+    rootNode->appendChildNode(m_gradientNode);
 
     return rootNode;
 }
@@ -157,6 +184,34 @@ void AudioMeterItem::drawBackground()
 
 void AudioMeterItem::drawVolumeBar()
 {
+    if (m_meterModel == nullptr) {
+        return;
+    }
+
+    if (m_fullRedrawNeeded) {
+        m_rmsNode->setRect(0, 0, 0, 0);
+        m_volumeBarNode->setRect(0, 0, 0, 0);
+
+        auto* geometry = m_gradientNode->geometry();
+        auto* vertices = geometry->vertexDataAsColoredPoint2D();
+        for (int i = 0; i < 6; ++i) {
+            vertices[i].set(0, 0, m_accentColor.red(), m_accentColor.green(), m_accentColor.blue(), m_accentColor.alpha());
+        }
+        geometry->markVertexDataDirty();
+        m_gradientNode->markDirty(QSGNode::DirtyGeometry);
+    }
+
+    if (m_meterModel->meterStyle() == playback::PlaybackMeterStyle::MeterStyle::Default) {
+        drawVolumeBarDefault();
+    } else if (m_meterModel->meterStyle() == playback::PlaybackMeterStyle::MeterStyle::RMS) {
+        drawVolumeBarRMS();
+    } else if (m_meterModel->meterStyle() == playback::PlaybackMeterStyle::MeterStyle::Gradient) {
+        drawVolumeBarGradient();
+    }
+}
+
+void AudioMeterItem::drawVolumeBarDefault()
+{
     if (m_volumeBarNode == nullptr) {
         return;
     }
@@ -173,6 +228,100 @@ void AudioMeterItem::drawVolumeBar()
         const auto sampleY = sampleToY(m_currentVolumePressure);
         m_volumeBarNode->setRect(0, height() - sampleY, width(), sampleY);
     }
+
+    m_lastVolumePressure = m_currentVolumePressure;
+    m_lastRMS = m_currentRMS;
+}
+
+void AudioMeterItem::drawVolumeBarRMS()
+{
+    if (m_volumeBarNode == nullptr || m_rmsNode == nullptr) {
+        return;
+    }
+
+    if (!m_fullRedrawNeeded && qFuzzyCompare(m_lastRMS, m_currentRMS)) {
+        return;
+    }
+
+    if (m_currentVolumePressure >= 0) {
+        m_volumeBarNode->setColor(m_clippedColor);
+        m_volumeBarNode->setRect(0, 0, width(), height());
+        m_rmsNode->setRect(0, 0, 0, 0);
+    } else {
+        m_volumeBarNode->setColor(m_accentColor);
+        const auto sampleY = sampleToY(m_currentVolumePressure);
+        m_volumeBarNode->setRect(0, height() - sampleY, width(), sampleY);
+        const auto rmsY = sampleToY(m_currentRMS);
+        m_rmsNode->setRect(0, height() - sampleY, width(), sampleY - rmsY);
+    }
+
+    m_lastVolumePressure = m_currentVolumePressure;
+    m_lastRMS = m_currentRMS;
+}
+
+void AudioMeterItem::drawVolumeBarGradient()
+{
+    if (m_gradientNode == nullptr) {
+        return;
+    }
+
+    if (!m_fullRedrawNeeded && qFuzzyCompare(m_lastVolumePressure, m_currentVolumePressure)) {
+        return;
+    }
+
+    const QColor redColor = QColor(GRADIENT_RED_COLOR);
+    const QColor yellowColor = QColor(GRADIENT_YELLOW_COLOR);
+    const QColor greenColor = QColor(GRADIENT_GREEN_COLOR);
+
+    auto* geometry = m_gradientNode->geometry();
+    auto* vertices = geometry->vertexDataAsColoredPoint2D();
+
+    const float yellowStop = 0.8f;
+    const float yellowSectionHeight = height() * yellowStop;
+
+    const float currentBarHeight = sampleToY(m_currentVolumePressure);
+    const float rectWidth = width();
+
+    float middleY, topY;
+    QColor middleColor, topColor;
+
+    if (currentBarHeight <= yellowSectionHeight) {
+        // Bar is short: Top of the bar is in the green->yellow zone.
+        middleY = height() - currentBarHeight;
+        const float localPercent = (currentBarHeight > 0) ? (currentBarHeight / yellowSectionHeight) : 0;
+        middleColor = QColor::fromRgbF(
+            (1.0f - localPercent) * greenColor.redF() + localPercent * yellowColor.redF(),
+            (1.0f - localPercent) * greenColor.greenF() + localPercent * yellowColor.greenF(),
+            (1.0f - localPercent) * greenColor.blueF() + localPercent * yellowColor.blueF()
+            );
+
+        // Collapse the top quad by setting its vertices equal to the middle ones.
+        topY = middleY;
+        topColor = middleColor;
+    } else {
+        // Bar is tall: Top of the bar is in the yellow->red zone.
+        middleY = height() - yellowSectionHeight;
+        middleColor = yellowColor;
+
+        topY = height() - currentBarHeight;
+        const float topSectionHeight = currentBarHeight - yellowSectionHeight;
+        const float redSectionTotalHeight = height() - yellowSectionHeight;
+        const float localPercent = topSectionHeight / redSectionTotalHeight;
+        topColor = QColor::fromRgbF(
+            (1.0f - localPercent) * yellowColor.redF() + localPercent * redColor.redF(),
+            (1.0f - localPercent) * yellowColor.greenF() + localPercent * redColor.greenF(),
+            (1.0f - localPercent) * yellowColor.blueF() + localPercent * redColor.blueF()
+            );
+    }
+
+    vertices[0].set(0, height(), greenColor.red(), greenColor.green(), greenColor.blue(), 255);
+    vertices[1].set(rectWidth, height(), greenColor.red(), greenColor.green(), greenColor.blue(), 255);
+    vertices[2].set(0, middleY, middleColor.red(), middleColor.green(), middleColor.blue(), 255);
+    vertices[3].set(rectWidth, middleY, middleColor.red(), middleColor.green(), middleColor.blue(), 255);
+    vertices[4].set(0, topY, topColor.red(), topColor.green(), topColor.blue(), 255);
+    vertices[5].set(rectWidth, topY, topColor.red(), topColor.green(), topColor.blue(), 255);
+    geometry->markVertexDataDirty();
+    m_gradientNode->markDirty(QSGNode::DirtyGeometry);
 
     m_lastVolumePressure = m_currentVolumePressure;
     m_lastRMS = m_currentRMS;

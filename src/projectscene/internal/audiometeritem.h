@@ -6,6 +6,7 @@
 #include <QtQuick/QSGSimpleRectNode>
 #include <QColor>
 #include <cstdint>
+#include <qsgnode.h>
 
 #include "async/asyncable.h"
 
@@ -66,6 +67,10 @@ private:
     void drawRecentPeakIndicator();
     void drawMaxPeakIndicator();
 
+    void drawVolumeBarDefault();
+    void drawVolumeBarRMS();
+    void drawVolumeBarGradient();
+
     bool m_showClippedInfo = true;
     int m_recentPeakIntervalMsecs = 600;
     int m_overloadHeight = 4;
@@ -94,6 +99,8 @@ private:
     QSGSimpleRectNode* m_clippedNode = nullptr;
     QSGSimpleRectNode* m_recentPeakNode = nullptr;
     QSGSimpleRectNode* m_maxPeakNode = nullptr;
+    QSGSimpleRectNode* m_rmsNode = nullptr;
+    QSGGeometryNode* m_gradientNode = nullptr;
 
     QColor m_accentColor;
     QColor m_strokeColor;
