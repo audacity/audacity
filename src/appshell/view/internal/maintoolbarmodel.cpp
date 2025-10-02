@@ -92,7 +92,7 @@ void MainToolBarModel::load()
 
     m_items.clear();
     m_items << buildItem(muse::qtrc("appshell", "Home"), HOME_PAGE, true);
-    m_items << buildItem(muse::qtrc("appshell", "Project"), PROJECT_PAGE, true);
+    m_items << buildItem(muse::qtrc("appshell", "Project"), PROJECT_PAGE, false);
     m_items << buildItem(muse::qtrc("appshell", "Publish"), PUBLISH_PAGE, false);
 
     if (globalConfiguration()->devModeEnabled()) {
@@ -113,10 +113,11 @@ void MainToolBarModel::updateNotationPageItem()
         QVariantMap& item = m_items[i];
 
         if (item[URI_KEY] == PROJECT_PAGE) {
+            item[ENABLED_KEY] = context()->currentProject() != nullptr;
             item[IS_TITLE_BOLD_KEY] = context()->currentProject() != nullptr;
 
             QModelIndex modelIndex = index(i);
-            emit dataChanged(modelIndex, modelIndex, { IsTitleBoldRole });
+            emit dataChanged(modelIndex, modelIndex, { IsTitleBoldRole, EnabledRole });
 
             break;
         }
