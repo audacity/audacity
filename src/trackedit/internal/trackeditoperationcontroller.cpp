@@ -4,6 +4,8 @@
 #include "trackeditoperationcontroller.h"
 #include "trackediterrors.h"
 
+#include "global/async/async.h"
+
 namespace au::trackedit {
 TrackeditOperationController::TrackeditOperationController(std::unique_ptr<IUndoManager> undoManager)
     : m_undoManager{std::move(undoManager)} {}
@@ -463,7 +465,19 @@ bool TrackeditOperationController::newLabelTrack()
 bool TrackeditOperationController::deleteTracks(const TrackIdList& trackIds)
 {
     if (trackAndClipOperations()->deleteTracks(trackIds)) {
-        projectHistory()->pushHistoryState("Delete track", "Delete track");
+        //! Why does this `pushHistoryState` have to be called later?
+        //!
+        //! On the one hand, calling `deleteTracks` ends up sending a notification that a track was deleted.
+        //!
+        //! On the other hand, when deleteTracks is called after an undo, this undo history item gets discarded.
+        //! If this undo item involved the creation of audio blocks, such as when generating audio, `pushHistoryState` will delete these blocks.
+        //! If there was many of them, it will open a progress dialog which, to be updated, leads to `QCoreApplication::processEvents()` calls.
+        //!
+        //! This crashes because QCoreApplication::processEvents() will now process an event that deletes the track item that is at the origin of this very call...
+        //! Qt then throws the message "Object 0x..... destroyed while one of its QML signal handlers is in progress."
+        //!
+        //! https://github.com/audacity/audacity/issues/9530
+        muse::async::Async::call(this, [this]{ projectHistory()->pushHistoryState("Delete track", "Delete track"); });
         return true;
     }
     return false;
