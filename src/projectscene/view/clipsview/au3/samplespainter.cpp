@@ -146,14 +146,13 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
         auto paddedMetrics = waveMetrics;
         paddedMetrics.top += SAMPLE_HEAD_PADDING;
         paddedMetrics.height -= 2 * SAMPLE_HEAD_PADDING;
-
-        const auto samples = samplespainterutils::getSampleData(*waveClip, index, paddedMetrics, dB, dBRange, zoomMax, zoomMin);
-        if (samples.size() == 0) {
-            continue;
-        }
-
         int yZero = samplespainterutils::getWaveYPos(0.0, zoomMin, zoomMax, paddedMetrics.height, dB, true, dBRange, false);
         yZero = paddedMetrics.top + std::max(-1, std::min(static_cast<int>(paddedMetrics.height + paddedMetrics.top), yZero));
+        const auto samples = samplespainterutils::getSampleData(*waveClip, index, paddedMetrics, dB, dBRange, zoomMax, zoomMin);
+        if (samples.size() == 0) {
+            samplespainterutils::drawCenterLine(painter, waveMetrics, params.style, yZero);
+            continue;
+        }
         drawSampleStalk(samples, yZero, paddedMetrics, painter, params.style, params.showClipping);
 
         // draw baseline after the sample stalk to ensure it's on top of it
