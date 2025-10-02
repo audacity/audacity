@@ -263,6 +263,11 @@ double TrackeditInteraction::nearestZeroCrossing(double time) const
     return m_interaction->nearestZeroCrossing(time);
 }
 
+muse::Ret TrackeditInteraction::makeRoomForClip(const ClipKey& clipKey)
+{
+    return m_interaction->makeRoomForClip(clipKey);
+}
+
 bool TrackeditInteraction::newMonoTrack()
 {
     return withPlaybackStop(&ITrackeditInteraction::newMonoTrack);
