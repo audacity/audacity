@@ -1,6 +1,7 @@
 #include "projectactionscontroller.h"
 
 #include <QFileDialog>
+#include <qfiledialog.h>
 
 #include "async/async.h"
 #include "global/defer.h"
@@ -350,7 +351,8 @@ io::path_t ProjectActionsController::selectImportFile()
     }
 
     io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("project",
-                                                                         "Open"), defaultDir, filter, QFileDialog::HideNameFilterDetails);
+                                                                         "Open"), defaultDir, filter,
+                                                               QFileDialog::HideNameFilterDetails | QFileDialog::DontUseNativeDialog);
 
     if (!filePath.empty()) {
         configuration()->setLastOpenedProjectsPath(io::dirpath(filePath));
