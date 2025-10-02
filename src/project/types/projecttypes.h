@@ -279,6 +279,39 @@ public:
 };
 
 using GenerateAudioTimePeriodType = GenerateAudioTimePeriod::Type;
+
+static const std::string AUP3 = "aup3";
+static const std::string AUP4 = "aup4";
+
+inline bool isAudacity3File(const muse::io::path_t& filename)
+{
+    return muse::io::suffix(filename) == AUP3;
+}
+
+inline bool isAudacity3FileType(const std::string_view ext)
+{
+    return ext == AUP3;
+}
+
+inline bool isAudacity4File(const muse::io::path_t& filename)
+{
+    return muse::io::suffix(filename) == AUP4;
+}
+
+inline bool isAudacity4FileType(const std::string_view ext)
+{
+    return ext == AUP4;
+}
+
+inline bool isAudacityFile(const muse::io::path_t& filename)
+{
+    return isAudacity3File(filename) || isAudacity4File(filename);
+}
+
+inline bool isAudacityFileType(const std::string_view ext)
+{
+    return isAudacity3FileType(ext) || isAudacity4FileType(ext);
+}
 }
 
 #endif // AU_PROJECT_PROJECTTYPES_H

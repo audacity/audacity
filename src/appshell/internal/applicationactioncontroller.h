@@ -35,6 +35,7 @@
 #include "iinteractive.h"
 #include "iappshellconfiguration.h"
 #include "iapplication.h"
+#include "startupscenario.h"
 #include "project/iprojectfilescontroller.h"
 #include "record/irecordcontroller.h"
 
@@ -48,15 +49,16 @@ namespace au::appshell {
 class ApplicationActionController : public QObject, public IApplicationActionController, public muse::actions::Actionable,
     public muse::async::Asyncable
 {
-    INJECT(muse::actions::IActionsDispatcher, dispatcher)
-    INJECT(muse::ui::IUiActionsRegister, actionsRegister)
-    INJECT(muse::ui::IMainWindow, mainWindow)
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<muse::ui::IUiActionsRegister> actionsRegister;
+    muse::Inject<muse::ui::IMainWindow> mainWindow;
+    muse::Inject<appshell::IStartupScenario> startupScenario;
 
-    INJECT(muse::IInteractive, interactive)
-    INJECT(muse::IApplication, application)
-    INJECT(IAppShellConfiguration, configuration)
-    INJECT(project::IProjectFilesController, projectFilesController)
-    INJECT(record::IRecordController, recordController)
+    muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<muse::IApplication> application;
+    muse::Inject<IAppShellConfiguration> configuration;
+    muse::Inject<project::IProjectFilesController> projectFilesController;
+    muse::Inject<record::IRecordController> recordController;
 //! TODO AU4
     // INJECT(languages::ILanguagesService, languagesService)
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)

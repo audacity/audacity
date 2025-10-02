@@ -155,20 +155,20 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
         return true;
     }
 
-    // if (event->type() == QEvent::FileOpen && watched == qApp) {
-    //     const QFileOpenEvent* openEvent = static_cast<const QFileOpenEvent*>(event);
-    //     const QUrl url = openEvent->url();
+    if (event->type() == QEvent::FileOpen && watched == qApp) {
+        const QFileOpenEvent* openEvent = static_cast<const QFileOpenEvent*>(event);
+        const QUrl url = openEvent->url();
 
-    //     if (projectFilesController()->isUrlSupported(url)) {
-    //         if (startupScenario()->startupCompleted()) {
-    //             dispatcher()->dispatch("file-open", ActionData::make_arg1<QUrl>(url));
-    //         } else {
-    //             startupScenario()->setStartupScoreFile(project::ProjectFile { url });
-    //         }
+        if (projectFilesController()->isUrlSupported(url)) {
+            if (startupScenario()->startupCompleted()) {
+                dispatcher()->dispatch("file-open", ActionData::make_arg1<QUrl>(url));
+            } else {
+                startupScenario()->setStartupScoreFile(project::ProjectFile { url });
+            }
 
-    //         return true;
-    //     }
-    // }
+            return true;
+        }
+    }
 
     return QObject::eventFilter(watched, event);
 }
