@@ -99,20 +99,25 @@ Ret ProjectActionsController::openProject(const ProjectFile& file)
 {
     LOGI() << "Try open project: url = " << file.url.toString() << ", displayNameOverride = " << file.displayNameOverride;
 
-    if (file.isNull()) {
-        muse::io::path_t askedPath = selectOpeningFile();
+    if (file.isNull() || file.url.isLocalFile()) {
+        muse::io::path_t filename = file.isNull() ? selectOpeningFile() : file.path();
 
-        if (askedPath.empty()) {
+        if (filename.empty()) {
             return make_ret(Ret::Code::Cancel);
         }
 
-        return openProject(askedPath);
+        if (au::project::isAudacity3File(filename)) {
+            auto resolved = openSaveProjectScenario()->resolveLegacyProjectFormat(filename);
+            if (!resolved.ret) {
+                return resolved.ret;
+            }
+            filename = resolved.val;
+        }
+
+        return openProject(filename, file.displayNameOverride);
     }
 
-    if (file.url.isLocalFile()) {
-        return openProject(file.path(), file.displayNameOverride);
-    }
-
+    //! TODO: Fix me
     // if (file.url.scheme() == AUDACITY_URL_SCHEME) {
     //     return openMuseScoreUrl(file.url);
     // }

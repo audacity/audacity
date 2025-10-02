@@ -28,6 +28,7 @@
 #include "modularity/ioc.h"
 #include "iprojectconfiguration.h"
 #include "iprojectfilescontroller.h"
+#include "global/io/ifilesystem.h"
 #include "global/iinteractive.h"
 
 #include "cloud/musescorecom/imusescorecomservice.h"
@@ -40,6 +41,7 @@ class OpenSaveProjectScenario : public IOpenSaveProjectScenario
     muse::Inject<IProjectConfiguration> configuration;
     muse::Inject<IProjectFilesController> projectFilesController;
     muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<muse::io::IFileSystem> fileSystem;
     muse::Inject<muse::cloud::IMuseScoreComService> museScoreComService;
     muse::Inject<muse::cloud::IAudioComService> audioComService;
 
@@ -53,6 +55,8 @@ public:
     muse::RetVal<CloudProjectInfo> askCloudLocation(IAudacityProjectPtr project, SaveMode mode) const override;
     muse::RetVal<CloudProjectInfo> askPublishLocation(IAudacityProjectPtr project) const override;
     muse::RetVal<CloudAudioInfo> askShareAudioLocation(IAudacityProjectPtr project) const override;
+
+    muse::RetVal<muse::io::path_t> resolveLegacyProjectFormat(const muse::io::path_t& path) const override;
 
     bool warnBeforeSavingToExistingPubliclyVisibleCloudProject() const override;
 

@@ -41,6 +41,8 @@ public:
     virtual muse::RetVal<CloudProjectInfo> askPublishLocation(IAudacityProjectPtr project) const = 0;
     virtual muse::RetVal<CloudAudioInfo> askShareAudioLocation(IAudacityProjectPtr project) const = 0;
 
+    virtual muse::RetVal<muse::io::path_t> resolveLegacyProjectFormat(const muse::io::path_t& path) const = 0;
+
     virtual bool warnBeforeSavingToExistingPubliclyVisibleCloudProject() const = 0;
 
     static constexpr int RET_CODE_CONFLICT_RESPONSE_SAVE_AS = 1235;
