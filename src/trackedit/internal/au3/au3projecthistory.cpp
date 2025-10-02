@@ -10,6 +10,8 @@
 
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "global/async/async.h"
+
 using namespace au::trackedit;
 using namespace au::au3;
 
@@ -53,6 +55,24 @@ void au::trackedit::Au3ProjectHistory::pushHistoryState(const std::string& longD
 }
 
 void Au3ProjectHistory::pushHistoryState(const std::string& longDescription, const std::string& shortDescription, UndoPushType flags)
+{
+    //! Why does this `doPushHistoryState` have to be called later?
+    //!
+    //! On the one hand, `pushHistoryState` may be called as a result of a QML item triggering an action that will lead to its deletion
+    //! (e.g. deleting a track from a context menu).
+    //!
+    //! On the other hand, when the QML-triggered action is called after an undo, this undo history item gets discarded.
+    //! If this undo item involved the creation of audio blocks, such as when generating audio, `pushHistoryState` will delete these blocks.
+    //! If there was many of them, it will open a progress dialog which, to be updated, leads to `QCoreApplication::processEvents()` calls.
+    //!
+    //! This crashes because QCoreApplication::processEvents() will now process an event that deletes the QML item that is at the origin of this very call...
+    //! Qt then throws the message "Object 0x..... destroyed while one of its QML signal handlers is in progress."
+    //!
+    //! https://github.com/audacity/audacity/issues/9530
+    muse::async::Async::call(this, [=]{ doPushHistoryState(longDescription, shortDescription, flags); });
+}
+
+void Au3ProjectHistory::doPushHistoryState(const std::string& longDescription, const std::string& shortDescription, UndoPushType flags)
 {
     LOGI() << "pushHistoryState(\"" << shortDescription << "\", " << flags << ")";
     auto& project = projectRef();
