@@ -74,6 +74,7 @@ public:
     virtual std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const = 0;
     virtual std::optional<secs_t> getRightmostClipEndTime(const ClipKeyList& clipKeys) const = 0;
     virtual double nearestZeroCrossing(double time) const = 0;
+    virtual muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) = 0;
 
     virtual bool newMonoTrack() = 0;
     virtual bool newStereoTrack() = 0;

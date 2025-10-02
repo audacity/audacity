@@ -79,6 +79,7 @@ public:
     std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const override;
     std::optional<secs_t> getRightmostClipEndTime(const ClipKeyList& clipKeys) const override;
     double nearestZeroCrossing(double time) const override;
+    muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) override;
 
     bool newMonoTrack() override;
     bool newStereoTrack() override;
@@ -129,7 +130,6 @@ private:
     bool userIsOkCombineMonoToStereo() const;
     bool canMergeMonoTracksToStereo(const TrackId left, const TrackId right);
     muse::Ret canPasteTrackData(const TrackIdList& tracksIds, const std::vector<Au3TrackDataPtr>& clipsToPaste) const;
-    muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey);
     muse::Ret makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<Au3TrackDataPtr>& trackData, secs_t begin);
     muse::Ret makeRoomForDataOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     muse::Ret makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<Au3TrackDataPtr>& trackData, secs_t begin,
