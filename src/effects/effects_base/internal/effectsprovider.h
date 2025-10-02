@@ -13,6 +13,7 @@
 #include "effects/vst/ivsteffectsrepository.h"
 #include "effects/nyquist/inyquisteffectsrepository.h"
 #include "effects/audio_unit/iaudiouniteffectsrepository.h"
+#include "audioplugins/iknownaudiopluginsregister.h"
 #include "../ieffectsconfiguration.h"
 #include "../ieffectviewlaunchregister.h"
 
@@ -33,8 +34,11 @@ class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<playback::IPlayback> playback;
     muse::Inject<IEffectViewLaunchRegister> viewLaunchRegister;
+    muse::Inject<muse::audioplugins::IKnownAudioPluginsRegister> knownPluginsRegister;
 
 public:
+    void init();
+
     void reloadEffects();
 
     EffectMetaList effectMetaList() const override;

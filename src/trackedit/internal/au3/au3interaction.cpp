@@ -2537,11 +2537,11 @@ bool Au3Interaction::changeTracksFormat(const TrackIdList& tracksIds, trackedit:
     });
     size_t convertedSamples = 0;
 
-    progress()->start();
+    progress().start();
 
     muse::ProgressResult result;
     DEFER {
-        progress()->finish(result);
+        progress().finish(result);
     };
 
     try {
@@ -2569,12 +2569,12 @@ bool Au3Interaction::changeTracksFormat(const TrackIdList& tracksIds, trackedit:
 
             if (!(waveTrack->GetSampleFormat() == newFormat)) {
                 waveTrack->ConvertToSampleFormat(newFormat,  [&](size_t sampleCnt) {
-                    if (progress()->isCanceled()) {
+                    if (progress().isCanceled()) {
                         throw UserException();
                     }
 
                     convertedSamples += sampleCnt;
-                    progress()->progress(convertedSamples, totalSamples, "");
+                    progress().progress(convertedSamples, totalSamples, "");
                 });
 
                 trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -2849,11 +2849,11 @@ bool Au3Interaction::resampleTracks(const TrackIdList& tracksIds, int rate)
         return sum + WaveTrackUtilities::GetSequenceSamplesCount(*waveTrack).as_size_t();
     });
 
-    progress()->start();
+    progress().start();
 
     muse::ProgressResult result;
     DEFER {
-        progress()->finish(result);
+        progress().finish(result);
     };
 
     try {
@@ -2864,12 +2864,12 @@ bool Au3Interaction::resampleTracks(const TrackIdList& tracksIds, int rate)
             }
 
             waveTrack->Resample(rate, [&](size_t sampleCnt) {
-                if (progress()->isCanceled()) {
+                if (progress().isCanceled()) {
                     throw UserException();
                 }
 
                 convertedSamples += sampleCnt;
-                progress()->progress(convertedSamples, totalSamples, "");
+                progress().progress(convertedSamples, totalSamples, "");
             });
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
@@ -2883,9 +2883,9 @@ bool Au3Interaction::resampleTracks(const TrackIdList& tracksIds, int rate)
     return true;
 }
 
-muse::ProgressPtr Au3Interaction::progress() const
+muse::Progress Au3Interaction::progress() const
 {
-    return m_progress;
+    return *m_progress;
 }
 
 bool Au3Interaction::doChangeClipSpeed(const ClipKey& clipKey, double speed)

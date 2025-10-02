@@ -101,7 +101,7 @@ private:
     bool makeStereoTrack(const TrackId left, const TrackId right) override;
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
 
-    muse::ProgressPtr progress() const override;
+    muse::Progress progress() const override;
 
 private:
     template<typename Func, typename ... Args>
@@ -118,11 +118,11 @@ private:
     muse::Ret withProgress(Func&& method, Args&&... args) const
     {
         auto progressDialog = std::make_unique<ProgressDialog>();
-        progress()->progressChanged().onReceive(progressDialog.get(),
-                                                [&](int64_t current, int64_t total, const std::string&) {
+        progress().progressChanged().onReceive(progressDialog.get(),
+                                               [&](int64_t current, int64_t total, const std::string&) {
             const auto result = progressDialog->Poll(current, total);
             if (result == ProgressResult::Cancelled) {
-                progress()->cancel();
+                progress().cancel();
             }
         });
 

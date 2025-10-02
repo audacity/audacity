@@ -246,7 +246,7 @@ muse::Ret au::trackedit::utils::withProgress(muse::IInteractive& interactive, co
                                                                                                                                  CancelCb)>& action)
 {
     muse::Progress progress;
-    interactive.showProgress(title, &progress);
+    interactive.showProgress(title, progress);
     progress.started();
 
     ProgressCb progressCb = [&](double progressFraction)

@@ -16,15 +16,15 @@ public:
 
     bool isMainThread() const override;
     std::thread::id mainThreadId() const override;
-    bool isAudioWorkerThread() const override;
-    std::thread::id workerThreadId() const override;
+    bool isAudioEngineThread() const override;
+    std::thread::id audioEngineThreadId() const override;
 
     void setupMainThread();
-    void setupWorkerThread();
+    void setupAudioEngineThread();
 
 private:
 
     std::thread::id m_mainThreadID;
-    std::thread::id m_workerThreadID;
+    std::thread::id m_audioEngineThreadID;
 };
 }

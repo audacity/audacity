@@ -108,7 +108,7 @@ public:
     bool makeStereoTrack(const TrackId left, const TrackId right) override;
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
 
-    muse::ProgressPtr progress() const override;
+    muse::Progress progress() const override;
 
 private:
     friend class Au3InteractionTests;

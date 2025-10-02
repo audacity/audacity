@@ -33,6 +33,13 @@
 using namespace muse;
 using namespace au::effects;
 
+void EffectsProvider::init()
+{
+    knownPluginsRegister()->pluginInfoListChanged().onNotify(this, [this]() {
+        reloadEffects();
+    });
+}
+
 bool EffectsProvider::isVstSupported() const
 {
     return vstEffectsRepository() ? true : false;

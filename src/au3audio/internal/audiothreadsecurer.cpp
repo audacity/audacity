@@ -10,9 +10,9 @@ void AudioThreadSecurer::setupMainThread()
     m_mainThreadID = std::this_thread::get_id();
 }
 
-void AudioThreadSecurer::setupWorkerThread()
+void AudioThreadSecurer::setupAudioEngineThread()
 {
-    m_workerThreadID = std::this_thread::get_id();
+    m_audioEngineThreadID = std::this_thread::get_id();
 }
 
 bool AudioThreadSecurer::isMainThread() const
@@ -25,12 +25,12 @@ std::thread::id AudioThreadSecurer::mainThreadId() const
     return m_mainThreadID;
 }
 
-bool AudioThreadSecurer::isAudioWorkerThread() const
+bool AudioThreadSecurer::isAudioEngineThread() const
 {
-    return m_workerThreadID == std::this_thread::get_id();
+    return m_audioEngineThreadID == std::this_thread::get_id();
 }
 
-std::thread::id AudioThreadSecurer::workerThreadId() const
+std::thread::id AudioThreadSecurer::audioEngineThreadId() const
 {
-    return m_workerThreadID;
+    return m_audioEngineThreadID;
 }
