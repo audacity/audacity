@@ -6,7 +6,7 @@
 
 ## This repository is currently undergoing major structural change.
 
-We're currently working on Audacity 4, which means an entirely new UI and also refactorings aplenty. As such, master is currently not particularly friendly to new contributors. It still is possible to submit patches to Audacity 3.x; make sure you branch off release-3.7.x if you choose to do so. Build instructions for 3.x can be found [here](https://github.com/audacity/audacity/blob/release-3.7.0/BUILDING.md); build instructions for Audacity 4 are not available yet.
+We're currently working on Audacity 4, which means an entirely new UI and also refactorings aplenty. As such, the `master` branch is currently not particularly friendly to new contributors. It is still possible to submit patches to Audacity 3.x; make sure you branch off `audacity3` if you choose to do so. Build instructions for 3.x can be found [here](https://github.com/audacity/audacity/blob/release-3.7.0/BUILDING.md); build instructions for Audacity 4 can be found [here](https://github.com/audacity/audacity/blob/master/BUILDING.md).
 
 You can stay updated with our efforts on [YouTube](https://youtube.com/@audacity), [discord](https://discord.gg/audacity) and [our blog](https://audacityteam.org/blog).
 
