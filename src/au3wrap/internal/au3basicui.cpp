@@ -99,11 +99,12 @@ BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const TranslatableString& mes
 std::unique_ptr<BasicUI::ProgressDialog> Au3BasicUI::DoMakeProgress(const TranslatableString& title, const TranslatableString& message,
                                                                     unsigned int flags, const TranslatableString& remainingLabelText)
 {
-    Q_UNUSED(title);
-    Q_UNUSED(message);
     Q_UNUSED(flags);
     Q_UNUSED(remainingLabelText);
-    return std::make_unique<ProgressDialog>();
+    auto dialog = std::make_unique<ProgressDialog>();
+    dialog->SetDialogTitle(title);
+    dialog->SetMessage(message);
+    return dialog;
 }
 
 namespace {

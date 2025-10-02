@@ -329,7 +329,13 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
         if (skipFlag == false) {
             using namespace BasicUI;
             auto name = effect->GetName();
-            ::ProgressDialog progress{};
+
+            const std::string title
+                = (effect->GetType()
+                   == EffectTypeGenerate ? muse::qtrc("effects", "Generating %1...") : muse::qtrc("effects", "Applying %1...")).arg(
+                      name.Translation().ToStdString()).toStdString();
+
+            ::ProgressDialog progress{ title };
             auto vr = valueRestorer<BasicUI::ProgressDialog*>(effect->mProgress, &progress);
 
             assert(pInstanceEx); // null check above

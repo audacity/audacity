@@ -17,7 +17,8 @@ class ProgressDialog : public BasicUI::ProgressDialog, public muse::async::Async
     muse::Inject<muse::IInteractive> interactive;
 
 public:
-    ProgressDialog();
+    ProgressDialog(const TranslatableString& title = {});
+    ProgressDialog(const std::string& title);
 
 public:
     virtual ~ProgressDialog();
@@ -39,5 +40,7 @@ public:
 
 private:
     mutable muse::Progress m_progress;
+    std::string m_progressTitle;
+    std::string m_progressMessage;
     bool m_cancelled = false;
 };
