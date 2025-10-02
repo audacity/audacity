@@ -46,7 +46,7 @@ void AudioModule::onInit(const muse::IApplication::RunMode&)
 
     //! NOTE At the moment this is needed for VST plugins
     //! and everything is done in the main thread.
-    m_audioThreadSecurer->setupWorkerThread();
+    m_audioThreadSecurer->setupAudioEngineThread();
 }
 
 void AudioModule::onDeinit()
