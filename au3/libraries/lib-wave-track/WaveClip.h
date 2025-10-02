@@ -932,6 +932,9 @@ public:
      */
     WaveClip(const WaveClip& orig, const SampleBlockFactoryPtr& factory, bool copyCutlines, CreateToken token);
 
+    sampleCount GetNumSamples() const;
+    const SampleBlockFactoryPtr& GetFactory() const;
+
 private:
     static void TransferSequence(WaveClip& origClip, WaveClip& newClip);
     static void FixSplitCutlines(
@@ -947,8 +950,8 @@ private:
     // even if t0 really falls outside that range
     sampleCount TimeToSequenceSamples(double t) const;
     bool StretchRatioEquals(double value) const;
-    sampleCount GetNumSamples() const;
-    const SampleBlockFactoryPtr& GetFactory() const;
+
+
     std::vector<std::unique_ptr<Sequence> > GetEmptySequenceCopies() const;
     void StretchCutLines(double ratioChange);
     double SnapToTrackSample(double time) const noexcept;

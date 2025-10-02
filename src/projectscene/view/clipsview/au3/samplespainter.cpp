@@ -97,26 +97,15 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing, false);
 
-    Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
 
-    Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(*au3Project, Au3TrackId(clipKey.trackId));
-
-    //! Pending tracks are same as project tracks, but with new tracks when recording, so we need draw them
-    Au3Track* pendingTrack = &PendingTracks::Get(*au3Project)
-                             .SubstitutePendingChangedTrack(*DomAccessor::findWaveTrack(*au3Project, Au3TrackId(clipKey.trackId)));
-
-    Au3WaveTrack* track = dynamic_cast<Au3WaveTrack*>(pendingTrack);
-    IF_ASSERT_FAILED(track) {
+    WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
+    if (!track) {
         return;
     }
 
-    auto pendingClipId = DomAccessor::findMatchedClip(track, origWaveTrack, clipKey.clipId);
-    if (pendingClipId == -1) {
-        return;
-    }
-
-    std::shared_ptr<Au3WaveClip> waveClip = DomAccessor::findWaveClip(track, pendingClipId);
-    IF_ASSERT_FAILED(waveClip) {
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
+    if (!waveClip) {
         return;
     }
 

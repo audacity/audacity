@@ -437,6 +437,11 @@ double TrackeditOperationController::nearestZeroCrossing(double t0) const
     return trackAndClipOperations()->nearestZeroCrossing(t0);
 }
 
+muse::Ret TrackeditOperationController::makeRoomForClip(const ClipKey& clipKey)
+{
+    return trackAndClipOperations()->makeRoomForClip(clipKey);
+}
+
 bool TrackeditOperationController::newMonoTrack()
 {
     if (trackAndClipOperations()->newMonoTrack()) {
