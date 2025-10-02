@@ -8,6 +8,7 @@
 
 namespace au::effects {
 class EffectsProvider;
+class EffectsMenuProvider;
 class EffectsConfiguration;
 class EffectsActionsController;
 class EffectsUiActions;
@@ -24,7 +25,8 @@ public:
     void onDelayedInit() override;
 
 private:
-    std::shared_ptr<EffectsProvider> m_provider;
+    std::shared_ptr<EffectsProvider> m_effectsProvider;
+    std::shared_ptr<EffectsMenuProvider> m_effectsMenuProvider;
     std::shared_ptr<EffectsConfiguration> m_configuration;
     std::shared_ptr<EffectsActionsController> m_actionsController;
     std::shared_ptr<RealtimeEffectService> m_realtimeEffectService;

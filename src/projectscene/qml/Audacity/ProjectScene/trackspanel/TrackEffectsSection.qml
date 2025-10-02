@@ -21,6 +21,10 @@ Rectangle {
 
     color: ui.theme.backgroundPrimaryColor
 
+    Component.onCompleted: {
+        menuModel.init()
+    }
+
     QtObject {
         id: prv
         property bool enabled: effectList.trackName !== ""
@@ -137,7 +141,7 @@ Rectangle {
                 isMasterTrack: effectList.isMasterTrack
             }
 
-            onClicked: function() {
+            onClicked: function () {
                 menuModel.load()
                 effectMenuLoader.toggleOpened(menuModel)
             }
@@ -145,7 +149,7 @@ Rectangle {
             StyledMenuLoader {
                 id: effectMenuLoader
 
-                onHandleMenuItem: function(itemId) {
+                onHandleMenuItem: function (itemId) {
                     menuModel.handleMenuItem(itemId)
                 }
             }

@@ -3,7 +3,6 @@
  */
 #include "addeffectmenumodel.h"
 #include "effects/effects_base/effectstypes.h"
-#include "effects/effects_base/effectsutils.h"
 #include "log.h"
 
 using namespace muse;
@@ -12,19 +11,6 @@ using namespace muse::uicomponents;
 
 AddEffectMenuModel::AddEffectMenuModel(QObject* parent)
     : RealtimeEffectMenuModelBase(parent) {}
-
-void AddEffectMenuModel::doLoad()
-{
-    doPopulateMenu();
-}
-
-void AddEffectMenuModel::doPopulateMenu()
-{
-    const MenuItemList items
-        = au::effects::utils::realtimeEffectMenu(effectsConfiguration()->effectMenuOrganization(),
-                                                 effectsProvider()->effectMetaList(), m_effectFilter, *this);
-    setItems(items);
-}
 
 void AddEffectMenuModel::handleMenuItem(const QString& itemId)
 {

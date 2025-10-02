@@ -13,7 +13,6 @@ ListItemBlank {
 
     property var item: null
     property var listView: null
-    property var availableEffects: null
     property int index: -1
     property int scrollOffset: 0
     property int topMargin: 0
@@ -41,7 +40,7 @@ ListItemBlank {
     hoverHitColor: "transparent"
 
     Component.onCompleted: {
-        menuModel.load()
+        menuModel.init()
     }
 
     Behavior on y {
@@ -69,8 +68,14 @@ ListItemBlank {
 
         states: State {
             when: gripButton.mouseArea.drag.active
-            AnchorChanges { target: content; anchors.verticalCenter: undefined }
-            PropertyChanges { target: root; z: listView.model.count() }
+            AnchorChanges {
+                target: content
+                anchors.verticalCenter: undefined
+            }
+            PropertyChanges {
+                target: root
+                z: listView.model.count()
+            }
         }
 
         FlatButton {
@@ -119,8 +124,7 @@ ListItemBlank {
                     const sibling = siblings[i]
                     if (!sibling.hasOwnProperty("yOffset")) {
                         continue
-                    }
-                    else if (sibling.index > root.index && sibling.index <= targetIndex) {
+                    } else if (sibling.index > root.index && sibling.index <= targetIndex) {
                         sibling.yOffset = -itemHeight
                     } else if (sibling.index < root.index && sibling.index >= targetIndex) {
                         sibling.yOffset = itemHeight
@@ -143,7 +147,6 @@ ListItemBlank {
             contentItem: StyledIconLabel {
                 iconCode: IconCode.TOOLBAR_GRIP
             }
-
         }
 
         BypassEffectButton {
@@ -184,10 +187,10 @@ ListItemBlank {
             }
 
             StyledTextLabel {
+                id: trackNameLabel
                 anchors.fill: parent
                 anchors.leftMargin: 6
                 anchors.rightMargin: 6
-                id: trackNameLabel
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 text: root.item ? root.item.effectName() : ""
@@ -227,13 +230,14 @@ ListItemBlank {
             }
 
             onClicked: {
-                effectMenuLoader.toggleOpened(menuModel.availableEffects)
+                menuModel.load()
+                effectMenuLoader.toggleOpened(menuModel)
             }
 
             StyledMenuLoader {
                 id: effectMenuLoader
 
-                onHandleMenuItem: function(menuItem) {
+                onHandleMenuItem: function (menuItem) {
                     menuModel.handleMenuItem(menuItem)
                 }
             }

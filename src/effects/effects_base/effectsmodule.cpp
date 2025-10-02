@@ -12,6 +12,7 @@
 
 #include "internal/effectconfigsettings.h"
 #include "internal/effectsprovider.h"
+#include "internal/effectsmenuprovider.h"
 #include "internal/effectsconfiguration.h"
 #include "internal/effectsactionscontroller.h"
 #include "internal/effectsuiactions.h"
@@ -41,12 +42,14 @@ std::string EffectsModule::moduleName() const
 
 void EffectsModule::registerExports()
 {
-    m_provider = std::make_shared<EffectsProvider>();
+    m_effectsProvider = std::make_shared<EffectsProvider>();
+    m_effectsMenuProvider = std::make_shared<EffectsMenuProvider>();
     m_configuration = std::make_shared<EffectsConfiguration>();
     m_actionsController = std::make_shared<EffectsActionsController>();
     m_realtimeEffectService = std::make_shared<RealtimeEffectService>();
 
-    ioc()->registerExport<IEffectsProvider>(moduleName(), m_provider);
+    ioc()->registerExport<IEffectsProvider>(moduleName(), m_effectsProvider);
+    ioc()->registerExport<IEffectsMenuProvider>(moduleName(), m_effectsMenuProvider);
     ioc()->registerExport<IEffectsConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IEffectsUiEngine>(moduleName(), new EffectsUiEngine());
     ioc()->registerExport<IEffectInstancesRegister>(moduleName(), new EffectInstancesRegister());
@@ -86,6 +89,7 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
         return std::make_unique<au3::EffectConfigSettings>(localFileName.ToStdString());
     });
 
+    m_effectsMenuProvider->init();
     m_configuration->init();
     m_actionsController->init();
     m_realtimeEffectService->init();
@@ -101,5 +105,5 @@ void EffectsModule::onDelayedInit()
 {
     //! NOTE On init, built-in, vst and other plugins are initialized.
     //! After all, the provider can load effects of different types.
-    m_provider->reloadEffects();
+    m_effectsProvider->reloadEffects();
 }

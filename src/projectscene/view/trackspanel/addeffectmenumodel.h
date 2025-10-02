@@ -3,7 +3,6 @@
  */
 #pragma once
 
-#include "modularity/ioc.h"
 #include "realtimeeffectmenumodelbase.h"
 
 namespace au::projectscene {
@@ -20,8 +19,5 @@ private:
     // effects::IEffectMenuItemFactory
     muse::uicomponents::MenuItem* makeMenuEffectItem(const effects::EffectId& effectId) override;
     muse::uicomponents::MenuItem* makeMenuEffect(const muse::String& title, const muse::uicomponents::MenuItemList& items) override;
-
-    void doLoad() override;
-    void doPopulateMenu() override;
 };
 }

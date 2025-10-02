@@ -59,7 +59,6 @@ Rectangle {
             topMargin: root.topMargin
             index: model.index
             listView: trackEffectList
-            availableEffects: trackEffectList.model.availableEffects
             width: trackEffectList.width - scrollbarContainer.width
             navigationPanel.section: root.navigationSection
             navigationPanel.order: navigationPanelOrderOffset + model.index

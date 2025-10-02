@@ -3,7 +3,6 @@
  */
 #include "realtimeeffectlistitemmenumodel.h"
 #include "effects/effects_base/effectstypes.h"
-#include "effects/effects_base/effectsutils.h"
 #include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "global/defer.h"
 #include "log.h"
@@ -23,20 +22,13 @@ bool RealtimeEffectListItemMenuModel::belongsWithMe(effects::TrackId trackId) co
     return isMasterTrack() == (trackId == IRealtimeEffectService::masterTrackId);
 }
 
-void RealtimeEffectListItemMenuModel::doLoad()
-{
-    doPopulateMenu();
-}
-
 void RealtimeEffectListItemMenuModel::doPopulateMenu()
 {
     MenuItemList items;
 
     items << makeMenuItem("realtimeeffect-remove", muse::TranslatableString("projectscene", "No effect")) << makeSeparator();
 
-    const auto effectMenus = effects::utils::realtimeEffectMenu(
-        effectsConfiguration()->effectMenuOrganization(),
-        effectsProvider()->effectMetaList(), m_effectFilter, *this);
+    const auto effectMenus = this->effectMenus();
     if (!effectMenus.empty()) {
         items << makeSeparator() << effectMenus;
     }
@@ -61,11 +53,6 @@ void RealtimeEffectListItemMenuModel::handleMenuItem(const QString& itemId)
             effectsProvider()->showEffect(newState);
         }
     }
-}
-
-QVariantList RealtimeEffectListItemMenuModel::availableEffects() const
-{
-    return menuItemListToVariantList(items());
 }
 
 QString RealtimeEffectListItemMenuModel::prop_effectState() const
