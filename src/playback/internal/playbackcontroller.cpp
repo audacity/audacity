@@ -70,7 +70,7 @@ void PlaybackController::init()
             player()->stop();
             if (player()->playbackRegion() != m_lastPlaybackRegion && !isEqualToPlaybackPosition(m_lastPlaybackRegion.end)) {
                 // we want to update the playback region in case user made new selection during playback
-                player()->setPlaybackRegion(m_lastPlaybackRegion);
+                updatePlaybackRegion();
             }
         }
     });
@@ -172,6 +172,11 @@ PlaybackRegion PlaybackController::selectionPlaybackRegion() const
 bool PlaybackController::isSelectionPlaybackRegionChanged() const
 {
     return m_lastPlaybackRegion.isValid() && m_lastPlaybackRegion != player()->playbackRegion();
+}
+
+void PlaybackController::updatePlaybackRegion()
+{
+    player()->setPlaybackRegion(m_lastPlaybackRegion);
 }
 
 Notification PlaybackController::isPlayingChanged() const
@@ -278,7 +283,7 @@ void PlaybackController::play(bool ignoreSelection)
             LOGW() << "playback region is not valid";
             // update the playback region "manually" even when not paused
             // (that's why we aren't using the doChangePlaybackRegion)
-            player()->setPlaybackRegion(m_lastPlaybackRegion);
+            updatePlaybackRegion();
         }
     } else {
         doChangePlaybackRegion({});
@@ -364,7 +369,7 @@ void PlaybackController::doChangePlaybackRegion(const PlaybackRegion& region)
     m_lastPlaybackRegion = region;
 
     if (isStopped()) {
-        player()->setPlaybackRegion(m_lastPlaybackRegion);
+        updatePlaybackRegion();
     }
 
     if (region.isValid()) {
@@ -390,7 +395,7 @@ void PlaybackController::stop()
     player()->stop();
 
     seek(m_lastPlaybackSeekTime, false);
-    player()->setPlaybackRegion(m_lastPlaybackRegion);
+    updatePlaybackRegion();
 }
 
 void PlaybackController::resume()
