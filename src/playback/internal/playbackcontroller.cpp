@@ -70,6 +70,7 @@ void PlaybackController::init()
             //! NOTE: just stop, without seek
             player()->stop();
             if (player()->playbackRegion() != m_lastPlaybackRegion && !isEqualToPlaybackPosition(m_lastPlaybackRegion.end)) {
+                // we want to update the playback region in case user made new selection during playback
                 player()->setPlaybackRegion(m_lastPlaybackRegion);
             }
         }
@@ -100,7 +101,7 @@ void PlaybackController::init()
             if (selectionRegion.isValid()) {
                 doChangePlaybackRegion(selectionRegion);
             }
-            doSeek(m_lastPlaybackSeekTime);
+            doSeek(m_lastPlaybackSeekTime, false);
         }
     });
 }
@@ -154,6 +155,7 @@ bool PlaybackController::isLoopActive() const
 PlaybackRegion PlaybackController::selectionPlaybackRegion() const
 {
     // clip selection have priority over time selection
+    // this?
     if (selectionController()->selectedClips().size() == 1) {
         secs_t clipStartTime = selectionController()->selectedClipStartTime();
         secs_t clipEndTime = selectionController()->selectedClipEndTime();
@@ -178,13 +180,13 @@ Notification PlaybackController::isPlayingChanged() const
     return m_isPlayingChanged;
 }
 
-void PlaybackController::seek(const muse::secs_t secs)
+void PlaybackController::seek(const muse::secs_t secs, bool applyIfPlaying)
 {
     IF_ASSERT_FAILED(player()) {
         return;
     }
 
-    player()->seek(secs);
+    player()->seek(secs, applyIfPlaying);
 }
 
 void PlaybackController::reset()
@@ -224,7 +226,7 @@ void PlaybackController::onProjectChanged()
             stop();
         });
 
-        seek(0.0);
+        seek(0.0, false); // TODO: get the previous position from the project data
     }
 }
 
@@ -235,7 +237,7 @@ void PlaybackController::togglePlay()
         return;
     }
 
-    bool isShiftPressed = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
+    const bool isShiftPressed = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
     if (isPlaying()) {
         if (isShiftPressed) {
             stop();
@@ -246,17 +248,17 @@ void PlaybackController::togglePlay()
         if (isSelectionPlaybackRegionChanged()) {
             //! NOTE: just stop, without seek
             player()->stop();
-            play();
+            play(false);
         } else if (isShiftPressed) {
             //! NOTE: set the current position as start position
-            doSeek(m_player->playbackPosition());
+            doSeek(m_player->playbackPosition(), false);
             play(true /* ignoreSelection */);
         } else {
             resume();
         }
     } else {
-        if (isPlaybackPositionOnTheEndOfProject()) {
-            doSeek(0.0);
+        if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
+            doSeek(0.0, false);
         }
 
         play(isShiftPressed /* ignoreSelection */);
@@ -281,7 +283,7 @@ void PlaybackController::play(bool ignoreSelection)
         }
     } else {
         doChangePlaybackRegion({});
-        doSeek(m_lastPlaybackSeekTime);
+        doSeek(m_lastPlaybackSeekTime, false);
     }
 
     if (!isPlaybackStartPositionValid()) {
@@ -296,7 +298,7 @@ void PlaybackController::rewindToStart()
     //! NOTE: In Audacity 3 we can't rewind while playing
     stop();
 
-    doSeek(0.0);
+    doSeek(0.0, false);
 
     selectionController()->resetTimeSelection();
 }
@@ -341,7 +343,7 @@ void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
 
 void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
 {
-    player()->seek(secs, applyIfPlaying);
+    seek(secs, applyIfPlaying);
     m_lastPlaybackSeekTime = secs;
     m_lastPlaybackRegion = {};
 }
@@ -388,7 +390,7 @@ void PlaybackController::stop()
 
     player()->stop();
 
-    seek(m_lastPlaybackSeekTime);
+    seek(m_lastPlaybackSeekTime, false);
     player()->setPlaybackRegion(m_lastPlaybackRegion);
 }
 

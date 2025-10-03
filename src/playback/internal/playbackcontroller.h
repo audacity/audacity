@@ -95,14 +95,14 @@ private:
     void rewindToStart();
     void rewindToEnd();
     void onSeekAction(const muse::actions::ActionData& args);
-    void doSeek(const muse::secs_t secs, bool applyIfPlaying = false);
+    void doSeek(const muse::secs_t secs, bool applyIfPlaying);
     void onChangePlaybackRegionAction(const muse::actions::ActionData& args);
     void doChangePlaybackRegion(const PlaybackRegion& region);
-    void play(bool ignoreSelection = false);
+    void play(bool ignoreSelection);
     void pause();
     void stop();
     void resume();
-    void seek(const muse::secs_t secs);
+    void seek(const muse::secs_t secs, bool applyIfPlaying);
 
     void togglePlayRepeats();
     void toggleAutomaticallyPan();
