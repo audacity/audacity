@@ -69,10 +69,8 @@ muse::Ret Au3ProjectCreator::removeUnsavedData(const muse::io::path_t& projectPa
         if (tempProject->isTemporary()) {
             tempProject->close();
             ret = fileSystem()->remove(projectPath);
-        } else if (tempProject->hasAutosaveData()) {
-            ret = tempProject->removeAutosaveData();
-            tempProject->close();
         } else {
+            ret = tempProject->removeAutosaveData();
             tempProject->close();
         }
     }
