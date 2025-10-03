@@ -16,6 +16,8 @@ Item {
     Rectangle {
         id: splitter
 
+        y: Math.round(root.channelHeightRatio * root.height) - 1
+
         height: 1
         width: root.width
     }
@@ -26,7 +28,6 @@ Item {
         anchors.fill: splitter
         anchors.margins: -2
 
-        drag.target: splitter
         drag.axis: Drag.YAxis
         drag.threshold: 0
 
@@ -35,19 +36,8 @@ Item {
         enabled: asymmetricStereoHeightsPossible
 
         onPositionChanged: {
-            root.positionChangeRequested(splitter.y)
-        }
-    }
-
-    Binding {
-        target: splitter
-        property: "y"
-        value: {
-            if (root.height <= 0) {
-                return 0
-            }
-
-            return Math.round(root.channelHeightRatio * root.height) - 1
+            var newY = mapToItem(root, mouse.x, mouse.y).y
+            root.positionChangeRequested(newY)
         }
     }
 }

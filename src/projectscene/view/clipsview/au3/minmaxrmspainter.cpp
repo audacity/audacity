@@ -89,7 +89,7 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
         _metrics.fromTime += waveClip->GetTrimLeft();
         _metrics.toTime += waveClip->GetTrimLeft();
 
-        metrics.top += metrics.height;
+        metrics.top += static_cast<int>(metrics.height);
 
         waveformPainter.Draw(index, painter, paintParameters, _metrics);
     }
