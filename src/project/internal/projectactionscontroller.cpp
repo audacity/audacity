@@ -178,6 +178,9 @@ void ProjectActionsController::openProject(const muse::actions::ActionData& args
     const QString displayNameOverride = args.count() >= 2 ? args.arg<QString>(1) : QString();
 
     Ret ret = openProject(ProjectFile(url, displayNameOverride));
+    if (!ret) {
+        openPageIfNeed(HOME_PAGE_URI);
+    }
 }
 
 void ProjectActionsController::importFile()
