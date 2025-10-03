@@ -385,6 +385,52 @@ bool OpenSaveProjectScenario::warnBeforePublishing(bool isPublishShare, cloud::V
     // return ok;
 }
 
+muse::RetVal<muse::io::path_t> OpenSaveProjectScenario::resolveLegacyProjectFormat(const muse::io::path_t& path) const
+{
+    auto ret = interactive()->questionSync(muse::trc("project/open", "Legacy project file"),
+                                           muse::trc(
+                                               "project/open",
+                                               "You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4."),
+    {
+        muse::IInteractive::ButtonData(
+            muse::IInteractive::Button::Cancel, muse::trc("project/open", "Cancel"),
+            false),
+        muse::IInteractive::ButtonData(
+            muse::IInteractive::Button::Apply, muse::trc("project/open", "Save as new project"), true)
+    }
+                                           );
+
+    if (ret.standardButton() != muse::IInteractive::Button::Apply) {
+        return muse::make_ret(Ret::Code::Cancel);
+    }
+
+    std::string s = path.toStdString();
+    auto pos = s.rfind(au::project::AUP3);
+    if (pos != std::string::npos) {
+        s.replace(pos, 4, au::project::AUP4);
+    }
+
+    muse::io::path_t newFilename = s;
+
+    int counter = 1;
+    while (fileSystem()->exists(newFilename)) {
+        std::string base = s.substr(0, s.size() - 5);
+        std::string numbered = base + "-" + std::to_string(counter) + "." + au::project::AUP4;
+        newFilename = numbered;
+        ++counter;
+    }
+
+    fileSystem()->copy(path, newFilename);
+
+    interactive()->infoSync(muse::trc("project/open", ""),
+                            muse::mtrc("project/open", "The project was saved as \"%1\"").arg(newFilename.toString()).toStdString(),
+    {
+        muse::IInteractive::ButtonData(
+            muse::IInteractive::Button::Ok, muse::trc("project/open", "Continue"), false)
+    });
+    return RetVal<muse::io::path_t>::make_ok(newFilename);
+}
+
 bool OpenSaveProjectScenario::warnBeforeSavingToExistingPubliclyVisibleCloudProject() const
 {
     IInteractive::ButtonDatas buttons = {

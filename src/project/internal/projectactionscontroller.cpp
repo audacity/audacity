@@ -7,6 +7,7 @@
 #include "audacityproject.h"
 #include "projecterrors.h"
 
+#include "project/types/projecttypes.h"
 #include "au3wrap/au3types.h"
 
 #include "log.h"
@@ -21,7 +22,7 @@ static const muse::Uri NEW_PROJECT_URI("audacity://project/new");
 static const muse::Uri EXPORT_URI("audacity://project/export");
 static const muse::Uri CUSTOM_FFMPEG_OPTIONS("audacity://project/export/ffmpeg");
 
-static const QString AUDACITY_URL_SCHEME("AUDACITY");
+static const QString AUDACITY_URL_SCHEME("audacity");
 static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
 
 static const muse::actions::ActionCode OPEN_CUSTOM_FFMPEG_OPTIONS("open-custom-ffmpeg-options");
@@ -98,20 +99,25 @@ Ret ProjectActionsController::openProject(const ProjectFile& file)
 {
     LOGI() << "Try open project: url = " << file.url.toString() << ", displayNameOverride = " << file.displayNameOverride;
 
-    if (file.isNull()) {
-        muse::io::path_t askedPath = selectOpeningFile();
+    if (file.isNull() || file.url.isLocalFile()) {
+        muse::io::path_t filename = file.isNull() ? selectOpeningFile() : file.path();
 
-        if (askedPath.empty()) {
+        if (filename.empty()) {
             return make_ret(Ret::Code::Cancel);
         }
 
-        return openProject(askedPath);
+        if (au::project::isAudacity3File(filename)) {
+            auto resolved = openSaveProjectScenario()->resolveLegacyProjectFormat(filename);
+            if (!resolved.ret) {
+                return resolved.ret;
+            }
+            filename = resolved.val;
+        }
+
+        return openProject(filename, file.displayNameOverride);
     }
 
-    if (file.url.isLocalFile()) {
-        return openProject(file.path(), file.displayNameOverride);
-    }
-
+    //! TODO: Fix me
     // if (file.url.scheme() == AUDACITY_URL_SCHEME) {
     //     return openMuseScoreUrl(file.url);
     // }
@@ -172,6 +178,9 @@ void ProjectActionsController::openProject(const muse::actions::ActionData& args
     const QString displayNameOverride = args.count() >= 2 ? args.arg<QString>(1) : QString();
 
     Ret ret = openProject(ProjectFile(url, displayNameOverride));
+    if (!ret) {
+        openPageIfNeed(HOME_PAGE_URI);
+    }
 }
 
 void ProjectActionsController::importFile()
@@ -181,15 +190,27 @@ void ProjectActionsController::importFile()
     project->import(askedPath);
 }
 
-bool ProjectActionsController::isUrlSupported([[maybe_unused]] const QUrl& url) const
+bool ProjectActionsController::isUrlSupported(const QUrl& url) const
 {
-    //! TODO AU4
+    if (url.isLocalFile()) {
+        return isFileSupported(muse::io::path_t(url));
+    }
+
+    if (url.scheme() == AUDACITY_URL_SCHEME) {
+        if (url.host() == OPEN_PROJECT_URL_HOSTNAME) {
+            return true;
+        }
+    }
+
     return false;
 }
 
-bool ProjectActionsController::isFileSupported([[maybe_unused]] const muse::io::path_t& path) const
+bool ProjectActionsController::isFileSupported(const muse::io::path_t& path) const
 {
-    //! TODO AU4
+    if (au::project::isAudacityFile(path)) {
+        return true;
+    }
+
     return false;
 }
 
