@@ -47,7 +47,18 @@ public:
     bool isPlaying() const override;
     muse::async::Notification isPlayingChanged() const override;
 
-    bool isLoopActive() const override;
+    bool isLoopRegionActive() const override;
+    void toggleLoopPlayback() override;
+    PlaybackRegion loopRegion() const override;
+    void setLoopRegion(const PlaybackRegion& region) override;
+    void setLoopRegionStart(const muse::secs_t time) override;
+    void setLoopRegionEnd(const muse::secs_t time) override;
+    void setLoopRegionActive(const bool active) override;
+    void clearLoopRegion() override;
+    void loopEditingBegin();
+    void loopEditingEnd();
+    bool isLoopRegionClear() const;
+    muse::async::Notification loopRegionChanged() const override;
 
     bool isPaused() const override;
     bool isStopped() const override;
@@ -108,8 +119,6 @@ private:
     void togglePlayRepeats();
     void toggleAutomaticallyPan();
 
-    void toggleLoopPlayback();
-    void clearLoopRegion();
     void setLoopRegionToSelection();
     void setSelectionToLoop();
     void setLoopRegionInOut();

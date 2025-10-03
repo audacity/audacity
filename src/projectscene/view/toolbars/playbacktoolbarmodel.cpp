@@ -230,7 +230,7 @@ void PlaybackToolBarModel::updateLoopState()
         return;
     }
 
-    bool isLooping = controller()->isLoopActive();
+    bool isLooping = controller()->isLoopRegionActive();
     item->setSelected(isLooping);
 
     QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());

@@ -145,7 +145,7 @@ bool PlaybackController::isLoaded() const
     return m_loadingTrackCount == 0;
 }
 
-bool PlaybackController::isLoopActive() const
+bool PlaybackController::isLoopRegionActive() const
 {
     au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
 
@@ -428,13 +428,58 @@ void PlaybackController::toggleAutomaticallyPan()
 
 void PlaybackController::toggleLoopPlayback()
 {
-    player()->setLoopRegionActive(!isLoopActive());
+    player()->setLoopRegionActive(!isLoopRegionActive());
     notifyActionCheckedChanged("toggle-loop-region");
+}
+
+PlaybackRegion PlaybackController::loopRegion() const
+{
+    return player()->loopRegion();
+}
+
+void PlaybackController::setLoopRegion(const PlaybackRegion& region)
+{
+    player()->setLoopRegion(region);
+}
+
+void PlaybackController::setLoopRegionStart(const muse::secs_t time)
+{
+    player()->setLoopRegionStart(time);
+}
+
+void PlaybackController::setLoopRegionEnd(const muse::secs_t time)
+{
+    player()->setLoopRegionEnd(time);
+}
+
+void PlaybackController::setLoopRegionActive(const bool active)
+{
+    player()->setLoopRegionActive(active);
 }
 
 void PlaybackController::clearLoopRegion()
 {
     player()->clearLoopRegion();
+}
+
+void PlaybackController::loopEditingBegin()
+{
+    player()->loopEditingBegin();
+}
+
+void PlaybackController::loopEditingEnd()
+{
+    player()->loopEditingEnd();
+}
+
+bool PlaybackController::isLoopRegionClear() const
+{
+    return player()->isLoopRegionClear();
+}
+
+muse::async::Notification PlaybackController::loopRegionChanged() const
+{
+    return player()->loopRegionChanged();
 }
 
 void PlaybackController::setLoopRegionToSelection()
@@ -570,7 +615,7 @@ bool PlaybackController::isPlaybackPositionOnTheEndOfProject() const
 bool PlaybackController::isPlaybackPositionOnTheEndOfPlaybackRegion() const
 {
     PlaybackRegion playbackRegion = player()->playbackRegion();
-    return playbackRegion.isValid() && isEqualToPlaybackPosition(playbackRegion.end) && !isLoopActive();
+    return playbackRegion.isValid() && isEqualToPlaybackPosition(playbackRegion.end) && !isLoopRegionActive();
 }
 
 bool PlaybackController::isPlaybackStartPositionValid() const
@@ -591,7 +636,7 @@ bool PlaybackController::isPlaybackStartPositionValid() const
 bool PlaybackController::actionChecked(const ActionCode& actionCode) const
 {
     QMap<std::string, bool> isChecked {
-        { "toggle-loop-region", isLoopActive() },
+        { "toggle-loop-region", isLoopRegionActive() },
         { "toggle-selection-follows-loop-region", playbackConfiguration()->selectionFollowsLoopRegion() }
     };
 
