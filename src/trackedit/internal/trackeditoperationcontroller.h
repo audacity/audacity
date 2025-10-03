@@ -8,21 +8,29 @@
 #include "itrackandclipoperations.h"
 #include "itrackeditclipboard.h"
 #include "iundomanager.h"
+#include "appshell/iguifocusstate.h"
 #include "context/iglobalcontext.h"
+#include "actions/actionable.h"
+#include "actions/iactionsdispatcher.h"
 #include "async/asyncable.h"
 #include "modularity/ioc.h"
 
 namespace au::trackedit {
-class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable, public muse::async::Asyncable
+class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable, public muse::async::Asyncable,
+    public muse::actions::Actionable
 {
     muse::Inject<ITrackAndClipOperations> trackAndClipOperations;
     muse::Inject<ITrackeditClipboard> clipboard;
     muse::Inject<IProjectHistory> projectHistory;
     muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<au::appshell::IGuiFocusState> guiFocusState;
 
 public:
     TrackeditOperationController(std::unique_ptr<IUndoManager> undoManager);
     ~TrackeditOperationController() override = default;
+
+    void init();
 
     secs_t clipStartTime(const ClipKey& clipKey) const override;
     secs_t clipEndTime(const trackedit::ClipKey& clipKey) const override;
@@ -90,6 +98,8 @@ public:
     bool redo() override;
     bool canRedo() override;
     bool undoRedoToIndex(size_t index) override;
+
+    void onCancel();
 
     bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) override;
 

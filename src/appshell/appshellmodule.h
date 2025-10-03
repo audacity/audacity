@@ -33,6 +33,7 @@ namespace au::appshell {
 class ApplicationActionController;
 class ApplicationUiActions;
 class AppShellConfiguration;
+class GuiFocusState;
 class SessionsManager;
 #ifdef Q_OS_MAC
 class MacOSScrollingHook;
@@ -60,6 +61,7 @@ private:
     std::shared_ptr<ApplicationUiActions> m_applicationUiActions;
     std::shared_ptr<AppShellConfiguration> m_appShellConfiguration;
     std::shared_ptr<SessionsManager> m_sessionsManager;
+    std::shared_ptr<GuiFocusState> m_guiFocusState;
 
     #ifdef Q_OS_MAC
     std::shared_ptr<MacOSScrollingHook> m_scrollingHook;

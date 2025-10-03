@@ -16,7 +16,7 @@ class TrackeditInteraction : public ITrackeditInteraction, public muse::Injectab
     muse::Inject<au::playback::IPlayback> playback;
 
 public:
-    TrackeditInteraction(std::unique_ptr<ITrackeditInteraction> interaction);
+    TrackeditInteraction(std::shared_ptr<ITrackeditInteraction> interaction);
 
 private:
     muse::secs_t clipStartTime(const trackedit::ClipKey& clipKey) const override;
@@ -129,6 +129,6 @@ private:
         return method(std::forward<Args>(args)...);
     }
 
-    const std::unique_ptr<ITrackeditInteraction> m_interaction;
+    const std::shared_ptr<ITrackeditInteraction> m_interaction;
 };
 } // namespace au::trackedit

@@ -28,6 +28,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/appshellmodule.h
     ${CMAKE_CURRENT_LIST_DIR}/iappshellconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/iapplicationactioncontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/iguifocusstate.h
     ${CMAKE_CURRENT_LIST_DIR}/istartupscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/appshelltypes.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/applicationuiactions.cpp
@@ -38,6 +39,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/applicationactioncontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/framelesswindowcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/framelesswindowcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/guifocusstate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/guifocusstate.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/startupscenario.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/startupscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/isessionsmanager.h

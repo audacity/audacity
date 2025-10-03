@@ -8,6 +8,16 @@ namespace au::trackedit {
 TrackeditOperationController::TrackeditOperationController(std::unique_ptr<IUndoManager> undoManager)
     : m_undoManager{std::move(undoManager)} {}
 
+void TrackeditOperationController::init()
+{
+    dispatcher()->reg(this, "cancel", this, &TrackeditOperationController::onCancel);
+    guiFocusState()->isFocusedChanged().onReceive(this, [this](bool focused){
+        if (!focused) {
+            onCancel();
+        }
+    });
+}
+
 secs_t TrackeditOperationController::clipStartTime(const ClipKey& clipKey) const
 {
     return trackAndClipOperations()->clipStartTime(clipKey);
@@ -520,6 +530,21 @@ bool TrackeditOperationController::canRedo()
 bool TrackeditOperationController::undoRedoToIndex(size_t index)
 {
     return m_undoManager->undoRedoToIndex(index);
+}
+
+void TrackeditOperationController::onCancel()
+{
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj) {
+        return;
+    }
+
+    const projectscene::IProjectViewStatePtr vs = prj->viewState();
+    if (vs->moveInitiated()) {
+        vs->setMoveInitiated(false);
+        projectHistory()->rollbackState();
+        prj->trackeditProject()->reload();
+    }
 }
 
 bool TrackeditOperationController::insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)

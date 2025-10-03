@@ -119,6 +119,10 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Redo"),
              IconCode::Code::REDO
              ),
+    UiAction("cancel",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY
+             ),
     UiAction("duplicate",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

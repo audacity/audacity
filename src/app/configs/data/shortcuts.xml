@@ -232,6 +232,10 @@
         <seq>Ctrl+Shift+Z</seq>
     </SC>
     <SC>
+      <key>cancel</key>
+      <seq>Esc</seq>
+    </SC>
+    <SC>
         <key>cut-per-track-ripple</key>
         <seq>Ctrl+Shift+X</seq>
     </SC>
