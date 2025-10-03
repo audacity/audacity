@@ -955,7 +955,7 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
             if (result != SQLITE_OK && (rc == SQLITE_DONE || rc == SQLITE_OK)) {
                 ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
                 ADD_EXCEPTION_CONTEXT(
-                    "sqlite3.context", "ProjectGileIO::CopyTo.cleanup");
+                    "sqlite3.context", "ProjectFileIO::CopyTo.cleanup");
 
                 SetDBError(
                     XO("Failed to rollback transaction during import")
