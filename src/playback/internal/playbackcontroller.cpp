@@ -66,14 +66,7 @@ void PlaybackController::init()
 
     // No need to assert that we're on the main thread here: this is the init method of a controller...
     m_player->playbackPositionChanged().onReceive(this, [this](const muse::secs_t&) {
-        if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
-            //! NOTE: just stop, without seek
-            player()->stop();
-            if (player()->playbackRegion() != m_lastPlaybackRegion && !isEqualToPlaybackPosition(m_lastPlaybackRegion.end)) {
-                // we want to update the playback region in case user made new selection during playback
-                updatePlaybackRegion();
-            }
-        }
+        onPlaybackPositionChanged();
     });
 
     m_player->loopRegionChanged().onNotify(this, [this](){
@@ -232,6 +225,18 @@ void PlaybackController::onProjectChanged()
         });
 
         seek(0.0, false); // TODO: get the previous position from the project data
+    }
+}
+
+void PlaybackController::onPlaybackPositionChanged()
+{
+    if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
+        //! NOTE: just stop, without seek
+        player()->stop();
+        if (player()->playbackRegion() != m_lastPlaybackRegion && !isEqualToPlaybackPosition(m_lastPlaybackRegion.end)) {
+            // we want to update the playback region in case user made new selection during playback
+            updatePlaybackRegion();
+        }
     }
 }
 
