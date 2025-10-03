@@ -26,7 +26,19 @@ public:
     virtual bool isPlaying() const = 0;
     virtual muse::async::Notification isPlayingChanged() const = 0;
 
-    virtual bool isLoopActive() const = 0;
+    virtual PlaybackRegion loopRegion() const = 0;
+    virtual void loopEditingBegin() = 0;
+    virtual void loopEditingEnd() = 0;
+    virtual void setLoopRegion(const PlaybackRegion& region) = 0;
+    virtual void setLoopRegionStart(const muse::secs_t time) = 0;
+    virtual void setLoopRegionEnd(const muse::secs_t time) = 0;
+    virtual void clearLoopRegion() = 0;
+    virtual bool isLoopRegionClear() const = 0;
+    virtual muse::async::Notification loopRegionChanged() const = 0;
+
+    virtual bool isLoopRegionActive() const = 0;
+    virtual void setLoopRegionActive(const bool active) = 0;
+    virtual void toggleLoopPlayback() = 0;
 
     virtual bool isPaused() const = 0;
     virtual bool isStopped() const = 0;
