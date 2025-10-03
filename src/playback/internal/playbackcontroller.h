@@ -98,6 +98,7 @@ private:
     void updatePlaybackRegion();
 
     void onProjectChanged();
+    void onPlaybackPositionChanged();
 
     void onSelectionChanged();
     void seekListSelection();
