@@ -84,6 +84,7 @@ private:
 
     PlaybackRegion selectionPlaybackRegion() const;
     bool isSelectionPlaybackRegionChanged() const;
+    void updatePlaybackRegion();
 
     void onProjectChanged();
 
