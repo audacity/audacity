@@ -427,7 +427,7 @@ void PlaybackController::toggleAutomaticallyPan()
 
 void PlaybackController::toggleLoopPlayback()
 {
-    player()->setLoopRegionActive(!player()->isLoopRegionActive());
+    player()->setLoopRegionActive(!isLoopActive());
     notifyActionCheckedChanged("toggle-loop-region");
 }
 
@@ -569,7 +569,7 @@ bool PlaybackController::isPlaybackPositionOnTheEndOfProject() const
 bool PlaybackController::isPlaybackPositionOnTheEndOfPlaybackRegion() const
 {
     PlaybackRegion playbackRegion = player()->playbackRegion();
-    return playbackRegion.isValid() && isEqualToPlaybackPosition(playbackRegion.end) && !player()->isLoopRegionActive();
+    return playbackRegion.isValid() && isEqualToPlaybackPosition(playbackRegion.end) && !isLoopActive();
 }
 
 bool PlaybackController::isPlaybackStartPositionValid() const
