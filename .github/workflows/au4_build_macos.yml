@@ -80,7 +80,7 @@ jobs:
 
           if [ "$SENTRY_PROJECT" == "au4" ]; then
             DO_UPLOAD_SYMBOLS='true'
-            SENTRY_URL=https://sentry.audacityteam.org/api/5/minidump/?sentry_key=$SENTRY_SERVER_AU4_KEY
+            SENTRY_URL=https://sentry.audacityteam.org/api/4/minidump/?sentry_key=$SENTRY_SERVER_AU4_KEY
           fi
         fi
 
