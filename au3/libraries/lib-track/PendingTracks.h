@@ -42,6 +42,10 @@ public:
      */
     void RegisterPendingNewTracks(TrackList& list);
 
+    //! Return a corresponding pending track without substituting
+    //! original track
+    Track* FindPendingTrack(const Track& track) const;
+
     //! Find anything registered with TrackList::RegisterPendingChangedTrack and
     //! not yet cleared or applied; if no such exists, return the given channel
     Channel& SubstitutePendingChangedChannel(Channel& channel) const;

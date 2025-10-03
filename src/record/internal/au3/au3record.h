@@ -12,8 +12,11 @@
 #include "actions/iactionsdispatcher.h"
 #include "trackedit/iprojecthistory.h"
 #include "playback/iplayback.h"
+#include "trackedit/itrackeditinteraction.h"
 
 #include "au3wrap/au3types.h"
+
+#include "SampleCount.h"
 
 #include "../../irecord.h"
 #include "irecordcontroller.h"
@@ -29,6 +32,7 @@ class Au3Record : public IRecord, public muse::async::Asyncable
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<au::playback::IPlayback> playback;
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
 
 public:
     void init();
@@ -71,5 +75,6 @@ private:
     RecordData m_recordData;
 
     muse::ValCh<muse::secs_t> m_recordPosition;
+    sampleCount mLastCopied = 0;
 };
 }
