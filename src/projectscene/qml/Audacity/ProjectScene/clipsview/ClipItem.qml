@@ -256,6 +256,7 @@ Rectangle {
         waveView.isStemPlot = false
         root.leftTrimContainsMouse = false
         root.rightTrimContainsMouse = false
+        headerHovered = false
     }
 
     MouseArea {
