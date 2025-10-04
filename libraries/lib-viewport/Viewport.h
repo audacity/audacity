@@ -129,6 +129,8 @@ public:
 
    void SetHorizontalThumb(double scrollto, bool doScroll = true);
 
+   void ScrollHorizontalByPixels(int deltaPixels);
+
    //! Set timeline magnification; unchanged left edge time
    void Zoom(double pixelsPerSecond);
 
