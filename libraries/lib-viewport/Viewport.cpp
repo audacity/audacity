@@ -218,6 +218,24 @@ void Viewport::SetHorizontalThumb(double scrollto, bool doScroll)
       DoScroll();
 }
 
+void Viewport::ScrollHorizontalByPixels(int deltaPixels)
+{
+    if (!mpCallbacks)
+        return;
+    int current = mpCallbacks->GetHorizontalThumbPosition();
+    int max = mpCallbacks->GetHorizontalRange() -
+              mpCallbacks->GetHorizontalThumbSize();
+    int newPos = std::clamp(current - deltaPixels, 0, max);
+    sbarH += deltaPixels;
+    sbarH = std::clamp<wxInt64>(
+        sbarH,
+        -PixelWidthBeforeTime(0.0),
+        std::max(sbarTotal - PixelWidthBeforeTime(0.0) - sbarScreen, 0.)
+    );
+    mpCallbacks->SetHorizontalThumbPosition(newPos);
+    DoScroll();
+}
+
 bool Viewport::ScrollUpDown(int delta)
 {
    int oldPos = mpCallbacks ? mpCallbacks->GetVerticalThumbPosition() : 0;

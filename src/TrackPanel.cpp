@@ -741,6 +741,21 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
       mTimer.Start(std::chrono::milliseconds{kTimerInterval}.count(), FALSE);
    }
 
+   if (event.MiddleDown()) {
+      mIsPanning = true;
+      mLastPanX = event.GetX();
+      CaptureMouse();
+   }
+   else if (event.MiddleUp()) {
+      mIsPanning = false;
+      ReleaseMouse();
+   }
+   else if (event.Dragging() && mIsPanning) {
+      int dx = event.GetX() - mLastPanX;
+      mLastPanX = event.GetX();
+
+      Viewport::Get(*GetProject()).ScrollHorizontalByPixels(-dx);
+   }
 
    if (event.ButtonUp()) {
       //ShowTrack should be called after processing the up-click.

@@ -214,6 +214,9 @@ protected:
 
    bool mRefreshBacking;
 
+   bool mIsPanning;
+   int mLastPanX;
+
 
 protected:
 
