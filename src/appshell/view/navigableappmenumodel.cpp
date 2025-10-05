@@ -38,13 +38,6 @@ QSet<int> possibleKeys(QKeyEvent* keyEvent)
     int key = keyEvent->key();
     Qt::KeyboardModifiers mods = keyEvent->modifiers();
 
-    //! NOTE: correct work only with alt modifier
-    if (mods & Qt::AltModifier) {
-        mods = Qt::AltModifier;
-    } else {
-        mods = Qt::NoModifier;
-    }
-
     if (key != Qt::Key_unknown) {
         keyset << (key | mods);
     } else if (!keyEvent->text().isEmpty()) {
