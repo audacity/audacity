@@ -25,44 +25,44 @@
 #include <QWindow>
 #include <QKeyEvent>
 
-#include <private/qkeymapper_p.h>
-
 #include "log.h"
 
 using namespace au::appshell;
 using namespace muse::ui;
 using namespace muse::uicomponents;
 
-QSet<int> convertToSet(QList<int> keys)
-{
-    return QSet<int>(keys.cbegin(), keys.cend());
-}
-
-QSet<int> convertToSet(QList<QKeyCombination> keys)
-{
-    QSet<int> keyset;
-    for (const auto& key : keys) {
-        keyset << key.toCombined();
-    }
-    return keyset;
-}
-
 QSet<int> possibleKeys(QKeyEvent* keyEvent)
 {
-    QKeyEvent* correctedKeyEvent = keyEvent;
-    //! NOTE: correct work only with alt modifier
-    correctedKeyEvent->setModifiers(Qt::AltModifier);
+    QSet<int> keyset;
 
-    auto keys = QKeyMapper::possibleKeys(correctedKeyEvent);
-    return convertToSet(keys);
+    int key = keyEvent->key();
+    Qt::KeyboardModifiers mods = keyEvent->modifiers();
+
+    //! NOTE: correct work only with alt modifier
+    if (mods & Qt::AltModifier) {
+        mods = Qt::AltModifier;
+    } else {
+        mods = Qt::NoModifier;
+    }
+
+    if (key != Qt::Key_unknown) {
+        keyset << (key | mods);
+    } else if (!keyEvent->text().isEmpty()) {
+        keyset << (int(keyEvent->text().at(0).unicode()) | mods);
+    }
+
+    return keyset;
 }
 
 QSet<int> possibleKeys(const QChar& keySymbol)
 {
-    QKeyEvent fakeKey(QKeyEvent::KeyRelease, Qt::Key_unknown, Qt::AltModifier, keySymbol);
-    auto keys = QKeyMapper::possibleKeys(&fakeKey);
+    QSet<int> keyset;
 
-    return convertToSet(keys);
+    if (!keySymbol.isNull()) {
+        keyset << int(keySymbol.unicode());
+    }
+
+    return keyset;
 }
 
 NavigableAppMenuModel::NavigableAppMenuModel(QObject* parent)
