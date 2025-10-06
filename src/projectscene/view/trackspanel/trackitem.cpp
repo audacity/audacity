@@ -10,6 +10,7 @@
 #include "playback/iaudiooutput.h"
 
 #include "log.h"
+#include <QMetaType>
 
 using namespace au::projectscene;
 using namespace au::trackedit;
@@ -23,11 +24,22 @@ static const std::string TRACK_ID_KEY("trackId");
 static const std::string RESOURCE_ID_KEY("resourceId");
 static const std::string CHAIN_ORDER_KEY("chainOrder");
 
+static muse::ui::IconCode::Code iconFromTrackType(au::trackedit::TrackType type)
+{
+    switch (type) {
+    case au::trackedit::TrackType::Label:
+        return muse::ui::IconCode::Code::LOOP_IN;
+    default:
+        return muse::ui::IconCode::Code::MICROPHONE;
+    }
+}
+
 TrackItem::TrackItem(QObject* parent)
     : QObject(parent),
     m_leftChannelPressure(playback::MIN_DISPLAYED_DBFS),
     m_rightChannelPressure(playback::MIN_DISPLAYED_DBFS)
 {
+    qRegisterMetaType<au::trackedit::TrackType>("au::trackedit::TrackType");
     connect(this, &TrackItem::mutedChanged, this, [this]() {
         if (muted()) {
             resetAudioChannelsVolumePressure();
@@ -46,6 +58,7 @@ void TrackItem::init(const trackedit::Track& track)
     if (m_trackType != track.type) {
         m_trackType = track.type;
         emit channelCountChanged();
+        emit trackTypeChanged();
     }
 
     playback()->audioOutput()->playbackTrackSignalChanges(m_trackId)
@@ -99,6 +112,9 @@ void TrackItem::init(const trackedit::Track& track)
     m_recordStreamChannelsMatch = (m_trackType == trackedit::TrackType::Mono && inputChannelsCount == 1)
                                   || (m_trackType == trackedit::TrackType::Stereo && inputChannelsCount == 2);
 
+
+    m_icon = iconFromTrackType(track.type);
+
     m_isFocused = selectionController()->focusedTrack() == m_trackId;
     emit isFocusedChanged();
 
@@ -138,6 +154,11 @@ QString TrackItem::title() const
     return m_title;
 }
 
+int TrackItem::icon() const
+{
+    return static_cast<int>(m_icon);
+}
+
 int TrackItem::channelCount() const
 {
     switch (m_trackType) {
@@ -148,6 +169,11 @@ int TrackItem::channelCount() const
     default:
         return 0;
     }
+}
+
+au::trackedit::TrackType TrackItem::trackType() const
+{
+    return m_trackType;
 }
 
 float TrackItem::leftChannelPressure() const
