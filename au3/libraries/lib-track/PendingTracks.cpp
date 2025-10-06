@@ -185,8 +185,7 @@ const Track& PendingTracks::SubstituteOriginalTrack(const Track& track) const
 
 Track* PendingTracks::RegisterPendingChangedTrack(Updater updater, Track* src)
 {
-    auto track
-        =src->Duplicate(Track::DuplicateOptions {}.ShallowCopyAttachments());
+    auto track = src->GetEmptyCopy();
 
     mUpdaters.push_back(move(updater));
     mPendingUpdates->Add(track);

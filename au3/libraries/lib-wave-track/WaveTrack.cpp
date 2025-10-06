@@ -1071,6 +1071,11 @@ auto WaveTrack::EmptyCopy(
     return EmptyCopy(NChannels(), pFactory);
 }
 
+Track::Holder WaveTrack::TrackEmptyCopy() const
+{
+    return EmptyCopy();
+}
+
 void WaveTrack::MakeMono()
 {
     mRightChannel.reset();

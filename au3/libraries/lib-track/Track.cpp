@@ -115,6 +115,11 @@ auto Track::Duplicate(DuplicateOptions options) const -> Holder
     return result;
 }
 
+Track::Holder Track::GetEmptyCopy() const
+{
+    return TrackEmptyCopy();
+}
+
 Track::~Track()
 {
 }

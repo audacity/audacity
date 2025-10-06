@@ -297,6 +297,7 @@ public:
 
     //! public nonvirtual duplication function that invokes Clone()
     virtual Holder Duplicate(DuplicateOptions = {}) const;
+    Holder GetEmptyCopy() const;
 
     void ReparentAllAttachments();
 
@@ -359,6 +360,7 @@ private:
      @post result tracks have same TrackIds as the channels of `this`
      */
     virtual Holder Clone(bool backup) const = 0;
+    virtual Holder TrackEmptyCopy() const = 0;
 
     template<typename T>
     friend std::enable_if_t< std::is_pointer_v<T>, T >

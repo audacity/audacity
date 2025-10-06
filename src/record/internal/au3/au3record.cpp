@@ -501,17 +501,11 @@ Ret Au3Record::doRecord(Au3Project& project,
                 audioEngine()->recordingClipChanged().send(trackId, clipId);
             };
 
-            // Get a copy of the track to be appended, to be pushed into
-            // undo history only later.
+            // Get an empty copy of the track to be recorded into at any position,
+            // to be pushed into undo history only later.
             const auto pending = static_cast<Au3WaveTrack*>(
                 pendingTracks.RegisterPendingChangedTrack(updater, wt)
                 );
-
-            // TODO: instead of creating pending track out of original one and then
-            // clearing it here and empty copy of original should be created before:
-            // wt->EmptyCopy()
-            // but it crashes this way
-            pending->Clear(pending->GetStartTime(), pending->GetEndTime(), false);
 
             // Source clip was marked as placeholder so that it would not be
             // skipped in clip copying.  Un-mark it and its copy now

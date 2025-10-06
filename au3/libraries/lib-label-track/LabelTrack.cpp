@@ -382,6 +382,12 @@ Track::Holder LabelTrack::Clone(bool) const
     return result;
 }
 
+Track::Holder LabelTrack::TrackEmptyCopy() const
+{
+    // not implemented
+    return {};
+}
+
 // Adjust label's left or right boundary, depending which is requested.
 // Return true iff the label flipped.
 bool LabelStruct::AdjustEdge(int iEdge, double fNewTime)
