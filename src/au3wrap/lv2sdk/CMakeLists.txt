@@ -192,4 +192,5 @@ setup_module()
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_compile_definitions(${MODULE} PRIVATE _GNU_SOURCE)
 endif()
+
 target_no_warning(${MODULE} -w)
