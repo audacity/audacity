@@ -336,17 +336,17 @@ muse::io::path_t ProjectActionsController::selectOpeningFile()
 io::path_t ProjectActionsController::selectImportFile()
 {
     std::string audioFileExt
-        = "*.aac;*.ac3;*.mp3;*.wma;*.wav;*.flac;*.ogg;*.opus;*.aif;*.aiff;*.amr;*.ape;*.au;*.dts;*.mpc;*.tta;*.wv;*.shn;*.voc;*.mmf";
+        = "*.aac *.ac3 *.mp3 *.wma *.wav *.flac *.ogg *.opus *.aif *.aiff *.amr *.ape *.au *.dts *.mpc *.tta *.wv *.shn *.voc *.mmf";
     std::string videoFileExt
-        = "*.avi;*.mp4;*.mkv;*.mov;*.flv;*.wmv;*.asf;*.webm;*.mpg;*.mpeg;*.m4v;*.ts;*.gxf;*.mxf;*.nut;*.dv;*.3gp;*.3g2;*.mj2";
+        = "*.avi *.mp4 *.mkv *.mov *.flv *.wmv *.asf *.webm *.mpg *.mpeg *.m4v *.ts *.gxf *.mxf *.nut *.dv *.3gp *.3g2 *.mj2";
     std::string gameMediaFileExt
         =
-            "*.roq;*.bethsoftvid;*.c93;*.dsicin;*.dxa;*.ea;*.cdata;*.film_cpk;*.idcin;*.ipmovie;*.psxstr;*.rl2;*.siff;*.smk;*.thp;*.tiertexseq;*.vmd;*.wc3movie;*.wsaud;*.wsvqa;*.txd";
-    std::string streamingFileExt = "*.rtsp;*.sdp;*.nsv;*.pva;*.msnwctcp;*.lmlm4;*.redir";
-    std::string animationAndImageFileExt = "*.gif;*.flic;*.swf;*.image2;*.image2pipe";
+            "*.roq *.bethsoftvid *.c93 *.dsicin *.dxa *.ea *.cdata *.film_cpk *.idcin *.ipmovie *.psxstr *.rl2 *.siff *.smk *.thp *.tiertexseq *.vmd *.wc3movie *.wsaud *.wsvqa *.txd";
+    std::string streamingFileExt = "*.rtsp *.sdp *.nsv *.pva *.msnwctcp *.lmlm4 *.redir";
+    std::string animationAndImageFileExt = "*.gif *.flic *.swf *.image2 *.image2pipe";
     std::string rawFileExt
         =
-            "*.al;*.ul;*.s16be;*.u16be;*.s8;*.u8;*.ub;*.uw;*.4xm;*.MTV;*.afc;*.aifc;*.apc;*.apl;*.mac;*.avs;*.302;*.daud;*.ffm;*.cgi;*.mm;*.mpegtsraw;*.mpegvideo;*.nuv;*.sw;*.sb;*.son;*.sol;*.vfwcap";
+            "*.al *.ul *.s16be *.u16be *.s8 *.u8 *.ub *.uw *.4xm *.MTV *.afc *.aifc *.apc *.apl *.mac *.avs *.302 *.daud *.ffm *.cgi *.mm *.mpegtsraw *.mpegvideo *.nuv *.sw *.sb *.son *.sol *.vfwcap";
 
     std::string allExt = audioFileExt + " " + videoFileExt + " " + gameMediaFileExt + " " + streamingFileExt + " "
                          + animationAndImageFileExt + " " + rawFileExt;
