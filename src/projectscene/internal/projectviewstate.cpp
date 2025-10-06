@@ -8,9 +8,10 @@
 
 using namespace au::projectscene;
 
-constexpr int DEFAULT_HEIGHT = 116;
-constexpr int MIN_HEIGHT = 44;
-constexpr int COLLAPSE_HEIGHT = 72;
+constexpr int TRACK_DEFAULT_HEIGHT = 116;
+constexpr int TRACK_LABEL_DEFAULT_HEIGHT = 86;
+constexpr int TRACK_MIN_HEIGHT = 44;
+constexpr int TRACK_COLLAPSE_HEIGHT = 72;
 
 namespace {
 void saveProjectSnap(std::shared_ptr<au::au3::IAu3Project> project, const Snap& snap)
@@ -179,7 +180,6 @@ int ProjectViewState::trackVerticalPosition(const trackedit::TrackId& trackId) c
 ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::TrackId& trackId) const
 {
     TrackData d;
-    d.height.val = DEFAULT_HEIGHT;
     d.collapsed.val = false;
     d.channelHeightRatio.val = 1.0;
     m_totalTracksHeight.set(m_totalTracksHeight.val + d.height.val);
@@ -189,6 +189,7 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
         std::optional<trackedit::Track> track = prj->track(trackId);
         if (track) {
             d.channelHeightRatio.val = track->type == trackedit::TrackType::Stereo ? 0.5 : 1.0;
+            d.height.val = track->type == trackedit::TrackType::Label ? TRACK_LABEL_DEFAULT_HEIGHT : TRACK_DEFAULT_HEIGHT;
         }
     }
     return m_tracks.insert({ trackId, d }).first->second;
@@ -238,10 +239,10 @@ void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int 
     }
 
     int oldHeight = d->height.val;
-    int newHeight = std::max(oldHeight + delta, MIN_HEIGHT);
+    int newHeight = std::max(oldHeight + delta, TRACK_MIN_HEIGHT);
 
     d->height.set(newHeight);
-    d->collapsed.set(newHeight < COLLAPSE_HEIGHT);
+    d->collapsed.set(newHeight < TRACK_COLLAPSE_HEIGHT);
 
     m_totalTracksHeight.set(m_totalTracksHeight.val + (newHeight - oldHeight));
 }
@@ -257,9 +258,9 @@ void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int hei
     }
 
     int oldHeight = d->height.val;
-    int newHeight = std::max(height, MIN_HEIGHT);
+    int newHeight = std::max(height, TRACK_MIN_HEIGHT);
     d->height.set(newHeight);
-    d->collapsed.set(height < COLLAPSE_HEIGHT);
+    d->collapsed.set(height < TRACK_COLLAPSE_HEIGHT);
 
     m_totalTracksHeight.set(m_totalTracksHeight.val + (newHeight - oldHeight));
 }
@@ -537,7 +538,7 @@ muse::ValCh<bool> ProjectViewState::ctrlPressed() const
 
 int ProjectViewState::trackDefaultHeight() const
 {
-    return DEFAULT_HEIGHT;
+    return TRACK_DEFAULT_HEIGHT;
 }
 
 bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)

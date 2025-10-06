@@ -32,6 +32,7 @@
 #include "view/trackspanel/realtimeeffectsectionmodel.h"
 #include "view/trackspanel/trackslistmodel.h"
 #include "view/trackspanel/trackcontextmenumodel.h"
+#include "view/trackspanel/trackitem.h"
 
 #include "view/clipsview/trackslistclipsmodel.h"
 #include "view/clipsview/clipslistmodel.h"
@@ -151,6 +152,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<RealtimeEffectSectionModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectSectionModel");
     qmlRegisterType<TracksListModel>("Audacity.ProjectScene", 1, 0, "TracksListModel");
     qmlRegisterType<TrackContextMenuModel>("Audacity.ProjectScene", 1, 0, "TrackContextMenuModel");
+    qmlRegisterUncreatableType<TrackItemType>("Audacity.ProjectScene", 1, 0, "TrackItemType", "Do not create objects of type TrackItemType");
 
     // clips view
     qmlRegisterType<TracksListClipsModel>("Audacity.ProjectScene", 1, 0, "TracksListClipsModel");
