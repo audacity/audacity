@@ -97,3 +97,8 @@ au::trackedit::Track DomConverter::track(const Au3Track* waveTrack)
     au4t.rate = trackRate(waveTrack);
     return au4t;
 }
+
+au::trackedit::Track DomConverter::labelTrack(const Au3LabelTrack* labelTrack)
+{
+    return track(labelTrack);
+}
