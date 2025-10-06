@@ -97,15 +97,6 @@ au::trackedit::TrackList Au3TrackeditProject::trackList() const
         au4tracks.push_back(std::move(au4t));
     }
 
-    //TODO AU4: For now we filter out label tracks
-    au4tracks.erase(std::remove_if(au4tracks.begin(), au4tracks.end(), [](const Track& t) {
-        if (t.type == au::trackedit::TrackType::Label) {
-            LOGW() << "Label tracks not implemented, so it will be filtered out.";
-            return true;
-        }
-        return false;
-    }), au4tracks.end());
-
     return au4tracks;
 }
 

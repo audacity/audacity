@@ -5,6 +5,7 @@
 #define AU_PROJECTSCENE_TRACKITEM_H
 
 #include <QObject>
+#include <QMetaType>
 
 #include "modularity/ioc.h"
 #include "playback/itrackplaybackcontrol.h"
@@ -15,12 +16,32 @@
 
 #include "async/asyncable.h"
 
+#include "ui/view/iconcodes.h"
+
 #include "trackedit/trackedittypes.h"
 #include "trackedit/dom/track.h"
+#include "trackedit/trackedittypes.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/iselectioncontroller.h"
 
+Q_DECLARE_METATYPE(au::trackedit::TrackType)
+
 namespace au::projectscene {
+class TrackItemType
+{
+    Q_GADGET
+
+public:
+    enum Type: int {
+        Undefined = (int)au::trackedit::TrackType::Undefined,
+        Mono = (int)au::trackedit::TrackType::Mono,
+        Stereo = (int)au::trackedit::TrackType::Stereo,
+        Label = (int)au::trackedit::TrackType::Label
+    };
+
+    Q_ENUM(Type)
+};
+
 class TrackItem : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
@@ -29,7 +50,9 @@ class TrackItem : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(QVariant trackId READ trackId_property CONSTANT)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(int icon READ icon CONSTANT)
     Q_PROPERTY(int channelCount READ channelCount NOTIFY channelCountChanged)
+    Q_PROPERTY(au::trackedit::TrackType trackType READ trackType NOTIFY trackTypeChanged)
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float rightChannelPressure READ rightChannelPressure NOTIFY rightChannelPressureChanged)
@@ -62,7 +85,9 @@ public:
     trackedit::TrackId trackId() const;
     QVariant trackId_property() const;
     QString title() const;
+    int icon() const;
     int channelCount() const;
+    au::trackedit::TrackType trackType() const;
 
     float leftChannelPressure() const;
     float rightChannelPressure() const;
@@ -118,6 +143,7 @@ signals:
     void soloChanged();
     void mutedChanged();
     void channelCountChanged();
+    void trackTypeChanged();
 
     void outputParamsChanged(const audio::AudioOutputParams& params);
 
@@ -142,6 +168,7 @@ protected:
     trackedit::TrackId m_trackId = -1;
     trackedit::TrackType m_trackType = trackedit::TrackType::Undefined;
     QString m_title;
+    muse::ui::IconCode::Code m_icon = muse::ui::IconCode::Code::NONE;
     bool m_outputOnly = false;
 
     float m_leftChannelPressure = playback::MIN_DISPLAYED_DBFS;
