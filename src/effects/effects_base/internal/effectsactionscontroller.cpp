@@ -60,14 +60,14 @@ void EffectsActionsController::onEffectTriggered(const muse::actions::ActionQuer
         return;
     }
 
-    playback()->player()->stop();
+    playbackController()->stop(false, false);
 
     effectExecutionScenario()->performEffect(effectId);
 }
 
 void EffectsActionsController::repeatLastEffect()
 {
-    playback()->player()->stop();
+    playbackController()->stop(false, false);
     effectExecutionScenario()->repeatLastProcessor();
 }
 
