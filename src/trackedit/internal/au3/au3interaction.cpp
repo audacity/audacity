@@ -1377,6 +1377,17 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
     }
 }
 
+void Au3Interaction::cancelClipEdit()
+{
+    if (const auto prj = globalContext()->currentTrackeditProject()) {
+        // Doesn't matter it tracks are now empty or not - we're canceling the action.
+        constexpr auto emptyOnly = false;
+        removeDragAddedTracks(*prj, emptyOnly);
+    }
+    m_startTracklistInfo.reset();
+    m_moveClipsNeedsDownmixing = false;
+}
+
 bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
 {
     selectionController()->resetSelectedClips();
@@ -1525,18 +1536,27 @@ NeedsDownmixing Au3Interaction::moveSelectedClipsUpOrDown(int offset)
         // The user dragged up. It's possible that the bottom-most tracks were created during this interaction,
         // in which case we make it nice to the user and remove them automatically.
         // `m_startTracklistInfo` tells use what the tracks looks like at the start of the interaction. We check all extra tracks.
-        const auto tracks = prj->trackList();
-        for (auto i = m_startTracklistInfo->size; i < tracks.size(); ++i) {
-            const auto& track = tracks[i];
-            Au3WaveTrack* const waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(track.id));
-            if (waveTrack->IsEmpty()) {
-                ::TrackList::Get(projectRef()).Remove(*waveTrack);
-                prj->notifyAboutTrackRemoved(track);
-            }
-        }
+        constexpr auto emptyOnly = true;
+        removeDragAddedTracks(*prj, emptyOnly);
     }
 
     return needsDownmixing;
+}
+
+void Au3Interaction::removeDragAddedTracks(ITrackeditProject& prj, bool emptyOnly)
+{
+    IF_ASSERT_FAILED(m_startTracklistInfo) {
+        return;
+    }
+    const auto tracks = prj.trackList();
+    for (auto i = m_startTracklistInfo->size; i < tracks.size(); ++i) {
+        const auto& track = tracks[i];
+        Au3WaveTrack* const waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(track.id));
+        if (!emptyOnly || waveTrack->IsEmpty()) {
+            ::TrackList::Get(projectRef()).Remove(*waveTrack);
+            prj.notifyAboutTrackRemoved(track);
+        }
+    }
 }
 
 bool Au3Interaction::splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end)

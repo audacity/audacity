@@ -56,6 +56,7 @@ Item {
 
     signal handleTimeGuideline(real x, bool completed)
     signal triggerClipGuideline(real x, bool completed)
+    signal clipDragEditCanceled
 
     height: trackViewState.trackHeight
 
@@ -384,6 +385,12 @@ Item {
                     root.triggerClipGuideline(false, -1)
                 }
 
+                onCancelClipDragEditRequested: function () {
+                    if (clipsModel.cancelClipDragEdit(clipItem.key)) {
+                        root.clipDragEditCanceled()
+                    }
+                }
+
                 onClipLeftTrimRequested: function (completed, action) {
                     clipsModel.trimLeftClip(clipItem.key, completed, action)
 
@@ -654,6 +661,12 @@ Item {
 
         function onClipEndEditRequested(clipKey) {
             clipsModel.endEditClip(clipKey)
+        }
+
+        function onCancelClipDragEditRequested(clipKey) {
+            if (clipsModel.cancelClipDragEdit(clipKey)) {
+                root.clipDragEditCanceled()
+            }
         }
 
         function onStartAutoScroll() {

@@ -44,6 +44,18 @@ Rectangle {
 
     property int interactionState: TracksClipsView.State.Idle
 
+    QtObject {
+        id: prv
+
+        property bool playRegionActivated: false
+
+        function cancelClipDragEdit() {
+            if (root.hoveredClipKey) {
+                tracksClipsView.cancelClipDragEditRequested(root.hoveredClipKey)
+            }
+        }
+    }
+
     PlaybackStateModel {
         id: playbackState
     }
@@ -53,6 +65,10 @@ Rectangle {
 
         onTotalTracksHeightChanged: {
             timeline.context.onResizeFrameContentHeight(tracksModel.totalTracksHeight)
+        }
+
+        onEscapePressed: {
+            prv.cancelClipDragEdit()
         }
     }
 
@@ -220,12 +236,6 @@ Rectangle {
                 id: timelineMouseArea
                 anchors.fill: parent
                 hoverEnabled: true
-
-                QtObject {
-                    id: prv
-
-                    property bool playRegionActivated: false
-                }
 
                 onPositionChanged: function (e) {
                     timeline.updateCursorPosition(e.x, e.y)
@@ -469,7 +479,7 @@ Rectangle {
             onCanceled: e => {
                 console.log("User interaction canceled")
                 root.interactionState = TracksClipsView.State.Idle
-                tracksModel.endUserInteraction()
+                prv.cancelClipDragEdit()
             }
 
             onClicked: e => {
@@ -542,6 +552,7 @@ Rectangle {
                 signal clipMoveRequested(var clipKey, bool completed)
                 signal clipStartEditRequested(var clipKey)
                 signal clipEndEditRequested(var clipKey)
+                signal cancelClipDragEditRequested(var clipKey)
                 signal startAutoScroll
                 signal stopAutoScroll
 
@@ -687,6 +698,12 @@ Rectangle {
 
                     onInteractionEnded: {
                         tracksViewState.requestVerticalScrollUnlock()
+                    }
+
+                    onClipDragEditCanceled: {
+                        root.hoveredClipKey = null
+                        root.clipHeaderHovered = false
+                        tracksModel.endUserInteraction()
                     }
 
                     onIsBrushChanged: function () {
