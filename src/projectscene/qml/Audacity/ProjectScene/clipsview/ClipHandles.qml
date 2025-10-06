@@ -28,8 +28,8 @@ Item {
 
     property var trimStartPos
 
-    signal clipStartEditRequested()
-    signal clipEndEditRequested()
+    signal clipStartEditRequested
+    signal clipEndEditRequested
 
     signal trimLeftRequested(bool completed, int action)
     signal trimRightRequested(bool completed, int action)
@@ -38,7 +38,7 @@ Item {
     signal stretchRightRequested(bool completed, int action)
 
     //! NOTE: auto-scroll for trimming is triggered from clipslistmodel
-    signal stopAutoScroll()
+    signal stopAutoScroll
 
     Item {
         id: leftTrimHandle
@@ -58,7 +58,6 @@ Item {
 
             visible: debugRectsVisible
         }
-
 
         StyledIconLabel {
             id: leftArrow
@@ -99,12 +98,12 @@ Item {
                     root.leftTrimActive = !root.leftTrimActive
                 }
 
-                onNavigationEvent: function(event) {
+                onNavigationEvent: function (event) {
                     if (!root.leftTrimActive) {
                         return
                     }
 
-                    switch(event.type) {
+                    switch (event.type) {
                     case NavigationEvent.Left:
                         root.trimLeftRequested(true, ClipBoundaryAction.Expand)
                         event.accepted = true
@@ -150,13 +149,13 @@ Item {
             hoverEnabled: true
             cursorShape: Qt.SizeHorCursor
 
-            onPressed: function(e) {
+            onPressed: function (e) {
                 root.clipStartEditRequested()
             }
 
-            onReleased: function(e) {
+            onReleased: function (e) {
                 root.trimLeftRequested(true, ClipBoundaryAction.Auto)
-                root.stopAutoScroll()
+                root.stopAutoScroll();
 
                 // this needs to be always at the very end
                 root.clipEndEditRequested()
@@ -172,7 +171,7 @@ Item {
                 }
             }
 
-            onPositionChanged: function(e) {
+            onPositionChanged: function (e) {
                 clipHandlesMousePositionChanged(mouseX + leftTrimHandle.x, mouseY)
 
                 if (pressed) {
@@ -240,12 +239,12 @@ Item {
                     root.rightTrimActive = !root.rightTrimActive
                 }
 
-                onNavigationEvent: function(event) {
+                onNavigationEvent: function (event) {
                     if (!root.rightTrimActive) {
                         return
                     }
 
-                    switch(event.type) {
+                    switch (event.type) {
                     case NavigationEvent.Left:
                         root.trimRightRequested(true, ClipBoundaryAction.Shrink)
                         event.accepted = true
@@ -291,13 +290,13 @@ Item {
             hoverEnabled: true
             cursorShape: Qt.SizeHorCursor
 
-            onPressed: function(e) {
+            onPressed: function (e) {
                 root.clipStartEditRequested()
             }
 
-            onReleased: function(e) {
+            onReleased: function (e) {
                 root.trimRightRequested(true, ClipBoundaryAction.Auto)
-                root.stopAutoScroll()
+                root.stopAutoScroll();
 
                 // this needs to be always at the very end
                 root.clipEndEditRequested()
@@ -313,7 +312,7 @@ Item {
                 }
             }
 
-            onPositionChanged: function(e) {
+            onPositionChanged: function (e) {
                 clipHandlesMousePositionChanged(mouseX + rightTrimHandle.x, mouseY)
 
                 if (pressed) {
@@ -391,12 +390,12 @@ Item {
                     root.leftStretchActive = !root.leftStretchActive
                 }
 
-                onNavigationEvent: function(event) {
+                onNavigationEvent: function (event) {
                     if (!root.leftStretchActive) {
                         return
                     }
 
-                    switch(event.type) {
+                    switch (event.type) {
                     case NavigationEvent.Left:
                         root.stretchLeftRequested(true, ClipBoundaryAction.Expand)
                         event.accepted = true
@@ -455,7 +454,7 @@ Item {
 
             onReleased: {
                 root.stretchLeftRequested(true, ClipBoundaryAction.Auto)
-                root.stopAutoScroll()
+                root.stopAutoScroll();
 
                 // this needs to be always at the very end
                 root.clipEndEditRequested()
@@ -545,12 +544,12 @@ Item {
                         root.rightStretchActive = !root.rightStretchActive
                     }
 
-                    onNavigationEvent: function(event) {
+                    onNavigationEvent: function (event) {
                         if (!root.rightStretchActive) {
                             return
                         }
 
-                        switch(event.type) {
+                        switch (event.type) {
                         case NavigationEvent.Left:
                             root.stretchRightRequested(true, ClipBoundaryAction.Shrink)
                             event.accepted = true
@@ -610,7 +609,7 @@ Item {
 
             onReleased: {
                 root.stretchRightRequested(true, ClipBoundaryAction.Auto)
-                root.stopAutoScroll()
+                root.stopAutoScroll();
 
                 // this needs to be always at the very end
                 root.clipEndEditRequested()
@@ -642,33 +641,53 @@ Item {
             name: "NORMAL"
             when: !leftTrimMa.containsMouse && !rightTrimMa.containsMouse && !leftTimeMa.containsMouse && !rightTimeMa.containsMouse
         },
-
         State {
             name: "LEFT_TRIM_HOVERED"
             when: leftTrimMa.containsMouse
-            PropertyChanges { target: leftArrow; font.pixelSize: 40 }
-            PropertyChanges { target: leftArrow; anchors.leftMargin: -10}
+            PropertyChanges {
+                target: leftArrow
+                font.pixelSize: 40
+            }
+            PropertyChanges {
+                target: leftArrow
+                anchors.leftMargin: -10
+            }
         },
-
         State {
             name: "RIGHT_TRIM_HOVERED"
             when: rightTrimMa.containsMouse
-            PropertyChanges { target: rightArrow; font.pixelSize: 40 }
-            PropertyChanges { target: rightArrow; anchors.rightMargin: -10}
+            PropertyChanges {
+                target: rightArrow
+                font.pixelSize: 40
+            }
+            PropertyChanges {
+                target: rightArrow
+                anchors.rightMargin: -10
+            }
         },
-
         State {
             name: "LEFT_TIME_HOVERED"
             when: leftTimeMa.containsMouse
-            PropertyChanges { target: leftClockIcon; font.pixelSize: 18 }
-            PropertyChanges { target: leftClock; anchors.leftMargin: 2 }
+            PropertyChanges {
+                target: leftClockIcon
+                font.pixelSize: 18
+            }
+            PropertyChanges {
+                target: leftClock
+                anchors.leftMargin: 2
+            }
         },
-
         State {
             name: "RIGHT_TIME_HOVERED"
             when: rightTimeMa.containsMouse
-            PropertyChanges { target: rightClockIcon; font.pixelSize: 18 }
-            PropertyChanges { target: rightClock; anchors.rightMargin: 2 }
+            PropertyChanges {
+                target: rightClockIcon
+                font.pixelSize: 18
+            }
+            PropertyChanges {
+                target: rightClock
+                anchors.rightMargin: 2
+            }
         }
     ]
 
