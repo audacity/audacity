@@ -23,6 +23,7 @@
 #include "libraries/lib-wave-track/TimeStretching.h"
 #include "libraries/lib-effects/MixAndRender.h"
 #include "libraries/lib-realtime-effects/RealtimeEffectList.h"
+#include "libraries/lib-label-track/LabelTrack.h"
 
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
@@ -1968,8 +1969,16 @@ void Au3Interaction::addWaveTrack(int numChannels)
 
 bool Au3Interaction::newLabelTrack()
 {
-    NOT_IMPLEMENTED;
-    return false;
+    auto& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* track = ::LabelTrack::Create(tracks);
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutTrackAdded(DomConverter::labelTrack(track));
+
+    selectionController()->setSelectedTracks({ track->GetId() });
+    selectionController()->setFocusedTrack(track->GetId());
+
+    return true;
 }
 
 bool Au3Interaction::deleteTracks(const TrackIdList& trackIds)
