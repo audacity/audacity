@@ -27,6 +27,7 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
     Q_PROPERTY(bool isVerticalRulersVisible READ isVerticalRulersVisible NOTIFY isVerticalRulersVisibleChanged)
     Q_PROPERTY(int totalTracksHeight READ totalTracksHeight NOTIFY totalTracksHeightChanged FINAL)
 
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<IProjectSceneConfiguration> configuration;
     muse::Inject<trackedit::ISelectionController> selectionController;
@@ -54,6 +55,7 @@ signals:
     void isVerticalRulersVisibleChanged(bool isVerticalRulersVisible);
 
     void totalTracksHeightChanged();
+    void escapePressed();
 
 private:
     void setIsVerticalRulersVisible(bool isVerticalRulersVisible);

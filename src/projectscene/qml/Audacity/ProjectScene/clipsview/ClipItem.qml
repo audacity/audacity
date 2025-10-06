@@ -54,6 +54,7 @@ Rectangle {
 
     signal clipStartEditRequested
     signal clipEndEditRequested
+    signal cancelClipDragEditRequested
 
     signal clipLeftTrimRequested(bool completed, int action)
     signal clipRightTrimRequested(bool completed, int action)
@@ -353,6 +354,10 @@ Rectangle {
                 }
             }
         }
+
+        onCanceled: e => {
+            root.cancelClipDragEditRequested()
+        }
     }
 
     MouseArea {
@@ -409,6 +414,10 @@ Rectangle {
                     root.clipRightTrimRequested(false, ClipBoundaryAction.Shrink)
                 }
             }
+        }
+
+        onCanceled: e => {
+            root.cancelClipDragEditRequested()
         }
     }
 
@@ -812,6 +821,10 @@ Rectangle {
 
         onClipEndEditRequested: function () {
             root.clipEndEditRequested()
+        }
+
+        onCancelClipDragEditRequested: function () {
+            root.cancelClipDragEditRequested()
         }
 
         onTrimLeftRequested: function (completed, action) {

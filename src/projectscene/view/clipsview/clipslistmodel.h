@@ -58,6 +58,7 @@ public:
 
     Q_INVOKABLE void startEditClip(const ClipKey& key);
     Q_INVOKABLE void endEditClip(const ClipKey& key);
+    Q_INVOKABLE bool cancelClipDragEdit(const ClipKey& key);
 
     Q_INVOKABLE bool moveSelectedClips(const ClipKey& key, bool completed);
     Q_INVOKABLE bool trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);

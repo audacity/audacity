@@ -16,6 +16,10 @@ using namespace muse::ui;
 using namespace muse::actions;
 
 static UiActionList STATIC_ACTIONS = {
+    UiAction("escape",
+             au::context::UiCtxProjectFocused,
+             muse::shortcuts::CTX_PROJECT_FOCUSED
+             ),
     UiAction("automation",
              au::context::UiCtxUnknown,
              au::context::CTX_PROJECT_OPENED,
