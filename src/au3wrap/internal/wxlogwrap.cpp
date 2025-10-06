@@ -15,6 +15,7 @@ WxLogWrap::WxLogWrap()
 
 void WxLogWrap::DoLogRecord(wxLogLevel level, const wxString& msg, const wxLogRecordInfo& info)
 {
+    return;
     std::string tag = std::string("[AU3] ") + info.func;
     switch (level) {
     case wxLOG_FatalError:
