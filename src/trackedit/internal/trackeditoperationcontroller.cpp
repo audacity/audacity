@@ -257,6 +257,13 @@ bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trac
     return success;
 }
 
+void TrackeditOperationController::cancelClipEdit()
+{
+    trackAndClipOperations()->cancelClipEdit();
+    projectHistory()->rollbackState();
+    globalContext()->currentTrackeditProject()->reload();
+}
+
 bool TrackeditOperationController::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
 {
     if (trackAndClipOperations()->splitTracksAt(tracksIds, pivots)) {

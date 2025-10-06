@@ -713,6 +713,33 @@ void ClipsListModel::endEditClip(const ClipKey& key)
     vs->updateClipsBoundaries(true);
 }
 
+bool ClipsListModel::cancelClipDragEdit(const ClipKey& key)
+{
+    ClipListItem* item = itemByKey(key.key);
+    if (!item) {
+        return false;
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    IF_ASSERT_FAILED(vs) {
+        return false;
+    }
+
+    vs->setClipEditStartTimeOffset(-1.0);
+    vs->setClipEditEndTimeOffset(-1.0);
+    vs->setMoveInitiated(false);
+
+    m_context->stopAutoScroll();
+    m_context->scrollHorizontal(0);
+    disconnectAutoScroll();
+
+    trackeditInteraction()->cancelClipEdit();
+
+    vs->updateClipsBoundaries(true);
+
+    return true;
+}
+
 /*!
  * \brief Moves all selected clips
  * \param key - the key from which the offset will be calculated to move all clips

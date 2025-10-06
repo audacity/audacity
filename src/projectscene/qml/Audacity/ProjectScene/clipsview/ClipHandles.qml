@@ -30,6 +30,7 @@ Item {
 
     signal clipStartEditRequested
     signal clipEndEditRequested
+    signal cancelClipDragEditRequested
 
     signal trimLeftRequested(bool completed, int action)
     signal trimRightRequested(bool completed, int action)
@@ -178,6 +179,10 @@ Item {
                     root.trimLeftRequested(false, ClipBoundaryAction.Auto)
                 }
             }
+
+            onCanceled: function (e) {
+                cancelClipDragEditRequested()
+            }
         }
     }
 
@@ -318,6 +323,10 @@ Item {
                 if (pressed) {
                     root.trimRightRequested(false, ClipBoundaryAction.Auto)
                 }
+            }
+
+            onCanceled: function (e) {
+                cancelClipDragEditRequested()
             }
         }
     }
@@ -477,6 +486,10 @@ Item {
                     root.stretchLeftRequested(false, ClipBoundaryAction.Auto)
                 }
             }
+
+            onCanceled: function (e) {
+                cancelClipDragEditRequested()
+            }
         }
     }
 
@@ -631,6 +644,10 @@ Item {
                 if (pressed) {
                     root.stretchRightRequested(false, ClipBoundaryAction.Auto)
                 }
+            }
+
+            onCanceled: function (e) {
+                cancelClipDragEditRequested()
             }
         }
     }
