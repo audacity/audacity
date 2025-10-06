@@ -473,7 +473,8 @@ int ClipsListModel::calculateTrackPositionOffset(const ClipKey& key) const
     }
 
     bool pointingAtEmptySpace = yPos > vs->totalTrackHeight().val - vs->tracksVerticalOffset().val;
-    int trackPositionOffset = pointingAtEmptySpace ? tracks.size() : tracks.size() - 1;
+    const auto numTracks = static_cast<int>(tracks.size());
+    int trackPositionOffset = pointingAtEmptySpace ? numTracks : numTracks - 1;
 
     if (!muse::RealIsEqualOrMore(yPos, trackVerticalPosition)) {
         trackPositionOffset = -trackPositionOffset;
@@ -1021,8 +1022,8 @@ void ClipsListModel::selectClip(const ClipKey& key)
     if (clipGroupId != -1) {
         //! NOTE: clip belongs to a group, select the whole group
         if (modifiers.testFlag(Qt::ShiftModifier)) {
-            for (const auto& key : trackeditInteraction()->clipsInGroup(clipGroupId)) {
-                selectionController()->addSelectedClip(key);
+            for (const auto& groupClipKey : trackeditInteraction()->clipsInGroup(clipGroupId)) {
+                selectionController()->addSelectedClip(groupClipKey);
             }
         } else {
             selectionController()->setSelectedClips(trackeditInteraction()->clipsInGroup(clipGroupId), complete);

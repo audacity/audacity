@@ -138,7 +138,6 @@ Rectangle {
         readonly property int doubleClickMaxDistance: 5
     }
 
-
     // panel for navigating within the clip's items
     property NavigationPanel clipNavigationPanel: NavigationPanel {
         name: "ClipNavigationPanel"
@@ -495,9 +494,7 @@ Rectangle {
                 onPositionChanged: function (e) {
                     // Reset double click timer if the mouse has moved,
                     // to prevent rapid clip movement activate title editing
-                    if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance ||
-                        Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
-
+                    if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance || Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
                         lastClickTime = 0
                     }
 

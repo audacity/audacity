@@ -31,7 +31,7 @@ void TracksListClipsModel::load()
     setIsVerticalRulersVisible(configuration()->isVerticalRulersVisible());
 
     trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this] (long) {
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackAudibleRole });
+        emit dataChanged(index(0), index(static_cast<int>(m_trackList.size()) - 1), { IsTrackAudibleRole });
     });
 
     projectHistory()->historyChanged().onNotify(this, [this]() {
