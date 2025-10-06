@@ -14,6 +14,7 @@ class TrackNavigationController;
 class TrackeditModule : public muse::modularity::IModuleSetup
 {
 public:
+    TrackeditModule();
 
     std::string moduleName() const override;
     void registerExports() override;
@@ -24,8 +25,8 @@ public:
     void onDeinit() override;
 
 private:
-    std::shared_ptr<TrackeditActionsController> m_trackeditController;
-    std::shared_ptr<TrackeditUiActions> m_trackeditUiActions;
+    const std::shared_ptr<TrackeditActionsController> m_trackeditController;
+    const std::shared_ptr<TrackeditUiActions> m_trackeditUiActions;
     std::shared_ptr<Au3SelectionController> m_selectionController;
     std::shared_ptr<TrackeditConfiguration> m_configuration;
     std::shared_ptr<TrackNavigationController> m_trackNavigationController;
