@@ -17,9 +17,15 @@ RowLayout {
 
     property alias value: bpmModel.value
 
+    property NavigationControl navigation: NavigationControl {
+        name: "BPM"
+        enabled: root.enabled && root.visible
+    }
+
     signal valueChangeRequested(var newValue)
 
     height: 28
+
 
     BPMModel {
         id: bpmModel
@@ -62,6 +68,10 @@ RowLayout {
 
                     delegate: TimecodeField {
                         value: symbol
+
+                        navigation.panel: root.navigation.panel
+                        navigation.order: root.navigation.order + 1 + index
+                        navigation.enabled: editable
 
                         isSelected: model.index === bpmModel.currentEditedFieldIndex
                         isEditable: editable
