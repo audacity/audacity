@@ -25,6 +25,7 @@ public:
 
     virtual bool isPlaying() const = 0;
     virtual muse::async::Notification isPlayingChanged() const = 0;
+    virtual PlaybackStatus playbackStatus() const = 0;
 
     virtual PlaybackRegion loopRegion() const = 0;
     virtual void loopEditingBegin() = 0;
@@ -42,6 +43,8 @@ public:
 
     virtual bool isPaused() const = 0;
     virtual bool isStopped() const = 0;
+
+    virtual void stop(bool shouldSeek, bool shouldUpdatePlaybackRegion) = 0;
 
     virtual void reset() = 0;
 
