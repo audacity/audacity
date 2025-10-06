@@ -46,6 +46,7 @@ public:
 
     bool isPlaying() const override;
     muse::async::Notification isPlayingChanged() const override;
+    PlaybackStatus playbackStatus() const override;
 
     bool isLoopRegionActive() const override;
     void toggleLoopPlayback() override;
@@ -62,6 +63,8 @@ public:
 
     bool isPaused() const override;
     bool isStopped() const override;
+
+    void stop(bool shouldSeek, bool shouldUpdatePlaybackRegion) override;
 
     void reset() override;
 
@@ -113,7 +116,6 @@ private:
     void doChangePlaybackRegion(const PlaybackRegion& region);
     void play(bool ignoreSelection);
     void pause();
-    void stop();
     void resume();
     void seek(const muse::secs_t secs, bool applyIfPlaying);
 
@@ -147,6 +149,7 @@ private:
     bool isPlaybackPositionOnTheEndOfProject() const;
     bool isPlaybackPositionOnTheEndOfPlaybackRegion() const;
     bool isPlaybackStartPositionValid() const;
+    muse::secs_t playbackPosition() const;
 
     using TrackAddFinished = std::function<void ()>;
 
