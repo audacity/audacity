@@ -129,6 +129,7 @@ public:
 
 private:
     Track::Holder Clone(bool backup) const override;
+    Track::Holder TrackEmptyCopy() const override;
 
 public:
     bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;

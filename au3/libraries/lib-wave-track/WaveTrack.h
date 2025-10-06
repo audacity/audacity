@@ -367,6 +367,8 @@ public:
     Holder EmptyCopy(const SampleBlockFactoryPtr& pFactory = {})
     const;
 
+    Track::Holder TrackEmptyCopy() const;
+
     //! Simply discard any right channel
     void MakeMono();
 
