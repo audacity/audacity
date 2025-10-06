@@ -34,7 +34,7 @@ PreferencesPage {
             navigation.order: root.navigationOrderStart
         }
 
-        SeparatorLine { }
+        SeparatorLine {}
 
         DeleteBehaviorSection {
             id: deleteBehaviorSection
@@ -46,7 +46,7 @@ PreferencesPage {
             navigation.order: effectBehaviorSection.navigationOrderEnd + 1
         }
 
-        SeparatorLine { }
+        SeparatorLine {}
 
         AsymmetricStereoHeightsSection {
             id: asymmetricStereoHeightsSection
@@ -57,7 +57,7 @@ PreferencesPage {
             navigation.order: deleteBehaviorSection.navigationOrderEnd + 1
         }
 
-        SeparatorLine { }
+        SeparatorLine {}
 
         PastingBehaviorSection {
             id: pastingBehaviorSection
@@ -68,7 +68,7 @@ PreferencesPage {
             navigation.order: asymmetricStereoHeightsSection.navigationOrderEnd + 1
         }
 
-        SeparatorLine { }
+        SeparatorLine {}
 
         MonoStereoConversionSection {
             id: monoStereoConversionSection
@@ -81,6 +81,6 @@ PreferencesPage {
             onAskBeforeConvertingChanged: {
                 editPreferencesModel.askBeforeConvertingToMonoOrStereo = askBeforeConverting
             }
-         }
+        }
     }
 }
