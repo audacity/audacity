@@ -127,7 +127,7 @@ bool Au3TrackPlaybackControl::solo(long trackId) const
 void Au3TrackPlaybackControl::setMuted(long trackId, bool mute)
 {
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(track) {
+    if (!track) {
         return;
     }
 

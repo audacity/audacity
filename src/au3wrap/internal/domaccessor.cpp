@@ -142,3 +142,34 @@ std::list<std::shared_ptr<Au3WaveClip> > DomAccessor::waveClipsAsList(Au3WaveTra
     std::list<std::shared_ptr<Au3WaveClip> > clips = { track->Intervals().begin(), track->Intervals().end() };
     return clips;
 }
+
+Au3LabelTrack* DomAccessor::findLabelTrack(Au3Project& prj, const Au3LabelTrackId& au3LabelTrackId)
+{
+    return const_cast<Au3LabelTrack*>(findLabelTrack(const_cast<const Au3Project&>(prj), au3LabelTrackId));
+}
+
+const Au3LabelTrack* DomAccessor::findLabelTrack(const Au3Project& prj, const Au3LabelTrackId& au3LabelTrackId)
+{
+    const Au3TrackList& tracks = Au3TrackList::Get(prj);
+    for (auto lt : tracks.Any<const LabelTrack>()) {
+        if (lt->GetId() == au3LabelTrackId) {
+            return lt;
+        }
+    }
+
+    return nullptr;
+}
+
+const Au3LabelTrack* DomAccessor::findLabelTrackByIndex(const Au3Project& prj, size_t index)
+{
+    const Au3TrackList& tracks = Au3TrackList::Get(prj);
+    size_t i = 0;
+    for (auto lt : tracks.Any<const LabelTrack>()) {
+        if (i == index) {
+            return lt;
+        }
+        ++i;
+    }
+
+    return nullptr;
+}
