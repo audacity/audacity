@@ -210,7 +210,56 @@ const UiActionList ApplicationUiActions::m_actions = {
              au::context::CTX_ANY,
              TranslatableString("action", "&Preferences"),
              TranslatableString("action", "Preferences…")
-             )
+             ),
+    UiAction("action://copy",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Copy"),
+             TranslatableString("action", "Copy"),
+             IconCode::Code::COPY
+             ),
+    UiAction("action://cut",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Cut"),
+             TranslatableString("action", "Cut"),
+             IconCode::Code::CUT
+             ),
+    UiAction("action://paste",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Paste"),
+             TranslatableString("action", "Paste"),
+             IconCode::Code::PASTE
+             ),
+    UiAction("action://undo",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Undo"),
+             TranslatableString("action", "Undo"),
+             IconCode::Code::UNDO
+             ),
+    UiAction("action://redo",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Redo"),
+             TranslatableString("action", "Redo"),
+             IconCode::Code::REDO
+             ),
+    UiAction("action://delete",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "De&lete"),
+             TranslatableString("action", "Delete"),
+             IconCode::Code::DELETE_TANK
+             ),
+    UiAction("action://cancel",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Cancel"),
+             TranslatableString("action", "Cancel"),
+             IconCode::Code::DELETE_TANK
+             ),
 };
 
 ApplicationUiActions::ApplicationUiActions(std::shared_ptr<ApplicationActionController> controller)

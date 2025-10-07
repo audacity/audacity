@@ -22,9 +22,9 @@ void MultiClipContextMenuModel::load()
 MenuItemList MultiClipContextMenuModel::makeItems()
 {
     MenuItemList items {
-        makeMenuItem("cut"),
-        makeMenuItem("copy"),
-        makeMenuItem("delete"),
+        makeMenuItem("action://trackedit/cut"),
+        makeMenuItem("action://trackedit/copy"),
+        makeMenuItem("action://trackedit/delete"),
         makeSeparator(),
         makeMenuItem("group-clips"),
         makeMenuItem("ungroup-clips")

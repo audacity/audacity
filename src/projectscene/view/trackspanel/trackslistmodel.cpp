@@ -231,7 +231,7 @@ void TracksListModel::removeSelectedRows()
 
 void TracksListModel::removeSelection()
 {
-    dispatcher()->dispatch("delete");
+    dispatcher()->dispatch("action://trackedit/delete");
 }
 
 void TracksListModel::requestTracksMove(QVariantList trackIndexes, int to)

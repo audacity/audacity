@@ -22,10 +22,10 @@ void SelectionContextMenuModel::load()
 MenuItemList SelectionContextMenuModel::makeItems()
 {
     MenuItemList items {
-        makeMenuItem("cut"),
-        makeMenuItem("copy"),
+        makeMenuItem("action://trackedit/cut"),
+        makeMenuItem("action://trackedit/copy"),
         makeMenuItem("duplicate"),
-        makeMenuItem("paste"),
+        makeMenuItem("action://trackedit/paste"),
         makeSeparator(),
         makeMenuItem("split")
     };

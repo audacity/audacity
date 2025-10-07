@@ -93,11 +93,47 @@
       <seq>Space</seq>
       <autorepeat>0</autorepeat>
     </SC>
+<!-- end Keyboard navigation -->
+
+<!-- Global actions -->
     <SC>
-      <key>nav-escape</key>
+        <key>action://copy</key>
+        <seq>Ctrl+C</seq>
+    </SC>
+    <SC>
+        <key>action://cut</key>
+        <seq>Ctrl+X</seq>
+    </SC>
+    <SC>
+        <key>action://paste</key>
+        <seq>Ctrl+V</seq>
+    </SC>
+    <SC>
+        <key>action://undo</key>
+        <seq>Ctrl+Z</seq>
+    </SC>
+    <SC>
+        <key>action://redo</key>
+        <seq>Ctrl+Shift+Z</seq>
+    </SC>
+    <SC>
+        <key>action://delete</key>
+        <seq>Del</seq>
+        <seq>Backspace</seq>
+    </SC>
+    <SC>
+      <key>action://cancel</key>
       <seq>Esc</seq>
     </SC>
-<!-- end Keyboard navigation -->
+<!-- end Global actions -->
+
+<!-- Trackedit actions -->
+    <SC>
+        <key>action://trackedit/paste-insert</key>
+        <seq>Shift+V</seq>
+    </SC>
+<!-- TODO move -->
+<!-- end Trackedit actions -->
 
     <SC>
         <key>pinned-head</key>
@@ -224,28 +260,8 @@
         <key>clip-right</key>
     </SC>
     <SC>
-        <key>undo</key>
-        <seq>Ctrl+Z</seq>
-    </SC>
-    <SC>
-        <key>redo</key>
-        <seq>Ctrl+Shift+Z</seq>
-    </SC>
-    <SC>
         <key>cut-per-track-ripple</key>
         <seq>Ctrl+Shift+X</seq>
-    </SC>
-    <SC>
-        <key>copy</key>
-        <seq>Ctrl+C</seq>
-    </SC>
-    <SC>
-        <key>paste</key>
-        <seq>Ctrl+V</seq>
-    </SC>
-    <SC>
-        <key>paste-insert</key>
-        <seq>Shift+V</seq>
     </SC>
     <SC>
         <key>paste-insert-all-tracks-ripple</key>
@@ -254,10 +270,6 @@
     <SC>
         <key>duplicate</key>
         <seq>Ctrl+D</seq>
-    </SC>
-    <SC>
-        <key>cut</key>
-        <seq>Ctrl+X</seq>
     </SC>
     <SC>
         <key>silence</key>
@@ -290,11 +302,6 @@
     <SC>
         <key>preferences</key>
         <seq>Ctrl+,</seq>
-    </SC>
-    <SC>
-        <key>delete</key>
-        <seq>Del</seq>
-        <seq>Backspace</seq>
     </SC>
     <SC>
         <key>delete-per-track-ripple</key>
