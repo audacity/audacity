@@ -1,11 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/Audacity/ProjectScene/qmldir</file>
-        <file>qml/Audacity/ProjectScene/clipsview/TracksClipsView.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/TrackClipsItem.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/ClipItem.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/Timeline.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/ClipsSelection.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/TracksItemsView.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/TrackClipsItem.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ClipsSelection.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItemButtonBackground.qml</file>
@@ -28,17 +28,17 @@
         <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumeTooltip.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/PlayCursorLine.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/PlayCursorHead.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/VerticalRulersPanel.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/PlayCursorLine.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/PlayCursorHead.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/VerticalRulersPanel.qml</file>
         <file>qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/CustomiseView.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarActionDelegate.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarCustomisePopup.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/ClipItemSmall.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/ClipHandles.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/ChannelSplitter.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ClipItemSmall.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ClipHandles.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ChannelSplitter.qml</file>
         <file>images/customCursorShapes/ClipStretchBoth.png</file>
         <file>images/customCursorShapes/ClipStretchLeft.png</file>
         <file>images/customCursorShapes/ClipStretchRight.png</file>
@@ -51,15 +51,15 @@
         <file>images/customCursorShapes/SelectionLeft.png</file>
         <file>images/customCursorShapes/SelectionRight.png</file>
         <file>images/customCursorShapes/Split.png</file>
-        <file>qml/Audacity/ProjectScene/clipsview/ClipItemPropertyButton.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/PitchAndSpeedChangeDialog.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/PropertyView.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/PitchSection.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/GeneralSection.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/SpeedSection.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ClipItemPropertyButton.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchAndSpeedChangeDialog.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PropertyView.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchSection.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/GeneralSection.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/SpeedSection.qml</file>
         <file>qml/Audacity/ProjectScene/historypanel/HistoryPanel.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/DropdownWithTitle.qml</file>
-        <file>qml/Audacity/ProjectScene/clipsview/PlayRegion.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/PlayRegion.qml</file>
     </qresource>
 </RCC>

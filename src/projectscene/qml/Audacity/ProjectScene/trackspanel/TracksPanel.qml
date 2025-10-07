@@ -31,7 +31,7 @@ Item {
         id: tracksModel
     }
 
-    //! NOTE Sync with TracksClipsView
+    //! NOTE Sync with TracksItemsView
     TracksViewStateModel {
         id: tracksViewState
         onTracksVerticalOffsetChanged: {
