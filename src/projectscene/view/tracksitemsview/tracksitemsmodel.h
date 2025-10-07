@@ -20,7 +20,7 @@
 #include "trackedit/dom/track.h"
 
 namespace au::projectscene {
-class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
+class TracksItemsModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
 {
     Q_OBJECT
 
@@ -34,7 +34,7 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
 
 public:
-    explicit TracksListClipsModel(QObject* parent = nullptr);
+    explicit TracksItemsModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void startUserInteraction();
