@@ -934,13 +934,12 @@ public:
 
     sampleCount GetNumSamples() const;
     const SampleBlockFactoryPtr& GetFactory() const;
+    size_t GreatestAppendBufferLen() const;
 
 private:
     static void TransferSequence(WaveClip& origClip, WaveClip& newClip);
     static void FixSplitCutlines(
         WaveClipHolders& myCutlines, WaveClipHolders& newCutlines);
-
-    size_t GreatestAppendBufferLen() const;
 
     //! Called by mutating operations; notifies listeners
     /*! @excsafety{No-fail} */
