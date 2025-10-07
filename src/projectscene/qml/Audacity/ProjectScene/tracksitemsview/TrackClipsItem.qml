@@ -22,10 +22,12 @@ Item {
     property bool isTrackFocused: false
     property bool isMultiSelectionActive: false
     property bool isTrackAudible: true
-    property bool isStereo: clipsModel.isStereo
+
     property bool moveActive: false
     property bool altPressed: false
     property bool ctrlPressed: false
+
+    //! clip
     property alias isNearSample: clipsContainer.isNearSample
     property alias isBrush: clipsContainer.isBrush
     property alias isIsolationMode: clipsContainer.isIsolationMode
@@ -33,6 +35,7 @@ Item {
     property alias rightTrimContainsMouse: clipsContainer.rightTrimContainsMouse
     property alias leftTrimPressedButtons: clipsContainer.leftTrimPressedButtons
     property alias rightTrimPressedButtons: clipsContainer.rightTrimPressedButtons
+
     property bool selectionEditInProgress: false
     property bool selectionInProgress: false
     property bool hover: false
@@ -90,8 +93,10 @@ Item {
         }
     }
 
+    //! clip
     Item {
         id: clipsContainer
+
         anchors.fill: parent
         anchors.bottomMargin: sep.height
         z: 1
@@ -299,7 +304,7 @@ Item {
                 rightVisibleMargin: clipItem.rightVisibleMargin
                 collapsed: trackViewState.isTrackCollapsed
                 channelHeightRatio: trackViewState.channelHeightRatio
-                showChannelSplitter: isStereo
+                showChannelSplitter: clipsModel.isStereo
 
                 navigation.name: Boolean(clipItem) ? clipItem.title + clipItem.index : ""
                 navigation.panel: root.navigationPanel
@@ -522,7 +527,7 @@ Item {
 
     // this one is drawn below the clips
     Rectangle {
-        id: clipSelectionRectangle
+        id: selectionRectangle
 
         x: root.context.selectionStartPosition
         width: root.context.selectionEndPosition - x
@@ -595,6 +600,7 @@ Item {
         }
     }
 
+    //! clip
     ChannelSplitter {
         id: channelSplitter
 
@@ -605,7 +611,7 @@ Item {
         channelHeightRatio: trackViewState.channelHeightRatio
         color: "#FFFFFF"
         opacity: 0.05
-        visible: isStereo
+        visible: clipsModel.isStereo
 
         onPositionChangeRequested: function (position) {
             clipsContainer.updateChannelHeightRatio(position)
