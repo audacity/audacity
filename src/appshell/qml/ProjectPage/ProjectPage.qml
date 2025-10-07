@@ -400,9 +400,7 @@ DockPage {
         }
     ]
 
-    central: TracksClipsView {
-        id: clipsView
-
+    central: TracksItemsView {
         navPanels: tracksNavModel.clipItemPanels
     }
 
