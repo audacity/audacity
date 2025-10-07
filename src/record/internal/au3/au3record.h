@@ -16,8 +16,6 @@
 
 #include "au3wrap/au3types.h"
 
-#include "SampleCount.h"
-
 #include "../../irecord.h"
 #include "irecordcontroller.h"
 
@@ -48,14 +46,8 @@ public:
 
 private:
     struct RecordData {
-        std::vector<trackedit::TrackId> tracksIds;
-        std::vector<trackedit::ClipKey> clipsKeys;
-
-        void clear()
-        {
-            tracksIds.clear();
-            clipsKeys.clear();
-        }
+        trackedit::ClipKey clipKey;
+        bool linkedToPendingClip;
     };
 
     au3::Au3Project& projectRef() const;
@@ -72,9 +64,8 @@ private:
     mutable muse::async::Channel<float> m_playbackVolumeChanged;
 
     IAudioInputPtr m_audioInput;
-    RecordData m_recordData;
+    std::vector<RecordData> m_recordData;
 
     muse::ValCh<muse::secs_t> m_recordPosition;
-    sampleCount mLastCopied = 0;
 };
 }

@@ -36,63 +36,6 @@ using namespace au::au3;
 constexpr int RATE_NOT_SELECTED = -1;
 using WritableSampleTrackArray = std::vector< std::shared_ptr< WritableSampleTrack > >;
 
-namespace {
-void pasteDelta(Au3WaveClip& pendingClip,
-                Au3WaveClip& origClip,
-                sampleCount& lastCopied)
-{
-    const sampleCount committed = pendingClip.GetNumSamples();
-    const auto buffered = pendingClip.GreatestAppendBufferLen();
-
-    const sampleCount total = committed + sampleCount{ buffered };
-    if (total <= lastCopied) {
-        return;
-    }
-
-    // paste flushed data
-    if (lastCopied < committed) {
-        const auto factory = pendingClip.GetFactory();
-        auto delta = Au3WaveClip::NewSharedFrom(pendingClip, factory, false, true);
-
-        delta->Clear(delta->GetSequenceStartTime(),
-                     delta->SamplesToTime(lastCopied));
-        delta->Clear(delta->SamplesToTime(committed),
-                     delta->GetSequenceEndTime());
-
-        const double t0 = origClip.GetPlayEndTime();
-        origClip.Paste(t0, *delta);
-
-        lastCopied = committed;
-    }
-
-    // append buffered data
-    if (total > committed) {
-        const size_t nCh = pendingClip.NChannels();
-        const size_t bufOffset = (lastCopied > committed)
-                                 ? (lastCopied - committed).as_size_t()
-                                 : 0;
-        const size_t take = buffered > bufOffset ? (buffered - bufOffset) : 0;
-        if (take == 0) {
-            return;
-        }
-
-        std::vector<constSamplePtr> ptrs(nCh);
-        for (size_t ch = 0; ch < nCh; ++ch) {
-            constSamplePtr base = pendingClip.GetAppendBuffer(ch);
-            if (!base) {
-                return;
-            }
-            const float* fbase = reinterpret_cast<const float*>(base);
-            ptrs[ch] = reinterpret_cast<constSamplePtr>(fbase + bufOffset);
-        }
-
-        origClip.Append(ptrs.data(), floatSample, take, 1, floatSample);
-
-        lastCopied = total;
-    }
-}
-}
-
 struct PropertiesOfSelected
 {
     bool allSameRate = false;
@@ -248,23 +191,31 @@ void Au3Record::init()
             return;
         }
 
-        Au3WaveTrack* pendingWaveTrack = dynamic_cast<Au3WaveTrack*>(pendingTrack);
-        IF_ASSERT_FAILED(pendingWaveTrack) {
-            return;
-        }
-
         std::shared_ptr<Au3WaveClip> origClip = DomAccessor::findWaveClip(origWaveTrack, clipId);
         IF_ASSERT_FAILED(origClip) {
             return;
         }
 
-        // pending track has only single clip
-        std::shared_ptr<Au3WaveClip> pendingClip = DomAccessor::findWaveClip(pendingWaveTrack, size_t(0));
-        IF_ASSERT_FAILED(pendingClip) {
-            return;
-        }
+        auto recordedClip = std::find_if(m_recordData.begin(), m_recordData.end(),
+                                         [&](const RecordData& r){ return r.clipKey.clipId == clipId; });
 
-        pasteDelta(*pendingClip, *origClip, mLastCopied);
+        if (!recordedClip->linkedToPendingClip) {
+            Au3WaveTrack* pendingWaveTrack = dynamic_cast<Au3WaveTrack*>(pendingTrack);
+            IF_ASSERT_FAILED(pendingWaveTrack) {
+                return;
+            }
+
+            // pending track has only single clip
+            std::shared_ptr<Au3WaveClip> pendingClip = DomAccessor::findWaveClip(pendingWaveTrack, size_t(0));
+            IF_ASSERT_FAILED(pendingClip) {
+                return;
+            }
+
+            // audio thread updates the pending clip
+            // make original clip point to the pending clip's data
+            origClip->LinkToOtherSource(*pendingClip.get());
+            recordedClip->linkedToPendingClip = true;
+        }
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
@@ -273,7 +224,8 @@ void Au3Record::init()
     });
 
     audioEngine()->commitRequested().onNotify(this, [this]() {
-        for (const trackedit::ClipKey& clipKey : m_recordData.clipsKeys) {
+        for (const RecordData& recordEntry : m_recordData) {
+            trackedit::ClipKey clipKey = recordEntry.clipKey;
             Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
 
             std::shared_ptr<Au3WaveClip> origClip = DomAccessor::findWaveClip(origWaveTrack, clipKey.clipId);
@@ -281,12 +233,14 @@ void Au3Record::init()
                 return;
             }
 
-            // need to flush when recording is finished, otherwise
-            // samples in the buffer will be lost
-            origClip->Flush();
+            trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+            prj->notifyAboutClipChanged(DomConverter::clip(origWaveTrack, origClip.get()));
+            m_recordPosition.set(origClip->GetPlayEndTime());
         }
 
-        for (const trackedit::ClipKey& clipKey : m_recordData.clipsKeys) {
+        for (const RecordData& recordEntry : m_recordData) {
+            trackedit::ClipKey clipKey = recordEntry.clipKey;
             trackeditInteraction()->makeRoomForClip(clipKey);
         }
 
@@ -306,7 +260,6 @@ muse::Ret Au3Record::start()
 
     //! TODO: should be configurable
     bool altAppearance = false;
-    mLastCopied = 0;
 
     // TODO: should preferNewTrack be an option?
     // bool bPreferNewTrack = false;
@@ -558,7 +511,7 @@ Ret Au3Record::doRecord(Au3Project& project,
             }
             transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
 
-            m_recordData.clipsKeys.push_back({ wt->GetId(), newClip->GetId() });
+            m_recordData.push_back(RecordData { trackedit::ClipKey(wt->GetId(), newClip->GetId()), false });
 
             trackedit::Clip _newClip = DomConverter::clip(pending, newClip.get());
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -670,8 +623,7 @@ Ret Au3Record::doRecord(Au3Project& project,
             }
             transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
 
-            m_recordData.tracksIds.push_back(newTrack->GetId());
-            m_recordData.clipsKeys.push_back({ newTrack->GetId(), newClip->GetId() });
+            m_recordData.push_back(RecordData { trackedit::ClipKey(newTrack->GetId(), newClip->GetId()), false });
 
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
@@ -715,25 +667,4 @@ bool Au3Record::canStopAudioStream() const
     return !gAudioIO->IsStreamActive()
            || gAudioIO->IsMonitoring()
            || gAudioIO->GetOwningProject().get() == &project;
-}
-
-void Au3Record::notifyAboutRecordClipsChanged()
-{
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-
-    for (const trackedit::ClipKey& clipKey : m_recordData.clipsKeys) {
-        Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-        IF_ASSERT_FAILED(track) {
-            return;
-        }
-
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(track, Au3ClipId(clipKey.clipId));
-        IF_ASSERT_FAILED(clip) {
-            return;
-        }
-
-        prj->notifyAboutClipChanged(DomConverter::clip(track, clip.get()));
-
-        m_recordPosition.set(clip->GetPlayEndTime());
-    }
 }
