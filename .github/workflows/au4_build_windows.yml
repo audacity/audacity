@@ -133,7 +133,8 @@ jobs:
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
       run: |
-        APP_BIN=$(pwd)/build.release/audacity.pdb
+        APP_BIN=$(pwd)/build.release/Audacity4.pdb
+
         cmake -DAPP_BIN=${APP_BIN} \
               -DSENTRY_URL=https://sentry.audacityteam.org \
               -DSENTRY_ORG=sentry \
