@@ -41,23 +41,55 @@ void pasteDelta(Au3WaveClip& pendingClip,
                 Au3WaveClip& origClip,
                 sampleCount& lastCopied)
 {
-    const auto total = pendingClip.GetNumSamples();
+    const sampleCount committed = pendingClip.GetNumSamples();
+    const auto buffered = pendingClip.GreatestAppendBufferLen();
+
+    const sampleCount total = committed + sampleCount{ buffered };
     if (total <= lastCopied) {
         return;
     }
 
-    const auto factory = pendingClip.GetFactory();
-    auto delta = Au3WaveClip::NewSharedFrom(pendingClip, factory, false, true);
+    // paste flushed data
+    if (lastCopied < committed) {
+        const auto factory = pendingClip.GetFactory();
+        auto delta = Au3WaveClip::NewSharedFrom(pendingClip, factory, false, true);
 
-    delta->Clear(delta->GetSequenceStartTime(),
-                 delta->SamplesToTime(lastCopied));
-    delta->Clear(delta->SamplesToTime(total),
-                 delta->GetSequenceEndTime());
+        delta->Clear(delta->GetSequenceStartTime(),
+                     delta->SamplesToTime(lastCopied));
+        delta->Clear(delta->SamplesToTime(committed),
+                     delta->GetSequenceEndTime());
 
-    const double t0 = origClip.GetPlayEndTime();
-    origClip.Paste(t0, *delta);
+        const double t0 = origClip.GetPlayEndTime();
+        origClip.Paste(t0, *delta);
 
-    lastCopied = total;
+        lastCopied = committed;
+    }
+
+    // append buffered data
+    if (total > committed) {
+        const size_t nCh = pendingClip.NChannels();
+        const size_t bufOffset = (lastCopied > committed)
+                                 ? (lastCopied - committed).as_size_t()
+                                 : 0;
+        const size_t take = buffered > bufOffset ? (buffered - bufOffset) : 0;
+        if (take == 0) {
+            return;
+        }
+
+        std::vector<constSamplePtr> ptrs(nCh);
+        for (size_t ch = 0; ch < nCh; ++ch) {
+            constSamplePtr base = pendingClip.GetAppendBuffer(ch);
+            if (!base) {
+                return;
+            }
+            const float* fbase = reinterpret_cast<const float*>(base);
+            ptrs[ch] = reinterpret_cast<constSamplePtr>(fbase + bufOffset);
+        }
+
+        origClip.Append(ptrs.data(), floatSample, take, 1, floatSample);
+
+        lastCopied = total;
+    }
 }
 }
 
@@ -232,10 +264,6 @@ void Au3Record::init()
             return;
         }
 
-        // need to flush, otherwise samples hang in the buffer so GetNumSamples returns
-        // same number of samples until we reach the size of sequence (262,144 samples) which
-        // results in refresh rate of once per 5.94s at 44.1 kHz
-        pendingClip->Flush();
         pasteDelta(*pendingClip, *origClip, mLastCopied);
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -245,6 +273,19 @@ void Au3Record::init()
     });
 
     audioEngine()->commitRequested().onNotify(this, [this]() {
+        for (const trackedit::ClipKey& clipKey : m_recordData.clipsKeys) {
+            Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+
+            std::shared_ptr<Au3WaveClip> origClip = DomAccessor::findWaveClip(origWaveTrack, clipKey.clipId);
+            IF_ASSERT_FAILED(origClip) {
+                return;
+            }
+
+            // need to flush when recording is finished, otherwise
+            // samples in the buffer will be lost
+            origClip->Flush();
+        }
+
         for (const trackedit::ClipKey& clipKey : m_recordData.clipsKeys) {
             trackeditInteraction()->makeRoomForClip(clipKey);
         }
