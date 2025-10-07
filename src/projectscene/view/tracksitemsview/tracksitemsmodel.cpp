@@ -233,6 +233,8 @@ QVariant TracksItemsModel::data(const QModelIndex& index, int role) const
                 });
         }
     }
+    case TypeRole:
+        return QVariant::fromValue(track.type);
     default:
         break;
     }
@@ -244,7 +246,7 @@ QHash<int, QByteArray> TracksItemsModel::roleNames() const
 {
     static QHash<int, QByteArray> roles
     {
-        //{ TypeRole, "trackType" },
+        { TypeRole, "trackType" },
         { TrackIdRole, "trackId" },
         { IsDataSelectedRole, "isDataSelected" },
         { IsTrackSelectedRole, "isTrackSelected" },
