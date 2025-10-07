@@ -13,10 +13,15 @@ using namespace au::trackedit;
 using namespace muse::async;
 using namespace muse::actions;
 
-static const ActionCode COPY_CODE("copy");
-static const ActionCode CUT_CODE("cut");
-static const ActionCode PASTE_CODE("paste");
-static const ActionCode DELETE_CODE("delete");
+static const ActionCode TRACKEDIT_COPY_CODE("action://trackedit/copy");
+static const ActionCode TRACKEDIT_CUT_CODE("action://trackedit/cut");
+static const ActionCode TRACKEDIT_PASTE_CODE("action://trackedit/paste");
+static const ActionCode TRACKEDIT_UNDO("action://trackedit/undo");
+static const ActionCode TRACKEDIT_REDO("action://trackedit/redo");
+static const ActionCode TRACKEDIT_DELETE_CODE("action://trackedit/delete");
+static const ActionCode TRACKEDIT_CANCEL_CODE("action://trackedit/cancel");
+
+static const ActionCode TRACKEDIT_PASTE_INSERT_CODE("action://trackedit/paste-insert");
 static const ActionCode SPLIT_CODE("split");
 static const ActionCode SPLIT_INTO_NEW_TRACK_CODE("split-into-new-track");
 static const ActionCode JOIN_CODE("join");
@@ -40,7 +45,6 @@ static const ActionCode CLIP_COPY_CODE("clip-copy");
 static const ActionCode MULTI_CLIP_COPY_CODE("multi-clip-copy");
 static const ActionCode RANGE_SELECTION_COPY_CODE("clip-copy-selected");
 
-static const ActionCode PASTE_INSERT_CODE("paste-insert");
 static const ActionCode PASTE_INSERT_ALL_TRACKS_RIPPLE_CODE("paste-insert-all-tracks-ripple");
 
 static const ActionCode CLIP_DELETE_CODE("clip-delete");
@@ -81,9 +85,6 @@ static const ActionCode TRACK_RESAMPLE("track-resample");
 static const ActionCode TRIM_AUDIO_OUTSIDE_SELECTION("trim-audio-outside-selection");
 static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
 
-static const ActionCode UNDO("undo");
-static const ActionCode REDO("redo");
-
 static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
 
 static const ActionCode GROUP_CLIPS_CODE("group-clips");
@@ -107,10 +108,10 @@ static const ActionQuery TRACK_CHANGE_RATE_QUERY("action://trackedit/track/chang
 
 // In principle, disabled are actions that modify the data involved in playback.
 static const std::vector<ActionCode> actionsDisabledDuringRecording {
-    CUT_CODE,
+    TRACKEDIT_CUT_CODE,
     CUT_PER_CLIP_RIPPLE_CODE,
     CUT_PER_TRACK_RIPPLE_CODE,
-    DELETE_CODE,
+    TRACKEDIT_DELETE_CODE,
     DELETE_PER_CLIP_RIPPLE_CODE,
     DELETE_PER_TRACK_RIPPLE_CODE,
     DELETE_ALL_TRACKS_RIPPLE_CODE,
@@ -125,8 +126,8 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     MULTI_CLIP_DELETE_CODE,
     RANGE_SELECTION_DELETE_CODE,
     CLIP_RENDER_PITCH_AND_SPEED_CODE,
-    PASTE_CODE,
-    PASTE_INSERT_CODE,
+    TRACKEDIT_PASTE_CODE,
+    TRACKEDIT_PASTE_INSERT_CODE,
     PASTE_INSERT_ALL_TRACKS_RIPPLE_CODE,
     TRACK_SPLIT,
     TRACK_SPLIT_AT,
@@ -146,8 +147,8 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     NEW_LABEL_TRACK,
     TRIM_AUDIO_OUTSIDE_SELECTION,
     SILENCE_AUDIO_SELECTION,
-    UNDO,
-    REDO,
+    TRACKEDIT_UNDO,
+    TRACKEDIT_REDO,
     STRETCH_ENABLED_CODE,
     TRACK_DELETE,
     TRACK_DUPLICATE_CODE,
@@ -163,9 +164,15 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
 
 void TrackeditActionsController::init()
 {
-    dispatcher()->reg(this, COPY_CODE, this, &TrackeditActionsController::doGlobalCopy);
-    dispatcher()->reg(this, CUT_CODE, this, &TrackeditActionsController::doGlobalCut);
-    dispatcher()->reg(this, DELETE_CODE, this, &TrackeditActionsController::doGlobalDelete);
+    dispatcher()->reg(this, TRACKEDIT_COPY_CODE, this, &TrackeditActionsController::doGlobalCopy);
+    dispatcher()->reg(this, TRACKEDIT_CUT_CODE, this, &TrackeditActionsController::doGlobalCut);
+    dispatcher()->reg(this, TRACKEDIT_PASTE_CODE, this, &TrackeditActionsController::paste);
+    dispatcher()->reg(this, TRACKEDIT_UNDO, this, &TrackeditActionsController::undo);
+    dispatcher()->reg(this, TRACKEDIT_REDO, this, &TrackeditActionsController::redo);
+    dispatcher()->reg(this, TRACKEDIT_DELETE_CODE, this, &TrackeditActionsController::doGlobalDelete);
+    dispatcher()->reg(this, TRACKEDIT_CANCEL_CODE, this, &TrackeditActionsController::doGlobalCancel);
+
+    dispatcher()->reg(this, TRACKEDIT_PASTE_INSERT_CODE, this, &TrackeditActionsController::pasteInsert);
     dispatcher()->reg(this, SPLIT_CODE, this, &TrackeditActionsController::doGlobalSplit);
     dispatcher()->reg(this, SPLIT_INTO_NEW_TRACK_CODE, this, &TrackeditActionsController::doGlobalSplitIntoNewTrack);
     dispatcher()->reg(this, JOIN_CODE, this, &TrackeditActionsController::doGlobalJoin);
@@ -176,8 +183,6 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, CUT_PER_TRACK_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalCutPerTrackRipple);
     dispatcher()->reg(this, CUT_ALL_TRACKS_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalCutAllTracksRipple);
 
-    dispatcher()->reg(this, PASTE_CODE, this, &TrackeditActionsController::paste);
-    dispatcher()->reg(this, PASTE_INSERT_CODE, this, &TrackeditActionsController::pasteInsert);
     dispatcher()->reg(this, PASTE_INSERT_ALL_TRACKS_RIPPLE_CODE, this, &TrackeditActionsController::pasteInsertRipple);
 
     dispatcher()->reg(this, DELETE_PER_CLIP_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalDeletePerClipRipple);
@@ -205,8 +210,6 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, SPLIT_RANGE_SELECTION_INTO_NEW_TRACKS, this, &TrackeditActionsController::splitRangeSelectionIntoNewTracks);
     dispatcher()->reg(this, SPLIT_CLIPS_INTO_NEW_TRACKS, this, &TrackeditActionsController::splitClipsIntoNewTracks);
     dispatcher()->reg(this, MERGE_SELECTED_ON_TRACK, this, &TrackeditActionsController::mergeSelectedOnTrack);
-    dispatcher()->reg(this, UNDO, this, &TrackeditActionsController::undo);
-    dispatcher()->reg(this, REDO, this, &TrackeditActionsController::redo);
     dispatcher()->reg(this, DUPLICATE_RANGE_SELECTION_CODE, this, &TrackeditActionsController::duplicateSelected);
     dispatcher()->reg(this, DUPLICATE_CLIPS_CODE, this, &TrackeditActionsController::duplicateClips);
     dispatcher()->reg(this, CLIP_SPLIT_CUT, this, &TrackeditActionsController::clipSplitCut);
@@ -255,8 +258,8 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, TRACK_CHANGE_RATE_QUERY, this, &TrackeditActionsController::setTrackRate);
 
     projectHistory()->historyChanged().onNotify(this, [this]() {
-        notifyActionEnabledChanged(UNDO);
-        notifyActionEnabledChanged(REDO);
+        notifyActionEnabledChanged(TRACKEDIT_UNDO);
+        notifyActionEnabledChanged(TRACKEDIT_REDO);
     });
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
@@ -449,6 +452,12 @@ void TrackeditActionsController::doGlobalDelete()
 
     interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
                              muse::trc("trackedit", "Select the audio for Delete then try again."));
+}
+
+void TrackeditActionsController::doGlobalCancel()
+{
+    LOGDA() << "trackedit cancel";
+    // Do cancel and notify the model about it.
 }
 
 void TrackeditActionsController::doGlobalDeletePerClipRipple()
@@ -1604,9 +1613,9 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
         return false;
     } else if (globalContext()->isRecording() && muse::contains(actionsDisabledDuringRecording, actionCode)) {
         return false;
-    } else if (actionCode == UNDO) {
+    } else if (actionCode == TRACKEDIT_UNDO) {
         return trackeditInteraction()->canUndo();
-    } else if (actionCode == REDO) {
+    } else if (actionCode == TRACKEDIT_REDO) {
         return trackeditInteraction()->canRedo();
     } else if (actionCode == GROUP_CLIPS_CODE) {
         return selectionController()->selectedClips().size() > 1 && !selectionController()->isSelectionGrouped();

@@ -54,6 +54,7 @@ private:
     void doGlobalCopy();
     void doGlobalCut();
     void doGlobalDelete();
+    void doGlobalCancel();
     void doGlobalSplit();
     void doGlobalSplitIntoNewTrack();
     void doGlobalJoin();

@@ -38,6 +38,8 @@
 #include "startupscenario.h"
 #include "project/iprojectfilescontroller.h"
 #include "record/irecordcontroller.h"
+#include "context/iuicontextresolver.h"
+#include "context/iglobalcontext.h"
 
 //! TODO AU4
 // #include "languages/ilanguagesservice.h"
@@ -59,6 +61,10 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     muse::Inject<IAppShellConfiguration> configuration;
     muse::Inject<project::IProjectFilesController> projectFilesController;
     muse::Inject<record::IRecordController> recordController;
+
+    muse::Inject<context::IUiContextResolver> uiContextResolver;
+    muse::Inject<context::IGlobalContext> globalContext;
+
 //! TODO AU4
     // INJECT(languages::ILanguagesService, languagesService)
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
@@ -97,6 +103,15 @@ private:
     void openEditingPreferencesDialog();
 
     void revertToFactorySettings();
+
+    bool hasProjectAndIsFocused() const;
+    void doGlobalCopy();
+    void doGlobalCut();
+    void doGlobalPaste();
+    void doGlobalUndo();
+    void doGlobalRedo();
+    void doGlobalDelete();
+    void doGlobalCancel();
 
     bool m_quiting = false;
 

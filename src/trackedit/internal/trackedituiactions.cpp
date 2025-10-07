@@ -19,6 +19,56 @@ constexpr const char16_t* TRACK_FORMAT_CHANGE_ACTION = u"action://trackedit/trac
 constexpr const char16_t* TRACK_RATE_CHANGE_ACTION = u"action://trackedit/track/change-rate?rate=%1";
 
 UiActionList STATIC_ACTIONS = {
+    UiAction("action://trackedit/copy",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Copy"),
+             TranslatableString("action", "Copy"),
+             IconCode::Code::COPY
+             ),
+    UiAction("action://trackedit/cut",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Cut"),
+             TranslatableString("action", "Cut"),
+             IconCode::Code::CUT
+             ),
+    UiAction("action://trackedit/paste",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Paste"),
+             TranslatableString("action", "Paste"),
+             IconCode::Code::PASTE
+             ),
+    UiAction("action://trackedit/paste-insert",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Paste (Insert)"),
+             TranslatableString("action", "Paste (Insert)"),
+             IconCode::Code::PASTE
+             ),
+    UiAction("action://trackedit/undo",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Undo"),
+             TranslatableString("action", "Undo"),
+             IconCode::Code::UNDO
+             ),
+    UiAction("action://trackedit/redo",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Redo"),
+             TranslatableString("action", "Redo"),
+             IconCode::Code::REDO
+             ),
+    UiAction("action://trackedit/delete",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "De&lete"),
+             TranslatableString("action", "Delete"),
+             IconCode::Code::DELETE_TANK
+             ),
+
     UiAction("select-all",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -30,13 +80,6 @@ UiActionList STATIC_ACTIONS = {
              au::context::CTX_ANY,
              TranslatableString("action", "Clear selection"),
              TranslatableString("action", "Clear selection")
-             ),
-    UiAction("cut",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Cut"),
-             TranslatableString("action", "Cut"),
-             IconCode::Code::CUT
              ),
     UiAction("cut-per-clip-ripple",
              au::context::UiCtxAny,
@@ -58,20 +101,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Cut and close gap (all tracks)"),
              TranslatableString("action", "Cut and close gap (all tracks)"),
              IconCode::Code::CUT
-             ),
-    UiAction("copy",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Copy"),
-             TranslatableString("action", "Copy"),
-             IconCode::Code::COPY
-             ),
-    UiAction("delete",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "De&lete"),
-             TranslatableString("action", "Delete"),
-             IconCode::Code::DELETE_TANK
              ),
     UiAction("delete-per-track-ripple",
              au::context::UiCtxAny,
@@ -104,20 +133,6 @@ UiActionList STATIC_ACTIONS = {
              au::context::CTX_ANY,
              TranslatableString("action", "Split clips at silences"),
              TranslatableString("action", "Split clips at silences")
-             ),
-    UiAction("undo",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Undo"),
-             TranslatableString("action", "Undo"),
-             IconCode::Code::UNDO
-             ),
-    UiAction("redo",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Redo"),
-             TranslatableString("action", "Redo"),
-             IconCode::Code::REDO
              ),
     UiAction("duplicate",
              au::context::UiCtxAny,
@@ -249,20 +264,6 @@ UiActionList STATIC_ACTIONS = {
              au::context::CTX_ANY,
              TranslatableString("action", "Enable vertical rulers"),
              TranslatableString("action", "Enable vertical rulers")
-             ),
-    UiAction("paste",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Paste"),
-             TranslatableString("action", "Paste"),
-             IconCode::Code::PASTE
-             ),
-    UiAction("paste-insert",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Paste (Insert)"),
-             TranslatableString("action", "Paste (Insert)"),
-             IconCode::Code::PASTE
              ),
     UiAction("paste-insert-all-tracks-ripple",
              au::context::UiCtxAny,

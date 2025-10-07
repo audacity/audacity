@@ -14,8 +14,8 @@ void UndoRedoToolBarModel::load()
     AbstractToolBarModel::load();
 
     muse::actions::ActionCodeList itemsCodes = {
-        "undo",
-        "redo",
+        "action://undo",
+        "action://redo",
     };
 
     ToolBarItemList items;

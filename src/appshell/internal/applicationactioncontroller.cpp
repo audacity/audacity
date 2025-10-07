@@ -64,6 +64,15 @@ void ApplicationActionController::init()
     dispatcher()->reg(this, "audio-settings", this, &ApplicationActionController::openAudioSettingsDialog);
     dispatcher()->reg(this, "shortcuts-preferences", this, &ApplicationActionController::openShortcutsPreferencesDialog);
     dispatcher()->reg(this, "editing-preferences", this, &ApplicationActionController::openEditingPreferencesDialog);
+
+    // Global actions
+    dispatcher()->reg(this, "action://copy", this, &ApplicationActionController::doGlobalCopy);
+    dispatcher()->reg(this, "action://cut", this, &ApplicationActionController::doGlobalCut);
+    dispatcher()->reg(this, "action://paste", this, &ApplicationActionController::doGlobalPaste);
+    dispatcher()->reg(this, "action://undo", this, &ApplicationActionController::doGlobalUndo);
+    dispatcher()->reg(this, "action://redo", this, &ApplicationActionController::doGlobalRedo);
+    dispatcher()->reg(this, "action://delete", this, &ApplicationActionController::doGlobalDelete);
+    dispatcher()->reg(this, "action://cancel", this, &ApplicationActionController::doGlobalCancel);
 }
 
 const std::vector<muse::actions::ActionCode>& ApplicationActionController::prohibitedActionsWhileRecording() const
@@ -306,4 +315,74 @@ void ApplicationActionController::revertToFactorySettings()
     }
 
     restart();
+}
+
+bool ApplicationActionController::hasProjectAndIsFocused() const
+{
+    bool hasProject = globalContext()->currentProject() != nullptr;
+    bool isFocused = uiContextResolver()->currentUiContext() == context::UiCtxProjectFocused;
+    return hasProject && isFocused;
+}
+
+void ApplicationActionController::doGlobalCopy()
+{
+    if (hasProjectAndIsFocused()) {
+        dispatcher()->dispatch("action://trackedit/copy");
+    } else {
+        // resolve other actions
+    }
+}
+
+void ApplicationActionController::doGlobalCut()
+{
+    if (hasProjectAndIsFocused()) {
+        dispatcher()->dispatch("action://trackedit/cut");
+    } else {
+        // resolve other actions
+    }
+}
+
+void ApplicationActionController::doGlobalPaste()
+{
+    if (hasProjectAndIsFocused()) {
+        dispatcher()->dispatch("action://trackedit/paste");
+    } else {
+        // resolve other actions
+    }
+}
+
+void ApplicationActionController::doGlobalUndo()
+{
+    if (hasProjectAndIsFocused()) {
+        dispatcher()->dispatch("action://trackedit/undo");
+    } else {
+        // resolve other actions
+    }
+}
+
+void ApplicationActionController::doGlobalRedo()
+{
+    if (hasProjectAndIsFocused()) {
+        dispatcher()->dispatch("action://trackedit/redo");
+    } else {
+        // resolve other actions
+    }
+}
+
+void ApplicationActionController::doGlobalDelete()
+{
+    if (hasProjectAndIsFocused()) {
+        dispatcher()->dispatch("action://trackedit/delete");
+    } else {
+        // resolve other actions
+    }
+}
+
+void ApplicationActionController::doGlobalCancel()
+{
+    if (hasProjectAndIsFocused()) {
+        dispatcher()->dispatch("action://trackedit/escape");
+    } else {
+        dispatcher()->dispatch("nav-escape");
+    }
 }
