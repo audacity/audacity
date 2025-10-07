@@ -10,7 +10,7 @@ KnobControl 1.0 trackspanel/audio/KnobControl.qml
 TrackEffectList 1.0 trackspanel/TrackEffectList.qml
 TrackEffectsSection 1.0 trackspanel/TrackEffectsSection.qml
 TracksTitleBar 1.0 trackspanel/TracksTitleBar.qml
-TracksClipsView 1.0 clipsview/TracksClipsView.qml
+TracksItemsView 1.0 tracksitemsview/TracksItemsView.qml
 TracksPositionController 1.0 common/TracksPositionController.qml
 SelectionStatus 1.0 statusbar/SelectionStatus.qml
 Snap 1.0 toolbars/Snap.qml

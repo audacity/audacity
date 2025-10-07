@@ -514,7 +514,7 @@ Rectangle {
                 property var lastClickTime: 0
                 property point doubleClickStartPosition
 
-                //! IMPORTANT NOTE: clip moving is handled in TracksClipsView (because
+                //! IMPORTANT NOTE: clip moving is handled in TracksItemsView (because
                 // Clip UI element will be destroyed along with its MouseArea if the clip is moved
                 // to the other track and we're gonna loose the ability to handle this MouseArea's events)
                 // hence we need to let simple events pass (e.accepted = false). Unfortunately this breaks
