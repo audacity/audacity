@@ -57,19 +57,13 @@ void PendingTracks::RegisterPendingNewTracks(TrackList& list)
 
 Track* PendingTracks::FindPendingTrack(const Track& track) const
 {
-    auto pTrack = &track;
-    if (!mPendingUpdates->empty()) {
-        const auto end = mPendingUpdates->end();
-        // Find the shadow track with the id
-        const auto pred = [id = track.GetId()](const auto& pTrack){
-            return pTrack->GetId() == id;
-        };
-        if (const auto it = std::find_if(mPendingUpdates->begin(), end, pred)
-            ; it != end) {
-            return *it;
-        }
-    }
-    return nullptr;
+    auto id = track.GetId();
+    auto pred = [id](const auto& pTrack) {
+        return pTrack->GetId() == id;
+    };
+
+    auto it = std::find_if(mPendingUpdates->begin(), mPendingUpdates->end(), pred);
+    return it != mPendingUpdates->end() ? *it : nullptr;
 }
 
 std::pair<Track*, Channel*>

@@ -5,7 +5,6 @@
 #include "WaveformScale.h"
 #include "WaveformSettings.h"
 #include "WaveformPainter.h"
-#include "PendingTracks.h"
 
 using namespace au::au3;
 
