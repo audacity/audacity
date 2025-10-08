@@ -23,12 +23,14 @@ void TracksListClipsModel::load()
         load();
     });
 
-    dispatcher()->reg(this, "escape", [this] { emit escapePressed(); });
-
     au::trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
     }
+
+    trackeditInteraction()->cancelDragEditRequested().onNotify(this, [this]() {
+        emit escapePressed();
+    });
 
     setIsVerticalRulersVisible(configuration()->isVerticalRulersVisible());
 

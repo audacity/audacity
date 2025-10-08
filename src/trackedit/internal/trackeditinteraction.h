@@ -84,6 +84,9 @@ private:
     bool canRedo() override;
     bool undoRedoToIndex(size_t index) override;
 
+    muse::async::Notification cancelDragEditRequested() const override;
+    void notifyAboutCancelDragEdit() override;
+
     bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) override;
 
     bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
