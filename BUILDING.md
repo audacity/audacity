@@ -23,6 +23,9 @@ As large parts of Audacity 4 are based on MuseScore Studio, the general setup st
 1. [Set up a developer environment](https://github.com/musescore/MuseScore/wiki/Set-up-developer-environment)
 2. [Install Qt and Qt Creator](https://github.com/musescore/MuseScore/wiki/Install-Qt-and-Qt-Creator)
 
+> [!IMPORTANT]  
+> You will also need to install `QT Shader Tools` under `Additional Libraries`
+
 ### Get the Audacity source and its submodules
 
 To get the source and submodules in one command, `git clone --recurse-submodules https://github.com/audacity/audacity.git` in the folder of your choice. See the [Github help](https://docs.github.com/en/get-started/getting-started-with-git/about-remote-repositories) for more information. 
