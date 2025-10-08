@@ -93,6 +93,9 @@ public:
     bool canRedo() override;
     bool undoRedoToIndex(size_t index) override;
 
+    void notifyAboutCancelDragEdit() override;
+    muse::async::Notification cancelDragEditRequested() const override;
+
     bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) override;
 
     bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
@@ -121,5 +124,6 @@ private:
     void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
 
     const std::unique_ptr<IUndoManager> m_undoManager;
+    muse::async::Notification m_cancelDragEditRequested;
 };
 }

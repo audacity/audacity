@@ -534,6 +534,16 @@ bool TrackeditOperationController::undoRedoToIndex(size_t index)
     return m_undoManager->undoRedoToIndex(index);
 }
 
+void TrackeditOperationController::notifyAboutCancelDragEdit()
+{
+    m_cancelDragEditRequested.notify();
+}
+
+muse::async::Notification TrackeditOperationController::cancelDragEditRequested() const
+{
+    return m_cancelDragEditRequested;
+}
+
 bool TrackeditOperationController::insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)
 {
     if (trackAndClipOperations()->insertSilence(trackIds, begin, end, duration)) {

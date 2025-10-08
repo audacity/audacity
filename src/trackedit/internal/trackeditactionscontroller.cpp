@@ -456,8 +456,7 @@ void TrackeditActionsController::doGlobalDelete()
 
 void TrackeditActionsController::doGlobalCancel()
 {
-    LOGDA() << "trackedit cancel";
-    // Do cancel and notify the model about it.
+    trackeditInteraction()->notifyAboutCancelDragEdit();
 }
 
 void TrackeditActionsController::doGlobalDeletePerClipRipple()
