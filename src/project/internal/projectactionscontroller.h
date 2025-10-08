@@ -5,19 +5,18 @@
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
-#include "global/iinteractive.h"
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
+#include "global/iinteractive.h"
+#include "project/iprojectconfiguration.h"
 #include "global/io/ifilesystem.h"
-#include "../iprojectconfiguration.h"
-#include "irecentfilescontroller.h"
+#include "project/irecentfilescontroller.h"
 #include "iopensaveprojectscenario.h"
-#include "record/irecordcontroller.h"
 #include "trackedit/iprojecthistory.h"
+#include "record/irecordcontroller.h"
+#include "importexport/export/internal/exportconfiguration.h"
 
 #include "project/iprojectfilescontroller.h"
-#include "project/iprojectconfiguration.h"
-#include "project/irecentfilescontroller.h"
 #include "project/iaudacityproject.h"
 
 namespace au::project {
@@ -32,6 +31,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<record::IRecordController> recordController;
+    muse::Inject<importexport::ExportConfiguration> exportConfiguration;
 
 public:
     ProjectActionsController() = default;

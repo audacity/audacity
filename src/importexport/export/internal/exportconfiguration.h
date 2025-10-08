@@ -5,7 +5,6 @@
 
 #include "modularity/ioc.h"
 #include "global/iglobalconfiguration.h"
-
 #include "../iexporter.h"
 
 #include "../iexportconfiguration.h"

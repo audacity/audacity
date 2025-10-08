@@ -46,6 +46,9 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "export-midi", this, &ProjectActionsController::exportMIDI);
 
     dispatcher()->reg(this, "file-close", [this]() {
+        // reset preferred export sample rate
+        exportConfiguration()->setExportSampleRate(-1);
+
         //! TODO AU4
         bool quitApp = false; //multiInstancesProvider()->instances().size() > 1;
         closeOpenedProject(quitApp);
