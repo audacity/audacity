@@ -14,6 +14,7 @@ static const muse::actions::ActionCode FOCUS_NEXT_TRACK_CODE("focus-next-track")
 static const muse::actions::ActionCode PREV_TRACK_CODE("prev-track");
 static const muse::actions::ActionCode NEXT_TRACK_CODE("next-track");
 static const muse::actions::ActionCode TRACK_TOGGLE_SELECTION_CODE("track-toggle-focused-selection");
+static const muse::actions::ActionCode TRACK_RANGE_SELECTION_CODE("track-range-selection");
 static const muse::actions::ActionCode MULTI_TRACK_SELECTION_PREV_CODE("shift-up");
 static const muse::actions::ActionCode MULTI_TRACK_SELECTION_NEXT_CODE("shift-down");
 
@@ -27,6 +28,7 @@ void TrackNavigationController::init()
     dispatcher()->reg(this, PREV_TRACK_CODE, this, &TrackNavigationController::navigateUp);
     dispatcher()->reg(this, NEXT_TRACK_CODE, this, &TrackNavigationController::navigateDown);
     dispatcher()->reg(this, TRACK_TOGGLE_SELECTION_CODE, this, &TrackNavigationController::toggleSelectionOnFocusedTrack);
+    dispatcher()->reg(this, TRACK_RANGE_SELECTION_CODE, this, &TrackNavigationController::trackRangeSelection);
     dispatcher()->reg(this, MULTI_TRACK_SELECTION_PREV_CODE, this, &TrackNavigationController::multiSelectionUp);
     dispatcher()->reg(this, MULTI_TRACK_SELECTION_NEXT_CODE, this, &TrackNavigationController::multiSelectionDown);
 
@@ -38,6 +40,13 @@ void TrackNavigationController::init()
         const auto activePanel = navigationController()->activePanel();
         if (activePanel && activePanel->name() != "AddNewTrackPopup" && activePanel->name() != QString("Track %1 Panel").arg(trackId)) {
             navigationController()->requestActivateByName("Main Section", "Main Panel", "Main Control");
+        }
+    });
+
+    selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList& trackIds) {
+        if (trackIds.size() == 1) {
+            // The idea here is that range selection also supports the base track to be selected using the mouse.
+            m_lastSelectedTrack = trackIds.front();
         }
     });
 
@@ -153,11 +162,48 @@ void TrackNavigationController::toggleSelectionOnFocusedTrack()
 
     if (muse::contains(selectedTracks, focusedTrack)) {
         selectedTracks.erase(std::remove(selectedTracks.begin(), selectedTracks.end(), focusedTrack), selectedTracks.end());
+        m_lastSelectedTrack = std::nullopt;
     } else {
         selectedTracks.push_back(focusedTrack);
+        m_lastSelectedTrack = focusedTrack;
     }
 
     selectionController()->setSelectedTracks(selectedTracks);
+}
+
+void TrackNavigationController::trackRangeSelection()
+{
+    const auto orderedTracks = selectionController()->orderedTrackList();
+    if (orderedTracks.empty()) {
+        return;
+    }
+
+    const au::trackedit::TrackId focusedTrack = selectionController()->focusedTrack();
+    const auto selectedTracks = selectionController()->selectedTracks();
+
+    if (!m_lastSelectedTrack) {
+        m_lastSelectedTrack = focusedTrack;
+        selectionController()->setSelectedTracks({ focusedTrack });
+        return;
+    }
+
+    if (!muse::contains(selectedTracks, *m_lastSelectedTrack)) {
+        m_lastSelectedTrack = selectedTracks.size() == 1 ? selectedTracks.front() : focusedTrack;
+    }
+
+    auto startIt = std::find(orderedTracks.begin(), orderedTracks.end(), *m_lastSelectedTrack);
+    auto endIt = std::find(orderedTracks.begin(), orderedTracks.end(), focusedTrack);
+
+    if (startIt > endIt) {
+        std::swap(startIt, endIt);
+    }
+
+    au::trackedit::TrackIdList newSelectedTracks;
+    for (auto it = startIt; it <= endIt; ++it) {
+        newSelectedTracks.push_back(*it);
+    }
+
+    selectionController()->setSelectedTracks(newSelectedTracks);
 }
 
 void TrackNavigationController::multiSelectionUp()
