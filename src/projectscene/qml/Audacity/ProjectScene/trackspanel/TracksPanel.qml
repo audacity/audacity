@@ -283,6 +283,10 @@ Item {
                             tracksModel.removeSelection()
                         }
 
+                        onAddLabelToSelectionRequested: {
+                            tracksModel.addLabelToSelection()
+                        }
+
                         Component.onCompleted: {
                             mousePressed.connect(dragHandler.startDrag)
                             mouseReleased.connect(dragHandler.endDrag)
