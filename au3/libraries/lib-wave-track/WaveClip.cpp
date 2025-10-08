@@ -1237,13 +1237,19 @@ void WaveClip::WriteXML(size_t ii, XMLWriter& xmlFile) const
     xmlFile.WriteAttr(CentShiftAttr, mCentShift);
     xmlFile.WriteAttr(PitchAndSpeedPreset_attr,
                       static_cast<long>(mPitchAndSpeedPreset));
-    xmlFile.WriteAttr(RawAudioTempo_attr, mRawAudioTempo.value_or(0.), 8);
     xmlFile.WriteAttr(ClipStretchRatio_attr, mClipStretchRatio, 8);
     xmlFile.WriteAttr(ClipStretchToMatchTempo_attr, mStretchToMatchProjectTempo);
-    xmlFile.WriteAttr(ClipTempo_attr, mClipTempo.value_or(0.), 8);
     xmlFile.WriteAttr(Name_attr, mName);
     xmlFile.WriteAttr(GroupId_attr, static_cast<long>(mGroupId));
     xmlFile.WriteAttr(Color_attr, mColor);
+
+    if (mClipTempo) {
+        xmlFile.WriteAttr(ClipTempo_attr, *mClipTempo, 8);
+    }
+    if (mRawAudioTempo) {
+        xmlFile.WriteAttr(RawAudioTempo_attr, *mRawAudioTempo, 8);
+    }
+
     Attachments::ForEach([&](const WaveClipListener& listener){
         listener.WriteXMLAttributes(xmlFile);
     });
