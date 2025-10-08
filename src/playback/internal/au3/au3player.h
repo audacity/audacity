@@ -5,17 +5,19 @@
 
 #include "../../iplayer.h"
 
-#include "global/async/asyncable.h"
-#include "global/types/retval.h"
-#include "global/timer.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/types/retval.h"
+#include "framework/global/timer.h"
+#include "framework/global/modularity/ioc.h"
 
 #include "trackedit/iselectioncontroller.h"
-
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "au3audio/iaudioengine.h"
 
 #include "au3wrap/au3types.h"
+
+#include <chrono>
+#include <optional>
 
 struct TransportSequences;
 namespace au::playback {
@@ -60,7 +62,8 @@ public:
     void setLoopRegionActive(const bool active) override;
 
     muse::secs_t playbackPosition() const override;
-    muse::async::Channel<muse::secs_t> playbackPositionChanged() const override;
+    void updatePlaybackPositionTimeCritical() override;
+    muse::async::Channel<muse::secs_t> playbackPositionChangedMainThreadOnly() const override;
 
     muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) override;
 
@@ -73,15 +76,17 @@ private:
 
     muse::Ret doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {});
 
-    void updatePlaybackState();
+    void updatePlaybackStateTimeCritical();
 
     muse::async::Notification m_loopRegionChanged;
 
     muse::ValCh<PlaybackStatus> m_playbackStatus;
     muse::ValNt<bool> m_reachedEnd;
 
-    muse::Timer m_positionUpdateTimer;
-    muse::ValCh<muse::secs_t> m_playbackPosition;
+    muse::ValCh<muse::secs_t> m_playbackPositionMainThreadOnly;
     double m_startOffset = 0.0;
+
+    unsigned long long m_elapsedSamplesAtLastReport = 0;
+    std::optional<std::chrono::steady_clock::time_point> m_startTime;
 };
 }

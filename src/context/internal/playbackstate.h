@@ -3,7 +3,8 @@
 */
 #pragma once
 
-#include "global/async/asyncable.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
 
 #include "context/iplaybackstate.h"
 #include "playback/iplayer.h"
