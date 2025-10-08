@@ -192,6 +192,24 @@ au::trackedit::Clips Au3TrackeditProject::getClips(const TrackId& trackId) const
     return clips;
 }
 
+au::trackedit::Labels Au3TrackeditProject::getLabels(const TrackId& trackId) const
+{
+    au::trackedit::Labels labels;
+
+    const Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(*m_impl->prj, Au3TrackId(trackId));
+    if (!labelTrack) {
+        return labels;
+    }
+
+    const auto& au3labels = labelTrack->GetLabels();
+    for (size_t i = 0; i < au3labels.size(); ++i) {
+        au::trackedit::Label label = DomConverter::label(labelTrack, i, au3labels[i]);
+        labels.push_back(std::move(label));
+    }
+
+    return labels;
+}
+
 muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const au::trackedit::TrackId& trackId) const
 {
     au::trackedit::Clips clips = getClips(trackId);
@@ -206,6 +224,22 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
     clipNotifyList.setNotify(notifier.notify());
 
     return clipNotifyList;
+}
+
+muse::async::NotifyList<au::trackedit::Label> Au3TrackeditProject::labelList(const au::trackedit::TrackId& trackId) const
+{
+    au::trackedit::Labels labels = getLabels(trackId);
+    muse::async::NotifyList<au::trackedit::Label> labelNotifyList;
+
+    labelNotifyList.reserve(labels.size());
+    for (Label& label : labels) {
+        labelNotifyList.push_back(std::move(label));
+    }
+
+    async::ChangedNotifier<Label>& notifier = m_labelsChanged[trackId];
+    labelNotifyList.setNotify(notifier.notify());
+
+    return labelNotifyList;
 }
 
 std::optional<std::string> Au3TrackeditProject::trackName(const TrackId& trackId) const

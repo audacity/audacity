@@ -610,6 +610,10 @@ Rectangle {
                     width: tracksItemsView.width
                     
                     sourceComponent: trackType === TrackItemType.Label ? labelTrackItemComp : clipsTrackItemComp
+
+                    onLoaded: {
+                        trackItemLoader.item.init()
+                    }
                     
                     Component {
                         id: clipsTrackItemComp

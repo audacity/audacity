@@ -102,6 +102,8 @@ private:
     bool makeStereoTrack(const TrackId left, const TrackId right) override;
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
 
+    bool addLabelToSelection() override;
+
     muse::Progress progress() const override;
 
 private:

@@ -80,6 +80,7 @@ public:
     bool newMonoTrack() override;
     bool newStereoTrack() override;
     bool newLabelTrack() override;
+
     bool deleteTracks(const TrackIdList& trackIds) override;
     bool duplicateTracks(const TrackIdList& trackIds) override;
     void moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) override;
@@ -110,6 +111,8 @@ public:
     bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) override;
     bool makeStereoTrack(const TrackId left, const TrackId right) override;
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
+
+    bool addLabelToSelection() override;
 
     muse::Progress progress() const override;
 

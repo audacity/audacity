@@ -25,6 +25,7 @@ public:
     std::optional<Track> track(TrackId trackId) const override;
     Clip clip(const ClipKey& key) const override;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const override;
+    muse::async::NotifyList<Label> labelList(const TrackId& trackId) const override;
     std::vector<int64_t> groupsIdsList() const override;
     std::optional<std::string> trackName(const TrackId& trackId) const override;
 
@@ -63,11 +64,13 @@ private:
     void onProjectTempoChange(double newTempo);
 
     au::trackedit::Clips getClips(const TrackId& trackId) const;
+    au::trackedit::Labels getLabels(const TrackId& trackId) const;
 
     struct Au3Impl;
     std::shared_ptr<Au3Impl> m_impl;
 
     mutable std::map<TrackId, muse::async::ChangedNotifier<Clip> > m_clipsChanged;
+    mutable std::map<TrackId, muse::async::ChangedNotifier<Label> > m_labelsChanged;
     mutable muse::async::Channel<au::trackedit::TimeSignature> m_timeSignatureChanged;
 
     mutable muse::async::Channel<trackedit::TrackList> m_tracksChanged;

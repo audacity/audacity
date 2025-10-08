@@ -295,6 +295,11 @@ void TracksListModel::endActiveDrag()
     setLoadingBlocked(false);
 }
 
+void TracksListModel::addLabelToSelection()
+{
+    dispatcher()->dispatch("add-label");
+}
+
 void TracksListModel::clear()
 {
     TRACEFUNC;

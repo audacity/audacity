@@ -10,6 +10,8 @@ import Audacity.ProjectScene
 TrackItem {
     id: root
 
+    signal addLabelToSelectionRequested()
+
     extraControlsComponent: Component {
         FlatButton {
             width: parent.width
@@ -22,7 +24,7 @@ TrackItem {
             text: qsTrc("projectscene", "Add label")
 
             onClicked: {
-                // root.addLabelRequested()
+                root.addLabelToSelectionRequested()
             }
         }
     }
