@@ -29,6 +29,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/dom/track.h
     ${CMAKE_CURRENT_LIST_DIR}/dom/clip.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dom/clip.h
+    ${CMAKE_CURRENT_LIST_DIR}/dom/label.h
     ${CMAKE_CURRENT_LIST_DIR}/dom/wave.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dom/wave.h
 

@@ -81,6 +81,7 @@ public:
     virtual bool newMonoTrack() = 0;
     virtual bool newStereoTrack() = 0;
     virtual bool newLabelTrack() = 0;
+
     virtual bool deleteTracks(const TrackIdList& trackIds) = 0;
     virtual bool duplicateTracks(const TrackIdList& trackIds) = 0;
     virtual void moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) = 0;
@@ -114,6 +115,8 @@ public:
     virtual bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) = 0;
     virtual bool makeStereoTrack(const TrackId left, const TrackId right) = 0;
     virtual bool resampleTracks(const TrackIdList& tracksIds, int rate) = 0;
+
+    virtual bool addLabelToSelection() = 0;
 
     virtual muse::Progress progress() const = 0;
 };

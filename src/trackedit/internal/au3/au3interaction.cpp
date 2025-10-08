@@ -2922,6 +2922,51 @@ bool Au3Interaction::resampleTracks(const TrackIdList& tracksIds, int rate)
     return true;
 }
 
+bool Au3Interaction::addLabelToSelection()
+{
+    auto& project = projectRef();
+    auto& tracks = Au3TrackList::Get(project);
+    auto& selectedRegion = ViewInfo::Get(project).selectedRegion;
+
+    Au3LabelTrack* labelTrack = nullptr;
+
+    const auto focusedTrackId = selectionController()->focusedTrack();
+    if (focusedTrackId > 0) {
+        Au3Track* focusedAu3Track = DomAccessor::findTrack(project, Au3TrackId(focusedTrackId));
+        if (focusedAu3Track) {
+            labelTrack = dynamic_cast<Au3LabelTrack*>(focusedAu3Track);
+        }
+    }
+
+    // If the focused track is not a label track, search for any existing label track
+    if (!labelTrack) {
+        for (auto lt : tracks.Any<Au3LabelTrack>()) {
+            labelTrack = lt;
+            break;
+        }
+    }
+
+    // If no label track exists, create a new one
+    if (!labelTrack) {
+        labelTrack = ::LabelTrack::Create(tracks);
+
+        const auto prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackAdded(DomConverter::labelTrack(labelTrack));
+    }
+
+    wxString title = wxEmptyString;
+    labelTrack->AddLabel(selectedRegion, title);
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutTrackChanged(DomConverter::labelTrack(labelTrack));
+    }
+
+    selectionController()->setFocusedTrack(labelTrack->GetId());
+
+    return true;
+}
+
 muse::Progress Au3Interaction::progress() const
 {
     return m_progress;

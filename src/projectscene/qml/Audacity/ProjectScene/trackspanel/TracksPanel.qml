@@ -103,15 +103,15 @@ Item {
                     property real startHeight: 0
 
                     onPressed: (mouse) => {
-                                   startY = mouse.y
-                                   startHeight = trackEffectsSection.height
-                               }
+                        startY = mouse.y
+                        startHeight = trackEffectsSection.height
+                    }
 
                     onPositionChanged: (mouse) => {
-                                           const deltaY = mouse.y - startY
-                                           const newMasterHeight = masterEffectsSection.height - deltaY
-                                           masterEffectsSection.Layout.preferredHeight = Math.min(newMasterHeight, effectColumn.height - trackEffectsSection.minimumHeight)
-                                       }
+                        const deltaY = mouse.y - startY
+                        const newMasterHeight = masterEffectsSection.height - deltaY
+                        masterEffectsSection.Layout.preferredHeight = Math.min(newMasterHeight, effectColumn.height - trackEffectsSection.minimumHeight)
+                    }
                 }
             }
 
@@ -283,6 +283,10 @@ Item {
                             tracksModel.removeSelection()
                         }
 
+                        onAddLabelToSelectionRequested: {
+                            tracksModel.addLabelToSelection()
+                        }
+
                         Component.onCompleted: {
                             mousePressed.connect(dragHandler.startDrag)
                             mouseReleased.connect(dragHandler.endDrag)
@@ -401,11 +405,11 @@ Item {
 
                     function setDraggedStateForTracks(state) {
                         tracksModel.selectionModel().selectedIndexes.forEach(selectedIndex => {
-                            let loader = view.itemAtIndex(selectedIndex.row)
-                            if (Boolean(loader) && Boolean(loader.item)) {
-                                loader.item.dragged = state
-                            }
-                        })
+                                                                                 let loader = view.itemAtIndex(selectedIndex.row)
+                                                                                 if (Boolean(loader) && Boolean(loader.item)) {
+                                                                                     loader.item.dragged = state
+                                                                                 }
+                                                                             })
                     }
                 }
             }
