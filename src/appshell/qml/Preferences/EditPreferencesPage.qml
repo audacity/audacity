@@ -48,13 +48,25 @@ PreferencesPage {
 
         SeparatorLine {}
 
+        PasteBehaviorSection {
+            id: pasteBehaviorSection
+
+            editPreferencesModel: editPreferencesModel
+            parentBackgroundColor: root.color
+
+            navigation.section: root.navigationSection
+            navigation.order: deleteBehaviorSection.navigationOrderEnd + 1
+        }
+
+        SeparatorLine {}
+
         AsymmetricStereoHeightsSection {
             id: asymmetricStereoHeightsSection
 
             editPreferencesModel: editPreferencesModel
 
             navigation.section: root.navigationSection
-            navigation.order: deleteBehaviorSection.navigationOrderEnd + 1
+            navigation.order: pasteBehaviorSection.navigationOrderEnd + 1
         }
 
         SeparatorLine {}

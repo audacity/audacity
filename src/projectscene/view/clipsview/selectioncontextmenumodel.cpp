@@ -24,9 +24,9 @@ MenuItemList SelectionContextMenuModel::makeItems()
     MenuItemList items {
         makeMenuItem("action://trackedit/cut"),
         makeMenuItem("action://trackedit/copy"),
-        makeMenuItem("duplicate"),
-        makeMenuItem("action://trackedit/paste"),
+        makeMenuItem("action://trackedit/paste-default"),
         makeSeparator(),
+        makeMenuItem("duplicate"),
         makeMenuItem("split")
     };
 

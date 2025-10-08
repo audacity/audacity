@@ -29,6 +29,14 @@ void EditPreferencesModel::init()
         emit closeGapBehaviorChanged();
     });
 
+    trackeditConfiguration()->pasteBehaviorChanged().onNotify(this, [this] {
+        emit pasteBehaviorPrefChanged();
+    });
+
+    trackeditConfiguration()->pasteInsertBehaviorChanged().onNotify(this, [this] {
+        emit pasteInsertBehaviorPrefChanged();
+    });
+
     projectsceneConfiguration()->asymmetricStereoHeightsWorkspacesChanged().onNotify(this, [this] {
         emit asymmetricWorkspacesChanged();
     });
@@ -131,6 +139,32 @@ void EditPreferencesModel::setCloseGapBehavior(int pref)
         return;
     }
     trackeditConfiguration()->setCloseGapBehavior(static_cast<au::trackedit::CloseGapBehavior>(pref));
+}
+
+    int EditPreferencesModel::pasteBehavior() const
+{
+    return static_cast<int>(trackeditConfiguration()->pasteBehavior());
+}
+
+    void EditPreferencesModel::setPasteBehavior(int pref)
+{
+    if (pasteBehavior() == pref) {
+        return;
+    }
+    trackeditConfiguration()->setPasteBehavior(static_cast<au::trackedit::PasteBehavior>(pref));
+}
+
+int EditPreferencesModel::pasteInsertBehavior() const
+{
+    return static_cast<int>(trackeditConfiguration()->pasteInsertBehavior());
+}
+
+void EditPreferencesModel::setPasteInsertBehavior(int pref)
+{
+    if (pasteInsertBehavior() == pref) {
+        return;
+    }
+    trackeditConfiguration()->setPasteInsertBehavior(static_cast<au::trackedit::PasteInsertBehavior>(pref));
 }
 
 QVariantList EditPreferencesModel::asymmetricWorkspaces() const

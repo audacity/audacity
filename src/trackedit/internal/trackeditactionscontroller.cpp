@@ -15,12 +15,13 @@ using namespace muse::actions;
 
 static const ActionCode TRACKEDIT_COPY_CODE("action://trackedit/copy");
 static const ActionCode TRACKEDIT_CUT_CODE("action://trackedit/cut");
-static const ActionCode TRACKEDIT_PASTE_CODE("action://trackedit/paste");
+static const ActionCode TRACKEDIT_PASTE_DEFAULT_CODE("action://trackedit/paste-default");
 static const ActionCode TRACKEDIT_UNDO("action://trackedit/undo");
 static const ActionCode TRACKEDIT_REDO("action://trackedit/redo");
 static const ActionCode TRACKEDIT_DELETE_CODE("action://trackedit/delete");
 static const ActionCode TRACKEDIT_CANCEL_CODE("action://trackedit/cancel");
 
+static const ActionCode PASTE_OVERLAP_CODE("paste-overlap");
 static const ActionCode TRACKEDIT_PASTE_INSERT_CODE("action://trackedit/paste-insert");
 static const ActionCode SPLIT_CODE("split");
 static const ActionCode SPLIT_INTO_NEW_TRACK_CODE("split-into-new-track");
@@ -126,7 +127,8 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     MULTI_CLIP_DELETE_CODE,
     RANGE_SELECTION_DELETE_CODE,
     CLIP_RENDER_PITCH_AND_SPEED_CODE,
-    TRACKEDIT_PASTE_CODE,
+    TRACKEDIT_PASTE_DEFAULT_CODE,
+    PASTE_OVERLAP_CODE,
     TRACKEDIT_PASTE_INSERT_CODE,
     PASTE_INSERT_ALL_TRACKS_RIPPLE_CODE,
     TRACK_SPLIT,
@@ -166,7 +168,7 @@ void TrackeditActionsController::init()
 {
     dispatcher()->reg(this, TRACKEDIT_COPY_CODE, this, &TrackeditActionsController::doGlobalCopy);
     dispatcher()->reg(this, TRACKEDIT_CUT_CODE, this, &TrackeditActionsController::doGlobalCut);
-    dispatcher()->reg(this, TRACKEDIT_PASTE_CODE, this, &TrackeditActionsController::paste);
+    dispatcher()->reg(this, TRACKEDIT_PASTE_DEFAULT_CODE, this, &TrackeditActionsController::pasteDefault);
     dispatcher()->reg(this, TRACKEDIT_UNDO, this, &TrackeditActionsController::undo);
     dispatcher()->reg(this, TRACKEDIT_REDO, this, &TrackeditActionsController::redo);
     dispatcher()->reg(this, TRACKEDIT_DELETE_CODE, this, &TrackeditActionsController::doGlobalDelete);
@@ -183,6 +185,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, CUT_PER_TRACK_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalCutPerTrackRipple);
     dispatcher()->reg(this, CUT_ALL_TRACKS_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalCutAllTracksRipple);
 
+    dispatcher()->reg(this, PASTE_OVERLAP_CODE, this, &TrackeditActionsController::pasteOverlap);
     dispatcher()->reg(this, PASTE_INSERT_ALL_TRACKS_RIPPLE_CODE, this, &TrackeditActionsController::pasteInsertRipple);
 
     dispatcher()->reg(this, DELETE_PER_CLIP_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalDeletePerClipRipple);
@@ -789,7 +792,26 @@ void TrackeditActionsController::rangeSelectionDelete(const ActionData& args)
     selectionController()->resetDataSelection();
 }
 
-void TrackeditActionsController::paste()
+void TrackeditActionsController::pasteDefault()
+{
+    switch (configuration()->pasteBehavior()) {
+    case PasteBehavior::PasteOverlap:
+        pasteOverlap();
+        break;
+    case PasteBehavior::PasteInsert:
+        switch (configuration()->pasteInsertBehavior()) {
+        case PasteInsertBehavior::PasteInsert:
+            pasteInsert();
+            break;
+        case PasteInsertBehavior::PasteInsertRipple:
+            pasteInsertRipple();
+            break;
+        }
+        break;
+    }
+}
+
+void TrackeditActionsController::pasteOverlap()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();

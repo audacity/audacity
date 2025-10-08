@@ -110,7 +110,7 @@
         <seq>Ctrl+X</seq>
     </SC>
     <SC>
-        <key>action://paste</key>
+        <key>action://paste-default</key>
         <seq>Ctrl+V</seq>
     </SC>
     <SC>
@@ -133,6 +133,10 @@
 <!-- end Global actions -->
 
 <!-- Trackedit actions -->
+    <SC>
+        <key>paste-overlap</key>
+        <seq>Ctrl+Alt+V</seq>
+    </SC>
     <SC>
         <key>action://trackedit/paste-insert</key>
         <seq>Shift+V</seq>

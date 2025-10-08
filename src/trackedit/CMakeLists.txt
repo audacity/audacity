@@ -73,6 +73,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/deletebehaviorpanelmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/deletebehaviorpanelmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/pastebehaviorpanelmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/pastebehaviorpanelmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracknavigationmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracknavigationmodel.h
     )
