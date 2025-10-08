@@ -4,6 +4,7 @@
 #include "au3player.h"
 
 #include "global/types/number.h"
+#include "global/defer.h"
 
 #include "libraries/lib-time-frequency-selection/SelectedRegion.h"
 #include "libraries/lib-track/Track.h"
@@ -25,17 +26,10 @@ using namespace au::playback;
 using namespace au::au3;
 
 Au3Player::Au3Player()
-    : m_positionUpdateTimer(std::chrono::milliseconds(16))
 {
-    m_positionUpdateTimer.onTimeout(this, [this]() {
-        updatePlaybackState();
-    });
-
     m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
         if (st == PlaybackStatus::Running) {
-            m_positionUpdateTimer.start();
-        } else {
-            m_positionUpdateTimer.stop();
+            m_startTime.reset();
         }
     });
 
@@ -228,7 +222,7 @@ void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
         gAudioIO->SeekStream(pos - gAudioIO->GetStreamTime());
     }
 
-    m_playbackPosition.set(pos);
+    m_playbackPositionMainThreadOnly.set(pos);
 }
 
 void Au3Player::rewind()
@@ -325,7 +319,7 @@ PlaybackRegion Au3Player::playbackRegion() const
 
 void Au3Player::setPlaybackRegion(const PlaybackRegion& region)
 {
-    m_playbackPosition.set(std::max(0.0, region.start.raw()));
+    m_playbackPositionMainThreadOnly.set(std::max(0.0, region.start.raw()));
 
     Au3Project& project = projectRef();
 
@@ -366,7 +360,7 @@ void Au3Player::loopEditingEnd()
     auto& playRegion = ViewInfo::Get(project).playRegion;
     playRegion.Order();
 
-    m_playbackPosition.set(std::max(loopRegion().start.raw(), 0.0));
+    m_playbackPositionMainThreadOnly.set(std::max(loopRegion().start.raw(), 0.0));
 }
 
 void Au3Player::setLoopRegion(const PlaybackRegion& region)
@@ -460,7 +454,7 @@ muse::async::Notification Au3Player::loopRegionChanged() const
     return m_loopRegionChanged;
 }
 
-void Au3Player::updatePlaybackState()
+void Au3Player::updatePlaybackStateTimeCritical()
 {
     if (m_playbackStatus.val != PlaybackStatus::Running) {
         return;
@@ -474,11 +468,12 @@ void Au3Player::updatePlaybackState()
     bool isActive = AudioIO::Get()->IsStreamActive(token);
     double time = AudioIO::Get()->GetStreamTime() + m_startOffset;
 
-    //LOGDA() << "token: " << token << ", isActive: " << isActive << ", time: " << time;
-
     if (isActive) {
         m_reachedEnd.val = false;
-        m_playbackPosition.set(std::max(0.0, time));
+        const auto newTime = std::max(0.0, time);
+        if (!muse::is_equal(newTime, m_playbackPositionMainThreadOnly.val.raw())) {
+            m_playbackPositionMainThreadOnly.set(newTime);
+        }
     } else {
         if (playbackStatus() == PlaybackStatus::Running && !m_reachedEnd.val) {
             m_reachedEnd.val = true;
@@ -489,12 +484,48 @@ void Au3Player::updatePlaybackState()
 
 muse::secs_t Au3Player::playbackPosition() const
 {
-    return m_playbackPosition.val;
+    return m_playbackPositionMainThreadOnly.val;
 }
 
-muse::async::Channel<muse::secs_t> Au3Player::playbackPositionChanged() const
+void Au3Player::updatePlaybackPositionTimeCritical()
 {
-    return m_playbackPosition.ch;
+    muse::Defer defer = [this] {
+        updatePlaybackStateTimeCritical();
+    };
+
+    auto& audioIO = *AudioIO::Get();
+    if (!audioIO.ProjectSamplesReachedDeviceThread()) {
+        // Too early: we only want to start when the user starts hearing audio.
+        return;
+    }
+
+    using namespace std::chrono;
+    const auto now = steady_clock::now();
+
+    if (!m_startTime.has_value()) {
+        m_startTime = now;
+        m_elapsedSamplesAtLastReport = 0;
+        return;
+    }
+
+    const double sampleRate = AudioIO::Get()->GetPlaybackSampleRate();
+
+    // Make 100% sure we do not introduce drift: quantize the elapsed time to an integral sample value,
+    // advance by that amount and don't lose track of the amount of samples advanced by so far.
+    const auto elapsedMs = duration_cast<milliseconds>(now - *m_startTime).count();
+    const auto elapsedSamples = static_cast<unsigned long long>(elapsedMs / 1000.0 * sampleRate);
+    IF_ASSERT_FAILED(elapsedSamples >= m_elapsedSamplesAtLastReport) {
+        return;
+    }
+    const unsigned long long elapsed { elapsedSamples - m_elapsedSamplesAtLastReport };
+    m_elapsedSamplesAtLastReport = elapsedSamples;
+
+    audioIO.UpdateTimePosition(elapsed);
+}
+
+muse::async::Channel<muse::secs_t> Au3Player::playbackPositionChangedMainThreadOnly() const
+{
+    return m_playbackPositionMainThreadOnly.ch;
 }
 
 Au3Project& Au3Player::projectRef() const

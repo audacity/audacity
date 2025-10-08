@@ -3,12 +3,13 @@ import Muse.Ui
 import Muse.UiComponents
 
 Rectangle {
-
     id: root
 
     property color borderColor: "#000000"
     property int borderWidth: 1
     property bool timelinePressed: false
+
+    antialiasing: true
 
     Rectangle {
         id: cursor
@@ -17,7 +18,6 @@ Rectangle {
         width: 3
         height: root.height
         color: "#ffffff"
-
 
         // draw borders without top one
         Rectangle {

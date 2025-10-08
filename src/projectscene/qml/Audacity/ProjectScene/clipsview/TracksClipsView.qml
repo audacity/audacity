@@ -834,6 +834,8 @@ Rectangle {
             width: timeline.context.selectionEndPosition - x
         }
 
+        PlaybackPositionTimer {}
+
         PlayCursorLine {
             id: playCursor
 

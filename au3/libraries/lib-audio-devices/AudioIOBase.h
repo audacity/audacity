@@ -321,6 +321,8 @@ public:
      */
     void SetMixer(int inputSource);
 
+    double GetPlaybackSampleRate() const { return mRate; }
+
 protected:
     static std::unique_ptr<AudioIOBase> ugAudioIO;
     static wxString DeviceName(const PaDeviceInfo* info);
