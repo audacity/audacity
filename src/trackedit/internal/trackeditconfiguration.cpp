@@ -56,7 +56,7 @@ muse::async::Notification TrackeditConfiguration::askBeforeConvertingToMonoOrSte
 
 DeleteBehavior TrackeditConfiguration::deleteBehavior() const
 {
-    return muse::settings()->value(muse::Settings::Key(moduleName, "trackedit/deleteBehavior")).toEnum<DeleteBehavior>();
+    return muse::settings()->value(DELETE_BEHAVIOR).toEnum<DeleteBehavior>();
 }
 
 void TrackeditConfiguration::setDeleteBehavior(DeleteBehavior value)
@@ -64,7 +64,7 @@ void TrackeditConfiguration::setDeleteBehavior(DeleteBehavior value)
     if (deleteBehavior() == value) {
         return;
     }
-    muse::settings()->setSharedValue(muse::Settings::Key(moduleName, "trackedit/deleteBehavior"), muse::Val(value));
+    muse::settings()->setSharedValue(DELETE_BEHAVIOR, muse::Val(value));
     m_deleteBehaviorChanged.notify();
 }
 
@@ -75,7 +75,7 @@ muse::async::Notification TrackeditConfiguration::deleteBehaviorChanged() const
 
 CloseGapBehavior TrackeditConfiguration::closeGapBehavior() const
 {
-    return muse::settings()->value(muse::Settings::Key(moduleName, "trackedit/closeGapBehavior")).toEnum<CloseGapBehavior>();
+    return muse::settings()->value(CLOSE_GAP_BEHAVIOR).toEnum<CloseGapBehavior>();
 }
 
 void TrackeditConfiguration::setCloseGapBehavior(CloseGapBehavior value)
@@ -83,7 +83,7 @@ void TrackeditConfiguration::setCloseGapBehavior(CloseGapBehavior value)
     if (closeGapBehavior() == value) {
         return;
     }
-    muse::settings()->setSharedValue(muse::Settings::Key(moduleName, "trackedit/closeGapBehavior"), muse::Val(value));
+    muse::settings()->setSharedValue(CLOSE_GAP_BEHAVIOR, muse::Val(value));
     m_closeGapBehaviorChanged.notify();
 }
 
