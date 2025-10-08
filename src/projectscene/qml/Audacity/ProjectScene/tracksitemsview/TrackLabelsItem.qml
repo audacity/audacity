@@ -5,177 +5,81 @@ import Muse.UiComponents
 
 import Audacity.ProjectScene
 
-Item {
+TrackObjectsItem {
 
     id: root
 
-    property NavigationSection navigationSection: null
-    property NavigationPanel navigationPanel: null
-
-    property int trackIdx: -1
-    property alias trackId: trackViewState.trackId
-    property var context: null
-    property var canvas: null
-    property var container: null
-
-    property bool isDataSelected: false
-    property bool isTrackSelected: false
-    property bool isTrackFocused: false
-    property bool isMultiSelectionActive: false
-    property bool isTrackAudible: true
-    property bool moveActive: false
-    property bool altPressed: false
-    property bool ctrlPressed: false
-    property bool selectionEditInProgress: false
-    property bool selectionInProgress: false
-    property bool hover: false
-
-    signal interactionStarted()
-    signal interactionEnded()
-    signal trackItemMousePositionChanged(real x, real y, var clipKey)
-    signal setHoveredClipKey(var clipKey)
-    signal clipSelectedRequested()
-    signal selectionResetRequested()
-    signal updateMoveActive(bool completed)
-    signal requestSelectionContextMenu(real x, real y)
-
-    signal selectionDraged(var x1, var x2, var completed)
-    signal seekToX(var x)
-    signal insureVerticallyVisible(var top, var bottom)
-
-    signal clipHeaderHoveredChanged(bool val)
-
-    signal handleTimeGuideline(real x, bool completed)
-    signal triggerClipGuideline(real x, bool completed)
-
-    height: trackViewState.trackHeight
-
-    TrackViewStateModel {
-        id: trackViewState
+    LabelsListModel {
+        id: labelsModel
         trackId: root.trackId
+        context: root.context
     }
 
-    Component.onCompleted: {
-        trackViewState.init()
+    onInitRequired: function() {
+        labelsModel.init()
     }
 
-    Item {
-        id: labelsContainer
-        anchors.fill: parent
-        anchors.bottomMargin: sep.height
-        z: 1
-
-        // TODO: Add label items here when LabelsListModel is available
-        // For now, just an empty container
-        
-        MouseArea {
-            id: labelsContainerMouseArea
+    contentComponent: Component {
+        Item {
+            id: labelsContainer
             anchors.fill: parent
-            hoverEnabled: true
-            
-            onPositionChanged: function(e) {
-                root.trackItemMousePositionChanged(e.x, e.y, null)
+            anchors.bottomMargin: root.bottomSeparatorHeight
+            z: 1
+
+            Repeater {
+                id: repeater
+                model: labelsModel
+
+                delegate: Loader {
+                    property QtObject labelItem: model.item
+                    property int index: model.index
+
+                    height: parent.height
+                    width: Math.max(3, labelItem.width)
+                    x: labelItem.x
+
+                    asynchronous: true
+
+                    sourceComponent: {
+                        if ((labelItem.x + labelItem.width) < (0 - labelsModel.cacheBufferPx)) {
+                            return null
+                        }
+
+                        if (labelItem.x > (labelsContainer.width + labelsModel.cacheBufferPx)) {
+                            return null
+                        }
+
+                        return labelComp
+                    }
+                }
             }
+
+            Component {
+                id: labelComp
+
+                Rectangle {
+                    color: "lightblue"
+                    border.color: "blue"
+                    border.width: 1
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: labelItem.title
+                        color: "black"
+                    }
+                }
+            }
+
+            // MouseArea {
+            //     id: labelsContainerMouseArea
+            //     anchors.fill: parent
+            //     hoverEnabled: true
+
+            //     onPositionChanged: function(e) {
+            //         root.trackItemMousePositionChanged(e.x, e.y, null)
+            //     }
+            // }
         }
-    }
-
-    // Selection highlight drawn below labels
-    Rectangle {
-        id: clipSelectionRectangle
-
-        x: root.context ? root.context.selectionStartPosition : 0
-        width: root.context ? (root.context.selectionEndPosition - x) : 0
-
-        anchors.top: root.top
-        anchors.bottom: root.bottom
-        anchors.bottomMargin: sep.thickness
-
-        visible: root.isDataSelected
-        color: "#ABE7FF"
-        opacity: 0.3
-    }
-
-    Rectangle {
-        id: selectedTrackHighlight
-
-        anchors.fill: parent
-        anchors.bottomMargin: sep.thickness
-        anchors.leftMargin: canvas ? -canvas.anchors.leftMargin : 0
-
-        color: "#FFFFFF"
-        opacity: 0.10
-
-        visible: root.isDataSelected || root.isTrackSelected
-    }
-
-    Rectangle {
-        id: defaultTrackHighlight
-
-        anchors.fill: parent
-        anchors.bottomMargin: sep.thickness
-        anchors.leftMargin: canvas ? -canvas.anchors.leftMargin : 0
-
-        color: "#FFFFFF"
-        opacity: 0.05
-    }
-
-    MouseArea {
-        id: dragArea
-
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        height: 4
-
-        cursorShape: Qt.SizeVerCursor
-
-        visible: !root.selectionInProgress
-
-        onPressed: {
-            root.interactionStarted()
-        }
-
-        onPositionChanged: function(mouse) {
-            const resizeVerticalMargin = 10
-            mouse.accepted = true
-
-            const currentY = mapToItem(container, 0, 0).y - container.y
-
-            const maxPosition = container.height - resizeVerticalMargin - height
-            const minPosition = resizeVerticalMargin
-            const newPosition = Math.max(Math.min(currentY + mouse.y, maxPosition), minPosition)
-
-            const delta = newPosition - currentY
-            trackViewState.changeTrackHeight(delta)
-        }
-
-        onReleased: {
-            root.interactionEnded()
-        }
-    }
-
-    Rectangle {
-        id: trackFocusState
-
-        anchors.fill: parent
-        anchors.leftMargin: -border.width - (canvas ? canvas.anchors.leftMargin : 0)
-        anchors.rightMargin: -border.width
-        anchors.topMargin: -border.width
-
-        visible: isTrackFocused
-
-        color: "transparent"
-
-        border.color: "#7EB1FF"
-        border.width: 2
-    }
-
-    SeparatorLine {
-        id: sep
-
-        color: "transparent"
-        anchors.bottom: parent.bottom
-        thickness: 2
     }
 
     Connections {
@@ -206,4 +110,3 @@ Item {
         }
     }
 }
-

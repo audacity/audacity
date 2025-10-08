@@ -422,6 +422,11 @@ bool TrackeditInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
     });
 }
 
+bool TrackeditInteraction::addLabelToSelection()
+{
+    return withPlaybackStop(&ITrackeditInteraction::addLabelToSelection);
+}
+
 muse::Progress TrackeditInteraction::progress() const
 {
     return m_interaction->progress();

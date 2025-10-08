@@ -651,6 +651,11 @@ bool TrackeditOperationController::resampleTracks(const TrackIdList& tracksIds, 
     return false;
 }
 
+bool TrackeditOperationController::addLabelToSelection()
+{
+    return trackAndClipOperations()->addLabelToSelection();
+}
+
 muse::Progress TrackeditOperationController::progress() const
 {
     return trackAndClipOperations()->progress();

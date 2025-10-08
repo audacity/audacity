@@ -18,9 +18,11 @@ using gain_t = float;
 using pan_t = float;
 
 using TrackId = int64_t;
+using LabelTrackId = int64_t;
 constexpr TrackId INVALID_TRACK = -1;
 
 using ClipId = int64_t;
+using LabelId = int64_t;
 
 using TrackIdList = std::vector<TrackId>;
 
@@ -40,6 +42,23 @@ struct ClipKey
 };
 
 using ClipKeyList = std::vector<ClipKey>;
+
+struct LabelKey  // todo: change to TrackItemKey?
+{
+    LabelTrackId trackId = -1;
+    LabelId labelId = -1;
+
+    LabelKey() = default;
+    LabelKey(const LabelTrackId t, const LabelId l)
+        : trackId(t), labelId(l) {}
+
+    inline bool isValid() const { return trackId != -1 && labelId != static_cast<LabelId>(-1); }
+
+    inline bool operator==(const LabelKey& k) const { return trackId == k.trackId && labelId == k.labelId; }
+    inline bool operator!=(const LabelKey& k) const { return !this->operator==(k); }
+};
+
+using LabelKeyList = std::vector<LabelKey>;
 
 struct TimeSignature
 {
@@ -88,6 +107,12 @@ enum class PasteInsertBehavior {
 inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::trackedit::ClipKey& k)
 {
     s << "{trackId: " << k.trackId << ", clip: " << k.clipId << "}";
+    return s;
+}
+
+inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::trackedit::LabelKey& k)
+{
+    s << "{trackId: " << k.trackId << ", label: " << k.labelId << "}";
     return s;
 }
 
