@@ -864,10 +864,17 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
     }
 }
 
+bool AudioIoCallback::ProjectSamplesReachedDeviceThread() const
+{
+    return mProjectSamplesReachedDeviceThread;
+}
+
 int AudioIO::StartStream(const TransportSequences& sequences,
                          double t0, double t1, double mixerLimit,
                          const AudioIOStartStreamOptions& options)
 {
+    mProjectSamplesReachedDeviceThread = false;
+
     // precondition
     assert(std::all_of(
                sequences.playbackSequences.begin(), sequences.playbackSequences.end(),
@@ -2780,6 +2787,8 @@ bool AudioIoCallback::FillOutputBuffers(
         // the device. For example mono channels output to both left and right
         // output channels.
         if (len > 0) {
+            mProjectSamplesReachedDeviceThread = true;
+
             // Output volume emulation: possibly copy meter samples, then
             // apply volume, then copy to the output buffer
             if (outputMeterFloats != outputFloats) {
@@ -2831,7 +2840,7 @@ void AudioIoCallback::UpdateTimePosition(unsigned long framesPerBuffer)
 
     // Update the position seen by drawing code
     mPlaybackSchedule.SetSequenceTime(
-        mPlaybackSchedule.mTimeQueue.Consumer(mMaxFramesOutput, mRate));
+        mPlaybackSchedule.mTimeQueue.Consumer(framesPerBuffer, mRate));
 }
 
 // return true, IFF we have fully handled the callback.
@@ -3293,9 +3302,6 @@ int AudioIoCallback::AudioCallback(
             outputMeterFloats)) {
         return mCallbackReturn;
     }
-
-    // To move the cursor onwards.  (uses mMaxFramesOutput)
-    UpdateTimePosition(framesPerBuffer);
 
     // To capture input into sequence (sound from microphone)
     DrainInputBuffers(

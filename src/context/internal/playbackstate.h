@@ -3,7 +3,9 @@
 */
 #pragma once
 
-#include "global/async/asyncable.h"
+#include "framework/audio/common/iaudiothreadsecurer.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
 
 #include "context/iplaybackstate.h"
 #include "playback/iplayer.h"
@@ -11,6 +13,8 @@
 namespace au::context {
 class PlaybackState : public IPlaybackState, public muse::async::Asyncable
 {
+    muse::Inject<muse::audio::IAudioThreadSecurer> audioThreadSecurer;
+
 public:
     PlaybackState() = default;
 
