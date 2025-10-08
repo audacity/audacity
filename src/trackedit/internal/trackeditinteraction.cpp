@@ -338,6 +338,16 @@ bool TrackeditInteraction::undoRedoToIndex(size_t index)
     return m_interaction->undoRedoToIndex(index);
 }
 
+muse::async::Notification TrackeditInteraction::cancelDragEditRequested() const
+{
+    return m_interaction->cancelDragEditRequested();
+}
+
+void TrackeditInteraction::notifyAboutCancelDragEdit()
+{
+    m_interaction->notifyAboutCancelDragEdit();
+}
+
 bool TrackeditInteraction::insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)
 {
     return withPlaybackStop(&ITrackeditInteraction::insertSilence, trackIds, begin, end, duration);
