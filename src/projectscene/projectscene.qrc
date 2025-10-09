@@ -59,5 +59,6 @@
         <file>qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/DropdownWithTitle.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/PlayRegion.qml</file>
+        <file>qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml</file>
     </qresource>
 </RCC>

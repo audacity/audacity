@@ -86,6 +86,20 @@ Rectangle {
                 clipsModel.init()
             }
 
+            MouseArea {
+                anchors.fill: parent
+
+                onClicked: {
+                    customisePopup.toggleOpened()
+                }
+            }
+
+            TrackRulerCustomizePopup {
+                id: customisePopup
+
+                placementPolicies: PopupView.PreferLeft
+            }
+
             TrackViewStateModel {
                 id: trackViewState
                 trackId: model.trackId
