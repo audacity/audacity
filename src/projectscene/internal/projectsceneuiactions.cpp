@@ -194,6 +194,12 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Select track"),
              TranslatableString("action", "Select track")
              ),
+    UiAction("track-range-selection",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Track range selection"),
+             TranslatableString("action", "Track range selection")
+             ),
     UiAction("focus-prev-track",
              au::context::UiCtxProjectOpened,
              muse::shortcuts::CTX_PROJECT_OPENED,

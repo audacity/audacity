@@ -34,6 +34,7 @@ public:
     void navigateUp(const muse::actions::ActionData& args) override;
     void navigateDown(const muse::actions::ActionData& args) override;
     void toggleSelectionOnFocusedTrack() override;
+    void trackRangeSelection() override;
     void multiSelectionUp() override;
     void multiSelectionDown() override;
 
@@ -42,5 +43,6 @@ private:
     void updateTrackSelection(TrackIdList& selectedTracks, const TrackId& previousFocusedTrack);
 
     std::optional<TrackId> m_selectionStart;
+    std::optional<TrackId> m_lastSelectedTrack;
 };
 }
