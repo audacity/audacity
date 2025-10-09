@@ -1377,7 +1377,7 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
     }
 }
 
-void Au3Interaction::cancelClipEdit()
+void Au3Interaction::cancelClipDragEdit()
 {
     // If false, then the edit wasn't a clip drag (could have been trim or stretch)
     if (m_tracksWhenDragStarted.has_value()) {
