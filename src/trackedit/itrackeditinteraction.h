@@ -117,6 +117,7 @@ public:
     virtual bool resampleTracks(const TrackIdList& tracksIds, int rate) = 0;
 
     virtual bool addLabelToSelection() = 0;
+    virtual bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) = 0;
 
     virtual muse::Progress progress() const = 0;
 };

@@ -427,6 +427,11 @@ bool TrackeditInteraction::addLabelToSelection()
     return withPlaybackStop(&ITrackeditInteraction::addLabelToSelection);
 }
 
+bool TrackeditInteraction::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)
+{
+    return withPlaybackStop(&ITrackeditInteraction::changeLabelTitle, labelKey, title);
+}
+
 muse::Progress TrackeditInteraction::progress() const
 {
     return m_interaction->progress();

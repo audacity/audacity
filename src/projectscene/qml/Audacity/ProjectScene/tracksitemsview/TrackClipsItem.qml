@@ -16,6 +16,8 @@ TrackObjectsItem {
     property bool leftTrimPressedButtons: false
     property bool rightTrimPressedButtons: false
 
+    signal clipHeaderHoveredChanged(bool val)
+
     ClipsListModel {
         id: clipsModel
         trackId: root.trackId
@@ -167,7 +169,9 @@ TrackObjectsItem {
                     model: clipsModel
 
                     delegate: Loader {
-                        property QtObject clipItem: model.item
+                        id: loader
+
+                        property var clipItem: model.item
                         property int index: model.index
 
                         height: parent.height
@@ -194,6 +198,11 @@ TrackObjectsItem {
 
                             return clipComp
                         }
+
+                        onLoaded: {
+                            loader.item.itemData = loader.clipItem
+                            loader.item.index = model.index
+                        }
                     }
                 }
 
@@ -201,8 +210,10 @@ TrackObjectsItem {
                     id: clipSmallComp
 
                     ClipItemSmall {
+                        property var itemData: null
+                        property int index: 0
 
-                        clipColor: clipItem.color
+                        clipColor: itemData.color
                         collapsed: root.trackViewState.isTrackCollapsed
                     }
                 }
@@ -213,17 +224,23 @@ TrackObjectsItem {
                     ClipItem {
                         id: item
 
+                        property var itemData: null
+                        property int index: 0
+
                         context: root.context
                         canvas: root.canvas
-                        title: clipItem.title
-                        clipColor: clipItem.color
+
+                        title: itemData.title
+                        clipColor: itemData.color
+                        groupId: itemData.groupId
+                        clipKey: itemData.key
+                        clipTime: itemData.time
+                        pitch: itemData.pitch
+
                         currentClipStyle: clipsModel.clipStyle
-                        groupId: clipItem.groupId
-                        clipKey: clipItem.key
-                        clipTime: clipItem.time
-                        pitch: clipItem.pitch
-                        speedPercentage: clipItem.speedPercentage
-                        clipSelected: clipItem.selected
+
+                        speedPercentage: itemData.speedPercentage
+                        clipSelected: itemData.selected
                         isMultiSelectionActive: root.isMultiSelectionActive
                         isDataSelected: root.isDataSelected
                         moveActive: root.moveActive
@@ -235,34 +252,34 @@ TrackObjectsItem {
                         isContrastFocusBorderEnabled: clipsModel.isContrastFocusBorderEnabled
 
                         //! NOTE: use the same integer rounding as in WaveBitmapCache
-                        selectionStart: root.context.selectionStartPosition < clipItem.x ? 0 : Math.floor(root.context.selectionStartPosition - clipItem.x + 0.5)
-                        selectionWidth: root.context.selectionStartPosition < clipItem.x ?
-                                            Math.round(root.context.selectionEndPosition - clipItem.x) : Math.floor(root.context.selectionEndPosition - clipItem.x + 0.5)  - Math.floor(root.context.selectionStartPosition - clipItem.x + 0.5)
+                        selectionStart: root.context.selectionStartPosition < itemData.x ? 0 : Math.floor(root.context.selectionStartPosition - itemData.x + 0.5)
+                        selectionWidth: root.context.selectionStartPosition < itemData.x ?
+                                            Math.round(root.context.selectionEndPosition - itemData.x) : Math.floor(root.context.selectionEndPosition - itemData.x + 0.5)  - Math.floor(root.context.selectionStartPosition - itemData.x + 0.5)
 
-                        navigation.name: Boolean(clipItem) ? clipItem.title + clipItem.index : ""
+                        navigation.name: Boolean(itemData) ? itemData.title + itemData.index : ""
                         navigation.panel: root.navigationPanel
-                        navigation.column: clipItem ? Math.floor(clipItem.x) : 0
-                        navigation.accessible.name: Boolean(clipItem) ? clipItem.title : ""
+                        navigation.column: itemData ? Math.floor(itemData.x) : 0
+                        navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
                         navigation.onActiveChanged: {
                             if (navigation.active) {
-                                root.context.insureVisible(root.context.positionToTime(clipItem.x))
+                                root.context.insureVisible(root.context.positionToTime(itemData.x))
                                 root.insureVerticallyVisible(root.y, root.y + root.height)
                             }
                         }
 
                         distanceToLeftNeighbor: {
-                            let leftNeighbor = clipsModel.prev(clipItem.key)
+                            let leftNeighbor = clipsModel.prev(itemData.key)
                             if (!leftNeighbor) {
                                 return -1
                             }
-                            return clipItem.x - (leftNeighbor.x + leftNeighbor.width)
+                            return itemData.x - (leftNeighbor.x + leftNeighbor.width)
                         }
                         distanceToRightNeighbor: {
-                            let rightNeighbor = clipsModel.next(clipItem.key)
+                            let rightNeighbor = clipsModel.next(itemData.key)
                             if (!rightNeighbor) {
                                 return -1
                             }
-                            return rightNeighbor.x - (clipItem.x + clipItem.width)
+                            return rightNeighbor.x - (itemData.x + itemData.width)
                         }
 
                         onIsNearSampleChanged: function() {
@@ -315,37 +332,37 @@ TrackObjectsItem {
                         }
 
                         onClipStartEditRequested: function() {
-                            clipsModel.startEditClip(clipItem.key)
+                            clipsModel.startEditClip(itemData.key)
                         }
 
                         onClipEndEditRequested: function() {
-                            clipsModel.endEditClip(clipItem.key)
+                            clipsModel.endEditClip(itemData.key)
 
                             root.triggerClipGuideline(false, -1)
                         }
 
                         onClipLeftTrimRequested: function(completed, action) {
-                            clipsModel.trimLeftClip(clipItem.key, completed, action)
+                            clipsModel.trimLeftClip(itemData.key, completed, action)
 
-                            handleClipGuideline(clipItem.key, Direction.Left, completed)
+                            handleClipGuideline(itemData.key, Direction.Left, completed)
                         }
 
                         onClipRightTrimRequested: function(completed, action) {
-                            clipsModel.trimRightClip(clipItem.key, completed, action)
+                            clipsModel.trimRightClip(itemData.key, completed, action)
 
-                            handleClipGuideline(clipItem.key, Direction.Right, completed)
+                            handleClipGuideline(itemData.key, Direction.Right, completed)
                         }
 
                         onClipLeftStretchRequested: function(completed, action) {
-                            clipsModel.stretchLeftClip(clipItem.key, completed, action)
+                            clipsModel.stretchLeftClip(itemData.key, completed, action)
 
-                            handleClipGuideline(clipItem.key, Direction.Left, completed)
+                            handleClipGuideline(itemData.key, Direction.Left, completed)
                         }
 
                         onClipRightStretchRequested: function(completed, action) {
-                            clipsModel.stretchRightClip(clipItem.key, completed, action)
+                            clipsModel.stretchRightClip(itemData.key, completed, action)
 
-                            handleClipGuideline(clipItem.key, Direction.Right, completed)
+                            handleClipGuideline(itemData.key, Direction.Right, completed)
                         }
 
                         onStartAutoScroll: {
@@ -358,17 +375,17 @@ TrackObjectsItem {
 
                         onClipItemMousePositionChanged: function(xWithinClip, yWithinClip) {
                             var yWithinTrack = yWithinClip
-                            var xWithinTrack = xWithinClip + clipItem.x
+                            var xWithinTrack = xWithinClip + itemData.x
 
-                            trackItemMousePositionChanged(xWithinTrack, yWithinTrack, clipItem.key)
+                            trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
 
                             let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
                             root.triggerClipGuideline(time, false)
                         }
 
                         onRequestSelected: {
-                            clipsModel.selectClip(clipItem.key)
-                            root.clipSelectedRequested()
+                            clipsModel.selectClip(itemData.key)
+                            root.itemSelectedRequested()
                         }
 
                         onRequestSelectionReset: {
@@ -377,11 +394,11 @@ TrackObjectsItem {
                         }
 
                         onTitleEditStarted: {
-                            clipsModel.selectClip(clipItem.key)
+                            clipsModel.selectClip(itemData.key)
                         }
 
                         onTitleEditAccepted: function(newTitle) {
-                            root.changeClipTitle(clipItem.key, newTitle)
+                            root.changeClipTitle(itemData.key, newTitle)
                         }
 
                         onTitleEditCanceled: {
@@ -394,19 +411,19 @@ TrackObjectsItem {
                         }
 
                         onPitchChangeRequested: {
-                            Qt.callLater(clipsModel.openClipPitchEdit, clipItem.key)
+                            Qt.callLater(clipsModel.openClipPitchEdit, itemData.key)
                         }
 
                         onPitchResetRequested: {
-                            Qt.callLater(clipsModel.resetClipPitch, clipItem.key)
+                            Qt.callLater(clipsModel.resetClipPitch, itemData.key)
                         }
 
                         onSpeedChangeRequested: {
-                            Qt.callLater(clipsModel.openClipSpeedEdit, clipItem.key)
+                            Qt.callLater(clipsModel.openClipSpeedEdit, itemData.key)
                         }
 
                         onSpeedResetRequested: {
-                            Qt.callLater(clipsModel.resetClipSpeed, clipItem.key)
+                            Qt.callLater(clipsModel.resetClipSpeed, itemData.key)
                         }
 
                         Connections {

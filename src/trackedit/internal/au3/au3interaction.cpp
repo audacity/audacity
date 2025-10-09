@@ -891,21 +891,28 @@ bool Au3Interaction::changeClipColor(const ClipKey& clipKey, const std::string& 
 bool Au3Interaction::changeTracksColor(const TrackIdList& tracksIds, const std::string& color)
 {
     for (const TrackId& trackId : tracksIds) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        Au3Track* track = DomAccessor::findTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(track) {
             return false;
         }
 
-        auto& trackColor = TrackColor::Get(waveTrack);
+        auto& trackColor = TrackColor::Get(track);
         trackColor.SetColor(muse::draw::Color::fromString(color));
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        prj->notifyAboutTrackChanged(DomConverter::track(track));
 
-        for (auto& clips: DomAccessor::waveClipsAsList(waveTrack)) {
-            //Set it back to auto
-            clips->SetColor("");
-            prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clips.get()));
+        if (Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track)) {
+            for (auto& clips: DomAccessor::waveClipsAsList(waveTrack)) {
+                //Set it back to auto
+                clips->SetColor("");
+                prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clips.get()));
+            }
+        } else if (Au3LabelTrack* labelTrack = dynamic_cast<Au3LabelTrack*>(track)) {
+            const auto& au3labels = labelTrack->GetLabels();
+            for (size_t i = 0; i < au3labels.size(); ++i) {
+                prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, i, au3labels[i]));
+            }
         }
     }
 
@@ -2926,7 +2933,6 @@ bool Au3Interaction::addLabelToSelection()
 {
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
-    auto& selectedRegion = ViewInfo::Get(project).selectedRegion;
 
     Au3LabelTrack* labelTrack = nullptr;
 
@@ -2955,14 +2961,50 @@ bool Au3Interaction::addLabelToSelection()
     }
 
     wxString title = wxEmptyString;
-    labelTrack->AddLabel(selectedRegion, title);
+    SelectedRegion selectedRegion;
+    selectedRegion.setTimes(selectionController()->dataSelectedStartTime(),
+                            selectionController()->dataSelectedEndTime());
+
+    int labelIndex = labelTrack->AddLabel(selectedRegion, title);
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
-        prj->notifyAboutTrackChanged(DomConverter::labelTrack(labelTrack));
+        const auto& au3labels = labelTrack->GetLabels();
+        if (labelIndex >= 0 && labelIndex < static_cast<int>(au3labels.size())) {
+            prj->notifyAboutLabelAdded(DomConverter::label(labelTrack, labelIndex, au3labels[labelIndex]));
+        }
     }
 
     selectionController()->setFocusedTrack(labelTrack->GetId());
+
+    return true;
+}
+
+bool Au3Interaction::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)
+{
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    const auto& au3labels = labelTrack->GetLabels();
+    size_t labelIndex = static_cast<size_t>(labelKey.labelId);
+
+    IF_ASSERT_FAILED(labelIndex < au3labels.size()) {
+        return false;
+    }
+
+    Au3Label au3Label = au3labels[labelIndex];
+    au3Label.title = wxFromString(title);
+    labelTrack->SetLabel(labelIndex, au3Label);
+
+    LOGD() << "changed title of label: " << labelKey.labelId << ", track: " << labelKey.trackId;
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, labelIndex, labelTrack->GetLabels()[labelIndex]));
+    }
 
     return true;
 }
