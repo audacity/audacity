@@ -183,114 +183,120 @@ Item {
 
                 delegate: Loader {
                     id: trackItemLoader
+
+                    property var trackItemData: itemData
+                    property int index: model.index
+
                     width: view.width
+
                     sourceComponent: (itemData && itemData.trackType === TrackItemType.Label) ? labelItemComp : waveItemComp
 
                     onLoaded: {
-                        trackItemLoader.item.item = itemData
-                        trackItemLoader.item.index = model.index
-
                         trackItemLoader.item.init()
                     }
-                }
 
-                Component {
-                    id: waveItemComp
+                    Component {
+                        id: waveItemComp
 
-                    WaveTrackItem {
-                        property var index: null
+                        WaveTrackItem {
+                            property int index: trackItemLoader.index
 
-                        isSelected: Boolean(item) ? item.isSelected : false
-                        isFocused: Boolean(item) ? item.isFocused : false
-                        container: view
+                            item: trackItemLoader.trackItemData
 
-                        navigation.name: Boolean(item) ? item.title + item.index : ""
-                        navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
-                        navigation.row: index
-                        navigation.accessible.name: Boolean(item) ? item.title : ""
-                        navigation.onActiveChanged: {
-                            if (navigation.active) {
-                                root.panelActive(index)
-                                prv.currentItemNavigationName = navigation.name
-                                view.positionViewAtIndex(index, ListView.Contain)
+                            isSelected: Boolean(item) ? item.isSelected : false
+                            isFocused: Boolean(item) ? item.isFocused : false
+                            container: view
+
+                            navigation.name: Boolean(item) ? item.title + item.index : ""
+                            navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
+                            navigation.row: index
+                            navigation.accessible.name: Boolean(item) ? item.title : ""
+                            navigation.onActiveChanged: {
+                                if (navigation.active) {
+                                    root.panelActive(index)
+                                    prv.currentItemNavigationName = navigation.name
+                                    view.positionViewAtIndex(index, ListView.Contain)
+                                }
                             }
-                        }
 
-                        onInteractionStarted: {
-                            tracksViewState.requestVerticalScrollLock()
-                        }
+                            onInteractionStarted: {
+                                tracksViewState.requestVerticalScrollLock()
+                            }
 
-                        onInteractionEnded: {
-                            tracksViewState.requestVerticalScrollUnlock()
-                        }
+                            onInteractionEnded: {
+                                tracksViewState.requestVerticalScrollUnlock()
+                            }
 
-                        onSelectionRequested: function (exclusive) {
-                            tracksModel.selectRow(index, exclusive)
-                        }
+                            onSelectionRequested: function (exclusive) {
+                                tracksModel.selectRow(index, exclusive)
+                            }
 
-                        onOpenEffectsRequested: {
-                            effectSectionModel.showEffectsSection = true
-                            root.openEffectsRequested()
-                        }
+                            onOpenEffectsRequested: {
+                                effectSectionModel.showEffectsSection = true
+                                root.openEffectsRequested()
+                            }
 
-                        onRemoveSelectionRequested: {
-                            tracksModel.removeSelection()
-                        }
+                            onRemoveSelectionRequested: {
+                                tracksModel.removeSelection()
+                            }
 
-                        Component.onCompleted: {
-                            mousePressed.connect(dragHandler.startDrag)
-                            mouseReleased.connect(dragHandler.endDrag)
-                            mouseMoved.connect(dragHandler.onMouseMove)
+                            Component.onCompleted: {
+                                mousePressed.connect(dragHandler.startDrag)
+                                mouseReleased.connect(dragHandler.endDrag)
+                                mouseMoved.connect(dragHandler.onMouseMove)
+                            }
                         }
                     }
-                }
 
-                Component {
-                    id: labelItemComp
+                    Component {
+                        id: labelItemComp
 
-                    LabelTrackItem {
-                        property var index: null
+                        LabelTrackItem {
+                            property int index: trackItemLoader.index
 
-                        isSelected: Boolean(item) ? item.isSelected : false
-                        isFocused: Boolean(item) ? item.isFocused : false
-                        container: view
+                            item: trackItemLoader.trackItemData
 
-                        navigation.name: Boolean(item) ? item.title + item.index : ""
-                        navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
-                        navigation.row: index
-                        navigation.accessible.name: Boolean(item) ? item.title : ""
-                        navigation.onActiveChanged: {
-                            if (navigation.active) {
-                                root.panelActive(index)
-                                prv.currentItemNavigationName = navigation.name
-                                view.positionViewAtIndex(index, ListView.Contain)
+                            isSelected: Boolean(item) ? item.isSelected : false
+                            isFocused: Boolean(item) ? item.isFocused : false
+                            container: view
+
+                            navigation.name: Boolean(item) ? item.title + item.index : ""
+                            navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
+                            navigation.row: index
+                            navigation.accessible.name: Boolean(item) ? item.title : ""
+                            navigation.onActiveChanged: {
+                                if (navigation.active) {
+                                    root.panelActive(index)
+                                    prv.currentItemNavigationName = navigation.name
+                                    view.positionViewAtIndex(index, ListView.Contain)
+                                }
                             }
-                        }
 
-                        onInteractionStarted: {
-                            tracksViewState.requestVerticalScrollLock()
-                        }
+                            onInteractionStarted: {
+                                tracksViewState.requestVerticalScrollLock()
+                            }
 
-                        onInteractionEnded: {
-                            tracksViewState.requestVerticalScrollUnlock()
-                        }
+                            onInteractionEnded: {
+                                tracksViewState.requestVerticalScrollUnlock()
+                            }
 
-                        onSelectionRequested: function (exclusive) {
-                            tracksModel.selectRow(index, exclusive)
-                        }
+                            onSelectionRequested: function (exclusive) {
+                                tracksModel.selectRow(index, exclusive)
+                            }
 
-                        onRemoveSelectionRequested: {
-                            tracksModel.removeSelection()
-                        }
+                            onRemoveSelectionRequested: {
+                                tracksModel.removeSelection()
+                            }
 
-                        onAddLabelToSelectionRequested: {
-                            tracksModel.addLabelToSelection()
-                        }
+                            onAddLabelToSelectionRequested: {
+                                tracksModel.addLabelToSelection()
+                            }
 
-                        Component.onCompleted: {
-                            mousePressed.connect(dragHandler.startDrag)
-                            mouseReleased.connect(dragHandler.endDrag)
-                            mouseMoved.connect(dragHandler.onMouseMove)
+                            Component.onCompleted: {
+                                mousePressed.connect(dragHandler.startDrag)
+                                mouseReleased.connect(dragHandler.endDrag)
+                                mouseMoved.connect(dragHandler.onMouseMove)
+                            }
                         }
                     }
                 }

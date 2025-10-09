@@ -33,6 +33,10 @@ public:
     MOCK_METHOD(void, notifyAboutClipAdded, (const Clip& clip), (override));
     MOCK_METHOD(void, notifyAboutClipRemoved, (const Clip& clip), (override));
 
+    MOCK_METHOD(void, notifyAboutLabelChanged, (const Label& label), (override));
+    MOCK_METHOD(void, notifyAboutLabelAdded, (const Label& label), (override));
+    MOCK_METHOD(void, notifyAboutLabelRemoved, (const Label& label), (override));
+
     MOCK_METHOD(TimeSignature, timeSignature, (), (const, override));
     MOCK_METHOD(void, setTimeSignature, (const TimeSignature& timeSignature), (override));
     MOCK_METHOD(muse::async::Channel<TimeSignature>, timeSignatureChanged, (), (const, override));
