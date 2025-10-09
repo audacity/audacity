@@ -883,8 +883,6 @@ Rectangle {
             width: verticalRulerPanelHeader.width
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-
-            visible: tracksModel.isVerticalRulersVisible
         }
     }
 

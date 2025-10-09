@@ -13,6 +13,10 @@ import Audacity.Playback 1.0
 StyledPopupView {
     id: root
 
+    property bool isVerticalRulersVisible: true
+
+    signal hideRulersRequested()
+
     contentWidth: uiModel.popupWidth - 2*uiModel.popupMargins
     contentHeight: uiModel.popupHeight - 2*uiModel.popupMargins
 
@@ -139,10 +143,10 @@ StyledPopupView {
 
                 text: qsTrc("trackruler", "Show track rulers")
 
-                checked: true
+                checked: root.isVerticalRulersVisible
 
                 onClicked: {
-                    console.log("Show track rulers toggled: " + checked)
+                    root.hideRulersRequested()
                 }
             }
         }

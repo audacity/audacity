@@ -16,6 +16,8 @@ Rectangle {
     width: 32
     color: ui.theme.backgroundQuarternaryColor
 
+    visible: model.isVerticalRulersVisible
+
     Rectangle {
         id: leftBorder
 
@@ -96,8 +98,13 @@ Rectangle {
 
             TrackRulerCustomizePopup {
                 id: customisePopup
+                isVerticalRulersVisible: root.model.isVerticalRulersVisible
 
                 placementPolicies: PopupView.PreferLeft
+
+                onHideRulersRequested: {
+                    root.model.toggleVerticalRuler();
+                }
             }
 
             TrackViewStateModel {
