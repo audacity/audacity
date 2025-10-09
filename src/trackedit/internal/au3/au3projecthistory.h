@@ -7,13 +7,12 @@
 #include "iprojecthistory.h"
 
 #include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
+
 #include "au3wrap/au3types.h"
 
-#include "global/modularity/ioc.h"
-#include "global/async/asyncable.h"
-
 namespace au::trackedit {
-class Au3ProjectHistory : public IProjectHistory, public muse::async::Asyncable
+class Au3ProjectHistory : public IProjectHistory
 {
     muse::Inject<context::IGlobalContext> globalContext;
 
@@ -49,7 +48,6 @@ private:
 
     void doUndo();
     void doRedo();
-    void doPushHistoryState(const std::string& longDescription, const std::string& shortDescription, UndoPushType flags);
 
     void notifyAboutHistoryChanged();
 
