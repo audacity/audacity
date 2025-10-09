@@ -4,6 +4,8 @@
 #include "trackcontextmenumodel.h"
 #include "trackedit/dom/track.h"
 
+#include "global/async/async.h"
+
 using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace muse::actions;
@@ -162,7 +164,7 @@ void TrackContextMenuModel::handleMenuItem(const QString& itemId)
     if (itemId == "track-rename") {
         emit trackRenameRequested();
     } else {
-        AbstractMenuModel::handleMenuItem(itemId);
+        muse::async::Async::call(this, [this, itemId]{ AbstractMenuModel::handleMenuItem(itemId); });
     }
 }
 
