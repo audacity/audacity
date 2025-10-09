@@ -90,6 +90,7 @@ private:
     muse::Ret openPageIfNeed(muse::Uri pageUri);
 
     void openCustomFFmpegOptions();
+    void openMetadataDialog();
 
     bool m_isProjectSaving = false;
     bool m_isProjectClosing = false;
