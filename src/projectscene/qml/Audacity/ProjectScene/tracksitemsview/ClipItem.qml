@@ -520,6 +520,7 @@ Rectangle {
                 // hence we need to let simple events pass (e.accepted = false). Unfortunately this breaks
                 // detecting composed events like doubleClick so we need to take care of it manually.
                 onPressed: function (e) {
+                    console.log("=========== click")
                     var currentTime = Date.now()
                     if (currentTime - lastClickTime < prv.doubleClickInterval) {
                         //! NOTE Handle doubleClick logic

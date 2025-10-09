@@ -13,15 +13,17 @@ Rectangle {
 
     property var navPanels: null
 
-    property bool clipHovered: false
+    property bool itemHovered: false
     property bool clipHeaderHovered: false
     property var hoveredClipKey: null
     property var hoveredTrackId: null
     property double hoveredTrackVerticalPosition
     property double hoveredTrackHeight
     property bool tracksHovered: false
+
     property bool guidelineVisible: false
     property double guidelinePos: -1
+
     property alias altPressed: tracksViewState.altPressed
     property alias ctrlPressed: tracksViewState.ctrlPressed
     property alias isSplitMode: splitToolController.active
@@ -140,7 +142,7 @@ Rectangle {
         id: splitToolController
         context: timeline.context
 
-        clipHovered: root.clipHovered && !root.clipHeaderHovered
+        clipHovered: root.itemHovered && !root.clipHeaderHovered
         hoveredTrack: root.hoveredTrackId
     }
 
@@ -376,7 +378,7 @@ Rectangle {
                 return false
             }
 
-            return (content.isIsolationMode || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse || content.leftTrimPressedButtons || content.rightTrimPressedButtons || (content.isBrush && root.clipHovered))
+            return (content.isIsolationMode || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse || content.leftTrimPressedButtons || content.rightTrimPressedButtons || (content.isBrush && root.itemHovered))
         }
         source: {
             if (content.isBrush) {
@@ -444,7 +446,7 @@ Rectangle {
                         if (!splitToolController.active) {
                             selectionController.onPressed(e.x, e.y)
                             selectionController.resetSelectedClip()
-                            clipsSelection.visible = true
+                            itemsSelection.visible = true
                         }
                         handleGuideline(e.x, false)
 
@@ -492,7 +494,7 @@ Rectangle {
                     }
                     if (!splitToolController.active) {
                         selectionController.onReleased(e.x, e.y)
-                        clipsSelection.visible = false
+                        itemsSelection.visible = false
                     }
                     handleGuideline(e.x, true)
                     if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
@@ -514,7 +516,7 @@ Rectangle {
                     return
                 }
 
-                if (!root.clipHovered) {
+                if (!root.itemHovered) {
                     selectionController.resetSelectedClip()
                 }
             }
@@ -528,14 +530,14 @@ Rectangle {
                     return
                 }
 
-                if (root.clipHovered) {
+                if (root.itemHovered) {
                     selectionController.selectClipAudioData(root.hoveredClipKey)
                     playCursorController.setPlaybackRegion(timeline.context.selectedClipStartPosition, timeline.context.selectedClipEndPosition)
                 } else {
                     selectionController.selectTrackAudioData(e.y)
                     playCursorController.setPlaybackRegion(timeline.context.selectedClipStartPosition, timeline.context.selectedClipEndPosition)
                 }
-                clipsSelection.visible = false
+                itemsSelection.visible = false
             }
         }
 
@@ -569,8 +571,11 @@ Rectangle {
 
                 function checkIfAnyTrack(f) {
                     for (let i = 0; i < tracksItemsView.count; i++) {
-                        if (f(tracksItemsView.itemAtIndex(i))) {
-                            return true
+                        let trackLoader = tracksItemsView.itemAtIndex(i)
+                        if (trackLoader && trackLoader.item) {
+                            if (f(trackLoader.item)) {
+                                return true
+                            }
                         }
                     }
                     return false
@@ -637,21 +642,15 @@ Rectangle {
 
                 delegate: Loader {
                     id: trackItemLoader
-                    
-                    property int trackType: model.trackType
-                    property var trackId: model.trackId
-                    property bool isDataSelected: model.isDataSelected
-                    property bool isTrackSelected: model.isTrackSelected
-                    property bool isTrackFocused: model.isTrackFocused
-                    property bool isMultiSelectionActive: model.isMultiSelectionActive
-                    property bool isTrackAudible: model.isTrackAudible
-                    property int index: model.index
-                    
+
                     width: tracksItemsView.width
                     
                     sourceComponent: trackType === TrackItemType.Label ? labelTrackItemComp : clipsTrackItemComp
 
                     onLoaded: {
+                        trackItemLoader.item.itemData = model
+                        trackItemLoader.item.index = model.index
+
                         trackItemLoader.item.init()
                     }
                     
@@ -659,30 +658,38 @@ Rectangle {
                         id: clipsTrackItemComp
                         
                         TrackClipsItem {
+                            property var itemData: null
+                            property int index: 0
+
                             width: trackItemLoader.width
 
                             context: timeline.context
+
                             container: tracksItemsView
                             canvas: content
-                            trackId: trackItemLoader.trackId
-                            isDataSelected: trackItemLoader.isDataSelected
-                            isTrackSelected: trackItemLoader.isTrackSelected
-                            isTrackFocused: trackItemLoader.isTrackFocused
-                            isMultiSelectionActive: trackItemLoader.isMultiSelectionActive
-                            isTrackAudible: trackItemLoader.isTrackAudible
+
+                            trackId: itemData.trackId
+
+                            isDataSelected: itemData.isDataSelected
+                            isTrackSelected: itemData.isTrackSelected
+                            isTrackFocused: itemData.isTrackFocused
+                            isMultiSelectionActive: itemData.isMultiSelectionActive
+                            isTrackAudible: itemData.isTrackAudible
+
                             moveActive: tracksItemsView.moveActive
+
                             altPressed: root.altPressed
                             ctrlPressed: root.ctrlPressed
+
                             selectionEditInProgress: selectionController.selectionEditInProgress
                             selectionInProgress: selectionController.selectionInProgress
                             onHoverChanged: function () {
-                                root.clipHovered = tracksItemsView.checkIfAnyTrack(function (trackItem) {
+                                root.itemHovered = tracksItemsView.checkIfAnyTrack(function (trackItem) {
                                     return trackItem && trackItem.hover
                                 })
                             }
 
-                            trackIdx: trackItemLoader.index
-                            navigationPanel: navPanels && navPanels[trackItemLoader.index] ? navPanels[trackItemLoader.index] : null
+                            navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 
                             onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, clipKey) {
                                 let xGlobalPosition = xWithinTrack
@@ -706,9 +713,9 @@ Rectangle {
                                 root.clipHeaderHovered = val
                             }
 
-                            onClipSelectedRequested: {
+                            onItemSelectedRequested: {
                                 selectionController.resetDataSelection()
-                                clipsSelection.visible = false
+                                itemsSelection.visible = false
                             }
 
                             onSelectionResetRequested: {
@@ -834,25 +841,34 @@ Rectangle {
                         id: labelTrackItemComp
 
                         TrackLabelsItem {
+                            property var itemData: null
+                            property int index: 0
+
                             width: trackItemLoader.width
 
                             context: timeline.context
                             container: tracksItemsView
                             canvas: content
-                            trackId: trackItemLoader.trackId
-                            isDataSelected: trackItemLoader.isDataSelected
-                            isTrackSelected: trackItemLoader.isTrackSelected
-                            isTrackFocused: trackItemLoader.isTrackFocused
-                            isMultiSelectionActive: trackItemLoader.isMultiSelectionActive
-                            isTrackAudible: trackItemLoader.isTrackAudible
-                            moveActive: tracksItemsView.moveActive
+
+                            trackId: itemData.trackId
+                            isDataSelected: itemData.isDataSelected
+                            isTrackSelected: itemData.isTrackSelected
+                            isTrackFocused: itemData.isTrackFocused
+                            isMultiSelectionActive: itemData.isMultiSelectionActive
+                            isTrackAudible: itemData.isTrackAudible
+                            moveActive: itemData.moveActive
                             altPressed: root.altPressed
                             ctrlPressed: root.ctrlPressed
                             selectionEditInProgress: selectionController.selectionEditInProgress
                             selectionInProgress: selectionController.selectionInProgress
 
-                            trackIdx: trackItemLoader.index
-                            navigationPanel: navPanels && navPanels[trackItemLoader.index] ? navPanels[trackItemLoader.index] : null
+                            navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
+
+                            onHoverChanged: function () {
+                                root.itemHovered = tracksItemsView.checkIfAnyTrack(function (trackItem) {
+                                    return trackItem && trackItem.hover
+                                })
+                            }
 
                             onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, clipKey) {
                                 let xGlobalPosition = xWithinTrack
@@ -868,12 +884,25 @@ Rectangle {
                                 splitToolController.mouseMove(xWithinTrack)
                             }
 
+                            onClipHeaderHoveredChanged: function (val) {
+                                root.clipHeaderHovered = val
+                            }
+
                             onInteractionStarted: {
                                 tracksViewState.requestVerticalScrollLock()
                             }
 
                             onInteractionEnded: {
                                 tracksViewState.requestVerticalScrollUnlock()
+                            }
+
+                            onSeekToX: function (x) {
+                                playCursorController.seekToX(x)
+                            }
+
+                            onItemSelectedRequested: {
+                                selectionController.resetDataSelection()
+                                itemsSelection.visible = false
                             }
                         }
                     }
@@ -894,7 +923,7 @@ Rectangle {
         }
 
         Rectangle {
-            id: clipsSelection
+            id: itemsSelection
 
             anchors.top: parent.top
             anchors.bottom: parent.bottom

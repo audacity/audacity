@@ -52,6 +52,10 @@ public:
     virtual void notifyAboutClipAdded(const Clip& clip) = 0;
     virtual void notifyAboutClipRemoved(const Clip& clip) = 0;
 
+    virtual void notifyAboutLabelChanged(const Label& label) = 0;
+    virtual void notifyAboutLabelAdded(const Label& label) = 0;
+    virtual void notifyAboutLabelRemoved(const Label& label) = 0;
+
     virtual TimeSignature timeSignature() const = 0;
     virtual void setTimeSignature(const TimeSignature& timeSignature) = 0;
     virtual muse::async::Channel<TimeSignature> timeSignatureChanged() const = 0;

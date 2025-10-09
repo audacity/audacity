@@ -117,6 +117,7 @@ public:
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
 
     bool addLabelToSelection() override;
+    bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) override;
 
     muse::Progress progress() const override;
 

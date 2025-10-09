@@ -51,8 +51,7 @@ TrackColor::TrackColor(Track& track)
 
     if (ntrack->GetId() == -1) {
         //Only assign color to newly created tracks
-        const auto colors = projectSceneConfiguration()->clipColors();
-        mColor = muse::draw::Color::fromString(colors[++lastColorIndex % colors.size()].second);
+        assignColor();
     }
 }
 
@@ -84,4 +83,10 @@ muse::draw::Color TrackColor::GetColor() const
 void TrackColor::SetColor(const muse::draw::Color& color)
 {
     mColor = color;
+}
+
+void TrackColor::assignColor()
+{
+    const auto colors = projectSceneConfiguration()->clipColors();
+    mColor = muse::draw::Color::fromString(colors[++lastColorIndex % colors.size()].second);
 }

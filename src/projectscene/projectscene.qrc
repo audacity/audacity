@@ -3,11 +3,13 @@
         <file>qml/Audacity/ProjectScene/qmldir</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/TracksItemsView.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/TrackClipsItem.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/TrackItem.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipsSelection.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/TrackLabelsItem.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/TrackObjectsItem.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/LabelItem.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItemButtonBackground.qml</file>

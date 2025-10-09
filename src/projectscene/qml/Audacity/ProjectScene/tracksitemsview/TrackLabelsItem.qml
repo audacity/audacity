@@ -6,8 +6,9 @@ import Muse.UiComponents
 import Audacity.ProjectScene
 
 TrackObjectsItem {
-
     id: root
+
+    signal clipHeaderHoveredChanged(bool value)
 
     LabelsListModel {
         id: labelsModel
@@ -31,11 +32,13 @@ TrackObjectsItem {
                 model: labelsModel
 
                 delegate: Loader {
+                    id: labelLoader
+
                     property QtObject labelItem: model.item
                     property int index: model.index
 
                     height: parent.height
-                    width: Math.max(3, labelItem.width)
+                    width: labelItem.width
                     x: labelItem.x
 
                     asynchronous: true
@@ -51,21 +54,60 @@ TrackObjectsItem {
 
                         return labelComp
                     }
+
+                    onLoaded: {
+                        labelLoader.item.itemData = model.item
+                    }
                 }
             }
 
             Component {
                 id: labelComp
 
-                Rectangle {
-                    color: "lightblue"
-                    border.color: "blue"
-                    border.width: 1
+                LabelItem {
+                    property var itemData: null
 
-                    Text {
-                        anchors.centerIn: parent
-                        text: labelItem.title
-                        color: "black"
+                    title: Boolean(itemData) ? itemData.title : ""
+                    labelColor: Boolean(itemData) ? itemData.color : null
+                    isSelected: Boolean(itemData) && itemData.selected
+                    enableCursorInteraction: true
+
+                    navigation.name: Boolean(itemData) ? itemData.title + itemData.index : ""
+                    navigation.panel: root.navigationPanel
+                    navigation.column: itemData ? Math.floor(itemData.x) : 0
+                    navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
+                    navigation.onActiveChanged: {
+                        if (navigation.active) {
+                            root.context.insureVisible(root.context.positionToTime(itemData.x))
+                            root.insureVerticallyVisible(root.y, root.y + root.height)
+                        }
+                    }
+
+                    onRequestSelected: {
+                        labelsModel.selectLabel(itemData.key)
+                        root.labelSelectedRequested()
+                    }
+
+                    onRequestSelectionReset: {
+                        labelsModel.resetSelectedLabels()
+                        root.selectionResetRequested()
+                    }
+
+                    onTitleEditAccepted: function(newTitle) {
+                        labelsModel.changeLabelTitle(itemData.key, newTitle)
+                        labelsModel.resetSelectedClip()
+                    }
+
+                    onTitleEditStarted: {
+                        labelsModel.selectLabel(itemData.key)
+                    }
+
+                    onTitleEditCanceled: {
+                        labelsModel.resetSelectedLabel()
+                    }
+
+                    onLabelHeaderHoveredChanged: function(headerHovered) {
+                        root.clipHeaderHoveredChanged(headerHovered)
                     }
                 }
             }

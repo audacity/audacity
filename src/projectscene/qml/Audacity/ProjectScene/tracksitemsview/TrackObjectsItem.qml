@@ -11,7 +11,6 @@ Item {
     property NavigationSection navigationSection: null
     property NavigationPanel navigationPanel: null
 
-    property int trackIdx: -1
     property var trackId: null
     property var context: null
     property var canvas: null
@@ -37,16 +36,16 @@ Item {
     signal interactionEnded()
     signal trackItemMousePositionChanged(real x, real y, var clipKey)
     signal setHoveredClipKey(var clipKey)
-    signal clipSelectedRequested()
-    signal selectionResetRequested()
-    signal updateMoveActive(bool completed)
-    signal requestSelectionContextMenu(real x, real y)
 
+    signal itemSelectedRequested()
+    signal selectionResetRequested()
+    signal requestSelectionContextMenu(real x, real y)
     signal selectionDraged(var x1, var x2, var completed)
+
+    signal updateMoveActive(bool completed)
+
     signal seekToX(var x)
     signal insureVerticallyVisible(var top, var bottom)
-
-    signal clipHeaderHoveredChanged(bool val)
 
     signal handleTimeGuideline(real x, bool completed)
     signal triggerClipGuideline(real x, bool completed)
@@ -56,9 +55,6 @@ Item {
     property Component contentComponent: null
 
     height: trackViewState.trackHeight
-    onHeightChanged: {
-        console.log("============= height " + height)
-    }
 
     property TrackViewStateModel trackViewState: TrackViewStateModel {
         trackId: root.trackId
@@ -178,18 +174,6 @@ Item {
 
     Connections {
         target: root.container
-
-        function onClipMoveRequested(clipKey, completed) {
-            // Override in children
-        }
-
-        function onClipStartEditRequested(clipKey) {
-            // Override in children
-        }
-
-        function onClipEndEditRequested(clipKey) {
-            // Override in children
-        }
 
         function onStartAutoScroll() {
             if (root.context) {

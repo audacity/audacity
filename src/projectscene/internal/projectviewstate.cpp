@@ -182,7 +182,6 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
     TrackData d;
     d.collapsed.val = false;
     d.channelHeightRatio.val = 1.0;
-    m_totalTracksHeight.set(m_totalTracksHeight.val + d.height.val);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (prj) {
@@ -192,6 +191,9 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
             d.height.val = track->type == trackedit::TrackType::Label ? TRACK_LABEL_DEFAULT_HEIGHT : TRACK_DEFAULT_HEIGHT;
         }
     }
+
+    m_totalTracksHeight.set(m_totalTracksHeight.val + d.height.val);
+
     return m_tracks.insert({ trackId, d }).first->second;
 }
 
