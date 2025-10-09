@@ -30,6 +30,7 @@
 
 namespace au::context {
 // common shortcuts (re declared for convenience)
+static const std::string CTX_DISABLED = muse::shortcuts::CTX_DISABLED;
 static const std::string CTX_ANY = muse::shortcuts::CTX_ANY;
 static const std::string CTX_PROJECT_OPENED = muse::shortcuts::CTX_PROJECT_OPENED;
 static const std::string CTX_PROJECT_PLAYBACK = "project-playback";
