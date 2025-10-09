@@ -336,12 +336,8 @@ void LabelsListModel::clearSelectedItems()
 
 bool LabelsListModel::changeLabelTitle(const LabelKey& key, const QString& newTitle)
 {
-    //! TODO: Implement changeLabelTitle in trackeditInteraction when label support is added
-    // bool ok = trackeditInteraction()->changeLabelTitle(key.key, newTitle);
-    // return ok;
-    Q_UNUSED(key);
-    Q_UNUSED(newTitle);
-    return false;
+    bool ok = trackeditInteraction()->changeLabelTitle(key.key, muse::String::fromQString(newTitle));
+    return ok;
 }
 
 QVariant LabelsListModel::next(const LabelKey& key) const

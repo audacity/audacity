@@ -198,7 +198,7 @@ Item {
                     id: waveItemComp
 
                     WaveTrackItem {
-                        property var index: null
+                        property int index: 0
 
                         isSelected: Boolean(item) ? item.isSelected : false
                         isFocused: Boolean(item) ? item.isFocused : false

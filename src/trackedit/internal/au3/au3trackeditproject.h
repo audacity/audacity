@@ -41,6 +41,10 @@ public:
     void notifyAboutClipAdded(const Clip& clip) override;
     void notifyAboutClipRemoved(const Clip& clip) override;
 
+    void notifyAboutLabelChanged(const Label& label) override;
+    void notifyAboutLabelAdded(const Label& label) override;
+    void notifyAboutLabelRemoved(const Label& label) override;
+
     TimeSignature timeSignature() const override;
     void setTimeSignature(const TimeSignature& timeSignature) override;
     muse::async::Channel<TimeSignature> timeSignatureChanged() const override;

@@ -314,6 +314,24 @@ void Au3TrackeditProject::notifyAboutClipAdded(const Clip& clip)
     notifier.itemAdded(clip);
 }
 
+void Au3TrackeditProject::notifyAboutLabelChanged(const Label& label)
+{
+    async::ChangedNotifier<Label>& notifier = m_labelsChanged[label.key.trackId];
+    notifier.itemChanged(label);
+}
+
+void Au3TrackeditProject::notifyAboutLabelRemoved(const Label& label)
+{
+    async::ChangedNotifier<Label>& notifier = m_labelsChanged[label.key.trackId];
+    notifier.itemRemoved(label);
+}
+
+void Au3TrackeditProject::notifyAboutLabelAdded(const Label& label)
+{
+    async::ChangedNotifier<Label>& notifier = m_labelsChanged[label.key.trackId];
+    notifier.itemAdded(label);
+}
+
 au::trackedit::TimeSignature Au3TrackeditProject::timeSignature() const
 {
     trackedit::TimeSignature result;
