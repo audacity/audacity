@@ -611,14 +611,15 @@ void RecreateWavelet(size_t &size, Floats &waveletRe, Floats &waveletIm, double 
     // We will then create a modulated Hann window at the given nominal frequency
     // Window length must be chosen such that spectral power bandwidth is 1/6th of an octave
     // This bandwidth constraint then in return governs the duration of the hann window
-    // The EQNBW of Hann window is 1.5 times 1/T
+    // The RMS Bandwidth of Hann window is 2* 1/T * sqrt(1/3)
     // Formula to obtain duration is thus
-    // RMSBW = sqrt(1.5) / T
-    // T = sqrt(1.5) / RMSBW
+    // RMSBW = 2 * sqrt(1/3) / T
+    // T = 2 * sqrt(1/3) / RMSBW
     // RMSBW = 1/6th octave, ie factor 2^0.16667 = 1.122 between bands
-    // T = sqrt(1.5) / (sqrt(1.122) * Fc - Fc / sqrt(1.122)) = sqrt(1.5) / (sqrt(1.122) - 1/sqrt(1.122) / Fc = 10.6 / Fc
-    const double bwFactor = pow(2, 1.0/6.0);
-    const double durationFactor = sqrt(1.5) / (sqrt(bwFactor) - sqrt(1/bwFactor));
+    // T = 2 * sqrt(1/3) / (sqrt(1.122) * Fc - Fc / sqrt(1.122)) = sqrt(1/3) / (sqrt(1.122) - 1/sqrt(1.122) / Fc = 10,02 / Fc
+    const double BandsPerOctave = 6.0;
+    const double bwFactor = pow(2, 1.0/BandsPerOctave);
+    const double durationFactor = 2 * sqrt(1.0/3.0) / (sqrt(bwFactor) - sqrt(1/bwFactor));
     const double PI = 4.0 * atan(1);
     const double omega = 2 * PI * frequency;
 
