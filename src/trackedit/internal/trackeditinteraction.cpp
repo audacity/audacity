@@ -145,9 +145,9 @@ bool TrackeditInteraction::moveClips(secs_t timePositionOffset, int trackPositio
                             clipsMovedToOtherTrack);
 }
 
-void TrackeditInteraction::cancelClipEdit()
+void TrackeditInteraction::cancelClipDragEdit()
 {
-    m_interaction->cancelClipEdit();
+    m_interaction->cancelClipDragEdit();
 }
 
 bool TrackeditInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
