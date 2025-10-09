@@ -160,6 +160,8 @@ signals:
 private:
     trackedit::ITrackeditProjectPtr trackEditProject() const;
     IProjectViewStatePtr viewState() const;
+    void initToViewState(double frameWidth);
+
     void onProjectChanged();
 
     void zoomIn();

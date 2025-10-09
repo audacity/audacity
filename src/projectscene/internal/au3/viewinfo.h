@@ -7,6 +7,8 @@
 #include "Observer.h"
 #include "Project.h"
 
+#include "global/async/notification.h"
+
 class AudacityProject;
 
 namespace au::au3 {
@@ -27,8 +29,19 @@ public:
     double hPos() const;
 
 private:
+    friend struct ViewStateRestorer;
+    ViewInfo& operator=(const ViewInfo& other)
+    {
+        m_zoom = other.m_zoom;
+        m_vpos = other.m_vpos;
+        m_hpos = other.m_hpos;
+        return *this;
+    }
+
     double m_zoom{ 0.0 };
     int m_vpos{ 0 };
     double m_hpos{ 0.0 };
 };
+
+void setViewStateRestorerNotification(AudacityProject&, muse::async::Notification);
 }

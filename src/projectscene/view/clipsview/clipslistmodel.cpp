@@ -730,7 +730,6 @@ bool ClipsListModel::cancelClipDragEdit(const ClipKey& key)
     vs->setMoveInitiated(false);
 
     m_context->stopAutoScroll();
-    m_context->scrollHorizontal(0);
     disconnectAutoScroll();
 
     trackeditInteraction()->cancelClipEdit();
