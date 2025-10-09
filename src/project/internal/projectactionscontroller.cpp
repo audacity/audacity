@@ -22,11 +22,13 @@ static const muse::Uri NEW_PROJECT_URI("audacity://project/new");
 
 static const muse::Uri EXPORT_URI("audacity://project/export");
 static const muse::Uri CUSTOM_FFMPEG_OPTIONS("audacity://project/export/ffmpeg");
+static const muse::Uri METADATA_DIALOG_URI("audacity://project/export/metadata");
 
 static const QString AUDACITY_URL_SCHEME("audacity");
 static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
 
 static const muse::actions::ActionCode OPEN_CUSTOM_FFMPEG_OPTIONS("open-custom-ffmpeg-options");
+static const muse::actions::ActionCode OPEN_METADATA_DIALOG("open-metadata-dialog");
 
 void ProjectActionsController::init()
 {
@@ -56,6 +58,7 @@ void ProjectActionsController::init()
     });
 
     dispatcher()->reg(this, OPEN_CUSTOM_FFMPEG_OPTIONS, this, &ProjectActionsController::openCustomFFmpegOptions);
+    dispatcher()->reg(this, OPEN_METADATA_DIALOG, this, &ProjectActionsController::openMetadataDialog);
 }
 
 const muse::actions::ActionCodeList& ProjectActionsController::prohibitedActionsWhileRecording() const
@@ -717,4 +720,9 @@ muse::Ret ProjectActionsController::openPageIfNeed(muse::Uri pageUri)
 void ProjectActionsController::openCustomFFmpegOptions()
 {
     interactive()->open(CUSTOM_FFMPEG_OPTIONS);
+}
+
+void ProjectActionsController::openMetadataDialog()
+{
+    interactive()->open(METADATA_DIALOG_URI);
 }

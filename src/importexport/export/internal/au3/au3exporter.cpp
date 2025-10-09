@@ -5,11 +5,12 @@
 #include "au3exporter.h"
 
 #include "libraries/lib-basic-ui/BasicUI.h"
-#include "libraries/lib-mixer/MixerOptions.h"
-#include "libraries/lib-track/Track.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-import-export/ExportPluginRegistry.h"
 #include "libraries/lib-import-export/ExportUtils.h"
+#include "libraries/lib-mixer/MixerOptions.h"
+#include "libraries/lib-tags/Tags.h"
+#include "libraries/lib-track/Track.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 #include "modules/import-export/RegisterExportPlugins.h"
 
 #include "au3wrap/au3types.h"
@@ -151,6 +152,8 @@ muse::Ret Au3Exporter::exportData(std::string filename)
     }
 
     m_selectedOnly = false;
+
+    m_tags = &Tags::Get(*project);
 
     auto exportedTracks = ExportUtils::FindExportWaveTracks(TrackList::Get(*project), m_selectedOnly);
     if (exportedTracks.empty()) {
