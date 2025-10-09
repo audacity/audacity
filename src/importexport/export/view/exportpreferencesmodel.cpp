@@ -341,6 +341,11 @@ void ExportPreferencesModel::openCustomFFmpegDialog()
     dispatcher()->dispatch("open-custom-ffmpeg-options");
 }
 
+void ExportPreferencesModel::openMetadataDialog()
+{
+    dispatcher()->dispatch("open-metadata-dialog");
+}
+
 void ExportPreferencesModel::setFilePickerPath(const QString& path)
 {
     muse::io::FileInfo info(path);

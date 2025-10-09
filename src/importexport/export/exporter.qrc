@@ -7,5 +7,6 @@
         <file>qml/Export/internal/FLACOptionsSection.qml</file>
         <file>qml/Export/internal/MPEGOptionsSection.qml</file>
         <file>qml/Export/CustomFFmpegDialog.qml</file>
+        <file>qml/Export/MetadataDialog.qml</file>
     </qresource>
 </RCC>
