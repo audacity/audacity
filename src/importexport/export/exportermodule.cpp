@@ -10,6 +10,7 @@
 #include "view/exportpreferencesmodel.h"
 #include "view/dynamicexportoptionsmodel.h"
 #include "view/customffmpegpreferencesmodel.h"
+#include "view/metadatamodel.h"
 
 #include "exportermodule.h"
 
@@ -47,6 +48,7 @@ void ExporterModule::resolveImports()
     if (ir) {
         ir->registerQmlUri(Uri("audacity://project/export"), "Export/ExportDialog.qml");
         ir->registerQmlUri(Uri("audacity://project/export/ffmpeg"), "Export/CustomFFmpegDialog.qml");
+        ir->registerQmlUri(Uri("audacity://project/export/metadata"), "Export/MetadataDialog.qml");
     }
 }
 
@@ -60,6 +62,7 @@ void ExporterModule::registerUiTypes()
     qmlRegisterType<ExportPreferencesModel>("Audacity.Export", 1, 0, "ExportPreferencesModel");
     qmlRegisterType<DynamicExportOptionsModel>("Audacity.Export", 1, 0, "DynamicExportOptionsModel");
     qmlRegisterType<CustomFFmpegPreferencesModel>("Audacity.Export", 1, 0, "CustomFFmpegPreferencesModel");
+    qmlRegisterType<MetadataModel>("Audacity.Export", 1, 0, "MetadataModel");
 
     qmlRegisterUncreatableType<importexport::ExportChannelsPref>("Audacity.Export", 1, 0, "ExportChannels", "Not creatable from QML");
     qmlRegisterUncreatableType<ExportOptionType>("Audacity.Export", 1, 0, "ExportOptionType", "Not creatable from QML");

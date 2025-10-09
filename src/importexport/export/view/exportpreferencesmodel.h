@@ -85,6 +85,7 @@ public:
     Q_INVOKABLE void setExportSampleRate(const QString& rate);
 
     Q_INVOKABLE void openCustomFFmpegDialog();
+    Q_INVOKABLE void openMetadataDialog();
     Q_INVOKABLE void setFilePickerPath(const QString& path);
     Q_INVOKABLE bool verifyExportPossible();
     Q_INVOKABLE QStringList fileFilter();

@@ -33,6 +33,7 @@ class ProjectUiActions;
 class RecentFilesController;
 class ThumbnailCreator;
 class ProjectAutoSaver;
+class Au3TagsAccessor;
 class ProjectModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -51,6 +52,7 @@ private:
     std::shared_ptr<RecentFilesController> m_recentFilesController;
     std::shared_ptr<ThumbnailCreator> m_thumbnailCreator;
     std::shared_ptr<ProjectUiActions> m_uiActions;
+    std::shared_ptr<Au3TagsAccessor> m_tagsAccessor;
     // std::shared_ptr<ProjectAutoSaver> m_projectAutoSaver;
 };
 }

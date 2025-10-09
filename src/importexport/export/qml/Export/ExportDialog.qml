@@ -480,9 +480,9 @@ StyledDialogView {
                 buttonRole: ButtonBoxModel.CustomRole
                 buttonId: ButtonBoxModel.CustomButton + 1
                 isLeftSide: true
-                enabled: false
 
                 onClicked: {
+                    exportPreferencesModel.openMetadataDialog()
                 }
             }
 
