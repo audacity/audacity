@@ -381,7 +381,7 @@ void ApplicationActionController::doGlobalDelete()
 void ApplicationActionController::doGlobalCancel()
 {
     if (hasProjectAndIsFocused()) {
-        dispatcher()->dispatch("action://trackedit/escape");
+        dispatcher()->dispatch("action://trackedit/cancel");
     } else {
         dispatcher()->dispatch("nav-escape");
     }
