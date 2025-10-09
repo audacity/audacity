@@ -1264,7 +1264,7 @@ bool AudioIO::AllocateBuffers(
     mCaptureRingBufferSecs
         =4.5 + 0.5 * std::min(size_t(16), mNumCaptureChannels);
     mMinCaptureSecsToCopy
-        =0.2 + 0.2 * std::min(size_t(16), mNumCaptureChannels);
+        =0.2;
 
     bool bDone;
     do{
