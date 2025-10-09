@@ -110,7 +110,7 @@
         <seq>Ctrl+X</seq>
     </SC>
     <SC>
-        <key>action://paste-default</key>
+        <key>action://paste</key>
         <seq>Ctrl+V</seq>
     </SC>
     <SC>
@@ -134,12 +134,22 @@
 
 <!-- Trackedit actions -->
     <SC>
-        <key>paste-overlap</key>
+        <key>action://trackedit/paste-default</key>
+<!--  TODO we should allow shortcut for context action
+      <seq>Ctrl+V</seq>
+      -->
+    </SC>
+    <SC>
+        <key>action://trackedit/paste-overlap</key>
         <seq>Ctrl+Alt+V</seq>
     </SC>
     <SC>
         <key>action://trackedit/paste-insert</key>
         <seq>Shift+V</seq>
+    </SC>
+    <SC>
+        <key>action://trackedit/paste-insert-all-tracks-ripple</key>
+        <seq>Ctrl+Shift+V</seq>
     </SC>
 <!-- TODO move -->
 <!-- end Trackedit actions -->
@@ -271,10 +281,6 @@
     <SC>
         <key>cut-per-track-ripple</key>
         <seq>Ctrl+Shift+X</seq>
-    </SC>
-    <SC>
-        <key>paste-insert-all-tracks-ripple</key>
-        <seq>Ctrl+Shift+V</seq>
     </SC>
     <SC>
         <key>duplicate</key>

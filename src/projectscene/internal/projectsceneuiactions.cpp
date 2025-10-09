@@ -325,6 +325,7 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             // { "spectral-brush", false },
             // { "", true },
             { "split-cut", false },
+            { "action://trackedit/cut", false },
             { "action://trackedit/copy", false },
             { "action://trackedit/paste-default", false },
             { "action://trackedit/paste-overlap", false },

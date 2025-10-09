@@ -345,7 +345,7 @@ void ApplicationActionController::doGlobalCut()
 void ApplicationActionController::doGlobalPaste()
 {
     if (isProjectOpened()) {
-        dispatcher()->dispatch("action://trackedit/paste");
+        dispatcher()->dispatch("action://trackedit/paste-default");
     } else {
         // resolve other actions
     }

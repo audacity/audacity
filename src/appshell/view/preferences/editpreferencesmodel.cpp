@@ -141,12 +141,12 @@ void EditPreferencesModel::setCloseGapBehavior(int pref)
     trackeditConfiguration()->setCloseGapBehavior(static_cast<au::trackedit::CloseGapBehavior>(pref));
 }
 
-    int EditPreferencesModel::pasteBehavior() const
+int EditPreferencesModel::pasteBehavior() const
 {
     return static_cast<int>(trackeditConfiguration()->pasteBehavior());
 }
 
-    void EditPreferencesModel::setPasteBehavior(int pref)
+void EditPreferencesModel::setPasteBehavior(int pref)
 {
     if (pasteBehavior() == pref) {
         return;
