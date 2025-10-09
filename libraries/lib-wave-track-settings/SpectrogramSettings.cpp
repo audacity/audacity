@@ -616,7 +616,7 @@ void RecreateWavelet(size_t &size, Floats &waveletRe, Floats &waveletIm, double 
     // RMSBW = 2 * sqrt(1/3) / T
     // T = 2 * sqrt(1/3) / RMSBW
     // RMSBW = 1/6th octave, ie factor 2^0.16667 = 1.122 between bands
-    // T = 2 * sqrt(1/3) / (sqrt(1.122) * Fc - Fc / sqrt(1.122)) = sqrt(1/3) / (sqrt(1.122) - 1/sqrt(1.122) / Fc = 10,02 / Fc
+    // T = 2 * sqrt(1/3) / (sqrt(1.122) * Fc - Fc / sqrt(1.122)) = 2 * sqrt(1/3) / (sqrt(1.122) - 1/sqrt(1.122) / Fc = 10,02 / Fc
     const double BandsPerOctave = 6.0;
     const double bwFactor = pow(2, 1.0/BandsPerOctave);
     const double durationFactor = 2 * sqrt(1.0/3.0) / (sqrt(bwFactor) - sqrt(1/bwFactor));
