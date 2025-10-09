@@ -48,11 +48,13 @@ Rectangle {
         id: prv
 
         property bool playRegionActivated: false
+        property bool releasedThroughCancel: false
 
         function cancelClipDragEdit() {
             if (root.hoveredClipKey) {
                 tracksClipsView.cancelClipDragEditRequested(root.hoveredClipKey)
             }
+            releasedThroughCancel = true
         }
     }
 
@@ -402,6 +404,7 @@ Rectangle {
                 }
 
                 if (e.button === Qt.LeftButton) {
+                    prv.releasedThroughCancel = false
                     tracksModel.startUserInteraction()
 
                     if (root.clipHeaderHovered) {
@@ -447,6 +450,16 @@ Rectangle {
 
             onReleased: e => {
                 if (e.button !== Qt.LeftButton) {
+                    return
+                }
+
+                if (prv.releasedThroughCancel) {
+                    prv.releasedThroughCancel = false
+                    return
+                }
+
+                if (prv.releasedThroughCancel) {
+                    prv.releasedThroughCancel = false
                     return
                 }
 
