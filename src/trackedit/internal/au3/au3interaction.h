@@ -163,7 +163,7 @@ private:
     int trackPosition(const TrackId trackId);
     void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
     void moveTrackTo(const TrackId trackId, int pos);
-    void removeDragAddedTracks(ITrackeditProject& prj, bool emptyOnly);
+    void removeDragAddedTracks(ITrackeditProject& prj, size_t numTracksWhenDragStarted, bool emptyOnly);
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
 
@@ -174,7 +174,7 @@ private:
     muse::Progress m_progress;
     std::atomic<bool> m_busy = false;
 
-    std::optional<TrackListInfo> m_startTracklistInfo;
+    std::optional<TrackListInfo> m_tracksWhenDragStarted;
     bool m_moveClipsNeedsDownmixing = false;
 };
 }
