@@ -17,6 +17,7 @@
 
 #include "trackedit/trackedittypes.h"
 #include "trackedit/dom/track.h"
+#include "trackedit/iprojecthistory.h"
 #include "trackedit/iselectioncontroller.h"
 
 namespace au::projectscene {
@@ -49,6 +50,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
     muse::Inject<record::IRecord> record;
     muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     explicit TrackItem(QObject* parent = nullptr);
@@ -133,6 +135,7 @@ protected:
     void setAudioChannelRMS(const trackedit::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
     void checkMainAudioInput();
+    void muteOrSoloChanged();
 
     audio::AudioOutputParams m_outParams;
 

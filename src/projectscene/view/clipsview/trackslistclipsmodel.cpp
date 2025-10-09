@@ -34,6 +34,10 @@ void TracksListClipsModel::load()
         emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackAudibleRole });
     });
 
+    projectHistory()->historyChanged().onNotify(this, [this]() {
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackAudibleRole });
+    });
+
     beginResetModel();
 
     m_trackList = prj->trackList();

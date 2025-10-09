@@ -88,20 +88,11 @@ void TrackItem::init(const trackedit::Track& track)
         if (trackId != m_trackId) {
             return;
         }
-        auto paramChanged = false;
-        if (m_outParams.solo != trackPlaybackControl()->solo(m_trackId)) {
-            m_outParams.solo = !m_outParams.solo;
-            paramChanged = true;
-            emit soloChanged();
-        }
-        if (m_outParams.muted != trackPlaybackControl()->muted(m_trackId)) {
-            m_outParams.muted = !m_outParams.muted;
-            paramChanged = true;
-            emit mutedChanged();
-        }
-        if (paramChanged) {
-            emit outputParamsChanged(m_outParams);
-        }
+        muteOrSoloChanged();
+    });
+
+    projectHistory()->historyChanged().onNotify(this, [this]() {
+        muteOrSoloChanged();
     });
 
     const int inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
@@ -112,6 +103,24 @@ void TrackItem::init(const trackedit::Track& track)
     emit isFocusedChanged();
 
     checkMainAudioInput();
+}
+
+void TrackItem::muteOrSoloChanged()
+{
+    auto paramChanged = false;
+    if (m_outParams.solo != trackPlaybackControl()->solo(m_trackId)) {
+        m_outParams.solo = !m_outParams.solo;
+        paramChanged = true;
+        emit soloChanged();
+    }
+    if (m_outParams.muted != trackPlaybackControl()->muted(m_trackId)) {
+        m_outParams.muted = !m_outParams.muted;
+        paramChanged = true;
+        emit mutedChanged();
+    }
+    if (paramChanged) {
+        emit outputParamsChanged(m_outParams);
+    }
 }
 
 au::trackedit::TrackId TrackItem::trackId() const
