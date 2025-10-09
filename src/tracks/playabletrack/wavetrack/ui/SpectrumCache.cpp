@@ -342,6 +342,8 @@ bool SpecCache::CalculateOneWaveletSpectrum(
    const auto sampleRate = clip.GetRate();
    const auto stretchRatio = clip.GetStretchRatio();
    const auto samplesPerPixel = sampleRate / pixelsPerSecond / stretchRatio;
+   const size_t nBins = settings.NBins();
+   float *const results = &out[nBins * xx];
 
    // not reassignment, xx is surely within bounds.
    wxASSERT(xx >= 0);
@@ -350,29 +352,27 @@ bool SpecCache::CalculateOneWaveletSpectrum(
    else
       from = where[xx];
 
-   size_t nBins = settings.NBins();
-
    if (from < 0 || from >= numSamples) {
       if (xx >= 0 && xx < (int)len) {
          // Pixel column is out of bounds of the clip!  Should not happen.
-         float *const results = &out[nBins * xx];
          std::fill(results, results + nBins, 0.0f);
       }
    }
-   else {
+   else
+   {
       // Iterate frequencies in turn
       // Note that as opposed to Fourier Transform, using wavelets implies a window length that varies with frequency
       // We extract samples corresponding to max wavelet length (the first)
-      
-      // Locate longest wavelet (first one) 
-      auto longestWaveletLen = settings.waveletMaxLength;
+    
+      // Locate longest wavelet (first one)
+      const auto longestWaveletLen = settings.waveletMaxLength;
       wxASSERT(longestWaveletLen);
        
       auto myLen = 2 * longestWaveletLen - 1;
       std::vector<float> scratch(myLen);
 
       // Take a window of the track centered at this sample.
-      from -= myLen >> 1;
+      from -= longestWaveletLen;
       float * adj = &scratch[0];
       if (from < 0) {
          // Near the start of the clip, pad left with zeroes as needed.
@@ -402,9 +402,7 @@ bool SpecCache::CalculateOneWaveletSpectrum(
       }
 
       // Done preparing samples. Now onward with calculations
-      float * middleSample = &scratch[longestWaveletLen - 1];
-
-      float *const results = &out[nBins * xx];
+      const float * middleSample = &scratch[longestWaveletLen - 1];
       for (size_t iBin = 0; iBin < nBins; iBin++)
       {
           if (settings.waveletSizes[iBin] == 0)
@@ -413,15 +411,15 @@ bool SpecCache::CalculateOneWaveletSpectrum(
              continue;
           }
          
-          float *right = middleSample;
-          float *left = middleSample;
+          const float *right = middleSample;
+          const float *left = middleSample;
           // Do the convolution
-          float * wRe = &settings.waveletsRe[iBin][0];
-          float * wIm = &settings.waveletsIm[iBin][0];
+          const float * wRe = &settings.waveletsRe[iBin][0];
+          const float * wIm = &settings.waveletsIm[iBin][0];
           double sumRe = *middleSample * *wRe;
           double sumIm = 0.0;
           wRe++, wIm++, right++, left--;
-          auto halfLen = settings.waveletSizes[iBin];;
+          const auto halfLen = settings.waveletSizes[iBin];
           for (auto ii = 1; ii < halfLen; ii++)
           {
               sumRe +=  (*right + *left) * *wRe;
@@ -432,7 +430,7 @@ bool SpecCache::CalculateOneWaveletSpectrum(
           // Calculate magnitude
           float power = sumRe * sumRe + sumIm * sumIm;
           
-
+          
           // Do the log thing
           if (power <= 0)
              power = -160.0;
@@ -456,9 +454,9 @@ bool SpecCache::CalculateOneWaveletSpectrum(
 
 void SpecCache::Grow(
    size_t len_, SpectrogramSettings& settings, double samplesPerPixel,
-   double start_, double sampleFrequency)
+   double start_)
 {
-   settings.CacheWindows(sampleFrequency);
+   settings.CacheWindows();
 
    // len columns, and so many rows, column-major.
    // Don't take column literally -- this isn't pixel data yet, it's the
@@ -534,16 +532,24 @@ void SpecCache::Populate(
 #endif
       for (auto xx = lowerBoundX; xx < upperBoundX; ++xx)
       {
+         if (isWaveletAnalysis(settings))
+         {
+             CalculateOneWaveletSpectrum(settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
+                                         gainFactors, &freq[0]);
+         }
+         else
+         {
 #ifdef _OPENMP
-         tls.init(waveTrackCache, scratchSize);
-         SampleTrackCache& cache = *tls.cache;
-         float* buffer = &tls.scratch[0];
+             tls.init(waveTrackCache, scratchSize);
+             SampleTrackCache& cache = *tls.cache;
+             float* buffer = &tls.scratch[0];
 #else
-         float* buffer = &scratch[0];
+             float* buffer = &scratch[0];
 #endif
-         CalculateOneSpectrum(
-            settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
-            gainFactors, buffer, &freq[0]);
+             CalculateOneSpectrum(
+                         settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
+                         gainFactors, buffer, &freq[0]);
+         }
       }
 
       if (reassignment) {
@@ -593,33 +599,6 @@ void SpecCache::Populate(
                   results[ii] += gainFactors[ii];
             }
          }
-      }
-   }
-}
-
-void SpecCache::PopulateWavelet(
-   const SpectrogramSettings& settings, const WaveChannelInterval& clip,
-   int copyBegin, int copyEnd, size_t numPixels, double pixelsPerSecond)
-{
-   const auto sampleRate = clip.GetRate();
-   const int &frequencyGainSetting = settings.frequencyGain;
-
-   const auto nBins = settings.NBins();
-
-   std::vector<float> gainFactors;
-   ComputeSpectrogramGainFactors(nBins * 2, sampleRate, frequencyGainSetting, gainFactors);
-
-   // Loop over the ranges before and after the copied portion and compute anew.
-   // One of the ranges may be empty.
-   for (int jj = 0; jj < 2; ++jj) {
-      const int lowerBoundX = jj == 0 ? 0 : copyEnd;
-      const int upperBoundX = jj == 0 ? copyBegin : (int)numPixels;
-
-      for (auto xx = lowerBoundX; xx < upperBoundX; ++xx)
-      {
-         CalculateOneWaveletSpectrum(
-            settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
-            gainFactors, &freq[0]);
       }
    }
 }
@@ -701,7 +680,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
    }
 
    // Resize the cache, keep the contents unchanged.
-   mSpecCache->Grow(numPixels, settings, samplesPerPixel, t0, sampleRate);
+   mSpecCache->Grow(numPixels, settings, samplesPerPixel, t0);
 
    // Reassignment accumulates, so it needs a zeroed buffer
    if (settings.algorithm == SpectrogramSettings::algReassignment)
@@ -728,14 +707,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
       mSpecCache->where, numPixels, addBias, correction, t0, sampleRate,
       stretchRatio, samplesPerPixel);
 
-   if (mSpecCache->isWaveletAnalysis(settings))
-   {
-       mSpecCache->PopulateWavelet(settings, clip, copyBegin, copyEnd, numPixels, pixelsPerSecond);
-   }
-   else
-   {
-       mSpecCache->Populate(settings, clip, copyBegin, copyEnd, numPixels, pixelsPerSecond);
-   }
+   mSpecCache->Populate(settings, clip, copyBegin, copyEnd, numPixels, pixelsPerSecond);
    mSpecCache->dirty = mDirty;
    spectrogram = &mSpecCache->freq[0];
    where = &mSpecCache->where[0];

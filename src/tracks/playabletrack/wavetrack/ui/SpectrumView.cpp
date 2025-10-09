@@ -676,7 +676,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    SpecCache specCache;
 
    // need explicit resize since specCache.where[] accessed before Populate()
-   specCache.Grow(numPixels, settings, -1, t0, sampleRate);
+   specCache.Grow(numPixels, settings, -1, t0);
 
    if (numPixels > 0) {
       for (int ii = begin; ii < end; ++ii) {

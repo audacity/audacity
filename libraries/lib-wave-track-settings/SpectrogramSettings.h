@@ -75,9 +75,6 @@ public:
    static const EnumValueSymbols &GetColorSchemeNames();
    static const TranslatableStrings &GetAlgorithmNames();
     
-   static constexpr double MinimumWaveletFrequency = 20.0;
-   static constexpr int NumberOfWaveletsPerOctave = 12;
-
    //! Return either the track's independent settings or global defaults
    //! Mutative access to attachment even if the track argument is const
    static SpectrogramSettings &Get(const WaveTrack &track);
@@ -114,7 +111,7 @@ public:
 
    void InvalidateCaches();
    void DestroyWindows();
-   void CacheWindows(double sampleFrequency);
+   void CacheWindows();
    void ConvertToEnumeratedWindowSizes();
    void ConvertToActualWindowSizes();
 

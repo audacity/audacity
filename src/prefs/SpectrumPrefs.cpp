@@ -542,20 +542,32 @@ void SpectrumPrefs::OnAlgorithm(wxCommandEvent &evt)
    EnableDisableSTFTOnlyControls();
  
    // Adjust choices according to wavelet or not
-   wxChoice *const pPaddingSizeControl =
-       static_cast<wxChoice*>(wxWindow::FindWindowById(ID_PADDING_SIZE, this));
    wxChoice *const pAlgorithmControl =
-       static_cast<wxChoice*>(wxWindow::FindWindowById(ID_ALGORITHM, this));
-    wxChoice *const pWindowControl =
-        static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_TYPE, this));
-    wxChoice *const pWindowSizeControl =
-        static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_SIZE, this));
+      static_cast<wxChoice*>(wxWindow::FindWindowById(ID_ALGORITHM, this));
 
-   if (pPaddingSizeControl && pAlgorithmControl && pAlgorithmControl->GetSelection() == SpectrogramSettings::algWavelet)
+   assert(pAlgorithmControl);
+   if (pAlgorithmControl->GetSelection() == SpectrogramSettings::algWavelet)
    {
-      pPaddingSizeControl->SetSelection(0);
-      if (pWindowControl) pWindowControl->SetSelection(eWinFuncHann);
-      if (pWindowSizeControl && !mPopulating) pWindowSizeControl->SetSelection(11);
+      wxChoice *const pPaddingSizeControl =
+         static_cast<wxChoice*>(wxWindow::FindWindowById(ID_PADDING_SIZE, this));
+      wxChoice *const pWindowControl =
+         static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_TYPE, this));
+      wxChoice *const pWindowSizeControl =
+         static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_SIZE, this));
+      assert(pPaddingSizeControl);
+      assert(pWindowControl);
+      assert(pWindowSizeControl);
+      pPaddingSizeControl->SetSelection(0); // Assumption is here that no zeropadding is the first choice. This assumption is logically built into code
+      pWindowControl->SetSelection(eWinFuncHann);
+
+      // Assure that we will use a default maximum window size which is valid
+      // We use size with index 11, we assure  11 which is
+      static const int LogWaveletWindowSize = 14; // Prefere default of 16384 window length (1<<14)
+      static_assert(LogWaveletWindowSize >= SpectrogramSettings::LogMinWindowSize);
+      static_assert(LogWaveletWindowSize <= SpectrogramSettings::LogMaxWindowSize);
+
+      // Find the selection index for window length 16384 now that we know it is a valid choice
+      if (!mPopulating) pWindowSizeControl->SetSelection(LogWaveletWindowSize - SpectrogramSettings::LogMinWindowSize);
    }
    OnControl(evt);
 }

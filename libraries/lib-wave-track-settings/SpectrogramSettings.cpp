@@ -596,24 +596,19 @@ namespace
          window[ii] *= scale;
 }
 
-size_t RecreateWavelet(size_t &size, Floats &waveletRe, Floats &waveletIm, double frequency, double samplingFrequency, size_t bins)
+void RecreateWavelet(size_t &size, Floats &waveletRe, Floats &waveletIm, double frequency, size_t bins)
 {
-    // Skip low frequencies since resolution is not good enough. Also this presents an optimisation
-    // When doing wavelet analysis we simulate an FFT with sufficient resolution to contain the finest resolution downto 20 Hz
-    // This is really a waste of memory and could be optimised
-    // On the other hand, we do not offer sufficient resolution below 20 Hz which could maybe be challenged
-    // Directly using minFreq to govern resolution seems to be too demanding given the defaults
-    //float calculationStartFrequency = delta / (exp((log(2.0) / SpectrogramSettings::NumberOfWaveletsPerOctave)) - 1.0);
-
+    assert(frequency >= 0);
+    assert(frequency <= 0.5);
     if (frequency == 0)
     {
         size = 0;
         waveletRe = Floats{};
         waveletIm = Floats{};
-        return 0;
+        return;
     }
     
-    // We will then create a modulated Hann window at the given frequency
+    // We will then create a modulated Hann window at the given nominal frequency
     // Window length must be chosen such that spectral power bandwidth is 1/6th of an octave
     // This bandwidth constraint then in return governs the duration of the hann window
     // The EQNBW of Hann window is 1.5 times 1/T
@@ -625,16 +620,17 @@ size_t RecreateWavelet(size_t &size, Floats &waveletRe, Floats &waveletIm, doubl
     const double bwFactor = pow(2, 1.0/6.0);
     const double durationFactor = sqrt(1.5) / (sqrt(bwFactor) - sqrt(1/bwFactor));
     const double PI = 4.0 * atan(1);
+    const double omega = 2 * PI * frequency;
 
-    double waveletDurationHalf = 0.5 * durationFactor / frequency; // in seconds
-    size = (int) (waveletDurationHalf * samplingFrequency); // in samples
+    double waveletDurationHalf = 0.5 * durationFactor / frequency; // float number of samples for half-length. Hann enveloped filter will be zero outside range [-waveletDurationHalf; waveletDurationHalf]
+    size = (int) (waveletDurationHalf); // truncate to integer number of samples. "size" will hold the half-length of the wavelet filter (conjugate symmetry)
     if (size > bins)
     {
         // There is no point in using wavelets that exceed resolution in our frequency array (under sampling, really)
         size = 0;
         waveletRe = Floats{};
         waveletIm = Floats{};
-        return 0;
+        return;
     }
 
 
@@ -643,19 +639,17 @@ size_t RecreateWavelet(size_t &size, Floats &waveletRe, Floats &waveletIm, doubl
     
     for (int i = 0; i < size; i++)
     {
-        double dt = i / samplingFrequency;
-        double relative_dt = dt / waveletDurationHalf;
-        double angle = PI + relative_dt * PI;
-        double envelope = (1 - cos(angle)) / (waveletDurationHalf * samplingFrequency * 2.0);
-        waveletRe[i] = envelope * cos(2 * PI * frequency * dt);
-        waveletIm[i] = envelope * sin(2 * PI * frequency * dt);
+        double relative_dt = i / waveletDurationHalf;
+        double envelope = (1 + cos(relative_dt * PI)) / (waveletDurationHalf * 2.0); // Normalize for zero gain when doing convolution
+        waveletRe[i] = envelope * cos(omega * i);
+        waveletIm[i] = envelope * sin(omega * i);
     }
     
-    return size;
+    return;
 }
 }
 
-void SpectrogramSettings::CacheWindows(double sampleFrequency)
+void SpectrogramSettings::CacheWindows()
 {
    if (algorithm == algWavelet)
    {
@@ -666,13 +660,13 @@ void SpectrogramSettings::CacheWindows(double sampleFrequency)
            waveletsIm = FloatBuffers {num};
            waveletSizes = ArrayOf<size_t> {num};
            waveletMaxLength = 0;
-           double delta = double(sampleFrequency/2) / num;
+           double delta = 0.5 / num;
            for (int i = 0; i < num; i++)
            {
-               size_t len = RecreateWavelet(waveletSizes[i], waveletsRe[i], waveletsIm[i], i * delta, sampleFrequency, num);
-               if (len > waveletMaxLength)
+               RecreateWavelet(waveletSizes[i], waveletsRe[i], waveletsIm[i], i * delta, num);
+               if (waveletSizes[i] > waveletMaxLength)
                {
-                   waveletMaxLength = len;
+                   waveletMaxLength = waveletSizes[i];
                }
            }
        }

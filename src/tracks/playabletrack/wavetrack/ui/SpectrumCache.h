@@ -50,14 +50,10 @@ public:
    // Grow the cache while preserving the (possibly now invalid!) contents
    void Grow(
       size_t len_, SpectrogramSettings& settings, double samplesPerPixel,
-      double start, /*relative to clip play start time*/
-      double sampleFrequency);
+      double start); /*relative to clip play start time*/
 
    // Calculate the dirty columns at the begin and end of the cache
    void Populate(
-      const SpectrogramSettings& settings, const WaveChannelInterval& clip,
-      int copyBegin, int copyEnd, size_t numPixels, double pixelsPerSecond);
-   void PopulateWavelet(
       const SpectrogramSettings& settings, const WaveChannelInterval& clip,
       int copyBegin, int copyEnd, size_t numPixels, double pixelsPerSecond);
 
