@@ -20,22 +20,44 @@ BaseSection {
     required property var editPreferencesModel
     property alias parentBackgroundColor: pasteBehaviorPanel.parentBackgroundColor
 
-    PasteBehaviorPanel {
-        id: pasteBehaviorPanel
-
+    Column {
         width: parent.width
+        spacing: 16
 
-        navigation: root.navigation
+        PasteBehaviorPanel {
+            id: pasteBehaviorPanel
 
-        pasteBehavior: editPreferencesModel.pasteBehavior
-        pasteInsertBehavior: editPreferencesModel.pasteInsertBehavior
+            width: parent.width
 
-        onNewPasteBehaviorRequested: function (pasteBehavior) {
-            editPreferencesModel.setPasteBehavior(pasteBehavior)
+            navigation: root.navigation
+
+            pasteBehavior: editPreferencesModel.pasteBehavior
+            pasteInsertBehavior: editPreferencesModel.pasteInsertBehavior
+
+            onNewPasteBehaviorRequested: function (pasteBehavior) {
+                editPreferencesModel.setPasteBehavior(pasteBehavior)
+            }
+
+            onNewPasteInsertBehaviorRequested: function (pasteInsertBehavior) {
+                editPreferencesModel.setPasteInsertBehavior(pasteInsertBehavior)
+            }
         }
 
-        onNewPasteInsertBehaviorRequested: function (pasteInsertBehavior) {
-            editPreferencesModel.setPasteInsertBehavior(pasteInsertBehavior)
+        CheckBox {
+            id: checkbox
+
+            width: parent.width
+
+            text: qsTrc("appshell/preferences", "Always paste audio as a new clip")
+
+            checked: editPreferencesModel.pasteAsNewClip
+
+            navigation.name: "PasteAsNewBox"
+            navigation.panel: root.navigation
+
+            onClicked: {
+                editPreferencesModel.setPasteAsNewClip(!checked)
+            }
         }
     }
 }

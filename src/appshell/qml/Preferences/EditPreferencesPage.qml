@@ -71,24 +71,13 @@ PreferencesPage {
 
         SeparatorLine {}
 
-        PastingBehaviorSection {
-            id: pastingBehaviorSection
-
-            editPreferencesModel: editPreferencesModel
-
-            navigation.section: root.navigationSection
-            navigation.order: asymmetricStereoHeightsSection.navigationOrderEnd + 1
-        }
-
-        SeparatorLine {}
-
         MonoStereoConversionSection {
             id: monoStereoConversionSection
 
             askBeforeConverting: editPreferencesModel.askBeforeConvertingToMonoOrStereo
 
             navigation.section: root.navigationSection
-            navigation.order: pastingBehaviorSection.navigationOrderEnd + 1
+            navigation.order: asymmetricStereoHeightsSection.navigationOrderEnd + 1
 
             onAskBeforeConvertingChanged: {
                 editPreferencesModel.askBeforeConvertingToMonoOrStereo = askBeforeConverting
