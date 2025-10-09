@@ -73,6 +73,9 @@ void au::trackedit::Au3ProjectHistory::rollbackState()
 void Au3ProjectHistory::startUserInteraction()
 {
     LOGI() << "startUserInteraction()";
+    // Modify the state, so that if the interaction gets canceled,
+    // rollbackState would revert to the state at the beginning of the action.
+    modifyState(false);
     IF_ASSERT_FAILED(!m_interactionOngoing) {
         return;
     }

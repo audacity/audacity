@@ -53,34 +53,13 @@ TimelineContext::TimelineContext(QObject* parent)
 
 void TimelineContext::init(double frameWidth)
 {
-    auto vs = this->viewState();
-    ZoomState zoomState;
+    initToViewState(frameWidth);
 
-    if (vs) {
-        zoomState = vs->zoomState();
+    if (const auto vs = viewState()) {
+        vs->rolledBack().onNotify(this, [this]() {
+            initToViewState(m_frameWidth);
+        });
     }
-
-    if (!muse::RealIsEqual(zoomState.zoom, 0.0)) {
-        m_zoom = zoomState.zoom;
-    } else {
-        double initialTimeRange = trackEditProject() ? trackEditProject()->totalTime().to_double() * 2 : 0.0;
-        if (muse::is_zero(initialTimeRange)) {
-            m_zoom = configuration()->zoom();
-        } else {
-            m_zoom = m_frameWidth / initialTimeRange;
-        }
-    }
-    emit zoomChanged();
-
-    m_frameWidth = frameWidth;
-    m_frameStartTime = zoomState.frameStart;
-    emit frameStartTimeChanged();
-    m_frameEndTime = positionToTime(frameWidth);
-
-    m_lastZoomEndTime = m_frameEndTime;
-
-    emit frameEndTimeChanged();
-    emit frameTimeChanged();
 
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList&) {
         updateSingleClipSelected();
@@ -131,7 +110,40 @@ void TimelineContext::init(double frameWidth)
     });
 
     onProjectChanged();
+}
 
+void TimelineContext::initToViewState(double frameWidth)
+{
+    auto vs = this->viewState();
+    ZoomState zoomState;
+
+    if (vs) {
+        zoomState = vs->zoomState();
+    }
+
+    if (!muse::RealIsEqual(zoomState.zoom, 0.0)) {
+        m_zoom = zoomState.zoom;
+    } else {
+        double initialTimeRange = trackEditProject() ? trackEditProject()->totalTime().to_double() * 2 : 0.0;
+        if (muse::is_zero(initialTimeRange)) {
+            m_zoom = configuration()->zoom();
+        } else {
+            m_zoom = m_frameWidth / initialTimeRange;
+        }
+    }
+    emit zoomChanged();
+
+    m_frameWidth = frameWidth;
+    m_frameStartTime = zoomState.frameStart;
+    emit frameStartTimeChanged();
+    m_frameEndTime = positionToTime(frameWidth);
+
+    m_lastZoomEndTime = m_frameEndTime;
+
+    saveViewState();
+
+    emit frameEndTimeChanged();
+    emit frameTimeChanged();
     emit horizontalScrollChanged();
     emit verticalScrollChanged();
 }
@@ -385,8 +397,6 @@ void TimelineContext::onProjectChanged()
     project->timeSignatureChanged().onReceive(this, [this](const trackedit::TimeSignature&) {
         updateTimeSignature();
     });
-
-    updateTimeSignature();
 }
 
 void TimelineContext::zoomIn()

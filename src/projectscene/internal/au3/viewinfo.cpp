@@ -3,6 +3,7 @@
 #include "XMLAttributeValueView.h"
 #include "XMLWriter.h"
 #include "Prefs.h"
+#include "UndoManager.h"
 
 using namespace au::au3;
 
@@ -88,3 +89,50 @@ static ProjectFileIORegistry::AttributeReaderEntries entries {
             } }
     }
 };
+
+namespace {
+struct RestorerNotification : public ClientData::Base
+{
+    static RestorerNotification& Get(AudacityProject& project);
+    muse::async::Notification notification;
+};
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key{ [](AudacityProject&) {
+        return std::make_shared<RestorerNotification>();
+    } };
+
+RestorerNotification& RestorerNotification::Get(AudacityProject& project)
+{
+    return project.AttachedObjects::Get<RestorerNotification>(key);
+}
+}
+
+namespace au::au3 {
+struct ViewStateRestorer final : UndoStateExtension {
+    ViewStateRestorer(AudacityProject& project)
+    {
+        m_viewInfo = ViewInfo::Get(project);
+    }
+
+    void RestoreUndoRedoState(AudacityProject& project) override
+    {
+        ViewInfo::Get(project) = m_viewInfo;
+        RestorerNotification::Get(project).notification.notify();
+    }
+
+    ViewInfo m_viewInfo;
+};
+}
+
+namespace {
+UndoRedoExtensionRegistry::Entry sEntry {
+    [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension> {
+        return std::make_shared<ViewStateRestorer>(project);
+    }
+};
+}
+
+void au::au3::setViewStateRestorerNotification(AudacityProject& project, muse::async::Notification notification)
+{
+    RestorerNotification::Get(project).notification = notification;
+}
