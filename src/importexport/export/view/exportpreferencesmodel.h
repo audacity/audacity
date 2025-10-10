@@ -15,6 +15,8 @@
 #include "context/iglobalcontext.h"
 #include "iexportconfiguration.h"
 #include "iexporter.h"
+#include "playback/iplayback.h"
+#include "trackedit/iselectioncontroller.h"
 
 namespace au::importexport {
 class ExportPreferencesModel : public QObject, public muse::async::Asyncable
@@ -28,6 +30,8 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<IExportConfiguration> exportConfiguration;
     muse::Inject<IExporter> exporter;
+    muse::Inject<au::playback::IPlayback> playback;
+    muse::Inject<trackedit::ISelectionController> selectionController;
 
     Q_PROPERTY(QString currentProcess READ currentProcess NOTIFY currentProcessChanged)
     Q_PROPERTY(QVariantList processList READ processList NOTIFY processListChanged)

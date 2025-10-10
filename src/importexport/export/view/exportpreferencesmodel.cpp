@@ -34,8 +34,8 @@ QString prepareExtensionsString(const QStringList& extensionList)
 std::map<ExportProcessType, std::string> EXPORT_PROCESS_MAPPING {
     { ExportProcessType::FULL_PROJECT_AUDIO, muse::trc("export", "Export full project audio") },
     { ExportProcessType::SELECTED_AUDIO, muse::trc("export", "Export selected audio") },
+    { ExportProcessType::AUDIO_IN_LOOP_REGION, muse::trc("export", "Export audio in loop region") },
     //! NOTE: not implemented yet
-    // { ExportProcessType::AUDIO_IN_LOOP_REGION, muse::trc("export", "Export audio in loop region") },
     // { ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES,
     //   muse::trc("export", "Export tracks as a separate audio files (Stems)") },
     // { ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE, muse::trc("export",
@@ -83,6 +83,12 @@ void ExportPreferencesModel::init()
     exportConfiguration()->processTypeChanged().onNotify(this, [this] {
         emit currentProcessChanged();
     });
+    if ((exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION
+         && !playback()->player()->loopRegion().isValid())
+        || (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO
+            && !selectionController()->timeSelectionIsNotEmpty())) {
+        setCurrentProcess(QString::fromStdString(EXPORT_PROCESS_MAPPING[ExportProcessType::FULL_PROJECT_AUDIO]));
+    }
 
     muse::io::path_t displayName = globalContext()->currentProject()->displayName();
     if (muse::io::suffix(displayName) == "aup4unsaved") {
@@ -149,6 +155,20 @@ void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
     }
 
     if (newProcess == currentProcess()) {
+        return;
+    }
+
+    if (type == ExportProcessType::AUDIO_IN_LOOP_REGION && !playback()->player()->loopRegion().isValid()) {
+        interactive()->error(muse::trc("export", "No loop region"),
+                             muse::trc("export",
+                                       "Export audio in loop region requires an active loop in the project. Please go back, create a loop and try again."));
+        return;
+    }
+
+    if (type == ExportProcessType::SELECTED_AUDIO && !selectionController()->timeSelectionIsNotEmpty()) {
+        interactive()->error(muse::trc("export", "No selected audio"),
+                             muse::trc("export",
+                                       "Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again."));
         return;
     }
 
