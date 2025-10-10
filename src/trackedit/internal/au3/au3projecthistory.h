@@ -32,7 +32,7 @@ public:
     void markUnsaved() override;
 
     void startUserInteraction() override;
-    void endUserInteraction() override;
+    void endUserInteraction(bool modifyState) override;
     bool interactionOngoing() const override { return m_interactionOngoing; }
 
     void undoRedoToIndex(size_t index) override;
