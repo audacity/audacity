@@ -176,16 +176,6 @@ void TracksListClipsModel::load()
     });
 }
 
-void TracksListClipsModel::startUserInteraction()
-{
-    projectHistory()->startUserInteraction();
-}
-
-void TracksListClipsModel::endUserInteraction()
-{
-    projectHistory()->endUserInteraction();
-}
-
 void TracksListClipsModel::handleDroppedFiles(const QStringList& fileUrls)
 {
     std::vector<muse::io::path_t> localPaths;

@@ -405,7 +405,6 @@ Rectangle {
 
                 if (e.button === Qt.LeftButton) {
                     prv.releasedThroughCancel = false
-                    tracksModel.startUserInteraction()
 
                     if (root.clipHeaderHovered) {
                         tracksClipsView.clipStartEditRequested(hoveredClipKey)
@@ -485,8 +484,6 @@ Rectangle {
 
                     playCursorController.setPlaybackRegion(timeline.context.selectionStartPosition, timeline.context.selectionEndPosition)
                 }
-
-                tracksModel.endUserInteraction()
             }
 
             onCanceled: e => {
@@ -716,7 +713,6 @@ Rectangle {
                     onClipDragEditCanceled: {
                         root.hoveredClipKey = null
                         root.clipHeaderHovered = false
-                        tracksModel.endUserInteraction()
                     }
 
                     onIsBrushChanged: function () {

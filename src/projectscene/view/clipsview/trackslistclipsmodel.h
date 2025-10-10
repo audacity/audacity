@@ -38,8 +38,6 @@ public:
     explicit TracksListClipsModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
-    Q_INVOKABLE void startUserInteraction();
-    Q_INVOKABLE void endUserInteraction();
     Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);
 
     int rowCount(const QModelIndex& parent) const override;
