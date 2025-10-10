@@ -80,7 +80,6 @@ Rectangle {
     // mouse position event is not propagated on overlapping mouse areas
     // so we are handling it manually
     signal clipItemMousePositionChanged(real x, real y)
-    signal clipHeaderHoveredChanged(bool value)
 
     property alias navigation: navCtrl
 
@@ -157,10 +156,6 @@ Rectangle {
                 navCtrl.requestActive()
             }
         }
-    }
-
-    onHeaderHoveredChanged: {
-        root.clipHeaderHoveredChanged(headerHovered)
     }
 
     onAsymmetricStereoHeightsPossibleChanged: {
@@ -256,6 +251,7 @@ Rectangle {
         waveView.isStemPlot = false
         root.leftTrimContainsMouse = false
         root.rightTrimContainsMouse = false
+        root.headerHovered = false
     }
 
     MouseArea {

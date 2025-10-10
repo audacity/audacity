@@ -364,7 +364,7 @@ Item {
                     })
                 }
 
-                onClipHeaderHoveredChanged: function(headerHovered) {
+                onHeaderHoveredChanged: function() {
                     root.clipHeaderHoveredChanged(headerHovered)
                 }
 
