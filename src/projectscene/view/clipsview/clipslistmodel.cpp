@@ -76,6 +76,10 @@ void ClipsListModel::init()
 
     dispatcher()->reg(this, "rename-clip", this, &ClipsListModel::requestClipTitleChange);
 
+    uiConfiguration()->currentThemeChanged().onNotify(this, [this]() {
+        emit isContrastFocusBorderEnabledChanged();
+    });
+
     reload();
 }
 
@@ -654,6 +658,11 @@ bool ClipsListModel::asymmetricStereoHeightsPossible() const
     }
 
     return false;
+}
+
+bool ClipsListModel::isContrastFocusBorderEnabled() const
+{
+    return !uiConfiguration()->isDarkMode();
 }
 
 au::projectscene::ClipKey ClipsListModel::updateClipTrack(ClipKey clipKey) const
