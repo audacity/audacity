@@ -2,7 +2,6 @@ import QtQuick
 import Muse.Ui
 import Muse.UiComponents
 
-
 Item {
     id: playCursorHead
 
@@ -10,6 +9,8 @@ Item {
 
     signal setPlaybackPosition(real x)
     signal playCursorMousePositionChanged(real x)
+
+    antialiasing: true
 
     StyledIconLabel {
         id: playheadIcon
@@ -38,7 +39,7 @@ Item {
             hoverEnabled: true
             cursorShape: pressed || timelinePressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor
 
-            onPositionChanged: function(e) {
+            onPositionChanged: function (e) {
                 var ix = mapToItem(content, e.x, e.y).x
                 if (pressed) {
                     setPlaybackPosition(ix)

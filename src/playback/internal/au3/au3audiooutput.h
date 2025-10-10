@@ -14,6 +14,8 @@
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometer.h"
 
+#include "libraries/lib-utility/LockFreeQueue.h"
+
 namespace au::playback {
 class Au3AudioOutput : public IAudioOutput, public muse::async::Asyncable
 {
@@ -39,9 +41,9 @@ private:
 
     void notifyAboutSampleRateChanged();
 
-    mutable muse::async::Channel<float> m_playbackVolumeChanged;
-    mutable muse::async::Channel<audio::sample_rate_t> m_sampleRateChanged;
+    muse::async::Channel<float> m_playbackVolumeChanged;
+    muse::async::Channel<audio::sample_rate_t> m_sampleRateChanged;
 
-    std::shared_ptr<au::au3::Meter> m_outputMeter;
+    const std::shared_ptr<au::au3::Meter> m_outputMeter;
 };
 }

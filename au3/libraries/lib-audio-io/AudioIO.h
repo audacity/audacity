@@ -138,7 +138,7 @@ public:
                         : audioIO.mAudioIOExt.begin()}
         {}
         AudioIOExtIterator& operator ++() { ++mIterator; return *this; }
-        auto operator *() const -> AudioIOExt &;
+        auto operator *() const -> AudioIOExt&;
         friend inline bool operator ==(
             const AudioIOExtIterator& xx, const AudioIOExtIterator& yy)
         {
@@ -185,6 +185,8 @@ public:
     std::shared_ptr< AudioIOListener > GetListener() const
     { return mListener.lock(); }
     void SetListener(const std::shared_ptr< AudioIOListener >& listener);
+
+    bool ProjectSamplesReachedDeviceThread() const;
 
     // Part of the callback
     int CallbackDoSeek();
@@ -400,6 +402,7 @@ protected:
     void PurgeAfterPause(unsigned long framesPerBuffer, float** sampleBuffer);
 
     std::atomic<bool> mPurgeIsNeeded{ false };
+    bool mProjectSamplesReachedDeviceThread { false };
 
 private:
     /*!

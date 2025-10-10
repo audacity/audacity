@@ -23,9 +23,8 @@ using namespace au::playback;
 using namespace au::au3;
 
 Au3AudioOutput::Au3AudioOutput()
+    : m_outputMeter{std::make_shared<au::au3::Meter>()}
 {
-    m_outputMeter = std::make_shared<au::au3::Meter>();
-
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         auto currentProject = globalContext()->currentProject();
         if (!currentProject) {
