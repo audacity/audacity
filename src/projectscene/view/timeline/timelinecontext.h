@@ -129,7 +129,7 @@ public:
 
     qreal verticalScrollbarSize() const;
 
-    void updateSelectedClipTime();
+    Q_INVOKABLE void updateSelectedClipTime();
 
     bool playbackOnRulerClickEnabled() const;
 
