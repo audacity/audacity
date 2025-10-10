@@ -134,12 +134,6 @@
 
 <!-- Trackedit actions -->
     <SC>
-        <key>action://trackedit/paste-default</key>
-<!--  TODO we should allow shortcut for context action
-      <seq>Ctrl+V</seq>
-      -->
-    </SC>
-    <SC>
         <key>action://trackedit/paste-overlap</key>
         <seq>Ctrl+Alt+V</seq>
     </SC>

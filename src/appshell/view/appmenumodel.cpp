@@ -228,7 +228,7 @@ MenuItem* AppMenuModel::makeEditMenu()
         makeSeparator(),
         makeMenuItem("action://cut"),
         makeMenuItem("action://copy"),
-        makeMenuItem("action://paste"), // TODO: when in Trackedit context this should be dynamically changed to be makeMenuItem("action://trackedit/paste-default"),
+        makeMenuItem("action://paste"),
         makeMenuItem("action://delete"),
         makeSeparator(),
         makeMenuItem("group-clips"),
