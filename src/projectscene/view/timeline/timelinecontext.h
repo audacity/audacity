@@ -127,7 +127,7 @@ public:
 
     qreal verticalScrollbarSize() const;
 
-    void updateSelectedClipTime();
+    Q_INVOKABLE void updateSelectedClipTime();
 
 signals:
 
@@ -160,6 +160,8 @@ signals:
 private:
     trackedit::ITrackeditProjectPtr trackEditProject() const;
     IProjectViewStatePtr viewState() const;
+    void initToViewState(double frameWidth);
+
     void onProjectChanged();
 
     void zoomIn();

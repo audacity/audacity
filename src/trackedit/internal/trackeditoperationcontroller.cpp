@@ -257,6 +257,16 @@ bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trac
     return success;
 }
 
+void TrackeditOperationController::cancelClipDragEdit()
+{
+    if (!projectHistory()->interactionOngoing()) {
+        return;
+    }
+    trackAndClipOperations()->cancelClipDragEdit();
+    projectHistory()->rollbackState();
+    globalContext()->currentTrackeditProject()->reload();
+}
+
 bool TrackeditOperationController::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
 {
     if (trackAndClipOperations()->splitTracksAt(tracksIds, pivots)) {
@@ -525,6 +535,16 @@ bool TrackeditOperationController::canRedo()
 bool TrackeditOperationController::undoRedoToIndex(size_t index)
 {
     return m_undoManager->undoRedoToIndex(index);
+}
+
+void TrackeditOperationController::notifyAboutCancelDragEdit()
+{
+    m_cancelDragEditRequested.notify();
+}
+
+muse::async::Notification TrackeditOperationController::cancelDragEditRequested() const
+{
+    return m_cancelDragEditRequested;
 }
 
 bool TrackeditOperationController::insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)

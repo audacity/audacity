@@ -44,6 +44,20 @@ Rectangle {
 
     property int interactionState: TracksClipsView.State.Idle
 
+    QtObject {
+        id: prv
+
+        property bool playRegionActivated: false
+        property bool releasedThroughCancel: false
+
+        function cancelClipDragEdit() {
+            if (root.hoveredClipKey) {
+                tracksClipsView.cancelClipDragEditRequested(root.hoveredClipKey)
+            }
+            releasedThroughCancel = true
+        }
+    }
+
     PlaybackStateModel {
         id: playbackState
     }
@@ -53,6 +67,10 @@ Rectangle {
 
         onTotalTracksHeightChanged: {
             timeline.context.onResizeFrameContentHeight(tracksModel.totalTracksHeight)
+        }
+
+        onEscapePressed: {
+            prv.cancelClipDragEdit()
         }
     }
 
@@ -221,12 +239,6 @@ Rectangle {
                 anchors.fill: parent
                 hoverEnabled: true
 
-                QtObject {
-                    id: prv
-
-                    property bool playRegionActivated: false
-                }
-
                 onPositionChanged: function (e) {
                     timeline.updateCursorPosition(e.x, e.y)
                     playRegionController.mouseMove(e.x)
@@ -392,7 +404,7 @@ Rectangle {
                 }
 
                 if (e.button === Qt.LeftButton) {
-                    tracksModel.startUserInteraction()
+                    prv.releasedThroughCancel = false
 
                     if (root.clipHeaderHovered) {
                         tracksClipsView.clipStartEditRequested(hoveredClipKey)
@@ -440,13 +452,22 @@ Rectangle {
                     return
                 }
 
+                if (prv.releasedThroughCancel) {
+                    prv.releasedThroughCancel = false
+                    return
+                }
+
+                if (prv.releasedThroughCancel) {
+                    prv.releasedThroughCancel = false
+                    return
+                }
+
                 if (root.interactionState === TracksClipsView.State.DraggingClip) {
                     root.interactionState = TracksClipsView.State.Idle
                     tracksClipsView.clipMoveRequested(hoveredClipKey, true)
                     tracksClipsView.stopAutoScroll()
                     tracksClipsView.clipEndEditRequested(hoveredClipKey)
-                }
-                else {
+                } else {
                     splitToolController.mouseUp(e.x)
 
                     if (selectionController.isLeftSelection(e.x)) {
@@ -463,14 +484,12 @@ Rectangle {
 
                     playCursorController.setPlaybackRegion(timeline.context.selectionStartPosition, timeline.context.selectionEndPosition)
                 }
-
-                tracksModel.endUserInteraction()
             }
 
             onCanceled: e => {
                 console.log("User interaction canceled")
                 root.interactionState = TracksClipsView.State.Idle
-                tracksModel.endUserInteraction()
+                prv.cancelClipDragEdit()
             }
 
             onClicked: e => {
@@ -543,6 +562,7 @@ Rectangle {
                 signal clipMoveRequested(var clipKey, bool completed)
                 signal clipStartEditRequested(var clipKey)
                 signal clipEndEditRequested(var clipKey)
+                signal cancelClipDragEditRequested(var clipKey)
                 signal startAutoScroll
                 signal stopAutoScroll
 
@@ -688,6 +708,12 @@ Rectangle {
 
                     onInteractionEnded: {
                         tracksViewState.requestVerticalScrollUnlock()
+                    }
+
+                    onClipDragEditCanceled: {
+                        root.hoveredClipKey = null
+                        root.clipHeaderHovered = false
+                        timeline.context.updateSelectedClipTime()
                     }
 
                     onIsBrushChanged: function () {

@@ -76,16 +76,21 @@ void Au3ProjectHistory::startUserInteraction()
     IF_ASSERT_FAILED(!m_interactionOngoing) {
         return;
     }
+    // Modify the state, so that if the interaction gets canceled,
+    // rollbackState would revert to the state at the beginning of the action.
+    modifyState(false);
     m_interactionOngoing = true;
 }
 
-void Au3ProjectHistory::endUserInteraction()
+void Au3ProjectHistory::endUserInteraction(bool modifyState)
 {
     LOGI() << "endUserInteraction()";
     if (m_interactionOngoing) {
         m_interactionOngoing = false;
-        // No new history entry was pushed -> update the state.
-        modifyState(false);
+        if (modifyState) {
+            // No new history entry was pushed -> update the state.
+            this->modifyState(true);
+        }
     }
 }
 

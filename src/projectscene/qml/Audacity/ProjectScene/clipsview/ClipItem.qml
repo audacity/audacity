@@ -54,6 +54,7 @@ Rectangle {
 
     signal clipStartEditRequested
     signal clipEndEditRequested
+    signal cancelClipDragEditRequested
 
     signal clipLeftTrimRequested(bool completed, int action)
     signal clipRightTrimRequested(bool completed, int action)
@@ -137,7 +138,6 @@ Rectangle {
         readonly property int doubleClickInterval: 400
         readonly property int doubleClickMaxDistance: 5
     }
-
 
     // panel for navigating within the clip's items
     property NavigationPanel clipNavigationPanel: NavigationPanel {
@@ -354,6 +354,10 @@ Rectangle {
                 }
             }
         }
+
+        onCanceled: e => {
+            root.cancelClipDragEditRequested()
+        }
     }
 
     MouseArea {
@@ -410,6 +414,10 @@ Rectangle {
                     root.clipRightTrimRequested(false, ClipBoundaryAction.Shrink)
                 }
             }
+        }
+
+        onCanceled: e => {
+            root.cancelClipDragEditRequested()
         }
     }
 
@@ -495,9 +503,7 @@ Rectangle {
                 onPositionChanged: function (e) {
                     // Reset double click timer if the mouse has moved,
                     // to prevent rapid clip movement activate title editing
-                    if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance ||
-                        Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
-
+                    if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance || Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
                         lastClickTime = 0
                     }
 
@@ -815,6 +821,10 @@ Rectangle {
 
         onClipEndEditRequested: function () {
             root.clipEndEditRequested()
+        }
+
+        onCancelClipDragEditRequested: function () {
+            root.cancelClipDragEditRequested()
         }
 
         onTrimLeftRequested: function (completed, action) {
