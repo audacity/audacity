@@ -686,6 +686,8 @@ void ClipsListModel::startEditClip(const ClipKey& key)
         return;
     }
 
+    projectHistory()->startUserInteraction();
+
     double mousePositionTime = m_context->mousePositionTime();
 
     vs->setClipEditStartTimeOffset(mousePositionTime - item->clip().startTime);
@@ -711,6 +713,8 @@ void ClipsListModel::endEditClip(const ClipKey& key)
     vs->setClipEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
     vs->updateClipsBoundaries(true);
+
+    projectHistory()->endUserInteraction();
 }
 
 bool ClipsListModel::cancelClipDragEdit(const ClipKey& key)
@@ -735,6 +739,9 @@ bool ClipsListModel::cancelClipDragEdit(const ClipKey& key)
     trackeditInteraction()->cancelClipDragEdit();
 
     vs->updateClipsBoundaries(true);
+
+    constexpr auto modifyState = false;
+    projectHistory()->endUserInteraction(modifyState);
 
     return true;
 }
