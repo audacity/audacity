@@ -13,6 +13,7 @@
 #include "trackedit/iprojecthistory.h"
 #include "playback/iplayback.h"
 #include "trackedit/itrackeditinteraction.h"
+#include "trackedit/iselectioncontroller.h"
 
 #include "au3wrap/au3types.h"
 
@@ -31,6 +32,7 @@ class Au3Record : public IRecord, public muse::async::Asyncable
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<au::playback::IPlayback> playback;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
+    muse::Inject<au::trackedit::ISelectionController> selectionController;
 
 public:
     void init();
