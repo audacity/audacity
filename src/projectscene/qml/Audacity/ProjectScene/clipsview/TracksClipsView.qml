@@ -713,6 +713,7 @@ Rectangle {
                     onClipDragEditCanceled: {
                         root.hoveredClipKey = null
                         root.clipHeaderHovered = false
+                        timeline.context.updateSelectedClipTime()
                     }
 
                     onIsBrushChanged: function () {
