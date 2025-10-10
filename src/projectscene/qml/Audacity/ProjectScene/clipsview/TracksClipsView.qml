@@ -37,6 +37,13 @@ Rectangle {
 
     clip: true
 
+    enum State {
+        Idle,
+        DraggingClip
+    }
+
+    property int interactionState: TracksClipsView.State.Idle
+
     PlaybackStateModel {
         id: playbackState
     }
@@ -389,6 +396,7 @@ Rectangle {
 
                     if (root.clipHeaderHovered) {
                         tracksClipsView.clipStartEditRequested(hoveredClipKey)
+                        root.interactionState = TracksClipsView.State.DraggingClip
                     } else {
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
                             playCursorController.seekToX(e.x)
@@ -416,7 +424,7 @@ Rectangle {
                 timeline.updateCursorPosition(e.x, e.y)
                 splitToolController.mouseMove(e.x)
 
-                if (root.clipHeaderHovered && pressed) {
+                if (root.interactionState === TracksClipsView.State.DraggingClip) {
                     tracksClipsView.clipMoveRequested(hoveredClipKey, false)
                     tracksClipsView.startAutoScroll()
                 } else {
@@ -432,7 +440,8 @@ Rectangle {
                     return
                 }
 
-                if (root.clipHeaderHovered) {
+                if (root.interactionState === TracksClipsView.State.DraggingClip) {
+                    root.interactionState = TracksClipsView.State.Idle
                     tracksClipsView.clipMoveRequested(hoveredClipKey, true)
                     tracksClipsView.stopAutoScroll()
                     tracksClipsView.clipEndEditRequested(hoveredClipKey)
@@ -460,6 +469,7 @@ Rectangle {
 
             onCanceled: e => {
                 console.log("User interaction canceled")
+                root.interactionState = TracksClipsView.State.Idle
                 tracksModel.endUserInteraction()
             }
 
