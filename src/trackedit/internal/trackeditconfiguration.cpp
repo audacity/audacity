@@ -12,6 +12,8 @@ static const muse::Settings::Key ASK_BEFORE_CONVERTING_TO_MONO_OR_STEREO(moduleN
 static const muse::Settings::Key PASTE_AS_NEW_CLIP(moduleName, "trackedit/pasteAsNewClip");
 static const muse::Settings::Key DELETE_BEHAVIOR(moduleName, "trackedit/deleteBehavior");
 static const muse::Settings::Key CLOSE_GAP_BEHAVIOR(moduleName, "trackedit/closeGapBehavior");
+static const muse::Settings::Key PASTE_BEHAVIOR(moduleName, "trackedit/pasteBehavior");
+static const muse::Settings::Key PASTE_INSERT_BEHAVIOR(moduleName, "trackedit/pasteInsertBehavior");
 
 void TrackeditConfiguration::init()
 {
@@ -33,6 +35,16 @@ void TrackeditConfiguration::init()
     muse::settings()->setDefaultValue(CLOSE_GAP_BEHAVIOR, muse::Val(CloseGapBehavior::ClipRipple));
     muse::settings()->valueChanged(CLOSE_GAP_BEHAVIOR).onReceive(nullptr, [this](const muse::Val&) {
         m_closeGapBehaviorChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(PASTE_BEHAVIOR, muse::Val(PasteBehavior::PasteOverlap));
+    muse::settings()->valueChanged(PASTE_BEHAVIOR).onReceive(nullptr, [this](const muse::Val&) {
+        m_pasteBehaviorChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(PASTE_INSERT_BEHAVIOR, muse::Val(PasteInsertBehavior::PasteInsert));
+    muse::settings()->valueChanged(PASTE_INSERT_BEHAVIOR).onReceive(nullptr, [this](const muse::Val&) {
+        m_pasteInsertBehaviorChanged.notify();
     });
 }
 
@@ -56,7 +68,7 @@ muse::async::Notification TrackeditConfiguration::askBeforeConvertingToMonoOrSte
 
 DeleteBehavior TrackeditConfiguration::deleteBehavior() const
 {
-    return muse::settings()->value(muse::Settings::Key(moduleName, "trackedit/deleteBehavior")).toEnum<DeleteBehavior>();
+    return muse::settings()->value(DELETE_BEHAVIOR).toEnum<DeleteBehavior>();
 }
 
 void TrackeditConfiguration::setDeleteBehavior(DeleteBehavior value)
@@ -64,7 +76,7 @@ void TrackeditConfiguration::setDeleteBehavior(DeleteBehavior value)
     if (deleteBehavior() == value) {
         return;
     }
-    muse::settings()->setSharedValue(muse::Settings::Key(moduleName, "trackedit/deleteBehavior"), muse::Val(value));
+    muse::settings()->setSharedValue(DELETE_BEHAVIOR, muse::Val(value));
     m_deleteBehaviorChanged.notify();
 }
 
@@ -75,7 +87,7 @@ muse::async::Notification TrackeditConfiguration::deleteBehaviorChanged() const
 
 CloseGapBehavior TrackeditConfiguration::closeGapBehavior() const
 {
-    return muse::settings()->value(muse::Settings::Key(moduleName, "trackedit/closeGapBehavior")).toEnum<CloseGapBehavior>();
+    return muse::settings()->value(CLOSE_GAP_BEHAVIOR).toEnum<CloseGapBehavior>();
 }
 
 void TrackeditConfiguration::setCloseGapBehavior(CloseGapBehavior value)
@@ -83,13 +95,51 @@ void TrackeditConfiguration::setCloseGapBehavior(CloseGapBehavior value)
     if (closeGapBehavior() == value) {
         return;
     }
-    muse::settings()->setSharedValue(muse::Settings::Key(moduleName, "trackedit/closeGapBehavior"), muse::Val(value));
+    muse::settings()->setSharedValue(CLOSE_GAP_BEHAVIOR, muse::Val(value));
     m_closeGapBehaviorChanged.notify();
 }
 
 muse::async::Notification TrackeditConfiguration::closeGapBehaviorChanged() const
 {
     return m_closeGapBehaviorChanged;
+}
+
+PasteBehavior TrackeditConfiguration::pasteBehavior() const
+{
+    return muse::settings()->value(PASTE_BEHAVIOR).toEnum<PasteBehavior>();
+}
+
+void TrackeditConfiguration::setPasteBehavior(PasteBehavior value)
+{
+    if (pasteBehavior() == value) {
+        return;
+    }
+    muse::settings()->setSharedValue(PASTE_BEHAVIOR, muse::Val(value));
+    m_pasteBehaviorChanged.notify();
+}
+
+muse::async::Notification TrackeditConfiguration::pasteBehaviorChanged() const
+{
+    return m_pasteBehaviorChanged;
+}
+
+PasteInsertBehavior TrackeditConfiguration::pasteInsertBehavior() const
+{
+    return muse::settings()->value(PASTE_INSERT_BEHAVIOR).toEnum<PasteInsertBehavior>();
+}
+
+void TrackeditConfiguration::setPasteInsertBehavior(PasteInsertBehavior value)
+{
+    if (pasteInsertBehavior() == value) {
+        return;
+    }
+    muse::settings()->setSharedValue(PASTE_INSERT_BEHAVIOR, muse::Val(value));
+    m_pasteInsertBehaviorChanged.notify();
+}
+
+muse::async::Notification TrackeditConfiguration::pasteInsertBehaviorChanged() const
+{
+    return m_pasteInsertBehaviorChanged;
 }
 
 bool TrackeditConfiguration::pasteAsNewClip() const

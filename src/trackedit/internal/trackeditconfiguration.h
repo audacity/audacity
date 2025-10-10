@@ -29,10 +29,20 @@ public:
     void setCloseGapBehavior(CloseGapBehavior value) override;
     muse::async::Notification closeGapBehaviorChanged() const override;
 
+    PasteBehavior pasteBehavior() const override;
+    void setPasteBehavior(PasteBehavior value) override;
+    muse::async::Notification pasteBehaviorChanged() const override;
+
+    PasteInsertBehavior pasteInsertBehavior() const override;
+    void setPasteInsertBehavior(PasteInsertBehavior value) override;
+    muse::async::Notification pasteInsertBehaviorChanged() const override;
+
 private:
     muse::async::Notification m_pasteAsNewClipChanged;
     muse::async::Notification m_askBeforeConvertingToMonoOrStereoChanged;
     muse::async::Notification m_deleteBehaviorChanged;
+    muse::async::Notification m_pasteBehaviorChanged;
+    muse::async::Notification m_pasteInsertBehaviorChanged;
     muse::async::Notification m_closeGapBehaviorChanged;
 };
 }

@@ -4,14 +4,15 @@
         <file>qml/Audacity/TrackEdit/CustomRateDialog.qml</file>
         <file>qml/Audacity/TrackEdit/CustomTimeDialog.qml</file>
         <file>qml/Audacity/TrackEdit/ClipImageButton.qml</file>
-        <file>qml/Audacity/TrackEdit/DeleteBehaviorChoice.qml</file>
+        <file>qml/Audacity/TrackEdit/BehaviorChoice.qml</file>
         <file>qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml</file>
         <file>qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml</file>
         <file>qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml</file>
+        <file>qml/Audacity/TrackEdit/PasteBehaviorPanel.qml</file>
         <file>qml/Audacity/TrackEdit/StyledTextLabelWithCustomLinkActivatedSignal.qml</file>
-        <file>resources/DarkMode_RippleDelete.gif</file>
-        <file>resources/DarkMode_DeleteAndLeaveGap.gif</file>
         <file>resources/LightMode_RippleDelete.gif</file>
         <file>resources/LightMode_DeleteAndLeaveGap.gif</file>
+        <file>resources/LightMode_PasteOverlap.gif</file>
+        <file>resources/LightMode_PasteInsert.gif</file>
     </qresource>
 </RCC>

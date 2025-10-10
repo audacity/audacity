@@ -73,6 +73,16 @@ enum class CloseGapBehavior {
     TrackRipple,
     AllTracksRipple,
 };
+
+enum class PasteBehavior {
+    PasteOverlap,
+    PasteInsert,
+};
+
+enum class PasteInsertBehavior {
+    PasteInsert,
+    PasteInsertRipple,
+};
 }
 
 inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::trackedit::ClipKey& k)

@@ -12,25 +12,25 @@ Column {
     id: root
 
     required property NavigationPanel navigation
-    readonly property string title: qsTrc("appshell/preferences", "Choose behavior when deleting a portion of a clip")
+    readonly property string title: qsTrc("appshell/preferences", "Choose behavior when pasting audio")
     required property color parentBackgroundColor
 
-    property alias deleteBehavior: deleteBehaviorModel.deleteBehavior
-    property alias closeGapBehavior: deleteBehaviorModel.closeGapBehavior
+    property alias pasteBehavior: pasteBehaviorModel.pasteBehavior
+    property alias pasteInsertBehavior: pasteBehaviorModel.pasteInsertBehavior
 
-    signal newDeleteBehaviorRequested(int deleteBehavior)
-    signal newCloseGapBehaviorRequested(int closeGapBehavior)
+    signal newPasteBehaviorRequested(int pasteBehavior)
+    signal newPasteInsertBehaviorRequested(int pasteInsertBehavior)
 
     spacing: 16
     width: imageRow.width
 
     Component.onCompleted: {
         root.navigation.direction = NavigationPanel.Both
-        deleteBehaviorModel.init()
+        pasteBehaviorModel.init()
     }
 
-    DeleteBehaviorPanelModel {
-        id: deleteBehaviorModel
+    PasteBehaviorPanelModel {
+        id: pasteBehaviorModel
     }
 
     Row {
@@ -39,14 +39,14 @@ Column {
         spacing: 24
 
         Repeater {
-            property var deleteBehaviors: deleteBehaviorModel.deleteBehaviors
-            model: deleteBehaviors
+            property var pasteBehaviors: pasteBehaviorModel.pasteBehaviors
+            model: pasteBehaviors
 
             delegate: BehaviorChoice {
                 text: modelData.text
                 imageSource: modelData.imageSource
-                addBorderToClipImageButton: deleteBehaviorModel.addBorderToClipImageButtons
-                checked: root.deleteBehavior === modelData.value
+                addBorderToClipImageButton: pasteBehaviorModel.addBorderToClipImageButtons
+                checked: root.pasteBehavior === modelData.value
 
                 navigation.name: modelData.text
                 navigation.panel: root.navigation
@@ -54,7 +54,7 @@ Column {
                 navigation.column: model.index
 
                 onToggled: {
-                    newDeleteBehaviorRequested(modelData.value)
+                    newPasteBehaviorRequested(modelData.value)
                 }
             }
         }
@@ -68,7 +68,7 @@ Column {
         color: parentBackgroundColor === ui.theme.backgroundPrimaryColor ? ui.theme.backgroundSecondaryColor : ui.theme.backgroundPrimaryColor
         border.color: ui.theme.strokeColor
         border.width: 1
-        visible: deleteBehaviorModel.userMustChooseCloseGapBehavior
+        visible: pasteBehaviorModel.userMustChoosePasteInsertBehavior
 
         Column {
             id: gapBehaviorColumn
@@ -79,7 +79,7 @@ Column {
             spacing: 8
 
             StyledTextLabel {
-                text: qsTrc("trackedit/preferences", "When closing the gap, do the following")
+                text: qsTrc("trackedit/preferences", "When making room for pasted audio, do the following")
                 width: parent.width
                 horizontalAlignment: Text.AlignLeft
 
@@ -90,11 +90,11 @@ Column {
                 spacing: 8
                 orientation: ListView.Vertical
 
-                property var closeGapBehaviors: deleteBehaviorModel.closeGapBehaviors
-                model: closeGapBehaviors
+                property var pasteInsertBehaviors: pasteBehaviorModel.pasteInsertBehaviors
+                model: pasteInsertBehaviors
 
                 delegate: RoundedRadioButton {
-                    checked: root.closeGapBehavior === modelData.value
+                    checked: root.pasteInsertBehavior === modelData.value
                     text: modelData.text
                     spacing: 8
 
@@ -104,7 +104,7 @@ Column {
                     navigation.column: 1
 
                     onToggled: {
-                        newCloseGapBehaviorRequested(modelData.value)
+                        newPasteInsertBehaviorRequested(modelData.value)
                     }
                 }
             }

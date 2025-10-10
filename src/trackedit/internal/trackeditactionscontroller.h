@@ -65,7 +65,8 @@ private:
     void doGlobalCutPerTrackRipple();
     void doGlobalCutAllTracksRipple();
 
-    void paste();
+    void pasteDefault();
+    void pasteOverlap();
     void pasteInsert();
     void pasteInsertRipple();
 
