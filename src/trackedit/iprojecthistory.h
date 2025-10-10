@@ -60,6 +60,8 @@ public:
      * @ref startUserInteraction()
      */
     virtual void endUserInteraction() = 0;
+
+    virtual bool interactionOngoing() const = 0;
 };
 
 using IProjectHistoryPtr = std::shared_ptr<IProjectHistory>;

@@ -259,6 +259,9 @@ bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trac
 
 void TrackeditOperationController::cancelClipDragEdit()
 {
+    if (!projectHistory()->interactionOngoing()) {
+        return;
+    }
     trackAndClipOperations()->cancelClipDragEdit();
     projectHistory()->rollbackState();
     globalContext()->currentTrackeditProject()->reload();
