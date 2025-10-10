@@ -220,7 +220,10 @@ void Au3Record::init()
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
         prj->notifyAboutClipChanged(DomConverter::clip(origWaveTrack, origClip.get()));
-        m_recordPosition.set(origClip->GetPlayEndTime());
+
+        if (!muse::RealIsEqual(m_recordPosition.val.to_double(), origClip->GetPlayEndTime())) {
+            m_recordPosition.set(origClip->GetPlayEndTime());
+        }
     });
 
     audioEngine()->commitRequested().onNotify(this, [this]() {
@@ -270,6 +273,7 @@ muse::Ret Au3Record::start()
 
     double t0 = playback()->player()->playbackPosition();
     double t1 = DBL_MAX;
+    selectionController()->resetSelectedClips();
 
     auto options = ProjectAudioIO::GetDefaultOptions(project);
     WritableSampleTrackArray existingTracks;
