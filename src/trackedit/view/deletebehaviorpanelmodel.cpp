@@ -69,9 +69,8 @@ QVariantList DeleteBehaviorPanelModel::closeGapBehaviors() const
 
 QVariantList DeleteBehaviorPanelModel::deleteBehaviors() const
 {
-    const bool dark = uiConfiguration()->isDarkMode();
-    const auto leaveGapImage = dark ? "qrc:/resources/DarkMode_DeleteAndLeaveGap.gif" : "qrc:/resources/LightMode_DeleteAndLeaveGap.gif";
-    const auto rippleImage = dark ? "qrc:/resources/DarkMode_RippleDelete.gif" : "qrc:/resources/LightMode_RippleDelete.gif";
+    const auto leaveGapImage = "qrc:/resources/LightMode_DeleteAndLeaveGap.gif";
+    const auto rippleImage = "qrc:/resources/LightMode_RippleDelete.gif";
 
     QVariantList behaviors;
     behaviors.append(QVariantMap { { "text", muse::qtrc("trackedit/preferences",

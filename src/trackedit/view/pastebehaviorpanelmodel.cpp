@@ -67,9 +67,8 @@ QVariantList PasteBehaviorPanelModel::pasteInsertBehaviors() const
 
 QVariantList PasteBehaviorPanelModel::pasteBehaviors() const
 {
-    const bool dark = uiConfiguration()->isDarkMode();
-    const auto pasteOverlapImage = dark ? "qrc:/resources/LightMode_PasteOverlap.gif" : "qrc:/resources/LightMode_PasteOverlap.gif";
-    const auto pasteInsertImage = dark ? "qrc:/resources/LightMode_PasteInsert.gif" : "qrc:/resources/LightMode_PasteInsert.gif";
+    const auto pasteOverlapImage = "qrc:/resources/LightMode_PasteOverlap.gif";
+    const auto pasteInsertImage = "qrc:/resources/LightMode_PasteInsert.gif";
 
     QVariantList behaviors;
     behaviors.append(QVariantMap { { "text", muse::qtrc("trackedit/preferences",
