@@ -30,8 +30,10 @@ public:
     void rollbackState() override;
     void modifyState(bool autoSave) override;
     void markUnsaved() override;
+
     void startUserInteraction() override;
     void endUserInteraction() override;
+    bool interactionOngoing() const override { return m_interactionOngoing; }
 
     void undoRedoToIndex(size_t index) override;
 
