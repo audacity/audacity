@@ -72,6 +72,11 @@ void ComputeSpectrogramGainFactors
 
 }
 
+bool SpecCache::isWaveletAnalysis(const SpectrogramSettings& settings) const
+{
+    return settings.algorithm == SpectrogramSettings::algWavelet;
+}
+
 bool SpecCache::Matches(
    int dirty_, double samplesPerPixel,
    const SpectrogramSettings& settings) const
@@ -81,6 +86,15 @@ bool SpecCache::Matches(
    // a sample period.
    const bool sppMatch = (fabs(samplesPerPixel - spp) * len < 1.0);
 
+   if (isWaveletAnalysis(settings))
+   {
+       return
+          sppMatch &&
+          dirty == dirty_ &&
+          frequencyGain == settings.frequencyGain &&
+          algorithm == settings.algorithm &&
+          windowSize == settings.WindowSize();
+   }
    return
       sppMatch &&
       dirty == dirty_ &&
@@ -315,6 +329,129 @@ bool SpecCache::CalculateOneSpectrum(
    return result;
 }
 
+bool SpecCache::CalculateOneWaveletSpectrum(
+   const SpectrogramSettings& settings, const WaveChannelInterval& clip,
+   const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
+   const std::vector<float>& gainFactors,
+   float* __restrict out) const
+{
+   bool result = false;
+   sampleCount from;
+
+   const auto numSamples = clip.GetSequence().GetNumSamples();
+   const auto sampleRate = clip.GetRate();
+   const auto stretchRatio = clip.GetStretchRatio();
+   const auto samplesPerPixel = sampleRate / pixelsPerSecond / stretchRatio;
+   const size_t nBins = settings.NBins();
+   float *const results = &out[nBins * xx];
+
+   // not reassignment, xx is surely within bounds.
+   wxASSERT(xx >= 0);
+   if (xx > (int)len)
+      from = sampleCount(where[len].as_double() + (xx - len) * samplesPerPixel);
+   else
+      from = where[xx];
+
+   if (from < 0 || from >= numSamples) {
+      if (xx >= 0 && xx < (int)len) {
+         // Pixel column is out of bounds of the clip!  Should not happen.
+         std::fill(results, results + nBins, 0.0f);
+      }
+   }
+   else
+   {
+      // Iterate frequencies in turn
+      // Note that as opposed to Fourier Transform, using wavelets implies a window length that varies with frequency
+      // We extract samples corresponding to max wavelet length (the first)
+    
+      // Locate longest wavelet (first one)
+      const auto longestWaveletLen = settings.waveletMaxLength;
+      wxASSERT(longestWaveletLen);
+       
+      auto myLen = 2 * longestWaveletLen - 1;
+      std::vector<float> scratch(myLen);
+
+      // Take a window of the track centered at this sample.
+      from -= longestWaveletLen;
+      float * adj = &scratch[0];
+      if (from < 0) {
+         // Near the start of the clip, pad left with zeroes as needed.
+         for (auto ii = from; ii < 0; ++ii)
+             *adj++ = 0;
+         myLen += from.as_long_long(); // add a negative
+         from = 0;
+      }
+      if (from + myLen >= numSamples) {
+         // Near the end of the clip, pad right with zeroes as needed.
+         // newlen is bounded by myLen:
+         auto newlen = ( numSamples - from ).as_size_t();
+         for (decltype(myLen) ii = newlen; ii < myLen; ++ii)
+             adj[ii] = 0;
+         myLen = newlen;
+      }
+      std::vector<float> floats;
+      if (myLen > 0) {
+         constexpr auto iChannel = 0u;
+         constexpr auto mayThrow = false; // Don't throw just for display
+         mSampleCacheHolder.emplace(
+             clip.GetSampleView(from, myLen, mayThrow));
+         floats.resize(myLen);
+         mSampleCacheHolder->Copy(floats.data(), myLen);
+         float *useBuffer = floats.data();
+         memcpy(adj, useBuffer, myLen * sizeof(float));
+      }
+
+      // Done preparing samples. Now onward with calculations
+      const float * middleSample = &scratch[longestWaveletLen - 1];
+      for (size_t iBin = 0; iBin < nBins; iBin++)
+      {
+          if (settings.waveletSizes[iBin] == 0)
+          {
+             results[iBin] = -160.0;
+             continue;
+          }
+         
+          const float *right = middleSample;
+          const float *left = middleSample;
+          // Do the convolution
+          const float * wRe = &settings.waveletsRe[iBin][0];
+          const float * wIm = &settings.waveletsIm[iBin][0];
+          double sumRe = *middleSample * *wRe;
+          double sumIm = 0.0;
+          wRe++, wIm++, right++, left--;
+          const auto halfLen = settings.waveletSizes[iBin];
+          for (auto ii = 1; ii < halfLen; ii++)
+          {
+              sumRe +=  (*right + *left) * *wRe;
+              sumIm +=  (*left - *right) * *wIm;
+              wRe++, wIm++, right++, left--;
+          }
+
+          // Calculate magnitude
+          float power = sumRe * sumRe + sumIm * sumIm;
+          
+          
+          // Do the log thing
+          if (power <= 0)
+             power = -160.0;
+          else
+             power = 10.0*log10f(power);
+
+          results[iBin] = power;
+      }
+
+
+       if (!gainFactors.empty()) {
+          // Apply a frequency-dependent gain factor
+          for (size_t ii = 0; ii < nBins; ++ii)
+             results[ii] += gainFactors[ii];
+       }
+       result = true;
+   }
+
+   return result;
+}
+
 void SpecCache::Grow(
    size_t len_, SpectrogramSettings& settings, double samplesPerPixel,
    double start_)
@@ -395,16 +532,24 @@ void SpecCache::Populate(
 #endif
       for (auto xx = lowerBoundX; xx < upperBoundX; ++xx)
       {
+         if (isWaveletAnalysis(settings))
+         {
+             CalculateOneWaveletSpectrum(settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
+                                         gainFactors, &freq[0]);
+         }
+         else
+         {
 #ifdef _OPENMP
-         tls.init(waveTrackCache, scratchSize);
-         SampleTrackCache& cache = *tls.cache;
-         float* buffer = &tls.scratch[0];
+             tls.init(waveTrackCache, scratchSize);
+             SampleTrackCache& cache = *tls.cache;
+             float* buffer = &tls.scratch[0];
 #else
-         float* buffer = &scratch[0];
+             float* buffer = &scratch[0];
 #endif
-         CalculateOneSpectrum(
-            settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
-            gainFactors, buffer, &freq[0]);
+             CalculateOneSpectrum(
+                         settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
+                         gainFactors, buffer, &freq[0]);
+         }
       }
 
       if (reassignment) {
@@ -562,9 +707,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
       mSpecCache->where, numPixels, addBias, correction, t0, sampleRate,
       stretchRatio, samplesPerPixel);
 
-   mSpecCache->Populate(
-      settings, clip, copyBegin, copyEnd, numPixels, pixelsPerSecond);
-
+   mSpecCache->Populate(settings, clip, copyBegin, copyEnd, numPixels, pixelsPerSecond);
    mSpecCache->dirty = mDirty;
    spectrogram = &mSpecCache->freq[0];
    where = &mSpecCache->where[0];
