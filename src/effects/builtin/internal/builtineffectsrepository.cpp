@@ -112,6 +112,27 @@ muse::String categoryIdString(EffectCategoryId category)
 }
 } // namespace
 
+namespace au::effects {
+int categoryIdOrder(const muse::String& category)
+{
+    static const std::map<muse::String, int> categoryOrder = {
+        { categoryIdString(EffectCategoryId::VolumeAndCompression), 0 },
+        { categoryIdString(EffectCategoryId::Fading), 1 },
+        { categoryIdString(EffectCategoryId::PitchAndTempo), 2 },
+        { categoryIdString(EffectCategoryId::EqAndFilters), 3 },
+        { categoryIdString(EffectCategoryId::NoiseRemovalAndRepair), 4 },
+        { categoryIdString(EffectCategoryId::DelayAndReverb), 5 },
+        { categoryIdString(EffectCategoryId::DistortionAndModulation), 6 },
+        { categoryIdString(EffectCategoryId::Special), 7 },
+        { categoryIdString(EffectCategoryId::Legacy), 8 },
+        { categoryIdString(EffectCategoryId::None), 9 },
+    };
+
+    auto it = categoryOrder.find(category);
+    return it == categoryOrder.end() ? INT_MAX : it->second;
+}
+} // namespace au::effects
+
 void BuiltinEffectsRepository::preInit()
 {
     static BuiltinEffectsModule::Registration< FadeInEffect > regFadeIn;
