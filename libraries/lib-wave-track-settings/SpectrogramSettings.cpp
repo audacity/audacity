@@ -288,7 +288,9 @@ const TranslatableStrings &SpectrogramSettings::GetAlgorithmNames()
       XO("Reassignment") ,
       /* i18n-hint: EAC abbreviates "Enhanced Autocorrelation" */
       XO("Pitch (EAC)") ,
+#ifdef WAVELET
       XO("Wavelet (1/6 Octave Hann)") ,
+#endif
    };
    return results;
 }
