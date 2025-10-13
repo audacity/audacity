@@ -104,7 +104,7 @@ private:
 
     void revertToFactorySettings();
 
-    bool hasProjectAndIsFocused() const;
+    bool isProjectOpened() const;
     void doGlobalCopy();
     void doGlobalCut();
     void doGlobalPaste();
