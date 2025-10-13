@@ -796,7 +796,7 @@ void TrackeditActionsController::pasteDefault()
 {
     switch (configuration()->pasteBehavior()) {
     case PasteBehavior::PasteOverlap:
-            dispatcher()->dispatch(TRACKEDIT_PASTE_OVERLAP_CODE);
+        dispatcher()->dispatch(TRACKEDIT_PASTE_OVERLAP_CODE);
         break;
     case PasteBehavior::PasteInsert:
         switch (configuration()->pasteInsertBehavior()) {

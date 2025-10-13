@@ -22,6 +22,8 @@ void CanvasContextMenuModel::load()
 MenuItemList CanvasContextMenuModel::makeItems()
 {
     MenuItemList items {
+        makeMenuItem("action://trackedit/paste-default"),
+        makeSeparator(),
         makeMenuItem("new-mono-track"),
         makeMenuItem("new-stereo-track"),
         makeMenuItem("new-label-track"),
