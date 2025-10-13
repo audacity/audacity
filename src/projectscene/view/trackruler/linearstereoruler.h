@@ -6,10 +6,11 @@ namespace au::projectscene {
 class LinearStereoRuler : public ITrackRulerModel
 {
 public:
-    double stepToPosition(double step, int channel) const override;
+    double stepToPosition(double step, size_t channel, bool isNegativeSample) const override;
     void setHeight(int height) override;
     void setChannelHeightRatio(double channelHeightRatio) override;
     void setCollapsed(bool isCollapsed) override;
+    std::string sampleToText(double sample) const override;
     std::vector<TrackRulerFullStep> fullSteps() const override;
     std::vector<TrackRulerSmallStep> smallSteps() const override;
 

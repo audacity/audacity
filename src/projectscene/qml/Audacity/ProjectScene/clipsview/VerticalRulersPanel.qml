@@ -258,7 +258,7 @@ Rectangle {
                                 anchors.right: parent.right
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                text: Math.abs(modelData.value).toFixed(1)
+                                text: rulerModel.sampleToText(modelData.value)
                                 color: "#F9F9FA"
                                 font.pixelSize: 10
 

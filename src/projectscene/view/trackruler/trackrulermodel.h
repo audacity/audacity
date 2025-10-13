@@ -7,6 +7,7 @@
 
 #include <QObject>
 #include <QVariantMap>
+#include <qtmetamacros.h>
 
 namespace au::projectscene {
 class TrackRulerModel : public QObject
@@ -27,6 +28,7 @@ public:
 
     std::vector<QVariantMap> fullSteps() const;
     std::vector<QVariantMap> smallSteps() const;
+    Q_INVOKABLE QString sampleToText(double sample) const;
 
     bool isStereo() const;
     void setIsStereo(bool isStereo);
@@ -52,7 +54,7 @@ signals:
 private:
     std::shared_ptr<ITrackRulerModel> m_model =  nullptr;
 
-    double stepToPosition(double step, int channel) const;
+    double stepToPosition(double step, int channel, bool isNegativeSample) const;
 
     bool m_isStereo = false;
     bool m_isCollapsed = false;
