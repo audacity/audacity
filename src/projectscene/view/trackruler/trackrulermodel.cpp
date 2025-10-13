@@ -3,6 +3,7 @@
 */
 
 #include "projectscene/view/trackruler/trackrulermodel.h"
+#include "playback/playbacktypes.h"
 #include "projectscene/view/trackruler/linearstereoruler.h"
 #include "projectscene/view/trackruler/linearmonoruler.h"
 
@@ -12,6 +13,16 @@ TrackRulerModel::TrackRulerModel(QObject* parent)
     : QObject(parent)
 {
     m_model = std::make_shared<LinearMonoRuler>();
+}
+
+void TrackRulerModel::init()
+{
+    m_model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
+    configuration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
+        m_model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
+        emit fullStepsChanged();
+        emit smallStepsChanged();
+    });
 }
 
 std::vector<QVariantMap> TrackRulerModel::fullSteps() const

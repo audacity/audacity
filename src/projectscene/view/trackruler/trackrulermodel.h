@@ -3,6 +3,11 @@
 */
 #pragma once
 
+#include "global/async/asyncable.h"
+
+#include "global/modularity/ioc.h"
+#include "playback/iplaybackconfiguration.h"
+
 #include "projectscene/view/trackruler/itrackrulermodel.h"
 
 #include <QObject>
@@ -10,7 +15,7 @@
 #include <qtmetamacros.h>
 
 namespace au::projectscene {
-class TrackRulerModel : public QObject
+class TrackRulerModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -23,8 +28,12 @@ class TrackRulerModel : public QObject
 
     Q_PROPERTY(double channelHeightRatio READ channelHeightRatio WRITE setChannelHeightRatio NOTIFY channelHeightRatioChanged FINAL)
 
+    muse::Inject<au::playback::IPlaybackConfiguration> configuration;
+
 public:
     explicit TrackRulerModel(QObject* parent = nullptr);
+
+    Q_INVOKABLE void init();
 
     std::vector<QVariantMap> fullSteps() const;
     std::vector<QVariantMap> smallSteps() const;

@@ -86,6 +86,7 @@ Rectangle {
             Component.onCompleted: {
                 trackViewState.init()
                 clipsModel.init()
+                rulerModel.init()
             }
 
             MouseArea {
