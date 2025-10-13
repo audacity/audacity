@@ -709,6 +709,7 @@ Rectangle {
                     onClipDragEditCanceled: {
                         root.hoveredClipKey = null
                         root.clipHeaderHovered = false
+                        tracksClipsView.moveActive = false
                         timeline.context.updateSelectedClipTime()
                     }
 
