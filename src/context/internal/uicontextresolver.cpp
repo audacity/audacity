@@ -139,7 +139,7 @@ bool UiContextResolver::match(const ui::UiContext& currentCtx, const ui::UiConte
     }
 
     //! NOTE If the current context is `UiCtxProjectPlayback`, then we allow `UiCtxProjectFocused` too
-    if (currentCtx == context::UiCtxProjectFocused && actCtx == context::UiCtxProjectPlayback) {
+    if (currentCtx == context::UiCtxProjectPlayback && actCtx == context::UiCtxProjectFocused) {
         return true;
     }
 
