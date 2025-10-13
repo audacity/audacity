@@ -41,9 +41,6 @@ void ClipContextMenuModel::load()
         makeItemWithArg("rename-clip"),
         makeMenu(muse::TranslatableString("clip", "Clip color"), colorItems, "colorMenu"),
         makeSeparator(),
-        // TODO: here the trackedit/ actions won't have shortcut keys associated with and wont show in the popup,
-        // we could default to use the main action like action://cut but that doesn't make sense in terms of design,
-        // the framework should evolve to support contextual shortcut actions
         makeItemWithArg("action://trackedit/cut"),
         makeItemWithArg("action://trackedit/copy"),
         makeItemWithArg("duplicate"),
