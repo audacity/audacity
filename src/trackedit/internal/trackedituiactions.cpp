@@ -259,8 +259,8 @@ UiActionList STATIC_ACTIONS = {
              "action://paste",
              au::context::UiCtxProjectOpened,
              au::context::CTX_DISABLED,
-             TranslatableString("action", "&Paste (default)"),
-             TranslatableString("action", "Paste (default)"),
+             TranslatableString("action", "&Paste"),
+             TranslatableString("action", "Paste"),
              IconCode::Code::PASTE
              ),
     UiAction("action://trackedit/paste-insert",
