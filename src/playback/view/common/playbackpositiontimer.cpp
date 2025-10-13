@@ -18,6 +18,34 @@ PlaybackPositionTimer::~PlaybackPositionTimer()
     m_beforeSynchronizingConnection = {};
 }
 
+void PlaybackPositionTimer::componentComplete()
+{
+    QQuickItem::componentComplete();
+
+    // Somewhat slower than the 60fps of the render thread: this will add a jitter of 10ms,
+    // leading to a total frame rate of 1 / (1 / 60 + 1 / 100) ~= 40fps.
+    // Should still look perfectly smooth.
+    m_timer.setInterval(10);
+    m_timer.setTimerType(Qt::PreciseTimer);
+
+    m_timer.callOnTimeout([this]() {
+        update();
+    });
+
+    const auto player = this->player();
+    // By this time we must have a player ...
+    IF_ASSERT_FAILED(player) {
+        return;
+    }
+    player->playbackStatusChanged().onReceive(this, [this](PlaybackStatus status) {
+        if (status == PlaybackStatus::Running) {
+            m_timer.start();
+        } else {
+            m_timer.stop();
+        }
+    });
+}
+
 void PlaybackPositionTimer::itemChange(ItemChange change, const ItemChangeData& value)
 {
     QQuickItem::itemChange(change, value);
@@ -38,14 +66,18 @@ void PlaybackPositionTimer::itemChange(ItemChange change, const ItemChangeData& 
 
 void PlaybackPositionTimer::doBeforeSynchronizing()
 {
+    const auto player = this->player();
+    if (player && player->playbackStatus() == PlaybackStatus::Running) {
+        player->updatePlaybackPositionTimeCritical();
+    }
+}
+
+std::shared_ptr<IPlayer> PlaybackPositionTimer::player() const
+{
     const auto playback = this->playback();
     if (!playback) {
-        return;
+        return nullptr;
     }
-    const auto player = playback->player();
-    if (!player) {
-        return;
-    }
-    player->updatePlaybackPositionTimeCritical();
+    return playback->player();
 }
 }
