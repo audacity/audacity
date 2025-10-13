@@ -865,9 +865,9 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
     }
 }
 
-bool AudioIoCallback::ProjectSamplesReachedDeviceThread() const
+std::optional<std::chrono::steady_clock::time_point> AudioIoCallback::UserStartsHearingAudioTimePoint() const
 {
-    return mProjectSamplesReachedDeviceThread.load();
+    return mUserStartsHearingAudioTimePoint.load();
 }
 
 void AudioIO::StopMonitoring()
@@ -890,7 +890,7 @@ int AudioIO::StartStream(const TransportSequences& sequences,
                          double t0, double t1, double mixerLimit,
                          const AudioIOStartStreamOptions& options)
 {
-    mProjectSamplesReachedDeviceThread.store(false);
+    mUserStartsHearingAudioTimePoint.store(std::nullopt);
 
     // precondition
     assert(std::all_of(
@@ -2748,7 +2748,11 @@ bool AudioIoCallback::FillOutputBuffers(
         // the device. For example mono channels output to both left and right
         // output channels.
         if (len > 0) {
-            mProjectSamplesReachedDeviceThread.store(true);
+            if (!mUserStartsHearingAudioTimePoint.load().has_value()) {
+                const auto remainingSamples = mHardwarePlaybackLatencyFrames > len ? mHardwarePlaybackLatencyFrames - len : 0;
+                mUserStartsHearingAudioTimePoint.store(std::chrono::steady_clock::now()
+                                                       + std::chrono::milliseconds(static_cast<int>(remainingSamples / mRate * 1000)));
+            }
 
             // Output volume emulation: possibly copy meter samples, then
             // apply volume, then copy to the output buffer

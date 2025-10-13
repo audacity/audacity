@@ -27,12 +27,6 @@ using namespace au::au3;
 
 Au3Player::Au3Player()
 {
-    m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
-        if (st == PlaybackStatus::Running) {
-            m_startTime.reset();
-        }
-    });
-
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         auto project = globalContext()->currentTrackeditProject();
         if (!project) {
@@ -489,30 +483,28 @@ muse::secs_t Au3Player::playbackPosition() const
 
 void Au3Player::updatePlaybackPositionTimeCritical()
 {
-    muse::Defer defer = [this] {
-        updatePlaybackStateTimeCritical();
-    };
-
     auto& audioIO = *AudioIO::Get();
-    if (!audioIO.ProjectSamplesReachedDeviceThread()) {
-        // Too early: we only want to start when the user starts hearing audio.
-        return;
-    }
+    const std::optional<std::chrono::steady_clock::time_point> startTime = audioIO.UserStartsHearingAudioTimePoint();
 
     using namespace std::chrono;
     const auto now = steady_clock::now();
 
-    if (!m_startTime.has_value()) {
-        m_startTime = now;
+    if (!startTime.has_value() || now < *startTime) {
+        // Too early: we only want to start when the user starts hearing audio.
         m_elapsedSamplesAtLastReport = 0;
         return;
     }
+
+    muse::Defer defer = [this] {
+        updatePlaybackStateTimeCritical();
+    };
+
 
     const double sampleRate = AudioIO::Get()->GetPlaybackSampleRate();
 
     // Make 100% sure we do not introduce drift: quantize the elapsed time to an integral sample value,
     // advance by that amount and don't lose track of the amount of samples advanced by so far.
-    const auto elapsedMs = duration_cast<milliseconds>(now - *m_startTime).count();
+    const auto elapsedMs = duration_cast<milliseconds>(now - *startTime).count();
     const auto elapsedSamples = static_cast<unsigned long long>(elapsedMs / 1000.0 * sampleRate);
     IF_ASSERT_FAILED(elapsedSamples >= m_elapsedSamplesAtLastReport) {
         return;
