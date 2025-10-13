@@ -54,10 +54,10 @@ public:
      * Beside consuming from a lock-free queue, the implementation also ensures that it does not involve locks elsewhere, making
      * it suitable for time-critical contexts.
      */
-    virtual void updatePlaybackPositionTimeCritical() = 0;
+    virtual void updatePlaybackPosition() = 0;
 
     virtual muse::secs_t playbackPosition() const = 0;
-    virtual muse::async::Channel<muse::secs_t> playbackPositionChangedMainThreadOnly() const = 0;
+    virtual muse::async::Channel<muse::secs_t> playbackPositionChanged() const = 0;
 
     // tracks
     virtual muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) = 0;

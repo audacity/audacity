@@ -68,7 +68,7 @@ void PlaybackPositionTimer::doBeforeSynchronizing()
 {
     const auto player = this->player();
     if (player && player->playbackStatus() == PlaybackStatus::Running) {
-        player->updatePlaybackPositionTimeCritical();
+        player->updatePlaybackPosition();
     }
 }
 

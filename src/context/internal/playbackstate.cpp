@@ -7,7 +7,7 @@ void PlaybackState::setPlayer(playback::IPlayerPtr player)
 {
     if (m_player) {
         m_player->playbackStatusChanged().resetOnReceive(this);
-        m_player->playbackPositionChangedMainThreadOnly().resetOnReceive(this);
+        m_player->playbackPositionChanged().resetOnReceive(this);
     }
 
     m_player = player;
@@ -17,7 +17,7 @@ void PlaybackState::setPlayer(playback::IPlayerPtr player)
         m_playbackStatusChanged.send(st);
     });
 
-    m_player->playbackPositionChangedMainThreadOnly().onReceive(this, [this](muse::secs_t pos) {
+    m_player->playbackPositionChanged().onReceive(this, [this](muse::secs_t pos) {
         m_playbackPositionChanged.send(pos);
     });
 }
