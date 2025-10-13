@@ -44,17 +44,25 @@ Rectangle {
 
     property int interactionState: TracksClipsView.State.Idle
 
+    MouseHelper {
+        id: mouseHelper
+    }
+
     QtObject {
         id: prv
 
         property bool playRegionActivated: false
-        property bool releasedThroughCancel: false
 
         function cancelClipDragEdit() {
+            if (mainMouseArea.pressed) {
+                // This will lead to a cancel signal on `mainMouseArea` that will call back into this function,
+                // but this time in released state.
+                mouseHelper.callUngrabMouseOnItem(mainMouseArea)
+                return
+            }
             if (root.hoveredClipKey) {
                 tracksClipsView.cancelClipDragEditRequested(root.hoveredClipKey)
             }
-            releasedThroughCancel = true
         }
     }
 
@@ -404,8 +412,6 @@ Rectangle {
                 }
 
                 if (e.button === Qt.LeftButton) {
-                    prv.releasedThroughCancel = false
-
                     if (root.clipHeaderHovered) {
                         tracksClipsView.clipStartEditRequested(hoveredClipKey)
                         root.interactionState = TracksClipsView.State.DraggingClip
@@ -449,16 +455,6 @@ Rectangle {
 
             onReleased: e => {
                 if (e.button !== Qt.LeftButton) {
-                    return
-                }
-
-                if (prv.releasedThroughCancel) {
-                    prv.releasedThroughCancel = false
-                    return
-                }
-
-                if (prv.releasedThroughCancel) {
-                    prv.releasedThroughCancel = false
                     return
                 }
 
