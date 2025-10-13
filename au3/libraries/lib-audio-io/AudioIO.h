@@ -138,7 +138,7 @@ public:
                         : audioIO.mAudioIOExt.begin()}
         {}
         AudioIOExtIterator& operator ++() { ++mIterator; return *this; }
-        auto operator *() const -> AudioIOExt&;
+        auto operator *() const -> AudioIOExt &;
         friend inline bool operator ==(
             const AudioIOExtIterator& xx, const AudioIOExtIterator& yy)
         {
@@ -186,7 +186,7 @@ public:
     { return mListener.lock(); }
     void SetListener(const std::shared_ptr< AudioIOListener >& listener);
 
-    bool ProjectSamplesReachedDeviceThread() const;
+    std::optional<std::chrono::steady_clock::time_point> UserStartsHearingAudioTimePoint() const;
 
     // Part of the callback
     int CallbackDoSeek();
@@ -392,7 +392,7 @@ protected:
     //! Holds some state for duration of playback or recording
     std::unique_ptr<TransportState> mpTransportState;
 
-    std::atomic<bool> mProjectSamplesReachedDeviceThread { false };
+    std::atomic<std::optional<std::chrono::steady_clock::time_point>> mUserStartsHearingAudioTimePoint;
 
 private:
     /*!

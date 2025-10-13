@@ -87,6 +87,5 @@ private:
     double m_startOffset = 0.0;
 
     unsigned long long m_elapsedSamplesAtLastReport = 0;
-    std::optional<std::chrono::steady_clock::time_point> m_startTime;
 };
 }
