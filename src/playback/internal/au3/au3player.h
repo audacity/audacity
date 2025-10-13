@@ -62,8 +62,8 @@ public:
     void setLoopRegionActive(const bool active) override;
 
     muse::secs_t playbackPosition() const override;
-    void updatePlaybackPositionTimeCritical() override;
-    muse::async::Channel<muse::secs_t> playbackPositionChangedMainThreadOnly() const override;
+    void updatePlaybackPosition() override;
+    muse::async::Channel<muse::secs_t> playbackPositionChanged() const override;
 
     muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) override;
 
@@ -83,7 +83,7 @@ private:
     muse::ValCh<PlaybackStatus> m_playbackStatus;
     muse::ValNt<bool> m_reachedEnd;
 
-    muse::ValCh<muse::secs_t> m_playbackPositionMainThreadOnly;
+    muse::ValCh<muse::secs_t> m_playbackPosition;
     double m_startOffset = 0.0;
 
     unsigned long long m_elapsedSamplesAtLastReport = 0;
