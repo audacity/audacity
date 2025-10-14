@@ -15,7 +15,7 @@ using namespace muse::actions;
 
 static const ActionCode PLAY_ACTION_CODE("play");
 static const ActionCode PAUSE_ACTION_CODE("pause");
-static const ActionCode STOP_ACTION_CODE("stop");
+static const ActionCode STOP_ACTION_CODE("playback/stop");
 
 static const ActionCode REWIND_START_ACTION_CODE("rewind-start");
 static const ActionCode REWIND_END_ACTION_CODE("rewind-end");
