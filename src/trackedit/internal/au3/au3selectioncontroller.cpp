@@ -237,7 +237,7 @@ double Au3SelectionController::selectedClipStartTime() const
         return -1.0;
     }
 
-    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.objectId);
     if (!clip) {
         return -1.0;
     }
@@ -259,7 +259,7 @@ double Au3SelectionController::selectedClipEndTime() const
         return -1.0;
     }
 
-    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.objectId);
     if (!clip) {
         return -1.0;
     }
@@ -276,7 +276,7 @@ double Au3SelectionController::leftMostSelectedClipStartTime() const
             continue;
         }
 
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.objectId);
         IF_ASSERT_FAILED(clip) {
             continue;
         }
@@ -307,7 +307,7 @@ double Au3SelectionController::rightMostSelectedClipEndTime() const
             continue;
         }
 
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.objectId);
         IF_ASSERT_FAILED(clip) {
             continue;
         }
@@ -453,7 +453,7 @@ bool Au3SelectionController::selectionContainsGroup() const
             return false;
         }
 
-        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.objectId);
         IF_ASSERT_FAILED(clip) {
             return false;
         }
@@ -481,7 +481,7 @@ bool Au3SelectionController::isSelectionGrouped() const
             return false;
         }
 
-        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.objectId);
         IF_ASSERT_FAILED(clip) {
             return false;
         }

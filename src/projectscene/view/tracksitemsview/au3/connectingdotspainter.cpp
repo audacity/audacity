@@ -36,7 +36,7 @@ void ConnectingDotsPainter::paint(QPainter& painter, const trackedit::ClipKey& c
         return;
     }
 
-    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.objectId);
     if (!waveClip) {
         return;
     }

@@ -100,7 +100,7 @@ public:
 
             std::vector<std::shared_ptr<Au3WaveClip> > intervals;
             for (const auto& clipKey : selectedTrackClips) {
-                std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+                std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.objectId);
                 clipboardTrack->InsertInterval(waveTrack->CopyClip(*clip, true), false);
             }
 

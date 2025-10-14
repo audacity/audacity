@@ -8,49 +8,9 @@
 #include <QColor>
 
 #include "trackedit/dom/label.h"
+#include "types/projectscenetypes.h"
 
 namespace au::projectscene {
-class LabelKey // todo: change to TrackItemKey
-{
-    Q_GADGET
-
-public:
-
-    LabelKey() = default;
-    LabelKey(const trackedit::LabelKey& k)
-        : key(k) {}
-
-    trackedit::LabelKey key;
-};
-
-class LabelTime  // todo: change to TrackItemTime
-{
-    Q_GADGET
-
-public:
-
-    double labelStartTime = 0.0;
-    double labelEndTime = 0.0;
-
-    double itemStartTime = 0.0;
-    double itemEndTime = 0.0;
-
-    double selectionStartTime = 0.0;
-    double selectionEndTime = 0.0;
-
-    inline bool operator==(const LabelTime& other) const
-    {
-        return muse::is_equal(labelStartTime, other.labelStartTime)
-               && muse::is_equal(labelEndTime, other.labelEndTime)
-               && muse::is_equal(itemStartTime, other.itemStartTime)
-               && muse::is_equal(itemEndTime, other.itemEndTime)
-               && muse::is_equal(selectionStartTime, other.selectionStartTime)
-               && muse::is_equal(selectionEndTime, other.selectionEndTime);
-    }
-
-    inline bool operator!=(const LabelTime& other) const { return !this->operator==(other); }
-};
-
 class LabelListItem : public QObject
 {
     Q_OBJECT

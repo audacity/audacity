@@ -57,7 +57,7 @@ void PitchAndSpeedChangeModel::load(const QString& trackIdStr, const QString& cl
             return;
         }
 
-        trackedit::Clip clip = clipKey.isValid() ? prj->clip({ clipKey.trackId, clipKey.clipId }) : trackedit::Clip();
+        trackedit::Clip clip = clipKey.isValid() ? prj->clip({ clipKey.trackId, clipKey.objectId }) : trackedit::Clip();
         setClip(clip);
     });
 
