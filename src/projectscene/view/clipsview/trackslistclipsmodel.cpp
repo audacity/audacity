@@ -234,6 +234,9 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
                 });
         }
     }
+    case IsStereoRole: {
+        return track.type == au::trackedit::TrackType::Stereo;
+    }
     default:
         break;
     }
@@ -252,6 +255,7 @@ QHash<int, QByteArray> TracksListClipsModel::roleNames() const
         { IsTrackFocusedRole, "isTrackFocused" },
         { IsMultiSelectionActiveRole, "isMultiSelectionActive" },
         { IsTrackAudibleRole, "isTrackAudible" },
+        { IsStereoRole, "isStereo" },
     };
     return roles;
 }

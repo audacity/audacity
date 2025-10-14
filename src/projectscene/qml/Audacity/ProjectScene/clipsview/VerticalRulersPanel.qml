@@ -85,7 +85,6 @@ Rectangle {
 
             Component.onCompleted: {
                 trackViewState.init()
-                clipsModel.init()
                 rulerModel.init()
             }
 
@@ -110,12 +109,6 @@ Rectangle {
 
             TrackViewStateModel {
                 id: trackViewState
-                trackId: model.trackId
-            }
-
-            ClipsListModel {
-                id: clipsModel
-                context: root.context
                 trackId: model.trackId
             }
 
@@ -191,7 +184,7 @@ Rectangle {
                 TrackRulerModel {
                     id: rulerModel
 
-                    isStereo: clipsModel.isStereo
+                    isStereo: model.isStereo
                     height: ruler.height
                     isCollapsed: trackViewState.isTrackCollapsed
                     channelHeightRatio: trackViewState.channelHeightRatio

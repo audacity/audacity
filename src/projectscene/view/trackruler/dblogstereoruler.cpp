@@ -92,7 +92,6 @@ double DbLogStereoRuler::stepToPosition(double step, size_t channel, bool isNega
 
 void DbLogStereoRuler::setHeight(int height)
 {
-    qDebug() << "DbLogStereoRuler::setHeight" << height;
     m_height = height;
 }
 

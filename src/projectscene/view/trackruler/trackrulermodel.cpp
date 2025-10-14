@@ -95,6 +95,7 @@ void TrackRulerModel::setIsStereo(bool isStereo)
         m_model->setHeight(m_height);
         m_model->setChannelHeightRatio(m_channelHeightRatio);
         m_model->setCollapsed(m_isCollapsed);
+        m_model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
 
         emit fullStepsChanged();
         emit smallStepsChanged();

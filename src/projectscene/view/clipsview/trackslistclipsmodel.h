@@ -66,6 +66,7 @@ private:
         IsTrackFocusedRole,
         IsMultiSelectionActiveRole,
         IsTrackAudibleRole,
+        IsStereoRole,
     };
 
     std::vector<trackedit::Track> m_trackList;
