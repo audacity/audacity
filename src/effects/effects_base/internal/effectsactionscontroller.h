@@ -28,7 +28,6 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectPresetsScenario> presetsScenario;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<au::playback::IPlaybackController> playbackController;
 
 public:
     void init();
