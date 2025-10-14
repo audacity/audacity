@@ -62,7 +62,7 @@ std::vector<int64_t> Au3TrackeditProject::groupsIdsList() const
         }
 
         for (const auto& key : clipList(trackId)) {
-            std::shared_ptr<Au3WaveClip> au3Clip = DomAccessor::findWaveClip(waveTrack, key.key.clipId);
+            std::shared_ptr<Au3WaveClip> au3Clip = DomAccessor::findWaveClip(waveTrack, key.key.objectId);
             IF_ASSERT_FAILED(au3Clip) {
                 return {};
             }
@@ -288,7 +288,7 @@ au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
         return Clip();
     }
 
-    std::shared_ptr<Au3WaveClip> au3Clip = DomAccessor::findWaveClip(waveTrack, key.clipId);
+    std::shared_ptr<Au3WaveClip> au3Clip = DomAccessor::findWaveClip(waveTrack, key.objectId);
     if (!au3Clip) {
         return Clip();
     }

@@ -102,7 +102,7 @@ void ProjectSceneActionsController::openClipPitchAndSpeedEdit(const ActionData& 
 
     muse::UriQuery query("audacity://projectscene/editpitchandspeed");
     query.addParam("trackId", muse::Val(std::to_string(clipKey.trackId)));
-    query.addParam("clipId", muse::Val(std::to_string(clipKey.clipId)));
+    query.addParam("clipId", muse::Val(std::to_string(clipKey.objectId)));
     query.addParam("focusItemName", muse::Val("pitch"));
 
     interactive()->open(query);

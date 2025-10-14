@@ -16,7 +16,7 @@ IWavePainter::PlotType getPlotType(std::shared_ptr<au::project::IAudacityProject
         return IWavePainter::PlotType::MinMaxRMS;
     }
 
-    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.objectId);
     if (!waveClip) {
         return IWavePainter::PlotType::MinMaxRMS;
     }
@@ -50,7 +50,7 @@ WaveMetrics getWaveMetrics(std::shared_ptr<au::project::IAudacityProject> projec
         return wm;
     }
 
-    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.objectId);
     IF_ASSERT_FAILED(waveClip) {
         return wm;
     }

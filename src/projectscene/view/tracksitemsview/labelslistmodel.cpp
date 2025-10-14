@@ -164,14 +164,14 @@ void LabelsListModel::update()
 {
     std::unordered_map<LabelId, LabelListItem*> oldItems;
     for (int row = 0; row < m_labelList.size(); ++row) {
-        oldItems.emplace(m_labelList[row]->key().key.labelId, m_labelList[row]);
+        oldItems.emplace(m_labelList[row]->key().key.objectId, m_labelList[row]);
     }
 
     QList<LabelListItem*> newList;
 
     // Building a new list, reusing existing labels
     for (const au::trackedit::Label& l : m_allLabelList) {
-        auto it = oldItems.find(l.key.labelId);
+        auto it = oldItems.find(l.key.objectId);
         LabelListItem* item = nullptr;
 
         if (it != oldItems.end()) {
@@ -249,8 +249,8 @@ void LabelsListModel::updateItemsMetrics(LabelListItem* item)
     const trackedit::Label& label = item->label();
 
     LabelTime time;
-    time.labelStartTime = label.startTime;
-    time.labelEndTime = label.endTime;
+    time.startTime = label.startTime;
+    time.endTime = label.endTime;
     time.itemStartTime = std::max(label.startTime, (m_context->frameStartTime() - cacheTime));
     time.itemEndTime = std::min(label.endTime, (m_context->frameEndTime() + cacheTime));
 
@@ -353,7 +353,7 @@ QVariant LabelsListModel::prev(const LabelKey& key) const
 QVariant LabelsListModel::neighbor(const LabelKey& key, int offset) const
 {
     auto it = std::find_if(m_labelList.begin(), m_labelList.end(), [key](LabelListItem* label) {
-        return label->key().key.labelId == key.key.labelId;
+        return label->key().key.objectId == key.key.objectId;
     });
 
     if (it == m_labelList.end()) {
