@@ -28,7 +28,7 @@ static const ActionQuery CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-i
 const UiActionList PlaybackUiActions::m_mainActions = {
     UiAction(PLAY_ACTION_CODE,
              au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_PLAYBACK,
+             au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Play"),
              TranslatableString("action", "Play"),
              IconCode::Code::PLAY_FILL
