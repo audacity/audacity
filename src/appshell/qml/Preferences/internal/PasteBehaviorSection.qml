@@ -44,7 +44,7 @@ BaseSection {
         }
 
         CheckBox {
-            id: checkbox
+            id: checkboxAlwaysPasteAsNew
 
             width: parent.width
 
@@ -54,6 +54,13 @@ BaseSection {
 
             navigation.name: "PasteAsNewBox"
             navigation.panel: root.navigation
+            // first radio button is 0,0
+            // navigation.column: 0
+            // navigation.row: 1
+            // or
+            // second radio button is 0,1 but has 2 rows
+            // navigation.column: 1
+            // navigation.row: 2
 
             onClicked: {
                 editPreferencesModel.setPasteAsNewClip(!checked)
