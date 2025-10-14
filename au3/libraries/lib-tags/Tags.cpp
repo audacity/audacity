@@ -553,8 +553,7 @@ static ProjectFileIORegistry::ObjectWriterEntry entry {
 };
 
 // Undo/redo handling
-static UndoRedoExtensionRegistry::Entry sEntry {
-    [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension> {
+static UndoRedoExtensionRegistry::Entry<Tags> sEntry { [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension> {
         return Tags::Get(project).shared_from_this();
     }
 };

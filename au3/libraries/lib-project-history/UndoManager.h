@@ -46,6 +46,7 @@
 
 #include <functional>
 #include <memory>
+#include <typeindex>
 #include <vector>
 #include "ClientData.h"
 #include "Observer.h"
@@ -93,7 +94,7 @@ public:
 };
 
 struct UndoState {
-    using Extensions = std::vector<std::shared_ptr<UndoStateExtension> >;
+    using Extensions = std::unordered_map<std::type_index, std::shared_ptr<UndoStateExtension> >;
 
     UndoState(Extensions extensions)
         : extensions(std::move(extensions))
@@ -107,13 +108,26 @@ class PROJECT_HISTORY_API UndoRedoExtensionRegistry
 public:
     //! Type of function that produces an UndoStateExtension object when saving state of a project
     /*! Shared pointer allows easy sharing of unchanging parts of project state among history states */
-    using Saver
-        =std::function<std::shared_ptr<UndoStateExtension>(AudacityProject&)>;
+    using Saver = std::function<std::shared_ptr<UndoStateExtension>(AudacityProject&)>;
+    using Savers = std::unordered_map<std::type_index, Saver>;
 
     //! Typically statically constructed
+    template<typename ExtensionType>
     struct PROJECT_HISTORY_API Entry {
-        Entry(const Saver& saver);
+        // For consistency, ensure that the type parameter is that of an UndoStateExtension child class.
+        static_assert(std::is_base_of<UndoStateExtension, ExtensionType>::value,
+                      "ExtensionType must inherit from UndoStateExtension");
+        Entry(const Saver& saver)
+        {
+            GetSavers().emplace(typeIndex, saver);
+        }
+
+    private:
+        const std::type_index typeIndex = typeid(ExtensionType);
     };
+
+    static Savers& GetSavers();
+    static UndoState::Extensions GetExtensions(AudacityProject& project);
 };
 
 struct UndoStackElem {
@@ -165,6 +179,7 @@ public:
 
     void PushState(const TranslatableString& longDescription, const TranslatableString& shortDescription, UndoPush flags = UndoPush::NONE);
     void ModifyState();
+    void ModifyState(const std::type_index& undoStateExtensionTypeIndex);
     void RenameState(int state, const TranslatableString& longDescription, const TranslatableString& shortDescription);
     void AbandonRedo();
     void ClearStates();

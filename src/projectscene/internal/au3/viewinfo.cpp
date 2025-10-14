@@ -125,8 +125,7 @@ struct ViewStateRestorer final : UndoStateExtension {
 }
 
 namespace {
-UndoRedoExtensionRegistry::Entry sEntry {
-    [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension> {
+UndoRedoExtensionRegistry::Entry<ViewStateRestorer> sEntry { [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension> {
         return std::make_shared<ViewStateRestorer>(project);
     }
 };

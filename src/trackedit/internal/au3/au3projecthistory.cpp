@@ -105,6 +105,15 @@ void Au3ProjectHistory::modifyState(bool autoSave)
     ::ProjectHistory::Get(project).ModifyState(autoSave);
 }
 
+void Au3ProjectHistory::modifyState(const std::type_index& restorerType)
+{
+    if (m_interactionOngoing) {
+        return;
+    }
+    auto& project = projectRef();
+    ::ProjectHistory::Get(project).ModifyState(restorerType);
+}
+
 void Au3ProjectHistory::markUnsaved()
 {
     LOGI() << "markUnsaved()";

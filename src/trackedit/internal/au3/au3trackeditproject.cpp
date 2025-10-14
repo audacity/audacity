@@ -413,8 +413,7 @@ void TimeSignatureRestorer::RestoreUndoRedoState(AudacityProject& project)
 
 void TimeSignatureRestorer::reg()
 {
-    static UndoRedoExtensionRegistry::Entry sEntry {
-        [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension>
+    static UndoRedoExtensionRegistry::Entry<TimeSignatureRestorer> sEntry { [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension>
         { return std::make_shared<TimeSignatureRestorer>(project); }
     };
 }

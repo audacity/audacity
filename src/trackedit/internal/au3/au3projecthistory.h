@@ -29,6 +29,7 @@ public:
         const std::string& longDescription, const std::string& shortDescription, UndoPushType flags) override;
     void rollbackState() override;
     void modifyState(bool autoSave) override;
+    void modifyState(const std::type_index& undoStateExtensionTypeIndex) override;
     void markUnsaved() override;
 
     void startUserInteraction() override;
