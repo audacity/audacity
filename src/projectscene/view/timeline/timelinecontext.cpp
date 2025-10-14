@@ -397,6 +397,8 @@ void TimelineContext::onProjectChanged()
     project->timeSignatureChanged().onReceive(this, [this](const trackedit::TimeSignature&) {
         updateTimeSignature();
     });
+
+    updateTimeSignature();
 }
 
 void TimelineContext::zoomIn()
