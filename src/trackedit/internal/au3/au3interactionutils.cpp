@@ -175,7 +175,7 @@ au::trackedit::NeedsDownmixing au::trackedit::utils::moveClipsVertically(Vertica
             continue;
         }
         const auto srcTrackIndex = getTrackIndex(copy, *srcWaveTrack);
-        movedClips.emplace_back(au3::DomAccessor::findWaveClip(srcWaveTrack, selectedClip.clipId), srcTrackIndex);
+        movedClips.emplace_back(au3::DomAccessor::findWaveClip(srcWaveTrack, selectedClip.objectId), srcTrackIndex);
         srcWaveTrack->RemoveInterval(movedClips.back().ptr);
     }
 
