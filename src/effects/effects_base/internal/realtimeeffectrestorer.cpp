@@ -100,8 +100,7 @@ private:
     const std::unique_ptr<RealtimeEffectList> m_masterEffectList;
 };
 
-static UndoRedoExtensionRegistry::Entry sEntry {
-    [](au3::Au3Project& project) -> std::shared_ptr<UndoStateExtension>
+static UndoRedoExtensionRegistry::Entry<RealtimeEffectRestorer> sEntry { [](au3::Au3Project& project) -> std::shared_ptr<UndoStateExtension>
     {
         return std::make_shared<RealtimeEffectRestorer>(project);
     }
