@@ -50,6 +50,23 @@ public:
     virtual double leftMostSelectedClipStartTime() const = 0;
     virtual double rightMostSelectedClipEndTime() const = 0;
 
+    // label selection
+    virtual void resetSelectedLabels() = 0;
+    virtual bool hasSelectedLabels() const = 0;
+    virtual LabelKeyList selectedLabels() const = 0;
+    virtual LabelKeyList selectedLabelsInTrackOrder() const = 0;
+    virtual void setSelectedLabels(const LabelKeyList& labelKeys, bool complete = true) = 0;
+    virtual void addSelectedLabel(const LabelKey& labelKey) = 0;
+    virtual void removeLabelSelection(const LabelKey& labelKey) = 0;
+    virtual muse::async::Channel<LabelKeyList> labelsSelected() const = 0;
+
+    virtual double selectedLabelStartTime() const = 0;
+    virtual double selectedLabelEndTime() const = 0;
+
+    // used to get range-like boundaries of multiple selected labels
+    virtual double leftMostSelectedLabelStartTime() const = 0;
+    virtual double rightMostSelectedLabelEndTime() const = 0;
+
     // data selection
     virtual void setSelectedTrackAudioData(trackedit::TrackId trackId) = 0;
     virtual void resetDataSelection() = 0;

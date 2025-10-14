@@ -139,7 +139,7 @@ void ClipsListModel::reload()
             item->setClip(clip);
         }
 
-        m_context->updateSelectedClipTime();
+        m_context->updateSelectedObjectTime();
 
         updateItemsMetrics();
     }, muse::async::Asyncable::Mode::SetReplace);
@@ -496,7 +496,7 @@ bool ClipsListModel::isKeyboardTriggered() const
 
     auto vs = prj->viewState();
 
-    return muse::RealIsEqual(vs->clipEditStartTimeOffset(), -1.0);
+    return muse::RealIsEqual(vs->objectEditStartTimeOffset(), -1.0);
 }
 
 void ClipsListModel::handleAutoScroll(bool ok,
@@ -509,7 +509,7 @@ void ClipsListModel::handleAutoScroll(bool ok,
     }
 
     // do not handle auto-scroll when using key-nav
-    if (muse::RealIsEqual(vs->clipEditStartTimeOffset(), -1.0)) {
+    if (muse::RealIsEqual(vs->objectEditStartTimeOffset(), -1.0)) {
         return;
     }
 
@@ -542,7 +542,7 @@ secs_t ClipsListModel::calculateTimePositionOffset(const ClipListItem* item) con
         return 0.0;
     }
 
-    double newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
+    double newStartTime = m_context->mousePositionTime() - vs->objectEditStartTimeOffset();
     double duration = item->time().endTime - item->time().startTime;
     double newEndTime = newStartTime + duration;
 
@@ -699,8 +699,8 @@ void ClipsListModel::startEditClip(const ClipKey& key)
 
     double mousePositionTime = m_context->mousePositionTime();
 
-    vs->setClipEditStartTimeOffset(mousePositionTime - item->clip().startTime);
-    vs->setClipEditEndTimeOffset(item->clip().endTime - mousePositionTime);
+    vs->setObjectEditStartTimeOffset(mousePositionTime - item->clip().startTime);
+    vs->setObjectEditEndTimeOffset(item->clip().endTime - mousePositionTime);
     vs->updateClipsBoundaries(true, key.key);
 }
 
@@ -718,8 +718,8 @@ void ClipsListModel::endEditClip(const ClipKey& key)
 
     disconnectAutoScroll();
 
-    vs->setClipEditStartTimeOffset(-1.0);
-    vs->setClipEditEndTimeOffset(-1.0);
+    vs->setObjectEditStartTimeOffset(-1.0);
+    vs->setObjectEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
     vs->updateClipsBoundaries(true);
 
@@ -835,7 +835,7 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipBounda
             undoType = UndoPushType::CONSOLIDATE;
         }
     } else {
-        newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
+        newStartTime = m_context->mousePositionTime() - vs->objectEditStartTimeOffset();
         if (vs->isSnapEnabled()) {
             newStartTime = m_context->applySnapToTime(newStartTime);
         } else {
@@ -900,7 +900,7 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed, ClipBound
             undoType = UndoPushType::CONSOLIDATE;
         }
     } else {
-        newEndTime = m_context->mousePositionTime() + vs->clipEditEndTimeOffset();
+        newEndTime = m_context->mousePositionTime() + vs->objectEditEndTimeOffset();
         if (vs->isSnapEnabled()) {
             newEndTime = m_context->applySnapToTime(newEndTime);
         } else {
@@ -963,7 +963,7 @@ bool ClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, ClipBou
             undoType = UndoPushType::CONSOLIDATE;
         }
     } else {
-        newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
+        newStartTime = m_context->mousePositionTime() - vs->objectEditStartTimeOffset();
         if (vs->isSnapEnabled()) {
             newStartTime = m_context->applySnapToTime(newStartTime);
         } else {
@@ -1028,7 +1028,7 @@ bool ClipsListModel::stretchRightClip(const ClipKey& key, bool completed, ClipBo
             undoType = UndoPushType::CONSOLIDATE;
         }
     } else {
-        newEndTime = m_context->mousePositionTime() + vs->clipEditEndTimeOffset();
+        newEndTime = m_context->mousePositionTime() + vs->objectEditEndTimeOffset();
         if (vs->isSnapEnabled()) {
             newEndTime = m_context->applySnapToTime(newEndTime);
         } else {
