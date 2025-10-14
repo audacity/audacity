@@ -13,8 +13,7 @@ using namespace muse::actions;
 
 static const ActionCode PLAY_CODE("play");
 static const ActionCode PAUSE_CODE("pause");
-// TODO : for now stop is commented and should be transformed to be using const muse::actions::ActionQuery& q
-// static const ActionCode STOP_CODE("stop");
+static const ActionCode STOP_CODE("action://playback/stop");
 static const ActionCode REWIND_START_CODE("rewind-start");
 static const ActionCode REWIND_END_CODE("rewind-end");
 static const ActionCode SEEK_CODE("playback-seek");
@@ -33,8 +32,7 @@ void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlay);
     dispatcher()->reg(this, PAUSE_CODE, this, &PlaybackController::pause);
-    // TODO : for now stop is commented and should be transformed to be using const muse::actions::ActionQuery& q
-    // dispatcher()->reg(this, STOP_CODE, this, &PlaybackController::stop);
+    dispatcher()->reg(this, STOP_CODE, this, &PlaybackController::stop);
     dispatcher()->reg(this, REWIND_START_CODE, this, &PlaybackController::rewindToStart);
     dispatcher()->reg(this, REWIND_END_CODE, this, &PlaybackController::rewindToEnd);
     dispatcher()->reg(this, SEEK_CODE, this, &PlaybackController::onSeekAction);
@@ -397,6 +395,13 @@ void PlaybackController::pause()
     }
 
     player()->pause();
+}
+
+void PlaybackController::stop(const muse::actions::ActionData& args)
+{
+    const bool shouldSeek = args.count() >= 1 ? args.arg<bool>(0) : false;
+    const bool shouldUpdatePlaybackRegion = args.count() >= 2 ? args.arg<bool>(1) : false;
+    stop(shouldSeek, shouldUpdatePlaybackRegion);
 }
 
 void PlaybackController::stop(bool shouldSeek, bool shouldUpdatePlaybackRegion)
