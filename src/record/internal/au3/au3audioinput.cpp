@@ -232,7 +232,7 @@ int Au3AudioInput::getFocusedTrackChannels() const
 
 void Au3AudioInput::restartMonitoring()
 {
-    if (controller()->isRecording() || playbackController()->isPlaying()) {
+    if (controller()->isRecording() || !playbackController()->isStopped()) {
         return;
     }
 
