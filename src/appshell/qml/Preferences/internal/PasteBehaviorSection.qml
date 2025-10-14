@@ -15,7 +15,7 @@ BaseSection {
 
     title: pasteBehaviorPanel.title
 
-    navigationOrderEnd: root.navigation.order
+    navigationOrderEnd: pasteAsNewSection.navigation.order
 
     required property var editPreferencesModel
     property alias parentBackgroundColor: pasteBehaviorPanel.parentBackgroundColor
@@ -43,27 +43,28 @@ BaseSection {
             }
         }
 
-        CheckBox {
-            id: checkboxAlwaysPasteAsNew
+        BaseSection {
+            id: pasteAsNewSection
 
-            width: parent.width
+            navigation.section: root.navigation.section
+            navigation.order: pasteBehaviorPanel.navigation.order + 1
 
-            text: qsTrc("appshell/preferences", "Always paste audio as a new clip")
+            CheckBox {
+                id: checkboxAlwaysPasteAsNew
 
-            checked: editPreferencesModel.pasteAsNewClip
+                width: parent.width
 
-            navigation.name: "PasteAsNewBox"
-            navigation.panel: root.navigation
-            // first radio button is 0,0
-            // navigation.column: 0
-            // navigation.row: 1
-            // or
-            // second radio button is 0,1 but has 2 rows
-            // navigation.column: 1
-            // navigation.row: 2
+                text: qsTrc("appshell/preferences", "Always paste audio as a new clip")
 
-            onClicked: {
-                editPreferencesModel.setPasteAsNewClip(!checked)
+                checked: editPreferencesModel.pasteAsNewClip
+
+                navigation.name: "PasteAsNewBox"
+                navigation.panel: pasteAsNewSection.navigation
+                navigation.row: 0
+
+                onClicked: {
+                    editPreferencesModel.setPasteAsNewClip(!checked)
+                }
             }
         }
     }
