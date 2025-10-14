@@ -60,14 +60,14 @@ void EffectsActionsController::onEffectTriggered(const muse::actions::ActionQuer
         return;
     }
 
-    dispatcher()->dispatch("action://playback/stop", ActionData::make_arg2<bool, bool>(false, false));
+    dispatcher()->dispatch("playback/stop", ActionData::make_arg2<bool, bool>(false, false));
 
     effectExecutionScenario()->performEffect(effectId);
 }
 
 void EffectsActionsController::repeatLastEffect()
 {
-    dispatcher()->dispatch("action://playback/stop", ActionData::make_arg2<bool, bool>(false, false));
+    dispatcher()->dispatch("playback/stop", ActionData::make_arg2<bool, bool>(false, false));
 
     effectExecutionScenario()->repeatLastProcessor();
 }

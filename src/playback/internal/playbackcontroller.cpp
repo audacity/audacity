@@ -13,7 +13,7 @@ using namespace muse::actions;
 
 static const ActionCode PLAY_CODE("play");
 static const ActionCode PAUSE_CODE("pause");
-static const ActionCode STOP_CODE("action://playback/stop");
+static const ActionCode PLAYBACK_STOP_CODE("playback/stop");
 static const ActionCode REWIND_START_CODE("rewind-start");
 static const ActionCode REWIND_END_CODE("rewind-end");
 static const ActionCode SEEK_CODE("playback-seek");
@@ -32,7 +32,7 @@ void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlay);
     dispatcher()->reg(this, PAUSE_CODE, this, &PlaybackController::pause);
-    dispatcher()->reg(this, STOP_CODE, this, &PlaybackController::stop);
+    dispatcher()->reg(this, PLAYBACK_STOP_CODE, this, &PlaybackController::stopAction);
     dispatcher()->reg(this, REWIND_START_CODE, this, &PlaybackController::rewindToStart);
     dispatcher()->reg(this, REWIND_END_CODE, this, &PlaybackController::rewindToEnd);
     dispatcher()->reg(this, SEEK_CODE, this, &PlaybackController::onSeekAction);
@@ -194,7 +194,7 @@ void PlaybackController::seek(const muse::secs_t secs, bool applyIfPlaying)
 
 void PlaybackController::reset()
 {
-    stop(true, true);
+    stopInternal(true, true);
 }
 
 Channel<uint32_t> PlaybackController::midiTickPlayed() const
@@ -226,7 +226,7 @@ void PlaybackController::onProjectChanged()
     au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (prj) {
         prj->aboutCloseBegin().onNotify(this, [this]() {
-            stop(true, true);
+            stopInternal(true, true);
         });
 
         seek(0.0, false); // TODO: get the previous position from the project data
@@ -255,7 +255,7 @@ void PlaybackController::togglePlay()
     const bool isShiftPressed = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
     if (isPlaying()) {
         if (isShiftPressed) {
-            stop(true, true);
+            stopInternal(true, true);
         } else {
             pause();
         }
@@ -311,7 +311,7 @@ void PlaybackController::play(bool ignoreSelection)
 void PlaybackController::rewindToStart()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
-    stop(true, true);
+    stopInternal(true, true);
 
     doSeek(0.0, false);
 
@@ -323,7 +323,7 @@ void PlaybackController::rewindToEnd()
     //! NOTE: In Audacity 3 we can't rewind while playing
     m_lastPlaybackSeekTime = totalPlayTime();
     m_lastPlaybackRegion = { totalPlayTime(), totalPlayTime() };
-    stop(true, true);
+    stopInternal(true, true);
 
     selectionController()->resetTimeSelection();
 }
@@ -397,14 +397,14 @@ void PlaybackController::pause()
     player()->pause();
 }
 
-void PlaybackController::stop(const muse::actions::ActionData& args)
+void PlaybackController::stopAction(const muse::actions::ActionData& args)
 {
     const bool shouldSeek = args.count() >= 1 ? args.arg<bool>(0) : false;
     const bool shouldUpdatePlaybackRegion = args.count() >= 2 ? args.arg<bool>(1) : false;
-    stop(shouldSeek, shouldUpdatePlaybackRegion);
+    stopInternal(shouldSeek, shouldUpdatePlaybackRegion);
 }
 
-void PlaybackController::stop(bool shouldSeek, bool shouldUpdatePlaybackRegion)
+void PlaybackController::stopInternal(const bool shouldSeek, const bool shouldUpdatePlaybackRegion)
 {
     IF_ASSERT_FAILED(player()) {
         return;

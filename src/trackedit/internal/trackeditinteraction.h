@@ -131,7 +131,7 @@ private:
         if (recordController()->isRecording()) {
             return make_ret(trackedit::Err::DisallowedDuringRecording);
         }
-        dispatcher()->dispatch("action://playback/stop", muse::actions::ActionData::make_arg2<bool, bool>(false, false));
+        dispatcher()->dispatch("playback/stop", muse::actions::ActionData::make_arg2<bool, bool>(false, false));
         return (m_interaction.get()->*method)(std::forward<Args>(args)...);
     }
 

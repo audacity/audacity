@@ -28,7 +28,7 @@ static const QString STOP_ITEM_ID("stop-id");
 
 static const ActionCode PLAY_ACTION_CODE("play");
 static const ActionCode PAUSE_ACTION_CODE("pause");
-static const ActionCode STOP_ACTION_CODE("stop");
+static const ActionCode STOP_ACTION_CODE("playback/stop");
 
 static const ActionCode RECORD_ACTION_CODE("record");
 static const ActionCode PAUSE_RECORD_ACTION_CODE("pause-record");
@@ -186,14 +186,12 @@ void PlaybackToolBarModel::updateStopState()
     }
 
     bool isRecording = recordController()->isRecording();
-
-    ActionCode code = STOP_ACTION_CODE;
-    if (isRecording) {
-        code = STOP_RECORD_ACTION_CODE;
-    }
-
+    ActionCode code = isRecording ? STOP_RECORD_ACTION_CODE : STOP_ACTION_CODE;
     UiAction action = uiActionsRegister()->action(code);
     item->setAction(action);
+    if (!isRecording) {
+        item->setArgs(ActionData::make_arg2<bool, bool>(true, true));
+    }
 
     QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
     item->setIconColor(iconColor);
