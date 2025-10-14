@@ -25,7 +25,7 @@ class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel
     muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister;
     muse::Inject<context::IGlobalContext> context;
     muse::Inject<playback::IPlaybackConfiguration> configuration;
-    muse::Inject<playback::IPlaybackController> controller;
+    muse::Inject<playback::IPlaybackController> playbackController;
     muse::Inject<record::IRecordController> recordController;
     muse::Inject<record::IRecordConfiguration> recordConfiguration;
 
