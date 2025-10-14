@@ -1,6 +1,8 @@
+#include "global/realfn.h"
+
 #include "projectscene/view/trackruler/dblogmonoruler.h"
 #include "view/trackruler/itrackrulermodel.h"
-#include "global/realfn.h"
+
 #include <string>
 
 using namespace au::projectscene;
@@ -39,7 +41,7 @@ std::vector<double> smallStepsValues(double dbRange)
 }
 }
 
-double DbLogMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, [[maybe_unused]] bool isNegativeSample) const
+double DbLogMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, bool isNegativeSample) const
 {
     double middlePosition = m_height / 2.0;
 
@@ -84,7 +86,7 @@ std::string DbLogMonoRuler::sampleToText(double sample) const
 std::vector<TrackRulerFullStep> DbLogMonoRuler::fullSteps() const
 {
     if (m_collapsed) {
-        return { TrackRulerFullStep { m_dbRange, 0, 0, true, false, false } };
+        return { TrackRulerFullStep { m_dbRange, 0, 0, true, true, false } };
     }
 
     const auto isBold = [this](double value) -> bool { return muse::RealIsEqual(value, 0.0) || muse::RealIsEqual(value, m_dbRange); };
@@ -102,7 +104,7 @@ std::vector<TrackRulerFullStep> DbLogMonoRuler::fullSteps() const
         result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, false), isBold(value), false, false });
         result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, true), isBold(value), false, true });
     }
-    result.push_back(TrackRulerFullStep { m_dbRange, 0, 0, true, false, false });
+    result.push_back(TrackRulerFullStep { m_dbRange, 0, 0, true, true, false });
 
     return result;
 }

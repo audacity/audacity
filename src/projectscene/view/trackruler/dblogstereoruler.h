@@ -6,7 +6,7 @@
 #include "projectscene/view/trackruler/itrackrulermodel.h"
 
 namespace au::projectscene {
-class DbLogMonoRuler : public ITrackRulerModel
+class DbLogStereoRuler : public ITrackRulerModel
 {
 public:
     double stepToPosition(double step, size_t channel, bool isNegativeSample) const override;

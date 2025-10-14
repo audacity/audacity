@@ -127,7 +127,7 @@ std::vector<TrackRulerFullStep> LinearStereoRuler::fullSteps() const
     }
 
     std::vector<double> channelHeight = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
-    for (int ch = 0; ch < 2; ++ch) {
+    for (size_t ch = 0; ch < 2; ++ch) {
         if (channelHeight[ch] < MIN_CHANNEL_HEIGHT) {
             steps.push_back(TrackRulerFullStep { 0.0, ch, 0, true, true, false });
             continue;
@@ -152,7 +152,7 @@ std::vector<TrackRulerSmallStep> LinearStereoRuler::smallSteps() const
     }
 
     std::vector<double> channelHeight = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
-    for (int ch = 0; ch < 2; ++ch) {
+    for (size_t ch = 0; ch < 2; ++ch) {
         if (channelHeight[ch] < MIN_CHANNEL_HEIGHT) {
             steps.push_back(TrackRulerSmallStep { 0.0, ch, false });
             continue;
