@@ -92,6 +92,16 @@ public:
     virtual bool CanUndoOrRedo(const AudacityProject& project);
 };
 
+struct UndoState {
+    using Extensions = std::vector<std::shared_ptr<UndoStateExtension> >;
+
+    UndoState(Extensions extensions)
+        : extensions(std::move(extensions))
+    {}
+
+    Extensions extensions;
+};
+
 class PROJECT_HISTORY_API UndoRedoExtensionRegistry
 {
 public:
@@ -104,16 +114,6 @@ public:
     struct PROJECT_HISTORY_API Entry {
         Entry(const Saver& saver);
     };
-};
-
-struct UndoState {
-    using Extensions = std::vector<std::shared_ptr<UndoStateExtension> >;
-
-    UndoState(Extensions extensions)
-        : extensions(std::move(extensions))
-    {}
-
-    Extensions extensions;
 };
 
 struct UndoStackElem {
