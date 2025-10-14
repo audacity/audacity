@@ -88,7 +88,7 @@ void LinearMonoRuler::setCollapsed(bool isCollapsed)
 std::string LinearMonoRuler::sampleToText(double sample) const
 {
     std::stringstream ss;
-    ss << std::fixed << std::setprecision(2) << std::abs(sample);
+    ss << std::fixed << std::setprecision(1) << std::abs(sample);
     return ss.str();
 }
 
