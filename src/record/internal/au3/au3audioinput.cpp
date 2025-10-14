@@ -44,7 +44,9 @@ Au3AudioInput::Au3AudioInput()
         });
 
         playbackController()->isPlayingChanged().onNotify(this, [this]() {
-            restartMonitoring();
+            if (playbackController()->isStopped()) {
+                restartMonitoring();
+            }
         });
 
         audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
