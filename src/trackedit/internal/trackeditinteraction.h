@@ -2,7 +2,8 @@
 
 #include "itrackeditinteraction.h"
 #include "trackedit/trackediterrors.h"
-#include "playback/iplaybackcontroller.h"
+#include "framework/actions/iactionsdispatcher.h"
+
 #include "playback/iplayer.h"
 #include "global/types/secs.h"
 #include "modularity/ioc.h"
@@ -13,7 +14,7 @@ namespace au::trackedit {
 class TrackeditInteraction : public ITrackeditInteraction, public muse::Injectable
 {
     muse::Inject<au::record::IRecordController> recordController;
-    muse::Inject<au::playback::IPlaybackController> playbackController;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
     TrackeditInteraction(std::unique_ptr<ITrackeditInteraction> interaction);
@@ -130,7 +131,7 @@ private:
         if (recordController()->isRecording()) {
             return make_ret(trackedit::Err::DisallowedDuringRecording);
         }
-        playbackController()->stop(false, false);
+        dispatcher()->dispatch("action://playback/stop", muse::actions::ActionData::make_arg2<bool, bool>(false, false));
         return (m_interaction.get()->*method)(std::forward<Args>(args)...);
     }
 
