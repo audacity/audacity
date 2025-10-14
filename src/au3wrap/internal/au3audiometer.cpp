@@ -56,6 +56,7 @@ Meter::Meter()
     });
 
     m_meterUpdateTimer.setInterval(static_cast<int>(updatePeriod * 1000));
+    m_meterUpdateTimer.setTimerType(Qt::PreciseTimer);
 
     m_meterUpdateTimer.callOnTimeout([this]() {
         for (auto& [_, trackData] : m_trackData) {
