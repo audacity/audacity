@@ -134,21 +134,19 @@ Rectangle {
     NavigationFocusBorder {
         id: focusBorder
 
-        padding: -1
-
         navigationCtrl: navCtrl
 
         border.color: ui.theme.fontPrimaryColor
         border.width: 2
-        radius: 4
+        radius: isContrastFocusBorderEnabled ? 0 : 4
 
-        visible: navigationCtrl ? navigationCtrl.highlight : false
+        visible: clipSelected || (navigationCtrl ? navigationCtrl.highlight : false)
     }
 
     NavigationFocusBorder {
         id: contrastFocusBorder
 
-        padding: focusBorder.padding + focusBorder.border.width
+        padding: focusBorder.border.width
 
         navigationCtrl: navCtrl
 
@@ -156,7 +154,7 @@ Rectangle {
         border.width: 2
         radius: 4
 
-        visible: isContrastFocusBorderEnabled && navigationCtrl ? navigationCtrl.highlight : false
+        visible: isContrastFocusBorderEnabled && ((navigationCtrl ? navigationCtrl.highlight : false) || root.clipSelected)
     }
 
     QtObject {
@@ -803,16 +801,6 @@ Rectangle {
                     waveView.onWaveViewPositionChanged(hoverArea.mouseX, hoverArea.mouseY - header.height)
                 }
             }
-        }
-
-        RoundedRectangle {
-            id: clipBorder
-            anchors.fill: parent
-            border.width: 1
-            border.color: root.clipSelected ? "white" : "black"
-            color: "transparent"
-            radius: root.radius
-            z: 2
         }
     }
 
