@@ -47,6 +47,9 @@ public:
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
 
+    Q_INVOKABLE void startEditLabel(const LabelKey& key);
+    Q_INVOKABLE void endEditLabel(const LabelKey& key);
+
     Q_INVOKABLE void selectLabel(const LabelKey& key);
     Q_INVOKABLE void resetSelectedLabels();
     Q_INVOKABLE bool changeLabelTitle(const LabelKey& key, const QString& newTitle);

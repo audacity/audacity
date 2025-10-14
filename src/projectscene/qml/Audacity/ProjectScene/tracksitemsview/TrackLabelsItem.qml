@@ -8,8 +8,6 @@ import Audacity.ProjectScene
 TrackObjectsItem {
     id: root
 
-    signal clipHeaderHoveredChanged(bool value)
-
     LabelsListModel {
         id: labelsModel
         trackId: root.trackId
@@ -22,121 +20,215 @@ TrackObjectsItem {
 
     contentComponent: Component {
         Item {
-            id: labelsContainer
-            anchors.fill: parent
-            anchors.bottomMargin: root.bottomSeparatorHeight
-            z: 1
+            Item {
+                id: labelsContainer
+                anchors.fill: parent
+                anchors.bottomMargin: root.bottomSeparatorHeight
+                z: 1
 
-            Repeater {
-                id: repeater
-                model: labelsModel
-
-                delegate: Loader {
-                    id: labelLoader
-
-                    property QtObject labelItem: model.item
-                    property int index: model.index
-
-                    height: parent.height
-                    width: labelItem.width
-                    x: labelItem.x
-
-                    asynchronous: true
-
-                    sourceComponent: {
-                        if ((labelItem.x + labelItem.width) < (0 - labelsModel.cacheBufferPx)) {
-                            return null
+                function mapToAllLabels(e, f) {
+                    for (let i = 0; i < repeater.count; i++) {
+                        let labelLoader = repeater.itemAt(i)
+                        if (labelLoader && labelLoader.item) {
+                            let labelPos = labelLoader.mapFromItem(this, e.x, e.y)
+                            f(labelLoader.item, {button: e.button, modifiers: e.modifiers, x: labelPos.x, y: labelPos.y})
                         }
+                    }
+                }
 
-                        if (labelItem.x > (labelsContainer.width + labelsModel.cacheBufferPx)) {
-                            return null
+                function checkIfAnyLabel(f) {
+                    for (let i = 0; i < repeater.count; i++) {
+                        let labelLoader = repeater.itemAt(i)
+                        if (labelLoader && labelLoader.item) {
+                            if (f(labelLoader.item)) {
+                                return true
+                            }
                         }
+                    }
+                    return false
+                }
 
-                        return labelComp
+                MouseArea {
+                    id: labelsContainerMouseArea
+                    anchors.fill: parent
+
+                    propagateComposedEvents: true
+
+                    hoverEnabled: true
+                    pressAndHoldInterval: 0
+
+                    cursorShape: root.selectionEditInProgress ? Qt.SizeHorCursor : Qt.IBeamCursor
+                    enabled: !root.selectionInProgress
+
+                    onPressed: function(e) {
+                        e.accepted = false
                     }
 
-                    onLoaded: {
-                        labelLoader.item.itemData = model.item
+                    onClicked: function(e) {
+                        e.accepted = false
+                    }
+
+                    onReleased: function(e) {
+                        e.accepted = false
+                    }
+
+                    onDoubleClicked: function(e) {
+                        e.accepted = true
+                    }
+
+                    onPositionChanged: function(e) {
+                        labelsContainer.mapToAllLabels(e, function(labelItem, mouseEvent) {
+                            labelItem.labelItemMousePositionChanged(mouseEvent.x, mouseEvent.y)
+                        })
+                    }
+
+                    onContainsMouseChanged: function() {
+                        labelsContainer.mapToAllLabels({x: mouseX, y: mouseY}, function(labelItem, mouseEvent) {
+                            labelItem.setContainsMouse(containsMouse)
+                        })
+                    }
+                }
+
+                Repeater {
+                    id: repeater
+                    model: labelsModel
+
+                    delegate: Loader {
+                        id: labelLoader
+
+                        property var itemData: model.item
+
+                        height: parent.height
+                        width: itemData.width
+                        x: itemData.x
+
+                        asynchronous: true
+
+                        sourceComponent: {
+                            if ((itemData.x + itemData.width) < (0 - labelsModel.cacheBufferPx)) {
+                                return null
+                            }
+
+                            if (itemData.x > (labelsContainer.width + labelsModel.cacheBufferPx)) {
+                                return null
+                            }
+
+                            return labelComp
+                        }
+
+                        Component {
+                            id: labelComp
+
+                            LabelItem {
+                                property var itemData: labelLoader.itemData
+
+                                title: Boolean(itemData) ? itemData.title : ""
+                                labelColor: Boolean(itemData) ? itemData.color : null
+                                isSelected: Boolean(itemData) && itemData.selected
+                                enableCursorInteraction: true
+
+                                navigation.name: Boolean(itemData) ? itemData.title + itemData.index : ""
+                                navigation.panel: root.navigationPanel
+                                navigation.column: itemData ? Math.floor(itemData.x) : 0
+                                navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
+                                navigation.onActiveChanged: {
+                                    if (navigation.active) {
+                                        root.context.insureVisible(root.context.positionToTime(itemData.x))
+                                        root.insureVerticallyVisible(root.y, root.y + root.height)
+                                    }
+                                }
+
+                                onLabelItemMousePositionChanged: function(xWithinLabel, yWithinLabel) {
+                                    var yWithinTrack = yWithinLabel
+                                    var xWithinTrack = xWithinLabel + itemData.x
+
+                                    trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
+                                }
+
+                                onRequestSelected: {
+                                    labelsModel.selectLabel(itemData.key)
+                                    root.itemSelectedRequested()
+                                }
+
+                                onRequestSelectionReset: {
+                                    labelsModel.resetSelectedLabels()
+                                    root.selectionResetRequested()
+                                }
+
+                                onTitleEditStarted: {
+                                    labelsModel.selectLabel(itemData.key)
+                                }
+
+                                onTitleEditAccepted: function(newTitle) {
+                                    labelsModel.changeLabelTitle(itemData.key, newTitle)
+                                    labelsModel.resetSelectedLabels()
+                                }
+
+                                onTitleEditCanceled: {
+                                    labelsModel.resetSelectedLabel()
+                                }
+
+                                onLabelHeaderHoveredChanged: function(headerHovered) {
+                                    root.itemHeaderHoveredChanged(headerHovered)
+                                }
+
+                                onHoverChanged: function() {
+                                    root.hover = labelsContainer.checkIfAnyLabel(function(labelItem) {
+                                        return labelItem && labelItem.hover
+                                    })
+                                }
+                            }
+                        }
                     }
                 }
             }
 
-            Component {
-                id: labelComp
+            // this one is transparent, it's on top of the labels
+            // to have extend/reduce selection area handles
+            ObjectsSelection {
+                id: labelsSelection
 
-                LabelItem {
-                    property var itemData: null
+                isDataSelected: root.isDataSelected
+                selectionInProgress: root.selectionInProgress
+                context: root.context
 
-                    title: Boolean(itemData) ? itemData.title : ""
-                    labelColor: Boolean(itemData) ? itemData.color : null
-                    isSelected: Boolean(itemData) && itemData.selected
-                    enableCursorInteraction: true
+                anchors.fill: parent
+                z: 1
 
-                    navigation.name: Boolean(itemData) ? itemData.title + itemData.index : ""
-                    navigation.panel: root.navigationPanel
-                    navigation.column: itemData ? Math.floor(itemData.x) : 0
-                    navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
-                    navigation.onActiveChanged: {
-                        if (navigation.active) {
-                            root.context.insureVisible(root.context.positionToTime(itemData.x))
-                            root.insureVerticallyVisible(root.y, root.y + root.height)
-                        }
-                    }
-
-                    onRequestSelected: {
-                        labelsModel.selectLabel(itemData.key)
-                        root.labelSelectedRequested()
-                    }
-
-                    onRequestSelectionReset: {
-                        labelsModel.resetSelectedLabels()
-                        root.selectionResetRequested()
-                    }
-
-                    onTitleEditAccepted: function(newTitle) {
-                        labelsModel.changeLabelTitle(itemData.key, newTitle)
-                        labelsModel.resetSelectedClip()
-                    }
-
-                    onTitleEditStarted: {
-                        labelsModel.selectLabel(itemData.key)
-                    }
-
-                    onTitleEditCanceled: {
-                        labelsModel.resetSelectedLabel()
-                    }
-
-                    onLabelHeaderHoveredChanged: function(headerHovered) {
-                        root.clipHeaderHoveredChanged(headerHovered)
+                onSelectionDraged: function(x1, x2, completed) {
+                    root.selectionDraged(x1, x2, completed)
+                    if (completed) {
+                        root.seekToX(Math.min(x1, x2))
                     }
                 }
+
+                onRequestSelectionContextMenu: function(x, y) {
+                    let position = mapToItem(root.parent, Qt.point(x, y))
+                    root.requestSelectionContextMenu(position.x, position.y)
+                }
+
+                onHandleGuideline: function(x, completed) {
+                    root.handleTimeGuideline(x, completed)
+                }
             }
-
-            // MouseArea {
-            //     id: labelsContainerMouseArea
-            //     anchors.fill: parent
-            //     hoverEnabled: true
-
-            //     onPositionChanged: function(e) {
-            //         root.trackItemMousePositionChanged(e.x, e.y, null)
-            //     }
-            // }
         }
     }
 
     Connections {
         target: root.container
 
-        function onClipMoveRequested(clipKey, completed) {
-            // Labels don't support clip moving yet
+        function onItemMoveRequested(objectKey, completed) {
+            console.info("Labels don't support clip moving yet")
+            root.updateMoveActive(completed)
         }
 
-        function onClipStartEditRequested(clipKey) {
-            // Labels don't support this yet
+        function onItemStartEditRequested(objectKey) {
+            console.info("startEditLabel", JSON.stringify(objectKey))
+            labelsModel.startEditLabel(objectKey)
         }
 
-        function onClipEndEditRequested(clipKey) {
-            // Labels don't support this yet
+        function onItemEndEditRequested(objectKey) {
+            labelsModel.endEditLabel(objectKey)
         }
 
         function onStartAutoScroll() {

@@ -11,7 +11,8 @@ Item {
 
     property string title: ""
     property bool isSelected: false
-    property bool enableCursorInteraction: true
+    property bool selectionInProgress: false
+    property bool enableCursorInteraction: !selectionInProgress
 
     property alias navigation: navCtrl
 
@@ -105,6 +106,7 @@ Item {
         anchors.fill: parent
 
         hoverEnabled: true
+        cursorShape: Qt.IBeamCursor
         acceptedButtons: Qt.RightButton
 
         visible: root.enableCursorInteraction
@@ -114,12 +116,11 @@ Item {
         }
 
         onClicked: function (e) {
-            // todo
+            root.requestSelected()
         }
 
         onPositionChanged: function (e) {
             labelItemMousePositionChanged(e.x, e.y);
-            // todo
         }
 
         onContainsMouseChanged: {
@@ -305,9 +306,13 @@ Item {
             id: titleLoader
 
             anchors.top: parent.top
+            anchors.topMargin: 2
             anchors.left: parent.left
             anchors.leftMargin: root.earWidth
-            anchors.rightMargin: 8
+            anchors.right: parent.right
+            anchors.rightMargin: root.earWidth
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 2
 
             property bool isEditState: false
             sourceComponent: isEditState ? titleEditComp : titleComp
@@ -470,7 +475,7 @@ Item {
             when: root.isSelected && !root.headerHovered
             PropertyChanges {
                 target: prv
-                backgroundOpacity: 0.7
+                backgroundOpacity: 0.4
             }
         },
         State {
@@ -478,18 +483,18 @@ Item {
             when: !root.isSelected && root.headerHovered
             PropertyChanges {
                 target: prv
+                backgroundOpacity: 0.7
+            }
+        }
+        ,
+        State {
+            name: "SELECTED_HOVERED"
+            when: root.isSelected && root.headerHovered
+            PropertyChanges {
+                target: prv
                 backgroundOpacity: 0.4
             }
         }
-        //,
-        // State {
-        //     name: "SELECTED_HOVERED"
-        //     when: root.isSelected && headerDragArea.containsMouse
-        //     PropertyChanges {
-        //         target: leftEar
-        //         opacity: 1
-        //     }
-        // }
     ]
 }
 
