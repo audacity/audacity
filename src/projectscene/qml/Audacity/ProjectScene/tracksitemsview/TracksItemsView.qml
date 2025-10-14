@@ -14,8 +14,9 @@ Rectangle {
     property var navPanels: null
 
     property bool itemHovered: false
-    property bool clipHeaderHovered: false
-    property var hoveredClipKey: null
+    property bool itemHeaderHovered: false
+    property var hoveredObjectKey: null
+
     property var hoveredTrackId: null
     property double hoveredTrackVerticalPosition
     property double hoveredTrackHeight
@@ -116,7 +117,7 @@ Rectangle {
         id: splitToolController
         context: timeline.context
 
-        clipHovered: root.itemHovered && !root.clipHeaderHovered
+        clipHovered: root.itemHovered && !root.itemHeaderHovered
         hoveredTrack: root.hoveredTrackId
     }
 
@@ -259,8 +260,8 @@ Rectangle {
             Rectangle {
                 id: timelineSelRect
 
-                x: timeline.context.singleClipSelected ? timeline.context.selectedClipStartPosition : timeline.context.selectionStartPosition
-                width: timeline.context.singleClipSelected ? timeline.context.selectedClipEndPosition - x : timeline.context.selectionEndPosition - x
+                x: timeline.context.singleObjectSelected ? timeline.context.selectedObjectStartPosition : timeline.context.selectionStartPosition
+                width: timeline.context.singleObjectSelected ? timeline.context.selectedObjectEndPosition - x : timeline.context.selectionEndPosition - x
 
                 anchors.top: parent.verticalCenter
                 anchors.bottom: parent.bottom
@@ -393,10 +394,11 @@ Rectangle {
                 }
 
                 if (e.button === Qt.LeftButton) {
+                    console.info("============ startUserInteraction qml ", root.itemHeaderHovered)
                     tracksModel.startUserInteraction()
 
-                    if (root.clipHeaderHovered) {
-                        tracksItemsView.clipStartEditRequested(hoveredClipKey)
+                    if (root.itemHeaderHovered) {
+                        tracksItemsView.itemStartEditRequested(hoveredObjectKey)
                     } else {
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
                             playCursorController.seekToX(e.x)
@@ -404,7 +406,7 @@ Rectangle {
 
                         if (!splitToolController.active) {
                             selectionController.onPressed(e.x, e.y)
-                            selectionController.resetSelectedClip()
+                            selectionController.resetSelectedObjects()
                             itemsSelection.visible = true
                         }
                         handleGuideline(e.x, false)
@@ -421,13 +423,15 @@ Rectangle {
             }
 
             onPositionChanged: function (e) {
+                console.info("=========== position", e.x)
                 timeline.updateCursorPosition(e.x, e.y)
                 splitToolController.mouseMove(e.x)
 
-                if (root.clipHeaderHovered && pressed) {
-                    tracksItemsView.clipMoveRequested(hoveredClipKey, false)
+                if (root.itemHeaderHovered && pressed) {
+                    tracksItemsView.itemMoveRequested(hoveredObjectKey, false)
                     tracksItemsView.startAutoScroll()
                 } else {
+                    console.info(new Error().stack)
                     selectionController.onPositionChanged(e.x, e.y)
                     let trackId = tracksViewState.trackAtPosition(e.x, e.y)
 
@@ -440,10 +444,10 @@ Rectangle {
                     return
                 }
 
-                if (root.clipHeaderHovered) {
-                    tracksItemsView.clipMoveRequested(hoveredClipKey, true)
+                if (root.itemHeaderHovered) {
+                    tracksItemsView.itemMoveRequested(hoveredObjectKey, true)
                     tracksItemsView.stopAutoScroll()
-                    tracksItemsView.clipEndEditRequested(hoveredClipKey)
+                    tracksItemsView.itemEndEditRequested(hoveredObjectKey)
                 }
                 else {
                     splitToolController.mouseUp(e.x)
@@ -478,7 +482,7 @@ Rectangle {
                 }
 
                 if (!root.itemHovered) {
-                    selectionController.resetSelectedClip()
+                    selectionController.resetSelectedObjects()
                 }
             }
 
@@ -492,11 +496,11 @@ Rectangle {
                 }
 
                 if (root.itemHovered) {
-                    selectionController.selectClipAudioData(root.hoveredClipKey)
-                    playCursorController.setPlaybackRegion(timeline.context.selectedClipStartPosition, timeline.context.selectedClipEndPosition)
+                    selectionController.selectObjectData(root.hoveredObjectKey)
+                    playCursorController.setPlaybackRegion(timeline.context.selectedObjectStartPosition, timeline.context.selectedObjectEndPosition)
                 } else {
                     selectionController.selectTrackAudioData(e.y)
-                    playCursorController.setPlaybackRegion(timeline.context.selectedClipStartPosition, timeline.context.selectedClipEndPosition)
+                    playCursorController.setPlaybackRegion(timeline.context.selectedObjectStartPosition, timeline.context.selectedObjectEndPosition)
                 }
                 itemsSelection.visible = false
             }
@@ -542,9 +546,9 @@ Rectangle {
                     return false
                 }
 
-                signal clipMoveRequested(var clipKey, bool completed)
-                signal clipStartEditRequested(var clipKey)
-                signal clipEndEditRequested(var clipKey)
+                signal itemMoveRequested(var objectKey, bool completed)
+                signal itemStartEditRequested(var objectKey)
+                signal itemEndEditRequested(var objectKey)
                 signal startAutoScroll
                 signal stopAutoScroll
 
@@ -603,14 +607,14 @@ Rectangle {
                 delegate: Loader {
                     id: trackItemLoader
 
+                    property var itemData: model
+                    property int index: model.index
+
                     width: tracksItemsView.width
                     
                     sourceComponent: trackType === TrackItemType.Label ? labelTrackItemComp : clipsTrackItemComp
 
                     onLoaded: {
-                        trackItemLoader.item.itemData = model
-                        trackItemLoader.item.index = model.index
-
                         trackItemLoader.item.init()
                     }
                     
@@ -618,8 +622,8 @@ Rectangle {
                         id: clipsTrackItemComp
                         
                         TrackClipsItem {
-                            property var itemData: null
-                            property int index: 0
+                            property var itemData: trackItemLoader.itemData
+                            property int index: trackItemLoader.index
 
                             width: trackItemLoader.width
 
@@ -651,26 +655,26 @@ Rectangle {
 
                             navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 
-                            onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, clipKey) {
+                            onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, objectKey) {
                                 let xGlobalPosition = xWithinTrack
                                 let yGlobalPosition = y + yWithinTrack - tracksItemsView.contentY
 
                                 timeline.updateCursorPosition(xGlobalPosition, yGlobalPosition)
 
                                 root.hoveredTrackId = trackId
-                                root.hoveredClipKey = clipKey
+                                root.hoveredObjectKey = objectKey
                                 root.hoveredTrackHeight = tracksViewState.trackHeight(trackId)
                                 root.hoveredTrackVerticalPosition = tracksViewState.trackVerticalPosition(trackId)
 
                                 splitToolController.mouseMove(xWithinTrack)
                             }
 
-                            onSetHoveredClipKey: function (clipKey) {
-                                root.hoveredClipKey = clipKey
+                            onSetHoveredObjectKey: function (objectKey) {
+                                root.hoveredObjectKey = objectKey
                             }
 
-                            onClipHeaderHoveredChanged: function (val) {
-                                root.clipHeaderHovered = val
+                            onItemHeaderHoveredChanged: function (val) {
+                                root.itemHeaderHovered = val
                             }
 
                             onItemSelectedRequested: {
@@ -794,8 +798,8 @@ Rectangle {
                         id: labelTrackItemComp
 
                         TrackLabelsItem {
-                            property var itemData: null
-                            property int index: 0
+                            property var itemData: trackItemLoader.itemData
+                            property int index: trackItemLoader.index
 
                             width: trackItemLoader.width
 
@@ -809,9 +813,11 @@ Rectangle {
                             isTrackFocused: itemData.isTrackFocused
                             isMultiSelectionActive: itemData.isMultiSelectionActive
                             isTrackAudible: itemData.isTrackAudible
-                            moveActive: itemData.moveActive
+                            // moveActive: itemData.moveActive
+
                             altPressed: root.altPressed
                             ctrlPressed: root.ctrlPressed
+
                             selectionEditInProgress: selectionController.selectionEditInProgress
                             selectionInProgress: selectionController.selectionInProgress
 
@@ -823,22 +829,22 @@ Rectangle {
                                 })
                             }
 
-                            onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, clipKey) {
+                            onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, objectKey) {
                                 let xGlobalPosition = xWithinTrack
                                 let yGlobalPosition = y + yWithinTrack - tracksItemsView.contentY
 
                                 timeline.updateCursorPosition(xGlobalPosition, yGlobalPosition)
 
                                 root.hoveredTrackId = trackId
-                                root.hoveredClipKey = clipKey
+                                root.hoveredObjectKey = objectKey
                                 root.hoveredTrackHeight = tracksViewState.trackHeight(trackId)
                                 root.hoveredTrackVerticalPosition = tracksViewState.trackVerticalPosition(trackId)
 
                                 splitToolController.mouseMove(xWithinTrack)
                             }
 
-                            onClipHeaderHoveredChanged: function (val) {
-                                root.clipHeaderHovered = val
+                            onItemHeaderHoveredChanged: function (val) {
+                                root.itemHeaderHovered = val
                             }
 
                             onInteractionStarted: {
@@ -853,9 +859,21 @@ Rectangle {
                                 playCursorController.seekToX(x)
                             }
 
+                            onSelectionDraged: function (x1, x2, completed) {
+                                selectionController.onSelectionDraged(x1, x2, completed)
+                            }
+
+                            onRequestSelectionContextMenu: function (x, y) {
+                                selectionContextMenuLoader.show(Qt.point(x + canvasIndent.width, y + timelineHeader.height), selectionContextMenuModel.items)
+                            }
+
                             onItemSelectedRequested: {
                                 selectionController.resetDataSelection()
                                 itemsSelection.visible = false
+                            }
+
+                            onSelectionResetRequested: {
+                                selectionController.resetDataSelection()
                             }
                         }
                     }

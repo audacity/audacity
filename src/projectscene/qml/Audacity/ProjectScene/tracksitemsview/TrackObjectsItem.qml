@@ -34,8 +34,10 @@ Item {
 
     signal interactionStarted()
     signal interactionEnded()
-    signal trackItemMousePositionChanged(real x, real y, var clipKey)
-    signal setHoveredClipKey(var clipKey)
+    signal trackItemMousePositionChanged(real x, real y, var objectKey)
+    signal setHoveredObjectKey(var objectKey)
+
+    signal itemHeaderHoveredChanged(bool val)
 
     signal itemSelectedRequested()
     signal selectionResetRequested()

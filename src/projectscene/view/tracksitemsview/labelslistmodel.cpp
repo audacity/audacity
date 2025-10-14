@@ -30,14 +30,14 @@ void LabelsListModel::init()
         return;
     }
 
-    // onSelectedLabels(selectionController()->selectedLabels());
-    // selectionController()->labelsSelected().onReceive(this, [this](const LabelKeyList& keyList) {
-    //     if (keyList.empty()) {
-    //         resetSelectedLabels();
-    //     }
-    //
-    //     onSelectedLabels(keyList);
-    // });
+    onSelectedLabels(selectionController()->selectedLabels());
+    selectionController()->labelsSelected().onReceive(this, [this](const LabelKeyList& keyList) {
+        if (keyList.empty()) {
+            resetSelectedLabels();
+        }
+
+        onSelectedLabels(keyList);
+    });
 
     dispatcher()->reg(this, "rename-label", this, &LabelsListModel::requestLabelTitleChange);
 
@@ -125,6 +125,43 @@ void LabelsListModel::reload()
     });
 
     update();
+}
+
+void LabelsListModel::startEditLabel(const LabelKey& key)
+{
+    LabelListItem* item = itemByKey(key.key);
+    if (!item) {
+        return;
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return;
+    }
+
+    double mousePositionTime = m_context->mousePositionTime();
+
+    vs->setObjectEditStartTimeOffset(mousePositionTime - item->label().startTime);
+    vs->setObjectEditEndTimeOffset(item->label().endTime - mousePositionTime);
+}
+
+void LabelsListModel::endEditLabel(const LabelKey& key)
+{
+    LabelListItem* item = itemByKey(key.key);
+    if (!item) {
+        return;
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return;
+    }
+
+    // disconnectAutoScroll();
+
+    vs->setObjectEditStartTimeOffset(-1.0);
+    vs->setObjectEditEndTimeOffset(-1.0);
+    vs->setMoveInitiated(false);
 }
 
 LabelListItem* LabelsListModel::itemByKey(const trackedit::LabelKey& k) const
@@ -225,8 +262,7 @@ void LabelsListModel::update()
     //! NOTE We need to update the selected items
     //! to take pointers to the items from the new list
     m_selectedItems.clear();
-    //! TODO: Update when selection controller supports labels
-    // onSelectedLabels(selectionController()->selectedLabels());
+    onSelectedLabels(selectionController()->selectedLabels());
 
     muse::async::Async::call(this, [cleanupList]() {
         qDeleteAll(cleanupList);
@@ -254,11 +290,10 @@ void LabelsListModel::updateItemsMetrics(LabelListItem* item)
     time.itemStartTime = std::max(label.startTime, (m_context->frameStartTime() - cacheTime));
     time.itemEndTime = std::min(label.endTime, (m_context->frameEndTime() + cacheTime));
 
-    //! TODO: Handle selection when selection controller supports labels
-    // if (selectionController()->isDataSelectedOnTrack(m_trackId)) {
-    //     time.selectionStartTime = selectionController()->dataSelectedStartTime();
-    //     time.selectionEndTime = selectionController()->dataSelectedEndTime();
-    // }
+    if (selectionController()->isDataSelectedOnTrack(m_trackId)) {
+        time.selectionStartTime = selectionController()->dataSelectedStartTime();
+        time.selectionEndTime = selectionController()->dataSelectedEndTime();
+    }
 
     item->setTime(time);
     item->setX(m_context->timeToPosition(time.itemStartTime));
@@ -370,47 +405,43 @@ QVariant LabelsListModel::neighbor(const LabelKey& key, int offset) const
 
 void LabelsListModel::selectLabel(const LabelKey& key)
 {
+    LOGI() << "============= selectLabel " << key.key.objectId;
+
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
-    //! TODO: Implement label selection when selection controller supports labels
-    // if (modifiers.testFlag(Qt::ShiftModifier)) {
-    //     selectionController()->addSelectedLabel(key.key);
-    // } else {
-    //     if (muse::contains(selectionController()->selectedLabels(), key.key)) {
-    //         return;
-    //     }
-    //     selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
-    // }
-
-    Q_UNUSED(modifiers);
-    Q_UNUSED(key);
+    if (modifiers.testFlag(Qt::ShiftModifier)) {
+        selectionController()->addSelectedLabel(key.key);
+    } else {
+        if (muse::contains(selectionController()->selectedLabels(), key.key)) {
+            return;
+        }
+        selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
+    }
 }
 
 void LabelsListModel::resetSelectedLabels()
 {
     clearSelectedItems();
-    //! TODO: Implement label selection when selection controller supports labels
-    // selectionController()->resetSelectedLabels();
+    selectionController()->resetSelectedLabels();
 }
 
 void LabelsListModel::requestLabelTitleChange()
 {
-    //! TODO: Implement label title change when selection controller supports labels
-    // auto selectedLabels = selectionController()->selectedLabels();
-    //
-    // if (selectedLabels.empty() || selectedLabels.size() > 1) {
-    //     return;
-    // }
-    //
-    // trackedit::LabelKey labelKey = selectedLabels.front();
-    // if (!labelKey.isValid()) {
-    //     return;
-    // }
-    //
-    // LabelListItem* selectedItem = itemByKey(labelKey);
-    // if (selectedItem != nullptr) {
-    //     emit selectedItem->titleEditRequested();
-    // }
+    auto selectedLabels = selectionController()->selectedLabels();
+
+    if (selectedLabels.empty() || selectedLabels.size() > 1) {
+        return;
+    }
+
+    trackedit::LabelKey labelKey = selectedLabels.front();
+    if (!labelKey.isValid()) {
+        return;
+    }
+
+    LabelListItem* selectedItem = itemByKey(labelKey);
+    if (selectedItem != nullptr) {
+        emit selectedItem->titleEditRequested();
+    }
 }
 
 void LabelsListModel::onSelectedLabel(const trackedit::LabelKey& k)
