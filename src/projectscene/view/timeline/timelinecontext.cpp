@@ -62,8 +62,13 @@ void TimelineContext::init(double frameWidth)
     }
 
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList&) {
-        updateSingleClipSelected();
-        updateSelectedClipTime();
+        updateSingleObjectSelected();
+        updateSelectedObjectTime();
+    });
+
+    selectionController()->labelsSelected().onReceive(this, [this](const trackedit::LabelKeyList&) {
+        updateSingleObjectSelected();
+        updateSelectedObjectTime();
     });
 
     m_selectionStartTime = selectionController()->dataSelectedStartTime();
@@ -94,9 +99,9 @@ void TimelineContext::init(double frameWidth)
         emit selectionEndTimeChanged();
         emit selectionStartPositionChanged();
         emit selectionEndPositionChanged();
-        if (singleClipSelected()) {
-            emit selectedClipStartPositionChanged();
-            emit selectedClipEndPositionChanged();
+        if (singleObjectSelected()) {
+            emit selectedObjectStartPositionChanged();
+            emit selectedObjectEndPositionChanged();
         }
     });
 
@@ -797,29 +802,29 @@ bool TimelineContext::selectionActive() const
     return m_selectionActive;
 }
 
-double TimelineContext::selectedClipStartTime() const
+double TimelineContext::selectedObjectStartTime() const
 {
-    return m_selectedClipStartTime.raw();
+    return m_selectedObjectStartTime.raw();
 }
 
-double TimelineContext::selectedClipEndTime() const
+double TimelineContext::selectedObjectEndTime() const
 {
-    return m_selectedClipEndTime.raw();
+    return m_selectedObjectEndTime.raw();
 }
 
-double TimelineContext::selectedClipStartPosition() const
+double TimelineContext::selectedObjectStartPosition() const
 {
-    return timeToPosition(m_selectedClipStartTime);
+    return timeToPosition(m_selectedObjectStartTime);
 }
 
-double TimelineContext::selectedClipEndPosition() const
+double TimelineContext::selectedObjectEndPosition() const
 {
-    return timeToPosition(m_selectedClipEndTime);
+    return timeToPosition(m_selectedObjectEndTime);
 }
 
-bool TimelineContext::singleClipSelected() const
+bool TimelineContext::singleObjectSelected() const
 {
-    return m_singleClipSelected;
+    return m_singleObjectSelected;
 }
 
 void TimelineContext::updateSelectionActive()
@@ -835,40 +840,44 @@ void TimelineContext::updateSelectionActive()
     emit selectionActiveChanged();
 }
 
-void TimelineContext::setClipStartTime(double time)
+void TimelineContext::setObjectStartTime(double time)
 {
-    if (m_selectedClipStartTime != time) {
-        m_selectedClipStartTime = time;
-        emit selectedClipStartTimeChanged();
-        emit selectedClipStartPositionChanged();
+    if (m_selectedObjectStartTime != time) {
+        m_selectedObjectStartTime = time;
+        emit selectedObjectStartTimeChanged();
+        emit selectedObjectStartPositionChanged();
     }
 }
 
-void TimelineContext::setClipEndTime(double time)
+void TimelineContext::setObjectEndTime(double time)
 {
-    if (m_selectedClipEndTime != time) {
-        m_selectedClipEndTime = time;
-        emit selectedClipEndTimeChanged();
-        emit selectedClipEndPositionChanged();
+    if (m_selectedObjectEndTime != time) {
+        m_selectedObjectEndTime = time;
+        emit selectedObjectEndTimeChanged();
+        emit selectedObjectEndPositionChanged();
     }
 }
 
-void TimelineContext::updateSingleClipSelected()
+void TimelineContext::updateSingleObjectSelected()
 {
-    bool selected = selectionController()->selectedClips().size() == 1;
+    bool selected = (selectionController()->selectedClips().size() == 1)
+                    || (selectionController()->selectedLabels().size() == 1);
 
-    if (m_singleClipSelected == selected) {
+    if (m_singleObjectSelected == selected) {
         return;
     }
-    m_singleClipSelected = selected;
-    emit singleClipSelectedChanged();
+    m_singleObjectSelected = selected;
+    emit singleObjectSelectedChanged();
 }
 
-void TimelineContext::updateSelectedClipTime()
+void TimelineContext::updateSelectedObjectTime()
 {
-    if (singleClipSelected()) {
-        setClipStartTime(selectionController()->selectedClipStartTime());
-        setClipEndTime(selectionController()->selectedClipEndTime());
+    if (selectionController()->selectedClips().size() == 1) {
+        setObjectStartTime(selectionController()->selectedClipStartTime());
+        setObjectEndTime(selectionController()->selectedClipEndTime());
+    } else if (selectionController()->selectedLabels().size() == 1) {
+        setObjectStartTime(selectionController()->selectedLabelStartTime());
+        setObjectEndTime(selectionController()->selectedLabelEndTime());
     }
 }
 

@@ -10,6 +10,7 @@
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/itrackeditinteraction.h"
 
+#include "types/projectscenetypes.h"
 #include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
@@ -44,9 +45,11 @@ public:
     Q_INVOKABLE void onSelectionDraged(double x, double x2, bool completed);
 
     Q_INVOKABLE void selectTrackAudioData(double y);
-    Q_INVOKABLE void selectClipAudioData(const ClipKey& clipKey);
+    Q_INVOKABLE void selectObjectData(const TrackObjectKey& objectKey);
 
-    Q_INVOKABLE void resetSelectedClip();
+    Q_INVOKABLE void resetSelectedObjects();
+    Q_INVOKABLE void resetSelectedClips();
+    Q_INVOKABLE void resetSelectedLabel();
     Q_INVOKABLE void resetDataSelection();
     Q_INVOKABLE bool isLeftSelection(double x) const;
 

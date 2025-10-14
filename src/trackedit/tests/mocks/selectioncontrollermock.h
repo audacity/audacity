@@ -29,6 +29,21 @@ public:
     MOCK_METHOD(double, leftMostSelectedClipStartTime, (), (const, override));
     MOCK_METHOD(double, rightMostSelectedClipEndTime, (), (const, override));
 
+    MOCK_METHOD(void, resetSelectedLabels, (), (override));
+    MOCK_METHOD(bool, hasSelectedLabels, (), (const, override));
+    MOCK_METHOD(LabelKeyList, selectedLabels, (), (const, override));
+    MOCK_METHOD(LabelKeyList, selectedLabelsInTrackOrder, (), (const, override));
+    MOCK_METHOD(void, setSelectedLabels, (const LabelKeyList&, bool), (override));
+    MOCK_METHOD(void, addSelectedLabel, (const LabelKey& LabelKey), (override));
+    MOCK_METHOD(void, removeLabelSelection, (const LabelKey& labelKey), (override));
+    MOCK_METHOD(muse::async::Channel<LabelKeyList>, labelsSelected, (), (const, override));
+
+    MOCK_METHOD(double, selectedLabelStartTime, (), (const, override));
+    MOCK_METHOD(double, selectedLabelEndTime, (), (const, override));
+
+    MOCK_METHOD(double, leftMostSelectedLabelStartTime, (), (const, override));
+    MOCK_METHOD(double, rightMostSelectedLabelEndTime, (), (const, override));
+
     MOCK_METHOD(void, setSelectedTrackAudioData, (TrackId), (override));
     MOCK_METHOD(void, resetDataSelection, (), (override));
     MOCK_METHOD(bool, timeSelectionIsNotEmpty, (), (const, override));
