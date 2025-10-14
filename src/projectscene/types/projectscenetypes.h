@@ -27,27 +27,30 @@ public:
     Q_ENUM(Type)
 };
 
-class ClipKey
+class TrackObjectKey
 {
     Q_GADGET
 
 public:
 
-    ClipKey() = default;
-    ClipKey(const trackedit::ClipKey& k)
+    TrackObjectKey() = default;
+    TrackObjectKey(const trackedit::TrackObjectKey& k)
         : key(k) {}
 
-    trackedit::ClipKey key;
+    trackedit::TrackObjectKey key;
 };
 
-class ClipTime
+using ClipKey = TrackObjectKey;
+using LabelKey = TrackObjectKey;
+
+class TrackObjectTime
 {
     Q_GADGET
 
 public:
 
-    double clipStartTime = 0.0;
-    double clipEndTime = 0.0;
+    double startTime = 0.0;
+    double endTime = 0.0;
 
     double itemStartTime = 0.0;
     double itemEndTime = 0.0;
@@ -55,18 +58,21 @@ public:
     double selectionStartTime = 0.0;
     double selectionEndTime = 0.0;
 
-    inline bool operator==(const ClipTime& other) const
+    inline bool operator==(const TrackObjectTime& other) const
     {
-        return muse::is_equal(clipStartTime, other.clipStartTime)
-               && muse::is_equal(clipEndTime, other.clipEndTime)
+        return muse::is_equal(startTime, other.startTime)
+               && muse::is_equal(endTime, other.endTime)
                && muse::is_equal(itemStartTime, other.itemStartTime)
                && muse::is_equal(itemEndTime, other.itemEndTime)
                && muse::is_equal(selectionStartTime, other.selectionStartTime)
                && muse::is_equal(selectionEndTime, other.selectionEndTime);
     }
 
-    inline bool operator!=(const ClipTime& other) const { return !this->operator==(other); }
+    inline bool operator!=(const TrackObjectTime& other) const { return !this->operator==(other); }
 };
+
+using ClipTime = TrackObjectTime;
+using LabelTime = TrackObjectTime;
 
 class VerticalRulerTypes
 {

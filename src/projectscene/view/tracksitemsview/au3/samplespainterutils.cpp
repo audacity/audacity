@@ -317,7 +317,7 @@ std::optional<int> hitNearestSampleChannelIndex(std::shared_ptr<au::project::IAu
         return std::nullopt;
     }
 
-    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.objectId);
     if (!waveClip) {
         return std::nullopt;
     }
@@ -413,7 +413,7 @@ void setIsolatedPoint(const unsigned int currentChannel, const trackedit::ClipKe
         return;
     }
 
-    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.objectId);
     if (!waveClip) {
         return;
     }
@@ -481,7 +481,7 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
         return;
     }
 
-    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.objectId);
     if (!waveClip) {
         return;
     }
@@ -592,7 +592,7 @@ void smoothLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::p
         return;
     }
 
-    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.objectId);
     if (!waveClip) {
         return;
     }
