@@ -138,8 +138,9 @@ bool UiContextResolver::match(const ui::UiContext& currentCtx, const ui::UiConte
         return true;
     }
 
+    //! SEE There's a problem here, see https://github.com/audacity/audacity/pull/9662#issuecomment-3405088750
     //! NOTE If the current context is `UiCtxProjectPlayback`, then we allow `UiCtxProjectFocused` too
-    if (currentCtx == context::UiCtxProjectPlayback && actCtx == context::UiCtxProjectFocused) {
+    if (currentCtx == context::UiCtxProjectFocused && actCtx == context::UiCtxProjectPlayback) {
         return true;
     }
 
