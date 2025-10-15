@@ -1906,6 +1906,11 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
                 gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStop,
                                                         std::memory_order::memory_order_release);
             }
+            else if (lastState == State::eDoNothing) {
+                //Avoid multiple stops in a row
+                gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStop,
+                                                        std::memory_order::memory_order_release);
+            }
             lastState = State::eDoNothing;
 
             if (gAudioIO->IsMonitoring()) {
