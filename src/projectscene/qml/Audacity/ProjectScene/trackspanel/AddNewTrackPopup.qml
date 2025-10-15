@@ -14,8 +14,6 @@ StyledPopupView {
     contentWidth: trackTypeOpts.width
     contentHeight: trackTypeOpts.height
 
-    modal: true
-
     property alias popupAnchorItem: root.anchorItem
 
     signal createTrack(type : int)

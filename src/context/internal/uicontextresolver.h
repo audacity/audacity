@@ -48,7 +48,7 @@ public:
 
     void init();
 
-    muse::ui::UiContext currentUiContext() const override;
+    const muse::ui::UiContext& currentUiContext() const override;
     muse::async::Notification currentUiContextChanged() const override;
 
     bool match(const muse::ui::UiContext& currentCtx, const muse::ui::UiContext& actCtx) const override;
@@ -57,6 +57,7 @@ public:
     bool isShortcutContextAllowed(const std::string& scContext) const override;
 
 private:
+    muse::ui::UiContext resolveUiContext() const;
     void notifyAboutContextChanged();
 
     muse::async::Notification m_currentUiContextChanged;
