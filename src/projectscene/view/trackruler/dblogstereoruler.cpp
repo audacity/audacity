@@ -1,5 +1,6 @@
-#include "global/realfn.h"
-
+/*
+* Audacity: A Digital Audio Editor
+*/
 #include "projectscene/view/trackruler/dblogstereoruler.h"
 #include "view/trackruler/itrackrulermodel.h"
 
@@ -22,17 +23,21 @@ constexpr std::array<TrackRulerFullStep, 2> LOW_RESOLUTION_FULL_STEPS_CH1 = { {
     TrackRulerFullStep{ 0.0, 1, 1, true, false, true },
 } };
 
-constexpr std::array<TrackRulerFullStep, 4> HIGH_RESOLUTION_FULL_STEPS_CH0 = { {
+constexpr std::array<TrackRulerFullStep, 6> HIGH_RESOLUTION_FULL_STEPS_CH0 = { {
     TrackRulerFullStep{ 0.0, 0, -1, true, false, false },
     TrackRulerFullStep{ 1.0 / 3.0, 0, 0, false, false, false },
+    TrackRulerFullStep{ 2.0 / 3.0, 0, 0, false, false, false },
     TrackRulerFullStep{ 1.0, 0, 0, true, true, false },
     TrackRulerFullStep{ 1.0 / 3.0, 0, 0, false, false, true },
+    TrackRulerFullStep{ 2.0 / 3.0, 0, 0, false, false, true },
 } };
 
-constexpr std::array<TrackRulerFullStep, 4> HIGH_RESOLUTION_FULL_STEPS_CH1 = { {
+constexpr std::array<TrackRulerFullStep, 6> HIGH_RESOLUTION_FULL_STEPS_CH1 = { {
     TrackRulerFullStep{ 1.0 / 3.0, 1, 0, false, false, false },
+    TrackRulerFullStep{ 2.0 / 3.0, 1, 0, false, false, false },
     TrackRulerFullStep{ 1.0, 1, 0, true, true, false },
     TrackRulerFullStep{ 1.0 / 3.0, 1, 0, false, false, true },
+    TrackRulerFullStep{ 2.0 / 3.0, 1, 0, false, false, true },
     TrackRulerFullStep{ 0.0, 1, 1, true, false, true },
 } };
 
