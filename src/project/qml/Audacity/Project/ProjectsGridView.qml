@@ -158,7 +158,7 @@ Item {
                 thumbnailUrl: Qt.resolvedUrl("file:" + project.thumbnailUrl) ?? ""
                 isCreateNew: project.isCreateNew
                 isNoResultsFound: project.isNoResultsFound
-                isCloud: project.isCloud
+                //isCloud: project.isCloud
                 cloudProjectId: project.projectId ?? 0
                 timeSinceModified: project.timeSinceModified ?? ""
 

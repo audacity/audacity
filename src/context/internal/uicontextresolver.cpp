@@ -90,7 +90,7 @@ void UiContextResolver::notifyAboutContextChanged()
     m_currentUiContextChanged.notify();
 }
 
-UiContext UiContextResolver::currentUiContext() const
+muse::ui::UiContext UiContextResolver::resolveUiContext() const
 {
     TRACEFUNC;
     Uri currentUri = interactive()->currentUri().val;
@@ -124,6 +124,13 @@ UiContext UiContextResolver::currentUiContext() const
     }
 
     return context::UiCtxUnknown;
+}
+
+const muse::ui::UiContext& UiContextResolver::currentUiContext() const
+{
+    static muse::ui::UiContext current;
+    current = resolveUiContext();
+    return current;
 }
 
 bool UiContextResolver::match(const ui::UiContext& currentCtx, const ui::UiContext& actCtx) const
