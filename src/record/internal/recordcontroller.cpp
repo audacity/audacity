@@ -10,16 +10,16 @@ using namespace au::record;
 using namespace muse::async;
 using namespace muse::actions;
 
-static const ActionCode RECORD_CODE("record");
-static const ActionCode PAUSE_CODE("pause-record");
-static const ActionCode STOP_CODE("stop-record");
-static const ActionCode RECORD_LEVEL_CODE("record-level");
+static const ActionCode RECORD_START_CODE("record"); // TODO rename "record/start"
+static const ActionCode RECORD_PAUSE_CODE("pause-record"); // TODO rename "record/pause"
+static const ActionCode RECORD_STOP_CODE("stop-record"); // TODO rename "record/stop"
+static const ActionCode RECORD_LEVEL_CODE("record-level"); // TODO rename "record/level" This also need callback
 
 void RecordController::init()
 {
-    dispatcher()->reg(this, RECORD_CODE, this, &RecordController::toggleRecord);
-    dispatcher()->reg(this, PAUSE_CODE, this, &RecordController::pause);
-    dispatcher()->reg(this, STOP_CODE, this, &RecordController::stop);
+    dispatcher()->reg(this, RECORD_START_CODE, this, &RecordController::toggleRecord);
+    dispatcher()->reg(this, RECORD_PAUSE_CODE, this, &RecordController::pause);
+    dispatcher()->reg(this, RECORD_STOP_CODE, this, &RecordController::stop);
 
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
         m_isRecordAllowedChanged.notify();
@@ -134,11 +134,11 @@ bool RecordController::canReceiveAction(const ActionCode& code) const
         return false;
     }
 
-    if (code == RECORD_CODE) {
+    if (code == RECORD_START_CODE) {
         return !playbackController()->isPlaying();
     }
 
-    if (code == STOP_CODE) {
+    if (code == RECORD_STOP_CODE) {
         return isRecording();
     }
 
