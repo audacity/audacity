@@ -35,10 +35,10 @@ Rectangle {
 
     enum State {
         Idle,
-        DraggingClip
+        DraggingObject
     }
 
-    property int interactionState: TracksClipsView.State.Idle
+    property int interactionState: TracksItemsView.State.Idle
 
     PlaybackStateModel {
         id: playbackState
@@ -394,11 +394,11 @@ Rectangle {
                 }
 
                 if (e.button === Qt.LeftButton) {
-                    console.info("============ startUserInteraction qml ", root.itemHeaderHovered)
                     tracksModel.startUserInteraction()
 
                     if (root.itemHeaderHovered) {
                         tracksItemsView.itemStartEditRequested(hoveredObjectKey)
+                        root.interactionState = TracksItemsView.State.DraggingObject
                     } else {
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
                             playCursorController.seekToX(e.x)
@@ -423,15 +423,13 @@ Rectangle {
             }
 
             onPositionChanged: function (e) {
-                console.info("=========== position", e.x)
                 timeline.updateCursorPosition(e.x, e.y)
                 splitToolController.mouseMove(e.x)
 
-                if (root.itemHeaderHovered && pressed) {
+                if (root.interactionState === TracksItemsView.State.DraggingObject) {
                     tracksItemsView.itemMoveRequested(hoveredObjectKey, false)
                     tracksItemsView.startAutoScroll()
                 } else {
-                    console.info(new Error().stack)
                     selectionController.onPositionChanged(e.x, e.y)
                     let trackId = tracksViewState.trackAtPosition(e.x, e.y)
 
@@ -444,7 +442,8 @@ Rectangle {
                     return
                 }
 
-                if (root.itemHeaderHovered) {
+                if (root.interactionState === TracksItemsView.State.DraggingObject) {
+                    root.interactionState = TracksItemsView.State.Idle
                     tracksItemsView.itemMoveRequested(hoveredObjectKey, true)
                     tracksItemsView.stopAutoScroll()
                     tracksItemsView.itemEndEditRequested(hoveredObjectKey)
@@ -471,8 +470,7 @@ Rectangle {
             }
 
             onCanceled: e => {
-                console.log("User interaction canceled")
-                root.interactionState = TracksClipsView.State.Idle
+                root.interactionState = TracksItemsView.State.Idle
                 tracksModel.endUserInteraction()
             }
 
