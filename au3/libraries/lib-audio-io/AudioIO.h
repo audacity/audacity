@@ -547,26 +547,6 @@ public:
 private:
     bool DelayingActions() const;
 
-    /**
-     * \brief Start the current VU meters
-     */
-    void StartMeters();
-
-    /**
-     * \brief Stop the current VU meters
-     */
-    void StopMeters();
-
-    /**
-     * \brief Reset the current VU meters
-     */
-    void ResetMeters();
-
-    /**
-     * \brief Update the sample rate of the current VU meters
-     */
-    void UpdateMetersRate(const double rate);
-
     /** \brief Opens the portaudio stream(s) used to do playback or recording
      * (or both) through.
      *

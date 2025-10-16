@@ -112,6 +112,26 @@ public:
     AudioIOBase(const AudioIOBase&) = delete;
     AudioIOBase& operator=(const AudioIOBase&) = delete;
 
+    /**
+     * \brief Start the current VU meters
+     */
+    void StartMeters();
+
+    /**
+     * \brief Stop the current VU meters
+     */
+    void StopMeters();
+
+    /**
+     * \brief Reset the current VU meters
+     */
+    void ResetMeters();
+
+    /**
+     * \brief Update the sample rate of the current VU meters
+     */
+    void UpdateMetersRate(const double rate);
+
     void SetCaptureMeter(
         const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<IMeterSender>& meter);
     void SetPlaybackMeter(

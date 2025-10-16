@@ -286,7 +286,7 @@ AudioIO::AudioIO()
     mNumCaptureChannels = 0;
     mSilenceLevel = 0.0;
 
-    mOutputMeter.reset();
+    ResetMeters();
 
     PaError err = Pa_Initialize();
 
@@ -1477,42 +1477,6 @@ bool AudioIO::IsAvailable(AudacityProject& project) const
 {
     auto pOwningProject = mOwningProject.lock();
     return !pOwningProject || pOwningProject.get() == &project;
-}
-
-void AudioIO::StartMeters()
-{
-    if (auto pInputMeter = mInputMeter.lock()) {
-        pInputMeter->start();
-    }
-    if (auto pOutputMeter = mOutputMeter.lock()) {
-        pOutputMeter->start();
-    }
-}
-
-void AudioIO::StopMeters()
-{
-    if (auto pInputMeter = mInputMeter.lock()) {
-        pInputMeter->stop();
-    }
-    if (auto pOutputMeter = mOutputMeter.lock()) {
-        pOutputMeter->stop();
-    }
-}
-
-void AudioIO::ResetMeters()
-{
-    mInputMeter.reset();
-    mOutputMeter.reset();
-}
-
-void AudioIO::UpdateMetersRate(const double rate)
-{
-    if (auto pInputMeter = mInputMeter.lock()) {
-        pInputMeter->setSampleRate(rate);
-    }
-    if (auto pOutputMeter = mOutputMeter.lock()) {
-        pOutputMeter->setSampleRate(rate);
-    }
 }
 
 void AudioIO::StopStream()
