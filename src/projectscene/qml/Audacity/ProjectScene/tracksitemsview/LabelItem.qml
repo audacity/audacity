@@ -36,18 +36,17 @@ Item {
 
     property color labelColor: null
 
-    readonly property int labelHeight: 14
-    readonly property int earWidth: 7
-    readonly property int textTopPadding: 2
-    readonly property int textBottomPadding: 2
-
     QtObject {
         id: prv
 
-        readonly property int doubleClickInterval: 400
-        readonly property int doubleClickMaxDistance: 5
+        property bool isPoint: root.width === 0
 
-        property real backgroundOpacity: 1
+        readonly property int labelHeight: 14
+        readonly property int earWidth: 7
+
+        property color backgroundColor: root.labelColor
+        property color leftEarBackgroundColor: root.labelColor
+        property color rightEarBackgroundColor: root.labelColor
     }
 
     function setContainsMouse(containsMouse) {
@@ -56,6 +55,10 @@ Item {
         }
 
         root.containsMouse = containsMouse
+    }
+
+    function editTitle() {
+        header.edit()
     }
 
     // Navigation support
@@ -133,341 +136,118 @@ Item {
     }
 
     // Left Ear
-    Canvas {
+    LabelEar {
         id: leftEar
-        width: root.earWidth
-        height: root.labelHeight
-        x: -root.earWidth - 1
-        opacity: prv.backgroundOpacity
 
-        onPaint: {
-            var ctx = getContext("2d")
-            ctx.clearRect(0, 0, width, height)
+        height: prv.labelHeight
+        x: -prv.earWidth - (prv.isPoint ? 0 : 1)
 
-            ctx.fillStyle = root.labelColor
-            ctx.strokeStyle = root.labelColor
-            ctx.lineWidth = 1
-            ctx.imageSmoothingEnabled = true
-
-            ctx.beginPath()
-
-            const radius = 1
-            ctx.moveTo(0, 1)
-            ctx.arcTo(0, 0, radius, 0, radius)
-            ctx.lineTo(width, 0)
-            ctx.lineTo(width + 1, height)
-
-            ctx.closePath()
-
-            ctx.fill()
-            ctx.stroke()
-        }
-
-        Connections {
-            target: root
-            function onLabelColorChanged() {
-                leftEar.requestPaint()
-            }
-        }
-
-        MouseArea {
-            id: leftEarDragArea
-            anchors.fill: parent
-
-            acceptedButtons: Qt.LeftButton
-            hoverEnabled: true
-            cursorShape: Qt.SizeHorCursor
-
-            visible: root.enableCursorInteraction
-
-            onContainsMouseChanged: {
-                if (!root.visible) {
-                    return
-                }
-                root.headerHovered = containsMouse
-            }
-        }
+        isRight: false
+        enableCursorInteraction: root.enableCursorInteraction
+        backgroundColor: prv.leftEarBackgroundColor
     }
 
     // Right Ear
-    Canvas {
+    LabelEar {
         id: rightEar
-        width: root.earWidth
-        height: root.labelHeight
-        x: root.width + 1
-        opacity: prv.backgroundOpacity
 
-        onPaint: {
-            var ctx = getContext("2d")
-            ctx.clearRect(0, 0, width, height)
+        height: prv.labelHeight
+        x: root.width + (prv.isPoint ? 0 : 1)
 
-            ctx.fillStyle = root.labelColor
-            ctx.strokeStyle = root.labelColor
-            ctx.lineWidth = 1
-            ctx.imageSmoothingEnabled = true
-
-            ctx.beginPath()
-
-            ctx.moveTo(0, 0)
-            ctx.lineTo(0, height)
-            ctx.lineTo(width, 0)
-
-            ctx.closePath()
-
-            ctx.fill()
-            ctx.stroke()
-        }
-
-        Connections {
-            target: root
-            function onLabelColorChanged() {
-                rightEar.requestPaint()
-            }
-        }
-
-        MouseArea {
-            id: rightEarDragArea
-            anchors.fill: parent
-
-            acceptedButtons: Qt.LeftButton
-            hoverEnabled: true
-            cursorShape: Qt.SizeHorCursor
-
-            visible: root.enableCursorInteraction
-
-            onContainsMouseChanged: {
-                if (!root.visible) {
-                    return
-                }
-                root.headerHovered = containsMouse
-            }
-        }
+        isRight: true
+        enableCursorInteraction: root.enableCursorInteraction
+        backgroundColor: prv.rightEarBackgroundColor
     }
 
     // Main Label Header
-    Rectangle {
+    LabelHeader {
         id: header
-        width: parent.width
-        height: root.labelHeight
-        color: root.labelColor
-        opacity: prv.backgroundOpacity
 
-        MouseArea {
-            id: headerDragArea
-            anchors.fill: parent
+        height: prv.labelHeight
 
-            property var lastClickTime: 0
-            property point doubleClickStartPosition
+        title: root.title
 
-            acceptedButtons: Qt.LeftButton
-            hoverEnabled: true
-            cursorShape: Qt.OpenHandCursor
+        isPoint: prv.isPoint
 
-            visible: root.enableCursorInteraction
+        backgroundColor: prv.backgroundColor
 
-            onContainsMouseChanged: {
-                if (!root.visible) {
-                    return
-                }
-                root.headerHovered = containsMouse
-            }
+        earWidth: prv.earWidth
 
-            onPressed: function (e) {
-                console.log("============= click")
-                var currentTime = Date.now()
+        enableCursorInteraction: root.enableCursorInteraction
 
-                if (currentTime - lastClickTime < prv.doubleClickInterval) {
-                    // Double click - edit title
-                    titleLoader.edit()
-                } else {
-                    // Single click - select
-                    root.requestSelected()
-                    lastClickTime = currentTime
-                }
-                e.accepted = false
-            }
+        navigationPanel: root.labelNavigationPanel
 
-            onPositionChanged: function (e) {
-                // Reset double click timer if the mouse has moved,
-                // to prevent rapid clip movement activate title editing
-                if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance ||
-                    Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
+        visible: root.visible
 
-                    lastClickTime = 0
-                }
-
-                root.labelItemMousePositionChanged(e.x, e.y)
-
-                e.accepted = false
-            }
+        onTitleEditAccepted: function(newTitle) {
+            root.titleEditAccepted(newTitle)
         }
 
-        Loader {
-            id: titleLoader
+        onTitleEditStarted: {
+            root.titleEditStarted()
+        }
 
-            anchors.top: parent.top
-            anchors.topMargin: 2
-            anchors.left: parent.left
-            anchors.leftMargin: root.earWidth
-            anchors.right: parent.right
-            anchors.rightMargin: root.earWidth
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 2
+        onRequestSelected: {
+            root.requestSelected()
+        }
 
-            property bool isEditState: false
-            sourceComponent: isEditState ? titleEditComp : titleComp
+        onLabelItemMousePositionChanged: function(x, y) {
+            root.labelItemMousePositionChanged(x, y)
+        }
 
-            property color labelColor: "#000000"
+        onHeaderHoveredChanged: function(value) {
+            root.headerHovered = value
+        }
+    }
 
-            function edit() {
-                root.titleEditStarted()
+    // Point's Stalk
+    LabelStalk {
+        isForPoint: true
+        enableCursorInteraction: root.enableCursorInteraction
+        backgroundColor: leftEar.hovered ? prv.leftEarBackgroundColor : prv.rightEarBackgroundColor
 
-                titleLoader.isEditState = true
-                titleLoader.item.currentText = root.title
-                titleLoader.item.newTitle = root.title
-                titleLoader.item.ensureActiveFocus()
-            }
+        visible: prv.isPoint
 
-            Component {
-                id: titleComp
-
-                StyledTextLabel {
-                    text: root.title
-                    horizontalAlignment: Qt.AlignLeft
-                    color: titleLoader.labelColor
-                }
-            }
-
-            Component {
-                id: titleEditComp
-
-                TextInputField {
-                    id: titleEdit
-
-                    property string newTitle: ""
-
-                    background.color: header.color
-                    background.border.width: 0
-                    background.radius: 0
-                    inputField.color: titleLoader.labelColor
-                    textSidePadding: 0
-
-                    onTextChanged: function (text) {
-                        titleEdit.newTitle = text
-                    }
-
-                    onAccepted: {
-                        Qt.callLater(root.titleEditAccepted, newTitle)
-
-                        titleLoader.isEditState = false
-                    }
-
-                    onEscaped: {
-                        titleLoader.isEditState = false
-                    }
-
-                    onFocusChanged: {
-                        if (!titleEdit.focus) {
-                            titleEdit.visible = false
-                            titleEdit.accepted()
-                        }
-                    }
-                }
-            }
-
-            NavigationControl {
-                id: titleEditNavCtrl
-                name: "TitleEditNavCtrl"
-                enabled: /*root.enabled && */root.visible
-                panel: root.labelNavigationPanel
-                column: 3
-
-                accessible.enabled: titleEditNavCtrl.enabled
-
-                onTriggered: {
-                    titleLoader.edit()
-                }
-            }
-
-            NavigationFocusBorder {
-                navigationCtrl: titleEditNavCtrl
-
-                anchors.topMargin: 1
-                anchors.bottomMargin: 0
-                radius: 5
-            }
+        onHeaderHoveredChanged: function(value) {
+            root.headerHovered = value
         }
     }
 
     // Left Stalk
-    Rectangle {
-        id: leftStalk
+    LabelStalk {
+        isRight: false
+        enableCursorInteraction: root.enableCursorInteraction
+        backgroundColor: prv.leftEarBackgroundColor
 
-        width: 1
-        height: parent.height
-        x: -1
+        visible: !prv.isPoint
 
-        color: root.labelColor
-        opacity: prv.backgroundOpacity
-
-        MouseArea {
-            anchors.fill: parent
-            anchors.leftMargin: -1
-            anchors.rightMargin: -1
-
-            acceptedButtons: Qt.LeftButton
-            hoverEnabled: true
-            cursorShape: pressed ? Qt.CloseHandCursor : Qt.OpenHandCursor
-
-            visible: root.enableCursorInteraction
-
-            onContainsMouseChanged: {
-                if (!root.visible) {
-                    return
-                }
-                root.headerHovered = containsMouse
-            }
+        onHeaderHoveredChanged: function(value) {
+            root.headerHovered = value
         }
     }
 
     // Right Stalk
-    Rectangle {
-        id: rightStalk
+    LabelStalk {
+        isRight: true
+        enableCursorInteraction: root.enableCursorInteraction
+        backgroundColor: prv.rightEarBackgroundColor
 
-        width: 1
-        height: parent.height
-        x: parent.width
+        visible: !prv.isPoint
 
-        color: root.labelColor
-        opacity: prv.backgroundOpacity
-
-        MouseArea {
-            anchors.fill: parent
-            anchors.leftMargin: -1
-            anchors.rightMargin: -1
-
-            acceptedButtons: Qt.LeftButton
-            hoverEnabled: true
-            cursorShape: pressed ? Qt.CloseHandCursor : Qt.OpenHandCursor
-
-            visible: root.enableCursorInteraction
-
-            onContainsMouseChanged: {
-                if (!root.visible) {
-                    return
-                }
-                root.headerHovered = containsMouse
-            }
+        onHeaderHoveredChanged: function(value) {
+            root.headerHovered = value
         }
     }
 
     states: [
         State {
             name: "NORMAL"
-            when: !root.isSelected && !root.headerHovered
+            when: !root.isSelected && !root.headerHovered && !leftEar.hovered && !rightEar.hovered
             PropertyChanges {
                 target: prv
-                backgroundOpacity: 1
+                backgroundColor: root.labelColor
+                leftEarBackgroundColor: prv.backgroundColor
+                rightEarBackgroundColor: prv.backgroundColor
             }
         },
         State {
@@ -475,7 +255,9 @@ Item {
             when: root.isSelected && !root.headerHovered
             PropertyChanges {
                 target: prv
-                backgroundOpacity: 0.4
+                backgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.4)
+                leftEarBackgroundColor: prv.backgroundColor
+                rightEarBackgroundColor: prv.backgroundColor
             }
         },
         State {
@@ -483,18 +265,40 @@ Item {
             when: !root.isSelected && root.headerHovered
             PropertyChanges {
                 target: prv
-                backgroundOpacity: 0.7
+                backgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.7)
+                leftEarBackgroundColor: prv.backgroundColor
+                rightEarBackgroundColor: prv.backgroundColor
             }
-        }
-        ,
+        },
+        State {
+            name: "LEFT_EAR_HOVERED"
+            when: !root.isSelected && leftEar.hovered && !root.headerHovered
+            PropertyChanges {
+                target: prv
+                backgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.7)
+                leftEarBackgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.3)
+                rightEarBackgroundColor: prv.backgroundColor
+            }
+        },
+        State {
+            name: "RIGHT_EAR_HOVERED"
+            when: !root.isSelected && rightEar.hovered && !root.headerHovered
+            PropertyChanges {
+                target: prv
+                backgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.7)
+                leftEarBackgroundColor: prv.backgroundColor
+                rightEarBackgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.3)
+            }
+        },
         State {
             name: "SELECTED_HOVERED"
             when: root.isSelected && root.headerHovered
             PropertyChanges {
                 target: prv
-                backgroundOpacity: 0.4
+                backgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.2)
+                leftEarBackgroundColor: prv.backgroundColor
+                rightEarBackgroundColor: prv.backgroundColor
             }
         }
     ]
 }
-
