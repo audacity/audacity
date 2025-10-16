@@ -24,15 +24,10 @@ Item {
     signal titleEditCanceled
 
     signal labelItemMousePositionChanged(real x, real y)
-    signal labelHeaderHoveredChanged(bool value)
 
     property bool hover: root.containsMouse || root.headerHovered
     property bool headerHovered: false
     property bool containsMouse: false
-
-    onHeaderHoveredChanged: {
-        labelHeaderHoveredChanged(headerHovered)
-    }
 
     property color labelColor: null
 

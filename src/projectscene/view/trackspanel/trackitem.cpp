@@ -112,7 +112,6 @@ void TrackItem::init(const trackedit::Track& track)
     m_recordStreamChannelsMatch = (m_trackType == trackedit::TrackType::Mono && inputChannelsCount == 1)
                                   || (m_trackType == trackedit::TrackType::Stereo && inputChannelsCount == 2);
 
-
     m_icon = iconFromTrackType(track.type);
 
     m_isFocused = selectionController()->focusedTrack() == m_trackId;

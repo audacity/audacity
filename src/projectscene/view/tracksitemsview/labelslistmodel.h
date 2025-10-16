@@ -100,4 +100,3 @@ private:
     QList<LabelListItem*> m_selectedItems;
 };
 }
-
