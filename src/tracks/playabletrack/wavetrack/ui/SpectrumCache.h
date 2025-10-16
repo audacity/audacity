@@ -41,6 +41,8 @@ public:
    {
    }
 
+   bool isWaveletAnalysis(const SpectrogramSettings& settings) const;
+
    bool Matches(
       int dirty_, double samplesPerPixel,
       const SpectrogramSettings& settings) const;
@@ -48,7 +50,7 @@ public:
    // Grow the cache while preserving the (possibly now invalid!) contents
    void Grow(
       size_t len_, SpectrogramSettings& settings, double samplesPerPixel,
-      double start /*relative to clip play start time*/);
+      double start); /*relative to clip play start time*/
 
    // Calculate the dirty columns at the begin and end of the cache
    void Populate(
@@ -78,6 +80,11 @@ private:
       const std::vector<float>& gainFactors, float* __restrict scratch,
       float* __restrict out) const;
 
+   bool CalculateOneWaveletSpectrum(
+      const SpectrogramSettings& settings, const WaveChannelInterval &clip,
+      const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
+      const std::vector<float>& gainFactors,
+      float* __restrict out) const;
    mutable std::optional<AudioSegmentSampleView> mSampleCacheHolder;
 };
 
