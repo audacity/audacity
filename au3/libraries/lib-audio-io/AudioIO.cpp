@@ -286,7 +286,7 @@ AudioIO::AudioIO()
     mNumCaptureChannels = 0;
     mSilenceLevel = 0.0;
 
-    mOutputMeter.reset();
+    ResetMeters();
 
     PaError err = Pa_Initialize();
 
@@ -517,8 +517,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         return false;
     }
 
-    mInputMeter.reset();
-    mOutputMeter.reset();
+    ResetMeters();
 
     mLastPaError = paNoError;
     // pick a rate to do the audio I/O at, from those available. The project
@@ -662,14 +661,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         SetCaptureMeter(mOwningProject.lock(), options.captureMeter);
     }
 
-    auto outputMeter = mOutputMeter.lock();
-    if (outputMeter) {
-        outputMeter->setSampleRate(mRate);
-    }
-    auto inputMeter = mInputMeter.lock();
-    if (inputMeter) {
-        inputMeter->setSampleRate(mRate);
-    }
+    UpdateMetersRate(mRate);
 
     const auto deviceInfo = usePlayback
                             ? Pa_GetDeviceInfo(playbackParameters.device)
@@ -861,6 +853,13 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
     if ((mLastPaError == paNoError) && pListener) {
         // advertise the chosen I/O sample rate to the UI
         pListener->OnAudioIORate((int)mRate);
+    }
+}
+
+void AudioIO::StopMonitoring()
+{
+    if (IsMonitoring()) {
+        StopStream();
     }
 }
 
@@ -1487,26 +1486,10 @@ bool AudioIO::IsAvailable(AudacityProject& project) const
     return !pOwningProject || pOwningProject.get() == &project;
 }
 
-void AudioIO::StartMeters()
-{
-    if (auto pInputMeter = mInputMeter.lock()) {
-        pInputMeter->start();
-    }
-    if (auto pOutputMeter = mOutputMeter.lock()) {
-        pOutputMeter->start();
-    }
-}
-
 void AudioIO::StopStream()
 {
-    if (auto pInputMeter = mInputMeter.lock()) {
-        pInputMeter->stop();
-    }
-    mInputMeter.reset();
-    if (auto pOutputMeter = mOutputMeter.lock()) {
-        pOutputMeter->stop();
-    }
-    mOutputMeter.reset();
+    StopMeters();
+    ResetMeters();
 
     auto cleanup = finally([this] {
         ClearRecordingException();
