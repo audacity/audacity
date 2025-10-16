@@ -307,6 +307,42 @@ int AudioIOBase::GetHostIndex(const std::string& hostName)
     return index;
 }
 
+void AudioIOBase::StartMeters()
+{
+    if (auto pInputMeter = mInputMeter.lock()) {
+        pInputMeter->start();
+    }
+    if (auto pOutputMeter = mOutputMeter.lock()) {
+        pOutputMeter->start();
+    }
+}
+
+void AudioIOBase::StopMeters()
+{
+    if (auto pInputMeter = mInputMeter.lock()) {
+        pInputMeter->stop();
+    }
+    if (auto pOutputMeter = mOutputMeter.lock()) {
+        pOutputMeter->stop();
+    }
+}
+
+void AudioIOBase::ResetMeters()
+{
+    mInputMeter.reset();
+    mOutputMeter.reset();
+}
+
+void AudioIOBase::UpdateMetersRate(const double rate)
+{
+    if (auto pInputMeter = mInputMeter.lock()) {
+        pInputMeter->setSampleRate(rate);
+    }
+    if (auto pOutputMeter = mOutputMeter.lock()) {
+        pOutputMeter->setSampleRate(rate);
+    }
+}
+
 void AudioIOBase::SetCaptureMeter(
     const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<IMeterSender>& wMeter)
 {

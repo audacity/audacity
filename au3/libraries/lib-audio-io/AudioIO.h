@@ -437,6 +437,9 @@ public:
      * the output device in stereo to play the data through */
     void StartMonitoring(const AudioIOStartStreamOptions& options);
 
+    /** \brief Stop monitoring */
+    void StopMonitoring();
+
     /** \brief Start recording or playing back audio
      *
      * Allocates buffers for recording and playback, gets the Audio thread to
@@ -546,11 +549,6 @@ public:
 
 private:
     bool DelayingActions() const;
-
-    /**
-     * \brief Start the current VU meters
-     */
-    void StartMeters();
 
     /** \brief Opens the portaudio stream(s) used to do playback or recording
      * (or both) through.
