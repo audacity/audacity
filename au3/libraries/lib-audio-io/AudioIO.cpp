@@ -517,8 +517,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         return false;
     }
 
-    mInputMeter.reset();
-    mOutputMeter.reset();
+    ResetMeters();
 
     mLastPaError = paNoError;
     // pick a rate to do the audio I/O at, from those available. The project
@@ -662,14 +661,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         SetCaptureMeter(mOwningProject.lock(), options.captureMeter);
     }
 
-    auto outputMeter = mOutputMeter.lock();
-    if (outputMeter) {
-        outputMeter->setSampleRate(mRate);
-    }
-    auto inputMeter = mInputMeter.lock();
-    if (inputMeter) {
-        inputMeter->setSampleRate(mRate);
-    }
+    UpdateMetersRate(mRate);
 
     const auto deviceInfo = usePlayback
                             ? Pa_GetDeviceInfo(playbackParameters.device)
@@ -1497,16 +1489,36 @@ void AudioIO::StartMeters()
     }
 }
 
-void AudioIO::StopStream()
+void AudioIO::StopMeters()
 {
     if (auto pInputMeter = mInputMeter.lock()) {
         pInputMeter->stop();
     }
-    mInputMeter.reset();
     if (auto pOutputMeter = mOutputMeter.lock()) {
         pOutputMeter->stop();
     }
+}
+
+void AudioIO::ResetMeters()
+{
+    mInputMeter.reset();
     mOutputMeter.reset();
+}
+
+void AudioIO::UpdateMetersRate(const double rate)
+{
+    if (auto pInputMeter = mInputMeter.lock()) {
+        pInputMeter->setSampleRate(rate);
+    }
+    if (auto pOutputMeter = mOutputMeter.lock()) {
+        pOutputMeter->setSampleRate(rate);
+    }
+}
+
+void AudioIO::StopStream()
+{
+    StopMeters();
+    ResetMeters();
 
     auto cleanup = finally([this] {
         ClearRecordingException();
