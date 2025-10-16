@@ -120,6 +120,8 @@ TrackObjectsItem {
                             id: labelComp
 
                             LabelItem {
+                                id: item
+
                                 property var itemData: labelLoader.itemData
 
                                 title: Boolean(itemData) ? itemData.title : ""
@@ -177,6 +179,13 @@ TrackObjectsItem {
                                         return labelItem && labelItem.hover
                                     })
                                 }
+
+                                Connections {
+                                    target: itemData
+                                    function onTitleEditRequested() {
+                                        item.editTitle()
+                                    }
+                                }
                             }
                         }
                     }
@@ -223,7 +232,6 @@ TrackObjectsItem {
         }
 
         function onItemStartEditRequested(objectKey) {
-            console.info("startEditLabel", JSON.stringify(objectKey))
             labelsModel.startEditLabel(objectKey)
         }
 
