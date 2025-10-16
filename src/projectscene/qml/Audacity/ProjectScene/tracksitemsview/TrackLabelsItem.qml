@@ -170,7 +170,7 @@ TrackObjectsItem {
                                     labelsModel.resetSelectedLabel()
                                 }
 
-                                onLabelHeaderHoveredChanged: function(headerHovered) {
+                                onHeaderHoveredChanged: function() {
                                     root.itemHeaderHoveredChanged(headerHovered)
                                 }
 

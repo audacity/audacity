@@ -133,4 +133,3 @@ void LabelListItem::setRightVisibleMargin(double newRightVisibleMargin)
     m_rightVisibleMargin = newRightVisibleMargin;
     emit rightVisibleMarginChanged();
 }
-
