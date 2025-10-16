@@ -251,9 +251,9 @@ void DeviceManager::Rescan()
         auto gAudioIO = AudioIOBase::Get();
         if (gAudioIO) {
             if (gAudioIO->IsMonitoring()) {
-                using namespace std::chrono;
                 gAudioIO->StopStream();
                 while (gAudioIO->IsBusy()) {
+                    using namespace std::chrono;
                     std::this_thread::sleep_for(100ms);
                 }
             }
