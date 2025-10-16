@@ -156,8 +156,8 @@ void Au3AudioInput::startMonitoring()
         }
 
         gAudioIO->StopStream();
-        using namespace std::chrono;
         while (gAudioIO->IsBusy()) {
+            using namespace std::chrono;
             std::this_thread::sleep_for(100ms);
         }
 
