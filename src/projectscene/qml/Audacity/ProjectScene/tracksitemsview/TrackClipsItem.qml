@@ -323,7 +323,7 @@ TrackObjectsItem {
                                     })
                                 }
 
-                                onClipHeaderHoveredChanged: function(headerHovered) {
+                                onHeaderHoveredChanged: function() {
                                     root.itemHeaderHoveredChanged(headerHovered)
                                 }
 
