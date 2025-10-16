@@ -110,6 +110,8 @@ void LabelsListModel::reload()
 
             update();
 
+            emit m_labelList.at(i)->titleEditRequested();
+
             break;
         }
     });
@@ -405,8 +407,6 @@ QVariant LabelsListModel::neighbor(const LabelKey& key, int offset) const
 
 void LabelsListModel::selectLabel(const LabelKey& key)
 {
-    LOGI() << "============= selectLabel " << key.key.objectId;
-
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     if (modifiers.testFlag(Qt::ShiftModifier)) {
