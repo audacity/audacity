@@ -254,6 +254,9 @@ void Au3Player::stop()
     if (captureMeter) {
         captureMeter->stop();
     }
+
+    m_consumedSamplesSoFar = 0;
+    m_currentTarget.reset();
 }
 
 void Au3Player::pause()
@@ -450,14 +453,6 @@ muse::async::Notification Au3Player::loopRegionChanged() const
 
 void Au3Player::updatePlaybackStateTimeCritical()
 {
-    if (m_playbackStatus.val != PlaybackStatus::Running) {
-        return;
-    }
-
-    IF_ASSERT_FAILED(globalContext()->currentProject()) {
-        return;
-    }
-
     int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
     bool isActive = AudioIO::Get()->IsStreamActive(token);
     double time = AudioIO::Get()->GetStreamTime() + m_startOffset;
@@ -483,35 +478,38 @@ muse::secs_t Au3Player::playbackPosition() const
 
 void Au3Player::updatePlaybackPosition()
 {
-    auto& audioIO = *AudioIO::Get();
-    const std::optional<std::chrono::steady_clock::time_point> startTime = audioIO.UserStartsHearingAudioTimePoint();
-
     using namespace std::chrono;
-    const auto now = steady_clock::now();
 
-    if (!startTime.has_value() || now < *startTime) {
-        // Too early: we only want to start when the user starts hearing audio.
-        m_elapsedSamplesAtLastReport = 0;
+    auto& audioIO = *AudioIO::Get();
+    const double sampleRate = audioIO.GetPlaybackSampleRate();
+    AudioIoCallback::AudioDelivery newDelivery;
+    while (audioIO.GetAudioDeliveryQueue().Get(newDelivery)) {
+        const auto targetConsumedSamples = static_cast<unsigned long long>(newDelivery.numSamples)
+                                           + (m_currentTarget ? m_currentTarget->consumedSamples : 0);
+        const nanoseconds newDeliveryDuration{ static_cast<long>(newDelivery.numSamples * 1e6 / sampleRate + .5) };
+        const auto targetTime = newDelivery.startTime + newDeliveryDuration;
+        m_currentTarget.emplace(targetTime, targetConsumedSamples);
+    }
+
+    if (!m_currentTarget.has_value()) {
         return;
     }
 
-    muse::Defer defer = [this] {
-        updatePlaybackStateTimeCritical();
-    };
-
-    const double sampleRate = AudioIO::Get()->GetPlaybackSampleRate();
-
-    // Make 100% sure we do not introduce drift: quantize the elapsed time to an integral sample value,
-    // advance by that amount and don't lose track of the amount of samples advanced by so far.
-    const auto elapsedMs = duration_cast<milliseconds>(now - *startTime).count();
-    const auto elapsedSamples = static_cast<unsigned long long>(elapsedMs / 1000.0 * sampleRate);
-    IF_ASSERT_FAILED(elapsedSamples >= m_elapsedSamplesAtLastReport) {
+    const auto timeDiff = duration_cast<milliseconds>(steady_clock::now() - m_currentTarget->time).count() / 1000.0;
+    if (timeDiff > 0) {
+        // Hardware buffer was drained an no new data was put in there.
         return;
     }
-    const unsigned long long elapsed { elapsedSamples - m_elapsedSamplesAtLastReport };
-    m_elapsedSamplesAtLastReport = elapsedSamples;
 
-    audioIO.UpdateTimePosition(elapsed);
+    const auto expectedConsumedNow = static_cast<long long>(m_currentTarget->consumedSamples + timeDiff * sampleRate);
+    if (static_cast<long long>(m_consumedSamplesSoFar) >= expectedConsumedNow) {
+        // User isn't hearing audio yet - wait some more.
+        return;
+    }
+
+    audioIO.UpdateTimePosition(expectedConsumedNow - m_consumedSamplesSoFar);
+    m_consumedSamplesSoFar = expectedConsumedNow;
+    updatePlaybackStateTimeCritical();
 }
 
 muse::async::Channel<muse::secs_t> Au3Player::playbackPositionChanged() const

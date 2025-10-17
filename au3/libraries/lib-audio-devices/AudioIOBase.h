@@ -128,11 +128,6 @@ public:
      */
     void ResetMeters();
 
-    /**
-     * \brief Update the sample rate of the current VU meters
-     */
-    void UpdateMetersRate(const double rate);
-
     void SetCaptureMeter(
         const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<IMeterSender>& meter);
     void SetPlaybackMeter(

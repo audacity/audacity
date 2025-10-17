@@ -38,7 +38,7 @@ void PlaybackPositionTimer::componentComplete()
         return;
     }
     player->playbackStatusChanged().onReceive(this, [this](PlaybackStatus status) {
-        if (status == PlaybackStatus::Running) {
+        if (status != PlaybackStatus::Stopped) {
             m_timer.start();
         } else {
             m_timer.stop();
@@ -67,7 +67,7 @@ void PlaybackPositionTimer::itemChange(ItemChange change, const ItemChangeData& 
 void PlaybackPositionTimer::doBeforeSynchronizing()
 {
     const auto player = this->player();
-    if (player && player->playbackStatus() == PlaybackStatus::Running) {
+    if (player && player->playbackStatus() != PlaybackStatus::Stopped) {
         player->updatePlaybackPosition();
     }
 }

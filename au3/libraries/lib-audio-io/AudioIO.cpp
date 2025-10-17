@@ -2748,10 +2748,15 @@ bool AudioIoCallback::FillOutputBuffers(
         // the device. For example mono channels output to both left and right
         // output channels.
         if (len > 0) {
-            if (!mUserStartsHearingAudioTimePoint.load().has_value()) {
-                const auto remainingSamples = mHardwarePlaybackLatencyFrames > len ? mHardwarePlaybackLatencyFrames - len : 0;
-                mUserStartsHearingAudioTimePoint.store(std::chrono::steady_clock::now()
-                                                       + std::chrono::milliseconds(static_cast<int>(remainingSamples / mRate * 1000)));
+            if (n == 0) {
+                using namespace std::chrono;
+                const auto now = steady_clock::now();
+                const auto startTime = now + milliseconds(static_cast<int>(mHardwarePlaybackLatencyFrames * 1000.0 / mRate));
+                mAudioDeliveryQueue.Put({ startTime, static_cast<int>(len) });
+                if (!mUserStartsHearingAudioTimePoint.load().has_value()) {
+                    const auto remainingSamples = mHardwarePlaybackLatencyFrames > len ? mHardwarePlaybackLatencyFrames - len : 0;
+                    mUserStartsHearingAudioTimePoint.store(now + milliseconds(static_cast<int>(remainingSamples / mRate * 1000)));
+                }
             }
 
             // Output volume emulation: possibly copy meter samples, then
