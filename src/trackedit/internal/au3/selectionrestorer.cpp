@@ -35,8 +35,7 @@ private:
     const ClipAndTimeSelection m_selection;
 };
 
-UndoRedoExtensionRegistry::Entry sEntry {
-    [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension> {
+UndoRedoExtensionRegistry::Entry<ClipAndTimeSelectionState> sEntry { [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension> {
         return std::make_shared<ClipAndTimeSelectionState>(project);
     }
 };

@@ -16,6 +16,7 @@
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "trackedit/trackedittypes.h"
+#include "trackedit/iprojecthistory.h"
 #include "../timeline/timelinecontext.h"
 
 #include "cliplistitem.h"
@@ -41,6 +42,7 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::Inject<muse::workspace::IWorkspaceManager> workspacesManager;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     explicit ClipsListModel(QObject* parent = nullptr);
@@ -58,6 +60,7 @@ public:
 
     Q_INVOKABLE void startEditClip(const ClipKey& key);
     Q_INVOKABLE void endEditClip(const ClipKey& key);
+    Q_INVOKABLE bool cancelClipDragEdit(const ClipKey& key);
 
     Q_INVOKABLE bool moveSelectedClips(const ClipKey& key, bool completed);
     Q_INVOKABLE bool trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);

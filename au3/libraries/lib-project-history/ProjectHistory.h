@@ -14,6 +14,8 @@ Paul Licameli split from ProjectManager.h
 #include "ClientData.h"
 #include "GlobalVariable.h"
 
+#include <typeindex>
+
 class AudacityProject;
 struct UndoState;
 enum class UndoPush : unsigned char;
@@ -51,6 +53,7 @@ public:
         const TranslatableString& desc, const TranslatableString& shortDesc, UndoPush flags);
     void RollbackState();
     void ModifyState(bool bWantsAutoSave);   // if true, writes auto-save file.
+    void ModifyState(const std::type_index& restorerType);
     // Should set only if you really want the state change restored after
     // a crash, as it can take many seconds for large (eg. 10 track-hours)
     // projects

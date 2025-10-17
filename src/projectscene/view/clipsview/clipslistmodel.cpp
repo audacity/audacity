@@ -473,7 +473,8 @@ int ClipsListModel::calculateTrackPositionOffset(const ClipKey& key) const
     }
 
     bool pointingAtEmptySpace = yPos > vs->totalTrackHeight().val - vs->tracksVerticalOffset().val;
-    int trackPositionOffset = pointingAtEmptySpace ? tracks.size() : tracks.size() - 1;
+    const auto numTracks = static_cast<int>(tracks.size());
+    int trackPositionOffset = pointingAtEmptySpace ? numTracks : numTracks - 1;
 
     if (!muse::RealIsEqualOrMore(yPos, trackVerticalPosition)) {
         trackPositionOffset = -trackPositionOffset;
@@ -685,6 +686,8 @@ void ClipsListModel::startEditClip(const ClipKey& key)
         return;
     }
 
+    projectHistory()->startUserInteraction();
+
     double mousePositionTime = m_context->mousePositionTime();
 
     vs->setClipEditStartTimeOffset(mousePositionTime - item->clip().startTime);
@@ -710,6 +713,37 @@ void ClipsListModel::endEditClip(const ClipKey& key)
     vs->setClipEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
     vs->updateClipsBoundaries(true);
+
+    projectHistory()->endUserInteraction();
+}
+
+bool ClipsListModel::cancelClipDragEdit(const ClipKey& key)
+{
+    ClipListItem* item = itemByKey(key.key);
+    if (!item) {
+        return false;
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    IF_ASSERT_FAILED(vs) {
+        return false;
+    }
+
+    vs->setClipEditStartTimeOffset(-1.0);
+    vs->setClipEditEndTimeOffset(-1.0);
+    vs->setMoveInitiated(false);
+
+    m_context->stopAutoScroll();
+    disconnectAutoScroll();
+
+    trackeditInteraction()->cancelClipDragEdit();
+
+    vs->updateClipsBoundaries(true);
+
+    constexpr auto modifyState = false;
+    projectHistory()->endUserInteraction(modifyState);
+
+    return true;
 }
 
 /*!
@@ -1021,8 +1055,8 @@ void ClipsListModel::selectClip(const ClipKey& key)
     if (clipGroupId != -1) {
         //! NOTE: clip belongs to a group, select the whole group
         if (modifiers.testFlag(Qt::ShiftModifier)) {
-            for (const auto& key : trackeditInteraction()->clipsInGroup(clipGroupId)) {
-                selectionController()->addSelectedClip(key);
+            for (const auto& groupClipKey : trackeditInteraction()->clipsInGroup(clipGroupId)) {
+                selectionController()->addSelectedClip(groupClipKey);
             }
         } else {
             selectionController()->setSelectedClips(trackeditInteraction()->clipsInGroup(clipGroupId), complete);

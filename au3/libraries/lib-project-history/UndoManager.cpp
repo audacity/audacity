@@ -28,6 +28,8 @@ UndoManager
 #include "TransactionScope.h"
 //#include "NoteTrack.h"  // for Sonify* function declarations
 
+#include <unordered_map>
+
 UndoStateExtension::~UndoStateExtension() = default;
 
 bool UndoStateExtension::CanUndoOrRedo(const AudacityProject&)
@@ -35,29 +37,21 @@ bool UndoStateExtension::CanUndoOrRedo(const AudacityProject&)
     return true;
 }
 
-namespace {
-using Savers = std::vector<UndoRedoExtensionRegistry::Saver>;
-static Savers& GetSavers()
+UndoRedoExtensionRegistry::Savers& UndoRedoExtensionRegistry::GetSavers()
 {
     static Savers theSavers;
     return theSavers;
 }
 
-UndoState::Extensions GetExtensions(AudacityProject& project)
+UndoState::Extensions UndoRedoExtensionRegistry::GetExtensions(AudacityProject& project)
 {
     UndoState::Extensions result;
-    for (auto& saver : GetSavers()) {
+    for (auto& [typeIndex, saver] : GetSavers()) {
         if (saver) {
-            result.emplace_back(saver(project));
+            result.emplace(typeIndex, saver(project));
         }
     }
     return result;
-}
-}
-
-UndoRedoExtensionRegistry::Entry::Entry(const Saver& saver)
-{
-    GetSavers().emplace_back(saver);
 }
 
 using SampleBlockID = long long;
@@ -187,8 +181,9 @@ bool UndoManager::CheckAvailable(int index)
         return false;
     }
     auto& extensions = stack[index]->state.extensions;
-    return std::all_of(extensions.begin(), extensions.end(), [&](auto& ext){
-        return !ext || ext->CanUndoOrRedo(mProject);
+    return std::all_of(extensions.begin(), extensions.end(),
+                       [&](std::pair<const std::type_index, std::shared_ptr<UndoStateExtension> >& entry){
+        return !entry.second || entry.second->CanUndoOrRedo(mProject);
     });
 }
 
@@ -202,11 +197,28 @@ void UndoManager::ModifyState()
     auto& state = stack[current]->state;
 
     // Re-create all captured project state
-    state.extensions = GetExtensions(mProject);
+    state.extensions = UndoRedoExtensionRegistry::GetExtensions(mProject);
 
 //   SonifyEndModifyState();
 
     EnqueueMessage({ UndoRedoMessage::Modified });
+}
+
+void UndoManager::ModifyState(const std::type_index& undoStateExtensionTypeIndex)
+{
+    if (current == wxNOT_FOUND) {
+        return;
+    }
+
+    auto& extensions = stack[current]->state.extensions;
+
+    std::unordered_map<std::type_index, UndoRedoExtensionRegistry::Saver>& savers = UndoRedoExtensionRegistry::GetSavers();
+    const auto saverIt = savers.find(undoStateExtensionTypeIndex);
+    const auto extensionIt = extensions.find(undoStateExtensionTypeIndex);
+    if (extensionIt != extensions.end() && saverIt != savers.end() && saverIt->second) {
+        auto updatedExtension = saverIt->second(mProject);
+        extensions.insert_or_assign(undoStateExtensionTypeIndex, updatedExtension);
+    }
 }
 
 void UndoManager::RenameState(int state,
@@ -243,10 +255,7 @@ void UndoManager::PushState(const TranslatableString& longDescription,
 
     AbandonRedo();
 
-    stack.push_back(
-        std::make_unique<UndoStackElem>
-            (GetExtensions(mProject), longDescription, shortDescription)
-        );
+    stack.push_back(std::make_unique<UndoStackElem>(UndoRedoExtensionRegistry::GetExtensions(mProject), longDescription, shortDescription));
 
     current++;
 

@@ -85,6 +85,8 @@ public:
     void setZoomState(const ZoomState& state) override;
     ZoomState zoomState() const override;
 
+    muse::async::Notification rolledBack() const override;
+
     muse::ValCh<bool> altPressed() const override;
     muse::ValCh<bool> ctrlPressed() const override;
 
@@ -128,5 +130,7 @@ private:
 
     muse::ValCh<bool> m_altPressed;
     muse::ValCh<bool> m_ctrlPressed;
+
+    muse::async::Notification m_rolledBack;
 };
 }

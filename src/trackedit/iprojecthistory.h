@@ -10,6 +10,8 @@
 #include "global/types/translatablestring.h"
 #include "trackedittypes.h"
 
+#include <typeindex>
+
 namespace au::trackedit {
 class IProjectHistory : MODULE_EXPORT_INTERFACE
 {
@@ -39,7 +41,16 @@ public:
     virtual muse::async::Notification historyChanged() const = 0;
 
     virtual void rollbackState() = 0;
+
     virtual void modifyState(bool autoSave = false) = 0;
+    /**
+     * @brief Modify state wrt a particular restorer only.
+     * Doesn't have an option for auto-save but may be added if needed.
+     *
+     * @param undoStateExtensionTypeIndex obtained by `typeid(<your undo state extension class>)`
+     */
+    virtual void modifyState(const std::type_index& undoStateExtensionTypeIndex) = 0;
+
     virtual void markUnsaved() = 0;
 
     /**
@@ -59,7 +70,9 @@ public:
     /**
      * @ref startUserInteraction()
      */
-    virtual void endUserInteraction() = 0;
+    virtual void endUserInteraction(bool modifyState = false) = 0;
+
+    virtual bool interactionOngoing() const = 0;
 };
 
 using IProjectHistoryPtr = std::shared_ptr<IProjectHistory>;

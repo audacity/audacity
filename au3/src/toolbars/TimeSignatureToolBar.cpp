@@ -301,8 +301,8 @@ struct TimeSignatureRestorer final : UndoStateExtension
     int mLower;
 };
 
-UndoRedoExtensionRegistry::Entry sEntry {
-    [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension>
+UndoRedoExtensionRegistry::Entry sEntry { typeid(TimeSignatureRestorer),
+                                          [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension>
     { return std::make_shared<TimeSignatureRestorer>(project); }
 };
 }

@@ -73,6 +73,8 @@ ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project
         return;
     }
 
+    au3::setViewStateRestorerNotification(*au3Project, m_rolledBack);
+
     m_tracksVerticalOffset.set(getProjectZoomState(au3Project).tracksVerticalOffset);
     m_tracksVerticalOffset.ch.onReceive(this, [au3Project](const int y) {
         ZoomState zoomState = getProjectZoomState(au3Project);
@@ -516,6 +518,11 @@ ZoomState ProjectViewState::zoomState() const
 {
     au::au3::Au3Project* project = reinterpret_cast<au::au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     return getProjectZoomState(project);
+}
+
+muse::async::Notification ProjectViewState::rolledBack() const
+{
+    return m_rolledBack;
 }
 
 muse::ValCh<bool> ProjectViewState::altPressed() const
