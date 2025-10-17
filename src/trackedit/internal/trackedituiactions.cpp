@@ -17,7 +17,6 @@ using namespace muse::actions;
 namespace {
 constexpr const char16_t* TRACK_FORMAT_CHANGE_ACTION = u"action://trackedit/track/change-format?format=%1";
 constexpr const char16_t* TRACK_RATE_CHANGE_ACTION = u"action://trackedit/track/change-rate?rate=%1";
-
 UiActionList STATIC_ACTIONS = {
     UiAction("action://trackedit/copy",
              "action://copy",
@@ -34,21 +33,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Cut"),
              TranslatableString("action", "Cut"),
              IconCode::Code::CUT
-             ),
-    UiAction("action://trackedit/paste",
-             "action://paste",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_DISABLED,
-             TranslatableString("action", "&Paste"),
-             TranslatableString("action", "Paste"),
-             IconCode::Code::PASTE
-             ),
-    UiAction("action://trackedit/paste-insert",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Paste (Insert)"),
-             TranslatableString("action", "Paste (Insert)"),
-             IconCode::Code::PASTE
              ),
     UiAction("action://trackedit/undo",
              "action://undo",
@@ -271,11 +255,33 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Enable vertical rulers"),
              TranslatableString("action", "Enable vertical rulers")
              ),
-    UiAction("paste-insert-all-tracks-ripple",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Insert and Preserve Sync"),
-             TranslatableString("action", "Insert and Preserve Sync"),
+    UiAction("action://trackedit/paste-default",
+             "action://paste",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_DISABLED,
+             TranslatableString("action", "&Paste"),
+             TranslatableString("action", "Paste"),
+             IconCode::Code::PASTE
+             ),
+    UiAction("action://trackedit/paste-insert",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Paste (pushes clips on selected track)"),
+             TranslatableString("action", "Paste (pushes clips on selected track)"),
+             IconCode::Code::PASTE
+             ),
+    UiAction("action://trackedit/paste-overlap",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Paste (overlaps other clips)"),
+             TranslatableString("action", "Paste (overlaps other clips)"),
+             IconCode::Code::PASTE
+             ),
+    UiAction("action://trackedit/paste-insert-all-tracks-ripple",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Paste (preserves synchronization on all tracks)"),
+             TranslatableString("action", "Paste (preserves synchronization on all tracks)"),
              IconCode::Code::PASTE
              ),
     UiAction("merge-selected-on-tracks",

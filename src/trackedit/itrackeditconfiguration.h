@@ -31,5 +31,13 @@ public:
     virtual CloseGapBehavior closeGapBehavior() const = 0;
     virtual void setCloseGapBehavior(CloseGapBehavior value) = 0;
     virtual muse::async::Notification closeGapBehaviorChanged() const = 0;
+
+    virtual PasteBehavior pasteBehavior() const = 0;
+    virtual void setPasteBehavior(PasteBehavior value) = 0;
+    virtual muse::async::Notification pasteBehaviorChanged() const = 0;
+
+    virtual PasteInsertBehavior pasteInsertBehavior() const = 0;
+    virtual void setPasteInsertBehavior(PasteInsertBehavior value) = 0;
+    virtual muse::async::Notification pasteInsertBehaviorChanged() const = 0;
 };
 }

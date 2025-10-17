@@ -64,9 +64,9 @@
         <file>qml/Preferences/internal/MonoStereoConversionSection.qml</file>
         <file>qml/Preferences/internal/EffectBehaviorSection.qml</file>
         <file>qml/Preferences/internal/DeleteBehaviorSection.qml</file>
+        <file>qml/Preferences/internal/PasteBehaviorSection.qml</file>
         <file>qml/Preferences/internal/AsymmetricStereoHeightsSection.qml</file>
         <file>qml/Preferences/internal/WorkspacesAsymmetricChannelsSection.qml</file>
-        <file>qml/Preferences/internal/PastingBehaviorSection.qml</file>
         <file>qml/Preferences/internal/MusicXmlSection.qml</file>
         <file>qml/Preferences/internal/MidiDevicesSection.qml</file>
         <file>qml/Preferences/internal/AudioEngineSection.qml</file>

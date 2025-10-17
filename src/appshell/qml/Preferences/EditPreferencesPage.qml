@@ -34,7 +34,7 @@ PreferencesPage {
             navigation.order: root.navigationOrderStart
         }
 
-        SeparatorLine { }
+        SeparatorLine {}
 
         DeleteBehaviorSection {
             id: deleteBehaviorSection
@@ -46,7 +46,19 @@ PreferencesPage {
             navigation.order: effectBehaviorSection.navigationOrderEnd + 1
         }
 
-        SeparatorLine { }
+        SeparatorLine {}
+
+        PasteBehaviorSection {
+            id: pasteBehaviorSection
+
+            editPreferencesModel: editPreferencesModel
+            parentBackgroundColor: root.color
+
+            navigation.section: root.navigationSection
+            navigation.order: deleteBehaviorSection.navigationOrderEnd + 1
+        }
+
+        SeparatorLine {}
 
         AsymmetricStereoHeightsSection {
             id: asymmetricStereoHeightsSection
@@ -54,21 +66,10 @@ PreferencesPage {
             editPreferencesModel: editPreferencesModel
 
             navigation.section: root.navigationSection
-            navigation.order: deleteBehaviorSection.navigationOrderEnd + 1
+            navigation.order: pasteBehaviorSection.navigationOrderEnd + 1
         }
 
-        SeparatorLine { }
-
-        PastingBehaviorSection {
-            id: pastingBehaviorSection
-
-            editPreferencesModel: editPreferencesModel
-
-            navigation.section: root.navigationSection
-            navigation.order: asymmetricStereoHeightsSection.navigationOrderEnd + 1
-        }
-
-        SeparatorLine { }
+        SeparatorLine {}
 
         MonoStereoConversionSection {
             id: monoStereoConversionSection
@@ -76,11 +77,11 @@ PreferencesPage {
             askBeforeConverting: editPreferencesModel.askBeforeConvertingToMonoOrStereo
 
             navigation.section: root.navigationSection
-            navigation.order: pastingBehaviorSection.navigationOrderEnd + 1
+            navigation.order: asymmetricStereoHeightsSection.navigationOrderEnd + 1
 
             onAskBeforeConvertingChanged: {
                 editPreferencesModel.askBeforeConvertingToMonoOrStereo = askBeforeConverting
             }
-         }
+        }
     }
 }

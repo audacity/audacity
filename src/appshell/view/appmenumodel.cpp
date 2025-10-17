@@ -235,7 +235,11 @@ MenuItem* AppMenuModel::makeEditMenu()
         makeMenuItem("ungroup-clips"),
         makeSeparator(),
         makeMenuItem("duplicate"),
-        makeMenuItem("action://trackedit/paste-insert"),
+        // TODO: we should only show those trackedit actions when in the trackedit context,
+        // this need some framework update to support contextual shortcuts and dynamic actions based on context
+        // makeMenuItem("action://trackedit/paste-overlap"),
+        // makeMenuItem("action://trackedit/paste-insert"),
+        // makeMenuItem("action://trackedit/paste-insert-all-tracks-ripple"),
         makeMenuItem("delete-per-track-ripple"),
         makeSeparator(),
         makeMenu(TranslatableString("appshell/menu/clip", "Clip"), makeClipItems(), "menu-clip"),

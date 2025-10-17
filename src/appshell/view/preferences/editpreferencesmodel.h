@@ -28,6 +28,8 @@ class EditPreferencesModel : public QObject, public muse::async::Asyncable
         projectscene::StereoHeightsPref::AsymmetricStereoHeights stereoHeightsPref READ stereoHeightsPref NOTIFY stereoHeightsPrefChanged)
     Q_PROPERTY(int deleteBehavior READ deleteBehavior NOTIFY deleteBehaviorPrefChanged)
     Q_PROPERTY(int closeGapBehavior READ closeGapBehavior NOTIFY closeGapBehaviorChanged)
+    Q_PROPERTY(int pasteBehavior READ pasteBehavior NOTIFY pasteBehaviorPrefChanged)
+    Q_PROPERTY(int pasteInsertBehavior READ pasteInsertBehavior NOTIFY pasteInsertBehaviorPrefChanged)
     Q_PROPERTY(QVariantList asymmetricWorkspaces READ asymmetricWorkspaces NOTIFY asymmetricWorkspacesChanged);
     Q_PROPERTY(bool pasteAsNewClip READ pasteAsNewClip NOTIFY pasteAsNewClipChanged)
     Q_PROPERTY(
@@ -50,6 +52,12 @@ public:
     int closeGapBehavior() const;
     Q_INVOKABLE void setCloseGapBehavior(int);
 
+    int pasteBehavior() const;
+    Q_INVOKABLE void setPasteBehavior(int);
+
+    int pasteInsertBehavior() const;
+    Q_INVOKABLE void setPasteInsertBehavior(int);
+
     QVariantList asymmetricWorkspaces() const;
     Q_INVOKABLE void appendToAsymmetricWorkspaces(const QString& newWorkspaceName);
     Q_INVOKABLE void removeFromAsymmetricWorkspaces(const QString& newWorkspaceName);
@@ -67,6 +75,8 @@ signals:
     void stereoHeightsPrefChanged();
     void deleteBehaviorPrefChanged();
     void closeGapBehaviorChanged();
+    void pasteBehaviorPrefChanged();
+    void pasteInsertBehaviorPrefChanged();
     void asymmetricWorkspacesChanged();
     void pasteAsNewClipChanged();
     void askBeforeConvertingToMonoOrStereoChanged();
