@@ -330,10 +330,7 @@ muse::Ret Au3Record::start()
     std::copy(existingTracks.begin(), existingTracks.end(),
               back_inserter(transportTracks.captureSequences));
 
-    auto gAudioIO = AudioIO::Get();
-    if (gAudioIO->IsMonitoring()) {
-        gAudioIO->StopStream();
-    }
+    audioEngine()->stopMonitoring();
 
     return doRecord(project, transportTracks, t0, t1, altAppearance, options);
 }
@@ -344,9 +341,7 @@ muse::Ret Au3Record::pause()
         return make_ret(Err::RecordingStopError);
     }
 
-    auto gAudioIO = AudioIO::Get();
-
-    gAudioIO->SetPaused(true);
+    audioEngine()->pauseStream(true);
 
     return make_ok();
 }
@@ -354,20 +349,13 @@ muse::Ret Au3Record::pause()
 muse::Ret Au3Record::stop()
 {
     //! NOTE: copied from ProjectAudioManager::Stop
-    bool stopStream = true;
-
     if (!canStopAudioStream()) {
         return make_ret(Err::RecordingStopError);
     }
 
-    auto gAudioIO = AudioIO::Get();
-
-    if (stopStream) {
-        gAudioIO->StopStream();
-    }
-
-    //Make sure you tell gAudioIO to unpause
-    gAudioIO->SetPaused(false);
+    audioEngine()->stopStream();
+    //Make sure to unpause
+    audioEngine()->pauseStream(false);
 
     // So that we continue monitoring after playing or recording.
     // also clean the MeterQueues
@@ -415,8 +403,7 @@ Ret Au3Record::doRecord(Au3Project& project,
 {
     //! NOTE: copied fromProjectAudioManager::DoRecord
 
-    auto gAudioIO = AudioIO::Get();
-    if (gAudioIO->IsBusy()) {
+    if (audioEngine()->isBusy()) {
         LOGE() << "Audio IO is busy";
         return make_ret(Ret::Code::InternalError);
     }
@@ -635,7 +622,7 @@ Ret Au3Record::doRecord(Au3Project& project,
         pendingTracks.UpdatePendingTracks();
     }
 
-    int token = gAudioIO->StartStream(transportSequences, t0, t1, t1, options);
+    int token = audioEngine()->startStream(transportSequences, t0, t1, t1, options);
 
     success = (token != 0);
 
@@ -645,6 +632,7 @@ Ret Au3Record::doRecord(Au3Project& project,
         cancelRecording();
 
         Ret ret = make_ret(Err::RecordingError);
+        auto gAudioIO = AudioIO::Get();
         ret.setText(String::fromStdString(ret.text()).arg(wxToString(gAudioIO->LastPaErrorString())).toStdString());
 
         return ret;

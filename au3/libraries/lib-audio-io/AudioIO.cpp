@@ -807,6 +807,16 @@ void AudioIO::ResetOwningProject()
 void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
 {
     if (mPortStreamV19 || mStreamToken) {
+        // we can't start monitoring if
+        // port stream is already opened
+        // OR
+        // a token is in use (!=0)
+        // What happen if mStreamToken is negative?
+        return;
+    }
+    // TODO above check kind of the same as IsMonitoring() should we get rid of it?
+    if (IsMonitoring())
+    {
         return;
     }
 
@@ -860,6 +870,15 @@ void AudioIO::StopMonitoring()
 {
     if (IsMonitoring()) {
         StopStream();
+        WaitWhileBusy();
+    }
+}
+
+void AudioIO::WaitWhileBusy() const
+{
+    while (IsBusy()) {
+        using namespace std::chrono;
+        std::this_thread::sleep_for(100ms);
     }
 }
 
