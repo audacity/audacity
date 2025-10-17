@@ -309,6 +309,9 @@ public:
      * playing actual audio) */
     bool IsMonitoring() const;
 
+    /** \brief Stop input monitoring */
+    virtual void StopMonitoring() = 0;
+
     /* Mixer services are always available.  If no stream is running, these
      * methods use whatever device is specified by the preferences.  If a
      * stream *is* running, naturally they manipulate the mixer associated

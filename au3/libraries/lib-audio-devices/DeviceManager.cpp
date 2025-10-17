@@ -249,15 +249,7 @@ void DeviceManager::Rescan()
         // check to see if there is a stream open - can happen if monitoring,
         // but otherwise Rescan() should not be available to the user.
         auto gAudioIO = AudioIOBase::Get();
-        if (gAudioIO) {
-            if (gAudioIO->IsMonitoring()) {
-                gAudioIO->StopStream();
-                while (gAudioIO->IsBusy()) {
-                    using namespace std::chrono;
-                    std::this_thread::sleep_for(100ms);
-                }
-            }
-        }
+        gAudioIO->StopMonitoring(); // TODO Inject and use IAudioEngine instead
 
         // restart portaudio - this updates the device list
         // FIXME: TRAP_ERR restarting PortAudio

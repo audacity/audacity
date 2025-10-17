@@ -66,9 +66,7 @@ bool Au3Player::isBusy() const
 void Au3Player::play()
 {
     if (m_playbackStatus.val == PlaybackStatus::Paused) {
-        auto gAudioIO = AudioIO::Get();
-        gAudioIO->SetPaused(false);
-
+        audioEngine()->pauseStream(false);
         m_playbackStatus.set(PlaybackStatus::Running);
         return;
     }
@@ -102,8 +100,7 @@ void Au3Player::play()
         std::swap(t0, t1);
     }
 
-    auto gAudioIO = AudioIO::Get();
-    if (gAudioIO->IsBusy()) {
+    if (audioEngine()->isBusy()) {
         return /*-1*/;
     }
 
@@ -247,20 +244,12 @@ void Au3Player::stop()
     m_playbackStatus.set(PlaybackStatus::Stopped);
 
     //! NOTE: copied from ProjectAudioManager::Stop
-    bool stopStream = true;
-
     if (!canStopAudioStream()) {
         return;
     }
-
-    auto gAudioIO = AudioIO::Get();
-
-    if (stopStream) {
-        gAudioIO->StopStream();
-    }
-
-    //Make sure you tell gAudioIO to unpause
-    gAudioIO->SetPaused(false);
+    audioEngine()->stopStream();
+    //Make sure you to unpause
+    audioEngine()->pauseStream(false);
 
     // So that we continue monitoring after playing or recording.
     // also clean the MeterQueues
@@ -274,11 +263,6 @@ void Au3Player::stop()
     auto captureMeter= projectAudioIO.GetCaptureMeter();
     if (captureMeter) {
         captureMeter->stop();
-    }
-
-    while (isBusy()) {
-        using namespace std::chrono;
-        std::this_thread::sleep_for(100ms);
     }
 }
 
@@ -301,9 +285,7 @@ void Au3Player::resume()
         return;
     }
 
-    auto gAudioIO = AudioIO::Get();
-
-    gAudioIO->SetPaused(false);
+    audioEngine()->pauseStream(false);
 
     m_playbackStatus.set(PlaybackStatus::Running);
 }

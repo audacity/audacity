@@ -14,6 +14,7 @@
 #include "record/irecordcontroller.h"
 #include "record/irecordmetercontroller.h"
 #include "trackedit/iselectioncontroller.h"
+#include "au3audio/iaudioengine.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometer.h"
@@ -29,6 +30,7 @@ class Au3AudioInput : public IAudioInput, public muse::async::Asyncable
     muse::Inject<playback::IPlaybackController> playbackController;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<au::audio::IAudioEngine> audioEngine;
 
 public:
     Au3AudioInput();
@@ -47,14 +49,29 @@ private:
     au3::Au3Project* projectRef() const;
 
     void initMeter();
-    void startMonitoring();
-    void stopMonitoring();
-    void restartMonitoring();
-    bool isTrackMeterMonitoring() const;
     int getFocusedTrackChannels() const;
-    bool shouldRestartMonitoring() const;
+
+    enum class MonitoringChangeReason {
+        Initialization,
+        RecordingState,
+        PlaybackState,
+        MicMetering,
+        AudibleInputMonitoring,
+        FocusedTrackChanged,
+        RecordMeterVisibilityChanged,
+        InputChannelsChanged,
+    };
+
+    void updateMonitoring(MonitoringChangeReason reason);
+    void updateMonitoring();
+
+    void startAudioEngineMonitoring() const;
+    void stopAudioEngineMonitoring() const;
+    bool canStartAudioEngineMonitoring() const;
+    bool audioEngineShouldBeMonitoring() const;
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
+    std::function<void()> audibleInputMonitoringChanged;
 
     std::shared_ptr<au::au3::Meter> m_inputMeter;
     int m_inputChannelsCount{};

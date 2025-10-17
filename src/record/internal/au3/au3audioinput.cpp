@@ -33,37 +33,78 @@ Au3AudioInput::Au3AudioInput()
         m_focusedTrackChannels = getFocusedTrackChannels();
 
         initMeter();
-        restartMonitoring();
 
+        updateMonitoring(MonitoringChangeReason::Initialization);
+
+        // register all callbacks for monitoring change reasons
         configuration()->isMicMeteringOnChanged().onNotify(this, [this]() {
-            restartMonitoring();
+            updateMonitoring(MonitoringChangeReason::MicMetering);
         });
 
         controller()->isRecordingChanged().onNotify(this, [this]() {
-            restartMonitoring();
+            updateMonitoring(MonitoringChangeReason::RecordingState);
         });
 
         playbackController()->isPlayingChanged().onNotify(this, [this]() {
-            restartMonitoring();
+            updateMonitoring(MonitoringChangeReason::PlaybackState);
         });
 
         audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
             m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
-            restartMonitoring();
+            updateMonitoring(MonitoringChangeReason::InputChannelsChanged);
         });
 
         selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId&) {
             const int focusedTrackChannels = getFocusedTrackChannels();
             if (focusedTrackChannels != m_focusedTrackChannels) {
                 m_focusedTrackChannels = focusedTrackChannels;
-                restartMonitoring();
+                updateMonitoring(MonitoringChangeReason::FocusedTrackChanged);
             }
         });
 
         meterController()->isRecordMeterVisibleChanged().onNotify(this, [this]() {
-            restartMonitoring();
+            updateMonitoring(MonitoringChangeReason::RecordMeterVisibilityChanged);
         });
+
+        audibleInputMonitoringChanged = [&]() {
+            updateMonitoring(MonitoringChangeReason::AudibleInputMonitoring);
+        };
     });
+}
+
+void Au3AudioInput::updateMonitoring(const MonitoringChangeReason reason)
+{
+    switch (reason) {
+    case MonitoringChangeReason::Initialization:
+        updateMonitoring();
+        break;
+    case MonitoringChangeReason::RecordingState:
+        updateMonitoring();
+        break;
+    case MonitoringChangeReason::PlaybackState:
+        // when the playback stops we need to restart the monitoring if mic metering is on or input monitoring is on
+        updateMonitoring();
+        break;
+    case MonitoringChangeReason::MicMetering:
+        // when updating the mic metering we need to either stop or restart the monitoring
+        updateMonitoring();
+        break;
+    case MonitoringChangeReason::FocusedTrackChanged:
+        updateMonitoring();
+        break;
+    case MonitoringChangeReason::RecordMeterVisibilityChanged:
+        // we have to update the monitoring when the meter is shown/hidden
+        // because current track channels might have different number of channels than the input device channels
+        updateMonitoring();
+        break;
+    case MonitoringChangeReason::InputChannelsChanged:
+        updateMonitoring();
+        break;
+    case MonitoringChangeReason::AudibleInputMonitoring:
+        // when updating the audible input monitoring we need to either stop or restart the monitoring
+        updateMonitoring();
+        break;
+    }
 }
 
 void Au3AudioInput::initMeter()
@@ -134,71 +175,57 @@ void Au3AudioInput::setAudibleInputMonitoring(bool enable)
 {
     gPrefs->Write(wxT("/AudioIO/SWPlaythrough"), enable);
     gPrefs->Flush();
-
-    restartMonitoring();
+    // Is there notification being sent when adjusting Prefs?
+    // we need to find a way to notify that the monitoring state has changed
+    // we could add a local lambda callback
+    audibleInputMonitoringChanged();
 }
 
-void Au3AudioInput::startMonitoring()
+void Au3AudioInput::startAudioEngineMonitoring() const
 {
     muse::async::Async::call(this, [this]() {
-        auto gAudioIO = AudioIO::Get();
-        if (!gAudioIO) {
-            return;
-        }
-
         Au3Project* project = projectRef();
         if (!project) {
             return;
         }
-
-        if (gAudioIO->IsMonitoring()) {
-            return;
-        }
-
-        gAudioIO->StopStream();
-        while (gAudioIO->IsBusy()) {
-            using namespace std::chrono;
-            std::this_thread::sleep_for(100ms);
-        }
-
-        gAudioIO->StartMonitoring(ProjectAudioIO::GetDefaultOptions(*project));
+        audioEngine()->startMonitoring(ProjectAudioIO::GetDefaultOptions(*project));
     });
 }
 
-void Au3AudioInput::stopMonitoring()
+void Au3AudioInput::stopAudioEngineMonitoring() const
 {
-    muse::async::Async::call(this, []() {
-        auto gAudioIO = AudioIO::Get();
-        if (!gAudioIO) {
-            return;
-        }
-
-        if (!gAudioIO->IsMonitoring()) {
-            return;
-        }
-
-        gAudioIO->StopStream();
-        using namespace std::chrono;
-        while (gAudioIO->IsBusy()) {
-            std::this_thread::sleep_for(100ms);
-        }
+    muse::async::Async::call(this, [this]() {
+        audioEngine()->stopMonitoring();
     });
 }
 
-bool Au3AudioInput::shouldRestartMonitoring() const
+void Au3AudioInput::updateMonitoring()
 {
+    if (canStartAudioEngineMonitoring()) {
+        if (audioEngineShouldBeMonitoring()) {
+            startAudioEngineMonitoring();
+        } else {
+            stopAudioEngineMonitoring();
+        }
+    }
+}
+
+bool Au3AudioInput::canStartAudioEngineMonitoring() const
+{
+    // monitoring can't be started if we are recording or playing/pause
+    // it can only be started when we are stopped
+    return !controller()->isRecording() && !playbackController()->isPlaying() && !playbackController()->isPaused();
+}
+
+bool Au3AudioInput::audioEngineShouldBeMonitoring() const
+{
+    // monitoring should be started if we are monitoring input or if we are metering the mic
     if (audibleInputMonitoring()) {
         return true;
     }
-
-    if (!configuration()->isMicMeteringOn()) {
-        return false;
-    }
-
-    if (isTrackMeterMonitoring() || meterController()->isRecordMeterVisible()) {
+    if (configuration()->isMicMeteringOn()) {
         return true;
     }
-
     return false;
 }
 
@@ -228,24 +255,6 @@ int Au3AudioInput::getFocusedTrackChannels() const
     }
 
     return channels;
-}
-
-void Au3AudioInput::restartMonitoring()
-{
-    if (controller()->isRecording() || playbackController()->isPlaying()) {
-        return;
-    }
-
-    stopMonitoring();
-
-    if (shouldRestartMonitoring()) {
-        startMonitoring();
-    }
-}
-
-bool Au3AudioInput::isTrackMeterMonitoring() const
-{
-    return m_inputChannelsCount == m_focusedTrackChannels;
 }
 
 Au3Project* Au3AudioInput::projectRef() const

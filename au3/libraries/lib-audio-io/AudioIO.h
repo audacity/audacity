@@ -438,7 +438,10 @@ public:
     void StartMonitoring(const AudioIOStartStreamOptions& options);
 
     /** \brief Stop monitoring */
-    void StopMonitoring();
+    void StopMonitoring() override;
+
+    /** \brief Wait for busy state to end */
+    void WaitWhileBusy() const;
 
     /** \brief Start recording or playing back audio
      *

@@ -60,6 +60,27 @@ int AudioEngine::startStream(const TransportSequences& sequences, double startTi
     return AudioIO::Get()->StartStream(sequences, startTime, endTime, mixerEndTime, options);
 }
 
+void AudioEngine::stopStream()
+{
+    AudioIO::Get()->StopStream();
+    AudioIO::Get()->WaitWhileBusy();
+}
+
+void AudioEngine::pauseStream(bool pause)
+{
+    AudioIO::Get()->SetPaused(pause);
+}
+
+void AudioEngine::startMonitoring(const AudioIOStartStreamOptions& options)
+{
+    AudioIO::Get()->StartMonitoring(options);
+}
+
+void AudioEngine::stopMonitoring()
+{
+    AudioIO::Get()->StopMonitoring();
+}
+
 muse::async::Notification AudioEngine::updateRequested() const
 {
     return s_audioIOListener->updateRequested();
