@@ -35,7 +35,7 @@ class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
 
     muse::Inject<IPlayback> playback;
     muse::Inject<IPlaybackConfiguration> configuration;
-    muse::Inject<IPlaybackController> controller;
+    muse::Inject<IPlaybackController> playbackController;
 
 public:
     explicit PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,

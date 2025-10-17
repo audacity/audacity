@@ -29,13 +29,13 @@ void PlayRegionController::mouseDown(double pos)
         return;
     }
 
-    m_initialRegion = playback()->player()->loopRegion();
+    m_initialRegion = playbackController()->loopRegion();
     m_dragStartPos = calculateSnappedPosition(pos);
     m_dragStarted = false;
     m_lastPos = m_dragStartPos;
     updateSnapGuideline(m_dragStartPos);
 
-    if (playback()->player()->isLoopRegionClear()) {
+    if (playbackController()->isLoopRegionClear()) {
         m_action = UserInputAction::CreateRegion;
         QGuiApplication::setOverrideCursor(QCursor(Qt::SizeHorCursor));
     } else if (std::abs(startPos() - pos) < RESIZE_AREA_WIDTH_PX) {
@@ -53,7 +53,7 @@ void PlayRegionController::mouseDown(double pos)
     }
 
     if (m_action != UserInputAction::None) {
-        playback()->player()->loopEditingBegin();
+        playbackController()->loopEditingBegin();
     }
 
     connect(qApp, &QApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
@@ -84,9 +84,6 @@ void PlayRegionController::mouseMove(double pos)
         m_dragStarted = true;
     }
 
-    auto player = playback()->player();
-    player->setLoopRegionActive(true);
-
     double visibleStartPos = context()->timeToPosition(context()->frameStartTime());
     double visibleEndPos = context()->timeToPosition(context()->frameEndTime());
 
@@ -98,9 +95,9 @@ void PlayRegionController::mouseMove(double pos)
     switch (m_action) {
     case UserInputAction::CreateRegion:
         // Have to clear the loop if we are replacing existing
-        player->clearLoopRegion();
+        playbackController()->clearLoopRegion();
         // Clearing the loop automatically disables it, reactivating
-        player->setLoopRegionActive(true);
+        playbackController()->setLoopRegionActive(true);
         setStartPos(m_dragStartPos);
         setEndPos(snappedPos);
         m_action = UserInputAction::ResizeEnd;
@@ -128,7 +125,6 @@ void au::projectscene::PlayRegionController::handleDrag(double pos)
         return;
     }
 
-    auto player = playback()->player();
     const auto& pr = m_initialRegion;
     const auto& ctx = context();
     double deltaTime = ctx->positionToTime(pos) - ctx->positionToTime(m_dragStartPos);
@@ -159,7 +155,7 @@ void au::projectscene::PlayRegionController::handleDrag(double pos)
         resetSnapGuideline();
     }
 
-    player->setLoopRegion({ ctx->positionToTime(snappedStart), ctx->positionToTime(snappedEnd) });
+    playbackController()->setLoopRegion({ ctx->positionToTime(snappedStart), ctx->positionToTime(snappedEnd) });
 }
 
 void PlayRegionController::mouseUp(double pos)
@@ -170,21 +166,20 @@ void PlayRegionController::mouseUp(double pos)
         return;
     }
 
-    auto player = playback()->player();
-    auto region = player->loopRegion();
+    auto region = playbackController()->loopRegion();
 
     if (region.end < region.start) {
-        player->setLoopRegion({ region.end, region.start });
+        playbackController()->setLoopRegion({ region.end, region.start });
     }
 
     // Toggle region active if it was a simple click without drag
     if (m_action == UserInputAction::Drag && !m_dragStarted) {
-        player->setLoopRegionActive(!player->isLoopRegionActive());
+        playbackController()->toggleLoopPlayback();
     }
 
     QGuiApplication::restoreOverrideCursor();
     resetSnapGuideline();
-    player->loopEditingEnd();
+    playbackController()->loopEditingEnd();
     m_action = UserInputAction::None;
 }
 
@@ -195,45 +190,45 @@ TimelineContext* PlayRegionController::context() const
 
 double PlayRegionController::startPos() const
 {
-    return context()->timeToPosition(playback()->player()->loopRegion().start);
+    return context()->timeToPosition(playbackController()->loopRegion().start);
 }
 
 double PlayRegionController::endPos() const
 {
-    return context()->timeToPosition(playback()->player()->loopRegion().end);
+    return context()->timeToPosition(playbackController()->loopRegion().end);
 }
 
 void PlayRegionController::setStartPos(double pos)
 {
-    playback()->player()->setLoopRegionStart(context()->positionToTime(pos));
+    playbackController()->setLoopRegionStart(context()->positionToTime(pos));
 }
 
 void PlayRegionController::setEndPos(double pos)
 {
-    playback()->player()->setLoopRegionEnd(context()->positionToTime(pos));
+    playbackController()->setLoopRegionEnd(context()->positionToTime(pos));
 }
 
 void PlayRegionController::beginPreview()
 {
-    m_initialRegion = playback()->player()->loopRegion();
-    m_initialState = playback()->player()->isLoopRegionActive();
-    playback()->player()->setLoopRegionActive(true);
+    m_initialRegion = playbackController()->loopRegion();
+    m_initialState = playbackController()->isLoopRegionActive();
+    playbackController()->setLoopRegionActive(true);
 }
 
 void PlayRegionController::setPreviewStartTime(double time)
 {
-    playback()->player()->setLoopRegionStart(time);
+    playbackController()->setLoopRegionStart(time);
 }
 
 void PlayRegionController::setPreviewEndTime(double time)
 {
-    playback()->player()->setLoopRegionEnd(time);
+    playbackController()->setLoopRegionEnd(time);
 }
 
 void PlayRegionController::endPreview()
 {
-    playback()->player()->setLoopRegion(m_initialRegion);
-    playback()->player()->setLoopRegionActive(m_initialState);
+    playbackController()->setLoopRegion(m_initialRegion);
+    playbackController()->setLoopRegionActive(m_initialState);
 }
 
 void PlayRegionController::setContext(TimelineContext* newContext)

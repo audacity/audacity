@@ -9,7 +9,7 @@
 #include "modularity/ioc.h"
 #include "context/iuicontextresolver.h"
 #include "context/iglobalcontext.h"
-#include "playback/iplayback.h"
+#include "playback/iplaybackcontroller.h"
 
 #include "timelinecontext.h"
 
@@ -22,7 +22,7 @@ class PlayRegionController : public QObject, public muse::async::Asyncable
     Q_PROPERTY(double guidelinePosition READ guidelinePosition NOTIFY guidelinePositionChanged FINAL)
     Q_PROPERTY(bool guidelineVisible READ guidelineVisible NOTIFY guidelineVisibleChanged FINAL)
 
-    muse::Inject<playback::IPlayback> playback;
+    muse::Inject<playback::IPlaybackController> playbackController;
     muse::Inject<context::IUiContextResolver> uicontextResolver;
     muse::Inject<context::IGlobalContext> globalContext;
 
