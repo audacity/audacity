@@ -12,6 +12,7 @@
 #include "libraries/lib-project-rate/ProjectRate.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/au3audiometerfactory.h"
 
 #include "au3audio/audiotypes.h"
 
@@ -23,7 +24,7 @@ using namespace au::playback;
 using namespace au::au3;
 
 Au3AudioOutput::Au3AudioOutput()
-    : m_outputMeter{std::make_shared<au::au3::Meter>()}
+    : m_outputMeter{au::au3::createAudioMeter()}
 {
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         auto currentProject = globalContext()->currentProject();

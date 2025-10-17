@@ -56,7 +56,7 @@ private:
     bool audioEngineShouldBeMonitoring() const;
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
-    std::shared_ptr<au::au3::Meter> m_inputMeter;
+    const std::shared_ptr<au::au3::Meter> m_inputMeter;
     int m_inputChannelsCount{};
     int m_focusedTrackChannels{};
 };

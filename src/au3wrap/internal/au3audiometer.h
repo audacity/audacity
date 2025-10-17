@@ -9,6 +9,11 @@
 
 #include "au3audio/audiotypes.h"
 
+// TODO
+// For now we include from auaudio internals because this class implements an Au3 interface (`IMeterSender`).
+// We should wrap that interface in an Au3-independent version that we can then have declared in auaudio.
+#include "auaudio/internal/itimer.h"
+
 #include "libraries/lib-audio-devices/IMeterSender.h"
 #include "libraries/lib-utility/LockFreeQueue.h"
 
@@ -22,7 +27,7 @@ namespace au::au3 {
 class Meter : public IMeterSender, public muse::async::Asyncable
 {
 public:
-    Meter();
+    Meter(std::unique_ptr<ITimer> meterUpdateTimer, std::unique_ptr<ITimer> stopTimer);
 
     void push(uint8_t channel, const IMeterSender::InterleavedSampleData& sampleData, TrackId) override;
     void start() override;
@@ -72,8 +77,8 @@ private:
     int m_maxFramesPerPush = 0;
     LockFreeQueue<QueueItem> m_queue{ 1024 };
     std::map<TrackId, TrackData> m_trackData;
-    QTimer m_meterUpdateTimer;
-    QTimer m_stopTimer;
+    const std::unique_ptr<ITimer> m_meterUpdateTimer;
+    const std::unique_ptr<ITimer> m_stopTimer;
     std::atomic<bool> m_running { false };
     bool m_stopPending = true;
     bool m_warningIssued = false;
