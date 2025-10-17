@@ -47,14 +47,29 @@ private:
     au3::Au3Project* projectRef() const;
 
     void initMeter();
-    void startMonitoring();
-    void stopMonitoring();
-    void restartMonitoring();
     bool isTrackMeterMonitoring() const;
     int getFocusedTrackChannels() const;
-    bool shouldRestartMonitoring() const;
+
+    enum class MonitoringChangeReason {
+        Initialization,
+        RecordingState,
+        PlaybackState,
+        MicMetering,
+        AudibleInputMonitoring,
+        FocusedTrackChanged,
+        RecordMeterVisibilityChanged,
+        InputChannelsChanged,
+    };
+
+    void startMonitoring() const;
+    void stopMonitoring() const;
+    void updateMonitoring(MonitoringChangeReason reason);
+    void updateMonitoring();
+    bool canStartMonitoring() const;
+    bool shouldStartMonitoring() const;
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
+    std::function<void()> audibleInputMonitoringChanged;
 
     std::shared_ptr<au::au3::Meter> m_inputMeter;
     int m_inputChannelsCount{};
