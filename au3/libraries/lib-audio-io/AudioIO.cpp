@@ -856,6 +856,13 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
     }
 }
 
+void AudioIO::StopMonitoring()
+{
+    if (IsMonitoring()) {
+        StopStream();
+    }
+}
+
 int AudioIO::StartStream(const TransportSequences& sequences,
                          double t0, double t1, double mixerLimit,
                          const AudioIOStartStreamOptions& options)
