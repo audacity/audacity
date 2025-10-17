@@ -42,23 +42,22 @@ void Meter::maybeBumpUp(LevelState& level, float newLinValue, int hangover)
     }
 }
 
-Meter::Meter()
+Meter::Meter(std::unique_ptr<ITimer> meterUpdateTimer, std::unique_ptr<ITimer> stopTimer)
+    : m_meterUpdateTimer{std::move(meterUpdateTimer)}, m_stopTimer{std::move(stopTimer)}
 {
     constexpr int letRingMs = -1000 * leastDb / decayDbPerSecond;
     static_assert(letRingMs > 0);
-    m_stopTimer.setSingleShot(true);
-    m_stopTimer.setInterval(letRingMs);
-    m_stopTimer.callOnTimeout([this]() {
-        m_meterUpdateTimer.stop();
+    m_stopTimer->setSingleShot(true);
+    m_stopTimer->setInterval(std::chrono::milliseconds { letRingMs });
+    m_stopTimer->setCallback([this]() {
+        m_meterUpdateTimer->stop();
         for (auto& [_, trackData] : m_trackData) {
             trackData.channelLevels.clear();
         }
     });
 
-    m_meterUpdateTimer.setInterval(static_cast<int>(updatePeriod * 1000));
-    m_meterUpdateTimer.setTimerType(Qt::PreciseTimer);
-
-    m_meterUpdateTimer.callOnTimeout([this]() {
+    m_meterUpdateTimer->setInterval(std::chrono::milliseconds { static_cast<int>(updatePeriod * 1000) });
+    m_meterUpdateTimer->setCallback([this]() {
         for (auto& [_, trackData] : m_trackData) {
             for (auto& [_, levels] : trackData.channelLevels) {
                 decay(levels.peak);
@@ -118,10 +117,8 @@ void Meter::push(uint8_t channel, const IMeterSender::InterleavedSampleData& sam
 
 void Meter::start()
 {
-    if (!m_meterUpdateTimer.isActive()) {
-        m_meterUpdateTimer.start();
-    }
-    m_stopTimer.stop();
+    m_meterUpdateTimer->start();
+    m_stopTimer->stop();
     m_running.store(true);
     m_maxFramesPerPush = 0;
 }
