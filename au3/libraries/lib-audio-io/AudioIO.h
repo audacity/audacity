@@ -17,6 +17,7 @@
 #include "AudioIOSequences.h"
 #include "PlaybackSchedule.h" // member variable
 #include "RingBuffer.h"
+#include "LockFreeQueue.h"
 
 #include <functional>
 #include <memory>
@@ -187,6 +188,14 @@ public:
     void SetListener(const std::shared_ptr< AudioIOListener >& listener);
 
     std::optional<std::chrono::steady_clock::time_point> UserStartsHearingAudioTimePoint() const;
+
+    struct AudioDelivery {
+        std::chrono::steady_clock::time_point startTime;
+        int numSamples = 0;
+    };
+    using AudioDeliveryQueue = LockFreeQueue<AudioDelivery>;
+
+    AudioDeliveryQueue& GetAudioDeliveryQueue() { return mAudioDeliveryQueue; }
 
     // Part of the callback
     int CallbackDoSeek();
@@ -392,7 +401,8 @@ protected:
     //! Holds some state for duration of playback or recording
     std::unique_ptr<TransportState> mpTransportState;
 
-    std::atomic<std::optional<std::chrono::steady_clock::time_point>> mUserStartsHearingAudioTimePoint;
+    AudioDeliveryQueue mAudioDeliveryQueue { 16 };
+    std::atomic<std::optional<std::chrono::steady_clock::time_point> > mUserStartsHearingAudioTimePoint;
 
 private:
     /*!

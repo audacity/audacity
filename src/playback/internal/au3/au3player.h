@@ -86,6 +86,14 @@ private:
     muse::ValCh<muse::secs_t> m_playbackPosition;
     double m_startOffset = 0.0;
 
-    unsigned long long m_elapsedSamplesAtLastReport = 0;
+    struct TargetPoint {
+        TargetPoint(const std::chrono::steady_clock::time_point time, const unsigned long long consumedSamples)
+            : time{time}, consumedSamples{consumedSamples} {}
+        const std::chrono::steady_clock::time_point time;
+        const unsigned long long consumedSamples;
+    };
+
+    std::optional<TargetPoint> m_currentTarget;
+    unsigned long long m_consumedSamplesSoFar = 0;
 };
 }
