@@ -248,7 +248,7 @@ FlatButton {
                     checked: root.isMicMeteringOn
 
                     onClicked: {
-                        isMicMeteringOnChangeRequested(!root.isMicMeteringOn)
+                        isMicMeteringOnChangeRequested(!checked)
                     }
                 }
 
@@ -262,7 +262,7 @@ FlatButton {
                     checked: root.audibleInputMonitoring
 
                     onClicked: {
-                        audibleInputMonitoringChangeRequested(!root.audibleInputMonitoring)
+                        audibleInputMonitoringChangeRequested(!checked)
                     }
                 }
             }
