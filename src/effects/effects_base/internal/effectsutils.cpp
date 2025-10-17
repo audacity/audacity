@@ -3,6 +3,7 @@
  */
 
 #include "effectsutils.h"
+#include "effects/builtin/internal/builtineffectsrepository.h"
 #include "log.h"
 
 namespace impl {
@@ -77,15 +78,24 @@ MenuItem* makeRealtimeBuiltinEffectSubmenu(const EffectMetaList& effects, IEffec
 
 MenuItemList makeDestructiveBuiltinEffectSubmenu(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
 {
-    std::map<CiString /*category*/, CiStringSet> categories;
+    std::map<muse::String /*category*/, CiStringSet> categories;
     for (const EffectMeta& meta : effects) {
         if (meta.family == EffectFamily::Builtin) {
-            categories[CiString{ meta.category }].insert(CiString { meta.id });
+            categories[meta.category].insert(CiString { meta.id });
         }
     }
-    MenuItemList items;
+
+    std::vector<std::pair<muse::String, CiStringSet> > categoriesSorted;
     for (const auto& [category, effectIds] : categories) {
-        items << makeEffectSubmenu(category, effectIds, effectMenu);
+        categoriesSorted.push_back({ category, effectIds });
+    }
+    std::sort(categoriesSorted.begin(), categoriesSorted.end(), [&](const auto& a, const auto& b) {
+        return categoryIdOrder(a.first) < categoryIdOrder(b.first);
+    });
+
+    MenuItemList items;
+    for (const auto& [category, effectIds] : categoriesSorted) {
+        items << makeEffectSubmenu(CiString { category }, effectIds, effectMenu);
     }
     return items;
 }
@@ -114,7 +124,8 @@ MenuItemList makeNonBuiltinEffectSubmenus(const EffectMetaList& effects, IEffect
             // Built-in effects are handled separately
             continue;
         }
-        families[CiString{ muse::String{ effectFamiliyString(meta.family) } }][CiString{ meta.vendor }][CiString{ meta.title }].insert(&meta);
+        families[CiString{ muse::String{ effectFamiliyString(meta.family) } }][CiString{ meta.vendor }][CiString{ meta.title }].insert(
+            &meta);
     }
 
     MenuItemList items;
