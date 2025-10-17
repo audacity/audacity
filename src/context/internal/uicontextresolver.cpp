@@ -190,8 +190,5 @@ bool UiContextResolver::isShortcutContextAllowed(const std::string& scContext) c
         return !matchWithCurrent(context::UiCtxProjectFocused);
     }
 
-    IF_ASSERT_FAILED(CTX_ANY == scContext) {
-        return true;
-    }
     return true;
 }
