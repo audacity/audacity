@@ -661,8 +661,6 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         SetCaptureMeter(mOwningProject.lock(), options.captureMeter);
     }
 
-    UpdateMetersRate(mRate);
-
     const auto deviceInfo = usePlayback
                             ? Pa_GetDeviceInfo(playbackParameters.device)
                             : Pa_GetDeviceInfo(captureParameters.device);
@@ -865,11 +863,6 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
     }
 }
 
-std::optional<std::chrono::steady_clock::time_point> AudioIoCallback::UserStartsHearingAudioTimePoint() const
-{
-    return mUserStartsHearingAudioTimePoint.load();
-}
-
 void AudioIO::StopMonitoring()
 {
     if (IsMonitoring()) {
@@ -890,8 +883,6 @@ int AudioIO::StartStream(const TransportSequences& sequences,
                          double t0, double t1, double mixerLimit,
                          const AudioIOStartStreamOptions& options)
 {
-    mUserStartsHearingAudioTimePoint.store(std::nullopt);
-
     // precondition
     assert(std::all_of(
                sequences.playbackSequences.begin(), sequences.playbackSequences.end(),
@@ -2753,10 +2744,6 @@ bool AudioIoCallback::FillOutputBuffers(
                 const auto now = steady_clock::now();
                 const auto startTime = now + milliseconds(static_cast<int>(mHardwarePlaybackLatencyFrames * 1000.0 / mRate));
                 mAudioDeliveryQueue.Put({ startTime, static_cast<int>(len) });
-                if (!mUserStartsHearingAudioTimePoint.load().has_value()) {
-                    const auto remainingSamples = mHardwarePlaybackLatencyFrames > len ? mHardwarePlaybackLatencyFrames - len : 0;
-                    mUserStartsHearingAudioTimePoint.store(now + milliseconds(static_cast<int>(remainingSamples / mRate * 1000)));
-                }
             }
 
             // Output volume emulation: possibly copy meter samples, then
@@ -3016,7 +3003,7 @@ void AudioIoCallback::DoPlaythrough(
 /* Send data to recording VU meter if applicable */
 // Also computes rms
 void AudioIoCallback::SendVuInputMeterData(const float* inputSamples, unsigned long framesPerBuffer,
-                                           const PaStreamCallbackTimeInfo* timeInfo)
+                                           const PaStreamCallbackTimeInfo* timeInfo, const std::chrono::steady_clock::time_point& when)
 {
     if (framesPerBuffer == 0) {
         return;
@@ -3031,12 +3018,12 @@ void AudioIoCallback::SendVuInputMeterData(const float* inputSamples, unsigned l
         return;
     }
 
-    PushInputMeterValues(inputMeter, inputSamples, framesPerBuffer, timeInfo);
+    PushInputMeterValues(inputMeter, inputSamples, framesPerBuffer, timeInfo, when);
 }
 
 /* Send data to playback VU meter if applicable */
 void AudioIoCallback::SendVuOutputMeterData(const float* outputMeterFloats, unsigned long framesPerBuffer,
-                                            const PaStreamCallbackTimeInfo* timeInfo)
+                                            const PaStreamCallbackTimeInfo* timeInfo, const std::chrono::steady_clock::time_point& when)
 {
     if (framesPerBuffer == 0) {
         return;
@@ -3051,12 +3038,12 @@ void AudioIoCallback::SendVuOutputMeterData(const float* outputMeterFloats, unsi
         return;
     }
 
-    PushMainMeterValues(outputMeter, outputMeterFloats, mNumPlaybackChannels, framesPerBuffer, timeInfo);
-    PushTrackMeterValues(outputMeter, framesPerBuffer, timeInfo);
+    PushMainMeterValues(outputMeter, outputMeterFloats, mNumPlaybackChannels, framesPerBuffer, timeInfo, when);
+    PushTrackMeterValues(outputMeter, framesPerBuffer, timeInfo, when);
 }
 
 void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, unsigned long frames,
-                                           const PaStreamCallbackTimeInfo* timeInfo)
+                                           const PaStreamCallbackTimeInfo* timeInfo, const std::chrono::steady_clock::time_point& when)
 {
     if (frames == 0) {
         return;
@@ -3068,7 +3055,7 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& 
         auto nChannels = sequence->NChannels();
         const int64_t id = sequence->GetRecordableSequenceId();
         for (size_t ch = 0; ch < nChannels; ch++) {
-            sender->push(ch, { sptr + ch, frames, nChannels, timeInfo->inputBufferAdcTime }, IMeterSender::TrackId { id });
+            sender->push(ch, { sptr + ch, frames, nChannels, timeInfo->inputBufferAdcTime, when }, IMeterSender::TrackId { id });
         }
     }
 
@@ -3076,7 +3063,7 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& 
     // If the input source has more than 2 channels it will be splitted on multiple mono sequences
     if (mNumCaptureChannels <= 2) {
         for (size_t ch = 0; ch < mNumCaptureChannels; ++ch) {
-            sender->push(ch, { sptr + ch, frames, mNumCaptureChannels, timeInfo->inputBufferAdcTime });
+            sender->push(ch, { sptr + ch, frames, mNumCaptureChannels, timeInfo->inputBufferAdcTime, when });
         }
     } else {
         constexpr size_t maxMainTrackChannels = 2;
@@ -3093,23 +3080,24 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& 
         }
 
         for (size_t ch = 0; ch < maxMainTrackChannels; ++ch) {
-            sender->push(ch, { mainTrackInput + ch * frames, frames, 1, timeInfo->inputBufferAdcTime });
+            sender->push(ch, { mainTrackInput + ch * frames, frames, 1, timeInfo->inputBufferAdcTime, when });
         }
     }
 }
 
 void AudioIoCallback::PushMainMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, uint8_t channels,
-                                          unsigned long frames, const PaStreamCallbackTimeInfo* timeInfo)
+                                          unsigned long frames, const PaStreamCallbackTimeInfo* timeInfo,
+                                          const std::chrono::steady_clock::time_point& when)
 {
     auto sptr = values;
     for (size_t ch = 0; ch < channels; ++ch) {
         auto sptr = values + ch;
-        sender->push(ch, { sptr, frames, channels, timeInfo->outputBufferDacTime });
+        sender->push(ch, { sptr, frames, channels, timeInfo->outputBufferDacTime, when });
     }
 }
 
 void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterSender>& sender, unsigned long frames,
-                                           const PaStreamCallbackTimeInfo* timeInfo)
+                                           const PaStreamCallbackTimeInfo* timeInfo, const std::chrono::steady_clock::time_point& when)
 {
     auto stackBuffer = stackAllocate(float, frames);
 
@@ -3123,7 +3111,7 @@ void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterSender>& 
                 frames
                 );
 
-            sender->push(nch, { stackBuffer, len, 1, timeInfo->outputBufferDacTime }, IMeterSender::TrackId { track.trackId() });
+            sender->push(nch, { stackBuffer, len, 1, timeInfo->outputBufferDacTime, when }, IMeterSender::TrackId { track.trackId() });
         }
     }
 }
@@ -3224,6 +3212,9 @@ int AudioIoCallback::AudioCallback(
                                    : outputBuffer;
     // ----- END of MEMORY ALLOCATIONS ------------------------------------------
 
+    const std::chrono::milliseconds hardwareLatencyMs{ static_cast<int>(mHardwarePlaybackLatencyFrames * 1000.0 / mRate) };
+    const auto levelDisplayTime = std::chrono::steady_clock::now() + hardwareLatencyMs;
+
     if (inputBuffer && numCaptureChannels) {
         float* inputSamples;
 
@@ -3235,7 +3226,7 @@ int AudioIoCallback::AudioCallback(
             inputSamples = tempFloats;
         }
 
-        SendVuInputMeterData(inputSamples, framesPerBuffer, timeInfo);
+        SendVuInputMeterData(inputSamples, framesPerBuffer, timeInfo, levelDisplayTime);
 
         // This function may queue up a pause or resume.
         // TODO this is a bit dodgy as it toggles the Pause, and
@@ -3280,7 +3271,7 @@ int AudioIoCallback::AudioCallback(
         statusFlags,
         tempFloats);
 
-    SendVuOutputMeterData(outputMeterFloats, framesPerBuffer, timeInfo);
+    SendVuOutputMeterData(outputMeterFloats, framesPerBuffer, timeInfo, levelDisplayTime);
 
     return mCallbackReturn;
 }
