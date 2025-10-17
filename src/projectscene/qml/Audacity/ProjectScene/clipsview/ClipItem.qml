@@ -39,6 +39,7 @@ Rectangle {
     property real selectionWidth: 0
     property bool selectionInProgress: false
     property bool enableCursorInteraction: !selectionInProgress && !isBrush
+    property bool isContrastFocusBorderEnabled: false
 
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
@@ -117,6 +118,8 @@ Rectangle {
         accessible.name: root.name
 
         onActiveChanged: function (active) {
+            // Make sure the focus navigation border is visible on top of other clips
+            root.parent.z = active ? 1 : 0
             if (active) {
                 root.forceActiveFocus()
             }
@@ -128,7 +131,29 @@ Rectangle {
     }
 
     NavigationFocusBorder {
+        id: focusBorder
+
         navigationCtrl: navCtrl
+
+        border.color: ui.theme.fontPrimaryColor
+        border.width: 2
+        radius: isContrastFocusBorderEnabled ? 0 : 4
+
+        visible: clipSelected || (navigationCtrl ? navigationCtrl.highlight : false)
+    }
+
+    NavigationFocusBorder {
+        id: contrastFocusBorder
+
+        padding: focusBorder.border.width
+
+        navigationCtrl: navCtrl
+
+        border.color: "white"
+        border.width: 2
+        radius: 4
+
+        visible: isContrastFocusBorderEnabled && ((navigationCtrl ? navigationCtrl.highlight : false) || root.clipSelected)
     }
 
     QtObject {
@@ -770,16 +795,6 @@ Rectangle {
                     waveView.onWaveViewPositionChanged(hoverArea.mouseX, hoverArea.mouseY - header.height)
                 }
             }
-        }
-
-        RoundedRectangle {
-            id: clipBorder
-            anchors.fill: parent
-            border.width: 1
-            border.color: root.clipSelected ? "white" : "black"
-            color: "transparent"
-            radius: root.radius
-            z: 2
         }
     }
 
