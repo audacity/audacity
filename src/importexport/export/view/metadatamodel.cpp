@@ -14,10 +14,6 @@ MetadataModel::MetadataModel(QObject* parent)
 {
 }
 
-MetadataModel::~MetadataModel()
-{
-}
-
 QVariant MetadataModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid()) {

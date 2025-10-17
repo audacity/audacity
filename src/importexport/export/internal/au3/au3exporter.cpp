@@ -274,6 +274,19 @@ bool Au3Exporter::isCustomFFmpegExportFormat() const
     return editor->GetName() == "custom_ffmpeg";
 }
 
+bool Au3Exporter::canMetadata() const
+{
+    std::string format = exportConfiguration()->currentFormat();
+
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
+            return plugin->GetFormatInfo(formatIndex).canMetaData;
+        }
+    }
+
+    return false;
+}
+
 int Au3Exporter::maxChannels() const
 {
     std::string format = exportConfiguration()->currentFormat();
