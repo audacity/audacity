@@ -10,6 +10,7 @@
 #include "draw/types/color.h"
 
 #include "clip.h" // IWYU pragma: export
+#include "label.h" // IWYU pragma: export
 
 namespace au::trackedit {
 enum class TrackType {

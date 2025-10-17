@@ -8,6 +8,7 @@
 
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track/WaveClip.h"
+#include "libraries/lib-label-track/LabelTrack.h"
 
 #include "trackedit/trackedittypes.h"
 #include "../au3types.h"
@@ -35,5 +36,9 @@ public:
     static trackedit::ClipId findMatchedClip(const Au3WaveTrack* track, const Au3WaveTrack* originTrack,
                                              const trackedit::ClipId& originClipId);
     static std::list<std::shared_ptr<Au3WaveClip> > waveClipsAsList(Au3WaveTrack* track);
+
+    static Au3LabelTrack* findLabelTrack(Au3Project& prj, const Au3LabelTrackId& au3LabelTrackId);
+    static const Au3LabelTrack* findLabelTrack(const Au3Project& prj, const Au3LabelTrackId& au3LabelTrackId);
+    static const Au3LabelTrack* findLabelTrackByIndex(const Au3Project& prj, size_t index);
 };
 }

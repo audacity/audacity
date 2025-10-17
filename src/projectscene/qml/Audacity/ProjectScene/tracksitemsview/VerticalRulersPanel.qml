@@ -34,7 +34,7 @@ Rectangle {
 
         ScrollBar.vertical: null
 
-        //! NOTE Sync with TracksClipsView
+        //! NOTE Sync with TracksItemsView
         TracksViewStateModel {
             id: tracksViewState
             onTracksVerticalOffsetChanged: {

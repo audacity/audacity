@@ -425,7 +425,7 @@ muse::Ret EffectExecutionScenario::performEffectOnEachSelectedClip(au3::Au3Proje
             continue;
         }
 
-        const std::shared_ptr<WaveClip> waveClip = au3::DomAccessor::findWaveClip(waveTrack, clip.clipId);
+        const std::shared_ptr<WaveClip> waveClip = au3::DomAccessor::findWaveClip(waveTrack, clip.objectId);
         IF_ASSERT_FAILED(waveClip) {
             continue;
         }

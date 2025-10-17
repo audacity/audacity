@@ -48,6 +48,20 @@ public:
     double leftMostSelectedClipStartTime() const override;
     double rightMostSelectedClipEndTime() const override;
 
+    // label selection
+    void resetSelectedLabels() override;
+    bool hasSelectedLabels() const override;
+    LabelKeyList selectedLabels() const override;
+    LabelKeyList selectedLabelsInTrackOrder() const override;
+    void setSelectedLabels(const LabelKeyList& labelKeys, bool complete) override;
+    void addSelectedLabel(const LabelKey& labelKey) override;
+    void removeLabelSelection(const LabelKey& labelKey) override;
+    muse::async::Channel<LabelKeyList> labelsSelected() const override;
+    double selectedLabelStartTime() const override;
+    double selectedLabelEndTime() const override;
+    double leftMostSelectedLabelStartTime() const override;
+    double rightMostSelectedLabelEndTime() const override;
+
     // data selection
     void setSelectedTrackAudioData(trackedit::TrackId trackId) override;
     void resetDataSelection() override;
@@ -122,6 +136,9 @@ private:
 
     // clip selection
     Val<ClipKeyList> m_selectedClips;
+
+    // label selection
+    Val<LabelKeyList> m_selectedLabels;
 
     // data selection
     Val<trackedit::secs_t> m_selectedStartTime;

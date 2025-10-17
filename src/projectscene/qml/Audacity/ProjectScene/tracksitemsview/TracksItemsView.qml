@@ -13,25 +13,21 @@ Rectangle {
 
     property var navPanels: null
 
-    property bool clipHovered: false
-    property bool clipHeaderHovered: false
-    property var hoveredClipKey: null
+    property bool itemHovered: false
+    property bool itemHeaderHovered: false
+    property var hoveredObjectKey: null
+
     property var hoveredTrackId: null
     property double hoveredTrackVerticalPosition
     property double hoveredTrackHeight
     property bool tracksHovered: false
+
     property bool guidelineVisible: false
     property double guidelinePos: -1
+
     property alias altPressed: tracksViewState.altPressed
     property alias ctrlPressed: tracksViewState.ctrlPressed
     property alias isSplitMode: splitToolController.active
-
-    readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
-    readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
-    readonly property string leftTrimShape: ":/images/customCursorShapes/ClipTrimLeft.png"
-    readonly property string leftStretchShape: ":/images/customCursorShapes/ClipStretchLeft.png"
-    readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
-    readonly property string rightStretchShape: ":/images/customCursorShapes/ClipStretchRight.png"
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -39,16 +35,16 @@ Rectangle {
 
     enum State {
         Idle,
-        DraggingClip
+        DraggingObject
     }
 
-    property int interactionState: TracksClipsView.State.Idle
+    property int interactionState: TracksItemsView.State.Idle
 
     PlaybackStateModel {
         id: playbackState
     }
 
-    TracksListClipsModel {
+    TracksItemsModel {
         id: tracksModel
 
         onTotalTracksHeightChanged: {
@@ -98,7 +94,7 @@ Rectangle {
     TracksViewStateModel {
         id: tracksViewState
         onTracksVerticalOffsetChanged: {
-            tracksClipsView.contentY = tracksViewState.tracksVerticalOffset
+            tracksItemsView.contentY = tracksViewState.tracksVerticalOffset
         }
     }
 
@@ -121,7 +117,7 @@ Rectangle {
         id: splitToolController
         context: timeline.context
 
-        clipHovered: root.clipHovered && !root.clipHeaderHovered
+        clipHovered: root.itemHovered && !root.itemHeaderHovered
         hoveredTrack: root.hoveredTrackId
     }
 
@@ -156,7 +152,7 @@ Rectangle {
 
         //! NOTE setting verticalY has to be done after tracks are loaded,
         // otherwise project always starts at the very top
-        Qt.callLater(() => tracksClipsView.contentY = tracksViewState.tracksVerticalOffset)
+        Qt.callLater(() => tracksItemsView.contentY = tracksViewState.tracksVerticalOffset)
     }
 
     Rectangle {
@@ -264,8 +260,8 @@ Rectangle {
             Rectangle {
                 id: timelineSelRect
 
-                x: timeline.context.singleClipSelected ? timeline.context.selectedClipStartPosition : timeline.context.selectionStartPosition
-                width: timeline.context.singleClipSelected ? timeline.context.selectedClipEndPosition - x : timeline.context.selectionEndPosition - x
+                x: timeline.context.singleObjectSelected ? timeline.context.selectedObjectStartPosition : timeline.context.selectionStartPosition
+                width: timeline.context.singleObjectSelected ? timeline.context.selectedObjectEndPosition - x : timeline.context.selectionEndPosition - x
 
                 anchors.top: parent.verticalCenter
                 anchors.bottom: parent.bottom
@@ -328,13 +324,19 @@ Rectangle {
 
     CustomCursor {
         id: customCursor
+
+        readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
+        readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
+        readonly property string leftTrimShape: ":/images/customCursorShapes/ClipTrimLeft.png"
+        readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
+
         active: {
             // Don't show custom cursor during playback for sample editing
             if ((content.isNearSample || content.isIsolationMode) && playbackState.isPlaying) {
                 return false
             }
 
-            return (content.isIsolationMode || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse || content.leftTrimPressedButtons || content.rightTrimPressedButtons || (content.isBrush && root.clipHovered))
+            return (content.isIsolationMode || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse || content.leftTrimPressedButtons || content.rightTrimPressedButtons || (content.isBrush && root.itemHovered))
         }
         source: {
             if (content.isBrush) {
@@ -352,7 +354,7 @@ Rectangle {
 
     Rectangle {
         id: content
-        objectName: "clipsView"
+        objectName: "ItemsView"
         anchors.leftMargin: 12
         anchors.top: timelineHeader.bottom
         anchors.bottom: parent.bottom
@@ -394,9 +396,9 @@ Rectangle {
                 if (e.button === Qt.LeftButton) {
                     tracksModel.startUserInteraction()
 
-                    if (root.clipHeaderHovered) {
-                        tracksClipsView.clipStartEditRequested(hoveredClipKey)
-                        root.interactionState = TracksClipsView.State.DraggingClip
+                    if (root.itemHeaderHovered) {
+                        tracksItemsView.itemStartEditRequested(hoveredObjectKey)
+                        root.interactionState = TracksItemsView.State.DraggingObject
                     } else {
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
                             playCursorController.seekToX(e.x)
@@ -404,8 +406,8 @@ Rectangle {
 
                         if (!splitToolController.active) {
                             selectionController.onPressed(e.x, e.y)
-                            selectionController.resetSelectedClip()
-                            clipsSelection.visible = true
+                            selectionController.resetSelectedObjects()
+                            itemsSelection.visible = true
                         }
                         handleGuideline(e.x, false)
 
@@ -424,9 +426,9 @@ Rectangle {
                 timeline.updateCursorPosition(e.x, e.y)
                 splitToolController.mouseMove(e.x)
 
-                if (root.interactionState === TracksClipsView.State.DraggingClip) {
-                    tracksClipsView.clipMoveRequested(hoveredClipKey, false)
-                    tracksClipsView.startAutoScroll()
+                if (root.interactionState === TracksItemsView.State.DraggingObject) {
+                    tracksItemsView.itemMoveRequested(hoveredObjectKey, false)
+                    tracksItemsView.startAutoScroll()
                 } else {
                     selectionController.onPositionChanged(e.x, e.y)
                     let trackId = tracksViewState.trackAtPosition(e.x, e.y)
@@ -440,11 +442,11 @@ Rectangle {
                     return
                 }
 
-                if (root.interactionState === TracksClipsView.State.DraggingClip) {
-                    root.interactionState = TracksClipsView.State.Idle
-                    tracksClipsView.clipMoveRequested(hoveredClipKey, true)
-                    tracksClipsView.stopAutoScroll()
-                    tracksClipsView.clipEndEditRequested(hoveredClipKey)
+                if (root.interactionState === TracksItemsView.State.DraggingObject) {
+                    root.interactionState = TracksItemsView.State.Idle
+                    tracksItemsView.itemMoveRequested(hoveredObjectKey, true)
+                    tracksItemsView.stopAutoScroll()
+                    tracksItemsView.itemEndEditRequested(hoveredObjectKey)
                 }
                 else {
                     splitToolController.mouseUp(e.x)
@@ -454,7 +456,7 @@ Rectangle {
                     }
                     if (!splitToolController.active) {
                         selectionController.onReleased(e.x, e.y)
-                        clipsSelection.visible = false
+                        itemsSelection.visible = false
                     }
                     handleGuideline(e.x, true)
                     if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
@@ -468,8 +470,7 @@ Rectangle {
             }
 
             onCanceled: e => {
-                console.log("User interaction canceled")
-                root.interactionState = TracksClipsView.State.Idle
+                root.interactionState = TracksItemsView.State.Idle
                 tracksModel.endUserInteraction()
             }
 
@@ -478,8 +479,8 @@ Rectangle {
                     return
                 }
 
-                if (!root.clipHovered) {
-                    selectionController.resetSelectedClip()
+                if (!root.itemHovered) {
+                    selectionController.resetSelectedObjects()
                 }
             }
 
@@ -492,24 +493,24 @@ Rectangle {
                     return
                 }
 
-                if (root.clipHovered) {
-                    selectionController.selectClipAudioData(root.hoveredClipKey)
-                    playCursorController.setPlaybackRegion(timeline.context.selectedClipStartPosition, timeline.context.selectedClipEndPosition)
+                if (root.itemHovered) {
+                    selectionController.selectObjectData(root.hoveredObjectKey)
+                    playCursorController.setPlaybackRegion(timeline.context.selectedObjectStartPosition, timeline.context.selectedObjectEndPosition)
                 } else {
                     selectionController.selectTrackAudioData(e.y)
-                    playCursorController.setPlaybackRegion(timeline.context.selectedClipStartPosition, timeline.context.selectedClipEndPosition)
+                    playCursorController.setPlaybackRegion(timeline.context.selectedObjectStartPosition, timeline.context.selectedObjectEndPosition)
                 }
-                clipsSelection.visible = false
+                itemsSelection.visible = false
             }
         }
 
         StyledViewScrollAndZoomArea {
-            id: tracksClipsViewArea
+            id: tracksItemsViewArea
 
             anchors.fill: parent
             anchors.rightMargin: tracksModel.isVerticalRulersVisible ? verticalRulerPanelHeader.width : 0
 
-            view: tracksClipsView
+            view: tracksItemsView
 
             horizontalScrollbarSize: timeline.context.horizontalScrollbarSize
             startHorizontalScrollPosition: timeline.context.startHorizontalScrollPosition
@@ -518,7 +519,7 @@ Rectangle {
             startVerticalScrollPosition: timeline.context.startVerticalScrollPosition
 
             StyledListView {
-                id: tracksClipsView
+                id: tracksItemsView
 
                 anchors.fill: parent
                 clip: false // do not clip so clip handles are visible
@@ -532,17 +533,20 @@ Rectangle {
                 property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
 
                 function checkIfAnyTrack(f) {
-                    for (let i = 0; i < tracksClipsView.count; i++) {
-                        if (f(tracksClipsView.itemAtIndex(i))) {
-                            return true
+                    for (let i = 0; i < tracksItemsView.count; i++) {
+                        let trackLoader = tracksItemsView.itemAtIndex(i)
+                        if (trackLoader && trackLoader.item) {
+                            if (f(trackLoader.item)) {
+                                return true
+                            }
                         }
                     }
                     return false
                 }
 
-                signal clipMoveRequested(var clipKey, bool completed)
-                signal clipStartEditRequested(var clipKey)
-                signal clipEndEditRequested(var clipKey)
+                signal itemMoveRequested(var objectKey, bool completed)
+                signal itemStartEditRequested(var objectKey)
+                signal itemEndEditRequested(var objectKey)
                 signal startAutoScroll
                 signal stopAutoScroll
 
@@ -564,33 +568,33 @@ Rectangle {
                     if (verticalScrollLocked) {
                         contentY = lockedVerticalScrollPosition
                     } else {
-                        tracksViewState.changeTracksVerticalOffset(tracksClipsView.contentY)
-                        timeline.context.startVerticalScrollPosition = tracksClipsView.contentY
+                        tracksViewState.changeTracksVerticalOffset(tracksItemsView.contentY)
+                        timeline.context.startVerticalScrollPosition = tracksItemsView.contentY
                     }
                 }
 
                 onHeightChanged: {
-                    timeline.context.onResizeFrameHeight(tracksClipsView.height)
+                    timeline.context.onResizeFrameHeight(tracksItemsView.height)
                 }
 
                 Connections {
                     target: timeline.context
 
                     function onViewContentYChangeRequested(delta) {
-                        let headerHeight = tracksClipsView.headerItem ? tracksClipsView.headerItem.height : 0
+                        let headerHeight = tracksItemsView.headerItem ? tracksItemsView.headerItem.height : 0
                         let totalContentHeight = tracksModel.totalTracksHeight + tracksViewState.tracksVerticalScrollPadding
-                        let canMove = totalContentHeight > tracksClipsView.height
+                        let canMove = totalContentHeight > tracksItemsView.height
                         if (!canMove) {
                             return
                         }
 
-                        let contentYOffset = tracksClipsView.contentY + delta
+                        let contentYOffset = tracksItemsView.contentY + delta
 
-                        let maxContentY = totalContentHeight - tracksClipsView.height
-                        maxContentY = Math.max(maxContentY, tracksClipsView.contentY)
+                        let maxContentY = totalContentHeight - tracksItemsView.height
+                        maxContentY = Math.max(maxContentY, tracksItemsView.contentY)
                         contentYOffset = Math.max(Math.min(contentYOffset, maxContentY), -headerHeight)
 
-                        tracksClipsView.contentY = contentYOffset
+                        tracksItemsView.contentY = contentYOffset
                     }
                 }
 
@@ -598,166 +602,278 @@ Rectangle {
 
                 model: tracksModel
 
-                delegate: TrackClipsItem {
-                    width: tracksClipsView.width
-                    context: timeline.context
-                    container: tracksClipsView
-                    canvas: content
-                    trackId: model.trackId
-                    isDataSelected: model.isDataSelected
-                    isTrackSelected: model.isTrackSelected
-                    isTrackFocused: model.isTrackFocused
-                    isMultiSelectionActive: model.isMultiSelectionActive
-                    isTrackAudible: model.isTrackAudible
-                    moveActive: tracksClipsView.moveActive
-                    altPressed: root.altPressed
-                    ctrlPressed: root.ctrlPressed
-                    selectionEditInProgress: selectionController.selectionEditInProgress
-                    selectionInProgress: selectionController.selectionInProgress
-                    onHoverChanged: function () {
-                        root.clipHovered = tracksClipsView.checkIfAnyTrack(function (trackItem) {
-                            return trackItem && trackItem.hover
-                        })
+                delegate: Loader {
+                    id: trackItemLoader
+
+                    property var itemData: model
+                    property int index: model.index
+
+                    width: tracksItemsView.width
+                    
+                    sourceComponent: trackType === TrackItemType.Label ? labelTrackItemComp : clipsTrackItemComp
+
+                    onLoaded: {
+                        trackItemLoader.item.init()
                     }
+                    
+                    Component {
+                        id: clipsTrackItemComp
+                        
+                        TrackClipsItem {
+                            property var itemData: trackItemLoader.itemData
+                            property int index: trackItemLoader.index
 
-                    trackIdx: model.index
-                    navigationPanel: navPanels && navPanels[model.index] ? navPanels[model.index] : null
+                            width: trackItemLoader.width
 
-                    onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, clipKey) {
-                        let xGlobalPosition = xWithinTrack
-                        let yGlobalPosition = y + yWithinTrack - tracksClipsView.contentY
+                            context: timeline.context
 
-                        timeline.updateCursorPosition(xGlobalPosition, yGlobalPosition)
+                            container: tracksItemsView
+                            canvas: content
 
-                        root.hoveredTrackId = trackId
-                        root.hoveredClipKey = clipKey
-                        root.hoveredTrackHeight = tracksViewState.trackHeight(trackId)
-                        root.hoveredTrackVerticalPosition = tracksViewState.trackVerticalPosition(trackId)
+                            trackId: itemData.trackId
 
-                        splitToolController.mouseMove(xWithinTrack)
-                    }
+                            isDataSelected: itemData.isDataSelected
+                            isTrackSelected: itemData.isTrackSelected
+                            isTrackFocused: itemData.isTrackFocused
+                            isMultiSelectionActive: itemData.isMultiSelectionActive
+                            isTrackAudible: itemData.isTrackAudible
 
-                    onSetHoveredClipKey: function (clipKey) {
-                        root.hoveredClipKey = clipKey
-                    }
+                            moveActive: tracksItemsView.moveActive
 
-                    onClipHeaderHoveredChanged: function (val) {
-                        root.clipHeaderHovered = val
-                    }
+                            altPressed: root.altPressed
+                            ctrlPressed: root.ctrlPressed
 
-                    onClipSelectedRequested: {
-                        selectionController.resetDataSelection()
-                        clipsSelection.visible = false
-                    }
+                            selectionEditInProgress: selectionController.selectionEditInProgress
+                            selectionInProgress: selectionController.selectionInProgress
+                            onHoverChanged: function () {
+                                root.itemHovered = tracksItemsView.checkIfAnyTrack(function (trackItem) {
+                                    return trackItem && trackItem.hover
+                                })
+                            }
 
-                    onSelectionResetRequested: {
-                        selectionController.resetDataSelection()
-                    }
+                            navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 
-                    onUpdateMoveActive: function (completed) {
-                        if (tracksClipsView.moveActive !== completed) {
-                            return
+                            onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, objectKey) {
+                                let xGlobalPosition = xWithinTrack
+                                let yGlobalPosition = y + yWithinTrack - tracksItemsView.contentY
+
+                                timeline.updateCursorPosition(xGlobalPosition, yGlobalPosition)
+
+                                root.hoveredTrackId = trackId
+                                root.hoveredObjectKey = objectKey
+                                root.hoveredTrackHeight = tracksViewState.trackHeight(trackId)
+                                root.hoveredTrackVerticalPosition = tracksViewState.trackVerticalPosition(trackId)
+
+                                splitToolController.mouseMove(xWithinTrack)
+                            }
+
+                            onSetHoveredObjectKey: function (objectKey) {
+                                root.hoveredObjectKey = objectKey
+                            }
+
+                            onItemHeaderHoveredChanged: function (val) {
+                                root.itemHeaderHovered = val
+                            }
+
+                            onItemSelectedRequested: {
+                                selectionController.resetDataSelection()
+                                itemsSelection.visible = false
+                            }
+
+                            onSelectionResetRequested: {
+                                selectionController.resetDataSelection()
+                            }
+
+                            onUpdateMoveActive: function (completed) {
+                                if (tracksItemsView.moveActive !== completed) {
+                                    return
+                                }
+                                tracksItemsView.moveActive = !completed
+                            }
+
+                            onRequestSelectionContextMenu: function (x, y) {
+                                selectionContextMenuLoader.show(Qt.point(x + canvasIndent.width, y + timelineHeader.height), selectionContextMenuModel.items)
+                            }
+
+                            onSelectionDraged: function (x1, x2, completed) {
+                                selectionController.onSelectionDraged(x1, x2, completed)
+                            }
+
+                            onSeekToX: function (x) {
+                                playCursorController.seekToX(x)
+                            }
+
+                            onInsureVerticallyVisible: function (clipTop, clipBottom) {
+                                var delta = calculateVerticalScrollDelta(tracksViewState.tracksVerticalOffset, tracksViewState.tracksVerticalOffset + content.height, clipTop, clipBottom)
+                                if (tracksViewState.tracksVerticalOffset + delta < 0) {
+                                    tracksViewState.changeTracksVerticalOffset(0)
+                                } else {
+                                    tracksViewState.changeTracksVerticalOffset(tracksViewState.tracksVerticalOffset + delta)
+                                }
+                            }
+
+                            onInteractionStarted: {
+                                tracksViewState.requestVerticalScrollLock()
+                            }
+
+                            onInteractionEnded: {
+                                tracksViewState.requestVerticalScrollUnlock()
+                            }
+
+                            onIsBrushChanged: function () {
+                                content.isBrush = tracksItemsView.checkIfAnyTrack(function (track) {
+                                    return track && track.isBrush
+                                })
+                            }
+
+                            onIsIsolationModeChanged: function () {
+                                content.isIsolationMode = tracksItemsView.checkIfAnyTrack(function (track) {
+                                    return track && track.isIsolationMode
+                                })
+                            }
+
+                            onIsNearSampleChanged: function () {
+                                content.isNearSample = tracksItemsView.checkIfAnyTrack(function (track) {
+                                    return track && track.isNearSample
+                                })
+                            }
+
+                            onLeftTrimContainsMouseChanged: function () {
+                                content.leftTrimContainsMouse = tracksItemsView.checkIfAnyTrack(function (track) {
+                                    return track && track.leftTrimContainsMouse
+                                })
+                            }
+
+                            onRightTrimContainsMouseChanged: function () {
+                                content.rightTrimContainsMouse = tracksItemsView.checkIfAnyTrack(function (track) {
+                                    return track && track.rightTrimContainsMouse
+                                })
+                            }
+
+                            onLeftTrimPressedButtonsChanged: function () {
+                                content.leftTrimPressedButtons = tracksItemsView.checkIfAnyTrack(function (track) {
+                                    return track && track.leftTrimPressedButtons
+                                })
+                            }
+
+                            onRightTrimPressedButtonsChanged: function () {
+                                content.rightTrimPressedButtons = tracksItemsView.checkIfAnyTrack(function (track) {
+                                    return track && track.rightTrimPressedButtons
+                                })
+                            }
+
+                            onTriggerClipGuideline: function (time, completed) {
+                                root.guidelinePos = timeline.context.timeToPosition(time)
+                                root.guidelineVisible = root.guidelinePos >= 0 && !completed
+                            }
+
+                            onHandleTimeGuideline: function (x) {
+                                root.handleGuideline(x)
+                            }
+
+                            function calculateVerticalScrollDelta(viewTop, viewBottom, clipTop, clipBottom, padding = 10) {
+                                // clip fully visible
+                                if (clipTop >= viewTop && clipBottom <= viewBottom) {
+                                    return 0
+                                }
+
+                                // clip is above the view —> scroll up
+                                if (clipTop < viewTop) {
+                                    return clipTop - (viewTop + padding)
+                                }
+
+                                // clip is below the view —> scroll down
+                                if (clipBottom > viewBottom) {
+                                    return clipBottom - (viewBottom - padding)
+                                }
+
+                                return 0
+                            }
                         }
-                        tracksClipsView.moveActive = !completed
                     }
 
-                    onRequestSelectionContextMenu: function (x, y) {
-                        selectionContextMenuLoader.show(Qt.point(x + canvasIndent.width, y + timelineHeader.height), selectionContextMenuModel.items)
-                    }
+                    Component {
+                        id: labelTrackItemComp
 
-                    onSelectionDraged: function (x1, x2, completed) {
-                        selectionController.onSelectionDraged(x1, x2, completed)
-                    }
+                        TrackLabelsItem {
+                            property var itemData: trackItemLoader.itemData
+                            property int index: trackItemLoader.index
 
-                    onSeekToX: function (x) {
-                        playCursorController.seekToX(x)
-                    }
+                            width: trackItemLoader.width
 
-                    onInsureVerticallyVisible: function (clipTop, clipBottom) {
-                        var delta = calculateVerticalScrollDelta(tracksViewState.tracksVerticalOffset, tracksViewState.tracksVerticalOffset + content.height, clipTop, clipBottom)
-                        if (tracksViewState.tracksVerticalOffset + delta < 0) {
-                            tracksViewState.changeTracksVerticalOffset(0)
-                        } else {
-                            tracksViewState.changeTracksVerticalOffset(tracksViewState.tracksVerticalOffset + delta)
+                            context: timeline.context
+                            container: tracksItemsView
+                            canvas: content
+
+                            trackId: itemData.trackId
+                            isDataSelected: itemData.isDataSelected
+                            isTrackSelected: itemData.isTrackSelected
+                            isTrackFocused: itemData.isTrackFocused
+                            isMultiSelectionActive: itemData.isMultiSelectionActive
+                            isTrackAudible: itemData.isTrackAudible
+                            // moveActive: itemData.moveActive
+
+                            altPressed: root.altPressed
+                            ctrlPressed: root.ctrlPressed
+
+                            selectionEditInProgress: selectionController.selectionEditInProgress
+                            selectionInProgress: selectionController.selectionInProgress
+
+                            navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
+
+                            onHoverChanged: function () {
+                                root.itemHovered = tracksItemsView.checkIfAnyTrack(function (trackItem) {
+                                    return trackItem && trackItem.hover
+                                })
+                            }
+
+                            onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, objectKey) {
+                                let xGlobalPosition = xWithinTrack
+                                let yGlobalPosition = y + yWithinTrack - tracksItemsView.contentY
+
+                                timeline.updateCursorPosition(xGlobalPosition, yGlobalPosition)
+
+                                root.hoveredTrackId = trackId
+                                root.hoveredObjectKey = objectKey
+                                root.hoveredTrackHeight = tracksViewState.trackHeight(trackId)
+                                root.hoveredTrackVerticalPosition = tracksViewState.trackVerticalPosition(trackId)
+
+                                splitToolController.mouseMove(xWithinTrack)
+                            }
+
+                            onItemHeaderHoveredChanged: function (val) {
+                                root.itemHeaderHovered = val
+                            }
+
+                            onInteractionStarted: {
+                                tracksViewState.requestVerticalScrollLock()
+                            }
+
+                            onInteractionEnded: {
+                                tracksViewState.requestVerticalScrollUnlock()
+                            }
+
+                            onSeekToX: function (x) {
+                                playCursorController.seekToX(x)
+                            }
+
+                            onSelectionDraged: function (x1, x2, completed) {
+                                selectionController.onSelectionDraged(x1, x2, completed)
+                            }
+
+                            onRequestSelectionContextMenu: function (x, y) {
+                                selectionContextMenuLoader.show(Qt.point(x + canvasIndent.width, y + timelineHeader.height), selectionContextMenuModel.items)
+                            }
+
+                            onItemSelectedRequested: {
+                                selectionController.resetDataSelection()
+                                itemsSelection.visible = false
+                            }
+
+                            onSelectionResetRequested: {
+                                selectionController.resetDataSelection()
+                            }
                         }
-                    }
-
-                    onInteractionStarted: {
-                        tracksViewState.requestVerticalScrollLock()
-                    }
-
-                    onInteractionEnded: {
-                        tracksViewState.requestVerticalScrollUnlock()
-                    }
-
-                    onIsBrushChanged: function () {
-                        content.isBrush = tracksClipsView.checkIfAnyTrack(function (track) {
-                            return track && track.isBrush
-                        })
-                    }
-
-                    onIsIsolationModeChanged: function () {
-                        content.isIsolationMode = tracksClipsView.checkIfAnyTrack(function (track) {
-                            return track && track.isIsolationMode
-                        })
-                    }
-
-                    onIsNearSampleChanged: function () {
-                        content.isNearSample = tracksClipsView.checkIfAnyTrack(function (track) {
-                            return track && track.isNearSample
-                        })
-                    }
-
-                    onLeftTrimContainsMouseChanged: function () {
-                        content.leftTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function (track) {
-                            return track && track.leftTrimContainsMouse
-                        })
-                    }
-
-                    onRightTrimContainsMouseChanged: function () {
-                        content.rightTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function (track) {
-                            return track && track.rightTrimContainsMouse
-                        })
-                    }
-
-                    onLeftTrimPressedButtonsChanged: function () {
-                        content.leftTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function (track) {
-                            return track && track.leftTrimPressedButtons
-                        })
-                    }
-
-                    onRightTrimPressedButtonsChanged: function () {
-                        content.rightTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function (track) {
-                            return track && track.rightTrimPressedButtons
-                        })
-                    }
-
-                    onTriggerClipGuideline: function (time, completed) {
-                        root.guidelinePos = timeline.context.timeToPosition(time)
-                        root.guidelineVisible = root.guidelinePos >= 0 && !completed
-                    }
-
-                    onHandleTimeGuideline: function (x) {
-                        root.handleGuideline(x)
-                    }
-
-                    function calculateVerticalScrollDelta(viewTop, viewBottom, clipTop, clipBottom, padding = 10) {
-                        // clip fully visible
-                        if (clipTop >= viewTop && clipBottom <= viewBottom) {
-                            return 0
-                        }
-
-                        // clip is above the view —> scroll up
-                        if (clipTop < viewTop) {
-                            return clipTop - (viewTop + padding)
-                        }
-
-                        // clip is below the view —> scroll down
-                        if (clipBottom > viewBottom) {
-                            return clipBottom - (viewBottom - padding)
-                        }
-
-                        return 0
                     }
                 }
             }
@@ -776,7 +892,7 @@ Rectangle {
         }
 
         Rectangle {
-            id: clipsSelection
+            id: itemsSelection
 
             anchors.top: parent.top
             anchors.bottom: parent.bottom
@@ -791,7 +907,7 @@ Rectangle {
         PlayCursorLine {
             id: playCursor
 
-            anchors.top: tracksClipsViewArea.top
+            anchors.top: tracksItemsViewArea.top
             anchors.bottom: parent.bottom
 
             x: playCursorController.positionX
