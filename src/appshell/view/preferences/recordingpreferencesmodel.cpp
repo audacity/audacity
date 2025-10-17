@@ -21,10 +21,8 @@ bool RecordingPreferencesModel::audibleInputMonitoring() const
 
 void RecordingPreferencesModel::setAudibleInputMonitoring(bool enabled)
 {
-    if (audibleInputMonitoring() != enabled) {
-        record()->audioInput()->setAudibleInputMonitoring(enabled);
-        emit audibleInputMonitoringChanged();
-    }
+    record()->audioInput()->setAudibleInputMonitoring(enabled);
+    emit audibleInputMonitoringChanged();
 }
 
 bool RecordingPreferencesModel::isMicMeteringOn() const
@@ -34,7 +32,6 @@ bool RecordingPreferencesModel::isMicMeteringOn() const
 
 void RecordingPreferencesModel::setIsMicMeteringOn(bool enabled)
 {
-    if (isMicMeteringOn() != enabled) {
-        recordConfiguration()->setIsMicMeteringOn(enabled);
-    }
+    recordConfiguration()->setIsMicMeteringOn(enabled);
+    emit isMicMeteringOnChanged();
 }
