@@ -31,6 +31,7 @@ endif()
 
 add_subdirectory(au3wrap)
 
+add_subdirectory(auaudio)
 add_subdirectory(context)
 add_subdirectory(project)
 

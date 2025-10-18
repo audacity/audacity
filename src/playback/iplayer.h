@@ -48,6 +48,14 @@ public:
     virtual void setLoopRegionActive(const bool active) = 0;
     virtual bool isLoopRegionActive() const = 0;
 
+    /*!
+     * \brief Consumer side of a single-producer/single-consumer lock-free queue.
+     * In other words, implementation assumes a single caller to this method on a single thread, whatever thread this might be.
+     * Beside consuming from a lock-free queue, the implementation also ensures that it does not involve locks elsewhere, making
+     * it suitable for time-critical contexts.
+     */
+    virtual void updatePlaybackPosition() = 0;
+
     virtual muse::secs_t playbackPosition() const = 0;
     virtual muse::async::Channel<muse::secs_t> playbackPositionChanged() const = 0;
 

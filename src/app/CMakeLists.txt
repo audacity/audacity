@@ -85,6 +85,7 @@ set(LINK_LIB
 
     appshell
     au3wrap
+    auaudio
     context
     effects_audio_unit
     effects_lv2

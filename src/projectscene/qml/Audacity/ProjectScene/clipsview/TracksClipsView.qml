@@ -445,8 +445,7 @@ Rectangle {
                     tracksClipsView.clipMoveRequested(hoveredClipKey, true)
                     tracksClipsView.stopAutoScroll()
                     tracksClipsView.clipEndEditRequested(hoveredClipKey)
-                }
-                else {
+                } else {
                     splitToolController.mouseUp(e.x)
 
                     if (selectionController.isLeftSelection(e.x)) {
@@ -787,6 +786,8 @@ Rectangle {
             x: Math.max(timeline.context.selectionStartPosition, 0.0)
             width: timeline.context.selectionEndPosition - x
         }
+
+        PlaybackPositionTimer {}
 
         PlayCursorLine {
             id: playCursor

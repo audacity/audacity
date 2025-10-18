@@ -43,6 +43,7 @@ public:
     MOCK_METHOD(bool, isLoopRegionActive, (), (const, override));
 
     MOCK_METHOD(muse::secs_t, playbackPosition, (), (const, override));
+    MOCK_METHOD(void, updatePlaybackPosition, (), (override));
     MOCK_METHOD(muse::async::Channel<muse::secs_t>, playbackPositionChanged, (), (const, override));
 
     MOCK_METHOD(muse::Ret, playTracks, (TrackList&, double, double, const PlayTracksOptions&), (override));

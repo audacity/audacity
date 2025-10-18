@@ -17,6 +17,7 @@
 #include "AudioIOSequences.h"
 #include "PlaybackSchedule.h" // member variable
 #include "RingBuffer.h"
+#include "LockFreeQueue.h"
 
 #include <functional>
 #include <memory>
@@ -186,6 +187,14 @@ public:
     { return mListener.lock(); }
     void SetListener(const std::shared_ptr< AudioIOListener >& listener);
 
+    struct AudioDelivery {
+        std::chrono::steady_clock::time_point startTime;
+        int numSamples = 0;
+    };
+    using AudioDeliveryQueue = LockFreeQueue<AudioDelivery>;
+
+    AudioDeliveryQueue& GetAudioDeliveryQueue() { return mAudioDeliveryQueue; }
+
     // Part of the callback
     int CallbackDoSeek();
 
@@ -211,14 +220,17 @@ public:
         unsigned long framesPerBuffer);
     void DoPlaythrough(
         constSamplePtr inputBuffer, float* outputBuffer, unsigned long framesPerBuffer, float* outputMeterFloats);
-    void SendVuInputMeterData(const float* inputSamples, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo);
+    void SendVuInputMeterData(const float* inputSamples, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo,
+                              const std::chrono::steady_clock::time_point& when);
     void SendVuOutputMeterData(
-        const float* outputMeterFloats, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo);
+        const float* outputMeterFloats, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo,
+        const std::chrono::steady_clock::time_point& when);
     void PushMainMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, uint8_t channels, unsigned long frames,
-                             const PaStreamCallbackTimeInfo* timeInfo);
-    void PushTrackMeterValues(const std::shared_ptr<IMeterSender>& sender, unsigned long frames, const PaStreamCallbackTimeInfo* timeInfo);
+                             const PaStreamCallbackTimeInfo* timeInfo, const std::chrono::steady_clock::time_point& when);
+    void PushTrackMeterValues(const std::shared_ptr<IMeterSender>& sender, unsigned long frames, const PaStreamCallbackTimeInfo* timeInfo,
+                              const std::chrono::steady_clock::time_point& when);
     void PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, unsigned long frames,
-                              const PaStreamCallbackTimeInfo* timeInfo);
+                              const PaStreamCallbackTimeInfo* timeInfo, const std::chrono::steady_clock::time_point& when);
 
     /** \brief Get the number of audio samples ready in all of the playback
     * buffers.
@@ -389,6 +401,8 @@ protected:
     struct TransportState;
     //! Holds some state for duration of playback or recording
     std::unique_ptr<TransportState> mpTransportState;
+
+    AudioDeliveryQueue mAudioDeliveryQueue { 16 };
 
 private:
     /*!
