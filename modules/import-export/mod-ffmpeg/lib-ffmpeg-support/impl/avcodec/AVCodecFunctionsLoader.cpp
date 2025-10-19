@@ -28,7 +28,6 @@ bool LoadAVCodecFunctions(
    RESOLVE(avcodec_get_name);
    RESOLVE(avcodec_open2);
    RESOLVE(avcodec_is_open);
-   RESOLVE(avcodec_close);  
    RESOLVE(avcodec_alloc_context3);
    RESOLVE(av_codec_is_encoder);
    RESOLVE(avcodec_fill_audio_frame);
@@ -44,11 +43,13 @@ bool LoadAVCodecFunctions(
    GET_SYMBOL(avcodec_register_all);
    GET_SYMBOL(av_codec_next);
    GET_SYMBOL(av_codec_iterate);
+   // Missing in FFmpeg 60
+   GET_SYMBOL(avcodec_close);
    // New decoding API
    GET_SYMBOL(avcodec_send_packet);
    GET_SYMBOL(avcodec_receive_frame);
    GET_SYMBOL(avcodec_send_frame);
    GET_SYMBOL(avcodec_receive_packet);
-   
+
    return GetAVVersion(lib, "avcodec_version", functions.AVCodecVersion);
 }
