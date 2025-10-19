@@ -58,8 +58,12 @@ AVCodecContextWrapper::~AVCodecContextWrapper()
       {
          // Its not clear how to avoid the leak here, but let's close
          // the codec at least
-         if (mFFmpeg.avcodec_is_open(mAVCodecContext))
-            mFFmpeg.avcodec_close(mAVCodecContext);
+         if (mFFmpeg.avcodec_is_open(mAVCodecContext)) {
+            // avcodec_close is deprecated and removed in FFmpeg 60
+            if (mFFmpeg.avcodec_close != nullptr) {
+               mFFmpeg.avcodec_close(mAVCodecContext);
+            }
+         }
       }
    }
 }
@@ -113,9 +117,9 @@ AVCodecContextWrapper::DecodeAudioPacket(const AVPacketWrapper* packet)
             packetCopy->OffsetPacket(bytesDecoded);
             continue;
          }
-         
+
          ConsumeFrame(data, *frame);
-         
+
          packetCopy->OffsetPacket(bytesDecoded);
       }
       while ( flushing ? bytesDecoded > 0 : packetCopy->GetSize() > 0 );

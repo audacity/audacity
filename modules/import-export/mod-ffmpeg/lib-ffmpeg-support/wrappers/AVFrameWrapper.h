@@ -81,7 +81,6 @@ public:
    virtual AVDictionaryWrapper GetMetadata() const noexcept = 0;
    virtual int GetDecodeErrorFlags() const noexcept = 0;
    virtual int GetChannels() const noexcept = 0;
-   virtual int GetPacketSize() const noexcept = 0;
 protected:
    const FFmpegFunctions& mFFmpeg;
    AVFrame* mAVFrame { nullptr };
