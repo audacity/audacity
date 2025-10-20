@@ -14,15 +14,15 @@ RecordingPreferencesModel::RecordingPreferencesModel(QObject* parent)
     });
 }
 
-bool RecordingPreferencesModel::audibleInputMonitoring() const
+bool RecordingPreferencesModel::isInputMonitoringOn() const
 {
-    return record()->audioInput()->audibleInputMonitoring();
+    return record()->audioInput()->isInputMonitoringOn();
 }
 
-void RecordingPreferencesModel::setAudibleInputMonitoring(bool enabled)
+void RecordingPreferencesModel::setIsInputMonitoringOn(bool enabled)
 {
-    record()->audioInput()->setAudibleInputMonitoring(enabled);
-    emit audibleInputMonitoringChanged();
+    record()->audioInput()->setIsInputMonitoringOn(enabled);
+    emit isInputMonitoringOnChanged();
 }
 
 bool RecordingPreferencesModel::isMicMeteringOn() const

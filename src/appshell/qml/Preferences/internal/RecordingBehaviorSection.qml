@@ -42,14 +42,14 @@ BaseSection {
 
             text: qsTrc("appshell/preferences", "Enable input monitoring")
 
-            checked: recordingPreferencesModel.audibleInputMonitoring
+            checked: recordingPreferencesModel.isInputMonitoringOn
 
             navigation.name: "InputMonitoringCheckBox"
             navigation.panel: root.navigation
             navigation.order: 2
 
             onClicked: {
-                recordingPreferencesModel.audibleInputMonitoring = !checked
+                recordingPreferencesModel.isInputMonitoringOn = !checked
             }
         }
     }

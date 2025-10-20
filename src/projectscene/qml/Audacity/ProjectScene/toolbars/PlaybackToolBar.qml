@@ -243,7 +243,7 @@ Item {
 
                 recordingChannelsCount: Boolean(itemData) ? itemData.recordingChannelsCount : 0
 
-                audibleInputMonitoring: Boolean(itemData) ? itemData.audibleInputMonitoring : false
+                isInputMonitoringOn: Boolean(itemData) ? itemData.isInputMonitoringOn : false
                 isMicMeteringOn: Boolean(itemData) ? itemData.isMicMeteringOn : false
 
                 enabled: Boolean(itemData) ? itemData.enabled : false
@@ -254,9 +254,9 @@ Item {
                     }
                 }
 
-                onAudibleInputMonitoringChangeRequested: function(enable) {
+                onIsInputMonitoringOnChangeRequested: function(enable) {
                     if (itemData) {
-                        itemData.audibleInputMonitoring = enable
+                        itemData.isInputMonitoringOn = enable
                     }
                 }
 

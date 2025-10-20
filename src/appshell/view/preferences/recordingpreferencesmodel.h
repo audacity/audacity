@@ -16,7 +16,7 @@ class RecordingPreferencesModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool audibleInputMonitoring READ audibleInputMonitoring WRITE setAudibleInputMonitoring NOTIFY audibleInputMonitoringChanged)
+    Q_PROPERTY(bool isInputMonitoringOn READ isInputMonitoringOn WRITE setIsInputMonitoringOn NOTIFY isInputMonitoringOnChanged)
     Q_PROPERTY(bool isMicMeteringOn READ isMicMeteringOn WRITE setIsMicMeteringOn NOTIFY isMicMeteringOnChanged)
 
     muse::Inject<record::IRecord> record;
@@ -25,14 +25,14 @@ class RecordingPreferencesModel : public QObject, public muse::async::Asyncable
 public:
     explicit RecordingPreferencesModel(QObject* parent = nullptr);
 
-    bool audibleInputMonitoring() const;
-    void setAudibleInputMonitoring(bool enabled);
+    bool isInputMonitoringOn() const;
+    void setIsInputMonitoringOn(bool enabled);
 
     bool isMicMeteringOn() const;
     void setIsMicMeteringOn(bool enabled);
 
 signals:
-    void audibleInputMonitoringChanged();
+    void isInputMonitoringOnChanged();
     void isMicMeteringOnChanged();
 };
 }
