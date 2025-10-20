@@ -27,11 +27,11 @@ FlatButton {
     property int navigationOrder: 0
 
     property int recordingChannelsCount: 0
-    property bool audibleInputMonitoring: false
+    property bool isInputMonitoringOn: false
     property bool isMicMeteringOn: false
 
     signal volumeLevelChangeRequested(var level)
-    signal audibleInputMonitoringChangeRequested(bool enable)
+    signal isInputMonitoringOnChangeRequested(bool enable)
     signal isMicMeteringOnChangeRequested(bool enable)
     signal isPopupOpened(bool opened)
 
@@ -259,10 +259,10 @@ FlatButton {
 
                     text: qsTrc("record", "Enable input monitoring")
 
-                    checked: root.audibleInputMonitoring
+                    checked: root.isInputMonitoringOn
 
                     onClicked: {
-                        audibleInputMonitoringChangeRequested(!checked)
+                        isInputMonitoringOnChangeRequested(!checked)
                     }
                 }
             }

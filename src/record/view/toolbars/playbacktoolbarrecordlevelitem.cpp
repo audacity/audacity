@@ -34,7 +34,7 @@ PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::U
 
     resetAudioChannelsVolumePressure();
     emit recordingChannelsCountChanged();
-    emit audibleInputMonitoringChanged();
+    emit isInputMonitoringOnChanged();
 }
 
 float PlaybackToolBarRecordLevelItem::level() const
@@ -161,15 +161,15 @@ int PlaybackToolBarRecordLevelItem::recordingChannelsCount() const
     return audioDevicesProvider()->currentInputChannelsCount();
 }
 
-bool PlaybackToolBarRecordLevelItem::audibleInputMonitoring() const
+bool PlaybackToolBarRecordLevelItem::isInputMonitoringOn() const
 {
-    return record()->audioInput()->audibleInputMonitoring();
+    return record()->audioInput()->isInputMonitoringOn();
 }
 
-void PlaybackToolBarRecordLevelItem::setAudibleInputMonitoring(bool enable)
+void PlaybackToolBarRecordLevelItem::setIsInputMonitoringOn(bool enable)
 {
-    record()->audioInput()->setAudibleInputMonitoring(enable);
-    emit audibleInputMonitoringChanged();
+    record()->audioInput()->setIsInputMonitoringOn(enable);
+    emit isInputMonitoringOnChanged();
 }
 
 bool PlaybackToolBarRecordLevelItem::isMicMeteringOn() const

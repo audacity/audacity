@@ -100,7 +100,7 @@ void Au3AudioInput::updateMonitoring(const MonitoringChangeReason reason)
     case MonitoringChangeReason::InputChannelsChanged:
         updateMonitoring();
         break;
-    case MonitoringChangeReason::AudibleInputMonitoring:
+    case MonitoringChangeReason::InputMonitoring:
         // when updating the audible input monitoring we need to either stop or restart the monitoring
         updateMonitoring();
         break;
@@ -164,14 +164,14 @@ muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioInput
     return m_inputMeter->dataChanged(IMeterSender::TrackId { key });
 }
 
-bool Au3AudioInput::audibleInputMonitoring() const
+bool Au3AudioInput::isInputMonitoringOn() const
 {
     bool swPlaythrough = false;
     gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &swPlaythrough, false);
     return swPlaythrough;
 }
 
-void Au3AudioInput::setAudibleInputMonitoring(bool enable)
+void Au3AudioInput::setIsInputMonitoringOn(bool enable)
 {
     gPrefs->Write(wxT("/AudioIO/SWPlaythrough"), enable);
     gPrefs->Flush();
@@ -220,7 +220,7 @@ bool Au3AudioInput::canStartAudioEngineMonitoring() const
 bool Au3AudioInput::audioEngineShouldBeMonitoring() const
 {
     // monitoring should be started if we are monitoring input or if we are metering the mic
-    if (audibleInputMonitoring()) {
+    if (isInputMonitoringOn()) {
         return true;
     }
     if (configuration()->isMicMeteringOn()) {
