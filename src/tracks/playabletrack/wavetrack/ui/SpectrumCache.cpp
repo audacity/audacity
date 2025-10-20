@@ -413,7 +413,7 @@ bool SpecCache::CalculateOneWaveletSpectrum(
          
           const float *right = middleSample;
           const float *left = middleSample;
-          // Do the convolution
+          // Do the inner product
           const float * wRe = &settings.waveletsRe[iBin][0];
           const float * wIm = &settings.waveletsIm[iBin][0];
           double sumRe = *middleSample * *wRe;
