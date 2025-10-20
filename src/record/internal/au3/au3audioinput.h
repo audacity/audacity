@@ -49,6 +49,7 @@ private:
     au3::Au3Project* projectRef() const;
 
     void initMeter();
+    bool isTrackMeterMonitoring() const;
     int getFocusedTrackChannels() const;
 
     enum class MonitoringChangeReason {

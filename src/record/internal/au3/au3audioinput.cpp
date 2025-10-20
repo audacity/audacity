@@ -223,7 +223,12 @@ bool Au3AudioInput::audioEngineShouldBeMonitoring() const
     if (isInputMonitoringOn()) {
         return true;
     }
-    if (configuration()->isMicMeteringOn()) {
+
+    if (!configuration()->isMicMeteringOn()) {
+        return false;
+    }
+
+    if (isTrackMeterMonitoring() || meterController()->isRecordMeterVisible()) {
         return true;
     }
     return false;
@@ -255,6 +260,11 @@ int Au3AudioInput::getFocusedTrackChannels() const
     }
 
     return channels;
+}
+
+bool Au3AudioInput::isTrackMeterMonitoring() const
+{
+    return m_inputChannelsCount == m_focusedTrackChannels;
 }
 
 Au3Project* Au3AudioInput::projectRef() const
