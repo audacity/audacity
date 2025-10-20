@@ -65,6 +65,10 @@ public:
     void setSelectionTimecodeFormat(int format) override;
     muse::async::Notification selectionTimecodeFormatChanged() const override;
 
+    bool playbackOnRulerClickEnabled() const override;
+    void setPlaybackOnRulerClickEnabled(bool enabled) override;
+    muse::async::Notification playbackOnRulerClickEnabledChanged() const override;
+
 private:
     muse::async::Channel<bool> m_isVerticalRulersVisibleChanged;
     muse::async::Channel<bool> m_isRMSInWaveformVisibleChanged;
@@ -74,5 +78,6 @@ private:
     muse::async::Notification m_asymmetricStereoHeightsChanged;
     muse::async::Notification m_asymmetricStereoHeightsWorkspacesChanged;
     muse::async::Notification m_selectionTimecodeFormatChanged;
+    muse::async::Notification m_playbackOnRulerClickEnabledChanged;
 };
 }

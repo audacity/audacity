@@ -135,6 +135,13 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Pinned play head"),
              Checkable::Yes
              ),
+    UiAction("toggle-playback-on-ruler-click-enabled",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Click ruler to start playback"),
+             TranslatableString("action", "Click ruler to start playback"),
+             Checkable::Yes
+             ),
     // clip
     UiAction("clip-properties",
              au::context::UiCtxUnknown,

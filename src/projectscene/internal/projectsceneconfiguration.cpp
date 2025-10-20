@@ -31,6 +31,8 @@ static const muse::Settings::Key CLIP_STYLE(moduleName, "projectscene/clipStyle"
 static const muse::Settings::Key STEREO_HEIGHTS_PREF(moduleName, "projectscene/asymmetricStereoHeights");
 static const muse::Settings::Key ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES(moduleName, "projectscene/asymmetricStereoHeightsWorkspaces");
 static const muse::Settings::Key SELECTION_TIMECODE_FORMAT(moduleName, "projectscene/selectionTimecodeFormat");
+static const muse::Settings::Key PLAYBACK_ON_RULER_CLICK_ENABLED(moduleName, "projectscene/playbackOnRulerClickEnabled");
+static const bool DEFAULT_PLAYBACK_ON_RULER_CLICK_ENABLED = false;
 
 void ProjectSceneConfiguration::init()
 {
@@ -69,6 +71,11 @@ void ProjectSceneConfiguration::init()
     muse::settings()->valueChanged(SELECTION_TIMECODE_FORMAT).onReceive(nullptr, [this](const muse::Val& val) {
         UNUSED(val);
         m_selectionTimecodeFormatChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(PLAYBACK_ON_RULER_CLICK_ENABLED, muse::Val(DEFAULT_PLAYBACK_ON_RULER_CLICK_ENABLED));
+    muse::settings()->valueChanged(PLAYBACK_ON_RULER_CLICK_ENABLED).onReceive(nullptr, [this](const muse::Val&) {
+        m_playbackOnRulerClickEnabledChanged.notify();
     });
 }
 
@@ -263,4 +270,19 @@ void ProjectSceneConfiguration::setSelectionTimecodeFormat(int format)
 muse::async::Notification ProjectSceneConfiguration::selectionTimecodeFormatChanged() const
 {
     return m_selectionTimecodeFormatChanged;
+}
+
+bool ProjectSceneConfiguration::playbackOnRulerClickEnabled() const
+{
+    return muse::settings()->value(PLAYBACK_ON_RULER_CLICK_ENABLED).toBool();
+}
+
+void ProjectSceneConfiguration::setPlaybackOnRulerClickEnabled(bool enabled)
+{
+    muse::settings()->setSharedValue(PLAYBACK_ON_RULER_CLICK_ENABLED, muse::Val(enabled));
+}
+
+muse::async::Notification ProjectSceneConfiguration::playbackOnRulerClickEnabledChanged() const
+{
+    return m_playbackOnRulerClickEnabledChanged;
 }

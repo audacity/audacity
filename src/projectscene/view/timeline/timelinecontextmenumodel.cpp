@@ -27,6 +27,7 @@ MenuItemList TimelineContextMenuModel::makeRulerItems()
         makeSeparator(),
         makeMenuItem("update-display-while-playing"),
         makeMenuItem("pinned-play-head"),
+        makeMenuItem("toggle-playback-on-ruler-click-enabled"),
         makeSeparator(),
         makeMenuItem("toggle-loop-region"),
         makeMenuItem("clear-loop-region"),
