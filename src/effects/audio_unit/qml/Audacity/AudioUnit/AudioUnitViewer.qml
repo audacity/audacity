@@ -22,6 +22,7 @@ Rectangle {
 
     // out
     property alias title: model.title
+    property alias isPreviewing: model.isPreviewing
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -39,11 +40,11 @@ Rectangle {
     }
 
     Component.onDestruction: {
-        model.deinit();
+        model.deinit()
     }
 
-    function preview() {
-        model.preview()
+    function togglePreview() {
+        model.togglePreview()
     }
 
     function manage(parent) {

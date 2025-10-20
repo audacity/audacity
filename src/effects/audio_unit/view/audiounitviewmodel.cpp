@@ -17,7 +17,7 @@
 
 namespace au::effects {
 AudioUnitViewModel::AudioUnitViewModel(QObject* parent)
-    : QObject(parent)
+    : AbstractEffectViewModel(parent)
 {}
 
 AudioUnitViewModel::~AudioUnitViewModel()
@@ -25,21 +25,21 @@ AudioUnitViewModel::~AudioUnitViewModel()
     checkSettingChangesFromUi();
 }
 
-void AudioUnitViewModel::init()
+void AudioUnitViewModel::doInit()
 {
-    IF_ASSERT_FAILED(m_instanceId >= 0) {
+    IF_ASSERT_FAILED(instanceId() >= 0) {
         return;
     }
 
-    m_instance = std::dynamic_pointer_cast<AudioUnitInstance>(instancesRegister()->instanceById(m_instanceId));
+    m_instance = std::dynamic_pointer_cast<AudioUnitInstance>(instancesRegister()->instanceById(instanceId()));
     IF_ASSERT_FAILED(m_instance) {
         return;
     }
 
-    instancesRegister()->settingsChanged(m_instanceId).onNotify(this, [this]() {
+    instancesRegister()->settingsChanged(instanceId()).onNotify(this, [this]() {
         settingsToView();
     });
-    instancesRegister()->updateSettingsRequested(m_instanceId).onNotify(this, [this]() {
+    instancesRegister()->updateSettingsRequested(instanceId()).onNotify(this, [this]() {
         settingsFromView();
     });
     realtimeEffectService()->effectSettingsChanged().onNotify(this, [this]() {
@@ -48,19 +48,19 @@ void AudioUnitViewModel::init()
 
     m_eventListenerRef = MakeListener();
 
-    const EffectSettings* settings = instancesRegister()->settingsById(m_instanceId);
+    const EffectSettings* settings = instancesRegister()->settingsById(instanceId());
     IF_ASSERT_FAILED(settings) {
         return;
     }
 
-    const EffectId id = instancesRegister()->effectIdByInstanceId(m_instanceId);
+    const EffectId id = instancesRegister()->effectIdByInstanceId(instanceId());
     const AudioUnitEffectBase* const effect = dynamic_cast<AudioUnitEffectBase*>(EffectManager::Get().GetEffect(id.toStdString()));
 
     IF_ASSERT_FAILED(effect) {
         return;
     }
 
-    m_settingsAccess = instancesRegister()->settingsAccessById(m_instanceId);
+    m_settingsAccess = instancesRegister()->settingsAccessById(instanceId());
     IF_ASSERT_FAILED(m_settingsAccess) {
         return;
     }
@@ -76,7 +76,7 @@ void AudioUnitViewModel::init()
     m_settingsTimer.start(100);
 }
 
-void au::effects::AudioUnitViewModel::preview()
+void au::effects::AudioUnitViewModel::doStartPreview()
 {
     IF_ASSERT_FAILED(m_settingsAccess) {
         return;
@@ -251,19 +251,5 @@ void AudioUnitViewModel::setTitle(const QString& newTitle)
     }
     m_title = newTitle;
     emit titleChanged();
-}
-
-int AudioUnitViewModel::instanceId() const
-{
-    return m_instanceId;
-}
-
-void AudioUnitViewModel::setInstanceId(int newInstanceId)
-{
-    if (m_instanceId == newInstanceId) {
-        return;
-    }
-    m_instanceId = newInstanceId;
-    emit instanceIdChanged();
 }
 }

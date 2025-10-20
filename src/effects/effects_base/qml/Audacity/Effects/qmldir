@@ -1,4 +1,5 @@
 module Audacity.Effects
 BypassEffectButton 1.0 BypassEffectButton.qml
+EffectControlsDisablingOverlay 1.0 EffectControlsDisablingOverlay.qml
 EffectPresetsBar 1.0 EffectPresetsBar.qml
 EffectStyledDialogView 1.0 EffectStyledDialogView.qml
