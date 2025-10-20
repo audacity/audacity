@@ -39,6 +39,7 @@ Rectangle {
 
     // out
     property alias title: view.title
+    property alias isPreviewing: viewModel.isPreviewing
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -51,8 +52,8 @@ Rectangle {
         Qt.callLater(manageMenuModel.load)
     }
 
-    function preview() {
-        viewModel.preview()
+    function togglePreview() {
+        viewModel.togglePreview()
     }
 
     function manage(parent) {

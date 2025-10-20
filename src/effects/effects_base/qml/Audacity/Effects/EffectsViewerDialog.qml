@@ -29,6 +29,33 @@ EffectStyledDialogView {
         property int panelMargins: effectFamily == EffectFamily.Builtin ? 16 : 4
         property int viewMargins: effectFamily == EffectFamily.Builtin ? 16 : 0
         property int separatorHeight: effectFamily == EffectFamily.Builtin ? separator.height + prv.panelMargins : 0
+
+        function closeWindow(accept) {
+            if (prv.viewer.isPreviewing) {
+                prv.viewer.togglePreview()
+            }
+            // Call later because the preview calls `QCoreApplication::processEvents()`,
+            // and we must make sure it doesn't do this after we've closed the dialog, or we'll be getting that Qt exception
+            // "Object %p destroyed while one of its QML signal handlers is in progress."
+            Qt.callLater(function () {
+                if (accept) {
+                    root.accept()
+                } else {
+                    root.reject()
+                }
+            })
+        }
+    }
+
+    Connections {
+        target: root.window
+        function onClosing(event) {
+            prv.closeWindow(false)
+            // Prevent immediate close so preview/cleanup can finish
+            if (event && event.accept !== undefined) {
+                event.accept = false
+            }
+        }
     }
 
     title: viewerModel.title
@@ -96,6 +123,7 @@ EffectStyledDialogView {
                         navigationPanel: root.navigationPanel
                         navigationOrder: 0
 
+                        enabled: !prv.viewer.isPreviewing
                         parentWindow: root.window
                         instanceId: root.instanceId
                     }
@@ -168,12 +196,12 @@ EffectStyledDialogView {
                             minWidth: 80
                             isLeftSide: true
 
-                            text: qsTrc("effects", "Preview")
+                            text: prv.viewer.isPreviewing ? qsTrc("effects", "Stop preview") : qsTrc("effects", "Preview")
                             buttonRole: ButtonBoxModel.CustomRole
                             buttonId: ButtonBoxModel.CustomButton + 2
                             enabled: prv.isApplyAllowed
 
-                            onClicked: prv.viewer.preview()
+                            onClicked: prv.viewer.togglePreview()
                         }
 
                         FlatButton {
@@ -186,7 +214,9 @@ EffectStyledDialogView {
                             buttonRole: ButtonBoxModel.RejectRole
                             buttonId: ButtonBoxModel.Cancel
 
-                            onClicked: root.reject()
+                            onClicked: {
+                                prv.closeWindow(false)
+                            }
                         }
 
                         FlatButton {
@@ -201,12 +231,24 @@ EffectStyledDialogView {
                             accentButton: true
                             enabled: prv.isApplyAllowed
 
-                            onClicked: root.accept()
+                            onClicked: {
+                                prv.closeWindow(true)
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    EffectControlsDisablingOverlay {
+        x: viewerLoader.x
+        y: viewerLoader.y
+        width: viewerLoader.width
+        height: viewerLoader.height
+
+        visible: prv.viewer.isPreviewing
+        effectFamily: root.effectFamily
     }
 
     Component {

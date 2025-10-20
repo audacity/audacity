@@ -568,25 +568,10 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
             return ret;
         }
 
-        using namespace BasicUI;
-
-        // The progress dialog must be deleted before stopping the stream
-        // to allow events to flow to the app during StopStream processing.
-        // The progress dialog blocks these events.
-        {
-            auto progress = MakeProgress(effect.GetName(), XO("Previewing"), ProgressShowStop);
-            while (player->isRunning()) {
-                using namespace std::chrono;
-                std::this_thread::sleep_for(100ms);
-                muse::secs_t playPos = player->playbackPosition() - startOffset;
-                auto previewing = progress->Poll(playPos, newCtx.t1);
-
-                if (previewing != BasicUI::ProgressResult::Success || player->reachedEnd().val) {
-                    break;
-                }
-            }
-
-            player->stop();
+        while (player->isRunning()) {
+            using namespace std::chrono;
+            std::this_thread::sleep_for(10ms);
+            QCoreApplication::processEvents();
         }
     }
 

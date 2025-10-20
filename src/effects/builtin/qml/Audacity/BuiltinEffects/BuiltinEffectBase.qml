@@ -13,11 +13,16 @@ Rectangle {
 
     property BuiltinEffectModel model: null
     property bool usesPresets: model ? model.usesPresets : true
+    property bool isPreviewing: model ? model.isPreviewing : false
     property bool usedDestructively: true
 
     color: ui.theme.backgroundPrimaryColor
 
-    function preview() {
-        root.model.preview()
+    function init() {
+        root.model.init()
+    }
+
+    function togglePreview() {
+        root.model.togglePreview()
     }
 }
