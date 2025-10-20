@@ -7,13 +7,15 @@
 
 #include "UndoManager.h"
 
-#include "iprojecthistory.h"
 #include "modularity/ioc.h"
+#include "iglobalconfiguration.h"
+#include "iprojecthistory.h"
 
 struct TrackListEvent;
 namespace au::trackedit {
 class Au3TrackeditProject : public ITrackeditProject
 {
+    muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:

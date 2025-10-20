@@ -33,6 +33,7 @@
 #include "view/trackspanel/trackslistmodel.h"
 #include "view/trackspanel/trackcontextmenumodel.h"
 #include "view/trackspanel/trackitem.h"
+#include "view/trackspanel/addnewtrackpopupmodel.h"
 
 #include "view/tracksitemsview/tracksitemsmodel.h"
 #include "view/tracksitemsview/clipslistmodel.h"
@@ -156,6 +157,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<TrackContextMenuModel>("Audacity.ProjectScene", 1, 0, "TrackContextMenuModel");
     qmlRegisterUncreatableType<TrackItemType>("Audacity.ProjectScene", 1, 0, "TrackItemType",
                                               "Do not create objects of type TrackItemType");
+    qmlRegisterType<AddNewTrackPopupModel>("Audacity.ProjectScene", 1, 0, "AddNewTrackPopupModel");
 
     // clips view
     qmlRegisterType<TracksItemsModel>("Audacity.ProjectScene", 1, 0, "TracksItemsModel");
