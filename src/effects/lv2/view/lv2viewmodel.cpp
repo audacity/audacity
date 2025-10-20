@@ -61,7 +61,7 @@ std::shared_ptr<SuilHost> getSuilHost()
 static LV2EffectsModule::Factory::SubstituteInUnique<LV2Effect> scope;
 
 Lv2ViewModel::Lv2ViewModel(QObject* parent)
-    : QObject(parent), m_handler(*this)
+    : AbstractEffectViewModel(parent), m_handler(*this)
 {}
 
 Lv2ViewModel::~Lv2ViewModel()

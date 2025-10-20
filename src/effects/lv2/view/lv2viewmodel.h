@@ -6,8 +6,7 @@
 #include "lv2uihandler.h"
 #include "gtk2ui.h"
 
-#include "effects/effects_base/ieffectinstancesregister.h"
-#include "effects/effects_base/ieffectexecutionscenario.h"
+#include "effects/effects_base/view/abstracteffectviewmodel.h"
 #include "playback/iplayback.h"
 #include "trackedit/iprojecthistory.h"
 
@@ -29,16 +28,13 @@ typedef unsigned long XID;
 
 namespace au::effects {
 class ILv2IdleUi;
-class Lv2ViewModel : public QObject
+class Lv2ViewModel : public AbstractEffectViewModel
 {
     Q_OBJECT
-    Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged FINAL)
     Q_PROPERTY(QString effectState READ effectState WRITE setEffectState NOTIFY effectStateChanged FINAL)
     Q_PROPERTY(QString unsupportedUiReason READ unsupportedUiReason NOTIFY unsupportedUiReasonChanged FINAL)
 
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<IEffectExecutionScenario> executionScenario;
     muse::Inject<au::playback::IPlayback> playback;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
 

@@ -8,16 +8,15 @@
 #include "libraries/lib-components/EffectInterface.h"
 
 #include "modularity/ioc.h"
-#include "effects/effects_base/ieffectinstancesregister.h"
-#include "effects/effects_base/ieffectexecutionscenario.h"
 #include "effects/effects_base/ieffectsprovider.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
+#include "effects/effects_base/view/abstracteffectviewmodel.h"
 #include "trackedit/iprojecthistory.h"
 
 #include "global/async/asyncable.h"
 
 namespace au::effects {
-class BuiltinEffectModel : public QObject, public QQmlParserStatus, public muse::async::Asyncable
+class BuiltinEffectModel : public AbstractEffectViewModel, public QQmlParserStatus, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId CONSTANT FINAL)
@@ -26,8 +25,6 @@ class BuiltinEffectModel : public QObject, public QQmlParserStatus, public muse:
     Q_PROPERTY(bool usesPresets READ usesPresets CONSTANT FINAL)
 
 public:
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<IEffectExecutionScenario> executionScenario;
     muse::Inject<IRealtimeEffectService> realtimeEffectService;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<IEffectsProvider> effectsProvider;

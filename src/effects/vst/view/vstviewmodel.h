@@ -9,23 +9,19 @@
 
 #include "modularity/ioc.h"
 #include "trackedit/iprojecthistory.h"
-#include "effects/effects_base/ieffectinstancesregister.h"
-#include "effects/effects_base/ieffectexecutionscenario.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
-
 #include "effects/effects_base/effectstypes.h"
+#include "effects/effects_base/view/abstracteffectviewmodel.h"
 
 class VST3Instance;
 class EffectSettingsAccess;
 namespace au::effects {
-class VstViewModel : public QObject, public muse::async::Asyncable
+class VstViewModel : public AbstractEffectViewModel, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
 
 public:
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<IEffectExecutionScenario> executionScenario;
     muse::Inject<IRealtimeEffectService> realtimeEffectService;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
 

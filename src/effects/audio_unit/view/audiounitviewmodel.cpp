@@ -17,7 +17,7 @@
 
 namespace au::effects {
 AudioUnitViewModel::AudioUnitViewModel(QObject* parent)
-    : QObject(parent)
+    : AbstractEffectViewModel(parent)
 {}
 
 AudioUnitViewModel::~AudioUnitViewModel()
