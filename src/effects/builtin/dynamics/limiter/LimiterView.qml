@@ -28,29 +28,43 @@ DynamicsEffectBase {
     Column {
         id: rootColumn
 
-        DynamicsPanel {
-            width: root.width
-            visible: !root.usedDestructively
+        Component {
+            id: dynamicsPanel
 
-            instanceId: limiter.instanceId
-            playState: root.playState
+            DynamicsPanel {
+                width: root.width
+                visible: !root.usedDestructively
 
-            showInputDbModel: LimiterSettingModel {
-                paramId: "showInput"
-            }
-            showOutputDbModel: LimiterSettingModel {
-                paramId: "showOutput"
-            }
-            showCompressionDbModel: LimiterSettingModel {
-                paramId: "showActual"
-            }
+                instanceId: limiter.instanceId
+                playState: root.playState
 
-            // Specific to limiter
-            dbMin: -12
-            dbStep: 3
-            duration: 2
-            timelineHeight: knobRow.height
-            needsClipIndicator: false // Clipping with the limiter is impossible.
+                showInputDbModel: LimiterSettingModel {
+                    paramId: "showInput"
+                }
+                showOutputDbModel: LimiterSettingModel {
+                    paramId: "showOutput"
+                }
+                showCompressionDbModel: LimiterSettingModel {
+                    paramId: "showActual"
+                }
+
+                // Specific to limiter
+                dbMin: -12
+                dbStep: 3
+                duration: 2
+                timelineHeight: knobRow.height
+                needsClipIndicator: false // Clipping with the limiter is impossible.
+            }
+        }
+
+        Loader {
+            id: dynamicsPanelLoader
+
+            Component.onCompleted: {
+                if (!root.usedDestructively) {
+                    sourceComponent = dynamicsPanel
+                }
+            }
         }
 
         Rectangle {
