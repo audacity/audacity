@@ -10,7 +10,6 @@ import Audacity.Effects 1.0
 import Audacity.AudioUnit 1.0
 
 Rectangle {
-
     id: root
 
     // in
@@ -31,7 +30,6 @@ Rectangle {
 
     implicitWidth: view.implicitWidth
     implicitHeight: view.implicitHeight
-
 
     Component.onCompleted: {
         model.init()
@@ -63,7 +61,7 @@ Rectangle {
     ContextMenuLoader {
         id: menuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             manageMenuModel.handleMenuItem(itemId)
         }
     }

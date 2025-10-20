@@ -6,7 +6,6 @@ import QtQuick
 import Audacity.BuiltinEffects
 
 Rectangle {
-
     id: root
 
     property string instanceId: ""
@@ -18,7 +17,7 @@ Rectangle {
     property bool isPreviewing: builder.contentItem ? builder.contentItem.isPreviewing : false
     property bool usesPresets: builder.contentItem ? builder.contentItem.usesPresets : false
 
-    signal closeRequested()
+    signal closeRequested
 
     color: ui.theme.backgroundPrimaryColor
 
