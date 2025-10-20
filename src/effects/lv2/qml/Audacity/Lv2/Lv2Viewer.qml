@@ -10,7 +10,6 @@ import Audacity.Effects
 import Audacity.Lv2
 
 Rectangle {
-
     id: root
 
     // in
@@ -51,7 +50,7 @@ Rectangle {
     ContextMenuLoader {
         id: menuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             manageMenuModel.handleMenuItem(itemId)
         }
     }
