@@ -580,6 +580,7 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
             while (player->isRunning()) {
                 using namespace std::chrono;
                 std::this_thread::sleep_for(100ms);
+                QCoreApplication::processEvents();
                 muse::secs_t playPos = player->playbackPosition() - startOffset;
                 auto previewing = progress->Poll(playPos, newCtx.t1);
 
