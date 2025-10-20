@@ -7,7 +7,6 @@
 #include "gtk2ui.h"
 
 #include "effects/effects_base/view/abstracteffectviewmodel.h"
-#include "playback/iplayback.h"
 #include "trackedit/iprojecthistory.h"
 
 #include "libraries/lib-lv2/LV2UIFeaturesList.h"
@@ -35,14 +34,12 @@ class Lv2ViewModel : public AbstractEffectViewModel
     Q_PROPERTY(QString effectState READ effectState WRITE setEffectState NOTIFY effectStateChanged FINAL)
     Q_PROPERTY(QString unsupportedUiReason READ unsupportedUiReason NOTIFY unsupportedUiReasonChanged FINAL)
 
-    muse::Inject<au::playback::IPlayback> playback;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     Lv2ViewModel(QObject* parent = nullptr);
     ~Lv2ViewModel() override;
 
-    Q_INVOKABLE void init();
     Q_INVOKABLE void deinit();
     Q_INVOKABLE void preview();
 
@@ -66,6 +63,7 @@ signals:
 
 private:
     friend class Lv2UiHandler;
+    void doInit() override;
     int onResizeUi(int width, int height);
     void onUiClosed();
     void onKeyPressed(Qt::Key);

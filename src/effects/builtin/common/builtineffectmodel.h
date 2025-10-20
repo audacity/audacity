@@ -13,10 +13,8 @@
 #include "effects/effects_base/view/abstracteffectviewmodel.h"
 #include "trackedit/iprojecthistory.h"
 
-#include "global/async/asyncable.h"
-
 namespace au::effects {
-class BuiltinEffectModel : public AbstractEffectViewModel, public QQmlParserStatus, public muse::async::Asyncable
+class BuiltinEffectModel : public AbstractEffectViewModel, public QQmlParserStatus
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId CONSTANT FINAL)
@@ -80,6 +78,7 @@ protected:
 private:
     void classBegin() override {}
     void componentComplete() override;
+    void doInit() override {}
 
     EffectSettingsAccessPtr settingsAccess() const;
     const int m_instanceId;

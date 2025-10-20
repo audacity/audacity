@@ -25,7 +25,7 @@ AudioUnitViewModel::~AudioUnitViewModel()
     checkSettingChangesFromUi();
 }
 
-void AudioUnitViewModel::init()
+void AudioUnitViewModel::doInit()
 {
     IF_ASSERT_FAILED(m_instanceId >= 0) {
         return;

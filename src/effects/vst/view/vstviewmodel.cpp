@@ -20,7 +20,7 @@ VstViewModel::~VstViewModel()
     checkSettingChangesFromUi(true);
 }
 
-void VstViewModel::init()
+void VstViewModel::doInit()
 {
     EffectInstanceId id = this->instanceId();
     IF_ASSERT_FAILED(id != 0) {

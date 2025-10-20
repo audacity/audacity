@@ -3,9 +3,33 @@
 */
 #include "abstracteffectviewmodel.h"
 
+#include "playback/iplayer.h"
+
 namespace au::effects {
 AbstractEffectViewModel::AbstractEffectViewModel(QObject* parent)
     : QObject(parent)
 {
+}
+
+void AbstractEffectViewModel::init()
+{
+    const auto player = playback()->player();
+    IF_ASSERT_FAILED(player) {
+        return;
+    }
+    player->playbackStatusChanged().onReceive(this, [this](auto) {
+        emit isPreviewingChanged();
+    });
+
+    doInit();
+}
+
+bool AbstractEffectViewModel::isPreviewing() const
+{
+    const auto player = playback()->player();
+    IF_ASSERT_FAILED(player) {
+        return false;
+    }
+    return player->playbackStatus() == playback::PlaybackStatus::Running;
 }
 }

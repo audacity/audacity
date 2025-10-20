@@ -127,7 +127,7 @@ void Lv2ViewModel::setEffectState(const QString& state)
     emit effectStateChanged();
 }
 
-void Lv2ViewModel::init()
+void Lv2ViewModel::doInit()
 {
     IF_ASSERT_FAILED(m_instanceId >= 0) {
         return;

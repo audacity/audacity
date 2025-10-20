@@ -5,8 +5,6 @@
 
 #include <QObject>
 
-#include "global/async/asyncable.h"
-
 #include "modularity/ioc.h"
 #include "trackedit/iprojecthistory.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
@@ -16,7 +14,7 @@
 class VST3Instance;
 class EffectSettingsAccess;
 namespace au::effects {
-class VstViewModel : public AbstractEffectViewModel, public muse::async::Asyncable
+class VstViewModel : public AbstractEffectViewModel
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
@@ -32,13 +30,13 @@ public:
     int instanceId() const;
     void setInstanceId(int newInstanceId);
 
-    Q_INVOKABLE void init();
     Q_INVOKABLE void preview();
 
 signals:
     void instanceIdChanged();
 
 private:
+    void doInit() override;
 
     std::shared_ptr<EffectSettingsAccess> settingsAccess() const;
     void settingsToView();

@@ -11,7 +11,6 @@
 #include "context/iglobalcontext.h"
 #include "playback/iplayback.h"
 #include "trackedit/iprojecthistory.h"
-#include "global/async/asyncable.h"
 
 #include "effects/effects_base/view/abstracteffectviewmodel.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
@@ -19,7 +18,7 @@
 #include "libraries/lib-audio-unit/AudioUnitInstance.h"
 
 namespace au::effects {
-class AudioUnitViewModel : public AbstractEffectViewModel, public muse::async::Asyncable
+class AudioUnitViewModel : public AbstractEffectViewModel
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
@@ -34,7 +33,6 @@ public:
     AudioUnitViewModel(QObject* parent = nullptr);
     ~AudioUnitViewModel() override;
 
-    Q_INVOKABLE void init();
     Q_INVOKABLE void preview();
     Q_INVOKABLE void deinit();
 
@@ -49,6 +47,8 @@ signals:
     void titleChanged();
 
 private:
+    void doInit() override;
+
     using EventListenerPtr = AudioUnitCleanup<AUEventListenerRef, AUListenerDispose>;
     static void EventListenerCallback(void* inCallbackRefCon, void* inObject, const AudioUnitEvent* inEvent, UInt64 inEventHostTime,
                                       AudioUnitParameterValue inParameterValue);
