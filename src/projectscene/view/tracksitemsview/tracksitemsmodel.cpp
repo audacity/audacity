@@ -216,6 +216,10 @@ QVariant TracksItemsModel::data(const QModelIndex& index, int role) const
         return selectionController()->selectedClips().size() > 1;
     }
     case IsTrackAudibleRole: {
+        if (track.type == au::trackedit::TrackType::Label) {
+            return false;
+        }
+
         if (trackPlaybackControl()->muted(track.id)) {
             assert(!trackPlaybackControl()->solo(track.id));
             return false;

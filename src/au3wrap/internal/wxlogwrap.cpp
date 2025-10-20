@@ -15,10 +15,6 @@ WxLogWrap::WxLogWrap()
 
 void WxLogWrap::DoLogRecord(wxLogLevel level, const wxString& msg, const wxLogRecordInfo& info)
 {
-    if (msg.Contains("dlopen")) {
-        return;
-    }
-
     std::string tag = std::string("[AU3] ") + info.func;
     switch (level) {
     case wxLOG_FatalError:
