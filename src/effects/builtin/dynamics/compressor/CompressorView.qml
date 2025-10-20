@@ -31,21 +31,34 @@ DynamicsEffectBase {
     Column {
         id: rootColumn
 
-        DynamicsPanel {
-            width: root.width
-            visible: !root.usedDestructively
+        Component {
+            id: dynamicsPanel
 
-            instanceId: compressor.instanceId
-            playState: root.playState
+            DynamicsPanel {
+                width: root.width
 
-            showInputDbModel: CompressorSettingModel {
-                paramId: "showInput"
+                instanceId: compressor.instanceId
+                playState: root.playState
+
+                showInputDbModel: CompressorSettingModel {
+                    paramId: "showInput"
+                }
+                showOutputDbModel: CompressorSettingModel {
+                    paramId: "showOutput"
+                }
+                showCompressionDbModel: CompressorSettingModel {
+                    paramId: "showActual"
+                }
             }
-            showOutputDbModel: CompressorSettingModel {
-                paramId: "showOutput"
-            }
-            showCompressionDbModel: CompressorSettingModel {
-                paramId: "showActual"
+        }
+
+        Loader {
+            id: dynamicsPanelLoader
+
+            Component.onCompleted: {
+                if (!root.usedDestructively) {
+                    sourceComponent = dynamicsPanel
+                }
             }
         }
 
