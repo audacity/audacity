@@ -99,16 +99,31 @@ Rectangle {
             TrackRulerCustomizePopup {
                 id: customisePopup
                 isVerticalRulersVisible: root.model.isVerticalRulersVisible
+                rulerType: rulerModel.rulerType
 
                 placementPolicies: PopupView.PreferLeft
 
                 onHideRulersRequested: {
                     root.model.toggleVerticalRuler();
                 }
+
+                onRulerTypeChangeRequested: function(newType) {
+                    rulerModel.rulerType = newType;
+                }
             }
 
             TrackViewStateModel {
                 id: trackViewState
+                trackId: model.trackId
+            }
+
+            TrackRulerModel {
+                id: rulerModel
+
+                isStereo: model.isStereo
+                height: ruler.height
+                isCollapsed: trackViewState.isTrackCollapsed
+                channelHeightRatio: trackViewState.channelHeightRatio
                 trackId: model.trackId
             }
 
@@ -180,15 +195,6 @@ Rectangle {
 
             Item {
                 id: ruler
-
-                TrackRulerModel {
-                    id: rulerModel
-
-                    isStereo: model.isStereo
-                    height: ruler.height
-                    isCollapsed: trackViewState.isTrackCollapsed
-                    channelHeightRatio: trackViewState.channelHeightRatio
-                }
 
                 anchors.top: header.bottom
                 anchors.bottom: sep.top

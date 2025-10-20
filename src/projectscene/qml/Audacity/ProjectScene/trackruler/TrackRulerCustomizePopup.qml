@@ -14,8 +14,10 @@ StyledPopupView {
     id: root
 
     property bool isVerticalRulersVisible: true
+    property int rulerType: 2
 
     signal hideRulersRequested()
+    signal rulerTypeChangeRequested(int newType)
 
     contentWidth: uiModel.popupWidth - 2*uiModel.popupMargins
     contentHeight: uiModel.popupHeight - 2*uiModel.popupMargins
@@ -103,13 +105,17 @@ StyledPopupView {
 
             backgroundColor: ui.theme.backgroundSecondaryColor
 
-            value: PlaybackMeterType.DbLog
+            value: root.rulerType
 
             model: [
-                {label : qsTrc("trackruler","Logarithmic (dB)"), value: PlaybackMeterType.DbLog},
-                {label : qsTrc("trackruler","Linear (dB)"), value: PlaybackMeterType.DbLinear},
-                {label : qsTrc("trackruler","Linear (amp)"), value: PlaybackMeterType.Linear}
+                {label : qsTrc("trackruler","Logarithmic (dB)"), value: 0, enabled:false},
+                {label : qsTrc("trackruler","Linear (dB)"), value: 1, enabled: true},
+                {label : qsTrc("trackruler","Linear (amp)"), value: 2, enabled: true}
             ]
+
+            onValueChangeRequested: function(value) {
+                root.rulerTypeChangeRequested(value)
+            }
         }
 
         CheckBox {

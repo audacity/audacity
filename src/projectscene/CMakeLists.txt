@@ -169,6 +169,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/historypanel/historypanelmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/historypanel/historypanelmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearmonoruler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearmonoruler.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearstereoruler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearstereoruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogmonoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogmonoruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogstereoruler.cpp
