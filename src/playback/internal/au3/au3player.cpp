@@ -247,8 +247,9 @@ void Au3Player::stop()
     if (!canStopAudioStream()) {
         return;
     }
+
     audioEngine()->stopStream();
-    //Make sure you to unpause
+    //Make sure to unpause
     audioEngine()->pauseStream(false);
 
     // So that we continue monitoring after playing or recording.

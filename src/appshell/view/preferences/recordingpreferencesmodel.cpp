@@ -33,5 +33,4 @@ bool RecordingPreferencesModel::isMicMeteringOn() const
 void RecordingPreferencesModel::setIsMicMeteringOn(bool enabled)
 {
     recordConfiguration()->setIsMicMeteringOn(enabled);
-    emit isMicMeteringOnChanged();
 }

@@ -806,23 +806,15 @@ void AudioIO::ResetOwningProject()
 
 void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
 {
-    if (mPortStreamV19 || mStreamToken) {
-        // we can't start monitoring if
-        // port stream is already opened
-        // OR
-        // a token is in use (!=0)
-        // What happen if mStreamToken is negative?
+    if (IsBusy()) {
         return;
     }
-    // TODO above check kind of the same as IsMonitoring() should we get rid of it?
-    if (IsMonitoring())
-    {
+    if (IsMonitoring()) {
         return;
     }
 
-    bool success;
-    auto captureFormat = QualitySettings::SampleFormatChoice();
-    auto captureChannels = AudioIORecordChannels.Read();
+    const auto captureFormat = QualitySettings::SampleFormatChoice();
+    const auto captureChannels = AudioIORecordChannels.Read();
     gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &mSoftwarePlaythrough, false);
     int playbackChannels = 0;
 
@@ -835,14 +827,14 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
     mUsingAlsa = false;
     mCaptureFormat = captureFormat;
     mCaptureRate = 44100.0; // Shouldn't matter
-    success = StartPortAudioStream(options,
-                                   static_cast<unsigned int>(playbackChannels),
-                                   static_cast<unsigned int>(captureChannels));
+    const bool success = StartPortAudioStream(options,
+                                        static_cast<unsigned int>(playbackChannels),
+                                        static_cast<unsigned int>(captureChannels));
 
-    auto pOwningProject = mOwningProject.lock();
+    const auto pOwningProject = mOwningProject.lock();
     if (!success) {
         using namespace BasicUI;
-        auto msg = XO("Error opening recording device.\nError code: %s")
+        const auto msg = XO("Error opening recording device.\nError code: %s")
                    .Format(Get()->LastPaErrorString());
         ShowErrorDialog(*ProjectFramePlacement(pOwningProject.get()),
                         XO("Error"), msg, wxT("Error_opening_sound_device"),
