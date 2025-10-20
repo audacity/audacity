@@ -28,6 +28,7 @@ public:
     ~AbstractEffectViewModel() override = default;
 
     Q_INVOKABLE void init();
+    Q_INVOKABLE void togglePreview();
 
     bool isPreviewing() const;
 
@@ -36,5 +37,6 @@ signals:
 
 private:
     virtual void doInit() = 0;
+    virtual void doStartPreview() = 0;
 };
 }

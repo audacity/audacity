@@ -14,7 +14,7 @@
 #include "trackedit/iprojecthistory.h"
 
 namespace au::effects {
-class BuiltinEffectModel : public AbstractEffectViewModel, public QQmlParserStatus
+class BuiltinEffectModel : public AbstractEffectViewModel
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId CONSTANT FINAL)
@@ -33,7 +33,6 @@ public:
     int instanceId() const;
     QString effectId() const;
 
-    Q_INVOKABLE void preview();
     Q_INVOKABLE void commitSettings();
 
     virtual bool usesPresets() const { return true; }
@@ -76,9 +75,8 @@ protected:
     }
 
 private:
-    void classBegin() override {}
-    void componentComplete() override;
-    void doInit() override {}
+    void doInit() override;
+    void doStartPreview() override;
 
     EffectSettingsAccessPtr settingsAccess() const;
     const int m_instanceId;

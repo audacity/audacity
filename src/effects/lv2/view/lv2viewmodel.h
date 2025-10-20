@@ -41,7 +41,6 @@ public:
     ~Lv2ViewModel() override;
 
     Q_INVOKABLE void deinit();
-    Q_INVOKABLE void preview();
 
     int instanceId() const;
     void setInstanceId(int newInstanceId);
@@ -64,6 +63,7 @@ signals:
 private:
     friend class Lv2UiHandler;
     void doInit() override;
+    void doStartPreview() override;
     int onResizeUi(int width, int height);
     void onUiClosed();
     void onKeyPressed(Qt::Key);

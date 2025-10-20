@@ -30,13 +30,12 @@ public:
     int instanceId() const;
     void setInstanceId(int newInstanceId);
 
-    Q_INVOKABLE void preview();
-
 signals:
     void instanceIdChanged();
 
 private:
     void doInit() override;
+    void doStartPreview() override;
 
     std::shared_ptr<EffectSettingsAccess> settingsAccess() const;
     void settingsToView();

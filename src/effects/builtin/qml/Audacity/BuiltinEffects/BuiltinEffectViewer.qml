@@ -14,6 +14,7 @@ Rectangle {
 
     property string title: builder.contentItem ? builder.contentItem.title : ""
     property bool isApplyAllowed: builder.contentItem ? builder.contentItem.isApplyAllowed : false
+    property bool isPreviewing: builder.contentItem ? builder.contentItem.isPreviewing : false
     property bool usesPresets: builder.contentItem ? builder.contentItem.usesPresets : false
 
     signal closeRequested
@@ -28,6 +29,7 @@ Rectangle {
 
     Component.onCompleted: {
         builder.load(root.instanceId, root, dialogView, usedDestructively)
+        builder.contentItem.init()
     }
 
     function manage(parent) {
@@ -36,9 +38,9 @@ Rectangle {
         }
     }
 
-    function preview() {
+    function togglePreview() {
         if (builder.contentItem) {
-            builder.contentItem.preview()
+            builder.contentItem.togglePreview()
         }
     }
 

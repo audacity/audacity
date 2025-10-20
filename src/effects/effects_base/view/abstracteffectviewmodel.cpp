@@ -32,4 +32,13 @@ bool AbstractEffectViewModel::isPreviewing() const
     }
     return player->playbackStatus() == playback::PlaybackStatus::Running;
 }
+
+void AbstractEffectViewModel::togglePreview()
+{
+    if (isPreviewing()) {
+        playback()->player()->stop();
+    } else {
+        doStartPreview();
+    }
+}
 }

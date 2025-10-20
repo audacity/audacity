@@ -16,6 +16,7 @@ Rectangle {
     property alias instanceId: model.instanceId
     property alias effectState: model.effectState
     property alias title: model.title
+    property alias isPreviewing: model.isPreviewing
 
     implicitWidth: textItem.width
     implicitHeight: textItem.height
@@ -30,8 +31,8 @@ Rectangle {
         model.deinit()
     }
 
-    function preview() {
-       model.preview()
+    function togglePreview() {
+        model.togglePreview()
     }
 
     function manage(parent) {

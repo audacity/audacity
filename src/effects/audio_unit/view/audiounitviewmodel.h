@@ -33,7 +33,6 @@ public:
     AudioUnitViewModel(QObject* parent = nullptr);
     ~AudioUnitViewModel() override;
 
-    Q_INVOKABLE void preview();
     Q_INVOKABLE void deinit();
 
     int instanceId() const;
@@ -48,6 +47,7 @@ signals:
 
 private:
     void doInit() override;
+    void doStartPreview() override;
 
     using EventListenerPtr = AudioUnitCleanup<AUEventListenerRef, AUListenerDispose>;
     static void EventListenerCallback(void* inCallbackRefCon, void* inObject, const AudioUnitEvent* inEvent, UInt64 inEventHostTime,

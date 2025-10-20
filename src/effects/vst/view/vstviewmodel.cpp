@@ -117,7 +117,7 @@ void VstViewModel::settingsFromView()
     });
 }
 
-void VstViewModel::preview()
+void VstViewModel::doStartPreview()
 {
     IF_ASSERT_FAILED(m_settingsAccess) {
         return;

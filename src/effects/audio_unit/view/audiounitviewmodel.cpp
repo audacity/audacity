@@ -76,7 +76,7 @@ void AudioUnitViewModel::doInit()
     m_settingsTimer.start(100);
 }
 
-void au::effects::AudioUnitViewModel::preview()
+void au::effects::AudioUnitViewModel::doStartPreview()
 {
     IF_ASSERT_FAILED(m_settingsAccess) {
         return;
