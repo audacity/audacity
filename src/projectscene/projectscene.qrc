@@ -2,12 +2,12 @@
     <qresource prefix="/">
         <file>qml/Audacity/ProjectScene/qmldir</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/TracksItemsView.qml</file>
-        <file>qml/Audacity/ProjectScene/tracksitemsview/TrackClipsItem.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/TrackClipsContainer.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ObjectsSelection.qml</file>
-        <file>qml/Audacity/ProjectScene/tracksitemsview/TrackLabelsItem.qml</file>
-        <file>qml/Audacity/ProjectScene/tracksitemsview/TrackObjectsItem.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/TrackLabelsContainer.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/TrackItemsContainer.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/LabelItem.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/LabelHeader.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/LabelEar.qml</file>
