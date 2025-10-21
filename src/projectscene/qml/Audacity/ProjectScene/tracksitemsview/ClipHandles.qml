@@ -37,7 +37,7 @@ Item {
     signal stretchLeftRequested(bool completed, int action)
     signal stretchRightRequested(bool completed, int action)
 
-    //! NOTE: auto-scroll for trimming is triggered from clipslistmodel
+    //! NOTE: auto-scroll for trimming is triggered from trackclipslistmodel
     signal stopAutoScroll()
 
     Item {

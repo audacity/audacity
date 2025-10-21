@@ -21,7 +21,7 @@
 #include "cliplistitem.h"
 
 namespace au::projectscene {
-class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
+class TrackClipsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
 {
     Q_OBJECT
 
@@ -43,8 +43,8 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
     muse::Inject<muse::workspace::IWorkspaceManager> workspacesManager;
 
 public:
-    explicit ClipsListModel(QObject* parent = nullptr);
-    ~ClipsListModel() override;
+    explicit TrackClipsListModel(QObject* parent = nullptr);
+    ~TrackClipsListModel() override;
 
     TimelineContext* timelineContext() const;
     void setTimelineContext(TimelineContext* newContext);
