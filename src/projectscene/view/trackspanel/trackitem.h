@@ -20,21 +20,6 @@
 Q_DECLARE_METATYPE(au::trackedit::TrackType)
 
 namespace au::projectscene {
-class TrackItemType
-{
-    Q_GADGET
-
-public:
-    enum Type: int {
-        Undefined = (int)au::trackedit::TrackType::Undefined,
-        Mono = (int)au::trackedit::TrackType::Mono,
-        Stereo = (int)au::trackedit::TrackType::Stereo,
-        Label = (int)au::trackedit::TrackType::Label
-    };
-
-    Q_ENUM(Type)
-};
-
 class TrackItem : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
