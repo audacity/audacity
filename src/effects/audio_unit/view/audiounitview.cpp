@@ -19,23 +19,9 @@ AudioUnitView::~AudioUnitView()
     deinit();
 }
 
-int AudioUnitView::instanceId() const
-{
-    return m_instanceId;
-}
-
-void AudioUnitView::setInstanceId(int newInstanceId)
-{
-    if (m_instanceId == newInstanceId) {
-        return;
-    }
-    m_instanceId = newInstanceId;
-    emit instanceIdChanged();
-}
-
 void AudioUnitView::doInit()
 {
-    const auto instance = std::dynamic_pointer_cast<AudioUnitInstance>(instancesRegister()->instanceById(m_instanceId));
+    const auto instance = std::dynamic_pointer_cast<AudioUnitInstance>(instancesRegister()->instanceById(instanceId()));
 
     // TODO: When design for this setting is ready, use the user preference here
     bool isGraphical = true;

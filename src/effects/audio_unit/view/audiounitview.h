@@ -15,7 +15,6 @@ namespace au::effects {
 class AudioUnitView : public muse::audioplugins::AudioPluginView
 {
     Q_OBJECT
-    Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
     Q_PROPERTY(int sidePadding READ sidePadding WRITE setSidePadding NOTIFY sidePaddingChanged FINAL)
     Q_PROPERTY(int topPadding READ topPadding WRITE setTopPadding NOTIFY topPaddingChanged FINAL)
     Q_PROPERTY(int bottomPadding READ bottomPadding WRITE setBottomPadding NOTIFY bottomPaddingChanged FINAL)
@@ -26,9 +25,6 @@ class AudioUnitView : public muse::audioplugins::AudioPluginView
 public:
     AudioUnitView(QQuickItem* parent = nullptr);
     ~AudioUnitView() override;
-
-    int instanceId() const;
-    void setInstanceId(int newInstanceId);
 
     Q_INVOKABLE void deinit();
 
@@ -45,7 +41,6 @@ public:
     void setMinimumWidth(int newMinimumWidth);
 
 signals:
-    void instanceIdChanged();
     void titleChanged();
 
     void sidePaddingChanged();
@@ -60,8 +55,6 @@ private:
     void embedNativeView();
 
     void updateViewGeometry();
-
-    int m_instanceId = -1;
 
     std::unique_ptr<AUControl> m_auControl;
 
