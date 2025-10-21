@@ -5,13 +5,14 @@
 
 #include <QQuickItem>
 
-#include "global/modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/audioplugins/view/audiopluginview.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
 
 class AUControl;
 
 namespace au::effects {
-class AudioUnitView : public QQuickItem
+class AudioUnitView : public muse::audioplugins::AudioPluginView
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
@@ -29,7 +30,6 @@ public:
     int instanceId() const;
     void setInstanceId(int newInstanceId);
 
-    Q_INVOKABLE void init();
     Q_INVOKABLE void deinit();
 
     int sidePadding() const;
@@ -54,6 +54,9 @@ signals:
     void minimumWidthChanged();
 
 private:
+    void doInit() override;
+    QWindow* pluginWindow() override;
+
     void embedNativeView();
 
     void updateViewGeometry();
@@ -61,7 +64,6 @@ private:
     int m_instanceId = -1;
 
     std::unique_ptr<AUControl> m_auControl;
-    QWindow* m_disablingWindow = nullptr;
 
     int m_sidePadding = 0;
     int m_topPadding = 0;
