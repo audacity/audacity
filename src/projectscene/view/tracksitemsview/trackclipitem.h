@@ -11,7 +11,7 @@
 #include "../../types/projectscenetypes.h"
 
 namespace au::projectscene {
-class ClipListItem : public QObject
+class TrackClipItem : public QObject
 {
     Q_OBJECT
 
@@ -34,7 +34,7 @@ class ClipListItem : public QObject
     Q_PROPERTY(int speedPercentage READ speedPercentage NOTIFY speedPercentageChanged FINAL)
 
 public:
-    explicit ClipListItem(QObject* parent);
+    explicit TrackClipItem(QObject* parent);
 
     void setClip(const trackedit::Clip& clip);
     const trackedit::Clip& clip() const;

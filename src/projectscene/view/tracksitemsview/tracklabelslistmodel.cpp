@@ -90,7 +90,7 @@ void TrackLabelsListModel::reload()
             break;
         }
 
-        LabelListItem* item = itemByKey(label.key);
+        TrackLabelItem* item = itemByKey(label.key);
         if (item) {
             item->setLabel(label);
         }
@@ -131,7 +131,7 @@ void TrackLabelsListModel::reload()
 
 void TrackLabelsListModel::startEditLabel(const LabelKey& key)
 {
-    LabelListItem* item = itemByKey(key.key);
+    TrackLabelItem* item = itemByKey(key.key);
     if (!item) {
         return;
     }
@@ -149,7 +149,7 @@ void TrackLabelsListModel::startEditLabel(const LabelKey& key)
 
 void TrackLabelsListModel::endEditLabel(const LabelKey& key)
 {
-    LabelListItem* item = itemByKey(key.key);
+    TrackLabelItem* item = itemByKey(key.key);
     if (!item) {
         return;
     }
@@ -166,9 +166,9 @@ void TrackLabelsListModel::endEditLabel(const LabelKey& key)
     vs->setMoveInitiated(false);
 }
 
-LabelListItem* TrackLabelsListModel::itemByKey(const trackedit::LabelKey& k) const
+TrackLabelItem* TrackLabelsListModel::itemByKey(const trackedit::LabelKey& k) const
 {
-    for (LabelListItem* item : std::as_const(m_labelList)) {
+    for (TrackLabelItem* item : std::as_const(m_labelList)) {
         if (item->label().key != k) {
             continue;
         }
@@ -201,23 +201,23 @@ Qt::KeyboardModifiers TrackLabelsListModel::keyboardModifiers() const
 
 void TrackLabelsListModel::update()
 {
-    std::unordered_map<LabelId, LabelListItem*> oldItems;
+    std::unordered_map<LabelId, TrackLabelItem*> oldItems;
     for (int row = 0; row < m_labelList.size(); ++row) {
         oldItems.emplace(m_labelList[row]->key().key.objectId, m_labelList[row]);
     }
 
-    QList<LabelListItem*> newList;
+    QList<TrackLabelItem*> newList;
 
     // Building a new list, reusing existing labels
     for (const au::trackedit::Label& l : m_allLabelList) {
         auto it = oldItems.find(l.key.objectId);
-        LabelListItem* item = nullptr;
+        TrackLabelItem* item = nullptr;
 
         if (it != oldItems.end()) {
             item = it->second;
             oldItems.erase(it);
         } else {
-            item = new LabelListItem(this);
+            item = new TrackLabelItem(this);
         }
 
         item->setLabel(l);
@@ -226,7 +226,7 @@ void TrackLabelsListModel::update()
 
     // Removing deleted or moved labels
     // Item deletion should be postponed, so QML is updated correctly
-    QList<LabelListItem*> cleanupList;
+    QList<TrackLabelItem*> cleanupList;
     for (auto& [id, item] : oldItems) {
         int row = m_labelList.indexOf(item);
         if (row >= 0) {
@@ -239,7 +239,7 @@ void TrackLabelsListModel::update()
 
     // Sorting labels with a notification for each moved label
     for (int i = 0; i < newList.size(); ++i) {
-        LabelListItem* item = newList[i];
+        TrackLabelItem* item = newList[i];
         if (i < m_labelList.size() && m_labelList[i] == item) {
             // TODO: is it possible to know if update is neccessary?
             QModelIndex idx = index(i);
@@ -274,12 +274,12 @@ void TrackLabelsListModel::update()
 void TrackLabelsListModel::updateItemsMetrics()
 {
     for (int i = 0; i < m_labelList.size(); ++i) {
-        LabelListItem* item = m_labelList[i];
+        TrackLabelItem* item = m_labelList[i];
         updateItemsMetrics(item);
     }
 }
 
-void TrackLabelsListModel::updateItemsMetrics(LabelListItem* item)
+void TrackLabelsListModel::updateItemsMetrics(TrackLabelItem* item)
 {
     //! NOTE The first step is to calculate the position and width
     const double cacheTime = CACHE_BUFFER_PX / m_context->zoom();
@@ -326,7 +326,7 @@ QVariant TrackLabelsListModel::data(const QModelIndex& index, int role) const
 
     switch (role) {
     case LabelItemRole: {
-        LabelListItem* item = m_labelList.at(index.row());
+        TrackLabelItem* item = m_labelList.at(index.row());
         return QVariant::fromValue(item);
     }
     default:
@@ -346,7 +346,7 @@ void TrackLabelsListModel::onTimelineFrameTimeChanged()
     updateItemsMetrics();
 }
 
-void TrackLabelsListModel::setSelectedItems(const QList<LabelListItem*>& items)
+void TrackLabelsListModel::setSelectedItems(const QList<TrackLabelItem*>& items)
 {
     for (auto& selectedItem : m_selectedItems) {
         selectedItem->setSelected(false);
@@ -357,7 +357,7 @@ void TrackLabelsListModel::setSelectedItems(const QList<LabelListItem*>& items)
     }
 }
 
-void TrackLabelsListModel::addSelectedItem(LabelListItem* item)
+void TrackLabelsListModel::addSelectedItem(TrackLabelItem* item)
 {
     item->setSelected(true);
     m_selectedItems.append(item);
@@ -389,7 +389,7 @@ QVariant TrackLabelsListModel::prev(const LabelKey& key) const
 
 QVariant TrackLabelsListModel::neighbor(const LabelKey& key, int offset) const
 {
-    auto it = std::find_if(m_labelList.begin(), m_labelList.end(), [key](LabelListItem* label) {
+    auto it = std::find_if(m_labelList.begin(), m_labelList.end(), [key](TrackLabelItem* label) {
         return label->key().key.objectId == key.key.objectId;
     });
 
@@ -438,7 +438,7 @@ void TrackLabelsListModel::requestLabelTitleChange()
         return;
     }
 
-    LabelListItem* selectedItem = itemByKey(labelKey);
+    TrackLabelItem* selectedItem = itemByKey(labelKey);
     if (selectedItem != nullptr) {
         emit selectedItem->titleEditRequested();
     }
@@ -469,7 +469,7 @@ void TrackLabelsListModel::onSelectedLabel(const trackedit::LabelKey& k)
             clearSelectedItems();
         } else {
             if (item) {
-                setSelectedItems(QList<LabelListItem*>({ item }));
+                setSelectedItems(QList<TrackLabelItem*>({ item }));
             }
         }
     }
@@ -486,7 +486,7 @@ void TrackLabelsListModel::onSelectedLabels(const trackedit::LabelKeyList& keyLi
     // we can begin by clearing everything.
     clearSelectedItems();
 
-    QList<LabelListItem*> items;
+    QList<TrackLabelItem*> items;
     for (const auto& k : keyList) {
         if (const auto item = itemByKey(k)) {
             items.append(item);

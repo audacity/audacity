@@ -1,16 +1,16 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "cliplistitem.h"
+#include "trackclipitem.h"
 
 using namespace au::projectscene;
 
-ClipListItem::ClipListItem(QObject* parent)
+TrackClipItem::TrackClipItem(QObject* parent)
     : QObject(parent)
 {
 }
 
-void ClipListItem::setClip(const trackedit::Clip& clip)
+void TrackClipItem::setClip(const trackedit::Clip& clip)
 {
     m_clip = clip;
 
@@ -22,43 +22,43 @@ void ClipListItem::setClip(const trackedit::Clip& clip)
     emit waveChanged();
 }
 
-const au::trackedit::Clip& ClipListItem::clip() const
+const au::trackedit::Clip& TrackClipItem::clip() const
 {
     return m_clip;
 }
 
-ClipKey ClipListItem::key() const
+ClipKey TrackClipItem::key() const
 {
     return ClipKey(m_clip.key);
 }
 
-QString ClipListItem::title() const
+QString TrackClipItem::title() const
 {
     return m_clip.title;
 }
 
-void ClipListItem::setTitle(const QString& newTitle)
+void TrackClipItem::setTitle(const QString& newTitle)
 {
     m_clip.title = newTitle;
     emit titleChanged();
 }
 
-QColor ClipListItem::color() const
+QColor TrackClipItem::color() const
 {
     return m_clip.color.toQColor();
 }
 
-int ClipListItem::groupId() const
+int TrackClipItem::groupId() const
 {
     return m_clip.groupId;
 }
 
-double ClipListItem::x() const
+double TrackClipItem::x() const
 {
     return m_x;
 }
 
-void ClipListItem::setX(double newX)
+void TrackClipItem::setX(double newX)
 {
     if (qFuzzyCompare(m_x, newX)) {
         return;
@@ -67,12 +67,12 @@ void ClipListItem::setX(double newX)
     emit xChanged();
 }
 
-double ClipListItem::width() const
+double TrackClipItem::width() const
 {
     return m_width;
 }
 
-void ClipListItem::setWidth(double newWidth)
+void TrackClipItem::setWidth(double newWidth)
 {
     if (qFuzzyCompare(m_width, newWidth)) {
         return;
@@ -81,12 +81,12 @@ void ClipListItem::setWidth(double newWidth)
     emit widthChanged();
 }
 
-bool ClipListItem::selected() const
+bool TrackClipItem::selected() const
 {
     return m_selected;
 }
 
-void ClipListItem::setSelected(bool newSelected)
+void TrackClipItem::setSelected(bool newSelected)
 {
     if (m_selected == newSelected) {
         return;
@@ -95,12 +95,12 @@ void ClipListItem::setSelected(bool newSelected)
     emit selectedChanged();
 }
 
-ClipTime ClipListItem::time() const
+ClipTime TrackClipItem::time() const
 {
     return m_time;
 }
 
-void ClipListItem::setTime(const ClipTime& newTime)
+void TrackClipItem::setTime(const ClipTime& newTime)
 {
     if (m_time == newTime) {
         return;
@@ -109,12 +109,12 @@ void ClipListItem::setTime(const ClipTime& newTime)
     emit timeChanged();
 }
 
-double ClipListItem::leftVisibleMargin() const
+double TrackClipItem::leftVisibleMargin() const
 {
     return m_leftVisibleMargin;
 }
 
-void ClipListItem::setLeftVisibleMargin(double newLeftVisibleMargin)
+void TrackClipItem::setLeftVisibleMargin(double newLeftVisibleMargin)
 {
     if (qFuzzyCompare(m_leftVisibleMargin, newLeftVisibleMargin)) {
         return;
@@ -123,12 +123,12 @@ void ClipListItem::setLeftVisibleMargin(double newLeftVisibleMargin)
     emit leftVisibleMarginChanged();
 }
 
-double ClipListItem::rightVisibleMargin() const
+double TrackClipItem::rightVisibleMargin() const
 {
     return m_rightVisibleMargin;
 }
 
-void ClipListItem::setRightVisibleMargin(double newRightVisibleMargin)
+void TrackClipItem::setRightVisibleMargin(double newRightVisibleMargin)
 {
     if (qFuzzyCompare(m_rightVisibleMargin, newRightVisibleMargin)) {
         return;
@@ -137,12 +137,12 @@ void ClipListItem::setRightVisibleMargin(double newRightVisibleMargin)
     emit rightVisibleMarginChanged();
 }
 
-int ClipListItem::pitch() const
+int TrackClipItem::pitch() const
 {
     return m_clip.pitch;
 }
 
-int ClipListItem::speedPercentage() const
+int TrackClipItem::speedPercentage() const
 {
     return qRound(100.0 / m_clip.speed);
 }

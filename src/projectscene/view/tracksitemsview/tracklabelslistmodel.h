@@ -17,7 +17,7 @@
 #include "trackedit/trackedittypes.h"
 #include "../timeline/timelinecontext.h"
 
-#include "labellistitem.h"
+#include "tracklabelitem.h"
 
 namespace au::projectscene {
 class TrackLabelsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
@@ -77,16 +77,16 @@ private:
         LabelItemRole = Qt::UserRole + 1,
     };
 
-    void setSelectedItems(const QList<LabelListItem*>& items);
-    void addSelectedItem(LabelListItem* item);
+    void setSelectedItems(const QList<TrackLabelItem*>& items);
+    void addSelectedItem(TrackLabelItem* item);
     void clearSelectedItems();
 
     void update();
     void updateItemsMetrics();
-    void updateItemsMetrics(LabelListItem* item);
+    void updateItemsMetrics(TrackLabelItem* item);
     void onSelectedLabel(const trackedit::LabelKey& k);
     void onSelectedLabels(const trackedit::LabelKeyList& keyList);
-    LabelListItem* itemByKey(const trackedit::LabelKey& k) const;
+    TrackLabelItem* itemByKey(const trackedit::LabelKey& k) const;
     int indexByKey(const trackedit::LabelKey& k) const;
     QVariant neighbor(const LabelKey& key, int offset) const;
     void requestLabelTitleChange();
@@ -96,7 +96,7 @@ private:
     TimelineContext* m_context = nullptr;
     trackedit::TrackId m_trackId = -1;
     muse::async::NotifyList<au::trackedit::Label> m_allLabelList;
-    QList<LabelListItem*> m_labelList;
-    QList<LabelListItem*> m_selectedItems;
+    QList<TrackLabelItem*> m_labelList;
+    QList<TrackLabelItem*> m_selectedItems;
 };
 }

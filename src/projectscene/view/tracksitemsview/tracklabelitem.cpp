@@ -1,16 +1,16 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "labellistitem.h"
+#include "tracklabelitem.h"
 
 using namespace au::projectscene;
 
-LabelListItem::LabelListItem(QObject* parent)
+TrackLabelItem::TrackLabelItem(QObject* parent)
     : QObject(parent)
 {
 }
 
-void LabelListItem::setLabel(const trackedit::Label& label)
+void TrackLabelItem::setLabel(const trackedit::Label& label)
 {
     m_label = label;
 
@@ -18,38 +18,38 @@ void LabelListItem::setLabel(const trackedit::Label& label)
     emit colorChanged();
 }
 
-const au::trackedit::Label& LabelListItem::label() const
+const au::trackedit::Label& TrackLabelItem::label() const
 {
     return m_label;
 }
 
-LabelKey LabelListItem::key() const
+LabelKey TrackLabelItem::key() const
 {
     return LabelKey(m_label.key);
 }
 
-QString LabelListItem::title() const
+QString TrackLabelItem::title() const
 {
     return m_label.title;
 }
 
-void LabelListItem::setTitle(const QString& newTitle)
+void TrackLabelItem::setTitle(const QString& newTitle)
 {
     m_label.title = newTitle;
     emit titleChanged();
 }
 
-QColor LabelListItem::color() const
+QColor TrackLabelItem::color() const
 {
     return m_label.color.toQColor();
 }
 
-double LabelListItem::x() const
+double TrackLabelItem::x() const
 {
     return m_x;
 }
 
-void LabelListItem::setX(double newX)
+void TrackLabelItem::setX(double newX)
 {
     if (qFuzzyCompare(m_x, newX)) {
         return;
@@ -59,12 +59,12 @@ void LabelListItem::setX(double newX)
     emit xChanged();
 }
 
-double LabelListItem::width() const
+double TrackLabelItem::width() const
 {
     return m_width;
 }
 
-void LabelListItem::setWidth(double newWidth)
+void TrackLabelItem::setWidth(double newWidth)
 {
     if (qFuzzyCompare(m_width, newWidth)) {
         return;
@@ -74,12 +74,12 @@ void LabelListItem::setWidth(double newWidth)
     emit widthChanged();
 }
 
-bool LabelListItem::selected() const
+bool TrackLabelItem::selected() const
 {
     return m_selected;
 }
 
-void LabelListItem::setSelected(bool newSelected)
+void TrackLabelItem::setSelected(bool newSelected)
 {
     if (m_selected == newSelected) {
         return;
@@ -89,12 +89,12 @@ void LabelListItem::setSelected(bool newSelected)
     emit selectedChanged();
 }
 
-LabelTime LabelListItem::time() const
+LabelTime TrackLabelItem::time() const
 {
     return m_time;
 }
 
-void LabelListItem::setTime(const LabelTime& newTime)
+void TrackLabelItem::setTime(const LabelTime& newTime)
 {
     if (m_time == newTime) {
         return;
@@ -104,12 +104,12 @@ void LabelListItem::setTime(const LabelTime& newTime)
     emit timeChanged();
 }
 
-double LabelListItem::leftVisibleMargin() const
+double TrackLabelItem::leftVisibleMargin() const
 {
     return m_leftVisibleMargin;
 }
 
-void LabelListItem::setLeftVisibleMargin(double newLeftVisibleMargin)
+void TrackLabelItem::setLeftVisibleMargin(double newLeftVisibleMargin)
 {
     if (qFuzzyCompare(m_leftVisibleMargin, newLeftVisibleMargin)) {
         return;
@@ -119,12 +119,12 @@ void LabelListItem::setLeftVisibleMargin(double newLeftVisibleMargin)
     emit leftVisibleMarginChanged();
 }
 
-double LabelListItem::rightVisibleMargin() const
+double TrackLabelItem::rightVisibleMargin() const
 {
     return m_rightVisibleMargin;
 }
 
-void LabelListItem::setRightVisibleMargin(double newRightVisibleMargin)
+void TrackLabelItem::setRightVisibleMargin(double newRightVisibleMargin)
 {
     if (qFuzzyCompare(m_rightVisibleMargin, newRightVisibleMargin)) {
         return;

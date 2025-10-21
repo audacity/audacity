@@ -11,7 +11,7 @@
 #include "types/projectscenetypes.h"
 
 namespace au::projectscene {
-class LabelListItem : public QObject
+class TrackLabelItem : public QObject
 {
     Q_OBJECT
 
@@ -30,7 +30,7 @@ class LabelListItem : public QObject
     Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged FINAL)
 
 public:
-    explicit LabelListItem(QObject* parent);
+    explicit TrackLabelItem(QObject* parent);
 
     void setLabel(const trackedit::Label& label);
     const trackedit::Label& label() const;
