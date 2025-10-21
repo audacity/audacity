@@ -6,13 +6,18 @@
 using namespace au::projectscene;
 
 TrackClipItem::TrackClipItem(QObject* parent)
-    : QObject(parent)
+    : ViewTrackItem(parent)
 {
 }
 
 void TrackClipItem::setClip(const trackedit::Clip& clip)
 {
-    m_clip = clip;
+    m_key = TrackObjectKey(clip.key);
+    m_title = clip.title;
+    m_color = clip.color.toQColor();
+    m_groupId = clip.groupId;
+    m_pitch = clip.pitch;
+    m_speed = clip.speed;
 
     emit titleChanged();
     emit pitchChanged();
@@ -20,129 +25,20 @@ void TrackClipItem::setClip(const trackedit::Clip& clip)
     emit colorChanged();
     emit groupIdChanged();
     emit waveChanged();
-}
-
-const au::trackedit::Clip& TrackClipItem::clip() const
-{
-    return m_clip;
-}
-
-ClipKey TrackClipItem::key() const
-{
-    return ClipKey(m_clip.key);
-}
-
-QString TrackClipItem::title() const
-{
-    return m_clip.title;
-}
-
-void TrackClipItem::setTitle(const QString& newTitle)
-{
-    m_clip.title = newTitle;
-    emit titleChanged();
-}
-
-QColor TrackClipItem::color() const
-{
-    return m_clip.color.toQColor();
+    emit timeChanged();
 }
 
 int TrackClipItem::groupId() const
 {
-    return m_clip.groupId;
-}
-
-double TrackClipItem::x() const
-{
-    return m_x;
-}
-
-void TrackClipItem::setX(double newX)
-{
-    if (qFuzzyCompare(m_x, newX)) {
-        return;
-    }
-    m_x = newX;
-    emit xChanged();
-}
-
-double TrackClipItem::width() const
-{
-    return m_width;
-}
-
-void TrackClipItem::setWidth(double newWidth)
-{
-    if (qFuzzyCompare(m_width, newWidth)) {
-        return;
-    }
-    m_width = newWidth;
-    emit widthChanged();
-}
-
-bool TrackClipItem::selected() const
-{
-    return m_selected;
-}
-
-void TrackClipItem::setSelected(bool newSelected)
-{
-    if (m_selected == newSelected) {
-        return;
-    }
-    m_selected = newSelected;
-    emit selectedChanged();
-}
-
-ClipTime TrackClipItem::time() const
-{
-    return m_time;
-}
-
-void TrackClipItem::setTime(const ClipTime& newTime)
-{
-    if (m_time == newTime) {
-        return;
-    }
-    m_time = newTime;
-    emit timeChanged();
-}
-
-double TrackClipItem::leftVisibleMargin() const
-{
-    return m_leftVisibleMargin;
-}
-
-void TrackClipItem::setLeftVisibleMargin(double newLeftVisibleMargin)
-{
-    if (qFuzzyCompare(m_leftVisibleMargin, newLeftVisibleMargin)) {
-        return;
-    }
-    m_leftVisibleMargin = newLeftVisibleMargin;
-    emit leftVisibleMarginChanged();
-}
-
-double TrackClipItem::rightVisibleMargin() const
-{
-    return m_rightVisibleMargin;
-}
-
-void TrackClipItem::setRightVisibleMargin(double newRightVisibleMargin)
-{
-    if (qFuzzyCompare(m_rightVisibleMargin, newRightVisibleMargin)) {
-        return;
-    }
-    m_rightVisibleMargin = newRightVisibleMargin;
-    emit rightVisibleMarginChanged();
+    return m_groupId;
 }
 
 int TrackClipItem::pitch() const
 {
-    return m_clip.pitch;
+    return m_pitch;
 }
 
 int TrackClipItem::speedPercentage() const
 {
-    return qRound(100.0 / m_clip.speed);
+    return qRound(100.0 / m_speed);
 }

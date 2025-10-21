@@ -143,8 +143,8 @@ void TrackLabelsListModel::startEditLabel(const LabelKey& key)
 
     double mousePositionTime = m_context->mousePositionTime();
 
-    vs->setObjectEditStartTimeOffset(mousePositionTime - item->label().startTime);
-    vs->setObjectEditEndTimeOffset(item->label().endTime - mousePositionTime);
+    vs->setObjectEditStartTimeOffset(mousePositionTime - item->time().startTime);
+    vs->setObjectEditEndTimeOffset(item->time().endTime - mousePositionTime);
 }
 
 void TrackLabelsListModel::endEditLabel(const LabelKey& key)
@@ -169,7 +169,7 @@ void TrackLabelsListModel::endEditLabel(const LabelKey& key)
 TrackLabelItem* TrackLabelsListModel::itemByKey(const trackedit::LabelKey& k) const
 {
     for (TrackLabelItem* item : std::as_const(m_labelList)) {
-        if (item->label().key != k) {
+        if (item->key().key != k) {
             continue;
         }
         return item;
@@ -180,7 +180,7 @@ TrackLabelItem* TrackLabelsListModel::itemByKey(const trackedit::LabelKey& k) co
 int TrackLabelsListModel::indexByKey(const trackedit::LabelKey& k) const
 {
     for (int i = 0; i < m_labelList.size(); ++i) {
-        if (m_labelList.at(i)->label().key == k) {
+        if (m_labelList.at(i)->key().key == k) {
             return i;
         }
     }
@@ -281,10 +281,18 @@ void TrackLabelsListModel::updateItemsMetrics()
 
 void TrackLabelsListModel::updateItemsMetrics(TrackLabelItem* item)
 {
+    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    trackedit::Label label = prj->label(item->key().key);
+    if (!label.isValid()) {
+        return;
+    }
+
     //! NOTE The first step is to calculate the position and width
     const double cacheTime = CACHE_BUFFER_PX / m_context->zoom();
-
-    const trackedit::Label& label = item->label();
 
     LabelTime time;
     time.startTime = label.startTime;
@@ -448,7 +456,7 @@ void TrackLabelsListModel::onSelectedLabel(const trackedit::LabelKey& k)
 {
     // ignore if item already selected
     for (const auto& selectedItem : m_selectedItems) {
-        if (selectedItem->label().key == k) {
+        if (selectedItem->key().key == k) {
             return;
         }
     }

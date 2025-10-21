@@ -35,6 +35,7 @@ public:
     virtual std::vector<Track> trackList() const = 0;
     virtual std::optional<Track> track(TrackId trackId) const = 0;
     virtual Clip clip(const ClipKey& key) const = 0;
+    virtual Label label(const LabelKey& key) const = 0;
     virtual muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const = 0;
     virtual muse::async::NotifyList<Label> labelList(const TrackId& trackId) const = 0;
     virtual std::vector<int64_t> groupsIdsList() const = 0;
