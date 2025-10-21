@@ -189,7 +189,7 @@ Item {
 
                     width: view.width
 
-                    sourceComponent: (itemData && itemData.trackType === TrackItemType.Label) ? labelItemComp : waveItemComp
+                    sourceComponent: (itemData && itemData.trackType === TrackType.LABEL) ? labelItemComp : waveItemComp
 
                     onLoaded: {
                         trackItemLoader.item.init()

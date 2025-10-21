@@ -157,8 +157,6 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<RealtimeEffectListItemMenuModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectListItemMenuModel");
     qmlRegisterType<RealtimeEffectSectionModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectSectionModel");
     qmlRegisterType<TrackContextMenuModel>("Audacity.ProjectScene", 1, 0, "TrackContextMenuModel");
-    qmlRegisterUncreatableType<TrackItemType>("Audacity.ProjectScene", 1, 0, "TrackItemType",
-                                              "Do not create objects of type TrackItemType");
     qmlRegisterType<AddNewTrackPopupModel>("Audacity.ProjectScene", 1, 0, "AddNewTrackPopupModel");
 
     // clips view
