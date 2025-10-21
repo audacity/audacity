@@ -50,6 +50,20 @@ void AudioUnitView::init()
         updateViewGeometry();
     });
 
+    connect(this, &QQuickItem::enabledChanged, this, [this]() {
+        if (!isEnabled() && !m_disablingWindow) {
+            m_disablingWindow = new QWindow(m_auControl.get());
+            m_disablingWindow->setGeometry(m_auControl->geometry());
+            // TODO: why does this not work on MacOS?
+            m_disablingWindow->setCursor(Qt::ForbiddenCursor);
+            m_disablingWindow->show();
+        } else if (isEnabled() && m_disablingWindow) {
+            m_disablingWindow->hide();
+            delete m_disablingWindow;
+            m_disablingWindow = nullptr;
+        }
+    });
+
     embedNativeView();
     updateViewGeometry();
 }

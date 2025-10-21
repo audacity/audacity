@@ -61,6 +61,7 @@ private:
     int m_instanceId = -1;
 
     std::unique_ptr<AUControl> m_auControl;
+    QWindow* m_disablingWindow = nullptr;
 
     int m_sidePadding = 0;
     int m_topPadding = 0;
