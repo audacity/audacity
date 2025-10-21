@@ -8,7 +8,9 @@
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
+#include "iinteractive.h"
 #include "project/itagsaccessor.h"
+#include "project/iprojectconfiguration.h"
 
 #include "project/types/projectmeta.h"
 
@@ -17,7 +19,9 @@ class MetadataModel : public QAbstractListModel, public muse::async::Asyncable
 {
     Q_OBJECT
 
+    muse::Inject<muse::IInteractive> interactive;
     muse::Inject<project::ITagsAccessor> tagsAccessor;
+    muse::Inject<project::IProjectConfiguration> configuration;
 
 public:
     explicit MetadataModel(QObject* parent = nullptr);
