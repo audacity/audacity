@@ -2,8 +2,11 @@
  * Audacity: A Digital Audio Editor
  */
 
+#include <QtCore/qxmlstream.h>
+
+#include "global/translation.h"
+
 #include "project/internal/au3/au3tagsaccessor.h"
-#include "translation.h"
 
 #include "metadatamodel.h"
 
@@ -98,12 +101,111 @@ bool MetadataModel::isStandardTag(const int index)
 
 void MetadataModel::loadTemplate()
 {
-    NOT_IMPLEMENTED;
+    std::vector<std::string> filter { muse::trc("metadata", "XML files") + " (*.xml)" };
+
+    muse::io::path_t defaultDir = configuration()->lastOpenedProjectsPath();
+
+    if (defaultDir.empty()) {
+        defaultDir = configuration()->userProjectsPath();
+    }
+
+    if (defaultDir.empty()) {
+        defaultDir = configuration()->defaultUserProjectsPath();
+    }
+
+    muse::io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("metadata", "Save"), defaultDir, filter);
+
+    QFile f(filePath.toQString());
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        return;
+    }
+
+    QXmlStreamReader r(&f);
+
+    au::project::ProjectMeta loaded = m_meta; // keep filePath, thumbnail, etc.
+    for (size_t i = 0; i < kStdTags.size(); ++i) {
+        loaded.*(project::kStdMembers[i]) = QString();
+    }
+    loaded.additionalTags.clear();
+
+    while (!r.atEnd() && !r.hasError()) {
+        auto token = r.readNext();
+        if (token == QXmlStreamReader::StartElement && r.name() == QLatin1String("tag")) {
+            const auto attrs = r.attributes();
+            const QString name = attrs.value(QStringLiteral("name")).toString();
+            const QString val  = attrs.value(QStringLiteral("value")).toString();
+
+            bool assigned = false;
+            for (size_t i = 0; i < kStdTags.size(); ++i) {
+                if (name == kStdTags[i]) {
+                    loaded.*(project::kStdMembers[i]) = val;
+                    assigned = true;
+                    break;
+                }
+            }
+            if (!assigned && !name.isEmpty()) {
+                loaded.additionalTags.insert(name, val);
+            }
+        }
+    }
+
+    if (r.hasError()) {
+        interactive()->errorSync(muse::trc("metadata", "Error loading template"),
+                                 muse::trc("metadata", "Unable to load metadata template from given file."));
+        return;
+    }
+
+    beginResetModel();
+    m_meta = std::move(loaded);
+    m_additionalKeys = m_meta.additionalTags.keys();
+    endResetModel();
 }
 
 void MetadataModel::saveTemplate()
 {
-    NOT_IMPLEMENTED;
+    std::vector<std::string> filter { muse::trc("metadata", "XML files") + " (*.xml)" };
+
+    muse::io::path_t defaultDir = configuration()->lastOpenedProjectsPath();
+
+    if (defaultDir.empty()) {
+        defaultDir = configuration()->userProjectsPath();
+    }
+
+    if (defaultDir.empty()) {
+        defaultDir = configuration()->defaultUserProjectsPath();
+    }
+
+    muse::io::path_t filePath = interactive()->selectSavingFileSync(muse::trc("metadata", "Save"), defaultDir, filter);
+
+    QFile f(filePath.toQString());
+    if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+        interactive()->errorSync(muse::trc("metadata", "Error saving template"),
+                                 muse::trc("metadata", "Unable to save metadata template into given file."));
+        return;
+    }
+
+    QXmlStreamWriter w(&f);
+    w.setAutoFormatting(true);
+    w.writeStartElement(QStringLiteral("tags"));
+
+    for (size_t i = 0; i < kStdTags.size(); ++i) {
+        const QString& name = kStdTags[i];
+        const QString& val  = m_meta.*(project::kStdMembers[i]);
+        w.writeEmptyElement(QStringLiteral("tag"));
+        w.writeAttribute(QStringLiteral("name"),  name);
+        w.writeAttribute(QStringLiteral("value"), val);
+    }
+
+    for (auto it = m_meta.additionalTags.cbegin(); it != m_meta.additionalTags.cend(); ++it) {
+        const QString& name = it.key();
+        const QString val  = it.value().toString();
+        w.writeEmptyElement(QStringLiteral("tag"));
+        w.writeAttribute(QStringLiteral("name"),  name);
+        w.writeAttribute(QStringLiteral("value"), val);
+    }
+
+    w.writeEndElement();
+    w.writeEndDocument();
 }
 
 void MetadataModel::setAsDefault()
