@@ -43,6 +43,8 @@ static const muse::Settings::Key FFMPEG_PACKET_SIZE("au3wrap", "FileFormats/FFmp
 static const muse::Settings::Key FFMPEG_CODEC("au3wrap", "FileFormats/FFmpegCodec");
 static const muse::Settings::Key FFMPEG_FORMAT("au3wrap", "FileFormats/FFmpegFormat");
 
+static const muse::Settings::Key DEFAULT_METADATA(module_name, "importexport/defaultMetadata");
+
 void ExportConfiguration::init()
 {
     muse::settings()->setDefaultValue(EXPORT_PROCESS, muse::Val(ExportProcessType::FULL_PROJECT_AUDIO));
@@ -176,6 +178,11 @@ void ExportConfiguration::init()
     muse::settings()->setDefaultValue(FFMPEG_PACKET_SIZE, muse::Val(0));
     muse::settings()->valueChanged(FFMPEG_PACKET_SIZE).onReceive(nullptr, [this] (const muse::Val&) {
         m_ffmpegPacketSizeChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(DEFAULT_METADATA, muse::Val(""));
+    muse::settings()->valueChanged(DEFAULT_METADATA).onReceive(nullptr, [this] (const muse::Val&) {
+        m_defaultMetadataChanged.notify();
     });
 }
 
@@ -614,4 +621,19 @@ void ExportConfiguration::setFFmpegPacketSize(int packetSize)
 muse::async::Notification ExportConfiguration::ffmpegPacketSizeChanged() const
 {
     return m_ffmpegPacketSizeChanged;
+}
+
+std::string ExportConfiguration::defaultMetadata() const
+{
+    return muse::settings()->value(DEFAULT_METADATA).toString();
+}
+
+void ExportConfiguration::setDefaultMetadata(const std::string& xmlString)
+{
+    muse::settings()->setSharedValue(DEFAULT_METADATA, muse::Val(xmlString));
+}
+
+muse::async::Notification ExportConfiguration::defaultMetadataChanged() const
+{
+    return m_defaultMetadataChanged;
 }

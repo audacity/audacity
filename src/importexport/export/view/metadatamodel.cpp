@@ -72,9 +72,19 @@ QHash<int, QByteArray> MetadataModel::roleNames() const
 
 void MetadataModel::load()
 {
+    project::ProjectMeta projectMeta = tagsAccessor()->tags();
+    std::string defaultTemplate = exportConfiguration()->defaultMetadata();
+
     beginResetModel();
 
-    m_meta = tagsAccessor()->tags();
+    project::ProjectMeta toLoad;
+    if (isMetadataEmpty(projectMeta) && !defaultTemplate.empty()) {
+        toLoad = parseXml(QString::fromStdString(defaultTemplate));
+    } else {
+        toLoad = tagsAccessor()->tags();
+    }
+
+    m_meta = std::move(toLoad);
     m_additionalKeys = m_meta.additionalTags.keys();
 
     endResetModel();
@@ -83,6 +93,7 @@ void MetadataModel::load()
 void MetadataModel::apply()
 {
     tagsAccessor()->setTags(m_meta);
+    configuration()->applySettings();
 }
 
 bool MetadataModel::isStandardTag(const int index)
@@ -103,14 +114,14 @@ void MetadataModel::loadTemplate()
 {
     std::vector<std::string> filter { muse::trc("metadata", "XML files") + " (*.xml)" };
 
-    muse::io::path_t defaultDir = configuration()->lastOpenedProjectsPath();
+    muse::io::path_t defaultDir = projectConfiguration()->lastOpenedProjectsPath();
 
     if (defaultDir.empty()) {
-        defaultDir = configuration()->userProjectsPath();
+        defaultDir = projectConfiguration()->userProjectsPath();
     }
 
     if (defaultDir.empty()) {
-        defaultDir = configuration()->defaultUserProjectsPath();
+        defaultDir = projectConfiguration()->defaultUserProjectsPath();
     }
 
     muse::io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("metadata", "Save"), defaultDir, filter);
@@ -120,40 +131,7 @@ void MetadataModel::loadTemplate()
         return;
     }
 
-    QXmlStreamReader r(&f);
-
-    au::project::ProjectMeta loaded = m_meta; // keep filePath, thumbnail, etc.
-    for (size_t i = 0; i < kStdTags.size(); ++i) {
-        loaded.*(project::kStdMembers[i]) = QString();
-    }
-    loaded.additionalTags.clear();
-
-    while (!r.atEnd() && !r.hasError()) {
-        auto token = r.readNext();
-        if (token == QXmlStreamReader::StartElement && r.name() == QLatin1String("tag")) {
-            const auto attrs = r.attributes();
-            const QString name = attrs.value(QStringLiteral("name")).toString();
-            const QString val  = attrs.value(QStringLiteral("value")).toString();
-
-            bool assigned = false;
-            for (size_t i = 0; i < kStdTags.size(); ++i) {
-                if (name == kStdTags[i]) {
-                    loaded.*(project::kStdMembers[i]) = val;
-                    assigned = true;
-                    break;
-                }
-            }
-            if (!assigned && !name.isEmpty()) {
-                loaded.additionalTags.insert(name, val);
-            }
-        }
-    }
-
-    if (r.hasError()) {
-        interactive()->errorSync(muse::trc("metadata", "Error loading template"),
-                                 muse::trc("metadata", "Unable to load metadata template from given file."));
-        return;
-    }
+    project::ProjectMeta loaded = parseXml(QString::fromUtf8(f.readAll()));
 
     beginResetModel();
     m_meta = std::move(loaded);
@@ -165,14 +143,14 @@ void MetadataModel::saveTemplate()
 {
     std::vector<std::string> filter { muse::trc("metadata", "XML files") + " (*.xml)" };
 
-    muse::io::path_t defaultDir = configuration()->lastOpenedProjectsPath();
+    muse::io::path_t defaultDir = projectConfiguration()->lastOpenedProjectsPath();
 
     if (defaultDir.empty()) {
-        defaultDir = configuration()->userProjectsPath();
+        defaultDir = projectConfiguration()->userProjectsPath();
     }
 
     if (defaultDir.empty()) {
-        defaultDir = configuration()->defaultUserProjectsPath();
+        defaultDir = projectConfiguration()->defaultUserProjectsPath();
     }
 
     muse::io::path_t filePath = interactive()->selectSavingFileSync(muse::trc("metadata", "Save"), defaultDir, filter);
@@ -184,33 +162,16 @@ void MetadataModel::saveTemplate()
         return;
     }
 
-    QXmlStreamWriter w(&f);
-    w.setAutoFormatting(true);
-    w.writeStartElement(QStringLiteral("tags"));
-
-    for (size_t i = 0; i < kStdTags.size(); ++i) {
-        const QString& name = kStdTags[i];
-        const QString& val  = m_meta.*(project::kStdMembers[i]);
-        w.writeEmptyElement(QStringLiteral("tag"));
-        w.writeAttribute(QStringLiteral("name"),  name);
-        w.writeAttribute(QStringLiteral("value"), val);
-    }
-
-    for (auto it = m_meta.additionalTags.cbegin(); it != m_meta.additionalTags.cend(); ++it) {
-        const QString& name = it.key();
-        const QString val  = it.value().toString();
-        w.writeEmptyElement(QStringLiteral("tag"));
-        w.writeAttribute(QStringLiteral("name"),  name);
-        w.writeAttribute(QStringLiteral("value"), val);
-    }
-
-    w.writeEndElement();
-    w.writeEndDocument();
+    const QString xml = buildXml(true);
+    const QByteArray utf8 = xml.toUtf8();
+    f.write(utf8);
+    f.close();
 }
 
 void MetadataModel::setAsDefault()
 {
-    NOT_IMPLEMENTED;
+    const QString xml = buildXml(true);
+    exportConfiguration()->setDefaultMetadata(xml.toStdString());
 }
 
 void MetadataModel::addTag()
@@ -313,4 +274,83 @@ void MetadataModel::setTagValue(int row, const QString& value)
     m_meta.additionalTags.insert(key, value);
     const QModelIndex idx = index(row, 0);
     emit dataChanged(idx, idx, { RoleValue });
+}
+
+QString MetadataModel::buildXml(bool autoFormat) const
+{
+    QString xml;
+    QXmlStreamWriter w(&xml);
+    w.setAutoFormatting(autoFormat);
+    w.writeStartElement(QStringLiteral("tags"));
+
+    for (size_t i = 0; i < kStdTags.size(); ++i) {
+        const QString& name = kStdTags[i];
+        const QString& val  = m_meta.*(project::kStdMembers[i]);
+        w.writeEmptyElement(QStringLiteral("tag"));
+        w.writeAttribute(QStringLiteral("name"),  name);
+        w.writeAttribute(QStringLiteral("value"), val);
+    }
+
+    for (auto it = m_meta.additionalTags.cbegin(); it != m_meta.additionalTags.cend(); ++it) {
+        const QString& name = it.key();
+        const QString val  = it.value().toString();
+        w.writeEmptyElement(QStringLiteral("tag"));
+        w.writeAttribute(QStringLiteral("name"),  name);
+        w.writeAttribute(QStringLiteral("value"), val);
+    }
+
+    w.writeEndElement();
+    w.writeEndDocument();
+    return xml;
+}
+
+au::project::ProjectMeta MetadataModel::parseXml(const QString& xml) const
+{
+    QXmlStreamReader r(xml);
+
+    au::project::ProjectMeta loaded = m_meta; // keep filePath, thumbnail, etc.
+    for (size_t i = 0; i < kStdTags.size(); ++i) {
+        loaded.*(project::kStdMembers[i]) = QString();
+    }
+    loaded.additionalTags.clear();
+
+    while (!r.atEnd() && !r.hasError()) {
+        auto token = r.readNext();
+        if (token == QXmlStreamReader::StartElement && r.name() == QLatin1String("tag")) {
+            const auto attrs = r.attributes();
+            const QString name = attrs.value(QStringLiteral("name")).toString();
+            const QString val  = attrs.value(QStringLiteral("value")).toString();
+
+            bool assigned = false;
+            for (size_t i = 0; i < kStdTags.size(); ++i) {
+                if (name == kStdTags[i]) {
+                    loaded.*(project::kStdMembers[i]) = val;
+                    assigned = true;
+                    break;
+                }
+            }
+            if (!assigned && !name.isEmpty()) {
+                loaded.additionalTags.insert(name, val);
+            }
+        }
+    }
+
+    if (r.hasError()) {
+        interactive()->errorSync(muse::trc("metadata", "Error loading template"),
+                                 muse::trc("metadata", "Unable to load metadata template from given file."));
+        return {};
+    }
+
+    return loaded;
+}
+
+bool MetadataModel::isMetadataEmpty(const au::project::ProjectMeta& meta) const
+{
+    for (size_t i = 0; i < project::kStdMembers.size(); ++i) {
+        const QString& value = meta.*(project::kStdMembers[i]);
+        if (!value.trimmed().isEmpty()) {
+            return false;
+        }
+    }
+    return true;
 }
