@@ -1,4 +1,8 @@
-#include "trackslistmodel.h"
+/*
+* Audacity: A Digital Audio Editor
+*/
+
+#include "paneltrackslistmodel.h"
 
 #include "global/async/async.h"
 #include "global/containers.h"
@@ -14,7 +18,7 @@ using namespace au::projectscene;
 using namespace au::project;
 using namespace au::trackedit;
 
-TracksListModel::TracksListModel(QObject* parent)
+PanelTracksListModel::PanelTracksListModel(QObject* parent)
     : QAbstractListModel(parent)
 {
     m_selectionModel = new muse::uicomponents::ItemMultiSelectionModel(this);
@@ -46,7 +50,7 @@ TracksListModel::TracksListModel(QObject* parent)
         onSelectedTracks(tracksIds);
     });
 
-    connect(this, &TracksListModel::rowsInserted, this, [this]() {
+    connect(this, &PanelTracksListModel::rowsInserted, this, [this]() {
         updateRemovingAvailability();
     });
 
@@ -56,12 +60,12 @@ TracksListModel::TracksListModel(QObject* parent)
     });
 }
 
-TracksListModel::~TracksListModel()
+PanelTracksListModel::~PanelTracksListModel()
 {
     deleteItems();
 }
 
-void TracksListModel::load()
+void PanelTracksListModel::load()
 {
     if (m_isLoadingBlocked) {
         return;
@@ -112,7 +116,7 @@ void TracksListModel::load()
     emit isAddingAvailableChanged(true);
 }
 
-void TracksListModel::loadTracks(const std::vector<Track>& tracks)
+void PanelTracksListModel::loadTracks(const std::vector<Track>& tracks)
 {
     beginResetModel();
     deleteItems();
@@ -125,7 +129,7 @@ void TracksListModel::loadTracks(const std::vector<Track>& tracks)
     onSelectedTracks(selectionController()->selectedTracks());
 }
 
-void TracksListModel::addTrack(TrackTypes::Type type)
+void PanelTracksListModel::addTrack(TrackTypes::Type type)
 {
     if (type == TrackTypes::Type::MONO) {
         dispatcher()->dispatch("new-mono-track");
@@ -136,18 +140,18 @@ void TracksListModel::addTrack(TrackTypes::Type type)
     }
 }
 
-void TracksListModel::duplicateTrack(int row)
+void PanelTracksListModel::duplicateTrack(int row)
 {
     UNUSED(row);
     NOT_IMPLEMENTED;
 }
 
-QItemSelectionModel* TracksListModel::selectionModel() const
+QItemSelectionModel* PanelTracksListModel::selectionModel() const
 {
     return m_selectionModel;
 }
 
-void TracksListModel::selectRow(int row, bool exclusive)
+void PanelTracksListModel::selectRow(int row, bool exclusive)
 {
     if (row >= rowCount()) {
         return;
@@ -167,12 +171,12 @@ void TracksListModel::selectRow(int row, bool exclusive)
     projectHistory()->modifyState();
 }
 
-void TracksListModel::clearSelection()
+void PanelTracksListModel::clearSelection()
 {
     m_selectionModel->clear();
 }
 
-void TracksListModel::moveSelectedRowsUp()
+void PanelTracksListModel::moveSelectedRowsUp()
 {
     if (!m_isMovingUpAvailable) {
         return;
@@ -192,7 +196,7 @@ void TracksListModel::moveSelectedRowsUp()
     moveRows(sourceRowFirst.parent(), sourceRowFirst.row(), selectedIndexList.count(), sourceRowFirst.parent(), sourceRowFirst.row() - 1);
 }
 
-void TracksListModel::moveSelectedRowsDown()
+void PanelTracksListModel::moveSelectedRowsDown()
 {
     if (!m_isMovingDownAvailable) {
         return;
@@ -213,7 +217,7 @@ void TracksListModel::moveSelectedRowsDown()
     moveRows(sourceRowFirst.parent(), sourceRowFirst.row(), selectedIndexList.count(), sourceRowFirst.parent(), sourceRowLast.row() + 1);
 }
 
-void TracksListModel::removeSelectedRows()
+void PanelTracksListModel::removeSelectedRows()
 {
     if (!m_isRemovingAvailable) {
         return;
@@ -232,12 +236,12 @@ void TracksListModel::removeSelectedRows()
     removeRows(firstIndex.row(), selectedIndexList.size(), firstIndex.parent());
 }
 
-void TracksListModel::removeSelection()
+void PanelTracksListModel::removeSelection()
 {
     dispatcher()->dispatch("action://trackedit/delete");
 }
 
-void TracksListModel::requestTracksMove(QVariantList trackIndexes, int to)
+void PanelTracksListModel::requestTracksMove(QVariantList trackIndexes, int to)
 {
     std::vector<TrackId> tracksToMove;
     for (auto index : trackIndexes) {
@@ -247,8 +251,8 @@ void TracksListModel::requestTracksMove(QVariantList trackIndexes, int to)
     trackeditInteraction()->moveTracksTo(tracksToMove, to);
 }
 
-bool TracksListModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent,
-                               int destinationChild)
+bool PanelTracksListModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent,
+                                    int destinationChild)
 {
     UNUSED(sourceParent);
     UNUSED(sourceRow);
@@ -280,12 +284,12 @@ bool TracksListModel::moveRows(const QModelIndex& sourceParent, int sourceRow, i
     return true;
 }
 
-void TracksListModel::startActiveDrag()
+void PanelTracksListModel::startActiveDrag()
 {
     m_dragInProgress = true;
 }
 
-void TracksListModel::endActiveDrag()
+void PanelTracksListModel::endActiveDrag()
 {
     setLoadingBlocked(true);
 
@@ -298,12 +302,12 @@ void TracksListModel::endActiveDrag()
     setLoadingBlocked(false);
 }
 
-void TracksListModel::addLabelToSelection()
+void PanelTracksListModel::addLabelToSelection()
 {
     dispatcher()->dispatch("add-label");
 }
 
-void TracksListModel::clear()
+void PanelTracksListModel::clear()
 {
     TRACEFUNC;
 
@@ -315,7 +319,7 @@ void TracksListModel::clear()
     emit isAddingAvailableChanged(false);
 }
 
-void TracksListModel::deleteItems()
+void PanelTracksListModel::deleteItems()
 {
     for (TrackItem* trackItem : m_trackList) {
         trackItem->deleteLater();
@@ -324,7 +328,7 @@ void TracksListModel::deleteItems()
     m_trackList.clear();
 }
 
-void TracksListModel::setIsMovingUpAvailable(bool isMovingUpAvailable)
+void PanelTracksListModel::setIsMovingUpAvailable(bool isMovingUpAvailable)
 {
     if (m_isMovingUpAvailable == isMovingUpAvailable) {
         return;
@@ -334,7 +338,7 @@ void TracksListModel::setIsMovingUpAvailable(bool isMovingUpAvailable)
     emit isMovingUpAvailableChanged(m_isMovingUpAvailable);
 }
 
-void TracksListModel::setIsMovingDownAvailable(bool isMovingDownAvailable)
+void PanelTracksListModel::setIsMovingDownAvailable(bool isMovingDownAvailable)
 {
     if (m_isMovingDownAvailable == isMovingDownAvailable) {
         return;
@@ -344,7 +348,7 @@ void TracksListModel::setIsMovingDownAvailable(bool isMovingDownAvailable)
     emit isMovingDownAvailableChanged(m_isMovingDownAvailable);
 }
 
-void TracksListModel::setIsRemovingAvailable(bool isRemovingAvailable)
+void PanelTracksListModel::setIsRemovingAvailable(bool isRemovingAvailable)
 {
     if (m_isRemovingAvailable == isRemovingAvailable) {
         return;
@@ -354,7 +358,7 @@ void TracksListModel::setIsRemovingAvailable(bool isRemovingAvailable)
     emit isRemovingAvailableChanged(m_isRemovingAvailable);
 }
 
-void TracksListModel::setItemsSelected(const QModelIndexList& indexes, bool selected)
+void PanelTracksListModel::setItemsSelected(const QModelIndexList& indexes, bool selected)
 {
     trackedit::TrackIdList idsToModify;
     for (const QModelIndex& index : indexes) {
@@ -386,7 +390,7 @@ void TracksListModel::setItemsSelected(const QModelIndexList& indexes, bool sele
     selectionController()->setSelectedTracks(alreadySelectedTracksIds);
 }
 
-QHash<int, QByteArray> TracksListModel::roleNames() const
+QHash<int, QByteArray> PanelTracksListModel::roleNames() const
 {
     static const QHash<int, QByteArray> roles = {
         { rItemData, "itemData" }
@@ -395,7 +399,7 @@ QHash<int, QByteArray> TracksListModel::roleNames() const
     return roles;
 }
 
-QVariant TracksListModel::data(const QModelIndex& index, int role) const
+QVariant PanelTracksListModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || index.row() >= rowCount() || role != rItemData) {
         return QVariant();
@@ -404,38 +408,38 @@ QVariant TracksListModel::data(const QModelIndex& index, int role) const
     return QVariant::fromValue(m_trackList.at(index.row()));
 }
 
-int TracksListModel::rowCount(const QModelIndex& parent) const
+int PanelTracksListModel::rowCount(const QModelIndex& parent) const
 {
     UNUSED(parent);
     return m_trackList.count();
 }
 
-bool TracksListModel::isMovingUpAvailable() const
+bool PanelTracksListModel::isMovingUpAvailable() const
 {
     return m_isMovingUpAvailable;
 }
 
-bool TracksListModel::isMovingDownAvailable() const
+bool PanelTracksListModel::isMovingDownAvailable() const
 {
     return m_isMovingDownAvailable;
 }
 
-bool TracksListModel::isRemovingAvailable() const
+bool PanelTracksListModel::isRemovingAvailable() const
 {
     return m_isRemovingAvailable;
 }
 
-bool TracksListModel::isAddingAvailable() const
+bool PanelTracksListModel::isAddingAvailable() const
 {
     return !isEmpty();
 }
 
-bool TracksListModel::isEmpty() const
+bool PanelTracksListModel::isEmpty() const
 {
     return m_trackList.empty();
 }
 
-void TracksListModel::updateRearrangementAvailability()
+void PanelTracksListModel::updateRearrangementAvailability()
 {
     QModelIndexList selectedIndexList = m_selectionModel->selectedIndexes();
 
@@ -470,14 +474,14 @@ void TracksListModel::updateRearrangementAvailability()
     updateMovingDownAvailability(isRearrangementAvailable, selectedIndexList.last());
 }
 
-void TracksListModel::updateMovingUpAvailability(bool isSelectionMovable, const QModelIndex& firstSelectedRowIndex)
+void PanelTracksListModel::updateMovingUpAvailability(bool isSelectionMovable, const QModelIndex& firstSelectedRowIndex)
 {
     bool isRowInBoundaries = firstSelectedRowIndex.isValid() ? firstSelectedRowIndex.row() > 0 : false;
 
     setIsMovingUpAvailable(isSelectionMovable && isRowInBoundaries);
 }
 
-void TracksListModel::updateMovingDownAvailability(bool isSelectionMovable, const QModelIndex& lastSelectedRowIndex)
+void PanelTracksListModel::updateMovingDownAvailability(bool isSelectionMovable, const QModelIndex& lastSelectedRowIndex)
 {
     int lastItemRowIndex = rowCount() - 1;
     bool isRowInBoundaries = lastSelectedRowIndex.isValid() ? lastSelectedRowIndex.row() < lastItemRowIndex : false;
@@ -485,18 +489,18 @@ void TracksListModel::updateMovingDownAvailability(bool isSelectionMovable, cons
     setIsMovingDownAvailable(isSelectionMovable && isRowInBoundaries);
 }
 
-void TracksListModel::updateRemovingAvailability()
+void PanelTracksListModel::updateRemovingAvailability()
 {
     QModelIndexList selectedIndexes = m_selectionModel->selectedIndexes();
     setIsRemovingAvailable(!selectedIndexes.empty());
 }
 
-bool TracksListModel::isProjectOpened() const
+bool PanelTracksListModel::isProjectOpened() const
 {
     return globalContext()->currentProject() != nullptr;
 }
 
-bool TracksListModel::removeRows(int row, int count, const QModelIndex& parent)
+bool PanelTracksListModel::removeRows(int row, int count, const QModelIndex& parent)
 {
     if (!m_isRemovingAvailable) {
         return false;
@@ -516,7 +520,7 @@ bool TracksListModel::removeRows(int row, int count, const QModelIndex& parent)
     return true;
 }
 
-void TracksListModel::onProjectChanged()
+void PanelTracksListModel::onProjectChanged()
 {
     if (m_isLoadingBlocked) {
         m_projectChangedWhileLoadingWasBlocked = true;
@@ -534,7 +538,7 @@ void TracksListModel::onProjectChanged()
     m_projectChangedWhileLoadingWasBlocked = false;
 }
 
-TrackItem* TracksListModel::buildTrackItem(const Track& track)
+TrackItem* PanelTracksListModel::buildTrackItem(const Track& track)
 {
     TrackItem* item = nullptr;
 
@@ -557,7 +561,7 @@ TrackItem* TracksListModel::buildTrackItem(const Track& track)
     return item;
 }
 
-TrackItem* TracksListModel::findTrackItem(const trackedit::TrackId& trackId)
+TrackItem* PanelTracksListModel::findTrackItem(const trackedit::TrackId& trackId)
 {
     for (TrackItem* track: m_trackList) {
         if (track->trackId() == trackId) {
@@ -568,7 +572,7 @@ TrackItem* TracksListModel::findTrackItem(const trackedit::TrackId& trackId)
     return nullptr;
 }
 
-void TracksListModel::setLoadingBlocked(bool blocked)
+void PanelTracksListModel::setLoadingBlocked(bool blocked)
 {
     m_isLoadingBlocked = blocked;
 
@@ -577,17 +581,17 @@ void TracksListModel::setLoadingBlocked(bool blocked)
     }
 }
 
-void TracksListModel::listenTracksSelectionChanged()
+void PanelTracksListModel::listenTracksSelectionChanged()
 {
     NOT_IMPLEMENTED;
 }
 
-void TracksListModel::updateSelectedRows()
+void PanelTracksListModel::updateSelectedRows()
 {
     NOT_IMPLEMENTED;
 }
 
-TrackItem* TracksListModel::modelIndexToItem(const QModelIndex& index) const
+TrackItem* PanelTracksListModel::modelIndexToItem(const QModelIndex& index) const
 {
     if (!index.isValid() || index.row() >= rowCount()) {
         return nullptr;
@@ -596,7 +600,7 @@ TrackItem* TracksListModel::modelIndexToItem(const QModelIndex& index) const
     return m_trackList.at(index.row());
 }
 
-void TracksListModel::onSelectedTracks(const TrackIdList& trackIds)
+void PanelTracksListModel::onSelectedTracks(const TrackIdList& trackIds)
 {
     QItemSelection selection;
     for (int i = 0; i < m_trackList.size(); i++) {
@@ -616,7 +620,7 @@ void TracksListModel::onSelectedTracks(const TrackIdList& trackIds)
     selectionModel->select(selection, QItemSelectionModel::ClearAndSelect);
 }
 
-void TracksListModel::onFocusedTrack(const trackedit::TrackId& trackId)
+void PanelTracksListModel::onFocusedTrack(const trackedit::TrackId& trackId)
 {
     for (int i = 0; i < m_trackList.size(); ++i) {
         auto& track = m_trackList.at(i);
@@ -624,7 +628,7 @@ void TracksListModel::onFocusedTrack(const trackedit::TrackId& trackId)
     }
 }
 
-void TracksListModel::onTracksChanged(const std::vector<au::trackedit::Track>& tracks)
+void PanelTracksListModel::onTracksChanged(const std::vector<au::trackedit::Track>& tracks)
 {
     Q_UNUSED(tracks);
     muse::async::Async::call(this, [this]() {
@@ -636,7 +640,7 @@ void TracksListModel::onTracksChanged(const std::vector<au::trackedit::Track>& t
     });
 }
 
-void TracksListModel::onTrackAdded(const trackedit::Track& track)
+void PanelTracksListModel::onTrackAdded(const trackedit::Track& track)
 {
     const int size = static_cast<int>(m_trackList.size());
     beginInsertRows(QModelIndex(), size, size);
@@ -645,7 +649,7 @@ void TracksListModel::onTrackAdded(const trackedit::Track& track)
     endInsertRows();
 }
 
-void TracksListModel::onTrackRemoved(const trackedit::Track& track)
+void PanelTracksListModel::onTrackRemoved(const trackedit::Track& track)
 {
     for (int i = 0; i < m_trackList.size(); ++i) {
         if (m_trackList.at(i)->trackId() == track.id) {
@@ -660,7 +664,7 @@ void TracksListModel::onTrackRemoved(const trackedit::Track& track)
     }
 }
 
-void TracksListModel::onTrackChanged(const trackedit::Track& track)
+void PanelTracksListModel::onTrackChanged(const trackedit::Track& track)
 {
     auto trackItem = findTrackItem(track.id);
     if (!trackItem) {
@@ -671,7 +675,7 @@ void TracksListModel::onTrackChanged(const trackedit::Track& track)
     updateRemovingAvailability();
 }
 
-void TracksListModel::onTrackInserted(const trackedit::Track& track, int pos)
+void PanelTracksListModel::onTrackInserted(const trackedit::Track& track, int pos)
 {
     int index = pos >= 0 && pos <= m_trackList.size() ? pos : m_trackList.size();
 
@@ -683,7 +687,7 @@ void TracksListModel::onTrackInserted(const trackedit::Track& track, int pos)
     endInsertRows();
 }
 
-void TracksListModel::onTrackMoved(const trackedit::Track& track, int pos)
+void PanelTracksListModel::onTrackMoved(const trackedit::Track& track, int pos)
 {
     TrackItem* item = findTrackItem(track.id);
 

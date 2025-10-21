@@ -27,7 +27,7 @@ Item {
     property alias showEffectsSection: effectSectionModel.showEffectsSection
     property int selectedTrackIndex: -1
 
-    TracksListModel {
+    PanelTracksListModel {
         id: tracksModel
     }
 
