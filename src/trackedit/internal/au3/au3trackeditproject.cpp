@@ -306,6 +306,24 @@ au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
     return DomConverter::clip(waveTrack, au3Clip.get());
 }
 
+au::trackedit::Label Au3TrackeditProject::label(const LabelKey& key) const
+{
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(*m_impl->prj, Au3TrackId(key.trackId));
+    if (!labelTrack) {
+        return Label();
+    }
+
+    const auto& au3labels = labelTrack->GetLabels();
+    for (size_t i = 0; i < au3labels.size(); ++i) {
+        au::trackedit::Label label = DomConverter::label(labelTrack, i, au3labels[i]);
+        if (label.key == key) {
+            return label;
+        }
+    }
+
+    return Label();
+}
+
 void Au3TrackeditProject::notifyAboutClipChanged(const Clip& clip)
 {
     async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
