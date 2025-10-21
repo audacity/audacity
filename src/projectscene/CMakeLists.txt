@@ -120,8 +120,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/cliplistitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/cliplistitem.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labelslistmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labelslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labellistitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labellistitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipcontextmenumodel.cpp

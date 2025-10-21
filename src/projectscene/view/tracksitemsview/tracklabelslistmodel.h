@@ -20,7 +20,7 @@
 #include "labellistitem.h"
 
 namespace au::projectscene {
-class LabelsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
+class TrackLabelsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
 {
     Q_OBJECT
 
@@ -36,8 +36,8 @@ class LabelsListModel : public QAbstractListModel, public muse::async::Asyncable
     muse::Inject<trackedit::ISelectionController> selectionController;
 
 public:
-    explicit LabelsListModel(QObject* parent = nullptr);
-    ~LabelsListModel() override;
+    explicit TrackLabelsListModel(QObject* parent = nullptr);
+    ~TrackLabelsListModel() override;
 
     TimelineContext* timelineContext() const;
     void setTimelineContext(TimelineContext* newContext);
