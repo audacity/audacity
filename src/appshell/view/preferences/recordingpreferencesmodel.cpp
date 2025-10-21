@@ -12,17 +12,19 @@ RecordingPreferencesModel::RecordingPreferencesModel(QObject* parent)
     recordConfiguration()->isMicMeteringOnChanged().onNotify(this, [this]() {
         emit isMicMeteringOnChanged();
     });
+    recordConfiguration()->isInputMonitoringOnChanged().onNotify(this, [this]() {
+        emit isInputMonitoringOnChanged();
+    });
 }
 
 bool RecordingPreferencesModel::isInputMonitoringOn() const
 {
-    return record()->audioInput()->isInputMonitoringOn();
+    return recordConfiguration()->isInputMonitoringOn();
 }
 
 void RecordingPreferencesModel::setIsInputMonitoringOn(bool enabled)
 {
-    record()->audioInput()->setIsInputMonitoringOn(enabled);
-    emit isInputMonitoringOnChanged();
+    recordConfiguration()->setIsInputMonitoringOn(enabled);
 }
 
 bool RecordingPreferencesModel::isMicMeteringOn() const

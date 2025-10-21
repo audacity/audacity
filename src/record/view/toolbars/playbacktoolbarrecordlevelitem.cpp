@@ -32,9 +32,14 @@ PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::U
         emit isMicMeteringOnChanged();
     });
 
+    recordConfiguration()->isInputMonitoringOnChanged().onNotify(this, [this]() {
+        emit isInputMonitoringOnChanged();
+    });
+
     resetAudioChannelsVolumePressure();
     emit recordingChannelsCountChanged();
-    emit isInputMonitoringOnChanged();
+    // TODO not sure this 'emit' is needed, should we then also emit isMicMeteringOnChanged(); ?
+    // emit isInputMonitoringOnChanged();
 }
 
 float PlaybackToolBarRecordLevelItem::level() const
@@ -163,13 +168,12 @@ int PlaybackToolBarRecordLevelItem::recordingChannelsCount() const
 
 bool PlaybackToolBarRecordLevelItem::isInputMonitoringOn() const
 {
-    return record()->audioInput()->isInputMonitoringOn();
+    return recordConfiguration()->isInputMonitoringOn();
 }
 
 void PlaybackToolBarRecordLevelItem::setIsInputMonitoringOn(bool enable)
 {
-    record()->audioInput()->setIsInputMonitoringOn(enable);
-    emit isInputMonitoringOnChanged();
+    recordConfiguration()->setIsInputMonitoringOn(enable);
 }
 
 bool PlaybackToolBarRecordLevelItem::isMicMeteringOn() const
