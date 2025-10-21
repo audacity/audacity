@@ -8,7 +8,7 @@ import Audacity.ProjectScene
 TrackItemsContainer {
     id: root
 
-    LabelsListModel {
+    TrackLabelsListModel {
         id: labelsModel
         trackId: root.trackId
         context: root.context

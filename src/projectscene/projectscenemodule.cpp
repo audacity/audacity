@@ -37,7 +37,7 @@
 #include "view/tracksitemsview/viewtrackslistmodel.h"
 #include "view/tracksitemsview/trackclipslistmodel.h"
 #include "view/tracksitemsview/cliplistitem.h"
-#include "view/tracksitemsview/labelslistmodel.h"
+#include "view/tracksitemsview/tracklabelslistmodel.h"
 #include "view/tracksitemsview/labellistitem.h"
 #include "view/tracksitemsview/waveview.h"
 #include "view/tracksitemsview/clipcontextmenumodel.h"
@@ -161,7 +161,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<TrackClipsListModel>("Audacity.ProjectScene", 1, 0, "TrackClipsListModel");
     qmlRegisterType<MouseHelper>("Audacity.ProjectScene", 1, 0, "MouseHelper");
     qmlRegisterUncreatableType<ClipListItem>("Audacity.ProjectScene", 1, 0, "ClipListItem", "Not creatable from QML");
-    qmlRegisterType<LabelsListModel>("Audacity.ProjectScene", 1, 0, "LabelsListModel");
+    qmlRegisterType<TrackLabelsListModel>("Audacity.ProjectScene", 1, 0, "TrackLabelsListModel");
     qmlRegisterUncreatableType<LabelListItem>("Audacity.ProjectScene", 1, 0, "LabelListItem", "Not creatable from QML");
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
     qmlRegisterType<ClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "ClipContextMenuModel");

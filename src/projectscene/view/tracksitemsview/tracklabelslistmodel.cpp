@@ -1,7 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "labelslistmodel.h"
+#include "tracklabelslistmodel.h"
 
 #include "global/realfn.h"
 #include "global/async/async.h"
@@ -15,16 +15,16 @@ using namespace au::trackedit;
 
 constexpr int CACHE_BUFFER_PX = 200;
 
-LabelsListModel::LabelsListModel(QObject* parent)
+TrackLabelsListModel::TrackLabelsListModel(QObject* parent)
     : QAbstractListModel(parent)
 {
 }
 
-LabelsListModel::~LabelsListModel()
+TrackLabelsListModel::~TrackLabelsListModel()
 {
 }
 
-void LabelsListModel::init()
+void TrackLabelsListModel::init()
 {
     IF_ASSERT_FAILED(m_trackId >= 0) {
         return;
@@ -39,12 +39,12 @@ void LabelsListModel::init()
         onSelectedLabels(keyList);
     });
 
-    dispatcher()->reg(this, "rename-label", this, &LabelsListModel::requestLabelTitleChange);
+    dispatcher()->reg(this, "rename-label", this, &TrackLabelsListModel::requestLabelTitleChange);
 
     reload();
 }
 
-void LabelsListModel::reload()
+void TrackLabelsListModel::reload()
 {
     if (m_trackId < 0) {
         return;
@@ -129,7 +129,7 @@ void LabelsListModel::reload()
     update();
 }
 
-void LabelsListModel::startEditLabel(const LabelKey& key)
+void TrackLabelsListModel::startEditLabel(const LabelKey& key)
 {
     LabelListItem* item = itemByKey(key.key);
     if (!item) {
@@ -147,7 +147,7 @@ void LabelsListModel::startEditLabel(const LabelKey& key)
     vs->setObjectEditEndTimeOffset(item->label().endTime - mousePositionTime);
 }
 
-void LabelsListModel::endEditLabel(const LabelKey& key)
+void TrackLabelsListModel::endEditLabel(const LabelKey& key)
 {
     LabelListItem* item = itemByKey(key.key);
     if (!item) {
@@ -166,7 +166,7 @@ void LabelsListModel::endEditLabel(const LabelKey& key)
     vs->setMoveInitiated(false);
 }
 
-LabelListItem* LabelsListModel::itemByKey(const trackedit::LabelKey& k) const
+LabelListItem* TrackLabelsListModel::itemByKey(const trackedit::LabelKey& k) const
 {
     for (LabelListItem* item : std::as_const(m_labelList)) {
         if (item->label().key != k) {
@@ -177,7 +177,7 @@ LabelListItem* LabelsListModel::itemByKey(const trackedit::LabelKey& k) const
     return nullptr;
 }
 
-int LabelsListModel::indexByKey(const trackedit::LabelKey& k) const
+int TrackLabelsListModel::indexByKey(const trackedit::LabelKey& k) const
 {
     for (int i = 0; i < m_labelList.size(); ++i) {
         if (m_labelList.at(i)->label().key == k) {
@@ -187,7 +187,7 @@ int LabelsListModel::indexByKey(const trackedit::LabelKey& k) const
     return -1;
 }
 
-Qt::KeyboardModifiers LabelsListModel::keyboardModifiers() const
+Qt::KeyboardModifiers TrackLabelsListModel::keyboardModifiers() const
 {
     Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
 
@@ -199,7 +199,7 @@ Qt::KeyboardModifiers LabelsListModel::keyboardModifiers() const
     return modifiers;
 }
 
-void LabelsListModel::update()
+void TrackLabelsListModel::update()
 {
     std::unordered_map<LabelId, LabelListItem*> oldItems;
     for (int row = 0; row < m_labelList.size(); ++row) {
@@ -271,7 +271,7 @@ void LabelsListModel::update()
     });
 }
 
-void LabelsListModel::updateItemsMetrics()
+void TrackLabelsListModel::updateItemsMetrics()
 {
     for (int i = 0; i < m_labelList.size(); ++i) {
         LabelListItem* item = m_labelList[i];
@@ -279,7 +279,7 @@ void LabelsListModel::updateItemsMetrics()
     }
 }
 
-void LabelsListModel::updateItemsMetrics(LabelListItem* item)
+void TrackLabelsListModel::updateItemsMetrics(LabelListItem* item)
 {
     //! NOTE The first step is to calculate the position and width
     const double cacheTime = CACHE_BUFFER_PX / m_context->zoom();
@@ -304,12 +304,12 @@ void LabelsListModel::updateItemsMetrics(LabelListItem* item)
     item->setRightVisibleMargin(std::max(time.itemEndTime - m_context->frameEndTime(), 0.0) * m_context->zoom());
 }
 
-int LabelsListModel::rowCount(const QModelIndex&) const
+int TrackLabelsListModel::rowCount(const QModelIndex&) const
 {
     return static_cast<int>(m_labelList.size());
 }
 
-QHash<int, QByteArray> LabelsListModel::roleNames() const
+QHash<int, QByteArray> TrackLabelsListModel::roleNames() const
 {
     static QHash<int, QByteArray> roles
     {
@@ -318,7 +318,7 @@ QHash<int, QByteArray> LabelsListModel::roleNames() const
     return roles;
 }
 
-QVariant LabelsListModel::data(const QModelIndex& index, int role) const
+QVariant TrackLabelsListModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid()) {
         return QVariant();
@@ -336,17 +336,17 @@ QVariant LabelsListModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-void LabelsListModel::onTimelineZoomChanged()
+void TrackLabelsListModel::onTimelineZoomChanged()
 {
     updateItemsMetrics();
 }
 
-void LabelsListModel::onTimelineFrameTimeChanged()
+void TrackLabelsListModel::onTimelineFrameTimeChanged()
 {
     updateItemsMetrics();
 }
 
-void LabelsListModel::setSelectedItems(const QList<LabelListItem*>& items)
+void TrackLabelsListModel::setSelectedItems(const QList<LabelListItem*>& items)
 {
     for (auto& selectedItem : m_selectedItems) {
         selectedItem->setSelected(false);
@@ -357,13 +357,13 @@ void LabelsListModel::setSelectedItems(const QList<LabelListItem*>& items)
     }
 }
 
-void LabelsListModel::addSelectedItem(LabelListItem* item)
+void TrackLabelsListModel::addSelectedItem(LabelListItem* item)
 {
     item->setSelected(true);
     m_selectedItems.append(item);
 }
 
-void LabelsListModel::clearSelectedItems()
+void TrackLabelsListModel::clearSelectedItems()
 {
     for (auto& selectedItem : m_selectedItems) {
         selectedItem->setSelected(false);
@@ -371,23 +371,23 @@ void LabelsListModel::clearSelectedItems()
     m_selectedItems.clear();
 }
 
-bool LabelsListModel::changeLabelTitle(const LabelKey& key, const QString& newTitle)
+bool TrackLabelsListModel::changeLabelTitle(const LabelKey& key, const QString& newTitle)
 {
     bool ok = trackeditInteraction()->changeLabelTitle(key.key, muse::String::fromQString(newTitle));
     return ok;
 }
 
-QVariant LabelsListModel::next(const LabelKey& key) const
+QVariant TrackLabelsListModel::next(const LabelKey& key) const
 {
     return neighbor(key, 1);
 }
 
-QVariant LabelsListModel::prev(const LabelKey& key) const
+QVariant TrackLabelsListModel::prev(const LabelKey& key) const
 {
     return neighbor(key, -1);
 }
 
-QVariant LabelsListModel::neighbor(const LabelKey& key, int offset) const
+QVariant TrackLabelsListModel::neighbor(const LabelKey& key, int offset) const
 {
     auto it = std::find_if(m_labelList.begin(), m_labelList.end(), [key](LabelListItem* label) {
         return label->key().key.objectId == key.key.objectId;
@@ -405,7 +405,7 @@ QVariant LabelsListModel::neighbor(const LabelKey& key, int offset) const
     return QVariant::fromValue(m_labelList[sortedIndex]);
 }
 
-void LabelsListModel::selectLabel(const LabelKey& key)
+void TrackLabelsListModel::selectLabel(const LabelKey& key)
 {
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
@@ -419,13 +419,13 @@ void LabelsListModel::selectLabel(const LabelKey& key)
     }
 }
 
-void LabelsListModel::resetSelectedLabels()
+void TrackLabelsListModel::resetSelectedLabels()
 {
     clearSelectedItems();
     selectionController()->resetSelectedLabels();
 }
 
-void LabelsListModel::requestLabelTitleChange()
+void TrackLabelsListModel::requestLabelTitleChange()
 {
     auto selectedLabels = selectionController()->selectedLabels();
 
@@ -444,7 +444,7 @@ void LabelsListModel::requestLabelTitleChange()
     }
 }
 
-void LabelsListModel::onSelectedLabel(const trackedit::LabelKey& k)
+void TrackLabelsListModel::onSelectedLabel(const trackedit::LabelKey& k)
 {
     // ignore if item already selected
     for (const auto& selectedItem : m_selectedItems) {
@@ -475,7 +475,7 @@ void LabelsListModel::onSelectedLabel(const trackedit::LabelKey& k)
     }
 }
 
-void LabelsListModel::onSelectedLabels(const trackedit::LabelKeyList& keyList)
+void TrackLabelsListModel::onSelectedLabels(const trackedit::LabelKeyList& keyList)
 {
     if (keyList.size() == 1) {
         onSelectedLabel(keyList.front());
@@ -495,12 +495,12 @@ void LabelsListModel::onSelectedLabels(const trackedit::LabelKeyList& keyList)
     setSelectedItems(items);
 }
 
-QVariant LabelsListModel::trackId() const
+QVariant TrackLabelsListModel::trackId() const
 {
     return QVariant::fromValue(m_trackId);
 }
 
-void LabelsListModel::setTrackId(const QVariant& _newTrackId)
+void TrackLabelsListModel::setTrackId(const QVariant& _newTrackId)
 {
     trackedit::TrackId newTrackId = _newTrackId.toInt();
     if (m_trackId == newTrackId) {
@@ -510,12 +510,12 @@ void LabelsListModel::setTrackId(const QVariant& _newTrackId)
     emit trackIdChanged();
 }
 
-TimelineContext* LabelsListModel::timelineContext() const
+TimelineContext* TrackLabelsListModel::timelineContext() const
 {
     return m_context;
 }
 
-void LabelsListModel::setTimelineContext(TimelineContext* newContext)
+void TrackLabelsListModel::setTimelineContext(TimelineContext* newContext)
 {
     if (m_context == newContext) {
         return;
@@ -528,14 +528,14 @@ void LabelsListModel::setTimelineContext(TimelineContext* newContext)
     m_context = newContext;
 
     if (m_context) {
-        connect(m_context, &TimelineContext::zoomChanged, this, &LabelsListModel::onTimelineZoomChanged);
-        connect(m_context, &TimelineContext::frameTimeChanged, this, &LabelsListModel::onTimelineFrameTimeChanged);
+        connect(m_context, &TimelineContext::zoomChanged, this, &TrackLabelsListModel::onTimelineZoomChanged);
+        connect(m_context, &TimelineContext::frameTimeChanged, this, &TrackLabelsListModel::onTimelineFrameTimeChanged);
     }
 
     emit timelineContextChanged();
 }
 
-int LabelsListModel::cacheBufferPx()
+int TrackLabelsListModel::cacheBufferPx()
 {
     return CACHE_BUFFER_PX;
 }
