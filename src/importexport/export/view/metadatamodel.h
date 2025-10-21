@@ -11,6 +11,8 @@
 #include "iinteractive.h"
 #include "project/itagsaccessor.h"
 #include "project/iprojectconfiguration.h"
+#include "iexportconfiguration.h"
+#include "appshell/iappshellconfiguration.h"
 
 #include "project/types/projectmeta.h"
 
@@ -21,7 +23,9 @@ class MetadataModel : public QAbstractListModel, public muse::async::Asyncable
 
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<project::ITagsAccessor> tagsAccessor;
-    muse::Inject<project::IProjectConfiguration> configuration;
+    muse::Inject<project::IProjectConfiguration> projectConfiguration;
+    muse::Inject<importexport::IExportConfiguration> exportConfiguration;
+    muse::Inject<appshell::IAppShellConfiguration> configuration;
 
 public:
     explicit MetadataModel(QObject* parent = nullptr);
@@ -49,8 +53,14 @@ public:
     Q_INVOKABLE void renameTag(int index, const QString& newTag);
     Q_INVOKABLE void setTagValue(int index, const QString& value);
 
+    QString buildXml(bool autoFormat) const;
+    project::ProjectMeta parseXml(const QString& xml) const;
+
+    bool isMetadataEmpty(const au::project::ProjectMeta& meta) const;
+
 private:
-    inline static const std::array<QString, 9> kStdTags = {
+    inline static const std::array<QString, 9> kStdTags =
+    {
         QString("TITLE"),
         QString("ARTIST"),
         QString("ALBUM"),
