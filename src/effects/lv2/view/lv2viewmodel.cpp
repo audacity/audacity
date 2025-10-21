@@ -509,6 +509,12 @@ void Lv2ViewModel::onSuilPortWrite(uint32_t port_index, uint32_t buffer_size, ui
                 if (currentValue != value) {
                     currentValue = value;
                     m_settingsChanged = true;
+                    // Is there a robust way of preventing the user from interacting with the UI
+                    // while previewing is active?
+                    // In the meantime, we just stop the preview.
+                    if (isPreviewing()) {
+                        togglePreview();
+                    }
                 }
                 return nullptr;
             });
