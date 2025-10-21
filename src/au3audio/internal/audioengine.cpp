@@ -57,6 +57,7 @@ bool AudioEngine::isBusy() const
 int AudioEngine::startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime,
                              const AudioIOStartStreamOptions& options)
 {
+    options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
     return AudioIO::Get()->StartStream(sequences, startTime, endTime, mixerEndTime, options);
 }
 
@@ -73,6 +74,7 @@ void AudioEngine::pauseStream(bool pause)
 
 void AudioEngine::startMonitoring(const AudioIOStartStreamOptions& options)
 {
+    options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
     AudioIO::Get()->StartMonitoring(options);
 }
 

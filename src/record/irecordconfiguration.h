@@ -20,5 +20,9 @@ public:
     virtual bool isMicMeteringOn() const = 0;
     virtual void setIsMicMeteringOn(bool enable) = 0;
     virtual muse::async::Notification isMicMeteringOnChanged() const = 0;
+
+    virtual bool isInputMonitoringOn() const = 0;
+    virtual void setIsInputMonitoringOn(bool enable) = 0;
+    virtual muse::async::Notification isInputMonitoringOnChanged() const = 0;
 };
 }

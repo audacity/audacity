@@ -17,7 +17,12 @@ public:
     void setIsMicMeteringOn(bool enable) override;
     muse::async::Notification isMicMeteringOnChanged() const override;
 
+    bool isInputMonitoringOn() const override;
+    void setIsInputMonitoringOn(bool enable) override;
+    muse::async::Notification isInputMonitoringOnChanged() const override;
+
 private:
     muse::async::Notification m_isMicMeteringOnChanged;
+    muse::async::Notification m_isInputMonitoringOnChanged;
 };
 }

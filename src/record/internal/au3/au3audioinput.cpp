@@ -34,77 +34,48 @@ Au3AudioInput::Au3AudioInput()
 
         initMeter();
 
-        updateMonitoring(MonitoringChangeReason::Initialization);
+        updateAudioEngineMonitoring();
 
         // register all callbacks for monitoring change reasons
         configuration()->isMicMeteringOnChanged().onNotify(this, [this]() {
-            updateMonitoring(MonitoringChangeReason::MicMetering);
+            // when updating the mic metering we need to either stop or restart the monitoring
+            updateAudioEngineMonitoring();
+        });
+
+        configuration()->isInputMonitoringOnChanged().onNotify(this, [this]() {
+            // when updating the audible input monitoring we need to either stop or restart the monitoring
+            updateAudioEngineMonitoring();
         });
 
         controller()->isRecordingChanged().onNotify(this, [this]() {
-            updateMonitoring(MonitoringChangeReason::RecordingState);
+            updateAudioEngineMonitoring();
         });
 
         playbackController()->isPlayingChanged().onNotify(this, [this]() {
-            updateMonitoring(MonitoringChangeReason::PlaybackState);
+            // when the playback stops we need to restart the monitoring if mic metering is on or input monitoring is on
+            updateAudioEngineMonitoring();
         });
 
         audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
             m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
-            updateMonitoring(MonitoringChangeReason::InputChannelsChanged);
+            updateAudioEngineMonitoring();
         });
 
         selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId&) {
             const int focusedTrackChannels = getFocusedTrackChannels();
             if (focusedTrackChannels != m_focusedTrackChannels) {
                 m_focusedTrackChannels = focusedTrackChannels;
-                updateMonitoring(MonitoringChangeReason::FocusedTrackChanged);
+                updateAudioEngineMonitoring();
             }
         });
 
         meterController()->isRecordMeterVisibleChanged().onNotify(this, [this]() {
-            updateMonitoring(MonitoringChangeReason::RecordMeterVisibilityChanged);
+            // we have to update the monitoring when the meter is shown/hidden
+            // because current track channels might have different number of channels than the input device channels
+            // causing the monitoring to be stopped so we need to restart it
+            updateAudioEngineMonitoring();
         });
-
-        audibleInputMonitoringChanged = [&]() {
-            updateMonitoring(MonitoringChangeReason::AudibleInputMonitoring);
-        };
     });
-}
-
-void Au3AudioInput::updateMonitoring(const MonitoringChangeReason reason)
-{
-    switch (reason) {
-    case MonitoringChangeReason::Initialization:
-        updateMonitoring();
-        break;
-    case MonitoringChangeReason::RecordingState:
-        updateMonitoring();
-        break;
-    case MonitoringChangeReason::PlaybackState:
-        // when the playback stops we need to restart the monitoring if mic metering is on or input monitoring is on
-        updateMonitoring();
-        break;
-    case MonitoringChangeReason::MicMetering:
-        // when updating the mic metering we need to either stop or restart the monitoring
-        updateMonitoring();
-        break;
-    case MonitoringChangeReason::FocusedTrackChanged:
-        updateMonitoring();
-        break;
-    case MonitoringChangeReason::RecordMeterVisibilityChanged:
-        // we have to update the monitoring when the meter is shown/hidden
-        // because current track channels might have different number of channels than the input device channels
-        updateMonitoring();
-        break;
-    case MonitoringChangeReason::InputChannelsChanged:
-        updateMonitoring();
-        break;
-    case MonitoringChangeReason::InputMonitoring:
-        // when updating the audible input monitoring we need to either stop or restart the monitoring
-        updateMonitoring();
-        break;
-    }
 }
 
 void Au3AudioInput::initMeter()
@@ -164,23 +135,6 @@ muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioInput
     return m_inputMeter->dataChanged(IMeterSender::TrackId { key });
 }
 
-bool Au3AudioInput::isInputMonitoringOn() const
-{
-    bool swPlaythrough = false;
-    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &swPlaythrough, false);
-    return swPlaythrough;
-}
-
-void Au3AudioInput::setIsInputMonitoringOn(bool enable)
-{
-    gPrefs->Write(wxT("/AudioIO/SWPlaythrough"), enable);
-    gPrefs->Flush();
-    // Is there notification being sent when adjusting Prefs?
-    // we need to find a way to notify that the monitoring state has changed
-    // we could add a local lambda callback
-    audibleInputMonitoringChanged();
-}
-
 void Au3AudioInput::startAudioEngineMonitoring() const
 {
     muse::async::Async::call(this, [this]() {
@@ -199,37 +153,45 @@ void Au3AudioInput::stopAudioEngineMonitoring() const
     });
 }
 
-void Au3AudioInput::updateMonitoring()
+void Au3AudioInput::updateAudioEngineMonitoring() const
 {
-    if (canStartAudioEngineMonitoring()) {
-        if (audioEngineShouldBeMonitoring()) {
-            startAudioEngineMonitoring();
-        } else {
-            stopAudioEngineMonitoring();
-        }
+    if (audioEngineShouldBeMonitoring()) {
+        startAudioEngineMonitoring();
+    } else {
+        stopAudioEngineMonitoring();
     }
 }
 
 bool Au3AudioInput::canStartAudioEngineMonitoring() const
 {
-    // monitoring can't be started if we are recording or playing/pause
+    // Monitoring can't be started if we are recording or playing/pause
     // it can only be started when we are stopped
     return !controller()->isRecording() && !playbackController()->isPlaying() && !playbackController()->isPaused();
 }
 
 bool Au3AudioInput::audioEngineShouldBeMonitoring() const
 {
-    // monitoring should be started if we are monitoring input or if we are metering the mic
-    if (isInputMonitoringOn()) {
-        return true;
-    }
-
-    if (!configuration()->isMicMeteringOn()) {
+    // When to enable Monitoring on the Audio Engine?
+    // Monitoring can't be started if we are recording or playing/pause
+    // it can only be started when we are stopped
+    if (!canStartAudioEngineMonitoring()) {
         return false;
     }
-
-    if (isTrackMeterMonitoring() || meterController()->isRecordMeterVisible()) {
+    // otherwise Monitoring can be started if:
+    // - ALWAYS: if we are monitoring input (listening to the input)
+    // - CONDITIONALLY if we are metering the mic (showing the meter)
+    //   -> only if the track in focus has the same number of channels as the input device
+    //   OR
+    //   -> only if the record meter is visible
+    if (configuration()->isInputMonitoringOn()) {
         return true;
+    }
+
+    if (configuration()->isMicMeteringOn()) {
+        // saving some resources here
+        if (isTrackMeterMonitoring() || meterController()->isRecordMeterVisible()) {
+            return true;
+        }
     }
     return false;
 }

@@ -815,7 +815,7 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
 
     const auto captureFormat = QualitySettings::SampleFormatChoice();
     const auto captureChannels = AudioIORecordChannels.Read();
-    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &mSoftwarePlaythrough, false);
+    mSoftwarePlaythrough = options.inputMonitoring;
     int playbackChannels = 0;
 
     if (mSoftwarePlaythrough) {
@@ -925,7 +925,7 @@ int AudioIO::StartStream(const TransportSequences& sequences,
         }
     }
 
-    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &mSoftwarePlaythrough, false);
+    mSoftwarePlaythrough = options.inputMonitoring;
     mPauseRec = SoundActivatedRecord.Read();
     gPrefs->Read(wxT("/AudioIO/Microfades"), &mbMicroFades, false);
     int silenceLevelDB;

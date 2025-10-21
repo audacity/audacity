@@ -4,12 +4,15 @@
 #pragma once
 
 #include "../iaudioengine.h"
+#include "record/irecordconfiguration.h"
 
 namespace au::audio {
 class AudioEngine : public IAudioEngine
 {
 public:
     AudioEngine() = default;
+
+    muse::Inject<au::record::IRecordConfiguration> recordConfiguration;
 
     void init();
 

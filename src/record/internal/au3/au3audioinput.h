@@ -42,9 +42,6 @@ public:
     muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordSignalChanges() const override;
     muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> recordTrackSignalChanges(int64_t key) const override;
 
-    void setIsInputMonitoringOn(bool enable) override;
-    bool isInputMonitoringOn() const override;
-
 private:
     au3::Au3Project* projectRef() const;
 
@@ -52,28 +49,13 @@ private:
     bool isTrackMeterMonitoring() const;
     int getFocusedTrackChannels() const;
 
-    enum class MonitoringChangeReason {
-        Initialization,
-        RecordingState,
-        PlaybackState,
-        MicMetering,
-        InputMonitoring,
-        FocusedTrackChanged,
-        RecordMeterVisibilityChanged,
-        InputChannelsChanged,
-    };
-
-    void updateMonitoring(MonitoringChangeReason reason);
-    void updateMonitoring();
-
+    void updateAudioEngineMonitoring() const;
     void startAudioEngineMonitoring() const;
     void stopAudioEngineMonitoring() const;
     bool canStartAudioEngineMonitoring() const;
     bool audioEngineShouldBeMonitoring() const;
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
-    std::function<void()> audibleInputMonitoringChanged;
-
     std::shared_ptr<au::au3::Meter> m_inputMeter;
     int m_inputChannelsCount{};
     int m_focusedTrackChannels{};

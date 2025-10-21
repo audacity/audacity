@@ -6,9 +6,7 @@
 #include "modularity/ioc.h"
 
 #include "async/asyncable.h"
-#include "audio/main/iaudioconfiguration.h"
 
-#include "record/irecord.h"
 #include "record/irecordconfiguration.h"
 
 namespace au::appshell {
@@ -19,7 +17,6 @@ class RecordingPreferencesModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool isInputMonitoringOn READ isInputMonitoringOn WRITE setIsInputMonitoringOn NOTIFY isInputMonitoringOnChanged)
     Q_PROPERTY(bool isMicMeteringOn READ isMicMeteringOn WRITE setIsMicMeteringOn NOTIFY isMicMeteringOnChanged)
 
-    muse::Inject<record::IRecord> record;
     muse::Inject<record::IRecordConfiguration> recordConfiguration;
 
 public:
