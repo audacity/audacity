@@ -176,7 +176,7 @@ void TrackClipsListModel::reload()
 TrackClipItem* TrackClipsListModel::itemByKey(const trackedit::ClipKey& k) const
 {
     for (TrackClipItem* item : std::as_const(m_clipList)) {
-        if (item->clip().key != k) {
+        if (item->key().key != k) {
             continue;
         }
         return item;
@@ -187,7 +187,7 @@ TrackClipItem* TrackClipsListModel::itemByKey(const trackedit::ClipKey& k) const
 int TrackClipsListModel::indexByKey(const trackedit::ClipKey& k) const
 {
     for (int i = 0; i < m_clipList.size(); ++i) {
-        if (m_clipList.at(i)->clip().key == k) {
+        if (m_clipList.at(i)->key().key == k) {
             return i;
         }
     }
@@ -295,10 +295,18 @@ void TrackClipsListModel::updateItemsMetrics()
 
 void TrackClipsListModel::updateItemsMetrics(TrackClipItem* item)
 {
+    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    trackedit::Clip clip = prj->clip(item->key().key);
+    if (!clip.isValid()) {
+        return;
+    }
+
     //! NOTE The first step is to calculate the position and width
     const double cacheTime = CACHE_BUFFER_PX / m_context->zoom();
-
-    const trackedit::Clip& clip = item->clip();
 
     ClipTime time;
     time.startTime = clip.startTime;
@@ -435,8 +443,8 @@ QVariant TrackClipsListModel::neighbor(const ClipKey& key, int offset) const
 }
 
 TrackClipsListModel::MoveOffset TrackClipsListModel::calculateMoveOffset(const TrackClipItem* item,
-                                                               const ClipKey& key,
-                                                               bool completed) const
+                                                                         const ClipKey& key,
+                                                                         bool completed) const
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj) {
@@ -500,8 +508,8 @@ bool TrackClipsListModel::isKeyboardTriggered() const
 }
 
 void TrackClipsListModel::handleAutoScroll(bool ok,
-                                      bool completed,
-                                      const std::function<void()>& onAutoScrollFrame)
+                                           bool completed,
+                                           const std::function<void()>& onAutoScrollFrame)
 {
     auto vs = globalContext()->currentProject()->viewState();
     if (!vs) {
@@ -699,8 +707,8 @@ void TrackClipsListModel::startEditClip(const ClipKey& key)
 
     double mousePositionTime = m_context->mousePositionTime();
 
-    vs->setObjectEditStartTimeOffset(mousePositionTime - item->clip().startTime);
-    vs->setObjectEditEndTimeOffset(item->clip().endTime - mousePositionTime);
+    vs->setObjectEditStartTimeOffset(mousePositionTime - item->time().startTime);
+    vs->setObjectEditEndTimeOffset(item->time().endTime - mousePositionTime);
     vs->updateClipsBoundaries(true, key.key);
 }
 
@@ -820,7 +828,7 @@ bool TrackClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipB
             offset = -offset;
         }
 
-        newStartTime = item->clip().startTime + offset;
+        newStartTime = item->time().startTime + offset;
 
         Direction direction = Direction::Left;
         if (action == ClipBoundary::Action::Shrink) {
@@ -844,14 +852,14 @@ bool TrackClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipB
     }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
-    double newClipTime = item->clip().endTime - newStartTime;
+    double newClipTime = item->time().endTime - newStartTime;
     if (newClipTime < minClipTime) {
-        newStartTime = item->clip().endTime - minClipTime;
+        newStartTime = item->time().endTime - minClipTime;
     }
 
     newStartTime = std::max(newStartTime, 0.0);
 
-    bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime, minClipTime, completed, undoType);
+    bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->time().startTime, minClipTime, completed, undoType);
 
     if (ok) {
         vs->setLastEditedClip(key.key);
@@ -885,7 +893,7 @@ bool TrackClipsListModel::trimRightClip(const ClipKey& key, bool completed, Clip
             offset = -offset;
         }
 
-        newEndTime = item->clip().endTime - offset;
+        newEndTime = item->time().endTime - offset;
 
         Direction direction = Direction::Left;
         if (action == ClipBoundary::Action::Expand) {
@@ -909,12 +917,12 @@ bool TrackClipsListModel::trimRightClip(const ClipKey& key, bool completed, Clip
     }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
-    double newClipTime = newEndTime - item->clip().startTime;
+    double newClipTime = newEndTime - item->time().startTime;
     if (newClipTime < minClipTime) {
-        newEndTime = item->clip().startTime + minClipTime;
+        newEndTime = item->time().startTime + minClipTime;
     }
 
-    bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime, minClipTime, completed, undoType);
+    bool ok = trackeditInteraction()->trimClipRight(key.key, item->time().endTime - newEndTime, minClipTime, completed, undoType);
 
     if (ok) {
         vs->setLastEditedClip(key.key);
@@ -948,7 +956,7 @@ bool TrackClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, Cl
             offset = -offset;
         }
 
-        newStartTime = item->clip().startTime + offset;
+        newStartTime = item->time().startTime + offset;
 
         Direction direction = Direction::Left;
         if (action == ClipBoundary::Action::Shrink) {
@@ -972,14 +980,14 @@ bool TrackClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, Cl
     }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
-    double newClipTime = item->clip().endTime - newStartTime;
+    double newClipTime = item->time().endTime - newStartTime;
     if (newClipTime < minClipTime) {
-        newStartTime = item->clip().endTime - minClipTime;
+        newStartTime = item->time().endTime - minClipTime;
     }
 
     newStartTime = std::max(newStartTime, 0.0);
 
-    bool ok = trackeditInteraction()->stretchClipLeft(key.key, newStartTime - item->clip().startTime, minClipTime, completed, undoType);
+    bool ok = trackeditInteraction()->stretchClipLeft(key.key, newStartTime - item->time().startTime, minClipTime, completed, undoType);
 
     if (ok) {
         vs->setLastEditedClip(key.key);
@@ -1013,7 +1021,7 @@ bool TrackClipsListModel::stretchRightClip(const ClipKey& key, bool completed, C
             offset = -offset;
         }
 
-        newEndTime = item->clip().endTime - offset;
+        newEndTime = item->time().endTime - offset;
 
         Direction direction = Direction::Left;
         if (action == ClipBoundary::Action::Expand) {
@@ -1037,12 +1045,12 @@ bool TrackClipsListModel::stretchRightClip(const ClipKey& key, bool completed, C
     }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
-    double newClipTime = newEndTime - item->clip().startTime;
+    double newClipTime = newEndTime - item->time().startTime;
     if (newClipTime < minClipTime) {
-        newEndTime = item->clip().startTime + minClipTime;
+        newEndTime = item->time().startTime + minClipTime;
     }
 
-    bool ok = trackeditInteraction()->stretchClipRight(key.key, item->clip().endTime - newEndTime, minClipTime, completed, undoType);
+    bool ok = trackeditInteraction()->stretchClipRight(key.key, item->time().endTime - newEndTime, minClipTime, completed, undoType);
 
     if (ok) {
         vs->setLastEditedClip(key.key);
@@ -1112,7 +1120,7 @@ void TrackClipsListModel::onSelectedClip(const trackedit::ClipKey& k)
 {
     // ignore if item already selected
     for (const auto& selectedItem : m_selectedItems) {
-        if (selectedItem->clip().key == k) {
+        if (selectedItem->key().key == k) {
             return;
         }
     }
@@ -1183,6 +1191,7 @@ ClipStyles::Style TrackClipsListModel::clipStyle() const
 {
     return projectSceneConfiguration()->clipStyle();
 }
+
 TimelineContext* TrackClipsListModel::timelineContext() const
 {
     return m_context;
@@ -1212,4 +1221,3 @@ int TrackClipsListModel::cacheBufferPx()
 {
     return CACHE_BUFFER_PX;
 }
-
