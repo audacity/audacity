@@ -57,7 +57,7 @@ private:
     bool canStopAudioStream() const;
 
     muse::Ret doRecord(au3::Au3Project& project, const TransportSequences& sequences, double t0, double t1, bool altAppearance,
-                       const AudioIOStartStreamOptions& options);
+                       const double audioStreamSampleRate);
     void cancelRecording();
     void commitRecording();
 

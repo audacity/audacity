@@ -22,11 +22,11 @@ public:
     virtual bool isBusy() const = 0;
 
     virtual int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, // Time at which mixer stops producing, maybe > endTime
-                            const AudioIOStartStreamOptions& options) = 0;
+                            AudacityProject& project, bool isDefaultPlayTrackPolicy, double audioStreamSampleRate) = 0;
     virtual void stopStream() = 0;
     virtual void pauseStream(bool pause) = 0;
 
-    virtual void startMonitoring(const AudioIOStartStreamOptions& options) = 0;
+    virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;
 
     virtual muse::async::Notification updateRequested() const = 0;

@@ -142,7 +142,7 @@ void Au3AudioInput::startAudioEngineMonitoring() const
         if (!project) {
             return;
         }
-        audioEngine()->startMonitoring(ProjectAudioIO::GetDefaultOptions(*project));
+        audioEngine()->startMonitoring(*project);
     });
 }
 

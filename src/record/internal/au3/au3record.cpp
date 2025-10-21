@@ -27,6 +27,7 @@
 
 #include "translation.h"
 #include "log.h"
+#include "ProjectRate.h"
 
 using namespace muse;
 using namespace muse::async;
@@ -70,7 +71,7 @@ PropertiesOfSelected GetPropertiesOfSelected(const Au3Project& proj)
     return result;
 }
 
-WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, bool selectedOnly, double targetRate)
+WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const bool selectedOnly, const double targetRate)
 {
     auto p = &proj;
     size_t recordingChannels = std::max(0, AudioIORecordChannels.Read());
@@ -275,7 +276,8 @@ muse::Ret Au3Record::start()
     double t1 = DBL_MAX;
     selectionController()->resetSelectedClips();
 
-    auto options = ProjectAudioIO::GetDefaultOptions(project);
+    double projectRate = ProjectRate::Get(project).GetRate();
+
     WritableSampleTrackArray existingTracks;
 
     // Checking the selected tracks: counting them and
@@ -294,13 +296,13 @@ muse::Ret Au3Record::start()
         // try to choose only from them; else if wave tracks exist, may record into any.)
         existingTracks = ChooseExistingRecordingTracks(project, true, rateOfSelected);
         if (!existingTracks.empty()) {
-            options.rate = rateOfSelected;
+            projectRate = rateOfSelected;
         } else {
-            if (anySelected && rateOfSelected != options.rate) {
+            if (anySelected && rateOfSelected != projectRate) {
                 return make_ret(Err::TooFewCompatibleTracksSelected);
             }
 
-            existingTracks = ChooseExistingRecordingTracks(project, false, options.rate);
+            existingTracks = ChooseExistingRecordingTracks(project, false, projectRate);
         }
     }
 
@@ -332,7 +334,7 @@ muse::Ret Au3Record::start()
 
     audioEngine()->stopMonitoring();
 
-    return doRecord(project, transportTracks, t0, t1, altAppearance, options);
+    return doRecord(project, transportTracks, t0, t1, altAppearance, projectRate);
 }
 
 muse::Ret Au3Record::pause()
@@ -399,7 +401,7 @@ Ret Au3Record::doRecord(Au3Project& project,
                         const TransportSequences& sequences,
                         double t0, double t1,
                         bool altAppearance,
-                        const AudioIOStartStreamOptions& options)
+                        const double audioStreamSampleRate)
 {
     //! NOTE: copied fromProjectAudioManager::DoRecord
 
@@ -622,7 +624,7 @@ Ret Au3Record::doRecord(Au3Project& project,
         pendingTracks.UpdatePendingTracks();
     }
 
-    int token = audioEngine()->startStream(transportSequences, t0, t1, t1, options);
+    int token = audioEngine()->startStream(transportSequences, t0, t1, t1, project, false, audioStreamSampleRate);
 
     success = (token != 0);
 

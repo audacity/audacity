@@ -18,12 +18,12 @@ using namespace au::audio;
 std::shared_ptr<Au3AudioIOListener> s_audioIOListener;
 
 static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
-    [](au::au3::Au3Project& project, bool newDefault) -> AudioIOStartStreamOptions {
+    [](au::au3::Au3Project& project, const bool newDefault) -> AudioIOStartStreamOptions {
         auto options = ProjectAudioIO::DefaultOptionsFactory(project, newDefault);
         options.listener = s_audioIOListener;
 
-        auto& playRegion = ViewInfo::Get(project).playRegion;
-        bool loopEnabled = playRegion.Active();
+        const auto& playRegion = ViewInfo::Get(project).playRegion;
+        const bool loopEnabled = playRegion.Active();
         options.loopEnabled = loopEnabled;
 
         if (newDefault) {
@@ -54,10 +54,12 @@ bool AudioEngine::isBusy() const
     return AudioIO::Get()->IsBusy();
 }
 
-int AudioEngine::startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime,
-                             const AudioIOStartStreamOptions& options)
+int AudioEngine::startStream(const TransportSequences& sequences, const double startTime, const double endTime, const double mixerEndTime,
+                             AudacityProject& project, const bool isDefaultPlayTrackPolicy, const double audioStreamSampleRate)
 {
+    AudioIOStartStreamOptions options = ProjectAudioIO::GetDefaultOptions(project, isDefaultPlayTrackPolicy);
     options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
+    options.rate = audioStreamSampleRate;
     return AudioIO::Get()->StartStream(sequences, startTime, endTime, mixerEndTime, options);
 }
 
@@ -67,13 +69,14 @@ void AudioEngine::stopStream()
     AudioIO::Get()->WaitWhileBusy();
 }
 
-void AudioEngine::pauseStream(bool pause)
+void AudioEngine::pauseStream(const bool pause)
 {
     AudioIO::Get()->SetPaused(pause);
 }
 
-void AudioEngine::startMonitoring(const AudioIOStartStreamOptions& options)
+void AudioEngine::startMonitoring(AudacityProject& project)
 {
+    AudioIOStartStreamOptions options = ProjectAudioIO::GetDefaultOptions(project);
     options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
     AudioIO::Get()->StartMonitoring(options);
 }

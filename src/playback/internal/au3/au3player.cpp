@@ -19,6 +19,8 @@
 #include "log.h"
 #include <algorithm>
 
+#include "ProjectRate.h"
+
 using namespace au::playback;
 using namespace au::au3;
 
@@ -199,9 +201,8 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
     m_startOffset = options.startOffset;
 
     AudacityProject& project = projectRef();
-    AudioIOStartStreamOptions sopts = ProjectAudioIO::GetDefaultOptions(project, options.isDefaultPolicy);
-
-    int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, sopts);
+    const double projectRate = ProjectRate::Get(project).GetRate();
+    int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, project, options.isDefaultPolicy, projectRate);
     bool success = token != 0;
     if (success) {
         ProjectAudioIO::Get(project).SetAudioIOToken(token);
