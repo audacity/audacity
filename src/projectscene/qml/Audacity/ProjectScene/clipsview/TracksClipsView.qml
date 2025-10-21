@@ -249,18 +249,18 @@ Rectangle {
 
                 onPositionChanged: function (e) {
                     timeline.updateCursorPosition(e.x, e.y)
-                    playRegionController.mouseMove(e.x)
+                    playRegionController.updatePosition(e.x)
                 }
 
                 onPressed: function (e) {
                     if (timeline.isMajorSection(e.y)) {
-                        playRegionController.mouseDown(e.x)
+                        playRegionController.startInteraction(e.x, root.ctrlPressed)
                         prv.playRegionActivated = true
                     }
                 }
 
                 onReleased: function (e) {
-                    playRegionController.mouseUp(e.x)
+                    playRegionController.finishInteraction(e.x)
                 }
 
                 onClicked: function (e) {
@@ -268,6 +268,16 @@ Rectangle {
                         playCursorController.seekToX(e.x, timeline.context.playbackOnRulerClickEnabled)
                     }
                     prv.playRegionActivated = false
+                }
+
+                Connections {
+                    target: root
+
+                    function onCtrlPressedChanged() {
+                        if (!root.ctrlPressed) {
+                            playRegionController.finishInteraction(timelineMouseArea.mouseX)
+                        }
+                    }
                 }
             }
 
