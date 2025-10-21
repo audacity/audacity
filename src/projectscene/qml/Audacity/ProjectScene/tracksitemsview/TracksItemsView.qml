@@ -650,16 +650,16 @@ Rectangle {
 
                     width: tracksItemsView.width
                     
-                    sourceComponent: trackType === TrackType.LABEL ? labelTrackItemComp : clipsTrackItemComp
+                    sourceComponent: trackType === TrackType.LABEL ? trackLabelsContainer : trackClipsContainerComp
 
                     onLoaded: {
                         trackItemLoader.item.init()
                     }
                     
                     Component {
-                        id: clipsTrackItemComp
+                        id: trackClipsContainerComp
                         
-                        TrackClipsItem {
+                        TrackClipsContainer {
                             property var itemData: trackItemLoader.itemData
                             property int index: trackItemLoader.index
 
@@ -840,9 +840,9 @@ Rectangle {
                     }
 
                     Component {
-                        id: labelTrackItemComp
+                        id: trackLabelsContainer
 
-                        TrackLabelsItem {
+                        TrackLabelsContainer {
                             property var itemData: trackItemLoader.itemData
                             property int index: trackItemLoader.index
 

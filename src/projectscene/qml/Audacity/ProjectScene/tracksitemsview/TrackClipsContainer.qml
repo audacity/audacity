@@ -5,7 +5,7 @@ import Muse.UiComponents
 
 import Audacity.ProjectScene
 
-TrackObjectsItem {
+TrackItemsContainer {
     id: root
 
     property bool isBrush: false
