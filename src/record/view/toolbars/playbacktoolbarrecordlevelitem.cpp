@@ -12,10 +12,10 @@ using namespace au::audio;
 using namespace au::playback;
 
 PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action,
-                                                               muse::uicomponents::ToolBarItemType::Type type, QObject* parent)
+                                                               const muse::uicomponents::ToolBarItemType::Type type, QObject* parent)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
-    record()->audioInput()->recordVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
+    record()->audioInput()->recordVolumeChanged().onReceive(this, [this](const audio::volume_dbfs_t volume){
         m_level = volume;
         emit levelChanged();
     });
@@ -37,9 +37,6 @@ PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::U
     });
 
     resetAudioChannelsVolumePressure();
-    emit recordingChannelsCountChanged();
-    // TODO not sure this 'emit' is needed, should we then also emit isMicMeteringOnChanged(); ?
-    // emit isInputMonitoringOnChanged();
 }
 
 float PlaybackToolBarRecordLevelItem::level() const
@@ -47,7 +44,7 @@ float PlaybackToolBarRecordLevelItem::level() const
     return m_level;
 }
 
-void PlaybackToolBarRecordLevelItem::setLevel(float newLevel)
+void PlaybackToolBarRecordLevelItem::setLevel(const float newLevel)
 {
     if (qFuzzyCompare(m_level, newLevel)) {
         return;
@@ -66,7 +63,7 @@ float PlaybackToolBarRecordLevelItem::rightChannelPressure() const
     return m_rightChannelPressure;
 }
 
-void PlaybackToolBarRecordLevelItem::setLeftChannelPressure(float leftChannelPressure)
+void PlaybackToolBarRecordLevelItem::setLeftChannelPressure(const float leftChannelPressure)
 {
     if (qFuzzyCompare(m_leftChannelPressure, leftChannelPressure)) {
         return;
@@ -76,7 +73,7 @@ void PlaybackToolBarRecordLevelItem::setLeftChannelPressure(float leftChannelPre
     emit leftChannelPressureChanged(m_leftChannelPressure);
 }
 
-void PlaybackToolBarRecordLevelItem::setRightChannelPressure(float rightChannelPressure)
+void PlaybackToolBarRecordLevelItem::setRightChannelPressure(const float rightChannelPressure)
 {
     if (qFuzzyCompare(m_rightChannelPressure, rightChannelPressure)) {
         return;
@@ -106,7 +103,7 @@ float PlaybackToolBarRecordLevelItem::leftRecentPeak() const
     return m_leftRecentPeak;
 }
 
-void PlaybackToolBarRecordLevelItem::setLeftRecentPeak(float newLeftRecentPeak)
+void PlaybackToolBarRecordLevelItem::setLeftRecentPeak(const float newLeftRecentPeak)
 {
     if (qFuzzyCompare(m_leftRecentPeak, newLeftRecentPeak)) {
         return;
@@ -121,7 +118,7 @@ float PlaybackToolBarRecordLevelItem::leftMaxPeak() const
     return m_leftMaxPeak;
 }
 
-void PlaybackToolBarRecordLevelItem::setLeftMaxPeak(float newLeftMaxPeak)
+void PlaybackToolBarRecordLevelItem::setLeftMaxPeak(const float newLeftMaxPeak)
 {
     if (qFuzzyCompare(m_leftMaxPeak, newLeftMaxPeak)) {
         return;
@@ -136,7 +133,7 @@ float PlaybackToolBarRecordLevelItem::rightRecentPeak() const
     return m_rightRecentPeak;
 }
 
-void PlaybackToolBarRecordLevelItem::setRightRecentPeak(float newRightRecentPeak)
+void PlaybackToolBarRecordLevelItem::setRightRecentPeak(const float newRightRecentPeak)
 {
     if (qFuzzyCompare(m_rightRecentPeak, newRightRecentPeak)) {
         return;
@@ -151,7 +148,7 @@ float PlaybackToolBarRecordLevelItem::rightMaxPeak() const
     return m_rightMaxPeak;
 }
 
-void PlaybackToolBarRecordLevelItem::setRightMaxPeak(float newRightMaxPeak)
+void PlaybackToolBarRecordLevelItem::setRightMaxPeak(const float newRightMaxPeak)
 {
     if (qFuzzyCompare(m_rightMaxPeak, newRightMaxPeak)) {
         return;
@@ -171,7 +168,7 @@ bool PlaybackToolBarRecordLevelItem::isInputMonitoringOn() const
     return recordConfiguration()->isInputMonitoringOn();
 }
 
-void PlaybackToolBarRecordLevelItem::setIsInputMonitoringOn(bool enable)
+void PlaybackToolBarRecordLevelItem::setIsInputMonitoringOn(const bool enable)
 {
     recordConfiguration()->setIsInputMonitoringOn(enable);
 }
@@ -181,7 +178,7 @@ bool PlaybackToolBarRecordLevelItem::isMicMeteringOn() const
     return recordConfiguration()->isMicMeteringOn();
 }
 
-void PlaybackToolBarRecordLevelItem::setIsMicMeteringOn(bool enable)
+void PlaybackToolBarRecordLevelItem::setIsMicMeteringOn(const bool enable)
 {
     recordConfiguration()->setIsMicMeteringOn(enable);
 }
@@ -191,7 +188,7 @@ PlaybackMeterStyle::MeterStyle PlaybackToolBarRecordLevelItem::meterStyle() cons
     return playbackConfiguration()->playbackMeterStyle();
 }
 
-void PlaybackToolBarRecordLevelItem::listenMainAudioInput(bool listen)
+void PlaybackToolBarRecordLevelItem::listenMainAudioInput(const bool listen)
 {
     recordMeterController()->setRecordMeterVisible(listen);
     if (listen) {

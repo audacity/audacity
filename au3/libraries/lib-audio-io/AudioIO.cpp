@@ -809,7 +809,14 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
     if (IsBusy()) {
         return;
     }
+
+    if (IsMonitoring() && options.inputMonitoring != mSoftwarePlaythrough) {
+        // muting or unmuting monitoring, so we need to restart it
+        StopMonitoring();
+    }
+
     if (IsMonitoring()) {
+        // already monitoring, nothing to do
         return;
     }
 
@@ -828,14 +835,14 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
     mCaptureFormat = captureFormat;
     mCaptureRate = 44100.0; // Shouldn't matter
     const bool success = StartPortAudioStream(options,
-                                        static_cast<unsigned int>(playbackChannels),
-                                        static_cast<unsigned int>(captureChannels));
+                                              static_cast<unsigned int>(playbackChannels),
+                                              static_cast<unsigned int>(captureChannels));
 
     const auto pOwningProject = mOwningProject.lock();
     if (!success) {
         using namespace BasicUI;
         const auto msg = XO("Error opening recording device.\nError code: %s")
-                   .Format(Get()->LastPaErrorString());
+                         .Format(Get()->LastPaErrorString());
         ShowErrorDialog(*ProjectFramePlacement(pOwningProject.get()),
                         XO("Error"), msg, wxT("Error_opening_sound_device"),
                         ErrorDialogOptions { ErrorDialogType::ModalErrorReport });
@@ -901,6 +908,8 @@ int AudioIO::StartStream(const TransportSequences& sequences,
         return 0;
     }
 
+    StopMonitoring();
+
     // We just want to set mStreamToken to -1 - this way avoids
     // an extremely rare but possible race condition, if two functions
     // somehow called StartStream at the same time...
@@ -916,14 +925,6 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     //       playbackChannels == mNumPlaybackChannels &&
     //       captureChannels == mNumCaptureChannels &&
     //       captureFormat == mCaptureFormat) {
-
-    if (mPortStreamV19) {
-        StopStream();
-        while (mPortStreamV19) {
-            using namespace std::chrono;
-            std::this_thread::sleep_for(50ms);
-        }
-    }
 
     mSoftwarePlaythrough = options.inputMonitoring;
     mPauseRec = SoundActivatedRecord.Read();
@@ -2355,6 +2356,8 @@ void AudioIO::DrainRecordBuffers()
         // AudacityException::DelayedHandlerAction prevents redundant message
         // boxes.
         StopStream();
+        WaitWhileBusy();
+
         DefaultDelayedHandlerAction(pException);
         for (auto& pSequence: mCaptureSequences) {
             pSequence->RepairChannels();

@@ -63,7 +63,7 @@ struct AudioIOStartStreamOptions
     double preRoll{ 0.0 };
 
     bool playNonWaveTracks{ true };
-    mutable bool inputMonitoring{ false };
+    bool inputMonitoring{ false };
 
     // contents may get swapped with empty vector
     PRCrossfadeData* pCrossfadeData{};
