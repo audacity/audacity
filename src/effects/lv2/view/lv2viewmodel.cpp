@@ -129,21 +129,21 @@ void Lv2ViewModel::setEffectState(const QString& state)
 
 void Lv2ViewModel::doInit()
 {
-    IF_ASSERT_FAILED(m_instanceId >= 0) {
+    IF_ASSERT_FAILED(instanceId() >= 0) {
         return;
     }
 
-    m_instance = std::dynamic_pointer_cast<LV2Instance>(instancesRegister()->instanceById(m_instanceId));
+    m_instance = std::dynamic_pointer_cast<LV2Instance>(instancesRegister()->instanceById(instanceId()));
     IF_ASSERT_FAILED(m_instance) {
         return;
     }
 
-    const EffectSettings* settings = instancesRegister()->settingsById(m_instanceId);
+    const EffectSettings* settings = instancesRegister()->settingsById(instanceId());
     IF_ASSERT_FAILED(settings) {
         return;
     }
 
-    const EffectId id = instancesRegister()->effectIdByInstanceId(m_instanceId);
+    const EffectId id = instancesRegister()->effectIdByInstanceId(instanceId());
     const LV2Effect* const effect = dynamic_cast<LV2Effect*>(EffectManager::Get().GetEffect(id.toStdString()));
     IF_ASSERT_FAILED(effect) {
         return;
@@ -152,7 +152,7 @@ void Lv2ViewModel::doInit()
     m_lilvPlugin = &effect->mPlug;
     m_ports = &effect->mPorts;
     m_portUIStates = std::make_unique<LV2PortUIStates>(m_instance->GetPortStates(), *m_ports);
-    m_settingsAccess = instancesRegister()->settingsAccessById(m_instanceId);
+    m_settingsAccess = instancesRegister()->settingsAccessById(instanceId());
 
     const auto sampleRate = playback()->audioOutput()->sampleRate();
     m_wrapper = m_instance->MakeWrapper(*settings, sampleRate, nullptr);
@@ -448,20 +448,6 @@ void Lv2ViewModel::onIdle()
             emit externalUiClosed();
         }
     }
-}
-
-int Lv2ViewModel::instanceId() const
-{
-    return m_instanceId;
-}
-
-void Lv2ViewModel::setInstanceId(int newInstanceId)
-{
-    if (m_instanceId == newInstanceId) {
-        return;
-    }
-    m_instanceId = newInstanceId;
-    emit instanceIdChanged();
 }
 
 QString Lv2ViewModel::title() const

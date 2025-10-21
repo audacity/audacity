@@ -130,17 +130,3 @@ void VstViewModel::doStartPreview()
         return nullptr;
     });
 }
-
-int VstViewModel::instanceId() const
-{
-    return m_instanceId;
-}
-
-void VstViewModel::setInstanceId(int newInstanceId)
-{
-    if (m_instanceId == newInstanceId) {
-        return;
-    }
-    m_instanceId = newInstanceId;
-    emit instanceIdChanged();
-}

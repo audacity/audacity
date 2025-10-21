@@ -21,7 +21,6 @@ namespace au::effects {
 class AudioUnitViewModel : public AbstractEffectViewModel
 {
     Q_OBJECT
-    Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -35,14 +34,10 @@ public:
 
     Q_INVOKABLE void deinit();
 
-    int instanceId() const;
-    void setInstanceId(int newInstanceId);
-
     QString title() const;
     void setTitle(const QString& newTitle);
 
 signals:
-    void instanceIdChanged();
     void titleChanged();
 
 private:
@@ -62,7 +57,6 @@ private:
     std::unordered_map<AudioUnitParameterID, AudioUnitParameterValue> m_parameterValues;
     std::vector<std::pair<AudioUnitParameterID, AudioUnitParameterValue> > m_toUpdate;
 
-    EffectInstanceId m_instanceId = -1;
     std::shared_ptr<AudioUnitInstance> m_instance;
     EffectSettingsAccessPtr m_settingsAccess;
     EventListenerPtr m_eventListenerRef;

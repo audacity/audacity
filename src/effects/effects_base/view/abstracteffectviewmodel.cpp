@@ -41,4 +41,18 @@ void AbstractEffectViewModel::togglePreview()
         doStartPreview();
     }
 }
+
+EffectInstanceId AbstractEffectViewModel::instanceId() const
+{
+    return m_instanceId;
+}
+
+void AbstractEffectViewModel::setInstanceId(EffectInstanceId newInstanceId)
+{
+    if (m_instanceId == newInstanceId) {
+        return;
+    }
+    m_instanceId = newInstanceId;
+    emit instanceIdChanged();
+}
 }

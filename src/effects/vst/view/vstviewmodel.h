@@ -17,7 +17,6 @@ namespace au::effects {
 class VstViewModel : public AbstractEffectViewModel
 {
     Q_OBJECT
-    Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
 
 public:
     muse::Inject<IRealtimeEffectService> realtimeEffectService;
@@ -26,12 +25,6 @@ public:
 public:
     VstViewModel() = default;
     ~VstViewModel() override;
-
-    int instanceId() const;
-    void setInstanceId(int newInstanceId);
-
-signals:
-    void instanceIdChanged();
 
 private:
     void doInit() override;
@@ -43,7 +36,6 @@ private:
     void checkSettingChangesFromUiWhileIdle();
     void checkSettingChangesFromUi(bool forceCommitting);
 
-    EffectInstanceId m_instanceId = -1;
     std::shared_ptr<VST3Instance> m_auVst3Instance;
     std::shared_ptr<EffectSettingsAccess> m_settingsAccess;
     QTimer m_settingUpdateTimer;
