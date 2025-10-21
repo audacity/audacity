@@ -245,7 +245,7 @@ Rectangle {
 
                 onClicked: function (e) {
                     if (!prv.playRegionActivated) {
-                        playCursorController.seekToX(e.x, true /* triggerPlay */)
+                        playCursorController.seekToX(e.x, timeline.context.playbackOnRulerClickEnabled)
                     }
                     prv.playRegionActivated = false
                 }

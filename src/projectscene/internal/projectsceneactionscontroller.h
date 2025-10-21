@@ -39,6 +39,7 @@ private:
     void toggleClippingInWaveform();
     void updateDisplayWhilePlaying();
     void pinnedPlayHead();
+    void togglePlaybackOnRulerClickEnabled();
 
     void openClipPitchAndSpeedEdit(const muse::actions::ActionData& args);
 

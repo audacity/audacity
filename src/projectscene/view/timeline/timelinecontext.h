@@ -53,6 +53,8 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
         qreal startVerticalScrollPosition READ startVerticalScrollPosition WRITE setStartVerticalScrollPosition NOTIFY verticalScrollChanged)
     Q_PROPERTY(qreal verticalScrollbarSize READ verticalScrollbarSize NOTIFY verticalScrollChanged)
 
+    Q_PROPERTY(bool playbackOnRulerClickEnabled READ playbackOnRulerClickEnabled NOTIFY playbackOnRulerClickEnabledChanged FINAL)
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::ISelectionController> selectionController;
@@ -129,6 +131,8 @@ public:
 
     void updateSelectedClipTime();
 
+    bool playbackOnRulerClickEnabled() const;
+
 signals:
 
     void frameStartTimeChanged();
@@ -156,6 +160,8 @@ signals:
 
     void horizontalScrollChanged();
     void verticalScrollChanged();
+
+    void playbackOnRulerClickEnabledChanged();
 
 private:
     trackedit::ITrackeditProjectPtr trackEditProject() const;

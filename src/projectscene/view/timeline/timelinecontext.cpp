@@ -126,6 +126,10 @@ void TimelineContext::init(double frameWidth)
     dispatcher()->reg(this, "zoom-to-selection", this, &TimelineContext::fitSelectionToWidth);
     dispatcher()->reg(this, "zoom-to-fit-project", this, &TimelineContext::fitProjectToWidth);
 
+    configuration()->playbackOnRulerClickEnabledChanged().onNotify(this, [this]() {
+        emit playbackOnRulerClickEnabledChanged();
+    });
+
     onProjectChanged();
 
     emit horizontalScrollChanged();
@@ -970,4 +974,9 @@ void TimelineContext::setStartVerticalScrollPosition(qreal position)
 au::context::IPlaybackStatePtr TimelineContext::playbackState() const
 {
     return globalContext()->playbackState();
+}
+
+bool TimelineContext::playbackOnRulerClickEnabled() const
+{
+    return configuration()->playbackOnRulerClickEnabled();
 }
