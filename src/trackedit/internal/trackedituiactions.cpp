@@ -345,6 +345,12 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "New label track"),
              TranslatableString("action", "New label track")
              ),
+    UiAction("add-label",
+             au::context::UiCtxUnknown,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Add label"),
+             TranslatableString("action", "Add label")
+             ),
     UiAction("trim-audio-outside-selection",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,

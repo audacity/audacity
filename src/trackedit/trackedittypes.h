@@ -18,28 +18,37 @@ using gain_t = float;
 using pan_t = float;
 
 using TrackId = int64_t;
+using LabelTrackId = int64_t;
 constexpr TrackId INVALID_TRACK = -1;
 
-using ClipId = int64_t;
+using TrackItemId = int64_t;
+using ClipId = TrackItemId;
+using LabelId = TrackItemId;
 
 using TrackIdList = std::vector<TrackId>;
 
-struct ClipKey
+struct TrackItemKey
 {
     TrackId trackId = -1;
-    ClipId clipId = -1;
+    TrackItemId itemId = -1;
 
-    ClipKey() = default;
-    ClipKey(const TrackId t, const ClipId c)
-        : trackId(t), clipId(c) {}
+    TrackItemKey() = default;
+    TrackItemKey(const TrackId t, const TrackItemId o)
+        : trackId(t), itemId(o) {}
 
-    inline bool isValid() const { return trackId != -1 && clipId != static_cast<ClipId>(-1); }
+    inline bool isValid() const { return trackId != -1 && itemId != static_cast<TrackItemId>(-1); }
 
-    inline bool operator==(const ClipKey& k) const { return trackId == k.trackId && clipId == k.clipId; }
-    inline bool operator!=(const ClipKey& k) const { return !this->operator==(k); }
+    inline bool operator==(const TrackItemKey& k) const { return trackId == k.trackId && itemId == k.itemId; }
+    inline bool operator!=(const TrackItemKey& k) const { return !this->operator==(k); }
 };
 
-using ClipKeyList = std::vector<ClipKey>;
+using TrackItemKeyList = std::vector<TrackItemKey>;
+
+using ClipKey = TrackItemKey;
+using ClipKeyList = TrackItemKeyList;
+
+using LabelKey = TrackItemKey;
+using LabelKeyList = TrackItemKeyList;
 
 struct TimeSignature
 {
@@ -85,9 +94,9 @@ enum class PasteInsertBehavior {
 };
 }
 
-inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::trackedit::ClipKey& k)
+inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::trackedit::TrackItemKey& k)
 {
-    s << "{trackId: " << k.trackId << ", clip: " << k.clipId << "}";
+    s << "{trackId: " << k.trackId << ", itemId: " << k.itemId << "}";
     return s;
 }
 

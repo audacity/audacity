@@ -14,7 +14,10 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/trackeditprojectmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/projecthistorymock.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/au3interaction_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/au3tracksinteraction_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/au3clipsinteraction_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/au3labelsinteractions_tests.cpp
+
     ${CMAKE_CURRENT_LIST_DIR}/changedetection_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3trackeditclipboard_tests.cpp
     )
