@@ -43,8 +43,7 @@ struct TrackListRestorer final : UndoStateExtension {
     const std::shared_ptr<TrackList> mpTracks;
 };
 
-UndoRedoExtensionRegistry::Entry sEntry {
-    [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension> {
+UndoRedoExtensionRegistry::Entry<TrackListRestorer> sEntry { [] (AudacityProject& project)->std::shared_ptr<UndoStateExtension> {
         return std::make_shared<TrackListRestorer>(project);
     }
 };
@@ -54,11 +53,11 @@ TrackList* UndoTracks::Find(const UndoStackElem& state)
 {
     auto& exts = state.state.extensions;
     auto end = exts.end(),
-         iter = std::find_if(exts.begin(), end, [](auto& pExt){
-        return dynamic_cast<TrackListRestorer*>(pExt.get());
+         iter = std::find_if(exts.begin(), end, [](const std::pair<const std::type_index, std::shared_ptr<UndoStateExtension> >& entry){
+        return dynamic_cast<TrackListRestorer*>(entry.second.get());
     });
     if (iter != end) {
-        return static_cast<TrackListRestorer*>(iter->get())->mpTracks.get();
+        return static_cast<TrackListRestorer*>(iter->second.get())->mpTracks.get();
     }
     return nullptr;
 }

@@ -329,8 +329,7 @@ struct SelectedRegionRestorer final : UndoStateExtension {
     SelectedRegion mSelectedRegion;
 };
 
-UndoRedoExtensionRegistry::Entry sEntry {
-    [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension> {
+UndoRedoExtensionRegistry::Entry<SelectedRegionRestorer> sEntry { [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension> {
         return std::make_shared<SelectedRegionRestorer>(project);
     }
 };

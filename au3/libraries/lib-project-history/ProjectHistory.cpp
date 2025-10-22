@@ -102,6 +102,12 @@ void ProjectHistory::ModifyState(bool bWantsAutoSave)
     undoManager.ModifyState();
 }
 
+void ProjectHistory::ModifyState(const std::type_index& restorerType)
+{
+    auto& project = mProject;
+    ::UndoManager::Get(project).ModifyState(restorerType);
+}
+
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
 // Vaughan, 2010-08-29: No, as "l" is a TrackList* of an Undo stack state.
 //    Need to keep it and its tracks "t" available for Undo/Redo/SetStateTo.
@@ -115,7 +121,7 @@ void ProjectHistory::PopState(const UndoState& state, bool doAutosave)
     // remaining no-fail operations "commit" the changes of undo manager state
 
     // Restore extra state
-    for (auto& pExtension : state.extensions) {
+    for (auto& [_, pExtension] : state.extensions) {
         if (pExtension) {
             pExtension->RestoreUndoRedoState(project);
         }

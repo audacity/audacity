@@ -6,7 +6,6 @@ import Muse.UiComponents
 import Audacity.ProjectScene
 
 Item {
-
     id: root
 
     property NavigationSection navigationSection: null
@@ -38,14 +37,14 @@ Item {
     property bool selectionInProgress: false
     property bool hover: false
 
-    signal interactionStarted()
-    signal interactionEnded()
+    signal interactionStarted
+    signal interactionEnded
     // mouse position event is not propagated on overlapping mouse areas
     // so we are handling it manually
     signal trackItemMousePositionChanged(real x, real y, var clipKey)
     signal setHoveredClipKey(var clipKey)
-    signal clipSelectedRequested()
-    signal selectionResetRequested()
+    signal clipSelectedRequested
+    signal selectionResetRequested
     signal updateMoveActive(bool completed)
     signal requestSelectionContextMenu(real x, real y)
 
@@ -57,6 +56,7 @@ Item {
 
     signal handleTimeGuideline(real x, bool completed)
     signal triggerClipGuideline(real x, bool completed)
+    signal clipDragEditCanceled
 
     height: trackViewState.trackHeight
 
@@ -81,7 +81,10 @@ Item {
 
     onCtrlPressedChanged: {
         if (!root.ctrlPressed) {
-            clipsContainer.mapToAllClips({x: 0, y: 0}, function(clipItem, mouseEvent) {
+            clipsContainer.mapToAllClips({
+                x: 0,
+                y: 0
+            }, function (clipItem, mouseEvent) {
                 clipItem.isIsolationMode = false
             })
         }
@@ -96,7 +99,7 @@ Item {
         property double targetHeightRatio: 0.5
         readonly property int minChannelHeight: 20
         readonly property int yMinValue: Math.min(root.height / 2, minChannelHeight)
-        readonly property int yMaxValue: Math.max(root.height / 2, root.height - minChannelHeight);
+        readonly property int yMaxValue: Math.max(root.height / 2, root.height - minChannelHeight)
 
         property bool isNearSample: false
         property bool multiSampleEdit: false
@@ -113,7 +116,12 @@ Item {
                 let clipLoader = repeator.itemAt(i)
                 if (clipLoader && clipLoader.item) {
                     let clipPos = clipLoader.mapFromItem(this, e.x, e.y)
-                    f(clipLoader.item, {button: e.button, modifiers: e.modifiers, x: clipPos.x, y: clipPos.y})
+                    f(clipLoader.item, {
+                        button: e.button,
+                        modifiers: e.modifiers,
+                        x: clipPos.x,
+                        y: clipPos.y
+                    })
                 }
             }
         }
@@ -149,32 +157,29 @@ Item {
             hoverEnabled: true
             pressAndHoldInterval: 0
             enabled: !root.selectionInProgress && (clipsContainer.isNearSample || clipsContainer.isBrush)
-            cursorShape: root.selectionEditInProgress ? Qt.SizeHorCursor : Qt.IBeamCursor 
+            cursorShape: root.selectionEditInProgress ? Qt.SizeHorCursor : Qt.IBeamCursor
 
             anchors.fill: parent
 
-            onDoubleClicked: function(e) {
+            onDoubleClicked: function (e) {
                 e.accepted = true
             }
 
-            onPressAndHold: function(e) {
+            onPressAndHold: function (e) {
                 if (clipsContainer.isNearSample || root.altPressed) {
-
                     if (root.ctrlPressed) {
                         clipsContainer.isIsolationMode = true
-                    }
-                    else if (!root.altPressed) {
+                    } else if (!root.altPressed) {
                         clipsContainer.multiSampleEdit = true
                     }
 
-                    clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipsContainer.mapToAllClips(e, function (clipItem, mouseEvent) {
                         clipItem.mousePressAndHold(mouseEvent.x, mouseEvent.y)
                         clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
 
                         if (root.ctrlPressed) {
                             clipItem.isIsolationMode = true
-                        }
-                        else if (!root.altPressed) {
+                        } else if (!root.altPressed) {
                             clipItem.multiSampleEdit = true
                         }
                         clipItem.currentChannel = clipsContainer.currentChannel
@@ -185,26 +190,29 @@ Item {
                 }
             }
 
-            onReleased: function(e) {
+            onReleased: function (e) {
                 clipsContainer.multiSampleEdit = false
                 clipsContainer.isIsolationMode = false
 
-                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                clipsContainer.mapToAllClips(e, function (clipItem, mouseEvent) {
                     clipItem.multiSampleEdit = false
                     clipItem.isIsolationMode = false
                     clipItem.mouseReleased(mouseEvent.x, mouseEvent.y)
                 })
             }
 
-            onPositionChanged: function(e) {
-                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+            onPositionChanged: function (e) {
+                clipsContainer.mapToAllClips(e, function (clipItem, mouseEvent) {
                     clipItem.mousePositionChanged(mouseEvent.x, mouseEvent.y)
                     clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
                 })
             }
 
-            onContainsMouseChanged: function() {
-                clipsContainer.mapToAllClips({x: mouseX, y: mouseY}, function(clipItem, mouseEvent) {
+            onContainsMouseChanged: function () {
+                clipsContainer.mapToAllClips({
+                    x: mouseX,
+                    y: mouseY
+                }, function (clipItem, mouseEvent) {
                     clipItem.containsMouseChanged(containsMouse)
                 })
             }
@@ -284,8 +292,7 @@ Item {
 
                 //! NOTE: use the same integer rounding as in WaveBitmapCache
                 selectionStart: root.context.selectionStartPosition < clipItem.x ? 0 : Math.floor(root.context.selectionStartPosition - clipItem.x + 0.5)
-                selectionWidth: root.context.selectionStartPosition < clipItem.x ?
-                                    Math.round(root.context.selectionEndPosition - clipItem.x) : Math.floor(root.context.selectionEndPosition - clipItem.x + 0.5)  - Math.floor(root.context.selectionStartPosition - clipItem.x + 0.5)
+                selectionWidth: root.context.selectionStartPosition < clipItem.x ? Math.round(root.context.selectionEndPosition - clipItem.x) : Math.floor(root.context.selectionEndPosition - clipItem.x + 0.5) - Math.floor(root.context.selectionStartPosition - clipItem.x + 0.5)
 
                 leftVisibleMargin: clipItem.leftVisibleMargin
                 rightVisibleMargin: clipItem.rightVisibleMargin
@@ -319,8 +326,8 @@ Item {
                     return rightNeighbor.x - (clipItem.x + clipItem.width)
                 }
 
-                onIsNearSampleChanged: function() {
-                    clipsContainer.isNearSample = clipsContainer.checkIfAnyClip(function(clipItem) {
+                onIsNearSampleChanged: function () {
+                    clipsContainer.isNearSample = clipsContainer.checkIfAnyClip(function (clipItem) {
                         if (clipItem.isNearSample) {
                             clipsContainer.currentChannel = clipItem.currentChannel
                         }
@@ -328,75 +335,81 @@ Item {
                     })
                 }
 
-                onHoverChanged: function() {
-                    root.hover = clipsContainer.checkIfAnyClip(function(clipItem) {
+                onHoverChanged: function () {
+                    root.hover = clipsContainer.checkIfAnyClip(function (clipItem) {
                         return clipItem && clipItem.hover
                     })
                 }
 
-                onIsBrushChanged: function() {
-                    clipsContainer.isBrush = clipsContainer.checkIfAnyClip(function(clipItem) {
+                onIsBrushChanged: function () {
+                    clipsContainer.isBrush = clipsContainer.checkIfAnyClip(function (clipItem) {
                         return clipItem && clipItem.isBrush
                     })
                 }
 
-                onLeftTrimContainsMouseChanged: function() {
-                    clipsContainer.leftTrimContainsMouse = clipsContainer.checkIfAnyClip(function(clipItem) {
+                onLeftTrimContainsMouseChanged: function () {
+                    clipsContainer.leftTrimContainsMouse = clipsContainer.checkIfAnyClip(function (clipItem) {
                         return clipItem && clipItem.leftTrimContainsMouse
                     })
                 }
 
-                onRightTrimContainsMouseChanged: function() {
-                    clipsContainer.rightTrimContainsMouse = clipsContainer.checkIfAnyClip(function(clipItem) {
+                onRightTrimContainsMouseChanged: function () {
+                    clipsContainer.rightTrimContainsMouse = clipsContainer.checkIfAnyClip(function (clipItem) {
                         return clipItem && clipItem.rightTrimContainsMouse
                     })
                 }
 
-                onLeftTrimPressedButtonsChanged: function() {
-                    clipsContainer.leftTrimPressedButtons = clipsContainer.checkIfAnyClip(function(clipItem) {
+                onLeftTrimPressedButtonsChanged: function () {
+                    clipsContainer.leftTrimPressedButtons = clipsContainer.checkIfAnyClip(function (clipItem) {
                         return clipItem && clipItem.leftTrimPressedButtons
                     })
                 }
 
-                onRightTrimPressedButtonsChanged: function() {
-                    clipsContainer.rightTrimPressedButtons = clipsContainer.checkIfAnyClip(function(clipItem) {
+                onRightTrimPressedButtonsChanged: function () {
+                    clipsContainer.rightTrimPressedButtons = clipsContainer.checkIfAnyClip(function (clipItem) {
                         return clipItem && clipItem.rightTrimPressedButtons
                     })
                 }
 
-                onHeaderHoveredChanged: function() {
+                onHeaderHoveredChanged: function () {
                     root.clipHeaderHoveredChanged(headerHovered)
                 }
 
-                onClipStartEditRequested: function() {
+                onClipStartEditRequested: function () {
                     clipsModel.startEditClip(clipItem.key)
                 }
 
-                onClipEndEditRequested: function() {
+                onClipEndEditRequested: function () {
                     clipsModel.endEditClip(clipItem.key)
 
                     root.triggerClipGuideline(false, -1)
                 }
 
-                onClipLeftTrimRequested: function(completed, action) {
+                onCancelClipDragEditRequested: function () {
+                    if (clipsModel.cancelClipDragEdit(clipItem.key)) {
+                        root.clipDragEditCanceled()
+                    }
+                }
+
+                onClipLeftTrimRequested: function (completed, action) {
                     clipsModel.trimLeftClip(clipItem.key, completed, action)
 
                     handleClipGuideline(clipItem.key, Direction.Left, completed)
                 }
 
-                onClipRightTrimRequested: function(completed, action) {
+                onClipRightTrimRequested: function (completed, action) {
                     clipsModel.trimRightClip(clipItem.key, completed, action)
 
                     handleClipGuideline(clipItem.key, Direction.Right, completed)
                 }
 
-                onClipLeftStretchRequested: function(completed, action) {
+                onClipLeftStretchRequested: function (completed, action) {
                     clipsModel.stretchLeftClip(clipItem.key, completed, action)
 
                     handleClipGuideline(clipItem.key, Direction.Left, completed)
                 }
 
-                onClipRightStretchRequested: function(completed, action) {
+                onClipRightStretchRequested: function (completed, action) {
                     clipsModel.stretchRightClip(clipItem.key, completed, action)
 
                     handleClipGuideline(clipItem.key, Direction.Right, completed)
@@ -410,7 +423,7 @@ Item {
                     root.context.stopAutoScroll()
                 }
 
-                onClipItemMousePositionChanged: function(xWithinClip, yWithinClip) {
+                onClipItemMousePositionChanged: function (xWithinClip, yWithinClip) {
                     var yWithinTrack = yWithinClip
                     var xWithinTrack = xWithinClip + clipItem.x
 
@@ -434,7 +447,7 @@ Item {
                     clipsModel.selectClip(clipItem.key)
                 }
 
-                onTitleEditAccepted: function(newTitle) {
+                onTitleEditAccepted: function (newTitle) {
                     root.changeClipTitle(clipItem.key, newTitle)
                 }
 
@@ -489,19 +502,19 @@ Item {
         anchors.fill: parent
         z: 1
 
-        onSelectionDraged: function(x1, x2, completed) {
+        onSelectionDraged: function (x1, x2, completed) {
             root.selectionDraged(x1, x2, completed)
             if (completed) {
                 root.seekToX(Math.min(x1, x2))
             }
         }
 
-        onRequestSelectionContextMenu: function(x, y) {
+        onRequestSelectionContextMenu: function (x, y) {
             let position = mapToItem(root.parent, Qt.point(x, y))
             root.requestSelectionContextMenu(position.x, position.y)
         }
 
-        onHandleGuideline: function(x, completed) {
+        onHandleGuideline: function (x, completed) {
             root.handleTimeGuideline(x, completed)
         }
     }
@@ -562,7 +575,7 @@ Item {
             root.interactionStarted()
         }
 
-        onPositionChanged: function(mouse) {
+        onPositionChanged: function (mouse) {
             const resizeVerticalMargin = 10
             mouse.accepted = true
 
@@ -593,7 +606,7 @@ Item {
         opacity: 0.05
         visible: isStereo
 
-        onPositionChangeRequested: function(position) {
+        onPositionChangeRequested: function (position) {
             clipsContainer.updateChannelHeightRatio(position)
             clipsContainer.resetTargetHeightRatio()
         }
@@ -628,15 +641,15 @@ Item {
 
         function onClipMoveRequested(clipKey, completed) {
             // this one notifies every ClipListModel about moveActive
-            root.updateMoveActive(completed)
+            root.updateMoveActive(completed);
 
             // this one moves the clips
-            let clipMovedToOtherTrack = clipsModel.moveSelectedClips(clipKey, completed)
+            let clipMovedToOtherTrack = clipsModel.moveSelectedClips(clipKey, completed);
 
             // clip might change its' track, we need to update grabbed clipKey
             if (clipMovedToOtherTrack) {
                 clipKey = clipsModel.updateClipTrack(clipKey)
-                setHoveredClipKey(clipsModel.updateClipTrack(clipKey));
+                setHoveredClipKey(clipsModel.updateClipTrack(clipKey))
             }
 
             handleClipGuideline(clipKey, Direction.Auto, completed)
@@ -648,6 +661,12 @@ Item {
 
         function onClipEndEditRequested(clipKey) {
             clipsModel.endEditClip(clipKey)
+        }
+
+        function onCancelClipDragEditRequested(clipKey) {
+            if (clipsModel.cancelClipDragEdit(clipKey)) {
+                root.clipDragEditCanceled()
+            }
         }
 
         function onStartAutoScroll() {

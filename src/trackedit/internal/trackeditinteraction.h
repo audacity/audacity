@@ -46,6 +46,7 @@ private:
     bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) override;
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
     bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, bool&) override;
+    void cancelClipDragEdit() override;
     bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) override;
     bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
     bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
@@ -82,6 +83,9 @@ private:
     bool redo() override;
     bool canRedo() override;
     bool undoRedoToIndex(size_t index) override;
+
+    muse::async::Notification cancelDragEditRequested() const override;
+    void notifyAboutCancelDragEdit() override;
 
     bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) override;
 

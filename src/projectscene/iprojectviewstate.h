@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "global/async/notification.h"
 #include "global/types/retval.h"
 
 #include "trackedit/trackedittypes.h"
@@ -70,6 +71,8 @@ public:
 
     virtual void setZoomState(const ZoomState& state) = 0;
     virtual ZoomState zoomState() const = 0;
+
+    virtual muse::async::Notification rolledBack() const = 0;
 
     virtual muse::ValCh<bool> altPressed() const = 0;
     virtual muse::ValCh<bool> ctrlPressed() const = 0;

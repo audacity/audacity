@@ -54,6 +54,7 @@ Rectangle {
 
     signal clipStartEditRequested
     signal clipEndEditRequested
+    signal cancelClipDragEditRequested
 
     signal clipLeftTrimRequested(bool completed, int action)
     signal clipRightTrimRequested(bool completed, int action)
@@ -138,13 +139,12 @@ Rectangle {
         readonly property int doubleClickMaxDistance: 5
     }
 
-
     // panel for navigating within the clip's items
     property NavigationPanel clipNavigationPanel: NavigationPanel {
         name: "ClipNavigationPanel"
         enabled: navCtrl.active
         direction: NavigationPanel.Horizontal
-        section: navigation.panel.section
+        section: navigation.panel ? navigation.panel.section : null
         onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
@@ -354,6 +354,10 @@ Rectangle {
                 }
             }
         }
+
+        onCanceled: e => {
+            root.cancelClipDragEditRequested()
+        }
     }
 
     MouseArea {
@@ -410,6 +414,10 @@ Rectangle {
                     root.clipRightTrimRequested(false, ClipBoundaryAction.Shrink)
                 }
             }
+        }
+
+        onCanceled: e => {
+            root.cancelClipDragEditRequested()
         }
     }
 
@@ -495,9 +503,7 @@ Rectangle {
                 onPositionChanged: function (e) {
                     // Reset double click timer if the mouse has moved,
                     // to prevent rapid clip movement activate title editing
-                    if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance ||
-                        Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
-
+                    if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance || Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
                         lastClickTime = 0
                     }
 
@@ -815,6 +821,10 @@ Rectangle {
 
         onClipEndEditRequested: function () {
             root.clipEndEditRequested()
+        }
+
+        onCancelClipDragEditRequested: function () {
+            root.cancelClipDragEditRequested()
         }
 
         onTrimLeftRequested: function (completed, action) {

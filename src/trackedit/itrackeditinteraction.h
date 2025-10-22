@@ -1,10 +1,11 @@
 #pragma once
 
 #include "dom/track.h"
-#include "modularity/imoduleinterface.h"
 
+#include "global/modularity/imoduleinterface.h"
 #include "global/types/string.h"
 #include "global/async/channel.h"
+#include "global/async/notification.h"
 #include "global/progress.h"
 
 #include "trackedittypes.h"
@@ -53,6 +54,7 @@ public:
     virtual bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) = 0;
     virtual bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) = 0;
     virtual bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, bool& clipsMovedToOtherTrack) = 0;
+    virtual void cancelClipDragEdit() = 0;
     virtual bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) = 0;
     virtual bool splitClipsAtSilences(const ClipKeyList& clipKeyList) = 0;
     virtual bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
@@ -90,6 +92,9 @@ public:
     virtual bool redo() = 0;
     virtual bool canRedo() = 0;
     virtual bool undoRedoToIndex(size_t index) = 0;
+
+    virtual void notifyAboutCancelDragEdit() = 0;
+    virtual muse::async::Notification cancelDragEditRequested() const = 0;
 
     virtual bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) = 0;
 
