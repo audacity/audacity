@@ -23,7 +23,6 @@ using namespace au;
 using namespace au::au3;
 
 namespace au::trackedit {
-
 /*******************************************************************************
  * DEFAULT TRACK CONFIGURATIONS
  * ===========================
@@ -152,7 +151,6 @@ enum class TestTrackID : size_t {
 
 /**
  * @brief Base class for Au3 interaction tests
- * 
  * Provides common functionality for testing Au3 interaction classes:
  * - Track template creation and management
  * - Project setup and teardown
@@ -304,6 +302,4 @@ protected:
 
     std::shared_ptr<au3::Au3ProjectAccessor> m_au3ProjectAccessor;
 };
-
 }
-

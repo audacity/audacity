@@ -354,7 +354,7 @@ TEST_F(Au3LabelsInteractionsTests, ChangeLabelTitle)
 
     //! [EXPECT] The project is notified about label change
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(Truly([&](const Label& label) {
-        return label.key.trackId == TrackId(labelTrack->GetId()) && label.key.objectId == 0;
+        return label.key.trackId == TrackId(labelTrack->GetId()) && label.key.itemId == 0;
     }))).Times(1);
 
     //! [WHEN] Change the label title

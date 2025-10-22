@@ -38,7 +38,6 @@
 #include "view/tracknavigationmodel.h"
 
 #include "internal/au3/au3trackeditproject.h"
-#include "internal/au3/au3interaction.h"
 #include "internal/au3/au3selectioncontroller.h"
 #include "internal/au3/au3projecthistory.h"
 #include "internal/au3/au3trackeditclipboard.h"
@@ -76,7 +75,6 @@ void TrackeditModule::registerExports()
 
     ioc()->registerExport<ITrackeditActionsController>(moduleName(), m_trackeditController);
     ioc()->registerExport<ITrackeditProjectCreator>(moduleName(), new Au3TrackeditProjectCreator());
-    ioc()->registerExport<ITrackAndClipOperations>(moduleName(), new Au3Interaction());
     ioc()->registerExport<ITrackeditInteraction>(moduleName(),
                                                  new TrackeditInteraction(std::make_unique<TrackeditOperationController>(
                                                                               std::make_unique<UndoManager>())));

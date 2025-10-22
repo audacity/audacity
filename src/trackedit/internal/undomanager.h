@@ -5,7 +5,6 @@
 
 #include "iundomanager.h"
 
-#include "itrackandclipoperations.h"
 #include "iprojecthistory.h"
 
 #include "context/iglobalcontext.h"
