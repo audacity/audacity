@@ -5,7 +5,6 @@
 #include "playregioncontroller.h"
 
 #include <cmath>
-#include <qguiapplication.h>
 
 #include "log.h"
 
@@ -36,8 +35,8 @@ void PlayRegionController::startInteraction(double pos, bool ctrlPressed)
     m_lastPos = m_dragStartPos;
     updateSnapGuideline(m_dragStartPos);
 
-    if (playback()->player()->isLoopRegionClear() && ctrlPressed) {
-        m_action = UserInputAction::CreateRegion;
+    if (playback()->player()->isLoopRegionClear()) {
+        m_action = ctrlPressed ? UserInputAction::CreateRegion : UserInputAction::None;
     } else if (std::abs(startPos() - pos) < RESIZE_AREA_WIDTH_PX) {
         m_action = UserInputAction::ResizeStart;
     } else if (std::abs(endPos() - pos) < RESIZE_AREA_WIDTH_PX) {

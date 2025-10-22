@@ -88,7 +88,7 @@ private:
     double m_snapGuidelinePos = 0;
 
     bool m_dragStarted = false;
-    UserInputAction m_action;
+    UserInputAction m_action = UserInputAction::None;
 
     bool m_isActive = false;
 };
