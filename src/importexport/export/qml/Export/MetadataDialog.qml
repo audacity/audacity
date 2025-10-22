@@ -18,6 +18,9 @@ StyledDialogView {
     contentWidth: 880
     contentHeight: 625
 
+    modal: true
+    alwaysOnTop: true
+
     MetadataModel {
         id: metadataModel
     }
