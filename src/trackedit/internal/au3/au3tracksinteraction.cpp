@@ -25,7 +25,7 @@
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
-#include "trackedit/dom/track.h"
+#include "dom/track.h"
 #include "trackediterrors.h"
 
 #include "au3interactionutils.h"
@@ -178,11 +178,10 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
     // Convert Au3TrackDataPtr to ITrackDataPtr for helper method
     std::vector<ITrackDataPtr> copiedDataBase(copiedData.begin(), copiedData.end());
 
-    // todo
-    // if (clipsOperations()->clipTransferNeedsDownmixing(copiedDataBase, dstTracksIds)
-    //     && !clipsOperations()->userIsOkWithDownmixing()) {
-    //     return trackedit::make_ret(trackedit::Err::Cancel);
-    // }
+    if (clipsInteraction()->clipTransferNeedsDownmixing(copiedDataBase, dstTracksIds)
+        && !clipsInteraction()->userIsOkWithDownmixing()) {
+        return trackedit::make_ret(trackedit::Err::Cancel);
+    }
 
     const bool newTracksNeeded = dstTracksIds.size() != data.size();
 
@@ -197,7 +196,7 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
 
     if (!moveClips) {
         if (isMultiSelectionCopy) {
-            // ok = clipsOperations()->makeRoomForClipsOnTracks(dstTracksIds, copiedDataBase, begin); // todo
+            ok = clipsInteraction()->makeRoomForClipsOnTracks(dstTracksIds, copiedDataBase, begin);
         } else {
             ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin, pasteIntoExistingClip);
         }
@@ -242,7 +241,7 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
                 dstWaveTrack->InsertInterval(interval, false);
             }
         } else if (pasteIntoExistingClip
-                   // && clipsOperations()->singleClipOnTrack(trackToPaste->GetId()) // todo
+                   && clipsInteraction()->singleClipOnTrack(trackToPaste->GetId())
                    && dstWaveTrack->GetClipAtTime(begin) != nullptr) {
             auto [leftClip, rightClip] = dstWaveTrack->SplitAt(begin);
             rightClip->SetPlayStartTime(begin + trackToPaste->GetClip(0)->GetPlayDuration());
@@ -1238,17 +1237,16 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
         // if paste into existing clip and there is a single clip to paste,
         // we need to make room for the clip to be extended
         if (pasteIntoExistingClip
-            // && clipsOperations()->singleClipOnTrack(trackToPaste->GetId()) // todo
+            && clipsInteraction()->singleClipOnTrack(trackToPaste->GetId())
             && dstWaveTrack->GetClipAtTime(begin) != nullptr) {
             secs_t currentClipEnd = dstWaveTrack->GetClipAtTime(begin)->GetPlayEndTime();
             snappedBegin = dstWaveTrack->SnapToSample(currentClipEnd);
         }
 
-        // todo
-        // auto ok = clipsOperations()->makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin, snappedBegin + insertDuration);
-        // if (!ok) {
-        //     return make_ret(trackedit::Err::FailedToMakeRoomForClip);
-        // }
+        auto ok = clipsInteraction()->makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin, snappedBegin + insertDuration);
+        if (!ok) {
+            return make_ret(trackedit::Err::FailedToMakeRoomForClip);
+        }
     }
 
     return muse::make_ok();
