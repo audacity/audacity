@@ -65,7 +65,7 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
 {
     au::trackedit::Clip clip;
     clip.key.trackId = waveTrack->GetId();
-    clip.key.clipId = au3clip->GetId();
+    clip.key.itemId = au3clip->GetId();
     clip.clipVersion = au3clip->GetVersion();
 
     clip.title = wxToString(au3clip->GetName());
@@ -86,14 +86,40 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
     return clip;
 }
 
-au::trackedit::Track DomConverter::track(const Au3Track* waveTrack)
+au::trackedit::Track DomConverter::track(const Au3Track* track)
 {
     trackedit::Track au4t;
-    au4t.id = waveTrack->GetId();
-    au4t.title = wxToString(waveTrack->GetName());
-    au4t.type = trackType(waveTrack);
-    au4t.color = TrackColor::Get(waveTrack).GetColor();
-    au4t.format = trackFormat(waveTrack);
-    au4t.rate = trackRate(waveTrack);
+    au4t.id = track->GetId();
+    au4t.title = wxToString(track->GetName());
+    au4t.type = trackType(track);
+
+    au4t.color = TrackColor::Get(track).GetColor();
+    if (!au4t.color.isValid()) { // todo
+        TrackColor::Get(track).assignColor();
+        au4t.color = TrackColor::Get(track).GetColor();
+    }
+
+    au4t.format = trackFormat(track);
+    au4t.rate = trackRate(track);
     return au4t;
+}
+
+au::trackedit::Track DomConverter::labelTrack(const Au3LabelTrack* labelTrack)
+{
+    return track(labelTrack);
+}
+
+au::trackedit::Label DomConverter::label(const Au3LabelTrack* labelTrack, size_t index, const Au3Label& au3label)
+{
+    au::trackedit::Label label;
+    label.key.trackId = labelTrack->GetId();
+    label.key.itemId = static_cast<au::trackedit::LabelId>(index);
+
+    label.title = wxToString(au3label.title);
+    label.startTime = au3label.getT0();
+    label.endTime = au3label.getT1();
+
+    label.color = TrackColor::Get(labelTrack).GetColor();
+
+    return label;
 }

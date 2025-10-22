@@ -198,7 +198,7 @@ void Au3Record::init()
         }
 
         auto recordedClip = std::find_if(m_recordData.begin(), m_recordData.end(),
-                                         [&](const RecordData& r){ return r.clipKey.clipId == clipId; });
+                                         [&](const RecordData& r){ return r.clipKey.itemId == clipId; });
 
         if (!recordedClip->linkedToPendingClip) {
             Au3WaveTrack* pendingWaveTrack = dynamic_cast<Au3WaveTrack*>(pendingTrack);
@@ -232,7 +232,7 @@ void Au3Record::init()
             trackedit::ClipKey clipKey = recordEntry.clipKey;
             Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
 
-            std::shared_ptr<Au3WaveClip> origClip = DomAccessor::findWaveClip(origWaveTrack, clipKey.clipId);
+            std::shared_ptr<Au3WaveClip> origClip = DomAccessor::findWaveClip(origWaveTrack, clipKey.itemId);
             IF_ASSERT_FAILED(origClip) {
                 return;
             }

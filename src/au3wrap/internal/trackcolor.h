@@ -26,6 +26,9 @@ public:
 
     muse::draw::Color GetColor() const;
     void SetColor(const muse::draw::Color& color);
+
+    void assignColor();
+
 private:
     std::weak_ptr<Track> mTrack;
     muse::draw::Color mColor;
