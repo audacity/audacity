@@ -3,7 +3,6 @@
 */
 #include "tracklabelslistmodel.h"
 
-#include "global/realfn.h"
 #include "global/async/async.h"
 
 #include "types/projectscenetypes.h"
@@ -218,6 +217,37 @@ void TrackLabelsListModel::updateItemMetrics(ViewTrackItem* viewItem)
 bool TrackLabelsListModel::changeLabelTitle(const LabelKey& key, const QString& newTitle)
 {
     return trackeditInteraction()->changeLabelTitle(key.key, muse::String::fromQString(newTitle));
+}
+
+bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool completed)
+{
+    TrackLabelItem* item = labelItemByKey(key.key);
+    if (!item) {
+        return false;
+    }
+
+    auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    auto vs = project->viewState();
+    IF_ASSERT_FAILED(vs) {
+        return false;
+    }
+
+    TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, completed);
+    if (vs->moveInitiated()) {
+        labelsInteraction()->moveLabels(moveOffset.timeOffset, completed);
+    }
+
+    if ((completed && m_autoScrollConnection)) {
+        disconnectAutoScroll();
+    } else if (!m_autoScrollConnection && !completed) {
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedLabels(key, false); });
+    }
+
+    return true;
 }
 
 void TrackLabelsListModel::selectLabel(const LabelKey& key)

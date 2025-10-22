@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include "trackedit/ilabelsinteraction.h"
+
 #include "trackitemslistmodel.h"
 #include "tracklabelitem.h"
 
@@ -11,12 +13,16 @@ class TrackLabelsListModel : public TrackItemsListModel
 {
     Q_OBJECT
 
+    muse::Inject<trackedit::ILabelsInteraction> labelsInteraction;
+
 public:
     explicit TrackLabelsListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void selectLabel(const LabelKey& key);
     Q_INVOKABLE void resetSelectedLabels();
     Q_INVOKABLE bool changeLabelTitle(const LabelKey& key, const QString& newTitle);
+
+    Q_INVOKABLE bool moveSelectedLabels(const LabelKey& key, bool completed);
 
 private:
 

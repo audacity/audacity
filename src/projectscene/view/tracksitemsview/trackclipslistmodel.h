@@ -63,12 +63,6 @@ signals:
     void contentXChanged();
 
 private:
-
-    struct MoveOffset {
-        muse::secs_t timeOffset = 0.0;
-        int trackOffset = 0;
-    };
-
     void onInit() override;
     void onReload() override;
 
@@ -80,9 +74,6 @@ private:
     void onStartEditItem(const trackedit::TrackItemKey& key) override;
     void onEndEditItem(const trackedit::TrackItemKey& key) override;
 
-    MoveOffset calculateMoveOffset(const TrackClipItem* item, const ClipKey& key, bool completed) const;
-    trackedit::secs_t calculateTimePositionOffset(const TrackClipItem* item) const;
-    int calculateTrackPositionOffset(const ClipKey& key) const;
     bool isKeyboardTriggered() const;
 
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;

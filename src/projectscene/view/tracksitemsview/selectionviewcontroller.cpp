@@ -83,7 +83,7 @@ void SelectionViewController::onPressed(double x, double y)
         selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), false);
     }
 
-    viewState()->updateClipsBoundaries(true);
+    viewState()->updateItemsBoundaries(true);
 
     m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this](){
         onPositionChanged(m_lastPoint.x(), m_lastPoint.y());

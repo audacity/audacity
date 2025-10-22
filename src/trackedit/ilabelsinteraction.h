@@ -21,6 +21,8 @@ public:
     virtual bool addLabelToSelection() = 0;
     virtual bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) = 0;
 
+    virtual bool moveLabels(secs_t timePositionOffset, bool completed) = 0;
+
     virtual muse::Progress progress() const = 0;
 };
 }

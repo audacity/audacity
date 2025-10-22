@@ -811,7 +811,8 @@ Rectangle {
                             isTrackFocused: itemData.isTrackFocused
                             isMultiSelectionActive: itemData.isMultiSelectionActive
                             isTrackAudible: itemData.isTrackAudible
-                            // moveActive: itemData.moveActive
+
+                            moveActive: tracksItemsView.moveActive
 
                             altPressed: root.altPressed
                             ctrlPressed: root.ctrlPressed
@@ -839,6 +840,10 @@ Rectangle {
                                 root.hoveredTrackVerticalPosition = tracksViewState.trackVerticalPosition(trackId)
 
                                 splitToolController.mouseMove(xWithinTrack)
+                            }
+
+                            onSetHoveredItemKey: function (itemKey) {
+                                root.hoveredItemKey = itemKey
                             }
 
                             onItemHeaderHoveredChanged: function (val) {
@@ -872,6 +877,13 @@ Rectangle {
 
                             onSelectionResetRequested: {
                                 selectionController.resetDataSelection()
+                            }
+
+                            onUpdateMoveActive: function (completed) {
+                                if (tracksItemsView.moveActive !== completed) {
+                                    return
+                                }
+                                tracksItemsView.moveActive = !completed
                             }
                         }
                     }
