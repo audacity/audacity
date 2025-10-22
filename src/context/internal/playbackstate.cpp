@@ -46,3 +46,13 @@ muse::async::Channel<muse::secs_t> PlaybackState::playbackPositionChanged() cons
 {
     return m_playbackPositionChanged;
 }
+
+bool PlaybackState::isBusy() const
+{
+    return m_player ? m_player->isBusy() : false;
+}
+
+bool PlaybackState::reachedEnd() const
+{
+    return m_player ? m_player->reachedEnd().val : true;
+}
