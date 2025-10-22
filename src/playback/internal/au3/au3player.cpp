@@ -487,7 +487,7 @@ void Au3Player::updatePlaybackPosition()
         const auto targetConsumedSamples = static_cast<unsigned long long>(newDelivery.numSamples)
                                            + (m_currentTarget ? m_currentTarget->consumedSamples : 0);
         const nanoseconds newDeliveryDuration{ static_cast<long>(newDelivery.numSamples * 1e6 / sampleRate + .5) };
-        const auto targetTime = newDelivery.startTime + newDeliveryDuration;
+        const auto targetTime = newDelivery.dacTime + newDeliveryDuration;
         m_currentTarget.emplace(targetTime, targetConsumedSamples);
     }
 

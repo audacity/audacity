@@ -48,7 +48,7 @@ private:
         TrackId trackId;
         audio::audioch_t channel;
         QueueSample sample;
-        std::chrono::steady_clock::time_point when;
+        TimePoint dacTime;
     };
 
     static constexpr auto leastDb = -100.0f;

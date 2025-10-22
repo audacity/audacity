@@ -188,7 +188,7 @@ public:
     void SetListener(const std::shared_ptr< AudioIOListener >& listener);
 
     struct AudioDelivery {
-        std::chrono::steady_clock::time_point startTime;
+        TimePoint dacTime;
         int numSamples = 0;
     };
     using AudioDeliveryQueue = LockFreeQueue<AudioDelivery>;
@@ -220,17 +220,12 @@ public:
         unsigned long framesPerBuffer);
     void DoPlaythrough(
         constSamplePtr inputBuffer, float* outputBuffer, unsigned long framesPerBuffer, float* outputMeterFloats);
-    void SendVuInputMeterData(const float* inputSamples, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo,
-                              const std::chrono::steady_clock::time_point& when);
-    void SendVuOutputMeterData(
-        const float* outputMeterFloats, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo,
-        const std::chrono::steady_clock::time_point& when);
-    void PushMainMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, uint8_t channels, unsigned long frames,
-                             const PaStreamCallbackTimeInfo* timeInfo, const std::chrono::steady_clock::time_point& when);
-    void PushTrackMeterValues(const std::shared_ptr<IMeterSender>& sender, unsigned long frames, const PaStreamCallbackTimeInfo* timeInfo,
-                              const std::chrono::steady_clock::time_point& when);
-    void PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, unsigned long frames,
-                              const PaStreamCallbackTimeInfo* timeInfo, const std::chrono::steady_clock::time_point& when);
+    void SendVuInputMeterData(const float* inputSamples, unsigned long framesPerBuffer, const TimePoint& dacTime);
+    void SendVuOutputMeterData(const float* outputMeterFloats, unsigned long framesPerBuffer, const TimePoint& dacTime);
+    void PushMainMeterValues(const IMeterSenderPtr& sender, const float* values, uint8_t channels, unsigned long frames,
+                             const TimePoint& dacTime);
+    void PushTrackMeterValues(const IMeterSenderPtr& sender, unsigned long frames, const TimePoint& dacTime);
+    void PushInputMeterValues(const IMeterSenderPtr& sender, const float* values, unsigned long frames, const TimePoint& dacTime);
 
     /** \brief Get the number of audio samples ready in all of the playback
     * buffers.

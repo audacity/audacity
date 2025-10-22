@@ -71,7 +71,7 @@ Meter::Meter(std::unique_ptr<ITimer> meterUpdateTimer, std::unique_ptr<ITimer> s
         }
 
         const auto now = std::chrono::steady_clock::now();
-        while (!m_mainThreadQueue.empty() && now >= m_mainThreadQueue.front().when) {
+        while (!m_mainThreadQueue.empty() && now >= m_mainThreadQueue.front().dacTime) {
             const QueueItem& item = m_mainThreadQueue.front();
             auto& levels = m_trackData[item.trackId].channelLevels[item.channel];
             maybeBumpUp(levels.peak, item.sample.peak, m_hangoverCount.load());
@@ -121,7 +121,7 @@ void Meter::push(uint8_t channel, const IMeterSender::InterleavedSampleData& sam
         m_hangoverCount.store(std::ceil(hangoverTime / updatePeriod));
     }
     const QueueSample value = getSamplesMaxValue(sampleData.buffer, sampleData.frames, sampleData.nChannels);
-    m_lockFreeQueue.Put(QueueItem { trackId, channel, value, sampleData.when });
+    m_lockFreeQueue.Put(QueueItem { trackId, channel, value, sampleData.dacTime });
 }
 
 void Meter::start(double sampleRate)
