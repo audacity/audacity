@@ -15,7 +15,6 @@
 #include "../ieffectsprovider.h"
 #include "../ieffectpresetsscenario.h"
 #include "iinteractive.h"
-#include "playback/iplaybackcontroller.h"
 
 namespace au::effects {
 class EffectsUiActions;
