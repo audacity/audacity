@@ -45,6 +45,7 @@
 
 #include "internal/au3/au3tracksinteraction.h"
 #include "internal/au3/au3clipsinteraction.h"
+#include "internal/au3/au3labelsinteraction.h"
 
 #include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
@@ -87,6 +88,7 @@ void TrackeditModule::registerExports()
 
     ioc()->registerExport<ITracksInteraction>(moduleName(), new Au3TracksInteraction());
     ioc()->registerExport<IClipsInteraction>(moduleName(), new Au3ClipsInteraction());
+    ioc()->registerExport<ILabelsInteraction>(moduleName(), new Au3LabelsInteraction());
 }
 
 void TrackeditModule::registerUiTypes()

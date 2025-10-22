@@ -13,6 +13,7 @@
 #include "itrackandclipoperations.h"
 #include "itracksinteraction.h"
 #include "iclipsinteraction.h"
+#include "ilabelsinteraction.h"
 #include "itrackeditclipboard.h"
 
 namespace au::trackedit {
@@ -21,6 +22,7 @@ class TrackeditOperationController : public ITrackeditInteraction, public muse::
     muse::Inject<ITrackAndClipOperations> trackAndClipOperations;
     muse::Inject<ITracksInteraction> tracksInteraction;
     muse::Inject<IClipsInteraction> clipsInteraction;
+    muse::Inject<ILabelsInteraction> labelsInteraction;
     muse::Inject<ITrackeditClipboard> clipboard;
     muse::Inject<IProjectHistory> projectHistory;
     muse::Inject<au::context::IGlobalContext> globalContext;
