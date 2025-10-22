@@ -11,7 +11,7 @@
 #include "audio/iaudioengine.h"
 #include "actions/iactionsdispatcher.h"
 #include "trackedit/iprojecthistory.h"
-#include "playback/iplayback.h"
+#include "context/iplaybackstate.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "trackedit/iselectioncontroller.h"
 
@@ -30,7 +30,6 @@ class Au3Record : public IRecord, public muse::async::Asyncable
     muse::Inject<au::audio::IAudioEngine> audioEngine;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
-    muse::Inject<au::playback::IPlayback> playback;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<au::trackedit::ISelectionController> selectionController;
 
@@ -69,5 +68,7 @@ private:
     std::vector<RecordData> m_recordData;
 
     muse::ValCh<muse::secs_t> m_recordPosition;
+
+    context::IPlaybackStatePtr playbackState() const;
 };
 }
