@@ -226,17 +226,17 @@ TrackItemsContainer {
     Connections {
         target: root.container
 
-        function onItemMoveRequested(objectKey, completed) {
+        function onItemMoveRequested(itemKey, completed) {
             console.info("Labels don't support clip moving yet")
             root.updateMoveActive(completed)
         }
 
-        function onItemStartEditRequested(objectKey) {
-            labelsModel.startEditItem(objectKey)
+        function onItemStartEditRequested(itemKey) {
+            labelsModel.startEditItem(itemKey)
         }
 
-        function onItemEndEditRequested(objectKey) {
-            labelsModel.endEditItem(objectKey)
+        function onItemEndEditRequested(itemKey) {
+            labelsModel.endEditItem(itemKey)
         }
 
         function onStartAutoScroll() {

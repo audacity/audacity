@@ -238,7 +238,7 @@ double Au3SelectionController::selectedClipStartTime() const
         return -1.0;
     }
 
-    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.objectId);
+    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
     if (!clip) {
         return -1.0;
     }
@@ -260,7 +260,7 @@ double Au3SelectionController::selectedClipEndTime() const
         return -1.0;
     }
 
-    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.objectId);
+    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
     if (!clip) {
         return -1.0;
     }
@@ -277,7 +277,7 @@ double Au3SelectionController::leftMostSelectedClipStartTime() const
             continue;
         }
 
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.objectId);
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.itemId);
         IF_ASSERT_FAILED(clip) {
             continue;
         }
@@ -308,7 +308,7 @@ double Au3SelectionController::rightMostSelectedClipEndTime() const
             continue;
         }
 
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.objectId);
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.itemId);
         IF_ASSERT_FAILED(clip) {
             continue;
         }
@@ -439,7 +439,7 @@ double Au3SelectionController::selectedLabelStartTime() const
         return -1.0;
     }
 
-    const Au3Label* label = labelTrack->GetLabel(labelKey.objectId);
+    const Au3Label* label = labelTrack->GetLabel(labelKey.itemId);
     if (!label) {
         return -1.0;
     }
@@ -461,7 +461,7 @@ double Au3SelectionController::selectedLabelEndTime() const
         return -1.0;
     }
 
-    const Au3Label* label = labelTrack->GetLabel(labelKey.objectId);
+    const Au3Label* label = labelTrack->GetLabel(labelKey.itemId);
     if (!label) {
         return -1.0;
     }
@@ -478,7 +478,7 @@ double Au3SelectionController::leftMostSelectedLabelStartTime() const
             continue;
         }
 
-        const Au3Label* label = labelTrack->GetLabel(selectedLabel.objectId);
+        const Au3Label* label = labelTrack->GetLabel(selectedLabel.itemId);
         IF_ASSERT_FAILED(label) {
             continue;
         }
@@ -509,7 +509,7 @@ double Au3SelectionController::rightMostSelectedLabelEndTime() const
             continue;
         }
 
-        const Au3Label* label = labelTrack->GetLabel(selectedLabel.objectId);
+        const Au3Label* label = labelTrack->GetLabel(selectedLabel.itemId);
         IF_ASSERT_FAILED(label) {
             continue;
         }
@@ -655,7 +655,7 @@ bool Au3SelectionController::selectionContainsGroup() const
             return false;
         }
 
-        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.objectId);
+        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
         IF_ASSERT_FAILED(clip) {
             return false;
         }
@@ -683,7 +683,7 @@ bool Au3SelectionController::isSelectionGrouped() const
             return false;
         }
 
-        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.objectId);
+        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
         IF_ASSERT_FAILED(clip) {
             return false;
         }

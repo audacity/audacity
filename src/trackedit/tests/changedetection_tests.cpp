@@ -76,7 +76,7 @@ protected:
     static void addClipToTrack(TracksAndClips& structure, TrackId trackId, int j)
     {
         auto& newClip = structure.clips[trackId].emplace_back();
-        newClip.key.objectId = j;
+        newClip.key.itemId = j;
         newClip.key.trackId = trackId;
 
         // None of the below should cause a change trigger:

@@ -12,7 +12,7 @@ TrackClipItem::TrackClipItem(QObject* parent)
 
 void TrackClipItem::setClip(const trackedit::Clip& clip)
 {
-    m_key = TrackObjectKey(clip.key);
+    m_key = TrackItemKey(clip.key);
     m_title = clip.title;
     m_color = clip.color.toQColor();
     m_groupId = clip.groupId;

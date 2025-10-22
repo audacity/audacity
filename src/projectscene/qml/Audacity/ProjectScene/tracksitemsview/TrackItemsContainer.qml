@@ -34,8 +34,8 @@ Item {
 
     signal interactionStarted()
     signal interactionEnded()
-    signal trackItemMousePositionChanged(real x, real y, var objectKey)
-    signal setHoveredObjectKey(var objectKey)
+    signal trackItemMousePositionChanged(real x, real y, var itemKey)
+    signal setHoveredItemKey(var itemKey)
 
     signal itemHeaderHoveredChanged(bool val)
 

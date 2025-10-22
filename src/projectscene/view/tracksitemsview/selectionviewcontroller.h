@@ -45,9 +45,9 @@ public:
     Q_INVOKABLE void onSelectionDraged(double x, double x2, bool completed);
 
     Q_INVOKABLE void selectTrackAudioData(double y);
-    Q_INVOKABLE void selectObjectData(const TrackObjectKey& objectKey);
+    Q_INVOKABLE void selectItemData(const TrackItemKey& key);
 
-    Q_INVOKABLE void resetSelectedObjects();
+    Q_INVOKABLE void resetSelectedItems();
     Q_INVOKABLE void resetSelectedClips();
     Q_INVOKABLE void resetSelectedLabel();
     Q_INVOKABLE void resetDataSelection();

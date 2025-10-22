@@ -14,7 +14,7 @@ ViewTrackItem::~ViewTrackItem()
 {
 }
 
-TrackObjectKey ViewTrackItem::key() const
+TrackItemKey ViewTrackItem::key() const
 {
     return m_key;
 }
@@ -108,12 +108,12 @@ void ViewTrackItem::setRightVisibleMargin(double newRightVisibleMargin)
     emit rightVisibleMarginChanged();
 }
 
-TrackObjectTime ViewTrackItem::time() const
+TrackItemTime ViewTrackItem::time() const
 {
     return m_time;
 }
 
-void ViewTrackItem::setTime(const TrackObjectTime& newTime)
+void ViewTrackItem::setTime(const TrackItemTime& newTime)
 {
     if (m_time == newTime) {
         return;

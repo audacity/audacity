@@ -112,14 +112,14 @@ void TrackLabelsListModel::update()
     std::unordered_map<LabelId, TrackLabelItem*> oldItems;
     for (int row = 0; row < m_items.size(); ++row) {
         TrackLabelItem* labelItem = static_cast<TrackLabelItem*>(m_items[row]);
-        oldItems.emplace(labelItem->key().key.objectId, labelItem);
+        oldItems.emplace(labelItem->key().key.itemId, labelItem);
     }
 
     QList<TrackLabelItem*> newList;
 
     // Building a new list, reusing existing labels
     for (const au::trackedit::Label& l : m_allLabelList) {
-        auto it = oldItems.find(l.key.objectId);
+        auto it = oldItems.find(l.key.itemId);
         TrackLabelItem* item = nullptr;
 
         if (it != oldItems.end()) {
@@ -240,7 +240,7 @@ void TrackLabelsListModel::resetSelectedLabels()
     selectionController()->resetSelectedLabels();
 }
 
-TrackObjectKeyList TrackLabelsListModel::getSelectedItemKeys() const
+TrackItemKeyList TrackLabelsListModel::getSelectedItemKeys() const
 {
     return selectionController()->selectedLabels();
 }

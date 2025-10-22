@@ -27,23 +27,23 @@ public:
     Q_ENUM(Type)
 };
 
-class TrackObjectKey
+class TrackItemKey
 {
     Q_GADGET
 
 public:
 
-    TrackObjectKey() = default;
-    TrackObjectKey(const trackedit::TrackObjectKey& k)
+    TrackItemKey() = default;
+    TrackItemKey(const trackedit::TrackItemKey& k)
         : key(k) {}
 
-    trackedit::TrackObjectKey key;
+    trackedit::TrackItemKey key;
 };
 
-using ClipKey = TrackObjectKey;
-using LabelKey = TrackObjectKey;
+using ClipKey = TrackItemKey;
+using LabelKey = TrackItemKey;
 
-class TrackObjectTime
+class TrackItemTime
 {
     Q_GADGET
 
@@ -58,7 +58,7 @@ public:
     double selectionStartTime = 0.0;
     double selectionEndTime = 0.0;
 
-    inline bool operator==(const TrackObjectTime& other) const
+    inline bool operator==(const TrackItemTime& other) const
     {
         return muse::is_equal(startTime, other.startTime)
                && muse::is_equal(endTime, other.endTime)
@@ -68,11 +68,11 @@ public:
                && muse::is_equal(selectionEndTime, other.selectionEndTime);
     }
 
-    inline bool operator!=(const TrackObjectTime& other) const { return !this->operator==(other); }
+    inline bool operator!=(const TrackItemTime& other) const { return !this->operator==(other); }
 };
 
-using ClipTime = TrackObjectTime;
-using LabelTime = TrackObjectTime;
+using ClipTime = TrackItemTime;
+using LabelTime = TrackItemTime;
 
 class VerticalRulerTypes
 {
