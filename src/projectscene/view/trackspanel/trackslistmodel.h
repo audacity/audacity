@@ -63,6 +63,8 @@ public:
     Q_INVOKABLE void startActiveDrag();
     Q_INVOKABLE void endActiveDrag();
 
+    Q_INVOKABLE void addLabelToSelection();
+
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex& index, int role) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;

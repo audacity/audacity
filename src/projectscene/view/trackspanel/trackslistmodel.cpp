@@ -5,6 +5,9 @@
 
 #include "uicomponents/view/itemmultiselectionmodel.h"
 
+#include "view/trackspanel/wavetrackitem.h"
+#include "view/trackspanel/labeltrackitem.h"
+
 #include "log.h"
 
 using namespace au::projectscene;
@@ -295,6 +298,11 @@ void TracksListModel::endActiveDrag()
     setLoadingBlocked(false);
 }
 
+void TracksListModel::addLabelToSelection()
+{
+    dispatcher()->dispatch("add-label");
+}
+
 void TracksListModel::clear()
 {
     TRACEFUNC;
@@ -528,8 +536,23 @@ void TracksListModel::onProjectChanged()
 
 TrackItem* TracksListModel::buildTrackItem(const Track& track)
 {
-    auto item = new TrackItem(this);
-    item->init(track);
+    TrackItem* item = nullptr;
+
+    switch (track.type) {
+    case trackedit::TrackType::Mono:
+    case trackedit::TrackType::Stereo:
+        item = new WaveTrackItem(this);
+        break;
+    case trackedit::TrackType::Label:
+        item = new LabelTrackItem(this);
+        break;
+    default:
+        break;
+    }
+
+    if (item) {
+        item->init(track);
+    }
 
     return item;
 }

@@ -7,13 +7,15 @@
 
 #include "UndoManager.h"
 
-#include "iprojecthistory.h"
 #include "modularity/ioc.h"
+#include "iglobalconfiguration.h"
+#include "iprojecthistory.h"
 
 struct TrackListEvent;
 namespace au::trackedit {
 class Au3TrackeditProject : public ITrackeditProject
 {
+    muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
@@ -25,6 +27,7 @@ public:
     std::optional<Track> track(TrackId trackId) const override;
     Clip clip(const ClipKey& key) const override;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const override;
+    muse::async::NotifyList<Label> labelList(const TrackId& trackId) const override;
     std::vector<int64_t> groupsIdsList() const override;
     std::optional<std::string> trackName(const TrackId& trackId) const override;
 
@@ -39,6 +42,10 @@ public:
     void notifyAboutClipChanged(const Clip& clip) override;
     void notifyAboutClipAdded(const Clip& clip) override;
     void notifyAboutClipRemoved(const Clip& clip) override;
+
+    void notifyAboutLabelChanged(const Label& label) override;
+    void notifyAboutLabelAdded(const Label& label) override;
+    void notifyAboutLabelRemoved(const Label& label) override;
 
     TimeSignature timeSignature() const override;
     void setTimeSignature(const TimeSignature& timeSignature) override;
@@ -63,11 +70,13 @@ private:
     void onProjectTempoChange(double newTempo);
 
     au::trackedit::Clips getClips(const TrackId& trackId) const;
+    au::trackedit::Labels getLabels(const TrackId& trackId) const;
 
     struct Au3Impl;
     std::shared_ptr<Au3Impl> m_impl;
 
     mutable std::map<TrackId, muse::async::ChangedNotifier<Clip> > m_clipsChanged;
+    mutable std::map<TrackId, muse::async::ChangedNotifier<Label> > m_labelsChanged;
     mutable muse::async::Channel<au::trackedit::TimeSignature> m_timeSignatureChanged;
 
     mutable muse::async::Channel<trackedit::TrackList> m_tracksChanged;

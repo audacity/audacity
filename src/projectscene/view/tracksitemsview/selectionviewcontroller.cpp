@@ -9,7 +9,7 @@ using namespace au::projectscene;
 using namespace au::project;
 using namespace au::trackedit;
 
-//! NOTE: sync with ClipsSelection.qml minSelection
+//! NOTE: sync with ObjectsSelection.qml minSelection
 constexpr double MIN_SELECTION_PX = 1.0;
 
 SelectionViewController::SelectionViewController(QObject* parent)
@@ -242,22 +242,52 @@ void SelectionViewController::selectTrackAudioData(double y)
     selectionController()->setSelectedTrackAudioData(tracks.at(0));
 }
 
-void SelectionViewController::selectClipAudioData(const ClipKey& clipKey)
+void SelectionViewController::selectObjectData(const TrackObjectKey& objectKey)
 {
     if (!isProjectOpened()) {
         return;
     }
 
-    selectionController()->setSelectedClips(ClipKeyList({ clipKey.key }));
+    auto prj = globalContext()->currentTrackeditProject();
+    auto track = prj->track(objectKey.key.trackId);
+    if (!track.has_value()) {
+        LOGW() << "Track not found: " << objectKey.key.trackId;
+        return;
+    }
+
+    if (track->type == trackedit::TrackType::Label) {
+        selectionController()->setSelectedLabels(trackedit::LabelKeyList({ objectKey.key }));
+    } else {
+        selectionController()->setSelectedClips(trackedit::ClipKeyList({ objectKey.key }));
+    }
 }
 
-void SelectionViewController::resetSelectedClip()
+void SelectionViewController::resetSelectedObjects()
 {
     if (!isProjectOpened()) {
         return;
     }
 
     selectionController()->resetSelectedClips();
+    selectionController()->resetSelectedLabels();
+}
+
+void SelectionViewController::resetSelectedClips()
+{
+    if (!isProjectOpened()) {
+        return;
+    }
+
+    selectionController()->resetSelectedClips();
+}
+
+void SelectionViewController::resetSelectedLabel()
+{
+    if (!isProjectOpened()) {
+        return;
+    }
+
+    selectionController()->resetSelectedLabels();
 }
 
 void SelectionViewController::resetDataSelection()

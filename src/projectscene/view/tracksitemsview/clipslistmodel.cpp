@@ -135,7 +135,7 @@ void ClipsListModel::reload()
             item->setClip(clip);
         }
 
-        m_context->updateSelectedClipTime();
+        m_context->updateSelectedObjectTime();
 
         updateItemsMetrics();
     });
@@ -206,7 +206,7 @@ void ClipsListModel::update()
 {
     std::unordered_map<ClipId, ClipListItem*> oldItems;
     for (int row = 0; row < m_clipList.size(); ++row) {
-        oldItems.emplace(m_clipList[row]->key().key.clipId, m_clipList[row]);
+        oldItems.emplace(m_clipList[row]->key().key.objectId, m_clipList[row]);
     }
 
     QList<ClipListItem*> newList;
@@ -214,7 +214,7 @@ void ClipsListModel::update()
 
     // Building a new list, reusing exiting clips
     for (const au::trackedit::Clip& c : m_allClipList) {
-        auto it = oldItems.find(c.key.clipId);
+        auto it = oldItems.find(c.key.objectId);
         ClipListItem* item = nullptr;
 
         if (it != oldItems.end()) {
@@ -297,8 +297,8 @@ void ClipsListModel::updateItemsMetrics(ClipListItem* item)
     const trackedit::Clip& clip = item->clip();
 
     ClipTime time;
-    time.clipStartTime = clip.startTime;
-    time.clipEndTime = clip.endTime;
+    time.startTime = clip.startTime;
+    time.endTime = clip.endTime;
     time.itemStartTime = std::max(clip.startTime, (m_context->frameStartTime() - cacheTime));
     time.itemEndTime = std::min(clip.endTime, (m_context->frameEndTime() + cacheTime));
 
@@ -415,7 +415,7 @@ QVariant ClipsListModel::prev(const ClipKey& key) const
 QVariant ClipsListModel::neighbor(const ClipKey& key, int offset) const
 {
     auto it = std::find_if(m_clipList.begin(), m_clipList.end(), [key](ClipListItem* clip) {
-        return clip->key().key.clipId == key.key.clipId;
+        return clip->key().key.objectId == key.key.objectId;
     });
 
     if (it == m_clipList.end()) {
@@ -491,7 +491,7 @@ bool ClipsListModel::isKeyboardTriggered() const
 
     auto vs = prj->viewState();
 
-    return muse::RealIsEqual(vs->clipEditStartTimeOffset(), -1.0);
+    return muse::RealIsEqual(vs->objectEditStartTimeOffset(), -1.0);
 }
 
 void ClipsListModel::handleAutoScroll(bool ok,
@@ -504,7 +504,7 @@ void ClipsListModel::handleAutoScroll(bool ok,
     }
 
     // do not handle auto-scroll when using key-nav
-    if (muse::RealIsEqual(vs->clipEditStartTimeOffset(), -1.0)) {
+    if (muse::RealIsEqual(vs->objectEditStartTimeOffset(), -1.0)) {
         return;
     }
 
@@ -537,8 +537,8 @@ secs_t ClipsListModel::calculateTimePositionOffset(const ClipListItem* item) con
         return 0.0;
     }
 
-    double newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
-    double duration = item->time().clipEndTime - item->time().clipStartTime;
+    double newStartTime = m_context->mousePositionTime() - vs->objectEditStartTimeOffset();
+    double duration = item->time().endTime - item->time().startTime;
     double newEndTime = newStartTime + duration;
 
     double snappedEndTime = newEndTime;
@@ -559,7 +559,7 @@ secs_t ClipsListModel::calculateTimePositionOffset(const ClipListItem* item) con
                ? snappedStartTime : snappedEndTime - duration);
     }
 
-    secs_t timePositionOffset = newStartTime - item->time().clipStartTime;
+    secs_t timePositionOffset = newStartTime - item->time().startTime;
 
     constexpr auto limit = 1. / 192000.; // 1 sample at 192 kHz
     if (!muse::RealIsEqualOrMore(std::abs(timePositionOffset), limit)) {
@@ -579,7 +579,7 @@ void ClipsListModel::openClipPitchEdit(const ClipKey& key)
 
     muse::UriQuery query(EDIT_PITCH_AND_SPEED_URI);
     query.addParam("trackId", muse::Val(std::to_string(key.key.trackId)));
-    query.addParam("clipId", muse::Val(std::to_string(key.key.clipId)));
+    query.addParam("clipId", muse::Val(std::to_string(key.key.objectId)));
     query.addParam("focusItemName", muse::Val("pitch"));
 
     interactive()->open(query);
@@ -600,7 +600,7 @@ void ClipsListModel::openClipSpeedEdit(const ClipKey& key)
 
     muse::UriQuery query(EDIT_PITCH_AND_SPEED_URI);
     query.addParam("trackId", muse::Val(std::to_string(key.key.trackId)));
-    query.addParam("clipId", muse::Val(std::to_string(key.key.clipId)));
+    query.addParam("clipId", muse::Val(std::to_string(key.key.objectId)));
     query.addParam("focusItemName", muse::Val("speed"));
 
     interactive()->open(query);
@@ -624,14 +624,14 @@ QVariant ClipsListModel::findGuideline(const ClipKey& key, Direction direction)
     }
 
     if (direction != Direction::Right) {
-        double clipStartTime = item->time().clipStartTime;
+        double clipStartTime = item->time().startTime;
         double guidelineTime = m_context->findGuideline(clipStartTime);
         if (!muse::RealIsEqual(guidelineTime, -1.0)) {
             return QVariant(guidelineTime);
         }
     }
     if (direction != Direction::Left) {
-        double clipEndTime = item->time().clipEndTime;
+        double clipEndTime = item->time().endTime;
         double guidelineTime = m_context->findGuideline(clipEndTime);
         if (!muse::RealIsEqual(guidelineTime, -1.0)) {
             return QVariant(guidelineTime);
@@ -665,7 +665,7 @@ au::projectscene::ClipKey ClipsListModel::updateClipTrack(ClipKey clipKey) const
 
     auto selectedClips = selectionController()->selectedClips();
     for (const auto& selectedClip : selectedClips) {
-        if (selectedClip.clipId == clipKey.key.clipId) {
+        if (selectedClip.objectId == clipKey.key.objectId) {
             return selectedClip;
         }
     }
@@ -687,8 +687,8 @@ void ClipsListModel::startEditClip(const ClipKey& key)
 
     double mousePositionTime = m_context->mousePositionTime();
 
-    vs->setClipEditStartTimeOffset(mousePositionTime - item->clip().startTime);
-    vs->setClipEditEndTimeOffset(item->clip().endTime - mousePositionTime);
+    vs->setObjectEditStartTimeOffset(mousePositionTime - item->clip().startTime);
+    vs->setObjectEditEndTimeOffset(item->clip().endTime - mousePositionTime);
     vs->updateClipsBoundaries(true, key.key);
 }
 
@@ -706,8 +706,8 @@ void ClipsListModel::endEditClip(const ClipKey& key)
 
     disconnectAutoScroll();
 
-    vs->setClipEditStartTimeOffset(-1.0);
-    vs->setClipEditEndTimeOffset(-1.0);
+    vs->setObjectEditStartTimeOffset(-1.0);
+    vs->setObjectEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
     vs->updateClipsBoundaries(true);
 }
@@ -792,7 +792,7 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipBounda
             undoType = UndoPushType::CONSOLIDATE;
         }
     } else {
-        newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
+        newStartTime = m_context->mousePositionTime() - vs->objectEditStartTimeOffset();
         if (vs->isSnapEnabled()) {
             newStartTime = m_context->applySnapToTime(newStartTime);
         } else {
@@ -857,7 +857,7 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed, ClipBound
             undoType = UndoPushType::CONSOLIDATE;
         }
     } else {
-        newEndTime = m_context->mousePositionTime() + vs->clipEditEndTimeOffset();
+        newEndTime = m_context->mousePositionTime() + vs->objectEditEndTimeOffset();
         if (vs->isSnapEnabled()) {
             newEndTime = m_context->applySnapToTime(newEndTime);
         } else {
@@ -920,7 +920,7 @@ bool ClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, ClipBou
             undoType = UndoPushType::CONSOLIDATE;
         }
     } else {
-        newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
+        newStartTime = m_context->mousePositionTime() - vs->objectEditStartTimeOffset();
         if (vs->isSnapEnabled()) {
             newStartTime = m_context->applySnapToTime(newStartTime);
         } else {
@@ -985,7 +985,7 @@ bool ClipsListModel::stretchRightClip(const ClipKey& key, bool completed, ClipBo
             undoType = UndoPushType::CONSOLIDATE;
         }
     } else {
-        newEndTime = m_context->mousePositionTime() + vs->clipEditEndTimeOffset();
+        newEndTime = m_context->mousePositionTime() + vs->objectEditEndTimeOffset();
         if (vs->isSnapEnabled()) {
             newEndTime = m_context->applySnapToTime(newEndTime);
         } else {
