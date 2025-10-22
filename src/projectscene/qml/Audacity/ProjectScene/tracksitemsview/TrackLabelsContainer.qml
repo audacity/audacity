@@ -170,6 +170,22 @@ TrackItemsContainer {
                                     labelsModel.resetSelectedLabels()
                                 }
 
+                                onLabelStartEditRequested: function() {
+                                    labelsModel.startEditItem(itemData.key)
+                                }
+
+                                onLabelEndEditRequested: function() {
+                                    labelsModel.endEditItem(itemData.key)
+                                }
+
+                                onLabelLeftStretchRequested: function(completed) {
+                                    labelsModel.stretchLabelLeft(itemData.key, completed)
+                                }
+
+                                onLabelRightStretchRequested: function(completed) {
+                                    labelsModel.stretchLabelRight(itemData.key, completed)
+                                }
+
                                 onHeaderHoveredChanged: function() {
                                     root.itemHeaderHoveredChanged(headerHovered)
                                 }
