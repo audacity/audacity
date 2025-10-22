@@ -42,6 +42,7 @@
 #include "internal/au3/au3selectioncontroller.h"
 #include "internal/au3/au3projecthistory.h"
 #include "internal/au3/au3trackeditclipboard.h"
+#include "internal/au3/au3tracksinteraction.h"
 
 #include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
@@ -81,6 +82,8 @@ void TrackeditModule::registerExports()
     ioc()->registerExport<ITrackeditClipboard>(moduleName(), new Au3TrackeditClipboard());
     ioc()->registerExport<ITrackeditConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<ITrackNavigationController>(moduleName(), m_trackNavigationController);
+
+    ioc()->registerExport<ITracksInteraction>(moduleName(), new Au3TracksInteraction());
 }
 
 void TrackeditModule::registerUiTypes()

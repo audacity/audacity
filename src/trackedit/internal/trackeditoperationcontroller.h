@@ -3,19 +3,22 @@
  */
 #pragma once
 
+#include "async/asyncable.h"
+
+#include "modularity/ioc.h"
+#include "context/iglobalcontext.h"
 #include "itrackeditinteraction.h"
 #include "iprojecthistory.h"
-#include "itrackandclipoperations.h"
-#include "itrackeditclipboard.h"
 #include "iundomanager.h"
-#include "context/iglobalcontext.h"
-#include "async/asyncable.h"
-#include "modularity/ioc.h"
+#include "itrackandclipoperations.h"
+#include "itracksinteraction.h"
+#include "itrackeditclipboard.h"
 
 namespace au::trackedit {
 class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable, public muse::async::Asyncable
 {
     muse::Inject<ITrackAndClipOperations> trackAndClipOperations;
+    muse::Inject<ITracksInteraction> tracksInteraction;
     muse::Inject<ITrackeditClipboard> clipboard;
     muse::Inject<IProjectHistory> projectHistory;
     muse::Inject<au::context::IGlobalContext> globalContext;
