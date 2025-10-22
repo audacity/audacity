@@ -1,0 +1,117 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+
+#include "au3labelsinteraction.h"
+
+#include "libraries/lib-label-track/LabelTrack.h"
+
+#include "au3wrap/internal/domaccessor.h"
+#include "au3wrap/internal/domconverter.h"
+#include "au3wrap/internal/wxtypes_convert.h"
+
+#include "log.h"
+
+using namespace au::trackedit;
+using namespace au::au3;
+
+Au3LabelsInteraction::Au3LabelsInteraction()
+{
+    m_progress.setMaxNumIncrements(200);
+}
+
+au::au3::Au3Project& Au3LabelsInteraction::projectRef() const
+{
+    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    return *project;
+}
+
+au::context::IPlaybackStatePtr Au3LabelsInteraction::playbackState() const
+{
+    return globalContext()->playbackState();
+}
+
+bool Au3LabelsInteraction::addLabelToSelection()
+{
+    auto& project = projectRef();
+    auto& tracks = Au3TrackList::Get(project);
+
+    Au3LabelTrack* labelTrack = nullptr;
+
+    const auto focusedTrackId = selectionController()->focusedTrack();
+    if (focusedTrackId > 0) {
+        Au3Track* focusedAu3Track = DomAccessor::findTrack(project, Au3TrackId(focusedTrackId));
+        if (focusedAu3Track) {
+            labelTrack = dynamic_cast<Au3LabelTrack*>(focusedAu3Track);
+        }
+    }
+
+    // If the focused track is not a label track, search for any existing label track
+    if (!labelTrack) {
+        for (auto lt : tracks.Any<Au3LabelTrack>()) {
+            labelTrack = lt;
+            break;
+        }
+    }
+
+    // If no label track exists, create a new one
+    if (!labelTrack) {
+        labelTrack = ::LabelTrack::Create(tracks);
+
+        const auto prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackAdded(DomConverter::labelTrack(labelTrack));
+    }
+
+    wxString title = wxEmptyString;
+    SelectedRegion selectedRegion;
+    selectedRegion.setTimes(selectionController()->dataSelectedStartTime(),
+                            selectionController()->dataSelectedEndTime());
+
+    int labelIndex = labelTrack->AddLabel(selectedRegion, title);
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        const auto& au3labels = labelTrack->GetLabels();
+        if (labelIndex >= 0 && labelIndex < static_cast<int>(au3labels.size())) {
+            prj->notifyAboutLabelAdded(DomConverter::label(labelTrack, labelIndex, au3labels[labelIndex]));
+        }
+    }
+
+    selectionController()->setFocusedTrack(labelTrack->GetId());
+
+    return true;
+}
+
+bool Au3LabelsInteraction::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)
+{
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    const auto& au3labels = labelTrack->GetLabels();
+    size_t labelIndex = static_cast<size_t>(labelKey.itemId);
+
+    IF_ASSERT_FAILED(labelIndex < au3labels.size()) {
+        return false;
+    }
+
+    Au3Label au3Label = au3labels[labelIndex];
+    au3Label.title = wxFromString(title);
+    labelTrack->SetLabel(labelIndex, au3Label);
+
+    LOGD() << "changed title of label: " << labelKey.itemId << ", track: " << labelKey.trackId;
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, labelIndex, labelTrack->GetLabels()[labelIndex]));
+    }
+
+    return true;
+}
+
+muse::Progress Au3LabelsInteraction::progress() const
+{
+    return m_progress;
+}
