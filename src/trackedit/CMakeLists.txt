@@ -19,6 +19,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/itrackandclipoperations.h
     ${CMAKE_CURRENT_LIST_DIR}/itracksinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/iclipsinteraction.h
+    ${CMAKE_CURRENT_LIST_DIR}/ilabelsinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojecthistory.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditclipboard.h
@@ -74,6 +75,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3tracksinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3clipsinteraction.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3clipsinteraction.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3labelsinteraction.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3labelsinteraction.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/iundomanager.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/undomanager.cpp
