@@ -166,6 +166,84 @@ bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset, bool completed)
     return true;
 }
 
+bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)
+{
+    //! NOTE: cannot start stretching until previous stretch is handled
+    if (m_busy) {
+        return false;
+    }
+    m_busy = true;
+
+    DEFER {
+        m_busy = false;
+    };
+
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    const auto& au3labels = labelTrack->GetLabels();
+    size_t labelIndex = static_cast<size_t>(labelKey.itemId);
+
+    IF_ASSERT_FAILED(labelIndex < au3labels.size()) {
+        return false;
+    }
+
+    Au3Label au3Label = au3labels[labelIndex];
+
+    // Update the label with new start time
+    au3Label.selectedRegion.setTimes(newStartTime, au3Label.getT1());
+    labelTrack->SetLabel(labelIndex, au3Label);
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, labelIndex, labelTrack->GetLabels()[labelIndex]));
+    }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
+{
+    //! NOTE: cannot start stretching until previous stretch is handled
+    if (m_busy) {
+        return false;
+    }
+    m_busy = true;
+
+    DEFER {
+        m_busy = false;
+    };
+
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    const auto& au3labels = labelTrack->GetLabels();
+    size_t labelIndex = static_cast<size_t>(labelKey.itemId);
+
+    IF_ASSERT_FAILED(labelIndex < au3labels.size()) {
+        return false;
+    }
+
+    Au3Label au3Label = au3labels[labelIndex];
+
+    // Update the label with new end time
+    au3Label.selectedRegion.setTimes(au3Label.getT0(), newEndTime);
+    labelTrack->SetLabel(labelIndex, au3Label);
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, labelIndex, labelTrack->GetLabels()[labelIndex]));
+    }
+
+    return true;
+}
+
 muse::Progress Au3LabelsInteraction::progress() const
 {
     return m_progress;

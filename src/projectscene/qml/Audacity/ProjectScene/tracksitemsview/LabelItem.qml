@@ -25,6 +25,12 @@ Item {
 
     signal labelItemMousePositionChanged(real x, real y)
 
+    signal labelStartEditRequested()
+    signal labelEndEditRequested()
+
+    signal labelLeftStretchRequested(bool completed)
+    signal labelRightStretchRequested(bool completed)
+
     property bool hover: root.containsMouse || root.headerHovered
     property bool headerHovered: false
     property bool containsMouse: false
@@ -140,6 +146,23 @@ Item {
         isRight: false
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.leftEarBackgroundColor
+        isSelected: root.isSelected
+
+        onStretchStartRequested: {
+            root.labelStartEditRequested()
+        }
+
+        onStretchMousePositionChanged: function(x, y) {
+            root.labelItemMousePositionChanged(x, y)
+        }
+
+        onStretchRequested: function(completed) {
+            root.labelLeftStretchRequested(completed)
+        }
+
+        onStretchEndRequested: {
+            root.labelEndEditRequested()
+        }
     }
 
     // Right Ear
@@ -152,6 +175,23 @@ Item {
         isRight: true
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.rightEarBackgroundColor
+        isSelected: root.isSelected
+
+        onStretchStartRequested: {
+            root.labelStartEditRequested()
+        }
+
+        onStretchMousePositionChanged: function(x, y) {
+            root.labelItemMousePositionChanged(x, y)
+        }
+
+        onStretchRequested: function(completed) {
+            root.labelRightStretchRequested(completed)
+        }
+
+        onStretchEndRequested: {
+            root.labelEndEditRequested()
+        }
     }
 
     // Main Label Header
@@ -221,6 +261,7 @@ Item {
         isRight: false
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.leftEarBackgroundColor
+        isSelected: root.isSelected
 
         visible: !prv.isPoint
 
@@ -234,6 +275,22 @@ Item {
 
         onRequestSelected: {
             root.requestSelected()
+        }
+
+        onStretchStartRequested: {
+            root.labelStartEditRequested()
+        }
+
+        onStretchMousePositionChanged: function(x, y) {
+            root.labelItemMousePositionChanged(x, y)
+        }
+
+        onStretchRequested: function(completed) {
+            root.labelLeftStretchRequested(completed)
+        }
+
+        onStretchEndRequested: {
+            root.labelEndEditRequested()
         }
     }
 
@@ -242,6 +299,7 @@ Item {
         isRight: true
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.rightEarBackgroundColor
+        isSelected: root.isSelected
 
         visible: !prv.isPoint
 
@@ -255,6 +313,22 @@ Item {
 
         onRequestSelected: {
             root.requestSelected()
+        }
+
+        onStretchStartRequested: {
+            root.labelStartEditRequested()
+        }
+
+        onStretchMousePositionChanged: function(x, y) {
+            root.labelItemMousePositionChanged(x, y)
+        }
+
+        onStretchRequested: function(completed) {
+            root.labelRightStretchRequested(completed)
+        }
+
+        onStretchEndRequested: {
+            root.labelEndEditRequested()
         }
     }
 
