@@ -666,6 +666,33 @@ bool TrackeditOperationController::changeLabelTitle(const LabelKey& labelKey, co
     return labelsInteraction()->changeLabelTitle(labelKey, title);
 }
 
+bool TrackeditOperationController::moveLabels(secs_t timePositionOffset, bool completed)
+{
+    bool success = labelsInteraction()->moveLabels(timePositionOffset, completed);
+    if (success && completed) {
+        projectHistory()->pushHistoryState("Label moved", "Move label");
+    }
+    return success;
+}
+
+bool TrackeditOperationController::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)
+{
+    bool success = labelsInteraction()->stretchLabelLeft(labelKey, newStartTime, completed);
+    if (success && completed) {
+        projectHistory()->pushHistoryState("Label stretched", "Stretch label left");
+    }
+    return success;
+}
+
+bool TrackeditOperationController::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
+{
+    bool success = labelsInteraction()->stretchLabelRight(labelKey, newEndTime, completed);
+    if (success && completed) {
+        projectHistory()->pushHistoryState("Label stretched", "Stretch label right");
+    }
+    return success;
+}
+
 muse::Progress TrackeditOperationController::progress() const
 {
     return tracksInteraction()->progress();

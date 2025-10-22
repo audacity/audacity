@@ -7,10 +7,16 @@ Rectangle {
     property bool isRight: false
     property bool enableCursorInteraction: true
     property color backgroundColor: "transparent"
+    property bool isSelected: false
 
     signal headerHoveredChanged(bool value)
     signal labelItemMousePositionChanged(real x, real y)
     signal requestSelected()
+
+    signal stretchRequested(bool completed)
+    signal stretchStartRequested()
+    signal stretchEndRequested()
+    signal stretchMousePositionChanged(real x, real y)
 
     width: 1
     height: parent.height
@@ -19,13 +25,14 @@ Rectangle {
     color: root.backgroundColor
 
     MouseArea {
+        id: stalkArea
         anchors.fill: parent
         anchors.leftMargin: -1
         anchors.rightMargin: -1
 
         acceptedButtons: Qt.LeftButton
         hoverEnabled: true
-        cursorShape: pressed ? Qt.CloseHandCursor : Qt.OpenHandCursor
+        cursorShape: !root.isForPoint ? Qt.SizeHorCursor : Qt.SizeHorCursor
 
         visible: root.enableCursorInteraction
 
@@ -37,17 +44,38 @@ Rectangle {
         }
 
         onPressed: function (e) {
-            root.requestSelected()
-            e.accepted = false
+            if (!root.isForPoint) {
+                let mousePos = mapToItem(root.parent, e.x, e.y)
+                root.stretchMousePositionChanged(mousePos.x, mousePos.y)
+                root.stretchStartRequested()
+                root.stretchRequested(false)
+                e.accepted = true
+            } else {
+                root.requestSelected()
+                e.accepted = false
+            }
         }
 
         onPositionChanged: function (e) {
-            root.labelItemMousePositionChanged(e.x, e.y)
-            e.accepted = false
+            if (pressed && !root.isForPoint) {
+                let mousePos = mapToItem(root.parent, e.x, e.y)
+                root.stretchMousePositionChanged(mousePos.x, mousePos.y)
+                root.stretchRequested(false)
+                e.accepted = true
+            } else {
+                root.labelItemMousePositionChanged(e.x, e.y)
+                e.accepted = false
+            }
         }
 
         onReleased: function (e) {
-            e.accepted = false
+            if (root.isSelected && !root.isForPoint) {
+                root.stretchRequested(true)
+                root.stretchEndRequested()
+                e.accepted = true
+            } else {
+                e.accepted = false
+            }
         }
     }
 }

@@ -3,8 +3,6 @@
 */
 #pragma once
 
-#include "trackedit/ilabelsinteraction.h"
-
 #include "trackitemslistmodel.h"
 #include "tracklabelitem.h"
 
@@ -12,8 +10,6 @@ namespace au::projectscene {
 class TrackLabelsListModel : public TrackItemsListModel
 {
     Q_OBJECT
-
-    muse::Inject<trackedit::ILabelsInteraction> labelsInteraction;
 
 public:
     explicit TrackLabelsListModel(QObject* parent = nullptr);
@@ -23,6 +19,8 @@ public:
     Q_INVOKABLE bool changeLabelTitle(const LabelKey& key, const QString& newTitle);
 
     Q_INVOKABLE bool moveSelectedLabels(const LabelKey& key, bool completed);
+    Q_INVOKABLE bool stretchLabelLeft(const LabelKey& key, bool completed);
+    Q_INVOKABLE bool stretchLabelRight(const LabelKey& key, bool completed);
 
 private:
 

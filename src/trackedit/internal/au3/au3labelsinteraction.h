@@ -27,6 +27,9 @@ public:
 
     bool moveLabels(secs_t timePositionOffset, bool completed) override;
 
+    bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
+    bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
+
     muse::Progress progress() const override;
 
 private:

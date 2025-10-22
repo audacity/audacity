@@ -23,6 +23,9 @@ public:
 
     virtual bool moveLabels(secs_t timePositionOffset, bool completed) = 0;
 
+    virtual bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) = 0;
+    virtual bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) = 0;
+
     virtual muse::Progress progress() const = 0;
 };
 }

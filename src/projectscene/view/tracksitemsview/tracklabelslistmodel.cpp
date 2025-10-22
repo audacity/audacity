@@ -238,7 +238,7 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
 
     TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, completed);
     if (vs->moveInitiated()) {
-        labelsInteraction()->moveLabels(moveOffset.timeOffset, completed);
+        trackeditInteraction()->moveLabels(moveOffset.timeOffset, completed);
     }
 
     if ((completed && m_autoScrollConnection)) {
@@ -273,4 +273,60 @@ void TrackLabelsListModel::resetSelectedLabels()
 TrackItemKeyList TrackLabelsListModel::getSelectedItemKeys() const
 {
     return selectionController()->selectedLabels();
+}
+
+bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, bool completed)
+{
+    auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    auto vs = project->viewState();
+    IF_ASSERT_FAILED(vs) {
+        return false;
+    }
+
+    double newStartTime = m_context->mousePositionTime() - vs->itemEditStartTimeOffset();
+    if (vs->isSnapEnabled()) {
+        newStartTime = m_context->applySnapToTime(newStartTime);
+    } else {
+        newStartTime = m_context->applySnapToItem(newStartTime);
+    }
+
+    bool ok = trackeditInteraction()->stretchLabelLeft(key.key, newStartTime, completed);
+
+    handleAutoScroll(ok, completed, [this, key]() {
+        stretchLabelLeft(key, false);
+    });
+
+    return ok;
+}
+
+bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, bool completed)
+{
+    auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    auto vs = project->viewState();
+    IF_ASSERT_FAILED(vs) {
+        return false;
+    }
+
+    double newEndTime = m_context->mousePositionTime() + vs->itemEditEndTimeOffset();
+    if (vs->isSnapEnabled()) {
+        newEndTime = m_context->applySnapToTime(newEndTime);
+    } else {
+        newEndTime = m_context->applySnapToItem(newEndTime);
+    }
+
+    bool ok = trackeditInteraction()->stretchLabelRight(key.key, newEndTime, completed);
+
+    handleAutoScroll(ok, completed, [this, key]() {
+        stretchLabelRight(key, false);
+    });
+
+    return ok;
 }
