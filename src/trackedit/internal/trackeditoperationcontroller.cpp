@@ -141,7 +141,7 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
 {
     auto modifiedState = false;
     const auto ret = tracksInteraction()->paste(clipboard()->trackDataCopy(), begin, moveClips, moveAllTracks,
-                                                     clipboard()->isMultiSelectionCopy(), modifiedState);
+                                                clipboard()->isMultiSelectionCopy(), modifiedState);
     if (ret) {
         projectHistory()->pushHistoryState("Pasted from the clipboard", "Paste");
     } else if (modifiedState) {

@@ -36,4 +36,3 @@ public:
     MOCK_METHOD(muse::async::Notification, pasteInsertBehaviorChanged, (), (const, override));
 };
 }
-
