@@ -131,7 +131,10 @@ private:
         if (recordController()->isRecording()) {
             return make_ret(trackedit::Err::DisallowedDuringRecording);
         }
-        dispatcher()->dispatch("playback/stop", muse::actions::ActionData::make_arg2<bool, bool>(false, false));
+        constexpr bool shouldSeek = false;
+        constexpr bool shouldUpdatePlaybackRegion = false;
+        const muse::actions::ActionData data = muse::actions::ActionData::make_arg2<bool, bool>(shouldSeek, shouldUpdatePlaybackRegion);
+        dispatcher()->dispatch("playback/stop", data);
         return (m_interaction.get()->*method)(std::forward<Args>(args)...);
     }
 
