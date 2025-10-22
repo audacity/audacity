@@ -10,7 +10,6 @@
 #include "itrackeditinteraction.h"
 #include "iprojecthistory.h"
 #include "iundomanager.h"
-#include "itrackandclipoperations.h"
 #include "itracksinteraction.h"
 #include "iclipsinteraction.h"
 #include "ilabelsinteraction.h"
@@ -19,7 +18,6 @@
 namespace au::trackedit {
 class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable, public muse::async::Asyncable
 {
-    muse::Inject<ITrackAndClipOperations> trackAndClipOperations;
     muse::Inject<ITracksInteraction> tracksInteraction;
     muse::Inject<IClipsInteraction> clipsInteraction;
     muse::Inject<ILabelsInteraction> labelsInteraction;
