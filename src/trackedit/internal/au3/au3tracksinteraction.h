@@ -11,6 +11,7 @@
 #include "iselectioncontroller.h"
 #include "itrackeditconfiguration.h"
 #include "iprojecthistory.h"
+#include "iclipsinteraction.h"
 
 #include "itracksinteraction.h"
 
@@ -20,11 +21,12 @@ using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 
 class Au3TracksInteraction : public ITracksInteraction
 {
+    muse::Inject<muse::IInteractive> interactive;
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::trackedit::ISelectionController> selectionController;
-    muse::Inject<muse::IInteractive> interactive;
     muse::Inject<au::trackedit::ITrackeditConfiguration> configuration;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
+    muse::Inject<au::trackedit::IClipsInteraction> clipsInteraction;
 
 public:
     Au3TracksInteraction();
