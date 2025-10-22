@@ -1,6 +1,6 @@
 #pragma once
 
-#include "modularity/imoduleinterface.h"
+#include "framework/global/modularity/imoduleinterface.h"
 
 #include "au3audio/audiotypes.h" // IWYU pragma: export
 #include "playbacktypes.h"
