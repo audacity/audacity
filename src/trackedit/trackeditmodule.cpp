@@ -42,7 +42,9 @@
 #include "internal/au3/au3selectioncontroller.h"
 #include "internal/au3/au3projecthistory.h"
 #include "internal/au3/au3trackeditclipboard.h"
+
 #include "internal/au3/au3tracksinteraction.h"
+#include "internal/au3/au3clipsinteraction.h"
 
 #include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
@@ -84,6 +86,7 @@ void TrackeditModule::registerExports()
     ioc()->registerExport<ITrackNavigationController>(moduleName(), m_trackNavigationController);
 
     ioc()->registerExport<ITracksInteraction>(moduleName(), new Au3TracksInteraction());
+    ioc()->registerExport<IClipsInteraction>(moduleName(), new Au3ClipsInteraction());
 }
 
 void TrackeditModule::registerUiTypes()

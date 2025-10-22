@@ -10,22 +10,22 @@ TrackeditOperationController::TrackeditOperationController(std::unique_ptr<IUndo
 
 secs_t TrackeditOperationController::clipStartTime(const ClipKey& clipKey) const
 {
-    return trackAndClipOperations()->clipStartTime(clipKey);
+    return clipsInteraction()->clipStartTime(clipKey);
 }
 
 secs_t TrackeditOperationController::clipEndTime(const ClipKey& clipKey) const
 {
-    return trackAndClipOperations()->clipEndTime(clipKey);
+    return clipsInteraction()->clipEndTime(clipKey);
 }
 
 bool TrackeditOperationController::changeClipStartTime(const ClipKey& clipKey, secs_t newStartTime, bool completed)
 {
-    return trackAndClipOperations()->changeClipStartTime(clipKey, newStartTime, completed);
+    return clipsInteraction()->changeClipStartTime(clipKey, newStartTime, completed);
 }
 
 muse::async::Channel<ClipKey, secs_t /*newStartTime*/, bool /*completed*/> TrackeditOperationController::clipStartTimeChanged() const
 {
-    return trackAndClipOperations()->clipStartTimeChanged();
+    return clipsInteraction()->clipStartTimeChanged();
 }
 
 bool TrackeditOperationController::trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
@@ -61,7 +61,7 @@ bool TrackeditOperationController::changeTrackTitle(const trackedit::TrackId tra
 
 bool TrackeditOperationController::changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle)
 {
-    if (trackAndClipOperations()->changeClipTitle(clipKey, newTitle)) {
+    if (clipsInteraction()->changeClipTitle(clipKey, newTitle)) {
         projectHistory()->pushHistoryState("Clip Title", "Changed Clip Title");
         return true;
     }
@@ -70,7 +70,7 @@ bool TrackeditOperationController::changeClipTitle(const ClipKey& clipKey, const
 
 bool TrackeditOperationController::changeClipPitch(const ClipKey& clipKey, int pitch)
 {
-    if (trackAndClipOperations()->changeClipPitch(clipKey, pitch)) {
+    if (clipsInteraction()->changeClipPitch(clipKey, pitch)) {
         projectHistory()->pushHistoryState("Pitch Shift", "Changed Pitch Shift");
         return true;
     }
@@ -79,7 +79,7 @@ bool TrackeditOperationController::changeClipPitch(const ClipKey& clipKey, int p
 
 bool TrackeditOperationController::resetClipPitch(const ClipKey& clipKey)
 {
-    if (trackAndClipOperations()->resetClipPitch(clipKey)) {
+    if (clipsInteraction()->resetClipPitch(clipKey)) {
         projectHistory()->pushHistoryState("Reset Clip Pitch", "Reset Clip Pitch");
         return true;
     }
@@ -88,7 +88,7 @@ bool TrackeditOperationController::resetClipPitch(const ClipKey& clipKey)
 
 bool TrackeditOperationController::changeClipSpeed(const ClipKey& clipKey, double speed)
 {
-    if (trackAndClipOperations()->changeClipSpeed(clipKey, speed)) {
+    if (clipsInteraction()->changeClipSpeed(clipKey, speed)) {
         projectHistory()->pushHistoryState("Changed Speed", "Changed Speed");
         return true;
     }
@@ -97,7 +97,7 @@ bool TrackeditOperationController::changeClipSpeed(const ClipKey& clipKey, doubl
 
 bool TrackeditOperationController::resetClipSpeed(const ClipKey& clipKey)
 {
-    if (trackAndClipOperations()->resetClipSpeed(clipKey)) {
+    if (clipsInteraction()->resetClipSpeed(clipKey)) {
         projectHistory()->pushHistoryState("Reset Clip Speed", "Reset Clip Speed");
         return true;
     }
@@ -106,7 +106,7 @@ bool TrackeditOperationController::resetClipSpeed(const ClipKey& clipKey)
 
 bool TrackeditOperationController::changeClipColor(const ClipKey& clipKey, const std::string& color)
 {
-    return trackAndClipOperations()->changeClipColor(clipKey, color);
+    return clipsInteraction()->changeClipColor(clipKey, color);
 }
 
 bool TrackeditOperationController::changeTracksColor(const TrackIdList& tracksIds, const std::string& color)
@@ -120,12 +120,12 @@ bool TrackeditOperationController::changeTracksColor(const TrackIdList& tracksId
 
 bool TrackeditOperationController::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
 {
-    return trackAndClipOperations()->changeClipOptimizeForVoice(clipKey, optimize);
+    return clipsInteraction()->changeClipOptimizeForVoice(clipKey, optimize);
 }
 
 bool TrackeditOperationController::renderClipPitchAndSpeed(const ClipKey& clipKey)
 {
-    if (trackAndClipOperations()->renderClipPitchAndSpeed(clipKey)) {
+    if (clipsInteraction()->renderClipPitchAndSpeed(clipKey)) {
         projectHistory()->pushHistoryState("Rendered time-stretched audio", "Render");
         return true;
     }
@@ -153,7 +153,7 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
 
 bool TrackeditOperationController::cutClipIntoClipboard(const ClipKey& clipKey)
 {
-    ITrackDataPtr data = trackAndClipOperations()->cutClip(clipKey);
+    ITrackDataPtr data = clipsInteraction()->cutClip(clipKey);
     if (!data) {
         return false;
     }
@@ -181,7 +181,7 @@ bool TrackeditOperationController::cutClipDataIntoClipboard(const TrackIdList& t
 
 bool TrackeditOperationController::copyClipIntoClipboard(const ClipKey& clipKey)
 {
-    ITrackDataPtr data = trackAndClipOperations()->copyClip(clipKey);
+    ITrackDataPtr data = clipsInteraction()->copyClip(clipKey);
     if (!data) {
         return false;
     }
@@ -215,7 +215,7 @@ bool TrackeditOperationController::copyContinuousTrackDataIntoClipboard(const Tr
 
 bool TrackeditOperationController::removeClip(const ClipKey& clipKey)
 {
-    if (const std::optional<TimeSpan> span = trackAndClipOperations()->removeClip(clipKey)) {
+    if (const std::optional<TimeSpan> span = clipsInteraction()->removeClip(clipKey)) {
         pushProjectHistoryDeleteState(span->start(), span->duration());
         return true;
     }
@@ -224,7 +224,7 @@ bool TrackeditOperationController::removeClip(const ClipKey& clipKey)
 
 bool TrackeditOperationController::removeClips(const ClipKeyList& clipKeyList, bool moveClips)
 {
-    if (trackAndClipOperations()->removeClips(clipKeyList, moveClips)) {
+    if (clipsInteraction()->removeClips(clipKeyList, moveClips)) {
         projectHistory()->pushHistoryState("Delete", "Delete multiple clips");
         return true;
     }
@@ -244,7 +244,7 @@ bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trac
                                              bool& clipsMovedToOtherTrack)
 {
     auto success = true;
-    if (!trackAndClipOperations()->moveClips(timePositionOffset, trackPositionOffset, completed, clipsMovedToOtherTrack)) {
+    if (!clipsInteraction()->moveClips(timePositionOffset, trackPositionOffset, completed, clipsMovedToOtherTrack)) {
         success = false;
         if (completed) {
             clipsMovedToOtherTrack = false;
@@ -278,7 +278,7 @@ bool TrackeditOperationController::splitTracksAt(const TrackIdList& tracksIds, s
 
 bool TrackeditOperationController::splitClipsAtSilences(const ClipKeyList& clipKeyList)
 {
-    if (trackAndClipOperations()->splitClipsAtSilences(clipKeyList)) {
+    if (clipsInteraction()->splitClipsAtSilences(clipKeyList)) {
         projectHistory()->pushHistoryState("Split clips at silence", "Split at silence");
         return true;
     }
@@ -305,7 +305,7 @@ bool TrackeditOperationController::splitRangeSelectionIntoNewTracks(const TrackI
 
 bool TrackeditOperationController::splitClipsIntoNewTracks(const ClipKeyList& clipKeyList)
 {
-    if (trackAndClipOperations()->splitClipsIntoNewTracks(clipKeyList)) {
+    if (clipsInteraction()->splitClipsIntoNewTracks(clipKeyList)) {
         projectHistory()->pushHistoryState("Split into new track", "Split into new track");
         return true;
     }
@@ -333,12 +333,12 @@ bool TrackeditOperationController::duplicateSelectedOnTracks(const TrackIdList& 
 
 bool TrackeditOperationController::duplicateClip(const ClipKey& clipKey)
 {
-    return trackAndClipOperations()->duplicateClip(clipKey);
+    return clipsInteraction()->duplicateClip(clipKey);
 }
 
 bool TrackeditOperationController::duplicateClips(const ClipKeyList& clipKeyList)
 {
-    if (trackAndClipOperations()->duplicateClips(clipKeyList)) {
+    if (clipsInteraction()->duplicateClips(clipKeyList)) {
         pushProjectHistoryDuplicateState();
         return true;
     }
@@ -347,7 +347,7 @@ bool TrackeditOperationController::duplicateClips(const ClipKeyList& clipKeyList
 
 bool TrackeditOperationController::clipSplitCut(const ClipKey& clipKey)
 {
-    ITrackDataPtr data = trackAndClipOperations()->clipSplitCut(clipKey);
+    ITrackDataPtr data = clipsInteraction()->clipSplitCut(clipKey);
     if (!data) {
         return false;
     }
@@ -358,7 +358,7 @@ bool TrackeditOperationController::clipSplitCut(const ClipKey& clipKey)
 
 bool TrackeditOperationController::clipSplitDelete(const ClipKey& clipKey)
 {
-    if (trackAndClipOperations()->clipSplitDelete(clipKey)) {
+    if (clipsInteraction()->clipSplitDelete(clipKey)) {
         pushProjectHistorySplitDeleteState();
         return true;
     }
@@ -390,7 +390,7 @@ bool TrackeditOperationController::splitDeleteSelectedOnTracks(const TrackIdList
 bool TrackeditOperationController::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed,
                                                 UndoPushType type)
 {
-    const auto success = trackAndClipOperations()->trimClipLeft(clipKey, deltaSec, minClipDuration, completed);
+    const auto success = clipsInteraction()->trimClipLeft(clipKey, deltaSec, minClipDuration, completed);
     if (success && completed) {
         projectHistory()->pushHistoryState("Clip left trimmed", "Trim clip left", type);
     }
@@ -400,7 +400,7 @@ bool TrackeditOperationController::trimClipLeft(const ClipKey& clipKey, secs_t d
 bool TrackeditOperationController::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed,
                                                  UndoPushType type)
 {
-    const auto success = trackAndClipOperations()->trimClipRight(clipKey, deltaSec, minClipDuration, completed);
+    const auto success = clipsInteraction()->trimClipRight(clipKey, deltaSec, minClipDuration, completed);
     if (success && completed) {
         projectHistory()->pushHistoryState("Clip right trimmed", "Trim clip right", type);
     }
@@ -410,7 +410,7 @@ bool TrackeditOperationController::trimClipRight(const ClipKey& clipKey, secs_t 
 bool TrackeditOperationController::stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed,
                                                    UndoPushType type)
 {
-    const auto success = trackAndClipOperations()->stretchClipLeft(clipKey, deltaSec, minClipDuration, completed);
+    const auto success = clipsInteraction()->stretchClipLeft(clipKey, deltaSec, minClipDuration, completed);
     if (success && completed) {
         projectHistory()->pushHistoryState("Clip left stretched", "Stretch clip left", type);
     }
@@ -420,7 +420,7 @@ bool TrackeditOperationController::stretchClipLeft(const ClipKey& clipKey, secs_
 bool TrackeditOperationController::stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed,
                                                     UndoPushType type)
 {
-    const auto success = trackAndClipOperations()->stretchClipRight(clipKey, deltaSec, minClipDuration, completed);
+    const auto success = clipsInteraction()->stretchClipRight(clipKey, deltaSec, minClipDuration, completed);
     if (success && completed) {
         projectHistory()->pushHistoryState("Clip right stretched", "Stretch clip right", type);
     }
@@ -429,17 +429,17 @@ bool TrackeditOperationController::stretchClipRight(const ClipKey& clipKey, secs
 
 secs_t TrackeditOperationController::clipDuration(const ClipKey& clipKey) const
 {
-    return trackAndClipOperations()->clipDuration(clipKey);
+    return clipsInteraction()->clipDuration(clipKey);
 }
 
 std::optional<secs_t> TrackeditOperationController::getLeftmostClipStartTime(const ClipKeyList& clipKeys) const
 {
-    return trackAndClipOperations()->getLeftmostClipStartTime(clipKeys);
+    return clipsInteraction()->getLeftmostClipStartTime(clipKeys);
 }
 
 std::optional<secs_t> TrackeditOperationController::getRightmostClipEndTime(const ClipKeyList& clipKeys) const
 {
-    return trackAndClipOperations()->getRightmostClipEndTime(clipKeys);
+    return clipsInteraction()->getRightmostClipEndTime(clipKeys);
 }
 
 double TrackeditOperationController::nearestZeroCrossing(double t0) const
@@ -449,7 +449,7 @@ double TrackeditOperationController::nearestZeroCrossing(double t0) const
 
 muse::Ret TrackeditOperationController::makeRoomForClip(const ClipKey& clipKey)
 {
-    return trackAndClipOperations()->makeRoomForClip(clipKey);
+    return clipsInteraction()->makeRoomForClip(clipKey);
 }
 
 bool TrackeditOperationController::newMonoTrack()
@@ -509,7 +509,7 @@ void TrackeditOperationController::moveTracksTo(const TrackIdList& trackIds, int
 
 ClipKeyList TrackeditOperationController::clipsOnTrack(const TrackId trackId)
 {
-    return trackAndClipOperations()->clipsOnTrack(trackId);
+    return clipsInteraction()->clipsOnTrack(trackId);
 }
 
 bool TrackeditOperationController::undo()
@@ -558,34 +558,34 @@ bool TrackeditOperationController::insertSilence(const TrackIdList& trackIds, se
 
 bool TrackeditOperationController::toggleStretchToMatchProjectTempo(const ClipKey& clipKey)
 {
-    return trackAndClipOperations()->toggleStretchToMatchProjectTempo(clipKey);
+    return clipsInteraction()->toggleStretchToMatchProjectTempo(clipKey);
 }
 
 int64_t TrackeditOperationController::clipGroupId(const trackedit::ClipKey& clipKey) const
 {
-    return trackAndClipOperations()->clipGroupId(clipKey);
+    return clipsInteraction()->clipGroupId(clipKey);
 }
 
 void TrackeditOperationController::setClipGroupId(const trackedit::ClipKey& clipKey, int64_t id)
 {
-    trackAndClipOperations()->setClipGroupId(clipKey, id);
+    clipsInteraction()->setClipGroupId(clipKey, id);
 }
 
 void TrackeditOperationController::groupClips(const trackedit::ClipKeyList& clipKeyList)
 {
-    trackAndClipOperations()->groupClips(clipKeyList);
+    clipsInteraction()->groupClips(clipKeyList);
     projectHistory()->pushHistoryState("Clips grouped", "Clips grouped");
 }
 
 void TrackeditOperationController::ungroupClips(const trackedit::ClipKeyList& clipKeyList)
 {
-    trackAndClipOperations()->ungroupClips(clipKeyList);
+    clipsInteraction()->ungroupClips(clipKeyList);
     projectHistory()->pushHistoryState("Clips ungrouped", "Clips ungrouped");
 }
 
 ClipKeyList TrackeditOperationController::clipsInGroup(int64_t id) const
 {
-    return trackAndClipOperations()->clipsInGroup(id);
+    return clipsInteraction()->clipsInGroup(id);
 }
 
 bool TrackeditOperationController::changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format)
