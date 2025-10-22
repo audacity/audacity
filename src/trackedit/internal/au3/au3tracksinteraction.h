@@ -8,12 +8,12 @@
 #include "modularity/ioc.h"
 #include "iinteractive.h"
 #include "context/iglobalcontext.h"
-#include "iselectioncontroller.h"
-#include "itrackeditconfiguration.h"
-#include "iprojecthistory.h"
-#include "iclipsinteraction.h"
+#include "../../itrackeditconfiguration.h"
+#include "../../iclipsinteraction.h"
+#include "../../iselectioncontroller.h"
+#include "../../iprojecthistory.h"
 
-#include "itracksinteraction.h"
+#include "../../itracksinteraction.h"
 
 namespace au::trackedit {
 class Au3TrackData;
@@ -76,7 +76,7 @@ public:
     muse::Progress progress() const override;
 
 private:
-    friend class Au3InteractionTests;
+    friend class Au3TracksInteractionTests;
 
     au3::Au3Project& projectRef() const;
     void addWaveTrack(int nChannels);

@@ -1291,6 +1291,7 @@ void TrackeditActionsController::renderClipPitchAndSpeed(const muse::actions::Ac
         return;
     }
 
+    // todo
     interactive()->showProgress(muse::trc("trackedit", "Applying"), trackeditInteraction()->progress());
 
     trackeditInteraction()->renderClipPitchAndSpeed(clipKey);

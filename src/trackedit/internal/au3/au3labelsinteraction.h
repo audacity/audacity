@@ -5,12 +5,12 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "iselectioncontroller.h"
-#include "iprojecthistory.h"
+#include "../../iprojecthistory.h"
+#include "../../iselectioncontroller.h"
 
 #include "au3wrap/au3types.h"
 
-#include "ilabelsinteraction.h"
+#include "../../ilabelsinteraction.h"
 
 namespace au::trackedit {
 class Au3LabelsInteraction : public ILabelsInteraction
@@ -28,7 +28,7 @@ public:
     muse::Progress progress() const override;
 
 private:
-    friend class Au3InteractionTests;
+    friend class Au3LabelsInteractionsTests;
 
     au3::Au3Project& projectRef() const;
 
