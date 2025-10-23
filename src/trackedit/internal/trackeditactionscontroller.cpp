@@ -107,7 +107,9 @@ static const ActionQuery TRACK_CHANGE_COLOR_QUERY("action://trackedit/track/chan
 static const ActionQuery TRACK_CHANGE_FORMAT_QUERY("action://trackedit/track/change-format");
 static const ActionQuery TRACK_CHANGE_RATE_QUERY("action://trackedit/track/change-rate");
 
-static const ActionCode ADD_LABEL("add-label");
+static const ActionCode LABEL_ADD_CODE("label-add");
+static const ActionCode LABEL_DELETE_CODE("label-delete");
+static const ActionCode LABEL_DELETE_MULTI_CODE("label-delete-multi");
 
 // In principle, disabled are actions that modify the data involved in playback.
 static const std::vector<ActionCode> actionsDisabledDuringRecording {
@@ -128,6 +130,8 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     CLIP_DELETE_CODE,
     MULTI_CLIP_DELETE_CODE,
     RANGE_SELECTION_DELETE_CODE,
+    LABEL_DELETE_CODE,
+    LABEL_DELETE_MULTI_CODE,
     CLIP_RENDER_PITCH_AND_SPEED_CODE,
     TRACKEDIT_PASTE_DEFAULT_CODE,
     TRACKEDIT_PASTE_OVERLAP_CODE,
@@ -164,7 +168,7 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACK_RESAMPLE,
     GROUP_CLIPS_CODE,
     UNGROUP_CLIPS_CODE,
-    ADD_LABEL,
+    LABEL_ADD_CODE,
 };
 
 void TrackeditActionsController::init()
@@ -206,6 +210,9 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, CLIP_DELETE_CODE, this, &TrackeditActionsController::clipDelete);
     dispatcher()->reg(this, MULTI_CLIP_DELETE_CODE, this, &TrackeditActionsController::multiClipDelete);
     dispatcher()->reg(this, RANGE_SELECTION_DELETE_CODE, this, &TrackeditActionsController::rangeSelectionDelete);
+
+    dispatcher()->reg(this, LABEL_DELETE_CODE, this, &TrackeditActionsController::labelDelete);
+    dispatcher()->reg(this, LABEL_DELETE_MULTI_CODE, this, &TrackeditActionsController::multiLabelDelete);
 
     dispatcher()->reg(this, OPEN_CLIP_AND_SPEED_CODE, this, &TrackeditActionsController::openClipPitchAndSpeed);
     dispatcher()->reg(this, CLIP_RENDER_PITCH_AND_SPEED_CODE, this, &TrackeditActionsController::renderClipPitchAndSpeed);
@@ -263,7 +270,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, TRACK_CHANGE_FORMAT_QUERY, this, &TrackeditActionsController::setTrackFormat);
     dispatcher()->reg(this, TRACK_CHANGE_RATE_QUERY, this, &TrackeditActionsController::setTrackRate);
 
-    dispatcher()->reg(this, ADD_LABEL, this, &TrackeditActionsController::addLabel);
+    dispatcher()->reg(this, LABEL_ADD_CODE, this, &TrackeditActionsController::addLabel);
 
     projectHistory()->historyChanged().onNotify(this, [this]() {
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
@@ -398,7 +405,7 @@ void TrackeditActionsController::doGlobalCutAllTracksRipple()
 void TrackeditActionsController::doGlobalDelete()
 {
     const bool isTrackSelected = !selectionController()->timeSelectionIsNotEmpty() && !selectionController()->selectedTracks().empty()
-                                 && !selectionController()->hasSelectedClips();
+                                 && !selectionController()->hasSelectedClips() && !selectionController()->hasSelectedLabels();
 
     const bool wasSet = configuration()->deleteBehavior() != DeleteBehavior::NotSet;
 
@@ -477,6 +484,11 @@ void TrackeditActionsController::doGlobalDeletePerClipRipple()
     }
 
     if (!selectionController()->selectedClips().empty()) {
+        dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, moveClips);
+        return;
+    }
+
+    if (!selectionController()->selectedLabels().empty()) {
         dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, moveClips);
         return;
     }
@@ -683,6 +695,30 @@ void TrackeditActionsController::multiClipDelete(const ActionData& args)
     selectionController()->resetSelectedClips();
 
     trackeditInteraction()->removeClips(selectedClipKeys, moveClips);
+}
+
+void TrackeditActionsController::labelDelete(const ActionData& args)
+{
+    LabelKey labelKey = args.arg<LabelKey>(0);
+    if (!labelKey.isValid()) {
+        return;
+    }
+
+    selectionController()->resetSelectedLabels();
+
+    trackeditInteraction()->removeLabel(labelKey);
+}
+
+void TrackeditActionsController::multiLabelDelete(const ActionData& args)
+{
+    LabelKeyList selectedLabelKeys = selectionController()->selectedLabels();
+    if (selectedLabelKeys.empty()) {
+        return;
+    }
+
+    selectionController()->resetSelectedLabels();
+
+    trackeditInteraction()->removeLabels(selectedLabelKeys);
 }
 
 void TrackeditActionsController::multiClipCut(const ActionData& args)

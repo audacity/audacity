@@ -42,6 +42,7 @@
 #include "view/tracksitemsview/waveview.h"
 #include "view/tracksitemsview/clipcontextmenumodel.h"
 #include "view/tracksitemsview/multiclipcontextmenumodel.h"
+#include "view/tracksitemsview/labelcontextmenumodel.h"
 #include "view/tracksitemsview/canvascontextmenumodel.h"
 #include "view/tracksitemsview/selectioncontextmenumodel.h"
 #include "view/tracksitemsview/selectionviewcontroller.h"
@@ -166,6 +167,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
     qmlRegisterType<ClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "ClipContextMenuModel");
     qmlRegisterType<MultiClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "MultiClipContextMenuModel");
+    qmlRegisterType<LabelContextMenuModel>("Audacity.ProjectScene", 1, 0, "LabelContextMenuModel");
     qmlRegisterType<SelectionContextMenuModel>("Audacity.ProjectScene", 1, 0, "SelectionContextMenuModel");
     qmlRegisterType<CanvasContextMenuModel>("Audacity.ProjectScene", 1, 0, "CanvasContextMenuModel");
     qmlRegisterType<SelectionViewController>("Audacity.ProjectScene", 1, 0, "SelectionViewController");

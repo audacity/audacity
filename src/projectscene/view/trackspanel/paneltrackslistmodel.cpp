@@ -304,7 +304,7 @@ void PanelTracksListModel::endActiveDrag()
 
 void PanelTracksListModel::addLabelToSelection()
 {
-    dispatcher()->dispatch("add-label");
+    dispatcher()->dispatch("label-add");
 }
 
 void PanelTracksListModel::clear()

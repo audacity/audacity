@@ -13,6 +13,7 @@ Item {
     property bool isSelected: false
     property bool selectionInProgress: false
     property bool enableCursorInteraction: !selectionInProgress
+    property var labelKey: null
 
     property alias navigation: navCtrl
 
@@ -105,6 +106,27 @@ Item {
         }
     }
 
+    LabelContextMenuModel {
+        id: labelContextMenuModel
+        labelKey: root.labelKey
+
+        onLabelEditRequested: {
+            root.editTitle()
+        }
+    }
+
+    ContextMenuLoader {
+        id: labelContextMenuLoader
+
+        onHandleMenuItem: function (itemId) {
+            labelContextMenuModel.handleMenuItem(itemId)
+        }
+    }
+
+    Component.onCompleted: {
+        labelContextMenuModel.load()
+    }
+
     MouseArea {
         id: hoverArea
         anchors.fill: parent
@@ -121,6 +143,7 @@ Item {
 
         onClicked: function (e) {
             root.requestSelected()
+            labelContextMenuLoader.show(Qt.point(e.x, e.y), labelContextMenuModel.items)
         }
 
         onPositionChanged: function (e) {
@@ -226,7 +249,11 @@ Item {
             root.requestSelected()
         }
 
-        onLabelItemMousePositionChanged: function(x, y) {
+        onContextMenuOpenRequested: function(x, y) {
+            labelContextMenuLoader.show(Qt.point(x, y), labelContextMenuModel.items)
+        }
+
+        onMousePositionChanged: function(x, y) {
             root.labelItemMousePositionChanged(x, y)
         }
 
@@ -247,7 +274,7 @@ Item {
             root.headerHovered = value
         }
 
-        onLabelItemMousePositionChanged: function(x, y) {
+        onMousePositionChanged: function(x, y) {
             root.labelItemMousePositionChanged(x, y)
         }
 
@@ -269,7 +296,7 @@ Item {
             root.headerHovered = value
         }
 
-        onLabelItemMousePositionChanged: function(x, y) {
+        onMousePositionChanged: function(x, y) {
             root.labelItemMousePositionChanged(x, y)
         }
 
@@ -307,7 +334,7 @@ Item {
             root.headerHovered = value
         }
 
-        onLabelItemMousePositionChanged: function(x, y) {
+        onMousePositionChanged: function(x, y) {
             root.labelItemMousePositionChanged(x, y)
         }
 
