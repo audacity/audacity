@@ -104,6 +104,9 @@ Rectangle {
     property bool rightTrimContainsMouse: false
     property alias leftTrimPressedButtons: leftTrimStretchEdgeHover.pressedButtons
     property alias rightTrimPressedButtons: rightTrimStretchEdgeHover.pressedButtons
+    property bool enableFocusBorder: (navCtrl ? navCtrl.highlight : false) || root.clipSelected
+    property bool enableDefaultBorder: !isContrastFocusBorderEnabled && enableFocusBorder
+    property bool enableContrastBorder: isContrastFocusBorderEnabled && enableFocusBorder
 
     PlaybackStateModel {
         id: playbackState
@@ -131,6 +134,17 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        id: borderRect
+
+        anchors.fill: parent
+        color: "transparent"
+        border.width: root.enableContrastBorder ?  2 : 1
+        border.color: "#000000"
+        radius: root.enableContrastBorder ? 0 : 4
+        z: root.parent.z + 1
+    }
+
     NavigationFocusBorder {
         id: focusBorder
 
@@ -138,15 +152,13 @@ Rectangle {
 
         border.color: ui.theme.fontPrimaryColor
         border.width: 2
-        radius: isContrastFocusBorderEnabled ? 0 : 4
+        radius: 4
 
-        visible: clipSelected || (navigationCtrl ? navigationCtrl.highlight : false)
+        visible: root.enableDefaultBorder
     }
 
     NavigationFocusBorder {
         id: contrastFocusBorder
-
-        padding: focusBorder.border.width
 
         navigationCtrl: navCtrl
 
@@ -154,7 +166,7 @@ Rectangle {
         border.width: 2
         radius: 4
 
-        visible: isContrastFocusBorderEnabled && ((navigationCtrl ? navigationCtrl.highlight : false) || root.clipSelected)
+        visible: root.enableContrastBorder
     }
 
     QtObject {
