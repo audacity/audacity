@@ -14,8 +14,8 @@ Rectangle {
     Rectangle {
         id: cursor
 
-        x: -width / 2
-        width: 3
+        x: -1 // offset to align center line
+        width: 3 // 1px border, 1px center line, 1px border
         height: root.height
         color: "#ffffff"
 

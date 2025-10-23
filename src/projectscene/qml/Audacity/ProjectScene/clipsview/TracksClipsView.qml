@@ -332,7 +332,7 @@ Rectangle {
                 }
 
                 onPlayCursorMousePositionChanged: function (ix) {
-                    timeline.updateCursorPosition(ix, -1)
+                     timeline.updateCursorPosition(ix, 0)
                 }
             }
         }
