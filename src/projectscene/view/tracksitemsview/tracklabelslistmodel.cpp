@@ -27,7 +27,7 @@ void TrackLabelsListModel::onInit()
         onSelectedItems(keyList);
     });
 
-    dispatcher()->reg(this, "rename-label", [this]() {
+    dispatcher()->reg(this, "label-rename", [this]() {
         requestItemTitleChange();
     });
 }

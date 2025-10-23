@@ -126,6 +126,7 @@ TrackItemsContainer {
 
                                 title: Boolean(itemData) ? itemData.title : ""
                                 labelColor: Boolean(itemData) ? itemData.color : null
+                                labelKey: Boolean(itemData) ? itemData.key : null
                                 isSelected: Boolean(itemData) && itemData.selected
                                 enableCursorInteraction: true
 
