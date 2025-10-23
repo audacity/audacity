@@ -2661,14 +2661,13 @@ bool AudioIoCallback::FillOutputBuffers(
     }
 
     // Choose a common size to take from all ring buffers
-    const auto toGet
-        =std::min<size_t>(framesPerBuffer, GetCommonlyReadyPlayback());
+    const auto currentlyAvailableFramesAcrossBuffers = std::min<size_t>(framesPerBuffer, GetCommonlyReadyPlayback());
 
     // Poke: If there are no playback sequences, then check playback
     // completion condition and do early return
     // PRL:  Also consume frbom the single playback ring buffer
     if (numPlaybackSequences == 0) {
-        mMaxFramesOutput = mPlaybackBuffers[0]->Discard(toGet);
+        mMaxFramesOutput = mPlaybackBuffers[0]->Discard(currentlyAvailableFramesAcrossBuffers);
         CallbackCheckCompletion(mCallbackReturn, 0);
         mLastPlaybackTimeMillis = ::wxGetUTCTimeMillis();
         return false;
@@ -2702,29 +2701,29 @@ bool AudioIoCallback::FillOutputBuffers(
     }
 
     for (unsigned n = 0; n < numPlaybackChannels; ++n) {
-        decltype(framesPerBuffer) len = mPlaybackBuffers[n]->Get(
+        decltype(framesPerBuffer) numberOfRetrievedFrames = mPlaybackBuffers[n]->Get(
             reinterpret_cast<samplePtr>(tempBufs[n]),
             floatSample,
-            toGet
+            currentlyAvailableFramesAcrossBuffers
             );
 
-        if (len < framesPerBuffer) {
+        if (numberOfRetrievedFrames < framesPerBuffer) {
             // This used to happen normally at the end of non-looping
             // plays, but it can also be an anomalous case where the
             // supply from SequenceBufferExchange fails to keep up with the
             // real-time demand in this thread (see bug 1932). We
             // must supply something to the sound card, so pad it with
             // zeroes and not random garbage.
-            memset((void*)&tempBufs[n][len], 0,
-                   (framesPerBuffer - len) * sizeof(float));
+            memset((void*)&tempBufs[n][numberOfRetrievedFrames], 0,
+                   (framesPerBuffer - numberOfRetrievedFrames) * sizeof(float));
         }
 
         // PRL:  More recent rewrites of SequenceBufferExchange should guarantee a
         // padding out of the ring buffers so that equal lengths are
         // available, so maxLen ought to increase from 0 only once
-        mMaxFramesOutput = std::max(mMaxFramesOutput, len);
+        mMaxFramesOutput = std::max(mMaxFramesOutput, numberOfRetrievedFrames);
 
-        len = mMaxFramesOutput;
+        numberOfRetrievedFrames = mMaxFramesOutput;
 
         // Realtime effect transformation of the sound used to happen here
         // but it is now done already on the producer side of the RingBuffer
@@ -2738,18 +2737,18 @@ bool AudioIoCallback::FillOutputBuffers(
         // Each channel in the sequences can output to more than one channel on
         // the device. For example mono channels output to both left and right
         // output channels.
-        if (len > 0) {
+        if (numberOfRetrievedFrames > 0) {
             if (n == 0) {
                 using namespace std::chrono;
                 const auto now = steady_clock::now();
-                const auto startTime = now + milliseconds(static_cast<int>(mHardwarePlaybackLatencyFrames * 1000.0 / mRate));
-                mAudioDeliveryQueue.Put({ startTime, static_cast<int>(len) });
+                const auto adcTime = now + milliseconds(static_cast<int>(mHardwarePlaybackLatencyFrames * 1000.0 / mRate));
+                mAudioDeliveryQueue.Put({ adcTime, static_cast<int>(numberOfRetrievedFrames) });
             }
 
             // Output volume emulation: possibly copy meter samples, then
             // apply volume, then copy to the output buffer
             if (outputMeterFloats != outputFloats) {
-                for ( unsigned i = 0; i < len; ++i) {
+                for ( unsigned i = 0; i < numberOfRetrievedFrames; ++i) {
                     outputMeterFloats[numPlaybackChannels * i + n]
                         +=playbackVolume * tempBufs[n][i];
                 }
@@ -2765,13 +2764,13 @@ bool AudioIoCallback::FillOutputBuffers(
             // PRL todo:  choose denominator differently, so it doesn't depend on
             // framesPerBuffer, which is influenced by the portAudio implementation in
             // opaque ways
-            const float deltaVolume = (playbackVolume - oldVolume) / len;
-            for (unsigned i = 0; i < len; i++) {
+            const float deltaVolume = (playbackVolume - oldVolume) / numberOfRetrievedFrames;
+            for (unsigned i = 0; i < numberOfRetrievedFrames; i++) {
                 outputFloats[numPlaybackChannels * i + n]
                     +=(oldVolume + deltaVolume * i) * tempBufs[n][i];
             }
         }
-        CallbackCheckCompletion(mCallbackReturn, len);
+        CallbackCheckCompletion(mCallbackReturn, numberOfRetrievedFrames);
     }
 
     mOldPlaybackVolume = playbackVolume;
