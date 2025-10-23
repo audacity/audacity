@@ -12,6 +12,7 @@ using namespace muse::async;
 using namespace muse::actions;
 
 static const ActionCode PLAY_CODE("play");
+static const ActionCode PLAYBACK_PLAY_TRACKS_CODE("playback/play-tracks");
 static const ActionCode PAUSE_CODE("pause");
 static const ActionCode PLAYBACK_STOP_CODE("playback/stop");
 static const ActionCode REWIND_START_CODE("rewind-start");
@@ -31,6 +32,7 @@ static const ActionQuery CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-i
 void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlay);
+    dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_CODE, this, &PlaybackController::playTracksAction);
     dispatcher()->reg(this, PAUSE_CODE, this, &PlaybackController::pause);
     dispatcher()->reg(this, PLAYBACK_STOP_CODE, this, &PlaybackController::stopAction);
     dispatcher()->reg(this, REWIND_START_CODE, this, &PlaybackController::rewindToStart);
@@ -306,6 +308,18 @@ void PlaybackController::play(bool ignoreSelection)
     }
 
     player()->play();
+}
+
+void PlaybackController::playTracksAction(const muse::actions::ActionData& args)
+{
+    const std::shared_ptr<TrackList> trackList = args.arg<std::shared_ptr<TrackList> >(0);
+    const double startTime = args.arg<double>(1);
+    const double endTime = args.arg<double>(2);
+    const PlayTracksOptions options = args.arg<PlayTracksOptions>(3);
+    muse::Ret ret = player()->playTracks(*trackList, startTime, endTime, options);
+    if (!ret.success()) {
+        LOGE() << "playTracks failed: " << ret.toString();
+    }
 }
 
 void PlaybackController::rewindToStart()
