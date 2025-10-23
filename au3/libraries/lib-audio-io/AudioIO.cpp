@@ -3035,7 +3035,7 @@ void AudioIoCallback::SendVuOutputMeterData(const float* outputMeterFloats, unsi
         return;
     }
 
-    PushMainMeterValues(outputMeter, outputMeterFloats, mNumPlaybackChannels, framesPerBuffer, dacTime);
+    PushMasterOutputMeterValues(outputMeter, outputMeterFloats, mNumPlaybackChannels, framesPerBuffer, dacTime);
     PushTrackMeterValues(outputMeter, framesPerBuffer, dacTime);
 }
 
@@ -3082,8 +3082,9 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
     }
 }
 
-void AudioIoCallback::PushMainMeterValues(const IMeterSenderPtr& sender, const float* values, uint8_t channels, unsigned long frames,
-                                          const TimePoint& dacTime)
+void AudioIoCallback::PushMasterOutputMeterValues(const IMeterSenderPtr& sender, const float* values, uint8_t channels,
+                                                  unsigned long frames,
+                                                  const TimePoint& dacTime)
 {
     auto sptr = values;
     for (size_t ch = 0; ch < channels; ++ch) {
