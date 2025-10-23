@@ -76,7 +76,7 @@ private:
 
     muse::Ret doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {});
 
-    void updatePlaybackStateTimeCritical();
+    void updatePlaybackState();
 
     muse::async::Notification m_loopRegionChanged;
 

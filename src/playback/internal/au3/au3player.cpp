@@ -451,7 +451,7 @@ muse::async::Notification Au3Player::loopRegionChanged() const
     return m_loopRegionChanged;
 }
 
-void Au3Player::updatePlaybackStateTimeCritical()
+void Au3Player::updatePlaybackState()
 {
     int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
     bool isActive = AudioIO::Get()->IsStreamActive(token);
@@ -509,7 +509,7 @@ void Au3Player::updatePlaybackPosition()
 
     audioIO.UpdateTimePosition(expectedConsumedNow - m_consumedSamplesSoFar);
     m_consumedSamplesSoFar = expectedConsumedNow;
-    updatePlaybackStateTimeCritical();
+    updatePlaybackState();
 }
 
 muse::async::Channel<muse::secs_t> Au3Player::playbackPositionChanged() const
