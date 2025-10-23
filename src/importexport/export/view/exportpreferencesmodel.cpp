@@ -161,7 +161,7 @@ void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
     if (type == ExportProcessType::AUDIO_IN_LOOP_REGION && !playback()->player()->loopRegion().isValid()) {
         interactive()->error(muse::trc("export", "No loop region"),
                              muse::trc("export",
-                                       "Export audio in loop region requires an active loop in the project. Please go back, create a loop and try again."));
+                                       "Export audio in loop region requires a loop in the project. Please go back, create a loop and try again."));
         return;
     }
 
