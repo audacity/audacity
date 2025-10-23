@@ -187,13 +187,13 @@ public:
     { return mListener.lock(); }
     void SetListener(const std::shared_ptr< AudioIOListener >& listener);
 
-    struct AudioDelivery {
+    struct AudioCallbackInfo {
         TimePoint dacTime;
         int numSamples = 0;
     };
-    using AudioDeliveryQueue = LockFreeQueue<AudioDelivery>;
+    using AudioCallbackInfoQueue = LockFreeQueue<AudioCallbackInfo>;
 
-    AudioDeliveryQueue& GetAudioDeliveryQueue() { return mAudioDeliveryQueue; }
+    AudioCallbackInfoQueue& GetAudioCallbackInfoQueue() { return mAudioCallbackInfoQueue; }
 
     // Part of the callback
     int CallbackDoSeek();
@@ -397,7 +397,7 @@ protected:
     //! Holds some state for duration of playback or recording
     std::unique_ptr<TransportState> mpTransportState;
 
-    AudioDeliveryQueue mAudioDeliveryQueue { 16 };
+    AudioCallbackInfoQueue mAudioCallbackInfoQueue { 16 };
 
 private:
     /*!

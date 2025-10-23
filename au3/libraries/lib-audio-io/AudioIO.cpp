@@ -2742,7 +2742,7 @@ bool AudioIoCallback::FillOutputBuffers(
                 using namespace std::chrono;
                 const auto now = steady_clock::now();
                 const auto adcTime = now + milliseconds(static_cast<int>(mHardwarePlaybackLatencyFrames * 1000.0 / mRate));
-                mAudioDeliveryQueue.Put({ adcTime, static_cast<int>(numberOfRetrievedFrames) });
+                mAudioCallbackInfoQueue.Put({ adcTime, static_cast<int>(numberOfRetrievedFrames) });
             }
 
             // Output volume emulation: possibly copy meter samples, then

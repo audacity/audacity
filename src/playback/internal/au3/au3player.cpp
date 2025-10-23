@@ -482,12 +482,12 @@ void Au3Player::updatePlaybackPosition()
 
     auto& audioIO = *AudioIO::Get();
     const double sampleRate = audioIO.GetPlaybackSampleRate();
-    AudioIoCallback::AudioDelivery newDelivery;
-    while (audioIO.GetAudioDeliveryQueue().Get(newDelivery)) {
-        const auto targetConsumedSamples = static_cast<unsigned long long>(newDelivery.numSamples)
+    AudioIoCallback::AudioCallbackInfo newCallback;
+    while (audioIO.GetAudioCallbackInfoQueue().Get(newCallback)) {
+        const auto targetConsumedSamples = static_cast<unsigned long long>(newCallback.numSamples)
                                            + (m_currentTarget ? m_currentTarget->consumedSamples : 0);
-        const nanoseconds newDeliveryDuration{ static_cast<long>(newDelivery.numSamples * 1e6 / sampleRate + .5) };
-        const auto targetTime = newDelivery.dacTime + newDeliveryDuration;
+        const nanoseconds payloadDuration{ static_cast<long>(newCallback.numSamples * 1e6 / sampleRate + .5) };
+        const auto targetTime = newCallback.dacTime + payloadDuration;
         m_currentTarget.emplace(targetTime, targetConsumedSamples);
     }
 
