@@ -64,6 +64,8 @@ public:
     virtual muse::async::Notification totalPlayTimeChanged() const = 0;
 
     virtual muse::Progress loadingProgress() const = 0;
+
+    virtual void playTracksAction(const muse::actions::ActionData& args) = 0;
 };
 }
 

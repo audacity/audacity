@@ -86,6 +86,8 @@ public:
 
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
+    void playTracksAction(const muse::actions::ActionData& args) override;
+
 private:
     friend class PlaybackControllerTests;
 
