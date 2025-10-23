@@ -203,6 +203,7 @@ jobs:
         cmake_options: |
           ${{ env.CONFIGURE_CMAKE_OPTIONS }}
           -DCMAKE_SYSTEM_VERSION=${{ matrix.config.windows_sdk }}
+          -Daudacity_has_asio_support=On
         windows_code_signing_access_key_id: ${{ secrets.WINDOWS_CODE_SIGNING_ACCESS_KEY_ID }}
         windows_code_signing_secret_access_key: ${{ secrets.WINDOWS_CODE_SIGNING_SECRET_ACCESS_KEY }}
     - name: Build
