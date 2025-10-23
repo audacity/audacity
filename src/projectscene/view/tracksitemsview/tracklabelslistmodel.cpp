@@ -236,7 +236,8 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
         return false;
     }
 
-    TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, completed);
+    // Labels can only be moved to label tracks
+    TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, { trackedit::TrackType::Label }, completed);
     if (vs->moveInitiated()) {
         trackeditInteraction()->moveLabels(moveOffset.timeOffset, completed);
     }
