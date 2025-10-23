@@ -23,7 +23,7 @@ void PlayRegionController::init()
     updateIsActive();
 }
 
-void PlayRegionController::mouseDown(double pos)
+void PlayRegionController::startInteraction(double pos, bool ctrlPressed)
 {
     if (!m_isActive) {
         return;
@@ -36,20 +36,21 @@ void PlayRegionController::mouseDown(double pos)
     updateSnapGuideline(m_dragStartPos);
 
     if (playback()->player()->isLoopRegionClear()) {
-        m_action = UserInputAction::CreateRegion;
-        QGuiApplication::setOverrideCursor(QCursor(Qt::SizeHorCursor));
+        m_action = ctrlPressed ? UserInputAction::CreateRegion : UserInputAction::None;
     } else if (std::abs(startPos() - pos) < RESIZE_AREA_WIDTH_PX) {
         m_action = UserInputAction::ResizeStart;
-        QGuiApplication::setOverrideCursor(QCursor(Qt::SizeHorCursor));
     } else if (std::abs(endPos() - pos) < RESIZE_AREA_WIDTH_PX) {
         m_action = UserInputAction::ResizeEnd;
-        QGuiApplication::setOverrideCursor(QCursor(Qt::SizeHorCursor));
     } else if (pos > startPos() && pos < endPos()) {
         m_action = UserInputAction::Drag;
-        QGuiApplication::setOverrideCursor(QCursor(Qt::ClosedHandCursor));
-    } else {
-        m_action = UserInputAction::CreateRegion;
+    }
+
+    if (m_action == UserInputAction::CreateRegion
+        || m_action == UserInputAction::ResizeStart
+        || m_action == UserInputAction::ResizeEnd) {
         QGuiApplication::setOverrideCursor(QCursor(Qt::SizeHorCursor));
+    } else if (m_action == UserInputAction::Drag) {
+        QGuiApplication::setOverrideCursor(QCursor(Qt::ClosedHandCursor));
     }
 
     if (m_action != UserInputAction::None) {
@@ -58,16 +59,16 @@ void PlayRegionController::mouseDown(double pos)
 
     connect(qApp, &QApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
         if (state != Qt::ApplicationActive) {
-            mouseUp(m_dragStartPos);
+            finishInteraction(m_dragStartPos);
         }
     });
 
     uicontextResolver()->currentUiContextChanged().onNotify(this, [this]() {
-        mouseUp(m_dragStartPos);
+        finishInteraction(m_dragStartPos);
     });
 }
 
-void PlayRegionController::mouseMove(double pos)
+void PlayRegionController::updatePosition(double pos)
 {
     if (!m_isActive) {
         return;
@@ -162,11 +163,15 @@ void au::projectscene::PlayRegionController::handleDrag(double pos)
     player->setLoopRegion({ ctx->positionToTime(snappedStart), ctx->positionToTime(snappedEnd) });
 }
 
-void PlayRegionController::mouseUp(double pos)
+void PlayRegionController::finishInteraction(double pos)
 {
     UNUSED(pos);
 
     if (!m_isActive) {
+        return;
+    }
+
+    if (m_action == UserInputAction::None) {
         return;
     }
 

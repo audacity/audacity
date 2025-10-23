@@ -227,6 +227,58 @@ Rectangle {
             }
         }
 
+        MouseArea {
+            id: timelineMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+
+            property bool playRegionActivated: false
+
+            function convertToTimelinePosition(e) {
+                let position = mapToItem(timeline, Qt.point(e.x, e.y))
+                position.x = Math.max(0, position.x)
+                position.y = Math.max(0, position.y)
+                return position
+            }
+
+            onPositionChanged: function (e) {
+                let position = convertToTimelinePosition(e)
+                timeline.updateCursorPosition(position.x, position.y)
+                playRegionController.updatePosition(position.x)
+            }
+
+            onPressed: function (e) {
+                let position = convertToTimelinePosition(e)
+                if (timeline.isMajorSection(position.y)) {
+                    playRegionController.startInteraction(position.x, root.ctrlPressed)
+                    playRegionActivated = true
+                }
+            }
+
+            onReleased: function (e) {
+                let position = convertToTimelinePosition(e)
+                playRegionController.finishInteraction(position.x)
+            }
+
+            onClicked: function (e) {
+                let position = convertToTimelinePosition(e)
+                if (!playRegionActivated) {
+                    playCursorController.seekToX(position.x, timeline.context.playbackOnRulerClickEnabled)
+                }
+                playRegionActivated = false
+            }
+
+            Connections {
+                target: root
+
+                function onCtrlPressedChanged() {
+                    if (!root.ctrlPressed) {
+                        playRegionController.finishInteraction(timelineMouseArea.mouseX)
+                    }
+                }
+            }
+        }
+
         Timeline {
             id: timeline
 
@@ -240,35 +292,6 @@ Rectangle {
                 lineCursor.x = x
                 timeline.context.updateMousePositionTime(x)
                 tracksViewState.setMouseY(Math.max(0, Math.min(y, mainMouseArea.height)))
-            }
-
-            MouseArea {
-                id: timelineMouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-
-                onPositionChanged: function (e) {
-                    timeline.updateCursorPosition(e.x, e.y)
-                    playRegionController.mouseMove(e.x)
-                }
-
-                onPressed: function (e) {
-                    if (timeline.isMajorSection(e.y)) {
-                        playRegionController.mouseDown(e.x)
-                        prv.playRegionActivated = true
-                    }
-                }
-
-                onReleased: function (e) {
-                    playRegionController.mouseUp(e.x)
-                }
-
-                onClicked: function (e) {
-                    if (!prv.playRegionActivated) {
-                        playCursorController.seekToX(e.x, timeline.context.playbackOnRulerClickEnabled)
-                    }
-                    prv.playRegionActivated = false
-                }
             }
 
             Rectangle {

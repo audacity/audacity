@@ -39,9 +39,9 @@ public:
 
     Q_INVOKABLE void init();
 
-    Q_INVOKABLE void mouseDown(double pos);
-    Q_INVOKABLE void mouseUp(double pos);
-    Q_INVOKABLE void mouseMove(double pos);
+    Q_INVOKABLE void startInteraction(double pos, bool ctrlPressed);
+    Q_INVOKABLE void finishInteraction(double pos);
+    Q_INVOKABLE void updatePosition(double pos);
 
     Q_INVOKABLE void beginPreview();
     Q_INVOKABLE void setPreviewStartTime(double time);
@@ -88,7 +88,7 @@ private:
     double m_snapGuidelinePos = 0;
 
     bool m_dragStarted = false;
-    UserInputAction m_action;
+    UserInputAction m_action = UserInputAction::None;
 
     bool m_isActive = false;
 };
