@@ -6,5 +6,7 @@
 
 std::shared_ptr<au::au3::Meter> au::au3::createAudioMeter()
 {
-    return std::make_shared<au3::Meter>(std::make_unique<AuQtTimer>(Qt::PreciseTimer), std::make_unique<AuQtTimer>());
+    auto playingTimer = std::make_unique<AuQtTimer>(Qt::PreciseTimer);
+    auto stoppingTimer = std::make_unique<AuQtTimer>(Qt::VeryCoarseTimer);
+    return std::make_shared<au3::Meter>(std::move(playingTimer), std::move(stoppingTimer));
 }

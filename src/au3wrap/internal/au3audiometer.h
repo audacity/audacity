@@ -28,7 +28,12 @@ namespace au::au3 {
 class Meter : public IMeterSender, public muse::async::Asyncable
 {
 public:
-    Meter(std::unique_ptr<ITimer> meterUpdateTimer, std::unique_ptr<ITimer> stopTimer);
+    /**
+     * @param playingTimer For the update of the meters. Called very frequently and needs high precision to maximize smoothness of meter animation.
+     * @param stoppingTimer After pressing stop, `playingTimer` will continue running for a while until the meters have decayed and become invisible.
+     * The `stoppingTimer` will tell when `playingTimer` can definitely stop. May be very coarse.
+     */
+    Meter(std::unique_ptr<ITimer> playingTimer, std::unique_ptr<ITimer> stoppingTimer);
 
     void push(uint8_t channel, const IMeterSender::InterleavedSampleData& sampleData, TrackId) override;
     void start(double sampleRate) override;
@@ -81,8 +86,8 @@ private:
     LockFreeQueue<QueueItem> m_lockFreeQueue{ 1024 };
     std::queue<QueueItem> m_mainThreadQueue;
     std::map<TrackId, TrackData> m_trackData;
-    const std::unique_ptr<ITimer> m_meterUpdateTimer;
-    const std::unique_ptr<ITimer> m_stopTimer;
+    const std::unique_ptr<ITimer> m_playingTimer;
+    const std::unique_ptr<ITimer> m_stoppingTimer;
     std::atomic<bool> m_running { false };
     bool m_stopPending = true;
     bool m_warningIssued = false;
