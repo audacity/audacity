@@ -331,11 +331,30 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "New label track"),
              TranslatableString("action", "New label track")
              ),
-    UiAction("add-label",
+    UiAction("label-add",
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Add label"),
              TranslatableString("action", "Add label")
+             ),
+    UiAction("label-rename",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Rename label"),
+             TranslatableString("action", "Rename label")
+             ),
+    UiAction("label-delete",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Delete label"),
+             TranslatableString("action", "Delete label"),
+             IconCode::Code::DELETE_TANK
+             ),
+    UiAction("label-open-in-editor",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Open in label editor"),
+             TranslatableString("action", "Open in label editor")
              ),
     UiAction("trim-audio-outside-selection",
              au::context::UiCtxProjectOpened,

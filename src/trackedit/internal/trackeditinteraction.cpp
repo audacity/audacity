@@ -437,6 +437,16 @@ bool TrackeditInteraction::changeLabelTitle(const LabelKey& labelKey, const muse
     return withPlaybackStop(&ITrackeditInteraction::changeLabelTitle, labelKey, title);
 }
 
+bool TrackeditInteraction::removeLabel(const LabelKey& labelKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::removeLabel, labelKey);
+}
+
+bool TrackeditInteraction::removeLabels(const LabelKeyList& labelKeys)
+{
+    return withPlaybackStop(&ITrackeditInteraction::removeLabels, labelKeys);
+}
+
 bool TrackeditInteraction::moveLabels(secs_t timePositionOffset, bool completed)
 {
     return withPlaybackStop(&ITrackeditInteraction::moveLabels, timePositionOffset, completed);

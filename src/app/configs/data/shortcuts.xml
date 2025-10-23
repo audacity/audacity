@@ -417,7 +417,7 @@
         <key>edit-labels</key>
     </SC>
     <SC>
-        <key>add-label</key>
+        <key>label-add</key>
         <seq>Ctrl+B</seq>
     </SC>
     <SC>

@@ -37,6 +37,8 @@ public:
     TrackItemKey(const trackedit::TrackItemKey& k)
         : key(k) {}
 
+    inline bool operator==(const TrackItemKey& other) const { return key == other.key; }
+
     trackedit::TrackItemKey key;
 };
 

@@ -10,7 +10,7 @@ Rectangle {
     property bool isSelected: false
 
     signal headerHoveredChanged(bool value)
-    signal labelItemMousePositionChanged(real x, real y)
+    signal mousePositionChanged(real x, real y)
     signal requestSelected()
 
     signal stretchRequested(bool completed)
@@ -63,7 +63,7 @@ Rectangle {
                 root.stretchRequested(false)
                 e.accepted = true
             } else {
-                root.labelItemMousePositionChanged(e.x, e.y)
+                root.mousePositionChanged(e.x, e.y)
                 e.accepted = false
             }
         }

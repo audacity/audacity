@@ -84,6 +84,8 @@ private:
 
     void clipDelete(const muse::actions::ActionData& args);
     void multiClipDelete(const muse::actions::ActionData& args);
+    void labelDelete(const muse::actions::ActionData& args);
+    void multiLabelDelete(const muse::actions::ActionData& args);
     void rangeSelectionDelete(const muse::actions::ActionData& args);
 
     void trackSplit(const muse::actions::ActionData& args);

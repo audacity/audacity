@@ -23,7 +23,8 @@ Rectangle {
     signal titleEditStarted()
     signal requestSelected()
 
-    signal labelItemMousePositionChanged(real x, real y)
+    signal contextMenuOpenRequested(real x, real y)
+    signal mousePositionChanged(real x, real y)
     signal headerHoveredChanged(bool value)
 
     width: root.isPoint ? Math.max(50, titleLoader.contentWidth + 8) : parent.width
@@ -51,7 +52,7 @@ Rectangle {
         property var lastClickTime: 0
         property point doubleClickStartPosition
 
-        acceptedButtons: Qt.LeftButton
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         hoverEnabled: true
         cursorShape: Qt.OpenHandCursor
 
@@ -59,6 +60,10 @@ Rectangle {
 
         onPressed: function (e) {
             var currentTime = Date.now()
+
+            if (e.button === Qt.RightButton) {
+                return
+            }
 
             if (currentTime - lastClickTime < prv.doubleClickInterval) {
                 // Double click - edit title
@@ -72,6 +77,13 @@ Rectangle {
             e.accepted = false
         }
 
+        onClicked: function(e) {
+            if (e.button === Qt.RightButton) {
+                root.contextMenuOpenRequested(e.x, e.y)
+            }
+            e.accepted = false
+        }
+
         onPositionChanged: function (e) {
             // Reset double click timer if the mouse has moved,
             // to prevent rapid clip movement activate title editing
@@ -81,7 +93,7 @@ Rectangle {
                 lastClickTime = 0
             }
 
-            root.labelItemMousePositionChanged(e.x, e.y)
+            root.mousePositionChanged(e.x, e.y)
 
             e.accepted = false
         }

@@ -4,6 +4,9 @@
 
 #include "au3labelsinteraction.h"
 
+#include <map>
+#include <algorithm>
+
 #include "libraries/lib-label-track/LabelTrack.h"
 
 #include "au3wrap/internal/domaccessor.h"
@@ -108,6 +111,75 @@ bool Au3LabelsInteraction::changeLabelTitle(const LabelKey& labelKey, const muse
     if (prj) {
         prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, labelIndex, labelTrack->GetLabels()[labelIndex]));
     }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::removeLabel(const LabelKey& labelKey)
+{
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    const auto& au3labels = labelTrack->GetLabels();
+    size_t labelIndex = static_cast<size_t>(labelKey.itemId);
+
+    IF_ASSERT_FAILED(labelIndex < au3labels.size()) {
+        return false;
+    }
+
+    labelTrack->DeleteLabel(labelIndex);
+
+    LOGD() << "deleted label: " << labelKey.itemId << ", track: " << labelKey.trackId;
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutTrackChanged(DomConverter::track(labelTrack));
+    }
+
+    projectHistory()->pushHistoryState("Delete label", "Delete");
+
+    return true;
+}
+
+bool Au3LabelsInteraction::removeLabels(const LabelKeyList& labelKeys)
+{
+    if (labelKeys.empty()) {
+        return false;
+    }
+
+    // Group labels by track
+    std::map<TrackId, std::vector<size_t>> labelsByTrack;
+    for (const auto& labelKey : labelKeys) {
+        labelsByTrack[labelKey.trackId].push_back(static_cast<size_t>(labelKey.itemId));
+    }
+
+    // Delete labels from each track, starting from the highest index to avoid index shifts
+    for (auto& [trackId, indices] : labelsByTrack) {
+        Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId));
+        IF_ASSERT_FAILED(labelTrack) {
+            continue;
+        }
+
+        // Sort indices in descending order to delete from highest to lowest
+        std::sort(indices.begin(), indices.end(), std::greater<size_t>());
+
+        const auto& au3labels = labelTrack->GetLabels();
+        for (size_t index : indices) {
+            if (index < au3labels.size()) {
+                labelTrack->DeleteLabel(index);
+                LOGD() << "deleted label: " << index << ", track: " << trackId;
+            }
+        }
+
+        const auto prj = globalContext()->currentTrackeditProject();
+        if (prj) {
+            prj->notifyAboutTrackChanged(DomConverter::track(labelTrack));
+        }
+    }
+
+    projectHistory()->pushHistoryState("Delete labels", "Delete");
 
     return true;
 }

@@ -666,6 +666,24 @@ bool TrackeditOperationController::changeLabelTitle(const LabelKey& labelKey, co
     return labelsInteraction()->changeLabelTitle(labelKey, title);
 }
 
+bool TrackeditOperationController::removeLabel(const LabelKey& labelKey)
+{
+    if (labelsInteraction()->removeLabel(labelKey)) {
+        projectHistory()->pushHistoryState("Label removed", "Remove label");
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::removeLabels(const LabelKeyList& labelKeys)
+{
+    if (labelsInteraction()->removeLabels(labelKeys)) {
+        projectHistory()->pushHistoryState("Labels removed", "Remove labels");
+        return true;
+    }
+    return false;
+}
+
 bool TrackeditOperationController::moveLabels(secs_t timePositionOffset, bool completed)
 {
     bool success = labelsInteraction()->moveLabels(timePositionOffset, completed);
