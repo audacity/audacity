@@ -3,8 +3,8 @@
 */
 #include "au3player.h"
 
-#include "global/types/number.h"
-#include "global/defer.h"
+#include "framework/global/types/number.h"
+#include "framework/global/defer.h"
 
 #include "libraries/lib-time-frequency-selection/SelectedRegion.h"
 #include "libraries/lib-track/Track.h"
