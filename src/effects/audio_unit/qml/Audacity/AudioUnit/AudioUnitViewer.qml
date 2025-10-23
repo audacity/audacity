@@ -73,6 +73,5 @@ Rectangle {
 
     AudioUnitView {
         id: view
-        enabled: !model.isPreviewing
     }
 }

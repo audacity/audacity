@@ -49,7 +49,7 @@ EffectStyledDialogView {
 
     Connections {
         target: root.window
-        onClosing: function (event) {
+        function onClosing(event) {
             prv.closeWindow(false)
             // Prevent immediate close so preview/cleanup can finish
             if (event && event.accept !== undefined) {
@@ -239,6 +239,16 @@ EffectStyledDialogView {
                 }
             }
         }
+    }
+
+    EffectControlsDisablingOverlay {
+        x: viewerLoader.x
+        y: viewerLoader.y
+        width: viewerLoader.width
+        height: viewerLoader.height
+
+        visible: prv.viewer.isPreviewing
+        effectFamily: root.effectFamily
     }
 
     Component {

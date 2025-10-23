@@ -84,7 +84,5 @@ Rectangle {
 
     VstView {
         id: view
-        enabled: !viewModel.isPreviewing
-        onEnabledChanged: console.log("enabled changed to", enabled)
     }
 }

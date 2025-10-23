@@ -5,12 +5,11 @@
 
 #include <QQuickWindow>
 
-#include "audioplugins/view/audiopluginview.h"
 #include "audiounitcontrol.h"
 
 namespace au::effects {
 AudioUnitView::AudioUnitView(QQuickItem* parent)
-    : muse::audioplugins::AudioPluginView(parent)
+    : QQuickItem(parent)
 {
 }
 
@@ -19,9 +18,23 @@ AudioUnitView::~AudioUnitView()
     deinit();
 }
 
-void AudioUnitView::doInit()
+int AudioUnitView::instanceId() const
 {
-    const auto instance = std::dynamic_pointer_cast<AudioUnitInstance>(instancesRegister()->instanceById(instanceId()));
+    return m_instanceId;
+}
+
+void AudioUnitView::setInstanceId(int newInstanceId)
+{
+    if (m_instanceId == newInstanceId) {
+        return;
+    }
+    m_instanceId = newInstanceId;
+    emit instanceIdChanged();
+}
+
+void AudioUnitView::init()
+{
+    const auto instance = std::dynamic_pointer_cast<AudioUnitInstance>(instancesRegister()->instanceById(m_instanceId));
 
     // TODO: When design for this setting is ready, use the user preference here
     bool isGraphical = true;
@@ -39,11 +52,6 @@ void AudioUnitView::doInit()
 
     embedNativeView();
     updateViewGeometry();
-}
-
-QWindow* AudioUnitView::pluginWindow()
-{
-    return m_auControl.get();
 }
 
 void AudioUnitView::deinit()

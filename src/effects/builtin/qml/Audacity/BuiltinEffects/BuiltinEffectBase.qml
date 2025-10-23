@@ -18,8 +18,6 @@ Rectangle {
 
     color: ui.theme.backgroundPrimaryColor
 
-    enabled: !isPreviewing
-
     function init() {
         root.model.init()
     }
