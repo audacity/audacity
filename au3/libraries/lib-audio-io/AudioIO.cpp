@@ -724,7 +724,8 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
                   : // Otherwise, use the (likely incorrect) latency reported by PA
                   stream->outputLatency;
 
-            mHardwarePlaybackLatencyFrames = lrint(outputLatency * mRate);
+            mHardwarePlaybackLatencyMs = outputLatency * 1000.0;
+            mHardwarePlaybackLatencyFrames = lrint(outputLatency * stream->sampleRate);
 #ifdef __WXGTK__
             // DV: When using ALSA PortAudio does not report the buffer size.
             // Instead, it reports periodSize * (periodsCount - 1). It is impossible
@@ -2741,7 +2742,7 @@ bool AudioIoCallback::FillOutputBuffers(
             if (n == 0) {
                 using namespace std::chrono;
                 const auto now = steady_clock::now();
-                const auto adcTime = now + milliseconds(static_cast<int>(mHardwarePlaybackLatencyFrames * 1000.0 / mRate));
+                const auto adcTime = now + milliseconds(static_cast<int>(mHardwarePlaybackLatencyMs));
                 mAudioCallbackInfoQueue.Put({ adcTime, static_cast<int>(numberOfRetrievedFrames) });
             }
 
@@ -3208,8 +3209,8 @@ int AudioIoCallback::AudioCallback(
                                    : outputBuffer;
     // ----- END of MEMORY ALLOCATIONS ------------------------------------------
 
-    const std::chrono::milliseconds hardwareLatencyMs{ static_cast<int>(mHardwarePlaybackLatencyFrames * 1000.0 / mRate) };
-    const auto levelDisplayTime = std::chrono::steady_clock::now() + hardwareLatencyMs;
+    const auto levelDisplayTime = std::chrono::steady_clock::now()
+                                  + std::chrono::milliseconds(static_cast<int>(mHardwarePlaybackLatencyMs));
 
     if (inputBuffer && numCaptureChannels) {
         float* inputSamples;

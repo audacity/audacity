@@ -280,7 +280,8 @@ public:
     /// Preferred batch size for replenishing the playback RingBuffer
     size_t mPlaybackSamplesToCopy;
     /// Hardware output latency in frames
-    size_t mHardwarePlaybackLatencyFrames {};
+    size_t mHardwarePlaybackLatencyFrames { 0u };
+    double mHardwarePlaybackLatencyMs{ 0 };
     /// Occupancy of the queue we try to maintain, with bigger batches if needed
     size_t mPlaybackQueueMinimum;
 
