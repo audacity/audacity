@@ -8,14 +8,14 @@
 namespace au::effects {
 void DynamicsPlayStateModel::init()
 {
-    playback()->player()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus) {
+    playbackController()->isPlayingChanged().onNotify(this, [this]() {
         emit playStateChanged();
     });
 }
 
 Stopwatch::PlayState DynamicsPlayStateModel::playState() const
 {
-    switch (playback()->player()->playbackStatus()) {
+    switch (playbackController()->playbackStatus()) {
     case playback::PlaybackStatus::Running:
         return Stopwatch::PlayState::Playing;
     case playback::PlaybackStatus::Paused:

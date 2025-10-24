@@ -10,7 +10,7 @@ namespace au {
 PlayRegionModel::PlayRegionModel(QObject* parent)
     : QObject{parent}
 {
-    playback()->player()->loopRegionChanged().onNotify(this, [this]() {
+    playbackController()->loopRegionChanged().onNotify(this, [this]() {
         onLoopRegionChanged();
     });
 }
@@ -59,9 +59,9 @@ void PlayRegionModel::setActive(bool newActive)
 
 void PlayRegionModel::onLoopRegionChanged()
 {
-    auto region = playback()->player()->loopRegion();
+    const auto region = playbackController()->loopRegion();
     setStart(region.start);
     setEnd(region.end);
-    setActive(playback()->player()->isLoopRegionActive());
+    setActive(playbackController()->isLoopRegionActive());
 }
 }

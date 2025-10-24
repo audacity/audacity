@@ -272,7 +272,7 @@ muse::Ret Au3Record::start()
 
     Au3Project& project = projectRef();
 
-    double t0 = playback()->player()->playbackPosition();
+    double t0 = playbackState()->playbackPosition();
     double t1 = DBL_MAX;
     selectionController()->resetSelectedClips();
 
@@ -661,4 +661,9 @@ bool Au3Record::canStopAudioStream() const
     return !gAudioIO->IsStreamActive()
            || gAudioIO->IsMonitoring()
            || gAudioIO->GetOwningProject().get() == &project;
+}
+
+au::context::IPlaybackStatePtr Au3Record::playbackState() const
+{
+    return globalContext()->playbackState();
 }

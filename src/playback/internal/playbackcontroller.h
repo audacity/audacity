@@ -46,12 +46,25 @@ public:
 
     bool isPlaying() const override;
     muse::async::Notification isPlayingChanged() const override;
+    PlaybackStatus playbackStatus() const override;
 
-    bool isLoopActive() const override;
+    bool isLoopRegionActive() const override;
+    void toggleLoopPlayback() override;
+    PlaybackRegion loopRegion() const override;
+    void setLoopRegion(const PlaybackRegion& region) override;
+    void setLoopRegionStart(const muse::secs_t time) override;
+    void setLoopRegionEnd(const muse::secs_t time) override;
+    void setLoopRegionActive(const bool active) override;
+    void clearLoopRegion() override;
+    void loopEditingBegin();
+    void loopEditingEnd();
+    bool isLoopRegionClear() const;
+    muse::async::Notification loopRegionChanged() const override;
 
     bool isPaused() const override;
     bool isStopped() const override;
 
+    void stopAction(const muse::actions::ActionData& args) override;
     void reset() override;
 
     muse::async::Channel<uint32_t> midiTickPlayed() const override;
@@ -73,6 +86,8 @@ public:
 
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
+    void playTracksAction(const muse::actions::ActionData& args) override;
+
 private:
     friend class PlaybackControllerTests;
 
@@ -84,8 +99,10 @@ private:
 
     PlaybackRegion selectionPlaybackRegion() const;
     bool isSelectionPlaybackRegionChanged() const;
+    void updatePlaybackRegion();
 
     void onProjectChanged();
+    void onPlaybackPositionChanged();
 
     void onSelectionChanged();
     void seekListSelection();
@@ -95,20 +112,18 @@ private:
     void rewindToStart();
     void rewindToEnd();
     void onSeekAction(const muse::actions::ActionData& args);
-    void doSeek(const muse::secs_t secs, bool applyIfPlaying = false);
+    void doSeek(const muse::secs_t secs, bool applyIfPlaying);
     void onChangePlaybackRegionAction(const muse::actions::ActionData& args);
     void doChangePlaybackRegion(const PlaybackRegion& region);
-    void play(bool ignoreSelection = false);
+    void play(bool ignoreSelection);
     void pause();
-    void stop();
+    void stopInternal(bool shouldSeek, bool shouldUpdatePlaybackRegion);
     void resume();
-    void seek(const muse::secs_t secs);
+    void seek(const muse::secs_t secs, bool applyIfPlaying);
 
     void togglePlayRepeats();
     void toggleAutomaticallyPan();
 
-    void toggleLoopPlayback();
-    void clearLoopRegion();
     void setLoopRegionToSelection();
     void setSelectionToLoop();
     void setLoopRegionInOut();
@@ -136,6 +151,7 @@ private:
     bool isPlaybackPositionOnTheEndOfProject() const;
     bool isPlaybackPositionOnTheEndOfPlaybackRegion() const;
     bool isPlaybackStartPositionValid() const;
+    muse::secs_t playbackPosition() const;
 
     using TrackAddFinished = std::function<void ()>;
 
