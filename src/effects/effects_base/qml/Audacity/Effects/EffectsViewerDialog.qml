@@ -31,9 +31,7 @@ EffectStyledDialogView {
         property int separatorHeight: effectFamily == EffectFamily.Builtin ? separator.height + prv.panelMargins : 0
 
         function closeWindow(accept) {
-            if (prv.viewer.isPreviewing) {
-                prv.viewer.togglePreview()
-            }
+            prv.viewer.stopPreview()
             // Call later because the preview calls `QCoreApplication::processEvents()`,
             // and we must make sure it doesn't do this after we've closed the dialog, or we'll be getting that Qt exception
             // "Object %p destroyed while one of its QML signal handlers is in progress."
@@ -201,7 +199,7 @@ EffectStyledDialogView {
                             buttonId: ButtonBoxModel.CustomButton + 2
                             enabled: prv.isApplyAllowed
 
-                            onClicked: prv.viewer.togglePreview()
+                            onClicked: prv.viewer.isPreviewing ? prv.viewer.stopPreview() : prv.viewer.startPreview()
                         }
 
                         FlatButton {
