@@ -448,12 +448,12 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
     if (effect.PreviewsFullSelection()) {
         newCtx.t1 = originCtx.t1;
     } else {
-        // Limit preview time to 1mn. We need to pre-render the audio,
-        // which would take a long time and lots of memory for long selections.
+        // Limit preview time:
+        // We need to pre-render the audio, which would take a long time and lots of memory for long selections.
         // On the other hand, preview isn't typically something users would listen to for more than a few seconds.
         // (Au3 used to read `previewLen` from the `/AudioIO/EffectsPreviewLen` setting.
         // There is no plan at the moment to reintroduce it in Au4.)
-        constexpr double maxPreviewLen = 60.0;
+        const double maxPreviewLen = configuration()->previewMaxDuration();
         const double previewLen = std::min(originCtx.t1 - originCtx.t0, maxPreviewLen);
         double previewDuration = 0.0;
         if (isNyquist && isGenerator) {
