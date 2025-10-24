@@ -165,14 +165,12 @@ int main(int argc, char** argv)
 #endif
 
 #ifdef Q_OS_LINUX
-    if (qEnvironmentVariable("QT_QPA_PLATFORM") != "offscreen") {
-        // At the time of writing the app hangs when started with "gtk3" theme
-        // TODO: #9308
-        qputenv("QT_QPA_PLATFORMTHEME", "qt6ct");
+    if (qEnvironmentVariable("AU_QT_QPA_PLATFORM") != "offscreen") {
+        qputenv("QT_QPA_PLATFORMTHEME", "gtk3");
     }
 
     //! NOTE Forced X11, with Wayland there are a number of problems now
-    if (qEnvironmentVariable("QT_QPA_PLATFORM") == "") {
+    if (qEnvironmentVariable("AU_QT_QPA_PLATFORM") == "") {
         qputenv("QT_QPA_PLATFORM", "xcb");
     }
 #endif
