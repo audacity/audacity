@@ -69,6 +69,9 @@ void PlaybackController::init()
         if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
             //! NOTE: just stop, without seek
             player()->stop();
+            if (player()->playbackRegion() != m_lastPlaybackRegion && !isEqualToPlaybackPosition(m_lastPlaybackRegion.end)) {
+                player()->setPlaybackRegion(m_lastPlaybackRegion);
+            }
         }
     });
 
@@ -85,6 +88,20 @@ void PlaybackController::init()
 
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         m_isPlayAllowedChanged.notify();
+    });
+
+    selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList& clipKeyList) {
+        if (clipKeyList.empty()) {
+            return;
+        }
+        if (!isPlaying()) {
+            player()->stop();
+            PlaybackRegion selectionRegion = selectionPlaybackRegion();
+            if (selectionRegion.isValid()) {
+                doChangePlaybackRegion(selectionRegion);
+            }
+            doSeek(m_lastPlaybackSeekTime);
+        }
     });
 }
 
@@ -136,15 +153,16 @@ bool PlaybackController::isLoopActive() const
 
 PlaybackRegion PlaybackController::selectionPlaybackRegion() const
 {
-    if (selectionController()->timeSelectionIsNotEmpty()) {
-        return { selectionController()->dataSelectedStartTime(),
-                 selectionController()->dataSelectedEndTime() };
-    }
-
+    // clip selection have priority over time selection
     if (selectionController()->selectedClips().size() == 1) {
         secs_t clipStartTime = selectionController()->selectedClipStartTime();
         secs_t clipEndTime = selectionController()->selectedClipEndTime();
         return { clipStartTime, clipEndTime };
+    }
+
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        return { selectionController()->dataSelectedStartTime(),
+                 selectionController()->dataSelectedEndTime() };
     }
 
     return PlaybackRegion();
@@ -255,6 +273,11 @@ void PlaybackController::play(bool ignoreSelection)
         PlaybackRegion selectionRegion = selectionPlaybackRegion();
         if (selectionRegion.isValid()) {
             doChangePlaybackRegion(selectionRegion);
+        } else {
+            LOGW() << "playback region is not valid";
+            // update the playback region "manually" even when not paused
+            // (that's why we aren't using the doChangePlaybackRegion)
+            player()->setPlaybackRegion(m_lastPlaybackRegion);
         }
     } else {
         doChangePlaybackRegion({});
@@ -273,7 +296,7 @@ void PlaybackController::rewindToStart()
     //! NOTE: In Audacity 3 we can't rewind while playing
     stop();
 
-    seek(0.0);
+    doSeek(0.0);
 
     selectionController()->resetTimeSelection();
 }
@@ -281,9 +304,9 @@ void PlaybackController::rewindToStart()
 void PlaybackController::rewindToEnd()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
+    m_lastPlaybackSeekTime = totalPlayTime();
+    m_lastPlaybackRegion = { totalPlayTime(), totalPlayTime() };
     stop();
-
-    seek(totalPlayTime());
 
     selectionController()->resetTimeSelection();
 }
@@ -365,12 +388,8 @@ void PlaybackController::stop()
 
     player()->stop();
 
-    PlaybackRegion loopRegion = player()->playbackRegion();
-    if (loopRegion.isValid()) {
-        seek(loopRegion.start);
-    } else {
-        seek(m_lastPlaybackSeekTime);
-    }
+    seek(m_lastPlaybackSeekTime);
+    player()->setPlaybackRegion(m_lastPlaybackRegion);
 }
 
 void PlaybackController::resume()
@@ -544,7 +563,7 @@ bool PlaybackController::isPlaybackPositionOnTheEndOfProject() const
 bool PlaybackController::isPlaybackPositionOnTheEndOfPlaybackRegion() const
 {
     PlaybackRegion playbackRegion = player()->playbackRegion();
-    return playbackRegion.isValid() && isEqualToPlaybackPosition(playbackRegion.end);
+    return playbackRegion.isValid() && isEqualToPlaybackPosition(playbackRegion.end) && !player()->isLoopRegionActive();
 }
 
 bool PlaybackController::isPlaybackStartPositionValid() const
