@@ -10,6 +10,7 @@ using namespace au::effects;
 static const std::string moduleName("effects");
 static const muse::Settings::Key APPLY_EFFECT_TO_ALL_AUDIO(moduleName, "effects/applyEffectToAllAudio");
 static const muse::Settings::Key EFFECT_MENU_ORGANIZATION(moduleName, "effects/effectMenuOrganization");
+static const muse::Settings::Key PREVIEW_MAX_DURATION(moduleName, "effects/previewMaxDuration");
 
 void EffectsConfiguration::init()
 {
@@ -22,6 +23,8 @@ void EffectsConfiguration::init()
     muse::settings()->valueChanged(EFFECT_MENU_ORGANIZATION).onReceive(nullptr, [this](const muse::Val&) {
         m_effectMenuOrganizationChanged.notify();
     });
+
+    muse::settings()->setDefaultValue(PREVIEW_MAX_DURATION, muse::Val(60.0));
 }
 
 bool EffectsConfiguration::applyEffectToAllAudio() const
@@ -56,4 +59,14 @@ void EffectsConfiguration::setEffectMenuOrganization(EffectMenuOrganization orga
 muse::async::Notification EffectsConfiguration::effectMenuOrganizationChanged() const
 {
     return m_effectMenuOrganizationChanged;
+}
+
+double EffectsConfiguration::previewMaxDuration() const
+{
+    return muse::settings()->value(PREVIEW_MAX_DURATION).toDouble();
+}
+
+void EffectsConfiguration::setPreviewMaxDuration(double value)
+{
+    muse::settings()->setSharedValue(PREVIEW_MAX_DURATION, muse::Val(value));
 }
