@@ -108,9 +108,9 @@ StyledPopupView {
             value: root.rulerType
 
             model: [
-                {label : qsTrc("trackruler","Logarithmic (dB)"), value: 0, enabled:false},
-                {label : qsTrc("trackruler","Linear (dB)"), value: 1, enabled: true},
-                {label : qsTrc("trackruler","Linear (amp)"), value: 2, enabled: true}
+                {label : qsTrc("trackruler","Logarithmic (dB)"), value: 0},
+                {label : qsTrc("trackruler","Linear (dB)"), value: 1},
+                {label : qsTrc("trackruler","Linear (amp)"), value: 2}
             ]
 
             onValueChangeRequested: function(value) {
