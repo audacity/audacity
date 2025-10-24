@@ -346,7 +346,6 @@ std::optional<size_t> MixerSource::Acquire(Buffers& data, size_t bound)
     // TODO: more-than-two-channels
     const auto maxChannels = mMaxChannels = data.Channels();
     const auto limit = std::min<size_t>(mnChannels, maxChannels);
-    size_t maxTrack = 0;
     const auto mixed = stackAllocate(size_t, maxChannels);
     const auto pFloats = stackAllocate(float*, limit);
     for (size_t j = 0; j < limit; ++j) {
@@ -356,16 +355,47 @@ std::optional<size_t> MixerSource::Acquire(Buffers& data, size_t bound)
     auto result = (mResampleParameters.mVariableRates || rate != mRate)
                   ? MixVariableRates(limit, bound, pFloats)
                   : MixSameRate(limit, bound, pFloats);
-    maxTrack = std::max(maxTrack, result);
-    auto newT = mSamplePos.as_double() / rate;
-    if (backwards) {
-        mTime = std::min(mTime, newT);
+
+    if (result == 0) {
+        // decide if we should keep this source alive by outputting silence,
+        // so downstream per-track FX still get called and can ring out.
+
+        const bool pastStop
+            =backwards
+              ? (mTime <= mT1)
+              : (mTime >= mT1);
+
+        if (pastStop) {
+            // we reached export stop time
+            mLastProduced = 0;
+            return std::nullopt;
+        }
+
+        // otherwise we're still inside the export range,
+        // so we need to feed silence to keep FX alive.
+
+        result = bound;
+
+        // zero-fill the buffers ourselves for all output channels
+        for (size_t j = 0; j < limit; ++j) {
+            auto* outPtr = &data.GetWritePosition(j);
+            std::fill(outPtr, outPtr + result, 0.0f);
+        }
     } else {
-        mTime = std::max(mTime, newT);
+        // we did generate real audio (the clip hasn't ended yet for this track)
+        auto newT = mSamplePos.as_double() / rate;
+        if (backwards) {
+            mTime = std::min(mTime, newT);
+        } else {
+            mTime = std::max(mTime, newT);
+        }
     }
+
     for (size_t j = 0; j < limit; ++j) {
         mixed[j] = result;
     }
+
+    size_t maxTrack = result;
     // Another pass in case channels of a track did not produce equal numbers
     for (size_t j = 0; j < limit; ++j) {
         const auto pFloat = &data.GetWritePosition(j);

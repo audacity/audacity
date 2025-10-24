@@ -99,6 +99,7 @@ Mixer::Mixer(
     , mApplyVolume{applyVolume}
     , mHighQuality{highQuality}
     , mFormat{outFormat}
+    , mRate{outRate}
     , mInterleaved{outInterleaved}
     , mTimesAndSpeed{std::make_shared<TimesAndSpeed>(TimesAndSpeed {
         startTime, stopTime, warpOptions.initialSpeed, startTime })}
@@ -183,8 +184,8 @@ Mixer::Mixer(
 
     if (mMasterEffects && !mMasterEffects->empty()) {
         mDownmixStage = std::make_unique<DownmixStage>(
-            std::move(downmixSources), mNumChannels, mBufferSize, ApplyVolume::MapChannels
-            );
+            std::move(downmixSources), mNumChannels, mBufferSize, ApplyVolume::MapChannels,
+            &mTimesAndSpeed->mTime, mTimesAndSpeed->mT1);
 
         AudioGraph::Source* pDownstream = mDownmixStage.get();
         for (const auto& stage : *mMasterEffects) {
@@ -200,14 +201,17 @@ Mixer::Mixer(
         std::vector<std::unique_ptr<DownmixSource> > masterDownmixSources;
         masterDownmixSources.push_back(std::make_unique<SimpleDonwmixSource>(*pDownstream, mNumChannels));
         mMasterDownmixStage = std::make_unique<DownmixStage>(
-            std::move(masterDownmixSources), mNumChannels, mBufferSize, ApplyVolume::Mixdown);
+            std::move(masterDownmixSources), mNumChannels, mBufferSize, ApplyVolume::Mixdown,
+            &mTimesAndSpeed->mTime, mTimesAndSpeed->mT1);
         mDownstream = mMasterDownmixStage.get();
     } else {
         mDownmixStage = std::make_unique<DownmixStage>(
             std::move(downmixSources),
             mNumChannels,
             mBufferSize,
-            mApplyVolume
+            mApplyVolume,
+            &mTimesAndSpeed->mTime,
+            mTimesAndSpeed->mT1
             );
         mDownstream = mDownmixStage.get();
     }
@@ -312,6 +316,17 @@ size_t Mixer::Process(const size_t maxToProcess)
 
     if (!maxOut) {
         return 0;
+    }
+
+    const size_t producedSamples = *maxOut;
+    if (mRate > 0.0) {
+        double deltaSeconds = double(producedSamples) / mRate;
+
+        if (backwards) {
+            mTime -= deltaSeconds;
+        } else {
+            mTime += deltaSeconds;
+        }
     }
 
     if (backwards) {
