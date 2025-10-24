@@ -13,6 +13,8 @@
 #include "libraries/lib-components/ComponentInterfaceSymbol.h"
 
 namespace au::effects {
+int categoryIdOrder(const muse::String& category);
+
 class BuiltinEffectsRepository : public IBuiltinEffectsRepository
 {
     muse::Inject<IEffectsViewRegister> effectsViewRegister;
