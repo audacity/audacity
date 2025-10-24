@@ -131,7 +131,7 @@ bool Au3TracksInteraction::changeTracksColor(const TrackIdList& tracksIds, const
         } else if (Au3LabelTrack* labelTrack = dynamic_cast<Au3LabelTrack*>(track)) {
             const auto& au3labels = labelTrack->GetLabels();
             for (size_t i = 0; i < au3labels.size(); ++i) {
-                prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, i, au3labels[i]));
+                prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, &au3labels[i]));
             }
         }
     }

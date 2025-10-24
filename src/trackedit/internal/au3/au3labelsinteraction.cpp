@@ -71,14 +71,11 @@ bool Au3LabelsInteraction::addLabelToSelection()
     selectedRegion.setTimes(selectionController()->dataSelectedStartTime(),
                             selectionController()->dataSelectedEndTime());
 
-    int labelIndex = labelTrack->AddLabel(selectedRegion, title);
+    int64_t newLabelId = labelTrack->AddLabel(selectedRegion, title);
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
-        const auto& au3labels = labelTrack->GetLabels();
-        if (labelIndex >= 0 && labelIndex < static_cast<int>(au3labels.size())) {
-            prj->notifyAboutLabelAdded(DomConverter::label(labelTrack, labelIndex, au3labels[labelIndex]));
-        }
+        prj->notifyAboutLabelAdded(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, newLabelId)));
     }
 
     selectionController()->setFocusedTrack(labelTrack->GetId());
@@ -94,22 +91,18 @@ bool Au3LabelsInteraction::changeLabelTitle(const LabelKey& labelKey, const muse
         return false;
     }
 
-    const auto& au3labels = labelTrack->GetLabels();
-    size_t labelIndex = static_cast<size_t>(labelKey.itemId);
-
-    IF_ASSERT_FAILED(labelIndex < au3labels.size()) {
+    Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
+    IF_ASSERT_FAILED(label) {
         return false;
     }
 
-    Au3Label au3Label = au3labels[labelIndex];
-    au3Label.title = wxFromString(title);
-    labelTrack->SetLabel(labelIndex, au3Label);
+    label->title = wxFromString(title);
 
     LOGD() << "changed title of label: " << labelKey.itemId << ", track: " << labelKey.trackId;
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
-        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, labelIndex, labelTrack->GetLabels()[labelIndex]));
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, label));
     }
 
     return true;
@@ -122,10 +115,8 @@ bool Au3LabelsInteraction::removeLabel(const LabelKey& labelKey)
         return false;
     }
 
-    const auto& au3labels = labelTrack->GetLabels();
-    size_t labelIndex = static_cast<size_t>(labelKey.itemId);
-
-    IF_ASSERT_FAILED(labelIndex < au3labels.size()) {
+    int labelIndex = labelTrack->GetLabelIndex(labelKey.itemId);
+    IF_ASSERT_FAILED(labelIndex >= 0) {
         return false;
     }
 
@@ -137,8 +128,6 @@ bool Au3LabelsInteraction::removeLabel(const LabelKey& labelKey)
     if (prj) {
         prj->notifyAboutTrackChanged(DomConverter::track(labelTrack));
     }
-
-    projectHistory()->pushHistoryState("Delete label", "Delete");
 
     return true;
 }
@@ -179,8 +168,6 @@ bool Au3LabelsInteraction::removeLabels(const LabelKeyList& labelKeys)
         }
     }
 
-    projectHistory()->pushHistoryState("Delete labels", "Delete");
-
     return true;
 }
 
@@ -213,13 +200,12 @@ bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset, bool completed)
             continue;
         }
 
-        const auto& au3labels = labelTrack->GetLabels();
-        size_t labelIndex = static_cast<size_t>(selectedLabel.itemId);
-
-        IF_ASSERT_FAILED(labelIndex < au3labels.size()) {
+        int labelIndex = labelTrack->GetLabelIndex(selectedLabel.itemId);
+        IF_ASSERT_FAILED(labelIndex >= 0) {
             continue;
         }
 
+        const auto& au3labels = labelTrack->GetLabels();
         Au3Label au3Label = au3labels[labelIndex];
 
         // Calculate new times
@@ -231,7 +217,7 @@ bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset, bool completed)
         labelTrack->SetLabel(labelIndex, au3Label);
 
         if (prj) {
-            prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, labelIndex, labelTrack->GetLabels()[labelIndex]));
+            prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, au3Label.GetId())));
         }
     }
 
@@ -256,13 +242,12 @@ bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
         return false;
     }
 
-    const auto& au3labels = labelTrack->GetLabels();
-    size_t labelIndex = static_cast<size_t>(labelKey.itemId);
-
-    IF_ASSERT_FAILED(labelIndex < au3labels.size()) {
+    int labelIndex = labelTrack->GetLabelIndex(labelKey.itemId);
+    IF_ASSERT_FAILED(labelIndex >= 0) {
         return false;
     }
 
+    const auto& au3labels = labelTrack->GetLabels();
     Au3Label au3Label = au3labels[labelIndex];
 
     // Update the label with new start time
@@ -271,7 +256,7 @@ bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
-        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, labelIndex, labelTrack->GetLabels()[labelIndex]));
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, au3Label.GetId())));
     }
 
     return true;
@@ -295,13 +280,12 @@ bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t ne
         return false;
     }
 
-    const auto& au3labels = labelTrack->GetLabels();
-    size_t labelIndex = static_cast<size_t>(labelKey.itemId);
-
-    IF_ASSERT_FAILED(labelIndex < au3labels.size()) {
+    int labelIndex = labelTrack->GetLabelIndex(labelKey.itemId);
+    IF_ASSERT_FAILED(labelIndex >= 0) {
         return false;
     }
 
+    const auto& au3labels = labelTrack->GetLabels();
     Au3Label au3Label = au3labels[labelIndex];
 
     // Update the label with new end time
@@ -310,7 +294,7 @@ bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t ne
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
-        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, labelIndex, labelTrack->GetLabels()[labelIndex]));
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, au3Label.GetId())));
     }
 
     return true;
