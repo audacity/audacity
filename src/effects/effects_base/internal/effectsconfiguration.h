@@ -26,6 +26,9 @@ public:
     void setEffectMenuOrganization(EffectMenuOrganization) override;
     muse::async::Notification effectMenuOrganizationChanged() const override;
 
+    double previewMaxDuration() const override;
+    void setPreviewMaxDuration(double value) override;
+
 private:
     muse::async::Notification m_applyEffectToAllAudioChanged;
     muse::async::Notification m_effectMenuOrganizationChanged;
