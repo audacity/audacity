@@ -22,7 +22,11 @@ Rectangle {
         root.model.init()
     }
 
-    function togglePreview() {
-        root.model.togglePreview()
+    function startPreview() {
+        root.model.startPreview()
+    }
+
+    function stopPreview() {
+        root.model.stopPreview()
     }
 }

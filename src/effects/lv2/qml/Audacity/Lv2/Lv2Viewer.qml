@@ -31,8 +31,12 @@ Rectangle {
         model.deinit()
     }
 
-    function togglePreview() {
-        model.togglePreview()
+    function startPreview() {
+        model.startPreview()
+    }
+
+    function stopPreview() {
+        model.stopPreview()
     }
 
     function manage(parent) {
