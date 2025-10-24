@@ -39,7 +39,7 @@ void notifier(const std::vector<TYPE>& first,
 /**
  * Iterates over two TrackLists, and when two track ID's match, it invokes the action
  */
-void clipsMatcher(const TrackList& first,
+void itemsMatcher(const TrackList& first,
                   const TrackList& second,
                   const std::function<void(int, int)>& action)
 {
@@ -128,11 +128,76 @@ bool clipsPair(ITrackeditProjectPtr trackeditProjectPtr,
 
     return changed;
 }
+
+/**
+ * Detect and notifies of changes between two label lists
+ * @param trackeditProject a TrackEditProjectPtr expected to be valid
+ * @param before a vector of Labels lists before the change
+ * @param after a vector of Labels lists after the change
+ */
+bool labelsPair(ITrackeditProjectPtr trackeditProjectPtr,
+                const Labels& before,
+                const Labels& after)
+{
+    bool changed = false;
+
+    //! Check for added labels:
+    notifier<Label>(
+        before,
+        after,
+        [&](const Label& label, int) {
+        changed = true;
+        trackeditProjectPtr->notifyAboutLabelAdded(label);
+    },
+        [](const Label& first, const Label& second) {
+        return first.key.itemId == second.key.itemId; // Here we're only interested in if the "id" exists.
+    }
+        );
+
+    //! Check for removed labels:
+    notifier<Label>(
+        after,
+        before,
+        [&](const Label& label, int) {
+        changed = true;
+        trackeditProjectPtr->notifyAboutLabelRemoved(label);
+    },
+        [](const Label& first, const Label& second) {
+        return first.key.itemId == second.key.itemId; // Here we're only interested in if the "id" exists.
+    }
+        );
+
+    //! Check for changed labels:
+    auto labelComparison = [](const Label& first, const Label& second) {
+        IF_ASSERT_FAILED(first.key == second.key)
+        {
+            // This comparison assumes the key has been the same.
+            return false;
+        }
+
+        return first.startTime == second.startTime
+               && first.endTime == second.endTime
+               && first.title == second.title;
+    };
+
+    // Brute force I'm afraid. Still much faster than redrawing:
+    for (const Label& labelBefore : before) {
+        for (const Label& labelAfter : after) {
+            if ((labelBefore.key == labelAfter.key)
+                && !labelComparison(labelBefore, labelAfter)) {
+                changed = true;
+                trackeditProjectPtr->notifyAboutLabelChanged(labelAfter);
+            }
+        }
+    }
+
+    return changed;
+}
 }  // namespace
 
 namespace au::trackedit::changeDetection {
-void notifyOfUndoRedo(const TracksAndClips& before,
-                      const TracksAndClips& after,
+void notifyOfUndoRedo(const TracksAndItems& before,
+                      const TracksAndItems& after,
                       ITrackeditProjectPtr trackeditProject)
 {
     bool changed = false;
@@ -207,11 +272,22 @@ void notifyOfUndoRedo(const TracksAndClips& before,
     }
 
     //! Now checking for changes in Clips lists.
-    clipsMatcher(after.tracks,
+    itemsMatcher(after.tracks,
                  before.tracks,
                  [&](int i, int j) {
         bool clipChange = clipsPair(trackeditProject, before.clips[j], after.clips[i]);
         if (clipChange) {
+            changed = true;
+        }
+    }
+                 );
+
+    //! Now checking for changes in Labels lists.
+    itemsMatcher(after.tracks,
+                 before.tracks,
+                 [&](int i, int j) {
+        bool labelChange = labelsPair(trackeditProject, before.labels[j], after.labels[i]);
+        if (labelChange) {
             changed = true;
         }
     }

@@ -442,17 +442,21 @@ int64_t Au3TrackeditProject::createNewGroupID(int64_t startingID) const
     return startingID;
 }
 
-TracksAndClips Au3TrackeditProject::buildTracksAndClips() const
+TracksAndItems Au3TrackeditProject::buildTracksAndItems() const
 {
-    TracksAndClips newCache;
+    TracksAndItems newCache;
 
     newCache.tracks = trackList();
 
     newCache.clips.reserve(newCache.tracks.size());
+    newCache.labels.reserve(newCache.tracks.size());
 
     for (const Track& track : newCache.tracks) {
         trackedit::Clips clips = getClips(track.id);
         newCache.clips.push_back(std::move(clips));
+
+        trackedit::Labels labels = getLabels(track.id);
+        newCache.labels.push_back(std::move(labels));
     }
 
     return newCache;

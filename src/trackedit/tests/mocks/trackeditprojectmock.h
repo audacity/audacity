@@ -53,6 +53,6 @@ public:
 
     MOCK_METHOD(int64_t, createNewGroupID, (int64_t startingId), (const, override));
 
-    MOCK_METHOD(TracksAndClips, buildTracksAndClips, (), (const, override));
+    MOCK_METHOD(TracksAndItems, buildTracksAndItems, (), (const, override));
 };
 }
