@@ -444,18 +444,26 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
     EffectContext newCtx;
 
     //! Step 3.1 - prepare time
-
-    //const bool previewFullSelection = effect.PreviewsFullSelection(); not used at the moment
-    const double previewLen = originCtx.t1 - originCtx.t0;
-    double previewDuration = 0.0;
-    if (isNyquist && isGenerator) {
-        previewDuration = effect.CalcPreviewInputLength(settings, previewLen);
+    newCtx.t0 = originCtx.t0;
+    if (effect.PreviewsFullSelection()) {
+        newCtx.t1 = originCtx.t1;
     } else {
-        previewDuration = std::min(settings.extra.GetDuration(), effect.CalcPreviewInputLength(settings, previewLen));
+        // Limit preview time to 1mn. We need to pre-render the audio,
+        // which would take a long time and lots of memory for long selections.
+        // On the other hand, preview isn't typically something users would listen to for more than a few seconds.
+        // (Au3 used to read `previewLen` from the `/AudioIO/EffectsPreviewLen` setting.
+        // There is no plan at the moment to reintroduce it in Au4.)
+        constexpr double maxPreviewLen = 60.0;
+        const double previewLen = std::min(originCtx.t1 - originCtx.t0, maxPreviewLen);
+        double previewDuration = 0.0;
+        if (isNyquist && isGenerator) {
+            previewDuration = effect.CalcPreviewInputLength(settings, previewLen);
+        } else {
+            previewDuration = std::min(settings.extra.GetDuration(), effect.CalcPreviewInputLength(settings, previewLen));
+        }
+        newCtx.t1 = originCtx.t0 + previewDuration;
     }
 
-    newCtx.t0 = originCtx.t0;
-    newCtx.t1 = originCtx.t0 + previewDuration;
     if ((newCtx.t1 > originCtx.t1) && !isGenerator) {
         newCtx.t1 = originCtx.t1;
     }
@@ -564,6 +572,16 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
         opt.selectedOnly = true;
         opt.startOffset = startOffset;
         opt.isDefaultPolicy = false;
+
+        // Setting looping to `false` ensures that the loop region won't interfere with preview.
+        // Also, looping is of course not effective during preview. Having it visually disabled
+        // makes it clear to the user.
+        const auto loopWasActive = player->isLoopRegionActive();
+        player->setLoopRegionActive(false);
+        const auto restorePlayerState = finally([&] {
+            player->setLoopRegionActive(loopWasActive);
+        });
+        player->setPlaybackRegion({ startOffset + newCtx.t0, startOffset + newCtx.t1 });
 
         muse::Ret ret = player->playTracks(*newCtx.tracks, newCtx.t0, newCtx.t1, opt);
         if (!ret) {
