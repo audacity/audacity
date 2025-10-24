@@ -258,8 +258,6 @@ void LabelTrack::Clear(double b, double e, bool moveClips)
     }
 }
 
-#if 0
-//used when we want to use clear only on the labels
 bool LabelTrack::SplitDelete(double b, double e)
 {
     // May DELETE labels, so use subscripts to iterate
@@ -281,8 +279,6 @@ bool LabelTrack::SplitDelete(double b, double e)
 
     return true;
 }
-
-#endif
 
 void LabelTrack::ShiftLabelsOnInsert(double length, double pt)
 {
@@ -855,7 +851,6 @@ Track::Holder LabelTrack::Cut(double t0, double t1, bool moveClips)
     return tmp;
 }
 
-#if 0
 Track::Holder LabelTrack::SplitCut(double t0, double t1)
 {
     // SplitCut() == Copy() + SplitDelete()
@@ -863,13 +858,11 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
     Track::Holder tmp = Copy(t0, t1);
 
     if (!SplitDelete(t0, t1)) {
-        return {}
+        return {};
     }
 
     return tmp;
 }
-
-#endif
 
 Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 {

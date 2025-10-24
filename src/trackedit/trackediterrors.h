@@ -16,7 +16,7 @@ enum class Err {
     Cancel          = int(muse::Ret::Code::Cancel),
     UnknownError    = TRACKEDIT_FIRST,
 
-    WaveTrackNotFound,
+    TrackNotFound,
     ClipNotFound,
     TrackEmpty,
     NotEnoughSpaceForPaste,
@@ -34,7 +34,7 @@ inline muse::Ret make_ret(Err e)
     case Err::NoError: return muse::Ret(retCode);
     case Err::Cancel: return muse::Ret(retCode);
     case Err::UnknownError: return muse::Ret(retCode);
-    case Err::WaveTrackNotFound: return muse::Ret(retCode);
+    case Err::TrackNotFound: return muse::Ret(retCode);
     case Err::ClipNotFound: return muse::Ret(retCode);
     case Err::TrackEmpty: return muse::Ret(retCode);
     case Err::NotEnoughSpaceForPaste: return muse::Ret(retCode, muse::trc("trackedit", "Not enough space to paste clip into"));

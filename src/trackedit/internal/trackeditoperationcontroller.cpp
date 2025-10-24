@@ -658,12 +658,42 @@ bool TrackeditOperationController::resampleTracks(const TrackIdList& tracksIds, 
 
 bool TrackeditOperationController::addLabelToSelection()
 {
-    return labelsInteraction()->addLabelToSelection();
+    if (labelsInteraction()->addLabelToSelection()) {
+        projectHistory()->pushHistoryState("Label added", "Add label");
+        return true;
+    }
+    return false;
 }
 
 bool TrackeditOperationController::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)
 {
-    return labelsInteraction()->changeLabelTitle(labelKey, title);
+    if (labelsInteraction()->changeLabelTitle(labelKey, title)) {
+        projectHistory()->pushHistoryState("Label title changed", "Change label title");
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::cutLabel(const LabelKey& labelKey)
+{
+    ITrackDataPtr data = labelsInteraction()->cutLabel(labelKey);
+    if (!data) {
+        return false;
+    }
+
+    clipboard()->addTrackData(std::move(data));
+    projectHistory()->pushHistoryState("Label cut", "Cut label");
+    return true;
+}
+
+bool TrackeditOperationController::copyLabel(const LabelKey& labelKey)
+{
+    ITrackDataPtr data = labelsInteraction()->copyLabel(labelKey);
+    if (!data) {
+        return false;
+    }
+    clipboard()->addTrackData(std::move(data));
+    return true;
 }
 
 bool TrackeditOperationController::removeLabel(const LabelKey& labelKey)

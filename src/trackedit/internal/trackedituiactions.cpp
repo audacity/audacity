@@ -350,6 +350,20 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Delete label"),
              IconCode::Code::DELETE_TANK
              ),
+    UiAction("label-cut",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Cut label"),
+             TranslatableString("action", "Cut label"),
+             IconCode::Code::CUT
+             ),
+    UiAction("label-copy",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Copy label"),
+             TranslatableString("action", "Copy label"),
+             IconCode::Code::COPY
+             ),
     UiAction("label-open-in-editor",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

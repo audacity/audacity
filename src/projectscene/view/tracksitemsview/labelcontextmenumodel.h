@@ -36,4 +36,3 @@ private:
     LabelKey m_labelKey;
 };
 }
-

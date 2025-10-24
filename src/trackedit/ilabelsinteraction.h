@@ -7,6 +7,7 @@
 #include "global/progress.h"
 
 #include "trackedittypes.h"
+#include "itrackdata.h"
 
 #include "modularity/imoduleinterface.h"
 
@@ -23,6 +24,9 @@ public:
 
     virtual bool removeLabel(const LabelKey& labelKey) = 0;
     virtual bool removeLabels(const LabelKeyList& labelKeys) = 0;
+
+    virtual ITrackDataPtr cutLabel(const LabelKey& labelKey) = 0;
+    virtual ITrackDataPtr copyLabel(const LabelKey& labelKey) = 0;
 
     virtual bool moveLabels(secs_t timePositionOffset, bool completed) = 0;
 

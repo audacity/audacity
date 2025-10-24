@@ -182,6 +182,11 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
         copiedData[i] = std::static_pointer_cast<Au3TrackData>(data[i]);
     }
 
+    bool isLabelTrack = false;
+    if (!copiedData.empty() && copiedData[0]->track()) {
+        isLabelTrack = dynamic_cast<Au3LabelTrack*>(copiedData[0]->track().get()) != nullptr;
+    }
+
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
 
@@ -207,6 +212,22 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
 
     TrackIdList dstTracksIds = determineDestinationTracksIds(tracks, selectedTracks, data.size());
 
+    if (isLabelTrack) {
+        return pasteLabels(copiedData, dstTracksIds, begin, moveClips, projectWasModified);
+    }
+
+    const bool pasteIntoExistingClip = !configuration()->pasteAsNewClip() && !moveAllTracks;
+    return pasteClips(copiedData, dstTracksIds, begin, moveClips, isMultiSelectionCopy, pasteIntoExistingClip, projectWasModified);
+}
+
+muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& copiedData,
+                                           const TrackIdList& dstTracksIds,
+                                           secs_t begin,
+                                           bool moveClips,
+                                           bool isMultiSelectionCopy,
+                                           bool pasteIntoExistingClip,
+                                           bool& projectWasModified)
+{
     // Convert Au3TrackDataPtr to ITrackDataPtr for helper method
     std::vector<ITrackDataPtr> copiedDataBase(copiedData.begin(), copiedData.end());
 
@@ -215,7 +236,7 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
         return trackedit::make_ret(trackedit::Err::Cancel);
     }
 
-    const bool newTracksNeeded = dstTracksIds.size() != data.size();
+    const bool newTracksNeeded = dstTracksIds.size() != copiedData.size();
 
     auto ret = canPasteTrackData(dstTracksIds, copiedData);
     if (!ret) {
@@ -224,7 +245,6 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
 
     muse::Ret ok { muse::make_ok() };
     projectWasModified = true;
-    const bool pasteIntoExistingClip = !configuration()->pasteAsNewClip() && !moveAllTracks;
 
     if (!moveClips) {
         if (isMultiSelectionCopy) {
@@ -237,7 +257,7 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
         Au3WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(dstTracksIds[i]));
         IF_ASSERT_FAILED(dstWaveTrack) {
-            return make_ret(trackedit::Err::WaveTrackNotFound);
+            return make_ret(trackedit::Err::TrackNotFound);
         }
         auto prj = globalContext()->currentTrackeditProject();
 
@@ -295,15 +315,74 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
 
     if (newTracksNeeded) {
         // remove already pasted elements from the clipboard and paste the rest into the new tracks
-        copiedData.erase(copiedData.begin(), copiedData.begin() + dstTracksIds.size());
-        const auto tracksIdsToSelect = pasteIntoNewTracks(copiedData);
-        dstTracksIds.insert(dstTracksIds.end(), tracksIdsToSelect.begin(), tracksIdsToSelect.end());
+        std::vector<Au3TrackDataPtr> remainingData(copiedData.begin() + dstTracksIds.size(), copiedData.end());
+        const auto tracksIdsToSelect = pasteIntoNewTracks(remainingData);
+        TrackIdList allDstTracksIds = dstTracksIds;
+        allDstTracksIds.insert(allDstTracksIds.end(), tracksIdsToSelect.begin(), tracksIdsToSelect.end());
+
+        selectionController()->setSelectedTracks(allDstTracksIds);
+        selectionController()->setFocusedTrack(allDstTracksIds.front());
+    } else {
+        selectionController()->setSelectedTracks(dstTracksIds);
+        selectionController()->setFocusedTrack(dstTracksIds.front());
     }
 
-    selectionController()->setSelectedTracks(dstTracksIds);
-    selectionController()->setFocusedTrack(dstTracksIds.front());
-
     return ok;
+}
+
+muse::Ret Au3TracksInteraction::pasteLabels(const std::vector<Au3TrackDataPtr>& copiedData,
+                                            const TrackIdList& dstTracksIds,
+                                            secs_t begin,
+                                            bool moveClips,
+                                            bool& projectWasModified)
+{
+    projectWasModified = true;
+    auto prj = globalContext()->currentTrackeditProject();
+    auto& tracks = Au3TrackList::Get(projectRef());
+
+    Au3LabelTrack* targetLabelTrack = nullptr;
+
+    for (const auto& trackId : dstTracksIds) {
+        Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId));
+        if (labelTrack) {
+            targetLabelTrack = labelTrack;
+            break;
+        }
+    }
+
+    if (!targetLabelTrack) {
+        for (auto lt : tracks.Any<Au3LabelTrack>()) {
+            targetLabelTrack = lt;
+            break;
+        }
+    }
+
+    if (!targetLabelTrack) {
+        targetLabelTrack = ::LabelTrack::Create(tracks);
+        prj->notifyAboutTrackAdded(DomConverter::labelTrack(targetLabelTrack));
+    }
+
+    for (size_t i = 0; i < copiedData.size(); ++i) {
+        const auto trackToPaste = std::static_pointer_cast<Au3LabelTrack>(copiedData.at(i)->track());
+        IF_ASSERT_FAILED(trackToPaste) {
+            continue;
+        }
+
+        const size_t labelCountBefore = targetLabelTrack->GetLabels().size();
+        targetLabelTrack->Paste(begin, *trackToPaste, moveClips);
+
+        const auto& labelsAfter = targetLabelTrack->GetLabels();
+        for (size_t labelIdx = labelCountBefore; labelIdx < labelsAfter.size(); ++labelIdx) {
+            prj->notifyAboutLabelAdded(DomConverter::label(targetLabelTrack, &labelsAfter[labelIdx]));
+        }
+    }
+
+    prj->notifyAboutTrackChanged(DomConverter::track(targetLabelTrack));
+
+    selectionController()->setSelectedTracks({ targetLabelTrack->GetId() });
+    selectionController()->setFocusedTrack(targetLabelTrack->GetId());
+
+    return muse::make_ok();
 }
 
 ITrackDataPtr Au3TracksInteraction::cutTrackData(const TrackId trackId, secs_t begin, secs_t end, bool moveClips)
@@ -364,15 +443,17 @@ ITrackDataPtr Au3TracksInteraction::copyContinuousTrackData(const TrackId trackI
 bool Au3TracksInteraction::removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
     for (const TrackId& trackId : tracksIds) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            continue;
+        Au3Track* track = nullptr;
+        if (Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId))) {
+            waveTrack->Clear(begin, end, moveClips);
+            track = waveTrack;
+        } else if (Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId))) {
+            labelTrack->Clear(begin, end, moveClips);
+            track = labelTrack;
         }
 
-        waveTrack->Clear(begin, end, moveClips);
-
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        prj->notifyAboutTrackChanged(DomConverter::track(track));
     }
 
     return true;
@@ -1094,8 +1175,19 @@ TrackIdList Au3TracksInteraction::pasteIntoNewTracks(const std::vector<Au3TrackD
 
         auto newTrack = DomConverter::track(pNewTrack.get());
         prj->notifyAboutTrackAdded(newTrack);
-        for (const auto& clip : prj->clipList(pNewTrack->GetId())) {
-            prj->notifyAboutClipAdded(clip);
+
+        // Handle wave track clips
+        if (dynamic_cast<Au3WaveTrack*>(pNewTrack.get())) {
+            for (const auto& clip : prj->clipList(pNewTrack->GetId())) {
+                prj->notifyAboutClipAdded(clip);
+            }
+        }
+        // Handle label track labels
+        else if (Au3LabelTrack* labelTrack = dynamic_cast<Au3LabelTrack*>(pNewTrack.get())) {
+            const auto& labels = labelTrack->GetLabels();
+            for (size_t i = 0; i < labels.size(); ++i) {
+                prj->notifyAboutLabelAdded(DomConverter::label(labelTrack, &labels[i]));
+            }
         }
 
         tracksIdsPastedInto.push_back(newTrack.id);
@@ -1107,19 +1199,24 @@ TrackIdList Au3TracksInteraction::pasteIntoNewTracks(const std::vector<Au3TrackD
 std::shared_ptr<au::au3::Au3Track> Au3TracksInteraction::createNewTrackAndPaste(std::shared_ptr<Au3Track> track, Au3TrackList& list,
                                                                                 secs_t begin)
 {
-    auto& trackFactory = WaveTrackFactory::Get(projectRef());
-    auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+    // Handle wave track clips
+    if (Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track.get())) {
+        auto& trackFactory = WaveTrackFactory::Get(projectRef());
+        auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
 
-    //! NOTE: using dynamic_cast directly because when using UndoManager
-    //! project may not contain track with given ID anymore
-    Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track.get());
-    IF_ASSERT_FAILED(waveTrack) {
-        return nullptr;
+        auto pFirstTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
+        list.Add(pFirstTrack->SharedPointer());
+        pFirstTrack->Paste(begin, *track, false);
+        return pFirstTrack->SharedPointer();
     }
-    auto pFirstTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
-    list.Add(pFirstTrack->SharedPointer());
-    pFirstTrack->Paste(begin, *track, false);
-    return pFirstTrack->SharedPointer();
+    // Handle label track labels
+    else if (dynamic_cast<Au3LabelTrack*>(track.get())) {
+        Au3LabelTrack* newLabelTrack = ::LabelTrack::Create(list);
+        newLabelTrack->Paste(begin, *track, false);
+        return newLabelTrack->SharedPointer();
+    }
+
+    return nullptr;
 }
 
 TrackIdList Au3TracksInteraction::determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
@@ -1238,7 +1335,7 @@ muse::Ret Au3TracksInteraction::canPasteTrackData(const TrackIdList& dstTracksId
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
         Au3WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(dstTracksIds[i]));
         IF_ASSERT_FAILED(dstWaveTrack) {
-            return make_ret(trackedit::Err::WaveTrackNotFound);
+            return make_ret(trackedit::Err::TrackNotFound);
         }
     }
 
@@ -1257,7 +1354,7 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
     for (size_t i = 0; i < tracksIds.size(); ++i) {
         WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(tracksIds.at(i)));
         IF_ASSERT_FAILED(dstWaveTrack) {
-            return make_ret(trackedit::Err::WaveTrackNotFound);
+            return make_ret(trackedit::Err::TrackNotFound);
         }
 
         const auto trackToPaste = std::static_pointer_cast<Au3WaveTrack>(trackData.at(i)->track());
@@ -1376,31 +1473,43 @@ void Au3TracksInteraction::insertBlankSpace(const TrackIdList& trackIds, secs_t 
 
 ITrackDataPtr Au3TracksInteraction::splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
 {
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return nullptr;
+    std::shared_ptr<Au3TrackData> data;
+    Au3Track* changedTrack = nullptr;
+
+    if (Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId))) {
+        const auto& newTrack = waveTrack->SplitCut(begin, end);
+        data = std::make_shared<Au3TrackData>(std::move(newTrack));
+        changedTrack = waveTrack;
+    } else if (Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId))) {
+        const auto& newTrack = labelTrack->SplitCut(begin, end);
+        data = std::make_shared<Au3TrackData>(std::move(newTrack));
+        changedTrack = labelTrack;
     }
 
-    auto track = waveTrack->SplitCut(begin, end);
-    const auto data = std::make_shared<Au3TrackData>(std::move(track));
-
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    prj->notifyAboutTrackChanged(DomConverter::track(changedTrack));
 
     return data;
 }
 
 bool Au3TracksInteraction::splitDeleteSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
 {
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    Au3Track* changedTrack = nullptr;
+
+    if (Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId))) {
+        waveTrack->SplitDelete(begin, end);
+        changedTrack = waveTrack;
+    } else if (Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId))) {
+        labelTrack->SplitDelete(begin, end);
+        changedTrack = labelTrack;
+    }
+
+    if (!changedTrack) {
         return false;
     }
 
-    waveTrack->SplitDelete(begin, end);
-
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    prj->notifyAboutTrackChanged(DomConverter::track(changedTrack));
 
     return true;
 }

@@ -13,6 +13,8 @@
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "au3trackdata.h"
+
 #include "defer.h"
 #include "log.h"
 
@@ -139,27 +141,32 @@ bool Au3LabelsInteraction::removeLabels(const LabelKeyList& labelKeys)
     }
 
     // Group labels by track
-    std::map<TrackId, std::vector<size_t>> labelsByTrack;
+    std::map<TrackId, std::vector<int64_t> > labelsByTrack;
     for (const auto& labelKey : labelKeys) {
-        labelsByTrack[labelKey.trackId].push_back(static_cast<size_t>(labelKey.itemId));
+        labelsByTrack[labelKey.trackId].push_back(labelKey.itemId);
     }
 
-    // Delete labels from each track, starting from the highest index to avoid index shifts
-    for (auto& [trackId, indices] : labelsByTrack) {
+    for (auto& [trackId, labelIds] : labelsByTrack) {
         Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId));
         IF_ASSERT_FAILED(labelTrack) {
             continue;
         }
 
-        // Sort indices in descending order to delete from highest to lowest
-        std::sort(indices.begin(), indices.end(), std::greater<size_t>());
-
-        const auto& au3labels = labelTrack->GetLabels();
-        for (size_t index : indices) {
-            if (index < au3labels.size()) {
-                labelTrack->DeleteLabel(index);
-                LOGD() << "deleted label: " << index << ", track: " << trackId;
+        // Convert label IDs to indices
+        std::vector<int> indices;
+        for (int64_t labelId : labelIds) {
+            int index = labelTrack->GetLabelIndex(labelId);
+            if (index >= 0) {
+                indices.push_back(index);
             }
+        }
+
+        // Sort indices in descending order to delete from highest to lowest
+        std::sort(indices.begin(), indices.end(), std::greater<int>());
+
+        for (int index : indices) {
+            labelTrack->DeleteLabel(index);
+            LOGD() << "deleted label at index: " << index << ", track: " << trackId;
         }
 
         const auto prj = globalContext()->currentTrackeditProject();
@@ -169,6 +176,46 @@ bool Au3LabelsInteraction::removeLabels(const LabelKeyList& labelKeys)
     }
 
     return true;
+}
+
+ITrackDataPtr Au3LabelsInteraction::cutLabel(const LabelKey& labelKey)
+{
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return nullptr;
+    }
+
+    const Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
+    IF_ASSERT_FAILED(label) {
+        return nullptr;
+    }
+
+    constexpr bool moveClips = true;
+    auto track = labelTrack->Cut(label->getT0(), label->getT1(), moveClips);
+    const auto data = std::make_shared<Au3TrackData>(std::move(track));
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutLabelRemoved(DomConverter::label(labelTrack, label));
+    prj->notifyAboutTrackChanged(DomConverter::track(labelTrack));
+
+    return data;
+}
+
+ITrackDataPtr Au3LabelsInteraction::copyLabel(const LabelKey& labelKey)
+{
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return nullptr;
+    }
+
+    const Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
+    IF_ASSERT_FAILED(label) {
+        return nullptr;
+    }
+
+    auto track = labelTrack->Copy(label->getT0(), label->getT1());
+
+    return std::make_shared<Au3TrackData>(std::move(track));
 }
 
 bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset, bool completed)
