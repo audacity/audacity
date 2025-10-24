@@ -38,9 +38,15 @@ Rectangle {
         }
     }
 
-    function togglePreview() {
+    function startPreview() {
         if (builder.contentItem) {
-            builder.contentItem.togglePreview()
+            builder.contentItem.startPreview()
+        }
+    }
+
+    function stopPreview() {
+        if (builder.contentItem) {
+            builder.contentItem.stopPreview()
         }
     }
 

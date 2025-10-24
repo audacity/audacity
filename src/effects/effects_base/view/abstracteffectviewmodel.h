@@ -29,7 +29,8 @@ public:
     ~AbstractEffectViewModel() override = default;
 
     Q_INVOKABLE void init();
-    Q_INVOKABLE void togglePreview();
+    Q_INVOKABLE void startPreview();
+    Q_INVOKABLE void stopPreview();
 
     EffectInstanceId instanceId() const;
     void setInstanceId(EffectInstanceId newInstanceId);
