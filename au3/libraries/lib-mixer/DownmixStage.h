@@ -33,10 +33,13 @@ private:
     AudioGraph::Buffers mFloatBuffers;
     size_t mNumChannels;
     ApplyVolume mApplyVolume;
+    double* mCurrentTimePtr = nullptr;
+    double mStopTime = 0.0;
 
 public:
 
-    DownmixStage(std::vector<std::unique_ptr<DownmixSource> > downmixSources, size_t numChannels, size_t bufferSize, ApplyVolume applyGain);
+    DownmixStage(std::vector<std::unique_ptr<DownmixSource> > downmixSources, size_t numChannels, size_t bufferSize, ApplyVolume applyGain,
+                 double* currentTimePtr, double stopTime);
 
     ~DownmixStage() override;
 

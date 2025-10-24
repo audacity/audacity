@@ -41,7 +41,9 @@ void MixBuffers(unsigned numChannels,
 DownmixStage::DownmixStage(std::vector<std::unique_ptr<DownmixSource> > downmixSources,
                            size_t numChannels,
                            size_t bufferSize,
-                           ApplyVolume applyGain)
+                           ApplyVolume applyGain,
+                           double* currentTimePtr,
+                           double stopTime)
     : mDownmixSources(std::move(downmixSources))
     // PRL:  Bug2536: see other comments below for the last, padding argument
     // TODO: more-than-two-channels
@@ -52,6 +54,8 @@ DownmixStage::DownmixStage(std::vector<std::unique_ptr<DownmixSource> > downmixS
     , mFloatBuffers{3, bufferSize, 1, 1}
     , mNumChannels(numChannels)
     , mApplyVolume(applyGain)
+    , mCurrentTimePtr(currentTimePtr)
+    , mStopTime(stopTime)
 {
 }
 
@@ -70,6 +74,10 @@ bool DownmixStage::AcceptsBlockSize(size_t blockSize) const
 
 std::optional<size_t> DownmixStage::Acquire(Buffers& data, size_t maxToProcess)
 {
+    if (mCurrentTimePtr && (*mCurrentTimePtr) >= mStopTime) {
+        return 0;
+    }
+
     // TODO: more-than-two-channels
     auto maxChannels = std::max(2u, mFloatBuffers.Channels());
     const auto channelFlags = stackAllocate(unsigned char, mNumChannels);
@@ -88,10 +96,31 @@ std::optional<size_t> DownmixStage::Acquire(Buffers& data, size_t maxToProcess)
         // One of MixVariableRates or MixSameRate assigns into mTemp[*][*]
         // which are the sources for the CopySamples calls, and they copy into
         // mBuffer[*][*]
+
+        size_t result = 0;
+        bool needSilence = false;
+
         if (!oResult) {
-            return 0;
+            needSilence = true;
+        } else {
+            result = *oResult;
+            if (result == 0) {
+                needSilence = true;
+            }
         }
-        const auto result = *oResult;
+
+        if (needSilence) {
+            if (mCurrentTimePtr && (*mCurrentTimePtr) >= mStopTime) {
+                return 0;
+            }
+
+            result = maxToProcess;
+
+            for (size_t j = 0; j < mFloatBuffers.Channels(); ++j) {
+                mFloatBuffers.ClearBuffer(j, result);
+            }
+        }
+
         maxOut = std::max(maxOut, result);
 
         // Insert effect stages here!  Passing them all channels of the track
