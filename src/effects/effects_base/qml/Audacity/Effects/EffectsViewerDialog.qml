@@ -35,12 +35,8 @@ EffectStyledDialogView {
             // Call later because the preview calls `QCoreApplication::processEvents()`,
             // and we must make sure it doesn't do this after we've closed the dialog, or we'll be getting that Qt exception
             // "Object %p destroyed while one of its QML signal handlers is in progress."
-            Qt.callLater(function () {
-                if (accept) {
-                    root.accept()
-                } else {
-                    root.reject()
-                }
+            Qt.callLater(() => {
+                accept ? root.accept() : root.reject()
             })
         }
     }
@@ -48,11 +44,8 @@ EffectStyledDialogView {
     Connections {
         target: root.window
         function onClosing(event) {
-            prv.closeWindow(false)
-            // Prevent immediate close so preview/cleanup can finish
-            if (event && event.accept !== undefined) {
-                event.accept = false
-            }
+            // Stop preview before closing, for the same reason as in closeWindow()
+            prv.viewer.stopPreview()
         }
     }
 
@@ -194,7 +187,12 @@ EffectStyledDialogView {
                             minWidth: 80
                             isLeftSide: true
 
-                            text: prv.viewer.isPreviewing ? qsTrc("effects", "Stop preview") : qsTrc("effects", "Preview")
+                            text: prv.viewer.isPreviewing ?
+                            //: Shown on a button that stops effect preview
+                            qsTrc("effects", "Stop preview") :
+                            //: Shown on a button that starts effect preview
+                            qsTrc("effects", "Preview")
+
                             buttonRole: ButtonBoxModel.CustomRole
                             buttonId: ButtonBoxModel.CustomButton + 2
                             enabled: prv.isApplyAllowed
