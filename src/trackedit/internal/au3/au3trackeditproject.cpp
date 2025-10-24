@@ -213,7 +213,7 @@ au::trackedit::Labels Au3TrackeditProject::getLabels(const TrackId& trackId) con
 
     const auto& au3labels = labelTrack->GetLabels();
     for (size_t i = 0; i < au3labels.size(); ++i) {
-        au::trackedit::Label label = DomConverter::label(labelTrack, i, au3labels[i]);
+        au::trackedit::Label label = DomConverter::label(labelTrack, &au3labels[i]);
         labels.push_back(std::move(label));
     }
 
@@ -313,15 +313,12 @@ au::trackedit::Label Au3TrackeditProject::label(const LabelKey& key) const
         return Label();
     }
 
-    const auto& au3labels = labelTrack->GetLabels();
-    for (size_t i = 0; i < au3labels.size(); ++i) {
-        au::trackedit::Label label = DomConverter::label(labelTrack, i, au3labels[i]);
-        if (label.key == key) {
-            return label;
-        }
+    const Au3Label* au3Label = DomAccessor::findLabel(labelTrack, key.itemId);
+    if (!au3Label) {
+        return Label();
     }
 
-    return Label();
+    return DomConverter::label(labelTrack, au3Label);
 }
 
 void Au3TrackeditProject::notifyAboutClipChanged(const Clip& clip)

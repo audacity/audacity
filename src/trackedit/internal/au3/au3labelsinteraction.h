@@ -5,7 +5,6 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "../../iprojecthistory.h"
 #include "../../iselectioncontroller.h"
 
 #include "au3wrap/au3types.h"
@@ -17,7 +16,6 @@ class Au3LabelsInteraction : public ILabelsInteraction
 {
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<ISelectionController> selectionController;
-    muse::Inject<IProjectHistory> projectHistory;
 
 public:
     Au3LabelsInteraction();
