@@ -80,7 +80,4 @@ populate(opus "opus/1.5.2")
 
 if (NOT OS_IS_LIN)
     populate(zlib "zlib/1.2.13")
-    populate(libjpeg-turbo "libjpeg-turbo/2.1.5")
-    populate(libpng "libpng/1.6.39")
 endif()
-
