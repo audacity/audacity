@@ -128,11 +128,6 @@ public:
      */
     void ResetMeters();
 
-    /**
-     * \brief Update the sample rate of the current VU meters
-     */
-    void UpdateMetersRate(const double rate);
-
     void SetCaptureMeter(
         const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<IMeterSender>& meter);
     void SetPlaybackMeter(
@@ -320,6 +315,8 @@ public:
      * input is stuck at 1.0f (a volume gain is applied to output samples).
      */
     void SetMixer(int inputSource);
+
+    double GetPlaybackSampleRate() const { return mRate; }
 
 protected:
     static std::unique_ptr<AudioIOBase> ugAudioIO;

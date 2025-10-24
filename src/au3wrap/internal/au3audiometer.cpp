@@ -42,22 +42,22 @@ void Meter::maybeBumpUp(LevelState& level, float newLinValue, int hangover)
     }
 }
 
-Meter::Meter()
+Meter::Meter(std::unique_ptr<ITimer> playingTimer, std::unique_ptr<ITimer> stoppingTimer)
+    : m_playingTimer{std::move(playingTimer)}, m_stoppingTimer{std::move(stoppingTimer)}
 {
     constexpr int letRingMs = -1000 * leastDb / decayDbPerSecond;
     static_assert(letRingMs > 0);
-    m_stopTimer.setSingleShot(true);
-    m_stopTimer.setInterval(letRingMs);
-    m_stopTimer.callOnTimeout([this]() {
-        m_meterUpdateTimer.stop();
+    m_stoppingTimer->setSingleShot(true);
+    m_stoppingTimer->setInterval(std::chrono::milliseconds { letRingMs });
+    m_stoppingTimer->setCallback([this]() {
+        m_playingTimer->stop();
         for (auto& [_, trackData] : m_trackData) {
             trackData.channelLevels.clear();
         }
     });
 
-    m_meterUpdateTimer.setInterval(static_cast<int>(updatePeriod * 1000));
-
-    m_meterUpdateTimer.callOnTimeout([this]() {
+    m_playingTimer->setInterval(std::chrono::milliseconds { static_cast<int>(updatePeriod * 1000) });
+    m_playingTimer->setCallback([this]() {
         for (auto& [_, trackData] : m_trackData) {
             for (auto& [_, levels] : trackData.channelLevels) {
                 decay(levels.peak);
@@ -66,14 +66,23 @@ Meter::Meter()
         }
 
         QueueItem item;
-        while (m_queue.Get(item)) {
+        while (m_lockFreeQueue.Get(item)) {
+            m_mainThreadQueue.emplace(item);
+        }
+
+        const auto now = std::chrono::steady_clock::now();
+        while (!m_mainThreadQueue.empty() && now >= m_mainThreadQueue.front().dacTime) {
+            const QueueItem& item = m_mainThreadQueue.front();
             auto& levels = m_trackData[item.trackId].channelLevels[item.channel];
             maybeBumpUp(levels.peak, item.sample.peak, m_hangoverCount.load());
             maybeBumpUp(levels.rms, item.sample.rms, m_hangoverCount.load());
+            m_mainThreadQueue.pop();
         }
 
-        for (auto& [_, trackData] : m_trackData) {
-            for (const auto& [channel, levels] : trackData.channelLevels) {
+        for (std::pair<const TrackId, TrackData>& entry : m_trackData) {
+            auto& trackData = entry.second;
+            for (const std::pair<const audio::audioch_t, Levels>& entry : trackData.channelLevels) {
+                const auto& [channel, levels] = entry;
                 trackData.notificationChannel.send(channel, audio::MeterSignal { levels.peak.db, levels.rms.db });
             }
         }
@@ -112,15 +121,14 @@ void Meter::push(uint8_t channel, const IMeterSender::InterleavedSampleData& sam
         m_hangoverCount.store(std::ceil(hangoverTime / updatePeriod));
     }
     const QueueSample value = getSamplesMaxValue(sampleData.buffer, sampleData.frames, sampleData.nChannels);
-    m_queue.Put(QueueItem { trackId, channel, value });
+    m_lockFreeQueue.Put(QueueItem { trackId, channel, value, sampleData.dacTime });
 }
 
-void Meter::start()
+void Meter::start(double sampleRate)
 {
-    if (!m_meterUpdateTimer.isActive()) {
-        m_meterUpdateTimer.start();
-    }
-    m_stopTimer.stop();
+    m_stoppingTimer->stop();
+    m_playingTimer->start();
+    m_sampleRate = sampleRate;
     m_running.store(true);
     m_maxFramesPerPush = 0;
 }
@@ -129,13 +137,10 @@ void Meter::stop()
 {
     m_warningIssued = false;
     m_running.store(false);
-    m_queue.Clear();
-    m_stopTimer.start();
-}
-
-void Meter::setSampleRate(double rate)
-{
-    m_sampleRate = rate;
+    m_lockFreeQueue.Clear();
+    decltype(m_mainThreadQueue) emptyQueue;
+    m_mainThreadQueue.swap(emptyQueue);
+    m_stoppingTimer->start();
 }
 
 muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Meter::dataChanged(TrackId trackId)

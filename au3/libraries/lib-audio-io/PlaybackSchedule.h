@@ -24,7 +24,9 @@ struct AudioIOStartStreamOptions;
 class BoundedEnvelope;
 using PRCrossfadeData = std::vector< std::vector < float > >;
 
-constexpr size_t TimeQueueGrainSize = 2000;
+// This can become a bottleneck to the update rate of the play cursor position.
+// Let's set this to 10ms at 48kHz. Even at 16kHz, that'd be a refresh rate of 33fps.
+constexpr size_t TimeQueueGrainSize = 480;
 
 struct RecordingSchedule {
     double mPreRoll{};

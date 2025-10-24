@@ -310,10 +310,10 @@ int AudioIOBase::GetHostIndex(const std::string& hostName)
 void AudioIOBase::StartMeters()
 {
     if (auto pInputMeter = mInputMeter.lock()) {
-        pInputMeter->start();
+        pInputMeter->start(mRate);
     }
     if (auto pOutputMeter = mOutputMeter.lock()) {
-        pOutputMeter->start();
+        pOutputMeter->start(mRate);
     }
 }
 
@@ -331,16 +331,6 @@ void AudioIOBase::ResetMeters()
 {
     mInputMeter.reset();
     mOutputMeter.reset();
-}
-
-void AudioIOBase::UpdateMetersRate(const double rate)
-{
-    if (auto pInputMeter = mInputMeter.lock()) {
-        pInputMeter->setSampleRate(rate);
-    }
-    if (auto pOutputMeter = mOutputMeter.lock()) {
-        pOutputMeter->setSampleRate(rate);
-    }
 }
 
 void AudioIOBase::SetCaptureMeter(

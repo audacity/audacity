@@ -10,6 +10,7 @@
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/au3audiometerfactory.h"
 
 #include "au3audio/audiotypes.h"
 
@@ -20,9 +21,8 @@ using namespace au::playback;
 using namespace au::au3;
 
 Au3AudioInput::Au3AudioInput()
+    : m_inputMeter{au::au3::createAudioMeter()}
 {
-    m_inputMeter = std::make_shared<au::au3::Meter>();
-
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         auto currentProject = globalContext()->currentProject();
         if (!currentProject) {
