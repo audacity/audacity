@@ -30,6 +30,7 @@ signals:
     void isCompactModeChanged();
 
 private:
+    bool m_loaded = false;
     bool m_isCompactMode = false;
 };
 }

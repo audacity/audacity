@@ -122,11 +122,6 @@ void TrackeditModule::onInit(const muse::IApplication::RunMode&)
     m_trackNavigationController->init();
 
     TimeSignatureRestorer::reg();
-
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
-    if (ar) {
-        ar->reg(m_trackeditUiActions);
-    }
 }
 
 void TrackeditModule::onDeinit()

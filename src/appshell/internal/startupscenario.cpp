@@ -146,7 +146,7 @@ void StartupScenario::runAfterSplashScreen()
 
         muse::async::Async::call(this, [this, opened]() {
             muse::async::Channel<muse::Uri> mut = opened;
-            mut.resetOnReceive(this);
+            mut.disconnect(this);
             m_startupCompleted = true;
         });
     });

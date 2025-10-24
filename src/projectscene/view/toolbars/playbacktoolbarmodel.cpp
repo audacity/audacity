@@ -77,25 +77,29 @@ PlaybackToolBarModel::PlaybackToolBarModel(QObject* parent)
 
 void PlaybackToolBarModel::load()
 {
-    uiConfiguration()->toolConfigChanged(TOOLBAR_NAME).onNotify(this, [this]() {
-        reload();
-    });
+    if (!m_inited) {
+        uiConfiguration()->toolConfigChanged(TOOLBAR_NAME).onNotify(this, [this]() {
+            reload();
+        });
 
-    uiConfiguration()->currentThemeChanged().onNotify(this, [this]() {
-        reload();
-    });
+        uiConfiguration()->currentThemeChanged().onNotify(this, [this]() {
+            reload();
+        });
 
-    context()->currentProjectChanged().onNotify(this, [this]() {
-        reload();
-        emit isEnabledChanged();
-        if (context()->currentProject()) {
-            context()->currentProject()->viewState()->splitToolEnabled().ch.onReceive(this, [this](bool){ updateSplitState(); });
-        }
-    });
+        context()->currentProjectChanged().onNotify(this, [this]() {
+            reload();
+            emit isEnabledChanged();
+            if (context()->currentProject()) {
+                context()->currentProject()->viewState()->splitToolEnabled().ch.onReceive(this, [this](bool){ updateSplitState(); });
+            }
+        });
 
-    configuration()->playbackMeterPositionChanged().onNotify(this, [this]() {
-        reload();
-    });
+        configuration()->playbackMeterPositionChanged().onNotify(this, [this]() {
+            reload();
+        });
+
+        m_inited = true;
+    }
 
     updateActions();
 

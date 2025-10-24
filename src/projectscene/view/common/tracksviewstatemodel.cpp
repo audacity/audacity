@@ -21,7 +21,7 @@ void TracksViewStateModel::init()
 {
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         init();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     IProjectViewStatePtr vs = viewState();
     if (!vs) {
@@ -32,13 +32,13 @@ void TracksViewStateModel::init()
     m_tracksVerticalOffset.ch.onReceive(this, [this](int y) {
         m_tracksVerticalOffset.val = y;
         emit tracksVerticalOffsetChanged();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     m_tracksVerticalScrollLocked = vs->tracksVerticalScrollLocked();
     m_tracksVerticalScrollLocked.ch.onReceive(this, [this](bool locked) {
         m_tracksVerticalScrollLocked.val = locked;
         emit tracksVerticalScrollLockedChanged();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     m_snapEnabled = vs->isSnapEnabled();
     vs->snap().ch.onReceive(this, [this](const Snap& snap) {
@@ -46,19 +46,19 @@ void TracksViewStateModel::init()
             m_snapEnabled = snap.enabled;
             emit snapEnabledChanged();
         }
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     m_altPressed = vs->altPressed();
     m_altPressed.ch.onReceive(this, [this](bool v) {
         m_altPressed.val = v;
         emit altPressedChanged();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     m_ctrlPressed = vs->ctrlPressed();
     m_ctrlPressed.ch.onReceive(this, [this](bool v) {
         m_ctrlPressed.val = v;
         emit ctrlPressedChanged();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 bool TracksViewStateModel::snapEnabled() const

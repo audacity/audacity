@@ -100,13 +100,13 @@ void ClipsListModel::reload()
         if (track.id == m_trackId) {
             reload();
         }
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackRemoved().onReceive(this, [this](const au::trackedit::Track& track) {
         if (track.id == m_trackId) {
             m_trackId = -1;
         }
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     m_allClipList = prj->clipList(m_trackId);
 
@@ -122,7 +122,7 @@ void ClipsListModel::reload()
         muse::async::Async::call(this, [this]() {
             reload();
         });
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     m_allClipList.onItemChanged(this, [this](const Clip& clip) {
         for (size_t i = 0; i < m_allClipList.size(); ++i) {
@@ -142,7 +142,7 @@ void ClipsListModel::reload()
         m_context->updateSelectedClipTime();
 
         updateItemsMetrics();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     m_allClipList.onItemAdded(this, [this](const Clip& clip) {
         ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -158,7 +158,7 @@ void ClipsListModel::reload()
 
             break;
         }
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     m_allClipList.onItemRemoved(this, [this](const Clip& clip) {
         for (auto it = m_allClipList.begin(); it != m_allClipList.end(); ++it) {
@@ -168,7 +168,7 @@ void ClipsListModel::reload()
                 break;
             }
         }
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     update();
 }

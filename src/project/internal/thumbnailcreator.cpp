@@ -27,7 +27,7 @@ muse::Ret ThumbnailCreator::createThumbnail(const muse::io::path_t& path)
 
     m_createThumbnailRequested.send(thumbnailPath(path));
     loop.exec();
-    m_thumbnailCreated.resetOnReceive(this);
+    m_thumbnailCreated.disconnect(this);
 
     return ret;
 }
