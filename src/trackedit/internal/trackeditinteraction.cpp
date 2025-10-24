@@ -427,6 +427,16 @@ bool TrackeditInteraction::removeLabels(const LabelKeyList& labelKeys)
     return withPlaybackStop(&ITrackeditInteraction::removeLabels, labelKeys);
 }
 
+bool TrackeditInteraction::cutLabel(const LabelKey& labelKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::cutLabel, labelKey);
+}
+
+bool TrackeditInteraction::copyLabel(const LabelKey& labelKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::copyLabel, labelKey);
+}
+
 bool TrackeditInteraction::moveLabels(secs_t timePositionOffset, bool completed)
 {
     return withPlaybackStop(&ITrackeditInteraction::moveLabels, timePositionOffset, completed);

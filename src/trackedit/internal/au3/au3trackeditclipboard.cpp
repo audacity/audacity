@@ -10,6 +10,7 @@
 #include "Track.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include "LabelTrack.h"
 
 using namespace au::trackedit;
 
@@ -69,7 +70,12 @@ std::set<int64_t> Au3TrackeditClipboard::getGroupIDs(const std::vector<Au3TrackD
     std::set<int64_t> groupIds;
 
     for (const Au3TrackDataPtr& data : tracksData) {
+        // Only process wave tracks (label tracks don't have group IDs)
         auto waveTrack = dynamic_cast<au3::Au3WaveTrack*>(data->track().get());
+        if (!waveTrack) {
+            continue;
+        }
+
         auto clips = waveTrack->Intervals();
 
         for (auto it = clips.begin(); it != clips.end(); ++it) {
@@ -105,7 +111,12 @@ void Au3TrackeditClipboard::updateTracksDataWithIDs(const std::vector<Au3TrackDa
     DO_ASSERT(groupIDs.size() == newGroupIDs.size());
 
     for (const Au3TrackDataPtr& data : tracksData) {
+        // Only process wave tracks (label tracks don't have group IDs)
         auto waveTrack = dynamic_cast<au3::Au3WaveTrack*>(data->track().get());
+        if (!waveTrack) {
+            continue;
+        }
+
         auto clips = waveTrack->Intervals();
 
         for (auto it = clips.begin(); it != clips.end(); ++it) {

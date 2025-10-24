@@ -737,7 +737,7 @@ muse::Ret Au3ClipsInteraction::makeRoomForClip(const ClipKey& clipKey)
 
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return make_ret(trackedit::Err::WaveTrackNotFound);
+        return make_ret(trackedit::Err::TrackNotFound);
     }
 
     std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
@@ -1506,7 +1506,7 @@ muse::Ret Au3ClipsInteraction::makeRoomForDataOnTrack(const TrackId trackId,
 
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return make_ret(trackedit::Err::WaveTrackNotFound);
+        return make_ret(trackedit::Err::TrackNotFound);
     }
 
     std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
@@ -1535,7 +1535,7 @@ muse::Ret Au3ClipsInteraction::makeRoomForClipsOnTracks(const std::vector<TrackI
     for (size_t i = 0; i < tracksIds.size(); ++i) {
         WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(tracksIds.at(i)));
         IF_ASSERT_FAILED(dstWaveTrack) {
-            return make_ret(trackedit::Err::WaveTrackNotFound);
+            return make_ret(trackedit::Err::TrackNotFound);
         }
 
         muse::secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);

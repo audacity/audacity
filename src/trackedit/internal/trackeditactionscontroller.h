@@ -84,8 +84,6 @@ private:
 
     void clipDelete(const muse::actions::ActionData& args);
     void multiClipDelete(const muse::actions::ActionData& args);
-    void labelDelete(const muse::actions::ActionData& args);
-    void multiLabelDelete(const muse::actions::ActionData& args);
     void rangeSelectionDelete(const muse::actions::ActionData& args);
 
     void trackSplit(const muse::actions::ActionData& args);
@@ -147,6 +145,11 @@ private:
     void setTrackRate(const muse::actions::ActionQuery& q);
 
     void addLabel();
+    void labelDelete(const muse::actions::ActionData& args);
+    void labelDeleteMulti(const muse::actions::ActionData& args);
+    void labelCut(const muse::actions::ActionData& args);
+    void labelCopy(const muse::actions::ActionData& args);
+    void labelCopyMulti(const muse::actions::ActionData& args);
 
     context::IPlaybackStatePtr playbackState() const;
 
