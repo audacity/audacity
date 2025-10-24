@@ -39,6 +39,7 @@ Rectangle {
     property real selectionWidth: 0
     property bool selectionInProgress: false
     property bool enableCursorInteraction: !selectionInProgress && !isBrush
+    property bool isContrastFocusBorderEnabled: false
 
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
@@ -103,6 +104,9 @@ Rectangle {
     property bool rightTrimContainsMouse: false
     property alias leftTrimPressedButtons: leftTrimStretchEdgeHover.pressedButtons
     property alias rightTrimPressedButtons: rightTrimStretchEdgeHover.pressedButtons
+    property bool enableFocusBorder: (navCtrl ? navCtrl.highlight : false) || root.clipSelected
+    property bool enableDefaultBorder: !isContrastFocusBorderEnabled && enableFocusBorder
+    property bool enableContrastBorder: isContrastFocusBorderEnabled && enableFocusBorder
 
     PlaybackStateModel {
         id: playbackState
@@ -118,6 +122,8 @@ Rectangle {
         accessible.name: root.name
 
         onActiveChanged: function (active) {
+            // Make sure the focus navigation border is visible on top of other clips
+            root.parent.z = active ? 1 : 0
             if (active) {
                 root.forceActiveFocus()
             }
@@ -128,8 +134,39 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        id: borderRect
+
+        anchors.fill: parent
+        color: "transparent"
+        border.width: root.enableContrastBorder ?  2 : 1
+        border.color: "#000000"
+        radius: root.enableContrastBorder ? 0 : 4
+        z: root.parent.z + 1
+    }
+
     NavigationFocusBorder {
+        id: focusBorder
+
         navigationCtrl: navCtrl
+
+        border.color: ui.theme.fontPrimaryColor
+        border.width: 2
+        radius: 4
+
+        visible: root.enableDefaultBorder
+    }
+
+    NavigationFocusBorder {
+        id: contrastFocusBorder
+
+        navigationCtrl: navCtrl
+
+        border.color: "white"
+        border.width: 2
+        radius: 4
+
+        visible: root.enableContrastBorder
     }
 
     QtObject {
@@ -776,16 +813,6 @@ Rectangle {
                     waveView.onWaveViewPositionChanged(hoverArea.mouseX, hoverArea.mouseY - header.height)
                 }
             }
-        }
-
-        RoundedRectangle {
-            id: clipBorder
-            anchors.fill: parent
-            border.width: 1
-            border.color: root.clipSelected ? "white" : "black"
-            color: "transparent"
-            radius: root.radius
-            z: 2
         }
     }
 

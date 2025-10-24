@@ -11,6 +11,7 @@
 #include "context/iglobalcontext.h"
 #include "global/iinteractive.h"
 #include "global/async/asyncable.h"
+#include "ui/iuiconfiguration.h"
 #include "workspace/iworkspacemanager.h"
 
 #include "trackedit/iselectioncontroller.h"
@@ -32,6 +33,7 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
     Q_PROPERTY(ClipStyles::Style clipStyle READ clipStyle NOTIFY clipStyleChanged FINAL)
     Q_PROPERTY(
         bool asymmetricStereoHeightsPossible READ asymmetricStereoHeightsPossible NOTIFY asymmetricStereoHeightsPossibleChanged)
+    Q_PROPERTY(bool isContrastFocusBorderEnabled READ isContrastFocusBorderEnabled NOTIFY isContrastFocusBorderEnabledChanged FINAL)
 
     Q_PROPERTY(int cacheBufferPx READ cacheBufferPx CONSTANT)
 
@@ -43,6 +45,7 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::Inject<muse::workspace::IWorkspaceManager> workspacesManager;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
     explicit ClipsListModel(QObject* parent = nullptr);
@@ -87,6 +90,7 @@ public:
     Q_INVOKABLE projectscene::ClipKey updateClipTrack(ClipKey clipKey) const;
 
     bool asymmetricStereoHeightsPossible() const;
+    bool isContrastFocusBorderEnabled() const;
 
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
@@ -101,6 +105,7 @@ signals:
     void isStereoChanged();
     void clipStyleChanged();
     void asymmetricStereoHeightsPossibleChanged();
+    void isContrastFocusBorderEnabledChanged();
 
     void requestClipTitleEdit(int index);
 
