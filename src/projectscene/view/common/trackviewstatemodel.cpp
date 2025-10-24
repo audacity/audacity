@@ -21,7 +21,7 @@ void TrackViewStateModel::init()
 {
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         init();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     IProjectViewStatePtr vs = viewState();
     if (!vs) {
@@ -36,7 +36,7 @@ void TrackViewStateModel::init()
             }
             m_trackHeight.val = h;
             emit trackHeightChanged();
-        });
+        }, muse::async::Asyncable::Mode::SetReplace);
 
         m_isTrackCollapsed = vs->isTrackCollapsed(m_trackId);
         m_isTrackCollapsed.ch.onReceive(this, [this](bool v) {
@@ -46,7 +46,7 @@ void TrackViewStateModel::init()
 
             m_isTrackCollapsed.val = v;
             emit isTrackCollapsedChanged();
-        });
+        }, muse::async::Asyncable::Mode::SetReplace);
 
         m_channelHeightRatio = vs->channelHeightRatio(m_trackId);
         m_channelHeightRatio.ch.onReceive(this, [this](double ratio) {
@@ -55,7 +55,7 @@ void TrackViewStateModel::init()
             }
             m_channelHeightRatio.val = ratio;
             emit channelHeightRatioChanged();
-        });
+        }, muse::async::Asyncable::Mode::SetReplace);
 
         emit trackHeightChanged();
         emit isTrackCollapsedChanged();
@@ -64,11 +64,11 @@ void TrackViewStateModel::init()
 
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         emit isRecordingChanged();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     m_meterModel = new playback::PlaybackMeterModel(this);
     emit meterModelChanged();

@@ -11,6 +11,10 @@ using namespace muse::actions;
 
 void UndoRedoToolBarModel::load()
 {
+    if (m_loaded) {
+        return;
+    }
+
     AbstractToolBarModel::load();
 
     muse::actions::ActionCodeList itemsCodes = {
@@ -30,4 +34,6 @@ void UndoRedoToolBarModel::load()
     context()->currentProjectChanged().onNotify(this, [this]() {
         load();
     });
+
+    m_loaded = true;
 }

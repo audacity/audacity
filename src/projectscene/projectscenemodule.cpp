@@ -204,7 +204,4 @@ void ProjectSceneModule::onInit(const muse::IApplication::RunMode& mode)
     m_uiActions->init();
     m_projectSceneActionsController->init();
     m_realtimeEffectPanelTrackSelection->init();
-
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
-    ar->reg(m_uiActions);
 }
