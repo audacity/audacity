@@ -40,26 +40,26 @@ Au3AudioInput::Au3AudioInput()
         configuration()->isMicMeteringOnChanged().onNotify(this, [this]() {
             // when updating the mic metering we need to either stop or restart the monitoring
             updateAudioEngineMonitoring();
-        });
+        }, muse::async::Asyncable::Mode::SetReplace);
 
         configuration()->isInputMonitoringOnChanged().onNotify(this, [this]() {
             // when updating the audible input monitoring we need to either stop or restart the monitoring
             updateAudioEngineMonitoring();
-        });
+        }, muse::async::Asyncable::Mode::SetReplace);
 
         controller()->isRecordingChanged().onNotify(this, [this]() {
             updateAudioEngineMonitoring();
-        });
+        }, muse::async::Asyncable::Mode::SetReplace);
 
         playbackController()->isPlayingChanged().onNotify(this, [this]() {
             // when the playback stops we need to restart the monitoring if mic metering is on or input monitoring is on
             updateAudioEngineMonitoring();
-        });
+        }, muse::async::Asyncable::Mode::SetReplace);
 
         audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
             m_inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
             updateAudioEngineMonitoring();
-        });
+        }, muse::async::Asyncable::Mode::SetReplace);
 
         selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId&) {
             const int focusedTrackChannels = getFocusedTrackChannels();
@@ -67,14 +67,14 @@ Au3AudioInput::Au3AudioInput()
                 m_focusedTrackChannels = focusedTrackChannels;
                 updateAudioEngineMonitoring();
             }
-        });
+        }, muse::async::Asyncable::Mode::SetReplace);
 
         meterController()->isRecordMeterVisibleChanged().onNotify(this, [this]() {
             // we have to update the monitoring when the meter is shown/hidden
             // because current track channels might have different number of channels than the input device channels
             // causing the monitoring to be stopped so we need to restart it
             updateAudioEngineMonitoring();
-        });
+        }, muse::async::Asyncable::Mode::SetReplace);
     });
 }
 

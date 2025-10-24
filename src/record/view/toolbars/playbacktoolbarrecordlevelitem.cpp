@@ -204,6 +204,6 @@ void PlaybackToolBarRecordLevelItem::listenMainAudioInput(const bool listen)
             }
         });
     } else {
-        record()->audioInput()->recordSignalChanges().resetOnReceive(this);
+        record()->audioInput()->recordSignalChanges().disconnect(this);
     }
 }

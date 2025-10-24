@@ -70,5 +70,7 @@ private:
     void updateActions();
 
     muse::uicomponents::ToolBarItem* makeLocalItem(const muse::actions::ActionCode& actionCode);
+
+    bool m_inited = false;
 };
 }

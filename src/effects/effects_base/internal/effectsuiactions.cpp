@@ -62,6 +62,21 @@ static UiActionList STATIC_ACTIONS = {
 EffectsUiActions::EffectsUiActions(std::shared_ptr<EffectsActionsController> controller)
     : m_controller{controller}
 {
+    effectExecutionScenario()->lastProcessorIdChanged().onReceive(this, [this](const EffectId& effectId) {
+        const auto it = std::find_if(m_actions.begin(), m_actions.end(), [](const UiAction& action) {
+            return action.code == "repeat-last-effect";
+        });
+        IF_ASSERT_FAILED(it != m_actions.end()) {
+            return;
+        }
+        const auto effectTitle = effectsProvider()->meta(effectId).title;
+        it->title = REPEAT_LAST_EFFECT_TITLE.arg(effectTitle);
+        m_actionsChanged.send({ *it });
+    });
+
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this] {
+        reload();
+    });
 }
 
 namespace {
@@ -123,25 +138,8 @@ void EffectsUiActions::makeActions(EffectMetaList effects)
 
 void EffectsUiActions::reload()
 {
-    effectExecutionScenario()->lastProcessorIdChanged().onReceive(this, [this](const EffectId& effectId) {
-        const auto it = std::find_if(m_actions.begin(), m_actions.end(), [](const UiAction& action) {
-            return action.code == "repeat-last-effect";
-        });
-        IF_ASSERT_FAILED(it != m_actions.end()) {
-            return;
-        }
-        const auto effectTitle = effectsProvider()->meta(effectId).title;
-        it->title = REPEAT_LAST_EFFECT_TITLE.arg(effectTitle);
-        m_actionsChanged.send({ *it });
-    });
-
     EffectMetaList metaList = effectsProvider()->effectMetaList();
     makeActions(metaList);
-
-    effectsProvider()->effectMetaListChanged().onNotify(this, [this] {
-        EffectMetaList metaList = effectsProvider()->effectMetaList();
-        makeActions(metaList);
-    });
 }
 
 const UiActionList& EffectsUiActions::actionsList() const

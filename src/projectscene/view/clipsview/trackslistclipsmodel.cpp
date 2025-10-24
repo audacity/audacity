@@ -21,7 +21,7 @@ void TracksListClipsModel::load()
 {
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         load();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     au::trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
@@ -30,17 +30,17 @@ void TracksListClipsModel::load()
 
     trackeditInteraction()->cancelDragEditRequested().onNotify(this, [this]() {
         emit escapePressed();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     setIsVerticalRulersVisible(configuration()->isVerticalRulersVisible());
 
     trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this] (long) {
         emit dataChanged(index(0), index(static_cast<int>(m_trackList.size()) - 1), { IsTrackAudibleRole });
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     projectHistory()->historyChanged().onNotify(this, [this]() {
         emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackAudibleRole });
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     beginResetModel();
 
@@ -57,7 +57,7 @@ void TracksListClipsModel::load()
 
         emit dataChanged(beginIndex, lastIndex, { IsTrackSelectedRole });
         emit dataChanged(beginIndex, lastIndex, { IsDataSelectedRole });
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& trackId) {
         Q_UNUSED(trackId);
@@ -69,14 +69,14 @@ void TracksListClipsModel::load()
         QModelIndex lastIndex = index(static_cast<int>(m_trackList.size()) - 1);
 
         emit dataChanged(beginIndex, lastIndex, { IsTrackFocusedRole });
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList& clipKeys) {
         Q_UNUSED(clipKeys);
 
         const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
         emit dataChanged(index(0), index(lastIndex), { IsMultiSelectionActiveRole });
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t begin) {
         Q_UNUSED(begin);
@@ -86,7 +86,7 @@ void TracksListClipsModel::load()
 
         const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
         emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t end) {
         Q_UNUSED(end);
@@ -96,21 +96,21 @@ void TracksListClipsModel::load()
 
         const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
         emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track> tracks) {
         Q_UNUSED(tracks);
         muse::async::Async::call(this, [this]() {
             load();
         });
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackAdded().onReceive(this, [this](const trackedit::Track& track) {
         const int size = static_cast<int>(m_trackList.size());
         beginInsertRows(QModelIndex(), size, size);
         m_trackList.push_back(track);
         endInsertRows();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackInserted().onReceive(this, [this](const trackedit::Track& track, const int pos) {
         const int size = static_cast<int>(m_trackList.size());
@@ -120,7 +120,7 @@ void TracksListClipsModel::load()
         m_trackList.insert(m_trackList.begin() + index, track);
 
         endInsertRows();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackMoved().onReceive(this, [this](const trackedit::Track& track, const int pos) {
         const auto iterator = std::find_if(m_trackList.begin(), m_trackList.end(), [&track](const trackedit::Track& it)
@@ -139,7 +139,7 @@ void TracksListClipsModel::load()
         m_trackList.erase(iterator);
         m_trackList.insert(m_trackList.begin() + to, track);
         endMoveRows();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
         for (size_t i = 0; i < m_trackList.size(); ++i) {
@@ -150,7 +150,7 @@ void TracksListClipsModel::load()
                 break;
             }
         }
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
         for (size_t i = 0; i < m_trackList.size(); ++i) {
@@ -161,7 +161,7 @@ void TracksListClipsModel::load()
                 break;
             }
         }
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     endResetModel();
 
@@ -173,7 +173,7 @@ void TracksListClipsModel::load()
 
     viewState->totalTrackHeight().ch.onReceive(this, [this](int) {
         emit totalTracksHeightChanged();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 void TracksListClipsModel::handleDroppedFiles(const QStringList& fileUrls)

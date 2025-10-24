@@ -37,11 +37,11 @@ void ProjectPropertiesModel::init()
 {
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         init();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     thumbnailCreator()->captureThumbnailRequested().onReceive(this, [this](const muse::io::path_t& response) {
         captureThumbnail(response.toQString());
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     m_project = globalContext()->currentProject();
 

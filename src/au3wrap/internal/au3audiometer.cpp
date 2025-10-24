@@ -148,7 +148,7 @@ muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Meter::dataCh
     auto& channel = m_trackData[trackId].notificationChannel;
     channel.onClose(this, [this, trackId]() {
         m_trackData.erase(trackId);
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     return channel;
 }

@@ -49,6 +49,7 @@ void EffectsActionsController::registerActions()
     dispatcher()->reg(this, ActionQuery("action://effects/presets/export"), this, &EffectsActionsController::exportPreset);
 
     m_uiActions->reload();
+    uiActionsRegister()->unreg(m_uiActions);
     uiActionsRegister()->reg(m_uiActions);
 }
 

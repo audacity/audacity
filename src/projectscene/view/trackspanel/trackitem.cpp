@@ -52,20 +52,20 @@ void TrackItem::init(const trackedit::Track& track)
     .onReceive(this, [this](au::audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
         setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
         setAudioChannelRMS(channel, meterSignal.rms.pressure);
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     record()->audioInput()->recordTrackSignalChanges(m_trackId)
     .onReceive(this, [this](au::audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
         setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
         setAudioChannelRMS(channel, meterSignal.rms.pressure);
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
         const int inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
         m_recordStreamChannelsMatch = (m_trackType == trackedit::TrackType::Mono && inputChannelsCount == 1)
                                       || (m_trackType == trackedit::TrackType::Stereo && inputChannelsCount == 2);
         checkMainAudioInput();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     if (m_title != track.title) {
         m_title = track.title;
@@ -89,11 +89,11 @@ void TrackItem::init(const trackedit::Track& track)
             return;
         }
         muteOrSoloChanged();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     projectHistory()->historyChanged().onNotify(this, [this]() {
         muteOrSoloChanged();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     const int inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
     m_recordStreamChannelsMatch = (m_trackType == trackedit::TrackType::Mono && inputChannelsCount == 1)
@@ -366,8 +366,8 @@ void TrackItem::checkMainAudioInput()
             setAudioChannelVolumePressure(audioChNum,
                                           meterSignal.peak.pressure);
             setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
-        });
+        }, muse::async::Asyncable::Mode::SetReplace);
     } else {
-        record()->audioInput()->recordSignalChanges().resetOnReceive(this);
+        record()->audioInput()->recordSignalChanges().disconnect(this);
     }
 }

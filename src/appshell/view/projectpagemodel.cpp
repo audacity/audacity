@@ -34,27 +34,32 @@ void ProjectPageModel::init()
 {
     TRACEFUNC;
 
-    for (const ActionCode& actionCode : ApplicationUiActions::toggleDockActions().keys()) {
-        DockName dockName = ApplicationUiActions::toggleDockActions()[actionCode];
-        dispatcher()->reg(this, actionCode, [=]() { toggleDock(dockName); });
+    if (!m_inited) {
+        for (const ActionCode& actionCode : ApplicationUiActions::toggleDockActions().keys()) {
+            DockName dockName = ApplicationUiActions::toggleDockActions()[actionCode];
+            dispatcher()->reg(this, actionCode, [=]() { toggleDock(dockName); });
+        }
+
+        uiConfiguration()->toolConfigChanged(playbackToolBarName()).onNotify(this, [this]() {
+            updatePlaybackMeterVisibility();
+        });
+
+        playbackConfiguration()->playbackMeterPositionChanged().onNotify(this, [this]() {
+            updatePlaybackMeterVisibility();
+        });
+
+        // globalContext()->currentNotationChanged().onNotify(this, [this]() {
+        //     onNotationChanged();
+        // });
+
+        // brailleConfiguration()->braillePanelEnabledChanged().onNotify(this, [this]() {
+        //     emit isBraillePanelVisibleChanged();
+        // });
+
+        m_inited = true;
     }
 
-    uiConfiguration()->toolConfigChanged(playbackToolBarName()).onNotify(this, [this]() {
-        updatePlaybackMeterVisibility();
-    });
-
-    playbackConfiguration()->playbackMeterPositionChanged().onNotify(this, [this]() {
-        updatePlaybackMeterVisibility();
-    });
-
-    // globalContext()->currentNotationChanged().onNotify(this, [this]() {
-    //     onNotationChanged();
-    // });
-
-    // brailleConfiguration()->braillePanelEnabledChanged().onNotify(this, [this]() {
-    //     emit isBraillePanelVisibleChanged();
-    // });
-
+    // update
     onNotationChanged();
     updatePlaybackMeterVisibility();
     updateDrumsetPanelVisibility();

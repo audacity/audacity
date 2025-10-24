@@ -73,27 +73,27 @@ void TracksListModel::load()
 
     prj->tracksChanged().onReceive(this, [this](std::vector<au::trackedit::Track> tracks) {
         onTracksChanged(tracks);
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackAdded().onReceive(this, [this](const Track& track) {
         onTrackAdded(track);
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackRemoved().onReceive(this, [this](const Track& track) {
         onTrackRemoved(track);
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackChanged().onReceive(this, [this](const Track& track) {
         onTrackChanged(track);
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackInserted().onReceive(this, [this](const Track& track, int pos) {
         onTrackInserted(track, pos);
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackMoved().onReceive(this, [this](const Track& track, int pos) {
         onTrackMoved(track, pos);
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     listenTracksSelectionChanged();
 
@@ -103,7 +103,7 @@ void TracksListModel::load()
 
     selectionController()->focusedTrackChanged().onReceive(this, [this](trackedit::TrackId trackId) {
         onFocusedTrack(trackId);
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     emit isEmptyChanged();
     emit isAddingAvailableChanged(true);

@@ -11,6 +11,10 @@ using namespace muse::actions;
 
 void ProjectToolBarModel::load()
 {
+    if (m_loaded) {
+        return;
+    }
+
     AbstractToolBarModel::load();
 
     muse::actions::ActionCodeList itemsCodes = {
@@ -33,6 +37,8 @@ void ProjectToolBarModel::load()
     });
 
     dispatcher()->reg(this, "audio-setup", [this]() { emit openAudioSetupContextMenu(); });
+
+    m_loaded = true;
 }
 
 bool ProjectToolBarModel::isCompactMode() const

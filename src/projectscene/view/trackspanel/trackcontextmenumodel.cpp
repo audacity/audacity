@@ -102,11 +102,11 @@ void TrackContextMenuModel::load()
         updateTrackFormatState();
         updateTrackRateState();
         updateTrackMonoState();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList&) {
         updateTrackMonoState();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     auto track = prj->track(m_trackId);
@@ -119,7 +119,7 @@ void TrackContextMenuModel::load()
             return;
         }
         load();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     switch (track.value().type) {
     case trackedit::TrackType::Mono:

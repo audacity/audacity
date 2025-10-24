@@ -299,8 +299,6 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
 #endif
     // Deinit
 
-    globalModule.invokeQueuedCalls();
-
     for (modularity::IModuleSetup* m : m_modules) {
         m->onDeinit();
     }

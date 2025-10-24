@@ -77,6 +77,8 @@ private:
 
     void updateDrumsetPanelVisibility();
     void updatePlaybackMeterVisibility();
+
+    bool m_inited = false;
 };
 }
 
