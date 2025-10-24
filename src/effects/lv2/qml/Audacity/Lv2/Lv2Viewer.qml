@@ -10,13 +10,13 @@ import Audacity.Effects
 import Audacity.Lv2
 
 Rectangle {
-
     id: root
 
     // in
     property alias instanceId: model.instanceId
     property alias effectState: model.effectState
     property alias title: model.title
+    property alias isPreviewing: model.isPreviewing
 
     implicitWidth: textItem.width
     implicitHeight: textItem.height
@@ -31,8 +31,12 @@ Rectangle {
         model.deinit()
     }
 
-    function preview() {
-       model.preview()
+    function startPreview() {
+        model.startPreview()
+    }
+
+    function stopPreview() {
+        model.stopPreview()
     }
 
     function manage(parent) {
@@ -51,7 +55,7 @@ Rectangle {
     ContextMenuLoader {
         id: menuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             manageMenuModel.handleMenuItem(itemId)
         }
     }

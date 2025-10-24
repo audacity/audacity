@@ -10,7 +10,6 @@ import Audacity.Effects 1.0
 import Audacity.AudioUnit 1.0
 
 Rectangle {
-
     id: root
 
     // in
@@ -22,6 +21,7 @@ Rectangle {
 
     // out
     property alias title: model.title
+    property alias isPreviewing: model.isPreviewing
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -31,7 +31,6 @@ Rectangle {
     implicitWidth: view.implicitWidth
     implicitHeight: view.implicitHeight
 
-
     Component.onCompleted: {
         model.init()
         view.init()
@@ -39,11 +38,15 @@ Rectangle {
     }
 
     Component.onDestruction: {
-        model.deinit();
+        model.deinit()
     }
 
-    function preview() {
-        model.preview()
+    function startPreview() {
+        model.startPreview()
+    }
+
+    function stopPreview() {
+        model.stopPreview()
     }
 
     function manage(parent) {
@@ -62,7 +65,7 @@ Rectangle {
     ContextMenuLoader {
         id: menuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             manageMenuModel.handleMenuItem(itemId)
         }
     }
