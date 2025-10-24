@@ -38,8 +38,6 @@ class BoundedEnvelope;
 class Meter;
 using PRCrossfadeData = std::vector< std::vector < float > >;
 
-#define BAD_STREAM_TIME (-DBL_MAX)
-
 class PlaybackPolicy;
 
 // To avoid growing the argument list of StartStream, add fields here
