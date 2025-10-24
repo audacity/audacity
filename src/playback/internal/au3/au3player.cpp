@@ -26,6 +26,12 @@ using namespace au::au3;
 
 Au3Player::Au3Player()
 {
+    m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
+        if (st == PlaybackStatus::Running) {
+            m_reachedEnd.val = false;
+        }
+    });
+
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         auto project = globalContext()->currentTrackeditProject();
         if (!project) {
@@ -444,14 +450,14 @@ void Au3Player::updatePlaybackState()
 {
     int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
     bool isActive = AudioIO::Get()->IsStreamActive(token);
-    double time = AudioIO::Get()->GetStreamTime() + m_startOffset;
+    const double time = std::max(0.0, AudioIO::Get()->GetStreamTime() + m_startOffset);
+
+    if (!muse::is_equal(time, m_playbackPosition.val.raw())) {
+        m_playbackPosition.set(time);
+    }
 
     if (isActive) {
         m_reachedEnd.val = false;
-        const auto newTime = std::max(0.0, time);
-        if (!muse::is_equal(newTime, m_playbackPosition.val.raw())) {
-            m_playbackPosition.set(newTime);
-        }
     } else {
         if (playbackStatus() == PlaybackStatus::Running && !m_reachedEnd.val) {
             m_reachedEnd.val = true;
