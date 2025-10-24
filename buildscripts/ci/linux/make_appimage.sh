@@ -220,7 +220,8 @@ function fallback_library()
 # Report new additions at https://github.com/linuxdeploy/linuxdeploy/issues
 # or https://github.com/linuxdeploy/linuxdeploy-plugin-qt/issues for Qt libs.
 unwanted_files=(
-  # none
+  # https://github.com/musescore/MuseScore/issues/24068#issuecomment-2297823192
+  lib/libwayland-client.so.0
 )
 
 # ADDITIONAL QT COMPONENTS
@@ -230,9 +231,8 @@ unwanted_files=(
 additional_qt_components=(
   plugins/printsupport/libcupsprintersupport.so
 
-# TODO: uncomment when #9308 is solved
-#   # At an unknown point in time, the libqgtk3 plugin stopped being deployed
-#   plugins/platformthemes/libqgtk3.so
+  # At an unknown point in time, the libqgtk3 plugin stopped being deployed
+  plugins/platformthemes/libqgtk3.so
 
   # Wayland support (run with QT_QPA_PLATFORM=wayland to use)
   plugins/wayland-decoration-client
