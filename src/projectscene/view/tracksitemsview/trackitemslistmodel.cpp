@@ -582,7 +582,7 @@ bool TrackItemsListModel::cancelItemDragEdit(const TrackItemKey& key)
 
     trackeditInteraction()->cancelItemDragEdit();
 
-    vs->updateClipsBoundaries(true);
+    vs->updateItemsBoundaries(true);
 
     constexpr auto modifyState = false;
     projectHistory()->endUserInteraction(modifyState);

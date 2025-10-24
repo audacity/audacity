@@ -26,6 +26,9 @@ public:
     bool removeLabel(const LabelKey& labelKey) override;
     bool removeLabels(const LabelKeyList& labelKeys) override;
 
+    ITrackDataPtr cutLabel(const LabelKey& labelKey) override;
+    ITrackDataPtr copyLabel(const LabelKey& labelKey) override;
+
     bool moveLabels(secs_t timePositionOffset, bool completed) override;
 
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;

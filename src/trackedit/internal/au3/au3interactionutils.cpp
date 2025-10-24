@@ -188,10 +188,10 @@ au::trackedit::NeedsDownmixing au::trackedit::utils::moveClipsVertically(Vertica
         // Find next WaveTrack in the direction, skipping non-WaveTrack tracks (e.g. LabelTrack)
         ::TrackList::iterator it = copy.begin();
         std::advance(it, clip.origTrackIndex);
-        
+
         au3::Au3WaveTrack* dstTrack = nullptr;
         const int direction = (dragDirection == VerticalDrag::Up ? -1 : 1);
-        
+
         if (direction > 0) {
             // Moving down - find next WaveTrack
             ++it;

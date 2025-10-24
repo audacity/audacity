@@ -45,6 +45,13 @@ protected:
             }
         }
 
+        // Adding an increasing number of labels to each track:
+        for (int i = 0; i < trackCount; ++i) {
+            for (int j = 0; j <= i; ++j) {
+                addLabelToTrack(structure, i, j);
+            }
+        }
+
         return structure;
     }
 
@@ -52,6 +59,7 @@ protected:
     {
         structure.tracks.emplace_back();
         structure.clips.emplace_back();
+        structure.labels.emplace_back();
         structure.tracks.back().id = id;
 
         // None of the below should cause a change trigger:
@@ -94,6 +102,19 @@ protected:
         }
     }
 
+    static void addLabelToTrack(TracksAndItems& structure, TrackId trackId, int j)
+    {
+        auto& newLabel = structure.labels[trackId].emplace_back();
+        newLabel.key.itemId = j;
+        newLabel.key.trackId = trackId;
+
+        // None of the below should cause a change trigger:
+        newLabel.title = std::to_string(j).c_str();
+        newLabel.startTime = j * 10.0;
+        newLabel.endTime = (j + 1) * 10.0;
+        newLabel.color = muse::draw::Color(std::rand() % 256, std::rand() % 256, std::rand() % 256);
+    }
+
     std::shared_ptr<TrackeditProjectMock> m_trackEditProject;
 };
 
@@ -117,6 +138,10 @@ TEST_F(ChangeDetectionTests, TestNotificationsWhenTheresNoChanges)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
@@ -143,6 +168,10 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForAddingOneTrack)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
@@ -165,6 +194,10 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForAddingTwoTracks)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
@@ -175,6 +208,7 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForRemovingOneTrack)
 
     after.tracks.pop_back();
     after.clips.pop_back();
+    after.labels.pop_back();
 
     EXPECT_NE(before.tracks.size(), after.tracks.size());
 
@@ -187,6 +221,10 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForRemovingOneTrack)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
@@ -197,9 +235,11 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForRemovingTwoTracks)
 
     after.tracks.pop_back();
     after.clips.pop_back();
+    after.labels.pop_back();
 
     after.tracks.pop_back();
     after.clips.pop_back();
+    after.labels.pop_back();
 
     EXPECT_NE(before.tracks.size(), after.tracks.size());
 
@@ -211,6 +251,10 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForRemovingTwoTracks)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
@@ -247,6 +291,10 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForReordering)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
@@ -267,6 +315,10 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationForTitleChange)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
@@ -291,6 +343,10 @@ TEST_F(ChangeDetectionTests, TestClipNotificationAddingOne)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
@@ -311,6 +367,10 @@ TEST_F(ChangeDetectionTests, TestClipNotificationAddingTwo)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
@@ -329,6 +389,10 @@ TEST_F(ChangeDetectionTests, TestClipNotificationRemovingOne)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
@@ -350,6 +414,10 @@ TEST_F(ChangeDetectionTests, TestClipNotificationRemovingTwo)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(2);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
@@ -369,6 +437,10 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeStartTime)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
 
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
@@ -387,6 +459,10 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeEndTime)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
@@ -416,6 +492,10 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeStereo)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
 
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
@@ -435,6 +515,10 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangePitch)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
 
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
@@ -453,6 +537,10 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeSpeed)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
@@ -474,6 +562,10 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeGroup)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(2);
 
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
@@ -492,6 +584,10 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeVersion)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
@@ -520,6 +616,10 @@ TEST_F(ChangeDetectionTests, TestNotificationsForAddingOneTrackAndOneClip)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
@@ -545,6 +645,10 @@ TEST_F(ChangeDetectionTests, TestClipNotificationAddingTwoAndRemovingTwo)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(2);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
@@ -563,6 +667,206 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeTitle)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
+
+////////////////////////////////////////////////
+/// Tests for label change notification:
+////////////////////////////////////////////////
+
+TEST_F(ChangeDetectionTests, TestLabelNotificationAddingOne)
+{
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
+
+    addLabelToTrack(after, after.tracks.back().id, static_cast<int>(after.labels.back().size()));
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
+
+TEST_F(ChangeDetectionTests, TestLabelNotificationAddingTwo)
+{
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
+
+    addLabelToTrack(after, after.tracks.front().id, static_cast<int>(after.labels.front().size()));
+    addLabelToTrack(after, after.tracks.back().id, static_cast<int>(after.labels.back().size()));
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(2);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
+
+TEST_F(ChangeDetectionTests, TestLabelNotificationRemovingOne)
+{
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
+
+    after.labels.back().pop_back();
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
+
+TEST_F(ChangeDetectionTests, TestLabelNotificationRemovingTwo)
+{
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
+
+    after.labels.front().pop_back();
+    after.labels.back().pop_back();
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(2);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
+
+TEST_F(ChangeDetectionTests, TestLabelNotificationChangeStartTime)
+{
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
+
+    after.labels.back().back().startTime += 200;
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(1);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
+
+TEST_F(ChangeDetectionTests, TestLabelNotificationChangeEndTime)
+{
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
+
+    after.labels.back().back().endTime += 200;
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(1);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
+
+TEST_F(ChangeDetectionTests, TestLabelNotificationChangeTitle)
+{
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
+
+    after.labels.back().back().title = "new label title";
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(1);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
+
+TEST_F(ChangeDetectionTests, TestLabelNotificationAddingTwoAndRemovingTwo)
+{
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
+
+    after.labels.front().pop_back();
+    after.labels.back().pop_back();
+
+    int newLabelIdNumber = static_cast<int>(after.labels.back().size()) + 1;
+
+    addLabelToTrack(after, after.tracks.front().id, newLabelIdNumber);
+    addLabelToTrack(after, after.tracks.back().id, newLabelIdNumber + 1);
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(2);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelRemoved(_)).Times(2);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }

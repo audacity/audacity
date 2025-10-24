@@ -344,18 +344,17 @@ TEST_F(Au3LabelsInteractionsTests, ChangeLabelTitle)
     //! [GIVEN] Add a label directly (not through the interaction being tested)
     SelectedRegion region;
     region.setTimes(1.0, 2.0);
-    int labelIndex = labelTrack->AddLabel(region, wxString());
-    ASSERT_EQ(labelIndex, 0) << "Label should be added at index 0";
+    TrackItemId labelId = labelTrack->AddLabel(region, wxString());
     ASSERT_EQ(labelTrack->GetNumLabels(), 1) << "Label track should contain one label";
 
     //! [EXPECT] The project is notified about label change
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(Truly([&](const Label& label) {
-        return label.key.trackId == TrackId(labelTrack->GetId()) && label.key.itemId == 0;
+        return label.key.trackId == TrackId(labelTrack->GetId()) && label.key.itemId == labelId;
     }))).Times(1);
 
     //! [WHEN] Change the label title
     const muse::String newTitle = u"Test Label";
-    const LabelKey labelKey { labelTrack->GetId(), 0 };
+    const LabelKey labelKey { labelTrack->GetId(), labelId };
     bool result = m_labelsInteraction->changeLabelTitle(labelKey, newTitle);
 
     //! [THEN] The operation is successful
