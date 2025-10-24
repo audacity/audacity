@@ -27,11 +27,11 @@ protected:
     {
     }
 
-    static TracksAndClips buildTracksAndClips()
+    static TracksAndItems buildTracksAndClips()
     {
         constexpr int trackCount = 5;
 
-        TracksAndClips structure;
+        TracksAndItems structure;
 
         // Adding tracks and clips vectors:
         for (int i = 0; i < trackCount; ++i) {
@@ -48,7 +48,7 @@ protected:
         return structure;
     }
 
-    static void addOneTrack(TracksAndClips& structure, int id)
+    static void addOneTrack(TracksAndItems& structure, int id)
     {
         structure.tracks.emplace_back();
         structure.clips.emplace_back();
@@ -73,7 +73,7 @@ protected:
         structure.tracks.back().color = muse::draw::Color(std::rand() % 256, std::rand() % 256, std::rand() % 256);
     }
 
-    static void addClipToTrack(TracksAndClips& structure, TrackId trackId, int j)
+    static void addClipToTrack(TracksAndItems& structure, TrackId trackId, int j)
     {
         auto& newClip = structure.clips[trackId].emplace_back();
         newClip.key.itemId = j;
@@ -99,8 +99,8 @@ protected:
 
 TEST_F(ChangeDetectionTests, TestNotificationsWhenTheresNoChanges)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     //! The above are equal. No change notifications are expected.
 
@@ -127,8 +127,8 @@ TEST_F(ChangeDetectionTests, TestNotificationsWhenTheresNoChanges)
 
 TEST_F(ChangeDetectionTests, TestTrackNotificationsForAddingOneTrack)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     addOneTrack(after, after.tracks.size());
 
@@ -148,8 +148,8 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForAddingOneTrack)
 
 TEST_F(ChangeDetectionTests, TestTrackNotificationsForAddingTwoTracks)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     addOneTrack(after, static_cast<int>(after.tracks.size()));
     addOneTrack(after, static_cast<int>(after.tracks.size()));
@@ -170,8 +170,8 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForAddingTwoTracks)
 
 TEST_F(ChangeDetectionTests, TestTrackNotificationsForRemovingOneTrack)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     after.tracks.pop_back();
     after.clips.pop_back();
@@ -192,8 +192,8 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForRemovingOneTrack)
 
 TEST_F(ChangeDetectionTests, TestTrackNotificationsForRemovingTwoTracks)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     after.tracks.pop_back();
     after.clips.pop_back();
@@ -217,8 +217,8 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForRemovingTwoTracks)
 
 TEST_F(ChangeDetectionTests, TestTrackNotificationsForReordering)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     EXPECT_EQ(before.tracks.size(), after.tracks.size());
 
@@ -252,8 +252,8 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForReordering)
 
 TEST_F(ChangeDetectionTests, TestTrackNotificationForTitleChange)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     EXPECT_EQ(before.tracks.size(), after.tracks.size());
 
@@ -277,8 +277,8 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationForTitleChange)
 
 TEST_F(ChangeDetectionTests, TestClipNotificationAddingOne)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     addClipToTrack(after, after.tracks.back().id, static_cast<int>(after.clips.back().size()));
 
@@ -296,8 +296,8 @@ TEST_F(ChangeDetectionTests, TestClipNotificationAddingOne)
 
 TEST_F(ChangeDetectionTests, TestClipNotificationAddingTwo)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     addClipToTrack(after, after.tracks.front().id, static_cast<int>(after.clips.front().size()));
     addClipToTrack(after, after.tracks.back().id, static_cast<int>(after.clips.back().size()));
@@ -316,8 +316,8 @@ TEST_F(ChangeDetectionTests, TestClipNotificationAddingTwo)
 
 TEST_F(ChangeDetectionTests, TestClipNotificationRemovingOne)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     after.clips.back().pop_back();
 
@@ -335,8 +335,8 @@ TEST_F(ChangeDetectionTests, TestClipNotificationRemovingOne)
 
 TEST_F(ChangeDetectionTests, TestClipNotificationRemovingTwo)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     after.clips.front().pop_back();
     after.clips.back().pop_back();
@@ -355,8 +355,8 @@ TEST_F(ChangeDetectionTests, TestClipNotificationRemovingTwo)
 
 TEST_F(ChangeDetectionTests, TestClipNotificationChangeStartTime)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     after.clips.back().back().startTime += 200;
 
@@ -374,8 +374,8 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeStartTime)
 
 TEST_F(ChangeDetectionTests, TestClipNotificationChangeEndTime)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     after.clips.back().back().endTime += after.clips.back().back().startTime + 200;
 
@@ -393,8 +393,8 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeEndTime)
 
 TEST_F(ChangeDetectionTests, TestClipNotificationChangeStereo)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     if (after.tracks.back().type == TrackType::Stereo) {
         after.tracks.back().type = TrackType::Mono;
@@ -421,8 +421,8 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeStereo)
 
 TEST_F(ChangeDetectionTests, TestClipNotificationChangePitch)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     after.clips.back().back().pitch = 100;
 
@@ -440,8 +440,8 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangePitch)
 
 TEST_F(ChangeDetectionTests, TestClipNotificationChangeSpeed)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     after.clips.back().back().speed = 10.0;
 
@@ -459,8 +459,8 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeSpeed)
 
 TEST_F(ChangeDetectionTests, TestClipNotificationChangeGroup)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     after.clips.back().back().groupId = 2;
     after.clips.back().front().groupId = 2;
@@ -479,8 +479,8 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeGroup)
 
 TEST_F(ChangeDetectionTests, TestClipNotificationChangeVersion)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     after.clips.back().back().clipVersion++;
 
@@ -502,8 +502,8 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeVersion)
 
 TEST_F(ChangeDetectionTests, TestNotificationsForAddingOneTrackAndOneClip)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     addOneTrack(after, after.tracks.size());
 
@@ -525,8 +525,8 @@ TEST_F(ChangeDetectionTests, TestNotificationsForAddingOneTrackAndOneClip)
 
 TEST_F(ChangeDetectionTests, TestClipNotificationAddingTwoAndRemovingTwo)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     after.clips.front().pop_back();
     after.clips.back().pop_back();
@@ -550,8 +550,8 @@ TEST_F(ChangeDetectionTests, TestClipNotificationAddingTwoAndRemovingTwo)
 
 TEST_F(ChangeDetectionTests, TestClipNotificationChangeTitle)
 {
-    TracksAndClips before = buildTracksAndClips();
-    TracksAndClips after = buildTracksAndClips();
+    TracksAndItems before = buildTracksAndClips();
+    TracksAndItems after = buildTracksAndClips();
 
     after.clips.back().back().title = "new clip title";
 

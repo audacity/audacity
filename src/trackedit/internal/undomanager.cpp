@@ -13,11 +13,11 @@ bool UndoManager::undo()
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
-    const TracksAndClips before = trackeditProject->buildTracksAndClips();
+    const TracksAndItems before = trackeditProject->buildTracksAndItems();
 
     projectHistory()->undo();
 
-    const TracksAndClips after = trackeditProject->buildTracksAndClips();
+    const TracksAndItems after = trackeditProject->buildTracksAndItems();
 
     changeDetection::notifyOfUndoRedo(before, after, trackeditProject);
 
@@ -37,11 +37,11 @@ bool UndoManager::redo()
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
-    TracksAndClips before = trackeditProject->buildTracksAndClips();
+    TracksAndItems before = trackeditProject->buildTracksAndItems();
 
     projectHistory()->redo();
 
-    TracksAndClips after = trackeditProject->buildTracksAndClips();
+    TracksAndItems after = trackeditProject->buildTracksAndItems();
 
     changeDetection::notifyOfUndoRedo(before, after, trackeditProject);
 
@@ -61,11 +61,11 @@ bool UndoManager::undoRedoToIndex(size_t index)
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
-    const TracksAndClips before = trackeditProject->buildTracksAndClips();
+    const TracksAndItems before = trackeditProject->buildTracksAndItems();
 
     projectHistory()->undoRedoToIndex(index);
 
-    const TracksAndClips after = trackeditProject->buildTracksAndClips();
+    const TracksAndItems after = trackeditProject->buildTracksAndItems();
 
     changeDetection::notifyOfUndoRedo(before, after, trackeditProject);
 
