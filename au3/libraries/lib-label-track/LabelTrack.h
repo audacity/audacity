@@ -74,6 +74,10 @@ public:
     /// it possible to DELETE capture all labels with a Select All).
     TimeRelations RegionRelation(double reg_t0, double reg_t1, const LabelTrack* parent = NULL) const;
 
+    static int64_t NewID();
+    int64_t GetId() const;
+    void SetId(int64_t id);
+
 public:
     SelectedRegion selectedRegion;
     wxString title; /// Text of the label.
@@ -86,6 +90,9 @@ public:
     mutable int y{};    /// Pixel position of label.
 
     bool updated{};                 /// flag to tell if the label times were updated
+
+private:
+    int64_t mId{ 0 };
 };
 
 using LabelArray = std::vector<LabelStruct>;
@@ -153,11 +160,13 @@ public:
 
     int GetNumLabels() const;
     const LabelStruct* GetLabel(int index) const;
+    LabelStruct* GetLabelById(int64_t id);
+    int GetLabelIndex(int64_t labelId) const;
     const LabelArray& GetLabels() const { return mLabels; }
 
     void OnLabelAdded(const wxString& title, int pos);
-    //This returns the index of the label we just added.
-    int AddLabel(const SelectedRegion& region, const wxString& title);
+    //This returns the id of the label we just added.
+    int64_t AddLabel(const SelectedRegion& region, const wxString& title);
 
     //This deletes the label at given index.
     void DeleteLabel(int index);
