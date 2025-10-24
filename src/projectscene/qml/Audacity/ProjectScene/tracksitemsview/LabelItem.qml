@@ -249,7 +249,11 @@ Item {
             root.requestSelected()
         }
 
-        onLabelItemMousePositionChanged: function(x, y) {
+        onContextMenuOpenRequested: function(x, y) {
+            labelContextMenuLoader.show(Qt.point(x, y), labelContextMenuModel.items)
+        }
+
+        onMousePositionChanged: function(x, y) {
             root.labelItemMousePositionChanged(x, y)
         }
 
@@ -270,7 +274,7 @@ Item {
             root.headerHovered = value
         }
 
-        onLabelItemMousePositionChanged: function(x, y) {
+        onMousePositionChanged: function(x, y) {
             root.labelItemMousePositionChanged(x, y)
         }
 
@@ -292,7 +296,7 @@ Item {
             root.headerHovered = value
         }
 
-        onLabelItemMousePositionChanged: function(x, y) {
+        onMousePositionChanged: function(x, y) {
             root.labelItemMousePositionChanged(x, y)
         }
 
@@ -330,7 +334,7 @@ Item {
             root.headerHovered = value
         }
 
-        onLabelItemMousePositionChanged: function(x, y) {
+        onMousePositionChanged: function(x, y) {
             root.labelItemMousePositionChanged(x, y)
         }
 
