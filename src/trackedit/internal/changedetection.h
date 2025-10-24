@@ -21,5 +21,5 @@ namespace au::trackedit::changeDetection {
  * @param after The TracksAndClips structure after the change
  * @param trackeditProject a TrackEditProjectPtr expected to be valid
  */
-void notifyOfUndoRedo(const TracksAndClips& before, const TracksAndClips& after, ITrackeditProjectPtr trackeditProject);
+void notifyOfUndoRedo(const TracksAndItems& before, const TracksAndItems& after, ITrackeditProjectPtr trackeditProject);
 }
