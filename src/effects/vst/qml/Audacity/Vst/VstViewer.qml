@@ -52,8 +52,12 @@ Rectangle {
         Qt.callLater(manageMenuModel.load)
     }
 
-    function togglePreview() {
-        viewModel.togglePreview()
+    function startPreview() {
+        viewModel.startPreview()
+    }
+
+    function stopPreview() {
+        viewModel.stopPreview()
     }
 
     function manage(parent) {
