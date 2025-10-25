@@ -135,7 +135,7 @@ jobs:
           postfix: '-22.04'
     steps:
     - name: Setup Dependencies
-      uses: audacity/audacity-actions/dependencies@v4
+      uses: audacity/audacity-actions/dependencies@v5
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
     - name: Checkout Audacity
