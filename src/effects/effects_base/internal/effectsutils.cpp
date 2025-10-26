@@ -3,7 +3,62 @@
  */
 
 #include "effectsutils.h"
+#include "effects/builtin/internal/builtineffectsrepository.h"
 #include "log.h"
+
+muse::String au::effects::utils::builtinEffectCategoryIdString(BuiltinEffectCategoryId category)
+{
+    switch (category) {
+    case BuiltinEffectCategoryId::None:
+        // Maybe a temporary solution to generator menu organization:
+        // since generators don't have a category, with this they'll end up in the Audacity "category".
+        // When we implement Nyquist support, though, either we create the
+        // "Nyquist" category and are happy with that, or we
+        // will have to ask our designers to specify organization of generators
+        // (and analyzers).
+        return muse::String{ "Audacity" };
+    case BuiltinEffectCategoryId::VolumeAndCompression:
+        return muse::String{ "Volume and compression" };
+    case BuiltinEffectCategoryId::Fading:
+        return muse::String{ "Fading" };
+    case BuiltinEffectCategoryId::PitchAndTempo:
+        return muse::String{ "Pitch and tempo" };
+    case BuiltinEffectCategoryId::EqAndFilters:
+        return muse::String{ "EQ and filters" };
+    case BuiltinEffectCategoryId::NoiseRemovalAndRepair:
+        return muse::String{ "Noise removal and repair" };
+    case BuiltinEffectCategoryId::DelayAndReverb:
+        return muse::String{ "Delay and reverb" };
+    case BuiltinEffectCategoryId::DistortionAndModulation:
+        return muse::String{ "Distortion and modulation" };
+    case BuiltinEffectCategoryId::Special:
+        return muse::String{ "Special" };
+    case BuiltinEffectCategoryId::Legacy:
+        return muse::String{ "Legacy" };
+    default:
+        assert(false);
+        return muse::String{ "" };
+    }
+}
+
+int au::effects::utils::builtinEffectCategoryIdOrder(const muse::String& category)
+{
+    using namespace au::effects::utils;
+    static const std::map<muse::String, int> categoryOrder = {
+        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::VolumeAndCompression), 0 },
+        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::Fading), 1 },
+        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::PitchAndTempo), 2 },
+        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::EqAndFilters), 3 },
+        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::NoiseRemovalAndRepair), 4 },
+        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::DelayAndReverb), 5 },
+        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::DistortionAndModulation), 6 },
+        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::Special), 7 },
+        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::Legacy), 8 },
+        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::None), 9 },
+    };
+    auto it = categoryOrder.find(category);
+    return it == categoryOrder.end() ? INT_MAX : it->second;
+}
 
 namespace impl {
 using namespace muse;
@@ -77,15 +132,24 @@ MenuItem* makeRealtimeBuiltinEffectSubmenu(const EffectMetaList& effects, IEffec
 
 MenuItemList makeDestructiveBuiltinEffectSubmenu(const EffectMetaList& effects, IEffectMenuItemFactory& effectMenu)
 {
-    std::map<CiString /*category*/, CiStringSet> categories;
+    std::map<muse::String /*category*/, CiStringSet> categories;
     for (const EffectMeta& meta : effects) {
         if (meta.family == EffectFamily::Builtin) {
-            categories[CiString{ meta.category }].insert(CiString { meta.id });
+            categories[meta.category].insert(CiString { meta.id });
         }
     }
-    MenuItemList items;
+
+    std::vector<std::pair<muse::String, CiStringSet> > categoriesSorted;
     for (const auto& [category, effectIds] : categories) {
-        items << makeEffectSubmenu(category, effectIds, effectMenu);
+        categoriesSorted.push_back({ category, effectIds });
+    }
+    std::sort(categoriesSorted.begin(), categoriesSorted.end(), [&](const auto& a, const auto& b) {
+        return au::effects::utils::builtinEffectCategoryIdOrder(a.first) < au::effects::utils::builtinEffectCategoryIdOrder(b.first);
+    });
+
+    MenuItemList items;
+    for (const auto& [category, effectIds] : categoriesSorted) {
+        items << makeEffectSubmenu(CiString { category }, effectIds, effectMenu);
     }
     return items;
 }
@@ -114,7 +178,8 @@ MenuItemList makeNonBuiltinEffectSubmenus(const EffectMetaList& effects, IEffect
             // Built-in effects are handled separately
             continue;
         }
-        families[CiString{ muse::String{ effectFamiliyString(meta.family) } }][CiString{ meta.vendor }][CiString{ meta.title }].insert(&meta);
+        families[CiString{ muse::String{ effectFamiliyString(meta.family) } }][CiString{ meta.vendor }][CiString{ meta.title }].insert(
+            &meta);
     }
 
     MenuItemList items;
