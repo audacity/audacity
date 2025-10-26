@@ -4,7 +4,8 @@
 
 #pragma once
 
-#include "effectstypes.h"
+// This is required because this file is now used in effects/builtin
+#include "effects/effects_base/effectstypes.h"
 #include "uicomponents/view/menuitem.h"
 
 namespace au::effects::utils {
@@ -14,4 +15,6 @@ muse::uicomponents::MenuItemList destructiveEffectMenu(EffectMenuOrganization or
                                                        const EffectFilter& filter, IEffectMenuItemFactory& effectMenu);
 muse::uicomponents::MenuItemList realtimeEffectMenu(EffectMenuOrganization organization, EffectMetaList metaList,
                                                     const EffectFilter& filter, IEffectMenuItemFactory& effectMenu);
+muse::String builtinEffectCategoryIdString(BuiltinEffectCategoryId category);
+int builtinEffectCategoryIdOrder(const muse::String& category);
 }

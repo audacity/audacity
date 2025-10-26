@@ -64,6 +64,19 @@ public:
 
 using EffectFamily = EffectFamilies::EffectFamily;
 
+enum class BuiltinEffectCategoryId {
+    None,
+    VolumeAndCompression,
+    Fading,
+    PitchAndTempo,
+    EqAndFilters,
+    NoiseRemovalAndRepair,
+    DelayAndReverb,
+    DistortionAndModulation,
+    Special,
+    Legacy,
+};
+
 enum class EffectType {
     Unknown = -1,
     Analyzer,
