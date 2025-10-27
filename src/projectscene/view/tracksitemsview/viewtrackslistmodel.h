@@ -20,7 +20,7 @@
 #include "trackedit/dom/track.h"
 
 namespace au::projectscene {
-class TracksItemsModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
+class ViewTracksListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
 {
     Q_OBJECT
 
@@ -35,7 +35,7 @@ class TracksItemsModel : public QAbstractListModel, public muse::async::Asyncabl
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
 
 public:
-    explicit TracksItemsModel(QObject* parent = nullptr);
+    explicit ViewTracksListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);

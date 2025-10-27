@@ -1,7 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "tracksitemsmodel.h"
+#include "viewtrackslistmodel.h"
 
 #include "global/async/async.h"
 
@@ -9,7 +9,7 @@
 
 using namespace au::projectscene;
 
-TracksItemsModel::TracksItemsModel(QObject* parent)
+ViewTracksListModel::ViewTracksListModel(QObject* parent)
     : QAbstractListModel(parent)
 {
     configuration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool isVerticalRulersVisible) {
@@ -17,7 +17,7 @@ TracksItemsModel::TracksItemsModel(QObject* parent)
     });
 }
 
-void TracksItemsModel::load()
+void ViewTracksListModel::load()
 {
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         load();
@@ -176,7 +176,7 @@ void TracksItemsModel::load()
     }, muse::async::Asyncable::Mode::SetReplace);
 }
 
-void TracksItemsModel::handleDroppedFiles(const QStringList& fileUrls)
+void ViewTracksListModel::handleDroppedFiles(const QStringList& fileUrls)
 {
     std::vector<muse::io::path_t> localPaths;
     for (const auto& fileUrl : fileUrls) {
@@ -188,12 +188,12 @@ void TracksItemsModel::handleDroppedFiles(const QStringList& fileUrls)
     prj->import(localPaths);
 }
 
-int TracksItemsModel::rowCount(const QModelIndex&) const
+int ViewTracksListModel::rowCount(const QModelIndex&) const
 {
     return static_cast<int>(m_trackList.size());
 }
 
-QVariant TracksItemsModel::data(const QModelIndex& index, int role) const
+QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid()) {
         return {};
@@ -240,7 +240,7 @@ QVariant TracksItemsModel::data(const QModelIndex& index, int role) const
     return {};
 }
 
-QHash<int, QByteArray> TracksItemsModel::roleNames() const
+QHash<int, QByteArray> ViewTracksListModel::roleNames() const
 {
     static QHash<int, QByteArray> roles
     {
@@ -255,12 +255,12 @@ QHash<int, QByteArray> TracksItemsModel::roleNames() const
     return roles;
 }
 
-bool TracksItemsModel::isVerticalRulersVisible() const
+bool ViewTracksListModel::isVerticalRulersVisible() const
 {
     return m_isVerticalRulersVisible;
 }
 
-void TracksItemsModel::setIsVerticalRulersVisible(bool isVerticalRulersVisible)
+void ViewTracksListModel::setIsVerticalRulersVisible(bool isVerticalRulersVisible)
 {
     if (m_isVerticalRulersVisible == isVerticalRulersVisible) {
         return;
@@ -270,7 +270,7 @@ void TracksItemsModel::setIsVerticalRulersVisible(bool isVerticalRulersVisible)
     emit isVerticalRulersVisibleChanged(m_isVerticalRulersVisible);
 }
 
-int TracksItemsModel::totalTracksHeight() const
+int ViewTracksListModel::totalTracksHeight() const
 {
     const project::IAudacityProjectPtr prj = globalContext()->currentProject();
     const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
