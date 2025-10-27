@@ -540,7 +540,7 @@ double TimelineContext::positionToTime(double position, bool withSnap) const
         if (vs->isSnapEnabled()) {
             result = applySnapToTime(result);
         } else {
-            result = applySnapToClip(result);
+            result = applySnapToItem(result);
         }
     }
 
@@ -581,7 +581,7 @@ double TimelineContext::applySnapToTime(double time) const
     return m_snapTimeFormatter->snapTime(time, viewState->snap().val, timeSig);
 }
 
-double TimelineContext::applySnapToClip(double time) const
+double TimelineContext::applySnapToItem(double time) const
 {
     auto viewState = this->viewState();
     if (!viewState || viewState->isSnapEnabled()) {
@@ -594,9 +594,9 @@ double TimelineContext::applySnapToClip(double time) const
     }
 
     muse::secs_t tolerance = SNAP_TO_CLIP_TOLERANCE_PX / zoom();
-    std::set<muse::secs_t> clipsBoundaries = viewState->clipsBoundaries();
+    std::set<muse::secs_t> itemsBoundaries = viewState->itemsBoundaries();
 
-    return m_snapTimeFormatter->snapToClip(time, tolerance, clipsBoundaries);
+    return m_snapTimeFormatter->snapToItem(time, tolerance, itemsBoundaries);
 }
 
 double TimelineContext::applyDetectedSnap(double time) const
@@ -610,7 +610,7 @@ double TimelineContext::applyDetectedSnap(double time) const
         return applySnapToTime(time);
     }
 
-    return applySnapToClip(time);
+    return applySnapToItem(time);
 }
 
 double TimelineContext::findGuideline(double time) const
@@ -627,7 +627,7 @@ double TimelineContext::findGuideline(double time) const
             return time;
         }
     } else {
-        if (muse::contains(vs->clipsBoundaries(), static_cast<muse::secs_t>(time))) {
+        if (muse::contains(vs->itemsBoundaries(), static_cast<muse::secs_t>(time))) {
             return time;
         }
     }

@@ -9,6 +9,8 @@ Rectangle {
     property color backgroundColor: "transparent"
 
     signal headerHoveredChanged(bool value)
+    signal labelItemMousePositionChanged(real x, real y)
+    signal requestSelected()
 
     width: 1
     height: parent.height
@@ -32,6 +34,20 @@ Rectangle {
                 return
             }
             root.headerHoveredChanged(containsMouse)
+        }
+
+        onPressed: function (e) {
+            root.requestSelected()
+            e.accepted = false
+        }
+
+        onPositionChanged: function (e) {
+            root.labelItemMousePositionChanged(e.x, e.y)
+            e.accepted = false
+        }
+
+        onReleased: function (e) {
+            e.accepted = false
         }
     }
 }

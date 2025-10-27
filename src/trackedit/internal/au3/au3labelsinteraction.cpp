@@ -10,6 +10,7 @@
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "defer.h"
 #include "log.h"
 
 using namespace au::trackedit;
@@ -106,6 +107,60 @@ bool Au3LabelsInteraction::changeLabelTitle(const LabelKey& labelKey, const muse
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
         prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, labelIndex, labelTrack->GetLabels()[labelIndex]));
+    }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset, bool completed)
+{
+    if (muse::RealIsEqual(timePositionOffset, 0.0)) {
+        return true;
+    }
+
+    //! NOTE: cannot start moving until previous move is handled
+    if (m_busy) {
+        return false;
+    }
+    m_busy = true;
+
+    DEFER {
+        m_busy = false;
+    };
+
+    const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    auto selectedLabels = selectionController()->selectedLabels();
+    if (selectedLabels.empty()) {
+        return false;
+    }
+
+    for (const auto& selectedLabel : selectedLabels) {
+        Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(selectedLabel.trackId));
+        IF_ASSERT_FAILED(labelTrack) {
+            continue;
+        }
+
+        const auto& au3labels = labelTrack->GetLabels();
+        size_t labelIndex = static_cast<size_t>(selectedLabel.itemId);
+
+        IF_ASSERT_FAILED(labelIndex < au3labels.size()) {
+            continue;
+        }
+
+        Au3Label au3Label = au3labels[labelIndex];
+
+        // Calculate new times
+        double newT0 = std::max(0.0, au3Label.getT0() + timePositionOffset);
+        double newT1 = std::max(0.0, au3Label.getT1() + timePositionOffset);
+
+        // Update the label with new times
+        au3Label.selectedRegion.setTimes(newT0, newT1);
+        labelTrack->SetLabel(labelIndex, au3Label);
+
+        if (prj) {
+            prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, labelIndex, labelTrack->GetLabels()[labelIndex]));
+        }
     }
 
     return true;

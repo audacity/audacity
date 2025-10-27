@@ -227,8 +227,9 @@ TrackItemsContainer {
         target: root.container
 
         function onItemMoveRequested(itemKey, completed) {
-            console.info("Labels don't support clip moving yet")
             root.updateMoveActive(completed)
+
+            labelsModel.moveSelectedLabels(itemKey, completed)
         }
 
         function onItemStartEditRequested(itemKey) {

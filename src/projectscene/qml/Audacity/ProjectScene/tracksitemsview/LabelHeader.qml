@@ -57,13 +57,6 @@ Rectangle {
 
         visible: root.enableCursorInteraction
 
-        onContainsMouseChanged: {
-            if (!root.visible) {
-                return
-            }
-            root.headerHoveredChanged(containsMouse)
-        }
-
         onPressed: function (e) {
             var currentTime = Date.now()
 
@@ -74,6 +67,7 @@ Rectangle {
                 // Single click - select
                 root.requestSelected()
                 lastClickTime = currentTime
+                doubleClickStartPosition = Qt.point(e.x, e.y)
             }
             e.accepted = false
         }
@@ -90,6 +84,13 @@ Rectangle {
             root.labelItemMousePositionChanged(e.x, e.y)
 
             e.accepted = false
+        }
+
+        onContainsMouseChanged: {
+            if (!root.visible) {
+                return
+            }
+            root.headerHoveredChanged(containsMouse)
         }
     }
 
