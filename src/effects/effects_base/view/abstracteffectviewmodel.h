@@ -16,7 +16,7 @@ namespace au::effects {
 class AbstractEffectViewModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
-    Q_PROPERTY(EffectInstanceId instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
+    Q_PROPERTY(EffectInstanceId instanceId READ instanceId CONSTANT FINAL)
     Q_PROPERTY(bool isPreviewing READ isPreviewing NOTIFY isPreviewingChanged FINAL)
 
 protected:
@@ -33,18 +33,16 @@ public:
     Q_INVOKABLE void stopPreview();
 
     EffectInstanceId instanceId() const;
-    void setInstanceId(EffectInstanceId newInstanceId);
-
     bool isPreviewing() const;
 
 signals:
-    void instanceIdChanged();
     void isPreviewingChanged();
+
+protected:
+    const EffectInstanceId m_instanceId;
 
 private:
     virtual void doInit() = 0;
     virtual void doStartPreview() = 0;
-
-    EffectInstanceId m_instanceId = -1;
 };
 }

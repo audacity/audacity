@@ -10,7 +10,7 @@
 using namespace au::effects;
 
 BuiltinEffectModel::BuiltinEffectModel(QObject* parent)
-    : AbstractEffectViewModel(parent), m_instanceId(BuiltinEffectViewLoader::initializationInstanceId())
+    : AbstractEffectViewModel(parent)
 {
     assert(m_instanceId != -1);
 }
@@ -47,11 +47,6 @@ const EffectSettings& BuiltinEffectModel::settings() const
 EffectSettingsAccessPtr BuiltinEffectModel::settingsAccess() const
 {
     return instancesRegister()->settingsAccessById(m_instanceId);
-}
-
-EffectInstanceId BuiltinEffectModel::instanceId() const
-{
-    return m_instanceId;
 }
 
 void BuiltinEffectModel::doStartPreview()
