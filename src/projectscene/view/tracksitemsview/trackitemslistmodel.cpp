@@ -207,7 +207,9 @@ QVariant TrackItemsListModel::neighbor(const TrackItemKey& key, int offset) cons
 
 TrackItemsListModel::MoveOffset TrackItemsListModel::calculateMoveOffset(const ViewTrackItem* item,
                                                                          const TrackItemKey& key,
-                                                                         bool completed) const
+                                                                         const std::vector<trackedit::TrackType>& trackTypesAllowedToMove,
+                                                                         bool completed)
+const
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj) {
@@ -218,7 +220,7 @@ TrackItemsListModel::MoveOffset TrackItemsListModel::calculateMoveOffset(const V
 
     MoveOffset moveOffset {
         calculateTimePositionOffset(item),
-        completed ? 0 : calculateTrackPositionOffset(key)
+        completed ? 0 : calculateTrackPositionOffset(key, trackTypesAllowedToMove)
     };
 
     secs_t positionOffsetX = moveOffset.timeOffset * m_context->zoom();
@@ -231,7 +233,8 @@ TrackItemsListModel::MoveOffset TrackItemsListModel::calculateMoveOffset(const V
     return moveOffset;
 }
 
-int TrackItemsListModel::calculateTrackPositionOffset(const TrackItemKey& key) const
+int TrackItemsListModel::calculateTrackPositionOffset(const TrackItemKey& key,
+                                                      const std::vector<trackedit::TrackType>& trackTypesAllowedToMove) const
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj) {
@@ -247,15 +250,78 @@ int TrackItemsListModel::calculateTrackPositionOffset(const TrackItemKey& key) c
         return 0;
     }
 
-    bool pointingAtEmptySpace = yPos > vs->totalTrackHeight().val - vs->tracksVerticalOffset().val;
-    const auto numTracks = static_cast<int>(tracks.size());
-    int trackPositionOffset = pointingAtEmptySpace ? numTracks : numTracks - 1;
+    // Check if mouse is pointing at a track with allowed type
+    if (!trackTypesAllowedToMove.empty()) {
+        trackedit::TrackId targetTrackId = vs->trackAtPosition(yPos);
+        if (targetTrackId != trackedit::INVALID_TRACK) {
+            if (!isAllowedToMoveToTracks(trackTypesAllowedToMove, targetTrackId)) {
+                return 0;
+            }
+        }
+    }
 
-    if (!muse::RealIsEqualOrMore(yPos, trackVerticalPosition)) {
-        trackPositionOffset = -trackPositionOffset;
+    // Calculate offset based on allowed track types only
+    trackedit::TrackId targetTrackId = vs->trackAtPosition(yPos);
+    bool pointingAtEmptySpace = yPos > vs->totalTrackHeight().val - vs->tracksVerticalOffset().val;
+
+    if (targetTrackId == trackedit::INVALID_TRACK && !pointingAtEmptySpace) {
+        return 0;
+    }
+
+    ITrackeditProjectPtr trackeditPrj = globalContext()->currentTrackeditProject();
+    if (!trackeditPrj) {
+        return 0;
+    }
+
+    TrackIdList allTracks = trackeditPrj->trackIdList();
+
+    int sourceAllowedIndex = -1;
+    int targetAllowedIndex = -1;
+    int allowedCount = 0;
+
+    for (size_t i = 0; i < allTracks.size(); ++i) {
+        auto track = trackeditPrj->track(allTracks[i]);
+        if (!track.has_value()) {
+            continue;
+        }
+
+        if (!muse::contains(trackTypesAllowedToMove, track->type)) {
+            continue;
+        }
+
+        if (allTracks[i] == key.key.trackId) {
+            sourceAllowedIndex = allowedCount;
+        }
+
+        if (allTracks[i] == targetTrackId) {
+            targetAllowedIndex = allowedCount;
+        }
+
+        allowedCount++;
+    }
+
+    int trackPositionOffset = 0;
+    if (pointingAtEmptySpace) {
+        if (sourceAllowedIndex >= 0) {
+            trackPositionOffset = allowedCount - sourceAllowedIndex;
+        }
+    } else if (sourceAllowedIndex >= 0 && targetAllowedIndex >= 0) {
+        trackPositionOffset = targetAllowedIndex - sourceAllowedIndex;
     }
 
     return trackPositionOffset;
+}
+
+bool TrackItemsListModel::isAllowedToMoveToTracks(const std::vector<trackedit::TrackType>& allowedTrackTypes,
+                                                  const trackedit::TrackId& movedTrackId) const
+{
+    ITrackeditProjectPtr trackeditPrj = globalContext()->currentTrackeditProject();
+    if (!trackeditPrj) {
+        return true;
+    }
+
+    auto track = trackeditPrj->track(movedTrackId);
+    return track.has_value() ? muse::contains(allowedTrackTypes, track->type) : false;
 }
 
 secs_t TrackItemsListModel::calculateTimePositionOffset(const ViewTrackItem* item) const

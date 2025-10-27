@@ -1005,9 +1005,24 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(int offset)
     }
 
     // The selected clips were moved up or down, so we need to update their track IDs.
+    // Search in the updated mutOrig (original track list that now has the moved clips)
     for (auto& clipKey : selectedClips) {
-        const size_t prevIndex = utils::getTrackIndex(orig, clipKey.trackId);
-        clipKey.trackId = utils::getWaveTrack(orig, utils::TrackIndex { prevIndex + offset })->GetId();
+        // Find which WaveTrack in mutOrig contains this clip
+        Au3WaveTrack* newTrack = nullptr;
+        for (auto track : mutOrig) {
+            Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track);
+            if (waveTrack) {
+                // Check if this track contains the clip
+                if (au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId)) {
+                    newTrack = waveTrack;
+                    break;
+                }
+            }
+        }
+
+        if (newTrack) {
+            clipKey.trackId = newTrack->GetId();
+        }
     }
     selectionController()->setSelectedClips(selectedClips);
 

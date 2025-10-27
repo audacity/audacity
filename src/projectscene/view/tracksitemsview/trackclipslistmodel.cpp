@@ -362,15 +362,23 @@ bool TrackClipsListModel::isContrastFocusBorderEnabled() const
 
 au::projectscene::ClipKey TrackClipsListModel::updateClipTrack(ClipKey clipKey) const
 {
-    project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    if (!prj) {
-        return {};
+    ITrackeditProjectPtr trackeditPrj = globalContext()->currentTrackeditProject();
+    if (!trackeditPrj) {
+        return clipKey;
     }
 
-    auto selectedClips = selectionController()->selectedClips();
-    for (const auto& selectedClip : selectedClips) {
-        if (selectedClip.itemId == clipKey.key.itemId) {
-            return selectedClip;
+    auto allTracks = trackeditPrj->trackIdList();
+
+    for (const auto& trackId : allTracks) {
+        auto clips = trackeditPrj->clipList(trackId);
+
+        for (const auto& clip : clips) {
+            if (clip.key.itemId == clipKey.key.itemId) {
+                ClipKey updatedKey;
+                updatedKey.key.trackId = trackId;
+                updatedKey.key.itemId = clip.key.itemId;
+                return updatedKey;
+            }
         }
     }
 
@@ -417,12 +425,29 @@ bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     }
 
     bool clipsMovedToOtherTrack = false;
-    TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, completed);
+    // Clips can only be moved to audio tracks (Mono and Stereo)
+    TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, {
+        trackedit::TrackType::Mono,
+        trackedit::TrackType::Stereo
+    }, completed);
+
     if (vs->moveInitiated()) {
         trackeditInteraction()->moveClips(moveOffset.timeOffset, moveOffset.trackOffset, completed, clipsMovedToOtherTrack);
     }
 
-    if ((completed && m_autoScrollConnection)) {
+    // Update key if clip moved to another track
+    ClipKey updatedKey = key;
+    if (clipsMovedToOtherTrack && !completed) {
+        updatedKey = updateClipTrack(key);
+
+        // Reconnect with updated key
+        if (m_autoScrollConnection) {
+            disconnectAutoScroll();
+        }
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, updatedKey](){
+            moveSelectedClips(updatedKey, false);
+        });
+    } else if ((completed && m_autoScrollConnection)) {
         disconnectAutoScroll();
     } else if (!m_autoScrollConnection && !completed) {
         m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedClips(key, false); });
