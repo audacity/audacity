@@ -98,22 +98,22 @@ ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project
             m_tracks.erase(it);
         });
 
-        updateClipsBoundaries(false);
+        updateItemsBoundaries(false);
         prj->trackChanged().onReceive(this, [this](const trackedit::Track&) {
-            updateClipsBoundaries(false);
+            updateItemsBoundaries(false);
         });
 
         prj->trackAdded().onReceive(this, [this](const trackedit::Track&) {
-            updateClipsBoundaries(false);
+            updateItemsBoundaries(false);
         });
 
         prj->trackInserted().onReceive(this, [this](const trackedit::Track&, int) {
-            updateClipsBoundaries(false);
+            updateItemsBoundaries(false);
         });
     });
 
     projectHistory()->historyChanged().onNotify(this, [this]() {
-        updateClipsBoundaries(false);
+        updateItemsBoundaries(false);
     });
 }
 
@@ -475,17 +475,17 @@ au::trackedit::ClipKey ProjectViewState::lastEditedClip() const
     return m_lastEditedClip;
 }
 
-void ProjectViewState::setClipsBoundaries(const std::set<muse::secs_t>& boundaries)
+void ProjectViewState::setItemsBoundaries(const std::set<muse::secs_t>& boundaries)
 {
-    m_clipsBoundaries = boundaries;
+    m_itemsBoundaries = boundaries;
 }
 
-std::set<muse::secs_t> ProjectViewState::clipsBoundaries() const
+std::set<muse::secs_t> ProjectViewState::itemsBoundaries() const
 {
-    return m_clipsBoundaries;
+    return m_itemsBoundaries;
 }
 
-void ProjectViewState::updateClipsBoundaries(bool excludeCurrentSelection, const trackedit::ClipKey& keyToOmit)
+void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const trackedit::TrackItemKey& itemKeyToOmit)
 {
     auto prj = globalContext()->currentTrackeditProject();
     if (!prj) {
@@ -493,22 +493,49 @@ void ProjectViewState::updateClipsBoundaries(bool excludeCurrentSelection, const
     }
 
     std::set<muse::secs_t> boundaries;
+    const auto& selectedClips = selectionController()->selectedClips();
+    const auto& selectedLabels = selectionController()->selectedLabels();
+
+    if (selectedClips.empty() && selectedLabels.empty()) {
+        setItemsBoundaries({});
+        return;
+    }
+
     for (const auto& trackId : prj->trackIdList()) {
-        for (const auto& clip : prj->clipList(trackId)) {
-            if (excludeCurrentSelection && muse::contains(selectionController()->selectedClips(), clip.key)) {
-                continue;
-            }
+        // Add clips boundaries
+        if (!selectedClips.empty()) {
+            for (const auto& clip : prj->clipList(trackId)) {
+                if (excludeCurrentSelection && muse::contains(selectedClips, clip.key)) {
+                    continue;
+                }
 
-            if (keyToOmit.isValid() && clip.key == keyToOmit) {
-                continue;
-            }
+                if (itemKeyToOmit.isValid() && clip.key == itemKeyToOmit) {
+                    continue;
+                }
 
-            boundaries.insert(clip.startTime);
-            boundaries.insert(clip.endTime);
+                boundaries.insert(clip.startTime);
+                boundaries.insert(clip.endTime);
+            }
+        }
+
+        // Add labels boundaries
+        if (!selectedLabels.empty()) {
+            for (const auto& label : prj->labelList(trackId)) {
+                if (excludeCurrentSelection && muse::contains(selectedLabels, label.key)) {
+                    continue;
+                }
+
+                if (itemKeyToOmit.isValid() && label.key == itemKeyToOmit) {
+                    continue;
+                }
+
+                boundaries.insert(label.startTime);
+                boundaries.insert(label.endTime);
+            }
         }
     }
 
-    setClipsBoundaries(boundaries);
+    setItemsBoundaries(boundaries);
 }
 
 void ProjectViewState::setZoomState(const ZoomState& state)

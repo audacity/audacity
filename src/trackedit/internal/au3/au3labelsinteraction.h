@@ -15,15 +15,17 @@
 namespace au::trackedit {
 class Au3LabelsInteraction : public ILabelsInteraction
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::trackedit::ISelectionController> selectionController;
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory;
+    muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<ISelectionController> selectionController;
+    muse::Inject<IProjectHistory> projectHistory;
 
 public:
     Au3LabelsInteraction();
 
     bool addLabelToSelection() override;
     bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) override;
+
+    bool moveLabels(secs_t timePositionOffset, bool completed) override;
 
     muse::Progress progress() const override;
 

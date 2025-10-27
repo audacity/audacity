@@ -105,6 +105,14 @@ protected:
 
     QVariant neighbor(const TrackItemKey& key, int offset) const;
 
+    struct MoveOffset {
+        muse::secs_t timeOffset = 0.0;
+        int trackOffset = 0;
+    };
+    MoveOffset calculateMoveOffset(const ViewTrackItem* item, const TrackItemKey& key, bool completed) const;
+    trackedit::secs_t calculateTimePositionOffset(const ViewTrackItem* item) const;
+    int calculateTrackPositionOffset(const TrackItemKey& key) const;
+
     Qt::KeyboardModifiers keyboardModifiers() const;
 
     TimelineContext* m_context = nullptr;

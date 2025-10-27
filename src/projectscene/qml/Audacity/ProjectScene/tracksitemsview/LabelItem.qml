@@ -16,12 +16,12 @@ Item {
 
     property alias navigation: navCtrl
 
-    signal requestSelected
-    signal requestSelectionReset
+    signal requestSelected()
+    signal requestSelectionReset()
 
     signal titleEditAccepted(var newTitle)
-    signal titleEditStarted
-    signal titleEditCanceled
+    signal titleEditStarted()
+    signal titleEditCanceled()
 
     signal labelItemMousePositionChanged(real x, real y)
 
@@ -206,6 +206,14 @@ Item {
         onHeaderHoveredChanged: function(value) {
             root.headerHovered = value
         }
+
+        onLabelItemMousePositionChanged: function(x, y) {
+            root.labelItemMousePositionChanged(x, y)
+        }
+
+        onRequestSelected: {
+            root.requestSelected()
+        }
     }
 
     // Left Stalk
@@ -219,6 +227,14 @@ Item {
         onHeaderHoveredChanged: function(value) {
             root.headerHovered = value
         }
+
+        onLabelItemMousePositionChanged: function(x, y) {
+            root.labelItemMousePositionChanged(x, y)
+        }
+
+        onRequestSelected: {
+            root.requestSelected()
+        }
     }
 
     // Right Stalk
@@ -231,6 +247,14 @@ Item {
 
         onHeaderHoveredChanged: function(value) {
             root.headerHovered = value
+        }
+
+        onLabelItemMousePositionChanged: function(x, y) {
+            root.labelItemMousePositionChanged(x, y)
+        }
+
+        onRequestSelected: {
+            root.requestSelected()
         }
     }
 

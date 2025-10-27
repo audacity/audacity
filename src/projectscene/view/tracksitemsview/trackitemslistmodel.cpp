@@ -11,6 +11,7 @@ using namespace au::projectscene;
 using namespace au::trackedit;
 
 constexpr int CACHE_BUFFER_PX = 200;
+constexpr double MOVE_THRESHOLD = 3.0;
 
 TrackItemsListModel::TrackItemsListModel(QObject* parent)
     : QAbstractListModel(parent)
@@ -202,6 +203,98 @@ QVariant TrackItemsListModel::neighbor(const TrackItemKey& key, int offset) cons
     }
 
     return QVariant::fromValue(m_items[sortedIndex]);
+}
+
+TrackItemsListModel::MoveOffset TrackItemsListModel::calculateMoveOffset(const ViewTrackItem* item,
+                                                                         const TrackItemKey& key,
+                                                                         bool completed) const
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj) {
+        return MoveOffset{};
+    }
+
+    auto vs = prj->viewState();
+
+    MoveOffset moveOffset {
+        calculateTimePositionOffset(item),
+        completed ? 0 : calculateTrackPositionOffset(key)
+    };
+
+    secs_t positionOffsetX = moveOffset.timeOffset * m_context->zoom();
+    if (!vs->moveInitiated() && (muse::RealIsEqualOrMore(std::abs(positionOffsetX), MOVE_THRESHOLD) || moveOffset.trackOffset != 0)) {
+        vs->setMoveInitiated(true);
+    } else if (!vs->moveInitiated()) {
+        moveOffset.timeOffset = 0.0;
+    }
+
+    return moveOffset;
+}
+
+int TrackItemsListModel::calculateTrackPositionOffset(const TrackItemKey& key) const
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj) {
+        return 0;
+    }
+
+    IProjectViewStatePtr vs = prj->viewState();
+    double yPos = vs->mousePositionY();
+    int trackVerticalPosition = vs->trackVerticalPosition(key.key.trackId);
+    TrackIdList tracks = vs->tracksInRange(trackVerticalPosition + 2, yPos);
+
+    if (!tracks.size()) {
+        return 0;
+    }
+
+    bool pointingAtEmptySpace = yPos > vs->totalTrackHeight().val - vs->tracksVerticalOffset().val;
+    const auto numTracks = static_cast<int>(tracks.size());
+    int trackPositionOffset = pointingAtEmptySpace ? numTracks : numTracks - 1;
+
+    if (!muse::RealIsEqualOrMore(yPos, trackVerticalPosition)) {
+        trackPositionOffset = -trackPositionOffset;
+    }
+
+    return trackPositionOffset;
+}
+
+secs_t TrackItemsListModel::calculateTimePositionOffset(const ViewTrackItem* item) const
+{
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return 0.0;
+    }
+
+    double newStartTime = m_context->mousePositionTime() - vs->itemEditStartTimeOffset();
+    double duration = item->time().endTime - item->time().startTime;
+    double newEndTime = newStartTime + duration;
+
+    double snappedEndTime = newEndTime;
+    double snappedStartTime = newStartTime;
+    if (vs->isSnapEnabled()) {
+        snappedStartTime = m_context->applySnapToTime(newStartTime);
+    } else {
+        snappedEndTime = m_context->applySnapToItem(newEndTime);
+        snappedStartTime = m_context->applySnapToItem(newStartTime);
+    }
+    if (muse::RealIsEqual(snappedEndTime, newEndTime)) {
+        newStartTime = snappedStartTime;
+    } else if (muse::RealIsEqual(snappedStartTime, newStartTime)) {
+        newStartTime = snappedEndTime - duration;
+    } else {
+        newStartTime
+            = (!muse::RealIsEqualOrMore(std::abs(snappedStartTime - newStartTime), std::abs(snappedEndTime - newEndTime))
+               ? snappedStartTime : snappedEndTime - duration);
+    }
+
+    secs_t timePositionOffset = newStartTime - item->time().startTime;
+
+    constexpr auto limit = 1. / 192000.; // 1 sample at 192 kHz
+    if (!muse::RealIsEqualOrMore(std::abs(timePositionOffset), limit)) {
+        timePositionOffset = 0.0;
+    }
+
+    return timePositionOffset;
 }
 
 void TrackItemsListModel::requestItemTitleChange()
