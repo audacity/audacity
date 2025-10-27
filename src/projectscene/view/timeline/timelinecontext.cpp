@@ -922,6 +922,9 @@ double TimelineContext::timeToContentPosition(double time) const
 void TimelineContext::saveViewState() const
 {
     auto vs = this->viewState();
+    if (!vs) {
+        return;
+    }
     ZoomState state = {
         m_zoom, m_frameStartTime, vs->tracksVerticalOffset().val
     };
