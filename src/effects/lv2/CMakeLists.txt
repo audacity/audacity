@@ -23,9 +23,6 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/externalidleui.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/externalidleui.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/gtk2ui.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/gtk2ui.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/gtkheaders.h
     ${CMAKE_CURRENT_LIST_DIR}/view/ilv2idleui.h
     ${CMAKE_CURRENT_LIST_DIR}/view/lv2uihandler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/lv2uihandler.h
@@ -37,20 +34,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/x11idleui.h
 )
 
+set(MODULE_LINK au3wrap lv2sdk X11)
+
 # AU3
 include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3defs.cmake)
 
 set(MODULE_DEF ${AU3_DEF})
-
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
-
-set(MODULE_LINK au3wrap lv2sdk X11
-    ${GTK2_LIBRARIES}
-)
-set(MODULE_INCLUDE ${AU3_INCLUDE}
-    ${GTK2_INCLUDE_DIRS}
-)
 
 set(MODULE_USE_UNITY OFF)
 setup_module()
