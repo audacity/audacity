@@ -292,6 +292,7 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
 
    { wxT("ogg"), AUDACITY_AV_CODEC_ID_VORBIS },
    { wxT("ogg"), AUDACITY_AV_CODEC_ID_FLAC },
+   { wxT("ogg"), AUDACITY_AV_CODEC_ID_OPUS },
 
    { wxT("ac3"), AUDACITY_AV_CODEC_ID_AC3 },
 
