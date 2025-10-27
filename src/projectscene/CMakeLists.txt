@@ -65,8 +65,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectmenumodelbase.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectsectionmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectsectionmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/paneltrackslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/paneltrackslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/addnewtrackpopupmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/addnewtrackpopupmodel.h
 
@@ -128,8 +128,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipcontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/multiclipcontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/multiclipcontextmenumodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracksitemsmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracksitemsmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/viewtrackslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/viewtrackslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/wavepainterproxy.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/wavepainterproxy.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/waveview.cpp

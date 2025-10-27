@@ -1,5 +1,8 @@
-#ifndef AU_PROJECTSCENE_TRACKSLISTMODEL_H
-#define AU_PROJECTSCENE_TRACKSLISTMODEL_H
+/*
+* Audacity: A Digital Audio Editor
+*/
+
+#pragma once
 
 #include <QAbstractListModel>
 
@@ -21,7 +24,7 @@ class ItemMultiSelectionModel;
 class QItemSelectionModel;
 
 namespace au::projectscene {
-class TracksListModel : public QAbstractListModel, public muse::async::Asyncable
+class PanelTracksListModel : public QAbstractListModel, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -39,8 +42,8 @@ class TracksListModel : public QAbstractListModel, public muse::async::Asyncable
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
-    explicit TracksListModel(QObject* parent = nullptr);
-    ~TracksListModel() override;
+    explicit PanelTracksListModel(QObject* parent = nullptr);
+    ~PanelTracksListModel() override;
 
     Q_INVOKABLE void load();
 
@@ -140,5 +143,3 @@ private:
     muse::uicomponents::ItemMultiSelectionModel* m_selectionModel = nullptr;
 };
 }
-
-#endif // AU_PROJECTSCENE_TRACKSLISTMODEL_H

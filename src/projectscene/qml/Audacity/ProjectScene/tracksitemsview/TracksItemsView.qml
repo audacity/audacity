@@ -66,7 +66,7 @@ Rectangle {
         id: playbackState
     }
 
-    TracksItemsModel {
+    ViewTracksListModel {
         id: tracksModel
 
         onTotalTracksHeightChanged: {
