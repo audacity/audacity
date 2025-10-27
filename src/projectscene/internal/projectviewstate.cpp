@@ -419,32 +419,32 @@ muse::ValCh<bool> ProjectViewState::splitToolEnabled()
     return m_splitToolEnabled;
 }
 
-void ProjectViewState::setObjectEditStartTimeOffset(double val)
+void ProjectViewState::setItemEditStartTimeOffset(double val)
 {
-    if (m_objectEditStartTimeOffset == val) {
+    if (m_itemEditStartTimeOffset == val) {
         return;
     }
 
-    m_objectEditStartTimeOffset = val;
+    m_itemEditStartTimeOffset = val;
 }
 
-double ProjectViewState::objectEditStartTimeOffset() const
+double ProjectViewState::itemEditStartTimeOffset() const
 {
-    return m_objectEditStartTimeOffset;
+    return m_itemEditStartTimeOffset;
 }
 
-void ProjectViewState::setObjectEditEndTimeOffset(double val)
+void ProjectViewState::setItemEditEndTimeOffset(double val)
 {
-    if (m_objectEditEndTimeOffset == val) {
+    if (m_itemEditEndTimeOffset == val) {
         return;
     }
 
-    m_objectEditEndTimeOffset = val;
+    m_itemEditEndTimeOffset = val;
 }
 
-double ProjectViewState::objectEditEndTimeOffset() const
+double ProjectViewState::itemEditEndTimeOffset() const
 {
-    return m_objectEditEndTimeOffset;
+    return m_itemEditEndTimeOffset;
 }
 
 void ProjectViewState::setMoveInitiated(bool val)

@@ -53,11 +53,11 @@ public:
     virtual muse::ValCh<bool> tracksVerticalScrollLocked() const = 0;
     virtual void setTracksVerticalScrollLocked(bool lock) = 0;
 
-    virtual void setObjectEditStartTimeOffset(double val) = 0;
-    virtual double objectEditStartTimeOffset() const = 0;
+    virtual void setItemEditStartTimeOffset(double val) = 0;
+    virtual double itemEditStartTimeOffset() const = 0;
 
-    virtual void setObjectEditEndTimeOffset(double val) = 0;
-    virtual double objectEditEndTimeOffset() const = 0;
+    virtual void setItemEditEndTimeOffset(double val) = 0;
+    virtual double itemEditEndTimeOffset() const = 0;
 
     virtual void setMoveInitiated(bool val) = 0;
     virtual bool moveInitiated() const = 0;

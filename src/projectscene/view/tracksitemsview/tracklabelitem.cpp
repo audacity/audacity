@@ -12,7 +12,7 @@ TrackLabelItem::TrackLabelItem(QObject* parent)
 
 void TrackLabelItem::setLabel(const trackedit::Label& label)
 {
-    m_key = TrackObjectKey(label.key);
+    m_key = TrackItemKey(label.key);
     m_title = label.title;
     m_color = label.color.toQColor();
 

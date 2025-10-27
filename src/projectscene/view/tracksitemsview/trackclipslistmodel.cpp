@@ -142,7 +142,7 @@ void TrackClipsListModel::update()
     std::unordered_map<ClipId, TrackClipItem*> oldItems;
     for (int row = 0; row < m_items.size(); ++row) {
         TrackClipItem* clipItem = static_cast<TrackClipItem*>(m_items[row]);
-        oldItems.emplace(clipItem->key().key.objectId, clipItem);
+        oldItems.emplace(clipItem->key().key.itemId, clipItem);
     }
 
     QList<TrackClipItem*> newList;
@@ -150,7 +150,7 @@ void TrackClipsListModel::update()
 
     // Building a new list, reusing exiting clips
     for (const au::trackedit::Clip& c : m_allClipList) {
-        auto it = oldItems.find(c.key.objectId);
+        auto it = oldItems.find(c.key.itemId);
         TrackClipItem* item = nullptr;
 
         if (it != oldItems.end()) {
@@ -319,7 +319,7 @@ bool TrackClipsListModel::isKeyboardTriggered() const
 
     auto vs = prj->viewState();
 
-    return muse::RealIsEqual(vs->objectEditStartTimeOffset(), -1.0);
+    return muse::RealIsEqual(vs->itemEditStartTimeOffset(), -1.0);
 }
 
 secs_t TrackClipsListModel::calculateTimePositionOffset(const TrackClipItem* item) const
@@ -329,7 +329,7 @@ secs_t TrackClipsListModel::calculateTimePositionOffset(const TrackClipItem* ite
         return 0.0;
     }
 
-    double newStartTime = m_context->mousePositionTime() - vs->objectEditStartTimeOffset();
+    double newStartTime = m_context->mousePositionTime() - vs->itemEditStartTimeOffset();
     double duration = item->time().endTime - item->time().startTime;
     double newEndTime = newStartTime + duration;
 
@@ -371,7 +371,7 @@ void TrackClipsListModel::openClipPitchEdit(const ClipKey& key)
 
     muse::UriQuery query(EDIT_PITCH_AND_SPEED_URI);
     query.addParam("trackId", muse::Val(std::to_string(key.key.trackId)));
-    query.addParam("clipId", muse::Val(std::to_string(key.key.objectId)));
+    query.addParam("clipId", muse::Val(std::to_string(key.key.itemId)));
     query.addParam("focusItemName", muse::Val("pitch"));
 
     interactive()->open(query);
@@ -392,7 +392,7 @@ void TrackClipsListModel::openClipSpeedEdit(const ClipKey& key)
 
     muse::UriQuery query(EDIT_PITCH_AND_SPEED_URI);
     query.addParam("trackId", muse::Val(std::to_string(key.key.trackId)));
-    query.addParam("clipId", muse::Val(std::to_string(key.key.objectId)));
+    query.addParam("clipId", muse::Val(std::to_string(key.key.itemId)));
     query.addParam("focusItemName", muse::Val("speed"));
 
     interactive()->open(query);
@@ -462,7 +462,7 @@ au::projectscene::ClipKey TrackClipsListModel::updateClipTrack(ClipKey clipKey) 
 
     auto selectedClips = selectionController()->selectedClips();
     for (const auto& selectedClip : selectedClips) {
-        if (selectedClip.objectId == clipKey.key.objectId) {
+        if (selectedClip.itemId == clipKey.key.itemId) {
             return selectedClip;
         }
     }
@@ -470,7 +470,7 @@ au::projectscene::ClipKey TrackClipsListModel::updateClipTrack(ClipKey clipKey) 
     return clipKey;
 }
 
-void TrackClipsListModel::onStartEditItem(const trackedit::TrackObjectKey& key)
+void TrackClipsListModel::onStartEditItem(const trackedit::TrackItemKey& key)
 {
     auto vs = globalContext()->currentProject()->viewState();
     if (vs) {
@@ -478,7 +478,7 @@ void TrackClipsListModel::onStartEditItem(const trackedit::TrackObjectKey& key)
     }
 }
 
-void TrackClipsListModel::onEndEditItem(const trackedit::TrackObjectKey& key)
+void TrackClipsListModel::onEndEditItem(const trackedit::TrackItemKey& key)
 {
     Q_UNUSED(key);
 
@@ -594,7 +594,7 @@ bool TrackClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipB
             undoType = UndoPushType::CONSOLIDATE;
         }
     } else {
-        newStartTime = m_context->mousePositionTime() - vs->objectEditStartTimeOffset();
+        newStartTime = m_context->mousePositionTime() - vs->itemEditStartTimeOffset();
         if (vs->isSnapEnabled()) {
             newStartTime = m_context->applySnapToTime(newStartTime);
         } else {
@@ -659,7 +659,7 @@ bool TrackClipsListModel::trimRightClip(const ClipKey& key, bool completed, Clip
             undoType = UndoPushType::CONSOLIDATE;
         }
     } else {
-        newEndTime = m_context->mousePositionTime() + vs->objectEditEndTimeOffset();
+        newEndTime = m_context->mousePositionTime() + vs->itemEditEndTimeOffset();
         if (vs->isSnapEnabled()) {
             newEndTime = m_context->applySnapToTime(newEndTime);
         } else {
@@ -722,7 +722,7 @@ bool TrackClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, Cl
             undoType = UndoPushType::CONSOLIDATE;
         }
     } else {
-        newStartTime = m_context->mousePositionTime() - vs->objectEditStartTimeOffset();
+        newStartTime = m_context->mousePositionTime() - vs->itemEditStartTimeOffset();
         if (vs->isSnapEnabled()) {
             newStartTime = m_context->applySnapToTime(newStartTime);
         } else {
@@ -787,7 +787,7 @@ bool TrackClipsListModel::stretchRightClip(const ClipKey& key, bool completed, C
             undoType = UndoPushType::CONSOLIDATE;
         }
     } else {
-        newEndTime = m_context->mousePositionTime() + vs->objectEditEndTimeOffset();
+        newEndTime = m_context->mousePositionTime() + vs->itemEditEndTimeOffset();
         if (vs->isSnapEnabled()) {
             newEndTime = m_context->applySnapToTime(newEndTime);
         } else {
@@ -848,7 +848,7 @@ void TrackClipsListModel::resetSelectedClips()
     selectionController()->resetSelectedClips();
 }
 
-TrackObjectKeyList TrackClipsListModel::getSelectedItemKeys() const
+TrackItemKeyList TrackClipsListModel::getSelectedItemKeys() const
 {
     return selectionController()->selectedClips();
 }

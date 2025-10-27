@@ -491,28 +491,28 @@ TrackItemsContainer {
     Connections {
         target: root.container
 
-        function onItemMoveRequested(objectKey, completed) {
+        function onItemMoveRequested(itemKey, completed) {
             // this one notifies every ClipListModel about moveActive
             root.updateMoveActive(completed);
 
             // this one moves the clips
-            let clipMovedToOtherTrack = clipsModel.moveSelectedClips(objectKey, completed)
+            let clipMovedToOtherTrack = clipsModel.moveSelectedClips(itemKey, completed)
 
-            // clip might change its' track, we need to update grabbed objectKey
+            // clip might change its' track, we need to update grabbed itemKey
             if (clipMovedToOtherTrack) {
-                objectKey = clipsModel.updateClipTrack(objectKey)
-                setHoveredObjectKey(clipsModel.updateClipTrack(objectKey));
+                itemKey = clipsModel.updateClipTrack(itemKey)
+                setHoveredItemKey(clipsModel.updateClipTrack(itemKey));
             }
 
-            handleClipGuideline(objectKey, Direction.Auto, completed)
+            handleClipGuideline(itemKey, Direction.Auto, completed)
         }
 
-        function onItemStartEditRequested(objectKey) {
-            clipsModel.startEditItem(objectKey)
+        function onItemStartEditRequested(itemKey) {
+            clipsModel.startEditItem(itemKey)
         }
 
-        function onItemEndEditRequested(objectKey) {
-            clipsModel.endEditItem(objectKey)
+        function onItemEndEditRequested(itemKey) {
+            clipsModel.endEditItem(itemKey)
         }
 
         function onCancelClipDragEditRequested(clipKey) {

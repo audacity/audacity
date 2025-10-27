@@ -73,7 +73,7 @@ bool clipsPair(ITrackeditProjectPtr trackeditProjectPtr,
         trackeditProjectPtr->notifyAboutClipAdded(clip);
     },
         [](const Clip& first, const Clip& second) {
-        return first.key.objectId == second.key.objectId; // Here we're only interested in if the "id" exists.
+        return first.key.itemId == second.key.itemId; // Here we're only interested in if the "id" exists.
     }
         );
 
@@ -86,7 +86,7 @@ bool clipsPair(ITrackeditProjectPtr trackeditProjectPtr,
         trackeditProjectPtr->notifyAboutClipRemoved(clip);
     },
         [](const Clip& first, const Clip& second) {
-        return first.key.objectId == second.key.objectId; // Here we're only interested in if the "id" exists.
+        return first.key.itemId == second.key.itemId; // Here we're only interested in if the "id" exists.
     }
         );
 

@@ -104,7 +104,7 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
         return;
     }
 
-    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.objectId);
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.itemId);
     if (!waveClip) {
         return;
     }
