@@ -26,8 +26,6 @@
 #include "log.h"
 
 #include <dlfcn.h>
-
-#include "gtkheaders.h"
 #include <X11/Xlib.h>
 
 namespace au::effects {
@@ -93,7 +91,7 @@ void Lv2ViewModel::makeDirtyIfSettingsChanged()
 namespace {
 bool usesX11(const char* pluginTypeUri)
 {
-    return !strcmp(pluginTypeUri, LV2_UI__X11UI) || !strcmp(pluginTypeUri, LV2_UI__GtkUI);
+    return !strcmp(pluginTypeUri, LV2_UI__X11UI);
 }
 
 unsigned uiIsSupported(const char* hostTypeUri,
@@ -177,11 +175,8 @@ void Lv2ViewModel::init()
 
 void Lv2ViewModel::deinit()
 {
-    if (std::holds_alternative<ILv2IdleUiUPtr>(m_pluginUi)) {
-        auto& ptr = std::get<ILv2IdleUiUPtr>(m_pluginUi);
-        if (ptr) {
-            ptr->hideExternalUi();
-        }
+    if (m_pluginUi) {
+        m_pluginUi->hideExternalUi();
     }
 }
 
@@ -195,22 +190,6 @@ void Lv2ViewModel::preview()
         executionScenario()->previewEffect(instanceId(), settings);
         return nullptr;
     });
-}
-
-GtkWindow* Lv2ViewModel::gtkWindow() const
-{
-    if (!m_hasGtkWidget) {
-        return nullptr;
-    }
-    GtkWidget* const gtkWidget = static_cast<GtkWidget*>(suil_instance_get_widget(m_suilInstance.get()));
-    if (!GTK_IS_WIDGET(gtkWidget)) {
-        return nullptr;
-    }
-    GtkWidget* const topLevel = gtk_widget_get_toplevel(gtkWidget);
-    if (GTK_IS_WINDOW(topLevel)) {
-        return GTK_WINDOW(topLevel);
-    }
-    return nullptr;
 }
 
 std::optional<XID> Lv2ViewModel::x11Window() const
@@ -285,8 +264,15 @@ bool Lv2ViewModel::buildFancy()
 
     const char* const uiTypeUri = lilv_node_as_uri(uiType);
     const auto isExternalUi = strcmp(uiTypeUri, lilv_node_as_string(node_ExternalUI)) == 0;
-    m_hasGtkWidget = strcmp(uiTypeUri, LV2_UI__GtkUI) == 0;
+    const bool isGtkUI
+        = strcmp(uiTypeUri, LV2_UI__GtkUI) == 0 || strcmp(uiTypeUri, LV2_UI__Gtk3UI) == 0 || strcmp(uiTypeUri, LV2_UI__Gtk4UI) == 0;
     m_isX11Window = strcmp(uiTypeUri, LV2_UI__X11UI) == 0;
+
+    if (isGtkUI) {
+        m_unsupportedUiReason = "GTK UIs not supported, will fall back to plain UI when it's there :)";
+        emit unsupportedUiReasonChanged();
+        return false;
+    }
 
     const char* const containerTypeUri
         = isExternalUi ? LV2_EXTERNAL_UI__Widget
@@ -326,19 +312,10 @@ bool Lv2ViewModel::buildFancy()
         m_pluginUi = std::move(idleUi);
     } else {
         const auto uri = lilv_node_as_uri(uiType);
-        if (!strcmp(uri, LV2_UI__GtkUI)) {
-            auto keyPressedCb = [this](Qt::Key key) { onKeyPressed(key); };
-            m_pluginUi = std::make_unique<Gtk2Ui>(*m_suilInstance, [this] { onUiClosed(); }, std::move(keyPressedCb), m_title);
-        } else {
-            m_unsupportedUiReason = "Idle UI creation failed";
-            emit unsupportedUiReasonChanged();
-            return false;
-        }
-    }
 
-    if (auto window = gtkWindow()) {
-        gtk_window_set_title(window, m_title.toUtf8().constData());
-        gtk_window_present(window);
+        m_unsupportedUiReason = "Idle UI creation failed";
+        emit unsupportedUiReasonChanged();
+        return false;
     }
 
     if (const std::optional<XID> window = x11Window()) {
@@ -443,7 +420,7 @@ void Lv2ViewModel::onIdle()
     // There is a suspicion that `updateExternalUi()` could result in synchronous destruction of this class.
     // Hence, we keep this for the end of the method and check that the lifetime hasn't expired before emitting the signal.
     auto lifetime = std::weak_ptr<char>(m_lifetime);
-    if (std::holds_alternative<ILv2IdleUiUPtr>(m_pluginUi) && !std::get<ILv2IdleUiUPtr>(m_pluginUi)->updateExternalUi()) {
+    if (!m_pluginUi->updateExternalUi()) {
         if (!lifetime.expired()) {
             emit externalUiClosed();
         }

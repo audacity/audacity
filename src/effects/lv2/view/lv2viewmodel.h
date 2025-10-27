@@ -4,7 +4,6 @@
 #pragma once
 
 #include "lv2uihandler.h"
-#include "gtk2ui.h"
 
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectexecutionscenario.h"
@@ -24,7 +23,6 @@
 
 class LV2PortUIStates;
 struct LV2EffectOutputs;
-struct _GtkWindow;
 typedef unsigned long XID;
 
 namespace au::effects {
@@ -88,7 +86,6 @@ private:
     void onIdle();
     void makeDirty();
     void makeDirtyIfSettingsChanged();
-    _GtkWindow* gtkWindow() const;
     std::optional<XID> x11Window() const;
 
     Lv2UiHandler m_handler;
@@ -113,9 +110,7 @@ private:
     QTimer m_uiTimer;
 
     using ILv2IdleUiUPtr = std::unique_ptr<ILv2IdleUi>;
-    using Gtk2UiUPtr = std::unique_ptr<Gtk2Ui>;
-    std::variant<ILv2IdleUiUPtr, Gtk2UiUPtr> m_pluginUi;
-    bool m_hasGtkWidget = false;
+    ILv2IdleUiUPtr m_pluginUi;
     bool m_isX11Window = false;
     std::shared_ptr<char> m_lifetime = std::make_shared<char>();
 
