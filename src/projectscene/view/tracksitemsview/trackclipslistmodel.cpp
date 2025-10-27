@@ -134,7 +134,7 @@ void TrackClipsListModel::reload()
         }
 
         // LOGDA() << "clip: " << clip.key << ", startTime: " << clip.startTime;
-        ClipListItem* item = itemByKey(clip.key);
+        TrackClipItem* item = itemByKey(clip.key);
         if (item) {
             item->setClip(clip);
         }
@@ -173,9 +173,9 @@ void TrackClipsListModel::reload()
     update();
 }
 
-ClipListItem* TrackClipsListModel::itemByKey(const trackedit::ClipKey& k) const
+TrackClipItem* TrackClipsListModel::itemByKey(const trackedit::ClipKey& k) const
 {
-    for (ClipListItem* item : std::as_const(m_clipList)) {
+    for (TrackClipItem* item : std::as_const(m_clipList)) {
         if (item->clip().key != k) {
             continue;
         }
@@ -208,24 +208,24 @@ Qt::KeyboardModifiers TrackClipsListModel::keyboardModifiers() const
 
 void TrackClipsListModel::update()
 {
-    std::unordered_map<ClipId, ClipListItem*> oldItems;
+    std::unordered_map<ClipId, TrackClipItem*> oldItems;
     for (int row = 0; row < m_clipList.size(); ++row) {
         oldItems.emplace(m_clipList[row]->key().key.objectId, m_clipList[row]);
     }
 
-    QList<ClipListItem*> newList;
+    QList<TrackClipItem*> newList;
     bool isStereo = false;
 
     // Building a new list, reusing exiting clips
     for (const au::trackedit::Clip& c : m_allClipList) {
         auto it = oldItems.find(c.key.objectId);
-        ClipListItem* item = nullptr;
+        TrackClipItem* item = nullptr;
 
         if (it != oldItems.end()) {
             item = it->second;
             oldItems.erase(it);
         } else {
-            item = new ClipListItem(this);
+            item = new TrackClipItem(this);
         }
 
         item->setClip(c);
@@ -235,7 +235,7 @@ void TrackClipsListModel::update()
 
     // Removing deleted or moved clips
     // Item deletion should be postponed, so QML is updated correctly
-    QList<ClipListItem*> cleanupList;
+    QList<TrackClipItem*> cleanupList;
     for (auto& [id, item] : oldItems) {
         int row = m_clipList.indexOf(item);
         if (row >= 0) {
@@ -248,7 +248,7 @@ void TrackClipsListModel::update()
 
     // Sorting clips with a notification for each moved clip
     for (int i = 0; i < newList.size(); ++i) {
-        ClipListItem* item = newList[i];
+        TrackClipItem* item = newList[i];
         if (i < m_clipList.size() && m_clipList[i] == item) {
             // TODO: is it possible to know if update is neccessary?
             QModelIndex idx = index(i);
@@ -288,12 +288,12 @@ void TrackClipsListModel::update()
 void TrackClipsListModel::updateItemsMetrics()
 {
     for (int i = 0; i < m_clipList.size(); ++i) {
-        ClipListItem* item = m_clipList[i];
+        TrackClipItem* item = m_clipList[i];
         updateItemsMetrics(item);
     }
 }
 
-void TrackClipsListModel::updateItemsMetrics(ClipListItem* item)
+void TrackClipsListModel::updateItemsMetrics(TrackClipItem* item)
 {
     //! NOTE The first step is to calculate the position and width
     const double cacheTime = CACHE_BUFFER_PX / m_context->zoom();
@@ -355,7 +355,7 @@ QVariant TrackClipsListModel::data(const QModelIndex& index, int role) const
 
     switch (role) {
     case ClipItemRole: {
-        ClipListItem* item = m_clipList.at(index.row());
+        TrackClipItem* item = m_clipList.at(index.row());
         return QVariant::fromValue(item);
     }
     default:
@@ -375,7 +375,7 @@ void TrackClipsListModel::onTimelineFrameTimeChanged()
     updateItemsMetrics();
 }
 
-void TrackClipsListModel::setSelectedItems(const QList<ClipListItem*>& items)
+void TrackClipsListModel::setSelectedItems(const QList<TrackClipItem*>& items)
 {
     for (auto& selectedItem : m_selectedItems) {
         selectedItem->setSelected(false);
@@ -386,7 +386,7 @@ void TrackClipsListModel::setSelectedItems(const QList<ClipListItem*>& items)
     }
 }
 
-void TrackClipsListModel::addSelectedItem(ClipListItem* item)
+void TrackClipsListModel::addSelectedItem(TrackClipItem* item)
 {
     item->setSelected(true);
     m_selectedItems.append(item);
@@ -418,7 +418,7 @@ QVariant TrackClipsListModel::prev(const ClipKey& key) const
 
 QVariant TrackClipsListModel::neighbor(const ClipKey& key, int offset) const
 {
-    auto it = std::find_if(m_clipList.begin(), m_clipList.end(), [key](ClipListItem* clip) {
+    auto it = std::find_if(m_clipList.begin(), m_clipList.end(), [key](TrackClipItem* clip) {
         return clip->key().key.objectId == key.key.objectId;
     });
 
@@ -434,7 +434,7 @@ QVariant TrackClipsListModel::neighbor(const ClipKey& key, int offset) const
     return QVariant::fromValue(m_clipList[sortedIndex]);
 }
 
-TrackClipsListModel::MoveOffset TrackClipsListModel::calculateMoveOffset(const ClipListItem* item,
+TrackClipsListModel::MoveOffset TrackClipsListModel::calculateMoveOffset(const TrackClipItem* item,
                                                                const ClipKey& key,
                                                                bool completed) const
 {
@@ -535,7 +535,7 @@ void TrackClipsListModel::disconnectAutoScroll()
     }
 }
 
-secs_t TrackClipsListModel::calculateTimePositionOffset(const ClipListItem* item) const
+secs_t TrackClipsListModel::calculateTimePositionOffset(const TrackClipItem* item) const
 {
     auto vs = globalContext()->currentProject()->viewState();
     if (!vs) {
@@ -623,7 +623,7 @@ QVariant TrackClipsListModel::findGuideline(const ClipKey& key, Direction direct
         return QVariant();
     }
 
-    ClipListItem* item = itemByKey(key.key);
+    TrackClipItem* item = itemByKey(key.key);
     if (!item) {
         return QVariant();
     }
@@ -685,7 +685,7 @@ au::projectscene::ClipKey TrackClipsListModel::updateClipTrack(ClipKey clipKey) 
 
 void TrackClipsListModel::startEditClip(const ClipKey& key)
 {
-    ClipListItem* item = itemByKey(key.key);
+    TrackClipItem* item = itemByKey(key.key);
     if (!item) {
         return;
     }
@@ -706,7 +706,7 @@ void TrackClipsListModel::startEditClip(const ClipKey& key)
 
 void TrackClipsListModel::endEditClip(const ClipKey& key)
 {
-    ClipListItem* item = itemByKey(key.key);
+    TrackClipItem* item = itemByKey(key.key);
     if (!item) {
         return;
     }
@@ -764,7 +764,7 @@ bool ClipsListModel::cancelClipDragEdit(const ClipKey& key)
  */
 bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
 {
-    ClipListItem* item = itemByKey(key.key);
+    TrackClipItem* item = itemByKey(key.key);
     if (!item) {
         return false;
     }
@@ -796,7 +796,7 @@ bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
 
 bool TrackClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
-    ClipListItem* item = itemByKey(key.key);
+    TrackClipItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
         return false;
     }
@@ -866,7 +866,7 @@ bool TrackClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipB
 
 bool TrackClipsListModel::trimRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
-    ClipListItem* item = itemByKey(key.key);
+    TrackClipItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
         return false;
     }
@@ -929,7 +929,7 @@ bool TrackClipsListModel::trimRightClip(const ClipKey& key, bool completed, Clip
 
 bool TrackClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
-    ClipListItem* item = itemByKey(key.key);
+    TrackClipItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
         return false;
     }
@@ -994,7 +994,7 @@ bool TrackClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, Cl
 
 bool TrackClipsListModel::stretchRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
-    ClipListItem* item = itemByKey(key.key);
+    TrackClipItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
         return false;
     }
@@ -1102,7 +1102,7 @@ void TrackClipsListModel::requestClipTitleChange()
         return;
     }
 
-    ClipListItem* selectedItem = itemByKey(clipKey);
+    TrackClipItem* selectedItem = itemByKey(clipKey);
     if (selectedItem != nullptr) {
         emit selectedItem->titleEditRequested();
     }
@@ -1133,7 +1133,7 @@ void TrackClipsListModel::onSelectedClip(const trackedit::ClipKey& k)
             clearSelectedItems();
         } else {
             if (item) {
-                setSelectedItems(QList<ClipListItem*>({ item }));
+                setSelectedItems(QList<TrackClipItem*>({ item }));
             }
         }
     }
@@ -1150,7 +1150,7 @@ void TrackClipsListModel::onSelectedClips(const trackedit::ClipKeyList& keyList)
     // we can begin by clearing everything.
     clearSelectedItems();
 
-    QList<ClipListItem*> items;
+    QList<TrackClipItem*> items;
     for (const auto& k : keyList) {
         if (const auto item = itemByKey(k)) {
             items.append(item);
@@ -1183,7 +1183,6 @@ ClipStyles::Style TrackClipsListModel::clipStyle() const
 {
     return projectSceneConfiguration()->clipStyle();
 }
-
 TimelineContext* TrackClipsListModel::timelineContext() const
 {
     return m_context;
@@ -1213,3 +1212,4 @@ int TrackClipsListModel::cacheBufferPx()
 {
     return CACHE_BUFFER_PX;
 }
+

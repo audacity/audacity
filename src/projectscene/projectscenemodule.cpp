@@ -36,9 +36,9 @@
 
 #include "view/tracksitemsview/viewtrackslistmodel.h"
 #include "view/tracksitemsview/trackclipslistmodel.h"
-#include "view/tracksitemsview/cliplistitem.h"
+#include "view/tracksitemsview/trackclipitem.h"
 #include "view/tracksitemsview/tracklabelslistmodel.h"
-#include "view/tracksitemsview/labellistitem.h"
+#include "view/tracksitemsview/tracklabelitem.h"
 #include "view/tracksitemsview/waveview.h"
 #include "view/tracksitemsview/clipcontextmenumodel.h"
 #include "view/tracksitemsview/multiclipcontextmenumodel.h"
@@ -159,10 +159,10 @@ void ProjectSceneModule::registerUiTypes()
     // clips view
     qmlRegisterType<ViewTracksListModel>("Audacity.ProjectScene", 1, 0, "ViewTracksListModel");
     qmlRegisterType<TrackClipsListModel>("Audacity.ProjectScene", 1, 0, "TrackClipsListModel");
+    qmlRegisterUncreatableType<TrackClipItem>("Audacity.ProjectScene", 1, 0, "TrackClipItem", "Not creatable from QML");
     qmlRegisterType<MouseHelper>("Audacity.ProjectScene", 1, 0, "MouseHelper");
-    qmlRegisterUncreatableType<ClipListItem>("Audacity.ProjectScene", 1, 0, "ClipListItem", "Not creatable from QML");
     qmlRegisterType<TrackLabelsListModel>("Audacity.ProjectScene", 1, 0, "TrackLabelsListModel");
-    qmlRegisterUncreatableType<LabelListItem>("Audacity.ProjectScene", 1, 0, "LabelListItem", "Not creatable from QML");
+    qmlRegisterUncreatableType<TrackLabelItem>("Audacity.ProjectScene", 1, 0, "TrackLabelItem", "Not creatable from QML");
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
     qmlRegisterType<ClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "ClipContextMenuModel");
     qmlRegisterType<MultiClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "MultiClipContextMenuModel");

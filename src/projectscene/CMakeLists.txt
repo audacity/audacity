@@ -118,12 +118,12 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipslistmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/cliplistitem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/cliplistitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelslistmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labellistitem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labellistitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipcontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipcontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/multiclipcontextmenumodel.cpp
