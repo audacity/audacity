@@ -52,6 +52,7 @@ public:
     std::optional<TimeSpan> removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClips(const trackedit::ClipKeyList& clipKeyList, bool moveClips) override;
     bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, bool& clipsMovedToOtherTracks) override;
+    void cancelClipDragEdit() override;
 
     bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
     bool splitClipsIntoNewTracks(const ClipKeyList& clipKeyList) override;
@@ -116,6 +117,8 @@ private:
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
 
+    void removeDragAddedTracks(ITrackeditProject& prj, size_t numTracksWhenDragStarted, bool emptyOnly);
+
     context::IPlaybackStatePtr playbackState() const;
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
@@ -123,7 +126,7 @@ private:
     muse::Progress m_progress;
     std::atomic<bool> m_busy = false;
 
-    std::optional<TrackListInfo> m_startTracklistInfo;
+    std::optional<TrackListInfo> m_tracksWhenDragStarted;
     bool m_moveClipsNeedsDownmixing = false;
 };
 }

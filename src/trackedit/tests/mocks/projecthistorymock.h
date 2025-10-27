@@ -33,9 +33,11 @@ public:
 
     MOCK_METHOD(void, rollbackState, (), (override));
     MOCK_METHOD(void, modifyState, (bool autoSave), (override));
+    MOCK_METHOD(void, modifyState, (const std::type_index& undoStateExtensionTypeIndex), (override));
     MOCK_METHOD(void, markUnsaved, (), (override));
 
     MOCK_METHOD(void, startUserInteraction, (), (override));
-    MOCK_METHOD(void, endUserInteraction, (), (override));
+    MOCK_METHOD(void, endUserInteraction, (bool modifyState), (override));
+    MOCK_METHOD(bool, interactionOngoing, (), (const, override));
 };
 }
