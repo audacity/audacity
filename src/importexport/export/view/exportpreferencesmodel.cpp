@@ -258,7 +258,7 @@ void ExportPreferencesModel::setCurrentFormat(const QString& format)
 
     exportConfiguration()->setCurrentFormat(format.toStdString());
     emit customFFmpegOptionsVisibleChanged();
-    emit canMetadataChanged();
+    emit hasMetadataChanged();
 }
 
 QStringList ExportPreferencesModel::formatsList() const
@@ -454,9 +454,9 @@ bool ExportPreferencesModel::customFFmpegOptionsVisible()
     return exporter()->isCustomFFmpegExportFormat();
 }
 
-bool ExportPreferencesModel::canMetadata()
+bool ExportPreferencesModel::hasMetadata()
 {
-    return exporter()->canMetadata();
+    return exporter()->hasMetadata();
 }
 
 int ExportPreferencesModel::optionsCount()

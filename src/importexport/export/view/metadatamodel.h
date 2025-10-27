@@ -53,7 +53,7 @@ public:
     Q_INVOKABLE void renameTag(int index, const QString& newTag);
     Q_INVOKABLE void setTagValue(int index, const QString& value);
 
-    QString buildXml(bool autoFormat) const;
+    QString buildXml() const;
     project::ProjectMeta parseXml(const QString& xml) const;
 
     bool isMetadataEmpty(const au::project::ProjectMeta& meta) const;
