@@ -2,15 +2,18 @@
  * Audacity: A Digital Audio Editor
  */
 
-#include <QtCore/qxmlstream.h>
-
 #include "global/translation.h"
+#include "serialization/xmlstreamwriter.h"
+#include "serialization/xmlstreamreader.h"
+#include "io/buffer.h"
 
 #include "project/internal/au3/au3tagsaccessor.h"
 
 #include "metadatamodel.h"
 
 using namespace au::importexport;
+using namespace muse;
+using namespace muse::io;
 
 MetadataModel::MetadataModel(QObject* parent)
     : QAbstractListModel(parent)
@@ -162,7 +165,7 @@ void MetadataModel::saveTemplate()
         return;
     }
 
-    const QString xml = buildXml(true);
+    const QString xml = buildXml();
     const QByteArray utf8 = xml.toUtf8();
     f.write(utf8);
     f.close();
@@ -170,7 +173,7 @@ void MetadataModel::saveTemplate()
 
 void MetadataModel::setAsDefault()
 {
-    const QString xml = buildXml(true);
+    const QString xml = buildXml();
     exportConfiguration()->setDefaultMetadata(xml.toStdString());
 }
 
@@ -276,50 +279,77 @@ void MetadataModel::setTagValue(int row, const QString& value)
     emit dataChanged(idx, idx, { RoleValue });
 }
 
-QString MetadataModel::buildXml(bool autoFormat) const
+QString MetadataModel::buildXml() const
 {
-    QString xml;
-    QXmlStreamWriter w(&xml);
-    w.setAutoFormatting(autoFormat);
-    w.writeStartElement(QStringLiteral("tags"));
+    ByteArray data;
+    Buffer buf(&data);
+    buf.open(muse::io::IODevice::WriteOnly);
+
+    XmlStreamWriter xml(&buf);
+
+    xml.startElement("tags");
 
     for (size_t i = 0; i < kStdTags.size(); ++i) {
         const QString& name = kStdTags[i];
         const QString& val  = m_meta.*(project::kStdMembers[i]);
-        w.writeEmptyElement(QStringLiteral("tag"));
-        w.writeAttribute(QStringLiteral("name"),  name);
-        w.writeAttribute(QStringLiteral("value"), val);
+
+        XmlStreamWriter::Attributes attrs;
+        attrs.emplace_back("name",  muse::String(name));
+        attrs.emplace_back("value", muse::String(val));
+
+        xml.element("tag", attrs);
     }
 
     for (auto it = m_meta.additionalTags.cbegin(); it != m_meta.additionalTags.cend(); ++it) {
         const QString& name = it.key();
         const QString val  = it.value().toString();
-        w.writeEmptyElement(QStringLiteral("tag"));
-        w.writeAttribute(QStringLiteral("name"),  name);
-        w.writeAttribute(QStringLiteral("value"), val);
+
+        XmlStreamWriter::Attributes attrs;
+        attrs.emplace_back("name",  muse::String(name));
+        attrs.emplace_back("value", muse::String(val));
+
+        xml.element("tag", attrs);
     }
 
-    w.writeEndElement();
-    w.writeEndDocument();
-    return xml;
+    xml.endElement();
+
+    xml.flush();
+    buf.close();
+
+    return QString(data.toQByteArray());
 }
 
 au::project::ProjectMeta MetadataModel::parseXml(const QString& xml) const
 {
-    QXmlStreamReader r(xml);
+    ByteArray data = ByteArray::fromQByteArray(QByteArray(xml.toStdString()));
+    XmlStreamReader r(data);
 
-    au::project::ProjectMeta loaded = m_meta; // keep filePath, thumbnail, etc.
+    au::project::ProjectMeta loaded = m_meta;
+
     for (size_t i = 0; i < kStdTags.size(); ++i) {
         loaded.*(project::kStdMembers[i]) = QString();
     }
     loaded.additionalTags.clear();
 
-    while (!r.atEnd() && !r.hasError()) {
-        auto token = r.readNext();
-        if (token == QXmlStreamReader::StartElement && r.name() == QLatin1String("tag")) {
-            const auto attrs = r.attributes();
-            const QString name = attrs.value(QStringLiteral("name")).toString();
-            const QString val  = attrs.value(QStringLiteral("value")).toString();
+    if (!r.readNextStartElement()) {
+        interactive()->errorSync(
+            muse::trc("metadata", "Error loading template"),
+            muse::trc("metadata", "Unable to load metadata template from given file.")
+            );
+        return {};
+    }
+
+    if (r.name() != muse::AsciiStringView("tags")) {
+        r.raiseError(u"Root element <tags> expected");
+    }
+
+    while (!r.isError() && r.readNextStartElement()) {
+        if (r.name() == muse::AsciiStringView("tag")) {
+            const muse::String nameAttr = r.attribute("name");
+            const muse::String valueAttr = r.attribute("value");
+
+            const QString name = nameAttr.toQString();
+            const QString val  = valueAttr.toQString();
 
             bool assigned = false;
             for (size_t i = 0; i < kStdTags.size(); ++i) {
@@ -329,15 +359,22 @@ au::project::ProjectMeta MetadataModel::parseXml(const QString& xml) const
                     break;
                 }
             }
+
             if (!assigned && !name.isEmpty()) {
                 loaded.additionalTags.insert(name, val);
             }
+
+            r.skipCurrentElement();
+        } else {
+            r.skipCurrentElement();
         }
     }
 
-    if (r.hasError()) {
-        interactive()->errorSync(muse::trc("metadata", "Error loading template"),
-                                 muse::trc("metadata", "Unable to load metadata template from given file."));
+    if (r.isError()) {
+        interactive()->errorSync(
+            muse::trc("metadata", "Error loading template"),
+            muse::trc("metadata", "Unable to load metadata template from given file.")
+            );
         return {};
     }
 

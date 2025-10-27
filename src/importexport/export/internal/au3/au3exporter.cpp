@@ -273,7 +273,7 @@ bool Au3Exporter::isCustomFFmpegExportFormat() const
     return editor->GetName() == "custom_ffmpeg";
 }
 
-bool Au3Exporter::canMetadata() const
+bool Au3Exporter::hasMetadata() const
 {
     std::string format = exportConfiguration()->currentFormat();
 
