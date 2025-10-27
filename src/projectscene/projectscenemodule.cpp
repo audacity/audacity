@@ -109,10 +109,6 @@ void ProjectSceneModule::registerExports()
 
 void ProjectSceneModule::resolveImports()
 {
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
     auto ir = ioc()->resolve<IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://projectscene/editpitchandspeed"),
@@ -201,7 +197,12 @@ void ProjectSceneModule::onInit(const muse::IApplication::RunMode& mode)
     }
 
     m_configuration->init();
-    m_uiActions->init();
     m_projectSceneActionsController->init();
     m_realtimeEffectPanelTrackSelection->init();
+
+    m_uiActions->init();
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
+    if (ar) {
+        ar->reg(m_uiActions);
+    }
 }

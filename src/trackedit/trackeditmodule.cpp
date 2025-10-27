@@ -92,11 +92,6 @@ void TrackeditModule::registerUiTypes()
 
 void TrackeditModule::resolveImports()
 {
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
-    if (ar) {
-        ar->reg(m_trackeditUiActions);
-    }
-
     auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://trackedit/custom_rate"), "Audacity/TrackEdit/CustomRateDialog.qml");
@@ -116,12 +111,17 @@ void TrackeditModule::registerResources()
 void TrackeditModule::onInit(const muse::IApplication::RunMode&)
 {
     m_trackeditController->init();
-    m_trackeditUiActions->init();
     m_selectionController->init();
     m_configuration->init();
     m_trackNavigationController->init();
 
     TimeSignatureRestorer::reg();
+
+    m_trackeditUiActions->init();
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
+    if (ar) {
+        ar->reg(m_trackeditUiActions);
+    }
 }
 
 void TrackeditModule::onDeinit()
