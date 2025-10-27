@@ -91,7 +91,7 @@ Rectangle {
                 trackId: model.trackId
             }
 
-            ClipsListModel {
+            TrackClipsListModel {
                 id: clipsModel
                 context: root.context
                 trackId: model.trackId

@@ -116,8 +116,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/wavepainterutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/wavepainterutils.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipslistmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/cliplistitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/cliplistitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labelslistmodel.cpp

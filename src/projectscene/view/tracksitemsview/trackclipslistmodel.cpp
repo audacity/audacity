@@ -1,7 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "clipslistmodel.h"
+#include "trackclipslistmodel.h"
 
 #include "global/realfn.h"
 #include "global/async/async.h"
@@ -19,17 +19,17 @@ constexpr double MOVE_THRESHOLD = 3.0;
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
-ClipsListModel::ClipsListModel(QObject* parent)
+TrackClipsListModel::TrackClipsListModel(QObject* parent)
     : QAbstractListModel(parent)
 {
 }
 
-ClipsListModel::~ClipsListModel()
+TrackClipsListModel::~TrackClipsListModel()
 {
     disconnectAutoScroll();
 }
 
-void ClipsListModel::init()
+void TrackClipsListModel::init()
 {
     IF_ASSERT_FAILED(m_trackId >= 0) {
         return;
@@ -74,7 +74,7 @@ void ClipsListModel::init()
         emit asymmetricStereoHeightsPossibleChanged();
     });
 
-    dispatcher()->reg(this, "rename-clip", this, &ClipsListModel::requestClipTitleChange);
+    dispatcher()->reg(this, "rename-clip", this, &TrackClipsListModel::requestClipTitleChange);
 
     uiConfiguration()->currentThemeChanged().onNotify(this, [this]() {
         emit isContrastFocusBorderEnabledChanged();
@@ -83,7 +83,7 @@ void ClipsListModel::init()
     reload();
 }
 
-void ClipsListModel::reload()
+void TrackClipsListModel::reload()
 {
     if (m_trackId < 0) {
         return;
@@ -173,7 +173,7 @@ void ClipsListModel::reload()
     update();
 }
 
-ClipListItem* ClipsListModel::itemByKey(const trackedit::ClipKey& k) const
+ClipListItem* TrackClipsListModel::itemByKey(const trackedit::ClipKey& k) const
 {
     for (ClipListItem* item : std::as_const(m_clipList)) {
         if (item->clip().key != k) {
@@ -184,7 +184,7 @@ ClipListItem* ClipsListModel::itemByKey(const trackedit::ClipKey& k) const
     return nullptr;
 }
 
-int ClipsListModel::indexByKey(const trackedit::ClipKey& k) const
+int TrackClipsListModel::indexByKey(const trackedit::ClipKey& k) const
 {
     for (int i = 0; i < m_clipList.size(); ++i) {
         if (m_clipList.at(i)->clip().key == k) {
@@ -194,7 +194,7 @@ int ClipsListModel::indexByKey(const trackedit::ClipKey& k) const
     return -1;
 }
 
-Qt::KeyboardModifiers ClipsListModel::keyboardModifiers() const
+Qt::KeyboardModifiers TrackClipsListModel::keyboardModifiers() const
 {
     Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
 
@@ -206,7 +206,7 @@ Qt::KeyboardModifiers ClipsListModel::keyboardModifiers() const
     return modifiers;
 }
 
-void ClipsListModel::update()
+void TrackClipsListModel::update()
 {
     std::unordered_map<ClipId, ClipListItem*> oldItems;
     for (int row = 0; row < m_clipList.size(); ++row) {
@@ -285,7 +285,7 @@ void ClipsListModel::update()
     });
 }
 
-void ClipsListModel::updateItemsMetrics()
+void TrackClipsListModel::updateItemsMetrics()
 {
     for (int i = 0; i < m_clipList.size(); ++i) {
         ClipListItem* item = m_clipList[i];
@@ -293,7 +293,7 @@ void ClipsListModel::updateItemsMetrics()
     }
 }
 
-void ClipsListModel::updateItemsMetrics(ClipListItem* item)
+void TrackClipsListModel::updateItemsMetrics(ClipListItem* item)
 {
     //! NOTE The first step is to calculate the position and width
     const double cacheTime = CACHE_BUFFER_PX / m_context->zoom();
@@ -318,7 +318,7 @@ void ClipsListModel::updateItemsMetrics(ClipListItem* item)
     item->setRightVisibleMargin(std::max(time.itemEndTime - m_context->frameEndTime(), 0.0) * m_context->zoom());
 }
 
-void ClipsListModel::positionViewAtClip(const Clip& clip)
+void TrackClipsListModel::positionViewAtClip(const Clip& clip)
 {
     double frameStartTime = m_context->frameStartTime();
     double frameEndTime = m_context->frameEndTime();
@@ -333,12 +333,12 @@ void ClipsListModel::positionViewAtClip(const Clip& clip)
     m_context->moveToFrameTime(newTime);
 }
 
-int ClipsListModel::rowCount(const QModelIndex&) const
+int TrackClipsListModel::rowCount(const QModelIndex&) const
 {
     return static_cast<int>(m_clipList.size());
 }
 
-QHash<int, QByteArray> ClipsListModel::roleNames() const
+QHash<int, QByteArray> TrackClipsListModel::roleNames() const
 {
     static QHash<int, QByteArray> roles
     {
@@ -347,7 +347,7 @@ QHash<int, QByteArray> ClipsListModel::roleNames() const
     return roles;
 }
 
-QVariant ClipsListModel::data(const QModelIndex& index, int role) const
+QVariant TrackClipsListModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid()) {
         return QVariant();
@@ -365,17 +365,17 @@ QVariant ClipsListModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-void ClipsListModel::onTimelineZoomChanged()
+void TrackClipsListModel::onTimelineZoomChanged()
 {
     updateItemsMetrics();
 }
 
-void ClipsListModel::onTimelineFrameTimeChanged()
+void TrackClipsListModel::onTimelineFrameTimeChanged()
 {
     updateItemsMetrics();
 }
 
-void ClipsListModel::setSelectedItems(const QList<ClipListItem*>& items)
+void TrackClipsListModel::setSelectedItems(const QList<ClipListItem*>& items)
 {
     for (auto& selectedItem : m_selectedItems) {
         selectedItem->setSelected(false);
@@ -386,13 +386,13 @@ void ClipsListModel::setSelectedItems(const QList<ClipListItem*>& items)
     }
 }
 
-void ClipsListModel::addSelectedItem(ClipListItem* item)
+void TrackClipsListModel::addSelectedItem(ClipListItem* item)
 {
     item->setSelected(true);
     m_selectedItems.append(item);
 }
 
-void ClipsListModel::clearSelectedItems()
+void TrackClipsListModel::clearSelectedItems()
 {
     for (auto& selectedItem : m_selectedItems) {
         selectedItem->setSelected(false);
@@ -400,23 +400,23 @@ void ClipsListModel::clearSelectedItems()
     m_selectedItems.clear();
 }
 
-bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle)
+bool TrackClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle)
 {
     bool ok = trackeditInteraction()->changeClipTitle(key.key, newTitle);
     return ok;
 }
 
-QVariant ClipsListModel::next(const ClipKey& key) const
+QVariant TrackClipsListModel::next(const ClipKey& key) const
 {
     return neighbor(key, 1);
 }
 
-QVariant ClipsListModel::prev(const ClipKey& key) const
+QVariant TrackClipsListModel::prev(const ClipKey& key) const
 {
     return neighbor(key, -1);
 }
 
-QVariant ClipsListModel::neighbor(const ClipKey& key, int offset) const
+QVariant TrackClipsListModel::neighbor(const ClipKey& key, int offset) const
 {
     auto it = std::find_if(m_clipList.begin(), m_clipList.end(), [key](ClipListItem* clip) {
         return clip->key().key.objectId == key.key.objectId;
@@ -434,7 +434,7 @@ QVariant ClipsListModel::neighbor(const ClipKey& key, int offset) const
     return QVariant::fromValue(m_clipList[sortedIndex]);
 }
 
-ClipsListModel::MoveOffset ClipsListModel::calculateMoveOffset(const ClipListItem* item,
+TrackClipsListModel::MoveOffset TrackClipsListModel::calculateMoveOffset(const ClipListItem* item,
                                                                const ClipKey& key,
                                                                bool completed) const
 {
@@ -460,7 +460,7 @@ ClipsListModel::MoveOffset ClipsListModel::calculateMoveOffset(const ClipListIte
     return moveOffset;
 }
 
-int ClipsListModel::calculateTrackPositionOffset(const ClipKey& key) const
+int TrackClipsListModel::calculateTrackPositionOffset(const ClipKey& key) const
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj) {
@@ -487,7 +487,7 @@ int ClipsListModel::calculateTrackPositionOffset(const ClipKey& key) const
     return trackPositionOffset;
 }
 
-bool ClipsListModel::isKeyboardTriggered() const
+bool TrackClipsListModel::isKeyboardTriggered() const
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj) {
@@ -499,7 +499,7 @@ bool ClipsListModel::isKeyboardTriggered() const
     return muse::RealIsEqual(vs->objectEditStartTimeOffset(), -1.0);
 }
 
-void ClipsListModel::handleAutoScroll(bool ok,
+void TrackClipsListModel::handleAutoScroll(bool ok,
                                       bool completed,
                                       const std::function<void()>& onAutoScrollFrame)
 {
@@ -527,7 +527,7 @@ void ClipsListModel::handleAutoScroll(bool ok,
     }
 }
 
-void ClipsListModel::disconnectAutoScroll()
+void TrackClipsListModel::disconnectAutoScroll()
 {
     if (m_autoScrollConnection) {
         disconnect(m_autoScrollConnection);
@@ -535,7 +535,7 @@ void ClipsListModel::disconnectAutoScroll()
     }
 }
 
-secs_t ClipsListModel::calculateTimePositionOffset(const ClipListItem* item) const
+secs_t TrackClipsListModel::calculateTimePositionOffset(const ClipListItem* item) const
 {
     auto vs = globalContext()->currentProject()->viewState();
     if (!vs) {
@@ -574,7 +574,7 @@ secs_t ClipsListModel::calculateTimePositionOffset(const ClipListItem* item) con
     return timePositionOffset;
 }
 
-void ClipsListModel::openClipPitchEdit(const ClipKey& key)
+void TrackClipsListModel::openClipPitchEdit(const ClipKey& key)
 {
     selectClip(key);
 
@@ -590,12 +590,12 @@ void ClipsListModel::openClipPitchEdit(const ClipKey& key)
     interactive()->open(query);
 }
 
-void ClipsListModel::resetClipPitch(const ClipKey& key)
+void TrackClipsListModel::resetClipPitch(const ClipKey& key)
 {
     trackeditInteraction()->resetClipPitch(key.key);
 }
 
-void ClipsListModel::openClipSpeedEdit(const ClipKey& key)
+void TrackClipsListModel::openClipSpeedEdit(const ClipKey& key)
 {
     selectClip(key);
 
@@ -611,12 +611,12 @@ void ClipsListModel::openClipSpeedEdit(const ClipKey& key)
     interactive()->open(query);
 }
 
-void ClipsListModel::resetClipSpeed(const ClipKey& key)
+void TrackClipsListModel::resetClipSpeed(const ClipKey& key)
 {
     trackeditInteraction()->resetClipSpeed(key.key);
 }
 
-QVariant ClipsListModel::findGuideline(const ClipKey& key, Direction direction)
+QVariant TrackClipsListModel::findGuideline(const ClipKey& key, Direction direction)
 {
     auto vs = globalContext()->currentProject()->viewState();
     if (!vs) {
@@ -646,7 +646,7 @@ QVariant ClipsListModel::findGuideline(const ClipKey& key, Direction direction)
     return QVariant(-1.0);
 }
 
-bool ClipsListModel::asymmetricStereoHeightsPossible() const
+bool TrackClipsListModel::asymmetricStereoHeightsPossible() const
 {
     auto pref = projectSceneConfiguration()->stereoHeightsPref();
     if (pref == projectscene::StereoHeightsPref::AsymmetricStereoHeights::ALWAYS) {
@@ -666,7 +666,7 @@ bool ClipsListModel::isContrastFocusBorderEnabled() const
     return !uiConfiguration()->isDarkMode();
 }
 
-au::projectscene::ClipKey ClipsListModel::updateClipTrack(ClipKey clipKey) const
+au::projectscene::ClipKey TrackClipsListModel::updateClipTrack(ClipKey clipKey) const
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj) {
@@ -683,7 +683,7 @@ au::projectscene::ClipKey ClipsListModel::updateClipTrack(ClipKey clipKey) const
     return clipKey;
 }
 
-void ClipsListModel::startEditClip(const ClipKey& key)
+void TrackClipsListModel::startEditClip(const ClipKey& key)
 {
     ClipListItem* item = itemByKey(key.key);
     if (!item) {
@@ -704,7 +704,7 @@ void ClipsListModel::startEditClip(const ClipKey& key)
     vs->updateClipsBoundaries(true, key.key);
 }
 
-void ClipsListModel::endEditClip(const ClipKey& key)
+void TrackClipsListModel::endEditClip(const ClipKey& key)
 {
     ClipListItem* item = itemByKey(key.key);
     if (!item) {
@@ -762,7 +762,7 @@ bool ClipsListModel::cancelClipDragEdit(const ClipKey& key)
     Calculate offset of clip that's being grabbed
     and apply it to all selected clips
  */
-bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
+bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
 {
     ClipListItem* item = itemByKey(key.key);
     if (!item) {
@@ -794,7 +794,7 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     return clipsMovedToOtherTrack;
 }
 
-bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
+bool TrackClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
@@ -864,7 +864,7 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipBounda
     return ok;
 }
 
-bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
+bool TrackClipsListModel::trimRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
@@ -927,7 +927,7 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed, ClipBound
     return ok;
 }
 
-bool ClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
+bool TrackClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
@@ -992,7 +992,7 @@ bool ClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, ClipBou
     return ok;
 }
 
-bool ClipsListModel::stretchRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
+bool TrackClipsListModel::stretchRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
@@ -1055,7 +1055,7 @@ bool ClipsListModel::stretchRightClip(const ClipKey& key, bool completed, ClipBo
     return ok;
 }
 
-void ClipsListModel::selectClip(const ClipKey& key)
+void TrackClipsListModel::selectClip(const ClipKey& key)
 {
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
@@ -1083,13 +1083,13 @@ void ClipsListModel::selectClip(const ClipKey& key)
     }
 }
 
-void ClipsListModel::resetSelectedClips()
+void TrackClipsListModel::resetSelectedClips()
 {
     clearSelectedItems();
     selectionController()->resetSelectedClips();
 }
 
-void ClipsListModel::requestClipTitleChange()
+void TrackClipsListModel::requestClipTitleChange()
 {
     auto selectedClips = selectionController()->selectedClips();
 
@@ -1108,7 +1108,7 @@ void ClipsListModel::requestClipTitleChange()
     }
 }
 
-void ClipsListModel::onSelectedClip(const trackedit::ClipKey& k)
+void TrackClipsListModel::onSelectedClip(const trackedit::ClipKey& k)
 {
     // ignore if item already selected
     for (const auto& selectedItem : m_selectedItems) {
@@ -1139,7 +1139,7 @@ void ClipsListModel::onSelectedClip(const trackedit::ClipKey& k)
     }
 }
 
-void ClipsListModel::onSelectedClips(const trackedit::ClipKeyList& keyList)
+void TrackClipsListModel::onSelectedClips(const trackedit::ClipKeyList& keyList)
 {
     if (keyList.size() == 1) {
         onSelectedClip(keyList.front());
@@ -1159,12 +1159,12 @@ void ClipsListModel::onSelectedClips(const trackedit::ClipKeyList& keyList)
     setSelectedItems(items);
 }
 
-QVariant ClipsListModel::trackId() const
+QVariant TrackClipsListModel::trackId() const
 {
     return QVariant::fromValue(m_trackId);
 }
 
-void ClipsListModel::setTrackId(const QVariant& _newTrackId)
+void TrackClipsListModel::setTrackId(const QVariant& _newTrackId)
 {
     trackedit::TrackId newTrackId = _newTrackId.toInt();
     if (m_trackId == newTrackId) {
@@ -1174,22 +1174,22 @@ void ClipsListModel::setTrackId(const QVariant& _newTrackId)
     emit trackIdChanged();
 }
 
-bool ClipsListModel::isStereo() const
+bool TrackClipsListModel::isStereo() const
 {
     return m_isStereo;
 }
 
-ClipStyles::Style ClipsListModel::clipStyle() const
+ClipStyles::Style TrackClipsListModel::clipStyle() const
 {
     return projectSceneConfiguration()->clipStyle();
 }
 
-TimelineContext* ClipsListModel::timelineContext() const
+TimelineContext* TrackClipsListModel::timelineContext() const
 {
     return m_context;
 }
 
-void ClipsListModel::setTimelineContext(TimelineContext* newContext)
+void TrackClipsListModel::setTimelineContext(TimelineContext* newContext)
 {
     if (m_context == newContext) {
         return;
@@ -1202,14 +1202,14 @@ void ClipsListModel::setTimelineContext(TimelineContext* newContext)
     m_context = newContext;
 
     if (m_context) {
-        connect(m_context, &TimelineContext::zoomChanged, this, &ClipsListModel::onTimelineZoomChanged);
-        connect(m_context, &TimelineContext::frameTimeChanged, this, &ClipsListModel::onTimelineFrameTimeChanged);
+        connect(m_context, &TimelineContext::zoomChanged, this, &TrackClipsListModel::onTimelineZoomChanged);
+        connect(m_context, &TimelineContext::frameTimeChanged, this, &TrackClipsListModel::onTimelineFrameTimeChanged);
     }
 
     emit timelineContextChanged();
 }
 
-int ClipsListModel::cacheBufferPx()
+int TrackClipsListModel::cacheBufferPx()
 {
     return CACHE_BUFFER_PX;
 }
