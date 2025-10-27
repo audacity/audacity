@@ -257,12 +257,12 @@ bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trac
     return success;
 }
 
-void TrackeditOperationController::cancelClipDragEdit()
+void TrackeditOperationController::cancelItemDragEdit()
 {
     if (!projectHistory()->interactionOngoing()) {
         return;
     }
-    trackAndClipOperations()->cancelClipDragEdit();
+    trackAndClipOperations()->cancelItemDragEdit();
     projectHistory()->rollbackState();
     globalContext()->currentTrackeditProject()->reload();
 }

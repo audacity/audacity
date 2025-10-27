@@ -57,6 +57,7 @@ public:
 
     Q_INVOKABLE void startEditItem(const TrackItemKey& key);
     Q_INVOKABLE void endEditItem(const TrackItemKey& key);
+    Q_INVOKABLE bool cancelItemDragEdit(const TrackItemKey& key);
 
     Q_INVOKABLE QVariant next(const TrackItemKey& key) const;
     Q_INVOKABLE QVariant prev(const TrackItemKey& key) const;
