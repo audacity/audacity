@@ -242,27 +242,27 @@ void SelectionViewController::selectTrackAudioData(double y)
     selectionController()->setSelectedTrackAudioData(tracks.at(0));
 }
 
-void SelectionViewController::selectObjectData(const TrackObjectKey& objectKey)
+void SelectionViewController::selectItemData(const TrackItemKey& key)
 {
     if (!isProjectOpened()) {
         return;
     }
 
     auto prj = globalContext()->currentTrackeditProject();
-    auto track = prj->track(objectKey.key.trackId);
+    auto track = prj->track(key.key.trackId);
     if (!track.has_value()) {
-        LOGW() << "Track not found: " << objectKey.key.trackId;
+        LOGW() << "Track not found: " << key.key.trackId;
         return;
     }
 
     if (track->type == trackedit::TrackType::Label) {
-        selectionController()->setSelectedLabels(trackedit::LabelKeyList({ objectKey.key }));
+        selectionController()->setSelectedLabels(trackedit::LabelKeyList({ key.key }));
     } else {
-        selectionController()->setSelectedClips(trackedit::ClipKeyList({ objectKey.key }));
+        selectionController()->setSelectedClips(trackedit::ClipKeyList({ key.key }));
     }
 }
 
-void SelectionViewController::resetSelectedObjects()
+void SelectionViewController::resetSelectedItems()
 {
     if (!isProjectOpened()) {
         return;

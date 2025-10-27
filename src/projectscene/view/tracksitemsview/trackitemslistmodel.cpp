@@ -104,7 +104,7 @@ void TrackItemsListModel::clearSelectedItems()
     m_selectedItems.clear();
 }
 
-ViewTrackItem* TrackItemsListModel::itemByKey(const trackedit::TrackObjectKey& key) const
+ViewTrackItem* TrackItemsListModel::itemByKey(const trackedit::TrackItemKey& key) const
 {
     for (ViewTrackItem* item : std::as_const(m_items)) {
         if (item->key().key != key) {
@@ -115,7 +115,7 @@ ViewTrackItem* TrackItemsListModel::itemByKey(const trackedit::TrackObjectKey& k
     return nullptr;
 }
 
-int TrackItemsListModel::indexByKey(const trackedit::TrackObjectKey& key) const
+int TrackItemsListModel::indexByKey(const trackedit::TrackItemKey& key) const
 {
     for (int i = 0; i < m_items.size(); ++i) {
         if (m_items.at(i)->key().key == key) {
@@ -125,7 +125,7 @@ int TrackItemsListModel::indexByKey(const trackedit::TrackObjectKey& key) const
     return -1;
 }
 
-void TrackItemsListModel::onSelectedItem(const trackedit::TrackObjectKey& k)
+void TrackItemsListModel::onSelectedItem(const trackedit::TrackItemKey& k)
 {
     // ignore if item already selected
     for (const auto& selectedItem : m_selectedItems) {
@@ -156,7 +156,7 @@ void TrackItemsListModel::onSelectedItem(const trackedit::TrackObjectKey& k)
     }
 }
 
-void TrackItemsListModel::onSelectedItems(const trackedit::TrackObjectKeyList& keyList)
+void TrackItemsListModel::onSelectedItems(const trackedit::TrackItemKeyList& keyList)
 {
     if (keyList.size() == 1) {
         onSelectedItem(keyList.front());
@@ -176,20 +176,20 @@ void TrackItemsListModel::onSelectedItems(const trackedit::TrackObjectKeyList& k
     setSelectedItems(items);
 }
 
-QVariant TrackItemsListModel::next(const TrackObjectKey& key) const
+QVariant TrackItemsListModel::next(const TrackItemKey& key) const
 {
     return neighbor(key, 1);
 }
 
-QVariant TrackItemsListModel::prev(const TrackObjectKey& key) const
+QVariant TrackItemsListModel::prev(const TrackItemKey& key) const
 {
     return neighbor(key, -1);
 }
 
-QVariant TrackItemsListModel::neighbor(const TrackObjectKey& key, int offset) const
+QVariant TrackItemsListModel::neighbor(const TrackItemKey& key, int offset) const
 {
     auto it = std::find_if(m_items.begin(), m_items.end(), [key](ViewTrackItem* viewItem) {
-        return viewItem->key().key.objectId == key.key.objectId;
+        return viewItem->key().key.itemId == key.key.itemId;
     });
 
     if (it == m_items.end()) {
@@ -212,7 +212,7 @@ void TrackItemsListModel::requestItemTitleChange()
         return;
     }
 
-    trackedit::TrackObjectKey itemKey = selectedItems.front();
+    trackedit::TrackItemKey itemKey = selectedItems.front();
     if (!itemKey.isValid()) {
         return;
     }
@@ -263,7 +263,7 @@ void TrackItemsListModel::handleAutoScroll(bool ok, bool completed, const std::f
     }
 
     // do not handle auto-scroll when using key-nav
-    if (muse::RealIsEqual(vs->objectEditStartTimeOffset(), -1.0)) {
+    if (muse::RealIsEqual(vs->itemEditStartTimeOffset(), -1.0)) {
         return;
     }
 
@@ -359,7 +359,7 @@ void TrackItemsListModel::reload()
     onReload();
 }
 
-void TrackItemsListModel::startEditItem(const TrackObjectKey& key)
+void TrackItemsListModel::startEditItem(const TrackItemKey& key)
 {
     ViewTrackItem* item = itemByKey(key.key);
     if (!item) {
@@ -375,13 +375,13 @@ void TrackItemsListModel::startEditItem(const TrackObjectKey& key)
 
     double mousePositionTime = m_context->mousePositionTime();
 
-    vs->setObjectEditStartTimeOffset(mousePositionTime - item->time().startTime);
-    vs->setObjectEditEndTimeOffset(item->time().endTime - mousePositionTime);
+    vs->setItemEditStartTimeOffset(mousePositionTime - item->time().startTime);
+    vs->setItemEditEndTimeOffset(item->time().endTime - mousePositionTime);
 
     onStartEditItem(key.key);
 }
 
-void TrackItemsListModel::endEditItem(const TrackObjectKey& key)
+void TrackItemsListModel::endEditItem(const TrackItemKey& key)
 {
     ViewTrackItem* item = itemByKey(key.key);
     if (!item) {
@@ -393,8 +393,8 @@ void TrackItemsListModel::endEditItem(const TrackObjectKey& key)
         return;
     }
 
-    vs->setObjectEditStartTimeOffset(-1.0);
-    vs->setObjectEditEndTimeOffset(-1.0);
+    vs->setItemEditStartTimeOffset(-1.0);
+    vs->setItemEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
 
     onEndEditItem(key.key);

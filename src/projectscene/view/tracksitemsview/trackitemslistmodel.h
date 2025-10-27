@@ -55,11 +55,11 @@ public:
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
 
-    Q_INVOKABLE void startEditItem(const TrackObjectKey& key);
-    Q_INVOKABLE void endEditItem(const TrackObjectKey& key);
+    Q_INVOKABLE void startEditItem(const TrackItemKey& key);
+    Q_INVOKABLE void endEditItem(const TrackItemKey& key);
 
-    Q_INVOKABLE QVariant next(const TrackObjectKey& key) const;
-    Q_INVOKABLE QVariant prev(const TrackObjectKey& key) const;
+    Q_INVOKABLE QVariant next(const TrackItemKey& key) const;
+    Q_INVOKABLE QVariant prev(const TrackItemKey& key) const;
 
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
@@ -85,24 +85,24 @@ protected:
     void addSelectedItem(ViewTrackItem* item);
     void clearSelectedItems();
 
-    ViewTrackItem* itemByKey(const trackedit::TrackObjectKey& key) const;
-    int indexByKey(const trackedit::TrackObjectKey& key) const;
-    virtual void onStartEditItem(const trackedit::TrackObjectKey&) {}
-    virtual void onEndEditItem(const trackedit::TrackObjectKey&) {}
+    ViewTrackItem* itemByKey(const trackedit::TrackItemKey& key) const;
+    int indexByKey(const trackedit::TrackItemKey& key) const;
+    virtual void onStartEditItem(const trackedit::TrackItemKey&) {}
+    virtual void onEndEditItem(const trackedit::TrackItemKey&) {}
 
     void requestItemTitleChange();
-    virtual trackedit::TrackObjectKeyList getSelectedItemKeys() const = 0;
+    virtual trackedit::TrackItemKeyList getSelectedItemKeys() const = 0;
 
     virtual void onInit() = 0;
     virtual void onReload() = 0;
 
-    void onSelectedItem(const trackedit::TrackObjectKey& k);
-    void onSelectedItems(const trackedit::TrackObjectKeyList& keyList);
+    void onSelectedItem(const trackedit::TrackItemKey& k);
+    void onSelectedItems(const trackedit::TrackItemKeyList& keyList);
 
     void handleAutoScroll(bool ok, bool completed, const std::function<void()>& onAutoScrollFrame);
     void disconnectAutoScroll();
 
-    QVariant neighbor(const TrackObjectKey& key, int offset) const;
+    QVariant neighbor(const TrackItemKey& key, int offset) const;
 
     Qt::KeyboardModifiers keyboardModifiers() const;
 

@@ -41,11 +41,11 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     Q_PROPERTY(double selectionEndPosition READ selectionEndPosition NOTIFY selectionEndPositionChanged FINAL)
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
 
-    Q_PROPERTY(double selectedObjectStartTime READ selectedObjectStartTime NOTIFY selectedObjectStartTimeChanged FINAL)
-    Q_PROPERTY(double selectedObjectEndTime READ selectedObjectEndTime NOTIFY selectedObjectEndTimeChanged FINAL)
-    Q_PROPERTY(double selectedObjectStartPosition READ selectedObjectStartPosition NOTIFY selectedObjectStartPositionChanged FINAL)
-    Q_PROPERTY(double selectedObjectEndPosition READ selectedObjectEndPosition NOTIFY selectedObjectEndPositionChanged FINAL)
-    Q_PROPERTY(bool singleObjectSelected READ singleObjectSelected NOTIFY singleObjectSelectedChanged FINAL)
+    Q_PROPERTY(double selectedItemStartTime READ selectedItemStartTime NOTIFY selectedItemStartTimeChanged FINAL)
+    Q_PROPERTY(double selectedItemEndTime READ selectedItemEndTime NOTIFY selectedItemEndTimeChanged FINAL)
+    Q_PROPERTY(double selectedItemStartPosition READ selectedItemStartPosition NOTIFY selectedItemStartPositionChanged FINAL)
+    Q_PROPERTY(double selectedItemEndPosition READ selectedItemEndPosition NOTIFY selectedItemEndPositionChanged FINAL)
+    Q_PROPERTY(bool singleItemSelected READ singleItemSelected NOTIFY singleItemSelectedChanged FINAL)
 
     Q_PROPERTY(qreal startHorizontalScrollPosition READ startHorizontalScrollPosition NOTIFY horizontalScrollChanged)
     Q_PROPERTY(qreal horizontalScrollbarSize READ horizontalScrollbarSize NOTIFY horizontalScrollChanged)
@@ -86,11 +86,11 @@ public:
     double selectionEndPosition() const;
     bool selectionActive() const;
 
-    double selectedObjectStartTime() const;
-    double selectedObjectEndTime() const;
-    double selectedObjectStartPosition() const;
-    double selectedObjectEndPosition() const;
-    bool singleObjectSelected() const;
+    double selectedItemStartTime() const;
+    double selectedItemEndTime() const;
+    double selectedItemStartPosition() const;
+    double selectedItemEndPosition() const;
+    bool singleItemSelected() const;
 
     Q_INVOKABLE void init(double frameWidth);
 
@@ -150,11 +150,11 @@ signals:
     void selectionEndPositionChanged();
     void selectionActiveChanged();
 
-    void selectedObjectStartTimeChanged();
-    void selectedObjectEndTimeChanged();
-    void selectedObjectStartPositionChanged();
-    void selectedObjectEndPositionChanged();
-    void singleObjectSelectedChanged();
+    void selectedItemStartTimeChanged();
+    void selectedItemEndTimeChanged();
+    void selectedItemStartPositionChanged();
+    void selectedItemEndPositionChanged();
+    void singleItemSelectedChanged();
 
     void viewContentYChangeRequested(double contentY);
 
@@ -193,9 +193,9 @@ private:
     void setSelectionEndTime(double time);
     void updateSelectionActive();
 
-    void setObjectStartTime(double time);
-    void setObjectEndTime(double time);
-    void updateSingleObjectSelected();
+    void setItemStartTime(double time);
+    void setItemEndTime(double time);
+    void updateSingleItemSelected();
 
     void updateTimeSignature();
 
@@ -227,9 +227,9 @@ private:
     trackedit::secs_t m_selectionEndTime = -1.0;
     bool m_selectionActive = false;
 
-    trackedit::secs_t m_selectedObjectStartTime = -1.0;
-    trackedit::secs_t m_selectedObjectEndTime = -1.0;
-    bool m_singleObjectSelected = false;
+    trackedit::secs_t m_selectedItemStartTime = -1.0;
+    trackedit::secs_t m_selectedItemEndTime = -1.0;
+    bool m_singleItemSelected = false;
 
     std::shared_ptr<SnapTimeFormatter> m_snapTimeFormatter;
 

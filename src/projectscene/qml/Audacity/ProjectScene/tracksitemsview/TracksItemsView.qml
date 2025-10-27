@@ -15,7 +15,7 @@ Rectangle {
 
     property bool itemHovered: false
     property bool itemHeaderHovered: false
-    property var hoveredObjectKey: null
+    property var hoveredItemKey: null
 
     property var hoveredTrackId: null
     property double hoveredTrackVerticalPosition
@@ -35,7 +35,7 @@ Rectangle {
 
     enum State {
         Idle,
-        DraggingObject
+        DraggingItem
     }
 
     property int interactionState: TracksItemsView.State.Idle
@@ -303,8 +303,8 @@ Rectangle {
             Rectangle {
                 id: timelineSelRect
 
-                x: timeline.context.singleObjectSelected ? timeline.context.selectedObjectStartPosition : timeline.context.selectionStartPosition
-                width: timeline.context.singleObjectSelected ? timeline.context.selectedObjectEndPosition - x : timeline.context.selectionEndPosition - x
+                x: timeline.context.singleItemSelected ? timeline.context.selectedItemStartPosition : timeline.context.selectionStartPosition
+                width: timeline.context.singleItemSelected ? timeline.context.selectedItemEndPosition - x : timeline.context.selectionEndPosition - x
 
                 anchors.top: parent.verticalCenter
                 anchors.bottom: parent.bottom
@@ -438,8 +438,8 @@ Rectangle {
 
                 if (e.button === Qt.LeftButton) {
                     if (root.itemHeaderHovered) {
-                        tracksItemsView.itemStartEditRequested(hoveredObjectKey)
-                        root.interactionState = TracksItemsView.State.DraggingObject
+                        tracksItemsView.itemStartEditRequested(hoveredItemKey)
+                        root.interactionState = TracksItemsView.State.DraggingItem
                     } else {
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
                             playCursorController.seekToX(e.x)
@@ -447,7 +447,7 @@ Rectangle {
 
                         if (!splitToolController.active) {
                             selectionController.onPressed(e.x, e.y)
-                            selectionController.resetSelectedObjects()
+                            selectionController.resetSelectedItems()
                             itemsSelection.visible = true
                         }
                         handleGuideline(e.x, false)
@@ -467,8 +467,8 @@ Rectangle {
                 timeline.updateCursorPosition(e.x, e.y)
                 splitToolController.mouseMove(e.x)
 
-                if (root.interactionState === TracksItemsView.State.DraggingObject) {
-                    tracksItemsView.itemMoveRequested(hoveredObjectKey, false)
+                if (root.interactionState === TracksItemsView.State.DraggingItem) {
+                    tracksItemsView.itemMoveRequested(hoveredItemKey, false)
                     tracksItemsView.startAutoScroll()
                 } else {
                     selectionController.onPositionChanged(e.x, e.y)
@@ -483,11 +483,11 @@ Rectangle {
                     return
                 }
 
-                if (root.interactionState === TracksItemsView.State.DraggingObject) {
+                if (root.interactionState === TracksItemsView.State.DraggingItem) {
                     root.interactionState = TracksItemsView.State.Idle
-                    tracksItemsView.itemMoveRequested(hoveredObjectKey, true)
+                    tracksItemsView.itemMoveRequested(hoveredItemKey, true)
                     tracksItemsView.stopAutoScroll()
-                    tracksItemsView.itemEndEditRequested(hoveredObjectKey)
+                    tracksItemsView.itemEndEditRequested(hoveredItemKey)
                 }
                 else {
                     splitToolController.mouseUp(e.x)
@@ -519,7 +519,7 @@ Rectangle {
                 }
 
                 if (!root.itemHovered) {
-                    selectionController.resetSelectedObjects()
+                    selectionController.resetSelectedItems()
                 }
             }
 
@@ -533,11 +533,11 @@ Rectangle {
                 }
 
                 if (root.itemHovered) {
-                    selectionController.selectObjectData(root.hoveredObjectKey)
-                    playCursorController.setPlaybackRegion(timeline.context.selectedObjectStartPosition, timeline.context.selectedObjectEndPosition)
+                    selectionController.selectItemData(root.hoveredItemKey)
+                    playCursorController.setPlaybackRegion(timeline.context.selectedItemStartPosition, timeline.context.selectedItemEndPosition)
                 } else {
                     selectionController.selectTrackAudioData(e.y)
-                    playCursorController.setPlaybackRegion(timeline.context.selectedObjectStartPosition, timeline.context.selectedObjectEndPosition)
+                    playCursorController.setPlaybackRegion(timeline.context.selectedItemStartPosition, timeline.context.selectedItemEndPosition)
                 }
                 itemsSelection.visible = false
             }
@@ -583,10 +583,10 @@ Rectangle {
                     return false
                 }
 
-                signal itemMoveRequested(var objectKey, bool completed)
-                signal itemStartEditRequested(var objectKey)
-                signal itemEndEditRequested(var objectKey)
-                signal cancelClipDragEditRequested(var clipKey)
+                signal itemMoveRequested(var itemKey, bool completed)
+                signal itemStartEditRequested(var itemKey)
+                signal itemEndEditRequested(var itemKey)
+                signal cancelItemDragEditRequested(var itemKey)
                 signal startAutoScroll
                 signal stopAutoScroll
 
@@ -693,22 +693,22 @@ Rectangle {
 
                             navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 
-                            onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, objectKey) {
+                            onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, itemKey) {
                                 let xGlobalPosition = xWithinTrack
                                 let yGlobalPosition = y + yWithinTrack - tracksItemsView.contentY
 
                                 timeline.updateCursorPosition(xGlobalPosition, yGlobalPosition)
 
                                 root.hoveredTrackId = trackId
-                                root.hoveredObjectKey = objectKey
+                                root.hoveredItemKey = itemKey
                                 root.hoveredTrackHeight = tracksViewState.trackHeight(trackId)
                                 root.hoveredTrackVerticalPosition = tracksViewState.trackVerticalPosition(trackId)
 
                                 splitToolController.mouseMove(xWithinTrack)
                             }
 
-                            onSetHoveredObjectKey: function (objectKey) {
-                                root.hoveredObjectKey = objectKey
+                            onSetHoveredItemKey: function (itemKey) {
+                                root.hoveredItemKey = itemKey
                             }
 
                             onItemHeaderHoveredChanged: function (val) {
@@ -874,14 +874,14 @@ Rectangle {
                                 })
                             }
 
-                            onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, objectKey) {
+                            onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, itemKey) {
                                 let xGlobalPosition = xWithinTrack
                                 let yGlobalPosition = y + yWithinTrack - tracksItemsView.contentY
 
                                 timeline.updateCursorPosition(xGlobalPosition, yGlobalPosition)
 
                                 root.hoveredTrackId = trackId
-                                root.hoveredObjectKey = objectKey
+                                root.hoveredItemKey = itemKey
                                 root.hoveredTrackHeight = tracksViewState.trackHeight(trackId)
                                 root.hoveredTrackVerticalPosition = tracksViewState.trackVerticalPosition(trackId)
 

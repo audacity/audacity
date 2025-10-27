@@ -79,11 +79,11 @@ private:
 
     void update();
     void updateItemMetrics(ViewTrackItem* item) override;
-    trackedit::TrackObjectKeyList getSelectedItemKeys() const override;
+    trackedit::TrackItemKeyList getSelectedItemKeys() const override;
 
     TrackClipItem* clipItemByKey(const trackedit::ClipKey& k) const;
-    void onStartEditItem(const trackedit::TrackObjectKey& key) override;
-    void onEndEditItem(const trackedit::TrackObjectKey& key) override;
+    void onStartEditItem(const trackedit::TrackItemKey& key) override;
+    void onEndEditItem(const trackedit::TrackItemKey& key) override;
 
     MoveOffset calculateMoveOffset(const TrackClipItem* item, const ClipKey& key, bool completed) const;
     trackedit::secs_t calculateTimePositionOffset(const TrackClipItem* item) const;

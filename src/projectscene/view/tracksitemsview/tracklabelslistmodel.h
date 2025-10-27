@@ -25,7 +25,7 @@ private:
 
     void update();
     void updateItemMetrics(ViewTrackItem* item) override;
-    trackedit::TrackObjectKeyList getSelectedItemKeys() const override;
+    trackedit::TrackItemKeyList getSelectedItemKeys() const override;
     TrackLabelItem* labelItemByKey(const trackedit::LabelKey& k) const;
 
     muse::async::NotifyList<au::trackedit::Label> m_allLabelList;
