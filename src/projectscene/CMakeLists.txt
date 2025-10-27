@@ -145,8 +145,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/canvascontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/splittoolcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/splittoolcontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/mousehelper.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/mousehelper.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/mousehelper.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/mousehelper.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.h

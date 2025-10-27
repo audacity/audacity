@@ -290,9 +290,9 @@ void WaveTrackItem::checkMainAudioInput()
             setAudioChannelVolumePressure(audioChNum,
                                           meterSignal.peak.pressure);
             setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
-        });
+        }, muse::async::Asyncable::Mode::SetReplace);
     } else {
-        record()->audioInput()->recordSignalChanges().resetOnReceive(this);
+        record()->audioInput()->recordSignalChanges().disconnect(this);
     }
 }
 
