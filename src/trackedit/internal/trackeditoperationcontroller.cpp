@@ -262,7 +262,7 @@ void TrackeditOperationController::cancelItemDragEdit()
     if (!projectHistory()->interactionOngoing()) {
         return;
     }
-    trackAndClipOperations()->cancelItemDragEdit();
+    clipsInteraction()->cancelClipDragEdit();
     projectHistory()->rollbackState();
     globalContext()->currentTrackeditProject()->reload();
 }
