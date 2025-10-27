@@ -3,11 +3,13 @@
 */
 #include "abstracteffectviewmodel.h"
 
+#include "effects/effects_base/internal/abstractviewlauncher.h"
+
 #include "playback/iplayer.h"
 
 namespace au::effects {
 AbstractEffectViewModel::AbstractEffectViewModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), m_instanceId{AbstractViewLauncher::initializationInstanceId()}
 {
 }
 
@@ -46,14 +48,5 @@ void AbstractEffectViewModel::stopPreview()
 EffectInstanceId AbstractEffectViewModel::instanceId() const
 {
     return m_instanceId;
-}
-
-void AbstractEffectViewModel::setInstanceId(EffectInstanceId newInstanceId)
-{
-    if (m_instanceId == newInstanceId) {
-        return;
-    }
-    m_instanceId = newInstanceId;
-    emit instanceIdChanged();
 }
 }

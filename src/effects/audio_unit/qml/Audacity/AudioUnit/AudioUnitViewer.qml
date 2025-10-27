@@ -13,7 +13,7 @@ Rectangle {
     id: root
 
     // in
-    property alias instanceId: view.instanceId
+    property alias instanceId: model.instanceId
     property alias sidePadding: view.sidePadding
     property alias topPadding: view.topPadding
     property alias bottomPadding: view.bottomPadding
@@ -59,7 +59,7 @@ Rectangle {
 
     EffectManageMenu {
         id: manageMenuModel
-        instanceId: view.instanceId
+        instanceId: model.instanceId
     }
 
     ContextMenuLoader {
@@ -72,10 +72,10 @@ Rectangle {
 
     AudioUnitViewModel {
         id: model
-        instanceId: view.instanceId
     }
 
     AudioUnitView {
         id: view
+        instanceId: model.instanceId
     }
 }

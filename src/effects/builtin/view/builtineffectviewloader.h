@@ -21,6 +21,7 @@ class BuiltinEffectViewLoader : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
+    Q_PROPERTY(int instanceId READ instanceId CONSTANT FINAL)
     Q_PROPERTY(QQuickItem * contentItem READ contentItem NOTIFY contentItemChanged FINAL)
 
     muse::Inject<IEffectsViewRegister> viewRegister;
@@ -33,9 +34,9 @@ public:
 
     QQuickItem* contentItem() const;
 
-    Q_INVOKABLE void load(const QString& instanceId, QObject* itemParent, QObject* dialogView, bool usedDestructively);
+    Q_INVOKABLE void load(QObject* itemParent, QObject* dialogView, bool usedDestructively);
 
-    static int initializationInstanceId();
+    int instanceId() const { return m_instanceId; }
 
 signals:
     void titleChanged();
@@ -44,6 +45,7 @@ signals:
     void closeRequested();
 
 private:
+    const int m_instanceId;
     QQuickItem* m_contentItem = nullptr;
 };
 }

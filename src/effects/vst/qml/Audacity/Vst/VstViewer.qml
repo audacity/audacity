@@ -31,7 +31,6 @@ Rectangle {
     id: root
 
     // in
-    property alias instanceId: view.instanceId
     property alias sidePadding: view.sidePadding
     property alias topPadding: view.topPadding
     property alias bottomPadding: view.bottomPadding
@@ -39,6 +38,7 @@ Rectangle {
 
     // out
     property alias title: view.title
+    property alias instanceId: viewModel.instanceId
     property alias isPreviewing: viewModel.isPreviewing
 
     color: ui.theme.backgroundPrimaryColor
@@ -83,10 +83,10 @@ Rectangle {
 
     VstViewModel {
         id: viewModel
-        instanceId: view.instanceId
     }
 
     VstView {
         id: view
+        instanceId: viewModel.instanceId
     }
 }

@@ -16,7 +16,6 @@ import Audacity.AudioUnit
 EffectStyledDialogView {
     id: root
 
-    property alias instanceId: viewerModel.instanceId
     property int effectFamily: EffectFamily.Unknown
 
     QtObject {
@@ -116,7 +115,7 @@ EffectStyledDialogView {
 
                         enabled: !prv.viewer.isPreviewing
                         parentWindow: root.window
-                        instanceId: root.instanceId
+                        instanceId: Boolean(prv.viewer) ? prv.viewer.instanceId : -1
                     }
                 }
 
@@ -250,7 +249,6 @@ EffectStyledDialogView {
     Component {
         id: builtinViewerComp
         BuiltinEffectViewer {
-            instanceId: root.instanceId
             dialogView: root
             usedDestructively: true
         }
@@ -259,7 +257,6 @@ EffectStyledDialogView {
     Component {
         id: lv2ViewerComp
         Lv2Viewer {
-            instanceId: root.instanceId
             title: root.title
         }
     }
@@ -267,7 +264,6 @@ EffectStyledDialogView {
     Component {
         id: audioUnitViewerComp
         AudioUnitViewer {
-            instanceId: root.instanceId
             height: implicitHeight
             topPadding: topPanel.height
             bottomPadding: bbox.implicitHeight + prv.panelMargins * 2
@@ -279,7 +275,6 @@ EffectStyledDialogView {
     Component {
         id: vstViewerComp
         VstViewer {
-            instanceId: root.instanceId
             height: implicitHeight
             topPadding: topPanel.height
             bottomPadding: bbox.implicitHeight + prv.panelMargins * 2
