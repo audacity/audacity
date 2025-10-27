@@ -123,21 +123,46 @@ public:
 };
 
 /**
- * @brief Toggle play when stopped
+ * @brief Toggle play when stopped without selection or loop
  * @details User clicked play without any additional params
- *          Playback should be started without seek
+ *          Project has content, no selection, no loop active
+ *          Playback should start from current stopped position without seeking
  */
-TEST_F(PlaybackControllerTests, TogglePlay)
+TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped)
 {
     //! [GIVEN] Playback is stopped
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Stopped));
 
-    //! [THEN] No seek position
+    //! [GIVEN] Project has content (totalTime = 100.0)
+    //! This is set up in SetUp() via m_trackeditProject->totalTime()
+
+    //! [GIVEN] Playback position is at some position (not at the end)
+    secs_t currentPosition = 42.0;
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillRepeatedly(Return(currentPosition));
+
+    //! [GIVEN] No time selection
+    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
+    .WillOnce(Return(false));
+
+    //! [GIVEN] No clip selection
+    EXPECT_CALL(*m_selectionController, selectedClips())
+    .WillOnce(Return(trackedit::ClipKeyList()));
+
+    //! [GIVEN] No loop region active
+    EXPECT_CALL(*m_player, isLoopRegionActive())
+    .WillRepeatedly(Return(false));
+
+    //! [THEN] No seek should occur (play from current stopped position)
     EXPECT_CALL(*m_player, seek(_, _))
     .Times(0);
 
-    //! [THEN] Player should start playing
+    //! [THEN] Playback region should be reset to empty (no selection, no loop)
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion()))
+    .Times(1);
+
+    //! [THEN] Player should start playing from current position
     EXPECT_CALL(*m_player, play())
     .Times(1);
 
