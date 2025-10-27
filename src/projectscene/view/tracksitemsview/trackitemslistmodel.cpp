@@ -401,3 +401,32 @@ void TrackItemsListModel::endEditItem(const TrackItemKey& key)
 
     projectHistory()->endUserInteraction();
 }
+
+bool TrackItemsListModel::cancelItemDragEdit(const TrackItemKey& key)
+{
+    ViewTrackItem* item = itemByKey(key.key);
+    if (!item) {
+        return false;
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    IF_ASSERT_FAILED(vs) {
+        return false;
+    }
+
+    vs->setItemEditStartTimeOffset(-1.0);
+    vs->setItemEditEndTimeOffset(-1.0);
+    vs->setMoveInitiated(false);
+
+    m_context->stopAutoScroll();
+    disconnectAutoScroll();
+
+    trackeditInteraction()->cancelItemDragEdit();
+
+    vs->updateClipsBoundaries(true);
+
+    constexpr auto modifyState = false;
+    projectHistory()->endUserInteraction(modifyState);
+
+    return true;
+}

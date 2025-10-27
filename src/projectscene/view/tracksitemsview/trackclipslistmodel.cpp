@@ -448,7 +448,7 @@ bool TrackClipsListModel::asymmetricStereoHeightsPossible() const
     return false;
 }
 
-bool ClipsListModel::isContrastFocusBorderEnabled() const
+bool TrackClipsListModel::isContrastFocusBorderEnabled() const
 {
     return !uiConfiguration()->isDarkMode();
 }
@@ -483,35 +483,6 @@ void TrackClipsListModel::onEndEditItem(const trackedit::TrackItemKey& key)
     Q_UNUSED(key);
 
     disconnectAutoScroll();
-}
-
-bool ClipsListModel::cancelClipDragEdit(const ClipKey& key)
-{
-    ClipListItem* item = itemByKey(key.key);
-    if (!item) {
-        return false;
-    }
-
-    auto vs = globalContext()->currentProject()->viewState();
-    IF_ASSERT_FAILED(vs) {
-        return false;
-    }
-
-    vs->setObjectEditStartTimeOffset(-1.0);
-    vs->setObjectEditEndTimeOffset(-1.0);
-    vs->setMoveInitiated(false);
-
-    m_context->stopAutoScroll();
-    disconnectAutoScroll();
-
-    trackeditInteraction()->cancelClipDragEdit();
-
-    vs->updateClipsBoundaries(true);
-
-    constexpr auto modifyState = false;
-    projectHistory()->endUserInteraction(modifyState);
-
-    return true;
 }
 
 /*!

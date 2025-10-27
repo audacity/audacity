@@ -515,8 +515,8 @@ TrackItemsContainer {
             clipsModel.endEditItem(itemKey)
         }
 
-        function onCancelClipDragEditRequested(clipKey) {
-            if (clipsModel.cancelClipDragEdit(clipKey)) {
+        function onCancelItemDragEditRequested(itemKey) {
+            if (clipsModel.cancelItemDragEdit(itemKey)) {
                 root.clipDragEditCanceled()
             }
         }

@@ -4,6 +4,7 @@
 #pragma once
 
 #include "modularity/ioc.h"
+#include "ui/iuiconfiguration.h"
 #include "workspace/iworkspacemanager.h"
 #include "iprojectsceneconfiguration.h"
 

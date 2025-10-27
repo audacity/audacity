@@ -28,6 +28,10 @@ WaveTrackItem::WaveTrackItem(QObject* parent)
             resetAudioChannelsVolumePressure();
         }
     });
+
+    connect(this, &WaveTrackItem::isFocusedChanged, this, [this]() {
+        checkMainAudioInput();
+    });
 }
 
 void WaveTrackItem::init(const trackedit::Track& track)
