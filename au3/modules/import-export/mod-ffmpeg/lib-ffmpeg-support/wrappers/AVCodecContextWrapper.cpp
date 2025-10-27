@@ -54,7 +54,10 @@ AVCodecContextWrapper::~AVCodecContextWrapper()
             // Its not clear how to avoid the leak here, but let's close
             // the codec at least
             if (mFFmpeg.avcodec_is_open(mAVCodecContext)) {
-                mFFmpeg.avcodec_close(mAVCodecContext);
+                // avcodec_close is deprecated and removed in FFmpeg 60
+                if (mFFmpeg.avcodec_close != nullptr) {
+                    mFFmpeg.avcodec_close(mAVCodecContext);
+                }
             }
         }
     }

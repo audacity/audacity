@@ -805,6 +805,13 @@ set(MODULE_SRC ${MODULE_SRC}
     ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/avformat/61/AVFormatImpl.cpp
     ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/avutil/59/AVUtilImpl.cpp
 
+    ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/ffmpeg-8.0.0-single-header.h
+    ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/avutil/60/avconfig.h
+    ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/avcodec/62/AVCodecIDLookup.cpp
+    ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/avcodec/62/AVCodecImpl.cpp
+    ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/avformat/62/AVFormatImpl.cpp
+    ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/avutil/60/AVUtilImpl.cpp
+
     ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/avcodec/AVCodecFunctionsLoader.cpp
     ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/avcodec/AVCodecFunctionsLoader.h
     ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/avformat/AVFormatFunctionsLoader.cpp

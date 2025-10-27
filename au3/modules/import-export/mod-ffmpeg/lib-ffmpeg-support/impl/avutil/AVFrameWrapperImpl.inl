@@ -97,8 +97,13 @@ public:
 
    int GetKeyFrame() const noexcept override
    {
-      if (mAVFrame != nullptr)
+      if (mAVFrame != nullptr) {
+      #if LIBAVUTIL_VERSION_MAJOR <= 59
          return mAVFrame->key_frame;
+      #else
+         return (mAVFrame->flags & AV_FRAME_FLAG_KEY) ? 1 : 0;
+      #endif
+      }
 
       return {};
    }
@@ -172,24 +177,39 @@ public:
 
    int GetInterlacedFrame() const noexcept override
    {
-      if (mAVFrame != nullptr)
+      if (mAVFrame != nullptr) {
+      #if LIBAVUTIL_VERSION_MAJOR <= 59
          return mAVFrame->interlaced_frame;
+      #else
+         return (mAVFrame->flags & AV_FRAME_FLAG_INTERLACED) ? 1 : 0;
+      #endif
+      }
 
       return {};
    }
 
    int GetTopFieldFirst() const noexcept override
    {
-      if (mAVFrame != nullptr)
+      if (mAVFrame != nullptr) {
+      #if LIBAVUTIL_VERSION_MAJOR <= 59
          return mAVFrame->top_field_first;
-
+      #else
+         return (mAVFrame->flags & AV_FRAME_FLAG_TOP_FIELD_FIRST) ? 1 : 0;
+      #endif
+      }
       return {};
    }
 
    int GetPaletteHasChanged() const noexcept override
    {
-      if (mAVFrame != nullptr)
+      if (mAVFrame != nullptr) {
+      #if LIBAVUTIL_VERSION_MAJOR <= 59
          return mAVFrame->palette_has_changed;
+      #else
+         // Deprecated without replacement
+         return {};
+      #endif
+      }
 
       return {};
    }
@@ -266,14 +286,6 @@ public:
    {
       if (auto layout = GetChannelLayoutSafe(); layout != nullptr)
          return layout->GetChannelsCount();
-
-      return {};
-   }
-
-   int GetPacketSize() const noexcept override
-   {
-      if (mAVFrame != nullptr)
-         return mAVFrame->pkt_size;
 
       return {};
    }
