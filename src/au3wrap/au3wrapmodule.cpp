@@ -50,13 +50,13 @@ void Au3WrapModule::onPreInit(const muse::IApplication::RunMode&)
     // Make sure the logger is initialized before other modules.
     m_wxLog = new WxLogWrap();
     wxLog::SetActiveTarget(m_wxLog);
+
+    std::unique_ptr<Au3CommonSettings> auset = std::make_unique<Au3CommonSettings>();
+    InitPreferences(std::move(auset));
 }
 
 void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 {
-    std::unique_ptr<Au3CommonSettings> auset = std::make_unique<Au3CommonSettings>();
-    InitPreferences(std::move(auset));
-
     AudioIO::Init();
 
     bool ok = ProjectFileIO::InitializeSQL();
