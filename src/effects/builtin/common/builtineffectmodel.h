@@ -17,8 +17,6 @@ namespace au::effects {
 class BuiltinEffectModel : public AbstractEffectViewModel
 {
     Q_OBJECT
-    Q_PROPERTY(int instanceId READ instanceId CONSTANT FINAL)
-
     Q_PROPERTY(QString effectId READ effectId NOTIFY effectIdChanged FINAL)
     Q_PROPERTY(bool usesPresets READ usesPresets CONSTANT FINAL)
 
@@ -30,7 +28,6 @@ public:
 public:
     BuiltinEffectModel(QObject* parent = nullptr);
 
-    int instanceId() const;
     QString effectId() const;
 
     Q_INVOKABLE void commitSettings();
@@ -79,6 +76,5 @@ private:
     void doStartPreview() override;
 
     EffectSettingsAccessPtr settingsAccess() const;
-    const int m_instanceId;
 };
 }

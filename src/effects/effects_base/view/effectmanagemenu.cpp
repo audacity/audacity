@@ -12,19 +12,18 @@ void EffectManageMenu::load()
 {
     AbstractMenuModel::load();
 
-    const EffectInstanceId instanceId = m_instanceId.toULongLong();
-    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
 
     // subscribe on user presets change
-    presetsController()->userPresetsChanged().onReceive(this, [this, effectId, instanceId](const EffectId& eid) {
+    presetsController()->userPresetsChanged().onReceive(this, [this, effectId](const EffectId& eid) {
         if (effectId != eid) {
             return;
         }
 
-        reload(effectId, instanceId);
+        reload(effectId, m_instanceId);
     });
 
-    reload(effectId, instanceId);
+    reload(effectId, m_instanceId);
 }
 
 void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& instanceId)
@@ -143,12 +142,12 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     emit presetsChanged();
 }
 
-QString EffectManageMenu::instanceId_prop() const
+int EffectManageMenu::instanceId_prop() const
 {
     return m_instanceId;
 }
 
-void EffectManageMenu::setInstanceId_prop(const QString& newInstanceId)
+void EffectManageMenu::setInstanceId_prop(int newInstanceId)
 {
     if (m_instanceId == newInstanceId) {
         return;
@@ -181,18 +180,16 @@ bool EffectManageMenu::enabled() const
 
 void EffectManageMenu::resetPreset()
 {
-    const EffectInstanceId instanceId = m_instanceId.toULongLong();
     ActionQuery q("action://effects/presets/apply");
-    q.addParam("instanceId", Val(instanceId));
+    q.addParam("instanceId", Val(m_instanceId));
     q.addParam("presetId", Val(m_currentPreset.toStdString()));
     dispatcher()->dispatch(q);
 }
 
 void EffectManageMenu::savePresetAs()
 {
-    const EffectInstanceId instanceId = m_instanceId.toULongLong();
     ActionQuery q("action://effects/presets/save");
-    q.addParam("instanceId", Val(instanceId));
+    q.addParam("instanceId", Val(m_instanceId));
     dispatcher()->dispatch(q);
     emit presetsChanged();
     emit presetChanged();

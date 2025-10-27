@@ -3,14 +3,9 @@
 */
 #include "audiounitviewlauncher.h"
 
-#include "log.h"
-
 muse::Ret au::effects::AudioUnitViewLauncher::showEffect(const EffectInstanceId& instanceId) const
 {
-    muse::UriQuery uri(EFFECT_VIEWER_URI);
-    uri.addParam("instanceId", muse::Val(instanceId));
-    uri.addParam("effectFamily", muse::Val(EffectFamily::AudioUnit));
-    return interactive()->openSync(uri).ret;
+    return doShowEffect(instanceId, EffectFamily::AudioUnit);
 }
 
 void au::effects::AudioUnitViewLauncher::showRealtimeEffect(const RealtimeEffectStatePtr& state) const
