@@ -16,7 +16,7 @@ TrackItemsContainer {
     property bool leftTrimPressedButtons: false
     property bool rightTrimPressedButtons: false
 
-    ClipsListModel {
+    TrackClipsListModel {
         id: clipsModel
         trackId: root.trackId
         context: root.context
