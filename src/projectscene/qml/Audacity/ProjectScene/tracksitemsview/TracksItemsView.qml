@@ -760,7 +760,7 @@ Rectangle {
                                 tracksViewState.requestVerticalScrollUnlock()
                             }
 
-                            onClipDragEditCanceled: {
+                            onItemDragEditCanceled: {
                                 root.hoveredClipKey = null
                                 root.clipHeaderHovered = false
                                 tracksClipsView.moveActive = false

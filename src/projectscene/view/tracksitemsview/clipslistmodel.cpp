@@ -139,7 +139,7 @@ void ClipsListModel::reload()
             item->setClip(clip);
         }
 
-        m_context->updateSelectedObjectTime();
+        m_context->updateSelectedItemTime();
 
         updateItemsMetrics();
     }, muse::async::Asyncable::Mode::SetReplace);
@@ -738,8 +738,8 @@ bool ClipsListModel::cancelClipDragEdit(const ClipKey& key)
         return false;
     }
 
-    vs->setClipEditStartTimeOffset(-1.0);
-    vs->setClipEditEndTimeOffset(-1.0);
+    vs->setObjectEditStartTimeOffset(-1.0);
+    vs->setObjectEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
 
     m_context->stopAutoScroll();

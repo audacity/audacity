@@ -63,12 +63,12 @@ void TimelineContext::init(double frameWidth)
 
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList&) {
         updateSingleObjectSelected();
-        updateSelectedObjectTime();
+        updateSelectedItemTime();
     });
 
     selectionController()->labelsSelected().onReceive(this, [this](const trackedit::LabelKeyList&) {
         updateSingleObjectSelected();
-        updateSelectedObjectTime();
+        updateSelectedItemTime();
     });
 
     m_selectionStartTime = selectionController()->dataSelectedStartTime();
@@ -870,7 +870,7 @@ void TimelineContext::updateSingleObjectSelected()
     emit singleObjectSelectedChanged();
 }
 
-void TimelineContext::updateSelectedObjectTime()
+void TimelineContext::updateSelectedItemTime()
 {
     if (selectionController()->selectedClips().size() == 1) {
         setObjectStartTime(selectionController()->selectedClipStartTime());

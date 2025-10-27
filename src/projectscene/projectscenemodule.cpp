@@ -52,7 +52,7 @@
 #include "view/tracksitemsview/au3/connectingdotspainter.h"
 #include "view/tracksitemsview/au3/minmaxrmspainter.h"
 #include "view/tracksitemsview/au3/samplespainter.h"
-#include "view/clipsview/mousehelper.h"
+#include "view/tracksitemsview/mousehelper.h"
 
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
