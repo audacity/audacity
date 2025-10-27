@@ -20,7 +20,7 @@
 #include "trackedit/iprojecthistory.h"
 #include "../timeline/timelinecontext.h"
 
-#include "cliplistitem.h"
+#include "trackclipitem.h"
 
 namespace au::projectscene {
 class TrackClipsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
@@ -126,23 +126,23 @@ private:
         int trackOffset = 0;
     };
 
-    void setSelectedItems(const QList<ClipListItem*>& items);
-    void addSelectedItem(ClipListItem* item);
+    void setSelectedItems(const QList<TrackClipItem*>& items);
+    void addSelectedItem(TrackClipItem* item);
     void clearSelectedItems();
 
     void update();
     void updateItemsMetrics();
-    void updateItemsMetrics(ClipListItem* item);
+    void updateItemsMetrics(TrackClipItem* item);
     void positionViewAtClip(const trackedit::Clip& clip);
     void onSelectedClip(const trackedit::ClipKey& k);
     void onSelectedClips(const trackedit::ClipKeyList& keyList);
-    ClipListItem* itemByKey(const trackedit::ClipKey& k) const;
+    TrackClipItem* itemByKey(const trackedit::ClipKey& k) const;
     int indexByKey(const trackedit::ClipKey& k) const;
     QVariant neighbor(const ClipKey& key, int offset) const;
     void requestClipTitleChange();
 
-    MoveOffset calculateMoveOffset(const ClipListItem* item, const ClipKey& key, bool completed) const;
-    trackedit::secs_t calculateTimePositionOffset(const ClipListItem* item) const;
+    MoveOffset calculateMoveOffset(const TrackClipItem* item, const ClipKey& key, bool completed) const;
+    trackedit::secs_t calculateTimePositionOffset(const TrackClipItem* item) const;
     int calculateTrackPositionOffset(const ClipKey& key) const;
     bool isKeyboardTriggered() const;
 
@@ -154,8 +154,8 @@ private:
     TimelineContext* m_context = nullptr;
     trackedit::TrackId m_trackId = -1;
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
-    QList<ClipListItem*> m_clipList;
-    QList<ClipListItem*> m_selectedItems;
+    QList<TrackClipItem*> m_clipList;
+    QList<TrackClipItem*> m_selectedItems;
     bool m_isStereo = false;
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
 
