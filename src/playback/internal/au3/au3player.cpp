@@ -29,6 +29,8 @@ Au3Player::Au3Player()
 {
     m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
         if (st == PlaybackStatus::Running) {
+            m_currentTarget.reset();
+            m_consumedSamplesSoFar = 0;
             m_reachedEnd.val = false;
         }
     });
@@ -261,9 +263,6 @@ void Au3Player::stop()
     if (captureMeter) {
         captureMeter->stop();
     }
-
-    m_consumedSamplesSoFar = 0;
-    m_currentTarget.reset();
 }
 
 void Au3Player::pause()
@@ -506,7 +505,7 @@ void Au3Player::updatePlaybackPosition()
 
     const auto timeDiff = duration_cast<milliseconds>(steady_clock::now() - m_currentTarget->time).count() / 1000.0;
     if (timeDiff > 0) {
-        // Hardware buffer was drained an no new data was put in there.
+        // We are past the target time, stop consuming until new data is available.
         return;
     }
 
