@@ -5,41 +5,40 @@ import Muse.UiComponents
 Rectangle {
     id: root
 
-    property color borderColor: "#000000"
-    property int borderWidth: 1
-    property bool timelinePressed: false
+    QtObject {
+        id: prv
+        property color borderColor: "#000000"
+        property color centerLineColor: "#ffffff"
+        property int borderWidth: 1
+        property int centerLineWidth: 1
+    }
 
     antialiasing: true
 
     Rectangle {
         id: cursor
 
-        x: -1 // offset to align center line
-        width: 3 // 1px border, 1px center line, 1px border
+        x: - prv.centerLineWidth // offset to align center line
+        width: prv.centerLineWidth + (2 * prv.borderWidth) // 1px left border, 1px center line, 1px left border
         height: root.height
-        color: "#ffffff"
-
-        // draw borders without top one
+        color: prv.centerLineColor
+        antialiasing: true
+        // draw left and right borders without top and bottom ones
         Rectangle {
             id: leftBorder
-            color: borderColor
-            width: borderWidth
+            color: prv.borderColor
+            width: prv.borderWidth
             height: parent.height
             anchors.left: parent.left
+            antialiasing: true
         }
         Rectangle {
             id: rightBorder
-            color: borderColor
-            width: borderWidth
+            color: prv.borderColor
+            width: prv.borderWidth
             height: parent.height
             anchors.right: parent.right
-        }
-        Rectangle {
-            id: bottomBorder
-            color: borderColor
-            width: root.width
-            height: borderWidth
-            anchors.bottom: parent.bottom
+            antialiasing: true
         }
     }
 }
