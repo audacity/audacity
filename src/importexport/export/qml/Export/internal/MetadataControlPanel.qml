@@ -97,7 +97,7 @@ RowLayout {
 
         Layout.preferredWidth: 61
 
-        enabled: !metadataModel.isStandardTag(tagView.currentIndex)
+        enabled: !metadataModel.isStandardTag(tagView.currentSourceRow)
 
         text: qsTrc("export", "Delete")
 
@@ -105,7 +105,7 @@ RowLayout {
         navigation.column: setDefaultBtn.navigation.column + 1
 
         onClicked: {
-            metadataModel.deleteTag(tagView.currentIndex)
+            metadataModel.deleteTag(tagView.currentSourceRow)
         }
     }
 
@@ -121,9 +121,6 @@ RowLayout {
 
         onClicked: {
             metadataModel.addTag()
-
-            // highlight right away
-            tagView.currentIndex = metadataModel.rowCount() - 1
         }
     }
 }

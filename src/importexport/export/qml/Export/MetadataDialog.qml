@@ -47,21 +47,45 @@ StyledDialogView {
             id: topButtonsBar
 
             metadataModel: metadataModel
-            tagView: metadataView.tagView
+            tagView: metadataView
 
             navigationPanel: root.navigation
             navigationOrder: root.navigationOrder
         }
 
-        SeparatorLine {}
-
-        MetadataView {
+        ValueList {
             id: metadataView
 
-            metadataModel: metadataModel
-        }
+            keyRoleName: "tag"
+            keyTitle: qsTrc("metadata", "tag")
+            valueRoleName: "value"
+            valueTitle: qsTrc("metadata", "value")
+            valueTypeRole: "roleType"
+            readOnly: false
 
-        SeparatorLine {}
+            width: root.contentWidth
+            height: 527
+
+            drawZebra: false
+            headerColor: ui.theme.backgroundSecondaryColor
+            keyColumnWidth: 140
+            isKeyEditable: true
+            headerCapitalization: Font.Capitalize
+            startEditByDoubleClick: true
+
+            navigationSection: navigation.section
+            navigationOrderStart: topButtonsBar.navigationOrder + 1
+
+            model: metadataModel
+
+            onKeyEdited: function(row, newKey) {
+                metadataModel.renameTag(row, newKey)
+            }
+
+            onValueEdited: function(row, newVal) {
+                metadataModel.setTagValue(row, newVal)
+            }
+        }
 
         ButtonBox {
             id: buttonBox
@@ -69,6 +93,9 @@ StyledDialogView {
             Layout.fillWidth: true
 
             padding: 8
+
+            navigationPanel.section: root.navigation.section
+            navigationPanel.order: metadataView.navigationOrderStart + 2
 
             FlatButton {
                 id: cancelBtn

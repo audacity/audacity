@@ -39,6 +39,7 @@ QVariant MetadataModel::data(const QModelIndex& index, int role) const
         if (role == RoleValue) {
             return QString(m_meta.*(project::kStdMembers[row]));
         }
+
         return {};
     }
 
@@ -51,6 +52,7 @@ QVariant MetadataModel::data(const QModelIndex& index, int role) const
     if (role == RoleValue) {
         return m_meta.additionalTags.value(key);
     }
+
     return {};
 }
 
@@ -67,7 +69,7 @@ QHash<int, QByteArray> MetadataModel::roleNames() const
 {
     static const QHash<int, QByteArray> roles {
         { RoleTag, "tag" },
-        { RoleValue, "value" }
+        { RoleValue, "value" },
     };
 
     return roles;
@@ -106,6 +108,8 @@ bool MetadataModel::isStandardTag(const int index)
     }
 
     // first 9 tags are always standard tags
+    // NOTE: this still works if you reorder tags in the UI
+    // but use sourceRowIndex
     if (index < int(kStdTags.size())) {
         return true;
     }
@@ -183,7 +187,7 @@ void MetadataModel::addTag()
 
     beginInsertRows(QModelIndex(), insertRow, insertRow);
 
-    QString key = muse::qtrc("metadata", "New tag");
+    QString key = "";
 
     m_meta.additionalTags.insert(key, QString());
     m_additionalKeys.append(key);

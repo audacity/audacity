@@ -137,7 +137,14 @@ void ExportPreferencesModel::apply()
 
 void ExportPreferencesModel::cancel()
 {
+    auto defaultMetadata = exportConfiguration()->defaultMetadata();
     configuration()->rollbackSettings();
+
+    // no matter if user exports audio or cancels - if they edited metadata
+    // it needs to stay
+    if (defaultMetadata != exportConfiguration()->defaultMetadata()) {
+        exportConfiguration()->setDefaultMetadata(defaultMetadata);
+    }
 }
 
 QString ExportPreferencesModel::currentProcess() const
