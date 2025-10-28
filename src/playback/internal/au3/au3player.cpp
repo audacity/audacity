@@ -488,7 +488,15 @@ void Au3Player::updatePlaybackPosition()
         const auto targetConsumedSamples = static_cast<unsigned long long>(newCallback.numSamples)
                                            + (m_currentTarget ? m_currentTarget->consumedSamples : 0);
         const nanoseconds payloadDuration{ static_cast<long>(newCallback.numSamples * 1e9 / sampleRate + .5) };
-        const auto targetTime = newCallback.dacTime + payloadDuration;
+
+        auto dacTime = newCallback.dacTime;
+        if (m_currentTarget && m_currentTarget->time > newCallback.dacTime) {
+            // Jitter was observed in the hardware-thread callbacks on a macbook device: 4096 samples at 44.1kHz is 93ms, yet it
+            // was called 10 times with 85ms intervals, then one time with 170ms, over and over again.
+            dacTime = m_currentTarget->time;
+        }
+
+        const auto targetTime = dacTime + payloadDuration;
         m_currentTarget.emplace(targetTime, targetConsumedSamples);
     }
 
