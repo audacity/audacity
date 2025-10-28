@@ -590,7 +590,9 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
 
         while (player->isRunning()) {
             using namespace std::chrono;
-            std::this_thread::sleep_for(10ms);
+            // A fast update rate is necessary if we want a smooth play-cursor animation
+            // whether the user interacts with the dialog during preview or not.
+            std::this_thread::sleep_for(1ms);
             QCoreApplication::processEvents();
         }
     }
