@@ -9,8 +9,8 @@ Rectangle {
         id: prv
         property color borderColor: "#000000"
         property color centerLineColor: "#ffffff"
-        property int borderWidth: 1
-        property int centerLineWidth: 1
+        property int borderWidth: 1 // can be any number
+        property int centerLineWidth: 1 // must be odd number
     }
 
     antialiasing: true
@@ -18,8 +18,8 @@ Rectangle {
     Rectangle {
         id: cursor
 
-        x: - prv.centerLineWidth // offset to align center line
-        width: prv.centerLineWidth + (2 * prv.borderWidth) // 1px left border, 1px center line, 1px left border
+        x: -prv.borderWidth - Math.floor(prv.centerLineWidth / 2) // offset to align center line
+        width: prv.centerLineWidth + (2 * prv.borderWidth) // left border width, center line width, right border width
         height: root.height
         color: prv.centerLineColor
         antialiasing: true
