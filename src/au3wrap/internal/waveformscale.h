@@ -29,8 +29,6 @@ public:
     ~WaveformScale() override = default;
     PointerType Clone() const override;
 
-    int ZeroLevelYCoordinate(wxRect rect) const;
-
     void GetDisplayBounds(float& min, float& max) const
     { min = mDisplayMin; max = mDisplayMax; }
 
