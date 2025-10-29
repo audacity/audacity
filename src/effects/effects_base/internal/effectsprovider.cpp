@@ -387,8 +387,14 @@ void restoreEffectStateHack(EffectBase& effect)
 }
 }
 
-muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& settings)
+muse::Ret EffectsProvider::previewEffect(const EffectId& effectId, EffectSettings& settings)
 {
+    ::EffectBase* pEffect = this->effect(effectId);
+    if (!pEffect) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
+    }
+    auto& effect = *pEffect;
+
     const bool isNyquist = effect.GetFamily() == NYQUISTEFFECTS_FAMILY;
     const bool isGenerator = effect.GetType() == EffectTypeGenerate;
 
@@ -594,9 +600,4 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
     }
 
     return muse::make_ok();
-}
-
-muse::Ret EffectsProvider::previewEffect(au3::Au3Project&, Effect* effect, EffectSettings& settings)
-{
-    return doEffectPreview(*effect, settings);
 }
