@@ -89,7 +89,6 @@ private:
     const std::unique_ptr<ITimer> m_playingTimer;
     const std::unique_ptr<ITimer> m_stoppingTimer;
     std::atomic<bool> m_running { false };
-    bool m_stopPending = true;
     bool m_warningIssued = false;
 };
 }

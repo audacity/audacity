@@ -7,15 +7,8 @@
 
 #include "au3audiometer.h"
 
-#include "global/async/async.h"
 #include "global/log.h"
-
-#include "libraries/lib-utility/MathApprox.h"
-#include "libraries/lib-utility/MemoryX.h"
-
 #include "global/types/ratio.h" // muse::linear_to_db
-
-#include <cmath> // std::ceil
 
 namespace au::au3 {
 namespace {
@@ -127,6 +120,10 @@ void Meter::push(uint8_t channel, const IMeterSender::InterleavedSampleData& sam
 void Meter::start(double sampleRate)
 {
     m_stoppingTimer->stop();
+    for (auto& [trackId, trackData] : m_trackData) {
+        trackData.channelLevels.clear();
+    }
+
     m_playingTimer->start();
     m_sampleRate = sampleRate;
     m_running.store(true);
