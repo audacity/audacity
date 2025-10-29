@@ -497,14 +497,12 @@ void Au3Player::updatePlaybackPosition()
     }
 
     const auto timeDiff = duration_cast<milliseconds>(steady_clock::now() - m_currentTarget->time).count() / 1000.0;
-    if (timeDiff > 0) {
-        // We are past the target time, stop consuming until new data is available.
-        return;
-    }
+    const auto extrapolation = static_cast<long long>(m_currentTarget->consumedSamples + timeDiff * sampleRate);
+    // Never progress by more samples than really have been output.
+    const auto expectedConsumedNow = std::min(static_cast<long long>(m_currentTarget->consumedSamples), extrapolation);
 
-    const auto expectedConsumedNow = static_cast<long long>(m_currentTarget->consumedSamples + timeDiff * sampleRate);
     if (static_cast<long long>(m_consumedSamplesSoFar) >= expectedConsumedNow) {
-        // User isn't hearing audio yet - wait some more.
+        // User isn't hearing audio yet - wait some more. (`expectedConsumedNow` can be negative.)
         return;
     }
 
