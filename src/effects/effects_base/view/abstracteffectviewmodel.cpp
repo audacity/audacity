@@ -11,6 +11,7 @@ namespace au::effects {
 AbstractEffectViewModel::AbstractEffectViewModel(QObject* parent)
     : QObject(parent), m_instanceId{AbstractViewLauncher::initializationInstanceId()}
 {
+    assert(m_instanceId != -1);
 }
 
 void AbstractEffectViewModel::init()
