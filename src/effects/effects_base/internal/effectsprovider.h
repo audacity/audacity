@@ -61,7 +61,7 @@ public:
     muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
                             EffectSettings& settings) override;
 
-    muse::Ret previewEffect(au3::Au3Project& project, Effect* effect, EffectSettings& settings) override;
+    muse::Ret previewEffect(const EffectId& effectId, EffectSettings& settings) override;
 
 private:
 
