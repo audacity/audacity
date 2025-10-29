@@ -465,8 +465,6 @@ muse::async::Channel<EffectId> EffectExecutionScenario::lastProcessorIdChanged()
 
 muse::Ret EffectExecutionScenario::previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings)
 {
-    au3::Au3Project& project = projectRef();
     EffectId effectId = effectInstancesRegister()->effectIdByInstanceId(effectInstanceId);
-    Effect* effect = effectsProvider()->effect(effectId);
-    return effectsProvider()->previewEffect(project, effect, settings);
+    return effectsProvider()->previewEffect(effectId, settings);
 }
