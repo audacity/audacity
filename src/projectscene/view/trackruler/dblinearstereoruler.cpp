@@ -1,7 +1,10 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include "global/realfn.h"
+
 #include "projectscene/view/trackruler/dblinearstereoruler.h"
+#include "types/ratio.h"
 #include "view/trackruler/itrackrulermodel.h"
 
 #include <cstddef>
@@ -10,69 +13,62 @@
 using namespace au::projectscene;
 
 namespace {
-constexpr double LOW_RESOLUTION_MIN_HEIGHT = 95.0;
-constexpr double MIN_CHANNEL_HEIGHT = 30.0;
+constexpr int MIN_LOWEST_FULL_STEP_TO_ZERO_HEIGHT = 12;
+constexpr int MIN_ADJACENT_STEPS_HEIGHT = 10;
+constexpr int MIN_HEIGHT_TO_ZERO = 10;
+constexpr int MIN_CHANNEL_HEIGHT = 30;
+constexpr std::array<int, 5> FULL_STEP_SIZES = { 1, 2, 3, 6, 9 };
 
-constexpr std::array<TrackRulerFullStep, 2> LOW_RESOLUTION_FULL_STEPS_CH0 = { {
-    TrackRulerFullStep{ 0.0, 0, -1, true, false, false },
-    TrackRulerFullStep{ 1.0, 0, 0, true, true, false },
-} };
-
-constexpr std::array<TrackRulerFullStep, 2> LOW_RESOLUTION_FULL_STEPS_CH1 = { {
-    TrackRulerFullStep{ 1.0, 1, 0, true, false, false },
-    TrackRulerFullStep{ 0.0, 1, 1, true, false, true },
-} };
-
-constexpr std::array<TrackRulerFullStep, 6> HIGH_RESOLUTION_FULL_STEPS_CH0 = { {
-    TrackRulerFullStep{ 0.0, 0, -1, true, false, false },
-    TrackRulerFullStep{ 1.0 / 3.0, 0, 0, false, false, false },
-    TrackRulerFullStep{ 2.0 / 3.0, 0, 0, false, false, false },
-    TrackRulerFullStep{ 1.0, 0, 0, true, true, false },
-    TrackRulerFullStep{ 1.0 / 3.0, 0, 0, false, false, true },
-    TrackRulerFullStep{ 2.0 / 3.0, 0, 0, false, false, true },
-} };
-
-constexpr std::array<TrackRulerFullStep, 6> HIGH_RESOLUTION_FULL_STEPS_CH1 = { {
-    TrackRulerFullStep{ 1.0 / 3.0, 1, 0, false, false, false },
-    TrackRulerFullStep{ 2.0 / 3.0, 1, 0, false, false, false },
-    TrackRulerFullStep{ 1.0, 1, 0, true, true, false },
-    TrackRulerFullStep{ 1.0 / 3.0, 1, 0, false, false, true },
-    TrackRulerFullStep{ 2.0 / 3.0, 1, 0, false, false, true },
-    TrackRulerFullStep{ 0.0, 1, 1, true, false, true },
-} };
-
-constexpr std::array<double, 4> HIGH_RESOLUTION_SMALL_STEPS = { 1.0 / 6.0, 1.0 / 2.0, 2.0 / 3.0, 5.0 / 6.0 };
-
-std::vector<TrackRulerFullStep> fullStepsValues(double height, size_t channel, double dbRange)
+double valueToPosition(double value, double height, bool isNegativeSample = false)
 {
-    std::vector<TrackRulerFullStep> steps;
-    if (height >= LOW_RESOLUTION_MIN_HEIGHT) {
-        channel == 0 ? steps = { HIGH_RESOLUTION_FULL_STEPS_CH0.begin(), HIGH_RESOLUTION_FULL_STEPS_CH0.end() }
-        : steps = { HIGH_RESOLUTION_FULL_STEPS_CH1.begin(), HIGH_RESOLUTION_FULL_STEPS_CH1.end() };
-    } else {
-        channel == 0 ? steps = { LOW_RESOLUTION_FULL_STEPS_CH0.begin(), LOW_RESOLUTION_FULL_STEPS_CH0.end() }
-        : steps = { LOW_RESOLUTION_FULL_STEPS_CH1.begin(), LOW_RESOLUTION_FULL_STEPS_CH1.end() };
+    const auto linearValue = muse::db_to_linear(value) * (isNegativeSample ? -1.0 : 1.0);
+    return (1.0 - (linearValue / 2.0 + 0.5)) * height;
+}
+
+int computeLowestFullStepValue(double height, double m_dbRange)
+{
+    auto const middlePoint = height / 2.0;
+    int lowestFullStep = static_cast<int>(m_dbRange);
+    for (int i = lowestFullStep + 3; i < 0; i += 3) {
+        const double position = valueToPosition(i, height);
+        if (middlePoint - position > MIN_LOWEST_FULL_STEP_TO_ZERO_HEIGHT) {
+            return lowestFullStep;
+        }
+        lowestFullStep = i;
     }
 
-    for (auto& step : steps) {
-        step.value *= dbRange;
+    return 0;
+}
+
+std::vector<int> fullStepsValues(double height, double dbRange)
+{
+    const int lowestFullStep = computeLowestFullStepValue(height, dbRange);
+
+    std::vector<int> steps;
+    if (lowestFullStep != 0) {
+        steps.push_back(lowestFullStep);
+        int previousValidStep = lowestFullStep;
+
+        for (int step = lowestFullStep + 1; step < 0; step++) {
+            const int diff = step - previousValidStep;
+            if (std::find(FULL_STEP_SIZES.begin(), FULL_STEP_SIZES.end(), diff) == FULL_STEP_SIZES.end()) {
+                continue;
+            }
+
+            const double position = valueToPosition(step, height);
+            if (position < MIN_HEIGHT_TO_ZERO) {
+                break;
+            }
+
+            const double previousPosition = valueToPosition(previousValidStep, height);
+            if (previousPosition - position >= MIN_ADJACENT_STEPS_HEIGHT) {
+                steps.push_back(step);
+                previousValidStep = step;
+            }
+        }
     }
 
     return steps;
-}
-
-std::vector<double> smallStepsValues(double height, double dbRange)
-{
-    if (height < LOW_RESOLUTION_MIN_HEIGHT) {
-        return {};
-    }
-
-    std::vector<double> smallSteps = { HIGH_RESOLUTION_SMALL_STEPS.begin(), HIGH_RESOLUTION_SMALL_STEPS.end() };
-    for (auto& step : smallSteps) {
-        step *= dbRange;
-    }
-
-    return smallSteps;
 }
 }
 
@@ -86,13 +82,14 @@ double DbLinearStereoRuler::stepToPosition(double step, size_t channel, bool isN
 
     const double startPosition = channel == 0 ? 0.0 : middlePosition;
     const double endPosition = channel == 0 ? middlePosition : m_height;
-    const double channelMiddlePosition = (endPosition - startPosition) / 2.0;
+    const double channelMiddleOffset = (endPosition - startPosition) / 2.0;
 
-    if (isNegativeSample) {
-        return endPosition - (channelMiddlePosition * (step / m_dbRange));
+    if (muse::RealIsEqual(step, m_dbRange)) {
+        return startPosition + channelMiddleOffset;
     }
 
-    return startPosition + (channelMiddlePosition * (step / m_dbRange));
+    const auto linearValue = muse::db_to_linear(step) * (isNegativeSample ? -1.0 : 1.0);
+    return startPosition + ((1.0 - (linearValue / 2.0 + 0.5)) * (endPosition - startPosition));
 }
 
 void DbLinearStereoRuler::setHeight(int height)
@@ -118,7 +115,13 @@ void DbLinearStereoRuler::setDbRange(double dbRange)
 std::string DbLinearStereoRuler::sampleToText(double sample) const
 {
     std::stringstream ss;
-    ss << std::fixed << std::setprecision(0) << std::abs(sample);
+
+    if (muse::RealIsEqual(sample, m_dbRange)) {
+        ss << "\u221E";
+    } else {
+        ss << std::fixed << std::setprecision(0) << std::abs(sample);
+    }
+
     return ss.str();
 }
 
@@ -131,19 +134,25 @@ std::vector<TrackRulerFullStep> DbLinearStereoRuler::fullSteps() const
 
     std::vector<double> channelHeights = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
     std::vector<TrackRulerFullStep> steps;
+
     for (size_t channel = 0; channel < channelHeights.size(); ++channel) {
         if (channelHeights[channel] < MIN_CHANNEL_HEIGHT) {
             steps.push_back(TrackRulerFullStep { m_dbRange, channel, 0, true, true, false });
             continue;
         }
 
-        auto channelSteps = fullStepsValues(channelHeights[channel], channel, m_dbRange);
-        for (auto& step : channelSteps) {
-            step.channel = channel;
-            steps.push_back(step);
+        std::vector<TrackRulerFullStep> channelSteps { TrackRulerFullStep { m_dbRange, channel, 0, false, true, false },
+                                                       TrackRulerFullStep { 0.0, channel, 0, true, true, false },
+                                                       TrackRulerFullStep { 0.0, channel, 0, true, true, true }
+        };
+
+        auto valuesList = fullStepsValues(channelHeights[channel], m_dbRange);
+        for (const auto& stepValue : valuesList) {
+            channelSteps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), channel, 0, false, false, false });
+            channelSteps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), channel, 0, false, false, true });
         }
+        steps.insert(steps.end(), channelSteps.begin(), channelSteps.end());
     }
-    steps.push_back(TrackRulerFullStep { 0.0, 2, 0, true, true, false });
 
     return steps;
 }
@@ -154,21 +163,5 @@ std::vector<TrackRulerSmallStep> DbLinearStereoRuler::smallSteps() const
         return { TrackRulerSmallStep { 0.0, 0, false }, TrackRulerSmallStep { 0.0, 1, true } };
     }
 
-    std::vector<TrackRulerSmallStep> steps;
-
-    std::vector<double> channelHeights = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
-    for (size_t channel = 0; channel < channelHeights.size(); ++channel) {
-        if (channelHeights[channel] < MIN_CHANNEL_HEIGHT) {
-            steps.push_back(TrackRulerSmallStep { 0.0, channel, channel == 1 });
-            continue;
-        }
-
-        auto channelSteps = smallStepsValues(channelHeights[channel], m_dbRange);
-        for (auto& step : channelSteps) {
-            steps.push_back(TrackRulerSmallStep { step, channel, false });
-            steps.push_back(TrackRulerSmallStep { step, channel, true });
-        }
-    }
-
-    return steps;
+    return {};
 }
