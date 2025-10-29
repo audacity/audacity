@@ -118,8 +118,8 @@ void ExportPreferencesModel::init()
         }
     }
 
-    exportConfiguration()->exportChannelsChanged().onNotify(this, [this] {
-        emit exportChannelsChanged();
+    exportConfiguration()->exportChannelsTypeChanged().onNotify(this, [this] {
+        emit exportChannelsTypeChanged();
     });
 
     exportConfiguration()->exportSampleRateChanged().onNotify(this, [this](){
@@ -279,14 +279,14 @@ QStringList ExportPreferencesModel::formatsList() const
     return result;
 }
 
-ExportChannelsPref::ExportChannels ExportPreferencesModel::exportChannels() const
+void ExportPreferencesModel::setExportChannelsType(ExportChannelsPref::ExportChannels type)
 {
-    return ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannels());
+    exportConfiguration()->setExportChannelsType(static_cast<int>(type));
 }
 
-void ExportPreferencesModel::setExportChannels(ExportChannelsPref::ExportChannels exportChannels)
+ExportChannelsPref::ExportChannels ExportPreferencesModel::exportChannelsType() const
 {
-    exportConfiguration()->setExportChannels(static_cast<int>(exportChannels));
+    return static_cast<ExportChannelsPref::ExportChannels>(exportConfiguration()->exportChannelsType());
 }
 
 int ExportPreferencesModel::maxExportChannels() const
@@ -355,6 +355,11 @@ void ExportPreferencesModel::openMetadataDialog()
     dispatcher()->dispatch("open-metadata-dialog");
 }
 
+void ExportPreferencesModel::openCustomMappingDialog()
+{
+    dispatcher()->dispatch("open-custom-mapping");
+}
+
 void ExportPreferencesModel::setFilePickerPath(const QString& path)
 {
     muse::io::FileInfo info(path);
@@ -421,8 +426,8 @@ void ExportPreferencesModel::updateExportChannels()
 {
     int maxChannels = exporter()->maxChannels();
 
-    if (static_cast<int>(exportChannels()) > maxChannels) {
-        setExportChannels(ExportChannelsPref::ExportChannels(maxChannels));
+    if (static_cast<int>(exportChannelsType()) > maxChannels) {
+        setExportChannelsType(ExportChannelsPref::ExportChannels(maxChannels));
     }
 }
 
