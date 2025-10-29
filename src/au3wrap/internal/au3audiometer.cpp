@@ -76,7 +76,9 @@ Meter::Meter(std::unique_ptr<ITimer> playingTimer, std::unique_ptr<ITimer> stopp
             auto& trackData = entry.second;
             for (const std::pair<const audio::audioch_t, Levels>& entry : trackData.channelLevels) {
                 const auto& [channel, levels] = entry;
-                trackData.notificationChannel.send(channel, audio::MeterSignal { levels.peak.db, levels.rms.db });
+                trackData.notificationChannel.send(channel, audio::MeterSignal {
+                        { muse::db_to_linear(levels.peak.db), levels.peak.db },
+                        { muse::db_to_linear(levels.rms.db), levels.rms.db } });
             }
         }
     });
