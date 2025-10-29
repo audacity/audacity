@@ -15,6 +15,7 @@
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
+#include "importexport/export/exportutils.h"
 
 #include "translation.h"
 
@@ -160,15 +161,37 @@ muse::Ret Au3Exporter::exportData(std::string filename)
         return muse::make_ret(muse::Ret::Code::InternalError, muse::trc("export", "All selected audio is muted"));
     }
 
-    // TODO: update when custom mapping is implemented
+    // TODO: take into account soloed/muted tracks
+    auto downMix = std::make_unique<MixerOptions::Downmix>(exportedTracks.size(), exportConfiguration()->exportChannels());
     if (ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannels()) == ExportChannelsPref::ExportChannels::MONO) {
         m_numChannels = 1;
-    } else {
+    } else if (ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannels()) == ExportChannelsPref::ExportChannels::STEREO) {
         m_numChannels = 2;
+    } else {
+        const std::vector<std::vector<bool> > matrix = utils::valToMatrix(exportConfiguration()->exportCustomChannelMapping());
+
+        m_mixerSpec = downMix.get();
+
+        const int trackCount = static_cast<int>(exportedTracks.size());
+        m_numChannels = exportConfiguration()->exportChannels();
+
+        for (int t = 0; t < trackCount; ++t) {
+            for (int ch = 0; ch < m_numChannels; ++ch) {
+                m_mixerSpec->mMap[t][ch] = false;
+            }
+        }
+
+        const int rows = std::min(trackCount, static_cast<int>(matrix.size()));
+        for (int t = 0; t < rows; ++t) {
+            const int cols = std::min(static_cast<int>(m_numChannels), static_cast<int>(matrix[t].size()));
+            for (int ch = 0; ch < cols; ++ch) {
+                if (matrix[t][ch]) {
+                    m_mixerSpec->mMap[t][ch] = true;
+                }
+            }
+        }
     }
 
-    // TODO: m_mixerSpec should be created ONLY when custom mapping is applied
-    // m_mixerSpec = std::make_unique<MixerOptions::Downmix>(exportedTracks.size(), m_numChannels).get();
     m_sampleRate = exportConfiguration()->exportSampleRate();
 
     try {

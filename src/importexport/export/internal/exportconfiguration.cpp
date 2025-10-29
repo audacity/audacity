@@ -15,7 +15,9 @@ static const std::string module_name("export");
 static const muse::Settings::Key EXPORT_PROCESS(module_name, "importexport/process");
 static const muse::Settings::Key EXPORT_DIRECTORY_PATH(module_name, "importexport/directoryPath");
 static const muse::Settings::Key EXPORT_FORMAT(module_name, "importexport/format");
+static const muse::Settings::Key EXPORT_CHANNELS_TYPE(module_name, "importexport/channelsType");
 static const muse::Settings::Key EXPORT_CHANNELS(module_name, "importexport/channels");
+static const muse::Settings::Key EXPORT_CUSTOM_CHANNEL_MAPPING(module_name, "importexport/customChannelMapping");
 static const muse::Settings::Key EXPORT_SAMPLE_RATE(module_name, "importexport/defaultProjectSampleRate");
 static const muse::Settings::Key EXPORT_ENCODING(module_name, "importexport/encoding");
 
@@ -61,9 +63,19 @@ void ExportConfiguration::init()
         m_currentFormatChanged.notify();
     });
 
-    muse::settings()->setDefaultValue(EXPORT_CHANNELS, muse::Val(ExportChannelsPref::ExportChannels::STEREO));
+    muse::settings()->setDefaultValue(EXPORT_CHANNELS_TYPE, muse::Val(ExportChannelsPref::ExportChannels::STEREO));
+    muse::settings()->valueChanged(EXPORT_CHANNELS_TYPE).onReceive(nullptr, [this] (const muse::Val&) {
+        m_exportChannelsTypeChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(EXPORT_CHANNELS, muse::Val(2));
     muse::settings()->valueChanged(EXPORT_CHANNELS).onReceive(nullptr, [this] (const muse::Val&) {
         m_exportChannelsChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(EXPORT_CUSTOM_CHANNEL_MAPPING, muse::Val());
+    muse::settings()->valueChanged(EXPORT_CUSTOM_CHANNEL_MAPPING).onReceive(nullptr, [this] (const muse::Val&) {
+        m_exportCustomChannelsMappingChanged.notify();
     });
 
     muse::settings()->valueChanged(EXPORT_SAMPLE_RATE).onReceive(nullptr, [this] (const muse::Val&) {
@@ -216,6 +228,21 @@ muse::async::Notification ExportConfiguration::directoryPathChanged() const
     return m_directoryPathChanged;
 }
 
+int ExportConfiguration::exportChannelsType() const
+{
+    return muse::settings()->value(EXPORT_CHANNELS_TYPE).toInt();
+}
+
+void ExportConfiguration::setExportChannelsType(int channels)
+{
+    muse::settings()->setSharedValue(EXPORT_CHANNELS_TYPE, muse::Val(channels));
+}
+
+muse::async::Notification ExportConfiguration::exportChannelsTypeChanged() const
+{
+    return m_exportChannelsTypeChanged;
+}
+
 int ExportConfiguration::exportChannels() const
 {
     return muse::settings()->value(EXPORT_CHANNELS).toInt();
@@ -229,6 +256,21 @@ void ExportConfiguration::setExportChannels(int channels)
 muse::async::Notification ExportConfiguration::exportChannelsChanged() const
 {
     return m_exportChannelsChanged;
+}
+
+muse::Val ExportConfiguration::exportCustomChannelMapping() const
+{
+    return muse::settings()->value(EXPORT_CUSTOM_CHANNEL_MAPPING);
+}
+
+void ExportConfiguration::setExportCustomChannelMapping(const muse::Val& mapping)
+{
+    muse::settings()->setSharedValue(EXPORT_CUSTOM_CHANNEL_MAPPING, mapping);
+}
+
+muse::async::Notification ExportConfiguration::exportCustomChannelMappingChanged() const
+{
+    return m_exportCustomChannelsMappingChanged;
 }
 
 std::string ExportConfiguration::currentFormat() const

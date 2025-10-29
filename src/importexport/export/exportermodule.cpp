@@ -11,6 +11,8 @@
 #include "view/dynamicexportoptionsmodel.h"
 #include "view/customffmpegpreferencesmodel.h"
 #include "view/metadatamodel.h"
+#include "view/custommappingmodel.h"
+#include "view/channelmappingtableviewmodel.h"
 
 #include "exportermodule.h"
 
@@ -49,6 +51,7 @@ void ExporterModule::resolveImports()
         ir->registerQmlUri(Uri("audacity://project/export"), "Export/ExportDialog.qml");
         ir->registerQmlUri(Uri("audacity://project/export/ffmpeg"), "Export/CustomFFmpegDialog.qml");
         ir->registerQmlUri(Uri("audacity://project/export/metadata"), "Export/MetadataDialog.qml");
+        ir->registerQmlUri(Uri("audacity://project/export/mapping"), "Export/CustomMappingDialog.qml");
     }
 }
 
@@ -63,6 +66,10 @@ void ExporterModule::registerUiTypes()
     qmlRegisterType<DynamicExportOptionsModel>("Audacity.Export", 1, 0, "DynamicExportOptionsModel");
     qmlRegisterType<CustomFFmpegPreferencesModel>("Audacity.Export", 1, 0, "CustomFFmpegPreferencesModel");
     qmlRegisterType<MetadataModel>("Audacity.Export", 1, 0, "MetadataModel");
+    qmlRegisterType<CustomMappingModel>("Audacity.Export", 1, 0, "CustomMappingModel");
+    qmlRegisterType<ChannelMappingTableViewModel>("Audacity.Export", 1, 0, "ChannelMappingTableViewModel");
+    qmlRegisterUncreatableMetaObject(ChannelMappingTableViewCellType::staticMetaObject,
+                                     "Audacity.Export", 1, 0, "ChannelMappingTableViewCellType", "");
 
     qmlRegisterUncreatableType<importexport::ExportChannelsPref>("Audacity.Export", 1, 0, "ExportChannels", "Not creatable from QML");
     qmlRegisterUncreatableType<ExportOptionType>("Audacity.Export", 1, 0, "ExportOptionType", "Not creatable from QML");
