@@ -648,6 +648,7 @@ Rectangle {
                     isTrackFocused: model.isTrackFocused
                     isMultiSelectionActive: model.isMultiSelectionActive
                     isTrackAudible: model.isTrackAudible
+                    trackRulerType: model.trackRulerType
                     moveActive: tracksClipsView.moveActive
                     altPressed: root.altPressed
                     ctrlPressed: root.ctrlPressed

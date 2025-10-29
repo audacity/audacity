@@ -36,7 +36,7 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
 
     auto& settings = WaveformSettings::Get(*track);
     const float dbRange = settings.dBRange;
-    const bool dB = !settings.isLinear();
+    const bool dB = !params.isLinear;
 
     const std::vector<double> channelHeight {
         params.geometry.height * params.channelHeightRatio,

@@ -48,6 +48,7 @@ public:
         bool showRMS = false;
         bool showClipping = false;
         Style style;
+        bool isLinear = true;
     };
 
     enum class PlotType

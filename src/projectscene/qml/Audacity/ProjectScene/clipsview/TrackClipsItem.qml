@@ -22,6 +22,7 @@ Item {
     property bool isTrackFocused: false
     property bool isMultiSelectionActive: false
     property bool isTrackAudible: true
+    property int trackRulerType: 0
     property bool isStereo: clipsModel.isStereo
     property bool moveActive: false
     property bool altPressed: false
@@ -285,6 +286,7 @@ Item {
                 isDataSelected: root.isDataSelected
                 moveActive: root.moveActive
                 isAudible: root.isTrackAudible
+                trackRulerType: root.trackRulerType
                 multiSampleEdit: clipsContainer.multiSampleEdit
                 altPressed: root.altPressed
                 selectionInProgress: root.selectionInProgress || root.selectionEditInProgress
