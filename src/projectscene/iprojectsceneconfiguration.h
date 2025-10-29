@@ -59,5 +59,9 @@ public:
     virtual bool playbackOnRulerClickEnabled() const = 0;
     virtual void setPlaybackOnRulerClickEnabled(bool enabled) = 0;
     virtual muse::async::Notification playbackOnRulerClickEnabledChanged() const = 0;
+
+    virtual int tracksRulerType(const trackedit::TrackId& trackId) = 0;
+    virtual void setTracksRulerType(trackedit::TrackId trackId, int rulerType) = 0;
+    virtual muse::async::Notification tracksRulerTypeChanged() const = 0;
 };
 }

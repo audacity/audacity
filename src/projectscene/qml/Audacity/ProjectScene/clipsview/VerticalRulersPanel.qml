@@ -108,7 +108,7 @@ Rectangle {
                 }
 
                 onRulerTypeChangeRequested: function(newType) {
-                    rulerModel.rulerType = newType;
+                    root.model.setTrackRulerType(model.trackId, newType);
                 }
             }
 
@@ -125,6 +125,7 @@ Rectangle {
                 isCollapsed: trackViewState.isTrackCollapsed
                 channelHeightRatio: trackViewState.channelHeightRatio
                 trackId: model.trackId
+                rulerType: model.trackRulerType
             }
 
             Rectangle {

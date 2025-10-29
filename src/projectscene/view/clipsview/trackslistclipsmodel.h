@@ -9,6 +9,7 @@
 
 #include "global/async/asyncable.h"
 
+#include "iprojectsceneconfiguration.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/iselectioncontroller.h"
@@ -16,6 +17,7 @@
 #include "trackedit/itrackeditinteraction.h"
 #include "playback/itrackplaybackcontrol.h"
 #include "ui/iuiconfiguration.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 
 #include "trackedit/dom/track.h"
 
@@ -34,6 +36,7 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<IProjectSceneConfiguration> projectsceneConfiguration;
 
 public:
     explicit TracksListClipsModel(QObject* parent = nullptr);
@@ -41,6 +44,7 @@ public:
     Q_INVOKABLE void load();
     Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);
     Q_INVOKABLE void toggleVerticalRuler() const;
+    Q_INVOKABLE void setTrackRulerType(const trackedit::TrackId& trackId, int rulerType) const;
 
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -67,6 +71,7 @@ private:
         IsMultiSelectionActiveRole,
         IsTrackAudibleRole,
         IsStereoRole,
+        TrackRulerType,
     };
 
     std::vector<trackedit::Track> m_trackList;

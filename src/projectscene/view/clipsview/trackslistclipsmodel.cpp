@@ -100,6 +100,15 @@ void TracksListClipsModel::load()
         emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    projectsceneConfiguration()->tracksRulerTypeChanged().onNotify(this, [this]() {
+        if (m_trackList.empty()) {
+            return;
+        }
+
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { TrackRulerType });
+    });
+
     prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track> tracks) {
         Q_UNUSED(tracks);
         muse::async::Async::call(this, [this]() {
@@ -237,6 +246,9 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
     case IsStereoRole: {
         return track.type == au::trackedit::TrackType::Stereo;
     }
+    case TrackRulerType: {
+        return projectsceneConfiguration()->tracksRulerType(track.id);
+    }
     default:
         break;
     }
@@ -256,6 +268,7 @@ QHash<int, QByteArray> TracksListClipsModel::roleNames() const
         { IsMultiSelectionActiveRole, "isMultiSelectionActive" },
         { IsTrackAudibleRole, "isTrackAudible" },
         { IsStereoRole, "isStereo" },
+        { TrackRulerType, "trackRulerType" },
     };
     return roles;
 }
@@ -280,4 +293,9 @@ int TracksListClipsModel::totalTracksHeight() const
 void TracksListClipsModel::toggleVerticalRuler() const
 {
     dispatcher()->dispatch(TOGGLE_VERTICAL_RULERS);
+}
+
+void TracksListClipsModel::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType) const
+{
+    projectsceneConfiguration()->setTracksRulerType(trackId, rulerType);
 }

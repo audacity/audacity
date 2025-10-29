@@ -7,8 +7,6 @@
 
 #include "global/stringutils.h"
 
-#include "NumericConverterFormats.h"
-
 #include "types/projectscenetypes.h"
 
 #include "projectsceneconfiguration.h"
@@ -33,6 +31,7 @@ static const muse::Settings::Key ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES(moduleName
 static const muse::Settings::Key SELECTION_TIMECODE_FORMAT(moduleName, "projectscene/selectionTimecodeFormat");
 static const muse::Settings::Key PLAYBACK_ON_RULER_CLICK_ENABLED(moduleName, "projectscene/playbackOnRulerClickEnabled");
 static const bool DEFAULT_PLAYBACK_ON_RULER_CLICK_ENABLED = false;
+static const muse::Settings::Key TRACKS_RULER_TYPE(moduleName, "projectscene/tracksRulerType");
 
 void ProjectSceneConfiguration::init()
 {
@@ -76,6 +75,11 @@ void ProjectSceneConfiguration::init()
     muse::settings()->setDefaultValue(PLAYBACK_ON_RULER_CLICK_ENABLED, muse::Val(DEFAULT_PLAYBACK_ON_RULER_CLICK_ENABLED));
     muse::settings()->valueChanged(PLAYBACK_ON_RULER_CLICK_ENABLED).onReceive(nullptr, [this](const muse::Val&) {
         m_playbackOnRulerClickEnabledChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(TRACKS_RULER_TYPE, muse::Val(std::map<std::string, muse::Val> {}));
+    muse::settings()->valueChanged(TRACKS_RULER_TYPE).onReceive(nullptr, [this](const muse::Val&) {
+        m_tracksRulerTypeChanged.notify();
     });
 }
 
@@ -285,4 +289,29 @@ void ProjectSceneConfiguration::setPlaybackOnRulerClickEnabled(bool enabled)
 muse::async::Notification ProjectSceneConfiguration::playbackOnRulerClickEnabledChanged() const
 {
     return m_playbackOnRulerClickEnabledChanged;
+}
+
+int ProjectSceneConfiguration::tracksRulerType(const trackedit::TrackId& trackId)
+{
+    const auto& value = muse::settings()->value(TRACKS_RULER_TYPE).toMap();
+
+    auto it = value.find(std::to_string(static_cast<int>(trackId)));
+    if (it == value.end()) {
+        setTracksRulerType(trackId, 0);
+        return 0;
+    }
+
+    return it->second.toInt();
+}
+
+void ProjectSceneConfiguration::setTracksRulerType(au::trackedit::TrackId trackId, int rulerType)
+{
+    auto value = muse::settings()->value(TRACKS_RULER_TYPE).toMap();
+    value[std::to_string(static_cast<int>(trackId))] = muse::Val(rulerType);
+    muse::settings()->setSharedValue(TRACKS_RULER_TYPE, muse::Val(value));
+}
+
+muse::async::Notification ProjectSceneConfiguration::tracksRulerTypeChanged() const
+{
+    return m_tracksRulerTypeChanged;
 }
