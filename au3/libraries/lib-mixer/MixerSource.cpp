@@ -342,43 +342,37 @@ std::optional<size_t> MixerSource::Acquire(Buffers& data, size_t bound)
     assert(data.BlockSize() <= data.Remaining());
 
     auto&[mT0, mT1, _, mTime] = *mTimesAndSpeed;
-    const bool backwards = (mT1 < mT0);
+
+    const auto target = std::min(sampleCount { bound }, sampleCount { (mT1 - mTime) * mRate }).as_size_t();
+
     // TODO: more-than-two-channels
     const auto maxChannels = mMaxChannels = data.Channels();
     const auto limit = std::min<size_t>(mnChannels, maxChannels);
-    size_t maxTrack = 0;
-    const auto mixed = stackAllocate(size_t, maxChannels);
     const auto pFloats = stackAllocate(float*, limit);
     for (size_t j = 0; j < limit; ++j) {
         pFloats[j] = &data.GetWritePosition(j);
     }
     const auto rate = GetSequence().GetRate();
+
     auto result = (mResampleParameters.mVariableRates || rate != mRate)
                   ? MixVariableRates(limit, bound, pFloats)
                   : MixSameRate(limit, bound, pFloats);
-    maxTrack = std::max(maxTrack, result);
-    auto newT = mSamplePos.as_double() / rate;
-    if (backwards) {
-        mTime = std::min(mTime, newT);
-    } else {
-        mTime = std::max(mTime, newT);
-    }
-    for (size_t j = 0; j < limit; ++j) {
-        mixed[j] = result;
-    }
-    // Another pass in case channels of a track did not produce equal numbers
-    for (size_t j = 0; j < limit; ++j) {
-        const auto pFloat = &data.GetWritePosition(j);
-        const auto result = mixed[j];
-        ZeroFill(result, maxTrack, *pFloat);
-    }
 
-    mLastProduced = maxTrack;
-    assert(maxTrack <= bound);
-    assert(maxTrack <= data.Remaining());
-    assert(maxTrack <= Remaining());
+    // Another pass in case one or more tracks did not have enough samples.
+    if (result < target) {
+        for (size_t j = 0; j < limit; ++j) {
+            const auto pFloat = &data.GetWritePosition(j);
+            ZeroFill(result, target, *pFloat);
+        }
+    }
+    mTime += static_cast<double>(target / mRate);
+
+    mLastProduced = target;
+    assert(target <= bound);
+    assert(target <= data.Remaining());
+    assert(target <= Remaining());
     assert(data.Remaining() > 0);
-    assert(bound == 0 || Remaining() == 0 || maxTrack > 0);
+    assert(bound == 0 || Remaining() == 0 || target > 0);
     return { mLastProduced };
 }
 

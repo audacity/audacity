@@ -165,7 +165,8 @@ muse::Ret Au3Exporter::exportData(std::string filename)
         m_numChannels = 2;
     }
 
-    m_mixerSpec = std::make_unique<MixerOptions::Downmix>(exportedTracks.size(), m_numChannels).get();
+    // TODO: m_mixerSpec should be created ONLY when custom mapping is applied
+    // m_mixerSpec = std::make_unique<MixerOptions::Downmix>(exportedTracks.size(), m_numChannels).get();
     m_sampleRate = exportConfiguration()->exportSampleRate();
 
     try {
