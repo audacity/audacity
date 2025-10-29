@@ -12,6 +12,7 @@
         <file>amplify/AmplifyView.qml</file>
         <file>clickremoval/ClickRemovalView.qml</file>
         <file>loudness/NormalizeLoudnessView.qml</file>
+        <file>truncatesilence/TruncateSilenceView.qml</file>
 
         <file>dynamics/compressor/CompressorView.qml</file>
         <file>dynamics/compressor/CompressionCurve.qml</file>
