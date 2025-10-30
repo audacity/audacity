@@ -22,6 +22,8 @@ Item {
     property bool isTrackFocused: false
     property bool isMultiSelectionActive: false
     property bool isTrackAudible: true
+    property bool isLinear: false
+    property real dbRange: -60.0
     property bool isStereo: clipsModel.isStereo
     property bool moveActive: false
     property bool altPressed: false
@@ -285,6 +287,8 @@ Item {
                 isDataSelected: root.isDataSelected
                 moveActive: root.moveActive
                 isAudible: root.isTrackAudible
+                isLinear: root.isLinear
+                dbRange: root.dbRange
                 multiSampleEdit: clipsContainer.multiSampleEdit
                 altPressed: root.altPressed
                 selectionInProgress: root.selectionInProgress || root.selectionEditInProgress

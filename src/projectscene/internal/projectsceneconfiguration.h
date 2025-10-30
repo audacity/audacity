@@ -69,6 +69,10 @@ public:
     void setPlaybackOnRulerClickEnabled(bool enabled) override;
     muse::async::Notification playbackOnRulerClickEnabledChanged() const override;
 
+    int tracksRulerType(const trackedit::TrackId& trackId) override;
+    void setTracksRulerType(trackedit::TrackId trackId, int rulerType) override;
+    muse::async::Notification tracksRulerTypeChanged() const override;
+
 private:
     muse::async::Channel<bool> m_isVerticalRulersVisibleChanged;
     muse::async::Channel<bool> m_isRMSInWaveformVisibleChanged;
@@ -79,5 +83,6 @@ private:
     muse::async::Notification m_asymmetricStereoHeightsWorkspacesChanged;
     muse::async::Notification m_selectionTimecodeFormatChanged;
     muse::async::Notification m_playbackOnRulerClickEnabledChanged;
+    muse::async::Notification m_tracksRulerTypeChanged;
 };
 }

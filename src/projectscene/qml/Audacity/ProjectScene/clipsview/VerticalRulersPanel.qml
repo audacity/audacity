@@ -16,6 +16,8 @@ Rectangle {
     width: 32
     color: ui.theme.backgroundQuarternaryColor
 
+    visible: model.isVerticalRulersVisible
+
     Rectangle {
         id: leftBorder
 
@@ -83,7 +85,32 @@ Rectangle {
 
             Component.onCompleted: {
                 trackViewState.init()
-                clipsModel.init()
+                rulerModel.init()
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                onClicked: {
+                    customisePopup.toggleOpened()
+                }
+            }
+
+            TrackRulerCustomizePopup {
+                id: customisePopup
+                isVerticalRulersVisible: root.model.isVerticalRulersVisible
+                rulerType: rulerModel.rulerType
+
+                placementPolicies: PopupView.PreferLeft
+
+                onHideRulersRequested: {
+                    root.model.toggleVerticalRuler();
+                }
+
+                onRulerTypeChangeRequested: function(newType) {
+                    root.model.setTrackRulerType(model.trackId, newType);
+                }
             }
 
             TrackViewStateModel {
@@ -91,10 +118,15 @@ Rectangle {
                 trackId: model.trackId
             }
 
-            ClipsListModel {
-                id: clipsModel
-                context: root.context
+            TrackRulerModel {
+                id: rulerModel
+
+                isStereo: model.isStereo
+                height: ruler.height
+                isCollapsed: trackViewState.isTrackCollapsed
+                channelHeightRatio: trackViewState.channelHeightRatio
                 trackId: model.trackId
+                rulerType: model.trackRulerType
             }
 
             Rectangle {
@@ -166,15 +198,6 @@ Rectangle {
             Item {
                 id: ruler
 
-                TrackRulerModel {
-                    id: rulerModel
-
-                    isStereo: clipsModel.isStereo
-                    height: ruler.height
-                    isCollapsed: trackViewState.isTrackCollapsed
-                    channelHeightRatio: trackViewState.channelHeightRatio
-                }
-
                 anchors.top: header.bottom
                 anchors.bottom: sep.top
                 anchors.left: leftBorder.right
@@ -237,7 +260,7 @@ Rectangle {
                                 anchors.right: parent.right
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                text: Math.abs(modelData.value).toFixed(1)
+                                text: rulerModel.sampleToText(modelData.value)
                                 color: "#F9F9FA"
                                 font.pixelSize: 10
 

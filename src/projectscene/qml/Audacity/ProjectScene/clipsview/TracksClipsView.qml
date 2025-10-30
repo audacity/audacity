@@ -648,6 +648,8 @@ Rectangle {
                     isTrackFocused: model.isTrackFocused
                     isMultiSelectionActive: model.isMultiSelectionActive
                     isTrackAudible: model.isTrackAudible
+                    isLinear: model.isLinear
+                    dbRange: model.dbRange
                     moveActive: tracksClipsView.moveActive
                     altPressed: root.altPressed
                     ctrlPressed: root.ctrlPressed
@@ -883,8 +885,6 @@ Rectangle {
             width: verticalRulerPanelHeader.width
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-
-            visible: tracksModel.isVerticalRulersVisible
         }
     }
 

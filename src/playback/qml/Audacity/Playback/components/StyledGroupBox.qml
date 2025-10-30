@@ -69,7 +69,7 @@ Item {
                         id: meterStyleButton
                         text: modelData["label"]
                         checked: root.value == modelData["value"]
-                        enabled: root.enabled
+                        enabled: root.enabled && (modelData["enabled"] === undefined || modelData["enabled"] === true)
 
                         onToggled: {
                             root.valueChangeRequested(modelData["value"])

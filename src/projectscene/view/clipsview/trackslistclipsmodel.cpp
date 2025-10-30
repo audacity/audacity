@@ -3,18 +3,22 @@
 */
 #include "trackslistclipsmodel.h"
 
+#include "actions/actiontypes.h"
 #include "global/async/async.h"
 
 #include "global/containers.h"
 
 using namespace au::projectscene;
 
+namespace {
+const muse::actions::ActionCode TOGGLE_VERTICAL_RULERS = "toggle-vertical-rulers";
+
+const QString IS_VERTICAL_RULERS_VISIBLE("projectscene/verticalRulersVisible");
+}
+
 TracksListClipsModel::TracksListClipsModel(QObject* parent)
     : QAbstractListModel(parent)
 {
-    configuration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool isVerticalRulersVisible) {
-        setIsVerticalRulersVisible(isVerticalRulersVisible);
-    });
 }
 
 void TracksListClipsModel::load()
@@ -32,8 +36,6 @@ void TracksListClipsModel::load()
         emit escapePressed();
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    setIsVerticalRulersVisible(configuration()->isVerticalRulersVisible());
-
     trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this] (long) {
         emit dataChanged(index(0), index(static_cast<int>(m_trackList.size()) - 1), { IsTrackAudibleRole });
     }, muse::async::Asyncable::Mode::SetReplace);
@@ -41,6 +43,10 @@ void TracksListClipsModel::load()
     projectHistory()->historyChanged().onNotify(this, [this]() {
         emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackAudibleRole });
     }, muse::async::Asyncable::Mode::SetReplace);
+
+    playbackConfiguration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { DbRangeRole });
+    });
 
     beginResetModel();
 
@@ -97,6 +103,15 @@ void TracksListClipsModel::load()
         const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
         emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
     }, muse::async::Asyncable::Mode::SetReplace);
+
+    projectsceneConfiguration()->tracksRulerTypeChanged().onNotify(this, [this]() {
+        if (m_trackList.empty()) {
+            return;
+        }
+
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsLinearRole, TrackRulerTypeRole });
+    });
 
     prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track> tracks) {
         Q_UNUSED(tracks);
@@ -174,6 +189,11 @@ void TracksListClipsModel::load()
     viewState->totalTrackHeight().ch.onReceive(this, [this](int) {
         emit totalTracksHeightChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
+
+    uiConfiguration()->isVisibleChanged(IS_VERTICAL_RULERS_VISIBLE).onNotify(this, [this]() {
+        emit isVerticalRulersVisibleChanged();
+    });
+    emit isVerticalRulersVisibleChanged();
 }
 
 void TracksListClipsModel::handleDroppedFiles(const QStringList& fileUrls)
@@ -227,6 +247,19 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
                 });
         }
     }
+    case IsStereoRole: {
+        return track.type == au::trackedit::TrackType::Stereo;
+    }
+    case IsLinearRole: {
+        return projectsceneConfiguration()->tracksRulerType(track.id) != 0;
+    }
+    case DbRangeRole: {
+        return au::playback::PlaybackMeterDbRange::toDouble(
+            playbackConfiguration()->playbackMeterDbRange());
+    }
+    case TrackRulerTypeRole: {
+        return projectsceneConfiguration()->tracksRulerType(track.id);
+    }
     default:
         break;
     }
@@ -245,23 +278,17 @@ QHash<int, QByteArray> TracksListClipsModel::roleNames() const
         { IsTrackFocusedRole, "isTrackFocused" },
         { IsMultiSelectionActiveRole, "isMultiSelectionActive" },
         { IsTrackAudibleRole, "isTrackAudible" },
+        { IsStereoRole, "isStereo" },
+        { TrackRulerTypeRole, "trackRulerType" },
+        { IsLinearRole, "isLinear" },
+        { DbRangeRole, "dbRange" },
     };
     return roles;
 }
 
 bool TracksListClipsModel::isVerticalRulersVisible() const
 {
-    return m_isVerticalRulersVisible;
-}
-
-void TracksListClipsModel::setIsVerticalRulersVisible(bool isVerticalRulersVisible)
-{
-    if (m_isVerticalRulersVisible == isVerticalRulersVisible) {
-        return;
-    }
-
-    m_isVerticalRulersVisible = isVerticalRulersVisible;
-    emit isVerticalRulersVisibleChanged(m_isVerticalRulersVisible);
+    return uiConfiguration()->isVisible(IS_VERTICAL_RULERS_VISIBLE, false);
 }
 
 int TracksListClipsModel::totalTracksHeight() const
@@ -274,4 +301,14 @@ int TracksListClipsModel::totalTracksHeight() const
     }
 
     return viewState->totalTrackHeight().val;
+}
+
+void TracksListClipsModel::toggleVerticalRuler() const
+{
+    dispatcher()->dispatch(TOGGLE_VERTICAL_RULERS);
+}
+
+void TracksListClipsModel::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType) const
+{
+    projectsceneConfiguration()->setTracksRulerType(trackId, rulerType);
 }

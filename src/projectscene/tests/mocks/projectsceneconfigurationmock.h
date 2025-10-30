@@ -58,5 +58,9 @@ public:
     MOCK_METHOD(bool, playbackOnRulerClickEnabled, (), (const, override));
     MOCK_METHOD(void, setPlaybackOnRulerClickEnabled, (bool enabled), (override));
     MOCK_METHOD(muse::async::Notification, playbackOnRulerClickEnabledChanged, (), (const, override));
+
+    MOCK_METHOD(int, tracksRulerType, (const au::trackedit::TrackId& trackId), (override));
+    MOCK_METHOD(void, setTracksRulerType, (au::trackedit::TrackId trackId, int rulerType), (override));
+    MOCK_METHOD(muse::async::Notification, tracksRulerTypeChanged, (), (const, override));
 };
 }

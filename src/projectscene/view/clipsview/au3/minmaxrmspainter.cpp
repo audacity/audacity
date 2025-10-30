@@ -34,9 +34,8 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
     auto& cache = WaveformScale::Get(*track);
     cache.GetDisplayBounds(zoomMin, zoomMax);
 
-    auto& settings = WaveformSettings::Get(*track);
-    const float dbRange = settings.dBRange;
-    const bool dB = !settings.isLinear();
+    const float dbRange = std::abs(params.dbRange);
+    const bool dB = !params.isLinear;
 
     const std::vector<double> channelHeight {
         params.geometry.height * params.channelHeightRatio,
