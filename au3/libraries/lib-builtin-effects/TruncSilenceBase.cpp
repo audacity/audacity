@@ -19,7 +19,7 @@
 #include "EffectOutputTracks.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "SyncLock.h"
+// #include "SyncLock.h"
 #include "WaveTrack.h"
 #include <algorithm>
 #include <cmath>
@@ -225,14 +225,15 @@ bool TruncSilenceBase::ProcessIndependently()
 {
     unsigned nGroups = 0;
 
-    const bool syncLock = SyncLockState::Get(*FindProject()).IsSyncLocked();
+    const bool syncLock = false; //SyncLockState::Get(*FindProject()).IsSyncLocked();
 
     // Check if it's permissible
     {
         for (auto track : inputTracks()->Selected<const WaveTrack>()) {
             if (syncLock) {
                 auto otherTracks
-                    =SyncLock::Group(*track).Filter<const WaveTrack>()
+                    =//SyncLock::Group(*track).Filter<const WaveTrack>()
+                      inputTracks()->Selected<const WaveTrack>()
                       + &Track::IsSelected
                       -[&](const Track * pTrack) {
                     return pTrack == track;
@@ -257,7 +258,7 @@ bool TruncSilenceBase::ProcessIndependently()
 
     // Copy tracks
     EffectOutputTracks outputs {
-        *mTracks, GetType(), { { mT0, mT1 } }, true, true
+        *mTracks, GetType(), { { mT0, mT1 } }
     };
     double newT1 = 0.0;
 
@@ -271,7 +272,8 @@ bool TruncSilenceBase::ProcessIndependently()
             }
             // Treat tracks in the sync lock group only
             Track* groupFirst, * groupLast;
-            auto range = syncLock ? SyncLock::Group(*track)
+            auto range = syncLock   //SyncLock::Group(*track)
+                         ? TrackList::SingletonRange<Track>(track)
                          : TrackList::SingletonRange<Track>(track);
             double totalCutLen = 0.0;
             if (!DoRemoval(silences, range, iGroup, nGroups, totalCutLen)) {
@@ -294,7 +296,7 @@ bool TruncSilenceBase::ProcessAll()
 {
     // Copy tracks
     EffectOutputTracks outputs {
-        *mTracks, GetType(), { { mT0, mT1 } }, true, true
+        *mTracks, GetType(), { { mT0, mT1 } }
     };
 
     // Master list of silent regions.
@@ -423,7 +425,8 @@ bool TruncSilenceBase::DoRemoval(
         bool success = true;
         double cutStart = (r->start + r->end - cutLen) / 2;
         double cutEnd = cutStart + cutLen;
-        (range + &SyncLock::IsSelectedOrSyncLockSelectedP
+        (range //+ &SyncLock::IsSelectedOrSyncLockSelectedP
+         + &Track::IsSelected
          -[&](const Track * pTrack) {
             return
             // Don't waste time past the end of a track
@@ -471,7 +474,7 @@ bool TruncSilenceBase::DoRemoval(
                 ++iChannel;
             }
 
-            wt.Clear(cutStart, cutEnd);
+            wt.Clear(cutStart, cutEnd, true);
 
             iChannel = 0;
             for (const auto pChannel : wt.Channels()) {
@@ -491,7 +494,7 @@ bool TruncSilenceBase::DoRemoval(
         },
             [&](Track& t) {
             // Non-wave tracks: just do a sync-lock adjust
-            t.SyncLockAdjust(cutEnd, cutStart);
+            //t.SyncLockAdjust(cutEnd, cutStart);
         });
         if (!success) {
             return false;
