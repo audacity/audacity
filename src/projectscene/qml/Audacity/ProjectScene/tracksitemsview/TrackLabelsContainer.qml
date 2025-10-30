@@ -167,7 +167,7 @@ TrackItemsContainer {
                                 }
 
                                 onTitleEditCanceled: {
-                                    labelsModel.resetSelectedLabel()
+                                    labelsModel.resetSelectedLabels()
                                 }
 
                                 onHeaderHoveredChanged: function() {
@@ -232,11 +232,11 @@ TrackItemsContainer {
         }
 
         function onItemStartEditRequested(objectKey) {
-            labelsModel.startEditLabel(objectKey)
+            labelsModel.startEditItem(objectKey)
         }
 
         function onItemEndEditRequested(objectKey) {
-            labelsModel.endEditLabel(objectKey)
+            labelsModel.endEditItem(objectKey)
         }
 
         function onStartAutoScroll() {

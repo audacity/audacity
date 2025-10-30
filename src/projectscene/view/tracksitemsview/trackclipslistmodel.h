@@ -3,45 +3,24 @@
 */
 #pragma once
 
-#include <QAbstractListModel>
-
 #include "modularity/ioc.h"
-#include "actions/actionable.h"
-#include "actions/iactionsdispatcher.h"
-#include "context/iglobalcontext.h"
-#include "global/iinteractive.h"
-#include "global/async/asyncable.h"
-#include "ui/iuiconfiguration.h"
 #include "workspace/iworkspacemanager.h"
+#include "iprojectsceneconfiguration.h"
 
-#include "trackedit/iselectioncontroller.h"
-#include "trackedit/itrackeditinteraction.h"
-#include "trackedit/trackedittypes.h"
-#include "trackedit/iprojecthistory.h"
-#include "../timeline/timelinecontext.h"
-
+#include "trackitemslistmodel.h"
 #include "trackclipitem.h"
 
 namespace au::projectscene {
-class TrackClipsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
+class TrackClipsListModel : public TrackItemsListModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
-    Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
     Q_PROPERTY(bool isStereo READ isStereo NOTIFY isStereoChanged FINAL)
     Q_PROPERTY(ClipStyles::Style clipStyle READ clipStyle NOTIFY clipStyleChanged FINAL)
     Q_PROPERTY(
         bool asymmetricStereoHeightsPossible READ asymmetricStereoHeightsPossible NOTIFY asymmetricStereoHeightsPossibleChanged)
     Q_PROPERTY(bool isContrastFocusBorderEnabled READ isContrastFocusBorderEnabled NOTIFY isContrastFocusBorderEnabledChanged FINAL)
 
-    Q_PROPERTY(int cacheBufferPx READ cacheBufferPx CONSTANT)
-
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
-    muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::Inject<muse::workspace::IWorkspaceManager> workspacesManager;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
@@ -49,21 +28,9 @@ class TrackClipsListModel : public QAbstractListModel, public muse::async::Async
 
 public:
     explicit TrackClipsListModel(QObject* parent = nullptr);
-    ~TrackClipsListModel() override;
 
-    TimelineContext* timelineContext() const;
-    void setTimelineContext(TimelineContext* newContext);
-    QVariant trackId() const;
-    void setTrackId(const QVariant& newTrackId);
     bool isStereo() const;
     ClipStyles::Style clipStyle() const;
-
-    Q_INVOKABLE void init();
-    Q_INVOKABLE void reload();
-
-    Q_INVOKABLE void startEditClip(const ClipKey& key);
-    Q_INVOKABLE void endEditClip(const ClipKey& key);
-    Q_INVOKABLE bool cancelClipDragEdit(const ClipKey& key);
 
     Q_INVOKABLE bool moveSelectedClips(const ClipKey& key, bool completed);
     Q_INVOKABLE bool trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
@@ -74,9 +41,6 @@ public:
     Q_INVOKABLE void selectClip(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClips();
     Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
-
-    Q_INVOKABLE QVariant next(const ClipKey& key) const;
-    Q_INVOKABLE QVariant prev(const ClipKey& key) const;
 
     Q_INVOKABLE void openClipPitchEdit(const ClipKey& key);
     Q_INVOKABLE void resetClipPitch(const ClipKey& key);
@@ -92,15 +56,7 @@ public:
     bool asymmetricStereoHeightsPossible() const;
     bool isContrastFocusBorderEnabled() const;
 
-    int rowCount(const QModelIndex& parent) const override;
-    QHash<int, QByteArray> roleNames() const override;
-    QVariant data(const QModelIndex& index, int role) const override;
-
-    static int cacheBufferPx();
-
 signals:
-    void trackIdChanged();
-    void timelineContextChanged();
     void selectedClipIdxChanged();
     void isStereoChanged();
     void clipStyleChanged();
@@ -111,54 +67,31 @@ signals:
 
     void contentXChanged();
 
-private slots:
-    void onTimelineZoomChanged();
-    void onTimelineFrameTimeChanged();
-
 private:
-
-    enum RoleNames {
-        ClipItemRole = Qt::UserRole + 1,
-    };
 
     struct MoveOffset {
         muse::secs_t timeOffset = 0.0;
         int trackOffset = 0;
     };
 
-    void setSelectedItems(const QList<TrackClipItem*>& items);
-    void addSelectedItem(TrackClipItem* item);
-    void clearSelectedItems();
+    void onInit() override;
+    void onReload() override;
 
     void update();
-    void updateItemsMetrics();
-    void updateItemsMetrics(TrackClipItem* item);
-    void positionViewAtClip(const trackedit::Clip& clip);
-    void onSelectedClip(const trackedit::ClipKey& k);
-    void onSelectedClips(const trackedit::ClipKeyList& keyList);
-    TrackClipItem* itemByKey(const trackedit::ClipKey& k) const;
-    int indexByKey(const trackedit::ClipKey& k) const;
-    QVariant neighbor(const ClipKey& key, int offset) const;
-    void requestClipTitleChange();
+    void updateItemMetrics(ViewTrackItem* item) override;
+    trackedit::TrackObjectKeyList getSelectedItemKeys() const override;
+
+    TrackClipItem* clipItemByKey(const trackedit::ClipKey& k) const;
+    void onStartEditItem(const trackedit::TrackObjectKey& key) override;
+    void onEndEditItem(const trackedit::TrackObjectKey& key) override;
 
     MoveOffset calculateMoveOffset(const TrackClipItem* item, const ClipKey& key, bool completed) const;
     trackedit::secs_t calculateTimePositionOffset(const TrackClipItem* item) const;
     int calculateTrackPositionOffset(const ClipKey& key) const;
     bool isKeyboardTriggered() const;
 
-    void handleAutoScroll(bool ok, bool completed, const std::function<void()>& onAutoScrollFrame);
-    void disconnectAutoScroll();
-
-    Qt::KeyboardModifiers keyboardModifiers() const;
-
-    TimelineContext* m_context = nullptr;
-    trackedit::TrackId m_trackId = -1;
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
-    QList<TrackClipItem*> m_clipList;
-    QList<TrackClipItem*> m_selectedItems;
-    bool m_isStereo = false;
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
-
-    QMetaObject::Connection m_autoScrollConnection;
+    bool m_isStereo = false;
 };
 }

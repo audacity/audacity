@@ -1,0 +1,403 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#include "trackitemslistmodel.h"
+
+#include <QApplication>
+
+#include "global/realfn.h"
+
+using namespace au::projectscene;
+using namespace au::trackedit;
+
+constexpr int CACHE_BUFFER_PX = 200;
+
+TrackItemsListModel::TrackItemsListModel(QObject* parent)
+    : QAbstractListModel(parent)
+{
+}
+
+TrackItemsListModel::~TrackItemsListModel()
+{
+    disconnectAutoScroll();
+}
+
+QVariant TrackItemsListModel::trackId() const
+{
+    return QVariant::fromValue(m_trackId);
+}
+
+void TrackItemsListModel::setTrackId(const QVariant& _newTrackId)
+{
+    trackedit::TrackId newTrackId = _newTrackId.toInt();
+    if (m_trackId == newTrackId) {
+        return;
+    }
+    m_trackId = newTrackId;
+    emit trackIdChanged();
+}
+
+TimelineContext* TrackItemsListModel::timelineContext() const
+{
+    return m_context;
+}
+
+void TrackItemsListModel::setTimelineContext(TimelineContext* newContext)
+{
+    if (m_context == newContext) {
+        return;
+    }
+
+    if (m_context) {
+        disconnect(m_context, nullptr, this, nullptr);
+    }
+
+    m_context = newContext;
+
+    if (m_context) {
+        connect(m_context, &TimelineContext::zoomChanged, this, &TrackItemsListModel::onTimelineZoomChanged);
+        connect(m_context, &TimelineContext::frameTimeChanged, this, &TrackItemsListModel::onTimelineFrameTimeChanged);
+    }
+
+    emit timelineContextChanged();
+}
+
+void TrackItemsListModel::onTimelineZoomChanged()
+{
+    updateItemsMetrics();
+}
+
+void TrackItemsListModel::onTimelineFrameTimeChanged()
+{
+    updateItemsMetrics();
+}
+
+void TrackItemsListModel::updateItemsMetrics()
+{
+    for (int i = 0; i < m_items.size(); ++i) {
+        updateItemMetrics(m_items[i]);
+    }
+}
+
+void TrackItemsListModel::setSelectedItems(const QList<ViewTrackItem*>& items)
+{
+    for (auto& selectedItem : m_selectedItems) {
+        selectedItem->setSelected(false);
+    }
+    m_selectedItems = items;
+    for (auto& selectedItem : m_selectedItems) {
+        selectedItem->setSelected(true);
+    }
+}
+
+void TrackItemsListModel::addSelectedItem(ViewTrackItem* item)
+{
+    item->setSelected(true);
+    m_selectedItems.append(item);
+}
+
+void TrackItemsListModel::clearSelectedItems()
+{
+    for (auto& selectedItem : m_selectedItems) {
+        selectedItem->setSelected(false);
+    }
+    m_selectedItems.clear();
+}
+
+ViewTrackItem* TrackItemsListModel::itemByKey(const trackedit::TrackObjectKey& key) const
+{
+    for (ViewTrackItem* item : std::as_const(m_items)) {
+        if (item->key().key != key) {
+            continue;
+        }
+        return item;
+    }
+    return nullptr;
+}
+
+int TrackItemsListModel::indexByKey(const trackedit::TrackObjectKey& key) const
+{
+    for (int i = 0; i < m_items.size(); ++i) {
+        if (m_items.at(i)->key().key == key) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void TrackItemsListModel::onSelectedItem(const trackedit::TrackObjectKey& k)
+{
+    // ignore if item already selected
+    for (const auto& selectedItem : m_selectedItems) {
+        if (selectedItem->key().key == k) {
+            return;
+        }
+    }
+
+    Qt::KeyboardModifiers modifiers = keyboardModifiers();
+
+    auto item = itemByKey(k);
+    if (modifiers.testFlag(Qt::ShiftModifier)) {
+        if (m_trackId != k.trackId) {
+            return;
+        } else {
+            if (item) {
+                addSelectedItem(item);
+            }
+        }
+    } else {
+        if (m_trackId != k.trackId) {
+            clearSelectedItems();
+        } else {
+            if (item) {
+                setSelectedItems(QList<ViewTrackItem*>({ item }));
+            }
+        }
+    }
+}
+
+void TrackItemsListModel::onSelectedItems(const trackedit::TrackObjectKeyList& keyList)
+{
+    if (keyList.size() == 1) {
+        onSelectedItem(keyList.front());
+        return;
+    }
+
+    // Multiple-item selection can only be done programmatically, hence there is no need to check for the Shift key ;
+    // we can begin by clearing everything.
+    clearSelectedItems();
+
+    QList<ViewTrackItem*> items;
+    for (const auto& k : keyList) {
+        if (const auto item = itemByKey(k)) {
+            items.append(item);
+        }
+    }
+    setSelectedItems(items);
+}
+
+QVariant TrackItemsListModel::next(const TrackObjectKey& key) const
+{
+    return neighbor(key, 1);
+}
+
+QVariant TrackItemsListModel::prev(const TrackObjectKey& key) const
+{
+    return neighbor(key, -1);
+}
+
+QVariant TrackItemsListModel::neighbor(const TrackObjectKey& key, int offset) const
+{
+    auto it = std::find_if(m_items.begin(), m_items.end(), [key](ViewTrackItem* viewItem) {
+        return viewItem->key().key.objectId == key.key.objectId;
+    });
+
+    if (it == m_items.end()) {
+        return QVariant();
+    }
+
+    int sortedIndex = std::distance(m_items.begin(), it) + offset;
+    if (sortedIndex < 0 || sortedIndex >= m_items.size()) {
+        return QVariant();
+    }
+
+    return QVariant::fromValue(m_items[sortedIndex]);
+}
+
+void TrackItemsListModel::requestItemTitleChange()
+{
+    auto selectedItems = getSelectedItemKeys();
+
+    if (selectedItems.empty() || selectedItems.size() > 1) {
+        return;
+    }
+
+    trackedit::TrackObjectKey itemKey = selectedItems.front();
+    if (!itemKey.isValid()) {
+        return;
+    }
+
+    ViewTrackItem* selectedItem = itemByKey(itemKey);
+    if (selectedItem != nullptr) {
+        emit selectedItem->titleEditRequested();
+    }
+}
+
+int TrackItemsListModel::rowCount(const QModelIndex&) const
+{
+    return static_cast<int>(m_items.size());
+}
+
+QHash<int, QByteArray> TrackItemsListModel::roleNames() const
+{
+    static QHash<int, QByteArray> roles
+    {
+        { ItemRole, "item" }
+    };
+    return roles;
+}
+
+QVariant TrackItemsListModel::data(const QModelIndex& index, int role) const
+{
+    if (!index.isValid()) {
+        return QVariant();
+    }
+
+    switch (role) {
+    case ItemRole: {
+        ViewTrackItem* item = m_items.at(index.row());
+        return QVariant::fromValue(item);
+    }
+    default:
+        break;
+    }
+
+    return QVariant();
+}
+
+void TrackItemsListModel::handleAutoScroll(bool ok, bool completed, const std::function<void()>& onAutoScrollFrame)
+{
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return;
+    }
+
+    // do not handle auto-scroll when using key-nav
+    if (muse::RealIsEqual(vs->objectEditStartTimeOffset(), -1.0)) {
+        return;
+    }
+
+    // handle auto-scroll over the edge
+    if (!ok) {
+        m_context->stopAutoScroll();
+    } else {
+        m_context->startAutoScroll(m_context->mousePositionTime());
+    }
+
+    if ((completed && m_autoScrollConnection) || !ok) {
+        disconnectAutoScroll();
+    } else if (!m_autoScrollConnection && !completed) {
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, onAutoScrollFrame);
+    }
+}
+
+void TrackItemsListModel::disconnectAutoScroll()
+{
+    if (m_autoScrollConnection) {
+        disconnect(m_autoScrollConnection);
+        m_autoScrollConnection = QMetaObject::Connection();
+    }
+}
+
+Qt::KeyboardModifiers TrackItemsListModel::keyboardModifiers() const
+{
+    Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+
+    //! NOTE: always treat simultaneously pressed Ctrl and Shift as Ctrl
+    if (modifiers.testFlag(Qt::ShiftModifier) && modifiers.testFlag(Qt::ControlModifier)) {
+        modifiers = Qt::ControlModifier;
+    }
+
+    return modifiers;
+}
+
+int TrackItemsListModel::cacheBufferPx()
+{
+    return CACHE_BUFFER_PX;
+}
+
+void TrackItemsListModel::init()
+{
+    IF_ASSERT_FAILED(m_trackId >= 0) {
+        return;
+    }
+
+    onSelectedItems(getSelectedItemKeys());
+
+    selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t time) {
+        Q_UNUSED(time);
+        updateItemsMetrics();
+    });
+    selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t time) {
+        Q_UNUSED(time);
+        updateItemsMetrics();
+    });
+    selectionController()->tracksSelected().onReceive(this, [this](const TrackIdList&) {
+        updateItemsMetrics();
+    });
+
+    onInit();
+
+    reload();
+}
+
+void TrackItemsListModel::reload()
+{
+    if (m_trackId < 0) {
+        return;
+    }
+
+    disconnectAutoScroll();
+
+    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    prj->trackChanged().onReceive(this, [this](const au::trackedit::Track& track) {
+        if (track.id == m_trackId) {
+            reload();
+        }
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    prj->trackRemoved().onReceive(this, [this](const au::trackedit::Track& track) {
+        if (track.id == m_trackId) {
+            m_trackId = -1;
+        }
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    onReload();
+}
+
+void TrackItemsListModel::startEditItem(const TrackObjectKey& key)
+{
+    ViewTrackItem* item = itemByKey(key.key);
+    if (!item) {
+        return;
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return;
+    }
+
+    projectHistory()->startUserInteraction();
+
+    double mousePositionTime = m_context->mousePositionTime();
+
+    vs->setObjectEditStartTimeOffset(mousePositionTime - item->time().startTime);
+    vs->setObjectEditEndTimeOffset(item->time().endTime - mousePositionTime);
+
+    onStartEditItem(key.key);
+}
+
+void TrackItemsListModel::endEditItem(const TrackObjectKey& key)
+{
+    ViewTrackItem* item = itemByKey(key.key);
+    if (!item) {
+        return;
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return;
+    }
+
+    vs->setObjectEditStartTimeOffset(-1.0);
+    vs->setObjectEditEndTimeOffset(-1.0);
+    vs->setMoveInitiated(false);
+
+    onEndEditItem(key.key);
+
+    projectHistory()->endUserInteraction();
+}
