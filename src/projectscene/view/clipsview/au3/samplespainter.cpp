@@ -9,7 +9,6 @@
 #include "wavepainterutils.h"
 #include "WaveClip.h"
 #include "WaveformScale.h"
-#include "WaveformSettings.h"
 #include "PendingTracks.h"
 #include "ZoomInfo.h"
 
@@ -118,9 +117,8 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
     const auto& cache = WaveformScale::Get(*track);
     cache.GetDisplayBounds(zoomMin, zoomMax);
 
-    const auto& settings = WaveformSettings::Get(*track);
-    const float dBRange = settings.dBRange;
-    const bool dB = !settings.isLinear();
+    const float dBRange = std::abs(params.dbRange);
+    const bool dB = !params.isLinear;
     const double trimLeft = waveClip->GetTrimLeft();
 
     auto waveMetrics = wavepainterutils::getWaveMetrics(globalContext()->currentProject(), clipKey, params, true);

@@ -4,11 +4,8 @@
 #include "wavepainterutils.h"
 #include "samplespainterutils.h"
 #include "WaveClip.h"
-#include "WaveClipUtilities.h"
-#include "WaveformSettings.h"
 #include "WaveformScale.h"
 #include "PendingTracks.h"
-#include "ZoomInfo.h"
 
 using namespace au::au3;
 namespace {
