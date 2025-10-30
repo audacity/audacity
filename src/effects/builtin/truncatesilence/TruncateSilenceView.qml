@@ -79,14 +79,17 @@ BuiltinEffectBase {
                             text: truncateSilence.thresholdLabel
                         }
 
-                        TextInputField {
+                        IncrementalPropertyControl {
                             width: parent.width
-                            currentText: truncateSilence.thresholdValue.toFixed(truncateSilence.thresholdDecimals) + " " + truncateSilence.dbUnit
-                            onTextEditingFinished: function (newTextValue) {
-                                var val = parseFloat(newTextValue)
-                                if (!isNaN(val)) {
-                                    truncateSilence.thresholdValue = val
-                                }
+                            currentValue: truncateSilence.thresholdValue
+                            measureUnitsSymbol: truncateSilence.dbUnit
+                            decimals: truncateSilence.thresholdDecimals
+                            step: truncateSilence.thresholdStep
+                            minValue: truncateSilence.thresholdMin
+                            maxValue: truncateSilence.thresholdMax
+
+                            onValueEdited: function (newValue) {
+                                truncateSilence.thresholdValue = newValue
                             }
                         }
                     }
@@ -99,14 +102,17 @@ BuiltinEffectBase {
                             text: truncateSilence.minimumLabel
                         }
 
-                        TextInputField {
+                        IncrementalPropertyControl {
                             width: parent.width
-                            currentText: truncateSilence.minimumValue.toFixed(truncateSilence.minimumDecimals) + " " + truncateSilence.secondsUnit
-                            onTextEditingFinished: function (newTextValue) {
-                                var val = parseFloat(newTextValue)
-                                if (!isNaN(val)) {
-                                    truncateSilence.minimumValue = val
-                                }
+                            currentValue: truncateSilence.minimumValue
+                            measureUnitsSymbol: truncateSilence.secondsUnit
+                            decimals: truncateSilence.minimumDecimals
+                            step: truncateSilence.minimumStep
+                            minValue: truncateSilence.minimumMin
+                            maxValue: truncateSilence.minimumMax
+
+                            onValueEdited: function (newValue) {
+                                truncateSilence.minimumValue = newValue
                             }
                         }
                     }
@@ -174,14 +180,17 @@ BuiltinEffectBase {
                             text: truncateSilence.truncateToLabel
                         }
 
-                        TextInputField {
+                        IncrementalPropertyControl {
                             width: prv.fieldWidth
-                            currentText: truncateSilence.truncateValue.toFixed(truncateSilence.truncateDecimals) + " " + truncateSilence.secondsUnit
-                            onTextEditingFinished: function (newTextValue) {
-                                var val = parseFloat(newTextValue)
-                                if (!isNaN(val)) {
-                                    truncateSilence.truncateValue = val
-                                }
+                            currentValue: truncateSilence.truncateValue
+                            measureUnitsSymbol: truncateSilence.secondsUnit
+                            decimals: truncateSilence.truncateDecimals
+                            step: truncateSilence.truncateStep
+                            minValue: truncateSilence.truncateMin
+                            maxValue: truncateSilence.truncateMax
+
+                            onValueEdited: function (newValue) {
+                                truncateSilence.truncateValue = newValue
                             }
                         }
                     }
@@ -196,14 +205,17 @@ BuiltinEffectBase {
                             text: truncateSilence.compressToLabel
                         }
 
-                        TextInputField {
+                        IncrementalPropertyControl {
                             width: prv.fieldWidth
-                            currentText: truncateSilence.compressValue.toFixed(truncateSilence.compressDecimals) + " " + truncateSilence.percentUnit
-                            onTextEditingFinished: function (newTextValue) {
-                                var val = parseFloat(newTextValue)
-                                if (!isNaN(val)) {
-                                    truncateSilence.compressValue = val
-                                }
+                            currentValue: truncateSilence.compressValue
+                            measureUnitsSymbol: truncateSilence.percentUnit
+                            decimals: truncateSilence.compressDecimals
+                            step: truncateSilence.compressStep
+                            minValue: truncateSilence.compressMin
+                            maxValue: truncateSilence.compressMax
+
+                            onValueEdited: function (newValue) {
+                                truncateSilence.compressValue = newValue
                             }
                         }
                     }
