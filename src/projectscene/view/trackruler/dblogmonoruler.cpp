@@ -14,6 +14,19 @@ constexpr double SMALL_STEPS_RATIO = 1.0 / 6.0;
 constexpr std::array<double, 2> LOW_RESOLUTION_FULL_STEPS_RATIO = { 0.0 };
 constexpr std::array<double, 4> HIGH_RESOLUTION_FULL_STEPS_RATIO = { 0.0, 1.0 / 3.0, 2.0 / 3.0 };
 
+bool isBold(double value, double dbRange)
+{
+    return muse::RealIsEqual(value, 0.0) || muse::RealIsEqual(value, dbRange);
+}
+
+int getAlignment(double value, bool isNegativeSample)
+{
+    if (muse::RealIsEqual(value, 0.0)) {
+        return isNegativeSample ? 1 : -1;
+    }
+    return 0;
+}
+
 std::vector<double> fullStepsValues(double height, double dbRange)
 {
     std::vector<double> ratios;
@@ -89,20 +102,12 @@ std::vector<TrackRulerFullStep> DbLogMonoRuler::fullSteps() const
         return { TrackRulerFullStep { m_dbRange, 0, 0, true, true, false } };
     }
 
-    const auto isBold = [this](double value) -> bool { return muse::RealIsEqual(value, 0.0) || muse::RealIsEqual(value, m_dbRange); };
-    const auto getAlignment = [](double value, bool isNegativeSample) {
-        if (muse::RealIsEqual(value, 0.0)) {
-            return isNegativeSample ? 1 : -1;
-        }
-        return 0;
-    };
-
     std::vector<double> steps = fullStepsValues(m_height, m_dbRange);
     std::vector<TrackRulerFullStep> result;
     result.reserve((2 * steps.size()) + 1);
     for (double value : steps) {
-        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, false), isBold(value), false, false });
-        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, true), isBold(value), false, true });
+        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, false), isBold(value, m_dbRange), false, false });
+        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, true), isBold(value, m_dbRange), false, true });
     }
     result.push_back(TrackRulerFullStep { m_dbRange, 0, 0, true, true, false });
 

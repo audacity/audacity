@@ -293,12 +293,13 @@ muse::async::Notification ProjectSceneConfiguration::playbackOnRulerClickEnabled
 
 int ProjectSceneConfiguration::tracksRulerType(const trackedit::TrackId& trackId)
 {
+    constexpr int DEFAULT_RULER_TYPE = 2;
     const auto& value = muse::settings()->value(TRACKS_RULER_TYPE).toMap();
 
     auto it = value.find(std::to_string(static_cast<int>(trackId)));
     if (it == value.end()) {
-        setTracksRulerType(trackId, 0);
-        return 0;
+        setTracksRulerType(trackId, DEFAULT_RULER_TYPE);
+        return DEFAULT_RULER_TYPE;
     }
 
     return it->second.toInt();
