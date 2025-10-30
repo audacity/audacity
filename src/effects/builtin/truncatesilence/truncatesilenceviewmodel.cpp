@@ -132,11 +132,11 @@ void TruncateSilenceViewModel::setActionIndex(int newActionIndex)
     }
 }
 
-QStringList TruncateSilenceViewModel::actionChoices() const
+QVariantList TruncateSilenceViewModel::actionModel() const
 {
     return {
-        truncateActionLabel(),
-        compressActionLabel()
+        QVariantMap { { "text", truncateActionLabel() }, { "value", 0 } },
+        QVariantMap { { "text", compressActionLabel() }, { "value", 1 } }
     };
 }
 

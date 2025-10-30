@@ -37,11 +37,10 @@ class TruncateSilenceViewModel : public BuiltinEffectModel
     // Action parameter (Truncate or Compress)
     Q_PROPERTY(QString actionLabel READ actionLabel CONSTANT FINAL)
     Q_PROPERTY(int actionIndex READ actionIndex WRITE setActionIndex NOTIFY actionIndexChanged FINAL)
-    Q_PROPERTY(QStringList actionChoices READ actionChoices CONSTANT FINAL)
+    Q_PROPERTY(QVariantList actionModel READ actionModel CONSTANT FINAL)
 
     // Truncate parameter
     Q_PROPERTY(QString truncateToLabel READ truncateToLabel CONSTANT FINAL)
-    Q_PROPERTY(QString truncateActionLabel READ truncateActionLabel CONSTANT FINAL)
     Q_PROPERTY(double truncateValue READ truncateValue WRITE setTruncateValue NOTIFY truncateValueChanged FINAL)
     Q_PROPERTY(double truncateMin READ truncateMin CONSTANT FINAL)
     Q_PROPERTY(double truncateMax READ truncateMax CONSTANT FINAL)
@@ -51,7 +50,6 @@ class TruncateSilenceViewModel : public BuiltinEffectModel
 
     // Compress parameter
     Q_PROPERTY(QString compressToLabel READ compressToLabel CONSTANT FINAL)
-    Q_PROPERTY(QString compressActionLabel READ compressActionLabel CONSTANT FINAL)
     Q_PROPERTY(double compressValue READ compressValue WRITE setCompressValue NOTIFY compressValueChanged FINAL)
     Q_PROPERTY(double compressMin READ compressMin CONSTANT FINAL)
     Q_PROPERTY(double compressMax READ compressMax CONSTANT FINAL)
@@ -96,7 +94,7 @@ public:
     QString actionLabel() const;
     int actionIndex() const;
     void setActionIndex(int newActionIndex);
-    QStringList actionChoices() const;
+    QVariantList actionModel() const;
 
     // Truncate
     QString truncateToLabel() const;
