@@ -16,7 +16,6 @@ import Audacity.AudioUnit
 EffectStyledDialogView {
     id: root
 
-    property alias instanceId: viewerModel.instanceId
     property int effectFamily: EffectFamily.Unknown
 
     QtObject {
@@ -29,6 +28,24 @@ EffectStyledDialogView {
         property int panelMargins: effectFamily == EffectFamily.Builtin ? 16 : 4
         property int viewMargins: effectFamily == EffectFamily.Builtin ? 16 : 0
         property int separatorHeight: effectFamily == EffectFamily.Builtin ? separator.height + prv.panelMargins : 0
+
+        function closeWindow(accept) {
+            prv.viewer.stopPreview()
+            // Call later because the preview calls `QCoreApplication::processEvents()`,
+            // and we must make sure it doesn't do this after we've closed the dialog, or we'll be getting that Qt exception
+            // "Object %p destroyed while one of its QML signal handlers is in progress."
+            Qt.callLater(() => {
+                accept ? root.accept() : root.reject()
+            })
+        }
+    }
+
+    Connections {
+        target: root.window
+        function onClosing(event) {
+            // Stop preview before closing, for the same reason as in closeWindow()
+            prv.viewer.stopPreview()
+        }
     }
 
     title: viewerModel.title
@@ -96,8 +113,9 @@ EffectStyledDialogView {
                         navigationPanel: root.navigationPanel
                         navigationOrder: 0
 
+                        enabled: !prv.viewer.isPreviewing
                         parentWindow: root.window
-                        instanceId: root.instanceId
+                        instanceId: Boolean(prv.viewer) ? prv.viewer.instanceId : -1
                     }
                 }
 
@@ -168,12 +186,17 @@ EffectStyledDialogView {
                             minWidth: 80
                             isLeftSide: true
 
-                            text: qsTrc("effects", "Preview")
+                            text: prv.viewer.isPreviewing ?
+                            //: Shown on a button that stops effect preview
+                            qsTrc("effects", "Stop preview") :
+                            //: Shown on a button that starts effect preview
+                            qsTrc("effects", "Preview")
+
                             buttonRole: ButtonBoxModel.CustomRole
                             buttonId: ButtonBoxModel.CustomButton + 2
                             enabled: prv.isApplyAllowed
 
-                            onClicked: prv.viewer.preview()
+                            onClicked: prv.viewer.isPreviewing ? prv.viewer.stopPreview() : prv.viewer.startPreview()
                         }
 
                         FlatButton {
@@ -186,7 +209,9 @@ EffectStyledDialogView {
                             buttonRole: ButtonBoxModel.RejectRole
                             buttonId: ButtonBoxModel.Cancel
 
-                            onClicked: root.reject()
+                            onClicked: {
+                                prv.closeWindow(false)
+                            }
                         }
 
                         FlatButton {
@@ -201,7 +226,9 @@ EffectStyledDialogView {
                             accentButton: true
                             enabled: prv.isApplyAllowed
 
-                            onClicked: root.accept()
+                            onClicked: {
+                                prv.closeWindow(true)
+                            }
                         }
                     }
                 }
@@ -209,10 +236,19 @@ EffectStyledDialogView {
         }
     }
 
+    EffectControlsDisablingOverlay {
+        x: viewerLoader.x
+        y: viewerLoader.y
+        width: viewerLoader.width
+        height: viewerLoader.height
+
+        visible: prv.viewer.isPreviewing
+        effectFamily: root.effectFamily
+    }
+
     Component {
         id: builtinViewerComp
         BuiltinEffectViewer {
-            instanceId: root.instanceId
             dialogView: root
             usedDestructively: true
         }
@@ -221,7 +257,6 @@ EffectStyledDialogView {
     Component {
         id: lv2ViewerComp
         Lv2Viewer {
-            instanceId: root.instanceId
             title: root.title
         }
     }
@@ -229,7 +264,6 @@ EffectStyledDialogView {
     Component {
         id: audioUnitViewerComp
         AudioUnitViewer {
-            instanceId: root.instanceId
             height: implicitHeight
             topPadding: topPanel.height
             bottomPadding: bbox.implicitHeight + prv.panelMargins * 2
@@ -241,7 +275,6 @@ EffectStyledDialogView {
     Component {
         id: vstViewerComp
         VstViewer {
-            instanceId: root.instanceId
             height: implicitHeight
             topPadding: topPanel.height
             bottomPadding: bbox.implicitHeight + prv.panelMargins * 2

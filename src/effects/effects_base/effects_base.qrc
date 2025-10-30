@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>qml/Audacity/Effects/qmldir</file>
         <file>qml/Audacity/Effects/BypassEffectButton.qml</file>
+        <file>qml/Audacity/Effects/EffectControlsDisablingOverlay.qml</file>
         <file>qml/Audacity/Effects/EffectPresetsBar.qml</file>
         <file>qml/Audacity/Effects/EffectsViewerDialog.qml</file>
         <file>qml/Audacity/Effects/EffectStyledDialogView.qml</file>

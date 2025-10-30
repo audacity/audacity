@@ -6,18 +6,18 @@ import QtQuick
 import Audacity.BuiltinEffects
 
 Rectangle {
-
     id: root
 
-    property string instanceId: ""
+    property alias instanceId: builder.instanceId
     property var dialogView: null
     required property bool usedDestructively
 
     property string title: builder.contentItem ? builder.contentItem.title : ""
     property bool isApplyAllowed: builder.contentItem ? builder.contentItem.isApplyAllowed : false
+    property bool isPreviewing: builder.contentItem ? builder.contentItem.isPreviewing : false
     property bool usesPresets: builder.contentItem ? builder.contentItem.usesPresets : false
 
-    signal closeRequested()
+    signal closeRequested
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -28,7 +28,8 @@ Rectangle {
     height: implicitHeight
 
     Component.onCompleted: {
-        builder.load(root.instanceId, root, dialogView, usedDestructively)
+        builder.load(root, dialogView, usedDestructively)
+        builder.contentItem.init()
     }
 
     function manage(parent) {
@@ -37,9 +38,15 @@ Rectangle {
         }
     }
 
-    function preview() {
+    function startPreview() {
         if (builder.contentItem) {
-            builder.contentItem.preview()
+            builder.contentItem.startPreview()
+        }
+    }
+
+    function stopPreview() {
+        if (builder.contentItem) {
+            builder.contentItem.stopPreview()
         }
     }
 

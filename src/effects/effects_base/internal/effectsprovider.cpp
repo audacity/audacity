@@ -4,7 +4,6 @@
 #include "effectsprovider.h"
 #include "effecterrors.h"
 
-#include "global/translation.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/internal/progressdialog.h"
@@ -28,7 +27,9 @@
 #include "au3wrap/au3types.h"
 #include "playback/iplayer.h"
 
-#include "log.h"
+#include "framework/global/log.h"
+#include "framework/global/translation.h"
+#include "framework/global/async/async.h"
 
 using namespace muse;
 using namespace au::effects;
@@ -389,8 +390,14 @@ void restoreEffectStateHack(EffectBase& effect)
 }
 }
 
-muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& settings)
+muse::Ret EffectsProvider::previewEffect(const EffectId& effectId, EffectSettings& settings)
 {
+    ::EffectBase* pEffect = this->effect(effectId);
+    if (!pEffect) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
+    }
+    auto& effect = *pEffect;
+
     const bool isNyquist = effect.GetFamily() == NYQUISTEFFECTS_FAMILY;
     const bool isGenerator = effect.GetType() == EffectTypeGenerate;
 
@@ -410,22 +417,7 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
     //! ============================================================================
     //! NOTE Step 2 - save origin context (state)
     //! ============================================================================
-    struct EffectContext {
-        double t0 = 0.0;
-        double t1 = 0.0;
-        std::shared_ptr<TrackList> tracks;
-        BasicUI::ProgressDialog* progress = nullptr;
-        bool isPreview = false;
-    };
-
     const EffectContext originCtx = { effect.mT0, effect.mT1, effect.mTracks, effect.mProgress, effect.mIsPreview };
-    auto restoreCtx = finally([&] {
-        effect.mT0 = originCtx.t0;
-        effect.mT1 = originCtx.t1;
-        effect.mTracks = originCtx.tracks;
-        effect.mProgress = originCtx.progress;
-        effect.mIsPreview = originCtx.isPreview;
-    });
 
     // restore internal effect state on return (if needed)
     auto cleanup0 = effect.BeginPreview(settings);
@@ -444,18 +436,26 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
     EffectContext newCtx;
 
     //! Step 3.1 - prepare time
-
-    //const bool previewFullSelection = effect.PreviewsFullSelection(); not used at the moment
-    const double previewLen = originCtx.t1 - originCtx.t0;
-    double previewDuration = 0.0;
-    if (isNyquist && isGenerator) {
-        previewDuration = effect.CalcPreviewInputLength(settings, previewLen);
+    newCtx.t0 = originCtx.t0;
+    if (effect.PreviewsFullSelection()) {
+        newCtx.t1 = originCtx.t1;
     } else {
-        previewDuration = std::min(settings.extra.GetDuration(), effect.CalcPreviewInputLength(settings, previewLen));
+        // Limit preview time:
+        // We need to pre-render the audio, which would take a long time and lots of memory for long selections.
+        // On the other hand, preview isn't typically something users would listen to for more than a few seconds.
+        // (Au3 used to read `previewLen` from the `/AudioIO/EffectsPreviewLen` setting.
+        // There is no plan at the moment to reintroduce it in Au4.)
+        const double maxPreviewLen = configuration()->previewMaxDuration();
+        const double previewLen = std::min(originCtx.t1 - originCtx.t0, maxPreviewLen);
+        double previewDuration = 0.0;
+        if (isNyquist && isGenerator) {
+            previewDuration = effect.CalcPreviewInputLength(settings, previewLen);
+        } else {
+            previewDuration = std::min(settings.extra.GetDuration(), effect.CalcPreviewInputLength(settings, previewLen));
+        }
+        newCtx.t1 = originCtx.t0 + previewDuration;
     }
 
-    newCtx.t0 = originCtx.t0;
-    newCtx.t1 = originCtx.t0 + previewDuration;
     if ((newCtx.t1 > originCtx.t1) && !isGenerator) {
         newCtx.t1 = originCtx.t1;
     }
@@ -528,7 +528,7 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
             ProgressShowStop
             ); // Have only "Stop" button.
 
-        newCtx.progress = progress.get();
+        newCtx.preparingPreviewProgress = progress.get();
         newCtx.isPreview = true;
 
         // apply new context
@@ -536,7 +536,7 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
             effect.mT0 = newCtx.t0;
             effect.mT1 = newCtx.t1;
             effect.mTracks = newCtx.tracks;
-            effect.mProgress = newCtx.progress;
+            effect.mProgress = newCtx.preparingPreviewProgress;
             effect.mIsPreview = newCtx.isPreview;
 
             // Update track/group counts
@@ -565,37 +565,56 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
         opt.startOffset = startOffset;
         opt.isDefaultPolicy = false;
 
+        // Setting looping to `false` ensures that the loop region won't interfere with preview.
+        // Also, looping is of course not effective during preview. Having it visually disabled
+        // makes it clear to the user.
+        const auto loopWasActive = player->isLoopRegionActive();
+        player->setLoopRegionActive(false);
+        player->setPlaybackRegion({ startOffset + newCtx.t0, startOffset + newCtx.t1 });
+
+        m_effectPreviewState.emplace(originCtx, newCtx.tracks);
+        player->playbackStatusChanged().onReceive(this, [this, effectId, loopWasActive](playback::PlaybackStatus status) {
+            if (status == playback::PlaybackStatus::Running) {
+                return;
+            }
+
+            IF_ASSERT_FAILED(status == playback::PlaybackStatus::Stopped) {
+                // Pausing should not be possible during preview.
+                // If we reset the playback context's tracks while playback is still ongoing, though,
+                // we're in for a crash, hence wait and hope that the "stop" signal will come in due time.
+                return;
+            }
+
+            // Wait for other observers of this signal to be finished, in particular the audio engine,
+            // which should stop playback synchronously. Only then we may delete the preview tracks.
+            async::Async::call(this, [this, effectId, loopWasActive] {
+                const auto player = playback()->player();
+                const auto reset = finally([this, player] {
+                    m_effectPreviewState.reset();
+                    player->playbackStatusChanged().disconnect(this);
+                });
+
+                EffectBase* effect = this->effect(effectId);
+                IF_ASSERT_FAILED(effect && m_effectPreviewState) {
+                    return;
+                }
+
+                const EffectContext& originCtx = m_effectPreviewState->originContext;
+                effect->mT0 = originCtx.t0;
+                effect->mT1 = originCtx.t1;
+                effect->mTracks = originCtx.tracks;
+                effect->mProgress = originCtx.preparingPreviewProgress;
+                effect->mIsPreview = originCtx.isPreview;
+
+                player->setLoopRegionActive(loopWasActive);
+            });
+        });
+
         muse::Ret ret = player->playTracks(*newCtx.tracks, newCtx.t0, newCtx.t1, opt);
         if (!ret) {
             return ret;
         }
-
-        using namespace BasicUI;
-
-        // The progress dialog must be deleted before stopping the stream
-        // to allow events to flow to the app during StopStream processing.
-        // The progress dialog blocks these events.
-        {
-            auto progress = MakeProgress(effect.GetName(), XO("Previewing"), ProgressShowStop);
-            while (player->isRunning()) {
-                using namespace std::chrono;
-                std::this_thread::sleep_for(100ms);
-                muse::secs_t playPos = player->playbackPosition() - startOffset;
-                auto previewing = progress->Poll(playPos, newCtx.t1);
-
-                if (previewing != BasicUI::ProgressResult::Success || player->reachedEnd().val) {
-                    break;
-                }
-            }
-
-            player->stop();
-        }
     }
 
     return muse::make_ok();
-}
-
-muse::Ret EffectsProvider::previewEffect(au3::Au3Project&, Effect* effect, EffectSettings& settings)
-{
-    return doEffectPreview(*effect, settings);
 }

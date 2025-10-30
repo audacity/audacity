@@ -367,7 +367,7 @@ public:
     Holder EmptyCopy(const SampleBlockFactoryPtr& pFactory = {})
     const;
 
-    Track::Holder TrackEmptyCopy() const;
+    Track::Holder TrackEmptyCopy() const override;
 
     //! Simply discard any right channel
     void MakeMono();
