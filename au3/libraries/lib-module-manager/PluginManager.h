@@ -13,7 +13,6 @@
 
 #include <wx/defs.h>
 
-#include "wxArrayStringEx.h"
 #include <functional>
 #include <map>
 #include <memory>
