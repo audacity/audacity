@@ -13,22 +13,6 @@ QString TruncateSilenceViewModel::effectTitle() const
     return muse::qtrc("effects/truncatesilence", "Truncate silence");
 }
 
-// Units
-QString TruncateSilenceViewModel::dbUnit() const
-{
-    return muse::qtrc("effects/truncatesilence", "dB");
-}
-
-QString TruncateSilenceViewModel::secondsUnit() const
-{
-    return muse::qtrc("effects/truncatesilence", "seconds");
-}
-
-QString TruncateSilenceViewModel::percentUnit() const
-{
-    return muse::qtrc("effects/truncatesilence", "%");
-}
-
 // Detect silence section
 QString TruncateSilenceViewModel::detectSilenceLabel() const
 {
@@ -76,6 +60,11 @@ int TruncateSilenceViewModel::thresholdDecimals() const
     return 1;
 }
 
+QString TruncateSilenceViewModel::thresholdUnit() const
+{
+    return dbUnit();
+}
+
 // Minimum
 QString TruncateSilenceViewModel::minimumLabel() const
 {
@@ -115,6 +104,11 @@ double TruncateSilenceViewModel::minimumStep() const
 int TruncateSilenceViewModel::minimumDecimals() const
 {
     return 3;
+}
+
+QString TruncateSilenceViewModel::minimumUnit() const
+{
+    return secondsUnit();
 }
 
 // Action
@@ -192,6 +186,11 @@ int TruncateSilenceViewModel::truncateDecimals() const
     return 3;
 }
 
+QString TruncateSilenceViewModel::truncateUnit() const
+{
+    return secondsUnit();
+}
+
 // Compress
 QString TruncateSilenceViewModel::compressToLabel() const
 {
@@ -238,6 +237,11 @@ int TruncateSilenceViewModel::compressDecimals() const
     return 1;
 }
 
+QString TruncateSilenceViewModel::compressUnit() const
+{
+    return percentUnit();
+}
+
 // Independent
 QString TruncateSilenceViewModel::independentTruncateLabel() const
 {
@@ -272,5 +276,21 @@ void TruncateSilenceViewModel::doReload()
     emit truncateValueChanged();
     emit compressValueChanged();
     emit independentValueChanged();
+}
+
+// Internal unit helpers
+QString TruncateSilenceViewModel::dbUnit() const
+{
+    return muse::qtrc("effects/truncatesilence", "dB");
+}
+
+QString TruncateSilenceViewModel::secondsUnit() const
+{
+    return muse::qtrc("effects/truncatesilence", "seconds");
+}
+
+QString TruncateSilenceViewModel::percentUnit() const
+{
+    return muse::qtrc("effects/truncatesilence", "%");
 }
 }

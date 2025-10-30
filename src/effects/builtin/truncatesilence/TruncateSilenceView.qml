@@ -82,7 +82,7 @@ BuiltinEffectBase {
                         IncrementalPropertyControl {
                             width: parent.width
                             currentValue: truncateSilence.thresholdValue
-                            measureUnitsSymbol: truncateSilence.dbUnit
+                            measureUnitsSymbol: truncateSilence.thresholdUnit
                             decimals: truncateSilence.thresholdDecimals
                             step: truncateSilence.thresholdStep
                             minValue: truncateSilence.thresholdMin
@@ -105,7 +105,7 @@ BuiltinEffectBase {
                         IncrementalPropertyControl {
                             width: parent.width
                             currentValue: truncateSilence.minimumValue
-                            measureUnitsSymbol: truncateSilence.secondsUnit
+                            measureUnitsSymbol: truncateSilence.minimumUnit
                             decimals: truncateSilence.minimumDecimals
                             step: truncateSilence.minimumStep
                             minValue: truncateSilence.minimumMin
@@ -183,7 +183,7 @@ BuiltinEffectBase {
                         IncrementalPropertyControl {
                             width: prv.fieldWidth
                             currentValue: truncateSilence.truncateValue
-                            measureUnitsSymbol: truncateSilence.secondsUnit
+                            measureUnitsSymbol: truncateSilence.truncateUnit
                             decimals: truncateSilence.truncateDecimals
                             step: truncateSilence.truncateStep
                             minValue: truncateSilence.truncateMin
@@ -208,7 +208,7 @@ BuiltinEffectBase {
                         IncrementalPropertyControl {
                             width: prv.fieldWidth
                             currentValue: truncateSilence.compressValue
-                            measureUnitsSymbol: truncateSilence.percentUnit
+                            measureUnitsSymbol: truncateSilence.compressUnit
                             decimals: truncateSilence.compressDecimals
                             step: truncateSilence.compressStep
                             minValue: truncateSilence.compressMin
