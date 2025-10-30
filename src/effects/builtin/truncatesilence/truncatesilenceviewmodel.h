@@ -13,6 +13,11 @@ class TruncateSilenceViewModel : public BuiltinEffectModel
 
     Q_PROPERTY(QString effectTitle READ effectTitle CONSTANT FINAL)
 
+    // Units
+    Q_PROPERTY(QString dbUnit READ dbUnit CONSTANT FINAL)
+    Q_PROPERTY(QString secondsUnit READ secondsUnit CONSTANT FINAL)
+    Q_PROPERTY(QString percentUnit READ percentUnit CONSTANT FINAL)
+
     // Detect silence section
     Q_PROPERTY(QString detectSilenceLabel READ detectSilenceLabel CONSTANT FINAL)
 
@@ -64,6 +69,11 @@ public:
     TruncateSilenceViewModel() = default;
 
     QString effectTitle() const;
+
+    // Units
+    QString dbUnit() const;
+    QString secondsUnit() const;
+    QString percentUnit() const;
 
     // Detect silence section
     QString detectSilenceLabel() const;

@@ -81,7 +81,7 @@ BuiltinEffectBase {
 
                         TextInputField {
                             width: parent.width
-                            currentText: truncateSilence.thresholdValue.toFixed(truncateSilence.thresholdDecimals) + " dB"
+                            currentText: truncateSilence.thresholdValue.toFixed(truncateSilence.thresholdDecimals) + " " + truncateSilence.dbUnit
                             onTextEditingFinished: function (newTextValue) {
                                 var val = parseFloat(newTextValue)
                                 if (!isNaN(val)) {
@@ -101,7 +101,7 @@ BuiltinEffectBase {
 
                         TextInputField {
                             width: parent.width
-                            currentText: truncateSilence.minimumValue.toFixed(truncateSilence.minimumDecimals) + " seconds"
+                            currentText: truncateSilence.minimumValue.toFixed(truncateSilence.minimumDecimals) + " " + truncateSilence.secondsUnit
                             onTextEditingFinished: function (newTextValue) {
                                 var val = parseFloat(newTextValue)
                                 if (!isNaN(val)) {
@@ -176,7 +176,7 @@ BuiltinEffectBase {
 
                         TextInputField {
                             width: prv.fieldWidth
-                            currentText: truncateSilence.truncateValue.toFixed(truncateSilence.truncateDecimals) + " seconds"
+                            currentText: truncateSilence.truncateValue.toFixed(truncateSilence.truncateDecimals) + " " + truncateSilence.secondsUnit
                             onTextEditingFinished: function (newTextValue) {
                                 var val = parseFloat(newTextValue)
                                 if (!isNaN(val)) {
@@ -198,7 +198,7 @@ BuiltinEffectBase {
 
                         TextInputField {
                             width: prv.fieldWidth
-                            currentText: truncateSilence.compressValue.toFixed(truncateSilence.compressDecimals) + " %"
+                            currentText: truncateSilence.compressValue.toFixed(truncateSilence.compressDecimals) + " " + truncateSilence.percentUnit
                             onTextEditingFinished: function (newTextValue) {
                                 var val = parseFloat(newTextValue)
                                 if (!isNaN(val)) {
