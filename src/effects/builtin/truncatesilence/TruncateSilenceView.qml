@@ -31,6 +31,9 @@ BuiltinEffectBase {
 
         readonly property int fieldWidth: 156
         readonly property int desiredWidth: 360
+
+        readonly property int borderWidth: 1
+        readonly property int borderRadius: 4
     }
 
     width: prv.desiredWidth - (2 * prv.spacingL) // we need to remove the padding from the dialog desired width
@@ -58,9 +61,9 @@ BuiltinEffectBase {
                 color: ui.theme.backgroundSecondaryColor
 
                 border.color: ui.theme.strokeColor
-                border.width: 1
+                border.width: prv.borderWidth
 
-                radius: 4
+                radius: prv.borderRadius
 
                 Row {
                     id: detectSilenceRow
@@ -128,9 +131,9 @@ BuiltinEffectBase {
                 color: ui.theme.backgroundSecondaryColor
 
                 border.color: ui.theme.strokeColor
-                border.width: 1
+                border.width: prv.borderWidth
 
-                radius: 4
+                radius: prv.borderRadius
 
                 Column {
                     id: actionColumn
