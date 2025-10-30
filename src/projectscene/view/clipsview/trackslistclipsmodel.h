@@ -73,8 +73,9 @@ private:
         IsMultiSelectionActiveRole,
         IsTrackAudibleRole,
         IsStereoRole,
-        TrackRulerType,
-        DbRange,
+        TrackRulerTypeRole,
+        IsLinearRole,
+        DbRangeRole,
     };
 
     std::vector<trackedit::Track> m_trackList;

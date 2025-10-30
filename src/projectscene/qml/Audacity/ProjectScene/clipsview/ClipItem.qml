@@ -35,7 +35,7 @@ Rectangle {
     property bool multiClipsSelected: root.isMultiSelectionActive && root.clipSelected
     property bool moveActive: false
     property bool isAudible: true
-    property int trackRulerType: 0
+    property bool isLinear: false
     property real dbRange: -60.0
     property real selectionStart: 0
     property real selectionWidth: 0
@@ -740,7 +740,7 @@ Rectangle {
             isIsolationMode: root.isIsolationMode
             multiSampleEdit: root.multiSampleEdit
             isBrush: root.isBrush
-            trackRulerType: root.trackRulerType
+            isLinear: root.isLinear
             dbRange: root.dbRange
 
             function onWaveViewPositionChanged(x, y) {

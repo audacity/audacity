@@ -45,7 +45,7 @@ void TracksListClipsModel::load()
     }, muse::async::Asyncable::Mode::SetReplace);
 
     playbackConfiguration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { DbRange });
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { DbRangeRole });
     });
 
     beginResetModel();
@@ -110,7 +110,7 @@ void TracksListClipsModel::load()
         }
 
         const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
-        emit dataChanged(index(0), index(lastIndex), { TrackRulerType });
+        emit dataChanged(index(0), index(lastIndex), { IsLinearRole, TrackRulerTypeRole });
     });
 
     prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track> tracks) {
@@ -250,12 +250,15 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
     case IsStereoRole: {
         return track.type == au::trackedit::TrackType::Stereo;
     }
-    case TrackRulerType: {
-        return projectsceneConfiguration()->tracksRulerType(track.id);
+    case IsLinearRole: {
+        return projectsceneConfiguration()->tracksRulerType(track.id) != 0;
     }
-    case DbRange: {
+    case DbRangeRole: {
         return au::playback::PlaybackMeterDbRange::toDouble(
             playbackConfiguration()->playbackMeterDbRange());
+    }
+    case TrackRulerTypeRole: {
+        return projectsceneConfiguration()->tracksRulerType(track.id);
     }
     default:
         break;
@@ -276,8 +279,9 @@ QHash<int, QByteArray> TracksListClipsModel::roleNames() const
         { IsMultiSelectionActiveRole, "isMultiSelectionActive" },
         { IsTrackAudibleRole, "isTrackAudible" },
         { IsStereoRole, "isStereo" },
-        { TrackRulerType, "trackRulerType" },
-        { DbRange, "dbRange" },
+        { TrackRulerTypeRole, "trackRulerType" },
+        { IsLinearRole, "isLinear" },
+        { DbRangeRole, "dbRange" },
     };
     return roles;
 }

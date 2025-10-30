@@ -91,7 +91,7 @@ IWavePainter::Params WaveView::getWavePainterParams() const
     params.channelHeightRatio = m_channelHeightRatio;
     params.showRMS = configuration()->isRMSInWaveformVisible();
     params.showClipping = configuration()->isClippingInWaveformVisible();
-    params.isLinear = m_trackRulerType != 0;
+    params.isLinear = m_isLinear;
     params.dbRange = m_dbRange;
 
     projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
@@ -352,18 +352,18 @@ bool WaveView::isBrush() const
     return m_isBrush;
 }
 
-int WaveView::trackRulerType() const
+bool WaveView::isLinear() const
 {
-    return m_trackRulerType;
+    return m_isLinear;
 }
 
-void WaveView::setTrackRulerType(int trackRulerType)
+void WaveView::setIsLinear(bool isLinear)
 {
-    if (m_trackRulerType == trackRulerType) {
+    if (m_isLinear == isLinear) {
         return;
     }
 
-    m_trackRulerType = trackRulerType;
+    m_isLinear = isLinear;
     update();
 }
 
