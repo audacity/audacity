@@ -13,6 +13,22 @@ QString TruncateSilenceViewModel::effectTitle() const
     return muse::qtrc("effects/truncatesilence", "Truncate silence");
 }
 
+// Units
+QString TruncateSilenceViewModel::dbUnit() const
+{
+    return muse::qtrc("effects/truncatesilence", "dB");
+}
+
+QString TruncateSilenceViewModel::secondsUnit() const
+{
+    return muse::qtrc("effects/truncatesilence", "seconds");
+}
+
+QString TruncateSilenceViewModel::percentUnit() const
+{
+    return muse::qtrc("effects/truncatesilence", "%");
+}
+
 // Detect silence section
 QString TruncateSilenceViewModel::detectSilenceLabel() const
 {
