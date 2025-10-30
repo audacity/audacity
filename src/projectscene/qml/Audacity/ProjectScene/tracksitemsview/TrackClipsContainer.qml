@@ -432,8 +432,14 @@ TrackItemsContainer {
                                         updateWave()
                                     }
 
-                                    function onTitleEditRequested() {
-                                        item.editTitle()
+                                }
+
+                                Connections {
+                                    target: clipsModel
+                                    function onItemTitleEditRequested(key) {
+                                        if (key === item.itemData.key) {
+                                            item.editTitle()
+                                        }
                                     }
                                 }
                             }

@@ -79,7 +79,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackWhenNoneE
     //! [EXPECT] The project is notified about a new track and a new label being added
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
-    EXPECT_CALL(*m_selectionController, setFocusedTrack(_)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection
     bool result = m_labelsInteraction->addLabelToSelection();
@@ -123,7 +123,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesExistingLabelTrack)
     //! [EXPECT] The project is notified about a new label being added but NOT about a new track
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
-    EXPECT_CALL(*m_selectionController, setFocusedTrack(_)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection
     bool result = m_labelsInteraction->addLabelToSelection();
@@ -170,7 +170,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesFocusedLabelTrack)
     //! [EXPECT] The project is notified about a new label being added
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
-    EXPECT_CALL(*m_selectionController, setFocusedTrack(focusedTrackId)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection
     bool result = m_labelsInteraction->addLabelToSelection();
@@ -207,7 +207,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithZeroLengthSelection)
     //! [EXPECT] The project is notified about a new track and a new label being added
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
-    EXPECT_CALL(*m_selectionController, setFocusedTrack(_)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label at the cursor position
     bool result = m_labelsInteraction->addLabelToSelection();
@@ -242,7 +242,7 @@ TEST_F(Au3LabelsInteractionsTests, AddMultipleLabelsToSameLabelTrack)
     //! [EXPECT] Notifications for track and labels
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(3);
-    EXPECT_CALL(*m_selectionController, setFocusedTrack(_)).Times(AtLeast(1));
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(AtLeast(1));
 
     //! [WHEN] Add first label from 0.0 to 1.0
     ON_CALL(*m_selectionController, dataSelectedStartTime()).WillByDefault(Return(0.0));
@@ -309,7 +309,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithAudioTrackPresent)
     //! [EXPECT] The project is notified about a new label track and a new label being added
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
-    EXPECT_CALL(*m_selectionController, setFocusedTrack(_)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection
     bool result = m_labelsInteraction->addLabelToSelection();

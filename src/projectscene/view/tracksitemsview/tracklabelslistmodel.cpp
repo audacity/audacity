@@ -82,8 +82,6 @@ void TrackLabelsListModel::onReload()
 
             update();
 
-            emit static_cast<TrackLabelItem*>(m_items.at(i))->titleEditRequested();
-
             break;
         }
     });
