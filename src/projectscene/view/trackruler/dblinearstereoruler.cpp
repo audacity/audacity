@@ -163,5 +163,20 @@ std::vector<TrackRulerSmallStep> DbLinearStereoRuler::smallSteps() const
         return { TrackRulerSmallStep { 0.0, 0, false }, TrackRulerSmallStep { 0.0, 1, true } };
     }
 
-    return {};
+    std::vector<double> channelHeights = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
+    std::vector<TrackRulerSmallStep> steps;
+    for (size_t channel = 0; channel < 2; ++channel) {
+        const int lowestFullStep = computeLowestFullStepValue(channelHeights[channel], m_dbRange);
+        const std::vector<int> valuesList = fullStepsValues(channelHeights[channel], m_dbRange);
+        for (int i = lowestFullStep; i < 0; i++) {
+            if (std::find(valuesList.begin(), valuesList.end(), i) != valuesList.end()) {
+                continue;
+            }
+
+            steps.push_back(TrackRulerSmallStep { static_cast<double>(i), channel, false });
+            steps.push_back(TrackRulerSmallStep { static_cast<double>(i), channel, true });
+        }
+    }
+
+    return steps;
 }
