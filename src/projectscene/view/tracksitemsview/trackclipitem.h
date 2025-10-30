@@ -5,8 +5,6 @@
 
 #include "trackedit/dom/clip.h"
 
-#include "../../types/projectscenetypes.h"
-
 #include "viewtrackitem.h"
 
 namespace au::projectscene {

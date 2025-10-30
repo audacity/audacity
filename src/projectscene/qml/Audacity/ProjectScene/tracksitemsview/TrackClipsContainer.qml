@@ -28,7 +28,7 @@ TrackItemsContainer {
 
     function changeClipTitle(index, newTitle) {
         clipsModel.changeClipTitle(index, newTitle)
-        clipsModel.resetSelectedObjects()
+        clipsModel.resetSelectedClips()
     }
 
     onCtrlPressedChanged: {
@@ -328,11 +328,11 @@ TrackItemsContainer {
                                 }
 
                                 onClipStartEditRequested: function() {
-                                    clipsModel.startEditClip(itemData.key)
+                                    clipsModel.startEditItem(itemData.key)
                                 }
 
                                 onClipEndEditRequested: function() {
-                                    clipsModel.endEditClip(itemData.key)
+                                    clipsModel.endEditItem(itemData.key)
 
                                     root.triggerClipGuideline(false, -1)
                                 }
@@ -385,7 +385,7 @@ TrackItemsContainer {
                                 }
 
                                 onRequestSelectionReset: {
-                                    clipsModel.resetSelectedObjects()
+                                    clipsModel.resetSelectedClips()
                                     root.selectionResetRequested()
                                 }
 
@@ -398,7 +398,7 @@ TrackItemsContainer {
                                 }
 
                                 onTitleEditCanceled: {
-                                    clipsModel.resetSelectedObjects()
+                                    clipsModel.resetSelectedClips()
                                 }
 
                                 onSplitterPositionChangeRequested: function (position) {
@@ -508,11 +508,11 @@ TrackItemsContainer {
         }
 
         function onItemStartEditRequested(objectKey) {
-            clipsModel.startEditClip(objectKey)
+            clipsModel.startEditItem(objectKey)
         }
 
         function onItemEndEditRequested(objectKey) {
-            clipsModel.endEditClip(objectKey)
+            clipsModel.endEditItem(objectKey)
         }
 
         function onCancelClipDragEditRequested(clipKey) {
