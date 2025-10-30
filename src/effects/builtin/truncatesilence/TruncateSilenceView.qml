@@ -168,33 +168,22 @@ BuiltinEffectBase {
 
                     spacing: prv.spacingL
 
-                    Column {
+                    RadioButtonGroup {
 
                         width: parent.width
 
                         spacing: prv.spacingM
+                        orientation: ListView.Vertical
 
-                        RoundedRadioButton {
+                        model: truncateSilence.actionModel
 
-                            text: truncateSilence.truncateActionLabel
-                            checked: truncateSilence.actionIndex === 0
+                        delegate: RoundedRadioButton {
 
-                            onToggled: {
-                                if (truncateSilence.actionIndex !== 0) {
-                                    truncateSilence.actionIndex = 0
-                                }
-                            }
-                        }
-
-                        RoundedRadioButton {
-
-                            text: truncateSilence.compressActionLabel
-                            checked: truncateSilence.actionIndex === 1
+                            text: modelData.text
+                            checked: truncateSilence.actionIndex === modelData.value
 
                             onToggled: {
-                                if (truncateSilence.actionIndex !== 1) {
-                                    truncateSilence.actionIndex = 1
-                                }
+                                truncateSilence.actionIndex = modelData.value
                             }
                         }
                     }
