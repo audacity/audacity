@@ -843,8 +843,6 @@ Rectangle {
             anchors.bottom: parent.bottom
 
             x: playCursorController.positionX
-
-            timelinePressed: timelineMouseArea.pressed
         }
 
         Rectangle {

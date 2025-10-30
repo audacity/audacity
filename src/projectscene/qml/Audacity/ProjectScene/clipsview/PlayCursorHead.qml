@@ -45,6 +45,7 @@ Item {
             x: parent.width / 2
             y: 15
             color: "white"
+            antialiasing: true
         }
         Rectangle {
             // this is to remove the aliased part in the bottom of the Icon
@@ -54,6 +55,7 @@ Item {
             x: (parent.width / 2) - 1
             y: 16
             color: "black"
+            antialiasing: true
         }
         Rectangle {
             // this is to remove the aliased part in the bottom of the Icon
@@ -63,6 +65,7 @@ Item {
             x: (parent.width / 2) + 1
             y: 16
             color: "black"
+            antialiasing: true
         }
 
         MouseArea {
