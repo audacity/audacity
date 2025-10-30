@@ -241,20 +241,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Half-wave"),
              Checkable::Yes
              ),
-    UiAction("track-ruler-enable-meter",
-             //! TODO: Change context when metering rulers are implemented
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Enable metering rulers"),
-             TranslatableString("action", "Enable metering rulers")
-             ),
-    UiAction("track-ruler-enable-vertical",
-             //!TODO: Change context when vertical rulers are implemented
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Enable vertical rulers"),
-             TranslatableString("action", "Enable vertical rulers")
-             ),
     UiAction("action://trackedit/paste-default",
              "action://paste",
              au::context::UiCtxProjectOpened,
