@@ -28,6 +28,7 @@ BuiltinEffectBase {
         readonly property int spacingS: 4
         readonly property int spacingM: 8
         readonly property int spacingL: 16
+
         readonly property int fieldWidth: 156
         readonly property int desiredWidth: 360
     }
@@ -77,7 +78,7 @@ BuiltinEffectBase {
 
                         TextInputField {
                             width: parent.width
-                            currentText: truncateSilence.thresholdValue.toFixed(1) + " dB"
+                            currentText: truncateSilence.thresholdValue.toFixed(truncateSilence.thresholdDecimals) + " dB"
                             onTextEditingFinished: function (newTextValue) {
                                 var val = parseFloat(newTextValue)
                                 if (!isNaN(val)) {
@@ -97,7 +98,7 @@ BuiltinEffectBase {
 
                         TextInputField {
                             width: parent.width
-                            currentText: truncateSilence.minimumValue.toFixed(3) + " seconds"
+                            currentText: truncateSilence.minimumValue.toFixed(truncateSilence.minimumDecimals) + " seconds"
                             onTextEditingFinished: function (newTextValue) {
                                 var val = parseFloat(newTextValue)
                                 if (!isNaN(val)) {
@@ -172,7 +173,7 @@ BuiltinEffectBase {
 
                         TextInputField {
                             width: prv.fieldWidth
-                            currentText: truncateSilence.truncateValue.toFixed(3) + " seconds"
+                            currentText: truncateSilence.truncateValue.toFixed(truncateSilence.truncateDecimals) + " seconds"
                             onTextEditingFinished: function (newTextValue) {
                                 var val = parseFloat(newTextValue)
                                 if (!isNaN(val)) {
@@ -194,7 +195,7 @@ BuiltinEffectBase {
 
                         TextInputField {
                             width: prv.fieldWidth
-                            currentText: truncateSilence.compressValue.toFixed(1) + " %"
+                            currentText: truncateSilence.compressValue.toFixed(truncateSilence.compressDecimals) + " %"
                             onTextEditingFinished: function (newTextValue) {
                                 var val = parseFloat(newTextValue)
                                 if (!isNaN(val)) {
