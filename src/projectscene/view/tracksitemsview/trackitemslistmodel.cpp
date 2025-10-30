@@ -378,7 +378,7 @@ void TrackItemsListModel::requestItemTitleChange()
 
     ViewTrackItem* selectedItem = itemByKey(itemKey);
     if (selectedItem != nullptr) {
-        emit selectedItem->titleEditRequested();
+        emit itemTitleEditRequested(selectedItem->key());
     }
 }
 

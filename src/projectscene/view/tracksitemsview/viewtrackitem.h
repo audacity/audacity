@@ -61,7 +61,6 @@ signals:
     void rightVisibleMarginChanged();
     void timeChanged();
     void selectedChanged();
-    void titleEditRequested();
 
 protected:
     TrackItemKey m_key;

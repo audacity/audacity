@@ -74,13 +74,14 @@ bool Au3LabelsInteraction::addLabelToSelection()
                             selectionController()->dataSelectedEndTime());
 
     int64_t newLabelId = labelTrack->AddLabel(selectedRegion, title);
+    const auto& newLabel = DomAccessor::findLabel(labelTrack, newLabelId);
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
-        prj->notifyAboutLabelAdded(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, newLabelId)));
+        prj->notifyAboutLabelAdded(DomConverter::label(labelTrack, newLabel));
     }
 
-    selectionController()->setFocusedTrack(labelTrack->GetId());
+    selectionController()->setSelectedLabels({ { labelTrack->GetId(), newLabel->GetId() } });
 
     return true;
 }

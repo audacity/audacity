@@ -274,12 +274,20 @@ Item {
             root.headerHovered = value
         }
 
-        onMousePositionChanged: function(x, y) {
+        onRequestSelected: {
+            root.requestSelected()
+        }
+
+        onStretchMousePositionChanged: function(x, y) {
             root.labelItemMousePositionChanged(x, y)
         }
 
-        onRequestSelected: {
-            root.requestSelected()
+        onStretchRequested: function(completed) {
+            root.labelLeftStretchRequested(completed)
+        }
+
+        onStretchEndRequested: {
+            root.labelEndEditRequested()
         }
     }
 
@@ -294,10 +302,6 @@ Item {
 
         onHeaderHoveredChanged: function(value) {
             root.headerHovered = value
-        }
-
-        onMousePositionChanged: function(x, y) {
-            root.labelItemMousePositionChanged(x, y)
         }
 
         onRequestSelected: {
@@ -332,10 +336,6 @@ Item {
 
         onHeaderHoveredChanged: function(value) {
             root.headerHovered = value
-        }
-
-        onMousePositionChanged: function(x, y) {
-            root.labelItemMousePositionChanged(x, y)
         }
 
         onRequestSelected: {

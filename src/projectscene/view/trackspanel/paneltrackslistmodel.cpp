@@ -305,6 +305,9 @@ void PanelTracksListModel::endActiveDrag()
 void PanelTracksListModel::addLabelToSelection()
 {
     dispatcher()->dispatch("label-add");
+    QTimer::singleShot(100, [this](){
+        dispatcher()->dispatch("label-rename");
+    });
 }
 
 void PanelTracksListModel::clear()

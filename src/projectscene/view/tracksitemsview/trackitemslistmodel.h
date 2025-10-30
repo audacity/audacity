@@ -69,6 +69,7 @@ public:
 signals:
     void trackIdChanged();
     void timelineContextChanged();
+    void itemTitleEditRequested(const TrackItemKey& key);
 
 protected slots:
     virtual void onTimelineZoomChanged();

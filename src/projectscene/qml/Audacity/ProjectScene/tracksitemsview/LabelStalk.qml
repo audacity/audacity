@@ -10,7 +10,6 @@ Rectangle {
     property bool isSelected: false
 
     signal headerHoveredChanged(bool value)
-    signal mousePositionChanged(real x, real y)
     signal requestSelected()
 
     signal stretchRequested(bool completed)
@@ -63,13 +62,13 @@ Rectangle {
                 root.stretchRequested(false)
                 e.accepted = true
             } else {
-                root.mousePositionChanged(e.x, e.y)
+                root.stretchMousePositionChanged(e.x, e.y)
                 e.accepted = false
             }
         }
 
         onReleased: function (e) {
-            if (root.isSelected && !root.isForPoint) {
+            if (!root.isForPoint) {
                 root.stretchRequested(true)
                 root.stretchEndRequested()
                 e.accepted = true

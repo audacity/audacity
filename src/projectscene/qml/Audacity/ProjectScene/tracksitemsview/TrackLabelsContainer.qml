@@ -132,7 +132,7 @@ TrackItemsContainer {
 
                                 navigation.name: Boolean(itemData) ? itemData.title + itemData.index : ""
                                 navigation.panel: root.navigationPanel
-                                navigation.column: itemData ? Math.floor(itemData.x) : 0
+                                navigation.column: Boolean(itemData) ? Math.floor(itemData.x) : 0
                                 navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
                                 navigation.onActiveChanged: {
                                     if (navigation.active) {
@@ -198,9 +198,11 @@ TrackItemsContainer {
                                 }
 
                                 Connections {
-                                    target: itemData
-                                    function onTitleEditRequested() {
-                                        item.editTitle()
+                                    target: labelsModel
+                                    function onItemTitleEditRequested(key) {
+                                        if (key === item.itemData.key) {
+                                            item.editTitle()
+                                        }
                                     }
                                 }
                             }
