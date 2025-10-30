@@ -11,10 +11,11 @@ import Audacity.BuiltinEffects
 BuiltinEffectBase {
     id: root
 
+    width: prv.desiredWidth - (2 * prv.spacingL) // we need to remove the padding from the dialog desired width
+    implicitHeight: mainColumn.height // see with EffectsViewerDialog.qml
+
     property string title: truncateSilence.effectTitle
     property bool isApplyAllowed: true
-
-    implicitHeight: mainColumn.height // see with EffectsViewerDialog.qml
 
     model: truncateSilence
 
@@ -36,8 +37,6 @@ BuiltinEffectBase {
         readonly property int borderRadius: 4
     }
 
-    width: prv.desiredWidth - (2 * prv.spacingL) // we need to remove the padding from the dialog desired width
-
     ColumnLayout {
         id: mainColumn
 
@@ -46,41 +45,52 @@ BuiltinEffectBase {
 
         // Detect silence section
         Column {
+
             Layout.fillWidth: true
+
             spacing: prv.spacingM
 
             StyledTextLabel {
+
                 text: truncateSilence.detectSilenceLabel
                 font: ui.theme.bodyFont
             }
 
             RoundedRectangle {
+
                 width: parent.width
                 height: detectSilenceRow.height + prv.spacingL * 2
 
                 color: ui.theme.backgroundSecondaryColor
+                radius: prv.borderRadius
 
                 border.color: ui.theme.strokeColor
                 border.width: prv.borderWidth
 
-                radius: prv.borderRadius
-
                 Row {
                     id: detectSilenceRow
+
                     anchors.centerIn: parent
+
                     width: parent.width - prv.spacingL * 2
+
                     spacing: prv.spacingL
 
                     Column {
+
                         width: (parent.width - parent.spacing) / 2
+
                         spacing: prv.spacingM
 
                         StyledTextLabel {
+
                             text: truncateSilence.thresholdLabel
                         }
 
                         IncrementalPropertyControl {
+
                             width: parent.width
+
                             currentValue: truncateSilence.thresholdValue
                             measureUnitsSymbol: truncateSilence.thresholdUnit
                             decimals: truncateSilence.thresholdDecimals
@@ -95,15 +105,20 @@ BuiltinEffectBase {
                     }
 
                     Column {
+
                         width: (parent.width - parent.spacing) / 2
+
                         spacing: prv.spacingM
 
                         StyledTextLabel {
+
                             text: truncateSilence.minimumLabel
                         }
 
                         IncrementalPropertyControl {
+
                             width: parent.width
+
                             currentValue: truncateSilence.minimumValue
                             measureUnitsSymbol: truncateSilence.minimumUnit
                             decimals: truncateSilence.minimumDecimals
@@ -122,36 +137,48 @@ BuiltinEffectBase {
 
         // Action section
         Column {
+
             Layout.fillWidth: true
+
             spacing: prv.spacingM
 
             StyledTextLabel {
+
                 text: truncateSilence.actionLabel
                 font: ui.theme.bodyFont
             }
 
             RoundedRectangle {
+
                 width: parent.width
                 height: actionColumn.height + prv.spacingL * 2
 
                 color: ui.theme.backgroundSecondaryColor
+                radius: prv.borderRadius
 
                 border.color: ui.theme.strokeColor
                 border.width: prv.borderWidth
 
-                radius: prv.borderRadius
-
                 Column {
                     id: actionColumn
+
                     anchors.centerIn: parent
+
                     width: parent.width - prv.spacingL * 2
+
                     spacing: prv.spacingL
+
                     Column {
+
                         width: parent.width
+
                         spacing: prv.spacingM
+
                         RoundedRadioButton {
+
                             text: truncateSilence.truncateActionLabel
                             checked: truncateSilence.actionIndex === 0
+
                             onToggled: {
                                 if (truncateSilence.actionIndex !== 0) {
                                     truncateSilence.actionIndex = 0
@@ -160,8 +187,10 @@ BuiltinEffectBase {
                         }
 
                         RoundedRadioButton {
+
                             text: truncateSilence.compressActionLabel
                             checked: truncateSilence.actionIndex === 1
+
                             onToggled: {
                                 if (truncateSilence.actionIndex !== 1) {
                                     truncateSilence.actionIndex = 1
@@ -172,16 +201,21 @@ BuiltinEffectBase {
 
                     // Truncate to field (visible when action = 0)
                     Column {
+
                         width: parent.width
+
                         spacing: prv.spacingS
                         visible: truncateSilence.actionIndex === 0
 
                         StyledTextLabel {
+
                             text: truncateSilence.truncateToLabel
                         }
 
                         IncrementalPropertyControl {
+
                             width: prv.fieldWidth
+
                             currentValue: truncateSilence.truncateValue
                             measureUnitsSymbol: truncateSilence.truncateUnit
                             decimals: truncateSilence.truncateDecimals
@@ -197,16 +231,21 @@ BuiltinEffectBase {
 
                     // Compress to field (visible when action = 1)
                     Column {
+
                         width: parent.width
+
                         spacing: prv.spacingS
                         visible: truncateSilence.actionIndex === 1
 
                         StyledTextLabel {
+
                             text: truncateSilence.compressToLabel
                         }
 
                         IncrementalPropertyControl {
+
                             width: prv.fieldWidth
+
                             currentValue: truncateSilence.compressValue
                             measureUnitsSymbol: truncateSilence.compressUnit
                             decimals: truncateSilence.compressDecimals
@@ -221,9 +260,12 @@ BuiltinEffectBase {
                     }
 
                     CheckBox {
+
                         width: parent.width
+
                         text: truncateSilence.actionIndex === 0 ? truncateSilence.independentTruncateLabel : truncateSilence.independentCompressLabel
                         checked: truncateSilence.independentValue
+
                         onClicked: {
                             truncateSilence.independentValue = !checked
                         }
