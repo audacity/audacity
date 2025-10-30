@@ -4,16 +4,12 @@
 using namespace au::projectscene;
 
 namespace {
-constexpr int HIGH_RESOLUTION_MIN_HEIGHT = 340;
+constexpr int MIN_ADJACENT_STEPS_HEIGHT = 20;
+constexpr std::array<std::pair<double, double>, 3> STEP_INCREMENT = { { { 0.1, 0.05 }, { 0.5, 0.1 }, { 1.0, 0.5 } } };
+constexpr std::pair<double, double> DEFAULT_INCREMENT = { 1.0, 0.5 };
 
 constexpr double MAX_VALUE = 1.0;
 constexpr double MIN_VALUE = -1.0;
-
-constexpr double LOW_RESOLUTION_FULL_STEPS_INCREMENT = 0.5;
-constexpr double LOW_RESOLUTION_SMALL_STEPS_INCREMENT = 0.1;
-
-constexpr double HIGH_RESOLUTION_FULL_STEPS_INCREMENT = 0.1;
-constexpr double HIGH_RESOLUTION_SMALL_STEPS_INCREMENT = 0.05;
 
 constexpr std::array<TrackRulerFullStep, 1> COLLAPSED_FULL_STEPS = { {
     TrackRulerFullStep{ 0.0, 0, 0, true, true, false },
@@ -42,12 +38,31 @@ int getAlignment(double value)
     return 0;
 }
 
+double valueToPosition(double value, double height)
+{
+    return (1.0 - (value / 2.0 + 0.5)) * height;
+}
+
+std::pair<double, double> stepsIncrement(double height)
+{
+    std::pair<double, double> increment = DEFAULT_INCREMENT;
+    for (const auto& stepInc : STEP_INCREMENT) {
+        const auto& [v, _] = stepInc;
+        if (valueToPosition(0.0, height) - valueToPosition(v, height) >= MIN_ADJACENT_STEPS_HEIGHT) {
+            increment = stepInc;
+            break;
+        }
+    }
+
+    return increment;
+}
+
 std::vector<double> fullStepsValues(double height)
 {
-    double increment = height >= HIGH_RESOLUTION_MIN_HEIGHT ? HIGH_RESOLUTION_FULL_STEPS_INCREMENT : LOW_RESOLUTION_FULL_STEPS_INCREMENT;
+    const std::pair<double, double> increment = stepsIncrement(height);
 
     std::vector<double> steps;
-    for (double v = MIN_VALUE; v <= MAX_VALUE; v += increment) {
+    for (double v = MIN_VALUE; v <= MAX_VALUE; v += increment.first) {
         steps.push_back(v);
     }
     return steps;
@@ -55,10 +70,10 @@ std::vector<double> fullStepsValues(double height)
 
 std::vector<double> smallStepsValues(double height)
 {
-    double increment = height >= HIGH_RESOLUTION_MIN_HEIGHT ? HIGH_RESOLUTION_SMALL_STEPS_INCREMENT : LOW_RESOLUTION_SMALL_STEPS_INCREMENT;
+    const std::pair<double, double> increment = stepsIncrement(height);
 
     std::vector<double> steps;
-    for (double v = MIN_VALUE; v <= MAX_VALUE; v += increment) {
+    for (double v = MIN_VALUE; v <= MAX_VALUE; v += increment.second) {
         steps.push_back(v);
     }
     return steps;
@@ -67,7 +82,7 @@ std::vector<double> smallStepsValues(double height)
 
 double LinearMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, [[maybe_unused]] bool isNegativeSample) const
 {
-    return (1.0 - (step / 2.0 + 0.5)) * m_height;
+    return valueToPosition(step, m_height);
 }
 
 void LinearMonoRuler::setHeight(int height)
