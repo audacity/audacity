@@ -29,7 +29,7 @@ StyledDialogView {
             anchors.margins: 24
 
             StyledTextLabel {
-                text: "<b>Notes on Audacity 4 - Alpha 1</b>"
+                text: "<b>Notes on Audacity 4 - Alpha 2</b>"
 
                 font.pixelSize: 16
                 anchors.horizontalCenter: parent.horizontalCenter
