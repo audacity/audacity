@@ -44,6 +44,10 @@ void TracksListClipsModel::load()
         emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackAudibleRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    playbackConfiguration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { DbRange });
+    });
+
     beginResetModel();
 
     m_trackList = prj->trackList();
@@ -249,6 +253,10 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
     case TrackRulerType: {
         return projectsceneConfiguration()->tracksRulerType(track.id);
     }
+    case DbRange: {
+        return au::playback::PlaybackMeterDbRange::toDouble(
+            playbackConfiguration()->playbackMeterDbRange());
+    }
     default:
         break;
     }
@@ -269,6 +277,7 @@ QHash<int, QByteArray> TracksListClipsModel::roleNames() const
         { IsTrackAudibleRole, "isTrackAudible" },
         { IsStereoRole, "isStereo" },
         { TrackRulerType, "trackRulerType" },
+        { DbRange, "dbRange" },
     };
     return roles;
 }

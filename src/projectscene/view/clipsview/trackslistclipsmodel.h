@@ -12,6 +12,7 @@
 #include "iprojectsceneconfiguration.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "playback/iplaybackconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditinteraction.h"
@@ -37,6 +38,7 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<IProjectSceneConfiguration> projectsceneConfiguration;
+    muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
 
 public:
     explicit TracksListClipsModel(QObject* parent = nullptr);
@@ -72,6 +74,7 @@ private:
         IsTrackAudibleRole,
         IsStereoRole,
         TrackRulerType,
+        DbRange,
     };
 
     std::vector<trackedit::Track> m_trackList;

@@ -36,6 +36,7 @@ Rectangle {
     property bool moveActive: false
     property bool isAudible: true
     property int trackRulerType: 0
+    property real dbRange: -60.0
     property real selectionStart: 0
     property real selectionWidth: 0
     property bool selectionInProgress: false
@@ -740,6 +741,7 @@ Rectangle {
             multiSampleEdit: root.multiSampleEdit
             isBrush: root.isBrush
             trackRulerType: root.trackRulerType
+            dbRange: root.dbRange
 
             function onWaveViewPositionChanged(x, y) {
                 if (waveView.isIsolationMode) {

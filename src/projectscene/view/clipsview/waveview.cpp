@@ -92,6 +92,7 @@ IWavePainter::Params WaveView::getWavePainterParams() const
     params.showRMS = configuration()->isRMSInWaveformVisible();
     params.showClipping = configuration()->isClippingInWaveformVisible();
     params.isLinear = m_trackRulerType != 0;
+    params.dbRange = m_dbRange;
 
     projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
     if (clipStyle == projectscene::ClipStyles::Style::COLORFUL) {
@@ -363,6 +364,21 @@ void WaveView::setTrackRulerType(int trackRulerType)
     }
 
     m_trackRulerType = trackRulerType;
+    update();
+}
+
+double WaveView::dbRange() const
+{
+    return m_dbRange;
+}
+
+void WaveView::setDbRange(double dbRange)
+{
+    if (m_dbRange == dbRange) {
+        return;
+    }
+
+    m_dbRange = dbRange;
     update();
 }
 
