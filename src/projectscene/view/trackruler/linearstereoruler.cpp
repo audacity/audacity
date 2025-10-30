@@ -4,22 +4,24 @@
 using namespace au::projectscene;
 
 namespace {
-constexpr int MEDIUM_RESOLUTION_MIN_HEIGHT = 105;
-constexpr int HIGH_RESOLUTION_MIN_HEIGHT = 350;
+constexpr int MIN_ADJACENT_STEPS_HEIGHT = 20;
+constexpr std::array<std::pair<double, double>, 3> STEP_INCREMENT = { { { 0.1, 0.05 }, { 0.5, 0.1 }, { 1.0, 0.5 } } };
+constexpr std::pair<double, double> DEFAULT_INCREMENT = { 1.0, 0.5 };
 
 constexpr double MAX_VALUE = 1.0;
 constexpr double MIN_VALUE = -1.0;
 
-constexpr double LOW_RESOLUTION_FULL_STEPS_INCREMENT = 1.0;
-constexpr double LOW_RESOLUTION_SMALL_STEPS_INCREMENT = 0.5;
+constexpr std::array<TrackRulerFullStep, 2> COLLAPSED_FULL_STEPS = { {
+    TrackRulerFullStep{ 0.0, 0, 0, true, true, false },
+    TrackRulerFullStep{ 0.0, 1, 0, true, true, false },
+} };
 
-constexpr double MEDIUM_RESOLUTION_FULL_STEPS_INCREMENT = 0.5;
-constexpr double MEDIUM_RESOLUTION_SMALL_STEPS_INCREMENT = 0.1;
+constexpr std::array<TrackRulerSmallStep, 2> COLLAPSED_SMALL_STEPS = { {
+    TrackRulerSmallStep{ 1.0, 0, false },
+    TrackRulerSmallStep{ -1.0, 1, false }
+} };
 
-constexpr double HIGH_RESOLUTION_FULL_STEPS_INCREMENT = 0.1;
-constexpr double HIGH_RESOLUTION_SMALL_STEPS_INCREMENT = 0.05;
-
-constexpr double MIN_CHANNEL_HEIGHT = 30.0;
+constexpr double MIN_CHANNEL_HEIGHT = 40.0;
 
 bool isBold(double value)
 {
@@ -39,19 +41,30 @@ int getAlignment(double value)
     return 0;
 }
 
-std::vector<double> fullStepsValues(double height)
+double valueToPosition(double value, double height)
 {
-    double increment;
-    if (height >= HIGH_RESOLUTION_MIN_HEIGHT) {
-        increment = HIGH_RESOLUTION_FULL_STEPS_INCREMENT;
-    } else if (height >= MEDIUM_RESOLUTION_MIN_HEIGHT) {
-        increment = MEDIUM_RESOLUTION_FULL_STEPS_INCREMENT;
-    } else {
-        increment = LOW_RESOLUTION_FULL_STEPS_INCREMENT;
+    return (1.0 - (value / 2.0 + 0.5)) * height;
+}
+
+std::pair<double, double> stepsIncrement(double height)
+{
+    std::pair<double, double> increment = DEFAULT_INCREMENT;
+    for (const auto& stepInc : STEP_INCREMENT) {
+        const auto& [v, _] = stepInc;
+        if (valueToPosition(0.0, height) - valueToPosition(v, height) >= MIN_ADJACENT_STEPS_HEIGHT) {
+            increment = stepInc;
+            break;
+        }
     }
 
+    return increment;
+}
+
+std::vector<double> fullStepsValues(double height)
+{
+    const std::pair<double, double> increment = stepsIncrement(height);
     std::vector<double> steps;
-    for (double v = MIN_VALUE; v <= MAX_VALUE; v += increment) {
+    for (double v = MIN_VALUE; v <= MAX_VALUE; v += increment.first) {
         steps.push_back(v);
     }
     return steps;
@@ -59,17 +72,9 @@ std::vector<double> fullStepsValues(double height)
 
 std::vector<double> smallStepsValues(double height)
 {
-    double increment;
-    if (height >= HIGH_RESOLUTION_MIN_HEIGHT) {
-        increment = HIGH_RESOLUTION_SMALL_STEPS_INCREMENT;
-    } else if (height >= MEDIUM_RESOLUTION_MIN_HEIGHT) {
-        increment = MEDIUM_RESOLUTION_SMALL_STEPS_INCREMENT;
-    } else {
-        increment = LOW_RESOLUTION_SMALL_STEPS_INCREMENT;
-    }
-
+    const std::pair<double, double> increment = stepsIncrement(height);
     std::vector<double> steps;
-    for (double v = MIN_VALUE; v <= MAX_VALUE; v += increment) {
+    for (double v = MIN_VALUE; v <= MAX_VALUE; v += increment.second) {
         steps.push_back(v);
     }
     return steps;
@@ -121,13 +126,12 @@ std::vector<TrackRulerFullStep> LinearStereoRuler::fullSteps() const
     std::vector<TrackRulerFullStep> steps;
 
     if (m_collapsed) {
-        steps.push_back(TrackRulerFullStep { 0.0, 0, 0, true, true, false });
-        steps.push_back(TrackRulerFullStep { 0.0, 1, 0, true, true, false });
+        steps.insert(steps.end(), COLLAPSED_FULL_STEPS.begin(), COLLAPSED_FULL_STEPS.end());
         return steps;
     }
 
     std::vector<double> channelHeight = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
-    for (size_t ch = 0; ch < 2; ++ch) {
+    for (size_t ch = 0; ch < channelHeight.size(); ++ch) {
         if (channelHeight[ch] < MIN_CHANNEL_HEIGHT) {
             steps.push_back(TrackRulerFullStep { 0.0, ch, 0, true, true, false });
             continue;
@@ -146,8 +150,7 @@ std::vector<TrackRulerSmallStep> LinearStereoRuler::smallSteps() const
 {
     std::vector<TrackRulerSmallStep> steps;
     if (m_collapsed) {
-        steps.push_back(TrackRulerSmallStep { 1.0, 0, false });
-        steps.push_back(TrackRulerSmallStep { -1.0, 1, false });
+        steps.insert(steps.end(), COLLAPSED_SMALL_STEPS.begin(), COLLAPSED_SMALL_STEPS.end());
         return steps;
     }
 
