@@ -141,6 +141,7 @@ private:
     const bool mHighQuality;      // dithering
     const sampleFormat mFormat; // output format also influences dithering
     const bool mInterleaved;
+    const double mOutRate;
 
     // INPUT
     sampleFormat mEffectiveFormat;

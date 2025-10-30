@@ -365,7 +365,6 @@ std::optional<size_t> MixerSource::Acquire(Buffers& data, size_t bound)
             ZeroFill(result, target, *pFloat);
         }
     }
-    mTime += static_cast<double>(target / mRate);
 
     mLastProduced = target;
     assert(target <= bound);
