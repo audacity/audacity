@@ -14,6 +14,7 @@ class TruncateSilenceViewModel : public BuiltinEffectModel
     Q_PROPERTY(double thresholdValue READ thresholdValue WRITE setThresholdValue NOTIFY thresholdValueChanged FINAL)
     Q_PROPERTY(double minimumValue READ minimumValue WRITE setMinimumValue NOTIFY minimumValueChanged FINAL)
     Q_PROPERTY(int actionIndex READ actionIndex WRITE setActionIndex NOTIFY actionIndexChanged FINAL)
+    Q_PROPERTY(QVariantMap currentActionConfig READ currentActionConfig NOTIFY actionIndexChanged FINAL)
     Q_PROPERTY(double truncateValue READ truncateValue WRITE setTruncateValue NOTIFY truncateValueChanged FINAL)
     Q_PROPERTY(double compressValue READ compressValue WRITE setCompressValue NOTIFY compressValueChanged FINAL)
     Q_PROPERTY(bool independentValue READ independentValue WRITE setIndependentValue NOTIFY independentValueChanged FINAL)
@@ -29,6 +30,8 @@ public:
 
     int actionIndex() const;
     void setActionIndex(int newActionIndex);
+
+    QVariantMap currentActionConfig() const;
 
     double truncateValue() const;
     void setTruncateValue(double newTruncate);

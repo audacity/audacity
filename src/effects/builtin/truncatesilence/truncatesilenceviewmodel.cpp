@@ -133,9 +133,41 @@ void TruncateSilenceViewModel::setActionIndex(int newActionIndex)
 QVariantList TruncateSilenceViewModel::actionModel() const
 {
     return {
-        QVariantMap { { "text", truncateActionLabel() }, { "value", 0 } },
-        QVariantMap { { "text", compressActionLabel() }, { "value", 1 } }
+        QVariantMap {
+            { "value", 0 },
+            { "text", truncateActionLabel() },
+            { "fieldLabel", truncateToLabel() },
+            { "independentLabel", independentTruncateLabel() },
+            { "paramValue", truncateValue() },
+            { "paramMin", truncateMin() },
+            { "paramMax", truncateMax() },
+            { "paramStep", truncateStep() },
+            { "paramDecimals", truncateDecimals() },
+            { "paramUnitSymbol", truncateUnitSymbol() }
+        },
+        QVariantMap {
+            { "value", 1 },
+            { "text", compressActionLabel() },
+            { "fieldLabel", compressToLabel() },
+            { "independentLabel", independentCompressLabel() },
+            { "paramValue", compressValue() },
+            { "paramMin", compressMin() },
+            { "paramMax", compressMax() },
+            { "paramStep", compressStep() },
+            { "paramDecimals", compressDecimals() },
+            { "paramUnitSymbol", compressUnitSymbol() }
+        }
     };
+}
+
+QVariantMap TruncateSilenceViewModel::currentActionConfig() const
+{
+    QVariantList actions = actionModel();
+    int index = actionIndex();
+    if (index >= 0 && index < actions.size()) {
+        return actions[index].toMap();
+    }
+    return QVariantMap();
 }
 
 QString TruncateSilenceViewModel::truncateToLabel() const

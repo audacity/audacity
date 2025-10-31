@@ -188,62 +188,35 @@ BuiltinEffectBase {
                         }
                     }
 
-                    // Truncate to field (visible when action = 0)
+                    // Dynamic action field based on current selection
                     Column {
 
                         width: parent.width
 
                         spacing: prv.spacingS
-                        visible: truncateSilence.actionIndex === 0
 
                         StyledTextLabel {
 
-                            text: truncateSilence.truncateToLabel()
+                            text: truncateSilence.currentActionConfig.fieldLabel || ""
                         }
 
                         IncrementalPropertyControl {
 
                             width: prv.fieldWidth
 
-                            currentValue: truncateSilence.truncateValue
-                            measureUnitsSymbol: truncateSilence.truncateUnitSymbol()
-                            decimals: truncateSilence.truncateDecimals()
-                            step: truncateSilence.truncateStep()
-                            minValue: truncateSilence.truncateMin()
-                            maxValue: truncateSilence.truncateMax()
+                            currentValue: truncateSilence.actionIndex === 0 ? truncateSilence.truncateValue : truncateSilence.compressValue
+                            measureUnitsSymbol: truncateSilence.currentActionConfig.paramUnitSymbol || ""
+                            decimals: truncateSilence.currentActionConfig.paramDecimals || 0
+                            step: truncateSilence.currentActionConfig.paramStep || 1
+                            minValue: truncateSilence.currentActionConfig.paramMin || 0
+                            maxValue: truncateSilence.currentActionConfig.paramMax || 100
 
                             onValueEdited: function (newValue) {
-                                truncateSilence.truncateValue = newValue
-                            }
-                        }
-                    }
-
-                    // Compress to field (visible when action = 1)
-                    Column {
-
-                        width: parent.width
-
-                        spacing: prv.spacingS
-                        visible: truncateSilence.actionIndex === 1
-
-                        StyledTextLabel {
-
-                            text: truncateSilence.compressToLabel()
-                        }
-
-                        IncrementalPropertyControl {
-
-                            width: prv.fieldWidth
-
-                            currentValue: truncateSilence.compressValue
-                            measureUnitsSymbol: truncateSilence.compressUnitSymbol()
-                            decimals: truncateSilence.compressDecimals()
-                            step: truncateSilence.compressStep()
-                            minValue: truncateSilence.compressMin()
-                            maxValue: truncateSilence.compressMax()
-
-                            onValueEdited: function (newValue) {
-                                truncateSilence.compressValue = newValue
+                                if (truncateSilence.actionIndex === 0) {
+                                    truncateSilence.truncateValue = newValue
+                                } else {
+                                    truncateSilence.compressValue = newValue
+                                }
                             }
                         }
                     }
@@ -252,7 +225,7 @@ BuiltinEffectBase {
 
                         width: parent.width
 
-                        text: truncateSilence.actionIndex === 0 ? truncateSilence.independentTruncateLabel() : truncateSilence.independentCompressLabel()
+                        text: truncateSilence.currentActionConfig.independentLabel || ""
                         checked: truncateSilence.independentValue
 
                         onClicked: {
