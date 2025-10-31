@@ -185,6 +185,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogmonoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogmonoruler.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogstereoruler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogstereoruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/itrackrulermodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearstereoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearstereoruler.h

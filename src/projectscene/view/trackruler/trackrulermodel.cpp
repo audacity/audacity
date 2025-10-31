@@ -6,6 +6,7 @@
 #include "linearstereoruler.h"
 #include "linearmonoruler.h"
 #include "dblogmonoruler.h"
+#include "dblogstereoruler.h"
 
 using namespace au::projectscene;
 
@@ -189,7 +190,7 @@ std::shared_ptr<ITrackRulerModel> TrackRulerModel::buildRulerModel()
     switch (m_rulerType) {
     case 0:
         if (m_isStereo) {
-            //model = std::make_shared<DbLogStereoRuler>();
+            model = std::make_shared<DbLogStereoRuler>();
         } else {
             model = std::make_shared<DbLogMonoRuler>();
         }
