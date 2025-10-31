@@ -9,12 +9,14 @@
 
 using namespace au::projectscene;
 
+namespace {
+const muse::actions::ActionCode TOGGLE_VERTICAL_RULERS = "toggle-vertical-rulers";
+const QString IS_VERTICAL_RULERS_VISIBLE("projectscene/verticalRulersVisible");
+}
+
 ViewTracksListModel::ViewTracksListModel(QObject* parent)
     : QAbstractListModel(parent)
 {
-    configuration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool isVerticalRulersVisible) {
-        setIsVerticalRulersVisible(isVerticalRulersVisible);
-    });
 }
 
 void ViewTracksListModel::load()
@@ -31,8 +33,6 @@ void ViewTracksListModel::load()
     trackeditInteraction()->cancelDragEditRequested().onNotify(this, [this]() {
         emit escapePressed();
     }, muse::async::Asyncable::Mode::SetReplace);
-
-    setIsVerticalRulersVisible(configuration()->isVerticalRulersVisible());
 
     trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this] (long) {
         emit dataChanged(index(0), index(static_cast<int>(m_trackList.size()) - 1), { IsTrackAudibleRole });
@@ -174,6 +174,11 @@ void ViewTracksListModel::load()
     viewState->totalTrackHeight().ch.onReceive(this, [this](int) {
         emit totalTracksHeightChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
+
+    uiConfiguration()->isVisibleChanged(IS_VERTICAL_RULERS_VISIBLE).onNotify(this, [this]() {
+        emit isVerticalRulersVisibleChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
+    emit isVerticalRulersVisibleChanged();
 }
 
 void ViewTracksListModel::handleDroppedFiles(const QStringList& fileUrls)
@@ -257,17 +262,7 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
 
 bool ViewTracksListModel::isVerticalRulersVisible() const
 {
-    return m_isVerticalRulersVisible;
-}
-
-void ViewTracksListModel::setIsVerticalRulersVisible(bool isVerticalRulersVisible)
-{
-    if (m_isVerticalRulersVisible == isVerticalRulersVisible) {
-        return;
-    }
-
-    m_isVerticalRulersVisible = isVerticalRulersVisible;
-    emit isVerticalRulersVisibleChanged(m_isVerticalRulersVisible);
+    return uiConfiguration()->isVisible(IS_VERTICAL_RULERS_VISIBLE, false);
 }
 
 int ViewTracksListModel::totalTracksHeight() const
@@ -280,4 +275,9 @@ int ViewTracksListModel::totalTracksHeight() const
     }
 
     return viewState->totalTrackHeight().val;
+}
+
+void ViewTracksListModel::toggleVerticalRuler() const
+{
+    actionsDispatcher()->dispatch(TOGGLE_VERTICAL_RULERS);
 }

@@ -147,7 +147,7 @@ StyledPopupView {
 
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTrc("trackruler", "Show track rulers")
+                text: qsTrc("trackruler", "Show vertical rulers")
 
                 checked: root.isVerticalRulersVisible
 

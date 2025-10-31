@@ -11,11 +11,12 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "iprojectsceneconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "playback/itrackplaybackcontrol.h"
+#include "ui/iuiconfiguration.h"
+#include "actions/iactionsdispatcher.h"
 
 #include "trackedit/dom/track.h"
 
@@ -28,17 +29,19 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     Q_PROPERTY(int totalTracksHeight READ totalTracksHeight NOTIFY totalTracksHeightChanged FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<IProjectSceneConfiguration> configuration;
+    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
+    muse::Inject<muse::actions::IActionsDispatcher> actionsDispatcher;
 
 public:
     explicit ViewTracksListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);
+    Q_INVOKABLE void toggleVerticalRuler() const;
 
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -50,14 +53,12 @@ public:
 signals:
     void dataSelectedTracksChanged();
     void selectedTracksChanged();
-    void isVerticalRulersVisibleChanged(bool isVerticalRulersVisible);
+    void isVerticalRulersVisibleChanged();
 
     void totalTracksHeightChanged();
     void escapePressed();
 
 private:
-    void setIsVerticalRulersVisible(bool isVerticalRulersVisible);
-
     enum RoleNames {
         TypeRole = Qt::UserRole + 1,
         TrackIdRole,
@@ -69,6 +70,5 @@ private:
     };
 
     std::vector<trackedit::Track> m_trackList;
-    bool m_isVerticalRulersVisible = false;
 };
 }
