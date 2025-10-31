@@ -86,6 +86,21 @@ Rectangle {
                 clipsModel.init()
             }
 
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton | Qt.LeftButton
+
+                onClicked: {
+                    customisePopup.toggleOpened()
+                }
+            }
+
+            TrackRulerCustomizePopup {
+                id: customisePopup
+
+                placementPolicies: PopupView.PreferLeft
+            }
+
             TrackViewStateModel {
                 id: trackViewState
                 trackId: model.trackId
