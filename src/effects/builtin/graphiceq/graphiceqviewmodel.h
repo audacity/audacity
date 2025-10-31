@@ -17,7 +17,7 @@ class GraphicEqViewModel : public BuiltinEffectModel
     Q_PROPERTY(double maxDbGain READ maxDbGain CONSTANT FINAL)
 
 public:
-    GraphicEqViewModel();
+    GraphicEqViewModel(QObject* parent, int instanceId);
 
     GraphicEqBandsModel* bandsModel() const;
     double minDbGain() const;
@@ -30,5 +30,9 @@ private:
     void doReload() override;
 
     GraphicEqBandsModel* const mBandsModel;
+};
+
+class GraphicEqViewModelFactory : public EffectViewModelFactory<GraphicEqViewModel>
+{
 };
 }

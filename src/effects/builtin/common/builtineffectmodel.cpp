@@ -9,8 +9,8 @@
 
 using namespace au::effects;
 
-BuiltinEffectModel::BuiltinEffectModel(QObject* parent)
-    : AbstractEffectViewModel(parent)
+BuiltinEffectModel::BuiltinEffectModel(QObject* parent, int instanceId)
+    : AbstractEffectViewModel(parent, instanceId)
 {
     assert(m_instanceId != -1);
 }

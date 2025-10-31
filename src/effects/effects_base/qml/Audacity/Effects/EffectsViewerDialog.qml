@@ -115,7 +115,7 @@ EffectStyledDialogView {
 
                         enabled: !prv.viewer.isPreviewing
                         parentWindow: root.window
-                        instanceId: Boolean(prv.viewer) ? prv.viewer.instanceId : -1
+                        instanceId: root.instanceId
                     }
                 }
 
@@ -249,6 +249,7 @@ EffectStyledDialogView {
     Component {
         id: builtinViewerComp
         BuiltinEffectViewer {
+            instanceId: root.instanceId
             dialogView: root
             usedDestructively: true
         }
@@ -257,6 +258,7 @@ EffectStyledDialogView {
     Component {
         id: lv2ViewerComp
         Lv2Viewer {
+            instanceId: root.instanceId
             title: root.title
         }
     }
@@ -265,6 +267,8 @@ EffectStyledDialogView {
         id: audioUnitViewerComp
         AudioUnitViewer {
             height: implicitHeight
+
+            instanceId: root.instanceId
             topPadding: topPanel.height
             bottomPadding: bbox.implicitHeight + prv.panelMargins * 2
             sidePadding: prv.viewMargins
@@ -276,6 +280,8 @@ EffectStyledDialogView {
         id: vstViewerComp
         VstViewer {
             height: implicitHeight
+
+            instanceId: root.instanceId
             topPadding: topPanel.height
             bottomPadding: bbox.implicitHeight + prv.panelMargins * 2
             sidePadding: prv.viewMargins

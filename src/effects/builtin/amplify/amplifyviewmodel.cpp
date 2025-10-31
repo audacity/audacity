@@ -10,6 +10,11 @@
 
 using namespace au::effects;
 
+AmplifyViewModel::AmplifyViewModel(QObject* parent, int instanceId)
+    : BuiltinEffectModel(parent, instanceId)
+{
+}
+
 void AmplifyViewModel::doReload()
 {
     auto& ae = effect<AmplifyEffect>();

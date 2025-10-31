@@ -10,6 +10,11 @@
 
 using namespace au::effects;
 
+GeneratorEffectModel::GeneratorEffectModel(QObject* parent, int instanceId)
+    : BuiltinEffectModel{parent, instanceId}
+{
+}
+
 void GeneratorEffectModel::doReload()
 {
     auto& ge = effect<GeneratorEffect>();

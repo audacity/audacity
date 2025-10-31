@@ -7,6 +7,7 @@
 #include "audioplugins/iaudiopluginmetareaderregister.h"
 
 #include "effects/effects_base/ieffectviewlaunchregister.h"
+#include "effects/effects_base/view/effectsviewutils.h"
 
 #include "internal/audiouniteffectsrepository.h"
 #include "internal/audiounitpluginsscanner.h"
@@ -60,7 +61,7 @@ void au::effects::AudioUnitEffectsModule::resolveImports()
 void au::effects::AudioUnitEffectsModule::registerUiTypes()
 {
     qmlRegisterType<au::effects::AudioUnitView>("Audacity.AudioUnit", 1, 0, "AudioUnitView");
-    qmlRegisterType<au::effects::AudioUnitViewModel>("Audacity.AudioUnit", 1, 0, "AudioUnitViewModel");
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(AudioUnitViewModelFactory);
 }
 
 void au::effects::AudioUnitEffectsModule::onInit(const muse::IApplication::RunMode& mode)

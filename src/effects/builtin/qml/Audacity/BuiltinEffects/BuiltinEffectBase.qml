@@ -11,22 +11,23 @@ Rectangle {
 
     property var dialogView: null
 
-    property BuiltinEffectModel model: null
-    property bool usesPresets: model ? model.usesPresets : true
-    property bool isPreviewing: model ? model.isPreviewing : false
+    required property int instanceId
+    required property BuiltinEffectModel builtinEffectModel
+    property bool usesPresets: builtinEffectModel.usesPresets
+    property bool isPreviewing: builtinEffectModel.isPreviewing
     property bool usedDestructively: true
 
     color: ui.theme.backgroundPrimaryColor
 
     function init() {
-        root.model.init()
+        root.builtinEffectModel.init()
     }
 
     function startPreview() {
-        root.model.startPreview()
+        root.builtinEffectModel.startPreview()
     }
 
     function stopPreview() {
-        root.model.stopPreview()
+        root.builtinEffectModel.stopPreview()
     }
 }

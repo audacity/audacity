@@ -13,24 +13,19 @@ import Preferences
 BuiltinEffectBase {
     id: root
 
-    property alias instanceId: dtmf.instanceId
-
     property string title: qsTrc("effects/dtmf", "DTMF tones")
-    property alias isApplyAllowed: dtmf.isApplyAllowed
+    property bool isApplyAllowed: dtmf.isApplyAllowed
 
     width: 550
     implicitHeight: row.height
 
-    model: dtmf
+    builtinEffectModel: DtmfViewModelFactory.createModel(root, root.instanceId)
+    property alias dtmf: root.builtinEffectModel
 
     QtObject {
         id: prv
 
         readonly property int spacing: 16
-    }
-
-    DtmfViewModel {
-        id: dtmf
     }
 
     RowLayout {

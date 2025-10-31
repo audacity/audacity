@@ -11,6 +11,11 @@
 
 using namespace au::effects;
 
+ToneViewModel::ToneViewModel(QObject* parent, int instanceId)
+    : GeneratorEffectModel(parent, instanceId)
+{
+}
+
 void ToneViewModel::doEmitSignals()
 {
     emit amplitudeStartChanged();

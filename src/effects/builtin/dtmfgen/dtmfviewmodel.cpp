@@ -6,7 +6,8 @@
 
 using namespace au::effects;
 
-DtmfViewModel::DtmfViewModel()
+DtmfViewModel::DtmfViewModel(QObject* parent, int instanceId)
+    : GeneratorEffectModel(parent, instanceId)
 {
     connect(this, &DtmfViewModel::durationChanged, this, &DtmfViewModel::recalculateDurations);
 }

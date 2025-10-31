@@ -13,6 +13,10 @@
 
 using namespace au::effects;
 
+VstViewModel::VstViewModel(QObject* parent, int instanceId)
+    : AbstractEffectViewModel(parent, instanceId)
+{}
+
 VstViewModel::~VstViewModel()
 {
     m_settingUpdateTimer.stop();

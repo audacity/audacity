@@ -34,12 +34,6 @@
 
 using namespace au::effects;
 
-BuiltinEffectViewLoader::BuiltinEffectViewLoader(QObject* parent)
-    : QObject(parent), m_instanceId{AbstractViewLauncher::initializationInstanceId()}
-{
-    assert(m_instanceId != -1);
-}
-
 BuiltinEffectViewLoader::~BuiltinEffectViewLoader()
 {
     if (m_contentItem) {
@@ -48,14 +42,14 @@ BuiltinEffectViewLoader::~BuiltinEffectViewLoader()
     }
 }
 
-void BuiltinEffectViewLoader::load(QObject* itemParent, QObject* dialogView, bool usedDestructively)
+void BuiltinEffectViewLoader::load(int instanceId, QObject* itemParent, QObject* dialogView, bool usedDestructively)
 {
     // TODO: could instancesRegister have a `typeByInstanceId` method?
-    const auto effectId = instancesRegister()->effectIdByInstanceId(m_instanceId).toStdString();
+    const auto effectId = instancesRegister()->effectIdByInstanceId(instanceId).toStdString();
 
     const auto effect = dynamic_cast<Effect*>(EffectManager::Get().GetEffect(effectId));
     IF_ASSERT_FAILED(effect) {
-        LOGE() << "effect not available, instanceId: " << m_instanceId << ", effectId: " << effectId;
+        LOGE() << "effect not available, instanceId: " << instanceId << ", effectId: " << effectId;
         return;
     }
 
@@ -82,6 +76,7 @@ void BuiltinEffectViewLoader::load(QObject* itemParent, QObject* dialogView, boo
     QObject* obj = component.createWithInitialProperties(
     {
         { "parent", QVariant::fromValue(itemParent) },
+        { "instanceId", instanceId },
         { "dialogView", QVariant::fromValue(dialogView) },
         { "usedDestructively", usedDestructively }
     });

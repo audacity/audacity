@@ -8,8 +8,8 @@
 #include "playback/iplayer.h"
 
 namespace au::effects {
-AbstractEffectViewModel::AbstractEffectViewModel(QObject* parent)
-    : QObject(parent), m_instanceId{AbstractViewLauncher::initializationInstanceId()}
+AbstractEffectViewModel::AbstractEffectViewModel(QObject* parent, int instanceId)
+    : QObject(parent), m_instanceId{instanceId}
 {
     assert(m_instanceId != -1);
 }

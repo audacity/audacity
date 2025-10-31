@@ -31,7 +31,7 @@ class NormalizeLoudnessViewModel : public BuiltinEffectModel
     Q_PROPERTY(bool useDualMono READ useDualMono WRITE setUseDualMono NOTIFY useDualMonoChanged FINAL)
 
 public:
-    NormalizeLoudnessViewModel() = default;
+    NormalizeLoudnessViewModel(QObject* parent, int instanceId);
 
     QString effectTitle() const;
 
@@ -71,5 +71,9 @@ signals:
 
 private:
     void doReload() override;
+};
+
+class NormalizeLoudnessViewModelFactory : public EffectViewModelFactory<NormalizeLoudnessViewModel>
+{
 };
 }

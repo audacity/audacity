@@ -11,9 +11,13 @@ class LimiterViewModel : public BuiltinEffectModel
     Q_OBJECT
 
 public:
-    LimiterViewModel(QObject* parent = nullptr);
+    LimiterViewModel(QObject* parent, int instanceId);
 
 private:
     void doReload() override;
+};
+
+class LimiterViewModelFactory : public EffectViewModelFactory<LimiterViewModel>
+{
 };
 }

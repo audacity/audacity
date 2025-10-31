@@ -8,7 +8,7 @@ import Audacity.BuiltinEffects
 Rectangle {
     id: root
 
-    property alias instanceId: builder.instanceId
+    required property int instanceId
     property var dialogView: null
     required property bool usedDestructively
 
@@ -28,7 +28,7 @@ Rectangle {
     height: implicitHeight
 
     Component.onCompleted: {
-        builder.load(root, dialogView, usedDestructively)
+        builder.load(instanceId, root, dialogView, usedDestructively)
         builder.contentItem.init()
     }
 

@@ -26,8 +26,8 @@ public:
 
     using LabelMap = std::unordered_map<QString /*param ID*/, Labels>;
 
-    EffectSettingModelImpl(QObject* parent, LabelMap labelMap, ParamGetter<EffectType> getter)
-        : BuiltinEffectSettingModel{parent}, m_labelMap{std::move(labelMap)}, m_getter{std::move(getter)} {}
+    EffectSettingModelImpl(QObject* parent, int instanceId, LabelMap labelMap, ParamGetter<EffectType> getter)
+        : BuiltinEffectSettingModel{parent, instanceId}, m_labelMap{std::move(labelMap)}, m_getter{std::move(getter)} {}
 
     double value() const final override
     {

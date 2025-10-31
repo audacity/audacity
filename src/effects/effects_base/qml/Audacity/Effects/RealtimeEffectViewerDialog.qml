@@ -63,6 +63,7 @@ EffectStyledDialogView {
     Component {
         id: audioUnitViewerComponent
         AudioUnitViewer {
+            instanceId: root.instanceId
             topPadding: headerBar.y + headerBar.height + prv.padding
             minimumWidth: prv.minimumWidth
         }
@@ -71,6 +72,7 @@ EffectStyledDialogView {
     Component {
         id: lv2ViewerComponent
         Lv2Viewer {
+            instanceId: root.instanceId
             effectState: root.effectState
             title: root.title
         }
@@ -79,6 +81,7 @@ EffectStyledDialogView {
     Component {
         id: vstViewerComponent
         VstViewer {
+            instanceId: root.instanceId
             topPadding: headerBar.y + headerBar.height + prv.padding
             minimumWidth: prv.minimumWidth
         }
@@ -96,6 +99,7 @@ EffectStyledDialogView {
 
             BuiltinEffectViewer {
                 id: viewer
+                instanceId: root.instanceId
                 usedDestructively: false
             }
         }
@@ -141,7 +145,7 @@ EffectStyledDialogView {
                         parentWindow: root.window
                         navigationPanel: root.navigationPanel
                         navigationOrder: 1
-                        instanceId: Boolean(prv.viewItem) ? prv.viewItem.instanceId : -1
+                        instanceId: root.instanceId
                         Layout.fillWidth: true
                     }
                 }

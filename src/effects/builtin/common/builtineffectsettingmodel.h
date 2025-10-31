@@ -20,7 +20,7 @@ class BuiltinEffectSettingModel : public BuiltinEffectModel
     Q_PROPERTY(QString unit READ unit CONSTANT FINAL)
 
 public:
-    BuiltinEffectSettingModel(QObject* parent);
+    BuiltinEffectSettingModel(QObject* parent, int instanceId);
     ~BuiltinEffectSettingModel() override = default;
 
     QString paramId() const;
@@ -46,5 +46,34 @@ protected:
 private:
     void doReload() override;
     void doUpdateSettings() override;
+};
+
+class AbstractBuiltinEffectSettingModelFactory : public QObject
+{
+    Q_OBJECT
+public:
+    virtual ~AbstractBuiltinEffectSettingModelFactory() = default;
+
+    Q_INVOKABLE BuiltinEffectSettingModel* createModel(QObject* parent, int instanceId, const QString& paramId) const
+    {
+        BuiltinEffectSettingModel* model = doCreateModel(parent, instanceId);
+        model->setParamId(paramId);
+        return model;
+    }
+
+private:
+    virtual BuiltinEffectSettingModel* doCreateModel(QObject* parent, int instanceId) const = 0;
+};
+
+template<typename T>
+class BuiltinEffectSettingModelFactory : public AbstractBuiltinEffectSettingModelFactory
+{
+public:
+    ~BuiltinEffectSettingModelFactory() override = default;
+
+    BuiltinEffectSettingModel* doCreateModel(QObject* parent, int instanceId) const override
+    {
+        return new T(parent, instanceId);
+    }
 };
 }

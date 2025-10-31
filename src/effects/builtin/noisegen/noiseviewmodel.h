@@ -17,6 +17,8 @@ class NoiseViewModel : public GeneratorEffectModel
     Q_PROPERTY(QVariantList types READ types CONSTANT)
 
 public:
+    NoiseViewModel(QObject* parent, int instanceId);
+
     bool isApplyAllowed() const override;
 
     QVariantList types() const;
@@ -34,5 +36,9 @@ signals:
 private:
 
     void doEmitSignals() override;
+};
+
+class NoiseViewModelFactory : public EffectViewModelFactory<NoiseViewModel>
+{
 };
 }

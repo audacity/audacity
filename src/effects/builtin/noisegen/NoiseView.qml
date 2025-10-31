@@ -13,16 +13,13 @@ BuiltinEffectBase {
     id: root
 
     property string title: qsTrc("effects", "Noise")
-    property alias isApplyAllowed: noise.isApplyAllowed
+    property bool isApplyAllowed: noise.isApplyAllowed
 
     width: 300
     implicitHeight: column.height
 
-    model: noise
-
-    NoiseViewModel {
-        id: noise
-    }
+    builtinEffectModel: NoiseViewModelFactory.createModel(root, root.instanceId)
+    property alias noise: root.builtinEffectModel
 
     Column {
         id: column

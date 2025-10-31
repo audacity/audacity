@@ -25,7 +25,7 @@ protected:
     muse::Inject<au::playback::IPlayback> playback;
 
 public:
-    AbstractEffectViewModel(QObject* parent = nullptr);
+    AbstractEffectViewModel(QObject* parent, int instanceId);
     ~AbstractEffectViewModel() override = default;
 
     Q_INVOKABLE void init();
@@ -44,5 +44,29 @@ protected:
 private:
     virtual void doInit() = 0;
     virtual void doStartPreview() = 0;
+};
+
+class AbstractEffectViewModelFactory : public QObject
+{
+    Q_OBJECT
+public:
+    virtual ~AbstractEffectViewModelFactory() = default;
+
+    Q_INVOKABLE AbstractEffectViewModel* createModel(QObject* parent, int instanceId) const
+    {
+        return doCreateModel(parent, instanceId);
+    }
+
+private:
+    virtual AbstractEffectViewModel* doCreateModel(QObject* parent, int instanceId) const = 0;
+};
+
+template<typename T>
+class EffectViewModelFactory : public AbstractEffectViewModelFactory
+{
+    AbstractEffectViewModel* doCreateModel(QObject* parent, int instanceId) const override
+    {
+        return new T(parent, instanceId);
+    }
 };
 }

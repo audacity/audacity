@@ -13,15 +13,17 @@ Rectangle {
     id: root
 
     // in
-    property alias instanceId: model.instanceId
+    required property int instanceId
     property alias sidePadding: view.sidePadding
     property alias topPadding: view.topPadding
     property alias bottomPadding: view.bottomPadding
     property alias minimumWidth: view.minimumWidth
 
     // out
-    property alias title: model.title
-    property alias isPreviewing: model.isPreviewing
+    property bool title: model.title
+    property bool isPreviewing: model.isPreviewing
+
+    readonly property var model: AudioUnitViewModelFactory.createModel(root, root.instanceId)
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -68,10 +70,6 @@ Rectangle {
         onHandleMenuItem: function (itemId) {
             manageMenuModel.handleMenuItem(itemId)
         }
-    }
-
-    AudioUnitViewModel {
-        id: model
     }
 
     AudioUnitView {

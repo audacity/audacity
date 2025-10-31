@@ -58,8 +58,10 @@ std::shared_ptr<SuilHost> getSuilHost()
 // Inject factory hook to make LV2Effect capable of UI
 static LV2EffectsModule::Factory::SubstituteInUnique<LV2Effect> scope;
 
-Lv2ViewModel::Lv2ViewModel(QObject* parent)
-    : AbstractEffectViewModel(parent), m_handler(*this)
+Lv2ViewModel::Lv2ViewModel(QObject* parent, int instanceId, const QString& effectState)
+    : AbstractEffectViewModel(parent, instanceId), m_handler(*this),
+    m_effectState(!effectState.isEmpty() ? reinterpret_cast<RealtimeEffectState*>(effectState.toULongLong())->shared_from_this() : nullptr),
+    m_realtimeOutputs(dynamic_cast<const LV2EffectOutputs*>(m_effectState ? m_effectState->GetOutputs() : nullptr))
 {}
 
 Lv2ViewModel::~Lv2ViewModel()
@@ -105,24 +107,6 @@ unsigned uiIsSupported(const char* hostTypeUri,
     }
     return 0;
 }
-}
-
-QString Lv2ViewModel::effectState() const
-{
-    if (!m_effectState) {
-        return {};
-    }
-    return QString::number(reinterpret_cast<uintptr_t>(m_effectState.get()));
-}
-
-void Lv2ViewModel::setEffectState(const QString& state)
-{
-    if (state == effectState()) {
-        return;
-    }
-    m_effectState = reinterpret_cast<RealtimeEffectState*>(state.toULongLong())->shared_from_this();
-    m_realtimeOutputs = dynamic_cast<const LV2EffectOutputs*>(m_effectState->GetOutputs());
-    emit effectStateChanged();
 }
 
 void Lv2ViewModel::doInit()
