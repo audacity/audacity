@@ -21,7 +21,6 @@ struct ClipAndTimeSelection;
 class Au3SelectionController : public ISelectionController, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::playback::IPlayback> playback;
 
 public:
     Au3SelectionController() = default;

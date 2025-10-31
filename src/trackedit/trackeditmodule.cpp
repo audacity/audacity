@@ -55,6 +55,12 @@ using namespace muse::modularity;
 using namespace muse::ui;
 using namespace muse::actions;
 
+TrackeditModule::TrackeditModule()
+    : m_trackeditController(std::make_shared<TrackeditActionsController>()),
+    m_trackeditUiActions(std::make_shared<TrackeditUiActions>(m_trackeditController))
+{
+}
+
 static void trackedit_init_qrc()
 {
     Q_INIT_RESOURCE(trackedit);
@@ -67,13 +73,10 @@ std::string TrackeditModule::moduleName() const
 
 void TrackeditModule::registerExports()
 {
-    m_trackeditController = std::make_shared<TrackeditActionsController>();
-    m_trackeditUiActions = std::make_shared<TrackeditUiActions>(m_trackeditController);
     m_selectionController = std::make_shared<Au3SelectionController>();
     m_configuration = std::make_shared<TrackeditConfiguration>();
     m_trackNavigationController = std::make_shared<TrackNavigationController>();
 
-    ioc()->registerExport<ITrackeditActionsController>(moduleName(), m_trackeditController);
     ioc()->registerExport<ITrackeditProjectCreator>(moduleName(), new Au3TrackeditProjectCreator());
     ioc()->registerExport<ITrackeditInteraction>(moduleName(),
                                                  new TrackeditInteraction(std::make_unique<TrackeditOperationController>(

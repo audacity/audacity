@@ -15,7 +15,6 @@
 #include "../ieffectsprovider.h"
 #include "../ieffectpresetsscenario.h"
 #include "iinteractive.h"
-#include "playback/iplayback.h"
 
 namespace au::effects {
 class EffectsUiActions;
@@ -28,7 +27,6 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectPresetsScenario> presetsScenario;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<au::playback::IPlayback> playback;
 
 public:
     void init();

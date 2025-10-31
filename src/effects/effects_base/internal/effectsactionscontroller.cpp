@@ -59,15 +59,21 @@ void EffectsActionsController::onEffectTriggered(const muse::actions::ActionQuer
     IF_ASSERT_FAILED(!effectId.empty()) {
         return;
     }
-
-    playback()->player()->stop();
+    constexpr bool shouldSeek = false;
+    constexpr bool shouldUpdatePlaybackRegion = false;
+    const ActionData data = ActionData::make_arg2<bool, bool>(shouldSeek, shouldUpdatePlaybackRegion);
+    dispatcher()->dispatch("playback/stop", data);
 
     effectExecutionScenario()->performEffect(effectId);
 }
 
 void EffectsActionsController::repeatLastEffect()
 {
-    playback()->player()->stop();
+    constexpr bool shouldSeek = false;
+    constexpr bool shouldUpdatePlaybackRegion = false;
+    const ActionData data = ActionData::make_arg2<bool, bool>(shouldSeek, shouldUpdatePlaybackRegion);
+    dispatcher()->dispatch("playback/stop", data);
+
     effectExecutionScenario()->repeatLastProcessor();
 }
 
