@@ -62,6 +62,23 @@ EnumSetting<bool> LabelStyleSetting {
     },
 };
 
+static int64_t s_lastLabelId = 0;
+
+int64_t LabelStruct::NewID()
+{
+    return ++s_lastLabelId;
+}
+
+int64_t LabelStruct::GetId() const
+{
+    return mId;
+}
+
+void LabelStruct::SetId(int64_t id)
+{
+    mId = id;
+}
+
 LabelTrack::Interval::~Interval() = default;
 
 double LabelTrack::Interval::Start() const
@@ -132,6 +149,7 @@ LabelTrack::LabelTrack(const LabelTrack& orig, ProtectedCreationArg&& a)
 {
     for (auto& original: orig.mLabels) {
         LabelStruct l { original.selectedRegion, original.title };
+        l.SetId(LabelStruct::NewID());
         mLabels.push_back(l);
     }
 }
@@ -240,8 +258,6 @@ void LabelTrack::Clear(double b, double e, bool moveClips)
     }
 }
 
-#if 0
-//used when we want to use clear only on the labels
 bool LabelTrack::SplitDelete(double b, double e)
 {
     // May DELETE labels, so use subscripts to iterate
@@ -263,8 +279,6 @@ bool LabelTrack::SplitDelete(double b, double e)
 
     return true;
 }
-
-#endif
 
 void LabelTrack::ShiftLabelsOnInsert(double length, double pt)
 {
@@ -339,6 +353,7 @@ LabelStruct::LabelStruct(const SelectedRegion& region,
                          const wxString& aTitle)
     : selectedRegion(region)
     , title(aTitle)
+    , mId(++s_lastLabelId)
 {
     updated = false;
     width = 0;
@@ -353,6 +368,7 @@ LabelStruct::LabelStruct(const SelectedRegion& region,
                          const wxString& aTitle)
     : selectedRegion(region)
     , title(aTitle)
+    , mId(++s_lastLabelId)
 {
     // Overwrite the times
     selectedRegion.setTimes(t0, t1);
@@ -835,7 +851,6 @@ Track::Holder LabelTrack::Cut(double t0, double t1, bool moveClips)
     return tmp;
 }
 
-#if 0
 Track::Holder LabelTrack::SplitCut(double t0, double t1)
 {
     // SplitCut() == Copy() + SplitDelete()
@@ -843,13 +858,11 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
     Track::Holder tmp = Copy(t0, t1);
 
     if (!SplitDelete(t0, t1)) {
-        return {}
+        return {};
     }
 
     return tmp;
 }
-
-#endif
 
 Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 {
@@ -1061,8 +1074,28 @@ const LabelStruct* LabelTrack::GetLabel(int index) const
     return &mLabels[index];
 }
 
-int LabelTrack::AddLabel(const SelectedRegion& selectedRegion,
-                         const wxString& title)
+LabelStruct* LabelTrack::GetLabelById(int64_t id)
+{
+    for (size_t i = 0; i < mLabels.size(); ++i) {
+        if (mLabels[i].GetId() == id) {
+            return &mLabels[i];
+        }
+    }
+    return nullptr;
+}
+
+int LabelTrack::GetLabelIndex(int64_t labelId) const
+{
+    for (size_t i = 0; i < mLabels.size(); ++i) {
+        if (mLabels[i].GetId() == labelId) {
+            return static_cast<int>(i);
+        }
+    }
+    return -1;
+}
+
+int64_t LabelTrack::AddLabel(const SelectedRegion& selectedRegion,
+                             const wxString& title)
 {
     LabelStruct l { selectedRegion, title };
 
@@ -1078,7 +1111,7 @@ int LabelTrack::AddLabel(const SelectedRegion& selectedRegion,
     Publish({ LabelTrackEvent::Addition,
               this->SharedPointer<LabelTrack>(), title, -1, pos });
 
-    return pos;
+    return l.GetId();
 }
 
 void LabelTrack::DeleteLabel(int index)

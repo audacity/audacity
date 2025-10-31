@@ -432,6 +432,41 @@ bool TrackeditInteraction::changeLabelTitle(const LabelKey& labelKey, const muse
     return withPlaybackStop(&ITrackeditInteraction::changeLabelTitle, labelKey, title);
 }
 
+bool TrackeditInteraction::removeLabel(const LabelKey& labelKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::removeLabel, labelKey);
+}
+
+bool TrackeditInteraction::removeLabels(const LabelKeyList& labelKeys)
+{
+    return withPlaybackStop(&ITrackeditInteraction::removeLabels, labelKeys);
+}
+
+bool TrackeditInteraction::cutLabel(const LabelKey& labelKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::cutLabel, labelKey);
+}
+
+bool TrackeditInteraction::copyLabel(const LabelKey& labelKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::copyLabel, labelKey);
+}
+
+bool TrackeditInteraction::moveLabels(secs_t timePositionOffset, bool completed)
+{
+    return withPlaybackStop(&ITrackeditInteraction::moveLabels, timePositionOffset, completed);
+}
+
+bool TrackeditInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)
+{
+    return withPlaybackStop(&ITrackeditInteraction::stretchLabelLeft, labelKey, newStartTime, completed);
+}
+
+bool TrackeditInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
+{
+    return withPlaybackStop(&ITrackeditInteraction::stretchLabelRight, labelKey, newEndTime, completed);
+}
+
 muse::Progress TrackeditInteraction::progress() const
 {
     return m_interaction->progress();

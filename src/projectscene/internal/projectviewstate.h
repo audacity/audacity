@@ -78,9 +78,10 @@ public:
     void setLastEditedClip(const trackedit::ClipKey& clipKey) override;
     trackedit::ClipKey lastEditedClip() const override;
 
-    void setClipsBoundaries(const std::set<muse::secs_t>& boundaries) override;
-    std::set<muse::secs_t> clipsBoundaries() const override;
-    void updateClipsBoundaries(bool excludeCurrentSelection, const trackedit::ClipKey& clipKeyToOmit = trackedit::ClipKey {}) override;
+    void setItemsBoundaries(const std::set<muse::secs_t>& boundaries) override;
+    std::set<muse::secs_t> itemsBoundaries() const override;
+    void updateItemsBoundaries(bool excludeCurrentSelection,
+                               const trackedit::TrackItemKey& itemKeyToOmit = trackedit::TrackItemKey {}) override;
 
     void setZoomState(const ZoomState& state) override;
     ZoomState zoomState() const override;
@@ -125,8 +126,8 @@ private:
 
     trackedit::ClipKey m_lastEditedClip = trackedit::ClipKey{};
 
-    //! clips start/end times the currently moved/trimmed/stretched clip can snap to
-    std::set<muse::secs_t> m_clipsBoundaries;
+    //! start/end times the currently moved/trimmed/stretched item can snap to
+    std::set<muse::secs_t> m_itemsBoundaries;
 
     muse::ValCh<bool> m_altPressed;
     muse::ValCh<bool> m_ctrlPressed;

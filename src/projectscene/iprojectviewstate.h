@@ -65,9 +65,10 @@ public:
     virtual void setLastEditedClip(const trackedit::ClipKey& clipKey) = 0;
     virtual trackedit::ClipKey lastEditedClip() const = 0;
 
-    virtual void setClipsBoundaries(const std::set<muse::secs_t>& boundaries) = 0;
-    virtual std::set<muse::secs_t> clipsBoundaries() const = 0;
-    virtual void updateClipsBoundaries(bool excludeCurrentSelection, const trackedit::ClipKey& clipKeyToOmit = trackedit::ClipKey {}) = 0;
+    virtual void setItemsBoundaries(const std::set<muse::secs_t>& boundaries) = 0;
+    virtual std::set<muse::secs_t> itemsBoundaries() const = 0;
+    virtual void updateItemsBoundaries(bool excludeCurrentSelection,
+                                       const trackedit::TrackItemKey& itemKeyToOmit = trackedit::TrackItemKey {}) = 0;
 
     virtual void setZoomState(const ZoomState& state) = 0;
     virtual ZoomState zoomState() const = 0;

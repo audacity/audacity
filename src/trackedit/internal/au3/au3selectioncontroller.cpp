@@ -434,12 +434,12 @@ double Au3SelectionController::selectedLabelStartTime() const
 
     auto labelKey = labelKeyList.at(0);
 
-    Au3LabelTrack* labelTrack = au3::DomAccessor::findLabelTrack(projectRef(), ::TrackId(labelKey.trackId));
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), ::TrackId(labelKey.trackId));
     IF_ASSERT_FAILED(labelTrack) {
         return -1.0;
     }
 
-    const Au3Label* label = labelTrack->GetLabel(labelKey.itemId);
+    const Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
     if (!label) {
         return -1.0;
     }
@@ -456,12 +456,12 @@ double Au3SelectionController::selectedLabelEndTime() const
 
     auto labelKey = labelKeyList.at(0);
 
-    Au3LabelTrack* labelTrack = au3::DomAccessor::findLabelTrack(projectRef(), ::TrackId(labelKey.trackId));
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), ::TrackId(labelKey.trackId));
     IF_ASSERT_FAILED(labelTrack) {
         return -1.0;
     }
 
-    const Au3Label* label = labelTrack->GetLabel(labelKey.itemId);
+    const Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
     if (!label) {
         return -1.0;
     }
@@ -478,7 +478,7 @@ double Au3SelectionController::leftMostSelectedLabelStartTime() const
             continue;
         }
 
-        const Au3Label* label = labelTrack->GetLabel(selectedLabel.itemId);
+        const Au3Label* label = DomAccessor::findLabel(labelTrack, selectedLabel.itemId);
         IF_ASSERT_FAILED(label) {
             continue;
         }
@@ -509,7 +509,7 @@ double Au3SelectionController::rightMostSelectedLabelEndTime() const
             continue;
         }
 
-        const Au3Label* label = labelTrack->GetLabel(selectedLabel.itemId);
+        const Au3Label* label = DomAccessor::findLabel(labelTrack, selectedLabel.itemId);
         IF_ASSERT_FAILED(label) {
             continue;
         }

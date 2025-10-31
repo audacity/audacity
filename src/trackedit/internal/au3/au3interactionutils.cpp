@@ -185,15 +185,43 @@ au::trackedit::NeedsDownmixing au::trackedit::utils::moveClipsVertically(Vertica
             continue;
         }
 
+        // Find next WaveTrack in the direction, skipping non-WaveTrack tracks (e.g. LabelTrack)
         ::TrackList::iterator it = copy.begin();
-        const auto dstTrackIndex = static_cast<int>(clip.origTrackIndex) + (dragDirection == VerticalDrag::Up ? -1 : 1);
-        IF_ASSERT_FAILED(dstTrackIndex >= 0) {
-            continue;
+        std::advance(it, clip.origTrackIndex);
+
+        au3::Au3WaveTrack* dstTrack = nullptr;
+        const int direction = (dragDirection == VerticalDrag::Up ? -1 : 1);
+
+        if (direction > 0) {
+            // Moving down - find next WaveTrack
+            ++it;
+            while (it != copy.end()) {
+                dstTrack = dynamic_cast<au3::Au3WaveTrack*>(*it);
+                if (dstTrack) {
+                    break;
+                }
+                ++it;
+            }
+            // If no WaveTrack found, append new one
+            if (!dstTrack) {
+                dstTrack = appendWaveTrack(copy, waveTrack->NChannels(), &factory, rate);
+            }
+        } else {
+            // Moving up - find previous WaveTrack
+            if (it != copy.begin()) {
+                do {
+                    --it;
+                    dstTrack = dynamic_cast<au3::Au3WaveTrack*>(*it);
+                    if (dstTrack) {
+                        break;
+                    }
+                } while (it != copy.begin());
+            }
+            // If no WaveTrack found above, cannot move up
+            if (!dstTrack) {
+                continue;
+            }
         }
-        std::advance(it, dstTrackIndex);
-        au3::Au3WaveTrack* const dstTrack = it != copy.end() ? dynamic_cast<au3::Au3WaveTrack*>(*it) : appendWaveTrack(copy,
-                                                                                                                       waveTrack->NChannels(), &factory,
-                                                                                                                       rate);
 
         needsDownmixing |= addClipToTrack(clip.ptr, *dstTrack, copy);
     }

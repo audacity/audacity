@@ -11,6 +11,7 @@ using namespace au::projectscene;
 using namespace au::trackedit;
 
 constexpr int CACHE_BUFFER_PX = 200;
+constexpr double MOVE_THRESHOLD = 3.0;
 
 TrackItemsListModel::TrackItemsListModel(QObject* parent)
     : QAbstractListModel(parent)
@@ -204,6 +205,164 @@ QVariant TrackItemsListModel::neighbor(const TrackItemKey& key, int offset) cons
     return QVariant::fromValue(m_items[sortedIndex]);
 }
 
+TrackItemsListModel::MoveOffset TrackItemsListModel::calculateMoveOffset(const ViewTrackItem* item,
+                                                                         const TrackItemKey& key,
+                                                                         const std::vector<trackedit::TrackType>& trackTypesAllowedToMove,
+                                                                         bool completed)
+const
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj) {
+        return MoveOffset{};
+    }
+
+    auto vs = prj->viewState();
+
+    MoveOffset moveOffset {
+        calculateTimePositionOffset(item),
+        completed ? 0 : calculateTrackPositionOffset(key, trackTypesAllowedToMove)
+    };
+
+    secs_t positionOffsetX = moveOffset.timeOffset * m_context->zoom();
+    if (!vs->moveInitiated() && (muse::RealIsEqualOrMore(std::abs(positionOffsetX), MOVE_THRESHOLD) || moveOffset.trackOffset != 0)) {
+        vs->setMoveInitiated(true);
+    } else if (!vs->moveInitiated()) {
+        moveOffset.timeOffset = 0.0;
+    }
+
+    return moveOffset;
+}
+
+int TrackItemsListModel::calculateTrackPositionOffset(const TrackItemKey& key,
+                                                      const std::vector<trackedit::TrackType>& trackTypesAllowedToMove) const
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj) {
+        return 0;
+    }
+
+    IProjectViewStatePtr vs = prj->viewState();
+    double yPos = vs->mousePositionY();
+    int trackVerticalPosition = vs->trackVerticalPosition(key.key.trackId);
+    TrackIdList tracks = vs->tracksInRange(trackVerticalPosition + 2, yPos);
+
+    if (!tracks.size()) {
+        return 0;
+    }
+
+    // Check if mouse is pointing at a track with allowed type
+    if (!trackTypesAllowedToMove.empty()) {
+        trackedit::TrackId targetTrackId = vs->trackAtPosition(yPos);
+        if (targetTrackId != trackedit::INVALID_TRACK) {
+            if (!isAllowedToMoveToTracks(trackTypesAllowedToMove, targetTrackId)) {
+                return 0;
+            }
+        }
+    }
+
+    // Calculate offset based on allowed track types only
+    trackedit::TrackId targetTrackId = vs->trackAtPosition(yPos);
+    bool pointingAtEmptySpace = yPos > vs->totalTrackHeight().val - vs->tracksVerticalOffset().val;
+
+    if (targetTrackId == trackedit::INVALID_TRACK && !pointingAtEmptySpace) {
+        return 0;
+    }
+
+    ITrackeditProjectPtr trackeditPrj = globalContext()->currentTrackeditProject();
+    if (!trackeditPrj) {
+        return 0;
+    }
+
+    TrackIdList allTracks = trackeditPrj->trackIdList();
+
+    int sourceAllowedIndex = -1;
+    int targetAllowedIndex = -1;
+    int allowedCount = 0;
+
+    for (size_t i = 0; i < allTracks.size(); ++i) {
+        auto track = trackeditPrj->track(allTracks[i]);
+        if (!track.has_value()) {
+            continue;
+        }
+
+        if (!muse::contains(trackTypesAllowedToMove, track->type)) {
+            continue;
+        }
+
+        if (allTracks[i] == key.key.trackId) {
+            sourceAllowedIndex = allowedCount;
+        }
+
+        if (allTracks[i] == targetTrackId) {
+            targetAllowedIndex = allowedCount;
+        }
+
+        allowedCount++;
+    }
+
+    int trackPositionOffset = 0;
+    if (pointingAtEmptySpace) {
+        if (sourceAllowedIndex >= 0) {
+            trackPositionOffset = allowedCount - sourceAllowedIndex;
+        }
+    } else if (sourceAllowedIndex >= 0 && targetAllowedIndex >= 0) {
+        trackPositionOffset = targetAllowedIndex - sourceAllowedIndex;
+    }
+
+    return trackPositionOffset;
+}
+
+bool TrackItemsListModel::isAllowedToMoveToTracks(const std::vector<trackedit::TrackType>& allowedTrackTypes,
+                                                  const trackedit::TrackId& movedTrackId) const
+{
+    ITrackeditProjectPtr trackeditPrj = globalContext()->currentTrackeditProject();
+    if (!trackeditPrj) {
+        return true;
+    }
+
+    auto track = trackeditPrj->track(movedTrackId);
+    return track.has_value() ? muse::contains(allowedTrackTypes, track->type) : false;
+}
+
+secs_t TrackItemsListModel::calculateTimePositionOffset(const ViewTrackItem* item) const
+{
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return 0.0;
+    }
+
+    double newStartTime = m_context->mousePositionTime() - vs->itemEditStartTimeOffset();
+    double duration = item->time().endTime - item->time().startTime;
+    double newEndTime = newStartTime + duration;
+
+    double snappedEndTime = newEndTime;
+    double snappedStartTime = newStartTime;
+    if (vs->isSnapEnabled()) {
+        snappedStartTime = m_context->applySnapToTime(newStartTime);
+    } else {
+        snappedEndTime = m_context->applySnapToItem(newEndTime);
+        snappedStartTime = m_context->applySnapToItem(newStartTime);
+    }
+    if (muse::RealIsEqual(snappedEndTime, newEndTime)) {
+        newStartTime = snappedStartTime;
+    } else if (muse::RealIsEqual(snappedStartTime, newStartTime)) {
+        newStartTime = snappedEndTime - duration;
+    } else {
+        newStartTime
+            = (!muse::RealIsEqualOrMore(std::abs(snappedStartTime - newStartTime), std::abs(snappedEndTime - newEndTime))
+               ? snappedStartTime : snappedEndTime - duration);
+    }
+
+    secs_t timePositionOffset = newStartTime - item->time().startTime;
+
+    constexpr auto limit = 1. / 192000.; // 1 sample at 192 kHz
+    if (!muse::RealIsEqualOrMore(std::abs(timePositionOffset), limit)) {
+        timePositionOffset = 0.0;
+    }
+
+    return timePositionOffset;
+}
+
 void TrackItemsListModel::requestItemTitleChange()
 {
     auto selectedItems = getSelectedItemKeys();
@@ -219,7 +378,7 @@ void TrackItemsListModel::requestItemTitleChange()
 
     ViewTrackItem* selectedItem = itemByKey(itemKey);
     if (selectedItem != nullptr) {
-        emit selectedItem->titleEditRequested();
+        emit itemTitleEditRequested(selectedItem->key());
     }
 }
 
@@ -423,7 +582,7 @@ bool TrackItemsListModel::cancelItemDragEdit(const TrackItemKey& key)
 
     trackeditInteraction()->cancelItemDragEdit();
 
-    vs->updateClipsBoundaries(true);
+    vs->updateItemsBoundaries(true);
 
     constexpr auto modifyState = false;
     projectHistory()->endUserInteraction(modifyState);

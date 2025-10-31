@@ -7,7 +7,6 @@
 
 #include "au3interactiontestbase.h"
 #include "mocks/selectioncontrollermock.h"
-#include "mocks/projecthistorymock.h"
 
 #include "libraries/lib-label-track/LabelTrack.h"
 #include "au3wrap/internal/domaccessor.h"
@@ -37,11 +36,9 @@ public:
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();
         m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
-        m_projectHistory = std::make_shared<NiceMock<ProjectHistoryMock> >();
 
         m_labelsInteraction->globalContext.set(m_globalContext);
         m_labelsInteraction->selectionController.set(m_selectionController);
-        m_labelsInteraction->projectHistory.set(m_projectHistory);
 
         m_trackEditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
         ON_CALL(*m_globalContext, currentTrackeditProject())
@@ -61,7 +58,6 @@ public:
 
     std::shared_ptr<Au3LabelsInteraction> m_labelsInteraction;
     std::shared_ptr<SelectionControllerMock> m_selectionController;
-    std::shared_ptr<ProjectHistoryMock> m_projectHistory;
 };
 
 TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackWhenNoneExists)
@@ -348,18 +344,17 @@ TEST_F(Au3LabelsInteractionsTests, ChangeLabelTitle)
     //! [GIVEN] Add a label directly (not through the interaction being tested)
     SelectedRegion region;
     region.setTimes(1.0, 2.0);
-    int labelIndex = labelTrack->AddLabel(region, wxString());
-    ASSERT_EQ(labelIndex, 0) << "Label should be added at index 0";
+    TrackItemId labelId = labelTrack->AddLabel(region, wxString());
     ASSERT_EQ(labelTrack->GetNumLabels(), 1) << "Label track should contain one label";
 
     //! [EXPECT] The project is notified about label change
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(Truly([&](const Label& label) {
-        return label.key.trackId == TrackId(labelTrack->GetId()) && label.key.itemId == 0;
+        return label.key.trackId == TrackId(labelTrack->GetId()) && label.key.itemId == labelId;
     }))).Times(1);
 
     //! [WHEN] Change the label title
     const muse::String newTitle = u"Test Label";
-    const LabelKey labelKey { labelTrack->GetId(), 0 };
+    const LabelKey labelKey { labelTrack->GetId(), labelId };
     bool result = m_labelsInteraction->changeLabelTitle(labelKey, newTitle);
 
     //! [THEN] The operation is successful

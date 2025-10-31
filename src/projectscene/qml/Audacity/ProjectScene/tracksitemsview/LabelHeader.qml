@@ -23,7 +23,8 @@ Rectangle {
     signal titleEditStarted()
     signal requestSelected()
 
-    signal labelItemMousePositionChanged(real x, real y)
+    signal contextMenuOpenRequested(real x, real y)
+    signal mousePositionChanged(real x, real y)
     signal headerHoveredChanged(bool value)
 
     width: root.isPoint ? Math.max(50, titleLoader.contentWidth + 8) : parent.width
@@ -51,21 +52,18 @@ Rectangle {
         property var lastClickTime: 0
         property point doubleClickStartPosition
 
-        acceptedButtons: Qt.LeftButton
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         hoverEnabled: true
         cursorShape: Qt.OpenHandCursor
 
         visible: root.enableCursorInteraction
 
-        onContainsMouseChanged: {
-            if (!root.visible) {
-                return
-            }
-            root.headerHoveredChanged(containsMouse)
-        }
-
         onPressed: function (e) {
             var currentTime = Date.now()
+
+            if (e.button === Qt.RightButton) {
+                return
+            }
 
             if (currentTime - lastClickTime < prv.doubleClickInterval) {
                 // Double click - edit title
@@ -74,6 +72,14 @@ Rectangle {
                 // Single click - select
                 root.requestSelected()
                 lastClickTime = currentTime
+                doubleClickStartPosition = Qt.point(e.x, e.y)
+            }
+            e.accepted = false
+        }
+
+        onClicked: function(e) {
+            if (e.button === Qt.RightButton) {
+                root.contextMenuOpenRequested(e.x, e.y)
             }
             e.accepted = false
         }
@@ -87,9 +93,16 @@ Rectangle {
                 lastClickTime = 0
             }
 
-            root.labelItemMousePositionChanged(e.x, e.y)
+            root.mousePositionChanged(e.x, e.y)
 
             e.accepted = false
+        }
+
+        onContainsMouseChanged: {
+            if (!root.visible) {
+                return
+            }
+            root.headerHoveredChanged(containsMouse)
         }
     }
 
