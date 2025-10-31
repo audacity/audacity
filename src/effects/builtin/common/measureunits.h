@@ -32,6 +32,7 @@ namespace units {
 inline Unit seconds()
 {
     return {
+        //: Abbreviation of "seconds"
         muse::qtrc("effects/units", "s"),
         muse::qtrc("effects/units", "seconds")
     };
@@ -40,6 +41,7 @@ inline Unit seconds()
 inline Unit milliseconds()
 {
     return {
+        //: Abbreviation of "milliseconds"
         muse::qtrc("effects/units", "ms"),
         muse::qtrc("effects/units", "milliseconds")
     };
@@ -57,6 +59,7 @@ inline Unit samples()
 inline Unit hertz()
 {
     return {
+        //: Abbreviation of "hertz"
         muse::qtrc("effects/units", "Hz"),
         muse::qtrc("effects/units", "hertz")
     };
@@ -65,6 +68,7 @@ inline Unit hertz()
 inline Unit kilohertz()
 {
     return {
+        //: Abbreviation of "kilohertz"
         muse::qtrc("effects/units", "kHz"),
         muse::qtrc("effects/units", "kilohertz")
     };
@@ -74,6 +78,7 @@ inline Unit kilohertz()
 inline Unit decibels()
 {
     return {
+        //: Abbreviation of "decibels"
         muse::qtrc("effects/units", "dB"),
         muse::qtrc("effects/units", "decibels")
     };
@@ -83,6 +88,7 @@ inline Unit decibels()
 inline Unit percent()
 {
     return {
+        //: Symbol of "percent"
         muse::qtrc("effects/units", "%"),
         muse::qtrc("effects/units", "percent")
     };
@@ -101,6 +107,7 @@ inline Unit semitones()
 inline Unit beatsPerMinute()
 {
     return {
+        //: Abbreviation of "beats per minute"
         muse::qtrc("effects/units", "bpm"),
         muse::qtrc("effects/units", "beats per minute")
     };
@@ -110,6 +117,7 @@ inline Unit beatsPerMinute()
 inline Unit degrees()
 {
     return {
+        //: Symbol of "degrees"
         muse::qtrc("effects/units", "°"),
         muse::qtrc("effects/units", "degrees")
     };
