@@ -57,7 +57,7 @@ MenuItemList TrackContextMenuModel::makeStereoTrackItems()
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track view"), makeTrackViewItems()),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
-        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Rulers"), makeTrackRulerItems()),
+        makeItemWithArg("toggle-vertical-rulers"),
         makeSeparator(),
         makeItemWithArg("track-swap-channels"),
         makeItemWithArg("track-split-stereo-to-lr"),
@@ -81,7 +81,7 @@ MenuItemList TrackContextMenuModel::makeMonoTrackItems()
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track view"), makeTrackViewItems()),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
-        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Rulers"), makeTrackRulerItems()),
+        makeItemWithArg("toggle-vertical-rulers"),
         makeSeparator(),
         makeItemWithArg("track-make-stereo"),
         makeSeparator(),
@@ -391,13 +391,5 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackViewItems()
         makeItemWithArg("track-view-multi"),
         makeSeparator(),
         makeItemWithArg("track-view-half-wave"),
-    };
-}
-
-muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackRulerItems()
-{
-    return {
-        makeItemWithArg("track-ruler-enable-meter"),
-        makeItemWithArg("track-ruler-enable-vertical"),
     };
 }

@@ -48,7 +48,6 @@ private:
     muse::uicomponents::MenuItemList makeTrackRateItems();
     muse::uicomponents::MenuItemList makeTrackMoveItems();
     muse::uicomponents::MenuItemList makeTrackViewItems();
-    muse::uicomponents::MenuItemList makeTrackRulerItems();
 
     muse::uicomponents::MenuItem* makeItemWithArg(const muse::actions::ActionCode& actionCode);
 
