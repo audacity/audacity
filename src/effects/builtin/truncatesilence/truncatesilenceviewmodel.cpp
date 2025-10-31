@@ -4,8 +4,8 @@
 #include "truncatesilenceviewmodel.h"
 #include "truncatesilenceeffect.h"
 
-#include "global/log.h"
-#include "global/translation.h"
+#include "framework/global/log.h"
+#include "framework/global/translation.h"
 
 namespace au::effects {
 QString TruncateSilenceViewModel::effectTitle() const
@@ -13,13 +13,11 @@ QString TruncateSilenceViewModel::effectTitle() const
     return muse::qtrc("effects/truncatesilence", "Truncate silence");
 }
 
-// Detect silence section
 QString TruncateSilenceViewModel::detectSilenceLabel() const
 {
     return muse::qtrc("effects/truncatesilence", "Detect silence");
 }
 
-// Threshold
 QString TruncateSilenceViewModel::thresholdLabel() const
 {
     return muse::qtrc("effects/truncatesilence", "Threshold");
@@ -65,7 +63,6 @@ QString TruncateSilenceViewModel::thresholdUnit() const
     return dbUnit();
 }
 
-// Minimum
 QString TruncateSilenceViewModel::minimumLabel() const
 {
     return muse::qtrc("effects/truncatesilence", "Duration");
@@ -111,7 +108,6 @@ QString TruncateSilenceViewModel::minimumUnit() const
     return secondsUnit();
 }
 
-// Action
 QString TruncateSilenceViewModel::actionLabel() const
 {
     return muse::qtrc("effects/truncatesilence", "Action");
@@ -140,7 +136,6 @@ QVariantList TruncateSilenceViewModel::actionModel() const
     };
 }
 
-// Truncate
 QString TruncateSilenceViewModel::truncateToLabel() const
 {
     return muse::qtrc("effects/truncatesilence", "Truncate to");
@@ -191,7 +186,6 @@ QString TruncateSilenceViewModel::truncateUnit() const
     return secondsUnit();
 }
 
-// Compress
 QString TruncateSilenceViewModel::compressToLabel() const
 {
     return muse::qtrc("effects/truncatesilence", "Compress to");
@@ -242,7 +236,6 @@ QString TruncateSilenceViewModel::compressUnit() const
     return percentUnit();
 }
 
-// Independent
 QString TruncateSilenceViewModel::independentTruncateLabel() const
 {
     return muse::qtrc("effects/truncatesilence", "Truncate tracks independently");
