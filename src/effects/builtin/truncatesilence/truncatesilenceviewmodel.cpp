@@ -4,7 +4,7 @@
 #include "truncatesilenceviewmodel.h"
 #include "truncatesilenceeffect.h"
 
-#include "../common/measureunitsymbols.h"
+#include "../common/measureunits.h"
 
 #include "framework/global/log.h"
 #include "framework/global/translation.h"
