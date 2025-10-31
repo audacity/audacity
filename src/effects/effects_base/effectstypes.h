@@ -107,7 +107,7 @@ const std::string EFFECT_OPEN_ACTION = "action://effects/open?effectId=%1";
 const std::string REALTIME_EFFECT_ADD_ACTION = "action://effects/realtime-add?effectId=%1";
 const std::string REALTIME_EFFECT_REPLACE_ACTION = "action://effects/realtime-replace?effectId=%1";
 
-const std::string EFFECT_VIEWER_URI = "audacity://effects/effect_viewer?effectFamily=%1";
+const std::string EFFECT_VIEWER_URI = "audacity://effects/effect_viewer?instanceId=%1&effectFamily=%2";
 
 inline std::string makeEffectAction(const std::string& action, const EffectId& id)
 {

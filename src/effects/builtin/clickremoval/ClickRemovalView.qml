@@ -12,11 +12,8 @@ BuiltinEffectBase {
     width: 328
     implicitHeight: column.height
 
-    model: clickRemoval
-
-    ClickRemovalViewModel {
-        id: clickRemoval
-    }
+    builtinEffectModel: ClickRemovalViewModelFactory.createModel(root, root.instanceId)
+    property alias clickRemoval: root.builtinEffectModel
 
     Column {
         id: column

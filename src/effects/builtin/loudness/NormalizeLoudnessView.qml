@@ -12,11 +12,8 @@ BuiltinEffectBase {
     width: 400
     implicitHeight: column.height
 
-    model: normalizeLoudness
-
-    NormalizeLoudnessViewModel {
-        id: normalizeLoudness
-    }
+    builtinEffectModel: NormalizeLoudnessViewModelFactory.createModel(root, root.instanceId)
+    property alias normalizeLoudness: root.builtinEffectModel
 
     Column {
         id: column
@@ -39,9 +36,9 @@ BuiltinEffectBase {
                 anchors.verticalCenter: parent.verticalCenter
 
                 model: normalizeLoudness.algorithmOptions
-                currentIndex: root.model.useRmsAlgorithm ? 0 : 1
+                currentIndex: normalizeLoudness.useRmsAlgorithm ? 0 : 1
                 onActivated: function (index) {
-                    root.model.useRmsAlgorithm = index === 0
+                    normalizeLoudness.useRmsAlgorithm = index === 0
                 }
             }
 
@@ -57,14 +54,14 @@ BuiltinEffectBase {
                 measureUnitsSymbol: normalizeLoudness.currentMeasureUnitsSymbol
                 step: normalizeLoudness.targetStep
                 decimals: normalizeLoudness.targetDecimals
-                minValue: root.model.targetMin
-                maxValue: root.model.targetMax
-                currentValue: root.model.useRmsAlgorithm ? root.model.rmsTarget : root.model.perceivedLoudnessTarget
+                minValue: normalizeLoudness.targetMin
+                maxValue: normalizeLoudness.targetMax
+                currentValue: normalizeLoudness.useRmsAlgorithm ? normalizeLoudness.rmsTarget : normalizeLoudness.perceivedLoudnessTarget
                 onValueEdited: function (newValue) {
-                    if (root.model.useRmsAlgorithm) {
-                        root.model.rmsTarget = newValue
+                    if (normalizeLoudness.useRmsAlgorithm) {
+                        normalizeLoudness.rmsTarget = newValue
                     } else {
-                        root.model.perceivedLoudnessTarget = newValue
+                        normalizeLoudness.perceivedLoudnessTarget = newValue
                     }
                 }
             }
@@ -74,9 +71,9 @@ BuiltinEffectBase {
             spacing: 8
 
             CheckBox {
-                checked: root.model.normalizeStereoChannelsIndependently
+                checked: normalizeLoudness.normalizeStereoChannelsIndependently
                 onClicked: {
-                    root.model.normalizeStereoChannelsIndependently = !checked
+                    normalizeLoudness.normalizeStereoChannelsIndependently = !checked
                 }
             }
 
@@ -90,10 +87,10 @@ BuiltinEffectBase {
             spacing: 8
 
             CheckBox {
-                enabled: !root.model.useRmsAlgorithm
-                checked: root.model.useDualMono
+                enabled: !normalizeLoudness.useRmsAlgorithm
+                checked: normalizeLoudness.useDualMono
                 onClicked: {
-                    root.model.useDualMono = !checked
+                    normalizeLoudness.useDualMono = !checked
                 }
             }
 

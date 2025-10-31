@@ -13,11 +13,8 @@ BuiltinEffectBase {
     width: 400
     implicitHeight: column.height
 
-    model: normalize
-
-    NormalizeViewModel {
-        id: normalize
-    }
+    builtinEffectModel: NormalizeViewModelFactory.createModel(root, root.instanceId)
+    property alias normalize: root.builtinEffectModel
 
     Column {
         id: column

@@ -10,9 +10,6 @@
 namespace au::effects {
 class AbstractViewLauncher : public IEffectViewLauncher
 {
-public:
-    static int initializationInstanceId();
-
 protected:
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<IEffectInstancesRegister> instancesRegister;

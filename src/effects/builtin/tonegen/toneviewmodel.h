@@ -24,6 +24,8 @@ class ToneViewModel : public GeneratorEffectModel
     muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
+    ToneViewModel(QObject* parent, int instanceId);
+
     bool isApplyAllowed() const override;
     QList<QString> waveforms() const;
     QList<QString> interpolationTypes() const;
@@ -52,5 +54,9 @@ private:
     void doEmitSignals() override;
 
     ToneEffect* effect() const;
+};
+
+class ToneViewModelFactory : public EffectViewModelFactory<ToneViewModel>
+{
 };
 }
