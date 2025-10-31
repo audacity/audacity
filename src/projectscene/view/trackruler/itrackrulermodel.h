@@ -10,11 +10,13 @@ struct TrackRulerFullStep {
     int alignment;
     bool isBold;
     bool fullWidthTick;
+    bool isNegativeSample;
 };
 
 struct TrackRulerSmallStep {
-    size_t channel;
     double value;
+    size_t channel;
+    bool isNegativeSample;
 };
 
 class ITrackRulerModel
@@ -22,11 +24,13 @@ class ITrackRulerModel
 public:
     virtual ~ITrackRulerModel() = default;
 
-    virtual double stepToPosition(double step, int channel) const = 0;
+    [[nodiscard]] virtual double stepToPosition(double step, size_t channel, bool isNegativeSample) const = 0;
     virtual void setHeight(int height) = 0;
     virtual void setChannelHeightRatio(double channelHeightRatio) = 0;
     virtual void setCollapsed(bool isCollapsed) = 0;
-    virtual std::vector<TrackRulerFullStep> fullSteps() const = 0;
-    virtual std::vector<TrackRulerSmallStep> smallSteps() const = 0;
+    virtual void setDbRange([[maybe_unused]] double dbRange) {}
+    [[nodiscard]] virtual std::string sampleToText(double sample) const = 0;
+    [[nodiscard]] virtual std::vector<TrackRulerFullStep> fullSteps() const = 0;
+    [[nodiscard]] virtual std::vector<TrackRulerSmallStep> smallSteps() const = 0;
 };
 }

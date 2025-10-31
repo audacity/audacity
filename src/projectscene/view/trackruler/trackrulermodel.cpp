@@ -27,7 +27,7 @@ std::vector<QVariantMap> TrackRulerModel::fullSteps() const
         return QVariantMap {
             { "alignment", step.alignment },
             { "value", step.value },
-            { "y", stepToPosition(step.value, step.channel) },
+            { "y", stepToPosition(step.value, step.channel, step.isNegativeSample) },
             { "channel", static_cast<int>(step.channel) },
             { "bold", step.isBold },
             { "fullWidthTick", step.fullWidthTick }
@@ -50,10 +50,19 @@ std::vector<QVariantMap> TrackRulerModel::smallSteps() const
         return QVariantMap {
             { "channel", static_cast<int>(step.channel) },
             { "value", step.value },
-            { "y", stepToPosition(step.value, step.channel) }
+            { "y", stepToPosition(step.value, step.channel, step.isNegativeSample) }
         };
     });
     return variantSteps;
+}
+
+QString TrackRulerModel::sampleToText(double sample) const
+{
+    if (!m_model) {
+        return QString();
+    }
+
+    return QString::fromStdString(m_model->sampleToText(sample));
 }
 
 bool TrackRulerModel::isStereo() const
@@ -111,13 +120,13 @@ void TrackRulerModel::setHeight(int height)
     }
 }
 
-double TrackRulerModel::stepToPosition(double step, int channel) const
+double TrackRulerModel::stepToPosition(double step, int channel, bool isNegativeSample) const
 {
     if (!m_model) {
         return 0.0;
     }
 
-    return m_model->stepToPosition(step, channel);
+    return m_model->stepToPosition(step, channel, isNegativeSample);
 }
 
 double TrackRulerModel::channelHeightRatio() const
