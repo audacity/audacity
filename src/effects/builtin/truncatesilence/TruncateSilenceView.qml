@@ -14,7 +14,7 @@ BuiltinEffectBase {
     width: prv.desiredWidth - (2 * prv.spacingL) // we need to remove the padding from the dialog desired width
     implicitHeight: mainColumn.height // see with EffectsViewerDialog.qml
 
-    property string title: truncateSilence.effectTitle
+    property string title: truncateSilence.effectTitle()
     property bool isApplyAllowed: true
 
     model: truncateSilence
@@ -52,7 +52,7 @@ BuiltinEffectBase {
 
             StyledTextLabel {
 
-                text: truncateSilence.detectSilenceLabel
+                text: truncateSilence.detectSilenceLabel()
                 font: ui.theme.bodyFont
             }
 
@@ -84,7 +84,7 @@ BuiltinEffectBase {
 
                         StyledTextLabel {
 
-                            text: truncateSilence.thresholdLabel
+                            text: truncateSilence.thresholdLabel()
                         }
 
                         IncrementalPropertyControl {
@@ -92,11 +92,11 @@ BuiltinEffectBase {
                             width: parent.width
 
                             currentValue: truncateSilence.thresholdValue
-                            measureUnitsSymbol: truncateSilence.thresholdUnit
-                            decimals: truncateSilence.thresholdDecimals
-                            step: truncateSilence.thresholdStep
-                            minValue: truncateSilence.thresholdMin
-                            maxValue: truncateSilence.thresholdMax
+                            measureUnitsSymbol: truncateSilence.thresholdUnit()
+                            decimals: truncateSilence.thresholdDecimals()
+                            step: truncateSilence.thresholdStep()
+                            minValue: truncateSilence.thresholdMin()
+                            maxValue: truncateSilence.thresholdMax()
 
                             onValueEdited: function (newValue) {
                                 truncateSilence.thresholdValue = newValue
@@ -112,7 +112,7 @@ BuiltinEffectBase {
 
                         StyledTextLabel {
 
-                            text: truncateSilence.minimumLabel
+                            text: truncateSilence.minimumLabel()
                         }
 
                         IncrementalPropertyControl {
@@ -120,11 +120,11 @@ BuiltinEffectBase {
                             width: parent.width
 
                             currentValue: truncateSilence.minimumValue
-                            measureUnitsSymbol: truncateSilence.minimumUnit
-                            decimals: truncateSilence.minimumDecimals
-                            step: truncateSilence.minimumStep
-                            minValue: truncateSilence.minimumMin
-                            maxValue: truncateSilence.minimumMax
+                            measureUnitsSymbol: truncateSilence.minimumUnit()
+                            decimals: truncateSilence.minimumDecimals()
+                            step: truncateSilence.minimumStep()
+                            minValue: truncateSilence.minimumMin()
+                            maxValue: truncateSilence.minimumMax()
 
                             onValueEdited: function (newValue) {
                                 truncateSilence.minimumValue = newValue
@@ -144,7 +144,7 @@ BuiltinEffectBase {
 
             StyledTextLabel {
 
-                text: truncateSilence.actionLabel
+                text: truncateSilence.actionLabel()
                 font: ui.theme.bodyFont
             }
 
@@ -175,7 +175,7 @@ BuiltinEffectBase {
                         spacing: prv.spacingM
                         orientation: ListView.Vertical
 
-                        model: truncateSilence.actionModel
+                        model: truncateSilence.actionModel()
 
                         delegate: RoundedRadioButton {
 
@@ -198,7 +198,7 @@ BuiltinEffectBase {
 
                         StyledTextLabel {
 
-                            text: truncateSilence.truncateToLabel
+                            text: truncateSilence.truncateToLabel()
                         }
 
                         IncrementalPropertyControl {
@@ -206,11 +206,11 @@ BuiltinEffectBase {
                             width: prv.fieldWidth
 
                             currentValue: truncateSilence.truncateValue
-                            measureUnitsSymbol: truncateSilence.truncateUnit
-                            decimals: truncateSilence.truncateDecimals
-                            step: truncateSilence.truncateStep
-                            minValue: truncateSilence.truncateMin
-                            maxValue: truncateSilence.truncateMax
+                            measureUnitsSymbol: truncateSilence.truncateUnit()
+                            decimals: truncateSilence.truncateDecimals()
+                            step: truncateSilence.truncateStep()
+                            minValue: truncateSilence.truncateMin()
+                            maxValue: truncateSilence.truncateMax()
 
                             onValueEdited: function (newValue) {
                                 truncateSilence.truncateValue = newValue
@@ -228,7 +228,7 @@ BuiltinEffectBase {
 
                         StyledTextLabel {
 
-                            text: truncateSilence.compressToLabel
+                            text: truncateSilence.compressToLabel()
                         }
 
                         IncrementalPropertyControl {
@@ -236,11 +236,11 @@ BuiltinEffectBase {
                             width: prv.fieldWidth
 
                             currentValue: truncateSilence.compressValue
-                            measureUnitsSymbol: truncateSilence.compressUnit
-                            decimals: truncateSilence.compressDecimals
-                            step: truncateSilence.compressStep
-                            minValue: truncateSilence.compressMin
-                            maxValue: truncateSilence.compressMax
+                            measureUnitsSymbol: truncateSilence.compressUnit()
+                            decimals: truncateSilence.compressDecimals()
+                            step: truncateSilence.compressStep()
+                            minValue: truncateSilence.compressMin()
+                            maxValue: truncateSilence.compressMax()
 
                             onValueEdited: function (newValue) {
                                 truncateSilence.compressValue = newValue
@@ -252,7 +252,7 @@ BuiltinEffectBase {
 
                         width: parent.width
 
-                        text: truncateSilence.actionIndex === 0 ? truncateSilence.independentTruncateLabel : truncateSilence.independentCompressLabel
+                        text: truncateSilence.actionIndex === 0 ? truncateSilence.independentTruncateLabel() : truncateSilence.independentCompressLabel()
                         checked: truncateSilence.independentValue
 
                         onClicked: {
