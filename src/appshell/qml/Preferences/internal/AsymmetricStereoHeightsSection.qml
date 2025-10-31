@@ -68,7 +68,7 @@ BaseSection {
 
             RoundedRadioButton {
 
-                checked: editPreferencesModel.stereoHeightsPref == AsymmetricStereoHeights.ALWAYS
+                checked: editPreferencesModel.stereoHeightsPref === AsymmetricStereoHeights.ALWAYS
                 text: qsTrc("appshell/preferences", "Always")
 
                 navigation.name: "AlwaysRadioBtn"
@@ -83,7 +83,7 @@ BaseSection {
             RoundedRadioButton {
                 id: workspaceRadioBtn
 
-                checked: editPreferencesModel.stereoHeightsPref == AsymmetricStereoHeights.WORKSPACE_DEPENDENT
+                checked: editPreferencesModel.stereoHeightsPref === AsymmetricStereoHeights.WORKSPACE_DEPENDENT
                 text: qsTrc("appshell/preferences", "Depending on workspace")
 
                 navigation.name: "WorkspaceDependentRadioBtn"
@@ -109,7 +109,7 @@ BaseSection {
             }
 
             RoundedRadioButton {
-                checked: editPreferencesModel.stereoHeightsPref == AsymmetricStereoHeights.NEVER
+                checked: editPreferencesModel.stereoHeightsPref === AsymmetricStereoHeights.NEVER
                 text: qsTrc("appshell/preferences", "Never")
 
                 navigation.name: "NeverRadioBtn"
