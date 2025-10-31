@@ -92,7 +92,7 @@ BuiltinEffectBase {
                             width: parent.width
 
                             currentValue: truncateSilence.thresholdValue
-                            measureUnitsSymbol: truncateSilence.thresholdUnit()
+                            measureUnitsSymbol: truncateSilence.thresholdUnitSymbol()
                             decimals: truncateSilence.thresholdDecimals()
                             step: truncateSilence.thresholdStep()
                             minValue: truncateSilence.thresholdMin()
@@ -120,7 +120,7 @@ BuiltinEffectBase {
                             width: parent.width
 
                             currentValue: truncateSilence.minimumValue
-                            measureUnitsSymbol: truncateSilence.minimumUnit()
+                            measureUnitsSymbol: truncateSilence.minimumUnitSymbol()
                             decimals: truncateSilence.minimumDecimals()
                             step: truncateSilence.minimumStep()
                             minValue: truncateSilence.minimumMin()
@@ -206,7 +206,7 @@ BuiltinEffectBase {
                             width: prv.fieldWidth
 
                             currentValue: truncateSilence.truncateValue
-                            measureUnitsSymbol: truncateSilence.truncateUnit()
+                            measureUnitsSymbol: truncateSilence.truncateUnitSymbol()
                             decimals: truncateSilence.truncateDecimals()
                             step: truncateSilence.truncateStep()
                             minValue: truncateSilence.truncateMin()
@@ -236,7 +236,7 @@ BuiltinEffectBase {
                             width: prv.fieldWidth
 
                             currentValue: truncateSilence.compressValue
-                            measureUnitsSymbol: truncateSilence.compressUnit()
+                            measureUnitsSymbol: truncateSilence.compressUnitSymbol()
                             decimals: truncateSilence.compressDecimals()
                             step: truncateSilence.compressStep()
                             minValue: truncateSilence.compressMin()
