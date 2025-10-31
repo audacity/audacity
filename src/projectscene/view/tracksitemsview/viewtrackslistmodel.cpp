@@ -238,6 +238,9 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     }
     case TypeRole:
         return QVariant::fromValue(track.type);
+
+    case IsStereoRole:
+        return track.type == au::trackedit::TrackType::Stereo;
     default:
         break;
     }
@@ -256,6 +259,7 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { IsTrackFocusedRole, "isTrackFocused" },
         { IsMultiSelectionActiveRole, "isMultiSelectionActive" },
         { IsTrackAudibleRole, "isTrackAudible" },
+        { IsStereoRole, "isStereo" },
     };
     return roles;
 }
