@@ -10,6 +10,10 @@ namespace au::effects {
 class CompressorSettingModel : public EffectSettingModelImpl<CompressorEffect>
 {
 public:
-    CompressorSettingModel(QObject* parent = nullptr);
+    CompressorSettingModel(QObject* parent, int instanceId);
+};
+
+class CompressorSettingModelFactory : public BuiltinEffectSettingModelFactory<CompressorSettingModel>
+{
 };
 }

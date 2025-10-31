@@ -14,12 +14,13 @@ BuiltinEffectBase {
     id: root
 
     property string title: qsTrc("effects", "Chirp")
-    property alias isApplyAllowed: chirp.isApplyAllowed
+    property bool isApplyAllowed: chirp.isApplyAllowed
 
     width: 370
     implicitHeight: column.height
 
-    model: chirp
+    builtinEffectModel: ToneViewModelFactory.createModel(root, root.instanceId)
+    property alias chirp: root.builtinEffectModel
 
     QtObject {
         id: prv
@@ -28,10 +29,6 @@ BuiltinEffectBase {
         readonly property int padding: 32
         readonly property int interpolationLinear: 0
         readonly property int interpolationLogarithmic: 1
-    }
-
-    ToneViewModel {
-        id: chirp
     }
 
     ColumnLayout {

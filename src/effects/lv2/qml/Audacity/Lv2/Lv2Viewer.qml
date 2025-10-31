@@ -13,30 +13,43 @@ Rectangle {
     id: root
 
     // in
-    property alias instanceId: model.instanceId
-    property alias effectState: model.effectState
-    property alias title: model.title
-    property alias isPreviewing: model.isPreviewing
+    required property int instanceId
+    property string effectState: ""
+
+    // out
+    property string title: prv.viewModel.title
+    property bool isPreviewing: prv.viewModel.isPreviewing
 
     implicitWidth: textItem.width
     implicitHeight: textItem.height
     color: ui.theme.backgroundPrimaryColor
 
+    QtObject {
+        id: prv
+        property var viewModel: {
+            var viewModel = Lv2ViewModelFactory.createModel(root, root.instanceId, root.effectState)
+            viewModel.onExternalUiClosed.connect(function () {
+                window.close()
+            })
+            return viewModel
+        }
+    }
+
     Component.onCompleted: {
-        model.init()
+        prv.viewModel.init()
         Qt.callLater(manageMenuModel.load)
     }
 
     Component.onDestruction: {
-        model.deinit()
+        prv.viewModel.deinit()
     }
 
     function startPreview() {
-        model.startPreview()
+        prv.viewModel.startPreview()
     }
 
     function stopPreview() {
-        model.stopPreview()
+        prv.viewModel.stopPreview()
     }
 
     function manage(parent) {
@@ -49,7 +62,7 @@ Rectangle {
 
     EffectManageMenu {
         id: manageMenuModel
-        instanceId: model.instanceId
+        instanceId: root.instanceId
     }
 
     ContextMenuLoader {
@@ -60,20 +73,13 @@ Rectangle {
         }
     }
 
-    Lv2ViewModel {
-        id: model
-        onExternalUiClosed: {
-            window.close()
-        }
-    }
-
     Text {
         id: textItem
-        visible: model.unsupportedUiReason.length > 0
+        visible: prv.viewModel.unsupportedUiReason.length > 0
         width: visible ? 300 : 0
         height: visible ? 100 : 0
         anchors.centerIn: parent
-        text: "No available UI:\n" + model.unsupportedUiReason + "\n(Plain UI not implemented yet)"
+        text: "No available UI:\n" + prv.viewModel.unsupportedUiReason + "\n(Plain UI not implemented yet)"
         color: ui.theme.fontPrimaryColor
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter

@@ -34,7 +34,7 @@ class NoiseReductionViewModel : public BuiltinEffectModel
     muse::Inject<muse::IInteractive> interactive;
 
 public:
-    NoiseReductionViewModel() = default;
+    NoiseReductionViewModel(QObject* parent, int instanceId);
 
     bool isApplyAllowed() const;
     void setIsApplyAllowed(bool isApplyAllowed);
@@ -69,5 +69,9 @@ signals:
 private:
     void doReload() override;
     bool usesPresets() const override { return false; }
+};
+
+class NoiseReductionViewModelFactory : public EffectViewModelFactory<NoiseReductionViewModel>
+{
 };
 }

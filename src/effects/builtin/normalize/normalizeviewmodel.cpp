@@ -8,6 +8,11 @@
 #include "log.h"
 
 namespace au::effects {
+NormalizeViewModel::NormalizeViewModel(QObject* parent, int instanceId)
+    : BuiltinEffectModel(parent, instanceId)
+{
+}
+
 bool NormalizeViewModel::removeDC() const
 {
     const auto& fx = effect<NormalizeEffect>();

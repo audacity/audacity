@@ -8,6 +8,11 @@
 #include "global/translation.h"
 
 namespace au::effects {
+ClickRemovalViewModel::ClickRemovalViewModel(QObject* parent, int instanceId)
+    : BuiltinEffectModel(parent, instanceId)
+{
+}
+
 QString ClickRemovalViewModel::effectTitle() const
 {
     return muse::qtrc("effects/clickremoval", "Click removal");
