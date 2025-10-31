@@ -4,6 +4,8 @@
 #include "truncatesilenceviewmodel.h"
 #include "truncatesilenceeffect.h"
 
+#include "../common/measureunitsymbols.h"
+
 #include "framework/global/log.h"
 #include "framework/global/translation.h"
 
@@ -58,9 +60,9 @@ int TruncateSilenceViewModel::thresholdDecimals() const
     return 1;
 }
 
-QString TruncateSilenceViewModel::thresholdUnit() const
+QString TruncateSilenceViewModel::thresholdUnitSymbol() const
 {
-    return dbUnit();
+    return units::decibels().m_symbol;
 }
 
 QString TruncateSilenceViewModel::minimumLabel() const
@@ -103,9 +105,9 @@ int TruncateSilenceViewModel::minimumDecimals() const
     return 3;
 }
 
-QString TruncateSilenceViewModel::minimumUnit() const
+QString TruncateSilenceViewModel::minimumUnitSymbol() const
 {
-    return secondsUnit();
+    return units::seconds().m_symbol;
 }
 
 QString TruncateSilenceViewModel::actionLabel() const
@@ -181,9 +183,9 @@ int TruncateSilenceViewModel::truncateDecimals() const
     return 3;
 }
 
-QString TruncateSilenceViewModel::truncateUnit() const
+QString TruncateSilenceViewModel::truncateUnitSymbol() const
 {
-    return secondsUnit();
+    return units::seconds().m_symbol;
 }
 
 QString TruncateSilenceViewModel::compressToLabel() const
@@ -231,9 +233,9 @@ int TruncateSilenceViewModel::compressDecimals() const
     return 1;
 }
 
-QString TruncateSilenceViewModel::compressUnit() const
+QString TruncateSilenceViewModel::compressUnitSymbol() const
 {
-    return percentUnit();
+    return units::percent().m_symbol;
 }
 
 QString TruncateSilenceViewModel::independentTruncateLabel() const
@@ -269,21 +271,5 @@ void TruncateSilenceViewModel::doReload()
     emit truncateValueChanged();
     emit compressValueChanged();
     emit independentValueChanged();
-}
-
-// Internal unit helpers
-QString TruncateSilenceViewModel::dbUnit() const
-{
-    return muse::qtrc("effects/truncatesilence", "dB");
-}
-
-QString TruncateSilenceViewModel::secondsUnit() const
-{
-    return muse::qtrc("effects/truncatesilence", "seconds");
-}
-
-QString TruncateSilenceViewModel::percentUnit() const
-{
-    return muse::qtrc("effects/truncatesilence", "%");
 }
 }

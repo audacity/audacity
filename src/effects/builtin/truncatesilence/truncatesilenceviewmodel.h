@@ -48,14 +48,14 @@ public:
     Q_INVOKABLE double thresholdMax() const;
     Q_INVOKABLE double thresholdStep() const;
     Q_INVOKABLE int thresholdDecimals() const;
-    Q_INVOKABLE QString thresholdUnit() const;
+    Q_INVOKABLE QString thresholdUnitSymbol() const;
 
     Q_INVOKABLE QString minimumLabel() const;
     Q_INVOKABLE double minimumMin() const;
     Q_INVOKABLE double minimumMax() const;
     Q_INVOKABLE double minimumStep() const;
     Q_INVOKABLE int minimumDecimals() const;
-    Q_INVOKABLE QString minimumUnit() const;
+    Q_INVOKABLE QString minimumUnitSymbol() const;
 
     Q_INVOKABLE QString actionLabel() const;
     Q_INVOKABLE QVariantList actionModel() const;
@@ -66,7 +66,7 @@ public:
     Q_INVOKABLE double truncateMax() const;
     Q_INVOKABLE double truncateStep() const;
     Q_INVOKABLE int truncateDecimals() const;
-    Q_INVOKABLE QString truncateUnit() const;
+    Q_INVOKABLE QString truncateUnitSymbol() const;
 
     Q_INVOKABLE QString compressToLabel() const;
     Q_INVOKABLE QString compressActionLabel() const;
@@ -74,7 +74,7 @@ public:
     Q_INVOKABLE double compressMax() const;
     Q_INVOKABLE double compressStep() const;
     Q_INVOKABLE int compressDecimals() const;
-    Q_INVOKABLE QString compressUnit() const;
+    Q_INVOKABLE QString compressUnitSymbol() const;
 
     Q_INVOKABLE QString independentTruncateLabel() const;
     Q_INVOKABLE QString independentCompressLabel() const;
@@ -89,10 +89,5 @@ signals:
 
 private:
     void doReload() override;
-
-    // Internal unit helpers
-    QString dbUnit() const;
-    QString secondsUnit() const;
-    QString percentUnit() const;
 };
 }
