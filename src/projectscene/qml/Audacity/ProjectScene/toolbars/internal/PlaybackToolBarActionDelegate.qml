@@ -23,7 +23,7 @@ Item {
         anchors.leftMargin: 6
         anchors.rightMargin: 6
 
-        spacing: 16
+        spacing: ui.theme.extra.spacing_xl
 
         StyledIconLabel {
             Layout.alignment: Qt.AlignLeft

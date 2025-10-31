@@ -38,7 +38,7 @@ BaseSection {
     signal intervalChanged(int minutes)
 
     Row {
-        spacing: 12
+        spacing: ui.theme.extra.spacing_l
 
         CheckBox {
             id: autoSaveCheckBox
@@ -70,13 +70,13 @@ BaseSection {
             step: 1
             decimals: 0
 
-            measureUnitsSymbol: " " + qsTrc("global", "min", /*disambiguation*/ "abbreviation of minutes")
+            measureUnitsSymbol: " " + qsTrc("global", "min" /*disambiguation*/ , "abbreviation of minutes")
 
             navigation.name: "AutoSavePeriodControl"
             navigation.panel: root.navigation
             navigation.column: 2
 
-            onValueEdited: function(newValue) {
+            onValueEdited: function (newValue) {
                 root.intervalChanged(newValue)
             }
         }

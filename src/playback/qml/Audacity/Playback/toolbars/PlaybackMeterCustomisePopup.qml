@@ -22,7 +22,7 @@ StyledPopupView {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 12
+        spacing: ui.theme.extra.spacing_l
 
         StyledGroupBox {
             Layout.fillWidth: true
@@ -37,11 +37,17 @@ StyledPopupView {
             value: root.model.meterPosition
 
             model: [
-                {label : qsTrc("playback","Top bar (horizontal)"), value: PlaybackMeterPosition.TopBar},
-                {label : qsTrc("playback","Side bar (vertical)"), value: PlaybackMeterPosition.SideBar}
+                {
+                    label: qsTrc("playback", "Top bar (horizontal)"),
+                    value: PlaybackMeterPosition.TopBar
+                },
+                {
+                    label: qsTrc("playback", "Side bar (vertical)"),
+                    value: PlaybackMeterPosition.SideBar
+                }
             ]
 
-            onValueChangeRequested: function(value) {
+            onValueChangeRequested: function (value) {
                 root.model.meterPosition = value
             }
         }
@@ -49,8 +55,8 @@ StyledPopupView {
         RowLayout {
             Layout.fillWidth: true
             Layout.preferredHeight: 120
-            
-            spacing: 12
+
+            spacing: ui.theme.extra.spacing_l
 
             StyledGroupBox {
                 Layout.fillWidth: true
@@ -65,12 +71,21 @@ StyledPopupView {
                 value: root.model.meterStyle
 
                 model: [
-                    {label : qsTrc("playback","Default"), value: PlaybackMeterStyle.Default},
-                    {label : qsTrc("playback","RMS"), value: PlaybackMeterStyle.RMS},
-                    {label : qsTrc("playback","Gradient"), value: PlaybackMeterStyle.Gradient}
+                    {
+                        label: qsTrc("playback", "Default"),
+                        value: PlaybackMeterStyle.Default
+                    },
+                    {
+                        label: qsTrc("playback", "RMS"),
+                        value: PlaybackMeterStyle.RMS
+                    },
+                    {
+                        label: qsTrc("playback", "Gradient"),
+                        value: PlaybackMeterStyle.Gradient
+                    }
                 ]
 
-                onValueChangeRequested: function(value) {
+                onValueChangeRequested: function (value) {
                     root.model.meterStyle = value
                 }
             }
@@ -88,12 +103,21 @@ StyledPopupView {
                 value: root.model.meterType
 
                 model: [
-                    {label : qsTrc("playback","Logarithmic (dB)"), value: PlaybackMeterType.DbLog},
-                    {label : qsTrc("playback","Linear (dB)"), value: PlaybackMeterType.DbLinear},
-                    {label : qsTrc("playback","Linear (amp)"), value: PlaybackMeterType.Linear}
+                    {
+                        label: qsTrc("playback", "Logarithmic (dB)"),
+                        value: PlaybackMeterType.DbLog
+                    },
+                    {
+                        label: qsTrc("playback", "Linear (dB)"),
+                        value: PlaybackMeterType.DbLinear
+                    },
+                    {
+                        label: qsTrc("playback", "Linear (amp)"),
+                        value: PlaybackMeterType.Linear
+                    }
                 ]
 
-                onValueChangeRequested: function(value) {
+                onValueChangeRequested: function (value) {
                     root.model.meterType = value
                 }
             }
@@ -122,19 +146,19 @@ StyledPopupView {
                 enabled: root.model.meterType !== PlaybackMeterType.Linear
 
                 function openMenu() {
-                    let rangeList = root.model.dbRangeList.map(function(range) {
+                    let rangeList = root.model.dbRangeList.map(function (range) {
                         return {
                             id: range,
                             title: root.model.description(range)
-                        };
-                    });
+                        }
+                    })
                     menuLoader.toggleOpened(rangeList)
                 }
 
                 Rectangle {
                     id: backgroundItem
                     anchors.fill: parent
- 
+
                     color: ui.theme.textFieldColor
                     border.color: ui.theme.strokeColor
                     border.width: Math.max(ui.theme.borderWidth, 1)
@@ -194,13 +218,19 @@ StyledPopupView {
                     State {
                         name: "HOVERED"
                         when: mouseAreaItem.containsMouse && !mouseAreaItem.pressed
-                        PropertyChanges { target: backgroundItem; border.color: Utils.colorWithAlpha(ui.theme.accentColor, 0.6) }
+                        PropertyChanges {
+                            target: backgroundItem
+                            border.color: Utils.colorWithAlpha(ui.theme.accentColor, 0.6)
+                        }
                     },
-
                     State {
                         name: "OPENED"
                         when: menuLoader.isMenuOpened
-                        PropertyChanges { target: backgroundItem; border.color: ui.theme.accentColor; width: 336 }
+                        PropertyChanges {
+                            target: backgroundItem
+                            border.color: ui.theme.accentColor
+                            width: 336
+                        }
                     }
                 ]
 
@@ -209,7 +239,7 @@ StyledPopupView {
 
                     anchors.top: parent.top
 
-                    onHandleMenuItem: function(itemId) {
+                    onHandleMenuItem: function (itemId) {
                         root.model.meterDbRange = itemId
                     }
                 }

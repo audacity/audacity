@@ -36,7 +36,7 @@ BaseSection {
     signal numberFormatSelected(string formatCode)
 
     Column {
-        spacing: 12
+        spacing: ui.theme.extra.spacing_l
 
         StyledTextLabel {
             text: qsTrc("appshell/preferences", "Number format")
@@ -58,7 +58,7 @@ BaseSection {
 
             indeterminateText: ""
 
-            onActivated: function(index, value) {
+            onActivated: function (index, value) {
                 root.numberFormatSelected(value)
             }
         }

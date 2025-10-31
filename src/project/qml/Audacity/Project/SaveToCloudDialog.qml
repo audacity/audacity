@@ -43,7 +43,9 @@ StyledDialogView {
     margins: 20
 
     function done(response, data = {}) {
-        let value = Object.assign(({ response: response }), data)
+        let value = Object.assign(({
+                response: response
+            }), data)
 
         root.ret = {
             errcode: 0,
@@ -128,8 +130,7 @@ StyledDialogView {
                 StyledTextLabel {
                     id: titleLabel
 
-                    text: root.isPublishShare && Boolean(contentItem.dialogText) ? contentItem.dialogText.titleText
-                                                                                 : qsTrc("project/save", "Save to cloud")
+                    text: root.isPublishShare && Boolean(contentItem.dialogText) ? contentItem.dialogText.titleText : qsTrc("project/save", "Save to cloud")
 
                     font: ui.theme.largeBodyBoldFont
                     horizontalAlignment: Text.AlignLeft
@@ -138,7 +139,7 @@ StyledDialogView {
 
             ColumnLayout {
                 id: optionsColumn
-                spacing: 16
+                spacing: ui.theme.extra.spacing_xl
 
                 NavigationPanel {
                     id: optionsNavPanel
@@ -151,7 +152,7 @@ StyledDialogView {
                 }
 
                 ColumnLayout {
-                    spacing: 8
+                    spacing: ui.theme.extra.spacing_m
 
                     StyledTextLabel {
                         Layout.fillWidth: true
@@ -167,14 +168,14 @@ StyledDialogView {
                         navigation.row: 1
                         accessible.name: titleLabel.text + ". " + qsTrc("project/save", "Name") + ": " + currentText
 
-                        onTextChanged: function(newTextValue) {
+                        onTextChanged: function (newTextValue) {
                             root.name = newTextValue
                         }
                     }
                 }
 
                 ColumnLayout {
-                    spacing: 8
+                    spacing: ui.theme.extra.spacing_m
 
                     StyledTextLabel {
                         Layout.fillWidth: true
@@ -194,7 +195,7 @@ StyledDialogView {
                         navigation.row: 2
                         navigation.accessible.name: qsTrc("project/cloud", "Visibility") + ": " + currentText
 
-                        onActivated: function(index, value) {
+                        onActivated: function (index, value) {
                             root.visibility = value
                         }
                     }
@@ -204,15 +205,19 @@ StyledDialogView {
                     Layout.fillWidth: true
 
                     orientation: ListView.Vertical
-                    spacing: 8
+                    spacing: ui.theme.extra.spacing_m
 
                     visible: root.isPublishShare && Boolean(root.existingProjectOrAudioUrl)
 
                     model: [
-                        { text: Boolean(contentItem.dialogText) ? contentItem.dialogText.replaceButtonText
-                                                                : qsTrc("project/save", "Replace existing"), value: true },
-                        { text: Boolean(contentItem.dialogText) ? contentItem.dialogText.newButtonText
-                                                                : qsTrc("project/save", "Create new"), value: false }
+                        {
+                            text: Boolean(contentItem.dialogText) ? contentItem.dialogText.replaceButtonText : qsTrc("project/save", "Replace existing"),
+                            value: true
+                        },
+                        {
+                            text: Boolean(contentItem.dialogText) ? contentItem.dialogText.newButtonText : qsTrc("project/save", "Create new"),
+                            value: false
+                        }
                     ]
 
                     delegate: RoundedRadioButton {
@@ -235,7 +240,7 @@ StyledDialogView {
 
                 Layout.fillWidth: true
 
-                buttons: [ ButtonBoxModel.Cancel ]
+                buttons: [ButtonBoxModel.Cancel]
 
                 navigationPanel.section: root.navigationSection
                 navigationPanel.order: 2
@@ -252,8 +257,7 @@ StyledDialogView {
                 }
 
                 FlatButton {
-                    text: root.isPublishShare && Boolean(contentItem.dialogText) ? contentItem.dialogText.saveButtonText
-                                                                                 : qsTrc("project/save", "Save")
+                    text: root.isPublishShare && Boolean(contentItem.dialogText) ? contentItem.dialogText.saveButtonText : qsTrc("project/save", "Save")
 
                     buttonRole: ButtonBoxModel.ApplyRole
                     buttonId: ButtonBoxModel.Save
@@ -262,14 +266,14 @@ StyledDialogView {
 
                     onClicked: {
                         root.done(SaveToCloudResponse.Ok, {
-                                      name: root.name,
-                                      visibility: root.visibility,
-                                      replaceExisting: root.replaceExisting
-                                  })
+                            name: root.name,
+                            visibility: root.visibility,
+                            replaceExisting: root.replaceExisting
+                        })
                     }
                 }
 
-                onStandardButtonClicked: function(buttonId) {
+                onStandardButtonClicked: function (buttonId) {
                     if (buttonId === ButtonBoxModel.Cancel) {
                         root.done(SaveToCloudResponse.Cancel)
                     }
@@ -278,4 +282,3 @@ StyledDialogView {
         }
     }
 }
-

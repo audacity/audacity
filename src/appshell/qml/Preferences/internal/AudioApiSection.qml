@@ -28,7 +28,7 @@ BaseSection {
     id: root
 
     title: qsTrc("appshell/preferences", "Inputs and outputs")
-    spacing: 16
+    spacing: ui.theme.extra.spacing_xl
 
     property int currentAudioApiIndex: -1
     property var audioApiList: null
@@ -57,7 +57,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 1
 
-        onValueEdited: function(newIndex, newValue) {
+        onValueEdited: function (newIndex, newValue) {
             root.currentAudioApiIndexChangeRequested(newIndex)
         }
     }

@@ -40,35 +40,122 @@ Rectangle {
                 width: parent.width
 
                 model: [
-                    { textRole: "Dropdown", componentRole: dropdownSample },
-                    { textRole: "StyledPopup", componentRole: styledPopupViewComponent },
-                    { textRole: "StyledMenu", componentRole: styledMenuComponent },
-                    { textRole: "StyledMenuScrollable", componentRole: styledScrollableMenuComponent },
-                    { textRole: "CheckBox", componentRole: checkBoxSample },
-                    { textRole: "VisibilityBox", componentRole: visibilityBoxSample },
-                    { textRole: "ColorPicker", componentRole: colorPickerSample },
-                    { textRole: "ExpandableBlank", componentRole: expandableBlankSample },
-                    { textRole: "FlatButton", componentRole: flatButtonSample },
-                    { textRole: "ProgressButton", componentRole: progressButtonSample },
-                    { textRole: "RadioButtonGroup + FlatRadioButton", componentRole: flatRadioButtonSample },
-                    { textRole: "RoundedRadioButton", componentRole: roundedRadioButtonSample },
-                    { textRole: "IncrementalPropertyControl (Hidden icon, Icon left, Icon right)", componentRole: incrementalPropertyControlSample },
-                    { textRole: "FlatToggleButton", componentRole: flatToggleButtonSample },
-                    { textRole: "ToggleButton", componentRole: toggleButtonSample },
-                    { textRole: "RoundedRectangle (which allows to round the particular corners)", componentRole: roundedRectangleSample },
-                    { textRole: "TextInputField", componentRole: textInputFieldSample },
-                    { textRole: "SearchField", componentRole: searchFieldSample },
-                    { textRole: "FilePicker", componentRole: filePickerSample },
-                    { textRole: "DirectoriesPicker", componentRole: directoriesPickerSample },
-                    { textRole: "StyledTabBar", componentRole: tabBarSample },
-                    { textRole: "PageTabButton", componentRole: pageTabButtonsSample },
-                    { textRole: "GridView", componentRole: gridViewVertical },
-                    { textRole: "StyledSlider", componentRole: slidersSample },
-                    { textRole: "NumberInputField", componentRole: numberInputFieldSample },
-                    { textRole: "TimeInputField", componentRole: timeInputFieldSample },
-                    { textRole: "ValueList", componentRole: valueListSample },
-                    { textRole: "StyledBusyIndicator", componentRole: styledBusyIndicatorSample },
-                    { textRole: "DialogButtonBox", componentRole: dialogButtonBoxSample }
+                    {
+                        textRole: "Dropdown",
+                        componentRole: dropdownSample
+                    },
+                    {
+                        textRole: "StyledPopup",
+                        componentRole: styledPopupViewComponent
+                    },
+                    {
+                        textRole: "StyledMenu",
+                        componentRole: styledMenuComponent
+                    },
+                    {
+                        textRole: "StyledMenuScrollable",
+                        componentRole: styledScrollableMenuComponent
+                    },
+                    {
+                        textRole: "CheckBox",
+                        componentRole: checkBoxSample
+                    },
+                    {
+                        textRole: "VisibilityBox",
+                        componentRole: visibilityBoxSample
+                    },
+                    {
+                        textRole: "ColorPicker",
+                        componentRole: colorPickerSample
+                    },
+                    {
+                        textRole: "ExpandableBlank",
+                        componentRole: expandableBlankSample
+                    },
+                    {
+                        textRole: "FlatButton",
+                        componentRole: flatButtonSample
+                    },
+                    {
+                        textRole: "ProgressButton",
+                        componentRole: progressButtonSample
+                    },
+                    {
+                        textRole: "RadioButtonGroup + FlatRadioButton",
+                        componentRole: flatRadioButtonSample
+                    },
+                    {
+                        textRole: "RoundedRadioButton",
+                        componentRole: roundedRadioButtonSample
+                    },
+                    {
+                        textRole: "IncrementalPropertyControl (Hidden icon, Icon left, Icon right)",
+                        componentRole: incrementalPropertyControlSample
+                    },
+                    {
+                        textRole: "FlatToggleButton",
+                        componentRole: flatToggleButtonSample
+                    },
+                    {
+                        textRole: "ToggleButton",
+                        componentRole: toggleButtonSample
+                    },
+                    {
+                        textRole: "RoundedRectangle (which allows to round the particular corners)",
+                        componentRole: roundedRectangleSample
+                    },
+                    {
+                        textRole: "TextInputField",
+                        componentRole: textInputFieldSample
+                    },
+                    {
+                        textRole: "SearchField",
+                        componentRole: searchFieldSample
+                    },
+                    {
+                        textRole: "FilePicker",
+                        componentRole: filePickerSample
+                    },
+                    {
+                        textRole: "DirectoriesPicker",
+                        componentRole: directoriesPickerSample
+                    },
+                    {
+                        textRole: "StyledTabBar",
+                        componentRole: tabBarSample
+                    },
+                    {
+                        textRole: "PageTabButton",
+                        componentRole: pageTabButtonsSample
+                    },
+                    {
+                        textRole: "GridView",
+                        componentRole: gridViewVertical
+                    },
+                    {
+                        textRole: "StyledSlider",
+                        componentRole: slidersSample
+                    },
+                    {
+                        textRole: "NumberInputField",
+                        componentRole: numberInputFieldSample
+                    },
+                    {
+                        textRole: "TimeInputField",
+                        componentRole: timeInputFieldSample
+                    },
+                    {
+                        textRole: "ValueList",
+                        componentRole: valueListSample
+                    },
+                    {
+                        textRole: "StyledBusyIndicator",
+                        componentRole: styledBusyIndicatorSample
+                    },
+                    {
+                        textRole: "DialogButtonBox",
+                        componentRole: dialogButtonBoxSample
+                    }
                 ]
 
                 delegate: Column {
@@ -86,7 +173,9 @@ Rectangle {
                         sourceComponent: modelData["componentRole"]
                     }
 
-                    SeparatorLine { anchors.margins: -18}
+                    SeparatorLine {
+                        anchors.margins: -18
+                    }
                 }
             }
         }
@@ -96,7 +185,7 @@ Rectangle {
         id: dropdownSample
 
         Row {
-            spacing: 16
+            spacing: ui.theme.extra.spacing_xl
 
             NavigationPanel {
                 id: dropdownNav
@@ -116,13 +205,16 @@ Rectangle {
                     var items = []
 
                     for (var i = 0; i < 40; i++) {
-                        items.push({text: i + " Option", value: i})
+                        items.push({
+                            text: i + " Option",
+                            value: i
+                        })
                     }
 
                     return items
                 }
 
-                onActivated: function(index, value) {
+                onActivated: function (index, value) {
                     currentIndex = index
                 }
             }
@@ -138,13 +230,16 @@ Rectangle {
                     var items = []
 
                     for (var i = 0; i < 10; i++) {
-                        items.push({text: i + " Option", value: i})
+                        items.push({
+                            text: i + " Option",
+                            value: i
+                        })
                     }
 
                     return items
                 }
 
-                onActivated: function(index, value) {
+                onActivated: function (index, value) {
                     currentIndex = index
                 }
             }
@@ -155,7 +250,7 @@ Rectangle {
         id: styledPopupViewComponent
 
         Row {
-            spacing: 12
+            spacing: ui.theme.extra.spacing_l
 
             FlatButton {
                 text: "Show PopupView"
@@ -172,7 +267,7 @@ Rectangle {
 
                     Column {
                         id: layout
-                        spacing: 12
+                        spacing: ui.theme.extra.spacing_l
                         anchors.fill: parent
 
                         CheckBox {
@@ -202,31 +297,90 @@ Rectangle {
         id: styledMenuComponent
 
         Row {
-            spacing: 12
+            spacing: ui.theme.extra.spacing_l
 
             FlatButton {
                 text: "Show Menu"
 
                 onClicked: {
                     var _subitems = [
-                                {id: "2", icon: IconCode.PAGE, title: "first action", enabled: true},
-                                {id: "3", icon: IconCode.PAGE, title: "with subitems", enabled: true, subitems: [
-                                        {id: "4", title: "first action", enabled: true, selectable: true},
-                                        {id: "5", title: "second action", enabled: true, selectable: true, selected: true},
-                                        {id: "6", title: "third action", enabled: true, selectable: true},
-                                        {},
-                                        {id: "7", title: "clear"}
-                                    ]}
+                        {
+                            id: "2",
+                            icon: IconCode.PAGE,
+                            title: "first action",
+                            enabled: true
+                        },
+                        {
+                            id: "3",
+                            icon: IconCode.PAGE,
+                            title: "with subitems",
+                            enabled: true,
+                            subitems: [
+                                {
+                                    id: "4",
+                                    title: "first action",
+                                    enabled: true,
+                                    selectable: true
+                                },
+                                {
+                                    id: "5",
+                                    title: "second action",
+                                    enabled: true,
+                                    selectable: true,
+                                    selected: true
+                                },
+                                {
+                                    id: "6",
+                                    title: "third action",
+                                    enabled: true,
+                                    selectable: true
+                                },
+                                {},
+                                {
+                                    id: "7",
+                                    title: "clear"
+                                }
                             ]
+                        }
+                    ]
 
                     var items = [
-                                {id: "00", icon: IconCode.PAGE, title: "enabled action", enabled: true},
-                                {id: "01", icon: IconCode.AMBITUS, title: "with subitems", enabled: true, shortcut: "Ctrl+A", subitems: _subitems },
-                                {},
-                                {id: "02", title: "with shortcut", enabled: true, shortcut: "Ctrl+Shift+G"},
-                                {id: "03", icon: IconCode.PAGE, title: "disabled action", enabled: false},
-                                {id: "04", icon: IconCode.CLEF_BASS, title: "checkable action", enabled: true, checkable: true, checked: true}
-                            ]
+                        {
+                            id: "00",
+                            icon: IconCode.PAGE,
+                            title: "enabled action",
+                            enabled: true
+                        },
+                        {
+                            id: "01",
+                            icon: IconCode.AMBITUS,
+                            title: "with subitems",
+                            enabled: true,
+                            shortcut: "Ctrl+A",
+                            subitems: _subitems
+                        },
+                        {},
+                        {
+                            id: "02",
+                            title: "with shortcut",
+                            enabled: true,
+                            shortcut: "Ctrl+Shift+G"
+                        },
+                        {
+                            id: "03",
+                            icon: IconCode.PAGE,
+                            title: "disabled action",
+                            enabled: false
+                        },
+                        {
+                            id: "04",
+                            icon: IconCode.CLEF_BASS,
+                            title: "checkable action",
+                            enabled: true,
+                            checkable: true,
+                            checked: true
+                        }
+                    ]
 
                     menuLoader.toggleOpened(items)
                 }
@@ -234,7 +388,7 @@ Rectangle {
                 StyledMenuLoader {
                     id: menuLoader
 
-                    onHandleMenuItem: function(itemId) {
+                    onHandleMenuItem: function (itemId) {
                         console.log("selected " + itemId)
                     }
                 }
@@ -246,7 +400,7 @@ Rectangle {
         id: styledScrollableMenuComponent
 
         Row {
-            spacing: 12
+            spacing: ui.theme.extra.spacing_l
 
             FlatButton {
                 text: "Show Scrollable Menu"
@@ -255,7 +409,12 @@ Rectangle {
                     var items = []
 
                     for (var i = 0; i < 100; i++) {
-                        items.push({id: i, icon: IconCode.PAGE, title: "some action", enabled: true})
+                        items.push({
+                            id: i,
+                            icon: IconCode.PAGE,
+                            title: "some action",
+                            enabled: true
+                        })
                     }
 
                     menuLoader.toggleOpened(items)
@@ -264,7 +423,7 @@ Rectangle {
                 StyledMenuLoader {
                     id: menuLoader
 
-                    onHandleMenuItem: function(itemId) {
+                    onHandleMenuItem: function (itemId) {
                         console.log("selected " + itemId)
                     }
                 }
@@ -289,7 +448,7 @@ Rectangle {
         id: visibilityBoxSample
 
         Column {
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             width: 200
 
@@ -311,7 +470,7 @@ Rectangle {
 
             color: "black"
 
-            onNewColorSelected: function(newColor) {
+            onNewColorSelected: function (newColor) {
                 color = newColor
             }
         }
@@ -344,7 +503,7 @@ Rectangle {
         id: flatButtonSample
 
         Column {
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
             width: 200
 
             FlatButton {
@@ -441,7 +600,7 @@ Rectangle {
         id: flatRadioButtonSample
 
         Column {
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             width: 200
 
@@ -453,9 +612,18 @@ Rectangle {
                 height: 30
 
                 model: [
-                    { iconRole: IconCode.SETTINGS_COG, valueRole: 0 },
-                    { iconRole: IconCode.ARROW_DOWN, valueRole: 1 },
-                    { iconRole: IconCode.ARROW_UP, valueRole: 2 }
+                    {
+                        iconRole: IconCode.SETTINGS_COG,
+                        valueRole: 0
+                    },
+                    {
+                        iconRole: IconCode.ARROW_DOWN,
+                        valueRole: 1
+                    },
+                    {
+                        iconRole: IconCode.ARROW_UP,
+                        valueRole: 2
+                    }
                 ]
 
                 delegate: FlatRadioButton {
@@ -478,9 +646,18 @@ Rectangle {
                 height: 30
 
                 model: [
-                    { textRole: "Text 1", valueRole: 0 },
-                    { textRole: "Text 2", valueRole: 1 },
-                    { textRole: "Text 3", valueRole: 2 }
+                    {
+                        textRole: "Text 1",
+                        valueRole: 0
+                    },
+                    {
+                        textRole: "Text 2",
+                        valueRole: 1
+                    },
+                    {
+                        textRole: "Text 3",
+                        valueRole: 2
+                    }
                 ]
 
                 delegate: FlatRadioButton {
@@ -501,10 +678,10 @@ Rectangle {
         id: dialogButtonBoxSample
 
         Column {
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             Row {
-                spacing: 8
+                spacing: ui.theme.extra.spacing_m
                 anchors.right: parent.right
 
                 FlatButton {
@@ -562,7 +739,7 @@ Rectangle {
         id: roundedRadioButtonSample
 
         Row {
-            spacing: 12
+            spacing: ui.theme.extra.spacing_l
 
             RoundedRadioButton {
                 text: "Option 1"
@@ -582,7 +759,7 @@ Rectangle {
         id: incrementalPropertyControlSample
 
         Column {
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             width: 200
 
@@ -593,7 +770,7 @@ Rectangle {
                 minValue: 0
                 step: 0.5
 
-                onValueEdited: function(newValue) {
+                onValueEdited: function (newValue) {
                     currentValue = newValue
                 }
             }
@@ -608,7 +785,7 @@ Rectangle {
                 minValue: 0
                 step: 0.5
 
-                onValueEdited: function(newValue) {
+                onValueEdited: function (newValue) {
                     currentValue = newValue
                 }
             }
@@ -622,7 +799,7 @@ Rectangle {
                 minValue: 0
                 step: 0.5
 
-                onValueEdited: function(newValue) {
+                onValueEdited: function (newValue) {
                     currentValue = newValue
                 }
             }
@@ -737,7 +914,7 @@ Rectangle {
 
             path: "/some/test/path/foo.txt"
 
-            onPathEdited: function(newPath) {
+            onPathEdited: function (newPath) {
                 path = newPath
             }
         }
@@ -753,7 +930,7 @@ Rectangle {
 
             path: "/some/test/path1;/some/test/path2"
 
-            onPathEdited: function(newPath) {
+            onPathEdited: function (newPath) {
                 path = newPath
             }
         }
@@ -769,7 +946,7 @@ Rectangle {
             StyledTabBar {
                 id: tabBar
                 width: parent.width
-                spacing: 12
+                spacing: ui.theme.extra.spacing_l
 
                 StyledTabButton {
                     fillWidth: true
@@ -953,7 +1130,7 @@ Rectangle {
         id: slidersSample
 
         Column {
-            spacing: 12
+            spacing: ui.theme.extra.spacing_l
 
             StyledSlider {
                 value: 0.25

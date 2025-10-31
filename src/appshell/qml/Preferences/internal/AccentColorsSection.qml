@@ -39,7 +39,7 @@ Row {
         direction: NavigationPanel.Horizontal
         accessible.name: titleLabel.text
 
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }
@@ -51,7 +51,7 @@ Row {
     signal accentColorChangeRequested(var newColorIndex)
 
     height: colorsList.height
-    spacing: 12
+    spacing: ui.theme.extra.spacing_l
 
     StyledTextLabel {
         id: titleLabel
@@ -70,7 +70,7 @@ Row {
 
         sampleSize: 30
 
-        onAccentColorChangeRequested: function(newColorIndex) {
+        onAccentColorChangeRequested: function (newColorIndex) {
             root.accentColorChangeRequested(newColorIndex)
         }
     }

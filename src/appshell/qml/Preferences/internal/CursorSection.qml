@@ -11,7 +11,7 @@ BaseSection {
     id: root
 
     title: qsTrc("appshell/preferences", "Move cursor along the timeline during playback")
-    spacing: 16
+    spacing: ui.theme.extra.spacing_xl
 
     property var playbackPreferencesModel: null
 
@@ -32,7 +32,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 0
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             playbackPreferencesModel.setShortSkip(newValue)
         }
     }
@@ -52,7 +52,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 1
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             playbackPreferencesModel.setLongSkip(newValue)
         }
     }

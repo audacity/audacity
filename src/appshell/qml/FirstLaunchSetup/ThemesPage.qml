@@ -94,7 +94,7 @@ Page {
             Layout.alignment: Qt.AlignCenter
 
             height: childrenRect.height
-            spacing: 16
+            spacing: ui.theme.extra.spacing_xl
 
             CheckBox {
                 Layout.alignment: Qt.AlignCenter

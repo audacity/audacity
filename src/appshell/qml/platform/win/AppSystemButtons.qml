@@ -31,11 +31,11 @@ Row {
 
     property bool windowIsMiximized: false
 
-    spacing: 8
+    spacing: ui.theme.extra.spacing_m
 
-    signal showWindowMinimizedRequested()
-    signal toggleWindowMaximizedRequested()
-    signal closeWindowRequested()
+    signal showWindowMinimizedRequested
+    signal toggleWindowMaximizedRequested
+    signal closeWindowRequested
 
     FlatButton {
         id: minimizeButton

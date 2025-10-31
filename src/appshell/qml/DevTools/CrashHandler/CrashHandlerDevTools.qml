@@ -19,7 +19,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.margins: 12
 
-        spacing: 12
+        spacing: ui.theme.extra.spacing_l
 
         Rectangle {
             readonly property real padding: 12
@@ -36,7 +36,7 @@ Rectangle {
                 id: hintLabel
                 anchors.fill: parent
                 anchors.margins: parent.padding
-                spacing: 4
+                spacing: ui.theme.extra.spacing_s
 
                 StyledIconLabel {
                     iconCode: IconCode.WARNING

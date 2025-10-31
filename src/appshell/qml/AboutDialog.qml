@@ -76,7 +76,7 @@ StyledDialogView {
             }
 
             Column {
-                spacing: 8
+                spacing: ui.theme.extra.spacing_m
                 Layout.fillWidth: true
 
                 StyledTextLabel {
@@ -86,7 +86,7 @@ StyledDialogView {
                 }
 
                 Row {
-                    spacing: 4
+                    spacing: ui.theme.extra.spacing_s
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     StyledTextLabel {
@@ -108,15 +108,12 @@ StyledDialogView {
             StyledTextLabel {
                 Layout.fillWidth: true
                 text: {
-                    let museScoreUrl = aboutModel.museScoreUrl()
+                    let museScoreUrl = aboutModel.museScoreUrl();
 
                     //: %1 will be a link to the MuseScore website
-                    let line1 = qsTrc("appshell/about", "Visit %1 for new versions and more information.")
-                                .arg(`<a href="${museScoreUrl.url}">${museScoreUrl.displayName}</a>`)
+                    let line1 = qsTrc("appshell/about", "Visit %1 for new versions and more information.").arg(`<a href="${museScoreUrl.url}">${museScoreUrl.displayName}</a>`)
 
-                    let line2 = qsTrc("appshell/about", "Get <a href=\"%1\">help</a> with the program or <a href=\"%2\">contribute</a> to its development.")
-                                .arg(aboutModel.museScoreForumUrl().url)
-                                .arg(aboutModel.museScoreContributionUrl().url)
+                    let line2 = qsTrc("appshell/about", "Get <a href=\"%1\">help</a> with the program or <a href=\"%2\">contribute</a> to its development.").arg(aboutModel.museScoreForumUrl().url).arg(aboutModel.museScoreContributionUrl().url)
 
                     return line1 + "<br>" + line2
                 }
@@ -127,8 +124,7 @@ StyledDialogView {
             StyledTextLabel {
                 Layout.fillWidth: true
 
-                text: qsTrc("appshell/about", "For privacy information, see our <a href=\"%1\">privacy policy</a>.")
-                      .arg(aboutModel.museScorePrivacyPolicyUrl().url)
+                text: qsTrc("appshell/about", "For privacy information, see our <a href=\"%1\">privacy policy</a>.").arg(aboutModel.museScorePrivacyPolicyUrl().url)
 
                 wrapMode: Text.WordWrap
                 maximumLineCount: 3
@@ -136,9 +132,7 @@ StyledDialogView {
 
             StyledTextLabel {
                 Layout.fillWidth: true
-                text: qsTrc("appshell/about", "Copyright © 1999-2024 MuseScore BVBA and others.\nPublished under the <a href=\"%1\">GNU General Public License version 3</a>.")
-                      .arg("https://www.gnu.org/licenses/gpl-3.0.html")
-                      .replace("\n", "<br>")
+                text: qsTrc("appshell/about", "Copyright © 1999-2024 MuseScore BVBA and others.\nPublished under the <a href=\"%1\">GNU General Public License version 3</a>.").arg("https://www.gnu.org/licenses/gpl-3.0.html").replace("\n", "<br>")
 
                 wrapMode: Text.WordWrap
                 maximumLineCount: 3
@@ -150,7 +144,7 @@ StyledDialogView {
             Layout.rightMargin: 16
             Layout.bottomMargin: 16
 
-            spacing: 12
+            spacing: ui.theme.extra.spacing_l
 
             FlatButton {
                 text: qsTrc("global", "OK")

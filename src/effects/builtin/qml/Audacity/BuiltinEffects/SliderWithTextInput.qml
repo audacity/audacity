@@ -13,16 +13,16 @@ Column {
     property alias measureUnitsSymbol: incrementalPropertyControl.measureUnitsSymbol
     property double step: {
         if (decimals <= 0) {
-            return 1;
+            return 1
         }
-        const val = "0." + "0".repeat(decimals - 1) + "1";
-        return parseFloat(val);
+        const val = "0." + "0".repeat(decimals - 1) + "1"
+        return parseFloat(val)
     }
 
     signal newValueRequested(double newValue)
 
     height: implicitHeight
-    spacing: 8
+    spacing: ui.theme.extra.spacing_m
 
     StyledTextLabel {
         id: label
@@ -31,7 +31,7 @@ Column {
     Row {
 
         width: parent.width - spacing
-        spacing: 16
+        spacing: ui.theme.extra.spacing_xl
 
         StyledSlider {
             id: slider
@@ -62,7 +62,7 @@ Column {
 
             currentValue: (slider.value).toFixed(decimals)
 
-            onValueEdited: function(newValue) {
+            onValueEdited: function (newValue) {
                 newValue = +(newValue.toFixed(decimals))
                 if (newValue !== root.value) {
                     root.newValueRequested(newValue)

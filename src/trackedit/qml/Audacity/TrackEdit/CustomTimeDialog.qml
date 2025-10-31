@@ -9,7 +9,6 @@ import Muse.UiComponents 1.0
 
 import Audacity.Playback
 
-
 StyledDialogView {
     id: root
 
@@ -24,7 +23,7 @@ StyledDialogView {
         id: timeRow
 
         anchors.fill: parent
-        spacing: 16
+        spacing: ui.theme.extra.spacing_xl
 
         Item {
 
@@ -55,7 +54,6 @@ StyledDialogView {
                 }
             }
         }
-
     }
 
     ButtonBox {
@@ -63,9 +61,9 @@ StyledDialogView {
         width: parent.width
         anchors.bottom: parent.bottom
 
-        buttons: [ ButtonBoxModel.Cancel, ButtonBoxModel.Ok]
+        buttons: [ButtonBoxModel.Cancel, ButtonBoxModel.Ok]
 
-        onStandardButtonClicked: function(buttonId) {
+        onStandardButtonClicked: function (buttonId) {
             switch (buttonId) {
             case ButtonBoxModel.Cancel:
                 root.reject()
@@ -77,7 +75,6 @@ StyledDialogView {
                 }
                 root.hide()
                 return
-
             }
         }
     }

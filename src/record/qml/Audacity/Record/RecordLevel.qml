@@ -57,7 +57,7 @@ FlatButton {
         }
     }
 
-    onClicked: function(mouse) {
+    onClicked: function (mouse) {
         togglePopupOpened()
     }
 
@@ -82,7 +82,6 @@ FlatButton {
         readonly property int contentHeight: 174 - 2 * margins
 
         readonly property int margins: 12
-        readonly property int spacing: 8
         readonly property int checkboxSpacing: 20
 
         readonly property int meterHeight: 50
@@ -95,7 +94,7 @@ FlatButton {
     }
 
     Component.onCompleted: {
-        meterModel.init();
+        meterModel.init()
     }
 
     StyledPopupView {
@@ -122,7 +121,7 @@ FlatButton {
 
             anchors.fill: parent
 
-            spacing: viewModel.spacing
+            spacing: ui.theme.extra.spacing_m
 
             StyledTextLabel {
                 anchors.left: parent.left
@@ -193,13 +192,13 @@ FlatButton {
                         meterModel: meterModel
 
                         anchors.left: parent.left
-                        anchors.leftMargin: -handleWidth/2
+                        anchors.leftMargin: -handleWidth / 2
                         anchors.right: parent.right
-                        anchors.rightMargin: -handleWidth/2 + leftVolumePressure.overloadWidth
+                        anchors.rightMargin: -handleWidth / 2 + leftVolumePressure.overloadWidth
                         anchors.top: parent.top
                         anchors.topMargin: -1
 
-                        onVolumeLevelMoved: function(level) {
+                        onVolumeLevelMoved: function (level) {
                             root.volumeLevelChangeRequested(Math.round(level * 100) / 100)
                         }
                     }
@@ -266,7 +265,6 @@ FlatButton {
                     }
                 }
             }
-
         }
     }
 }

@@ -66,11 +66,11 @@ StyledDialogView {
         direction: NavigationPanel.Horizontal
         accessible.role: MUAccessible.Dialog
 
-        onNavigationEvent: function(event) {
+        onNavigationEvent: function (event) {
             if (event.type === NavigationEvent.AboutActive) {
                 var btn = buttonBox.firstFocusBtn
                 if (Boolean(btn) && btn.enabled) {
-                    event.setData("controlIndex", [ btn.navigation.row, btn.navigation.column ])
+                    event.setData("controlIndex", [btn.navigation.row, btn.navigation.column])
                 }
             } else {
                 buttonBox.restoreAccessibility()
@@ -107,7 +107,7 @@ StyledDialogView {
             id: header
 
             width: parent.width
-            spacing: 16
+            spacing: ui.theme.extra.spacing_xl
 
             StyledTextLabel {
                 id: titleInfo
@@ -174,13 +174,16 @@ StyledDialogView {
             ButtonBox {
                 id: buttonBox
 
-                buttons: [ ButtonBoxModel.No, ButtonBoxModel.Yes ]
+                buttons: [ButtonBoxModel.No, ButtonBoxModel.Yes]
 
                 navigationPanel: buttonsPanel
                 isAccessibilityDisabledWhenInit: true
 
-                onStandardButtonClicked: function(buttonId) {
-                    root.done({ share: buttonId === ButtonBoxModel.Yes, remember: checkbox.checked })
+                onStandardButtonClicked: function (buttonId) {
+                    root.done({
+                        share: buttonId === ButtonBoxModel.Yes,
+                        remember: checkbox.checked
+                    })
                 }
             }
         }

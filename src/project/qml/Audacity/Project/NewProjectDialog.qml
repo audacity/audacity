@@ -88,13 +88,11 @@ StyledDialogView {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 16
 
-        spacing: 12
+        spacing: ui.theme.extra.spacing_l
 
         StyledTextLabel {
             id: descriptionLabel
-            text: pagesStack.currentIndex === 0
-                  ? chooseInstrumentsAndTemplatePage.description
-                  : ""
+            text: pagesStack.currentIndex === 0 ? chooseInstrumentsAndTemplatePage.description : ""
 
             Layout.fillWidth: true
             Layout.maximumHeight: buttonBox.height

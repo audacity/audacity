@@ -54,7 +54,7 @@ StyledDialogView {
         ColumnLayout {
             Layout.leftMargin: 16
 
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             StyledTextLabel {
                 Layout.fillWidth: true
@@ -100,7 +100,7 @@ StyledDialogView {
         ColumnLayout {
             Layout.leftMargin: 16
 
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             StyledTextLabel {
                 Layout.fillWidth: true

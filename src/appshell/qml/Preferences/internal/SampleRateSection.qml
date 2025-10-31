@@ -29,7 +29,7 @@ BaseSection {
     id: root
 
     title: qsTrc("appshell/preferences", "Sample rate")
-    spacing: 16
+    spacing: ui.theme.extra.spacing_xl
 
     property var apiModel: null
 
@@ -38,7 +38,7 @@ BaseSection {
     }
 
     Row {
-        spacing: 8
+        spacing: ui.theme.extra.spacing_m
 
         ComboBoxWithTitle {
             title: qsTrc("appshell/preferences", "Default sample rate")
@@ -54,7 +54,7 @@ BaseSection {
             navigation.row: 1
             navigation.column: 0
 
-            onValueEdited: function(newIndex, newValue) {
+            onValueEdited: function (newIndex, newValue) {
                 apiModel.defaultSampleRateSelected(newValue)
             }
         }
@@ -75,7 +75,7 @@ BaseSection {
             navigation.row: 1
             navigation.column: 1
 
-            onValueEdited: function(newValue) {
+            onValueEdited: function (newValue) {
                 apiModel.defaultSampleRateValueSelected(newValue)
             }
         }
@@ -94,7 +94,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 2
 
-        onValueEdited: function(newIndex, newValue) {
+        onValueEdited: function (newIndex, newValue) {
             apiModel.defaultSampleFormatSelected(newValue)
         }
     }
@@ -107,6 +107,5 @@ BaseSection {
         horizontalAlignment: Text.AlignLeft
 
         wrapMode: Text.WordWrap
-
     }
 }

@@ -14,7 +14,7 @@ Column {
         name: "SpeedSection"
         accessible.name: sectionTitle.text
 
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 speedProperty.requestActiveFocus()
             }
@@ -22,9 +22,9 @@ Column {
     }
     property int navigationRowStart: 0
 
-    spacing: 12
+    spacing: ui.theme.extra.spacing_l
 
-    function requestActiveFocus(){
+    function requestActiveFocus() {
         speedProperty.requestActiveFocus()
     }
 
@@ -61,7 +61,7 @@ Column {
         navigationPanel: root.navigationPanel
         navigationRowStart: root.navigationRowStart
 
-        onValueChanged: function(newValue){
+        onValueChanged: function (newValue) {
             root.valueChanged(newValue)
         }
     }

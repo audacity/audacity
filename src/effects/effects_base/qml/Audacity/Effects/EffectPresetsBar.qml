@@ -18,7 +18,7 @@ RowLayout {
 
     property var parentWindow: null
 
-    spacing: 4
+    spacing: ui.theme.extra.spacing_s
 
     function manage(button) {
         var pos = Qt.point(button.x, button.y + button.height)
@@ -70,8 +70,7 @@ RowLayout {
 
         onActivated: function (index, value) {
             manageMenuModel.preset = value
-            currentIndex = manageMenuModel.presets.findIndex(
-                        preset => preset.id === value)
+            currentIndex = manageMenuModel.presets.findIndex(preset => preset.id === value)
         }
     }
 

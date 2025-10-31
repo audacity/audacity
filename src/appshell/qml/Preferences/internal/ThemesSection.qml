@@ -62,14 +62,14 @@ BaseSection {
             navigationPanel: root.navigation
             navigationRow: 0
 
-            onThemeChangeRequested: function(newThemeCode) {
+            onThemeChangeRequested: function (newThemeCode) {
                 root.themeChangeRequested(newThemeCode)
             }
         }
 
         Column {
             width: parent.width
-            spacing: 12
+            spacing: ui.theme.extra.spacing_l
 
             CheckBox {
                 id: followSystemThemeCheckBox
@@ -117,7 +117,7 @@ BaseSection {
         navigation.section: root.navigation.section
         navigation.order: root.navigation.order + 1
 
-        onAccentColorChangeRequested: function(newColorIndex) {
+        onAccentColorChangeRequested: function (newColorIndex) {
             root.accentColorChangeRequested(newColorIndex)
         }
 

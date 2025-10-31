@@ -44,7 +44,7 @@ FocusScope {
         name: "Extensions"
         enabled: root.enabled && root.visible
         order: 3
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }
@@ -88,7 +88,7 @@ FocusScope {
         RowLayout {
             width: parent.width
 
-            spacing: 12
+            spacing: ui.theme.extra.spacing_l
 
             StyledTextLabel {
                 id: pageTitle
@@ -131,14 +131,20 @@ FocusScope {
 
                 function initModel() {
                     var categories = pluginsPage.categories()
-                    var result = []
+                    var result = [];
 
                     //: The title of an option to display the plugins from all categories.
-                    result.push({ "text": qsTrc("appshell", "All"), "value": allCategoryValue })
+                    result.push({
+                        "text": qsTrc("appshell", "All"),
+                        "value": allCategoryValue
+                    })
 
                     for (var i = 0; i < categories.length; ++i) {
                         var category = categories[i]
-                        result.push({ "text": category.title, "value": category.code })
+                        result.push({
+                            "text": category.title,
+                            "value": category.code
+                        })
                     }
 
                     model = result
@@ -148,7 +154,7 @@ FocusScope {
                     initModel()
                 }
 
-                onActivated: function(index, value) {
+                onActivated: function (index, value) {
                     currentIndex = index
                 }
             }

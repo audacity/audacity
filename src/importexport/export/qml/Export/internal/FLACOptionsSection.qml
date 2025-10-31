@@ -6,7 +6,6 @@ import QtQuick.Layouts
 
 import Muse.UiComponents
 
-
 ColumnLayout {
     id: root
 
@@ -27,7 +26,7 @@ ColumnLayout {
         ColumnLayout {
 
             Layout.fillWidth: true
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             RowLayout {
 
@@ -51,7 +50,7 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.compression
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         ffmpegPrefModel.setCompression(newValue)
                     }
                 }
@@ -79,7 +78,7 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.lpc
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         ffmpegPrefModel.setLpc(newValue)
                     }
                 }
@@ -107,7 +106,7 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.minPdO
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         ffmpegPrefModel.setMinPdO(newValue)
                     }
                 }
@@ -135,7 +134,7 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.minPtO
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         ffmpegPrefModel.setMinPtO(newValue)
                     }
                 }
@@ -150,7 +149,7 @@ ColumnLayout {
 
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             RowLayout {
 
@@ -174,11 +173,10 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.frameSize
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         ffmpegPrefModel.setFrameSize(newValue)
                     }
                 }
-
             }
 
             RowLayout {
@@ -197,7 +195,7 @@ ColumnLayout {
 
                     currentIndex: indexOfValue(ffmpegPrefModel.pdOMethod)
 
-                    onActivated: function(index, value) {
+                    onActivated: function (index, value) {
                         ffmpegPrefModel.setPdOMethod(index)
                     }
                 }
@@ -222,7 +220,7 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.maxPdO
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         ffmpegPrefModel.setMaxPdO(newValue)
                     }
                 }
@@ -247,7 +245,7 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.maxPtO
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         ffmpegPrefModel.setMaxPtO(newValue)
                     }
                 }

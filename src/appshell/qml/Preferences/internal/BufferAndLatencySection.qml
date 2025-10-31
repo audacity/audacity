@@ -29,7 +29,7 @@ BaseSection {
     id: root
 
     title: qsTrc("appshell/preferences", "Buffer and latency")
-    spacing: 16
+    spacing: ui.theme.extra.spacing_xl
 
     property var apiModel: null
 
@@ -54,7 +54,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 1
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             apiModel.bufferLengthSelected(newValue)
         }
     }
@@ -76,7 +76,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 2
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             apiModel.latencyCompensationSelected(newValue)
         }
     }

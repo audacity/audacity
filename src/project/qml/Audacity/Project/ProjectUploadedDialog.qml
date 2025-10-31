@@ -83,11 +83,7 @@ StyledDialogView {
                 accessibleParent: buttonsNavPanel.accessible
                 visualItem: content
                 role: MUAccessible.Button
-                name: "%1; %2; %3; %4; %5".arg(titleLabel.text)
-                                          .arg(subtitleLabel.text)
-                                          .arg(publishTitleLabel.text)
-                                          .arg(repeater.contentText())
-                                          .arg(watchVideoButton.text)
+                name: "%1; %2; %3; %4; %5".arg(titleLabel.text).arg(subtitleLabel.text).arg(publishTitleLabel.text).arg(repeater.contentText()).arg(watchVideoButton.text)
 
                 function readInfo() {
                     accessibleInfo.ignored = false
@@ -168,7 +164,7 @@ StyledDialogView {
                         Column {
                             Layout.fillWidth: true
 
-                            spacing: 12
+                            spacing: ui.theme.extra.spacing_l
 
                             Repeater {
                                 id: repeater
@@ -183,11 +179,7 @@ StyledDialogView {
                                     return result
                                 }
 
-                                model: [
-                                    qsTrc("project", "Create a portfolio to showcase your music"),
-                                    qsTrc("project", "Gain followers and receive project comments and ratings"),
-                                    qsTrc("project", "Share your projects and collaborate with other musicians")
-                                ]
+                                model: [qsTrc("project", "Create a portfolio to showcase your music"), qsTrc("project", "Gain followers and receive project comments and ratings"), qsTrc("project", "Share your projects and collaborate with other musicians")]
 
                                 RowLayout {
                                     width: parent.width
@@ -254,7 +246,7 @@ StyledDialogView {
                     navigation.column: 2
 
                     onClicked: {
-                        Qt.callLater(function() {
+                        Qt.callLater(function () {
                             api.launcher.openUrl(root.projectManagerUrl)
                         })
 

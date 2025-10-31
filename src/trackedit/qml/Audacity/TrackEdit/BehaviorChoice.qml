@@ -17,7 +17,7 @@ Column {
 
     signal toggled
 
-    spacing: 16
+    spacing: ui.theme.extra.spacing_xl
 
     ClipImageButton {
         id: imageBtn

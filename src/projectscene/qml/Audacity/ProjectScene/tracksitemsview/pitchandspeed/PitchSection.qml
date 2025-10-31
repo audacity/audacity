@@ -13,7 +13,7 @@ Column {
         name: "PitchSection"
         accessible.name: sectionTitle.text
 
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 semitonesProperty.requestActiveFocus()
             }
@@ -21,14 +21,14 @@ Column {
     }
     property int navigationRowStart: 0
 
-    spacing: 12
+    spacing: ui.theme.extra.spacing_l
 
-    function requestActiveFocus(){
+    function requestActiveFocus() {
         semitonesProperty.requestActiveFocus()
     }
 
-    signal incrementRequested()
-    signal decrementRequested()
+    signal incrementRequested
+    signal decrementRequested
 
     signal valueChanged(var newValue)
 
@@ -78,18 +78,18 @@ Column {
             property int incOrDecPitchValueForApply: 0
 
             canIncrease: currentValue <= Math.trunc(prv.pitchMaxValue / 100)
-            onIncrement: function(){
+            onIncrement: function () {
                 incOrDecPitchValueForApply = root.pitch + 100
                 return Math.trunc(incOrDecPitchValueForApply / 100)
             }
 
             canDecrease: currentValue >= Math.trunc(prv.pitchMinValue / 100)
-            onDecrement: function(){
+            onDecrement: function () {
                 incOrDecPitchValueForApply = root.pitch - 100
                 return Math.trunc(incOrDecPitchValueForApply / 100)
             }
 
-            onValueChanged: function(newValue){
+            onValueChanged: function (newValue) {
                 if (incOrDecPitchValueForApply !== 0) {
                     root.valueChanged(incOrDecPitchValueForApply)
                     incOrDecPitchValueForApply = 0
@@ -125,18 +125,18 @@ Column {
             property int incOrDecPitchValueForApply: 0
 
             canIncrease: root.pitch < prv.pitchMaxValue
-            onIncrement: function(){
+            onIncrement: function () {
                 incOrDecPitchValueForApply = root.pitch + 1
                 return Math.abs(incOrDecPitchValueForApply % 100)
             }
 
             canDecrease: root.pitch > prv.pitchMinValue
-            onDecrement: function(){
+            onDecrement: function () {
                 incOrDecPitchValueForApply = root.pitch - 1
                 return incOrDecPitchValueForApply % 100
             }
 
-            onValueChanged: function(newValue){
+            onValueChanged: function (newValue) {
                 if (incOrDecPitchValueForApply !== 0) {
                     root.valueChanged(incOrDecPitchValueForApply)
                     incOrDecPitchValueForApply = 0

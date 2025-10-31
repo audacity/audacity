@@ -13,7 +13,7 @@ Column {
         name: "GeneralSection"
         accessible.name: sectionTitle.text
 
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 optimizeCheckBox.requestActiveFocus()
             }
@@ -21,7 +21,7 @@ Column {
     }
     property int navigationRowStart: 0
 
-    spacing: 12
+    spacing: ui.theme.extra.spacing_l
 
     signal valueChanged(var newValue)
 

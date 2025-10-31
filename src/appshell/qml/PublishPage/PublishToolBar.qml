@@ -58,7 +58,7 @@ Rectangle {
         orientation: Qt.Horizontal
         interactive: false
 
-        spacing: 8
+        spacing: ui.theme.extra.spacing_m
 
         model: toolBarModel
 

@@ -21,7 +21,7 @@ BuiltinEffectBase {
     Column {
         id: column
 
-        spacing: 16
+        spacing: ui.theme.extra.spacing_xl
         bottomPadding: 16
 
         Row {
@@ -71,7 +71,7 @@ BuiltinEffectBase {
         }
 
         Row {
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             CheckBox {
                 checked: root.model.normalizeStereoChannelsIndependently
@@ -87,7 +87,7 @@ BuiltinEffectBase {
         }
 
         Row {
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             CheckBox {
                 enabled: !root.model.useRmsAlgorithm

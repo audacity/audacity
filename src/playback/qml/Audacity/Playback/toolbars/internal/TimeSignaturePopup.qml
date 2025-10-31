@@ -17,16 +17,16 @@ StyledPopupView {
     signal lowerChangeRequested(var newValue)
 
     margins: 12
-    
+
     contentWidth: 216
     contentHeight: 52
-    
+
     ColumnLayout {
         id: content
 
         anchors.fill: parent
 
-        spacing: 8
+        spacing: ui.theme.extra.spacing_m
 
         StyledTextLabel {
             Layout.fillWidth: true
@@ -36,7 +36,7 @@ StyledPopupView {
         }
 
         Row {
-            spacing: 12
+            spacing: ui.theme.extra.spacing_l
 
             IncrementalPropertyControl {
                 id: control
@@ -50,7 +50,7 @@ StyledPopupView {
                 maxValue: 128
                 minValue: 1
 
-                onValueEdited: function(newValue) {
+                onValueEdited: function (newValue) {
                     root.upperChangeRequested(newValue)
                 }
             }
@@ -71,15 +71,33 @@ StyledPopupView {
                 currentIndex: timeComboBox.indexOfValue(root.lower)
 
                 model: [
-                    { "text": "2", "value": 2 },
-                    { "text": "4", "value": 4 },
-                    { "text": "8", "value": 8 },
-                    { "text": "16", "value": 16 },
-                    { "text": "32", "value": 32 },
-                    { "text": "64", "value": 64 }
+                    {
+                        "text": "2",
+                        "value": 2
+                    },
+                    {
+                        "text": "4",
+                        "value": 4
+                    },
+                    {
+                        "text": "8",
+                        "value": 8
+                    },
+                    {
+                        "text": "16",
+                        "value": 16
+                    },
+                    {
+                        "text": "32",
+                        "value": 32
+                    },
+                    {
+                        "text": "64",
+                        "value": 64
+                    }
                 ]
 
-                onActivated: function(index, value) {
+                onActivated: function (index, value) {
                     root.lowerChangeRequested(value)
                 }
             }

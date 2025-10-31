@@ -7,7 +7,6 @@ import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 
 Rectangle {
-
     id: root
 
     property alias keynavSection: keynavsec.section
@@ -17,7 +16,9 @@ Rectangle {
     height: 40
     width: btns.childrenRect.width
 
-    NavigationFocusBorder { navigationCtrl: keynavsec }
+    NavigationFocusBorder {
+        navigationCtrl: keynavsec
+    }
 
     signal clicked(string info)
 
@@ -40,7 +41,7 @@ Rectangle {
     Row {
         id: btns
         anchors.fill: parent
-        spacing: 8
+        spacing: ui.theme.extra.spacing_m
 
         FlatButton {
             id: btn1

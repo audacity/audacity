@@ -44,10 +44,10 @@ Item {
 
     property alias navigation: navPanel
 
-    signal createNewProjectRequested()
+    signal createNewProjectRequested
     signal openProjectRequested(var projectPath, var displayName)
 
-    component ColumnItem : QtObject {
+    component ColumnItem: QtObject {
         property string header
 
         property var width: function (parentWidth) {
@@ -84,7 +84,7 @@ Item {
         anchors.leftMargin: sideMargin
         anchors.rightMargin: sideMargin
 
-        spacing: 12
+        spacing: ui.theme.extra.spacing_l
 
         ProjectListItem {
             id: newProjectItem
@@ -159,7 +159,9 @@ Item {
                         //
                         // - Qt.font(Object.assign(ui.theme.bodyBoldFont, { capitalization: Font.AllUppercase }))
                         //   (complains that ui.theme.bodyBoldFont is const and cannot be modified)
-                        font: Qt.font(Object.assign({}, ui.theme.bodyBoldFont, { capitalization: Font.AllUppercase }))
+                        font: Qt.font(Object.assign({}, ui.theme.bodyBoldFont, {
+                            capitalization: Font.AllUppercase
+                        }))
                         horizontalAlignment: Text.AlignLeft
                     }
 
@@ -171,7 +173,9 @@ Item {
 
                             text: modelData.header
 
-                            font: Qt.font(Object.assign({}, ui.theme.bodyBoldFont, { capitalization: Font.AllUppercase }))
+                            font: Qt.font(Object.assign({}, ui.theme.bodyBoldFont, {
+                                capitalization: Font.AllUppercase
+                            }))
                             horizontalAlignment: Text.AlignLeft
                         }
                     }

@@ -21,7 +21,7 @@ Column {
     signal newDeleteBehaviorRequested(int deleteBehavior)
     signal newCloseGapBehaviorRequested(int closeGapBehavior)
 
-    spacing: 16
+    spacing: ui.theme.extra.spacing_xl
     width: imageRow.width
 
     Component.onCompleted: {
@@ -76,7 +76,7 @@ Column {
             width: parent.width
 
             padding: 16
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             StyledTextLabel {
                 text: qsTrc("trackedit/preferences", "When closing the gap, do the following")
@@ -87,7 +87,7 @@ Column {
             }
 
             RadioButtonGroup {
-                spacing: 8
+                spacing: ui.theme.extra.spacing_m
                 orientation: ListView.Vertical
 
                 property var closeGapBehaviors: deleteBehaviorModel.closeGapBehaviors
@@ -96,7 +96,7 @@ Column {
                 delegate: RoundedRadioButton {
                     checked: root.closeGapBehavior === modelData.value
                     text: modelData.text
-                    spacing: 8
+                    spacing: ui.theme.extra.spacing_m
 
                     navigation.name: modelData.text
                     navigation.panel: root.navigation

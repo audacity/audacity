@@ -11,7 +11,7 @@ import Audacity.BuiltinEffects
 BuiltinEffectBase {
     id: root
 
-    width: prv.desiredWidth - (2 * prv.spacingL) // we need to remove the padding from the dialog desired width
+    width: prv.desiredWidth - (2 * ui.theme.extra.spacing_xl) // we need to remove the padding from the dialog desired width
     implicitHeight: mainColumn.height // see with EffectsViewerDialog.qml
 
     property string title: truncateSilence.effectTitle()
@@ -26,10 +26,6 @@ BuiltinEffectBase {
     QtObject {
         id: prv
 
-        readonly property int spacingS: 4
-        readonly property int spacingM: 8
-        readonly property int spacingL: 16
-
         readonly property int fieldWidth: 156
         readonly property int desiredWidth: 360
 
@@ -41,14 +37,14 @@ BuiltinEffectBase {
         id: mainColumn
 
         width: parent.width
-        spacing: prv.spacingL
+        spacing: ui.theme.extra.spacing_xl
 
         // Detect silence section
         Column {
 
             Layout.fillWidth: true
 
-            spacing: prv.spacingM
+            spacing: ui.theme.extra.spacing_m
 
             StyledTextLabel {
 
@@ -59,7 +55,7 @@ BuiltinEffectBase {
             RoundedRectangle {
 
                 width: parent.width
-                height: detectSilenceRow.height + prv.spacingL * 2
+                height: detectSilenceRow.height + ui.theme.extra.spacing_xl * 2
 
                 color: ui.theme.backgroundSecondaryColor
                 radius: prv.borderRadius
@@ -72,15 +68,15 @@ BuiltinEffectBase {
 
                     anchors.centerIn: parent
 
-                    width: parent.width - prv.spacingL * 2
+                    width: parent.width - ui.theme.extra.spacing_xl * 2
 
-                    spacing: prv.spacingL
+                    spacing: ui.theme.extra.spacing_xl
 
                     Column {
 
                         width: (parent.width - parent.spacing) / 2
 
-                        spacing: prv.spacingM
+                        spacing: ui.theme.extra.spacing_m
 
                         StyledTextLabel {
 
@@ -108,7 +104,7 @@ BuiltinEffectBase {
 
                         width: (parent.width - parent.spacing) / 2
 
-                        spacing: prv.spacingM
+                        spacing: ui.theme.extra.spacing_m
 
                         StyledTextLabel {
 
@@ -140,7 +136,7 @@ BuiltinEffectBase {
 
             Layout.fillWidth: true
 
-            spacing: prv.spacingM
+            spacing: ui.theme.extra.spacing_m
 
             StyledTextLabel {
 
@@ -151,7 +147,7 @@ BuiltinEffectBase {
             RoundedRectangle {
 
                 width: parent.width
-                height: actionColumn.height + prv.spacingL * 2
+                height: actionColumn.height + ui.theme.extra.spacing_xl * 2
 
                 color: ui.theme.backgroundSecondaryColor
                 radius: prv.borderRadius
@@ -164,15 +160,15 @@ BuiltinEffectBase {
 
                     anchors.centerIn: parent
 
-                    width: parent.width - prv.spacingL * 2
+                    width: parent.width - ui.theme.extra.spacing_xl * 2
 
-                    spacing: prv.spacingL
+                    spacing: ui.theme.extra.spacing_xl
 
                     RadioButtonGroup {
 
                         width: parent.width
 
-                        spacing: prv.spacingM
+                        spacing: ui.theme.extra.spacing_m
                         orientation: ListView.Vertical
 
                         model: truncateSilence.actionModel()
@@ -193,7 +189,7 @@ BuiltinEffectBase {
 
                         width: parent.width
 
-                        spacing: prv.spacingS
+                        spacing: ui.theme.extra.spacing_s
 
                         StyledTextLabel {
 

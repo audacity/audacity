@@ -32,7 +32,7 @@ BaseSection {
     navigation.direction: NavigationPanel.Horizontal
 
     Column {
-        spacing: 12
+        spacing: ui.theme.extra.spacing_l
 
         StyledTextLabel {
             text: qsTrc("appshell/preferences", "Free space")

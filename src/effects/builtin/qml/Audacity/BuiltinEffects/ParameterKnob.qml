@@ -40,7 +40,7 @@ Item {
         }
 
         Row {
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             KnobControl {
                 id: knob

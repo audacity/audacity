@@ -41,7 +41,7 @@ Item {
     Column {
         id: content
 
-        spacing: 16
+        spacing: ui.theme.extra.spacing_xl
 
         ComboBoxWithTitle {
             title: qsTrc("appshell/preferences", "Playback device")
@@ -54,7 +54,7 @@ Item {
             navigation.panel: root.navigation
             navigation.row: root.navigationOrderStart
 
-            onValueEdited: function(newIndex, newValue) {
+            onValueEdited: function (newIndex, newValue) {
                 apiModel.outputDeviceSelected(newValue)
             }
         }
@@ -70,7 +70,7 @@ Item {
             navigation.panel: root.navigation
             navigation.row: root.navigationOrderStart + 1
 
-            onValueEdited: function(newIndex, newValue) {
+            onValueEdited: function (newIndex, newValue) {
                 apiModel.inputDeviceSelected(newValue)
             }
         }
@@ -86,7 +86,7 @@ Item {
             navigation.panel: root.navigation
             navigation.row: root.navigationOrderStart + 2
 
-            onValueEdited: function(newIndex, newValue) {
+            onValueEdited: function (newIndex, newValue) {
                 apiModel.inputChannelsSelected(newValue)
             }
         }

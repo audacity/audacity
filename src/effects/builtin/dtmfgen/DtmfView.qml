@@ -23,12 +23,6 @@ BuiltinEffectBase {
 
     model: dtmf
 
-    QtObject {
-        id: prv
-
-        readonly property int spacing: 16
-    }
-
     DtmfViewModel {
         id: dtmf
     }
@@ -37,7 +31,7 @@ BuiltinEffectBase {
         id: row
 
         width: parent.width
-        spacing: prv.spacing
+        spacing: ui.theme.extra.spacing_xl
 
         ColumnLayout {
             id: leftColumn
@@ -45,7 +39,7 @@ BuiltinEffectBase {
             Layout.fillWidth: true
             Layout.preferredWidth: 1
 
-            spacing: prv.spacing
+            spacing: ui.theme.extra.spacing_xl
 
             StyledTextLabel {
                 text: qsTrc("effects/dtmf", "DTMF sequence")
@@ -101,7 +95,7 @@ BuiltinEffectBase {
 
             Column {
 
-                spacing: 8
+                spacing: ui.theme.extra.spacing_m
 
                 StyledTextLabel {
                     text: qsTrc("effects/dtmf", "Duration")
@@ -156,10 +150,10 @@ BuiltinEffectBase {
 
             ColumnLayout {
 
-                x: prv.spacing
-                y: prv.spacing
+                x: ui.theme.extra.spacing_xl
+                y: ui.theme.extra.spacing_xl
 
-                spacing: prv.spacing
+                spacing: ui.theme.extra.spacing_xl
 
                 StyledTextLabel {
                     text: qsTrc("effects/dtmf", "Tone/silence ratio")
@@ -167,7 +161,7 @@ BuiltinEffectBase {
 
                 Row {
 
-                    spacing: 8
+                    spacing: ui.theme.extra.spacing_m
 
                     KnobControl {
 
@@ -205,7 +199,7 @@ BuiltinEffectBase {
 
                 Column {
 
-                    spacing: 8
+                    spacing: ui.theme.extra.spacing_m
 
                     StyledTextLabel {
                         text: qsTrc("effects/dtmf", "Duty cycle")
@@ -219,7 +213,7 @@ BuiltinEffectBase {
 
                 Column {
 
-                    spacing: 8
+                    spacing: ui.theme.extra.spacing_m
 
                     StyledTextLabel {
                         text: qsTrc("effects/dtmf", "Tone duration")
@@ -233,7 +227,7 @@ BuiltinEffectBase {
 
                 Column {
 
-                    spacing: 8
+                    spacing: ui.theme.extra.spacing_m
 
                     StyledTextLabel {
                         text: qsTrc("effects/dtmf", "Silence duration")

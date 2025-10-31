@@ -46,7 +46,7 @@ StyledDialogView {
         section: root.navigationSection
         direction: NavigationPanel.Horizontal
         order: 1
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }
@@ -64,7 +64,7 @@ StyledDialogView {
     ColumnLayout {
         anchors.fill: parent
 
-        spacing: 8
+        spacing: ui.theme.extra.spacing_m
 
         ProjectPropertiesView {
             id: propertiesListView
@@ -103,7 +103,7 @@ StyledDialogView {
         ButtonBox {
             Layout.fillWidth: true
 
-            buttons: [ ButtonBoxModel.Ok, ButtonBoxModel.Cancel ]
+            buttons: [ButtonBoxModel.Ok, ButtonBoxModel.Cancel]
 
             navigationPanel.section: root.navigationSection
             navigationPanel.order: 2
@@ -119,7 +119,7 @@ StyledDialogView {
                 }
             }
 
-            onStandardButtonClicked: function(buttonId) {
+            onStandardButtonClicked: function (buttonId) {
                 if (buttonId === ButtonBoxModel.Ok) {
                     projectPropertiesModel.saveProperties()
                     root.hide()

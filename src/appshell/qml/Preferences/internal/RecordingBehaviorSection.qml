@@ -15,7 +15,7 @@ BaseSection {
 
     Column {
         width: parent.width
-        spacing: 12
+        spacing: ui.theme.extra.spacing_l
 
         CheckBox {
             id: micMeteringCheckBox

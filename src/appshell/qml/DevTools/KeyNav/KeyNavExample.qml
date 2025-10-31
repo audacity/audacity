@@ -13,7 +13,7 @@ Rectangle {
 
     property string lastClickedInfo: ""
 
-    signal activeFocusRequested()
+    signal activeFocusRequested
 
     Rectangle {
         id: infoPanel
@@ -53,7 +53,7 @@ Rectangle {
 
         RowLayout {
             anchors.fill: parent
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             Repeater {
                 model: 3
@@ -64,7 +64,7 @@ Rectangle {
                     subsectionName: "subsec" + model.index
                     subsectionOrder: model.index
                     color: mainMenu.color
-                    onClicked: function(info) {
+                    onClicked: function (info) {
                         root.lastClickedInfo = "sec: " + mainMenu.sectionName + ", " + info
                     }
                 }
@@ -87,7 +87,7 @@ Rectangle {
 
         Row {
             anchors.fill: parent
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             Repeater {
                 model: 2
@@ -97,7 +97,7 @@ Rectangle {
                     subsectionName: "subsec" + model.index
                     subsectionOrder: model.index
                     color: topTools.color
-                    onClicked: function(info) {
+                    onClicked: function (info) {
                         root.lastClickedInfo = "sec: " + topTools.sectionName + ", " + info
                     }
                 }
@@ -120,7 +120,7 @@ Rectangle {
 
         Column {
             anchors.fill: parent
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             Repeater {
                 model: 2
@@ -129,7 +129,7 @@ Rectangle {
                     subsectionName: "subsec" + model.index
                     subsectionOrder: model.index
                     color: leftPanel.color
-                    onClicked: function(info) {
+                    onClicked: function (info) {
                         root.lastClickedInfo = "sec: " + leftPanel.sectionName + ", " + info
                     }
                 }
@@ -152,7 +152,7 @@ Rectangle {
 
         Column {
             anchors.fill: parent
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             Repeater {
                 model: 2
@@ -161,7 +161,7 @@ Rectangle {
                     subsectionName: "subsec" + model.index
                     subsectionOrder: model.index
                     color: rightPanel.color
-                    onClicked: function(info) {
+                    onClicked: function (info) {
                         root.lastClickedInfo = "sec: " + rightPanel.sectionName + ", " + info
                     }
                 }
@@ -187,7 +187,7 @@ Rectangle {
             subsectionName: "subsec0"
             subsectionOrder: 0
             color: centerPanel.color
-            onClicked: function(info) {
+            onClicked: function (info) {
                 root.lastClickedInfo = "sec: " + centerPanel.sectionName + ", " + info
             }
         }

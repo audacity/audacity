@@ -28,7 +28,7 @@ BuiltinEffectBase {
         id: column
 
         width: parent.width
-        spacing: 16
+        spacing: ui.theme.extra.spacing_xl
 
         ComboBoxWithTitle {
             id: typeSelector
@@ -68,7 +68,7 @@ BuiltinEffectBase {
 
         Column {
 
-            spacing: 8
+            spacing: ui.theme.extra.spacing_m
 
             StyledTextLabel {
                 text: qsTrc("effects/noise", "Duration")

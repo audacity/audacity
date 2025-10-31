@@ -41,9 +41,9 @@ Rectangle {
 
     property alias appWindow: menu.appWindow
 
-    signal showWindowMinimizedRequested()
-    signal toggleWindowMaximizedRequested()
-    signal closeWindowRequested()
+    signal showWindowMinimizedRequested
+    signal toggleWindowMaximizedRequested
+    signal closeWindowRequested
 
     height: content.childrenRect.height
 
@@ -53,7 +53,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        spacing: 8
+        spacing: ui.theme.extra.spacing_m
 
         AppMenuBar {
             id: menu

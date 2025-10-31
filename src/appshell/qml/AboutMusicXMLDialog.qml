@@ -63,7 +63,7 @@ StyledDialogView {
 
             Column {
                 Layout.fillWidth: true
-                spacing: 12
+                spacing: ui.theme.extra.spacing_l
 
                 StyledTextLabel {
                     width: parent.width
@@ -88,7 +88,7 @@ StyledDialogView {
 
             Column {
                 Layout.fillWidth: true
-                spacing: 12
+                spacing: ui.theme.extra.spacing_l
 
                 StyledTextLabel {
                     width: parent.width
@@ -116,11 +116,11 @@ StyledDialogView {
             Layout.rightMargin: 16
             Layout.bottomMargin: 16
 
-            buttons: [ ButtonBoxModel.Ok ]
+            buttons: [ButtonBoxModel.Ok]
 
             navigationPanel.section: root.navigationSection
 
-            onStandardButtonClicked: function(buttonId) {
+            onStandardButtonClicked: function (buttonId) {
                 if (buttonId === ButtonBoxModel.Ok) {
                     root.hide()
                 }

@@ -11,14 +11,14 @@ BaseSection {
     id: root
 
     title: qsTrc("appshell/preferences", "Meter dB range")
-    spacing: 16
+    spacing: ui.theme.extra.spacing_xl
 
     MeterModel {
         id: meterModel
     }
 
     Component.onCompleted: {
-        meterModel.init();
+        meterModel.init()
     }
 
     ComboBoxWithTitle {
@@ -27,16 +27,16 @@ BaseSection {
         columnWidth: 320
 
         currentIndex: meterModel.meterDbRange
-        model: meterModel.dbRangeList.map(function(id) {
-            return meterModel.description(id);
+        model: meterModel.dbRangeList.map(function (id) {
+            return meterModel.description(id)
         })
 
         navigation.name: "MeterDbRangeBox"
         navigation.panel: root.navigation
         navigation.row: 1
 
-        onValueEdited: function(newIndex, _) {
-            meterModel.meterDbRange = newIndex;
+        onValueEdited: function (newIndex, _) {
+            meterModel.meterDbRange = newIndex
         }
     }
 }

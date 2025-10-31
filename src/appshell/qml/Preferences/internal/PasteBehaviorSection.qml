@@ -22,7 +22,7 @@ BaseSection {
 
     Column {
         width: parent.width
-        spacing: 16
+        spacing: ui.theme.extra.spacing_xl
 
         PasteBehaviorPanel {
             id: pasteBehaviorPanel

@@ -20,7 +20,11 @@ TrackItem {
             opacity: root.collapsed ? 1 : 0
             visible: opacity !== 0
 
-            Behavior on opacity { OpacityAnimator { duration: 100 } }
+            Behavior on opacity {
+                OpacityAnimator {
+                    duration: 100
+                }
+            }
 
             Loader {
                 sourceComponent: trackControlButtons
@@ -35,15 +39,19 @@ TrackItem {
             RowLayout {
                 Layout.fillWidth: true
 
-                spacing: 16
+                spacing: ui.theme.extra.spacing_xl
 
                 opacity: root.collapsed ? 0 : 1
                 visible: opacity !== 0
-                Behavior on opacity { OpacityAnimator { duration: 100 } }
+                Behavior on opacity {
+                    OpacityAnimator {
+                        duration: 100
+                    }
+                }
 
                 PanKnob {
                     value: Boolean(root.item) ? root.item.pan : 0
-                    onNewPanRequested: function(newValue, completed) {
+                    onNewPanRequested: function (newValue, completed) {
                         if (Boolean(root.item)) {
                             root.item.setPan(newValue, completed)
                         }
@@ -52,7 +60,7 @@ TrackItem {
 
                 VolumeSlider {
                     value: Boolean(root.item) ? root.item.volumeLevel : 0
-                    onNewVolumeRequested: function(newValue, completed) {
+                    onNewVolumeRequested: function (newValue, completed) {
                         if (Boolean(root.item)) {
                             root.item.setVolumeLevel(newValue, completed)
                         }
@@ -70,7 +78,11 @@ TrackItem {
 
                 opacity: root.height > root.mapFromItem(this, 0, height + bottomSeparatorHeight).y ? 1 : 0
                 visible: opacity !== 0
-                Behavior on opacity { OpacityAnimator { duration: 100 } }
+                Behavior on opacity {
+                    OpacityAnimator {
+                        duration: 100
+                    }
+                }
 
                 text: qsTrc("projectscene", "Effects")
 
@@ -104,7 +116,9 @@ TrackItem {
                     rightVolumePressureMeter.resetClipped()
                 }
 
-                TapHandler { onTapped: clearMeters() }
+                TapHandler {
+                    onTapped: clearMeters()
+                }
 
                 VolumePressureMeter {
                     id: leftOrMonoVolumePressureMeter
@@ -161,14 +175,26 @@ TrackItem {
                 State {
                     when: Boolean(root.item) && root.item.channelCount === 1
                     name: "mono"
-                    PropertyChanges { target: volumePressureContainer; indicatorWidth: 8 }
-                    PropertyChanges { target: rightVolumePressureMeter; visible: false }
+                    PropertyChanges {
+                        target: volumePressureContainer
+                        indicatorWidth: 8
+                    }
+                    PropertyChanges {
+                        target: rightVolumePressureMeter
+                        visible: false
+                    }
                 },
                 State {
                     when: Boolean(root.item) && root.item.channelCount === 2
                     name: "stereo"
-                    PropertyChanges { target: volumePressureContainer; indicatorWidth: 7 }
-                    PropertyChanges { target: rightVolumePressureMeter; visible: true }
+                    PropertyChanges {
+                        target: volumePressureContainer
+                        indicatorWidth: 7
+                    }
+                    PropertyChanges {
+                        target: rightVolumePressureMeter
+                        visible: true
+                    }
                 }
             ]
         }
@@ -178,7 +204,7 @@ TrackItem {
         id: trackControlButtons
 
         RowLayout {
-            spacing: 4
+            spacing: ui.theme.extra.spacing_s
 
             FlatToggleButton {
                 Layout.preferredWidth: 20

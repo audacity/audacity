@@ -38,7 +38,7 @@ BaseSection {
     signal temporaryFilesLocationChanged(string newPath)
 
     Column {
-        spacing: 12
+        spacing: ui.theme.extra.spacing_l
 
         StyledTextLabel {
             text: qsTrc("appshell/preferences", "Temporary files location")
@@ -60,7 +60,7 @@ BaseSection {
                 navigation: root.navigation
                 navigationColumnOrderStart: 1
 
-                onPathEdited: function(newPath) {
+                onPathEdited: function (newPath) {
                     path = newPath
                     root.temporaryFilesLocationChanged(newPath)
                 }

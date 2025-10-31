@@ -27,7 +27,7 @@ StyledDialogView {
         width: deleteBehaviorPanel.width
 
         padding: 24
-        spacing: 16
+        spacing: ui.theme.extra.spacing_xl
 
         StyledTextLabel {
             text: deleteBehaviorPanel.title
@@ -52,12 +52,12 @@ StyledDialogView {
             deleteBehavior: root.deleteBehavior
             closeGapBehavior: root.closeGapBehavior
 
-            onNewDeleteBehaviorRequested: function(newDeleteBehavior) {
-                root.deleteBehavior = newDeleteBehavior;
+            onNewDeleteBehaviorRequested: function (newDeleteBehavior) {
+                root.deleteBehavior = newDeleteBehavior
             }
 
-            onNewCloseGapBehaviorRequested: function(newCloseGapBehavior) {
-                root.closeGapBehavior = newCloseGapBehavior;
+            onNewCloseGapBehaviorRequested: function (newCloseGapBehavior) {
+                root.closeGapBehavior = newCloseGapBehavior
             }
         }
     }
@@ -94,7 +94,7 @@ StyledDialogView {
             height: 28
             minWidth: 80
             accentButton: true
-            onClicked: function() {
+            onClicked: function () {
                 root.ret = {
                     errcode: 0,
                     value: {

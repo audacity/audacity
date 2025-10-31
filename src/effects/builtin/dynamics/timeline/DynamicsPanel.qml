@@ -106,7 +106,7 @@ Item {
 
             height: 40
 
-            spacing: 16
+            spacing: ui.theme.extra.spacing_xl
 
             StyledTextLabel {
                 text: qsTrc("effects/compressor", "Show:")

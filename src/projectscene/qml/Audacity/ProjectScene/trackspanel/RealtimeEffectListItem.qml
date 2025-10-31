@@ -64,7 +64,7 @@ ListItemBlank {
 
         Drag.active: gripButton.mouseArea.drag.active
 
-        spacing: 4
+        spacing: ui.theme.extra.spacing_s
 
         states: State {
             when: gripButton.mouseArea.drag.active
