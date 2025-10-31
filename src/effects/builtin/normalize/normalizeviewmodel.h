@@ -19,7 +19,7 @@ class NormalizeViewModel : public BuiltinEffectModel
     Q_PROPERTY(double peakAmplitudeTarget READ peakAmplitudeTarget WRITE setPeakAmplitudeTarget NOTIFY peakAmplitudeTargetChanged FINAL)
 
 public:
-    NormalizeViewModel() = default;
+    NormalizeViewModel(QObject* parent, int instanceId);
 
     bool removeDC() const;
     void setRemoveDC(bool removeDC);
@@ -41,5 +41,9 @@ signals:
 
 private:
     void doReload() override;
+};
+
+class NormalizeViewModelFactory : public EffectViewModelFactory<NormalizeViewModel>
+{
 };
 }

@@ -7,6 +7,7 @@
 #include "audioplugins/iaudiopluginmetareaderregister.h"
 
 #include "effects/effects_base/ieffectviewlaunchregister.h"
+#include "effects/effects_base/view/effectsviewutils.h"
 
 #include "internal/lv2effectsrepository.h"
 #include "internal/lv2pluginmetareader.h"
@@ -72,7 +73,7 @@ void Lv2EffectsModule::registerResources()
 
 void Lv2EffectsModule::registerUiTypes()
 {
-    qmlRegisterType<Lv2ViewModel>("Audacity.Lv2", 1, 0, "Lv2ViewModel");
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(Lv2ViewModelFactory);
 }
 
 void Lv2EffectsModule::onInit(const muse::IApplication::RunMode& runMode)

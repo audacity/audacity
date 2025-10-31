@@ -16,8 +16,8 @@
 #include "log.h"
 
 namespace au::effects {
-AudioUnitViewModel::AudioUnitViewModel(QObject* parent)
-    : AbstractEffectViewModel(parent)
+AudioUnitViewModel::AudioUnitViewModel(QObject* parent, int instanceId)
+    : AbstractEffectViewModel(parent, instanceId)
 {}
 
 AudioUnitViewModel::~AudioUnitViewModel()

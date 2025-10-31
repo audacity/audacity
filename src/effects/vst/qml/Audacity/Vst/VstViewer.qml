@@ -31,6 +31,7 @@ Rectangle {
     id: root
 
     // in
+    required property int instanceId
     property alias sidePadding: view.sidePadding
     property alias topPadding: view.topPadding
     property alias bottomPadding: view.bottomPadding
@@ -38,13 +39,14 @@ Rectangle {
 
     // out
     property alias title: view.title
-    property alias instanceId: viewModel.instanceId
-    property alias isPreviewing: viewModel.isPreviewing
+    property bool isPreviewing: viewModel.isPreviewing
 
     color: ui.theme.backgroundPrimaryColor
 
     implicitWidth: view.implicitWidth
     implicitHeight: view.implicitHeight
+
+    readonly property var viewModel: VstViewModelFactory.createModel(root, instanceId)
 
     Component.onCompleted: {
         viewModel.init()
@@ -70,7 +72,7 @@ Rectangle {
 
     EffectManageMenu {
         id: manageMenuModel
-        instanceId: view.instanceId
+        instanceId: viewModel.instanceId
     }
 
     ContextMenuLoader {
@@ -79,10 +81,6 @@ Rectangle {
         onHandleMenuItem: function (itemId) {
             manageMenuModel.handleMenuItem(itemId)
         }
-    }
-
-    VstViewModel {
-        id: viewModel
     }
 
     VstView {

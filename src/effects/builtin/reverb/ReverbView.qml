@@ -15,7 +15,8 @@ BuiltinEffectBase {
     implicitHeight: row.height
     width: 560
 
-    model: reverb
+    builtinEffectModel: ReverbViewModelFactory.createModel(root, root.instanceId)
+    property alias reverb: root.builtinEffectModel
 
     QtObject {
         id: prv
@@ -23,10 +24,6 @@ BuiltinEffectBase {
         readonly property int narrowRowSpacing: 16
         readonly property int rowSpacing: 24
         readonly property int columnSpacing: 32
-    }
-
-    ReverbViewModel {
-        id: reverb
     }
 
     function newParameterValueRequested(key, value) {

@@ -23,7 +23,7 @@ public:
     muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
-    VstViewModel() = default;
+    VstViewModel(QObject* parent, int instanceId);
     ~VstViewModel() override;
 
 private:
@@ -39,5 +39,9 @@ private:
     std::shared_ptr<VST3Instance> m_auVst3Instance;
     std::shared_ptr<EffectSettingsAccess> m_settingsAccess;
     QTimer m_settingUpdateTimer;
+};
+
+class VstViewModelFactory : public EffectViewModelFactory<VstViewModel>
+{
 };
 }
