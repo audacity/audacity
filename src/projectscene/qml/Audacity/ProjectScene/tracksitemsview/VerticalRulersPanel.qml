@@ -86,6 +86,7 @@ Rectangle {
             Component.onCompleted: {
                 trackViewState.init()
                 clipsModel.init()
+                rulerModel.init()
             }
 
             MouseArea {
@@ -105,6 +106,10 @@ Rectangle {
 
                 onHideRulersRequested: {
                     root.model.toggleVerticalRuler();
+                }
+
+                onRulerTypeChangeRequested: function(rulerType) {
+                    rulerModel.rulerType = rulerType;
                 }
             }
 

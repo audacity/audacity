@@ -2,16 +2,27 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "projectscene/view/trackruler/trackrulermodel.h"
-#include "projectscene/view/trackruler/linearstereoruler.h"
-#include "projectscene/view/trackruler/linearmonoruler.h"
+#include "trackrulermodel.h"
+#include "linearstereoruler.h"
+#include "linearmonoruler.h"
+#include "dblogmonoruler.h"
 
 using namespace au::projectscene;
 
 TrackRulerModel::TrackRulerModel(QObject* parent)
     : QObject(parent)
 {
-    m_model = std::make_shared<LinearMonoRuler>();
+    m_model = buildRulerModel();
+}
+
+void TrackRulerModel::init()
+{
+    m_model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
+    configuration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
+        m_model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
+        emit fullStepsChanged();
+        emit smallStepsChanged();
+    });
 }
 
 std::vector<QVariantMap> TrackRulerModel::fullSteps() const
@@ -75,18 +86,7 @@ void TrackRulerModel::setIsStereo(bool isStereo)
     if (m_isStereo != isStereo) {
         m_isStereo = isStereo;
 
-        if (m_isStereo) {
-            m_model = std::make_shared<LinearStereoRuler>();
-        } else {
-            m_model = std::make_shared<LinearMonoRuler>();
-        }
-
-        m_model->setHeight(m_height);
-        m_model->setChannelHeightRatio(m_channelHeightRatio);
-        m_model->setCollapsed(m_isCollapsed);
-
-        emit fullStepsChanged();
-        emit smallStepsChanged();
+        m_model = buildRulerModel();
     }
 }
 
@@ -142,4 +142,81 @@ void TrackRulerModel::setChannelHeightRatio(double channelHeightRatio)
         emit fullStepsChanged();
         emit smallStepsChanged();
     }
+}
+
+int TrackRulerModel::trackId() const
+{
+    return m_trackId;
+}
+
+void TrackRulerModel::setTrackId(int trackId)
+{
+    if (m_trackId == trackId) {
+        return;
+    }
+
+    m_trackId = trackId;
+
+    emit trackIdChanged();
+    emit fullStepsChanged();
+    emit smallStepsChanged();
+}
+
+int TrackRulerModel::rulerType() const
+{
+    return m_rulerType;
+}
+
+void TrackRulerModel::setRulerType(int rulerType)
+{
+    if (m_rulerType == rulerType) {
+        return;
+    }
+
+    m_rulerType = rulerType;
+
+    m_model = buildRulerModel();
+
+    emit rulerTypeChanged();
+    emit fullStepsChanged();
+    emit smallStepsChanged();
+}
+
+std::shared_ptr<ITrackRulerModel> TrackRulerModel::buildRulerModel()
+{
+    std::shared_ptr<ITrackRulerModel> model = nullptr;
+
+    switch (m_rulerType) {
+    case 0:
+        if (m_isStereo) {
+            //model = std::make_shared<DbLogStereoRuler>();
+        } else {
+            model = std::make_shared<DbLogMonoRuler>();
+        }
+        break;
+    case 1:
+        if (m_isStereo) {
+            //model = std::make_shared<DbLinearStereoRuler>();
+        } else {
+            //model = std::make_shared<DbLinearMonoRuler>();
+        }
+        break;
+    case 2:
+        if (m_isStereo) {
+            model = std::make_shared<LinearStereoRuler>();
+        } else {
+            model = std::make_shared<LinearMonoRuler>();
+        }
+        break;
+    default:
+        model = std::make_shared<LinearMonoRuler>();
+        break;
+    }
+
+    model->setHeight(m_height);
+    model->setChannelHeightRatio(m_channelHeightRatio);
+    model->setCollapsed(m_isCollapsed);
+    model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
+
+    return model;
 }

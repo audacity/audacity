@@ -183,6 +183,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/historypanel/historypanelmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/historypanel/historypanelmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogmonoruler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogmonoruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/itrackrulermodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearstereoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearstereoruler.h
