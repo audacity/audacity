@@ -6,9 +6,9 @@
 #include <QtQml>
 
 #include "global/translation.h"
+#include "global/log.h"
 
 #include "libraries/lib-module-manager/PluginManager.h"
-
 #include "libraries/lib-effects/LoadEffects.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
@@ -59,7 +59,8 @@
 #include "invert/inverteffect.h"
 #include "reverse/reverseeffect.h"
 #include "repair/repaireffect.h"
-#include "log.h"
+#include "truncatesilence/truncatesilenceeffect.h"
+#include "truncatesilence/truncatesilenceviewmodel.h"
 
 #include <algorithm>
 
@@ -72,6 +73,7 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< InvertEffect > regInvert;
     static BuiltinEffectsModule::Registration< Repair > regRepair;
     static BuiltinEffectsModule::Registration< ReverseEffect > regReverse;
+    static BuiltinEffectsModule::Registration< TruncateSilenceEffect > regTruncateSilence;
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
     static BuiltinEffectsModule::Registration< NormalizeLoudnessEffect > regLoudness;
     static BuiltinEffectsModule::Registration< GraphicEq > regGraphicEq;
@@ -242,6 +244,15 @@ void BuiltinEffectsRepository::updateEffectMetaList()
             regMeta(desc,
                     muse::mtrc("effects", "Reverse"),
                     muse::mtrc("effects", "Reverses the selected audio"),
+                    BuiltinEffectCategoryId::Special,
+                    true
+                    );
+        } else if (symbol == TruncateSilenceEffect::Symbol) {
+            qmlRegisterType<TruncateSilenceViewModel>("Audacity.Effects", 1, 0, "TruncateSilenceViewModel");
+            regView(TruncateSilenceEffect::Symbol, u"qrc:/truncatesilence/TruncateSilenceView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects", "Truncate Silence"),
+                    muse::mtrc("effects", "Automatically reduces the length of passages where the volume is below a specified level"),
                     BuiltinEffectCategoryId::Special,
                     true
                     );
