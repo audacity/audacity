@@ -2,6 +2,8 @@
  * Audacity: A Digital Audio Editor
  */
 import QtQuick 2.15
+import QtQuick.Controls
+import QtQuick.Layouts
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
@@ -22,20 +24,19 @@ BaseSection {
         workspacesModel.load()
     }
 
-    Column {
+    ColumnLayout {
         width: parent.width
-        height: workspacesList.height
 
         StyledListView {
             id: workspacesList
 
-            width: parent.width
-            height: contentHeight + topMargin + bottomMargin
+            Layout.fillWidth: true
+            Layout.preferredHeight: contentHeight
+            Layout.leftMargin: 2
+            Layout.topMargin: 2
+            Layout.bottomMargin: 2
 
             spacing: 8
-            leftMargin: 2
-            topMargin: 2
-            bottomMargin: 2
 
             model: workspacesModel
 
@@ -46,7 +47,7 @@ BaseSection {
 
                 width: parent.width
 
-                checked: root.editPreferencesModel.asymmetricWorkspaces.indexOf(model.name) != -1
+                checked: root.editPreferencesModel.asymmetricWorkspaces.indexOf(model.name) !== -1
 
                 navigation.name: model.name + "Box"
                 navigation.panel: root.navigation
