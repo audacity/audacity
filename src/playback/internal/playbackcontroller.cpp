@@ -153,15 +153,16 @@ bool PlaybackController::isLoopActive() const
 
 PlaybackRegion PlaybackController::selectionPlaybackRegion() const
 {
-    if (selectionController()->timeSelectionIsNotEmpty()) {
-        return { selectionController()->dataSelectedStartTime(),
-                 selectionController()->dataSelectedEndTime() };
-    }
-
+    // clip selection have priority over time selection
     if (selectionController()->selectedClips().size() == 1) {
         secs_t clipStartTime = selectionController()->selectedClipStartTime();
         secs_t clipEndTime = selectionController()->selectedClipEndTime();
         return { clipStartTime, clipEndTime };
+    }
+
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        return { selectionController()->dataSelectedStartTime(),
+                 selectionController()->dataSelectedEndTime() };
     }
 
     return PlaybackRegion();
