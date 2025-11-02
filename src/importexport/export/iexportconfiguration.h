@@ -132,5 +132,9 @@ public:
     virtual int ffmpegPacketSize() const = 0;
     virtual void setFFmpegPacketSize(int packetSize) = 0;
     virtual muse::async::Notification ffmpegPacketSizeChanged() const = 0;
+
+    virtual std::string defaultMetadata() const = 0;
+    virtual void setDefaultMetadata(const std::string& xmlString) = 0;
+    virtual muse::async::Notification defaultMetadataChanged() const = 0;
 };
 }

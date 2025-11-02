@@ -258,6 +258,7 @@ void ExportPreferencesModel::setCurrentFormat(const QString& format)
 
     exportConfiguration()->setCurrentFormat(format.toStdString());
     emit customFFmpegOptionsVisibleChanged();
+    emit hasMetadataChanged();
 }
 
 QStringList ExportPreferencesModel::formatsList() const
@@ -339,6 +340,11 @@ void ExportPreferencesModel::setExportSampleRate(const QString& rateName)
 void ExportPreferencesModel::openCustomFFmpegDialog()
 {
     dispatcher()->dispatch("open-custom-ffmpeg-options");
+}
+
+void ExportPreferencesModel::openMetadataDialog()
+{
+    dispatcher()->dispatch("open-metadata-dialog");
 }
 
 void ExportPreferencesModel::setFilePickerPath(const QString& path)
@@ -446,6 +452,11 @@ void ExportPreferencesModel::exportData()
 bool ExportPreferencesModel::customFFmpegOptionsVisible()
 {
     return exporter()->isCustomFFmpegExportFormat();
+}
+
+bool ExportPreferencesModel::hasMetadata()
+{
+    return exporter()->hasMetadata();
 }
 
 int ExportPreferencesModel::optionsCount()

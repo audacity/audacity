@@ -52,6 +52,7 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable
 
     // dynamic inputs section
     Q_PROPERTY(bool customFFmpegOptionsVisible READ customFFmpegOptionsVisible NOTIFY customFFmpegOptionsVisibleChanged)
+    Q_PROPERTY(bool hasMetadata READ hasMetadata NOTIFY hasMetadataChanged)
     Q_PROPERTY(int optionsCount READ optionsCount NOTIFY optionsCountChanged)
 
 public:
@@ -85,6 +86,7 @@ public:
     Q_INVOKABLE void setExportSampleRate(const QString& rate);
 
     Q_INVOKABLE void openCustomFFmpegDialog();
+    Q_INVOKABLE void openMetadataDialog();
     Q_INVOKABLE void setFilePickerPath(const QString& path);
     Q_INVOKABLE bool verifyExportPossible();
     Q_INVOKABLE QStringList fileFilter();
@@ -94,6 +96,7 @@ public:
 
     // dynamic inputs
     bool customFFmpegOptionsVisible();
+    bool hasMetadata();
     int optionsCount();
 
 signals:
@@ -110,6 +113,7 @@ signals:
     void exportSampleRateListChanged();
 
     void customFFmpegOptionsVisibleChanged();
+    void hasMetadataChanged();
     void optionsCountChanged();
     void optionTitleListChanged();
 
