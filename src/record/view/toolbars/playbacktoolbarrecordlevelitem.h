@@ -100,7 +100,7 @@ signals:
     void meterStyleChanged();
 
 private:
-    void setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue);
+    void setAudioChannelVolumePressure(const auaudio::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
 
     int m_level = 0;

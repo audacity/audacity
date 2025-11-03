@@ -17,12 +17,12 @@ void PlaybackMeterPanelModel::init()
 
     playback()->audioOutput()->playbackSignalChanges().onReceive(this,
                                                                  [this](const trackedit::audioch_t audioChNum,
-                                                                        const audio::MeterSignal& meterSignal) {
+                                                                        const auaudio::MeterSignal& meterSignal) {
         setAudioChannelVolumePressure(audioChNum, meterSignal.peak.pressure);
         setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
     });
 
-    playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
+    playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](auaudio::volume_dbfs_t volume){
         m_meterModel->setVolume(volume);
         emit levelChanged();
     });
@@ -79,13 +79,13 @@ void PlaybackMeterPanelModel::setRightChannelPressure(float rightChannelPressure
     emit rightChannelPressureChanged(m_rightChannelPressure);
 }
 
-void PlaybackMeterPanelModel::setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue)
+void PlaybackMeterPanelModel::setAudioChannelVolumePressure(const auaudio::audioch_t chNum, const float newValue)
 {
     float clampedValue = std::clamp(newValue, playback::MIN_DISPLAYED_DBFS, playback::MAX_DISPLAYED_DBFS);
     chNum == 0 ? setLeftChannelPressure(clampedValue) : setRightChannelPressure(clampedValue);
 }
 
-void PlaybackMeterPanelModel::setAudioChannelRMS(const audio::audioch_t chNum, const float newValue)
+void PlaybackMeterPanelModel::setAudioChannelRMS(const auaudio::audioch_t chNum, const float newValue)
 {
     float clampedValue = std::clamp(newValue, playback::MIN_DISPLAYED_DBFS, playback::MAX_DISPLAYED_DBFS);
     chNum == 0 ? setLeftChannelRMS(clampedValue) : setRightChannelRMS(clampedValue);

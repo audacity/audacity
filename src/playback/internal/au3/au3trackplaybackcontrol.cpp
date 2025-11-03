@@ -53,7 +53,7 @@ pan_t Au3TrackPlaybackControl::pan(long trackId) const
     return track->GetPan();
 }
 
-void Au3TrackPlaybackControl::setPan(long trackId, au::audio::pan_t pan, bool completed)
+void Au3TrackPlaybackControl::setPan(long trackId, au::auaudio::pan_t pan, bool completed)
 {
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(track) {

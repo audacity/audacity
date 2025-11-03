@@ -24,7 +24,7 @@ void SelectionStatusModel::init()
         emit endTimeChanged();
     });
 
-    playback()->audioOutput()->sampleRateChanged().onReceive(this, [this](audio::sample_rate_t) {
+    playback()->audioOutput()->sampleRateChanged().onReceive(this, [this](auaudio::sample_rate_t) {
         emit sampleRateChanged();
     });
 

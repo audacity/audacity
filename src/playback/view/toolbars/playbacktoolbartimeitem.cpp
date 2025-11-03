@@ -10,7 +10,6 @@
 static const int INVALID_FORMAT = -1;
 
 using namespace au::playback;
-using namespace au::audio;
 
 PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
                                                  QObject* parent)
@@ -20,7 +19,7 @@ PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& actio
         emit currentValueChanged();
     });
 
-    playback()->audioOutput()->sampleRateChanged().onReceive(this, [this](audio::sample_rate_t) {
+    playback()->audioOutput()->sampleRateChanged().onReceive(this, [this](auaudio::sample_rate_t) {
         emit sampleRateChanged();
     });
 

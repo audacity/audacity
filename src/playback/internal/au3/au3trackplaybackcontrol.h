@@ -15,8 +15,8 @@
 #include "itrackplaybackcontrol.h"
 
 namespace au::playback {
-using au::audio::volume_dbfs_t;
-using au::audio::pan_t;
+using au::auaudio::volume_dbfs_t;
+using au::auaudio::pan_t;
 
 class Au3TrackPlaybackControl : public ITrackPlaybackControl
 {
@@ -30,7 +30,7 @@ public:
     void setVolume(long trackId, volume_dbfs_t vol, bool completed) override;
 
     pan_t pan(long trackId) const override;
-    void setPan(long trackId, au::audio::pan_t pan, bool completed) override;
+    void setPan(long trackId, au::auaudio::pan_t pan, bool completed) override;
 
     bool solo(long trackId) const override;
     void setSolo(long trackId, bool solo) override;

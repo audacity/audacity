@@ -6,7 +6,6 @@
 #include "translation.h"
 
 using namespace muse;
-using namespace au::audio;
 using namespace au::record;
 using namespace muse::async;
 using namespace muse::actions;

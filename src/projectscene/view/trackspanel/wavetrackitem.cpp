@@ -12,7 +12,7 @@
 
 using namespace au::projectscene;
 using namespace au::trackedit;
-using namespace au::audio;
+using namespace au::auaudio;
 
 static constexpr float PAN_SCALING_FACTOR = 100.f;
 static constexpr float MIN_ALLOWED_PRESSURE = -145.f;
@@ -41,13 +41,13 @@ void WaveTrackItem::init(const trackedit::Track& track)
     emit channelCountChanged();
 
     playback()->audioOutput()->playbackTrackSignalChanges(trackId())
-    .onReceive(this, [this](au::audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
+    .onReceive(this, [this](auaudio::audioch_t channel, const au::auaudio::MeterSignal& meterSignal) {
         setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
         setAudioChannelRMS(channel, meterSignal.rms.pressure);
     }, muse::async::Asyncable::Mode::SetReplace);
 
     record()->audioInput()->recordTrackSignalChanges(trackId())
-    .onReceive(this, [this](au::audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
+    .onReceive(this, [this](auaudio::audioch_t channel, const au::auaudio::MeterSignal& meterSignal) {
         setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
         setAudioChannelRMS(channel, meterSignal.rms.pressure);
     }, muse::async::Asyncable::Mode::SetReplace);
@@ -165,7 +165,7 @@ bool WaveTrackItem::muted() const
     return m_outParams.muted;
 }
 
-void WaveTrackItem::loadOutputParams(const audio::AudioOutputParams& newParams)
+void WaveTrackItem::loadOutputParams(const auaudio::AudioOutputParams& newParams)
 {
     if (!muse::RealIsEqual(m_outParams.volume, newParams.volume)) {
         m_outParams.volume = newParams.volume;
@@ -290,7 +290,7 @@ void WaveTrackItem::checkMainAudioInput()
 {
     if (isFocused() && m_recordStreamChannelsMatch) {
         record()->audioInput()->recordSignalChanges().onReceive(this,
-                                                                [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
+                                                                [this](const audioch_t audioChNum, const auaudio::MeterSignal& meterSignal) {
             setAudioChannelVolumePressure(audioChNum,
                                           meterSignal.peak.pressure);
             setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);

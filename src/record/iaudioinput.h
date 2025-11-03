@@ -9,7 +9,7 @@
 #include "global/async/promise.h"
 #include "global/async/channel.h"
 
-#include "au3audio/audiotypes.h"
+#include "auaudio/auaudiotypes.h"
 
 namespace au::record {
 class IAudioInput
@@ -21,8 +21,8 @@ public:
     virtual void setRecordVolume(float volume) = 0;
     virtual muse::async::Channel<float> recordVolumeChanged() const = 0;
 
-    virtual muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordSignalChanges() const = 0;
-    virtual muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordTrackSignalChanges(int64_t key) const = 0;
+    virtual muse::async::Channel<auaudio::audioch_t, auaudio::MeterSignal> recordSignalChanges() const = 0;
+    virtual muse::async::Channel<auaudio::audioch_t, auaudio::MeterSignal> recordTrackSignalChanges(int64_t key) const = 0;
 };
 
 using IAudioInputPtr = std::shared_ptr<IAudioInput>;

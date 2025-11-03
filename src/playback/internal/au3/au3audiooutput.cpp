@@ -14,7 +14,7 @@
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometerfactory.h"
 
-#include "au3audio/audiotypes.h"
+#include "auaudio/auaudiotypes.h"
 
 #include "log.h"
 
@@ -88,7 +88,7 @@ muse::async::Channel<float> Au3AudioOutput::playbackVolumeChanged() const
     return m_playbackVolumeChanged;
 }
 
-au::audio::sample_rate_t Au3AudioOutput::sampleRate() const
+au::auaudio::sample_rate_t Au3AudioOutput::sampleRate() const
 {
     Au3Project* project = projectRef();
     if (!project) {
@@ -98,17 +98,17 @@ au::audio::sample_rate_t Au3AudioOutput::sampleRate() const
     return ProjectRate::Get(*project).GetRate();
 }
 
-muse::async::Channel<au::audio::sample_rate_t> Au3AudioOutput::sampleRateChanged() const
+muse::async::Channel<au::auaudio::sample_rate_t> Au3AudioOutput::sampleRateChanged() const
 {
     return m_sampleRateChanged;
 }
 
-muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioOutput::playbackSignalChanges() const
+muse::async::Channel<au::auaudio::audioch_t, au::auaudio::MeterSignal> Au3AudioOutput::playbackSignalChanges() const
 {
     return m_outputMeter->dataChanged();
 }
 
-muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioOutput::playbackTrackSignalChanges(
+muse::async::Channel<au::auaudio::audioch_t, au::auaudio::MeterSignal> Au3AudioOutput::playbackTrackSignalChanges(
     int64_t key) const
 {
     return m_outputMeter->dataChanged(IMeterSender::TrackId { key });
