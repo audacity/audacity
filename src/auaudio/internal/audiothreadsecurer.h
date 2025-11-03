@@ -8,7 +8,7 @@
 // from muse
 #include "audio/common/iaudiothreadsecurer.h"
 
-namespace au::audio {
+namespace au::auaudio {
 class AudioThreadSecurer : public muse::audio::IAudioThreadSecurer
 {
 public:

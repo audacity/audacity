@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "../iaudioengine.h"
+#include "auaudio/iaudioengine.h"
 #include "record/irecordconfiguration.h"
 
 namespace au::au3audio {

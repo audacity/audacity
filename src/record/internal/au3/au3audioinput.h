@@ -14,7 +14,7 @@
 #include "record/irecordcontroller.h"
 #include "record/irecordmetercontroller.h"
 #include "trackedit/iselectioncontroller.h"
-#include "au3audio/iaudioengine.h"
+#include "auaudio/iaudioengine.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometer.h"
