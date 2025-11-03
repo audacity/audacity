@@ -92,6 +92,13 @@ void Au3AudioEngine::stopMonitoring()
     AudioIO::Get()->StopMonitoring();
 }
 
+bool Au3AudioEngine::canStopAudioStream(AudacityProject& project) const
+{
+    return !AudioIO::Get()->IsStreamActive()
+           || AudioIO::Get()->IsMonitoring()
+           || AudioIO::Get()->GetOwningProject().get() == &project;
+}
+
 muse::async::Notification Au3AudioEngine::updateRequested() const
 {
     return s_audioIOListener->updateRequested();

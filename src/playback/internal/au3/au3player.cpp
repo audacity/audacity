@@ -509,17 +509,13 @@ muse::async::Channel<muse::secs_t> Au3Player::playbackPositionChanged() const
 
 Au3Project& Au3Player::projectRef() const
 {
-    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    const auto project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     return *project;
 }
 
 bool Au3Player::canStopAudioStream() const
 {
-    auto gAudioIO = AudioIO::Get();
-    Au3Project& project = projectRef();
-    return !gAudioIO->IsStreamActive()
-           || gAudioIO->IsMonitoring()
-           || gAudioIO->GetOwningProject().get() == &project;
+    return audioEngine()->canStopAudioStream(projectRef());
 }
 
 TransportSequences Au3Player::makeTransportTracks(Au3TrackList& trackList, bool selectedOnly)

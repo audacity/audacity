@@ -28,6 +28,8 @@ public:
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;
 
+    bool canStopAudioStream(AudacityProject& project) const override;
+
     muse::async::Notification updateRequested() const override;
     muse::async::Notification commitRequested() const override;
     muse::async::Notification finished() const override;

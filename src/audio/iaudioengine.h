@@ -30,6 +30,8 @@ public:
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;
 
+    virtual bool canStopAudioStream(AudacityProject& project) const = 0;
+
     virtual muse::async::Notification updateRequested() const = 0;
     virtual muse::async::Notification commitRequested() const = 0;
     virtual muse::async::Notification finished() const = 0;
