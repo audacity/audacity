@@ -7,12 +7,12 @@
 
 #include "modularity/imodulesetup.h"
 
-namespace au::auaudio {
+namespace au::audio {
 class AudioThreadSecurer;
-class AuAudioModule : public muse::modularity::IModuleSetup
+class AudioModule : public muse::modularity::IModuleSetup
 {
 public:
-    AuAudioModule();
+    AudioModule();
 
 private:
     std::string moduleName() const override;

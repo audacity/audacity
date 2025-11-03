@@ -26,19 +26,19 @@
 #include "iaudiooutput.h"
 
 using namespace au::playback;
-using namespace au::auaudio;
+using namespace au::audio;
 
 PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
                                                    QObject* parent)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
-    playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](auaudio::volume_dbfs_t volume){
+    playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
         m_level = volume;
         emit levelChanged();
     });
 
     playback()->audioOutput()->playbackSignalChanges().onReceive(this,
-                                                                 [this](const audioch_t audioChNum, const auaudio::MeterSignal& meterSignal) {
+                                                                 [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
         setAudioChannelVolumePressure(audioChNum,
                                       meterSignal.peak.pressure);
         setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
@@ -109,13 +109,13 @@ void PlaybackToolBarLevelItem::setRightChannelPressure(float rightChannelPressur
     emit rightChannelPressureChanged(m_rightChannelPressure);
 }
 
-void PlaybackToolBarLevelItem::setAudioChannelVolumePressure(const auaudio::audioch_t chNum, const float newValue)
+void PlaybackToolBarLevelItem::setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue)
 {
     float clampedValue = std::clamp(newValue, MIN_DISPLAYED_DBFS, MAX_DISPLAYED_DBFS);
     chNum == 0 ? setLeftChannelPressure(clampedValue) : setRightChannelPressure(clampedValue);
 }
 
-void PlaybackToolBarLevelItem::setAudioChannelRMS(const auaudio::audioch_t chNum, const float newValue)
+void PlaybackToolBarLevelItem::setAudioChannelRMS(const audio::audioch_t chNum, const float newValue)
 {
     float clampedValue = std::clamp(newValue, MIN_DISPLAYED_DBFS, MAX_DISPLAYED_DBFS);
     chNum == 0 ? setLeftChannelRMS(clampedValue) : setRightChannelRMS(clampedValue);

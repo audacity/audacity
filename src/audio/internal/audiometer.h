@@ -7,8 +7,8 @@
 #include "global/async/asyncable.h"
 #include "global/async/channel.h"
 
-#include "auaudio/iaudiometer.h"
-#include "auaudio/internal/itimer.h"
+#include "audio/iaudiometer.h"
+#include "audio/internal/itimer.h"
 
 #include "libraries/lib-utility/LockFreeQueue.h"
 
@@ -19,7 +19,7 @@
 #include <unordered_map>
 #include <queue>
 
-namespace au::auaudio {
+namespace au::audio {
 class AudioMeter : public IAudioMeter, public muse::async::Asyncable
 {
 public:

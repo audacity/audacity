@@ -6,7 +6,7 @@
 #include "../playbacktypes.h"
 
 using namespace muse;
-using namespace au::auaudio;
+using namespace au::audio;
 using namespace au::playback;
 using namespace muse::async;
 using namespace muse::actions;

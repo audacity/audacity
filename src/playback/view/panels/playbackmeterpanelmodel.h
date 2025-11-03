@@ -74,8 +74,8 @@ signals:
     void isPlayingChanged();
 
 private:
-    void setAudioChannelVolumePressure(const auaudio::audioch_t chNum, const float newValue);
-    void setAudioChannelRMS(const auaudio::audioch_t chNum, const float newValue);
+    void setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue);
+    void setAudioChannelRMS(const audio::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
 
     PlaybackMeterModel* m_meterModel = nullptr;

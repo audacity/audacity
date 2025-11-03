@@ -4,7 +4,7 @@
 #pragma once
 
 #include "actions/actiontypes.h"
-#include "auaudio/auaudiotypes.h"
+#include "audio/audiotypes.h"
 #include "global/types/secs.h" // IWYU pragma: export
 
 namespace au::playback {
@@ -66,8 +66,8 @@ struct PlaybackRegion
     inline bool operator!=(const PlaybackRegion& other) const { return !this->operator==(other); }
 };
 
-static constexpr auaudio::volume_dbfs_t MAX_DISPLAYED_DBFS = 0.f; // 100%
-static constexpr auaudio::volume_dbfs_t MIN_DISPLAYED_DBFS = -145.f; // 0%
+static constexpr audio::volume_dbfs_t MAX_DISPLAYED_DBFS = 0.f; // 100%
+static constexpr audio::volume_dbfs_t MIN_DISPLAYED_DBFS = -145.f; // 0%
 
 struct PlayTracksOptions {
     bool selectedOnly = false;

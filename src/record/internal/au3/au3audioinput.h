@@ -14,7 +14,7 @@
 #include "record/irecordcontroller.h"
 #include "record/irecordmetercontroller.h"
 #include "trackedit/iselectioncontroller.h"
-#include "auaudio/iaudioengine.h"
+#include "audio/iaudioengine.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometer.h"
@@ -39,8 +39,8 @@ public:
     void setRecordVolume(float volume) override;
     muse::async::Channel<float> recordVolumeChanged() const override;
 
-    muse::async::Channel<auaudio::audioch_t, auaudio::MeterSignal> recordSignalChanges() const override;
-    muse::async::Channel<auaudio::audioch_t, au::auaudio::MeterSignal> recordTrackSignalChanges(int64_t key) const override;
+    muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordSignalChanges() const override;
+    muse::async::Channel<audio::audioch_t, au::audio::MeterSignal> recordTrackSignalChanges(int64_t key) const override;
 
 private:
     au3::Au3Project* projectRef() const;

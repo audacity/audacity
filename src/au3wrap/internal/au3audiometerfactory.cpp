@@ -2,9 +2,9 @@
  * Audacity: A Digital Audio Editor
  */
 #include "au3audiometerfactory.h"
-#include "auaudio/iaudiometer.h"
+#include "audio/iaudiometer.h"
 
 std::shared_ptr<au::au3::Au3AudioMeter> au::au3::createAudioMeter()
 {
-    return std::make_shared<Au3AudioMeter>(auaudio::IAudioMeter::create());
+    return std::make_shared<Au3AudioMeter>(audio::IAudioMeter::create());
 }

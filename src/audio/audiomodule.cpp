@@ -1,28 +1,28 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "auaudiomodule.h"
+#include "audiomodule.h"
 
 #include "internal/audiothreadsecurer.h"
 
-namespace au::auaudio {
-AuAudioModule::AuAudioModule()
+namespace au::audio {
+AudioModule::AudioModule()
     : m_audioThreadSecurer{std::make_shared<AudioThreadSecurer>()}
 {
 }
 
-std::string AuAudioModule::moduleName() const
+std::string AudioModule::moduleName() const
 {
-    return "auaudio";
+    return "audio";
 }
 
-void AuAudioModule::registerExports()
+void AudioModule::registerExports()
 {
     // for muse
     ioc()->registerExport<muse::audio::IAudioThreadSecurer>(moduleName(), m_audioThreadSecurer);
 }
 
-void AuAudioModule::onInit(const muse::IApplication::RunMode&)
+void AudioModule::onInit(const muse::IApplication::RunMode&)
 {
     m_audioThreadSecurer->setupMainThread();
 

@@ -20,7 +20,7 @@ void PlaybackMeterModel::init()
 {
     MeterModel::init();
 
-    playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](auaudio::volume_dbfs_t volume) {
+    playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume) {
         setVolume(volume);
     });
 

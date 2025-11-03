@@ -57,9 +57,9 @@ public:
     bool solo() const;
     bool muted() const;
 
-    void loadOutputParams(const auaudio::AudioOutputParams& newParams);
+    void loadOutputParams(const audio::AudioOutputParams& newParams);
 
-    const auaudio::AudioOutputParams& outputParams() const;
+    const audio::AudioOutputParams& outputParams() const;
 
 public slots:
     void setLeftChannelPressure(float leftChannelPressure);
@@ -83,7 +83,7 @@ signals:
     void soloChanged();
     void mutedChanged();
 
-    void outputParamsChanged(const auaudio::AudioOutputParams& params);
+    void outputParamsChanged(const audio::AudioOutputParams& params);
 
 protected:
     void setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue);
@@ -95,7 +95,7 @@ protected:
     bool isAudible() const override;
 
 private:
-    auaudio::AudioOutputParams m_outParams;
+    audio::AudioOutputParams m_outParams;
 
     float m_leftChannelPressure = playback::MIN_DISPLAYED_DBFS;
     float m_rightChannelPressure = playback::MIN_DISPLAYED_DBFS;

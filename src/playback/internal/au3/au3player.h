@@ -12,7 +12,7 @@
 
 #include "trackedit/iselectioncontroller.h"
 #include "context/iglobalcontext.h"
-#include "auaudio/iaudioengine.h"
+#include "audio/iaudioengine.h"
 
 #include "au3wrap/au3types.h"
 

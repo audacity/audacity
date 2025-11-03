@@ -6,7 +6,7 @@
 #include "global/realfn.h"
 #include "global/types/secs.h" // IWYU pragma: export
 
-namespace au::auaudio {
+namespace au::audio {
 using audioch_t = uint8_t;
 using aux_channel_idx_t = uint8_t;
 using volume_db_t = float; //! TODO use db_t

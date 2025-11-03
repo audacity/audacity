@@ -11,7 +11,7 @@
 #include "ui/iuiactionsregister.h"
 #include "context/iglobalcontext.h"
 
-#include "auaudio/auaudiotypes.h"
+#include "audio/audiotypes.h"
 #include "record/irecordcontroller.h"
 #include "trackedit/iselectioncontroller.h"
 
@@ -155,7 +155,7 @@ private:
     muse::async::Channel<playback::TrackId> m_trackAdded;
     muse::async::Channel<playback::TrackId> m_trackRemoved;
 
-    muse::async::Channel<auaudio::aux_channel_idx_t, std::string> m_auxChannelNameChanged;
+    muse::async::Channel<audio::aux_channel_idx_t, std::string> m_auxChannelNameChanged;
 
     muse::Progress m_loadingProgress;
     size_t m_loadingTrackCount = 0;

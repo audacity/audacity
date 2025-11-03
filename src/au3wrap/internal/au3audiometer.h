@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "auaudio/iaudiometer.h"
+#include "audio/iaudiometer.h"
 #include "libraries/lib-audio-devices/IMeterSender.h"
 
 namespace au::au3 {
@@ -14,16 +14,16 @@ namespace au::au3 {
 class Au3AudioMeter : public IMeterSender
 {
 public:
-    Au3AudioMeter(std::unique_ptr<auaudio::IAudioMeter> audioMeter);
+    Au3AudioMeter(std::unique_ptr<audio::IAudioMeter> audioMeter);
 
     void push(uint8_t channel, const InterleavedSampleData& sampleData, const std::optional<TrackId>&) override;
     void start(double sampleRate) override;
     void stop() override;
 
-    muse::async::Channel<auaudio::audioch_t, auaudio::MeterSignal> dataChanged(
-        const std::optional<auaudio::IAudioMeter::TrackId>& trackId = std::nullopt);
+    muse::async::Channel<audio::audioch_t, audio::MeterSignal> dataChanged(
+        const std::optional<audio::IAudioMeter::TrackId>& trackId = std::nullopt);
 
 private:
-    const std::unique_ptr<auaudio::IAudioMeter> m_audioMeter;
+    const std::unique_ptr<audio::IAudioMeter> m_audioMeter;
 };
 }

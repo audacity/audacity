@@ -11,7 +11,7 @@
 #include "global/log.h"
 #include "global/types/ratio.h" // muse::linear_to_db
 
-namespace au::auaudio {
+namespace au::audio {
 namespace {
 constexpr double updatePeriod = 1 / 30.0;
 constexpr auto decayDbPerSecond = 36.0f;

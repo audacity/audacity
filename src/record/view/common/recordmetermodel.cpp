@@ -19,7 +19,7 @@ void RecordMeterModel::init()
 {
     MeterModel::init();
 
-    record()->audioInput()->recordVolumeChanged().onReceive(this, [this](auaudio::volume_dbfs_t volume) {
+    record()->audioInput()->recordVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume) {
         setVolume(volume);
     });
 

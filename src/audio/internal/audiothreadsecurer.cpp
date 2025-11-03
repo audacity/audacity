@@ -3,7 +3,7 @@
  */
 #include "audiothreadsecurer.h"
 
-using namespace au::auaudio;
+using namespace au::audio;
 
 void AudioThreadSecurer::setupMainThread()
 {
