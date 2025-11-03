@@ -16,11 +16,12 @@ class Au3AudioMeter : public IMeterSender
 public:
     Au3AudioMeter(std::unique_ptr<auaudio::IAudioMeter> audioMeter);
 
-    void push(uint8_t channel, const IMeterSender::InterleavedSampleData& sampleData, TrackId) override;
+    void push(uint8_t channel, const InterleavedSampleData& sampleData, const std::optional<TrackId>&) override;
     void start(double sampleRate) override;
     void stop() override;
 
-    muse::async::Channel<auaudio::audioch_t, auaudio::MeterSignal> dataChanged(TrackId key = TrackId { MASTER_TRACK_ID });
+    muse::async::Channel<auaudio::audioch_t, auaudio::MeterSignal> dataChanged(
+        const std::optional<auaudio::IAudioMeter::TrackId>& trackId = std::nullopt);
 
 private:
     const std::unique_ptr<auaudio::IAudioMeter> m_audioMeter;

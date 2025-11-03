@@ -30,11 +30,11 @@ public:
      */
     AudioMeter(std::unique_ptr<ITimer> playingTimer, std::unique_ptr<ITimer> stoppingTimer);
 
-    void push(uint8_t channel, const IAudioMeter::InterleavedSampleData& sampleData, TrackId) override;
+    void push(uint8_t channel, const IAudioMeter::InterleavedSampleData& sampleData, const std::optional<TrackId>& trackId) override;
     void start(double sampleRate) override;
     void stop() override;
 
-    muse::async::Channel<audioch_t, MeterSignal> dataChanged(TrackId key = TrackId { MASTER_TRACK_ID });
+    muse::async::Channel<audioch_t, MeterSignal> dataChanged(const std::optional<TrackId>& trackId) override;
 
 private:
     struct QueueSample

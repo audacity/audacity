@@ -11,10 +11,9 @@
 #include <memory>
 #include <optional>
 
-constexpr int64_t MASTER_TRACK_ID = -2;
+namespace au::auaudio {
 using TimePoint = std::chrono::steady_clock::time_point;
 
-namespace au::auaudio {
 class IAudioMeter
 {
 public:
@@ -51,10 +50,14 @@ public:
     using OptionalTimePoint = std::optional<TimePoint>;
 
     virtual ~IAudioMeter() = default;
-    virtual void push(uint8_t channel, const InterleavedSampleData& sampleData, TrackId = TrackId { MASTER_TRACK_ID }) = 0;
+    /**
+     * @param trackId nullopt means master track
+     */
+    virtual void push(uint8_t channel, const InterleavedSampleData& sampleData, const std::optional<TrackId>& trackId = std::nullopt) = 0;
     virtual void start(double sampleRate) = 0;
     virtual void stop() = 0;
-    virtual muse::async::Channel<auaudio::audioch_t, auaudio::MeterSignal> dataChanged(TrackId key = TrackId { MASTER_TRACK_ID }) = 0;
+    virtual muse::async::Channel<auaudio::audioch_t,
+                                 auaudio::MeterSignal> dataChanged(const std::optional<TrackId>& trackId = std::nullopt) = 0;
 };
 
 using IAudioMeterPtr = std::shared_ptr<IAudioMeter>;

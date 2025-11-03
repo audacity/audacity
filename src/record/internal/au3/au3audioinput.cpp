@@ -132,7 +132,7 @@ muse::async::Channel<au::auaudio::audioch_t, au::auaudio::MeterSignal> Au3AudioI
 muse::async::Channel<au::auaudio::audioch_t, au::auaudio::MeterSignal> Au3AudioInput::recordTrackSignalChanges(
     int64_t key) const
 {
-    return m_inputMeter->dataChanged(IMeterSender::TrackId { key });
+    return m_inputMeter->dataChanged(auaudio::IAudioMeter::TrackId { key });
 }
 
 void Au3AudioInput::startAudioEngineMonitoring() const

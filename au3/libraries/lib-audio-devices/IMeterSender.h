@@ -3,13 +3,15 @@
 */
 #pragma once
 
+#include <chrono>
+#include <optional>
+#include <memory>
+
 using TimePoint = std::chrono::steady_clock::time_point;
 
 class AUDIO_DEVICES_API IMeterSender
 {
 public:
-    static constexpr int64_t MASTER_TRACK_ID = -2;
-
     struct InterleavedSampleData
     {
         InterleavedSampleData(
@@ -39,7 +41,7 @@ public:
     };
 
     virtual ~IMeterSender() = default;
-    virtual void push(uint8_t channel, const InterleavedSampleData& sampleData, TrackId = TrackId { MASTER_TRACK_ID }) = 0;
+    virtual void push(uint8_t channel, const InterleavedSampleData& sampleData, const std::optional<TrackId>& = std::nullopt) = 0;
     virtual void start(double sampleRate) = 0;
     virtual void stop() = 0;
 };
