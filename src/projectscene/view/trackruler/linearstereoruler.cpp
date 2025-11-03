@@ -7,8 +7,9 @@
 using namespace au::projectscene;
 
 namespace {
-constexpr int MIN_ADJACENT_STEPS_HEIGHT = 20;
-constexpr std::array<std::pair<double, double>, 3> STEP_INCREMENT = { { { 0.1, 0.05 }, { 0.5, 0.1 }, { 1.0, 0.5 } } };
+constexpr int MIN_ADJACENT_FULL_STEPS_HEIGHT = 20;
+constexpr int MIN_ADJACENT_SMALL_STEPS_HEIGHT = 10;
+constexpr std::array<std::pair<double, double>, 4> STEP_INCREMENT = { { { 0.1, 0.05 }, { 0.5, 0.1 }, { 0.5, 0.25 }, { 1.0, 0.5 } } };
 constexpr std::pair<double, double> DEFAULT_INCREMENT = { 1.0, 0.5 };
 
 constexpr double MAX_VALUE = 1.0;
@@ -53,8 +54,9 @@ std::pair<double, double> stepsIncrement(double height)
 {
     std::pair<double, double> increment = DEFAULT_INCREMENT;
     for (const auto& stepInc : STEP_INCREMENT) {
-        const auto& [v, _] = stepInc;
-        if (valueToPosition(0.0, height) - valueToPosition(v, height) >= MIN_ADJACENT_STEPS_HEIGHT) {
+        const auto& [fs, ss] = stepInc;
+        if ((valueToPosition(0.0, height) - valueToPosition(fs, height) >= MIN_ADJACENT_FULL_STEPS_HEIGHT)
+            && (valueToPosition(0.0, height) - valueToPosition(ss, height) >= MIN_ADJACENT_SMALL_STEPS_HEIGHT)) {
             increment = stepInc;
             break;
         }
@@ -167,7 +169,7 @@ std::vector<TrackRulerSmallStep> LinearStereoRuler::smallSteps() const
         const auto values = smallStepsValues(channelHeight[ch]);
         const auto fullSteps = fullStepsValues(channelHeight[ch]);
         for (double v : values) {
-            if (std::find(fullSteps.begin(), fullSteps.end(), v) != fullSteps.end()) {
+            if (std::find_if(fullSteps.begin(), fullSteps.end(), [v](double fs) { return muse::RealIsEqual(v, fs); }) != fullSteps.end()) {
                 continue;
             }
             steps.push_back(TrackRulerSmallStep { v, ch,  v < 0.0 });
