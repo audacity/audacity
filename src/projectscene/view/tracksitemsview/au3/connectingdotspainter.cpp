@@ -4,11 +4,8 @@
 #include "wavepainterutils.h"
 #include "samplespainterutils.h"
 #include "WaveClip.h"
-#include "WaveClipUtilities.h"
-#include "WaveformSettings.h"
 #include "WaveformScale.h"
 #include "PendingTracks.h"
-#include "ZoomInfo.h"
 
 using namespace au::au3;
 namespace {
@@ -50,9 +47,8 @@ void ConnectingDotsPainter::paint(QPainter& painter, const trackedit::ClipKey& c
     const auto& cache = WaveformScale::Get(*track);
     cache.GetDisplayBounds(zoomMin, zoomMax);
 
-    const auto& settings = WaveformSettings::Get(*track);
-    const float dBRange = settings.dBRange;
-    const bool dB = !settings.isLinear();
+    const float dBRange = std::abs(params.dbRange);
+    const bool dB = !params.isLinear;
     const double trimLeft = waveClip->GetTrimLeft();
 
     auto waveMetrics = wavepainterutils::getWaveMetrics(globalContext()->currentProject(), clipKey, params);
