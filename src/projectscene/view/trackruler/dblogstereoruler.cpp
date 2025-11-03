@@ -11,12 +11,12 @@
 using namespace au::projectscene;
 
 namespace {
-constexpr int MIN_ADJACENT_STEPS_HEIGHT = 20;
-constexpr std::array<std::pair<double, double>, 4> STEP_INCREMENT = {
-    { { 1.0 / 6.0, 1.0 / 12.0 },
+constexpr int MIN_ADJACENT_FULL_STEPS_HEIGHT = 17;
+constexpr int MIN_ADJACENT_SMALL_STEPS_HEIGHT = 6;
+constexpr std::array<std::pair<double, double>, 3> STEP_INCREMENT = {
+    { { 1.0 / 3.0, 1.0 / 15.0 },
         { 1.0 / 3.0, 1.0 / 6.0 },
-        { 1.0 / 2.0, 1.0 / 4.0 },
-        { 1.0, 1.0 / 3.0 } } };
+        { 1.0, 1.0 / 2.0 } } };
 constexpr std:: pair<double, double> DEFAULT_INCREMENT = { 1.0, 1.0 / 3.0 };
 constexpr double MIN_CHANNEL_HEIGHT = 40.0;
 
@@ -57,8 +57,11 @@ std::pair<double, double> stepsIncrement(double height, double dbRange)
 {
     std::pair<double, double> increment = DEFAULT_INCREMENT;
     for (const auto& stepInc : STEP_INCREMENT) {
-        const auto& [v, _] = stepInc;
-        if (valueToPosition(dbRange * v, height, dbRange, false) >= MIN_ADJACENT_STEPS_HEIGHT) {
+        const auto& [fs, ss] = stepInc;
+        if ((valueToPosition(dbRange * fs, height, dbRange,
+                             false) - valueToPosition(0, height, dbRange, false) >= MIN_ADJACENT_FULL_STEPS_HEIGHT)
+            && (valueToPosition(dbRange * ss, height, dbRange,
+                                false) - valueToPosition(0, height, dbRange, false) >= MIN_ADJACENT_SMALL_STEPS_HEIGHT)) {
             increment = stepInc;
             break;
         }
