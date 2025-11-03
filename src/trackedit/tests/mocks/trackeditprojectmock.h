@@ -16,7 +16,9 @@ public:
     MOCK_METHOD(std::optional<Track>, track, (TrackId trackId), (const, override));
 
     MOCK_METHOD(Clip, clip, (const ClipKey& key), (const, override));
+    MOCK_METHOD(Label, label, (const LabelKey& key), (const, override));
     MOCK_METHOD(muse::async::NotifyList<Clip>, clipList, (const TrackId& trackId), (const, override));
+    MOCK_METHOD(muse::async::NotifyList<Label>, labelList, (const TrackId& trackId), (const, override));
     MOCK_METHOD(std::vector<int64_t>, groupsIdsList, (), (const, override));
     MOCK_METHOD(std::optional<std::string>, trackName, (const TrackId& trackId), (const, override));
 
@@ -31,6 +33,10 @@ public:
     MOCK_METHOD(void, notifyAboutClipChanged, (const Clip& clip), (override));
     MOCK_METHOD(void, notifyAboutClipAdded, (const Clip& clip), (override));
     MOCK_METHOD(void, notifyAboutClipRemoved, (const Clip& clip), (override));
+
+    MOCK_METHOD(void, notifyAboutLabelChanged, (const Label& label), (override));
+    MOCK_METHOD(void, notifyAboutLabelAdded, (const Label& label), (override));
+    MOCK_METHOD(void, notifyAboutLabelRemoved, (const Label& label), (override));
 
     MOCK_METHOD(TimeSignature, timeSignature, (), (const, override));
     MOCK_METHOD(void, setTimeSignature, (const TimeSignature& timeSignature), (override));

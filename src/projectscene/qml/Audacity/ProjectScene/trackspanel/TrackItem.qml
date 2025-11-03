@@ -10,8 +10,6 @@ import Muse.UiComponents
 
 import Audacity.ProjectScene
 
-import "audio"
-
 ListItemBlank {
     id: root
 
@@ -22,6 +20,12 @@ ListItemBlank {
 
     property bool isFocused: false
 
+    property alias headerTrailingControlsComponent: headerTrailingControls.sourceComponent
+    property alias extraControlsComponent: extraControlsLoader.sourceComponent
+    property alias rightSideContainerComponent: rightSideContainer.sourceComponent
+
+    property alias bottomSeparatorHeight: bottomSeparator.height
+
     signal interactionStarted()
     signal interactionEnded()
     signal selectionRequested(bool exclusive)
@@ -29,19 +33,6 @@ ListItemBlank {
     signal mousePressed(var item, double x, double y)
     signal mouseReleased(var item, double x, double y)
     signal mouseMoved(var item, double x, double y)
-
-    function clearMeters() {
-        leftOrMonoVolumePressureMeter.reset()
-        leftOrMonoVolumePressureMeter.resetClipped()
-        rightVolumePressureMeter.reset()
-        rightVolumePressureMeter.resetClipped()
-    }
-
-    onIsFocusedChanged: {
-        if (!root.isFocused) {
-            root.clearMeters()
-        }
-    }
 
     mouseArea.onPressed: {
         root.mousePressed(this, mouseArea.mouseX, mouseArea.mouseY)
@@ -81,25 +72,8 @@ ListItemBlank {
 
     signal openEffectsRequested()
 
-    TrackViewStateModel {
-        id: trackViewState
+    property TrackViewStateModel trackViewState: TrackViewStateModel {
         trackId: root.item ? root.item.trackId : -1
-
-        onIsPlayingChanged: {
-            if (trackViewState.isPlaying) {
-                root.clearMeters()
-            }
-        }
-
-        onIsRecordingChanged: {
-            if (trackViewState.isRecording) {
-                leftOrMonoVolumePressureMeter.resetClipped()
-                rightVolumePressureMeter.resetClipped()
-            }
-
-            leftOrMonoVolumePressureMeter.reset()
-            rightVolumePressureMeter.reset()
-        }
     }
 
     TrackContextMenuModel {
@@ -109,7 +83,7 @@ ListItemBlank {
         onTrackRenameRequested: title.edit()
     }
 
-    Component.onCompleted: {
+    function init() {
         trackViewState.init()
         contextMenuModel.load()
         // Disable ancestor's states
@@ -156,7 +130,6 @@ ListItemBlank {
             Layout.topMargin: 7
             Layout.margins: 12
             Layout.alignment: Qt.AlignTop
-            spacing: 2
 
             RowLayout {
                 Layout.fillWidth: true
@@ -164,7 +137,7 @@ ListItemBlank {
                 spacing: 8
 
                 StyledIconLabel {
-                    iconCode: IconCode.MICROPHONE
+                    iconCode: Boolean(root.item) ? root.item.icon : 0
                 }
 
                 EditableLabel {
@@ -173,24 +146,16 @@ ListItemBlank {
                     Layout.preferredHeight: title.implicitHeight
                     Layout.fillWidth: true
 
-                    text: root.item.title
+                    text: Boolean(root.item) ? root.item.title : ""
 
                     onTextEdited: function(text) {
-                        root.item.title = text
-                    }
-                }
-
-                Loader {
-                    sourceComponent: trackControlButtons
-                    opacity: root.collapsed ? 1 : 0
-                    visible: opacity !== 0
-
-                    Behavior on opacity {
-                        OpacityAnimator {
-                            duration: 100
+                        if (Boolean(root.item)) {
+                            root.item.title = text
                         }
                     }
                 }
+
+                Loader { id: headerTrailingControls }
 
                 MenuButton {
                     menuModel: contextMenuModel
@@ -205,61 +170,10 @@ ListItemBlank {
                 }
             }
 
-            RowLayout {
-                id: trackControlsRow
-
+            Loader { 
+                id: extraControlsLoader
                 Layout.fillWidth: true
-
-                spacing: 16
-
-                opacity: root.collapsed ? 0 : 1
-                visible: opacity !== 0
-
-                Behavior on opacity {
-                    OpacityAnimator {
-                        duration: 100
-                    }
-                }
-
-                PanKnob {
-                    value: root.item.pan
-
-                    onNewPanRequested: function(newValue, completed) {
-                        root.item.setPan(newValue, completed)
-                    }
-                }
-
-                VolumeSlider {
-                    value: root.item.volumeLevel
-
-                    onNewVolumeRequested: function(newValue, completed) {
-                        root.item.setVolumeLevel(newValue, completed)
-                    }
-                }
-
-                Loader {
-                    sourceComponent: trackControlButtons
-                }
-            }
-
-            FlatButton {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 24
-
-                opacity: root.height > root.mapFromItem(this, 0, height + bottomSeparator.height).y ? 1 : 0
-                visible: opacity !== 0
-
-                Behavior on opacity {
-                    OpacityAnimator {
-                        duration: 100
-                    }
-                }
-
-                text: qsTrc("projectscene", "Effects")
-
-                onClicked: {
-                    root.openEffectsRequested()
-                }
+                Layout.preferredHeight: implicitHeight
             }
         }
 
@@ -268,85 +182,13 @@ ListItemBlank {
             Layout.bottomMargin: 2 * bottomSeparator.thickness
         }
 
-        Item {
+        Loader {
+            id: rightSideContainer
+
             Layout.fillHeight: true
             Layout.topMargin: 5
             Layout.bottomMargin: 5
-            width: 24
-
-            Row {
-                id: volumePressureContainer
-
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                property int indicatorWidth: 7
-
-                spacing: 2
-
-                TapHandler {
-                    id: volumePressureTapHandler
-                    onTapped: {
-                        root.clearMeters()
-                    }
-                }
-
-                VolumePressureMeter {
-                    id: leftOrMonoVolumePressureMeter
-
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-
-                    indicatorWidth: parent.indicatorWidth
-
-                    meterModel: trackViewState.meterModel
-
-                    currentVolumePressure: root.item.leftChannelPressure
-                    currentRMS: root.item.leftChannelRMS
-                }
-
-                VolumePressureMeter {
-                    id: rightVolumePressureMeter
-
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-
-                    indicatorWidth: parent.indicatorWidth
-
-                    meterModel: trackViewState.meterModel
-
-                    currentVolumePressure: root.item.rightChannelPressure
-                    currentRMS: root.item.rightChannelRMS
-                }
-            }
-
-            states: [
-                State {
-                    when: root.item.channelCount === 1
-                    name: "mono"
-                    PropertyChanges {
-                        target: volumePressureContainer
-                        indicatorWidth: 8
-                    }
-                    PropertyChanges {
-                        target: rightVolumePressureMeter
-                        visible: false
-                    }
-                },
-                State {
-                    when: root.item.channelCount === 2
-                    name: "stereo"
-                    PropertyChanges {
-                        target: volumePressureContainer
-                        indicatorWidth: 7
-                    }
-                    PropertyChanges {
-                        target: rightVolumePressureMeter
-                        visible: true
-                    }
-                }
-            ]
+            Layout.preferredWidth: 24
         }
     }
 
@@ -444,36 +286,5 @@ ListItemBlank {
         border.width: 2
 
         radius: 6
-    }
-
-    Component {
-        id: trackControlButtons
-
-        RowLayout {
-
-            FlatToggleButton {
-                Layout.preferredWidth: 20
-                Layout.preferredHeight: Layout.preferredWidth
-
-                icon: IconCode.MUTE
-                checked: root.item.muted
-
-                onToggled: {
-                    root.item.muted = !checked
-                }
-            }
-
-            FlatToggleButton {
-                Layout.preferredWidth: 20
-                Layout.preferredHeight: Layout.preferredWidth
-
-                icon: IconCode.SOLO
-                checked: root.item.solo
-
-                onToggled: {
-                    root.item.solo = !checked
-                }
-            }
-        }
     }
 }

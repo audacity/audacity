@@ -9,7 +9,6 @@
 
 #include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
-#include "ui/uitypes.h"
 
 #include "internal/projectsceneuiactions.h"
 #include "internal/projectsceneactionscontroller.h"
@@ -26,29 +25,33 @@
 #include "view/toolbars/undoredotoolbarmodel.h"
 #include "view/toolbars/workspacestoolbarmodel.h"
 
+#include "view/trackspanel/paneltrackslistmodel.h"
 #include "view/trackspanel/addeffectmenumodel.h"
 #include "view/trackspanel/realtimeeffectlistmodel.h"
 #include "view/trackspanel/realtimeeffectlistitemmenumodel.h"
 #include "view/trackspanel/realtimeeffectsectionmodel.h"
-#include "view/trackspanel/trackslistmodel.h"
 #include "view/trackspanel/trackcontextmenumodel.h"
+#include "view/trackspanel/trackitem.h"
+#include "view/trackspanel/addnewtrackpopupmodel.h"
 
-#include "view/clipsview/trackslistclipsmodel.h"
-#include "view/clipsview/clipslistmodel.h"
-#include "view/clipsview/cliplistitem.h"
-#include "view/clipsview/waveview.h"
-#include "view/clipsview/clipcontextmenumodel.h"
-#include "view/clipsview/mousehelper.h"
-#include "view/clipsview/multiclipcontextmenumodel.h"
-#include "view/clipsview/canvascontextmenumodel.h"
-#include "view/clipsview/selectioncontextmenumodel.h"
-#include "view/clipsview/selectionviewcontroller.h"
-#include "view/clipsview/splittoolcontroller.h"
-#include "view/clipsview/pitchandspeedchangemodel.h"
-#include "view/clipsview/wavepainterproxy.h"
-#include "view/clipsview/au3/connectingdotspainter.h"
-#include "view/clipsview/au3/minmaxrmspainter.h"
-#include "view/clipsview/au3/samplespainter.h"
+#include "view/tracksitemsview/viewtrackslistmodel.h"
+#include "view/tracksitemsview/trackclipslistmodel.h"
+#include "view/tracksitemsview/trackclipitem.h"
+#include "view/tracksitemsview/tracklabelslistmodel.h"
+#include "view/tracksitemsview/tracklabelitem.h"
+#include "view/tracksitemsview/waveview.h"
+#include "view/tracksitemsview/clipcontextmenumodel.h"
+#include "view/tracksitemsview/multiclipcontextmenumodel.h"
+#include "view/tracksitemsview/canvascontextmenumodel.h"
+#include "view/tracksitemsview/selectioncontextmenumodel.h"
+#include "view/tracksitemsview/selectionviewcontroller.h"
+#include "view/tracksitemsview/splittoolcontroller.h"
+#include "view/tracksitemsview/pitchandspeedchangemodel.h"
+#include "view/tracksitemsview/wavepainterproxy.h"
+#include "view/tracksitemsview/au3/connectingdotspainter.h"
+#include "view/tracksitemsview/au3/minmaxrmspainter.h"
+#include "view/tracksitemsview/au3/samplespainter.h"
+#include "view/tracksitemsview/mousehelper.h"
 
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
@@ -112,7 +115,7 @@ void ProjectSceneModule::resolveImports()
     auto ir = ioc()->resolve<IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://projectscene/editpitchandspeed"),
-                           "Audacity/ProjectScene/clipsview/pitchandspeed/PitchAndSpeedChangeDialog.qml");
+                           "Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchAndSpeedChangeDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://projectscene/insertsilence"),
                            "Audacity/ProjectScene/common/InsertSilence.qml");
     }
@@ -145,18 +148,21 @@ void ProjectSceneModule::registerUiTypes()
                                                              "Cannot create");
 
     // tracks panel
+    qmlRegisterType<PanelTracksListModel>("Audacity.ProjectScene", 1, 0, "PanelTracksListModel");
     qmlRegisterType<AddEffectMenuModel>("Audacity.ProjectScene", 1, 0, "AddEffectMenuModel");
     qmlRegisterType<RealtimeEffectListModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectListModel");
     qmlRegisterType<RealtimeEffectListItemMenuModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectListItemMenuModel");
     qmlRegisterType<RealtimeEffectSectionModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectSectionModel");
-    qmlRegisterType<TracksListModel>("Audacity.ProjectScene", 1, 0, "TracksListModel");
     qmlRegisterType<TrackContextMenuModel>("Audacity.ProjectScene", 1, 0, "TrackContextMenuModel");
+    qmlRegisterType<AddNewTrackPopupModel>("Audacity.ProjectScene", 1, 0, "AddNewTrackPopupModel");
 
     // clips view
-    qmlRegisterType<TracksListClipsModel>("Audacity.ProjectScene", 1, 0, "TracksListClipsModel");
-    qmlRegisterType<ClipsListModel>("Audacity.ProjectScene", 1, 0, "ClipsListModel");
+    qmlRegisterType<ViewTracksListModel>("Audacity.ProjectScene", 1, 0, "ViewTracksListModel");
+    qmlRegisterType<TrackClipsListModel>("Audacity.ProjectScene", 1, 0, "TrackClipsListModel");
+    qmlRegisterUncreatableType<TrackClipItem>("Audacity.ProjectScene", 1, 0, "TrackClipItem", "Not creatable from QML");
     qmlRegisterType<MouseHelper>("Audacity.ProjectScene", 1, 0, "MouseHelper");
-    qmlRegisterUncreatableType<ClipListItem>("Audacity.ProjectScene", 1, 0, "ClipListItem", "Not creatable from QML");
+    qmlRegisterType<TrackLabelsListModel>("Audacity.ProjectScene", 1, 0, "TrackLabelsListModel");
+    qmlRegisterUncreatableType<TrackLabelItem>("Audacity.ProjectScene", 1, 0, "TrackLabelItem", "Not creatable from QML");
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
     qmlRegisterType<ClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "ClipContextMenuModel");
     qmlRegisterType<MultiClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "MultiClipContextMenuModel");

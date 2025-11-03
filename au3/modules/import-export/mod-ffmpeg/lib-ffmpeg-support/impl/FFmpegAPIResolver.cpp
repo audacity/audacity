@@ -29,6 +29,10 @@ namespace avformat_61 {
 extern void Register();
 }
 
+namespace avformat_62 {
+extern void Register();
+}
+
 namespace avutil_52 {
 extern void Register();
 }
@@ -45,6 +49,9 @@ namespace avutil_58 {
 extern void Register();
 }
 namespace avutil_59 {
+extern void Register();
+}
+namespace avutil_60 {
 extern void Register();
 }
 
@@ -72,6 +79,10 @@ namespace avcodec_61 {
 extern void Register();
 extern void RegisterId();
 }
+namespace avcodec_62 {
+extern void Register();
+extern void RegisterId();
+}
 
 // without this method all supported ffmpeg versions are not initialized
 void Register()
@@ -82,6 +93,7 @@ void Register()
     avformat_59::Register();
     avformat_60::Register();
     avformat_61::Register();
+    avformat_62::Register();
 
     avutil_52::Register();
     avutil_55::Register();
@@ -89,6 +101,7 @@ void Register()
     avutil_57::Register();
     avutil_58::Register();
     avutil_59::Register();
+    avutil_60::Register();
 
     avcodec_55::Register();
     avcodec_57::Register();
@@ -96,6 +109,7 @@ void Register()
     avcodec_59::Register();
     avcodec_60::Register();
     avcodec_61::Register();
+    avcodec_62::Register();
 
     avcodec_55::RegisterId();
     avcodec_57::RegisterId();
@@ -103,6 +117,7 @@ void Register()
     avcodec_59::RegisterId();
     avcodec_60::RegisterId();
     avcodec_61::RegisterId();
+    avcodec_62::RegisterId();
 }
 
 FFmpegAPIResolver& FFmpegAPIResolver::Get()

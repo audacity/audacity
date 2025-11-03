@@ -107,6 +107,8 @@ static const ActionQuery TRACK_CHANGE_COLOR_QUERY("action://trackedit/track/chan
 static const ActionQuery TRACK_CHANGE_FORMAT_QUERY("action://trackedit/track/change-format");
 static const ActionQuery TRACK_CHANGE_RATE_QUERY("action://trackedit/track/change-rate");
 
+static const ActionCode ADD_LABEL("add-label");
+
 // In principle, disabled are actions that modify the data involved in playback.
 static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACKEDIT_CUT_CODE,
@@ -162,6 +164,7 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACK_RESAMPLE,
     GROUP_CLIPS_CODE,
     UNGROUP_CLIPS_CODE,
+    ADD_LABEL,
 };
 
 void TrackeditActionsController::init()
@@ -259,6 +262,8 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, TRACK_CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setTrackColor);
     dispatcher()->reg(this, TRACK_CHANGE_FORMAT_QUERY, this, &TrackeditActionsController::setTrackFormat);
     dispatcher()->reg(this, TRACK_CHANGE_RATE_QUERY, this, &TrackeditActionsController::setTrackRate);
+
+    dispatcher()->reg(this, ADD_LABEL, this, &TrackeditActionsController::addLabel);
 
     projectHistory()->historyChanged().onNotify(this, [this]() {
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
@@ -1285,6 +1290,7 @@ void TrackeditActionsController::renderClipPitchAndSpeed(const muse::actions::Ac
         return;
     }
 
+    // todo
     interactive()->showProgress(muse::trc("trackedit", "Applying"), trackeditInteraction()->progress());
 
     trackeditInteraction()->renderClipPitchAndSpeed(clipKey);
@@ -1541,6 +1547,11 @@ void TrackeditActionsController::setTrackRate(const muse::actions::ActionQuery& 
     if (trackeditInteraction()->changeTracksRate(tracks, rate)) {
         notifyActionCheckedChanged(q.toString());
     }
+}
+
+void TrackeditActionsController::addLabel()
+{
+    trackeditInteraction()->addLabelToSelection();
 }
 
 void TrackeditActionsController::makeStereoTrack(const muse::actions::ActionData&)

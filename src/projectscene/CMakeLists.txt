@@ -49,6 +49,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/addeffectmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/wavetrackitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/wavetrackitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/labeltrackitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/labeltrackitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackcontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackcontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistitemmenumodel.cpp
@@ -61,8 +65,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectmenumodelbase.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectsectionmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectsectionmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/paneltrackslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/paneltrackslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/addnewtrackpopupmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/addnewtrackpopupmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/projecttoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/projecttoolbarmodel.h
@@ -87,56 +93,64 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audiosetupcontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audiosetupcontextmenumodel.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/isamplespainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/samplespainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/samplespainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/samplespainterutils.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/samplespainterutils.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/iminmaxrmspainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/minmaxrmspainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/minmaxrmspainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/iconnectingdotspainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/connectingdotspainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/connectingdotspainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/iau3wavepainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/sampledata.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformScale.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformScale.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformSettings.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformSettings.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformPainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformPainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveMetrics.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/wavepainterutils.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/wavepainterutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/isamplespainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainterutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainterutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/iminmaxrmspainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/minmaxrmspainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/minmaxrmspainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/iconnectingdotspainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/connectingdotspainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/connectingdotspainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/iau3wavepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/sampledata.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformScale.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformScale.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformSettings.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformSettings.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformPainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformPainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveMetrics.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/wavepainterutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/wavepainterutils.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/cliplistitem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/cliplistitem.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipcontextmenumodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipcontextmenumodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/mousehelper.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/mousehelper.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/multiclipcontextmenumodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/multiclipcontextmenumodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/wavepainterproxy.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/wavepainterproxy.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/iwavepainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/selectionviewcontroller.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/selectionviewcontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/pitchandspeedchangemodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/pitchandspeedchangemodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/selectioncontextmenumodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/selectioncontextmenumodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/canvascontextmenumodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/canvascontextmenumodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/splittoolcontroller.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/splittoolcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/viewtrackitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/viewtrackitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackitemslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackitemslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipcontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipcontextmenumodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/multiclipcontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/multiclipcontextmenumodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/viewtrackslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/viewtrackslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/wavepainterproxy.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/wavepainterproxy.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/waveview.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/waveview.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/iwavepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/selectionviewcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/selectionviewcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/pitchandspeedchangemodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/pitchandspeedchangemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/selectioncontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/selectioncontextmenumodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/canvascontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/canvascontextmenumodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/splittoolcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/splittoolcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/mousehelper.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/mousehelper.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.h

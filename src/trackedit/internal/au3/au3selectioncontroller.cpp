@@ -36,6 +36,7 @@ void Au3SelectionController::init()
 
         if (prj) {
             resetSelectedClips();
+            resetSelectedLabels();
             resetSelectedTracks();
 
             //! NOTE: load project's last saved selection state
@@ -237,7 +238,7 @@ double Au3SelectionController::selectedClipStartTime() const
         return -1.0;
     }
 
-    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
     if (!clip) {
         return -1.0;
     }
@@ -259,7 +260,7 @@ double Au3SelectionController::selectedClipEndTime() const
         return -1.0;
     }
 
-    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
     if (!clip) {
         return -1.0;
     }
@@ -276,7 +277,7 @@ double Au3SelectionController::leftMostSelectedClipStartTime() const
             continue;
         }
 
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.itemId);
         IF_ASSERT_FAILED(clip) {
             continue;
         }
@@ -307,7 +308,7 @@ double Au3SelectionController::rightMostSelectedClipEndTime() const
             continue;
         }
 
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.itemId);
         IF_ASSERT_FAILED(clip) {
             continue;
         }
@@ -319,6 +320,207 @@ double Au3SelectionController::rightMostSelectedClipEndTime() const
 
         if (!muse::RealIsEqualOrLess(clip->GetPlayEndTime(), endTime.value())) {
             endTime = clip->GetPlayEndTime();
+        }
+    }
+
+    if (endTime.has_value()) {
+        return endTime.value();
+    }
+
+    return -1.0;
+}
+
+// label selection
+
+void Au3SelectionController::resetSelectedLabels()
+{
+    MYLOG() << "resetSelectedLabels";
+    m_selectedLabels.set(au::trackedit::LabelKeyList(), true);
+}
+
+bool Au3SelectionController::hasSelectedLabels() const
+{
+    return !m_selectedLabels.val.empty();
+}
+
+LabelKeyList Au3SelectionController::selectedLabels() const
+{
+    return m_selectedLabels.val;
+}
+
+LabelKeyList Au3SelectionController::selectedLabelsInTrackOrder() const
+{
+    LabelKeyList sortedSelectedLabels;
+    auto& tracks = ::TrackList::Get(projectRef());
+    for (const auto& track : tracks) {
+        for (const auto& selectedLabel : m_selectedLabels.val) {
+            if (TrackId(track->GetId()) == selectedLabel.trackId) {
+                sortedSelectedLabels.push_back(selectedLabel);
+            }
+        }
+    }
+
+    return sortedSelectedLabels;
+}
+
+void Au3SelectionController::setSelectedLabels(const LabelKeyList& labelKeys, bool complete)
+{
+    m_selectedLabels.set(labelKeys, complete);
+
+    //! NOTE: when selecting a label, we also need to select
+    //! the track on which the label is located
+    TrackIdList selectedTracks;
+    for (const LabelKey& key : labelKeys) {
+        if (muse::contains(selectedTracks, key.trackId)) {
+            continue;
+        }
+        selectedTracks.push_back(key.trackId);
+    }
+    setSelectedTracks(selectedTracks, complete);
+}
+
+void Au3SelectionController::addSelectedLabel(const LabelKey& labelKey)
+{
+    auto selectedLabels = m_selectedLabels.val;
+
+    if (!muse::contains(selectedLabels, labelKey)) {
+        selectedLabels.push_back(labelKey);
+
+        m_selectedLabels.set(selectedLabels, true);
+
+        //! NOTE: when selecting a label, we also need to select
+        //! the track on which the label is located
+        addSelectedTrack(labelKey.trackId);
+    }
+}
+
+void Au3SelectionController::removeLabelSelection(const LabelKey& labelKey)
+{
+    auto selectedLabels = m_selectedLabels.val;
+
+    if (!muse::contains(selectedLabels, labelKey)) {
+        return;
+    }
+
+    selectedLabels.erase(
+        std::remove(selectedLabels.begin(), selectedLabels.end(), labelKey),
+        selectedLabels.end()
+        );
+
+    m_selectedLabels.set(selectedLabels, true);
+
+    //! NOTE: update selected tracks
+    TrackIdList selectedTracks;
+    for (const LabelKey& key : selectedLabels) {
+        if (muse::contains(selectedTracks, key.trackId)) {
+            continue;
+        }
+        selectedTracks.push_back(key.trackId);
+    }
+    setSelectedTracks(selectedTracks, true);
+}
+
+muse::async::Channel<LabelKeyList> Au3SelectionController::labelsSelected() const
+{
+    return m_selectedLabels.selected;
+}
+
+double Au3SelectionController::selectedLabelStartTime() const
+{
+    auto labelKeyList = selectedLabels();
+    if (labelKeyList.empty()) {
+        return -1.0;
+    }
+
+    auto labelKey = labelKeyList.at(0);
+
+    Au3LabelTrack* labelTrack = au3::DomAccessor::findLabelTrack(projectRef(), ::TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return -1.0;
+    }
+
+    const Au3Label* label = labelTrack->GetLabel(labelKey.itemId);
+    if (!label) {
+        return -1.0;
+    }
+
+    return label->getT0();
+}
+
+double Au3SelectionController::selectedLabelEndTime() const
+{
+    auto labelKeyList = selectedLabels();
+    if (labelKeyList.empty()) {
+        return -1.0;
+    }
+
+    auto labelKey = labelKeyList.at(0);
+
+    Au3LabelTrack* labelTrack = au3::DomAccessor::findLabelTrack(projectRef(), ::TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return -1.0;
+    }
+
+    const Au3Label* label = labelTrack->GetLabel(labelKey.itemId);
+    if (!label) {
+        return -1.0;
+    }
+
+    return label->getT1();
+}
+
+double Au3SelectionController::leftMostSelectedLabelStartTime() const
+{
+    std::optional<double> startTime;
+    for (const auto& selectedLabel : selectedLabels()) {
+        Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(selectedLabel.trackId));
+        IF_ASSERT_FAILED(labelTrack) {
+            continue;
+        }
+
+        const Au3Label* label = labelTrack->GetLabel(selectedLabel.itemId);
+        IF_ASSERT_FAILED(label) {
+            continue;
+        }
+
+        if (!startTime.has_value()) {
+            startTime = label->getT0();
+            continue;
+        }
+
+        if (!muse::RealIsEqualOrMore(label->getT0(), startTime.value())) {
+            startTime = label->getT0();
+        }
+    }
+
+    if (startTime.has_value()) {
+        return startTime.value();
+    }
+
+    return -1.0;
+}
+
+double Au3SelectionController::rightMostSelectedLabelEndTime() const
+{
+    std::optional<double> endTime;
+    for (const auto& selectedLabel : selectedLabels()) {
+        Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(selectedLabel.trackId));
+        IF_ASSERT_FAILED(labelTrack) {
+            continue;
+        }
+
+        const Au3Label* label = labelTrack->GetLabel(selectedLabel.itemId);
+        IF_ASSERT_FAILED(label) {
+            continue;
+        }
+
+        if (!endTime.has_value()) {
+            endTime = label->getT1();
+            continue;
+        }
+
+        if (!muse::RealIsEqualOrLess(label->getT1(), endTime.value())) {
+            endTime = label->getT1();
         }
     }
 
@@ -453,7 +655,7 @@ bool Au3SelectionController::selectionContainsGroup() const
             return false;
         }
 
-        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
         IF_ASSERT_FAILED(clip) {
             return false;
         }
@@ -481,7 +683,7 @@ bool Au3SelectionController::isSelectionGrouped() const
             return false;
         }
 
-        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
         IF_ASSERT_FAILED(clip) {
             return false;
         }
@@ -508,6 +710,7 @@ void Au3SelectionController::resetTimeSelection()
 {
     resetDataSelection();
     resetSelectedClips();
+    resetSelectedLabels();
 }
 
 au::trackedit::TrackId Au3SelectionController::focusedTrack() const

@@ -27,11 +27,11 @@ Item {
     property alias showEffectsSection: effectSectionModel.showEffectsSection
     property int selectedTrackIndex: -1
 
-    TracksListModel {
+    PanelTracksListModel {
         id: tracksModel
     }
 
-    //! NOTE Sync with TracksClipsView
+    //! NOTE Sync with TracksItemsView
     TracksViewStateModel {
         id: tracksViewState
         onTracksVerticalOffsetChanged: {
@@ -181,49 +181,123 @@ Item {
                     height: tracksViewState.tracksVerticalScrollPadding
                 }
 
-                delegate: TrackItem {
-                    item: itemData
-                    isSelected: Boolean(item) ? item.isSelected : false
-                    isFocused: Boolean(item) ? item.isFocused : false
-                    container: view
+                delegate: Loader {
+                    id: trackItemLoader
 
-                    navigation.name: Boolean(item) ? item.title + item.index : ""
-                    navigation.panel: root.navPanels && root.navPanels[model.index] ? root.navPanels[model.index] : null
-                    navigation.row: model.index
-                    navigation.accessible.name: Boolean(item) ? item.title : ""
-                    navigation.onActiveChanged: {
-                        if (navigation.active) {
-                            root.panelActive(model.index)
-                            prv.currentItemNavigationName = navigation.name
-                            view.positionViewAtIndex(index, ListView.Contain)
+                    property var trackItemData: itemData
+                    property int index: model.index
+
+                    width: view.width
+
+                    sourceComponent: (itemData && itemData.trackType === TrackType.LABEL) ? labelItemComp : waveItemComp
+
+                    onLoaded: {
+                        trackItemLoader.item.init()
+                    }
+
+                    Component {
+                        id: waveItemComp
+
+                        WaveTrackItem {
+                            property int index: trackItemLoader.index
+
+                            item: trackItemLoader.trackItemData
+
+                            isSelected: Boolean(item) ? item.isSelected : false
+                            isFocused: Boolean(item) ? item.isFocused : false
+                            container: view
+
+                            navigation.name: Boolean(item) ? item.title + item.index : ""
+                            navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
+                            navigation.row: index
+                            navigation.accessible.name: Boolean(item) ? item.title : ""
+                            navigation.onActiveChanged: {
+                                if (navigation.active) {
+                                    root.panelActive(index)
+                                    prv.currentItemNavigationName = navigation.name
+                                    view.positionViewAtIndex(index, ListView.Contain)
+                                }
+                            }
+
+                            onInteractionStarted: {
+                                tracksViewState.requestVerticalScrollLock()
+                            }
+
+                            onInteractionEnded: {
+                                tracksViewState.requestVerticalScrollUnlock()
+                            }
+
+                            onSelectionRequested: function (exclusive) {
+                                tracksModel.selectRow(index, exclusive)
+                            }
+
+                            onOpenEffectsRequested: {
+                                effectSectionModel.showEffectsSection = true
+                                root.openEffectsRequested()
+                            }
+
+                            onRemoveSelectionRequested: {
+                                tracksModel.removeSelection()
+                            }
+
+                            Component.onCompleted: {
+                                mousePressed.connect(dragHandler.startDrag)
+                                mouseReleased.connect(dragHandler.endDrag)
+                                mouseMoved.connect(dragHandler.onMouseMove)
+                            }
                         }
                     }
 
-                    onInteractionStarted: {
-                        tracksViewState.requestVerticalScrollLock()
-                    }
+                    Component {
+                        id: labelItemComp
 
-                    onInteractionEnded: {
-                        tracksViewState.requestVerticalScrollUnlock()
-                    }
+                        LabelTrackItem {
+                            property int index: trackItemLoader.index
 
-                    onSelectionRequested: function (exclusive) {
-                        tracksModel.selectRow(model.index, exclusive)
-                    }
+                            item: trackItemLoader.trackItemData
 
-                    onOpenEffectsRequested: {
-                        effectSectionModel.showEffectsSection = true
-                        root.openEffectsRequested()
-                    }
+                            isSelected: Boolean(item) ? item.isSelected : false
+                            isFocused: Boolean(item) ? item.isFocused : false
+                            container: view
 
-                    onRemoveSelectionRequested: {
-                        tracksModel.removeSelection()
-                    }
+                            navigation.name: Boolean(item) ? item.title + item.index : ""
+                            navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
+                            navigation.row: index
+                            navigation.accessible.name: Boolean(item) ? item.title : ""
+                            navigation.onActiveChanged: {
+                                if (navigation.active) {
+                                    root.panelActive(index)
+                                    prv.currentItemNavigationName = navigation.name
+                                    view.positionViewAtIndex(index, ListView.Contain)
+                                }
+                            }
 
-                    Component.onCompleted: {
-                        mousePressed.connect(dragHandler.startDrag)
-                        mouseReleased.connect(dragHandler.endDrag)
-                        mouseMoved.connect(dragHandler.onMouseMove)
+                            onInteractionStarted: {
+                                tracksViewState.requestVerticalScrollLock()
+                            }
+
+                            onInteractionEnded: {
+                                tracksViewState.requestVerticalScrollUnlock()
+                            }
+
+                            onSelectionRequested: function (exclusive) {
+                                tracksModel.selectRow(index, exclusive)
+                            }
+
+                            onRemoveSelectionRequested: {
+                                tracksModel.removeSelection()
+                            }
+
+                            onAddLabelToSelectionRequested: {
+                                tracksModel.addLabelToSelection()
+                            }
+
+                            Component.onCompleted: {
+                                mousePressed.connect(dragHandler.startDrag)
+                                mouseReleased.connect(dragHandler.endDrag)
+                                mouseMoved.connect(dragHandler.onMouseMove)
+                            }
+                        }
                     }
                 }
 
@@ -265,9 +339,13 @@ Item {
                         height: 2
                         color: ui.theme.accentColor
                         visible: dragHandler.dropIndex >= 0
-                        y: dragHandler.dropIndex >= 0 && dragHandler.dropIndex < view.count
-                        ? view.itemAtIndex(dragHandler.dropIndex).y - view.contentY
-                        : view.contentHeight - view.contentY - tracksViewState.tracksVerticalScrollPadding
+                        y: {
+                            if (dragHandler.dropIndex >= 0 && dragHandler.dropIndex < view.count) {
+                                let loader = view.itemAtIndex(dragHandler.dropIndex)
+                                return Boolean(loader) ? loader.y - view.contentY : 0
+                            }
+                            return view.contentHeight - view.contentY - tracksViewState.tracksVerticalScrollPadding
+                        }
                     }
 
                     function startDrag(item, mouseX, mouseY) {
@@ -333,8 +411,11 @@ Item {
 
                     function setDraggedStateForTracks(state) {
                         tracksModel.selectionModel().selectedIndexes.forEach(selectedIndex => {
-                            view.itemAtIndex(selectedIndex.row).dragged = state
-                        })
+                                                                                 let loader = view.itemAtIndex(selectedIndex.row)
+                                                                                 if (Boolean(loader) && Boolean(loader.item)) {
+                                                                                     loader.item.dragged = state
+                                                                                 }
+                                                                             })
                     }
                 }
             }

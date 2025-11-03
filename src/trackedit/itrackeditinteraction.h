@@ -54,7 +54,7 @@ public:
     virtual bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) = 0;
     virtual bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) = 0;
     virtual bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, bool& clipsMovedToOtherTrack) = 0;
-    virtual void cancelClipDragEdit() = 0;
+    virtual void cancelItemDragEdit() = 0;
     virtual bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) = 0;
     virtual bool splitClipsAtSilences(const ClipKeyList& clipKeyList) = 0;
     virtual bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
@@ -81,6 +81,7 @@ public:
     virtual bool newMonoTrack() = 0;
     virtual bool newStereoTrack() = 0;
     virtual bool newLabelTrack() = 0;
+
     virtual bool deleteTracks(const TrackIdList& trackIds) = 0;
     virtual bool duplicateTracks(const TrackIdList& trackIds) = 0;
     virtual void moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) = 0;
@@ -114,6 +115,9 @@ public:
     virtual bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) = 0;
     virtual bool makeStereoTrack(const TrackId left, const TrackId right) = 0;
     virtual bool resampleTracks(const TrackIdList& tracksIds, int rate) = 0;
+
+    virtual bool addLabelToSelection() = 0;
+    virtual bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) = 0;
 
     virtual muse::Progress progress() const = 0;
 };

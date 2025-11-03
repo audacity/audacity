@@ -99,6 +99,7 @@ Mixer::Mixer(
     , mApplyVolume{applyVolume}
     , mHighQuality{highQuality}
     , mFormat{outFormat}
+    , mOutRate{outRate}
     , mInterleaved{outInterleaved}
     , mTimesAndSpeed{std::make_shared<TimesAndSpeed>(TimesAndSpeed {
         startTime, stopTime, warpOptions.initialSpeed, startTime })}
@@ -312,6 +313,10 @@ size_t Mixer::Process(const size_t maxToProcess)
 
     if (!maxOut) {
         return 0;
+    }
+
+    if (mOutRate > 0.0) {
+        mTime += static_cast<double>(*maxOut) / mOutRate;
     }
 
     if (backwards) {

@@ -144,6 +144,8 @@ private:
     void setTrackFormat(const muse::actions::ActionQuery& q);
     void setTrackRate(const muse::actions::ActionQuery& q);
 
+    void addLabel();
+
     context::IPlaybackStatePtr playbackState() const;
 
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;

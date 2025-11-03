@@ -145,9 +145,9 @@ bool TrackeditInteraction::moveClips(secs_t timePositionOffset, int trackPositio
                             clipsMovedToOtherTrack);
 }
 
-void TrackeditInteraction::cancelClipDragEdit()
+void TrackeditInteraction::cancelItemDragEdit()
 {
-    m_interaction->cancelClipDragEdit();
+    m_interaction->cancelItemDragEdit();
 }
 
 bool TrackeditInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
@@ -420,6 +420,16 @@ bool TrackeditInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
     return withProgress([&, this]() {
         return withPlaybackStop(&ITrackeditInteraction::resampleTracks, tracksIds, rate);
     });
+}
+
+bool TrackeditInteraction::addLabelToSelection()
+{
+    return withPlaybackStop(&ITrackeditInteraction::addLabelToSelection);
+}
+
+bool TrackeditInteraction::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)
+{
+    return withPlaybackStop(&ITrackeditInteraction::changeLabelTitle, labelKey, title);
 }
 
 muse::Progress TrackeditInteraction::progress() const

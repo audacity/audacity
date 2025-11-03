@@ -34,9 +34,6 @@ class ApplicationActionController;
 class ApplicationUiActions;
 class AppShellConfiguration;
 class SessionsManager;
-#ifdef Q_OS_MAC
-class MacOSScrollingHook;
- #endif
 class AppShellModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -60,10 +57,6 @@ private:
     std::shared_ptr<ApplicationUiActions> m_applicationUiActions;
     std::shared_ptr<AppShellConfiguration> m_appShellConfiguration;
     std::shared_ptr<SessionsManager> m_sessionsManager;
-
-    #ifdef Q_OS_MAC
-    std::shared_ptr<MacOSScrollingHook> m_scrollingHook;
-    #endif
 };
 }
 

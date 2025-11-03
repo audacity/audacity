@@ -3,19 +3,24 @@
  */
 #pragma once
 
+#include "async/asyncable.h"
+
+#include "modularity/ioc.h"
+#include "context/iglobalcontext.h"
 #include "itrackeditinteraction.h"
 #include "iprojecthistory.h"
-#include "itrackandclipoperations.h"
-#include "itrackeditclipboard.h"
 #include "iundomanager.h"
-#include "context/iglobalcontext.h"
-#include "async/asyncable.h"
-#include "modularity/ioc.h"
+#include "itracksinteraction.h"
+#include "iclipsinteraction.h"
+#include "ilabelsinteraction.h"
+#include "itrackeditclipboard.h"
 
 namespace au::trackedit {
 class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable, public muse::async::Asyncable
 {
-    muse::Inject<ITrackAndClipOperations> trackAndClipOperations;
+    muse::Inject<ITracksInteraction> tracksInteraction;
+    muse::Inject<IClipsInteraction> clipsInteraction;
+    muse::Inject<ILabelsInteraction> labelsInteraction;
     muse::Inject<ITrackeditClipboard> clipboard;
     muse::Inject<IProjectHistory> projectHistory;
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -54,7 +59,7 @@ public:
     bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) override;
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
     bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, bool& clipsMovedToOtherTrack) override;
-    void cancelClipDragEdit() override;
+    void cancelItemDragEdit() override;
     bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) override;
     bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
     bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
@@ -81,6 +86,7 @@ public:
     bool newMonoTrack() override;
     bool newStereoTrack() override;
     bool newLabelTrack() override;
+
     bool deleteTracks(const TrackIdList& trackIds) override;
     bool duplicateTracks(const TrackIdList& trackIds) override;
     void moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) override;
@@ -114,6 +120,9 @@ public:
     bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) override;
     bool makeStereoTrack(const TrackId left, const TrackId right) override;
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
+
+    bool addLabelToSelection() override;
+    bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) override;
 
     muse::Progress progress() const override;
 

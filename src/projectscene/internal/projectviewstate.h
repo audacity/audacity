@@ -66,11 +66,11 @@ public:
     virtual muse::ValCh<bool> tracksVerticalScrollLocked() const override;
     virtual void setTracksVerticalScrollLocked(bool lock) override;
 
-    void setClipEditStartTimeOffset(double val) override;
-    double clipEditStartTimeOffset() const override;
+    void setItemEditStartTimeOffset(double val) override;
+    double itemEditStartTimeOffset() const override;
 
-    void setClipEditEndTimeOffset(double val) override;
-    double clipEditEndTimeOffset() const override;
+    void setItemEditEndTimeOffset(double val) override;
+    double itemEditEndTimeOffset() const override;
 
     void setMoveInitiated(bool val) override;
     bool moveInitiated() const override;
@@ -115,9 +115,9 @@ private:
 
     muse::ValCh<double> m_mouseYPosition;
 
-    //! Offset between mouse click position on clip's header and clip's start and end time
-    double m_clipEditStartTimeOffset = -1.0;
-    double m_clipEditEndTimeOffset = -1.0;
+    //! Offset between mouse click position on item's header and item's start and end time
+    double m_itemEditStartTimeOffset = -1.0;
+    double m_itemEditEndTimeOffset = -1.0;
 
     //! User needs to drag a mouse by a certain amount of pixels (left or right) or
     //! move to the other track for move to be initiated
