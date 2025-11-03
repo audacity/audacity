@@ -6,6 +6,7 @@
 #include "global/async/async.h"
 
 #include "global/containers.h"
+#include "playback/playbacktypes.h"
 
 using namespace au::projectscene;
 
@@ -179,6 +180,10 @@ void ViewTracksListModel::load()
         emit isVerticalRulersVisibleChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
     emit isVerticalRulersVisibleChanged();
+
+    playbackConfiguration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { DbRangeRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 void ViewTracksListModel::handleDroppedFiles(const QStringList& fileUrls)
@@ -241,6 +246,16 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
 
     case IsStereoRole:
         return track.type == au::trackedit::TrackType::Stereo;
+
+    case IsLinearRole:
+        return globalContext()->currentProject()->viewState()->trackRulerType(track.id).val != 0;
+
+    case TrackRulerTypeRole:
+        return globalContext()->currentProject()->viewState()->trackRulerType(track.id).val;
+
+    case DbRangeRole:
+        return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
+
     default:
         break;
     }
@@ -260,6 +275,9 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { IsMultiSelectionActiveRole, "isMultiSelectionActive" },
         { IsTrackAudibleRole, "isTrackAudible" },
         { IsStereoRole, "isStereo" },
+        { IsLinearRole, "isLinear" },
+        { TrackRulerTypeRole, "trackRulerType" },
+        { DbRangeRole, "dbRange" },
     };
     return roles;
 }
@@ -284,4 +302,17 @@ int ViewTracksListModel::totalTracksHeight() const
 void ViewTracksListModel::toggleVerticalRuler() const
 {
     actionsDispatcher()->dispatch(TOGGLE_VERTICAL_RULERS);
+}
+
+void ViewTracksListModel::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType)
+{
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
+
+    if (!viewState) {
+        return;
+    }
+
+    viewState->setTrackRulerType(trackId, rulerType);
+    emit dataChanged(index(0), index(m_trackList.size() - 1), { IsLinearRole, TrackRulerTypeRole });
 }

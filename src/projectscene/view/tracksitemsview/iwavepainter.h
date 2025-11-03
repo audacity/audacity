@@ -48,6 +48,8 @@ public:
         bool showRMS = false;
         bool showClipping = false;
         Style style;
+        bool isLinear = true;
+        double dbRange = -60.0;
     };
 
     enum class PlotType

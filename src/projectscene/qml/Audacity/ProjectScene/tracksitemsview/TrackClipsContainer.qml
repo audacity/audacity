@@ -15,6 +15,8 @@ TrackItemsContainer {
     property bool rightTrimContainsMouse: false
     property bool leftTrimPressedButtons: false
     property bool rightTrimPressedButtons: false
+    property bool isLinear: false
+    property real dbRange: -60.0
 
     TrackClipsListModel {
         id: clipsModel
@@ -236,6 +238,8 @@ TrackItemsContainer {
                                 isDataSelected: root.isDataSelected
                                 moveActive: root.moveActive
                                 isAudible: root.isTrackAudible
+                                isLinear: root.isLinear
+                                dbRange: root.dbRange
                                 multiSampleEdit: clipsContainer.multiSampleEdit
                                 altPressed: root.altPressed
                                 selectionInProgress: root.selectionInProgress || root.selectionEditInProgress

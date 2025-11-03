@@ -11,12 +11,12 @@ using namespace au::projectscene;
 
 namespace {
 constexpr int MIN_ADJACENT_STEPS_HEIGHT = 20;
-std::array<std::pair<double, double>, 4> STEP_INCREMENT = {
+constexpr std::array<std::pair<double, double>, 4> STEP_INCREMENT = {
     { { 1.0 / 6.0, 1.0 / 12.0 },
         { 1.0 / 3.0, 1.0 / 6.0 },
         { 1.0 / 2.0, 1.0 / 4.0 },
         { 1.0, 1.0 / 3.0 } } };
-std:: pair<double, double> DEFAULT_INCREMENT = { 1.0, 1.0 / 3.0 };
+constexpr std:: pair<double, double> DEFAULT_INCREMENT = { 1.0, 1.0 / 3.0 };
 
 bool isBold(double value, double dbRange)
 {

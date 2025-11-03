@@ -100,6 +100,7 @@ Rectangle {
             TrackRulerCustomizePopup {
                 id: customisePopup
                 isVerticalRulersVisible: root.model.isVerticalRulersVisible
+                rulerType: model.trackRulerType
 
                 placementPolicies: PopupView.PreferLeft
 
@@ -108,7 +109,7 @@ Rectangle {
                 }
 
                 onRulerTypeChangeRequested: function(rulerType) {
-                    rulerModel.rulerType = rulerType;
+                    root.model.setTrackRulerType(model.trackId, rulerType);
                 }
             }
 
@@ -193,6 +194,7 @@ Rectangle {
                     height: ruler.height
                     isCollapsed: trackViewState.isTrackCollapsed
                     channelHeightRatio: trackViewState.channelHeightRatio
+                    rulerType: model.trackRulerType
                 }
 
                 anchors.top: header.bottom
