@@ -657,7 +657,7 @@ void PanelTracksListModel::onTrackRemoved(const trackedit::Track& track)
             const auto it = m_trackList.begin() + i;
             const auto item = *it;
             m_trackList.erase(it);
-            item->deleteLater();
+            delete item;
             endRemoveRows();
             break;
         }
