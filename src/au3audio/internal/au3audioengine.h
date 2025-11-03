@@ -6,11 +6,11 @@
 #include "../iaudioengine.h"
 #include "record/irecordconfiguration.h"
 
-namespace au::audio {
-class AudioEngine final : public IAudioEngine
+namespace au::au3audio {
+class Au3AudioEngine final : public au::audio::IAudioEngine
 {
 public:
-    AudioEngine() = default;
+    Au3AudioEngine() = default;
 
     muse::Inject<au::record::IRecordConfiguration> recordConfiguration;
 

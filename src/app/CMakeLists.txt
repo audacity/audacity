@@ -92,7 +92,7 @@ set(LINK_LIB
     effects_vst
     project
     projectscene
-    audio
+    au3audio
     playback
     record
     effects_base

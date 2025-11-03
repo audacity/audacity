@@ -5,6 +5,7 @@
 
 #include "PlaybackSchedule.h"
 
+namespace au::au3audio {
 //! The PlaybackPolicy used by Audacity for most playback.
 /*! It subscribes to messages from ViewInfo and PlayRegion for loop bounds
  adjustment.  Therefore it is not a low-level class that can be defined with
@@ -66,3 +67,4 @@ private:
     bool mLoopEnabled{ true };
     bool mVariableSpeed{ false };
 };
+}

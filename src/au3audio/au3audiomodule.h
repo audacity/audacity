@@ -8,9 +8,12 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::audio {
-class AudioEngine;
-class AudioThreadSecurer;
-class AudioModule : public muse::modularity::IModuleSetup
+class AudioThreadSecurer; // TODO move to audio module
+}
+
+namespace au::au3audio {
+class Au3AudioEngine;
+class Au3AudioModule : public muse::modularity::IModuleSetup
 {
 public:
 
@@ -24,7 +27,7 @@ public:
 
 private:
 
-    std::shared_ptr<AudioEngine> m_audioEngine;
-    std::shared_ptr<AudioThreadSecurer> m_audioThreadSecurer;
+    std::shared_ptr<Au3AudioEngine> m_audioEngine;
+    std::shared_ptr<audio::AudioThreadSecurer> m_audioThreadSecurer;
 };
 }
