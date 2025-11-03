@@ -23,6 +23,7 @@ public:
 
     void stopStream() override;
     void pauseStream(bool pause) override;
+    void seekStream(double time) override;
 
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;

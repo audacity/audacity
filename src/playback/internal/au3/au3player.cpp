@@ -213,8 +213,7 @@ void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
     }
 
     if (applyIfPlaying && m_playbackStatus.val == PlaybackStatus::Running) {
-        auto gAudioIO = AudioIO::Get();
-        gAudioIO->SeekStream(pos - gAudioIO->GetStreamTime());
+        audioEngine()->seekStream(pos);
     }
 
     m_playbackPosition.set(pos);
@@ -265,10 +264,7 @@ void Au3Player::pause()
     if (!canStopAudioStream()) {
         return;
     }
-
-    auto gAudioIO = AudioIO::Get();
-
-    gAudioIO->SetPaused(true);
+    audioEngine()->pauseStream(true);
 
     m_playbackStatus.set(PlaybackStatus::Paused);
 }
@@ -278,7 +274,6 @@ void Au3Player::resume()
     if (!canStopAudioStream()) {
         return;
     }
-
     audioEngine()->pauseStream(false);
 
     m_playbackStatus.set(PlaybackStatus::Running);

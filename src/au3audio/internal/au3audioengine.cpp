@@ -75,6 +75,11 @@ void Au3AudioEngine::pauseStream(const bool pause)
     AudioIO::Get()->SetPaused(pause);
 }
 
+void Au3AudioEngine::seekStream(double time)
+{
+    AudioIO::Get()->SeekStream(time - AudioIO::Get()->GetStreamTime());
+}
+
 void Au3AudioEngine::startMonitoring(AudacityProject& project)
 {
     AudioIOStartStreamOptions options = ProjectAudioIO::GetDefaultOptions(project);

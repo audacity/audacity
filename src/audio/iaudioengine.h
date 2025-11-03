@@ -25,6 +25,7 @@ public:
                             AudacityProject& project, bool isDefaultPlayTrackPolicy, double audioStreamSampleRate) = 0;
     virtual void stopStream() = 0;
     virtual void pauseStream(bool pause) = 0;
+    virtual void seekStream(double time) = 0;
 
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;
