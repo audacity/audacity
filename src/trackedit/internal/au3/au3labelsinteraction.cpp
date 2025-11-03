@@ -119,7 +119,7 @@ bool Au3LabelsInteraction::removeLabel(const LabelKey& labelKey)
     }
 
     int labelIndex = labelTrack->GetLabelIndex(labelKey.itemId);
-    IF_ASSERT_FAILED(labelIndex >= 0) {
+    if (labelIndex == -1) {
         return false;
     }
 
@@ -187,16 +187,18 @@ ITrackDataPtr Au3LabelsInteraction::cutLabel(const LabelKey& labelKey)
     }
 
     const Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
-    IF_ASSERT_FAILED(label) {
+    if (!label) {
         return nullptr;
     }
+
+    const Au3Label labelCopy = *label;
 
     constexpr bool moveClips = true;
     auto track = labelTrack->Cut(label->getT0(), label->getT1(), moveClips);
     const auto data = std::make_shared<Au3TrackData>(std::move(track));
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutLabelRemoved(DomConverter::label(labelTrack, label));
+    prj->notifyAboutLabelRemoved(DomConverter::label(labelTrack, &labelCopy));
     prj->notifyAboutTrackChanged(DomConverter::track(labelTrack));
 
     return data;
@@ -210,7 +212,7 @@ ITrackDataPtr Au3LabelsInteraction::copyLabel(const LabelKey& labelKey)
     }
 
     const Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
-    IF_ASSERT_FAILED(label) {
+    if (!label) {
         return nullptr;
     }
 
@@ -291,7 +293,7 @@ bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
     }
 
     int labelIndex = labelTrack->GetLabelIndex(labelKey.itemId);
-    IF_ASSERT_FAILED(labelIndex >= 0) {
+    if (labelIndex == -1) {
         return false;
     }
 
@@ -329,7 +331,7 @@ bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t ne
     }
 
     int labelIndex = labelTrack->GetLabelIndex(labelKey.itemId);
-    IF_ASSERT_FAILED(labelIndex >= 0) {
+    if (labelIndex == -1) {
         return false;
     }
 
