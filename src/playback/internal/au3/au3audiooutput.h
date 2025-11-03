@@ -44,6 +44,6 @@ private:
     muse::async::Channel<float> m_playbackVolumeChanged;
     muse::async::Channel<auaudio::sample_rate_t> m_sampleRateChanged;
 
-    const std::shared_ptr<au::au3::AudioMeterWrapper> m_outputMeter;
+    const std::shared_ptr<au::au3::Au3AudioMeter> m_outputMeter;
 };
 }

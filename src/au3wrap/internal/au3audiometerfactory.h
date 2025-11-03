@@ -7,5 +7,5 @@
 #include <memory>
 
 namespace au::au3 {
-std::shared_ptr<Meter> createAudioMeter();
+std::shared_ptr<Au3AudioMeter> createAudioMeter();
 }
