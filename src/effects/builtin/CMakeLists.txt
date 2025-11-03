@@ -26,6 +26,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffect.h
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/common/measureunits.h
 
     ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/valuewarper.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/valuewarper.h
@@ -151,6 +152,11 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/repair/repaireffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/repair/repaireffect.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/truncatesilence/truncatesilenceeffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/truncatesilence/truncatesilenceeffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/truncatesilence/truncatesilenceviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/truncatesilence/truncatesilenceviewmodel.h
     )
 
 # AU3
@@ -169,6 +175,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-builtin-effects/SilenceBase.h
     ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationBase.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationBase.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/TruncSilenceBase.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/TruncSilenceBase.h
 )
 
 set(AU3_DEF ${AU3_DEF}
