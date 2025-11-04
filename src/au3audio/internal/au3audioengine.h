@@ -29,8 +29,10 @@ public:
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;
 
-    void setOutputVolume(float volume) override;
-    void getOutputVolume(float& volume) const override;
+    void setInputVolume(float newInputVolume) override;
+    void getInputVolume(float& inputVolume) const override;
+    void setPlaybackVolume(float newPlaybackVolume) override;
+    void getPlaybackVolume(float& playbackVolume) const override;
 
     bool canStopAudioStream(AudacityProject& project) const override;
 
