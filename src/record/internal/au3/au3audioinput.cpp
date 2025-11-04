@@ -6,7 +6,6 @@
 
 #include "global/async/async.h"
 
-#include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 
 #include "au3wrap/au3types.h"

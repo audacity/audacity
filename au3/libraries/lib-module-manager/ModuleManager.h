@@ -20,6 +20,7 @@
 #include <wx/string.h>
 
 #include "Identifier.h"
+#include "PluginProvider.h"
 
 class wxArrayString;
 class wxDynamicLibrary;

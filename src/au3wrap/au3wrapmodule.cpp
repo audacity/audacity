@@ -7,7 +7,6 @@
 
 #include "FFmpeg.h"
 #include "FileNames.h"
-#include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-import-export/Import.h"
 #include "libraries/lib-import-export/ExportPluginRegistry.h"
 #include "libraries/lib-preferences/Prefs.h"
