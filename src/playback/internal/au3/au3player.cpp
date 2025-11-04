@@ -498,7 +498,7 @@ void Au3Player::updatePlaybackPosition()
         return;
     }
 
-    audioIO.UpdateTimePosition(expectedConsumedNow - m_consumedSamplesSoFar);
+    audioEngine()->updateTimePosition(expectedConsumedNow - m_consumedSamplesSoFar);
     m_consumedSamplesSoFar = expectedConsumedNow;
     updatePlaybackState();
 }

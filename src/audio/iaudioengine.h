@@ -42,6 +42,7 @@ public:
 
     virtual muse::String lastErrorString() const = 0;
     virtual double getPlaybackSampleRate() const = 0;
+    virtual void updateTimePosition(unsigned long newlyConsumedSamples) = 0;
 
     virtual muse::async::Notification updateRequested() const = 0;
     virtual muse::async::Notification commitRequested() const = 0;

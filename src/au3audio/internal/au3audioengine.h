@@ -40,6 +40,7 @@ public:
     int getHostIndex(const std::string& hostName) override;
     muse::String lastErrorString() const override;
     double getPlaybackSampleRate() const override;
+    void updateTimePosition(unsigned long newlyConsumedSamples) override;
 
     muse::async::Notification updateRequested() const override;
     muse::async::Notification commitRequested() const override;

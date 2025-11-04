@@ -158,6 +158,11 @@ double Au3AudioEngine::getPlaybackSampleRate() const
     return AudioIO::Get()->GetPlaybackSampleRate();
 }
 
+void Au3AudioEngine::updateTimePosition(const unsigned long newlyConsumedSamples)
+{
+    AudioIO::Get()->UpdateTimePosition(newlyConsumedSamples);
+}
+
 muse::async::Notification Au3AudioEngine::updateRequested() const
 {
     return s_audioIOListener->updateRequested();
