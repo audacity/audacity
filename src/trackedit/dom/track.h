@@ -27,6 +27,12 @@ enum class TrackFormat : int {
     Float32
 };
 
+enum class TrackRulerType : int {
+    Linear = 0,
+    DbLinear,
+    DbLog
+};
+
 struct TrackFormatInfo {
     TrackFormat format;
     const char* description;
@@ -48,6 +54,7 @@ struct Track {
     TrackType type = TrackType::Undefined;
     muse::draw::Color color;
     TrackFormat format = TrackFormat::Undefined;
+    TrackRulerType rulerType = TrackRulerType::Linear;
     uint64_t rate;
 };
 

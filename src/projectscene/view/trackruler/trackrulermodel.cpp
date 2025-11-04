@@ -2,6 +2,8 @@
 * Audacity: A Digital Audio Editor
 */
 
+#include "trackedit/dom/track.h"
+
 #include "trackrulermodel.h"
 #include "linearstereoruler.h"
 #include "linearmonoruler.h"
@@ -189,22 +191,23 @@ std::shared_ptr<ITrackRulerModel> TrackRulerModel::buildRulerModel()
 {
     std::shared_ptr<ITrackRulerModel> model = nullptr;
 
-    switch (m_rulerType) {
-    case 0:
+    const auto rulerType = static_cast<trackedit::TrackRulerType>(m_rulerType);
+    switch (rulerType) {
+    case trackedit::TrackRulerType::DbLog:
         if (m_isStereo) {
             model = std::make_shared<DbLogStereoRuler>();
         } else {
             model = std::make_shared<DbLogMonoRuler>();
         }
         break;
-    case 1:
+    case trackedit::TrackRulerType::DbLinear:
         if (m_isStereo) {
             model = std::make_shared<DbLinearStereoRuler>();
         } else {
             model = std::make_shared<DbLinearMonoRuler>();
         }
         break;
-    case 2:
+    case trackedit::TrackRulerType::Linear:
         if (m_isStereo) {
             model = std::make_shared<LinearStereoRuler>();
         } else {

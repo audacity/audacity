@@ -20,13 +20,11 @@ public:
     virtual muse::ValCh<int> trackHeight(const trackedit::TrackId& trackId) const = 0;
     virtual muse::ValCh<bool> isTrackCollapsed(const trackedit::TrackId& trackId) const = 0;
     virtual muse::ValCh<double> channelHeightRatio(const trackedit::TrackId& trackId) const = 0;
-    virtual muse::ValCh<int> trackRulerType(const trackedit::TrackId& trackId) const = 0;
 
     virtual int trackVerticalPosition(const trackedit::TrackId& trackId) const = 0;
     virtual void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) = 0;
     virtual void setTrackHeight(const trackedit::TrackId& trackId, int height) = 0;
     virtual void setChannelHeightRatio(const trackedit::TrackId& trackId, double ratio) = 0;
-    virtual void setTrackRulerType(const trackedit::TrackId& trackId, int rulerType) = 0;
     virtual trackedit::TrackId trackAtPosition(double y) const = 0;
     virtual trackedit::TrackIdList tracksInRange(double y1, double y2) const = 0;
 

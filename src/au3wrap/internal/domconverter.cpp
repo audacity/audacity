@@ -2,6 +2,7 @@
 
 #include "au3types.h"
 #include "trackcolor.h"
+#include "trackrulertype.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
@@ -59,6 +60,21 @@ int trackRate(const Au3Track* track)
     }
     return waveTrack->GetRate();
 }
+
+au::trackedit::TrackRulerType trackRulerType(const Au3Track* track)
+{
+    const auto& rulerTypeAttachment = TrackRulerType::Get(track);
+    switch (rulerTypeAttachment.GetRulerType()) {
+    case RulerType::Linear:
+        return au::trackedit::TrackRulerType::Linear;
+    case RulerType::DbLinear:
+        return au::trackedit::TrackRulerType::DbLinear;
+    case RulerType::DbLog:
+        return au::trackedit::TrackRulerType::DbLog;
+    default:
+        return au::trackedit::TrackRulerType::Linear;
+    }
+}
 }
 
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
@@ -100,6 +116,7 @@ au::trackedit::Track DomConverter::track(const Au3Track* track)
     }
 
     au4t.format = trackFormat(track);
+    au4t.rulerType = trackRulerType(track);
     au4t.rate = trackRate(track);
     return au4t;
 }

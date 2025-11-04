@@ -7,6 +7,7 @@
 
 #include "global/containers.h"
 #include "playback/playbacktypes.h"
+#include "trackedit/dom/track.h"
 
 using namespace au::projectscene;
 
@@ -248,10 +249,17 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
         return track.type == au::trackedit::TrackType::Stereo;
 
     case IsLinearRole:
-        return globalContext()->currentProject()->viewState()->trackRulerType(track.id).val != 0;
+        return track.rulerType != au::trackedit::TrackRulerType::DbLog;
 
     case TrackRulerTypeRole:
-        return globalContext()->currentProject()->viewState()->trackRulerType(track.id).val;
+        return static_cast<int>(track.rulerType);
+
+    case AvailableRulerTypesRole:
+        return QVariant::fromValue(QList<QMap<QString, QVariant> > {
+            { { "label", "Logarithmic (dB)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLog) } },
+            { { "label", "Linear (dB)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLinear) } },
+            { { "label", "Linear (amp)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::Linear) } },
+        });
 
     case DbRangeRole:
         return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
@@ -276,8 +284,9 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { IsTrackAudibleRole, "isTrackAudible" },
         { IsStereoRole, "isStereo" },
         { IsLinearRole, "isLinear" },
+        { AvailableRulerTypesRole, "availableRulerTypes" },
         { TrackRulerTypeRole, "trackRulerType" },
-        { DbRangeRole, "dbRange" },
+        { DbRangeRole, "dbRange" }
     };
     return roles;
 }
@@ -306,13 +315,6 @@ void ViewTracksListModel::toggleVerticalRuler() const
 
 void ViewTracksListModel::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType)
 {
-    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
-
-    if (!viewState) {
-        return;
-    }
-
-    viewState->setTrackRulerType(trackId, rulerType);
-    emit dataChanged(index(0), index(m_trackList.size() - 1), { IsLinearRole, TrackRulerTypeRole });
+    trackeditInteraction()->changeTrackRulerType(trackId, static_cast<trackedit::TrackRulerType>(rulerType));
+    emit dataChanged(index(0), index(m_trackList.size() - 1), { TrackRulerTypeRole });
 }

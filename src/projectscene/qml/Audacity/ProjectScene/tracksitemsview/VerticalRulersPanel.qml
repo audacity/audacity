@@ -101,6 +101,7 @@ Rectangle {
                 id: customisePopup
                 isVerticalRulersVisible: root.model.isVerticalRulersVisible
                 rulerType: model.trackRulerType
+                availableRulerTypes: model.availableRulerTypes
 
                 placementPolicies: PopupView.PreferLeft
 

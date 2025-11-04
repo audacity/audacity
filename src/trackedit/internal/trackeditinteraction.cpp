@@ -76,6 +76,11 @@ bool TrackeditInteraction::changeTracksColor(const TrackIdList& tracksIds, const
     return m_interaction->changeTracksColor(tracksIds, color);
 }
 
+bool TrackeditInteraction::changeTrackRulerType(const trackedit::TrackId& trackId, trackedit::TrackRulerType rulerType)
+{
+    return m_interaction->changeTrackRulerType(trackId, rulerType);
+}
+
 bool TrackeditInteraction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
 {
     return withPlaybackStop(&ITrackeditInteraction::changeClipOptimizeForVoice, clipKey, optimize);

@@ -72,6 +72,7 @@ private:
         IsTrackAudibleRole,
         IsStereoRole,
         IsLinearRole,
+        AvailableRulerTypesRole,
         TrackRulerTypeRole,
         DbRangeRole,
     };

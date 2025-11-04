@@ -14,7 +14,8 @@ StyledPopupView {
     id: root
 
     property bool isVerticalRulersVisible: true
-    property int rulerType: 2
+    required property int rulerType
+    required property var availableRulerTypes
 
     signal hideRulersRequested()
     signal rulerTypeChangeRequested(int newType)
@@ -107,11 +108,7 @@ StyledPopupView {
 
             value: root.rulerType
 
-            model: [
-                {label : qsTrc("trackruler","Logarithmic (dB)"), value: 0},
-                {label : qsTrc("trackruler","Linear (dB)"), value: 1},
-                {label : qsTrc("trackruler","Linear (amp)"), value: 2}
-            ]
+            model: root.availableRulerTypes
 
             onValueChangeRequested: function(value) {
                 root.rulerTypeChangeRequested(value)
