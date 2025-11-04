@@ -4,6 +4,9 @@
 
 #include "au3record.h"
 
+#include "framework/global/translation.h"
+#include "framework/global/log.h"
+
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 #include "libraries/lib-audio-devices/AudioIOBase.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
@@ -12,19 +15,15 @@
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-stretching-sequence/StretchingSequence.h"
-
-#include "au3audioinput.h"
+#include "libraries/lib-project-rate/ProjectRate.h"
 
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
-#include "recorderrors.h"
-
-#include "translation.h"
-#include "log.h"
-#include "ProjectRate.h"
+#include "au3audioinput.h"
+#include "../../recorderrors.h"
 
 using namespace muse;
 using namespace muse::async;

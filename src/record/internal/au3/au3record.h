@@ -4,17 +4,16 @@
 
 #pragma once
 
-#include "global/async/asyncable.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/actions/iactionsdispatcher.h"
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "audio/iaudioengine.h"
-#include "actions/iactionsdispatcher.h"
-#include "trackedit/iprojecthistory.h"
 #include "context/iplaybackstate.h"
+#include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "trackedit/iselectioncontroller.h"
-
+#include "audio/iaudioengine.h"
 #include "au3wrap/au3types.h"
 
 #include "../../irecord.h"

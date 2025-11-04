@@ -4,12 +4,10 @@
 #ifndef AU_RECORD_IRECORDONTROLLER_H
 #define AU_RECORD_IRECORDONTROLLER_H
 
-#include "modularity/imoduleinterface.h"
-
-#include "async/notification.h"
-#include "async/channel.h"
-
-#include "global/types/secs.h"
+#include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/async/channel.h"
+#include "framework/global/types/secs.h"
 
 namespace au::record {
 class IRecordController : MODULE_EXPORT_INTERFACE
