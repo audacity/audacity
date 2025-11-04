@@ -225,6 +225,8 @@ Rectangle {
                             width: 7
                             height: 1
                             color: ui.theme.isDark ? "#F4F7F9" : "#F4F5F9"
+
+                            antialiasing: true
                         }
 
                         Rectangle {
@@ -239,6 +241,8 @@ Rectangle {
                             color: "#475157"
 
                             visible: modelData.fullWidthTick
+
+                            antialiasing: true
                         }
 
                         Item {
@@ -283,6 +287,8 @@ Rectangle {
                                 color: "#F4F5F9"
 
                                 visible: modelData.value < 0
+
+                                antialiasing: true
                             }
                         }
                     }
@@ -305,6 +311,7 @@ Rectangle {
                             height: 1
                             color: ui.theme.isDark ? "#868B8E": "#8B8C96"
                             anchors.verticalCenter: parent.verticalCenter
+                            antialiasing: true
                         }
                     }
                 }
