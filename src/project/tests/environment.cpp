@@ -4,7 +4,6 @@
 
 #include "testing/environment.h"
 
-#include "trackedit/trackeditmodule.h"
 #include "trackedit/itrackeditproject.h"
 #include "au3wrap/au3wrapmodule.h"
 
