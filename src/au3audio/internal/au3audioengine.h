@@ -38,6 +38,7 @@ public:
 
     void handleDeviceChange() override;
     int getHostIndex(const std::string& hostName) override;
+    muse::String lastErrorString() const override;
 
     muse::async::Notification updateRequested() const override;
     muse::async::Notification commitRequested() const override;

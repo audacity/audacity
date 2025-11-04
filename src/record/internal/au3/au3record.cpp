@@ -634,8 +634,7 @@ Ret Au3Record::doRecord(Au3Project& project,
         cancelRecording();
 
         Ret ret = make_ret(Err::RecordingError);
-        auto gAudioIO = AudioIO::Get();
-        ret.setText(String::fromStdString(ret.text()).arg(wxToString(gAudioIO->LastPaErrorString())).toStdString());
+        ret.setText(String::fromStdString(ret.text()).arg(audioEngine()->lastErrorString()).toStdString());
 
         return ret;
     }

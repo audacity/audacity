@@ -9,6 +9,7 @@
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "defaultplaybackpolicy.h"
 #include "au3audioiolistener.h"
@@ -145,6 +146,11 @@ void Au3AudioEngine::handleDeviceChange()
 int Au3AudioEngine::getHostIndex(const std::string& hostName)
 {
     return AudioIO::Get()->GetHostIndex(hostName);
+}
+
+muse::String Au3AudioEngine::lastErrorString() const
+{
+    return au::au3::wxToString(AudioIO::Get()->LastPaErrorString());
 }
 
 muse::async::Notification Au3AudioEngine::updateRequested() const

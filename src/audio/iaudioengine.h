@@ -40,6 +40,8 @@ public:
     virtual void handleDeviceChange() = 0;
     virtual int getHostIndex(const std::string& hostName) = 0;
 
+    virtual muse::String lastErrorString() const = 0;
+
     virtual muse::async::Notification updateRequested() const = 0;
     virtual muse::async::Notification commitRequested() const = 0;
     virtual muse::async::Notification finished() const = 0;
