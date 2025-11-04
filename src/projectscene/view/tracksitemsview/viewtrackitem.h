@@ -7,7 +7,7 @@
 #include <QString>
 #include <QColor>
 
-#include "types/projectscenetypes.h"
+#include "projectscene/types/projectscenetypes.h"
 
 namespace au::projectscene {
 class ViewTrackItem : public QObject
@@ -63,7 +63,11 @@ signals:
     void colorChanged();
     void leftVisibleMarginChanged();
     void rightVisibleMarginChanged();
+
     void timeChanged();
+    void startTimeChanged();
+    void endTimeChanged();
+
     void selectedChanged();
     void intersectsSelectionChanged();
 

@@ -77,8 +77,6 @@ private:
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
 
     TrackClipItem* clipItemByKey(const trackedit::ClipKey& k) const;
-    void onStartEditItem(const trackedit::TrackItemKey& key) override;
-    void onEndEditItem(const trackedit::TrackItemKey& key) override;
 
     bool isKeyboardTriggered() const;
 

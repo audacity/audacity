@@ -51,7 +51,7 @@ void TrackLabelsListModel::onReload()
         muse::async::Async::call(this, [this]() {
             reload();
         });
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     m_allLabelList.onItemChanged(this, [this](const Label& label) {
         for (size_t i = 0; i < m_allLabelList.size(); ++i) {
@@ -68,7 +68,7 @@ void TrackLabelsListModel::onReload()
         }
 
         updateItemsMetrics();
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     m_allLabelList.onItemAdded(this, [this](const Label& label) {
         ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -84,7 +84,7 @@ void TrackLabelsListModel::onReload()
 
             break;
         }
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     m_allLabelList.onItemRemoved(this, [this](const Label& label) {
         for (auto it = m_allLabelList.begin(); it != m_allLabelList.end(); ++it) {
@@ -94,7 +94,7 @@ void TrackLabelsListModel::onReload()
                 break;
             }
         }
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     update();
 }
@@ -170,7 +170,10 @@ void TrackLabelsListModel::update()
     //! NOTE We need to update the selected items
     //! to take pointers to the items from the new list
     m_selectedItems.clear();
-    onSelectedItems(selectionController()->selectedLabels());
+
+    if (selectionController()) {
+        onSelectedItems(selectionController()->selectedLabels());
+    }
 
     muse::async::Async::call(this, [cleanupList]() {
         qDeleteAll(cleanupList);
@@ -200,7 +203,7 @@ void TrackLabelsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     time.itemStartTime = std::max(label.startTime, (m_context->frameStartTime() - cacheTime));
     time.itemEndTime = std::min(label.endTime, (m_context->frameEndTime() + cacheTime));
 
-    if (selectionController()->isDataSelectedOnTrack(m_trackId)) {
+    if (selectionController() && selectionController()->isDataSelectedOnTrack(m_trackId)) {
         time.selectionStartTime = selectionController()->dataSelectedStartTime();
         time.selectionEndTime = selectionController()->dataSelectedEndTime();
     }
@@ -274,7 +277,7 @@ TrackItemKeyList TrackLabelsListModel::getSelectedItemKeys() const
     return selectionController()->selectedLabels();
 }
 
-bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, bool completed)
+bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed)
 {
     auto project = globalContext()->currentProject();
     IF_ASSERT_FAILED(project) {
@@ -295,14 +298,18 @@ bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, bool completed)
 
     bool ok = trackeditInteraction()->stretchLabelLeft(key.key, newStartTime, completed);
 
-    handleAutoScroll(ok, completed, [this, key]() {
-        stretchLabelLeft(key, false);
+    if (ok && !unlink && leftLinkedLabel.isValid()) {
+        ok = trackeditInteraction()->stretchLabelRight(leftLinkedLabel.key, newStartTime, completed);
+    }
+
+    handleAutoScroll(ok, completed, [this, key, leftLinkedLabel, unlink]() {
+        stretchLabelLeft(key, leftLinkedLabel, unlink, false);
     });
 
     return ok;
 }
 
-bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, bool completed)
+bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, const LabelKey& rightLinkedLabel, bool unlink, bool completed)
 {
     auto project = globalContext()->currentProject();
     IF_ASSERT_FAILED(project) {
@@ -323,8 +330,12 @@ bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, bool completed
 
     bool ok = trackeditInteraction()->stretchLabelRight(key.key, newEndTime, completed);
 
-    handleAutoScroll(ok, completed, [this, key]() {
-        stretchLabelRight(key, false);
+    if (ok && !unlink && rightLinkedLabel.isValid()) {
+        ok = trackeditInteraction()->stretchLabelLeft(rightLinkedLabel.key, newEndTime, completed);
+    }
+
+    handleAutoScroll(ok, completed, [this, key, rightLinkedLabel, unlink]() {
+        stretchLabelRight(key, rightLinkedLabel, unlink, false);
     });
 
     return ok;
