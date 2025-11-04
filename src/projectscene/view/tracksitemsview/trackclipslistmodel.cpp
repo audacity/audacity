@@ -386,21 +386,6 @@ au::projectscene::ClipKey TrackClipsListModel::updateClipTrack(ClipKey clipKey) 
     return clipKey;
 }
 
-void TrackClipsListModel::onStartEditItem(const trackedit::TrackItemKey& key)
-{
-    auto vs = globalContext()->currentProject()->viewState();
-    if (vs) {
-        vs->updateItemsBoundaries(true, key);
-    }
-}
-
-void TrackClipsListModel::onEndEditItem(const trackedit::TrackItemKey& key)
-{
-    Q_UNUSED(key);
-
-    disconnectAutoScroll();
-}
-
 /*!
  * \brief Moves all selected clips
  * \param key - the key from which the offset will be calculated to move all clips

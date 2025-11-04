@@ -208,8 +208,7 @@ QVariant TrackItemsListModel::neighbor(const TrackItemKey& key, int offset) cons
 TrackItemsListModel::MoveOffset TrackItemsListModel::calculateMoveOffset(const ViewTrackItem* item,
                                                                          const TrackItemKey& key,
                                                                          const std::vector<trackedit::TrackType>& trackTypesAllowedToMove,
-                                                                         bool completed)
-const
+                                                                         bool completed) const
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj) {
@@ -540,7 +539,9 @@ void TrackItemsListModel::startEditItem(const TrackItemKey& key)
     vs->setItemEditStartTimeOffset(mousePositionTime - item->time().startTime);
     vs->setItemEditEndTimeOffset(item->time().endTime - mousePositionTime);
 
-    onStartEditItem(key.key);
+    if (vs) {
+        vs->updateItemsBoundaries(true, key.key);
+    }
 }
 
 void TrackItemsListModel::endEditItem(const TrackItemKey& key)
@@ -559,7 +560,7 @@ void TrackItemsListModel::endEditItem(const TrackItemKey& key)
     vs->setItemEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
 
-    onEndEditItem(key.key);
+    disconnectAutoScroll();
 
     projectHistory()->endUserInteraction();
 }

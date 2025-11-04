@@ -1,6 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include <realfn.h>
 #include "viewtrackitem.h"
 
 using namespace au::projectscene;
@@ -132,6 +133,19 @@ void ViewTrackItem::setTime(const TrackItemTime& newTime)
     if (m_time == newTime) {
         return;
     }
+
+    bool isStartTimeChanged = !muse::RealIsEqual(m_time.startTime, newTime.startTime);
+    bool isEndTimeChanged = !muse::RealIsEqual(m_time.endTime, newTime.endTime);
+
     m_time = newTime;
+
     emit timeChanged();
+
+    if (isStartTimeChanged) {
+        emit startTimeChanged();
+    }
+
+    if (isEndTimeChanged) {
+        emit endTimeChanged();
+    }
 }

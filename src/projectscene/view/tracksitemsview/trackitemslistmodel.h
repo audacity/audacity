@@ -21,7 +21,7 @@
 
 #include "../timeline/timelinecontext.h"
 
-#include "types/projectscenetypes.h"
+#include "projectscene/types/projectscenetypes.h"
 #include "viewtrackitem.h"
 
 namespace au::projectscene {
@@ -89,8 +89,6 @@ protected:
 
     ViewTrackItem* itemByKey(const trackedit::TrackItemKey& key) const;
     int indexByKey(const trackedit::TrackItemKey& key) const;
-    virtual void onStartEditItem(const trackedit::TrackItemKey&) {}
-    virtual void onEndEditItem(const trackedit::TrackItemKey&) {}
 
     void requestItemTitleChange();
     virtual trackedit::TrackItemKeyList getSelectedItemKeys() const = 0;
