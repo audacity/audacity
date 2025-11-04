@@ -15,6 +15,21 @@ Item {
     property bool enableCursorInteraction: !selectionInProgress
     property var labelKey: null
 
+    property bool isLeftLinked: false
+    property bool isRightLinked: false
+    property bool isLinkedActive: false
+
+    property int visualWidth: prv.isPoint ? pointStalk.width + header.x + header.width : header.width
+    readonly property int headerHeight: 14
+
+    property var container: null
+
+    property bool hover: root.containsMouse || root.headerHovered
+    property bool headerHovered: false
+    property bool containsMouse: false
+
+    property color labelColor: null
+
     property alias navigation: navCtrl
 
     signal requestSelected()
@@ -29,21 +44,17 @@ Item {
     signal labelStartEditRequested()
     signal labelEndEditRequested()
 
-    signal labelLeftStretchRequested(bool completed)
-    signal labelRightStretchRequested(bool completed)
+    signal labelLeftStretchRequested(bool unlink, bool completed)
+    signal labelRightStretchRequested(bool unlink, bool completed)
 
-    property bool hover: root.containsMouse || root.headerHovered
-    property bool headerHovered: false
-    property bool containsMouse: false
-
-    property color labelColor: null
+    signal activateLeftLinkedLabel()
+    signal activateRightLinkedLabel()
+    signal deactivateLinkedLabel()
 
     QtObject {
         id: prv
 
-        property bool isPoint: root.width === 0
-
-        readonly property int labelHeight: 14
+        property bool isPoint: root.width < 2
         readonly property int earWidth: 7
 
         property color backgroundColor: root.labelColor
@@ -89,7 +100,7 @@ Item {
 
     // panel for navigating within the label's items
     property NavigationPanel labelNavigationPanel: NavigationPanel {
-        name: "ClipNavigationPanel"
+        name: "LabelNavigationPanel"
         enabled: navCtrl.active
         direction: NavigationPanel.Horizontal
         section: navigation.panel.section
@@ -127,60 +138,43 @@ Item {
         labelContextMenuModel.load()
     }
 
-    MouseArea {
-        id: hoverArea
-        anchors.fill: parent
-
-        hoverEnabled: true
-        cursorShape: Qt.IBeamCursor
-        acceptedButtons: Qt.RightButton
-
-        visible: root.enableCursorInteraction
-
-        onVisibleChanged: {
-            root.setContainsMouse(containsMouse)
-        }
-
-        onClicked: function (e) {
-            root.requestSelected()
-            labelContextMenuLoader.show(Qt.point(e.x, e.y), labelContextMenuModel.items)
-        }
-
-        onPositionChanged: function (e) {
-            labelItemMousePositionChanged(e.x, e.y);
-        }
-
-        onContainsMouseChanged: {
-            if (!root.visible) {
-                return
-            }
-
-            root.setContainsMouse(containsMouse)
-        }
-    }
-
     // Left Ear
     LabelEar {
         id: leftEar
 
-        height: prv.labelHeight
-        x: -prv.earWidth - (prv.isPoint ? 0 : 1)
+        //! To draw on top of other labels, we need to change the parent and increase z
+        parent: root.container
+        x: root.parent.x - prv.earWidth - (prv.isPoint ? 0 : 1)
+        y: root.parent.y
+        z: root.parent.z
+
+        height: root.headerHeight
 
         isRight: false
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.leftEarBackgroundColor
         isSelected: root.isSelected
+        isLinked: root.isLeftLinked
+
+        onHoveredChanged: {
+            if (hovered && isLinked) {
+                root.activateLeftLinkedLabel()
+            } else if (!hovered && isLinked) {
+                root.deactivateLinkedLabel()
+            }
+        }
 
         onStretchStartRequested: {
+            root.requestSelected()
             root.labelStartEditRequested()
         }
 
         onStretchMousePositionChanged: function(x, y) {
-            root.labelItemMousePositionChanged(x, y)
+            root.labelItemMousePositionChanged(x - root.parent.x, y)
         }
 
         onStretchRequested: function(completed) {
-            root.labelLeftStretchRequested(completed)
+            root.labelLeftStretchRequested(true /*unlink*/, completed)
         }
 
         onStretchEndRequested: {
@@ -192,24 +186,39 @@ Item {
     LabelEar {
         id: rightEar
 
-        height: prv.labelHeight
-        x: root.width + (prv.isPoint ? 0 : 1)
+        //! To draw on top of other labels, we need to change the parent and increase z
+        parent: root.container
+        x: root.parent.x + root.width + (prv.isPoint ? 0 : 1)
+        y: root.parent.y
+        z: root.parent.z
+
+        height: root.headerHeight
 
         isRight: true
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.rightEarBackgroundColor
         isSelected: root.isSelected
+        isLinked: root.isRightLinked
+
+        onHoveredChanged: {
+            if (hovered && isLinked) {
+                root.activateRightLinkedLabel()
+            } else if (!hovered && isLinked) {
+                root.deactivateLinkedLabel()
+            }
+        }
 
         onStretchStartRequested: {
+            root.requestSelected()
             root.labelStartEditRequested()
         }
 
         onStretchMousePositionChanged: function(x, y) {
-            root.labelItemMousePositionChanged(x, y)
+            root.labelItemMousePositionChanged(x - root.parent.x, y)
         }
 
         onStretchRequested: function(completed) {
-            root.labelRightStretchRequested(completed)
+            root.labelRightStretchRequested(true /*unlink*/, completed)
         }
 
         onStretchEndRequested: {
@@ -221,7 +230,7 @@ Item {
     LabelHeader {
         id: header
 
-        height: prv.labelHeight
+        height: root.headerHeight
 
         title: root.title
 
@@ -264,6 +273,16 @@ Item {
 
     // Point's Stalk
     LabelStalk {
+        id: pointStalk
+
+        //! To draw on top of other labels, we need to change the parent and increase z
+        parent: root.container
+        x: root.parent.x - width/2
+        y: root.parent.y
+        z: root.parent.z
+
+        height: root.height
+
         isForPoint: true
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: leftEar.hovered ? prv.leftEarBackgroundColor : prv.rightEarBackgroundColor
@@ -279,11 +298,11 @@ Item {
         }
 
         onStretchMousePositionChanged: function(x, y) {
-            root.labelItemMousePositionChanged(x, y)
+            root.labelItemMousePositionChanged(x - root.parent.x, y)
         }
 
         onStretchRequested: function(completed) {
-            root.labelLeftStretchRequested(completed)
+            root.labelLeftStretchRequested(false /*without unlink*/, completed)
         }
 
         onStretchEndRequested: {
@@ -293,31 +312,48 @@ Item {
 
     // Left Stalk
     LabelStalk {
+        id: leftStalk
+
+        property bool isLinked: root.isLeftLinked
+
+        //! To draw on top of other labels, we need to change the parent and increase z
+        parent: root.container
+        x: root.parent.x - 1
+        y: root.parent.y
+        z: root.parent.z
+
+        height: root.height
+
         isRight: false
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.leftEarBackgroundColor
         isSelected: root.isSelected
 
-        visible: !prv.isPoint
+        visible: !prv.isPoint || isStretchInProgress
 
         onHeaderHoveredChanged: function(value) {
             root.headerHovered = value
         }
 
-        onRequestSelected: {
-            root.requestSelected()
+        onHoveredChanged: {
+            if (hovered && isLinked) {
+                root.activateLeftLinkedLabel()
+            } else if (!hovered && isLinked) {
+                root.deactivateLinkedLabel()
+            }
         }
 
         onStretchStartRequested: {
+            root.requestSelected()
             root.labelStartEditRequested()
         }
 
         onStretchMousePositionChanged: function(x, y) {
-            root.labelItemMousePositionChanged(x, y)
+            root.labelItemMousePositionChanged(x - root.parent.x, y)
         }
 
         onStretchRequested: function(completed) {
-            root.labelLeftStretchRequested(completed)
+            root.labelLeftStretchRequested(false /*without unlink*/, completed)
         }
 
         onStretchEndRequested: {
@@ -327,31 +363,48 @@ Item {
 
     // Right Stalk
     LabelStalk {
+        id: rightStalk
+
+        property bool isLinked: root.isRightLinked
+
+        //! To draw on top of other labels, we need to change the parent and increase z
+        parent: root.container
+        x: root.parent.x + root.width
+        y: root.parent.y
+        z: root.parent.z
+
+        height: root.height
+
         isRight: true
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.rightEarBackgroundColor
         isSelected: root.isSelected
 
-        visible: !prv.isPoint
+        visible: !prv.isPoint || isStretchInProgress
 
         onHeaderHoveredChanged: function(value) {
             root.headerHovered = value
         }
 
-        onRequestSelected: {
-            root.requestSelected()
+        onHoveredChanged: {
+            if (hovered && isLinked) {
+                root.activateRightLinkedLabel()
+            } else if (!hovered && isLinked) {
+                root.deactivateLinkedLabel()
+            }
         }
 
         onStretchStartRequested: {
+            root.requestSelected()
             root.labelStartEditRequested()
         }
 
         onStretchMousePositionChanged: function(x, y) {
-            root.labelItemMousePositionChanged(x, y)
+            root.labelItemMousePositionChanged(x - root.parent.x, y)
         }
 
         onStretchRequested: function(completed) {
-            root.labelRightStretchRequested(completed)
+            root.labelRightStretchRequested(false /*without unlink*/, completed)
         }
 
         onStretchEndRequested: {
@@ -362,7 +415,10 @@ Item {
     states: [
         State {
             name: "NORMAL"
-            when: !root.isSelected && !root.headerHovered && !leftEar.hovered && !rightEar.hovered
+            when: !root.isSelected && !root.headerHovered &&
+                  !leftEar.hovered && !leftStalk.hovered &&
+                  !rightEar.hovered && !rightStalk.hovered &&
+                  ((root.isLeftLinked || root.isRightLinked) && !root.isLinkedActive)
             PropertyChanges {
                 target: prv
                 backgroundColor: root.labelColor
@@ -392,7 +448,10 @@ Item {
         },
         State {
             name: "LEFT_EAR_HOVERED"
-            when: !root.isSelected && leftEar.hovered && !root.headerHovered
+            when: (!root.isSelected &&
+                  (leftEar.hovered || leftStalk.hovered) &&
+                  !root.headerHovered) ||
+                  (root.isLeftLinked && root.isLinkedActive)
             PropertyChanges {
                 target: prv
                 backgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.7)
@@ -402,7 +461,9 @@ Item {
         },
         State {
             name: "RIGHT_EAR_HOVERED"
-            when: !root.isSelected && rightEar.hovered && !root.headerHovered
+            when: !root.isSelected &&
+                  (rightEar.hovered || rightStalk.hovered || (root.isRightLinked && root.isLinkedActive)) &&
+                  !root.headerHovered
             PropertyChanges {
                 target: prv
                 backgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.7)

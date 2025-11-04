@@ -126,6 +126,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelslayoutmanager.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelslayoutmanager.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipcontextmenumodel.cpp

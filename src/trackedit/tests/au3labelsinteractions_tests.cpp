@@ -966,22 +966,22 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsRight)
 
 TEST_F(Au3LabelsInteractionsTests, MoveLabelsLeftWhenLabelIsAtZero)
 {
-    //! [GIVEN] There is a project with a label track containing labels starting at zero
+    //! [GIVEN] There is a project with a label track containing labels, with the leftmost starting close to zero
     Au3TrackList& tracks = Au3TrackList::Get(projectRef());
     Au3LabelTrack* labelTrack = ::LabelTrack::Create(tracks);
     ASSERT_NE(labelTrack, nullptr) << "Failed to create label track";
 
-    //! [GIVEN] Add three labels, first one starting at 0.0
+    //! [GIVEN] Add three labels, first one starting at 0.5
     SelectedRegion region1;
-    region1.setTimes(0.0, 1.0);
+    region1.setTimes(0.5, 1.5);
     TrackItemId labelId1 = labelTrack->AddLabel(region1, wxString("Label 1"));
 
     SelectedRegion region2;
-    region2.setTimes(2.0, 3.0);
+    region2.setTimes(2.5, 3.5);
     TrackItemId labelId2 = labelTrack->AddLabel(region2, wxString("Label 2"));
 
     SelectedRegion region3;
-    region3.setTimes(4.0, 5.0);
+    region3.setTimes(4.5, 5.5);
     TrackItemId labelId3 = labelTrack->AddLabel(region3, wxString("Label 3"));
 
     //! [GIVEN] The label track contains three labels
@@ -1003,30 +1003,30 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsLeftWhenLabelIsAtZero)
 
     const double timeOffset = -1.0;
 
-    //! [WHEN] Move the labels left
+    //! [WHEN] Move the labels left by 1.0 second
     bool result = m_labelsInteraction->moveLabels(timeOffset, true);
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Moving labels should succeed";
 
-    //! [THEN] Labels are moved but clamped to not go below zero
+    //! [THEN] Labels are moved but the leftmost is clamped to zero
     const Au3Label* label1 = labelTrack->GetLabel(0);
     ASSERT_NE(label1, nullptr) << "First label should exist";
     ASSERT_EQ(label1->GetId(), labelId1) << "First label should have correct ID";
     ASSERT_DOUBLE_EQ(label1->getT0(), 0.0) << "First label start time should be clamped to 0.0";
-    ASSERT_DOUBLE_EQ(label1->getT1(), 0.0) << "First label end time should be clamped to 0.0";
+    ASSERT_DOUBLE_EQ(label1->getT1(), 1.0) << "First label end time should be 1.0";
 
     const Au3Label* label2 = labelTrack->GetLabel(1);
     ASSERT_NE(label2, nullptr) << "Second label should exist";
     ASSERT_EQ(label2->GetId(), labelId2) << "Second label should have correct ID";
-    ASSERT_DOUBLE_EQ(label2->getT0(), 1.0) << "Second label start time should be 1.0";
-    ASSERT_DOUBLE_EQ(label2->getT1(), 2.0) << "Second label end time should be 2.0";
+    ASSERT_DOUBLE_EQ(label2->getT0(), 2.0) << "Second label start time should be 2.0";
+    ASSERT_DOUBLE_EQ(label2->getT1(), 3.0) << "Second label end time should be 3.0";
 
     const Au3Label* label3 = labelTrack->GetLabel(2);
     ASSERT_NE(label3, nullptr) << "Third label should exist";
     ASSERT_EQ(label3->GetId(), labelId3) << "Third label should have correct ID";
-    ASSERT_DOUBLE_EQ(label3->getT0(), 3.0) << "Third label start time should be 3.0";
-    ASSERT_DOUBLE_EQ(label3->getT1(), 4.0) << "Third label end time should be 4.0";
+    ASSERT_DOUBLE_EQ(label3->getT0(), 4.0) << "Third label start time should be 4.0";
+    ASSERT_DOUBLE_EQ(label3->getT1(), 5.0) << "Third label end time should be 5.0";
 }
 
 TEST_F(Au3LabelsInteractionsTests, MoveLabelsWithZeroOffset)
