@@ -14,8 +14,8 @@ public:
 
     muse::Inject<au::record::IRecordConfiguration> recordConfiguration;
 
-    void init() override;
-    void deinit() override;
+    void init();
+    void deinit();
 
     bool isBusy() const override;
 
