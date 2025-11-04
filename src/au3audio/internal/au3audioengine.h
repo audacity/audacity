@@ -29,6 +29,9 @@ public:
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;
 
+    void setOutputVolume(float volume) override;
+    void getOutputVolume(float& volume) const override;
+
     bool canStopAudioStream(AudacityProject& project) const override;
 
     muse::async::Notification updateRequested() const override;

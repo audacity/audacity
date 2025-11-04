@@ -7,7 +7,6 @@
 #include "global/async/async.h"
 #include "global/types/ratio.h"
 
-#include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 #include "libraries/lib-project-rate/ProjectRate.h"
 
@@ -55,14 +54,9 @@ void Au3AudioOutput::notifyAboutSampleRateChanged()
 
 muse::async::Promise<float> Au3AudioOutput::playbackVolume() const
 {
-    return muse::async::Promise<float>([](auto resolve, auto /*reject*/) {
-        float inputVolume;
+    return muse::async::Promise<float>([this](auto resolve, auto /*reject*/) {
         float outputVolume;
-        int inputSource;
-
-        auto gAudioIO = AudioIO::Get();
-        gAudioIO->GetMixer(&inputSource, &inputVolume, &outputVolume);
-
+        audioEngine()->getOutputVolume(outputVolume);
         return resolve(muse::linear_to_db(outputVolume));
     });
 }
@@ -70,15 +64,7 @@ muse::async::Promise<float> Au3AudioOutput::playbackVolume() const
 void Au3AudioOutput::setPlaybackVolume(float volume)
 {
     muse::async::Async::call(this, [this, volume]() {
-        float inputVolume;
-        float outputVolume;
-        int inputSource;
-
-        auto gAudioIO = AudioIO::Get();
-        gAudioIO->GetMixer(&inputSource, &inputVolume, &outputVolume);
-
-        gAudioIO->SetMixer(inputSource, inputVolume, muse::db_to_linear(volume));
-
+        audioEngine()->setOutputVolume(muse::db_to_linear(volume));
         m_playbackVolumeChanged.send(volume);
     });
 }

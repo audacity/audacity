@@ -1,5 +1,7 @@
 #include "au3audioengine.h"
 
+#include "framework/global/realfn.h"
+
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 
@@ -10,8 +12,6 @@
 
 #include "defaultplaybackpolicy.h"
 #include "au3audioiolistener.h"
-
-#include "realfn.h"
 
 using namespace au::au3audio;
 
@@ -96,6 +96,22 @@ void Au3AudioEngine::startMonitoring(AudacityProject& project)
 void Au3AudioEngine::stopMonitoring()
 {
     AudioIO::Get()->StopMonitoring();
+}
+
+void Au3AudioEngine::setOutputVolume(const float volume)
+{
+    float inputVolume;
+    float outputVolume;
+    int inputSource;
+    AudioIO::Get()->GetMixer(&inputSource, &inputVolume, &outputVolume);
+    AudioIO::Get()->SetMixer(inputSource, inputVolume, volume);
+}
+
+void Au3AudioEngine::getOutputVolume(float& volume) const
+{
+    float inputVolume;
+    int inputSource;
+    AudioIO::Get()->GetMixer(&inputSource, &inputVolume, &volume);
 }
 
 bool Au3AudioEngine::canStopAudioStream(AudacityProject& project) const

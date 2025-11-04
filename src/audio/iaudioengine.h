@@ -33,6 +33,9 @@ public:
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;
 
+    virtual void setOutputVolume(float volume) = 0;
+    virtual void getOutputVolume(float& volume) const = 0;
+
     virtual bool canStopAudioStream(AudacityProject& project) const = 0;
 
     virtual muse::async::Notification updateRequested() const = 0;
