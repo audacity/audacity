@@ -6,15 +6,15 @@
 
 #include "../../iaudiooutput.h"
 
-#include "global/async/asyncable.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
 
-#include "modularity/ioc.h"
+#include "libraries/lib-utility/LockFreeQueue.h"
+
 #include "context/iglobalcontext.h"
 #include "au3audio/iaudioengine.h"
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometer.h"
-
-#include "libraries/lib-utility/LockFreeQueue.h"
 
 namespace au::playback {
 class Au3AudioOutput : public IAudioOutput, public muse::async::Asyncable

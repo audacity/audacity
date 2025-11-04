@@ -4,21 +4,20 @@
 
 #pragma once
 
-#include "global/async/asyncable.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
 #include "playback/iaudiodevicesprovider.h"
+#include "record/iaudioinput.h"
 #include "record/irecordconfiguration.h"
 #include "record/irecordcontroller.h"
 #include "record/irecordmetercontroller.h"
 #include "trackedit/iselectioncontroller.h"
 #include "audio/iaudioengine.h"
-
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometer.h"
-#include "record/iaudioinput.h"
 
 namespace au::record {
 class Au3AudioInput : public IAudioInput, public muse::async::Asyncable

@@ -3,8 +3,9 @@
 */
 #pragma once
 
-#include "modularity/imoduleinterface.h"
-#include "global/async/notification.h"
+#include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/async/notification.h"
+
 #include "project/iaudacityproject.h"
 #include "playback/iplayer.h"
 #include "iplaybackstate.h"

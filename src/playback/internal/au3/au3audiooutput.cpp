@@ -56,7 +56,7 @@ muse::async::Promise<float> Au3AudioOutput::playbackVolume() const
 {
     return muse::async::Promise<float>([this](auto resolve, auto /*reject*/) {
         float outputVolume;
-        audioEngine()->getOutputVolume(outputVolume);
+        audioEngine()->getPlaybackVolume(outputVolume);
         return resolve(muse::linear_to_db(outputVolume));
     });
 }
@@ -64,7 +64,7 @@ muse::async::Promise<float> Au3AudioOutput::playbackVolume() const
 void Au3AudioOutput::setPlaybackVolume(float volume)
 {
     muse::async::Async::call(this, [this, volume]() {
-        audioEngine()->setOutputVolume(muse::db_to_linear(volume));
+        audioEngine()->setPlaybackVolume(muse::db_to_linear(volume));
         m_playbackVolumeChanged.send(volume);
     });
 }

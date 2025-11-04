@@ -16,7 +16,6 @@
 
 #include "log.h"
 #include "realfn.h"
-#include <portaudio.h>
 
 #include "au3audiodevicesprovider.h"
 
