@@ -150,7 +150,6 @@ bool PlaybackController::isLoopRegionActive() const
 PlaybackRegion PlaybackController::selectionPlaybackRegion() const
 {
     // clip selection have priority over time selection
-    // this?
     if (selectionController()->selectedClips().size() == 1) {
         secs_t clipStartTime = selectionController()->selectedClipStartTime();
         secs_t clipEndTime = selectionController()->selectedClipEndTime();
