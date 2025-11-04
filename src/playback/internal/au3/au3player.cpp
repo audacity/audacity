@@ -470,15 +470,13 @@ void Au3Player::updatePlaybackPosition()
 {
     using namespace std::chrono;
 
-    auto& audioIO = *AudioIO::Get();
     const double sampleRate = audioEngine()->getPlaybackSampleRate();
 
-    AudioIoCallback::AudioCallbackInfo newCallback;
-    while (audioIO.GetAudioCallbackInfoQueue().Get(newCallback)) {
-        const auto targetConsumedSamples = static_cast<unsigned long long>(newCallback.numSamples)
+    while (const auto callbackInfo = audioEngine()->consumeNextCallbackInfo()) {
+        const auto targetConsumedSamples = static_cast<unsigned long long>(callbackInfo->numSamples)
                                            + (m_currentTarget ? m_currentTarget->consumedSamples : 0);
-        const nanoseconds payloadDuration{ static_cast<long>(newCallback.numSamples * 1e9 / sampleRate + .5) };
-        const auto targetTime = newCallback.dacTime + payloadDuration;
+        const nanoseconds payloadDuration{ static_cast<long>(callbackInfo->numSamples * 1e9 / sampleRate + .5) };
+        const auto targetTime = callbackInfo->dacTime + payloadDuration;
         m_currentTarget.emplace(targetTime, targetConsumedSamples);
     }
 

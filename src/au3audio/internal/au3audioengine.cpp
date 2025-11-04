@@ -4,7 +4,6 @@
 
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
-
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
 
@@ -161,6 +160,15 @@ double Au3AudioEngine::getPlaybackSampleRate() const
 void Au3AudioEngine::updateTimePosition(const unsigned long newlyConsumedSamples)
 {
     AudioIO::Get()->UpdateTimePosition(newlyConsumedSamples);
+}
+
+std::optional<AudioCallbackInfo> Au3AudioEngine::consumeNextCallbackInfo()
+{
+    AudioIoCallback::AudioCallbackInfo au3Info;
+    if (AudioIO::Get()->GetAudioCallbackInfoQueue().Get(au3Info)) {
+        return AudioCallbackInfo { au3Info.dacTime, au3Info.numSamples };
+    }
+    return std::nullopt;
 }
 
 muse::async::Notification Au3AudioEngine::updateRequested() const
