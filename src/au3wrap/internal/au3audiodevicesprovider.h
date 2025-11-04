@@ -5,22 +5,25 @@
 #ifndef AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
 #define AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
 
 #include "context/iglobalcontext.h"
-#include "global/types/string.h"
+#include "framework/global/types/string.h"
 
 #include "libraries/lib-strings/wxArrayStringEx.h"
 #include "libraries/lib-utility/IteratorX.h"
 
 #include <wx/arrstr.h>
 
+#include "au3audio/iaudioengine.h"
 #include "playback/iaudiodevicesprovider.h"
 
 namespace au::au3 {
 class Au3AudioDevicesProvider : public playback::IAudioDevicesProvider
 {
     muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<au::audio::IAudioEngine> audioEngine;
+
 public:
     void init();
 

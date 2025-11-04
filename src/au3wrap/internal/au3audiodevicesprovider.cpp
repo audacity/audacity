@@ -9,7 +9,6 @@
 
 #include "libraries/lib-audio-devices/DeviceManager.h"
 #include "libraries/lib-audio-devices/AudioIOBase.h"
-#include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-utility/IteratorX.h"
 #include "QualitySettings.h"
 #include "ProjectRate.h"
@@ -178,7 +177,7 @@ async::Notification Au3AudioDevicesProvider::audioInputDeviceChanged() const
 
 void Au3AudioDevicesProvider::handleDeviceChange()
 {
-    AudioIO::Get()->HandleDeviceChange();
+    audioEngine()->handleDeviceChange();
 }
 
 std::vector<std::string> Au3AudioDevicesProvider::audioApiList() const
@@ -617,7 +616,7 @@ std::string Au3AudioDevicesProvider::defaultOutputDevice()
         return "";
     }
 
-    int index = AudioIO::GetHostIndex(currentAudioApi());
+    const int index = audioEngine()->getHostIndex(currentAudioApi());
 
     const auto currentOutputDevice = currentAudioOutputDevice();
     const auto outputDevices = audioOutputDevices();
@@ -643,7 +642,7 @@ std::string Au3AudioDevicesProvider::defaultInputDevice()
         return "";
     }
 
-    int index = AudioIO::GetHostIndex(currentAudioApi());
+    const int index = audioEngine()->getHostIndex(currentAudioApi());
 
     const auto currentInputDevice = currentAudioInputDevice();
     const auto inputDevices = audioInputDevices();

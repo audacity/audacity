@@ -137,6 +137,16 @@ bool Au3AudioEngine::canStopAudioStream(AudacityProject& project) const
            || AudioIO::Get()->GetOwningProject().get() == &project;
 }
 
+void Au3AudioEngine::handleDeviceChange()
+{
+    AudioIO::Get()->HandleDeviceChange();
+}
+
+int Au3AudioEngine::getHostIndex(const std::string& hostName)
+{
+    return AudioIO::Get()->GetHostIndex(hostName);
+}
+
 muse::async::Notification Au3AudioEngine::updateRequested() const
 {
     return s_audioIOListener->updateRequested();
