@@ -9,6 +9,7 @@
 
 #include "global/async/asyncable.h"
 
+#include "iprojectsceneconfiguration.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackconfiguration.h"
@@ -16,8 +17,7 @@
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "playback/itrackplaybackcontrol.h"
-#include "ui/iuiconfiguration.h"
-#include "actions/iactionsdispatcher.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 
 #include "trackedit/dom/track.h"
 
@@ -30,12 +30,11 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     Q_PROPERTY(int totalTracksHeight READ totalTracksHeight NOTIFY totalTracksHeightChanged FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
-    muse::Inject<muse::actions::IActionsDispatcher> actionsDispatcher;
     muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
 
 public:

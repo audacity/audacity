@@ -149,24 +149,6 @@ void TrackRulerModel::setChannelHeightRatio(double channelHeightRatio)
     }
 }
 
-int TrackRulerModel::trackId() const
-{
-    return m_trackId;
-}
-
-void TrackRulerModel::setTrackId(int trackId)
-{
-    if (m_trackId == trackId) {
-        return;
-    }
-
-    m_trackId = trackId;
-
-    emit trackIdChanged();
-    emit fullStepsChanged();
-    emit smallStepsChanged();
-}
-
 int TrackRulerModel::rulerType() const
 {
     return m_rulerType;

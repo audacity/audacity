@@ -27,7 +27,6 @@ class TrackRulerModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(double channelHeightRatio READ channelHeightRatio WRITE setChannelHeightRatio NOTIFY channelHeightRatioChanged FINAL)
 
-    Q_PROPERTY(int trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
     Q_PROPERTY(int rulerType READ rulerType WRITE setRulerType NOTIFY rulerTypeChanged FINAL)
 
     muse::Inject<au::playback::IPlaybackConfiguration> configuration;
@@ -81,7 +80,6 @@ private:
     bool m_isCollapsed = false;
     int m_height = 0;
     double m_channelHeightRatio = 0.5;
-    int m_trackId = -1;
     int m_rulerType = 2;
 };
 }

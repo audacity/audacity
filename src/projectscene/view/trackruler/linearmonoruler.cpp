@@ -56,7 +56,10 @@ std::vector<TrackRulerFullStep> LinearMonoRuler::fullSteps() const
     std::vector<TrackRulerFullStep> result;
     result.reserve(steps.size());
     for (double v : steps) {
-        result.push_back(TrackRulerFullStep { v, 0, linearrulerutils::getAlignment(v), linearrulerutils::isBold(v), v == 0.0, v < 0.0 });
+        result.push_back(TrackRulerFullStep { v, 0,
+                                              linearrulerutils::getAlignment(v),
+                                              linearrulerutils::isBold(v),
+                                              muse::RealIsEqual(v, 0.0), v < 0.0 });
     }
 
     return result;

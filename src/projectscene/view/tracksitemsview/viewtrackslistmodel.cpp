@@ -11,11 +11,6 @@
 
 using namespace au::projectscene;
 
-namespace {
-const muse::actions::ActionCode TOGGLE_VERTICAL_RULERS = "toggle-vertical-rulers";
-const QString IS_VERTICAL_RULERS_VISIBLE("projectscene/verticalRulersVisible");
-}
-
 ViewTracksListModel::ViewTracksListModel(QObject* parent)
     : QAbstractListModel(parent)
 {
@@ -177,7 +172,7 @@ void ViewTracksListModel::load()
         emit totalTracksHeightChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    uiConfiguration()->isVisibleChanged(IS_VERTICAL_RULERS_VISIBLE).onNotify(this, [this]() {
+    projectSceneConfiguration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool) {
         emit isVerticalRulersVisibleChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
     emit isVerticalRulersVisibleChanged();
@@ -293,7 +288,7 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
 
 bool ViewTracksListModel::isVerticalRulersVisible() const
 {
-    return uiConfiguration()->isVisible(IS_VERTICAL_RULERS_VISIBLE, false);
+    return projectSceneConfiguration()->isVerticalRulersVisible();
 }
 
 int ViewTracksListModel::totalTracksHeight() const
@@ -310,7 +305,7 @@ int ViewTracksListModel::totalTracksHeight() const
 
 void ViewTracksListModel::toggleVerticalRuler() const
 {
-    actionsDispatcher()->dispatch(TOGGLE_VERTICAL_RULERS);
+    projectSceneConfiguration()->setVerticalRulersVisible(!projectSceneConfiguration()->isVerticalRulersVisible());
 }
 
 void ViewTracksListModel::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType)
