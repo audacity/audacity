@@ -471,7 +471,8 @@ void Au3Player::updatePlaybackPosition()
     using namespace std::chrono;
 
     auto& audioIO = *AudioIO::Get();
-    const double sampleRate = audioIO.GetPlaybackSampleRate();
+    const double sampleRate = audioEngine()->getPlaybackSampleRate();
+
     AudioIoCallback::AudioCallbackInfo newCallback;
     while (audioIO.GetAudioCallbackInfoQueue().Get(newCallback)) {
         const auto targetConsumedSamples = static_cast<unsigned long long>(newCallback.numSamples)

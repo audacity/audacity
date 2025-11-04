@@ -153,6 +153,11 @@ muse::String Au3AudioEngine::lastErrorString() const
     return au::au3::wxToString(AudioIO::Get()->LastPaErrorString());
 }
 
+double Au3AudioEngine::getPlaybackSampleRate() const
+{
+    return AudioIO::Get()->GetPlaybackSampleRate();
+}
+
 muse::async::Notification Au3AudioEngine::updateRequested() const
 {
     return s_audioIOListener->updateRequested();
