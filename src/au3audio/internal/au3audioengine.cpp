@@ -47,6 +47,12 @@ static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
 void Au3AudioEngine::init()
 {
     s_audioIOListener = std::make_shared<Au3AudioIOListener>();
+    AudioIO::Init();
+}
+
+void AudioEngine::deinit()
+{
+    AudioIO::Deinit();
 }
 
 bool Au3AudioEngine::isBusy() const

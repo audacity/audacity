@@ -57,8 +57,6 @@ void Au3WrapModule::onPreInit(const muse::IApplication::RunMode&)
 
 void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 {
-    AudioIO::Init();
-
     bool ok = ProjectFileIO::InitializeSQL();
     if (!ok) {
         LOGE() << "failed init sql";
@@ -80,7 +78,6 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 
 void Au3WrapModule::onDeinit()
 {
-    AudioIO::Deinit();
     (void)BasicUI::Install(nullptr);
 
     wxLog::SetActiveTarget(nullptr);
