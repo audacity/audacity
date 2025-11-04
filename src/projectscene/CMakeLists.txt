@@ -187,10 +187,14 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogmonoruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogstereoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogstereoruler.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogrulerutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogrulerutils.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearmonoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearmonoruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearstereoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearstereoruler.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearrulerutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearrulerutils.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/itrackrulermodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearstereoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearstereoruler.h
