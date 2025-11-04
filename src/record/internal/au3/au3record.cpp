@@ -4,17 +4,14 @@
 
 #include "au3record.h"
 
-#include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 #include "libraries/lib-audio-devices/AudioIOBase.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
-#include "libraries/lib-track-selection/TrackFocus.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-track/PendingTracks.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-stretching-sequence/StretchingSequence.h"
-#include "libraries/lib-viewport/Viewport.h"
 
 #include "au3audioinput.h"
 
