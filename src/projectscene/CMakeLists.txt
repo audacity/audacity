@@ -196,6 +196,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearstereoruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearmonoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearmonoruler.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearrulerutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearrulerutils.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/trackrulermodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/trackrulermodel.h
 
