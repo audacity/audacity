@@ -25,6 +25,13 @@ void RealtimeEffectListModel::onProjectChanged()
                 emit trackNameChanged();
             }
         });
+        const std::vector<au::trackedit::TrackId> trackIds = project->trackIdList();
+        for (const auto& trackId : trackIds) {
+            if (belongsWithMe(trackId)) {
+                // Project was just opened, we can use brute-force `onChanged`, it won't have an impact on scrollbar position or alike.
+                onChanged(trackId);
+            }
+        }
     } else {
         beginResetModel();
         m_trackEffectLists.clear();
