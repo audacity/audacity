@@ -213,7 +213,7 @@ TrackItemsContainer {
 
             // this one is transparent, it's on top of the labels
             // to have extend/reduce selection area handles
-            ObjectsSelection {
+            ItemsSelection {
                 id: labelsSelection
 
                 isDataSelected: root.isDataSelected

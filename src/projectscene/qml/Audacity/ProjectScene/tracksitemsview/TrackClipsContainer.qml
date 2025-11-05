@@ -450,7 +450,7 @@ TrackItemsContainer {
 
             // this one is transparent, it's on top of the clips
             // to have extend/reduce selection area handles
-            ObjectsSelection {
+            ItemsSelection {
                 id: clipsSelection
 
                 isDataSelected: root.isDataSelected
