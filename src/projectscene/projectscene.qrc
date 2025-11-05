@@ -68,5 +68,6 @@
         <file>qml/Audacity/ProjectScene/toolbars/internal/DropdownWithTitle.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/PlayRegion.qml</file>
         <file>qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml</file>
+        <file>qml/Audacity/ProjectScene/trackruler/WaveformRuler.qml</file>
     </qresource>
 </RCC>
