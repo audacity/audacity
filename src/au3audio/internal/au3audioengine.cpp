@@ -1,4 +1,4 @@
-#include "audioengine.h"
+#include "au3audioengine.h"
 
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
@@ -13,7 +13,7 @@
 
 #include "realfn.h"
 
-using namespace au::audio;
+using namespace au::au3audio;
 
 std::shared_ptr<Au3AudioIOListener> s_audioIOListener;
 
@@ -44,18 +44,19 @@ static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
         return options;
     } };
 
-void AudioEngine::init()
+void Au3AudioEngine::init()
 {
     s_audioIOListener = std::make_shared<Au3AudioIOListener>();
 }
 
-bool AudioEngine::isBusy() const
+bool Au3AudioEngine::isBusy() const
 {
     return AudioIO::Get()->IsBusy();
 }
 
-int AudioEngine::startStream(const TransportSequences& sequences, const double startTime, const double endTime, const double mixerEndTime,
-                             AudacityProject& project, const bool isDefaultPlayTrackPolicy, const double audioStreamSampleRate)
+int Au3AudioEngine::startStream(const TransportSequences& sequences, const double startTime, const double endTime,
+                                const double mixerEndTime,
+                                AudacityProject& project, const bool isDefaultPlayTrackPolicy, const double audioStreamSampleRate)
 {
     AudioIOStartStreamOptions options = ProjectAudioIO::GetDefaultOptions(project, isDefaultPlayTrackPolicy);
     options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
@@ -63,45 +64,45 @@ int AudioEngine::startStream(const TransportSequences& sequences, const double s
     return AudioIO::Get()->StartStream(sequences, startTime, endTime, mixerEndTime, options);
 }
 
-void AudioEngine::stopStream()
+void Au3AudioEngine::stopStream()
 {
     AudioIO::Get()->StopStream();
     AudioIO::Get()->WaitWhileBusy();
 }
 
-void AudioEngine::pauseStream(const bool pause)
+void Au3AudioEngine::pauseStream(const bool pause)
 {
     AudioIO::Get()->SetPaused(pause);
 }
 
-void AudioEngine::startMonitoring(AudacityProject& project)
+void Au3AudioEngine::startMonitoring(AudacityProject& project)
 {
     AudioIOStartStreamOptions options = ProjectAudioIO::GetDefaultOptions(project);
     options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
     AudioIO::Get()->StartMonitoring(options);
 }
 
-void AudioEngine::stopMonitoring()
+void Au3AudioEngine::stopMonitoring()
 {
     AudioIO::Get()->StopMonitoring();
 }
 
-muse::async::Notification AudioEngine::updateRequested() const
+muse::async::Notification Au3AudioEngine::updateRequested() const
 {
     return s_audioIOListener->updateRequested();
 }
 
-muse::async::Notification AudioEngine::commitRequested() const
+muse::async::Notification Au3AudioEngine::commitRequested() const
 {
     return s_audioIOListener->commitRequested();
 }
 
-muse::async::Notification AudioEngine::finished() const
+muse::async::Notification Au3AudioEngine::finished() const
 {
     return s_audioIOListener->finished();
 }
 
-muse::async::Channel<au::au3::Au3TrackId, au::au3::Au3ClipId> AudioEngine::recordingClipChanged() const
+muse::async::Channel<au::au3::Au3TrackId, au::au3::Au3ClipId> Au3AudioEngine::recordingClipChanged() const
 {
     return s_audioIOListener->recordingClipChanged();
 }

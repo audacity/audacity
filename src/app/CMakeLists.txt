@@ -85,14 +85,14 @@ set(LINK_LIB
 
     appshell
     au3wrap
-    auaudio
+    au3audio
+    audio
     context
     effects_audio_unit
     effects_lv2
     effects_vst
     project
     projectscene
-    audio
     playback
     record
     effects_base

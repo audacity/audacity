@@ -32,7 +32,7 @@ public:
     muse::async::Channel<audio::sample_rate_t> sampleRateChanged() const override;
 
     muse::async::Channel<audio::audioch_t, audio::MeterSignal> playbackSignalChanges() const override;
-    muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> playbackTrackSignalChanges(int64_t key) const override;
+    muse::async::Channel<audio::audioch_t, au::audio::MeterSignal> playbackTrackSignalChanges(int64_t key) const override;
 
 private:
     au3::Au3Project* projectRef() const;
@@ -44,6 +44,6 @@ private:
     muse::async::Channel<float> m_playbackVolumeChanged;
     muse::async::Channel<audio::sample_rate_t> m_sampleRateChanged;
 
-    const std::shared_ptr<au::au3::Meter> m_outputMeter;
+    const std::shared_ptr<au::au3::Au3AudioMeter> m_outputMeter;
 };
 }

@@ -830,7 +830,7 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/portmixer au3-portmixer)
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
 set(MODULE_SRC ${MODULE_SRC} ${AU3_SRC})
-set(MODULE_LINK ${AU3_LINK} project auaudio)
+set(MODULE_LINK ${AU3_LINK} project audio)
 
 set(MODULE_USE_PCH OFF)
 set(MODULE_USE_UNITY OFF)

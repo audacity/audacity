@@ -4,7 +4,7 @@
 #pragma once
 
 #include "actions/actiontypes.h"
-#include "au3audio/audiotypes.h"
+#include "audio/audiotypes.h"
 #include "global/types/secs.h" // IWYU pragma: export
 
 namespace au::playback {

@@ -41,13 +41,13 @@ void WaveTrackItem::init(const trackedit::Track& track)
     emit channelCountChanged();
 
     playback()->audioOutput()->playbackTrackSignalChanges(trackId())
-    .onReceive(this, [this](au::audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
+    .onReceive(this, [this](audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
         setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
         setAudioChannelRMS(channel, meterSignal.rms.pressure);
     }, muse::async::Asyncable::Mode::SetReplace);
 
     record()->audioInput()->recordTrackSignalChanges(trackId())
-    .onReceive(this, [this](au::audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
+    .onReceive(this, [this](audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
         setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
         setAudioChannelRMS(channel, meterSignal.rms.pressure);
     }, muse::async::Asyncable::Mode::SetReplace);

@@ -9,7 +9,7 @@
 #include "global/async/promise.h"
 #include "global/async/channel.h"
 
-#include "au3audio/audiotypes.h"
+#include "audio/audiotypes.h"
 
 namespace au::record {
 class IAudioInput

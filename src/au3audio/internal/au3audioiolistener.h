@@ -12,7 +12,7 @@
 
 #include "au3wrap/au3types.h"
 
-namespace au::audio {
+namespace au::au3audio {
 class Au3AudioIOListener : public AudioIOListener, public muse::async::Asyncable
 {
 public:

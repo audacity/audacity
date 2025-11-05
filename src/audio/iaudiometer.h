@@ -1,17 +1,24 @@
 /*
-* Audacity: A Digital Audio Editor
-*/
+ * Audacity: A Digital Audio Editor
+ */
 #pragma once
 
-#include <chrono>
-#include <optional>
-#include <memory>
+#include "audio/audiotypes.h"
 
+#include "framework/global/async/channel.h"
+
+#include <chrono>
+#include <memory>
+#include <optional>
+
+namespace au::audio {
 using TimePoint = std::chrono::steady_clock::time_point;
 
-class AUDIO_DEVICES_API IMeterSender
+class IAudioMeter
 {
 public:
+    static std::unique_ptr<IAudioMeter> create();
+
     struct InterleavedSampleData
     {
         InterleavedSampleData(
@@ -40,10 +47,18 @@ public:
         bool operator<(const TrackId& other) const { return value < other.value; }
     };
 
-    virtual ~IMeterSender() = default;
-    virtual void push(uint8_t channel, const InterleavedSampleData& sampleData, const std::optional<TrackId>& = std::nullopt) = 0;
+    using OptionalTimePoint = std::optional<TimePoint>;
+
+    virtual ~IAudioMeter() = default;
+    /**
+     * @param trackId nullopt means master track
+     */
+    virtual void push(uint8_t channel, const InterleavedSampleData& sampleData, const std::optional<TrackId>& trackId = std::nullopt) = 0;
     virtual void start(double sampleRate) = 0;
     virtual void stop() = 0;
+    virtual muse::async::Channel<audio::audioch_t,
+                                 audio::MeterSignal> dataChanged(const std::optional<TrackId>& trackId = std::nullopt) = 0;
 };
 
-using IMeterSenderPtr = std::shared_ptr<IMeterSender>;
+using IAudioMeterPtr = std::shared_ptr<IAudioMeter>;
+}

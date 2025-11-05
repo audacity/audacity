@@ -10,7 +10,6 @@
 static const int INVALID_FORMAT = -1;
 
 using namespace au::playback;
-using namespace au::audio;
 
 PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
                                                  QObject* parent)

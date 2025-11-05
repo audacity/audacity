@@ -55,7 +55,8 @@
 #include "context/contextmodule.h"
 #include "project/projectmodule.h"
 #include "projectscene/projectscenemodule.h"
-#include "au3audio/audiomodule.h"
+#include "audio/audiomodule.h"
+#include "au3audio/au3audiomodule.h"
 #include "playback/playbackmodule.h"
 #include "trackedit/trackeditmodule.h"
 #include "record/recordmodule.h"
@@ -256,6 +257,7 @@ int main(int argc, char** argv)
     if (!isPluginRegistration) {
         app.addModule(new au::context::ContextModule());
         app.addModule(new au::audio::AudioModule());
+        app.addModule(new au::au3audio::Au3AudioModule());
         app.addModule(new au::projectscene::ProjectSceneModule());
         app.addModule(new au::playback::PlaybackModule());
         app.addModule(new au::record::RecordModule());

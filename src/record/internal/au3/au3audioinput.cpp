@@ -12,7 +12,7 @@
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometerfactory.h"
 
-#include "au3audio/audiotypes.h"
+#include "audio/audiotypes.h"
 
 using namespace muse;
 using namespace muse::async;
@@ -132,7 +132,7 @@ muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioInput
 muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioInput::recordTrackSignalChanges(
     int64_t key) const
 {
-    return m_inputMeter->dataChanged(IMeterSender::TrackId { key });
+    return m_inputMeter->dataChanged(audio::IAudioMeter::TrackId { key });
 }
 
 void Au3AudioInput::startAudioEngineMonitoring() const

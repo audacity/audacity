@@ -14,7 +14,7 @@
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometerfactory.h"
 
-#include "au3audio/audiotypes.h"
+#include "audio/audiotypes.h"
 
 #include "log.h"
 
@@ -111,7 +111,7 @@ muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioOutpu
 muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioOutput::playbackTrackSignalChanges(
     int64_t key) const
 {
-    return m_outputMeter->dataChanged(IMeterSender::TrackId { key });
+    return m_outputMeter->dataChanged(audio::IAudioMeter::TrackId { key });
 }
 
 Au3Project* Au3AudioOutput::projectRef() const

@@ -11,7 +11,7 @@
 #include "ui/iuiactionsregister.h"
 #include "context/iglobalcontext.h"
 
-#include "au3audio/audiotypes.h"
+#include "audio/audiotypes.h"
 #include "record/irecordcontroller.h"
 #include "trackedit/iselectioncontroller.h"
 

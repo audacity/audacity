@@ -8,7 +8,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "au3audio/iaudioengine.h"
+#include "audio/iaudioengine.h"
 #include "actions/iactionsdispatcher.h"
 #include "trackedit/iprojecthistory.h"
 #include "playback/iplayback.h"

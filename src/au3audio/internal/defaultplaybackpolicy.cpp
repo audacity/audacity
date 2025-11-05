@@ -8,6 +8,7 @@
 #include "ViewInfo.h"
 #include "log.h"
 
+namespace au::au3audio {
 DefaultPlaybackPolicy::DefaultPlaybackPolicy(AudacityProject& project,
                                              double trackEndTime, double loopEndTime, std::optional<double> pStartTime,
                                              bool loopEnabled, bool variableSpeed)
@@ -289,4 +290,5 @@ double DefaultPlaybackPolicy::GetPlaySpeed()
     return mVariableSpeed
            ? ProjectAudioIO::Get(mProject).GetPlaySpeed()
            : 1.0;
+}
 }

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "au3audio/audiotypes.h"
+#include "audio/audiotypes.h"
 #include "async/channel.h"
 #include "modularity/imoduleinterface.h"
 

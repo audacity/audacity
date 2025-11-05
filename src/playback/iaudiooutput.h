@@ -3,7 +3,7 @@
 #include "global/async/promise.h"
 #include "global/async/channel.h"
 
-#include "au3audio/audiotypes.h"
+#include "audio/audiotypes.h"
 
 //! NOTE Implemented in Au3Wrap
 namespace au::playback {
@@ -20,7 +20,6 @@ public:
     virtual muse::async::Channel<audio::sample_rate_t> sampleRateChanged() const = 0;
 
     virtual muse::async::Channel<audio::audioch_t, audio::MeterSignal> playbackSignalChanges() const = 0;
-    virtual muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> playbackTrackSignalChanges(
-        int64_t key) const = 0;
+    virtual muse::async::Channel<audio::audioch_t, audio::MeterSignal> playbackTrackSignalChanges(int64_t key) const = 0;
 };
 }

@@ -14,7 +14,7 @@
 #include "record/irecordcontroller.h"
 #include "record/irecordmetercontroller.h"
 #include "trackedit/iselectioncontroller.h"
-#include "au3audio/iaudioengine.h"
+#include "audio/iaudioengine.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometer.h"
@@ -40,7 +40,7 @@ public:
     muse::async::Channel<float> recordVolumeChanged() const override;
 
     muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordSignalChanges() const override;
-    muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> recordTrackSignalChanges(int64_t key) const override;
+    muse::async::Channel<audio::audioch_t, au::audio::MeterSignal> recordTrackSignalChanges(int64_t key) const override;
 
 private:
     au3::Au3Project* projectRef() const;
@@ -56,7 +56,7 @@ private:
     bool audioEngineShouldBeMonitoring() const;
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
-    const std::shared_ptr<au::au3::Meter> m_inputMeter;
+    const std::shared_ptr<au::au3::Au3AudioMeter> m_inputMeter;
     int m_inputChannelsCount{};
     int m_focusedTrackChannels{};
 };

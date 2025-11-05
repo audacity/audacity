@@ -39,7 +39,8 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
 
     playback()->audioOutput()->playbackSignalChanges().onReceive(this,
                                                                  [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
-        setAudioChannelVolumePressure(audioChNum, meterSignal.peak.pressure);
+        setAudioChannelVolumePressure(audioChNum,
+                                      meterSignal.peak.pressure);
         setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
     });
 
