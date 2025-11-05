@@ -404,8 +404,12 @@ bool Au3ClipsInteraction::moveClips(secs_t timePositionOffset, int trackPosition
         m_tracksWhenDragStarted.emplace(utils::getTrackListInfo(Au3TrackList::Get(projectRef())));
     }
 
+    ClipKeyList clipsToProcess = selectionController()->timeSelectionIsNotEmpty()
+                                 ? selectionController()->clipsIntersectingRangeSelection()
+                                 : selectionController()->selectedClipsInTrackOrder();
+
     //! NOTE: check if offset is applicable to every clip and recalculate if needed
-    std::optional<secs_t> leftmostClipStartTime = getLeftmostClipStartTime(selectionController()->selectedClips());
+    std::optional<secs_t> leftmostClipStartTime = getLeftmostClipStartTime(clipsToProcess);
 
     if (leftmostClipStartTime.has_value()) {
         if (muse::RealIsEqualOrLess(leftmostClipStartTime.value() + timePositionOffset, 0.0)) {
@@ -413,7 +417,12 @@ bool Au3ClipsInteraction::moveClips(secs_t timePositionOffset, int trackPosition
         }
     }
 
-    for (const auto& selectedClip : selectionController()->selectedClipsInTrackOrder()) {
+    if (selectionController()->timeSelectionIsNotEmpty() && !selectionController()->clipsIntersectingRangeSelection().empty()) {
+        selectionController()->setDataSelectedStartTime(selectionController()->dataSelectedStartTime() + timePositionOffset, false);
+        selectionController()->setDataSelectedEndTime(selectionController()->dataSelectedEndTime() + timePositionOffset, false);
+    }
+
+    for (const auto& selectedClip : clipsToProcess) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
         IF_ASSERT_FAILED(waveTrack) {
             continue;
@@ -924,7 +933,10 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(int offset)
     // Shallow-copies wave data, no worries.
     const auto copy = orig.Duplicate();
     const auto prj = globalContext()->currentTrackeditProject();
-    ClipKeyList selectedClips = selectionController()->selectedClips();
+
+    ClipKeyList selectedClips = selectionController()->timeSelectionIsNotEmpty()
+                                ? selectionController()->clipsIntersectingRangeSelection()
+                                : selectionController()->selectedClips();
 
     const auto dragDirection = offset == -1 ? utils::VerticalDrag::Up : utils::VerticalDrag::Down;
     // Make sure clips aren't dragged past the topmost track:
@@ -1024,7 +1036,11 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(int offset)
             clipKey.trackId = newTrack->GetId();
         }
     }
-    selectionController()->setSelectedClips(selectedClips);
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        selectionController()->setClipsIntersectingRangeSelection(selectedClips);
+    } else {
+        selectionController()->setSelectedClips(selectedClips);
+    }
 
     if (offset < 0) {
         // The user dragged up. It's possible that the bottom-most tracks were created during this interaction,
