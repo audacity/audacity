@@ -95,7 +95,7 @@ Rectangle {
             Component {
                 id: emptyComp
 
-                Item { }
+                Item {}
             }
 
             Component {
@@ -126,11 +126,11 @@ Rectangle {
                         placementPolicies: PopupView.PreferLeft
 
                         onHideRulersRequested: {
-                            root.model.toggleVerticalRuler();
+                            root.model.toggleVerticalRuler()
                         }
 
-                        onRulerTypeChangeRequested: function(rulerType) {
-                            root.model.setTrackRulerType(model.trackId, rulerType);
+                        onRulerTypeChangeRequested: function (rulerType) {
+                            root.model.setTrackRulerType(model.trackId, rulerType)
                         }
                     }
 
@@ -325,7 +325,7 @@ Rectangle {
                                 Rectangle {
                                     width: 3
                                     height: 1
-                                    color: ui.theme.isDark ? "#868B8E": "#8B8C96"
+                                    color: ui.theme.isDark ? "#868B8E" : "#8B8C96"
                                     anchors.verticalCenter: parent.verticalCenter
                                     antialiasing: true
                                 }
