@@ -52,6 +52,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsnap.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackcolor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackcolor.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackrulertype.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackrulertype.h
     )
 
 

@@ -6,15 +6,14 @@
 #include "global/async/async.h"
 
 #include "global/containers.h"
+#include "playback/playbacktypes.h"
+#include "trackedit/dom/track.h"
 
 using namespace au::projectscene;
 
 ViewTracksListModel::ViewTracksListModel(QObject* parent)
     : QAbstractListModel(parent)
 {
-    configuration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool isVerticalRulersVisible) {
-        setIsVerticalRulersVisible(isVerticalRulersVisible);
-    });
 }
 
 void ViewTracksListModel::load()
@@ -31,8 +30,6 @@ void ViewTracksListModel::load()
     trackeditInteraction()->cancelDragEditRequested().onNotify(this, [this]() {
         emit escapePressed();
     }, muse::async::Asyncable::Mode::SetReplace);
-
-    setIsVerticalRulersVisible(configuration()->isVerticalRulersVisible());
 
     trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this] (long) {
         emit dataChanged(index(0), index(static_cast<int>(m_trackList.size()) - 1), { IsTrackAudibleRole });
@@ -174,6 +171,15 @@ void ViewTracksListModel::load()
     viewState->totalTrackHeight().ch.onReceive(this, [this](int) {
         emit totalTracksHeightChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
+
+    projectSceneConfiguration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool) {
+        emit isVerticalRulersVisibleChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
+    emit isVerticalRulersVisibleChanged();
+
+    playbackConfiguration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { DbRangeRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 void ViewTracksListModel::handleDroppedFiles(const QStringList& fileUrls)
@@ -233,6 +239,26 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     }
     case TypeRole:
         return QVariant::fromValue(track.type);
+
+    case IsStereoRole:
+        return track.type == au::trackedit::TrackType::Stereo;
+
+    case IsLinearRole:
+        return track.rulerType != au::trackedit::TrackRulerType::DbLog;
+
+    case TrackRulerTypeRole:
+        return static_cast<int>(track.rulerType);
+
+    case AvailableRulerTypesRole:
+        return QVariant::fromValue(QList<QMap<QString, QVariant> > {
+            { { "label", "Logarithmic (dB)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLog) } },
+            { { "label", "Linear (dB)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLinear) } },
+            { { "label", "Linear (amp)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::Linear) } },
+        });
+
+    case DbRangeRole:
+        return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
+
     default:
         break;
     }
@@ -251,23 +277,18 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { IsTrackFocusedRole, "isTrackFocused" },
         { IsMultiSelectionActiveRole, "isMultiSelectionActive" },
         { IsTrackAudibleRole, "isTrackAudible" },
+        { IsStereoRole, "isStereo" },
+        { IsLinearRole, "isLinear" },
+        { AvailableRulerTypesRole, "availableRulerTypes" },
+        { TrackRulerTypeRole, "trackRulerType" },
+        { DbRangeRole, "dbRange" }
     };
     return roles;
 }
 
 bool ViewTracksListModel::isVerticalRulersVisible() const
 {
-    return m_isVerticalRulersVisible;
-}
-
-void ViewTracksListModel::setIsVerticalRulersVisible(bool isVerticalRulersVisible)
-{
-    if (m_isVerticalRulersVisible == isVerticalRulersVisible) {
-        return;
-    }
-
-    m_isVerticalRulersVisible = isVerticalRulersVisible;
-    emit isVerticalRulersVisibleChanged(m_isVerticalRulersVisible);
+    return projectSceneConfiguration()->isVerticalRulersVisible();
 }
 
 int ViewTracksListModel::totalTracksHeight() const
@@ -280,4 +301,15 @@ int ViewTracksListModel::totalTracksHeight() const
     }
 
     return viewState->totalTrackHeight().val;
+}
+
+void ViewTracksListModel::toggleVerticalRuler() const
+{
+    projectSceneConfiguration()->setVerticalRulersVisible(!projectSceneConfiguration()->isVerticalRulersVisible());
+}
+
+void ViewTracksListModel::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType)
+{
+    trackeditInteraction()->changeTrackRulerType(trackId, static_cast<trackedit::TrackRulerType>(rulerType));
+    emit dataChanged(index(0), index(m_trackList.size() - 1), { TrackRulerTypeRole });
 }

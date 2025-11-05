@@ -16,6 +16,8 @@ Rectangle {
     width: 32
     color: ui.theme.backgroundQuarternaryColor
 
+    visible: model.isVerticalRulersVisible
+
     Rectangle {
         id: leftBorder
 
@@ -83,17 +85,37 @@ Rectangle {
 
             Component.onCompleted: {
                 trackViewState.init()
-                clipsModel.init()
+                rulerModel.init()
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton | Qt.LeftButton
+
+                onClicked: {
+                    customisePopup.toggleOpened()
+                }
+            }
+
+            TrackRulerCustomizePopup {
+                id: customisePopup
+                isVerticalRulersVisible: root.model.isVerticalRulersVisible
+                rulerType: model.trackRulerType
+                availableRulerTypes: model.availableRulerTypes
+
+                placementPolicies: PopupView.PreferLeft
+
+                onHideRulersRequested: {
+                    root.model.toggleVerticalRuler();
+                }
+
+                onRulerTypeChangeRequested: function(rulerType) {
+                    root.model.setTrackRulerType(model.trackId, rulerType);
+                }
             }
 
             TrackViewStateModel {
                 id: trackViewState
-                trackId: model.trackId
-            }
-
-            TrackClipsListModel {
-                id: clipsModel
-                context: root.context
                 trackId: model.trackId
             }
 
@@ -169,10 +191,11 @@ Rectangle {
                 TrackRulerModel {
                     id: rulerModel
 
-                    isStereo: clipsModel.isStereo
+                    isStereo: model.isStereo
                     height: ruler.height
                     isCollapsed: trackViewState.isTrackCollapsed
                     channelHeightRatio: trackViewState.channelHeightRatio
+                    rulerType: model.trackRulerType
                 }
 
                 anchors.top: header.bottom
@@ -203,6 +226,8 @@ Rectangle {
                             width: 7
                             height: 1
                             color: ui.theme.isDark ? "#F4F7F9" : "#F4F5F9"
+
+                            antialiasing: true
                         }
 
                         Rectangle {
@@ -217,6 +242,8 @@ Rectangle {
                             color: "#475157"
 
                             visible: modelData.fullWidthTick
+
+                            antialiasing: true
                         }
 
                         Item {
@@ -237,7 +264,7 @@ Rectangle {
                                 anchors.right: parent.right
                                 anchors.verticalCenter: parent.verticalCenter
 
-                                text: Math.abs(modelData.value).toFixed(1)
+                                text: rulerModel.sampleToText(modelData.value)
                                 color: "#F9F9FA"
                                 font.pixelSize: 10
 
@@ -261,6 +288,8 @@ Rectangle {
                                 color: "#F4F5F9"
 
                                 visible: modelData.value < 0
+
+                                antialiasing: true
                             }
                         }
                     }
@@ -283,6 +312,7 @@ Rectangle {
                             height: 1
                             color: ui.theme.isDark ? "#868B8E": "#8B8C96"
                             anchors.verticalCenter: parent.verticalCenter
+                            antialiasing: true
                         }
                     }
                 }

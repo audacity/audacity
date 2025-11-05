@@ -1,50 +1,28 @@
-#include "projectscene/view/trackruler/linearstereoruler.h"
+/*
+* Audacity: A Digital Audio Editor
+*/
+#include "global/realfn.h"
+
+#include "linearstereoruler.h"
+#include "linearrulerutils.h"
 
 using namespace au::projectscene;
 
 namespace {
-constexpr std::array<TrackRulerFullStep, 3> FULL_STEPS_CH_0 = { {
-    TrackRulerFullStep{ 1.0, 0, -1, true, false },
-    TrackRulerFullStep{ 0.0, 0, 0, true, true },
-    TrackRulerFullStep{ -1.0, 0, 1, true, true }
+constexpr std::array<TrackRulerFullStep, 2> COLLAPSED_FULL_STEPS = { {
+    TrackRulerFullStep{ 0.0, 0, 0, true, true, false },
+    TrackRulerFullStep{ 0.0, 1, 0, true, true, false },
 } };
 
-constexpr std::array<TrackRulerFullStep, 3> FULL_STEPS_CH_1 = { {
-    TrackRulerFullStep{ 1.0, 1, -1, true, true },
-    TrackRulerFullStep{ 0.0, 1, 0, true, true },
-    TrackRulerFullStep{ -1.0, 1, 1, true, false },
+constexpr std::array<TrackRulerSmallStep, 2> COLLAPSED_SMALL_STEPS = { {
+    TrackRulerSmallStep{ 1.0, 0, false },
+    TrackRulerSmallStep{ -1.0, 1, false }
 } };
 
-constexpr std::array<TrackRulerSmallStep, 2> SMALL_STEPS_CH_0 = { {
-    TrackRulerSmallStep{ 0, 0.5 },
-    TrackRulerSmallStep{ 0, -0.5 }
-} };
-
-constexpr std::array<TrackRulerSmallStep, 2> SMALL_STEPS_CH_1 = { {
-    TrackRulerSmallStep{ 1, 0.5 },
-    TrackRulerSmallStep{ 1, -0.5 }
-} };
-
-constexpr std::array<TrackRulerFullStep, 2> COLLAPSED_FULL_STEPS_CH_0 = { {
-    TrackRulerFullStep{ 0.0, 0, 0, true, true },
-} };
-
-constexpr std::array<TrackRulerFullStep, 2> COLLAPSED_FULL_STEPS_CH_1 = { {
-    TrackRulerFullStep{ 0.0, 1, 0, true, true },
-} };
-
-constexpr std::array<TrackRulerSmallStep, 1> COLLAPSED_SMALL_STEPS_CH_0 = { {
-    TrackRulerSmallStep{ 0, 1.0 }
-} };
-
-constexpr std::array<TrackRulerSmallStep, 1> COLLAPSED_SMALL_STEPS_CH_1 = { {
-    TrackRulerSmallStep{ 1, -1.0 }
-} };
-
-constexpr double MIN_CHANNEL_HEIGHT = 30.0;
+constexpr double MIN_CHANNEL_HEIGHT = 40.0;
 }
 
-double LinearStereoRuler::stepToPosition(double step, int channel) const
+double LinearStereoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, [[maybe_unused]] bool isNegativeSample) const
 {
     double position;
     if (channel == 0) {
@@ -77,30 +55,36 @@ void LinearStereoRuler::setCollapsed(bool isCollapsed)
     m_collapsed = isCollapsed;
 }
 
+std::string LinearStereoRuler::sampleToText(double sample) const
+{
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(1) << std::abs(sample);
+    return ss.str();
+}
+
 std::vector<TrackRulerFullStep> LinearStereoRuler::fullSteps() const
 {
     std::vector<TrackRulerFullStep> steps;
 
     if (m_collapsed) {
-        steps.insert(steps.end(), COLLAPSED_FULL_STEPS_CH_0.begin(), COLLAPSED_FULL_STEPS_CH_0.end());
-        steps.insert(steps.end(), COLLAPSED_FULL_STEPS_CH_1.begin(), COLLAPSED_FULL_STEPS_CH_1.end());
+        steps.insert(steps.end(), COLLAPSED_FULL_STEPS.begin(), COLLAPSED_FULL_STEPS.end());
         return steps;
     }
 
-    if (m_height * m_channelHeightRatio < MIN_CHANNEL_HEIGHT) {
-        steps.insert(steps.end(), COLLAPSED_FULL_STEPS_CH_0.begin(), COLLAPSED_FULL_STEPS_CH_0.end());
-        steps.insert(steps.end(), FULL_STEPS_CH_1.begin(), FULL_STEPS_CH_1.end());
-        return steps;
+    std::vector<double> channelHeight = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
+    for (size_t ch = 0; ch < channelHeight.size(); ++ch) {
+        if (channelHeight[ch] < MIN_CHANNEL_HEIGHT) {
+            steps.push_back(TrackRulerFullStep { 0.0, ch, 0, true, true, false });
+            continue;
+        }
+
+        const auto values = linearrulerutils::fullStepsValues(channelHeight[ch]);
+        for (double value : values) {
+            steps.push_back(TrackRulerFullStep { value, ch, linearrulerutils::getAlignment(value), linearrulerutils::isBold(
+                                                     value), value == 0.0, value < 0.0 });
+        }
     }
 
-    if (m_height * (1.0 - m_channelHeightRatio) < MIN_CHANNEL_HEIGHT) {
-        steps.insert(steps.end(), FULL_STEPS_CH_0.begin(), FULL_STEPS_CH_0.end());
-        steps.insert(steps.end(), COLLAPSED_FULL_STEPS_CH_1.begin(), COLLAPSED_FULL_STEPS_CH_1.end());
-        return steps;
-    }
-
-    steps.insert(steps.end(), FULL_STEPS_CH_0.begin(), FULL_STEPS_CH_0.end());
-    steps.insert(steps.end(), FULL_STEPS_CH_1.begin(), FULL_STEPS_CH_1.end());
     return steps;
 }
 
@@ -108,24 +92,26 @@ std::vector<TrackRulerSmallStep> LinearStereoRuler::smallSteps() const
 {
     std::vector<TrackRulerSmallStep> steps;
     if (m_collapsed) {
-        steps.insert(steps.end(), COLLAPSED_SMALL_STEPS_CH_0.begin(), COLLAPSED_SMALL_STEPS_CH_0.end());
-        steps.insert(steps.end(), COLLAPSED_SMALL_STEPS_CH_1.begin(), COLLAPSED_SMALL_STEPS_CH_1.end());
+        steps.insert(steps.end(), COLLAPSED_SMALL_STEPS.begin(), COLLAPSED_SMALL_STEPS.end());
         return steps;
     }
 
-    if (m_height * m_channelHeightRatio < MIN_CHANNEL_HEIGHT) {
-        steps.insert(steps.end(), COLLAPSED_SMALL_STEPS_CH_0.begin(), COLLAPSED_SMALL_STEPS_CH_0.end());
-        steps.insert(steps.end(), SMALL_STEPS_CH_1.begin(), SMALL_STEPS_CH_1.end());
-        return steps;
+    std::vector<double> channelHeight = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
+    for (size_t ch = 0; ch < 2; ++ch) {
+        if (channelHeight[ch] < MIN_CHANNEL_HEIGHT) {
+            steps.push_back(TrackRulerSmallStep { 0.0, ch, false });
+            continue;
+        }
+
+        const auto values = linearrulerutils::smallStepsValues(channelHeight[ch]);
+        const auto fullSteps = linearrulerutils::fullStepsValues(channelHeight[ch]);
+        for (double v : values) {
+            if (std::find_if(fullSteps.begin(), fullSteps.end(), [v](double fs) { return muse::RealIsEqual(v, fs); }) != fullSteps.end()) {
+                continue;
+            }
+            steps.push_back(TrackRulerSmallStep { v, ch,  v < 0.0 });
+        }
     }
 
-    if (m_height * (1.0 - m_channelHeightRatio) < MIN_CHANNEL_HEIGHT) {
-        steps.insert(steps.end(), SMALL_STEPS_CH_0.begin(), SMALL_STEPS_CH_0.end());
-        steps.insert(steps.end(), COLLAPSED_SMALL_STEPS_CH_1.begin(), COLLAPSED_SMALL_STEPS_CH_1.end());
-        return steps;
-    }
-
-    steps.insert(steps.end(), SMALL_STEPS_CH_0.begin(), SMALL_STEPS_CH_0.end());
-    steps.insert(steps.end(), SMALL_STEPS_CH_1.begin(), SMALL_STEPS_CH_1.end());
     return steps;
 }

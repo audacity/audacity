@@ -677,6 +677,8 @@ Rectangle {
                             isTrackFocused: itemData.isTrackFocused
                             isMultiSelectionActive: itemData.isMultiSelectionActive
                             isTrackAudible: itemData.isTrackAudible
+                            isLinear: itemData.isLinear
+                            dbRange: itemData.dbRange
 
                             moveActive: tracksItemsView.moveActive
 
@@ -1000,8 +1002,6 @@ Rectangle {
             width: verticalRulerPanelHeader.width
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-
-            visible: tracksModel.isVerticalRulersVisible
         }
     }
 

@@ -91,6 +91,8 @@ IWavePainter::Params WaveView::getWavePainterParams() const
     params.channelHeightRatio = m_channelHeightRatio;
     params.showRMS = configuration()->isRMSInWaveformVisible();
     params.showClipping = configuration()->isClippingInWaveformVisible();
+    params.isLinear = m_isLinear;
+    params.dbRange = m_dbRange;
 
     projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
     if (clipStyle == projectscene::ClipStyles::Style::COLORFUL) {
@@ -348,6 +350,36 @@ void WaveView::setIsBrush(bool isBrush)
 bool WaveView::isBrush() const
 {
     return m_isBrush;
+}
+
+bool WaveView::isLinear() const
+{
+    return m_isLinear;
+}
+
+void WaveView::setIsLinear(bool isLinear)
+{
+    if (m_isLinear == isLinear) {
+        return;
+    }
+
+    m_isLinear = isLinear;
+    update();
+}
+
+double WaveView::dbRange() const
+{
+    return m_dbRange;
+}
+
+void WaveView::setDbRange(double dbRange)
+{
+    if (m_dbRange == dbRange) {
+        return;
+    }
+
+    m_dbRange = dbRange;
+    update();
 }
 
 QColor WaveView::transformColor(const QColor& originalColor) const

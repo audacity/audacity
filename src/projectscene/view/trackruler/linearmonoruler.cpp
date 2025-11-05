@@ -1,48 +1,27 @@
-#include "projectscene/view/trackruler/linearmonoruler.h"
+/*
+* Audacity: A Digital Audio Editor
+*/
+#include "global/realfn.h"
+
+#include "linearmonoruler.h"
+#include "linearrulerutils.h"
 
 using namespace au::projectscene;
 
 namespace {
-constexpr std::array<TrackRulerFullStep, 5> FULL_STEPS = { {
-    TrackRulerFullStep{ 1.0, 0, -1, true, false },
-    TrackRulerFullStep{ 0.5, 0, 0, false, false },
-    TrackRulerFullStep{ 0.0, 0, 0, true, true },
-    TrackRulerFullStep{ -0.5, 0, 0, false, false },
-    TrackRulerFullStep{ -1.0, 0, 1, true, false }
-} };
-
-constexpr std::array<TrackRulerSmallStep, 16> SMALL_STEPS = { {
-    TrackRulerSmallStep{ 0, 0.9 },
-    TrackRulerSmallStep{ 0, 0.8 },
-    TrackRulerSmallStep{ 0, 0.7 },
-    TrackRulerSmallStep{ 0, 0.6 },
-    TrackRulerSmallStep{ 0, 0.4 },
-    TrackRulerSmallStep{ 0, 0.3 },
-    TrackRulerSmallStep{ 0, 0.2 },
-    TrackRulerSmallStep{ 0, 0.1 },
-    TrackRulerSmallStep{ 0, -0.1 },
-    TrackRulerSmallStep{ 0, -0.2 },
-    TrackRulerSmallStep{ 0, -0.3 },
-    TrackRulerSmallStep{ 0, -0.4 },
-    TrackRulerSmallStep{ 0, -0.6 },
-    TrackRulerSmallStep{ 0, -0.7 },
-    TrackRulerSmallStep{ 0, -0.8 },
-    TrackRulerSmallStep{ 0, -0.9 }
-} };
-
 constexpr std::array<TrackRulerFullStep, 1> COLLAPSED_FULL_STEPS = { {
-    TrackRulerFullStep{ 0.0, 0, 0, true, true },
+    TrackRulerFullStep{ 0.0, 0, 0, true, true, false },
 } };
 
 constexpr std::array<TrackRulerSmallStep, 2> COLLAPSED_SMALL_STEPS = { {
-    TrackRulerSmallStep{ 0, 1.0 },
-    TrackRulerSmallStep{ 0, -1.0 }
+    TrackRulerSmallStep{ 1.0, 0, false },
+    TrackRulerSmallStep{ -1.0, 0, true }
 } };
 }
 
-double LinearMonoRuler::stepToPosition(double step, int) const
+double LinearMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, [[maybe_unused]] bool isNegativeSample) const
 {
-    return (1.0 - (step / 2.0 + 0.5)) * m_height;
+    return linearrulerutils::valueToPosition(step, m_height);
 }
 
 void LinearMonoRuler::setHeight(int height)
@@ -60,13 +39,30 @@ void LinearMonoRuler::setCollapsed(bool isCollapsed)
     m_collapsed = isCollapsed;
 }
 
+std::string LinearMonoRuler::sampleToText(double sample) const
+{
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(1) << std::abs(sample);
+    return ss.str();
+}
+
 std::vector<TrackRulerFullStep> LinearMonoRuler::fullSteps() const
 {
     if (m_collapsed) {
         return { COLLAPSED_FULL_STEPS.begin(), COLLAPSED_FULL_STEPS.end() };
     }
 
-    return { FULL_STEPS.begin(), FULL_STEPS.end() };
+    std::vector<double> steps = linearrulerutils::fullStepsValues(m_height);
+    std::vector<TrackRulerFullStep> result;
+    result.reserve(steps.size());
+    for (double v : steps) {
+        result.push_back(TrackRulerFullStep { v, 0,
+                                              linearrulerutils::getAlignment(v),
+                                              linearrulerutils::isBold(v),
+                                              muse::RealIsEqual(v, 0.0), v < 0.0 });
+    }
+
+    return result;
 }
 
 std::vector<TrackRulerSmallStep> LinearMonoRuler::smallSteps() const
@@ -75,5 +71,17 @@ std::vector<TrackRulerSmallStep> LinearMonoRuler::smallSteps() const
         return { COLLAPSED_SMALL_STEPS.begin(), COLLAPSED_SMALL_STEPS.end() };
     }
 
-    return { SMALL_STEPS.begin(), SMALL_STEPS.end() };
+    std::vector<double> fullSteps = linearrulerutils::fullStepsValues(m_height);
+    std::vector<double> steps = linearrulerutils::smallStepsValues(m_height);
+
+    std::vector<TrackRulerSmallStep> result;
+    for (double v : steps) {
+        if (std::find_if(fullSteps.begin(), fullSteps.end(), [v](double fs) { return muse::RealIsEqual(v, fs); }) != fullSteps.end()) {
+            continue;
+        }
+
+        result.push_back(TrackRulerSmallStep { v, 0, v < 0.0 });
+    }
+
+    return result;
 }

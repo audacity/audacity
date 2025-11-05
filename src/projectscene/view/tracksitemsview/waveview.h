@@ -33,6 +33,8 @@ class WaveView : public QQuickPaintedItem, public muse::async::Asyncable
     Q_PROPERTY(bool isIsolationMode READ isIsolationMode WRITE setIsIsolationMode NOTIFY isIsolationModeChanged FINAL)
     Q_PROPERTY(bool multiSampleEdit READ multiSampleEdit WRITE setMultiSampleEdit NOTIFY multiSampleEditChanged FINAL)
     Q_PROPERTY(bool isBrush READ isBrush WRITE setIsBrush NOTIFY isBrushChanged FINAL)
+    Q_PROPERTY(bool isLinear READ isLinear WRITE setIsLinear FINAL)
+    Q_PROPERTY(double dbRange READ dbRange WRITE setDbRange FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::projectscene::IWavePainter> wavePainter;
@@ -67,6 +69,10 @@ public:
     void setMultiSampleEdit(bool multiSampleEdit);
     bool isBrush() const;
     void setIsBrush(bool isBrush);
+    bool isLinear() const;
+    void setIsLinear(bool isLinear);
+    double dbRange() const;
+    void setDbRange(double dbRange);
 
     Q_INVOKABLE QColor transformColor(const QColor& originalColor) const;
     Q_INVOKABLE void setLastMousePos(const unsigned int x, const unsigned int y);
@@ -112,6 +118,8 @@ private:
     bool m_isIsolationMode = false;
     bool m_multiSampleEdit = false;
     bool m_isBrush = false;
+    bool m_isLinear = false;
+    double m_dbRange = -60.0;
 
     std::optional<int> m_currentChannel;
     std::optional<QPoint> m_lastClickedPoint;

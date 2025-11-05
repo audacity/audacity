@@ -118,6 +118,11 @@ bool TrackeditOperationController::changeTracksColor(const TrackIdList& tracksId
     return false;
 }
 
+bool TrackeditOperationController::changeTrackRulerType(const trackedit::TrackId& trackId, trackedit::TrackRulerType rulerType)
+{
+    return tracksInteraction()->changeTrackRulerType(trackId, rulerType);
+}
+
 bool TrackeditOperationController::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
 {
     return clipsInteraction()->changeClipOptimizeForVoice(clipKey, optimize);
