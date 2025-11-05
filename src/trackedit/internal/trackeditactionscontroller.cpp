@@ -133,11 +133,6 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     CLIP_DELETE_CODE,
     MULTI_CLIP_DELETE_CODE,
     RANGE_SELECTION_DELETE_CODE,
-    LABEL_DELETE_CODE,
-    LABEL_DELETE_MULTI_CODE,
-    LABEL_CUT_CODE,
-    LABEL_COPY_CODE,
-    LABEL_COPY_CODE_MULTI,
     CLIP_RENDER_PITCH_AND_SPEED_CODE,
     TRACKEDIT_PASTE_DEFAULT_CODE,
     TRACKEDIT_PASTE_OVERLAP_CODE,
@@ -174,7 +169,6 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACK_RESAMPLE,
     GROUP_CLIPS_CODE,
     UNGROUP_CLIPS_CODE,
-    LABEL_ADD_CODE,
 };
 
 void TrackeditActionsController::init()

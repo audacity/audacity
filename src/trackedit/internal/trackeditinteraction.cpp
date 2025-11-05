@@ -429,47 +429,47 @@ bool TrackeditInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
 
 bool TrackeditInteraction::addLabelToSelection()
 {
-    return withPlaybackStop(&ITrackeditInteraction::addLabelToSelection);
+    return m_interaction->addLabelToSelection();
 }
 
 bool TrackeditInteraction::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)
 {
-    return withPlaybackStop(&ITrackeditInteraction::changeLabelTitle, labelKey, title);
+    return m_interaction->changeLabelTitle(labelKey, title);
 }
 
 bool TrackeditInteraction::removeLabel(const LabelKey& labelKey)
 {
-    return withPlaybackStop(&ITrackeditInteraction::removeLabel, labelKey);
+    return m_interaction->removeLabel(labelKey);
 }
 
 bool TrackeditInteraction::removeLabels(const LabelKeyList& labelKeys)
 {
-    return withPlaybackStop(&ITrackeditInteraction::removeLabels, labelKeys);
+    return m_interaction->removeLabels(labelKeys);
 }
 
 bool TrackeditInteraction::cutLabel(const LabelKey& labelKey)
 {
-    return withPlaybackStop(&ITrackeditInteraction::cutLabel, labelKey);
+    return m_interaction->cutLabel(labelKey);
 }
 
 bool TrackeditInteraction::copyLabel(const LabelKey& labelKey)
 {
-    return withPlaybackStop(&ITrackeditInteraction::copyLabel, labelKey);
+    return m_interaction->copyLabel(labelKey);
 }
 
 bool TrackeditInteraction::moveLabels(secs_t timePositionOffset, bool completed)
 {
-    return withPlaybackStop(&ITrackeditInteraction::moveLabels, timePositionOffset, completed);
+    return m_interaction->moveLabels(timePositionOffset, completed);
 }
 
 bool TrackeditInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)
 {
-    return withPlaybackStop(&ITrackeditInteraction::stretchLabelLeft, labelKey, newStartTime, completed);
+    return m_interaction->stretchLabelLeft(labelKey, newStartTime, completed);
 }
 
 bool TrackeditInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
 {
-    return withPlaybackStop(&ITrackeditInteraction::stretchLabelRight, labelKey, newEndTime, completed);
+    return m_interaction->stretchLabelRight(labelKey, newEndTime, completed);
 }
 
 muse::Progress TrackeditInteraction::progress() const
