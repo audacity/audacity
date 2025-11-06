@@ -36,6 +36,7 @@ public:
     bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) override;
     bool changeTracksColor(const TrackIdList& tracksIds, const std::string& color) override;
     bool changeTrackRulerType(const trackedit::TrackId& trackId, trackedit::TrackRulerType rulerType) override;
+    bool changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) override;
 
     muse::Ret paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks, bool isMultiSelectionCopy,
                     bool& projectWasModified) override;

@@ -33,6 +33,13 @@ enum class TrackRulerType : int {
     DbLog
 };
 
+enum class TrackViewType : int {
+    Unspecified = -1,
+    Waveform,
+    Spectrogram,
+    WaveformAndSpectrogram,
+};
+
 struct TrackFormatInfo {
     TrackFormat format;
     const char* description;
@@ -55,6 +62,7 @@ struct Track {
     muse::draw::Color color;
     TrackFormat format = TrackFormat::Undefined;
     TrackRulerType rulerType = TrackRulerType::Linear;
+    TrackViewType viewType = TrackViewType::Unspecified;
     uint64_t rate;
 };
 

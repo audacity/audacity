@@ -151,11 +151,6 @@ void TrackContextMenuModel::load()
     updateTrackFormatState();
     updateTrackRateState();
     updateTrackMonoState();
-
-    MenuItem& waveformViewItem = findItem(ActionCode("track-view-waveform"));
-    auto state = waveformViewItem.state();
-    state.checked = true;
-    waveformViewItem.setState(state);
 }
 
 au::trackedit::TrackId TrackContextMenuModel::trackId() const

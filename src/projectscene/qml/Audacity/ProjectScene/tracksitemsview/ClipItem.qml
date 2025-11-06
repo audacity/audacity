@@ -15,6 +15,8 @@ Rectangle {
     property alias clipKey: waveView.clipKey
     property alias clipTime: waveView.clipTime
     property alias title: titleLabel.text
+    required property bool isWaveformViewVisible
+    required property bool isSpectrogramViewVisible
     property int pitch: 0
     property int speedPercentage: 0
     property alias showChannelSplitter: channelSplitter.visible
@@ -726,96 +728,113 @@ Rectangle {
             }
         }
 
-        WaveView {
-            id: waveView
+        ColumnLayout {
+
             anchors.top: (!root.collapsed && header.visible) ? header.bottom : parent.top
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
-            channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
+            spacing: 0
 
-            clipColor: root.clipColor
-            clipSelected: root.clipSelected
-            isIsolationMode: root.isIsolationMode
-            multiSampleEdit: root.multiSampleEdit
-            isBrush: root.isBrush
-            isLinear: root.isLinear
-            dbRange: root.dbRange
+            WaveView {
+                id: waveView
+                visible: root.isWaveformViewVisible
 
-            function onWaveViewPositionChanged(x, y) {
-                if (waveView.isIsolationMode) {
-                    waveView.setIsolatedPoint(x, y)
-                    waveView.update()
-                } else if (root.multiSampleEdit && !root.altPressed) {
-                    var lastX = root.lastSample.x
-                    var lastY = root.lastSample.y
-                    waveView.setLastClickPos(lastX, lastY, x, y)
-                    waveView.update()
-                } else {
-                    waveView.setLastMousePos(x, y)
-                }
-            }
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-            ChannelSplitter {
-                id: channelSplitter
+                channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
 
-                anchors.fill: parent
+                clipColor: root.clipColor
+                clipSelected: root.clipSelected
+                isIsolationMode: root.isIsolationMode
+                multiSampleEdit: root.multiSampleEdit
+                isBrush: root.isBrush
+                isLinear: root.isLinear
+                dbRange: root.dbRange
 
-                editable: root.enableCursorInteraction && root.asymmetricStereoHeightsPossible
-                asymmetricStereoHeightsPossible: root.asymmetricStereoHeightsPossible
-
-                color: "#000000"
-                opacity: 0.10
-
-                onPositionChangeRequested: function (position) {
-                    root.splitterPositionChangeRequested(position)
-                }
-            }
-
-            FlatButton {
-                id: accessibilitySelectBtn
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 10
-
-                navigation.name: "SelectBtn"
-                navigation.panel: root.clipNavigationPanel
-                navigation.column: 0
-
-                width: 55
-                height: 20
-                text: !root.clipSelected ? qsTrc("clips", "Select") : qsTrc("clips", "Deselect")
-                visible: root.clipNavigationPanel.highlight
-                normalColor: "#2b2a33"
-
-                onClicked: {
-                    if (!root.clipSelected) {
-                        root.requestSelected()
+                function onWaveViewPositionChanged(x, y) {
+                    if (waveView.isIsolationMode) {
+                        waveView.setIsolatedPoint(x, y)
+                        waveView.update()
+                    } else if (root.multiSampleEdit && !root.altPressed) {
+                        var lastX = root.lastSample.x
+                        var lastY = root.lastSample.y
+                        waveView.setLastClickPos(lastX, lastY, x, y)
+                        waveView.update()
                     } else {
-                        root.requestSelectionReset()
+                        waveView.setLastMousePos(x, y)
+                    }
+                }
+
+                ChannelSplitter {
+                    id: channelSplitter
+
+                    anchors.fill: parent
+
+                    editable: root.enableCursorInteraction && root.asymmetricStereoHeightsPossible
+                    asymmetricStereoHeightsPossible: root.asymmetricStereoHeightsPossible
+
+                    color: "#000000"
+                    opacity: 0.10
+
+                    onPositionChangeRequested: function (position) {
+                        root.splitterPositionChangeRequested(position)
+                    }
+                }
+
+                FlatButton {
+                    id: accessibilitySelectBtn
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 10
+
+                    navigation.name: "SelectBtn"
+                    navigation.panel: root.clipNavigationPanel
+                    navigation.column: 0
+
+                    width: 55
+                    height: 20
+                    text: !root.clipSelected ? qsTrc("clips", "Select") : qsTrc("clips", "Deselect")
+                    visible: root.clipNavigationPanel.highlight
+                    normalColor: "#2b2a33"
+
+                    onClicked: {
+                        if (!root.clipSelected) {
+                            root.requestSelected()
+                        } else {
+                            root.requestSelectionReset()
+                        }
+                    }
+                }
+
+                onIsNearSampleChanged: {
+                    if (root.isNearSample) {
+                        waveView.forceActiveFocus()
+                    }
+                }
+
+                onIsIsolationModeChanged: {
+                    if (waveView.isIsolationMode) {
+                        waveView.forceActiveFocus()
+                    }
+                }
+
+                onIsStemPlotChanged: {
+                    if (waveView.isStemPlot && hoverArea.containsMouse) {
+                        // force mouse position update will update isNearSample
+                        waveView.onWaveViewPositionChanged(hoverArea.mouseX, hoverArea.mouseY - header.height)
                     }
                 }
             }
 
-            onIsNearSampleChanged: {
-                if (root.isNearSample) {
-                    waveView.forceActiveFocus()
-                }
-            }
+            SpectrogramView {
+                visible: root.isSpectrogramViewVisible
 
-            onIsIsolationModeChanged: {
-                if (waveView.isIsolationMode) {
-                    waveView.forceActiveFocus()
-                }
-            }
-
-            onIsStemPlotChanged: {
-                if (waveView.isStemPlot && hoverArea.containsMouse) {
-                    // force mouse position update will update isNearSample
-                    waveView.onWaveViewPositionChanged(hoverArea.mouseX, hoverArea.mouseY - header.height)
-                }
+                Layout.fillWidth: true
+                Layout.fillHeight: true
             }
         }
     }

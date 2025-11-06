@@ -249,6 +249,14 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case TrackRulerTypeRole:
         return static_cast<int>(track.rulerType);
 
+    case IsWaveformViewVisibleRole:
+        return track.viewType == au::trackedit::TrackViewType::Waveform
+               || track.viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
+
+    case IsSpectrogramViewVisibleRole:
+        return track.viewType == au::trackedit::TrackViewType::Spectrogram
+               || track.viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
+
     case AvailableRulerTypesRole:
         return QVariant::fromValue(QList<QMap<QString, QVariant> > {
             { { "label", "Logarithmic (dB)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLog) } },
@@ -281,6 +289,8 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { IsLinearRole, "isLinear" },
         { AvailableRulerTypesRole, "availableRulerTypes" },
         { TrackRulerTypeRole, "trackRulerType" },
+        { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
+        { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
         { DbRangeRole, "dbRange" }
     };
     return roles;

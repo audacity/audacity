@@ -26,6 +26,32 @@ Item {
         channelHeightRatio: root.channelHeightRatio
     }
 
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton | Qt.LeftButton
+
+        onClicked: {
+            customisePopup.toggleOpened()
+        }
+    }
+
+    TrackRulerCustomizePopup {
+        id: customisePopup
+        isVerticalRulersVisible: root.model.isVerticalRulersVisible
+        rulerType: model.trackRulerType
+        availableRulerTypes: model.availableRulerTypes
+
+        placementPolicies: PopupView.PreferLeft
+
+        onHideRulersRequested: {
+            root.model.toggleVerticalRuler()
+        }
+
+        onRulerTypeChangeRequested: function (rulerType) {
+            root.model.setTrackRulerType(model.trackId, rulerType)
+        }
+    }
+
     Repeater {
         id: fullStepsRepeater
 

@@ -3,6 +3,7 @@
 #include "au3types.h"
 #include "trackcolor.h"
 #include "trackrulertype.h"
+#include "trackviewtype.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
@@ -75,6 +76,24 @@ au::trackedit::TrackRulerType trackRulerType(const Au3Track* track)
         return au::trackedit::TrackRulerType::Linear;
     }
 }
+
+au::trackedit::TrackViewType trackViewType(const Au3Track* track)
+{
+    const auto& viewTypeAttachment = TrackViewTypeAttachment::Get(track);
+    switch (viewTypeAttachment.GetTrackViewType()) {
+    case TrackViewType::Waveform:
+        return au::trackedit::TrackViewType::Waveform;
+    case TrackViewType::Spectrogram:
+        return au::trackedit::TrackViewType::Spectrogram;
+    case TrackViewType::WaveformAndSpectrogram:
+        return au::trackedit::TrackViewType::WaveformAndSpectrogram;
+    case TrackViewType::Unspecified:
+        return dynamic_cast<const WaveTrack*>(track) ? au::trackedit::TrackViewType::Waveform : au::trackedit::TrackViewType::Unspecified;
+    default:
+        assert(false);
+        return au::trackedit::TrackViewType::Unspecified;
+    }
+}
 }
 
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
@@ -117,6 +136,7 @@ au::trackedit::Track DomConverter::track(const Au3Track* track)
 
     au4t.format = trackFormat(track);
     au4t.rulerType = trackRulerType(track);
+    au4t.viewType = trackViewType(track);
     au4t.rate = trackRate(track);
     return au4t;
 }

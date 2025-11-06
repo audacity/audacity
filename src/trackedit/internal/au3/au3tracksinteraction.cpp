@@ -23,6 +23,7 @@
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/trackcolor.h"
 #include "au3wrap/internal/trackrulertype.h"
+#include "au3wrap/internal/trackviewtype.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
@@ -157,6 +158,40 @@ bool Au3TracksInteraction::changeTrackRulerType(const trackedit::TrackId& trackI
         break;
     case trackedit::TrackRulerType::DbLog:
         trackRulerType.SetRulerType(RulerType::DbLog);
+        break;
+    default:
+        IF_ASSERT_FAILED(false) {
+            return false;
+        }
+    }
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutTrackChanged(DomConverter::track(track));
+
+    return true;
+}
+
+bool Au3TracksInteraction::changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
+{
+    Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
+    IF_ASSERT_FAILED(track) {
+        return false;
+    }
+
+    auto& attachment = au3::TrackViewTypeAttachment::Get(track);
+
+    switch (viewType) {
+    case trackedit::TrackViewType::Waveform:
+        attachment.SetTrackViewType(au3::TrackViewType::Waveform);
+        break;
+    case trackedit::TrackViewType::Spectrogram:
+        attachment.SetTrackViewType(au3::TrackViewType::Spectrogram);
+        break;
+    case trackedit::TrackViewType::WaveformAndSpectrogram:
+        attachment.SetTrackViewType(au3::TrackViewType::WaveformAndSpectrogram);
+        break;
+    case trackedit::TrackViewType::Unspecified:
+        attachment.SetTrackViewType(au3::TrackViewType::Unspecified);
         break;
     default:
         IF_ASSERT_FAILED(false) {

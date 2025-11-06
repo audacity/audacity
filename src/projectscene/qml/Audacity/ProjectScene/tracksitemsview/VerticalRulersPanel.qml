@@ -104,30 +104,13 @@ Rectangle {
                 Rectangle {
                     color: ui.theme.backgroundQuarternaryColor
 
-                    MouseArea {
-                        anchors.fill: parent
-                        acceptedButtons: Qt.RightButton | Qt.LeftButton
-
-                        onClicked: {
-                            customisePopup.toggleOpened()
-                        }
+                    Component.onCompleted: {
+                        rulerModel.init()
                     }
 
-                    TrackRulerCustomizePopup {
-                        id: customisePopup
-                        isVerticalRulersVisible: root.model.isVerticalRulersVisible
-                        rulerType: model.trackRulerType
-                        availableRulerTypes: model.availableRulerTypes
-
-                        placementPolicies: PopupView.PreferLeft
-
-                        onHideRulersRequested: {
-                            root.model.toggleVerticalRuler()
-                        }
-
-                        onRulerTypeChangeRequested: function (rulerType) {
-                            root.model.setTrackRulerType(model.trackId, rulerType)
-                        }
+                    MouseArea {
+                        id: mouseClickBlocker // to prevent clicks from reaching and modifying the viewport
+                        anchors.fill: parent
                     }
 
                     Rectangle {
@@ -196,8 +179,7 @@ Rectangle {
                         thickness: 2
                     }
 
-                    WaveformRuler {
-                        id: ruler
+                    ColumnLayout {
 
                         anchors.top: header.bottom
                         anchors.bottom: sep.top
@@ -205,10 +187,24 @@ Rectangle {
                         anchors.right: parent.right
                         anchors.bottomMargin: 1
 
-                        isStereo: model.isStereo
-                        isCollapsed: trackViewState.isTrackCollapsed
-                        channelHeightRatio: trackViewState.channelHeightRatio
-                        rulerType: model.trackRulerType
+                        WaveformRuler {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+
+                            visible: model.isWaveformViewVisible
+
+                            isStereo: model.isStereo
+                            isCollapsed: trackViewState.isTrackCollapsed
+                            channelHeightRatio: trackViewState.channelHeightRatio
+                            rulerType: model.trackRulerType
+                        }
+
+                        SpectrogramRuler {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+
+                            visible: model.isSpectrogramViewVisible
+                        }
                     }
                 }
             }

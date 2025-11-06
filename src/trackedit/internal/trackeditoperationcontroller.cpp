@@ -123,6 +123,11 @@ bool TrackeditOperationController::changeTrackRulerType(const trackedit::TrackId
     return tracksInteraction()->changeTrackRulerType(trackId, rulerType);
 }
 
+bool TrackeditOperationController::changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
+{
+    return tracksInteraction()->changeAudioTrackViewType(trackId, viewType);
+}
+
 bool TrackeditOperationController::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
 {
     return clipsInteraction()->changeClipOptimizeForVoice(clipKey, optimize);

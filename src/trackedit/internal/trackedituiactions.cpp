@@ -215,23 +215,21 @@ UiActionList STATIC_ACTIONS = {
              au::context::CTX_ANY,
              TranslatableString("action", "Waveform"),
              TranslatableString("action", "Waveform"),
-             Checkable::Yes
+             IconCode::Code::WAVEFORM
              ),
     UiAction("track-view-spectrogram",
-             //! TODO: Change context when spectrogram is implemented
-             au::context::UiCtxUnknown,
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Spectogram"),
              TranslatableString("action", "Spectogram"),
-             Checkable::Yes
+             IconCode::Code::SPECTROGRAM
              ),
     UiAction("track-view-multi",
-             //! TODO: Change context when multi-view is implemented
-             au::context::UiCtxUnknown,
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Multi-view"),
              TranslatableString("action", "Multi-view"),
-             Checkable::Yes
+             IconCode::Code::SPECTROGRAM_BOX_SELECTION // TODO need proper icon
              ),
     UiAction("track-view-half-wave",
              //! TODO: Change context when half-wave is implemented

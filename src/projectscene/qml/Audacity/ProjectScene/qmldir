@@ -20,3 +20,4 @@ VolumePressureRuler 1.0 trackspanel/audio/VolumePressureRuler.qml
 VolumeTooltip 1.0 trackspanel/audio/VolumeTooltip.qml
 TrackRulerCustomizePopup 1.0 trackruler/TrackRulerCustomizePopup.qml
 WaveformRuler 1.0 trackruler/WaveformRuler.qml
+SpectrogramRuler 1.0 trackruler/SpectrogramRuler.qml
