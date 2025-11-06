@@ -5,11 +5,18 @@
 
 namespace au::projectscene {
 SpectrogramView::SpectrogramView(QQuickItem* parent)
-    : QQuickPaintedItem(parent)
+    : AbstractClipView(parent)
 {
 }
 
-SpectrogramView::~SpectrogramView() = default;
+void SpectrogramView::setTimelineContext(TimelineContext* newContext)
+{
+    if (m_context == newContext) {
+        return;
+    }
+    m_context = newContext;
+    update();
+}
 
 void SpectrogramView::paint(QPainter* painter)
 {
