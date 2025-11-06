@@ -208,3 +208,18 @@ std::shared_ptr<ITrackRulerModel> TrackRulerModel::buildRulerModel()
 
     return model;
 }
+
+void TrackRulerModel::zoomIn(const trackedit::TrackId& trackId)
+{
+    trackeditInteraction()->verticalZoomIn(trackId);
+}
+
+void TrackRulerModel::zoomOut(const trackedit::TrackId& trackId)
+{
+    trackeditInteraction()->verticalZoomOut(trackId);
+}
+
+void TrackRulerModel::resetZoom(const trackedit::TrackId& trackId)
+{
+    trackeditInteraction()->resetVerticalZoom(trackId);
+}

@@ -136,6 +136,10 @@ public:
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
 
+    void verticalZoomIn(const trackedit::TrackId& trackId) override;
+    void verticalZoomOut(const trackedit::TrackId& trackId) override;
+    void resetVerticalZoom(const trackedit::TrackId& trackId) override;
+
     muse::Progress progress() const override;
 
 private:

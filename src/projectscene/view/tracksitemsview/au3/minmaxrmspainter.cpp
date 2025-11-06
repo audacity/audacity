@@ -2,8 +2,6 @@
 
 #include "au3wrap/internal/domaccessor.h"
 #include "wavepainterutils.h"
-#include "WaveformScale.h"
-#include "WaveformSettings.h"
 #include "WaveformPainter.h"
 
 using namespace au::au3;
@@ -30,10 +28,6 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
         return;
     }
 
-    float zoomMin, zoomMax;
-    auto& cache = WaveformScale::Get(*track);
-    cache.GetDisplayBounds(zoomMin, zoomMax);
-
     const float dbRange = std::abs(params.dbRange);
     const bool dB = !params.isLinear;
 
@@ -51,7 +45,7 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
         metrics.height = channelHeight[index];
         paintParameters
         .SetDisplayParameters(
-            metrics.height, zoomMin, zoomMax, params.showClipping)
+            metrics.height, params.displayBounds.first, params.displayBounds.second, params.showClipping)
         .SetDBParameters(dbRange, dB)
         .SetBlankColor(ColorFromQColor(params.style.blankBrush))
         .SetSampleColors(

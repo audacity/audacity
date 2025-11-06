@@ -35,6 +35,7 @@ class WaveView : public QQuickPaintedItem, public muse::async::Asyncable
     Q_PROPERTY(bool isBrush READ isBrush WRITE setIsBrush NOTIFY isBrushChanged FINAL)
     Q_PROPERTY(bool isLinear READ isLinear WRITE setIsLinear FINAL)
     Q_PROPERTY(double dbRange READ dbRange WRITE setDbRange FINAL)
+    Q_PROPERTY(QMap<QString, QVariant> displayBounds READ displayBounds WRITE setDisplayBounds FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::projectscene::IWavePainter> wavePainter;
@@ -73,6 +74,8 @@ public:
     void setIsLinear(bool isLinear);
     double dbRange() const;
     void setDbRange(double dbRange);
+    QMap<QString, QVariant> displayBounds() const;
+    void setDisplayBounds(const QMap<QString, QVariant>& displayBounds);
 
     Q_INVOKABLE QColor transformColor(const QColor& originalColor) const;
     Q_INVOKABLE void setLastMousePos(const unsigned int x, const unsigned int y);
@@ -120,6 +123,7 @@ private:
     bool m_isBrush = false;
     bool m_isLinear = false;
     double m_dbRange = -60.0;
+    QMap<QString, QVariant> m_displayBounds;
 
     std::optional<int> m_currentChannel;
     std::optional<QPoint> m_lastClickedPoint;
