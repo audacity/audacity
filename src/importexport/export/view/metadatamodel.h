@@ -61,15 +61,15 @@ public:
 private:
     inline static const std::array<QString, 9> kStdTags =
     {
-        QString("TITLE"),
-        QString("ARTIST"),
-        QString("ALBUM"),
-        QString("TRACKNUMBER"),
-        QString("YEAR"),
-        QString("GENRE"),
-        QString("COMMENTS"),
-        QString("Software"),
-        QString("Copyright")
+        QString::fromStdString(muse::trc("metadata", "TITLE")),
+        QString::fromStdString(muse::trc("metadata", "ARTIST")),
+        QString::fromStdString(muse::trc("metadata", "ALBUM")),
+        QString::fromStdString(muse::trc("metadata", "TRACKNUMBER")),
+        QString::fromStdString(muse::trc("metadata", "YEAR")),
+        QString::fromStdString(muse::trc("metadata", "GENRE")),
+        QString::fromStdString(muse::trc("metadata", "COMMENTS")),
+        QString::fromStdString(muse::trc("metadata", "Software")),
+        QString::fromStdString(muse::trc("metadata", "Copyright")),
     };
 
     project::ProjectMeta m_meta;
