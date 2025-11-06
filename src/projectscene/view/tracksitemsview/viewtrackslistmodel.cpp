@@ -267,6 +267,12 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case DbRangeRole:
         return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
 
+    case VerticalDisplayBoundsRole:
+        return QMap<QString, QVariant> {
+            { "min", track.displayBounds.first },
+            { "max", track.displayBounds.second },
+        };
+
     default:
         break;
     }
@@ -289,9 +295,10 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { IsLinearRole, "isLinear" },
         { AvailableRulerTypesRole, "availableRulerTypes" },
         { TrackRulerTypeRole, "trackRulerType" },
+        { DbRangeRole, "dbRange" },
+        { VerticalDisplayBoundsRole, "displayBounds" },
         { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
         { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
-        { DbRangeRole, "dbRange" }
     };
     return roles;
 }

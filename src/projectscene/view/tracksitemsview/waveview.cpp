@@ -93,6 +93,10 @@ IWavePainter::Params WaveView::getWavePainterParams() const
     params.showClipping = configuration()->isClippingInWaveformVisible();
     params.isLinear = m_isLinear;
     params.dbRange = m_dbRange;
+    params.displayBounds = {
+        m_displayBounds.value("min").toFloat(),
+        m_displayBounds.value("max").toFloat()
+    };
 
     projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
     if (clipStyle == projectscene::ClipStyles::Style::COLORFUL) {
@@ -379,6 +383,21 @@ void WaveView::setDbRange(double dbRange)
     }
 
     m_dbRange = dbRange;
+    update();
+}
+
+QMap<QString, QVariant> WaveView::displayBounds() const
+{
+    return m_displayBounds;
+}
+
+void WaveView::setDisplayBounds(const QMap<QString, QVariant>& displayBounds)
+{
+    if (m_displayBounds == displayBounds) {
+        return;
+    }
+
+    m_displayBounds = displayBounds;
     update();
 }
 

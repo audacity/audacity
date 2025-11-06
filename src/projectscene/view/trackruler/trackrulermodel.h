@@ -10,6 +10,7 @@
 
 #include "global/modularity/ioc.h"
 #include "playback/iplaybackconfiguration.h"
+#include "trackedit/itrackeditinteraction.h"
 
 #include "itrackrulermodel.h"
 
@@ -30,11 +31,15 @@ class TrackRulerModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(int rulerType READ rulerType WRITE setRulerType NOTIFY rulerTypeChanged FINAL)
 
     muse::Inject<au::playback::IPlaybackConfiguration> configuration;
+    muse::Inject<au::trackedit::ITrackeditInteraction> trackeditInteraction;
 
 public:
     explicit TrackRulerModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
+    Q_INVOKABLE void zoomIn(const trackedit::TrackId& trackId);
+    Q_INVOKABLE void zoomOut(const trackedit::TrackId& trackId);
+    Q_INVOKABLE void resetZoom(const trackedit::TrackId& trackId);
 
     std::vector<QVariantMap> fullSteps() const;
     std::vector<QVariantMap> smallSteps() const;

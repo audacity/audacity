@@ -45,6 +45,8 @@ struct TrackFormatInfo {
     const char* description;
 };
 
+using TrackDisplayBounds = std::pair<float, float>;
+
 inline const std::array<TrackFormatInfo, 3>& availableTrackFormats()
 {
     static constexpr std::array<TrackFormatInfo, 3> AVAILABLE_TRACK_FORMATS = { {
@@ -64,6 +66,7 @@ struct Track {
     TrackRulerType rulerType = TrackRulerType::Linear;
     TrackViewType viewType = TrackViewType::Unspecified;
     uint64_t rate;
+    TrackDisplayBounds displayBounds;
 };
 
 using TrackList = std::vector<Track>;

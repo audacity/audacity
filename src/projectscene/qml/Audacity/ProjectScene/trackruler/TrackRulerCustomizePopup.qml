@@ -19,6 +19,9 @@ StyledPopupView {
 
     signal hideRulersRequested()
     signal rulerTypeChangeRequested(int newType)
+    signal zoomInRequested()
+    signal zoomOutRequested()
+    signal zoomResetRequested()
 
     contentWidth: uiModel.popupWidth - 2*uiModel.popupMargins
     contentHeight: uiModel.popupHeight - 2*uiModel.popupMargins
@@ -59,10 +62,12 @@ StyledPopupView {
                 anchors.bottom: parent.bottom
                 width: uiModel.zoomBtnWidth
 
-                enabled: false
-
                 normalColor: ui.theme.buttonColor
                 icon: IconCode.ZOOM_IN
+
+                onClicked: {
+                    root.zoomInRequested()
+                }
             }
 
             FlatButton {
@@ -72,10 +77,12 @@ StyledPopupView {
                 anchors.bottom: parent.bottom
                 width: uiModel.zoomBtnWidth
 
-                enabled: false
-
                 normalColor: ui.theme.buttonColor
                 icon: IconCode.ZOOM_OUT
+
+                onClicked: {
+                    root.zoomOutRequested()
+                }
             }
 
             FlatButton {
@@ -85,14 +92,16 @@ StyledPopupView {
                 anchors.bottom: parent.bottom
                 width: uiModel.resetBtnWidth
 
-                enabled: false
-
                 normalColor: ui.theme.buttonColor
                 icon: IconCode.UNDO
 
                 orientation: Qt.Horizontal
 
                 text: qsTrc("trackruler", "Reset")
+
+                onClicked: {
+                    root.zoomResetRequested()
+                }
             }
         }
 

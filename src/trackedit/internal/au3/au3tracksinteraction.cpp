@@ -4,6 +4,7 @@
 #include "au3tracksinteraction.h"
 
 #include <algorithm>
+#include <cmath>
 
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-track/TimeWarper.h"
@@ -25,6 +26,7 @@
 #include "au3wrap/internal/trackcolor.h"
 #include "au3wrap/internal/trackrulertypeattachment.h"
 #include "au3wrap/internal/trackviewtypeattachment.h"
+#include "au3wrap/internal/waveformscale.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
@@ -1128,6 +1130,66 @@ bool Au3TracksInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
     }
 
     return true;
+}
+
+void Au3TracksInteraction::verticalZoomIn(const trackedit::TrackId& trackId)
+{
+    constexpr float MAX_ZOOM_IN = 1.0 / (1 << 11);
+
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    if (waveTrack == nullptr) {
+        return;
+    }
+
+    float min;
+    float max;
+    auto& cache = WaveformScale::Get(*waveTrack);
+    cache.GetDisplayBounds(min, max);
+    if (muse::is_equal(max, MAX_ZOOM_IN)) {
+        return;
+    }
+
+    cache.SetDisplayBounds(min / 2, max / 2);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+}
+
+void Au3TracksInteraction::verticalZoomOut(const trackedit::TrackId& trackId)
+{
+    constexpr float MAX_ZOOM_OUT = 2;
+
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    if (waveTrack == nullptr) {
+        return;
+    }
+
+    float min;
+    float max;
+    auto& cache = WaveformScale::Get(*waveTrack);
+    cache.GetDisplayBounds(min, max);
+    if (muse::is_equal(max, MAX_ZOOM_OUT)) {
+        return;
+    }
+
+    cache.SetDisplayBounds(min * 2, max * 2);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+}
+
+void Au3TracksInteraction::resetVerticalZoom(const trackedit::TrackId& trackId)
+{
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    if (waveTrack == nullptr) {
+        return;
+    }
+
+    auto& cache = WaveformScale::Get(*waveTrack);
+    cache.SetDisplayBounds(-1.0f, 1.0f);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 }
 
 double Au3TracksInteraction::nearestZeroCrossing(double t0) const

@@ -8,7 +8,6 @@
 #include "samplespainterutils.h"
 #include "wavepainterutils.h"
 #include "WaveClip.h"
-#include "WaveformScale.h"
 #include "PendingTracks.h"
 #include "ZoomInfo.h"
 
@@ -113,10 +112,6 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
         params.geometry.height * (1 - params.channelHeightRatio),
     };
 
-    float zoomMin, zoomMax;
-    const auto& cache = WaveformScale::Get(*track);
-    cache.GetDisplayBounds(zoomMin, zoomMax);
-
     const float dBRange = std::abs(params.dbRange);
     const bool dB = !params.isLinear;
     const double trimLeft = waveClip->GetTrimLeft();
@@ -133,9 +128,11 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
         auto paddedMetrics = waveMetrics;
         paddedMetrics.top += SAMPLE_HEAD_PADDING;
         paddedMetrics.height -= 2 * SAMPLE_HEAD_PADDING;
-        int yZero = samplespainterutils::getWaveYPos(0.0, zoomMin, zoomMax, paddedMetrics.height, dB, true, dBRange, false);
+        int yZero = samplespainterutils::getWaveYPos(0.0, params.displayBounds.first, params.displayBounds.second, paddedMetrics.height, dB,
+                                                     true, dBRange, false);
         yZero = paddedMetrics.top + std::max(-1, std::min(static_cast<int>(paddedMetrics.height + paddedMetrics.top), yZero));
-        const auto samples = samplespainterutils::getSampleData(*waveClip, index, paddedMetrics, dB, dBRange, zoomMax, zoomMin);
+        const auto samples = samplespainterutils::getSampleData(*waveClip, index, paddedMetrics, dB, dBRange, params.displayBounds.second,
+                                                                params.displayBounds.first);
         if (samples.size() == 0) {
             samplespainterutils::drawCenterLine(painter, waveMetrics, params.style, yZero);
             continue;

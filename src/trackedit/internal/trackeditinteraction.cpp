@@ -482,6 +482,21 @@ std::optional<secs_t> TrackeditInteraction::getLeftmostLabelStartTime(const Labe
     return m_interaction->getLeftmostLabelStartTime(labelKeys);
 }
 
+void TrackeditInteraction::verticalZoomIn(const trackedit::TrackId& trackId)
+{
+    m_interaction->verticalZoomIn(trackId);
+}
+
+void TrackeditInteraction::verticalZoomOut(const trackedit::TrackId& trackId)
+{
+    m_interaction->verticalZoomOut(trackId);
+}
+
+void TrackeditInteraction::resetVerticalZoom(const trackedit::TrackId& trackId)
+{
+    m_interaction->resetVerticalZoom(trackId);
+}
+
 muse::Progress TrackeditInteraction::progress() const
 {
     return m_interaction->progress();
