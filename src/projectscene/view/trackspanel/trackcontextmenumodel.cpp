@@ -14,6 +14,11 @@ namespace {
 constexpr const char* TRACK_FORMAT_CHANGE_ACTION = "action://trackedit/track/change-format?format=%1";
 constexpr const char* TRACK_RATE_CHANGE_ACTION = "action://trackedit/track/change-rate?rate=%1";
 
+constexpr const char* TRACK_VIEW_WAVEFORM_ACTION = "track-view-waveform";
+constexpr const char* TRACK_VIEW_SPECTROGRAM_ACTION = "track-view-spectrogram";
+constexpr const char* TRACK_VIEW_MULTI_ACTION = "track-view-multi";
+constexpr const char* TRACK_VIEW_HALF_WAVE_ACTION = "track-view-half-wave";
+
 constexpr const char* TRACK_COLOR_MENU_ID = "trackColorMenu";
 constexpr const char* TRACK_FORMAT_MENU_ID = "trackFormatMenu";
 constexpr const char* TRACK_RATE_MENU_ID = "trackRateMenu";
@@ -191,6 +196,34 @@ void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCod
 
     if (containsAny(codes, m_colorChangeActionCodeList)) {
         updateColorCheckedState();
+    }
+
+    if (containsAny(codes, m_trackViewTypeChangeActionCodeList)) {
+        const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
+        const std::optional<trackedit::Track> track = trackeditProject->track(m_trackId);
+        assert(track.has_value());
+        if (track.has_value()) {
+            const trackedit::TrackViewType viewType = track->viewType;
+            for (const auto& viewTypeCode : m_trackViewTypeChangeActionCodeList) {
+                MenuItem& item = findItem(viewTypeCode);
+                auto state = item.state();
+                switch (viewType) {
+                case trackedit::TrackViewType::Waveform:
+                    state.checked = (viewTypeCode == TRACK_VIEW_WAVEFORM_ACTION);
+                    break;
+                case trackedit::TrackViewType::Spectrogram:
+                    state.checked = (viewTypeCode == TRACK_VIEW_SPECTROGRAM_ACTION);
+                    break;
+                case trackedit::TrackViewType::WaveformAndSpectrogram:
+                    state.checked = (viewTypeCode == TRACK_VIEW_MULTI_ACTION);
+                    break;
+                default:
+                    assert(false);
+                    state.checked = false;
+                }
+                item.setState(state);
+            }
+        }
     }
 
     for (const auto& formatInfo : au::trackedit::availableTrackFormats()) {
@@ -380,11 +413,20 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackMoveItems()
 
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackViewItems()
 {
-    return {
-        makeItemWithArg("track-view-waveform"),
-        makeItemWithArg("track-view-spectrogram"),
-        makeItemWithArg("track-view-multi"),
-        makeSeparator(),
-        makeItemWithArg("track-view-half-wave"),
-    };
+    m_trackViewTypeChangeActionCodeList.clear();
+    muse::uicomponents::MenuItemList items;
+    items.reserve(5);
+    for (const muse::actions::ActionCode& code : { TRACK_VIEW_WAVEFORM_ACTION,
+                                                   TRACK_VIEW_SPECTROGRAM_ACTION,
+                                                   TRACK_VIEW_MULTI_ACTION,
+                                                   "",
+                                                   TRACK_VIEW_HALF_WAVE_ACTION }) {
+        if (code.empty()) {
+            items.push_back(makeSeparator());
+        } else {
+            items.push_back(makeItemWithArg(code));
+            m_trackViewTypeChangeActionCodeList.push_back(code);
+        }
+    }
+    return items;
 }

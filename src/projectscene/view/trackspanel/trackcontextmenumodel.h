@@ -58,5 +58,6 @@ private:
 
     trackedit::TrackId m_trackId;
     muse::actions::ActionCodeList m_colorChangeActionCodeList;
+    muse::actions::ActionCodeList m_trackViewTypeChangeActionCodeList;
 };
 }

@@ -1681,7 +1681,22 @@ void TrackeditActionsController::changeTrackView(const muse::actions::ActionData
         return;
     }
     const auto trackId = d.arg<TrackId>(0);
-    trackeditInteraction()->changeAudioTrackViewType(trackId, trackView);
+    if (!trackeditInteraction()->changeAudioTrackViewType(trackId, trackView)) {
+        return;
+    }
+    switch (trackView) {
+    case TrackViewType::Waveform:
+        notifyActionCheckedChanged(SET_TRACK_VIEW_WAVEFORM);
+        break;
+    case TrackViewType::Spectrogram:
+        notifyActionCheckedChanged(SET_TRACK_VIEW_SPECTROGRAM);
+        break;
+    case TrackViewType::WaveformAndSpectrogram:
+        notifyActionCheckedChanged(SET_TRACK_VIEW_MULTI);
+        break;
+    default:
+        assert(false);
+    }
 }
 
 void TrackeditActionsController::addLabel()
