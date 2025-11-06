@@ -1,3 +1,7 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
@@ -7,9 +11,7 @@
   Paul Licameli split from WaveClip.h
 
 *******************************************************************/
-
-#ifndef __AUDACITY_WAVECLIP_SPECTRUM_CACHE__
-#define __AUDACITY_WAVECLIP_SPECTRUM_CACHE__
+#pragma once
 
 class sampleCount;
 class SpectrogramSettings;
@@ -23,7 +25,7 @@ class WideSampleSequence;
 
 using Floats = ArrayOf<float>;
 
-class AUDACITY_DLL_API SpecCache
+class SpecCache
 {
 public:
 
@@ -129,5 +131,3 @@ struct WaveClipSpectrumCache final : WaveClipListener
     void SwapChannels() override;
     void Erase(size_t index) override;
 };
-
-#endif

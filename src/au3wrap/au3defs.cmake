@@ -17,6 +17,7 @@ set(AU3_DEF
 
     -Dsafenew=new
 
+    -DWAVE_TRACK_SETTINGS_API=
     -DUTILITY_API=
     -DPROJECT_API=
     -DSTRINGS_API=
