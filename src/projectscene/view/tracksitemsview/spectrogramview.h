@@ -3,15 +3,18 @@
  */
 #pragma once
 
-#include <QQuickPaintedItem>
+#include "abstractclipview.h"
 
 namespace au::projectscene {
-class SpectrogramView : public QQuickPaintedItem
+class SpectrogramView : public AbstractClipView
 {
     Q_OBJECT
+
 public:
     SpectrogramView(QQuickItem* parent = nullptr);
-    ~SpectrogramView() override;
+    ~SpectrogramView() override = default;
+
+    void setTimelineContext(TimelineContext* newContext) override;
 
     void paint(QPainter* painter) override;
 };
