@@ -68,7 +68,7 @@ TrackItem {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 24
 
-                opacity: root.collapsed ? 0 : 1
+                opacity: root.height > root.mapFromItem(this, 0, height + bottomSeparatorHeight).y ? 1 : 0
                 visible: opacity !== 0
                 Behavior on opacity { OpacityAnimator { duration: 100 } }
 
@@ -83,10 +83,8 @@ TrackItem {
 
     rightSideContainerComponent: Component {
         Item {
-            Layout.fillHeight: true
-            Layout.topMargin: 5
-            Layout.bottomMargin: 5
-            width: 24
+            width: parent.width
+            height: parent.height
 
             Row {
                 id: volumePressureContainer
