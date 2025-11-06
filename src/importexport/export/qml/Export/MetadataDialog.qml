@@ -46,6 +46,14 @@ StyledDialogView {
         MetadataControlPanel {
             id: topButtonsBar
 
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
+            Layout.leftMargin: 16
+            Layout.rightMargin: 12
+            Layout.topMargin: 10
+            Layout.bottomMargin: 10
+
             metadataModel: metadataModel
             tagView: metadataView
 
@@ -56,15 +64,15 @@ StyledDialogView {
         ValueList {
             id: metadataView
 
+            width: root.contentWidth
+            height: 524
+
             keyRoleName: "tag"
             keyTitle: qsTrc("metadata", "tag")
             valueRoleName: "value"
             valueTitle: qsTrc("metadata", "value")
             valueTypeRole: "roleType"
             readOnly: false
-
-            width: root.contentWidth
-            height: 527
 
             drawZebra: false
             headerColor: ui.theme.backgroundSecondaryColor
