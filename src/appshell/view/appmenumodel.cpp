@@ -245,7 +245,7 @@ MenuItem* AppMenuModel::makeEditMenu()
         makeMenu(TranslatableString("appshell/menu/clip", "Clip"), makeClipItems(), "menu-clip"),
         makeMenuItem("silence-audio"),
         makeSeparator(),
-        makeMenuItem("add-label"),
+        makeMenuItem("label-add"),
         makeMenuItem("paste-new-label"),
         makeMenu(TranslatableString("appshell/menu/audio-actions", "Audio actions across labels"),
                  makeAudioActionsItems(), "menu-audio-actions", false),

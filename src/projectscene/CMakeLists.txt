@@ -132,6 +132,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipcontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/multiclipcontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/multiclipcontextmenumodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labelcontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labelcontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/viewtrackslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/viewtrackslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/wavepainterproxy.cpp

@@ -658,12 +658,87 @@ bool TrackeditOperationController::resampleTracks(const TrackIdList& tracksIds, 
 
 bool TrackeditOperationController::addLabelToSelection()
 {
-    return labelsInteraction()->addLabelToSelection();
+    if (labelsInteraction()->addLabelToSelection()) {
+        projectHistory()->pushHistoryState("Label added", "Add label");
+        return true;
+    }
+    return false;
 }
 
 bool TrackeditOperationController::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)
 {
-    return labelsInteraction()->changeLabelTitle(labelKey, title);
+    if (labelsInteraction()->changeLabelTitle(labelKey, title)) {
+        projectHistory()->pushHistoryState("Label title changed", "Change label title");
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::cutLabel(const LabelKey& labelKey)
+{
+    ITrackDataPtr data = labelsInteraction()->cutLabel(labelKey);
+    if (!data) {
+        return false;
+    }
+
+    clipboard()->addTrackData(std::move(data));
+    projectHistory()->pushHistoryState("Label cut", "Cut label");
+    return true;
+}
+
+bool TrackeditOperationController::copyLabel(const LabelKey& labelKey)
+{
+    ITrackDataPtr data = labelsInteraction()->copyLabel(labelKey);
+    if (!data) {
+        return false;
+    }
+    clipboard()->addTrackData(std::move(data));
+    return true;
+}
+
+bool TrackeditOperationController::removeLabel(const LabelKey& labelKey)
+{
+    if (labelsInteraction()->removeLabel(labelKey)) {
+        projectHistory()->pushHistoryState("Label removed", "Remove label");
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::removeLabels(const LabelKeyList& labelKeys)
+{
+    if (labelsInteraction()->removeLabels(labelKeys)) {
+        projectHistory()->pushHistoryState("Labels removed", "Remove labels");
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::moveLabels(secs_t timePositionOffset, bool completed)
+{
+    bool success = labelsInteraction()->moveLabels(timePositionOffset, completed);
+    if (success && completed) {
+        projectHistory()->pushHistoryState("Label moved", "Move label");
+    }
+    return success;
+}
+
+bool TrackeditOperationController::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)
+{
+    bool success = labelsInteraction()->stretchLabelLeft(labelKey, newStartTime, completed);
+    if (success && completed) {
+        projectHistory()->pushHistoryState("Label stretched", "Stretch label left");
+    }
+    return success;
+}
+
+bool TrackeditOperationController::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
+{
+    bool success = labelsInteraction()->stretchLabelRight(labelKey, newEndTime, completed);
+    if (success && completed) {
+        projectHistory()->pushHistoryState("Label stretched", "Stretch label right");
+    }
+    return success;
 }
 
 muse::Progress TrackeditOperationController::progress() const

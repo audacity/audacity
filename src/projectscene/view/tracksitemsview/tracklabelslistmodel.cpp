@@ -3,7 +3,6 @@
 */
 #include "tracklabelslistmodel.h"
 
-#include "global/realfn.h"
 #include "global/async/async.h"
 
 #include "types/projectscenetypes.h"
@@ -28,7 +27,7 @@ void TrackLabelsListModel::onInit()
         onSelectedItems(keyList);
     });
 
-    dispatcher()->reg(this, "rename-label", [this]() {
+    dispatcher()->reg(this, "label-rename", [this]() {
         requestItemTitleChange();
     });
 }
@@ -82,8 +81,6 @@ void TrackLabelsListModel::onReload()
             m_allLabelList.insert(m_allLabelList.begin() + i, label);
 
             update();
-
-            emit static_cast<TrackLabelItem*>(m_items.at(i))->titleEditRequested();
 
             break;
         }
@@ -220,6 +217,38 @@ bool TrackLabelsListModel::changeLabelTitle(const LabelKey& key, const QString& 
     return trackeditInteraction()->changeLabelTitle(key.key, muse::String::fromQString(newTitle));
 }
 
+bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool completed)
+{
+    TrackLabelItem* item = labelItemByKey(key.key);
+    if (!item) {
+        return false;
+    }
+
+    auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    auto vs = project->viewState();
+    IF_ASSERT_FAILED(vs) {
+        return false;
+    }
+
+    // Labels can only be moved to label tracks
+    TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, { trackedit::TrackType::Label }, completed);
+    if (vs->moveInitiated()) {
+        trackeditInteraction()->moveLabels(moveOffset.timeOffset, completed);
+    }
+
+    if ((completed && m_autoScrollConnection)) {
+        disconnectAutoScroll();
+    } else if (!m_autoScrollConnection && !completed) {
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedLabels(key, false); });
+    }
+
+    return true;
+}
+
 void TrackLabelsListModel::selectLabel(const LabelKey& key)
 {
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
@@ -243,4 +272,60 @@ void TrackLabelsListModel::resetSelectedLabels()
 TrackItemKeyList TrackLabelsListModel::getSelectedItemKeys() const
 {
     return selectionController()->selectedLabels();
+}
+
+bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, bool completed)
+{
+    auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    auto vs = project->viewState();
+    IF_ASSERT_FAILED(vs) {
+        return false;
+    }
+
+    double newStartTime = m_context->mousePositionTime() - vs->itemEditStartTimeOffset();
+    if (vs->isSnapEnabled()) {
+        newStartTime = m_context->applySnapToTime(newStartTime);
+    } else {
+        newStartTime = m_context->applySnapToItem(newStartTime);
+    }
+
+    bool ok = trackeditInteraction()->stretchLabelLeft(key.key, newStartTime, completed);
+
+    handleAutoScroll(ok, completed, [this, key]() {
+        stretchLabelLeft(key, false);
+    });
+
+    return ok;
+}
+
+bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, bool completed)
+{
+    auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    auto vs = project->viewState();
+    IF_ASSERT_FAILED(vs) {
+        return false;
+    }
+
+    double newEndTime = m_context->mousePositionTime() + vs->itemEditEndTimeOffset();
+    if (vs->isSnapEnabled()) {
+        newEndTime = m_context->applySnapToTime(newEndTime);
+    } else {
+        newEndTime = m_context->applySnapToItem(newEndTime);
+    }
+
+    bool ok = trackeditInteraction()->stretchLabelRight(key.key, newEndTime, completed);
+
+    handleAutoScroll(ok, completed, [this, key]() {
+        stretchLabelRight(key, false);
+    });
+
+    return ok;
 }

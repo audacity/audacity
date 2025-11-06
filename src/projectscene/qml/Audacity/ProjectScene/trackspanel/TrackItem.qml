@@ -112,24 +112,27 @@ ListItemBlank {
         }
     }
 
-    RowLayout {
+    Item {
         anchors.fill: parent
-
-        spacing: 0
 
         Rectangle {
             id: spacer
 
-            color: "transparent"
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: 9
 
-            Layout.fillHeight: true
-            Layout.preferredWidth: 9
+            color: "transparent"
         }
 
         ColumnLayout {
-            Layout.topMargin: 7
-            Layout.margins: 12
-            Layout.alignment: Qt.AlignTop
+            id: contentColumn
+            anchors.left: spacer.right
+            anchors.right: separatorLine.left
+            anchors.top: parent.top
+            anchors.topMargin: 7
+            anchors.margins: 12
 
             RowLayout {
                 Layout.fillWidth: true
@@ -179,16 +182,21 @@ ListItemBlank {
 
         SeparatorLine {
             id: separatorLine
-            Layout.bottomMargin: 2 * bottomSeparator.thickness
+            anchors.right: rightSideContainer.left
+            anchors.bottomMargin: bottomSeparator.thickness
+            orientation: Qt.Vertical
         }
 
         Loader {
             id: rightSideContainer
 
-            Layout.fillHeight: true
-            Layout.topMargin: 5
-            Layout.bottomMargin: 5
-            Layout.preferredWidth: 24
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.topMargin: 5
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 5
+
+            width: 24
         }
     }
 

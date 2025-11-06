@@ -40,5 +40,7 @@ public:
     static Au3LabelTrack* findLabelTrack(Au3Project& prj, const Au3LabelTrackId& au3LabelTrackId);
     static const Au3LabelTrack* findLabelTrack(const Au3Project& prj, const Au3LabelTrackId& au3LabelTrackId);
     static const Au3LabelTrack* findLabelTrackByIndex(const Au3Project& prj, size_t index);
+
+    static Au3Label* findLabel(Au3LabelTrack* track, int64_t labelId);
 };
 }

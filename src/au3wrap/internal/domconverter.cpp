@@ -126,15 +126,15 @@ au::trackedit::Track DomConverter::labelTrack(const Au3LabelTrack* labelTrack)
     return track(labelTrack);
 }
 
-au::trackedit::Label DomConverter::label(const Au3LabelTrack* labelTrack, size_t index, const Au3Label& au3label)
+au::trackedit::Label DomConverter::label(const Au3LabelTrack* labelTrack, const Au3Label* au3label)
 {
     au::trackedit::Label label;
     label.key.trackId = labelTrack->GetId();
-    label.key.itemId = static_cast<au::trackedit::LabelId>(index);
+    label.key.itemId = au3label->GetId();
 
-    label.title = wxToString(au3label.title);
-    label.startTime = au3label.getT0();
-    label.endTime = au3label.getT1();
+    label.title = wxToString(au3label->title);
+    label.startTime = au3label->getT0();
+    label.endTime = au3label->getT1();
 
     label.color = TrackColor::Get(labelTrack).GetColor();
 

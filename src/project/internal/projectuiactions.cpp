@@ -120,12 +120,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Silence audio"),
              TranslatableString("action", "Silence audio")
              ),
-    UiAction("add-label",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Add label"),
-             TranslatableString("action", "Add label")
-             ),
     UiAction("paste-new-label",
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,

@@ -432,8 +432,14 @@ TrackItemsContainer {
                                         updateWave()
                                     }
 
-                                    function onTitleEditRequested() {
-                                        item.editTitle()
+                                }
+
+                                Connections {
+                                    target: clipsModel
+                                    function onItemTitleEditRequested(key) {
+                                        if (key === item.itemData.key) {
+                                            item.editTitle()
+                                        }
                                     }
                                 }
                             }
@@ -444,7 +450,7 @@ TrackItemsContainer {
 
             // this one is transparent, it's on top of the clips
             // to have extend/reduce selection area handles
-            ObjectsSelection {
+            ItemsSelection {
                 id: clipsSelection
 
                 isDataSelected: root.isDataSelected

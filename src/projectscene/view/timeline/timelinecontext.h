@@ -111,7 +111,7 @@ public:
     Q_INVOKABLE double positionToTime(double position, bool withSnap = false) const;
     double singleStepToTime(double position, Direction direction, const Snap& snap) const;
     double applySnapToTime(double time) const;
-    double applySnapToClip(double time) const;
+    double applySnapToItem(double time) const;
     Q_INVOKABLE double applyDetectedSnap(double time) const;
     Q_INVOKABLE double findGuideline(double time) const;
 

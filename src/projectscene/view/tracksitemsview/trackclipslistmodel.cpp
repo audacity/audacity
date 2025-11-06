@@ -14,7 +14,6 @@ using namespace au::projectscene;
 using namespace au::trackedit;
 
 constexpr double MIN_CLIP_WIDTH = 3.0;
-constexpr double MOVE_THRESHOLD = 3.0;
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
@@ -257,59 +256,6 @@ bool TrackClipsListModel::changeClipTitle(const ClipKey& key, const QString& new
     return trackeditInteraction()->changeClipTitle(key.key, newTitle);
 }
 
-TrackClipsListModel::MoveOffset TrackClipsListModel::calculateMoveOffset(const TrackClipItem* item,
-                                                                         const ClipKey& key,
-                                                                         bool completed) const
-{
-    project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    if (!prj) {
-        return MoveOffset{};
-    }
-
-    auto vs = prj->viewState();
-
-    MoveOffset moveOffset {
-        calculateTimePositionOffset(item),
-        completed ? 0 : calculateTrackPositionOffset(key)
-    };
-
-    secs_t positionOffsetX = moveOffset.timeOffset * m_context->zoom();
-    if (!vs->moveInitiated() && (muse::RealIsEqualOrMore(std::abs(positionOffsetX), MOVE_THRESHOLD) || moveOffset.trackOffset != 0)) {
-        vs->setMoveInitiated(true);
-    } else if (!vs->moveInitiated()) {
-        moveOffset.timeOffset = 0.0;
-    }
-
-    return moveOffset;
-}
-
-int TrackClipsListModel::calculateTrackPositionOffset(const ClipKey& key) const
-{
-    project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    if (!prj) {
-        return 0;
-    }
-
-    IProjectViewStatePtr vs = prj->viewState();
-    double yPos = vs->mousePositionY();
-    int trackVerticalPosition = vs->trackVerticalPosition(key.key.trackId);
-    TrackIdList tracks = vs->tracksInRange(trackVerticalPosition + 2, yPos);
-
-    if (!tracks.size()) {
-        return 0;
-    }
-
-    bool pointingAtEmptySpace = yPos > vs->totalTrackHeight().val - vs->tracksVerticalOffset().val;
-    const auto numTracks = static_cast<int>(tracks.size());
-    int trackPositionOffset = pointingAtEmptySpace ? numTracks : numTracks - 1;
-
-    if (!muse::RealIsEqualOrMore(yPos, trackVerticalPosition)) {
-        trackPositionOffset = -trackPositionOffset;
-    }
-
-    return trackPositionOffset;
-}
-
 bool TrackClipsListModel::isKeyboardTriggered() const
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
@@ -320,45 +266,6 @@ bool TrackClipsListModel::isKeyboardTriggered() const
     auto vs = prj->viewState();
 
     return muse::RealIsEqual(vs->itemEditStartTimeOffset(), -1.0);
-}
-
-secs_t TrackClipsListModel::calculateTimePositionOffset(const TrackClipItem* item) const
-{
-    auto vs = globalContext()->currentProject()->viewState();
-    if (!vs) {
-        return 0.0;
-    }
-
-    double newStartTime = m_context->mousePositionTime() - vs->itemEditStartTimeOffset();
-    double duration = item->time().endTime - item->time().startTime;
-    double newEndTime = newStartTime + duration;
-
-    double snappedEndTime = newEndTime;
-    double snappedStartTime = newStartTime;
-    if (vs->isSnapEnabled()) {
-        snappedStartTime = m_context->applySnapToTime(newStartTime);
-    } else {
-        snappedEndTime = m_context->applySnapToClip(newEndTime);
-        snappedStartTime = m_context->applySnapToClip(newStartTime);
-    }
-    if (muse::RealIsEqual(snappedEndTime, newEndTime)) {
-        newStartTime = snappedStartTime;
-    } else if (muse::RealIsEqual(snappedStartTime, newStartTime)) {
-        newStartTime = snappedEndTime - duration;
-    } else {
-        newStartTime
-            = (!muse::RealIsEqualOrMore(std::abs(snappedStartTime - newStartTime), std::abs(snappedEndTime - newEndTime))
-               ? snappedStartTime : snappedEndTime - duration);
-    }
-
-    secs_t timePositionOffset = newStartTime - item->time().startTime;
-
-    constexpr auto limit = 1. / 192000.; // 1 sample at 192 kHz
-    if (!muse::RealIsEqualOrMore(std::abs(timePositionOffset), limit)) {
-        timePositionOffset = 0.0;
-    }
-
-    return timePositionOffset;
 }
 
 void TrackClipsListModel::openClipPitchEdit(const ClipKey& key)
@@ -455,15 +362,23 @@ bool TrackClipsListModel::isContrastFocusBorderEnabled() const
 
 au::projectscene::ClipKey TrackClipsListModel::updateClipTrack(ClipKey clipKey) const
 {
-    project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    if (!prj) {
-        return {};
+    ITrackeditProjectPtr trackeditPrj = globalContext()->currentTrackeditProject();
+    if (!trackeditPrj) {
+        return clipKey;
     }
 
-    auto selectedClips = selectionController()->selectedClips();
-    for (const auto& selectedClip : selectedClips) {
-        if (selectedClip.itemId == clipKey.key.itemId) {
-            return selectedClip;
+    auto allTracks = trackeditPrj->trackIdList();
+
+    for (const auto& trackId : allTracks) {
+        auto clips = trackeditPrj->clipList(trackId);
+
+        for (const auto& clip : clips) {
+            if (clip.key.itemId == clipKey.key.itemId) {
+                ClipKey updatedKey;
+                updatedKey.key.trackId = trackId;
+                updatedKey.key.itemId = clip.key.itemId;
+                return updatedKey;
+            }
         }
     }
 
@@ -474,7 +389,7 @@ void TrackClipsListModel::onStartEditItem(const trackedit::TrackItemKey& key)
 {
     auto vs = globalContext()->currentProject()->viewState();
     if (vs) {
-        vs->updateClipsBoundaries(true, key);
+        vs->updateItemsBoundaries(true, key);
     }
 }
 
@@ -510,12 +425,29 @@ bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     }
 
     bool clipsMovedToOtherTrack = false;
-    MoveOffset moveOffset = calculateMoveOffset(item, key, completed);
+    // Clips can only be moved to audio tracks (Mono and Stereo)
+    TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, {
+        trackedit::TrackType::Mono,
+        trackedit::TrackType::Stereo
+    }, completed);
+
     if (vs->moveInitiated()) {
         trackeditInteraction()->moveClips(moveOffset.timeOffset, moveOffset.trackOffset, completed, clipsMovedToOtherTrack);
     }
 
-    if ((completed && m_autoScrollConnection)) {
+    // Update key if clip moved to another track
+    ClipKey updatedKey = key;
+    if (clipsMovedToOtherTrack && !completed) {
+        updatedKey = updateClipTrack(key);
+
+        // Reconnect with updated key
+        if (m_autoScrollConnection) {
+            disconnectAutoScroll();
+        }
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, updatedKey](){
+            moveSelectedClips(updatedKey, false);
+        });
+    } else if ((completed && m_autoScrollConnection)) {
         disconnectAutoScroll();
     } else if (!m_autoScrollConnection && !completed) {
         m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedClips(key, false); });
@@ -569,7 +501,7 @@ bool TrackClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipB
         if (vs->isSnapEnabled()) {
             newStartTime = m_context->applySnapToTime(newStartTime);
         } else {
-            newStartTime = m_context->applySnapToClip(newStartTime);
+            newStartTime = m_context->applySnapToItem(newStartTime);
         }
     }
 
@@ -634,7 +566,7 @@ bool TrackClipsListModel::trimRightClip(const ClipKey& key, bool completed, Clip
         if (vs->isSnapEnabled()) {
             newEndTime = m_context->applySnapToTime(newEndTime);
         } else {
-            newEndTime = m_context->applySnapToClip(newEndTime);
+            newEndTime = m_context->applySnapToItem(newEndTime);
         }
     }
 
@@ -697,7 +629,7 @@ bool TrackClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, Cl
         if (vs->isSnapEnabled()) {
             newStartTime = m_context->applySnapToTime(newStartTime);
         } else {
-            newStartTime = m_context->applySnapToClip(newStartTime);
+            newStartTime = m_context->applySnapToItem(newStartTime);
         }
     }
 
@@ -762,7 +694,7 @@ bool TrackClipsListModel::stretchRightClip(const ClipKey& key, bool completed, C
         if (vs->isSnapEnabled()) {
             newEndTime = m_context->applySnapToTime(newEndTime);
         } else {
-            newEndTime = m_context->applySnapToClip(newEndTime);
+            newEndTime = m_context->applySnapToItem(newEndTime);
         }
     }
 

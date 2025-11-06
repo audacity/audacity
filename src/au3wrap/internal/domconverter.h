@@ -17,6 +17,6 @@ public:
 
     static trackedit::Track labelTrack(const Au3LabelTrack* labelTrack);
 
-    static trackedit::Label label(const Au3LabelTrack* labelTrack, size_t index, const Au3Label& au3label);
+    static trackedit::Label label(const Au3LabelTrack* labelTrack, const Au3Label* au3label);
 };
 }

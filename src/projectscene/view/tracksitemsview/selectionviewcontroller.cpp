@@ -9,7 +9,7 @@ using namespace au::projectscene;
 using namespace au::project;
 using namespace au::trackedit;
 
-//! NOTE: sync with ObjectsSelection.qml minSelection
+//! NOTE: sync with ItemsSelection.qml minSelection
 constexpr double MIN_SELECTION_PX = 1.0;
 
 SelectionViewController::SelectionViewController(QObject* parent)
@@ -83,7 +83,7 @@ void SelectionViewController::onPressed(double x, double y)
         selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), false);
     }
 
-    viewState()->updateClipsBoundaries(true);
+    viewState()->updateItemsBoundaries(true);
 
     m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this](){
         onPositionChanged(m_lastPoint.x(), m_lastPoint.y());

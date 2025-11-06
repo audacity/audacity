@@ -751,7 +751,7 @@ muse::Ret Au3ClipsInteraction::makeRoomForClip(const ClipKey& clipKey)
 
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return make_ret(trackedit::Err::WaveTrackNotFound);
+        return make_ret(trackedit::Err::TrackNotFound);
     }
 
     std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
@@ -1005,9 +1005,24 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(int offset)
     }
 
     // The selected clips were moved up or down, so we need to update their track IDs.
+    // Search in the updated mutOrig (original track list that now has the moved clips)
     for (auto& clipKey : selectedClips) {
-        const size_t prevIndex = utils::getTrackIndex(orig, clipKey.trackId);
-        clipKey.trackId = utils::getWaveTrack(orig, utils::TrackIndex { prevIndex + offset })->GetId();
+        // Find which WaveTrack in mutOrig contains this clip
+        Au3WaveTrack* newTrack = nullptr;
+        for (auto track : mutOrig) {
+            Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track);
+            if (waveTrack) {
+                // Check if this track contains the clip
+                if (au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId)) {
+                    newTrack = waveTrack;
+                    break;
+                }
+            }
+        }
+
+        if (newTrack) {
+            clipKey.trackId = newTrack->GetId();
+        }
     }
     selectionController()->setSelectedClips(selectedClips);
 
@@ -1511,7 +1526,7 @@ muse::Ret Au3ClipsInteraction::makeRoomForDataOnTrack(const TrackId trackId,
 
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return make_ret(trackedit::Err::WaveTrackNotFound);
+        return make_ret(trackedit::Err::TrackNotFound);
     }
 
     std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
@@ -1540,7 +1555,7 @@ muse::Ret Au3ClipsInteraction::makeRoomForClipsOnTracks(const std::vector<TrackI
     for (size_t i = 0; i < tracksIds.size(); ++i) {
         WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(tracksIds.at(i)));
         IF_ASSERT_FAILED(dstWaveTrack) {
-            return make_ret(trackedit::Err::WaveTrackNotFound);
+            return make_ret(trackedit::Err::TrackNotFound);
         }
 
         muse::secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);

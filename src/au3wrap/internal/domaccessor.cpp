@@ -173,3 +173,12 @@ const Au3LabelTrack* DomAccessor::findLabelTrackByIndex(const Au3Project& prj, s
 
     return nullptr;
 }
+
+Au3Label* DomAccessor::findLabel(Au3LabelTrack* track, int64_t labelId)
+{
+    IF_ASSERT_FAILED(track) {
+        return nullptr;
+    }
+
+    return track->GetLabelById(labelId);
+}

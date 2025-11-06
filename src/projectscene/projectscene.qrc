@@ -5,7 +5,7 @@
         <file>qml/Audacity/ProjectScene/tracksitemsview/TrackClipsContainer.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml</file>
-        <file>qml/Audacity/ProjectScene/tracksitemsview/ObjectsSelection.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ItemsSelection.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/TrackLabelsContainer.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/TrackItemsContainer.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/LabelItem.qml</file>

@@ -6,8 +6,14 @@ Canvas {
     property bool isRight: false
     property bool enableCursorInteraction: true
     property color backgroundColor: "transparent"
+    property bool isSelected: false
 
     property alias hovered: dragArea.containsMouse
+
+    signal stretchRequested(bool completed)
+    signal stretchStartRequested()
+    signal stretchEndRequested()
+    signal stretchMousePositionChanged(real x, real y)
 
     width: 7
 
@@ -51,5 +57,30 @@ Canvas {
         cursorShape: Qt.SizeHorCursor
 
         visible: root.enableCursorInteraction
+
+        onPressed: function(e) {
+            let mousePos = mapToItem(root.parent, e.x, e.y)
+            root.stretchMousePositionChanged(mousePos.x, mousePos.y)
+            root.stretchStartRequested()
+            root.stretchRequested(false)
+            e.accepted = true
+        }
+
+        onPositionChanged: function(e) {
+            if (pressed) {
+                let mousePos = mapToItem(root.parent, e.x, e.y)
+                root.stretchMousePositionChanged(mousePos.x, mousePos.y)
+                root.stretchRequested(false)
+                e.accepted = true
+            } else {
+                e.accepted = false
+            }
+        }
+
+        onReleased: function(e) {
+            root.stretchRequested(true)
+            root.stretchEndRequested()
+            e.accepted = true
+        }
     }
 }

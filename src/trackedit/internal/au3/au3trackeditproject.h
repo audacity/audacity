@@ -61,7 +61,7 @@ public:
 
     secs_t totalTime() const override;
 
-    TracksAndClips buildTracksAndClips() const override;
+    TracksAndItems buildTracksAndItems() const override;
 
     int64_t createNewGroupID(int64_t startingId = 0) const override;
 

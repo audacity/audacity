@@ -126,12 +126,13 @@ TrackItemsContainer {
 
                                 title: Boolean(itemData) ? itemData.title : ""
                                 labelColor: Boolean(itemData) ? itemData.color : null
+                                labelKey: Boolean(itemData) ? itemData.key : null
                                 isSelected: Boolean(itemData) && itemData.selected
                                 enableCursorInteraction: true
 
                                 navigation.name: Boolean(itemData) ? itemData.title + itemData.index : ""
                                 navigation.panel: root.navigationPanel
-                                navigation.column: itemData ? Math.floor(itemData.x) : 0
+                                navigation.column: Boolean(itemData) ? Math.floor(itemData.x) : 0
                                 navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
                                 navigation.onActiveChanged: {
                                     if (navigation.active) {
@@ -170,6 +171,22 @@ TrackItemsContainer {
                                     labelsModel.resetSelectedLabels()
                                 }
 
+                                onLabelStartEditRequested: function() {
+                                    labelsModel.startEditItem(itemData.key)
+                                }
+
+                                onLabelEndEditRequested: function() {
+                                    labelsModel.endEditItem(itemData.key)
+                                }
+
+                                onLabelLeftStretchRequested: function(completed) {
+                                    labelsModel.stretchLabelLeft(itemData.key, completed)
+                                }
+
+                                onLabelRightStretchRequested: function(completed) {
+                                    labelsModel.stretchLabelRight(itemData.key, completed)
+                                }
+
                                 onHeaderHoveredChanged: function() {
                                     root.itemHeaderHoveredChanged(headerHovered)
                                 }
@@ -181,9 +198,11 @@ TrackItemsContainer {
                                 }
 
                                 Connections {
-                                    target: itemData
-                                    function onTitleEditRequested() {
-                                        item.editTitle()
+                                    target: labelsModel
+                                    function onItemTitleEditRequested(key) {
+                                        if (key === item.itemData.key) {
+                                            item.editTitle()
+                                        }
                                     }
                                 }
                             }
@@ -194,7 +213,7 @@ TrackItemsContainer {
 
             // this one is transparent, it's on top of the labels
             // to have extend/reduce selection area handles
-            ObjectsSelection {
+            ItemsSelection {
                 id: labelsSelection
 
                 isDataSelected: root.isDataSelected
@@ -227,8 +246,9 @@ TrackItemsContainer {
         target: root.container
 
         function onItemMoveRequested(itemKey, completed) {
-            console.info("Labels don't support clip moving yet")
             root.updateMoveActive(completed)
+
+            labelsModel.moveSelectedLabels(itemKey, completed)
         }
 
         function onItemStartEditRequested(itemKey) {

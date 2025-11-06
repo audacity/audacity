@@ -120,20 +120,20 @@ muse::secs_t SnapTimeFormatter::singleStep(muse::secs_t time, const Snap& snap, 
     return 0.0;
 }
 
-muse::secs_t SnapTimeFormatter::snapToClip(muse::secs_t time,
+muse::secs_t SnapTimeFormatter::snapToItem(muse::secs_t time,
                                            muse::secs_t tolerance,
-                                           const std::set<muse::secs_t> clipsBoundaries) const
+                                           const std::set<muse::secs_t> itemsBoundaries) const
 {
-    if (clipsBoundaries.empty()) {
+    if (itemsBoundaries.empty()) {
         return time;
     }
 
-    auto it = clipsBoundaries.lower_bound(time);
+    auto it = itemsBoundaries.lower_bound(time);
 
     muse::secs_t closest = time;
     muse::secs_t minDist = std::numeric_limits<double>::max();
 
-    if (it != clipsBoundaries.end()) {
+    if (it != itemsBoundaries.end()) {
         muse::secs_t dist = std::abs(*it - time);
         if (dist <= tolerance && dist < minDist) {
             closest = *it;
@@ -141,7 +141,7 @@ muse::secs_t SnapTimeFormatter::snapToClip(muse::secs_t time,
         }
     }
 
-    if (it != clipsBoundaries.begin()) {
+    if (it != itemsBoundaries.begin()) {
         auto prev = std::prev(it);
         muse::secs_t dist = std::abs(*prev - time);
         if (dist <= tolerance && dist < minDist) {

@@ -145,6 +145,11 @@ private:
     void setTrackRate(const muse::actions::ActionQuery& q);
 
     void addLabel();
+    void labelDelete(const muse::actions::ActionData& args);
+    void labelDeleteMulti(const muse::actions::ActionData& args);
+    void labelCut(const muse::actions::ActionData& args);
+    void labelCopy(const muse::actions::ActionData& args);
+    void labelCopyMulti(const muse::actions::ActionData& args);
 
     context::IPlaybackStatePtr playbackState() const;
 

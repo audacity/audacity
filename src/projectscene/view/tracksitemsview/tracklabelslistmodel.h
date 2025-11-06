@@ -18,6 +18,10 @@ public:
     Q_INVOKABLE void resetSelectedLabels();
     Q_INVOKABLE bool changeLabelTitle(const LabelKey& key, const QString& newTitle);
 
+    Q_INVOKABLE bool moveSelectedLabels(const LabelKey& key, bool completed);
+    Q_INVOKABLE bool stretchLabelLeft(const LabelKey& key, bool completed);
+    Q_INVOKABLE bool stretchLabelRight(const LabelKey& key, bool completed);
+
 private:
 
     void onInit() override;

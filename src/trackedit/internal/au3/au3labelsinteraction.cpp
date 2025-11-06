@@ -4,12 +4,18 @@
 
 #include "au3labelsinteraction.h"
 
+#include <map>
+#include <algorithm>
+
 #include "libraries/lib-label-track/LabelTrack.h"
 
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "au3trackdata.h"
+
+#include "defer.h"
 #include "log.h"
 
 using namespace au::trackedit;
@@ -67,17 +73,15 @@ bool Au3LabelsInteraction::addLabelToSelection()
     selectedRegion.setTimes(selectionController()->dataSelectedStartTime(),
                             selectionController()->dataSelectedEndTime());
 
-    int labelIndex = labelTrack->AddLabel(selectedRegion, title);
+    int64_t newLabelId = labelTrack->AddLabel(selectedRegion, title);
+    const auto& newLabel = DomAccessor::findLabel(labelTrack, newLabelId);
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
-        const auto& au3labels = labelTrack->GetLabels();
-        if (labelIndex >= 0 && labelIndex < static_cast<int>(au3labels.size())) {
-            prj->notifyAboutLabelAdded(DomConverter::label(labelTrack, labelIndex, au3labels[labelIndex]));
-        }
+        prj->notifyAboutLabelAdded(DomConverter::label(labelTrack, newLabel));
     }
 
-    selectionController()->setFocusedTrack(labelTrack->GetId());
+    selectionController()->setSelectedLabels({ { labelTrack->GetId(), newLabel->GetId() } });
 
     return true;
 }
@@ -90,22 +94,257 @@ bool Au3LabelsInteraction::changeLabelTitle(const LabelKey& labelKey, const muse
         return false;
     }
 
-    const auto& au3labels = labelTrack->GetLabels();
-    size_t labelIndex = static_cast<size_t>(labelKey.itemId);
-
-    IF_ASSERT_FAILED(labelIndex < au3labels.size()) {
+    Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
+    IF_ASSERT_FAILED(label) {
         return false;
     }
 
-    Au3Label au3Label = au3labels[labelIndex];
-    au3Label.title = wxFromString(title);
-    labelTrack->SetLabel(labelIndex, au3Label);
+    label->title = wxFromString(title);
 
     LOGD() << "changed title of label: " << labelKey.itemId << ", track: " << labelKey.trackId;
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
-        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, labelIndex, labelTrack->GetLabels()[labelIndex]));
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, label));
+    }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::removeLabel(const LabelKey& labelKey)
+{
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    int labelIndex = labelTrack->GetLabelIndex(labelKey.itemId);
+    if (labelIndex == -1) {
+        return false;
+    }
+
+    labelTrack->DeleteLabel(labelIndex);
+
+    LOGD() << "deleted label: " << labelKey.itemId << ", track: " << labelKey.trackId;
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutTrackChanged(DomConverter::track(labelTrack));
+    }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::removeLabels(const LabelKeyList& labelKeys)
+{
+    if (labelKeys.empty()) {
+        return false;
+    }
+
+    // Group labels by track
+    std::map<TrackId, std::vector<int64_t> > labelsByTrack;
+    for (const auto& labelKey : labelKeys) {
+        labelsByTrack[labelKey.trackId].push_back(labelKey.itemId);
+    }
+
+    for (auto& [trackId, labelIds] : labelsByTrack) {
+        Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId));
+        IF_ASSERT_FAILED(labelTrack) {
+            continue;
+        }
+
+        // Convert label IDs to indices
+        std::vector<int> indices;
+        for (int64_t labelId : labelIds) {
+            int index = labelTrack->GetLabelIndex(labelId);
+            if (index >= 0) {
+                indices.push_back(index);
+            }
+        }
+
+        // Sort indices in descending order to delete from highest to lowest
+        std::sort(indices.begin(), indices.end(), std::greater<int>());
+
+        for (int index : indices) {
+            labelTrack->DeleteLabel(index);
+            LOGD() << "deleted label at index: " << index << ", track: " << trackId;
+        }
+
+        const auto prj = globalContext()->currentTrackeditProject();
+        if (prj) {
+            prj->notifyAboutTrackChanged(DomConverter::track(labelTrack));
+        }
+    }
+
+    return true;
+}
+
+ITrackDataPtr Au3LabelsInteraction::cutLabel(const LabelKey& labelKey)
+{
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return nullptr;
+    }
+
+    const Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
+    if (!label) {
+        return nullptr;
+    }
+
+    const Au3Label labelCopy = *label;
+
+    constexpr bool moveClips = true;
+    auto track = labelTrack->Cut(label->getT0(), label->getT1(), moveClips);
+    const auto data = std::make_shared<Au3TrackData>(std::move(track));
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutLabelRemoved(DomConverter::label(labelTrack, &labelCopy));
+    prj->notifyAboutTrackChanged(DomConverter::track(labelTrack));
+
+    return data;
+}
+
+ITrackDataPtr Au3LabelsInteraction::copyLabel(const LabelKey& labelKey)
+{
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return nullptr;
+    }
+
+    const Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
+    if (!label) {
+        return nullptr;
+    }
+
+    auto track = labelTrack->Copy(label->getT0(), label->getT1());
+
+    return std::make_shared<Au3TrackData>(std::move(track));
+}
+
+bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset, bool completed)
+{
+    if (muse::RealIsEqual(timePositionOffset, 0.0)) {
+        return true;
+    }
+
+    //! NOTE: cannot start moving until previous move is handled
+    if (m_busy) {
+        return false;
+    }
+    m_busy = true;
+
+    DEFER {
+        m_busy = false;
+    };
+
+    const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    auto selectedLabels = selectionController()->selectedLabels();
+    if (selectedLabels.empty()) {
+        return false;
+    }
+
+    for (const auto& selectedLabel : selectedLabels) {
+        Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(selectedLabel.trackId));
+        IF_ASSERT_FAILED(labelTrack) {
+            continue;
+        }
+
+        int labelIndex = labelTrack->GetLabelIndex(selectedLabel.itemId);
+        IF_ASSERT_FAILED(labelIndex >= 0) {
+            continue;
+        }
+
+        const auto& au3labels = labelTrack->GetLabels();
+        Au3Label au3Label = au3labels[labelIndex];
+
+        // Calculate new times
+        double newT0 = std::max(0.0, au3Label.getT0() + timePositionOffset);
+        double newT1 = std::max(0.0, au3Label.getT1() + timePositionOffset);
+
+        // Update the label with new times
+        au3Label.selectedRegion.setTimes(newT0, newT1);
+        labelTrack->SetLabel(labelIndex, au3Label);
+
+        if (prj) {
+            prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, au3Label.GetId())));
+        }
+    }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)
+{
+    //! NOTE: cannot start stretching until previous stretch is handled
+    if (m_busy) {
+        return false;
+    }
+    m_busy = true;
+
+    DEFER {
+        m_busy = false;
+    };
+
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    int labelIndex = labelTrack->GetLabelIndex(labelKey.itemId);
+    if (labelIndex == -1) {
+        return false;
+    }
+
+    const auto& au3labels = labelTrack->GetLabels();
+    Au3Label au3Label = au3labels[labelIndex];
+
+    // Update the label with new start time
+    au3Label.selectedRegion.setTimes(newStartTime, au3Label.getT1());
+    labelTrack->SetLabel(labelIndex, au3Label);
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, au3Label.GetId())));
+    }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
+{
+    //! NOTE: cannot start stretching until previous stretch is handled
+    if (m_busy) {
+        return false;
+    }
+    m_busy = true;
+
+    DEFER {
+        m_busy = false;
+    };
+
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    int labelIndex = labelTrack->GetLabelIndex(labelKey.itemId);
+    if (labelIndex == -1) {
+        return false;
+    }
+
+    const auto& au3labels = labelTrack->GetLabels();
+    Au3Label au3Label = au3labels[labelIndex];
+
+    // Update the label with new end time
+    au3Label.selectedRegion.setTimes(au3Label.getT0(), newEndTime);
+    labelTrack->SetLabel(labelIndex, au3Label);
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, au3Label.GetId())));
     }
 
     return true;

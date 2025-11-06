@@ -5,7 +5,6 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "../../iprojecthistory.h"
 #include "../../iselectioncontroller.h"
 
 #include "au3wrap/au3types.h"
@@ -15,15 +14,25 @@
 namespace au::trackedit {
 class Au3LabelsInteraction : public ILabelsInteraction
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::trackedit::ISelectionController> selectionController;
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory;
+    muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<ISelectionController> selectionController;
 
 public:
     Au3LabelsInteraction();
 
     bool addLabelToSelection() override;
     bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) override;
+
+    bool removeLabel(const LabelKey& labelKey) override;
+    bool removeLabels(const LabelKeyList& labelKeys) override;
+
+    ITrackDataPtr cutLabel(const LabelKey& labelKey) override;
+    ITrackDataPtr copyLabel(const LabelKey& labelKey) override;
+
+    bool moveLabels(secs_t timePositionOffset, bool completed) override;
+
+    bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
+    bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
 
     muse::Progress progress() const override;
 

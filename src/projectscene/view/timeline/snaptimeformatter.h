@@ -19,7 +19,7 @@ public:
     muse::secs_t snapTime(muse::secs_t time, const Snap& snap, trackedit::TimeSignature timeSig) const;
     muse::secs_t singleStep(muse::secs_t time, const Snap& snap, Direction direction, trackedit::TimeSignature timeSig) const;
 
-    muse::secs_t snapToClip(muse::secs_t time, muse::secs_t tolerance, const std::set<muse::secs_t> clipsBoundaries) const;
+    muse::secs_t snapToItem(muse::secs_t time, muse::secs_t tolerance, const std::set<muse::secs_t> itemsBoundaries) const;
 
 private:
     double snapTypeMultiplier(SnapType type, bool triplets, trackedit::TimeSignature timeSig) const;

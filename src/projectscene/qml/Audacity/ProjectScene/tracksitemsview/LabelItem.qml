@@ -13,17 +13,24 @@ Item {
     property bool isSelected: false
     property bool selectionInProgress: false
     property bool enableCursorInteraction: !selectionInProgress
+    property var labelKey: null
 
     property alias navigation: navCtrl
 
-    signal requestSelected
-    signal requestSelectionReset
+    signal requestSelected()
+    signal requestSelectionReset()
 
     signal titleEditAccepted(var newTitle)
-    signal titleEditStarted
-    signal titleEditCanceled
+    signal titleEditStarted()
+    signal titleEditCanceled()
 
     signal labelItemMousePositionChanged(real x, real y)
+
+    signal labelStartEditRequested()
+    signal labelEndEditRequested()
+
+    signal labelLeftStretchRequested(bool completed)
+    signal labelRightStretchRequested(bool completed)
 
     property bool hover: root.containsMouse || root.headerHovered
     property bool headerHovered: false
@@ -99,6 +106,27 @@ Item {
         }
     }
 
+    LabelContextMenuModel {
+        id: labelContextMenuModel
+        labelKey: root.labelKey
+
+        onLabelEditRequested: {
+            root.editTitle()
+        }
+    }
+
+    ContextMenuLoader {
+        id: labelContextMenuLoader
+
+        onHandleMenuItem: function (itemId) {
+            labelContextMenuModel.handleMenuItem(itemId)
+        }
+    }
+
+    Component.onCompleted: {
+        labelContextMenuModel.load()
+    }
+
     MouseArea {
         id: hoverArea
         anchors.fill: parent
@@ -115,6 +143,7 @@ Item {
 
         onClicked: function (e) {
             root.requestSelected()
+            labelContextMenuLoader.show(Qt.point(e.x, e.y), labelContextMenuModel.items)
         }
 
         onPositionChanged: function (e) {
@@ -140,6 +169,23 @@ Item {
         isRight: false
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.leftEarBackgroundColor
+        isSelected: root.isSelected
+
+        onStretchStartRequested: {
+            root.labelStartEditRequested()
+        }
+
+        onStretchMousePositionChanged: function(x, y) {
+            root.labelItemMousePositionChanged(x, y)
+        }
+
+        onStretchRequested: function(completed) {
+            root.labelLeftStretchRequested(completed)
+        }
+
+        onStretchEndRequested: {
+            root.labelEndEditRequested()
+        }
     }
 
     // Right Ear
@@ -152,6 +198,23 @@ Item {
         isRight: true
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.rightEarBackgroundColor
+        isSelected: root.isSelected
+
+        onStretchStartRequested: {
+            root.labelStartEditRequested()
+        }
+
+        onStretchMousePositionChanged: function(x, y) {
+            root.labelItemMousePositionChanged(x, y)
+        }
+
+        onStretchRequested: function(completed) {
+            root.labelRightStretchRequested(completed)
+        }
+
+        onStretchEndRequested: {
+            root.labelEndEditRequested()
+        }
     }
 
     // Main Label Header
@@ -186,7 +249,11 @@ Item {
             root.requestSelected()
         }
 
-        onLabelItemMousePositionChanged: function(x, y) {
+        onContextMenuOpenRequested: function(x, y) {
+            labelContextMenuLoader.show(Qt.point(x, y), labelContextMenuModel.items)
+        }
+
+        onMousePositionChanged: function(x, y) {
             root.labelItemMousePositionChanged(x, y)
         }
 
@@ -206,6 +273,22 @@ Item {
         onHeaderHoveredChanged: function(value) {
             root.headerHovered = value
         }
+
+        onRequestSelected: {
+            root.requestSelected()
+        }
+
+        onStretchMousePositionChanged: function(x, y) {
+            root.labelItemMousePositionChanged(x, y)
+        }
+
+        onStretchRequested: function(completed) {
+            root.labelLeftStretchRequested(completed)
+        }
+
+        onStretchEndRequested: {
+            root.labelEndEditRequested()
+        }
     }
 
     // Left Stalk
@@ -213,11 +296,32 @@ Item {
         isRight: false
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.leftEarBackgroundColor
+        isSelected: root.isSelected
 
         visible: !prv.isPoint
 
         onHeaderHoveredChanged: function(value) {
             root.headerHovered = value
+        }
+
+        onRequestSelected: {
+            root.requestSelected()
+        }
+
+        onStretchStartRequested: {
+            root.labelStartEditRequested()
+        }
+
+        onStretchMousePositionChanged: function(x, y) {
+            root.labelItemMousePositionChanged(x, y)
+        }
+
+        onStretchRequested: function(completed) {
+            root.labelLeftStretchRequested(completed)
+        }
+
+        onStretchEndRequested: {
+            root.labelEndEditRequested()
         }
     }
 
@@ -226,11 +330,32 @@ Item {
         isRight: true
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.rightEarBackgroundColor
+        isSelected: root.isSelected
 
         visible: !prv.isPoint
 
         onHeaderHoveredChanged: function(value) {
             root.headerHovered = value
+        }
+
+        onRequestSelected: {
+            root.requestSelected()
+        }
+
+        onStretchStartRequested: {
+            root.labelStartEditRequested()
+        }
+
+        onStretchMousePositionChanged: function(x, y) {
+            root.labelItemMousePositionChanged(x, y)
+        }
+
+        onStretchRequested: function(completed) {
+            root.labelRightStretchRequested(completed)
+        }
+
+        onStretchEndRequested: {
+            root.labelEndEditRequested()
         }
     }
 

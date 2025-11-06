@@ -213,7 +213,7 @@ au::trackedit::Labels Au3TrackeditProject::getLabels(const TrackId& trackId) con
 
     const auto& au3labels = labelTrack->GetLabels();
     for (size_t i = 0; i < au3labels.size(); ++i) {
-        au::trackedit::Label label = DomConverter::label(labelTrack, i, au3labels[i]);
+        au::trackedit::Label label = DomConverter::label(labelTrack, &au3labels[i]);
         labels.push_back(std::move(label));
     }
 
@@ -313,15 +313,12 @@ au::trackedit::Label Au3TrackeditProject::label(const LabelKey& key) const
         return Label();
     }
 
-    const auto& au3labels = labelTrack->GetLabels();
-    for (size_t i = 0; i < au3labels.size(); ++i) {
-        au::trackedit::Label label = DomConverter::label(labelTrack, i, au3labels[i]);
-        if (label.key == key) {
-            return label;
-        }
+    const Au3Label* au3Label = DomAccessor::findLabel(labelTrack, key.itemId);
+    if (!au3Label) {
+        return Label();
     }
 
-    return Label();
+    return DomConverter::label(labelTrack, au3Label);
 }
 
 void Au3TrackeditProject::notifyAboutClipChanged(const Clip& clip)
@@ -445,17 +442,21 @@ int64_t Au3TrackeditProject::createNewGroupID(int64_t startingID) const
     return startingID;
 }
 
-TracksAndClips Au3TrackeditProject::buildTracksAndClips() const
+TracksAndItems Au3TrackeditProject::buildTracksAndItems() const
 {
-    TracksAndClips newCache;
+    TracksAndItems newCache;
 
     newCache.tracks = trackList();
 
     newCache.clips.reserve(newCache.tracks.size());
+    newCache.labels.reserve(newCache.tracks.size());
 
     for (const Track& track : newCache.tracks) {
         trackedit::Clips clips = getClips(track.id);
         newCache.clips.push_back(std::move(clips));
+
+        trackedit::Labels labels = getLabels(track.id);
+        newCache.labels.push_back(std::move(labels));
     }
 
     return newCache;
