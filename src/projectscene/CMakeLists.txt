@@ -106,8 +106,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/connectingdotspainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/iau3wavepainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/sampledata.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformScale.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformScale.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformSettings.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformSettings.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformPainter.cpp

@@ -756,6 +756,21 @@ bool TrackeditOperationController::stretchLabelRight(const LabelKey& labelKey, s
     return success;
 }
 
+void TrackeditOperationController::verticalZoomIn(const trackedit::TrackId& trackId)
+{
+    tracksInteraction()->verticalZoomIn(trackId);
+}
+
+void TrackeditOperationController::verticalZoomOut(const trackedit::TrackId& trackId)
+{
+    tracksInteraction()->verticalZoomOut(trackId);
+}
+
+void TrackeditOperationController::resetVerticalZoom(const trackedit::TrackId& trackId)
+{
+    tracksInteraction()->resetVerticalZoom(trackId);
+}
+
 muse::Progress TrackeditOperationController::progress() const
 {
     return tracksInteraction()->progress();

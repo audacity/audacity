@@ -4,6 +4,7 @@
 #include "trackcolor.h"
 #include "trackrulertypeattachment.h"
 #include "trackviewtypeattachment.h"
+#include "waveformscale.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
@@ -77,7 +78,17 @@ au::trackedit::TrackViewType trackViewType(const Au3Track* track)
         return type;
     }
 }
-} // namespace
+
+au::trackedit::TrackDisplayBounds trackDisplayBounds(const Au3Track* track)
+{
+    const auto* waveTrack = dynamic_cast<const WaveTrack*>(track);
+    const auto& cache = WaveformScale::Get(*waveTrack);
+    float min;
+    float max;
+    cache.GetDisplayBounds(min, max);
+    return { min, max };
+}
+}
 
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
 {
@@ -121,6 +132,7 @@ au::trackedit::Track DomConverter::track(const Au3Track* track)
     au4t.rulerType = trackRulerType(track);
     au4t.viewType = trackViewType(track);
     au4t.rate = trackRate(track);
+    au4t.displayBounds = trackDisplayBounds(track);
     return au4t;
 }
 
