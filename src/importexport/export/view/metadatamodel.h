@@ -9,7 +9,7 @@
 
 #include "modularity/ioc.h"
 #include "iinteractive.h"
-#include "project/itagsaccessor.h"
+#include "project/imetadata.h"
 #include "project/iprojectconfiguration.h"
 #include "iexportconfiguration.h"
 #include "appshell/iappshellconfiguration.h"
@@ -22,7 +22,7 @@ class MetadataModel : public QAbstractListModel, public muse::async::Asyncable
     Q_OBJECT
 
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<project::ITagsAccessor> tagsAccessor;
+    muse::Inject<project::IMetadata> metadata;
     muse::Inject<project::IProjectConfiguration> projectConfiguration;
     muse::Inject<importexport::IExportConfiguration> exportConfiguration;
     muse::Inject<appshell::IAppShellConfiguration> configuration;

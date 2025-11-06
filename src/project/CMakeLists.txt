@@ -59,7 +59,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/imscmetareader.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectautosaver.h
     ${CMAKE_CURRENT_LIST_DIR}/ithumbnailcreator.h
-    ${CMAKE_CURRENT_LIST_DIR}/itagsaccessor.h
+    ${CMAKE_CURRENT_LIST_DIR}/imetadata.h
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projecttypes.h
     ${CMAKE_CURRENT_LIST_DIR}/types/projectmeta.h
@@ -81,8 +81,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/opensaveprojectscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/thumbnailcreator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/thumbnailcreator.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3tagsaccessor.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3tagsaccessor.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3metadata.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3metadata.h
 
     ${PLATFORM_SRC}
 

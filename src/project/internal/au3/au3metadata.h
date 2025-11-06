@@ -8,10 +8,10 @@
 #include "libraries/lib-tags/Tags.h"
 #include "project/types/projectmeta.h"
 
-#include "project/itagsaccessor.h"
+#include "project/imetadata.h"
 
 namespace au::project {
-class Au3TagsAccessor : public ITagsAccessor
+class Au3Metadata : public IMetadata
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
 

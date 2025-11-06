@@ -7,7 +7,7 @@
 #include "serialization/xmlstreamreader.h"
 #include "io/buffer.h"
 
-#include "project/internal/au3/au3tagsaccessor.h"
+#include "project/internal/au3/au3metadata.h"
 
 #include "metadatamodel.h"
 
@@ -77,7 +77,7 @@ QHash<int, QByteArray> MetadataModel::roleNames() const
 
 void MetadataModel::load()
 {
-    project::ProjectMeta projectMeta = tagsAccessor()->tags();
+    project::ProjectMeta projectMeta = metadata()->tags();
     std::string defaultTemplate = exportConfiguration()->defaultMetadata();
 
     beginResetModel();
@@ -86,7 +86,7 @@ void MetadataModel::load()
     if (isMetadataEmpty(projectMeta) && !defaultTemplate.empty()) {
         toLoad = parseXml(QString::fromStdString(defaultTemplate));
     } else {
-        toLoad = tagsAccessor()->tags();
+        toLoad = metadata()->tags();
     }
 
     m_meta = std::move(toLoad);
@@ -97,7 +97,7 @@ void MetadataModel::load()
 
 void MetadataModel::apply()
 {
-    tagsAccessor()->setTags(m_meta);
+    metadata()->setTags(m_meta);
     configuration()->applySettings();
 }
 

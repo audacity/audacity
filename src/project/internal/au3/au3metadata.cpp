@@ -2,14 +2,14 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "au3tagsaccessor.h"
+#include "au3metadata.h"
 #include "project/types/projectmeta.h"
 
 #include "au3wrap/au3types.h"
 
 using namespace au::project;
 
-ProjectMeta Au3TagsAccessor::tags() const
+ProjectMeta Au3Metadata::tags() const
 {
     auto project = reinterpret_cast<au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
 
@@ -43,7 +43,7 @@ ProjectMeta Au3TagsAccessor::tags() const
     return au4Tags;
 }
 
-void Au3TagsAccessor::setTags(ProjectMeta au4Tags)
+void Au3Metadata::setTags(ProjectMeta au4Tags)
 {
     auto project = reinterpret_cast<au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
 
