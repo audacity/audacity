@@ -105,6 +105,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/iminmaxrmspainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/minmaxrmspainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/minmaxrmspainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/SpectrumCache.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/SpectrumCache.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveClipUIUtilities.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveClipUIUtilities.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/iconnectingdotspainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/connectingdotspainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/connectingdotspainter.h

@@ -1,21 +1,6 @@
-/**********************************************************************
-
-  Audacity: A Digital Audio Editor
-
-  @file WaveClipUIUtilities.cpp
-
-  Paul Licameli split from WaveClip.cpp
-
-**********************************************************************/
-
 #include "WaveClipUIUtilities.h"
 
-#include "PitchAndSpeedDialog.h"
-#include "ProjectHistory.h"
-#include "SampleCount.h"
-#include "UndoManager.h"
-#include "ViewInfo.h"
-#include "WaveClip.h"
+#include "libraries/lib-math/SampleCount.h"
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -71,43 +56,4 @@ void WaveClipUIUtilities::fillWhere(
     for (decltype(len) x = 1; x < len + 1; x++) {
         where[x] = sampleCount(floor(w0 + double(x) * samplesPerPixel));
     }
-}
-
-std::vector<CommonTrackPanelCell::MenuItem>
-WaveClipUIUtilities::GetWaveClipMenuItems()
-{
-    return {
-        { L"Cut", XO("Cut") },
-        { L"Copy", XO("Copy") },
-        { L"Paste", XO("Paste") },
-        {},
-        { L"Split", XO("Split Clip") },
-        { L"Join", XO("Join Clips") },
-        { L"TrackMute", XO("Mute/Unmute Track") },
-        {},
-        { L"RenameClip", XO("Rename Clip...") },
-        { L"ChangePitchAndSpeed", XO("Pitch and Speed...") },
-        { L"RenderPitchAndSpeed", XO("Render Pitch and Speed") },
-    };
-}
-
-void WaveClipUIUtilities::PushClipSpeedChangedUndoState(
-    AudacityProject& project, double speedInPercent)
-{
-    ProjectHistory::Get(project).PushState(
-        /* i18n-hint: This is about changing the clip playback speed, speed is in
-           percent */
-        XO("Changed Clip Speed to %.01f%%").Format(speedInPercent),
-        /* i18n-hint: This is about changing the clip playback speed, speed is in
-           percent */
-        XO("Changed Speed to %.01f%%").Format(speedInPercent),
-        UndoPush::CONSOLIDATE);
-}
-
-void WaveClipUIUtilities::SelectClip(
-    AudacityProject& project, const WaveTrack::Interval& clip)
-{
-    auto& viewInfo = ViewInfo::Get(project);
-    viewInfo.selectedRegion.setTimes(
-        clip.GetPlayStartTime(), clip.GetPlayEndTime());
 }
