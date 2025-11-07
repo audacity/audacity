@@ -195,13 +195,11 @@ void TrackLabelsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     }
 
     //! NOTE The first step is to calculate the position and width
-    const double cacheTime = cacheBufferPx() / m_context->zoom();
-
     LabelTime time;
     time.startTime = label.startTime;
     time.endTime = label.endTime;
-    time.itemStartTime = std::max(label.startTime, (m_context->frameStartTime() - cacheTime));
-    time.itemEndTime = std::min(label.endTime, (m_context->frameEndTime() + cacheTime));
+    time.itemStartTime = label.startTime;
+    time.itemEndTime = label.endTime;
 
     if (selectionController() && selectionController()->isDataSelectedOnTrack(m_trackId)) {
         time.selectionStartTime = selectionController()->dataSelectedStartTime();

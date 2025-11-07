@@ -20,7 +20,7 @@ Item {
     property bool isLinkedActive: false
 
     property int visualWidth: prv.isPoint ? pointStalk.width + header.x + header.width : header.width
-    readonly property int headerHeight: 14
+    readonly property int headerDefaultHeight: 14
 
     property var container: null
 
@@ -31,6 +31,8 @@ Item {
     property color labelColor: null
 
     property alias navigation: navCtrl
+
+    height: header.height
 
     signal requestSelected()
     signal requestSelectionReset()
@@ -148,7 +150,7 @@ Item {
         y: root.parent.y
         z: root.parent.z
 
-        height: root.headerHeight
+        height: root.headerDefaultHeight
 
         isRight: false
         enableCursorInteraction: root.enableCursorInteraction
@@ -192,7 +194,7 @@ Item {
         y: root.parent.y
         z: root.parent.z
 
-        height: root.headerHeight
+        height: root.headerDefaultHeight
 
         isRight: true
         enableCursorInteraction: root.enableCursorInteraction
@@ -230,7 +232,8 @@ Item {
     LabelHeader {
         id: header
 
-        height: root.headerHeight
+        width: prv.isPoint ? contentWidth : root.width
+        height: Math.min(root.height, contentHeight)
 
         title: root.title
 
