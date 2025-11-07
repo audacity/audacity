@@ -1,3 +1,7 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+
 /*  SPDX-License-Identifier: GPL-2.0-or-later */
 /**********************************************************************
 
@@ -27,11 +31,11 @@ double CalculateAdjustmentForZoomLevel(double avgPixPerSecond, bool showSamples)
     return .0;
 }
 
-double GetPixelsPerSecond(const wxRect& viewRect, const ZoomInfo& zoomInfo)
+double GetPixelsPerSecond(const QRect& viewRect, const ZoomInfo& zoomInfo)
 {
     const auto h = zoomInfo.PositionToTime(0, 0, true);
-    const auto trackRectT1 = zoomInfo.PositionToTime(viewRect.width, 0, true);
-    return viewRect.width / (trackRectT1 - h);
+    const auto trackRectT1 = zoomInfo.PositionToTime(viewRect.width(), 0, true);
+    return viewRect.width() / (trackRectT1 - h);
 }
 
 bool ShowIndividualSamples(
@@ -49,13 +53,13 @@ double GetBlankSpaceBeforePlayEndTime(const ClipTimes& clip)
 } // namespace
 
 ClipParameters::ClipParameters(
-    const ClipTimes& clip, const wxRect& rect, const ZoomInfo& zoomInfo)
+    const ClipTimes& clip, const QRect& rect, const ZoomInfo& zoomInfo)
     : trackRectT0{zoomInfo.PositionToTime(0, 0, true)}
     , averagePixelsPerSecond{GetPixelsPerSecond(rect, zoomInfo)}
     , showIndividualSamples{ShowIndividualSamples(
                                 clip.GetRate(), clip.GetStretchRatio(), averagePixelsPerSecond)}
 {
-    const auto trackRectT1 = zoomInfo.PositionToTime(rect.width, 0, true);
+    const auto trackRectT1 = zoomInfo.PositionToTime(rect.width(), 0, true);
     const auto stretchRatio = clip.GetStretchRatio();
     const auto playStartTime = clip.GetPlayStartTime();
 
@@ -95,14 +99,14 @@ ClipParameters::ClipParameters(
     hiddenLeftOffset = 0;
     if (tpre < 0) {
         // Fix Bug #1296 caused by premature conversion to (int).
-        wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime, 0, true);
+        int64_t time64 = zoomInfo.TimeToPosition(playStartTime, 0, true);
         if (time64 < 0) {
             time64 = 0;
         }
-        hiddenLeftOffset = (time64 < rect.width) ? (int)time64 : rect.width;
+        hiddenLeftOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
 
-        hiddenMid.x += hiddenLeftOffset;
-        hiddenMid.width -= hiddenLeftOffset;
+        hiddenMid.setX(hiddenMid.x() + hiddenLeftOffset);
+        hiddenMid.setWidth(hiddenMid.width() - hiddenLeftOffset);
     }
 
     // If the right edge of the track is to the left of the right
@@ -110,14 +114,13 @@ ClipParameters::ClipParameters(
     // of the track.  Reduce the "hiddenMid" rect by the
     // size of the blank area.
     if (tpost > t1) {
-        wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, true);
+        int64_t time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, true);
         if (time64 < 0) {
             time64 = 0;
         }
-        const int hiddenRightOffset
-            =(time64 < rect.width) ? (int)time64 : rect.width;
+        const int hiddenRightOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
 
-        hiddenMid.width = std::max(0, hiddenRightOffset - hiddenLeftOffset);
+        hiddenMid.setWidth(std::max(0, hiddenRightOffset - hiddenLeftOffset));
     }
     // The variable "mid" will be the rectangle containing the
     // actual waveform, as distorted by the fisheye,
@@ -129,14 +132,14 @@ ClipParameters::ClipParameters(
     // left of the track.  Reduce the "mid"
     leftOffset = 0;
     if (tpre < 0) {
-        wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime, 0, false);
+        int64_t time64 = zoomInfo.TimeToPosition(playStartTime, 0, false);
         if (time64 < 0) {
             time64 = 0;
         }
-        leftOffset = (time64 < rect.width) ? (int)time64 : rect.width;
+        leftOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
 
-        mid.x += leftOffset;
-        mid.width -= leftOffset;
+        mid.setX(mid.x() + leftOffset);
+        mid.setWidth(mid.width() - leftOffset);
     }
 
     // If the right edge of the track is to the left of the right
@@ -144,19 +147,17 @@ ClipParameters::ClipParameters(
     // of the track.  Reduce the "mid" rect by the
     // size of the blank area.
     if (tpost > t1) {
-        wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, false);
+        int64_t time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, false);
         if (time64 < 0) {
             time64 = 0;
         }
-        const int distortedRightOffset
-            =(time64 < rect.width) ? (int)time64 : rect.width;
-
-        mid.width = std::max(0, distortedRightOffset - leftOffset);
+        const int distortedRightOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
+        mid.setWidth(std::max(0, distortedRightOffset - leftOffset));
     }
 }
 
-wxRect ClipParameters::GetClipRect(
-    const ClipTimes& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect,
+QRect ClipParameters::GetClipRect(
+    const ClipTimes& clip, const ZoomInfo& zoomInfo, const QRect& viewRect,
     bool* outShowSamples)
 {
     const auto pixelsPerSecond = GetPixelsPerSecond(viewRect, zoomInfo);
@@ -172,20 +173,20 @@ wxRect ClipParameters::GetClipRect(
     constexpr auto edgeRight
         =static_cast<ZoomInfo::int64>(std::numeric_limits<int>::max());
     const auto left = std::clamp(
-        zoomInfo.TimeToPosition(clip.GetPlayStartTime(), viewRect.x, true),
+        zoomInfo.TimeToPosition(clip.GetPlayStartTime(), viewRect.x(), true),
         edgeLeft, edgeRight);
     const auto right = std::clamp(
         zoomInfo.TimeToPosition(
             clip.GetPlayEndTime() - GetBlankSpaceBeforePlayEndTime(clip)
             + clipEndingAdjustment,
-            viewRect.x, true),
+            viewRect.x(), true),
         edgeLeft, edgeRight);
     if (right >= left) {
         // after clamping we can expect that left and right
         // are small enough to be put into int
-        return wxRect(
-            static_cast<int>(left), viewRect.y,
-            std::max(1, static_cast<int>(right - left)), viewRect.height);
+        return QRect(
+            static_cast<int>(left), viewRect.y(),
+            std::max(1, static_cast<int>(right - left)), viewRect.height());
     }
-    return wxRect();
+    return QRect();
 }

@@ -1,3 +1,7 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+
 /*  SPDX-License-Identifier: GPL-2.0-or-later */
 /**********************************************************************
 
@@ -10,16 +14,16 @@ Matthieu Hodgkinson split from class WaveChannelView.h
 **********************************************************************/
 #pragma once
 
-#include <wx/gdicmn.h>
+#include <QRect>
 
 class ZoomInfo;
 class ClipTimes;
 
-struct AUDACITY_DLL_API ClipParameters
+struct ClipParameters
 {
     // Do a bunch of calculations common to waveform and spectrum drawing.
     ClipParameters(
-        const ClipTimes& clip, const wxRect& rect, const ZoomInfo& zoomInfo);
+        const ClipTimes& clip, const QRect& rect, const ZoomInfo& zoomInfo);
 
     const double trackRectT0; // absolute time of left edge of track
 
@@ -31,14 +35,14 @@ struct AUDACITY_DLL_API ClipParameters
     const double averagePixelsPerSecond;
     const bool showIndividualSamples;
 
-    wxRect hiddenMid;
+    QRect hiddenMid;
     int hiddenLeftOffset;
 
-    wxRect mid;
+    QRect mid;
     int leftOffset;
 
     // returns a clip rectangle restricted by viewRect,
     // and with clipOffsetX - clip horizontal origin offset within view rect
-    static wxRect GetClipRect(
-        const ClipTimes& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect, bool* outShowSamples = nullptr);
+    static QRect GetClipRect(
+        const ClipTimes& clip, const ZoomInfo& zoomInfo, const QRect& viewRect, bool* outShowSamples = nullptr);
 };
