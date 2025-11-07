@@ -22,7 +22,7 @@
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/trackcolor.h"
-#include "au3wrap/internal/trackrulertype.h"
+#include "au3wrap/internal/trackrulertypeattachment.h"
 #include "au3wrap/internal/trackviewtype.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"

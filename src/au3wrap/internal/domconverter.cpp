@@ -2,7 +2,7 @@
 
 #include "au3types.h"
 #include "trackcolor.h"
-#include "trackrulertype.h"
+#include "trackrulertypeattachment.h"
 #include "trackviewtype.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveClip.h"

@@ -1,7 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "trackrulertype.h"
+#include "trackrulertypeattachment.h"
 
 using namespace au::au3;
 using namespace au::trackedit;
