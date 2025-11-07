@@ -22,7 +22,8 @@
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/trackcolor.h"
-#include "au3wrap/internal/trackrulertype.h"
+#include "au3wrap/internal/trackrulertypeattachment.h"
+#include "au3wrap/internal/trackviewtypeattachment.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
@@ -146,24 +147,21 @@ bool Au3TracksInteraction::changeTrackRulerType(const trackedit::TrackId& trackI
         return false;
     }
 
-    auto& trackRulerType = au::au3::TrackRulerType::Get(track);
+    au::au3::TrackRulerTypeAttachment::Get(track).SetRulerType(rulerType);
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutTrackChanged(DomConverter::track(track));
 
-    switch (rulerType) {
-    case trackedit::TrackRulerType::Linear:
-        trackRulerType.SetRulerType(RulerType::Linear);
-        break;
-    case trackedit::TrackRulerType::DbLinear:
-        trackRulerType.SetRulerType(RulerType::DbLinear);
-        break;
-    case trackedit::TrackRulerType::DbLog:
-        trackRulerType.SetRulerType(RulerType::DbLog);
-        break;
-    default:
-        IF_ASSERT_FAILED(false) {
-            return false;
-        }
+    return true;
+}
+
+bool Au3TracksInteraction::changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
+{
+    Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
+    IF_ASSERT_FAILED(track) {
+        return false;
     }
 
+    au3::TrackViewTypeAttachment::Get(track).SetTrackViewType(viewType);
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(track));
 

@@ -73,6 +73,8 @@ private:
         IsLinearRole,
         AvailableRulerTypesRole,
         TrackRulerTypeRole,
+        IsWaveformViewVisibleRole,
+        IsSpectrogramViewVisibleRole,
         DbRangeRole,
     };
 

@@ -144,6 +144,11 @@ private:
     void setTrackFormat(const muse::actions::ActionQuery& q);
     void setTrackRate(const muse::actions::ActionQuery& q);
 
+    void changeTrackViewToWaveform(const muse::actions::ActionData&);
+    void changeTrackViewToSpectrogram(const muse::actions::ActionData&);
+    void changeTrackViewToWaveformAndSpectrogram(const muse::actions::ActionData&);
+    void changeTrackView(const muse::actions::ActionData&, TrackViewType);
+
     void addLabel();
     void labelDelete(const muse::actions::ActionData& args);
     void labelDeleteMulti(const muse::actions::ActionData& args);

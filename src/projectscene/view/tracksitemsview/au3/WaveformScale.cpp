@@ -33,8 +33,3 @@ auto WaveformScale::Clone() const -> PointerType
 {
     return std::make_unique<WaveformScale>(*this);
 }
-
-int WaveformScale::ZeroLevelYCoordinate(wxRect rect) const
-{
-    return rect.GetTop() + (int)((mDisplayMax / (mDisplayMax - mDisplayMin)) * rect.height);
-}
