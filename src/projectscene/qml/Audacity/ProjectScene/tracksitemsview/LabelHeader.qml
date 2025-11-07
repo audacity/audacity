@@ -27,7 +27,9 @@ Rectangle {
     signal mousePositionChanged(real x, real y)
     signal headerHoveredChanged(bool value)
 
-    width: root.isPoint ? Math.max(50, titleLoader.contentWidth + 8) : parent.width
+    property int contentWidth: Math.max(50, Math.min(200, titleLoader.contentWidth + 8))
+    property int contentHeight: titleLoader.isEditState && titleLoader.item ? titleLoader.item.contentHeight : 14
+
     x: root.isPoint ? root.earWidth + 3 : 0
     y: 0
 
@@ -49,7 +51,7 @@ Rectangle {
         id: headerDragArea
         anchors.fill: parent
 
-        property var lastClickTime: 0
+        property var lastClickTime: Date()
         property point doubleClickStartPosition
 
         acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -110,7 +112,8 @@ Rectangle {
         id: titleLoader
 
         property bool isEditState: false
-        property real contentWidth: item ? (isEditState ? item.contentWidth : item.implicitWidth) : 0
+        property real contentWidth: item ? (isEditState ? item.contentWidth + 1 : item.implicitWidth + 1) : 0
+        property real contentHeight: item ? (isEditState ? item.contentHeight : item.implicitHeight) : 0
 
         anchors.top: parent.top
         anchors.topMargin: isEditState ? 0 : 2
@@ -145,11 +148,12 @@ Rectangle {
         Component {
             id: titleEditComp
 
-            TextInputField {
+            TextInputArea {
                 id: titleEdit
 
                 property string newTitle: ""
                 property real contentWidth: textMetrics.advanceWidth
+                property real contentHeight: scrollableContentHeight
 
                 TextMetrics {
                     id: textMetrics
