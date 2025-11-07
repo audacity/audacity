@@ -51,6 +51,7 @@
 #include "view/tracksitemsview/splittoolcontroller.h"
 #include "view/tracksitemsview/pitchandspeedchangemodel.h"
 #include "view/tracksitemsview/wavepainterproxy.h"
+#include "view/tracksitemsview/au3/au3spectrogrampainter.h"
 #include "view/tracksitemsview/au3/connectingdotspainter.h"
 #include "view/tracksitemsview/au3/minmaxrmspainter.h"
 #include "view/tracksitemsview/au3/samplespainter.h"
@@ -103,12 +104,14 @@ void ProjectSceneModule::registerExports()
     m_uiActions = std::make_shared<ProjectSceneUiActions>(m_projectSceneActionsController);
     m_configuration = std::make_shared<ProjectSceneConfiguration>();
     m_realtimeEffectPanelTrackSelection = std::make_shared<RealtimeEffectPanelTrackSelection>();
+    m_spectrogramPainter = std::make_shared<Au3SpectrogramPainter>();
 
     ioc()->registerExport<IProjectSceneConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IProjectViewStateCreator>(moduleName(), new ProjectViewStateCreator());
     ioc()->registerExport<IProjectSceneActionsController>(moduleName(), m_projectSceneActionsController);
     ioc()->registerExport<IRealtimeEffectPanelTrackSelection>(moduleName(), m_realtimeEffectPanelTrackSelection);
     ioc()->registerExport<IWavePainter>(moduleName(), new WavePainterProxy());
+    ioc()->registerExport<ISpectrogramPainter>(moduleName(), m_spectrogramPainter);
     ioc()->registerExport<IConnectingDotsPainter>(moduleName(), new ConnectingDotsPainter());
     ioc()->registerExport<IMinMaxRMSPainter>(moduleName(), new MinMaxRMSPainter());
     ioc()->registerExport<ISamplesPainter>(moduleName(), new SamplesPainter());
@@ -213,6 +216,7 @@ void ProjectSceneModule::onInit(const muse::IApplication::RunMode& mode)
     m_configuration->init();
     m_projectSceneActionsController->init();
     m_realtimeEffectPanelTrackSelection->init();
+    m_spectrogramPainter->init();
 
     m_uiActions->init();
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());

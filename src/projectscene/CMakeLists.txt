@@ -98,13 +98,17 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audiosetupcontextmenumodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/isamplespainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainterutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainterutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainterutils.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/iminmaxrmspainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/minmaxrmspainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/minmaxrmspainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/au3spectrogramchannelpainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/au3spectrogramchannelpainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/au3spectrogrampainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/au3spectrogrampainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/ClipParameters.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/ClipParameters.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/SpectrumCache.cpp
@@ -150,11 +154,14 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/wavepainterproxy.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/abstractclipview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/abstractclipview.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/spectrogramtypes.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/spectrogramtypes.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/spectrogramview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/spectrogramview.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/waveview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/waveview.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/iwavepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/ispectrogrampainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/selectionviewcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/selectionviewcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/pitchandspeedchangemodel.cpp

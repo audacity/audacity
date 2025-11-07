@@ -9,6 +9,7 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::projectscene {
+class Au3SpectrogramPainter;
 class ProjectSceneUiActions;
 class ProjectSceneActionsController;
 class ProjectSceneConfiguration;
@@ -25,6 +26,7 @@ public:
     void onInit(const muse::IApplication::RunMode& mode) override;
 
 private:
+    std::shared_ptr<Au3SpectrogramPainter> m_spectrogramPainter;
     std::shared_ptr<ProjectSceneUiActions> m_uiActions;
     std::shared_ptr<ProjectSceneActionsController> m_projectSceneActionsController;
     std::shared_ptr<ProjectSceneConfiguration> m_configuration;
