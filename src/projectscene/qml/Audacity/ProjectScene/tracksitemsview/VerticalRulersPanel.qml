@@ -10,7 +10,7 @@ import Audacity.ProjectScene
 Rectangle {
     id: root
 
-    property var model: null
+    property ViewTracksListModel model: null
     property var context: null
 
     width: 32
@@ -104,10 +104,6 @@ Rectangle {
                 Rectangle {
                     color: ui.theme.backgroundQuarternaryColor
 
-                    Component.onCompleted: {
-                        rulerModel.init()
-                    }
-
                     MouseArea {
                         id: mouseClickBlocker // to prevent clicks from reaching and modifying the viewport
                         anchors.fill: parent
@@ -197,6 +193,15 @@ Rectangle {
                             isCollapsed: trackViewState.isTrackCollapsed
                             channelHeightRatio: trackViewState.channelHeightRatio
                             rulerType: model.trackRulerType
+                            isVerticalRulersVisible: root.model.isVerticalRulersVisible
+
+                            onHideVerticalRulerRequested: {
+                                root.model.toggleVerticalRuler()
+                            }
+
+                            onSetTrackRulerTypeRequested: function (rulerType) {
+                                root.model.setTrackRulerType(model.trackId, rulerType)
+                            }
                         }
 
                         SpectrogramRuler {
