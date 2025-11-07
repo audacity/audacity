@@ -16,15 +16,12 @@ struct ProjectMeta
 {
     muse::io::path_t filePath;
 
-    std::string title;
     std::string artist;
+    std::string trackTitle;
     std::string album;
     std::string trackNumber;
     std::string year;
-    std::string genre;
     std::string comments;
-    std::string software;
-    std::string copyright;
 
     QPixmap thumbnail;
 
@@ -42,16 +39,12 @@ struct ProjectMeta
     bool operator==(const ProjectMeta& other) const
     {
         bool equal = filePath == other.filePath;
-        equal &= title == other.title;
+        equal &= trackTitle == other.trackTitle;
         equal &= artist == other.artist;
         equal &= album == other.album;
-        equal &= copyright == other.copyright;
         equal &= trackNumber == other.trackNumber;
         equal &= year == other.year;
-        equal &= genre == other.genre;
         equal &= comments == other.comments;
-        equal &= software == other.software;
-        equal &= copyright == other.copyright;
 
         equal &= thumbnail.toImage() == other.thumbnail.toImage();
 
@@ -69,52 +62,41 @@ struct ProjectMeta
 using ProjectMetaList = QList<ProjectMeta>;
 
 // Tags
-inline const std::string TITLE_TAG("TITLE");
-inline const std::string ARTIST_TAG("ARTIST");
-inline const std::string ALBUM_TAG("ALBUM");
-inline const std::string TRACK_TAG("TRACKNUMBER");
-inline const std::string YEAR_TAG("YEAR");
-inline const std::string GENRE_TAG("GENRE");
-inline const std::string COMMENTS_TAG("COMMENTS");
-inline const std::string SOFTWARE_TAG("Software");
-inline const std::string COPYRIGHT_TAG("Copyright");
+inline const std::string ARTIST_TAG("Artist name");
+inline const std::string TRACK_TITLE_TAG("Track title");
+inline const std::string ALBUM_TAG("Album title");
+inline const std::string TRACK_NUMBER_TAG("Track number");
+inline const std::string YEAR_TAG("Year");
+inline const std::string COMMENTS_TAG("Comments");
 
 static const QList<std::string> standardTags {
-    TITLE_TAG,
+    ARTIST_TAG,
+    TRACK_TITLE_TAG,
     ARTIST_TAG,
     ALBUM_TAG,
-    TRACK_TAG,
+    TRACK_NUMBER_TAG,
     YEAR_TAG,
-    GENRE_TAG,
     COMMENTS_TAG,
-    SOFTWARE_TAG,
-    COPYRIGHT_TAG
 };
 
 using MemberPtr = std::string ProjectMeta::*;
 
 inline static const std::array<MemberPtr, 9> kStdMembers = {
-    &project::ProjectMeta::title,
     &project::ProjectMeta::artist,
+    &project::ProjectMeta::trackTitle,
     &project::ProjectMeta::album,
     &project::ProjectMeta::trackNumber,
     &project::ProjectMeta::year,
-    &project::ProjectMeta::genre,
     &project::ProjectMeta::comments,
-    &project::ProjectMeta::software,
-    &project::ProjectMeta::copyright
 };
 
 static std::map<std::string, std::string> LABEL_MAP {
-    { TITLE_TAG,    muse::trc("metadata", "Title") },
-    { ARTIST_TAG,   muse::trc("metadata", "Artist") },
-    { ALBUM_TAG,    muse::trc("metadata", "Album") },
-    { TRACK_TAG,    muse::trc("metadata", "Track number") },
-    { YEAR_TAG,     muse::trc("metadata", "Year") },
-    { GENRE_TAG,    muse::trc("metadata", "Genre") },
-    { COMMENTS_TAG, muse::trc("metadata", "Comments") },
-    { SOFTWARE_TAG, muse::trc("metadata", "Software") },
-    { COPYRIGHT_TAG, muse::trc("metadata", "Copyright") },
+    { ARTIST_TAG,       muse::trc("metadata", "Artist name") },
+    { TRACK_TITLE_TAG,  muse::trc("metadata", "Track title") },
+    { ALBUM_TAG,        muse::trc("metadata", "Album title") },
+    { TRACK_NUMBER_TAG, muse::trc("metadata", "Track number") },
+    { YEAR_TAG,         muse::trc("metadata", "Year") },
+    { COMMENTS_TAG,     muse::trc("metadata", "Comments") },
 };
 
 // Cloud-related tags

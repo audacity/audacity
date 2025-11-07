@@ -59,17 +59,14 @@ public:
     bool isMetadataEmpty(const au::project::ProjectMeta& meta) const;
 
 private:
-    inline static const std::array<std::string, 9> kStdTags =
+    inline static const std::array<std::string, 6> kStdTags =
     {
-        muse::trc("metadata", "TITLE"),
-        muse::trc("metadata", "ARTIST"),
-        muse::trc("metadata", "ALBUM"),
-        muse::trc("metadata", "TRACKNUMBER"),
-        muse::trc("metadata", "YEAR"),
-        muse::trc("metadata", "GENRE"),
-        muse::trc("metadata", "COMMENTS"),
-        muse::trc("metadata", "Software"),
-        muse::trc("metadata", "Copyright"),
+        muse::trc("metadata", "Artist name"),
+        muse::trc("metadata", "Track title"),
+        muse::trc("metadata", "Album title"),
+        muse::trc("metadata", "Track number"),
+        muse::trc("metadata", "Year"),
+        muse::trc("metadata", "Comments"),
     };
 
     project::ProjectMeta m_meta;
