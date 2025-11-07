@@ -1,7 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "trackviewtype.h"
+#include "trackviewtypeattachment.h"
 
 namespace au::au3 {
 static const AttachedTrackObjects::RegisteredFactory keyTrackViewType{

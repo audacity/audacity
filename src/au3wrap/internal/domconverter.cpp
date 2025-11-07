@@ -3,7 +3,7 @@
 #include "au3types.h"
 #include "trackcolor.h"
 #include "trackrulertypeattachment.h"
-#include "trackviewtype.h"
+#include "trackviewtypeattachment.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
