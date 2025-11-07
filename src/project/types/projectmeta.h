@@ -16,15 +16,15 @@ struct ProjectMeta
 {
     muse::io::path_t filePath;
 
-    QString title;
-    QString artist;
-    QString album;
-    QString trackNumber;
-    QString year;
-    QString genre;
-    QString comments;
-    QString software;
-    QString copyright;
+    std::string title;
+    std::string artist;
+    std::string album;
+    std::string trackNumber;
+    std::string year;
+    std::string genre;
+    std::string comments;
+    std::string software;
+    std::string copyright;
 
     QPixmap thumbnail;
 
@@ -69,17 +69,17 @@ struct ProjectMeta
 using ProjectMetaList = QList<ProjectMeta>;
 
 // Tags
-inline const QString TITLE_TAG("TITLE");
-inline const QString ARTIST_TAG("ARTIST");
-inline const QString ALBUM_TAG("ALBUM");
-inline const QString TRACK_TAG("TRACKNUMBER");
-inline const QString YEAR_TAG("YEAR");
-inline const QString GENRE_TAG("GENRE");
-inline const QString COMMENTS_TAG("COMMENTS");
-inline const QString SOFTWARE_TAG("Software");
-inline const QString COPYRIGHT_TAG("Copyright");
+inline const std::string TITLE_TAG("TITLE");
+inline const std::string ARTIST_TAG("ARTIST");
+inline const std::string ALBUM_TAG("ALBUM");
+inline const std::string TRACK_TAG("TRACKNUMBER");
+inline const std::string YEAR_TAG("YEAR");
+inline const std::string GENRE_TAG("GENRE");
+inline const std::string COMMENTS_TAG("COMMENTS");
+inline const std::string SOFTWARE_TAG("Software");
+inline const std::string COPYRIGHT_TAG("Copyright");
 
-static const QList<QString> standardTags {
+static const QList<std::string> standardTags {
     TITLE_TAG,
     ARTIST_TAG,
     ALBUM_TAG,
@@ -91,7 +91,7 @@ static const QList<QString> standardTags {
     COPYRIGHT_TAG
 };
 
-using MemberPtr = QString ProjectMeta::*;
+using MemberPtr = std::string ProjectMeta::*;
 
 inline static const std::array<MemberPtr, 9> kStdMembers = {
     &project::ProjectMeta::title,
@@ -105,16 +105,16 @@ inline static const std::array<MemberPtr, 9> kStdMembers = {
     &project::ProjectMeta::copyright
 };
 
-static std::map<QString, QString> LABEL_MAP {
-    { TITLE_TAG,    muse::qtrc("metadata", "Title") },
-    { ARTIST_TAG,   muse::qtrc("metadata", "Artist") },
-    { ALBUM_TAG,    muse::qtrc("metadata", "Album") },
-    { TRACK_TAG,    muse::qtrc("metadata", "Track number") },
-    { YEAR_TAG,     muse::qtrc("metadata", "Year") },
-    { GENRE_TAG,    muse::qtrc("metadata", "Genre") },
-    { COMMENTS_TAG, muse::qtrc("metadata", "Comments") },
-    { SOFTWARE_TAG, muse::qtrc("metadata", "Software") },
-    { COPYRIGHT_TAG, muse::qtrc("metadata", "Copyright") },
+static std::map<std::string, std::string> LABEL_MAP {
+    { TITLE_TAG,    muse::trc("metadata", "Title") },
+    { ARTIST_TAG,   muse::trc("metadata", "Artist") },
+    { ALBUM_TAG,    muse::trc("metadata", "Album") },
+    { TRACK_TAG,    muse::trc("metadata", "Track number") },
+    { YEAR_TAG,     muse::trc("metadata", "Year") },
+    { GENRE_TAG,    muse::trc("metadata", "Genre") },
+    { COMMENTS_TAG, muse::trc("metadata", "Comments") },
+    { SOFTWARE_TAG, muse::trc("metadata", "Software") },
+    { COPYRIGHT_TAG, muse::trc("metadata", "Copyright") },
 };
 
 // Cloud-related tags

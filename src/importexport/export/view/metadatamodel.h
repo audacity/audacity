@@ -59,17 +59,17 @@ public:
     bool isMetadataEmpty(const au::project::ProjectMeta& meta) const;
 
 private:
-    inline static const std::array<QString, 9> kStdTags =
+    inline static const std::array<std::string, 9> kStdTags =
     {
-        QString::fromStdString(muse::trc("metadata", "TITLE")),
-        QString::fromStdString(muse::trc("metadata", "ARTIST")),
-        QString::fromStdString(muse::trc("metadata", "ALBUM")),
-        QString::fromStdString(muse::trc("metadata", "TRACKNUMBER")),
-        QString::fromStdString(muse::trc("metadata", "YEAR")),
-        QString::fromStdString(muse::trc("metadata", "GENRE")),
-        QString::fromStdString(muse::trc("metadata", "COMMENTS")),
-        QString::fromStdString(muse::trc("metadata", "Software")),
-        QString::fromStdString(muse::trc("metadata", "Copyright")),
+        muse::trc("metadata", "TITLE"),
+        muse::trc("metadata", "ARTIST"),
+        muse::trc("metadata", "ALBUM"),
+        muse::trc("metadata", "TRACKNUMBER"),
+        muse::trc("metadata", "YEAR"),
+        muse::trc("metadata", "GENRE"),
+        muse::trc("metadata", "COMMENTS"),
+        muse::trc("metadata", "Software"),
+        muse::trc("metadata", "Copyright"),
     };
 
     project::ProjectMeta m_meta;

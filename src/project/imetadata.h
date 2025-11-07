@@ -17,5 +17,8 @@ public:
 
     virtual project::ProjectMeta tags() const = 0;
     virtual void setTags(project::ProjectMeta) = 0;
+
+    virtual std::string buildXml(const project::ProjectMeta&) const = 0;
+    virtual project::ProjectMeta parseXml(const std::string& xml) const = 0;
 };
 }

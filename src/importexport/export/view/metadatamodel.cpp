@@ -3,9 +3,6 @@
  */
 
 #include "global/translation.h"
-#include "serialization/xmlstreamwriter.h"
-#include "serialization/xmlstreamreader.h"
-#include "io/buffer.h"
 
 #include "project/internal/au3/au3metadata.h"
 
@@ -34,10 +31,10 @@ QVariant MetadataModel::data(const QModelIndex& index, int role) const
     if (row < int(kStdTags.size())) {
         // Standard tags
         if (role == RoleTag) {
-            return QString(project::LABEL_MAP[kStdTags[row]]);
+            return QString::fromStdString(project::LABEL_MAP[kStdTags[row]]);
         }
         if (role == RoleValue) {
-            return QString(m_meta.*(project::kStdMembers[row]));
+            return QString::fromStdString(m_meta.*(project::kStdMembers[row]));
         }
 
         return {};
@@ -260,7 +257,7 @@ void MetadataModel::setTagValue(int row, const QString& value)
         if (m_meta.*member == value) {
             return;
         }
-        m_meta.*member = value;
+        m_meta.*member = value.toStdString();
 
         const QModelIndex idx = index(row, 0);
         emit dataChanged(idx, idx, { RoleValue });
@@ -285,110 +282,26 @@ void MetadataModel::setTagValue(int row, const QString& value)
 
 QString MetadataModel::buildXml() const
 {
-    ByteArray data;
-    Buffer buf(&data);
-    buf.open(muse::io::IODevice::WriteOnly);
+    std::string data = metadata()->buildXml(m_meta);
 
-    XmlStreamWriter xml(&buf);
-
-    xml.startElement("tags");
-
-    for (size_t i = 0; i < kStdTags.size(); ++i) {
-        const QString& name = kStdTags[i];
-        const QString& val  = m_meta.*(project::kStdMembers[i]);
-
-        XmlStreamWriter::Attributes attrs;
-        attrs.emplace_back("name",  muse::String(name));
-        attrs.emplace_back("value", muse::String(val));
-
-        xml.element("tag", attrs);
-    }
-
-    for (auto it = m_meta.additionalTags.cbegin(); it != m_meta.additionalTags.cend(); ++it) {
-        const QString& name = it.key();
-        const QString val  = it.value().toString();
-
-        XmlStreamWriter::Attributes attrs;
-        attrs.emplace_back("name",  muse::String(name));
-        attrs.emplace_back("value", muse::String(val));
-
-        xml.element("tag", attrs);
-    }
-
-    xml.endElement();
-
-    xml.flush();
-    buf.close();
-
-    return QString(data.toQByteArray());
+    return QString::fromStdString(data);
 }
 
 au::project::ProjectMeta MetadataModel::parseXml(const QString& xml) const
 {
-    ByteArray data = ByteArray::fromQByteArray(QByteArray(xml.toStdString()));
-    XmlStreamReader r(data);
+    project::ProjectMeta meta = metadata()->parseXml(xml.toStdString());
 
-    au::project::ProjectMeta loaded = m_meta;
+    // keep these unchanged
+    meta.filePath = m_meta.filePath;
+    meta.thumbnail = m_meta.thumbnail;
 
-    for (size_t i = 0; i < kStdTags.size(); ++i) {
-        loaded.*(project::kStdMembers[i]) = QString();
-    }
-    loaded.additionalTags.clear();
-
-    if (!r.readNextStartElement()) {
-        interactive()->errorSync(
-            muse::trc("metadata", "Error loading template"),
-            muse::trc("metadata", "Unable to load metadata template from given file.")
-            );
-        return {};
-    }
-
-    if (r.name() != muse::AsciiStringView("tags")) {
-        r.raiseError(u"Root element <tags> expected");
-    }
-
-    while (!r.isError() && r.readNextStartElement()) {
-        if (r.name() == muse::AsciiStringView("tag")) {
-            const muse::String nameAttr = r.attribute("name");
-            const muse::String valueAttr = r.attribute("value");
-
-            const QString name = nameAttr.toQString();
-            const QString val  = valueAttr.toQString();
-
-            bool assigned = false;
-            for (size_t i = 0; i < kStdTags.size(); ++i) {
-                if (name == kStdTags[i]) {
-                    loaded.*(project::kStdMembers[i]) = val;
-                    assigned = true;
-                    break;
-                }
-            }
-
-            if (!assigned && !name.isEmpty()) {
-                loaded.additionalTags.insert(name, val);
-            }
-
-            r.skipCurrentElement();
-        } else {
-            r.skipCurrentElement();
-        }
-    }
-
-    if (r.isError()) {
-        interactive()->errorSync(
-            muse::trc("metadata", "Error loading template"),
-            muse::trc("metadata", "Unable to load metadata template from given file.")
-            );
-        return {};
-    }
-
-    return loaded;
+    return meta;
 }
 
 bool MetadataModel::isMetadataEmpty(const au::project::ProjectMeta& meta) const
 {
     for (size_t i = 0; i < project::kStdMembers.size(); ++i) {
-        const QString& value = meta.*(project::kStdMembers[i]);
+        const QString& value = QString::fromStdString(meta.*(project::kStdMembers[i]));
         if (!value.trimmed().isEmpty()) {
             return false;
         }
