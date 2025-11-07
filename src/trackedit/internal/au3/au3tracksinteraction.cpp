@@ -147,24 +147,7 @@ bool Au3TracksInteraction::changeTrackRulerType(const trackedit::TrackId& trackI
         return false;
     }
 
-    auto& trackRulerType = au::au3::TrackRulerType::Get(track);
-
-    switch (rulerType) {
-    case trackedit::TrackRulerType::Linear:
-        trackRulerType.SetRulerType(RulerType::Linear);
-        break;
-    case trackedit::TrackRulerType::DbLinear:
-        trackRulerType.SetRulerType(RulerType::DbLinear);
-        break;
-    case trackedit::TrackRulerType::DbLog:
-        trackRulerType.SetRulerType(RulerType::DbLog);
-        break;
-    default:
-        IF_ASSERT_FAILED(false) {
-            return false;
-        }
-    }
-
+    au::au3::TrackRulerTypeAttachment::Get(track).SetRulerType(rulerType);
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(track));
 

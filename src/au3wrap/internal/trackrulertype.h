@@ -3,32 +3,28 @@
 */
 #pragma once
 
+#include "../au3types.h"
+#include "trackedit/dom/track.h"
 #include "libraries/lib-track/Track.h"
 
 namespace au::au3 {
-enum class RulerType : uint8_t {
-    Linear,
-    DbLinear,
-    DbLog
-};
-
-class TrackRulerType : public TrackAttachment
+class TrackRulerTypeAttachment : public TrackAttachment
 {
 public:
-    static TrackRulerType& Get(const Track* track);
-    static TrackRulerType& Get(Track* track);
+    static TrackRulerTypeAttachment& Get(const Au3Track* track);
+    static TrackRulerTypeAttachment& Get(Au3Track* track);
 
-    TrackRulerType(Track& track);
-    void Reparent(const std::shared_ptr<Track>& parent) override;
-    void CopyTo(Track& track) const override;
+    TrackRulerTypeAttachment(Au3Track& track);
+    void Reparent(const std::shared_ptr<Au3Track>& parent) override;
+    void CopyTo(Au3Track& track) const override;
     void WriteXMLAttributes(XMLWriter& writer) const override;
     bool HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView) override;
 
-    RulerType GetRulerType() const;
-    void SetRulerType(const RulerType& rulerType);
+    trackedit::TrackRulerType GetRulerType() const;
+    void SetRulerType(const trackedit::TrackRulerType& rulerType);
 
 private:
-    std::weak_ptr<Track> mTrack;
-    RulerType mRulerType;
+    std::weak_ptr<Au3Track> mTrack;
+    trackedit::TrackRulerType mRulerType;
 };
 }

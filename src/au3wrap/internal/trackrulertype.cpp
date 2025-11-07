@@ -4,61 +4,62 @@
 #include "trackrulertype.h"
 
 using namespace au::au3;
+using namespace au::trackedit;
 
 static const AttachedTrackObjects::RegisteredFactory keyTrackRulerType{
-    [](Track& track) -> std::shared_ptr<TrackRulerType> { return std::make_shared<TrackRulerType>(track); }
+    [](Au3Track& track) -> std::shared_ptr<TrackRulerTypeAttachment> { return std::make_shared<TrackRulerTypeAttachment>(track); }
 };
 
 static constexpr auto RulerTypeAttr = "rulerType";
 
-TrackRulerType& TrackRulerType::Get(Track* track)
+TrackRulerTypeAttachment& TrackRulerTypeAttachment::Get(Au3Track* track)
 {
-    return track->AttachedTrackObjects::Get<TrackRulerType>(keyTrackRulerType);
+    return track->AttachedTrackObjects::Get<TrackRulerTypeAttachment>(keyTrackRulerType);
 }
 
-TrackRulerType& TrackRulerType::Get(const Track* track)
+TrackRulerTypeAttachment& TrackRulerTypeAttachment::Get(const Au3Track* track)
 {
-    return Get(const_cast<Track*>(track));
+    return Get(const_cast<Au3Track*>(track));
 }
 
-void TrackRulerType::CopyTo(Track& track) const
+void TrackRulerTypeAttachment::CopyTo(Au3Track& track) const
 {
     auto& rulerType = Get(&track);
     rulerType.SetRulerType(mRulerType);
 }
 
-TrackRulerType::TrackRulerType(Track& track)
+TrackRulerTypeAttachment::TrackRulerTypeAttachment(Au3Track& track)
     : mTrack{track.shared_from_this()}
-    , mRulerType{RulerType::Linear}
+    , mRulerType{TrackRulerType::Linear}
 {
 }
 
-void TrackRulerType::Reparent(const std::shared_ptr<Track>& parent)
+void TrackRulerTypeAttachment::Reparent(const std::shared_ptr<Au3Track>& parent)
 {
     mTrack = parent;
 }
 
-void TrackRulerType::WriteXMLAttributes(XMLWriter& writer) const
+void TrackRulerTypeAttachment::WriteXMLAttributes(XMLWriter& writer) const
 {
     writer.WriteAttr(RulerTypeAttr, static_cast<int>(mRulerType));
 }
 
-bool TrackRulerType::HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView)
+bool TrackRulerTypeAttachment::HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView)
 {
     int nValue;
     if (attr == RulerTypeAttr && valueView.TryGet(nValue)) {
-        mRulerType = static_cast<RulerType>(nValue);
+        mRulerType = static_cast<TrackRulerType>(nValue);
         return true;
     }
     return false;
 }
 
-RulerType TrackRulerType::GetRulerType() const
+TrackRulerType TrackRulerTypeAttachment::GetRulerType() const
 {
     return mRulerType;
 }
 
-void TrackRulerType::SetRulerType(const RulerType& rulerType)
+void TrackRulerTypeAttachment::SetRulerType(const TrackRulerType& rulerType)
 {
     mRulerType = rulerType;
 }

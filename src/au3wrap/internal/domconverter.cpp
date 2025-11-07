@@ -64,17 +64,7 @@ int trackRate(const Au3Track* track)
 
 au::trackedit::TrackRulerType trackRulerType(const Au3Track* track)
 {
-    const auto& rulerTypeAttachment = TrackRulerType::Get(track);
-    switch (rulerTypeAttachment.GetRulerType()) {
-    case RulerType::Linear:
-        return au::trackedit::TrackRulerType::Linear;
-    case RulerType::DbLinear:
-        return au::trackedit::TrackRulerType::DbLinear;
-    case RulerType::DbLog:
-        return au::trackedit::TrackRulerType::DbLog;
-    default:
-        return au::trackedit::TrackRulerType::Linear;
-    }
+    return TrackRulerTypeAttachment::Get(track).GetRulerType();
 }
 
 au::trackedit::TrackViewType trackViewType(const Au3Track* track)
