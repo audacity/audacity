@@ -14,8 +14,8 @@ Matthieu Hodgkinson split from class WaveChannelView.cpp
 **********************************************************************/
 #include "ClipParameters.h"
 #include "ClipInterface.h"
-#include "ZoomInfo.h"
 
+namespace au::projectscene {
 namespace {
 // Returns an offset in seconds to be applied to the right clip
 // boundary so that it does not overlap the last sample
@@ -33,8 +33,8 @@ double CalculateAdjustmentForZoomLevel(double avgPixPerSecond, bool showSamples)
 
 double GetPixelsPerSecond(const QRect& viewRect, const ZoomInfo& zoomInfo)
 {
-    const auto h = zoomInfo.PositionToTime(0, 0, true);
-    const auto trackRectT1 = zoomInfo.PositionToTime(viewRect.width(), 0, true);
+    const auto h = zoomInfo.PositionToTime(0);
+    const auto trackRectT1 = zoomInfo.PositionToTime(viewRect.width());
     return viewRect.width() / (trackRectT1 - h);
 }
 
@@ -52,14 +52,13 @@ double GetBlankSpaceBeforePlayEndTime(const ClipTimes& clip)
 }
 } // namespace
 
-ClipParameters::ClipParameters(
-    const ClipTimes& clip, const QRect& rect, const ZoomInfo& zoomInfo)
-    : trackRectT0{zoomInfo.PositionToTime(0, 0, true)}
-    , averagePixelsPerSecond{GetPixelsPerSecond(rect, zoomInfo)}
-    , showIndividualSamples{ShowIndividualSamples(
-                                clip.GetRate(), clip.GetStretchRatio(), averagePixelsPerSecond)}
+ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& rect, const ZoomInfo& zoomInfo)
+    : trackRectT0{zoomInfo.PositionToTime(0)}, averagePixelsPerSecond{GetPixelsPerSecond(rect, zoomInfo)},
+    showIndividualSamples{ShowIndividualSamples(
+                              clip.GetRate(),
+                              clip.GetStretchRatio(), averagePixelsPerSecond)}
 {
-    const auto trackRectT1 = zoomInfo.PositionToTime(rect.width(), 0, true);
+    const auto trackRectT1 = zoomInfo.PositionToTime(rect.width());
     const auto stretchRatio = clip.GetStretchRatio();
     const auto playStartTime = clip.GetPlayStartTime();
 
@@ -99,7 +98,7 @@ ClipParameters::ClipParameters(
     hiddenLeftOffset = 0;
     if (tpre < 0) {
         // Fix Bug #1296 caused by premature conversion to (int).
-        int64_t time64 = zoomInfo.TimeToPosition(playStartTime, 0, true);
+        int64_t time64 = zoomInfo.TimeToPosition(playStartTime);
         if (time64 < 0) {
             time64 = 0;
         }
@@ -114,7 +113,7 @@ ClipParameters::ClipParameters(
     // of the track.  Reduce the "hiddenMid" rect by the
     // size of the blank area.
     if (tpost > t1) {
-        int64_t time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, true);
+        int64_t time64 = zoomInfo.TimeToPosition(playStartTime + t1);
         if (time64 < 0) {
             time64 = 0;
         }
@@ -132,7 +131,7 @@ ClipParameters::ClipParameters(
     // left of the track.  Reduce the "mid"
     leftOffset = 0;
     if (tpre < 0) {
-        int64_t time64 = zoomInfo.TimeToPosition(playStartTime, 0, false);
+        int64_t time64 = zoomInfo.TimeToPosition(playStartTime);
         if (time64 < 0) {
             time64 = 0;
         }
@@ -147,7 +146,7 @@ ClipParameters::ClipParameters(
     // of the track.  Reduce the "mid" rect by the
     // size of the blank area.
     if (tpost > t1) {
-        int64_t time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, false);
+        int64_t time64 = zoomInfo.TimeToPosition(playStartTime + t1);
         if (time64 < 0) {
             time64 = 0;
         }
@@ -156,9 +155,7 @@ ClipParameters::ClipParameters(
     }
 }
 
-QRect ClipParameters::GetClipRect(
-    const ClipTimes& clip, const ZoomInfo& zoomInfo, const QRect& viewRect,
-    bool* outShowSamples)
+QRect ClipParameters::GetClipRect(const ClipTimes& clip, const ZoomInfo& zoomInfo, const QRect& viewRect, bool* outShowSamples)
 {
     const auto pixelsPerSecond = GetPixelsPerSecond(viewRect, zoomInfo);
     const auto showIndividualSamples = ShowIndividualSamples(
@@ -168,19 +165,12 @@ QRect ClipParameters::GetClipRect(
     if (outShowSamples != nullptr) {
         *outShowSamples = showIndividualSamples;
     }
-    constexpr auto edgeLeft
-        =static_cast<ZoomInfo::int64>(std::numeric_limits<int>::min());
-    constexpr auto edgeRight
-        =static_cast<ZoomInfo::int64>(std::numeric_limits<int>::max());
-    const auto left = std::clamp(
-        zoomInfo.TimeToPosition(clip.GetPlayStartTime(), viewRect.x(), true),
-        edgeLeft, edgeRight);
-    const auto right = std::clamp(
-        zoomInfo.TimeToPosition(
-            clip.GetPlayEndTime() - GetBlankSpaceBeforePlayEndTime(clip)
-            + clipEndingAdjustment,
-            viewRect.x(), true),
-        edgeLeft, edgeRight);
+    constexpr auto edgeLeft = static_cast<int64_t>(std::numeric_limits<int>::min());
+    constexpr auto edgeRight = static_cast<int64_t>(std::numeric_limits<int>::max());
+    const auto left = std::clamp<int64_t>(zoomInfo.TimeToPosition(clip.GetPlayStartTime(), viewRect.x()), edgeLeft, edgeRight);
+    const auto blank = GetBlankSpaceBeforePlayEndTime(clip);
+    const auto right = std::clamp<int64_t>(zoomInfo.TimeToPosition(clip.GetPlayEndTime() - blank + clipEndingAdjustment,
+                                                                   viewRect.x()), edgeLeft, edgeRight);
     if (right >= left) {
         // after clamping we can expect that left and right
         // are small enough to be put into int
@@ -189,4 +179,5 @@ QRect ClipParameters::GetClipRect(
             std::max(1, static_cast<int>(right - left)), viewRect.height());
     }
     return QRect();
+}
 }
