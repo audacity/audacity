@@ -161,27 +161,7 @@ bool Au3TracksInteraction::changeAudioTrackViewType(const trackedit::TrackId& tr
         return false;
     }
 
-    auto& attachment = au3::TrackViewTypeAttachment::Get(track);
-
-    switch (viewType) {
-    case trackedit::TrackViewType::Waveform:
-        attachment.SetTrackViewType(au3::TrackViewType::Waveform);
-        break;
-    case trackedit::TrackViewType::Spectrogram:
-        attachment.SetTrackViewType(au3::TrackViewType::Spectrogram);
-        break;
-    case trackedit::TrackViewType::WaveformAndSpectrogram:
-        attachment.SetTrackViewType(au3::TrackViewType::WaveformAndSpectrogram);
-        break;
-    case trackedit::TrackViewType::Unspecified:
-        attachment.SetTrackViewType(au3::TrackViewType::Unspecified);
-        break;
-    default:
-        IF_ASSERT_FAILED(false) {
-            return false;
-        }
-    }
-
+    au3::TrackViewTypeAttachment::Get(track).SetTrackViewType(viewType);
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(track));
 

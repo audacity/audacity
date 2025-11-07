@@ -69,22 +69,15 @@ au::trackedit::TrackRulerType trackRulerType(const Au3Track* track)
 
 au::trackedit::TrackViewType trackViewType(const Au3Track* track)
 {
-    const auto& viewTypeAttachment = TrackViewTypeAttachment::Get(track);
-    switch (viewTypeAttachment.GetTrackViewType()) {
-    case TrackViewType::Waveform:
+    const auto type = TrackViewTypeAttachment::Get(track).GetTrackViewType();
+    if (type == au::trackedit::TrackViewType::Unspecified && dynamic_cast<const WaveTrack*>(track)) {
+        // Default to Waveform for WaveTracks
         return au::trackedit::TrackViewType::Waveform;
-    case TrackViewType::Spectrogram:
-        return au::trackedit::TrackViewType::Spectrogram;
-    case TrackViewType::WaveformAndSpectrogram:
-        return au::trackedit::TrackViewType::WaveformAndSpectrogram;
-    case TrackViewType::Unspecified:
-        return dynamic_cast<const WaveTrack*>(track) ? au::trackedit::TrackViewType::Waveform : au::trackedit::TrackViewType::Unspecified;
-    default:
-        assert(false);
-        return au::trackedit::TrackViewType::Unspecified;
+    } else {
+        return type;
     }
 }
-}
+} // namespace
 
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
 {

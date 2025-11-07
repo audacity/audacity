@@ -4,16 +4,10 @@
 #pragma once
 
 #include "../au3types.h"
+#include "trackedit/dom/track.h"
 #include "libraries/lib-track/Track.h"
 
 namespace au::au3 {
-enum class TrackViewType {
-    Unspecified = -1,
-    Waveform,
-    Spectrogram,
-    WaveformAndSpectrogram,
-};
-
 class TrackViewTypeAttachment : public TrackAttachment
 {
 public:
@@ -26,11 +20,11 @@ public:
     void WriteXMLAttributes(XMLWriter& writer) const override;
     bool HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView) override;
 
-    TrackViewType GetTrackViewType() const;
-    void SetTrackViewType(const TrackViewType&);
+    trackedit::TrackViewType GetTrackViewType() const;
+    void SetTrackViewType(const trackedit::TrackViewType&);
 
 private:
     std::weak_ptr<Au3Track> mTrack;
-    TrackViewType mTrackViewType = TrackViewType::Unspecified;
+    trackedit::TrackViewType mTrackViewType = trackedit::TrackViewType::Unspecified;
 };
 }

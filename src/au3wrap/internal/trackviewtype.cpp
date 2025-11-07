@@ -45,18 +45,18 @@ bool TrackViewTypeAttachment::HandleXMLAttribute(const std::string_view& attr, c
 {
     int nValue;
     if (attr == TrackViewTypeAttr && valueView.TryGet(nValue)) {
-        mTrackViewType = static_cast<TrackViewType>(nValue);
+        mTrackViewType = static_cast<trackedit::TrackViewType>(nValue);
         return true;
     }
     return false;
 }
 
-TrackViewType TrackViewTypeAttachment::GetTrackViewType() const
+trackedit::TrackViewType TrackViewTypeAttachment::GetTrackViewType() const
 {
     return mTrackViewType;
 }
 
-void TrackViewTypeAttachment::SetTrackViewType(const TrackViewType& type)
+void TrackViewTypeAttachment::SetTrackViewType(const trackedit::TrackViewType& type)
 {
     mTrackViewType = type;
 }
