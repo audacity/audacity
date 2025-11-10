@@ -96,6 +96,11 @@ public:
       }
    }
 
+   HKEY GetHandle() const
+   {
+      return mKeyHandle;
+   }
+
 private:
    HKEY mKeyHandle {};
 };
@@ -119,18 +124,32 @@ auto registrar = ([]() {
       try
       {
          RegistryKey hkcu;
+
+         //! Bug fix: Clean up conflicting registry entries from Audacity 4 alphas
+         try
+         {
+            RegistryKey capabilitiesKey(hkcu, L"Software\\Audacity 4 \\Capabilities");
+            RegDeleteKeyW(capabilitiesKey.GetHandle(), L"URLAssociations");
+         }
+         catch (...) {  }
+
          RegistryKey rootKey(hkcu, L"Software\\Classes");
 
          RegistryKey schemaKey(rootKey, schema);
-         schemaKey.SetValue(L"", L"URL:" + schema + L" Protocol");
+         schemaKey.SetValue(L"", L"URL:" + schema);
          schemaKey.SetValue(L"URL Protocol", L"");
+
+         RegistryKey curVerKey(schemaKey, L"CurVer");
+         curVerKey.SetValue(L"", schema + L".Url.Audacity.3");
+
+         RegistryKey handlerKey(rootKey, schema + L".Url.Audacity.3");
 
          const std::wstring filename(filenameBuffer);
 
-         RegistryKey iconKey(schemaKey, L"DefaultIcon");
+         RegistryKey iconKey(handlerKey, L"DefaultIcon");
          iconKey.SetValue(L"", filename + std::wstring(L",1"));
 
-         RegistryKey shellKey(schemaKey, L"shell");
+         RegistryKey shellKey(handlerKey, L"shell");
          RegistryKey openKey(shellKey, L"open");
          RegistryKey commandKey(openKey, L"command");
 
