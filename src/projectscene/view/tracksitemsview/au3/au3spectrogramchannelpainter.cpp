@@ -120,28 +120,6 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
         bins[yy] = nextBin;
     }
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-    const float
-        log2 = logf(2.0f),
-        scale2 = (lmax - lmin) / log2,
-        lmin2 = lmin / log2;
-
-    ArrayOf<bool> yGrid{ size_t(mid.height) };
-    for (int yy = 0; yy < mid.height; ++yy) {
-        float n = (float(yy) / mid.height * scale2 - lmin2) * 12;
-        float n2 = (float(yy + 1) / mid.height * scale2 - lmin2) * 12;
-        float f = float(minFreq) / (fftSkipPoints + 1) * powf(2.0f, n / 12.0f + lmin2);
-        float f2 = float(minFreq) / (fftSkipPoints + 1) * powf(2.0f, n2 / 12.0f + lmin2);
-        n = logf(f / 440) / log2 * 12;
-        n2 = logf(f2 / 440) / log2 * 12;
-        if (floor(n) < floor(n2)) {
-            yGrid[yy] = true;
-        } else {
-            yGrid[yy] = false;
-        }
-    }
-#endif //EXPERIMENTAL_FFT_Y_GRID
-
     auto& clipCache = WaveClipSpectrumCache::Get(clip);
     auto& specPxCache = clipCache.mSpecPxCaches[clip.GetChannelIndex()];
     if (!updated && specPxCache
@@ -151,15 +129,6 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
         && range == specPxCache->range
         && minFreq == specPxCache->minFreq
         && maxFreq == specPxCache->maxFreq
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-        && fftYGrid == fftYGridOld
-#endif //EXPERIMENTAL_FFT_Y_GRID
-#ifdef EXPERIMENTAL_FIND_NOTES
-        && fftFindNotes == artist->fftFindNotesOld
-        && findNotesMinA == artist->findNotesMinAOld
-        && numberOfMaxima == artist->findNotesNOld
-        && findNotesQuantize == artist->findNotesQuantizeOld
-#endif
         ) {
         // Wave clip's spectrum cache is up to date,
         // and so is the spectrum pixel cache
@@ -171,153 +140,13 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
         specPxCache->range = range;
         specPxCache->minFreq = minFreq;
         specPxCache->maxFreq = maxFreq;
-#ifdef EXPERIMENTAL_FIND_NOTES
-        artist->fftFindNotesOld = fftFindNotes;
-        artist->findNotesMinAOld = findNotesMinA;
-        artist->findNotesNOld = numberOfMaxima;
-        artist->findNotesQuantizeOld = findNotesQuantize;
-#endif
 
-#ifdef EXPERIMENTAL_FIND_NOTES
-        float log2 = logf(2.0f),
-              lmin = logf(minFreq), lmax = logf(maxFreq), scale = lmax - lmin,
-              lmins = lmin,
-              lmaxs = lmax
-        ;
-#endif //EXPERIMENTAL_FIND_NOTES
-
-#ifdef EXPERIMENTAL_FIND_NOTES
-        int maxima[128];
-        float maxima0[128], maxima1[128];
-        const float
-            f2bin = half / (sampleRate / 2.0f),
-            bin2f = 1.0f / f2bin,
-            minDistance = powf(2.0f, 2.0f / 12.0f),
-            i0 = expf(lmin) / binUnit,
-            i1 = expf(scale + lmin) / binUnit,
-            minColor = 0.0f;
-        const size_t maxTableSize = 1024;
-        ArrayOf<int> indexes{ maxTableSize };
-#endif //EXPERIMENTAL_FIND_NOTES
-
-#ifdef _OPENMP
-#pragma omp parallel for
-#endif
         for (int xx = 0; xx < hiddenMid.width; ++xx) {
-#ifdef EXPERIMENTAL_FIND_NOTES
-            int maximas = 0;
-            const int x0 = nBins * xx;
-            if (fftFindNotes) {
-                for (int i = maxTableSize - 1; i >= 0; i--) {
-                    indexes[i] = -1;
-                }
-
-                // Build a table of (most) values, put the index in it.
-                for (int i = (int)(i0); i < (int)(i1); i++) {
-                    float freqi = freq[x0 + (int)(i)];
-                    int value = (int)((freqi + gain + range) / range * (maxTableSize - 1));
-                    if (value < 0) {
-                        value = 0;
-                    }
-                    if (value >= maxTableSize) {
-                        value = maxTableSize - 1;
-                    }
-                    indexes[value] = i;
-                }
-                // Build from the indices an array of maxima.
-                for (int i = maxTableSize - 1; i >= 0; i--) {
-                    int index = indexes[i];
-                    if (index >= 0) {
-                        float freqi = freq[x0 + index];
-                        if (freqi < findNotesMinA) {
-                            break;
-                        }
-
-                        bool ok = true;
-                        for (int m = 0; m < maximas; m++) {
-                            // Avoid to store very close maxima.
-                            float maxm = maxima[m];
-                            if (maxm / index < minDistance && index / maxm < minDistance) {
-                                ok = false;
-                                break;
-                            }
-                        }
-                        if (ok) {
-                            maxima[maximas++] = index;
-                            if (maximas >= numberOfMaxima) {
-                                break;
-                            }
-                        }
-                    }
-                }
-
-// The f2pix helper macro converts a frequency into a pixel coordinate.
-#define f2pix(f) (logf(f) - lmins) / (lmaxs - lmins) * hiddenMid.height
-
-                // Possibly quantize the maxima frequencies and create the pixel block limits.
-                for (int i = 0; i < maximas; i++) {
-                    int index = maxima[i];
-                    float f = float(index) * bin2f;
-                    if (findNotesQuantize) {
-                        f = expf((int)(log(f / 440) / log2 * 12 - 0.5) / 12.0f * log2) * 440;
-                        maxima[i] = f * f2bin;
-                    }
-                    float f0 = expf((log(f / 440) / log2 * 24 - 1) / 24.0f * log2) * 440;
-                    maxima0[i] = f2pix(f0);
-                    float f1 = expf((log(f / 440) / log2 * 24 + 1) / 24.0f * log2) * 440;
-                    maxima1[i] = f2pix(f1);
-                }
-            }
-
-            int it = 0;
-            bool inMaximum = false;
-#endif //EXPERIMENTAL_FIND_NOTES
-
             for (int yy = 0; yy < hiddenMid.height; ++yy) {
                 const float bin     = bins[yy];
                 const float nextBin = bins[yy + 1];
-
-                if (settings.scaleType != SpectrogramSettings::stLogarithmic) {
-                    const float value = findValue
-                                            (freq + nBins * xx, bin, nextBin, nBins, autocorrelation, gain, range);
-                    specPxCache->values[xx * hiddenMid.height + yy] = value;
-                } else {
-                    float value;
-
-#ifdef EXPERIMENTAL_FIND_NOTES
-                    if (fftFindNotes) {
-                        if (it < maximas) {
-                            float i0 = maxima0[it];
-                            if (yy >= i0) {
-                                inMaximum = true;
-                            }
-
-                            if (inMaximum) {
-                                float i1 = maxima1[it];
-                                if (yy + 1 <= i1) {
-                                    value = findValue(freq + x0, bin, nextBin, nBins, autocorrelation, gain, range);
-                                    if (value < findNotesMinA) {
-                                        value = minColor;
-                                    }
-                                } else {
-                                    it++;
-                                    inMaximum = false;
-                                    value = minColor;
-                                }
-                            } else {
-                                value = minColor;
-                            }
-                        } else {
-                            value = minColor;
-                        }
-                    } else
-#endif //EXPERIMENTAL_FIND_NOTES
-                    {
-                        value = findValue
-                                    (freq + nBins * xx, bin, nextBin, nBins, autocorrelation, gain, range);
-                    }
-                    specPxCache->values[xx * hiddenMid.height + yy] = value;
-                } // logF
+                const float value = findValue(freq + nBins * xx, bin, nextBin, nBins, autocorrelation, gain, range);
+                specPxCache->values[xx * hiddenMid.height + yy] = value;
             } // each yy
         } // each xx
     } // updating cache
@@ -365,10 +194,6 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
 
     // Bug 2389 - always draw at least one pixel of selection.
     int selectedX = zoomInfo.TimeToPosition(selectedRegion.t0(), -leftOffset);
-
-#ifdef _OPENMP
-#pragma omp parallel for
-#endif
 
     const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
     int windowSize = mpSpectralData->GetWindowSize();
@@ -492,19 +317,7 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
 
             unsigned char rv, gv, bv;
             GetColorGradient(value, selected, colorScheme, &rv, &gv, &bv);
-
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-            if (fftYGrid && yGrid[yy]) {
-                rv /= 1.1f;
-                gv /= 1.1f;
-                bv /= 1.1f;
-            }
-#endif //EXPERIMENTAL_FFT_Y_GRID
             int px = ((mid.height - 1 - yy) * mid.width + xx);
-#ifdef EXPERIMENTAL_SPECTROGRAM_OVERLAY
-            // More transparent the closer to zero intensity.
-            alpha[px]= wxMin(200, (value + 0.3) * 500);
-#endif
             px *=3;
             data[px++] = rv;
             data[px++] = gv;
