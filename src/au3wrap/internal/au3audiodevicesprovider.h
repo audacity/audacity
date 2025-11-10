@@ -15,7 +15,7 @@
 
 #include <wx/arrstr.h>
 
-#include "au3audio/iaudioengine.h"
+#include "audio/iaudioengine.h"
 #include "playback/iaudiodevicesprovider.h"
 
 namespace au::au3 {

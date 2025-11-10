@@ -41,4 +41,5 @@ void Au3AudioModule::onInit(const muse::IApplication::RunMode&)
 
 void Au3AudioModule::onDeinit()
 {
+    m_audioEngine->deinit();
 }

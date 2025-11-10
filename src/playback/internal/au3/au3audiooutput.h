@@ -12,7 +12,7 @@
 #include "libraries/lib-utility/LockFreeQueue.h"
 
 #include "context/iglobalcontext.h"
-#include "au3audio/iaudioengine.h"
+#include "audio/iaudioengine.h"
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometer.h"
 

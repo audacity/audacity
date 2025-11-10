@@ -41,7 +41,7 @@ public:
     muse::String lastErrorString() const override;
     double getPlaybackSampleRate() const override;
     void updateTimePosition(unsigned long newlyConsumedSamples) override;
-    std::optional<AudioCallbackInfo> consumeNextCallbackInfo() override;
+    std::optional<au::audio::AudioCallbackInfo> consumeNextCallbackInfo() override;
 
     muse::async::Notification updateRequested() const override;
     muse::async::Notification commitRequested() const override;

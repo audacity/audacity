@@ -50,7 +50,7 @@ void Au3AudioEngine::init()
     AudioIO::Init();
 }
 
-void AudioEngine::deinit()
+void Au3AudioEngine::deinit()
 {
     AudioIO::Deinit();
 }
@@ -162,11 +162,11 @@ void Au3AudioEngine::updateTimePosition(const unsigned long newlyConsumedSamples
     AudioIO::Get()->UpdateTimePosition(newlyConsumedSamples);
 }
 
-std::optional<AudioCallbackInfo> Au3AudioEngine::consumeNextCallbackInfo()
+std::optional<au::audio::AudioCallbackInfo> Au3AudioEngine::consumeNextCallbackInfo()
 {
     AudioIoCallback::AudioCallbackInfo au3Info;
     if (AudioIO::Get()->GetAudioCallbackInfoQueue().Get(au3Info)) {
-        return AudioCallbackInfo { au3Info.dacTime, au3Info.numSamples };
+        return au::audio::AudioCallbackInfo { au3Info.dacTime, au3Info.numSamples };
     }
     return std::nullopt;
 }
