@@ -209,7 +209,7 @@ MenuItem* AppMenuModel::makeFileMenu()
         makeSeparator(),
 
         makeMenuItem("export-audio"),
-        makeMenu(TranslatableString("appshell/menu/export-other", "&Export other"), makeExportItems(), "menu-export-other", false),
+        makeMenu(TranslatableString("appshell/menu/export-other", "&Export other"), makeExportItems(), "menu-export-other"),
 
         makeSeparator(),
 
@@ -560,9 +560,15 @@ MenuItemList AppMenuModel::appendClearRecentSection(const uicomponents::MenuItem
 MenuItemList AppMenuModel::makeExportItems()
 {
     MenuItemList items {
-        makeMenuItem("export-labels"),
-        makeMenuItem("export-midi")
+        makeMenuItem("export-labels")
     };
+
+    MenuItem* exportMidi = makeMenuItem("export-midi");
+    UiActionState exportMidiState = exportMidi->state();
+    exportMidiState.enabled = false;
+    exportMidi->setState(exportMidiState);
+
+    items << exportMidi;
 
     return items;
 }

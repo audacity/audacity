@@ -28,6 +28,9 @@ public:
     void setDirectoryPath(const muse::io::path_t& path) override;
     muse::async::Notification directoryPathChanged() const override;
 
+    muse::io::path_t labelsDirectoryPath() const override;
+    void setLabelsDirectoryPath(const muse::io::path_t& path) override;
+
     int exportChannels() const override;
     void setExportChannels(int channels) override;
     muse::async::Notification exportChannelsChanged() const override;

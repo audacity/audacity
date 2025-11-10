@@ -81,7 +81,7 @@ private:
     void clearRecentProjects();
 
     void exportAudio();
-    void exportLabels();
+    void exportLabels(const muse::actions::ActionData& args);
     void exportMIDI();
 
     void undo();
