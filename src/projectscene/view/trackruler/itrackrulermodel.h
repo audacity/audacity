@@ -32,5 +32,6 @@ public:
     [[nodiscard]] virtual std::string sampleToText(double sample) const = 0;
     [[nodiscard]] virtual std::vector<TrackRulerFullStep> fullSteps() const = 0;
     [[nodiscard]] virtual std::vector<TrackRulerSmallStep> smallSteps() const = 0;
+    virtual void setDisplayBounds(float min, float max) = 0;
 };
 }

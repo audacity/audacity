@@ -152,3 +152,8 @@ std::vector<TrackRulerSmallStep> DbLogStereoRuler::smallSteps() const
 
     return steps;
 }
+
+void DbLogStereoRuler::setDisplayBounds(float min, float max)
+{
+    // No-op for DbLog ruler
+}

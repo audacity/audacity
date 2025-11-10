@@ -6,11 +6,13 @@ import Audacity.ProjectScene
 Item {
     id: root
 
+    required property int trackId
     required property bool isStereo
     required property bool isCollapsed
     required property int rulerType
     required property real channelHeightRatio
     required property bool isVerticalRulersVisible
+    required property var displayBounds
 
     signal hideVerticalRulerRequested
     signal setTrackRulerTypeRequested(int rulerType)
@@ -28,6 +30,7 @@ Item {
         isCollapsed: root.isCollapsed
         rulerType: root.rulerType
         channelHeightRatio: root.channelHeightRatio
+        displayBounds: root.displayBounds
     }
 
     MouseArea {
@@ -53,6 +56,18 @@ Item {
 
         onRulerTypeChangeRequested: function (rulerType) {
             root.setTrackRulerTypeRequested(rulerType)
+        }
+
+        onZoomInRequested: {
+            rulerModel.zoomIn(trackId)
+        }
+
+        onZoomOutRequested: {
+            rulerModel.zoomOut(trackId)
+        }
+
+        onZoomResetRequested: {
+            rulerModel.resetZoom(trackId)
         }
     }
 
