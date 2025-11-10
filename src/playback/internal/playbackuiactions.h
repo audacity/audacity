@@ -4,11 +4,11 @@
 #ifndef AU_PLAYBACK_PLAYBACKUIACTIONS_H
 #define AU_PLAYBACK_PLAYBACKUIACTIONS_H
 
-#include "async/asyncable.h"
-#include "context/iuicontextresolver.h"
-#include "ui/iuiactionsmodule.h"
-#include "ui/iuiactionsregister.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/ui/iuiactionsmodule.h"
+#include "framework/ui/iuiactionsregister.h"
 
+#include "context/iuicontextresolver.h"
 #include "iaudiodevicesprovider.h"
 #include "internal/playbackcontroller.h"
 

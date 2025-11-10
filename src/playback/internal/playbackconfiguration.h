@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
-#include "ui/iuiconfiguration.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/ui/iuiconfiguration.h"
 
 #include "../iplaybackconfiguration.h"
 

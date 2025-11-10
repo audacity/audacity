@@ -24,9 +24,8 @@
 #include <array>
 #include <string>
 
-#include "shortcuts/shortcutcontext.h"
-
-#include "global/containers.h"
+#include "framework/shortcuts/shortcutcontext.h"
+#include "framework/global/containers.h"
 
 namespace au::context {
 // common shortcuts (re declared for convenience)

@@ -3,9 +3,9 @@
 */
 #pragma once
 
-#include "async/notification.h"
-#include "modularity/imoduleinterface.h"
-#include "draw/types/color.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/modularity/imoduleinterface.h"
+#include "framework/draw/types/color.h"
 
 #include "playbacktypes.h"
 #include "trackedit/trackedittypes.h"

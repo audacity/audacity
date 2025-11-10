@@ -5,8 +5,8 @@
 
 //! NOTE Implemented in Au3Wrap
 //! This is equivalent of IAudioDriver/IAudioConfiguration of Musescore's audio engine
-#include "async/notification.h"
-#include "modularity/imoduleinterface.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/modularity/imoduleinterface.h"
 
 namespace au::playback {
 class IAudioDevicesProvider : MODULE_EXPORT_INTERFACE

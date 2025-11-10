@@ -5,7 +5,7 @@
 
 #include <memory>
 
-#include "global/async/channel.h"
+#include "framework/global/async/channel.h"
 #include "playback/playbacktypes.h"
 
 namespace au::context {

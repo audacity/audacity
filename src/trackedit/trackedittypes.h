@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#include "global/types/number.h"
-#include "global/logstream.h"
+#include "framework/global/types/number.h"
+#include "framework/global/logstream.h"
 
 namespace au::trackedit {
 using msecs_t = int64_t;

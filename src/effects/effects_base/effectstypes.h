@@ -5,9 +5,9 @@
 
 #include <vector>
 
-#include "global/types/string.h"
-#include "global/types/ratio.h"
-#include "actions/actiontypes.h"
+#include "framework/global/types/string.h"
+#include "framework/global/types/ratio.h"
+#include "framework/actions/actiontypes.h"
 
 class Effect;
 class EffectInstanceEx;

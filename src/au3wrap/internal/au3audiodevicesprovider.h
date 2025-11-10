@@ -7,16 +7,12 @@
 
 #include "framework/global/modularity/ioc.h"
 
-#include "context/iglobalcontext.h"
-#include "framework/global/types/string.h"
-
 #include "libraries/lib-strings/wxArrayStringEx.h"
 #include "libraries/lib-utility/IteratorX.h"
 
-#include <wx/arrstr.h>
-
-#include "audio/iaudioengine.h"
 #include "playback/iaudiodevicesprovider.h"
+#include "context/iglobalcontext.h"
+#include "audio/iaudioengine.h"
 
 namespace au::au3 {
 class Au3AudioDevicesProvider : public playback::IAudioDevicesProvider

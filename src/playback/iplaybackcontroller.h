@@ -4,11 +4,11 @@
 #ifndef AU_PLAYBACK_IPLAYBACKCONTROLLER_H
 #define AU_PLAYBACK_IPLAYBACKCONTROLLER_H
 
-#include "modularity/imoduleinterface.h"
-#include "async/notification.h"
-#include "async/channel.h"
-#include "global/progress.h"
-#include "actions/actiontypes.h"
+#include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/async/channel.h"
+#include "framework/global/progress.h"
+#include "framework/actions/actiontypes.h"
 
 #include "playbacktypes.h"
 

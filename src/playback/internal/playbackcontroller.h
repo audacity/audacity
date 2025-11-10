@@ -3,23 +3,21 @@
 */
 #pragma once
 
-#include "async/asyncable.h"
-#include "actions/actionable.h"
-#include "iapplication.h"
-#include "iinteractive.h"
-#include "actions/iactionsdispatcher.h"
-#include "ui/iuiactionsregister.h"
-#include "context/iglobalcontext.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/actions/actionable.h"
+#include "framework/global/iapplication.h"
+#include "framework/global/iinteractive.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/ui/iuiactionsregister.h"
 
+#include "context/iglobalcontext.h"
 #include "audio/audiotypes.h"
 #include "record/irecordcontroller.h"
 #include "trackedit/iselectioncontroller.h"
-
 #include "playback/iaudiodevicesprovider.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplayback.h"
 #include "playback/iplayer.h"
-
 #include "playback/iplaybackcontroller.h"
 
 namespace au::playback {

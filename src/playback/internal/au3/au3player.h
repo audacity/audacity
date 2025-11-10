@@ -7,7 +7,6 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/types/retval.h"
-#include "framework/global/timer.h"
 #include "framework/global/modularity/ioc.h"
 
 #include "trackedit/iselectioncontroller.h"

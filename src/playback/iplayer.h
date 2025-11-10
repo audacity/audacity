@@ -2,11 +2,10 @@
 
 #include <memory>
 
-#include "global/types/ret.h"
-#include "global/types/retval.h"
-#include "global/async/channel.h"
-#include "global/async/promise.h"
-#include "global/async/notification.h"
+#include "framework/global/types/ret.h"
+#include "framework/global/types/retval.h"
+#include "framework/global/async/channel.h"
+#include "framework/global/async/notification.h"
 
 #include "playbacktypes.h"
 

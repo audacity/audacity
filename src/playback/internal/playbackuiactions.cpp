@@ -3,10 +3,11 @@
 */
 #include "playbackuiactions.h"
 
-#include "ui/view/iconcodes.h"
+#include "framework/ui/view/iconcodes.h"
+#include "framework/global/types/translatablestring.h"
+
 #include "context/uicontext.h"
 #include "context/shortcutcontext.h"
-#include "types/translatablestring.h"
 
 using namespace au::playback;
 using namespace muse;

@@ -4,10 +4,9 @@
 
 #pragma once
 
-#include "global/types/ret.h"
-#include "global/async/notification.h"
-
-#include "modularity/imoduleinterface.h"
+#include "framework/global/types/ret.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/modularity/imoduleinterface.h"
 
 #include "au3wrap/au3types.h"
 

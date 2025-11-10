@@ -4,17 +4,17 @@
 
 #pragma once
 
-#include "async/asyncable.h"
-#include "async/channel.h"
-#include "actions/actionable.h"
+#include "framework/global/iinteractive.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/async/channel.h"
+#include "framework/actions/actionable.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/ui/iuiactionsregister.h"
 
-#include "modularity/ioc.h"
-#include "actions/iactionsdispatcher.h"
-#include "ui/iuiactionsregister.h"
 #include "../ieffectexecutionscenario.h"
 #include "../ieffectsprovider.h"
 #include "../ieffectpresetsscenario.h"
-#include "iinteractive.h"
 
 namespace au::effects {
 class EffectsUiActions;

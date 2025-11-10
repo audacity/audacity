@@ -5,6 +5,7 @@
 
 #include "framework/global/types/number.h"
 #include "framework/global/defer.h"
+#include "framework/global/log.h"
 
 #include "libraries/lib-time-frequency-selection/SelectedRegion.h"
 #include "libraries/lib-track/Track.h"
@@ -13,14 +14,12 @@
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
 #include "libraries/lib-audio-io/AudioIO.h"
+#include "libraries/lib-project-rate/ProjectRate.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
-#include "log.h"
 #include <algorithm>
-
-#include "ProjectRate.h"
 
 using namespace au::playback;
 using namespace au::au3;

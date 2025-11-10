@@ -4,8 +4,8 @@
 
 #include "au3audiooutput.h"
 
-#include "global/async/async.h"
-#include "global/types/ratio.h"
+#include "framework/global/async/async.h"
+#include "framework/global/types/ratio.h"
 
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 #include "libraries/lib-project-rate/ProjectRate.h"
@@ -14,8 +14,6 @@
 #include "au3wrap/internal/au3audiometerfactory.h"
 
 #include "audio/audiotypes.h"
-
-#include "log.h"
 
 using namespace muse;
 using namespace muse::async;

@@ -6,7 +6,7 @@
 
 #include "audio/audiotypes.h"
 #include "async/channel.h"
-#include "modularity/imoduleinterface.h"
+#include "framework/global/modularity/imoduleinterface.h"
 
 namespace au::playback {
 class ITrackPlaybackControl : MODULE_EXPORT_INTERFACE

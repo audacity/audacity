@@ -3,7 +3,7 @@
 */
 #include "au3audiomodule.h"
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
 
 #include "internal/au3audioengine.h"
 
