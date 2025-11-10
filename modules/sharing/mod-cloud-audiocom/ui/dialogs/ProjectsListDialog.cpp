@@ -25,6 +25,7 @@
 #include "CodeConversions.h"
 #include "ExportUtils.h"
 #include "Internat.h"
+#include "UrlEncode.h"
 #include "wxWidgetsWindowPlacement.h"
 
 #include "ProjectManager.h"
@@ -175,7 +176,7 @@ public:
       auto cancellationContext = concurrency::CancellationContext::Create();
 
       auto future = CloudSyncService::Get().GetProjects(
-         cancellationContext, page, mPageSize, ToUTF8(searchTerm));
+         cancellationContext, page, mPageSize, UrlEncode(ToUTF8(searchTerm)));
 
       while (std::future_status::ready != future.wait_for(100ms))
       {
