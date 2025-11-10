@@ -112,3 +112,8 @@ std::vector<TrackRulerSmallStep> DbLogMonoRuler::smallSteps() const
     }
     return result;
 }
+
+void DbLogMonoRuler::setDisplayBounds(float min, float max)
+{
+    // No op
+}

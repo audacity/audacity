@@ -4,7 +4,6 @@
 #include "global/realfn.h"
 
 #include "linearstereoruler.h"
-#include "linearrulerutils.h"
 
 using namespace au::projectscene;
 
@@ -24,42 +23,17 @@ constexpr double MIN_CHANNEL_HEIGHT = 40.0;
 
 double LinearStereoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, [[maybe_unused]] bool isNegativeSample) const
 {
+    double clampedValue = std::clamp(step, static_cast<double>(m_minDisplayValue), static_cast<double>(m_maxDisplayValue));
+
     double position;
     if (channel == 0) {
-        position = (1.0 - (step / 2.0 + 0.5)) * m_height * m_channelHeightRatio;
-        if (step == -1.0) {
-            position += 1;
-        }
+        position = (0.5 - clampedValue / (m_maxDisplayValue - m_minDisplayValue)) * m_height * m_channelHeightRatio;
     } else {
-        position = (1.0 - (step / 2.0 + 0.5)) * (1.0 - m_channelHeightRatio) * m_height + m_channelHeightRatio * m_height;
-        if (step == 1.0) {
-            position += 1;
-        }
+        position = (0.5 - clampedValue / (m_maxDisplayValue - m_minDisplayValue)) * (1.0 - m_channelHeightRatio) * m_height
+                   + m_channelHeightRatio * m_height;
     }
 
     return position;
-}
-
-void LinearStereoRuler::setHeight(int height)
-{
-    m_height = height;
-}
-
-void LinearStereoRuler::setChannelHeightRatio(double channelHeightRatio)
-{
-    m_channelHeightRatio = channelHeightRatio;
-}
-
-void LinearStereoRuler::setCollapsed(bool isCollapsed)
-{
-    m_collapsed = isCollapsed;
-}
-
-std::string LinearStereoRuler::sampleToText(double sample) const
-{
-    std::stringstream ss;
-    ss << std::fixed << std::setprecision(1) << std::abs(sample);
-    return ss.str();
 }
 
 std::vector<TrackRulerFullStep> LinearStereoRuler::fullSteps() const
@@ -78,10 +52,12 @@ std::vector<TrackRulerFullStep> LinearStereoRuler::fullSteps() const
             continue;
         }
 
-        const auto values = linearrulerutils::fullStepsValues(channelHeight[ch]);
+        const auto values = fullStepsValues(channelHeight[ch]);
         for (double value : values) {
-            steps.push_back(TrackRulerFullStep { value, ch, linearrulerutils::getAlignment(value), linearrulerutils::isBold(
-                                                     value), value == 0.0, value < 0.0 });
+            steps.push_back(TrackRulerFullStep { value,
+                                                 ch,
+                                                 getAlignment(value),
+                                                 isBold(value), value == 0.0, value < 0.0 });
         }
     }
 
@@ -103,8 +79,8 @@ std::vector<TrackRulerSmallStep> LinearStereoRuler::smallSteps() const
             continue;
         }
 
-        const auto values = linearrulerutils::smallStepsValues(channelHeight[ch]);
-        const auto fullSteps = linearrulerutils::fullStepsValues(channelHeight[ch]);
+        const auto values = smallStepsValues(channelHeight[ch]);
+        const auto fullSteps = fullStepsValues(channelHeight[ch]);
         for (double v : values) {
             if (std::find_if(fullSteps.begin(), fullSteps.end(), [v](double fs) { return muse::RealIsEqual(v, fs); }) != fullSteps.end()) {
                 continue;
