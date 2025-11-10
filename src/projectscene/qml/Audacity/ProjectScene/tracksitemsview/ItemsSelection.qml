@@ -44,7 +44,10 @@ Item {
 
         visible: isDataSelected
 
-        cursorShape: Qt.IBeamCursor
+        hoverEnabled: false
+        // setting cursorShape to undefined on purpose - otherwise
+        // it overrides ClipItem's (even if hover is disabled)
+        cursorShape: undefined
 
         onClicked: function(mouse) {
             let position = mapToItem(root.parent, Qt.point(mouse.x, mouse.y))
