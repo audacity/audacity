@@ -668,7 +668,7 @@ Rectangle {
                     }
                     icon: root.pitch > 0 ? IconCode.ARROW_UP : IconCode.ARROW_DOWN
 
-                    visible: root.pitch !== 0
+                    visible: root.pitch !== 0 && header.width > (60 + pitchBtn.implicitWidth + speedBtn.implicitWidth * (root.speedPercentage !== 100.0) + menuBtn.implicitWidth)
 
                     onClicked: function (mouse) {
                         if (mouse.modifiers & Qt.ControlModifier) {
@@ -687,7 +687,7 @@ Rectangle {
                     icon: IconCode.CLOCK
                     text: root.speedPercentage + "%"
 
-                    visible: root.speedPercentage !== 100.0
+                    visible: root.speedPercentage !== 100.0 && header.width > (60 + speedBtn.implicitWidth + menuBtn.implicitWidth)
 
                     onClicked: function (mouse) {
                         if (mouse.modifiers & Qt.ControlModifier) {
@@ -707,6 +707,8 @@ Rectangle {
                     mouseArea.visible: root.enableCursorInteraction
 
                     menuModel: (root.multiClipsSelected || root.groupId != -1) ? multiClipContextMenuModel : singleClipContextMenuModel
+
+                    visible: header.width > (60 + menuBtn.implicitWidth)
 
                     navigation.name: "ClipMenuBtn"
                     navigation.panel: root.clipNavigationPanel
