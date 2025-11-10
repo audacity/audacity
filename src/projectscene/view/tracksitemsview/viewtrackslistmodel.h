@@ -27,6 +27,7 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     Q_OBJECT
 
     Q_PROPERTY(bool isVerticalRulersVisible READ isVerticalRulersVisible NOTIFY isVerticalRulersVisibleChanged)
+    Q_PROPERTY(int verticalRulerWidth READ verticalRulerWidth NOTIFY verticalRulerWidthChanged FINAL)
     Q_PROPERTY(int totalTracksHeight READ totalTracksHeight NOTIFY totalTracksHeightChanged FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -51,11 +52,13 @@ public:
 
     bool isVerticalRulersVisible() const;
     int totalTracksHeight() const;
+    int verticalRulerWidth() const;
 
 signals:
     void dataSelectedTracksChanged();
     void selectedTracksChanged();
     void isVerticalRulersVisibleChanged();
+    void verticalRulerWidthChanged();
 
     void totalTracksHeightChanged();
     void escapePressed();

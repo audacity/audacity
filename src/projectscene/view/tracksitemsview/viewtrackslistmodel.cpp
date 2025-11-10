@@ -158,6 +158,7 @@ void ViewTracksListModel::load()
                 break;
             }
         }
+        emit verticalRulerWidthChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
     endResetModel();
@@ -306,6 +307,30 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
 bool ViewTracksListModel::isVerticalRulersVisible() const
 {
     return projectSceneConfiguration()->isVerticalRulersVisible();
+}
+
+int ViewTracksListModel::verticalRulerWidth() const
+{
+    float smallestBoundValue = 1;
+    for (const auto& track : m_trackList) {
+        smallestBoundValue = std::min(smallestBoundValue, track.displayBounds.second);
+    }
+    smallestBoundValue *= 0.1f;
+
+    const double EPSILON = 1e-9;
+    int count = 0;
+    float decimalPart = smallestBoundValue - static_cast<int>(smallestBoundValue);
+
+    while (std::abs(decimalPart) > EPSILON) {
+        decimalPart *= 10;
+        decimalPart = decimalPart - static_cast<int>(decimalPart);
+        count++;
+        if (count == 4) {
+            break;
+        }
+    }
+
+    return 24 + (count * 8);
 }
 
 int ViewTracksListModel::totalTracksHeight() const
