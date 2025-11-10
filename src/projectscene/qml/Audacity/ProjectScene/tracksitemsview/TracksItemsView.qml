@@ -339,7 +339,7 @@ Rectangle {
             anchors.top: parent.top
             anchors.right: parent.right
             height: timeline.height
-            width: tracksModel.isVerticalRulersVisible ? 32 : 0
+            width: tracksModel.isVerticalRulersVisible ? tracksModel.verticalRulerWidth : 0
 
             color: ui.theme.backgroundSecondaryColor
 
