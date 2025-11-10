@@ -130,3 +130,8 @@ std::vector<TrackRulerSmallStep> DbLinearStereoRuler::smallSteps() const
 
     return steps;
 }
+
+void DbLinearStereoRuler::setDisplayBounds(float min, float max)
+{
+    // No-op for DbLinear ruler
+}

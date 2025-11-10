@@ -169,6 +169,25 @@ void TrackRulerModel::setRulerType(int rulerType)
     emit smallStepsChanged();
 }
 
+QMap<QString, QVariant> TrackRulerModel::displayBounds() const
+{
+    return m_displayBounds;
+}
+
+void TrackRulerModel::setDisplayBounds(const QMap<QString, QVariant>& displayBounds)
+{
+    if (m_displayBounds == displayBounds) {
+        return;
+    }
+
+    m_displayBounds = displayBounds;
+
+    m_model = buildRulerModel();
+
+    emit fullStepsChanged();
+    emit smallStepsChanged();
+}
+
 std::shared_ptr<ITrackRulerModel> TrackRulerModel::buildRulerModel()
 {
     std::shared_ptr<ITrackRulerModel> model = nullptr;
@@ -205,6 +224,9 @@ std::shared_ptr<ITrackRulerModel> TrackRulerModel::buildRulerModel()
     model->setChannelHeightRatio(m_channelHeightRatio);
     model->setCollapsed(m_isCollapsed);
     model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
+    model->setDisplayBounds(
+        m_displayBounds.value("min").toFloat(),
+        m_displayBounds.value("max").toFloat());
 
     return model;
 }

@@ -147,3 +147,8 @@ std::vector<TrackRulerSmallStep> DbLinearMonoRuler::smallSteps() const
     }
     return steps;
 }
+
+void DbLinearMonoRuler::setDisplayBounds(float min, float max)
+{
+    // No-op for DbLinear ruler
+}
