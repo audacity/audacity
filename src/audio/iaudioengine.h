@@ -38,9 +38,9 @@ public:
     virtual void stopMonitoring() = 0;
 
     virtual void setInputVolume(float newInputVolume) = 0;
-    virtual void getInputVolume(float& inputVolume) const = 0;
+    virtual float getInputVolume() const = 0;
     virtual void setPlaybackVolume(float newPlaybackVolume) = 0;
-    virtual void getPlaybackVolume(float& playbackVolume) const = 0;
+    virtual float getPlaybackVolume() const = 0;
 
     virtual bool canStopAudioStream(AudacityProject& project) const = 0;
 

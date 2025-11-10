@@ -91,8 +91,7 @@ void Au3AudioInput::initMeter()
 muse::async::Promise<float> Au3AudioInput::recordVolume() const
 {
     return muse::async::Promise<float>([this](auto resolve, auto /*reject*/) {
-        float inputVolume;
-        audioEngine()->getInputVolume(inputVolume);
+        const float inputVolume = audioEngine()->getInputVolume();
         return resolve(au3VolumeToLocal(inputVolume));
     });
 }

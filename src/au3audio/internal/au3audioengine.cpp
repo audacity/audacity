@@ -107,11 +107,13 @@ void Au3AudioEngine::setInputVolume(const float newInputVolume)
     AudioIO::Get()->SetMixer(inputSource, newInputVolume, playbackVolume);
 }
 
-void Au3AudioEngine::getInputVolume(float& inputVolume) const
+float Au3AudioEngine::getInputVolume() const
 {
     int inputSource;
+    float inputVolume;
     float playbackVolume;
     AudioIO::Get()->GetMixer(&inputSource, &inputVolume, &playbackVolume);
+    return inputVolume;
 }
 
 void Au3AudioEngine::setPlaybackVolume(const float newPlaybackVolume)
@@ -123,11 +125,13 @@ void Au3AudioEngine::setPlaybackVolume(const float newPlaybackVolume)
     AudioIO::Get()->SetMixer(inputSource, inputVolume, newPlaybackVolume);
 }
 
-void Au3AudioEngine::getPlaybackVolume(float& playbackVolume) const
+float Au3AudioEngine::getPlaybackVolume() const
 {
     int inputSource;
     float inputVolume;
+    float playbackVolume;
     AudioIO::Get()->GetMixer(&inputSource, &inputVolume, &playbackVolume);
+    return playbackVolume;
 }
 
 bool Au3AudioEngine::canStopAudioStream(AudacityProject& project) const

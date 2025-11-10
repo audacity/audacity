@@ -53,8 +53,7 @@ void Au3AudioOutput::notifyAboutSampleRateChanged()
 muse::async::Promise<float> Au3AudioOutput::playbackVolume() const
 {
     return muse::async::Promise<float>([this](auto resolve, auto /*reject*/) {
-        float outputVolume;
-        audioEngine()->getPlaybackVolume(outputVolume);
+        const float outputVolume = audioEngine()->getPlaybackVolume();
         return resolve(muse::linear_to_db(outputVolume));
     });
 }
