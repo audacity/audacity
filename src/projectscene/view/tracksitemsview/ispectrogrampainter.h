@@ -12,12 +12,14 @@
 #include <QPainter>
 
 namespace au::projectscene {
+struct WaveMetrics;
+
 class ISpectrogramPainter : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(ISpectrogramPainter)
 public:
     virtual ~ISpectrogramPainter() = default;
 
-    virtual void paint(QPainter&, const trackedit::ClipKey&, const ZoomInfo&, const SelectedRegion&) = 0;
+    virtual void paint(QPainter&, const trackedit::ClipKey&, const WaveMetrics&, const ZoomInfo&, const SelectedRegion&) = 0;
 };
 }

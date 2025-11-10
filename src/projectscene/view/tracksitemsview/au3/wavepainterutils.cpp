@@ -40,7 +40,7 @@ IWavePainter::PlotType getPlotType(std::shared_ptr<au::project::IAudacityProject
 }
 
 WaveMetrics getWaveMetrics(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
-                           const IWavePainter::Params& params, bool snapToSamples)
+                           const PaintParams& params, bool snapToSamples)
 {
     WaveMetrics wm;
 
@@ -62,6 +62,7 @@ WaveMetrics getWaveMetrics(std::shared_ptr<au::project::IAudacityProject> projec
     wm.selectionEndTime = 0;
     wm.width = params.geometry.width;
     wm.left = params.geometry.left;
+    wm.height = params.geometry.height;
 
     // calculate selection area relative to the clip itself
     if (!muse::RealIsEqual(params.selectionStartTime, params.selectionEndTime)) {

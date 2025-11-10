@@ -5,6 +5,7 @@
 
 #include "./ClipParameters.h"
 #include "./SpectrumCache.h"
+#include "./wavepainterutils.h" // TODO generalize
 #include "../../../internal/au3/viewinfo.h"
 
 #include "framework/global/log.h"
@@ -33,12 +34,23 @@ std::pair<sampleCount, sampleCount> GetSelectedSampleIndices(
 }
 }
 
+Au3SpectrogramChannelPainter::Params::Params(SpectrogramSettings& settings,
+                                             const SelectedRegion& selectedRegion,
+                                             const ZoomInfo& zoomInfo,
+                                             bool trackIsSelected)
+    : settings{settings}
+    , zoomInfo{zoomInfo}
+    , selectedRegion{selectedRegion}
+    , trackIsSelected{trackIsSelected}
+{
+}
+
 Au3SpectrogramChannelPainter::Au3SpectrogramChannelPainter(std::weak_ptr<au3::Au3Project> au3Project)
     : m_au3Project{std::move(au3Project)}
 {
 }
 
-void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& clipChannel, const Params& params)
+void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& clipChannel, const WaveMetrics& metrics, const Params& params)
 {
     SpectrogramSettings& settings = params.settings;
     Au3SelectedRegion selectedRegion;
@@ -47,7 +59,8 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
     selectedRegion.setF0(params.selectedRegion.f0);
     selectedRegion.setF1(params.selectedRegion.f1);
 
-    const ClipParameters clipParams { clipChannel, QRect(), params.zoomInfo };
+    const QRect rect{ static_cast<int>(metrics.left), 0, static_cast<int>(metrics.width), static_cast<int>(metrics.height) };
+    const ClipParameters clipParams { clipChannel, rect, params.zoomInfo };
 
     const QRect& hiddenMid = clipParams.hiddenMid;
     // The "hiddenMid" rect contains the part of the display actually
@@ -78,8 +91,7 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
 
     const float* spectrogram = nullptr;
     const sampleCount* where = nullptr;
-    constexpr auto numPixels = 0; // TODO
-    constexpr auto pixelsPerSecond = 0; // TODO
-    WaveClipSpectrumCache::Get(clipChannel).GetSpectrogram(clipChannel, spectrogram, settings, where, numPixels, t0, pixelsPerSecond);
+    WaveClipSpectrumCache::Get(clipChannel).GetSpectrogram(clipChannel, spectrogram, settings, where,
+                                                           hiddenMid.width(), t0, averagePixelsPerSecond);
 }
 }

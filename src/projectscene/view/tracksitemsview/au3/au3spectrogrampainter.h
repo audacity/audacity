@@ -24,7 +24,7 @@ public:
 
     void init();
 
-    void paint(QPainter&, const trackedit::ClipKey&, const ZoomInfo&, const SelectedRegion&) override;
+    void paint(QPainter&, const trackedit::ClipKey&, const WaveMetrics&, const ZoomInfo&, const SelectedRegion&) override;
 
 private:
     void onProjectChanged(project::IAudacityProject& project);

@@ -6,6 +6,7 @@
 #include "ispectrogrampainter.h"
 #include "abstractclipview.h"
 
+#include "context/iglobalcontext.h"
 #include "trackedit/iselectioncontroller.h"
 
 namespace au::projectscene {
@@ -15,6 +16,7 @@ class SpectrogramView : public AbstractClipView
 
     muse::Inject<ISpectrogramPainter> spectrogramPainter;
     muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:
     SpectrogramView(QQuickItem* parent = nullptr);
