@@ -13,6 +13,7 @@
 #include "CloudProjectFileIOExtensions.h"
 #include "CloudProjectMixdownUtils.h"
 #include "CommandContext.h"
+#include "CommandFlag.h"
 #include "ExportUtils.h"
 #include "MenuRegistry.h"
 
@@ -22,6 +23,7 @@
 #include "ProjectWindow.h"
 
 #include "ui/dialogs/ProjectsListDialog.h"
+#include "ui/dialogs/AudioListDialog.h"
 #include "ui/dialogs/ShareAudioDialog.h"
 
 #include "CommonCommandFlags.h"
@@ -36,13 +38,22 @@ void OnSaveToCloud(const CommandContext& context)
    SaveToCloud(context.project, UploadMode::Normal);
 }
 
-void OnOpenFromCloud(const CommandContext& context)
+void OnOpenProjectFromCloud(const CommandContext& context)
 {
    ProjectsListDialog dialog { ProjectWindow::Find(&context.project),
                                &context.project };
 
    dialog.ShowModal();
 }
+
+void OnOpenAudioFromCloud(const CommandContext& context)
+{
+   AudioListDialog dialog { ProjectWindow::Find(&context.project),
+                               &context.project };
+
+   dialog.ShowModal();
+}
+
 
 void OnUpdateMixdown(const CommandContext& context)
 {
@@ -87,6 +98,25 @@ const ReservedCommandFlag& IsCloudProjectFlag()
 
 using namespace MenuRegistry;
 
+
+auto OpenFromCloud()
+{
+   static auto menu = std::shared_ptr{
+   Menu( wxT("OpenFromCloud"), XXO("Open &From Cloud"),
+      Command( wxT("OpenProjectFromCloud"), XXO("Open Cloud &Project..."),
+         OnOpenProjectFromCloud,
+         AlwaysEnabledFlag ),
+      Command( wxT("OpenAudioFromCloud"), XXO("Open Cloud &Audio File..."),
+         OnOpenAudioFromCloud,
+         AlwaysEnabledFlag )
+   ) };
+   return menu;
+}
+
+AttachedItem sOpenCloudMenuAttachment{ Indirect(OpenFromCloud()),
+   Placement{ wxT("File/Basic"), { OrderingHint::End } }
+};
+
 AttachedItem sSaveAttachment { Command(
                                   wxT("SaveToCloud"), XXO("Save &To Cloud..."),
                                   OnSaveToCloud, AlwaysEnabledFlag),
@@ -97,12 +127,6 @@ AttachedItem sMixdownAttachment { Command(
                                      XXO("&Update Cloud Audio Preview"),
                                      OnUpdateMixdown, IsCloudProjectFlag()),
                                   wxT("File/Save") };
-
-AttachedItem sOpenAttachment { Command(
-                                  wxT("OpenFromCloud"),
-                                  XXO("Open Fro&m Cloud..."), OnOpenFromCloud,
-                                  AlwaysEnabledFlag),
-                               wxT("File/Basic") };
 
 AttachedItem sShareAttachment { Command(
                                    wxT("ShareAudio"), XXO("S&hare Audio..."),

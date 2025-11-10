@@ -1,5 +1,6 @@
 CMakeUserPresets.json
 
+au4
 # Autotools generated files
 locale/Makefile.in
 Makefile

@@ -12,6 +12,8 @@ set( SOURCES
 
    ui/dialogs/AudioComDialogBase.cpp
    ui/dialogs/AudioComDialogBase.h
+   ui/dialogs/AudioListDialog.cpp
+   ui/dialogs/AudioListDialog.h
    ui/dialogs/CloudLocationDialog.cpp
    ui/dialogs/CloudLocationDialog.h
    ui/dialogs/CloudProjectPropertiesDialog.cpp
@@ -74,6 +76,8 @@ set( SOURCES
    CloudProjectMixdownUtils.h
    CloudProjectOpenUtils.cpp
    CloudProjectOpenUtils.h
+   CloudAudioOpenUtils.cpp
+   CloudAudioOpenUtils.h
    CloudLoginHandler.cpp
 )
 

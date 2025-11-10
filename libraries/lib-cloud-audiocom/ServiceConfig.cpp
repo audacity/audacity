@@ -354,6 +354,56 @@ std::string ServiceConfig::GetDeleteSnapshotUrl(
       });
 }
 
+std::string ServiceConfig::GetAudioListUrl(
+   int page, int pageSize, std::string_view searchTerm) const
+{
+   if (searchTerm.empty())
+      return Substitute(
+         "{api_url}/my/audio?page={page}&per-page={page_size}",
+         { { "api_url", mApiEndpoint },
+           { "page", std::to_string(page) },
+           { "page_size", std::to_string(pageSize) }, });
+
+   return Substitute(
+      "{api_url}/my/audio?page={page}&per-page={page_size}&q={search_term}",
+      { { "api_url", mApiEndpoint },
+        { "page", std::to_string(page) },
+        { "page_size", std::to_string(pageSize) },
+        { "search_term", searchTerm }, });
+}
+std::string ServiceConfig::GetAudioInfoUrl(std::string_view audioId) const
+{
+   static constexpr auto kAudioFields =
+      "id,"
+      "slug,"
+      "title,"
+      "tags,"
+      "author_name,"
+      "username,"
+      "date_created,"
+      "date_updated,"
+      "is_public,"
+      "is_downloadable,"
+      "author.id";
+
+   return Substitute(
+      "{api_url}/audio/{audio_id}?fields={fields}&expand=author",
+      {
+         { "api_url", mApiEndpoint },
+         { "audio_id", audioId },
+         { "fields", kAudioFields },
+      });
+}
+
+std::string ServiceConfig::GetAudioDownloadListUrl(std::string_view audioId) const {
+   return Substitute(
+      "{api_url}/download/{audio_id}",
+      {
+         { "api_url", mApiEndpoint },
+         { "audio_id", audioId },
+      });
+}
+
 std::string ServiceConfig::GetNetworkStatsUrl(std::string_view projectId) const
 {
    return Substitute(
