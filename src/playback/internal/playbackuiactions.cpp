@@ -14,48 +14,48 @@ using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
 
-static const ActionCode PLAY_ACTION_CODE("play");
-static const ActionCode PAUSE_ACTION_CODE("pause");
-static const ActionCode STOP_ACTION_CODE("playback/stop");
+static const ActionCode PLAYBACK_PLAY_ACTION_CODE("playback/play");
+static const ActionCode PLAYBACK_PAUSE_ACTION_CODE("playback/pause");
+static const ActionCode PLAYBACK_STOP_ACTION_CODE("playback/stop");
 
-static const ActionCode REWIND_START_ACTION_CODE("rewind-start");
-static const ActionCode REWIND_END_ACTION_CODE("rewind-end");
+static const ActionCode PLAYBACK_REWIND_START_ACTION_CODE("playback/rewind-start");
+static const ActionCode PLAYBACK_REWIND_END_ACTION_CODE("playback/rewind-end");
 
-static const ActionQuery CHANGE_AUDIO_API_QUERY("action://playback/change-api");
-static const ActionQuery CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
-static const ActionQuery CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
-static const ActionQuery CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
+static const ActionQuery PLAYBACK_CHANGE_AUDIO_API_QUERY("action://playback/change-api");
+static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
+static const ActionQuery PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
+static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
 
 const UiActionList PlaybackUiActions::m_mainActions = {
-    UiAction(PLAY_ACTION_CODE,
+    UiAction(PLAYBACK_PLAY_ACTION_CODE,
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_PLAYBACK,
              TranslatableString("action", "Play"),
              TranslatableString("action", "Play"),
              IconCode::Code::PLAY_FILL
              ),
-    UiAction(PAUSE_ACTION_CODE,
+    UiAction(PLAYBACK_PAUSE_ACTION_CODE,
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_PLAYBACK,
              TranslatableString("action", "Pause"),
              TranslatableString("action", "Pause"),
              IconCode::Code::PAUSE_FILL
              ),
-    UiAction(STOP_ACTION_CODE,
+    UiAction(PLAYBACK_STOP_ACTION_CODE,
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Stop"),
              TranslatableString("action", "Stop playback"),
              IconCode::Code::STOP_FILL
              ),
-    UiAction(REWIND_START_ACTION_CODE,
+    UiAction(PLAYBACK_REWIND_START_ACTION_CODE,
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Rewind to start"),
              TranslatableString("action", "Rewind to start"),
              IconCode::Code::REWIND_START_FILL
              ),
-    UiAction(REWIND_END_ACTION_CODE,
+    UiAction(PLAYBACK_REWIND_END_ACTION_CODE,
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Rewind to end"),
@@ -125,28 +125,28 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              TranslatableString("action", "Set playback level"),
              IconCode::Code::AUDIO
              ),
-    UiAction(CHANGE_AUDIO_API_QUERY.toString(),
+    UiAction(PLAYBACK_CHANGE_AUDIO_API_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Change audio host"),
              TranslatableString("action", "Change audio host"),
              Checkable::Yes
              ),
-    UiAction(CHANGE_PLAYBACK_DEVICE_QUERY.toString(),
+    UiAction(PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Change playback device"),
              TranslatableString("action", "Change playback device"),
              Checkable::Yes
              ),
-    UiAction(CHANGE_RECORDING_DEVICE_QUERY.toString(),
+    UiAction(PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Change recording device"),
              TranslatableString("action", "Change recording device"),
              Checkable::Yes
              ),
-    UiAction(CHANGE_INPUT_CHANNELS_QUERY.toString(),
+    UiAction(PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Change input channels"),
@@ -237,29 +237,29 @@ void PlaybackUiActions::init()
 
     m_controller->isPlayingChanged().onNotify(this, [this]() {
         ActionCodeList codes= {
-            PLAY_ACTION_CODE,
-            PAUSE_ACTION_CODE,
-            REWIND_START_ACTION_CODE,
-            REWIND_END_ACTION_CODE
+            PLAYBACK_PLAY_ACTION_CODE,
+            PLAYBACK_PAUSE_ACTION_CODE,
+            PLAYBACK_REWIND_START_ACTION_CODE,
+            PLAYBACK_REWIND_END_ACTION_CODE
         };
 
         m_actionEnabledChanged.send(codes);
     });
 
     audioDevicesProvider()->audioApiChanged().onNotify(this, [this]() {
-        actionCheckedChanged().send(ActionCodeList({ CHANGE_AUDIO_API_QUERY.toString() }));
+        actionCheckedChanged().send(ActionCodeList({ PLAYBACK_CHANGE_AUDIO_API_QUERY.toString() }));
     });
 
     audioDevicesProvider()->audioOutputDeviceChanged().onNotify(this, [this]() {
-        actionCheckedChanged().send(ActionCodeList({ CHANGE_PLAYBACK_DEVICE_QUERY.toString() }));
+        actionCheckedChanged().send(ActionCodeList({ PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString() }));
     });
 
     audioDevicesProvider()->audioInputDeviceChanged().onNotify(this, [this]() {
-        actionCheckedChanged().send(ActionCodeList({ CHANGE_RECORDING_DEVICE_QUERY.toString() }));
+        actionCheckedChanged().send(ActionCodeList({ PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString() }));
     });
 
     audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
-        actionCheckedChanged().send(ActionCodeList({ CHANGE_INPUT_CHANNELS_QUERY.toString() }));
+        actionCheckedChanged().send(ActionCodeList({ PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString() }));
     });
 }
 

@@ -23,6 +23,8 @@ static constexpr double SCROLL_MAX_SPEED = 0.025;
 
 static constexpr int SNAP_TO_CLIP_TOLERANCE_PX = 4;
 
+static const muse::actions::ActionCode PLAYBACK_SEEK_CODE("playback/seek");
+
 using namespace au::projectscene;
 
 namespace {
@@ -500,7 +502,7 @@ void TimelineContext::updateViewOnProjectTempoChange(double ratio)
     setFrameStartTime(m_frameStartTime / ratio);
     setFrameEndTime(m_frameEndTime / ratio);
 
-    dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1<double>(
+    dispatcher()->dispatch(PLAYBACK_SEEK_CODE, muse::actions::ActionData::make_arg1<double>(
                                playbackState()->playbackPosition() / ratio));
 }
 

@@ -20,7 +20,7 @@ using namespace muse::actions;
 
 static const QString TOOLBAR_NAME("playbackToolBar");
 
-static const ActionCode PLAY_ACTION_CODE("play");
+static const ActionCode PLAYBACK_PLAY_ACTION_CODE("playback/play");
 static const ActionCode RECORD_ACTION_CODE("record");
 
 PlaybackToolBarCustomiseModel::PlaybackToolBarCustomiseModel(QObject* parent)
@@ -236,7 +236,7 @@ PlaybackToolBarCustomiseItem* PlaybackToolBarCustomiseModel::makeSeparatorItem()
 QColor PlaybackToolBarCustomiseModel::iconColor(const muse::ui::UiAction& action) const
 {
     QColor color = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
-    if (action.code == PLAY_ACTION_CODE) {
+    if (action.code == PLAYBACK_PLAY_ACTION_CODE) {
         color = QColor(configuration()->playColor().toQColor());
     } else if (action.code == RECORD_ACTION_CODE) {
         color = QColor(recordConfiguration()->recordColor().toQColor());

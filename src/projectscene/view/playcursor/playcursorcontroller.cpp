@@ -27,6 +27,9 @@
 using namespace au::projectscene;
 using namespace muse::actions;
 
+static const ActionCode PLAYBACK_SEEK_CODE("playback/seek");
+static const ActionCode PLAYBACK_CHANGE_PLAY_REGION_CODE("playback/play-region-change");
+
 PlayCursorController::PlayCursorController(QObject* parent)
     : QObject(parent)
 {
@@ -55,9 +58,9 @@ void PlayCursorController::seekToX(double x, bool triggerPlay)
 
     double secs = m_context->positionToTime(x, snapEnabled);
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
-        dispatcher()->dispatch("playback-seek", ActionData::make_arg2<double, bool>(secs, triggerPlay));
+        dispatcher()->dispatch(PLAYBACK_SEEK_CODE, ActionData::make_arg2<double, bool>(secs, triggerPlay));
     } else if (!muse::RealIsEqual(playbackState()->playbackPosition(), 0.0)) {
-        dispatcher()->dispatch("playback-seek", ActionData::make_arg2<double, bool>(0.0, triggerPlay));
+        dispatcher()->dispatch(PLAYBACK_SEEK_CODE, ActionData::make_arg2<double, bool>(0.0, triggerPlay));
     }
 }
 
@@ -72,7 +75,7 @@ void PlayCursorController::setPlaybackRegion(double x1, double x2)
     double end = m_context->positionToTime(x2, snapEnabled);
     end = std::max(0.0, end);
 
-    dispatcher()->dispatch("playback-play-region-change", ActionData::make_arg2<double, double>(start, end));
+    dispatcher()->dispatch(PLAYBACK_CHANGE_PLAY_REGION_CODE, ActionData::make_arg2<double, double>(start, end));
 }
 
 au::context::IPlaybackStatePtr PlayCursorController::playbackState() const

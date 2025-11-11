@@ -11,34 +11,35 @@ using namespace au::playback;
 using namespace muse::async;
 using namespace muse::actions;
 
-static const ActionCode PLAY_CODE("play");
+static const ActionCode PLAYBACK_PLAY_CODE("playback/play");
 static const ActionCode PLAYBACK_PLAY_TRACKS_CODE("playback/play-tracks");
-static const ActionCode PAUSE_CODE("pause");
+static const ActionCode PLAYBACK_PAUSE_CODE("playback/pause");
 static const ActionCode PLAYBACK_STOP_CODE("playback/stop");
-static const ActionCode REWIND_START_CODE("rewind-start");
-static const ActionCode REWIND_END_CODE("rewind-end");
-static const ActionCode SEEK_CODE("playback-seek");
-static const ActionCode CHANGE_PLAY_REGION_CODE("playback-play-region-change");
+static const ActionCode PLAYBACK_REWIND_START_CODE("playback/rewind-start");
+static const ActionCode PLAYBACK_REWIND_END_CODE("playback/rewind-end");
+static const ActionCode PLAYBACK_SEEK_CODE("playback/seek");
+static const ActionCode PLAYBACK_CHANGE_PLAY_REGION_CODE("playback/play-region-change");
+
 static const ActionCode PAN_CODE("pan");
 static const ActionCode REPEAT_CODE("repeat");
 
-static const secs_t TIME_EPS = secs_t(1 / 1000.0);
+static const ActionQuery PLAYBACK_CHANGE_AUDIO_API_QUERY("action://playback/change-api");
+static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
+static const ActionQuery PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
+static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
 
-static const ActionQuery CHANGE_AUDIO_API_QUERY("action://playback/change-api");
-static const ActionQuery CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
-static const ActionQuery CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
-static const ActionQuery CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
+static const secs_t TIME_EPS = secs_t(1 / 1000.0);
 
 void PlaybackController::init()
 {
-    dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlayAction);
+    dispatcher()->reg(this, PLAYBACK_PLAY_CODE, this, &PlaybackController::togglePlayAction);
     dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_CODE, this, &PlaybackController::playTracksAction);
-    dispatcher()->reg(this, PAUSE_CODE, this, &PlaybackController::pauseAction);
+    dispatcher()->reg(this, PLAYBACK_PAUSE_CODE, this, &PlaybackController::pauseAction);
     dispatcher()->reg(this, PLAYBACK_STOP_CODE, this, &PlaybackController::stopAction);
-    dispatcher()->reg(this, REWIND_START_CODE, this, &PlaybackController::rewindToStartAction);
-    dispatcher()->reg(this, REWIND_END_CODE, this, &PlaybackController::rewindToEndAction);
-    dispatcher()->reg(this, SEEK_CODE, this, &PlaybackController::onSeekAction);
-    dispatcher()->reg(this, CHANGE_PLAY_REGION_CODE, this, &PlaybackController::onChangePlaybackRegionAction);
+    dispatcher()->reg(this, PLAYBACK_REWIND_START_CODE, this, &PlaybackController::rewindToStartAction);
+    dispatcher()->reg(this, PLAYBACK_REWIND_END_CODE, this, &PlaybackController::rewindToEndAction);
+    dispatcher()->reg(this, PLAYBACK_SEEK_CODE, this, &PlaybackController::onSeekAction);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAY_REGION_CODE, this, &PlaybackController::onChangePlaybackRegionAction);
 
     dispatcher()->reg(this, "toggle-loop-region", this, &PlaybackController::toggleLoopPlayback);
     dispatcher()->reg(this, "clear-loop-region", this, &PlaybackController::clearLoopRegion);
@@ -50,10 +51,10 @@ void PlaybackController::init()
     dispatcher()->reg(this, REPEAT_CODE, this, &PlaybackController::togglePlayRepeats);
     dispatcher()->reg(this, PAN_CODE, this, &PlaybackController::toggleAutomaticallyPan);
 
-    dispatcher()->reg(this, CHANGE_AUDIO_API_QUERY, this, &PlaybackController::setAudioApi);
-    dispatcher()->reg(this, CHANGE_PLAYBACK_DEVICE_QUERY, this, &PlaybackController::setAudioOutputDevice);
-    dispatcher()->reg(this, CHANGE_RECORDING_DEVICE_QUERY, this, &PlaybackController::setAudioInputDevice);
-    dispatcher()->reg(this, CHANGE_INPUT_CHANNELS_QUERY, this, &PlaybackController::setInputChannels);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_AUDIO_API_QUERY, this, &PlaybackController::setAudioApi);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY, this, &PlaybackController::setAudioOutputDevice);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY, this, &PlaybackController::setAudioInputDevice);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY, this, &PlaybackController::setInputChannels);
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
@@ -731,11 +732,11 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
         return false;
     }
 
-    if (code == PLAY_CODE) {
+    if (code == PLAYBACK_PLAY_CODE) {
         return !recordController()->isRecording();
     }
 
-    if (code == REWIND_START_CODE || code == REWIND_END_CODE) {
+    if (code == PLAYBACK_REWIND_START_CODE || code == PLAYBACK_REWIND_END_CODE) {
         return !isPlaying() && !recordController()->isRecording();
     }
 

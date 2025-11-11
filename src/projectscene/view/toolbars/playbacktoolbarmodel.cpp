@@ -26,16 +26,16 @@ static const QString TOOLBAR_NAME("playbackToolBar");
 static const QString PLAY_PAUSE_ITEM_ID("play-pause-id");
 static const QString STOP_ITEM_ID("stop-id");
 
-static const ActionCode PLAY_ACTION_CODE("play");
-static const ActionCode PAUSE_ACTION_CODE("pause");
-static const ActionCode STOP_ACTION_CODE("playback/stop");
+static const ActionCode PLAYBACK_PLAY_ACTION_CODE("playback/play");
+static const ActionCode PLAYBACK_PAUSE_ACTION_CODE("playback/pause");
+static const ActionCode PLAYBACK_STOP_ACTION_CODE("playback/stop");
 
 static const ActionCode RECORD_ACTION_CODE("record");
 static const ActionCode PAUSE_RECORD_ACTION_CODE("pause-record");
 static const ActionCode STOP_RECORD_ACTION_CODE("stop-record");
 
-static const ActionCode REWIND_START_ACTION_CODE("rewind-start");
-static const ActionCode REWIND_END_ACTION_CODE("rewind-end");
+static const ActionCode PLAYBACK_REWIND_START_ACTION_CODE("playback/rewind-start");
+static const ActionCode PLAYBACK_REWIND_END_ACTION_CODE("playback/rewind-end");
 static const ActionCode LOOP_ACTION_CODE("toggle-loop-region");
 
 static const ActionCode SPLIT_TOOL_ACTION_CODE("split-tool");
@@ -57,11 +57,11 @@ static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
         { PLAYBACK_BPM, PlaybackToolBarModel::PLAYBACK_BPM },
         { PLAYBACK_TIME_SIGNATURE, PlaybackToolBarModel::PLAYBACK_TIME_SIGNATURE },
         { RECORD_LEVEL, PlaybackToolBarModel::RECORD_LEVEL },
-        { PLAY_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { STOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PLAYBACK_PLAY_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PLAYBACK_STOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { RECORD_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { REWIND_START_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { REWIND_END_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PLAYBACK_REWIND_START_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PLAYBACK_REWIND_END_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { LOOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { SPLIT_TOOL_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { SNAP_ACTION_CODE, PlaybackToolBarModel::SNAP }
@@ -114,12 +114,12 @@ void PlaybackToolBarModel::reload()
 
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
 {
-    if (containsAction(codes, PLAY_ACTION_CODE) || containsAction(codes, PAUSE_ACTION_CODE)
+    if (containsAction(codes, PLAYBACK_PLAY_ACTION_CODE) || containsAction(codes, PLAYBACK_PAUSE_ACTION_CODE)
         || containsAction(codes, PAUSE_RECORD_ACTION_CODE)) {
         updatePlayState();
     }
 
-    if (containsAction(codes, STOP_ACTION_CODE) || containsAction(codes, STOP_RECORD_ACTION_CODE)) {
+    if (containsAction(codes, PLAYBACK_STOP_ACTION_CODE) || containsAction(codes, STOP_RECORD_ACTION_CODE)) {
         updateStopState();
     }
 
@@ -154,7 +154,7 @@ void PlaybackToolBarModel::updatePlayState()
     bool isPlaying = playbackController()->isPlaying();
     bool isRecording = recordController()->isRecording();
 
-    ActionCode code = isPlaying ? PAUSE_ACTION_CODE : PLAY_ACTION_CODE;
+    ActionCode code = isPlaying ? PLAYBACK_PAUSE_ACTION_CODE : PLAYBACK_PLAY_ACTION_CODE;
     if (isRecording) {
         code = PAUSE_RECORD_ACTION_CODE;
     }
@@ -186,7 +186,7 @@ void PlaybackToolBarModel::updateStopState()
     }
 
     const bool isRecording = recordController()->isRecording();
-    const ActionCode code = isRecording ? STOP_RECORD_ACTION_CODE : STOP_ACTION_CODE;
+    const ActionCode code = isRecording ? STOP_RECORD_ACTION_CODE : PLAYBACK_STOP_ACTION_CODE;
     const UiAction action = uiActionsRegister()->action(code);
     item->setAction(action);
     if (!isRecording) {
@@ -304,11 +304,11 @@ void PlaybackToolBarModel::updateActions()
             continue;
         }
 
-        if (citem.action == PLAY_ACTION_CODE) {
+        if (citem.action == PLAYBACK_PLAY_ACTION_CODE) {
             item->setId(PLAY_PAUSE_ITEM_ID); // for quick finding
         }
 
-        if (citem.action == STOP_ACTION_CODE) {
+        if (citem.action == PLAYBACK_STOP_ACTION_CODE) {
             item->setId(STOP_ITEM_ID); // for quick finding
         }
 
