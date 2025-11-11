@@ -552,7 +552,7 @@ void Au3SelectionController::resetDataSelection()
 {
     MYLOG() << "resetDataSelection";
 
-    constexpr auto initialPlaybackPosition = 0; // if this isn't working inject PlaybackController and replace by playbackController()->playbackPosition();
+    const auto initialPlaybackPosition = globalContext()->playbackState()->playbackPosition();
     m_selectedStartTime.set(initialPlaybackPosition, true);
     m_selectedEndTime.set(initialPlaybackPosition, true);
 }
