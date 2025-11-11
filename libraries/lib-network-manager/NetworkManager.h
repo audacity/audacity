@@ -36,7 +36,7 @@ class NETWORK_MANAGER_API NetworkManager final
     ~NetworkManager ();
 public:
     static NetworkManager& GetInstance();
-    static void Terminate (); 
+    static void Terminate ();
 
     ResponsePtr doGet(const Request& request);
     ResponsePtr doHead(const Request& request);
