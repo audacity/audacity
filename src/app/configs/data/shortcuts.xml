@@ -852,10 +852,6 @@
         <seq>Shift+D</seq>
     </SC>
     <SC>
-        <key>pause</key>
-        <seq>P</seq>
-    </SC>
-    <SC>
         <key>toggle-loop-region</key>
         <seq>L</seq>
     </SC>
