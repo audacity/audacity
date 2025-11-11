@@ -156,7 +156,7 @@ jobs:
         run: ctest -C ${{ env.BUILD_TYPE }} --verbose
         working-directory: ./.build.x64/
     - name: Package
-      uses: audacity/audacity-actions/package@v4
+      uses: audacity/audacity-actions/package@v6
       with:
         postfix: ${{ matrix.config.postfix }}
 
@@ -214,12 +214,12 @@ jobs:
         ctest -C ${{ env.BUILD_TYPE }} --verbose
         popd
     - name: Package
-      uses: audacity/audacity-actions/package@v4
+      uses: audacity/audacity-actions/package@v6
       with:
         postfix: ${{ matrix.config.postfix }}
   build_macos_intel:
     name: Build macOS (x86_64)
-    runs-on: macos-13
+    runs-on: macos-14
     steps:
     - name: Checkout Audacity
       uses: actions/checkout@v4
@@ -253,7 +253,7 @@ jobs:
         path: macos_intel.tar
   build_macos_arm64:
     name: Build macOS (arm64)
-    runs-on: macos-13
+    runs-on: macos-14
     steps:
     - name: Checkout Audacity
       uses: actions/checkout@v4
@@ -295,7 +295,7 @@ jobs:
         path: macos_arm64.tar
   package_macos:
     name: Package macOS (x86_64, arm64, universal)
-    runs-on: macos-13
+    runs-on: macos-14
     needs: [build_macos_intel, build_macos_arm64]
     steps:
     - name: Checkout Audacity
@@ -326,7 +326,7 @@ jobs:
         p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
         p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
     - name: Package
-      uses: audacity/audacity-actions/package@v4
+      uses: audacity/audacity-actions/package@v6
       env:
         AUDACITY_BUILD_DIR: "${{ github.workspace }}/.build.x64"
         AUDACITY_BUILD_TYPE: ${{ env.BUILD_TYPE }}
