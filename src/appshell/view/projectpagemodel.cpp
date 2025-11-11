@@ -11,7 +11,7 @@
 using namespace au::appshell;
 using namespace muse::actions;
 
-static const muse::actions::ActionCode PLAYBACK_LEVEL_CODE("playback-level");
+static const ActionCode PLAYBACK_LEVEL_ACTION_CODE("action://playback/level");
 
 ProjectPageModel::ProjectPageModel(QObject* parent)
     : QObject(parent)
@@ -70,7 +70,7 @@ void ProjectPageModel::updatePlaybackMeterVisibility()
                                                           au::projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
     const auto it = std::find_if(toolConfig.items.begin(), toolConfig.items.end(),
                                  [](const muse::ui::ToolConfig::Item& item) {
-        return item.action == PLAYBACK_LEVEL_CODE;
+        return item.action == PLAYBACK_LEVEL_ACTION_CODE;
     });
 
     if (it != toolConfig.items.end()) {

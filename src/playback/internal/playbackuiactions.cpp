@@ -26,6 +26,8 @@ static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playbac
 static const ActionQuery PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
 static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
 
+static const ActionCode PLAYBACK_LEVEL_ACTION_CODE("action://playback/level");
+
 const UiActionList PlaybackUiActions::m_mainActions = {
     UiAction(PLAYBACK_PLAY_ACTION_CODE,
              au::context::UiCtxProjectOpened,
@@ -118,7 +120,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              TranslatableString("action", "Set playback time signature"),
              IconCode::Code::TIME_SIGNATURE
              ),
-    UiAction("playback-level",
+    UiAction(PLAYBACK_LEVEL_ACTION_CODE,
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Playback level"),

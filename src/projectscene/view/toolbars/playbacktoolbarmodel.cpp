@@ -41,8 +41,7 @@ static const ActionCode LOOP_ACTION_CODE("toggle-loop-region");
 
 static const ActionCode SPLIT_TOOL_ACTION_CODE("split-tool");
 
-static const ActionCode PLAYBACK_LEVEL_CODE("playback-level");
-static const ActionCode PLAYBACK_LEVEL("playback-level");
+static const ActionCode PLAYBACK_LEVEL_ACTION_CODE("action://playback/level");
 static const ActionCode PLAYBACK_TIME("playback-time");
 static const ActionCode PLAYBACK_BPM("playback-bpm");
 static const ActionCode PLAYBACK_TIME_SIGNATURE("playback-time-signature");
@@ -52,7 +51,7 @@ static const ActionCode SNAP_ACTION_CODE("snap");
 static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
 {
     std::map<ActionCode, PlaybackToolBarModel::ItemType> types = {
-        { PLAYBACK_LEVEL, PlaybackToolBarModel::PLAYBACK_LEVEL },
+        { PLAYBACK_LEVEL_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_LEVEL },
         { PLAYBACK_TIME, PlaybackToolBarModel::PLAYBACK_TIME },
         { PLAYBACK_BPM, PlaybackToolBarModel::PLAYBACK_BPM },
         { PLAYBACK_TIME_SIGNATURE, PlaybackToolBarModel::PLAYBACK_TIME_SIGNATURE },
@@ -287,7 +286,7 @@ void PlaybackToolBarModel::updateActions()
             continue;
         }
 
-        if (citem.action == PLAYBACK_LEVEL_CODE) {
+        if (citem.action == PLAYBACK_LEVEL_ACTION_CODE) {
             if (configuration()->playbackMeterPosition() == playback::PlaybackMeterPosition::MeterPosition::SideBar) {
                 // Skip playback meter item if it is set to be displayed in the sidebar
                 continue;

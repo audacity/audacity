@@ -348,7 +348,7 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "snap", true },
             { "", true },
             { "action://record/level", true },
-            { "playback-level", true }
+            { "action://playback/level", true }
         };
     }
     return config;
