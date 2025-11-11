@@ -85,7 +85,7 @@ public:
 
     void togglePlay()
     {
-        m_controller->togglePlay();
+        m_controller->togglePlayAction();
     }
 
     void changePlaybackRegion(const secs_t start, const secs_t end)

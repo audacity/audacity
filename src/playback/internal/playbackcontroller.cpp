@@ -31,7 +31,7 @@ static const ActionQuery CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-i
 
 void PlaybackController::init()
 {
-    dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlay);
+    dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlayAction);
     dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_CODE, this, &PlaybackController::playTracksAction);
     dispatcher()->reg(this, PAUSE_CODE, this, &PlaybackController::pause);
     dispatcher()->reg(this, PLAYBACK_STOP_CODE, this, &PlaybackController::stopAction);
@@ -250,7 +250,7 @@ void PlaybackController::onPlaybackPositionChanged()
     }
 }
 
-void PlaybackController::togglePlay()
+void PlaybackController::togglePlayAction()
 {
     if (!isPlayAllowed()) {
         LOGW() << "playback not allowed";

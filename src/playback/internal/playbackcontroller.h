@@ -104,7 +104,7 @@ private:
     void seekListSelection();
     void seekRangeSelection();
 
-    void togglePlay();
+    void togglePlayAction();
     void stopAction(const muse::actions::ActionData& args);
     void playTracksAction(const muse::actions::ActionData& args);
     void rewindToStart();
