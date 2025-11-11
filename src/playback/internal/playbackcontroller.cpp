@@ -11,35 +11,41 @@ using namespace au::playback;
 using namespace muse::async;
 using namespace muse::actions;
 
-static const ActionQuery PLAYBACK_PLAY_CODE("action://playback/play");
-static const ActionQuery PLAYBACK_PLAY_TRACKS_CODE("action://playback/play-tracks");
-static const ActionQuery PLAYBACK_PAUSE_CODE("action://playback/pause");
-static const ActionQuery PLAYBACK_STOP_CODE("action://playback/stop");
-static const ActionQuery PLAYBACK_REWIND_START_CODE("action://playback/rewind-start");
-static const ActionQuery PLAYBACK_REWIND_END_CODE("action://playback/rewind-end");
-static const ActionQuery PLAYBACK_SEEK_CODE("action://playback/seek");
-static const ActionQuery PLAYBACK_CHANGE_PLAY_REGION_CODE("action://playback/play-region-change");
-
-static const ActionCode PAN_CODE("pan");
-static const ActionCode REPEAT_CODE("repeat");
-
+static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
+static const ActionQuery PLAYBACK_PLAY_TRACKS_QUERY("action://playback/play-tracks");
+static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
+static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
+static const ActionQuery PLAYBACK_REWIND_START_QUERY("action://playback/rewind-start");
+static const ActionQuery PLAYBACK_REWIND_END_QUERY("action://playback/rewind-end");
+static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
+static const ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/play-region-change");
 static const ActionQuery PLAYBACK_CHANGE_AUDIO_API_QUERY("action://playback/change-api");
 static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
 static const ActionQuery PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
 static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
 
+static const ActionCode PAN_CODE("pan");
+static const ActionCode REPEAT_CODE("repeat");
+
 static const secs_t TIME_EPS = secs_t(1 / 1000.0);
 
 void PlaybackController::init()
 {
-    dispatcher()->reg(this, PLAYBACK_PLAY_CODE, this, &PlaybackController::togglePlayAction);
-    dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_CODE, this, &PlaybackController::playTracksAction);
-    dispatcher()->reg(this, PLAYBACK_PAUSE_CODE, this, &PlaybackController::pauseAction);
-    dispatcher()->reg(this, PLAYBACK_STOP_CODE, this, &PlaybackController::stopAction);
-    dispatcher()->reg(this, PLAYBACK_REWIND_START_CODE, this, &PlaybackController::rewindToStartAction);
-    dispatcher()->reg(this, PLAYBACK_REWIND_END_CODE, this, &PlaybackController::rewindToEndAction);
-    dispatcher()->reg(this, PLAYBACK_SEEK_CODE, this, &PlaybackController::onSeekAction);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAY_REGION_CODE, this, &PlaybackController::onChangePlaybackRegionAction);
+    dispatcher()->reg(this, PLAYBACK_PLAY_QUERY, this, &PlaybackController::togglePlayAction);
+    dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_QUERY, this, &PlaybackController::playTracksAction);
+    dispatcher()->reg(this, PLAYBACK_PAUSE_QUERY, this, &PlaybackController::pauseAction);
+    dispatcher()->reg(this, PLAYBACK_STOP_QUERY, this, &PlaybackController::stopAction);
+    dispatcher()->reg(this, PLAYBACK_REWIND_START_QUERY, this, &PlaybackController::rewindToStartAction);
+    dispatcher()->reg(this, PLAYBACK_REWIND_END_QUERY, this, &PlaybackController::rewindToEndAction);
+    dispatcher()->reg(this, PLAYBACK_SEEK_QUERY, this, &PlaybackController::onSeekAction);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAY_REGION_QUERY, this, &PlaybackController::onChangePlaybackRegionAction);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_AUDIO_API_QUERY, this, &PlaybackController::setAudioApi);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY, this, &PlaybackController::setAudioOutputDevice);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY, this, &PlaybackController::setAudioInputDevice);
+    dispatcher()->reg(this, PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY, this, &PlaybackController::setInputChannels);
+
+    dispatcher()->reg(this, REPEAT_CODE, this, &PlaybackController::togglePlayRepeats);
+    dispatcher()->reg(this, PAN_CODE, this, &PlaybackController::toggleAutomaticallyPan);
 
     dispatcher()->reg(this, "toggle-loop-region", this, &PlaybackController::toggleLoopPlayback);
     dispatcher()->reg(this, "clear-loop-region", this, &PlaybackController::clearLoopRegion);
@@ -47,14 +53,6 @@ void PlaybackController::init()
     dispatcher()->reg(this, "set-selection-to-loop", this, &PlaybackController::setSelectionToLoop);
     dispatcher()->reg(this, "set-loop-region-in-out", this, &PlaybackController::setLoopRegionInOut);
     dispatcher()->reg(this, "toggle-selection-follows-loop-region", this, &PlaybackController::setSelectionFollowsLoopRegion);
-
-    dispatcher()->reg(this, REPEAT_CODE, this, &PlaybackController::togglePlayRepeats);
-    dispatcher()->reg(this, PAN_CODE, this, &PlaybackController::toggleAutomaticallyPan);
-
-    dispatcher()->reg(this, PLAYBACK_CHANGE_AUDIO_API_QUERY, this, &PlaybackController::setAudioApi);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY, this, &PlaybackController::setAudioOutputDevice);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY, this, &PlaybackController::setAudioInputDevice);
-    dispatcher()->reg(this, PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY, this, &PlaybackController::setInputChannels);
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
@@ -763,11 +761,11 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
         return false;
     }
 
-    if (code == PLAYBACK_PLAY_CODE.toString()) {
+    if (code == PLAYBACK_PLAY_QUERY.toString()) {
         return !recordController()->isRecording();
     }
 
-    if (code == PLAYBACK_REWIND_START_CODE.toString() || code == PLAYBACK_REWIND_END_CODE.toString()) {
+    if (code == PLAYBACK_REWIND_START_QUERY.toString() || code == PLAYBACK_REWIND_END_QUERY.toString()) {
         return !isPlaying() && !recordController()->isRecording();
     }
 

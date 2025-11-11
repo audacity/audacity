@@ -14,50 +14,50 @@ using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
 
-static const ActionQuery PLAYBACK_PLAY_ACTION_CODE("action://playback/play");
-static const ActionQuery PLAYBACK_PAUSE_ACTION_CODE("action://playback/pause");
-static const ActionQuery PLAYBACK_STOP_ACTION_CODE("action://playback/stop");
+static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
+static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
+static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
 
-static const ActionQuery PLAYBACK_REWIND_START_ACTION_CODE("action://playback/rewind-start");
-static const ActionQuery PLAYBACK_REWIND_END_ACTION_CODE("action://playback/rewind-end");
+static const ActionQuery PLAYBACK_REWIND_START_QUERY("action://playback/rewind-start");
+static const ActionQuery PLAYBACK_REWIND_END_QUERY("action://playback/rewind-end");
 
 static const ActionQuery PLAYBACK_CHANGE_AUDIO_API_QUERY("action://playback/change-api");
 static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
 static const ActionQuery PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
 static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
 
-static const ActionQuery PLAYBACK_LEVEL_ACTION_CODE("action://playback/level");
+static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
 
 const UiActionList PlaybackUiActions::m_mainActions = {
-    UiAction(PLAYBACK_PLAY_ACTION_CODE.toString(),
+    UiAction(PLAYBACK_PLAY_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_PLAYBACK,
              TranslatableString("action", "Play"),
              TranslatableString("action", "Play"),
              IconCode::Code::PLAY_FILL
              ),
-    UiAction(PLAYBACK_PAUSE_ACTION_CODE.toString(),
+    UiAction(PLAYBACK_PAUSE_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_PLAYBACK,
              TranslatableString("action", "Pause"),
              TranslatableString("action", "Pause"),
              IconCode::Code::PAUSE_FILL
              ),
-    UiAction(PLAYBACK_STOP_ACTION_CODE.toString(),
+    UiAction(PLAYBACK_STOP_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Stop"),
              TranslatableString("action", "Stop playback"),
              IconCode::Code::STOP_FILL
              ),
-    UiAction(PLAYBACK_REWIND_START_ACTION_CODE.toString(),
+    UiAction(PLAYBACK_REWIND_START_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Rewind to start"),
              TranslatableString("action", "Rewind to start"),
              IconCode::Code::REWIND_START_FILL
              ),
-    UiAction(PLAYBACK_REWIND_END_ACTION_CODE.toString(),
+    UiAction(PLAYBACK_REWIND_END_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Rewind to end"),
@@ -120,7 +120,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              TranslatableString("action", "Set playback time signature"),
              IconCode::Code::TIME_SIGNATURE
              ),
-    UiAction(PLAYBACK_LEVEL_ACTION_CODE.toString(),
+    UiAction(PLAYBACK_LEVEL_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Playback level"),
@@ -239,10 +239,10 @@ void PlaybackUiActions::init()
 
     m_controller->isPlayingChanged().onNotify(this, [this]() {
         ActionCodeList codes= {
-            PLAYBACK_PLAY_ACTION_CODE.toString(),
-            PLAYBACK_PAUSE_ACTION_CODE.toString(),
-            PLAYBACK_REWIND_START_ACTION_CODE.toString(),
-            PLAYBACK_REWIND_END_ACTION_CODE.toString()
+            PLAYBACK_PLAY_QUERY.toString(),
+            PLAYBACK_PAUSE_QUERY.toString(),
+            PLAYBACK_REWIND_START_QUERY.toString(),
+            PLAYBACK_REWIND_END_QUERY.toString()
         };
 
         m_actionEnabledChanged.send(codes);
