@@ -63,6 +63,7 @@ set(AU3_DEF
 
     -DGRAPHICS_API=
     -DWAVE_TRACK_PAINT_API=
+    -DTHEME_API=
 
     -DEXPERIMENTAL_SPECTRAL_EDITING
 
@@ -158,6 +159,7 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-time-frequency-selection
     ${AU3_LIBRARIES}/lib-graphics
     ${AU3_LIBRARIES}/lib-wave-track-paint
+    ${AU3_LIBRARIES}/lib-theme
 
     # effects
     ${AU3_LIBRARIES}/lib-effects
