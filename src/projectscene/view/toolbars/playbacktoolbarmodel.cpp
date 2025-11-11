@@ -185,15 +185,18 @@ void PlaybackToolBarModel::updateStopState()
         return;
     }
 
-    bool isRecording = recordController()->isRecording();
-    ActionCode code = isRecording ? STOP_RECORD_ACTION_CODE : STOP_ACTION_CODE;
-    UiAction action = uiActionsRegister()->action(code);
+    const bool isRecording = recordController()->isRecording();
+    const ActionCode code = isRecording ? STOP_RECORD_ACTION_CODE : STOP_ACTION_CODE;
+    const UiAction action = uiActionsRegister()->action(code);
     item->setAction(action);
     if (!isRecording) {
-        item->setArgs(ActionData::make_arg2<bool, bool>(true, true));
+        constexpr bool shouldSeek = true;
+        constexpr bool shouldUpdatePlaybackRegion = true;
+        const ActionData data = ActionData::make_arg2<bool, bool>(shouldSeek, shouldUpdatePlaybackRegion);
+        item->setArgs(data);
     }
 
-    QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
+    const QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
     item->setIconColor(iconColor);
 }
 

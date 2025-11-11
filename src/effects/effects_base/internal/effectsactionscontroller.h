@@ -12,6 +12,7 @@
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/ui/iuiactionsregister.h"
 
+#include "playback/iplaybackcontroller.h"
 #include "../ieffectexecutionscenario.h"
 #include "../ieffectsprovider.h"
 #include "../ieffectpresetsscenario.h"
@@ -27,6 +28,7 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectPresetsScenario> presetsScenario;
     muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<au::playback::IPlaybackController> playbackController;
 
 public:
     void init();

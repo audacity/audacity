@@ -45,6 +45,7 @@ public:
     virtual bool isStopped() const = 0;
 
     virtual void stopAction(const muse::actions::ActionData& args) = 0;
+    virtual void stop(bool shouldSeek, bool shouldUpdatePlaybackRegion) = 0;
 
     virtual void reset() = 0;
 

@@ -61,8 +61,7 @@ void EffectsActionsController::onEffectTriggered(const muse::actions::ActionQuer
     }
     constexpr bool shouldSeek = false;
     constexpr bool shouldUpdatePlaybackRegion = false;
-    const ActionData data = ActionData::make_arg2<bool, bool>(shouldSeek, shouldUpdatePlaybackRegion);
-    dispatcher()->dispatch("playback/stop", data);
+    playbackController()->stop(shouldSeek, shouldUpdatePlaybackRegion);
 
     effectExecutionScenario()->performEffect(effectId);
 }
@@ -71,8 +70,7 @@ void EffectsActionsController::repeatLastEffect()
 {
     constexpr bool shouldSeek = false;
     constexpr bool shouldUpdatePlaybackRegion = false;
-    const ActionData data = ActionData::make_arg2<bool, bool>(shouldSeek, shouldUpdatePlaybackRegion);
-    dispatcher()->dispatch("playback/stop", data);
+    playbackController()->stop(shouldSeek, shouldUpdatePlaybackRegion);
 
     effectExecutionScenario()->repeatLastProcessor();
 }

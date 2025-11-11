@@ -195,7 +195,9 @@ void PlaybackController::seek(const muse::secs_t secs, bool applyIfPlaying)
 
 void PlaybackController::reset()
 {
-    stopInternal(true, true);
+    constexpr bool shouldSeek = true;
+    constexpr bool shouldUpdatePlaybackRegion = true;
+    stop(shouldSeek, shouldUpdatePlaybackRegion);
 }
 
 Channel<uint32_t> PlaybackController::midiTickPlayed() const
@@ -227,7 +229,9 @@ void PlaybackController::onProjectChanged()
     au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (prj) {
         prj->aboutCloseBegin().onNotify(this, [this]() {
-            stopInternal(true, true);
+            constexpr bool shouldSeek = true;
+            constexpr bool shouldUpdatePlaybackRegion = true;
+            stop(shouldSeek, shouldUpdatePlaybackRegion);
         });
 
         seek(0.0, false); // TODO: get the previous position from the project data
@@ -256,7 +260,9 @@ void PlaybackController::togglePlay()
     const bool isShiftPressed = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
     if (isPlaying()) {
         if (isShiftPressed) {
-            stopInternal(true, true);
+            constexpr bool shouldSeek = true;
+            constexpr bool shouldUpdatePlaybackRegion = true;
+            stop(shouldSeek, shouldUpdatePlaybackRegion);
         } else {
             pause();
         }
@@ -324,7 +330,9 @@ void PlaybackController::playTracksAction(const muse::actions::ActionData& args)
 void PlaybackController::rewindToStart()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
-    stopInternal(true, true);
+    constexpr bool shouldSeek = true;
+    constexpr bool shouldUpdatePlaybackRegion = true;
+    stop(shouldSeek, shouldUpdatePlaybackRegion);
 
     doSeek(0.0, false);
 
@@ -336,7 +344,9 @@ void PlaybackController::rewindToEnd()
     //! NOTE: In Audacity 3 we can't rewind while playing
     m_lastPlaybackSeekTime = totalPlayTime();
     m_lastPlaybackRegion = { totalPlayTime(), totalPlayTime() };
-    stopInternal(true, true);
+    constexpr bool shouldSeek = true;
+    constexpr bool shouldUpdatePlaybackRegion = true;
+    stop(shouldSeek, shouldUpdatePlaybackRegion);
 
     selectionController()->resetTimeSelection();
 }
@@ -414,10 +424,10 @@ void PlaybackController::stopAction(const muse::actions::ActionData& args)
 {
     const bool shouldSeek = args.count() >= 1 ? args.arg<bool>(0) : false;
     const bool shouldUpdatePlaybackRegion = args.count() >= 2 ? args.arg<bool>(1) : false;
-    stopInternal(shouldSeek, shouldUpdatePlaybackRegion);
+    stop(shouldSeek, shouldUpdatePlaybackRegion);
 }
 
-void PlaybackController::stopInternal(const bool shouldSeek, const bool shouldUpdatePlaybackRegion)
+void PlaybackController::stop(const bool shouldSeek, const bool shouldUpdatePlaybackRegion)
 {
     IF_ASSERT_FAILED(player()) {
         return;

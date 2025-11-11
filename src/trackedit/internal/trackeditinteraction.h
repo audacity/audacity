@@ -2,19 +2,19 @@
 
 #include "itrackeditinteraction.h"
 #include "trackedit/trackediterrors.h"
-#include "framework/actions/iactionsdispatcher.h"
 
 #include "playback/iplayer.h"
 #include "global/types/secs.h"
 #include "modularity/ioc.h"
 #include "record/irecordcontroller.h"
 #include "au3wrap/internal/progressdialog.h"
+#include "playback/iplaybackcontroller.h"
 
 namespace au::trackedit {
 class TrackeditInteraction : public ITrackeditInteraction, public muse::Injectable
 {
     muse::Inject<au::record::IRecordController> recordController;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<au::playback::IPlaybackController> playbackController;
 
 public:
     TrackeditInteraction(std::unique_ptr<ITrackeditInteraction> interaction);
@@ -133,8 +133,8 @@ private:
         }
         constexpr bool shouldSeek = false;
         constexpr bool shouldUpdatePlaybackRegion = false;
-        const muse::actions::ActionData data = muse::actions::ActionData::make_arg2<bool, bool>(shouldSeek, shouldUpdatePlaybackRegion);
-        dispatcher()->dispatch("playback/stop", data);
+        playbackController()->stop(shouldSeek, shouldUpdatePlaybackRegion);
+
         return (m_interaction.get()->*method)(std::forward<Args>(args)...);
     }
 
