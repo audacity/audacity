@@ -36,7 +36,7 @@ public:
         const bool trackIsSelected;
     };
 
-    void paint(QPainter&, WaveClipChannel& clipChannel, const WaveMetrics&, const Params& params);
+    void paint(QPainter&, WaveClipChannel&, const WaveChannel&, const WaveMetrics&, const Params&);
 
 private:
     std::weak_ptr<au3::Au3Project> m_au3Project; // TODO check if still needed when done
