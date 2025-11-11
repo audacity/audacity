@@ -280,7 +280,8 @@ Item {
 
         //! To draw on top of other labels, we need to change the parent and increase z
         parent: root.container
-        x: root.parent.x - width/2
+        width: 2
+        x: root.parent.x + root.parent.width/2 - width/2
         y: root.parent.y
         z: root.parent.z
 

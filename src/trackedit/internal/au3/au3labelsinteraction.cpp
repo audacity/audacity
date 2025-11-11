@@ -284,7 +284,7 @@ bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset, bool /*complete
     return true;
 }
 
-bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool /*completed*/)
+bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)
 {
     UNUSED(completed);
 
@@ -312,24 +312,31 @@ bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
     const auto& au3labels = labelTrack->GetLabels();
     Au3Label au3Label = au3labels[labelIndex];
 
+    if (!m_stretchTime.has_value() || m_stretchingLabelKey != labelKey) {
+        m_stretchTime = au3Label.getT1();
+        m_stretchingLabelKey = labelKey;
+    }
+
     newStartTime = std::max(0.0, newStartTime.to_double());
+    double anchorT1 = m_stretchTime.value();
 
-    secs_t newEndTime = std::max(newStartTime.to_double(), au3Label.getT1());
-    newStartTime = std::min(newStartTime.to_double(), au3Label.getT1());
-
-    // Update the label with new start time
-    au3Label.selectedRegion.setTimes(newStartTime, newEndTime);
+    au3Label.selectedRegion.setTimes(newStartTime, anchorT1);
     labelTrack->SetLabel(labelIndex, au3Label);
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
         prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, au3Label.GetId())));
+    }
+
+    if (completed) {
+        m_stretchTime.reset();
+        m_stretchingLabelKey.reset();
     }
 
     return true;
 }
 
-bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool /*completed*/)
+bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
 {
     UNUSED(completed);
 
@@ -357,18 +364,25 @@ bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t ne
     const auto& au3labels = labelTrack->GetLabels();
     Au3Label au3Label = au3labels[labelIndex];
 
-    secs_t newStartTime = std::min(newEndTime.to_double(), au3Label.getT0());
-    newStartTime = std::max(0.0, newStartTime.to_double());
+    if (!m_stretchTime.has_value() || m_stretchingLabelKey != labelKey) {
+        m_stretchTime = au3Label.getT0();
+        m_stretchingLabelKey = labelKey;
+    }
 
-    newEndTime = std::max(newEndTime.to_double(), au3Label.getT0());
+    newEndTime = std::max(0.0, newEndTime.to_double());
+    double anchorT0 = m_stretchTime.value();
 
-    // Update the label with new end time
-    au3Label.selectedRegion.setTimes(newStartTime, newEndTime);
+    au3Label.selectedRegion.setTimes(anchorT0, newEndTime);
     labelTrack->SetLabel(labelIndex, au3Label);
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
         prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, au3Label.GetId())));
+    }
+
+    if (completed) {
+        m_stretchTime.reset();
+        m_stretchingLabelKey.reset();
     }
 
     return true;
