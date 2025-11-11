@@ -26,22 +26,22 @@ static const QString TOOLBAR_NAME("playbackToolBar");
 static const QString PLAY_PAUSE_ITEM_ID("play-pause-id");
 static const QString STOP_ITEM_ID("stop-id");
 
-static const ActionCode PLAYBACK_PLAY_ACTION_CODE("action://playback/play");
-static const ActionCode PLAYBACK_PAUSE_ACTION_CODE("action://playback/pause");
-static const ActionCode PLAYBACK_STOP_ACTION_CODE("action://playback/stop");
+static const ActionQuery PLAYBACK_PLAY_ACTION_CODE("action://playback/play");
+static const ActionQuery PLAYBACK_PAUSE_ACTION_CODE("action://playback/pause");
+static const ActionQuery PLAYBACK_STOP_ACTION_CODE("action://playback/stop");
 
 static const ActionCode RECORD_START_ACTION_CODE("action://record/start");
 static const ActionCode RECORD_PAUSE_ACTION_CODE("action://record/pause");
 static const ActionCode RECORD_STOP_ACTION_CODE("action://record/stop");
 static const ActionCode RECORD_LEVEL_ACTION_CODE("action://record/level");
 
-static const ActionCode PLAYBACK_REWIND_START_ACTION_CODE("action://playback/rewind-start");
-static const ActionCode PLAYBACK_REWIND_END_ACTION_CODE("action://playback/rewind-end");
+static const ActionQuery PLAYBACK_REWIND_START_ACTION_CODE("action://playback/rewind-start");
+static const ActionQuery PLAYBACK_REWIND_END_ACTION_CODE("action://playback/rewind-end");
 static const ActionCode LOOP_ACTION_CODE("toggle-loop-region");
 
 static const ActionCode SPLIT_TOOL_ACTION_CODE("split-tool");
 
-static const ActionCode PLAYBACK_LEVEL_ACTION_CODE("action://playback/level");
+static const ActionQuery PLAYBACK_LEVEL_ACTION_CODE("action://playback/level");
 static const ActionCode PLAYBACK_TIME("playback-time");
 static const ActionCode PLAYBACK_BPM("playback-bpm");
 static const ActionCode PLAYBACK_TIME_SIGNATURE("playback-time-signature");
@@ -51,16 +51,16 @@ static const ActionCode SNAP_ACTION_CODE("snap");
 static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
 {
     std::map<ActionCode, PlaybackToolBarModel::ItemType> types = {
-        { PLAYBACK_LEVEL_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_LEVEL },
+        { PLAYBACK_LEVEL_ACTION_CODE.toString(), PlaybackToolBarModel::PLAYBACK_LEVEL },
         { PLAYBACK_TIME, PlaybackToolBarModel::PLAYBACK_TIME },
         { PLAYBACK_BPM, PlaybackToolBarModel::PLAYBACK_BPM },
         { PLAYBACK_TIME_SIGNATURE, PlaybackToolBarModel::PLAYBACK_TIME_SIGNATURE },
         { RECORD_LEVEL_ACTION_CODE, PlaybackToolBarModel::RECORD_LEVEL },
-        { PLAYBACK_PLAY_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { PLAYBACK_STOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PLAYBACK_PLAY_ACTION_CODE.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PLAYBACK_STOP_ACTION_CODE.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { RECORD_START_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { PLAYBACK_REWIND_START_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { PLAYBACK_REWIND_END_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PLAYBACK_REWIND_START_ACTION_CODE.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { PLAYBACK_REWIND_END_ACTION_CODE.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { LOOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { SPLIT_TOOL_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { SNAP_ACTION_CODE, PlaybackToolBarModel::SNAP }
@@ -113,12 +113,12 @@ void PlaybackToolBarModel::reload()
 
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
 {
-    if (containsAction(codes, PLAYBACK_PLAY_ACTION_CODE) || containsAction(codes, PLAYBACK_PAUSE_ACTION_CODE)
+    if (containsAction(codes, PLAYBACK_PLAY_ACTION_CODE.toString()) || containsAction(codes, PLAYBACK_PAUSE_ACTION_CODE.toString())
         || containsAction(codes, RECORD_PAUSE_ACTION_CODE)) {
         updatePlayState();
     }
 
-    if (containsAction(codes, PLAYBACK_STOP_ACTION_CODE) || containsAction(codes, RECORD_STOP_ACTION_CODE)) {
+    if (containsAction(codes, PLAYBACK_STOP_ACTION_CODE.toString()) || containsAction(codes, RECORD_STOP_ACTION_CODE)) {
         updateStopState();
     }
 
@@ -153,7 +153,7 @@ void PlaybackToolBarModel::updatePlayState()
     bool isPlaying = playbackController()->isPlaying();
     bool isRecording = recordController()->isRecording();
 
-    ActionCode code = isPlaying ? PLAYBACK_PAUSE_ACTION_CODE : PLAYBACK_PLAY_ACTION_CODE;
+    ActionCode code = isPlaying ? PLAYBACK_PAUSE_ACTION_CODE.toString() : PLAYBACK_PLAY_ACTION_CODE.toString();
     if (isRecording) {
         code = RECORD_PAUSE_ACTION_CODE;
     }
@@ -185,7 +185,7 @@ void PlaybackToolBarModel::updateStopState()
     }
 
     const bool isRecording = recordController()->isRecording();
-    const ActionCode code = isRecording ? RECORD_STOP_ACTION_CODE : PLAYBACK_STOP_ACTION_CODE;
+    const ActionCode code = isRecording ? RECORD_STOP_ACTION_CODE : PLAYBACK_STOP_ACTION_CODE.toString();
     const UiAction action = uiActionsRegister()->action(code);
     item->setAction(action);
     if (!isRecording) {
@@ -286,7 +286,7 @@ void PlaybackToolBarModel::updateActions()
             continue;
         }
 
-        if (citem.action == PLAYBACK_LEVEL_ACTION_CODE) {
+        if (citem.action == PLAYBACK_LEVEL_ACTION_CODE.toString()) {
             if (configuration()->playbackMeterPosition() == playback::PlaybackMeterPosition::MeterPosition::SideBar) {
                 // Skip playback meter item if it is set to be displayed in the sidebar
                 continue;
@@ -303,11 +303,11 @@ void PlaybackToolBarModel::updateActions()
             continue;
         }
 
-        if (citem.action == PLAYBACK_PLAY_ACTION_CODE) {
+        if (citem.action == PLAYBACK_PLAY_ACTION_CODE.toString()) {
             item->setId(PLAY_PAUSE_ITEM_ID); // for quick finding
         }
 
-        if (citem.action == PLAYBACK_STOP_ACTION_CODE) {
+        if (citem.action == PLAYBACK_STOP_ACTION_CODE.toString()) {
             item->setId(STOP_ITEM_ID); // for quick finding
         }
 

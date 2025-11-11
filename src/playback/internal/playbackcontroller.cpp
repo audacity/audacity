@@ -11,14 +11,14 @@ using namespace au::playback;
 using namespace muse::async;
 using namespace muse::actions;
 
-static const ActionCode PLAYBACK_PLAY_CODE("action://playback/play");
-static const ActionCode PLAYBACK_PLAY_TRACKS_CODE("action://playback/play-tracks");
-static const ActionCode PLAYBACK_PAUSE_CODE("action://playback/pause");
-static const ActionCode PLAYBACK_STOP_CODE("action://playback/stop");
-static const ActionCode PLAYBACK_REWIND_START_CODE("action://playback/rewind-start");
-static const ActionCode PLAYBACK_REWIND_END_CODE("action://playback/rewind-end");
-static const ActionCode PLAYBACK_SEEK_CODE("action://playback/seek");
-static const ActionCode PLAYBACK_CHANGE_PLAY_REGION_CODE("action://playback/play-region-change");
+static const ActionQuery PLAYBACK_PLAY_CODE("action://playback/play");
+static const ActionQuery PLAYBACK_PLAY_TRACKS_CODE("action://playback/play-tracks");
+static const ActionQuery PLAYBACK_PAUSE_CODE("action://playback/pause");
+static const ActionQuery PLAYBACK_STOP_CODE("action://playback/stop");
+static const ActionQuery PLAYBACK_REWIND_START_CODE("action://playback/rewind-start");
+static const ActionQuery PLAYBACK_REWIND_END_CODE("action://playback/rewind-end");
+static const ActionQuery PLAYBACK_SEEK_CODE("action://playback/seek");
+static const ActionQuery PLAYBACK_CHANGE_PLAY_REGION_CODE("action://playback/play-region-change");
 
 static const ActionCode PAN_CODE("pan");
 static const ActionCode REPEAT_CODE("repeat");
@@ -316,16 +316,32 @@ void PlaybackController::doPlay(bool ignoreSelection)
     player()->play();
 }
 
-void PlaybackController::playTracksAction(const muse::actions::ActionData& args)
+void PlaybackController::playTracksAction(const muse::actions::ActionQuery& q)
 {
-    const std::shared_ptr<TrackList> trackList = args.arg<std::shared_ptr<TrackList> >(0);
-    const double startTime = args.arg<double>(1);
-    const double endTime = args.arg<double>(2);
-    const PlayTracksOptions options = args.arg<PlayTracksOptions>(3);
+    // this is not implemented yet
+    /*
+    IF_ASSERT_FAILED(q.contains("trackList")) {
+        return;
+    }
+    IF_ASSERT_FAILED(q.contains("startTime")) {
+        return;
+    }
+    IF_ASSERT_FAILED(q.contains("endTime")) {
+        return;
+    }
+    IF_ASSERT_FAILED(q.contains("options")) {
+        return;
+    }
+
+    const std::shared_ptr<TrackList> trackList = q.param("trackList").toObject<TrackList>();
+    const double startTime = q.param("startTime").toDouble();
+    const double endTime = q.param("endTime").toDouble();
+    const PlayTracksOptions options = q.param("options").toObject<PlayTracksOptions>();
     muse::Ret ret = player()->playTracks(*trackList, startTime, endTime, options);
     if (!ret.success()) {
         LOGE() << "playTracks failed: " << ret.toString();
     }
+    */
 }
 
 void PlaybackController::rewindToStartAction()
@@ -352,14 +368,17 @@ void PlaybackController::rewindToEndAction()
     selectionController()->resetTimeSelection();
 }
 
-void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
+void PlaybackController::onSeekAction(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(args.count() > 0) {
+    IF_ASSERT_FAILED(q.contains("seekTime")) {
+        return;
+    }
+    IF_ASSERT_FAILED(q.contains("triggerPlay")) {
         return;
     }
 
-    muse::secs_t secs = args.arg<double>(0);
-    bool triggerPlay = args.count() > 1 ? args.arg<bool>(1) : false;
+    const muse::secs_t secs = q.param("seekTime").toDouble();
+    const bool triggerPlay = q.param("triggerPlay").toBool();
 
     if (isPaused()) {
         player()->stop();
@@ -387,14 +406,17 @@ void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
     m_lastPlaybackRegion = {};
 }
 
-void PlaybackController::onChangePlaybackRegionAction(const muse::actions::ActionData& args)
+void PlaybackController::onChangePlaybackRegionAction(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(args.count() > 1) {
+    IF_ASSERT_FAILED(q.contains("start")) {
+        return;
+    }
+    IF_ASSERT_FAILED(q.contains("end")) {
         return;
     }
 
-    muse::secs_t start = args.arg<double>(0);
-    muse::secs_t end = args.arg<double>(1);
+    const muse::secs_t start = q.param("start").toDouble();
+    const muse::secs_t end = q.param("end").toDouble();
 
     doChangePlaybackRegion({ start, end });
 }
@@ -426,10 +448,17 @@ void PlaybackController::doPause()
     player()->pause();
 }
 
-void PlaybackController::stopAction(const muse::actions::ActionData& args)
+void PlaybackController::stopAction(const muse::actions::ActionQuery& q)
 {
-    const bool shouldSeek = args.count() >= 1 ? args.arg<bool>(0) : false;
-    const bool shouldUpdatePlaybackRegion = args.count() >= 2 ? args.arg<bool>(1) : false;
+    IF_ASSERT_FAILED(q.contains("shouldSeek")) {
+        return;
+    }
+    IF_ASSERT_FAILED(q.contains("shouldUpdatePlaybackRegion")) {
+        return;
+    }
+
+    const bool shouldSeek = q.param("shouldSeek").toBool();
+    const bool shouldUpdatePlaybackRegion = q.param("shouldUpdatePlaybackRegion").toBool();
     stop(shouldSeek, shouldUpdatePlaybackRegion);
 }
 
@@ -728,15 +757,17 @@ muse::Progress PlaybackController::loadingProgress() const
 
 bool PlaybackController::canReceiveAction(const ActionCode& code) const
 {
+    // note that we currently do toString() on the NAMED_CODE because those are ActionQuery, and we don't have
+    // convenient way to compare ActionCode with ActionQuery
     if (globalContext()->currentProject() == nullptr) {
         return false;
     }
 
-    if (code == PLAYBACK_PLAY_CODE) {
+    if (code == PLAYBACK_PLAY_CODE.toString()) {
         return !recordController()->isRecording();
     }
 
-    if (code == PLAYBACK_REWIND_START_CODE || code == PLAYBACK_REWIND_END_CODE) {
+    if (code == PLAYBACK_REWIND_START_CODE.toString() || code == PLAYBACK_REWIND_END_CODE.toString()) {
         return !isPlaying() && !recordController()->isRecording();
     }
 

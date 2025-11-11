@@ -25,6 +25,9 @@ using namespace au;
 using namespace au::playback;
 using namespace au::context;
 
+static const actions::ActionQuery PLAYBACK_SEEK_CODE("action://playback/seek");
+static const actions::ActionQuery PLAYBACK_CHANGE_PLAY_REGION_CODE("action://playback/play-region-change");
+
 namespace au::playback {
 class PlaybackControllerTests : public ::testing::Test
 {
@@ -90,12 +93,18 @@ public:
 
     void changePlaybackRegion(const secs_t start, const secs_t end)
     {
-        m_controller->onChangePlaybackRegionAction(muse::actions::ActionData::make_arg2<double, double>(start, end));
+        muse::actions::ActionQuery q(PLAYBACK_CHANGE_PLAY_REGION_CODE);
+        q.addParam("start", muse::Val(start));
+        q.addParam("end", muse::Val(end));
+        m_controller->onChangePlaybackRegionAction(q);
     }
 
-    void seek(const secs_t time, bool triggerPlay = false)
+    void seek(const secs_t seekTime, const bool triggerPlay = false)
     {
-        m_controller->onSeekAction(muse::actions::ActionData::make_arg2<double, bool>(time, triggerPlay));
+        muse::actions::ActionQuery q(PLAYBACK_SEEK_CODE);
+        q.addParam("seekTime", muse::Val(seekTime));
+        q.addParam("triggerPlay", muse::Val(triggerPlay));
+        m_controller->onSeekAction(q);
     }
 
     void rewindToStart()

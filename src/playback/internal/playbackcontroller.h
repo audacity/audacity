@@ -106,13 +106,13 @@ private:
 
     void togglePlayAction();
     void doPlay(bool ignoreSelection);
-    void stopAction(const muse::actions::ActionData& args);
-    void playTracksAction(const muse::actions::ActionData& args);
+    void stopAction(const muse::actions::ActionQuery& q);
+    void playTracksAction(const muse::actions::ActionQuery& q);
     void rewindToStartAction();
     void rewindToEndAction();
-    void onSeekAction(const muse::actions::ActionData& args);
+    void onSeekAction(const muse::actions::ActionQuery& q);
     void doSeek(const muse::secs_t secs, bool applyIfPlaying);
-    void onChangePlaybackRegionAction(const muse::actions::ActionData& args);
+    void onChangePlaybackRegionAction(const muse::actions::ActionQuery& q);
     void doChangePlaybackRegion(const PlaybackRegion& region);
     void pauseAction();
     void doPause();

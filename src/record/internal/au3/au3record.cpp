@@ -33,7 +33,7 @@ using namespace au::au3;
 constexpr int RATE_NOT_SELECTED = -1;
 using WritableSampleTrackArray = std::vector< std::shared_ptr< WritableSampleTrack > >;
 
-static const muse::actions::ActionCode PLAYBACK_SEEK_CODE("action://playback/seek");
+static const muse::actions::ActionQuery PLAYBACK_SEEK_CODE("action://playback/seek");
 
 struct PropertiesOfSelected
 {
@@ -248,7 +248,10 @@ void Au3Record::init()
 
         commitRecording();
 
-        dispatcher()->dispatch(PLAYBACK_SEEK_CODE, muse::actions::ActionData::make_arg1<double>(globalContext()->recordPosition()));
+        muse::actions::ActionQuery q(PLAYBACK_SEEK_CODE);
+        q.addParam("seekTime", muse::Val(globalContext()->recordPosition()));
+        q.addParam("triggerPlay", muse::Val(false));
+        dispatcher()->dispatch(q);
 
         auto& pendingTracks = PendingTracks::Get(projectRef());
         pendingTracks.ClearPendingTracks();
