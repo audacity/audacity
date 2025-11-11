@@ -62,7 +62,6 @@ public:
     bool isPaused() const override;
     bool isStopped() const override;
 
-    void stopAction(const muse::actions::ActionData& args) override;
     void stop(bool shouldSeek, bool shouldUpdatePlaybackRegion) override;
     void reset() override;
 
@@ -85,8 +84,6 @@ public:
 
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
-    void playTracksAction(const muse::actions::ActionData& args) override;
-
 private:
     friend class PlaybackControllerTests;
 
@@ -108,6 +105,8 @@ private:
     void seekRangeSelection();
 
     void togglePlay();
+    void stopAction(const muse::actions::ActionData& args);
+    void playTracksAction(const muse::actions::ActionData& args);
     void rewindToStart();
     void rewindToEnd();
     void onSeekAction(const muse::actions::ActionData& args);

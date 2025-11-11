@@ -44,7 +44,6 @@ public:
     virtual bool isPaused() const = 0;
     virtual bool isStopped() const = 0;
 
-    virtual void stopAction(const muse::actions::ActionData& args) = 0;
     virtual void stop(bool shouldSeek, bool shouldUpdatePlaybackRegion) = 0;
 
     virtual void reset() = 0;
@@ -65,8 +64,6 @@ public:
     virtual muse::async::Notification totalPlayTimeChanged() const = 0;
 
     virtual muse::Progress loadingProgress() const = 0;
-
-    virtual void playTracksAction(const muse::actions::ActionData& args) = 0;
 };
 }
 
