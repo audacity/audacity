@@ -10,10 +10,10 @@ using namespace au::record;
 using namespace muse::async;
 using namespace muse::actions;
 
-static const ActionCode RECORD_START_ACTION_CODE("action://record/start");
-static const ActionCode RECORD_PAUSE_ACTION_CODE("action://record/pause");
-static const ActionCode RECORD_STOP_ACTION_CODE("action://record/stop");
-static const ActionCode RECORD_LEVEL_ACTION_CODE("action://record/level"); // doesn't have callback here
+static const ActionQuery RECORD_START_ACTION_CODE("action://record/start");
+static const ActionQuery RECORD_PAUSE_ACTION_CODE("action://record/pause");
+static const ActionQuery RECORD_STOP_ACTION_CODE("action://record/stop");
+static const ActionQuery RECORD_LEVEL_ACTION_CODE("action://record/level"); // doesn't have callback here
 
 void RecordController::init()
 {
@@ -134,11 +134,11 @@ bool RecordController::canReceiveAction(const ActionCode& code) const
         return false;
     }
 
-    if (code == RECORD_START_ACTION_CODE) {
+    if (code == RECORD_START_ACTION_CODE.toString()) {
         return !playbackController()->isPlaying();
     }
 
-    if (code == RECORD_STOP_ACTION_CODE) {
+    if (code == RECORD_STOP_ACTION_CODE.toString()) {
         return isRecording();
     }
 
