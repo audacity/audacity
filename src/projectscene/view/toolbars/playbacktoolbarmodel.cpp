@@ -30,10 +30,10 @@ static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
 static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
 static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
 
-static const ActionQuery RECORD_START_ACTION_CODE("action://record/start");
-static const ActionQuery RECORD_PAUSE_ACTION_CODE("action://record/pause");
-static const ActionQuery RECORD_STOP_ACTION_CODE("action://record/stop");
-static const ActionQuery RECORD_LEVEL_ACTION_CODE("action://record/level");
+static const ActionQuery RECORD_START_QUERY("action://record/start");
+static const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
+static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
+static const ActionQuery RECORD_LEVEL_QUERY("action://record/level");
 
 static const ActionQuery PLAYBACK_REWIND_START_QUERY("action://playback/rewind-start");
 static const ActionQuery PLAYBACK_REWIND_END_QUERY("action://playback/rewind-end");
@@ -55,10 +55,10 @@ static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
         { PLAYBACK_TIME, PlaybackToolBarModel::PLAYBACK_TIME },
         { PLAYBACK_BPM, PlaybackToolBarModel::PLAYBACK_BPM },
         { PLAYBACK_TIME_SIGNATURE, PlaybackToolBarModel::PLAYBACK_TIME_SIGNATURE },
-        { RECORD_LEVEL_ACTION_CODE.toString(), PlaybackToolBarModel::RECORD_LEVEL },
+        { RECORD_LEVEL_QUERY.toString(), PlaybackToolBarModel::RECORD_LEVEL },
         { PLAYBACK_PLAY_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { PLAYBACK_STOP_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { RECORD_START_ACTION_CODE.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { RECORD_START_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { PLAYBACK_REWIND_START_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { PLAYBACK_REWIND_END_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { LOOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
@@ -114,15 +114,15 @@ void PlaybackToolBarModel::reload()
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
 {
     if (containsAction(codes, PLAYBACK_PLAY_QUERY.toString()) || containsAction(codes, PLAYBACK_PAUSE_QUERY.toString())
-        || containsAction(codes, RECORD_PAUSE_ACTION_CODE.toString())) {
+        || containsAction(codes, RECORD_PAUSE_QUERY.toString())) {
         updatePlayState();
     }
 
-    if (containsAction(codes, PLAYBACK_STOP_QUERY.toString()) || containsAction(codes, RECORD_STOP_ACTION_CODE.toString())) {
+    if (containsAction(codes, PLAYBACK_STOP_QUERY.toString()) || containsAction(codes, RECORD_STOP_QUERY.toString())) {
         updateStopState();
     }
 
-    if (containsAction(codes, RECORD_START_ACTION_CODE.toString())) {
+    if (containsAction(codes, RECORD_START_QUERY.toString())) {
         updateRecordState();
     }
 
@@ -155,7 +155,7 @@ void PlaybackToolBarModel::updatePlayState()
 
     ActionCode code = isPlaying ? PLAYBACK_PAUSE_QUERY.toString() : PLAYBACK_PLAY_QUERY.toString();
     if (isRecording) {
-        code = RECORD_PAUSE_ACTION_CODE.toString();
+        code = RECORD_PAUSE_QUERY.toString();
     }
 
     UiAction action = uiActionsRegister()->action(code);
@@ -185,7 +185,7 @@ void PlaybackToolBarModel::updateStopState()
     }
 
     const bool isRecording = recordController()->isRecording();
-    const ActionCode code = isRecording ? RECORD_STOP_ACTION_CODE.toString() : PLAYBACK_STOP_QUERY.toString();
+    const ActionCode code = isRecording ? RECORD_STOP_QUERY.toString() : PLAYBACK_STOP_QUERY.toString();
     const UiAction action = uiActionsRegister()->action(code);
     item->setAction(action);
     if (!isRecording) {
@@ -201,7 +201,7 @@ void PlaybackToolBarModel::updateStopState()
 
 void PlaybackToolBarModel::updateRecordState()
 {
-    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(RECORD_START_ACTION_CODE.toString()));
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(RECORD_START_QUERY.toString()));
 
     if (item == nullptr) {
         return;

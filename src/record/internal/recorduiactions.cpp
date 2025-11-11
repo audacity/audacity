@@ -13,34 +13,34 @@ using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
 
-static const ActionQuery RECORD_START_ACTION_CODE("action://record/start");
-static const ActionQuery RECORD_PAUSE_ACTION_CODE("action://record/pause");
-static const ActionQuery RECORD_STOP_ACTION_CODE("action://record/stop");
-static const ActionQuery RECORD_LEVEL_ACTION_CODE("action://record/level");
+static const ActionQuery RECORD_START_QUERY("action://record/start");
+static const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
+static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
+static const ActionQuery RECORD_LEVEL_QUERY("action://record/level");
 
 const UiActionList RecordUiActions::m_mainActions = {
-    UiAction(RECORD_START_ACTION_CODE.toString(),
+    UiAction(RECORD_START_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Record"),
              TranslatableString("action", "Record"),
              IconCode::Code::RECORD_FILL
              ),
-    UiAction(RECORD_PAUSE_ACTION_CODE.toString(),
+    UiAction(RECORD_PAUSE_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Pause"),
              TranslatableString("action", "Pause"),
              IconCode::Code::PAUSE_FILL
              ),
-    UiAction(RECORD_STOP_ACTION_CODE.toString(),
+    UiAction(RECORD_STOP_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Stop"),
              TranslatableString("action", "Stop record"),
              IconCode::Code::STOP_FILL
              ),
-    UiAction(RECORD_LEVEL_ACTION_CODE.toString(),
+    UiAction(RECORD_LEVEL_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Record level"),
@@ -68,9 +68,9 @@ void RecordUiActions::init()
 
     m_controller->isRecordingChanged().onNotify(this, [this]() {
         ActionCodeList codes= {
-            RECORD_START_ACTION_CODE.toString(),
-            RECORD_PAUSE_ACTION_CODE.toString(),
-            RECORD_STOP_ACTION_CODE.toString()
+            RECORD_START_QUERY.toString(),
+            RECORD_PAUSE_QUERY.toString(),
+            RECORD_STOP_QUERY.toString()
         };
 
         m_actionEnabledChanged.send(codes);

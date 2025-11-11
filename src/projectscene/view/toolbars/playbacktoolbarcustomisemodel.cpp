@@ -21,7 +21,7 @@ using namespace muse::actions;
 static const QString TOOLBAR_NAME("playbackToolBar");
 
 static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
-static const ActionQuery RECORD_START_ACTION_CODE("action://record/start");
+static const ActionQuery RECORD_START_QUERY("action://record/start");
 
 PlaybackToolBarCustomiseModel::PlaybackToolBarCustomiseModel(QObject* parent)
     : SelectableItemListModel(parent)
@@ -238,7 +238,7 @@ QColor PlaybackToolBarCustomiseModel::iconColor(const muse::ui::UiAction& action
     QColor color = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
     if (action.code == PLAYBACK_PLAY_QUERY.toString()) {
         color = QColor(configuration()->playColor().toQColor());
-    } else if (action.code == RECORD_START_ACTION_CODE.toString()) {
+    } else if (action.code == RECORD_START_QUERY.toString()) {
         color = QColor(recordConfiguration()->recordColor().toQColor());
     }
 
