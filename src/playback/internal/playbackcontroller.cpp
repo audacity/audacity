@@ -11,14 +11,14 @@ using namespace au::playback;
 using namespace muse::async;
 using namespace muse::actions;
 
-static const ActionCode PLAYBACK_PLAY_CODE("playback/play");
-static const ActionCode PLAYBACK_PLAY_TRACKS_CODE("playback/play-tracks");
-static const ActionCode PLAYBACK_PAUSE_CODE("playback/pause");
-static const ActionCode PLAYBACK_STOP_CODE("playback/stop");
-static const ActionCode PLAYBACK_REWIND_START_CODE("playback/rewind-start");
-static const ActionCode PLAYBACK_REWIND_END_CODE("playback/rewind-end");
-static const ActionCode PLAYBACK_SEEK_CODE("playback/seek");
-static const ActionCode PLAYBACK_CHANGE_PLAY_REGION_CODE("playback/play-region-change");
+static const ActionCode PLAYBACK_PLAY_CODE("action://playback/play");
+static const ActionCode PLAYBACK_PLAY_TRACKS_CODE("action://playback/play-tracks");
+static const ActionCode PLAYBACK_PAUSE_CODE("action://playback/pause");
+static const ActionCode PLAYBACK_STOP_CODE("action://playback/stop");
+static const ActionCode PLAYBACK_REWIND_START_CODE("action://playback/rewind-start");
+static const ActionCode PLAYBACK_REWIND_END_CODE("action://playback/rewind-end");
+static const ActionCode PLAYBACK_SEEK_CODE("action://playback/seek");
+static const ActionCode PLAYBACK_CHANGE_PLAY_REGION_CODE("action://playback/play-region-change");
 
 static const ActionCode PAN_CODE("pan");
 static const ActionCode REPEAT_CODE("repeat");

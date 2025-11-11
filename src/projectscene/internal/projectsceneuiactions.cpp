@@ -312,11 +312,11 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
     static ToolConfig config;
     if (!config.isValid()) {
         config.items = {
-            { "playback/play", true },
-            { "playback/stop", true },
+            { "action://playback/play", true },
+            { "action://playback/stop", true },
             { "record", true },
-            { "playback/rewind-start", true },
-            { "playback/rewind-end", true },
+            { "action://playback/rewind-start", true },
+            { "action://playback/rewind-end", true },
             { "toggle-loop-region", true },
             { "", true },
             { "automation", true },

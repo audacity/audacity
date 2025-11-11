@@ -23,7 +23,7 @@ static constexpr double SCROLL_MAX_SPEED = 0.025;
 
 static constexpr int SNAP_TO_CLIP_TOLERANCE_PX = 4;
 
-static const muse::actions::ActionCode PLAYBACK_SEEK_CODE("playback/seek");
+static const muse::actions::ActionCode PLAYBACK_SEEK_CODE("action://playback/seek");
 
 using namespace au::projectscene;
 

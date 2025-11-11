@@ -11,7 +11,7 @@ static const int INVALID_FORMAT = -1;
 
 using namespace au::playback;
 
-static const muse::actions::ActionCode PLAYBACK_SEEK_CODE("playback/seek");
+static const muse::actions::ActionCode PLAYBACK_SEEK_CODE("action://playback/seek");
 
 PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
                                                  QObject* parent)

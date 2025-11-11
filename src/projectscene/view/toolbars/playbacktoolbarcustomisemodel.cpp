@@ -20,7 +20,7 @@ using namespace muse::actions;
 
 static const QString TOOLBAR_NAME("playbackToolBar");
 
-static const ActionCode PLAYBACK_PLAY_ACTION_CODE("playback/play");
+static const ActionCode PLAYBACK_PLAY_ACTION_CODE("action://playback/play");
 static const ActionCode RECORD_ACTION_CODE("record");
 
 PlaybackToolBarCustomiseModel::PlaybackToolBarCustomiseModel(QObject* parent)

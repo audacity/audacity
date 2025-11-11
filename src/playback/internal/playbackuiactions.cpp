@@ -14,12 +14,12 @@ using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
 
-static const ActionCode PLAYBACK_PLAY_ACTION_CODE("playback/play");
-static const ActionCode PLAYBACK_PAUSE_ACTION_CODE("playback/pause");
-static const ActionCode PLAYBACK_STOP_ACTION_CODE("playback/stop");
+static const ActionCode PLAYBACK_PLAY_ACTION_CODE("action://playback/play");
+static const ActionCode PLAYBACK_PAUSE_ACTION_CODE("action://playback/pause");
+static const ActionCode PLAYBACK_STOP_ACTION_CODE("action://playback/stop");
 
-static const ActionCode PLAYBACK_REWIND_START_ACTION_CODE("playback/rewind-start");
-static const ActionCode PLAYBACK_REWIND_END_ACTION_CODE("playback/rewind-end");
+static const ActionCode PLAYBACK_REWIND_START_ACTION_CODE("action://playback/rewind-start");
+static const ActionCode PLAYBACK_REWIND_END_ACTION_CODE("action://playback/rewind-end");
 
 static const ActionQuery PLAYBACK_CHANGE_AUDIO_API_QUERY("action://playback/change-api");
 static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");

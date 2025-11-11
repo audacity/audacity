@@ -29,7 +29,7 @@ using namespace muse::actions;
 
 static const ActionCode PLAY_POSITION_DECREASE("play-position-decrease");
 static const ActionCode PLAY_POSITION_INCREASE("play-position-increase");
-static const ActionCode PLAYBACK_SEEK_CODE("playback/seek");
+static const ActionCode PLAYBACK_SEEK_CODE("action://playback/seek");
 
 au::projectscene::PlayPositionActionController::PlayPositionActionController(QObject* parent)
     : QObject(parent)

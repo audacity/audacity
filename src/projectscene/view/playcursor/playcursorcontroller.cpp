@@ -27,8 +27,8 @@
 using namespace au::projectscene;
 using namespace muse::actions;
 
-static const ActionCode PLAYBACK_SEEK_CODE("playback/seek");
-static const ActionCode PLAYBACK_CHANGE_PLAY_REGION_CODE("playback/play-region-change");
+static const ActionCode PLAYBACK_SEEK_CODE("action://playback/seek");
+static const ActionCode PLAYBACK_CHANGE_PLAY_REGION_CODE("action://playback/play-region-change");
 
 PlayCursorController::PlayCursorController(QObject* parent)
     : QObject(parent)

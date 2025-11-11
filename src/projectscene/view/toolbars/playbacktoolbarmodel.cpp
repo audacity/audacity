@@ -26,16 +26,16 @@ static const QString TOOLBAR_NAME("playbackToolBar");
 static const QString PLAY_PAUSE_ITEM_ID("play-pause-id");
 static const QString STOP_ITEM_ID("stop-id");
 
-static const ActionCode PLAYBACK_PLAY_ACTION_CODE("playback/play");
-static const ActionCode PLAYBACK_PAUSE_ACTION_CODE("playback/pause");
-static const ActionCode PLAYBACK_STOP_ACTION_CODE("playback/stop");
+static const ActionCode PLAYBACK_PLAY_ACTION_CODE("action://playback/play");
+static const ActionCode PLAYBACK_PAUSE_ACTION_CODE("action://playback/pause");
+static const ActionCode PLAYBACK_STOP_ACTION_CODE("action://playback/stop");
 
 static const ActionCode RECORD_ACTION_CODE("record");
 static const ActionCode PAUSE_RECORD_ACTION_CODE("pause-record");
 static const ActionCode STOP_RECORD_ACTION_CODE("stop-record");
 
-static const ActionCode PLAYBACK_REWIND_START_ACTION_CODE("playback/rewind-start");
-static const ActionCode PLAYBACK_REWIND_END_ACTION_CODE("playback/rewind-end");
+static const ActionCode PLAYBACK_REWIND_START_ACTION_CODE("action://playback/rewind-start");
+static const ActionCode PLAYBACK_REWIND_END_ACTION_CODE("action://playback/rewind-end");
 static const ActionCode LOOP_ACTION_CODE("toggle-loop-region");
 
 static const ActionCode SPLIT_TOOL_ACTION_CODE("split-tool");

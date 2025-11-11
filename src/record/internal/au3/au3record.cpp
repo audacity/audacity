@@ -33,7 +33,7 @@ using namespace au::au3;
 constexpr int RATE_NOT_SELECTED = -1;
 using WritableSampleTrackArray = std::vector< std::shared_ptr< WritableSampleTrack > >;
 
-static const muse::actions::ActionCode PLAYBACK_SEEK_CODE("playback/seek");
+static const muse::actions::ActionCode PLAYBACK_SEEK_CODE("action://playback/seek");
 
 struct PropertiesOfSelected
 {

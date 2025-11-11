@@ -118,7 +118,7 @@ static const ActionCode LABEL_CUT_CODE("label-cut");
 static const ActionCode LABEL_COPY_CODE("label-copy");
 static const ActionCode LABEL_COPY_CODE_MULTI("label-copy-multi");
 
-static const ActionCode PLAYBACK_SEEK_CODE("playback/seek");
+static const ActionCode PLAYBACK_SEEK_CODE("action://playback/seek");
 
 // In principle, disabled are actions that modify the data involved in playback.
 static const std::vector<ActionCode> actionsDisabledDuringRecording {

@@ -18,7 +18,7 @@ static const muse::actions::ActionCode TRACK_RANGE_SELECTION_CODE("track-range-s
 static const muse::actions::ActionCode MULTI_TRACK_SELECTION_PREV_CODE("shift-up");
 static const muse::actions::ActionCode MULTI_TRACK_SELECTION_NEXT_CODE("shift-down");
 
-static const muse::actions::ActionCode PLAYBACK_SEEK_CODE("playback/seek");
+static const muse::actions::ActionCode PLAYBACK_SEEK_CODE("action://playback/seek");
 
 void TrackNavigationController::init()
 {
