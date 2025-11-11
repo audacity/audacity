@@ -31,7 +31,8 @@ void Au3SpectrogramPainter::onProjectChanged(project::IAudacityProject& project)
     }
 }
 
-void Au3SpectrogramPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey, const WaveMetrics& metrics, const ZoomInfo& zoomInfo,
+void Au3SpectrogramPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey, const WaveMetrics& metrics,
+                                  const ZoomInfo& zoomInfo,
                                   const SelectedRegion& selectedRegion)
 {
     const auto au3Project = m_au3Project.lock();
@@ -59,10 +60,11 @@ void Au3SpectrogramPainter::paint(QPainter& painter, const trackedit::ClipKey& c
     };
 
     for (const std::shared_ptr<WaveClipChannel> channel : clip->Channels()) {
-        IF_ASSERT_FAILED(channel->GetChannelIndex() < m_channelPainters.size()) {
+        const auto i = channel->GetChannelIndex();
+        IF_ASSERT_FAILED(i < m_channelPainters.size()) {
             continue;
         }
-        m_channelPainters[channel->GetChannelIndex()]->paint(painter, *channel, metrics, params);
+        m_channelPainters[i]->paint(painter, *channel, *track->GetChannel(i), metrics, params);
     }
 }
 }

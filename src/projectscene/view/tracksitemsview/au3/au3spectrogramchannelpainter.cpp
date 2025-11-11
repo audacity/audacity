@@ -11,6 +11,8 @@
 #include "framework/global/log.h"
 
 #include "libraries/lib-time-frequency-selection/SelectedRegion.h"
+#include "libraries/lib-screen-geometry/NumberScale.h"
+#include "libraries/lib-theme/AColor.h"
 
 namespace au::projectscene {
 using Au3SelectedRegion = ::SelectedRegion;
@@ -32,6 +34,64 @@ std::pair<sampleCount, sampleCount> GetSelectedSampleIndices(
         clip.GetVisibleSampleCount());
     return { s0, s1 };
 }
+
+float findValue(const float* spectrum, float bin0, float bin1, unsigned nBins, bool autocorrelation, int gain, int range)
+{
+    float value;
+
+    // Maximum method, and no apportionment of any single bins over multiple pixel rows
+    // See Bug971
+    int index, limitIndex;
+    if (autocorrelation) {
+        // bin = 2 * nBins / (nBins - 1 - array_index);
+        // Solve for index
+        index = std::max(0.0f, std::min(float(nBins - 1),
+                                        (nBins - 1) - (2 * nBins) / (std::max(1.0f, bin0))
+                                        ));
+        limitIndex = std::max(0.0f, std::min(float(nBins - 1),
+                                             (nBins - 1) - (2 * nBins) / (std::max(1.0f, bin1))
+                                             ));
+    } else {
+        index = std::min<int>(nBins - 1, (int)(floor(0.5 + bin0)));
+        limitIndex = std::min<int>(nBins, (int)(floor(0.5 + bin1)));
+    }
+    value = spectrum[index];
+    while (++index < limitIndex) {
+        value = std::max(value, spectrum[index]);
+    }
+
+    if (!autocorrelation) {
+        // Last step converts dB to a 0.0-1.0 range
+        value = (value + range + gain) / (double)range;
+    }
+    value = std::min(1.0f, std::max(0.0f, value));
+    return value;
+}
+
+constexpr auto DASH_LENGTH = 10; // pixel
+
+inline AColor::ColorGradientChoice
+ChooseColorSet(float bin0, float bin1, float selBinLo,
+               float selBinCenter, float selBinHi, int dashCount, bool isSpectral)
+{
+    if (!isSpectral) {
+        return AColor::ColorGradientTimeSelected;
+    }
+    if ((selBinCenter >= 0) && (bin0 <= selBinCenter)
+        && (selBinCenter < bin1)) {
+        return AColor::ColorGradientEdge;
+    }
+    if ((0 == dashCount % 2)
+        && (((selBinLo >= 0) && (bin0 <= selBinLo) && (selBinLo < bin1))
+            || ((selBinHi >= 0) && (bin0 <= selBinHi) && (selBinHi < bin1)))) {
+        return AColor::ColorGradientEdge;
+    }
+    if ((selBinLo < 0 || selBinLo < bin1) && (selBinHi < 0 || selBinHi > bin0)) {
+        return AColor::ColorGradientTimeAndFrequencySelected;
+    }
+
+    return AColor::ColorGradientTimeSelected;
+}
 }
 
 Au3SpectrogramChannelPainter::Params::Params(SpectrogramSettings& settings,
@@ -50,9 +110,11 @@ Au3SpectrogramChannelPainter::Au3SpectrogramChannelPainter(std::weak_ptr<au3::Au
 {
 }
 
-void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& clipChannel, const WaveMetrics& metrics, const Params& params)
+void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& clipChannel, const WaveChannel& trackChannel,
+                                         const WaveMetrics& metrics, const Params& params)
 {
     SpectrogramSettings& settings = params.settings;
+    const ZoomInfo& zoomInfo = params.zoomInfo;
     Au3SelectedRegion selectedRegion;
     selectedRegion.setT0(params.selectedRegion.t0);
     selectedRegion.setT1(params.selectedRegion.t1);
@@ -60,7 +122,7 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
     selectedRegion.setF1(params.selectedRegion.f1);
 
     const QRect rect{ static_cast<int>(metrics.left), 0, static_cast<int>(metrics.width), static_cast<int>(metrics.height) };
-    const ClipParameters clipParams { clipChannel, rect, params.zoomInfo };
+    const ClipParameters clipParams { clipChannel, rect, zoomInfo };
 
     const QRect& hiddenMid = clipParams.hiddenMid;
     // The "hiddenMid" rect contains the part of the display actually
@@ -89,30 +151,34 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
     const int& range = settings.range;
     const int& gain = settings.gain;
 
+    QImage image(mid.width(), mid.height(), QImage::Format_RGB888);
+
     const float* spectrogram = nullptr;
     const sampleCount* where = nullptr;
-    WaveClipSpectrumCache::Get(clipChannel).GetSpectrogram(clipChannel, spectrogram, settings, where,
-                                                           hiddenMid.width(), t0, averagePixelsPerSecond);
+    const auto half = settings.GetFFTLength() / 2;
+    const double binUnit = sampleRate / (2 * half);
+    const bool updated = WaveClipSpectrumCache::Get(clipChannel).GetSpectrogram(clipChannel, spectrogram, settings, where,
+                                                                                hiddenMid.width(), t0, averagePixelsPerSecond);
 
     auto nBins = settings.NBins();
 
     float minFreq, maxFreq;
-    SpectrogramBounds::Get(channel).GetBounds(channel, minFreq, maxFreq);
+    SpectrogramBounds::Get(trackChannel).GetBounds(trackChannel, minFreq, maxFreq);
 
     const SpectrogramSettings::ScaleType scaleType = settings.scaleType;
 
     // nearest frequency to each pixel row from number scale, for selecting
     // the desired fft bin(s) for display on that row
-    float* bins = (float*)alloca(sizeof(*bins) * (hiddenMid.height + 1));
+    float* bins = (float*)alloca(sizeof(*bins) * (hiddenMid.height() + 1));
     {
         const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
 
-        NumberScale::Iterator it = numberScale.begin(mid.height);
+        NumberScale::Iterator it = numberScale.begin(mid.height());
         float nextBin = std::max(0.0f, std::min(float(nBins - 1),
                                                 settings.findBin(*it, binUnit)));
 
         int yy;
-        for (yy = 0; yy < hiddenMid.height; ++yy) {
+        for (yy = 0; yy < hiddenMid.height(); ++yy) {
             bins[yy] = nextBin;
             nextBin = std::max(0.0f, std::min(float(nBins - 1),
                                               settings.findBin(*++it, binUnit)));
@@ -120,10 +186,11 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
         bins[yy] = nextBin;
     }
 
-    auto& clipCache = WaveClipSpectrumCache::Get(clip);
-    auto& specPxCache = clipCache.mSpecPxCaches[clip.GetChannelIndex()];
+    const bool autocorrelation = settings.algorithm == SpectrogramSettings::algPitchEAC;
+    auto& clipCache = WaveClipSpectrumCache::Get(clipChannel);
+    auto& specPxCache = clipCache.mSpecPxCaches[clipChannel.GetChannelIndex()];
     if (!updated && specPxCache
-        && ((int)specPxCache->len == hiddenMid.height * hiddenMid.width)
+        && ((int)specPxCache->len == hiddenMid.height() * hiddenMid.width())
         && scaleType == specPxCache->scaleType
         && gain == specPxCache->gain
         && range == specPxCache->range
@@ -134,19 +201,19 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
         // and so is the spectrum pixel cache
     } else {
         // Update the spectrum pixel cache
-        specPxCache = std::make_unique<SpecPxCache>(hiddenMid.width * hiddenMid.height);
+        specPxCache = std::make_unique<SpecPxCache>(hiddenMid.width() * hiddenMid.height());
         specPxCache->scaleType = scaleType;
         specPxCache->gain = gain;
         specPxCache->range = range;
         specPxCache->minFreq = minFreq;
         specPxCache->maxFreq = maxFreq;
 
-        for (int xx = 0; xx < hiddenMid.width; ++xx) {
-            for (int yy = 0; yy < hiddenMid.height; ++yy) {
+        for (int xx = 0; xx < hiddenMid.width(); ++xx) {
+            for (int yy = 0; yy < hiddenMid.height(); ++yy) {
                 const float bin     = bins[yy];
                 const float nextBin = bins[yy + 1];
-                const float value = findValue(freq + nBins * xx, bin, nextBin, nBins, autocorrelation, gain, range);
-                specPxCache->values[xx * hiddenMid.height + yy] = value;
+                const float value = findValue(spectrogram + nBins * xx, bin, nextBin, nBins, autocorrelation, gain, range);
+                specPxCache->values[xx * hiddenMid.height() + yy] = value;
             } // each yy
         } // each xx
     } // updating cache
@@ -158,14 +225,10 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
                          : settings.findBin(sqrt(freqLo * freqHi), binUnit);
 
     const bool isSpectral = settings.SpectralSelectionEnabled();
-    const bool hidden = (ZoomInfo::HIDDEN == zoomInfo.GetFisheyeState());
-    const int begin = hidden
-                      ? 0
-                      : std::max(0, (int)(zoomInfo.GetFisheyeLeftBoundary(-leftOffset)));
-    const int end = hidden
-                    ? 0
-                    : std::min(mid.width, (int)(zoomInfo.GetFisheyeRightBoundary(-leftOffset)));
-    const size_t numPixels = std::max(0, end - begin);
+    constexpr bool hidden = true; // Used to check if fisheye is enabled
+    constexpr int begin = 0;
+    constexpr int end = 0;
+    constexpr size_t numPixels = std::max(0, end - begin);
 
     SpecCache specCache;
 
@@ -179,7 +242,7 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
                 =sampleCount(0.5 + sampleRate / stretchRatio * time);
         }
         specCache.Populate(
-            settings, clip, 0, 0, numPixels,
+            settings, clipChannel, 0, 0, numPixels,
             0 // FIXME: PRL -- make reassignment work with fisheye
             );
     }
@@ -189,36 +252,17 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
         AColor::PreComputeGradient();
     }
 
-    // left pixel column of the fisheye
-    int fisheyeLeft = zoomInfo.GetFisheyeLeftBoundary(-leftOffset);
-
     // Bug 2389 - always draw at least one pixel of selection.
     int selectedX = zoomInfo.TimeToPosition(selectedRegion.t0(), -leftOffset);
 
     const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
-    int windowSize = mpSpectralData->GetWindowSize();
-    int hopSize = mpSpectralData->GetHopSize();
-    double sr = mpSpectralData->GetSR();
-    auto& dataHistory = mpSpectralData->dataHistory;
-
-    // Lazy way to add all hops and bins required for rendering
-    dataHistory.push_back(mpSpectralData->dataBuffer);
-
-    // Generate combined hops and bins map for rendering
-    std::map<long long, std::set<int> > hopBinMap;
-    for (auto vecIter = dataHistory.begin(); vecIter != dataHistory.end(); ++vecIter) {
-        for (const auto& hopMap: *vecIter) {
-            for (const auto& binNum: hopMap.second) {
-                hopBinMap[hopMap.first].insert(binNum);
-            }
-        }
-    }
+    const int windowSize = settings.WindowSize();
 
     // Lambda for converting yy (not mouse coord!) to respective freq. bins
     auto yyToFreqBin = [&](int yy){
-        const double p = double(yy) / hiddenMid.height;
+        const double p = double(yy) / hiddenMid.height();
         float convertedFreq = numberScale.PositionToValue(p);
-        float convertedFreqBinNum = convertedFreq / (sr / windowSize);
+        float convertedFreqBinNum = convertedFreq / (sampleRate / windowSize);
 
         // By default lrintf will round to nearest by default, rounding to even on tie.
         // std::round that was used here before rounds halfway cases away from zero.
@@ -227,19 +271,10 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
         return static_cast<int>(lrintf(convertedFreqBinNum));
     };
 
-    for (int xx = 0; xx < mid.width; ++xx) {
-        int correctedX = xx + leftOffset - hiddenLeftOffset;
+    unsigned char* const data = image.bits();
 
-        // in fisheye mode the time scale has changed, so the row values aren't cached
-        // in the loop above, and must be fetched from fft cache
-        float* uncached;
-        if (!zoomInfo.InFisheye(xx, -leftOffset)) {
-            uncached = 0;
-        } else {
-            int specIndex = (xx - fisheyeLeft) * nBins;
-            wxASSERT(specIndex >= 0 && specIndex < (int)specCache.freq.size());
-            uncached = &specCache.freq[specIndex];
-        }
+    for (int xx = 0; xx < mid.width(); ++xx) {
+        int correctedX = xx + leftOffset - hiddenLeftOffset;
 
         // zoomInfo must be queried for each column since with fisheye enabled
         // time between columns is variable
@@ -264,35 +299,11 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
             }
         };
 
-        bool hitHopNum = false;
-        if (onBrushTool) {
-            int convertedHopNum = (w0.as_long_long() + hopSize / 2) / hopSize;
-            hitHopNum = (hopBinMap.find(convertedHopNum) != hopBinMap.end());
-            if (hitHopNum) {
-                pSelectedBins = &hopBinMap[convertedHopNum];
-                freqBinIter = pSelectedBins->begin();
-                advanceFreqBinIter(yyToFreqBin(0));
-            }
-        }
-
-        for (int yy = 0; yy < hiddenMid.height; ++yy) {
-            if (onBrushTool) {
-                maybeSelected = false;
-            }
+        for (int yy = 0; yy < hiddenMid.height(); ++yy) {
             const float bin     = bins[yy];
             const float nextBin = bins[yy + 1];
             auto binRounded = yyToFreqBin(yy);
             auto nextBinRounded = yyToFreqBin(yy + 1);
-
-            if (hitHopNum
-                && freqBinIter != pSelectedBins->end()
-                && binRounded == *freqBinIter) {
-                maybeSelected = true;
-            }
-
-            if (hitHopNum) {
-                advanceFreqBinIter(nextBinRounded);
-            }
 
             // For spectral selection, determine what colour
             // set to use.  We use a darker selection if
@@ -302,22 +313,15 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
 
             // If we are in the time selected range, then we may use a different color set.
             if (maybeSelected) {
-                selected
-                    =ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
-                                    (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
-                if (onBrushTool && selected != AColor::ColorGradientUnselected) {
-                    // use only two sets of colors
-                    selected = AColor::ColorGradientTimeAndFrequencySelected;
-                }
+                selected = ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
+                                          (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
             }
 
-            const float value = uncached
-                                ? findValue(uncached, bin, nextBin, nBins, autocorrelation, gain, range)
-                                : specPxCache->values[correctedX * hiddenMid.height + yy];
+            const float value = specPxCache->values[correctedX * hiddenMid.height() + yy];
 
             unsigned char rv, gv, bv;
             GetColorGradient(value, selected, colorScheme, &rv, &gv, &bv);
-            int px = ((mid.height - 1 - yy) * mid.width + xx);
+            int px = ((mid.height() - 1 - yy) * mid.width() + xx);
             px *=3;
             data[px++] = rv;
             data[px++] = gv;
@@ -325,20 +329,8 @@ void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& cli
         } // each yy
     } // each xx
 
-    dataHistory.pop_back();
-    wxBitmap converted = wxBitmap(image);
-
-    wxMemoryDC memDC;
-
-    memDC.SelectObject(converted);
-
-    dc.Blit(mid.x, mid.y, mid.width, mid.height, &memDC, 0, 0, wxCOPY, FALSE);
-
-    // Draw clip edges, as also in waveform view, which improves the appearance
-    // of split views
-    {
-        auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, rect);
-        TrackArt::DrawClipEdges(dc, clipRect, selected);
-    }
+    const QRectF targetRect(metrics.left, metrics.top, metrics.width, metrics.height);
+    const QRectF sourceRect(0, 0, mid.width(), mid.height());
+    painter.drawImage(targetRect, image, sourceRect);
 }
 }
