@@ -13,7 +13,7 @@
 
 namespace au::audio {
 namespace {
-constexpr double updatePeriod = 1 / 30.0;
+constexpr double updatePeriod = 1 / 60.0;
 constexpr auto decayDbPerSecond = 36.0f;
 constexpr int64_t MASTER_TRACK_ID = -2;
 }
