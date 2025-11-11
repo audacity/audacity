@@ -840,7 +840,7 @@
         <seq>Shift+Space</seq>
     </SC>
     <SC>
-        <key>pause</key>
+        <key>action://playback/pause</key>
         <seq>P</seq>
     </SC>
     <SC>
@@ -883,7 +883,7 @@
         <key>s-w-playthrough</key>
     </SC>
     <SC>
-        <key>play</key>
+        <key>action://playback/play</key>
         <seq>Space</seq>
         <seq>Shift+Space</seq>
     </SC>
