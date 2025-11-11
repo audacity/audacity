@@ -100,12 +100,12 @@ public:
 
     void rewindToStart()
     {
-        m_controller->rewindToStart();
+        m_controller->rewindToStartAction();
     }
 
     void rewindToEnd()
     {
-        m_controller->rewindToEnd();
+        m_controller->rewindToEndAction();
     }
 
     PlaybackController* m_controller = nullptr;

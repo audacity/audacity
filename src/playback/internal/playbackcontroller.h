@@ -105,17 +105,18 @@ private:
     void seekRangeSelection();
 
     void togglePlayAction();
+    void doPlay(bool ignoreSelection);
     void stopAction(const muse::actions::ActionData& args);
     void playTracksAction(const muse::actions::ActionData& args);
-    void rewindToStart();
-    void rewindToEnd();
+    void rewindToStartAction();
+    void rewindToEndAction();
     void onSeekAction(const muse::actions::ActionData& args);
     void doSeek(const muse::secs_t secs, bool applyIfPlaying);
     void onChangePlaybackRegionAction(const muse::actions::ActionData& args);
     void doChangePlaybackRegion(const PlaybackRegion& region);
-    void play(bool ignoreSelection);
-    void pause();
-    void resume();
+    void pauseAction();
+    void doPause();
+    void doResume();
     void seek(const muse::secs_t secs, bool applyIfPlaying);
 
     void togglePlayRepeats();

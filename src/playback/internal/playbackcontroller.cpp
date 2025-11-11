@@ -33,10 +33,10 @@ void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlayAction);
     dispatcher()->reg(this, PLAYBACK_PLAY_TRACKS_CODE, this, &PlaybackController::playTracksAction);
-    dispatcher()->reg(this, PAUSE_CODE, this, &PlaybackController::pause);
+    dispatcher()->reg(this, PAUSE_CODE, this, &PlaybackController::pauseAction);
     dispatcher()->reg(this, PLAYBACK_STOP_CODE, this, &PlaybackController::stopAction);
-    dispatcher()->reg(this, REWIND_START_CODE, this, &PlaybackController::rewindToStart);
-    dispatcher()->reg(this, REWIND_END_CODE, this, &PlaybackController::rewindToEnd);
+    dispatcher()->reg(this, REWIND_START_CODE, this, &PlaybackController::rewindToStartAction);
+    dispatcher()->reg(this, REWIND_END_CODE, this, &PlaybackController::rewindToEndAction);
     dispatcher()->reg(this, SEEK_CODE, this, &PlaybackController::onSeekAction);
     dispatcher()->reg(this, CHANGE_PLAY_REGION_CODE, this, &PlaybackController::onChangePlaybackRegionAction);
 
@@ -264,30 +264,30 @@ void PlaybackController::togglePlayAction()
             constexpr bool shouldUpdatePlaybackRegion = true;
             stop(shouldSeek, shouldUpdatePlaybackRegion);
         } else {
-            pause();
+            doPause();
         }
     } else if (isPaused()) {
         if (isSelectionPlaybackRegionChanged()) {
             //! NOTE: just stop, without seek
             player()->stop();
-            play(false);
+            doPlay(false);
         } else if (isShiftPressed) {
             //! NOTE: set the current position as start position
             doSeek(playbackPosition(), false);
-            play(true /* ignoreSelection */);
+            doPlay(true /* ignoreSelection */);
         } else {
-            resume();
+            doResume();
         }
     } else {
         if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
             doSeek(0.0, false);
         }
 
-        play(isShiftPressed /* ignoreSelection */);
+        doPlay(isShiftPressed /* ignoreSelection */);
     }
 }
 
-void PlaybackController::play(bool ignoreSelection)
+void PlaybackController::doPlay(bool ignoreSelection)
 {
     IF_ASSERT_FAILED(player()) {
         return;
@@ -327,7 +327,7 @@ void PlaybackController::playTracksAction(const muse::actions::ActionData& args)
     }
 }
 
-void PlaybackController::rewindToStart()
+void PlaybackController::rewindToStartAction()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
     constexpr bool shouldSeek = true;
@@ -339,7 +339,7 @@ void PlaybackController::rewindToStart()
     selectionController()->resetTimeSelection();
 }
 
-void PlaybackController::rewindToEnd()
+void PlaybackController::rewindToEndAction()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
     m_lastPlaybackSeekTime = totalPlayTime();
@@ -411,7 +411,12 @@ void PlaybackController::doChangePlaybackRegion(const PlaybackRegion& region)
     }
 }
 
-void PlaybackController::pause()
+void PlaybackController::pauseAction()
+{
+    doPause();
+}
+
+void PlaybackController::doPause()
 {
     IF_ASSERT_FAILED(player()) {
         return;
@@ -446,7 +451,7 @@ void PlaybackController::stop(const bool shouldSeek, const bool shouldUpdatePlay
     }
 }
 
-void PlaybackController::resume()
+void PlaybackController::doResume()
 {
     IF_ASSERT_FAILED(player()) {
         return;
