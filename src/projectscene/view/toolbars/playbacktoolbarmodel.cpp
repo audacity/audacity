@@ -3,6 +3,8 @@
 */
 #include "playbacktoolbarmodel.h"
 
+#include "framework/global/containers.h"
+
 #include "internal/projectsceneuiactions.h"
 
 #include "playback/view/toolbars/playbacktoolbarlevelitem.h"
@@ -12,8 +14,6 @@
 #include "playback/view/toolbars/playbacktoolbartimesignatureitem.h"
 #include "record/view/toolbars/playbacktoolbarrecordlevelitem.h"
 #include "projectscene/view/toolbars/snaptoolbaritem.h"
-
-#include "containers.h"
 
 using namespace muse::uicomponents;
 using namespace muse::ui;

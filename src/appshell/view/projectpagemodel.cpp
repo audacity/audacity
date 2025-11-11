@@ -3,11 +3,10 @@
 */
 #include "projectpagemodel.h"
 
-#include "internal/applicationuiactions.h"
-#include "dockwindow/idockwindow.h"
-#include "projectscene/internal/projectsceneuiactions.h"
+#include "framework/global/log.h"
 
-#include "log.h"
+#include "internal/applicationuiactions.h"
+#include "projectscene/internal/projectsceneuiactions.h"
 
 using namespace au::appshell;
 using namespace muse::actions;

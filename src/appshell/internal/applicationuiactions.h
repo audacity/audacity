@@ -22,18 +22,18 @@
 #ifndef AU_APPSHELL_APPLICATIONUIACTIONS_H
 #define AU_APPSHELL_APPLICATIONUIACTIONS_H
 
-#include "ui/iuiactionsmodule.h"
-#include "applicationactioncontroller.h"
-#include "modularity/ioc.h"
-#include "context/iuicontextresolver.h"
-#include "async/asyncable.h"
-#include "ui/imainwindow.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/ui/iuiactionsmodule.h"
+#include "framework/ui/imainwindow.h"
+#include "framework/dockwindow/idockwindowprovider.h"
+
 #include "record/irecordcontroller.h"
+#include "context/iuicontextresolver.h"
+#include "applicationactioncontroller.h"
 
 //! TODO AU4
 // #include "view/preferences/braillepreferencesmodel.h"
-
-#include "dockwindow/idockwindowprovider.h"
 
 namespace au::appshell {
 class ApplicationUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
