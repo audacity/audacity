@@ -30,9 +30,10 @@ static const ActionCode PLAYBACK_PLAY_ACTION_CODE("action://playback/play");
 static const ActionCode PLAYBACK_PAUSE_ACTION_CODE("action://playback/pause");
 static const ActionCode PLAYBACK_STOP_ACTION_CODE("action://playback/stop");
 
-static const ActionCode RECORD_ACTION_CODE("record");
-static const ActionCode PAUSE_RECORD_ACTION_CODE("pause-record");
-static const ActionCode STOP_RECORD_ACTION_CODE("stop-record");
+static const ActionCode RECORD_START_ACTION_CODE("action://record/start");
+static const ActionCode RECORD_PAUSE_ACTION_CODE("action://record/pause");
+static const ActionCode RECORD_STOP_ACTION_CODE("action://record/stop");
+static const ActionCode RECORD_LEVEL_ACTION_CODE("action://record/level");
 
 static const ActionCode PLAYBACK_REWIND_START_ACTION_CODE("action://playback/rewind-start");
 static const ActionCode PLAYBACK_REWIND_END_ACTION_CODE("action://playback/rewind-end");
@@ -45,7 +46,6 @@ static const ActionCode PLAYBACK_LEVEL("playback-level");
 static const ActionCode PLAYBACK_TIME("playback-time");
 static const ActionCode PLAYBACK_BPM("playback-bpm");
 static const ActionCode PLAYBACK_TIME_SIGNATURE("playback-time-signature");
-static const ActionCode RECORD_LEVEL("record-level");
 
 static const ActionCode SNAP_ACTION_CODE("snap");
 
@@ -56,10 +56,10 @@ static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
         { PLAYBACK_TIME, PlaybackToolBarModel::PLAYBACK_TIME },
         { PLAYBACK_BPM, PlaybackToolBarModel::PLAYBACK_BPM },
         { PLAYBACK_TIME_SIGNATURE, PlaybackToolBarModel::PLAYBACK_TIME_SIGNATURE },
-        { RECORD_LEVEL, PlaybackToolBarModel::RECORD_LEVEL },
+        { RECORD_LEVEL_ACTION_CODE, PlaybackToolBarModel::RECORD_LEVEL },
         { PLAYBACK_PLAY_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { PLAYBACK_STOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { RECORD_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { RECORD_START_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { PLAYBACK_REWIND_START_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { PLAYBACK_REWIND_END_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { LOOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
@@ -115,15 +115,15 @@ void PlaybackToolBarModel::reload()
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
 {
     if (containsAction(codes, PLAYBACK_PLAY_ACTION_CODE) || containsAction(codes, PLAYBACK_PAUSE_ACTION_CODE)
-        || containsAction(codes, PAUSE_RECORD_ACTION_CODE)) {
+        || containsAction(codes, RECORD_PAUSE_ACTION_CODE)) {
         updatePlayState();
     }
 
-    if (containsAction(codes, PLAYBACK_STOP_ACTION_CODE) || containsAction(codes, STOP_RECORD_ACTION_CODE)) {
+    if (containsAction(codes, PLAYBACK_STOP_ACTION_CODE) || containsAction(codes, RECORD_STOP_ACTION_CODE)) {
         updateStopState();
     }
 
-    if (containsAction(codes, RECORD_ACTION_CODE)) {
+    if (containsAction(codes, RECORD_START_ACTION_CODE)) {
         updateRecordState();
     }
 
@@ -156,7 +156,7 @@ void PlaybackToolBarModel::updatePlayState()
 
     ActionCode code = isPlaying ? PLAYBACK_PAUSE_ACTION_CODE : PLAYBACK_PLAY_ACTION_CODE;
     if (isRecording) {
-        code = PAUSE_RECORD_ACTION_CODE;
+        code = RECORD_PAUSE_ACTION_CODE;
     }
 
     UiAction action = uiActionsRegister()->action(code);
@@ -186,7 +186,7 @@ void PlaybackToolBarModel::updateStopState()
     }
 
     const bool isRecording = recordController()->isRecording();
-    const ActionCode code = isRecording ? STOP_RECORD_ACTION_CODE : PLAYBACK_STOP_ACTION_CODE;
+    const ActionCode code = isRecording ? RECORD_STOP_ACTION_CODE : PLAYBACK_STOP_ACTION_CODE;
     const UiAction action = uiActionsRegister()->action(code);
     item->setAction(action);
     if (!isRecording) {
@@ -202,7 +202,7 @@ void PlaybackToolBarModel::updateStopState()
 
 void PlaybackToolBarModel::updateRecordState()
 {
-    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(RECORD_ACTION_CODE));
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(RECORD_START_ACTION_CODE));
 
     if (item == nullptr) {
         return;

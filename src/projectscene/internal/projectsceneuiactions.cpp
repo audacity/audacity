@@ -314,7 +314,7 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
         config.items = {
             { "action://playback/play", true },
             { "action://playback/stop", true },
-            { "record", true },
+            { "action://record/start", true },
             { "action://playback/rewind-start", true },
             { "action://playback/rewind-end", true },
             { "toggle-loop-region", true },
@@ -347,7 +347,7 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "", true },
             { "snap", true },
             { "", true },
-            { "record-level", true },
+            { "action://record/level", true },
             { "playback-level", true }
         };
     }

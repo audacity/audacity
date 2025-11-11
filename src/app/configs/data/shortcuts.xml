@@ -892,7 +892,7 @@
         <seq>Shift+Space</seq>
     </SC>
     <SC>
-        <key>stop-record</key>
+        <key>action://record/stop</key>
         <seq>Space</seq>
     </SC>
     <SC>
