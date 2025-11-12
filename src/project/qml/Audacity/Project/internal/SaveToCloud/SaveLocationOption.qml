@@ -41,7 +41,7 @@ ColumnLayout {
 
     readonly property int radius: 6
 
-    spacing: 0
+    spacing: ui.theme.extra.space_0
 
     RoundedRectangle {
         Layout.fillWidth: true
@@ -72,7 +72,7 @@ ColumnLayout {
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: 24
-            spacing: 24
+            spacing: ui.theme.extra.space_24
 
             StyledTextLabel {
                 id: titleLabel

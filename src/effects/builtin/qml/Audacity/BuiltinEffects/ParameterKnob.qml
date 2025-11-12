@@ -31,7 +31,7 @@ Item {
     Column {
         id: content
 
-        spacing: 6
+        spacing: ui.theme.extra.space_6
 
         StyledTextLabel {
             text: parameter["title"]

@@ -110,13 +110,13 @@ StyledDialogView {
     ColumnLayout {
         anchors.fill: parent
 
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            spacing: 0
+            spacing: ui.theme.extra.space_0
 
             PreferencesMenu {
                 id: menu

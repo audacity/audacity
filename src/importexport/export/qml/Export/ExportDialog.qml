@@ -60,7 +60,7 @@ StyledDialogView {
         BaseSection {
             title: qsTrc("export", "Export")
 
-            spacing: 10
+            spacing: ui.theme.extra.space_10
 
             RowLayout {
 
@@ -149,7 +149,7 @@ StyledDialogView {
 
                     pickerType: FilePicker.PickerType.Any
                     pathFieldWidth: root.dropdownWidth
-                    spacing: 10
+                    spacing: ui.theme.extra.space_10
                     filter: exportPreferencesModel.fileFilter()
 
                     buttonType: FlatButton.Horizontal
@@ -225,7 +225,7 @@ StyledDialogView {
 
                     Row {
                         width: parent.width
-                        spacing: 10
+                        spacing: ui.theme.extra.space_10
 
                         RoundedRadioButton {
                             id: monoBtn
@@ -387,7 +387,7 @@ StyledDialogView {
             ColumnLayout {
                 id: dynamicSection
 
-                spacing: 10
+                spacing: ui.theme.extra.space_10
 
                 visible: !exportPreferencesModel.customFFmpegOptionsVisible
 

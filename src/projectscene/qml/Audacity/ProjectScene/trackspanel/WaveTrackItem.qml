@@ -34,7 +34,7 @@ TrackItem {
 
     extraControlsComponent: Component {
         ColumnLayout {
-            spacing: 2
+            spacing: ui.theme.extra.space_2
 
             RowLayout {
                 Layout.fillWidth: true
@@ -107,7 +107,7 @@ TrackItem {
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                spacing: 2
+                spacing: ui.theme.extra.space_2
 
                 function clearMeters() {
                     leftOrMonoVolumePressureMeter.reset()

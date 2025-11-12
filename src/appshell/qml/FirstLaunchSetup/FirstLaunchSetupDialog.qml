@@ -55,7 +55,7 @@ StyledDialogView {
         id: content
 
         anchors.fill: parent
-        spacing: 0
+        spacing: ui.theme.extra.space_0
         Layout.margins: 0
 
         StyledTextLabel {

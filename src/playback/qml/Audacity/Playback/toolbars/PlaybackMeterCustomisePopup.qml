@@ -129,7 +129,7 @@ StyledPopupView {
             Layout.fillWidth: true
             Layout.preferredHeight: 50
 
-            spacing: 6
+            spacing: ui.theme.extra.space_6
 
             StyledTextLabel {
                 text: qsTrc("playback", "dB range")

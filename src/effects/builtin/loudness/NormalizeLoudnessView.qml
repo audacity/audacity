@@ -25,7 +25,7 @@ BuiltinEffectBase {
         bottomPadding: 16
 
         Row {
-            spacing: 6
+            spacing: ui.theme.extra.space_6
 
             StyledTextLabel {
                 anchors.verticalCenter: parent.verticalCenter

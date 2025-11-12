@@ -12,7 +12,7 @@ import Audacity.ProjectScene 1.0
 StyledListView {
     id: root
 
-    spacing: 0
+    spacing: ui.theme.extra.space_0
     scrollBarPolicy: ScrollBar.AlwaysOn
 
     signal selectRowRequested(int index)

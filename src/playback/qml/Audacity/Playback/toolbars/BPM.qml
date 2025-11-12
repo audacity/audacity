@@ -31,7 +31,7 @@ RowLayout {
         }
     }
 
-    spacing: 1
+    spacing: ui.theme.extra.space_1
 
     RoundedRectangle {
         Layout.preferredWidth: childrenRect.width
@@ -55,7 +55,7 @@ RowLayout {
                 anchors.leftMargin: parent.margin
                 anchors.verticalCenter: parent.verticalCenter
 
-                spacing: 0
+                spacing: ui.theme.extra.space_0
 
                 Repeater {
                     model: bpmModel
@@ -79,7 +79,7 @@ RowLayout {
         Layout.preferredWidth: 16
         Layout.preferredHeight: root.height
 
-        spacing: 1
+        spacing: ui.theme.extra.space_1
 
         ArrowButton {
             Layout.fillWidth: true

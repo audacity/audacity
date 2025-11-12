@@ -53,7 +53,7 @@ RadioButtonGroup {
 
     implicitWidth: count * totalSampleSize + (count - 1) * spacing
     implicitHeight: totalSampleSize
-    spacing: 6
+    spacing: ui.theme.extra.space_6
 
     delegate: RoundedRadioButton {
         id: button

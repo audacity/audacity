@@ -34,7 +34,7 @@ Rectangle {
 
             width: parent.width
 
-            spacing: 24
+            spacing: ui.theme.extra.space_24
 
             Repeater {
                 width: parent.width
@@ -163,7 +163,7 @@ Rectangle {
                     anchors.right: parent.right
                     anchors.margins: 8
 
-                    spacing: 24
+                    spacing: ui.theme.extra.space_24
 
                     StyledTextLabel {
                         text: modelData["textRole"]
@@ -941,7 +941,7 @@ Rectangle {
 
         Column {
             width: 200
-            spacing: 0
+            spacing: ui.theme.extra.space_0
 
             StyledTabBar {
                 id: tabBar
@@ -990,7 +990,7 @@ Rectangle {
         id: pageTabButtonsSample
 
         Row {
-            spacing: 30
+            spacing: ui.theme.extra.space_30
 
             Column {
                 PageTabButton {

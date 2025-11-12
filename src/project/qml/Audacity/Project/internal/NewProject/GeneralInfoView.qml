@@ -36,7 +36,7 @@ Column {
     property alias lyricist: lyricistInfo.info
     property alias copyright: copyrightInfo.info
 
-    spacing: 20
+    spacing: ui.theme.extra.space_20
 
     property alias navigationPanel: navPanel
 
@@ -56,7 +56,7 @@ Column {
 
         property real childWidth: (width - spacing) / 2
 
-        spacing: 20
+        spacing: ui.theme.extra.space_20
 
         GeneralInfoItem {
             id: titleInfo
@@ -96,7 +96,7 @@ Column {
 
         property real childWidth: (width - (spacing * 2)) / 3
 
-        spacing: 20
+        spacing: ui.theme.extra.space_20
 
         GeneralInfoItem {
             id: subtitleInfo

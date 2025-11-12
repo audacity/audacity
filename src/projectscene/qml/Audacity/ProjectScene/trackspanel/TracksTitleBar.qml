@@ -33,7 +33,7 @@ Item {
 
         anchors.fill: parent
 
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         Rectangle {
             id: effectsTitleBar

@@ -70,7 +70,7 @@ RowLayout {
                 anchors.leftMargin: parent.margin
                 anchors.verticalCenter: parent.verticalCenter
 
-                spacing: 0
+                spacing: ui.theme.extra.space_0
 
                 Repeater {
                     model: timecodeModel

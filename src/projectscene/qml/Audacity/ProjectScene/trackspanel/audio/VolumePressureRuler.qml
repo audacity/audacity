@@ -56,7 +56,7 @@ Item {
             Row {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 2
+                spacing: ui.theme.extra.space_2
 
                 // Draw the full step tick
                 Rectangle {

@@ -45,14 +45,14 @@ StyledDialogView {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         Column {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.margins: 16
 
-            spacing: 24
+            spacing: ui.theme.extra.space_24
 
             PitchSection {
                 id: pitchSection

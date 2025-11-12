@@ -41,7 +41,7 @@ StyledDialogView {
     ColumnLayout {
         id: mainColumn
 
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         MetadataControlPanel {
             id: topButtonsBar

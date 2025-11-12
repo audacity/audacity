@@ -32,7 +32,7 @@ Column {
 
     property alias navigation: textField.navigation
 
-    spacing: 10
+    spacing: ui.theme.extra.space_10
 
     StyledTextLabel {
         anchors.left: parent.left

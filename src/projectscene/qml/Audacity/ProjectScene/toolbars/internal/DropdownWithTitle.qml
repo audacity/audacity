@@ -21,7 +21,7 @@ RowLayout {
 
     property var navigation: allowOptionToggle ? optionCheckBox.navigation : navCtrl // todo
 
-    spacing: 6
+    spacing: ui.theme.extra.space_6
 
     signal isOptionEnableChangeRequested(var enable)
     signal handleMenuItem(var itemId)

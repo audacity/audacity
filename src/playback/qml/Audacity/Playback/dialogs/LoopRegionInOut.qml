@@ -49,7 +49,7 @@ StyledDialogView {
     ColumnLayout {
         anchors.fill: parent
 
-        spacing: 2
+        spacing: ui.theme.extra.space_2
 
         ColumnLayout {
             Layout.leftMargin: 16

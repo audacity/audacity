@@ -22,7 +22,7 @@ RowLayout {
 
     height: 28
 
-    spacing: 1
+    spacing: ui.theme.extra.space_1
 
     RoundedRectangle {
         Layout.preferredWidth: childrenRect.width
@@ -48,7 +48,7 @@ RowLayout {
 
                 height: root.height
 
-                spacing: 6
+                spacing: ui.theme.extra.space_6
 
                 StyledTextLabel {
                     id: upperLabel

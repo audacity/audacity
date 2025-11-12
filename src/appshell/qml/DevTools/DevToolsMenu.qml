@@ -29,7 +29,7 @@ RadioButtonGroup {
     id: radioButtonList
 
     orientation: ListView.Vertical
-    spacing: 0
+    spacing: ui.theme.extra.space_0
 
     signal selected(string name)
 

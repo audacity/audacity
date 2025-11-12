@@ -27,7 +27,7 @@ RowLayout {
     signal endValueChangeRequested(var newValue)
     signal formatChangeRequested(var newFormat)
 
-    spacing: 1
+    spacing: ui.theme.extra.space_1
 
     Timecode {
         id: startTimecode

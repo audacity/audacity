@@ -99,7 +99,7 @@ Item {
         id: rootColumn
 
         padding: 0
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         Row {
             id: checkboxRow
@@ -150,7 +150,7 @@ Item {
         Row {
             id: timelineRow
 
-            spacing: 6
+            spacing: ui.theme.extra.space_6
 
             Rectangle {
                 id: timelineArea
@@ -216,7 +216,7 @@ Item {
 
                 y: -clipIndicator.height - spacing
 
-                spacing: 2
+                spacing: ui.theme.extra.space_2
 
                 Row {
                     id: clipIndicatorRow

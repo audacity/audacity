@@ -6,7 +6,7 @@ import Audacity.ProjectScene
 import Audacity.Playback
 
 Row {
-    spacing: 6
+    spacing: ui.theme.extra.space_6
 
     SelectionStatusModel {
         id: selectionModel

@@ -34,7 +34,7 @@ Item {
     ColumnLayout {
         anchors.fill: parent
         anchors.bottomMargin: 2
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         FlatButton {
             id: meterOptionsBtn
@@ -71,7 +71,7 @@ Item {
             Row {
                 id: meterChannelRow
 
-                spacing: 2
+                spacing: ui.theme.extra.space_2
 
                 anchors.fill: parent
                 anchors.leftMargin: 4

@@ -17,7 +17,7 @@ BaseSection {
 
     Column {
         width: parent.width
-        spacing: 24
+        spacing: ui.theme.extra.space_24
 
         CheckBox {
             id: checkbox

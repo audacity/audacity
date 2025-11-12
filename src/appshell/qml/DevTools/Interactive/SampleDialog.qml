@@ -23,7 +23,7 @@ StyledDialogView {
         Column {
             anchors.centerIn: parent
 
-            spacing: 50
+            spacing: ui.theme.extra.space_50
 
             TextInputField {
                 id: input
@@ -47,7 +47,7 @@ StyledDialogView {
 
             anchors.rightMargin: 16
             anchors.bottomMargin: 20
-            spacing: 20
+            spacing: ui.theme.extra.space_20
 
             FlatButton {
                 text: "Cancel"

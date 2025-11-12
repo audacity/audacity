@@ -36,7 +36,7 @@ Rectangle {
 
     ColumnLayout {
         id: trackEffects
-        spacing: 0
+        spacing: ui.theme.extra.space_0
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right

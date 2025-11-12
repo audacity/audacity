@@ -40,7 +40,7 @@ StyledDialogView {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 30
+        spacing: ui.theme.extra.space_30
 
         ColumnLayout {
             id: content
@@ -51,7 +51,7 @@ StyledDialogView {
             Layout.leftMargin: 40
             Layout.rightMargin: 40
 
-            spacing: 32
+            spacing: ui.theme.extra.space_32
 
             Image {
                 id: logo

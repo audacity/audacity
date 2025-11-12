@@ -654,7 +654,7 @@ Rectangle {
                 anchors.rightMargin: 4
                 anchors.verticalCenter: parent.verticalCenter
 
-                spacing: 2
+                spacing: ui.theme.extra.space_2
 
                 ClipItemPropertyButton {
                     id: pitchBtn
@@ -737,7 +737,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
-            spacing: 0
+            spacing: ui.theme.extra.space_0
 
             WaveView {
                 id: waveView

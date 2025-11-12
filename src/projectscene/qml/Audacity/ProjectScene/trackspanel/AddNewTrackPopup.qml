@@ -36,7 +36,7 @@ StyledPopupView {
     RowLayout {
         id: trackTypeOpts
 
-        spacing: 10
+        spacing: ui.theme.extra.space_10
 
         Repeater {
             model: [

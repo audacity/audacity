@@ -21,7 +21,7 @@ FlatButton {
 
     contentItem: RowLayout {
         width: Math.min(implicitWidth, root.width)
-        spacing: 2
+        spacing: ui.theme.extra.space_2
 
         StyledIconLabel {
             Layout.alignment: Qt.AlignVCenter

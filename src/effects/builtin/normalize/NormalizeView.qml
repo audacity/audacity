@@ -24,7 +24,7 @@ BuiltinEffectBase {
 
         topPadding: 2
         bottomPadding: 2
-        spacing: 10
+        spacing: ui.theme.extra.space_10
 
         CheckBox {
             id: removeDcCheckbox

@@ -360,7 +360,7 @@ FocusScope {
             anchors.rightMargin: prv.sideMargin
             anchors.verticalCenter: parent.verticalCenter
 
-            spacing: 22
+            spacing: ui.theme.extra.space_22
 
             FlatButton {
                 navigation.name: "NewProject"

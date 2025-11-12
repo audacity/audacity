@@ -36,7 +36,7 @@ Column {
     Row {
         id: imageRow
 
-        spacing: 24
+        spacing: ui.theme.extra.space_24
 
         Repeater {
             property var pasteBehaviors: pasteBehaviorModel.pasteBehaviors

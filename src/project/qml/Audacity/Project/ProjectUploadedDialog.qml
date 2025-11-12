@@ -75,7 +75,7 @@ StyledDialogView {
             anchors.right: parent.right
             anchors.margins: 24
 
-            spacing: 0
+            spacing: ui.theme.extra.space_0
 
             AccessibleItem {
                 id: accessibleInfo
@@ -148,7 +148,7 @@ StyledDialogView {
                         anchors.fill: parent
                         anchors.margins: 28
 
-                        spacing: 24
+                        spacing: ui.theme.extra.space_24
 
                         StyledTextLabel {
                             id: publishTitleLabel
@@ -183,7 +183,7 @@ StyledDialogView {
 
                                 RowLayout {
                                     width: parent.width
-                                    spacing: 10
+                                    spacing: ui.theme.extra.space_10
 
                                     property string title: modelData
 
@@ -237,7 +237,7 @@ StyledDialogView {
             Row {
                 Layout.alignment: Qt.AlignRight
 
-                spacing: 10
+                spacing: ui.theme.extra.space_10
 
                 FlatButton {
                     text: qsTrc("project", "View project online")

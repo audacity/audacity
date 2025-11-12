@@ -56,7 +56,7 @@ Item {
     ColumnLayout {
         anchors.fill: parent
 
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         AccountInfoButton {
             Layout.fillWidth: true
@@ -84,7 +84,7 @@ Item {
             Layout.fillWidth: true
 
             orientation: ListView.Vertical
-            spacing: 0
+            spacing: ui.theme.extra.space_0
 
             model: [
                 {
@@ -114,7 +114,7 @@ Item {
                 navigation.panel: navPanel
                 navigation.row: 2 + model.index
 
-                spacing: 30
+                spacing: ui.theme.extra.space_30
                 leftPadding: spacing
 
                 ButtonGroup.group: radioButtonList.radioButtonGroup

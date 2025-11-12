@@ -67,7 +67,7 @@ Page {
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
 
-        spacing: 24
+        spacing: ui.theme.extra.space_24
 
         ThemeSamplesList {
             id: themeSamplesList
@@ -76,7 +76,7 @@ Page {
 
             themes: model.highContrastEnabled ? model.highContrastThemes : model.generalThemes
             currentThemeCode: model.currentThemeCode
-            spacing: 24
+            spacing: ui.theme.extra.space_24
 
             navigationPanel.section: root.navigationSection
             navigationPanel.order: root.navigationStartRow + 1
@@ -138,7 +138,7 @@ Page {
 
             height: childrenRect.height
 
-            spacing: 6
+            spacing: ui.theme.extra.space_6
             StyledTextLabel {
                 id: accentColorTitleLabel
                 Layout.alignment: Qt.AlignCenter
@@ -158,7 +158,7 @@ Page {
                 currentColorIndex: model.currentAccentColorIndex
 
                 sampleSize: 22
-                spacing: 6
+                spacing: ui.theme.extra.space_6
 
                 navigationPanel.section: root.navigationSection
                 navigationPanel.order: root.navigationStartRow + 3

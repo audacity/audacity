@@ -23,7 +23,7 @@ BuiltinEffectBase {
 
     Column {
         id: column
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         Row {
             id: row

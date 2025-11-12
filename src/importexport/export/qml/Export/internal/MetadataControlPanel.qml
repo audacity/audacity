@@ -22,7 +22,7 @@ RowLayout {
     property int templateButtonWidth: 105
     property int tagButtonWidth: 70
 
-    spacing: 6
+    spacing: ui.theme.extra.space_6
 
     StyledTextLabel {
         id: title

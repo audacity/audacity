@@ -30,7 +30,7 @@ Column {
     default property alias contentData: sectionContent.data
 
     width: parent.width
-    spacing: 18
+    spacing: ui.theme.extra.space_18
 
     property alias title: titleLabel.text
     property int columnWidth: 208

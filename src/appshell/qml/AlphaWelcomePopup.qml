@@ -25,7 +25,7 @@ StyledDialogView {
 
             anchors.fill: parent
 
-            spacing: 24
+            spacing: ui.theme.extra.space_24
             anchors.margins: 24
 
             StyledTextLabel {

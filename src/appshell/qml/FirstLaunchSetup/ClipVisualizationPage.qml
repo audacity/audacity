@@ -33,7 +33,7 @@ DoublePage {
     // Left side content
     leftContent: Column {
         anchors.fill: parent
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         // Radio button options
         Column {

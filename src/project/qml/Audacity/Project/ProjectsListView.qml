@@ -134,7 +134,7 @@ Item {
                 id: listViewColumn
 
                 anchors.fill: parent
-                spacing: 0
+                spacing: ui.theme.extra.space_0
 
                 // Column headers
                 RowLayout {

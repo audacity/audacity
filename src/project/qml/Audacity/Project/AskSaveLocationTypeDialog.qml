@@ -53,7 +53,7 @@ StyledDialogView {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 24
-        spacing: 24
+        spacing: ui.theme.extra.space_24
 
         StyledTextLabel {
             Layout.fillWidth: true
@@ -63,7 +63,7 @@ StyledDialogView {
 
         RowLayout {
             id: optionsRowLayout
-            spacing: 24
+            spacing: ui.theme.extra.space_24
 
             NavigationPanel {
                 id: optionsNavPanel

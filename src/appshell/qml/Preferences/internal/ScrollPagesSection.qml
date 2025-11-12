@@ -57,7 +57,7 @@ BaseSection {
 
         delegate: RoundedRadioButton {
             leftPadding: 0
-            spacing: 6
+            spacing: ui.theme.extra.space_6
 
             property string title: modelData["title"]
 

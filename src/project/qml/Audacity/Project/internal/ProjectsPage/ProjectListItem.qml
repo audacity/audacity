@@ -58,7 +58,7 @@ ListItemBlank {
         spacing: root.columnSpacing
 
         RowLayout {
-            spacing: 24
+            spacing: ui.theme.extra.space_24
 
             Loader {
                 id: thumbnailLoader
@@ -92,7 +92,7 @@ ListItemBlank {
                 sourceComponent: RowLayout {
                     visible: root.project.isCloud
 
-                    spacing: 24
+                    spacing: ui.theme.extra.space_24
 
                     // CloudProjectStatusWatcher {
                     //     id: cloudProjectStatusWatcher

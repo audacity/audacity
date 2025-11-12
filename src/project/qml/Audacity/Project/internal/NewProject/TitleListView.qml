@@ -75,7 +75,7 @@ Item {
         anchors.bottom: parent.bottom
 
         width: parent.width
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         currentIndex: 0
 

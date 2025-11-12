@@ -83,7 +83,7 @@ FocusScope {
         anchors.right: parent.right
         anchors.rightMargin: prv.sideMargin
 
-        spacing: 24
+        spacing: ui.theme.extra.space_24
 
         RowLayout {
             width: parent.width

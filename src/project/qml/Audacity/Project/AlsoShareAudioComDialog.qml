@@ -101,7 +101,7 @@ StyledDialogView {
         id: content
 
         anchors.fill: parent
-        spacing: 20
+        spacing: ui.theme.extra.space_20
 
         ColumnLayout {
             id: header

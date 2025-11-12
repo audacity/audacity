@@ -47,7 +47,7 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         FlatButton {
             Layout.preferredWidth: root.height
@@ -78,7 +78,7 @@ Item {
                 anchors.fill: parent
                 anchors.topMargin: 2
 
-                spacing: 2
+                spacing: ui.theme.extra.space_2
 
                 HorizontalVolumePressureMeter {
                     id: leftVolumePressure

@@ -30,7 +30,7 @@ StyledDialogView {
     ColumnLayout {
         id: mainColumn
 
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         // PRESETS BAR PLACEHOLDER
         // Rectangle {
@@ -48,7 +48,7 @@ StyledDialogView {
             width: root.contentWidth
             height: 575
 
-            spacing: 0
+            spacing: ui.theme.extra.space_0
 
             FormatAndCodecSection {
                 ffmpegPrefModel: ffmpegPrefModel

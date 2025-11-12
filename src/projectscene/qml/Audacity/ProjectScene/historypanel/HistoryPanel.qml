@@ -54,7 +54,7 @@ Item {
                 anchors.leftMargin: 12
                 anchors.rightMargin: 12
 
-                spacing: 6
+                spacing: ui.theme.extra.space_6
 
                 Item {
                     implicitWidth: 16

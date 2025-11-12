@@ -10,7 +10,7 @@ import Muse.UiComponents
 ColumnLayout {
     id: root
 
-    spacing: 10
+    spacing: ui.theme.extra.space_10
 
     property var ffmpegPrefModel: null
     property int controlWidth: 156

@@ -75,7 +75,7 @@ Item {
         anchors.rightMargin: 8
         anchors.bottom: parent.bottom
 
-        spacing: 30
+        spacing: ui.theme.extra.space_30
 
         // AdditionalInfoView {
         //     id: additionalInfo

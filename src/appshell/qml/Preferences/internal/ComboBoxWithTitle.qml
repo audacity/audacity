@@ -41,7 +41,7 @@ Column {
 
     signal valueEdited(int newIndex, var newValue)
 
-    spacing: 6
+    spacing: ui.theme.extra.space_6
 
     function indexOfValue(value) {
         return comboBox.indexOfValue(value)

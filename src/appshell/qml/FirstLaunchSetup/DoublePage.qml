@@ -64,7 +64,7 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         // Left side - Controls
         Item {
@@ -76,7 +76,7 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 24
 
-                spacing: 24
+                spacing: ui.theme.extra.space_24
 
                 StyledTextLabel {
                     id: titleLabel

@@ -19,7 +19,7 @@ StyledToolBarView {
     navigationPanel.name: "WorkspacesToolBar"
     navigationPanel.accessible.name: qsTrc("projectscene", "Workspaces toolbar")
 
-    spacing: 0
+    spacing: ui.theme.extra.space_0
     rowHeight: 28
 
     WorkspacesToolBarModel {

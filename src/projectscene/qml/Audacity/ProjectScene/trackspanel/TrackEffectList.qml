@@ -40,7 +40,7 @@ Rectangle {
     StyledListView {
         id: trackEffectList
         anchors.fill: parent
-        spacing: 6
+        spacing: ui.theme.extra.space_6
         cacheBuffer: 3000
         interactive: trackEffectList.contentHeight > trackEffectList.height
         model: trackEffectListModel

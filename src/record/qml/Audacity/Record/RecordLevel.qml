@@ -153,7 +153,7 @@ FlatButton {
 
                         anchors.fill: parent
 
-                        spacing: 2
+                        spacing: ui.theme.extra.space_2
 
                         HorizontalVolumePressureMeter {
                             id: leftVolumePressure

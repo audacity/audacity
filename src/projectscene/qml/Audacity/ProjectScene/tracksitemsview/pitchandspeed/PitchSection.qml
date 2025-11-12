@@ -51,7 +51,7 @@ Column {
     Row {
         width: parent.width
 
-        spacing: 40
+        spacing: ui.theme.extra.space_40
 
         PropertyView {
             id: semitonesProperty

@@ -55,7 +55,7 @@ Item {
     RowLayout {
 
         anchors.fill: parent
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         ColumnLayout {
             id: effectColumn
@@ -66,7 +66,7 @@ Item {
             Layout.fillHeight: true
 
             visible: effectSectionModel.showEffectsSection
-            spacing: 0
+            spacing: ui.theme.extra.space_0
 
             RealtimeEffectSectionModel {
                 id: effectSectionModel
@@ -146,7 +146,7 @@ Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                spacing: 0
+                spacing: ui.theme.extra.space_0
                 cacheBuffer: 3000
 
                 ScrollBar.vertical: null

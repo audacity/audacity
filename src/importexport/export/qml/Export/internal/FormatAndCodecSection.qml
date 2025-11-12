@@ -20,7 +20,7 @@ Rectangle {
     RowLayout {
 
         Layout.preferredWidth: formatsColumn.width
-        spacing: 10
+        spacing: ui.theme.extra.space_10
 
         ColumnLayout {
 
