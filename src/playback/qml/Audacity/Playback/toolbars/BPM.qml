@@ -43,7 +43,7 @@ RowLayout {
         color: ui.theme.backgroundQuarternaryColor
 
         Item {
-            property int margin: 6
+            property int margin: ui.theme.extra.space_6
 
             width: row.width + margin * 2
             height: row.height
