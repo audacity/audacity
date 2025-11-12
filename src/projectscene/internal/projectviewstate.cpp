@@ -503,35 +503,31 @@ void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const
 
     for (const auto& trackId : prj->trackIdList()) {
         // Add clips boundaries
-        if (!selectedClips.empty()) {
-            for (const auto& clip : prj->clipList(trackId)) {
-                if (excludeCurrentSelection && muse::contains(selectedClips, clip.key)) {
-                    continue;
-                }
-
-                if (itemKeyToOmit.isValid() && clip.key == itemKeyToOmit) {
-                    continue;
-                }
-
-                boundaries.insert(clip.startTime);
-                boundaries.insert(clip.endTime);
+        for (const auto& clip : prj->clipList(trackId)) {
+            if (excludeCurrentSelection && muse::contains(selectedClips, clip.key)) {
+                continue;
             }
+
+            if (itemKeyToOmit.isValid() && clip.key == itemKeyToOmit) {
+                continue;
+            }
+
+            boundaries.insert(clip.startTime);
+            boundaries.insert(clip.endTime);
         }
 
         // Add labels boundaries
-        if (!selectedLabels.empty()) {
-            for (const auto& label : prj->labelList(trackId)) {
-                if (excludeCurrentSelection && muse::contains(selectedLabels, label.key)) {
-                    continue;
-                }
-
-                if (itemKeyToOmit.isValid() && label.key == itemKeyToOmit) {
-                    continue;
-                }
-
-                boundaries.insert(label.startTime);
-                boundaries.insert(label.endTime);
+        for (const auto& label : prj->labelList(trackId)) {
+            if (excludeCurrentSelection && muse::contains(selectedLabels, label.key)) {
+                continue;
             }
+
+            if (itemKeyToOmit.isValid() && label.key == itemKeyToOmit) {
+                continue;
+            }
+
+            boundaries.insert(label.startTime);
+            boundaries.insert(label.endTime);
         }
     }
 
