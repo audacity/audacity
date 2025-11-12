@@ -20,8 +20,8 @@ Rectangle {
     property var navigationPanel: null
 
     signal titleEditAccepted(var newTitle)
-    signal titleEditStarted()
-    signal requestSelected()
+    signal titleEditStarted
+    signal requestSelected
 
     signal contextMenuOpenRequested(real x, real y)
     signal mousePositionChanged(real x, real y)
@@ -77,7 +77,7 @@ Rectangle {
             e.accepted = false
         }
 
-        onClicked: function(e) {
+        onClicked: function (e) {
             if (e.button === Qt.RightButton) {
                 root.contextMenuOpenRequested(e.x, e.y)
             }
@@ -87,9 +87,7 @@ Rectangle {
         onPositionChanged: function (e) {
             // Reset double click timer if the mouse has moved,
             // to prevent rapid clip movement activate title editing
-            if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance ||
-                Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
-
+            if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance || Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
                 lastClickTime = 0
             }
 

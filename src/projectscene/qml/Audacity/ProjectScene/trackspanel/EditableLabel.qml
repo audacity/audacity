@@ -56,7 +56,7 @@ Item {
             currentText: root.text
             property string newText: root.text
 
-            onTextEdited: function(text) {
+            onTextEdited: function (text) {
                 newText = text
             }
 
