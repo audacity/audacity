@@ -106,7 +106,7 @@ RowLayout {
         iconColor: root.textColor
         visible: root.showMenu
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             timecodeModel.currentFormat = parseInt(itemId)
         }
     }

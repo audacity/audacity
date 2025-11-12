@@ -35,7 +35,7 @@ StyledToolBarView {
     ContextMenuLoader {
         id: audioSetupContextMenuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             audioSetupContextMenuModel.handleMenuItem(itemId)
         }
     }

@@ -88,7 +88,7 @@ RowLayout {
             isDown: false
             bottomRightRadius: 0
 
-            onClicked: function(mouse) {
+            onClicked: function (mouse) {
                 bpmModel.upValue()
             }
         }
@@ -101,7 +101,7 @@ RowLayout {
             isDown: true
             topRightRadius: 0
 
-            onClicked: function(mouse) {
+            onClicked: function (mouse) {
                 bpmModel.downValue()
             }
         }

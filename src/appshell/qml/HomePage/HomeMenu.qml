@@ -87,8 +87,18 @@ Item {
             spacing: 0
 
             model: [
-                { "name": "projects", "title": qsTrc("appshell", "Project"), "icon": IconCode.WAVEFORM, "enabled": true},
-                { "name": "learn", "title": qsTrc("appshell", "Learn"), "icon":  IconCode.LEARN, "enabled": false}
+                {
+                    "name": "projects",
+                    "title": qsTrc("appshell", "Project"),
+                    "icon": IconCode.WAVEFORM,
+                    "enabled": true
+                },
+                {
+                    "name": "learn",
+                    "title": qsTrc("appshell", "Learn"),
+                    "icon": IconCode.LEARN,
+                    "enabled": false
+                }
             ]
 
             currentIndex: 0

@@ -91,7 +91,7 @@ StyledDialogView {
                 continue
             }
 
-            obj.hideRequested.connect(function() {
+            obj.hideRequested.connect(function () {
                 root.hide()
             })
 
@@ -102,7 +102,7 @@ StyledDialogView {
     PreferencesModel {
         id: preferencesModel
 
-        onCurrentPageIdChanged: function(currentPageId) {
+        onCurrentPageIdChanged: function (currentPageId) {
             prv.updateStackCurrentIndex()
         }
     }
@@ -130,14 +130,16 @@ StyledDialogView {
                 model: preferencesModel
             }
 
-            SeparatorLine { orientation: Qt.Vertical }
+            SeparatorLine {
+                orientation: Qt.Vertical
+            }
 
             StackLayout {
                 id: stack
             }
         }
 
-        SeparatorLine { }
+        SeparatorLine {}
 
         PreferencesButtonsPanel {
             id: buttonsPanel

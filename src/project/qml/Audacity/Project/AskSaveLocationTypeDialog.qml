@@ -111,7 +111,9 @@ You can share drafts with others and publish your finished projects publicly too
             }
         }
 
-        SeparatorLine { Layout.margins: -24 }
+        SeparatorLine {
+            Layout.margins: -24
+        }
 
         NavigationPanel {
             id: dontAskAgainPanel

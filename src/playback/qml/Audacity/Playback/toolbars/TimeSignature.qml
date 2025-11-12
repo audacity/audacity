@@ -94,7 +94,7 @@ RowLayout {
             }
         }
 
-        onClicked: function(mouse) {
+        onClicked: function (mouse) {
             togglePopupOpened()
         }
 
@@ -104,11 +104,11 @@ RowLayout {
             upper: root.upper
             lower: root.lower
 
-            onUpperChangeRequested: function(newValue){
+            onUpperChangeRequested: function (newValue) {
                 root.upperChangeRequested(newValue)
             }
 
-            onLowerChangeRequested: function(newValue){
+            onLowerChangeRequested: function (newValue) {
                 root.lowerChangeRequested(newValue)
             }
         }

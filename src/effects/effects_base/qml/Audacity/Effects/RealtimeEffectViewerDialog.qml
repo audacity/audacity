@@ -115,7 +115,6 @@ EffectStyledDialogView {
             Layout.fillWidth: true
 
             window: Window {
-
                 id: win
 
                 color: ui.theme.backgroundPrimaryColor

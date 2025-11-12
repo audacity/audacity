@@ -45,7 +45,7 @@ Column {
         accessible.name: root.title
         enabled: root.enabled && root.visible
 
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }

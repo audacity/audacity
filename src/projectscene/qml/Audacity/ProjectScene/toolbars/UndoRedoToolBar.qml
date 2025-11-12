@@ -16,11 +16,12 @@ StyledToolBarView {
     spacing: 0
     rowHeight: 28
 
-    model: UndoRedoToolBarModel { }
+    model: UndoRedoToolBarModel {}
 
-    sourceComponentCallback: function(type) {
-        switch(type) {
-        case ToolBarItemType.ACTION: return controlComp
+    sourceComponentCallback: function (type) {
+        switch (type) {
+        case ToolBarItemType.ACTION:
+            return controlComp
         }
 
         return null

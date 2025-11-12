@@ -143,7 +143,7 @@ Rectangle {
 
         anchors.fill: parent
         color: "transparent"
-        border.width: root.enableContrastBorder ?  2 : 1
+        border.width: root.enableContrastBorder ? 2 : 1
         border.color: "#000000"
         radius: root.enableContrastBorder ? 0 : 4
         z: root.parent.z + 1

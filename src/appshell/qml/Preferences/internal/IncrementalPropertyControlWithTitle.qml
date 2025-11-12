@@ -65,7 +65,7 @@ Column {
 
         navigation.accessible.name: titleLabel.text + " " + currentValue + " " + measureUnitsSymbol
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             root.valueEdited(newValue)
         }
     }

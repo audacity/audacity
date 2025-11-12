@@ -38,15 +38,15 @@ Row {
 
         enabled: selectionModel.isEnabled
 
-        onStartValueChangeRequested: function(newValue) {
+        onStartValueChangeRequested: function (newValue) {
             selectionModel.startTime = newValue
         }
 
-        onEndValueChangeRequested: function(newValue) {
+        onEndValueChangeRequested: function (newValue) {
             selectionModel.endTime = newValue
         }
 
-        onFormatChangeRequested: function(newFormat) {
+        onFormatChangeRequested: function (newFormat) {
             selectionModel.currentFormat = newFormat
         }
     }

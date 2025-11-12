@@ -86,11 +86,11 @@ StyledDialogView {
 
             model: metadataModel
 
-            onKeyEdited: function(row, newKey) {
+            onKeyEdited: function (row, newKey) {
                 metadataModel.renameTag(row, newKey)
             }
 
-            onValueEdited: function(row, newVal) {
+            onValueEdited: function (row, newVal) {
                 metadataModel.setTagValue(row, newVal)
             }
         }

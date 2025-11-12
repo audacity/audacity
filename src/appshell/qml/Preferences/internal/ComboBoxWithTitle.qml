@@ -66,7 +66,7 @@ Column {
 
         indeterminateText: ""
 
-        onActivated: function(index, value) {
+        onActivated: function (index, value) {
             root.valueEdited(index, value)
         }
     }

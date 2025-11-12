@@ -40,7 +40,7 @@ RowLayout {
         checked: root.isOptionEnabled
         visible: root.allowOptionToggle
 
-        onClicked: function() {
+        onClicked: function () {
             root.isOptionEnableChangeRequested(!optionCheckBox.checked)
         }
     }
@@ -80,7 +80,9 @@ RowLayout {
             id: backgroundItem
             anchors.fill: parent
 
-            NavigationFocusBorder { navigationCtrl: navCtrl }
+            NavigationFocusBorder {
+                navigationCtrl: navCtrl
+            }
 
             color: ui.theme.textFieldColor
             border.color: ui.theme.strokeColor
@@ -141,20 +143,25 @@ RowLayout {
             State {
                 name: "HOVERED"
                 when: mouseAreaItem.containsMouse && !mouseAreaItem.pressed
-                PropertyChanges { target: backgroundItem; border.color: Utils.colorWithAlpha(ui.theme.accentColor, 0.6) }
+                PropertyChanges {
+                    target: backgroundItem
+                    border.color: Utils.colorWithAlpha(ui.theme.accentColor, 0.6)
+                }
             },
-
             State {
                 name: "OPENED"
                 when: menuLoader.isMenuOpened
-                PropertyChanges { target: backgroundItem; border.color: ui.theme.accentColor }
+                PropertyChanges {
+                    target: backgroundItem
+                    border.color: ui.theme.accentColor
+                }
             }
         ]
 
         StyledMenuLoader {
             id: menuLoader
 
-            onHandleMenuItem: function(itemId) {
+            onHandleMenuItem: function (itemId) {
                 root.handleMenuItem(itemId)
             }
         }

@@ -28,9 +28,10 @@ StyledToolBarView {
 
     model: workspacesModel
 
-    sourceComponentCallback: function(type) {
-        switch(type) {
-        case ToolBarItemType.ACTION: return controlComp
+    sourceComponentCallback: function (type) {
+        switch (type) {
+        case ToolBarItemType.ACTION:
+            return controlComp
         }
 
         return null
@@ -61,7 +62,7 @@ StyledToolBarView {
 
                     allowOptionToggle: false
 
-                    onHandleMenuItem: function(itemId) {
+                    onHandleMenuItem: function (itemId) {
                         Qt.callLater(root.model.handleWorkspacesMenuItem, itemId)
                     }
                 }

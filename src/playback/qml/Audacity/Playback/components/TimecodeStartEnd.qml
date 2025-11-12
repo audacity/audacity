@@ -42,7 +42,7 @@ RowLayout {
 
         showMenu: false
 
-        onValueChangeRequested: function(newValue) {
+        onValueChangeRequested: function (newValue) {
             root.startValueChangeRequested(newValue)
         }
     }
@@ -60,11 +60,11 @@ RowLayout {
 
         backgroundLeftRadius: 0
 
-        onValueChangeRequested: function(newValue) {
+        onValueChangeRequested: function (newValue) {
             root.endValueChangeRequested(newValue)
         }
 
-        onCurrentFormatChanged: function() {
+        onCurrentFormatChanged: function () {
             root.formatChangeRequested(currentFormat)
         }
     }
