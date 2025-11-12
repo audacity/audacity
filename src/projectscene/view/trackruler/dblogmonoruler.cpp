@@ -1,9 +1,10 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include "global/types/ratio.h"
+
 #include "dblogmonoruler.h"
 #include "dblogrulerutils.h"
-#include "types/ratio.h"
 
 using namespace au::projectscene;
 

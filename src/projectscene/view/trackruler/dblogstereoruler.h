@@ -24,5 +24,6 @@ private:
     double m_channelHeightRatio = 1.0;
     bool m_collapsed = false;
     double m_dbRange = -60.0;
+    double m_maxDisplayValue = 1.0;
 };
 }
