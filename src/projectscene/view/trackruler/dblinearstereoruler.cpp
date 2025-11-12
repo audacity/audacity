@@ -92,7 +92,7 @@ std::vector<TrackRulerFullStep> DbLinearStereoRuler::fullSteps() const
                                                        TrackRulerFullStep { 0.0, channel, 0, true, true, true }
         };
 
-        auto valuesList = dblinearrulerutils::fullStepsValues(channelHeights[channel], m_dbRange, MIN_HEIGHT_TO_ZERO,
+        auto valuesList = dblinearrulerutils::fullStepsValues(channelHeights[channel], m_dbRange, 1.0, MIN_HEIGHT_TO_ZERO,
                                                               MIN_ADJACENT_STEPS_HEIGHT, FULL_STEP_SIZES);
         for (const auto& stepValue : valuesList) {
             channelSteps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), channel, 0, false, false, false });
@@ -113,9 +113,9 @@ std::vector<TrackRulerSmallStep> DbLinearStereoRuler::smallSteps() const
     std::vector<double> channelHeights = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
     std::vector<TrackRulerSmallStep> steps;
     for (size_t channel = 0; channel < 2; ++channel) {
-        const int lowestFullStep = dblinearrulerutils::computeLowestFullStepValue(channelHeights[channel], m_dbRange,
+        const int lowestFullStep = dblinearrulerutils::computeLowestFullStepValue(channelHeights[channel], m_dbRange, 1.0,
                                                                                   MIN_LOWEST_FULL_STEP_TO_ZERO_HEIGHT);
-        const std::vector<int> valuesList = dblinearrulerutils::fullStepsValues(channelHeights[channel], m_dbRange, MIN_HEIGHT_TO_ZERO,
+        const std::vector<int> valuesList = dblinearrulerutils::fullStepsValues(channelHeights[channel], m_dbRange, 1.0, MIN_HEIGHT_TO_ZERO,
                                                                                 MIN_ADJACENT_STEPS_HEIGHT,
                                                                                 FULL_STEP_SIZES);
         for (int i = lowestFullStep; i < 0; i++) {
