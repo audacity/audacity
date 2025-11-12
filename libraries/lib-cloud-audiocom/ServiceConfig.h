@@ -74,6 +74,10 @@ public:
    std::string GetDeleteSnapshotUrl(
       std::string_view projectId, std::string_view snapshotId) const;
 
+   std::string GetAudioListUrl(int page, int pageSize, std::string_view searchTerm) const;
+   std::string GetAudioInfoUrl(std::string_view audioId) const;
+   std::string GetAudioDownloadListUrl(std::string_view audioId) const;
+
    std::string GetNetworkStatsUrl(std::string_view projectId) const;
    std::string GetProjectPagePath(std::string_view userSlug, std::string_view projectSlug,
       AudiocomTrace) const;

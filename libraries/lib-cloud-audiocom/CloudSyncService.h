@@ -31,6 +31,8 @@ namespace sync
 {
 class LocalProjectSnapshot;
 class PaginatedProjectsResponse;
+class PaginatedAudioResponse;
+class CloudAudioInfo;
 class ProjectInfo;
 class SnapshotInfo;
 class RemoteProjectSnapshot;
@@ -44,11 +46,27 @@ struct ProjectSyncResult final
       Failed,
    };
 
-   StatusCode Status {};
+   StatusCode Status { StatusCode::Failed };
    ResponseResult Result;
    std::string ProjectPath;
    TransferStats Stats;
 }; // struct ProjectSyncResult
+
+struct DownloadAudioResult final
+{
+   enum class StatusCode
+   {
+      Succeeded,
+      Failed,
+      Blocked,
+   };
+
+   StatusCode Status { StatusCode::Failed };
+   ResponseResult Result;
+   std::string AudioPath;
+   std::string Title;
+   std::string Format;
+}; // struct DownloadAudioResult
 
 using ProgressCallback = std::function<bool(double)>;
 
@@ -56,6 +74,10 @@ using GetProjectsResult =
    std::variant<sync::PaginatedProjectsResponse, ResponseResult>;
 
 using GetHeadSnapshotIDResult = std::variant<std::string, ResponseResult>;
+
+using GetAudioListResult = std::variant<sync::PaginatedAudioResponse, ResponseResult>;
+using GetAudioInfoResult = std::variant<sync::CloudAudioInfo, ResponseResult>;
+
 } // namespace sync
 
 //! CloudSyncService is responsible for saving and loading projects from the
@@ -82,6 +104,15 @@ public:
    using GetHeadSnapshotIDPromise = std::promise<sync::GetHeadSnapshotIDResult>;
    using GetHeadSnapshotIDFuture  = std::future<sync::GetHeadSnapshotIDResult>;
 
+   using GetAudioListPromise = std::promise<sync::GetAudioListResult>;
+   using GetAudioListFuture  = std::future<sync::GetAudioListResult>;
+
+   using GetAudioInfoPromise = std::promise<sync::GetAudioInfoResult>;
+   using GetAudioInfoFuture  = std::future<sync::GetAudioInfoResult>;
+
+   using DownloadAudioPromise = std::promise<sync::DownloadAudioResult>;
+   using DownloadAudioFuture  = std::future<sync::DownloadAudioResult>;
+
    enum class SyncMode
    {
       Normal,
@@ -93,6 +124,15 @@ public:
    GetProjectsFuture GetProjects(
       concurrency::CancellationContextPtr context, int page, int pageSize,
       std::string_view searchString);
+
+   //! Retrieve the list of audio from the cloud
+   GetAudioListFuture GetAudioList(
+      concurrency::CancellationContextPtr context, int page, int pageSize,
+      std::string_view searchString);
+
+   [[nodiscard]] DownloadAudioFuture DownloadCloudAudio(
+      std::string_view audioId,
+      sync::ProgressCallback callback);
 
    //! Open the project from the cloud. This operation is asynchronous.
    [[nodiscard]] SyncFuture OpenFromCloud(
@@ -126,6 +166,8 @@ private:
       const sync::ProjectInfo& projectInfo,
       const sync::SnapshotInfo& snapshotInfo, SyncMode mode);
 
+   void DownloadAudio(const std::string& name, const std::string& format, const std::string& url);
+
    void UpdateDowloadProgress(double downloadProgress);
 
    void
@@ -137,9 +179,12 @@ private:
    SyncPromise mSyncPromise;
    sync::ProgressCallback mProgressCallback;
 
+   DownloadAudioPromise mDownloadAudioPromise;
+
    std::atomic<double> mDownloadProgress { 0.0 };
    std::atomic<bool> mProgressUpdateQueued { false };
 
    std::atomic<bool> mSyncInProcess { false };
+   std::atomic<bool> mDownloadInProcess { false };
 };
 } // namespace audacity::cloud::audiocom
