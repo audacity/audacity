@@ -62,6 +62,8 @@ public:
     Q_INVOKABLE QVariant next(const TrackItemKey& key) const;
     Q_INVOKABLE QVariant prev(const TrackItemKey& key) const;
 
+    Q_INVOKABLE QVariant findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const;
+
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex& index, int role) const override;

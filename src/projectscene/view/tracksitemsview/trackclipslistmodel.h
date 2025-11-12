@@ -49,8 +49,6 @@ public:
     Q_INVOKABLE void openClipSpeedEdit(const ClipKey& key);
     Q_INVOKABLE void resetClipSpeed(const ClipKey& key);
 
-    Q_INVOKABLE QVariant findGuideline(const ClipKey& key, Direction direction);
-
     // update clip after moving to other track
     Q_INVOKABLE projectscene::ClipKey updateClipTrack(ClipKey clipKey) const;
 

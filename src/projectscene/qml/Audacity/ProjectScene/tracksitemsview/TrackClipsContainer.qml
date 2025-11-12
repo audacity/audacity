@@ -343,7 +343,7 @@ TrackItemsContainer {
                                 onClipEndEditRequested: function() {
                                     clipsModel.endEditItem(itemData.key)
 
-                                    root.triggerClipGuideline(false, -1)
+                                    root.triggerItemGuideline(false, -1)
                                 }
 
                                 onClipLeftTrimRequested: function(completed, action) {
@@ -385,7 +385,7 @@ TrackItemsContainer {
                                     trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
 
                                     let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
-                                    root.triggerClipGuideline(time, false)
+                                    root.triggerItemGuideline(time, false)
                                 }
 
                                 onRequestSelected: {
@@ -548,7 +548,7 @@ TrackItemsContainer {
     function handleClipGuideline(clipKey, direction, completed) {
         let guidelinePos = clipsModel.findGuideline(clipKey, direction)
         if (guidelinePos) {
-            triggerClipGuideline(guidelinePos, completed)
+            triggerItemGuideline(guidelinePos, completed)
         }
     }
 }

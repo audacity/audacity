@@ -260,6 +260,8 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
         if (muse::contains(selectionController()->selectedLabels(), key.key)) {
             return;
         }
+
+        selectionController()->resetSelectedClips();
         selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
     }
 }

@@ -50,7 +50,7 @@ Item {
     signal insureVerticallyVisible(var top, var bottom)
 
     signal handleTimeGuideline(real x, bool completed)
-    signal triggerClipGuideline(real x, bool completed)
+    signal triggerItemGuideline(real x, bool completed)
     signal itemDragEditCanceled
 
     signal initRequired()

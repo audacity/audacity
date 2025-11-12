@@ -187,6 +187,36 @@ QVariant TrackItemsListModel::prev(const TrackItemKey& key) const
     return neighbor(key, -1);
 }
 
+QVariant TrackItemsListModel::findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const
+{
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return QVariant();
+    }
+
+    ViewTrackItem* item = itemByKey(key.key);
+    if (!item) {
+        return QVariant();
+    }
+
+    if (direction != DirectionType::Direction::Right) {
+        double itemStartTime = item->time().startTime;
+        double guidelineTime = m_context->findGuideline(itemStartTime);
+        if (!muse::RealIsEqual(guidelineTime, -1.0)) {
+            return QVariant(guidelineTime);
+        }
+    }
+    if (direction != DirectionType::Direction::Left) {
+        double itemEndTime = item->time().endTime;
+        double guidelineTime = m_context->findGuideline(itemEndTime);
+        if (!muse::RealIsEqual(guidelineTime, -1.0)) {
+            return QVariant(guidelineTime);
+        }
+    }
+
+    return QVariant(-1.0);
+}
+
 QVariant TrackItemsListModel::neighbor(const TrackItemKey& key, int offset) const
 {
     auto it = std::find_if(m_items.begin(), m_items.end(), [key](ViewTrackItem* viewItem) {

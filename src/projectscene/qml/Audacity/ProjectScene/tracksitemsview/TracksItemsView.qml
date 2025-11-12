@@ -813,7 +813,7 @@ Rectangle {
                                 })
                             }
 
-                            onTriggerClipGuideline: function (time, completed) {
+                            onTriggerItemGuideline: function (time, completed) {
                                 root.guidelinePos = timeline.context.timeToPosition(time)
                                 root.guidelineVisible = root.guidelinePos >= 0 && !completed
                             }
@@ -936,6 +936,15 @@ Rectangle {
                                 }
                                 tracksItemsView.moveActive = !completed
                             }
+
+                            onTriggerItemGuideline: function (time, completed) {
+                                root.guidelinePos = timeline.context.timeToPosition(time)
+                                root.guidelineVisible = root.guidelinePos >= 0 && !completed
+                            }
+
+                            onHandleTimeGuideline: function (x) {
+                                root.handleGuideline(x)
+                            }
                         }
                     }
                 }
@@ -979,8 +988,6 @@ Rectangle {
         }
 
         Rectangle {
-            id: clipGuideline
-
             anchors.top: content.top
             anchors.bottom: content.bottom
 
