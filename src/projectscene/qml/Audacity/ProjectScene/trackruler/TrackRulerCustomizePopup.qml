@@ -31,7 +31,7 @@ StyledPopupView {
         readonly property int popupWidth: 200
         readonly property int popupHeight: 260
 
-        readonly property int popupMargins: 12
+        readonly property int popupMargins: ui.theme.extra.space_12
         readonly property int itemsSpacing: ui.theme.extra.space_12
         readonly property int btnSpacing: ui.theme.extra.space_6
 
