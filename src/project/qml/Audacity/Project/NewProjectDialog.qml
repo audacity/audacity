@@ -62,13 +62,13 @@ StyledDialogView {
         id: pagesStack
 
         anchors.top: parent.top
-        anchors.topMargin: 12
+        anchors.topMargin: ui.theme.extra.space_12
         anchors.left: parent.left
-        anchors.leftMargin: 12
+        anchors.leftMargin: ui.theme.extra.space_12
         anchors.right: parent.right
-        anchors.rightMargin: 12
+        anchors.rightMargin: ui.theme.extra.space_12
         anchors.bottom: footer.top
-        anchors.bottomMargin: 20
+        anchors.bottomMargin: ui.theme.extra.space_20
 
         ProjectInfoPage {
             id: projectInfoPage
@@ -82,11 +82,11 @@ StyledDialogView {
         id: footer
 
         anchors.left: parent.left
-        anchors.leftMargin: 24
+        anchors.leftMargin: ui.theme.extra.space_24
         anchors.right: parent.right
-        anchors.rightMargin: 16
+        anchors.rightMargin: ui.theme.extra.space_16
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 16
+        anchors.bottomMargin: ui.theme.extra.space_16
 
         spacing: ui.theme.extra.space_12
 

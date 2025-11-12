@@ -13,7 +13,7 @@ import Audacity.ProjectScene
 Rectangle {
     id: root
     implicitHeight: trackEffectList.contentHeight
-    readonly property int topMargin: 8
+    readonly property int topMargin: ui.theme.extra.space_8
     property alias isMasterTrack: trackEffectListModel.isMasterTrack
     property alias trackName: trackEffectListModel.trackName
     property alias trackEffectsActive: trackEffectListModel.trackEffectsActive

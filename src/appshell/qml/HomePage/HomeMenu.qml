@@ -61,7 +61,7 @@ Item {
         AccountInfoButton {
             Layout.fillWidth: true
             Layout.preferredHeight: 60
-            Layout.topMargin: 20
+            Layout.topMargin: ui.theme.extra.space_20
 
             enabled: false
 

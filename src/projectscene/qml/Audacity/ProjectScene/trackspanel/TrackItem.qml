@@ -56,9 +56,9 @@ ListItemBlank {
     height: trackViewState.trackHeight
     opacity: dragged ? 0.5 : 1
 
-    focusBorder.anchors.leftMargin: spacer.width + 2
-    focusBorder.anchors.rightMargin: 24 + separatorLine.width
-    focusBorder.anchors.bottomMargin: 2
+    focusBorder.anchors.leftMargin: ui.theme.extra.space_2 + spacer.width
+    focusBorder.anchors.rightMargin: ui.theme.extra.space_24 + separatorLine.width
+    focusBorder.anchors.bottomMargin: ui.theme.extra.space_2
 
     background.color: (root.isSelected || hoverHandler.hovered) ? ui.theme.backgroundPrimaryColor : ui.theme.backgroundSecondaryColor
 
@@ -129,7 +129,7 @@ ListItemBlank {
             anchors.left: spacer.right
             anchors.right: separatorLine.left
             anchors.top: parent.top
-            anchors.topMargin: 7
+            anchors.topMargin: ui.theme.extra.space_7
             anchors.margins: ui.theme.extra.space_12
 
             RowLayout {

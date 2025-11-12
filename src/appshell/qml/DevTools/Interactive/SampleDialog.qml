@@ -45,8 +45,8 @@ StyledDialogView {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
 
-            anchors.rightMargin: 16
-            anchors.bottomMargin: 20
+            anchors.rightMargin: ui.theme.extra.space_16
+            anchors.bottomMargin: ui.theme.extra.space_20
             spacing: ui.theme.extra.space_20
 
             FlatButton {

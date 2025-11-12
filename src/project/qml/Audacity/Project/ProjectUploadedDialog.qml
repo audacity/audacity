@@ -111,7 +111,7 @@ StyledDialogView {
                 id: subtitleLabel
 
                 Layout.fillWidth: true
-                Layout.topMargin: 6
+                Layout.topMargin: ui.theme.extra.space_6
 
                 text: qsTrc("project", "All saved changes will now update to the cloud")
                 horizontalAlignment: Text.AlignLeft
@@ -121,7 +121,7 @@ StyledDialogView {
             Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.topMargin: 24
+                Layout.topMargin: ui.theme.extra.space_24
 
                 implicitHeight: bodyItem.implicitHeight
 

@@ -175,11 +175,11 @@ FocusScope {
                 active: root.isCloud
 
                 anchors.left: parent.left
-                anchors.leftMargin: 8
+                anchors.leftMargin: ui.theme.extra.space_8
                 anchors.right: parent.right
-                anchors.rightMargin: 8
+                anchors.rightMargin: ui.theme.extra.space_8
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 8
+                anchors.bottomMargin: ui.theme.extra.space_8
 
                 sourceComponent: RowLayout {
                     visible: root.isCloud

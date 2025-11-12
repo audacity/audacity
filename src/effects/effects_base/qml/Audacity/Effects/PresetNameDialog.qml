@@ -27,7 +27,7 @@ StyledDialogView {
         anchors.bottom: bbox.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottomMargin: 16
+        anchors.bottomMargin: ui.theme.extra.space_16
 
         hint: qsTrc("effects", "Preset name")
 

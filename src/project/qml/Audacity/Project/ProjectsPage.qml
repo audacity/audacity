@@ -238,7 +238,7 @@ FocusScope {
         id: contentLoader
 
         anchors.top: controlsRow.bottom
-        anchors.topMargin: 24
+        anchors.topMargin: ui.theme.extra.space_24
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: buttonsPanel.top

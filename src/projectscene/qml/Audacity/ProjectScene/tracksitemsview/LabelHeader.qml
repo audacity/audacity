@@ -117,7 +117,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: root.isPoint ? 4 : root.earWidth
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 2
+        anchors.bottomMargin: ui.theme.extra.space_2
 
         sourceComponent: isEditState ? titleEditComp : titleComp
 
@@ -202,8 +202,8 @@ Rectangle {
         NavigationFocusBorder {
             navigationCtrl: titleEditNavCtrl
 
-            anchors.topMargin: 1
-            anchors.bottomMargin: 0
+            anchors.topMargin: ui.theme.extra.space_1
+            anchors.bottomMargin: ui.theme.extra.space_0
             radius: 5
         }
     }

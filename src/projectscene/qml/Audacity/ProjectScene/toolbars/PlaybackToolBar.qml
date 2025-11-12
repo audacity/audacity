@@ -315,9 +315,9 @@ Item {
         id: customizeButton
 
         anchors.right: parent.right
-        anchors.rightMargin: 12
+        anchors.rightMargin: ui.theme.extra.space_12
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 10
+        anchors.bottomMargin: ui.theme.extra.space_10
 
         width: 28
         height: width

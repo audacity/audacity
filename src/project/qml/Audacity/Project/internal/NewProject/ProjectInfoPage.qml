@@ -60,7 +60,7 @@ Item {
         id: title
 
         anchors.top: parent.top
-        anchors.topMargin: 8
+        anchors.topMargin: ui.theme.extra.space_8
         anchors.horizontalCenter: parent.horizontalCenter
 
         font: ui.theme.largeBodyBoldFont
@@ -70,9 +70,9 @@ Item {
     ColumnLayout {
         anchors.top: title.bottom
         anchors.left: parent.left
-        anchors.leftMargin: 8
+        anchors.leftMargin: ui.theme.extra.space_8
         anchors.right: parent.right
-        anchors.rightMargin: 8
+        anchors.rightMargin: ui.theme.extra.space_8
         anchors.bottom: parent.bottom
 
         spacing: ui.theme.extra.space_30

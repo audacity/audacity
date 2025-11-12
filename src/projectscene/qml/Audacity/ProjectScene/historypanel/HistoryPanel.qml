@@ -51,8 +51,8 @@ Item {
 
             RowLayout {
                 anchors.fill: parent
-                anchors.leftMargin: 12
-                anchors.rightMargin: 12
+                anchors.leftMargin: ui.theme.extra.space_12
+                anchors.rightMargin: ui.theme.extra.space_12
 
                 spacing: ui.theme.extra.space_6
 

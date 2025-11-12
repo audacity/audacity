@@ -69,10 +69,10 @@ StyledDialogView {
 
                     anchors {
                         fill: parent
-                        leftMargin: 20
-                        rightMargin: 20
-                        topMargin: 30
-                        bottomMargin: 30
+                        leftMargin: ui.theme.extra.space_20
+                        rightMargin: ui.theme.extra.space_20
+                        topMargin: ui.theme.extra.space_30
+                        bottomMargin: ui.theme.extra.space_30
                     }
 
                     GeneralOptionsSection {

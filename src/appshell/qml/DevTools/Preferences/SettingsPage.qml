@@ -67,8 +67,8 @@ ColumnLayout {
         delegate: Item {
             anchors.left: parent ? parent.left : undefined
             anchors.right: parent ? parent.right : undefined
-            anchors.leftMargin: 8
-            anchors.rightMargin: 8
+            anchors.leftMargin: ui.theme.extra.space_8
+            anchors.rightMargin: ui.theme.extra.space_8
             height: 32
 
             StyledTextLabel {

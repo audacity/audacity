@@ -60,7 +60,7 @@ StyledDialogView {
 
         StyledTextLabel {
             Layout.preferredHeight: 27 // 28 - 1 for the SeparatorLine
-            Layout.leftMargin: 8
+            Layout.leftMargin: ui.theme.extra.space_8
             Layout.alignment: Qt.AlignLeft
             text: title
             font: ui.theme.bodyFont
@@ -111,15 +111,15 @@ StyledDialogView {
             Layout.preferredHeight: 47 // 48 - 1 for the SeparatorLine
 
             Layout.fillWidth: true
-            Layout.leftMargin: 12
-            Layout.rightMargin: 12
+            Layout.leftMargin: ui.theme.extra.space_12
+            Layout.rightMargin: ui.theme.extra.space_12
             Layout.topMargin: 9 // 10 - 1 for the SeparatorLine
-            Layout.bottomMargin: 10
+            Layout.bottomMargin: ui.theme.extra.space_10
             spacing: ui.theme.extra.space_8
 
             StyledTextLabel {
-                Layout.topMargin: 6
-                Layout.bottomMargin: 6
+                Layout.topMargin: ui.theme.extra.space_6
+                Layout.bottomMargin: ui.theme.extra.space_6
                 Layout.alignment: Qt.AlignLeft
                 text: model.formatPageProgress(model.currentPageIndex + 1, model.numberOfPages)
                 font: ui.theme.bodyFont

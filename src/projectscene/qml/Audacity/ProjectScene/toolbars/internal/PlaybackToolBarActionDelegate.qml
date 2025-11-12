@@ -20,8 +20,8 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: 6
-        anchors.rightMargin: 6
+        anchors.leftMargin: ui.theme.extra.space_6
+        anchors.rightMargin: ui.theme.extra.space_6
 
         spacing: ui.theme.extra.space_16
 

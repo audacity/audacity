@@ -48,8 +48,8 @@ Rectangle {
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
 
-    property real leftVisibleMargin: 0
-    property real rightVisibleMargin: 0
+    property real leftVisibleMargin: ui.theme.extra.space_0
+    property real rightVisibleMargin: ui.theme.extra.space_0
 
     property bool collapsed: false
 
@@ -565,7 +565,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.right: buttonsRow.left
                 anchors.leftMargin: root.leftVisibleMargin + 4
-                anchors.rightMargin: 8
+                anchors.rightMargin: ui.theme.extra.space_8
                 horizontalAlignment: Qt.AlignLeft
 
                 NavigationControl {
@@ -585,8 +585,8 @@ Rectangle {
                 NavigationFocusBorder {
                     navigationCtrl: titleEditNavCtrl
 
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 0
+                    anchors.topMargin: ui.theme.extra.space_1
+                    anchors.bottomMargin: ui.theme.extra.space_0
                     radius: 5
                 }
             }
@@ -651,7 +651,7 @@ Rectangle {
                 id: buttonsRow
 
                 anchors.right: parent.right
-                anchors.rightMargin: 4
+                anchors.rightMargin: ui.theme.extra.space_4
                 anchors.verticalCenter: parent.verticalCenter
 
                 spacing: ui.theme.extra.space_2
@@ -791,7 +791,7 @@ Rectangle {
 
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 10
+                    anchors.bottomMargin: ui.theme.extra.space_10
 
                     navigation.name: "SelectBtn"
                     navigation.panel: root.clipNavigationPanel

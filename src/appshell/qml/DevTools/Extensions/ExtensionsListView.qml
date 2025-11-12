@@ -26,8 +26,8 @@ Rectangle {
             StyledTextLabel {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.leftMargin: 8
-                anchors.rightMargin: 8
+                anchors.leftMargin: ui.theme.extra.space_8
+                anchors.rightMargin: ui.theme.extra.space_8
                 anchors.verticalCenter: parent.verticalCenter
                 horizontalAlignment: Text.AlignLeft
                 text: (model.index + 1) + ": " + modelData.title + "\n uri: " + modelData.uri + "\n type: " + modelData.type

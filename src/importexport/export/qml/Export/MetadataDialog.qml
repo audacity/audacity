@@ -49,10 +49,10 @@ StyledDialogView {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
-            Layout.leftMargin: 16
-            Layout.rightMargin: 12
-            Layout.topMargin: 10
-            Layout.bottomMargin: 10
+            Layout.leftMargin: ui.theme.extra.space_16
+            Layout.rightMargin: ui.theme.extra.space_12
+            Layout.topMargin: ui.theme.extra.space_10
+            Layout.bottomMargin: ui.theme.extra.space_10
 
             metadataModel: metadataModel
             tagView: metadataView

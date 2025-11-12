@@ -52,8 +52,8 @@ BuiltinEffectBase {
 
                     StyledTextLabel {
                         Layout.fillWidth: true
-                        Layout.leftMargin: 16
-                        Layout.rightMargin: 16
+                        Layout.leftMargin: ui.theme.extra.space_16
+                        Layout.rightMargin: ui.theme.extra.space_16
 
                         text: qsTrc("effects/noisereduction", "Select a few seconds of isolated noise so Audacity knows what to filter out, then click Get noise profile.")
                         wrapMode: Text.Wrap
@@ -101,9 +101,9 @@ BuiltinEffectBase {
 
                     StyledTextLabel {
                         Layout.fillWidth: true
-                        Layout.leftMargin: 16
-                        Layout.rightMargin: 16
-                        Layout.bottomMargin: 16
+                        Layout.leftMargin: ui.theme.extra.space_16
+                        Layout.rightMargin: ui.theme.extra.space_16
+                        Layout.bottomMargin: ui.theme.extra.space_16
 
                         text: qsTrc("effects/noisereduction", "Select all of the audio you want filtered, choose how much noise you want filtered out, and then click “Apply” to reduce noise.")
                         wrapMode: Text.Wrap
@@ -112,8 +112,8 @@ BuiltinEffectBase {
 
                     StyledTextLabel {
                         Layout.fillWidth: true
-                        Layout.leftMargin: 16
-                        Layout.rightMargin: 16
+                        Layout.leftMargin: ui.theme.extra.space_16
+                        Layout.rightMargin: ui.theme.extra.space_16
 
                         text: qsTrc("effects/noisereduction", "Noise reduction")
                         horizontalAlignment: Text.AlignLeft
@@ -121,9 +121,9 @@ BuiltinEffectBase {
 
                     NoiseReductionSlider {
                         Layout.fillWidth: true
-                        Layout.leftMargin: 16
-                        Layout.rightMargin: 16
-                        Layout.bottomMargin: 16
+                        Layout.leftMargin: ui.theme.extra.space_16
+                        Layout.rightMargin: ui.theme.extra.space_16
+                        Layout.bottomMargin: ui.theme.extra.space_16
 
                         value: noiseReduction.reduction
                         onNewValueRequested: function (newValue) {
@@ -137,8 +137,8 @@ BuiltinEffectBase {
 
                     StyledTextLabel {
                         Layout.fillWidth: true
-                        Layout.leftMargin: 16
-                        Layout.rightMargin: 16
+                        Layout.leftMargin: ui.theme.extra.space_16
+                        Layout.rightMargin: ui.theme.extra.space_16
 
                         text: qsTrc("effects/noisereduction", "Sensitivity")
                         horizontalAlignment: Text.AlignLeft
@@ -146,9 +146,9 @@ BuiltinEffectBase {
 
                     NoiseReductionSlider {
                         Layout.fillWidth: true
-                        Layout.leftMargin: 16
-                        Layout.rightMargin: 16
-                        Layout.bottomMargin: 16
+                        Layout.leftMargin: ui.theme.extra.space_16
+                        Layout.rightMargin: ui.theme.extra.space_16
+                        Layout.bottomMargin: ui.theme.extra.space_16
 
                         value: noiseReduction.sensitivity
                         onNewValueRequested: function (newValue) {
@@ -161,8 +161,8 @@ BuiltinEffectBase {
 
                     StyledTextLabel {
                         Layout.fillWidth: true
-                        Layout.leftMargin: 16
-                        Layout.rightMargin: 16
+                        Layout.leftMargin: ui.theme.extra.space_16
+                        Layout.rightMargin: ui.theme.extra.space_16
 
                         text: qsTrc("effects/noisereduction", "Frequency smoothing")
                         horizontalAlignment: Text.AlignLeft
@@ -170,9 +170,9 @@ BuiltinEffectBase {
 
                     NoiseReductionSlider {
                         Layout.fillWidth: true
-                        Layout.leftMargin: 16
-                        Layout.rightMargin: 16
-                        Layout.bottomMargin: 16
+                        Layout.leftMargin: ui.theme.extra.space_16
+                        Layout.rightMargin: ui.theme.extra.space_16
+                        Layout.bottomMargin: ui.theme.extra.space_16
 
                         value: noiseReduction.frequencySmoothingBands
                         onNewValueRequested: function (newValue) {
@@ -186,16 +186,16 @@ BuiltinEffectBase {
 
                     SeparatorLine {
                         Layout.fillWidth: true
-                        Layout.leftMargin: 16
-                        Layout.rightMargin: 16
-                        Layout.bottomMargin: 16
+                        Layout.leftMargin: ui.theme.extra.space_16
+                        Layout.rightMargin: ui.theme.extra.space_16
+                        Layout.bottomMargin: ui.theme.extra.space_16
                     }
 
                     StyledTextLabel {
                         Layout.fillWidth: true
-                        Layout.leftMargin: 16
-                        Layout.rightMargin: 16
-                        Layout.bottomMargin: 10
+                        Layout.leftMargin: ui.theme.extra.space_16
+                        Layout.rightMargin: ui.theme.extra.space_16
+                        Layout.bottomMargin: ui.theme.extra.space_10
 
                         text: qsTrc("effects/noisereduction", "Output")
                         horizontalAlignment: Text.AlignLeft
@@ -204,9 +204,9 @@ BuiltinEffectBase {
                     RadioButtonGroup {
                         Layout.fillWidth: true
                         Layout.preferredHeight: radioButtonColumn.height
-                        Layout.leftMargin: 16
-                        Layout.rightMargin: 16
-                        Layout.bottomMargin: 16
+                        Layout.leftMargin: ui.theme.extra.space_16
+                        Layout.rightMargin: ui.theme.extra.space_16
+                        Layout.bottomMargin: ui.theme.extra.space_16
 
                         orientation: Qt.Vertical
 

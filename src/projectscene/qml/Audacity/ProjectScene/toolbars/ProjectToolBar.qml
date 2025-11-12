@@ -21,7 +21,7 @@ StyledToolBarView {
     model: ProjectToolBarModel {
         id: toolBarModel
 
-        readonly property int bottomMargin: 10
+        readonly property int bottomMargin: ui.theme.extra.space_10
 
         onOpenAudioSetupContextMenu: {
             audioSetupContextMenuLoader.show(Qt.point(root.width / 3, root.rowHeight + bottomMargin), audioSetupContextMenuModel.items)

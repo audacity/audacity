@@ -62,7 +62,7 @@ Item {
         id: treeView
 
         anchors.fill: parent
-        anchors.topMargin: 12
+        anchors.topMargin: ui.theme.extra.space_12
 
         alternatingRowColors: false
         headerVisible: false

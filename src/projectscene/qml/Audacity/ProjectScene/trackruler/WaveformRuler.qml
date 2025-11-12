@@ -131,7 +131,7 @@ Item {
                     id: minusIndicator
 
                     anchors.right: aLabel.left
-                    anchors.rightMargin: 2
+                    anchors.rightMargin: ui.theme.extra.space_2
                     anchors.verticalCenter: aLabel.verticalCenter
 
                     width: 3

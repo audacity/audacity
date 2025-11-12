@@ -17,7 +17,7 @@ Item {
 
         readonly property int faderHeight: 352
         readonly property int labelHeight: 16
-        readonly property int labelBottomMargin: 16
+        readonly property int labelBottomMargin: ui.theme.extra.space_16
         readonly property int fontSize: 10
 
         property var pressedFader: null

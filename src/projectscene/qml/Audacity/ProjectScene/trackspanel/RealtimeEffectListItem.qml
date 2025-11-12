@@ -15,7 +15,7 @@ ListItemBlank {
     property var listView: null
     property int index: -1
     property int scrollOffset: 0
-    property int topMargin: 0
+    property int topMargin: ui.theme.extra.space_0
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "effect item panel - " + prv.title
@@ -189,8 +189,8 @@ ListItemBlank {
             StyledTextLabel {
                 id: trackNameLabel
                 anchors.fill: parent
-                anchors.leftMargin: 6
-                anchors.rightMargin: 6
+                anchors.leftMargin: ui.theme.extra.space_6
+                anchors.rightMargin: ui.theme.extra.space_6
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 text: root.item ? root.item.effectName() : ""

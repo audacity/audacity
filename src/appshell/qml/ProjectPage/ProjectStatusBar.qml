@@ -31,9 +31,9 @@ Item {
         id: statusBarRow
 
         anchors.left: parent.left
-        anchors.leftMargin: 12
+        anchors.leftMargin: ui.theme.extra.space_12
         anchors.right: parent.right
-        anchors.rightMargin: 6
+        anchors.rightMargin: ui.theme.extra.space_6
 
         height: parent.height
 

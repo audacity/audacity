@@ -29,7 +29,7 @@ Rectangle {
         id: prv
         property bool enabled: effectList.trackName !== ""
         readonly property int addEffectButtonHeight: 24
-        readonly property int addEffectButtonMargin: 12
+        readonly property int addEffectButtonMargin: ui.theme.extra.space_12
         readonly property int headerHeight: 40
         readonly property int itemSpacing: ui.theme.extra.space_12
     }
@@ -105,7 +105,7 @@ Rectangle {
                 navigationPanelOrderOffset: 1
                 color: "transparent"
                 anchors.fill: parent
-                anchors.leftMargin: 4
+                anchors.leftMargin: ui.theme.extra.space_4
                 onTrackEffectsActiveChanged: {
                     trackEffectsPowerButton.accentButton = trackEffectsActive
                 }

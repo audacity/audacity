@@ -48,8 +48,8 @@ StyledDialogView {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.topMargin: 36
-            Layout.leftMargin: 40
-            Layout.rightMargin: 40
+            Layout.leftMargin: ui.theme.extra.space_40
+            Layout.rightMargin: ui.theme.extra.space_40
 
             spacing: ui.theme.extra.space_24
 
@@ -113,8 +113,8 @@ StyledDialogView {
 
         ButtonBox {
             Layout.fillWidth: true
-            Layout.rightMargin: 16
-            Layout.bottomMargin: 16
+            Layout.rightMargin: ui.theme.extra.space_16
+            Layout.bottomMargin: ui.theme.extra.space_16
 
             buttons: [ButtonBoxModel.Ok]
 

@@ -38,7 +38,7 @@ Rectangle {
     property bool contentFillsAvailableHeight: false
 
     readonly property int sectionsSpacing: ui.theme.extra.space_24
-    readonly property int sideMargin: 30
+    readonly property int sideMargin: ui.theme.extra.space_30
 
     property NavigationSection navigationSection: null
     property int navigationOrderStart: 0

@@ -169,7 +169,7 @@ StyledPopupView {
                     id: labelItem
 
                     anchors.left: parent.left
-                    anchors.leftMargin: 12
+                    anchors.leftMargin: ui.theme.extra.space_12
                     anchors.right: dropIconItem.left
                     anchors.verticalCenter: parent.verticalCenter
 
@@ -209,7 +209,7 @@ StyledPopupView {
                     id: dropIconItem
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
-                    anchors.rightMargin: 8
+                    anchors.rightMargin: ui.theme.extra.space_8
 
                     iconCode: IconCode.SMALL_ARROW_DOWN
                 }

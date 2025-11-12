@@ -38,7 +38,7 @@ StyledPopupView {
             id: titleLabel
             Layout.alignment: Qt.AlignTop
             Layout.fillWidth: true
-            Layout.topMargin: 8
+            Layout.topMargin: ui.theme.extra.space_8
 
             text: qsTrc("projectscene", "Customize toolbar")
             horizontalAlignment: Text.AlignLeft
@@ -49,7 +49,7 @@ StyledPopupView {
             id: view
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.topMargin: 12
+            Layout.topMargin: ui.theme.extra.space_12
 
             model: customiseModel
 

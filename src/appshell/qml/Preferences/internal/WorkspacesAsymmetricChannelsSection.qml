@@ -32,9 +32,9 @@ BaseSection {
 
             Layout.fillWidth: true
             Layout.preferredHeight: contentHeight
-            Layout.leftMargin: 2
-            Layout.topMargin: 2
-            Layout.bottomMargin: 2
+            Layout.leftMargin: ui.theme.extra.space_2
+            Layout.topMargin: ui.theme.extra.space_2
+            Layout.bottomMargin: ui.theme.extra.space_2
 
             spacing: ui.theme.extra.space_8
 

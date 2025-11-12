@@ -54,11 +54,11 @@ DoublePage {
                     width: parent.width
 
                     Row {
-                        anchors.bottomMargin: 12
+                        anchors.bottomMargin: ui.theme.extra.space_12
                         anchors.left: parent.left
-                        anchors.leftMargin: 12
-                        anchors.rightMargin: 16
-                        anchors.topMargin: 12
+                        anchors.leftMargin: ui.theme.extra.space_12
+                        anchors.rightMargin: ui.theme.extra.space_16
+                        anchors.topMargin: ui.theme.extra.space_12
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: ui.theme.extra.space_12
 

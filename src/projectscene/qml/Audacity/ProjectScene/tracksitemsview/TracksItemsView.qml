@@ -317,7 +317,7 @@ Rectangle {
                 id: head
 
                 anchors.top: parent.top
-                anchors.topMargin: 24
+                anchors.topMargin: ui.theme.extra.space_24
 
                 x: playCursorController.positionX
 
@@ -398,7 +398,7 @@ Rectangle {
     Rectangle {
         id: content
         objectName: "ItemsView"
-        anchors.leftMargin: 12
+        anchors.leftMargin: ui.theme.extra.space_12
         anchors.top: timelineHeader.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left

@@ -52,7 +52,7 @@ Item {
         FlatButton {
             Layout.preferredWidth: root.height
             Layout.preferredHeight: root.height
-            Layout.rightMargin: 6
+            Layout.rightMargin: ui.theme.extra.space_6
 
             icon: IconCode.AUDIO
             accentButton: popup.isOpened
@@ -76,7 +76,7 @@ Item {
                 id: volumePressureContainer
 
                 anchors.fill: parent
-                anchors.topMargin: 2
+                anchors.topMargin: ui.theme.extra.space_2
 
                 spacing: ui.theme.extra.space_2
 
@@ -121,7 +121,7 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: leftVolumePressure.overloadTotalSpace
                 anchors.top: parent.top
-                anchors.topMargin: 1
+                anchors.topMargin: ui.theme.extra.space_1
 
                 enabled: root.enabled
 
@@ -172,7 +172,7 @@ Item {
 
             Layout.preferredWidth: 16
             Layout.preferredHeight: root.height
-            Layout.leftMargin: 2
+            Layout.leftMargin: ui.theme.extra.space_2
 
             property bool isDragging: false
 

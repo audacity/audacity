@@ -136,13 +136,13 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            readonly property int sideMargin: 12
+            readonly property int sideMargin: ui.theme.extra.space_12
             spacing: sideMargin
 
             StyledListView {
                 id: view
 
-                Layout.topMargin: 1
+                Layout.topMargin: ui.theme.extra.space_1
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 

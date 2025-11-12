@@ -89,9 +89,9 @@ StyledDialogView {
             propertiesModel: projectPropertiesModel
 
             Layout.fillWidth: true
-            Layout.topMargin: 4
+            Layout.topMargin: ui.theme.extra.space_4
             Layout.rightMargin: root.propertyRowRightMargin
-            Layout.bottomMargin: 8
+            Layout.bottomMargin: ui.theme.extra.space_8
 
             propertyNameWidth: root.propertyNameWidth
             propertyRowHorizontalSpacing: root.propertyRowHorizontalSpacing

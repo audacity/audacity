@@ -146,8 +146,8 @@ StyledDialogView {
 
         RowLayout {
             Layout.alignment: Qt.AlignRight
-            Layout.rightMargin: 12
-            Layout.bottomMargin: 12
+            Layout.rightMargin: ui.theme.extra.space_12
+            Layout.bottomMargin: ui.theme.extra.space_12
 
             spacing: ui.theme.extra.space_12
 

@@ -33,7 +33,7 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.bottomMargin: 2
+        anchors.bottomMargin: ui.theme.extra.space_2
         spacing: ui.theme.extra.space_0
 
         FlatButton {
@@ -42,8 +42,8 @@ Item {
             Layout.preferredWidth: 28
             Layout.preferredHeight: 28
             Layout.alignment: Qt.AlignHCenter
-            Layout.topMargin: 12
-            Layout.bottomMargin: 12
+            Layout.topMargin: ui.theme.extra.space_12
+            Layout.bottomMargin: ui.theme.extra.space_12
 
             icon: IconCode.AUDIO
             accentButton: popup.isOpened
@@ -74,10 +74,10 @@ Item {
                 spacing: ui.theme.extra.space_2
 
                 anchors.fill: parent
-                anchors.leftMargin: 4
-                anchors.rightMargin: 4
-                anchors.topMargin: 2
-                anchors.bottomMargin: 6
+                anchors.leftMargin: ui.theme.extra.space_4
+                anchors.rightMargin: ui.theme.extra.space_4
+                anchors.topMargin: ui.theme.extra.space_2
+                anchors.bottomMargin: ui.theme.extra.space_6
 
                 VolumePressureMeter {
                     id: leftVolumePressure
@@ -132,7 +132,7 @@ Item {
                 volumeLevel: model.level
 
                 anchors.top: parent.top
-                anchors.topMargin: 2 + leftVolumePressure.overloadHeight - (handleWidth / 2)
+                anchors.topMargin: ui.theme.extra.space_2 + leftVolumePressure.overloadHeight - (handleWidth / 2)
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.leftMargin: 3

@@ -15,7 +15,7 @@ Item {
 
     property int titleSpacing: ui.theme.extra.space_12
     property int itemSpacing: ui.theme.extra.space_8
-    property int itemMargin: 12
+    property int itemMargin: ui.theme.extra.space_12
 
     property int borderWidth: 1
     property int boarderRadius: 2

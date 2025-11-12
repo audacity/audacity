@@ -181,7 +181,7 @@ Rectangle {
                         anchors.bottom: sep.top
                         anchors.left: leftBorder.right
                         anchors.right: parent.right
-                        anchors.bottomMargin: 1
+                        anchors.bottomMargin: ui.theme.extra.space_1
 
                         WaveformRuler {
                             Layout.fillWidth: true

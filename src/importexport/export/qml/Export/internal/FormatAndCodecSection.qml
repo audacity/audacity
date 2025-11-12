@@ -26,9 +26,9 @@ Rectangle {
 
             Layout.fillWidth: true
 
-            Layout.topMargin: 10
-            Layout.leftMargin: 10
-            Layout.bottomMargin: 10
+            Layout.topMargin: ui.theme.extra.space_10
+            Layout.leftMargin: ui.theme.extra.space_10
+            Layout.bottomMargin: ui.theme.extra.space_10
 
             StyledTextLabel {
                 text: qsTrc("export", "Formats")
@@ -85,10 +85,10 @@ Rectangle {
         ColumnLayout {
 
             Layout.fillWidth: true
-            Layout.topMargin: 10
+            Layout.topMargin: ui.theme.extra.space_10
             Layout.leftMargin: 5
-            Layout.bottomMargin: 10
-            Layout.rightMargin: 10
+            Layout.bottomMargin: ui.theme.extra.space_10
+            Layout.rightMargin: ui.theme.extra.space_10
 
             StyledTextLabel {
                 text: qsTrc("export", "Codecs")

@@ -72,7 +72,7 @@ StyledDialogView {
                 id: dropIconItem
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
-                anchors.rightMargin: 8
+                anchors.rightMargin: ui.theme.extra.space_8
 
                 iconCode: IconCode.SMALL_ARROW_DOWN
 
