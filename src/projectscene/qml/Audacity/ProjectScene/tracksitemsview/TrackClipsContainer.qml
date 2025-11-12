@@ -26,7 +26,7 @@ TrackItemsContainer {
         context: root.context
     }
 
-    onInitRequired: function() {
+    onInitRequired: function () {
         clipsModel.init()
     }
 
@@ -37,7 +37,10 @@ TrackItemsContainer {
 
     onCtrlPressedChanged: {
         if (!root.ctrlPressed && contentItem) {
-            contentItem.clipsContainer.mapToAllClips({x: 0, y: 0}, function(clipItem, mouseEvent) {
+            contentItem.clipsContainer.mapToAllClips({
+                x: 0,
+                y: 0
+            }, function (clipItem, mouseEvent) {
                 clipItem.isIsolationMode = false
             })
         }
@@ -58,7 +61,7 @@ TrackItemsContainer {
                 property double targetHeightRatio: 0.5
                 readonly property int minChannelHeight: 20
                 readonly property int yMinValue: Math.min(root.height / 2, minChannelHeight)
-                readonly property int yMaxValue: Math.max(root.height / 2, root.height - minChannelHeight);
+                readonly property int yMaxValue: Math.max(root.height / 2, root.height - minChannelHeight)
 
                 property bool multiSampleEdit: false
                 property int currentChannel: 0
@@ -68,7 +71,12 @@ TrackItemsContainer {
                         let clipLoader = repeator.itemAt(i)
                         if (clipLoader && clipLoader.item) {
                             let clipPos = clipLoader.mapFromItem(this, e.x, e.y)
-                            f(clipLoader.item, {button: e.button, modifiers: e.modifiers, x: clipPos.x, y: clipPos.y})
+                            f(clipLoader.item, {
+                                button: e.button,
+                                modifiers: e.modifiers,
+                                x: clipPos.x,
+                                y: clipPos.y
+                            })
                         }
                     }
                 }
@@ -104,32 +112,29 @@ TrackItemsContainer {
                     hoverEnabled: true
                     pressAndHoldInterval: 0
                     enabled: !root.selectionInProgress && (root.isNearSample || root.isBrush)
-                    cursorShape: root.selectionEditInProgress ? Qt.SizeHorCursor : Qt.IBeamCursor 
+                    cursorShape: root.selectionEditInProgress ? Qt.SizeHorCursor : Qt.IBeamCursor
 
                     anchors.fill: parent
 
-                    onDoubleClicked: function(e) {
+                    onDoubleClicked: function (e) {
                         e.accepted = true
                     }
 
-                    onPressAndHold: function(e) {
+                    onPressAndHold: function (e) {
                         if (root.isNearSample || root.altPressed) {
-
                             if (root.ctrlPressed) {
                                 root.isIsolationMode = true
-                            }
-                            else if (!root.altPressed) {
+                            } else if (!root.altPressed) {
                                 root.multiSampleEdit = true
                             }
 
-                            clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                            clipsContainer.mapToAllClips(e, function (clipItem, mouseEvent) {
                                 clipItem.mousePressAndHold(mouseEvent.x, mouseEvent.y)
                                 clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
 
                                 if (root.ctrlPressed) {
                                     clipItem.isIsolationMode = true
-                                }
-                                else if (!root.altPressed) {
+                                } else if (!root.altPressed) {
                                     clipItem.multiSampleEdit = true
                                 }
                                 clipItem.currentChannel = clipsContainer.currentChannel
@@ -140,26 +145,29 @@ TrackItemsContainer {
                         }
                     }
 
-                    onReleased: function(e) {
+                    onReleased: function (e) {
                         clipsContainer.multiSampleEdit = false
                         root.isIsolationMode = false
 
-                        clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                        clipsContainer.mapToAllClips(e, function (clipItem, mouseEvent) {
                             clipItem.multiSampleEdit = false
                             root.isIsolationMode = false
                             clipItem.mouseReleased(mouseEvent.x, mouseEvent.y)
                         })
                     }
 
-                    onPositionChanged: function(e) {
-                        clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    onPositionChanged: function (e) {
+                        clipsContainer.mapToAllClips(e, function (clipItem, mouseEvent) {
                             clipItem.mousePositionChanged(mouseEvent.x, mouseEvent.y)
                             clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
                         })
                     }
 
-                    onContainsMouseChanged: function() {
-                        clipsContainer.mapToAllClips({x: mouseX, y: mouseY}, function(clipItem, mouseEvent) {
+                    onContainsMouseChanged: function () {
+                        clipsContainer.mapToAllClips({
+                            x: mouseX,
+                            y: mouseY
+                        }, function (clipItem, mouseEvent) {
                             clipItem.setContainsMouse(containsMouse)
                         })
                     }
@@ -251,8 +259,7 @@ TrackItemsContainer {
 
                                 //! NOTE: use the same integer rounding as in WaveBitmapCache
                                 selectionStart: root.context.selectionStartPosition < itemData.x ? 0 : Math.floor(root.context.selectionStartPosition - itemData.x + 0.5)
-                                selectionWidth: root.context.selectionStartPosition < itemData.x ?
-                                                    Math.round(root.context.selectionEndPosition - itemData.x) : Math.floor(root.context.selectionEndPosition - itemData.x + 0.5)  - Math.floor(root.context.selectionStartPosition - itemData.x + 0.5)
+                                selectionWidth: root.context.selectionStartPosition < itemData.x ? Math.round(root.context.selectionEndPosition - itemData.x) : Math.floor(root.context.selectionEndPosition - itemData.x + 0.5) - Math.floor(root.context.selectionStartPosition - itemData.x + 0.5)
 
                                 leftVisibleMargin: itemData.leftVisibleMargin
                                 rightVisibleMargin: itemData.rightVisibleMargin
@@ -286,8 +293,8 @@ TrackItemsContainer {
                                     return rightNeighbor.x - (itemData.x + itemData.width)
                                 }
 
-                                onIsNearSampleChanged: function() {
-                                    root.isNearSample = clipsContainer.checkIfAnyClip(function(clipItem) {
+                                onIsNearSampleChanged: function () {
+                                    root.isNearSample = clipsContainer.checkIfAnyClip(function (clipItem) {
                                         if (clipItem.isNearSample) {
                                             clipsContainer.currentChannel = clipItem.currentChannel
                                         }
@@ -295,75 +302,75 @@ TrackItemsContainer {
                                     })
                                 }
 
-                                onHoverChanged: function() {
-                                    root.hover = clipsContainer.checkIfAnyClip(function(clipItem) {
+                                onHoverChanged: function () {
+                                    root.hover = clipsContainer.checkIfAnyClip(function (clipItem) {
                                         return clipItem && clipItem.hover
                                     })
                                 }
 
-                                onIsBrushChanged: function() {
-                                    root.isBrush = clipsContainer.checkIfAnyClip(function(clipItem) {
+                                onIsBrushChanged: function () {
+                                    root.isBrush = clipsContainer.checkIfAnyClip(function (clipItem) {
                                         return clipItem && clipItem.isBrush
                                     })
                                 }
 
-                                onLeftTrimContainsMouseChanged: function() {
-                                    root.leftTrimContainsMouse = clipsContainer.checkIfAnyClip(function(clipItem) {
+                                onLeftTrimContainsMouseChanged: function () {
+                                    root.leftTrimContainsMouse = clipsContainer.checkIfAnyClip(function (clipItem) {
                                         return clipItem && clipItem.leftTrimContainsMouse
                                     })
                                 }
 
-                                onRightTrimContainsMouseChanged: function() {
-                                    root.rightTrimContainsMouse = clipsContainer.checkIfAnyClip(function(clipItem) {
+                                onRightTrimContainsMouseChanged: function () {
+                                    root.rightTrimContainsMouse = clipsContainer.checkIfAnyClip(function (clipItem) {
                                         return clipItem && clipItem.rightTrimContainsMouse
                                     })
                                 }
 
-                                onLeftTrimPressedButtonsChanged: function() {
-                                    root.leftTrimPressedButtons = clipsContainer.checkIfAnyClip(function(clipItem) {
+                                onLeftTrimPressedButtonsChanged: function () {
+                                    root.leftTrimPressedButtons = clipsContainer.checkIfAnyClip(function (clipItem) {
                                         return clipItem && clipItem.leftTrimPressedButtons
                                     })
                                 }
 
-                                onRightTrimPressedButtonsChanged: function() {
-                                    root.rightTrimPressedButtons = clipsContainer.checkIfAnyClip(function(clipItem) {
+                                onRightTrimPressedButtonsChanged: function () {
+                                    root.rightTrimPressedButtons = clipsContainer.checkIfAnyClip(function (clipItem) {
                                         return clipItem && clipItem.rightTrimPressedButtons
                                     })
                                 }
 
-                                onHeaderHoveredChanged: function() {
+                                onHeaderHoveredChanged: function () {
                                     root.itemHeaderHoveredChanged(headerHovered)
                                 }
 
-                                onClipStartEditRequested: function() {
+                                onClipStartEditRequested: function () {
                                     clipsModel.startEditItem(itemData.key)
                                 }
 
-                                onClipEndEditRequested: function() {
+                                onClipEndEditRequested: function () {
                                     clipsModel.endEditItem(itemData.key)
 
                                     root.triggerClipGuideline(false, -1)
                                 }
 
-                                onClipLeftTrimRequested: function(completed, action) {
+                                onClipLeftTrimRequested: function (completed, action) {
                                     clipsModel.trimLeftClip(itemData.key, completed, action)
 
                                     handleClipGuideline(itemData.key, Direction.Left, completed)
                                 }
 
-                                onClipRightTrimRequested: function(completed, action) {
+                                onClipRightTrimRequested: function (completed, action) {
                                     clipsModel.trimRightClip(itemData.key, completed, action)
 
                                     handleClipGuideline(itemData.key, Direction.Right, completed)
                                 }
 
-                                onClipLeftStretchRequested: function(completed, action) {
+                                onClipLeftStretchRequested: function (completed, action) {
                                     clipsModel.stretchLeftClip(itemData.key, completed, action)
 
                                     handleClipGuideline(itemData.key, Direction.Left, completed)
                                 }
 
-                                onClipRightStretchRequested: function(completed, action) {
+                                onClipRightStretchRequested: function (completed, action) {
                                     clipsModel.stretchRightClip(itemData.key, completed, action)
 
                                     handleClipGuideline(itemData.key, Direction.Right, completed)
@@ -377,7 +384,7 @@ TrackItemsContainer {
                                     root.context.stopAutoScroll()
                                 }
 
-                                onClipItemMousePositionChanged: function(xWithinClip, yWithinClip) {
+                                onClipItemMousePositionChanged: function (xWithinClip, yWithinClip) {
                                     var yWithinTrack = yWithinClip
                                     var xWithinTrack = xWithinClip + itemData.x
 
@@ -401,7 +408,7 @@ TrackItemsContainer {
                                     clipsModel.selectClip(itemData.key)
                                 }
 
-                                onTitleEditAccepted: function(newTitle) {
+                                onTitleEditAccepted: function (newTitle) {
                                     root.changeClipTitle(itemData.key, newTitle)
                                 }
 
@@ -435,7 +442,6 @@ TrackItemsContainer {
                                     function onWaveChanged() {
                                         updateWave()
                                     }
-
                                 }
 
                                 Connections {
@@ -464,19 +470,19 @@ TrackItemsContainer {
                 anchors.fill: parent
                 z: 1
 
-                onSelectionDraged: function(x1, x2, completed) {
+                onSelectionDraged: function (x1, x2, completed) {
                     root.selectionDraged(x1, x2, completed)
                     if (completed) {
                         root.seekToX(Math.min(x1, x2))
                     }
                 }
 
-                onRequestSelectionContextMenu: function(x, y) {
+                onRequestSelectionContextMenu: function (x, y) {
                     let position = mapToItem(root.parent, Qt.point(x, y))
                     root.requestSelectionContextMenu(position.x, position.y)
                 }
 
-                onHandleGuideline: function(x, completed) {
+                onHandleGuideline: function (x, completed) {
                     root.handleTimeGuideline(x, completed)
                 }
             }
@@ -494,7 +500,7 @@ TrackItemsContainer {
                 opacity: 0.05
                 visible: clipsModel.isStereo
 
-                onPositionChangeRequested: function(position) {
+                onPositionChangeRequested: function (position) {
                     clipsContainer.updateChannelHeightRatio(position)
                     clipsContainer.resetTargetHeightRatio()
                 }
@@ -510,12 +516,12 @@ TrackItemsContainer {
             root.updateMoveActive(completed);
 
             // this one moves the clips
-            let clipMovedToOtherTrack = clipsModel.moveSelectedClips(itemKey, completed)
+            let clipMovedToOtherTrack = clipsModel.moveSelectedClips(itemKey, completed);
 
             // clip might change its' track, we need to update grabbed itemKey
             if (clipMovedToOtherTrack) {
                 itemKey = clipsModel.updateClipTrack(itemKey)
-                setHoveredItemKey(clipsModel.updateClipTrack(itemKey));
+                setHoveredItemKey(clipsModel.updateClipTrack(itemKey))
             }
 
             handleClipGuideline(itemKey, Direction.Auto, completed)

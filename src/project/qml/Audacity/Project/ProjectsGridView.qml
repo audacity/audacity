@@ -41,7 +41,7 @@ Item {
 
     property alias navigation: navPanel
 
-    signal createNewProjectRequested()
+    signal createNewProjectRequested
     signal openProjectRequested(var projectPath, var displayName)
 
     clip: true
