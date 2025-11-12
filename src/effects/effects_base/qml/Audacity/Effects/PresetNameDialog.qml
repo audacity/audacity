@@ -39,9 +39,9 @@ StyledDialogView {
         width: parent.width
         anchors.bottom: parent.bottom
 
-        buttons: [ ButtonBoxModel.Cancel, ButtonBoxModel.Ok]
+        buttons: [ButtonBoxModel.Cancel, ButtonBoxModel.Ok]
 
-        onStandardButtonClicked: function(buttonId) {
+        onStandardButtonClicked: function (buttonId) {
             switch (buttonId) {
             case ButtonBoxModel.Cancel:
                 root.reject()
@@ -53,7 +53,6 @@ StyledDialogView {
                 }
                 root.hide()
                 return
-
             }
         }
     }

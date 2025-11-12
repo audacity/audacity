@@ -32,9 +32,9 @@ Rectangle {
 
     property alias navigation: buttonBox.navigationPanel
 
-    signal revertFactorySettingsRequested()
-    signal applyRequested()
-    signal rejectRequested()
+    signal revertFactorySettingsRequested
+    signal applyRequested
+    signal rejectRequested
 
     ButtonBox {
         id: buttonBox
@@ -44,7 +44,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.margins: 20
 
-        buttons: [ ButtonBoxModel.Cancel, ButtonBoxModel.Ok ]
+        buttons: [ButtonBoxModel.Cancel, ButtonBoxModel.Ok]
 
         FlatButton {
             text: qsTrc("appshell/preferences", "Reset preferences")
@@ -57,7 +57,7 @@ Rectangle {
             }
         }
 
-        onStandardButtonClicked: function(buttonId) {
+        onStandardButtonClicked: function (buttonId) {
             if (buttonId === ButtonBoxModel.Cancel) {
                 root.rejectRequested()
             } else if (buttonId === ButtonBoxModel.Ok) {

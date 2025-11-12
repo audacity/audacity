@@ -37,9 +37,9 @@ StyledPopupView {
             anchors.right: parent.right
 
             text: {
-                let value = Math.round(root.value);
-                let direction = value < 0 ? 'L' : value > 0 ? 'R' : '';
-                return `${Math.abs(value)}${direction}`;
+                let value = Math.round(root.value)
+                let direction = value < 0 ? 'L' : value > 0 ? 'R' : ''
+                return `${Math.abs(value)}${direction}`
             }
         }
     }

@@ -35,8 +35,8 @@ StyledPopupView {
 
             anchors.horizontalCenter: parent.horizontalCenter
             text: {
-                let value = root.volume.toFixed(root.decimalPlaces);
-                return `${value}${root.unitText}`;
+                let value = root.volume.toFixed(root.decimalPlaces)
+                return `${value}${root.unitText}`
             }
         }
     }
