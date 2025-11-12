@@ -135,7 +135,7 @@ ListItemBlank {
             RowLayout {
                 Layout.fillWidth: true
 
-                spacing: ui.theme.extra.spacing_m
+                spacing: ui.theme.extra.space_8
 
                 StyledIconLabel {
                     iconCode: Boolean(root.item) ? root.item.icon : 0

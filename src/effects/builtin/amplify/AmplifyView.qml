@@ -29,7 +29,7 @@ BuiltinEffectBase {
 
         height: implicitHeight
         width: parent.width
-        spacing: ui.theme.extra.spacing_xl
+        spacing: ui.theme.extra.space_16
 
         SliderWithTextInput {
             id: ampSlider

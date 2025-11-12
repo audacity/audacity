@@ -22,7 +22,7 @@ Column {
     signal newValueRequested(double newValue)
 
     height: implicitHeight
-    spacing: ui.theme.extra.spacing_m
+    spacing: ui.theme.extra.space_8
 
     StyledTextLabel {
         id: label
@@ -31,7 +31,7 @@ Column {
     Row {
 
         width: parent.width - spacing
-        spacing: ui.theme.extra.spacing_xl
+        spacing: ui.theme.extra.space_16
 
         StyledSlider {
             id: slider

@@ -139,7 +139,7 @@ StyledDialogView {
 
             ColumnLayout {
                 id: optionsColumn
-                spacing: ui.theme.extra.spacing_xl
+                spacing: ui.theme.extra.space_16
 
                 NavigationPanel {
                     id: optionsNavPanel
@@ -152,7 +152,7 @@ StyledDialogView {
                 }
 
                 ColumnLayout {
-                    spacing: ui.theme.extra.spacing_m
+                    spacing: ui.theme.extra.space_8
 
                     StyledTextLabel {
                         Layout.fillWidth: true
@@ -175,7 +175,7 @@ StyledDialogView {
                 }
 
                 ColumnLayout {
-                    spacing: ui.theme.extra.spacing_m
+                    spacing: ui.theme.extra.space_8
 
                     StyledTextLabel {
                         Layout.fillWidth: true
@@ -205,7 +205,7 @@ StyledDialogView {
                     Layout.fillWidth: true
 
                     orientation: ListView.Vertical
-                    spacing: ui.theme.extra.spacing_m
+                    spacing: ui.theme.extra.space_8
 
                     visible: root.isPublishShare && Boolean(root.existingProjectOrAudioUrl)
 

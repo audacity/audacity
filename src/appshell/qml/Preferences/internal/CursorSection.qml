@@ -11,7 +11,7 @@ BaseSection {
     id: root
 
     title: qsTrc("appshell/preferences", "Move cursor along the timeline during playback")
-    spacing: ui.theme.extra.spacing_xl
+    spacing: ui.theme.extra.space_16
 
     property var playbackPreferencesModel: null
 

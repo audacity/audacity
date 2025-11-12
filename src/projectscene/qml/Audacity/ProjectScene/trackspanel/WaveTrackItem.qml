@@ -39,7 +39,7 @@ TrackItem {
             RowLayout {
                 Layout.fillWidth: true
 
-                spacing: ui.theme.extra.spacing_xl
+                spacing: ui.theme.extra.space_16
 
                 opacity: root.collapsed ? 0 : 1
                 visible: opacity !== 0
@@ -204,7 +204,7 @@ TrackItem {
         id: trackControlButtons
 
         RowLayout {
-            spacing: ui.theme.extra.spacing_s
+            spacing: ui.theme.extra.space_4
 
             FlatToggleButton {
                 Layout.preferredWidth: 20

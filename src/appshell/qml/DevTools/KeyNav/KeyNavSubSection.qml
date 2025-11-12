@@ -41,7 +41,7 @@ Rectangle {
     Row {
         id: btns
         anchors.fill: parent
-        spacing: ui.theme.extra.spacing_m
+        spacing: ui.theme.extra.space_8
 
         FlatButton {
             id: btn1

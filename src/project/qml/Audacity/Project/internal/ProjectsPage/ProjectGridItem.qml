@@ -76,7 +76,7 @@ FocusScope {
     Column {
         anchors.fill: parent
 
-        spacing: ui.theme.extra.spacing_xl
+        spacing: ui.theme.extra.space_16
 
         Item {
             height: 126
@@ -184,7 +184,7 @@ FocusScope {
                 sourceComponent: RowLayout {
                     visible: root.isCloud
 
-                    spacing: ui.theme.extra.spacing_m
+                    spacing: ui.theme.extra.space_8
 
                     // CloudProjectStatusWatcher {
                     //     id: cloudProjectStatusWatcher
@@ -235,7 +235,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            spacing: ui.theme.extra.spacing_s
+            spacing: ui.theme.extra.space_4
 
             StyledTextLabel {
                 anchors.horizontalCenter: parent.horizontalCenter

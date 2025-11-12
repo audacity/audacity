@@ -88,7 +88,7 @@ StyledDialogView {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 16
 
-        spacing: ui.theme.extra.spacing_l
+        spacing: ui.theme.extra.space_12
 
         StyledTextLabel {
             id: descriptionLabel

@@ -53,7 +53,7 @@ Rectangle {
 
         RowLayout {
             anchors.fill: parent
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             Repeater {
                 model: 3
@@ -87,7 +87,7 @@ Rectangle {
 
         Row {
             anchors.fill: parent
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             Repeater {
                 model: 2
@@ -120,7 +120,7 @@ Rectangle {
 
         Column {
             anchors.fill: parent
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             Repeater {
                 model: 2
@@ -152,7 +152,7 @@ Rectangle {
 
         Column {
             anchors.fill: parent
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             Repeater {
                 model: 2

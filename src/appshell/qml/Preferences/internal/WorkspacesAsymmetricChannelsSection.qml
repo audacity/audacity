@@ -36,7 +36,7 @@ BaseSection {
             Layout.topMargin: 2
             Layout.bottomMargin: 2
 
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             model: workspacesModel
 

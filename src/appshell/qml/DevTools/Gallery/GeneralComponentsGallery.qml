@@ -185,7 +185,7 @@ Rectangle {
         id: dropdownSample
 
         Row {
-            spacing: ui.theme.extra.spacing_xl
+            spacing: ui.theme.extra.space_16
 
             NavigationPanel {
                 id: dropdownNav
@@ -250,7 +250,7 @@ Rectangle {
         id: styledPopupViewComponent
 
         Row {
-            spacing: ui.theme.extra.spacing_l
+            spacing: ui.theme.extra.space_12
 
             FlatButton {
                 text: "Show PopupView"
@@ -267,7 +267,7 @@ Rectangle {
 
                     Column {
                         id: layout
-                        spacing: ui.theme.extra.spacing_l
+                        spacing: ui.theme.extra.space_12
                         anchors.fill: parent
 
                         CheckBox {
@@ -297,7 +297,7 @@ Rectangle {
         id: styledMenuComponent
 
         Row {
-            spacing: ui.theme.extra.spacing_l
+            spacing: ui.theme.extra.space_12
 
             FlatButton {
                 text: "Show Menu"
@@ -400,7 +400,7 @@ Rectangle {
         id: styledScrollableMenuComponent
 
         Row {
-            spacing: ui.theme.extra.spacing_l
+            spacing: ui.theme.extra.space_12
 
             FlatButton {
                 text: "Show Scrollable Menu"
@@ -448,7 +448,7 @@ Rectangle {
         id: visibilityBoxSample
 
         Column {
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             width: 200
 
@@ -503,7 +503,7 @@ Rectangle {
         id: flatButtonSample
 
         Column {
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
             width: 200
 
             FlatButton {
@@ -600,7 +600,7 @@ Rectangle {
         id: flatRadioButtonSample
 
         Column {
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             width: 200
 
@@ -678,10 +678,10 @@ Rectangle {
         id: dialogButtonBoxSample
 
         Column {
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             Row {
-                spacing: ui.theme.extra.spacing_m
+                spacing: ui.theme.extra.space_8
                 anchors.right: parent.right
 
                 FlatButton {
@@ -739,7 +739,7 @@ Rectangle {
         id: roundedRadioButtonSample
 
         Row {
-            spacing: ui.theme.extra.spacing_l
+            spacing: ui.theme.extra.space_12
 
             RoundedRadioButton {
                 text: "Option 1"
@@ -759,7 +759,7 @@ Rectangle {
         id: incrementalPropertyControlSample
 
         Column {
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             width: 200
 
@@ -946,7 +946,7 @@ Rectangle {
             StyledTabBar {
                 id: tabBar
                 width: parent.width
-                spacing: ui.theme.extra.spacing_l
+                spacing: ui.theme.extra.space_12
 
                 StyledTabButton {
                     fillWidth: true
@@ -1130,7 +1130,7 @@ Rectangle {
         id: slidersSample
 
         Column {
-            spacing: ui.theme.extra.spacing_l
+            spacing: ui.theme.extra.space_12
 
             StyledSlider {
                 value: 0.25

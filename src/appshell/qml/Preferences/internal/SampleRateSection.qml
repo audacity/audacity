@@ -29,7 +29,7 @@ BaseSection {
     id: root
 
     title: qsTrc("appshell/preferences", "Sample rate")
-    spacing: ui.theme.extra.spacing_xl
+    spacing: ui.theme.extra.space_16
 
     property var apiModel: null
 
@@ -38,7 +38,7 @@ BaseSection {
     }
 
     Row {
-        spacing: ui.theme.extra.spacing_m
+        spacing: ui.theme.extra.space_8
 
         ComboBoxWithTitle {
             title: qsTrc("appshell/preferences", "Default sample rate")

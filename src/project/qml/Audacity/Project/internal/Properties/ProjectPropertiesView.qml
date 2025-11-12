@@ -40,7 +40,7 @@ StyledListView {
     property NavigationPanel navigationPanel: null
     property int navigationColumnStart: 0
 
-    spacing: ui.theme.extra.spacing_s
+    spacing: ui.theme.extra.space_4
 
     model: propertiesModel
 

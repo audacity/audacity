@@ -55,7 +55,7 @@ StyledDialogView {
     ColumnLayout {
         id: mainColumn
 
-        spacing: ui.theme.extra.spacing_xl
+        spacing: ui.theme.extra.space_16
 
         BaseSection {
             title: qsTrc("export", "Export")

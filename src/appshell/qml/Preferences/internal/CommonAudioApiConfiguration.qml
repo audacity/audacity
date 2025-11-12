@@ -41,7 +41,7 @@ Item {
     Column {
         id: content
 
-        spacing: ui.theme.extra.spacing_xl
+        spacing: ui.theme.extra.space_16
 
         ComboBoxWithTitle {
             title: qsTrc("appshell/preferences", "Playback device")

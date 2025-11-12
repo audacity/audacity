@@ -39,7 +39,7 @@ StyledDialogView {
     ColumnLayout {
         anchors.fill: parent
 
-        spacing: ui.theme.extra.spacing_m
+        spacing: ui.theme.extra.space_8
 
         StyledTextLabel {
             Layout.fillWidth: true

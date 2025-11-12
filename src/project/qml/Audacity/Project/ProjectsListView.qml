@@ -84,7 +84,7 @@ Item {
         anchors.leftMargin: sideMargin
         anchors.rightMargin: sideMargin
 
-        spacing: ui.theme.extra.spacing_l
+        spacing: ui.theme.extra.space_12
 
         ProjectListItem {
             id: newProjectItem

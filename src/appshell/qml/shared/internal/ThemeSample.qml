@@ -54,7 +54,7 @@ Rectangle {
             anchors.leftMargin: 4
             anchors.rightMargin: 4
 
-            spacing: ui.theme.extra.spacing_s
+            spacing: ui.theme.extra.space_4
 
             Rectangle {
                 height: 32
@@ -70,7 +70,7 @@ Rectangle {
                     anchors.fill: parent
                     anchors.margins: 7
 
-                    spacing: ui.theme.extra.spacing_s
+                    spacing: ui.theme.extra.space_4
 
                     Rectangle {
                         width: parent.width
@@ -102,7 +102,7 @@ Rectangle {
                 width: parent.width
                 height: 12
 
-                spacing: ui.theme.extra.spacing_s
+                spacing: ui.theme.extra.space_4
 
                 Rectangle {
                     height: parent.height

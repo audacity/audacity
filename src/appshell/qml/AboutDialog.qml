@@ -76,7 +76,7 @@ StyledDialogView {
             }
 
             Column {
-                spacing: ui.theme.extra.spacing_m
+                spacing: ui.theme.extra.space_8
                 Layout.fillWidth: true
 
                 StyledTextLabel {
@@ -86,7 +86,7 @@ StyledDialogView {
                 }
 
                 Row {
-                    spacing: ui.theme.extra.spacing_s
+                    spacing: ui.theme.extra.space_4
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     StyledTextLabel {
@@ -144,7 +144,7 @@ StyledDialogView {
             Layout.rightMargin: 16
             Layout.bottomMargin: 16
 
-            spacing: ui.theme.extra.spacing_l
+            spacing: ui.theme.extra.space_12
 
             FlatButton {
                 text: qsTrc("global", "OK")

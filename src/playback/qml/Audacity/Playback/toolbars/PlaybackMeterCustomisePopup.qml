@@ -22,7 +22,7 @@ StyledPopupView {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: ui.theme.extra.spacing_l
+        spacing: ui.theme.extra.space_12
 
         StyledGroupBox {
             Layout.fillWidth: true
@@ -56,7 +56,7 @@ StyledPopupView {
             Layout.fillWidth: true
             Layout.preferredHeight: 120
 
-            spacing: ui.theme.extra.spacing_l
+            spacing: ui.theme.extra.space_12
 
             StyledGroupBox {
                 Layout.fillWidth: true

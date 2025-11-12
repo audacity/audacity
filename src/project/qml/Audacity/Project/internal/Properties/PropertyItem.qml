@@ -42,7 +42,7 @@ RowLayout {
     signal scrollIntoViewRequested
     signal deletePropertyRequested
 
-    spacing: ui.theme.extra.spacing_m
+    spacing: ui.theme.extra.space_8
 
     QtObject {
         id: prv

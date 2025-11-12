@@ -64,7 +64,7 @@ DynamicsEffectBase {
             Row {
                 id: knobRow
 
-                spacing: ui.theme.extra.spacing_xl
+                spacing: ui.theme.extra.space_16
                 padding: 16
 
                 Column {

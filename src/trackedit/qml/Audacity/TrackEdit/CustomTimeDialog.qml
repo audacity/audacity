@@ -23,7 +23,7 @@ StyledDialogView {
         id: timeRow
 
         anchors.fill: parent
-        spacing: ui.theme.extra.spacing_xl
+        spacing: ui.theme.extra.space_16
 
         Item {
 

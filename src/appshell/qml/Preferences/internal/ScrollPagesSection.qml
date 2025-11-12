@@ -41,7 +41,7 @@ BaseSection {
         width: parent.width
         height: implicitHeight
 
-        spacing: ui.theme.extra.spacing_l
+        spacing: ui.theme.extra.space_12
         orientation: ListView.Vertical
 
         model: [

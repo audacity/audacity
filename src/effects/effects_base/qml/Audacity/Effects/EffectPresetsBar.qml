@@ -18,7 +18,7 @@ RowLayout {
 
     property var parentWindow: null
 
-    spacing: ui.theme.extra.spacing_s
+    spacing: ui.theme.extra.space_4
 
     function manage(button) {
         var pos = Qt.point(button.x, button.y + button.height)

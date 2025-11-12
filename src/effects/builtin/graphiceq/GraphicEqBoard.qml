@@ -122,7 +122,7 @@ Item {
     Row {
         id: faderRow
 
-        spacing: ui.theme.extra.spacing_xl
+        spacing: ui.theme.extra.space_16
         x: gridLines.gridlineHorizontalCenter - width / 2
         height: prv.faderHeight + prv.labelHeight + prv.labelBottomMargin
 

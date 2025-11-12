@@ -31,7 +31,7 @@ Row {
 
     property bool windowIsMiximized: false
 
-    spacing: ui.theme.extra.spacing_m
+    spacing: ui.theme.extra.space_8
 
     signal showWindowMinimizedRequested
     signal toggleWindowMaximizedRequested

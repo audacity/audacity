@@ -26,7 +26,7 @@ StyledPopupView {
 
         anchors.fill: parent
 
-        spacing: ui.theme.extra.spacing_m
+        spacing: ui.theme.extra.space_8
 
         StyledTextLabel {
             Layout.fillWidth: true
@@ -36,7 +36,7 @@ StyledPopupView {
         }
 
         Row {
-            spacing: ui.theme.extra.spacing_l
+            spacing: ui.theme.extra.space_12
 
             IncrementalPropertyControl {
                 id: control

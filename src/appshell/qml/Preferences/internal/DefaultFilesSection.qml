@@ -40,7 +40,7 @@ BaseSection {
         width: parent.width
         height: contentHeight
 
-        spacing: ui.theme.extra.spacing_s
+        spacing: ui.theme.extra.space_4
         interactive: false
 
         delegate: RowLayout {

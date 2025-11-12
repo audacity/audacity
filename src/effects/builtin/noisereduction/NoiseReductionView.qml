@@ -27,7 +27,7 @@ BuiltinEffectBase {
 
         Row {
             id: row
-            spacing: ui.theme.extra.spacing_xl
+            spacing: ui.theme.extra.space_16
 
             RoundedRectangle {
                 color: ui.theme.backgroundSecondaryColor
@@ -213,7 +213,7 @@ BuiltinEffectBase {
                         Column {
                             id: radioButtonColumn
                             width: parent.width
-                            spacing: ui.theme.extra.spacing_m
+                            spacing: ui.theme.extra.space_8
 
                             RoundedRadioButton {
                                 id: audioWithNoiseRemovedRadioButton

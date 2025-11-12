@@ -149,7 +149,7 @@ StyledDialogView {
             Layout.rightMargin: 12
             Layout.bottomMargin: 12
 
-            spacing: ui.theme.extra.spacing_l
+            spacing: ui.theme.extra.space_12
 
             FlatButton {
                 text: qsTrc("global", "OK")

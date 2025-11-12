@@ -27,7 +27,7 @@ Column {
 
     width: parent.width
 
-    spacing: ui.theme.extra.spacing_s
+    spacing: ui.theme.extra.space_4
 
     function requestActiveFocus() {
         spinBoxItem.navigation.requestActive()

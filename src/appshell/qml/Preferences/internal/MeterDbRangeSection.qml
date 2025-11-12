@@ -11,7 +11,7 @@ BaseSection {
     id: root
 
     title: qsTrc("appshell/preferences", "Meter dB range")
-    spacing: ui.theme.extra.spacing_xl
+    spacing: ui.theme.extra.space_16
 
     MeterModel {
         id: meterModel

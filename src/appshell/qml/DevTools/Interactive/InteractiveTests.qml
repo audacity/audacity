@@ -46,7 +46,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 16
-        spacing: ui.theme.extra.spacing_xl
+        spacing: ui.theme.extra.space_16
         columns: 2
 
         FlatButton {

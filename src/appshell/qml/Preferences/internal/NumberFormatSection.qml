@@ -36,7 +36,7 @@ BaseSection {
     signal numberFormatSelected(string formatCode)
 
     Column {
-        spacing: ui.theme.extra.spacing_l
+        spacing: ui.theme.extra.space_12
 
         StyledTextLabel {
             text: qsTrc("appshell/preferences", "Number format")

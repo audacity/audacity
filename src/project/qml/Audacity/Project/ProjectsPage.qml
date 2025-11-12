@@ -77,7 +77,7 @@ FocusScope {
         anchors.right: parent.right
         anchors.rightMargin: prv.sideMargin
 
-        spacing: ui.theme.extra.spacing_l
+        spacing: ui.theme.extra.space_12
 
         NavigationPanel {
             id: navSearchPanel
@@ -119,7 +119,7 @@ FocusScope {
         anchors.right: parent.right
         anchors.rightMargin: prv.sideMargin
 
-        spacing: ui.theme.extra.spacing_l
+        spacing: ui.theme.extra.space_12
 
         StyledTabBar {
             id: tabBar

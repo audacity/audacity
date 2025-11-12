@@ -115,7 +115,7 @@ StyledDialogView {
             Layout.rightMargin: 12
             Layout.topMargin: 9 // 10 - 1 for the SeparatorLine
             Layout.bottomMargin: 10
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             StyledTextLabel {
                 Layout.topMargin: 6

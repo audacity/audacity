@@ -27,7 +27,7 @@ Column {
     property alias title: titleLabel.text
     property alias body: bodyLabel.text
 
-    spacing: ui.theme.extra.spacing_xl
+    spacing: ui.theme.extra.space_16
 
     StyledTextLabel {
         id: titleLabel

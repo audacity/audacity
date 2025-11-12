@@ -38,7 +38,7 @@ ColumnLayout {
     property NavigationPanel navigationPanel: null
     property int navigationColumnEnd: apiLevelProperty.navigationColumnEnd
 
-    spacing: ui.theme.extra.spacing_m
+    spacing: ui.theme.extra.space_8
 
     RowLayout {
         spacing: root.propertyRowHorizontalSpacing

@@ -28,7 +28,7 @@ BaseSection {
     id: root
 
     title: qsTrc("appshell/preferences", "Inputs and outputs")
-    spacing: ui.theme.extra.spacing_xl
+    spacing: ui.theme.extra.space_16
 
     property int currentAudioApiIndex: -1
     property var audioApiList: null

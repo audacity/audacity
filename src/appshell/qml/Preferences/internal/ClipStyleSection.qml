@@ -46,10 +46,10 @@ BaseSection {
     signal clipStyleChangeRequested(int style)
 
     Row {
-        spacing: ui.theme.extra.spacing_xl
+        spacing: ui.theme.extra.space_16
 
         Column {
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             ClipImageButton {
                 width: root.imgWidth
@@ -80,7 +80,7 @@ BaseSection {
         }
 
         Column {
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             ClipImageButton {
                 width: root.imgWidth

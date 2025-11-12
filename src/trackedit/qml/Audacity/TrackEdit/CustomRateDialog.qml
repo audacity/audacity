@@ -36,7 +36,7 @@ StyledDialogView {
             top: parent.top
         }
 
-        spacing: ui.theme.extra.spacing_xl
+        spacing: ui.theme.extra.space_16
 
         StyledTextLabel {
             id: label

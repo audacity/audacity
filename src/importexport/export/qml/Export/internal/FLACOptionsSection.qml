@@ -26,7 +26,7 @@ ColumnLayout {
         ColumnLayout {
 
             Layout.fillWidth: true
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             RowLayout {
 
@@ -149,7 +149,7 @@ ColumnLayout {
 
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop
-            spacing: ui.theme.extra.spacing_m
+            spacing: ui.theme.extra.space_8
 
             RowLayout {
 
