@@ -94,6 +94,10 @@ Rectangle {
     border.color: "#000000"
     opacity: root.moveActive && clipSelected ? 0.5 : isAudible ? 1.0 : 0.3
 
+    onMoveActiveChanged: {
+        root.parent.z = moveActive && (selectionWidth > 0.0) ? 1 : 0
+    }
+
     property int borderWidth: 1
     property bool hover: root.containsMouse || root.headerHovered
     property bool headerHovered: false
@@ -530,7 +534,7 @@ Rectangle {
                         root.editTitle()
                     } else {
                         //! NOTE Handle singleClick logic
-                        if (!root.multiClipsSelected) {
+                        if (!root.multiClipsSelected && !isWithinRange(e.x, headerSelectionRectangle.x, headerSelectionRectangle.width)) {
                             root.requestSelected()
                         }
 
@@ -555,6 +559,10 @@ Rectangle {
 
                 onReleased: function (e) {
                     e.accepted = false
+                }
+
+                function isWithinRange(val, x, w) {
+                    return val >= x && val <= (x + w);
                 }
             }
 

@@ -446,11 +446,6 @@ TEST_F(Au3ClipsInteractionTests, MoveClipsRight)
     const double lastClipStart = lastClip->GetSequenceStartTime();
     const double lastClipEnd = lastClip->GetSequenceEndTime();
 
-    EXPECT_CALL(*m_selectionController, selectedClips()).Times(1).WillOnce(Return(ClipKeyList {
-            ClipKey { trackId, firstClip->GetId() },
-            ClipKey { trackId, middleClip->GetId() },
-            ClipKey { trackId, lastClip->GetId() }
-        }));
     EXPECT_CALL(*m_selectionController,
                 selectedClipsInTrackOrder()).Times(1).WillOnce(Return(ClipKeyList {
             ClipKey { trackId, firstClip->GetId() },
