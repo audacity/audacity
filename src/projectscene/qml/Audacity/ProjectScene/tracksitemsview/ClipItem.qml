@@ -622,7 +622,7 @@ Rectangle {
                     background.border.width: 0
                     background.radius: 0
                     inputField.color: titleLabel.color
-                    textSidePadding: 0
+                    textSidePadding: ui.theme.extra.space_0
                     visible: false
 
                     onTextChanged: function (text) {

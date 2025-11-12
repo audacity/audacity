@@ -78,7 +78,7 @@ Item {
             ButtonGroup.group: radioButtonList.radioButtonGroup
 
             spacing: ui.theme.extra.space_0
-            leftPadding: 12
+            leftPadding: ui.theme.extra.space_12
 
             normalStateFont: model.isTitleBold ? ui.theme.largeBodyBoldFont : ui.theme.largeBodyFont
 

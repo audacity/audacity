@@ -160,7 +160,7 @@ Rectangle {
                 background.radius: 0
 
                 inputField.color: root.labelColor
-                textSidePadding: 0
+                textSidePadding: ui.theme.extra.space_0
 
                 onTextChanged: function (text) {
                     titleEdit.newTitle = text

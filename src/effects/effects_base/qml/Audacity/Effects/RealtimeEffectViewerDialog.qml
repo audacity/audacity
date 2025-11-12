@@ -94,7 +94,7 @@ EffectStyledDialogView {
     Component {
         id: builtinViewerComponent
         Column {
-            topPadding: 0
+            topPadding: ui.theme.extra.space_0
             leftPadding: prv.padding
             rightPadding: prv.padding
             bottomPadding: prv.padding

@@ -171,8 +171,8 @@ Rectangle {
             wrapMode: Text.Wrap
             font: ui.theme.bodyFont
             color: ui.theme.fontPrimaryColor
-            leftPadding: 16
-            rightPadding: 16
+            leftPadding: ui.theme.extra.space_16
+            rightPadding: ui.theme.extra.space_16
             elide: Text.ElideNone
             verticalAlignment: Text.AlignTop
             horizontalAlignment: Text.AlignLeft

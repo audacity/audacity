@@ -153,7 +153,7 @@ DockPage {
             separatorsVisible: false
 
             alignment: DockToolBarAlignment.Center
-            contentBottomPadding: 2
+            contentBottomPadding: ui.theme.extra.space_2
 
             compactPriorityOrder: 2
 
@@ -176,7 +176,7 @@ DockPage {
             separatorsVisible: false
 
             alignment: DockToolBarAlignment.Right
-            contentBottomPadding: 2
+            contentBottomPadding: ui.theme.extra.space_2
 
             compactPriorityOrder: 1
 
@@ -199,7 +199,7 @@ DockPage {
             separatorsVisible: false
 
             alignment: DockToolBarAlignment.Right
-            contentBottomPadding: 2
+            contentBottomPadding: ui.theme.extra.space_2
 
             UndoRedoToolBar {
                 navigationPanel.section: root.topToolKeyNavSec

@@ -70,8 +70,8 @@ DynamicsEffectBase {
                 Column {
                     id: thresholdColumn
 
-                    topPadding: 12
-                    bottomPadding: 12
+                    topPadding: ui.theme.extra.space_12
+                    bottomPadding: ui.theme.extra.space_12
 
                     SettingKnob {
                         id: thresholdKnob
@@ -86,8 +86,8 @@ DynamicsEffectBase {
                 }
 
                 Column {
-                    topPadding: 12
-                    bottomPadding: 12
+                    topPadding: ui.theme.extra.space_12
+                    bottomPadding: ui.theme.extra.space_12
 
                     SettingKnob {
                         id: makeupKnob

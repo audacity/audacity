@@ -40,7 +40,7 @@ RadioButtonGroup {
 
         width: parent.width
 
-        leftPadding: 30
+        leftPadding: ui.theme.extra.space_30
 
         ButtonGroup.group: radioButtonList.radioButtonGroup
         orientation: Qt.Horizontal

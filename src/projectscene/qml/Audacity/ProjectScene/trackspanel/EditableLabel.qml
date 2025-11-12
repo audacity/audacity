@@ -51,7 +51,7 @@ Item {
             background.color: "transparent"
             background.border.width: 0
             background.radius: 0
-            textSidePadding: 0
+            textSidePadding: ui.theme.extra.space_0
 
             currentText: root.text
             property string newText: root.text
