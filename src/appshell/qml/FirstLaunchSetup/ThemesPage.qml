@@ -175,7 +175,7 @@ Page {
             id: highContrastPreferencesHintLabel
             visible: model.highContrastEnabled
             Layout.fillWidth: true
-            Layout.topMargin: 15
+            Layout.topMargin: ui.theme.extra.space_15
             Layout.preferredHeight: Math.max(implicitHeight, accentColorsList.implicitHeight)
             text: model.highContrastPreferencesHint
         }
