@@ -23,9 +23,8 @@ int computeLowestFullStepValue(double height, double m_dbRange, double maxValue,
     for (int i = lowestFullStep + 3; i < 0; i += 3) {
         const double position = valueToPosition(i, height, maxValue);
         if (middlePoint - position > minHeightToZero) {
-            return lowestFullStep;
+            return i;
         }
-        lowestFullStep = i;
     }
 
     return 0;
