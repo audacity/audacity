@@ -5,6 +5,7 @@
 #include <string>
 
 #include "global/realfn.h"
+#include "global/types/ratio.h"
 
 #include "dblogstereoruler.h"
 #include "dblogrulerutils.h"
@@ -14,16 +15,12 @@ using namespace au::projectscene;
 namespace {
 constexpr int MIN_ADJACENT_FULL_STEPS_HEIGHT = 17;
 constexpr int MIN_ADJACENT_SMALL_STEPS_HEIGHT = 6;
-const std::vector<std::pair<double, double> > STEP_INCREMENT = {
-    { { 1.0 / 3.0, 1.0 / 15.0 },
-        { 1.0 / 3.0, 1.0 / 6.0 },
-        { 1.0, 1.0 / 2.0 } } };
-constexpr std:: pair<double, double> DEFAULT_INCREMENT = { 1.0, 1.0 / 3.0 };
+
 constexpr double MIN_CHANNEL_HEIGHT = 40.0;
 
-int getAlignment(double value, size_t channel, bool isNegativeSample)
+int getAlignment(double value, size_t channel, double maxValue, bool isNegativeSample)
 {
-    if (muse::RealIsEqual(value, 0.0)) {
+    if (std::round(value) == std::round(maxValue)) {
         if (channel == 0) {
             return isNegativeSample ? 0 : -1;
         }
@@ -45,7 +42,7 @@ double DbLogStereoRuler::stepToPosition(double step, size_t channel, bool isNega
 
     const double startPosition = channel == 0 ? 0.0 : middlePosition;
     const double height = channel == 0 ? middlePosition : m_height - middlePosition;
-    return startPosition + dblogrulerutils::valueToPosition(step, height, m_dbRange, 0, isNegativeSample);
+    return startPosition + dblogrulerutils::valueToPosition(step, height, m_dbRange, m_maxDisplayValue, isNegativeSample);
 }
 
 void DbLogStereoRuler::setHeight(int height)
@@ -94,19 +91,20 @@ std::vector<TrackRulerFullStep> DbLogStereoRuler::fullSteps() const
             m_dbRange,
             static_cast<double>(MIN_ADJACENT_FULL_STEPS_HEIGHT),
             static_cast<double>(MIN_ADJACENT_SMALL_STEPS_HEIGHT),
-            1.0,
+            m_maxDisplayValue,
         });
 
         for (double value : values) {
             for (bool isNegativeSample : { false, true }) {
                 steps.push_back(TrackRulerFullStep {
-                    value, channel, getAlignment(value, channel, isNegativeSample), dblogrulerutils::isBold(value, 0.0,
-                                                                                                            m_dbRange), value == 0.0,
+                    value, channel, getAlignment(value, channel, m_maxDisplayValue, isNegativeSample),
+                    dblogrulerutils::isBold(value, m_maxDisplayValue,
+                                            m_dbRange), value == 0.0,
                     isNegativeSample });
             }
         }
     }
-    steps.push_back(TrackRulerFullStep { 0.0, 2, 0, true, true, false });
+    steps.push_back(TrackRulerFullStep { m_maxDisplayValue, 2, 0, true, true, false });
 
     return steps;
 }
@@ -130,7 +128,7 @@ std::vector<TrackRulerSmallStep> DbLogStereoRuler::smallSteps() const
             m_dbRange,
             static_cast<double>(MIN_ADJACENT_FULL_STEPS_HEIGHT),
             static_cast<double>(MIN_ADJACENT_SMALL_STEPS_HEIGHT),
-            1.0,
+            m_maxDisplayValue,
         };
 
         const auto values = dblogrulerutils::smallStepsValues(channelHeights[channel], settings);
@@ -151,7 +149,7 @@ std::vector<TrackRulerSmallStep> DbLogStereoRuler::smallSteps() const
     return steps;
 }
 
-void DbLogStereoRuler::setVerticalZoom(float)
+void DbLogStereoRuler::setVerticalZoom(float verticalZoom)
 {
-    // No-op for DbLog ruler
+    m_maxDisplayValue = muse::linear_to_db(verticalZoom);
 }
