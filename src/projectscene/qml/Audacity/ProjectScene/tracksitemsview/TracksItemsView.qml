@@ -696,7 +696,7 @@ Rectangle {
                             isTrackAudible: itemData.isTrackAudible
                             isLinear: itemData.isLinear
                             dbRange: itemData.dbRange
-                            displayBounds: itemData.displayBounds
+                            verticalZoom: itemData.verticalZoom
                             isWaveformViewVisible: itemData.isWaveformViewVisible
                             isSpectrogramViewVisible: itemData.isSpectrogramViewVisible
 

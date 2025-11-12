@@ -128,11 +128,11 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
         auto paddedMetrics = waveMetrics;
         paddedMetrics.top += SAMPLE_HEAD_PADDING;
         paddedMetrics.height -= 2 * SAMPLE_HEAD_PADDING;
-        int yZero = samplespainterutils::getWaveYPos(0.0, params.displayBounds.first, params.displayBounds.second, paddedMetrics.height, dB,
+        int yZero = samplespainterutils::getWaveYPos(0.0, -params.verticalZoom, params.verticalZoom, paddedMetrics.height, dB,
                                                      true, dBRange, false);
         yZero = paddedMetrics.top + std::max(-1, std::min(static_cast<int>(paddedMetrics.height + paddedMetrics.top), yZero));
-        const auto samples = samplespainterutils::getSampleData(*waveClip, index, paddedMetrics, dB, dBRange, params.displayBounds.second,
-                                                                params.displayBounds.first);
+        const auto samples = samplespainterutils::getSampleData(*waveClip, index, paddedMetrics, dB, dBRange, params.verticalZoom,
+                                                                -params.verticalZoom);
         if (samples.size() == 0) {
             samplespainterutils::drawCenterLine(painter, waveMetrics, params.style, yZero);
             continue;

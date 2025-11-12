@@ -29,7 +29,7 @@ class TrackRulerModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(double channelHeightRatio READ channelHeightRatio WRITE setChannelHeightRatio NOTIFY channelHeightRatioChanged FINAL)
 
     Q_PROPERTY(int rulerType READ rulerType WRITE setRulerType NOTIFY rulerTypeChanged FINAL)
-    Q_PROPERTY(QMap<QString, QVariant> displayBounds READ displayBounds WRITE setDisplayBounds FINAL)
+    Q_PROPERTY(float verticalZoom READ verticalZoom WRITE setVerticalZoom FINAL)
 
     muse::Inject<au::playback::IPlaybackConfiguration> configuration;
     muse::Inject<au::trackedit::ITrackeditInteraction> trackeditInteraction;
@@ -64,8 +64,8 @@ public:
     int rulerType() const;
     void setRulerType(int rulerType);
 
-    QMap<QString, QVariant> displayBounds() const;
-    void setDisplayBounds(const QMap<QString, QVariant>& displayBounds);
+    float verticalZoom() const;
+    void setVerticalZoom(float verticalZoom);
 
 signals:
     void fullStepsChanged();
@@ -90,6 +90,6 @@ private:
     int m_height = 0;
     double m_channelHeightRatio = 0.5;
     int m_rulerType = 2;
-    QMap<QString, QVariant> m_displayBounds;
+    float m_verticalZoom = 1.0f;
 };
 }

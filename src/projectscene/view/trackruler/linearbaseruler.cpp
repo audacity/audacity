@@ -34,10 +34,10 @@ void LinearBaseRuler::setCollapsed(bool isCollapsed)
     m_collapsed = isCollapsed;
 }
 
-void LinearBaseRuler::setDisplayBounds(float min, float max)
+void LinearBaseRuler::setVerticalZoom(float verticalZoom)
 {
-    m_minDisplayValue = min;
-    m_maxDisplayValue = max;
+    m_minDisplayValue = -verticalZoom;
+    m_maxDisplayValue = verticalZoom;
 }
 
 std::string LinearBaseRuler::sampleToText(double sample) const

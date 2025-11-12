@@ -195,7 +195,7 @@ Rectangle {
                             channelHeightRatio: trackViewState.channelHeightRatio
                             rulerType: model.trackRulerType
                             isVerticalRulersVisible: root.model.isVerticalRulersVisible
-                            displayBounds: model.displayBounds
+                            verticalZoom: model.verticalZoom
 
                             onHideVerticalRulerRequested: {
                                 root.model.toggleVerticalRuler()

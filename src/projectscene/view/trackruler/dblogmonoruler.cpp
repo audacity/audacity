@@ -1,26 +1,19 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "global/realfn.h"
-
 #include "dblogmonoruler.h"
 #include "dblogrulerutils.h"
+#include "types/ratio.h"
 
 using namespace au::projectscene;
 
 namespace {
-constexpr int MIN_ADJACENT_FULL_STEPS_HEIGHT = 17;
+constexpr int MIN_ADJACENT_FULL_STEPS_HEIGHT = 20;
 constexpr int MIN_ADJACENT_SMALL_STEPS_HEIGHT = 4;
-const std::vector<std::pair<double, double> > STEP_INCREMENT = {
-    { { 1.0 / 6.0, 1.0 / 30.0 },
-        { 1.0 / 6.0, 1.0 / 12.0 },
-        { 1.0 / 3.0, 1.0 / 6.0 },
-        { 1.0, 1.0 / 3.0 } } };
-constexpr std::pair <double, double> DEFAULT_INCREMENT = { 1.0, 1.0 / 3.0 };
 
-int getAlignment(double value, bool isNegativeSample)
+int getAlignment(double value, double maxValue, bool isNegativeSample)
 {
-    if (muse::RealIsEqual(value, 0.0)) {
+    if (std::round(value) == std::round(maxValue)) {
         return isNegativeSample ? 1 : -1;
     }
     return 0;
@@ -29,7 +22,7 @@ int getAlignment(double value, bool isNegativeSample)
 
 double DbLogMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, bool isNegativeSample) const
 {
-    return dblogrulerutils::valueToPosition(step, m_height, m_dbRange, isNegativeSample);
+    return dblogrulerutils::valueToPosition(step, m_height, m_dbRange, m_maxDisplayValue, isNegativeSample);
 }
 
 void DbLogMonoRuler::setHeight(int height)
@@ -69,17 +62,16 @@ std::vector<TrackRulerFullStep> DbLogMonoRuler::fullSteps() const
         m_dbRange,
         static_cast<double>(MIN_ADJACENT_FULL_STEPS_HEIGHT),
         static_cast<double>(MIN_ADJACENT_SMALL_STEPS_HEIGHT),
-        DEFAULT_INCREMENT,
-        STEP_INCREMENT
+        m_maxDisplayValue,
     });
 
     std::vector<TrackRulerFullStep> result;
     result.reserve((2 * steps.size()) + 1);
     for (double value : steps) {
-        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, false), dblogrulerutils::isBold(value,
-                                                                                                            m_dbRange), false, false });
-        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, true), dblogrulerutils::isBold(value, m_dbRange), false,
-                                              true });
+        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, m_maxDisplayValue, false),
+                                              dblogrulerutils::isBold(value, m_maxDisplayValue, m_dbRange), false, false });
+        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, m_maxDisplayValue, true),
+                                              dblogrulerutils::isBold(value, m_maxDisplayValue, m_dbRange), false, true });
     }
     result.push_back(TrackRulerFullStep { m_dbRange, 0, 0, true, true, false });
 
@@ -96,8 +88,7 @@ std::vector<TrackRulerSmallStep> DbLogMonoRuler::smallSteps() const
         m_dbRange,
         static_cast<double>(MIN_ADJACENT_FULL_STEPS_HEIGHT),
         static_cast<double>(MIN_ADJACENT_SMALL_STEPS_HEIGHT),
-        DEFAULT_INCREMENT,
-        STEP_INCREMENT
+        m_maxDisplayValue,
     };
 
     std::vector<double> steps = dblogrulerutils::smallStepsValues(m_height, settings);
@@ -113,7 +104,7 @@ std::vector<TrackRulerSmallStep> DbLogMonoRuler::smallSteps() const
     return result;
 }
 
-void DbLogMonoRuler::setDisplayBounds(float min, float max)
+void DbLogMonoRuler::setVerticalZoom(float verticalZoom)
 {
-    // No op
+    m_maxDisplayValue = muse::linear_to_db(verticalZoom);
 }

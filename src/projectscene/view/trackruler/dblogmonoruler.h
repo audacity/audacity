@@ -17,12 +17,13 @@ public:
     std::string sampleToText(double sample) const override;
     std::vector<TrackRulerFullStep> fullSteps() const override;
     std::vector<TrackRulerSmallStep> smallSteps() const override;
-    void setDisplayBounds(float min, float max) override;
+    void setVerticalZoom(float verticalZoom) override;
 
 private:
     double m_height = 0.0;
     double m_channelHeightRatio = 1.0;
     bool m_collapsed = false;
     double m_dbRange = -60.0;
+    double m_maxDisplayValue = 1.0;
 };
 }

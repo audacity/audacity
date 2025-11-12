@@ -268,11 +268,8 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case DbRangeRole:
         return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
 
-    case VerticalDisplayBoundsRole:
-        return QMap<QString, QVariant> {
-            { "min", track.displayBounds.first },
-            { "max", track.displayBounds.second },
-        };
+    case VerticalZoomRole:
+        return track.verticalZoom;
 
     default:
         break;
@@ -297,7 +294,7 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { AvailableRulerTypesRole, "availableRulerTypes" },
         { TrackRulerTypeRole, "trackRulerType" },
         { DbRangeRole, "dbRange" },
-        { VerticalDisplayBoundsRole, "displayBounds" },
+        { VerticalZoomRole, "verticalZoom" },
         { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
         { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
     };
@@ -313,7 +310,11 @@ int ViewTracksListModel::verticalRulerWidth() const
 {
     float smallestBoundValue = 1;
     for (const auto& track : m_trackList) {
-        smallestBoundValue = std::min(smallestBoundValue, track.displayBounds.second);
+        if (track.rulerType != au::trackedit::TrackRulerType::Linear) {
+            continue;
+        }
+
+        smallestBoundValue = std::min(smallestBoundValue, track.verticalZoom);
     }
     smallestBoundValue *= 0.1f;
 

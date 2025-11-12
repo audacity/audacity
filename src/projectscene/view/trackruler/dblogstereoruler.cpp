@@ -45,7 +45,7 @@ double DbLogStereoRuler::stepToPosition(double step, size_t channel, bool isNega
 
     const double startPosition = channel == 0 ? 0.0 : middlePosition;
     const double height = channel == 0 ? middlePosition : m_height - middlePosition;
-    return startPosition + dblogrulerutils::valueToPosition(step, height, m_dbRange, isNegativeSample);
+    return startPosition + dblogrulerutils::valueToPosition(step, height, m_dbRange, 0, isNegativeSample);
 }
 
 void DbLogStereoRuler::setHeight(int height)
@@ -94,14 +94,13 @@ std::vector<TrackRulerFullStep> DbLogStereoRuler::fullSteps() const
             m_dbRange,
             static_cast<double>(MIN_ADJACENT_FULL_STEPS_HEIGHT),
             static_cast<double>(MIN_ADJACENT_SMALL_STEPS_HEIGHT),
-            DEFAULT_INCREMENT,
-            STEP_INCREMENT
+            1.0,
         });
 
         for (double value : values) {
             for (bool isNegativeSample : { false, true }) {
                 steps.push_back(TrackRulerFullStep {
-                    value, channel, getAlignment(value, channel, isNegativeSample), dblogrulerutils::isBold(value,
+                    value, channel, getAlignment(value, channel, isNegativeSample), dblogrulerutils::isBold(value, 0.0,
                                                                                                             m_dbRange), value == 0.0,
                     isNegativeSample });
             }
@@ -131,8 +130,7 @@ std::vector<TrackRulerSmallStep> DbLogStereoRuler::smallSteps() const
             m_dbRange,
             static_cast<double>(MIN_ADJACENT_FULL_STEPS_HEIGHT),
             static_cast<double>(MIN_ADJACENT_SMALL_STEPS_HEIGHT),
-            DEFAULT_INCREMENT,
-            STEP_INCREMENT
+            1.0,
         };
 
         const auto values = dblogrulerutils::smallStepsValues(channelHeights[channel], settings);
@@ -153,7 +151,7 @@ std::vector<TrackRulerSmallStep> DbLogStereoRuler::smallSteps() const
     return steps;
 }
 
-void DbLogStereoRuler::setDisplayBounds(float min, float max)
+void DbLogStereoRuler::setVerticalZoom(float)
 {
     // No-op for DbLog ruler
 }

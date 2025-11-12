@@ -11,6 +11,24 @@ graphics::Color ColorFromQColor(const QColor& color)
 {
     return graphics::Color(color.red(), color.green(), color.blue(), color.alpha());
 }
+
+float getDBValue(float value, float dbRange)
+{
+    float sign = (value >= 0 ? 1 : -1);
+
+    if (value != 0.) {
+        float db = LINEAR_TO_DB(fabs(value));
+        value = (db + dbRange) / dbRange;
+
+        if (value < 0.0) {
+            value = 0.0;
+        }
+
+        value *= sign;
+    }
+
+    return value;
+}
 }
 
 namespace au::projectscene {
@@ -36,6 +54,9 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
         params.geometry.height * (1 - params.channelHeightRatio),
     };
 
+    const float zoomMin = dB ? getDBValue(-params.verticalZoom, dbRange) : -params.verticalZoom;
+    const float zoomMax = dB ? getDBValue(params.verticalZoom, dbRange) : params.verticalZoom;
+
     auto& waveformPainter = WaveformPainter::Get(*waveClip);
     WavePaintParameters paintParameters;
 
@@ -45,7 +66,7 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
         metrics.height = channelHeight[index];
         paintParameters
         .SetDisplayParameters(
-            metrics.height, params.displayBounds.first, params.displayBounds.second, params.showClipping)
+            metrics.height, zoomMin, zoomMax, params.showClipping)
         .SetDBParameters(dbRange, dB)
         .SetBlankColor(ColorFromQColor(params.style.blankBrush))
         .SetSampleColors(
