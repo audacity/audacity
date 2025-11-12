@@ -1,4 +1,3 @@
-
 import QtQuick 2.15
 
 import Muse.Ui 1.0
@@ -16,7 +15,7 @@ Item {
     readonly property real effectiveWidth: width - leftTextMargin - rightTextMargin
 
     onEffectiveWidthChanged: {
-        root.meterModel.meterSize = root.effectiveWidth;
+        root.meterModel.meterSize = root.effectiveWidth
     }
 
     // Draw bigger steps and numbers
@@ -57,7 +56,17 @@ Item {
             }
         }
     }
-    
-    Text { id: leftText; text: "0.00"; font.pixelSize: 10; visible: false }
-    Text { id: rightText; text: "1.00"; font.pixelSize: 10; visible: false }
+
+    Text {
+        id: leftText
+        text: "0.00"
+        font.pixelSize: 10
+        visible: false
+    }
+    Text {
+        id: rightText
+        text: "1.00"
+        font.pixelSize: 10
+        visible: false
+    }
 }

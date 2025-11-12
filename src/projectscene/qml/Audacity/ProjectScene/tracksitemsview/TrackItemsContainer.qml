@@ -32,15 +32,15 @@ Item {
 
     property alias contentItem: contentLoader.item
 
-    signal interactionStarted()
-    signal interactionEnded()
+    signal interactionStarted
+    signal interactionEnded
     signal trackItemMousePositionChanged(real x, real y, var itemKey)
     signal setHoveredItemKey(var itemKey)
 
     signal itemHeaderHoveredChanged(bool val)
 
-    signal itemSelectedRequested()
-    signal selectionResetRequested()
+    signal itemSelectedRequested
+    signal selectionResetRequested
     signal requestSelectionContextMenu(real x, real y)
     signal selectionDraged(var x1, var x2, var completed)
 
@@ -53,7 +53,7 @@ Item {
     signal triggerClipGuideline(real x, bool completed)
     signal itemDragEditCanceled
 
-    signal initRequired()
+    signal initRequired
 
     property Component contentComponent: null
 
@@ -132,7 +132,7 @@ Item {
             root.interactionStarted()
         }
 
-        onPositionChanged: function(mouse) {
+        onPositionChanged: function (mouse) {
             const resizeVerticalMargin = 10
             mouse.accepted = true
 
