@@ -163,6 +163,9 @@ TrackItemsContainer {
                                     var xWithinTrack = xWithinLabel + itemData.x
 
                                     trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
+
+                                    let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
+                                    root.triggerItemGuideline(time, false)
                                 }
 
                                 onRequestSelected: {
@@ -201,11 +204,15 @@ TrackItemsContainer {
                                 onLabelLeftStretchRequested: function(unlink, completed) {
                                     var leftLinkedLabelKey = layoutManager.leftLinkedLabel(itemData.key)
                                     labelsModel.stretchLabelLeft(itemData.key, leftLinkedLabelKey, unlink, completed)
+
+                                    handleLabelGuideline(itemData.key, Direction.Left, completed)
                                 }
 
                                 onLabelRightStretchRequested: function(unlink, completed) {
                                     var rightLinkedLabelKey = layoutManager.rightLinkedLabel(itemData.key)
                                     labelsModel.stretchLabelRight(itemData.key, rightLinkedLabelKey, unlink, completed)
+
+                                    handleLabelGuideline(itemData.key, Direction.Right, completed)
                                 }
 
                                 onHeaderHoveredChanged: function() {
@@ -290,6 +297,8 @@ TrackItemsContainer {
             root.updateMoveActive(completed)
 
             labelsModel.moveSelectedLabels(itemKey, completed)
+
+            handleLabelGuideline(itemKey, Direction.Auto, completed)
         }
 
         function onItemStartEditRequested(itemKey) {
@@ -310,6 +319,13 @@ TrackItemsContainer {
             if (root.context) {
                 root.context.stopAutoScroll()
             }
+        }
+    }
+
+    function handleLabelGuideline(labelKey, direction, completed) {
+        let guidelinePos = labelsModel.findGuideline(labelKey, direction)
+        if (guidelinePos) {
+            triggerItemGuideline(guidelinePos, completed)
         }
     }
 }
