@@ -134,7 +134,7 @@ ListView {
 
         buttonType: FlatButton.TextOnly
         isNarrow: true
-        margins: 8
+        margins: ui.theme.extra.space_8
         drawFocusBorderInsideRect: true
 
         transparent: !isMenuOpened

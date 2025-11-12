@@ -42,7 +42,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        anchors.margins: 20
+        anchors.margins: ui.theme.extra.space_20
 
         buttons: [ButtonBoxModel.Cancel, ButtonBoxModel.Ok]
 

@@ -18,7 +18,7 @@ StyledDialogView {
     contentWidth: 550
     contentHeight: mainColumn.implicitHeight
 
-    margins: 10
+    margins: ui.theme.extra.space_10
 
     modal: true
     alwaysOnTop: true

@@ -16,7 +16,7 @@ StyledPopupView {
     signal upperChangeRequested(var newValue)
     signal lowerChangeRequested(var newValue)
 
-    margins: 12
+    margins: ui.theme.extra.space_12
 
     contentWidth: 216
     contentHeight: 52

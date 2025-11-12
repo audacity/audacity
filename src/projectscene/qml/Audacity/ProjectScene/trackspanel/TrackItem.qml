@@ -130,7 +130,7 @@ ListItemBlank {
             anchors.right: separatorLine.left
             anchors.top: parent.top
             anchors.topMargin: 7
-            anchors.margins: 12
+            anchors.margins: ui.theme.extra.space_12
 
             RowLayout {
                 Layout.fillWidth: true

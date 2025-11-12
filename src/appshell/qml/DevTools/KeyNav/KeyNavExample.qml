@@ -24,7 +24,7 @@ Rectangle {
 
         StyledTextLabel {
             anchors.fill: parent
-            anchors.margins: 8
+            anchors.margins: ui.theme.extra.space_8
             verticalAlignment: Text.AlignVCenter
             text: "Last clicked: " + root.lastClickedInfo
             color: "#000000"

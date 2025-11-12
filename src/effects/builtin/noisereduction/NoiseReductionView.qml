@@ -43,7 +43,7 @@ BuiltinEffectBase {
 
                     StyledTextLabel {
                         Layout.fillWidth: true
-                        Layout.margins: 16
+                        Layout.margins: ui.theme.extra.space_16
 
                         text: qsTrc("effects/noisereduction", "Step 1")
                         horizontalAlignment: Text.AlignLeft
@@ -64,7 +64,7 @@ BuiltinEffectBase {
                         id: getNoiseProfileButton
 
                         Layout.fillWidth: true
-                        Layout.margins: 16
+                        Layout.margins: ui.theme.extra.space_16
 
                         text: qsTrc("effects/noisereduction", "Get noise profile")
                         onClicked: {
@@ -92,7 +92,7 @@ BuiltinEffectBase {
 
                     StyledTextLabel {
                         Layout.fillWidth: true
-                        Layout.margins: 16
+                        Layout.margins: ui.theme.extra.space_16
 
                         text: qsTrc("effects/noisereduction", "Step 2")
                         horizontalAlignment: Text.AlignLeft

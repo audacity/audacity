@@ -64,7 +64,7 @@ StyledPopupView {
                 Layout.preferredWidth: 80
                 Layout.preferredHeight: 72
                 Layout.fillHeight: true
-                Layout.margins: 2
+                Layout.margins: ui.theme.extra.space_2
 
                 navigation.name: "TrackType" + index
                 navigation.panel: navPanel

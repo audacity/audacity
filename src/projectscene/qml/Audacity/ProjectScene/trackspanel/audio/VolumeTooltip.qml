@@ -7,7 +7,7 @@ StyledPopupView {
     id: root
 
     padding: 8
-    margins: 8
+    margins: ui.theme.extra.space_8
     contentWidth: contentRect.width
     contentHeight: contentRect.height
 

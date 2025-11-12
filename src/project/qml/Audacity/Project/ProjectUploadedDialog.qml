@@ -73,7 +73,7 @@ StyledDialogView {
             anchors.bottom: parent.bottom
             anchors.left: image.right
             anchors.right: parent.right
-            anchors.margins: 24
+            anchors.margins: ui.theme.extra.space_24
 
             spacing: ui.theme.extra.space_0
 
@@ -146,7 +146,7 @@ StyledDialogView {
                         id: bodyColumn
 
                         anchors.fill: parent
-                        anchors.margins: 28
+                        anchors.margins: ui.theme.extra.space_28
 
                         spacing: ui.theme.extra.space_24
 

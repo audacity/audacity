@@ -55,7 +55,7 @@ StyledDialogView {
     Item {
         id: popupsAnchorItem
         anchors.fill: parent
-        anchors.margins: 8
+        anchors.margins: ui.theme.extra.space_8
     }
 
     StackLayout {

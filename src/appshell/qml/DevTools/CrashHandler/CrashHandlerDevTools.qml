@@ -17,7 +17,7 @@ Rectangle {
     Column {
         anchors.top: parent.top
         anchors.left: parent.left
-        anchors.margins: 12
+        anchors.margins: ui.theme.extra.space_12
 
         spacing: ui.theme.extra.space_12
 

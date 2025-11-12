@@ -40,7 +40,7 @@ StyledDialogView {
     contentWidth: contentItem.implicitWidth
     contentHeight: contentItem.implicitHeight
 
-    margins: 20
+    margins: ui.theme.extra.space_20
 
     function done(response, data = {}) {
         let value = Object.assign(({

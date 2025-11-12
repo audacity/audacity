@@ -39,7 +39,7 @@ StyledDialogView {
     frameless: true
     closeOnEscape: false
 
-    margins: 0
+    margins: ui.theme.extra.space_0
 
     readonly property Page currentPage: pageLoader.item as Page
 
@@ -56,7 +56,7 @@ StyledDialogView {
 
         anchors.fill: parent
         spacing: ui.theme.extra.space_0
-        Layout.margins: 0
+        Layout.margins: ui.theme.extra.space_0
 
         StyledTextLabel {
             Layout.preferredHeight: 27 // 28 - 1 for the SeparatorLine
@@ -68,7 +68,7 @@ StyledDialogView {
 
         SeparatorLine {
             Layout.fillWidth: true
-            Layout.margins: 0
+            Layout.margins: ui.theme.extra.space_0
             Layout.preferredHeight: 1
         }
 
@@ -102,7 +102,7 @@ StyledDialogView {
 
         SeparatorLine {
             Layout.fillWidth: true
-            Layout.margins: 0
+            Layout.margins: ui.theme.extra.space_0
             Layout.preferredHeight: 1
         }
 

@@ -14,7 +14,7 @@ FlatButton {
 
     anchors.verticalCenter: parent.verticalCenter
     height: 16
-    margins: 2
+    margins: ui.theme.extra.space_2
 
     transparent: true
     orientation: Qt.Horizontal

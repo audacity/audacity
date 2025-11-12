@@ -15,7 +15,7 @@ StyledDialogView {
     contentWidth: 280
     contentHeight: 80
 
-    margins: 16
+    margins: ui.theme.extra.space_16
 
     Component.onCompleted: {
         Qt.callLater(input.forceActiveFocus)

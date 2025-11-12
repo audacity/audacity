@@ -152,7 +152,7 @@ ListItemBlank {
         BypassEffectButton {
             id: bypassButton
 
-            Layout.margins: 0
+            Layout.margins: ui.theme.extra.space_0
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredWidth: root.height
             Layout.minimumHeight: root.height

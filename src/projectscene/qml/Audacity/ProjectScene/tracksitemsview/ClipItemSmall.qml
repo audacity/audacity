@@ -17,7 +17,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: 1
+        anchors.margins: ui.theme.extra.space_1
 
         height: 20
 

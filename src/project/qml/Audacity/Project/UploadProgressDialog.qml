@@ -30,7 +30,7 @@ StyledDialogView {
 
     contentWidth: 314
     contentHeight: 52
-    margins: 12
+    margins: ui.theme.extra.space_12
 
     modal: true
     frameless: true

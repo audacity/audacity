@@ -188,7 +188,7 @@ Slider {
 
             Rectangle {
                 anchors.fill: parent
-                anchors.margins: 1
+                anchors.margins: ui.theme.extra.space_1
                 radius: width / 2
                 color: ui.theme.backgroundPrimaryColor
                 opacity: 0.7

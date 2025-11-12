@@ -17,7 +17,7 @@ StyledDialogView {
     contentWidth: 280
     contentHeight: 80
 
-    margins: 16
+    margins: ui.theme.extra.space_16
 
     Row {
         id: timeRow

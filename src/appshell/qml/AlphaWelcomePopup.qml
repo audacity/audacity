@@ -26,7 +26,7 @@ StyledDialogView {
             anchors.fill: parent
 
             spacing: ui.theme.extra.space_24
-            anchors.margins: 24
+            anchors.margins: ui.theme.extra.space_24
 
             StyledTextLabel {
                 text: "<b>Notes on Audacity 4 - Alpha 1</b>"
@@ -49,7 +49,7 @@ StyledDialogView {
 
                 StyledFlickable {
                     anchors.fill: parent
-                    anchors.margins: 16
+                    anchors.margins: ui.theme.extra.space_16
 
                     contentHeight: message.implicitHeight
 

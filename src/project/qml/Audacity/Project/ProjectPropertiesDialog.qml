@@ -35,7 +35,7 @@ StyledDialogView {
 
     contentWidth: 680
     contentHeight: 500
-    margins: 16
+    margins: ui.theme.extra.space_16
 
     readonly property int propertyNameWidth: 160
     readonly property int propertyRowHorizontalSpacing: 8

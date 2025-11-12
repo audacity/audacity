@@ -25,7 +25,7 @@ Rectangle {
         id: flickableWrapper
 
         anchors.fill: parent
-        anchors.margins: 12
+        anchors.margins: ui.theme.extra.space_12
 
         contentHeight: contentColumn.implicitHeight
 
@@ -161,7 +161,7 @@ Rectangle {
                 delegate: Column {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.margins: 8
+                    anchors.margins: ui.theme.extra.space_8
 
                     spacing: ui.theme.extra.space_24
 

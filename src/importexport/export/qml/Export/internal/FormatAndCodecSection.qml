@@ -54,7 +54,7 @@ Rectangle {
 
                 StyledListView {
                     anchors.fill: parent
-                    anchors.margins: 1
+                    anchors.margins: ui.theme.extra.space_1
 
                     currentIndex: ffmpegPrefModel.ffmpegFormatIndex
                     scrollBarPolicy: ScrollBar.AlwaysOn
@@ -72,7 +72,7 @@ Rectangle {
 
                         StyledTextLabel {
                             anchors.fill: parent
-                            anchors.margins: 8
+                            anchors.margins: ui.theme.extra.space_8
                             horizontalAlignment: Text.AlignLeft
 
                             text: modelData
@@ -114,7 +114,7 @@ Rectangle {
 
                 StyledListView {
                     anchors.fill: parent
-                    anchors.margins: 1
+                    anchors.margins: ui.theme.extra.space_1
 
                     currentIndex: ffmpegPrefModel.ffmpegCodecIndex
                     scrollBarPolicy: ScrollBar.AlwaysOn
@@ -132,7 +132,7 @@ Rectangle {
 
                         StyledTextLabel {
                             anchors.fill: parent
-                            anchors.margins: 8
+                            anchors.margins: ui.theme.extra.space_8
                             horizontalAlignment: Text.AlignLeft
 
                             text: modelData

@@ -58,7 +58,7 @@ ColumnLayout {
             color: ui.theme.backgroundSecondaryColor
             StyledTextLabel {
                 anchors.fill: parent
-                anchors.margins: 2
+                anchors.margins: ui.theme.extra.space_2
                 horizontalAlignment: Qt.AlignLeft
                 text: section
             }
@@ -86,7 +86,7 @@ ColumnLayout {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
-                anchors.margins: 2
+                anchors.margins: ui.theme.extra.space_2
                 width: 150
 
                 Loader {
@@ -158,7 +158,7 @@ ColumnLayout {
             border.color: ui.theme.strokeColor
             TextEdit {
                 anchors.fill: parent
-                anchors.margins: 2
+                anchors.margins: ui.theme.extra.space_2
                 verticalAlignment: Text.AlignVCenter
                 text: String(val)
                 onEditingFinished: textControl.changed(text)

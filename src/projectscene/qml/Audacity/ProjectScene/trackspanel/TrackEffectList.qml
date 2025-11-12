@@ -51,7 +51,7 @@ Rectangle {
         header: listMargin
 
         clip: true
-        anchors.margins: 0
+        anchors.margins: ui.theme.extra.space_0
 
         delegate: RealtimeEffectListItem {
             item: itemData

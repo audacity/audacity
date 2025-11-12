@@ -52,7 +52,7 @@ StyledDialogView {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 24
+        anchors.margins: ui.theme.extra.space_24
         spacing: ui.theme.extra.space_24
 
         StyledTextLabel {

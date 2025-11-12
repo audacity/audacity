@@ -81,7 +81,7 @@ FlatButton {
         readonly property int contentWidth: 480 - 2 * margins
         readonly property int contentHeight: 174 - 2 * margins
 
-        readonly property int margins: 12
+        readonly property int margins: ui.theme.extra.space_12
         readonly property int checkboxSpacing: 20
 
         readonly property int meterHeight: 50
@@ -146,7 +146,7 @@ FlatButton {
 
                 Item {
                     anchors.fill: parent
-                    anchors.margins: 12
+                    anchors.margins: ui.theme.extra.space_12
 
                     Column {
                         id: volumePressureContainer

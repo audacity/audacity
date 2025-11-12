@@ -63,7 +63,7 @@ Rectangle {
                 navigation.panel: trackEffectsPowerButton.navigationPanel
 
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-                Layout.margins: 8
+                Layout.margins: ui.theme.extra.space_8
                 Layout.preferredWidth: prv.headerHeight - Layout.margins * 2
                 Layout.preferredHeight: Layout.preferredWidth
 

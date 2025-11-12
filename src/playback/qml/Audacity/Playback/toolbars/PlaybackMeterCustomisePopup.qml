@@ -18,7 +18,7 @@ StyledPopupView {
     contentWidth: 336
     contentHeight: 286
 
-    margins: 12
+    margins: ui.theme.extra.space_12
 
     ColumnLayout {
         anchors.fill: parent
