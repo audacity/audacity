@@ -131,9 +131,7 @@ private:
         if (recordController()->isRecording()) {
             return make_ret(trackedit::Err::DisallowedDuringRecording);
         }
-        constexpr bool shouldSeek = false;
-        constexpr bool shouldUpdatePlaybackRegion = false;
-        playbackController()->stop(shouldSeek, shouldUpdatePlaybackRegion);
+        playbackController()->stop();
 
         return (m_interaction.get()->*method)(std::forward<Args>(args)...);
     }

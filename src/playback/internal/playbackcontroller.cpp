@@ -192,11 +192,12 @@ void PlaybackController::seek(const muse::secs_t secs, bool applyIfPlaying)
     player()->seek(secs, applyIfPlaying);
 }
 
-void PlaybackController::reset()
+void PlaybackController::stopSeekAndUpdatePlaybackRegion()
 {
-    constexpr bool shouldSeek = true;
-    constexpr bool shouldUpdatePlaybackRegion = true;
-    stop(shouldSeek, shouldUpdatePlaybackRegion);
+    stop();
+
+    seek(m_lastPlaybackSeekTime, false);
+    updatePlaybackRegion();
 }
 
 Channel<uint32_t> PlaybackController::midiTickPlayed() const
@@ -228,9 +229,7 @@ void PlaybackController::onProjectChanged()
     au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (prj) {
         prj->aboutCloseBegin().onNotify(this, [this]() {
-            constexpr bool shouldSeek = true;
-            constexpr bool shouldUpdatePlaybackRegion = true;
-            stop(shouldSeek, shouldUpdatePlaybackRegion);
+            stopSeekAndUpdatePlaybackRegion();
         });
 
         seek(0.0, false); // TODO: get the previous position from the project data
@@ -259,9 +258,7 @@ void PlaybackController::togglePlayAction()
     const bool isShiftPressed = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
     if (isPlaying()) {
         if (isShiftPressed) {
-            constexpr bool shouldSeek = true;
-            constexpr bool shouldUpdatePlaybackRegion = true;
-            stop(shouldSeek, shouldUpdatePlaybackRegion);
+            stopSeekAndUpdatePlaybackRegion();
         } else {
             doPause();
         }
@@ -345,9 +342,7 @@ void PlaybackController::playTracksAction(const muse::actions::ActionQuery& q)
 void PlaybackController::rewindToStartAction()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
-    constexpr bool shouldSeek = true;
-    constexpr bool shouldUpdatePlaybackRegion = true;
-    stop(shouldSeek, shouldUpdatePlaybackRegion);
+    stopSeekAndUpdatePlaybackRegion();
 
     doSeek(0.0, false);
 
@@ -359,9 +354,7 @@ void PlaybackController::rewindToEndAction()
     //! NOTE: In Audacity 3 we can't rewind while playing
     m_lastPlaybackSeekTime = totalPlayTime();
     m_lastPlaybackRegion = { totalPlayTime(), totalPlayTime() };
-    constexpr bool shouldSeek = true;
-    constexpr bool shouldUpdatePlaybackRegion = true;
-    stop(shouldSeek, shouldUpdatePlaybackRegion);
+    stopSeekAndUpdatePlaybackRegion();
 
     selectionController()->resetTimeSelection();
 }
@@ -446,37 +439,17 @@ void PlaybackController::doPause()
     player()->pause();
 }
 
-void PlaybackController::stopAction(const muse::actions::ActionQuery& q)
+void PlaybackController::stopAction()
 {
-    IF_ASSERT_FAILED(q.contains("shouldSeek")) {
-        return;
-    }
-    IF_ASSERT_FAILED(q.contains("shouldUpdatePlaybackRegion")) {
-        return;
-    }
-
-    const bool shouldSeek = q.param("shouldSeek").toBool();
-    const bool shouldUpdatePlaybackRegion = q.param("shouldUpdatePlaybackRegion").toBool();
-    stop(shouldSeek, shouldUpdatePlaybackRegion);
+    stopSeekAndUpdatePlaybackRegion();
 }
 
-void PlaybackController::stop(const bool shouldSeek, const bool shouldUpdatePlaybackRegion)
+void PlaybackController::stop()
 {
     IF_ASSERT_FAILED(player()) {
         return;
     }
-
     player()->stop();
-
-    // FIXME: those two boolean are temporary, the idea is to revisit the calls to PlaybackController::stop from
-    // everywhere and check if we want to keep the seek and the updatePlaybackRegion extra operation
-    // because ideally we should be able to call stop() without any extra operation
-    if (shouldSeek) {
-        seek(m_lastPlaybackSeekTime, false);
-    }
-    if (shouldUpdatePlaybackRegion) {
-        updatePlaybackRegion();
-    }
 }
 
 void PlaybackController::doResume()

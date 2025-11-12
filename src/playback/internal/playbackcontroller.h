@@ -62,8 +62,8 @@ public:
     bool isPaused() const override;
     bool isStopped() const override;
 
-    void stop(bool shouldSeek, bool shouldUpdatePlaybackRegion) override;
-    void reset() override;
+    void stop() override;
+    void stopSeekAndUpdatePlaybackRegion() override;
 
     muse::async::Channel<uint32_t> midiTickPlayed() const override;
 
@@ -106,7 +106,7 @@ private:
 
     void togglePlayAction();
     void doPlay(bool ignoreSelection);
-    void stopAction(const muse::actions::ActionQuery& q);
+    void stopAction();
     void playTracksAction(const muse::actions::ActionQuery& q);
     void rewindToStartAction();
     void rewindToEndAction();

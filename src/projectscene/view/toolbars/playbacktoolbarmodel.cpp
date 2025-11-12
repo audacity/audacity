@@ -188,13 +188,6 @@ void PlaybackToolBarModel::updateStopState()
     const ActionCode code = isRecording ? RECORD_STOP_QUERY.toString() : PLAYBACK_STOP_QUERY.toString();
     const UiAction action = uiActionsRegister()->action(code);
     item->setAction(action);
-    if (!isRecording) {
-        constexpr bool shouldSeek = true;
-        constexpr bool shouldUpdatePlaybackRegion = true;
-        const ActionData data = ActionData::make_arg2<bool, bool>(shouldSeek, shouldUpdatePlaybackRegion);
-        item->setArgs(data);
-    }
-
     const QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
     item->setIconColor(iconColor);
 }

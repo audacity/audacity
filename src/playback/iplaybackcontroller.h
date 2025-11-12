@@ -44,9 +44,8 @@ public:
     virtual bool isPaused() const = 0;
     virtual bool isStopped() const = 0;
 
-    virtual void stop(bool shouldSeek, bool shouldUpdatePlaybackRegion) = 0;
-
-    virtual void reset() = 0;
+    virtual void stop() = 0;
+    virtual void stopSeekAndUpdatePlaybackRegion() = 0;
 
     virtual muse::async::Channel<uint32_t> midiTickPlayed() const = 0;
 
