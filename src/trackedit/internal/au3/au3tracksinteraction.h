@@ -8,10 +8,11 @@
 #include "modularity/ioc.h"
 #include "iinteractive.h"
 #include "context/iglobalcontext.h"
-#include "../../itrackeditconfiguration.h"
-#include "../../iclipsinteraction.h"
-#include "../../iselectioncontroller.h"
-#include "../../iprojecthistory.h"
+#include "trackedit/itrackeditconfiguration.h"
+#include "trackedit/iclipsinteraction.h"
+#include "trackedit/iselectioncontroller.h"
+#include "trackedit/iprojecthistory.h"
+#include "playback/iplaybackconfiguration.h"
 
 #include "../../itracksinteraction.h"
 
@@ -27,6 +28,7 @@ class Au3TracksInteraction : public ITracksInteraction
     muse::Inject<au::trackedit::ITrackeditConfiguration> configuration;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<au::trackedit::IClipsInteraction> clipsInteraction;
+    muse::Inject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
 public:
     Au3TracksInteraction();
@@ -76,6 +78,7 @@ public:
     void verticalZoomIn(const trackedit::TrackId& trackId) override;
     void verticalZoomOut(const trackedit::TrackId& trackId) override;
     void resetVerticalZoom(const trackedit::TrackId& trackId) override;
+    void adjustVerticalZoom(const trackedit::TrackId& trackId) override;
 
     double nearestZeroCrossing(double time) const override;
 
