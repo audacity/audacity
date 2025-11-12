@@ -26,7 +26,7 @@ StyledDialogView {
 
         width: deleteBehaviorPanel.width
 
-        padding: 24
+        padding: ui.theme.extra.space_24
         spacing: ui.theme.extra.space_16
 
         StyledTextLabel {
@@ -71,7 +71,7 @@ StyledDialogView {
     Row {
         id: applyButtonRow
 
-        padding: 12
+        padding: ui.theme.extra.space_12
         anchors.top: separatorLine.bottom
         anchors.right: parent.right
 

@@ -121,7 +121,7 @@ StyledDialogView {
 
             Layout.fillWidth: true
 
-            padding: 8
+            padding: ui.theme.extra.space_8
 
             FlatButton {
                 id: cancelBtn

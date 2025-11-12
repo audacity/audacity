@@ -24,7 +24,7 @@ BuiltinEffectBase {
     QtObject {
         id: prv
 
-        readonly property int padding: 32
+        readonly property int padding: ui.theme.extra.space_32
         readonly property int interpolationLinear: 0
         readonly property int interpolationLogarithmic: 1
     }

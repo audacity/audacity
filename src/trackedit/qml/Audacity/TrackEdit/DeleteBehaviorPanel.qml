@@ -75,7 +75,7 @@ Column {
 
             width: parent.width
 
-            padding: 16
+            padding: ui.theme.extra.space_16
             spacing: ui.theme.extra.space_8
 
             StyledTextLabel {

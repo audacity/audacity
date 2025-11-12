@@ -65,7 +65,7 @@ DynamicsEffectBase {
                 id: knobRow
 
                 spacing: ui.theme.extra.space_16
-                padding: 16
+                padding: ui.theme.extra.space_16
 
                 Column {
                     id: thresholdColumn

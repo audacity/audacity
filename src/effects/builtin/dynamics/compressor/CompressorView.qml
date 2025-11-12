@@ -61,7 +61,7 @@ DynamicsEffectBase {
             Row {
                 id: row
 
-                padding: 16
+                padding: ui.theme.extra.space_16
                 spacing: ui.theme.extra.space_24
 
                 Grid {

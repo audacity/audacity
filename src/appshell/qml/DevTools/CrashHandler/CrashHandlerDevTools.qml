@@ -22,7 +22,7 @@ Rectangle {
         spacing: ui.theme.extra.space_12
 
         Rectangle {
-            readonly property real padding: 12
+            readonly property real padding: ui.theme.extra.space_12
 
             width: hintLabel.implicitWidth + 2 * padding
             height: hintLabel.implicitHeight + 2 * padding

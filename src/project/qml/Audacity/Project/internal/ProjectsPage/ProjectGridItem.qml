@@ -123,7 +123,7 @@ FocusScope {
                     NavigationFocusBorder {
                         navigationCtrl: navCtrl
 
-                        padding: 2
+                        padding: ui.theme.extra.space_2
                     }
 
                     border.color: ui.theme.strokeColor

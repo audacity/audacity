@@ -34,7 +34,7 @@ BuiltinEffectBase {
         Column {
             id: boardAndButtons
 
-            padding: 16
+            padding: ui.theme.extra.space_16
             spacing: ui.theme.extra.space_16
             width: board.width + 2 * padding
 

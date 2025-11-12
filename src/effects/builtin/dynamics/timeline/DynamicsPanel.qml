@@ -98,7 +98,7 @@ Item {
     Column {
         id: rootColumn
 
-        padding: 0
+        padding: ui.theme.extra.space_0
         spacing: ui.theme.extra.space_0
 
         Row {
