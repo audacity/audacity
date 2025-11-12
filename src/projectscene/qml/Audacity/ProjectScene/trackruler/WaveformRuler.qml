@@ -12,7 +12,7 @@ Item {
     required property int rulerType
     required property real channelHeightRatio
     required property bool isVerticalRulersVisible
-    required property var displayBounds
+    required property real verticalZoom
 
     signal hideVerticalRulerRequested
     signal setTrackRulerTypeRequested(int rulerType)
@@ -30,7 +30,7 @@ Item {
         isCollapsed: root.isCollapsed
         rulerType: root.rulerType
         channelHeightRatio: root.channelHeightRatio
-        displayBounds: root.displayBounds
+        verticalZoom: root.verticalZoom
     }
 
     MouseArea {
