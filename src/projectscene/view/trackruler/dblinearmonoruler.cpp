@@ -31,9 +31,8 @@ int computeLowestFullStepValue(double height, double m_dbRange, double maxValue)
     for (int i = lowestFullStep + 3; i < 0; i += 3) {
         const double position = valueToPosition(i, height, maxValue);
         if (middlePoint - position > MIN_LOWEST_FULL_STEP_TO_ZERO_HEIGHT) {
-            return lowestFullStep;
+            return i;
         }
-        lowestFullStep = i;
     }
 
     return 0;
@@ -141,7 +140,6 @@ std::vector<TrackRulerSmallStep> DbLinearMonoRuler::smallSteps() const
 
     const int lowestFullStep = computeLowestFullStepValue(m_height, m_dbRange, m_maxDisplayValue);
     const std::vector<int> valuesList = fullStepValues(m_height, m_dbRange, m_maxDisplayValue);
-    //remove lowestFullStep from valuesList to avoid duplications
     std::vector<int> filteredValuesList;
     std::copy_if(valuesList.begin(), valuesList.end(), std::back_inserter(filteredValuesList),
                  [lowestFullStep](int value) { return value != lowestFullStep; });
