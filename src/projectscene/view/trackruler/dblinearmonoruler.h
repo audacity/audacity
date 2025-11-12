@@ -17,7 +17,7 @@ public:
     std::string sampleToText(double sample) const override;
     std::vector<TrackRulerFullStep> fullSteps() const override;
     std::vector<TrackRulerSmallStep> smallSteps() const override;
-    void setDisplayBounds(float min, float max) override;
+    void setVerticalZoom(float verticalZoom) override;
 
 private:
     double m_height = 0.0;

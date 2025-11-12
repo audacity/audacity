@@ -79,14 +79,14 @@ au::trackedit::TrackViewType trackViewType(const Au3Track* track)
     }
 }
 
-au::trackedit::TrackDisplayBounds trackDisplayBounds(const Au3Track* track)
+float trackVerticalZoom(const Au3Track* track)
 {
     const auto* waveTrack = dynamic_cast<const WaveTrack*>(track);
     const auto& cache = WaveformScale::Get(*waveTrack);
     float min;
     float max;
     cache.GetDisplayBounds(min, max);
-    return { min, max };
+    return (max - min) / 2.0f;
 }
 }
 
@@ -132,7 +132,7 @@ au::trackedit::Track DomConverter::track(const Au3Track* track)
     au4t.rulerType = trackRulerType(track);
     au4t.viewType = trackViewType(track);
     au4t.rate = trackRate(track);
-    au4t.displayBounds = trackDisplayBounds(track);
+    au4t.verticalZoom = trackVerticalZoom(track);
     return au4t;
 }
 

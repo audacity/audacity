@@ -17,7 +17,7 @@ TrackItemsContainer {
     property bool rightTrimPressedButtons: false
     property bool isLinear: false
     property real dbRange: -60.0
-    property var displayBounds: null
+    property real verticalZoom: 1.0
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
 
@@ -244,7 +244,7 @@ TrackItemsContainer {
                                 isAudible: root.isTrackAudible
                                 isLinear: root.isLinear
                                 dbRange: root.dbRange
-                                displayBounds: root.displayBounds
+                                verticalZoom: root.verticalZoom
                                 isWaveformViewVisible: root.isWaveformViewVisible
                                 isSpectrogramViewVisible: root.isSpectrogramViewVisible
                                 multiSampleEdit: clipsContainer.multiSampleEdit

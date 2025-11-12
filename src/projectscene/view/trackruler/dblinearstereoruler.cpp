@@ -131,7 +131,7 @@ std::vector<TrackRulerSmallStep> DbLinearStereoRuler::smallSteps() const
     return steps;
 }
 
-void DbLinearStereoRuler::setDisplayBounds(float min, float max)
+void DbLinearStereoRuler::setVerticalZoom(float)
 {
     // No-op for DbLinear ruler
 }
