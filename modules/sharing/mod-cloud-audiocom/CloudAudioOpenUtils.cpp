@@ -17,6 +17,7 @@
 #include "BasicUI.h"
 #include "ExportUtils.h"
 #include "CloudSyncService.h"
+#include "UriParser.h"
 
 #include "AuthorizationHandler.h"
 
@@ -154,7 +155,26 @@ AudacityProject* OpenAudioFromCloud(std::string_view audioId) {
 }
 
 bool HandleAudioLink(std::string_view link) {
-   return false;
+   ASSERT_MAIN_THREAD();
+
+   const auto parsedUri = ParseUri(link);
+
+   if (parsedUri.Scheme != "audacity" || parsedUri.Host != "open")
+      return false;
+
+   const auto queryParameters = ParseUriQuery(parsedUri.Query);
+
+   if (queryParameters.empty())
+      return false;
+
+   const auto audioId = queryParameters.find("audioId");
+
+   if (audioId == queryParameters.end())
+      return false;
+
+   OpenAudioFromCloud(audioId->second);
+
+   return true;
 }
 
 } // namespace audacity::cloud::audiocom::sync

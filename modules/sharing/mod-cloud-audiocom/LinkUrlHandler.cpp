@@ -13,6 +13,7 @@
 
 #include "CloudProjectMixdownUtils.h"
 #include "CloudProjectOpenUtils.h"
+#include "CloudAudioOpenUtils.h"
 #include "ExportUtils.h"
 #include "OAuthService.h"
 
@@ -33,6 +34,9 @@ auto subscription = URLSchemesRegistry::Get().Subscribe(
          return;
 
       if (sync::HandleMixdownLink(message.url))
+         return;
+
+      if (sync::HandleAudioLink(message.url))
          return;
    });
 }
