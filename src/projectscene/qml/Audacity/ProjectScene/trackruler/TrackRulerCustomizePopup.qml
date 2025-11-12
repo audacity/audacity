@@ -17,11 +17,11 @@ StyledPopupView {
     required property int rulerType
     required property var availableRulerTypes
 
-    signal hideRulersRequested()
+    signal hideRulersRequested
     signal rulerTypeChangeRequested(int newType)
 
-    contentWidth: uiModel.popupWidth - 2*uiModel.popupMargins
-    contentHeight: uiModel.popupHeight - 2*uiModel.popupMargins
+    contentWidth: uiModel.popupWidth - 2 * uiModel.popupMargins
+    contentHeight: uiModel.popupHeight - 2 * uiModel.popupMargins
 
     margins: uiModel.popupMargins
 
@@ -110,7 +110,7 @@ StyledPopupView {
 
             model: root.availableRulerTypes
 
-            onValueChangeRequested: function(value) {
+            onValueChangeRequested: function (value) {
                 root.rulerTypeChangeRequested(value)
             }
         }
@@ -154,5 +154,4 @@ StyledPopupView {
             }
         }
     }
-
 }

@@ -54,8 +54,7 @@ BaseSection {
             RoundedRadioButton {
                 anchors.verticalCenter: parent.verticalCenter
 
-                width: filePicker.visible ? Math.max(implicitWidth, root.columnWidth)
-                                          : parent.width
+                width: filePicker.visible ? Math.max(implicitWidth, root.columnWidth) : parent.width
 
                 checked: modelData.checked
                 text: modelData.title
@@ -86,7 +85,7 @@ BaseSection {
                 navigationRowOrderStart: model.index
                 navigationColumnOrderStart: 1
 
-                onPathEdited: function(newPath) {
+                onPathEdited: function (newPath) {
                     root.startupScorePathChanged(newPath)
                 }
             }

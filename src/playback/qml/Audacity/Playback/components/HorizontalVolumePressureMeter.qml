@@ -15,7 +15,7 @@ Canvas {
     property real currentRMS: -145.0
     property real minDisplayedVolumePressure: -60.0
     property real maxDisplayedVolumePressure: 0.0
-    
+
     property int recentPeakIntervalMiliseconds: 600
 
     property var meterModel: null
@@ -57,20 +57,20 @@ Canvas {
 
         function getRecentPeakMarkerColor() {
             switch (root.meterModel.meterStyle) {
-                case PlaybackMeterStyle.Default:
-                    return meterStyle.defaultColor
-                case PlaybackMeterStyle.RMS:
-                    return meterStyle.rmsColor
-                case PlaybackMeterStyle.Gradient:
-                    var recentPeakRatio = (prv.recentPeak - root.minDisplayedVolumePressure) / (root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure)
-                    if (recentPeakRatio < 0.2) {
-                        return meterStyle.gradientColorGreen
-                    } else if (recentPeakRatio < 0.8) {
-                        return meterStyle.gradientColorYellow
-                    }
-                    return meterStyle.gradientColorRed
-                default:
-                    return meterStyle.maxPeakMarkerColor
+            case PlaybackMeterStyle.Default:
+                return meterStyle.defaultColor
+            case PlaybackMeterStyle.RMS:
+                return meterStyle.rmsColor
+            case PlaybackMeterStyle.Gradient:
+                var recentPeakRatio = (prv.recentPeak - root.minDisplayedVolumePressure) / (root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure)
+                if (recentPeakRatio < 0.2) {
+                    return meterStyle.gradientColorGreen
+                } else if (recentPeakRatio < 0.8) {
+                    return meterStyle.gradientColorYellow
+                }
+                return meterStyle.gradientColorRed
+            default:
+                return meterStyle.maxPeakMarkerColor
             }
         }
 
@@ -104,7 +104,10 @@ Canvas {
         function updateRecentPeak() {
             const now = Date.now()
 
-            prv.recentVolumePressure.push({ value: prv.updatedVolumePressure, time: now })
+            prv.recentVolumePressure.push({
+                value: prv.updatedVolumePressure,
+                time: now
+            })
 
             const recentPeakStartInterval = now - root.recentPeakIntervalMiliseconds
             let cutoffIndex = -1
@@ -112,8 +115,7 @@ Canvas {
             for (let i = 0; i < prv.recentVolumePressure.length; i++) {
                 if (prv.recentVolumePressure[i].time < recentPeakStartInterval) {
                     cutoffIndex = i
-                }
-                else {
+                } else {
                     break
                 }
             }
@@ -126,7 +128,7 @@ Canvas {
         }
 
         function sampleValueToHeight(sampleValue) {
-            return Math.floor(prv.indicatorWidth * root.meterModel.sampleToPosition(sampleValue));
+            return Math.floor(prv.indicatorWidth * root.meterModel.sampleToPosition(sampleValue))
         }
 
         onIsClippingChanged: {
@@ -179,7 +181,7 @@ Canvas {
             ctx.fillStyle = meterStyle.getRecentPeakMarkerColor()
             ctx.fillRect(recentPeakWidth, 0, 1, root.height)
         }
-        
+
         const maxPeakWidth = prv.sampleValueToHeight(prv.maxPeak)
         if (maxPeakWidth > 0) {
             ctx.fillStyle = meterStyle.maxPeakMarkerColor
@@ -188,7 +190,7 @@ Canvas {
     }
 
     function drawBarStyleDefault(ctx) {
-        // On clipping draw full red rectangle   
+        // On clipping draw full red rectangle
         if (prv.isClipping) {
             ctx.fillStyle = meterStyle.clippedColor
             ctx.fillRect(0, 0, prv.indicatorWidth, root.height)
@@ -209,7 +211,7 @@ Canvas {
         // On clipping draw full red rectangle
         if (prv.isClipping) {
             ctx.fillStyle = meterStyle.clippedColor
-            ctx.fillRect(0, 0, prv.indicatorWidth , root.height)
+            ctx.fillRect(0, 0, prv.indicatorWidth, root.height)
             return
         }
 
@@ -244,8 +246,7 @@ Canvas {
 
         drawBackground(ctx)
 
-        if (root.showOverload)
-        {
+        if (root.showOverload) {
             drawClippedIndicator(ctx)
         }
 

@@ -41,7 +41,7 @@ Item {
             text: root.title
             horizontalAlignment: Text.AlignLeft
         }
-        
+
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true

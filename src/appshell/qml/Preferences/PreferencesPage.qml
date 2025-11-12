@@ -43,7 +43,7 @@ Rectangle {
     property NavigationSection navigationSection: null
     property int navigationOrderStart: 0
 
-    signal hideRequested()
+    signal hideRequested
 
     function apply() {
         return true
@@ -77,7 +77,9 @@ Rectangle {
         rightMargin: root.sideMargin
         bottomMargin: root.sideMargin
 
-        ScrollBar.vertical: StyledScrollBar { id: scrollBar }
+        ScrollBar.vertical: StyledScrollBar {
+            id: scrollBar
+        }
 
         Item {
             id: content
