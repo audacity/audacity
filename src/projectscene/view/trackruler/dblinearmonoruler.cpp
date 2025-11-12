@@ -14,18 +14,22 @@ constexpr int MIN_ADJACENT_STEPS_HEIGHT = 10;
 constexpr int MIN_HEIGHT_TO_ZERO = 14;
 constexpr std::array<int, 4> FULL_STEP_SIZES = { 1, 2, 3, 6 };
 
-double valueToPosition(double value, double height, bool isNegativeSample = false)
+double valueToPosition(double value, double height, double maxValue, bool isNegativeSample = false)
 {
-    const auto linearValue = muse::db_to_linear(value) * (isNegativeSample ? -1.0 : 1.0);
-    return (1.0 - (linearValue / 2.0 + 0.5)) * height;
+    const double maxLinearValue = std::abs(muse::db_to_linear(maxValue));
+    const double minLinearValue = -maxLinearValue;
+    const double linearValue = muse::db_to_linear(value) * (isNegativeSample ? -1.0 : 1.0);
+    const double clampedLinearValue = std::clamp(linearValue, minLinearValue, maxLinearValue);
+
+    return (0.5 - (clampedLinearValue / (maxLinearValue - minLinearValue))) * height;
 }
 
-int computeLowestFullStepValue(double height, double m_dbRange)
+int computeLowestFullStepValue(double height, double m_dbRange, double maxValue)
 {
     auto const middlePoint = height / 2.0;
     int lowestFullStep = static_cast<int>(m_dbRange);
     for (int i = lowestFullStep + 3; i < 0; i += 3) {
-        const double position = valueToPosition(i, height);
+        const double position = valueToPosition(i, height, maxValue);
         if (middlePoint - position > MIN_LOWEST_FULL_STEP_TO_ZERO_HEIGHT) {
             return lowestFullStep;
         }
@@ -35,27 +39,27 @@ int computeLowestFullStepValue(double height, double m_dbRange)
     return 0;
 }
 
-std::vector<int> fullStepValues(double height, double dbRange)
+std::vector<int> fullStepValues(double height, double dbRange, double maxValue)
 {
-    const int lowestFullStep = computeLowestFullStepValue(height, dbRange);
+    const int lowestFullStep = computeLowestFullStepValue(height, dbRange, maxValue);
 
     std::vector<int> steps;
     if (lowestFullStep != 0) {
         steps.push_back(lowestFullStep);
         int previousValidStep = lowestFullStep;
 
-        for (int step = lowestFullStep + 1; step < 0; step++) {
+        for (int step = lowestFullStep + 1; step < maxValue; step++) {
             const int diff = step - previousValidStep;
             if (std::find(FULL_STEP_SIZES.begin(), FULL_STEP_SIZES.end(), diff) == FULL_STEP_SIZES.end()) {
                 continue;
             }
 
-            const double position = valueToPosition(step, height);
+            const double position = valueToPosition(step, height, maxValue);
             if (position < MIN_HEIGHT_TO_ZERO) {
                 break;
             }
 
-            const double previousPosition = valueToPosition(previousValidStep, height);
+            const double previousPosition = valueToPosition(previousValidStep, height, maxValue);
             if (previousPosition - position >= MIN_ADJACENT_STEPS_HEIGHT) {
                 steps.push_back(step);
                 previousValidStep = step;
@@ -73,7 +77,7 @@ double DbLinearMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t ch
         return m_height / 2.0;
     }
 
-    return valueToPosition(step, m_height, isNegativeSample);
+    return valueToPosition(step, m_height, m_maxDisplayValue, isNegativeSample);
 }
 
 void DbLinearMonoRuler::setHeight(int height)
@@ -115,10 +119,10 @@ std::vector<TrackRulerFullStep> DbLinearMonoRuler::fullSteps() const
         return { TrackRulerFullStep { m_dbRange, 0, 0, true, true, false } };
     }
 
-    const std::vector<int> valuesList = fullStepValues(m_height, m_dbRange);
+    const std::vector<int> valuesList = fullStepValues(m_height, m_dbRange, m_maxDisplayValue);
     std::vector<TrackRulerFullStep> steps { TrackRulerFullStep { m_dbRange, 0, 0, false, true, false },
-                                            TrackRulerFullStep { 0.0, 0, 0, true, true, false },
-                                            TrackRulerFullStep { 0.0, 0, 0, true, true, true }
+                                            TrackRulerFullStep { m_maxDisplayValue, 0, -1, true, true, false },
+                                            TrackRulerFullStep { m_maxDisplayValue, 0, 1, true, true, true }
     };
 
     for (const int stepValue : valuesList) {
@@ -132,13 +136,22 @@ std::vector<TrackRulerFullStep> DbLinearMonoRuler::fullSteps() const
 std::vector<TrackRulerSmallStep> DbLinearMonoRuler::smallSteps() const
 {
     if (m_collapsed) {
-        return { TrackRulerSmallStep { 0.0, 0, false }, TrackRulerSmallStep { 0.0, 0, true } };
+        return { TrackRulerSmallStep { m_maxDisplayValue, 0, false }, TrackRulerSmallStep { m_maxDisplayValue, 0, true } };
     }
 
-    const int lowestFullStep = computeLowestFullStepValue(m_height, m_dbRange);
-    const std::vector<int> valuesList = fullStepValues(m_height, m_dbRange);
+    const int lowestFullStep = computeLowestFullStepValue(m_height, m_dbRange, m_maxDisplayValue);
+    const std::vector<int> valuesList = fullStepValues(m_height, m_dbRange, m_maxDisplayValue);
+    //remove lowestFullStep from valuesList to avoid duplications
+    std::vector<int> filteredValuesList;
+    std::copy_if(valuesList.begin(), valuesList.end(), std::back_inserter(filteredValuesList),
+                 [lowestFullStep](int value) { return value != lowestFullStep; });
+
+    const int newLowestFullStep
+        =filteredValuesList.empty() ? static_cast<int>(m_maxDisplayValue) : *std::min_element(
+              filteredValuesList.begin(), filteredValuesList.end());
+
     std::vector<TrackRulerSmallStep> steps;
-    for (int i = lowestFullStep; i < 0; i++) {
+    for (int i = newLowestFullStep; i < m_maxDisplayValue; i++) {
         if (std::find(valuesList.begin(), valuesList.end(), i) != valuesList.end()) {
             continue;
         }
@@ -150,5 +163,5 @@ std::vector<TrackRulerSmallStep> DbLinearMonoRuler::smallSteps() const
 
 void DbLinearMonoRuler::setVerticalZoom(float verticalZoom)
 {
-    // No-op for DbLinear ruler
+    m_maxDisplayValue = muse::linear_to_db(verticalZoom);
 }
