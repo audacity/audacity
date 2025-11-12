@@ -328,7 +328,7 @@ Rectangle {
                 }
 
                 onPlayCursorMousePositionChanged: function (ix) {
-                     timeline.updateCursorPosition(ix, 0)
+                    timeline.updateCursorPosition(ix, 0)
                 }
             }
         }
@@ -488,8 +488,7 @@ Rectangle {
                     tracksItemsView.itemMoveRequested(hoveredItemKey, true)
                     tracksItemsView.stopAutoScroll()
                     tracksItemsView.itemEndEditRequested(hoveredItemKey)
-                }
-                else {
+                } else {
                     splitToolController.mouseUp(e.x)
 
                     if (selectionController.isLeftSelection(e.x)) {
@@ -649,16 +648,16 @@ Rectangle {
                     property int index: model.index
 
                     width: tracksItemsView.width
-                    
+
                     sourceComponent: trackType === TrackType.LABEL ? trackLabelsContainer : trackClipsContainerComp
 
                     onLoaded: {
                         trackItemLoader.item.init()
                     }
-                    
+
                     Component {
                         id: trackClipsContainerComp
-                        
+
                         TrackClipsContainer {
                             property var itemData: trackItemLoader.itemData
                             property int index: trackItemLoader.index

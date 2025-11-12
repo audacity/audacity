@@ -39,7 +39,7 @@ Item {
     signal stretchRightRequested(bool completed, int action)
 
     //! NOTE: auto-scroll for trimming is triggered from trackclipslistmodel
-    signal stopAutoScroll()
+    signal stopAutoScroll
 
     Item {
         id: leftTrimHandle
