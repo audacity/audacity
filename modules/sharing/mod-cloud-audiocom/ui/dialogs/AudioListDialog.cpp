@@ -23,6 +23,7 @@
 #include "BasicUI.h"
 #include "CodeConversions.h"
 #include "Internat.h"
+#include "UrlEncode.h"
 #include "wxWidgetsWindowPlacement.h"
 
 #include "AuthorizationHandler.h"
@@ -193,7 +194,7 @@ public:
       auto cancellationContext = concurrency::CancellationContext::Create();
 
       auto future = CloudSyncService::Get().GetAudioList(
-         cancellationContext, page, mPageSize, ToUTF8(searchTerm));
+         cancellationContext, page, mPageSize, UrlEncode(ToUTF8(searchTerm)));
 
       while (std::future_status::ready != future.wait_for(100ms))
       {
