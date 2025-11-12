@@ -43,7 +43,12 @@ private:
 
     context::IPlaybackStatePtr playbackState() const;
 
+    std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const;
+
     muse::Progress m_progress;
     std::atomic<bool> m_busy = false;
+
+    std::optional<secs_t> m_stretchTime;
+    std::optional<LabelKey> m_stretchingLabelKey;
 };
 }

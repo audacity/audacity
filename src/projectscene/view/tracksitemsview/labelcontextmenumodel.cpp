@@ -25,7 +25,6 @@ void LabelContextMenuModel::load()
         makeSeparator(),
         makeItemWithArg("action://trackedit/cut"),
         makeItemWithArg("action://trackedit/copy"),
-        makeSeparator(),
         makeItemWithArg("label-delete"),
     };
 
