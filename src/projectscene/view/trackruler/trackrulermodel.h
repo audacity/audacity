@@ -41,6 +41,7 @@ public:
     Q_INVOKABLE void zoomIn(const trackedit::TrackId& trackId);
     Q_INVOKABLE void zoomOut(const trackedit::TrackId& trackId);
     Q_INVOKABLE void resetZoom(const trackedit::TrackId& trackId);
+    Q_INVOKABLE void adjustZoom(const trackedit::TrackId& trackId);
 
     std::vector<QVariantMap> fullSteps() const;
     std::vector<QVariantMap> smallSteps() const;

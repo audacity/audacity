@@ -31,6 +31,7 @@
 #include "au3wrap/au3types.h"
 
 #include "dom/track.h"
+#include "playback/playbacktypes.h"
 #include "trackediterrors.h"
 
 #include "au3interactionutils.h"
@@ -1134,18 +1135,27 @@ bool Au3TracksInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
 
 void Au3TracksInteraction::verticalZoomIn(const trackedit::TrackId& trackId)
 {
-    constexpr float MAX_ZOOM_IN = 1.0 / (1 << 11);
+    constexpr float MAX_ZOOM_IN_LINEAR = 1.0 / (1 << 11);
 
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
     if (waveTrack == nullptr) {
         return;
     }
 
+    trackedit::Track track = DomConverter::track(waveTrack);
+    float maxZoom;
+    if (track.rulerType == trackedit::TrackRulerType::DbLog) {
+        const int dBRange = static_cast<int>(playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange()));
+        maxZoom = 1.0 / (1 << std::min(static_cast<int>(std::abs(dBRange + 6.0) / 6.0f), 11));
+    } else {
+        maxZoom = MAX_ZOOM_IN_LINEAR;
+    }
+
     float min;
     float max;
     auto& cache = WaveformScale::Get(*waveTrack);
     cache.GetDisplayBounds(min, max);
-    if (muse::is_equal(max, MAX_ZOOM_IN)) {
+    if (muse::is_equal(max, maxZoom)) {
         return;
     }
 
@@ -1187,6 +1197,38 @@ void Au3TracksInteraction::resetVerticalZoom(const trackedit::TrackId& trackId)
 
     auto& cache = WaveformScale::Get(*waveTrack);
     cache.SetDisplayBounds(-1.0f, 1.0f);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+}
+
+void Au3TracksInteraction::adjustVerticalZoom(const trackedit::TrackId& trackId)
+{
+    constexpr float MAX_ZOOM_IN_LINEAR = 1.0 / (1 << 11);
+
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    if (waveTrack == nullptr) {
+        return;
+    }
+
+    trackedit::Track track = DomConverter::track(waveTrack);
+    float maxZoom;
+    if (track.rulerType == trackedit::TrackRulerType::DbLog) {
+        const int dBRange = static_cast<int>(playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange()));
+        maxZoom = 1.0 / (1 << std::min(static_cast<int>(std::abs(dBRange + 6.0) / 6.0f), 11));
+    } else {
+        maxZoom = MAX_ZOOM_IN_LINEAR;
+    }
+
+    float min;
+    float max;
+    auto& cache = WaveformScale::Get(*waveTrack);
+    cache.GetDisplayBounds(min, max);
+    if (muse::is_equal(max, maxZoom)) {
+        return;
+    }
+
+    cache.SetDisplayBounds(min, max);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));

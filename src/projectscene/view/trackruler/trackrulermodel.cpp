@@ -239,6 +239,11 @@ void TrackRulerModel::zoomOut(const trackedit::TrackId& trackId)
     trackeditInteraction()->verticalZoomOut(trackId);
 }
 
+void TrackRulerModel::adjustZoom(const trackedit::TrackId& trackId)
+{
+    trackeditInteraction()->adjustVerticalZoom(trackId);
+}
+
 void TrackRulerModel::resetZoom(const trackedit::TrackId& trackId)
 {
     trackeditInteraction()->resetVerticalZoom(trackId);
