@@ -493,7 +493,7 @@ TrackItemsContainer {
 
                 anchors.fill: parent
                 anchors.topMargin: root.trackViewState.isTrackCollapsed ? 1 : 21
-                anchors.bottomMargin: 3
+                anchors.bottomMargin: ui.theme.extra.space_3
 
                 channelHeightRatio: root.trackViewState.channelHeightRatio
                 color: "#FFFFFF"

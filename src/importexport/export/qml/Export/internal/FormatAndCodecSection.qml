@@ -86,7 +86,7 @@ Rectangle {
 
             Layout.fillWidth: true
             Layout.topMargin: ui.theme.extra.space_10
-            Layout.leftMargin: 5
+            Layout.leftMargin: ui.theme.extra.space_5
             Layout.bottomMargin: ui.theme.extra.space_10
             Layout.rightMargin: ui.theme.extra.space_10
 

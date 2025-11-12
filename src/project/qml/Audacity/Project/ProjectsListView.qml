@@ -38,7 +38,7 @@ Item {
     property string searchText
 
     property color backgroundColor: ui.theme.backgroundSecondaryColor
-    property real sideMargin: 46
+    property real sideMargin: ui.theme.extra.space_46
 
     property alias view: view
 

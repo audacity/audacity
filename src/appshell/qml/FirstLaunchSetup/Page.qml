@@ -81,7 +81,7 @@ Item {
         id: header
 
         anchors.top: parent.top
-        anchors.topMargin: 39
+        anchors.topMargin: ui.theme.extra.space_39
         anchors.left: parent.left
         anchors.right: parent.right
 

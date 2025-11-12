@@ -47,7 +47,7 @@ StyledDialogView {
 
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.topMargin: 36
+            Layout.topMargin: ui.theme.extra.space_36
             Layout.leftMargin: ui.theme.extra.space_40
             Layout.rightMargin: ui.theme.extra.space_40
 

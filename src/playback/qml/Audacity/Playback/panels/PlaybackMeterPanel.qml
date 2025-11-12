@@ -135,7 +135,7 @@ Item {
                 anchors.topMargin: ui.theme.extra.space_2 + leftVolumePressure.overloadHeight - (handleWidth / 2)
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.leftMargin: 3
+                anchors.leftMargin: ui.theme.extra.space_3
 
                 handleWidth: 24
 

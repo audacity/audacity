@@ -192,9 +192,9 @@ ListItemBlank {
 
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.topMargin: 5
+            anchors.topMargin: ui.theme.extra.space_5
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 5
+            anchors.bottomMargin: ui.theme.extra.space_5
 
             width: 24
         }
