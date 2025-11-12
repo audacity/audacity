@@ -20,6 +20,9 @@ StyledDialogView {
 
     margins: 10
 
+    modal: true
+    alwaysOnTop: true
+
     property int dropdownWidth: 364
     property int smallDropdownWidth: 364 * 0.65
     property int labelColumnWidth: 80
@@ -44,9 +47,6 @@ StyledDialogView {
     }
 
     Component.onCompleted: {
-        // NOTE: position dialog so entire content is visible
-        y = -250
-
         exportPreferencesModel.init()
         ffmpegPrefModel.init()
         dynamicOptionsModel.init()
@@ -480,9 +480,10 @@ StyledDialogView {
                 buttonRole: ButtonBoxModel.CustomRole
                 buttonId: ButtonBoxModel.CustomButton + 1
                 isLeftSide: true
-                enabled: false
+                enabled: exportPreferencesModel.hasMetadata
 
                 onClicked: {
+                    exportPreferencesModel.openMetadataDialog()
                 }
             }
 

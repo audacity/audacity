@@ -33,6 +33,7 @@ public:
     int formatIndex(const std::string& format) const override;
     std::vector<std::string> formatExtensions(const std::string& format) const override;
     bool isCustomFFmpegExportFormat() const override;
+    bool hasMetadata() const override;
 
     int maxChannels() const override;
     std::vector<int> sampleRateList() const override;

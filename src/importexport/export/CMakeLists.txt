@@ -28,6 +28,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/dynamicexportoptionsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/customffmpegpreferencesmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/customffmpegpreferencesmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/metadatamodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/metadatamodel.h
 
     #types
     ${CMAKE_CURRENT_LIST_DIR}/types/exporttypes.h
