@@ -113,7 +113,7 @@ StyledDialogView {
             Layout.fillWidth: true
             Layout.leftMargin: ui.theme.extra.space_12
             Layout.rightMargin: ui.theme.extra.space_12
-            Layout.topMargin: ui.theme.extra.space_10 - 1 // 10 - 1 for the SeparatorLine
+            Layout.topMargin: ui.theme.extra.space_10 - ui.theme.extra.space_1 // 10 - 1 for the SeparatorLine
             Layout.bottomMargin: ui.theme.extra.space_10
             spacing: ui.theme.extra.space_8
 

@@ -564,7 +564,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.right: buttonsRow.left
-                anchors.leftMargin: root.leftVisibleMargin + 4
+                anchors.leftMargin: root.leftVisibleMargin + ui.theme.extra.space_4
                 anchors.rightMargin: ui.theme.extra.space_8
                 horizontalAlignment: Qt.AlignLeft
 

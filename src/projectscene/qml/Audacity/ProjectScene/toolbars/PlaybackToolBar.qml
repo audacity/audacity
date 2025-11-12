@@ -45,8 +45,8 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
 
         rowHeight: isMultiline ? 32 : 48
-        topPadding: isMultiline ? 8 : 0
-        bottomPadding: isMultiline ? 8 : 0
+        topPadding: isMultiline ? ui.theme.extra.space_8 : ui.theme.extra.space_0
+        bottomPadding: isMultiline ? ui.theme.extra.space_8 : ui.theme.extra.space_0
 
         separatorHeight: 28
         maximumWidth: root.maximumWidth - prv.customizeButtonSpaceWidth

@@ -75,7 +75,7 @@ StyledDialogView {
             ColumnLayout {
                 id: headerColumn
 
-                spacing: root.isPublishShare ? 16 : 0
+                spacing: root.isPublishShare ? ui.theme.extra.space_16 : ui.theme.extra.space_0
 
                 Item {
                     id: cloudImages

@@ -192,7 +192,7 @@ Item {
 
         Message {
             anchors.top: parent.top
-            anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
+            anchors.topMargin: Math.max(parent.height / 3 - height / 2, ui.theme.extra.space_0)
             anchors.left: parent.left
             anchors.leftMargin: root.sideMargin
             anchors.right: parent.right

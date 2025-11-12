@@ -546,7 +546,7 @@ Rectangle {
             id: tracksItemsViewArea
 
             anchors.fill: parent
-            anchors.rightMargin: tracksModel.isVerticalRulersVisible ? verticalRulerPanelHeader.width : 0
+            anchors.rightMargin: tracksModel.isVerticalRulersVisible ? verticalRulerPanelHeader.width : ui.theme.extra.space_0
 
             view: tracksItemsView
 

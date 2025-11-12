@@ -97,7 +97,7 @@ Item {
 
         anchors.fill: parent
         anchors.bottomMargin: sep.thickness
-        anchors.leftMargin: (canvas && canvas.anchors && canvas.anchors.leftMargin) ? -canvas.anchors.leftMargin : 0
+        anchors.leftMargin: (canvas && canvas.anchors && canvas.anchors.leftMargin) ? -canvas.anchors.leftMargin : ui.theme.extra.space_0
 
         color: "#FFFFFF"
         opacity: 0.10
@@ -110,7 +110,7 @@ Item {
 
         anchors.fill: parent
         anchors.bottomMargin: sep.thickness
-        anchors.leftMargin: (canvas && canvas.anchors && canvas.anchors.leftMargin) ? -canvas.anchors.leftMargin : 0
+        anchors.leftMargin: (canvas && canvas.anchors && canvas.anchors.leftMargin) ? -canvas.anchors.leftMargin : ui.theme.extra.space_0
 
         color: "#FFFFFF"
         opacity: 0.05
@@ -155,7 +155,7 @@ Item {
         id: trackFocusState
 
         anchors.fill: parent
-        anchors.leftMargin: -border.width - ((canvas && canvas.anchors && canvas.anchors.leftMargin) ? canvas.anchors.leftMargin : 0)
+        anchors.leftMargin: -border.width - ((canvas && canvas.anchors && canvas.anchors.leftMargin) ? canvas.anchors.leftMargin : ui.theme.extra.space_0)
         anchors.rightMargin: -border.width
         anchors.topMargin: -border.width
 

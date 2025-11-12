@@ -34,7 +34,7 @@ Item {
             Row {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: modelData < 0 ? 2 : 0
+                spacing: modelData < 0 ? ui.theme.extra.space_2 : ui.theme.extra.space_0
 
                 // Draw the full step tick
                 Rectangle {

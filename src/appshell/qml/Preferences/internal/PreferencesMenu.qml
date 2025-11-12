@@ -93,7 +93,7 @@ Item {
             orientation: Qt.Horizontal
 
             spacing: ui.theme.extra.space_16
-            leftPadding: spacing * (styleData.depth + 1)
+            leftPadding: spacing * (styleData.depth + ui.theme.extra.space_1)
 
             normalStateFont: ui.theme.bodyFont
             selectedStateFont: ui.theme.bodyBoldFont

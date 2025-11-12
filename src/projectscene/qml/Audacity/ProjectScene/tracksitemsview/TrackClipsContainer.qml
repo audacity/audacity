@@ -492,7 +492,7 @@ TrackItemsContainer {
                 id: channelSplitter
 
                 anchors.fill: parent
-                anchors.topMargin: root.trackViewState.isTrackCollapsed ? 1 : 21
+                anchors.topMargin: root.trackViewState.isTrackCollapsed ? ui.theme.extra.space_1 : ui.theme.extra.space_21
                 anchors.bottomMargin: ui.theme.extra.space_3
 
                 channelHeightRatio: root.trackViewState.channelHeightRatio

@@ -48,7 +48,7 @@ ListItemBlank {
         }
     }
 
-    focusBorder.anchors.bottomMargin: bottomBorder.visible ? bottomBorder.height : 0
+    focusBorder.anchors.bottomMargin: bottomBorder.visible ? bottomBorder.height : ui.theme.extra.space_0
 
     RowLayout {
         anchors.fill: parent

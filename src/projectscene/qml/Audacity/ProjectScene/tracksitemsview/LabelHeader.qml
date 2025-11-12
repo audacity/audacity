@@ -111,11 +111,11 @@ Rectangle {
         property real contentWidth: item ? (isEditState ? item.contentWidth : item.implicitWidth) : 0
 
         anchors.top: parent.top
-        anchors.topMargin: isEditState ? 0 : 2
+        anchors.topMargin: isEditState ? ui.theme.extra.space_0 : ui.theme.extra.space_2
         anchors.left: parent.left
-        anchors.leftMargin: root.isPoint ? 4 : root.earWidth
+        anchors.leftMargin: root.isPoint ? ui.theme.extra.space_4 : root.earWidth
         anchors.right: parent.right
-        anchors.rightMargin: root.isPoint ? 4 : root.earWidth
+        anchors.rightMargin: root.isPoint ? ui.theme.extra.space_4 : root.earWidth
         anchors.bottom: parent.bottom
         anchors.bottomMargin: ui.theme.extra.space_2
 

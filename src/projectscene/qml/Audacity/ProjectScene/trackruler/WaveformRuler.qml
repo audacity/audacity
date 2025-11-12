@@ -103,7 +103,7 @@ Item {
                 anchors.right: parent.right
 
                 anchors.rightMargin: ui.theme.extra.space_3
-                anchors.bottomMargin: modelData.alignment == 1 ? 1 : undefined
+                anchors.bottomMargin: modelData.alignment == 1 ? ui.theme.extra.space_1 : undefined
                 anchors.verticalCenter: modelData.alignment == 0 ? parent.verticalCenter : undefined
 
                 height: aLabelMetrics.ascent
