@@ -30,7 +30,7 @@ StyledPopupView {
 
             title: qsTrc("playback", "Position")
 
-            titleSpacing: 4
+            titleSpacing: ui.theme.extra.space_4
 
             backgroundColor: ui.theme.backgroundSecondaryColor
 
@@ -64,7 +64,7 @@ StyledPopupView {
 
                 title: qsTrc("Playback", "Meter style")
 
-                titleSpacing: 4
+                titleSpacing: ui.theme.extra.space_4
 
                 backgroundColor: ui.theme.backgroundSecondaryColor
 
@@ -96,7 +96,7 @@ StyledPopupView {
 
                 title: qsTrc("Playback", "Meter type")
 
-                titleSpacing: 4
+                titleSpacing: ui.theme.extra.space_4
 
                 backgroundColor: ui.theme.backgroundSecondaryColor
 

@@ -31,7 +31,7 @@ Rectangle {
         readonly property int addEffectButtonHeight: 24
         readonly property int addEffectButtonMargin: 12
         readonly property int headerHeight: 40
-        readonly property int itemSpacing: 12
+        readonly property int itemSpacing: ui.theme.extra.space_12
     }
 
     ColumnLayout {

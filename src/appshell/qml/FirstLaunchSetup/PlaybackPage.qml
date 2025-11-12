@@ -31,7 +31,7 @@ Page {
     title: qsTrc("appshell/gettingstarted", "Playback")
     //explanation: qsTrc("appshell/gettingstarted", "Enjoy realistic playback for free by downloading our new Muse Sounds library")
 
-    titleContentSpacing: 12
+    titleContentSpacing: ui.theme.extra.space_12
 
     extraButtonTitle: qsTrc("appshell/gettingstarted", "Watch video")
 

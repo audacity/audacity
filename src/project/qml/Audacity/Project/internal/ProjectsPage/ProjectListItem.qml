@@ -36,7 +36,7 @@ ListItemBlank {
     property alias thumbnailComponent: thumbnailLoader.sourceComponent
 
     property real itemInset: 12
-    property real columnSpacing: 44
+    property real columnSpacing: ui.theme.extra.space_44
     property alias showBottomBorder: bottomBorder.visible
 
     implicitHeight: 64

@@ -20,9 +20,9 @@ BuiltinEffectBase {
     QtObject {
         id: prv
 
-        readonly property int narrowRowSpacing: 16
-        readonly property int rowSpacing: 24
-        readonly property int columnSpacing: 32
+        readonly property int narrowRowSpacing: ui.theme.extra.space_16
+        readonly property int rowSpacing: ui.theme.extra.space_24
+        readonly property int columnSpacing: ui.theme.extra.space_32
     }
 
     ReverbViewModel {

@@ -37,7 +37,7 @@ BaseSection {
     signal currentStartupModesChanged(int index)
     signal startupScorePathChanged(string path)
 
-    rowSpacing: 16
+    rowSpacing: ui.theme.extra.space_16
 
     RadioButtonGroup {
         id: startupModesBox

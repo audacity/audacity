@@ -43,7 +43,7 @@ Item {
         id: prv
 
         readonly property int meterWidth: 11
-        readonly property int meterSpacing: 4
+        readonly property int meterSpacing: ui.theme.extra.space_4
 
         function dbToY(db) {
             return db / root.dbMin * root.timelineHeight

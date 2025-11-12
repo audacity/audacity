@@ -27,7 +27,7 @@ RowLayout {
     property bool showMenu: true
     property int backgroundLeftRadius: 3
     property Border border: Border {}
-    property int arrowSpacing: 1
+    property int arrowSpacing: ui.theme.extra.space_1
     property color textColor: ui.theme.fontSecondaryColor
     property color backgroundColor: ui.theme.backgroundQuarternaryColor
 

@@ -34,8 +34,8 @@ Column {
 
     property alias title: titleLabel.text
     property int columnWidth: 208
-    property int columnSpacing: 12
-    property int rowSpacing: 12
+    property int columnSpacing: ui.theme.extra.space_12
+    property int rowSpacing: ui.theme.extra.space_12
 
     property int navigationOrderStart: 0
     property int navigationOrderEnd: 0

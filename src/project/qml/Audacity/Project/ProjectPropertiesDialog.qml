@@ -38,7 +38,7 @@ StyledDialogView {
     margins: ui.theme.extra.space_16
 
     readonly property int propertyNameWidth: 160
-    readonly property int propertyRowHorizontalSpacing: 8
+    readonly property int propertyRowHorizontalSpacing: ui.theme.extra.space_8
     readonly property int propertyRowRightMargin: propertiesListView.propertyRowRightMargin
 
     property NavigationPanel navigationPanel: NavigationPanel {

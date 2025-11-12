@@ -32,7 +32,7 @@ ColumnLayout {
     required property ProjectPropertiesModel propertiesModel
 
     property int propertyNameWidth: 160
-    property int propertyRowHorizontalSpacing: 8
+    property int propertyRowHorizontalSpacing: ui.theme.extra.space_8
     property int propertyRowRightMargin: 0
 
     property NavigationPanel navigationPanel: null

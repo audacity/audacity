@@ -32,8 +32,8 @@ StyledPopupView {
         readonly property int popupHeight: 260
 
         readonly property int popupMargins: 12
-        readonly property int itemsSpacing: 12
-        readonly property int btnSpacing: 6
+        readonly property int itemsSpacing: ui.theme.extra.space_12
+        readonly property int btnSpacing: ui.theme.extra.space_6
 
         readonly property int btnHeight: 28
         readonly property int zoomBtnWidth: 40
@@ -102,7 +102,7 @@ StyledPopupView {
 
             title: qsTrc("trackruler", "Ruler format")
 
-            titleSpacing: 4
+            titleSpacing: ui.theme.extra.space_4
 
             backgroundColor: ui.theme.backgroundSecondaryColor
 

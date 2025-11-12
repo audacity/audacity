@@ -193,7 +193,7 @@ Item {
 
                     readonly property real itemInset: 12
                     readonly property real rowHeight: 64
-                    readonly property real columnSpacing: 44
+                    readonly property real columnSpacing: ui.theme.extra.space_44
 
                     ScrollBar.vertical: StyledScrollBar {
                         parent: root

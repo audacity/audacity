@@ -22,7 +22,7 @@ Canvas {
 
     property bool showOverload: true
     readonly property int overloadWidth: 6
-    readonly property int overloadSpacing: 2
+    readonly property int overloadSpacing: ui.theme.extra.space_2
     readonly property int overloadTotalSpace: root.overloadWidth + root.overloadSpacing
 
     width: parent.width

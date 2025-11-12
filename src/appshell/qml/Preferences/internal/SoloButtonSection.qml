@@ -17,7 +17,7 @@ BaseSection {
 
     property var playbackPreferencesModel: null
 
-    columnSpacing: 16
+    columnSpacing: ui.theme.extra.space_16
 
     RadioButtonGroup {
         id: soloBtnGroup

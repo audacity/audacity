@@ -82,7 +82,7 @@ FlatButton {
         readonly property int contentHeight: 174 - 2 * margins
 
         readonly property int margins: ui.theme.extra.space_12
-        readonly property int checkboxSpacing: 20
+        readonly property int checkboxSpacing: ui.theme.extra.space_20
 
         readonly property int meterHeight: 50
         readonly property int textHeight: 16

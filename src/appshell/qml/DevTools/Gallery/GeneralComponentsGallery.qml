@@ -839,8 +839,8 @@ Rectangle {
         id: roundedRectangleSample
 
         GridLayout {
-            columnSpacing: 12
-            rowSpacing: 12
+            columnSpacing: ui.theme.extra.space_12
+            rowSpacing: ui.theme.extra.space_12
             columns: 2
 
             width: 400

@@ -37,7 +37,7 @@ Rectangle {
     // If true, the contentHeight of the Flickable is determined by the available height for the page.
     property bool contentFillsAvailableHeight: false
 
-    readonly property int sectionsSpacing: 24
+    readonly property int sectionsSpacing: ui.theme.extra.space_24
     readonly property int sideMargin: 30
 
     property NavigationSection navigationSection: null
