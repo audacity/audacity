@@ -61,14 +61,14 @@ DynamicsEffectBase {
             Row {
                 id: row
 
-                padding: 16
-                spacing: 24
+                padding: ui.theme.extra.space_16
+                spacing: ui.theme.extra.space_24
 
                 Grid {
                     id: leftGrid
 
                     columns: 2
-                    spacing: 24
+                    spacing: ui.theme.extra.space_24
 
                     Repeater {
                         model: ["attackMs", "releaseMs", "lookaheadMs"]
@@ -94,7 +94,7 @@ DynamicsEffectBase {
 
                 Grid {
                     columns: 2
-                    spacing: 24
+                    spacing: ui.theme.extra.space_24
 
                     Repeater {
                         model: ["thresholdDb", "compressionRatio", "kneeWidthDb", "makeupGainDb"]

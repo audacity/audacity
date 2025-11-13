@@ -29,7 +29,7 @@ RadioButtonGroup {
     id: radioButtonList
 
     orientation: ListView.Vertical
-    spacing: 0
+    spacing: ui.theme.extra.space_0
 
     signal selected(string name)
 
@@ -40,7 +40,7 @@ RadioButtonGroup {
 
         width: parent.width
 
-        leftPadding: 30
+        leftPadding: ui.theme.extra.space_30
 
         ButtonGroup.group: radioButtonList.radioButtonGroup
         orientation: Qt.Horizontal

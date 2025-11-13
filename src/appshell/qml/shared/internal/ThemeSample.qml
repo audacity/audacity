@@ -37,8 +37,8 @@ Rectangle {
 
     RoundedRectangle {
         anchors.fill: parent
-        anchors.topMargin: 8
-        anchors.leftMargin: 12
+        anchors.topMargin: ui.theme.extra.space_8
+        anchors.leftMargin: ui.theme.extra.space_12
 
         color: root.theme.backgroundSecondaryColor
 
@@ -49,12 +49,12 @@ Rectangle {
 
         Column {
             anchors.fill: parent
-            anchors.topMargin: 4
-            anchors.bottomMargin: 20
-            anchors.leftMargin: 4
-            anchors.rightMargin: 4
+            anchors.topMargin: ui.theme.extra.space_4
+            anchors.bottomMargin: ui.theme.extra.space_20
+            anchors.leftMargin: ui.theme.extra.space_4
+            anchors.rightMargin: ui.theme.extra.space_4
 
-            spacing: 4
+            spacing: ui.theme.extra.space_4
 
             Rectangle {
                 height: 32
@@ -68,9 +68,9 @@ Rectangle {
 
                 Column {
                     anchors.fill: parent
-                    anchors.margins: 7
+                    anchors.margins: ui.theme.extra.space_7
 
-                    spacing: 4
+                    spacing: ui.theme.extra.space_4
 
                     Rectangle {
                         width: parent.width
@@ -102,7 +102,7 @@ Rectangle {
                 width: parent.width
                 height: 12
 
-                spacing: 4
+                spacing: ui.theme.extra.space_4
 
                 Rectangle {
                     height: parent.height

@@ -33,14 +33,14 @@ StyledListView {
     required property ProjectPropertiesModel propertiesModel
 
     property int propertyNameWidth: 160
-    property int propertyRowHorizontalSpacing: 8
+    property int propertyRowHorizontalSpacing: ui.theme.extra.space_8
 
     readonly property int propertyRowRightMargin: propertyRowHorizontalSpacing + visualScrollBarInset
 
     property NavigationPanel navigationPanel: null
     property int navigationColumnStart: 0
 
-    spacing: 4
+    spacing: ui.theme.extra.space_4
 
     model: propertiesModel
 
@@ -71,19 +71,19 @@ StyledListView {
 
         navigationPanel: root.navigationPanel
 
-        onPropertyNameChanged: function() {
+        onPropertyNameChanged: function () {
             model.propertyName = propertyName
         }
 
-        onPropertyValueChanged: function() {
+        onPropertyValueChanged: function () {
             model.propertyValue = propertyValue
         }
 
-        onScrollIntoViewRequested: function() {
+        onScrollIntoViewRequested: function () {
             root.positionViewAtIndex(model.index, ListView.Contain)
         }
 
-        onDeletePropertyRequested: function() {
+        onDeletePropertyRequested: function () {
             root.propertiesModel.deleteProperty(model.index)
         }
     }

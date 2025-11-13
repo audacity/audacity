@@ -62,13 +62,13 @@ ListView {
     orientation: Qt.Horizontal
     interactive: false
 
-    spacing: 24
+    spacing: ui.theme.extra.space_24
 
     delegate: Column {
         width: sampleWidth
         height: sampleHeight
 
-        spacing: 10
+        spacing: ui.theme.extra.space_10
 
         ThemeSample {
             theme: modelData

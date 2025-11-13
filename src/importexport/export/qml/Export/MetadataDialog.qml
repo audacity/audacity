@@ -41,7 +41,7 @@ StyledDialogView {
     ColumnLayout {
         id: mainColumn
 
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         MetadataControlPanel {
             id: topButtonsBar
@@ -49,10 +49,10 @@ StyledDialogView {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
-            Layout.leftMargin: 16
-            Layout.rightMargin: 12
-            Layout.topMargin: 10
-            Layout.bottomMargin: 10
+            Layout.leftMargin: ui.theme.extra.space_16
+            Layout.rightMargin: ui.theme.extra.space_12
+            Layout.topMargin: ui.theme.extra.space_10
+            Layout.bottomMargin: ui.theme.extra.space_10
 
             metadataModel: metadataModel
             tagView: metadataView
@@ -86,11 +86,11 @@ StyledDialogView {
 
             model: metadataModel
 
-            onKeyEdited: function(row, newKey) {
+            onKeyEdited: function (row, newKey) {
                 metadataModel.renameTag(row, newKey)
             }
 
-            onValueEdited: function(row, newVal) {
+            onValueEdited: function (row, newVal) {
                 metadataModel.setTagValue(row, newVal)
             }
         }
@@ -100,7 +100,7 @@ StyledDialogView {
 
             Layout.fillWidth: true
 
-            padding: 8
+            padding: ui.theme.extra.space_8
 
             navigationPanel.section: root.navigation.section
             navigationPanel.order: metadataView.navigationOrderStart + 2

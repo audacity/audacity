@@ -13,9 +13,9 @@ Item {
 
     property string title: ""
 
-    property int titleSpacing: 12
-    property int itemSpacing: 8
-    property int itemMargin: 12
+    property int titleSpacing: ui.theme.extra.space_12
+    property int itemSpacing: ui.theme.extra.space_8
+    property int itemMargin: ui.theme.extra.space_12
 
     property int borderWidth: 1
     property int boarderRadius: 2
@@ -41,7 +41,7 @@ Item {
             text: root.title
             horizontalAlignment: Text.AlignLeft
         }
-        
+
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true

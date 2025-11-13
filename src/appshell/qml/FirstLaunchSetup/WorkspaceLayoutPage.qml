@@ -33,11 +33,11 @@ DoublePage {
     // Left side content
     leftContent: Column {
         anchors.fill: parent
-        spacing: 16
+        spacing: ui.theme.extra.space_16
 
         // Radio button options
         Column {
-            spacing: 8
+            spacing: ui.theme.extra.space_8
             width: parent.width
 
             Repeater {
@@ -54,13 +54,13 @@ DoublePage {
                     width: parent.width
 
                     Row {
-                        anchors.bottomMargin: 12
+                        anchors.bottomMargin: ui.theme.extra.space_12
                         anchors.left: parent.left
-                        anchors.leftMargin: 12
-                        anchors.rightMargin: 16
-                        anchors.topMargin: 12
+                        anchors.leftMargin: ui.theme.extra.space_12
+                        anchors.rightMargin: ui.theme.extra.space_16
+                        anchors.topMargin: ui.theme.extra.space_12
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 12
+                        spacing: ui.theme.extra.space_12
 
                         RoundedRadioButton {
                             anchors.verticalCenter: parent.verticalCenter
@@ -79,7 +79,7 @@ DoublePage {
                         }
                         Column {
                             anchors.verticalCenter: parent.verticalCenter
-                            spacing: 4
+                            spacing: ui.theme.extra.space_4
 
                             StyledTextLabel {
                                 font: ui.theme.bodyBoldFont

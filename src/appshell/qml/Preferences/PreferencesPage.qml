@@ -37,13 +37,13 @@ Rectangle {
     // If true, the contentHeight of the Flickable is determined by the available height for the page.
     property bool contentFillsAvailableHeight: false
 
-    readonly property int sectionsSpacing: 24
-    readonly property int sideMargin: 30
+    readonly property int sectionsSpacing: ui.theme.extra.space_24
+    readonly property int sideMargin: ui.theme.extra.space_30
 
     property NavigationSection navigationSection: null
     property int navigationOrderStart: 0
 
-    signal hideRequested()
+    signal hideRequested
 
     function apply() {
         return true
@@ -77,7 +77,9 @@ Rectangle {
         rightMargin: root.sideMargin
         bottomMargin: root.sideMargin
 
-        ScrollBar.vertical: StyledScrollBar { id: scrollBar }
+        ScrollBar.vertical: StyledScrollBar {
+            id: scrollBar
+        }
 
         Item {
             id: content

@@ -17,12 +17,12 @@ Rectangle {
     Column {
         anchors.top: parent.top
         anchors.left: parent.left
-        anchors.margins: 12
+        anchors.margins: ui.theme.extra.space_12
 
-        spacing: 12
+        spacing: ui.theme.extra.space_12
 
         Rectangle {
-            readonly property real padding: 12
+            readonly property real padding: ui.theme.extra.space_12
 
             width: hintLabel.implicitWidth + 2 * padding
             height: hintLabel.implicitHeight + 2 * padding
@@ -36,7 +36,7 @@ Rectangle {
                 id: hintLabel
                 anchors.fill: parent
                 anchors.margins: parent.padding
-                spacing: 4
+                spacing: ui.theme.extra.space_4
 
                 StyledIconLabel {
                     iconCode: IconCode.WARNING

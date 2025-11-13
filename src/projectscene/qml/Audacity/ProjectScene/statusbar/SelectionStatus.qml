@@ -6,7 +6,7 @@ import Audacity.ProjectScene
 import Audacity.Playback
 
 Row {
-    spacing: 6
+    spacing: ui.theme.extra.space_6
 
     SelectionStatusModel {
         id: selectionModel
@@ -38,15 +38,15 @@ Row {
 
         enabled: selectionModel.isEnabled
 
-        onStartValueChangeRequested: function(newValue) {
+        onStartValueChangeRequested: function (newValue) {
             selectionModel.startTime = newValue
         }
 
-        onEndValueChangeRequested: function(newValue) {
+        onEndValueChangeRequested: function (newValue) {
             selectionModel.endTime = newValue
         }
 
-        onFormatChangeRequested: function(newFormat) {
+        onFormatChangeRequested: function (newFormat) {
             selectionModel.currentFormat = newFormat
         }
     }

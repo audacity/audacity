@@ -14,18 +14,18 @@ FlatButton {
 
     anchors.verticalCenter: parent.verticalCenter
     height: 16
-    margins: 2
+    margins: ui.theme.extra.space_2
 
     transparent: true
     orientation: Qt.Horizontal
 
     contentItem: RowLayout {
         width: Math.min(implicitWidth, root.width)
-        spacing: 2
+        spacing: ui.theme.extra.space_2
 
         StyledIconLabel {
             Layout.alignment: Qt.AlignVCenter
-            Layout.leftMargin: 2
+            Layout.leftMargin: ui.theme.extra.space_2
             Layout.preferredWidth: 8
             Layout.preferredHeight: 8
             iconCode: root.icon
@@ -35,7 +35,7 @@ FlatButton {
 
         StyledTextLabel {
             Layout.fillWidth: true
-            Layout.rightMargin: 2
+            Layout.rightMargin: ui.theme.extra.space_2
             Layout.alignment: Qt.AlignVCenter
             text: root.text
             color: root.textColor

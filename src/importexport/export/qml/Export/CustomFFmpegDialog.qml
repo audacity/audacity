@@ -30,7 +30,7 @@ StyledDialogView {
     ColumnLayout {
         id: mainColumn
 
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         // PRESETS BAR PLACEHOLDER
         // Rectangle {
@@ -48,7 +48,7 @@ StyledDialogView {
             width: root.contentWidth
             height: 575
 
-            spacing: 0
+            spacing: ui.theme.extra.space_0
 
             FormatAndCodecSection {
                 ffmpegPrefModel: ffmpegPrefModel
@@ -69,10 +69,10 @@ StyledDialogView {
 
                     anchors {
                         fill: parent
-                        leftMargin: 20
-                        rightMargin: 20
-                        topMargin: 30
-                        bottomMargin: 30
+                        leftMargin: ui.theme.extra.space_20
+                        rightMargin: ui.theme.extra.space_20
+                        topMargin: ui.theme.extra.space_30
+                        bottomMargin: ui.theme.extra.space_30
                     }
 
                     GeneralOptionsSection {
@@ -121,7 +121,7 @@ StyledDialogView {
 
             Layout.fillWidth: true
 
-            padding: 8
+            padding: ui.theme.extra.space_8
 
             FlatButton {
                 id: cancelBtn

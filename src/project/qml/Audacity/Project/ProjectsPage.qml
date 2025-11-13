@@ -35,7 +35,7 @@ FocusScope {
     QtObject {
         id: prv
 
-        readonly property int sideMargin: 46
+        readonly property int sideMargin: ui.theme.extra.space_46
     }
 
     NavigationSection {
@@ -77,7 +77,7 @@ FocusScope {
         anchors.right: parent.right
         anchors.rightMargin: prv.sideMargin
 
-        spacing: 12
+        spacing: ui.theme.extra.space_12
 
         NavigationPanel {
             id: navSearchPanel
@@ -119,7 +119,7 @@ FocusScope {
         anchors.right: parent.right
         anchors.rightMargin: prv.sideMargin
 
-        spacing: 12
+        spacing: ui.theme.extra.space_12
 
         StyledTabBar {
             id: tabBar
@@ -143,7 +143,7 @@ FocusScope {
                 accessible.name: qsTrc("project", "Projects tab bar")
                 enabled: tabBar.enabled && tabBar.visible
 
-                onNavigationEvent: function(event) {
+                onNavigationEvent: function (event) {
                     if (event.type === NavigationEvent.AboutActive) {
                         event.setData("controlName", tabBar.currentItem.navigation.name)
                     }
@@ -200,8 +200,16 @@ FocusScope {
             implicitHeight: ui.theme.defaultButtonSize
 
             model: [
-                { "icon": IconCode.GRID, "title": qsTrc("project", "Grid view"), "value": ProjectsPageModel.Grid },
-                { "icon": IconCode.LIST, "title": qsTrc("project", "List view"), "value": ProjectsPageModel.List }
+                {
+                    "icon": IconCode.GRID,
+                    "title": qsTrc("project", "Grid view"),
+                    "value": ProjectsPageModel.Grid
+                },
+                {
+                    "icon": IconCode.LIST,
+                    "title": qsTrc("project", "List view"),
+                    "value": ProjectsPageModel.List
+                }
             ]
 
             delegate: FlatRadioButton {
@@ -230,7 +238,7 @@ FocusScope {
         id: contentLoader
 
         anchors.top: controlsRow.bottom
-        anchors.topMargin: 24
+        anchors.topMargin: ui.theme.extra.space_24
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: buttonsPanel.top
@@ -263,7 +271,7 @@ FocusScope {
                 projectsPageModel.createNewProject()
             }
 
-            onOpenProjectRequested: function(projectPath, displayName) {
+            onOpenProjectRequested: function (projectPath, displayName) {
                 Qt.callLater(projectsPageModel.openProject, projectPath, displayName)
             }
         }
@@ -348,11 +356,11 @@ FocusScope {
         }
 
         Row {
-            anchors.right : parent.right
+            anchors.right: parent.right
             anchors.rightMargin: prv.sideMargin
             anchors.verticalCenter: parent.verticalCenter
 
-            spacing: 22
+            spacing: ui.theme.extra.space_22
 
             FlatButton {
                 navigation.name: "NewProject"

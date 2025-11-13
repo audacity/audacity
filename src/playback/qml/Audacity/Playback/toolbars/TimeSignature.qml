@@ -22,7 +22,7 @@ RowLayout {
 
     height: 28
 
-    spacing: 1
+    spacing: ui.theme.extra.space_1
 
     RoundedRectangle {
         Layout.preferredWidth: childrenRect.width
@@ -34,7 +34,7 @@ RowLayout {
         color: ui.theme.backgroundQuarternaryColor
 
         Item {
-            property int margin: 10
+            property int margin: ui.theme.extra.space_10
 
             width: row.width + margin * 2
             height: row.height
@@ -48,7 +48,7 @@ RowLayout {
 
                 height: root.height
 
-                spacing: 6
+                spacing: ui.theme.extra.space_6
 
                 StyledTextLabel {
                     id: upperLabel
@@ -94,7 +94,7 @@ RowLayout {
             }
         }
 
-        onClicked: function(mouse) {
+        onClicked: function (mouse) {
             togglePopupOpened()
         }
 
@@ -104,11 +104,11 @@ RowLayout {
             upper: root.upper
             lower: root.lower
 
-            onUpperChangeRequested: function(newValue){
+            onUpperChangeRequested: function (newValue) {
                 root.upperChangeRequested(newValue)
             }
 
-            onLowerChangeRequested: function(newValue){
+            onLowerChangeRequested: function (newValue) {
                 root.lowerChangeRequested(newValue)
             }
         }

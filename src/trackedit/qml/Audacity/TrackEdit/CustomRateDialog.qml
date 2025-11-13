@@ -25,7 +25,7 @@ StyledDialogView {
     contentWidth: 280
     contentHeight: 80
 
-    margins: 16
+    margins: ui.theme.extra.space_16
 
     Row {
         id: rateRow
@@ -36,8 +36,8 @@ StyledDialogView {
             top: parent.top
         }
 
-        spacing: 16
-        
+        spacing: ui.theme.extra.space_16
+
         StyledTextLabel {
             id: label
 
@@ -48,7 +48,7 @@ StyledDialogView {
 
         Item {
             id: dropdown
-            width: parent.width *.5
+            width: parent.width * .5
             height: 30
 
             TextInputField {
@@ -58,20 +58,21 @@ StyledDialogView {
 
                 currentText: root.rate > 0 ? root.rate.toString() : ""
 
-                validator: IntValidator { bottom: 1 }
+                validator: IntValidator {
+                    bottom: 1
+                }
 
-                onTextChanged: function(newValue) {
+                onTextChanged: function (newValue) {
                     var val = parseInt(newValue)
                     root.rate = (val > 0) ? val : 1
                 }
-
             }
 
             StyledIconLabel {
                 id: dropIconItem
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
-                anchors.rightMargin: 8
+                anchors.rightMargin: ui.theme.extra.space_8
 
                 iconCode: IconCode.SMALL_ARROW_DOWN
 
@@ -82,8 +83,11 @@ StyledDialogView {
                     anchors.fill: parent
 
                     onClicked: {
-                        menuLoader.toggleOpened(availableRates.map(function(rate) {
-                            return {"title": rate.toString(), "id": rate.toString()}
+                        menuLoader.toggleOpened(availableRates.map(function (rate) {
+                            return {
+                                "title": rate.toString(),
+                                "id": rate.toString()
+                            }
                         }))
                     }
 
@@ -109,7 +113,7 @@ StyledDialogView {
                 id: menuLoader
                 width: parent.width
 
-                onHandleMenuItem: function(itemId) {
+                onHandleMenuItem: function (itemId) {
                     if (itemId === null) {
                         return
                     }
@@ -118,7 +122,6 @@ StyledDialogView {
                 }
             }
         }
-
     }
 
     ButtonBox {
@@ -126,9 +129,9 @@ StyledDialogView {
         width: parent.width
         anchors.bottom: parent.bottom
 
-        buttons: [ ButtonBoxModel.Cancel, ButtonBoxModel.Ok]
+        buttons: [ButtonBoxModel.Cancel, ButtonBoxModel.Ok]
 
-        onStandardButtonClicked: function(buttonId) {
+        onStandardButtonClicked: function (buttonId) {
             switch (buttonId) {
             case ButtonBoxModel.Cancel:
                 root.reject()
@@ -140,7 +143,6 @@ StyledDialogView {
                 }
                 root.hide()
                 return
-
             }
         }
     }

@@ -6,8 +6,8 @@ import Muse.UiComponents
 StyledPopupView {
     id: root
 
-    padding: 8
-    margins: 8
+    padding: ui.theme.extra.space_8
+    margins: ui.theme.extra.space_8
     contentWidth: contentRect.width
     contentHeight: contentRect.height
 
@@ -35,8 +35,8 @@ StyledPopupView {
 
             anchors.horizontalCenter: parent.horizontalCenter
             text: {
-                let value = root.volume.toFixed(root.decimalPlaces);
-                return `${value}${root.unitText}`;
+                let value = root.volume.toFixed(root.decimalPlaces)
+                return `${value}${root.unitText}`
             }
         }
     }

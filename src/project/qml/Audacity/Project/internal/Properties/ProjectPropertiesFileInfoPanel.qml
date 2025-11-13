@@ -32,13 +32,13 @@ ColumnLayout {
     required property ProjectPropertiesModel propertiesModel
 
     property int propertyNameWidth: 160
-    property int propertyRowHorizontalSpacing: 8
-    property int propertyRowRightMargin: 0
+    property int propertyRowHorizontalSpacing: ui.theme.extra.space_8
+    property int propertyRowRightMargin: ui.theme.extra.space_0
 
     property NavigationPanel navigationPanel: null
     property int navigationColumnEnd: apiLevelProperty.navigationColumnEnd
 
-    spacing: 8
+    spacing: ui.theme.extra.space_8
 
     RowLayout {
         spacing: root.propertyRowHorizontalSpacing
@@ -91,8 +91,8 @@ ColumnLayout {
             propertyValue: root.propertiesModel.revision
             isFileInfoPanelProperty: true
 
-            Layout.leftMargin: 32
-            Layout.rightMargin: 32
+            Layout.leftMargin: ui.theme.extra.space_32
+            Layout.rightMargin: ui.theme.extra.space_32
 
             navigationPanel: root.navigationPanel
         }

@@ -10,7 +10,7 @@ BaseSection {
     id: root
 
     title: qsTrc("appshell/preferences", "Effect menu organization")
-    spacing: 16
+    spacing: ui.theme.extra.space_16
 
     property var pluginPreferencesModel: null
 

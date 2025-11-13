@@ -73,9 +73,9 @@ StyledDialogView {
             anchors.bottom: parent.bottom
             anchors.left: image.right
             anchors.right: parent.right
-            anchors.margins: 24
+            anchors.margins: ui.theme.extra.space_24
 
-            spacing: 0
+            spacing: ui.theme.extra.space_0
 
             AccessibleItem {
                 id: accessibleInfo
@@ -83,11 +83,7 @@ StyledDialogView {
                 accessibleParent: buttonsNavPanel.accessible
                 visualItem: content
                 role: MUAccessible.Button
-                name: "%1; %2; %3; %4; %5".arg(titleLabel.text)
-                                          .arg(subtitleLabel.text)
-                                          .arg(publishTitleLabel.text)
-                                          .arg(repeater.contentText())
-                                          .arg(watchVideoButton.text)
+                name: "%1; %2; %3; %4; %5".arg(titleLabel.text).arg(subtitleLabel.text).arg(publishTitleLabel.text).arg(repeater.contentText()).arg(watchVideoButton.text)
 
                 function readInfo() {
                     accessibleInfo.ignored = false
@@ -115,7 +111,7 @@ StyledDialogView {
                 id: subtitleLabel
 
                 Layout.fillWidth: true
-                Layout.topMargin: 6
+                Layout.topMargin: ui.theme.extra.space_6
 
                 text: qsTrc("project", "All saved changes will now update to the cloud")
                 horizontalAlignment: Text.AlignLeft
@@ -125,7 +121,7 @@ StyledDialogView {
             Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.topMargin: 24
+                Layout.topMargin: ui.theme.extra.space_24
 
                 implicitHeight: bodyItem.implicitHeight
 
@@ -150,9 +146,9 @@ StyledDialogView {
                         id: bodyColumn
 
                         anchors.fill: parent
-                        anchors.margins: 28
+                        anchors.margins: ui.theme.extra.space_28
 
-                        spacing: 24
+                        spacing: ui.theme.extra.space_24
 
                         StyledTextLabel {
                             id: publishTitleLabel
@@ -168,7 +164,7 @@ StyledDialogView {
                         Column {
                             Layout.fillWidth: true
 
-                            spacing: 12
+                            spacing: ui.theme.extra.space_12
 
                             Repeater {
                                 id: repeater
@@ -183,15 +179,11 @@ StyledDialogView {
                                     return result
                                 }
 
-                                model: [
-                                    qsTrc("project", "Create a portfolio to showcase your music"),
-                                    qsTrc("project", "Gain followers and receive project comments and ratings"),
-                                    qsTrc("project", "Share your projects and collaborate with other musicians")
-                                ]
+                                model: [qsTrc("project", "Create a portfolio to showcase your music"), qsTrc("project", "Gain followers and receive project comments and ratings"), qsTrc("project", "Share your projects and collaborate with other musicians")]
 
                                 RowLayout {
                                     width: parent.width
-                                    spacing: 10
+                                    spacing: ui.theme.extra.space_10
 
                                     property string title: modelData
 
@@ -245,7 +237,7 @@ StyledDialogView {
             Row {
                 Layout.alignment: Qt.AlignRight
 
-                spacing: 10
+                spacing: ui.theme.extra.space_10
 
                 FlatButton {
                     text: qsTrc("project", "View project online")
@@ -254,7 +246,7 @@ StyledDialogView {
                     navigation.column: 2
 
                     onClicked: {
-                        Qt.callLater(function() {
+                        Qt.callLater(function () {
                             api.launcher.openUrl(root.projectManagerUrl)
                         })
 

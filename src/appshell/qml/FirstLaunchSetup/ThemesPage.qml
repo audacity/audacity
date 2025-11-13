@@ -67,7 +67,7 @@ Page {
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
 
-        spacing: 24
+        spacing: ui.theme.extra.space_24
 
         ThemeSamplesList {
             id: themeSamplesList
@@ -76,7 +76,7 @@ Page {
 
             themes: model.highContrastEnabled ? model.highContrastThemes : model.generalThemes
             currentThemeCode: model.currentThemeCode
-            spacing: 24
+            spacing: ui.theme.extra.space_24
 
             navigationPanel.section: root.navigationSection
             navigationPanel.order: root.navigationStartRow + 1
@@ -94,7 +94,7 @@ Page {
             Layout.alignment: Qt.AlignCenter
 
             height: childrenRect.height
-            spacing: 16
+            spacing: ui.theme.extra.space_16
 
             CheckBox {
                 Layout.alignment: Qt.AlignCenter
@@ -138,7 +138,7 @@ Page {
 
             height: childrenRect.height
 
-            spacing: 6
+            spacing: ui.theme.extra.space_6
             StyledTextLabel {
                 id: accentColorTitleLabel
                 Layout.alignment: Qt.AlignCenter
@@ -158,7 +158,7 @@ Page {
                 currentColorIndex: model.currentAccentColorIndex
 
                 sampleSize: 22
-                spacing: 6
+                spacing: ui.theme.extra.space_6
 
                 navigationPanel.section: root.navigationSection
                 navigationPanel.order: root.navigationStartRow + 3
@@ -175,7 +175,7 @@ Page {
             id: highContrastPreferencesHintLabel
             visible: model.highContrastEnabled
             Layout.fillWidth: true
-            Layout.topMargin: 15
+            Layout.topMargin: ui.theme.extra.space_15
             Layout.preferredHeight: Math.max(implicitHeight, accentColorsList.implicitHeight)
             text: model.highContrastPreferencesHint
         }

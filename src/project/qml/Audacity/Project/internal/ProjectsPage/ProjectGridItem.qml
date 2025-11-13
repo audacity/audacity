@@ -76,7 +76,7 @@ FocusScope {
     Column {
         anchors.fill: parent
 
-        spacing: 16
+        spacing: ui.theme.extra.space_16
 
         Item {
             height: 126
@@ -123,7 +123,7 @@ FocusScope {
                     NavigationFocusBorder {
                         navigationCtrl: navCtrl
 
-                        padding: 2
+                        padding: ui.theme.extra.space_2
                     }
 
                     border.color: ui.theme.strokeColor
@@ -175,16 +175,16 @@ FocusScope {
                 active: root.isCloud
 
                 anchors.left: parent.left
-                anchors.leftMargin: 8
+                anchors.leftMargin: ui.theme.extra.space_8
                 anchors.right: parent.right
-                anchors.rightMargin: 8
+                anchors.rightMargin: ui.theme.extra.space_8
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 8
+                anchors.bottomMargin: ui.theme.extra.space_8
 
                 sourceComponent: RowLayout {
                     visible: root.isCloud
 
-                    spacing: 8
+                    spacing: ui.theme.extra.space_8
 
                     // CloudProjectStatusWatcher {
                     //     id: cloudProjectStatusWatcher
@@ -235,7 +235,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            spacing: 4
+            spacing: ui.theme.extra.space_4
 
             StyledTextLabel {
                 anchors.horizontalCenter: parent.horizontalCenter

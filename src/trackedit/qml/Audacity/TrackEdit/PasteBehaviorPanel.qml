@@ -21,7 +21,7 @@ Column {
     signal newPasteBehaviorRequested(int pasteBehavior)
     signal newPasteInsertBehaviorRequested(int pasteInsertBehavior)
 
-    spacing: 16
+    spacing: ui.theme.extra.space_16
     width: imageRow.width
 
     Component.onCompleted: {
@@ -36,7 +36,7 @@ Column {
     Row {
         id: imageRow
 
-        spacing: 24
+        spacing: ui.theme.extra.space_24
 
         Repeater {
             property var pasteBehaviors: pasteBehaviorModel.pasteBehaviors
@@ -75,8 +75,8 @@ Column {
 
             width: parent.width
 
-            padding: 16
-            spacing: 8
+            padding: ui.theme.extra.space_16
+            spacing: ui.theme.extra.space_8
 
             StyledTextLabel {
                 text: qsTrc("trackedit/preferences", "When making room for pasted audio, do the following")
@@ -87,7 +87,7 @@ Column {
             }
 
             RadioButtonGroup {
-                spacing: 8
+                spacing: ui.theme.extra.space_8
                 orientation: ListView.Vertical
 
                 property var pasteInsertBehaviors: pasteBehaviorModel.pasteInsertBehaviors
@@ -96,7 +96,7 @@ Column {
                 delegate: RoundedRadioButton {
                     checked: root.pasteInsertBehavior === modelData.value
                     text: modelData.text
-                    spacing: 8
+                    spacing: ui.theme.extra.space_8
 
                     navigation.name: modelData.text
                     navigation.panel: root.navigation

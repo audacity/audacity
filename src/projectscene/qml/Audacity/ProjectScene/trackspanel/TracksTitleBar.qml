@@ -15,10 +15,10 @@ Item {
 
     property int buttonWidth: 97
     property int buttonHeight: 28
-    property int buttonRightMargin: 8
-    property int textLeftMargin: 12
+    property int buttonRightMargin: ui.theme.extra.space_8
+    property int textLeftMargin: ui.theme.extra.space_12
 
-    signal effectsSectionCloseRequested()
+    signal effectsSectionCloseRequested
     signal addRequested(type: int)
 
     Component.onCompleted: {
@@ -33,7 +33,7 @@ Item {
 
         anchors.fill: parent
 
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         Rectangle {
             id: effectsTitleBar
@@ -85,7 +85,7 @@ Item {
             }
         }
 
-        SeparatorLine { }
+        SeparatorLine {}
 
         Rectangle {
             id: buttonContainer
@@ -147,12 +147,11 @@ Item {
                 AddNewTrackPopup {
                     id: addNewTrack
 
-                    onCreateTrack: (type) => {
+                    onCreateTrack: type => {
                         root.addRequested(type)
                     }
                 }
             }
-
         }
     }
 }

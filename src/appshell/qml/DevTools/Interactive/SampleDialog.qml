@@ -6,7 +6,6 @@ import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 
 StyledDialogView {
-
     id: root
 
     property color color: "#444444"
@@ -24,7 +23,7 @@ StyledDialogView {
         Column {
             anchors.centerIn: parent
 
-            spacing: 50
+            spacing: ui.theme.extra.space_50
 
             TextInputField {
                 id: input
@@ -46,9 +45,9 @@ StyledDialogView {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
 
-            anchors.rightMargin: 16
-            anchors.bottomMargin: 20
-            spacing: 20
+            anchors.rightMargin: ui.theme.extra.space_16
+            anchors.bottomMargin: ui.theme.extra.space_20
+            spacing: ui.theme.extra.space_20
 
             FlatButton {
                 text: "Cancel"
@@ -60,7 +59,10 @@ StyledDialogView {
             FlatButton {
                 text: "OK"
                 onClicked: {
-                    root.ret = {errcode: 0, value: input.value }
+                    root.ret = {
+                        errcode: 0,
+                        value: input.value
+                    }
                     root.hide()
                 }
             }
@@ -69,16 +71,40 @@ StyledDialogView {
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.RightButton
-            onClicked: function(mouse) {
+            onClicked: function (mouse) {
                 var items = [
-                            {id: "undo", title: "Undo", shortcut: "Ctrl+Z", icon: IconCode.UNDO},
-                            {id: "redo", title: "Redo", shortcut: "Shift+Ctrl+Z", enabled: false, icon: IconCode.REDO},
-                            {},
-                            {id: "zoomin", title: "Zoom in", icon: IconCode.ZOOM_IN},
-                            {id: "zoomout", title: "Zoom out", icon: IconCode.ZOOM_OUT},
-                            {},
-                            {id: "checkable", title: "Checkable", checkable: true, checked: false}
-                        ]
+                    {
+                        id: "undo",
+                        title: "Undo",
+                        shortcut: "Ctrl+Z",
+                        icon: IconCode.UNDO
+                    },
+                    {
+                        id: "redo",
+                        title: "Redo",
+                        shortcut: "Shift+Ctrl+Z",
+                        enabled: false,
+                        icon: IconCode.REDO
+                    },
+                    {},
+                    {
+                        id: "zoomin",
+                        title: "Zoom in",
+                        icon: IconCode.ZOOM_IN
+                    },
+                    {
+                        id: "zoomout",
+                        title: "Zoom out",
+                        icon: IconCode.ZOOM_OUT
+                    },
+                    {},
+                    {
+                        id: "checkable",
+                        title: "Checkable",
+                        checkable: true,
+                        checked: false
+                    }
+                ]
 
                 menuLoader.toggleOpened(items, mouse.x, mouse.y)
             }
@@ -87,7 +113,7 @@ StyledDialogView {
         StyledMenuLoader {
             id: menuLoader
 
-            onHandleMenuItem: function(itemId) {
+            onHandleMenuItem: function (itemId) {
                 console.log("selected " + itemId)
             }
         }

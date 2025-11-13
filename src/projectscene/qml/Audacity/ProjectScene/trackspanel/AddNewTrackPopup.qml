@@ -15,7 +15,7 @@ StyledPopupView {
 
     property alias popupAnchorItem: root.anchorItem
 
-    signal createTrack(type : int)
+    signal createTrack(type: int)
 
     AddNewTrackPopupModel {
         id: addModel
@@ -36,20 +36,35 @@ StyledPopupView {
     RowLayout {
         id: trackTypeOpts
 
-        spacing: 10
+        spacing: ui.theme.extra.space_10
 
         Repeater {
             model: [
-                { type: TrackType.MONO, icon: IconCode.MICROPHONE, text: qsTrc("projectscene", "Mono"), enabled: true },
-                { type: TrackType.STEREO, icon: IconCode.MICROPHONE, text: qsTrc("projectscene", "Stereo"), enabled: true },
-                { type: TrackType.LABEL, icon: IconCode.LOOP_IN, text: qsTrc("projectscene", "Label"), enabled: addModel.isAddLabelAvailable() }
+                {
+                    type: TrackType.MONO,
+                    icon: IconCode.MICROPHONE,
+                    text: qsTrc("projectscene", "Mono"),
+                    enabled: true
+                },
+                {
+                    type: TrackType.STEREO,
+                    icon: IconCode.MICROPHONE,
+                    text: qsTrc("projectscene", "Stereo"),
+                    enabled: true
+                },
+                {
+                    type: TrackType.LABEL,
+                    icon: IconCode.LOOP_IN,
+                    text: qsTrc("projectscene", "Label"),
+                    enabled: addModel.isAddLabelAvailable()
+                }
             ]
 
             FlatButton {
                 Layout.preferredWidth: 80
                 Layout.preferredHeight: 72
                 Layout.fillHeight: true
-                Layout.margins: 2
+                Layout.margins: ui.theme.extra.space_2
 
                 navigation.name: "TrackType" + index
                 navigation.panel: navPanel

@@ -13,7 +13,7 @@ import Audacity.ProjectScene
 Rectangle {
     id: root
     implicitHeight: trackEffectList.contentHeight
-    readonly property int topMargin: 8
+    readonly property int topMargin: ui.theme.extra.space_8
     property alias isMasterTrack: trackEffectListModel.isMasterTrack
     property alias trackName: trackEffectListModel.trackName
     property alias trackEffectsActive: trackEffectListModel.trackEffectsActive
@@ -40,7 +40,7 @@ Rectangle {
     StyledListView {
         id: trackEffectList
         anchors.fill: parent
-        spacing: 6
+        spacing: ui.theme.extra.space_6
         cacheBuffer: 3000
         interactive: trackEffectList.contentHeight > trackEffectList.height
         model: trackEffectListModel
@@ -51,7 +51,7 @@ Rectangle {
         header: listMargin
 
         clip: true
-        anchors.margins: 0
+        anchors.margins: ui.theme.extra.space_0
 
         delegate: RealtimeEffectListItem {
             item: itemData

@@ -33,8 +33,8 @@ StyledDialogView {
 
         width: parent.width
 
-        padding: 16
-        spacing: 7
+        padding: ui.theme.extra.space_16
+        spacing: ui.theme.extra.space_7
 
         StyledTextLabel {
             id: titleLabel
@@ -88,7 +88,7 @@ StyledDialogView {
         anchors.top: separatorLine.bottom
         anchors.right: parent.right
 
-        padding: 12
+        padding: ui.theme.extra.space_12
 
         FlatButton {
             height: 28

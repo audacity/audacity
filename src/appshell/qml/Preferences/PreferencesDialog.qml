@@ -91,7 +91,7 @@ StyledDialogView {
                 continue
             }
 
-            obj.hideRequested.connect(function() {
+            obj.hideRequested.connect(function () {
                 root.hide()
             })
 
@@ -102,7 +102,7 @@ StyledDialogView {
     PreferencesModel {
         id: preferencesModel
 
-        onCurrentPageIdChanged: function(currentPageId) {
+        onCurrentPageIdChanged: function (currentPageId) {
             prv.updateStackCurrentIndex()
         }
     }
@@ -110,13 +110,13 @@ StyledDialogView {
     ColumnLayout {
         anchors.fill: parent
 
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            spacing: 0
+            spacing: ui.theme.extra.space_0
 
             PreferencesMenu {
                 id: menu
@@ -130,14 +130,16 @@ StyledDialogView {
                 model: preferencesModel
             }
 
-            SeparatorLine { orientation: Qt.Vertical }
+            SeparatorLine {
+                orientation: Qt.Vertical
+            }
 
             StackLayout {
                 id: stack
             }
         }
 
-        SeparatorLine { }
+        SeparatorLine {}
 
         PreferencesButtonsPanel {
             id: buttonsPanel

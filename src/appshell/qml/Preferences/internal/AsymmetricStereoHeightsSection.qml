@@ -19,7 +19,7 @@ BaseSection {
     property var editPreferencesModel: null
     navigationOrderEnd: workspaceSection.navigation.order
 
-    rowSpacing: 16
+    rowSpacing: ui.theme.extra.space_16
 
     Rectangle {
         id: svgImg

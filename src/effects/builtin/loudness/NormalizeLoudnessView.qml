@@ -21,11 +21,11 @@ BuiltinEffectBase {
     Column {
         id: column
 
-        spacing: 16
-        bottomPadding: 16
+        spacing: ui.theme.extra.space_16
+        bottomPadding: ui.theme.extra.space_16
 
         Row {
-            spacing: 6
+            spacing: ui.theme.extra.space_6
 
             StyledTextLabel {
                 anchors.verticalCenter: parent.verticalCenter
@@ -71,7 +71,7 @@ BuiltinEffectBase {
         }
 
         Row {
-            spacing: 8
+            spacing: ui.theme.extra.space_8
 
             CheckBox {
                 checked: root.model.normalizeStereoChannelsIndependently
@@ -87,7 +87,7 @@ BuiltinEffectBase {
         }
 
         Row {
-            spacing: 8
+            spacing: ui.theme.extra.space_8
 
             CheckBox {
                 enabled: !root.model.useRmsAlgorithm

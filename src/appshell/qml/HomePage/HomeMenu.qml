@@ -56,12 +56,12 @@ Item {
     ColumnLayout {
         anchors.fill: parent
 
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         AccountInfoButton {
             Layout.fillWidth: true
             Layout.preferredHeight: 60
-            Layout.topMargin: 20
+            Layout.topMargin: ui.theme.extra.space_20
 
             enabled: false
 
@@ -84,11 +84,21 @@ Item {
             Layout.fillWidth: true
 
             orientation: ListView.Vertical
-            spacing: 0
+            spacing: ui.theme.extra.space_0
 
             model: [
-                { "name": "projects", "title": qsTrc("appshell", "Project"), "icon": IconCode.WAVEFORM, "enabled": true},
-                { "name": "learn", "title": qsTrc("appshell", "Learn"), "icon":  IconCode.LEARN, "enabled": false}
+                {
+                    "name": "projects",
+                    "title": qsTrc("appshell", "Project"),
+                    "icon": IconCode.WAVEFORM,
+                    "enabled": true
+                },
+                {
+                    "name": "learn",
+                    "title": qsTrc("appshell", "Learn"),
+                    "icon": IconCode.LEARN,
+                    "enabled": false
+                }
             ]
 
             currentIndex: 0
@@ -104,7 +114,7 @@ Item {
                 navigation.panel: navPanel
                 navigation.row: 2 + model.index
 
-                spacing: 30
+                spacing: ui.theme.extra.space_30
                 leftPadding: spacing
 
                 ButtonGroup.group: radioButtonList.radioButtonGroup

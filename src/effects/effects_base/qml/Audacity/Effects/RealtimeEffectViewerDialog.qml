@@ -30,7 +30,7 @@ EffectStyledDialogView {
     QtObject {
         id: prv
         property int minimumWidth: viewerModel.effectFamily === EffectFamily.LV2 ? 500 : 270
-        property int padding: viewerModel.effectFamily == EffectFamily.Builtin ? 16 : 4
+        property int padding: viewerModel.effectFamily == EffectFamily.Builtin ? ui.theme.extra.space_16 : ui.theme.extra.space_4
         property alias viewItem: viewLoader.item
     }
 
@@ -94,7 +94,7 @@ EffectStyledDialogView {
     Component {
         id: builtinViewerComponent
         Column {
-            topPadding: 0
+            topPadding: ui.theme.extra.space_0
             leftPadding: prv.padding
             rightPadding: prv.padding
             bottomPadding: prv.padding
@@ -108,14 +108,13 @@ EffectStyledDialogView {
     }
 
     ColumnLayout {
-        spacing: 0
+        spacing: ui.theme.extra.space_0
         anchors.fill: parent
 
         WindowContainer {
             Layout.fillWidth: true
 
             window: Window {
-
                 id: win
 
                 color: ui.theme.backgroundPrimaryColor

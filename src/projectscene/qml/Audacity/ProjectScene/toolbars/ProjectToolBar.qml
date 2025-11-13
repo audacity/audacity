@@ -15,13 +15,13 @@ StyledToolBarView {
     navigationPanel.name: "ProjectToolBar"
     navigationPanel.accessible.name: qsTrc("projectscene", "Project toolbar")
 
-    spacing: 2
+    spacing: ui.theme.extra.space_2
     rowHeight: 28
 
     model: ProjectToolBarModel {
         id: toolBarModel
 
-        readonly property int bottomMargin: 10
+        readonly property int bottomMargin: ui.theme.extra.space_10
 
         onOpenAudioSetupContextMenu: {
             audioSetupContextMenuLoader.show(Qt.point(root.width / 3, root.rowHeight + bottomMargin), audioSetupContextMenuModel.items)
@@ -35,7 +35,7 @@ StyledToolBarView {
     ContextMenuLoader {
         id: audioSetupContextMenuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             audioSetupContextMenuModel.handleMenuItem(itemId)
         }
     }

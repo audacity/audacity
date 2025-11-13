@@ -22,7 +22,7 @@ Item {
                 leftVolumePressure.reset()
                 leftVolumePressure.resetClipped()
                 rightVolumePressure.reset()
-                rightVolumePressure.resetClipped();
+                rightVolumePressure.resetClipped()
             }
         }
     }
@@ -33,8 +33,8 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.bottomMargin: 2
-        spacing: 0
+        anchors.bottomMargin: ui.theme.extra.space_2
+        spacing: ui.theme.extra.space_0
 
         FlatButton {
             id: meterOptionsBtn
@@ -42,8 +42,8 @@ Item {
             Layout.preferredWidth: 28
             Layout.preferredHeight: 28
             Layout.alignment: Qt.AlignHCenter
-            Layout.topMargin: 12
-            Layout.bottomMargin: 12
+            Layout.topMargin: ui.theme.extra.space_12
+            Layout.bottomMargin: ui.theme.extra.space_12
 
             icon: IconCode.AUDIO
             accentButton: popup.isOpened
@@ -71,13 +71,13 @@ Item {
             Row {
                 id: meterChannelRow
 
-                spacing: 2
+                spacing: ui.theme.extra.space_2
 
                 anchors.fill: parent
-                anchors.leftMargin: 4
-                anchors.rightMargin: 4
-                anchors.topMargin: 2
-                anchors.bottomMargin: 6
+                anchors.leftMargin: ui.theme.extra.space_4
+                anchors.rightMargin: ui.theme.extra.space_4
+                anchors.topMargin: ui.theme.extra.space_2
+                anchors.bottomMargin: ui.theme.extra.space_6
 
                 VolumePressureMeter {
                     id: leftVolumePressure
@@ -97,7 +97,6 @@ Item {
 
                 VolumePressureMeter {
                     id: rightVolumePressure
-
 
                     anchors.top: parent.top
                     height: parent.height - ruler.bottomTextMargin
@@ -133,14 +132,14 @@ Item {
                 volumeLevel: model.level
 
                 anchors.top: parent.top
-                anchors.topMargin: 2  + leftVolumePressure.overloadHeight - (handleWidth / 2)
+                anchors.topMargin: ui.theme.extra.space_2 + leftVolumePressure.overloadHeight - (handleWidth / 2)
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.leftMargin: 3
+                anchors.leftMargin: ui.theme.extra.space_3
 
                 handleWidth: 24
 
-                onVolumeLevelMoved: function(level) {
+                onVolumeLevelMoved: function (level) {
                     leftVolumePressure.reset()
                     leftVolumePressure.resetClipped()
                     rightVolumePressure.reset()
@@ -149,7 +148,7 @@ Item {
                     model.volumeLevelChangeRequested(level)
                 }
 
-                onHandlePressed: function() {
+                onHandlePressed: function () {
                     leftVolumePressure.reset()
                     leftVolumePressure.resetClipped()
                     rightVolumePressure.reset()
@@ -171,7 +170,7 @@ Item {
                 // This will avoid to reset the volume levels when clicking on the overload area
                 enabled: (volumeSlider.handleY >= leftVolumePressure.overloadHeight)
 
-                onClicked: function(mouse) {
+                onClicked: function (mouse) {
                     leftVolumePressure.reset()
                     leftVolumePressure.resetClipped()
                     rightVolumePressure.reset()

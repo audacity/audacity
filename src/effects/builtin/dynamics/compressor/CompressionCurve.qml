@@ -32,7 +32,7 @@ Item {
 
         property int labelWidth: fontMetrics.boundingRect("-000").width
         property int labelHeight: fontMetrics.boundingRect("0").height
-        readonly property int labelMargin: 4
+        readonly property int labelMargin: ui.theme.extra.space_4
         readonly property int extraLabelSpace: 8
     }
 

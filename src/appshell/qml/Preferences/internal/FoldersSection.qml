@@ -40,7 +40,7 @@ BaseSection {
         width: parent.width
         height: contentHeight
 
-        spacing: 4
+        spacing: ui.theme.extra.space_4
         interactive: false
 
         delegate: RowLayout {
@@ -69,7 +69,7 @@ BaseSection {
                 navigationRowOrderStart: model.index
                 pathFieldTitle: titleLabel.text
 
-                onPathEdited: function(newPath) {
+                onPathEdited: function (newPath) {
                     model.path = newPath
                 }
             }

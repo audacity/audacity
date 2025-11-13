@@ -22,9 +22,9 @@ BuiltinEffectBase {
     Column {
         id: column
 
-        topPadding: 2
-        bottomPadding: 2
-        spacing: 10
+        topPadding: ui.theme.extra.space_2
+        bottomPadding: ui.theme.extra.space_2
+        spacing: ui.theme.extra.space_10
 
         CheckBox {
             id: removeDcCheckbox

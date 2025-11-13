@@ -38,16 +38,16 @@ Item {
     property string searchText
 
     property color backgroundColor: ui.theme.backgroundSecondaryColor
-    property real sideMargin: 46
+    property real sideMargin: ui.theme.extra.space_46
 
     property alias view: view
 
     property alias navigation: navPanel
 
-    signal createNewProjectRequested()
+    signal createNewProjectRequested
     signal openProjectRequested(var projectPath, var displayName)
 
-    component ColumnItem : QtObject {
+    component ColumnItem: QtObject {
         property string header
 
         property var width: function (parentWidth) {
@@ -84,7 +84,7 @@ Item {
         anchors.leftMargin: sideMargin
         anchors.rightMargin: sideMargin
 
-        spacing: 12
+        spacing: ui.theme.extra.space_12
 
         ProjectListItem {
             id: newProjectItem
@@ -134,7 +134,7 @@ Item {
                 id: listViewColumn
 
                 anchors.fill: parent
-                spacing: 0
+                spacing: ui.theme.extra.space_0
 
                 // Column headers
                 RowLayout {
@@ -159,7 +159,9 @@ Item {
                         //
                         // - Qt.font(Object.assign(ui.theme.bodyBoldFont, { capitalization: Font.AllUppercase }))
                         //   (complains that ui.theme.bodyBoldFont is const and cannot be modified)
-                        font: Qt.font(Object.assign({}, ui.theme.bodyBoldFont, { capitalization: Font.AllUppercase }))
+                        font: Qt.font(Object.assign({}, ui.theme.bodyBoldFont, {
+                            capitalization: Font.AllUppercase
+                        }))
                         horizontalAlignment: Text.AlignLeft
                     }
 
@@ -171,7 +173,9 @@ Item {
 
                             text: modelData.header
 
-                            font: Qt.font(Object.assign({}, ui.theme.bodyBoldFont, { capitalization: Font.AllUppercase }))
+                            font: Qt.font(Object.assign({}, ui.theme.bodyBoldFont, {
+                                capitalization: Font.AllUppercase
+                            }))
                             horizontalAlignment: Text.AlignLeft
                         }
                     }
@@ -189,7 +193,7 @@ Item {
 
                     readonly property real itemInset: 12
                     readonly property real rowHeight: 64
-                    readonly property real columnSpacing: 44
+                    readonly property real columnSpacing: ui.theme.extra.space_44
 
                     ScrollBar.vertical: StyledScrollBar {
                         parent: root
@@ -259,7 +263,7 @@ Item {
 
             Message {
                 anchors.top: parent.top
-                anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
+                anchors.topMargin: Math.max(parent.height / 3 - height / 2, ui.theme.extra.space_0)
                 anchors.left: parent.left
                 anchors.leftMargin: root.sideMargin
                 anchors.right: parent.right

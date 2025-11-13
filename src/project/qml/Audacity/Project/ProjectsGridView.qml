@@ -35,13 +35,13 @@ Item {
     property string searchText
 
     property color backgroundColor: ui.theme.backgroundSecondaryColor
-    property real sideMargin: 46
+    property real sideMargin: ui.theme.extra.space_46
 
     property alias view: view
 
     property alias navigation: navPanel
 
-    signal createNewProjectRequested()
+    signal createNewProjectRequested
     signal openProjectRequested(var projectPath, var displayName)
 
     clip: true
@@ -192,7 +192,7 @@ Item {
 
         Message {
             anchors.top: parent.top
-            anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
+            anchors.topMargin: Math.max(parent.height / 3 - height / 2, ui.theme.extra.space_0)
             anchors.left: parent.left
             anchors.leftMargin: root.sideMargin
             anchors.right: parent.right

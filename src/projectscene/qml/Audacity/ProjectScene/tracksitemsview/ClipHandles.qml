@@ -39,7 +39,7 @@ Item {
     signal stretchRightRequested(bool completed, int action)
 
     //! NOTE: auto-scroll for trimming is triggered from trackclipslistmodel
-    signal stopAutoScroll()
+    signal stopAutoScroll
 
     Item {
         id: leftTrimHandle
@@ -359,7 +359,7 @@ Item {
             radius: (leftClockIcon.font.pixelSize - 2) / 2
             anchors.verticalCenter: leftTimecode.verticalCenter
             anchors.left: leftTimecode.left
-            anchors.leftMargin: 4
+            anchors.leftMargin: ui.theme.extra.space_4
 
             color: "black"
 
@@ -520,7 +520,7 @@ Item {
             radius: (rightClockIcon.font.pixelSize - 2) / 2
             anchors.verticalCenter: rightTimecode.verticalCenter
             anchors.right: rightTimecode.right
-            anchors.rightMargin: 4
+            anchors.rightMargin: ui.theme.extra.space_4
 
             color: "black"
 
@@ -691,7 +691,7 @@ Item {
             }
             PropertyChanges {
                 target: leftClock
-                anchors.leftMargin: 2
+                anchors.leftMargin: ui.theme.extra.space_2
             }
         },
         State {
@@ -703,7 +703,7 @@ Item {
             }
             PropertyChanges {
                 target: rightClock
-                anchors.rightMargin: 2
+                anchors.rightMargin: ui.theme.extra.space_2
             }
         }
     ]

@@ -15,7 +15,7 @@ ListItemBlank {
     property var listView: null
     property int index: -1
     property int scrollOffset: 0
-    property int topMargin: 0
+    property int topMargin: ui.theme.extra.space_0
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "effect item panel - " + prv.title
@@ -64,7 +64,7 @@ ListItemBlank {
 
         Drag.active: gripButton.mouseArea.drag.active
 
-        spacing: 4
+        spacing: ui.theme.extra.space_4
 
         states: State {
             when: gripButton.mouseArea.drag.active
@@ -152,7 +152,7 @@ ListItemBlank {
         BypassEffectButton {
             id: bypassButton
 
-            Layout.margins: 0
+            Layout.margins: ui.theme.extra.space_0
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredWidth: root.height
             Layout.minimumHeight: root.height
@@ -189,8 +189,8 @@ ListItemBlank {
             StyledTextLabel {
                 id: trackNameLabel
                 anchors.fill: parent
-                anchors.leftMargin: 6
-                anchors.rightMargin: 6
+                anchors.leftMargin: ui.theme.extra.space_6
+                anchors.rightMargin: ui.theme.extra.space_6
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 text: root.item ? root.item.effectName() : ""

@@ -20,15 +20,15 @@ Rectangle {
     RowLayout {
 
         Layout.preferredWidth: formatsColumn.width
-        spacing: 10
+        spacing: ui.theme.extra.space_10
 
         ColumnLayout {
 
             Layout.fillWidth: true
 
-            Layout.topMargin: 10
-            Layout.leftMargin: 10
-            Layout.bottomMargin: 10
+            Layout.topMargin: ui.theme.extra.space_10
+            Layout.leftMargin: ui.theme.extra.space_10
+            Layout.bottomMargin: ui.theme.extra.space_10
 
             StyledTextLabel {
                 text: qsTrc("export", "Formats")
@@ -54,7 +54,7 @@ Rectangle {
 
                 StyledListView {
                     anchors.fill: parent
-                    anchors.margins: 1
+                    anchors.margins: ui.theme.extra.space_1
 
                     currentIndex: ffmpegPrefModel.ffmpegFormatIndex
                     scrollBarPolicy: ScrollBar.AlwaysOn
@@ -72,7 +72,7 @@ Rectangle {
 
                         StyledTextLabel {
                             anchors.fill: parent
-                            anchors.margins: 8
+                            anchors.margins: ui.theme.extra.space_8
                             horizontalAlignment: Text.AlignLeft
 
                             text: modelData
@@ -85,10 +85,10 @@ Rectangle {
         ColumnLayout {
 
             Layout.fillWidth: true
-            Layout.topMargin: 10
-            Layout.leftMargin: 5
-            Layout.bottomMargin: 10
-            Layout.rightMargin: 10
+            Layout.topMargin: ui.theme.extra.space_10
+            Layout.leftMargin: ui.theme.extra.space_5
+            Layout.bottomMargin: ui.theme.extra.space_10
+            Layout.rightMargin: ui.theme.extra.space_10
 
             StyledTextLabel {
                 text: qsTrc("export", "Codecs")
@@ -114,7 +114,7 @@ Rectangle {
 
                 StyledListView {
                     anchors.fill: parent
-                    anchors.margins: 1
+                    anchors.margins: ui.theme.extra.space_1
 
                     currentIndex: ffmpegPrefModel.ffmpegCodecIndex
                     scrollBarPolicy: ScrollBar.AlwaysOn
@@ -132,7 +132,7 @@ Rectangle {
 
                         StyledTextLabel {
                             anchors.fill: parent
-                            anchors.margins: 8
+                            anchors.margins: ui.theme.extra.space_8
                             horizontalAlignment: Text.AlignLeft
 
                             text: modelData

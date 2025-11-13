@@ -58,7 +58,7 @@ Item {
         id: searchField
 
         anchors.top: title.bottom
-        anchors.topMargin: 16
+        anchors.topMargin: ui.theme.extra.space_16
 
         navigation.name: "Search"
         navigation.panel: view.navigation
@@ -71,11 +71,11 @@ Item {
         id: view
 
         anchors.top: searchEnabled ? searchField.bottom : title.bottom
-        anchors.topMargin: 16
+        anchors.topMargin: ui.theme.extra.space_16
         anchors.bottom: parent.bottom
 
         width: parent.width
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         currentIndex: 0
 
@@ -96,7 +96,7 @@ Item {
                 id: titleLabel
 
                 anchors.fill: parent
-                anchors.leftMargin: 12
+                anchors.leftMargin: ui.theme.extra.space_12
 
                 horizontalAlignment: Text.AlignLeft
                 text: modelData

@@ -1,4 +1,3 @@
-
 import QtQuick 2.15
 
 import Muse.Ui 1.0
@@ -13,7 +12,7 @@ BaseSection {
 
     Column {
         width: parent.width
-        spacing: 24
+        spacing: ui.theme.extra.space_24
 
         CheckBox {
             id: checkbox

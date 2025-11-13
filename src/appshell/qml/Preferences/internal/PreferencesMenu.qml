@@ -62,7 +62,7 @@ Item {
         id: treeView
 
         anchors.fill: parent
-        anchors.topMargin: 12
+        anchors.topMargin: ui.theme.extra.space_12
 
         alternatingRowColors: false
         headerVisible: false
@@ -92,8 +92,8 @@ Item {
 
             orientation: Qt.Horizontal
 
-            spacing: 16
-            leftPadding: spacing * (styleData.depth + 1)
+            spacing: ui.theme.extra.space_16
+            leftPadding: spacing * (styleData.depth + ui.theme.extra.space_1)
 
             normalStateFont: ui.theme.bodyFont
             selectedStateFont: ui.theme.bodyBoldFont

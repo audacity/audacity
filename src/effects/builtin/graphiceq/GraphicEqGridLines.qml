@@ -15,7 +15,7 @@ Item {
 
     QtObject {
         id: prv
-        readonly property int labelLineSpacing: 8
+        readonly property int labelLineSpacing: ui.theme.extra.space_8
         property int labelWidth: fontMetrics.boundingRect("-000").width
     }
 

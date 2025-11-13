@@ -10,8 +10,8 @@ import Muse.UiComponents 1.0
 StyledPopupView {
     id: root
 
-    padding: 8
-    margins: 8
+    padding: ui.theme.extra.space_8
+    margins: ui.theme.extra.space_8
     contentWidth: contentRect.width
     contentHeight: contentRect.height
     placementPolicies: PopupView.PreferAbove
@@ -37,9 +37,9 @@ StyledPopupView {
             anchors.right: parent.right
 
             text: {
-                let value = Math.round(root.value);
-                let direction = value < 0 ? 'L' : value > 0 ? 'R' : '';
-                return `${Math.abs(value)}${direction}`;
+                let value = Math.round(root.value)
+                let direction = value < 0 ? 'L' : value > 0 ? 'R' : ''
+                return `${Math.abs(value)}${direction}`
             }
         }
     }

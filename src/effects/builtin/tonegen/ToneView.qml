@@ -23,7 +23,6 @@ BuiltinEffectBase {
     QtObject {
         id: prv
 
-        readonly property int spacing: 16
         readonly property int interpolationLinear: 0
         readonly property int interpolationLogarithmic: 1
     }
@@ -37,7 +36,7 @@ BuiltinEffectBase {
 
         width: parent.width
 
-        spacing: prv.spacing
+        spacing: ui.theme.extra.space_16
 
         ComboBoxWithTitle {
 
@@ -98,7 +97,7 @@ BuiltinEffectBase {
 
         Column {
 
-            spacing: 8
+            spacing: ui.theme.extra.space_8
 
             StyledTextLabel {
                 text: qsTrc("effects/tone", "Duration")

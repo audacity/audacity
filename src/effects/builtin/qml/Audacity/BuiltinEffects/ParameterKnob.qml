@@ -31,7 +31,7 @@ Item {
     Column {
         id: content
 
-        spacing: 6
+        spacing: ui.theme.extra.space_6
 
         StyledTextLabel {
             text: parameter["title"]
@@ -40,7 +40,7 @@ Item {
         }
 
         Row {
-            spacing: 8
+            spacing: ui.theme.extra.space_8
 
             KnobControl {
                 id: knob

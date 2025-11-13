@@ -27,7 +27,7 @@ RowLayout {
     property bool showMenu: true
     property int backgroundLeftRadius: 3
     property Border border: Border {}
-    property int arrowSpacing: 1
+    property int arrowSpacing: ui.theme.extra.space_1
     property color textColor: ui.theme.fontSecondaryColor
     property color backgroundColor: ui.theme.backgroundQuarternaryColor
 
@@ -58,7 +58,7 @@ RowLayout {
         color: root.backgroundColor
 
         Item {
-            property int margin: 6
+            property int margin: ui.theme.extra.space_6
 
             width: row.width + margin * 2
             height: row.height
@@ -70,7 +70,7 @@ RowLayout {
                 anchors.leftMargin: parent.margin
                 anchors.verticalCenter: parent.verticalCenter
 
-                spacing: 0
+                spacing: ui.theme.extra.space_0
 
                 Repeater {
                     model: timecodeModel
@@ -106,7 +106,7 @@ RowLayout {
         iconColor: root.textColor
         visible: root.showMenu
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             timecodeModel.currentFormat = parseInt(itemId)
         }
     }

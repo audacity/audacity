@@ -29,14 +29,14 @@ Rectangle {
         id: prv
         property bool enabled: effectList.trackName !== ""
         readonly property int addEffectButtonHeight: 24
-        readonly property int addEffectButtonMargin: 12
+        readonly property int addEffectButtonMargin: ui.theme.extra.space_12
         readonly property int headerHeight: 40
-        readonly property int itemSpacing: 12
+        readonly property int itemSpacing: ui.theme.extra.space_12
     }
 
     ColumnLayout {
         id: trackEffects
-        spacing: 0
+        spacing: ui.theme.extra.space_0
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
@@ -63,7 +63,7 @@ Rectangle {
                 navigation.panel: trackEffectsPowerButton.navigationPanel
 
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-                Layout.margins: 8
+                Layout.margins: ui.theme.extra.space_8
                 Layout.preferredWidth: prv.headerHeight - Layout.margins * 2
                 Layout.preferredHeight: Layout.preferredWidth
 
@@ -105,7 +105,7 @@ Rectangle {
                 navigationPanelOrderOffset: 1
                 color: "transparent"
                 anchors.fill: parent
-                anchors.leftMargin: 4
+                anchors.leftMargin: ui.theme.extra.space_4
                 onTrackEffectsActiveChanged: {
                     trackEffectsPowerButton.accentButton = trackEffectsActive
                 }
@@ -171,8 +171,8 @@ Rectangle {
             wrapMode: Text.Wrap
             font: ui.theme.bodyFont
             color: ui.theme.fontPrimaryColor
-            leftPadding: 16
-            rightPadding: 16
+            leftPadding: ui.theme.extra.space_16
+            rightPadding: ui.theme.extra.space_16
             elide: Text.ElideNone
             verticalAlignment: Text.AlignTop
             horizontalAlignment: Text.AlignLeft

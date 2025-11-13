@@ -12,7 +12,7 @@ Page {
     title: qsTrc("appshell/gettingstarted", "Pre-alpha build")
     explanation: qsTrc("appshell/gettingstarted", "Many features are currently unavailable, but our team is actively developing and implementing them for future releases.")
 
-    titleContentSpacing: 12
+    titleContentSpacing: ui.theme.extra.space_12
 
     Image {
         id: image

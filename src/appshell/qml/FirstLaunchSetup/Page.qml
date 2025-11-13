@@ -35,7 +35,7 @@ Item {
     property int navigationStartRow: 2
     property string activeButtonTitle: ""
     default property alias content: contentItem.data
-    property real titleContentSpacing: 24
+    property real titleContentSpacing: ui.theme.extra.space_24
     property string extraButtonTitle: ""
 
     property NavigationPanel navigationPanel: NavigationPanel {
@@ -81,7 +81,7 @@ Item {
         id: header
 
         anchors.top: parent.top
-        anchors.topMargin: 39
+        anchors.topMargin: ui.theme.extra.space_39
         anchors.left: parent.left
         anchors.right: parent.right
 

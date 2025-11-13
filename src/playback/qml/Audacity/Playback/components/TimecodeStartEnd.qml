@@ -27,7 +27,7 @@ RowLayout {
     signal endValueChangeRequested(var newValue)
     signal formatChangeRequested(var newFormat)
 
-    spacing: 1
+    spacing: ui.theme.extra.space_1
 
     Timecode {
         id: startTimecode
@@ -42,7 +42,7 @@ RowLayout {
 
         showMenu: false
 
-        onValueChangeRequested: function(newValue) {
+        onValueChangeRequested: function (newValue) {
             root.startValueChangeRequested(newValue)
         }
     }
@@ -60,11 +60,11 @@ RowLayout {
 
         backgroundLeftRadius: 0
 
-        onValueChangeRequested: function(newValue) {
+        onValueChangeRequested: function (newValue) {
             root.endValueChangeRequested(newValue)
         }
 
-        onCurrentFormatChanged: function() {
+        onCurrentFormatChanged: function () {
             root.formatChangeRequested(currentFormat)
         }
     }

@@ -21,7 +21,7 @@ RowLayout {
 
     property var navigation: allowOptionToggle ? optionCheckBox.navigation : navCtrl // todo
 
-    spacing: 6
+    spacing: ui.theme.extra.space_6
 
     signal isOptionEnableChangeRequested(var enable)
     signal handleMenuItem(var itemId)
@@ -40,7 +40,7 @@ RowLayout {
         checked: root.isOptionEnabled
         visible: root.allowOptionToggle
 
-        onClicked: function() {
+        onClicked: function () {
             root.isOptionEnableChangeRequested(!optionCheckBox.checked)
         }
     }
@@ -80,7 +80,9 @@ RowLayout {
             id: backgroundItem
             anchors.fill: parent
 
-            NavigationFocusBorder { navigationCtrl: navCtrl }
+            NavigationFocusBorder {
+                navigationCtrl: navCtrl
+            }
 
             color: ui.theme.textFieldColor
             border.color: ui.theme.strokeColor
@@ -92,7 +94,7 @@ RowLayout {
             id: labelItem
 
             anchors.left: parent.left
-            anchors.leftMargin: 12
+            anchors.leftMargin: ui.theme.extra.space_12
             anchors.right: dropIconItem.left
             anchors.verticalCenter: parent.verticalCenter
 
@@ -132,7 +134,7 @@ RowLayout {
             id: dropIconItem
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
-            anchors.rightMargin: 8
+            anchors.rightMargin: ui.theme.extra.space_8
 
             iconCode: IconCode.SMALL_ARROW_DOWN
         }
@@ -141,20 +143,25 @@ RowLayout {
             State {
                 name: "HOVERED"
                 when: mouseAreaItem.containsMouse && !mouseAreaItem.pressed
-                PropertyChanges { target: backgroundItem; border.color: Utils.colorWithAlpha(ui.theme.accentColor, 0.6) }
+                PropertyChanges {
+                    target: backgroundItem
+                    border.color: Utils.colorWithAlpha(ui.theme.accentColor, 0.6)
+                }
             },
-
             State {
                 name: "OPENED"
                 when: menuLoader.isMenuOpened
-                PropertyChanges { target: backgroundItem; border.color: ui.theme.accentColor }
+                PropertyChanges {
+                    target: backgroundItem
+                    border.color: ui.theme.accentColor
+                }
             }
         ]
 
         StyledMenuLoader {
             id: menuLoader
 
-            onHandleMenuItem: function(itemId) {
+            onHandleMenuItem: function (itemId) {
                 root.handleMenuItem(itemId)
             }
         }

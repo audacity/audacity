@@ -23,7 +23,7 @@ BuiltinEffectBase {
 
         height: implicitHeight
         width: parent.width
-        spacing: 16
+        spacing: ui.theme.extra.space_16
 
         SliderWithTextInput {
             id: thresholdSlider

@@ -64,14 +64,14 @@ DynamicsEffectBase {
             Row {
                 id: knobRow
 
-                spacing: 16
-                padding: 16
+                spacing: ui.theme.extra.space_16
+                padding: ui.theme.extra.space_16
 
                 Column {
                     id: thresholdColumn
 
-                    topPadding: 12
-                    bottomPadding: 12
+                    topPadding: ui.theme.extra.space_12
+                    bottomPadding: ui.theme.extra.space_12
 
                     SettingKnob {
                         id: thresholdKnob
@@ -86,8 +86,8 @@ DynamicsEffectBase {
                 }
 
                 Column {
-                    topPadding: 12
-                    bottomPadding: 12
+                    topPadding: ui.theme.extra.space_12
+                    bottomPadding: ui.theme.extra.space_12
 
                     SettingKnob {
                         id: makeupKnob

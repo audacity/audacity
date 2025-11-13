@@ -35,10 +35,10 @@ StyledDialogView {
 
     contentWidth: 680
     contentHeight: 500
-    margins: 16
+    margins: ui.theme.extra.space_16
 
     readonly property int propertyNameWidth: 160
-    readonly property int propertyRowHorizontalSpacing: 8
+    readonly property int propertyRowHorizontalSpacing: ui.theme.extra.space_8
     readonly property int propertyRowRightMargin: propertiesListView.propertyRowRightMargin
 
     property NavigationPanel navigationPanel: NavigationPanel {
@@ -46,7 +46,7 @@ StyledDialogView {
         section: root.navigationSection
         direction: NavigationPanel.Horizontal
         order: 1
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }
@@ -64,7 +64,7 @@ StyledDialogView {
     ColumnLayout {
         anchors.fill: parent
 
-        spacing: 8
+        spacing: ui.theme.extra.space_8
 
         ProjectPropertiesView {
             id: propertiesListView
@@ -89,9 +89,9 @@ StyledDialogView {
             propertiesModel: projectPropertiesModel
 
             Layout.fillWidth: true
-            Layout.topMargin: 4
+            Layout.topMargin: ui.theme.extra.space_4
             Layout.rightMargin: root.propertyRowRightMargin
-            Layout.bottomMargin: 8
+            Layout.bottomMargin: ui.theme.extra.space_8
 
             propertyNameWidth: root.propertyNameWidth
             propertyRowHorizontalSpacing: root.propertyRowHorizontalSpacing
@@ -103,7 +103,7 @@ StyledDialogView {
         ButtonBox {
             Layout.fillWidth: true
 
-            buttons: [ ButtonBoxModel.Ok, ButtonBoxModel.Cancel ]
+            buttons: [ButtonBoxModel.Ok, ButtonBoxModel.Cancel]
 
             navigationPanel.section: root.navigationSection
             navigationPanel.order: 2
@@ -119,7 +119,7 @@ StyledDialogView {
                 }
             }
 
-            onStandardButtonClicked: function(buttonId) {
+            onStandardButtonClicked: function (buttonId) {
                 if (buttonId === ButtonBoxModel.Ok) {
                     projectPropertiesModel.saveProperties()
                     root.hide()

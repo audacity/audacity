@@ -43,7 +43,7 @@ Item {
         id: prv
 
         readonly property int meterWidth: 11
-        readonly property int meterSpacing: 4
+        readonly property int meterSpacing: ui.theme.extra.space_4
 
         function dbToY(db) {
             return db / root.dbMin * root.timelineHeight
@@ -98,15 +98,15 @@ Item {
     Column {
         id: rootColumn
 
-        padding: 0
-        spacing: 0
+        padding: ui.theme.extra.space_0
+        spacing: ui.theme.extra.space_0
 
         Row {
             id: checkboxRow
 
             height: 40
 
-            spacing: 16
+            spacing: ui.theme.extra.space_16
 
             StyledTextLabel {
                 text: qsTrc("effects/compressor", "Show:")
@@ -150,7 +150,7 @@ Item {
         Row {
             id: timelineRow
 
-            spacing: 6
+            spacing: ui.theme.extra.space_6
 
             Rectangle {
                 id: timelineArea
@@ -216,7 +216,7 @@ Item {
 
                 y: -clipIndicator.height - spacing
 
-                spacing: 2
+                spacing: ui.theme.extra.space_2
 
                 Row {
                     id: clipIndicatorRow

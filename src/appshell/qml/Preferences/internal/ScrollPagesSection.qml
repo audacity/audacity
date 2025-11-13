@@ -41,17 +41,23 @@ BaseSection {
         width: parent.width
         height: implicitHeight
 
-        spacing: 12
+        spacing: ui.theme.extra.space_12
         orientation: ListView.Vertical
 
         model: [
-            { title: qsTrc("appshell/preferences", "Horizontal"), value: Qt.Horizontal },
-            { title: qsTrc("appshell/preferences", "Vertical"), value: Qt.Vertical }
+            {
+                title: qsTrc("appshell/preferences", "Horizontal"),
+                value: Qt.Horizontal
+            },
+            {
+                title: qsTrc("appshell/preferences", "Vertical"),
+                value: Qt.Vertical
+            }
         ]
 
         delegate: RoundedRadioButton {
-            leftPadding: 0
-            spacing: 6
+            leftPadding: ui.theme.extra.space_0
+            spacing: ui.theme.extra.space_6
 
             property string title: modelData["title"]
 

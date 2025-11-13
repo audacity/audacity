@@ -30,12 +30,12 @@ Column {
     default property alias contentData: sectionContent.data
 
     width: parent.width
-    spacing: 18
+    spacing: ui.theme.extra.space_18
 
     property alias title: titleLabel.text
     property int columnWidth: 208
-    property int columnSpacing: 12
-    property int rowSpacing: 12
+    property int columnSpacing: ui.theme.extra.space_12
+    property int rowSpacing: ui.theme.extra.space_12
 
     property int navigationOrderStart: 0
     property int navigationOrderEnd: 0
@@ -45,7 +45,7 @@ Column {
         accessible.name: root.title
         enabled: root.enabled && root.visible
 
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }

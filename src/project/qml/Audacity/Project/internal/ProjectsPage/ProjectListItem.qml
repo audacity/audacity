@@ -36,7 +36,7 @@ ListItemBlank {
     property alias thumbnailComponent: thumbnailLoader.sourceComponent
 
     property real itemInset: 12
-    property real columnSpacing: 44
+    property real columnSpacing: ui.theme.extra.space_44
     property alias showBottomBorder: bottomBorder.visible
 
     implicitHeight: 64
@@ -48,7 +48,7 @@ ListItemBlank {
         }
     }
 
-    focusBorder.anchors.bottomMargin: bottomBorder.visible ? bottomBorder.height : 0
+    focusBorder.anchors.bottomMargin: bottomBorder.visible ? bottomBorder.height : ui.theme.extra.space_0
 
     RowLayout {
         anchors.fill: parent
@@ -58,7 +58,7 @@ ListItemBlank {
         spacing: root.columnSpacing
 
         RowLayout {
-            spacing: 24
+            spacing: ui.theme.extra.space_24
 
             Loader {
                 id: thumbnailLoader
@@ -92,7 +92,7 @@ ListItemBlank {
                 sourceComponent: RowLayout {
                     visible: root.project.isCloud
 
-                    spacing: 24
+                    spacing: ui.theme.extra.space_24
 
                     // CloudProjectStatusWatcher {
                     //     id: cloudProjectStatusWatcher

@@ -10,7 +10,7 @@ import Muse.UiComponents
 ColumnLayout {
     id: root
 
-    spacing: 10
+    spacing: ui.theme.extra.space_10
 
     property var ffmpegPrefModel: null
     property int controlWidth: 156
@@ -50,7 +50,7 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.muxRate
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         ffmpegPrefModel.setMuxRate(newValue)
                     }
                 }
@@ -88,7 +88,7 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.packetSize
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         ffmpegPrefModel.setPacketSize(newValue)
                     }
                 }

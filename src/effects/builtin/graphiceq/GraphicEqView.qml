@@ -34,8 +34,8 @@ BuiltinEffectBase {
         Column {
             id: boardAndButtons
 
-            padding: 16
-            spacing: 16
+            padding: ui.theme.extra.space_16
+            spacing: ui.theme.extra.space_16
             width: board.width + 2 * padding
 
             GraphicEqBoard {
@@ -49,7 +49,7 @@ BuiltinEffectBase {
             Row {
                 id: buttons
 
-                spacing: 8
+                spacing: ui.theme.extra.space_8
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 FlatButton {

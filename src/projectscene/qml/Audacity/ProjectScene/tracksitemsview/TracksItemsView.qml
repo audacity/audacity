@@ -317,7 +317,7 @@ Rectangle {
                 id: head
 
                 anchors.top: parent.top
-                anchors.topMargin: 24
+                anchors.topMargin: ui.theme.extra.space_24
 
                 x: playCursorController.positionX
 
@@ -328,7 +328,7 @@ Rectangle {
                 }
 
                 onPlayCursorMousePositionChanged: function (ix) {
-                     timeline.updateCursorPosition(ix, 0)
+                    timeline.updateCursorPosition(ix, 0)
                 }
             }
         }
@@ -398,7 +398,7 @@ Rectangle {
     Rectangle {
         id: content
         objectName: "ItemsView"
-        anchors.leftMargin: 12
+        anchors.leftMargin: ui.theme.extra.space_12
         anchors.top: timelineHeader.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
@@ -488,8 +488,7 @@ Rectangle {
                     tracksItemsView.itemMoveRequested(hoveredItemKey, true)
                     tracksItemsView.stopAutoScroll()
                     tracksItemsView.itemEndEditRequested(hoveredItemKey)
-                }
-                else {
+                } else {
                     splitToolController.mouseUp(e.x)
 
                     if (selectionController.isLeftSelection(e.x)) {
@@ -547,7 +546,7 @@ Rectangle {
             id: tracksItemsViewArea
 
             anchors.fill: parent
-            anchors.rightMargin: tracksModel.isVerticalRulersVisible ? verticalRulerPanelHeader.width : 0
+            anchors.rightMargin: tracksModel.isVerticalRulersVisible ? verticalRulerPanelHeader.width : ui.theme.extra.space_0
 
             view: tracksItemsView
 
@@ -649,16 +648,16 @@ Rectangle {
                     property int index: model.index
 
                     width: tracksItemsView.width
-                    
+
                     sourceComponent: trackType === TrackType.LABEL ? trackLabelsContainer : trackClipsContainerComp
 
                     onLoaded: {
                         trackItemLoader.item.init()
                     }
-                    
+
                     Component {
                         id: trackClipsContainerComp
-                        
+
                         TrackClipsContainer {
                             property var itemData: trackItemLoader.itemData
                             property int index: trackItemLoader.index

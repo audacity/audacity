@@ -49,12 +49,12 @@ StyledDialogView {
     ColumnLayout {
         anchors.fill: parent
 
-        spacing: 2
+        spacing: ui.theme.extra.space_2
 
         ColumnLayout {
-            Layout.leftMargin: 16
+            Layout.leftMargin: ui.theme.extra.space_16
 
-            spacing: 8
+            spacing: ui.theme.extra.space_8
 
             StyledTextLabel {
                 Layout.fillWidth: true
@@ -98,9 +98,9 @@ StyledDialogView {
         }
 
         ColumnLayout {
-            Layout.leftMargin: 16
+            Layout.leftMargin: ui.theme.extra.space_16
 
-            spacing: 8
+            spacing: ui.theme.extra.space_8
 
             StyledTextLabel {
                 Layout.fillWidth: true
@@ -144,15 +144,15 @@ StyledDialogView {
         }
 
         SeparatorLine {
-            Layout.topMargin: 16
+            Layout.topMargin: ui.theme.extra.space_16
         }
 
         ButtonBox {
             id: buttonBox
 
             Layout.fillWidth: true
-            Layout.rightMargin: 8
-            Layout.bottomMargin: 8
+            Layout.rightMargin: ui.theme.extra.space_8
+            Layout.bottomMargin: ui.theme.extra.space_8
 
             FlatButton {
                 id: cancelBtn

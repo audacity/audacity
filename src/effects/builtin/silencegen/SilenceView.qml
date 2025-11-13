@@ -26,7 +26,7 @@ BuiltinEffectBase {
 
         anchors.fill: parent
 
-        spacing: 16
+        spacing: ui.theme.extra.space_16
 
         StyledTextLabel {
             text: qsTrc("projectscene/silence", "Duration:")

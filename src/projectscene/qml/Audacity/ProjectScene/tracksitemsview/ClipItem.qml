@@ -48,8 +48,8 @@ Rectangle {
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
 
-    property real leftVisibleMargin: 0
-    property real rightVisibleMargin: 0
+    property real leftVisibleMargin: ui.theme.extra.space_0
+    property real rightVisibleMargin: ui.theme.extra.space_0
 
     property bool collapsed: false
 
@@ -143,7 +143,7 @@ Rectangle {
 
         anchors.fill: parent
         color: "transparent"
-        border.width: root.enableContrastBorder ?  2 : 1
+        border.width: root.enableContrastBorder ? 2 : 1
         border.color: "#000000"
         radius: root.enableContrastBorder ? 0 : 4
         z: root.parent.z + 1
@@ -564,8 +564,8 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.right: buttonsRow.left
-                anchors.leftMargin: root.leftVisibleMargin + 4
-                anchors.rightMargin: 8
+                anchors.leftMargin: root.leftVisibleMargin + ui.theme.extra.space_4
+                anchors.rightMargin: ui.theme.extra.space_8
                 horizontalAlignment: Qt.AlignLeft
 
                 NavigationControl {
@@ -585,8 +585,8 @@ Rectangle {
                 NavigationFocusBorder {
                     navigationCtrl: titleEditNavCtrl
 
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 0
+                    anchors.topMargin: ui.theme.extra.space_1
+                    anchors.bottomMargin: ui.theme.extra.space_0
                     radius: 5
                 }
             }
@@ -622,7 +622,7 @@ Rectangle {
                     background.border.width: 0
                     background.radius: 0
                     inputField.color: titleLabel.color
-                    textSidePadding: 0
+                    textSidePadding: ui.theme.extra.space_0
                     visible: false
 
                     onTextChanged: function (text) {
@@ -651,10 +651,10 @@ Rectangle {
                 id: buttonsRow
 
                 anchors.right: parent.right
-                anchors.rightMargin: 4
+                anchors.rightMargin: ui.theme.extra.space_4
                 anchors.verticalCenter: parent.verticalCenter
 
-                spacing: 2
+                spacing: ui.theme.extra.space_2
 
                 ClipItemPropertyButton {
                     id: pitchBtn
@@ -737,7 +737,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
-            spacing: 0
+            spacing: ui.theme.extra.space_0
 
             WaveView {
                 id: waveView
@@ -791,7 +791,7 @@ Rectangle {
 
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 10
+                    anchors.bottomMargin: ui.theme.extra.space_10
 
                     navigation.name: "SelectBtn"
                     navigation.panel: root.clipNavigationPanel

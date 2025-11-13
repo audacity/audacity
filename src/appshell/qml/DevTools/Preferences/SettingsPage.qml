@@ -58,7 +58,7 @@ ColumnLayout {
             color: ui.theme.backgroundSecondaryColor
             StyledTextLabel {
                 anchors.fill: parent
-                anchors.margins: 2
+                anchors.margins: ui.theme.extra.space_2
                 horizontalAlignment: Qt.AlignLeft
                 text: section
             }
@@ -67,8 +67,8 @@ ColumnLayout {
         delegate: Item {
             anchors.left: parent ? parent.left : undefined
             anchors.right: parent ? parent.right : undefined
-            anchors.leftMargin: 8
-            anchors.rightMargin: 8
+            anchors.leftMargin: ui.theme.extra.space_8
+            anchors.rightMargin: ui.theme.extra.space_8
             height: 32
 
             StyledTextLabel {
@@ -86,7 +86,7 @@ ColumnLayout {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
-                anchors.margins: 2
+                anchors.margins: ui.theme.extra.space_2
                 width: 150
 
                 Loader {
@@ -118,7 +118,7 @@ ColumnLayout {
                 Connections {
                     target: loader.item
                     function onChanged(newVal) {
-                        let sortFilterModelIndex = sortFilterModel.index(model.index, 0);
+                        let sortFilterModelIndex = sortFilterModel.index(model.index, 0)
                         let sourceModelIndex = sortFilterModel.mapToSource(sortFilterModelIndex)
                         settingsModel.changeVal(sourceModelIndex.row, newVal)
                     }
@@ -129,15 +129,21 @@ ColumnLayout {
 
     function componentByType(type) {
         switch (type) {
-        case "Undefined": return textComp;
-        case "Bool": return boolComp;
-        case "Int": return intComp;
-        case "Double": return doubleComp;
-        case "String": return textComp;
-        case "Color": return colorComp;
+        case "Undefined":
+            return textComp
+        case "Bool":
+            return boolComp
+        case "Int":
+            return intComp
+        case "Double":
+            return doubleComp
+        case "String":
+            return textComp
+        case "Color":
+            return colorComp
         }
 
-        return textComp;
+        return textComp
     }
 
     Component {
@@ -152,7 +158,7 @@ ColumnLayout {
             border.color: ui.theme.strokeColor
             TextEdit {
                 anchors.fill: parent
-                anchors.margins: 2
+                anchors.margins: ui.theme.extra.space_2
                 verticalAlignment: Text.AlignVCenter
                 text: String(val)
                 onEditingFinished: textControl.changed(text)
@@ -169,7 +175,7 @@ ColumnLayout {
             anchors.fill: parent
             color: val
 
-            onNewColorSelected: function(newColor) {
+            onNewColorSelected: function (newColor) {
                 changed(newColor)
             }
         }
@@ -191,7 +197,7 @@ ColumnLayout {
             step: 1
             decimals: 0
 
-            onValueEdited: function(newValue) {
+            onValueEdited: function (newValue) {
                 control.changed(newValue)
             }
         }
@@ -213,7 +219,7 @@ ColumnLayout {
             step: 1
             decimals: 2
 
-            onValueEdited: function(newValue) {
+            onValueEdited: function (newValue) {
                 control.changed(newValue)
             }
         }

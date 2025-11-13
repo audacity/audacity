@@ -19,7 +19,7 @@ StyledToolBarView {
     navigationPanel.name: "WorkspacesToolBar"
     navigationPanel.accessible.name: qsTrc("projectscene", "Workspaces toolbar")
 
-    spacing: 0
+    spacing: ui.theme.extra.space_0
     rowHeight: 28
 
     WorkspacesToolBarModel {
@@ -28,9 +28,10 @@ StyledToolBarView {
 
     model: workspacesModel
 
-    sourceComponentCallback: function(type) {
-        switch(type) {
-        case ToolBarItemType.ACTION: return controlComp
+    sourceComponentCallback: function (type) {
+        switch (type) {
+        case ToolBarItemType.ACTION:
+            return controlComp
         }
 
         return null
@@ -61,7 +62,7 @@ StyledToolBarView {
 
                     allowOptionToggle: false
 
-                    onHandleMenuItem: function(itemId) {
+                    onHandleMenuItem: function (itemId) {
                         Qt.callLater(root.model.handleWorkspacesMenuItem, itemId)
                     }
                 }

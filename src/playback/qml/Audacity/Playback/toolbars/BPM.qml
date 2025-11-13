@@ -31,7 +31,7 @@ RowLayout {
         }
     }
 
-    spacing: 1
+    spacing: ui.theme.extra.space_1
 
     RoundedRectangle {
         Layout.preferredWidth: childrenRect.width
@@ -43,7 +43,7 @@ RowLayout {
         color: ui.theme.backgroundQuarternaryColor
 
         Item {
-            property int margin: 6
+            property int margin: ui.theme.extra.space_6
 
             width: row.width + margin * 2
             height: row.height
@@ -55,7 +55,7 @@ RowLayout {
                 anchors.leftMargin: parent.margin
                 anchors.verticalCenter: parent.verticalCenter
 
-                spacing: 0
+                spacing: ui.theme.extra.space_0
 
                 Repeater {
                     model: bpmModel
@@ -79,7 +79,7 @@ RowLayout {
         Layout.preferredWidth: 16
         Layout.preferredHeight: root.height
 
-        spacing: 1
+        spacing: ui.theme.extra.space_1
 
         ArrowButton {
             Layout.fillWidth: true
@@ -88,7 +88,7 @@ RowLayout {
             isDown: false
             bottomRightRadius: 0
 
-            onClicked: function(mouse) {
+            onClicked: function (mouse) {
                 bpmModel.upValue()
             }
         }
@@ -101,7 +101,7 @@ RowLayout {
             isDown: true
             topRightRadius: 0
 
-            onClicked: function(mouse) {
+            onClicked: function (mouse) {
                 bpmModel.downValue()
             }
         }

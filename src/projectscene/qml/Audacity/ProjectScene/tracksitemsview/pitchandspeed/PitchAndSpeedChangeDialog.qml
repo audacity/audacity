@@ -26,7 +26,7 @@ StyledDialogView {
     PitchAndSpeedChangeModel {
         id: changeModel
 
-        onCloseDialogRequested: function(){
+        onCloseDialogRequested: function () {
             root.close()
         }
     }
@@ -45,14 +45,14 @@ StyledDialogView {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 0
+        spacing: ui.theme.extra.space_0
 
         Column {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.margins: 16
+            Layout.margins: ui.theme.extra.space_16
 
-            spacing: 24
+            spacing: ui.theme.extra.space_24
 
             PitchSection {
                 id: pitchSection
@@ -64,7 +64,7 @@ StyledDialogView {
                 navigationPanel.section: root.navigationSection
                 navigationPanel.order: 1
 
-                onValueChanged: function(newValue){
+                onValueChanged: function (newValue) {
                     changeModel.pitch = newValue
                 }
             }
@@ -80,7 +80,7 @@ StyledDialogView {
                 navigationPanel.section: root.navigationSection
                 navigationPanel.order: 2
 
-                onValueChanged: function(newValue){
+                onValueChanged: function (newValue) {
                     changeModel.speedPercentage = newValue
                 }
             }
@@ -93,7 +93,7 @@ StyledDialogView {
                 navigationPanel.section: root.navigationSection
                 navigationPanel.order: 3
 
-                onValueChanged: function(newValue){
+                onValueChanged: function (newValue) {
                     changeModel.optimizeForVoice = newValue
                 }
             }
@@ -105,16 +105,18 @@ StyledDialogView {
             id: buttonBox
 
             Layout.fillWidth: true
-            Layout.margins: 12
+            Layout.margins: ui.theme.extra.space_12
 
-            buttons: [ ButtonBoxModel.Done ]
+            buttons: [ButtonBoxModel.Done]
 
             navigationPanel.section: root.navigationSection
             navigationPanel.order: 4
 
-            onStandardButtonClicked: function(buttonId) {
-                switch(buttonId) {
-                case ButtonBoxModel.Done: root.accept(); break;
+            onStandardButtonClicked: function (buttonId) {
+                switch (buttonId) {
+                case ButtonBoxModel.Done:
+                    root.accept()
+                    break
                 }
             }
         }

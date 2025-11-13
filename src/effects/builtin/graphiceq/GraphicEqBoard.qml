@@ -17,7 +17,7 @@ Item {
 
         readonly property int faderHeight: 352
         readonly property int labelHeight: 16
-        readonly property int labelBottomMargin: 16
+        readonly property int labelBottomMargin: ui.theme.extra.space_16
         readonly property int fontSize: 10
 
         property var pressedFader: null
@@ -69,7 +69,7 @@ Item {
 
         hoverEnabled: true
 
-        onPressed: function(mouse) {
+        onPressed: function (mouse) {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
@@ -83,7 +83,7 @@ Item {
             }
         }
 
-        onPositionChanged: function(mouse) {
+        onPositionChanged: function (mouse) {
             if (!(mouse.buttons & Qt.LeftButton)) {
                 return
             }
@@ -97,7 +97,6 @@ Item {
                 }
             }
 
-
             if (!prv.isPainting) {
                 prv.updateFader(prv.pressedFader)
             } else {
@@ -109,7 +108,7 @@ Item {
             }
         }
 
-        onDoubleClicked: function(mouse) {
+        onDoubleClicked: function (mouse) {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
@@ -123,7 +122,7 @@ Item {
     Row {
         id: faderRow
 
-        spacing: 16
+        spacing: ui.theme.extra.space_16
         x: gridLines.gridlineHorizontalCenter - width / 2
         height: prv.faderHeight + prv.labelHeight + prv.labelBottomMargin
 

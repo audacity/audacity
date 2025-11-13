@@ -24,8 +24,7 @@ BuiltinEffectBase {
     QtObject {
         id: prv
 
-        readonly property int spacing: 16
-        readonly property int padding: 32
+        readonly property int padding: ui.theme.extra.space_32
         readonly property int interpolationLinear: 0
         readonly property int interpolationLogarithmic: 1
     }
@@ -39,7 +38,7 @@ BuiltinEffectBase {
 
         width: parent.width
 
-        spacing: prv.spacing
+        spacing: ui.theme.extra.space_16
 
         ComboBoxWithTitle {
 
@@ -61,7 +60,7 @@ BuiltinEffectBase {
         RoundedRectangle {
 
             Layout.fillWidth: true
-            Layout.preferredHeight: frequencyGroup.height + prv.spacing * 2
+            Layout.preferredHeight: frequencyGroup.height + (ui.theme.extra.space_16 * 2)
 
             color: ui.theme.backgroundSecondaryColor
 
@@ -73,15 +72,15 @@ BuiltinEffectBase {
             Column {
                 id: frequencyGroup
 
-                width: parent.width - prv.spacing * 2
-                x: prv.spacing
-                y: prv.spacing
+                width: parent.width - (ui.theme.extra.space_16 * 2)
+                x: ui.theme.extra.space_16
+                y: ui.theme.extra.space_16
 
-                spacing: prv.spacing
+                spacing: ui.theme.extra.space_16
 
                 Column {
 
-                    spacing: 8
+                    spacing: ui.theme.extra.space_8
 
                     StyledTextLabel {
                         text: qsTrc("effects/chirp", "Frequency sweep")
@@ -89,7 +88,7 @@ BuiltinEffectBase {
 
                     Row {
 
-                        spacing: prv.spacing
+                        spacing: ui.theme.extra.space_16
 
                         RoundedRadioButton {
 
@@ -119,7 +118,7 @@ BuiltinEffectBase {
 
                 Row {
 
-                    spacing: prv.spacing
+                    spacing: ui.theme.extra.space_16
                     width: parent.width
 
                     IncrementalPropertyControlWithTitle {
@@ -180,12 +179,12 @@ BuiltinEffectBase {
             Row {
                 id: amplitudeGroup
 
-                spacing: prv.spacing
+                spacing: ui.theme.extra.space_16
                 width: parent.width - prv.padding
                 height: implicitHeight
 
-                x: prv.spacing
-                y: prv.spacing
+                x: ui.theme.extra.space_16
+                y: ui.theme.extra.space_16
 
                 IncrementalPropertyControlWithTitle {
 
@@ -231,7 +230,7 @@ BuiltinEffectBase {
 
         Column {
 
-            spacing: 8
+            spacing: ui.theme.extra.space_8
 
             StyledTextLabel {
                 text: qsTrc("effects/chirp", "Duration")

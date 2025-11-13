@@ -44,7 +44,7 @@ Column {
 
     signal valueEdited(var newValue)
 
-    spacing: 6
+    spacing: ui.theme.extra.space_6
 
     StyledTextLabel {
         id: titleLabel
@@ -65,7 +65,7 @@ Column {
 
         navigation.accessible.name: titleLabel.text + " " + currentValue + " " + measureUnitsSymbol
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             root.valueEdited(newValue)
         }
     }

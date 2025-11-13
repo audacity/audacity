@@ -36,7 +36,7 @@ FocusScope {
     QtObject {
         id: prv
 
-        readonly property int sideMargin: 46
+        readonly property int sideMargin: ui.theme.extra.space_46
     }
 
     NavigationSection {
@@ -44,7 +44,7 @@ FocusScope {
         name: "Extensions"
         enabled: root.enabled && root.visible
         order: 3
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }
@@ -83,12 +83,12 @@ FocusScope {
         anchors.right: parent.right
         anchors.rightMargin: prv.sideMargin
 
-        spacing: 24
+        spacing: ui.theme.extra.space_24
 
         RowLayout {
             width: parent.width
 
-            spacing: 12
+            spacing: ui.theme.extra.space_12
 
             StyledTextLabel {
                 id: pageTitle
@@ -131,14 +131,20 @@ FocusScope {
 
                 function initModel() {
                     var categories = pluginsPage.categories()
-                    var result = []
+                    var result = [];
 
                     //: The title of an option to display the plugins from all categories.
-                    result.push({ "text": qsTrc("appshell", "All"), "value": allCategoryValue })
+                    result.push({
+                        "text": qsTrc("appshell", "All"),
+                        "value": allCategoryValue
+                    })
 
                     for (var i = 0; i < categories.length; ++i) {
                         var category = categories[i]
-                        result.push({ "text": category.title, "value": category.code })
+                        result.push({
+                            "text": category.title,
+                            "value": category.code
+                        })
                     }
 
                     model = result
@@ -148,7 +154,7 @@ FocusScope {
                     initModel()
                 }
 
-                onActivated: function(index, value) {
+                onActivated: function (index, value) {
                     currentIndex = index
                 }
             }
@@ -177,7 +183,7 @@ FocusScope {
         id: pluginsPage
 
         anchors.top: topLayout.bottom
-        anchors.topMargin: 24
+        anchors.topMargin: ui.theme.extra.space_24
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
