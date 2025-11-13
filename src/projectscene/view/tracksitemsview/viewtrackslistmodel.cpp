@@ -348,7 +348,7 @@ int ViewTracksListModel::totalTracksHeight() const
 
 void ViewTracksListModel::toggleVerticalRuler() const
 {
-    projectSceneConfiguration()->setVerticalRulersVisible(!projectSceneConfiguration()->isVerticalRulersVisible());
+    dispatcher()->dispatch("toggle-vertical-rulers");
 }
 
 void ViewTracksListModel::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType)
