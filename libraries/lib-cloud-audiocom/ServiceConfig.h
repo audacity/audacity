@@ -84,6 +84,10 @@ public:
    std::string
    GetProjectsPagePath(std::string_view userSlug, AudiocomTrace) const;
 
+   std::string GetTaskPollUrl() const;
+   std::string GetTaskAckUrl(std::string_view taskId) const;
+   std::string GetTaskResultUrl(std::string_view taskId) const;
+
 private:
    std::string mApiEndpoint;
    std::string mOAuthClientID;

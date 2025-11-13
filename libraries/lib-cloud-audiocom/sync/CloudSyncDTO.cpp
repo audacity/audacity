@@ -462,6 +462,146 @@ bool Deserialize(
    return true;
 }
 
+bool Deserialize(const rapidjson::Value& value, PollingInfo& task)
+{
+   if (!value.IsObject())
+      return {};
+
+   PollingInfo tempPolling;
+
+   if (!Deserialize(value, "interval", tempPolling.IntervalSeconds))
+      return {};
+
+   if (!Deserialize(value, "stop", tempPolling.Stop))
+      return {};
+
+   task = std::move(tempPolling);
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, AudioOpenTaskParameters& task)
+{
+   if (!value.IsObject())
+      return {};
+
+   AudioOpenTaskParameters tempTask;
+
+   if (!Deserialize(value, "audio_id", tempTask.AudioId))
+      return {};
+
+   task = std::move(tempTask);
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, ProjectOpenTaskParameters& task)
+{
+   if (!value.IsObject())
+      return {};
+
+   ProjectOpenTaskParameters tempTask;
+
+   if (!Deserialize(value, "project_id", tempTask.ProjectId))
+      return {};
+
+   // Snapshot ID is optional
+   Deserialize(value, "snapshot_id", tempTask.SnapshotId);
+
+   task = std::move(tempTask);
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, TaskStatus& taskStatus)
+{
+   if (!value.IsString())
+      return false;
+
+   const std::string typeStr = value.GetString();
+
+   if (typeStr == "pending")
+      taskStatus = TaskStatus::Pending;
+   else if (typeStr == "started")
+      taskStatus = TaskStatus::Started;
+   else if (typeStr == "success")
+      taskStatus = TaskStatus::Success;
+   else if (typeStr == "failed")
+      taskStatus = TaskStatus::Failed;
+   else
+      taskStatus = TaskStatus::Unknown;
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, TaskAction& taskAction)
+{
+   if (!value.IsString())
+      return false;
+
+   const std::string typeStr = value.GetString();
+
+   if (typeStr == "open_audio")
+      taskAction = TaskAction::OpenAudio;
+   else if (typeStr == "open_project")
+      taskAction = TaskAction::OpenProject;
+   else
+      taskAction = TaskAction::Unknown;
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, AppTask& task)
+{
+   if (!value.IsObject())
+      return false;
+
+   AppTask tempTask;
+
+   if (!Deserialize(value, "id", tempTask.Id))
+      return false;
+
+   if (!Deserialize(value, "status", tempTask.Status))
+      return false;
+
+   if (!Deserialize(value, "action", tempTask.Action))
+      return false;
+
+   if (!Deserialize(value, "created_at", tempTask.Created))
+      return false;
+
+   if (ProjectOpenTaskParameters parameters; Deserialize(value, "parameters", parameters))
+   {
+      tempTask.Parameters = std::move(parameters);
+   }
+   else if (AudioOpenTaskParameters parameters; Deserialize(value, "parameters", parameters))
+   {
+      tempTask.Parameters = std::move(parameters);
+   }
+
+   task = std::move(tempTask);
+
+   return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, AppTaskPollResponse& response)
+{
+   if (!value.IsObject())
+      return false;
+
+   AppTaskPollResponse tempResponse;
+
+   if (!Deserialize(value, "polling", tempResponse.Polling))
+      return false;
+
+   if (!DeserializeArray(value, "tasks", tempResponse.Tasks))
+      return false;
+
+   response = std::move(tempResponse);
+
+   return true;
+}
+
 template<typename T>
 bool Deserialize(
    const rapidjson::Value& value, std::string_view zKey, T& result)
@@ -629,6 +769,16 @@ std::optional<ProjectInfo> DeserializeProjectInfo(const std::string& data)
 std::optional<SnapshotInfo> DeserializeSnapshotInfo(const std::string& data)
 {
    SnapshotInfo result;
+
+   if (Deserialize(data, result))
+      return std::move(result);
+
+   return {};
+}
+
+std::optional<AppTaskPollResponse> DeserializeAppTaskPollResponse(const std::string& data)
+{
+   AppTaskPollResponse result;
 
    if (Deserialize(data, result))
       return std::move(result);

@@ -79,6 +79,7 @@ set( SOURCES
    CloudAudioOpenUtils.cpp
    CloudAudioOpenUtils.h
    CloudLoginHandler.cpp
+   TaskExecutionHandler.cpp
 )
 
 if(${_OPT}has_url_schemes_support)
