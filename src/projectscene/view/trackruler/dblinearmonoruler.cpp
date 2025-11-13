@@ -1,73 +1,21 @@
 #include "global/realfn.h"
 
 #include "projectscene/view/trackruler/dblinearmonoruler.h"
-#include "types/ratio.h"
-#include "view/trackruler/itrackrulermodel.h"
-
-#include <string>
+#include "projectscene/view/trackruler/itrackrulermodel.h"
 
 using namespace au::projectscene;
 
 namespace {
-constexpr int MIN_LOWEST_FULL_STEP_TO_ZERO_HEIGHT = 23;
+constexpr int MIN_FULL_STEP_TO_INF_HEIGHT = 23;
 constexpr int MIN_ADJACENT_STEPS_HEIGHT = 10;
-constexpr int MIN_HEIGHT_TO_ZERO = 14;
+constexpr int MIN_FULL_STEP_TO_ZERO_HEIGHT = 14;
 constexpr std::array<int, 4> FULL_STEP_SIZES = { 1, 2, 3, 6 };
-
-double valueToPosition(double value, double height, double maxValue, bool isNegativeSample = false)
-{
-    const double maxLinearValue = std::abs(muse::db_to_linear(maxValue));
-    const double minLinearValue = -maxLinearValue;
-    const double linearValue = muse::db_to_linear(value) * (isNegativeSample ? -1.0 : 1.0);
-    const double clampedLinearValue = std::clamp(linearValue, minLinearValue, maxLinearValue);
-
-    return (0.5 - (clampedLinearValue / (maxLinearValue - minLinearValue))) * height;
 }
 
-int computeLowestFullStepValue(double height, double m_dbRange, double maxValue)
+DbLinearMonoRuler::DbLinearMonoRuler()
+    : DbLinearBaseRuler(DbLinearRulerUiSettings { MIN_ADJACENT_STEPS_HEIGHT, MIN_FULL_STEP_TO_INF_HEIGHT, MIN_FULL_STEP_TO_ZERO_HEIGHT,
+                                                  std::vector<int>(FULL_STEP_SIZES.begin(), FULL_STEP_SIZES.end()) })
 {
-    auto const middlePoint = height / 2.0;
-    int lowestFullStep = static_cast<int>(m_dbRange);
-    for (int i = lowestFullStep + 3; i < 0; i += 3) {
-        const double position = valueToPosition(i, height, maxValue);
-        if (middlePoint - position > MIN_LOWEST_FULL_STEP_TO_ZERO_HEIGHT) {
-            return i;
-        }
-    }
-
-    return 0;
-}
-
-std::vector<int> fullStepValues(double height, double dbRange, double maxValue)
-{
-    const int lowestFullStep = computeLowestFullStepValue(height, dbRange, maxValue);
-
-    std::vector<int> steps;
-    if (lowestFullStep != 0) {
-        steps.push_back(lowestFullStep);
-        int previousValidStep = lowestFullStep;
-
-        for (int step = lowestFullStep + 1; step < maxValue; step++) {
-            const int diff = step - previousValidStep;
-            if (std::find(FULL_STEP_SIZES.begin(), FULL_STEP_SIZES.end(), diff) == FULL_STEP_SIZES.end()) {
-                continue;
-            }
-
-            const double position = valueToPosition(step, height, maxValue);
-            if (position < MIN_HEIGHT_TO_ZERO) {
-                break;
-            }
-
-            const double previousPosition = valueToPosition(previousValidStep, height, maxValue);
-            if (previousPosition - position >= MIN_ADJACENT_STEPS_HEIGHT) {
-                steps.push_back(step);
-                previousValidStep = step;
-            }
-        }
-    }
-
-    return steps;
-}
 }
 
 double DbLinearMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, bool isNegativeSample) const
@@ -76,40 +24,7 @@ double DbLinearMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t ch
         return m_height / 2.0;
     }
 
-    return valueToPosition(step, m_height, m_maxDisplayValue, isNegativeSample);
-}
-
-void DbLinearMonoRuler::setHeight(int height)
-{
-    m_height = height;
-}
-
-void DbLinearMonoRuler::setChannelHeightRatio(double channelHeightRatio)
-{
-    m_channelHeightRatio = channelHeightRatio;
-}
-
-void DbLinearMonoRuler::setCollapsed(bool isCollapsed)
-{
-    m_collapsed = isCollapsed;
-}
-
-void DbLinearMonoRuler::setDbRange(double dbRange)
-{
-    m_dbRange = dbRange;
-}
-
-std::string DbLinearMonoRuler::sampleToText(double sample) const
-{
-    std::stringstream ss;
-
-    if (muse::RealIsEqual(sample, m_dbRange)) {
-        ss << "\u221E";
-    } else {
-        ss << std::fixed << std::setprecision(0) << std::abs(sample);
-    }
-
-    return ss.str();
+    return valueToPosition(step, m_height, isNegativeSample);
 }
 
 std::vector<TrackRulerFullStep> DbLinearMonoRuler::fullSteps() const
@@ -118,7 +33,7 @@ std::vector<TrackRulerFullStep> DbLinearMonoRuler::fullSteps() const
         return { TrackRulerFullStep { m_dbRange, 0, 0, true, true, false } };
     }
 
-    const std::vector<int> valuesList = fullStepValues(m_height, m_dbRange, m_maxDisplayValue);
+    const std::vector<int> valuesList = fullStepValues(m_height);
     std::vector<TrackRulerFullStep> steps { TrackRulerFullStep { m_dbRange, 0, 0, false, true, false },
                                             TrackRulerFullStep { m_maxDisplayValue, 0, -1, true, true, false },
                                             TrackRulerFullStep { m_maxDisplayValue, 0, 1, true, true, true }
@@ -138,8 +53,8 @@ std::vector<TrackRulerSmallStep> DbLinearMonoRuler::smallSteps() const
         return { TrackRulerSmallStep { m_maxDisplayValue, 0, false }, TrackRulerSmallStep { m_maxDisplayValue, 0, true } };
     }
 
-    const int lowestFullStep = computeLowestFullStepValue(m_height, m_dbRange, m_maxDisplayValue);
-    const std::vector<int> valuesList = fullStepValues(m_height, m_dbRange, m_maxDisplayValue);
+    const int lowestFullStep = computeLowestFullStepValue(m_height);
+    const std::vector<int> valuesList = fullStepValues(m_height);
     std::vector<int> filteredValuesList;
     std::copy_if(valuesList.begin(), valuesList.end(), std::back_inserter(filteredValuesList),
                  [lowestFullStep](int value) { return value != lowestFullStep; });
@@ -157,9 +72,4 @@ std::vector<TrackRulerSmallStep> DbLinearMonoRuler::smallSteps() const
         steps.push_back(TrackRulerSmallStep { static_cast<double>(i), 0, true });
     }
     return steps;
-}
-
-void DbLinearMonoRuler::setVerticalZoom(float verticalZoom)
-{
-    m_maxDisplayValue = muse::linear_to_db(verticalZoom);
 }
