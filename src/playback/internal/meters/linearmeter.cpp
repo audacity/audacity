@@ -4,7 +4,7 @@
 
 #include "linearmeter.h"
 
-#include "global/types/ratio.h"
+#include "framework/global/types/ratio.h"
 
 #include <sstream>
 #include <iomanip>

@@ -840,7 +840,7 @@
         <seq>Shift+Space</seq>
     </SC>
     <SC>
-        <key>pause</key>
+        <key>action://playback/pause</key>
         <seq>P</seq>
     </SC>
     <SC>
@@ -850,10 +850,6 @@
     <SC>
         <key>punch-and-roll</key>
         <seq>Shift+D</seq>
-    </SC>
-    <SC>
-        <key>pause</key>
-        <seq>P</seq>
     </SC>
     <SC>
         <key>toggle-loop-region</key>
@@ -887,12 +883,12 @@
         <key>s-w-playthrough</key>
     </SC>
     <SC>
-        <key>play</key>
+        <key>action://playback/play</key>
         <seq>Space</seq>
         <seq>Shift+Space</seq>
     </SC>
     <SC>
-        <key>stop-record</key>
+        <key>action://record/stop</key>
         <seq>Space</seq>
     </SC>
     <SC>

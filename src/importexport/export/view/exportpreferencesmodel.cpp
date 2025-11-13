@@ -84,7 +84,7 @@ void ExportPreferencesModel::init()
         emit currentProcessChanged();
     });
     if ((exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION
-         && !playback()->player()->loopRegion().isValid())
+         && !playbackController()->loopRegion().isValid())
         || (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO
             && !selectionController()->timeSelectionIsNotEmpty())) {
         setCurrentProcess(QString::fromStdString(EXPORT_PROCESS_MAPPING[ExportProcessType::FULL_PROJECT_AUDIO]));
@@ -165,7 +165,7 @@ void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
         return;
     }
 
-    if (type == ExportProcessType::AUDIO_IN_LOOP_REGION && !playback()->player()->loopRegion().isValid()) {
+    if (type == ExportProcessType::AUDIO_IN_LOOP_REGION && !playbackController()->loopRegion().isValid()) {
         interactive()->error(muse::trc("export", "No loop region"),
                              muse::trc("export",
                                        "Export audio in loop region requires a loop in the project. Please go back, create a loop and try again."));

@@ -3,9 +3,9 @@
 */
 #pragma once
 
-#include "async/notification.h"
-#include "modularity/ioc.h"
-#include "modularity/imoduleinterface.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/modularity/imoduleinterface.h"
 
 #include <string>
 #include <vector>

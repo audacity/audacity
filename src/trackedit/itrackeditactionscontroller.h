@@ -6,13 +6,10 @@
 #include "modularity/imoduleinterface.h"
 #include "async/channel.h"
 #include "actions/actiontypes.h"
-#include "ui/uiaction.h"
 
 namespace au::trackedit {
-class ITrackeditActionsController : MODULE_EXPORT_INTERFACE
+class ITrackeditActionsController
 {
-    INTERFACE_ID(ITrackeditActionsController)
-
 public:
     virtual ~ITrackeditActionsController() = default;
 

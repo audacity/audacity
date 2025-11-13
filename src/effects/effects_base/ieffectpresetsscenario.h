@@ -3,7 +3,8 @@
 */
 #pragma once
 
-#include "modularity/imoduleinterface.h"
+#include "framework/global/modularity/imoduleinterface.h"
+
 #include "effectstypes.h"
 
 namespace au::effects {

@@ -4,30 +4,26 @@
 
 #include "au3record.h"
 
-#include "libraries/lib-audio-io/AudioIO.h"
+#include "framework/global/translation.h"
+#include "framework/global/log.h"
+
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 #include "libraries/lib-audio-devices/AudioIOBase.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
-#include "libraries/lib-track-selection/TrackFocus.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-track/PendingTracks.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-stretching-sequence/StretchingSequence.h"
-#include "libraries/lib-viewport/Viewport.h"
-
-#include "au3audioinput.h"
+#include "libraries/lib-project-rate/ProjectRate.h"
 
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
-#include "recorderrors.h"
-
-#include "translation.h"
-#include "log.h"
-#include "ProjectRate.h"
+#include "au3audioinput.h"
+#include "../../recorderrors.h"
 
 using namespace muse;
 using namespace muse::async;
@@ -36,6 +32,8 @@ using namespace au::au3;
 
 constexpr int RATE_NOT_SELECTED = -1;
 using WritableSampleTrackArray = std::vector< std::shared_ptr< WritableSampleTrack > >;
+
+static const muse::actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 struct PropertiesOfSelected
 {
@@ -250,7 +248,10 @@ void Au3Record::init()
 
         commitRecording();
 
-        dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1<double>(globalContext()->recordPosition()));
+        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
+        q.addParam("seekTime", muse::Val(globalContext()->recordPosition()));
+        q.addParam("triggerPlay", muse::Val(false));
+        dispatcher()->dispatch(q);
 
         auto& pendingTracks = PendingTracks::Get(projectRef());
         pendingTracks.ClearPendingTracks();
@@ -272,7 +273,7 @@ muse::Ret Au3Record::start()
 
     Au3Project& project = projectRef();
 
-    double t0 = playback()->player()->playbackPosition();
+    double t0 = playbackState()->playbackPosition();
     double t1 = DBL_MAX;
     selectionController()->resetSelectedClips();
 
@@ -393,7 +394,7 @@ secs_t Au3Record::recordPosition() const
 
 Au3Project& Au3Record::projectRef() const
 {
-    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    const auto project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     return *project;
 }
 
@@ -634,8 +635,7 @@ Ret Au3Record::doRecord(Au3Project& project,
         cancelRecording();
 
         Ret ret = make_ret(Err::RecordingError);
-        auto gAudioIO = AudioIO::Get();
-        ret.setText(String::fromStdString(ret.text()).arg(wxToString(gAudioIO->LastPaErrorString())).toStdString());
+        ret.setText(String::fromStdString(ret.text()).arg(audioEngine()->lastErrorString()).toStdString());
 
         return ret;
     }
@@ -656,9 +656,10 @@ void Au3Record::commitRecording()
 
 bool Au3Record::canStopAudioStream() const
 {
-    auto gAudioIO = AudioIO::Get();
-    Au3Project& project = projectRef();
-    return !gAudioIO->IsStreamActive()
-           || gAudioIO->IsMonitoring()
-           || gAudioIO->GetOwningProject().get() == &project;
+    return audioEngine()->canStopAudioStream(projectRef());
+}
+
+au::context::IPlaybackStatePtr Au3Record::playbackState() const
+{
+    return globalContext()->playbackState();
 }

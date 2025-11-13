@@ -27,6 +27,9 @@
 using namespace au::projectscene;
 using namespace muse::actions;
 
+static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
+static const ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/play-region-change");
+
 PlayCursorController::PlayCursorController(QObject* parent)
     : QObject(parent)
 {
@@ -50,29 +53,33 @@ void PlayCursorController::seekToX(double x, bool triggerPlay)
         return;
     }
 
-    IProjectViewStatePtr viewState = projectViewState();
-    bool snapEnabled = viewState ? viewState->isSnapEnabled() : false;
+    const IProjectViewStatePtr viewState = projectViewState();
+    const bool snapEnabled = viewState ? viewState->isSnapEnabled() : false;
 
-    double secs = m_context->positionToTime(x, snapEnabled);
+    const double secs = m_context->positionToTime(x, snapEnabled);
+    muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
+    q.addParam("triggerPlay", muse::Val(triggerPlay));
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
-        dispatcher()->dispatch("playback-seek", ActionData::make_arg2<double, bool>(secs, triggerPlay));
+        q.addParam("seekTime", muse::Val(secs));
+        dispatcher()->dispatch(q);
     } else if (!muse::RealIsEqual(playbackState()->playbackPosition(), 0.0)) {
-        dispatcher()->dispatch("playback-seek", ActionData::make_arg2<double, bool>(0.0, triggerPlay));
+        q.addParam("seekTime", muse::Val(0.0));
+        dispatcher()->dispatch(q);
     }
 }
 
 void PlayCursorController::setPlaybackRegion(double x1, double x2)
 {
-    IProjectViewStatePtr viewState = projectViewState();
-    bool snapEnabled = viewState ? viewState->isSnapEnabled() : false;
+    const IProjectViewStatePtr viewState = projectViewState();
+    const bool snapEnabled = viewState ? viewState->isSnapEnabled() : false;
 
-    double start = m_context->positionToTime(x1, snapEnabled);
-    start = std::max(0.0, start);
+    const double start = std::max(0.0, m_context->positionToTime(x1, snapEnabled));
+    const double end = std::max(0.0, m_context->positionToTime(x2, snapEnabled));
 
-    double end = m_context->positionToTime(x2, snapEnabled);
-    end = std::max(0.0, end);
-
-    dispatcher()->dispatch("playback-play-region-change", ActionData::make_arg2<double, double>(start, end));
+    muse::actions::ActionQuery q(PLAYBACK_CHANGE_PLAY_REGION_QUERY);
+    q.addParam("start", muse::Val(start));
+    q.addParam("end", muse::Val(end));
+    dispatcher()->dispatch(q);
 }
 
 au::context::IPlaybackStatePtr PlayCursorController::playbackState() const

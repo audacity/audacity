@@ -17,5 +17,8 @@ public:
 
     MOCK_METHOD(muse::secs_t, playbackPosition, (), (const, override));
     MOCK_METHOD(muse::async::Channel<muse::secs_t>, playbackPositionChanged, (), (const, override));
+
+    MOCK_METHOD(bool, isBusy, (), (const, override));
+    MOCK_METHOD(bool, reachedEnd, (), (const, override));
 };
 }

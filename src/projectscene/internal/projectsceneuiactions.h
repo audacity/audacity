@@ -4,10 +4,11 @@
 #ifndef AU_PROJECTSCENE_PROJECTSCENEUIACTIONS_H
 #define AU_PROJECTSCENE_PROJECTSCENEUIACTIONS_H
 
-#include "ui/iuiactionsmodule.h"
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/ui/iuiactionsmodule.h"
+
 #include "context/iuicontextresolver.h"
-#include "async/asyncable.h"
 
 #include "projectsceneactionscontroller.h"
 

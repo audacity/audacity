@@ -2,7 +2,7 @@
 #define AU_AU3WRAP_WXTYPES_CONVERT_H
 
 #include <string>
-#include "global/types/string.h"
+#include "framework/global/types/string.h"
 #include "wx/string.h"
 
 namespace au::au3 {

@@ -72,16 +72,6 @@ struct AudioIOEvent {
     bool on;
 };
 
-struct AUDIO_IO_API TransportSequences final {
-    ConstPlayableSequences playbackSequences;
-    RecordableSequences captureSequences;
-    std::vector<std::shared_ptr<const OtherPlayableSequence> >
-    otherPlayableSequences;
-
-    // This is a subset of playbackSequences
-    ConstPlayableSequences prerollSequences;
-};
-
 /** brief The function which is called from PortAudio's callback thread
  * context to collect and deliver audio for / from the sound device.
  *

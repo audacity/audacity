@@ -1,17 +1,17 @@
 #include "au3audioengine.h"
 
+#include "framework/global/realfn.h"
+
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
-
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "defaultplaybackpolicy.h"
 #include "au3audioiolistener.h"
-
-#include "realfn.h"
 
 using namespace au::au3audio;
 
@@ -47,6 +47,12 @@ static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
 void Au3AudioEngine::init()
 {
     s_audioIOListener = std::make_shared<Au3AudioIOListener>();
+    AudioIO::Init();
+}
+
+void Au3AudioEngine::deinit()
+{
+    AudioIO::Deinit();
 }
 
 bool Au3AudioEngine::isBusy() const
@@ -75,6 +81,11 @@ void Au3AudioEngine::pauseStream(const bool pause)
     AudioIO::Get()->SetPaused(pause);
 }
 
+void Au3AudioEngine::seekStream(double time)
+{
+    AudioIO::Get()->SeekStream(time - AudioIO::Get()->GetStreamTime());
+}
+
 void Au3AudioEngine::startMonitoring(AudacityProject& project)
 {
     AudioIOStartStreamOptions options = ProjectAudioIO::GetDefaultOptions(project);
@@ -85,6 +96,83 @@ void Au3AudioEngine::startMonitoring(AudacityProject& project)
 void Au3AudioEngine::stopMonitoring()
 {
     AudioIO::Get()->StopMonitoring();
+}
+
+void Au3AudioEngine::setInputVolume(const float newInputVolume)
+{
+    int inputSource;
+    float inputVolume;
+    float playbackVolume;
+    AudioIO::Get()->GetMixer(&inputSource, &inputVolume, &playbackVolume);
+    AudioIO::Get()->SetMixer(inputSource, newInputVolume, playbackVolume);
+}
+
+float Au3AudioEngine::getInputVolume() const
+{
+    int inputSource;
+    float inputVolume;
+    float playbackVolume;
+    AudioIO::Get()->GetMixer(&inputSource, &inputVolume, &playbackVolume);
+    return inputVolume;
+}
+
+void Au3AudioEngine::setPlaybackVolume(const float newPlaybackVolume)
+{
+    int inputSource;
+    float inputVolume;
+    float playbackVolume;
+    AudioIO::Get()->GetMixer(&inputSource, &inputVolume, &playbackVolume);
+    AudioIO::Get()->SetMixer(inputSource, inputVolume, newPlaybackVolume);
+}
+
+float Au3AudioEngine::getPlaybackVolume() const
+{
+    int inputSource;
+    float inputVolume;
+    float playbackVolume;
+    AudioIO::Get()->GetMixer(&inputSource, &inputVolume, &playbackVolume);
+    return playbackVolume;
+}
+
+bool Au3AudioEngine::canStopAudioStream(AudacityProject& project) const
+{
+    return !AudioIO::Get()->IsStreamActive()
+           || AudioIO::Get()->IsMonitoring()
+           || AudioIO::Get()->GetOwningProject().get() == &project;
+}
+
+void Au3AudioEngine::handleDeviceChange()
+{
+    AudioIO::Get()->HandleDeviceChange();
+}
+
+int Au3AudioEngine::getHostIndex(const std::string& hostName)
+{
+    return AudioIO::Get()->GetHostIndex(hostName);
+}
+
+muse::String Au3AudioEngine::lastErrorString() const
+{
+    return au::au3::wxToString(AudioIO::Get()->LastPaErrorString());
+}
+
+double Au3AudioEngine::getPlaybackSampleRate() const
+{
+    return AudioIO::Get()->GetPlaybackSampleRate();
+}
+
+void Au3AudioEngine::updateTimePosition(const unsigned long newlyConsumedSamples)
+{
+    AudioIO::Get()->UpdateTimePosition(newlyConsumedSamples);
+}
+
+std::optional<au::audio::AudioCallbackInfo> Au3AudioEngine::consumeNextCallbackInfo()
+{
+    AudioIoCallback::AudioCallbackInfo au3Info;
+    if (AudioIO::Get()->GetAudioCallbackInfoQueue().Get(au3Info)) {
+        return au::audio::AudioCallbackInfo { au3Info.dacTime, au3Info.numSamples };
+    }
+    return std::nullopt;
 }
 
 muse::async::Notification Au3AudioEngine::updateRequested() const

@@ -22,7 +22,7 @@
 #ifndef AU_CONTEXT_UICONTEXT_H
 #define AU_CONTEXT_UICONTEXT_H
 
-#include "ui/uiaction.h"
+#include "framework/ui/uiaction.h"
 
 namespace au::context {
 //! NOTE Determines where to be, what the user is doing

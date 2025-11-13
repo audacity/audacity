@@ -11,6 +11,8 @@ static const int INVALID_FORMAT = -1;
 
 using namespace au::playback;
 
+static const muse::actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
+
 PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
                                                  QObject* parent)
     : muse::uicomponents::ToolBarItem(action, type, parent)
@@ -65,8 +67,10 @@ void PlaybackToolBarTimeItem::setCurrentValue(double value)
     if (currentValue() == value) {
         return;
     }
-
-    dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1(value));
+    muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
+    q.addParam("seekTime", muse::Val(value));
+    q.addParam("triggerPlay", muse::Val(false));
+    dispatcher()->dispatch(q);
 }
 
 au::context::IPlaybackStatePtr PlaybackToolBarTimeItem::playbackState() const

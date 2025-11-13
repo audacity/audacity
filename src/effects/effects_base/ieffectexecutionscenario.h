@@ -3,11 +3,10 @@
 */
 #pragma once
 
-#include "global/types/ret.h"
-
-#include "async/notification.h"
-#include "async/channel.h"
-#include "modularity/imoduleinterface.h"
+#include "framework/global/types/ret.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/async/channel.h"
+#include "framework/global/modularity/imoduleinterface.h"
 
 #include "effectstypes.h"
 

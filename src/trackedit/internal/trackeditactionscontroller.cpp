@@ -118,6 +118,8 @@ static const ActionCode LABEL_CUT_CODE("label-cut");
 static const ActionCode LABEL_COPY_CODE("label-copy");
 static const ActionCode LABEL_COPY_CODE_MULTI("label-copy-multi");
 
+static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
+
 // In principle, disabled are actions that modify the data involved in playback.
 static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACKEDIT_CUT_CODE,
@@ -1552,7 +1554,10 @@ void TrackeditActionsController::moveCursorToClosestZeroCrossing()
     secs_t zeroCrossing = trackeditInteraction()->nearestZeroCrossing(playbackState()->playbackPosition());
     zeroCrossing = std::max(zeroCrossing.to_double(), 0.0);
 
-    dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1<double>(zeroCrossing));
+    muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
+    q.addParam("seekTime", muse::Val(zeroCrossing));
+    q.addParam("triggerPlay", muse::Val(false));
+    dispatcher()->dispatch(q);
 }
 
 void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& q)

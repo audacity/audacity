@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
 
 #include "context/iglobalcontext.h"
 

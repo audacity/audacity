@@ -2,18 +2,19 @@
 
 #include "itrackeditinteraction.h"
 #include "trackedit/trackediterrors.h"
-#include "playback/iplayback.h"
+
 #include "playback/iplayer.h"
 #include "global/types/secs.h"
 #include "modularity/ioc.h"
 #include "record/irecordcontroller.h"
 #include "au3wrap/internal/progressdialog.h"
+#include "playback/iplaybackcontroller.h"
 
 namespace au::trackedit {
 class TrackeditInteraction : public ITrackeditInteraction, public muse::Injectable
 {
     muse::Inject<au::record::IRecordController> recordController;
-    muse::Inject<au::playback::IPlayback> playback;
+    muse::Inject<au::playback::IPlaybackController> playbackController;
 
 public:
     TrackeditInteraction(std::unique_ptr<ITrackeditInteraction> interaction);
@@ -130,7 +131,8 @@ private:
         if (recordController()->isRecording()) {
             return make_ret(trackedit::Err::DisallowedDuringRecording);
         }
-        playback()->player()->stop();
+        playbackController()->stop();
+
         return (m_interaction.get()->*method)(std::forward<Args>(args)...);
     }
 

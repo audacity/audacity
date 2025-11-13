@@ -4,17 +4,16 @@
 
 #pragma once
 
-#include "global/async/asyncable.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/actions/iactionsdispatcher.h"
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "audio/iaudioengine.h"
-#include "actions/iactionsdispatcher.h"
+#include "context/iplaybackstate.h"
 #include "trackedit/iprojecthistory.h"
-#include "playback/iplayback.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "trackedit/iselectioncontroller.h"
-
+#include "audio/iaudioengine.h"
 #include "au3wrap/au3types.h"
 
 #include "../../irecord.h"
@@ -30,7 +29,6 @@ class Au3Record : public IRecord, public muse::async::Asyncable
     muse::Inject<au::audio::IAudioEngine> audioEngine;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
-    muse::Inject<au::playback::IPlayback> playback;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<au::trackedit::ISelectionController> selectionController;
 
@@ -69,5 +67,7 @@ private:
     std::vector<RecordData> m_recordData;
 
     muse::ValCh<muse::secs_t> m_recordPosition;
+
+    context::IPlaybackStatePtr playbackState() const;
 };
 }

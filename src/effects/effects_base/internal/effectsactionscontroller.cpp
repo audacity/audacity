@@ -59,15 +59,15 @@ void EffectsActionsController::onEffectTriggered(const muse::actions::ActionQuer
     IF_ASSERT_FAILED(!effectId.empty()) {
         return;
     }
-
-    playback()->player()->stop();
+    playbackController()->stop();
 
     effectExecutionScenario()->performEffect(effectId);
 }
 
 void EffectsActionsController::repeatLastEffect()
 {
-    playback()->player()->stop();
+    playbackController()->stop();
+
     effectExecutionScenario()->repeatLastProcessor();
 }
 

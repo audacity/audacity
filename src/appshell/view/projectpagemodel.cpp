@@ -3,16 +3,15 @@
 */
 #include "projectpagemodel.h"
 
-#include "internal/applicationuiactions.h"
-#include "dockwindow/idockwindow.h"
-#include "projectscene/internal/projectsceneuiactions.h"
+#include "framework/global/log.h"
 
-#include "log.h"
+#include "internal/applicationuiactions.h"
+#include "projectscene/internal/projectsceneuiactions.h"
 
 using namespace au::appshell;
 using namespace muse::actions;
 
-static const muse::actions::ActionCode PLAYBACK_LEVEL_CODE("playback-level");
+static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
 
 ProjectPageModel::ProjectPageModel(QObject* parent)
     : QObject(parent)
@@ -71,7 +70,7 @@ void ProjectPageModel::updatePlaybackMeterVisibility()
                                                           au::projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
     const auto it = std::find_if(toolConfig.items.begin(), toolConfig.items.end(),
                                  [](const muse::ui::ToolConfig::Item& item) {
-        return item.action == PLAYBACK_LEVEL_CODE;
+        return item.action == PLAYBACK_LEVEL_QUERY.toString();
     });
 
     if (it != toolConfig.items.end()) {

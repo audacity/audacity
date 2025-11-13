@@ -25,6 +25,9 @@ using namespace au;
 using namespace au::playback;
 using namespace au::context;
 
+static const actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
+static const actions::ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/play-region-change");
+
 namespace au::playback {
 class PlaybackControllerTests : public ::testing::Test
 {
@@ -85,27 +88,33 @@ public:
 
     void togglePlay()
     {
-        m_controller->togglePlay();
+        m_controller->togglePlayAction();
     }
 
     void changePlaybackRegion(const secs_t start, const secs_t end)
     {
-        m_controller->onChangePlaybackRegionAction(muse::actions::ActionData::make_arg2<double, double>(start, end));
+        muse::actions::ActionQuery q(PLAYBACK_CHANGE_PLAY_REGION_QUERY);
+        q.addParam("start", muse::Val(start));
+        q.addParam("end", muse::Val(end));
+        m_controller->onChangePlaybackRegionAction(q);
     }
 
-    void seek(const secs_t time, bool triggerPlay = false)
+    void seek(const secs_t seekTime, const bool triggerPlay = false)
     {
-        m_controller->onSeekAction(muse::actions::ActionData::make_arg2<double, bool>(time, triggerPlay));
+        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
+        q.addParam("seekTime", muse::Val(seekTime));
+        q.addParam("triggerPlay", muse::Val(triggerPlay));
+        m_controller->onSeekAction(q);
     }
 
     void rewindToStart()
     {
-        m_controller->rewindToStart();
+        m_controller->rewindToStartAction();
     }
 
     void rewindToEnd()
     {
-        m_controller->rewindToEnd();
+        m_controller->rewindToEndAction();
     }
 
     PlaybackController* m_controller = nullptr;
@@ -232,7 +241,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection)
 /**
  * @brief Toggle play when there is clips data selection
  * @details User made a selection by double clicking on waveform and clicked play
- *          Playback should be started without seek
+ *          Playback should be started from clip's start time
  */
 TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
 {
@@ -240,10 +249,15 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Stopped));
 
-    //! [GIVEN] There is clip's selection from 10 to 20 secs
+    //! [GIVEN] Playback position is at the beginning
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillRepeatedly(Return(secs_t(0.0)));
+
+    //! [GIVEN] There is single clip selection from 10 to 20 secs
     PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
-    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
-    .WillOnce(Return(false));
+    //! [GIVEN] No time selection
+    // EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
+    // .WillOnce(Return(false)); // this isn't called 1st anymore in PlaybackController::selectionPlaybackRegion() as we 1st check the clip selection
     EXPECT_CALL(*m_selectionController, selectedClips())
     .WillOnce(Return(trackedit::ClipKeyList({ trackedit::ClipKey { 1, 1 } })));
     EXPECT_CALL(*m_selectionController, selectedClipStartTime())
@@ -251,9 +265,13 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
     EXPECT_CALL(*m_selectionController, selectedClipEndTime())
     .WillOnce(Return(selectionRegion.end));
 
-    //! [THEN] Expect that we will take into account the selection region
+    //! [THEN] Expect that we will take into account the clip's selection region
     EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion))
     .Times(1);
+
+    //! [THEN] No explicit seek (will play from clip start via playback region)
+    EXPECT_CALL(*m_player, seek(_, _))
+    .Times(0);
 
     //! [THEN] Player should start playing
     EXPECT_CALL(*m_player, play())

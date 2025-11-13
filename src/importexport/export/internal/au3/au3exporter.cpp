@@ -141,7 +141,7 @@ muse::Ret Au3Exporter::exportData(std::string filename)
                                                                                                                             secs_t>(
                   selectionController()->rightMostSelectedClipEndTime());
     } else if (exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION) {
-        auto region = playback()->player()->loopRegion();
+        auto region = playbackController()->loopRegion();
         m_t0 = region.start;
         m_t1 = region.end;
     } else {

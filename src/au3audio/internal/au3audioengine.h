@@ -15,6 +15,7 @@ public:
     muse::Inject<au::record::IRecordConfiguration> recordConfiguration;
 
     void init();
+    void deinit();
 
     bool isBusy() const override;
 
@@ -23,9 +24,24 @@ public:
 
     void stopStream() override;
     void pauseStream(bool pause) override;
+    void seekStream(double time) override;
 
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;
+
+    void setInputVolume(float newInputVolume) override;
+    float getInputVolume() const override;
+    void setPlaybackVolume(float newPlaybackVolume) override;
+    float getPlaybackVolume() const override;
+
+    bool canStopAudioStream(AudacityProject& project) const override;
+
+    void handleDeviceChange() override;
+    int getHostIndex(const std::string& hostName) override;
+    muse::String lastErrorString() const override;
+    double getPlaybackSampleRate() const override;
+    void updateTimePosition(unsigned long newlyConsumedSamples) override;
+    std::optional<au::audio::AudioCallbackInfo> consumeNextCallbackInfo() override;
 
     muse::async::Notification updateRequested() const override;
     muse::async::Notification commitRequested() const override;

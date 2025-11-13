@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#include "global/realfn.h"
-#include "global/types/secs.h" // IWYU pragma: export
+#include "framework/global/realfn.h"
+#include "framework/global/types/secs.h" // IWYU pragma: export
 
 namespace au::audio {
 using audioch_t = uint8_t;

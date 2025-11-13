@@ -53,7 +53,7 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
         emit meterSizeChanged();
     });
 
-    controller()->isPlayingChanged().onNotify(this, [this]() {
+    playbackController()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
     });
 
@@ -86,7 +86,7 @@ float PlaybackToolBarLevelItem::rightChannelPressure() const
 
 bool PlaybackToolBarLevelItem::isPlaying() const
 {
-    return controller()->isPlaying();
+    return playbackController()->isPlaying();
 }
 
 void PlaybackToolBarLevelItem::setLeftChannelPressure(float leftChannelPressure)

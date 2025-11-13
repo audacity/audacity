@@ -5,6 +5,7 @@
 
 #include "framework/global/types/number.h"
 #include "framework/global/defer.h"
+#include "framework/global/log.h"
 
 #include "libraries/lib-time-frequency-selection/SelectedRegion.h"
 #include "libraries/lib-track/Track.h"
@@ -13,14 +14,12 @@
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
 #include "libraries/lib-audio-io/AudioIO.h"
+#include "libraries/lib-project-rate/ProjectRate.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
-#include "log.h"
 #include <algorithm>
-
-#include "ProjectRate.h"
 
 using namespace au::playback;
 using namespace au::au3;
@@ -213,8 +212,7 @@ void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
     }
 
     if (applyIfPlaying && m_playbackStatus.val == PlaybackStatus::Running) {
-        auto gAudioIO = AudioIO::Get();
-        gAudioIO->SeekStream(pos - gAudioIO->GetStreamTime());
+        audioEngine()->seekStream(pos);
     }
 
     m_playbackPosition.set(pos);
@@ -265,10 +263,7 @@ void Au3Player::pause()
     if (!canStopAudioStream()) {
         return;
     }
-
-    auto gAudioIO = AudioIO::Get();
-
-    gAudioIO->SetPaused(true);
+    audioEngine()->pauseStream(true);
 
     m_playbackStatus.set(PlaybackStatus::Paused);
 }
@@ -278,7 +273,6 @@ void Au3Player::resume()
     if (!canStopAudioStream()) {
         return;
     }
-
     audioEngine()->pauseStream(false);
 
     m_playbackStatus.set(PlaybackStatus::Running);
@@ -475,14 +469,13 @@ void Au3Player::updatePlaybackPosition()
 {
     using namespace std::chrono;
 
-    auto& audioIO = *AudioIO::Get();
-    const double sampleRate = audioIO.GetPlaybackSampleRate();
-    AudioIoCallback::AudioCallbackInfo newCallback;
-    while (audioIO.GetAudioCallbackInfoQueue().Get(newCallback)) {
-        const auto targetConsumedSamples = static_cast<unsigned long long>(newCallback.numSamples)
+    const double sampleRate = audioEngine()->getPlaybackSampleRate();
+
+    while (const auto callbackInfo = audioEngine()->consumeNextCallbackInfo()) {
+        const auto targetConsumedSamples = static_cast<unsigned long long>(callbackInfo->numSamples)
                                            + (m_currentTarget ? m_currentTarget->consumedSamples : 0);
-        const nanoseconds payloadDuration{ static_cast<long>(newCallback.numSamples * 1e9 / sampleRate + .5) };
-        const auto targetTime = newCallback.dacTime + payloadDuration;
+        const nanoseconds payloadDuration{ static_cast<long>(callbackInfo->numSamples * 1e9 / sampleRate + .5) };
+        const auto targetTime = callbackInfo->dacTime + payloadDuration;
         m_currentTarget.emplace(targetTime, targetConsumedSamples);
     }
 
@@ -502,7 +495,7 @@ void Au3Player::updatePlaybackPosition()
         return;
     }
 
-    audioIO.UpdateTimePosition(expectedConsumedNow - m_consumedSamplesSoFar);
+    audioEngine()->updateTimePosition(expectedConsumedNow - m_consumedSamplesSoFar);
     m_consumedSamplesSoFar = expectedConsumedNow;
     updatePlaybackState();
 }
@@ -514,17 +507,13 @@ muse::async::Channel<muse::secs_t> Au3Player::playbackPositionChanged() const
 
 Au3Project& Au3Player::projectRef() const
 {
-    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    const auto project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     return *project;
 }
 
 bool Au3Player::canStopAudioStream() const
 {
-    auto gAudioIO = AudioIO::Get();
-    Au3Project& project = projectRef();
-    return !gAudioIO->IsStreamActive()
-           || gAudioIO->IsMonitoring()
-           || gAudioIO->GetOwningProject().get() == &project;
+    return audioEngine()->canStopAudioStream(projectRef());
 }
 
 TransportSequences Au3Player::makeTransportTracks(Au3TrackList& trackList, bool selectedOnly)

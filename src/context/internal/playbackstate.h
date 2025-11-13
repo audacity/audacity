@@ -24,6 +24,9 @@ public:
     muse::secs_t playbackPosition() const override;
     muse::async::Channel<muse::secs_t> playbackPositionChanged() const override;
 
+    bool isBusy() const override;
+    bool reachedEnd() const override;
+
 private:
     playback::IPlayerPtr m_player;
 

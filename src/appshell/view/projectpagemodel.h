@@ -4,17 +4,17 @@
 #ifndef AU_APPSHELL_PROJECTPAGEMODEL_H
 #define AU_APPSHELL_PROJECTPAGEMODEL_H
 
-#include <QQuickItem>
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/actions/actionable.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/dockwindow/idockwindowprovider.h"
+#include "framework/ui/iuiconfiguration.h"
 
-#include "modularity/ioc.h"
-#include "async/asyncable.h"
-#include "actions/actionable.h"
-#include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
-#include "iappshellconfiguration.h"
-#include "dockwindow/idockwindowprovider.h"
-#include "ui/iuiconfiguration.h"
 #include "playback/iplaybackconfiguration.h"
+
+#include "iappshellconfiguration.h"
 
 //! TODO AU4
 // #include "braille/ibrailleconfiguration.h"

@@ -18,7 +18,7 @@ static const muse::actions::ActionCode TRACK_RANGE_SELECTION_CODE("track-range-s
 static const muse::actions::ActionCode MULTI_TRACK_SELECTION_PREV_CODE("shift-up");
 static const muse::actions::ActionCode MULTI_TRACK_SELECTION_NEXT_CODE("shift-down");
 
-static const muse::actions::ActionCode PLAYBACK_SEEK_CODE("playback-seek");
+static const muse::actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 void TrackNavigationController::init()
 {
@@ -32,7 +32,7 @@ void TrackNavigationController::init()
     dispatcher()->reg(this, MULTI_TRACK_SELECTION_PREV_CODE, this, &TrackNavigationController::multiSelectionUp);
     dispatcher()->reg(this, MULTI_TRACK_SELECTION_NEXT_CODE, this, &TrackNavigationController::multiSelectionDown);
 
-    dispatcher()->reg(this, PLAYBACK_SEEK_CODE, [this] {
+    dispatcher()->reg(this, PLAYBACK_SEEK_QUERY, [this] {
         m_selectionStart = std::nullopt;
     });
 

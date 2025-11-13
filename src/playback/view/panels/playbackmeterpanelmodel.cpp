@@ -32,7 +32,7 @@ void PlaybackMeterPanelModel::init()
         emit levelChanged();
     });
 
-    controller()->isPlayingChanged().onNotify(this, [this]() {
+    playbackController()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
     });
 
@@ -56,7 +56,7 @@ float PlaybackMeterPanelModel::level() const
 
 bool PlaybackMeterPanelModel::isPlaying() const
 {
-    return controller()->isPlaying();
+    return playbackController()->isPlaying();
 }
 
 void PlaybackMeterPanelModel::setLeftChannelPressure(float leftChannelPressure)

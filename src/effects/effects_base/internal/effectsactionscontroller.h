@@ -4,18 +4,18 @@
 
 #pragma once
 
-#include "async/asyncable.h"
-#include "async/channel.h"
-#include "actions/actionable.h"
+#include "framework/global/iinteractive.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/async/channel.h"
+#include "framework/actions/actionable.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/ui/iuiactionsregister.h"
 
-#include "modularity/ioc.h"
-#include "actions/iactionsdispatcher.h"
-#include "ui/iuiactionsregister.h"
+#include "playback/iplaybackcontroller.h"
 #include "../ieffectexecutionscenario.h"
 #include "../ieffectsprovider.h"
 #include "../ieffectpresetsscenario.h"
-#include "iinteractive.h"
-#include "playback/iplayback.h"
 
 namespace au::effects {
 class EffectsUiActions;
@@ -28,7 +28,7 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectPresetsScenario> presetsScenario;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<au::playback::IPlayback> playback;
+    muse::Inject<au::playback::IPlaybackController> playbackController;
 
 public:
     void init();

@@ -7,6 +7,11 @@ using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace muse::actions;
 
+static const ActionQuery PLAYBACK_CHANGE_AUDIO_API_QUERY("action://playback/change-api");
+static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
+static const ActionQuery PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
+static const ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
+
 namespace {
 bool containsAny(const ActionCodeList& list, const ActionCodeList& actionCodes)
 {
@@ -27,9 +32,11 @@ void AudioSetupContextMenuModel::onActionsStateChanges(const muse::actions::Acti
 {
     AbstractMenuModel::onActionsStateChanges(codes);
 
-    auto audioSetupCodeList = { ActionCode("action://playback/change-api"), ActionCode("action://playback/change-playback-device"),
-                                ActionCode("action://playback/change-recording-device"), ActionCode(
-                                    "action://playback/change-input-channels") };
+    // here we use ActionQuery toString() to create ActionCodeList, update once we have ActionQueryList
+    auto audioSetupCodeList = { PLAYBACK_CHANGE_AUDIO_API_QUERY.toString(),
+                                PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString(),
+                                PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString(),
+                                PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString() };
 
     if (containsAny(codes, audioSetupCodeList)) {
         //! NOTE: changing audio setup may change available items within context menu
@@ -57,7 +64,7 @@ MenuItemList AudioSetupContextMenuModel::makeHostItems()
     auto currentApi = audioDevicesProvider()->currentAudioApi();
 
     auto makeChangeApiAction = [](int index) {
-        ActionQuery q("action://playback/change-api");
+        ActionQuery q = PLAYBACK_CHANGE_AUDIO_API_QUERY;
         q.addParam("api_index", muse::Val(index));
         return q;
     };
@@ -82,7 +89,7 @@ MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
     auto currentOutputDevice = audioDevicesProvider()->currentAudioOutputDevice();
 
     auto makeChangePlaybackDeviceAction = [](int index) {
-        ActionQuery q("action://playback/change-playback-device");
+        ActionQuery q = PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY;
         q.addParam("device_index", muse::Val(index));
         return q;
     };
@@ -107,7 +114,7 @@ MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
     auto currentInputDevice = audioDevicesProvider()->currentAudioInputDevice();
 
     auto makeChangeRecordingDeviceAction = [](int index) {
-        ActionQuery q("action://playback/change-recording-device");
+        ActionQuery q = PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY;
         q.addParam("device_index", muse::Val(index));
         return q;
     };
@@ -132,7 +139,7 @@ MenuItemList AudioSetupContextMenuModel::makeInputChannelsItems()
     auto currentInputChannels = audioDevicesProvider()->currentInputChannels();
 
     auto makeChangeInputChannelsAction = [](int index) {
-        ActionQuery q("action://playback/change-input-channels");
+        ActionQuery q = PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY;
         q.addParam("input-channels_index", muse::Val(index));
         return q;
     };

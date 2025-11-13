@@ -3,17 +3,16 @@
 */
 #pragma once
 
-#include "../../iselectioncontroller.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
 
-#include "async/asyncable.h"
-#include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
-#include "playback/iplayback.h"
-
-#include "Track.h"
+#include "libraries/lib-track/Track.h"
 
 #include "au3wrap/au3types.h"
+#include "context/iglobalcontext.h"
+
 #include "trackedittypes.h"
+#include "../../iselectioncontroller.h"
 
 namespace au::trackedit {
 struct ClipAndTimeSelection;
@@ -21,7 +20,6 @@ struct ClipAndTimeSelection;
 class Au3SelectionController : public ISelectionController, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::playback::IPlayback> playback;
 
 public:
     Au3SelectionController() = default;

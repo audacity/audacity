@@ -23,8 +23,6 @@
 #include "libraries/lib-module-manager/PluginManager.h" // for NYQUIST_PROMPT_ID
 #include "libraries/lib-basic-ui/BasicUI.h"
 
-#include "libraries/lib-audio-io/AudioIO.h"
-
 #include "au3wrap/au3types.h"
 #include "playback/iplayer.h"
 

@@ -29,6 +29,7 @@ using namespace muse::actions;
 
 static const ActionCode PLAY_POSITION_DECREASE("play-position-decrease");
 static const ActionCode PLAY_POSITION_INCREASE("play-position-increase");
+static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 au::projectscene::PlayPositionActionController::PlayPositionActionController(QObject* parent)
     : QObject(parent)
@@ -78,7 +79,10 @@ void PlayPositionActionController::snapCurrentPosition()
     const double currentXPosition = m_context->timeToPosition(currentPlaybackPosition);
     const muse::secs_t secs = m_context->positionToTime(currentXPosition, true);
     if (muse::RealIsEqualOrMore(secs, 0.0) || !muse::RealIsEqual(secs, currentPlaybackPosition)) {
-        dispatcher()->dispatch("playback-seek", ActionData::make_arg1<double>(secs));
+        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
+        q.addParam("seekTime", muse::Val(secs));
+        q.addParam("triggerPlay", muse::Val(false));
+        dispatcher()->dispatch(q);
     }
 }
 
@@ -105,7 +109,10 @@ void PlayPositionActionController::applySingleStep(Direction direction)
     }
 
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
-        dispatcher()->dispatch("playback-seek", ActionData::make_arg1<double>(secs));
+        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
+        q.addParam("seekTime", muse::Val(secs));
+        q.addParam("triggerPlay", muse::Val(false));
+        dispatcher()->dispatch(q);
     }
 }
 

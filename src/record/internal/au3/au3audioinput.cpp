@@ -6,7 +6,6 @@
 
 #include "global/async/async.h"
 
-#include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 
 #include "au3wrap/au3types.h"
@@ -91,14 +90,8 @@ void Au3AudioInput::initMeter()
 
 muse::async::Promise<float> Au3AudioInput::recordVolume() const
 {
-    return muse::async::Promise<float>([](auto resolve, auto /*reject*/) {
-        float inputVolume;
-        float outputVolume;
-        int inputSource;
-
-        auto gAudioIO = AudioIO::Get();
-        gAudioIO->GetMixer(&inputSource, &inputVolume, &outputVolume);
-
+    return muse::async::Promise<float>([this](auto resolve, auto /*reject*/) {
+        const float inputVolume = audioEngine()->getInputVolume();
         return resolve(au3VolumeToLocal(inputVolume));
     });
 }
@@ -106,15 +99,7 @@ muse::async::Promise<float> Au3AudioInput::recordVolume() const
 void Au3AudioInput::setRecordVolume(float volume)
 {
     muse::async::Async::call(this, [this, volume]() {
-        float inputVolume;
-        float outputVolume;
-        int inputSource;
-
-        auto gAudioIO = AudioIO::Get();
-        gAudioIO->GetMixer(&inputSource, &inputVolume, &outputVolume);
-
-        gAudioIO->SetMixer(inputSource, localVolumeToAu3(volume), outputVolume);
-
+        audioEngine()->setInputVolume(localVolumeToAu3(volume));
         m_recordVolumeChanged.send(volume);
     });
 }

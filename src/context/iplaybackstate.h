@@ -5,7 +5,7 @@
 
 #include <memory>
 
-#include "global/async/channel.h"
+#include "framework/global/async/channel.h"
 #include "playback/playbacktypes.h"
 
 namespace au::context {
@@ -24,6 +24,9 @@ public:
 
     virtual muse::secs_t playbackPosition() const = 0;
     virtual muse::async::Channel<muse::secs_t> playbackPositionChanged() const = 0;
+
+    virtual bool isBusy() const = 0;
+    virtual bool reachedEnd() const = 0;
 };
 
 using IPlaybackStatePtr = std::shared_ptr<IPlaybackState>;

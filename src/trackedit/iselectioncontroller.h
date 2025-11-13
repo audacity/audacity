@@ -3,9 +3,8 @@
  */
 #pragma once
 
-#include "modularity/imoduleinterface.h"
-
-#include "global/async/channel.h"
+#include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/async/channel.h"
 
 #include "trackedit/trackedittypes.h"
 

@@ -2,7 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "settings.h"
+#include "framework/global/settings.h"
 
 #include "playbackconfiguration.h"
 

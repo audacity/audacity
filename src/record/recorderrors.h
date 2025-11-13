@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "types/ret.h"
-#include "translation.h"
+#include "framework/global/types/ret.h"
+#include "framework/global/translation.h"
 
 namespace au::record {
 static constexpr int RECORD_FIRST = 5000;

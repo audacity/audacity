@@ -84,4 +84,14 @@ public:
     virtual ~OtherPlayableSequence();
 };
 
+struct MIXER_API TransportSequences final {
+    ConstPlayableSequences playbackSequences;
+    RecordableSequences captureSequences;
+    std::vector<std::shared_ptr<const OtherPlayableSequence> >
+    otherPlayableSequences;
+
+    // This is a subset of playbackSequences
+    ConstPlayableSequences prerollSequences;
+};
+
 #endif

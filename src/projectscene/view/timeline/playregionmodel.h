@@ -9,7 +9,7 @@
 #include "global/async/asyncable.h"
 #include "modularity/ioc.h"
 
-#include "playback/iplayback.h"
+#include "playback/iplaybackcontroller.h"
 
 namespace au {
 class PlayRegionModel : public QObject, public muse::Injectable, public muse::async::Asyncable
@@ -20,7 +20,7 @@ class PlayRegionModel : public QObject, public muse::Injectable, public muse::as
     Q_PROPERTY(double end READ end WRITE setEnd NOTIFY endChanged FINAL)
     Q_PROPERTY(bool active READ active WRITE setActive NOTIFY activeChanged FINAL)
 
-    muse::Inject<playback::IPlayback> playback;
+    muse::Inject<playback::IPlaybackController> playbackController;
 
 public:
     explicit PlayRegionModel(QObject* parent = nullptr);

@@ -3,7 +3,7 @@
 */
 #include "au3audiomodule.h"
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
 
 #include "internal/au3audioengine.h"
 
@@ -41,4 +41,5 @@ void Au3AudioModule::onInit(const muse::IApplication::RunMode&)
 
 void Au3AudioModule::onDeinit()
 {
+    m_audioEngine->deinit();
 }

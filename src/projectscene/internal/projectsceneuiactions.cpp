@@ -312,11 +312,11 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
     static ToolConfig config;
     if (!config.isValid()) {
         config.items = {
-            { "play", true },
-            { "stop", true },
-            { "record", true },
-            { "rewind-start", true },
-            { "rewind-end", true },
+            { "action://playback/play", true },
+            { "action://playback/stop", true },
+            { "action://record/start", true },
+            { "action://playback/rewind-start", true },
+            { "action://playback/rewind-end", true },
             { "toggle-loop-region", true },
             { "", true },
             { "automation", true },
@@ -347,8 +347,8 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "", true },
             { "snap", true },
             { "", true },
-            { "record-level", true },
-            { "playback-level", true }
+            { "action://record/level", true },
+            { "action://playback/level", true }
         };
     }
     return config;

@@ -22,7 +22,7 @@
 #ifndef AU_CONTEXT_IUICONTEXTRESOLVER_H
 #define AU_CONTEXT_IUICONTEXTRESOLVER_H
 
-#include "ui/iuicontextresolver.h"
+#include "framework/ui/iuicontextresolver.h"
 #include "uicontext.h" // IWYU pragma: export
 
 namespace au::context {
