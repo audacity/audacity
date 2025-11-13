@@ -17,11 +17,14 @@
 **********************************************************************/
 #pragma once
 
-#include "Identifier.h"
-#include "TranslatableString.h"
 #include <functional>
 #include <memory>
+#include <unordered_map>
+
 #include <wx/string.h>
+
+#include "Identifier.h"
+#include "TranslatableString.h"
 
 class Effect;
 class EffectSettings;
