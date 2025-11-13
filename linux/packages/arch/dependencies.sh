@@ -58,6 +58,3 @@ deps=(
 pacman -Syu --noconfirm \
    "${build_deps[@]}" \
    "${deps[@]}"
-
-# fakeroot is broken since 1.35 as of Oct 1 2024, https://github.com/docker/for-mac/issues/7331
-pacman -U --noconfirm https://archive.archlinux.org/packages/f/fakeroot/fakeroot-1.34-1-x86_64.pkg.tar.zst
