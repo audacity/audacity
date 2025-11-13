@@ -82,6 +82,10 @@ au::trackedit::TrackViewType trackViewType(const Au3Track* track)
 float trackVerticalZoom(const Au3Track* track)
 {
     const auto* waveTrack = dynamic_cast<const WaveTrack*>(track);
+    if (waveTrack == nullptr) {
+        return 0.0f;
+    }
+
     const auto& cache = WaveformScale::Get(*waveTrack);
     float min;
     float max;
