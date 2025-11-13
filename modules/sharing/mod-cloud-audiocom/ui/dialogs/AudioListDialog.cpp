@@ -843,18 +843,38 @@ void AudioListDialog::OnOpenAudioCom()
 
 void AudioListDialog::OnGridSelect(wxGridRangeSelectEvent& event)
 {
-   mInRangeSelection = event.Selecting();
+   event.Skip();
 
-   const auto sel = mAudioTable->GetSelectedRows();
-   mOpenButton->Enable(!sel.empty());
-   mOpenAudioCom->Enable(!sel.empty());
+   if (!event.Selecting())
+   {
+      mOpenButton->Disable();
+      mOpenAudioCom->Disable();
+      return;
+   }
+
+   mOpenButton->Enable();
+   mOpenAudioCom->Enable();
+
+   const auto topRow     = event.GetTopRow();
+   const auto bottomRow  = event.GetBottomRow();
+   const auto currentRow = mAudioTable->GetGridCursorRow();
+
+   if (topRow != bottomRow)
+   {
+      if (mInRangeSelection)
+         return;
+
+      mInRangeSelection = true;
+      auto switcher     = finally([this] { mInRangeSelection = false; });
+
+      mAudioTable->SelectRow(currentRow == topRow ? bottomRow : topRow);
+   }
 }
 
 void AudioListDialog::OnSelectCell(wxGridEvent& event)
 {
-   const auto sel = mAudioTable->GetSelectedRows();
-   mOpenButton->Enable(!sel.empty());
-   mOpenAudioCom->Enable(!sel.empty());
+   event.Skip();
+   mAudioTable->SelectRow(event.GetRow());
 
 #if wxUSE_ACCESSIBILITY
    if (mAccessible)
