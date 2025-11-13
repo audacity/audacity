@@ -5,12 +5,12 @@ LABEL description="A build environment to check the builds for Arch package main
 LABEL version="3.0"
 
 COPY ["dependencies.sh", "/dependencies.sh"]
-RUN ./dependencies.sh
+RUN chmod +x /dependencies.sh && /dependencies.sh
 
 COPY ["entrypoint.sh", "/entrypoint.sh"]
 
 RUN useradd -m user
-#RUN echo "user ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/user
+RUN echo "user ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/user
 USER user
 WORKDIR /home/user
 
