@@ -96,6 +96,7 @@ set( LIBRARIES
 set (EXTRA_CLUSTER_NODES "${LIBRARIES};lib-crypto" PARENT_SCOPE)
 
 list(APPEND LIBRARIES
+      lib-string-utils-interface
       lib-menus-interface
       lib-shuttlegui-interface
       lib-wx-wrappers-interface

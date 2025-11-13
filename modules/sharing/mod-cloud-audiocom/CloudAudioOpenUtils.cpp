@@ -15,6 +15,7 @@
 #include <wx/log.h>
 
 #include "BasicUI.h"
+#include "CodeConversions.h"
 #include "ExportUtils.h"
 #include "CloudSyncService.h"
 #include "UriParser.h"
@@ -74,7 +75,7 @@ AudacityProject* GetTargetProject()
    return project.get();
 }
 
-void FixupProject(AudacityProject& project, const std::string& title)
+void FixupProject(AudacityProject& project, const wxString& title)
 {
    auto tracks = TrackList::Get(project).Any<WaveTrack>();
 
@@ -147,7 +148,7 @@ AudacityProject* OpenAudioFromCloud(std::string_view audioId) {
    auto project = GetTargetProject();
 
    ProjectFileManager::Get(*project).Import(audioPath, false);
-   FixupProject(*project, result.Title);
+   FixupProject(*project, audacity::ToWXString(result.Title));
 
    wxRemoveFile(audioPath);
 

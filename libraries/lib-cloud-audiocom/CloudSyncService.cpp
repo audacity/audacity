@@ -852,7 +852,7 @@ void CloudSyncService::DownloadAudio(const std::string& name, const std::string&
    const Request request(url);
    auto response = NetworkManager::GetInstance().doGet(request);
 
-   const auto filename = sync::MakeSafeFilePath(wxFileName::GetTempDir(), name, format);
+   const auto filename = sync::MakeSafeFilePath(wxFileName::GetTempDir(), audacity::ToWXString(name), format);
    auto audioFile = std::make_shared<std::ofstream>(filename.ToStdString(), std::ios::binary);
 
    response->setRequestFinishedCallback([response, this, filename, name, format, audioFile]
