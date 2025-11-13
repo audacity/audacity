@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 build_deps=(
    gcc
    git
@@ -8,44 +10,49 @@ build_deps=(
 )
 
 deps=(
-   zlib
-   alsa-lib
-   gtk2
-   expat
-   libid3tag
-   libogg
-   libvorbis
-   flac
-   lame
-   twolame
-   libsndfile
-   jack
-   lilv
-   lv2
-   portaudio
-   portsmf
-   portmidi
-   suil
-   vamp-plugin-sdk
-   libsoxr
-   soundtouch
-   # sbsms is not available on arch
-   # sbsms
-   libpng
-   libjpeg-turbo
-   libsm
-   ffmpeg
-   harfbuzz
-   freetype2
-   fontconfig
-   mesa
-   mpg123
-   wavpack
-   wxwidgets-gtk3
-   vst3sdk
-   rapidjson
-   opusfile
-   opus
+  alsa-lib
+  expat
+  ffmpeg
+  flac
+  gcc-libs
+  gdk-pixbuf2
+  glib2
+  glibc
+  gtk3
+  gtkmm3
+  jack
+  lame
+  libid3tag
+  libmad
+  libogg
+  libsbsms
+  libsndfile
+  libsoxr
+  libvorbis
+  libxkbcommon-x11
+  lilv
+  lv2
+  mpg123
+  opusfile
+  portaudio
+  portmidi
+  portsmf
+  rapidjson
+  soundtouch
+  serd
+  sord
+  sratom
+  sqlite
+  suil
+  twolame
+  vamp-plugin-sdk
+  vst3sdk
+  wavpack
+  wxwidgets-gtk3
+  xcb-util
+  xcb-util-cursor
+  xcb-util-keysyms
+  zlib
 )
 
 pacman -Syu --noconfirm \

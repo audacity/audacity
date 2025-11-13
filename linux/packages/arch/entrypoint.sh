@@ -26,7 +26,7 @@ sed -i -e "s|TMPL_AUDACITY_SOURCES|${sources}|g" PKGBUILD
 
 cat PKGBUILD
 
-makepkg
+makepkg --syncdeps --noconfirm --needed
 
 ls -la /work_dir
 id
