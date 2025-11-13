@@ -119,7 +119,7 @@ TrackItemsContainer {
                                 root.isIsolationMode = true
                             }
                             else if (!root.altPressed) {
-                                root.multiSampleEdit = true
+                                clipsContainer.multiSampleEdit = true
                             }
 
                             clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
