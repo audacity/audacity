@@ -107,7 +107,7 @@ std::unique_ptr<ImportFileHandle> WavPackImportPlugin::Open(const FilePath &file
 {
    char errMessage[100]; // To hold possible error message
    int flags = OPEN_WVC | OPEN_FILE_UTF8 | OPEN_TAGS | OPEN_DSD_AS_PCM | OPEN_NORMALIZE;
-   WavpackContext *wavpackContext = WavpackOpenFileInput(filename, errMessage, flags, 0);
+   WavpackContext *wavpackContext = WavpackOpenFileInput(audacity::ToUTF8(filename).c_str(), errMessage, flags, 0);
 
    if (!wavpackContext) {
       // Some error occured(e.g. File not found or is invalid)
