@@ -2,20 +2,24 @@
 * Audacity: A Digital Audio Editor
 */
 #include "global/realfn.h"
-#include "types/ratio.h"
 
-#include "dblinearrulerutils.h"
 #include "dblinearstereoruler.h"
 #include "itrackrulermodel.h"
 
 using namespace au::projectscene;
 
 namespace {
-constexpr int MIN_LOWEST_FULL_STEP_TO_ZERO_HEIGHT = 14;
+constexpr int MIN_FULL_STEP_TO_INF_HEIGHT = 14;
 constexpr int MIN_ADJACENT_STEPS_HEIGHT = 10;
-constexpr int MIN_HEIGHT_TO_ZERO = 10;
+constexpr int MIN_FULL_STEP_TO_ZERO_HEIGHT = 10;
 constexpr int MIN_CHANNEL_HEIGHT = 30;
 const std::vector<int> FULL_STEP_SIZES = { 1, 2, 3, 6, 9 };
+}
+
+DbLinearStereoRuler::DbLinearStereoRuler()
+    : DbLinearBaseRuler(DbLinearRulerUiSettings { MIN_ADJACENT_STEPS_HEIGHT, MIN_FULL_STEP_TO_INF_HEIGHT, MIN_FULL_STEP_TO_ZERO_HEIGHT,
+                                                  std::vector<int>(FULL_STEP_SIZES.begin(), FULL_STEP_SIZES.end()) })
+{
 }
 
 double DbLinearStereoRuler::stepToPosition(double step, size_t channel, bool isNegativeSample) const
@@ -34,45 +38,7 @@ double DbLinearStereoRuler::stepToPosition(double step, size_t channel, bool isN
         return startPosition + channelMiddleOffset;
     }
 
-    const double maxLinearValue = std::abs(muse::db_to_linear(m_maxDisplayValue));
-    const double minLinearValue = -maxLinearValue;
-    const double linearValue = muse::db_to_linear(step) * (isNegativeSample ? -1.0 : 1.0);
-    const double clampedLinearValue = std::clamp(linearValue, minLinearValue, maxLinearValue);
-
-    return startPosition + ((0.5 - (clampedLinearValue / (maxLinearValue - minLinearValue))) * (endPosition - startPosition));
-}
-
-void DbLinearStereoRuler::setHeight(int height)
-{
-    m_height = height;
-}
-
-void DbLinearStereoRuler::setChannelHeightRatio(double channelHeightRatio)
-{
-    m_channelHeightRatio = channelHeightRatio;
-}
-
-void DbLinearStereoRuler::setCollapsed(bool isCollapsed)
-{
-    m_collapsed = isCollapsed;
-}
-
-void DbLinearStereoRuler::setDbRange(double dbRange)
-{
-    m_dbRange = dbRange;
-}
-
-std::string DbLinearStereoRuler::sampleToText(double sample) const
-{
-    std::stringstream ss;
-
-    if (muse::RealIsEqual(sample, m_dbRange)) {
-        ss << "\u221E";
-    } else {
-        ss << std::fixed << std::setprecision(0) << std::abs(sample);
-    }
-
-    return ss.str();
+    return startPosition + valueToPosition(step, endPosition - startPosition, isNegativeSample);
 }
 
 std::vector<TrackRulerFullStep> DbLinearStereoRuler::fullSteps() const
@@ -98,8 +64,7 @@ std::vector<TrackRulerFullStep> DbLinearStereoRuler::fullSteps() const
                                                                             true }
         };
 
-        auto valuesList = dblinearrulerutils::fullStepsValues(channelHeights[channel], m_dbRange, m_maxDisplayValue, MIN_HEIGHT_TO_ZERO,
-                                                              MIN_ADJACENT_STEPS_HEIGHT, FULL_STEP_SIZES);
+        auto valuesList = fullStepValues(channelHeights[channel]);
         for (const auto& stepValue : valuesList) {
             channelSteps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), channel, 0, false, false, false });
             channelSteps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), channel, 0, false, false, true });
@@ -119,12 +84,8 @@ std::vector<TrackRulerSmallStep> DbLinearStereoRuler::smallSteps() const
     std::vector<double> channelHeights = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
     std::vector<TrackRulerSmallStep> steps;
     for (size_t channel = 0; channel < 2; ++channel) {
-        const int lowestFullStep = dblinearrulerutils::computeLowestFullStepValue(channelHeights[channel], m_dbRange, m_maxDisplayValue,
-                                                                                  MIN_LOWEST_FULL_STEP_TO_ZERO_HEIGHT);
-        const std::vector<int> valuesList = dblinearrulerutils::fullStepsValues(channelHeights[channel], m_dbRange, m_maxDisplayValue,
-                                                                                MIN_HEIGHT_TO_ZERO,
-                                                                                MIN_ADJACENT_STEPS_HEIGHT,
-                                                                                FULL_STEP_SIZES);
+        const int lowestFullStep = computeLowestFullStepValue(channelHeights[channel]);
+        const std::vector<int> valuesList = fullStepValues(channelHeights[channel]);
         std::vector<int> filteredValuesList;
         std::copy_if(valuesList.begin(), valuesList.end(), std::back_inserter(filteredValuesList),
                      [lowestFullStep](int value) { return value != lowestFullStep; });
@@ -143,9 +104,4 @@ std::vector<TrackRulerSmallStep> DbLinearStereoRuler::smallSteps() const
     }
 
     return steps;
-}
-
-void DbLinearStereoRuler::setVerticalZoom(float verticalZoom)
-{
-    m_maxDisplayValue = muse::linear_to_db(verticalZoom);
 }
