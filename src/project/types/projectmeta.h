@@ -72,7 +72,6 @@ inline const std::string COMMENTS_TAG("Comments");
 static const QList<std::string> standardTags {
     ARTIST_TAG,
     TRACK_TITLE_TAG,
-    ARTIST_TAG,
     ALBUM_TAG,
     TRACK_NUMBER_TAG,
     YEAR_TAG,
@@ -81,7 +80,7 @@ static const QList<std::string> standardTags {
 
 using MemberPtr = std::string ProjectMeta::*;
 
-inline static const std::array<MemberPtr, 9> kStdMembers = {
+inline static const std::array<MemberPtr, 6> kStdMembers = {
     &project::ProjectMeta::artist,
     &project::ProjectMeta::trackTitle,
     &project::ProjectMeta::album,
