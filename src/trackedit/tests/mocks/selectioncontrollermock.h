@@ -52,7 +52,6 @@ public:
     MOCK_METHOD(void, setSelectedAllAudioData, (), (override));
     MOCK_METHOD(ClipKeyList, clipsIntersectingRangeSelection, (), (const, override));
     MOCK_METHOD(void, setClipsIntersectingRangeSelection, (const ClipKeyList& clipKeys), (override));
-    MOCK_METHOD(ClipKeyList, findClipsIntersectingRangeSelection, (), (const, override));
 
     MOCK_METHOD(secs_t, dataSelectedStartTime, (), (const, override));
     MOCK_METHOD(void, setDataSelectedStartTime, (secs_t, bool), (override));

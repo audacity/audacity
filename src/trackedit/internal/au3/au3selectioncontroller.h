@@ -69,7 +69,6 @@ public:
     void setSelectedAllAudioData() override;
     ClipKeyList clipsIntersectingRangeSelection() const override;
     void setClipsIntersectingRangeSelection(const ClipKeyList& clipKeys) override;
-    ClipKeyList findClipsIntersectingRangeSelection() const override;
 
     trackedit::secs_t dataSelectedStartTime() const override;
     void setDataSelectedStartTime(trackedit::secs_t time, bool complete) override;
@@ -105,6 +104,7 @@ private:
     void addSelectedTrack(const trackedit::TrackId& trackId);
     void updateSelectionController();
     void restoreSelection(const ClipAndTimeSelection& selection);
+    ClipKeyList findClipsIntersectingRangeSelection() const;
 
     au3::Au3Project& projectRef() const;
     Observer::Subscription m_tracksSubc;
