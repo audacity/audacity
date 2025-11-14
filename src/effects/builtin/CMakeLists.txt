@@ -157,6 +157,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/truncatesilence/truncatesilenceeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/truncatesilence/truncatesilenceviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/truncatesilence/truncatesilenceviewmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/changepitch/changepitcheffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/changepitch/changepitcheffect.h
     )
 
 # AU3
