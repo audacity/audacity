@@ -78,7 +78,6 @@ public:
     void verticalZoomIn(const trackedit::TrackId& trackId) override;
     void verticalZoomOut(const trackedit::TrackId& trackId) override;
     void resetVerticalZoom(const trackedit::TrackId& trackId) override;
-    void adjustVerticalZoom(const trackedit::TrackId& trackId) override;
 
     double nearestZeroCrossing(double time) const override;
 
@@ -122,6 +121,9 @@ private:
     int trackPosition(const TrackId trackId);
     void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
     void moveTrackTo(const TrackId trackId, int pos);
+
+    float maxVerticalZoom(const trackedit::Track& track) const;
+    void adjustVerticalZoom(const trackedit::TrackId& trackId);
 
     context::IPlaybackStatePtr playbackState() const;
 

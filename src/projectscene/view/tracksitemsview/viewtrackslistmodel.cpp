@@ -308,12 +308,16 @@ bool ViewTracksListModel::isVerticalRulersVisible() const
 
 int ViewTracksListModel::verticalRulerWidth() const
 {
+    constexpr int MAX_DECIMAL_PLACES = 4;
+
     float smallestBoundValue = 1;
     for (const auto& track : m_trackList) {
         if (track.rulerType != au::trackedit::TrackRulerType::Linear) {
+            //Only linear rulers contain decimal places.
             continue;
         }
 
+        // Find the smallest vertical zoom among linear rulers to ajust the width globally.
         smallestBoundValue = std::min(smallestBoundValue, track.verticalZoom);
     }
     smallestBoundValue *= 0.1f;
@@ -326,11 +330,12 @@ int ViewTracksListModel::verticalRulerWidth() const
         decimalPart *= 10;
         decimalPart = decimalPart - static_cast<int>(decimalPart);
         count++;
-        if (count == 4) {
+        if (count == MAX_DECIMAL_PLACES) {
             break;
         }
     }
 
+    // Adjust the width according to the number of decimal places.
     return 24 + (count * 8);
 }
 
