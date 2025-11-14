@@ -41,6 +41,8 @@ private:
     void pinnedPlayHead();
     void togglePlaybackOnRulerClickEnabled();
 
+    void changeFontForLabels();
+
     void openClipPitchAndSpeedEdit(const muse::actions::ActionData& args);
 
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;

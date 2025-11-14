@@ -6,11 +6,10 @@
 
 #include "modularity/imodulesetup.h"
 
-#include "internal/exportconfiguration.h"
-
 namespace au::importexport {
 class Au3Exporter;
 class Au3FFmpegOptionsAccessor;
+class ExportConfiguration;
 class ExporterModule : public muse::modularity::IModuleSetup
 {
 public:

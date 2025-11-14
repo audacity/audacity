@@ -14,6 +14,7 @@ static const std::string module_name("export");
 
 static const muse::Settings::Key EXPORT_PROCESS(module_name, "importexport/process");
 static const muse::Settings::Key EXPORT_DIRECTORY_PATH(module_name, "importexport/directoryPath");
+static const muse::Settings::Key EXPORT_LABELS_DIRECTORY_PATH(module_name, "importexport/labelsDirectoryPath");
 static const muse::Settings::Key EXPORT_FORMAT(module_name, "importexport/format");
 static const muse::Settings::Key EXPORT_CHANNELS(module_name, "importexport/channels");
 static const muse::Settings::Key EXPORT_SAMPLE_RATE(module_name, "importexport/defaultProjectSampleRate");
@@ -56,6 +57,8 @@ void ExportConfiguration::init()
     muse::settings()->valueChanged(EXPORT_DIRECTORY_PATH).onReceive(nullptr, [this] (const muse::Val&) {
         m_directoryPathChanged.notify();
     });
+
+    muse::settings()->setDefaultValue(EXPORT_LABELS_DIRECTORY_PATH, muse::Val(globalConfiguration()->userDataPath()));
 
     muse::settings()->valueChanged(EXPORT_FORMAT).onReceive(nullptr, [this] (const muse::Val&) {
         m_currentFormatChanged.notify();
@@ -214,6 +217,16 @@ void ExportConfiguration::setDirectoryPath(const muse::io::path_t& path)
 muse::async::Notification ExportConfiguration::directoryPathChanged() const
 {
     return m_directoryPathChanged;
+}
+
+muse::io::path_t ExportConfiguration::labelsDirectoryPath() const
+{
+    return muse::settings()->value(EXPORT_LABELS_DIRECTORY_PATH).toString();
+}
+
+void ExportConfiguration::setLabelsDirectoryPath(const muse::io::path_t& path)
+{
+    muse::settings()->setSharedValue(EXPORT_LABELS_DIRECTORY_PATH, muse::Val(path));
 }
 
 int ExportConfiguration::exportChannels() const

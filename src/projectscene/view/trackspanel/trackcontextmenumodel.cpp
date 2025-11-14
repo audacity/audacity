@@ -107,6 +107,8 @@ MenuItemList TrackContextMenuModel::makeLabelTrackItems()
         makeSeparator(),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
+        makeSeparator(),
+        makeItemWithArg("export-labels")
     };
 }
 

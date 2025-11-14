@@ -23,6 +23,7 @@ static const muse::Uri NEW_PROJECT_URI("audacity://project/new");
 static const muse::Uri EXPORT_URI("audacity://project/export");
 static const muse::Uri CUSTOM_FFMPEG_OPTIONS("audacity://project/export/ffmpeg");
 static const muse::Uri METADATA_DIALOG_URI("audacity://project/export/metadata");
+static const muse::Uri EXPORT_LABELS_URI("audacity://project/export/labels");
 
 static const QString AUDACITY_URL_SCHEME("audacity");
 static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
@@ -687,9 +688,14 @@ void ProjectActionsController::exportAudio()
     interactive()->open(EXPORT_URI);
 }
 
-void ProjectActionsController::exportLabels()
+void ProjectActionsController::exportLabels(const actions::ActionData& args)
 {
-    NOT_IMPLEMENTED;
+    muse::UriQuery query(EXPORT_LABELS_URI);
+
+    trackedit::TrackId trackId = args.count() == 1 ? args.arg<trackedit::LabelKey>(0).trackId : -1;
+    query.addParam("trackId", Val(trackId));
+
+    interactive()->open(query);
 }
 
 void ProjectActionsController::exportMIDI()
