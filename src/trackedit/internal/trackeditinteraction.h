@@ -127,7 +127,6 @@ private:
     void verticalZoomIn(const trackedit::TrackId& trackId) override;
     void verticalZoomOut(const trackedit::TrackId& trackId) override;
     void resetVerticalZoom(const trackedit::TrackId& trackId) override;
-    void adjustVerticalZoom(const trackedit::TrackId& trackId) override;
 
     muse::Progress progress() const override;
 

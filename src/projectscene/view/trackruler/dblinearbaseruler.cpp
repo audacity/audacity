@@ -2,8 +2,8 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "global/types/ratio.h"
-#include "global/realfn.h"
+#include "framework/global/types/ratio.h"
+#include "framework/global/realfn.h"
 
 #include "dblinearbaseruler.h"
 

@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "dblogbaseruler.h"
+#include "projectscene/view/trackruler/dblogbaseruler.h"
 
 namespace au::projectscene {
 class DbLogMonoRuler : public DbLogBaseRuler

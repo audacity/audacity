@@ -6,13 +6,13 @@
 #include <QObject>
 #include <QVariantMap>
 
-#include "global/async/asyncable.h"
+#include "framework/global/async/asyncable.h"
 
-#include "global/modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
 #include "playback/iplaybackconfiguration.h"
 #include "trackedit/itrackeditinteraction.h"
 
-#include "itrackrulermodel.h"
+#include "projectscene/view/trackruler/itrackrulermodel.h"
 
 namespace au::projectscene {
 class TrackRulerModel : public QObject, public muse::async::Asyncable
@@ -41,7 +41,6 @@ public:
     Q_INVOKABLE void zoomIn(const trackedit::TrackId& trackId);
     Q_INVOKABLE void zoomOut(const trackedit::TrackId& trackId);
     Q_INVOKABLE void resetZoom(const trackedit::TrackId& trackId);
-    Q_INVOKABLE void adjustZoom(const trackedit::TrackId& trackId);
 
     std::vector<QVariantMap> fullSteps() const;
     std::vector<QVariantMap> smallSteps() const;

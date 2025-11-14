@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "dblinearbaseruler.h"
+#include "projectscene/view/trackruler/dblinearbaseruler.h"
 
 namespace au::projectscene {
 class DbLinearStereoRuler : public DbLinearBaseRuler
