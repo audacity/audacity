@@ -183,6 +183,7 @@ private:
 
    std::atomic<double> mDownloadProgress { 0.0 };
    std::atomic<bool> mProgressUpdateQueued { false };
+   std::atomic<bool> mAudioProgressUpdateQueued { false };
 
    std::atomic<bool> mSyncInProcess { false };
    std::atomic<bool> mDownloadInProcess { false };

@@ -38,6 +38,7 @@ enum class AudiocomTrace
    UpdateCloudAudioPreviewMenu,
    LinkAudiocomAccountHelpMenu,
    OpenFromCloudMenu,
+   TaskService,
 };
 
 class IMPORT_EXPORT_API ExportUtils final

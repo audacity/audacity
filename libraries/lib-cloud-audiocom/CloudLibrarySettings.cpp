@@ -28,4 +28,8 @@ StringSetting CloudProjectsSavePath {
 IntSetting DaysToKeepFiles {
    "/cloud/audiocom/DaysToKeepFiles", 30
 };
+
+BoolSetting TaskPollingEnabled {
+   "/cloud/audiocom/TaskPollingEnabled", true
+};
 } // namespace audacity::cloud::audiocom

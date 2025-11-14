@@ -12,6 +12,8 @@ set( SOURCES
    CloudLibrarySettings.h
    CloudSyncService.cpp
    CloudSyncService.h
+   TaskExecutionService.cpp
+   TaskExecutionService.h
    NetworkUtils.cpp
    NetworkUtils.h
    OAuthService.cpp
