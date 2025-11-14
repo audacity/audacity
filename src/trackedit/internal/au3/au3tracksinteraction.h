@@ -85,7 +85,8 @@ private:
     TrackIdList pasteIntoNewTracks(const std::vector<Au3TrackDataPtr>& tracksData);
     std::shared_ptr<au3::Au3Track> createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
     TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
-                                              size_t clipboardTracksSize) const;
+                                              const std::vector<Au3TrackDataPtr>& clipboardData,
+                                              bool forLabels = false) const;
     TrackIdList expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
                                         size_t clipboardTracksSize) const;
 

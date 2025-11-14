@@ -66,7 +66,8 @@ public:
     bool timeSelectionIsNotEmpty() const override;
     bool timeSelectionHasAudioData() const override;
     bool isDataSelectedOnTrack(TrackId trackId) const override;
-    void setSelectedAllAudioData() override;
+    void setSelectedAllAudioData(const std::optional<secs_t>& fromTime = std::nullopt,
+                                 const std::optional<secs_t>& toTime = std::nullopt) override;
     ClipKeyList clipsIntersectingRangeSelection() const override;
     void setClipsIntersectingRangeSelection(const ClipKeyList& clipKeys) override;
     muse::async::Channel<ClipKeyList> clipsIntersectingRangeSelectionChanged() const override;

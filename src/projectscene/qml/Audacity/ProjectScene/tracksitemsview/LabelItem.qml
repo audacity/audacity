@@ -35,10 +35,10 @@ Item {
     height: header.height
 
     signal requestSelected()
+    signal requestSingleSelected()
     signal requestSelectionReset()
 
     signal titleEditAccepted(var newTitle)
-    signal titleEditStarted()
     signal titleEditCanceled()
 
     signal labelItemMousePositionChanged(real x, real y)
@@ -92,7 +92,7 @@ Item {
         }
 
         onTriggered: {
-            root.requestSelected()
+            root.requestSingleSelected()
         }
     }
 
@@ -140,6 +140,13 @@ Item {
         labelContextMenuModel.load()
     }
 
+    Component.onDestruction: {
+        //! NOTE The outer component uses this information to handle the current cursor.
+        // It is important to cleanup this state before removing the component
+        // to prevent the cursor from being stuck in the wrong state.
+        root.headerHovered = false
+    }
+
     // Left Ear
     LabelEar {
         id: leftEar
@@ -167,7 +174,7 @@ Item {
         }
 
         onStretchStartRequested: {
-            root.requestSelected()
+            root.requestSingleSelected()
             root.labelStartEditRequested()
         }
 
@@ -211,7 +218,7 @@ Item {
         }
 
         onStretchStartRequested: {
-            root.requestSelected()
+            root.requestSingleSelected()
             root.labelStartEditRequested()
         }
 
@@ -251,10 +258,6 @@ Item {
 
         onTitleEditAccepted: function(newTitle) {
             root.titleEditAccepted(newTitle)
-        }
-
-        onTitleEditStarted: {
-            root.titleEditStarted()
         }
 
         onRequestSelected: {
@@ -298,7 +301,7 @@ Item {
         }
 
         onRequestSelected: {
-            root.requestSelected()
+            root.requestSingleSelected()
         }
 
         onStretchMousePositionChanged: function(x, y) {
@@ -348,7 +351,7 @@ Item {
         }
 
         onStretchStartRequested: {
-            root.requestSelected()
+            root.requestSingleSelected()
             root.labelStartEditRequested()
         }
 
@@ -399,7 +402,7 @@ Item {
         }
 
         onStretchStartRequested: {
-            root.requestSelected()
+            root.requestSingleSelected()
             root.labelStartEditRequested()
         }
 
