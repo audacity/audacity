@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "linearbaseruler.h"
+#include "projectscene/view/trackruler/linearbaseruler.h"
 
 namespace au::projectscene {
 class LinearStereoRuler : public LinearBaseRuler

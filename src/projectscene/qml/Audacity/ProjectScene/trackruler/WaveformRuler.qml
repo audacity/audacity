@@ -55,7 +55,6 @@ Item {
         }
 
         onRulerTypeChangeRequested: function (rulerType) {
-            rulerModel.adjustZoom(trackId)
             root.setTrackRulerTypeRequested(rulerType)
         }
 
