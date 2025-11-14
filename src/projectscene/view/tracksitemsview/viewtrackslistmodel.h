@@ -18,6 +18,7 @@
 #include "trackedit/itrackeditinteraction.h"
 #include "playback/itrackplaybackcontrol.h"
 #include "projectscene/iprojectsceneconfiguration.h"
+#include "actions/iactionsdispatcher.h"
 
 #include "trackedit/dom/track.h"
 
@@ -27,6 +28,7 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     Q_OBJECT
 
     Q_PROPERTY(bool isVerticalRulersVisible READ isVerticalRulersVisible NOTIFY isVerticalRulersVisibleChanged)
+    Q_PROPERTY(int verticalRulerWidth READ verticalRulerWidth NOTIFY verticalRulerWidthChanged FINAL)
     Q_PROPERTY(int totalTracksHeight READ totalTracksHeight NOTIFY totalTracksHeightChanged FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -36,6 +38,7 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
     muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
     explicit ViewTracksListModel(QObject* parent = nullptr);
@@ -51,11 +54,13 @@ public:
 
     bool isVerticalRulersVisible() const;
     int totalTracksHeight() const;
+    int verticalRulerWidth() const;
 
 signals:
     void dataSelectedTracksChanged();
     void selectedTracksChanged();
     void isVerticalRulersVisibleChanged();
+    void verticalRulerWidthChanged();
 
     void totalTracksHeightChanged();
     void escapePressed();
@@ -76,6 +81,7 @@ private:
         IsWaveformViewVisibleRole,
         IsSpectrogramViewVisibleRole,
         DbRangeRole,
+        VerticalZoomRole,
     };
 
     std::vector<trackedit::Track> m_trackList;

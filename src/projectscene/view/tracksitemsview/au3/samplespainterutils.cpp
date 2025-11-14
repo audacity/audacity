@@ -7,9 +7,8 @@
 #include "WaveClipUtilities.h"
 #include "WaveChannelUtilities.h"
 #include "WaveTrack.h"
-#include "WaveformScale.h"
-#include "WaveformSettings.h"
 #include "ZoomInfo.h"
+#include <cstdlib>
 
 static constexpr auto X_MIN_DISTANCE = 5;
 static constexpr auto Y_MIN_DISTANCE = 5;
@@ -331,13 +330,8 @@ std::optional<int> hitNearestSampleChannelIndex(std::shared_ptr<au::project::IAu
     const auto adjustedTime = waveClip->SamplesToTime(sampleOffset);
     const auto adjustedPosition = zoomInfo.TimeToPosition(adjustedTime);
 
-    auto& settings = WaveformSettings::Get(*track);
-    const float dBRange = settings.dBRange;
-    const bool dB = !settings.isLinear();
-
-    float zoomMin, zoomMax;
-    auto& cache = WaveformScale::Get(*track);
-    cache.GetDisplayBounds(zoomMin, zoomMax);
+    const float dBRange = std::abs(params.dbRange);
+    const bool dB = !params.isLinear;
 
     const std::vector<double> channelHeight {
         params.geometry.height * params.channelHeightRatio,
@@ -359,7 +353,8 @@ std::optional<int> hitNearestSampleChannelIndex(std::shared_ptr<au::project::IAu
 
         const auto adjustedYPos = position.y() - top;
 
-        const auto baselineYPos = getWaveYPos(0.0, zoomMin, zoomMax, waveMetrics.height, dB, true, dBRange, false);
+        const auto baselineYPos = getWaveYPos(0.0, -params.verticalZoom, params.verticalZoom, waveMetrics.height, dB, true,
+                                              dBRange, false);
         if (std::abs(adjustedYPos - baselineYPos) <= BASELINE_HIT_AREA_SIZE) {
             return i;
         }
@@ -370,7 +365,8 @@ std::optional<int> hitNearestSampleChannelIndex(std::shared_ptr<au::project::IAu
             continue;
         }
 
-        const auto ypos = getWaveYPos(tt, zoomMin, zoomMax, waveMetrics.height, dB, true, dBRange, false);
+        const auto ypos = getWaveYPos(tt, -params.verticalZoom, params.verticalZoom, waveMetrics.height, dB, true, dBRange,
+                                      false);
 
         if (position.y() < top || position.y() > top + waveMetrics.height) {
             // Check bounderies
@@ -432,13 +428,8 @@ void setIsolatedPoint(const unsigned int currentChannel, const trackedit::ClipKe
         params.geometry.height * (1 - params.channelHeightRatio),
     };
 
-    auto& settings = WaveformSettings::Get(*track);
-    const float dBRange = settings.dBRange;
-    const bool dB = !settings.isLinear();
-
-    float zoomMin, zoomMax;
-    auto& cache = WaveformScale::Get(*track);
-    cache.GetDisplayBounds(zoomMin, zoomMax);
+    const float dBRange = std::abs(params.dbRange);
+    const bool dB = !params.isLinear;
 
     const std::vector<double> channelHeights {
         params.geometry.height * params.channelHeightRatio,
@@ -463,7 +454,8 @@ void setIsolatedPoint(const unsigned int currentChannel, const trackedit::ClipKe
         static_cast<int>(currentPosition.y() - channelTopOffset), static_cast<int>(waveMetrics.height - 1)); // Allow bottom edge
     const auto yy = std::max(y, 0); // Allow top edge
 
-    float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
+    float newValue
+        = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, -params.verticalZoom, params.verticalZoom);
 
     // Ensure value stays within valid audio range
     newValue = std::clamp(newValue, -1.0f, 1.0f);
@@ -504,13 +496,8 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
 
     const int channelTopOffset = (currentChannel == 0) ? 0 : static_cast<int>(channelHeights[0]);
 
-    auto& settings = WaveformSettings::Get(*track);
-    const float dBRange = settings.dBRange;
-    const bool dB = !settings.isLinear();
-
-    float zoomMin, zoomMax;
-    auto& cache = WaveformScale::Get(*track);
-    cache.GetDisplayBounds(zoomMin, zoomMax);
+    const float dBRange = std::abs(params.dbRange);
+    const bool dB = !params.isLinear;
 
     auto waveMetrics = wavepainterutils::getWaveMetrics(project, clipKey, params);
     waveMetrics.height = channelHeights[currentChannel];
@@ -554,7 +541,8 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
             static_cast<int>(point.y() - channelTopOffset), static_cast<int>(waveMetrics.height - 1)); // Allow bottom edge
         const auto yy = std::max(y, 0); // Allow top edge
 
-        float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
+        float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, -params.verticalZoom,
+                                                           params.verticalZoom);
 
         // Ensure value stays within valid audio range
         newValue = std::clamp(newValue, -1.0f, 1.0f);

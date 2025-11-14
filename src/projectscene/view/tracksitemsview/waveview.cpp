@@ -93,6 +93,7 @@ IWavePainter::Params WaveView::getWavePainterParams() const
     params.showClipping = configuration()->isClippingInWaveformVisible();
     params.isLinear = m_isLinear;
     params.dbRange = m_dbRange;
+    params.verticalZoom = m_verticalZoom;
 
     projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
     if (clipStyle == projectscene::ClipStyles::Style::COLORFUL) {
@@ -379,6 +380,21 @@ void WaveView::setDbRange(double dbRange)
     }
 
     m_dbRange = dbRange;
+    update();
+}
+
+float WaveView::verticalZoom() const
+{
+    return m_verticalZoom;
+}
+
+void WaveView::setVerticalZoom(float verticalZoom)
+{
+    if (m_verticalZoom == verticalZoom) {
+        return;
+    }
+
+    m_verticalZoom = verticalZoom;
     update();
 }
 

@@ -169,6 +169,25 @@ void TrackRulerModel::setRulerType(int rulerType)
     emit smallStepsChanged();
 }
 
+float TrackRulerModel::verticalZoom() const
+{
+    return m_verticalZoom;
+}
+
+void TrackRulerModel::setVerticalZoom(float verticalZoom)
+{
+    if (m_verticalZoom == verticalZoom) {
+        return;
+    }
+
+    m_verticalZoom = verticalZoom;
+
+    m_model = buildRulerModel();
+
+    emit fullStepsChanged();
+    emit smallStepsChanged();
+}
+
 std::shared_ptr<ITrackRulerModel> TrackRulerModel::buildRulerModel()
 {
     std::shared_ptr<ITrackRulerModel> model = nullptr;
@@ -205,6 +224,22 @@ std::shared_ptr<ITrackRulerModel> TrackRulerModel::buildRulerModel()
     model->setChannelHeightRatio(m_channelHeightRatio);
     model->setCollapsed(m_isCollapsed);
     model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
+    model->setVerticalZoom(m_verticalZoom);
 
     return model;
+}
+
+void TrackRulerModel::zoomIn(const trackedit::TrackId& trackId)
+{
+    trackeditInteraction()->verticalZoomIn(trackId);
+}
+
+void TrackRulerModel::zoomOut(const trackedit::TrackId& trackId)
+{
+    trackeditInteraction()->verticalZoomOut(trackId);
+}
+
+void TrackRulerModel::resetZoom(const trackedit::TrackId& trackId)
+{
+    trackeditInteraction()->resetVerticalZoom(trackId);
 }
