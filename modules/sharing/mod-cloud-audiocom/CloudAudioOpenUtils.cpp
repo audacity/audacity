@@ -59,7 +59,6 @@ T GetResult(std::future<T>& future)
    while (future.wait_for(std::chrono::milliseconds(50)) !=
           std::future_status::ready) {
             BasicUI::Yield();
-            wxSafeYield();
           }
 
    return future.get();

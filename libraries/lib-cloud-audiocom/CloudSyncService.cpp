@@ -862,28 +862,30 @@ void CloudSyncService::DownloadAudio(const std::string& name, const std::string&
 
          if (response->getError() != NetworkError::NoError)
          {
-            BasicUI::CallAfter([] {
+            BasicUI::CallAfter([this] {
                ShowErrorDialog( {},
                XC("Error importing cloud audio", "cloud sync"),
                XC("Can't download cloud audio", "update dialog"),
                wxString(),
                BasicUI::ErrorDialogOptions{ BasicUI::ErrorDialogType::ModalErrorReport });
-            });
 
-            mDownloadInProcess.store(false);
-            mDownloadAudioPromise.set_value({DownloadAudioResult::StatusCode::Failed, {}, {}});
+               mDownloadInProcess.store(false);
+               mDownloadAudioPromise.set_value({DownloadAudioResult::StatusCode::Failed, {}, {}});
+            });
 
             return;
          }
 
-         mDownloadAudioPromise.set_value({
-            DownloadAudioResult::StatusCode::Succeeded,
-            {},
-            filename.ToStdString(),
-            name,
-            format
+         BasicUI::CallAfter([this, filename, name, format] {
+            mDownloadAudioPromise.set_value({
+               DownloadAudioResult::StatusCode::Succeeded,
+               {},
+               filename.ToStdString(),
+               name,
+               format
+            });
+            mDownloadInProcess.store(false);
          });
-         mDownloadInProcess.store(false);
       }
    );
 
@@ -891,7 +893,14 @@ void CloudSyncService::DownloadAudio(const std::string& name, const std::string&
    response->setDownloadProgressCallback([this]
       (int64_t current, int64_t expected) {
          mDownloadProgress.store(static_cast<double>(current) / expected);
-         mProgressCallback(mDownloadProgress.load());
+
+         if (mAudioProgressUpdateQueued.exchange(true))
+            return;
+
+         BasicUI::CallAfter([this] {
+            mProgressCallback(mDownloadProgress.load());
+            mAudioProgressUpdateQueued.store(false);
+         });
       }
    );
 
