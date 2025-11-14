@@ -6,18 +6,14 @@
 #include "projectscene/view/trackruler/itrackrulermodel.h"
 
 namespace au::projectscene {
-struct DbLinearRulerUiSettings {
+struct DbLogRulerUiSettings {
     int minAdjacentStepsHeight;
-    int minFullStepToInfHeight;
-    int minFullStepToZeroHeight;
-    std::vector<int> fullStepSizes;
 };
 
-class DbLinearBaseRuler : public ITrackRulerModel
+class DbLogBaseRuler : public ITrackRulerModel
 {
 public:
-    DbLinearBaseRuler(DbLinearRulerUiSettings config);
-
+    DbLogBaseRuler(DbLogRulerUiSettings settings);
     void setHeight(int height) override;
     void setChannelHeightRatio(double channelHeightRatio) override;
     void setCollapsed(bool isCollapsed) override;
@@ -26,15 +22,18 @@ public:
     void setVerticalZoom(float verticalZoom) override;
 
 protected:
-    int computeLowestFullStepValue(double height) const;
+    bool isBold(double value) const;
+    int getAlignment(double value) const;
     double valueToPosition(double value, double height, bool isNegativeSample) const;
-    std::vector<int> fullStepValues(double height) const;
+    std::pair<double, double> stepsIncrement(double height) const;
+    std::vector<double> fullStepsValues(double height) const;
+    std::vector<double> smallStepsValues(double height) const;
 
     bool m_collapsed = false;
     double m_height = 0.0;
     double m_channelHeightRatio = 1.0;
-    double m_dbRange = -60.0;
+    double m_dbRange = 0.0;
     double m_maxDisplayValueDB = 0.0;
-    DbLinearRulerUiSettings m_ui_settings;
+    DbLogRulerUiSettings m_ui_settings;
 };
 }
