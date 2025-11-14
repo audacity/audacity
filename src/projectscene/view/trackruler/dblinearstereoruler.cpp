@@ -58,9 +58,9 @@ std::vector<TrackRulerFullStep> DbLinearStereoRuler::fullSteps() const
         }
 
         std::vector<TrackRulerFullStep> channelSteps { TrackRulerFullStep { m_dbRange, channel, 0, false, true, false },
-                                                       TrackRulerFullStep { m_maxDisplayValue, channel, channel == 0 ? -1 : 0, true, true,
+                                                       TrackRulerFullStep { m_maxDisplayValueDB, channel, channel == 0 ? -1 : 0, true, true,
                                                                             false },
-                                                       TrackRulerFullStep { m_maxDisplayValue, channel, channel == 1 ? 1 : 0, true, true,
+                                                       TrackRulerFullStep { m_maxDisplayValueDB, channel, channel == 1 ? 1 : 0, true, true,
                                                                             true }
         };
 
@@ -78,7 +78,7 @@ std::vector<TrackRulerFullStep> DbLinearStereoRuler::fullSteps() const
 std::vector<TrackRulerSmallStep> DbLinearStereoRuler::smallSteps() const
 {
     if (m_collapsed) {
-        return { TrackRulerSmallStep { m_maxDisplayValue, 0, false }, TrackRulerSmallStep { m_maxDisplayValue, 1, true } };
+        return { TrackRulerSmallStep { m_maxDisplayValueDB, 0, false }, TrackRulerSmallStep { m_maxDisplayValueDB, 1, true } };
     }
 
     std::vector<double> channelHeights = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
@@ -86,14 +86,7 @@ std::vector<TrackRulerSmallStep> DbLinearStereoRuler::smallSteps() const
     for (size_t channel = 0; channel < 2; ++channel) {
         const int lowestFullStep = computeLowestFullStepValue(channelHeights[channel]);
         const std::vector<int> valuesList = fullStepValues(channelHeights[channel]);
-        std::vector<int> filteredValuesList;
-        std::copy_if(valuesList.begin(), valuesList.end(), std::back_inserter(filteredValuesList),
-                     [lowestFullStep](int value) { return value != lowestFullStep; });
-
-        const int newLowestFullStep
-            =filteredValuesList.empty() ? static_cast<int>(m_maxDisplayValue) : *std::min_element(
-                  filteredValuesList.begin(), filteredValuesList.end());
-        for (int i = newLowestFullStep; i < m_maxDisplayValue; i++) {
+        for (int i = lowestFullStep; i < m_maxDisplayValueDB; i++) {
             if (std::find(valuesList.begin(), valuesList.end(), i) != valuesList.end()) {
                 continue;
             }

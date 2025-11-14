@@ -3,27 +3,17 @@
 */
 #pragma once
 
-#include "projectscene/view/trackruler/itrackrulermodel.h"
+#include "dblogbaseruler.h"
 
 namespace au::projectscene {
-class DbLogStereoRuler : public ITrackRulerModel
+class DbLogStereoRuler : public DbLogBaseRuler
 {
 public:
+    DbLogStereoRuler();
     double stepToPosition(double step, size_t channel, bool isNegativeSample) const override;
-    void setHeight(int height) override;
-    void setChannelHeightRatio(double channelHeightRatio) override;
-    void setCollapsed(bool isCollapsed) override;
-    void setDbRange(double dbRange) override;
-    std::string sampleToText(double sample) const override;
     std::vector<TrackRulerFullStep> fullSteps() const override;
     std::vector<TrackRulerSmallStep> smallSteps() const override;
-    void setVerticalZoom(float verticalZoom) override;
-
 private:
-    double m_height = 0.0;
-    double m_channelHeightRatio = 1.0;
-    bool m_collapsed = false;
-    double m_dbRange = -60.0;
-    double m_maxDisplayValue = 1.0;
+    int getAlignment(double value, size_t channel, bool isNegativeSample) const;
 };
 }

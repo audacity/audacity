@@ -35,8 +35,8 @@ std::vector<TrackRulerFullStep> DbLinearMonoRuler::fullSteps() const
 
     const std::vector<int> valuesList = fullStepValues(m_height);
     std::vector<TrackRulerFullStep> steps { TrackRulerFullStep { m_dbRange, 0, 0, false, true, false },
-                                            TrackRulerFullStep { m_maxDisplayValue, 0, -1, true, true, false },
-                                            TrackRulerFullStep { m_maxDisplayValue, 0, 1, true, true, true }
+                                            TrackRulerFullStep { m_maxDisplayValueDB, 0, -1, true, true, false },
+                                            TrackRulerFullStep { m_maxDisplayValueDB, 0, 1, true, true, true }
     };
 
     for (const int stepValue : valuesList) {
@@ -50,21 +50,14 @@ std::vector<TrackRulerFullStep> DbLinearMonoRuler::fullSteps() const
 std::vector<TrackRulerSmallStep> DbLinearMonoRuler::smallSteps() const
 {
     if (m_collapsed) {
-        return { TrackRulerSmallStep { m_maxDisplayValue, 0, false }, TrackRulerSmallStep { m_maxDisplayValue, 0, true } };
+        return { TrackRulerSmallStep { m_maxDisplayValueDB, 0, false }, TrackRulerSmallStep { m_maxDisplayValueDB, 0, true } };
     }
 
     const int lowestFullStep = computeLowestFullStepValue(m_height);
     const std::vector<int> valuesList = fullStepValues(m_height);
-    std::vector<int> filteredValuesList;
-    std::copy_if(valuesList.begin(), valuesList.end(), std::back_inserter(filteredValuesList),
-                 [lowestFullStep](int value) { return value != lowestFullStep; });
 
-    const int newLowestFullStep
-        =filteredValuesList.empty() ? static_cast<int>(m_maxDisplayValue) : *std::min_element(
-              filteredValuesList.begin(), filteredValuesList.end());
-
-    std::vector<TrackRulerSmallStep> steps;
-    for (int i = newLowestFullStep; i < m_maxDisplayValue; i++) {
+    std::vector<TrackRulerSmallStep> steps = {};
+    for (int i = lowestFullStep; i < m_maxDisplayValueDB; i++) {
         if (std::find(valuesList.begin(), valuesList.end(), i) != valuesList.end()) {
             continue;
         }
