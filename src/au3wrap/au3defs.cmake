@@ -104,6 +104,11 @@ set(AU3_INCLUDE
     ${AUDACITY_ROOT}/lib-src/pffft
     ${AUDACITY_ROOT}/lib-src/libsoxr/src
     ${AUDACITY_ROOT}/lib-src/portmixer
+    # As for the above libraries, SoundTouch includes: Even though soundtouch is linked via AU3_LINK, the include paths
+    # don't propagate through the static library chain, so we need to add them explicitly
+    ${AUDACITY_ROOT}/lib-src/soundtouch/include
+    # also include the Generated soundtouch_config.h (needed by STTypes.h when compiling AU3 code that uses SoundTouch)
+    ${CMAKE_BINARY_DIR}/src/au3wrap/au3-soundtouch/private
 
     ${AUDACITY_ROOT}
     # compile lib-project
@@ -129,6 +134,9 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-wave-track-fft
     ${AU3_LIBRARIES}/lib-sample-track
     ${AU3_LIBRARIES}/lib-label-track
+    # Note: lib-note-track is only needed if USE_MIDI is defined
+    # Currently MIDI support is not enabled in AU4
+    # ${AU3_LIBRARIES}/lib-note-track
     ${AU3_LIBRARIES}/lib-mixer
     ${AU3_LIBRARIES}/lib-audio-graph
     ${AU3_LIBRARIES}/lib-playable-track
@@ -207,6 +215,7 @@ set(AU3_LINK
     soxr
     pffft
     portmixer
+    soundtouch
 )
 
 set(WXBASE_DEFS
