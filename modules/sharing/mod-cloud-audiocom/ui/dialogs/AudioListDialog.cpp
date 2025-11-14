@@ -769,6 +769,8 @@ void AudioListDialog::SetupHandlers()
 
 void AudioListDialog::OnBeforeRefresh()
 {
+   mNextPageButtonWasFocused = mNextPageButton->HasFocus();
+   mPrevPageButtonWasFocused = mPrevPageButton->HasFocus();
    mAudioTable->Enable(false);
    mPrevPageButton->Enable(false);
    mNextPageButton->Enable(false);
@@ -794,6 +796,18 @@ void AudioListDialog::OnRefreshCompleted(bool success)
    if (mAccessible)
       mAccessible->TableDataUpdated();
 #endif
+
+   if (mNextPageButtonWasFocused || mPrevPageButtonWasFocused)
+   {
+      BasicUI::CallAfter([this]() {
+         auto buttonToFocus =
+            (mPrevPageButtonWasFocused && mPrevPageButton->IsEnabled()) ? mPrevPageButton :
+            (mNextPageButtonWasFocused && mNextPageButton->IsEnabled()) ? mNextPageButton :
+            mPrevPageButton->IsEnabled() ? mPrevPageButton : mNextPageButton;
+
+         buttonToFocus->SetFocus();
+      });
+   }
 }
 
 void AudioListDialog::FormatPageLabel()

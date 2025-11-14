@@ -748,6 +748,8 @@ void ProjectsListDialog::SetupHandlers()
 
 void ProjectsListDialog::OnBeforeRefresh()
 {
+   mNextPageButtonWasFocused = mNextPageButton->HasFocus();
+   mPrevPageButtonWasFocused = mPrevPageButton->HasFocus();
    mProjectsTable->Enable(false);
    mPrevPageButton->Enable(false);
    mNextPageButton->Enable(false);
@@ -756,6 +758,9 @@ void ProjectsListDialog::OnBeforeRefresh()
 void ProjectsListDialog::OnRefreshCompleted(bool success)
 {
    mProjectsTable->Enable(success);
+
+   bool nextPageButtonFocused = mNextPageButton->HasFocus();
+   bool prevPageButtonFocused = mPrevPageButton->HasFocus();
 
    mPrevPageButton->Enable(success && mProjectsTableData->HasPrevPage());
    mNextPageButton->Enable(success && mProjectsTableData->HasNextPage());
@@ -767,6 +772,18 @@ void ProjectsListDialog::OnRefreshCompleted(bool success)
 #if wxUSE_ACCESSIBILITY
    mAccessible->TableDataUpdated();
 #endif
+
+   if (mNextPageButtonWasFocused || mPrevPageButtonWasFocused)
+   {
+      BasicUI::CallAfter([this]() {
+         auto buttonToFocus =
+            (mPrevPageButtonWasFocused && mPrevPageButton->IsEnabled()) ? mPrevPageButton :
+            (mNextPageButtonWasFocused && mNextPageButton->IsEnabled()) ? mNextPageButton :
+            mPrevPageButton->IsEnabled() ? mPrevPageButton : mNextPageButton;
+
+         buttonToFocus->SetFocus();
+      });
+   }
 }
 
 void ProjectsListDialog::FormatPageLabel()
