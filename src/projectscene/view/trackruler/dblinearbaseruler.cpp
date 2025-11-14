@@ -31,7 +31,10 @@ void DbLinearBaseRuler::setCollapsed(bool isCollapsed)
 
 void DbLinearBaseRuler::setVerticalZoom(float verticalZoom)
 {
-    m_maxDisplayValue = muse::linear_to_db(verticalZoom);
+    // The defult vertical zoom is 1.0 which corresponds to 0 dB
+    // For a zoom of 0.5 the max display value is 0.5 or -6 dB
+    // We need just to convert the linear zoom value to dB
+    m_maxDisplayValueDB = muse::linear_to_db(verticalZoom);
 }
 
 void DbLinearBaseRuler::setDbRange(double dbRange)
@@ -54,9 +57,14 @@ std::string DbLinearBaseRuler::sampleToText(double sample) const
 
 int DbLinearBaseRuler::computeLowestFullStepValue(double height) const
 {
+    // We prefer to show only multiple of 3 values as full steps
+    constexpr int FULL_STEP_INCREMENT = 3;
+
     auto const middlePoint = height / 2.0;
     int lowestFullStep = static_cast<int>(m_dbRange);
-    for (int i = lowestFullStep + 3; i < 0; i += 3) {
+
+    // Find the closer value to dbRange that has enough room to be drawn
+    for (int i = lowestFullStep + FULL_STEP_INCREMENT; i < 0; i += FULL_STEP_INCREMENT) {
         const double position = valueToPosition(i, height, false);
         if (middlePoint - position > m_ui_settings.minFullStepToInfHeight) {
             return i;
@@ -68,7 +76,7 @@ int DbLinearBaseRuler::computeLowestFullStepValue(double height) const
 
 double DbLinearBaseRuler::valueToPosition(double value, double height, bool isNegativeSample) const
 {
-    const double maxLinearValue = std::abs(muse::db_to_linear(m_maxDisplayValue));
+    const double maxLinearValue = std::abs(muse::db_to_linear(static_cast<double>(m_maxDisplayValueDB)));
     const double linearValue = muse::db_to_linear(value) * (isNegativeSample ? -1.0 : 1.0);
     const double clampedLinearValue = std::clamp(linearValue, -maxLinearValue, maxLinearValue);
 
@@ -84,7 +92,7 @@ std::vector<int> DbLinearBaseRuler::fullStepValues(double height) const
         steps.push_back(lowestFullStep);
         int previousValidStep = lowestFullStep;
 
-        for (int step = lowestFullStep + 1; step < m_maxDisplayValue; step++) {
+        for (int step = lowestFullStep + 1; step < m_maxDisplayValueDB; step++) {
             const int diff = step - previousValidStep;
             if (std::find(m_ui_settings.fullStepSizes.begin(), m_ui_settings.fullStepSizes.end(),
                           diff) == m_ui_settings.fullStepSizes.end()) {
