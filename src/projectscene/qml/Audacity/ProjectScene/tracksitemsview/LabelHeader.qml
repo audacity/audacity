@@ -20,7 +20,6 @@ Rectangle {
     property var navigationPanel: null
 
     signal titleEditAccepted(var newTitle)
-    signal titleEditStarted()
     signal requestSelected()
 
     signal contextMenuOpenRequested(real x, real y)
@@ -127,8 +126,6 @@ Rectangle {
         sourceComponent: isEditState ? titleEditComp : titleComp
 
         function edit() {
-            root.titleEditStarted()
-
             titleLoader.isEditState = true
             titleLoader.item.currentText = root.title
             titleLoader.item.newTitle = root.title

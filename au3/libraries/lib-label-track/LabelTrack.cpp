@@ -261,13 +261,14 @@ void LabelTrack::Clear(double b, double e, bool moveClips)
 bool LabelTrack::SplitDelete(double b, double e)
 {
     // May DELETE labels, so use subscripts to iterate
+
+    std::vector<size_t> labelsToDelete;
+
     for (size_t i = 0, len = mLabels.size(); i < len; ++i) {
         auto& labelStruct = mLabels[i];
-        LabelStruct::TimeRelations relation
-            =labelStruct.RegionRelation(b, e, this);
+        LabelStruct::TimeRelations relation = labelStruct.RegionRelation(b, e, this);
         if (relation == LabelStruct::SURROUNDS_LABEL) {
-            DeleteLabel(i);
-            --i;
+            labelsToDelete.push_back(i);
         } else if (relation == LabelStruct::WITHIN_LABEL) {
             labelStruct.selectedRegion.moveT1(-(e - b));
         } else if (relation == LabelStruct::ENDS_IN_LABEL) {
@@ -275,6 +276,10 @@ bool LabelTrack::SplitDelete(double b, double e)
         } else if (relation == LabelStruct::BEGINS_IN_LABEL) {
             labelStruct.selectedRegion.setT1(b);
         }
+    }
+
+    for (auto it = labelsToDelete.rbegin(); it != labelsToDelete.rend(); ++it) {
+        DeleteLabel(*it);
     }
 
     return true;

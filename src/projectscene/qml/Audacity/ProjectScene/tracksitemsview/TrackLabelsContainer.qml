@@ -170,16 +170,16 @@ TrackItemsContainer {
 
                                 onRequestSelected: {
                                     labelsModel.selectLabel(itemData.key)
-                                    root.itemSelectedRequested()
+                                    labelsModel.selectTracksDataFromLabelRange(itemData.key)
+                                }
+
+                                onRequestSingleSelected: {
+                                    labelsModel.selectLabel(itemData.key)
                                 }
 
                                 onRequestSelectionReset: {
                                     labelsModel.resetSelectedLabels()
                                     root.selectionResetRequested()
-                                }
-
-                                onTitleEditStarted: {
-                                    labelsModel.selectLabel(itemData.key)
                                 }
 
                                 onTitleEditAccepted: function(newTitle) {
@@ -296,7 +296,10 @@ TrackItemsContainer {
         function onItemMoveRequested(itemKey, completed) {
             root.updateMoveActive(completed)
 
-            labelsModel.moveSelectedLabels(itemKey, completed)
+            var ok = labelsModel.moveSelectedLabels(itemKey, completed)
+            if (ok) {
+                labelsModel.resetSelectedTracksData()
+            }
 
             handleLabelGuideline(itemKey, Direction.Auto, completed)
         }
@@ -307,6 +310,12 @@ TrackItemsContainer {
 
         function onItemEndEditRequested(itemKey) {
             labelsModel.endEditItem(itemKey)
+        }
+
+        function onCancelItemDragEditRequested(itemKey) {
+            if (labelsModel.cancelItemDragEdit(itemKey)) {
+                root.itemDragEditCanceled()
+            }
         }
 
         function onStartAutoScroll() {

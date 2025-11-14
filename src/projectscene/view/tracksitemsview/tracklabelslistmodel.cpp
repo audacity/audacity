@@ -67,6 +67,8 @@ void TrackLabelsListModel::onReload()
             item->setLabel(label);
         }
 
+        m_context->updateSelectedItemTime();
+
         updateItemsMetrics();
     }, muse::async::Asyncable::Mode::SetReplace);
 
@@ -235,10 +237,12 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
         return false;
     }
 
+    bool ok = false;
+
     // Labels can only be moved to label tracks
     TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, { trackedit::TrackType::Label }, completed);
     if (vs->moveInitiated()) {
-        trackeditInteraction()->moveLabels(moveOffset.timeOffset, completed);
+        ok = trackeditInteraction()->moveLabels(moveOffset.timeOffset, completed);
     }
 
     if ((completed && m_autoScrollConnection)) {
@@ -247,7 +251,7 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
         m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedLabels(key, false); });
     }
 
-    return true;
+    return ok;
 }
 
 void TrackLabelsListModel::selectLabel(const LabelKey& key)
@@ -270,6 +274,27 @@ void TrackLabelsListModel::resetSelectedLabels()
 {
     clearSelectedItems();
     selectionController()->resetSelectedLabels();
+}
+
+void TrackLabelsListModel::selectTracksDataFromLabelRange(const LabelKey& key)
+{
+    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    trackedit::Label label = prj->label(key.key);
+    if (!label.isValid()) {
+        return;
+    }
+
+    selectionController()->setSelectedAllAudioData(label.startTime, label.endTime);
+}
+
+void TrackLabelsListModel::resetSelectedTracksData()
+{
+    selectionController()->resetSelectedTracks();
+    selectionController()->resetDataSelection();
 }
 
 TrackItemKeyList TrackLabelsListModel::getSelectedItemKeys() const

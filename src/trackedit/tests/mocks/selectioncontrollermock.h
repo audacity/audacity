@@ -49,7 +49,7 @@ public:
     MOCK_METHOD(bool, timeSelectionIsNotEmpty, (), (const, override));
     MOCK_METHOD(bool, timeSelectionHasAudioData, (), (const, override));
     MOCK_METHOD(bool, isDataSelectedOnTrack, (TrackId), (const, override));
-    MOCK_METHOD(void, setSelectedAllAudioData, (), (override));
+    MOCK_METHOD(void, setSelectedAllAudioData, (const std::optional<secs_t>&, const std::optional<secs_t>&), (override));
     MOCK_METHOD(ClipKeyList, clipsIntersectingRangeSelection, (), (const, override));
     MOCK_METHOD(void, setClipsIntersectingRangeSelection, (const ClipKeyList& clipKeys), (override));
     MOCK_METHOD(muse::async::Channel<ClipKeyList>, clipsIntersectingRangeSelectionChanged, (), (const, override));
