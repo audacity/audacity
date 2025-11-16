@@ -236,6 +236,7 @@ TrackItemsContainer {
 
                                 speedPercentage: itemData.speedPercentage
                                 clipSelected: itemData.selected
+                                clipIntersectsSelection: itemData.intersectsSelection
                                 isMultiSelectionActive: root.isMultiSelectionActive
                                 isDataSelected: root.isDataSelected
                                 moveActive: root.moveActive

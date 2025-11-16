@@ -69,6 +69,7 @@ public:
     void setSelectedAllAudioData() override;
     ClipKeyList clipsIntersectingRangeSelection() const override;
     void setClipsIntersectingRangeSelection(const ClipKeyList& clipKeys) override;
+    muse::async::Channel<ClipKeyList> clipsIntersectingRangeSelectionChanged() const override;
 
     trackedit::secs_t dataSelectedStartTime() const override;
     void setDataSelectedStartTime(trackedit::secs_t time, bool complete) override;

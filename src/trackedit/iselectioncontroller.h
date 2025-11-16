@@ -75,6 +75,7 @@ public:
     virtual void setSelectedAllAudioData() = 0;
     virtual ClipKeyList clipsIntersectingRangeSelection() const = 0;
     virtual void setClipsIntersectingRangeSelection(const ClipKeyList& clipKeys) = 0;
+    virtual muse::async::Channel<ClipKeyList> clipsIntersectingRangeSelectionChanged() const = 0;
 
     virtual secs_t dataSelectedStartTime() const = 0;
     virtual void setDataSelectedStartTime(secs_t time, bool complete) = 0;

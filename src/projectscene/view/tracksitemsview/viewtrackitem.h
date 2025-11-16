@@ -23,6 +23,7 @@ class ViewTrackItem : public QObject
     Q_PROPERTY(double rightVisibleMargin READ rightVisibleMargin WRITE setRightVisibleMargin NOTIFY rightVisibleMarginChanged FINAL)
     Q_PROPERTY(TrackItemTime time READ time WRITE setTime NOTIFY timeChanged FINAL)
     Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged FINAL)
+    Q_PROPERTY(bool intersectsSelection READ intersectsSelection WRITE setIntersectsSelection NOTIFY intersectsSelectionChanged FINAL)
 
 public:
     explicit ViewTrackItem(QObject* parent = nullptr);
@@ -43,6 +44,9 @@ public:
     bool selected() const;
     void setSelected(bool newSelected);
 
+    bool intersectsSelection() const;
+    void setIntersectsSelection(bool newState);
+
     double leftVisibleMargin() const;
     void setLeftVisibleMargin(double newLeftVisibleMargin);
 
@@ -61,6 +65,7 @@ signals:
     void rightVisibleMarginChanged();
     void timeChanged();
     void selectedChanged();
+    void intersectsSelectionChanged();
 
 protected:
     TrackItemKey m_key;
@@ -69,6 +74,7 @@ protected:
     double m_x = 0.0;
     double m_width = 0.0;
     bool m_selected = false;
+    bool m_intersectsSelection = false;
     double m_leftVisibleMargin = 0.0;
     double m_rightVisibleMargin = 0.0;
     TrackItemTime m_time;

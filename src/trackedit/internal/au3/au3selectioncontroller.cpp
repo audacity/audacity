@@ -635,6 +635,11 @@ void Au3SelectionController::setClipsIntersectingRangeSelection(const ClipKeyLis
     m_clipsIntersectingRangeSelection.set(clipKeys, true);
 }
 
+muse::async::Channel<ClipKeyList> Au3SelectionController::clipsIntersectingRangeSelectionChanged() const
+{
+    return m_clipsIntersectingRangeSelection.changed;
+}
+
 au::trackedit::secs_t Au3SelectionController::dataSelectedStartTime() const
 {
     return m_selectedStartTime.val;
