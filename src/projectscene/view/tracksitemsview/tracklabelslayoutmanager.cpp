@@ -241,6 +241,12 @@ void TrackLabelsLayoutManager::relayout()
                 LabelInfo& other = labels[j];
 
                 if (other.level == current.level) {
+                    if (current.isPoint && other.isPoint && std::abs(current.startTime - other.startTime) < COMPARE_EPS) {
+                        hasOverlap = true;
+                        conflictingIndex = j;
+                        break;
+                    }
+
                     double currentRight = current.x + current.visualWidth;
                     double otherRight = other.x + other.visualWidth;
                     if (current.x < otherRight && other.x < currentRight) {
@@ -266,18 +272,25 @@ void TrackLabelsLayoutManager::relayout()
                     conflictingLabel.item->setLevel(conflictingLabel.level);
                     continue;
                 } else {
-                    // Both are points or both are not points - compare by x
-                    double conflictingLabelRight = conflictingLabel.startTime + conflictingLabel.width;
-                    if (current.x < conflictingLabel.x) {
-                        // current has smaller x, push conflicting to higher level
-                        conflictingLabel.level++;
-                        conflictingLabel.item->setLevel(conflictingLabel.level);
-                        continue;
-                    } else if (current.startTime == conflictingLabelRight) {
-                        foundLevel = true;
+                    // Both are points or both are not points
+                    if (current.isPoint && conflictingLabel.isPoint
+                        && std::abs(current.startTime - conflictingLabel.startTime) < COMPARE_EPS) {
+                        current.level++;
                         continue;
                     } else {
-                        current.level++;
+                        // Compare by x
+                        double conflictingLabelRight = conflictingLabel.startTime + conflictingLabel.width;
+                        if (current.x < conflictingLabel.x) {
+                            // current has smaller x, push conflicting to higher level
+                            conflictingLabel.level++;
+                            conflictingLabel.item->setLevel(conflictingLabel.level);
+                            continue;
+                        } else if (current.startTime == conflictingLabelRight) {
+                            foundLevel = true;
+                            continue;
+                        } else {
+                            current.level++;
+                        }
                     }
                 }
             } else {
@@ -317,10 +330,6 @@ void TrackLabelsLayoutManager::relink()
     // Label is linked if its right edge matches another label's left edge (or vice versa)
     for (int i = 0; i < labels.size(); ++i) {
         const LabelInfo& current = labels[i];
-
-        if (current.isPoint) {
-            continue;
-        }
 
         double currentRightEdge = current.startTime + current.width;
         double currentLeftEdge = current.startTime;

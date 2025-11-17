@@ -175,6 +175,25 @@ TEST_F(TrackLabelsLayoutManagerTests, PointsOverlap)
     ASSERT_EQ(item2->level(), 1) << "Item 2 should be on level 1";
 }
 
+TEST_F(TrackLabelsLayoutManagerTests, PointsAtSamePosition_LargerIndexOnHigherLevel)
+{
+    //! [GIVEN] A layout manager with a model set
+    m_layoutManager->setLabelsModel(m_labelsModel);
+
+    //! [WHEN] Two points are added at the same position (same startTime)
+    addItem(1, u"Point 1", 10.0, 10.0, 10);
+    addItem(2, u"Point 2", 10.0, 10.0, 10);
+
+    m_layoutManager->init();
+
+    //! [THEN] The point with larger index should be on higher level
+    TrackLabelItem* item1 = item(0);
+    TrackLabelItem* item2 = item(1);
+    ASSERT_NE(item1->level(), item2->level()) << "Points should be on different levels";
+    ASSERT_EQ(item1->level(), 0) << "Point 1 (smaller index) should be on level 0";
+    ASSERT_EQ(item2->level(), 1) << "Point 2 (larger index) should be on level 1";
+}
+
 TEST_F(TrackLabelsLayoutManagerTests, PointAndRegionOverlap_PointOnHigherLevel)
 {
     //! [GIVEN] A layout manager with a model set

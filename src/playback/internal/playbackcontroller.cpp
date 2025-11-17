@@ -109,7 +109,7 @@ void PlaybackController::init()
             if (selectionRegion.isValid()) {
                 doChangePlaybackRegion(selectionRegion);
             }
-            doSeek(m_lastPlaybackSeekTime);
+            doSeek(m_lastPlaybackSeekTime, false);
         }
     });
 }
