@@ -41,19 +41,19 @@ draw::Color PlaybackConfiguration::playColor() const
     return "#18A999";
 }
 
-TimecodeFormatType PlaybackConfiguration::playbackTimeItemFormat() const
+au::uicomponents::TimecodeFormatType PlaybackConfiguration::playbackTimeItemFormat() const
 {
-    TimecodeFormatType result = TimecodeFormatType::HHMMSSHundredths;
+    au::uicomponents::TimecodeFormatType result = au::uicomponents::TimecodeFormatType::HHMMSSHundredths;
 
     QString formatStr = uiConfiguration()->uiItemState(PLAYBACK_TIME_ITEM_FORMAT);
     if (!formatStr.isEmpty()) {
-        result = static_cast<TimecodeFormatType>(formatStr.toInt());
+        result = static_cast<au::uicomponents::TimecodeFormatType>(formatStr.toInt());
     }
 
     return result;
 }
 
-void PlaybackConfiguration::setPlaybackTimeItemFormat(TimecodeFormatType format)
+void PlaybackConfiguration::setPlaybackTimeItemFormat(au::uicomponents::TimecodeFormatType format)
 {
     uiConfiguration()->setUiItemState(PLAYBACK_TIME_ITEM_FORMAT, QString::number(static_cast<int>(format)));
 }

@@ -8,7 +8,7 @@
 #include "translation.h"
 #include "log.h"
 
-using namespace au::playback;
+using namespace au::uicomponents;
 
 static constexpr size_t pow10(int power)
 {
@@ -41,12 +41,12 @@ static constexpr std::array<size_t, 3> UPPER_BOUNDS {
 
 static QString barString()
 {
-    return muse::qtrc("playback", "bar");
+    return muse::qtrc("uicomponents", "bar");
 }
 
 static QString beatString()
 {
-    return muse::qtrc("playback", "beat");
+    return muse::qtrc("uicomponents", "beat");
 }
 
 BeatsFormatter::BeatsFormatter(const QString& formatStr, int fracPart, TimecodeMode mode)

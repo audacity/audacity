@@ -9,7 +9,7 @@ import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.ProjectScene
-import Audacity.Playback
+import Audacity.UiComponents
 
 StyledDialogView {
     id: root

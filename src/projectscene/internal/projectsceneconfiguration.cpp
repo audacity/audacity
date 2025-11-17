@@ -1,15 +1,12 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-
-#include "playback/playbacktypes.h"
 #include "settings.h"
 
 #include "global/stringutils.h"
 
-#include "NumericConverterFormats.h"
-
 #include "types/projectscenetypes.h"
+#include "uicomponents/types/timecode.h"
 
 #include "projectsceneconfiguration.h"
 
@@ -67,7 +64,7 @@ void ProjectSceneConfiguration::init()
         m_asymmetricStereoHeightsWorkspacesChanged.notify();
     });
 
-    muse::settings()->setDefaultValue(SELECTION_TIMECODE_FORMAT, muse::Val(playback::TimecodeFormatType::HHMMSSHundredths));
+    muse::settings()->setDefaultValue(SELECTION_TIMECODE_FORMAT, muse::Val(au::uicomponents::TimecodeFormatType::HHMMSSHundredths));
     muse::settings()->valueChanged(SELECTION_TIMECODE_FORMAT).onReceive(nullptr, [this](const muse::Val& val) {
         UNUSED(val);
         m_selectionTimecodeFormatChanged.notify();

@@ -5,9 +5,9 @@
 
 #include <QString>
 
-#include "types.h"
+#include "uicomponents/types/timecode.h"
 
-namespace au::playback {
+namespace au::uicomponents {
 struct FieldConfig final
 {
     bool frac = false; // is it a fractional field

@@ -9,7 +9,7 @@
 #include "timecodeformatter.h"
 #include "fieldsinteractioncontroller.h"
 
-namespace au::playback {
+namespace au::uicomponents {
 class BPMModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -50,6 +50,8 @@ private:
         rSymbol = Qt::UserRole + 1,
         rIsEditable
     };
+
+    static bool isFieldEditable(const QChar& fieldSymbol);
 
     void reloadFormatter();
     void initFormatter();

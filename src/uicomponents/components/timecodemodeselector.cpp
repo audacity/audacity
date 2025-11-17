@@ -1,6 +1,6 @@
 #include "timecodemodeselector.h"
 
-using namespace au::playback;
+using namespace au::uicomponents;
 
 TimecodeModeSelector::TimecodeModeSelector(QObject* parent)
     : QObject(parent)

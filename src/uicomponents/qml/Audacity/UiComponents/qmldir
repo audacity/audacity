@@ -1,0 +1,6 @@
+BPM 1.0 components/BPM.qml
+Timecode 1.0 components/Timecode.qml
+TimecodeStartEnd 1.0 components/TimecodeStartEnd.qml
+TimeSignature 1.0 components/TimeSignature.qml
+ArrowButton 1.0 components/ArrowButton.qml
+ArrowMenuButton 1.0 components/ArrowMenuButton.qml

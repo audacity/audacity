@@ -60,6 +60,7 @@
 #include "playback/playbackmodule.h"
 #include "trackedit/trackeditmodule.h"
 #include "record/recordmodule.h"
+#include "uicomponents/uicomponentsmodule.h"
 #include "effects/effects_base/effectsmodule.h"
 #include "effects/builtin/builtineffectsmodule.h"
 #ifdef AU_MODULE_EFFECTS_LV2
@@ -250,6 +251,7 @@ int main(int argc, char** argv)
 #ifdef MUSE_MODULE_AUTOBOT
     app.addModule(new muse::autobot::AutobotModule());
 #endif
+    app.addModule(new au::uicomponents::UiComponentsModule());
     app.addModule(new au::effects::AudioUnitEffectsModule());
     app.addModule(new au::effects::Lv2EffectsModule());
     app.addModule(new au::effects::VstEffectsModule());

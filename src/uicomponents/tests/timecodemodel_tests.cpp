@@ -3,9 +3,9 @@
  */
 #include <gtest/gtest.h>
 
-#include "../view/toolbars/components/timecodemodel.h"
+#include "components/timecodemodel.h"
 
-namespace au::playback {
+namespace au::uicomponents {
 constexpr double SAMPLE_RATE = 44100.0;
 constexpr double TEMPO = 120.0;
 constexpr int UPPER_TIME_SIGNATURE = 3;

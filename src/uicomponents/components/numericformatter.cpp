@@ -5,7 +5,7 @@
 
 #include <cstdio>
 
-using namespace au::playback;
+using namespace au::uicomponents;
 
 /**
 NumericConverter

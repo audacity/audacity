@@ -5,10 +5,9 @@
 
 #include <QString>
 
-#include "types.h"
 #include "timecodeformatter.h"
 
-namespace au::playback {
+namespace au::uicomponents {
 class NumericFormatter : public TimecodeFormatter
 {
 public:

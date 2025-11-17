@@ -548,7 +548,7 @@ MenuItemList AppMenuModel::makeRecentProjectsItems()
     return items;
 }
 
-MenuItemList AppMenuModel::appendClearRecentSection(const uicomponents::MenuItemList& recentScores)
+MenuItemList AppMenuModel::appendClearRecentSection(const muse::uicomponents::MenuItemList& recentScores)
 {
     MenuItemList result = recentScores;
     result << makeSeparator()

@@ -3,7 +3,7 @@
 */
 #include "timecodeformatter.h"
 
-using namespace au::playback;
+using namespace au::uicomponents;
 
 TimecodeFormatter::TimecodeFormatter(const QString& formatStr)
     : m_format(formatStr)

@@ -7,7 +7,7 @@ import QtQuick.Controls 2.15
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 
-import Audacity.Playback
+import Audacity.UiComponents
 
 
 StyledDialogView {

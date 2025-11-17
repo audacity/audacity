@@ -18,8 +18,8 @@ public:
 
     muse::draw::Color playColor() const override;
 
-    TimecodeFormatType playbackTimeItemFormat() const override;
-    void setPlaybackTimeItemFormat(TimecodeFormatType format) override;
+    au::uicomponents::TimecodeFormatType playbackTimeItemFormat() const override;
+    void setPlaybackTimeItemFormat(au::uicomponents::TimecodeFormatType format) override;
     muse::async::Notification playbackTimeItemFormatChanged() const override;
 
     PlaybackMeterStyle::MeterStyle playbackMeterStyle() const override;

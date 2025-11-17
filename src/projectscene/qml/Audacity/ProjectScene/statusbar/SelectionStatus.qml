@@ -3,7 +3,7 @@ import QtQuick
 import Muse.UiComponents
 
 import Audacity.ProjectScene
-import Audacity.Playback
+import Audacity.UiComponents 1.0
 
 Row {
     spacing: 6

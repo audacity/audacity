@@ -7,9 +7,9 @@
 
 #include "log.h"
 
-using namespace au::playback;
+using namespace au::uicomponents;
 
-static bool isFieldEditable(const QChar& fieldSymbol)
+bool FieldsInteractionController::isFieldEditable(const QChar& fieldSymbol)
 {
     return fieldSymbol.isDigit();
 }

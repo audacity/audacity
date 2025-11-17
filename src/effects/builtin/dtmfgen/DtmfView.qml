@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import Muse.UiComponents
 import Audacity.Effects
 import Audacity.BuiltinEffects
-import Audacity.Playback
+import Audacity.UiComponents
 import Audacity.ProjectScene
 
 // TODO: move to common controls

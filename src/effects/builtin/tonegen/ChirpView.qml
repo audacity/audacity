@@ -5,7 +5,7 @@ import Muse.Ui
 import Muse.UiComponents
 import Audacity.Effects
 import Audacity.BuiltinEffects
-import Audacity.Playback
+import Audacity.UiComponents
 
 // TODO: move to common controls
 import Preferences

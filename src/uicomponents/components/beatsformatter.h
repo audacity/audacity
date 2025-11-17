@@ -8,7 +8,7 @@
 #include "timecodemodeselector.h"
 #include "timecodeformatter.h"
 
-namespace au::playback {
+namespace au::uicomponents {
 class BeatsFormatter : public TimecodeFormatter
 {
 public:
