@@ -66,7 +66,7 @@ int DbLinearBaseRuler::computeLowestFullStepValue(double height) const
     // Find the closer value to dbRange that has enough room to be drawn
     for (int i = lowestFullStep + FULL_STEP_INCREMENT; i < 0; i += FULL_STEP_INCREMENT) {
         const double position = valueToPosition(i, height, false);
-        if (middlePoint - position > m_ui_settings.minFullStepToInfHeight) {
+        if ((middlePoint - position > m_ui_settings.minFullStepToInfHeight) && (position > m_ui_settings.minFullStepToZeroHeight)) {
             return i;
         }
     }
