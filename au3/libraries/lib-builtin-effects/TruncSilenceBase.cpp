@@ -226,9 +226,7 @@ bool TruncSilenceBase::ProcessIndependently()
 
     // Check if it's permissible
     {
-        for (auto track : inputTracks()->Selected<const WaveTrack>()) {
-            ++nGroups;
-        }
+        nGroups = inputTracks()->Selected<const WaveTrack>().size();
     }
 
     if (nGroups == 0) {

@@ -223,6 +223,7 @@ ITrackDataPtr Au3LabelsInteraction::copyLabel(const LabelKey& labelKey)
 
 bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset, bool completed)
 {
+    UNUSED(completed);
     if (muse::RealIsEqual(timePositionOffset, 0.0)) {
         return true;
     }
@@ -276,6 +277,8 @@ bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset, bool completed)
 
 bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)
 {
+    UNUSED(completed);
+
     //! NOTE: cannot start stretching until previous stretch is handled
     if (m_busy) {
         return false;
@@ -314,6 +317,8 @@ bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
 
 bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
 {
+    UNUSED(completed);
+
     //! NOTE: cannot start stretching until previous stretch is handled
     if (m_busy) {
         return false;
