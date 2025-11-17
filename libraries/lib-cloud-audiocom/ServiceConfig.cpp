@@ -122,6 +122,8 @@ std::string GetButtonName(AudiocomTrace trace)
       return "Link_Audiocom_Account_Help_Menu";
    case AudiocomTrace::OpenFromCloudMenu:
       return "Open_From_Cloud_Menu";
+   case AudiocomTrace::TaskService:
+      return "Task_Service";
    }
 
    assert(false);
@@ -437,6 +439,35 @@ std::string ServiceConfig::GetProjectsPagePath(
          { "user_slug", userSlug },
          { "version_number", audacity::ToUTF8(AUDACITY_VERSION_STRING) },
          { "button_name", GetButtonName(trace) },
+      });
+}
+
+std::string ServiceConfig::GetTaskPollUrl() const
+{
+   return Substitute(
+      "{api_url}/audacity/task/pending",
+      {
+         { "api_url", mApiEndpoint },
+      });
+}
+
+std::string ServiceConfig::GetTaskAckUrl(std::string_view taskId) const
+{
+   return Substitute(
+      "{api_url}/audacity/task/ack?id={task_id}",
+      {
+         { "api_url", mApiEndpoint },
+         { "task_id", taskId }
+      });
+}
+
+std::string ServiceConfig::GetTaskResultUrl(std::string_view taskId) const
+{
+   return Substitute(
+      "{api_url}/audacity/task/result?id={task_id}",
+      {
+         { "api_url", mApiEndpoint },
+         { "task_id", taskId }
       });
 }
 

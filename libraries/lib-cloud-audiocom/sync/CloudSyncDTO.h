@@ -15,6 +15,7 @@
 #include <string_view>
 #include <optional>
 #include <unordered_set>
+#include <variant>
 #include <vector>
 #include <memory>
 
@@ -192,6 +193,53 @@ struct NetworkStats final
    bool IsDownload {};
 }; // struct NetworkStats
 
+enum class TaskAction
+{
+   OpenAudio,
+   OpenProject,
+   Unknown
+};
+
+enum class TaskStatus
+{
+   Pending,
+   Started,
+   Success,
+   Failed,
+   Unknown
+};
+
+struct ProjectOpenTaskParameters final
+{
+   std::string ProjectId;
+   std::string SnapshotId;
+}; // struct ProjectOpenTaskParameters
+
+struct AudioOpenTaskParameters final
+{
+   std::string AudioId;
+}; // struct AudioOpenTaskParameters
+
+struct AppTask final {
+   std::string Id;
+   TaskStatus Status;
+   TaskAction Action;
+   int64_t Created {};
+   std::variant<ProjectOpenTaskParameters, AudioOpenTaskParameters> Parameters;
+}; // struct AppTask
+
+struct PollingInfo final
+{
+   int IntervalSeconds { 10 };
+   bool Stop { false };
+}; // struct PollingInfo
+
+struct AppTaskPollResponse final
+{
+   PollingInfo Polling;
+   std::vector<AppTask> Tasks;
+}; // struct AppTaskPollResponse
+
 std::string Serialize(const ProjectForm& form);
 
 std::optional<ProjectSyncState>
@@ -214,6 +262,8 @@ std::optional<CloudAudioFullInfo> DeserializeCloudAudioFullInfo(const std::strin
 
 std::optional<ProjectInfo> DeserializeProjectInfo(const std::string& data);
 std::optional<SnapshotInfo> DeserializeSnapshotInfo(const std::string& data);
+
+std::optional<AppTaskPollResponse> DeserializeAppTaskPollResponse(const std::string& data);
 
 std::string Serialize(NetworkStats stats);
 

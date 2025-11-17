@@ -79,6 +79,7 @@ set( SOURCES
    CloudAudioOpenUtils.cpp
    CloudAudioOpenUtils.h
    CloudLoginHandler.cpp
+   TaskExecutionHandler.cpp
 )
 
 if(${_OPT}has_url_schemes_support)
@@ -95,6 +96,7 @@ set( LIBRARIES
 set (EXTRA_CLUSTER_NODES "${LIBRARIES};lib-crypto" PARENT_SCOPE)
 
 list(APPEND LIBRARIES
+      lib-string-utils-interface
       lib-menus-interface
       lib-shuttlegui-interface
       lib-wx-wrappers-interface

@@ -68,6 +68,9 @@ private:
    wxButton* mPrevPageButton { nullptr };
    wxButton* mNextPageButton { nullptr };
 
+   bool mNextPageButtonWasFocused{ false };
+   bool mPrevPageButtonWasFocused{ false };
+
    wxButton* mOpenButton { nullptr };
    wxButton* mOpenAudioCom { nullptr };
 
