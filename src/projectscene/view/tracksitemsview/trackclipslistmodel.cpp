@@ -243,6 +243,7 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
         time.selectionStartTime = selectionController()->dataSelectedStartTime();
         time.selectionEndTime = selectionController()->dataSelectedEndTime();
     }
+    item->setIntersectsSelection(muse::contains(selectionController()->clipsIntersectingRangeSelection(), item->key().key));
 
     item->setTime(time);
     item->setX(m_context->timeToPosition(time.itemStartTime));

@@ -67,6 +67,9 @@ public:
     bool timeSelectionHasAudioData() const override;
     bool isDataSelectedOnTrack(TrackId trackId) const override;
     void setSelectedAllAudioData() override;
+    ClipKeyList clipsIntersectingRangeSelection() const override;
+    void setClipsIntersectingRangeSelection(const ClipKeyList& clipKeys) override;
+    muse::async::Channel<ClipKeyList> clipsIntersectingRangeSelectionChanged() const override;
 
     trackedit::secs_t dataSelectedStartTime() const override;
     void setDataSelectedStartTime(trackedit::secs_t time, bool complete) override;
@@ -102,6 +105,7 @@ private:
     void addSelectedTrack(const trackedit::TrackId& trackId);
     void updateSelectionController();
     void restoreSelection(const ClipAndTimeSelection& selection);
+    ClipKeyList findClipsIntersectingRangeSelection() const;
 
     au3::Au3Project& projectRef() const;
     Observer::Subscription m_tracksSubc;
@@ -141,6 +145,7 @@ private:
     // data selection
     Val<trackedit::secs_t> m_selectedStartTime;
     Val<trackedit::secs_t> m_selectedEndTime;
+    Val<ClipKeyList> m_clipsIntersectingRangeSelection;
 
     Val<trackedit::secs_t> m_selectionStartTime; // indicates where user started selection
 

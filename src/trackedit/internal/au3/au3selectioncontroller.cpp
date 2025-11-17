@@ -78,6 +78,27 @@ void Au3SelectionController::restoreSelection(const ClipAndTimeSelection& select
     updateSelectionController();
 }
 
+ClipKeyList Au3SelectionController::findClipsIntersectingRangeSelection() const
+{
+    if (!timeSelectionIsNotEmpty() || selectedTracks().empty()) {
+        return {};
+    }
+
+    ClipKeyList clipsIntersectingRangeSelection = {};
+    for (const auto& trackId : m_selectedTracks.val) {
+        WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        for (const auto& clip : waveTrack->GetSortedClipsIntersecting(m_selectedStartTime.val, m_selectedEndTime.val)) {
+            clipsIntersectingRangeSelection.push_back(DomConverter::clip(waveTrack, clip.get()).key);
+        }
+    }
+
+    return clipsIntersectingRangeSelection;
+}
+
 void Au3SelectionController::resetSelectedTracks()
 {
     MYLOG() << "resetSelectedTrack";
@@ -555,6 +576,8 @@ void Au3SelectionController::resetDataSelection()
     const auto initialPlaybackPosition = globalContext()->playbackState()->playbackPosition();
     m_selectedStartTime.set(initialPlaybackPosition, true);
     m_selectedEndTime.set(initialPlaybackPosition, true);
+
+    setClipsIntersectingRangeSelection({});
 }
 
 bool Au3SelectionController::timeSelectionIsNotEmpty() const
@@ -602,6 +625,21 @@ void Au3SelectionController::setSelectedAllAudioData()
     setDataSelectedEndTime(prj->totalTime(), true);
 }
 
+ClipKeyList Au3SelectionController::clipsIntersectingRangeSelection() const
+{
+    return m_clipsIntersectingRangeSelection.val;
+}
+
+void Au3SelectionController::setClipsIntersectingRangeSelection(const ClipKeyList& clipKeys)
+{
+    m_clipsIntersectingRangeSelection.set(clipKeys, true);
+}
+
+muse::async::Channel<ClipKeyList> Au3SelectionController::clipsIntersectingRangeSelectionChanged() const
+{
+    return m_clipsIntersectingRangeSelection.changed;
+}
+
 au::trackedit::secs_t Au3SelectionController::dataSelectedStartTime() const
 {
     return m_selectedStartTime.val;
@@ -615,6 +653,10 @@ void Au3SelectionController::setDataSelectedStartTime(au::trackedit::secs_t time
     selectedRegion.setT0(time);
 
     m_selectedStartTime.set(time, complete);
+
+    if (complete) {
+        setClipsIntersectingRangeSelection(findClipsIntersectingRangeSelection());
+    }
 }
 
 muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedStartTimeChanged() const
@@ -640,6 +682,10 @@ void Au3SelectionController::setDataSelectedEndTime(au::trackedit::secs_t time, 
     selectedRegion.setT1(time);
 
     m_selectedEndTime.set(time, complete);
+
+    if (complete) {
+        setClipsIntersectingRangeSelection(findClipsIntersectingRangeSelection());
+    }
 }
 
 bool Au3SelectionController::selectionContainsGroup() const

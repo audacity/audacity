@@ -11,6 +11,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/exportermodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/exportermodule.h
     ${CMAKE_CURRENT_LIST_DIR}/iexporter.h
+    ${CMAKE_CURRENT_LIST_DIR}/ilabelsexporter.h
     ${CMAKE_CURRENT_LIST_DIR}/iffmpegoptionsaccessor.h
     ${CMAKE_CURRENT_LIST_DIR}/iexportconfiguration.h
 
@@ -19,6 +20,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exporter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3ffmpegoptionsaccessor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3ffmpegoptionsaccessor.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3labelsexporter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3labelsexporter.h
+
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportconfiguration.h
 
@@ -30,6 +34,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/customffmpegpreferencesmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/metadatamodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/metadatamodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/exportlabelsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/exportlabelsmodel.h
 
     #types
     ${CMAKE_CURRENT_LIST_DIR}/types/exporttypes.h

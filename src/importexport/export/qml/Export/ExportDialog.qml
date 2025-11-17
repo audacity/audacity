@@ -18,7 +18,7 @@ StyledDialogView {
     contentWidth: 550
     contentHeight: mainColumn.implicitHeight
 
-    margins: 10
+    margins: 16
 
     modal: true
     alwaysOnTop: true
@@ -55,7 +55,7 @@ StyledDialogView {
     ColumnLayout {
         id: mainColumn
 
-        spacing: 16
+        spacing: 8
 
         BaseSection {
             title: qsTrc("export", "Export")

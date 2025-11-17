@@ -80,6 +80,20 @@ void ViewTrackItem::setSelected(bool newSelected)
     emit selectedChanged();
 }
 
+bool ViewTrackItem::intersectsSelection() const
+{
+    return m_intersectsSelection;
+}
+
+void ViewTrackItem::setIntersectsSelection(bool newState)
+{
+    if (m_intersectsSelection == newState) {
+        return;
+    }
+    m_intersectsSelection = newState;
+    emit intersectsSelectionChanged();
+}
+
 double ViewTrackItem::leftVisibleMargin() const
 {
     return m_leftVisibleMargin;

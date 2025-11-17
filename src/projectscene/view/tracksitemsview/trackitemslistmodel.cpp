@@ -484,6 +484,9 @@ void TrackItemsListModel::init()
     selectionController()->tracksSelected().onReceive(this, [this](const TrackIdList&) {
         updateItemsMetrics();
     });
+    selectionController()->clipsIntersectingRangeSelectionChanged().onReceive(this, [this](const ClipKeyList&) {
+        updateItemsMetrics();
+    });
 
     onInit();
 
