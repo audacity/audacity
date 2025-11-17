@@ -336,7 +336,7 @@ int ViewTracksListModel::verticalRulerWidth() const
     }
 
     // Adjust the width according to the number of decimal places.
-    return 24 + (count * 8);
+    return 56 + (count * 8);
 }
 
 int ViewTracksListModel::totalTracksHeight() const

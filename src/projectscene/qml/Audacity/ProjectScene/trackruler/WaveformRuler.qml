@@ -110,7 +110,7 @@ Item {
                 anchors.bottom: modelData.alignment == 1 ? parent.bottom : undefined
                 anchors.right: parent.right
 
-                anchors.rightMargin: 3
+                anchors.rightMargin: 20
                 anchors.bottomMargin: modelData.alignment == 1 ? 1 : undefined
                 anchors.verticalCenter: modelData.alignment == 0 ? parent.verticalCenter : undefined
 
