@@ -32,6 +32,7 @@ Rectangle {
     property int currentClipStyle: ClipStyle.COLORFUL
     property int groupId: -1
     property bool clipSelected: false
+    property bool clipIntersectsSelection: false
     property bool isDataSelected: false
     property bool isMultiSelectionActive: false
     property bool multiClipsSelected: root.isMultiSelectionActive && root.clipSelected
@@ -92,7 +93,11 @@ Rectangle {
     radius: 4
     color: clipSelected ? "white" : clipColor
     border.color: "#000000"
-    opacity: root.moveActive && clipSelected ? 0.5 : isAudible ? 1.0 : 0.3
+    opacity: root.moveActive && (clipSelected || clipIntersectsSelection) ? 0.5 : isAudible ? 1.0 : 0.3
+
+    onMoveActiveChanged: {
+        root.parent.z = moveActive && (clipSelected || clipIntersectsSelection) ? 1 : 0
+    }
 
     property int borderWidth: 1
     property bool hover: root.containsMouse || root.headerHovered
@@ -530,7 +535,7 @@ Rectangle {
                         root.editTitle()
                     } else {
                         //! NOTE Handle singleClick logic
-                        if (!root.multiClipsSelected) {
+                        if (!root.multiClipsSelected && !isWithinRange(e.x, headerSelectionRectangle.x, headerSelectionRectangle.width)) {
                             root.requestSelected()
                         }
 
@@ -555,6 +560,10 @@ Rectangle {
 
                 onReleased: function (e) {
                     e.accepted = false
+                }
+
+                function isWithinRange(val, x, w) {
+                    return val >= x && val <= (x + w);
                 }
             }
 
