@@ -27,12 +27,9 @@ StyledDialogView {
     property int smallDropdownWidth: 364 * 0.65
     property int labelColumnWidth: 80
 
-    // property NavigationPanel navigation: NavigationPanel {
-    //     name: root.title
-    //     enabled: root.enabled && root.visible
-    //     direction: NavigationPanel.Horizontal
-    //     section: root.navigationSection
-    // }
+    onNavigationActivateRequested: {
+        typeDropdown.navigation.requestActive()
+    }
 
     ExportPreferencesModel {
         id: exportPreferencesModel
@@ -58,9 +55,14 @@ StyledDialogView {
         spacing: 8
 
         BaseSection {
+            id: typeSection
+
             title: qsTrc("export", "Export")
 
             spacing: 10
+
+            navigation.section: root.navigationSection
+            navigation.order: 1
 
             RowLayout {
 
@@ -68,14 +70,16 @@ StyledDialogView {
                     width: root.labelColumnWidth
 
                     StyledTextLabel {
-                        text: qsTrc("export", "Process")
+                        id: typeLabel
+
+                        text: qsTrc("export", "Type")
 
                         anchors.verticalCenter: parent.verticalCenter
                     }
                 }
 
                 StyledDropdown {
-                    id: processDropdown
+                    id: typeDropdown
 
                     Layout.preferredWidth: root.dropdownWidth
 
@@ -86,10 +90,11 @@ StyledDialogView {
                     currentIndex: indexOfValue(exportPreferencesModel.currentProcess)
                     model: exportPreferencesModel.processList
 
-                    // navigation.name: "ProcessBox"
-                    // navigation.panel: root.navigation
-                    // navigation.order: 0
-                    // navigation.row: 0
+
+                    navigation.name: "TypeDropdown"
+                    navigation.panel: typeSection.navigation
+                    navigation.order: 1
+                    navigation.accessible.name: typeLabel.text + ": " + currentText
 
                     indeterminateText: ""
 
@@ -100,15 +105,25 @@ StyledDialogView {
             }
         }
 
+        SeparatorLine {}
+
         BaseSection {
+            id: fileSection
+
             title: qsTrc("export", "File")
+
+            navigation.section: root.navigationSection
+            navigation.order: typeSection.navigation.order + 1
 
             RowLayout {
 
                 Item {
                     width: root.labelColumnWidth
                     StyledTextLabel {
+                        id: filenameLabel
+
                         text: qsTrc("export", "File name")
+
                         anchors.verticalCenter: parent.verticalCenter
                     }
                 }
@@ -123,10 +138,10 @@ StyledDialogView {
 
                     implicitWidth: root.dropdownWidth
 
-                    // navigation.name: "FilenameFieldBox"
-                    // navigation.panel: root.navigation
-                    // navigation.order: 1
-                    // navigation.row: 1
+                    navigation.name: "FileNameFieldBox"
+                    navigation.panel: fileSection.navigation
+                    navigation.order: 1
+                    navigation.accessible.name: filenameLabel.text + ": " + currentText
 
                     onTextChanged: function(newTextValue) {
                         exportPreferencesModel.setFilename(newTextValue)
@@ -139,7 +154,10 @@ StyledDialogView {
                 Item {
                     width: root.labelColumnWidth
                     StyledTextLabel {
+                        id: folderLabel
+
                         text: qsTrc("export", "Folder")
+
                         anchors.verticalCenter: parent.verticalCenter
                     }
                 }
@@ -158,10 +176,8 @@ StyledDialogView {
                     path: exportPreferencesModel.directoryPath
                     dir: exportPreferencesModel.directoryPath
 
-                    // navigation: root.navigation
-                    // navigationRowOrderStart: 2
-                    // navigation.order: 2
-                    // navigation.order: filenameField.navigation.order + 1
+                    navigation: fileSection.navigation
+                    navigationRowOrderStart: filenameField.navigation.order + 1
 
                     onPathEdited: function(newPath) {
                         exportPreferencesModel.setFilePickerPath(newPath)
@@ -174,7 +190,10 @@ StyledDialogView {
                 Item {
                     width: root.labelColumnWidth
                     StyledTextLabel {
+                        id: formatLabel
+
                         text: qsTrc("export", "Format")
+
                         anchors.verticalCenter: parent.verticalCenter
                     }
                 }
@@ -191,9 +210,10 @@ StyledDialogView {
                     currentIndex: indexOfValue(exportPreferencesModel.currentFormat)
                     model: exportPreferencesModel.formatsList
 
-                    // navigation.name: "FormatBox"
-                    // navigation.panel: root.navigation
-                    // navigation.order: dirPicker.navigation.order + 1
+                    navigation.name: "FormatDropdown"
+                    navigation.panel: fileSection.navigation
+                    navigation.order: dirPicker.navigationRowOrderStart + 2
+                    navigation.accessible.name: formatLabel.text + ": " + currentText
 
                     indeterminateText: ""
 
@@ -204,8 +224,15 @@ StyledDialogView {
             }
         }
 
+        SeparatorLine {}
+
         BaseSection {
+            id: audioSection
+
             title: qsTrc("export", "Audio options")
+
+            navigation.section: root.navigationSection
+            navigation.order: fileSection.navigation.order + 1
 
             RowLayout {
 
@@ -223,6 +250,8 @@ StyledDialogView {
                     Layout.preferredWidth: root.dropdownWidth
                     Layout.preferredHeight: 20
 
+                    property int navigationOrderStart: 0
+
                     Row {
                         width: parent.width
                         spacing: 10
@@ -234,10 +263,10 @@ StyledDialogView {
                             enabled: exportPreferencesModel.maxExportChannels > 0
                             text: qsTrc("export", "Mono")
 
-                            // navigation.name: "MonoBox"
-                            // navigation.panel: root.navigation
-                            // navigation.order: formatDropdown.navigation.order + 1
-                            // navigation.row: 0
+                            navigation.name: "MonoBox"
+                            navigation.panel: audioSection.navigation
+                            navigation.row: channelsGroup.navigationOrderStart
+                            navigation.column: 0
 
                             onToggled: {
                                 exportPreferencesModel.setExportChannels(ExportChannels.MONO)
@@ -250,10 +279,10 @@ StyledDialogView {
                             enabled: exportPreferencesModel.maxExportChannels > 1
                             text: qsTrc("export", "Stereo")
 
-                            // navigation.name: "StereoBox"
-                            // navigation.panel: root.navigation
-                            // navigation.order: formatDropdown.navigation.order + 1
-                            // navigation.row: 1
+                            navigation.name: "StereoBox"
+                            navigation.panel: audioSection.navigation
+                            navigation.row: channelsGroup.navigationOrderStart
+                            navigation.column: 1
 
                             onToggled: {
                                 exportPreferencesModel.setExportChannels(ExportChannels.STEREO)
@@ -266,10 +295,10 @@ StyledDialogView {
                             text: qsTrc("export", "Custom mapping")
                             enabled: false // until custom mapping grid is implemented
 
-                            // navigation.name: "CustomBox"
-                            // navigation.panel: root.navigation
-                            // navigation.order: formatDropdown.navigation.order + 1
-                            // navigation.row: 2
+                            navigation.name: "CustomBox"
+                            navigation.panel: audioSection.navigation
+                            navigation.row: channelsGroup.navigationOrderStart
+                            navigation.column: 2
 
                             onToggled: {
                                 exportPreferencesModel.setExportChannels(ExportChannels.CUSTOM)
@@ -284,7 +313,10 @@ StyledDialogView {
                 Item {
                     width: root.labelColumnWidth
                     StyledTextLabel {
+                        id: sampleRateLabel
+
                         text: qsTrc("export", "Sample rate")
+
                         anchors.verticalCenter: parent.verticalCenter
                     }
                 }
@@ -301,9 +333,11 @@ StyledDialogView {
                     currentIndex: indexOfValue(exportPreferencesModel.exportSampleRate)
                     model: exportPreferencesModel.exportSampleRateList
 
-                    // navigation.name: "ProcessBox"
-                    // navigation.panel: root.navigation
-                    // navigation.column: 1
+                    navigation.name: "SampleRateDropdown"
+                    navigation.panel: audioSection.navigation
+                    navigation.row: channelsGroup.navigationOrderStart + 1
+                    navigation.column: 0
+                    navigation.accessible.name: formatLabel.text + ": " + currentText
 
                     indeterminateText: ""
 
@@ -328,6 +362,12 @@ StyledDialogView {
                         Layout.preferredWidth: root.smallDropdownWidth
 
                         text: qsTrc("export", "Open custom FFmpeg format options")
+
+                        navigation.name: "CustomFFmpegButton"
+                        navigation.panel: audioSection.navigation
+                        navigation.row: sampleRateDropdown.navigation.row + 1
+                        navigation.column: 0
+                        navigation.accessible.name: text + " button"
 
                         onClicked: {
                             exportPreferencesModel.openCustomFFmpegDialog()
@@ -445,8 +485,14 @@ StyledDialogView {
             }
         }
 
+        SeparatorLine {}
+
         BaseSection {
+            id: renderingSection
             title: qsTrc("export", "Rendering")
+
+            navigation.section: root.navigationSection
+            navigation.order: audioSection.navigation.order + 1
 
             ColumnLayout {
                 CheckBox {
@@ -456,10 +502,10 @@ StyledDialogView {
                     text: qsTrc("export", "Trim blank space before first clip")
                     enabled: false
 
-                    // navigation.name: "TrimBlankSpaceBox"
-                    // navigation.panel: root.navigation
-                    // navigation.row: 1
-                    // navigation.column: 0
+                    navigation.name: "TrimBlankSpaceBox"
+                    navigation.panel: renderingSection.navigation
+                    navigation.order: 1
+                    navigation.accessible.name: text + " checkbox"
 
                     onClicked: {}
                 }
@@ -475,12 +521,18 @@ StyledDialogView {
 
             Layout.fillWidth: true
 
+            navigationPanel.section: root.navigationSection
+            navigationPanel.order: audioSection.navigation.order + 2
+
             FlatButton {
                 text: qsTrc("appshell/preferences", "Edit metadata")
                 buttonRole: ButtonBoxModel.CustomRole
                 buttonId: ButtonBoxModel.CustomButton + 1
                 isLeftSide: true
                 enabled: exportPreferencesModel.hasMetadata
+
+                navigation.panel: buttonBox.navigationPanel
+                navigation.order: 1
 
                 onClicked: {
                     exportPreferencesModel.openMetadataDialog()
@@ -493,6 +545,10 @@ StyledDialogView {
                 buttonRole: ButtonBoxModel.RejectRole
                 buttonId: ButtonBoxModel.Cancel
                 minWidth: 80
+
+                navigation.panel: buttonBox.navigationPanel
+                navigation.order: 2
+
                 onClicked: {
                     exportPreferencesModel.cancel()
                     exportPreferencesModel.setExportSampleRate("")
@@ -507,6 +563,10 @@ StyledDialogView {
                 buttonId: ButtonBoxModel.Apply
                 minWidth: 80
                 accentButton: true
+
+                navigation.panel: buttonBox.navigationPanel
+                navigation.order: 3
+
                 onClicked: {
                     if (exportPreferencesModel.verifyExportPossible()) {
                         exportPreferencesModel.apply()
@@ -516,7 +576,6 @@ StyledDialogView {
                 }
             }
         }
-
     }
 
     // dynamic export controls
@@ -528,6 +587,10 @@ StyledDialogView {
 
             model: option.names
             currentIndex: option.value
+
+            navigation.panel: audioSection.navigation
+            navigation.row: 2 + option.index
+            navigation.column: 0
 
             onActivated: function(index, value) {
                 dynamicOptionsModel.setData(dynamicOptionsModel.index(option.index, 0),
@@ -543,6 +606,11 @@ StyledDialogView {
             property var option
 
             checked: Boolean(option.value)
+
+            navigation.panel: audioSection.navigation
+            navigation.row: 2 + option.index
+            navigation.column: 0
+
             onClicked: dynamicOptionsModel.setData(
                            dynamicOptionsModel.index(option.index, 0),
                            checked,
@@ -591,6 +659,11 @@ StyledDialogView {
             minValue: option.min
             maxValue: option.max
             currentValue: option.value
+
+            navigation.panel: audioSection.navigation
+            navigation.row: 2 + option.index
+            navigation.column: 0
+
             onValueEdited: function(newValue) {
                 dynamicOptionsModel.setData(
                     dynamicOptionsModel.index(option.index,0),
