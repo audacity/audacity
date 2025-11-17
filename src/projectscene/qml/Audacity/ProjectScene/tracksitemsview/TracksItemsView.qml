@@ -259,7 +259,7 @@ Rectangle {
             onClicked: function (e) {
                 let position = convertToTimelinePosition(e)
                 if (!playRegionActivated) {
-                    playCursorController.seekToX(position.x, timeline.context.playbackOnRulerClickEnabled)
+                    playCursorController.seekToX(position.x, playbackState.isPlaying || timeline.context.playbackOnRulerClickEnabled)
                 }
                 playRegionActivated = false
             }
