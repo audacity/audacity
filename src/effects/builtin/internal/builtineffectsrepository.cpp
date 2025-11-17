@@ -61,6 +61,8 @@
 #include "repair/repaireffect.h"
 #include "truncatesilence/truncatesilenceeffect.h"
 #include "truncatesilence/truncatesilenceviewmodel.h"
+#include "changepitch/changepitcheffect.h"
+#include "changepitch/changepitchviewmodel.h"
 
 #include <algorithm>
 
@@ -74,6 +76,7 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< Repair > regRepair;
     static BuiltinEffectsModule::Registration< ReverseEffect > regReverse;
     static BuiltinEffectsModule::Registration< TruncateSilenceEffect > regTruncateSilence;
+    static BuiltinEffectsModule::Registration< ChangePitchEffect > regChangePitch;
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
     static BuiltinEffectsModule::Registration< NormalizeLoudnessEffect > regLoudness;
     static BuiltinEffectsModule::Registration< GraphicEq > regGraphicEq;
@@ -254,6 +257,15 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     muse::mtrc("effects", "Truncate Silence"),
                     muse::mtrc("effects", "Automatically reduces the length of passages where the volume is below a specified level"),
                     BuiltinEffectCategoryId::Special,
+                    true
+                    );
+        } else if (symbol == ChangePitchEffect::Symbol) {
+            qmlRegisterType<ChangePitchViewModel>("Audacity.Effects", 1, 0, "ChangePitchViewModel");
+            regView(ChangePitchEffect::Symbol, u"qrc:/changepitch/ChangePitchView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects", "Change Pitch"),
+                    muse::mtrc("effects", "Changes the pitch of a track without changing its tempo"),
+                    BuiltinEffectCategoryId::PitchAndTempo,
                     true
                     );
         } else if (symbol == ChirpEffect::Symbol) {

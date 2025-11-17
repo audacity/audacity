@@ -160,6 +160,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/changepitch/changepitcheffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/changepitch/changepitcheffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/changepitch/changepitchviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/changepitch/changepitchviewmodel.h
     )
 
 # AU3
@@ -180,10 +182,24 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationBase.h
     ${AU3_LIBRARIES}/lib-builtin-effects/TruncSilenceBase.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/TruncSilenceBase.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/ChangePitchBase.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/ChangePitchBase.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/SoundTouchBase.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/SoundTouchBase.h
+    ${AU3_LIBRARIES}/lib-math/PitchName.cpp
+    ${AU3_LIBRARIES}/lib-math/PitchName.h
+    ${AU3_LIBRARIES}/lib-fft/FFT.cpp
+    ${AU3_LIBRARIES}/lib-fft/FFT.h
+    ${AU3_LIBRARIES}/lib-fft/Spectrum.cpp
+    ${AU3_LIBRARIES}/lib-fft/Spectrum.h
 )
 
 set(AU3_DEF ${AU3_DEF}
     -DBUILTIN_EFFECTS_API=
+    USE_SOUNDTOUCH=1
+    # Note: NOTE_TRACK_API is only needed if USE_MIDI is defined
+    # Currently MIDI support is not enabled in AU4
+    # -DNOTE_TRACK_API=
 )
 
 set(MODULE_SRC ${MODULE_SRC}
