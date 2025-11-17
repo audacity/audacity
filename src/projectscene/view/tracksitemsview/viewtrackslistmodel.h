@@ -18,7 +18,6 @@
 #include "trackedit/itrackeditinteraction.h"
 #include "playback/itrackplaybackcontrol.h"
 #include "projectscene/iprojectsceneconfiguration.h"
-#include "actions/iactionsdispatcher.h"
 
 #include "trackedit/dom/track.h"
 
@@ -38,14 +37,12 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
     muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
     explicit ViewTracksListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);
-    Q_INVOKABLE void toggleVerticalRuler() const;
     Q_INVOKABLE void setTrackRulerType(const trackedit::TrackId& trackId, int rulerType);
 
     int rowCount(const QModelIndex& parent) const override;

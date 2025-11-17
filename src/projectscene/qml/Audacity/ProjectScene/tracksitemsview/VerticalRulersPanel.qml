@@ -194,12 +194,7 @@ Rectangle {
                             isCollapsed: trackViewState.isTrackCollapsed
                             channelHeightRatio: trackViewState.channelHeightRatio
                             rulerType: model.trackRulerType
-                            isVerticalRulersVisible: root.model.isVerticalRulersVisible
                             verticalZoom: model.verticalZoom
-
-                            onHideVerticalRulerRequested: {
-                                root.model.toggleVerticalRuler()
-                            }
 
                             onSetTrackRulerTypeRequested: function (rulerType) {
                                 root.model.setTrackRulerType(model.trackId, rulerType)
