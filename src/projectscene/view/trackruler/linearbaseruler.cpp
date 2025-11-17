@@ -42,10 +42,15 @@ void LinearBaseRuler::setVerticalZoom(float verticalZoom)
 
 std::string LinearBaseRuler::sampleToText(double sample) const
 {
+    constexpr int MIN_PRECISION = 1;
+    constexpr int MAX_PRECISION = 4;
+
     const auto increments = stepsIncrement(m_height);
-    const int precision = getPrecision(increments.first);
+    int precision = getPrecision(increments.first);
     double multiplier = std::pow(10.0, precision);
     double rounded = std::round(std::abs(sample) * multiplier) / multiplier;
+
+    precision = std::clamp(precision, MIN_PRECISION, MAX_PRECISION);
 
     std::stringstream ss;
     ss << std::fixed << std::setprecision(precision) << rounded;
