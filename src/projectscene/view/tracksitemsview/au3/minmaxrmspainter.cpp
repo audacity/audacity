@@ -84,7 +84,7 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
             ColorFromQColor(params.style.clippedPen))
         .SetEnvelopeColors(
             ColorFromQColor(params.style.envelopeBackground),
-            ColorFromQColor(params.style.envelopeBackground))
+            ColorFromQColor(params.style.selectedEnvelopeBackground))
         .SetEnvelope(waveClip->GetEnvelope());
 
         au::projectscene::WaveMetrics _metrics = metrics;

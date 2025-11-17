@@ -115,6 +115,10 @@ void WaveView::applyColorfulStyle(IWavePainter::Params& params,
     params.style.normalBackground = muse::blendQColors(BACKGROUND_COLOR, clipColor, normalBgAlpha);
     params.style.selectedBackground = transformColor(params.style.normalBackground);
 
+    const QColor envelopeBgColor = muse::blendQColors(clipColor, QColor(255, 255, 255), 0.64);
+    params.style.envelopeBackground = envelopeBgColor;
+    params.style.selectedEnvelopeBackground = transformColor(envelopeBgColor);
+
     params.style.samplePen = muse::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.8);
     params.style.selectedSamplePen = muse::blendQColors(params.style.blankBrush,
                                                         selected ? SAMPLES_HIGHLIGHT_COLOR : SAMPLES_BASE_COLOR,
@@ -142,6 +146,10 @@ void WaveView::applyClassicStyle(IWavePainter::Params& params, bool selected) co
     params.style.blankBrush = selected ? CLASSIC_BACKGROUND_SELECTED_COLOR : CLASSIC_BACKGROUND_COLOR;
     params.style.normalBackground = params.style.blankBrush;
     params.style.selectedBackground = selected ? transformColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
+
+    const QColor envelopeBgColor = muse::blendQColors(CLASSIC_BACKGROUND_COLOR, QColor(255, 255, 255), 0.64);
+    params.style.envelopeBackground = envelopeBgColor;
+    params.style.selectedEnvelopeBackground = transformColor(envelopeBgColor);
 
     QColor baseSampleColor = selected ? CLASSIC_SAMPLES_BASE_SELECTED_COLOR : CLASSIC_SAMPLES_BASE_COLOR;
     params.style.samplePen = baseSampleColor;

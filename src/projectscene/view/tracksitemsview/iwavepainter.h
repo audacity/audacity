@@ -29,6 +29,7 @@ public:
         QColor sampleHeadSelection;
         QColor sampleStalkSelection;
         QColor envelopeBackground;
+        QColor selectedEnvelopeBackground;
     };
 
     struct Geometry {
