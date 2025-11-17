@@ -2,11 +2,11 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "playregioncontroller.h"
-
 #include <cmath>
 
-#include "log.h"
+#include "framework/global/log.h"
+
+#include "playregioncontroller.h"
 
 namespace au::projectscene {
 PlayRegionController::PlayRegionController(QObject* parent)
@@ -18,6 +18,16 @@ void PlayRegionController::init()
 {
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         updateIsActive();
+    });
+
+    uicontextResolver()->currentUiContextChanged().onNotify(this, [this]() {
+        finishInteraction(m_dragStartPos);
+    });
+
+    connect(qApp, &QApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
+        if (state != Qt::ApplicationActive) {
+            finishInteraction(m_dragStartPos);
+        }
     });
 
     updateIsActive();
@@ -56,16 +66,6 @@ void PlayRegionController::startInteraction(double pos, bool ctrlPressed)
     if (m_action != UserInputAction::None) {
         playbackController()->loopEditingBegin();
     }
-
-    connect(qApp, &QApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
-        if (state != Qt::ApplicationActive) {
-            finishInteraction(m_dragStartPos);
-        }
-    });
-
-    uicontextResolver()->currentUiContextChanged().onNotify(this, [this]() {
-        finishInteraction(m_dragStartPos);
-    });
 }
 
 void PlayRegionController::updatePosition(double pos)
