@@ -125,7 +125,7 @@ Item {
 
                     text: rulerModel.sampleToText(modelData.value)
                     color: "#F9F9FA"
-                    font.pixelSize: 10
+                    font.pixelSize: 11
 
                     font.bold: modelData.bold
 
