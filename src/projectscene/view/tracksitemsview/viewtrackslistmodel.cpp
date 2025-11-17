@@ -351,11 +351,6 @@ int ViewTracksListModel::totalTracksHeight() const
     return viewState->totalTrackHeight().val;
 }
 
-void ViewTracksListModel::toggleVerticalRuler() const
-{
-    dispatcher()->dispatch("toggle-vertical-rulers");
-}
-
 void ViewTracksListModel::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType)
 {
     trackeditInteraction()->changeTrackRulerType(trackId, static_cast<trackedit::TrackRulerType>(rulerType));

@@ -11,10 +11,8 @@ Item {
     required property bool isCollapsed
     required property int rulerType
     required property real channelHeightRatio
-    required property bool isVerticalRulersVisible
     required property real verticalZoom
 
-    signal hideVerticalRulerRequested
     signal setTrackRulerTypeRequested(int rulerType)
 
     Component.onCompleted: {
@@ -44,15 +42,10 @@ Item {
 
     TrackRulerCustomizePopup {
         id: customisePopup
-        isVerticalRulersVisible: root.isVerticalRulersVisible
         rulerType: model.trackRulerType
         availableRulerTypes: model.availableRulerTypes
 
         placementPolicies: PopupView.PreferLeft
-
-        onHideRulersRequested: {
-            root.hideVerticalRulerRequested()
-        }
 
         onRulerTypeChangeRequested: function (rulerType) {
             root.setTrackRulerTypeRequested(rulerType)

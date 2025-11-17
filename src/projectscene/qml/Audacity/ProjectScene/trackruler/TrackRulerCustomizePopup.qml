@@ -13,11 +13,9 @@ import Audacity.Playback 1.0
 StyledPopupView {
     id: root
 
-    property bool isVerticalRulersVisible: true
     required property int rulerType
     required property var availableRulerTypes
 
-    signal hideRulersRequested()
     signal rulerTypeChangeRequested(int newType)
     signal zoomInRequested()
     signal zoomOutRequested()
@@ -42,7 +40,6 @@ StyledPopupView {
         readonly property int zoomBtnWidth: 40
         readonly property int resetBtnWidth: 85
         readonly property int formatGroupBoxHeight: 120
-        readonly property int showRulersBoxHeight: 40
     }
 
     ColumnLayout {
@@ -135,31 +132,6 @@ StyledPopupView {
 
             onClicked: {
                 console.log("Half wave toggled: " + checked)
-            }
-        }
-
-        Item {
-            Layout.fillWidth: true
-            Layout.preferredHeight: uiModel.showRulersBoxHeight
-
-            SeparatorLine {
-                anchors.top: parent.top
-                anchors.leftMargin: -uiModel.popupMargins
-                anchors.rightMargin: -uiModel.popupMargins
-            }
-
-            CheckBox {
-                id: showTrackRulers
-
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: qsTrc("trackruler", "Show vertical rulers")
-
-                checked: root.isVerticalRulersVisible
-
-                onClicked: {
-                    root.hideRulersRequested()
-                }
             }
         }
     }
