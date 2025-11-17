@@ -232,18 +232,18 @@ struct WaveBitmapCache::LookupHelper final
                 const auto envelopePositiveRow = std::clamp(GetRowFromValue(envelopeValue), globalMaxRow, globalMinRow);
                 const auto envelopeNegativeRow = std::clamp(GetRowFromValue(-envelopeValue) + 1, globalMaxRow, globalMinRow);
 
-                function.AddBand(envelopeColors.Normal, globalMaxRow, envelopePositiveRow);
+                function.AddBand(selected ? envelopeColors.Selected : envelopeColors.Normal, globalMaxRow, envelopePositiveRow);
 
                 if (drawEnvelope) {
                     const auto envelopeEndPositiveRow = std::clamp(GetRowFromValue(envelopeValue - 0.5), globalMaxRow, zeroLineY);
                     const auto envelopeEndNegativeRow = std::clamp(GetRowFromValue(-envelopeValue + 0.5) + 1, zeroLineY, globalMinRow);
 
                     if (envelopeEndNegativeRow != envelopeEndPositiveRow) {
-                        function.AddBand(envelopeColors.Normal, envelopeEndPositiveRow, envelopeEndNegativeRow);
+                        function.AddBand(selected ? envelopeColors.Selected : envelopeColors.Normal, envelopeEndPositiveRow, envelopeEndNegativeRow);
                     }
                 }
 
-                function.AddBand(envelopeColors.Normal, envelopeNegativeRow, globalMinRow);
+                function.AddBand(selected ? envelopeColors.Selected : envelopeColors.Normal, envelopeNegativeRow, globalMinRow);
             }
 
             function.AddBand(zeroLineColor, zeroLineY, zeroLineY + 1);
