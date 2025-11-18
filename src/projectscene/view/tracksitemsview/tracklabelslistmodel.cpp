@@ -245,6 +245,10 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
         ok = trackeditInteraction()->moveLabels(moveOffset.timeOffset, completed);
     }
 
+    if (ok) {
+        selectTracksDataFromLabelRange(key);
+    }
+
     if ((completed && m_autoScrollConnection)) {
         disconnectAutoScroll();
     } else if (!m_autoScrollConnection && !completed) {
@@ -327,6 +331,10 @@ bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, const LabelKey&
         ok = trackeditInteraction()->stretchLabelRight(leftLinkedLabel.key, newStartTime, completed);
     }
 
+    if (ok) {
+        selectTracksDataFromLabelRange(key);
+    }
+
     handleAutoScroll(ok, completed, [this, key, leftLinkedLabel, unlink]() {
         stretchLabelLeft(key, leftLinkedLabel, unlink, false);
     });
@@ -357,6 +365,10 @@ bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, const LabelKey
 
     if (ok && !unlink && rightLinkedLabel.isValid()) {
         ok = trackeditInteraction()->stretchLabelLeft(rightLinkedLabel.key, newEndTime, completed);
+    }
+
+    if (ok) {
+        selectTracksDataFromLabelRange(key);
     }
 
     handleAutoScroll(ok, completed, [this, key, rightLinkedLabel, unlink]() {

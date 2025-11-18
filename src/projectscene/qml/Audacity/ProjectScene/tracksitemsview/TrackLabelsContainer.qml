@@ -296,10 +296,7 @@ TrackItemsContainer {
         function onItemMoveRequested(itemKey, completed) {
             root.updateMoveActive(completed)
 
-            var ok = labelsModel.moveSelectedLabels(itemKey, completed)
-            if (ok) {
-                labelsModel.resetSelectedTracksData()
-            }
+            labelsModel.moveSelectedLabels(itemKey, completed)
 
             handleLabelGuideline(itemKey, Direction.Auto, completed)
         }
