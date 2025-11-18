@@ -2,15 +2,15 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "trackedit/dom/track.h"
-
 #include "trackrulermodel.h"
-#include "linearstereoruler.h"
-#include "linearmonoruler.h"
-#include "dblogmonoruler.h"
-#include "dblogstereoruler.h"
-#include "dblinearmonoruler.h"
-#include "dblinearstereoruler.h"
+
+#include "trackedit/dom/track.h"
+#include "projectscene/view/trackruler/linearstereoruler.h"
+#include "projectscene/view/trackruler/linearmonoruler.h"
+#include "projectscene/view/trackruler/dblogmonoruler.h"
+#include "projectscene/view/trackruler/dblogstereoruler.h"
+#include "projectscene/view/trackruler/dblinearmonoruler.h"
+#include "projectscene/view/trackruler/dblinearstereoruler.h"
 
 using namespace au::projectscene;
 

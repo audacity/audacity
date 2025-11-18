@@ -1,10 +1,10 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include "dblogbaseruler.h"
+
 #include "framework/global/realfn.h"
 #include "framework/global/types/ratio.h"
-
-#include "dblogbaseruler.h"
 
 using namespace au::projectscene;
 
