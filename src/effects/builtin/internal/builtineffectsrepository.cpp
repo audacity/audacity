@@ -61,8 +61,10 @@
 #include "repair/repaireffect.h"
 #include "truncatesilence/truncatesilenceeffect.h"
 #include "truncatesilence/truncatesilenceviewmodel.h"
+#if USE_SOUNDTOUCH
 #include "changepitch/changepitcheffect.h"
 #include "changepitch/changepitchviewmodel.h"
+#endif
 
 #include <algorithm>
 
@@ -76,7 +78,9 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< Repair > regRepair;
     static BuiltinEffectsModule::Registration< ReverseEffect > regReverse;
     static BuiltinEffectsModule::Registration< TruncateSilenceEffect > regTruncateSilence;
+#if USE_SOUNDTOUCH
     static BuiltinEffectsModule::Registration< ChangePitchEffect > regChangePitch;
+#endif
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
     static BuiltinEffectsModule::Registration< NormalizeLoudnessEffect > regLoudness;
     static BuiltinEffectsModule::Registration< GraphicEq > regGraphicEq;
@@ -259,7 +263,9 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     BuiltinEffectCategoryId::Special,
                     true
                     );
-        } else if (symbol == ChangePitchEffect::Symbol) {
+        }
+#if USE_SOUNDTOUCH
+        else if (symbol == ChangePitchEffect::Symbol) {
             qmlRegisterType<ChangePitchViewModel>("Audacity.Effects", 1, 0, "ChangePitchViewModel");
             regView(ChangePitchEffect::Symbol, u"qrc:/changepitch/ChangePitchView.qml");
             regMeta(desc,
@@ -268,7 +274,9 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     BuiltinEffectCategoryId::PitchAndTempo,
                     true
                     );
-        } else if (symbol == ChirpEffect::Symbol) {
+        }
+#endif
+        else if (symbol == ChirpEffect::Symbol) {
             regView(ChirpEffect::Symbol, u"qrc:/tonegen/ChirpView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Chirp"),
