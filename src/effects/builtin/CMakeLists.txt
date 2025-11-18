@@ -186,6 +186,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-builtin-effects/ChangePitchBase.h
     ${AU3_LIBRARIES}/lib-builtin-effects/SoundTouchBase.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/SoundTouchBase.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/SBSMSBase.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/SBSMSBase.h
     ${AU3_LIBRARIES}/lib-math/PitchName.cpp
     ${AU3_LIBRARIES}/lib-math/PitchName.h
     ${AU3_LIBRARIES}/lib-fft/FFT.cpp
@@ -197,6 +199,7 @@ set(AU3_SRC
 set(AU3_DEF ${AU3_DEF}
     -DBUILTIN_EFFECTS_API=
     USE_SOUNDTOUCH=1
+    USE_SBSMS=1
     # Note: NOTE_TRACK_API is only needed if USE_MIDI is defined
     # Currently MIDI support is not enabled in AU4
     # -DNOTE_TRACK_API=
