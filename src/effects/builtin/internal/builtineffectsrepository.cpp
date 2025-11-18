@@ -263,7 +263,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
             qmlRegisterType<ChangePitchViewModel>("Audacity.Effects", 1, 0, "ChangePitchViewModel");
             regView(ChangePitchEffect::Symbol, u"qrc:/changepitch/ChangePitchView.qml");
             regMeta(desc,
-                    muse::mtrc("effects", "Change Pitch"),
+                    muse::mtrc("effects", "Change pitch"),
                     muse::mtrc("effects", "Changes the pitch of a track without changing its tempo"),
                     BuiltinEffectCategoryId::PitchAndTempo,
                     true
