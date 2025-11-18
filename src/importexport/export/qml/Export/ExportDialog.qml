@@ -16,7 +16,7 @@ StyledDialogView {
     title: qsTrc("export", "Export audio")
 
     contentWidth: 612
-    contentHeight: mainColumn.implicitHeight
+    contentHeight: 600
 
     margins: 12
 
@@ -53,6 +53,12 @@ StyledDialogView {
         id: mainColumn
 
         spacing: 12
+
+        onImplicitHeightChanged: {
+            Qt.callLater(function() {
+                root.contentHeight = implicitHeight
+            })
+        }
 
         ColumnLayout {
             Layout.margins: 4
