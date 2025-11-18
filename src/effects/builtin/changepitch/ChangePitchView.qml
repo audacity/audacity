@@ -196,7 +196,7 @@ BuiltinEffectBase {
 
                         IncrementalPropertyControl {
                             width: parent.width
-                            currentValue: changePitch.semitonesIntegerValue()
+                            currentValue: changePitch.semitonesIntegerValue
                             measureUnitsSymbol: changePitch.semitonesUnitSymbol()
                             decimals: changePitch.semitonesDecimals()
                             step: changePitch.semitonesStep()
@@ -204,7 +204,7 @@ BuiltinEffectBase {
                             maxValue: changePitch.semitonesMax()
 
                             onValueEdited: function (newValue) {
-                                changePitch.setSemitonesIntegerValue(newValue)
+                                changePitch.semitonesIntegerValue = newValue
                             }
                         }
                     }
@@ -220,7 +220,7 @@ BuiltinEffectBase {
 
                         IncrementalPropertyControl {
                             width: parent.width
-                            currentValue: changePitch.centsValue()
+                            currentValue: changePitch.centsValue
                             measureUnitsSymbol: changePitch.centsUnitSymbol()
                             decimals: changePitch.centsDecimals()
                             step: changePitch.centsStep()
@@ -228,7 +228,7 @@ BuiltinEffectBase {
                             maxValue: changePitch.centsMax()
 
                             onValueEdited: function (newValue) {
-                                changePitch.setCentsValue(newValue)
+                                changePitch.centsValue = newValue
                             }
                         }
                     }
