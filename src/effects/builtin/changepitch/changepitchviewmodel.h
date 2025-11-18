@@ -16,6 +16,8 @@ class ChangePitchViewModel : public BuiltinEffectModel
     Q_PROPERTY(int toPitchValue READ toPitchValue WRITE setToPitchValue NOTIFY toPitchValueChanged FINAL)
     Q_PROPERTY(int toOctaveValue READ toOctaveValue WRITE setToOctaveValue NOTIFY toOctaveValueChanged FINAL)
     Q_PROPERTY(double semitonesValue READ semitonesValue WRITE setSemitonesValue NOTIFY semitonesValueChanged FINAL)
+    Q_PROPERTY(int semitonesIntegerValue READ semitonesIntegerValue WRITE setSemitonesIntegerValue NOTIFY semitonesIntegerValueChanged FINAL)
+    Q_PROPERTY(int centsValue READ centsValue WRITE setCentsValue NOTIFY centsValueChanged FINAL)
     Q_PROPERTY(double fromFrequencyValue READ fromFrequencyValue WRITE setFromFrequencyValue NOTIFY fromFrequencyValueChanged FINAL)
     Q_PROPERTY(double toFrequencyValue READ toFrequencyValue WRITE setToFrequencyValue NOTIFY toFrequencyValueChanged FINAL)
     Q_PROPERTY(double percentChangeValue READ percentChangeValue WRITE setPercentChangeValue NOTIFY percentChangeValueChanged FINAL)
@@ -74,9 +76,13 @@ public:
     Q_INVOKABLE int toOctaveDecimals() const;
     Q_INVOKABLE QString toOctaveUnitSymbol() const;
 
+    int semitonesIntegerValue() const;
+    void setSemitonesIntegerValue(int value);
+
+    int centsValue() const;
+    void setCentsValue(int value);
+
     Q_INVOKABLE QString semitonesLabel() const;
-    Q_INVOKABLE int semitonesIntegerValue() const;
-    Q_INVOKABLE void setSemitonesIntegerValue(int value);
     Q_INVOKABLE int semitonesMin() const;
     Q_INVOKABLE int semitonesMax() const;
     Q_INVOKABLE int semitonesStep() const;
@@ -84,8 +90,6 @@ public:
     Q_INVOKABLE QString semitonesUnitSymbol() const;
 
     Q_INVOKABLE QString centsLabel() const;
-    Q_INVOKABLE int centsValue() const;
-    Q_INVOKABLE void setCentsValue(int value);
     Q_INVOKABLE int centsMin() const;
     Q_INVOKABLE int centsMax() const;
     Q_INVOKABLE int centsStep() const;
@@ -123,6 +127,8 @@ signals:
     void toPitchValueChanged();
     void toOctaveValueChanged();
     void semitonesValueChanged();
+    void semitonesIntegerValueChanged();
+    void centsValueChanged();
     void fromFrequencyValueChanged();
     void toFrequencyValueChanged();
     void percentChangeValueChanged();

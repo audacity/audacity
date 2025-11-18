@@ -21,10 +21,11 @@ QString ChangePitchViewModel::estimatedStartPitch() const
 {
     const auto& e = effect<ChangePitchEffect>();
     QStringList pitchNames = pitchChoices();
-    QString pitchName = (e.m_nFromPitch >= 0 && e.m_nFromPitch < pitchNames.size())
-                        ? pitchNames[e.m_nFromPitch]
-                        : "C";
-    double frequency = e.m_FromFrequency;
+    const QString pitchName = (e.m_nFromPitch >= 0 && e.m_nFromPitch < pitchNames.size())
+                              ? pitchNames[e.m_nFromPitch]
+                              : "C";
+    const double frequency = e.m_FromFrequency;
+    //: %1 = pitch name (e.g. C), %2 = octave number, %3 = frequency in Hz
     return muse::qtrc("effects/changepitch", "Estimated start pitch: %1%2 (%3 Hz)")
            .arg(pitchName)
            .arg(e.m_nFromOctave)
@@ -43,7 +44,7 @@ int ChangePitchViewModel::fromPitchValue() const
     return e.m_nFromPitch;
 }
 
-void ChangePitchViewModel::setFromPitchValue(int newFromPitch)
+void ChangePitchViewModel::setFromPitchValue(const int newFromPitch)
 {
     auto& e = effect<ChangePitchEffect>();
     if (e.m_nFromPitch == newFromPitch) {
@@ -52,18 +53,24 @@ void ChangePitchViewModel::setFromPitchValue(int newFromPitch)
 
     e.m_nFromPitch = newFromPitch;
     e.m_bLoopDetect = true;
+
+    // Update FROM frequency from pitch/octave
+    const double midiNote = PitchToMIDInote(e.m_nFromPitch, e.m_nFromOctave);
+    e.m_FromFrequency = MIDInoteToFreq(midiNote);
+
+    // Recalculate relative values (semitones, percent) from [FROM -> TO] relationship
     e.Calc_SemitonesChange_fromPitches();
     e.Calc_PercentChange();
-    e.Calc_ToFrequency();
+
     e.m_bLoopDetect = false;
 
     emit fromPitchValueChanged();
     emit estimatedStartPitchChanged();
+    emit fromFrequencyValueChanged();
     emit semitonesValueChanged();
+    emit semitonesIntegerValueChanged();
+    emit centsValueChanged();
     emit percentChangeValueChanged();
-    emit toFrequencyValueChanged();
-    emit toPitchValueChanged();
-    emit toOctaveValueChanged();
 }
 
 QStringList ChangePitchViewModel::pitchChoices() const
@@ -72,7 +79,7 @@ QStringList ChangePitchViewModel::pitchChoices() const
     // Use PitchName from lib-math to get the pitch names with both sharps and flats
     for (int i = 0; i < 12; ++i) {
         // Convert pitch index to MIDI note (using octave 0 as reference)
-        double midiNote = PitchToMIDInote(i, 0);
+        const double midiNote = PitchToMIDInote(i, 0);
         // Get the pitch name with both sharp and flat notation
         TranslatableString pitchName = PitchName(midiNote, PitchNameChoice::Both);
         // Convert to QString
@@ -116,7 +123,7 @@ int ChangePitchViewModel::fromOctaveValue() const
     return e.m_nFromOctave;
 }
 
-void ChangePitchViewModel::setFromOctaveValue(int newFromOctave)
+void ChangePitchViewModel::setFromOctaveValue(const int newFromOctave)
 {
     auto& e = effect<ChangePitchEffect>();
     if (e.m_nFromOctave == newFromOctave) {
@@ -125,18 +132,24 @@ void ChangePitchViewModel::setFromOctaveValue(int newFromOctave)
 
     e.m_nFromOctave = newFromOctave;
     e.m_bLoopDetect = true;
+
+    // Update FROM frequency from pitch/octave
+    const double midiNote = PitchToMIDInote(e.m_nFromPitch, e.m_nFromOctave);
+    e.m_FromFrequency = MIDInoteToFreq(midiNote);
+
+    // Recalculate relative values (semitones, percent) from [FROM -> TO] relationship
     e.Calc_SemitonesChange_fromPitches();
     e.Calc_PercentChange();
-    e.Calc_ToFrequency();
+
     e.m_bLoopDetect = false;
 
     emit fromOctaveValueChanged();
     emit estimatedStartPitchChanged();
+    emit fromFrequencyValueChanged();
     emit semitonesValueChanged();
+    emit semitonesIntegerValueChanged();
+    emit centsValueChanged();
     emit percentChangeValueChanged();
-    emit toFrequencyValueChanged();
-    emit toPitchValueChanged();
-    emit toOctaveValueChanged();
 }
 
 int ChangePitchViewModel::fromOctaveMin() const
@@ -176,7 +189,7 @@ int ChangePitchViewModel::toPitchValue() const
     return e.m_nToPitch;
 }
 
-void ChangePitchViewModel::setToPitchValue(int newToPitch)
+void ChangePitchViewModel::setToPitchValue(const int newToPitch)
 {
     auto& e = effect<ChangePitchEffect>();
     if (e.m_nToPitch == newToPitch) {
@@ -192,6 +205,8 @@ void ChangePitchViewModel::setToPitchValue(int newToPitch)
 
     emit toPitchValueChanged();
     emit semitonesValueChanged();
+    emit semitonesIntegerValueChanged();
+    emit centsValueChanged();
     emit percentChangeValueChanged();
     emit toFrequencyValueChanged();
 }
@@ -203,7 +218,7 @@ int ChangePitchViewModel::toOctaveValue() const
     return e.m_nToOctave;
 }
 
-void ChangePitchViewModel::setToOctaveValue(int newToOctave)
+void ChangePitchViewModel::setToOctaveValue(const int newToOctave)
 {
     auto& e = effect<ChangePitchEffect>();
     if (e.m_nToOctave == newToOctave) {
@@ -219,6 +234,8 @@ void ChangePitchViewModel::setToOctaveValue(int newToOctave)
 
     emit toOctaveValueChanged();
     emit semitonesValueChanged();
+    emit semitonesIntegerValueChanged();
+    emit centsValueChanged();
     emit percentChangeValueChanged();
     emit toFrequencyValueChanged();
 }
@@ -260,7 +277,7 @@ double ChangePitchViewModel::semitonesValue() const
     return e.m_dSemitonesChange;
 }
 
-void ChangePitchViewModel::setSemitonesValue(double newSemitones)
+void ChangePitchViewModel::setSemitonesValue(const double newSemitones)
 {
     auto& e = effect<ChangePitchEffect>();
     if (e.m_dSemitonesChange == newSemitones) {
@@ -276,6 +293,8 @@ void ChangePitchViewModel::setSemitonesValue(double newSemitones)
     e.m_bLoopDetect = false;
 
     emit semitonesValueChanged();
+    emit semitonesIntegerValueChanged();
+    emit centsValueChanged();
     emit toPitchValueChanged();
     emit toOctaveValueChanged();
     emit percentChangeValueChanged();
@@ -288,10 +307,10 @@ int ChangePitchViewModel::semitonesIntegerValue() const
     return static_cast<int>(std::floor(e.m_dSemitonesChange));
 }
 
-void ChangePitchViewModel::setSemitonesIntegerValue(int value)
+void ChangePitchViewModel::setSemitonesIntegerValue(const int value)
 {
-    int currentCents = centsValue();
-    double newSemitones = value + (currentCents / 100.0);
+    const int currentCents = centsValue();
+    const double newSemitones = value + (currentCents / 100.0);
     setSemitonesValue(newSemitones);
 }
 
@@ -328,14 +347,14 @@ QString ChangePitchViewModel::centsLabel() const
 int ChangePitchViewModel::centsValue() const
 {
     const auto& e = effect<ChangePitchEffect>();
-    double fractionalPart = e.m_dSemitonesChange - std::floor(e.m_dSemitonesChange);
+    const double fractionalPart = e.m_dSemitonesChange - std::floor(e.m_dSemitonesChange);
     return static_cast<int>(std::round(fractionalPart * 100.0));
 }
 
-void ChangePitchViewModel::setCentsValue(int value)
+void ChangePitchViewModel::setCentsValue(const int value)
 {
-    int currentSemitones = semitonesIntegerValue();
-    double newSemitones = currentSemitones + (value / 100.0);
+    const int currentSemitones = semitonesIntegerValue();
+    const double newSemitones = currentSemitones + (value / 100.0);
     setSemitonesValue(newSemitones);
 }
 
@@ -376,7 +395,7 @@ double ChangePitchViewModel::fromFrequencyValue() const
     return e.m_FromFrequency;
 }
 
-void ChangePitchViewModel::setFromFrequencyValue(double newFromFrequency)
+void ChangePitchViewModel::setFromFrequencyValue(const double newFromFrequency)
 {
     auto& e = effect<ChangePitchEffect>();
 
@@ -387,20 +406,25 @@ void ChangePitchViewModel::setFromFrequencyValue(double newFromFrequency)
     e.m_FromFrequency = newFromFrequency;
     e.m_bLoopDetect = true;
 
-    // Update pitch/octave from frequency
-    double dFromMIDInote = FreqToMIDInote(e.m_FromFrequency);
-    e.m_nFromPitch = PitchIndex(dFromMIDInote);
-    e.m_nFromOctave = PitchOctave(dFromMIDInote);
+    // Update FROM pitch/octave from frequency
+    const double midiNote = FreqToMIDInote(e.m_FromFrequency);
+    e.m_nFromPitch = PitchIndex(midiNote);
+    e.m_nFromOctave = PitchOctave(midiNote);
 
-    e.Calc_ToFrequency();
-    e.Calc_ToOctave();
+    // Recalculate relative values (semitones, percent) from [FROM -> TO] relationship
+    e.Calc_SemitonesChange_fromPitches();
+    e.Calc_PercentChange();
+
     e.m_bLoopDetect = false;
 
     emit fromFrequencyValueChanged();
     emit fromPitchValueChanged();
     emit fromOctaveValueChanged();
-    emit toFrequencyValueChanged();
-    emit toOctaveValueChanged();
+    emit estimatedStartPitchChanged();
+    emit semitonesValueChanged();
+    emit semitonesIntegerValueChanged();
+    emit centsValueChanged();
+    emit percentChangeValueChanged();
 }
 
 double ChangePitchViewModel::fromFrequencyMin() const
@@ -440,7 +464,7 @@ double ChangePitchViewModel::toFrequencyValue() const
     return e.m_ToFrequency;
 }
 
-void ChangePitchViewModel::setToFrequencyValue(double newToFrequency)
+void ChangePitchViewModel::setToFrequencyValue(const double newToFrequency)
 {
     auto& e = effect<ChangePitchEffect>();
 
@@ -465,6 +489,8 @@ void ChangePitchViewModel::setToFrequencyValue(double newToFrequency)
     emit toPitchValueChanged();
     emit toOctaveValueChanged();
     emit semitonesValueChanged();
+    emit semitonesIntegerValueChanged();
+    emit centsValueChanged();
     emit percentChangeValueChanged();
 }
 
@@ -505,7 +531,7 @@ double ChangePitchViewModel::percentChangeValue() const
     return e.m_dPercentChange;
 }
 
-void ChangePitchViewModel::setPercentChangeValue(double newPercentChange)
+void ChangePitchViewModel::setPercentChangeValue(const double newPercentChange)
 {
     auto& e = effect<ChangePitchEffect>();
 
@@ -523,6 +549,8 @@ void ChangePitchViewModel::setPercentChangeValue(double newPercentChange)
 
     emit percentChangeValueChanged();
     emit semitonesValueChanged();
+    emit semitonesIntegerValueChanged();
+    emit centsValueChanged();
     emit toPitchValueChanged();
     emit toOctaveValueChanged();
     emit toFrequencyValueChanged();
@@ -565,7 +593,7 @@ bool ChangePitchViewModel::useSBSMSValue() const
     return e.mUseSBSMS;
 }
 
-void ChangePitchViewModel::setUseSBSMSValue(bool newUseSBSMS)
+void ChangePitchViewModel::setUseSBSMSValue(const bool newUseSBSMS)
 {
     auto& e = effect<ChangePitchEffect>();
 
@@ -598,6 +626,8 @@ void ChangePitchViewModel::doReload()
     emit toPitchValueChanged();
     emit toOctaveValueChanged();
     emit semitonesValueChanged();
+    emit semitonesIntegerValueChanged();
+    emit centsValueChanged();
     emit fromFrequencyValueChanged();
     emit toFrequencyValueChanged();
     emit percentChangeValueChanged();
