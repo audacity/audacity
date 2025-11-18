@@ -2,7 +2,7 @@
 
 #include <QObject>
 
-namespace au::playback {
+namespace au::uicomponents {
 class TimecodeModeSelector : public QObject
 {
     Q_OBJECT

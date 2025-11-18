@@ -7,13 +7,36 @@
 
 #include "containers.h"
 
-namespace au::playback {
+namespace au::uicomponents {
 enum class NumericType
 {
     Time,
     Duration,
     Frequency,
     Bandwidth
+};
+
+enum class TimecodeFormatType {
+    Undefined = -1,
+    Seconds,
+    SecondsMilliseconds,
+    HHMMSS,
+    DDHHMMSS,
+    HHMMSSHundredths,
+    HHMMSSMilliseconds,
+    HHMMSSSamples,
+    Samples,
+    HHMMSSFilmFrames,
+    FilmFrames,
+    HHMMSSNTSCDropFrames,
+    HHMMSSNTSCNonDropFrames,
+    NTSCFrames,
+    HHMMSSPALFrames,
+    PALFrames,
+    HHMMSSCDDAFrames,
+    CDDAFrames,
+    BarBeat,
+    BarBeatTick
 };
 
 static size_t calculateDigits(size_t rangeEnd)

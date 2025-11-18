@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Muse.UiComponents
-import Audacity.Playback
+import Audacity.UiComponents
 import Audacity.Effects
 import Audacity.BuiltinEffects
 

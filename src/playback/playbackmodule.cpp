@@ -18,9 +18,6 @@
 #include "view/common/playbackmetermodel.h"
 #include "view/common/playbackpositiontimer.h"
 #include "view/common/metermodel.h"
-#include "view/toolbars/components/timecodemodeselector.h"
-#include "view/toolbars/components/timecodemodel.h"
-#include "view/toolbars/components/bpmmodel.h"
 #include "view/panels/playbackmeterpanelmodel.h"
 
 #include "playbackmodule.h"
@@ -74,11 +71,7 @@ void PlaybackModule::registerResources()
 
 void PlaybackModule::registerUiTypes()
 {
-    qmlRegisterUncreatableType<TimecodeModeSelector>("Audacity.Playback", 1, 0, "TimecodeModeSelector",
-                                                     "TimecodeModeSelector is a simple enum");
-    qmlRegisterType<TimecodeModel>("Audacity.Playback", 1, 0, "TimecodeModel");
     qmlRegisterType<PlaybackStateModel>("Audacity.Playback", 1, 0, "PlaybackStateModel");
-    qmlRegisterType<BPMModel>("Audacity.Playback", 1, 0, "BPMModel");
     qmlRegisterType<PlaybackMeterPanelModel>("Audacity.Playback", 1, 0, "PlaybackMeterPanelModel");
     qmlRegisterType<PlaybackMeterModel>("Audacity.Playback", 1, 0, "PlaybackMeterModel");
     qmlRegisterType<PlaybackPositionTimer>("Audacity.Playback", 1, 0, "PlaybackPositionTimer");

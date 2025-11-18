@@ -56,6 +56,8 @@ endif()
 
 add_subdirectory(importexport)
 
+add_subdirectory(uicomponents)
+
 # Stubs
 add_subdirectory(stubs)
 

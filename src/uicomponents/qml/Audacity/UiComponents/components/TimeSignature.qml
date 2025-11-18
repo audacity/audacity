@@ -8,7 +8,8 @@ import QtQuick.Layouts
 import Muse.Ui
 import Muse.UiComponents
 
-import "../components"
+import Audacity.UiComponents 1.0
+
 import "internal"
 
 RowLayout {

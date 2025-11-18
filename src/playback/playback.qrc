@@ -5,17 +5,9 @@
         <file>qml/Audacity/Playback/components/HorizontalVolumePressureRuler.qml</file>
         <file>qml/Audacity/Playback/components/VerticalVolumeSlider.qml</file>
         <file>qml/Audacity/Playback/components/VolumeSlider.qml</file>
-        <file>qml/Audacity/Playback/components/Timecode.qml</file>
-        <file>qml/Audacity/Playback/components/TimecodeField.qml</file>
-        <file>qml/Audacity/Playback/components/TimecodeStartEnd.qml</file>
-        <file>qml/Audacity/Playback/components/ArrowButton.qml</file>
-        <file>qml/Audacity/Playback/components/ArrowMenuButton.qml</file>
         <file>qml/Audacity/Playback/components/StyledGroupBox.qml</file>
         <file>qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml</file>
         <file>qml/Audacity/Playback/toolbars/PlaybackLevel.qml</file>
-        <file>qml/Audacity/Playback/toolbars/TimeSignature.qml</file>
-        <file>qml/Audacity/Playback/toolbars/BPM.qml</file>
-        <file>qml/Audacity/Playback/toolbars/internal/TimeSignaturePopup.qml</file>
         <file>qml/Audacity/Playback/panels/PlaybackMeterPanel.qml</file>
         <file>qml/Audacity/Playback/dialogs/LoopRegionInOut.qml</file>
     </qresource>

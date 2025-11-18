@@ -17,10 +17,10 @@ StyledPopupView {
     signal lowerChangeRequested(var newValue)
 
     margins: 12
-    
+
     contentWidth: 216
     contentHeight: 52
-    
+
     ColumnLayout {
         id: content
 

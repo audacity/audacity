@@ -17,7 +17,7 @@ Rectangle {
     property bool itemHeaderHovered: false
     property var hoveredItemKey: null
 
-    property var hoveredTrackId: null
+    property var hoveredTrackId: -1
     property double hoveredTrackVerticalPosition
     property double hoveredTrackHeight
     property bool tracksHovered: false
@@ -649,16 +649,16 @@ Rectangle {
                     property int index: model.index
 
                     width: tracksItemsView.width
-                    
+
                     sourceComponent: trackType === TrackType.LABEL ? trackLabelsContainer : trackClipsContainerComp
 
                     onLoaded: {
                         trackItemLoader.item.init()
                     }
-                    
+
                     Component {
                         id: trackClipsContainerComp
-                        
+
                         TrackClipsContainer {
                             property var itemData: trackItemLoader.itemData
                             property int index: trackItemLoader.index

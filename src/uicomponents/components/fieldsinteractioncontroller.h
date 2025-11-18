@@ -7,7 +7,7 @@
 
 #include "timecodeformatter.h"
 
-namespace au::playback {
+namespace au::uicomponents {
 class FieldsInteractionController : public QObject
 {
     Q_OBJECT
@@ -35,6 +35,7 @@ signals:
     void valueChanged(double value);
 
 private:
+    static bool isFieldEditable(const QChar& fieldSymbol);
     bool eventFilter(QObject* watched, QEvent* event) override;
     bool needOverrideShortcut(QEvent* event) const;
 

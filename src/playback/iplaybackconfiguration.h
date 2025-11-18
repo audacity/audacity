@@ -8,6 +8,7 @@
 #include "framework/draw/types/color.h"
 
 #include "playbacktypes.h"
+#include "uicomponents/types/timecode.h"
 #include "trackedit/trackedittypes.h"
 
 namespace au::playback {
@@ -20,8 +21,8 @@ public:
 
     virtual muse::draw::Color playColor() const = 0;
 
-    virtual TimecodeFormatType playbackTimeItemFormat() const = 0;
-    virtual void setPlaybackTimeItemFormat(TimecodeFormatType format) = 0;
+    virtual au::uicomponents::TimecodeFormatType playbackTimeItemFormat() const = 0;
+    virtual void setPlaybackTimeItemFormat(au::uicomponents::TimecodeFormatType format) = 0;
     virtual muse::async::Notification playbackTimeItemFormatChanged() const = 0;
 
     virtual PlaybackMeterStyle::MeterStyle playbackMeterStyle() const = 0;

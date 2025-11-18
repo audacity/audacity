@@ -6,13 +6,11 @@
 #include <QAbstractListModel>
 #include <QQuickItem>
 
-#include "playback/playbacktypes.h"
-
 #include "timecodemodeselector.h"
 #include "timecodeformatter.h"
 #include "fieldsinteractioncontroller.h"
 
-namespace au::playback {
+namespace au::uicomponents {
 class TimecodeModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -98,6 +96,8 @@ private:
         rSymbol = Qt::UserRole + 1,
         rIsEditable
     };
+
+    static bool isFieldEditable(const QChar& fieldSymbol);
 
     void reloadFormatter();
     void initFormatter();

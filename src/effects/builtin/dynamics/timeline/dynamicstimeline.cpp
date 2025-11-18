@@ -174,7 +174,7 @@ DynamicsTimeline::createSequenceData(const QColor& color, DrawerType drawerType,
     }
     auto node = createGeometryNode(std::move(color));
     node->setGeometry(&drawer->geometry());
-    return { visible, std::move(drawer), node };
+    return { visible, std::move(drawer), node, {} };
 }
 
 void DynamicsTimeline::updateDrawerViewportX()
@@ -241,7 +241,7 @@ QSGNode* DynamicsTimeline::updatePaintNode(QSGNode* oldNode,
             std::vector<SequenceSample> drawerSamples;
             drawerSamples.reserve(m_pendingXValues.size());
             for (auto& seq : m_sequences) {
-                for (auto i = 0; i < m_pendingXValues.size(); ++i) {
+                for (size_t i = 0; i < m_pendingXValues.size(); ++i) {
                     drawerSamples.push_back({ m_pendingXValues[i], seq.pendingYValues[i] });
                 }
                 seq.drawer->append(std::move(drawerSamples));

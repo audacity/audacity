@@ -33,7 +33,7 @@ ProjectMeta Au3Metadata::tags() const
 
         bool assigned = false;
         // assign to standard fields if matched
-        for (size_t i = 0; i < project::standardTags.size(); ++i) {
+        for (int i = 0; i < project::standardTags.size(); ++i) {
             if (key == project::standardTags[i]) {
                 au4Tags.*(kStdMembers[i]) = val;
                 assigned = true;
@@ -56,7 +56,7 @@ void Au3Metadata::setTags(ProjectMeta au4Tags)
     Tags& au3Tags = Tags::Get(*project);
     au3Tags.Clear();
 
-    for (size_t i = 0; i < project::standardTags.size(); ++i) {
+    for (int i = 0; i < project::standardTags.size(); ++i) {
         const std::string& key = project::standardTags[i];
         const std::string& val = au4Tags.*(kStdMembers[i]);
 

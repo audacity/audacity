@@ -54,7 +54,7 @@ void PlaybackToolBarTimeItem::setCurrentFormat(int format)
         return;
     }
 
-    configuration()->setPlaybackTimeItemFormat(static_cast<TimecodeFormatType>(format));
+    configuration()->setPlaybackTimeItemFormat(static_cast<au::uicomponents::TimecodeFormatType>(format));
 }
 
 double PlaybackToolBarTimeItem::currentValue() const

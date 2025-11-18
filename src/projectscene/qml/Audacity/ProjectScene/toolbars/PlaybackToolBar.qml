@@ -9,6 +9,7 @@ import Muse.UiComponents 1.0
 import Audacity.Playback 1.0
 import Audacity.Record 1.0
 import Audacity.ProjectScene 1.0
+import Audacity.UiComponents 1.0
 
 import "internal"
 

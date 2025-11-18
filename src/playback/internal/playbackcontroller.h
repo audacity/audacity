@@ -54,9 +54,9 @@ public:
     void setLoopRegionEnd(const muse::secs_t time) override;
     void setLoopRegionActive(const bool active) override;
     void clearLoopRegion() override;
-    void loopEditingBegin();
-    void loopEditingEnd();
-    bool isLoopRegionClear() const;
+    void loopEditingBegin() override;
+    void loopEditingEnd() override;
+    bool isLoopRegionClear() const override;
     muse::async::Notification loopRegionChanged() const override;
 
     bool isPaused() const override;

@@ -12,9 +12,9 @@
 static constexpr double BPM_MAX = 999.0;
 static constexpr double BPM_MIN = 1.0;
 
-using namespace au::playback;
+using namespace au::uicomponents;
 
-static bool isFieldEditable(const QChar& fieldSymbol)
+bool BPMModel::isFieldEditable(const QChar& fieldSymbol)
 {
     return fieldSymbol.isDigit();
 }

@@ -173,7 +173,7 @@ size_t DtmfGenerator::Instance::ProcessBlock(
 
         if (isTone) {
             // generate the tone and append
-            assert(curSeqPos < dtmfSettings.dtmfNTones);
+            assert(curSeqPos < static_cast<int>(dtmfSettings.dtmfNTones));
             MakeDtmfTone(
                 buffer, len, mSampleRate, dtmfSettings.dtmfSequence[curSeqPos],
                 curTonePos, numSamplesTone, dtmfSettings.dtmfAmplitude);
