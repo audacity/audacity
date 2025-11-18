@@ -544,6 +544,22 @@ void SpectrogramSettings::CacheWindows()
     }
 }
 
+namespace {
+constexpr auto isPowerOfTwo(int x) -> bool
+{
+    return (x != 0) && ((x & (x - 1)) == 0);
+}
+static_assert(isPowerOfTwo(3) == false);
+static_assert(isPowerOfTwo(4) == true);
+}
+
+void SpectrogramSettings::SetWindowSize(int size)
+{
+    assert(isPowerOfTwo(size));
+    windowSize = size;
+    InvalidateCaches();
+}
+
 void SpectrogramSettings::ConvertToEnumeratedWindowSizes()
 {
     unsigned size;

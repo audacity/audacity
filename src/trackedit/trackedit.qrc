@@ -10,6 +10,11 @@
         <file>qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml</file>
         <file>qml/Audacity/TrackEdit/PasteBehaviorPanel.qml</file>
         <file>qml/Audacity/TrackEdit/StyledTextLabelWithCustomLinkActivatedSignal.qml</file>
+        <file>qml/Audacity/TrackEdit/TrackSpectrogramAlgorithmSection.qml</file>
+        <file>qml/Audacity/TrackEdit/TrackSpectrogramColorsSection.qml</file>
+        <file>qml/Audacity/TrackEdit/TrackSpectrogramScaleSection.qml</file>
+        <file>qml/Audacity/TrackEdit/TrackSpectrogramSelectionSection.qml</file>
+        <file>qml/Audacity/TrackEdit/TrackSpectrogramSettingsDialog.qml</file>
         <file>resources/LightMode_RippleDelete.gif</file>
         <file>resources/LightMode_DeleteAndLeaveGap.gif</file>
         <file>resources/LightMode_PasteOverlap.gif</file>
