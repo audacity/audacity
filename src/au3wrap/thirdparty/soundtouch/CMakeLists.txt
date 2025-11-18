@@ -1,9 +1,7 @@
 set(TARGET soundtouch)
-
 add_library( ${TARGET} STATIC )
 
 set(TARGET_ROOT ${AUDACITY_ROOT}/lib-src/soundtouch)
-
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/source/SoundTouch/AAFilter.cpp
@@ -47,7 +45,7 @@ list( APPEND DEFINES
       DECIMATED_BLOCK_SIZE=256
 )
 
-# Check for standard headers
+# Check for headers
 include(CheckIncludeFile)
 check_include_file(cpuid.h HAVE_CPUID_H)
 check_include_file(inttypes.h HAVE_INTTYPES_H)
@@ -56,31 +54,31 @@ check_include_file(stdlib.h HAVE_STDLIB_H)
 check_include_file(string.h HAVE_STRING_H)
 check_include_file(unistd.h HAVE_UNISTD_H)
 
-# Configure the header file (for other config options)
-configure_file( soundtouch_config.h.in private/soundtouch_config.h )
+list( APPEND OPTIONS
+   PRIVATE
+      $<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:
+         -O3
+         -fcheck-new
+         -Wno-unused-parameter
+         -Wno-unused-variable
+         -Wno-unused-function
+      >
+      $<$<CXX_COMPILER_ID:MSVC>:
+         /O2
+         /wd4100
+         /wd4505
+      >
+)
 
-set_target_properties( ${TARGET} PROPERTIES FOLDER "lib-src" )
+list( APPEND PROPERTIES
+   POSITION_INDEPENDENT_CODE On
+)
+
+configure_file( soundtouch_config.h.in private/soundtouch_config.h )
 
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
+target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
-set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE On)
-
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
-    target_compile_options(${TARGET}
-        PRIVATE
-            -O3
-            -fcheck-new
-            -Wno-unused-parameter
-            -Wno-unused-variable
-            -Wno-unused-function
-    )
-else() # MSVC
-    target_compile_options(${TARGET}
-        PRIVATE
-            /O2
-            /wd4100
-            /wd4505
-    )
-endif()
+set_target_properties( ${TARGET} PROPERTIES ${PROPERTIES} )
 
