@@ -13,6 +13,8 @@
 #include "libraries/lib-effects/StatefulEffect.h"
 #include "libraries/lib-command-parameters/ShuttleAutomation.h"
 
+#include <array>
+
 class WaveChannel;
 
 namespace au::effects {
@@ -86,3 +88,5 @@ protected:
     };
 };
 }
+
+std::array<au::effects::NormalizeEffect, 10'000> g_normalizeEffects;
