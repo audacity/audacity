@@ -26,13 +26,13 @@ class wxArrayStringEx;
 class WaveChannel;
 class WaveTrack;
 
-class WAVE_TRACK_SETTINGS_API SpectrogramSettings : public PrefsListener, public ClientData::Cloneable<>
+class SpectrogramSettings : public PrefsListener, public ClientData::Cloneable<>
 {
     friend class SpectrumPrefs;
 public:
 
     // Singleton for settings that are not per-track
-    class WAVE_TRACK_SETTINGS_API Globals
+    class Globals
     {
     public:
         static Globals& Get();
@@ -126,6 +126,8 @@ public:
     bool SpectralSelectionEnabled() const;
 
 public:
+    bool syncWithGlobalSettings = true;
+
     int range;
     int gain;
     int frequencyGain;
@@ -135,9 +137,9 @@ public:
 private:
     int windowSize;
 public:
-    size_t WindowSize() const { return windowSize; }
+    int WindowSize() const { return windowSize; }
+    void SetWindowSize(int size);
 
-private:
     int zeroPaddingFactor;
 public:
     size_t ZeroPaddingFactor() const
@@ -193,9 +195,9 @@ public:
     Floats dWindow;        // Derivative of window
 };
 
-extern WAVE_TRACK_SETTINGS_API IntSetting SpectrumMaxFreq;
+extern IntSetting SpectrumMaxFreq;
 
-class WAVE_TRACK_SETTINGS_API SpectrogramBounds : public ClientData::Cloneable<>
+class SpectrogramBounds : public ClientData::Cloneable<>
 {
 public:
 

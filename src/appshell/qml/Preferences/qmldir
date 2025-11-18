@@ -2,3 +2,7 @@
 module Preferences
 IncrementalPropertyControlWithTitle 1.0 internal/IncrementalPropertyControlWithTitle.qml
 ComboBoxWithTitle 1.0 internal/ComboBoxWithTitle.qml
+SpectrogramBaseSection 1.0 internal/SpectrogramBaseSection.qml
+SpectrogramAlgorithmSection 1.0 internal/SpectrogramAlgorithmSection.qml
+SpectrogramColorsSection 1.0 internal/SpectrogramColorsSection.qml
+SpectrogramScaleSection 1.0 internal/SpectrogramScaleSection.qml

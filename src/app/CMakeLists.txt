@@ -100,6 +100,7 @@ set(LINK_LIB
     projectscene
     playback
     record
+    spectrogram
     effects_base
     effects_builtin
     effects_nyquist

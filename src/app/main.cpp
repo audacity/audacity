@@ -59,6 +59,7 @@
 #include "au3audio/au3audiomodule.h"
 #include "playback/playbackmodule.h"
 #include "trackedit/trackeditmodule.h"
+#include "spectrogram/spectrogrammodule.h"
 #include "record/recordmodule.h"
 #include "uicomponents/uicomponentsmodule.h"
 #include "effects/effects_base/effectsmodule.h"
@@ -264,6 +265,7 @@ int main(int argc, char** argv)
         app.addModule(new au::playback::PlaybackModule());
         app.addModule(new au::record::RecordModule());
         app.addModule(new au::trackedit::TrackeditModule());
+        app.addModule(new au::spectrogram::SpectrogramModule());
         app.addModule(new au::project::ProjectModule());
         app.addModule(new au::importexport::ExporterModule());
         app.addModule(new au::importexport::ImporterModule());

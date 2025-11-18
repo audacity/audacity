@@ -19,6 +19,8 @@ constexpr const char* TRACK_VIEW_SPECTROGRAM_ACTION = "track-view-spectrogram";
 constexpr const char* TRACK_VIEW_MULTI_ACTION = "track-view-multi";
 constexpr const char* TRACK_VIEW_HALF_WAVE_ACTION = "track-view-half-wave";
 
+constexpr const char* TRACK_SPECTROGRAM_SETTINGS_ACTION = "track-spectrogram-settings";
+
 constexpr const char* TRACK_COLOR_MENU_ID = "trackColorMenu";
 constexpr const char* TRACK_FORMAT_MENU_ID = "trackFormatMenu";
 constexpr const char* TRACK_RATE_MENU_ID = "trackRateMenu";
@@ -423,9 +425,10 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackViewItems()
     for (const muse::actions::ActionCode& code : { TRACK_VIEW_WAVEFORM_ACTION,
                                                    TRACK_VIEW_SPECTROGRAM_ACTION,
                                                    TRACK_VIEW_MULTI_ACTION,
-                                                   "",
-                                                   TRACK_VIEW_HALF_WAVE_ACTION }) {
-        if (code.empty()) {
+                                                   TRACK_VIEW_HALF_WAVE_ACTION,
+                                                   "separator",
+                                                   TRACK_SPECTROGRAM_SETTINGS_ACTION }) {
+        if (code == "separator") {
             items.push_back(makeSeparator());
         } else {
             items.push_back(makeItemWithArg(code));

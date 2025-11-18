@@ -110,6 +110,7 @@ static const ActionQuery TRACK_CHANGE_RATE_QUERY("action://trackedit/track/chang
 static const ActionCode SET_TRACK_VIEW_WAVEFORM("track-view-waveform");
 static const ActionCode SET_TRACK_VIEW_SPECTROGRAM("track-view-spectrogram");
 static const ActionCode SET_TRACK_VIEW_MULTI("track-view-multi");
+static const ActionCode TRACK_OPEN_SPECTROGRAM_SETTINGS("track-spectrogram-settings");
 
 static const ActionCode LABEL_ADD_CODE("label-add");
 
@@ -280,6 +281,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, SET_TRACK_VIEW_WAVEFORM, this, &TrackeditActionsController::changeTrackViewToWaveform);
     dispatcher()->reg(this, SET_TRACK_VIEW_SPECTROGRAM, this, &TrackeditActionsController::changeTrackViewToSpectrogram);
     dispatcher()->reg(this, SET_TRACK_VIEW_MULTI, this, &TrackeditActionsController::changeTrackViewToWaveformAndSpectrogram);
+    dispatcher()->reg(this, TRACK_OPEN_SPECTROGRAM_SETTINGS, this, &TrackeditActionsController::openTrackSpectrogramSettings);
 
     dispatcher()->reg(this, LABEL_ADD_CODE, this, &TrackeditActionsController::addLabel);
 
@@ -1817,6 +1819,13 @@ void TrackeditActionsController::changeTrackView(const muse::actions::ActionData
     default:
         assert(false);
     }
+}
+
+void TrackeditActionsController::openTrackSpectrogramSettings(const muse::actions::ActionData& d)
+{
+    muse::UriQuery spectrogramSettingsUri("audacity://trackedit/track_spectrogram_settings");
+    spectrogramSettingsUri.addParam("trackId", muse::Val(d.arg<TrackId>(0)));
+    interactive()->open(spectrogramSettingsUri);
 }
 
 void TrackeditActionsController::addLabel()

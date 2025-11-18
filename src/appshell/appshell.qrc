@@ -64,6 +64,10 @@
         <file>qml/Preferences/internal/MonoStereoConversionSection.qml</file>
         <file>qml/Preferences/internal/EffectBehaviorSection.qml</file>
         <file>qml/Preferences/internal/DeleteBehaviorSection.qml</file>
+        <file>qml/Preferences/internal/SpectrogramAlgorithmSection.qml</file>
+        <file>qml/Preferences/internal/SpectrogramColorsSection.qml</file>
+        <file>qml/Preferences/internal/SpectrogramScaleSection.qml</file>
+        <file>qml/Preferences/internal/SpectrogramSelectionSection.qml</file>
         <file>qml/Preferences/internal/PasteBehaviorSection.qml</file>
         <file>qml/Preferences/internal/AsymmetricStereoHeightsSection.qml</file>
         <file>qml/Preferences/internal/WorkspacesAsymmetricChannelsSection.qml</file>
@@ -97,6 +101,7 @@
         <file>qml/platform/win/Main.qml</file>
         <file>resources/win_opengl_buglist.json</file>
         <file>qml/Preferences/internal/BaseSection.qml</file>
+        <file>qml/Preferences/internal/SpectrogramBaseSection.qml</file>
         <file>qml/Preferences/internal/LanguagesSection.qml</file>
         <file>qml/Preferences/internal/NumberFormatSection.qml</file>
         <file>qml/Preferences/internal/TemporaryFilesSection.qml</file>
@@ -133,6 +138,7 @@
         <file>qml/platform/PlatformMenuBar.qml</file>
         <file>qml/ProjectPage/ProjectPage.qml</file>
         <file>qml/ProjectPage/ProjectStatusBar.qml</file>
+        <file>qml/Preferences/SpectrogramPreferencesPage.qml</file>
         <file>qml/Preferences/qmldir</file>
     </qresource>
 </RCC>
