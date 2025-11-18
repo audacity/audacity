@@ -158,15 +158,13 @@ class PortAudioDependency(AudacityDependency):
 @dataclass
 class CurlDependency(AudacityDependency):
     def __init__(self, package_options: dict = None):
-        super().__init__("libcurl", "8.12.1", package_options=package_options)
+        super().__init__("libcurl", "8.17.0", package_options=package_options)
 
     def apply_options(self, conanfile, package):
         super().apply_options(conanfile, package)
 
         if conanfile.settings.os == "Windows":
             package.with_ssl = "schannel"
-        elif conanfile.settings.os == "Macos":
-            package.with_ssl = "darwinssl"
         else:
             package.with_ssl = "openssl"
 
