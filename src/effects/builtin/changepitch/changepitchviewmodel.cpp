@@ -411,9 +411,12 @@ void ChangePitchViewModel::setFromFrequencyValue(const double newFromFrequency)
     e.m_nFromPitch = PitchIndex(midiNote);
     e.m_nFromOctave = PitchOctave(midiNote);
 
-    // Recalculate relative values (semitones, percent) from [FROM -> TO] relationship
-    e.Calc_SemitonesChange_fromPitches();
-    e.Calc_PercentChange();
+    // Calculate percent change directly from frequencies (not through semitones)
+    // to avoid rounding errors when frequency changes don't cross semitone boundaries
+    e.m_dPercentChange = ((e.m_ToFrequency / e.m_FromFrequency) - 1.0) * 100.0;
+
+    // Calculate semitones from the percent change
+    e.Calc_SemitonesChange_fromPercentChange();
 
     e.m_bLoopDetect = false;
 
@@ -480,9 +483,13 @@ void ChangePitchViewModel::setToFrequencyValue(const double newToFrequency)
     e.m_nToPitch = PitchIndex(dToMIDInote);
     e.m_nToOctave = PitchOctave(dToMIDInote);
 
-    // Calculate semitones and percent change
-    e.Calc_SemitonesChange_fromPitches();
-    e.Calc_PercentChange();
+    // Calculate percent change directly from frequencies (not through semitones)
+    // to avoid rounding errors when frequency changes don't cross semitone boundaries
+    e.m_dPercentChange = ((e.m_ToFrequency / e.m_FromFrequency) - 1.0) * 100.0;
+
+    // Calculate semitones from the percent change
+    e.Calc_SemitonesChange_fromPercentChange();
+
     e.m_bLoopDetect = false;
 
     emit toFrequencyValueChanged();
