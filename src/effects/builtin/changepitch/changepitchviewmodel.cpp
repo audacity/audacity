@@ -588,6 +588,11 @@ bool ChangePitchViewModel::useSBSMSEnabled() const
 
 void ChangePitchViewModel::doReload()
 {
+    // Deduce the start frequency from the audio selection
+    auto& e = effect<ChangePitchEffect>();
+    e.DeduceFrequencies();
+
+    emit estimatedStartPitchChanged();
     emit fromPitchValueChanged();
     emit fromOctaveValueChanged();
     emit toPitchValueChanged();
