@@ -14,10 +14,7 @@ effect that uses SBSMS to do its processing (TimeScale)
 #include "SBSMSBase.h"
 #include "EffectOutputTracks.h"
 
-#include <math.h>
-
 #include "LabelTrack.h"
-#include "SyncLock.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "TimeWarper.h"
@@ -233,7 +230,7 @@ bool SBSMSBase::Process(EffectInstance&, EffectSettings&)
 
     //Iterate over each track
     //all needed because this effect needs to introduce silence in the group tracks to keep sync
-    EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
+    EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
     mCurTrackNum = 0;
 
     double maxDuration = 0.0;
@@ -245,7 +242,7 @@ bool SBSMSBase::Process(EffectInstance&, EffectSettings&)
     outputs.Get().Any().VisitWhile(bGoodResult,
                                    [&](auto&& fallthrough){
         return [&](LabelTrack& lt) {
-            if (!(lt.GetSelected() || SyncLock::IsSyncLockSelected(lt))) {
+            if (!lt.GetSelected()) {
                 return fallthrough();
             }
             if (!ProcessLabelTrack(&lt)) {
@@ -430,13 +427,7 @@ bool SBSMSBase::Process(EffectInstance&, EffectSettings&)
             }
             mCurTrackNum++;
         };
-    },
-                                   [&](Track& t) {
-        if (SyncLock::IsSyncLockSelected(t)) {
-            t.SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mTotalStretch);
-        }
-    }
-                                   );
+    });
 
     if (bGoodResult) {
         outputs.Commit();
