@@ -1,12 +1,11 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-
 #include "playregioncontroller.h"
 
 #include <cmath>
 
-#include "log.h"
+#include "framework/global/log.h"
 
 namespace au::projectscene {
 PlayRegionController::PlayRegionController(QObject* parent)
