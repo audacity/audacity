@@ -167,7 +167,7 @@ Item {
             height: 1
 
             Rectangle {
-                width: 3
+                width: 5
                 height: 1
                 color: ui.theme.isDark ? "#868B8E" : "#8B8C96"
                 anchors.verticalCenter: parent.verticalCenter
