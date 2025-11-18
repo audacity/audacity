@@ -518,14 +518,6 @@ void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const
 
         // Add labels boundaries
         for (const auto& label : prj->labelList(trackId)) {
-            if (excludeCurrentSelection && muse::contains(selectedLabels, label.key)) {
-                continue;
-            }
-
-            if (itemKeyToOmit.isValid() && label.key == itemKeyToOmit) {
-                continue;
-            }
-
             boundaries.insert(label.startTime);
             boundaries.insert(label.endTime);
         }
