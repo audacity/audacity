@@ -109,6 +109,10 @@ set(AU3_INCLUDE
     ${AUDACITY_ROOT}/lib-src/soundtouch/include
     # also include the Generated soundtouch_config.h (needed by STTypes.h when compiling AU3 code that uses SoundTouch)
     ${CMAKE_BINARY_DIR}/src/au3wrap/au3-soundtouch/private
+    # SBSMS includes: Similar to SoundTouch, we need to add SBSMS include paths explicitly
+    ${AUDACITY_ROOT}/lib-src/libsbsms/include
+    # also include the Generated config.h for SBSMS
+    ${CMAKE_BINARY_DIR}/src/au3wrap/au3-sbsms/private
 
     ${AUDACITY_ROOT}
     # compile lib-project
@@ -216,6 +220,7 @@ set(AU3_LINK
     pffft
     portmixer
     soundtouch
+    libsbsms
 )
 
 set(WXBASE_DEFS
