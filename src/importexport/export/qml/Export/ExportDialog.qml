@@ -254,6 +254,14 @@ StyledDialogView {
                         id: spacer
 
                         width: root.labelColumnWidth
+
+                        StyledTextLabel {
+                            id: channelsLabel
+
+                            text: qsTrc("export", "Channels")
+
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
                     }
 
                     RadioButtonGroup {
