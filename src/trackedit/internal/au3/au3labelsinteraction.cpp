@@ -221,9 +221,10 @@ ITrackDataPtr Au3LabelsInteraction::copyLabel(const LabelKey& labelKey)
     return std::make_shared<Au3TrackData>(std::move(track));
 }
 
-bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset, bool /*completed*/)
+bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset, bool completed)
 {
     UNUSED(completed);
+
     if (muse::RealIsEqual(timePositionOffset, 0.0)) {
         return true;
     }
