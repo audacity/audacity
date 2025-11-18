@@ -27,6 +27,8 @@ Column {
     id: root
 
     property alias title: titleLabel.text
+    property alias elide: titleLabel.elide
+    property alias wrapMode: titleLabel.wrapMode
 
     property real columnWidth: 208
 
@@ -66,7 +68,7 @@ Column {
 
         indeterminateText: ""
 
-        onActivated: function(index, value) {
+        onActivated: function (index, value) {
             root.valueEdited(index, value)
         }
     }
