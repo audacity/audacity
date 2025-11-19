@@ -12,6 +12,10 @@
 
 #include <algorithm>
 #include <cassert>
+// Linux requires explicit include for std::abs
+#ifdef __linux__
+#include <cmath>
+#endif
 #include <type_traits>
 
 #include "ZoomInfo.h"

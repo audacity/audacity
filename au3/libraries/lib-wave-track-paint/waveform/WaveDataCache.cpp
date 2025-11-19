@@ -13,6 +13,10 @@
 
 #include <algorithm>
 #include <cassert>
+// Linux requires explicit include for std::round
+#ifdef __linux__
+#include <cmath>
+#endif
 
 #include "au3-math/RoundUpUnsafe.h"
 #include "au3-math/SampleFormat.h"

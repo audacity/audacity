@@ -11,7 +11,11 @@
 #include "Snap.h"
 
 #include <algorithm>
+// Linux requires explicit include for std::abs
+#ifdef __linux__
+#include <cmath>
 #include <cstdlib>
+#endif
 
 #include "Project.h"
 #include "ProjectNumericFormats.h"
