@@ -44,9 +44,13 @@ check_include_file(unistd.h HAVE_UNISTD_H)
 
 # Check for lrint and lrintf functions
 include(CheckCXXSourceCompiles)
-set(CMAKE_REQUIRED_LIBRARIES m)
+# On Windows, don't require the math library
+if(NOT WIN32)
+    set(CMAKE_REQUIRED_LIBRARIES m)
+endif()
 check_cxx_source_compiles("
-    #include <math.h>
+    #define _USE_MATH_DEFINES
+    #include <cmath>
     int main() {
         long int x = lrint(3.14);
         return 0;
@@ -54,7 +58,8 @@ check_cxx_source_compiles("
 " HAVE_LRINT)
 
 check_cxx_source_compiles("
-    #include <math.h>
+    #define _USE_MATH_DEFINES
+    #include <cmath>
     int main() {
         long int x = lrintf(3.14f);
         return 0;
