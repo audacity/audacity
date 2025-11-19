@@ -129,7 +129,6 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-files
     # compile lib-project-file-io
     ${AU3_LIBRARIES}/lib-sentry-reporting
-    ${AU3_LIBRARIES}/lib-math
     ${AU3_LIBRARIES}/lib-fft
     ${AU3_LIBRARIES}/lib-project-history
     ${AU3_LIBRARIES}/lib-transactions
