@@ -187,7 +187,7 @@ class AudacityConan(ConanFile):
         AudacityDependency("libmp3lame", "3.100"),
         AudacityDependency("mpg123", "1.31.2", package_options={ "network": False }),
         AudacityDependency("libid3tag", "0.15.2b", package_options={ "shared": False }),
-        AudacityDependency("wavpack", "5.6.0"),
+        AudacityDependency("wavpack", "5.7.0"),
         AudacityDependency("ogg", "1.3.5"),
         AudacityDependency("flac", "1.4.2"),
         AudacityDependency("opus", "1.5.2", override=True),
