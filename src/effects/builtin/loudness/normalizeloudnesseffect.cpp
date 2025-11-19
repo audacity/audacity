@@ -18,7 +18,7 @@
 #include "normalizeloudnesseffect.h"
 
 #include "libraries/lib-effects/EffectOutputTracks.h"
-#include "libraries/lib-math/EBUR128.h"
+#include "au3-math/EBUR128.h"
 #include "libraries/lib-wave-track/WaveChannelUtilities.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-command-parameters/ShuttleAutomation.h"
