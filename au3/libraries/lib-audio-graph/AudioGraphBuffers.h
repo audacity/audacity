@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_AUDIO_GRAPH_BUFFERS__
 #define __AUDACITY_AUDIO_GRAPH_BUFFERS__
 
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include <vector>
 
 namespace AudioGraph {

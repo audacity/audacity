@@ -16,7 +16,7 @@
 #include <vector>
 
 #include "Import.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include "Internat.h"
 #include "Track.h"
 

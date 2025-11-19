@@ -11,8 +11,6 @@
 
 #pragma once
 
-#include "SampleCount.h"
-
 #include <vector>
 
 /**

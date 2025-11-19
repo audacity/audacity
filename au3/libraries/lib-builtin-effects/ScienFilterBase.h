@@ -11,7 +11,7 @@ Vaughan Johnson (Preview)
 ***********************************************************************/
 #pragma once
 
-#include "Biquad.h"
+#include "au3-math/Biquad.h"
 #include "ShuttleAutomation.h"
 #include "StatefulPerTrackEffect.h"
 #include <cfloat> // for FLT_MAX

@@ -13,7 +13,7 @@ Paul Licameli split from Mix.h
 #define __AUDACITY_MIX_AND_RENDER_H
 
 #include "Mix.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include "Track.h"
 
 class AudacityProject;

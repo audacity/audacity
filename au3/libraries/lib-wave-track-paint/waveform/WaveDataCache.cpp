@@ -13,15 +13,12 @@
 
 #include <algorithm>
 #include <cassert>
-#include <cmath>
-#include <cstring>
 
+#include "au3-math/RoundUpUnsafe.h"
+#include "au3-math/SampleFormat.h"
 #include "SampleBlock.h"
-#include "SampleFormat.h"
 #include "Sequence.h"
 #include "WaveClip.h"
-
-#include "RoundUpUnsafe.h"
 
 namespace {
 //

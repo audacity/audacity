@@ -16,8 +16,8 @@
 
 #include "ZoomInfo.h"
 
-#include "float_cast.h"
-#include "RoundUpUnsafe.h"
+#include "au3-math/float_cast.h"
+#include "au3-math/RoundUpUnsafe.h"
 
 namespace {
 bool IsSameSample(double sampleRate, double t0, double t1) noexcept

@@ -14,9 +14,8 @@
 #include "EffectInterface.h"
 #include "MessageBuffer.h"
 #include "PluginManager.h"
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 
-#include <chrono>
 #include <thread>
 #include <condition_variable>
 

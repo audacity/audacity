@@ -12,7 +12,7 @@
 #define __AUDACITY_QUALITY_SETTINGS__
 
 #include "Prefs.h" // for EnumSetting
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 
 class IntSetting;
 

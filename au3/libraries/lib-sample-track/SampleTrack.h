@@ -14,8 +14,7 @@ Paul Licameli split from WaveTrack.h
 
 #include "AudioIOSequences.h"
 #include "PlayableTrack.h"
-#include "SampleCount.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 
 enum class sampleFormat : unsigned;
 
