@@ -304,22 +304,7 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphTask.cpp
     ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphTask.h
 
-    ${AU3_LIBRARIES}/lib-math/Biquad.cpp
-    ${AU3_LIBRARIES}/lib-math/Biquad.h
-    ${AU3_LIBRARIES}/lib-math/EBUR128.cpp
-    ${AU3_LIBRARIES}/lib-math/EBUR128.h
-    ${AU3_LIBRARIES}/lib-math/SampleFormat.cpp
-    ${AU3_LIBRARIES}/lib-math/SampleFormat.h
-    ${AU3_LIBRARIES}/lib-math/SampleCount.cpp
-    ${AU3_LIBRARIES}/lib-math/SampleCount.h
-    ${AU3_LIBRARIES}/lib-math/Resample.cpp
-    ${AU3_LIBRARIES}/lib-math/Resample.h
-    ${AU3_LIBRARIES}/lib-math/Dither.cpp
-    ${AU3_LIBRARIES}/lib-math/Dither.h
-    ${AU3_LIBRARIES}/lib-math/InterpolateAudio.cpp
-    ${AU3_LIBRARIES}/lib-math/InterpolateAudio.h
-    ${AU3_LIBRARIES}/lib-math/Matrix.cpp
-    ${AU3_LIBRARIES}/lib-math/Matrix.h
+    # lib-math is now a separate library: au3-math
 
     ${AU3_LIBRARIES}/lib-fft/FFT.cpp
     ${AU3_LIBRARIES}/lib-fft/FFT.h
@@ -836,12 +821,15 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/portmixer au3-portmixer)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soundtouch au3-soundtouch)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sbsms au3-sbsms)
 
+# AU3 Libraries
+add_subdirectory(${AU3_LIBRARIES}/au3-math au3-math)
 
 # ==================================
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
 set(MODULE_SRC ${MODULE_SRC} ${AU3_SRC})
 set(MODULE_LINK ${AU3_LINK} project audio)
+set(MODULE_LINK_PUBLIC au3-math)
 
 set(MODULE_USE_PCH OFF)
 set(MODULE_USE_UNITY OFF)
