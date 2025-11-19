@@ -19,10 +19,9 @@
 
 #include <cmath>
 #include "EffectStage.h"
-#include "Dither.h"
-#include "Resample.h"
+#include "au3-math/Dither.h"
+#include "au3-math/float_cast.h"
 #include "WideSampleSequence.h"
-#include "float_cast.h"
 #include <numeric>
 
 #include "DownmixSource.h"

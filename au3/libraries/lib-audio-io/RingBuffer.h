@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_RING_BUFFER__
 #define __AUDACITY_RING_BUFFER__
 
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include <atomic>
 
 class RingBuffer final : public NonInterferingBase

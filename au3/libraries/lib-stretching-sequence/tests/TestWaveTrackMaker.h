@@ -11,7 +11,7 @@
 #pragma once
 
 #include "MockSampleBlockFactory.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 

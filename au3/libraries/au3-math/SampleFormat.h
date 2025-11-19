@@ -12,7 +12,6 @@
 #define __AUDACITY_SAMPLE_FORMAT__
 
 #include "MemoryX.h"
-#include <cstdlib>
 
 //
 // Definitions / Meta-Information

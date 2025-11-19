@@ -12,10 +12,7 @@ Max Maisel
 #define __EBUR128_H__
 
 #include "Biquad.h"
-#include <memory>
 #include "SampleFormat.h"
-
-#include <cmath>
 
 /// \brief Implements EBU-R128 loudness measurement.
 class MATH_API EBUR128

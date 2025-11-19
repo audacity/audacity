@@ -11,7 +11,7 @@
 #include "PlotSpectrumBase.h"
 #include "BasicUI.h"
 #include "Prefs.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 

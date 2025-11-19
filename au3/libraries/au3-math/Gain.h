@@ -11,7 +11,6 @@
 #pragma once
 
 #include <type_traits>
-#include <cmath>
 #include <limits>
 
 // Implementation is based on https://www.dr-lex.be/info-stuff/volumecontrols.html
