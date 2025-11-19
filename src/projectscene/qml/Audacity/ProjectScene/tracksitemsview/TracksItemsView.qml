@@ -1054,9 +1054,23 @@ Rectangle {
     }
 
     DropArea {
+        id: dropArea
+
         anchors.fill: parent
+
+        onEntered: drop => {
+            let urls = drop.urls.concat([]);
+        }
+
+        onExited: {
+        }
+
+        onPositionChanged: {
+        }
+
         onDropped: drop => {
             let urls = drop.urls.concat([]);
+            tracksModel.audioFileLength(urls); // temporary
             // Forces conversion to a compatible array
             tracksModel.handleDroppedFiles(urls)
 

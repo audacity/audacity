@@ -9,15 +9,15 @@
 
 #include "global/async/asyncable.h"
 
-#include "iprojectsceneconfiguration.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "playback/iplaybackconfiguration.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "playback/itrackplaybackcontrol.h"
-#include "projectscene/iprojectsceneconfiguration.h"
+#include "playback/iplaybackconfiguration.h"
+#include "importexport/import/iimporter.h"
 
 #include "trackedit/dom/track.h"
 
@@ -37,11 +37,13 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
     muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
+    muse::Inject<importexport::IImporter> importer;
 
 public:
     explicit ViewTracksListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
+    Q_INVOKABLE double audioFileLength(const QStringList& fileUrls);
     Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);
 
     int rowCount(const QModelIndex& parent) const override;

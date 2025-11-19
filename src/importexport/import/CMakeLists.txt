@@ -13,6 +13,8 @@ set(MODULE_SRC
     #internals
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3importer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3importer.h
+    
+    ${CMAKE_CURRENT_LIST_DIR}/types/importtypes.h
 )
 
 # AU3

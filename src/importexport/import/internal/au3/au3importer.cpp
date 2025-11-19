@@ -81,6 +81,29 @@ void au::importexport::Au3Importer::init()
     RegisterImportPlugins();
 }
 
+au::importexport::FileInfo au::importexport::Au3Importer::fileInfo(const muse::io::path_t& filePath)
+{
+    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    auto importPlugins = Importer::sImportPluginList();
+
+    FileInfo fileInfo;
+    for (const auto plugin : importPlugins) {
+        if (!plugin->SupportsExtension(suffix(filePath))) {
+            continue;
+        }
+
+        auto inFile = plugin->Open(filePath.toStdString(), project);
+        if ((inFile != NULL) && (inFile->GetStreamCount() > 0)) {
+            fileInfo.filename = inFile->GetFilename();
+            fileInfo.duration = inFile->GetDuration();
+
+            return fileInfo;
+        }
+    }
+
+    return FileInfo{};
+}
+
 bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());

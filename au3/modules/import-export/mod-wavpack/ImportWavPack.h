@@ -26,6 +26,7 @@ public:
     ~WavPackImportFileHandle();
 
     TranslatableString GetFileDescription() override;
+    double GetDuration() const override;
     ByteCount GetFileUncompressedBytes() override;
     void Import(ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
                 std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;

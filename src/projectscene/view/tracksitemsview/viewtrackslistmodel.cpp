@@ -217,6 +217,25 @@ void ViewTracksListModel::load()
     }, muse::async::Asyncable::Mode::SetReplace);
 }
 
+double ViewTracksListModel::audioFileLength(const QStringList& fileUrls)
+{
+    std::vector<muse::io::path_t> localPaths;
+    for (const auto& fileUrl : fileUrls) {
+        QUrl url(fileUrl);
+        localPaths.push_back(muse::io::path_t(url.toLocalFile()));
+    }
+
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (localPaths.empty()) {
+        return 0.0;
+    }
+
+    // temporary
+    importexport::FileInfo fileInfo = importer()->fileInfo(localPaths.at(0));
+
+    return fileInfo.duration;
+}
+
 void ViewTracksListModel::handleDroppedFiles(const QStringList& fileUrls)
 {
     std::vector<muse::io::path_t> localPaths;

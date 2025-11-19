@@ -201,6 +201,7 @@ public:
     bool InitCodecs();
 
     TranslatableString GetFileDescription() override;
+    double GetDuration() const override;
     ByteCount GetFileUncompressedBytes() override;
 
     void Import(
@@ -429,6 +430,44 @@ bool FFmpegImportFileHandle::InitCodecs()
 TranslatableString FFmpegImportFileHandle::GetFileDescription()
 {
     return DESC;
+}
+
+double FFmpegImportFileHandle::GetDuration() const
+{
+    if (!mAVFormatContext) {
+        return 0.0;
+    }
+
+    // try container duration first
+    const auto fileDuration = mAVFormatContext->GetDuration();
+    if (fileDuration > 0 && fileDuration != AUDACITY_AV_NOPTS_VALUE) {
+        return static_cast<double>(fileDuration) / static_cast<double>(AUDACITY_AV_TIME_BASE);
+    }
+
+    // fallback: use the longest audio stream duration we know about
+    double maxDurationSeconds = 0.0;
+
+    for (const auto& sc : mStreamContexts) {
+        const AVStreamWrapper* stream = mAVFormatContext->GetStream(sc.StreamIndex);
+        if (!stream) {
+            continue;
+        }
+
+        const auto streamDuration = stream->GetDuration();
+        if (streamDuration <= 0 || streamDuration == int64_t(AUDACITY_AV_NOPTS_VALUE)) {
+            continue;
+        }
+
+        const auto timeBase = stream->GetTimeBase();
+        const double seconds
+            =static_cast<double>(streamDuration) * timeBase.num / timeBase.den;
+
+        if (seconds > maxDurationSeconds) {
+            maxDurationSeconds = seconds;
+        }
+    }
+
+    return maxDurationSeconds;
 }
 
 auto FFmpegImportFileHandle::GetFileUncompressedBytes() -> ByteCount
