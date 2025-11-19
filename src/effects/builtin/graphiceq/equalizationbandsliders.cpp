@@ -16,7 +16,7 @@
 
 **********************************************************************/
 #include "equalizationbandsliders.h"
-#include "libraries/lib-math/SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 
 #include "log.h"
 
