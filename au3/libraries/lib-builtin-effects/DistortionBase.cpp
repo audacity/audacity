@@ -17,6 +17,10 @@
 *//*******************************************************************/
 #include "DistortionBase.h"
 #include "ShuttleAutomation.h"
+// Linux requires explicit include for std::exp, std::log, std::sin, std::pow
+#ifdef __linux__
+#include <cmath>
+#endif
 #include <utility>
 
 #define STEPS 1024 // number of +ve or -ve steps in lookup tabe
