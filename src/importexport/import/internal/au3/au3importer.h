@@ -20,6 +20,7 @@ public:
     Au3Importer() = default;
 
     void init() override;
+    FileInfo fileInfo(const muse::io::path_t& filePath) override;
     bool import(const muse::io::path_t& filePath) override;
 
 private:

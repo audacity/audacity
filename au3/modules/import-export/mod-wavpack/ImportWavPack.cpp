@@ -110,6 +110,15 @@ TranslatableString WavPackImportFileHandle::GetFileDescription()
     return DESC;
 }
 
+double WavPackImportFileHandle::GetDuration() const
+{
+    if (mSampleRate <= 0 || mNumSamples <= 0) {
+        return 0.0;
+    }
+
+    return static_cast<double>(mNumSamples) / static_cast<double>(mSampleRate);
+}
+
 auto WavPackImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
     return 0;

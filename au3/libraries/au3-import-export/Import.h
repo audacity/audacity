@@ -177,6 +177,8 @@ public:
         AudacityProject& project, const FilePath& fName, ImportProgressListener* importProgressListener, WaveTrackFactory* trackFactory,
         TrackHolders& tracks, Tags* tags, std::optional<LibFileFormats::AcidizerTags>& outAcidTags, TranslatableString& errorMessage);
 
+    static ImportPluginList& sImportPluginList();
+
 private:
     struct Traits : Registry::DefaultTraits
     {
@@ -193,7 +195,6 @@ private:
     static Importer mInstance;
 
     ExtImportItems mExtImportItems;
-    static ImportPluginList& sImportPluginList();
     static UnusableImportPluginList& sUnusableImportPluginList();
 };
 
