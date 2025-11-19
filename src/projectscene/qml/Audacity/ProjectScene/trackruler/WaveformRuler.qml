@@ -82,7 +82,7 @@ Item {
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
 
-                width: 7
+                width: 8
                 height: 1
                 color: ui.theme.isDark ? "#F4F7F9" : "#F4F5F9"
 
@@ -167,7 +167,7 @@ Item {
             height: 1
 
             Rectangle {
-                width: 5
+                width: 4
                 height: 1
                 color: ui.theme.isDark ? "#868B8E" : "#8B8C96"
                 anchors.verticalCenter: parent.verticalCenter
