@@ -161,4 +161,6 @@ if (NOT OS_IS_MAC)
     set(MODULE_LINK ${MODULE_LINK} Qt6::GuiPrivate)
 endif(NOT OS_IS_MAC)
 
+list(APPEND MODULE_LINK Qt::Svg)
+
 setup_module()

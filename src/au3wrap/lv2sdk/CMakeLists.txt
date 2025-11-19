@@ -61,7 +61,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(suil)
 
 set( SOURCES
-   PRIVATE
 
       # zix
       ${zix_SOURCE_DIR}/src/allocator.c
