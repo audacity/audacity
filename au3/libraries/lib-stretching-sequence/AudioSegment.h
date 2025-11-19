@@ -11,6 +11,11 @@
 
 #pragma once
 
+// Linux requires explicit include for size_t
+#ifdef __linux__
+#include <cstddef>
+#endif
+
 #include <vector>
 
 /**
