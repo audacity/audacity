@@ -125,6 +125,9 @@ else() # MSVC
 endif()
 
 set(MODULE_LINK au3wrap)
+if (QT_ADD_CONCURRENT)
+    list(APPEND MODULE_LINK Qt::Concurrent)
+endif()
 
 set(MODULE_USE_UNITY OFF)
 
