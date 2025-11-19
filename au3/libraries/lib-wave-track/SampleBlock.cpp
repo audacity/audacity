@@ -8,9 +8,7 @@ SampleBlock.cpp
 
 #include "InconsistencyException.h"
 #include "SampleBlock.h"
-#include "SampleFormat.h"
-
-#include <wx/defs.h>
+#include "au3-math/SampleFormat.h"
 
 SampleBlockFactoryPtr SampleBlockFactory::New(AudacityProject& project)
 {

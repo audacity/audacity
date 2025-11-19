@@ -17,7 +17,7 @@
 
 #include "AudioGraphSource.h" // to inherit
 #include "EffectInterface.h"
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 #include <functional>
 
 class WideSampleSequence;

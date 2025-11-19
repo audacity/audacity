@@ -12,7 +12,7 @@
 #include "ClipTimeAndPitchSource.h"
 #include "ClipInterface.h"
 
-#include <cassert>
+#include "au3-math/SampleFormat.h"
 
 namespace {
 sampleCount GetLastReadSample(

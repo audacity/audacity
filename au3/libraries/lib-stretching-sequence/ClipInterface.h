@@ -12,8 +12,7 @@
 
 #include "AudioSegmentSampleView.h"
 #include "Observer.h"
-#include "SampleCount.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleCount.h"
 
 class STRETCHING_SEQUENCE_API ClipTimes
 {

@@ -11,7 +11,7 @@
 #include "ParsedNumericConverterFormatter.h"
 #include "NumericConverterRegistry.h"
 
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 #include "NumericConverterFormats.h"
 #include "NumericConverterFormatterContext.h"
 

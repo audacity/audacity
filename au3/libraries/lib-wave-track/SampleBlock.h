@@ -10,7 +10,7 @@ SampleBlock.h
 #define __AUDACITY_SAMPLE_BLOCK__
 
 #include "GlobalVariable.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include "AudioSegmentSampleView.h"
 
 #include <functional>

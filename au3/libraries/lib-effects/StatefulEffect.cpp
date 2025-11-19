@@ -12,7 +12,7 @@
 
 **********************************************************************/
 #include "StatefulEffect.h"
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 
 bool StatefulEffect::Instance::Process(EffectSettings& settings)
 {

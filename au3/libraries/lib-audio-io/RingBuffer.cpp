@@ -25,7 +25,7 @@
 *//*******************************************************************/
 
 #include "RingBuffer.h"
-#include "Dither.h"
+#include "au3-math/Dither.h"
 #include <cstring>
 
 RingBuffer::RingBuffer(sampleFormat format, size_t size)

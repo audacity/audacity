@@ -11,7 +11,7 @@
 #include "AudioContainerHelper.h"
 #include "MockPlayableSequence.h"
 #include "MockSampleBlockFactory.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include "StretchingSequence.h"
 #include "TestWaveClipMaker.h"
 #include "TestWaveTrackMaker.h"

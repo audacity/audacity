@@ -24,7 +24,7 @@
 #include "BasicUI.h"
 #include "Envelope.h"
 #include "InconsistencyException.h"
-#include "Resample.h"
+#include "au3-math/Resample.h"
 #include "Sequence.h"
 #include "TimeAndPitchInterface.h"
 #include "UserException.h"

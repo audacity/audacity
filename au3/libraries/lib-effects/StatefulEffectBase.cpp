@@ -12,7 +12,7 @@
 
 **********************************************************************/
 #include "StatefulEffectBase.h"
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 
 StatefulEffectBase::Instance::Instance(StatefulEffectBase& effect)
     : mEffect{effect}

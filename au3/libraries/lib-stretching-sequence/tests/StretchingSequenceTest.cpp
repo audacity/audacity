@@ -14,7 +14,7 @@
 #include "FloatVectorClip.h"
 #include "MockAudioSegmentFactory.h"
 #include "MockPlayableSequence.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include "WavFileIO.h"
 
 #include <array>

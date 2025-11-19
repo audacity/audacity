@@ -9,7 +9,7 @@
 **********************************************************************/
 
 #include "AudioGraphBuffers.h"
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 #include <cassert>
 #include <cstring>
 

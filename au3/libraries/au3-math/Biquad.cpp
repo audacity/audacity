@@ -11,7 +11,6 @@ Max Maisel
 
 #include "Biquad.h"
 
-#include <cmath>
 #include <wx/utils.h>
 
 #define square(a) ((a) * (a))

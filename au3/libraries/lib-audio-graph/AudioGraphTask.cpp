@@ -15,7 +15,7 @@
 #include "AudioGraphBuffers.h"
 #include "AudioGraphSink.h"
 #include "AudioGraphSource.h"
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 #include <cassert>
 
 AudioGraph::Task::Task(Source& source, Buffers& buffers, Sink& sink)

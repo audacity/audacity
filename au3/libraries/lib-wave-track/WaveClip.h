@@ -14,10 +14,10 @@
 #include "Channel.h"
 #include "ClientData.h"
 #include "CRTPBase.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
+#include "au3-math/SampleCount.h"
 #include "ClipInterface.h"
 #include "XMLTagHandler.h"
-#include "SampleCount.h"
 #include "AudioSegmentSampleView.h"
 
 #include <wx/longlong.h>

@@ -14,9 +14,7 @@
 #include "Envelope.h"
 #include "Mix.h"
 #include "Project.h"
-#include "SampleCount.h"
-
-#include <cmath>
+#include "au3-math/SampleCount.h"
 
 PlaybackPolicy::~PlaybackPolicy() = default;
 

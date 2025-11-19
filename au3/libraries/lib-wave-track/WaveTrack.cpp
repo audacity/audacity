@@ -41,7 +41,7 @@ from the project that will own the track.
 #include <type_traits>
 #include <unordered_set>
 
-#include "float_cast.h"
+#include "au3-math/float_cast.h"
 
 #include "AudioSegmentSampleView.h"
 #include "ChannelAttachments.h"

@@ -16,7 +16,7 @@
 
 #include "ExportPlugin.h"
 #include "ExportTypes.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 
 class TrackList;
 class WaveTrack;

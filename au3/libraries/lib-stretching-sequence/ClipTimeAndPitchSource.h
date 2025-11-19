@@ -12,10 +12,8 @@
 
 #include "AudioSegmentSampleView.h"
 #include "PlaybackDirection.h"
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 #include "TimeAndPitchInterface.h"
-
-#include <memory>
 
 class ClipInterface;
 using ChannelSampleViews = std::vector<AudioSegmentSampleView>;

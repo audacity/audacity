@@ -12,7 +12,7 @@
 #define __AUDACITY_FILE_FORMATS__
 
 #include "Identifier.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 
 #include <memory>
 #include <sndfile.h>

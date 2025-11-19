@@ -10,7 +10,7 @@
 #pragma once
 
 #include "PerTrackEffect.h"
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 #include "SettingsVisitor.h"
 #include <queue>
 

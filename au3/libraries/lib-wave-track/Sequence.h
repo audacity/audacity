@@ -15,10 +15,9 @@
 #include <deque>
 #include <functional>
 
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
+#include "au3-math/SampleCount.h"
 #include "XMLTagHandler.h"
-
-#include "SampleCount.h"
 #include "AudioSegmentSampleView.h"
 
 class SampleBlock;

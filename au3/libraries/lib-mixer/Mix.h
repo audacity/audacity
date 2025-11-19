@@ -15,7 +15,7 @@
 #include "AudioGraphBuffers.h"
 #include "AudioGraphSource.h"
 #include "MixerOptions.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include <optional>
 
 #include "DownmixStage.h"

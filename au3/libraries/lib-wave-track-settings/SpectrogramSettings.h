@@ -13,7 +13,7 @@ Paul Licameli
 
 #include "ClientData.h" // to inherit
 #include "Prefs.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include "RealFFTf.h"
 
 #undef SPECTRAL_SELECTION_GLOBAL_SWITCH

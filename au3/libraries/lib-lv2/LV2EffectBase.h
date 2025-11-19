@@ -16,7 +16,7 @@
 #include "LV2FeaturesList.h"
 #include "LV2Ports.h"
 
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include "PerTrackEffect.h"
 
 #define LV2EFFECTS_VERSION wxT("1.0.0.0")

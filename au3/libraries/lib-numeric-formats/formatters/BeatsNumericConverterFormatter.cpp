@@ -17,7 +17,7 @@
 #include "NumericConverterRegistry.h"
 #include "NumericConverterFormatterContext.h"
 
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 
 #include "Project.h"
 #include "ProjectTimeSignature.h"

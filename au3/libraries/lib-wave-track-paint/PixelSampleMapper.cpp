@@ -11,9 +11,8 @@
 #include "PixelSampleMapper.h"
 
 #include <cassert>
-#include <cmath>
 
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 #include "Variant.h"
 
 PixelSampleMapper::PixelSampleMapper(

@@ -3,7 +3,7 @@
 #include "LabelTrack.h"
 #include "NumericConverterFormats.h"
 #include "Prefs.h"
-#include "Resample.h"
+#include "au3-math/Resample.h"
 #include "ShuttleAutomation.h"
 #include "SyncLock.h"
 #include "TimeWarper.h"

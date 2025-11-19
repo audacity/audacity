@@ -6,7 +6,7 @@
 #include "TimeWarper.h"
 #include "WaveTrack.h"
 #include <wx/math.h>
-#include "PitchName.h"
+#include "au3-math/PitchName.h"
 
 #if USE_SBSMS
 #include "SBSMSBase.h"

@@ -11,8 +11,8 @@ Paul Licameli split from SampleFrame.h
 #define __AUDACITY_WIDE_SAMPLE_SEQUENCE_
 
 #include "AudioGraphChannel.h"
-#include "SampleCount.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleCount.h"
+#include "au3-math/SampleFormat.h"
 
 class WideSampleSequence;
 

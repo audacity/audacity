@@ -10,8 +10,6 @@
 **********************************************************************/
 #pragma once
 
-#include "SampleCount.h"
-
 #include <memory>
 #include <vector>
 

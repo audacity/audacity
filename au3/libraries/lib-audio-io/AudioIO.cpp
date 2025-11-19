@@ -63,7 +63,9 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "AudioIOExt.h"
 #include "AudioIOListener.h"
 
-#include "float_cast.h"
+#include "au3-math/float_cast.h"
+#include "au3-math/Resample.h"
+#include "au3-math/Gain.h"
 #include "DeviceManager.h"
 
 #include <cfloat>
@@ -102,7 +104,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "Channel.h"
 #include "Mix.h"
-#include "Resample.h"
 #include "RingBuffer.h"
 #include "Decibels.h"
 #include "Prefs.h"
@@ -113,8 +114,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "QualitySettings.h"
 #include "BasicUI.h"
 #include "WaveTrack.h"
-
-#include "Gain.h"
 
 using std::max;
 using std::min;

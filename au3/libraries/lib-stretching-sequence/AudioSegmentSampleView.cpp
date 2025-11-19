@@ -10,6 +10,8 @@
 **********************************************************************/
 #include "AudioSegmentSampleView.h"
 
+#include "au3-math/SampleCount.h"
+
 #include <algorithm>
 #include <cassert>
 #include <numeric>
