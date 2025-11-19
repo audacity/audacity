@@ -11,6 +11,11 @@
 #include "PixelSampleMapper.h"
 
 #include <cassert>
+// Linux requires explicit include for std::floor, std::min, std::max
+#ifdef __linux__
+#include <cmath>
+#include <algorithm>
+#endif
 
 #include "au3-math/SampleCount.h"
 #include "Variant.h"
