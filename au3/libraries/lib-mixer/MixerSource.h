@@ -17,9 +17,9 @@
 #include "AudioGraphSource.h"
 #include "MixerOptions.h"
 #include "au3-math/SampleCount.h"
+#include "au3-math/Resample.h"
 #include <memory>
 
-class Resample;
 class SampleTrack;
 class WideSampleSequence;
 

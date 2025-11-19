@@ -15,7 +15,6 @@
 
 #include "AudioGraphBuffers.h"
 #include "Envelope.h"
-#include "au3-math/Resample.h"
 #include "au3-math/float_cast.h"
 #include "WideSampleSequence.h"
 
