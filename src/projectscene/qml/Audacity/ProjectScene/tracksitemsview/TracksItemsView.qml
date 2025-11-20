@@ -427,6 +427,10 @@ Rectangle {
 
             hoverEnabled: true
 
+            property int itemClickCount: 0
+            property var lastItemClickKey: null
+            property bool itemWasMoved: false
+
             onWheel: function (wheelEvent) {
                 timeline.onWheel(wheelEvent.x, wheelEvent.pixelDelta, wheelEvent.angleDelta)
             }
@@ -440,6 +444,7 @@ Rectangle {
                     if (root.itemHeaderHovered) {
                         tracksItemsView.itemStartEditRequested(hoveredItemKey)
                         root.interactionState = TracksItemsView.State.DraggingItem
+                        lastItemClickKey = root.hoveredItemKey
                     } else {
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
                             playCursorController.seekToX(e.x)
@@ -453,7 +458,10 @@ Rectangle {
                         handleGuideline(e.x, false)
 
                         splitToolController.mouseDown(e.x)
+                        lastItemClickKey = null
                     }
+
+                    itemWasMoved = false
                 } else if (e.button === Qt.RightButton) {
                     if (tracksHovered)
                     //! TODO AU4: handle context menu over empty track area
@@ -467,6 +475,10 @@ Rectangle {
                 timeline.updateCursorPosition(e.x, e.y)
                 splitToolController.mouseMove(e.x)
 
+                if (root.itemHeaderHovered && mainMouseArea.pressed) {
+                    itemWasMoved = true
+                }
+
                 if (root.interactionState === TracksItemsView.State.DraggingItem) {
                     tracksItemsView.itemMoveRequested(hoveredItemKey, false)
                     tracksItemsView.startAutoScroll()
@@ -478,9 +490,20 @@ Rectangle {
                 }
             }
 
-            onReleased: e => {
+            onReleased: function(e) {
                 if (e.button !== Qt.LeftButton) {
                     return
+                }
+
+                if (lastItemClickKey && lastItemClickKey === root.hoveredItemKey) {
+                    itemClickCount++
+                } else {
+                    itemClickCount = 0
+                }
+
+                if (!itemWasMoved) {
+                    tracksItemsView.itemReleaseRequested(hoveredItemKey, itemClickCount)
+                    itemWasMoved = false
                 }
 
                 if (root.interactionState === TracksItemsView.State.DraggingItem) {
@@ -586,6 +609,7 @@ Rectangle {
                 signal itemMoveRequested(var itemKey, bool completed)
                 signal itemStartEditRequested(var itemKey)
                 signal itemEndEditRequested(var itemKey)
+                signal itemReleaseRequested(var itemKey, int clickCount)
                 signal cancelItemDragEditRequested(var itemKey)
                 signal startAutoScroll
                 signal stopAutoScroll

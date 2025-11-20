@@ -170,7 +170,6 @@ TrackItemsContainer {
 
                                 onRequestSelected: {
                                     labelsModel.selectLabel(itemData.key)
-                                    labelsModel.selectTracksDataFromLabelRange(itemData.key)
                                 }
 
                                 onRequestSingleSelected: {
@@ -182,6 +181,10 @@ TrackItemsContainer {
                                     root.selectionResetRequested()
                                 }
 
+                                onTitleEditStarted: {
+                                    itemData.isEditing = true
+                                }
+
                                 onTitleEditAccepted: function(newTitle) {
                                     labelsModel.changeLabelTitle(itemData.key, newTitle)
                                     labelsModel.resetSelectedLabels()
@@ -189,6 +192,10 @@ TrackItemsContainer {
 
                                 onTitleEditCanceled: {
                                     labelsModel.resetSelectedLabels()
+                                }
+
+                                onTitleEditFinished: {
+                                    itemData.isEditing = false
                                 }
 
                                 onLabelStartEditRequested: function() {
@@ -307,6 +314,14 @@ TrackItemsContainer {
 
         function onItemEndEditRequested(itemKey) {
             labelsModel.endEditItem(itemKey)
+        }
+
+        function onItemReleaseRequested(itemKey, clickCount) {
+            if (clickCount % 2 === 0) {
+                labelsModel.selectTracksDataFromLabelRange(itemKey)
+            } else {
+                labelsModel.resetSelectedTracksData()
+            }
         }
 
         function onCancelItemDragEditRequested(itemKey) {
