@@ -48,6 +48,11 @@ enum class EffectMenuOrganization {
     Flat = 1,
 };
 
+enum class PluginUIMode {
+    VendorUI = 0,      // Use plugin's native/graphical UI
+    GeneratedUI = 1,   // Use Audacity's auto-generated UI
+};
+
 class EffectFamilies
 {
     Q_GADGET

@@ -137,6 +137,26 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
         items << item;
     }
 
+    items << makeSeparator();
+
+    // UI Mode toggle
+    if (!effectId.empty()) {
+        MenuItem* menuItem = new MenuItem(this);
+
+        // Create a UiAction for this menu item
+        ui::UiAction action;
+        action.title = TranslatableString("effects", "Use Vendor UI");
+        action.checkable = ui::Checkable::Yes;
+        menuItem->setAction(action);
+        menuItem->setId("toggle_vendor_ui");
+
+        const bool isVendorUI = (configuration()->pluginUIMode(effectId) == PluginUIMode::VendorUI);
+        menuItem->setChecked(isVendorUI);
+
+        // Note: The actual toggle will be handled by the QML binding to useVendorUI property
+        items << menuItem;
+    }
+
     setItems(items);
     m_presets = presets;
     emit presetsChanged();
@@ -193,4 +213,27 @@ void EffectManageMenu::savePresetAs()
     dispatcher()->dispatch(q);
     emit presetsChanged();
     emit presetChanged();
+}
+
+bool EffectManageMenu::useVendorUI() const
+{
+    const EffectInstanceId instanceId = m_instanceId.toULongLong();
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
+    if (effectId.empty()) {
+        return true; // Default to vendor UI
+    }
+    return configuration()->pluginUIMode(effectId) == PluginUIMode::VendorUI;
+}
+
+void EffectManageMenu::setUseVendorUI(const bool value)
+{
+    const EffectInstanceId instanceId = m_instanceId.toULongLong();
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
+    if (effectId.empty()) {
+        return;
+    }
+
+    const PluginUIMode mode = value ? PluginUIMode::VendorUI : PluginUIMode::GeneratedUI;
+    configuration()->setPluginUIMode(effectId, mode);
+    emit useVendorUIChanged();
 }

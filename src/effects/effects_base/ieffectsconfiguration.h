@@ -25,5 +25,9 @@ public:
 
     virtual double previewMaxDuration() const = 0;
     virtual void setPreviewMaxDuration(double value) = 0;
+
+    virtual PluginUIMode pluginUIMode(const EffectId& effectId) const = 0;
+    virtual void setPluginUIMode(const EffectId& effectId, PluginUIMode mode) = 0;
+    virtual muse::async::Notification pluginUIModeChanged() const = 0;
 };
 }
