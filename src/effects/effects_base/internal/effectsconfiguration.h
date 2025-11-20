@@ -26,8 +26,13 @@ public:
     void setEffectMenuOrganization(EffectMenuOrganization) override;
     muse::async::Notification effectMenuOrganizationChanged() const override;
 
+    PluginUIMode pluginUIMode(const EffectId& effectId) const override;
+    void setPluginUIMode(const EffectId& effectId, PluginUIMode mode) override;
+    muse::async::Notification pluginUIModeChanged() const override;
+
 private:
     muse::async::Notification m_applyEffectToAllAudioChanged;
     muse::async::Notification m_effectMenuOrganizationChanged;
+    muse::async::Notification m_pluginUIModeChanged;
 };
 }
