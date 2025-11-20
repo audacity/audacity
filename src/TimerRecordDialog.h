@@ -87,6 +87,7 @@ private:
 
    void UpdateDuration(); // Update m_TimeSpan_Duration and ctrl based on m_DateTime_Start and m_DateTime_End.
    void UpdateEnd(); // Update m_DateTime_End and ctrls based on m_DateTime_Start and m_TimeSpan_Duration.
+   void UpdateStart(); // Update m_DateTime_Start and ctrls based on m_DateTime_Start and call UpdateEnd.
    ProgressResult WaitForStart();
 
    // Timer Recording Automation Control Events
