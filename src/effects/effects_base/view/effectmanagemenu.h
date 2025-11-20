@@ -1,11 +1,12 @@
 #pragma once
 
-#include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
+#include "framework/uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
+#include "framework/global/modularity/ioc.h"
 
-#include "modularity/ioc.h"
 #include "effects/effects_base/ieffectpresetsprovider.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectsconfiguration.h"
+#include "effects/effects_base/ieffectsprovider.h"
 
 namespace au::effects {
 class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
@@ -20,6 +21,7 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
     muse::Inject<IEffectPresetsProvider> presetsController;
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectsConfiguration> configuration;
+    muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
