@@ -3,10 +3,11 @@
 */
 #include "recorduiactions.h"
 
-#include "ui/view/iconcodes.h"
+#include "framework/ui/view/iconcodes.h"
+#include "framework/global/types/translatablestring.h"
+
 #include "context/uicontext.h"
 #include "context/shortcutcontext.h"
-#include "types/translatablestring.h"
 
 using namespace au::record;
 using namespace muse;
@@ -17,6 +18,8 @@ static const ActionQuery RECORD_START_QUERY("action://record/start");
 static const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
 static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
 static const ActionQuery RECORD_LEVEL_QUERY("action://record/level");
+static const ActionQuery RECORD_TOGGLE_MIC_METERING("action://record/toggle-mic-metering");
+static const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-input-monitoring");
 
 const UiActionList RecordUiActions::m_mainActions = {
     UiAction(RECORD_START_QUERY.toString(),
@@ -47,6 +50,20 @@ const UiActionList RecordUiActions::m_mainActions = {
              TranslatableString("action", "Set record level"),
              IconCode::Code::MICROPHONE
              ),
+    UiAction(RECORD_TOGGLE_MIC_METERING.toString(),
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Show mic metering"),
+             TranslatableString("action", "Show mic metering"),
+             Checkable::Yes
+             ),
+    UiAction(RECORD_TOGGLE_INPUT_MONITORING.toString(),
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Enable input monitoring"),
+             TranslatableString("action", "Enable input monitoring"),
+             Checkable::Yes
+             ),
 };
 
 RecordUiActions::RecordUiActions(std::shared_ptr<RecordController> controller)
@@ -67,13 +84,25 @@ void RecordUiActions::init()
     });
 
     m_controller->isRecordingChanged().onNotify(this, [this]() {
-        ActionCodeList codes= {
-            RECORD_START_QUERY.toString(),
-            RECORD_PAUSE_QUERY.toString(),
-            RECORD_STOP_QUERY.toString()
-        };
+        ActionCodeList codes;
+
+        for (const UiAction& action : actionsList()) {
+            codes.push_back(action.code);
+        }
 
         m_actionEnabledChanged.send(codes);
+    });
+
+    m_controller->isMicMeteringOnChanged().onNotify(this, [this]() {
+        ActionCodeList codes;
+        codes.push_back(RECORD_TOGGLE_MIC_METERING.toString());
+        m_actionCheckedChanged.send(codes);
+    });
+
+    m_controller->isInputMonitoringOnChanged().onNotify(this, [this]() {
+        ActionCodeList codes;
+        codes.push_back(RECORD_TOGGLE_INPUT_MONITORING.toString());
+        m_actionCheckedChanged.send(codes);
     });
 }
 
@@ -88,16 +117,19 @@ const UiActionList& RecordUiActions::actionsList() const
 
 bool RecordUiActions::actionEnabled(const UiAction& act) const
 {
-    if (!m_controller->canReceiveAction(act.code)) {
-        return false;
-    }
-
-    return true;
+    return m_controller->canReceiveAction(act.code);
 }
 
 bool RecordUiActions::actionChecked(const UiAction& act) const
 {
-    UNUSED(act);
+    if (act.code == RECORD_TOGGLE_MIC_METERING.toString()) {
+        return m_controller->isMicMeteringOn();
+    }
+
+    if (act.code == RECORD_TOGGLE_INPUT_MONITORING.toString()) {
+        return m_controller->isInputMonitoringOn();
+    }
+
     return false;
 }
 
@@ -108,6 +140,5 @@ muse::async::Channel<ActionCodeList> RecordUiActions::actionEnabledChanged() con
 
 muse::async::Channel<ActionCodeList> RecordUiActions::actionCheckedChanged() const
 {
-    static async::Channel<muse::actions::ActionCodeList> ch;
-    return ch;
+    return m_actionCheckedChanged;
 }

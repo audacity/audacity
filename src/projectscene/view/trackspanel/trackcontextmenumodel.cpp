@@ -63,6 +63,7 @@ MenuItemList TrackContextMenuModel::makeStereoTrackItems()
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track view"), makeTrackViewItems()),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
         makeItemWithArg("toggle-vertical-rulers"),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Meters && monitoring"), makeMeterMonitoringItems()),
         makeSeparator(),
         makeItemWithArg("track-swap-channels"),
         makeItemWithArg("track-split-stereo-to-lr"),
@@ -87,6 +88,7 @@ MenuItemList TrackContextMenuModel::makeMonoTrackItems()
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track view"), makeTrackViewItems()),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
         makeItemWithArg("toggle-vertical-rulers"),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Meters && monitoring"), makeMeterMonitoringItems()),
         makeSeparator(),
         makeItemWithArg("track-make-stereo"),
         makeSeparator(),
@@ -431,4 +433,13 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackViewItems()
         }
     }
     return items;
+}
+
+muse::uicomponents::MenuItemList TrackContextMenuModel::makeMeterMonitoringItems()
+{
+    return {
+        makeItemWithArg("action://record/toggle-mic-metering"),
+        makeSeparator(),
+        makeItemWithArg("action://record/toggle-input-monitoring"),
+    };
 }

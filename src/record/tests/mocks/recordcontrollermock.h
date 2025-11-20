@@ -19,5 +19,11 @@ public:
 
     MOCK_METHOD(muse::secs_t, recordPosition, (), (const, override));
     MOCK_METHOD(muse::async::Channel<muse::secs_t>, recordPositionChanged, (), (const, override));
+
+    MOCK_METHOD(bool, isMicMeteringOn, (), (const, override));
+    MOCK_METHOD(muse::async::Notification, isMicMeteringOnChanged, (), (const, override));
+
+    MOCK_METHOD(bool, isInputMonitoringOn, (), (const, override));
+    MOCK_METHOD(muse::async::Notification, isInputMonitoringOnChanged, (), (const, override));
 };
 }
