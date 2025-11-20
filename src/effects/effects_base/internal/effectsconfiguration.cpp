@@ -11,6 +11,12 @@ static const std::string moduleName("effects");
 static const muse::Settings::Key APPLY_EFFECT_TO_ALL_AUDIO(moduleName, "effects/applyEffectToAllAudio");
 static const muse::Settings::Key EFFECT_MENU_ORGANIZATION(moduleName, "effects/effectMenuOrganization");
 static const muse::Settings::Key PREVIEW_MAX_DURATION(moduleName, "effects/previewMaxDuration");
+static const std::string PLUGIN_UI_MODE_PREFIX = "effects/pluginUIMode/";
+
+static muse::Settings::Key makePluginUIModeKey(const EffectId& effectId)
+{
+    return { moduleName, PLUGIN_UI_MODE_PREFIX + effectId.toStdString() };
+}
 
 void EffectsConfiguration::init()
 {
@@ -69,4 +75,36 @@ double EffectsConfiguration::previewMaxDuration() const
 void EffectsConfiguration::setPreviewMaxDuration(double value)
 {
     muse::settings()->setSharedValue(PREVIEW_MAX_DURATION, muse::Val(value));
+}
+
+PluginUIMode EffectsConfiguration::pluginUIMode(const EffectId& effectId) const
+{
+    if (effectId.empty()) {
+        return PluginUIMode::VendorUI;
+    }
+
+    const muse::Settings::Key key = makePluginUIModeKey(effectId);
+    // Default to VendorUI (native plugin UI) for backward compatibility
+    const muse::Val value = muse::settings()->value(key);
+    if (value.isNull()) {
+        // No setting exists yet, return default
+        return PluginUIMode::VendorUI;
+    }
+    return static_cast<PluginUIMode>(value.toInt());
+}
+
+void EffectsConfiguration::setPluginUIMode(const EffectId& effectId, PluginUIMode mode)
+{
+    if (pluginUIMode(effectId) == mode) {
+        return;
+    }
+
+    const muse::Settings::Key key = makePluginUIModeKey(effectId);
+    muse::settings()->setSharedValue(key, muse::Val(static_cast<int>(mode)));
+    m_pluginUIModeChanged.notify();
+}
+
+muse::async::Notification EffectsConfiguration::pluginUIModeChanged() const
+{
+    return m_pluginUIModeChanged;
 }
