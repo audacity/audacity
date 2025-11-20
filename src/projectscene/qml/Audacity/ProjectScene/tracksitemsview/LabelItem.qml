@@ -38,8 +38,10 @@ Item {
     signal requestSingleSelected()
     signal requestSelectionReset()
 
+    signal titleEditStarted()
     signal titleEditAccepted(var newTitle)
     signal titleEditCanceled()
+    signal titleEditFinished()
 
     signal labelItemMousePositionChanged(real x, real y)
 
@@ -260,8 +262,16 @@ Item {
             root.titleEditAccepted(newTitle)
         }
 
-        onRequestSelected: {
-            root.requestSelected()
+        onEditStarted: {
+            root.titleEditStarted()
+        }
+
+        onEditFinished: {
+            root.titleEditFinished()
+        }
+
+        onRequestSingleSelected: {
+            root.requestSingleSelected()
         }
 
         onContextMenuOpenRequested: function(x, y) {

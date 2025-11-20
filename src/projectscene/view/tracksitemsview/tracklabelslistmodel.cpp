@@ -106,6 +106,21 @@ TrackLabelItem* TrackLabelsListModel::labelItemByKey(const trackedit::LabelKey& 
     return static_cast<TrackLabelItem*>(itemByKey(k));
 }
 
+void TrackLabelsListModel::doSelectTracksData(const LabelKey& key)
+{
+    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    trackedit::Label label = prj->label(key.key);
+    if (!label.isValid()) {
+        return;
+    }
+
+    selectionController()->setSelectedAllAudioData(label.startTime, label.endTime);
+}
+
 void TrackLabelsListModel::update()
 {
     std::unordered_map<LabelId, TrackLabelItem*> oldItems;
@@ -245,8 +260,8 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
         ok = trackeditInteraction()->moveLabels(moveOffset.timeOffset, completed);
     }
 
-    if (ok) {
-        selectTracksDataFromLabelRange(key);
+    if (ok && m_isTracksDataSelected) {
+        doSelectTracksData(key);
     }
 
     if ((completed && m_autoScrollConnection)) {
@@ -272,6 +287,8 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
         selectionController()->resetSelectedClips();
         selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
     }
+
+    m_isTracksDataSelected = false;
 }
 
 void TrackLabelsListModel::resetSelectedLabels()
@@ -282,23 +299,28 @@ void TrackLabelsListModel::resetSelectedLabels()
 
 void TrackLabelsListModel::selectTracksDataFromLabelRange(const LabelKey& key)
 {
-    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
+    TrackLabelItem* labelItem = labelItemByKey(key.key);
+    if (!labelItem || labelItem->isEditing()) {
         return;
     }
 
-    trackedit::Label label = prj->label(key.key);
-    if (!label.isValid()) {
+    auto selectedLabels = selectionController()->selectedLabels();
+
+    if (selectedLabels.size() > 1 || !muse::contains(selectionController()->selectedLabels(), key.key)) {
         return;
     }
 
-    selectionController()->setSelectedAllAudioData(label.startTime, label.endTime);
+    doSelectTracksData(key);
+
+    m_isTracksDataSelected = true;
 }
 
 void TrackLabelsListModel::resetSelectedTracksData()
 {
     selectionController()->resetSelectedTracks();
     selectionController()->resetDataSelection();
+
+    m_isTracksDataSelected = false;
 }
 
 TrackItemKeyList TrackLabelsListModel::getSelectedItemKeys() const
@@ -331,8 +353,8 @@ bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, const LabelKey&
         ok = trackeditInteraction()->stretchLabelRight(leftLinkedLabel.key, newStartTime, completed);
     }
 
-    if (ok) {
-        selectTracksDataFromLabelRange(key);
+    if (ok && m_isTracksDataSelected) {
+        doSelectTracksData(key);
     }
 
     handleAutoScroll(ok, completed, [this, key, leftLinkedLabel, unlink]() {
@@ -367,8 +389,8 @@ bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, const LabelKey
         ok = trackeditInteraction()->stretchLabelLeft(rightLinkedLabel.key, newEndTime, completed);
     }
 
-    if (ok) {
-        selectTracksDataFromLabelRange(key);
+    if (ok && m_isTracksDataSelected) {
+        doSelectTracksData(key);
     }
 
     handleAutoScroll(ok, completed, [this, key, rightLinkedLabel, unlink]() {

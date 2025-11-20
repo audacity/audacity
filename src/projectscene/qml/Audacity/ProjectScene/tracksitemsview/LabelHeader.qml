@@ -20,7 +20,11 @@ Rectangle {
     property var navigationPanel: null
 
     signal titleEditAccepted(var newTitle)
-    signal requestSelected()
+
+    signal editStarted()
+    signal editFinished()
+
+    signal requestSingleSelected()
 
     signal contextMenuOpenRequested(real x, real y)
     signal mousePositionChanged(real x, real y)
@@ -71,7 +75,7 @@ Rectangle {
                 titleLoader.edit()
             } else {
                 // Single click - select
-                root.requestSelected()
+                root.requestSingleSelected()
                 lastClickTime = currentTime
                 doubleClickStartPosition = Qt.point(e.x, e.y)
             }
@@ -126,6 +130,8 @@ Rectangle {
         sourceComponent: isEditState ? titleEditComp : titleComp
 
         function edit() {
+            root.editStarted()
+
             titleLoader.isEditState = true
             titleLoader.item.currentText = root.title
             titleLoader.item.newTitle = root.title
@@ -183,6 +189,8 @@ Rectangle {
                     if (!titleEdit.focus) {
                         titleEdit.visible = false
                         titleEdit.accepted()
+
+                        root.editFinished()
                     }
                 }
             }

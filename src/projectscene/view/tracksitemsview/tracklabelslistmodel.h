@@ -37,6 +37,9 @@ private:
 
     TrackLabelItem* labelItemByKey(const trackedit::LabelKey& k) const;
 
+    void doSelectTracksData(const LabelKey& key);
+
     muse::async::NotifyList<au::trackedit::Label> m_allLabelList;
+    bool m_isTracksDataSelected = false;
 };
 }

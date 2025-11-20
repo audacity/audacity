@@ -87,7 +87,7 @@ ClipKeyList Au3SelectionController::findClipsIntersectingRangeSelection() const
     ClipKeyList clipsIntersectingRangeSelection = {};
     for (const auto& trackId : m_selectedTracks.val) {
         WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        if (!waveTrack) {
             continue;
         }
 
