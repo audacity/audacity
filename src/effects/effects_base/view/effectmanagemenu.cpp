@@ -137,24 +137,30 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
         items << item;
     }
 
-    items << makeSeparator();
-
-    // UI Mode toggle
+    // UI Mode toggle - only for external plugins (VST3, LV2, Audio Units...)
+    // Built-in effects don't have a "Vendor UI" concept
     if (!effectId.empty()) {
-        MenuItem* menuItem = new MenuItem(this);
+        const EffectMeta effectMeta = effectsProvider()->meta(effectId);
+        const bool isExternalPlugin = effectMeta.family != EffectFamily::Builtin
+                                      && effectMeta.family != EffectFamily::Unknown;
 
-        // Create a UiAction for this menu item
-        ui::UiAction action;
-        action.title = TranslatableString("effects", "Use Vendor UI");
-        action.checkable = ui::Checkable::Yes;
-        menuItem->setAction(action);
-        menuItem->setId("toggle_vendor_ui");
+        if (isExternalPlugin) {
+            items << makeSeparator();
+            MenuItem* menuItem = new MenuItem(this);
 
-        const bool isVendorUI = (configuration()->pluginUIMode(effectId) == PluginUIMode::VendorUI);
-        menuItem->setChecked(isVendorUI);
+            // Create a UiAction for this menu item
+            ui::UiAction action;
+            action.title = TranslatableString("effects", "Use Vendor UI");
+            action.checkable = ui::Checkable::Yes;
+            menuItem->setAction(action);
+            menuItem->setId("toggle_vendor_ui");
 
-        // Note: The actual toggle will be handled by the QML binding to useVendorUI property
-        items << menuItem;
+            const bool isVendorUI = (configuration()->pluginUIMode(effectId) == PluginUIMode::VendorUI);
+            menuItem->setChecked(isVendorUI);
+
+            // Note: The actual toggle will be handled by the QML binding to useVendorUI property
+            items << menuItem;
+        }
     }
 
     setItems(items);
