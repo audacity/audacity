@@ -1,7 +1,8 @@
 #pragma once
 
 #include "au3-components/SettingsVisitor.h"
-#include "SoundTouchBase.h"
+#include "au3-builtin-effects/SoundTouchBase.h"
+#include "au3-components/EffectInterface.h"
 
 class BUILTIN_EFFECTS_API ChangeTempoBase : public SoundTouchBase
 {
