@@ -3,7 +3,7 @@
 */
 #include "recordcontroller.h"
 
-#include "translation.h"
+#include "framework/global/translation.h"
 
 using namespace muse;
 using namespace au::record;
@@ -14,12 +14,16 @@ static const ActionQuery RECORD_START_QUERY("action://record/start");
 static const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
 static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
 static const ActionQuery RECORD_LEVEL_QUERY("action://record/level"); // doesn't have callback here
+static const ActionQuery RECORD_TOGGLE_MIC_METERING("action://record/toggle-mic-metering");
+static const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-input-monitoring");
 
 void RecordController::init()
 {
     dispatcher()->reg(this, RECORD_START_QUERY, this, &RecordController::toggleRecord);
     dispatcher()->reg(this, RECORD_PAUSE_QUERY, this, &RecordController::pause);
     dispatcher()->reg(this, RECORD_STOP_QUERY, this, &RecordController::stop);
+    dispatcher()->reg(this, RECORD_TOGGLE_MIC_METERING, this, &RecordController::toggleMicMetering);
+    dispatcher()->reg(this, RECORD_TOGGLE_INPUT_MONITORING, this, &RecordController::toggleInputMonitoring);
 
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
         m_isRecordAllowedChanged.notify();
@@ -116,6 +120,36 @@ void RecordController::stop()
     }
 
     setCurrentRecordStatus(RecordStatus::Stopped);
+}
+
+void RecordController::toggleMicMetering()
+{
+    configuration()->setIsMicMeteringOn(!configuration()->isMicMeteringOn());
+}
+
+muse::async::Notification RecordController::isMicMeteringOnChanged() const
+{
+    return configuration()->isMicMeteringOnChanged();
+}
+
+bool RecordController::isMicMeteringOn() const
+{
+    return configuration()->isMicMeteringOn();
+}
+
+void RecordController::toggleInputMonitoring()
+{
+    configuration()->setIsInputMonitoringOn(!configuration()->isInputMonitoringOn());
+}
+
+muse::async::Notification RecordController::isInputMonitoringOnChanged() const
+{
+    return configuration()->isInputMonitoringOnChanged();
+}
+
+bool RecordController::isInputMonitoringOn() const
+{
+    return configuration()->isInputMonitoringOn();
 }
 
 void RecordController::setCurrentRecordStatus(RecordStatus status)

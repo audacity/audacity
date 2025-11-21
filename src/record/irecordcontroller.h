@@ -25,6 +25,12 @@ public:
 
     virtual muse::secs_t recordPosition() const = 0;
     virtual muse::async::Channel<muse::secs_t> recordPositionChanged() const = 0;
+
+    virtual bool isMicMeteringOn() const = 0;
+    virtual muse::async::Notification isMicMeteringOnChanged() const = 0;
+
+    virtual bool isInputMonitoringOn() const = 0;
+    virtual muse::async::Notification isInputMonitoringOnChanged() const = 0;
 };
 }
 

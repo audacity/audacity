@@ -4,12 +4,11 @@
 #ifndef AU_RECORD_RECORDUIACTIONS_H
 #define AU_RECORD_RECORDUIACTIONS_H
 
-#include "async/asyncable.h"
+#include "framework/global/async/asyncable.h"
 
 #include "modularity/ioc.h"
 #include "context/iuicontextresolver.h"
-
-#include "ui/iuiactionsmodule.h"
+#include "framework/ui/iuiactionsmodule.h"
 
 #include "recordcontroller.h"
 
@@ -36,6 +35,7 @@ private:
 
     std::shared_ptr<RecordController> m_controller;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
+    muse::async::Channel<muse::actions::ActionCodeList> m_actionCheckedChanged;
 };
 }
 

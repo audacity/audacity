@@ -4,17 +4,18 @@
 #ifndef AU_RECORD_RECORDCONTROLLER_H
 #define AU_RECORD_RECORDCONTROLLER_H
 
-#include "async/asyncable.h"
-#include "actions/actionable.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/actions/actionable.h"
 
 #include "modularity/ioc.h"
-#include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
-#include "iinteractive.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/global/iinteractive.h"
 #include "playback/iplaybackcontroller.h"
+#include "record/irecordconfiguration.h"
 
-#include "../irecord.h"
-#include "../irecordcontroller.h"
+#include "record/irecord.h"
+#include "record/irecordcontroller.h"
 
 namespace au::record {
 class RecordController : public IRecordController, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable
@@ -24,6 +25,7 @@ class RecordController : public IRecordController, public muse::actions::Actiona
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<IRecord> record;
     muse::Inject<playback::IPlaybackController> playbackController;
+    muse::Inject<record::IRecordConfiguration> configuration;
 
 public:
     void init();
@@ -40,6 +42,12 @@ public:
 
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
+    bool isMicMeteringOn() const override;
+    muse::async::Notification isMicMeteringOnChanged() const override;
+
+    bool isInputMonitoringOn() const override;
+    muse::async::Notification isInputMonitoringOnChanged() const override;
+
 private:
     enum class RecordStatus {
         Stopped = 0,
@@ -53,6 +61,8 @@ private:
     void start();
     void pause();
     void stop();
+    void toggleMicMetering();
+    void toggleInputMonitoring();
 
     void setCurrentRecordStatus(RecordStatus status);
 
@@ -60,6 +70,8 @@ private:
     muse::async::Notification m_isRecordAllowedChanged;
 
     RecordStatus m_currentRecordStatus = RecordStatus::Stopped;
+
+    muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 };
 }
 
