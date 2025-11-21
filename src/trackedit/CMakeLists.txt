@@ -52,6 +52,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/deletebehavioronboardingscenario.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/deletebehavioronboardingscenario.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackspectrogramutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackspectrogramconfiguration.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackspectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditproject.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditproject.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3selectioncontroller.cpp
@@ -85,6 +88,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/pastebehaviorpanelmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracknavigationmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracknavigationmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspectrogramsettingsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspectrogramsettingsmodel.h
     )
 
 # AU3

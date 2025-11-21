@@ -39,6 +39,8 @@ if (AU_BUILD_PROJECTSCENE_MODULE)
    add_subdirectory(projectscene)
 endif()
 
+add_subdirectory(spectrogram)
+
 add_subdirectory(trackedit)
 
 if (AU_BUILD_PLAYBACK_MODULE)
