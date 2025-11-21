@@ -23,7 +23,7 @@ public:
     virtual bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) = 0;
 
     virtual bool removeLabel(const LabelKey& labelKey) = 0;
-    virtual bool removeLabels(const LabelKeyList& labelKeys) = 0;
+    virtual bool removeLabels(const LabelKeyList& labelKeys, bool moveLabels) = 0;
 
     virtual ITrackDataPtr cutLabel(const LabelKey& labelKey) = 0;
     virtual ITrackDataPtr copyLabel(const LabelKey& labelKey) = 0;

@@ -526,7 +526,7 @@ TEST_F(Au3LabelsInteractionsTests, RemoveTwoLabels)
         { labelTrack->GetId(), labelId1 },
         { labelTrack->GetId(), labelId3 }
     };
-    bool result = m_labelsInteraction->removeLabels(labelsToRemove);
+    bool result = m_labelsInteraction->removeLabels(labelsToRemove, false);
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Removing labels should succeed";
@@ -582,7 +582,7 @@ TEST_F(Au3LabelsInteractionsTests, RemoveAllLabelsAtOnce)
         { labelTrack->GetId(), labelId2 },
         { labelTrack->GetId(), labelId3 }
     };
-    bool result = m_labelsInteraction->removeLabels(labelsToRemove);
+    bool result = m_labelsInteraction->removeLabels(labelsToRemove, false);
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Removing all labels should succeed";
@@ -634,7 +634,7 @@ TEST_F(Au3LabelsInteractionsTests, RemoveLabelsFromMultipleTracks)
         { labelTrack1->GetId(), label1Track1 },
         { labelTrack2->GetId(), label2Track2 }
     };
-    bool result = m_labelsInteraction->removeLabels(labelsToRemove);
+    bool result = m_labelsInteraction->removeLabels(labelsToRemove, false);
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Removing labels from multiple tracks should succeed";
@@ -679,7 +679,7 @@ TEST_F(Au3LabelsInteractionsTests, RemoveLabelsWithEmptyList)
 
     //! [WHEN] Try to remove labels with an empty list
     LabelKeyList emptyList;
-    bool result = m_labelsInteraction->removeLabels(emptyList);
+    bool result = m_labelsInteraction->removeLabels(emptyList, false);
 
     //! [THEN] The operation fails
     ASSERT_FALSE(result) << "Removing with empty list should fail";
@@ -717,7 +717,7 @@ TEST_F(Au3LabelsInteractionsTests, RemoveLabelsWithSomeInvalidKeys)
         { labelTrack->GetId(), labelId1 },
         { labelTrack->GetId(), 999999 }  // Invalid ID
     };
-    bool result = m_labelsInteraction->removeLabels(labelsToRemove);
+    bool result = m_labelsInteraction->removeLabels(labelsToRemove, false);
 
     //! [THEN] The operation succeeds (valid labels are removed)
     ASSERT_TRUE(result) << "Operation should succeed when at least one valid label is present";
@@ -733,6 +733,48 @@ TEST_F(Au3LabelsInteractionsTests, RemoveLabelsWithSomeInvalidKeys)
     ASSERT_NE(remainingLabel, nullptr) << "Remaining label should exist";
     ASSERT_EQ(remainingLabel->GetId(), labelId2) << "Remaining label should have correct ID";
     EXPECT_EQ(remainingLabel->title, wxString("Label 2")) << "Remaining label should be 'Label 2'";
+}
+
+TEST_F(Au3LabelsInteractionsTests, RemoveLabelsWithMoveLabels)
+{
+    //! [GIVEN] There is a project with a label track containing three labels
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(tracks);
+    ASSERT_NE(labelTrack, nullptr) << "Failed to create label track";
+
+    //! [GIVEN] Add three labels: first label (1.0-2.0), second to remove (3.0-5.0), third to shift (6.0-7.0)
+    SelectedRegion region1;
+    region1.setTimes(1.0, 2.0);
+    TrackItemId labelId1 = labelTrack->AddLabel(region1, wxString("Label 1"));
+
+    SelectedRegion region2;
+    region2.setTimes(3.0, 5.0);
+    TrackItemId labelId2 = labelTrack->AddLabel(region2, wxString("Label 2"));
+
+    SelectedRegion region3;
+    region3.setTimes(6.0, 7.0);
+    TrackItemId labelId3 = labelTrack->AddLabel(region3, wxString("Label 3"));
+
+    ASSERT_EQ(labelTrack->GetNumLabels(), 3) << "Precondition failed: Should have three labels";
+
+    //! [EXPECT] The project is notified about track changed once
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(1);
+
+    //! [WHEN] Remove the second label with moveLabels=true (ripple delete)
+    LabelKeyList labelsToRemove = { { labelTrack->GetId(), labelId2 } };
+    bool result = m_labelsInteraction->removeLabels(labelsToRemove, true);
+
+    //! [THEN] The operation is successful
+    ASSERT_TRUE(result) << "Removing label with moveLabels=true should succeed";
+
+    //! [THEN] Two labels remain
+    ASSERT_EQ(labelTrack->GetNumLabels(), 2) << "Should have two labels after removal";
+
+    //! [THEN] The third label shifted left by the duration of removed label (2.0 seconds)
+    const Au3Label* label3 = labelTrack->GetLabel(1);
+    ASSERT_NE(label3, nullptr) << "Label 3 should exist";
+    ASSERT_DOUBLE_EQ(label3->getT0(), 4.0) << "Label 3 should shift from 6.0 to 4.0";
+    ASSERT_DOUBLE_EQ(label3->getT1(), 5.0) << "Label 3 should shift from 7.0 to 5.0";
 }
 
 TEST_F(Au3LabelsInteractionsTests, CutLabel)

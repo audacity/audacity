@@ -135,7 +135,7 @@ bool Au3LabelsInteraction::removeLabel(const LabelKey& labelKey)
     return true;
 }
 
-bool Au3LabelsInteraction::removeLabels(const LabelKeyList& labelKeys)
+bool Au3LabelsInteraction::removeLabels(const LabelKeyList& labelKeys, bool moveLabels)
 {
     if (labelKeys.empty()) {
         return false;
@@ -153,21 +153,22 @@ bool Au3LabelsInteraction::removeLabels(const LabelKeyList& labelKeys)
             continue;
         }
 
-        // Convert label IDs to indices
-        std::vector<int> indices;
         for (int64_t labelId : labelIds) {
-            int index = labelTrack->GetLabelIndex(labelId);
-            if (index >= 0) {
-                indices.push_back(index);
+            const auto& au3Label = labelTrack->GetLabelById(labelId);
+            if (!au3Label) {
+                continue;
             }
-        }
 
-        // Sort indices in descending order to delete from highest to lowest
-        std::sort(indices.begin(), indices.end(), std::greater<int>());
+            const double startTime = au3Label->getT0();
+            const double endTime = au3Label->getT1();
 
-        for (int index : indices) {
-            labelTrack->DeleteLabel(index);
-            LOGD() << "deleted label at index: " << index << ", track: " << trackId;
+            labelTrack->DeleteLabelById(labelId);
+
+            if (moveLabels) {
+                labelTrack->ShiftBy(startTime, -(endTime - startTime));
+            }
+
+            LOGD() << "deleted label: " << labelId << ", track: " << trackId;
         }
 
         const auto prj = globalContext()->currentTrackeditProject();

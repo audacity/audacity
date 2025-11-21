@@ -447,9 +447,9 @@ bool TrackeditInteraction::removeLabel(const LabelKey& labelKey)
     return m_interaction->removeLabel(labelKey);
 }
 
-bool TrackeditInteraction::removeLabels(const LabelKeyList& labelKeys)
+bool TrackeditInteraction::removeLabels(const LabelKeyList& labelKeys, bool moveLabels)
 {
-    return m_interaction->removeLabels(labelKeys);
+    return m_interaction->removeLabels(labelKeys, moveLabels);
 }
 
 bool TrackeditInteraction::cutLabel(const LabelKey& labelKey)

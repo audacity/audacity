@@ -113,7 +113,7 @@ private:
     bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) override;
 
     bool removeLabel(const LabelKey& labelKey) override;
-    bool removeLabels(const LabelKeyList& labelKeys) override;
+    bool removeLabels(const LabelKeyList& labelKeys, bool moveLabels) override;
 
     bool cutLabel(const LabelKey& labelKey) override;
     bool copyLabel(const LabelKey& labelKey) override;

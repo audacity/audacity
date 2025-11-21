@@ -168,8 +168,8 @@ public:
     //This returns the id of the label we just added.
     int64_t AddLabel(const SelectedRegion& region, const wxString& title);
 
-    //This deletes the label at given index.
     void DeleteLabel(int index);
+    void DeleteLabelById(int64_t id);
 
     // This pastes labels without shifting existing ones
     bool PasteOver(double t, const Track& src);
