@@ -2,6 +2,9 @@
 Library of built-in effects. Implement the UI-agnostic APIs of lib-effects.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    AmplifyBase.cpp
    AmplifyBase.h

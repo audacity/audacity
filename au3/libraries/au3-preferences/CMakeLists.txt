@@ -14,6 +14,9 @@ FileConfig decorates wxFileConfig, with a member function to
 alert the user of failure to initialize it (as when the file is read-only).
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    BasicSettings.cpp
    BasicSettings.h

@@ -2,6 +2,9 @@
 Generation of UUIDs
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( TARGET lib-uuid )
 set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 

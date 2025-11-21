@@ -25,6 +25,9 @@ defined, scattered, in plug-ins instead of hard-coded
 Non-intrusive definition of more kinds of visitations of the dialog description
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    ReadOnlyText.h
    ShuttleGui.cpp

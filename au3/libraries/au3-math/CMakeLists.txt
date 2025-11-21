@@ -2,6 +2,9 @@
 A library of mathematical utilities and manipulation of samples
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 addlib( libsoxr            soxr        SOXR        YES   YES   "soxr >= 0.1.1" )
 
 set( SOURCES

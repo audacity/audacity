@@ -5,6 +5,9 @@ and SampleBlockFactory subclasses so that lib-wave-track is usable.
 All usage of Sqlite is encapsulated in this library.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 addlib( sqlite             sqlite      SQLITE      YES   YES   "sqlite3 >= 3.31.1" )
 
 set( SOURCES

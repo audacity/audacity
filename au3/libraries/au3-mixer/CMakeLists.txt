@@ -19,6 +19,9 @@ sometimes used with an independent variable that is not time.  Perhaps a base
 class Curve should be extracted from it and lowered into lib-math.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    AudioIOSequences.cpp
    AudioIOSequences.h

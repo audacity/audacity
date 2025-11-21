@@ -9,6 +9,9 @@ registry, and can build menus, if a subclass overrides certain virtual functions
 appropriately for the UI toolkit.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set(SOURCES
    CommandContext.cpp
    CommandContext.h
