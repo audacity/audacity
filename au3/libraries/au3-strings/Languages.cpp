@@ -396,7 +396,7 @@ wxString GetLang()
     if (sLocale) {
         return sLocale->GetSysName();
     } else {
-        return {}
+        return {};
     }
 }
 
@@ -405,7 +405,7 @@ wxString GetLangShort()
     if (sLocale) {
         return sLocale->GetName();
     } else {
-        return {}
+        return {};
     }
 }
 }

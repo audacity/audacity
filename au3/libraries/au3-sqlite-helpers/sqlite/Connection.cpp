@@ -335,7 +335,7 @@ std::string_view Connection::GetPath(const char* dbName) const noexcept
     auto path = sqlite3_db_filename(mConnection, dbName);
 
     if (path == nullptr) {
-        return {}
+        return {};
     }
 
     return path;

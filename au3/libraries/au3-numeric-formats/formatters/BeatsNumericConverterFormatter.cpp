@@ -367,7 +367,7 @@ public:
     Create(const FormatterContext& context) const override
     {
         if (!IsAcceptableInContext(context)) {
-            return {}
+            return {};
         }
 
         return std::make_unique<BeatsFormatter>(context, mFracPart, mTimeFormat);

@@ -131,7 +131,7 @@ bool FindClippingBase::ProcessOne(
         // if we are throwing bad_alloc and mStart is negative, find out why.
         if (mStart < 0 || (int)blockSize < mStart) {
             // overflow
-            throw std::bad_alloc {}
+            throw std::bad_alloc {};
         }
         buffer.reinit(blockSize);
     }

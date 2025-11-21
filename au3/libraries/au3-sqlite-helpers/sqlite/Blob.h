@@ -46,7 +46,7 @@ public:
         }
 
         if (bufferSize <= 0) {
-            return {}
+            return {};
         }
 
         ContainerType buffer;

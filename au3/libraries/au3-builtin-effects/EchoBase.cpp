@@ -72,7 +72,7 @@ bool EchoBase::Instance::ProcessInitialize(
         if (
             requestedHistLen
             != (histLen = static_cast<size_t>(requestedHistLen.as_long_long()))) {
-            throw std::bad_alloc {}
+            throw std::bad_alloc {};
         }
         history.reinit(histLen, true);
     }
