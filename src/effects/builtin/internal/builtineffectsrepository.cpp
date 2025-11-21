@@ -256,7 +256,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     true
                     );
         } else if (symbol == TruncateSilenceEffect::Symbol) {
-            qmlRegisterType<TruncateSilenceViewModel>("Audacity.Effects", 1, 0, "TruncateSilenceViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(TruncateSilenceViewModelFactory);
             regView(TruncateSilenceEffect::Symbol, u"qrc:/truncatesilence/TruncateSilenceView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Truncate Silence"),
