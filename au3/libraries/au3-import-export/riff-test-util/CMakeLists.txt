@@ -8,4 +8,5 @@ add_executable(riff-test-util
 
 target_link_libraries(riff-test-util
    lib-import-export
+   lib-file-formats
 )

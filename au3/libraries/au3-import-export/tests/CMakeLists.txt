@@ -1,6 +1,7 @@
 #[[
 Unit tests for lib-import-export
 ]]
+add_subdirectory(../riff-test-util)
 
 add_unit_test(
    NAME
