@@ -15,7 +15,7 @@
 #ifndef __AUDACITY_MIXER_OPTIONS__
 #define __AUDACITY_MIXER_OPTIONS__
 
-#include "EffectInterface.h" // for EffectSettings
+#include "au3-components/EffectInterface.h" // for EffectSettings
 #include "au3-utility/GlobalVariable.h"
 #include "au3-utility/MemoryX.h"
 #include <functional>

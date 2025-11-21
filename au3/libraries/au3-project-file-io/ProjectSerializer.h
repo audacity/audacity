@@ -13,7 +13,7 @@
 
 #include "au3-xml/XMLTagHandler.h"
 
-#include "MemoryStream.h" // member variables
+#include "au3-utility/MemoryStream.h" // member variables
 #include <wx/mstream.h>
 
 #include <unordered_set>

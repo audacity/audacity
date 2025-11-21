@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_PROJECT__
 #define __AUDACITY_PROJECT__
 
-#include "ClientData.h" // to inherit
+#include "au3-registries/ClientData.h" // to inherit
 #include "au3-utility/GlobalVariable.h"
 
 #include <memory>

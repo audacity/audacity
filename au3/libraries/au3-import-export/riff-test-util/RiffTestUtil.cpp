@@ -13,7 +13,7 @@
 **********************************************************************/
 
 #include "au3-file-formats/AcidizerTags.h"
-#include "LibsndfileTagger.h"
+#include "au3-import-export/LibsndfileTagger.h"
 
 #include "sndfile.h"
 #include <fstream>

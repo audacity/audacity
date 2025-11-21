@@ -15,7 +15,7 @@ Paul Licameli
 #include <utility>
 #include <unordered_map>
 #include <vector>
-#include "ClientData.h" // to inherit
+#include "au3-registries/ClientData.h" // to inherit
 #include "au3-preferences/Prefs.h"
 #include "au3-utility/Observer.h"
 #include "au3-registries/Registry.h"

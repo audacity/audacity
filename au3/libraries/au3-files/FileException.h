@@ -10,7 +10,7 @@
 #ifndef __AUDACITY_FILE_EXCEPTION__
 #define __AUDACITY_FILE_EXCEPTION__
 
-#include "AudacityException.h" // to inherit
+#include "au3-exceptions/AudacityException.h" // to inherit
 #include <wx/filename.h> // wxFileName member variable
 
 //! Thrown for failure of file or database operations in deeply nested places

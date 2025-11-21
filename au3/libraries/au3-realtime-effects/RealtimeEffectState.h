@@ -21,7 +21,7 @@
 #include "au3-utility/GlobalVariable.h"
 #include "au3-utility/MemoryX.h"
 #include "au3-utility/Observer.h"
-#include "PluginProvider.h" // for PluginID
+#include "au3-components/PluginProvider.h" // for PluginID
 #include "au3-xml/XMLTagHandler.h"
 
 class ChannelGroup;

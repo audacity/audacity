@@ -14,7 +14,7 @@
 #ifndef __AUDACITY_WIDE_SAMPLE_SOURCE__
 #define __AUDACITY_WIDE_SAMPLE_SOURCE__
 
-#include "AudioGraphSource.h" // to inherit
+#include "au3-audio-graph/AudioGraphSource.h" // to inherit
 #include "au3-math/SampleCount.h"
 #include <functional>
 

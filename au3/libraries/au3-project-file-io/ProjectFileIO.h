@@ -17,10 +17,10 @@ Paul Licameli split from AudacityProject.h
 
 #include <wx/event.h>
 
-#include "ClientData.h" // to inherit
+#include "au3-registries/ClientData.h" // to inherit
 #include "au3-utility/Observer.h"
-#include "Prefs.h" // to inherit
-#include "XMLTagHandler.h" // to inherit
+#include "au3-preferences/Prefs.h" // to inherit
+#include "au3-xml/XMLTagHandler.h" // to inherit
 
 struct sqlite3;
 struct sqlite3_context;

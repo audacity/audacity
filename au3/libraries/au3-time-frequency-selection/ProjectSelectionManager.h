@@ -11,7 +11,7 @@ Paul Licameli split from ProjectManager.cpp
 #ifndef __AUDACITY_PROJECT_SELECTION_MANAGER__
 #define __AUDACITY_PROJECT_SELECTION_MANAGER__
 
-#include "ClientData.h" // to inherit
+#include "au3-registries/ClientData.h" // to inherit
 #include "au3-utility/Observer.h"
 #include "au3-components/ComponentInterfaceSymbol.h"
 #include "au3-utility/Observer.h"

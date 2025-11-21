@@ -8,7 +8,7 @@
   Matthieu Hodgkinson
 
 **********************************************************************/
-#include "libraries/lib-import-export/GetAcidizerTags.h"
+#include "au3-import-export/GetAcidizerTags.h"
 #include "au3-file-formats/AcidizerTags.h"
 
 #include <algorithm>
