@@ -6,13 +6,13 @@ import Audacity.ProjectScene
 Item {
     id: root
 
+    required property int trackId
     required property bool isStereo
     required property bool isCollapsed
     required property int rulerType
     required property real channelHeightRatio
-    required property bool isVerticalRulersVisible
+    required property real verticalZoom
 
-    signal hideVerticalRulerRequested
     signal setTrackRulerTypeRequested(int rulerType)
 
     Component.onCompleted: {
@@ -28,6 +28,7 @@ Item {
         isCollapsed: root.isCollapsed
         rulerType: root.rulerType
         channelHeightRatio: root.channelHeightRatio
+        verticalZoom: root.verticalZoom
     }
 
     MouseArea {
@@ -41,18 +42,25 @@ Item {
 
     TrackRulerCustomizePopup {
         id: customisePopup
-        isVerticalRulersVisible: root.isVerticalRulersVisible
         rulerType: model.trackRulerType
         availableRulerTypes: model.availableRulerTypes
 
         placementPolicies: PopupView.PreferLeft
 
-        onHideRulersRequested: {
-            root.hideVerticalRulerRequested()
-        }
-
         onRulerTypeChangeRequested: function (rulerType) {
             root.setTrackRulerTypeRequested(rulerType)
+        }
+
+        onZoomInRequested: {
+            rulerModel.zoomIn(trackId)
+        }
+
+        onZoomOutRequested: {
+            rulerModel.zoomOut(trackId)
+        }
+
+        onZoomResetRequested: {
+            rulerModel.resetZoom(trackId)
         }
     }
 
@@ -74,7 +82,7 @@ Item {
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
 
-                width: 7
+                width: 8
                 height: 1
                 color: ui.theme.isDark ? "#F4F7F9" : "#F4F5F9"
 
@@ -102,7 +110,7 @@ Item {
                 anchors.bottom: modelData.alignment == 1 ? parent.bottom : undefined
                 anchors.right: parent.right
 
-                anchors.rightMargin: 3
+                anchors.rightMargin: 20
                 anchors.bottomMargin: modelData.alignment == 1 ? 1 : undefined
                 anchors.verticalCenter: modelData.alignment == 0 ? parent.verticalCenter : undefined
 
@@ -117,7 +125,7 @@ Item {
 
                     text: rulerModel.sampleToText(modelData.value)
                     color: "#F9F9FA"
-                    font.pixelSize: 10
+                    font.pixelSize: 11
 
                     font.bold: modelData.bold
 
@@ -159,7 +167,7 @@ Item {
             height: 1
 
             Rectangle {
-                width: 3
+                width: 4
                 height: 1
                 color: ui.theme.isDark ? "#868B8E" : "#8B8C96"
                 anchors.verticalCenter: parent.verticalCenter

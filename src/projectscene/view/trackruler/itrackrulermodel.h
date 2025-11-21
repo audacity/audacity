@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stddef.h>
+#include <cstddef>
 #include <vector>
 
 namespace au::projectscene {
@@ -32,5 +32,6 @@ public:
     [[nodiscard]] virtual std::string sampleToText(double sample) const = 0;
     [[nodiscard]] virtual std::vector<TrackRulerFullStep> fullSteps() const = 0;
     [[nodiscard]] virtual std::vector<TrackRulerSmallStep> smallSteps() const = 0;
+    virtual void setVerticalZoom(float verticalZoom) = 0;
 };
 }

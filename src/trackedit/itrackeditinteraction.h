@@ -131,6 +131,10 @@ public:
     virtual bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) = 0;
     virtual bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) = 0;
 
+    virtual void verticalZoomIn(const trackedit::TrackId& trackId) = 0;
+    virtual void verticalZoomOut(const trackedit::TrackId& trackId) = 0;
+    virtual void resetVerticalZoom(const trackedit::TrackId& trackId) = 0;
+
     virtual muse::Progress progress() const = 0;
 };
 }

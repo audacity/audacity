@@ -27,6 +27,7 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     Q_OBJECT
 
     Q_PROPERTY(bool isVerticalRulersVisible READ isVerticalRulersVisible NOTIFY isVerticalRulersVisibleChanged)
+    Q_PROPERTY(int verticalRulerWidth READ verticalRulerWidth NOTIFY verticalRulerWidthChanged FINAL)
     Q_PROPERTY(int totalTracksHeight READ totalTracksHeight NOTIFY totalTracksHeightChanged FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -42,7 +43,6 @@ public:
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);
-    Q_INVOKABLE void toggleVerticalRuler() const;
     Q_INVOKABLE void setTrackRulerType(const trackedit::TrackId& trackId, int rulerType);
 
     int rowCount(const QModelIndex& parent) const override;
@@ -51,11 +51,13 @@ public:
 
     bool isVerticalRulersVisible() const;
     int totalTracksHeight() const;
+    int verticalRulerWidth() const;
 
 signals:
     void dataSelectedTracksChanged();
     void selectedTracksChanged();
     void isVerticalRulersVisibleChanged();
+    void verticalRulerWidthChanged();
 
     void totalTracksHeightChanged();
     void escapePressed();
@@ -76,6 +78,7 @@ private:
         IsWaveformViewVisibleRole,
         IsSpectrogramViewVisibleRole,
         DbRangeRole,
+        VerticalZoomRole,
     };
 
     std::vector<trackedit::Track> m_trackList;

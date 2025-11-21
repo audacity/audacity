@@ -189,15 +189,12 @@ Rectangle {
 
                             visible: model.isWaveformViewVisible
 
+                            trackId: model.trackId
                             isStereo: model.isStereo
                             isCollapsed: trackViewState.isTrackCollapsed
                             channelHeightRatio: trackViewState.channelHeightRatio
                             rulerType: model.trackRulerType
-                            isVerticalRulersVisible: root.model.isVerticalRulersVisible
-
-                            onHideVerticalRulerRequested: {
-                                root.model.toggleVerticalRuler()
-                            }
+                            verticalZoom: model.verticalZoom
 
                             onSetTrackRulerTypeRequested: function (rulerType) {
                                 root.model.setTrackRulerType(model.trackId, rulerType)

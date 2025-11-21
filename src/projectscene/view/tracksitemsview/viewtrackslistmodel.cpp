@@ -158,6 +158,7 @@ void ViewTracksListModel::load()
                 break;
             }
         }
+        emit verticalRulerWidthChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
     endResetModel();
@@ -267,6 +268,9 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case DbRangeRole:
         return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
 
+    case VerticalZoomRole:
+        return track.verticalZoom;
+
     default:
         break;
     }
@@ -289,9 +293,10 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { IsLinearRole, "isLinear" },
         { AvailableRulerTypesRole, "availableRulerTypes" },
         { TrackRulerTypeRole, "trackRulerType" },
+        { DbRangeRole, "dbRange" },
+        { VerticalZoomRole, "verticalZoom" },
         { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
         { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
-        { DbRangeRole, "dbRange" }
     };
     return roles;
 }
@@ -299,6 +304,39 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
 bool ViewTracksListModel::isVerticalRulersVisible() const
 {
     return projectSceneConfiguration()->isVerticalRulersVisible();
+}
+
+int ViewTracksListModel::verticalRulerWidth() const
+{
+    constexpr int MAX_DECIMAL_PLACES = 4;
+
+    float smallestBoundValue = 1;
+    for (const auto& track : m_trackList) {
+        if (track.rulerType != au::trackedit::TrackRulerType::Linear) {
+            //Only linear rulers contain decimal places.
+            continue;
+        }
+
+        // Find the smallest vertical zoom among linear rulers to ajust the width globally.
+        smallestBoundValue = std::min(smallestBoundValue, track.verticalZoom);
+    }
+    smallestBoundValue *= 0.1f;
+
+    const double EPSILON = 1e-9;
+    int count = 0;
+    float decimalPart = smallestBoundValue - static_cast<int>(smallestBoundValue);
+
+    while (std::abs(decimalPart) > EPSILON) {
+        decimalPart *= 10;
+        decimalPart = decimalPart - static_cast<int>(decimalPart);
+        count++;
+        if (count == MAX_DECIMAL_PLACES) {
+            break;
+        }
+    }
+
+    // Adjust the width according to the number of decimal places.
+    return 56 + (count * 8);
 }
 
 int ViewTracksListModel::totalTracksHeight() const
@@ -311,11 +349,6 @@ int ViewTracksListModel::totalTracksHeight() const
     }
 
     return viewState->totalTrackHeight().val;
-}
-
-void ViewTracksListModel::toggleVerticalRuler() const
-{
-    projectSceneConfiguration()->setVerticalRulersVisible(!projectSceneConfiguration()->isVerticalRulersVisible());
 }
 
 void ViewTracksListModel::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType)

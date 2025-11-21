@@ -4,7 +4,6 @@
 #include "wavepainterutils.h"
 #include "samplespainterutils.h"
 #include "WaveClip.h"
-#include "WaveformScale.h"
 #include "PendingTracks.h"
 
 using namespace au::au3;
@@ -43,10 +42,6 @@ void ConnectingDotsPainter::paint(QPainter& painter, const trackedit::ClipKey& c
         params.geometry.height * (1 - params.channelHeightRatio),
     };
 
-    float zoomMin, zoomMax;
-    const auto& cache = WaveformScale::Get(*track);
-    cache.GetDisplayBounds(zoomMin, zoomMax);
-
     const float dBRange = std::abs(params.dbRange);
     const bool dB = !params.isLinear;
     const double trimLeft = waveClip->GetTrimLeft();
@@ -59,7 +54,8 @@ void ConnectingDotsPainter::paint(QPainter& painter, const trackedit::ClipKey& c
         // Draw center line at the middle of the current channel
         const int centerY = waveMetrics.top + waveMetrics.height / 2;
         samplespainterutils::drawCenterLine(painter, waveMetrics, params.style, centerY);
-        const auto samples = samplespainterutils::getSampleData(*waveClip, index, waveMetrics, dB, dBRange, zoomMax, zoomMin);
+        const auto samples = samplespainterutils::getSampleData(*waveClip, index, waveMetrics, dB, dBRange, params.verticalZoom,
+                                                                -params.verticalZoom);
         if (samples.size() == 0) {
             continue;
         }

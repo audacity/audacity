@@ -1,29 +1,25 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include <cstddef>
-#include <string>
-
-#include "global/realfn.h"
-
 #include "dblogstereoruler.h"
-#include "dblogrulerutils.h"
+
+#include "framework/global/realfn.h"
 
 using namespace au::projectscene;
 
 namespace {
 constexpr int MIN_ADJACENT_FULL_STEPS_HEIGHT = 17;
-constexpr int MIN_ADJACENT_SMALL_STEPS_HEIGHT = 6;
-const std::vector<std::pair<double, double> > STEP_INCREMENT = {
-    { { 1.0 / 3.0, 1.0 / 15.0 },
-        { 1.0 / 3.0, 1.0 / 6.0 },
-        { 1.0, 1.0 / 2.0 } } };
-constexpr std:: pair<double, double> DEFAULT_INCREMENT = { 1.0, 1.0 / 3.0 };
 constexpr double MIN_CHANNEL_HEIGHT = 40.0;
+}
 
-int getAlignment(double value, size_t channel, bool isNegativeSample)
+DbLogStereoRuler::DbLogStereoRuler()
+    : DbLogBaseRuler(DbLogRulerUiSettings { MIN_ADJACENT_FULL_STEPS_HEIGHT })
 {
-    if (muse::RealIsEqual(value, 0.0)) {
+}
+
+int DbLogStereoRuler::getAlignment(double value, size_t channel, bool isNegativeSample) const
+{
+    if (std::round(value) == std::round(m_maxDisplayValueDB)) {
         if (channel == 0) {
             return isNegativeSample ? 0 : -1;
         }
@@ -32,7 +28,6 @@ int getAlignment(double value, size_t channel, bool isNegativeSample)
     }
 
     return 0;
-}
 }
 
 double DbLogStereoRuler::stepToPosition(double step, size_t channel, bool isNegativeSample) const
@@ -45,34 +40,7 @@ double DbLogStereoRuler::stepToPosition(double step, size_t channel, bool isNega
 
     const double startPosition = channel == 0 ? 0.0 : middlePosition;
     const double height = channel == 0 ? middlePosition : m_height - middlePosition;
-    return startPosition + dblogrulerutils::valueToPosition(step, height, m_dbRange, isNegativeSample);
-}
-
-void DbLogStereoRuler::setHeight(int height)
-{
-    m_height = height;
-}
-
-void DbLogStereoRuler::setChannelHeightRatio(double channelHeightRatio)
-{
-    m_channelHeightRatio = channelHeightRatio;
-}
-
-void DbLogStereoRuler::setCollapsed(bool isCollapsed)
-{
-    m_collapsed = isCollapsed;
-}
-
-void DbLogStereoRuler::setDbRange(double dbRange)
-{
-    m_dbRange = dbRange;
-}
-
-std::string DbLogStereoRuler::sampleToText(double sample) const
-{
-    std::stringstream ss;
-    ss << std::fixed << std::setprecision(0) << std::abs(sample);
-    return ss.str();
+    return startPosition + valueToPosition(step, height, isNegativeSample);
 }
 
 std::vector<TrackRulerFullStep> DbLogStereoRuler::fullSteps() const
@@ -90,24 +58,17 @@ std::vector<TrackRulerFullStep> DbLogStereoRuler::fullSteps() const
             continue;
         }
 
-        const auto values = dblogrulerutils::fullStepsValues(channelHeights[channel], dblogrulerutils::StepSettings {
-            m_dbRange,
-            static_cast<double>(MIN_ADJACENT_FULL_STEPS_HEIGHT),
-            static_cast<double>(MIN_ADJACENT_SMALL_STEPS_HEIGHT),
-            DEFAULT_INCREMENT,
-            STEP_INCREMENT
-        });
+        const auto values = fullStepsValues(channelHeights[channel]);
 
         for (double value : values) {
             for (bool isNegativeSample : { false, true }) {
                 steps.push_back(TrackRulerFullStep {
-                    value, channel, getAlignment(value, channel, isNegativeSample), dblogrulerutils::isBold(value,
-                                                                                                            m_dbRange), value == 0.0,
+                    value, channel, getAlignment(value, channel, isNegativeSample), isBold(value), value == 0.0,
                     isNegativeSample });
             }
         }
     }
-    steps.push_back(TrackRulerFullStep { 0.0, 2, 0, true, true, false });
+    steps.push_back(TrackRulerFullStep { m_maxDisplayValueDB, 2, 0, true, true, false });
 
     return steps;
 }
@@ -127,16 +88,8 @@ std::vector<TrackRulerSmallStep> DbLogStereoRuler::smallSteps() const
             continue;
         }
 
-        const dblogrulerutils::StepSettings settings = {
-            m_dbRange,
-            static_cast<double>(MIN_ADJACENT_FULL_STEPS_HEIGHT),
-            static_cast<double>(MIN_ADJACENT_SMALL_STEPS_HEIGHT),
-            DEFAULT_INCREMENT,
-            STEP_INCREMENT
-        };
-
-        const auto values = dblogrulerutils::smallStepsValues(channelHeights[channel], settings);
-        const auto fullSteps = dblogrulerutils::fullStepsValues(channelHeights[channel], settings);
+        const auto values = smallStepsValues(channelHeights[channel]);
+        const auto fullSteps = fullStepsValues(channelHeights[channel]);
         for (double v : values) {
             for (bool isNegativeSample : { false, true }) {
                 if (std::find_if(fullSteps.begin(), fullSteps.end(),

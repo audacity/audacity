@@ -2,8 +2,6 @@
 
 #include "au3wrap/internal/domaccessor.h"
 #include "wavepainterutils.h"
-#include "WaveformScale.h"
-#include "WaveformSettings.h"
 #include "WaveformPainter.h"
 
 using namespace au::au3;
@@ -12,6 +10,24 @@ namespace {
 graphics::Color ColorFromQColor(const QColor& color)
 {
     return graphics::Color(color.red(), color.green(), color.blue(), color.alpha());
+}
+
+float getDBValue(float value, float dbRange)
+{
+    float sign = (value >= 0 ? 1 : -1);
+
+    if (value != 0.) {
+        float db = LINEAR_TO_DB(fabs(value));
+        value = (db + dbRange) / dbRange;
+
+        if (value < 0.0) {
+            value = 0.0;
+        }
+
+        value *= sign;
+    }
+
+    return value;
 }
 }
 
@@ -30,10 +46,6 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
         return;
     }
 
-    float zoomMin, zoomMax;
-    auto& cache = WaveformScale::Get(*track);
-    cache.GetDisplayBounds(zoomMin, zoomMax);
-
     const float dbRange = std::abs(params.dbRange);
     const bool dB = !params.isLinear;
 
@@ -41,6 +53,9 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
         params.geometry.height * params.channelHeightRatio,
         params.geometry.height * (1 - params.channelHeightRatio),
     };
+
+    const float zoomMin = dB ? getDBValue(-params.verticalZoom, dbRange) : -params.verticalZoom;
+    const float zoomMax = dB ? getDBValue(params.verticalZoom, dbRange) : params.verticalZoom;
 
     auto& waveformPainter = WaveformPainter::Get(*waveClip);
     WavePaintParameters paintParameters;
@@ -69,7 +84,7 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
             ColorFromQColor(params.style.clippedPen))
         .SetEnvelopeColors(
             ColorFromQColor(params.style.envelopeBackground),
-            ColorFromQColor(params.style.envelopeBackground))
+            ColorFromQColor(params.style.selectedEnvelopeBackground))
         .SetEnvelope(waveClip->GetEnvelope());
 
         au::projectscene::WaveMetrics _metrics = metrics;

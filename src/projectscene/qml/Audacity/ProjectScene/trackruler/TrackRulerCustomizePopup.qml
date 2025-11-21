@@ -13,12 +13,13 @@ import Audacity.Playback 1.0
 StyledPopupView {
     id: root
 
-    property bool isVerticalRulersVisible: true
     required property int rulerType
     required property var availableRulerTypes
 
-    signal hideRulersRequested()
     signal rulerTypeChangeRequested(int newType)
+    signal zoomInRequested()
+    signal zoomOutRequested()
+    signal zoomResetRequested()
 
     contentWidth: uiModel.popupWidth - 2*uiModel.popupMargins
     contentHeight: uiModel.popupHeight - 2*uiModel.popupMargins
@@ -39,7 +40,6 @@ StyledPopupView {
         readonly property int zoomBtnWidth: 40
         readonly property int resetBtnWidth: 85
         readonly property int formatGroupBoxHeight: 120
-        readonly property int showRulersBoxHeight: 40
     }
 
     ColumnLayout {
@@ -59,10 +59,12 @@ StyledPopupView {
                 anchors.bottom: parent.bottom
                 width: uiModel.zoomBtnWidth
 
-                enabled: false
-
                 normalColor: ui.theme.buttonColor
                 icon: IconCode.ZOOM_IN
+
+                onClicked: {
+                    root.zoomInRequested()
+                }
             }
 
             FlatButton {
@@ -72,10 +74,12 @@ StyledPopupView {
                 anchors.bottom: parent.bottom
                 width: uiModel.zoomBtnWidth
 
-                enabled: false
-
                 normalColor: ui.theme.buttonColor
                 icon: IconCode.ZOOM_OUT
+
+                onClicked: {
+                    root.zoomOutRequested()
+                }
             }
 
             FlatButton {
@@ -85,14 +89,16 @@ StyledPopupView {
                 anchors.bottom: parent.bottom
                 width: uiModel.resetBtnWidth
 
-                enabled: false
-
                 normalColor: ui.theme.buttonColor
                 icon: IconCode.UNDO
 
                 orientation: Qt.Horizontal
 
                 text: qsTrc("trackruler", "Reset")
+
+                onClicked: {
+                    root.zoomResetRequested()
+                }
             }
         }
 
@@ -126,31 +132,6 @@ StyledPopupView {
 
             onClicked: {
                 console.log("Half wave toggled: " + checked)
-            }
-        }
-
-        Item {
-            Layout.fillWidth: true
-            Layout.preferredHeight: uiModel.showRulersBoxHeight
-
-            SeparatorLine {
-                anchors.top: parent.top
-                anchors.leftMargin: -uiModel.popupMargins
-                anchors.rightMargin: -uiModel.popupMargins
-            }
-
-            CheckBox {
-                id: showTrackRulers
-
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: qsTrc("trackruler", "Show vertical rulers")
-
-                checked: root.isVerticalRulersVisible
-
-                onClicked: {
-                    root.hideRulersRequested()
-                }
             }
         }
     }

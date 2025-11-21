@@ -2,15 +2,15 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "trackedit/dom/track.h"
-
 #include "trackrulermodel.h"
-#include "linearstereoruler.h"
-#include "linearmonoruler.h"
-#include "dblogmonoruler.h"
-#include "dblogstereoruler.h"
-#include "dblinearmonoruler.h"
-#include "dblinearstereoruler.h"
+
+#include "trackedit/dom/track.h"
+#include "projectscene/view/trackruler/linearstereoruler.h"
+#include "projectscene/view/trackruler/linearmonoruler.h"
+#include "projectscene/view/trackruler/dblogmonoruler.h"
+#include "projectscene/view/trackruler/dblogstereoruler.h"
+#include "projectscene/view/trackruler/dblinearmonoruler.h"
+#include "projectscene/view/trackruler/dblinearstereoruler.h"
 
 using namespace au::projectscene;
 
@@ -169,6 +169,25 @@ void TrackRulerModel::setRulerType(int rulerType)
     emit smallStepsChanged();
 }
 
+float TrackRulerModel::verticalZoom() const
+{
+    return m_verticalZoom;
+}
+
+void TrackRulerModel::setVerticalZoom(float verticalZoom)
+{
+    if (m_verticalZoom == verticalZoom) {
+        return;
+    }
+
+    m_verticalZoom = verticalZoom;
+
+    m_model = buildRulerModel();
+
+    emit fullStepsChanged();
+    emit smallStepsChanged();
+}
+
 std::shared_ptr<ITrackRulerModel> TrackRulerModel::buildRulerModel()
 {
     std::shared_ptr<ITrackRulerModel> model = nullptr;
@@ -205,6 +224,22 @@ std::shared_ptr<ITrackRulerModel> TrackRulerModel::buildRulerModel()
     model->setChannelHeightRatio(m_channelHeightRatio);
     model->setCollapsed(m_isCollapsed);
     model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
+    model->setVerticalZoom(m_verticalZoom);
 
     return model;
+}
+
+void TrackRulerModel::zoomIn(const trackedit::TrackId& trackId)
+{
+    trackeditInteraction()->verticalZoomIn(trackId);
+}
+
+void TrackRulerModel::zoomOut(const trackedit::TrackId& trackId)
+{
+    trackeditInteraction()->verticalZoomOut(trackId);
+}
+
+void TrackRulerModel::resetZoom(const trackedit::TrackId& trackId)
+{
+    trackeditInteraction()->resetVerticalZoom(trackId);
 }
