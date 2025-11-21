@@ -25,6 +25,7 @@ set( SOURCES
    RingBuffer.h
 )
 set( LIBRARIES
+   portaudio::portaudio
    lib-mixer-interface
    lib-project-rate-interface
    lib-realtime-effects
