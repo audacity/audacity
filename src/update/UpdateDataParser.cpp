@@ -19,11 +19,11 @@ UpdateDataParser::UpdateDataParser()
 UpdateDataParser::~UpdateDataParser()
 {}
 
-bool UpdateDataParser::Parse(const VersionPatch::UpdateDataFormat& updateData, VersionPatch* versionPatch)
+bool UpdateDataParser::Parse(const UpdateDataFeed::UpdateDataFormat& updateData, UpdateDataFeed* feed)
 {
     XMLFileReader xmlReader;
 
-    ValueRestorer<VersionPatch*> setter{ mVersionPatch, versionPatch };
+    ValueRestorer<UpdateDataFeed*> setter{ mUpdateDataFeed, feed };
 
     return xmlReader.ParseString(this, updateData);
 }
@@ -51,69 +51,208 @@ wxArrayString UpdateDataParser::SplitChangelogSentences(const wxString& changelo
 
 bool UpdateDataParser::HandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
 {
+    switch (mContext)
+    {
+    case ParserContext::Unset:
+         mContext = ParserContext::Root;
+         return true;
+
+    case ParserContext::Root:
+        return HandleRootTags(tag);
+
+    case ParserContext::Changelog:
+        return HandleChangelogTags(tag, attrs);
+
+    case ParserContext::Notifications:
+        return HandleNotificationsTags(tag);
+
+    case ParserContext::Notification:
+        return HandleNotificationTags(tag);
+
+    case ParserContext::NotificationAction:
+        return HandleNotificationActionTags(tag);
+
+    case ParserContext::OS:
+        return HandleOSTags(tag);
+    }
+
+    return false;
+}
+
+bool UpdateDataParser::HandleRootTags(const std::string_view& tag)
+{
+    if (tag == mXmlTagNames[XmlParsedTags::kNotificationsTag])
+    {
+        mContext = ParserContext::Notifications;
+        return true;
+    }
+
+    if (tag == mXmlTagNames[XmlParsedTags::kChangelogTag])
+    {
+        mContext = ParserContext::Changelog;
+        mCurrentContentTag = XmlParsedTags::kChangelogTag;
+        return true;
+    }
+
+    if (tag == mXmlTagNames[XmlParsedTags::kOsTag])
+    {
+        mContext = ParserContext::OS;
+        return true;
+    }
+
+    if (tag == mXmlTagNames[XmlParsedTags::kReleaseNotesUrlTag])
+    {
+        mCurrentContentTag = XmlParsedTags::kReleaseNotesUrlTag;
+        return true;
+    }
+
     if (tag == mXmlTagNames[XmlParsedTags::kDescriptionTag])
     {
-        mXmlParsingState = XmlParsedTags::kDescriptionTag;
+        // Skip root-level Description (legacy)
         return true;
     }
 
-    const wxPlatformInfo& info = wxPlatformInfo::Get();
+    return false;
+}
 
-    constexpr bool is32Bit = sizeof(void*) == 4;
-    constexpr bool is64Bit = sizeof(void*) == 8;
-
-    if (is32Bit)
+bool UpdateDataParser::HandleChangelogTags(const std::string_view& tag, const AttributesList& attrs)
+{
+    if (tag == mXmlTagNames[XmlParsedTags::kDescriptionTag])
     {
-       if (tag == mXmlTagNames[XmlParsedTags::kWin32Tag])
-       {
-          if (info.GetOperatingSystemId() & wxOS_WINDOWS)
-             mXmlParsingState = XmlParsedTags::kOsTag;
-          return true;
-       }
-    }
-
-    if (is64Bit)
-    {
-       if (tag == mXmlTagNames[XmlParsedTags::kWin64Tag])
-       {
-          if (info.GetOperatingSystemId() & wxOS_WINDOWS)
-             mXmlParsingState = XmlParsedTags::kOsTag;
-          return true;
-       }
-    }
-
-    if (tag == mXmlTagNames[XmlParsedTags::kMacosTag])
-    {
-        if (info.GetOperatingSystemId() & wxOS_MAC)
-            mXmlParsingState = XmlParsedTags::kOsTag;
+        mCurrentContentTag = XmlParsedTags::kDescriptionTag;
         return true;
     }
 
-    if (tag == mXmlTagNames[XmlParsedTags::kLinuxTag])
+    if (tag == mXmlTagNames[XmlParsedTags::kChangelogItemTag])
     {
-        if (info.GetOperatingSystemId() & wxOS_UNIX_LINUX)
-            mXmlParsingState = XmlParsedTags::kOsTag;
+        mCurrentContentTag = XmlParsedTags::kChangelogItemTag;
+        mCurrentChangelogItem = ChangelogItem();
+
+        // Capture version attribute if present
+        for (const auto& attr : attrs)
+        {
+            if (attr.first == "version")
+            {
+                mCurrentChangelogItem.version = attr.second.ToWString();
+                break;
+            }
+        }
         return true;
     }
 
-    if (tag == mXmlTagNames[XmlParsedTags::kVersionTag])
+    return false;
+}
+
+bool UpdateDataParser::HandleNotificationsTags(const std::string_view& tag)
+{
+    if (tag == mXmlTagNames[XmlParsedTags::kNotificationTag])
     {
-        if (mXmlParsingState == XmlParsedTags::kOsTag)
-            mXmlParsingState = XmlParsedTags::kVersionTag;
+        mContext = ParserContext::Notification;
+        mCurrentNotification = Notification();
+        return true;
+    }
+
+    return false;
+}
+
+bool UpdateDataParser::HandleNotificationTags(const std::string_view& tag)
+{
+    if (tag == mXmlTagNames[XmlParsedTags::kNotificationActionTag])
+    {
+        mContext = ParserContext::NotificationAction;
+        mCurrentButton = NotificationAction();
+        return true;
+    }
+
+    if (tag == mXmlTagNames[XmlParsedTags::kUuidTag])
+    {
+        mCurrentContentTag = XmlParsedTags::kUuidTag;
+        return true;
+    }
+
+    if (tag == mXmlTagNames[XmlParsedTags::kTitleTag])
+    {
+        mCurrentContentTag = XmlParsedTags::kTitleTag;
+        return true;
+    }
+
+    if (tag == mXmlTagNames[XmlParsedTags::kMessageTag])
+    {
+        mCurrentContentTag = XmlParsedTags::kMessageTag;
+        return true;
+    }
+
+    if (tag == mXmlTagNames[XmlParsedTags::kStartTag])
+    {
+        mCurrentContentTag = XmlParsedTags::kStartTag;
+        return true;
+    }
+
+    if (tag == mXmlTagNames[XmlParsedTags::kExpiresTag])
+    {
+        mCurrentContentTag = XmlParsedTags::kExpiresTag;
+        return true;
+    }
+
+    return false;
+}
+
+bool UpdateDataParser::HandleNotificationActionTags(const std::string_view& tag)
+{
+    if (tag == mXmlTagNames[XmlParsedTags::kLabelTag])
+    {
+        mCurrentContentTag = XmlParsedTags::kLabelTag;
         return true;
     }
 
     if (tag == mXmlTagNames[XmlParsedTags::kLinkTag])
     {
-        if (mXmlParsingState == XmlParsedTags::kOsTag)
-            mXmlParsingState = XmlParsedTags::kLinkTag;
+        mCurrentContentTag = XmlParsedTags::kLinkTag;
         return true;
     }
 
-    for (auto& xmlTag : mXmlTagNames)
+    return false;
+}
+
+bool UpdateDataParser::HandleOSTags(const std::string_view& tag)
+{
+    const wxPlatformInfo& info = wxPlatformInfo::Get();
+
+    // Check if this is a platform tag matching our current platform
+    if (tag == mXmlTagNames[XmlParsedTags::kWin32Tag])
     {
-        if (tag == xmlTag.second)
-            return true;
+        mIsCorrectPlatform = (info.GetArchitecture() == wxARCH_32 && (info.GetOperatingSystemId() & wxOS_WINDOWS));
+        return true;
+    }
+    else if (tag == mXmlTagNames[XmlParsedTags::kWin64Tag])
+    {
+        mIsCorrectPlatform = (info.GetArchitecture() == wxARCH_64 && (info.GetOperatingSystemId() & wxOS_WINDOWS));
+        return true;
+    }
+    else if (tag == mXmlTagNames[XmlParsedTags::kMacosTag])
+    {
+        mIsCorrectPlatform = (info.GetOperatingSystemId() & wxOS_MAC);
+        return true;
+    }
+    else if (tag == mXmlTagNames[XmlParsedTags::kLinuxTag])
+    {
+        mIsCorrectPlatform = (info.GetOperatingSystemId() & wxOS_UNIX_LINUX);
+        return true;
+    }
+
+    // Only parse Version and Link tags for the correct platform
+    if (tag == mXmlTagNames[XmlParsedTags::kVersionTag])
+    {
+        if (mIsCorrectPlatform)
+            mCurrentContentTag = XmlParsedTags::kVersionTag;
+        return true;
+    }
+
+    if (tag == mXmlTagNames[XmlParsedTags::kLinkTag])
+    {
+        if (mIsCorrectPlatform)
+            mCurrentContentTag = XmlParsedTags::kLinkTag;
+        return true;
     }
 
     return false;
@@ -121,38 +260,121 @@ bool UpdateDataParser::HandleXMLTag(const std::string_view& tag, const Attribute
 
 void UpdateDataParser::HandleXMLEndTag(const std::string_view& tag)
 {
-    if (mXmlParsingState == XmlParsedTags::kDescriptionTag ||
-        mXmlParsingState == XmlParsedTags::kLinkTag)
-        mXmlParsingState = XmlParsedTags::kNotUsedTag;
+    if (tag == mXmlTagNames[XmlParsedTags::kUpdateTag])
+    {
+        mContext = ParserContext::Unset;
+    }
 
-    // If it is our working OS, using "kOsTag" for keeping ready for parse state for both tags:
-    // <Version> and <Link>, that ordered one after another.
-    if (mXmlParsingState == XmlParsedTags::kVersionTag)
-        mXmlParsingState = XmlParsedTags::kOsTag;
+    else if (tag == mXmlTagNames[XmlParsedTags::kNotificationActionTag])
+    {
+        if (mContext == ParserContext::NotificationAction)
+        {
+            mCurrentNotification.notificationAction = mCurrentButton;
+            mContext = ParserContext::Notification;
+        }
+    }
+    else if (tag == mXmlTagNames[XmlParsedTags::kNotificationTag])
+    {
+        if (mContext == ParserContext::Notification && mUpdateDataFeed)
+        {
+            mUpdateDataFeed->notifications.push_back(mCurrentNotification);
+        }
+        mContext = ParserContext::Notifications;
+    }
+    else if (tag == mXmlTagNames[XmlParsedTags::kNotificationsTag])
+    {
+        mContext = ParserContext::Root;
+    }
+    else if (tag == mXmlTagNames[XmlParsedTags::kChangelogTag])
+    {
+        mContext = ParserContext::Root;
+    }
+    else if (tag == mXmlTagNames[XmlParsedTags::kOsTag])
+    {
+        mContext = ParserContext::Root;
+        mIsCorrectPlatform = false;
+    }
+    else if (tag == mXmlTagNames[XmlParsedTags::kWin32Tag] ||
+             tag == mXmlTagNames[XmlParsedTags::kWin64Tag] ||
+             tag == mXmlTagNames[XmlParsedTags::kMacosTag] ||
+             tag == mXmlTagNames[XmlParsedTags::kLinuxTag])
+    {
+        mIsCorrectPlatform = false;
+    }
+
+    mCurrentContentTag = XmlParsedTags::kNotUsedTag;
 }
 
 void UpdateDataParser::HandleXMLContent(const std::string_view& content)
 {
-    if (mVersionPatch == nullptr)
+    if (mUpdateDataFeed == nullptr)
         return;
 
     wxString trimmedContent = std::string(content);
+    trimmedContent.Trim(true).Trim(false);
 
-    switch (mXmlParsingState)
+    switch (mCurrentContentTag)
     {
     case XmlParsedTags::kDescriptionTag:
-        trimmedContent.Trim(true).Trim(false);
-        mVersionPatch->changelog = SplitChangelogSentences(trimmedContent);
+        mUpdateDataFeed->versionPatch.description = trimmedContent;
+        break;
+
+    case XmlParsedTags::kChangelogItemTag:
+        mCurrentChangelogItem.text = trimmedContent;
+        mUpdateDataFeed->versionPatch.changelog.push_back(mCurrentChangelogItem);
+        break;
+
+    case XmlParsedTags::kReleaseNotesUrlTag:
+        mUpdateDataFeed->versionPatch.releaseNotesUrl = trimmedContent;
         break;
 
     case XmlParsedTags::kVersionTag:
-        trimmedContent.Trim(true).Trim(false);
-        mVersionPatch->version = VersionId::ParseFromString(trimmedContent);
+        mUpdateDataFeed->versionPatch.version = VersionId::ParseFromString(trimmedContent);
         break;
 
     case XmlParsedTags::kLinkTag:
-        trimmedContent.Trim(true).Trim(false);
-        mVersionPatch->download = trimmedContent;
+        if (mContext == ParserContext::NotificationAction)
+        {
+            mCurrentButton.link = trimmedContent;
+        }
+        else if (mContext == ParserContext::OS)
+        {
+            mUpdateDataFeed->versionPatch.download = trimmedContent;
+        }
+        break;
+
+    case XmlParsedTags::kUuidTag:
+        if (mContext == ParserContext::Notification)
+            mCurrentNotification.uuid = trimmedContent;
+        break;
+
+    case XmlParsedTags::kTitleTag:
+        if (mContext == ParserContext::Notification)
+            mCurrentNotification.title = trimmedContent;
+        break;
+
+    case XmlParsedTags::kMessageTag:
+        if (mContext == ParserContext::Notification)
+            mCurrentNotification.message = trimmedContent;
+        break;
+
+    case XmlParsedTags::kStartTag:
+        if (mContext == ParserContext::Notification)
+        {
+            mCurrentNotification.start.ParseISOCombined(trimmedContent);
+        }
+        break;
+
+    case XmlParsedTags::kExpiresTag:
+        if (mContext == ParserContext::Notification)
+        {
+            mCurrentNotification.expires.ParseISOCombined(trimmedContent);
+        }
+        break;
+
+    case XmlParsedTags::kLabelTag:
+        if (mContext == ParserContext::NotificationAction)
+            mCurrentButton.label = trimmedContent;
         break;
 
     default:

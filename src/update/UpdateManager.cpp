@@ -12,6 +12,8 @@
 #include "Prefs.h"
 #include "UpdatePopupDialog.h"
 #include "UpdateNoticeDialog.h"
+#include "UpdateNotificationDialog.h"
+#include "CustomNotificationDialogs.h"
 #include "NoUpdatesAvailableDialog.h"
 
 #include "AudioIO.h"
@@ -22,12 +24,14 @@
 #include "Request.h"
 #include "Uuid.h"
 
+#include <wx/arrstr.h>
 #include <wx/log.h>
 #include <wx/utils.h>
 #include <wx/frame.h>
 #include <wx/app.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
+#include <wx/tokenzr.h>
 
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
@@ -38,15 +42,16 @@
 #define UPDATE_LOCAL_TESTING 0
 
 static const char* prefsUpdateScheduledTime = "/Update/UpdateScheduledTime";
-static BoolSetting prefUpdatesNoticeShown(wxT("/Update/UpdateNoticeShown"), false);
-static StringSetting AudioComUserId { L"/cloud/audiocom/userId", "" };
+static BoolSetting prefUpdatesNoticeShown { wxT("/Update/UpdateNoticeShown"), false };
+static StringSetting AudioComUserId { wxT("/cloud/audiocom/userId"), wxEmptyString };
+static StringSetting prefShownNotifications { wxT("/Update/ShownNotifications"), wxEmptyString };
 
 using Clock = std::chrono::system_clock;
 using TimePoint = Clock::time_point;
 using Duration = TimePoint::duration;
 
 #if UPDATE_LOCAL_TESTING == 1
-constexpr Duration updatesCheckInterval = std::chrono::minutes(2);
+constexpr Duration updatesCheckInterval = std::chrono::minutes(1);
 #else
 constexpr Duration updatesCheckInterval = std::chrono::hours(12);
 #endif
@@ -94,7 +99,7 @@ void UpdateManager::Start(bool suppressModal)
 
 VersionPatch UpdateManager::GetVersionPatch() const
 {
-    return mVersionPatch;
+    return mUpdateDataFeed.versionPatch;
 }
 
 void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotification)
@@ -103,6 +108,7 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotifi
     const audacity::network_manager::Request request(GetUpdatesUrl());
     auto response = audacity::network_manager::NetworkManager::GetInstance().doGet(request);
 
+    mUpdateDataFeed = {};
     response->setRequestFinishedCallback([response, ignoreNetworkErrors, configurableNotification, this](audacity::network_manager::IResponse*) {
 
         // We don't' want to duplicate the updates checking if that already launched.
@@ -134,7 +140,7 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotifi
            return;
         }
 
-        if (!mUpdateDataParser.Parse(response->readAll<VersionPatch::UpdateDataFormat>(), &mVersionPatch))
+        if (!mUpdateDataParser.Parse(response->readAll<UpdateDataFeed::UpdateDataFormat>(), &mUpdateDataFeed))
         {
            if (!ignoreNetworkErrors)
            {
@@ -151,16 +157,16 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotifi
         }
 
 #if UPDATE_LOCAL_TESTING == 0
-        if (mVersionPatch.version > CurrentBuildVersion())
+        if (mUpdateDataFeed.versionPatch.version > CurrentBuildVersion())
 #endif
         {
             gAudioIO->CallAfterRecording([this, ignoreNetworkErrors, configurableNotification] {
-                UpdatePopupDialog dlg(nullptr, mVersionPatch, configurableNotification);
+                UpdatePopupDialog dlg(nullptr, mUpdateDataFeed.versionPatch, configurableNotification);
                 const int code = dlg.ShowModal();
 
                 if (code == wxID_YES)
                 {
-                    const audacity::network_manager::Request downloadRequest(mVersionPatch.download.ToStdString());
+                    const audacity::network_manager::Request downloadRequest(mUpdateDataFeed.versionPatch.download.ToStdString());
                     auto downloadResponse = audacity::network_manager::NetworkManager::GetInstance().doGet(downloadRequest);
 
                     // Called once, when downloading is real will finish.
@@ -202,7 +208,7 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotifi
                         }
                     );
 
-                    auto audacityPatchFilename = wxFileName(mVersionPatch.download).GetName();
+                    auto audacityPatchFilename = wxFileName(mUpdateDataFeed.versionPatch.download).GetName();
 
                     mProgressDialog = BasicUI::MakeProgress(XO("Audacity update"), XO("Downloading %s").Format(audacityPatchFilename));
                     wxASSERT(mProgressDialog);
@@ -251,6 +257,8 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotifi
                 {
                     mOnProgress = false;
                 }
+
+                ShowNotifications();
             });
         }
 #if UPDATE_LOCAL_TESTING == 0
@@ -259,9 +267,19 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotifi
             // That also shows, that updates checking was called manually from menu.
             if (!configurableNotification)
             {
-                gAudioIO->CallAfterRecording([] {
+                gAudioIO->CallAfterRecording([this] {
                     NoUpdatesAvailableDialog(nullptr).ShowModal();
+
+                    // Show notifications after no updates dialog is dismissed
+                    ShowNotifications();
                     });
+            }
+            else
+            {
+                // No dialog shown, but we can still show notifications
+                wxTheApp->CallAfter([this] {
+                    ShowNotifications();
+                });
             }
 
             mOnProgress = false;
@@ -396,5 +414,104 @@ void UpdateManager::UpdatePrefs()
    }
    else {
       SendOptOutRequest();
+   }
+}
+
+std::vector<Notification> UpdateManager::GetActiveNotifications() const
+{
+   std::vector<Notification> active;
+   const wxDateTime now = wxDateTime::Now();
+
+   for (const auto& notification : mUpdateDataFeed.notifications)
+   {
+      if (notification.IsActive(now))
+      {
+         active.push_back(notification);
+      }
+   }
+
+   return active;
+}
+
+std::vector<wxString> UpdateManager::GetShownNotificationUUIDs() const
+{
+   wxString shownUUIDs = prefShownNotifications.Read();
+   std::vector<wxString> result;
+
+   if (shownUUIDs.IsEmpty())
+      return result;
+
+   // Notifications UUIDs are comma-separated string
+   wxStringTokenizer tokenizer(shownUUIDs, wxT(","));
+   while (tokenizer.HasMoreTokens())
+   {
+      wxString uuid = tokenizer.GetNextToken();
+      uuid.Trim(true).Trim(false);
+      if (!uuid.IsEmpty())
+         result.push_back(uuid);
+   }
+
+   return result;
+}
+
+bool UpdateManager::IsNotificationShown(const wxString& uuid) const
+{
+   auto shownUUIDs = GetShownNotificationUUIDs();
+   return std::find(shownUUIDs.begin(), shownUUIDs.end(), uuid) != shownUUIDs.end();
+}
+
+void UpdateManager::MarkNotificationAsShown(const wxString& uuid)
+{
+   auto shownUUIDs = GetShownNotificationUUIDs();
+
+   // Do not add duplicates
+   if (std::find(shownUUIDs.begin(), shownUUIDs.end(), uuid) != shownUUIDs.end())
+      return;
+
+   shownUUIDs.push_back(uuid);
+
+   wxString uuidString;
+   for (size_t i = 0; i < shownUUIDs.size(); i++)
+   {
+      if (i > 0)
+         uuidString += wxT(",");
+      uuidString += shownUUIDs[i];
+   }
+
+   prefShownNotifications.Write(uuidString);
+   gPrefs->Flush();
+}
+
+void UpdateManager::ShowNotifications()
+{
+   auto activeNotifications = GetActiveNotifications();
+
+   for (const auto& notification : activeNotifications)
+   {
+      if (IsNotificationShown(notification.uuid))
+         continue;
+
+      if (CustomNotificationRegistry::HasCustomDialog(notification.uuid))
+      {
+         int result = CustomNotificationRegistry::ShowCustomDialog(nullptr, notification);
+         if (result != wxID_APPLY && !IsNotificationShown(notification.uuid))
+            MarkNotificationAsShown(notification.uuid);
+         continue;
+      }
+
+      UpdateNotificationDialog dlg(nullptr, notification);
+
+      dlg.Bind(EVT_NOTIFICATION_DISMISSED, [this](wxCommandEvent& evt) {
+         MarkNotificationAsShown(evt.GetString());
+      });
+
+      dlg.Bind(EVT_NOTIFICATION_REMIND_LATER, [](wxCommandEvent&) {
+         // If remind later, close the dialog, and show it again next time
+      });
+
+      int result = dlg.ShowModal();
+
+      if ((result == wxID_OK || result == wxID_CANCEL) && !IsNotificationShown(notification.uuid))
+         MarkNotificationAsShown(notification.uuid);
    }
 }

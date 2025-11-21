@@ -9,7 +9,7 @@
 #pragma once
 
 #include "VersionId.h"
-#include "VersionPatch.h"
+#include "UpdateDataStructures.h"
 #include "UpdateDataParser.h"
 
 #include "Prefs.h"
@@ -42,12 +42,17 @@ public:
 
     VersionPatch GetVersionPatch() const;
 
+    std::vector<Notification> GetActiveNotifications() const;
+    void ShowNotifications();
+    bool IsNotificationShown(const wxString& uuid) const;
+    void MarkNotificationAsShown(const wxString& uuid);
+
     // PrefsListener implementation
     void UpdatePrefs() override;
 
 private:
     UpdateDataParser mUpdateDataParser;
-    VersionPatch mVersionPatch;
+    UpdateDataFeed mUpdateDataFeed;
 
     wxTimer mTimer;
 
@@ -60,6 +65,9 @@ private:
 
     std::string GetUpdatesUrl() const;
     std::string GetOptOutUrl() const;
+
+
+    std::vector<wxString> GetShownNotificationUUIDs() const;
 
     std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
 

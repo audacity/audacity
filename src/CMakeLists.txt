@@ -902,6 +902,8 @@ set( SOURCES
           update/UpdateManager.cpp
           update/UpdateNoticeDialog.h
           update/UpdateNoticeDialog.cpp
+          update/UpdateNotificationDialog.h
+          update/UpdateNotificationDialog.cpp
           update/UpdatePopupDialog.h
           update/UpdatePopupDialog.cpp
           prefs/ApplicationPrefs.h
