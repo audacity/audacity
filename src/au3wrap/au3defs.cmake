@@ -88,6 +88,9 @@ set(AU3_DEF
 
 set(AU3_LIBRARIES ${AUDACITY_ROOT}/libraries)
 set(AU3_MODULES ${AUDACITY_ROOT}/modules)
+
+# AU3 include directories - only external dependencies and special paths
+# Library-specific includes are now handled by each library's CMakeLists.txt
 set(AU3_INCLUDE
     ${wxwidgets_INCLUDE_DIRS}
     ${expat_INCLUDE_DIRS}
@@ -115,68 +118,8 @@ set(AU3_INCLUDE
     ${CMAKE_BINARY_DIR}/src/au3wrap/au3-sbsms/private
 
     ${AUDACITY_ROOT}
-    # compile lib-project
-    ${AU3_LIBRARIES}/lib-project
-    ${AU3_LIBRARIES}/lib-registries
-    ${AU3_LIBRARIES}/lib-exceptions
-    ${AU3_LIBRARIES}/lib-utility
-    ${AU3_LIBRARIES}/lib-strings
-    ${AU3_LIBRARIES}/lib-string-utils
-    ${AU3_LIBRARIES}/lib-preferences
-    ${AU3_LIBRARIES}/lib-xml
-    ${AU3_LIBRARIES}/lib-components
-    ${AU3_LIBRARIES}/lib-basic-ui
-    ${AU3_LIBRARIES}/lib-files
-    # compile lib-project-file-io
-    ${AU3_LIBRARIES}/lib-sentry-reporting
-    ${AU3_LIBRARIES}/lib-fft
-    ${AU3_LIBRARIES}/lib-project-history
-    ${AU3_LIBRARIES}/lib-transactions
-    ${AU3_LIBRARIES}/lib-stretching-sequence
-    ${AU3_LIBRARIES}/lib-wave-track
-    ${AU3_LIBRARIES}/lib-wave-track-fft
-    ${AU3_LIBRARIES}/lib-sample-track
-    ${AU3_LIBRARIES}/lib-label-track
-    # Note: lib-note-track is only needed if USE_MIDI is defined
-    # Currently MIDI support is not enabled in AU4
-    # ${AU3_LIBRARIES}/lib-note-track
-    ${AU3_LIBRARIES}/lib-mixer
-    ${AU3_LIBRARIES}/lib-audio-graph
-    ${AU3_LIBRARIES}/lib-playable-track
-    ${AU3_LIBRARIES}/lib-track
-    ${AU3_LIBRARIES}/lib-channel
-    ${AU3_LIBRARIES}/lib-time-and-pitch
-    ${AU3_LIBRARIES}/lib-project-rate
-    ${AU3_LIBRARIES}/lib-track-selection
-    ${AU3_LIBRARIES}/lib-audio-devices
-    ${AU3_LIBRARIES}/lib-viewport
-    ${AU3_LIBRARIES}/lib-snapping
-    ${AU3_LIBRARIES}/lib-numeric-formats
 
-    # compile lib-audio-io
-    ${AU3_LIBRARIES}/lib-audio-io
-    ${AU3_LIBRARIES}/lib-realtime-effects
-    ${AU3_LIBRARIES}/lib-module-manager
-
-    ${AU3_LIBRARIES}/lib-screen-geometry
-
-    # compile after update 04.26
-    ${AU3_LIBRARIES}/lib-sqlite-helpers
-
-    # track paint
-    ${AU3_LIBRARIES}/lib-time-frequency-selection
-    ${AU3_LIBRARIES}/lib-graphics
-    ${AU3_LIBRARIES}/lib-wave-track-paint
-
-    # effects
-    ${AU3_LIBRARIES}/lib-effects
-    ${AU3_LIBRARIES}/lib-audio-unit
-    ${AU3_LIBRARIES}/lib-command-parameters
-    ${AU3_LIBRARIES}/lib-menus
-    ${AU3_LIBRARIES}/lib-vst3
-    ${AU3_LIBRARIES}/lib-lv2
-    ${AU3_LIBRARIES}/lib-ipc
-
+    # FFmpeg module (not yet converted to library)
     ${AU3_MODULES}/import-export/mod-ffmpeg
 )
 
