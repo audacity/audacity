@@ -98,6 +98,20 @@ void PlaybackController::init()
             doSeek(m_lastPlaybackSeekTime, false);
         }
     });
+
+    selectionController()->labelsSelected().onReceive(this, [this](const trackedit::LabelKeyList& labelKeyList) {
+        if (labelKeyList.empty()) {
+            return;
+        }
+        if (!isPlaying()) {
+            player()->stop();
+            PlaybackRegion selectionRegion = selectionPlaybackRegion();
+            if (selectionRegion.isValid()) {
+                doChangePlaybackRegion(selectionRegion);
+            }
+            doSeek(m_lastPlaybackSeekTime, false);
+        }
+    });
 }
 
 void PlaybackController::deinit()
@@ -153,6 +167,12 @@ PlaybackRegion PlaybackController::selectionPlaybackRegion() const
         secs_t clipStartTime = selectionController()->selectedClipStartTime();
         secs_t clipEndTime = selectionController()->selectedClipEndTime();
         return { clipStartTime, clipEndTime };
+    }
+
+    if (selectionController()->selectedLabels().size() == 1) {
+        secs_t labelStartTime = selectionController()->selectedLabelStartTime();
+        secs_t labelEndTime = selectionController()->selectedLabelEndTime();
+        return { labelStartTime, labelEndTime };
     }
 
     if (selectionController()->timeSelectionIsNotEmpty()) {

@@ -72,7 +72,8 @@ public:
     virtual bool timeSelectionIsNotEmpty() const = 0;
     virtual bool timeSelectionHasAudioData() const = 0;
     virtual bool isDataSelectedOnTrack(TrackId trackId) const = 0;
-    virtual void setSelectedAllAudioData() = 0;
+    virtual void setSelectedAllAudioData(const std::optional<secs_t>& fromTime = std::nullopt,
+                                         const std::optional<secs_t>& toTime = std::nullopt) = 0;
     virtual ClipKeyList clipsIntersectingRangeSelection() const = 0;
     virtual void setClipsIntersectingRangeSelection(const ClipKeyList& clipKeys) = 0;
     virtual muse::async::Channel<ClipKeyList> clipsIntersectingRangeSelectionChanged() const = 0;

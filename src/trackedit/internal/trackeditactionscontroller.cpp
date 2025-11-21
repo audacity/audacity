@@ -752,8 +752,14 @@ void TrackeditActionsController::labelDelete(const ActionData& args)
     trackeditInteraction()->removeLabel(labelKey);
 }
 
-void TrackeditActionsController::labelDeleteMulti(const ActionData&)
+void TrackeditActionsController::labelDeleteMulti(const ActionData& args)
 {
+    bool moveLabels = false;
+
+    if (args.count() >= 1) {
+        moveLabels = args.arg<bool>(0);
+    }
+
     LabelKeyList selectedLabelKeys = selectionController()->selectedLabels();
     if (selectedLabelKeys.empty()) {
         return;
@@ -761,7 +767,7 @@ void TrackeditActionsController::labelDeleteMulti(const ActionData&)
 
     selectionController()->resetSelectedLabels();
 
-    trackeditInteraction()->removeLabels(selectedLabelKeys);
+    trackeditInteraction()->removeLabels(selectedLabelKeys, moveLabels);
 }
 
 void TrackeditActionsController::labelCut(const ActionData& args)

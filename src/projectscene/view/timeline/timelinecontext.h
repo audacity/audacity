@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QTimer>
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
@@ -8,7 +9,7 @@
 #include "actions/actionable.h"
 #include "actions/iactionsdispatcher.h"
 
-#include "iprojectsceneconfiguration.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 #include "playback/iplayback.h"
 #include "trackedit/iselectioncontroller.h"
 
@@ -66,7 +67,10 @@ public:
     TimelineContext(QObject* parent = nullptr);
 
     double frameStartTime() const;
+    void setFrameStartTime(double newFrameStartTime);
+
     double frameEndTime() const;
+    void setFrameEndTime(double newFrameEndTime);
 
     double zoom() const;
     void setZoom(double zoom, double mouseX);
@@ -184,8 +188,6 @@ private:
     bool hasSelection() const;
 
     void shiftFrameTimeOnStep(int direction);
-    void setFrameStartTime(double newFrameStartTime);
-    void setFrameEndTime(double newFrameEndTime);
     void updateFrameTime();
     void autoScrollView(double scrollStep);
 

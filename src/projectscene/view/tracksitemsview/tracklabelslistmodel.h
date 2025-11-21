@@ -18,11 +18,15 @@ public:
     Q_INVOKABLE void resetSelectedLabels();
     Q_INVOKABLE bool changeLabelTitle(const LabelKey& key, const QString& newTitle);
 
+    Q_INVOKABLE void selectTracksDataFromLabelRange(const LabelKey& key);
+    Q_INVOKABLE void resetSelectedTracksData();
+
     Q_INVOKABLE bool moveSelectedLabels(const LabelKey& key, bool completed);
-    Q_INVOKABLE bool stretchLabelLeft(const LabelKey& key, bool completed);
-    Q_INVOKABLE bool stretchLabelRight(const LabelKey& key, bool completed);
+    Q_INVOKABLE bool stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed);
+    Q_INVOKABLE bool stretchLabelRight(const LabelKey& key, const LabelKey& rightLinkedLabel, bool unlink, bool completed);
 
 private:
+    friend class TrackLabelsLayoutManagerTests;
 
     void onInit() override;
     void onReload() override;
@@ -30,8 +34,12 @@ private:
     void update();
     void updateItemMetrics(ViewTrackItem* item) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
+
     TrackLabelItem* labelItemByKey(const trackedit::LabelKey& k) const;
 
+    void doSelectTracksData(const LabelKey& key);
+
     muse::async::NotifyList<au::trackedit::Label> m_allLabelList;
+    bool m_isTracksDataSelected = false;
 };
 }

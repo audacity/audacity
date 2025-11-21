@@ -311,36 +311,6 @@ void TrackClipsListModel::resetClipSpeed(const ClipKey& key)
     trackeditInteraction()->resetClipSpeed(key.key);
 }
 
-QVariant TrackClipsListModel::findGuideline(const ClipKey& key, Direction direction)
-{
-    auto vs = globalContext()->currentProject()->viewState();
-    if (!vs) {
-        return QVariant();
-    }
-
-    TrackClipItem* item = clipItemByKey(key.key);
-    if (!item) {
-        return QVariant();
-    }
-
-    if (direction != Direction::Right) {
-        double clipStartTime = item->time().startTime;
-        double guidelineTime = m_context->findGuideline(clipStartTime);
-        if (!muse::RealIsEqual(guidelineTime, -1.0)) {
-            return QVariant(guidelineTime);
-        }
-    }
-    if (direction != Direction::Left) {
-        double clipEndTime = item->time().endTime;
-        double guidelineTime = m_context->findGuideline(clipEndTime);
-        if (!muse::RealIsEqual(guidelineTime, -1.0)) {
-            return QVariant(guidelineTime);
-        }
-    }
-
-    return QVariant(-1.0);
-}
-
 bool TrackClipsListModel::asymmetricStereoHeightsPossible() const
 {
     auto pref = projectSceneConfiguration()->stereoHeightsPref();
@@ -384,21 +354,6 @@ au::projectscene::ClipKey TrackClipsListModel::updateClipTrack(ClipKey clipKey) 
     }
 
     return clipKey;
-}
-
-void TrackClipsListModel::onStartEditItem(const trackedit::TrackItemKey& key)
-{
-    auto vs = globalContext()->currentProject()->viewState();
-    if (vs) {
-        vs->updateItemsBoundaries(true, key);
-    }
-}
-
-void TrackClipsListModel::onEndEditItem(const trackedit::TrackItemKey& key)
-{
-    Q_UNUSED(key);
-
-    disconnectAutoScroll();
 }
 
 /*!
@@ -731,6 +686,7 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
                 selectionController()->addSelectedClip(groupClipKey);
             }
         } else {
+            selectionController()->resetSelectedLabels();
             selectionController()->setSelectedClips(trackeditInteraction()->clipsInGroup(clipGroupId), complete);
             selectionController()->setFocusedTrack(key.key.trackId);
         }
@@ -741,6 +697,7 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
             if (muse::contains(selectionController()->selectedClips(), key.key)) {
                 return;
             }
+            selectionController()->resetSelectedLabels();
             selectionController()->setSelectedClips(ClipKeyList({ key.key }), complete);
         }
     }

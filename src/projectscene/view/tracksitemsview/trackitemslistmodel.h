@@ -21,7 +21,7 @@
 
 #include "../timeline/timelinecontext.h"
 
-#include "types/projectscenetypes.h"
+#include "projectscene/types/projectscenetypes.h"
 #include "viewtrackitem.h"
 
 namespace au::projectscene {
@@ -62,6 +62,8 @@ public:
     Q_INVOKABLE QVariant next(const TrackItemKey& key) const;
     Q_INVOKABLE QVariant prev(const TrackItemKey& key) const;
 
+    Q_INVOKABLE QVariant findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const;
+
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -89,8 +91,6 @@ protected:
 
     ViewTrackItem* itemByKey(const trackedit::TrackItemKey& key) const;
     int indexByKey(const trackedit::TrackItemKey& key) const;
-    virtual void onStartEditItem(const trackedit::TrackItemKey&) {}
-    virtual void onEndEditItem(const trackedit::TrackItemKey&) {}
 
     void requestItemTitleChange();
     virtual trackedit::TrackItemKeyList getSelectedItemKeys() const = 0;

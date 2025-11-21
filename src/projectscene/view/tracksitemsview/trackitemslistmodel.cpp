@@ -187,6 +187,36 @@ QVariant TrackItemsListModel::prev(const TrackItemKey& key) const
     return neighbor(key, -1);
 }
 
+QVariant TrackItemsListModel::findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const
+{
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return QVariant();
+    }
+
+    ViewTrackItem* item = itemByKey(key.key);
+    if (!item) {
+        return QVariant();
+    }
+
+    if (direction != DirectionType::Direction::Right) {
+        double itemStartTime = item->time().startTime;
+        double guidelineTime = m_context->findGuideline(itemStartTime);
+        if (!muse::RealIsEqual(guidelineTime, -1.0)) {
+            return QVariant(guidelineTime);
+        }
+    }
+    if (direction != DirectionType::Direction::Left) {
+        double itemEndTime = item->time().endTime;
+        double guidelineTime = m_context->findGuideline(itemEndTime);
+        if (!muse::RealIsEqual(guidelineTime, -1.0)) {
+            return QVariant(guidelineTime);
+        }
+    }
+
+    return QVariant(-1.0);
+}
+
 QVariant TrackItemsListModel::neighbor(const TrackItemKey& key, int offset) const
 {
     auto it = std::find_if(m_items.begin(), m_items.end(), [key](ViewTrackItem* viewItem) {
@@ -208,8 +238,7 @@ QVariant TrackItemsListModel::neighbor(const TrackItemKey& key, int offset) cons
 TrackItemsListModel::MoveOffset TrackItemsListModel::calculateMoveOffset(const ViewTrackItem* item,
                                                                          const TrackItemKey& key,
                                                                          const std::vector<trackedit::TrackType>& trackTypesAllowedToMove,
-                                                                         bool completed)
-const
+                                                                         bool completed) const
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj) {
@@ -540,7 +569,9 @@ void TrackItemsListModel::startEditItem(const TrackItemKey& key)
     vs->setItemEditStartTimeOffset(mousePositionTime - item->time().startTime);
     vs->setItemEditEndTimeOffset(item->time().endTime - mousePositionTime);
 
-    onStartEditItem(key.key);
+    if (vs) {
+        vs->updateItemsBoundaries(true, key.key);
+    }
 }
 
 void TrackItemsListModel::endEditItem(const TrackItemKey& key)
@@ -559,7 +590,7 @@ void TrackItemsListModel::endEditItem(const TrackItemKey& key)
     vs->setItemEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
 
-    onEndEditItem(key.key);
+    disconnectAutoScroll();
 
     projectHistory()->endUserInteraction();
 }
