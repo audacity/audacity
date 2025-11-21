@@ -3,6 +3,7 @@
 #include "au3-components/SettingsVisitor.h"
 #include "au3-builtin-effects/SoundTouchBase.h"
 #include "au3-components/EffectInterface.h"
+#if USE_SOUNDTOUCH
 
 class BUILTIN_EFFECTS_API ChangeTempoBase : public SoundTouchBase
 {
@@ -57,3 +58,5 @@ protected:
         &ChangeTempoBase::mUseSBSMS, L"SBSMS", false, false, true, 1
     };
 };
+
+#endif
