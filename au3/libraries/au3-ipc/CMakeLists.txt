@@ -3,6 +3,9 @@ Small crossplatform IPC library, provides a simple way
 to transfer data/messages between processes.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    IPCChannel.cpp
    IPCChannel.h

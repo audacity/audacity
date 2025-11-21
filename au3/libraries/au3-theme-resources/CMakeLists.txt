@@ -3,6 +3,9 @@ A library holding image and color data for the four built-in themes
 ]]
 
 # Names of the image files (and Colors.txt) expected in each theme
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( IMAGE_LIST
    AnonymousUser.png
    AudacityLogo48x48.png

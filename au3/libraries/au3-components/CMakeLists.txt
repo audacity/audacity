@@ -8,6 +8,9 @@ string.  It serves to "name" various things.
 CommandParameters, for write and reading key-value pairs to and from strings.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    ComponentInterface.cpp
    ComponentInterface.h

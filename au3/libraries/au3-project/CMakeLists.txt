@@ -9,6 +9,9 @@ Also ProjectStatus, an abstraction of the status bar, just holding some strings
 and formatter functions, and emitting events when changed.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    Project.cpp
    Project.h

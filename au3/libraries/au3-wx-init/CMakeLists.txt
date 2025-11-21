@@ -3,6 +3,9 @@ Startup time injections of wxWidgets based implementations of services behind
 toolkit-neutral facades
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    AccessibleLinksFormatter.cpp
    AccessibleLinksFormatter.h

@@ -19,6 +19,9 @@ interval-major iteration, but sometimes the other iteration is more convenient
 to the task.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    Channel.cpp
    Channel.h

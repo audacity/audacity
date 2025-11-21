@@ -8,6 +8,9 @@ The main program can inject an implementation.  If this isn't done, then the
 object has no effect.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    TransactionScope.cpp
    TransactionScope.h

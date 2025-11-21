@@ -7,6 +7,9 @@ Includes ability to transform the played-back sample streams with effects in
 realtime.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    AudioIO.cpp
    AudioIO.h

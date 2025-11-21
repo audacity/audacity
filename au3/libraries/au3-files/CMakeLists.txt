@@ -8,6 +8,9 @@ for temporary projects.
 Also the global logger which can save to a file.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    AudacityLogger.cpp
    AudacityLogger.h

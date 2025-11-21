@@ -3,6 +3,9 @@ This library provides an interface to configure and start Crashpad handler
 in a platform independent way.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set(SOURCES 
    CrashpadConfigurer.h
    CrashpadConfigurer.cpp

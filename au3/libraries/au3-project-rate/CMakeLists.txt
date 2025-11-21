@@ -7,6 +7,9 @@ This library depends on lib-audio-devices, because available devices may be
 queried to decide the default sample rate.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    Decibels.cpp
    Decibels.h

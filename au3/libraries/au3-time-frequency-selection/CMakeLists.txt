@@ -3,6 +3,9 @@ Per-project state of selected time interval, frequency interval of simple
 spectral selection, and play region
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    ProjectSelectionManager.cpp
    ProjectSelectionManager.h

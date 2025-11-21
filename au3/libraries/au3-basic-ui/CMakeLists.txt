@@ -13,6 +13,9 @@ set the pointer.  If it does not, then calls to the non-member functions in
 namespace BasicUI are no-ops.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    BasicUI.cpp
    BasicUI.h

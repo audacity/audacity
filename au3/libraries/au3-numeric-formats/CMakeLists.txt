@@ -7,6 +7,9 @@ Definitions of may commonly used formats.
 Per-project choices of numeric formats.
 ]]
 
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
+
 set( SOURCES
    Beats.cpp
    Beats.h
