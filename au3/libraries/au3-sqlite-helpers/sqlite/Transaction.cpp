@@ -35,7 +35,7 @@ bool Transaction::IsOpen() const noexcept
 Error Transaction::Commit() noexcept
 {
     if (mCommitted) {
-        return {}
+        return {};
     }
 
     if (mBeginResult.IsError()) {
@@ -48,7 +48,7 @@ Error Transaction::Commit() noexcept
 Error Transaction::Abort() noexcept
 {
     if (mCommitted) {
-        return {}
+        return {};
     }
 
     if (mBeginResult.IsError()) {

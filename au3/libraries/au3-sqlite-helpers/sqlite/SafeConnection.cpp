@@ -90,7 +90,7 @@ SafeConnection::Lock::Lock(std::shared_ptr<SafeConnection> connection)
     : mSafeConnection(std::move(connection))
 {
     if (mSafeConnection) {
-        mLock = std::unique_lock { mSafeConnection->mConnectionMutex }
+        mLock = std::unique_lock { mSafeConnection->mConnectionMutex };
     }
 }
 
