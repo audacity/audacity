@@ -231,12 +231,17 @@ double ViewTracksListModel::audioFileLength(const QStringList& fileUrls)
     }
 
     // temporary
+    if (m_lastProbedFileInfo.path == localPaths.at(0)) {
+        return m_lastProbedFileInfo.duration;
+    }
+
     importexport::FileInfo fileInfo = importer()->fileInfo(localPaths.at(0));
+    m_lastProbedFileInfo = fileInfo;
 
     return fileInfo.duration;
 }
 
-void ViewTracksListModel::handleDroppedFiles(const QStringList& fileUrls)
+void ViewTracksListModel::handleDroppedFiles(const trackedit::TrackId& trackId, double startTime, const QStringList& fileUrls)
 {
     std::vector<muse::io::path_t> localPaths;
     for (const auto& fileUrl : fileUrls) {
@@ -245,7 +250,11 @@ void ViewTracksListModel::handleDroppedFiles(const QStringList& fileUrls)
     }
 
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    prj->import(localPaths);
+    if (fileUrls.size() > 1) {
+        prj->import(localPaths);
+    } else {
+        prj->importIntoTrack(localPaths.front(), trackId, startTime);
+    }
 }
 
 int ViewTracksListModel::rowCount(const QModelIndex&) const
