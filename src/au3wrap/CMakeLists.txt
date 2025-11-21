@@ -77,533 +77,77 @@ endif()
 # ==================================
 include(${CMAKE_CURRENT_LIST_DIR}/au3defs.cmake)
 
+# AU3 Libraries - using add_subdirectory instead of manual source listing
+# Note: Libraries are renamed from lib-* to au3-* in the au3/libraries directory
+
+# Third-party libraries
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sqlite au3-sqlite)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soxr au3-soxr)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/pffft au3-pffft)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/portmixer au3-portmixer)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soundtouch au3-soundtouch)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sbsms au3-sbsms)
+
+# Core AU3 libraries (in dependency order)
+add_subdirectory(${AU3_LIBRARIES}/au3-string-utils au3-string-utils)
+add_subdirectory(${AU3_LIBRARIES}/au3-strings au3-strings)
+add_subdirectory(${AU3_LIBRARIES}/au3-utility au3-utility)
+add_subdirectory(${AU3_LIBRARIES}/au3-components au3-components)
+add_subdirectory(${AU3_LIBRARIES}/au3-basic-ui au3-basic-ui)
+add_subdirectory(${AU3_LIBRARIES}/au3-exceptions au3-exceptions)
+add_subdirectory(${AU3_LIBRARIES}/au3-preferences au3-preferences)
+add_subdirectory(${AU3_LIBRARIES}/au3-math au3-math)
+add_subdirectory(${AU3_LIBRARIES}/au3-files au3-files)
+add_subdirectory(${AU3_LIBRARIES}/au3-registries au3-registries)
+add_subdirectory(${AU3_LIBRARIES}/au3-xml au3-xml)
+add_subdirectory(${AU3_LIBRARIES}/au3-project au3-project)
+add_subdirectory(${AU3_LIBRARIES}/au3-project-rate au3-project-rate)
+add_subdirectory(${AU3_LIBRARIES}/au3-file-formats au3-file-formats)
+add_subdirectory(${AU3_LIBRARIES}/au3-track au3-track)
+add_subdirectory(${AU3_LIBRARIES}/au3-transactions au3-transactions)
+add_subdirectory(${AU3_LIBRARIES}/au3-sample-track au3-sample-track)
+add_subdirectory(${AU3_LIBRARIES}/au3-audio-graph au3-audio-graph)
+add_subdirectory(${AU3_LIBRARIES}/au3-tags au3-tags)
+add_subdirectory(${AU3_LIBRARIES}/au3-wave-track au3-wave-track)
+add_subdirectory(${AU3_LIBRARIES}/au3-wave-track-settings au3-wave-track-settings)
+add_subdirectory(${AU3_LIBRARIES}/au3-track-selection au3-track-selection)
+add_subdirectory(${AU3_LIBRARIES}/au3-sqlite-helpers au3-sqlite-helpers)
+add_subdirectory(${AU3_LIBRARIES}/au3-project-history au3-project-history)
+add_subdirectory(${AU3_LIBRARIES}/au3-project-file-io au3-project-file-io)
+add_subdirectory(${AU3_LIBRARIES}/au3-time-and-pitch au3-time-and-pitch)
+add_subdirectory(${AU3_LIBRARIES}/au3-playable-track au3-playable-track)
+add_subdirectory(${AU3_LIBRARIES}/au3-audio-devices au3-audio-devices)
+add_subdirectory(${AU3_LIBRARIES}/au3-fft au3-fft)
+add_subdirectory(${AU3_LIBRARIES}/au3-wave-track-fft au3-wave-track-fft)
+add_subdirectory(${AU3_LIBRARIES}/au3-stretching-sequence au3-stretching-sequence)
+add_subdirectory(${AU3_LIBRARIES}/au3-channel au3-channel)
+add_subdirectory(${AU3_LIBRARIES}/au3-mixer au3-mixer)
+add_subdirectory(${AU3_LIBRARIES}/au3-realtime-effects au3-realtime-effects)
+add_subdirectory(${AU3_LIBRARIES}/au3-audio-io au3-audio-io)
+add_subdirectory(${AU3_LIBRARIES}/au3-module-manager au3-module-manager)
+add_subdirectory(${AU3_LIBRARIES}/au3-time-frequency-selection au3-time-frequency-selection)
+add_subdirectory(${AU3_LIBRARIES}/au3-screen-geometry au3-screen-geometry)
+add_subdirectory(${AU3_LIBRARIES}/au3-graphics au3-graphics)
+add_subdirectory(${AU3_LIBRARIES}/au3-wave-track-paint au3-wave-track-paint)
+add_subdirectory(${AU3_LIBRARIES}/au3-viewport au3-viewport)
+add_subdirectory(${AU3_LIBRARIES}/au3-snapping au3-snapping)
+add_subdirectory(${AU3_LIBRARIES}/au3-numeric-formats au3-numeric-formats)
+add_subdirectory(${AU3_LIBRARIES}/au3-command-parameters au3-command-parameters)
+add_subdirectory(${AU3_LIBRARIES}/au3-menus au3-menus)
+add_subdirectory(${AU3_LIBRARIES}/au3-effects au3-effects)
+add_subdirectory(${AU3_LIBRARIES}/au3-builtin-effects au3-builtin-effects)
+add_subdirectory(${AU3_LIBRARIES}/au3-dynamic-range-processor au3-dynamic-range-processor)
+add_subdirectory(${AU3_LIBRARIES}/au3-label-track au3-label-track)
+add_subdirectory(${AU3_LIBRARIES}/au3-import-export au3-import-export)
+add_subdirectory(${AU3_LIBRARIES}/au3-ipc au3-ipc)
+add_subdirectory(${AU3_LIBRARIES}/au3-audacity-application-logic au3-audacity-application-logic)
+
+# AU3 modules that are still compiled as sources (not yet converted to libraries)
 set(AU3_SRC
-    # Create project
-    ${AU3_LIBRARIES}/lib-project/Project.cpp
-    ${AU3_LIBRARIES}/lib-project/Project.h
-    # dependencies of project-file-io:
-    ${AU3_LIBRARIES}/lib-project/ProjectFormatVersion.cpp
-    ${AU3_LIBRARIES}/lib-project/ProjectFormatVersion.h
-    # dependencies of project:
-    # xml
-    ${AU3_LIBRARIES}/lib-xml/XMLAttributeValueView.cpp
-    ${AU3_LIBRARIES}/lib-xml/XMLAttributeValueView.h
-    ${AU3_LIBRARIES}/lib-xml/XMLFileReader.cpp
-    ${AU3_LIBRARIES}/lib-xml/XMLFileReader.h
-    ${AU3_LIBRARIES}/lib-xml/XMLMethodRegistry.cpp
-    ${AU3_LIBRARIES}/lib-xml/XMLMethodRegistry.h
-    ${AU3_LIBRARIES}/lib-xml/XMLTagHandler.cpp
-    ${AU3_LIBRARIES}/lib-xml/XMLTagHandler.h
-    ${AU3_LIBRARIES}/lib-xml/XMLWriter.cpp
-    ${AU3_LIBRARIES}/lib-xml/XMLWriter.h
-    # string-utils
-    ${AU3_LIBRARIES}/lib-string-utils/HexHelpers.h
-    ${AU3_LIBRARIES}/lib-string-utils/UrlEncode.h
-    ${AU3_LIBRARIES}/lib-string-utils/UrlEncode.cpp
-    ${AU3_LIBRARIES}/lib-string-utils/UrlDecode.h
-    ${AU3_LIBRARIES}/lib-string-utils/UrlDecode.cpp
-    ${AU3_LIBRARIES}/lib-string-utils/CodeConversions.h
-    ${AU3_LIBRARIES}/lib-string-utils/CodeConversions.cpp
-    ${AU3_LIBRARIES}/lib-string-utils/DateTimeConversions.h
-    ${AU3_LIBRARIES}/lib-string-utils/DateTimeConversions.cpp
-    ${AU3_LIBRARIES}/lib-string-utils/ToChars.h
-    ${AU3_LIBRARIES}/lib-string-utils/ToChars.cpp
-    ${AU3_LIBRARIES}/lib-string-utils/FromChars.h
-    ${AU3_LIBRARIES}/lib-string-utils/FromChars.cpp
-    # basic-ui
-    ${AU3_LIBRARIES}/lib-basic-ui/BasicUI.cpp
-    ${AU3_LIBRARIES}/lib-basic-ui/BasicUI.h
-    ${AU3_LIBRARIES}/lib-basic-ui/BasicUIPoint.h
-
-    # Load project:
-    # project-file-io
-    ${AU3_LIBRARIES}/lib-project-file-io/ActiveProjects.cpp
-    ${AU3_LIBRARIES}/lib-project-file-io/ActiveProjects.h
-    ${AU3_LIBRARIES}/lib-project-file-io/DBConnection.cpp
-    ${AU3_LIBRARIES}/lib-project-file-io/DBConnection.h
-    ${AU3_LIBRARIES}/lib-project-file-io/ProjectFileIO.cpp
-    ${AU3_LIBRARIES}/lib-project-file-io/ProjectFileIO.h
-    ${AU3_LIBRARIES}/lib-project-file-io/ProjectFileIOExtension.cpp
-    ${AU3_LIBRARIES}/lib-project-file-io/ProjectFileIOExtension.h
-    ${AU3_LIBRARIES}/lib-project-file-io/ProjectSerializer.cpp
-    ${AU3_LIBRARIES}/lib-project-file-io/ProjectSerializer.h
-    ${AU3_LIBRARIES}/lib-project-file-io/SqliteSampleBlock.cpp
-
-    ${AU3_LIBRARIES}/lib-sqlite-helpers/sqlite/SQLiteUtils.cpp
-    ${AU3_LIBRARIES}/lib-sqlite-helpers/sqlite/SQLiteUtils.h
-    ${AU3_LIBRARIES}/lib-sqlite-helpers/sqlite/Error.cpp
-    ${AU3_LIBRARIES}/lib-sqlite-helpers/sqlite/Error.h
-
-    ${AU3_LIBRARIES}/lib-project-history/ProjectHistory.cpp
-    ${AU3_LIBRARIES}/lib-project-history/ProjectHistory.h
-    ${AU3_LIBRARIES}/lib-project-history/UndoManager.cpp
-    ${AU3_LIBRARIES}/lib-project-history/UndoManager.h
-
-    # dependencies of project-file-io:
-    ${AU3_LIBRARIES}/lib-strings/TranslatableString.cpp
-    ${AU3_LIBRARIES}/lib-strings/TranslatableString.h
-    ${AU3_LIBRARIES}/lib-strings/Internat.cpp
-    ${AU3_LIBRARIES}/lib-strings/Internat.h
-    ${AU3_LIBRARIES}/lib-strings/Base64.cpp
-    ${AU3_LIBRARIES}/lib-strings/Base64.h
-    ${AU3_LIBRARIES}/lib-strings/Identifier.cpp
-    ${AU3_LIBRARIES}/lib-strings/Identifier.h
-
-    ${AU3_LIBRARIES}/lib-exceptions/AudacityException.cpp
-    ${AU3_LIBRARIES}/lib-exceptions/AudacityException.h
-    ${AU3_LIBRARIES}/lib-exceptions/InconsistencyException.cpp
-    ${AU3_LIBRARIES}/lib-exceptions/InconsistencyException.h
-    ${AU3_LIBRARIES}/lib-exceptions/UserException.cpp
-    ${AU3_LIBRARIES}/lib-exceptions/UserException.h
-
-    ${AU3_LIBRARIES}/lib-registries/AttachedVirtualFunction.h
-    ${AU3_LIBRARIES}/lib-registries/ClientData.cpp
-    ${AU3_LIBRARIES}/lib-registries/ClientData.h
-    ${AU3_LIBRARIES}/lib-registries/ClientDataHelpers.h
-    ${AU3_LIBRARIES}/lib-registries/Registrar.h
-    ${AU3_LIBRARIES}/lib-registries/Registry.cpp
-    ${AU3_LIBRARIES}/lib-registries/Registry.h
-
-    ${AU3_LIBRARIES}/lib-utility/Observer.cpp
-    ${AU3_LIBRARIES}/lib-utility/Observer.h
-    ${AU3_LIBRARIES}/lib-utility/MemoryStream.cpp
-    ${AU3_LIBRARIES}/lib-utility/MemoryStream.h
-    ${AU3_LIBRARIES}/lib-utility/BufferedStreamReader.cpp
-    ${AU3_LIBRARIES}/lib-utility/BufferedStreamReader.h
-    ${AU3_LIBRARIES}/lib-utility/MemoryX.cpp
-    ${AU3_LIBRARIES}/lib-utility/MemoryX.h
-    ${AU3_LIBRARIES}/lib-utility/ModuleConstants.cpp
-    ${AU3_LIBRARIES}/lib-utility/ModuleConstants.h
-    ${AU3_LIBRARIES}/lib-utility/TypedAny.h
-    ${AU3_LIBRARIES}/lib-utility/CommandLineArgs.cpp
-    ${AU3_LIBRARIES}/lib-utility/CommandLineArgs.h
-
-    ${AU3_LIBRARIES}/lib-files/AudacityLogger.cpp
-    ${AU3_LIBRARIES}/lib-files/AudacityLogger.h
-    ${AU3_LIBRARIES}/lib-files/FileException.cpp
-    ${AU3_LIBRARIES}/lib-files/FileException.h
-    ${AU3_LIBRARIES}/lib-files/FileIO.cpp
-    ${AU3_LIBRARIES}/lib-files/FileIO.h
-    ${AU3_LIBRARIES}/lib-files/FileNames.cpp
-    ${AU3_LIBRARIES}/lib-files/FileNames.h
-    ${AU3_LIBRARIES}/lib-files/PathList.cpp
-    ${AU3_LIBRARIES}/lib-files/PathList.h
-    ${AU3_LIBRARIES}/lib-files/PlatformCompatibility.cpp
-    ${AU3_LIBRARIES}/lib-files/PlatformCompatibility.h
-    ${AU3_LIBRARIES}/lib-files/TempDirectory.cpp
-    ${AU3_LIBRARIES}/lib-files/TempDirectory.h
-    ${AU3_LIBRARIES}/lib-files/wxFileNameWrapper.h
-
-    ${AU3_LIBRARIES}/lib-track/TimeWarper.cpp
-    ${AU3_LIBRARIES}/lib-track/TimeWarper.h
-    ${AU3_LIBRARIES}/lib-track/Track.cpp
-    ${AU3_LIBRARIES}/lib-track/Track.h
-    ${AU3_LIBRARIES}/lib-track/TrackAttachment.cpp
-    ${AU3_LIBRARIES}/lib-track/TrackAttachment.h
-    ${AU3_LIBRARIES}/lib-track/UndoTracks.cpp
-    ${AU3_LIBRARIES}/lib-track/UndoTracks.h
-    ${AU3_LIBRARIES}/lib-track/PendingTracks.cpp
-    ${AU3_LIBRARIES}/lib-track/PendingTracks.h
-    ${AU3_LIBRARIES}/lib-track/ChannelAttachments.cpp
-    ${AU3_LIBRARIES}/lib-track/ChannelAttachments.h
-
-    ${AU3_LIBRARIES}/lib-wave-track/WaveTrack.cpp
-    ${AU3_LIBRARIES}/lib-wave-track/WaveTrack.h
-    ${AU3_LIBRARIES}/lib-wave-track/Sequence.cpp
-    ${AU3_LIBRARIES}/lib-wave-track/Sequence.h
-    ${AU3_LIBRARIES}/lib-wave-track/WaveClip.cpp
-    ${AU3_LIBRARIES}/lib-wave-track/WaveClip.h
-    ${AU3_LIBRARIES}/lib-wave-track/SampleBlock.cpp
-    ${AU3_LIBRARIES}/lib-wave-track/SampleBlock.h
-    ${AU3_LIBRARIES}/lib-wave-track/WaveTrackUtilities.cpp
-    ${AU3_LIBRARIES}/lib-wave-track/WaveTrackUtilities.h
-    ${AU3_LIBRARIES}/lib-wave-track/WaveTrackSink.cpp
-    ${AU3_LIBRARIES}/lib-wave-track/WaveTrackSink.h
-    ${AU3_LIBRARIES}/lib-wave-track/TimeStretching.cpp
-    ${AU3_LIBRARIES}/lib-wave-track/TimeStretching.h
-    ${AU3_LIBRARIES}/lib-wave-track/WaveChannelUtilities.cpp
-    ${AU3_LIBRARIES}/lib-wave-track/WaveChannelUtilities.h
-    ${AU3_LIBRARIES}/lib-wave-track/WaveClipUtilities.cpp
-    ${AU3_LIBRARIES}/lib-wave-track/WaveClipUtilities.h
-
-    ${AU3_LIBRARIES}/lib-sample-track/SampleTrack.cpp
-    ${AU3_LIBRARIES}/lib-sample-track/SampleTrack.h
-
-    ${AU3_LIBRARIES}/lib-preferences/Prefs.cpp
-    ${AU3_LIBRARIES}/lib-preferences/Prefs.h
-    ${AU3_LIBRARIES}/lib-preferences/BasicSettings.cpp
-    ${AU3_LIBRARIES}/lib-preferences/BasicSettings.h
-
-    ${AU3_LIBRARIES}/lib-transactions/TransactionScope.cpp
-    ${AU3_LIBRARIES}/lib-transactions/TransactionScope.h
-
-    ${AU3_LIBRARIES}/lib-channel/Channel.cpp
-    ${AU3_LIBRARIES}/lib-channel/Channel.h
-
-    ${AU3_LIBRARIES}/lib-mixer/WideSampleSequence.cpp
-    ${AU3_LIBRARIES}/lib-mixer/WideSampleSequence.h
-    ${AU3_LIBRARIES}/lib-mixer/Envelope.cpp
-    ${AU3_LIBRARIES}/lib-mixer/Envelope.h
-    ${AU3_LIBRARIES}/lib-mixer/AudioIOSequences.cpp
-    ${AU3_LIBRARIES}/lib-mixer/AudioIOSequences.h
-
-    ${AU3_LIBRARIES}/lib-track-selection/TrackFocus.cpp
-    ${AU3_LIBRARIES}/lib-track-selection/TrackFocus.h
-
-    ${AU3_LIBRARIES}/lib-project-rate/Decibels.cpp
-    ${AU3_LIBRARIES}/lib-project-rate/Decibels.h
-    ${AU3_LIBRARIES}/lib-project-rate/ProjectRate.cpp
-    ${AU3_LIBRARIES}/lib-project-rate/ProjectRate.h
-    ${AU3_LIBRARIES}/lib-project-rate/QualitySettings.cpp
-    ${AU3_LIBRARIES}/lib-project-rate/QualitySettings.h
-
-    ${AU3_LIBRARIES}/lib-time-and-pitch/StaffPadTimeAndPitch.cpp
-    ${AU3_LIBRARIES}/lib-time-and-pitch/StaffPadTimeAndPitch.h
-    ${AU3_LIBRARIES}/lib-time-and-pitch/AudioContainer.cpp
-    ${AU3_LIBRARIES}/lib-time-and-pitch/AudioContainer.h
-    ${AU3_LIBRARIES}/lib-time-and-pitch/TimeAndPitchExperimentalSettings.cpp
-    ${AU3_LIBRARIES}/lib-time-and-pitch/TimeAndPitchExperimentalSettings.h
-    ${AU3_LIBRARIES}/lib-time-and-pitch/TimeAndPitchInterface.cpp
-    ${AU3_LIBRARIES}/lib-time-and-pitch/TimeAndPitchInterface.h
-    ${AU3_LIBRARIES}/lib-time-and-pitch/DummyFormantShifterLogger.cpp
-    ${AU3_LIBRARIES}/lib-time-and-pitch/DummyFormantShifterLogger.h
-    ${AU3_LIBRARIES}/lib-time-and-pitch/FormantShifter.cpp
-    ${AU3_LIBRARIES}/lib-time-and-pitch/FormantShifter.h
-    ${AU3_LIBRARIES}/lib-time-and-pitch/FormantShifterLogger.cpp
-    ${AU3_LIBRARIES}/lib-time-and-pitch/FormantShifterLogger.cpp
-    ${AU3_LIBRARIES}/lib-time-and-pitch/StaffPad/TimeAndPitch.cpp
-    ${AU3_LIBRARIES}/lib-time-and-pitch/StaffPad/TimeAndPitch.h
-    ${AU3_LIBRARIES}/lib-time-and-pitch/StaffPad/FourierTransform_pffft.cpp
-    ${AU3_LIBRARIES}/lib-time-and-pitch/StaffPad/FourierTransform_pffft.h
-
-    ${AU3_LIBRARIES}/lib-playable-track/PlayableTrack.cpp
-    ${AU3_LIBRARIES}/lib-playable-track/PlayableTrack.h
-
-    ${AU3_LIBRARIES}/lib-audio-devices/AudioIOBase.cpp
-    ${AU3_LIBRARIES}/lib-audio-devices/AudioIOBase.h
-    ${AU3_LIBRARIES}/lib-audio-devices/DeviceManager.cpp
-    ${AU3_LIBRARIES}/lib-audio-devices/DeviceManager.h
-
-    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationCurves.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationCurves.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationCurvesList.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationCurvesList.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationFilter.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationFilter.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationParameters.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationParameters.h
-
-    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphChannel.cpp
-    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphChannel.h
-    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphBuffers.cpp
-    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphBuffers.h
-    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphSource.cpp
-    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphSource.h
-    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphSink.cpp
-    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphSink.h
-    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphTask.cpp
-    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphTask.h
-
-    # lib-math is now a separate library: au3-math
-
-    ${AU3_LIBRARIES}/lib-fft/FFT.cpp
-    ${AU3_LIBRARIES}/lib-fft/FFT.h
-    ${AU3_LIBRARIES}/lib-fft/SpectrumTransformer.cpp
-    ${AU3_LIBRARIES}/lib-fft/SpectrumTransformer.h
-    ${AU3_LIBRARIES}/lib-fft/RealFFTf.cpp
-    ${AU3_LIBRARIES}/lib-fft/RealFFTf.h
-
-    ${AU3_LIBRARIES}/lib-wave-track-fft/TrackSpectrumTransformer.cpp
-    ${AU3_LIBRARIES}/lib-wave-track-fft/TrackSpectrumTransformer.h
-
-    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentSampleView.cpp
-    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentSampleView.h
-    ${AU3_LIBRARIES}/lib-stretching-sequence/ClipInterface.cpp
-    ${AU3_LIBRARIES}/lib-stretching-sequence/ClipInterface.h
-    ${AU3_LIBRARIES}/lib-stretching-sequence/ClipTimeAndPitchSource.cpp
-    ${AU3_LIBRARIES}/lib-stretching-sequence/ClipTimeAndPitchSource.h
-    ${AU3_LIBRARIES}/lib-stretching-sequence/StretchingSequence.cpp
-    ${AU3_LIBRARIES}/lib-stretching-sequence/StretchingSequence.h
-    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentFactory.cpp
-    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentFactory.h
-    ${AU3_LIBRARIES}/lib-stretching-sequence/ClipSegment.cpp
-    ${AU3_LIBRARIES}/lib-stretching-sequence/ClipSegment.h
-    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegment.cpp
-    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegment.h
-    ${AU3_LIBRARIES}/lib-stretching-sequence/SilenceSegment.cpp
-    ${AU3_LIBRARIES}/lib-stretching-sequence/SilenceSegment.h
-    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentFactoryInterface.cpp
-    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentFactoryInterface.h
-    ${AU3_LIBRARIES}/lib-stretching-sequence/TempoChange.cpp
-    ${AU3_LIBRARIES}/lib-stretching-sequence/TempoChange.h
-
-    # end dependencies of project-file-io
-
-    # When creating a project, audio devices are accessed, so we need to initialize the audio
-    ${AU3_LIBRARIES}/lib-audio-io/AudioIO.cpp
-    ${AU3_LIBRARIES}/lib-audio-io/AudioIO.h
-    ${AU3_LIBRARIES}/lib-audio-io/AudioIOExt.cpp
-    ${AU3_LIBRARIES}/lib-audio-io/AudioIOExt.h
-    ${AU3_LIBRARIES}/lib-audio-io/AudioIOListener.cpp
-    ${AU3_LIBRARIES}/lib-audio-io/AudioIOListener.h
-    ${AU3_LIBRARIES}/lib-audio-io/PlaybackSchedule.cpp
-    ${AU3_LIBRARIES}/lib-audio-io/PlaybackSchedule.h
-    ${AU3_LIBRARIES}/lib-audio-io/ProjectAudioIO.cpp
-    ${AU3_LIBRARIES}/lib-audio-io/ProjectAudioIO.h
-    ${AU3_LIBRARIES}/lib-audio-io/RingBuffer.cpp
-    ${AU3_LIBRARIES}/lib-audio-io/RingBuffer.h
-
-    # begin dependencies of lib-audio-io
-    ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectList.cpp
-    ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectList.h
-    ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectManager.cpp
-    ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectManager.h
-    ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectState.cpp
-    ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectState.h
-    ${AU3_LIBRARIES}/lib-realtime-effects/SavedMasterEffectList.cpp
-    ${AU3_LIBRARIES}/lib-realtime-effects/SavedMasterEffectList.h
-
-    ${AU3_LIBRARIES}/lib-mixer/Mix.cpp
-    ${AU3_LIBRARIES}/lib-mixer/Mix.h
-    ${AU3_LIBRARIES}/lib-mixer/DownmixSource.cpp
-    ${AU3_LIBRARIES}/lib-mixer/DownmixSource.h
-    ${AU3_LIBRARIES}/lib-mixer/DownmixStage.cpp
-    ${AU3_LIBRARIES}/lib-mixer/DownmixStage.h
-    ${AU3_LIBRARIES}/lib-mixer/MixerSource.cpp
-    ${AU3_LIBRARIES}/lib-mixer/MixerSource.h
-    ${AU3_LIBRARIES}/lib-mixer/MixerSource.cpp
-    ${AU3_LIBRARIES}/lib-mixer/MixerSource.h
-    ${AU3_LIBRARIES}/lib-mixer/EffectStage.cpp
-    ${AU3_LIBRARIES}/lib-mixer/EffectStage.h
-    ${AU3_LIBRARIES}/lib-mixer/MixerOptions.cpp
-    ${AU3_LIBRARIES}/lib-mixer/MixerOptions.h
-    ${AU3_LIBRARIES}/lib-mixer/WideSampleSource.cpp
-    ${AU3_LIBRARIES}/lib-mixer/WideSampleSource.h
-
-    ${AU3_LIBRARIES}/lib-module-manager/PluginManager.cpp
-    ${AU3_LIBRARIES}/lib-module-manager/PluginManager.h
-    ${AU3_LIBRARIES}/lib-module-manager/ModuleManager.cpp
-    ${AU3_LIBRARIES}/lib-module-manager/ModuleManager.h
-    ${AU3_LIBRARIES}/lib-module-manager/PluginDescriptor.cpp
-    ${AU3_LIBRARIES}/lib-module-manager/PluginDescriptor.cpp
-    ${AU3_LIBRARIES}/lib-module-manager/PluginInterface.cpp
-    ${AU3_LIBRARIES}/lib-module-manager/PluginInterface.h
-    ${AU3_LIBRARIES}/lib-module-manager/ModuleSettings.cpp
-    ${AU3_LIBRARIES}/lib-module-manager/ModuleSettings.h
-    ${AU3_LIBRARIES}/lib-module-manager/ConfigInterface.cpp
-    ${AU3_LIBRARIES}/lib-module-manager/ConfigInterface.h
-    ${AU3_LIBRARIES}/lib-module-manager/PluginHost.cpp
-    ${AU3_LIBRARIES}/lib-module-manager/PluginHost.h
-    ${AU3_LIBRARIES}/lib-module-manager/PluginIPCUtils.cpp
-    ${AU3_LIBRARIES}/lib-module-manager/PluginIPCUtils.h
-
-    ${AU3_LIBRARIES}/lib-components/EffectAutomationParameters.cpp
-    ${AU3_LIBRARIES}/lib-components/EffectAutomationParameters.h
-    ${AU3_LIBRARIES}/lib-components/EffectInterface.cpp
-    ${AU3_LIBRARIES}/lib-components/EffectInterface.h
-    ${AU3_LIBRARIES}/lib-components/ComponentInterface.cpp
-    ${AU3_LIBRARIES}/lib-components/ComponentInterface.h
-    ${AU3_LIBRARIES}/lib-components/ComponentInterfaceSymbol.h
-    ${AU3_LIBRARIES}/lib-components/SettingsVisitor.cpp
-    ${AU3_LIBRARIES}/lib-components/SettingsVisitor.h
-    ${AU3_LIBRARIES}/lib-components/PluginProvider.cpp
-    ${AU3_LIBRARIES}/lib-components/PluginProvider.h
-
-    ${AU3_LIBRARIES}/lib-time-frequency-selection/SelectedRegion.cpp
-    ${AU3_LIBRARIES}/lib-time-frequency-selection/SelectedRegion.h
-    ${AU3_LIBRARIES}/lib-time-frequency-selection/ViewInfo.cpp
-    ${AU3_LIBRARIES}/lib-time-frequency-selection/ViewInfo.h
-
-    ${AU3_LIBRARIES}/lib-screen-geometry/ZoomInfo.cpp
-    ${AU3_LIBRARIES}/lib-screen-geometry/ZoomInfo.h
-
-    # end dependencies of lib-audio-io
-
-    # track paint
-    ${AU3_LIBRARIES}/lib-wave-track-paint/GraphicsDataCache.cpp
-    ${AU3_LIBRARIES}/lib-wave-track-paint/GraphicsDataCache.h
-    ${AU3_LIBRARIES}/lib-wave-track-paint/PixelSampleMapper.cpp
-    ${AU3_LIBRARIES}/lib-wave-track-paint/PixelSampleMapper.h
-    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WaveBitmapCache.cpp
-    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WaveBitmapCache.h
-    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WaveDataCache.cpp
-    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WaveDataCache.h
-    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WaveData.cpp
-    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WaveData.h
-    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WavePaintParameters.cpp
-    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WavePaintParameters.h
-
-    ${AU3_LIBRARIES}/lib-wave-track-settings/SpectrogramSettings.cpp
-    ${AU3_LIBRARIES}/lib-wave-track-settings/SpectrogramSettings.h
-
-    ${AU3_LIBRARIES}/lib-graphics/FrameStatistics.cpp
-    ${AU3_LIBRARIES}/lib-graphics/FrameStatistics.h
-
-    ${AU3_LIBRARIES}/lib-viewport/Viewport.cpp
-    ${AU3_LIBRARIES}/lib-viewport/Viewport.h
-
-    ${AU3_LIBRARIES}/lib-snapping/ProjectSnap.cpp
-    ${AU3_LIBRARIES}/lib-snapping/ProjectSnap.h
-    ${AU3_LIBRARIES}/lib-snapping/SnapUtils.cpp
-    ${AU3_LIBRARIES}/lib-snapping/SnapUtils.h
-
-    ${AU3_LIBRARIES}/lib-numeric-formats/ProjectTimeSignature.cpp
-    ${AU3_LIBRARIES}/lib-numeric-formats/ProjectTimeSignature.h
-    ${AU3_LIBRARIES}/lib-numeric-formats/Beats.cpp
-    ${AU3_LIBRARIES}/lib-numeric-formats/Beats.h
-    ${AU3_LIBRARIES}/lib-numeric-formats/NumericConverterFormats.cpp
-    ${AU3_LIBRARIES}/lib-numeric-formats/NumericConverterFormats.h
-    ${AU3_LIBRARIES}/lib-numeric-formats/NumericConverterRegistry.cpp
-    ${AU3_LIBRARIES}/lib-numeric-formats/NumericConverterRegistry.h
-    ${AU3_LIBRARIES}/lib-numeric-formats/ProjectNumericFormats.cpp
-    ${AU3_LIBRARIES}/lib-numeric-formats/ProjectNumericFormats.h
-    ${AU3_LIBRARIES}/lib-numeric-formats/NumericConverterFormatterContext.cpp
-    ${AU3_LIBRARIES}/lib-numeric-formats/NumericConverterFormatterContext.h
-
-    # Requires wxApp, so we won't use it
-    # ${AU3_LIBRARIES}/lib-wx-init/SettingsWX.cpp
-    # ${AU3_LIBRARIES}/lib-wx-init/SettingsWX.h
-
-    ${AU3_LIBRARIES}/lib-effects/StatefulEffect.cpp
-    ${AU3_LIBRARIES}/lib-effects/StatefulEffect.h
-    ${AU3_LIBRARIES}/lib-effects/StatefulEffectBase.cpp
-    ${AU3_LIBRARIES}/lib-effects/StatefulEffectBase.h
-    ${AU3_LIBRARIES}/lib-effects/PerTrackEffect.cpp
-    ${AU3_LIBRARIES}/lib-effects/PerTrackEffect.h
-    ${AU3_LIBRARIES}/lib-effects/EffectBase.cpp
-    ${AU3_LIBRARIES}/lib-effects/EffectBase.h
-    ${AU3_LIBRARIES}/lib-effects/EffectPlugin.cpp
-    ${AU3_LIBRARIES}/lib-effects/EffectPlugin.h
-    ${AU3_LIBRARIES}/lib-effects/EffectOutputTracks.cpp
-    ${AU3_LIBRARIES}/lib-effects/EffectOutputTracks.h
-    ${AU3_LIBRARIES}/lib-effects/Effect.cpp
-    ${AU3_LIBRARIES}/lib-effects/Effect.h
-    ${AU3_LIBRARIES}/lib-effects/LoadEffects.cpp
-    ${AU3_LIBRARIES}/lib-effects/LoadEffects.h
-
-    ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitEffectsModule.cpp
-    ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitEffectsModule.h
-
-    ${AU3_LIBRARIES}/lib-command-parameters/ShuttleAutomation.cpp
-    ${AU3_LIBRARIES}/lib-command-parameters/ShuttleAutomation.h
-    ${AU3_LIBRARIES}/lib-command-parameters/ShuttlePrefs.cpp
-    ${AU3_LIBRARIES}/lib-command-parameters/ShuttlePrefs.h
-    ${AU3_LIBRARIES}/lib-command-parameters/WrappedType.cpp
-    ${AU3_LIBRARIES}/lib-command-parameters/WrappedType.h
-
-    ${AU3_LIBRARIES}/lib-menus/CommandContext.cpp
-    ${AU3_LIBRARIES}/lib-menus/CommandContext.h
-    ${AU3_LIBRARIES}/lib-menus/CommandFlag.cpp
-    ${AU3_LIBRARIES}/lib-menus/CommandFlag.h
-    ${AU3_LIBRARIES}/lib-menus/CommandFunctors.h
-    ${AU3_LIBRARIES}/lib-menus/CommandManager.cpp
-    ${AU3_LIBRARIES}/lib-menus/CommandManager.h
-    ${AU3_LIBRARIES}/lib-menus/CommandTargets.cpp
-    ${AU3_LIBRARIES}/lib-menus/CommandTargets.h
-    ${AU3_LIBRARIES}/lib-menus/Keyboard.cpp
-    ${AU3_LIBRARIES}/lib-menus/Keyboard.h
-    ${AU3_LIBRARIES}/lib-menus/MenuRegistry.cpp
-    ${AU3_LIBRARIES}/lib-menus/MenuRegistry.h
-
-    ${AU3_LIBRARIES}/lib-audacity-application-logic/AudacityApplicationLogic.cpp
-    ${AU3_LIBRARIES}/lib-audacity-application-logic/AudacityApplicationLogic.h
-    ${AU3_LIBRARIES}/lib-audacity-application-logic/AudacityApplicationLogicTypes.h
-
-    ${AU3_LIBRARIES}/lib-effects/EffectBase.cpp
-    ${AU3_LIBRARIES}/lib-effects/EffectBase.h
-    ${AU3_LIBRARIES}/lib-effects/Effect.cpp
-    ${AU3_LIBRARIES}/lib-effects/Effect.h
-    ${AU3_LIBRARIES}/lib-effects/EffectManager.cpp
-    ${AU3_LIBRARIES}/lib-effects/EffectManager.h
-    ${AU3_LIBRARIES}/lib-effects/EffectOutputTracks.cpp
-    ${AU3_LIBRARIES}/lib-effects/EffectOutputTracks.h
-    ${AU3_LIBRARIES}/lib-effects/EffectPlugin.cpp
-    ${AU3_LIBRARIES}/lib-effects/EffectPlugin.h
-    ${AU3_LIBRARIES}/lib-effects/LoadEffects.cpp
-    ${AU3_LIBRARIES}/lib-effects/LoadEffects.h
-    ${AU3_LIBRARIES}/lib-effects/MixAndRender.cpp
-    ${AU3_LIBRARIES}/lib-effects/MixAndRender.h
-    ${AU3_LIBRARIES}/lib-effects/PerTrackEffect.cpp
-    ${AU3_LIBRARIES}/lib-effects/PerTrackEffect.h
-    ${AU3_LIBRARIES}/lib-effects/StatefulEffectBase.cpp
-    ${AU3_LIBRARIES}/lib-effects/StatefulEffectBase.h
-
-    ${AU3_LIBRARIES}/lib-builtin-effects/CompressorInstance.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/CompressorInstance.h
-
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/CompressorProcessor.cpp
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/CompressorProcessor.h
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DownwardMeterValueProvider.cpp
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DownwardMeterValueProvider.h
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorClock.cpp
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorClock.h
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorHistory.cpp
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorHistory.h
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorTypes.h
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorUtils.cpp
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/MeterValueProvider.cpp
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/MeterValueProvider.h
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/UpwardMeterValueProvider.cpp
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/UpwardMeterValueProvider.h
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/SimpleCompressor/GainReductionComputer.cpp
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/SimpleCompressor/GainReductionComputer.h
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/SimpleCompressor/LookAheadGainReduction.cpp
-    ${AU3_LIBRARIES}/lib-dynamic-range-processor/SimpleCompressor/LookAheadGainReduction.h
-
-    ${AU3_LIBRARIES}/lib-label-track/LabelTrack.cpp
-    ${AU3_LIBRARIES}/lib-label-track/LabelTrack.h
-
     ${AU3_MODULES}/import-export/RegisterExportPlugins.cpp
     ${AU3_MODULES}/import-export/RegisterExportPlugins.h
     ${AU3_MODULES}/import-export/RegisterImportPlugins.cpp
     ${AU3_MODULES}/import-export/RegisterImportPlugins.h
-
-    ${AU3_LIBRARIES}/lib-import-export/Import.cpp
-    ${AU3_LIBRARIES}/lib-import-export/Import.h
-    ${AU3_LIBRARIES}/lib-import-export/ImportUtils.cpp
-    ${AU3_LIBRARIES}/lib-import-export/ImportUtils.h
-    ${AU3_LIBRARIES}/lib-import-export/ImportProgressListener.cpp
-    ${AU3_LIBRARIES}/lib-import-export/ImportProgressListener.h
-    ${AU3_LIBRARIES}/lib-import-export/ImportPlugin.cpp
-    ${AU3_LIBRARIES}/lib-import-export/ImportPlugin.h
-    ${AU3_LIBRARIES}/lib-import-export/ImportForwards.h
-
-    ${AU3_LIBRARIES}/lib-import-export/Export.cpp
-    ${AU3_LIBRARIES}/lib-import-export/Export.h
-    ${AU3_LIBRARIES}/lib-import-export/ExportPlugin.cpp
-    ${AU3_LIBRARIES}/lib-import-export/ExportPlugin.h
-    ${AU3_LIBRARIES}/lib-import-export/ExportPluginRegistry.cpp
-    ${AU3_LIBRARIES}/lib-import-export/ExportPluginRegistry.h
-    ${AU3_LIBRARIES}/lib-import-export/ExportPluginHelpers.cpp
-    ${AU3_LIBRARIES}/lib-import-export/ExportPluginHelpers.h
-    ${AU3_LIBRARIES}/lib-import-export/PlainExportOptionsEditor.cpp
-    ${AU3_LIBRARIES}/lib-import-export/PlainExportOptionsEditor.h
-    ${AU3_LIBRARIES}/lib-import-export/ExportOptionsEditor.cpp
-    ${AU3_LIBRARIES}/lib-import-export/ExportOptionsEditor.h
-    ${AU3_LIBRARIES}/lib-import-export/ExportUtils.cpp
-    ${AU3_LIBRARIES}/lib-import-export/ExportUtils.h
-
-    ${AU3_LIBRARIES}/lib-import-export/GetAcidizerTags.cpp
-    ${AU3_LIBRARIES}/lib-import-export/GetAcidizerTags.h
-
-    ${AU3_LIBRARIES}/lib-file-formats/AcidizerTags.h
-    ${AU3_LIBRARIES}/lib-file-formats/FileFormats.cpp
-    ${AU3_LIBRARIES}/lib-file-formats/FileFormats.h
-
-    ${AU3_LIBRARIES}/lib-tags/Tags.cpp
-    ${AU3_LIBRARIES}/lib-tags/Tags.h
-
-    ${AU3_LIBRARIES}/lib-ipc/IPCChannel.cpp
-    ${AU3_LIBRARIES}/lib-ipc/IPCChannel.h
-    ${AU3_LIBRARIES}/lib-ipc/IPCClient.cpp
-    ${AU3_LIBRARIES}/lib-ipc/IPCClient.h
-    ${AU3_LIBRARIES}/lib-ipc/IPCServer.cpp
-    ${AU3_LIBRARIES}/lib-ipc/IPCServer.h
-    ${AU3_LIBRARIES}/lib-ipc/internal/BufferedIPCChannel.cpp
-    ${AU3_LIBRARIES}/lib-ipc/internal/BufferedIPCChannel.h
-    ${AU3_LIBRARIES}/lib-ipc/internal/ipc-types.h
-    ${AU3_LIBRARIES}/lib-ipc/internal/socket_guard.h
 
     ${AU3_MODULES}/import-export/mod-mp3/ExportMP3.cpp
     ${AU3_MODULES}/import-export/mod-mp3/ExportMP3.h
@@ -626,18 +170,7 @@ set(AU3_SRC
 )
 
 if (AU_MODULE_EFFECTS_AUDIO_UNIT)
-    set(MODULE_SRC ${MODULE_SRC}
-        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitEffectBase.cpp
-        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitEffectBase.h
-        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitEffectsModule.cpp
-        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitEffectsModule.h
-        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitInstance.cpp
-        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitInstance.h
-        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitUtils.cpp
-        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitUtils.h
-        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitWrapper.cpp
-        ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitWrapper.h
-    )
+    add_subdirectory(${AU3_LIBRARIES}/au3-audio-unit au3-audio-unit)
 
     set(AU3_DEF ${AU3_DEF}
         USE_AUDIO_UNITS=1
@@ -647,70 +180,29 @@ if (AU_MODULE_EFFECTS_AUDIO_UNIT)
         "-framework AudioUnit"
         "-framework AudioToolbox"
     )
+
+    set(AU3_LIBRARIES_LIST ${AU3_LIBRARIES_LIST} au3-audio-unit)
 endif()
 
 if (AU_MODULE_EFFECTS_LV2)
-
     add_subdirectory(lv2sdk)
-
-    set(MODULE_SRC ${MODULE_SRC}
-        ${AU3_LIBRARIES}/lib-lv2/LoadLV2.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LoadLV2.h
-        ${AU3_LIBRARIES}/lib-lv2/LV2EffectBase.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LV2EffectBase.h
-        ${AU3_LIBRARIES}/lib-lv2/lv2_external_ui.h
-        ${AU3_LIBRARIES}/lib-lv2/LV2Instance.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LV2Instance.h
-        ${AU3_LIBRARIES}/lib-lv2/LV2PluginId.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LV2PluginId.h
-        ${AU3_LIBRARIES}/lib-lv2/LV2Ports.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LV2Ports.h
-        ${AU3_LIBRARIES}/lib-lv2/LV2Preferences.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LV2Preferences.h
-        ${AU3_LIBRARIES}/lib-lv2/LV2Symbols.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LV2Symbols.h
-        ${AU3_LIBRARIES}/lib-lv2/LV2Utils.h
-        ${AU3_LIBRARIES}/lib-lv2/LV2Wrapper.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LV2Wrapper.h
-
-        ${AU3_LIBRARIES}/lib-lv2/LV2FeaturesList.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LV2FeaturesList.h
-        ${AU3_LIBRARIES}/lib-lv2/LV2InstanceFeaturesList.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LV2InstanceFeaturesList.h
-        ${AU3_LIBRARIES}/lib-lv2/LV2UIFeaturesList.cpp
-        ${AU3_LIBRARIES}/lib-lv2/LV2UIFeaturesList.h
-    )
+    add_subdirectory(${AU3_LIBRARIES}/au3-lv2 au3-lv2)
 
     set(AU3_LINK ${AU3_LINK} lv2sdk)
+    set(AU3_LIBRARIES_LIST ${AU3_LIBRARIES_LIST} au3-lv2)
 endif()
 
 if(AU_MODULE_EFFECTS_VST)
-
     # VST3 SDK
     add_subdirectory(vst3)
-
-    set(MODULE_SRC ${MODULE_SRC}
-        ${AU3_LIBRARIES}/lib-vst3/AudacityVst3HostApplication.cpp
-        ${AU3_LIBRARIES}/lib-vst3/AudacityVst3HostApplication.h
-        ${AU3_LIBRARIES}/lib-vst3/VST3EffectBase.cpp
-        ${AU3_LIBRARIES}/lib-vst3/VST3EffectBase.h
-        ${AU3_LIBRARIES}/lib-vst3/VST3EffectsModule.cpp
-        ${AU3_LIBRARIES}/lib-vst3/VST3EffectsModule.h
-        ${AU3_LIBRARIES}/lib-vst3/VST3Instance.cpp
-        ${AU3_LIBRARIES}/lib-vst3/VST3Instance.h
-        ${AU3_LIBRARIES}/lib-vst3/VST3Utils.cpp
-        ${AU3_LIBRARIES}/lib-vst3/VST3Utils.h
-        ${AU3_LIBRARIES}/lib-vst3/VST3Wrapper.cpp
-        ${AU3_LIBRARIES}/lib-vst3/VST3Wrapper.h
-        ${AU3_LIBRARIES}/lib-vst3/internal/ConnectionProxy.cpp
-        ${AU3_LIBRARIES}/lib-vst3/internal/ConnectionProxy.h
-    )
+    add_subdirectory(${AU3_LIBRARIES}/au3-vst3 au3-vst3)
 
     set(AU3_INCLUDE ${AU3_INCLUDE} ${AU_MODULE_VST_VST3_SDK_PATH})
-
     set(AU3_LINK ${AU3_LINK} vst_sdk_3)
+    set(AU3_LIBRARIES_LIST ${AU3_LIBRARIES_LIST} au3-vst3)
 endif()
 
+# FFmpeg support (still compiled as sources, not yet converted to library)
 set(MODULE_SRC ${MODULE_SRC}
     ${AU3_MODULES}/import-export/mod-ffmpeg/ImportFFmpeg.cpp
     ${AU3_MODULES}/import-export/mod-ffmpeg/ExportFFmpeg.cpp
@@ -814,22 +306,69 @@ set(MODULE_SRC ${MODULE_SRC}
     ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/avutil/AVUtilFunctionsLoader.h
 )
 
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sqlite au3-sqlite)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soxr au3-soxr)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/pffft au3-pffft)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/portmixer au3-portmixer)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soundtouch au3-soundtouch)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sbsms au3-sbsms)
-
-# AU3 Libraries
-add_subdirectory(${AU3_LIBRARIES}/au3-math au3-math)
+# ==================================
+# List of all AU3 libraries to link publicly
+set(AU3_LIBRARIES_LIST
+    au3-string-utils
+    au3-strings
+    au3-utility
+    au3-components
+    au3-basic-ui
+    au3-exceptions
+    au3-preferences
+    au3-math
+    au3-files
+    au3-registries
+    au3-xml
+    au3-project
+    au3-project-rate
+    au3-file-formats
+    au3-track
+    au3-transactions
+    au3-sample-track
+    au3-audio-graph
+    au3-tags
+    au3-wave-track
+    au3-track-selection
+    au3-sqlite-helpers
+    au3-project-history
+    au3-project-file-io
+    au3-time-and-pitch
+    au3-playable-track
+    au3-audio-devices
+    au3-fft
+    au3-wave-track-fft
+    au3-stretching-sequence
+    au3-channel
+    au3-mixer
+    au3-realtime-effects
+    au3-audio-io
+    au3-module-manager
+    au3-time-frequency-selection
+    au3-screen-geometry
+    au3-graphics
+    au3-wave-track-paint
+    au3-viewport
+    au3-snapping
+    au3-numeric-formats
+    au3-command-parameters
+    au3-menus
+    au3-effects
+    au3-builtin-effects
+    au3-dynamic-range-processor
+    au3-label-track
+    au3-import-export
+    au3-ipc
+    au3-audacity-application-logic
+    ${AU3_LIBRARIES_LIST}
+)
 
 # ==================================
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
 set(MODULE_SRC ${MODULE_SRC} ${AU3_SRC})
 set(MODULE_LINK ${AU3_LINK} project audio)
-set(MODULE_LINK_PUBLIC au3-math)
+set(MODULE_LINK_PUBLIC ${AU3_LIBRARIES_LIST})
 
 set(MODULE_USE_PCH OFF)
 set(MODULE_USE_UNITY OFF)
