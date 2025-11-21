@@ -8,7 +8,7 @@
  **********************************************************************/
 #pragma once
 
-#include "VersionPatch.h"
+#include "UpdateDataStructures.h"
 
 #include "XMLTagHandler.h"
 
@@ -22,13 +22,13 @@ public:
     UpdateDataParser();
     ~UpdateDataParser();
 
-    //! Parsing from update data format to VersionPatch fields.
+    //! Parsing from update data format to UpdateDataFeed.
     /*!
-       @param updateData InputData.
-       @param versionPath Parsed output data.
+       @param updateData Input XML data from update server.
+       @param feed Parsed output data containing new version info and notifications
        @return True if success.
     */
-    bool Parse(const VersionPatch::UpdateDataFormat& updateData, VersionPatch* versionPatch);
+    bool Parse(const UpdateDataFeed::UpdateDataFormat& updateData, UpdateDataFeed* feed);
 
 private:
     enum class XmlParsedTags : int {
@@ -41,9 +41,20 @@ private:
         kMacosTag,
         kLinuxTag,
         kVersionTag,
-        kLinkTag
+        kLinkTag,
+        kChangelogTag,
+        kChangelogItemTag,
+        kReleaseNotesUrlTag,
+        kNotificationsTag,
+        kNotificationTag,
+        kUuidTag,
+        kTitleTag,
+        kMessageTag,
+        kStartTag,
+        kExpiresTag,
+        kNotificationActionTag,
+        kLabelTag
     };
-    XmlParsedTags mXmlParsingState{ XmlParsedTags::kNotUsedTag };
 
     std::map<XmlParsedTags, const char*> mXmlTagNames{
         { XmlParsedTags::kUpdateTag, "Updates" },
@@ -55,7 +66,25 @@ private:
         { XmlParsedTags::kLinuxTag, "Linux" },
         { XmlParsedTags::kVersionTag, "Version" },
         { XmlParsedTags::kLinkTag, "Link" },
+        { XmlParsedTags::kChangelogTag, "Changelog" },
+        { XmlParsedTags::kChangelogItemTag, "Item" },
+        { XmlParsedTags::kReleaseNotesUrlTag, "ReleaseNotesUrl" },
+        { XmlParsedTags::kNotificationsTag, "Notifications" },
+        { XmlParsedTags::kNotificationTag, "Notification" },
+        { XmlParsedTags::kUuidTag, "Uuid" },
+        { XmlParsedTags::kTitleTag, "Title" },
+        { XmlParsedTags::kMessageTag, "Message" },
+        { XmlParsedTags::kStartTag, "Start" },
+        { XmlParsedTags::kExpiresTag, "Expires" },
+        { XmlParsedTags::kNotificationActionTag, "Action" },
+        { XmlParsedTags::kLabelTag, "Label" }
     };
+
+    // Track which tag's content we're currently reading
+    XmlParsedTags mCurrentContentTag{ XmlParsedTags::kNotUsedTag };
+
+    // Track if we're in the correct platform section for OS-specific data
+    bool mIsCorrectPlatform{ false };
 
     bool HandleXMLTag(
        const std::string_view& tag, const AttributesList& attrs) override;
@@ -63,7 +92,30 @@ private:
     void HandleXMLContent(const std::string_view& content) override;
     XMLTagHandler* HandleXMLChild(const std::string_view& tag) override;
 
+    // Context-specific tag handlers
+    bool HandleRootTags(const std::string_view& tag);
+    bool HandleChangelogTags(const std::string_view& tag, const AttributesList& attrs);
+    bool HandleNotificationsTags(const std::string_view& tag);
+    bool HandleNotificationTags(const std::string_view& tag);
+    bool HandleNotificationActionTags(const std::string_view& tag);
+    bool HandleOSTags(const std::string_view& tag);
+
     wxArrayString SplitChangelogSentences(const wxString& changelogContent);
 
-    VersionPatch* mVersionPatch{ nullptr };
+    UpdateDataFeed* mUpdateDataFeed{ nullptr };
+
+    enum class ParserContext {
+        Unset,
+        Root,
+        Changelog,
+        Notifications,
+        Notification,
+        NotificationAction,
+        OS
+    };
+    ParserContext mContext{ ParserContext::Unset };
+
+    Notification mCurrentNotification;
+    NotificationAction mCurrentButton;
+    ChangelogItem mCurrentChangelogItem;
 };
