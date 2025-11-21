@@ -15,8 +15,8 @@
 #define __AUDACITY_EQUALIZATION_FILTER__
 
 #include "EqualizationParameters.h" // base class
-#include "Envelope.h" // member
-#include "RealFFTf.h" // member
+#include "au3-mixer/Envelope.h" // member
+#include "au3-fft/RealFFTf.h" // member
 using Floats = ArrayOf<float>;
 
 //! Extend EqualizationParameters with frequency domain coefficients computed

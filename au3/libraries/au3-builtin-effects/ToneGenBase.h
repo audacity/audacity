@@ -11,7 +11,7 @@
 **********************************************************************/
 #pragma once
 
-#include "SettingsVisitor.h" // EffectParameter
+#include "au3-components/SettingsVisitor.h" // EffectParameter
 #include "au3-effects/StatefulPerTrackEffect.h"
 #include <float.h> // for DBL_MAX
 
