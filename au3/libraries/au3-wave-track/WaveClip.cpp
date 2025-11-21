@@ -29,7 +29,7 @@
 #include "au3-time-and-pitch/TimeAndPitchInterface.h"
 #include "au3-exceptions/UserException.h"
 
-#include "global/realfn.h"
+#include "framework/global/realfn.h"
 
 #ifdef _OPENMP
 #include <omp.h>
