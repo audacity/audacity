@@ -24,7 +24,7 @@ public:
 private:
     void OnDismiss(wxCommandEvent& event);
     void OnRemindLater(wxCommandEvent& event);
-    void OnnotificationAction(wxCommandEvent& event);
+    void OnNotificationAction(wxCommandEvent& event);
 
     const Notification& mNotification;
 

@@ -13,7 +13,7 @@
 #include "UpdatePopupDialog.h"
 #include "UpdateNoticeDialog.h"
 #include "UpdateNotificationDialog.h"
-#include "CustomNotificationDialogs.h"
+#include "CustomNotificationRegistry.h"
 #include "NoUpdatesAvailableDialog.h"
 
 #include "AudioIO.h"
@@ -43,8 +43,8 @@
 
 static const char* prefsUpdateScheduledTime = "/Update/UpdateScheduledTime";
 static BoolSetting prefUpdatesNoticeShown { wxT("/Update/UpdateNoticeShown"), false };
-static StringSetting AudioComUserId { wxT("/cloud/audiocom/userId"), wxEmptyString };
 static StringSetting prefShownNotifications { wxT("/Update/ShownNotifications"), wxEmptyString };
+static StringSetting perfAudioComUserId { wxT("/cloud/audiocom/userId"), wxEmptyString };
 
 using Clock = std::chrono::system_clock;
 using TimePoint = Clock::time_point;
@@ -359,9 +359,9 @@ std::string UpdateManager::GetUpdatesUrl() const
    {
       url += "?audacity-instance-id=" + InstanceId->Read().ToStdString();
 
-      if (!AudioComUserId.Read().IsEmpty())
+      if (!perfAudioComUserId.Read().IsEmpty())
       {
-         url += "&user_id=" + AudioComUserId.Read().ToStdString();
+         url += "&user_id=" + perfAudioComUserId.Read().ToStdString();
       }
    }
 

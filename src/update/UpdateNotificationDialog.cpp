@@ -22,7 +22,7 @@ wxDEFINE_EVENT(EVT_NOTIFICATION_REMIND_LATER, wxCommandEvent);
 enum {
     DismissID = wxID_HIGHEST + 1,
     RemindLaterID,
-    notificationActionStartID
+    NotificationActionStartID
 };
 
 BEGIN_EVENT_TABLE(UpdateNotificationDialog, wxDialogWrapper)
@@ -71,8 +71,8 @@ UpdateNotificationDialog::UpdateNotificationDialog(wxWindow* parent, const Notif
         {
             if (!notification.notificationAction.label.IsEmpty())
             {
-                auto actionBtn = S.Id(notificationActionStartID).AddButton(Verbatim(notification.notificationAction.label));
-                actionBtn->Bind(wxEVT_BUTTON, &UpdateNotificationDialog::OnnotificationAction, this);
+                auto actionBtn = S.Id(NotificationActionStartID).AddButton(Verbatim(notification.notificationAction.label));
+                actionBtn->Bind(wxEVT_BUTTON, &UpdateNotificationDialog::OnNotificationAction, this);
                 actionBtn->SetDefault();
             }
 
@@ -115,7 +115,7 @@ void UpdateNotificationDialog::OnRemindLater(wxCommandEvent&)
     EndModal(wxID_CANCEL);
 }
 
-void UpdateNotificationDialog::OnnotificationAction(wxCommandEvent&)
+void UpdateNotificationDialog::OnNotificationAction(wxCommandEvent&)
 {
     if (!mNotification.notificationAction.link.IsEmpty())
     {

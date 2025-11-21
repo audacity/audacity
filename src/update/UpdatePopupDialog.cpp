@@ -143,7 +143,7 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
 
     informationStr << wxT("<p>");
     wxString releaseUrl = mVersionPatch.releaseNotesUrl.IsEmpty()
-        ? "https://github.com/audacity/audacity/releases"
+        ? wxString("https://github.com/audacity/audacity/releases")
         : mVersionPatch.releaseNotesUrl;
     informationStr << wxT("<a href = \"") << releaseUrl << wxT("\">");
     informationStr << XC("Read more on GitHub", "update dialog");
