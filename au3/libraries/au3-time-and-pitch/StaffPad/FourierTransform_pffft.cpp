@@ -1,6 +1,6 @@
 #include "FourierTransform_pffft.h"
 
-#include "pffft.h"
+#include <pffft.h>
 
 namespace staffpad::audio {
 FourierTransform::FourierTransform(int32_t newBlockSize)

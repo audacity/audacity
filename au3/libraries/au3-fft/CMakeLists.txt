@@ -24,6 +24,7 @@ set( SOURCES
    SpectrumTransformer.h
 )
 set( LIBRARIES
+PUBLIC
    pffft
    lib-math-interface
    lib-strings-interface
