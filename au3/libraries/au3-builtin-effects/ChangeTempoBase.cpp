@@ -1,6 +1,8 @@
 #include "ChangeTempoBase.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
 #include "au3-track/TimeWarper.h"
+#if USE_SOUNDTOUCH
+#include "SoundTouch.h"
 #ifdef USE_SBSMS
 #include "SBSMSBase.h"
 #endif
@@ -132,3 +134,5 @@ bool ChangeTempoBase::Process(EffectInstance&, EffectSettings& settings)
 
     return success;
 }
+
+#endif

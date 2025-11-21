@@ -54,7 +54,7 @@ bool RepeatBase::Process(EffectInstance&, EffectSettings&)
 {
     // Set up mOutputTracks.
     // This effect needs all for sync-lock grouping.
-    EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
+    EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
 
     int nTrack = 0;
     bool bGoodResult = true;
@@ -94,7 +94,8 @@ bool RepeatBase::Process(EffectInstance&, EffectSettings&)
                     bGoodResult = false;
                     return;
                 }
-                track.Paste(t0, *firstTemp);
+                const bool moveClips = false; // this need check
+                track.Paste(t0, *firstTemp, moveClips);
                 t0 += tLen;
             }
             if (t0 > maxDestLen) {
@@ -137,11 +138,6 @@ bool RepeatBase::Process(EffectInstance&, EffectSettings&)
             }
             nTrack++;
         };
-    },
-        [&](Track& t) {
-        if (SyncLock::IsSyncLockSelected(t)) {
-            t.SyncLockAdjust(mT1, mT1 + (mT1 - mT0) * repeatCount);
-        }
     });
 
     if (bGoodResult) {

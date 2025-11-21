@@ -6,8 +6,8 @@ Library of built-in effects. Implement the UI-agnostic APIs of lib-effects.
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
 
 set( SOURCES
-   AmplifyBase.cpp
-   AmplifyBase.h
+#   AmplifyBase.cpp
+#   AmplifyBase.h
    AutoDuckBase.cpp
    AutoDuckBase.h
    BassTrebleBase.cpp
@@ -18,14 +18,14 @@ set( SOURCES
    ChangeSpeedBase.h
    ChangeTempoBase.cpp
    ChangeTempoBase.h
-   ClickRemovalBase.cpp
-   ClickRemovalBase.h
+#   ClickRemovalBase.cpp
+#   ClickRemovalBase.h
    CompressorInstance.cpp
    CompressorInstance.h
    ContrastBase.cpp
    ContrastBase.h
-   DtmfBase.cpp
-   DtmfBase.h
+#   DtmfBase.cpp
+#   DtmfBase.h
    DistortionBase.cpp
    DistortionBase.h
    EchoBase.cpp
@@ -46,26 +46,26 @@ set( SOURCES
    Generator.h
    LegacyCompressorBase.cpp
    LegacyCompressorBase.h
-   LoudnessBase.cpp
-   LoudnessBase.h
-   NoiseBase.cpp
-   NoiseBase.h
-   NoiseReductionBase.cpp
-   NoiseReductionBase.h
-   NormalizeBase.cpp
-   NormalizeBase.h
+#   LoudnessBase.cpp
+#   LoudnessBase.h
+#   NoiseBase.cpp
+#   NoiseBase.h
+#   NoiseReductionBase.cpp
+#   NoiseReductionBase.h
+#   NormalizeBase.cpp
+#   NormalizeBase.h
    PaulstretchBase.cpp
    PaulstretchBase.h
    PhaserBase.cpp
    PhaserBase.h
    PlotSpectrumBase.cpp
    PlotSpectrumBase.h
-   Repair.cpp
-   Repair.h
+#   Repair.cpp
+#   Repair.h
    RepeatBase.cpp
    RepeatBase.h
-   ReverbBase.cpp
-   ReverbBase.h
+#   ReverbBase.cpp
+#   ReverbBase.h
    SBSMSBase.cpp
    SBSMSBase.h
    ScienFilterBase.cpp
@@ -74,8 +74,8 @@ set( SOURCES
    SilenceBase.h
    SoundTouchBase.cpp
    SoundTouchBase.h
-   StereoToMono.cpp
-   StereoToMono.h
+#   StereoToMono.cpp # need some cleanups, commenting for now
+#   StereoToMono.h # need some cleanups, commenting for now
    TimeScaleBase.cpp
    TimeScaleBase.h
    ToneGenBase.cpp
