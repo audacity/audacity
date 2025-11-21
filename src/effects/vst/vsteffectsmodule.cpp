@@ -10,6 +10,7 @@
 #include "audioplugins/iaudiopluginmetareaderregister.h"
 
 #include "effects/effects_base/ieffectviewlaunchregister.h"
+#include "effects/effects_base/view/effectsviewutils.h"
 
 #include "internal/vsteffectsrepository.h"
 #include "internal/vst3pluginsscanner.h"
@@ -78,7 +79,7 @@ void VstEffectsModule::registerResources()
 void VstEffectsModule::registerUiTypes()
 {
     qmlRegisterType<muse::vst::VstView>("Audacity.Vst", 1, 0, "VstView");
-    qmlRegisterType<VstViewModel>("Audacity.Vst", 1, 0, "VstViewModel");
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(VstViewModelFactory);
 }
 
 void VstEffectsModule::onInit(const muse::IApplication::RunMode& runMode)

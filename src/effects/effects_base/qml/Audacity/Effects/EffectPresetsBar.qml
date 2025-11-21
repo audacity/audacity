@@ -12,7 +12,7 @@ import Audacity.Effects
 RowLayout {
     id: root
 
-    property var instanceId
+    required property var instanceId
     property int navigationOrder: 0
     property var navigationPanel: null
 
@@ -70,8 +70,7 @@ RowLayout {
 
         onActivated: function (index, value) {
             manageMenuModel.preset = value
-            currentIndex = manageMenuModel.presets.findIndex(
-                        preset => preset.id === value)
+            currentIndex = manageMenuModel.presets.findIndex(preset => preset.id === value)
         }
     }
 

@@ -10,6 +10,11 @@
 #include "framework/global/translation.h"
 
 namespace au::effects {
+TruncateSilenceViewModel::TruncateSilenceViewModel(QObject* parent, int instanceId)
+    : BuiltinEffectModel(parent, instanceId)
+{
+}
+
 QString TruncateSilenceViewModel::effectTitle() const
 {
     return muse::qtrc("effects/truncatesilence", "Truncate silence");

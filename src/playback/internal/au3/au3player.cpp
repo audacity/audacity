@@ -26,6 +26,14 @@ using namespace au::au3;
 
 Au3Player::Au3Player()
 {
+    m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
+        if (st == PlaybackStatus::Running) {
+            m_currentTarget.reset();
+            m_consumedSamplesSoFar = 0;
+            m_reachedEnd.val = false;
+        }
+    });
+
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         auto project = globalContext()->currentTrackeditProject();
         if (!project) {
@@ -253,9 +261,6 @@ void Au3Player::stop()
     if (captureMeter) {
         captureMeter->stop();
     }
-
-    m_consumedSamplesSoFar = 0;
-    m_currentTarget.reset();
 }
 
 void Au3Player::pause()
@@ -444,14 +449,14 @@ void Au3Player::updatePlaybackState()
 {
     int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
     bool isActive = AudioIO::Get()->IsStreamActive(token);
-    double time = AudioIO::Get()->GetStreamTime() + m_startOffset;
+    const double time = std::max(0.0, AudioIO::Get()->GetStreamTime() + m_startOffset);
+
+    if (!muse::is_equal(time, m_playbackPosition.val.raw())) {
+        m_playbackPosition.set(time);
+    }
 
     if (isActive) {
         m_reachedEnd.val = false;
-        const auto newTime = std::max(0.0, time);
-        if (!muse::is_equal(newTime, m_playbackPosition.val.raw())) {
-            m_playbackPosition.set(newTime);
-        }
     } else {
         if (playbackStatus() == PlaybackStatus::Running && !m_reachedEnd.val) {
             m_reachedEnd.val = true;
@@ -475,7 +480,15 @@ void Au3Player::updatePlaybackPosition()
         const auto targetConsumedSamples = static_cast<unsigned long long>(callbackInfo->numSamples)
                                            + (m_currentTarget ? m_currentTarget->consumedSamples : 0);
         const nanoseconds payloadDuration{ static_cast<long>(callbackInfo->numSamples * 1e9 / sampleRate + .5) };
-        const auto targetTime = callbackInfo->dacTime + payloadDuration;
+
+        auto dacTime = callbackInfo->dacTime;
+        if (m_currentTarget && m_currentTarget->time > callbackInfo->dacTime) {
+            // Jitter was observed in the hardware-thread callbacks on a macbook device: 4096 samples at 44.1kHz is 93ms, yet it
+            // was called 10 times with 85ms intervals, then one time with 170ms, over and over again.
+            dacTime = m_currentTarget->time;
+        }
+
+        const auto targetTime = dacTime + payloadDuration;
         m_currentTarget.emplace(targetTime, targetConsumedSamples);
     }
 
@@ -484,14 +497,12 @@ void Au3Player::updatePlaybackPosition()
     }
 
     const auto timeDiff = duration_cast<milliseconds>(steady_clock::now() - m_currentTarget->time).count() / 1000.0;
-    if (timeDiff > 0) {
-        // Hardware buffer was drained an no new data was put in there.
-        return;
-    }
+    const auto extrapolation = static_cast<long long>(m_currentTarget->consumedSamples + timeDiff * sampleRate);
+    // Never progress by more samples than really have been output.
+    const auto expectedConsumedNow = std::min(static_cast<long long>(m_currentTarget->consumedSamples), extrapolation);
 
-    const auto expectedConsumedNow = static_cast<long long>(m_currentTarget->consumedSamples + timeDiff * sampleRate);
     if (static_cast<long long>(m_consumedSamplesSoFar) >= expectedConsumedNow) {
-        // User isn't hearing audio yet - wait some more.
+        // User isn't hearing audio yet - wait some more. (`expectedConsumedNow` can be negative.)
         return;
     }
 

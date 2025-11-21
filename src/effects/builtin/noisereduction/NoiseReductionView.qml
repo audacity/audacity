@@ -15,11 +15,8 @@ BuiltinEffectBase {
     implicitHeight: column.implicitHeight
     implicitWidth: row.implicitWidth
 
-    model: noiseReduction
-
-    NoiseReductionViewModel {
-        id: noiseReduction
-    }
+    builtinEffectModel: NoiseReductionViewModelFactory.createModel(root, root.instanceId)
+    property alias noiseReduction: root.builtinEffectModel
 
     Column {
         id: column

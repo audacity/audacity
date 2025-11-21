@@ -8,37 +8,28 @@
 #include "libraries/lib-components/EffectInterface.h"
 
 #include "modularity/ioc.h"
-#include "effects/effects_base/ieffectinstancesregister.h"
-#include "effects/effects_base/ieffectexecutionscenario.h"
 #include "effects/effects_base/ieffectsprovider.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
+#include "effects/effects_base/view/abstracteffectviewmodel.h"
 #include "trackedit/iprojecthistory.h"
 
-#include "global/async/asyncable.h"
-
 namespace au::effects {
-class BuiltinEffectModel : public QObject, public QQmlParserStatus, public muse::async::Asyncable
+class BuiltinEffectModel : public AbstractEffectViewModel
 {
     Q_OBJECT
-    Q_PROPERTY(int instanceId READ instanceId CONSTANT FINAL)
-
     Q_PROPERTY(QString effectId READ effectId NOTIFY effectIdChanged FINAL)
     Q_PROPERTY(bool usesPresets READ usesPresets CONSTANT FINAL)
 
 public:
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<IEffectExecutionScenario> executionScenario;
     muse::Inject<IRealtimeEffectService> realtimeEffectService;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
-    BuiltinEffectModel(QObject* parent = nullptr);
+    BuiltinEffectModel(QObject* parent, int instanceId);
 
-    int instanceId() const;
     QString effectId() const;
 
-    Q_INVOKABLE void preview();
     Q_INVOKABLE void commitSettings();
 
     virtual bool usesPresets() const { return true; }
@@ -81,10 +72,9 @@ protected:
     }
 
 private:
-    void classBegin() override {}
-    void componentComplete() override;
+    void doInit() override;
+    void doStartPreview() override;
 
     EffectSettingsAccessPtr settingsAccess() const;
-    const int m_instanceId;
 };
 }

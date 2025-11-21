@@ -8,7 +8,8 @@
 
 using namespace au::effects;
 
-ReverbViewModel::ReverbViewModel()
+ReverbViewModel::ReverbViewModel(QObject* parent, int instanceId)
+    : BuiltinEffectModel(parent, instanceId)
 {
 }
 

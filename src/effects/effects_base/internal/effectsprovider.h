@@ -21,6 +21,11 @@
 
 class EffectBase;
 class EffectSettingsAccess;
+
+namespace BasicUI {
+class ProgressDialog;
+}
+
 namespace au::effects {
 class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
 {
@@ -61,9 +66,23 @@ public:
     muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
                             EffectSettings& settings) override;
 
-    muse::Ret previewEffect(au3::Au3Project& project, Effect* effect, EffectSettings& settings) override;
+    muse::Ret previewEffect(const EffectId& effectId, EffectSettings& settings) override;
 
 private:
+    struct EffectContext {
+        double t0 = 0.0;
+        double t1 = 0.0;
+        std::shared_ptr<TrackList> tracks;
+        BasicUI::ProgressDialog* preparingPreviewProgress = nullptr;
+        bool isPreview = false;
+    };
+
+    struct EffectPreviewState {
+        EffectPreviewState(const EffectContext& originContext, const std::shared_ptr<TrackList>& previewTracks)
+            : originContext(originContext), previewTracks(previewTracks) {}
+        const EffectContext originContext;
+        const std::shared_ptr<TrackList> previewTracks;
+    };
 
     bool isVstSupported() const;
     bool isNyquistSupported() const;
@@ -74,5 +93,6 @@ private:
 
     mutable EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;
+    std::optional<EffectPreviewState> m_effectPreviewState;
 };
 }

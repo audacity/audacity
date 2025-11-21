@@ -5,9 +5,7 @@
 
 #include "lv2uihandler.h"
 
-#include "effects/effects_base/ieffectinstancesregister.h"
-#include "effects/effects_base/ieffectexecutionscenario.h"
-#include "playback/iplayback.h"
+#include "effects/effects_base/view/abstracteffectviewmodel.h"
 #include "trackedit/iprojecthistory.h"
 
 #include "libraries/lib-lv2/LV2UIFeaturesList.h"
@@ -27,32 +25,19 @@ typedef unsigned long XID;
 
 namespace au::effects {
 class ILv2IdleUi;
-class Lv2ViewModel : public QObject
+class Lv2ViewModel : public AbstractEffectViewModel
 {
     Q_OBJECT
-    Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged FINAL)
-    Q_PROPERTY(QString effectState READ effectState WRITE setEffectState NOTIFY effectStateChanged FINAL)
     Q_PROPERTY(QString unsupportedUiReason READ unsupportedUiReason NOTIFY unsupportedUiReasonChanged FINAL)
 
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<IEffectExecutionScenario> executionScenario;
-    muse::Inject<au::playback::IPlayback> playback;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
-    Lv2ViewModel(QObject* parent = nullptr);
+    Lv2ViewModel(QObject* parent, int instanceId, const QString& effectState);
     ~Lv2ViewModel() override;
 
-    Q_INVOKABLE void init();
     Q_INVOKABLE void deinit();
-    Q_INVOKABLE void preview();
-
-    int instanceId() const;
-    void setInstanceId(int newInstanceId);
-
-    QString effectState() const;
-    void setEffectState(const QString& state);
 
     QString unsupportedUiReason() const;
 
@@ -60,14 +45,14 @@ public:
     void setTitle(const QString& title);
 
 signals:
-    void instanceIdChanged();
     void titleChanged();
     void externalUiClosed();
-    void effectStateChanged();
     void unsupportedUiReasonChanged();
 
 private:
     friend class Lv2UiHandler;
+    void doInit() override;
+    void doStartPreview() override;
     int onResizeUi(int width, int height);
     void onUiClosed();
     void onKeyPressed(Qt::Key);
@@ -90,17 +75,16 @@ private:
 
     Lv2UiHandler m_handler;
 
-    int m_instanceId = -1;
     int m_minimumWidth = 0;
     QString m_title;
-    RealtimeEffectStatePtr m_effectState;
+    const RealtimeEffectStatePtr m_effectState;
 
     std::shared_ptr<LV2Instance> m_instance;
     std::unique_ptr<LV2Wrapper> m_wrapper;
     const LilvPlugin* m_lilvPlugin = nullptr;
     const LV2Ports* m_ports = nullptr;
     std::unique_ptr<LV2PortUIStates> m_portUIStates;
-    const LV2EffectOutputs* m_realtimeOutputs = nullptr;
+    const LV2EffectOutputs* const m_realtimeOutputs;
     EffectSettingsAccessPtr m_settingsAccess;
 
     SuilInstancePtr m_suilInstance;
@@ -118,5 +102,17 @@ private:
     bool m_settingsChanged = false;
 
     std::string m_unsupportedUiReason;
+};
+
+class Lv2ViewModelFactory : public QObject
+{
+    Q_OBJECT
+public:
+    virtual ~Lv2ViewModelFactory() = default;
+
+    Q_INVOKABLE Lv2ViewModel* createModel(QObject* parent, int instanceId, const QString& effectState) const
+    {
+        return new Lv2ViewModel(parent, instanceId, effectState);
+    }
 };
 }
