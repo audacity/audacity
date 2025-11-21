@@ -50,3 +50,6 @@ set( LIBRARIES
 audacity_library( lib-wave-track "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
+
+# this is a temporary hack to access the muse_framework from au3 code
+include_directories(../../../muse_framework)
