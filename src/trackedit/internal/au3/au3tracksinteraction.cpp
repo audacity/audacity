@@ -401,12 +401,18 @@ muse::Ret Au3TracksInteraction::pasteLabels(const std::vector<Au3TrackDataPtr>& 
             continue;
         }
 
-        const size_t labelCountBefore = targetLabelTrack->GetLabels().size();
+        const auto& labelsBefore = targetLabelTrack->GetLabels();
         targetLabelTrack->Paste(begin, *trackToPaste, moveClips);
 
         const auto& labelsAfter = targetLabelTrack->GetLabels();
-        for (size_t labelIdx = labelCountBefore; labelIdx < labelsAfter.size(); ++labelIdx) {
-            prj->notifyAboutLabelAdded(DomConverter::label(targetLabelTrack, &labelsAfter[labelIdx]));
+        for (size_t labelIdx = 0; labelIdx < labelsAfter.size(); ++labelIdx) {
+            const auto it = std::find_if(labelsBefore.begin(), labelsBefore.end(), [&](const auto& label) {
+                return label.GetId() == labelsAfter[labelIdx].GetId();
+            });
+
+            if (it == labelsBefore.end()) {
+                prj->notifyAboutLabelAdded(DomConverter::label(targetLabelTrack, &labelsAfter[labelIdx]));
+            }
         }
     }
 
