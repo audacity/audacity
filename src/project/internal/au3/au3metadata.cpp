@@ -24,7 +24,7 @@ ProjectMeta Au3Metadata::tags() const
 
     for (auto row : au3Tags.GetRange()) {
         auto tag = row.first.ToStdString();
-        if (tag == TRACK_TITLE_TAG) {
+        if (tag == TITLE_TAG) {
             au4Tags.trackTitle = row.second.ToStdString();
         }
 
