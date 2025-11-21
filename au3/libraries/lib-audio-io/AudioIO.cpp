@@ -1886,7 +1886,8 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
             gAudioIO->SequenceBufferExchange();
         } else {
             if ((lastState == State::eLoopRunning)
-                || (lastState == State::eMonitoring)) {
+                || (lastState == State::eMonitoring)
+                || (lastState == State::eOnce)) {
                 // Main thread has told us to stop; (actually: to neither process "once" nor "loop running")
                 // acknowledge that we received the order and that no more processing will be done.
                 gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStop,
