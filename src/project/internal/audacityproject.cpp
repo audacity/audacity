@@ -67,6 +67,18 @@ muse::Ret Audacity4Project::load(const muse::io::path_t& path, const bool forceM
     return ret;
 }
 
+Ret Audacity4Project::importIntoTrack(const muse::io::path_t& filePath,
+                                      trackedit::TrackId dstTrackId,
+                                      muse::secs_t startTime)
+{
+    const std::string importInfo = muse::qtrc("project", "Imported file “%1”?")
+                                   .arg(filePath.toString()).toStdString();
+    Ret ok = doImportIntoTrack(filePath, dstTrackId, startTime);
+
+    // TODO: take care of project history
+    return ok;
+}
+
 Ret Audacity4Project::import(const muse::io::path_t& path, const bool forceMode)
 {
     const std::string importInfo = muse::qtrc("project", "Imported file “%1”?")
@@ -150,6 +162,20 @@ Ret Audacity4Project::doImport(const muse::io::path_t& path, const bool forceMod
     }
 
     importer()->import(path);
+    m_trackeditProject->reload();
+
+    return muse::make_ret(Ret::Code::Ok);
+}
+
+Ret Audacity4Project::doImportIntoTrack(const muse::io::path_t& path, trackedit::TrackId dstTrackId, muse::secs_t startTime)
+{
+    TRACEFUNC;
+
+    if (!m_au3Project) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
+    }
+
+    importer()->importIntoTrack(path, dstTrackId, startTime);
     m_trackeditProject->reload();
 
     return muse::make_ret(Ret::Code::Ok);

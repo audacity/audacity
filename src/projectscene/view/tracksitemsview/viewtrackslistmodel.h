@@ -44,7 +44,7 @@ public:
 
     Q_INVOKABLE void load();
     Q_INVOKABLE double audioFileLength(const QStringList& fileUrls);
-    Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);
+    Q_INVOKABLE void handleDroppedFiles(const trackedit::TrackId& trackId, double startTime, const QStringList& fileUrls);
 
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -79,5 +79,9 @@ private:
     };
 
     std::vector<trackedit::Track> m_trackList;
+
+    // TODO std::pair<importexport::FileInfo, std::chrono::steady_clock::time_point> m_lastProbedFileInfo;
+    // TODO: will need a vector for multiple files
+    importexport::FileInfo m_lastProbedFileInfo;
 };
 }

@@ -620,6 +620,9 @@ Rectangle {
                 signal startAutoScroll
                 signal stopAutoScroll
 
+                signal previewImportClipRequested(int trackId, real startPos, real endPos)
+                signal clearPreviewImportClip()
+
                 header: Rectangle {
                     height: 2
                     width: parent.width
@@ -690,6 +693,8 @@ Rectangle {
                         id: trackClipsContainerComp
 
                         TrackClipsContainer {
+                            id: trackClipsContainer
+
                             property var itemData: trackItemLoader.itemData
                             property int index: trackItemLoader.index
 
@@ -868,6 +873,22 @@ Rectangle {
                                 }
 
                                 return 0
+                            }
+
+                            Connections {
+                                target: tracksItemsView
+
+                                function onPreviewImportClipRequested(trackId, startPos, endPos) {
+                                    if (trackId === trackClipsContainer.trackId) {
+                                        trackClipsContainer.movePreviewClip(startPos, endPos)
+                                    } else {
+                                        trackClipsContainer.clearPreviewClip()
+                                    }
+                                }
+
+                                function onClearPreviewImportClip() {
+                                    trackClipsContainer.clearPreviewClip()
+                                }
                             }
                         }
                     }
@@ -1058,21 +1079,50 @@ Rectangle {
 
         anchors.fill: parent
 
+        Timer {
+            id: clearPreviewClipsTimer
+            interval: 100
+            onTriggered: {
+                tracksItemsView.clearPreviewImportClip()
+            }
+        }
+
         onEntered: drop => {
+            drop.accepted = true
+            clearPreviewClipsTimer.stop()
+
             let urls = drop.urls.concat([]);
+
+            // TODO: parallel/serial visuals of multiple clips
+            if (urls.length > 1) {
+                return
+            }
+
+            // update preview clip position
+            let position = mapToItem(content, Qt.point(drop.x, drop.y))
+
+            let trackId = tracksViewState.trackAtPosition(position.x, position.y)
+            let endPos = timeline.context.timeToPosition((timeline.context.positionToTime(position.x) + tracksModel.audioFileLength(urls)))
+            tracksItemsView.previewImportClipRequested(trackId, position.x, endPos)
         }
 
         onExited: {
+            clearPreviewClipsTimer.start()
         }
 
         onPositionChanged: {
+            // NOTE! Qt does not reliably send onPositionChanged for external drags
+            // it is expected that Qt may trigger entered/exited signals alternately
+            // instead of positionChanged
         }
 
         onDropped: drop => {
-            let urls = drop.urls.concat([]);
-            tracksModel.audioFileLength(urls); // temporary
             // Forces conversion to a compatible array
-            tracksModel.handleDroppedFiles(urls)
+            let urls = drop.urls.concat([]);
+
+            let position = mapToItem(content, Qt.point(drop.x, drop.y))
+            let trackId = tracksViewState.trackAtPosition(position.x, position.y)
+            tracksModel.handleDroppedFiles(trackId, timeline.context.positionToTime(position.x), urls)
 
             drop.acceptProposedAction()
         }

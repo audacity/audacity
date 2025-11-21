@@ -19,6 +19,9 @@ TrackItemsContainer {
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
 
+    signal movePreviewClip(int x, int duration) // clip title too?
+    signal clearPreviewClip()
+
     TrackClipsListModel {
         id: clipsModel
         trackId: root.trackId
@@ -448,6 +451,28 @@ TrackItemsContainer {
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+
+                ClipItemSmall {
+                    id: previewClip
+
+                    visible: false
+                    opacity: 0.3
+                    color: "#FFFFFF"
+
+                    Connections {
+                        target: root
+
+                        function onMovePreviewClip(x, endPos) {
+                            previewClip.visible = true
+                            previewClip.x = x
+                            previewClip.width = endPos - x
+                        }
+
+                        function onClearPreviewClip() {
+                            previewClip.visible = false
                         }
                     }
                 }
