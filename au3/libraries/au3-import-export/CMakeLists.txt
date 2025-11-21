@@ -45,7 +45,7 @@ set( SOURCES
    PlainExportOptionsEditor.h
 )
 set( LIBRARIES
-   rapidjson::rapidjson
+#   rapidjson::rapidjson
    lib-tags-interface
    lib-wave-track-interface
    lib-project-interface
@@ -55,4 +55,3 @@ set( LIBRARIES
 audacity_library( lib-import-export "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
-add_subdirectory(riff-test-util)
