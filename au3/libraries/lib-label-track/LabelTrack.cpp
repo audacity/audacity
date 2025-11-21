@@ -1130,6 +1130,21 @@ void LabelTrack::DeleteLabel(int index)
               this->SharedPointer<LabelTrack>(), title, index, -1 });
 }
 
+void LabelTrack::DeleteLabelById(int64_t id)
+{
+    for (size_t i = 0; i < mLabels.size(); ++i) {
+        if (mLabels[i].GetId() == id) {
+            const auto title = mLabels[i].title;
+            mLabels.erase(mLabels.begin() + i);
+
+            Publish({ LabelTrackEvent::Deletion,
+                      this->SharedPointer<LabelTrack>(), title, (int)i, -1 });
+
+            break;
+        }
+    }
+}
+
 /// Sorts the labels in order of their starting times.
 /// This function is called often (whilst dragging a label)
 /// We expect them to be very nearly in order, so insertion

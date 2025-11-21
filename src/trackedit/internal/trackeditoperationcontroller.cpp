@@ -720,9 +720,9 @@ bool TrackeditOperationController::removeLabel(const LabelKey& labelKey)
     return false;
 }
 
-bool TrackeditOperationController::removeLabels(const LabelKeyList& labelKeys)
+bool TrackeditOperationController::removeLabels(const LabelKeyList& labelKeys, bool moveLabels)
 {
-    if (labelsInteraction()->removeLabels(labelKeys)) {
+    if (labelsInteraction()->removeLabels(labelKeys, moveLabels)) {
         projectHistory()->pushHistoryState("Labels removed", "Remove labels");
         return true;
     }

@@ -24,7 +24,7 @@ public:
     bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) override;
 
     bool removeLabel(const LabelKey& labelKey) override;
-    bool removeLabels(const LabelKeyList& labelKeys) override;
+    bool removeLabels(const LabelKeyList& labelKeys, bool moveLabels) override;
 
     ITrackDataPtr cutLabel(const LabelKey& labelKey) override;
     ITrackDataPtr copyLabel(const LabelKey& labelKey) override;
