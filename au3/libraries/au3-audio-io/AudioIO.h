@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_AUDIO_IO__
 #define __AUDACITY_AUDIO_IO__
 
-#include "AudioIOBase.h" // to inherit
+#include "au3-audio-devices/AudioIOBase.h" // to inherit
 #include "au3-mixer/AudioIOSequences.h"
 #include "PlaybackSchedule.h" // member variable
 #include "RingBuffer.h"
@@ -28,7 +28,7 @@
 #include <wx/atomic.h> // member variable
 #include <wx/thread.h>
 
-#include "PluginProvider.h" // for PluginID
+#include "au3-components/PluginProvider.h" // for PluginID
 #include "au3-utility/Observer.h"
 #include "au3-math/SampleFormat.h"
 

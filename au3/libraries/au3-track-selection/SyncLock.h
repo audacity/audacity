@@ -12,7 +12,7 @@ Paul Licameli split from Track.cpp
 #define __AUDACITY_SYNC_LOCK__
 
 #include "au3-preferences/Prefs.h"
-#include "Track.h" // for TrackIterRange
+#include "au3-track/Track.h" // for TrackIterRange
 #include "au3-registries/AttachedVirtualFunction.h"
 #include "au3-utility/Observer.h"
 

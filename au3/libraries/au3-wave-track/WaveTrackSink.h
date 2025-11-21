@@ -15,7 +15,7 @@
 #ifndef __AUDACITY_WAVE_TRACK_SINK__
 #define __AUDACITY_WAVE_TRACK_SINK__
 
-#include "AudioGraphSink.h" // to inherit
+#include "au3-audio-graph/AudioGraphSink.h" // to inherit
 #include "au3-math/SampleCount.h"
 #include "au3-math/SampleFormat.h"
 

@@ -20,7 +20,7 @@
 #include "au3-utility/Observer.h"
 #include "au3-preferences/Prefs.h"
 #include "au3-xml/XMLMethodRegistry.h"
-#include "ZoomInfo.h" // to inherit
+#include "au3-screen-geometry/ZoomInfo.h" // to inherit
 
 struct NotifyingSelectedRegionMessage : Observer::Message {};
 

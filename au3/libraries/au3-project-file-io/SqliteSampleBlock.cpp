@@ -18,7 +18,7 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include "au3-stretching-sequence/AudioSegmentSampleView.h"
 #include "au3-xml/XMLTagHandler.h"
 
-#include "SampleBlock.h" // to inherit
+#include "au3-wave-track/SampleBlock.h" // to inherit
 #include "au3-project-history/UndoManager.h"
 #include "au3-track/UndoTracks.h"
 #include "au3-wave-track/WaveTrack.h"

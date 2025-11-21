@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_QUALITY_SETTINGS__
 #define __AUDACITY_QUALITY_SETTINGS__
 
-#include "Prefs.h" // for EnumSetting
+#include "au3-preferences/Prefs.h" // for EnumSetting
 #include "au3-math/SampleFormat.h"
 
 class IntSetting;

@@ -21,7 +21,7 @@
 
 #include "au3-registries/ClientData.h"
 #include "au3-utility/Observer.h"
-#include "PluginProvider.h" // for PluginID
+#include "au3-components/PluginProvider.h" // for PluginID
 #include "RealtimeEffectList.h"
 
 class ChannelGroup;

@@ -15,7 +15,7 @@
 #include <vector>
 #include <wx/filename.h> // member variable
 #include "au3-strings/Identifier.h"
-#include "FileNames.h" // for FileTypes
+#include "au3-files/FileNames.h" // for FileTypes
 
 #include "au3-registries/Registry.h"
 #include "ExportPlugin.h"

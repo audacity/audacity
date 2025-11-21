@@ -14,8 +14,8 @@
 #ifndef __AUDACITY_PER_TRACK_EFFECT__
 #define __AUDACITY_PER_TRACK_EFFECT__
 
-#include "AudioGraphSink.h" // to inherit
-#include "AudioGraphSource.h" // to inherit
+#include "au3-audio-graph/AudioGraphSink.h" // to inherit
+#include "au3-audio-graph/AudioGraphSource.h" // to inherit
 #include "Effect.h" // to inherit
 #include "au3-utility/MemoryX.h"
 #include "au3-math/SampleCount.h"

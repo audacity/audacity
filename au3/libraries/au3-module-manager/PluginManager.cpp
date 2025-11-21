@@ -28,7 +28,7 @@ for shared and private configs - which need to move out.
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-components/PluginProvider.h"
 
-#include "Internat.h" // for macro XO
+#include "au3-strings/Internat.h" // for macro XO
 #include "au3-files/FileNames.h"
 #include "au3-utility/MemoryX.h"
 #include "ModuleManager.h"

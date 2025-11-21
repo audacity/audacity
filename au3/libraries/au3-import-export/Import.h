@@ -16,7 +16,7 @@
 #include <vector>
 #include <wx/tokenzr.h> // for enum wxStringTokenizerMode
 
-#include "FileNames.h" // for FileType
+#include "au3-files/FileNames.h" // for FileType
 
 #include "au3-registries/Registry.h"
 

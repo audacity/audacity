@@ -32,7 +32,7 @@
 #include "au3-xml/XMLTagHandler.h"
 
 #include "au3-registries/ClientData.h"
-#include "UndoManager.h" // To inherit UndoStateExtension
+#include "au3-project-history/UndoManager.h" // To inherit UndoStateExtension
 #include <utility>
 
 #include <memory>
