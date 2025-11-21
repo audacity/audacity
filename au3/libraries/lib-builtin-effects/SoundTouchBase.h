@@ -27,7 +27,9 @@ class SoundTouch;
 
 class TimeWarper;
 class LabelTrack;
+#ifdef USE_MIDI
 class NoteTrack;
+#endif
 class WaveChannel;
 class WaveTrack;
 
