@@ -25,7 +25,7 @@
 #include <wx/defs.h>
 
 #if wxUSE_ACCESSIBILITY
-#include "WindowAccessible.h"
+#include "au3-wx-wrappers/WindowAccessible.h"
 
 class HtmlWindowAx final : public WindowAccessible
 {

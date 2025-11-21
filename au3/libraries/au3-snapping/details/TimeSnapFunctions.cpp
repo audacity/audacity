@@ -10,7 +10,7 @@
 **********************************************************************/
 
 #include "SnapUtils.h"
-#include "ProjectRate.h"
+#include "au3-project-rate/ProjectRate.h"
 
 namespace {
 double SnapToSamples(const AudacityProject& project)

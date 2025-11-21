@@ -18,7 +18,7 @@ MP3 and FFmpeg encoding libraries.
 
 #include "LibraryPrefs.h"
 
-#include "ShuttleGui.h"
+#include "au3-shuttlegui/ShuttleGui.h"
 
 #include <wx/defs.h>
 #include <wx/stattext.h>

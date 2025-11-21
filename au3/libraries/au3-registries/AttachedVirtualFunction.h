@@ -16,7 +16,7 @@ Paul Licameli
 #include <mutex>
 #include <type_traits>
 #include <utility>
-#include "InconsistencyException.h"
+#include "au3-exceptions/InconsistencyException.h"
 
 //! Class template generates single-dispatch, open method registry tables
 /*!

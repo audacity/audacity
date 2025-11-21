@@ -12,8 +12,8 @@
 
 *//*******************************************************************/
 #include "MenuRegistry.h"
-#include "Project.h"
-#include "BasicUI.h"
+#include "au3-project/Project.h"
+#include "au3-basic-ui/BasicUI.h"
 #include <wx/log.h>
 
 namespace MenuRegistry {

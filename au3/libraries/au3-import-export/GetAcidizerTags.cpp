@@ -9,7 +9,7 @@
 
 **********************************************************************/
 #include "libraries/lib-import-export/GetAcidizerTags.h"
-#include "libraries/lib-file-formats/AcidizerTags.h"
+#include "au3-file-formats/AcidizerTags.h"
 
 #include <algorithm>
 #include <array>

@@ -12,7 +12,7 @@
 *//********************************************************************/
 
 #include "ActiveProjects.h"
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 #include <wx/filename.h>
 

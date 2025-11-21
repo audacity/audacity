@@ -11,7 +11,7 @@
 #include "JournalOutput.h"
 
 #include <wx/textfile.h>
-#include "wxArrayStringEx.h"
+#include "au3-strings/wxArrayStringEx.h"
 
 namespace Journal {
 namespace {

@@ -14,7 +14,7 @@ Paul Licameli split from Menus.cpp
 
 #include <wx/log.h>
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 namespace {
 struct ItemOrdering;

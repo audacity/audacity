@@ -47,9 +47,9 @@
 #include <wx/window.h>
 #include <wx/stattext.h>
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
 #ifdef __WXOSX_COCOA__
 extern "C" void NSBeep(void);

@@ -42,7 +42,7 @@
 #ifndef __AUDACITY_CONFIGINTERFACE_H__
 #define __AUDACITY_CONFIGINTERFACE_H__
 
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 #include <functional>
 #include <tuple>
 #include <type_traits>

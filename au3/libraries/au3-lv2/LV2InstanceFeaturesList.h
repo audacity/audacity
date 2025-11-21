@@ -17,8 +17,8 @@
 #if USE_LV2
 
 #include "LV2FeaturesList.h"
-#include "Callable.h"
-#include "GlobalVariable.h"
+#include "au3-utility/Callable.h"
+#include "au3-utility/GlobalVariable.h"
 #include "lv2/options/options.h"
 #include "lv2/worker/worker.h"
 

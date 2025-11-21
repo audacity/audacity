@@ -17,7 +17,7 @@
 #include "LV2Ports.h"
 
 #include "au3-math/SampleFormat.h"
-#include "PerTrackEffect.h"
+#include "au3-effects/PerTrackEffect.h"
 
 #define LV2EFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: abbreviates

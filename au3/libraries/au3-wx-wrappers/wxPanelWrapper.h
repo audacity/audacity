@@ -12,9 +12,9 @@
 #include <wx/panel.h> // to inherit
 #include <wx/dialog.h> // to inherit
 
-#include "Internat.h"
+#include "au3-strings/Internat.h"
 
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 
 WX_WRAPPERS_API void wxTabTraversalWrapperCharHook(wxKeyEvent& event);
 

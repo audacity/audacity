@@ -18,7 +18,7 @@
 
 #include <wx/string.h>
 
-#include "AudioIOBase.h"
+#include "au3-audio-devices/AudioIOBase.h"
 
 struct PaStreamCallbackTimeInfo;
 struct PaStreamInfo;

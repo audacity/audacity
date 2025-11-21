@@ -9,7 +9,7 @@
  **********************************************************************/
 
 #include <vector>
-#include "Theme.h"
+#include "au3-theme/Theme.h"
 
 static const std::vector<unsigned char> ImageCacheAsData {
 // Include the generated file full of numbers

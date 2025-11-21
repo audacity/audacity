@@ -6,7 +6,7 @@ SampleBlock.cpp
 
 **********************************************************************/
 
-#include "InconsistencyException.h"
+#include "au3-exceptions/InconsistencyException.h"
 #include "SampleBlock.h"
 #include "au3-math/SampleFormat.h"
 

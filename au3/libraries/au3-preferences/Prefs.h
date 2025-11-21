@@ -40,16 +40,16 @@
 
 #include <functional>
 
-#include "ComponentInterfaceSymbol.h"
-#include "wxArrayStringEx.h"
+#include "au3-components/ComponentInterfaceSymbol.h"
+#include "au3-strings/wxArrayStringEx.h"
 
 #include <wx/filename.h>
 #include <wx/textfile.h>
 
-#include "GlobalVariable.h"
+#include "au3-utility/GlobalVariable.h"
 
 #include "BasicSettings.h"
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
 PREFERENCES_API void InitPreferences(std::unique_ptr<audacity::BasicSettings> uPrefs);
 PREFERENCES_API void GetPreferencesVersion(int& vMajor, int& vMinor, int& vMicro);

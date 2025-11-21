@@ -12,10 +12,10 @@
 #define __AUDACITY_COMMAND_CONTEXT__
 
 #include <memory>
-#include "Callable.h"
+#include "au3-utility/Callable.h"
 #include "CommandTargets.h"
-#include "GlobalVariable.h"
-#include "Identifier.h"
+#include "au3-utility/GlobalVariable.h"
+#include "au3-strings/Identifier.h"
 
 class AudacityProject;
 class wxEvent;

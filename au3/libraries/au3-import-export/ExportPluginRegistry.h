@@ -5,7 +5,7 @@
 
 #include <wx/string.h>
 
-#include "Registry.h"
+#include "au3-registries/Registry.h"
 
 class ExportPlugin;
 struct FormatInfo;

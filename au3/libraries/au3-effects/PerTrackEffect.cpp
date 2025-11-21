@@ -20,13 +20,13 @@
 #include "PerTrackEffect.h"
 #include "EffectOutputTracks.h"
 
-#include "AudioGraphBuffers.h"
-#include "AudioGraphTask.h"
-#include "EffectStage.h"
-#include "TimeWarper.h"
-#include "WaveTrack.h"
-#include "WaveTrackSink.h"
-#include "WideSampleSource.h"
+#include "au3-audio-graph/AudioGraphBuffers.h"
+#include "au3-audio-graph/AudioGraphTask.h"
+#include "au3-mixer/EffectStage.h"
+#include "au3-track/TimeWarper.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackSink.h"
+#include "au3-mixer/WideSampleSource.h"
 
 PerTrackEffect::Instance::~Instance() = default;
 

@@ -12,25 +12,25 @@
 #ifndef __AUDACITY_COMMAND_MANAGER__
 #define __AUDACITY_COMMAND_MANAGER__
 
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 
-#include "Callable.h"
-#include "ClientData.h"
+#include "au3-utility/Callable.h"
+#include "au3-registries/ClientData.h"
 #include "CommandFunctors.h"
 #include "CommandFlag.h"
-#include "GlobalVariable.h"
+#include "au3-utility/GlobalVariable.h"
 
 #include "Keyboard.h"
 #include "MenuRegistry.h"
 
-#include "Observer.h"
-#include "Prefs.h"
-#include "Project.h"
+#include "au3-utility/Observer.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-project/Project.h"
 
 #include <functional>
 #include <vector>
 
-#include "XMLTagHandler.h"
+#include "au3-xml/XMLTagHandler.h"
 
 #include <unordered_map>
 

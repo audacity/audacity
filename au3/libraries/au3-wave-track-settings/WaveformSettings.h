@@ -11,7 +11,7 @@ Paul Licameli
 #pragma once
 
 #include "ClientData.h" // to inherit
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 class wxRect;
 

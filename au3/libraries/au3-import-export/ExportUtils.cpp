@@ -15,9 +15,9 @@
 #include <algorithm>
 #include <vector>
 
-#include "Track.h"
-#include "ViewInfo.h"
-#include "WaveTrack.h"
+#include "au3-track/Track.h"
+#include "au3-time-frequency-selection/ViewInfo.h"
+#include "au3-wave-track/WaveTrack.h"
 
 //TODO: used in many places in anticipation that Exporter yields same result, fix that
 TrackIterRange<const WaveTrack> ExportUtils::FindExportWaveTracks(const TrackList& tracks, bool selectedOnly)

@@ -9,7 +9,7 @@
 
 **********************************************************************/
 #include "SilenceSegment.h"
-#include "AudioContainer.h"
+#include "au3-time-and-pitch/AudioContainer.h"
 
 #include <catch2/catch.hpp>
 

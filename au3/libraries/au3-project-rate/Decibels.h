@@ -14,7 +14,7 @@ Paul Licameli
 #ifndef __AUDACITY_DECIBELS__
 #define __AUDACITY_DECIBELS__
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 //! Negation of this value is the lowest dB level that should be shown in dB scales
 extern PROJECT_RATE_API IntSetting DecibelScaleCutoff;

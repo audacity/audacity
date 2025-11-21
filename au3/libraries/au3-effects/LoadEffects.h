@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_LOAD_EFFECTS__
 #define __AUDACITY_LOAD_EFFECTS__
 
-#include "PluginProvider.h"
+#include "au3-components/PluginProvider.h"
 
 #include <functional>
 #include <memory>

@@ -14,8 +14,8 @@
 #define __AUDACITY_VST_EFFECT_BASE__
 
 #include "VSTWrapper.h"
-#include "PerTrackEffect.h"
-#include "PluginInterface.h"
+#include "au3-effects/PerTrackEffect.h"
+#include "au3-module-manager/PluginInterface.h"
 
 /* i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
    developed by Steinberg GmbH */

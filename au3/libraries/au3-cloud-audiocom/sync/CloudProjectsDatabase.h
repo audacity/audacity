@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-#include "sqlite/SafeConnection.h"
+#include "au3-sqlite-helpers/sqlite/SafeConnection.h"
 
 #include "CloudSyncDTO.h"
 

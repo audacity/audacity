@@ -9,9 +9,9 @@
 **********************************************************************/
 #pragma once
 
-#include "PerTrackEffect.h"
+#include "au3-effects/PerTrackEffect.h"
 #include "au3-math/SampleCount.h"
-#include "SettingsVisitor.h"
+#include "au3-components/SettingsVisitor.h"
 #include <queue>
 
 #define TABLESIZE 2049 // size of lookup table (steps * 2 + 1)

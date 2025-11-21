@@ -22,22 +22,22 @@
 #include "sync/CloudSyncDTO.h"
 #include "sync/RemoteProjectSnapshot.h"
 
-#include "CodeConversions.h"
+#include "au3-string-utils/CodeConversions.h"
 
 #include "OAuthService.h"
 #include "ServiceConfig.h"
 
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
-#include "Project.h"
-#include "ProjectFileIO.h"
+#include "au3-project/Project.h"
+#include "au3-project-file-io/ProjectFileIO.h"
 
-#include "BasicUI.h"
-#include "FileNames.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-files/FileNames.h"
 
-#include "IResponse.h"
-#include "NetworkManager.h"
-#include "Request.h"
+#include "au3-network-manager/IResponse.h"
+#include "au3-network-manager/NetworkManager.h"
+#include "au3-network-manager/Request.h"
 
 namespace audacity::cloud::audiocom {
 namespace {

@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_FILE_FORMATS__
 #define __AUDACITY_FILE_FORMATS__
 
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 #include "au3-math/SampleFormat.h"
 
 #include <memory>

@@ -11,7 +11,7 @@
 
 ***********************************************************************/
 #include "EqualizationParameters.h"
-#include "ConfigInterface.h"
+#include "au3-module-manager/ConfigInterface.h"
 
 const EnumValueSymbol EqualizationParameters::kInterpStrings[nInterpolations] =
 {

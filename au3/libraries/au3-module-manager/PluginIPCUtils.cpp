@@ -16,8 +16,8 @@
 
 #include "PluginDescriptor.h"
 
-#include "IPCChannel.h"
-#include "XMLWriter.h"
+#include "au3-ipc/IPCChannel.h"
+#include "au3-xml/XMLWriter.h"
 
 using namespace detail;
 

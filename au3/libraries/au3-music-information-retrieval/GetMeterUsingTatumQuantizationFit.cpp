@@ -10,8 +10,8 @@ Matthieu Hodgkinson
 **********************************************************************/
 
 #include "GetMeterUsingTatumQuantizationFit.h"
-#include "IteratorX.h"
-#include "MapToPositiveHalfIndex.h"
+#include "au3-utility/IteratorX.h"
+#include "au3-utility/MapToPositiveHalfIndex.h"
 #include "MirDsp.h"
 #include "MirTypes.h"
 #include "MirUtils.h"

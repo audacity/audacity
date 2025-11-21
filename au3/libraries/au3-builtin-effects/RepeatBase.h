@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ShuttleAutomation.h"
-#include "StatefulEffect.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-effects/StatefulEffect.h"
 
 class BUILTIN_EFFECTS_API RepeatBase : public StatefulEffect
 {

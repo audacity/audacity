@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BasicSettings.h"
+#include "au3-preferences/BasicSettings.h"
 
 #include <memory>
 #include <wx/string.h>

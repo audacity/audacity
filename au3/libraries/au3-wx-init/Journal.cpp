@@ -25,9 +25,9 @@
 #include <string>
 #include <string_view>
 
-#include "MemoryX.h"
-#include "Prefs.h"
-#include "FileNames.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-files/FileNames.h"
 
 namespace Journal {
 namespace {

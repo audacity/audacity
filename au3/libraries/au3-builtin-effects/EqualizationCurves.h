@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_EFFECT_EQUALIZATION_CURVES__
 #define __AUDACITY_EFFECT_EQUALIZATION_CURVES__
 
-#include "XMLTagHandler.h"
+#include "au3-xml/XMLTagHandler.h"
 
 #include <vector>
 class TranslatableString;

@@ -11,7 +11,7 @@
 #include "TempDirectory.h"
 
 #include "FileNames.h"
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 namespace {
 struct TempDirChangedPublisher final : Observer::Publisher<FilePath>

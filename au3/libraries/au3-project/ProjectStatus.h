@@ -16,9 +16,9 @@ Paul Licameli
 #include <unordered_map>
 #include <vector>
 #include "ClientData.h" // to inherit
-#include "Prefs.h"
-#include "Observer.h"
-#include "Registry.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-utility/Observer.h"
+#include "au3-registries/Registry.h"
 
 class AudacityProject;
 class wxWindow;

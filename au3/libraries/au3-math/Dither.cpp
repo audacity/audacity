@@ -36,8 +36,8 @@ and get deterministic behaviour.
 
 #include "Dither.h"
 
-#include "Internat.h"
-#include "Prefs.h"
+#include "au3-strings/Internat.h"
+#include "au3-preferences/Prefs.h"
 
 // Erik de Castro Lopo's header file that
 // makes sure that we have lrint and lrintf

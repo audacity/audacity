@@ -10,11 +10,11 @@ Paul Licameli split from Mix.cpp
 
 #include "MixAndRender.h"
 
-#include "BasicUI.h"
-#include "Mix.h"
-#include "RealtimeEffectList.h"
-#include "StretchingSequence.h"
-#include "WaveTrack.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-mixer/Mix.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
+#include "au3-stretching-sequence/StretchingSequence.h"
+#include "au3-wave-track/WaveTrack.h"
 
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 
@@ -171,8 +171,8 @@ Track::Holder MixAndRender(const TrackIterRange<const WaveTrack>& trackRange,
     return mix;
 }
 
-#include "RealtimeEffectList.h"
-#include "RealtimeEffectState.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
 
 template<typename Host>
 std::vector<MixerOptions::StageSpecification>
@@ -226,7 +226,7 @@ GetMasterEffectStages(const AudacityProject& project)
  There is also registration for serialization of the project-wide master effect
  stack (whether or not UI makes it available).
  */
-#include "Project.h"
+#include "au3-project/Project.h"
 static ProjectFileIORegistry::ObjectReaderEntry projectAccessor {
     RealtimeEffectList::XMLTag(),
     [](AudacityProject& project) { return &RealtimeEffectList::Get(project); }

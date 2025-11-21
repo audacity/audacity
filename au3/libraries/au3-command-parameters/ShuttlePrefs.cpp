@@ -29,7 +29,7 @@
 #include <wx/defs.h>
 
 #include "WrappedType.h"
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 bool ShuttlePrefs::TransferBool(const wxString& Name, bool& bValue, const bool& bDefault)
 {

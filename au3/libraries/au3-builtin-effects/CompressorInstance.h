@@ -10,11 +10,11 @@
 **********************************************************************/
 #pragma once
 
-#include "libraries/lib-dynamic-range-processor/CompressorProcessor.h"
-#include "libraries/lib-dynamic-range-processor/DynamicRangeProcessorTypes.h"
-#include "EffectInterface.h"
-#include "Observer.h"
-#include "PerTrackEffect.h"
+#include "au3-dynamic-range-processor/CompressorProcessor.h"
+#include "au3-dynamic-range-processor/DynamicRangeProcessorTypes.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-utility/Observer.h"
+#include "au3-effects/PerTrackEffect.h"
 #include <memory>
 #include <optional>
 #include <vector>

@@ -10,10 +10,10 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectAudioIO.h"
 
-#include "AudioIOBase.h"
-#include "Mix.h"
-#include "Project.h"
-#include "ProjectRate.h"
+#include "au3-audio-devices/AudioIOBase.h"
+#include "au3-mixer/Mix.h"
+#include "au3-project/Project.h"
+#include "au3-project-rate/ProjectRate.h"
 
 AudioIOStartStreamOptions
 ProjectAudioIO::DefaultOptionsFactory(AudacityProject& project, bool)

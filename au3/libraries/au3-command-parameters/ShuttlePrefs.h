@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_SHUTTLE_PREFS__
 #define __AUDACITY_SHUTTLE_PREFS__
 
-#include "SettingsVisitor.h"
+#include "au3-components/SettingsVisitor.h"
 
 class COMMAND_PARAMETERS_API ShuttlePrefs final
 {

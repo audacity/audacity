@@ -11,8 +11,8 @@
 #pragma once
 
 #include "DynamicRangeProcessorTypes.h"
-#include "Internat.h"
-#include "TranslatableString.h"
+#include "au3-strings/Internat.h"
+#include "au3-strings/TranslatableString.h"
 
 namespace DynamicRangeProcessorUtils {
 template<typename Struct> struct Preset

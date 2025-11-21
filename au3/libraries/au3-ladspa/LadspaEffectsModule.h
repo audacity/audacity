@@ -12,10 +12,10 @@
 #ifndef __AUDACITY_LADSPA_EFFECTS_MODULE__
 #define __AUDACITY_LADSPA_EFFECTS_MODULE__
 
-#include "Callable.h"
-#include "GlobalVariable.h"
+#include "au3-utility/Callable.h"
+#include "au3-utility/GlobalVariable.h"
 #include "LadspaEffectBase.h"
-#include "PluginProvider.h"
+#include "au3-components/PluginProvider.h"
 
 class LadspaEffectsModule final : public PluginProvider
 {

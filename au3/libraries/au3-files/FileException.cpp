@@ -10,7 +10,7 @@
 #include "FileException.h"
 #include "FileNames.h"
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 FileException::~FileException()
 {

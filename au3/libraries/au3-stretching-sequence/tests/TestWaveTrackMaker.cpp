@@ -11,7 +11,7 @@
 #include "TestWaveTrackMaker.h"
 #include "MockedAudio.h"
 #include "MockedPrefs.h"
-#include "Project.h"
+#include "au3-project/Project.h"
 
 MockedPrefs prefs;
 MockedAudio audio;

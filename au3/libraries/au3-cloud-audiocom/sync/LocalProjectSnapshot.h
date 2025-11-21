@@ -22,7 +22,7 @@
 #include "CloudSyncDTO.h"
 #include "NetworkUtils.h"
 
-#include "concurrency/CancellationContext.h"
+#include "au3-concurrency/concurrency/CancellationContext.h"
 
 class AudacityProject;
 enum class AudiocomTrace;

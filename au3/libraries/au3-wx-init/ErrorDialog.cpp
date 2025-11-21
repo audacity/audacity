@@ -28,11 +28,11 @@
 #include <wx/textctrl.h>
 #include <wx/artprov.h>
 
-#include "AllThemeResources.h"
-#include "CodeConversions.h"
-#include "ShuttleGui.h"
+#include "au3-theme/AllThemeResources.h"
+#include "au3-string-utils/CodeConversions.h"
+#include "au3-shuttlegui/ShuttleGui.h"
 #include "HelpText.h"
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 #include "HelpSystem.h"
 
 BEGIN_EVENT_TABLE(ErrorDialog, wxDialogWrapper)

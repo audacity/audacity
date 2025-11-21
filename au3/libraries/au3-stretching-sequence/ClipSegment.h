@@ -12,7 +12,7 @@
 
 #include "AudioSegment.h"
 #include "ClipTimeAndPitchSource.h"
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 #include "PlaybackDirection.h"
 #include <atomic>
 #include <memory>

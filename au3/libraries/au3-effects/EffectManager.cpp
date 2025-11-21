@@ -19,9 +19,9 @@ effects.
 *//*******************************************************************/
 
 #include "EffectManager.h"
-#include "ConfigInterface.h"
+#include "au3-module-manager/ConfigInterface.h"
 #include "Effect.h"
-#include "PluginManager.h"
+#include "au3-module-manager/PluginManager.h"
 #include <algorithm>
 
 /*******************************************************************************

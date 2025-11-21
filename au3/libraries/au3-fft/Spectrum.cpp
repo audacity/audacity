@@ -16,7 +16,7 @@
 #include "Spectrum.h"
 
 #include <math.h>
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 using Floats = ArrayOf<float>;
 
 bool ComputeSpectrum(

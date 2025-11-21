@@ -14,8 +14,8 @@
 
 #include <wx/control.h>
 
-#include "TranslatableString.h"
-#include "Prefs.h"
+#include "au3-strings/TranslatableString.h"
+#include "au3-preferences/Prefs.h"
 
 class wxTextCtrl;
 class wxKeyEvent;

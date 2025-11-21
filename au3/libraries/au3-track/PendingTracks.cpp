@@ -8,7 +8,7 @@
 
  **********************************************************************/
 #include "PendingTracks.h"
-#include "Project.h"
+#include "au3-project/Project.h"
 #include "Track.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory

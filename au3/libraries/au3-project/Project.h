@@ -12,7 +12,7 @@
 #define __AUDACITY_PROJECT__
 
 #include "ClientData.h" // to inherit
-#include "GlobalVariable.h"
+#include "au3-utility/GlobalVariable.h"
 
 #include <memory>
 #include <mutex>
@@ -129,7 +129,7 @@ public:
 };
 
 // Generate a registry for serialized data attached to the project
-#include "XMLMethodRegistry.h"
+#include "au3-xml/XMLMethodRegistry.h"
 class AudacityProject;
 using ProjectFileIORegistry = XMLMethodRegistry<AudacityProject>;
 DECLARE_XML_METHOD_REGISTRY(PROJECT_API, ProjectFileIORegistry);

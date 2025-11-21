@@ -23,9 +23,9 @@
 *//*******************************************************************/
 
 #include "Resample.h"
-#include "Prefs.h"
-#include "Internat.h"
-#include "ComponentInterface.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-strings/Internat.h"
+#include "au3-components/ComponentInterface.h"
 
 #include <soxr.h>
 

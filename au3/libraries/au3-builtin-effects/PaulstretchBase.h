@@ -8,8 +8,8 @@
  **********************************************************************/
 #pragma once
 
-#include "ShuttleAutomation.h"
-#include "StatefulEffect.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-effects/StatefulEffect.h"
 #include <cfloat>
 
 class WaveChannel;

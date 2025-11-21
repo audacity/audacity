@@ -13,11 +13,11 @@
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitWrapper.h"
-#include "ConfigInterface.h"
-#include "EffectInterface.h"
-#include "Internat.h"
-#include "ModuleManager.h"
-#include "PluginProvider.h"
+#include "au3-module-manager/ConfigInterface.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-strings/Internat.h"
+#include "au3-module-manager/ModuleManager.h"
+#include "au3-components/PluginProvider.h"
 
 #include <wx/osx/core/private.h>
 #include <wx/log.h>

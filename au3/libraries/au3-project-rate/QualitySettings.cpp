@@ -9,8 +9,8 @@
  **********************************************************************/
 
 #include "QualitySettings.h"
-#include "AudioIOBase.h"
-#include "Internat.h"
+#include "au3-audio-devices/AudioIOBase.h"
+#include "au3-strings/Internat.h"
 
 IntSetting QualitySettings::DefaultSampleRate{
     L"/SamplingRate/DefaultProjectSampleRate",

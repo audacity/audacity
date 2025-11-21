@@ -8,7 +8,7 @@
   PaulLicameli
 
 **********************************************************************/
-#include "AttachedVirtualFunction.h"
+#include "au3-registries/AttachedVirtualFunction.h"
 #include <optional>
 
 class ChannelGroup;

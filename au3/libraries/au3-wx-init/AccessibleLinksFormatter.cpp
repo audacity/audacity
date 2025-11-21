@@ -10,13 +10,13 @@
 
 #include "AccessibleLinksFormatter.h"
 
-#include "ShuttleGui.h"
+#include "au3-shuttlegui/ShuttleGui.h"
 
 #include <unordered_map>
 #include <algorithm>
 #include <memory>
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 #include <wx/hyperlink.h>
 

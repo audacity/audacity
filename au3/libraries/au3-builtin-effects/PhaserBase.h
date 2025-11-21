@@ -14,9 +14,9 @@
 **********************************************************************/
 #pragma once
 
-#include "PerTrackEffect.h"
+#include "au3-effects/PerTrackEffect.h"
 #include "au3-math/SampleCount.h"
-#include "ShuttleAutomation.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
 
 #define NUM_STAGES 24
 

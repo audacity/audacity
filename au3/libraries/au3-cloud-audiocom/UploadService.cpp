@@ -20,22 +20,22 @@
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
 
-#include "AudacityException.h"
+#include "au3-exceptions/AudacityException.h"
 
 #include "OAuthService.h"
 #include "ServiceConfig.h"
 #include "UserService.h"
 
-#include "IResponse.h"
-#include "MultipartData.h"
-#include "NetworkManager.h"
+#include "au3-network-manager/IResponse.h"
+#include "au3-network-manager/MultipartData.h"
+#include "au3-network-manager/NetworkManager.h"
 #include "NetworkUtils.h"
-#include "Request.h"
+#include "au3-network-manager/Request.h"
 
-#include "CodeConversions.h"
+#include "au3-string-utils/CodeConversions.h"
 
-#include "TempDirectory.h"
-#include "FileNames.h"
+#include "au3-files/TempDirectory.h"
+#include "au3-files/FileNames.h"
 
 namespace audacity::cloud::audiocom {
 namespace {

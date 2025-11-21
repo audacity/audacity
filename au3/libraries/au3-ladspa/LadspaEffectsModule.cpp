@@ -13,7 +13,7 @@
 *//*******************************************************************/
 #include "LadspaEffectsModule.h"
 
-#include "ConfigInterface.h"
+#include "au3-module-manager/ConfigInterface.h"
 
 #if !defined(__WXMSW__)
 #include <dlfcn.h>
@@ -28,8 +28,8 @@
 #include <wx/log.h>
 #include <wx/tokenzr.h>
 #include <wx/utils.h>
-#include "FileNames.h"
-#include "ModuleManager.h"
+#include "au3-files/FileNames.h"
+#include "au3-module-manager/ModuleManager.h"
 
 // ============================================================================
 // List of effects that ship with Audacity.  These will be autoregistered.

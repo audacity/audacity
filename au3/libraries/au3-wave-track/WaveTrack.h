@@ -11,13 +11,13 @@
 #ifndef __AUDACITY_WAVETRACK__
 #define __AUDACITY_WAVETRACK__
 
-#include "ClipInterface.h"
-#include "PlaybackDirection.h"
-#include "Prefs.h"
+#include "au3-stretching-sequence/ClipInterface.h"
+#include "au3-stretching-sequence/PlaybackDirection.h"
+#include "au3-preferences/Prefs.h"
 #include "au3-math/SampleCount.h"
 #include "au3-math/SampleFormat.h"
-#include "SampleTrack.h"
-#include "WideSampleSequence.h"
+#include "au3-sample-track/SampleTrack.h"
+#include "au3-mixer/WideSampleSequence.h"
 
 #include <functional>
 #include <optional>
@@ -978,7 +978,7 @@ private:
 extern WAVE_TRACK_API StringSetting AudioTrackNameSetting;
 
 // Generate a registry for serialized data
-#include "XMLMethodRegistry.h"
+#include "au3-xml/XMLMethodRegistry.h"
 using WaveTrackIORegistry = XMLMethodRegistry<WaveTrack>;
 DECLARE_XML_METHOD_REGISTRY(WAVE_TRACK_API, WaveTrackIORegistry);
 

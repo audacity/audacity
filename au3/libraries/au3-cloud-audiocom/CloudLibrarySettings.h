@@ -10,7 +10,7 @@
 **********************************************************************/
 #pragma once
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 namespace audacity::cloud::audiocom {
 CLOUD_AUDIOCOM_API extern StringSetting CloudProjectsSavePath;

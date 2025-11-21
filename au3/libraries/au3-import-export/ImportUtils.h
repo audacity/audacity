@@ -17,8 +17,8 @@
 
 #include "Import.h"
 #include "au3-math/SampleFormat.h"
-#include "Internat.h"
-#include "Track.h"
+#include "au3-strings/Internat.h"
+#include "au3-track/Track.h"
 
 class wxString;
 

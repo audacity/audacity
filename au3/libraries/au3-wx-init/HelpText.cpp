@@ -18,10 +18,10 @@
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
 
-#include "FileNames.h"
-#include "Internat.h"
-#include "AllThemeResources.h"
-#include "Theme.h"
+#include "au3-files/FileNames.h"
+#include "au3-strings/Internat.h"
+#include "au3-theme/AllThemeResources.h"
+#include "au3-theme/Theme.h"
 
 wxString HtmlColourOfIndex(int i)
 {

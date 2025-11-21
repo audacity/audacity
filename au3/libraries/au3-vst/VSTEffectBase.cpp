@@ -24,8 +24,8 @@
 
 #include <wx/time.h>
 
-#include "Base64.h"
-#include "ConfigInterface.h"
+#include "au3-strings/Base64.h"
+#include "au3-module-manager/ConfigInterface.h"
 
 VSTEffectBase::VSTEffectBase(const PluginPath& path)
     :  VSTWrapper(path)

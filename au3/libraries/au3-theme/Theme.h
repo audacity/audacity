@@ -21,10 +21,10 @@
 #include <wx/arrstr.h>
 #include <wx/defs.h>
 #include <wx/gdicmn.h>
-#include "ComponentInterfaceSymbol.h"
+#include "au3-components/ComponentInterfaceSymbol.h"
 
-#include "Observer.h"
-#include "Prefs.h"
+#include "au3-utility/Observer.h"
+#include "au3-preferences/Prefs.h"
 
 //! A choice of theme such as "Light", "Dark", ...
 using teThemeType = Identifier;

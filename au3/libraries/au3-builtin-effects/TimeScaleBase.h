@@ -12,7 +12,7 @@
 #if USE_SBSMS
 
 #include "SBSMSBase.h"
-#include "ShuttleAutomation.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
 
 class BUILTIN_EFFECTS_API TimeScaleBase : public SBSMSBase
 {

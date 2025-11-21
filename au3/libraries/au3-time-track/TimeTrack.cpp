@@ -16,10 +16,10 @@
 
 #include <cfloat>
 #include <wx/wxcrtvararg.h>
-#include "Envelope.h"
-#include "Mix.h"
-#include "Project.h"
-#include "ProjectRate.h"
+#include "au3-mixer/Envelope.h"
+#include "au3-mixer/Mix.h"
+#include "au3-project/Project.h"
+#include "au3-project-rate/ProjectRate.h"
 
 //TODO-MB: are these sensible values?
 #define TIMETRACK_MIN 0.01

@@ -11,10 +11,10 @@ Paul Licameli split from CommandManager.h
 #ifndef __AUDACITY_REGISTRY__
 #define __AUDACITY_REGISTRY__
 
-#include "Prefs.h"
-#include "Composite.h"
-#include "TypeSwitch.h"
-#include "Variant.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-utility/Composite.h"
+#include "au3-utility/TypeSwitch.h"
+#include "au3-utility/Variant.h"
 #include <functional>
 #include <type_traits>
 #include <utility>

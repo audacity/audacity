@@ -31,9 +31,9 @@ the general functionality for creating XML in UTF8 encoding.
 
 #include <cstring>
 
-#include "ToChars.h"
+#include "au3-string-utils/ToChars.h"
 
-#include "InconsistencyException.h"
+#include "au3-exceptions/InconsistencyException.h"
 
 //table for xml encoding compatibility with expat decoding
 //see wxWidgets-2.8.12/src/expat/lib/xmltok_impl.h

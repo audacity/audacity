@@ -15,7 +15,7 @@
 #include <cassert>
 #include <cstring>
 #include <mutex>
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 #include "socket_guard.h"
 
 BufferedIPCChannel::BufferedIPCChannel()

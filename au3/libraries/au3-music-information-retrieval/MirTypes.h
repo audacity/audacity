@@ -17,7 +17,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include "PowerSpectrumGetter.h"
+#include "au3-fft/PowerSpectrumGetter.h"
 
 namespace MIR {
 enum class FalsePositiveTolerance

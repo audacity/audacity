@@ -9,13 +9,13 @@ Paul Licameli split from ProjectManager.cpp
 **********************************************************************/
 #include "ProjectSelectionManager.h"
 
-#include "Project.h"
-#include "ProjectHistory.h"
-#include "ProjectNumericFormats.h"
-#include "ProjectRate.h"
-#include "ProjectSnap.h"
-#include "ProjectTimeSignature.h"
-#include "Snap.h"
+#include "au3-project/Project.h"
+#include "au3-project-history/ProjectHistory.h"
+#include "au3-numeric-formats/ProjectNumericFormats.h"
+#include "au3-project-rate/ProjectRate.h"
+#include "au3-snapping/ProjectSnap.h"
+#include "au3-numeric-formats/ProjectTimeSignature.h"
+#include "au3-snapping/Snap.h"
 #include "ViewInfo.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory

@@ -13,7 +13,7 @@
 
 #include "AudioSegmentFactoryInterface.h"
 #include "ClipInterface.h"
-#include "TimeAndPitchInterface.h"
+#include "au3-time-and-pitch/TimeAndPitchInterface.h"
 
 #include <memory>
 

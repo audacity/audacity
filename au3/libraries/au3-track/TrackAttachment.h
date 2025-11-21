@@ -15,7 +15,7 @@ Paul Licameli split from CommonTrackPanelCell.h
 #include <wx/chartype.h>
 #include <memory>
 
-#include "ClientData.h"
+#include "au3-registries/ClientData.h"
 
 class Track;
 class XMLAttributeValueView;

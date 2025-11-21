@@ -12,8 +12,8 @@ Paul Licameli split from WaveTrack.h
 #ifndef __AUDACITY_SAMPLE_TRACK__
 #define __AUDACITY_SAMPLE_TRACK__
 
-#include "AudioIOSequences.h"
-#include "PlayableTrack.h"
+#include "au3-mixer/AudioIOSequences.h"
+#include "au3-playable-track/PlayableTrack.h"
 #include "au3-math/SampleFormat.h"
 
 enum class sampleFormat : unsigned;

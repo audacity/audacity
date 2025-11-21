@@ -12,8 +12,8 @@ Vaughan Johnson (Preview)
 #pragma once
 
 #include "au3-math/Biquad.h"
-#include "ShuttleAutomation.h"
-#include "StatefulPerTrackEffect.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-effects/StatefulPerTrackEffect.h"
 #include <cfloat> // for FLT_MAX
 
 class BUILTIN_EFFECTS_API ScienFilterBase : public StatefulPerTrackEffect

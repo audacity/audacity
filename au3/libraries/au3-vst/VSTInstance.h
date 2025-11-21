@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_VST_INSTANCE__
 #define __AUDACITY_VST_INSTANCE__
 
-#include "PerTrackEffect.h"
+#include "au3-effects/PerTrackEffect.h"
 #include "VSTWrapper.h"
 
 #include <atomic>

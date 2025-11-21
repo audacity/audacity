@@ -12,9 +12,9 @@ Paul Licameli split from Mix.h
 #ifndef __AUDACITY_MIX_AND_RENDER_H
 #define __AUDACITY_MIX_AND_RENDER_H
 
-#include "Mix.h"
+#include "au3-mixer/Mix.h"
 #include "au3-math/SampleFormat.h"
-#include "Track.h"
+#include "au3-track/Track.h"
 
 class AudacityProject;
 class WaveTrack;

@@ -16,7 +16,7 @@
 
 #include <vector>
 #include <wx/string.h>
-#include "XMLTagHandler.h"
+#include "au3-xml/XMLTagHandler.h"
 
 class IPCChannel;
 class PluginDescriptor;

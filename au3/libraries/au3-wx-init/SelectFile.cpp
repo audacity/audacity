@@ -9,8 +9,8 @@
  **********************************************************************/
 
 #include "SelectFile.h"
-#include "FileNames.h"
-#include "FileDialog/FileDialog.h"
+#include "au3-files/FileNames.h"
+#include "au3-wx-wrappers/FileDialog/FileDialog.h"
 #include "AudacityMessageBox.h"
 
 FilePath

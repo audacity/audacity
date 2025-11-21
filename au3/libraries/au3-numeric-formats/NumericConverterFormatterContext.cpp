@@ -10,8 +10,8 @@
  **********************************************************************/
 #include "NumericConverterFormatterContext.h"
 
-#include "Project.h"
-#include "ProjectRate.h"
+#include "au3-project/Project.h"
+#include "au3-project-rate/ProjectRate.h"
 
 FormatterContext::FormatterContext(const AudacityProject& project)
     : mProject(project.weak_from_this())

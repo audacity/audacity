@@ -21,10 +21,10 @@
 
 *//*******************************************************************/
 #include "ScienFilterBase.h"
-#include "BasicUI.h"
-#include "Prefs.h"
-#include "Project.h"
-#include "WaveTrack.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-project/Project.h"
+#include "au3-wave-track/WaveTrack.h"
 #include <cmath>
 
 #if !defined(M_PI)

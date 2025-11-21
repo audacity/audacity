@@ -9,8 +9,8 @@
 **********************************************************************/
 #pragma once
 
-#include "MemoryX.h"
-#include "ShuttleAutomation.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
 #include "TwoPassSimpleMono.h"
 
 using Floats = ArrayOf<float>;

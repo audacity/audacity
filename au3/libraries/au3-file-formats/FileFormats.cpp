@@ -16,10 +16,10 @@ information.
 
 #include "FileFormats.h"
 
-#include "wxArrayStringEx.h"
-#include "Internat.h"
-#include "MemoryX.h"
-#include "BasicUI.h"
+#include "au3-strings/wxArrayStringEx.h"
+#include "au3-strings/Internat.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-basic-ui/BasicUI.h"
 
 #ifndef SNDFILE_1
 #error Requires libsndfile 1.0 or higher

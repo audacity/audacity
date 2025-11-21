@@ -46,13 +46,13 @@
 #include "ComponentInterfaceSymbol.h"
 #include "EffectAutomationParameters.h"
 
-#include "TypedAny.h"
+#include "au3-utility/TypedAny.h"
 #include <cstdint>
 #include <memory>
 #include <optional>
 #include <type_traits>
 
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 
 class ShuttleGui;
 template<bool Const> class SettingsVisitorBase;

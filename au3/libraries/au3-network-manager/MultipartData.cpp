@@ -13,7 +13,7 @@
 #include <cstdint>
 #include <cstring>
 
-#include "AudacityException.h"
+#include "au3-exceptions/AudacityException.h"
 
 namespace audacity {
 namespace network_manager {

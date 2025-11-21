@@ -13,9 +13,9 @@
 #ifndef __AUDACITY_TIME_STRETCHING__
 #define __AUDACITY_TIME_STRETCHING__
 
-#include "Internat.h"
-#include "IteratorX.h"
-#include "TranslatableString.h"
+#include "au3-strings/Internat.h"
+#include "au3-utility/IteratorX.h"
+#include "au3-strings/TranslatableString.h"
 #include "WaveTrack.h"
 #include <unordered_set>
 

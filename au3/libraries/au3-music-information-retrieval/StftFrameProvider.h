@@ -11,7 +11,7 @@
 #pragma once
 
 #include <vector>
-#include "PowerSpectrumGetter.h"
+#include "au3-fft/PowerSpectrumGetter.h"
 
 namespace MIR {
 class MirAudioReader;

@@ -9,7 +9,7 @@
 #ifndef __AUDACITY_ACTIVE_PROJECTS__
 #define __AUDACITY_ACTIVE_PROJECTS__
 
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 
 namespace ActiveProjects {
 PROJECT_FILE_IO_API FilePaths GetAll();

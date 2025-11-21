@@ -8,10 +8,10 @@
 
 #include "SelectionState.h"
 
-#include "ViewInfo.h"
+#include "au3-time-frequency-selection/ViewInfo.h"
 #include "SyncLock.h"
-#include "Track.h"
-#include "Project.h"
+#include "au3-track/Track.h"
+#include "au3-project/Project.h"
 
 #include <cassert>
 

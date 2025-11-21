@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 #include "SilenceBase.h"
-#include "WaveTrack.h"
+#include "au3-wave-track/WaveTrack.h"
 
 const ComponentInterfaceSymbol SilenceBase::Symbol
 /* i18n-hint: noun */

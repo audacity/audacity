@@ -16,9 +16,9 @@
 #if USE_AUDIO_UNITS
 
 #include <AudioToolbox/AudioUnitUtilities.h>
-#include "Callable.h"
-#include "GlobalVariable.h"
-#include "PluginProvider.h"
+#include "au3-utility/Callable.h"
+#include "au3-utility/GlobalVariable.h"
+#include "au3-components/PluginProvider.h"
 #include "AudioUnitEffectBase.h"
 
 ///////////////////////////////////////////////////////////////////////////////

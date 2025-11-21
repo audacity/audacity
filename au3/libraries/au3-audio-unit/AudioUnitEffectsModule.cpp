@@ -15,11 +15,11 @@
 #include "AudioUnitEffectsModule.h"
 
 #include "AudioUnitEffectBase.h"
-#include "ModuleManager.h"
+#include "au3-module-manager/ModuleManager.h"
 #include <wx/log.h>
 #include <wx/tokenzr.h>
 
-#include "wxArrayStringEx.h"
+#include "au3-strings/wxArrayStringEx.h"
 #include <wx/osx/core/private.h>
 
 static const struct

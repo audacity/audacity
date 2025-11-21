@@ -22,9 +22,9 @@
 #include <unordered_map>
 
 #include "LV2Utils.h"
-#include "EffectInterface.h"
-#include "MemoryX.h"
-#include "TranslatableString.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-strings/TranslatableString.h"
 #include <wx/arrstr.h>
 #include "lv2/atom/forge.h"
 #include "zix/ring.h"

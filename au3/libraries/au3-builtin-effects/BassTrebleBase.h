@@ -10,8 +10,8 @@
 **********************************************************************/
 #pragma once
 
-#include "PerTrackEffect.h"
-#include "SettingsVisitor.h"
+#include "au3-effects/PerTrackEffect.h"
+#include "au3-components/SettingsVisitor.h"
 
 // Used to communicate the type of the filter.
 enum kShelfType

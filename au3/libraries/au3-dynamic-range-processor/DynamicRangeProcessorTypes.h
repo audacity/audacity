@@ -10,7 +10,7 @@
 **********************************************************************/
 #pragma once
 
-#include "LockFreeQueue.h"
+#include "au3-utility/LockFreeQueue.h"
 #include <array>
 #include <limits>
 #include <memory>

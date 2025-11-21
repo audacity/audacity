@@ -19,7 +19,7 @@
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffectBase.h"
 #include "AudioUnitInstance.h"
-#include "ConfigInterface.h"
+#include "au3-module-manager/ConfigInterface.h"
 
 #include <wx/ffile.h>
 #include <wx/osx/core/private.h>

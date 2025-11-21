@@ -42,11 +42,11 @@
 #ifndef __AUDACITY_PLUGININTERFACE_H__
 #define __AUDACITY_PLUGININTERFACE_H__
 
-#include "EffectInterface.h"
-#include "ComponentInterface.h"
-#include "Identifier.h"
-#include "PluginProvider.h"
-#include "TypeListVisitor.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-components/ComponentInterface.h"
+#include "au3-strings/Identifier.h"
+#include "au3-components/PluginProvider.h"
+#include "au3-utility/TypeListVisitor.h"
 #include <variant>
 
 class PluginProvider;

@@ -19,21 +19,21 @@ i.e. an alternative to the usual interface, for Audacity.
 *//*******************************************************************/
 
 #include "ModuleManager.h"
-#include "PluginProvider.h"
+#include "au3-components/PluginProvider.h"
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 #include <wx/dynlib.h>
 #include <wx/log.h>
 #include <wx/filename.h>
 #include <wx/tokenzr.h>
 
-#include "FileNames.h"
-#include "MemoryX.h"
+#include "au3-files/FileNames.h"
+#include "au3-utility/MemoryX.h"
 
 #include "PluginInterface.h"
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 #include "ModuleSettings.h"
 
 #define initFnName      "ExtensionModuleInit"

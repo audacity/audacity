@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 #include "PhaserBase.h"
-#include "EffectInterface.h"
+#include "au3-components/EffectInterface.h"
 
 const EffectParameterMethods& PhaserBase::Parameters() const
 {

@@ -12,8 +12,8 @@
 *//********************************************************************/
 #include "VSTEffectsModule.h"
 
-#include "ModuleManager.h"
-#include "wxArrayStringEx.h"
+#include "au3-module-manager/ModuleManager.h"
+#include "au3-strings/wxArrayStringEx.h"
 
 #if defined(__WXMSW__)
 #include <Windows.h>

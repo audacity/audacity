@@ -21,7 +21,7 @@
 
 #include <algorithm>
 
-#include "wxFileNameWrapper.h"
+#include "au3-files/wxFileNameWrapper.h"
 
 namespace audacity::cloud::audiocom::sync {
 namespace {

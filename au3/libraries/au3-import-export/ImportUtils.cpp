@@ -12,9 +12,9 @@
 
 #include "ImportUtils.h"
 
-#include "WaveTrack.h"
-#include "QualitySettings.h"
-#include "BasicUI.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-project-rate/QualitySettings.h"
+#include "au3-basic-ui/BasicUI.h"
 
 sampleFormat ImportUtils::ChooseFormat(sampleFormat effectiveFormat)
 {

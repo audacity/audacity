@@ -12,7 +12,7 @@
 
 #include <wx/string.h>
 
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 
 namespace audacity::cloud::audiocom {
 //! Message that is sent when user data changes.

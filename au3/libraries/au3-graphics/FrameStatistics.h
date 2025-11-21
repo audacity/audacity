@@ -15,7 +15,7 @@
 #include <cstddef>
 #include <functional>
 
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 
 //! A class to profile TrackPanel painting
 /*!

@@ -15,7 +15,7 @@
 #include <memory>
 #include <vector>
 
-#include "concurrency/ICancellable.h"
+#include "au3-concurrency/concurrency/ICancellable.h"
 
 class TrackList;
 

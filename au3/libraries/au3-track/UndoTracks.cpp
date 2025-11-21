@@ -10,7 +10,7 @@
 #include "UndoTracks.h"
 #include "PendingTracks.h"
 #include "Track.h"
-#include "UndoManager.h"
+#include "au3-project-history/UndoManager.h"
 
 // Undo/redo handling of selection changes
 namespace {

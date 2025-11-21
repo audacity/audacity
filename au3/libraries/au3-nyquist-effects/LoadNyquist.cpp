@@ -14,9 +14,9 @@
 
 #include "NyquistBase.h"
 
-#include "FileNames.h"
-#include "PluginManager.h"
-#include "ModuleManager.h"
+#include "au3-files/FileNames.h"
+#include "au3-module-manager/PluginManager.h"
+#include "au3-module-manager/ModuleManager.h"
 
 #include <nyx.h>
 

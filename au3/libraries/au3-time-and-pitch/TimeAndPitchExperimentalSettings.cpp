@@ -9,8 +9,8 @@
 
 **********************************************************************/
 #include "TimeAndPitchExperimentalSettings.h"
-#include "FileNames.h"
-#include "Prefs.h"
+#include "au3-files/FileNames.h"
+#include "au3-preferences/Prefs.h"
 #include <cstdlib>
 #include <fstream>
 

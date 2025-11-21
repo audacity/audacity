@@ -14,7 +14,7 @@
 #pragma once
 
 #include <public.sdk/source/vst/hosting/module.h>
-#include "PerTrackEffect.h"
+#include "au3-effects/PerTrackEffect.h"
 
 /**
  * \brief Objects of this class connect Audacity with VST3 effects

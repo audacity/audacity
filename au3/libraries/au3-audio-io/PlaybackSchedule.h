@@ -11,10 +11,10 @@
 #ifndef __AUDACITY_PLAYBACK_SCHEDULE__
 #define __AUDACITY_PLAYBACK_SCHEDULE__
 
-#include "MemoryX.h"
-#include "MessageBuffer.h"
-#include "Mix.h"
-#include "Observer.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-utility/MessageBuffer.h"
+#include "au3-mixer/Mix.h"
+#include "au3-utility/Observer.h"
 #include <atomic>
 #include <chrono>
 #include <vector>

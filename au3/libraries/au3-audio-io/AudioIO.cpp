@@ -66,7 +66,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "au3-math/float_cast.h"
 #include "au3-math/Resample.h"
 #include "au3-math/Gain.h"
-#include "DeviceManager.h"
+#include "au3-audio-devices/DeviceManager.h"
 
 #include <cfloat>
 #include <cstring>
@@ -102,18 +102,18 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include <wx/power.h>
 #endif
 
-#include "Channel.h"
-#include "Mix.h"
+#include "au3-channel/Channel.h"
+#include "au3-mixer/Mix.h"
 #include "RingBuffer.h"
-#include "Decibels.h"
-#include "Prefs.h"
-#include "Project.h"
-#include "TransactionScope.h"
+#include "au3-project-rate/Decibels.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-project/Project.h"
+#include "au3-transactions/TransactionScope.h"
 
-#include "RealtimeEffectManager.h"
-#include "QualitySettings.h"
-#include "BasicUI.h"
-#include "WaveTrack.h"
+#include "au3-realtime-effects/RealtimeEffectManager.h"
+#include "au3-project-rate/QualitySettings.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-wave-track/WaveTrack.h"
 
 using std::max;
 using std::min;

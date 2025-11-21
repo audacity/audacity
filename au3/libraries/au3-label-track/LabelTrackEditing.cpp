@@ -9,7 +9,7 @@
 
 **********************************************************************/
 #include "LabelTrack.h"
-#include "TempoChange.h"
+#include "au3-stretching-sequence/TempoChange.h"
 
 using OnLabelTrackProjectTempoChange
     =OnProjectTempoChange::Override<LabelTrack>;

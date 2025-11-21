@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_WAVE_TRACK_UTILITIES__
 #define __AUDACITY_WAVE_TRACK_UTILITIES__
 
-#include "IteratorX.h"
+#include "au3-utility/IteratorX.h"
 #include "WaveTrack.h"
 #include <unordered_set>
 

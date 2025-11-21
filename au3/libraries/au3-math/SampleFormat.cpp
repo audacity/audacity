@@ -41,8 +41,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "Prefs.h"
-#include "Internat.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-strings/Internat.h"
 
 DitherType gLowQualityDither = DitherType::none;
 DitherType gHighQualityDither = DitherType::shaped;

@@ -11,9 +11,9 @@
 
 #include "ImportExport.h"
 
-#include "Project.h"
-#include "XMLWriter.h"
-#include "XMLAttributeValueView.h"
+#include "au3-project/Project.h"
+#include "au3-xml/XMLWriter.h"
+#include "au3-xml/XMLAttributeValueView.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory
     sKey{

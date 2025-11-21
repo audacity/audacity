@@ -10,9 +10,9 @@
 **********************************************************************/
 #pragma once
 
-#include "Callable.h"
-#include "Prefs.h"
-#include "Registry.h"
+#include "au3-utility/Callable.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-registries/Registry.h"
 
 #include <functional>
 #include <string_view>

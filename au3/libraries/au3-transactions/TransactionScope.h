@@ -10,7 +10,7 @@
 #ifndef __AUDACITY_TRANSACTION_SCOPE__
 #define __AUDACITY_TRANSACTION_SCOPE__
 
-#include "GlobalVariable.h"
+#include "au3-utility/GlobalVariable.h"
 class AudacityProject;
 #include <functional>
 #include <memory>

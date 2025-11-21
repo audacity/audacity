@@ -25,8 +25,8 @@
 
 #include <wx/log.h>
 
-#include "BufferedStreamReader.h"
-#include "MemoryX.h"
+#include "au3-utility/BufferedStreamReader.h"
+#include "au3-utility/MemoryX.h"
 
 ///
 /// ProjectSerializer class

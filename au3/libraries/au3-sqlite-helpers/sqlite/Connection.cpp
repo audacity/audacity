@@ -11,7 +11,7 @@
 
 #include "sqlite3.h"
 
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
 #include "SQLiteUtils.h"
 

@@ -13,8 +13,8 @@ Paul Licameli
 
 #include <functional>
 #include <memory>
-#include "Identifier.h"
-#include "Internat.h"
+#include "au3-strings/Identifier.h"
+#include "au3-strings/Internat.h"
 
 namespace BasicUI {
 //! @name Types used in the Services interface

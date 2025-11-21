@@ -48,8 +48,8 @@
 #include <memory>
 #include <typeindex>
 #include <vector>
-#include "ClientData.h"
-#include "Observer.h"
+#include "au3-registries/ClientData.h"
+#include "au3-utility/Observer.h"
 
 //! Type of message published by UndoManager
 /*! all are published only during idle time, except BeginPurge and EndPurge */

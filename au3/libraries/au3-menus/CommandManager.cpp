@@ -59,10 +59,10 @@ CommandManager.  It holds the callback for one command.
 
 #include <wx/log.h>
 
-#include "BasicUI.h"
-#include "Project.h"
-#include "ProjectHistory.h"
-#include "UndoManager.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-project/Project.h"
+#include "au3-project-history/ProjectHistory.h"
+#include "au3-project-history/UndoManager.h"
 
 #include <cassert>
 

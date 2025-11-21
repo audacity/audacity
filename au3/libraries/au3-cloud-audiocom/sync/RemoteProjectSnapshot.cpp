@@ -17,14 +17,14 @@
 
 #include "CloudProjectsDatabase.h"
 
-#include "CodeConversions.h"
-#include "Internat.h"
-#include "MemoryX.h"
-#include "StringUtils.h"
+#include "au3-string-utils/CodeConversions.h"
+#include "au3-strings/Internat.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-string-utils/StringUtils.h"
 
-#include "IResponse.h"
-#include "NetworkManager.h"
-#include "Request.h"
+#include "au3-network-manager/IResponse.h"
+#include "au3-network-manager/NetworkManager.h"
+#include "au3-network-manager/Request.h"
 
 #include "WavPackCompressor.h"
 

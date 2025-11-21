@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_DEVICECHANGE_H__
 #define __AUDACITY_DEVICECHANGE_H__
 
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 
 enum class DeviceChangeMessage : char {
     Rescan, Change
@@ -28,7 +28,7 @@ using DeviceChangeMessagePublisher = Observer::Publisher<DeviceChangeMessage>;
 
 #if defined(HAVE_DEVICE_CHANGE)
 
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 
 class DeviceChangeInterface /* not final */
 {

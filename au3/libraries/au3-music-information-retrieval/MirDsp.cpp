@@ -9,12 +9,12 @@
 
 **********************************************************************/
 #include "MirDsp.h"
-#include "IteratorX.h"
-#include "MathApprox.h"
-#include "MemoryX.h"
+#include "au3-utility/IteratorX.h"
+#include "au3-utility/MathApprox.h"
+#include "au3-utility/MemoryX.h"
 #include "MirTypes.h"
 #include "MirUtils.h"
-#include "PowerSpectrumGetter.h"
+#include "au3-fft/PowerSpectrumGetter.h"
 #include "StftFrameProvider.h"
 #include <cassert>
 #include <cmath>

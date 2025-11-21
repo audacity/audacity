@@ -15,14 +15,14 @@ Paul Licameli -- split from ProjectFileIO.cpp
 
 #include <wx/string.h>
 
-#include "AudacityLogger.h"
-#include "BasicUI.h"
-#include "FileNames.h"
-#include "Internat.h"
-#include "Project.h"
-#include "FileException.h"
-#include "wxFileNameWrapper.h"
-#include "SentryHelper.h"
+#include "au3-files/AudacityLogger.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-files/FileNames.h"
+#include "au3-strings/Internat.h"
+#include "au3-project/Project.h"
+#include "au3-files/FileException.h"
+#include "au3-files/wxFileNameWrapper.h"
+#include "au3-sentry-reporting/SentryHelper.h"
 
 #define AUDACITY_PROJECT_PAGE_SIZE 65536
 
@@ -577,7 +577,7 @@ int DBConnection::CheckpointHook(void* data, sqlite3* db, const char* schema, in
 }
 
 // Install an implementation of TransactionScope
-#include "TransactionScope.h"
+#include "au3-transactions/TransactionScope.h"
 
 struct DBConnectionTransactionScopeImpl final : TransactionScopeImpl {
     explicit DBConnectionTransactionScopeImpl(DBConnection& connection)

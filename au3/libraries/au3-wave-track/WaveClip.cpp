@@ -21,13 +21,13 @@
 #include <vector>
 #include <wx/log.h>
 
-#include "BasicUI.h"
-#include "Envelope.h"
-#include "InconsistencyException.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-mixer/Envelope.h"
+#include "au3-exceptions/InconsistencyException.h"
 #include "au3-math/Resample.h"
 #include "Sequence.h"
-#include "TimeAndPitchInterface.h"
-#include "UserException.h"
+#include "au3-time-and-pitch/TimeAndPitchInterface.h"
+#include "au3-exceptions/UserException.h"
 
 #include "global/realfn.h"
 

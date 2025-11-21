@@ -16,13 +16,13 @@
 #include <optional>
 #include <unordered_map>
 #include <vector>
-#include "ClientData.h"
-#include "EffectInterface.h"
-#include "GlobalVariable.h"
-#include "MemoryX.h"
-#include "Observer.h"
+#include "au3-registries/ClientData.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-utility/GlobalVariable.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-utility/Observer.h"
 #include "PluginProvider.h" // for PluginID
-#include "XMLTagHandler.h"
+#include "au3-xml/XMLTagHandler.h"
 
 class ChannelGroup;
 class EffectSettingsAccess;

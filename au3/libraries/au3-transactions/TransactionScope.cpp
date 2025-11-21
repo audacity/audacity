@@ -9,7 +9,7 @@
 **********************************************************************/
 
 #include "TransactionScope.h"
-#include "InconsistencyException.h"
+#include "au3-exceptions/InconsistencyException.h"
 #include <wx/log.h>
 
 TransactionScopeImpl::~TransactionScopeImpl() = default;

@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "ClientData.h"
+#include "au3-registries/ClientData.h"
 
 class AudacityProject;
 

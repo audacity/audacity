@@ -14,11 +14,11 @@ Paul Licameli
 *//*******************************************************************/
 
 #include "WaveformSettings.h"
-#include "WaveTrack.h"
+#include "au3-wave-track/WaveTrack.h"
 
-#include "Decibels.h"
+#include "au3-project-rate/Decibels.h"
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 #include <algorithm>
 
 const wxString WaveformSettings::waveformScaleKey

@@ -1,14 +1,14 @@
 #include "ChangeSpeedBase.h"
-#include "EffectOutputTracks.h"
-#include "LabelTrack.h"
-#include "NumericConverterFormats.h"
-#include "Prefs.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-label-track/LabelTrack.h"
+#include "au3-numeric-formats/NumericConverterFormats.h"
+#include "au3-preferences/Prefs.h"
 #include "au3-math/Resample.h"
-#include "ShuttleAutomation.h"
-#include "SyncLock.h"
-#include "TimeWarper.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-track-selection/SyncLock.h"
+#include "au3-track/TimeWarper.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
 #include <cmath>
 
 // Soundtouch is not reasonable below -99% or above 3000%.

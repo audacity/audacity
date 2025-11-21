@@ -17,7 +17,7 @@
 #include <wx/log.h>
 #include <exception>
 
-#include "CodeConversions.h"
+#include "au3-string-utils/CodeConversions.h"
 
 /*
 *

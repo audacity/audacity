@@ -15,7 +15,7 @@
 #include <memory>
 
 #include "ClientData.h" // to inherit
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 
 class AudacityProject;
 class Track;

@@ -17,8 +17,8 @@
 
 #include "au3-math/SampleFormat.h"
 #include "au3-math/SampleCount.h"
-#include "XMLTagHandler.h"
-#include "AudioSegmentSampleView.h"
+#include "au3-xml/XMLTagHandler.h"
+#include "au3-stretching-sequence/AudioSegmentSampleView.h"
 
 class SampleBlock;
 class SampleBlockFactory;

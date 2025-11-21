@@ -16,7 +16,7 @@
 
 *//*******************************************************************/
 #include "DistortionBase.h"
-#include "ShuttleAutomation.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
 // Linux requires explicit include for std::exp, std::log, std::sin, std::pow
 #ifdef __linux__
 #include <cmath>

@@ -8,11 +8,11 @@
 
 **********************************************************************/
 #include "EffectOutputTracks.h"
-#include "BasicUI.h"
-#include "UserException.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
-#include "TimeStretching.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-exceptions/UserException.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/TimeStretching.h"
 
 // Effect application counter
 int EffectOutputTracks::nEffectsDone = 0;

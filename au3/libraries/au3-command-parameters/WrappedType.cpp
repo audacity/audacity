@@ -28,7 +28,7 @@
 #include "WrappedType.h"
 
 #include <wx/wxprec.h>
-#include "Internat.h"
+#include "au3-strings/Internat.h"
 
 /// @return true iff the wrapped type is a string.
 bool WrappedType::IsString()

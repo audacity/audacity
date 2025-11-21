@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_AUDIO_UNIT_INSTANCE__
 #define __AUDACITY_AUDIO_UNIT_INSTANCE__
 
-#include "PerTrackEffect.h"
+#include "au3-effects/PerTrackEffect.h"
 #include "AudioUnitWrapper.h"
 struct AudioUnitEvent;
 

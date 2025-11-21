@@ -9,7 +9,7 @@
 
 **********************************************************************/
 #include "TempoChange.h"
-#include "Channel.h"
+#include "au3-channel/Channel.h"
 
 namespace {
 struct ProjectTempo : ClientData::Cloneable<> {

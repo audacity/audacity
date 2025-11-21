@@ -9,7 +9,7 @@
 
 **********************************************************************/
 #include "StretchingSequence.h"
-#include "AudioContainer.h"
+#include "au3-time-and-pitch/AudioContainer.h"
 #include "AudioContainerHelper.h"
 #include "FloatVectorClip.h"
 #include "MockAudioSegmentFactory.h"

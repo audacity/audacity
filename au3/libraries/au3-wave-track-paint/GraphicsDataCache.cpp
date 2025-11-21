@@ -18,7 +18,7 @@
 #endif
 #include <type_traits>
 
-#include "ZoomInfo.h"
+#include "au3-screen-geometry/ZoomInfo.h"
 
 #include "au3-math/float_cast.h"
 #include "au3-math/RoundUpUnsafe.h"

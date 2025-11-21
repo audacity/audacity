@@ -10,8 +10,8 @@
  **********************************************************************/
 #pragma once
 
-#include "ClientData.h"
-#include "Observer.h"
+#include "au3-registries/ClientData.h"
+#include "au3-utility/Observer.h"
 
 class AudacityProject;
 

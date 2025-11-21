@@ -13,7 +13,7 @@
 
 #include "LV2Ports.h"
 #include "LV2Symbols.h"
-#include "Internat.h"
+#include "au3-strings/Internat.h"
 
 #include <wx/log.h>
 #include <cmath>

@@ -11,8 +11,8 @@
 
 #include <gtk/gtk.h>
 
-#include "Internat.h"
-#include "BasicUI.h"
+#include "au3-strings/Internat.h"
+#include "au3-basic-ui/BasicUI.h"
 #include "../FileDialog.h"
 
 #ifdef __UNIX__

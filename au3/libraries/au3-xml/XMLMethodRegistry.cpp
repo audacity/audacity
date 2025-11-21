@@ -10,7 +10,7 @@
 
 #include "XMLMethodRegistry.h"
 
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 
 XMLMethodRegistryBase::XMLMethodRegistryBase() = default;
 XMLMethodRegistryBase::~XMLMethodRegistryBase() = default;

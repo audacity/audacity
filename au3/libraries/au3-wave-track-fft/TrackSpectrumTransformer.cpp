@@ -9,7 +9,7 @@ Paul Licameli
 **********************************************************************/
 #include "TrackSpectrumTransformer.h"
 
-#include "WaveTrack.h"
+#include "au3-wave-track/WaveTrack.h"
 
 void TrackSpectrumTransformer::DoOutput(
     const float* outBuffer, size_t mStepSize)

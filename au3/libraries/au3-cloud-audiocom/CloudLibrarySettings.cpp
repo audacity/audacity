@@ -10,8 +10,8 @@
 **********************************************************************/
 #include "CloudLibrarySettings.h"
 
-#include "FileNames.h"
-#include "wxFileNameWrapper.h"
+#include "au3-files/FileNames.h"
+#include "au3-files/wxFileNameWrapper.h"
 
 namespace audacity::cloud::audiocom {
 StringSetting CloudProjectsSavePath {

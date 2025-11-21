@@ -18,11 +18,11 @@
 #include <wavpack/wavpack.h>
 
 #include "au3-math/SampleFormat.h"
-#include "SampleBlock.h"
+#include "au3-wave-track/SampleBlock.h"
 
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
-#include "FromChars.h"
+#include "au3-string-utils/FromChars.h"
 
 namespace audacity::cloud::audiocom::sync {
 namespace {

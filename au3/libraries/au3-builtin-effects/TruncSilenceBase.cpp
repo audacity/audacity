@@ -15,11 +15,11 @@
 
 *//*******************************************************************/
 #include "TruncSilenceBase.h"
-#include "BasicUI.h"
-#include "EffectOutputTracks.h"
-#include "Prefs.h"
-#include "Project.h"
-#include "WaveTrack.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-project/Project.h"
+#include "au3-wave-track/WaveTrack.h"
 #include <algorithm>
 #include <cmath>
 #include <limits>

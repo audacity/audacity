@@ -15,9 +15,9 @@
 #include <unordered_map>
 #include <memory>
 
-#include "Callable.h"
-#include "GlobalVariable.h"
-#include "PluginProvider.h"
+#include "au3-utility/Callable.h"
+#include "au3-utility/GlobalVariable.h"
+#include "au3-components/PluginProvider.h"
 #include "VST3EffectBase.h"
 
 namespace VST3 {

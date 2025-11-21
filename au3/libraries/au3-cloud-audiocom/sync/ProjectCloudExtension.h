@@ -20,8 +20,8 @@
 #include <string_view>
 #include <vector>
 
-#include "ClientData.h"
-#include "Observer.h"
+#include "au3-registries/ClientData.h"
+#include "au3-utility/Observer.h"
 
 #include "CloudSyncError.h"
 #include "CloudSyncDTO.h"

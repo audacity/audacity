@@ -14,15 +14,15 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 
 #if USE_SOUNDTOUCH
 #include "SoundTouchBase.h"
-#include "EffectOutputTracks.h"
+#include "au3-effects/EffectOutputTracks.h"
 
-#include "LabelTrack.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
+#include "au3-label-track/LabelTrack.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
 #ifdef USE_MIDI
-#include "NoteTrack.h"
+#include "au3-note-track/NoteTrack.h"
 #endif
-#include "TimeWarper.h"
+#include "au3-track/TimeWarper.h"
 
 // Soundtouch defines these as well, which are also in generated configmac.h
 // and configunix.h, so get rid of them before including,

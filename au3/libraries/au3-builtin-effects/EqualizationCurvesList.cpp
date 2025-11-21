@@ -12,9 +12,9 @@
 
  /*********************************************************************/
 #include "EqualizationCurvesList.h"
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 #include "EqualizationFilter.h"
-#include "Envelope.h"
+#include "au3-mixer/Envelope.h"
 #include "au3-math/SampleFormat.h"
 
 //

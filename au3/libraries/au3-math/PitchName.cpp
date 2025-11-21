@@ -17,7 +17,7 @@
 *//*******************************************************************/
 
 #include "PitchName.h"
-#include "Internat.h"
+#include "au3-strings/Internat.h"
 #include <math.h>
 
 double FreqToMIDInote(const double freq)

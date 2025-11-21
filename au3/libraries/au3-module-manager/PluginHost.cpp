@@ -16,13 +16,13 @@
 #include <wx/module.h>
 #include <wx/process.h>
 
-#include "BasicUI.h"
-#include "CommandLineArgs.h"
-#include "PathList.h"
-#include "FileNames.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-utility/CommandLineArgs.h"
+#include "au3-files/PathList.h"
+#include "au3-files/FileNames.h"
 #include "ModuleManager.h"
-#include "IPCClient.h"
-#include "PlatformCompatibility.h"
+#include "au3-ipc/IPCClient.h"
+#include "au3-files/PlatformCompatibility.h"
 #include "PluginManager.h"
 
 namespace {

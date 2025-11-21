@@ -10,7 +10,7 @@
 **********************************************************************/
 #pragma once
 
-#include "EffectInterface.h"
+#include "au3-components/EffectInterface.h"
 
 //! A dummy implementation just to distinguish real-time from non-real-time
 //! `CompressorInstance`s.

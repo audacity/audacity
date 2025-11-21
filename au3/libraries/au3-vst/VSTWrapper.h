@@ -12,9 +12,9 @@
 #ifndef __AUDACITY_VST_WRAPPER__
 #define __AUDACITY_VST_WRAPPER__
 
-#include "EffectInterface.h"
-#include "CFResources.h"
-#include "XMLTagHandler.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-utility/CFResources.h"
+#include "au3-xml/XMLTagHandler.h"
 
 #include <wx/dynlib.h>
 #include <wx/string.h>

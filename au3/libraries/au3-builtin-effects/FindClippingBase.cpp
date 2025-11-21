@@ -13,11 +13,11 @@
 
 *//*******************************************************************/
 #include "FindClippingBase.h"
-#include "AnalysisTracks.h"
-#include "BasicUI.h"
-#include "EffectOutputTracks.h"
-#include "LabelTrack.h"
-#include "WaveTrack.h"
+#include "au3-label-track/AnalysisTracks.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-label-track/LabelTrack.h"
+#include "au3-wave-track/WaveTrack.h"
 #include <cmath>
 
 const EffectParameterMethods& FindClippingBase::Parameters() const

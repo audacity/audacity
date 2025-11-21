@@ -69,12 +69,12 @@ and use it for toolbar and window layouts too.
 #include <regex>
 
 #include "AllThemeResources.h"
-#include "BasicUI.h"
-#include "FileNames.h"
-#include "Prefs.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-files/FileNames.h"
+#include "au3-preferences/Prefs.h"
 #include "ImageManipulation.h"
-#include "Internat.h"
-#include "MemoryX.h"
+#include "au3-strings/Internat.h"
+#include "au3-utility/MemoryX.h"
 
 // theTheme is a global variable.
 THEME_API Theme theTheme;

@@ -30,7 +30,7 @@
 #include <math.h>
 #include <string_view>
 
-#include "XMLMethodRegistry.h"
+#include "au3-xml/XMLMethodRegistry.h"
 
 class XMLWriter;
 class XMLAttributeValueView;

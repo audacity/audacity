@@ -12,15 +12,15 @@
 #ifndef __AUDACITY_MODULEMANAGER_H__
 #define __AUDACITY_MODULEMANAGER_H__
 
-#include "IteratorX.h"
+#include "au3-utility/IteratorX.h"
 #include <functional>
 #include <map>
 #include <memory>
 #include <vector>
 #include <wx/string.h>
 
-#include "Identifier.h"
-#include "PluginProvider.h"
+#include "au3-strings/Identifier.h"
+#include "au3-components/PluginProvider.h"
 
 class wxArrayString;
 class wxDynamicLibrary;
@@ -36,7 +36,7 @@ class TranslatableString;
 // wxPluginManager would be MUCH better, but it's an "undocumented" framework.
 //
 
-#include "ModuleConstants.h"
+#include "au3-utility/ModuleConstants.h"
 
 typedef int (* fnModuleDispatch)(ModuleDispatchTypes type);
 

@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_SAMPLE_FORMAT__
 #define __AUDACITY_SAMPLE_FORMAT__
 
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
 //
 // Definitions / Meta-Information

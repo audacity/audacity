@@ -20,7 +20,7 @@
 #include "CloudSyncDTO.h"
 #include "NetworkUtils.h"
 
-#include "concurrency/CancellationContext.h"
+#include "au3-concurrency/concurrency/CancellationContext.h"
 
 namespace audacity::cloud::audiocom {
 class ServiceConfig;

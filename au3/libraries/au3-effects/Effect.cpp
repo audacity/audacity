@@ -21,14 +21,14 @@
 
 #include <wx/defs.h>
 
-#include "BasicUI.h"
-#include "ConfigInterface.h"
-#include "ProjectNumericFormats.h"
-#include "ShuttleAutomation.h"
-#include "ViewInfo.h"
-#include "WaveTrack.h"
-#include "wxFileNameWrapper.h"
-#include "NumericConverterFormats.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-module-manager/ConfigInterface.h"
+#include "au3-numeric-formats/ProjectNumericFormats.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-time-frequency-selection/ViewInfo.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-files/wxFileNameWrapper.h"
+#include "au3-numeric-formats/NumericConverterFormats.h"
 
 Effect::Effect()
 {

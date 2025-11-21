@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_TIMETRACK__
 #define __AUDACITY_TIMETRACK__
 
-#include "Track.h"
+#include "au3-track/Track.h"
 
 #include <algorithm>
 

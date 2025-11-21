@@ -13,9 +13,9 @@
 #ifndef _LABELTRACK_
 #define _LABELTRACK_
 
-#include "SelectedRegion.h"
-#include "Track.h"
-#include "FileNames.h"
+#include "au3-time-frequency-selection/SelectedRegion.h"
+#include "au3-track/Track.h"
+#include "au3-files/FileNames.h"
 
 class wxTextFile;
 

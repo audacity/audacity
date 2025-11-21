@@ -32,15 +32,15 @@
 #include <wx/statusbr.h>
 #include <wx/regex.h>
 
-#include "FileNames.h"
-#include "AllThemeResources.h"
-#include "ShuttleGui.h"
-#include "Theme.h"
+#include "au3-files/FileNames.h"
+#include "au3-theme/AllThemeResources.h"
+#include "au3-shuttlegui/ShuttleGui.h"
+#include "au3-theme/Theme.h"
 #include "HelpText.h"
-#include "Prefs.h"
-#include "wxFileNameWrapper.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-files/wxFileNameWrapper.h"
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 const wxString HelpSystem::HelpHostname = wxT("manual.audacityteam.org");
 const wxString HelpSystem::HelpServerHomeDir = wxT("/");

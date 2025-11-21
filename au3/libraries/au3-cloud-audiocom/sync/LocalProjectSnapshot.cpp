@@ -16,7 +16,7 @@
 #include "../OAuthService.h"
 #include "../ServiceConfig.h"
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 #include "BlockHasher.h"
 #include "CloudProjectsDatabase.h"
@@ -25,25 +25,25 @@
 #include "NetworkUtils.h"
 #include "ProjectCloudExtension.h"
 
-#include "ExportUtils.h"
-#include "MemoryX.h"
-#include "Project.h"
-#include "SampleBlock.h"
-#include "Sequence.h"
-#include "Track.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
-#include "WaveTrackUtilities.h"
+#include "au3-import-export/ExportUtils.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-project/Project.h"
+#include "au3-wave-track/SampleBlock.h"
+#include "au3-wave-track/Sequence.h"
+#include "au3-track/Track.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 
-#include "IResponse.h"
-#include "NetworkManager.h"
-#include "Request.h"
+#include "au3-network-manager/IResponse.h"
+#include "au3-network-manager/NetworkManager.h"
+#include "au3-network-manager/Request.h"
 
 #include "MissingBlocksUploader.h"
 
-#include "StringUtils.h"
+#include "au3-string-utils/StringUtils.h"
 
-#include "crypto/SHA256.h"
+#include "au3-crypto/crypto/SHA256.h"
 
 namespace audacity::cloud::audiocom::sync {
 struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache

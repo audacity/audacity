@@ -9,7 +9,7 @@
 **********************************************************************/
 #pragma once
 
-#include "StatefulEffect.h"
+#include "au3-effects/StatefulEffect.h"
 
 class BUILTIN_EFFECTS_API StereoToMono : public StatefulEffect
 {

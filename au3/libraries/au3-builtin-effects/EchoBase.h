@@ -10,9 +10,9 @@
 **********************************************************************/
 #pragma once
 
-#include "MemoryX.h"
-#include "PerTrackEffect.h"
-#include "SettingsVisitor.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-effects/PerTrackEffect.h"
+#include "au3-components/SettingsVisitor.h"
 #include <cfloat>
 
 using Floats = ArrayOf<float>;

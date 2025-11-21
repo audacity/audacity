@@ -19,7 +19,7 @@
 
 #include "au3-math/SampleCount.h"
 
-#include "Project.h"
+#include "au3-project/Project.h"
 #include "ProjectTimeSignature.h"
 
 namespace {

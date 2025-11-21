@@ -18,10 +18,10 @@
 #include <wx/slider.h> // to inherit
 #include <wx/listbase.h> // for wxLIST_FORMAT_LEFT
 
-#include "Internat.h"
-#include "Prefs.h"
-#include "WrappedType.h"
-#include "ComponentInterfaceSymbol.h"
+#include "au3-strings/Internat.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-command-parameters/WrappedType.h"
+#include "au3-components/ComponentInterfaceSymbol.h"
 
 #include <optional>
 

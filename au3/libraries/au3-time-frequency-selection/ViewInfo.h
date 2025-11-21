@@ -14,12 +14,12 @@
 #include <utility>
 #include <vector>
 #include <wx/weakref.h> // member variable
-#include "ClientData.h"
+#include "au3-registries/ClientData.h"
 #include "SelectedRegion.h"
 #include <memory>
-#include "Observer.h"
-#include "Prefs.h"
-#include "XMLMethodRegistry.h"
+#include "au3-utility/Observer.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-xml/XMLMethodRegistry.h"
 #include "ZoomInfo.h" // to inherit
 
 struct NotifyingSelectedRegionMessage : Observer::Message {};

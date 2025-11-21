@@ -14,10 +14,10 @@
 #include <functional>
 #include <vector>
 #include <wx/filename.h> // member variable
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 #include "FileNames.h" // for FileTypes
 
-#include "Registry.h"
+#include "au3-registries/Registry.h"
 #include "ExportPlugin.h"
 
 class AudacityProject;

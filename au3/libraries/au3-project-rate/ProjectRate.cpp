@@ -10,12 +10,12 @@ Paul Licameli split from ProjectSettings.cpp
 
 #include "ProjectRate.h"
 
-#include "AudioIOBase.h"
-#include "Prefs.h"
-#include "Project.h"
+#include "au3-audio-devices/AudioIOBase.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-project/Project.h"
 #include "QualitySettings.h"
-#include "XMLWriter.h"
-#include "XMLAttributeValueView.h"
+#include "au3-xml/XMLWriter.h"
+#include "au3-xml/XMLAttributeValueView.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory
     sKey{

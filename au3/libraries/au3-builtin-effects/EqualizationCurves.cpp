@@ -16,8 +16,8 @@
 #include "EqualizationParameters.h"
 
 #include <wx/log.h>
-#include "FileNames.h"
-#include "XMLFileReader.h"
+#include "au3-files/FileNames.h"
+#include "au3-xml/XMLFileReader.h"
 
 // Increment whenever EQCurves.xml is updated
 #define EQCURVES_VERSION   1

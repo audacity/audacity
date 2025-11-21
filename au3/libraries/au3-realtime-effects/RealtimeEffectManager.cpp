@@ -9,10 +9,10 @@
  **********************************************************************/
 #include "RealtimeEffectManager.h"
 #include "RealtimeEffectState.h"
-#include "Channel.h"
+#include "au3-channel/Channel.h"
 
 #include <memory>
-#include "Project.h"
+#include "au3-project/Project.h"
 
 #include <atomic>
 #include <wx/time.h>

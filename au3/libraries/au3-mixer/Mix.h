@@ -12,8 +12,8 @@
 #ifndef __AUDACITY_MIX__
 #define __AUDACITY_MIX__
 
-#include "AudioGraphBuffers.h"
-#include "AudioGraphSource.h"
+#include "au3-audio-graph/AudioGraphBuffers.h"
+#include "au3-audio-graph/AudioGraphSource.h"
 #include "MixerOptions.h"
 #include "au3-math/SampleFormat.h"
 #include <optional>
