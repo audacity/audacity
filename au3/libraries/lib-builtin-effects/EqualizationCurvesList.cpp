@@ -15,7 +15,7 @@
 #include "BasicUI.h"
 #include "EqualizationFilter.h"
 #include "Envelope.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 
 //
 // Set NEW curve selection (safe to call outside of the UI)

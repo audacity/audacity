@@ -13,9 +13,11 @@ ranges.
 **********************************************************************/
 #pragma once
 
-#include "SampleCount.h"
+// Linux requires explicit include for size_t
+#ifdef __linux__
+#include <cstddef>
+#endif
 
-#include <chrono>
 #include <fstream>
 #include <memory>
 #include <vector>

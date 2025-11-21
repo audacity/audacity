@@ -15,7 +15,6 @@
 #define __AUDACITY_GENERATOR__
 
 #include "StatefulEffect.h"
-#include "SampleCount.h"
 
 class TrackList;
 

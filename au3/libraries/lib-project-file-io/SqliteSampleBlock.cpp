@@ -14,7 +14,7 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include "BasicUI.h"
 #include "DBConnection.h"
 #include "ProjectFileIO.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include "AudioSegmentSampleView.h"
 #include "XMLTagHandler.h"
 

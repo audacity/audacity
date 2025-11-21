@@ -17,7 +17,7 @@
 
 #include <wavpack/wavpack.h>
 
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include "SampleBlock.h"
 
 #include "MemoryX.h"

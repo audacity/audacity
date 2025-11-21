@@ -13,15 +13,17 @@
 
 #include <algorithm>
 #include <cassert>
+// Linux requires explicit include for std::round and std::memmove
+#ifdef __linux__
 #include <cmath>
 #include <cstring>
+#endif
 
+#include "au3-math/RoundUpUnsafe.h"
+#include "au3-math/SampleFormat.h"
 #include "SampleBlock.h"
-#include "SampleFormat.h"
 #include "Sequence.h"
 #include "WaveClip.h"
-
-#include "RoundUpUnsafe.h"
 
 namespace {
 //

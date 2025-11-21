@@ -17,7 +17,7 @@ Paul Licameli
 #include <memory>
 #include <vector>
 #include "RealFFTf.h"
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 
 enum eWindowFunctions : int;
 

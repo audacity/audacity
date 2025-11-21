@@ -14,8 +14,8 @@
 #include "ClipInterface.h"
 #include "PlaybackDirection.h"
 #include "Prefs.h"
-#include "SampleCount.h"
-#include "SampleFormat.h"
+#include "au3-math/SampleCount.h"
+#include "au3-math/SampleFormat.h"
 #include "SampleTrack.h"
 #include "WideSampleSequence.h"
 

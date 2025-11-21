@@ -15,7 +15,7 @@
 #include <cassert>
 #include <numeric>
 
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 #include "DownmixSource.h"
 
 #define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))

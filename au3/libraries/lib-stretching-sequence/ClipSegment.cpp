@@ -10,10 +10,7 @@
 **********************************************************************/
 #include "ClipSegment.h"
 #include "ClipInterface.h"
-#include "SampleFormat.h"
 #include "StaffPadTimeAndPitch.h"
-#include <cassert>
-#include <cmath>
 #include <functional>
 
 namespace {

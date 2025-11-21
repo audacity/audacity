@@ -39,7 +39,7 @@
 #include <wx/log.h>
 
 #include "BasicUI.h"
-#include "Dither.h"
+#include "au3-math/Dither.h"
 #include "SampleBlock.h"
 #include "InconsistencyException.h"
 
