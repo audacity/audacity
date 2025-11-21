@@ -17,14 +17,14 @@ Paul Licameli split from AudacityLogger.cpp
 #include <wx/textctrl.h>
 #include <wx/weakref.h>
 
-#include "AudacityLogger.h"
+#include "au3-files/AudacityLogger.h"
 #include "AudacityMessageBox.h"
-#include "FileNames.h"
-#include "Internat.h"
-#include "MemoryX.h"
-#include "Prefs.h"
+#include "au3-files/FileNames.h"
+#include "au3-strings/Internat.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-preferences/Prefs.h"
 #include "SelectFile.h"
-#include "ShuttleGui.h"
+#include "au3-shuttlegui/ShuttleGui.h"
 
 #include "AudacityLogoAlpha.xpm"
 

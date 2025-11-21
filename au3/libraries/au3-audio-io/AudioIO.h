@@ -14,10 +14,10 @@
 #define __AUDACITY_AUDIO_IO__
 
 #include "AudioIOBase.h" // to inherit
-#include "AudioIOSequences.h"
+#include "au3-mixer/AudioIOSequences.h"
 #include "PlaybackSchedule.h" // member variable
 #include "RingBuffer.h"
-#include "LockFreeQueue.h"
+#include "au3-utility/LockFreeQueue.h"
 
 #include <functional>
 #include <memory>
@@ -29,7 +29,7 @@
 #include <wx/thread.h>
 
 #include "PluginProvider.h" // for PluginID
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 #include "au3-math/SampleFormat.h"
 
 class wxArrayString;

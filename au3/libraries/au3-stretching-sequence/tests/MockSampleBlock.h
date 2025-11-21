@@ -10,7 +10,7 @@
 **********************************************************************/
 #pragma once
 
-#include "SampleBlock.h"
+#include "au3-wave-track/SampleBlock.h"
 
 class MockSampleBlock final : public SampleBlock
 {

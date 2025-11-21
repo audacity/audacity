@@ -38,11 +38,11 @@ for drawing different aspects of the label and its text box.
 #include <wx/tokenzr.h>
 #include <wx/datetime.h>
 
-#include "Prefs.h"
-#include "Project.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-project/Project.h"
 
-#include "TimeWarper.h"
-#include "BasicUI.h"
+#include "au3-track/TimeWarper.h"
+#include "au3-basic-ui/BasicUI.h"
 
 const FileNames::FileType LabelTrack::SubripFiles{ XO("SubRip text file"), { wxT("srt") }, true };
 const FileNames::FileType LabelTrack::WebVTTFiles{ XO("WebVTT file"), { wxT("vtt") }, true };

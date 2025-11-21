@@ -25,16 +25,16 @@ for shared and private configs - which need to move out.
 #include <wx/log.h>
 #include <wx/tokenzr.h>
 
-#include "BasicUI.h"
-#include "PluginProvider.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-components/PluginProvider.h"
 
 #include "Internat.h" // for macro XO
-#include "FileNames.h"
-#include "MemoryX.h"
+#include "au3-files/FileNames.h"
+#include "au3-utility/MemoryX.h"
 #include "ModuleManager.h"
-#include "PlatformCompatibility.h"
-#include "Base64.h"
-#include "Variant.h"
+#include "au3-files/PlatformCompatibility.h"
+#include "au3-strings/Base64.h"
+#include "au3-utility/Variant.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //

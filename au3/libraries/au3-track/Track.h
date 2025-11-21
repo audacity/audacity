@@ -20,14 +20,14 @@
 #include <thread>
 #include <wx/longlong.h>
 
-#include "Channel.h"
-#include "Observer.h"
+#include "au3-channel/Channel.h"
+#include "au3-utility/Observer.h"
 // TrackAttachment needs to be a complete type for the Windows build, though
 // not the others, so there is a nested include here:
 #include "TrackAttachment.h"
-#include "TypeEnumerator.h"
-#include "TypeSwitch.h"
-#include "XMLTagHandler.h"
+#include "au3-utility/TypeEnumerator.h"
+#include "au3-utility/TypeSwitch.h"
+#include "au3-xml/XMLTagHandler.h"
 
 #ifdef __WXMSW__
 #pragma warning(disable:4284)

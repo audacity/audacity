@@ -22,7 +22,7 @@
 #endif
 
 #include "LV2Preferences.h"
-#include "ConfigInterface.h"
+#include "au3-module-manager/ConfigInterface.h"
 
 static constexpr auto SettingsStr = L"Settings";
 static constexpr auto BufferSizeStr = L"BufferSize";

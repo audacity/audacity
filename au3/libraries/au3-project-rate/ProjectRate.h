@@ -14,8 +14,8 @@ Paul Licameli split from ProjectSettings.h
 
 class AudacityProject;
 
-#include "ClientData.h"
-#include "Observer.h"
+#include "au3-registries/ClientData.h"
+#include "au3-utility/Observer.h"
 
 ///\brief Holds project sample rate
 class PROJECT_RATE_API ProjectRate final : public ClientData::Base, public Observer::Publisher<double>

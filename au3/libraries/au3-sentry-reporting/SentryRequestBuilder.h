@@ -12,7 +12,7 @@
 
 #include <string>
 
-#include "Request.h"
+#include "au3-network-manager/Request.h"
 
 namespace audacity {
 namespace sentry {

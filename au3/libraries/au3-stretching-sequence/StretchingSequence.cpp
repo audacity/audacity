@@ -11,7 +11,7 @@
 #include "StretchingSequence.h"
 #include "AudioSegment.h"
 #include "AudioSegmentFactory.h"
-#include "StaffPadTimeAndPitch.h"
+#include "au3-time-and-pitch/StaffPadTimeAndPitch.h"
 
 #include <cassert>
 

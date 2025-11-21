@@ -9,8 +9,8 @@
 **********************************************************************/
 #pragma once
 
-#include "PerTrackEffect.h"
-#include "ShuttleAutomation.h"
+#include "au3-effects/PerTrackEffect.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
 
 class EffectWahwahState
 {

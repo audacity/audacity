@@ -23,8 +23,8 @@
 #include "NumericConverterFormatter.h"
 #include "NumericConverterFormatterContext.h"
 
-#include "ComponentInterfaceSymbol.h"
-#include "TranslatableString.h"
+#include "au3-components/ComponentInterfaceSymbol.h"
+#include "au3-strings/TranslatableString.h"
 
 struct FormatChangedToFitValueMessage final {
     double value;

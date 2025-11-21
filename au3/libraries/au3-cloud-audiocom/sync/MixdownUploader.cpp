@@ -13,21 +13,21 @@
 
 #include <rapidjson/document.h>
 
-#include "WaveTrack.h"
+#include "au3-wave-track/WaveTrack.h"
 
-#include "CodeConversions.h"
+#include "au3-string-utils/CodeConversions.h"
 
 #include "ServiceConfig.h"
 
-#include "Export.h"
-#include "ExportPluginRegistry.h"
+#include "au3-import-export/Export.h"
+#include "au3-import-export/ExportPluginRegistry.h"
 
-#include "ProjectRate.h"
+#include "au3-project-rate/ProjectRate.h"
 
 #include "DataUploader.h"
 #include "UploadService.h"
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 namespace audacity::cloud::audiocom::sync {
 namespace {

@@ -9,11 +9,11 @@
 
 **********************************************************************/
 #include "PlotSpectrumBase.h"
-#include "BasicUI.h"
-#include "Prefs.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-preferences/Prefs.h"
 #include "au3-math/SampleFormat.h"
-#include "ViewInfo.h"
-#include "WaveTrack.h"
+#include "au3-time-frequency-selection/ViewInfo.h"
+#include "au3-wave-track/WaveTrack.h"
 
 PlotSpectrumBase::PlotSpectrumBase(AudacityProject& project)
     : mProject{&project}

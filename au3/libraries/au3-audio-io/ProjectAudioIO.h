@@ -12,9 +12,9 @@ Paul Licameli split from AudacityProject.h
 #define __PROJECT_AUDIO_IO__
 
 #include "ClientData.h" // to inherit
-#include "GlobalVariable.h"
+#include "au3-utility/GlobalVariable.h"
 #include "Observer.h" // to inherit
-#include "IMeterSender.h"
+#include "au3-audio-devices/IMeterSender.h"
 #include <wx/weakref.h>
 
 #include <atomic>

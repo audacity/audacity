@@ -20,7 +20,7 @@
 #ifndef __AUDACITY_COMPATIBILITY__
 #define __AUDACITY_COMPATIBILITY__
 
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 
 namespace PlatformCompatibility {
 //

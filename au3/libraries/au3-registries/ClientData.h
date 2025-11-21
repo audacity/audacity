@@ -19,7 +19,7 @@ Paul Licameli
 #include <optional>
 #include <utility>
 #include <vector>
-#include "InconsistencyException.h"
+#include "au3-exceptions/InconsistencyException.h"
 
 //! @copydoc ClientData.h
 namespace ClientData {

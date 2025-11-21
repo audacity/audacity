@@ -11,14 +11,14 @@
 #ifndef __AUDACITY_WAVECLIP__
 #define __AUDACITY_WAVECLIP__
 
-#include "Channel.h"
-#include "ClientData.h"
-#include "CRTPBase.h"
+#include "au3-channel/Channel.h"
+#include "au3-registries/ClientData.h"
+#include "au3-utility/CRTPBase.h"
 #include "au3-math/SampleFormat.h"
 #include "au3-math/SampleCount.h"
-#include "ClipInterface.h"
-#include "XMLTagHandler.h"
-#include "AudioSegmentSampleView.h"
+#include "au3-stretching-sequence/ClipInterface.h"
+#include "au3-xml/XMLTagHandler.h"
+#include "au3-stretching-sequence/AudioSegmentSampleView.h"
 
 #include <wx/longlong.h>
 

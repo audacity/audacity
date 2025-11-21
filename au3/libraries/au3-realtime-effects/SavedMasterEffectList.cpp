@@ -2,7 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "SavedMasterEffectList.h"
-#include "Project.h"
+#include "au3-project/Project.h"
 
 SavedMasterEffectList::SavedMasterEffectList(AudacityProject& project)
     : m_project(project)

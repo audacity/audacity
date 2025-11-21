@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 #include "CommandTargets.h"
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 #include <locale>
 #include <sstream>
 

@@ -94,11 +94,11 @@ for registering for changes.
 
 #include "ShuttleGui.h"
 
-#include "IteratorX.h"
-#include "Prefs.h"
-#include "ShuttlePrefs.h"
-#include "SpinControl.h"
-#include "Theme.h"
+#include "au3-utility/IteratorX.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-command-parameters/ShuttlePrefs.h"
+#include "au3-wx-wrappers/SpinControl.h"
+#include "au3-theme/Theme.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wx.h>
@@ -114,12 +114,12 @@ for registering for changes.
 #include <wx/wrapsizer.h>
 
 #include "ReadOnlyText.h"
-#include "wxPanelWrapper.h"
+#include "au3-wx-wrappers/wxPanelWrapper.h"
 #include "wxTextCtrlWrapper.h"
-#include "AllThemeResources.h"
+#include "au3-theme/AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "WindowAccessible.h"
+#include "au3-wx-wrappers/WindowAccessible.h"
 #endif
 
 ShuttleGuiBase::ShuttleGuiBase(

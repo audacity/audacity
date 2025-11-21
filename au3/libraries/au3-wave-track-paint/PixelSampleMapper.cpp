@@ -18,7 +18,7 @@
 #endif
 
 #include "au3-math/SampleCount.h"
-#include "Variant.h"
+#include "au3-utility/Variant.h"
 
 PixelSampleMapper::PixelSampleMapper(
     double t0, double rate, double samplesPerPixel) noexcept

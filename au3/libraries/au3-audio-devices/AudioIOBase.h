@@ -20,7 +20,7 @@ Paul Licameli split from AudioIO.h
 #include <vector>
 #include <utility>
 #include <wx/string.h>
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 #include "IMeterSender.h"
 
 struct PaDeviceInfo;
@@ -401,7 +401,7 @@ protected:
     std::vector<std::unique_ptr<AudioIOExtBase> > mAudioIOExt;
 };
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 extern AUDIO_DEVICES_API StringSetting AudioIOHost;
 extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyCorrection;

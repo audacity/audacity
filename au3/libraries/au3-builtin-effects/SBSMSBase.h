@@ -16,7 +16,7 @@
 
 #if USE_SBSMS
 
-#include "StatefulEffect.h"
+#include "au3-effects/StatefulEffect.h"
 #include <sbsms.h>
 
 using namespace _sbsms_;

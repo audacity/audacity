@@ -16,8 +16,8 @@ doing the second pass over all selected tracks.
 
 *//*******************************************************************/
 #include "TwoPassSimpleMono.h"
-#include "EffectOutputTracks.h"
-#include "WaveTrack.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-wave-track/WaveTrack.h"
 
 EffectTwoPassSimpleMono::~EffectTwoPassSimpleMono() = default;
 

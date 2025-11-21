@@ -13,7 +13,7 @@
 #include <memory>
 
 #include "GraphicsDataCache.h"
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 #include "waveform/WavePaintParameters.h"
 
 class wxBitmap;

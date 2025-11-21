@@ -10,10 +10,10 @@
 #ifndef __AUDACITY_PROJECT_NUMERIC_FORMATS__
 #define __AUDACITY_PROJECT_NUMERIC_FORMATS__
 
-#include "ClientData.h"
-#include "ComponentInterfaceSymbol.h"
+#include "au3-registries/ClientData.h"
+#include "au3-components/ComponentInterfaceSymbol.h"
 #include "NumericConverterType.h"
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 
 class AudacityProject;
 

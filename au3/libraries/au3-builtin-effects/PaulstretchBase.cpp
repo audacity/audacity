@@ -13,13 +13,13 @@
 
 *//*******************************************************************/
 #include "PaulstretchBase.h"
-#include "BasicUI.h"
-#include "EffectOutputTracks.h"
-#include "FFT.h"
-#include "Prefs.h"
-#include "SyncLock.h"
-#include "TimeWarper.h"
-#include "WaveTrack.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-fft/FFT.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-track-selection/SyncLock.h"
+#include "au3-track/TimeWarper.h"
+#include "au3-wave-track/WaveTrack.h"
 #include <algorithm>
 #include <cfloat> // FLT_MAX
 #include <cmath>

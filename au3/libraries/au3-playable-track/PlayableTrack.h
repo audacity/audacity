@@ -13,8 +13,8 @@
 #ifndef __AUDACITY_PLAYABLE_TRACK__
 #define __AUDACITY_PLAYABLE_TRACK__
 
-#include "Prefs.h"
-#include "Track.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-track/Track.h"
 
 //! Track subclass holding data representing sound (as notes, or samples, or ...)
 class PLAYABLE_TRACK_API AudioTrack /* not final */ : public Track

@@ -22,7 +22,7 @@
 
 #include "LV2Instance.h"
 #include "LV2Wrapper.h"
-#include "AudacityException.h"
+#include "au3-exceptions/AudacityException.h"
 
 LV2Instance::LV2Instance(
     const PerTrackEffect& effect, const LV2FeaturesList& features,

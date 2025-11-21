@@ -9,7 +9,7 @@
 
 **********************************************************************/
 #include "BassTrebleBase.h"
-#include "ShuttleAutomation.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
 
 const EffectParameterMethods& BassTrebleBase::Parameters() const
 {

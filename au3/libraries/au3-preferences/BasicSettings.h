@@ -13,7 +13,7 @@
 #include <memory>
 #include <wx/string.h>
 #include <wx/arrstr.h>
-#include "GlobalVariable.h"
+#include "au3-utility/GlobalVariable.h"
 
 namespace audacity {
 /**

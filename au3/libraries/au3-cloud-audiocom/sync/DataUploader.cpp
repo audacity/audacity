@@ -15,16 +15,16 @@
 
 #include <wx/file.h>
 
-#include "CodeConversions.h"
+#include "au3-string-utils/CodeConversions.h"
 
-#include "IResponse.h"
-#include "NetworkManager.h"
+#include "au3-network-manager/IResponse.h"
+#include "au3-network-manager/NetworkManager.h"
 #include "NetworkUtils.h"
-#include "Request.h"
+#include "au3-network-manager/Request.h"
 
-#include "RequestPayload.h"
+#include "au3-network-manager/RequestPayload.h"
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 using namespace audacity::network_manager;
 

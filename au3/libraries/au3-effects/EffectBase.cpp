@@ -19,15 +19,15 @@
 #include "EffectBase.h"
 
 #include <thread>
-#include "BasicUI.h"
-#include "ConfigInterface.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-module-manager/ConfigInterface.h"
 #include "EffectOutputTracks.h"
-#include "PluginManager.h"
-#include "QualitySettings.h"
-#include "TransactionScope.h"
-#include "ViewInfo.h"
-#include "WaveTrack.h"
-#include "NumericConverterFormats.h"
+#include "au3-module-manager/PluginManager.h"
+#include "au3-project-rate/QualitySettings.h"
+#include "au3-transactions/TransactionScope.h"
+#include "au3-time-frequency-selection/ViewInfo.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-numeric-formats/NumericConverterFormats.h"
 
 EffectBase::EffectBase()
 {

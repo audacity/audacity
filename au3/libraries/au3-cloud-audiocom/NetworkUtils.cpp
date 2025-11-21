@@ -14,13 +14,13 @@
 #include <algorithm>
 
 #include "OAuthService.h"
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 #include "ServiceConfig.h"
 
-#include "IResponse.h"
-#include "Request.h"
+#include "au3-network-manager/IResponse.h"
+#include "au3-network-manager/Request.h"
 
-#include "TranslatableString.h"
+#include "au3-strings/TranslatableString.h"
 
 namespace audacity::cloud::audiocom {
 using namespace audacity::network_manager;

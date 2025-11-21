@@ -17,7 +17,7 @@
 
 #include "NetworkManagerApi.h"
 
-#include "concurrency/ICancellable.h"
+#include "au3-concurrency/concurrency/ICancellable.h"
 
 namespace audacity {
 namespace network_manager {

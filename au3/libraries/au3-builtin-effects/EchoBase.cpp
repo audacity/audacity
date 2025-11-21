@@ -9,8 +9,8 @@
 
 ***********************************************************************/
 #include "EchoBase.h"
-#include "BasicUI.h"
-#include "ShuttleAutomation.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
 
 const EffectParameterMethods& EchoBase::Parameters() const
 {

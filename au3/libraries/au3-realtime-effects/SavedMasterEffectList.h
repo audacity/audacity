@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "ClientData.h"
+#include "au3-registries/ClientData.h"
 #include "RealtimeEffectList.h"
 #include <memory>
 

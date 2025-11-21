@@ -16,9 +16,9 @@
 
 #include "PluginDescriptor.h"
 
-#include "EffectInterface.h"
+#include "au3-components/EffectInterface.h"
 #include "ModuleManager.h"
-#include "XMLWriter.h"
+#include "au3-xml/XMLWriter.h"
 
 namespace {
 constexpr auto AttrID = "id";

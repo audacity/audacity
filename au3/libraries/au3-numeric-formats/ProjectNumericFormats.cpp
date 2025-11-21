@@ -8,14 +8,14 @@
 
  **********************************************************************/
 #include "ProjectNumericFormats.h"
-#include "Prefs.h"
-#include "Project.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-project/Project.h"
 
 #include "NumericConverterFormats.h"
 #include "NumericConverterFormatterContext.h"
 
-#include "XMLAttributeValueView.h"
-#include "XMLWriter.h"
+#include "au3-xml/XMLAttributeValueView.h"
+#include "au3-xml/XMLWriter.h"
 
 static const AttachedProjectObjects::RegisteredFactory key
 {

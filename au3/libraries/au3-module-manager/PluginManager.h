@@ -18,10 +18,10 @@
 #include <memory>
 #include <vector>
 
-#include "EffectInterface.h"
+#include "au3-components/EffectInterface.h"
 #include "PluginInterface.h"
 #include "PluginDescriptor.h"
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 
 class wxArrayString;
 

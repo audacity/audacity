@@ -18,7 +18,7 @@
 *//*******************************************************************/
 #include "WideSampleSource.h"
 
-#include "AudioGraphBuffers.h"
+#include "au3-audio-graph/AudioGraphBuffers.h"
 #include "WideSampleSequence.h"
 #include <cassert>
 

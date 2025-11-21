@@ -12,9 +12,9 @@ Paul Licameli
 #define __AUDACITY_SPECTROGRAM_SETTINGS__
 
 #include "ClientData.h" // to inherit
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 #include "au3-math/SampleFormat.h"
-#include "RealFFTf.h"
+#include "au3-fft/RealFFTf.h"
 
 #undef SPECTRAL_SELECTION_GLOBAL_SWITCH
 

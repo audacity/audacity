@@ -16,7 +16,7 @@
 
 #include <vector>
 #include "LV2Utils.h"
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
 #if !defined(LV2_CORE__MIDIPlugin)
 #define LV2_CORE__MIDIPlugin   LV2_CORE_PREFIX "MIDIPlugin"

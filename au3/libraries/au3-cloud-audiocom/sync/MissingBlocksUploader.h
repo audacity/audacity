@@ -22,8 +22,8 @@
 #include "CloudSyncDTO.h"
 #include "NetworkUtils.h"
 
-#include "concurrency/CancellationContext.h"
-#include "concurrency/ICancellable.h"
+#include "au3-concurrency/concurrency/CancellationContext.h"
+#include "au3-concurrency/concurrency/ICancellable.h"
 
 namespace audacity::network_manager {
 class IResponse;

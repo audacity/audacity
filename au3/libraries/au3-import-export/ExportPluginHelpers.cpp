@@ -11,13 +11,13 @@
 **********************************************************************/
 
 #include "ExportPluginHelpers.h"
-#include "Track.h"
-#include "Mix.h"
-#include "WaveTrack.h"
-#include "MixAndRender.h"
+#include "au3-track/Track.h"
+#include "au3-mixer/Mix.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-effects/MixAndRender.h"
 #include "ExportUtils.h"
 #include "ExportPlugin.h"
-#include "StretchingSequence.h"
+#include "au3-stretching-sequence/StretchingSequence.h"
 
 //Create a mixer by computing the time warp factor
 std::unique_ptr<Mixer> ExportPluginHelpers::CreateMixer(

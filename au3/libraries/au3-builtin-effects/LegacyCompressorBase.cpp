@@ -19,8 +19,8 @@
 
 *//*******************************************************************/
 #include "LegacyCompressorBase.h"
-#include "Prefs.h"
-#include "WaveTrack.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-wave-track/WaveTrack.h"
 #include <cmath>
 
 const EffectParameterMethods& LegacyCompressorBase::Parameters() const

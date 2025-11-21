@@ -11,7 +11,7 @@
 #include "PlainExportOptionsEditor.h"
 #include <wx/config.h>
 
-#include "BasicSettings.h"
+#include "au3-preferences/BasicSettings.h"
 
 PlainExportOptionsEditor::PlainExportOptionsEditor(std::initializer_list<OptionDesc> options,
                                                    Listener* listener)

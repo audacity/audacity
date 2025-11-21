@@ -27,15 +27,15 @@
 #include <wx/bmpbuttn.h>
 
 #include "AccessibleLinksFormatter.h"
-#include "AllThemeResources.h"
-#include "Theme.h"
+#include "au3-theme/AllThemeResources.h"
+#include "au3-theme/Theme.h"
 #include "HelpText.h"
-#include "Prefs.h"
-#include "ShuttleGui.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-shuttlegui/ShuttleGui.h"
 #include "HelpSystem.h"
 
-#include "SentryReport.h"
-#include "CodeConversions.h"
+#include "au3-sentry-reporting/SentryReport.h"
+#include "au3-string-utils/CodeConversions.h"
 
 namespace {
 // wxWidgets set an inaccessible border for the wxCollapsiblePane

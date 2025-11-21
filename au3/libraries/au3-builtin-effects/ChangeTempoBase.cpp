@@ -1,6 +1,6 @@
 #include "ChangeTempoBase.h"
-#include "ShuttleAutomation.h"
-#include "TimeWarper.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-track/TimeWarper.h"
 #ifdef USE_SBSMS
 #include "SBSMSBase.h"
 #endif

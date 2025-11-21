@@ -12,7 +12,7 @@
 
 #include <regex>
 
-#include "CodeConversions.h"
+#include "au3-string-utils/CodeConversions.h"
 
 namespace audacity {
 namespace sentry {

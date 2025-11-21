@@ -38,10 +38,10 @@
 #include <wx/ffile.h>
 #include <wx/log.h>
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 #include "au3-math/Dither.h"
 #include "SampleBlock.h"
-#include "InconsistencyException.h"
+#include "au3-exceptions/InconsistencyException.h"
 
 size_t Sequence::sMaxDiskBlockSize = 1048576;
 

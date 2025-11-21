@@ -11,7 +11,7 @@ Michael Papadopoulos split from Decibels.h
 #ifndef __AUDACITY_BEATS__
 #define __AUDACITY_BEATS__
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 //! The tempo used for drawing the Beats & Measures ruler
 extern NUMERIC_FORMATS_API DoubleSetting BeatsPerMinute;

@@ -16,7 +16,7 @@
 #if USE_AUDIO_UNITS
 
 #include "AudioUnitWrapper.h"
-#include "PerTrackEffect.h"
+#include "au3-effects/PerTrackEffect.h"
 
 constexpr auto OptionsKey = L"Options";
 constexpr auto UseLatencyKey = L"UseLatency";

@@ -14,14 +14,14 @@
 #include <cmath>
 #include <cstring>
 
-#include "ZoomInfo.h"
+#include "au3-screen-geometry/ZoomInfo.h"
 
 #include "waveform/WaveDataCache.h"
 
-#include "Envelope.h"
-#include "FrameStatistics.h"
+#include "au3-mixer/Envelope.h"
+#include "au3-graphics/FrameStatistics.h"
 
-#include "WaveClip.h"
+#include "au3-wave-track/WaveClip.h"
 
 // The worst case scenario is:
 // blank > background > envelope top + envelope bottom > sample > rms > zero line

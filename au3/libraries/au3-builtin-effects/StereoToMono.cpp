@@ -8,13 +8,13 @@
 
 **********************************************************************/
 #include "StereoToMono.h"
-#include "BasicUI.h"
-#include "EffectOutputTracks.h"
-#include "Mix.h"
-#include "MixAndRender.h"
-#include "Project.h"
-#include "RealtimeEffectList.h"
-#include "WaveTrack.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-mixer/Mix.h"
+#include "au3-effects/MixAndRender.h"
+#include "au3-project/Project.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
+#include "au3-wave-track/WaveTrack.h"
 
 const ComponentInterfaceSymbol StereoToMono::Symbol { XO("Stereo To Mono") };
 

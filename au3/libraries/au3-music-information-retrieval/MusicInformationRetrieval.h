@@ -10,7 +10,7 @@
 **********************************************************************/
 #pragma once
 
-#include "AcidizerTags.h"
+#include "au3-file-formats/AcidizerTags.h"
 #include "MirTypes.h"
 
 #include <functional>

@@ -14,7 +14,7 @@ typedef struct XML_ParserStruct* XML_Parser;
 
 #include "XMLTagHandler.h"
 #include "Internat.h" // for TranslatableString
-#include "MemoryStream.h"
+#include "au3-utility/MemoryStream.h"
 
 class XML_API XMLFileReader final
 {

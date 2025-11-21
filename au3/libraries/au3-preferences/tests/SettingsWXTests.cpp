@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 #include "SettingsTestsCommon.h"
 #include <wx/fileconf.h>
-#include "SettingsWX.h"
+#include "au3-wx-init/SettingsWX.h"
 
 TEST_CASE("SettingsWX implementations test", "")
 {

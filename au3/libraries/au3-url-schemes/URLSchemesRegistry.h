@@ -14,7 +14,7 @@
 #include <string_view>
 #include <functional>
 
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 
 //! A message that is invoked when a custom-scheme URL is passed to Audacity
 struct URLschemeHandlerMessage final

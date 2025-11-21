@@ -10,7 +10,7 @@
 **********************************************************************/
 #include "ClipSegment.h"
 #include "ClipInterface.h"
-#include "StaffPadTimeAndPitch.h"
+#include "au3-time-and-pitch/StaffPadTimeAndPitch.h"
 #include <functional>
 
 namespace {

@@ -9,7 +9,7 @@ Paul Licameli
 **********************************************************************/
 #pragma once
 
-#include "SpectrumTransformer.h"
+#include "au3-fft/SpectrumTransformer.h"
 
 class WaveChannel;
 class WaveTrack;

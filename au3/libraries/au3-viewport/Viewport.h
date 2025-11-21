@@ -11,8 +11,8 @@ Paul Licameli split from ProjectWindow.h
 #ifndef __AUDACITY_VIEWPORT__
 #define __AUDACITY_VIEWPORT__
 
-#include "ClientData.h"
-#include "Observer.h"
+#include "au3-registries/ClientData.h"
+#include "au3-utility/Observer.h"
 
 class AudacityProject;
 class Track;

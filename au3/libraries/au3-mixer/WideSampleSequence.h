@@ -10,7 +10,7 @@ Paul Licameli split from SampleFrame.h
 #ifndef __AUDACITY_WIDE_SAMPLE_SEQUENCE_
 #define __AUDACITY_WIDE_SAMPLE_SEQUENCE_
 
-#include "AudioGraphChannel.h"
+#include "au3-audio-graph/AudioGraphChannel.h"
 #include "au3-math/SampleCount.h"
 #include "au3-math/SampleFormat.h"
 

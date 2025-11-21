@@ -15,7 +15,7 @@
 #include <type_traits>
 
 #include "GraphicsDataCache.h"
-#include "ZoomInfo.h"
+#include "au3-screen-geometry/ZoomInfo.h"
 
 namespace {
 struct CacheElement : GraphicsDataCacheElementBase

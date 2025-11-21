@@ -41,8 +41,8 @@
 
 #include "FFT.h"
 
-#include "Internat.h"
-#include "MemoryX.h"
+#include "au3-strings/Internat.h"
+#include "au3-utility/MemoryX.h"
 
 #include <wx/wxcrtvararg.h>
 #include <stdlib.h>

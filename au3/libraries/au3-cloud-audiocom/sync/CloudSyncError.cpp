@@ -12,10 +12,10 @@
 
 #include <unordered_map>
 
-#include "IResponse.h"
+#include "au3-network-manager/IResponse.h"
 
-#include "CodeConversions.h"
-#include "TranslatableString.h"
+#include "au3-string-utils/CodeConversions.h"
+#include "au3-strings/TranslatableString.h"
 
 namespace audacity::cloud::audiocom::sync {
 CLOUD_AUDIOCOM_API CloudSyncError

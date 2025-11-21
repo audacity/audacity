@@ -17,7 +17,7 @@
 #include "MultipartData.h"
 #include "RequestPayload.h"
 
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
 namespace audacity {
 namespace network_manager {

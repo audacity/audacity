@@ -10,8 +10,8 @@ Paul Licameli
 
 #include "SelectedRegion.h"
 
-#include "XMLWriter.h"
-#include "XMLAttributeValueView.h"
+#include "au3-xml/XMLWriter.h"
+#include "au3-xml/XMLAttributeValueView.h"
 
 const char* SelectedRegion::sDefaultT0Name = "selStart";
 const char* SelectedRegion::sDefaultT1Name = "selEnd";

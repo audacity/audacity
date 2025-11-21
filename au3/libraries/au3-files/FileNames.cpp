@@ -28,10 +28,10 @@ used throughout Audacity into this one place.
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 #include <wx/utils.h>
-#include "BasicUI.h"
-#include "Prefs.h"
-#include "Internat.h"
-#include "ModuleConstants.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-strings/Internat.h"
+#include "au3-utility/ModuleConstants.h"
 #include "PlatformCompatibility.h"
 #include "wxFileNameWrapper.h"
 

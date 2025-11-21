@@ -20,7 +20,7 @@
 #include <algorithm>
 #include <cstring>
 #include <cassert>
-#include "CFResources.h"
+#include "au3-utility/CFResources.h"
 
 #if defined(USE_UUID_CREATE)
 #   include <rpc.h>
@@ -30,7 +30,7 @@
 #   include <uuid/uuid.h>
 #endif
 
-#include "HexHelpers.h"
+#include "au3-string-utils/HexHelpers.h"
 
 namespace audacity {
 constexpr int BRACED_UUID_LENGTH = 38;

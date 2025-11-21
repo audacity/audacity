@@ -6,12 +6,12 @@
 
 *//*******************************************************************/
 #include "ContrastBase.h"
-#include "BasicUI.h"
-#include "Prefs.h"
-#include "Project.h"
-#include "ViewInfo.h"
-#include "WaveChannelUtilities.h"
-#include "WaveTrack.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-project/Project.h"
+#include "au3-time-frequency-selection/ViewInfo.h"
+#include "au3-wave-track/WaveChannelUtilities.h"
+#include "au3-wave-track/WaveTrack.h"
 
 bool ContrastBase::GetDB(float& dB)
 {

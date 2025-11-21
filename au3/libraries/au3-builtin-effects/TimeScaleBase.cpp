@@ -16,7 +16,7 @@
 #if USE_SBSMS
 
 #include "TimeScaleBase.h"
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 #include <cmath>
 
 const EffectParameterMethods& TimeScaleBase::Parameters() const

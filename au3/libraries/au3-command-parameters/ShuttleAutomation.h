@@ -12,8 +12,8 @@
 #define __AUDACITY_SHUTTLE_AUTOMATION__
 
 #include <type_traits>
-#include "EffectInterface.h"
-#include "SettingsVisitor.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-components/SettingsVisitor.h"
 
 class Effect;
 //! Interface for manipulations of an Effect's settings

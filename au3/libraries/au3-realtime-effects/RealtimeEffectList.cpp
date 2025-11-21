@@ -9,9 +9,9 @@
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 
-#include "Channel.h"
-#include "Project.h"
-#include "UndoManager.h"
+#include "au3-channel/Channel.h"
+#include "au3-project/Project.h"
+#include "au3-project-history/UndoManager.h"
 
 RealtimeEffectList::RealtimeEffectList()
 {

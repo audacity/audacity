@@ -10,10 +10,10 @@
 
 #include "RealtimeEffectState.h"
 
-#include "Channel.h"
-#include "EffectInterface.h"
-#include "MessageBuffer.h"
-#include "PluginManager.h"
+#include "au3-channel/Channel.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-utility/MessageBuffer.h"
+#include "au3-module-manager/PluginManager.h"
 #include "au3-math/SampleCount.h"
 
 #include <thread>

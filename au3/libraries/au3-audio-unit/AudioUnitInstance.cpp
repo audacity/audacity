@@ -15,7 +15,7 @@
 #include "AudioUnitInstance.h"
 
 #include <AudioToolbox/AudioUnitUtilities.h>
-#include "AudacityException.h"
+#include "au3-exceptions/AudacityException.h"
 #include <wx/log.h>
 
 namespace {

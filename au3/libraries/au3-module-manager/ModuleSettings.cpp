@@ -10,12 +10,12 @@
 
 #include "ModuleSettings.h"
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 #include <unordered_set>
 #include <wx/filename.h>
 
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
 class ModuleSettingsResetHandler final : public PreferencesResetHandler
 {

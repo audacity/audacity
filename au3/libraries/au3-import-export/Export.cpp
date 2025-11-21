@@ -17,13 +17,13 @@
 
 #include <numeric>
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 #include "ExportPluginRegistry.h"
-#include "Mix.h"
-#include "Project.h"
-#include "WaveTrack.h"
-#include "wxFileNameWrapper.h"
-#include "StretchingSequence.h"
+#include "au3-mixer/Mix.h"
+#include "au3-project/Project.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-files/wxFileNameWrapper.h"
+#include "au3-stretching-sequence/StretchingSequence.h"
 
 #include "ExportUtils.h"
 

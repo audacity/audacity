@@ -14,7 +14,7 @@ Functions that find and load all LV2 plugins on the system.
 
 *//*******************************************************************/
 #include "LV2Wrapper.h"
-#include "PluginInterface.h"
+#include "au3-module-manager/PluginInterface.h"
 #if defined(USE_LV2)
 
 #if defined(__GNUC__)
@@ -23,7 +23,7 @@ Functions that find and load all LV2 plugins on the system.
 
 #include "LoadLV2.h"
 #include "LV2PluginId.h"
-#include "ModuleManager.h"
+#include "au3-module-manager/ModuleManager.h"
 
 #include <cstdlib>
 #include <cstring>
@@ -34,8 +34,8 @@ Functions that find and load all LV2 plugins on the system.
 #include <wx/log.h>
 #include <wx/utils.h>
 
-#include "Internat.h"
-#include "wxArrayStringEx.h"
+#include "au3-strings/Internat.h"
+#include "au3-strings/wxArrayStringEx.h"
 
 #include <unordered_map>
 

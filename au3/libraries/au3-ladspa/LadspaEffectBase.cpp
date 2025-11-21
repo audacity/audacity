@@ -18,7 +18,7 @@ effects from this one class.
 
 *//*******************************************************************/
 #include "LadspaEffectBase.h"       // This class's header file
-#include "ConfigInterface.h"
+#include "au3-module-manager/ConfigInterface.h"
 
 #include <wx/log.h>
 #include <wx/utils.h>

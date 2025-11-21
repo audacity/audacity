@@ -13,7 +13,7 @@
 
 #include <wx/atomic.h>
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 AudacityException::~AudacityException()
 {

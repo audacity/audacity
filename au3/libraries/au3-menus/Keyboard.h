@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_KEYBOARD__
 #define __AUDACITY_KEYBOARD__
 
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 
 class wxKeyEvent;
 

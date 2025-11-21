@@ -3,7 +3,7 @@
 #include <optional>
 #include <map>
 
-#include "EffectInterface.h"
+#include "au3-components/EffectInterface.h"
 
 #include "AudacityVst3HostApplication.h"
 
@@ -12,11 +12,11 @@
 #include <wx/dir.h>
 #include <wx/tokenzr.h>
 
-#include "AudacityException.h"
-#include "ConfigInterface.h"
-#include "FileException.h"
+#include "au3-exceptions/AudacityException.h"
+#include "au3-module-manager/ConfigInterface.h"
+#include "au3-files/FileException.h"
 #include "memorystream.h"
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 #include "VST3Utils.h"
 #include "internal/ConnectionProxy.h"
 

@@ -10,8 +10,8 @@
 #ifndef __AUDACITY_PENDING_TRACKS__
 #define __AUDACITY_PENDING_TRACKS__
 
-#include "ClientData.h"
-#include "Observer.h"
+#include "au3-registries/ClientData.h"
+#include "au3-utility/Observer.h"
 
 class AudacityProject;
 class Channel;

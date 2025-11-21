@@ -13,11 +13,11 @@
 #ifndef __AUDACITY_MENU_REGISTRY__
 #define __AUDACITY_MENU_REGISTRY__
 
-#include "Callable.h"
-#include "MemoryX.h"
+#include "au3-utility/Callable.h"
+#include "au3-utility/MemoryX.h"
 #include "CommandFunctors.h"
 #include "CommandFlag.h"
-#include "Registry.h"
+#include "au3-registries/Registry.h"
 #include <functional>
 
 class AudacityProject;

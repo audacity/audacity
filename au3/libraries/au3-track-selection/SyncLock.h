@@ -11,10 +11,10 @@ Paul Licameli split from Track.cpp
 #ifndef __AUDACITY_SYNC_LOCK__
 #define __AUDACITY_SYNC_LOCK__
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 #include "Track.h" // for TrackIterRange
-#include "AttachedVirtualFunction.h"
-#include "Observer.h"
+#include "au3-registries/AttachedVirtualFunction.h"
+#include "au3-utility/Observer.h"
 
 //! Sent after sync lock setting changes, with its new state
 struct SyncLockChangeMessage {

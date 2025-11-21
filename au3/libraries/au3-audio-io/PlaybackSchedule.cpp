@@ -10,10 +10,10 @@
 
 #include "PlaybackSchedule.h"
 
-#include "AudioIOBase.h"
-#include "Envelope.h"
-#include "Mix.h"
-#include "Project.h"
+#include "au3-audio-devices/AudioIOBase.h"
+#include "au3-mixer/Envelope.h"
+#include "au3-mixer/Mix.h"
+#include "au3-project/Project.h"
 #include "au3-math/SampleCount.h"
 
 PlaybackPolicy::~PlaybackPolicy() = default;

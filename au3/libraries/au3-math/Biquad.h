@@ -12,7 +12,7 @@ Max Maisel
 #ifndef __BIQUAD_H__
 #define __BIQUAD_H__
 
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
 /// \brief Represents a biquad digital filter.
 struct MATH_API Biquad

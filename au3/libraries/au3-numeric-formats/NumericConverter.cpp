@@ -30,7 +30,7 @@ different formats.
 #include "NumericConverterFormats.h"
 #include "NumericConverterRegistry.h"
 
-#include "Project.h"
+#include "au3-project/Project.h"
 
 #include "formatters/ParsedNumericConverterFormatter.h"
 

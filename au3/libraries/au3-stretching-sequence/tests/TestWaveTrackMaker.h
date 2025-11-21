@@ -12,8 +12,8 @@
 
 #include "MockSampleBlockFactory.h"
 #include "au3-math/SampleFormat.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
 
 class TestWaveTrackMaker final
 {

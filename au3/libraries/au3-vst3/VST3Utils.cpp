@@ -11,7 +11,7 @@
 **********************************************************************/
 
 #include "VST3Utils.h"
-#include "Base64.h"
+#include "au3-strings/Base64.h"
 
 #include <wx/string.h>
 #include <wx/filename.h>
@@ -20,7 +20,7 @@
 #include <pluginterfaces/vst/ivstparameterchanges.h>
 #include <wx/regex.h>
 
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
 #ifdef __WXMSW__
 #include <shlobj.h>

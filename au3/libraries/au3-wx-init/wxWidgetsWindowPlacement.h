@@ -13,7 +13,7 @@ Paul Licameli
 #ifndef __WXWIDGETS_WINDOW_PLACEMENT__
 #define __WXWIDGETS_WINDOW_PLACEMENT__
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 class wxWindow;
 

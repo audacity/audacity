@@ -11,8 +11,8 @@
 *//*******************************************************************/
 
 #include "LadspaInstance.h"       // This class's header file
-#include "ConfigInterface.h"
-#include "AudacityException.h"
+#include "au3-module-manager/ConfigInterface.h"
+#include "au3-exceptions/AudacityException.h"
 
 static const wchar_t* OptionsKey = L"Options";
 static const wchar_t* UseLatencyKey = L"UseLatency";

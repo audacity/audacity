@@ -19,7 +19,7 @@ the pitch without changing the tempo.
 
 #pragma once
 
-#include "SettingsVisitor.h"
+#include "au3-components/SettingsVisitor.h"
 #include "SoundTouchBase.h"
 
 class BUILTIN_EFFECTS_API ChangePitchBase : public SoundTouchBase

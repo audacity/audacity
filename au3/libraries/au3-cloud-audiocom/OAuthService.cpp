@@ -17,23 +17,23 @@
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
 
-#include "CodeConversions.h"
-#include "Prefs.h"
+#include "au3-string-utils/CodeConversions.h"
+#include "au3-preferences/Prefs.h"
 
-#include "IResponse.h"
-#include "NetworkManager.h"
-#include "Request.h"
+#include "au3-network-manager/IResponse.h"
+#include "au3-network-manager/NetworkManager.h"
+#include "au3-network-manager/Request.h"
 
 #include "ServiceConfig.h"
 #include "NetworkUtils.h"
 
-#include "UrlDecode.h"
+#include "au3-string-utils/UrlDecode.h"
 
-#include "BasicUI.h"
-#include "ExportUtils.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-import-export/ExportUtils.h"
 
-#include "StringUtils.h"
-#include "UrlEncode.h"
+#include "au3-string-utils/StringUtils.h"
+#include "au3-string-utils/UrlEncode.h"
 
 namespace audacity::cloud::audiocom {
 namespace {

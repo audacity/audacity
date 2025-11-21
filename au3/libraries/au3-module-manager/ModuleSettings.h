@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_MODULE_SETTINGS__
 #define __AUDACITY_MODULE_SETTINGS__
 
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 
 enum {
     kModuleDisabled = 0,

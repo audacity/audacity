@@ -10,7 +10,7 @@
 **********************************************************************/
 
 #include "CompressorProcessor.h"
-#include "MathApprox.h"
+#include "au3-utility/MathApprox.h"
 #include "SimpleCompressor/GainReductionComputer.h"
 #include "SimpleCompressor/LookAheadGainReduction.h"
 #include <algorithm>

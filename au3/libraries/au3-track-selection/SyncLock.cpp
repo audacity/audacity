@@ -11,10 +11,10 @@ Paul Licameli split from Track.cpp
 
 #include "SyncLock.h"
 
-#include "PendingTracks.h"
-#include "Prefs.h"
-#include "Project.h"
-#include "Track.h"
+#include "au3-track/PendingTracks.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-project/Project.h"
+#include "au3-track/Track.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory
     sSyncLockStateKey{

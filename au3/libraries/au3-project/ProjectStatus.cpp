@@ -14,8 +14,8 @@ Paul Licameli
 
 #include "Project.h"
 
-#include "AppEvents.h"
-#include "BasicUI.h"
+#include "au3-utility/AppEvents.h"
+#include "au3-basic-ui/BasicUI.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
     []( AudacityProject& parent ){

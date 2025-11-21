@@ -18,7 +18,7 @@ Paul Licameli split from AudacityProject.h
 #include <wx/event.h>
 
 #include "ClientData.h" // to inherit
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 #include "Prefs.h" // to inherit
 #include "XMLTagHandler.h" // to inherit
 

@@ -32,7 +32,7 @@
 #include <wx/arrstr.h>
 #include <wx/filename.h>
 
-#include "FileNames.h"
+#include "au3-files/FileNames.h"
 
 // "Good" means the name is well-formed and names an existing file or folder.
 bool XMLValueChecker::IsGoodFileName(const FilePath& strFileName, const FilePath& strDirName /* = "{} */)

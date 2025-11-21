@@ -9,12 +9,12 @@
 
 **********************************************************************/
 #include "ProjectSnap.h"
-#include "Project.h"
-#include "XMLWriter.h"
-#include "XMLAttributeValueView.h"
+#include "au3-project/Project.h"
+#include "au3-xml/XMLWriter.h"
+#include "au3-xml/XMLAttributeValueView.h"
 
-#include "ProjectRate.h"
-#include "ProjectTimeSignature.h"
+#include "au3-project-rate/ProjectRate.h"
+#include "au3-numeric-formats/ProjectTimeSignature.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sKey {
     [](AudacityProject& project)

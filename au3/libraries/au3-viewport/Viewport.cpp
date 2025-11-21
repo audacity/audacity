@@ -9,14 +9,14 @@ Paul Licameli split from ProjectWindow.cpp
 **********************************************************************/
 #include "Viewport.h"
 
-#include "BasicUI.h"
-#include "PendingTracks.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-track/PendingTracks.h"
 #include "PlayableTrack.h" // just for AudioTrack
-#include "Project.h"
-#include "ProjectSnap.h"
-#include "TrackFocus.h"
-#include "UndoManager.h"
-#include "ViewInfo.h"
+#include "au3-project/Project.h"
+#include "au3-snapping/ProjectSnap.h"
+#include "au3-track-selection/TrackFocus.h"
+#include "au3-project-history/UndoManager.h"
+#include "au3-time-frequency-selection/ViewInfo.h"
 
 #include <numeric>
 

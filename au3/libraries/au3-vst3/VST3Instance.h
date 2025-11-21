@@ -2,7 +2,7 @@
 
 #include <public.sdk/source/vst/utility/uid.h>
 
-#include "PerTrackEffect.h"
+#include "au3-effects/PerTrackEffect.h"
 
 namespace Steinberg {
 class IPlugView;

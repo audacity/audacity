@@ -17,7 +17,7 @@
  */
 
 #include "GainReductionComputer.h"
-#include "MathApprox.h"
+#include "au3-utility/MathApprox.h"
 // Linux requires explicit include for std::abs
 #ifdef __linux__
 #include <cmath>

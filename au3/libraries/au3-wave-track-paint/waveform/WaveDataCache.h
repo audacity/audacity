@@ -18,7 +18,7 @@
 
 #include "GraphicsDataCache.h"
 #include "WaveData.h"
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 
 class WaveClip;
 

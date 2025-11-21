@@ -12,8 +12,8 @@
 
 **********************************************************************/
 #include "EqualizationFilter.h"
-#include "Envelope.h"
-#include "FFT.h"
+#include "au3-mixer/Envelope.h"
+#include "au3-fft/FFT.h"
 
 EqualizationFilter::EqualizationFilter(const EffectSettingsManager& manager)
     : EqualizationParameters{manager}
@@ -28,7 +28,7 @@ EqualizationFilter::EqualizationFilter(const EffectSettingsManager& manager)
     mLinEnvelope.SetTrackLen(1.0);
 }
 
-#include "RealFFTf.h"
+#include "au3-fft/RealFFTf.h"
 bool EqualizationFilter::CalcFilter()
 {
     // Inverse-transform the given curve from frequency domain to time;

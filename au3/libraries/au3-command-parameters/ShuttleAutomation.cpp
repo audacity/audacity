@@ -9,7 +9,7 @@
 **********************************************************************/
 
 #include "ShuttleAutomation.h"
-#include "EffectAutomationParameters.h"
+#include "au3-components/EffectAutomationParameters.h"
 
 EffectParameterMethods::~EffectParameterMethods() = default;
 

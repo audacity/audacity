@@ -14,8 +14,8 @@
 #include <memory>
 #include <optional>
 
-#include "Callable.h"
-#include "Registry.h"
+#include "au3-utility/Callable.h"
+#include "au3-registries/Registry.h"
 #include "NumericConverterType.h"
 
 struct NumericConverterFormatter;

@@ -14,9 +14,9 @@
 
 #include "Export.h"
 #include "ExportTypes.h"
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 #include "ExportPlugin.h"
-#include "wxFileNameWrapper.h"
+#include "au3-files/wxFileNameWrapper.h"
 
 class ExportProcessorDelegate;
 class Exporter;

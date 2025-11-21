@@ -14,7 +14,7 @@
 #ifndef __AUDACITY_MIXER_SOURCE__
 #define __AUDACITY_MIXER_SOURCE__
 
-#include "AudioGraphSource.h"
+#include "au3-audio-graph/AudioGraphSource.h"
 #include "MixerOptions.h"
 #include "au3-math/SampleCount.h"
 #include "au3-math/Resample.h"

@@ -16,10 +16,10 @@
 #include <wx/string.h>
 
 #include "ExportOptionsEditor.h"
-#include "wxArrayStringEx.h"
-#include "Identifier.h"
-#include "TranslatableString.h"
-#include "wxFileNameWrapper.h"
+#include "au3-strings/wxArrayStringEx.h"
+#include "au3-strings/Identifier.h"
+#include "au3-strings/TranslatableString.h"
+#include "au3-files/wxFileNameWrapper.h"
 
 class wxFileName;
 class wxString;

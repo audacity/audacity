@@ -2,9 +2,9 @@
 
 #include <public.sdk/source/vst/utility/uid.h>
 
-#include "AudacityException.h"
+#include "au3-exceptions/AudacityException.h"
 #include "VST3Wrapper.h"
-#include "ConfigInterface.h"
+#include "au3-module-manager/ConfigInterface.h"
 #include "VST3Utils.h"
 
 namespace {

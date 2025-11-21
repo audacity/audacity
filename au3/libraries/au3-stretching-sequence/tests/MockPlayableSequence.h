@@ -10,7 +10,7 @@
 **********************************************************************/
 #pragma once
 
-#include "AudioIOSequences.h"
+#include "au3-mixer/AudioIOSequences.h"
 
 class MockPlayableSequence final : public PlayableSequence
 {

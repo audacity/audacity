@@ -24,7 +24,7 @@
 #include "LV2PluginId.h"
 #include "LV2Instance.h"
 #include "LV2Wrapper.h"
-#include "ConfigInterface.h"
+#include "au3-module-manager/ConfigInterface.h"
 
 LV2EffectBase::LV2EffectBase(const LilvPlugin& plug)
     : mPlug{plug}

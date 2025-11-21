@@ -54,10 +54,10 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 
-#include "BasicUI.h"
-#include "Internat.h"
-#include "IteratorX.h"
-#include "Observer.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-strings/Internat.h"
+#include "au3-utility/IteratorX.h"
+#include "au3-utility/Observer.h"
 
 StickySetting<BoolSetting> DefaultUpdatesCheckingFlag{
     L"/Update/DefaultUpdatesChecking", true };

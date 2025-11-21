@@ -14,10 +14,10 @@
 #include <wx/ffile.h> // to inherit
 
 #include <string_view> // For UTF8 writer
-#include "MemoryStream.h"
+#include "au3-utility/MemoryStream.h"
 
-#include "FileException.h"
-#include "Identifier.h"
+#include "au3-files/FileException.h"
+#include "au3-strings/Identifier.h"
 
 ///
 /// XMLWriter

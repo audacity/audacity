@@ -17,7 +17,7 @@
 #include "AudioGraphSink.h" // to inherit
 #include "AudioGraphSource.h" // to inherit
 #include "Effect.h" // to inherit
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 #include "au3-math/SampleCount.h"
 #include <functional>
 #include <memory>

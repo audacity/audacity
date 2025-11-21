@@ -28,7 +28,7 @@
 #include <cstring>
 #include <algorithm>
 
-#include "DateTimeConversions.h"
+#include "au3-string-utils/DateTimeConversions.h"
 
 namespace audacity {
 namespace network_manager {

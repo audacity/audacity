@@ -15,8 +15,8 @@
 #include "formatters/BeatsNumericConverterFormatter.h"
 #include "NumericConverterFormatterContext.h"
 
-#include "Project.h"
-#include "ProjectRate.h"
+#include "au3-project/Project.h"
+#include "au3-project-rate/ProjectRate.h"
 #include "ProjectTimeSignature.h"
 
 #include "MockedPrefs.h"

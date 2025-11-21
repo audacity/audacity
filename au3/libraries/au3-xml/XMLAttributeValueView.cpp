@@ -9,7 +9,7 @@
 **********************************************************************/
 
 #include "XMLAttributeValueView.h"
-#include "FromChars.h"
+#include "au3-string-utils/FromChars.h"
 
 #include <numeric>
 

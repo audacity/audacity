@@ -12,8 +12,8 @@
 
 #include <cassert>
 
-#include "CodeConversions.h"
-#include "FileNames.h"
+#include "au3-string-utils/CodeConversions.h"
+#include "au3-files/FileNames.h"
 
 namespace audacity::cloud::audiocom::sync {
 namespace {

@@ -9,7 +9,7 @@
 
 **********************************************************************/
 #include "WaveChannelUtilities.h"
-#include "PlaybackDirection.h"
+#include "au3-stretching-sequence/PlaybackDirection.h"
 #include "WaveClip.h"
 #include "WaveClipUtilities.h"
 #include "WaveTrack.h"

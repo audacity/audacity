@@ -15,7 +15,7 @@
 
 #include "DeviceChange.h"
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 

@@ -9,11 +9,11 @@
 
 **********************************************************************/
 #include "TimeStretching.h"
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 #include "SampleBlock.h"
 #include "Sequence.h"
-#include "TempoChange.h"
-#include "UserException.h"
+#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-exceptions/UserException.h"
 #include "WaveClip.h"
 #include "realfn.h"
 #include <algorithm>

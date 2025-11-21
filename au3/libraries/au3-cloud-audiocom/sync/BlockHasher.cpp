@@ -17,10 +17,10 @@
 #include <sstream>
 #include <utility>
 
-#include "MemoryX.h"
-#include "SampleBlock.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-wave-track/SampleBlock.h"
 
-#include "crypto/SHA256.h"
+#include "au3-crypto/crypto/SHA256.h"
 
 namespace audacity::cloud::audiocom::sync {
 class BlockHasher::Workers final

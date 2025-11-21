@@ -20,13 +20,13 @@
 #include <wx/utils.h>
 
 #include "AudacityVst3HostApplication.h"
-#include "ModuleManager.h"
+#include "au3-module-manager/ModuleManager.h"
 
-#include "wxArrayStringEx.h"
-#include "PlatformCompatibility.h"
-#include "PluginInterface.h"
-#include "PluginProvider.h"
-#include "PluginProvider.h"
+#include "au3-strings/wxArrayStringEx.h"
+#include "au3-files/PlatformCompatibility.h"
+#include "au3-module-manager/PluginInterface.h"
+#include "au3-components/PluginProvider.h"
+#include "au3-components/PluginProvider.h"
 #include "VST3Utils.h"
 #include "VST3Wrapper.h"
 

@@ -20,23 +20,23 @@
 #include "ProjectUploadOperation.h"
 #include "ServiceConfig.h"
 
-#include "CodeConversions.h"
+#include "au3-string-utils/CodeConversions.h"
 
-#include "Project.h"
+#include "au3-project/Project.h"
 
-#include "ProjectFileIO.h"
-#include "ProjectSerializer.h"
+#include "au3-project-file-io/ProjectFileIO.h"
+#include "au3-project-file-io/ProjectSerializer.h"
 
-#include "BasicUI.h"
-#include "ExportUtils.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-import-export/ExportUtils.h"
 
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
 #include "CloudProjectsDatabase.h"
 #include "OAuthService.h"
 #include "UserService.h"
 
-#include "Track.h"
+#include "au3-track/Track.h"
 
 namespace audacity::cloud::audiocom::sync {
 namespace {

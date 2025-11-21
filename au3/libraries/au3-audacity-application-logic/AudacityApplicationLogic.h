@@ -10,9 +10,9 @@
 **********************************************************************/
 #pragma once
 
-#include "CommandFlag.h"
+#include "au3-menus/CommandFlag.h"
 #include "AudacityApplicationLogicTypes.h"
-#include "PluginProvider.h"
+#include "au3-components/PluginProvider.h"
 
 class AudacityProject;
 

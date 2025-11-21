@@ -18,9 +18,9 @@ frequency changes smoothly during the tone.
 
 *//*******************************************************************/
 #include "ToneGenBase.h"
-#include "Project.h"
-#include "ProjectRate.h"
-#include "ShuttleAutomation.h"
+#include "au3-project/Project.h"
+#include "au3-project-rate/ProjectRate.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
 #include <math.h>
 
 const EnumValueSymbol ToneGenBase::kInterStrings[nInterpolations] = {

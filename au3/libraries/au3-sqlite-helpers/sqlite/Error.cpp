@@ -7,7 +7,7 @@
 
 #include <cassert>
 
-#include "AudacityException.h"
+#include "au3-exceptions/AudacityException.h"
 #include "sqlite3.h"
 
 namespace audacity::sqlite {

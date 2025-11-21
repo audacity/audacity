@@ -12,9 +12,9 @@ Paul Licameli split from ProjectManager.cpp
 #define __AUDACITY_PROJECT_SELECTION_MANAGER__
 
 #include "ClientData.h" // to inherit
-#include "Observer.h"
-#include "ComponentInterfaceSymbol.h"
-#include "Observer.h"
+#include "au3-utility/Observer.h"
+#include "au3-components/ComponentInterfaceSymbol.h"
+#include "au3-utility/Observer.h"
 
 class AudacityProject;
 struct ProjectNumericFormatsEvent;

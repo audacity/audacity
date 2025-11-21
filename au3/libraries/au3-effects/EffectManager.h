@@ -12,8 +12,8 @@
 #ifndef __AUDACITY_EFFECTMANAGER__
 #define __AUDACITY_EFFECTMANAGER__
 
-#include "EffectInterface.h"
-#include "Identifier.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-strings/Identifier.h"
 
 #include <functional>
 #include <memory>

@@ -13,8 +13,8 @@
 
 #include <algorithm>
 #include <AudioUnit/AudioUnit.h>
-#include "CFResources.h"
-#include "PackedArray.h"
+#include "au3-utility/CFResources.h"
+#include "au3-utility/PackedArray.h"
 
 //! Generates deleters for std::unique_ptr that clean up AU plugin state
 template<typename T, OSStatus(*fn)(T*)> struct AudioUnitCleaner {

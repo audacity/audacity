@@ -11,10 +11,10 @@
 #pragma once
 #include <wx/string.h>
 
-#include "EffectInterface.h"
+#include "au3-components/EffectInterface.h"
 #include "PluginInterface.h"
-#include "XMLTagHandler.h"
-#include "wxArrayStringEx.h"
+#include "au3-xml/XMLTagHandler.h"
+#include "au3-strings/wxArrayStringEx.h"
 
 class XMLWriter;
 

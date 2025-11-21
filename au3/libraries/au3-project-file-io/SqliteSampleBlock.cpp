@@ -11,20 +11,20 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include <float.h>
 #include <sqlite3.h>
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 #include "DBConnection.h"
 #include "ProjectFileIO.h"
 #include "au3-math/SampleFormat.h"
-#include "AudioSegmentSampleView.h"
-#include "XMLTagHandler.h"
+#include "au3-stretching-sequence/AudioSegmentSampleView.h"
+#include "au3-xml/XMLTagHandler.h"
 
 #include "SampleBlock.h" // to inherit
-#include "UndoManager.h"
-#include "UndoTracks.h"
-#include "WaveTrack.h"
-#include "WaveTrackUtilities.h"
+#include "au3-project-history/UndoManager.h"
+#include "au3-track/UndoTracks.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 
-#include "SentryHelper.h"
+#include "au3-sentry-reporting/SentryHelper.h"
 #include <wx/log.h>
 
 #include <mutex>

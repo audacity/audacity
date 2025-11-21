@@ -21,17 +21,17 @@
 #include "ServiceConfig.h"
 #include "OAuthService.h"
 
-#include "BasicUI.h"
-#include "FileNames.h"
-#include "Observer.h"
-#include "Prefs.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-files/FileNames.h"
+#include "au3-utility/Observer.h"
+#include "au3-preferences/Prefs.h"
 
-#include "IResponse.h"
-#include "NetworkManager.h"
+#include "au3-network-manager/IResponse.h"
+#include "au3-network-manager/NetworkManager.h"
 #include "NetworkUtils.h"
-#include "Request.h"
+#include "au3-network-manager/Request.h"
 
-#include "CodeConversions.h"
+#include "au3-string-utils/CodeConversions.h"
 
 namespace audacity::cloud::audiocom {
 namespace {

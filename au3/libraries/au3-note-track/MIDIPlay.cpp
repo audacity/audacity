@@ -354,10 +354,10 @@ Time (in seconds, = total_sample_count / sample_rate)
 **********************************************************************/
 
 #include "MIDIPlay.h"
-#include "AudioIO.h"
+#include "au3-audio-io/AudioIO.h"
 
-#include "BasicUI.h"
-#include "Prefs.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-preferences/Prefs.h"
 #include "portaudio.h"
 #include <portmidi.h>
 #include <porttime.h>

@@ -11,11 +11,11 @@
  Paul Licameli
  **********************************************************************/
 
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 #include <exception>
 #include <functional>
 
-#include "Internat.h"
+#include "au3-strings/Internat.h"
 
 //! A type of an exception
 enum class ExceptionType

@@ -42,8 +42,8 @@
 #ifndef __AUDACITY_COMPONENT_INTERFACE_H__
 #define __AUDACITY_COMPONENT_INTERFACE_H__
 
-#include "Identifier.h"
-#include "Internat.h"
+#include "au3-strings/Identifier.h"
+#include "au3-strings/Internat.h"
 #include <wx/string.h> // member variables
 
 class ComponentInterfaceSymbol;

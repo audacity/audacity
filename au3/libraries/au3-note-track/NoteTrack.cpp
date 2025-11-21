@@ -23,10 +23,10 @@
 
 #define ROUND(x) ((int)((x) + 0.5))
 
-#include "Prefs.h"
-#include "Project.h"
-#include "InconsistencyException.h"
-#include "TimeWarper.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-project/Project.h"
+#include "au3-exceptions/InconsistencyException.h"
+#include "au3-track/TimeWarper.h"
 
 #ifdef SONIFY
 #include <portmidi.h>
@@ -885,7 +885,7 @@ void NoteTrack::WriteXML(XMLWriter& xmlFile) const
 #include <wx/log.h>
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
-#include "AudioIOBase.h"
+#include "au3-audio-devices/AudioIOBase.h"
 #include "portmidi.h"
 
 // FIXME: When EXPERIMENTAL_MIDI_IN is added (eventually) this should also be enabled -- Poke

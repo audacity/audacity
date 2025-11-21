@@ -9,10 +9,10 @@
 **********************************************************************/
 
 #include "AudacityMessageBox.h"
-#include "Internat.h"
+#include "au3-strings/Internat.h"
 
 #include "Journal.h"
-#include "wxArrayStringEx.h"
+#include "au3-strings/wxArrayStringEx.h"
 
 int AudacityMessageBox(const TranslatableString& message,
                        const TranslatableString& caption,

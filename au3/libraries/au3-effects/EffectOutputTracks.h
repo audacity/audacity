@@ -13,7 +13,7 @@
 class Track;
 class TrackList;
 
-#include "EffectInterface.h"
+#include "au3-components/EffectInterface.h"
 
 #include <memory>
 #include <optional>

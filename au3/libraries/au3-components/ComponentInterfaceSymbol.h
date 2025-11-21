@@ -11,8 +11,8 @@
 #ifndef __AUDACITY_COMPONENT_INTERFACE_SYMBOL__
 #define __AUDACITY_COMPONENT_INTERFACE_SYMBOL__
 
-#include "Identifier.h"
-#include "Internat.h"
+#include "au3-strings/Identifier.h"
+#include "au3-strings/Internat.h"
 
 /**************************************************************************//**
 

@@ -21,8 +21,8 @@ Paul Licameli -- split from ProjectFileIO.h
 #include <thread>
 #include <chrono>
 
-#include "ClientData.h"
-#include "Identifier.h"
+#include "au3-registries/ClientData.h"
+#include "au3-strings/Identifier.h"
 
 struct sqlite3;
 struct sqlite3_stmt;

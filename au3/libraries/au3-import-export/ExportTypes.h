@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 #include <future>
-#include "Internat.h"
+#include "au3-strings/Internat.h"
 
 class ExportProcessorDelegate;
 

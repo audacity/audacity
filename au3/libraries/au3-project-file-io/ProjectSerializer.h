@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_PROJECTSERIALIZER__
 #define __AUDACITY_PROJECTSERIALIZER__
 
-#include "XMLTagHandler.h"
+#include "au3-xml/XMLTagHandler.h"
 
 #include "MemoryStream.h" // member variables
 #include <wx/mstream.h>
@@ -19,7 +19,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 
 // From SampleBlock.h
 using SampleBlockID = long long;

@@ -9,8 +9,8 @@
 
 **********************************************************************/
 #include "CompressorInstance.h"
-#include "libraries/lib-dynamic-range-processor/CompressorProcessor.h"
-#include "MathApprox.h"
+#include "au3-dynamic-range-processor/CompressorProcessor.h"
+#include "au3-utility/MathApprox.h"
 #include <numeric>
 
 CompressorInstance::CompressorInstance(const PerTrackEffect& effect)

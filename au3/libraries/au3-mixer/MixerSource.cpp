@@ -13,7 +13,7 @@
 **********************************************************************/
 #include "MixerSource.h"
 
-#include "AudioGraphBuffers.h"
+#include "au3-audio-graph/AudioGraphBuffers.h"
 #include "Envelope.h"
 #include "au3-math/float_cast.h"
 #include "WideSampleSequence.h"

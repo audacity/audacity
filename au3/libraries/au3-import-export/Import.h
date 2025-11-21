@@ -12,13 +12,13 @@
 #define _IMPORT_
 
 #include "ImportForwards.h"
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 #include <vector>
 #include <wx/tokenzr.h> // for enum wxStringTokenizerMode
 
 #include "FileNames.h" // for FileType
 
-#include "Registry.h"
+#include "au3-registries/Registry.h"
 
 class wxArrayString;
 class AudacityProject;

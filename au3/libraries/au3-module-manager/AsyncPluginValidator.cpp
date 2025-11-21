@@ -15,16 +15,16 @@
 #include <optional>
 #include <mutex>
 
-#include "BasicUI.h"
-#include "IPCChannel.h"
-#include "IPCServer.h"
-#include "spinlock.h"
-#include "XMLTagHandler.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-ipc/IPCChannel.h"
+#include "au3-ipc/IPCServer.h"
+#include "au3-utility/spinlock.h"
+#include "au3-xml/XMLTagHandler.h"
 
 #include "PluginIPCUtils.h"
 #include "PluginDescriptor.h"
 #include "PluginHost.h"
-#include "XMLFileReader.h"
+#include "au3-xml/XMLFileReader.h"
 
 AsyncPluginValidator::Delegate::~Delegate() = default;
 

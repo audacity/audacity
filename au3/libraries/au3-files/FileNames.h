@@ -12,8 +12,8 @@
 #define __AUDACITY_FILE_NAMES__
 
 #include <wx/dir.h> // for wxDIR_FILES
-#include "Identifier.h"
-#include "Prefs.h"
+#include "au3-strings/Identifier.h"
+#include "au3-preferences/Prefs.h"
 
 // Please try to support unlimited path length instead of using PLATFORM_MAX_PATH!
 // Define one constant for maximum path value, so we don't have to do

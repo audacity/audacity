@@ -9,10 +9,10 @@
 **********************************************************************/
 #pragma once
 
-#include "FileNames.h"
+#include "au3-files/FileNames.h"
 #include "au3-math/SampleCount.h"
-#include "StatefulEffect.h"
-#include "WaveChannelViewConstants.h"
+#include "au3-effects/StatefulEffect.h"
+#include "au3-wave-track/WaveChannelViewConstants.h"
 
 class wxArrayString;
 class wxFileName;

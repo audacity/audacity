@@ -10,8 +10,8 @@
 **********************************************************************/
 #pragma once
 
-#include "MemoryX.h"
-#include "SpectrumAnalyst.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-fft/SpectrumAnalyst.h"
 #include <memory>
 
 class AudacityProject;

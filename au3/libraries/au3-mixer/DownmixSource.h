@@ -7,7 +7,7 @@
 *******************************************************************/
 
 #pragma once
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
 class WideSampleSequence;
 

@@ -10,7 +10,7 @@
 **********************************************************************/
 #pragma once
 
-#include "graphics/Color.h"
+#include "au3-graphics/graphics/Color.h"
 
 class Envelope;
 

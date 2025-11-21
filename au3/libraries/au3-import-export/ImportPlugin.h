@@ -45,10 +45,10 @@ but little else.
 #ifndef __AUDACITY_IMPORTER__
 #define __AUDACITY_IMPORTER__
 
-#include "libraries/lib-file-formats/AcidizerTags.h"
-#include "Identifier.h"
-#include "Internat.h"
-#include "wxArrayStringEx.h"
+#include "au3-file-formats/AcidizerTags.h"
+#include "au3-strings/Identifier.h"
+#include "au3-strings/Internat.h"
+#include "au3-strings/wxArrayStringEx.h"
 #include <memory>
 #include <optional>
 

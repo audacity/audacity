@@ -16,13 +16,13 @@
 
 *******************************************************************/
 #include "AutoDuckBase.h"
-#include "BasicUI.h"
-#include "EffectOutputTracks.h"
-#include "ShuttleAutomation.h"
-#include "TimeStretching.h"
-#include "UserException.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-wave-track/TimeStretching.h"
+#include "au3-exceptions/UserException.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
 #include <cmath>
 
 const ComponentInterfaceSymbol AutoDuckBase::Symbol { XO("Auto Duck") };

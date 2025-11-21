@@ -10,7 +10,7 @@
 **********************************************************************/
 #pragma once
 
-#include "AcidizerTags.h"
+#include "au3-file-formats/AcidizerTags.h"
 
 // SNDFILE is defined differently between libsndfile versions
 // making forward declarations impossible.

@@ -11,8 +11,8 @@
 #include <vector>
 #include <memory>
 
-#include "AudioGraphBuffers.h"
-#include "AudioGraphSource.h"
+#include "au3-audio-graph/AudioGraphBuffers.h"
+#include "au3-audio-graph/AudioGraphSource.h"
 
 class DownmixSource;
 

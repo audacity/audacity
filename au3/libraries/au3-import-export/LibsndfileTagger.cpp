@@ -1,5 +1,5 @@
 #include "LibsndfileTagger.h"
-#include "AcidizerTags.h"
+#include "au3-file-formats/AcidizerTags.h"
 
 #include <array>
 #include <cassert>

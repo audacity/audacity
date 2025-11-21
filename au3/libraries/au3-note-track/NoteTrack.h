@@ -12,10 +12,10 @@
 #define __AUDACITY_NOTETRACK__
 
 #include <utility>
-#include "AudioIOSequences.h"
-#include "CRTPBase.h"
-#include "Prefs.h"
-#include "PlayableTrack.h"
+#include "au3-mixer/AudioIOSequences.h"
+#include "au3-utility/CRTPBase.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-playable-track/PlayableTrack.h"
 
 #if defined(USE_MIDI)
 

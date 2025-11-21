@@ -9,19 +9,19 @@
 
 **********************************************************************/
 #include "AudacityApplicationLogic.h"
-#include "BasicUI.h"
-#include "CommandManager.h"
-#include "Effect.h"
-#include "EffectManager.h"
-#include "EffectPlugin.h"
-#include "PluginManager.h"
-#include "Project.h"
-#include "ProjectHistory.h"
-#include "ProjectRate.h"
-#include "TrackFocus.h"
-#include "ViewInfo.h"
-#include "Viewport.h"
-#include "WaveTrack.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-menus/CommandManager.h"
+#include "au3-effects/Effect.h"
+#include "au3-effects/EffectManager.h"
+#include "au3-effects/EffectPlugin.h"
+#include "au3-module-manager/PluginManager.h"
+#include "au3-project/Project.h"
+#include "au3-project-history/ProjectHistory.h"
+#include "au3-project-rate/ProjectRate.h"
+#include "au3-track-selection/TrackFocus.h"
+#include "au3-time-frequency-selection/ViewInfo.h"
+#include "au3-viewport/Viewport.h"
+#include "au3-wave-track/WaveTrack.h"
 
 /// DoEffect() takes a PluginID and executes the associated effect.
 ///

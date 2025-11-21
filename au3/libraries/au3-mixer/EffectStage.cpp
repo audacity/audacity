@@ -12,8 +12,8 @@
 
 **********************************************************************/
 #include "EffectStage.h"
-#include "AudacityException.h"
-#include "AudioGraphBuffers.h"
+#include "au3-exceptions/AudacityException.h"
+#include "au3-audio-graph/AudioGraphBuffers.h"
 #include <cassert>
 
 namespace {

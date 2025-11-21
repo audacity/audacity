@@ -15,7 +15,7 @@
 
 #include <wx/string.h>
 
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 
 class AudacityProject;
 

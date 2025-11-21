@@ -13,8 +13,8 @@
 
 #include "SnapUtils.h"
 
-#include "Project.h"
-#include "ProjectTimeSignature.h"
+#include "au3-project/Project.h"
+#include "au3-numeric-formats/ProjectTimeSignature.h"
 
 #include "MockedAudio.h"
 #include "MockedPrefs.h"

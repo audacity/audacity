@@ -25,10 +25,10 @@ and TimeTrack.
 #include <wx/textfile.h>
 #include <wx/log.h>
 
-#include "BasicUI.h"
-#include "Project.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-project/Project.h"
 
-#include "InconsistencyException.h"
+#include "au3-exceptions/InconsistencyException.h"
 
 #ifdef _MSC_VER
 //Disable truncation warnings

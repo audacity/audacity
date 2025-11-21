@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_EFFECTPLUGIN_H__
 #define __AUDACITY_EFFECTPLUGIN_H__
 
-#include "EffectInterface.h"
+#include "au3-components/EffectInterface.h"
 
 #include <functional>
 #include <memory>

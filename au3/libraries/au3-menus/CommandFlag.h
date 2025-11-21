@@ -11,7 +11,7 @@
 
 // Flags used in command handling.
 
-#include "TranslatableString.h"
+#include "au3-strings/TranslatableString.h"
 
 #include <bitset>
 #include <functional>

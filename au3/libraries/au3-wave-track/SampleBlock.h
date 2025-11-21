@@ -9,16 +9,16 @@ SampleBlock.h
 #ifndef __AUDACITY_SAMPLE_BLOCK__
 #define __AUDACITY_SAMPLE_BLOCK__
 
-#include "GlobalVariable.h"
+#include "au3-utility/GlobalVariable.h"
 #include "au3-math/SampleFormat.h"
-#include "AudioSegmentSampleView.h"
+#include "au3-stretching-sequence/AudioSegmentSampleView.h"
 
 #include <functional>
 #include <memory>
 #include <unordered_set>
 
-#include "Observer.h"
-#include "XMLTagHandler.h"
+#include "au3-utility/Observer.h"
+#include "au3-xml/XMLTagHandler.h"
 
 class AudacityProject;
 class ProjectFileIO;

@@ -13,11 +13,11 @@
 #include <optional>
 #include <vector>
 
-#include "ClientData.h"
+#include "au3-registries/ClientData.h"
 #include "PluginProvider.h" // for PluginID
-#include "spinlock.h"
-#include "XMLTagHandler.h"
-#include "Observer.h"
+#include "au3-utility/spinlock.h"
+#include "au3-xml/XMLTagHandler.h"
+#include "au3-utility/Observer.h"
 
 class AudacityProject;
 class ChannelGroup;

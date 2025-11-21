@@ -11,13 +11,13 @@
 #ifndef __AUDACITY_TEMP_DIRECTORY__
 #define __AUDACITY_TEMP_DIRECTORY__
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 class TranslatableString;
 class wxWindow;
 
-#include "Identifier.h"
-#include "Observer.h"
+#include "au3-strings/Identifier.h"
+#include "au3-utility/Observer.h"
 
 namespace TempDirectory {
 FILES_API wxString TempDir();

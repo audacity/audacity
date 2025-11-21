@@ -13,7 +13,7 @@
 #include <functional>
 #include <vector>
 
-#include "TranslatableString.h"
+#include "au3-strings/TranslatableString.h"
 
 class ShuttleGui;
 

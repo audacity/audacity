@@ -32,10 +32,10 @@
 
 #include <cstring>
 
-#include "BasicUI.h"
-#include "FileNames.h"
-#include "XMLFileReader.h"
-#include "Base64.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-files/FileNames.h"
+#include "au3-xml/XMLFileReader.h"
+#include "au3-strings/Base64.h"
 
 static float reinterpretAsFloat(uint32_t x)
 {

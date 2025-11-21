@@ -29,15 +29,15 @@
 #ifndef __AUDACITY_TAGS__
 #define __AUDACITY_TAGS__
 
-#include "XMLTagHandler.h"
+#include "au3-xml/XMLTagHandler.h"
 
-#include "ClientData.h"
+#include "au3-registries/ClientData.h"
 #include "UndoManager.h" // To inherit UndoStateExtension
 #include <utility>
 
 #include <memory>
 #include <unordered_map>
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 
 class wxArrayString;
 class wxComboBox;

@@ -10,8 +10,8 @@
 **********************************************************************/
 #include "FormantShifter.h"
 #include "FormantShifterLoggerInterface.h"
-#include "MapToPositiveHalfIndex.h"
-#include "MathApprox.h"
+#include "au3-utility/MapToPositiveHalfIndex.h"
+#include "au3-utility/MathApprox.h"
 #include <algorithm>
 #include <cassert>
 #include <fstream>

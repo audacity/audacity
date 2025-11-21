@@ -16,8 +16,8 @@ Paul Licameli split from AudioIO.cpp
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
 
-#include "IteratorX.h"
-#include "Prefs.h"
+#include "au3-utility/IteratorX.h"
+#include "au3-preferences/Prefs.h"
 
 #include "portaudio.h"
 

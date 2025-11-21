@@ -13,9 +13,9 @@
 #ifndef __AUDACITY_VST_EFFECTS_MODULE__
 #define __AUDACITY_VST_EFFECTS_MODULE__
 
-#include "Callable.h"
-#include "GlobalVariable.h"
-#include "PluginProvider.h"
+#include "au3-utility/Callable.h"
+#include "au3-utility/GlobalVariable.h"
+#include "au3-components/PluginProvider.h"
 #include "VSTEffectBase.h"
 
 class VST_API VSTEffectsModule final : public PluginProvider

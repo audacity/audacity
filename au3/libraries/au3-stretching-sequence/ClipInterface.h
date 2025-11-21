@@ -11,7 +11,7 @@
 #pragma once
 
 #include "AudioSegmentSampleView.h"
-#include "Observer.h"
+#include "au3-utility/Observer.h"
 #include "au3-math/SampleCount.h"
 
 class STRETCHING_SEQUENCE_API ClipTimes

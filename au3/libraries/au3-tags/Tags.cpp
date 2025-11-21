@@ -42,9 +42,9 @@
 // Include your minimal set of headers here, or wx.h
 #endif
 
-#include "FileNames.h"
-#include "Prefs.h"
-#include "Project.h"
+#include "au3-files/FileNames.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-project/Project.h"
 
 static const wxChar* DefaultGenres[] =
 {

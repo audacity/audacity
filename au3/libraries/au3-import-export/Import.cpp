@@ -40,14 +40,14 @@ ImportFileHandle
 #include <unordered_set>
 
 #include <wx/log.h>
-#include "FileNames.h"
-#include "Project.h"
-#include "WaveTrack.h"
+#include "au3-files/FileNames.h"
+#include "au3-project/Project.h"
+#include "au3-wave-track/WaveTrack.h"
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 #include "ImportProgressListener.h"
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 namespace {
 //Proxy class used by importer to capture import result

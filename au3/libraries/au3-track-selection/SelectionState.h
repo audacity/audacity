@@ -13,7 +13,7 @@ class AudacityProject;
 class Track;
 class TrackList;
 class ViewInfo;
-#include "ClientData.h"
+#include "au3-registries/ClientData.h"
 #include <memory>
 #include <vector>
 

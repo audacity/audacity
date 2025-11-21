@@ -9,7 +9,7 @@
 
 **********************************************************************/
 #include "ClipTimeAndPitchSource.h"
-#include "AudioContainer.h"
+#include "au3-time-and-pitch/AudioContainer.h"
 #include "FloatVectorClip.h"
 
 #include <catch2/catch.hpp>

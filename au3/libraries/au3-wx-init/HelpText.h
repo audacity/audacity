@@ -13,7 +13,7 @@
 
 class TranslatableString;
 class wxString;
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 
 struct URLStringTag;
 //! Distinct type for URLs

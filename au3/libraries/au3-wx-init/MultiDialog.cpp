@@ -16,9 +16,9 @@
 
 *//*******************************************************************/
 #include "MultiDialog.h"
-#include "IteratorX.h"
+#include "au3-utility/IteratorX.h"
 
-#include "ShuttleGui.h"
+#include "au3-shuttlegui/ShuttleGui.h"
 
 #include <wx/app.h>
 #include <wx/icon.h>
@@ -29,10 +29,10 @@
 #include <wx/radiobox.h>
 #include <wx/bmpbuttn.h>
 
-#include "wxPanelWrapper.h"
+#include "au3-wx-wrappers/wxPanelWrapper.h"
 #include "LogWindow.h"
-#include "Theme.h"
-#include "AllThemeResources.h"
+#include "au3-theme/Theme.h"
+#include "au3-theme/AllThemeResources.h"
 #include "HelpSystem.h"
 
 class MultiDialog final : public wxDialogWrapper

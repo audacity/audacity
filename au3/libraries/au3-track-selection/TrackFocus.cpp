@@ -10,9 +10,9 @@
 *//*******************************************************************/
 #include "TrackFocus.h"
 
-#include "BasicUI.h"
-#include "Project.h"
-#include "Track.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-project/Project.h"
+#include "au3-track/Track.h"
 
 TrackFocusCallbacks::~TrackFocusCallbacks() = default;
 

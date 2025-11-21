@@ -10,7 +10,7 @@
 **********************************************************************/
 #pragma once
 
-#include "TranslatableString.h"
+#include "au3-strings/TranslatableString.h"
 #include <functional>
 #include <memory>
 

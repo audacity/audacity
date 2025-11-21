@@ -25,11 +25,11 @@
 #include <wx/platinfo.h>
 #include <wx/log.h>
 
-#include "CodeConversions.h"
-#include "Uuid.h"
+#include "au3-string-utils/CodeConversions.h"
+#include "au3-uuid/Uuid.h"
 
-#include "IResponse.h"
-#include "NetworkManager.h"
+#include "au3-network-manager/IResponse.h"
+#include "au3-network-manager/NetworkManager.h"
 
 #include "SentryRequestBuilder.h"
 

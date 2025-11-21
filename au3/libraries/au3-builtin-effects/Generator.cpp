@@ -12,15 +12,15 @@
 **********************************************************************/
 
 #include "Generator.h"
-#include "EffectOutputTracks.h"
+#include "au3-effects/EffectOutputTracks.h"
 
-#include "BasicUI.h"
-#include "Project.h"
-#include "Prefs.h"
-#include "ViewInfo.h"
-#include "WaveTrack.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-project/Project.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-time-frequency-selection/ViewInfo.h"
+#include "au3-wave-track/WaveTrack.h"
 
-#include "TimeWarper.h"
+#include "au3-track/TimeWarper.h"
 
 bool Generator::Process(EffectInstance&, EffectSettings& settings)
 {

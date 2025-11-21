@@ -1,10 +1,10 @@
 #ifdef USE_SOUNDTOUCH
 
 #include "ChangePitchBase.h"
-#include "ShuttleAutomation.h"
-#include "Spectrum.h"
-#include "TimeWarper.h"
-#include "WaveTrack.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-fft/Spectrum.h"
+#include "au3-track/TimeWarper.h"
+#include "au3-wave-track/WaveTrack.h"
 #include <wx/math.h>
 #include "au3-math/PitchName.h"
 

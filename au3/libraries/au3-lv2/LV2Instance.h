@@ -19,7 +19,7 @@
 
 #include "LV2InstanceFeaturesList.h"
 #include "LV2Ports.h"
-#include "PerTrackEffect.h"
+#include "au3-effects/PerTrackEffect.h"
 
 class LV2Wrapper;
 

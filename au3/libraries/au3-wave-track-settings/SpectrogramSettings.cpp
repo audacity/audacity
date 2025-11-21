@@ -15,17 +15,17 @@ Paul Licameli
 
 #include "SpectrogramSettings.h"
 
-#include "NumberScale.h"
+#include "au3-screen-geometry/NumberScale.h"
 
 #include <algorithm>
 
-#include "FFT.h"
-#include "Prefs.h"
-#include "WaveTrack.h"
+#include "au3-fft/FFT.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-wave-track/WaveTrack.h"
 
 #include <cmath>
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 IntSetting SpectrumMaxFreq{
     L"/Spectrum/MaxFreq", 20000 };

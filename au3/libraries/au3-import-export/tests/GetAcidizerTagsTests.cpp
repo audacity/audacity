@@ -8,11 +8,11 @@
   Matthieu Hodgkinson
 
 **********************************************************************/
-#include "AcidizerTags.h"
+#include "au3-file-formats/AcidizerTags.h"
 #include "GetAcidizerTags.h"
 #include "LibsndfileTagger.h"
 
-#include "FileFormats.h"
+#include "au3-file-formats/FileFormats.h"
 #include "sndfile.h"
 #include <array>
 #include <catch2/catch.hpp>

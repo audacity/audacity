@@ -9,7 +9,7 @@
 ***********************************************************************/
 
 #include "AudioUnitUtils.h"
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
 OSStatus AudioUnitUtils::GetFixedSizePropertyPtr(AudioUnit unit,
                                                  AudioUnitPropertyID inID, void* pProperty, const UInt32 size,

@@ -13,7 +13,7 @@
 #include "ClipInterface.h"
 #include "ClipSegment.h"
 #include "SilenceSegment.h"
-#include "TimeAndPitchInterface.h"
+#include "au3-time-and-pitch/TimeAndPitchInterface.h"
 
 #include <algorithm>
 

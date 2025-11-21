@@ -6,7 +6,7 @@
 #include <pluginterfaces/vst/ivstprocesscontext.h>
 #include <public.sdk/source/vst/hosting/module.h>
 
-#include "EffectInterface.h"
+#include "au3-components/EffectInterface.h"
 
 class VST3Wrapper;
 

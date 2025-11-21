@@ -12,7 +12,7 @@
 #pragma once
 
 #include "SettingsVisitor.h" // EffectParameter
-#include "StatefulPerTrackEffect.h"
+#include "au3-effects/StatefulPerTrackEffect.h"
 #include <float.h> // for DBL_MAX
 
 class NumericTextCtrl;

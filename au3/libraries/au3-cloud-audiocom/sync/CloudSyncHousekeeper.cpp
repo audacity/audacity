@@ -16,8 +16,8 @@
 
 #include <wx/file.h>
 
-#include "AppEvents.h"
-#include "CodeConversions.h"
+#include "au3-utility/AppEvents.h"
+#include "au3-string-utils/CodeConversions.h"
 
 #include "CloudLibrarySettings.h"
 #include "CloudProjectsDatabase.h"

@@ -13,11 +13,11 @@
 
 #include "LoadEffects.h"
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 #include "Effect.h"
-#include "ModuleManager.h"
-#include "PluginManager.h"
+#include "au3-module-manager/ModuleManager.h"
+#include "au3-module-manager/PluginManager.h"
 
 static bool sInitialized = false;
 

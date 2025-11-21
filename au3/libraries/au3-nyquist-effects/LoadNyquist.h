@@ -8,9 +8,9 @@
 
 **********************************************************************/
 
-#include "PluginProvider.h"
-#include "EffectInterface.h"
-#include "PluginInterface.h"
+#include "au3-components/PluginProvider.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-module-manager/PluginInterface.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //

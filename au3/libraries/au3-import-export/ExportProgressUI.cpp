@@ -12,9 +12,9 @@
 
 #include "Export.h"
 #include "ExportPlugin.h"
-#include "Internat.h"
-#include "BasicUI.h"
-#include "FileException.h"
+#include "au3-strings/Internat.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-files/FileException.h"
 
 namespace {
 class DialogExportProgressDelegate : public ExportProcessorDelegate

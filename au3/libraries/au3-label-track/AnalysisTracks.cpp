@@ -17,7 +17,7 @@
 
 *//*******************************************************************/
 #include "AnalysisTracks.h"
-#include "Effect.h"
+#include "au3-effects/Effect.h"
 #include "LabelTrack.h"
 
 AddedAnalysisTrack::AddedAnalysisTrack(Effect* pEffect, const wxString& name)

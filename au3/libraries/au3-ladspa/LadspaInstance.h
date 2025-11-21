@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_LADSPA_INSTANCE__
 #define __AUDACITY_LADSPA_INSTANCE__
 
-#include "PerTrackEffect.h"
+#include "au3-effects/PerTrackEffect.h"
 #include "ladspa.h"
 
 struct LadspaEffectSettings {

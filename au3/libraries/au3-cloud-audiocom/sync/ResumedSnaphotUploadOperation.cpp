@@ -16,7 +16,7 @@
 #include <string>
 #include <string_view>
 
-#include "concurrency/CancellationContext.h"
+#include "au3-concurrency/concurrency/CancellationContext.h"
 
 #include "CloudProjectsDatabase.h"
 #include "DataUploader.h"
@@ -25,17 +25,17 @@
 #include "ProjectUploadOperation.h"
 #include "ServiceConfig.h"
 
-#include "ExportUtils.h"
-#include "SampleBlock.h"
-#include "WaveTrack.h"
+#include "au3-import-export/ExportUtils.h"
+#include "au3-wave-track/SampleBlock.h"
+#include "au3-wave-track/WaveTrack.h"
 
-#include "CodeConversions.h"
-#include "DateTimeConversions.h"
-#include "FromChars.h"
-#include "IResponse.h"
-#include "NetworkManager.h"
-#include "Request.h"
-#include "UriParser.h"
+#include "au3-string-utils/CodeConversions.h"
+#include "au3-string-utils/DateTimeConversions.h"
+#include "au3-string-utils/FromChars.h"
+#include "au3-network-manager/IResponse.h"
+#include "au3-network-manager/NetworkManager.h"
+#include "au3-network-manager/Request.h"
+#include "au3-string-utils/UriParser.h"
 
 namespace audacity::cloud::audiocom::sync {
 namespace {

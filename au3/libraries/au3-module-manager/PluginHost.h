@@ -12,14 +12,14 @@
 
 #pragma once
 
-#include "IPCChannel.h"
+#include "au3-ipc/IPCChannel.h"
 #include <memory>
 #include <mutex>
 #include <optional>
 #include <condition_variable>
 #include <wx/string.h>
 
-#include "IPCClient.h"
+#include "au3-ipc/IPCClient.h"
 #include "PluginIPCUtils.h"
 
 /**

@@ -9,7 +9,7 @@
 **********************************************************************/
 
 #include "ExportPlugin.h"
-#include "wxFileNameWrapper.h"
+#include "au3-files/wxFileNameWrapper.h"
 
 ExportException::ExportException(const wxString& msg)
     : mMessage(msg)

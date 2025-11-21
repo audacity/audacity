@@ -19,8 +19,8 @@
 #include <optional>
 #include <vector>
 
-#include "ClientData.h"
-#include "IteratorX.h"
+#include "au3-registries/ClientData.h"
+#include "au3-utility/IteratorX.h"
 
 //! A start and an end time, and whatever else subclasses associate with them
 /*!

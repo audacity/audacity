@@ -11,8 +11,8 @@ Paul Licameli split from ProjectManager.h
 #ifndef __AUDACITY_PROJECT_HISTORY__
 #define __AUDACITY_PROJECT_HISTORY__
 
-#include "ClientData.h"
-#include "GlobalVariable.h"
+#include "au3-registries/ClientData.h"
+#include "au3-utility/GlobalVariable.h"
 
 #include <typeindex>
 

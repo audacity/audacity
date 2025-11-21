@@ -12,7 +12,7 @@ Paul Licameli split from AudIOBase.h
 #ifndef __AUDACITY_MIDI_PLAY__
 #define __AUDACITY_MIDI_PLAY__
 
-#include "AudioIOExt.h"
+#include "au3-audio-io/AudioIOExt.h"
 #include <optional>
 #include "WrapAllegro.h"
 
@@ -28,7 +28,7 @@ using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 #define AUDIO_IO_GB_MIDI_WORKAROUND
 
 #include "NoteTrack.h"
-#include "PlaybackSchedule.h"
+#include "au3-audio-io/PlaybackSchedule.h"
 
 namespace {
 struct MIDIPlay;

@@ -14,7 +14,7 @@
 
 #include "NumericConverterType.h"
 #include "NumericConverterFormatter.h"
-#include "TranslatableString.h"
+#include "au3-strings/TranslatableString.h"
 
 class FormatterContext;
 

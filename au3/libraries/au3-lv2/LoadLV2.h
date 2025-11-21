@@ -16,10 +16,10 @@
 
 #include "lilv/lilv.h"
 
-#include "Callable.h"
-#include "GlobalVariable.h"
+#include "au3-utility/Callable.h"
+#include "au3-utility/GlobalVariable.h"
 #include "LV2EffectBase.h"
-#include "PluginProvider.h"
+#include "au3-components/PluginProvider.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //

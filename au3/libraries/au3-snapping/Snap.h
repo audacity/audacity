@@ -17,7 +17,7 @@
 
 #include <vector>
 #include <wx/defs.h>
-#include "ComponentInterfaceSymbol.h"
+#include "au3-components/ComponentInterfaceSymbol.h"
 
 class AudacityProject;
 class Track;

@@ -10,7 +10,7 @@ Paul Licameli split from ProjectManager.cpp
 
 #include "ProjectHistory.h"
 
-#include "Project.h"
+#include "au3-project/Project.h"
 #include "UndoManager.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory sProjectHistoryKey {

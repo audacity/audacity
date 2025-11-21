@@ -9,8 +9,8 @@
 
 **********************************************************************/
 #include "ServiceConfig.h"
-#include "ExportUtils.h"
-#include "Languages.h"
+#include "au3-import-export/ExportUtils.h"
+#include "au3-strings/Languages.h"
 
 #include <cassert>
 #include <stdexcept>
@@ -18,8 +18,8 @@
 
 #include <rapidjson/document.h>
 
-#include "CodeConversions.h"
-#include "Prefs.h"
+#include "au3-string-utils/CodeConversions.h"
+#include "au3-preferences/Prefs.h"
 
 namespace audacity::cloud::audiocom {
 namespace {

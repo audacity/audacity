@@ -9,7 +9,7 @@
 
 **********************************************************************/
 #include "WaveDataCache.h"
-#include "FrameStatistics.h"
+#include "au3-graphics/FrameStatistics.h"
 
 #include <algorithm>
 #include <cassert>
@@ -21,9 +21,9 @@
 
 #include "au3-math/RoundUpUnsafe.h"
 #include "au3-math/SampleFormat.h"
-#include "SampleBlock.h"
-#include "Sequence.h"
-#include "WaveClip.h"
+#include "au3-wave-track/SampleBlock.h"
+#include "au3-wave-track/Sequence.h"
+#include "au3-wave-track/WaveClip.h"
 
 namespace {
 //

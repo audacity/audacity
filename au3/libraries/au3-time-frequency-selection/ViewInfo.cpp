@@ -11,12 +11,12 @@ Paul Licameli
 #include "ViewInfo.h"
 
 #include <algorithm>
-#include "XMLAttributeValueView.h"
+#include "au3-xml/XMLAttributeValueView.h"
 
-#include "BasicUI.h"
-#include "Project.h"
-#include "UndoManager.h"
-#include "XMLWriter.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-project/Project.h"
+#include "au3-project-history/UndoManager.h"
+#include "au3-xml/XMLWriter.h"
 
 XMLMethodRegistryBase::Mutators<NotifyingSelectedRegion>
 NotifyingSelectedRegion::Mutators(

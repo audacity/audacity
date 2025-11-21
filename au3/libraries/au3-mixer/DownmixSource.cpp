@@ -12,7 +12,7 @@
 
 #include "DownmixSource.h"
 
-#include "AudioGraphChannel.h"
+#include "au3-audio-graph/AudioGraphChannel.h"
 #include "WideSampleSequence.h"
 
 SequenceDownmixSource::SequenceDownmixSource(AudioGraph::Source& downstream,

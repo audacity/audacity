@@ -6,8 +6,8 @@
 #include "EqualizationCurvesList.h"
 #include "EqualizationFilter.h"
 #include "au3-math/SampleFormat.h"
-#include "StatefulEffect.h"
-#include "WaveTrack.h"
+#include "au3-effects/StatefulEffect.h"
+#include "au3-wave-track/WaveTrack.h"
 
 struct EqualizationParameters;
 

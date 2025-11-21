@@ -29,8 +29,8 @@ MousePrefs, QualityPrefs, SpectrumPrefs.
 
 #include <functional>
 #include "wxPanelWrapper.h" // to inherit
-#include "ComponentInterface.h"
-#include "Registry.h"
+#include "au3-components/ComponentInterface.h"
+#include "au3-registries/Registry.h"
 
 /* A few constants for an attempt at semi-uniformity */
 #define PREFS_FONT_SIZE     8

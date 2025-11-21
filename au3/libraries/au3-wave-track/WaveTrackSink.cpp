@@ -13,7 +13,7 @@
 **********************************************************************/
 #include "WaveTrackSink.h"
 
-#include "AudioGraphBuffers.h"
+#include "au3-audio-graph/AudioGraphBuffers.h"
 #include "WaveTrack.h"
 #include <cassert>
 

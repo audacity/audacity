@@ -16,7 +16,7 @@
 #define __AUDACITY_EFFECT_STAGE__
 
 #include "AudioGraphSource.h" // to inherit
-#include "EffectInterface.h"
+#include "au3-components/EffectInterface.h"
 #include "au3-math/SampleCount.h"
 #include <functional>
 

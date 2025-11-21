@@ -15,8 +15,8 @@
 
 #include <wx/platinfo.h>
 
-#include "Prefs.h"
-#include "CodeConversions.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-string-utils/CodeConversions.h"
 
 namespace audacity {
 namespace network_manager {

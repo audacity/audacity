@@ -12,12 +12,12 @@ effect that uses SBSMS to do its processing (TimeScale)
 **********************************************************************/
 #if USE_SBSMS
 #include "SBSMSBase.h"
-#include "EffectOutputTracks.h"
+#include "au3-effects/EffectOutputTracks.h"
 
-#include "LabelTrack.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
-#include "TimeWarper.h"
+#include "au3-label-track/LabelTrack.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-track/TimeWarper.h"
 
 #include <cassert>
 

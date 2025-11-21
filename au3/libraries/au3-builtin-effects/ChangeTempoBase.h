@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SettingsVisitor.h"
+#include "au3-components/SettingsVisitor.h"
 #include "SoundTouchBase.h"
 
 class BUILTIN_EFFECTS_API ChangeTempoBase : public SoundTouchBase

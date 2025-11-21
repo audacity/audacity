@@ -22,7 +22,7 @@
 #include <wx/string.h>
 
 #include "AudioUnitUtils.h"
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 
 class wxCFStringRef;
 class wxMemoryBuffer;

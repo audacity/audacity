@@ -15,7 +15,7 @@
 
 #include <wx/file.h>
 
-#include "CodeConversions.h"
+#include "au3-string-utils/CodeConversions.h"
 
 namespace audacity::network_manager {
 namespace {

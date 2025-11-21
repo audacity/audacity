@@ -17,12 +17,12 @@
 #include <cstdlib>
 #endif
 
-#include "Project.h"
-#include "ProjectNumericFormats.h"
-#include "ProjectRate.h"
+#include "au3-project/Project.h"
+#include "au3-numeric-formats/ProjectNumericFormats.h"
+#include "au3-project-rate/ProjectRate.h"
 #include "ProjectSnap.h"
-#include "Track.h"
-#include "ZoomInfo.h"
+#include "au3-track/Track.h"
+#include "au3-screen-geometry/ZoomInfo.h"
 
 inline bool operator <(SnapPoint s1, SnapPoint s2)
 {

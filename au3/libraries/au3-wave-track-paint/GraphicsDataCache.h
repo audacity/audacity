@@ -17,8 +17,8 @@
 #include <type_traits>
 #include <vector>
 
-#include "MemoryX.h"
-#include "IteratorX.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-utility/IteratorX.h"
 
 class ZoomInfo;
 

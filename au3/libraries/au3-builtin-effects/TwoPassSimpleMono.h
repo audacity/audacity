@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_TWOPASSSIMPLEMONO__
 #define __AUDACITY_EFFECT_TWOPASSSIMPLEMONO__
 
-#include "StatefulEffect.h"
+#include "au3-effects/StatefulEffect.h"
 
 class WaveChannel;
 

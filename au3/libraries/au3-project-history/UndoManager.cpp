@@ -23,9 +23,9 @@ UndoManager
 
 #include <wx/hashset.h>
 
-#include "BasicUI.h"
-#include "Project.h"
-#include "TransactionScope.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-project/Project.h"
+#include "au3-transactions/TransactionScope.h"
 //#include "NoteTrack.h"  // for Sonify* function declarations
 
 #include <unordered_map>

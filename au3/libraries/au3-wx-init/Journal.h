@@ -11,12 +11,12 @@
 #ifndef __AUDACITY_JOURNAL__
 #define __AUDACITY_JOURNAL__
 
-#include "Identifier.h"
+#include "au3-strings/Identifier.h"
 class wxArrayString;
 class wxArrayStringEx;
 class wxString;
 
-#include "AudacityException.h"
+#include "au3-exceptions/AudacityException.h"
 
 // Whether the journalling feature is shown to the end user
 #undef END_USER_JOURNALLING

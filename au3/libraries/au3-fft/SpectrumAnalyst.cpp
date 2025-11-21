@@ -24,7 +24,7 @@ and in the spectrogram spectral selection.
 
 #include "SpectrumAnalyst.h"
 #include "FFT.h"
-#include "MemoryX.h"
+#include "au3-utility/MemoryX.h"
 
 SpectrumAnalyst::SpectrumAnalyst()
     : mAlg(Spectrum)

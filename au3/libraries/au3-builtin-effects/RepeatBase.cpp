@@ -1,9 +1,9 @@
 #include "RepeatBase.h"
-#include "EffectOutputTracks.h"
-#include "LabelTrack.h"
-#include "SyncLock.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-label-track/LabelTrack.h"
+#include "au3-track-selection/SyncLock.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
 #include <cmath>
 
 const EffectParameterMethods& RepeatBase::Parameters() const
