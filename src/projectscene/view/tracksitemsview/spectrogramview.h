@@ -7,7 +7,6 @@
 #include "abstractclipview.h"
 
 #include "context/iglobalcontext.h"
-#include "trackedit/iselectioncontroller.h"
 
 namespace au::projectscene {
 class SpectrogramView : public AbstractClipView
@@ -15,7 +14,6 @@ class SpectrogramView : public AbstractClipView
     Q_OBJECT
 
     muse::Inject<ISpectrogramPainter> spectrogramPainter;
-    muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:

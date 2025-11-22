@@ -3,6 +3,8 @@
  */
 #include "spectrogramtypes.h"
 
+#include <cmath>
+
 namespace au::projectscene {
 ZoomInfo::ZoomInfo(double zoom, double viewportTime)
     : zoom{zoom}, viewportTime{viewportTime}
@@ -23,7 +25,7 @@ int64_t ZoomInfo::TimeToPosition(double projectTime, int64_t origin) const
     if (t > INT64_MAX) {
         return INT64_MAX;
     }
-    t = floor(t);
+    t = std::floor(t);
     return t;
 }
 }
