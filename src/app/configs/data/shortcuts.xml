@@ -956,6 +956,10 @@
         <seq>Shift+Z</seq>
     </SC>
     <SC>
+        <key>zoom-to-fit-project</key>
+        <seq>Ctrl+F</seq>
+    </SC>
+    <SC>
         <key>fit-in-window</key>
         <seq>Ctrl+F</seq>
     </SC>
