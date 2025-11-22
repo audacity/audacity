@@ -59,7 +59,7 @@ function create_path()
 if create_path "appimagetool"; then
 (
     cd "appimagetool"
-    download_appimage_release AppImage/AppImageKit appimagetool continuous
+    download_appimage_release AppImage/appimagetool appimagetool continuous
 )
 fi
 export PATH="${PWD%/}/appimagetool:${PATH}"
