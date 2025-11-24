@@ -3,14 +3,14 @@
 */
 #pragma once
 
-#include "projectscene/view/trackruler/itrackrulermodel.h"
+#include "projectscene/view/trackruler/itrackruler.h"
 
 namespace au::projectscene {
 struct DbLogRulerUiSettings {
     int minAdjacentStepsHeight;
 };
 
-class DbLogBaseRuler : public ITrackRulerModel
+class DbLogBaseRuler : public ITrackRuler
 {
 public:
     DbLogBaseRuler(DbLogRulerUiSettings settings);

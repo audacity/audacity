@@ -5,7 +5,7 @@
 
 #include "framework/global/realfn.h"
 
-#include "projectscene/view/trackruler/itrackrulermodel.h"
+#include "projectscene/view/trackruler/itrackruler.h"
 
 using namespace au::projectscene;
 

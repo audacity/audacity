@@ -1149,7 +1149,7 @@ float Au3TracksInteraction::maxVerticalZoom(const trackedit::Track& track) const
     return MAX_ZOOM_IN_LINEAR;
 }
 
-void Au3TracksInteraction::verticalZoomIn(const trackedit::TrackId& trackId)
+void Au3TracksInteraction::zoomInVertically(const trackedit::TrackId& trackId)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
     if (waveTrack == nullptr) {
@@ -1173,7 +1173,7 @@ void Au3TracksInteraction::verticalZoomIn(const trackedit::TrackId& trackId)
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 }
 
-void Au3TracksInteraction::verticalZoomOut(const trackedit::TrackId& trackId)
+void Au3TracksInteraction::zoomOutVertically(const trackedit::TrackId& trackId)
 {
     constexpr float MAX_ZOOM_OUT = 2.0f;
 

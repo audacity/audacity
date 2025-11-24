@@ -65,8 +65,8 @@ public:
     virtual bool makeStereoTrack(const TrackId left, const TrackId right) = 0;
     virtual bool resampleTracks(const TrackIdList& tracksIds, int rate) = 0;
 
-    virtual void verticalZoomIn(const trackedit::TrackId& trackId) = 0;
-    virtual void verticalZoomOut(const trackedit::TrackId& trackId) = 0;
+    virtual void zoomInVertically(const trackedit::TrackId& trackId) = 0;
+    virtual void zoomOutVertically(const trackedit::TrackId& trackId) = 0;
     virtual void resetVerticalZoom(const trackedit::TrackId& trackId) = 0;
 
     virtual double nearestZeroCrossing(double time) const = 0;

@@ -19,10 +19,10 @@ struct TrackRulerSmallStep {
     bool isNegativeSample;
 };
 
-class ITrackRulerModel
+class ITrackRuler
 {
 public:
-    virtual ~ITrackRulerModel() = default;
+    virtual ~ITrackRuler() = default;
 
     [[nodiscard]] virtual double stepToPosition(double step, size_t channel, bool isNegativeSample) const = 0;
     virtual void setHeight(int height) = 0;

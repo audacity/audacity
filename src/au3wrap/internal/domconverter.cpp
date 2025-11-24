@@ -87,8 +87,8 @@ float trackVerticalZoom(const Au3Track* track)
     }
 
     const auto& cache = WaveformScale::Get(*waveTrack);
-    float min;
-    float max;
+    float min  = 0.0f;
+    float max = 0.0f;
     cache.GetDisplayBounds(min, max);
     return (max - min) / 2.0f;
 }

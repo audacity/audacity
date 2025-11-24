@@ -12,7 +12,7 @@
 #include "playback/iplaybackconfiguration.h"
 #include "trackedit/itrackeditinteraction.h"
 
-#include "projectscene/view/trackruler/itrackrulermodel.h"
+#include "projectscene/view/trackruler/itrackruler.h"
 
 namespace au::projectscene {
 class TrackRulerModel : public QObject, public muse::async::Asyncable
@@ -80,10 +80,10 @@ signals:
     void trackIdChanged();
     void rulerTypeChanged();
 private:
-    std::shared_ptr<ITrackRulerModel> buildRulerModel();
+    std::shared_ptr<ITrackRuler> buildRulerModel();
     double stepToPosition(double step, int channel, bool isNegativeSample) const;
 
-    std::shared_ptr<ITrackRulerModel> m_model =  nullptr;
+    std::shared_ptr<ITrackRuler> m_model =  nullptr;
 
     bool m_isStereo = false;
     bool m_isCollapsed = false;

@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "projectscene/view/trackruler/itrackrulermodel.h"
+#include "projectscene/view/trackruler/itrackruler.h"
 
 namespace au::projectscene {
 struct DbLinearRulerUiSettings {
@@ -13,7 +13,7 @@ struct DbLinearRulerUiSettings {
     std::vector<int> fullStepSizes;
 };
 
-class DbLinearBaseRuler : public ITrackRulerModel
+class DbLinearBaseRuler : public ITrackRuler
 {
 public:
     DbLinearBaseRuler(DbLinearRulerUiSettings config);

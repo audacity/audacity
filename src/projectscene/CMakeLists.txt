@@ -199,7 +199,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearstereoruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearbaseruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearbaseruler.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/itrackrulermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/itrackruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearstereoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearstereoruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearmonoruler.cpp

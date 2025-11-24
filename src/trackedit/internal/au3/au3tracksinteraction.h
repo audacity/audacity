@@ -75,8 +75,8 @@ public:
     bool makeStereoTrack(const TrackId left, const TrackId right) override;
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
 
-    void verticalZoomIn(const trackedit::TrackId& trackId) override;
-    void verticalZoomOut(const trackedit::TrackId& trackId) override;
+    void zoomInVertically(const trackedit::TrackId& trackId) override;
+    void zoomOutVertically(const trackedit::TrackId& trackId) override;
     void resetVerticalZoom(const trackedit::TrackId& trackId) override;
 
     double nearestZeroCrossing(double time) const override;

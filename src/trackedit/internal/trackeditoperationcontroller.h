@@ -138,8 +138,8 @@ public:
 
     std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const override;
 
-    void verticalZoomIn(const trackedit::TrackId& trackId) override;
-    void verticalZoomOut(const trackedit::TrackId& trackId) override;
+    void zoomInVertically(const trackedit::TrackId& trackId) override;
+    void zoomOutVertically(const trackedit::TrackId& trackId) override;
     void resetVerticalZoom(const trackedit::TrackId& trackId) override;
 
     muse::Progress progress() const override;

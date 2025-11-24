@@ -3,10 +3,10 @@
 */
 #pragma once
 
-#include "projectscene/view/trackruler/itrackrulermodel.h"
+#include "projectscene/view/trackruler/itrackruler.h"
 
 namespace au::projectscene {
-class LinearBaseRuler : public ITrackRulerModel
+class LinearBaseRuler : public ITrackRuler
 {
 public:
     void setHeight(int height) override;

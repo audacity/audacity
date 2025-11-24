@@ -11,6 +11,36 @@
 
 using namespace au::projectscene;
 
+namespace {
+constexpr int numDecimals(float value)
+{
+    constexpr int MAX_DECIMAL_PLACES = 4;
+    constexpr float POWER_OF_TEN = 10000.0f;
+
+    int rounded_scaled_value = static_cast<int>((value * POWER_OF_TEN) + 0.5f);
+    int integer_part = static_cast<int>(value);
+    int decimal_part_scaled = rounded_scaled_value - (integer_part * static_cast<int>(POWER_OF_TEN));
+
+    if (decimal_part_scaled == 0) {
+        return 0;
+    }
+
+    int count = MAX_DECIMAL_PLACES;
+    int power_of_ten = 10;
+
+    while (count > 0 && (decimal_part_scaled % power_of_ten) == 0) {
+        count--;
+        power_of_ten *= 10;
+    }
+
+    return count;
+}
+
+static_assert(numDecimals(0.14999999) == 2);
+static_assert(numDecimals(1.00) == 0);
+static_assert(numDecimals(0.005) == 3);
+}
+
 ViewTracksListModel::ViewTracksListModel(QObject* parent)
     : QAbstractListModel(parent)
 {
@@ -294,7 +324,7 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { AvailableRulerTypesRole, "availableRulerTypes" },
         { TrackRulerTypeRole, "trackRulerType" },
         { DbRangeRole, "dbRange" },
-        { VerticalZoomRole, "verticalZoom" },
+        { VerticalZoomRole, "trackVerticalZoom" },
         { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
         { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
     };
@@ -308,8 +338,6 @@ bool ViewTracksListModel::isVerticalRulersVisible() const
 
 int ViewTracksListModel::verticalRulerWidth() const
 {
-    constexpr int MAX_DECIMAL_PLACES = 4;
-
     float smallestBoundValue = 1;
     for (const auto& track : m_trackList) {
         if (track.rulerType != au::trackedit::TrackRulerType::Linear) {
@@ -322,21 +350,10 @@ int ViewTracksListModel::verticalRulerWidth() const
     }
     smallestBoundValue *= 0.1f;
 
-    const double EPSILON = 1e-9;
-    int count = 0;
-    float decimalPart = smallestBoundValue - static_cast<int>(smallestBoundValue);
-
-    while (std::abs(decimalPart) > EPSILON) {
-        decimalPart *= 10;
-        decimalPart = decimalPart - static_cast<int>(decimalPart);
-        count++;
-        if (count == MAX_DECIMAL_PLACES) {
-            break;
-        }
-    }
+    const int nDecimals = numDecimals(smallestBoundValue);
 
     // Adjust the width according to the number of decimal places.
-    return 56 + (count * 8);
+    return 56 + (nDecimals * 8);
 }
 
 int ViewTracksListModel::totalTracksHeight() const

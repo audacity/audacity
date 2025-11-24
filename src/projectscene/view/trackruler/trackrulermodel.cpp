@@ -188,9 +188,9 @@ void TrackRulerModel::setVerticalZoom(float verticalZoom)
     emit smallStepsChanged();
 }
 
-std::shared_ptr<ITrackRulerModel> TrackRulerModel::buildRulerModel()
+std::shared_ptr<ITrackRuler> TrackRulerModel::buildRulerModel()
 {
-    std::shared_ptr<ITrackRulerModel> model = nullptr;
+    std::shared_ptr<ITrackRuler> model = nullptr;
 
     const auto rulerType = static_cast<trackedit::TrackRulerType>(m_rulerType);
     switch (rulerType) {
@@ -231,12 +231,12 @@ std::shared_ptr<ITrackRulerModel> TrackRulerModel::buildRulerModel()
 
 void TrackRulerModel::zoomIn(const trackedit::TrackId& trackId)
 {
-    trackeditInteraction()->verticalZoomIn(trackId);
+    trackeditInteraction()->zoomInVertically(trackId);
 }
 
 void TrackRulerModel::zoomOut(const trackedit::TrackId& trackId)
 {
-    trackeditInteraction()->verticalZoomOut(trackId);
+    trackeditInteraction()->zoomOutVertically(trackId);
 }
 
 void TrackRulerModel::resetZoom(const trackedit::TrackId& trackId)
