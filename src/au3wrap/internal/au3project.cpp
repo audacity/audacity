@@ -5,26 +5,26 @@
 
 #include "global/defer.h"
 
-#include "libraries/lib-project-history/ProjectHistory.h"
-#include "libraries/lib-project-history/UndoManager.h"
-#include "libraries/lib-realtime-effects/SavedMasterEffectList.h"
-#include "libraries/lib-file-formats/AcidizerTags.h"
-#include "libraries/lib-import-export/Import.h"
-#include "libraries/lib-import-export/ImportPlugin.h"
-#include "libraries/lib-import-export/ImportProgressListener.h"
-#include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
-#include "libraries/lib-project-file-io/ProjectFileIO.h"
-#include "libraries/lib-project/Project.h"
-#include "libraries/lib-tags/Tags.h"
-#include "libraries/lib-wave-track/WaveClip.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
+#include "au3-project-history/ProjectHistory.h"
+#include "au3-project-history/UndoManager.h"
+#include "au3-realtime-effects/SavedMasterEffectList.h"
+#include "au3-file-formats/AcidizerTags.h"
+#include "au3-import-export/Import.h"
+#include "au3-import-export/ImportPlugin.h"
+#include "au3-import-export/ImportProgressListener.h"
+#include "au3-numeric-formats/ProjectTimeSignature.h"
+#include "au3-project-file-io/ProjectFileIO.h"
+#include "au3-project/Project.h"
+#include "au3-tags/Tags.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
 #include "TempoChange.h"
 
 //! HACK
 //! Static variable is not initialized
 //! static SampleBlockFactory::Factory::Scope scope{ []( AudacityProject &project )
 //! so, to fix it, included this file here
-#include "libraries/lib-project-file-io/SqliteSampleBlock.cpp"
+#include "au3-project-file-io/SqliteSampleBlock.cpp"
 
 #include "translation.h"
 #include "wxtypes_convert.h"

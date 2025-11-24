@@ -3,7 +3,7 @@
 */
 #include "generalviewmodel.h"
 
-#include "libraries/lib-effects/Effect.h"
+#include "au3-effects/Effect.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 

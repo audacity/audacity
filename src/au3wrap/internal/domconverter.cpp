@@ -5,10 +5,10 @@
 #include "trackrulertypeattachment.h"
 #include "trackviewtypeattachment.h"
 #include "waveformscale.h"
-#include "libraries/lib-track/Track.h"
-#include "libraries/lib-wave-track/WaveClip.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-label-track/LabelTrack.h"
+#include "au3-track/Track.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-label-track/LabelTrack.h"
 
 #include "wxtypes_convert.h"
 

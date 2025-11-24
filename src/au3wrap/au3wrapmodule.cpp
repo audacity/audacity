@@ -7,11 +7,11 @@
 
 #include "FFmpeg.h"
 #include "FileNames.h"
-#include "libraries/lib-import-export/Import.h"
-#include "libraries/lib-import-export/ExportPluginRegistry.h"
-#include "libraries/lib-preferences/Prefs.h"
-#include "libraries/lib-project-file-io/ProjectFileIO.h"
-#include "libraries/lib-module-manager/ModuleManager.h"
+#include "au3-import-export/Import.h"
+#include "au3-import-export/ExportPluginRegistry.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-project-file-io/ProjectFileIO.h"
+#include "au3-module-manager/ModuleManager.h"
 
 #include "modularity/ioc.h"
 

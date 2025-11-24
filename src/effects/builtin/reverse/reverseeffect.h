@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libraries/lib-effects/StatefulEffect.h"
+#include "au3-effects/StatefulEffect.h"
 
 namespace au::effects {
 class ReverseEffect : public StatefulEffect

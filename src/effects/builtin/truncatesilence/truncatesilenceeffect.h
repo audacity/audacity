@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "libraries/lib-builtin-effects/TruncSilenceBase.h"
+#include "au3-builtin-effects/TruncSilenceBase.h"
 
 namespace au::effects {
 class TruncateSilenceEffect final : public TruncSilenceBase

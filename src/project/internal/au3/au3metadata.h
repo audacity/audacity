@@ -6,7 +6,7 @@
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
 
-#include "libraries/lib-tags/Tags.h"
+#include "au3-tags/Tags.h"
 
 #include "project/types/projectmeta.h"
 

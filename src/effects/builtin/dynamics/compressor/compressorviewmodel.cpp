@@ -3,7 +3,7 @@
  */
 #include "compressorviewmodel.h"
 
-#include "libraries/lib-dynamic-range-processor/CompressorProcessor.h"
+#include "au3-dynamic-range-processor/CompressorProcessor.h"
 
 #include "log.h"
 

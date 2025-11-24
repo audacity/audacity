@@ -7,9 +7,9 @@
 #include "internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
-#include "libraries/lib-audio-devices/DeviceManager.h"
-#include "libraries/lib-audio-devices/AudioIOBase.h"
-#include "libraries/lib-utility/IteratorX.h"
+#include "au3-audio-devices/DeviceManager.h"
+#include "au3-audio-devices/AudioIOBase.h"
+#include "au3-utility/IteratorX.h"
 #include "QualitySettings.h"
 #include "ProjectRate.h"
 

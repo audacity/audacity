@@ -5,7 +5,7 @@
 
 #include "global/log.h"
 
-#include "libraries/lib-builtin-effects/CompressorInstance.h"
+#include "au3-builtin-effects/CompressorInstance.h"
 
 namespace au::effects {
 CompressionDbMeterModel::CompressionDbMeterModel(QObject* parent)

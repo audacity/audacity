@@ -7,7 +7,7 @@
 
 #include "context/iglobalcontext.h"
 
-#include "libraries/lib-import-export/Import.h"
+#include "au3-import-export/Import.h"
 
 #include "../../iimporter.h"
 

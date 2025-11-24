@@ -10,7 +10,7 @@
 #include "audio/iaudiometer.h"
 #include "audio/internal/itimer.h"
 
-#include "libraries/lib-utility/LockFreeQueue.h"
+#include "au3-utility/LockFreeQueue.h"
 
 #include <QTimer>
 

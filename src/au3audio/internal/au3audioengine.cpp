@@ -2,10 +2,10 @@
 
 #include "framework/global/realfn.h"
 
-#include "libraries/lib-audio-io/AudioIO.h"
-#include "libraries/lib-audio-io/ProjectAudioIO.h"
-#include "libraries/lib-track/Track.h"
-#include "libraries/lib-time-frequency-selection/ViewInfo.h"
+#include "au3-audio-io/AudioIO.h"
+#include "au3-audio-io/ProjectAudioIO.h"
+#include "au3-track/Track.h"
+#include "au3-time-frequency-selection/ViewInfo.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"

@@ -8,19 +8,19 @@
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/internal/progressdialog.h"
 
-#include "libraries/lib-effects/Effect.h"
-#include "libraries/lib-components/EffectInterface.h"
-#include "libraries/lib-effects/EffectManager.h"
-#include "libraries/lib-effects/MixAndRender.h"
-#include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
-#include "libraries/lib-stretching-sequence/TempoChange.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-transactions/TransactionScope.h"
-#include "libraries/lib-exceptions/AudacityException.h"
+#include "au3-effects/Effect.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-effects/EffectManager.h"
+#include "au3-effects/MixAndRender.h"
+#include "au3-numeric-formats/ProjectTimeSignature.h"
+#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-transactions/TransactionScope.h"
+#include "au3-exceptions/AudacityException.h"
 
-#include "libraries/lib-module-manager/PluginManager.h" // for NYQUIST_PROMPT_ID
-#include "libraries/lib-basic-ui/BasicUI.h"
+#include "au3-module-manager/PluginManager.h" // for NYQUIST_PROMPT_ID
+#include "au3-basic-ui/BasicUI.h"
 
 #include "au3wrap/au3types.h"
 #include "playback/iplayer.h"

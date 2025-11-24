@@ -1,10 +1,10 @@
 #include "abstractaudiopluginmetareader.h"
 #include "effecterrors.h"
 
-#include "libraries/lib-components/PluginProvider.h"
-#include "libraries/lib-strings/TranslatableString.h"
-#include "libraries/lib-module-manager/PluginManager.h"
-#include "libraries/lib-module-manager/ModuleManager.h"
+#include "au3-components/PluginProvider.h"
+#include "au3-strings/TranslatableString.h"
+#include "au3-module-manager/PluginManager.h"
+#include "au3-module-manager/ModuleManager.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 

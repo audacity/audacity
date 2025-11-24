@@ -6,18 +6,18 @@
 #include <algorithm>
 #include <cmath>
 
-#include "libraries/lib-track/Track.h"
-#include "libraries/lib-track/TimeWarper.h"
-#include "libraries/lib-track/PendingTracks.h"
-#include "libraries/lib-wave-track/WaveTrackUtilities.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-wave-track/WaveClip.h"
-#include "libraries/lib-label-track/LabelTrack.h"
-#include "libraries/lib-project-rate/ProjectRate.h"
-#include "libraries/lib-project-rate/QualitySettings.h"
-#include "libraries/lib-effects/MixAndRender.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectList.h"
-#include "libraries/lib-exceptions/UserException.h"
+#include "au3-track/Track.h"
+#include "au3-track/TimeWarper.h"
+#include "au3-track/PendingTracks.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-label-track/LabelTrack.h"
+#include "au3-project-rate/ProjectRate.h"
+#include "au3-project-rate/QualitySettings.h"
+#include "au3-effects/MixAndRender.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
+#include "au3-exceptions/UserException.h"
 
 #include "global/types/number.h"
 

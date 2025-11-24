@@ -6,7 +6,7 @@
 #include "../ilv2effectsrepository.h"
 #include "effects/effects_base/internal/effectsrepositoryhelper.h"
 #include "modularity/ioc.h"
-#include "libraries/lib-lv2/LoadLV2.h"
+#include "au3-lv2/LoadLV2.h"
 
 namespace au::effects {
 class Lv2EffectsRepository final : public ILv2EffectsRepository

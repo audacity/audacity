@@ -19,8 +19,8 @@
 #define NUMBER_OF_BANDS 31
 #define NUM_PTS 180
 
-#include "libraries/lib-builtin-effects/EqualizationCurvesList.h"
-#include "libraries/lib-builtin-effects/EqualizationFilter.h"
+#include "au3-builtin-effects/EqualizationCurvesList.h"
+#include "au3-builtin-effects/EqualizationFilter.h"
 
 struct EqualizationBandSliders
 {

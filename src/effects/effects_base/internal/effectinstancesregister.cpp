@@ -2,8 +2,8 @@
 * Audacity: A Digital Audio Editor
 */
 #include "effectinstancesregister.h"
-#include "libraries/lib-components/EffectInterface.h"
-#include "libraries/lib-effects/EffectPlugin.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-effects/EffectPlugin.h"
 
 using namespace au::effects;
 

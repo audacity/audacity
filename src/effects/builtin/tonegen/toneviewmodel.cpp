@@ -7,7 +7,7 @@
 
 #include "global/translation.h"
 
-#include "libraries/lib-components/EffectInterface.h"
+#include "au3-components/EffectInterface.h"
 
 using namespace au::effects;
 

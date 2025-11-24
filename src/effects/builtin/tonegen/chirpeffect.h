@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "libraries/lib-builtin-effects/ToneGenBase.h"
+#include "au3-builtin-effects/ToneGenBase.h"
 #include "../common/generatoreffect.h"
 #include "toneeffect.h"
 

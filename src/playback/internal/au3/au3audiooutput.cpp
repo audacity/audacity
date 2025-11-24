@@ -7,8 +7,8 @@
 #include "framework/global/async/async.h"
 #include "framework/global/types/ratio.h"
 
-#include "libraries/lib-audio-io/ProjectAudioIO.h"
-#include "libraries/lib-project-rate/ProjectRate.h"
+#include "au3-audio-io/ProjectAudioIO.h"
+#include "au3-project-rate/ProjectRate.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3audiometerfactory.h"

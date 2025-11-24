@@ -5,9 +5,9 @@
 
 #include "musevstplugininstance.h"
 
-#include "libraries/lib-components/EffectInterface.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
-#include "libraries/lib-vst3/VST3Instance.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3-vst3/VST3Instance.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "log.h"

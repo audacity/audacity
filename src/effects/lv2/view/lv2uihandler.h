@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "libraries/lib-lv2/LV2UIFeaturesList.h"
+#include "au3-lv2/LV2UIFeaturesList.h"
 
 namespace au::effects {
 class Lv2ViewModel;

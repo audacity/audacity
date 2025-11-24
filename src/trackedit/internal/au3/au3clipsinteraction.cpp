@@ -6,12 +6,12 @@
 
 #include <algorithm>
 
-#include "libraries/lib-track/Track.h"
-#include "libraries/lib-stretching-sequence/TempoChange.h"
-#include "libraries/lib-wave-track/WaveClip.h"
-#include "libraries/lib-wave-track/WaveTrackUtilities.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-wave-track/TimeStretching.h"
+#include "au3-track/Track.h"
+#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/TimeStretching.h"
 
 #include "global/types/ret.h"
 #include "global/types/number.h"
