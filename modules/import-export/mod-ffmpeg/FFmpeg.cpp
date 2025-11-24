@@ -25,6 +25,7 @@ License: GPL v2 or later.  See License.txt.
 #include "SelectFile.h"
 #include "HelpSystem.h"
 #include "AudacityMessageBox.h"
+#include "BasicUI.h"
 #include "ShuttleGui.h"
 
 #include <wx/checkbox.h>
@@ -210,7 +211,7 @@ public:
 
    void OnDownload(wxCommandEvent & WXUNUSED(event))
    {
-      HelpSystem::ShowHelp(this, L"FAQ:Installing_the_FFmpeg_Import_Export_Library");
+      BasicUI::OpenInDefaultBrowser(wxT("https://support.audacityteam.org/basics/installing-ffmpeg"));
    }
 
    void UpdatePath()
