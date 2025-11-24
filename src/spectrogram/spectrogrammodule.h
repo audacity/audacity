@@ -18,7 +18,6 @@ public:
     std::string moduleName() const override;
     void registerExports() override;
     void registerUiTypes() override;
-    void registerResources() override;
     void onInit(const muse::IApplication::RunMode&) override;
 
 private:
