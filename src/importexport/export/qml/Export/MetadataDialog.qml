@@ -73,13 +73,16 @@ StyledDialogView {
             valueTitle: qsTrc("metadata", "value")
             valueTypeRole: "roleType"
             readOnly: false
+            isReadOnlyFunction: function(rowIndex) {
+                return metadataModel.isStandardTag(rowIndex)
+            }
 
             drawZebra: false
             headerColor: ui.theme.backgroundSecondaryColor
-            keyColumnWidth: 140
+            keyColumnWidth: 100
             isKeyEditable: true
             headerCapitalization: Font.Capitalize
-            startEditByDoubleClick: true
+            sorterEnabled: false
 
             navigationSection: navigation.section
             navigationOrderStart: topButtonsBar.navigationOrder + 1
@@ -128,8 +131,8 @@ StyledDialogView {
                 accentButton: true
 
                 onClicked: {
-                    root.accept()
                     metadataModel.apply()
+                    root.accept()
                 }
             }
         }

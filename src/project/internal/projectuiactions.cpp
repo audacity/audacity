@@ -187,10 +187,10 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Manage labels")
              ),
     UiAction("manage-metadata",
-             au::context::UiCtxUnknown,
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Manage metadata"),
-             TranslatableString("action", "Manage metadata")
+             TranslatableString("action", "Metadata editor"),
+             TranslatableString("action", "Metadata editor")
              ),
 
     // select menu

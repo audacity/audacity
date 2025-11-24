@@ -49,6 +49,8 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "export-labels", this, &ProjectActionsController::exportLabels);
     dispatcher()->reg(this, "export-midi", this, &ProjectActionsController::exportMIDI);
 
+    dispatcher()->reg(this, "manage-metadata", this, &ProjectActionsController::openMetadataDialog);
+
     dispatcher()->reg(this, "file-close", [this]() {
         // reset preferred export sample rate
         exportConfiguration()->setExportSampleRate(-1);
