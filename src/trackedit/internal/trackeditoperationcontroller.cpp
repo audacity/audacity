@@ -182,7 +182,7 @@ bool TrackeditOperationController::cutClipIntoClipboard(const ClipKey& clipKey)
     return true;
 }
 
-bool TrackeditOperationController::cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
+bool TrackeditOperationController::cutItemDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
     std::vector<ITrackDataPtr> tracksData(tracksIds.size());
     for (const auto& trackId : tracksIds) {
@@ -209,15 +209,15 @@ bool TrackeditOperationController::copyClipIntoClipboard(const ClipKey& clipKey)
     return true;
 }
 
-bool TrackeditOperationController::copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys,
+bool TrackeditOperationController::copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const TrackItemKeyList& itemKeys,
                                                                            secs_t offset)
 {
-    ITrackDataPtr data = tracksInteraction()->copyNonContinuousTrackData(trackId, clipKeys, offset);
+    ITrackDataPtr data = tracksInteraction()->copyNonContinuousTrackData(trackId, itemKeys, offset);
     if (!data) {
         return false;
     }
     clipboard()->addTrackData(std::move(data));
-    if (clipKeys.size() > 1) {
+    if (itemKeys.size() > 1) {
         clipboard()->setMultiSelectionCopy(true);
     }
     return true;
@@ -754,6 +754,11 @@ bool TrackeditOperationController::stretchLabelRight(const LabelKey& labelKey, s
         projectHistory()->pushHistoryState("Label stretched", "Stretch label right");
     }
     return success;
+}
+
+std::optional<secs_t> TrackeditOperationController::getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const
+{
+    return labelsInteraction()->getLeftmostLabelStartTime(labelKeys);
 }
 
 muse::Progress TrackeditOperationController::progress() const

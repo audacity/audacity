@@ -27,12 +27,15 @@ public:
     bool removeLabels(const LabelKeyList& labelKeys, bool moveLabels) override;
 
     ITrackDataPtr cutLabel(const LabelKey& labelKey) override;
+
     ITrackDataPtr copyLabel(const LabelKey& labelKey) override;
 
     bool moveLabels(secs_t timePositionOffset, bool completed) override;
 
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
+
+    std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const override;
 
     muse::Progress progress() const override;
 
@@ -42,8 +45,6 @@ private:
     au3::Au3Project& projectRef() const;
 
     context::IPlaybackStatePtr playbackState() const;
-
-    std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const;
 
     muse::Progress m_progress;
     std::atomic<bool> m_busy = false;

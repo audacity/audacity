@@ -745,7 +745,7 @@ TEST_F(Au3LabelsInteractionsTests, RemoveLabelsWithMoveLabels)
     //! [GIVEN] Add three labels: first label (1.0-2.0), second to remove (3.0-5.0), third to shift (6.0-7.0)
     SelectedRegion region1;
     region1.setTimes(1.0, 2.0);
-    TrackItemId labelId1 = labelTrack->AddLabel(region1, wxString("Label 1"));
+    labelTrack->AddLabel(region1, wxString("Label 1"));
 
     SelectedRegion region2;
     region2.setTimes(3.0, 5.0);
@@ -753,7 +753,7 @@ TEST_F(Au3LabelsInteractionsTests, RemoveLabelsWithMoveLabels)
 
     SelectedRegion region3;
     region3.setTimes(6.0, 7.0);
-    TrackItemId labelId3 = labelTrack->AddLabel(region3, wxString("Label 3"));
+    labelTrack->AddLabel(region3, wxString("Label 3"));
 
     ASSERT_EQ(labelTrack->GetNumLabels(), 3) << "Precondition failed: Should have three labels";
 

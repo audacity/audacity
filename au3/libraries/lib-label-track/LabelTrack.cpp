@@ -136,6 +136,14 @@ LabelTrack* LabelTrack::Create(TrackList& trackList)
     return Create(trackList, trackList.MakeUniqueTrackName(GetDefaultName()));
 }
 
+LabelTrack::Holder LabelTrack::CreatePtr(TrackList& trackList)
+{
+    auto track = std::make_shared<LabelTrack>();
+    track->SetName(trackList.MakeUniqueTrackName(GetDefaultName()));
+    trackList.Add(track);
+    return track;
+}
+
 LabelTrack::LabelTrack()
     : UniqueChannelTrack{}
     , mClipLen{0.0}

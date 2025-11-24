@@ -150,11 +150,15 @@ private:
     void changeTrackView(const muse::actions::ActionData&, TrackViewType);
 
     void addLabel();
+
     void labelDelete(const muse::actions::ActionData& args);
     void labelDeleteMulti(const muse::actions::ActionData& args);
+
     void labelCut(const muse::actions::ActionData& args);
+    void labelCutMulti(const muse::actions::ActionData& args);
+
     void labelCopy(const muse::actions::ActionData& args);
-    void labelCopyMulti(const muse::actions::ActionData& args);
+    void labelCopyMulti();
 
     context::IPlaybackStatePtr playbackState() const;
 

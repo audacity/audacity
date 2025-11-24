@@ -11,6 +11,7 @@
 #include "libraries/lib-wave-track/WaveTrackUtilities.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track/WaveClip.h"
+#include "libraries/lib-label-track/LabelTrack.h"
 #include "libraries/lib-project-rate/ProjectRate.h"
 #include "libraries/lib-project-rate/QualitySettings.h"
 #include "libraries/lib-effects/MixAndRender.h"
@@ -426,46 +427,61 @@ muse::Ret Au3TracksInteraction::pasteLabels(const std::vector<Au3TrackDataPtr>& 
 
 ITrackDataPtr Au3TracksInteraction::cutTrackData(const TrackId trackId, secs_t begin, secs_t end, bool moveClips)
 {
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return nullptr;
+    std::shared_ptr<Au3Track> track;
+    Au3Track* originTrack = nullptr;
+    if (Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId))) {
+        track = waveTrack->Cut(begin, end, moveClips);
+        originTrack = waveTrack;
+    } else if (Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId))) {
+        track = labelTrack->Cut(begin, end, moveClips);
+        originTrack = labelTrack;
     }
 
-    auto track = waveTrack->Cut(begin, end, moveClips);
     const auto data = std::make_shared<Au3TrackData>(std::move(track));
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    prj->notifyAboutTrackChanged(DomConverter::track(originTrack));
 
     return data;
 }
 
-ITrackDataPtr Au3TracksInteraction::copyNonContinuousTrackData(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset)
+ITrackDataPtr Au3TracksInteraction::copyNonContinuousTrackData(const TrackId trackId, const TrackItemKeyList& itemKeys, secs_t offset)
 {
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return nullptr;
-    }
+    // Try to find wave track first
+    if (Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId))) {
+        auto& trackFactory = WaveTrackFactory::Get(projectRef());
+        auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+        auto clipboardTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
 
-    auto& trackFactory = WaveTrackFactory::Get(projectRef());
-    auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-    auto clipboardTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
-
-    std::vector<std::shared_ptr<Au3WaveClip> > intervals;
-    for (const auto& clipKey : clipKeys) {
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-        IF_ASSERT_FAILED(clip) {
-            return nullptr;
+        for (const auto& itemKey : itemKeys) {
+            if (std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, itemKey.itemId)) {
+                clipboardTrack->InsertInterval(waveTrack->CopyClip(*clip, true), false);
+            }
         }
 
-        clipboardTrack->InsertInterval(waveTrack->CopyClip(*clip, true), false);
+        for (const auto& clip : clipboardTrack->SortedIntervalArray()) {
+            clip->SetPlayStartTime(clip->GetPlayStartTime() + offset);
+        }
+
+        return std::make_shared<Au3TrackData>(std::move(clipboardTrack));
+    }
+    // Try to find label track
+    else if (Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId))) {
+        auto& trackList = Au3TrackList::Get(projectRef());
+        auto clipboardTrack = ::LabelTrack::CreatePtr(trackList);
+
+        for (const auto& itemKey : itemKeys) {
+            if (Au3Label* label = DomAccessor::findLabel(labelTrack, itemKey.itemId)) {
+                SelectedRegion region;
+                region.setTimes(label->getT0() + offset, label->getT1() + offset);
+                clipboardTrack->AddLabel(region, label->title);
+            }
+        }
+
+        return std::make_shared<Au3TrackData>(std::move(clipboardTrack));
     }
 
-    for (const auto& clip : clipboardTrack->SortedIntervalArray()) {
-        clip->SetPlayStartTime(clip->GetPlayStartTime() + offset);
-    }
-
-    return std::make_shared<Au3TrackData>(std::move(clipboardTrack));
+    return nullptr;
 }
 
 ITrackDataPtr Au3TracksInteraction::copyContinuousTrackData(const TrackId trackId, secs_t begin, secs_t end)

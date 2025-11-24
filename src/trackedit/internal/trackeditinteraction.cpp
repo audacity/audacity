@@ -111,9 +111,9 @@ bool TrackeditInteraction::cutClipIntoClipboard(const ClipKey& clipKey)
     return withPlaybackStop(&ITrackeditInteraction::cutClipIntoClipboard, clipKey);
 }
 
-bool TrackeditInteraction::cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
+bool TrackeditInteraction::cutItemDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
-    return withPlaybackStop(&ITrackeditInteraction::cutClipDataIntoClipboard, tracksIds, begin, end, moveClips);
+    return withPlaybackStop(&ITrackeditInteraction::cutItemDataIntoClipboard, tracksIds, begin, end, moveClips);
 }
 
 bool TrackeditInteraction::copyClipIntoClipboard(const trackedit::ClipKey& clipKey)
@@ -475,6 +475,11 @@ bool TrackeditInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
 bool TrackeditInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
 {
     return m_interaction->stretchLabelRight(labelKey, newEndTime, completed);
+}
+
+std::optional<secs_t> TrackeditInteraction::getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const
+{
+    return m_interaction->getLeftmostLabelStartTime(labelKeys);
 }
 
 muse::Progress TrackeditInteraction::progress() const
