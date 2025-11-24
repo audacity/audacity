@@ -20,6 +20,7 @@ set( SOURCES
    AudioUnitWrapper.h
 )
 set( LIBRARIES
+   lib-utility
    lib-effects-interface
     "-framework AudioUnit"
 )

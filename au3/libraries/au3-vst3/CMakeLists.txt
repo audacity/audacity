@@ -39,6 +39,7 @@ set( LIBRARIES
    vst3sdk::pluginterfaces
    vst3sdk::sdk_hosting
    vst3sdk::sdk_common
+   lib-utility
    lib-effects-interface
    lib-files-interface
 )
