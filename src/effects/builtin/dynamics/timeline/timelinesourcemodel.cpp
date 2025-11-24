@@ -3,8 +3,8 @@
  */
 #include "timelinesourcemodel.h"
 
-#include "libraries/lib-builtin-effects/CompressorInstance.h"
-#include "libraries/lib-dynamic-range-processor/DynamicRangeProcessorHistory.h"
+#include "au3-builtin-effects/CompressorInstance.h"
+#include "au3-dynamic-range-processor/DynamicRangeProcessorHistory.h"
 
 #include "global/log.h"
 

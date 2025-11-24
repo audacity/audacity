@@ -6,8 +6,8 @@
 
 #include <FileNames.h>
 
-#include "libraries/lib-track/Track.h"
-#include "libraries/lib-label-track/LabelTrack.h"
+#include "au3-track/Track.h"
+#include "au3-label-track/LabelTrack.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"

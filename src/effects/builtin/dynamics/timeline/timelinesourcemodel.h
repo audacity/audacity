@@ -6,9 +6,9 @@
 #include "dynamicstimelinetypes.h"
 #include "abstractdynamicseffectinstancemodel.h"
 
-#include "libraries/lib-utility/Observer.h"
-#include "libraries/lib-dynamic-range-processor/DynamicRangeProcessorTypes.h"
-#include "libraries/lib-dynamic-range-processor/DynamicRangeProcessorHistory.h"
+#include "au3-utility/Observer.h"
+#include "au3-dynamic-range-processor/DynamicRangeProcessorTypes.h"
+#include "au3-dynamic-range-processor/DynamicRangeProcessorHistory.h"
 
 #include <optional>
 

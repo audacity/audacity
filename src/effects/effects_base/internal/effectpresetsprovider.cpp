@@ -6,9 +6,9 @@
 #include "global/containers.h"
 #include "global/io/file.h"
 
-#include "libraries/lib-effects/Effect.h"
-#include "libraries/lib-effects/EffectManager.h"
-#include "libraries/lib-module-manager/PluginManager.h"
+#include "au3-effects/Effect.h"
+#include "au3-effects/EffectManager.h"
+#include "au3-module-manager/PluginManager.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 

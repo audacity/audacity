@@ -10,7 +10,7 @@
 #include "../ieffectsviewregister.h"
 #include "../ibuiltineffectsrepository.h"
 
-#include "libraries/lib-components/ComponentInterfaceSymbol.h"
+#include "au3-components/ComponentInterfaceSymbol.h"
 
 namespace au::effects {
 class BuiltinEffectsRepository : public IBuiltinEffectsRepository

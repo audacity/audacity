@@ -1,7 +1,7 @@
 #include "abstractviewlauncher.h"
 #include "log.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
-#include "libraries/lib-effects/Effect.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3-effects/Effect.h"
 
 namespace au::effects {
 namespace {

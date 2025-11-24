@@ -4,7 +4,7 @@
 #pragma once
 
 #include "effects/effects_base/internal/abstractaudiopluginmetareader.h"
-#include "libraries/lib-lv2/LoadLV2.h"
+#include "au3-lv2/LoadLV2.h"
 
 namespace au::effects {
 class Lv2PluginMetaReader final : public AbstractAudioPluginMetaReader

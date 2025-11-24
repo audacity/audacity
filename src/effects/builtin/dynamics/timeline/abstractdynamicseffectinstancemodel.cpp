@@ -3,7 +3,7 @@
  */
 #include "abstractdynamicseffectinstancemodel.h"
 
-#include "libraries/lib-builtin-effects/CompressorInstance.h"
+#include "au3-builtin-effects/CompressorInstance.h"
 
 #include "global/log.h"
 

@@ -2,9 +2,9 @@
  * Audacity: A Digital Audio Editor
  */
 #include "realtimeeffectviewerdialogmodel.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
-#include "libraries/lib-effects/EffectPlugin.h"
-#include "libraries/lib-module-manager/PluginManager.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3-effects/EffectPlugin.h"
+#include "au3-module-manager/PluginManager.h"
 #include "trackedit/trackedittypes.h"
 #include "trackedit/itrackeditproject.h"
 #include "au3wrap/internal/wxtypes_convert.h"

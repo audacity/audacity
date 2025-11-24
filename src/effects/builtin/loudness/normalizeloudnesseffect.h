@@ -12,9 +12,9 @@
 **********************************************************************/
 #pragma once
 
-#include "libraries/lib-utility/MemoryX.h"
-#include "libraries/lib-components/SettingsVisitor.h"
-#include "libraries/lib-effects/StatefulEffect.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-components/SettingsVisitor.h"
+#include "au3-effects/StatefulEffect.h"
 
 class WaveChannel;
 class EBUR128;

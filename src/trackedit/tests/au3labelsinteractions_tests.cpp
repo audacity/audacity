@@ -8,7 +8,7 @@
 #include "au3interactiontestbase.h"
 #include "mocks/selectioncontrollermock.h"
 
-#include "libraries/lib-label-track/LabelTrack.h"
+#include "au3-label-track/LabelTrack.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 

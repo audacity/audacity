@@ -7,7 +7,7 @@
 #include <map>
 #include <algorithm>
 
-#include "libraries/lib-label-track/LabelTrack.h"
+#include "au3-label-track/LabelTrack.h"
 
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"

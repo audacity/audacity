@@ -3,10 +3,10 @@
  */
 #include "compressoreffect.h"
 
-#include "libraries/lib-command-parameters/ShuttleAutomation.h"
-#include "libraries/lib-builtin-effects/CompressorInstance.h"
-#include "libraries/lib-dynamic-range-processor/DynamicRangeProcessorDummyOutputs.h"
-#include "libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-builtin-effects/CompressorInstance.h"
+#include "au3-dynamic-range-processor/DynamicRangeProcessorDummyOutputs.h"
+#include "au3-dynamic-range-processor/DynamicRangeProcessorUtils.h"
 
 #include "global/types/number.h"
 
