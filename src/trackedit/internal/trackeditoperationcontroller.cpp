@@ -776,6 +776,21 @@ void TrackeditOperationController::resetVerticalZoom(const trackedit::TrackId& t
     tracksInteraction()->resetVerticalZoom(trackId);
 }
 
+bool TrackeditOperationController::isDefaultVerticalZoom(const trackedit::TrackId& trackId) const
+{
+    return tracksInteraction()->isDefaultVerticalZoom(trackId);
+}
+
+bool TrackeditOperationController::isMaxVerticalZoom(const trackedit::TrackId& trackId) const
+{
+    return tracksInteraction()->isMaxVerticalZoom(trackId);
+}
+
+bool TrackeditOperationController::isMinVerticalZoom(const trackedit::TrackId& trackId) const
+{
+    return tracksInteraction()->isMinVerticalZoom(trackId);
+}
+
 muse::Progress TrackeditOperationController::progress() const
 {
     return tracksInteraction()->progress();

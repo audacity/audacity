@@ -16,6 +16,10 @@ StyledPopupView {
     required property int rulerType
     required property var availableRulerTypes
 
+    required property bool isDefaultZoom
+    required property bool isMaxZoom
+    required property bool isMinZoom
+
     signal rulerTypeChangeRequested(int newType)
     signal zoomInRequested()
     signal zoomOutRequested()
@@ -62,6 +66,8 @@ StyledPopupView {
                 normalColor: ui.theme.buttonColor
                 icon: IconCode.ZOOM_IN
 
+                enabled: !isMaxZoom
+
                 onClicked: {
                     root.zoomInRequested()
                 }
@@ -76,6 +82,8 @@ StyledPopupView {
 
                 normalColor: ui.theme.buttonColor
                 icon: IconCode.ZOOM_OUT
+
+                enabled: !isMinZoom
 
                 onClicked: {
                     root.zoomOutRequested()
@@ -95,6 +103,8 @@ StyledPopupView {
                 orientation: Qt.Horizontal
 
                 text: qsTrc("trackruler", "Reset")
+
+                enabled: !isDefaultZoom
 
                 onClicked: {
                     root.zoomResetRequested()

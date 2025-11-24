@@ -68,6 +68,9 @@ public:
     virtual void zoomInVertically(const trackedit::TrackId& trackId) = 0;
     virtual void zoomOutVertically(const trackedit::TrackId& trackId) = 0;
     virtual void resetVerticalZoom(const trackedit::TrackId& trackId) = 0;
+    virtual bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const = 0;
+    virtual bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const = 0;
+    virtual bool isMinVerticalZoom(const trackedit::TrackId& trackId) const = 0;
 
     virtual double nearestZeroCrossing(double time) const = 0;
 

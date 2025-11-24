@@ -167,6 +167,9 @@ void TrackRulerModel::setRulerType(int rulerType)
     emit rulerTypeChanged();
     emit fullStepsChanged();
     emit smallStepsChanged();
+    emit isDefaultZoomChanged();
+    emit isMaxZoomChanged();
+    emit isMinZoomChanged();
 }
 
 float TrackRulerModel::verticalZoom() const
@@ -186,6 +189,9 @@ void TrackRulerModel::setVerticalZoom(float verticalZoom)
 
     emit fullStepsChanged();
     emit smallStepsChanged();
+    emit isDefaultZoomChanged();
+    emit isMaxZoomChanged();
+    emit isMinZoomChanged();
 }
 
 std::shared_ptr<ITrackRuler> TrackRulerModel::buildRulerModel()
@@ -229,17 +235,57 @@ std::shared_ptr<ITrackRuler> TrackRulerModel::buildRulerModel()
     return model;
 }
 
-void TrackRulerModel::zoomIn(const trackedit::TrackId& trackId)
+void TrackRulerModel::zoomIn()
 {
-    trackeditInteraction()->zoomInVertically(trackId);
+    trackeditInteraction()->zoomInVertically(m_trackId);
+
+    emit isDefaultZoomChanged();
+    emit isMaxZoomChanged();
+    emit isMinZoomChanged();
 }
 
-void TrackRulerModel::zoomOut(const trackedit::TrackId& trackId)
+void TrackRulerModel::zoomOut()
 {
-    trackeditInteraction()->zoomOutVertically(trackId);
+    trackeditInteraction()->zoomOutVertically(m_trackId);
+
+    emit isDefaultZoomChanged();
+    emit isMaxZoomChanged();
+    emit isMinZoomChanged();
 }
 
-void TrackRulerModel::resetZoom(const trackedit::TrackId& trackId)
+void TrackRulerModel::resetZoom()
 {
-    trackeditInteraction()->resetVerticalZoom(trackId);
+    trackeditInteraction()->resetVerticalZoom(m_trackId);
+
+    emit isDefaultZoomChanged();
+    emit isMaxZoomChanged();
+    emit isMinZoomChanged();
+}
+
+bool TrackRulerModel::isDefaultZoom() const
+{
+    return trackeditInteraction()->isDefaultVerticalZoom(m_trackId);
+}
+
+bool TrackRulerModel::isMaxZoom() const
+{
+    return trackeditInteraction()->isMaxVerticalZoom(m_trackId);
+}
+
+bool TrackRulerModel::isMinZoom() const
+{
+    return trackeditInteraction()->isMinVerticalZoom(m_trackId);
+}
+
+void TrackRulerModel::setTrackId(const trackedit::TrackId& newTrackId)
+{
+    if (m_trackId != newTrackId) {
+        m_trackId = newTrackId;
+        emit trackIdChanged();
+    }
+}
+
+au::trackedit::TrackId TrackRulerModel::trackId() const
+{
+    return m_trackId;
 }

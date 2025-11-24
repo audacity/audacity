@@ -78,6 +78,9 @@ public:
     void zoomInVertically(const trackedit::TrackId& trackId) override;
     void zoomOutVertically(const trackedit::TrackId& trackId) override;
     void resetVerticalZoom(const trackedit::TrackId& trackId) override;
+    bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const override;
+    bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const override;
+    bool isMinVerticalZoom(const trackedit::TrackId& trackId) const override;
 
     double nearestZeroCrossing(double time) const override;
 
