@@ -73,7 +73,9 @@ StyledDialogView {
             valueTitle: qsTrc("metadata", "value")
             valueTypeRole: "roleType"
             readOnly: false
-            isReadOnlyFunction: metadataModel.isStandardTag
+            isReadOnlyFunction: function(rowIndex) {
+                return metadataModel.isStandardTag(rowIndex)
+            }
 
             drawZebra: false
             headerColor: ui.theme.backgroundSecondaryColor
