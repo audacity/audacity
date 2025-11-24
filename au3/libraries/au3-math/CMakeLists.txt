@@ -35,7 +35,7 @@ set( SOURCES
 set( LIBRARIES
    lib-preferences-interface
    PRIVATE
-   libsoxr
+   soxr
 )
 audacity_library( lib-math "${SOURCES}" "${LIBRARIES}"
    "" ""
