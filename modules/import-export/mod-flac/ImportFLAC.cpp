@@ -237,7 +237,11 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
                      frame->header.blocksize, 1,
                      int16Sample);
          } else if (frame->header.bits_per_sample == 16) {
-            channel.AppendBuffer((samplePtr)buffer[chn],
+            auto tmp = ArrayOf< short >{ frame->header.blocksize };
+            for (unsigned int s = 0; s < frame->header.blocksize; s++) {
+               tmp[s] = buffer[chn][s];
+            }
+            channel.AppendBuffer((samplePtr)tmp.get(),
                      int16Sample,
                      frame->header.blocksize, 1,
                      int16Sample);
