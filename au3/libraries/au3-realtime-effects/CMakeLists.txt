@@ -13,6 +13,8 @@ set( SOURCES
    RealtimeEffectManager.h
    RealtimeEffectState.cpp
    RealtimeEffectState.h
+   SavedMasterEffectList.cpp
+   SavedMasterEffectList.h
 )
 set( LIBRARIES
    lib-channel-interface
