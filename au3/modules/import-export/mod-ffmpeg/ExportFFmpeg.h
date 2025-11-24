@@ -3,7 +3,7 @@
 #include "Mix.h"
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
 #include "lib-ffmpeg-support/FifoBuffer.h"
-#include "libraries/lib-import-export/ExportPlugin.h"
+#include "au3-import-export/ExportPlugin.h"
 
 class ExportFFmpeg final : public ExportPlugin
 {

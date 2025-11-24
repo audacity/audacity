@@ -13,9 +13,9 @@
 #include <cstddef>
 #include <cstring>
 
-#include "libraries/lib-import-export/Import.h"
-#include "libraries/lib-import-export/ImportUtils.h"
-#include "libraries/lib-import-export/ImportProgressListener.h"
+#include "au3-import-export/Import.h"
+#include "au3-import-export/ImportUtils.h"
+#include "au3-import-export/ImportProgressListener.h"
 #include "Project.h"
 
 #define DESC XO("MP3 files")
@@ -25,7 +25,7 @@
 
 #include <mpg123.h>
 
-#include "libraries/lib-tags/Tags.h"
+#include "au3-tags/Tags.h"
 #include "WaveTrack.h"
 
 #include "CodeConversions.h"

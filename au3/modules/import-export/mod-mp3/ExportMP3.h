@@ -14,7 +14,7 @@
 
 #include "FileNames.h"
 #include "Mix.h"
-#include "libraries/lib-import-export/ExportPlugin.h"
+#include "au3-import-export/ExportPlugin.h"
 #include <memory>
 
 #include <lame/lame.h>

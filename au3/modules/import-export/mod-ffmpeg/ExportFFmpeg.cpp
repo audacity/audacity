@@ -29,7 +29,7 @@ function.
 
 #include "BasicSettings.h"
 #include "Mix.h"
-#include "libraries/lib-tags/Tags.h"
+#include "au3-tags/Tags.h"
 #include "Track.h"
 #include "wxFileNameWrapper.h"
 
@@ -43,10 +43,10 @@ function.
 #define OSINPUT(X) OSFILENAME(X)
 #endif
 
-#include "libraries/lib-import-export/ExportPluginHelpers.h"
-#include "libraries/lib-import-export/PlainExportOptionsEditor.h"
+#include "au3-import-export/ExportPluginHelpers.h"
+#include "au3-import-export/PlainExportOptionsEditor.h"
 #include "FFmpegDefines.h"
-#include "libraries/lib-import-export/ExportPluginRegistry.h"
+#include "au3-import-export/ExportPluginRegistry.h"
 
 #include "ExportFFmpeg.h"
 

@@ -20,19 +20,19 @@
 
 *//*******************************************************************/
 
-#include "libraries/lib-import-export/Import.h"
-#include "libraries/lib-import-export/ImportPlugin.h"
+#include "au3-import-export/Import.h"
+#include "au3-import-export/ImportPlugin.h"
 
 #include <wx/string.h>
 #include <wx/log.h>
 #include <stdlib.h>
 #include <wavpack/wavpack.h>
 
-#include "libraries/lib-tags/Tags.h"
+#include "au3-tags/Tags.h"
 #include "WaveTrack.h"
 #include "CodeConversions.h"
-#include "libraries/lib-import-export/ImportUtils.h"
-#include "libraries/lib-import-export/ImportProgressListener.h"
+#include "au3-import-export/ImportUtils.h"
+#include "au3-import-export/ImportProgressListener.h"
 
 #include "ImportWavPack.h"
 
