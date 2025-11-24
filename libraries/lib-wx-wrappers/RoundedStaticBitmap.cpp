@@ -12,20 +12,8 @@
 #include "RoundedStaticBitmap.h"
 #include <wx/image.h>
 
-RoundedStaticBitmap::RoundedStaticBitmap(wxWindow *parent,
-                                         wxWindowID id,
-                                         const wxBitmap& bitmap,
-                                         int radius,
-                                         const wxPoint& pos,
-                                         const wxSize& size,
-                                         long style,
-                                         const wxString& name)
-   : mRadius(radius),
-     wxStaticBitmap(parent, id, bitmap, pos, size, style, name)
-{
-}
 
- wxImage RoundedStaticBitmap::MakeRoundedImage(const wxImage& source, int radius) {
+ wxImage RoundedImage(const wxImage& source, int radius) {
    wxImage image = source;
 
    if (!image.HasAlpha()) {
@@ -91,12 +79,25 @@ RoundedStaticBitmap::RoundedStaticBitmap(wxWindow *parent,
    return image;
 }
 
+RoundedStaticBitmap::RoundedStaticBitmap(wxWindow *parent,
+                                         wxWindowID id,
+                                         const wxBitmap& bitmap,
+                                         int radius,
+                                         const wxPoint& pos,
+                                         const wxSize& size,
+                                         long style,
+                                         const wxString& name)
+   : mRadius(radius),
+     wxStaticBitmap(parent, id, bitmap, pos, size, style, name)
+{
+}
+
 #if wxCHECK_VERSION(3, 1, 6)
 
 void RoundedStaticBitmap::SetBitmap(const wxBitmapBundle& bitmap)
 {
    mImage = bitmap.GetBitmapFor(this).ConvertToImage();
-   auto roundedImage = MakeRoundedImage(mImage, mRadius);
+   auto roundedImage = RoundedImage(mImage, mRadius);
    wxStaticBitmap::SetBitmap(wxBitmapBundle::FromImage(roundedImage));
 }
 
@@ -105,7 +106,7 @@ void RoundedStaticBitmap::SetBitmap(const wxBitmapBundle& bitmap)
 void RoundedStaticBitmap::SetBitmap(const wxBitmap& bitmap)
 {
    mImage = bitmap.ConvertToImage();
-   auto roundedImage = MakeRoundedImage(mImage, mRadius);
+   auto roundedImage = RoundedImage(mImage, mRadius);
    wxStaticBitmap::SetBitmap(wxBitmap(roundedImage));
 }
 
@@ -114,7 +115,7 @@ void RoundedStaticBitmap::SetBitmap(const wxBitmap& bitmap)
 void RoundedStaticBitmap::SetImage(const wxImage& image)
 {
    mImage = image;
-   auto roundedImage = MakeRoundedImage(mImage, mRadius);
+   auto roundedImage = RoundedImage(mImage, mRadius);
    wxStaticBitmap::SetBitmap(wxBitmap(roundedImage));
 }
 
@@ -124,7 +125,7 @@ void RoundedStaticBitmap::SetRadius(int radius)
       return;
 
    mRadius = radius;
-   auto roundedImage = MakeRoundedImage(mImage, mRadius);
+   auto roundedImage = RoundedImage(mImage, mRadius);
    wxStaticBitmap::SetBitmap(wxBitmap(roundedImage));
 }
 
