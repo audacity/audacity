@@ -73,12 +73,12 @@
 #include "float_cast.h"
 #include "Mix.h"
 #include "Prefs.h"
-#include "libraries/lib-tags/Tags.h"
+#include "au3-tags/Tags.h"
 #include "Track.h"
 #include "wxFileNameWrapper.h"
 #include "Project.h"
 
-#include "libraries/lib-import-export/Export.h"
+#include "au3-import-export/Export.h"
 #include "BasicUI.h"
 
 #include <lame/lame.h>
@@ -87,9 +87,9 @@
 #include <id3tag.h>
 #endif
 
-#include "libraries/lib-import-export/ExportOptionsEditor.h"
-#include "libraries/lib-import-export/ExportPluginHelpers.h"
-#include "libraries/lib-import-export/ExportPluginRegistry.h"
+#include "au3-import-export/ExportOptionsEditor.h"
+#include "au3-import-export/ExportPluginHelpers.h"
+#include "au3-import-export/ExportPluginRegistry.h"
 
 #if defined(__WXMSW__)
 #include <winsock2.h>

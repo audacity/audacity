@@ -7,8 +7,8 @@
 #include <sndfile.h>
 
 #include "Mix.h"
-#include "libraries/lib-import-export/ExportOptionsEditor.h"
-#include <libraries/lib-import-export/ExportPlugin.h>
+#include "au3-import-export/ExportOptionsEditor.h"
+#include <au3-import-export/ExportPlugin.h>
 
 class ExportOptionsSFTypedEditor final : public ExportOptionsEditor
 {

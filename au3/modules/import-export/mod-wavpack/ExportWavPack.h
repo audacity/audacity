@@ -6,8 +6,8 @@
 
 #include "Mix.h"
 #include "SampleFormat.h"
-#include "libraries/lib-import-export/ExportOptionsEditor.h"
-#include "libraries/lib-import-export/ExportPlugin.h"
+#include "au3-import-export/ExportOptionsEditor.h"
+#include "au3-import-export/ExportPlugin.h"
 
 enum : int {
     OptionIDQuality = 0,
