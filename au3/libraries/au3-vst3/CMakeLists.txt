@@ -35,10 +35,7 @@ set( SOURCES
    >
 )
 set( LIBRARIES
-   vst3sdk::base
-   vst3sdk::pluginterfaces
-   vst3sdk::sdk_hosting
-   vst3sdk::sdk_common
+   vst_sdk_3
    lib-utility
    lib-effects-interface
    lib-files-interface
