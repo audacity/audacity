@@ -172,10 +172,6 @@ set(AU3_SRC
 if (AU_MODULE_EFFECTS_AUDIO_UNIT)
     add_subdirectory(${AU3_LIBRARIES}/au3-audio-unit au3-audio-unit)
 
-    set(AU3_DEF ${AU3_DEF}
-        USE_AUDIO_UNITS=1
-    )
-
     set(AU3_LINK ${AU3_LINK}
         "-framework AudioUnit"
         "-framework AudioToolbox"

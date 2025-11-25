@@ -11,7 +11,6 @@
 
 **********************************************************************/
 
-#if USE_AUDIO_UNITS
 #include "AudioUnitEffectsModule.h"
 
 #include "AudioUnitEffectBase.h"
@@ -173,11 +172,7 @@ void AudioUnitEffectsModule::Terminate()
 
 EffectFamilySymbol AudioUnitEffectsModule::GetOptionalFamilySymbol()
 {
-#if USE_AUDIO_UNITS
     return AUDIOUNITEFFECTS_FAMILY;
-#else
-    return {};
-#endif
 }
 
 void AudioUnitEffectsModule::AutoRegisterPlugins(PluginManagerInterface&)
@@ -296,5 +291,3 @@ void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
         component = AudioComponentFindNext(component, &desc);
     }
 }
-
-#endif

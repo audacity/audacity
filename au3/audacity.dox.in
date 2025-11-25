@@ -2068,7 +2068,6 @@ PREDEFINED             = AUDACITY_DLL_API \
                          USE_NYQUIST=1 \
                          USE_LADSPA=1 \
                          USE_VAMP=1 \
-                         USE_AUDIO_UNITS \
                          USE_MIDI=1 \
                          USE_LIBVORBIS=1 \
                          USE_LIBFLAC=1 \
