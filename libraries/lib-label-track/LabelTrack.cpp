@@ -47,7 +47,7 @@ for drawing different aspects of the label and its text box.
 
 const FileNames::FileType LabelTrack::SubripFiles{ XO("SubRip text file"), { wxT("srt") }, true };
 const FileNames::FileType LabelTrack::WebVTTFiles{ XO("WebVTT file"), { wxT("vtt") }, true };
-const FileNames::FileType LabelTrack::PodcastChaptersFiles{ XO("JSON file"), { wxT("json") }, true };
+const FileNames::FileType LabelTrack::PodcastChaptersFiles{ XO("Podcast Chapters"), { wxT("json") }, true };
 const FileNames::FileType LabelTrack::AllSupportedFiles{ XO("Supported label file"), { wxT("srt"), wxT("txt") }, true };
 
 EnumSetting<bool> LabelStyleSetting {
