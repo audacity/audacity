@@ -47,6 +47,7 @@ for drawing different aspects of the label and its text box.
 
 const FileNames::FileType LabelTrack::SubripFiles{ XO("SubRip text file"), { wxT("srt") }, true };
 const FileNames::FileType LabelTrack::WebVTTFiles{ XO("WebVTT file"), { wxT("vtt") }, true };
+const FileNames::FileType LabelTrack::PodcastChaptersFiles{ XO("Podcast Chapters JSON"), { wxT("json") }, true };
 const FileNames::FileType LabelTrack::AllSupportedFiles{ XO("Supported label file"), { wxT("srt"), wxT("txt") }, true };
 
 EnumSetting<bool> LabelStyleSetting {
@@ -603,6 +604,28 @@ void LabelStruct::Export(wxTextFile &file, LabelFormat format, int index) const
 
       break;
    }
+   case LabelFormat::PODCAST_CHAPTERS_JSON:
+   {
+      // Individual chapter object (called from LabelTrack::Export)
+      // Format: {"startTime": X.XXX, "title": "..."}
+      // Podcast 2.0 Chapters spec: https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#chapters
+      wxString escapedTitle = title;
+      escapedTitle.Replace(wxT("\\"), wxT("\\\\"));  // Must be first
+      escapedTitle.Replace(wxT("\""), wxT("\\\""));
+      escapedTitle.Replace(wxT("\n"), wxT("\\n"));
+      escapedTitle.Replace(wxT("\r"), wxT("\\r"));
+      escapedTitle.Replace(wxT("\t"), wxT("\\t"));
+      escapedTitle.Replace(wxT("\b"), wxT("\\b"));
+      escapedTitle.Replace(wxT("\f"), wxT("\\f"));
+      
+      wxString entry = wxString::Format(
+         wxT("   {\"startTime\": %s, \"title\": \"%s\"}"),  // 3 spaces per Audacity coding standards
+         Internat::ToString(getT0(), 3),
+         escapedTitle
+      );
+      file.AddLine(entry);
+      break;
+   }
    }
 }
 
@@ -679,11 +702,36 @@ void LabelTrack::Export(wxTextFile & f, LabelFormat format) const
       f.AddLine(wxT("WEBVTT"));
       f.AddLine(wxT(""));
    }
+   else if (format == LabelFormat::PODCAST_CHAPTERS_JSON) {
+      // JSON header
+      // Podcast 2.0 Chapters spec version 1.2.0
+      f.AddLine(wxT("{"));
+      f.AddLine(wxT("  \"version\": \"1.2.0\","));
+      f.AddLine(wxT("  \"chapters\": ["));
+   }
 
    // PRL: to do: export other selection fields
    int index = 0;
-   for (auto &labelStruct: mLabels)
-      labelStruct.Export(f, format, index++);
+   int numLabels = mLabels.size();
+   for (auto &labelStruct: mLabels) {
+      bool isLast = (index == numLabels - 1);
+      labelStruct.Export(f, format, index);
+      
+      // Add comma between JSON entries (not after last)
+      if (format == LabelFormat::PODCAST_CHAPTERS_JSON && !isLast) {
+         // Modify last line to add comma
+         wxString lastLine = f.GetLine(f.GetLineCount() - 1);
+         f.RemoveLine(f.GetLineCount() - 1);
+         f.AddLine(lastLine + wxT(","));
+      }
+      ++index;
+   }
+   
+   if (format == LabelFormat::PODCAST_CHAPTERS_JSON) {
+      // JSON footer
+      f.AddLine(wxT("  ]"));
+      f.AddLine(wxT("}"));
+   }
 }
 
 LabelFormat LabelTrack::FormatForFileName(const wxString & fileName)
@@ -693,6 +741,8 @@ LabelFormat LabelTrack::FormatForFileName(const wxString & fileName)
       format = LabelFormat::SUBRIP;
    } else if (fileName.Right(4).CmpNoCase(wxT(".vtt")) == 0) {
       format = LabelFormat::WEBVTT;
+   } else if (fileName.Right(5).CmpNoCase(wxT(".json")) == 0) {
+      format = LabelFormat::PODCAST_CHAPTERS_JSON;
    }
    return format;
 }
