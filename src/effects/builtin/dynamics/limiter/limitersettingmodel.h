@@ -10,6 +10,10 @@ namespace au::effects {
 class LimiterSettingModel : public EffectSettingModelImpl<LimiterEffect>
 {
 public:
-    LimiterSettingModel(QObject* parent = nullptr);
+    LimiterSettingModel(QObject* parent, int instanceId);
+};
+
+class LimiterSettingModelFactory : public BuiltinEffectSettingModelFactory<LimiterSettingModel>
+{
 };
 }

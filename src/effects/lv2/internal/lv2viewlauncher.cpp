@@ -6,17 +6,11 @@
 #include "libraries/lib-components/EffectInterface.h"
 #include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 
-#include "au3wrap/internal/wxtypes_convert.h"
-#include "log.h"
-
 using namespace au::effects;
 
 muse::Ret Lv2ViewLauncher::showEffect(const EffectInstanceId& instanceId) const
 {
-    muse::UriQuery uri(EFFECT_VIEWER_URI);
-    uri.addParam("instanceId", muse::Val(instanceId));
-    uri.addParam("effectFamily", muse::Val(EffectFamily::LV2));
-    return interactive()->openSync(uri).ret;
+    return doShowEffect(instanceId, EffectFamily::LV2);
 }
 
 void Lv2ViewLauncher::showRealtimeEffect(const RealtimeEffectStatePtr& state) const

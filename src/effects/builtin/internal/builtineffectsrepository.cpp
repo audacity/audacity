@@ -17,6 +17,7 @@
 
 #include "effects/effects_base/effectstypes.h"
 #include "effects/effects_base/internal/effectsutils.h"
+#include "effects/effects_base/view/effectsviewutils.h"
 
 #include "amplify/amplifyeffect.h"
 #include "amplify/amplifyviewmodel.h"
@@ -145,7 +146,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
     for (const PluginDescriptor& desc : PluginManager::Get().PluginsOfType(PluginTypeEffect)) {
         const auto& symbol = desc.GetSymbol();
         if (symbol == AmplifyEffect::Symbol) {
-            qmlRegisterType<AmplifyViewModel>("Audacity.Effects", 1, 0, "AmplifyViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(AmplifyViewModelFactory);
             regView(AmplifyEffect::Symbol, u"qrc:/amplify/AmplifyView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Amplify"),
@@ -154,7 +155,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     false
                     );
         } else if (symbol == NormalizeLoudnessEffect::Symbol) {
-            qmlRegisterType<NormalizeLoudnessViewModel>("Audacity.Effects", 1, 0, "NormalizeLoudnessViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(NormalizeLoudnessViewModelFactory);
             regView(NormalizeLoudnessEffect::Symbol, u"qrc:/loudness/NormalizeLoudnessView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Loudness normalization"),
@@ -163,7 +164,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     true
                     );
         } else if (symbol == GraphicEq::Symbol) {
-            qmlRegisterType<GraphicEqViewModel>("Audacity.Effects", 1, 0, "GraphicEqViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(GraphicEqViewModelFactory);
             qmlRegisterType<GraphicEqBandsModel>("Audacity.Effects", 1, 0, "GraphicEqBandsModel");
             regView(GraphicEq::Symbol, u"qrc:/graphiceq/GraphicEqView.qml");
             regMeta(desc,
@@ -173,7 +174,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     true
                     );
         } else if (symbol == ClickRemovalEffect::Symbol) {
-            qmlRegisterType<ClickRemovalViewModel>("Audacity.Effects", 1, 0, "ClickRemovalViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(ClickRemovalViewModelFactory);
             regView(ClickRemovalEffect::Symbol, u"qrc:/clickremoval/ClickRemovalView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Click Removal"),
@@ -183,8 +184,8 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     );
         } else if (symbol == CompressorEffect::Symbol) {
             hasDynamicRangeProcessor = true;
-            qmlRegisterType<CompressorViewModel>("Audacity.Effects", 1, 0, "CompressorViewModel");
-            qmlRegisterType<CompressorSettingModel>("Audacity.Effects", 1, 0, "CompressorSettingModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(CompressorViewModelFactory);
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(CompressorSettingModelFactory);
             regView(CompressorEffect::Symbol, u"qrc:/dynamics/compressor/CompressorView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Compressor"),
@@ -194,8 +195,8 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     );
         } else if (symbol == LimiterEffect::Symbol) {
             hasDynamicRangeProcessor = true;
-            qmlRegisterType<LimiterViewModel>("Audacity.Effects", 1, 0, "LimiterViewModel");
-            qmlRegisterType<LimiterSettingModel>("Audacity.Effects", 1, 0, "LimiterSettingModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(LimiterViewModelFactory);
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(LimiterSettingModelFactory);
             regView(LimiterEffect::Symbol, u"qrc:/dynamics/limiter/LimiterView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Limiter"),
@@ -204,7 +205,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     true
                     );
         } else if (symbol == NormalizeEffect::Symbol) {
-            qmlRegisterType<NormalizeViewModel>("Audacity.Effects", 1, 0, "NormalizeViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(NormalizeViewModelFactory);
             regView(NormalizeEffect::Symbol, u"qrc:/normalize/NormalizeView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Normalize"),
@@ -248,7 +249,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     true
                     );
         } else if (symbol == TruncateSilenceEffect::Symbol) {
-            qmlRegisterType<TruncateSilenceViewModel>("Audacity.Effects", 1, 0, "TruncateSilenceViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(TruncateSilenceViewModelFactory);
             regView(TruncateSilenceEffect::Symbol, u"qrc:/truncatesilence/TruncateSilenceView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Truncate Silence"),
@@ -265,7 +266,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     false
                     );
         } else if (symbol == ToneEffect::Symbol) {
-            qmlRegisterType<ToneViewModel>("Audacity.Effects", 1, 0, "ToneViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(ToneViewModelFactory);
             regView(ToneEffect::Symbol, u"qrc:/tonegen/ToneView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Tone"),
@@ -274,7 +275,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     false
                     );
         } else if (symbol == ReverbEffect::Symbol) {
-            qmlRegisterType<ReverbViewModel>("Audacity.Effects", 1, 0, "ReverbViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(ReverbViewModelFactory);
             regView(ReverbEffect::Symbol, u"qrc:/reverb/ReverbView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Reverb"),
@@ -283,7 +284,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     true
                     );
         } else if (symbol == NoiseGenerator::Symbol) {
-            qmlRegisterType<NoiseViewModel>("Audacity.Effects", 1, 0, "NoiseViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(NoiseViewModelFactory);
             regView(NoiseGenerator::Symbol, u"qrc:/noisegen/NoiseView.qml");
             regMeta(desc,
                     muse::mtrc("effects/noise", "Noise"),
@@ -292,7 +293,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     false
                     );
         } else if (symbol == NoiseReductionEffect::Symbol) {
-            qmlRegisterType<NoiseReductionViewModel>("Audacity.Effects", 1, 0, "NoiseReductionViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(NoiseReductionViewModelFactory);
             regView(NoiseReductionEffect::Symbol, u"qrc:/noisereduction/NoiseReductionView.qml");
             regMeta(desc,
                     muse::mtrc("effects/noisereduction", "Noise Reduction"),
@@ -301,7 +302,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     false
                     );
         } else if (symbol == DtmfGenerator::Symbol) {
-            qmlRegisterType<DtmfViewModel>("Audacity.Effects", 1, 0, "DtmfViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(DtmfViewModelFactory);
             regView(DtmfGenerator::Symbol, u"qrc:/dtmfgen/DtmfView.qml");
             regMeta(desc,
                     muse::mtrc("effects/dtmf", "DTMF tones"),
@@ -310,7 +311,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     false
                     );
         } else if (symbol == SilenceGenerator::Symbol) {
-            qmlRegisterType<SilenceViewModel>("Audacity.Effects", 1, 0, "SilenceViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(SilenceViewModelFactory);
             regView(SilenceGenerator::Symbol, u"qrc:/silencegen/SilenceView.qml");
             regMeta(desc,
                     muse::mtrc("effects/silence", "Silence"),

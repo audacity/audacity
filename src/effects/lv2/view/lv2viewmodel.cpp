@@ -58,8 +58,10 @@ std::shared_ptr<SuilHost> getSuilHost()
 // Inject factory hook to make LV2Effect capable of UI
 static LV2EffectsModule::Factory::SubstituteInUnique<LV2Effect> scope;
 
-Lv2ViewModel::Lv2ViewModel(QObject* parent)
-    : QObject(parent), m_handler(*this)
+Lv2ViewModel::Lv2ViewModel(QObject* parent, int instanceId, const QString& effectState)
+    : AbstractEffectViewModel(parent, instanceId), m_handler(*this),
+    m_effectState(!effectState.isEmpty() ? reinterpret_cast<RealtimeEffectState*>(effectState.toULongLong())->shared_from_this() : nullptr),
+    m_realtimeOutputs(dynamic_cast<const LV2EffectOutputs*>(m_effectState ? m_effectState->GetOutputs() : nullptr))
 {}
 
 Lv2ViewModel::~Lv2ViewModel()
@@ -107,41 +109,23 @@ unsigned uiIsSupported(const char* hostTypeUri,
 }
 }
 
-QString Lv2ViewModel::effectState() const
+void Lv2ViewModel::doInit()
 {
-    if (!m_effectState) {
-        return {};
-    }
-    return QString::number(reinterpret_cast<uintptr_t>(m_effectState.get()));
-}
-
-void Lv2ViewModel::setEffectState(const QString& state)
-{
-    if (state == effectState()) {
-        return;
-    }
-    m_effectState = reinterpret_cast<RealtimeEffectState*>(state.toULongLong())->shared_from_this();
-    m_realtimeOutputs = dynamic_cast<const LV2EffectOutputs*>(m_effectState->GetOutputs());
-    emit effectStateChanged();
-}
-
-void Lv2ViewModel::init()
-{
-    IF_ASSERT_FAILED(m_instanceId >= 0) {
+    IF_ASSERT_FAILED(instanceId() >= 0) {
         return;
     }
 
-    m_instance = std::dynamic_pointer_cast<LV2Instance>(instancesRegister()->instanceById(m_instanceId));
+    m_instance = std::dynamic_pointer_cast<LV2Instance>(instancesRegister()->instanceById(instanceId()));
     IF_ASSERT_FAILED(m_instance) {
         return;
     }
 
-    const EffectSettings* settings = instancesRegister()->settingsById(m_instanceId);
+    const EffectSettings* settings = instancesRegister()->settingsById(instanceId());
     IF_ASSERT_FAILED(settings) {
         return;
     }
 
-    const EffectId id = instancesRegister()->effectIdByInstanceId(m_instanceId);
+    const EffectId id = instancesRegister()->effectIdByInstanceId(instanceId());
     const LV2Effect* const effect = dynamic_cast<LV2Effect*>(EffectManager::Get().GetEffect(id.toStdString()));
     IF_ASSERT_FAILED(effect) {
         return;
@@ -150,7 +134,7 @@ void Lv2ViewModel::init()
     m_lilvPlugin = &effect->mPlug;
     m_ports = &effect->mPorts;
     m_portUIStates = std::make_unique<LV2PortUIStates>(m_instance->GetPortStates(), *m_ports);
-    m_settingsAccess = instancesRegister()->settingsAccessById(m_instanceId);
+    m_settingsAccess = instancesRegister()->settingsAccessById(instanceId());
 
     const auto sampleRate = playback()->audioOutput()->sampleRate();
     m_wrapper = m_instance->MakeWrapper(*settings, sampleRate, nullptr);
@@ -180,7 +164,7 @@ void Lv2ViewModel::deinit()
     }
 }
 
-void Lv2ViewModel::preview()
+void Lv2ViewModel::doStartPreview()
 {
     IF_ASSERT_FAILED(m_settingsAccess) {
         return;
@@ -427,20 +411,6 @@ void Lv2ViewModel::onIdle()
     }
 }
 
-int Lv2ViewModel::instanceId() const
-{
-    return m_instanceId;
-}
-
-void Lv2ViewModel::setInstanceId(int newInstanceId)
-{
-    if (m_instanceId == newInstanceId) {
-        return;
-    }
-    m_instanceId = newInstanceId;
-    emit instanceIdChanged();
-}
-
 QString Lv2ViewModel::title() const
 {
     return m_title;
@@ -500,6 +470,10 @@ void Lv2ViewModel::onSuilPortWrite(uint32_t port_index, uint32_t buffer_size, ui
                 if (currentValue != value) {
                     currentValue = value;
                     m_settingsChanged = true;
+                    // Is there a robust way of preventing the user from interacting with the UI
+                    // while previewing is active?
+                    // In the meantime, we just stop the preview.
+                    stopPreview();
                 }
                 return nullptr;
             });

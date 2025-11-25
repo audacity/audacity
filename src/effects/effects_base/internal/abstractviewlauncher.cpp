@@ -9,6 +9,15 @@ constexpr const char16_t* REALTIME_VIEWER_URI
     = u"audacity://effects/realtime_viewer?instanceId=%1&effectState=%2&sync=false&modal=false&floating=true";
 }
 
+muse::Ret AbstractViewLauncher::doShowEffect(int instanceId, EffectFamily family) const
+{
+    muse::UriQuery uri(EFFECT_VIEWER_URI);
+    uri.addParam("instanceId", muse::Val(instanceId));
+    uri.addParam("effectFamily", muse::Val(family));
+    const auto ret = interactive()->openSync(uri);
+    return ret.ret;
+}
+
 void AbstractViewLauncher::doShowRealtimeEffect(const RealtimeEffectStatePtr& state) const
 {
     IF_ASSERT_FAILED(state) {
@@ -19,6 +28,7 @@ void AbstractViewLauncher::doShowRealtimeEffect(const RealtimeEffectStatePtr& st
         LOGW() << "Could not get instance for " << state->GetID().ToStdString();
         return;
     }
+
     const auto instanceId = instance->id();
 
     const muse::UriQuery query{ muse::String(REALTIME_VIEWER_URI).arg(size_t(instanceId)).arg(size_t(state.get())) };

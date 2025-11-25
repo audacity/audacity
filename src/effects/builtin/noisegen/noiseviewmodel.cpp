@@ -8,6 +8,11 @@
 
 using namespace au::effects;
 
+NoiseViewModel::NoiseViewModel(QObject* parent, int instanceId)
+    : GeneratorEffectModel(parent, instanceId)
+{
+}
+
 bool NoiseViewModel::isApplyAllowed() const
 {
     return settings<NoiseSettings>().isApplyAllowed() && GeneratorEffectModel::isApplyAllowed();

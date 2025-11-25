@@ -10,18 +10,20 @@ import Audacity.Effects 1.0
 import Audacity.AudioUnit 1.0
 
 Rectangle {
-
     id: root
 
     // in
-    property alias instanceId: view.instanceId
+    required property int instanceId
     property alias sidePadding: view.sidePadding
     property alias topPadding: view.topPadding
     property alias bottomPadding: view.bottomPadding
     property alias minimumWidth: view.minimumWidth
 
     // out
-    property alias title: model.title
+    property bool title: model.title
+    property bool isPreviewing: model.isPreviewing
+
+    readonly property var model: AudioUnitViewModelFactory.createModel(root, root.instanceId)
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -31,7 +33,6 @@ Rectangle {
     implicitWidth: view.implicitWidth
     implicitHeight: view.implicitHeight
 
-
     Component.onCompleted: {
         model.init()
         view.init()
@@ -39,11 +40,15 @@ Rectangle {
     }
 
     Component.onDestruction: {
-        model.deinit();
+        model.deinit()
     }
 
-    function preview() {
-        model.preview()
+    function startPreview() {
+        model.startPreview()
+    }
+
+    function stopPreview() {
+        model.stopPreview()
     }
 
     function manage(parent) {
@@ -56,23 +61,19 @@ Rectangle {
 
     EffectManageMenu {
         id: manageMenuModel
-        instanceId: view.instanceId
+        instanceId: model.instanceId
     }
 
     ContextMenuLoader {
         id: menuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             manageMenuModel.handleMenuItem(itemId)
         }
     }
 
-    AudioUnitViewModel {
-        id: model
-        instanceId: view.instanceId
-    }
-
     AudioUnitView {
         id: view
+        instanceId: model.instanceId
     }
 }

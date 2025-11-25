@@ -41,6 +41,6 @@ public:
     virtual muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
                                     EffectSettings& settings) = 0;
 
-    virtual muse::Ret previewEffect(au3::Au3Project& project, Effect* effect, EffectSettings& settings) = 0;
+    virtual muse::Ret previewEffect(const EffectId& effectId, EffectSettings& settings) = 0;
 };
 }

@@ -20,7 +20,8 @@ class TruncateSilenceViewModel : public BuiltinEffectModel
     Q_PROPERTY(bool independentValue READ independentValue WRITE setIndependentValue NOTIFY independentValueChanged FINAL)
 
 public:
-    TruncateSilenceViewModel() = default;
+    TruncateSilenceViewModel(QObject* parent, int instanceId);
+    ~TruncateSilenceViewModel() override = default;
 
     double thresholdValue() const;
     void setThresholdValue(double newThreshold);
@@ -92,5 +93,9 @@ signals:
 
 private:
     void doReload() override;
+};
+
+class TruncateSilenceViewModelFactory : public EffectViewModelFactory<TruncateSilenceViewModel>
+{
 };
 }

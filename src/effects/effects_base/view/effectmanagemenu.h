@@ -10,7 +10,7 @@ namespace au::effects {
 class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
-    Q_PROPERTY(QString instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)
+    Q_PROPERTY(int instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)
     Q_PROPERTY(QVariantList presets READ presets NOTIFY presetsChanged FINAL)
     Q_PROPERTY(QString preset READ preset WRITE setPreset NOTIFY presetChanged FINAL)
     Q_PROPERTY(bool enabled READ enabled NOTIFY presetsChanged FINAL)
@@ -21,8 +21,8 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
 
 public:
 
-    QString instanceId_prop() const;
-    void setInstanceId_prop(const QString& newInstanceId);
+    int instanceId_prop() const;
+    void setInstanceId_prop(int newInstanceId);
     QVariantList presets();
     QString preset() const;
     void setPreset(QString presetId);
@@ -42,7 +42,7 @@ private:
 
     void reload(const EffectId& effectId, const EffectInstanceId& instanceId);
 
-    QString m_instanceId;
+    int m_instanceId = -1;
     QString m_currentPreset;
     QVariantList m_presets;
 };
