@@ -19,8 +19,6 @@ public:
     Q_INVOKABLE bool changeLabelTitle(const LabelKey& key, const QString& newTitle);
 
     Q_INVOKABLE void toggleTracksDataSelectionByLabel(const LabelKey& key);
-    Q_INVOKABLE void selectTracksDataFromLabelRange(const LabelKey& key);
-    Q_INVOKABLE void resetSelectedTracksData();
 
     Q_INVOKABLE bool moveSelectedLabels(const LabelKey& key, bool completed);
     Q_INVOKABLE bool stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed);
@@ -38,8 +36,11 @@ private:
 
     TrackLabelItem* labelItemByKey(const trackedit::LabelKey& k) const;
 
+    void selectTracksDataFromLabelRange(const LabelKey& key);
     void doSelectTracksData(const LabelKey& key);
     bool isTrackDataSelected() const;
+
+    void resetSelectedTracksData();
 
     muse::async::NotifyList<au::trackedit::Label> m_allLabelList;
     bool m_needToSelectTracksData = false;
