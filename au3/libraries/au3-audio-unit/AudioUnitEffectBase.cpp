@@ -16,7 +16,6 @@
 
 *//*******************************************************************/
 
-#if USE_AUDIO_UNITS
 #include "AudioUnitEffectBase.h"
 #include "AudioUnitInstance.h"
 #include "au3-module-manager/ConfigInterface.h"
@@ -601,5 +600,3 @@ void AudioUnitEffectBase::GetChannelCounts()
 
     return;
 }
-
-#endif

@@ -13,8 +13,6 @@
 #ifndef AUDACITY_AUDIOUNIT_EFFECT_BASE_H
 #define AUDACITY_AUDIOUNIT_EFFECT_BASE_H
 
-#if USE_AUDIO_UNITS
-
 #include "AudioUnitWrapper.h"
 #include "au3-effects/PerTrackEffect.h"
 
@@ -113,7 +111,5 @@ protected:
 
     bool mInteractive{ false };
 };
-
-#endif
 
 #endif

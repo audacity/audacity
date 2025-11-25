@@ -5,8 +5,6 @@ AudioUnit effect processing logic, minus user interface
 # Include AU3 compatibility macros
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
 
-if (USE_AUDIO_UNITS)
-
 set( SOURCES
    AudioUnitEffectBase.cpp
    AudioUnitEffectBase.h
@@ -28,4 +26,3 @@ audacity_library( lib-audio-unit "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
 
-endif ()

@@ -11,7 +11,6 @@
 
 **********************************************************************/
 
-#if USE_AUDIO_UNITS
 #include "AudioUnitInstance.h"
 
 #include <AudioToolbox/AudioUnitUtilities.h>
@@ -451,5 +450,3 @@ bool AudioUnitInstance::BypassEffect(bool bypass)
     }
     return !SetProperty(kAudioUnitProperty_BypassEffect, value);
 }
-
-#endif

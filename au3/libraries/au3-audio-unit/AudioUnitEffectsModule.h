@@ -13,8 +13,6 @@
 #ifndef AUDACITY_AUDIOUNIT_EFFECTS_MODULE_H
 #define AUDACITY_AUDIOUNIT_EFFECTS_MODULE_H
 
-#if USE_AUDIO_UNITS
-
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include "au3-utility/Callable.h"
 #include "au3-utility/GlobalVariable.h"
@@ -70,7 +68,5 @@ public:
 
     void LoadAudioUnitsOfType(OSType inAUType, PluginPaths& effects) const;
 };
-
-#endif
 
 #endif

@@ -13,8 +13,6 @@
 #ifndef AUDACITY_AUDIOUNIT_WRAPPER_H
 #define AUDACITY_AUDIOUNIT_WRAPPER_H
 
-#if USE_AUDIO_UNITS
-
 #include <optional>
 #include <map>
 #include <set>
@@ -217,7 +215,5 @@ private:
     static constexpr char idSep = wxT(',');
     static constexpr char idEnd = wxT('>');
 };
-
-#endif
 
 #endif

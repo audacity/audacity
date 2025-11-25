@@ -11,7 +11,6 @@
 
 **********************************************************************/
 
-#if USE_AUDIO_UNITS
 #include "AudioUnitWrapper.h"
 #include "au3-module-manager/ConfigInterface.h"
 #include "au3-components/EffectInterface.h"
@@ -507,5 +506,3 @@ bool AudioUnitWrapper::SetRateAndChannels(
     }
     return true;
 }
-
-#endif
