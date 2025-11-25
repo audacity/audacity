@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 16:27+0300\n"
+"POT-Creation-Date: 2025-11-25 18:02+0300\n"
 "PO-Revision-Date: 2025-07-25 16:00+0900\n"
 "Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (https://app.transifex.com/klyok/teams/690/ko/)\n"
@@ -11665,7 +11665,7 @@ msgid "Get our free OpenVino AI tools"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Explore free plugins for scuplting your audio"
+msgid "Explore free plugins for sculpting your audio"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
