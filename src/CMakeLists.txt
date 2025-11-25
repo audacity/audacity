@@ -898,10 +898,17 @@ set( SOURCES
           update/VersionPatch.h
           update/UpdateDataParser.h
           update/UpdateDataParser.cpp
+          update/UpdateDataStructures.h
           update/UpdateManager.h
           update/UpdateManager.cpp
           update/UpdateNoticeDialog.h
           update/UpdateNoticeDialog.cpp
+          update/UpdateNotificationDialog.h
+          update/UpdateNotificationDialog.cpp
+          update/CustomNotificationRegistry.h
+          update/CustomNotificationRegistry.cpp
+          update/Audacity40PromoDialog.h
+          update/Audacity40PromoDialog.cpp
           update/UpdatePopupDialog.h
           update/UpdatePopupDialog.cpp
           prefs/ApplicationPrefs.h

@@ -112,22 +112,40 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
                          .Format(
                             mVersionPatch.version.GetString() + versionPostfix)
                          .Translation()
-        << wxT("</h3><h5>")
+        << wxT("</h3>");
+
+    // Display description if available
+    if (!mVersionPatch.description.IsEmpty())
+    {
+        informationStr << wxT("<p>") << mVersionPatch.description << wxT("</p>");
+    }
+
+    informationStr << wxT("<h5>")
         << XC("Changelog", "update dialog")
         << wxT("</h5><p>");
 
     informationStr << wxT("<ul>");
-    for (auto& logLine : mVersionPatch.changelog)
+    for (const auto& item : mVersionPatch.changelog)
     {
         informationStr << wxT("<li>");
-        // We won't to translate downloaded text.
-        informationStr << logLine;
+
+        // Display version if present
+        if (!item.version.IsEmpty())
+        {
+            informationStr << wxT("<b>From ") << item.version << wxT(":</b> ");
+        }
+
+        // Display changelog text
+        informationStr << item.text;
         informationStr << wxT("</li>");
     }
     informationStr << wxT("</ul></p>");
 
     informationStr << wxT("<p>");
-    informationStr << wxT("<a href = \"https://github.com/audacity/audacity/releases\">");
+    wxString releaseUrl = mVersionPatch.releaseNotesUrl.IsEmpty()
+        ? wxString("https://github.com/audacity/audacity/releases")
+        : mVersionPatch.releaseNotesUrl;
+    informationStr << wxT("<a href = \"") << releaseUrl << wxT("\">");
     informationStr << XC("Read more on GitHub", "update dialog");
     informationStr << wxT("</a>");
     informationStr << wxT("</p>");

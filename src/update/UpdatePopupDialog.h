@@ -12,7 +12,7 @@
 #include "wxPanelWrapper.h"
 #include "wx/string.h"
 
-#include "VersionPatch.h"
+#include "UpdateDataStructures.h"
 
 class HtmlWindow;
 class wxWindow;
