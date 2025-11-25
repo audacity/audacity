@@ -374,29 +374,16 @@ muse::Ret Au3TracksInteraction::pasteLabels(const std::vector<Au3TrackDataPtr>& 
     auto prj = globalContext()->currentTrackeditProject();
     auto& tracks = Au3TrackList::Get(projectRef());
 
-    Au3LabelTrack* targetLabelTrack = nullptr;
+    const bool newTracksNeeded = dstTracksIds.size() != copiedData.size();
 
-    for (const auto& trackId : dstTracksIds) {
-        Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId));
-        if (labelTrack) {
-            targetLabelTrack = labelTrack;
-            break;
+    for (size_t i = 0; i < dstTracksIds.size(); ++i) {
+        Au3LabelTrack* targetLabelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(dstTracksIds[i]));
+
+        if (!targetLabelTrack) {
+            targetLabelTrack = ::LabelTrack::Create(tracks);
+            prj->notifyAboutTrackAdded(DomConverter::labelTrack(targetLabelTrack));
         }
-    }
 
-    if (!targetLabelTrack) {
-        for (auto lt : tracks.Any<Au3LabelTrack>()) {
-            targetLabelTrack = lt;
-            break;
-        }
-    }
-
-    if (!targetLabelTrack) {
-        targetLabelTrack = ::LabelTrack::Create(tracks);
-        prj->notifyAboutTrackAdded(DomConverter::labelTrack(targetLabelTrack));
-    }
-
-    for (size_t i = 0; i < copiedData.size(); ++i) {
         const auto trackToPaste = std::static_pointer_cast<Au3LabelTrack>(copiedData.at(i)->track());
         IF_ASSERT_FAILED(trackToPaste) {
             continue;
@@ -415,12 +402,23 @@ muse::Ret Au3TracksInteraction::pasteLabels(const std::vector<Au3TrackDataPtr>& 
                 prj->notifyAboutLabelAdded(DomConverter::label(targetLabelTrack, &labelsAfter[labelIdx]));
             }
         }
+
+        prj->notifyAboutTrackChanged(DomConverter::track(targetLabelTrack));
     }
 
-    prj->notifyAboutTrackChanged(DomConverter::track(targetLabelTrack));
+    if (newTracksNeeded) {
+        // remove already pasted elements from the clipboard and paste the rest into the new tracks
+        std::vector<Au3TrackDataPtr> remainingData(copiedData.begin() + dstTracksIds.size(), copiedData.end());
+        const auto tracksIdsToSelect = pasteIntoNewTracks(remainingData);
+        TrackIdList allDstTracksIds = dstTracksIds;
+        allDstTracksIds.insert(allDstTracksIds.end(), tracksIdsToSelect.begin(), tracksIdsToSelect.end());
 
-    selectionController()->setSelectedTracks({ targetLabelTrack->GetId() });
-    selectionController()->setFocusedTrack(targetLabelTrack->GetId());
+        selectionController()->setSelectedTracks(allDstTracksIds);
+        selectionController()->setFocusedTrack(allDstTracksIds.front());
+    } else {
+        selectionController()->setSelectedTracks(dstTracksIds);
+        selectionController()->setFocusedTrack(dstTracksIds.front());
+    }
 
     return muse::make_ok();
 }
