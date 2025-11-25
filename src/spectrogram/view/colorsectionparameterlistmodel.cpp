@@ -11,23 +11,14 @@
 
 namespace au::spectrogram {
 ColorSectionParameterListModel::ColorSectionParameterListModel(QObject* parent)
-    : QAbstractListModel(parent) {}
+    : AbstractSectionParametersListModel(parent) {}
 
-void ColorSectionParameterListModel::setSettingsModel(AbstractSpectrogramSettingsModel* model)
+void ColorSectionParameterListModel::onSettingsModelSet(AbstractSpectrogramSettingsModel&)
 {
-    if (m_settingsModel == model) {
-        return;
-    }
-    m_settingsModel = model;
-
-    if (m_settingsModel) {
-        const QList<int> roles { ControlCurrentValueRole };
-        CONNECT_SETTING_CHANGED(colorGainDbChanged_2, Control::ColorGain, roles);
-        CONNECT_SETTING_CHANGED(colorRangeDbChanged_3, Control::ColorRange, roles);
-        CONNECT_SETTING_CHANGED(colorHighBoostDbPerDecChanged_4, Control::ColorHighBoost, roles);
-    }
-
-    emit settingsModelChanged();
+    const QList<int> roles { ControlCurrentValueRole };
+    CONNECT_SETTING_CHANGED(colorGainDbChanged_2, Control::ColorGain, roles);
+    CONNECT_SETTING_CHANGED(colorRangeDbChanged_3, Control::ColorRange, roles);
+    CONNECT_SETTING_CHANGED(colorHighBoostDbPerDecChanged_4, Control::ColorHighBoost, roles);
 }
 
 QVariant ColorSectionParameterListModel::data(const QModelIndex& index, int role) const
@@ -40,6 +31,7 @@ QVariant ColorSectionParameterListModel::data(const QModelIndex& index, int role
     switch (role) {
     case ControlLabelRole: return controlLabel(control);
     case ControlUnitsRole: return controlUnits(control);
+    case ControlWidthRole: return controlWidth(control);
     case ControlMinValueRole: return controlMinValue(control);
     case ControlMaxValueRole: return controlMaxValue(control);
     case ControlCurrentValueRole: return controlCurrentValue(control);
@@ -124,11 +116,27 @@ QString ColorSectionParameterListModel::controlUnits(Control control) const
     }
 }
 
+int ColorSectionParameterListModel::controlWidth(Control control) const
+{
+    switch (control) {
+    case ColorGain:
+        return controlWidthS();
+    case ColorRange:
+        return controlWidthS();
+    case ColorHighBoost:
+        return controlWidthM();
+    default:
+        assert(false);
+        return 0;
+    }
+}
+
 QHash<int, QByteArray> ColorSectionParameterListModel::roleNames() const
 {
     return {
         { ControlLabelRole, "colorControlLabel" },
         { ControlUnitsRole, "colorControlUnits" },
+        { ControlWidthRole, "colorControlWidth" },
         { ControlMinValueRole, "colorControlMinValue" },
         { ControlMaxValueRole, "colorControlMaxValue" },
         { ControlCurrentValueRole, "colorControlCurrentValue" }

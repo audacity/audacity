@@ -20,6 +20,7 @@ SpectrogramBaseSection {
 
         model: AlgorithmSectionParameterListModel {
             settingsModel: root.settingsModel
+            columnWidth: root.prefsColumnWidth
         }
 
         spacing: root.mediumSpacing

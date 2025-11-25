@@ -13,6 +13,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramconfiguration.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/view/abstractsectionparameterslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/abstractsectionparameterslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/abstractspectrogramsettingsmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/abstractspectrogramsettingsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/algorithmsectionparameterlistmodel.cpp

@@ -14,12 +14,6 @@
 
 namespace au::spectrogram {
 namespace {
-constexpr int prefsColumnWidth = 68;
-constexpr int prefsColumnSpacing = 8;
-
-constexpr int smallControlWidth = prefsColumnWidth;
-constexpr int largeControlWidth = 3 * prefsColumnWidth + 2 * prefsColumnSpacing;
-
 const Table<SpectrogramAlgorithm> algorithmTable {
     { 0, SpectrogramAlgorithm::Frequencies, muse::qtrc("spectrogram/preferences", "Frequencies") },
     { 1, SpectrogramAlgorithm::Reassignment, muse::qtrc("spectrogram/preferences", "Reassignment") },
@@ -65,24 +59,15 @@ const Table<int> zeroPaddingFactorTable {
 } // namespace
 
 AlgorithmSectionParameterListModel::AlgorithmSectionParameterListModel(QObject* parent)
-    : QAbstractListModel(parent) {}
+    : AbstractSectionParametersListModel(parent) {}
 
-void AlgorithmSectionParameterListModel::setSettingsModel(AbstractSpectrogramSettingsModel* model)
+void AlgorithmSectionParameterListModel::onSettingsModelSet(AbstractSpectrogramSettingsModel&)
 {
-    if (m_settingsModel == model) {
-        return;
-    }
-    m_settingsModel = model;
-
-    if (m_settingsModel) {
-        const QList<int> roles { ControlCurrentIndexRole, ControlCurrentValueRole };
-        CONNECT_SETTING_CHANGED(algorithmChanged_7, Control::Algorithm, roles);
-        CONNECT_SETTING_CHANGED(windowSizeChanged_9, Control::WindowSize, roles);
-        CONNECT_SETTING_CHANGED(windowTypeChanged_8, Control::WindowType, roles);
-        CONNECT_SETTING_CHANGED(zeroPaddingFactorChanged_10, Control::ZeroPaddingFactor, roles);
-    }
-
-    emit settingsModelChanged();
+    const QList<int> roles { ControlCurrentIndexRole, ControlCurrentValueRole };
+    CONNECT_SETTING_CHANGED(algorithmChanged_7, Control::Algorithm, roles);
+    CONNECT_SETTING_CHANGED(windowSizeChanged_9, Control::WindowSize, roles);
+    CONNECT_SETTING_CHANGED(windowTypeChanged_8, Control::WindowType, roles);
+    CONNECT_SETTING_CHANGED(zeroPaddingFactorChanged_10, Control::ZeroPaddingFactor, roles);
 }
 
 QVariant AlgorithmSectionParameterListModel::data(const QModelIndex& index, int role) const
@@ -135,10 +120,10 @@ QString AlgorithmSectionParameterListModel::controlLabel(Control control) const
 int AlgorithmSectionParameterListModel::controlWidth(Control control) const
 {
     switch (control) {
-    case Algorithm: return largeControlWidth;
-    case WindowSize: return largeControlWidth;
-    case WindowType: return largeControlWidth;
-    case ZeroPaddingFactor: return smallControlWidth;
+    case Algorithm: return controlWidthL();
+    case WindowSize: return controlWidthL();
+    case WindowType: return controlWidthL();
+    case ZeroPaddingFactor: return controlWidthS();
     default:
         assert(false);
         return 0;
