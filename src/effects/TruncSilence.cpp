@@ -156,6 +156,10 @@ bool EffectTruncSilence::TransferDataFromWindow(EffectSettings &)
    
    if (!anyLocationSelected)
    {
+      AudacityMessageBox(
+         XO("At least one location option must be selected.\n\nPlease select at least one of:\n• Remove silence from beginning\n• Remove silence from middle\n• Remove silence from end"),
+         XO("Truncate Silence"),
+         wxOK | wxICON_INFORMATION);
       EffectEditor::EnableApply(mUIParent, false);
       return false;
    }

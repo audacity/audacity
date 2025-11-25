@@ -85,6 +85,10 @@ static const size_t DEF_BlendFrameCount = 100;
 // detecting silence repeatedly in low-frequency sounds.
 static const double DEF_MinTruncMs = 0.001;
 
+// Tolerance for boundary detection (1ms) - handles floating-point precision
+// when determining if silence is at track start/end
+static const double DEF_BoundaryTolerance = 0.001;
+
 // Typical fraction of total time taken by detection (better to guess low)
 const double detectFrac = 0.4;
 
@@ -388,8 +392,8 @@ bool TruncSilenceBase::DoRemoval(
    
    for (const auto& region : silences)
    {
-      bool isAtStart = (region.start <= trackStart + 0.001);
-      bool isAtEnd = (region.end >= trackEnd - 0.001);
+      bool isAtStart = (region.start <= trackStart + DEF_BoundaryTolerance);
+      bool isAtEnd = (region.end >= trackEnd - DEF_BoundaryTolerance);
       bool isInMiddle = !isAtStart && !isAtEnd;
       
       bool shouldInclude = false;
