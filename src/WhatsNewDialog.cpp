@@ -184,7 +184,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
       };
 
       snapshots.push_back(CarouselSnapshot(
-         XXO("Explore free plugins for scuplting your audio"),
+         XXO("Explore free plugins for sculpting your audio"),
          RoundedImage(Rescale(LoadEmbeddedPNG(MuseHubPromo_png, MuseHubPromo_png_len), width, height), 12),
          displayMuseHub,
          XXO("View free plugins"),
