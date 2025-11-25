@@ -11,6 +11,7 @@
 
 #include "../FFmpeg.h"
 #include "Internat.h"
+#include "BasicUI.h"
 #include "ShuttleGui.h"
 #include "LibraryPrefs.h"
 #include "AudacityMessageBox.h"
@@ -76,8 +77,7 @@ void AddControls( ShuttleGui &S )
                        wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
          if (pDownButton)
             pDownButton->Bind(wxEVT_BUTTON, [pState](wxCommandEvent&){
-               HelpSystem::ShowHelp(pState->parent,
-                  wxT("FAQ:Installing_the_FFmpeg_Import_Export_Library"), true);
+               BasicUI::OpenInDefaultBrowser(wxT("https://support.audacityteam.org/basics/installing-ffmpeg"));
             });
       }
       S.EndTwoColumn();
