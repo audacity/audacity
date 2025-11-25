@@ -316,12 +316,8 @@ TrackItemsContainer {
             labelsModel.endEditItem(itemKey)
         }
 
-        function onItemReleaseRequested(itemKey, clickCount) {
-            if (clickCount % 2 === 0) {
-                labelsModel.selectTracksDataFromLabelRange(itemKey)
-            } else {
-                labelsModel.resetSelectedTracksData()
-            }
+        function onItemReleaseRequested(itemKey) {
+            labelsModel.toggleTracksDataSelectionByLabel(itemKey)
         }
 
         function onCancelItemDragEditRequested(itemKey) {

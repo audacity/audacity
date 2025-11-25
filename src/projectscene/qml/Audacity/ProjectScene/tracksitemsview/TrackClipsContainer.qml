@@ -530,7 +530,7 @@ TrackItemsContainer {
             clipsModel.endEditItem(itemKey)
         }
 
-        function onItemReleaseRequested(itemKey, clickCount) {}
+        function onItemReleaseRequested(itemKey) {}
 
         function onCancelItemDragEditRequested(itemKey) {
             if (clipsModel.cancelItemDragEdit(itemKey)) {

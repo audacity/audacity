@@ -427,7 +427,6 @@ Rectangle {
 
             hoverEnabled: true
 
-            property int itemClickCount: 0
             property var lastItemClickKey: null
             property bool itemWasMoved: false
 
@@ -495,14 +494,8 @@ Rectangle {
                     return
                 }
 
-                if (lastItemClickKey && lastItemClickKey === root.hoveredItemKey) {
-                    itemClickCount++
-                } else {
-                    itemClickCount = 0
-                }
-
                 if (!itemWasMoved) {
-                    tracksItemsView.itemReleaseRequested(hoveredItemKey, itemClickCount)
+                    tracksItemsView.itemReleaseRequested(hoveredItemKey)
                     itemWasMoved = false
                 }
 
@@ -609,7 +602,7 @@ Rectangle {
                 signal itemMoveRequested(var itemKey, bool completed)
                 signal itemStartEditRequested(var itemKey)
                 signal itemEndEditRequested(var itemKey)
-                signal itemReleaseRequested(var itemKey, int clickCount)
+                signal itemReleaseRequested(var itemKey)
                 signal cancelItemDragEditRequested(var itemKey)
                 signal startAutoScroll
                 signal stopAutoScroll

@@ -275,6 +275,10 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
 
 void TrackLabelsListModel::selectLabel(const LabelKey& key)
 {
+    if (key.key.trackId != m_trackId) {
+        return;
+    }
+
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     if (modifiers.testFlag(Qt::ShiftModifier)) {
@@ -289,12 +293,39 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
     }
 
     m_isTracksDataSelected = false;
+    m_needToSelectTracksData = false;
 }
 
 void TrackLabelsListModel::resetSelectedLabels()
 {
     clearSelectedItems();
     selectionController()->resetSelectedLabels();
+}
+
+void TrackLabelsListModel::toggleTracksDataSelectionByLabel(const LabelKey& key)
+{
+    if (key.key.trackId != m_trackId) {
+        return;
+    }
+
+    if (!m_needToSelectTracksData) {
+        m_needToSelectTracksData = true;
+        return;
+    }
+
+    TrackLabelItem* labelItem = labelItemByKey(key.key);
+    if (!labelItem || labelItem->isEditing()) {
+        return;
+    }
+
+    TrackIdList selectedTracksIds = selectionController()->selectedTracks();
+
+    if (labelItem->selected() && selectedTracksIds.size() == 1 && selectedTracksIds.front() == key.key.trackId) {
+        selectTracksDataFromLabelRange(key);
+    } else {
+        resetSelectedTracksData();
+        selectionController()->setSelectedTracks({ key.key.trackId }, true);
+    }
 }
 
 void TrackLabelsListModel::selectTracksDataFromLabelRange(const LabelKey& key)

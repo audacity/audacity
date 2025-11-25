@@ -18,6 +18,7 @@ public:
     Q_INVOKABLE void resetSelectedLabels();
     Q_INVOKABLE bool changeLabelTitle(const LabelKey& key, const QString& newTitle);
 
+    Q_INVOKABLE void toggleTracksDataSelectionByLabel(const LabelKey& key);
     Q_INVOKABLE void selectTracksDataFromLabelRange(const LabelKey& key);
     Q_INVOKABLE void resetSelectedTracksData();
 
@@ -41,5 +42,6 @@ private:
 
     muse::async::NotifyList<au::trackedit::Label> m_allLabelList;
     bool m_isTracksDataSelected = false;
+    bool m_needToSelectTracksData = false;
 };
 }
