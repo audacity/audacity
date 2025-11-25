@@ -7,9 +7,8 @@ import QtQuick.Controls 2.15
 import Muse.UiComponents 1.0
 
 import Audacity.Spectrogram 1.0
-import Preferences // SpectrogramBaseSection
 
-SpectrogramBaseSection {
+TrackSpectrogramBaseSection {
     id: root
 
     required property TrackSpectrogramSettingsModel settingsModel

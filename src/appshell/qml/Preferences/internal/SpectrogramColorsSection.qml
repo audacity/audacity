@@ -23,6 +23,7 @@ SpectrogramBaseSection {
         Repeater {
             model: ColorSectionParameterListModel {
                 settingsModel: root.settingsModel
+                columnWidth: root.prefsColumnWidth
             }
 
             IncrementalPropertyControlWithTitle {

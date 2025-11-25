@@ -9,7 +9,7 @@ import Muse.UiComponents 1.0
 BaseSection {
     id: root
 
-    readonly property int prefsColumnWidth: 68
+    property int prefsColumnWidth: 68
     readonly property int prefsColumnSpacing: 8
 
     readonly property int smallControlWidth: prefsColumnWidth

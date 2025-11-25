@@ -7,9 +7,8 @@ import QtQuick.Controls 2.15
 import Muse.UiComponents 1.0
 
 import Audacity.Spectrogram 1.0
-import Preferences // ComboBoxWithTitle
 
-SpectrogramBaseSection {
+TrackSpectrogramBaseSection {
     id: root
 
     title: qsTrc("appshell/preferences/spectrogram", "Colors")
@@ -24,6 +23,7 @@ SpectrogramBaseSection {
         Repeater {
             model: ColorSectionParameterListModel {
                 settingsModel: root.settingsModel
+                columnWidth: root.prefsColumnWidth
             }
 
             Row {

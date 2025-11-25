@@ -3,26 +3,15 @@
  */
 #pragma once
 
-#include <QAbstractListModel>
+#include "abstractsectionparameterslistmodel.h"
+#include "abstractspectrogramsettingsmodel.h"
 
 namespace au::spectrogram {
-class AbstractSpectrogramSettingsModel;
-
-class AlgorithmSectionParameterListModel : public QAbstractListModel
+class AlgorithmSectionParameterListModel : public AbstractSectionParametersListModel
 {
-    Q_OBJECT
-
-    Q_PROPERTY(AbstractSpectrogramSettingsModel * settingsModel READ settingsModel WRITE setSettingsModel NOTIFY settingsModelChanged)
-
 public:
     explicit AlgorithmSectionParameterListModel(QObject* parent = nullptr);
     ~AlgorithmSectionParameterListModel() override = default;
-
-    AbstractSpectrogramSettingsModel* settingsModel() const { return m_settingsModel; }
-    void setSettingsModel(AbstractSpectrogramSettingsModel* model);
-
-signals:
-    void settingsModelChanged();
 
 private:
     enum Control {
@@ -38,6 +27,8 @@ private:
     QHash<int, QByteArray> roleNames() const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
+    void onSettingsModelSet(AbstractSpectrogramSettingsModel& model) override;
+
     enum Roles {
         ControlLabelRole = Qt::UserRole + 1,
         ControlWidthRole,
@@ -51,7 +42,5 @@ private:
     QVariantList controlPossibleValues(Control) const;
     int controlCurrentIndex(Control) const;
     int controlCurrentValue(Control) const;
-
-    AbstractSpectrogramSettingsModel* m_settingsModel = nullptr;
 };
 }
