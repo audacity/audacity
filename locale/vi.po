@@ -11,9 +11,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.5\n"
+"Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-04 17:39+0200\n"
+"POT-Creation-Date: 2025-11-25 16:27+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: brad freedom <brad.freedom@gmail.com>, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/audacity/teams/164520/vi/)\n"
@@ -1348,6 +1348,17 @@ msgstr "Wahwah - Hiệu ứng ghita điện "
 #: libraries/lib-builtin-effects/WahWahBase.cpp
 msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
 msgstr "Các thay đổi chất lượng âm điệu nhanh, tương tự những âm thanh guitar rất phổ biến trong thập niên 70"
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+#, fuzzy
+msgctxt "cloud sync"
+msgid "Error importing cloud audio"
+msgstr "Có lỗi khi nhập"
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+msgctxt "update dialog"
+msgid "Can't download cloud audio"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -4220,6 +4231,10 @@ msgid "Pitch (EAC)"
 msgstr "Độ cao của âm (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Wavelet (1/6 Octave Hann)"
+msgstr ""
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
 msgstr "Tần số lớn nhất phải lớn hơn 100 Hz"
 
@@ -6992,6 +7007,7 @@ msgid "New script"
 msgstr "Tập lệnh mới"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Open"
 msgstr "&Mở"
@@ -7126,6 +7142,7 @@ msgid "Go to previous S-expr"
 msgstr "Đi tới S-expr ở dưới"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Next"
 msgstr "Tiếp theo"
@@ -7157,6 +7174,28 @@ msgstr "Đang đợi audio.com"
 msgid "An action on audio.com is required before you can continue. You can cancel this operation."
 msgstr "Một thao tác trên audio.com đang được xử lý trước khi bạn có thể tiếp tục. bạn có thể huỷ bỏ quá trình này."
 
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "Mở từ audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#, fuzzy
+msgid "Downloading audio"
+msgstr "Đang tải về %s"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to download audio from cloud.\n"
+"%s"
+msgstr "Không thể mã hóa thiết lập sẵn từ \"%s\""
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+msgid "Downloaded audio file does not exist."
+msgstr ""
+
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
@@ -7169,11 +7208,6 @@ msgid "Generating audio preview..."
 msgstr "Đang tạo bản xem trước âm thanh.."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "Mở từ audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
 msgstr "Đang đồng bộ dự án"
 
@@ -7182,16 +7216,27 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Bản xem trước có thể được tải lên chỉ áp dụng cho các dự án ở trên đám mây"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open &From Cloud"
+msgstr "Mở từ đám mây"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open Cloud &Project..."
+msgstr "Mở Dụ Ấn..."
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open Cloud &Audio File..."
+msgstr "&Tải lên đám mây bản xem trước âm thanh"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
 msgstr "Lưu &vào đám mây"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "&Update Cloud Audio Preview"
 msgstr "&Tải lên đám mây bản xem trước âm thanh"
-
-#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open Fro&m Cloud..."
-msgstr "Mở t&ừ đám mây"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "S&hare Audio..."
@@ -7324,6 +7369,82 @@ msgstr "Đăng Xuất"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
 msgstr "Không hiển thị lại"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Open cloud audio file"
+msgstr "&Tải lên đám mây bản xem trước âm thanh"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "less than 1 minute"
+msgstr "còn lại chưa đến 1 phút"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy, c-format
+msgid "one minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "%dPhút trước"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "%dgiờ trước"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Title"
+msgstr "Tiêu đề của track"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Author"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Tags"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Created"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Failed to authorize account"
+msgstr "Không thể ủy quyền tài khoản"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Loading audio list..."
+msgstr "Đang tải lên audio..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Failed to get audio list"
+msgstr "Không thể tải danh sách dự án"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Search:"
+msgstr "Tìm kiếm:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Prev"
+msgstr "Xem trước"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr "Xem trên audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "Page %d of %d"
+msgstr "Trang %d trên %d"
 
 #. i18n-hint: A title that is shown on the first project save that allows the
 #. user to select Cloud or local save.
@@ -7634,28 +7755,14 @@ msgid "Open from Cloud"
 msgstr "Mở từ đám mây"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "less than 1 minute"
-msgstr "còn lại chưa đến 1 phút"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "one minutes ago"
 msgid_plural "%d minutes ago"
 msgstr[0] "%dPhút trước"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "one hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "%dgiờ trước"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Modified"
 msgstr "Đã sửa đổi"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Failed to authorize account"
-msgstr "Không thể ủy quyền tài khoản"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Loading projects list..."
@@ -7668,23 +7775,6 @@ msgstr "Không thể tải danh sách dự án"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Cloud saved projects"
 msgstr "Các dự án đã lưu trên đám mây"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Search:"
-msgstr "Tìm kiếm:"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Prev"
-msgstr "Xem trước"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "View in audio.com"
-msgstr "Xem trên audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "Page %d of %d"
-msgstr "Trang %d trên %d"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Anyone will be able to listen to this audio."
@@ -10816,7 +10906,7 @@ msgstr "Hiệu ứng thời gian thực cho %s"
 msgid "Realtime Effects"
 msgstr "Hiệu ứng thời gian thực"
 
-#: src/RealtimeEffectPanel.cpp
+#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
 msgid "Watch video"
 msgstr "Xem video"
 
@@ -11534,129 +11624,29 @@ msgid "Calibration Complete"
 msgstr "Quá trinh đo đạt hoàn tất"
 
 #: src/WhatsNewDialog.cpp
-msgid "<font color=\"#000000\">"
-msgstr "<font color=\"#000000\">"
-
-#: src/WhatsNewDialog.cpp
-msgid "Sign up to Audacity's cloud saving platform"
-msgstr "Đăng ký nền tảng lưu trữ đám mây của Audacity"
-
-#: src/WhatsNewDialog.cpp
-msgid "and access your projects from anywhere!"
-msgstr "và truy cập dự án của bạn từ mọi nơi!"
-
-#: src/WhatsNewDialog.cpp
-msgid "</font>"
-msgstr "</font>"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "What's new in Audacity %s"
-msgstr "Các tính năng mới trong Audacity %s"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr "Hãy xem [[%s|release video]] hoặc đọc [[%s|changelog]] để tìm hiểu thêm về những gì chúng tôi đã đưa vào bản phát hành mới nhất!</p>"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "You can also read the [[%s|changelog]]</p>"
-msgstr "Bạn cũng có thể đọc [[%s|changelog]]</p>"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get free plugins & sounds"
-msgstr "Nhận plugin và âm thanh miễn phí"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr "<p>Hãy xem Ứng dụng của chúng tôi [[%s|Muse Hub app]] để biết nhiều plugin âm thanh dành cho người dùng Audacity</p>"
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr "Hiệu ứng xử lý giọng nói giúp tăng cường độ trong trẻo và chiều sâu của giọng nói."
-
-#: src/WhatsNewDialog.cpp
-msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr "Một plugin tạo hiệu ứng hồi âm reverb đa năng cho hiệu ứng âm thanh rộng rãi, tự nhiên."
-
-#: src/WhatsNewDialog.cpp
-msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr "Một plugin mô phỏng hiệu ứng và guitar amp cho âm thanh chân thực và có thể tùy chỉnh."
-
-#: src/WhatsNewDialog.cpp
-msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr "Một plugin tạo hiệu ứng hồi âm reverb có khả năng thích ứng với động lực của bản nhạc để tạo nên cảnh quan âm thanh sống động."
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr "Một plugin đa hiệu ứng giọng hát giúp tăng cường chất lượng giọng hát để mang lại kết quả chuyên nghiệp."
-
-#: src/WhatsNewDialog.cpp
-msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr "Một plugin hiệu ứng âm trầm được thiết kế để mang lại âm thanh trầm mạnh mẽ, rõ ràng."
-
-#: src/WhatsNewDialog.cpp
-msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr "Một plugin giúp âm thanh trở nên hoàn hảo, tăng cường độ ấm và độ trong trẻo."
-
-#: src/WhatsNewDialog.cpp
-msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr "Một plugin tăng cường giọng nói tuyệt vời mang lại hiệu ứng giọng nói chuyên nghiệp, rõ ràng."
-
-#: src/WhatsNewDialog.cpp
-msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr "Một công cụ phân tách stem thời gian thực để tách giọng hát, tiếng trống và nhạc cụ."
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr "Kiểm tra nhiều plugin của các nhà phát triển nổi tiếng có sẵn trên [[%s|MuseHub]]."
-
-#: src/WhatsNewDialog.cpp
-msgid "A multiband compressor offering precise control over frequencies."
-msgstr "Bộ nén đa băng tần cung cấp khả năng kiểm soát tần số chính xác."
-
-#: src/WhatsNewDialog.cpp
-msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-msgstr "Ace Studio - Công cụ tạo giọng hát bằng AI số.1 thế giới."
-
-#: src/WhatsNewDialog.cpp
-msgid "Continue for Cloud Storage"
-msgstr "Tiếp tục cho Lưu trữ đám mây"
-
-#: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Xin chào!"
+
+#: src/WhatsNewDialog.cpp
+msgid "Video: how we're redesigning Audacity for the future"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Hoàn tất thiết lập đám mây Audacity của bạn với audio.com"
 
 #: src/WhatsNewDialog.cpp
-msgid "What's new in Audacity"
-msgstr "Các tính năng mới trong Audacity"
+msgid "Get our free OpenVino AI tools"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Watch the release video"
-msgstr "Xem video phát hành"
+msgid "Explore free plugins for scuplting your audio"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr "Soap Voice Cleaner: âm thanh lồng tiếng chất lượng phòng thu"
-
-#: src/WhatsNewDialog.cpp
-msgid "Help us decide the future of Audacity"
-msgstr "Hãy giúp chúng tôi quyết định tương lai của Audacity"
-
-#: src/WhatsNewDialog.cpp
-msgid "Take part in survey"
-msgstr "Tham gia khảo sát Survey"
-
-#: src/WhatsNewDialog.cpp
-msgid "Audacity feature survey"
-msgstr "Khảo sát tính năng Audacity"
+#, fuzzy
+msgid "View free plugins"
+msgstr "Nhận plugin và âm thanh miễn phí"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -19743,6 +19733,33 @@ msgstr "Rê chuột để phóng to vùng, bấm chuột phải để thu nhỏ"
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Chuột Trái=Phóng to, Chuột Phải=Thu nhỏ, Chuột Giữa=Chuẩn"
 
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Install Audacity 4"
+msgstr "&Cài bản cập nhật"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid ""
+"Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
+"easier to use than ever."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Discover what's new in our full feature breakdown."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No thanks"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Remind me later"
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19841,6 +19858,14 @@ msgstr "Vô hiệu hóa UUID"
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Accept && continue"
 msgstr "Chấp nhận và tiếp tục"
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Remind me later"
+msgstr ""
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Dismiss"
+msgstr ""
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -21692,3 +21717,92 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Phiên bản cũ"
+
+#~ msgid "Open Fro&m Cloud..."
+#~ msgstr "Mở t&ừ đám mây"
+
+#~ msgid "<font color=\"#000000\">"
+#~ msgstr "<font color=\"#000000\">"
+
+#~ msgid "Sign up to Audacity's cloud saving platform"
+#~ msgstr "Đăng ký nền tảng lưu trữ đám mây của Audacity"
+
+#~ msgid "and access your projects from anywhere!"
+#~ msgstr "và truy cập dự án của bạn từ mọi nơi!"
+
+#~ msgid "</font>"
+#~ msgstr "</font>"
+
+#, c-format
+#~ msgid "What's new in Audacity %s"
+#~ msgstr "Các tính năng mới trong Audacity %s"
+
+#, c-format
+#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
+#~ msgstr "Hãy xem [[%s|release video]] hoặc đọc [[%s|changelog]] để tìm hiểu thêm về những gì chúng tôi đã đưa vào bản phát hành mới nhất!</p>"
+
+#, c-format
+#~ msgid "You can also read the [[%s|changelog]]</p>"
+#~ msgstr "Bạn cũng có thể đọc [[%s|changelog]]</p>"
+
+#, c-format
+#~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+#~ msgstr "<p>Hãy xem Ứng dụng của chúng tôi [[%s|Muse Hub app]] để biết nhiều plugin âm thanh dành cho người dùng Audacity</p>"
+
+#~ msgid "A vocal processing effect that enhances vocal clarity and depth."
+#~ msgstr "Hiệu ứng xử lý giọng nói giúp tăng cường độ trong trẻo và chiều sâu của giọng nói."
+
+#~ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
+#~ msgstr "Một plugin tạo hiệu ứng hồi âm reverb đa năng cho hiệu ứng âm thanh rộng rãi, tự nhiên."
+
+#~ msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
+#~ msgstr "Một plugin mô phỏng hiệu ứng và guitar amp cho âm thanh chân thực và có thể tùy chỉnh."
+
+#~ msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
+#~ msgstr "Một plugin tạo hiệu ứng hồi âm reverb có khả năng thích ứng với động lực của bản nhạc để tạo nên cảnh quan âm thanh sống động."
+
+#~ msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
+#~ msgstr "Một plugin đa hiệu ứng giọng hát giúp tăng cường chất lượng giọng hát để mang lại kết quả chuyên nghiệp."
+
+#~ msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
+#~ msgstr "Một plugin hiệu ứng âm trầm được thiết kế để mang lại âm thanh trầm mạnh mẽ, rõ ràng."
+
+#~ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
+#~ msgstr "Một plugin giúp âm thanh trở nên hoàn hảo, tăng cường độ ấm và độ trong trẻo."
+
+#~ msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
+#~ msgstr "Một plugin tăng cường giọng nói tuyệt vời mang lại hiệu ứng giọng nói chuyên nghiệp, rõ ràng."
+
+#~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
+#~ msgstr "Một công cụ phân tách stem thời gian thực để tách giọng hát, tiếng trống và nhạc cụ."
+
+#, c-format
+#~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
+#~ msgstr "Kiểm tra nhiều plugin của các nhà phát triển nổi tiếng có sẵn trên [[%s|MuseHub]]."
+
+#~ msgid "A multiband compressor offering precise control over frequencies."
+#~ msgstr "Bộ nén đa băng tần cung cấp khả năng kiểm soát tần số chính xác."
+
+#~ msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
+#~ msgstr "Ace Studio - Công cụ tạo giọng hát bằng AI số.1 thế giới."
+
+#~ msgid "Continue for Cloud Storage"
+#~ msgstr "Tiếp tục cho Lưu trữ đám mây"
+
+#~ msgid "What's new in Audacity"
+#~ msgstr "Các tính năng mới trong Audacity"
+
+#~ msgid "Watch the release video"
+#~ msgstr "Xem video phát hành"
+
+#~ msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+#~ msgstr "Soap Voice Cleaner: âm thanh lồng tiếng chất lượng phòng thu"
+
+#~ msgid "Help us decide the future of Audacity"
+#~ msgstr "Hãy giúp chúng tôi quyết định tương lai của Audacity"
+
+#~ msgid "Take part in survey"
+#~ msgstr "Tham gia khảo sát Survey"
+
+#~ msgid "Audacity feature survey"
+#~ msgstr "Khảo sát tính năng Audacity"

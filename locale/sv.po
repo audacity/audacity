@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.5\n"
+"Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-04 17:39+0200\n"
+"POT-Creation-Date: 2025-11-25 16:27+0300\n"
 "PO-Revision-Date: 2025-07-29 13:31+0200\n"
 "Last-Translator: A. Regnander <anton_r_3@hotmail.com>\n"
 "Language-Team: swedish <musselasse@gmail.com, anton_r_3@hotmail.com>\n"
@@ -1349,6 +1349,17 @@ msgstr "Wahwah"
 #: libraries/lib-builtin-effects/WahWahBase.cpp
 msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
 msgstr "Snabba variationer i tonkvaliteten, som det där gitarrljudet som var populärt på 70-talet"
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+#, fuzzy
+msgctxt "cloud sync"
+msgid "Error importing cloud audio"
+msgstr "Fel uppstod under import"
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+msgctxt "update dialog"
+msgid "Can't download cloud audio"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -4231,6 +4242,10 @@ msgid "Pitch (EAC)"
 msgstr "Tonhöjd (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Wavelet (1/6 Octave Hann)"
+msgstr ""
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
 msgstr "Den maximala frekvensen måste vara 100 Hz eller högre"
 
@@ -7004,6 +7019,7 @@ msgid "New script"
 msgstr "Nytt skript"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Open"
 msgstr "Öppna"
@@ -7138,6 +7154,7 @@ msgid "Go to previous S-expr"
 msgstr "Gå till föregående S-uttryck"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Next"
 msgstr "Nästa"
@@ -7169,6 +7186,28 @@ msgstr "Väntar på audio.com"
 msgid "An action on audio.com is required before you can continue. You can cancel this operation."
 msgstr "En åtgärd på audio.com krävs innan du kan fortsätta. Du kan avbryta denna operation."
 
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "Öppna från audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#, fuzzy
+msgid "Downloading audio"
+msgstr "Laddar ned %s"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to download audio from cloud.\n"
+"%s"
+msgstr "Misslyckades med att tyda förinställningarna från \"%s\""
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+msgid "Downloaded audio file does not exist."
+msgstr ""
+
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
@@ -7181,11 +7220,6 @@ msgid "Generating audio preview..."
 msgstr "Genererar ljudförhandsvisning..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "Öppna från audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
 msgstr "Synkroniserar projekt"
 
@@ -7194,16 +7228,27 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Förhandsvisningar kan endast uppdateras för molnprojekt"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open &From Cloud"
+msgstr "Öppna från Moln"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open Cloud &Project..."
+msgstr "Öppna projekt..."
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open Cloud &Audio File..."
+msgstr "Uppdatera Cloud Audio förhandsvisning"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
 msgstr "Spara & Till molnet..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "&Update Cloud Audio Preview"
 msgstr "&Uppdatera Förhandsgranska moln ljud"
-
-#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open Fro&m Cloud..."
-msgstr "Öppna fr&ån moln..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "S&hare Audio..."
@@ -7336,6 +7381,86 @@ msgstr "&Logga ut"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
 msgstr "Visa inte detta igen"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Open cloud audio file"
+msgstr "När ljudfiler importeras"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "less than 1 minute"
+msgstr "mindre än 1 minut"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy, c-format
+msgid "one minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "en minut sedan"
+msgstr[1] "%d minuter sedan"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "en timme sedan"
+msgstr[1] "%d timmar sedan"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Title"
+msgstr "Spårtitel"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Author"
+msgstr "Författare:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Tags"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Created"
+msgstr "Skapa"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Failed to authorize account"
+msgstr "Det gick inte att auktorisera konto"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Loading audio list..."
+msgstr "Laddar upp ljud..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Failed to get audio list"
+msgstr "Misslyckades med att få projektlistan"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Search:"
+msgstr "Sök:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Prev"
+msgstr "Tidigare"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr "Visa i audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "Page %d of %d"
+msgstr "Sida %d av %d"
 
 #. i18n-hint: A title that is shown on the first project save that allows the
 #. user to select Cloud or local save.
@@ -7646,10 +7771,6 @@ msgid "Open from Cloud"
 msgstr "Öppna från Moln"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "less than 1 minute"
-msgstr "mindre än 1 minut"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "one minutes ago"
 msgid_plural "%d minutes ago"
@@ -7657,19 +7778,8 @@ msgstr[0] "en minut sedan"
 msgstr[1] "%d minuter sedan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "one hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "en timme sedan"
-msgstr[1] "%d timmar sedan"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Modified"
 msgstr "Modifierad"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Failed to authorize account"
-msgstr "Det gick inte att auktorisera konto"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Loading projects list..."
@@ -7682,23 +7792,6 @@ msgstr "Misslyckades med att få projektlistan"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Cloud saved projects"
 msgstr "Projekt sparade i Moln"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Search:"
-msgstr "Sök:"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Prev"
-msgstr "Tidigare"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "View in audio.com"
-msgstr "Visa i audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "Page %d of %d"
-msgstr "Sida %d av %d"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Anyone will be able to listen to this audio."
@@ -10845,7 +10938,7 @@ msgstr "Realtime effekter för %s"
 msgid "Realtime Effects"
 msgstr "Realtime Effekter"
 
-#: src/RealtimeEffectPanel.cpp
+#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
 msgid "Watch video"
 msgstr "Se video"
 
@@ -11566,129 +11659,29 @@ msgid "Calibration Complete"
 msgstr "Kalibrering slutförd"
 
 #: src/WhatsNewDialog.cpp
-msgid "<font color=\"#000000\">"
-msgstr "<font color=\"#000000\">"
-
-#: src/WhatsNewDialog.cpp
-msgid "Sign up to Audacity's cloud saving platform"
-msgstr "Registrera dig till Audacitys molnsparplattform"
-
-#: src/WhatsNewDialog.cpp
-msgid "and access your projects from anywhere!"
-msgstr "och få tillgång till dina projekt var som helst!"
-
-#: src/WhatsNewDialog.cpp
-msgid "</font>"
-msgstr "</font>"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "What's new in Audacity %s"
-msgstr "Vad är nytt i Audacity %s"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr "Titta på [[%s|release-video]] eller läs [[%s|changelog]] för att lära dig mer om vad vi har inkluderat i den senaste versionen!</p>"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "You can also read the [[%s|changelog]]</p>"
-msgstr "Du kan också läsa [[%s|changelog]]</p>"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get free plugins & sounds"
-msgstr "Hämta gratis plugins & ljud"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr "<p>Kolla in vår [[%s|Muse Hub-app]] för ett brett utbud av ljudpluginprogram för Audacity-användare</p>"
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr "En röstbearbetningseffekt som förbättrar röstens klarhet och djup."
-
-#: src/WhatsNewDialog.cpp
-msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr "En mångsidig reverb-plugin för rymliga, naturligt klingande effekter."
-
-#: src/WhatsNewDialog.cpp
-msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr "En gitarrförstärkare och effektmodelleringsplugin för realistiska toner och anpassningsbara ljud."
-
-#: src/WhatsNewDialog.cpp
-msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr "En responsiv reverb-plugin som anpassar sig till spårdynamik för uppslukande ljudlandskap."
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr "En sångplugin för flera effekter som förbättrar sångspår för professionella resultat."
-
-#: src/WhatsNewDialog.cpp
-msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr "En baseffektplugin designad för att leverera kraftfullt, klart low-end ljud."
-
-#: src/WhatsNewDialog.cpp
-msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr "En plugin för perfektion av akustisk ljud, förbättrar värme och klarhet."
-
-#: src/WhatsNewDialog.cpp
-msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr "Ett fantastiskt plugin för röstförbättring för kristallklara, professionella sångeffekter."
-
-#: src/WhatsNewDialog.cpp
-msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr "Ett verktyg för stamseparering i realtid för att isolera sång, trummor och instrument."
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr "Kolla in en mängd plugins från välkända utvecklare tillgängliga på [[%s|MuseHub]]."
-
-#: src/WhatsNewDialog.cpp
-msgid "A multiband compressor offering precise control over frequencies."
-msgstr "En multibandskompressor som erbjuder exakt kontroll över frekvenserna."
-
-#: src/WhatsNewDialog.cpp
-msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-msgstr "Ace Studio - Världens nr 1 AI Singing Voice Generator."
-
-#: src/WhatsNewDialog.cpp
-msgid "Continue for Cloud Storage"
-msgstr "Fortsätt för Cloud Storage"
-
-#: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Välkommen to Audacity!"
+
+#: src/WhatsNewDialog.cpp
+msgid "Video: how we're redesigning Audacity for the future"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Slutför din Audacity-molninstallation med audio.com"
 
 #: src/WhatsNewDialog.cpp
-msgid "What's new in Audacity"
-msgstr "Vad är nytt i Audacity"
+msgid "Get our free OpenVino AI tools"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Watch the release video"
-msgstr "Se releasevideon"
+msgid "Explore free plugins for scuplting your audio"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr "Soap Voice Cleaner: röstinspelning i studiokvalitet"
-
-#: src/WhatsNewDialog.cpp
-msgid "Help us decide the future of Audacity"
-msgstr "Hjälp oss bestämma framtiden för Audacity"
-
-#: src/WhatsNewDialog.cpp
-msgid "Take part in survey"
-msgstr "Ta aktivt del i undersökning"
-
-#: src/WhatsNewDialog.cpp
-msgid "Audacity feature survey"
-msgstr "Funktionsundersökning för Audacity"
+#, fuzzy
+msgid "View free plugins"
+msgstr "Hämta gratis plugins & ljud"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -19786,6 +19779,33 @@ msgstr "Dra för att zooma till område. Högerklicka för att zooma ut"
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Vänster=Zooma in, Höger=Zooma ut, Mitten=Återställ"
 
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Install Audacity 4"
+msgstr "&Installera uppdatering"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid ""
+"Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
+"easier to use than ever."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Discover what's new in our full feature breakdown."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No thanks"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Remind me later"
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19884,6 +19904,14 @@ msgstr "Inaktivera UUID"
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Accept && continue"
 msgstr "Acceptera && fortsätt"
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Remind me later"
+msgstr ""
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Dismiss"
+msgstr ""
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -21737,6 +21765,95 @@ msgstr "Spektralverktyg"
 msgid "Legacy"
 msgstr "Gammal"
 
+#~ msgid "Open Fro&m Cloud..."
+#~ msgstr "Öppna fr&ån moln..."
+
+#~ msgid "<font color=\"#000000\">"
+#~ msgstr "<font color=\"#000000\">"
+
+#~ msgid "Sign up to Audacity's cloud saving platform"
+#~ msgstr "Registrera dig till Audacitys molnsparplattform"
+
+#~ msgid "and access your projects from anywhere!"
+#~ msgstr "och få tillgång till dina projekt var som helst!"
+
+#~ msgid "</font>"
+#~ msgstr "</font>"
+
+#, c-format
+#~ msgid "What's new in Audacity %s"
+#~ msgstr "Vad är nytt i Audacity %s"
+
+#, c-format
+#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
+#~ msgstr "Titta på [[%s|release-video]] eller läs [[%s|changelog]] för att lära dig mer om vad vi har inkluderat i den senaste versionen!</p>"
+
+#, c-format
+#~ msgid "You can also read the [[%s|changelog]]</p>"
+#~ msgstr "Du kan också läsa [[%s|changelog]]</p>"
+
+#, c-format
+#~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+#~ msgstr "<p>Kolla in vår [[%s|Muse Hub-app]] för ett brett utbud av ljudpluginprogram för Audacity-användare</p>"
+
+#~ msgid "A vocal processing effect that enhances vocal clarity and depth."
+#~ msgstr "En röstbearbetningseffekt som förbättrar röstens klarhet och djup."
+
+#~ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
+#~ msgstr "En mångsidig reverb-plugin för rymliga, naturligt klingande effekter."
+
+#~ msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
+#~ msgstr "En gitarrförstärkare och effektmodelleringsplugin för realistiska toner och anpassningsbara ljud."
+
+#~ msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
+#~ msgstr "En responsiv reverb-plugin som anpassar sig till spårdynamik för uppslukande ljudlandskap."
+
+#~ msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
+#~ msgstr "En sångplugin för flera effekter som förbättrar sångspår för professionella resultat."
+
+#~ msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
+#~ msgstr "En baseffektplugin designad för att leverera kraftfullt, klart low-end ljud."
+
+#~ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
+#~ msgstr "En plugin för perfektion av akustisk ljud, förbättrar värme och klarhet."
+
+#~ msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
+#~ msgstr "Ett fantastiskt plugin för röstförbättring för kristallklara, professionella sångeffekter."
+
+#~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
+#~ msgstr "Ett verktyg för stamseparering i realtid för att isolera sång, trummor och instrument."
+
+#, c-format
+#~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
+#~ msgstr "Kolla in en mängd plugins från välkända utvecklare tillgängliga på [[%s|MuseHub]]."
+
+#~ msgid "A multiband compressor offering precise control over frequencies."
+#~ msgstr "En multibandskompressor som erbjuder exakt kontroll över frekvenserna."
+
+#~ msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
+#~ msgstr "Ace Studio - Världens nr 1 AI Singing Voice Generator."
+
+#~ msgid "Continue for Cloud Storage"
+#~ msgstr "Fortsätt för Cloud Storage"
+
+#~ msgid "What's new in Audacity"
+#~ msgstr "Vad är nytt i Audacity"
+
+#~ msgid "Watch the release video"
+#~ msgstr "Se releasevideon"
+
+#~ msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+#~ msgstr "Soap Voice Cleaner: röstinspelning i studiokvalitet"
+
+#~ msgid "Help us decide the future of Audacity"
+#~ msgstr "Hjälp oss bestämma framtiden för Audacity"
+
+#~ msgid "Take part in survey"
+#~ msgstr "Ta aktivt del i undersökning"
+
+#~ msgid "Audacity feature survey"
+#~ msgstr "Funktionsundersökning för Audacity"
+
 #~ msgid "Create an account to save to the cloud"
 #~ msgstr "Skapa ett konto för att spara i molnet"
 
@@ -22074,9 +22191,6 @@ msgstr "Gammal"
 
 #~ msgid "Save To Cloud..."
 #~ msgstr "Spara till Molnet..."
-
-#~ msgid "Update Cloud Audio Preview"
-#~ msgstr "Uppdatera Cloud Audio förhandsvisning"
 
 #~ msgid "Open From Cloud..."
 #~ msgstr "Öppna från Moln..."
@@ -23169,9 +23283,6 @@ msgstr "Gammal"
 
 #~ msgid "Folder:"
 #~ msgstr "Mapp:"
-
-#~ msgid "Create"
-#~ msgstr "Skapa"
 
 #~ msgid "Options:"
 #~ msgstr "Alternativ:"
@@ -24407,9 +24518,6 @@ msgstr "Gammal"
 #~ msgstr ""
 #~ "Om det tillgängliga systemminnet sjunker under detta värde, kommer ljud inte\n"
 #~ "att cachelagras i minnet utan kommer att skrivas till hårddisken."
-
-#~ msgid "When importing audio files"
-#~ msgstr "När ljudfiler importeras"
 
 #~ msgid "Allow &background on-demand loading"
 #~ msgstr "Tillåt begärd inläsning i &bakgrunden"
@@ -26378,9 +26486,6 @@ msgstr "Gammal"
 
 #~ msgid "Performing Effect: %s"
 #~ msgstr "Skapar Effect: %s"
-
-#~ msgid "Author: "
-#~ msgstr "Författare:"
 
 #~ msgid "Sorry, Plug-in Effects cannot be performed on stereo tracks where the individual channels of the track do not match."
 #~ msgstr "Tyvärr, VST Effects kan inte användas på stereospår när de enskilda kanalerna i spåret inte passar."
