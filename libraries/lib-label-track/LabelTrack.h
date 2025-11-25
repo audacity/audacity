@@ -31,6 +31,7 @@ enum class LabelFormat
    TEXT,
    SUBRIP,
    WEBVTT,
+   PODCAST_CHAPTERS_JSON,
 };
 
 LABEL_TRACK_API
@@ -130,6 +131,7 @@ class LABEL_TRACK_API LabelTrack final
 
    static const FileNames::FileType SubripFiles;
    static const FileNames::FileType WebVTTFiles;
+   static const FileNames::FileType PodcastChaptersFiles;
    static const FileNames::FileType AllSupportedFiles;
 
 private:
