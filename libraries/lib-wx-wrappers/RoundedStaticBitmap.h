@@ -13,6 +13,8 @@
 #include <wx/bitmap.h>
 #include <wx/statbmp.h>
 
+wxImage WX_WRAPPERS_API RoundedImage(const wxImage& source, int radius);
+
 class WX_WRAPPERS_API RoundedStaticBitmap final
    : public wxStaticBitmap
 {
@@ -38,7 +40,6 @@ public:
    void SetImage(const wxImage& image);
 
 private:
-   static wxImage MakeRoundedImage(const wxImage& source, int radius);
 
    wxImage mImage;
    int mRadius;

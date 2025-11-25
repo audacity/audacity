@@ -12,6 +12,7 @@
 #include "WhatsNewDialog.h"
 
 #include <wx/fs_mem.h>
+#include <wx/image.h>
 #include <wx/settings.h>
 #include <wx/mstream.h>
 #include <wx/sstream.h>
@@ -26,7 +27,9 @@
 #include "HelpText.h"
 #include "ModuleManager.h"
 #include "PluginProvider.h"
+#include "menus/GetEffectsHelper.h"
 #include "ProjectWindows.h"
+#include "RoundedStaticBitmap.h"
 #include "ShuttleGui.h"
 #include "Theme.h"
 #include "AllThemeResources.h"
@@ -34,10 +37,11 @@
 #include "ImageCarousel.h"
 #include "HyperLink.h"
 
-#include "../images/Audacity_3.7.2_Thumb.jpg.h"
 #include "../images/Cloud.xpm"
 #include "../images/Cloud_low_res.xpm"
 
+#include "../images/Audacity40Video.h"
+#include "../images/OpenVinoMH.h"
 #include "../images/AudacityMerchStore.h"
 #include "../images/AudioDotComPromo.h"
 #include "../images/AudacityPromo.h"
@@ -60,16 +64,9 @@ namespace
 #define SHOW_CLOUD_PROMO false
 #endif
 
-enum {
-   WhatsNewID_WatchReleaseVideo = wxID_HIGHEST + 1,
-   WhatsNewID_GoToMuseHub,
-   WhatsNewID_GoToAudioCom,
-};
-
-const char* WhatsNewURL = "https://youtu.be/f5TXPUOFH6A?si=L-RbB7c1Lrd-1-ys&utm_source=au-app-welcome-yt-video&utm_medium=audacity-3-6-vid&utm_campaign=au-app-welcome-au-app-welcome-yt-video-audacity-3-6-vid&utm_id=au-app-welcome";
+const char* WhatsNewURL = "https://youtu.be/QYM3TWf_G38?utm_source=au-app-au4-video&utm_medium=au-app-au4-video&utm_campaign=au-app-au4-video";
 const char* ChangeLogURL = "https://support.audacityteam.org/additional-resources/changelog";
-//const char* MuseHubURL = "https://www.audacityteam.org/mh-whatsnew";
-const char* MuseHubURL = "https://www.musehub.com/plugin/soap-voice-cleaner?utm_source=au-app-welcome-mh-web&utm_medium=soap-voice-cleaner&utm_campaign=au-app-welcome-mh-web-soap-voice-cleaner&utm_id=au-app-welcome";
+const char* OpenVinoURL = "https://www.musehub.com/en-gb/plugin/openvino-ai-tools?utm_source=au-app-3-7-6-mh-welcome-open-vino&utm_medium=au-app-3-7-6-mh-welcome-open-vino&utm_campaign=au-app-3-7-6-mh-welcome-open-vino";
 const char* PromoURL = "https://audacityteam.org/audacitypromo";
 const char* AudioComURL = "https://audio.com/audacity/auth/sign-in?mtm_campaign=audacitydesktop&mtm_content=app_launch_popup";
 const char* AudacitySurveyURL = "http://audacityteam.org/survey?utm_source=au-app-survey&utm_medium=survey&utm_campaign=au-app-welcome-au-app-survey-survey&utm_id=au-app-welcome";
@@ -95,221 +92,6 @@ AttachedWindows::RegisteredFactory sWhatsNewWindow{
 };
 
 
-namespace
-{
-
-struct FSHelper final
-{
-   FSHelper()
-       : mMemoryFSHandler(std::make_unique<wxMemoryFSHandler>())
-   {
-      wxFileSystem::AddHandler(mMemoryFSHandler.get());
-
-//      wxMemoryFSHandler::AddFile(
-//         "audacity_3_7_2_thumb.jpeg", bin2c_Audacity_3_7_2_Thumb_jpg,
-//         sizeof(bin2c_Audacity_3_7_2_Thumb_jpg));
-//      wxMemoryFSHandler::AddFile(
-//         "ace.jpeg", bin2c_ACE_jpg,
-//         sizeof(bin2c_ACE_jpg));
-   }
-
-   ~FSHelper()
-   {
-//      wxMemoryFSHandler::RemoveFile("audacity_3_7_2_thumb.jpeg");
-//      wxMemoryFSHandler::RemoveFile("ace.jpeg");
-      wxFileSystem::RemoveHandler(mMemoryFSHandler.get());
-   }
-
-private:
-   std::unique_ptr<wxMemoryFSHandler> mMemoryFSHandler;
-};
-
-wxString MakeSignUpToCloudText()
-{
-   wxStringOutputStream o;
-   wxTextOutputStream s(o);
-   s
-      << wxT("<body>")
-      << wxT("<p><center>")
-#if defined (__WXOSX__) || defined(__WXMSW__)
-      << wxT("<h3>")
-#else
-      << wxT("<p>")
-#endif
-      << XO("<font color=\"#000000\">")
-      << XO("Sign up to Audacity's cloud saving platform")
-      << wxT("<br>") << XO("and access your projects from anywhere!")
-      << XO("</font>")
-#if defined (__WXOSX__) || defined(__WXMSW__)
-      << wxT("</h3>");
-#else
-      << wxT("</p>");
-#endif
-
-   return FormatHtmlText(o.GetString());
-}
-
-wxString MakeWhatsNewText()
-{
-   wxStringOutputStream o;
-   wxTextOutputStream s(o);
-   s
-      << wxT("<body>")
-      << wxT("<p><center>")
-      << wxT(R"(<p><a href=")") << WhatsNewURL << wxT(R"(">)")
-      // Bug: (Windows) specified width and height should match exactly to the size of the image
-#if 0
-   << wxT(R"(<img src="memory:whats_new_btn.jpeg" width="352" height="198" /><br></a></p>)")
-   << wxT("<h3>") << XO("What's new in Audacity %s").Format(AUDACITY_VERSION_STRING) << wxT("</h3>")
-   << wxT("<p>")
-   << XO("Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>").Format(WhatsNewURL, ChangeLogURL);
-#endif
-      << wxT(R"(<img src="memory:audacity_3_7_2_thumb.jpeg" width="352" height="198" /><br></a></p>)")
-      << wxT("<h3>") << XO("What's new in Audacity %s").Format(AUDACITY_VERSION_STRING) << wxT("</h3>")
-      << wxT("<p>")
-      << XO("You can also read the [[%s|changelog]]</p>").Format(ChangeLogURL);
-
-   return FormatHtmlText(o.GetString());
-}
-
-wxString MakeGetPluginsText()
-{
-   wxStringOutputStream o;
-   wxTextOutputStream s(o);
-   s
-      << wxT("<body>")
-      << wxT("<p><center>")
-      << wxT(R"(<p><a href=")") << PromoURL << wxT(R"(">)")
-      // Bug: (Windows) specified width and height should match exactly to the size of the image
-      << wxT(R"(<img src="memory:ace.jpeg" width="352" height="198" /><br></a></p>)")
-#if 0
-      //we want to keep these strings, but not display them at the moment
-      << wxT("<h3>") << XO("Get free plugins & sounds")<< wxT("</h3>")
-      << XO("<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>").Format(MuseHubURL);
-
-      /*i18n-hint: MuseHub is a name of a product, see musehub.com. */
-      // << XO("Available on [[%s|MuseHub]].").Format(MuseHubURL) << wxT("</p>");
-
-      //we also may need these strings in the future. Adding them to the catalogue now so we don't have to send out multiple translation CTAs
-
-      << wxT("<h3>") << wxT("VocalStrip - Solid State Logic")<< wxT("</h3>")
-      << wxT("<p>") << XO("A vocal processing effect that enhances vocal clarity and depth.") << wxT(" ")
-      << wxT("<h3>") << wxT("Crystalline Next-gen Reverb")<< wxT("</h3>")
-      << wxT("<p>") << XO("A multipurpose reverb plugin for spacious, natural-sounding effects.") << wxT(" ")
-      << wxT("<h3>") << wxT("Ampkit Guitar Modeller")<< wxT("</h3>")
-      << wxT("<p>") << XO("A guitar amp and effects modelling plugin for realistic tones and customizable sounds.") << wxT(" ")
-      << wxT("<h3>") << wxT("BOREALIS Dynamic Reverb")<< wxT("</h3>")
-      << wxT("<p>") << XO("A responsive reverb plugin that adapts to track dynamics for immersive soundscapes.") << wxT(" ")
-      << wxT("<h3>") << wxT("LANDR FX Voice")<< wxT("</h3>")
-      << wxT("<p>") << XO("A vocal multi-effect plugin that enhances vocal tracks for professional results.") << wxT(" ")
-      << wxT("<h3>") << wxT("LANDR FX Bass")<< wxT("</h3>")
-      << wxT("<p>") << XO("A bass effect plugin designed to deliver punchy, clear low-end sound.") << wxT(" ")
-      << wxT("<h3>") << wxT("LANDR FX Acoustic:")<< wxT("</h3>")
-      << wxT("<p>") << XO("A plugin for acoustic sound perfection, enhancing warmth and clarity.") << wxT(" ")
-      << wxT("<h3>") << wxT("Pristine Voice")<< wxT("</h3>")
-      << wxT("<p>") << XO("An amazing voice enhancement plugin for crystal-clear, professional vocal effects.") << wxT(" ")
-      << wxT("<h3>") << wxT("Remix Source Separation")<< wxT("</h3>")
-      << wxT("<p>") << XO("A real-time stem separation tool to isolate vocals, drums, and instruments.") << wxT(" ")
-      << wxT("<h3>") << wxT("Recommended effects plugins for Audacity")<< wxT("</h3>")
-      << wxT("<p>") << XO("Check out a variety of plugins by well known developers available on [[%s|MuseHub]].").Format(MuseHubURL)
-      << wxT("<h3>") << wxT("Polyspectral Multiband Compressor")<< wxT("</h3>")
-      << wxT("<p>") << XO("A multiband compressor offering precise control over frequencies.");
-
-#endif
-
-      << wxT("<h3>") << wxT("Ace Studio")<< wxT("</h3>")
-      << wxT("<p>") << XO("Ace Studio - The World's No.1 AI Singing Voice Generator.");
-
-   return FormatHtmlText(o.GetString());
-}
-
-static const wxColour infoBlue(224, 228, 255);
-static const wxSize infoWindowSize = SHOW_MUSEHUB ? wxSize(761, 180) : wxSize(520, 180);
-
-class InfoWindow : public wxPanel
-{
-public:
-    InfoWindow(wxWindow* parent)
-        : wxPanel(parent, wxID_ANY, wxDefaultPosition, infoWindowSize)
-    {
-       ShuttleGui S( this, eIsCreating);
-
-       S.StartHorizontalLay(wxEXPAND);
-       {
-          S.AddSpace(150);
-
-          S.StartVerticalLay(wxEXPAND);
-          {
-#if defined(__WXMSW__)
-             S.AddSpace(30);
-#else
-             S.AddSpace(35);
-#endif
-
-             const auto text = safenew LinkingHtmlWindow(S.GetParent());
-             text->SetPage(MakeSignUpToCloudText());
-             text->Layout();
-             text->Fit();
-             text->SetBackgroundColour(infoBlue);
-             S
-               .Prop(1)
-               .Position(wxEXPAND | wxALL)
-               .AddWindow(text);
-          }
-          S.EndVerticalLay();
-          if constexpr (SHOW_MUSEHUB) {
-            S.AddSpace(150);
-          }
-       }
-       S.EndHorizontalLay();
-
-	     TranslatableString cloudLabel = XXO("Continue for Cloud Storage");
-             S
-                .Id(WhatsNewID_GoToAudioCom)
-                .Position(wxALL | wxALIGN_CENTER)
-#if defined (__WXOSX__) || defined(__WXMSW__)
-                .AddGradientButton(cloudLabel, wxALL, true, true /* set padding */);
-#else
-                .AddButton(cloudLabel, wxALL, true);
-#endif
-
-#if defined(__WXMSW__)
-             S.AddSpace(20);
-#else
-             S.AddSpace(25);
-#endif
-
-       Layout();
-
-#if defined (__WXOSX__)
-       wxImage image = wxBitmap(Cloud).ConvertToImage();
-       wxImage resizedImage = image.Scale(189, 104, wxIMAGE_QUALITY_HIGH);
-       m_bitmap = wxBitmap(resizedImage);
-#else
-       m_bitmap = wxBitmap(Cloud_low_res);
-#endif
-
-       Bind(wxEVT_PAINT, &InfoWindow::OnPaint, this);
-    }
-
-private:
-    void OnPaint(wxPaintEvent& event)
-    {
-        wxPaintDC dc(this);
-
-        wxColour outline(212, 212, 212);
-
-        dc.SetBrush(infoBlue);
-        dc.SetPen(outline);
-        dc.DrawRoundedRectangle(wxPoint(0, 0), infoWindowSize, 10);
-
-        dc.DrawBitmap(m_bitmap, -5, 40, true);
-    }
-
-    wxBitmap m_bitmap;
-};
-}
-
 class NotFocusableWindow : public wxWindow
 {
 public:
@@ -321,9 +103,6 @@ public:
 };
 
 BEGIN_EVENT_TABLE(WhatsNewDialog, wxDialogWrapper)
-   EVT_BUTTON(WhatsNewID_WatchReleaseVideo, WhatsNewDialog::OnWatchReleaseVideo)
-   EVT_BUTTON(WhatsNewID_GoToMuseHub, WhatsNewDialog::OnGoToMuseHub)
-   EVT_BUTTON(WhatsNewID_GoToAudioCom, WhatsNewDialog::OnGoToAudioCom)
    EVT_BUTTON(wxID_OK, WhatsNewDialog::OnOK)
 END_EVENT_TABLE()
 
@@ -354,8 +133,6 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
    bool showSplashScreen;
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &showSplashScreen, true );
 
-   FSHelper helper;
-
 #if defined (__WXOSX__) || defined(__WXMSW__)
    const int width = 572;
    const int height = 322;
@@ -366,6 +143,15 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 
    std::vector<CarouselSnapshot> snapshots;
    snapshots.reserve(5);
+
+   snapshots.push_back(CarouselSnapshot(
+      XXO("Video: how we're redesigning Audacity for the future"),
+      RoundedImage(Rescale(LoadEmbeddedPNG(Audacity40Video_png, Audacity40Video_png_len), width, height), 12),
+      WhatsNewURL,
+      XXO("Watch video"),
+      XXO("")
+   ));
+
    if (ModuleManager::Get().CheckModuleLoaded("mod-cloud-audiocom")) {
 
       auto displayLoginDialog = []() {
@@ -374,40 +160,41 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 
       snapshots.push_back(CarouselSnapshot(
          XXO("Complete your Audacity cloud setup with audio.com"),
-         Rescale(LoadEmbeddedPNG(AudioDotComPromo_png, AudioDotComPromo_png_len), width, height),
+         RoundedImage(Rescale(LoadEmbeddedPNG(AudioDotComPromo_png, AudioDotComPromo_png_len), width, height), 12),
          displayLoginDialog,
          XXO("Continue"),
          XXO("")
       ));
    }
 
-   snapshots.push_back(CarouselSnapshot(
-      XXO("What's new in Audacity"),
-      Rescale(LoadEmbeddedPNG(AudacityPromo_png, AudacityPromo_png_len), width, height),
-      WhatsNewURL,
-      XXO("Watch the release video"),
-      XXO("")
-   ));
 #if defined (__WXOSX__) || defined(__WXMSW__)
    snapshots.push_back(CarouselSnapshot(
-      XXO("Soap Voice Cleaner: studio-quality voice-over sound"),
-      Rescale(LoadEmbeddedPNG(MuseHubPromo_png, MuseHubPromo_png_len), width, height),
-      MuseHubURL,
+      XXO("Get our free OpenVino AI tools"),
+      RoundedImage(Rescale(LoadEmbeddedPNG(OpenVinoMH_png, OpenVinoMH_png_len), width, height), 12),
+      OpenVinoURL,
       XXO("Get it on MuseHub"),
       XXO("")
    ));
 #endif
-   snapshots.push_back(CarouselSnapshot(
-      XXO("Help us decide the future of Audacity"),
-      Rescale(LoadEmbeddedPNG(AudacityFeatureSurvey_png, AudacityFeatureSurvey_png_len), width, height),
-      AudacitySurveyURL,
-      XXO("Take part in survey"),
-      XXO("Audacity feature survey")
-   ));
+
+   if (ModuleManager::Get().CheckModuleLoaded("mod-musehub-ui")) {
+
+      auto displayMuseHub = []() {
+         GetEffectsHelper::Get().GetEffects();
+      };
+
+      snapshots.push_back(CarouselSnapshot(
+         XXO("Explore free plugins for scuplting your audio"),
+         RoundedImage(Rescale(LoadEmbeddedPNG(MuseHubPromo_png, MuseHubPromo_png_len), width, height), 12),
+         displayMuseHub,
+         XXO("View free plugins"),
+         XXO("")
+      ));
+   }
 
    snapshots.push_back(CarouselSnapshot(
       XXO("25th Anniversary Merchandise!"),
-      Rescale(LoadEmbeddedPNG(AudacityMerchStore_png, AudacityMerchStore_png_len), width, height),
+      RoundedImage(Rescale(LoadEmbeddedPNG(AudacityMerchStore_png, AudacityMerchStore_png_len), width, height), 12),
       AudacityMerchStoreURL,
       XXO("Visit now"),
       XXO("Visit our new Audacity merch store")
@@ -502,37 +289,22 @@ void WhatsNewDialog::OnOK(wxCommandEvent& evt)
    wxDialogWrapper::Show(false);
 }
 
-void WhatsNewDialog::OnWatchReleaseVideo(wxCommandEvent& evt)
+wxImage WhatsNewDialog::Rescale(const wxImage& image, int width, int height)
 {
-   OpenInDefaultBrowser(WhatsNewURL);
-}
-
-void WhatsNewDialog::OnGoToMuseHub(wxCommandEvent& evt)
-{
-   OpenInDefaultBrowser(MuseHubURL);
-}
-
-void WhatsNewDialog::OnGoToAudioCom(wxCommandEvent& evt)
-{
-   OpenInDefaultBrowser(AudioComURL);
-}
-
-wxBitmap WhatsNewDialog::Rescale(const wxBitmap& bmp, int width, int height)
-{
-   wxImage img = bmp.ConvertToImage();
+   wxImage img = image;
    img.Rescale(width, height, wxIMAGE_QUALITY_HIGH);
 
-   return wxBitmap(img);
+   return img;
 }
 
-wxBitmap WhatsNewDialog::LoadEmbeddedPNG(const unsigned char* data, size_t len)
+wxImage WhatsNewDialog::LoadEmbeddedPNG(const unsigned char* data, size_t len)
 {
     wxMemoryInputStream stream(data, len);
     wxImage image;
     if (!image.LoadFile(stream, wxBITMAP_TYPE_PNG))
     {
         wxLogError("Failed to load embedded PNG image.");
-        return wxBitmap();
+        return wxImage();
     }
-    return wxBitmap(image);
+    return image;
 }
