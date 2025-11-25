@@ -121,6 +121,11 @@ void TrackLabelsListModel::doSelectTracksData(const LabelKey& key)
     selectionController()->setSelectedAllAudioData(label.startTime, label.endTime);
 }
 
+bool TrackLabelsListModel::isTrackDataSelected() const
+{
+    return !selectionController()->selectedTracks().empty() && selectionController()->timeSelectionIsNotEmpty();
+}
+
 void TrackLabelsListModel::update()
 {
     std::unordered_map<LabelId, TrackLabelItem*> oldItems;
@@ -260,7 +265,7 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
         ok = trackeditInteraction()->moveLabels(moveOffset.timeOffset, completed);
     }
 
-    if (ok && m_isTracksDataSelected) {
+    if (ok && isTrackDataSelected()) {
         doSelectTracksData(key);
     }
 
@@ -292,7 +297,6 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
         selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
     }
 
-    m_isTracksDataSelected = false;
     m_needToSelectTracksData = false;
 }
 
@@ -342,16 +346,12 @@ void TrackLabelsListModel::selectTracksDataFromLabelRange(const LabelKey& key)
     }
 
     doSelectTracksData(key);
-
-    m_isTracksDataSelected = true;
 }
 
 void TrackLabelsListModel::resetSelectedTracksData()
 {
     selectionController()->resetSelectedTracks();
     selectionController()->resetDataSelection();
-
-    m_isTracksDataSelected = false;
 }
 
 TrackItemKeyList TrackLabelsListModel::getSelectedItemKeys() const
@@ -384,7 +384,7 @@ bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, const LabelKey&
         ok = trackeditInteraction()->stretchLabelRight(leftLinkedLabel.key, newStartTime, completed);
     }
 
-    if (ok && m_isTracksDataSelected) {
+    if (ok && isTrackDataSelected()) {
         doSelectTracksData(key);
     }
 
@@ -420,7 +420,7 @@ bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, const LabelKey
         ok = trackeditInteraction()->stretchLabelLeft(rightLinkedLabel.key, newEndTime, completed);
     }
 
-    if (ok && m_isTracksDataSelected) {
+    if (ok && isTrackDataSelected()) {
         doSelectTracksData(key);
     }
 
