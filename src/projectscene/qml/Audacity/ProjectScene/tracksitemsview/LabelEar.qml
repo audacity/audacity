@@ -8,6 +8,8 @@ Canvas {
     property color backgroundColor: "transparent"
     property bool isSelected: false
 
+    property bool isLinked: false
+
     property alias hovered: dragArea.containsMouse
 
     signal stretchRequested(bool completed)
@@ -54,7 +56,7 @@ Canvas {
 
         acceptedButtons: Qt.LeftButton
         hoverEnabled: true
-        cursorShape: Qt.SizeHorCursor
+        cursorShape: !root.isLinked ? Qt.SizeHorCursor : Qt.SplitHCursor
 
         visible: root.enableCursorInteraction
 

@@ -247,7 +247,7 @@ public:
     void removeTrack(const TrackId trackId)
     {
         Au3TrackList& trackList = Au3TrackList::Get(projectRef());
-        Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+        Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
         trackList.Remove(*track);
     }
 

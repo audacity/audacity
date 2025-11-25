@@ -14,6 +14,12 @@ struct ClipTemplate {
     std::vector<std::tuple<double, ClipDataGeneratorFunc> > dataGenerator;
 };
 
+struct LabelTemplate {
+    double t0;
+    double t1;
+    std::string title;
+};
+
 class TrackTemplateFactory
 {
 public:
@@ -21,6 +27,10 @@ public:
     std::shared_ptr<WaveTrack> createTrackFromTemplate(const std::string& name, const std::vector<ClipTemplate>& clipTemplates);
     au::au3::Au3TrackId addTrackToProject(std::shared_ptr<WaveTrack> track);
     au::au3::Au3TrackId addTrackFromTemplate(const std::string& name, const std::vector<ClipTemplate>& clipTemplates);
+
+    std::shared_ptr<LabelTrack> createLabelTrackFromTemplate(const std::string& name, const std::vector<LabelTemplate>& labelTemplates);
+    au::au3::Au3TrackId addLabelTrackToProject(std::shared_ptr<LabelTrack> track);
+    au::au3::Au3TrackId addLabelTrackFromTemplate(const std::string& name, const std::vector<LabelTemplate>& labelTemplates);
 
     static std::vector<float> createNoise(double duration, double sampleRate);
     static std::vector<float> createSilence(double duration, double sampleRate);

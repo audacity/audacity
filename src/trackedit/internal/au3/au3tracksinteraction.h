@@ -42,7 +42,7 @@ public:
                     bool& projectWasModified) override;
 
     ITrackDataPtr cutTrackData(const TrackId trackId, secs_t begin, secs_t end, bool moveClips) override;
-    ITrackDataPtr copyNonContinuousTrackData(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) override;
+    ITrackDataPtr copyNonContinuousTrackData(const TrackId trackId, const TrackItemKeyList& itemKeys, secs_t offset) override;
     ITrackDataPtr copyContinuousTrackData(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
 
@@ -85,7 +85,7 @@ private:
     TrackIdList pasteIntoNewTracks(const std::vector<Au3TrackDataPtr>& tracksData);
     std::shared_ptr<au3::Au3Track> createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
     TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
-                                              size_t clipboardTracksSize) const;
+                                              const std::vector<Au3TrackDataPtr>& clipboardData, bool forLabels = false) const;
     TrackIdList expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
                                         size_t clipboardTracksSize) const;
 

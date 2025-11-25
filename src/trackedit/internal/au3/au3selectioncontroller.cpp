@@ -87,7 +87,7 @@ ClipKeyList Au3SelectionController::findClipsIntersectingRangeSelection() const
     ClipKeyList clipsIntersectingRangeSelection = {};
     for (const auto& trackId : m_selectedTracks.val) {
         WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        if (!waveTrack) {
             continue;
         }
 
@@ -611,7 +611,7 @@ bool Au3SelectionController::isDataSelectedOnTrack(TrackId trackId) const
     return muse::contains(m_selectedTracks.val, trackId) && timeSelectionIsNotEmpty();
 }
 
-void Au3SelectionController::setSelectedAllAudioData()
+void Au3SelectionController::setSelectedAllAudioData(const std::optional<secs_t>& fromTime, const std::optional<secs_t>& toTime)
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
@@ -620,9 +620,12 @@ void Au3SelectionController::setSelectedAllAudioData()
 
     trackedit::TrackIdList tracks = prj->trackIdList();
 
+    secs_t startTime = fromTime.has_value() ? fromTime.value() : secs_t(0.0);
+    secs_t endTime = toTime.has_value() ? toTime.value() : prj->totalTime();
+
     setSelectedTracks(tracks, true);
-    setDataSelectedStartTime(0.0, true);
-    setDataSelectedEndTime(prj->totalTime(), true);
+    setDataSelectedStartTime(startTime, true);
+    setDataSelectedEndTime(endTime, true);
 }
 
 ClipKeyList Au3SelectionController::clipsIntersectingRangeSelection() const

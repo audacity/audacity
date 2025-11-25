@@ -112,11 +112,15 @@ static const ActionCode SET_TRACK_VIEW_SPECTROGRAM("track-view-spectrogram");
 static const ActionCode SET_TRACK_VIEW_MULTI("track-view-multi");
 
 static const ActionCode LABEL_ADD_CODE("label-add");
+
 static const ActionCode LABEL_DELETE_CODE("label-delete");
 static const ActionCode LABEL_DELETE_MULTI_CODE("label-delete-multi");
+
 static const ActionCode LABEL_CUT_CODE("label-cut");
+static const ActionCode LABEL_CUT_MULTI_CODE("label-cut-multi");
+
 static const ActionCode LABEL_COPY_CODE("label-copy");
-static const ActionCode LABEL_COPY_CODE_MULTI("label-copy-multi");
+static const ActionCode LABEL_COPY_MULTI_CODE("label-copy-multi");
 
 static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
@@ -217,12 +221,6 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, MULTI_CLIP_DELETE_CODE, this, &TrackeditActionsController::multiClipDelete);
     dispatcher()->reg(this, RANGE_SELECTION_DELETE_CODE, this, &TrackeditActionsController::rangeSelectionDelete);
 
-    dispatcher()->reg(this, LABEL_DELETE_CODE, this, &TrackeditActionsController::labelDelete);
-    dispatcher()->reg(this, LABEL_DELETE_MULTI_CODE, this, &TrackeditActionsController::labelDeleteMulti);
-    dispatcher()->reg(this, LABEL_CUT_CODE, this, &TrackeditActionsController::labelCut);
-    dispatcher()->reg(this, LABEL_COPY_CODE, this, &TrackeditActionsController::labelCopy);
-    dispatcher()->reg(this, LABEL_COPY_CODE_MULTI, this, &TrackeditActionsController::labelCopyMulti);
-
     dispatcher()->reg(this, OPEN_CLIP_AND_SPEED_CODE, this, &TrackeditActionsController::openClipPitchAndSpeed);
     dispatcher()->reg(this, CLIP_RENDER_PITCH_AND_SPEED_CODE, this, &TrackeditActionsController::renderClipPitchAndSpeed);
     dispatcher()->reg(this, TRACK_SPLIT, this, &TrackeditActionsController::trackSplit);
@@ -285,6 +283,15 @@ void TrackeditActionsController::init()
 
     dispatcher()->reg(this, LABEL_ADD_CODE, this, &TrackeditActionsController::addLabel);
 
+    dispatcher()->reg(this, LABEL_DELETE_CODE, this, &TrackeditActionsController::labelDelete);
+    dispatcher()->reg(this, LABEL_DELETE_MULTI_CODE, this, &TrackeditActionsController::labelDeleteMulti);
+
+    dispatcher()->reg(this, LABEL_CUT_CODE, this, &TrackeditActionsController::labelCut);
+    dispatcher()->reg(this, LABEL_CUT_MULTI_CODE, this, &TrackeditActionsController::labelCutMulti);
+
+    dispatcher()->reg(this, LABEL_COPY_CODE, this, &TrackeditActionsController::labelCopy);
+    dispatcher()->reg(this, LABEL_COPY_MULTI_CODE, this, &TrackeditActionsController::labelCopyMulti);
+
     projectHistory()->historyChanged().onNotify(this, [this]() {
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
         notifyActionEnabledChanged(TRACKEDIT_REDO);
@@ -338,15 +345,54 @@ void TrackeditActionsController::doGlobalCopy()
         return;
     }
 
-    if (selectionController()->selectedLabels().size() == 1) {
-        dispatcher()->dispatch(LABEL_COPY_CODE,
-                               actions::ActionData::make_arg1<trackedit::LabelKey>(selectionController()->selectedLabels().at(0)));
+    if (!selectionController()->selectedLabels().empty()) {
+        dispatcher()->dispatch(LABEL_COPY_MULTI_CODE);
         return;
     }
 }
 
 void TrackeditActionsController::doGlobalCut()
 {
+    const bool isTrackSelected = !selectionController()->timeSelectionIsNotEmpty() && !selectionController()->selectedTracks().empty()
+                                 && !selectionController()->hasSelectedClips() && !selectionController()->hasSelectedLabels();
+
+    const bool wasSet = configuration()->deleteBehavior() != DeleteBehavior::NotSet;
+
+    if (!isTrackSelected) {
+        if (!wasSet && !m_deleteBehaviorOnboardingScenario.showOnboardingDialog()) {
+            return;
+        }
+
+        muse::Defer showFollowup([this, wasSet]() {
+            if (!wasSet) {
+                m_deleteBehaviorOnboardingScenario.showFollowupDialog();
+            }
+        });
+
+        const DeleteBehavior deleteBehavior = configuration()->deleteBehavior();
+        IF_ASSERT_FAILED(deleteBehavior != DeleteBehavior::NotSet) {
+            return;
+        }
+
+        if (deleteBehavior != DeleteBehavior::NotSet && deleteBehavior != DeleteBehavior::LeaveGap) {
+            switch (configuration()->closeGapBehavior()) {
+            case CloseGapBehavior::ClipRipple:
+                doGlobalCutPerClipRipple();
+                break;
+            case CloseGapBehavior::TrackRipple:
+                doGlobalCutPerTrackRipple();
+                break;
+            case CloseGapBehavior::AllTracksRipple:
+                doGlobalCutAllTracksRipple();
+                break;
+            default:
+                LOGE() << "Unexpected close gap behavior: " << static_cast<int>(configuration()->closeGapBehavior());
+                assert(false);
+            }
+            return;
+        }
+    }
+
     if (selectionController()->timeSelectionIsNotEmpty()) {
         auto selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
@@ -357,17 +403,13 @@ void TrackeditActionsController::doGlobalCut()
         return;
     }
 
-    if (selectionController()->selectedClips().size() > 1) {
+    if (!selectionController()->selectedClips().empty()) {
         dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, ActionData::make_arg1(false));
-    } else if (!selectionController()->selectedClips().empty()) {
-        ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
-        if (selectedClipKey.isValid()) {
-            dispatcher()->dispatch(CLIP_SPLIT_CUT, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
-            return;
-        }
-    } else if (selectionController()->selectedLabels().size() == 1) {
-        dispatcher()->dispatch(LABEL_CUT_CODE,
-                               actions::ActionData::make_arg1<trackedit::LabelKey>(selectionController()->selectedLabels().at(0)));
+        return;
+    }
+
+    if (!selectionController()->selectedLabels().empty()) {
+        dispatcher()->dispatch(LABEL_CUT_MULTI_CODE, ActionData::make_arg1(false));
         return;
     }
 }
@@ -380,11 +422,15 @@ void TrackeditActionsController::doGlobalCutPerClipRipple()
         return;
     }
 
-    if (selectionController()->selectedClips().empty()) {
+    if (!selectionController()->selectedClips().empty()) {
+        dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, moveClips);
         return;
     }
 
-    dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, moveClips);
+    if (!selectionController()->selectedLabels().empty()) {
+        dispatcher()->dispatch(LABEL_CUT_MULTI_CODE, moveClips);
+        return;
+    }
 }
 
 void TrackeditActionsController::doGlobalCutPerTrackRipple()
@@ -395,33 +441,56 @@ void TrackeditActionsController::doGlobalCutPerTrackRipple()
         return;
     }
 
-    if (selectionController()->selectedClips().empty()) {
+    if (!selectionController()->selectedClips().empty()) {
+        dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, moveClips);
         return;
     }
 
-    dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, moveClips);
+    if (!selectionController()->selectedLabels().empty()) {
+        dispatcher()->dispatch(LABEL_CUT_MULTI_CODE, moveClips);
+        return;
+    }
 }
 
 void TrackeditActionsController::doGlobalCutAllTracksRipple()
 {
+    auto moveClips = ActionData::make_arg1(true);
+
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto tracks = project->trackeditProject()->trackIdList();
+
     if (selectionController()->timeSelectionIsNotEmpty()) {
-        project::IAudacityProjectPtr project = globalContext()->currentProject();
-        auto tracks = project->trackeditProject()->trackIdList();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
         trackeditInteraction()->clearClipboard();
-        trackeditInteraction()->cutClipDataIntoClipboard(tracks, selectedStartTime, selectedEndTime, true);
+        trackeditInteraction()->cutItemDataIntoClipboard(tracks, selectedStartTime, selectedEndTime, true);
 
         selectionController()->resetDataSelection();
         return;
     }
 
-    if (selectionController()->selectedClips().empty()) {
+    if (!selectionController()->selectedClips().empty()) {
+        secs_t selectedStartTime = selectionController()->leftMostSelectedClipStartTime();
+        secs_t selectedEndTime = selectionController()->rightMostSelectedClipEndTime();
+
+        trackeditInteraction()->clearClipboard();
+        trackeditInteraction()->cutItemDataIntoClipboard(tracks, selectedStartTime, selectedEndTime, true);
+
+        selectionController()->resetSelectedClips();
         return;
     }
 
-    dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, ActionData::make_arg1(true));
+    if (!selectionController()->selectedLabels().empty()) {
+        secs_t selectedStartTime = selectionController()->leftMostSelectedLabelStartTime();
+        secs_t selectedEndTime = selectionController()->rightMostSelectedLabelEndTime();
+
+        trackeditInteraction()->clearClipboard();
+        trackeditInteraction()->cutItemDataIntoClipboard(tracks, selectedStartTime, selectedEndTime, true);
+
+        selectionController()->resetSelectedLabels();
+        return;
+    }
 }
 
 void TrackeditActionsController::doGlobalDelete()
@@ -483,7 +552,7 @@ void TrackeditActionsController::doGlobalDelete()
     }
 
     if (!selectionController()->selectedLabels().empty()) {
-        dispatcher()->dispatch(LABEL_DELETE_MULTI_CODE);
+        dispatcher()->dispatch(LABEL_DELETE_MULTI_CODE, ActionData::make_arg1(false));
         return;
     }
 
@@ -752,8 +821,14 @@ void TrackeditActionsController::labelDelete(const ActionData& args)
     trackeditInteraction()->removeLabel(labelKey);
 }
 
-void TrackeditActionsController::labelDeleteMulti(const ActionData&)
+void TrackeditActionsController::labelDeleteMulti(const ActionData& args)
 {
+    bool moveLabels = false;
+
+    if (args.count() >= 1) {
+        moveLabels = args.arg<bool>(0);
+    }
+
     LabelKeyList selectedLabelKeys = selectionController()->selectedLabels();
     if (selectedLabelKeys.empty()) {
         return;
@@ -761,7 +836,7 @@ void TrackeditActionsController::labelDeleteMulti(const ActionData&)
 
     selectionController()->resetSelectedLabels();
 
-    trackeditInteraction()->removeLabels(selectedLabelKeys);
+    trackeditInteraction()->removeLabels(selectedLabelKeys, moveLabels);
 }
 
 void TrackeditActionsController::labelCut(const ActionData& args)
@@ -776,6 +851,26 @@ void TrackeditActionsController::labelCut(const ActionData& args)
     trackeditInteraction()->cutLabel(labelKey);
 }
 
+void TrackeditActionsController::labelCutMulti(const muse::actions::ActionData& args)
+{
+    bool moveClips = false;
+
+    if (args.count() >= 1) {
+        moveClips = args.arg<bool>(0);
+    }
+
+    auto selectedLabelKeys = selectionController()->selectedLabels();
+    if (selectedLabelKeys.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->clearClipboard();
+    labelCopyMulti();
+    selectionController()->resetSelectedLabels();
+
+    trackeditInteraction()->removeLabels(selectedLabelKeys, moveClips);
+}
+
 void TrackeditActionsController::labelCopy(const ActionData& args)
 {
     LabelKey labelKey = args.arg<LabelKey>(0);
@@ -787,15 +882,35 @@ void TrackeditActionsController::labelCopy(const ActionData& args)
     trackeditInteraction()->copyLabel(labelKey);
 }
 
-void TrackeditActionsController::labelCopyMulti(const ActionData& args)
+void TrackeditActionsController::labelCopyMulti()
 {
-    LabelKey labelKey = args.arg<LabelKey>(0);
-    if (!labelKey.isValid()) {
-        return;
-    }
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto selectedTracks = selectionController()->selectedTracks();
+    auto selectedLabels = selectionController()->selectedLabels();
+    auto tracks = project->trackeditProject()->trackList();
 
     trackeditInteraction()->clearClipboard();
-    trackeditInteraction()->copyLabel(labelKey);
+
+    secs_t offset = 0.0;
+    std::optional<secs_t> leftmostLabelStartTime = trackeditInteraction()->getLeftmostLabelStartTime(selectedLabels);
+    if (leftmostLabelStartTime.has_value()) {
+        offset = -leftmostLabelStartTime.value();
+    }
+
+    for (const auto& track : tracks) {
+        if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
+            continue;
+        }
+
+        LabelKeyList selectedTrackLabels;
+        for (const auto& label : selectedLabels) {
+            if (label.trackId == track.id) {
+                selectedTrackLabels.push_back(label);
+            }
+        }
+
+        trackeditInteraction()->copyNonContinuousTrackDataIntoClipboard(track.id, selectedTrackLabels, offset);
+    }
 }
 
 void TrackeditActionsController::multiClipCut(const ActionData& args)
@@ -832,7 +947,7 @@ void TrackeditActionsController::rangeSelectionCut(const ActionData& args)
     secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
     trackeditInteraction()->clearClipboard();
-    trackeditInteraction()->cutClipDataIntoClipboard(selectedTracks, selectedStartTime, selectedEndTime, moveClips);
+    trackeditInteraction()->cutItemDataIntoClipboard(selectedTracks, selectedStartTime, selectedEndTime, moveClips);
 
     selectionController()->resetDataSelection();
 }

@@ -48,9 +48,9 @@ public:
     virtual void clearClipboard() = 0;
     virtual muse::Ret pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks=false) = 0;
     virtual bool cutClipIntoClipboard(const ClipKey& clipKey) = 0;
-    virtual bool cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) = 0;
+    virtual bool cutItemDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) = 0;
     virtual bool copyClipIntoClipboard(const ClipKey& clipKey) = 0;
-    virtual bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) = 0;
+    virtual bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const TrackItemKeyList& itemKeys, secs_t offset) = 0;
     virtual bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) = 0;
     virtual bool removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) = 0;
@@ -122,7 +122,7 @@ public:
     virtual bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) = 0;
 
     virtual bool removeLabel(const LabelKey& labelKey) = 0;
-    virtual bool removeLabels(const LabelKeyList& labelKeys) = 0;
+    virtual bool removeLabels(const LabelKeyList& labelKeys, bool moveLabels) = 0;
 
     virtual bool cutLabel(const LabelKey& labelKey) = 0;
     virtual bool copyLabel(const LabelKey& labelKey) = 0;
@@ -130,6 +130,8 @@ public:
     virtual bool moveLabels(secs_t timePositionOffset, bool completed) = 0;
     virtual bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) = 0;
     virtual bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) = 0;
+
+    virtual std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const = 0;
 
     virtual muse::Progress progress() const = 0;
 };

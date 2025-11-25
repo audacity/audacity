@@ -526,7 +526,7 @@ TEST_F(Au3LabelsInteractionsTests, RemoveTwoLabels)
         { labelTrack->GetId(), labelId1 },
         { labelTrack->GetId(), labelId3 }
     };
-    bool result = m_labelsInteraction->removeLabels(labelsToRemove);
+    bool result = m_labelsInteraction->removeLabels(labelsToRemove, false);
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Removing labels should succeed";
@@ -582,7 +582,7 @@ TEST_F(Au3LabelsInteractionsTests, RemoveAllLabelsAtOnce)
         { labelTrack->GetId(), labelId2 },
         { labelTrack->GetId(), labelId3 }
     };
-    bool result = m_labelsInteraction->removeLabels(labelsToRemove);
+    bool result = m_labelsInteraction->removeLabels(labelsToRemove, false);
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Removing all labels should succeed";
@@ -634,7 +634,7 @@ TEST_F(Au3LabelsInteractionsTests, RemoveLabelsFromMultipleTracks)
         { labelTrack1->GetId(), label1Track1 },
         { labelTrack2->GetId(), label2Track2 }
     };
-    bool result = m_labelsInteraction->removeLabels(labelsToRemove);
+    bool result = m_labelsInteraction->removeLabels(labelsToRemove, false);
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Removing labels from multiple tracks should succeed";
@@ -679,7 +679,7 @@ TEST_F(Au3LabelsInteractionsTests, RemoveLabelsWithEmptyList)
 
     //! [WHEN] Try to remove labels with an empty list
     LabelKeyList emptyList;
-    bool result = m_labelsInteraction->removeLabels(emptyList);
+    bool result = m_labelsInteraction->removeLabels(emptyList, false);
 
     //! [THEN] The operation fails
     ASSERT_FALSE(result) << "Removing with empty list should fail";
@@ -717,7 +717,7 @@ TEST_F(Au3LabelsInteractionsTests, RemoveLabelsWithSomeInvalidKeys)
         { labelTrack->GetId(), labelId1 },
         { labelTrack->GetId(), 999999 }  // Invalid ID
     };
-    bool result = m_labelsInteraction->removeLabels(labelsToRemove);
+    bool result = m_labelsInteraction->removeLabels(labelsToRemove, false);
 
     //! [THEN] The operation succeeds (valid labels are removed)
     ASSERT_TRUE(result) << "Operation should succeed when at least one valid label is present";
@@ -733,6 +733,48 @@ TEST_F(Au3LabelsInteractionsTests, RemoveLabelsWithSomeInvalidKeys)
     ASSERT_NE(remainingLabel, nullptr) << "Remaining label should exist";
     ASSERT_EQ(remainingLabel->GetId(), labelId2) << "Remaining label should have correct ID";
     EXPECT_EQ(remainingLabel->title, wxString("Label 2")) << "Remaining label should be 'Label 2'";
+}
+
+TEST_F(Au3LabelsInteractionsTests, RemoveLabelsWithMoveLabels)
+{
+    //! [GIVEN] There is a project with a label track containing three labels
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(tracks);
+    ASSERT_NE(labelTrack, nullptr) << "Failed to create label track";
+
+    //! [GIVEN] Add three labels: first label (1.0-2.0), second to remove (3.0-5.0), third to shift (6.0-7.0)
+    SelectedRegion region1;
+    region1.setTimes(1.0, 2.0);
+    labelTrack->AddLabel(region1, wxString("Label 1"));
+
+    SelectedRegion region2;
+    region2.setTimes(3.0, 5.0);
+    TrackItemId labelId2 = labelTrack->AddLabel(region2, wxString("Label 2"));
+
+    SelectedRegion region3;
+    region3.setTimes(6.0, 7.0);
+    labelTrack->AddLabel(region3, wxString("Label 3"));
+
+    ASSERT_EQ(labelTrack->GetNumLabels(), 3) << "Precondition failed: Should have three labels";
+
+    //! [EXPECT] The project is notified about track changed once
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(1);
+
+    //! [WHEN] Remove the second label with moveLabels=true (ripple delete)
+    LabelKeyList labelsToRemove = { { labelTrack->GetId(), labelId2 } };
+    bool result = m_labelsInteraction->removeLabels(labelsToRemove, true);
+
+    //! [THEN] The operation is successful
+    ASSERT_TRUE(result) << "Removing label with moveLabels=true should succeed";
+
+    //! [THEN] Two labels remain
+    ASSERT_EQ(labelTrack->GetNumLabels(), 2) << "Should have two labels after removal";
+
+    //! [THEN] The third label shifted left by the duration of removed label (2.0 seconds)
+    const Au3Label* label3 = labelTrack->GetLabel(1);
+    ASSERT_NE(label3, nullptr) << "Label 3 should exist";
+    ASSERT_DOUBLE_EQ(label3->getT0(), 4.0) << "Label 3 should shift from 6.0 to 4.0";
+    ASSERT_DOUBLE_EQ(label3->getT1(), 5.0) << "Label 3 should shift from 7.0 to 5.0";
 }
 
 TEST_F(Au3LabelsInteractionsTests, CutLabel)
@@ -966,22 +1008,22 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsRight)
 
 TEST_F(Au3LabelsInteractionsTests, MoveLabelsLeftWhenLabelIsAtZero)
 {
-    //! [GIVEN] There is a project with a label track containing labels starting at zero
+    //! [GIVEN] There is a project with a label track containing labels, with the leftmost starting close to zero
     Au3TrackList& tracks = Au3TrackList::Get(projectRef());
     Au3LabelTrack* labelTrack = ::LabelTrack::Create(tracks);
     ASSERT_NE(labelTrack, nullptr) << "Failed to create label track";
 
-    //! [GIVEN] Add three labels, first one starting at 0.0
+    //! [GIVEN] Add three labels, first one starting at 0.5
     SelectedRegion region1;
-    region1.setTimes(0.0, 1.0);
+    region1.setTimes(0.5, 1.5);
     TrackItemId labelId1 = labelTrack->AddLabel(region1, wxString("Label 1"));
 
     SelectedRegion region2;
-    region2.setTimes(2.0, 3.0);
+    region2.setTimes(2.5, 3.5);
     TrackItemId labelId2 = labelTrack->AddLabel(region2, wxString("Label 2"));
 
     SelectedRegion region3;
-    region3.setTimes(4.0, 5.0);
+    region3.setTimes(4.5, 5.5);
     TrackItemId labelId3 = labelTrack->AddLabel(region3, wxString("Label 3"));
 
     //! [GIVEN] The label track contains three labels
@@ -1003,30 +1045,30 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsLeftWhenLabelIsAtZero)
 
     const double timeOffset = -1.0;
 
-    //! [WHEN] Move the labels left
+    //! [WHEN] Move the labels left by 1.0 second
     bool result = m_labelsInteraction->moveLabels(timeOffset, true);
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Moving labels should succeed";
 
-    //! [THEN] Labels are moved but clamped to not go below zero
+    //! [THEN] Labels are moved but the leftmost is clamped to zero
     const Au3Label* label1 = labelTrack->GetLabel(0);
     ASSERT_NE(label1, nullptr) << "First label should exist";
     ASSERT_EQ(label1->GetId(), labelId1) << "First label should have correct ID";
     ASSERT_DOUBLE_EQ(label1->getT0(), 0.0) << "First label start time should be clamped to 0.0";
-    ASSERT_DOUBLE_EQ(label1->getT1(), 0.0) << "First label end time should be clamped to 0.0";
+    ASSERT_DOUBLE_EQ(label1->getT1(), 1.0) << "First label end time should be 1.0";
 
     const Au3Label* label2 = labelTrack->GetLabel(1);
     ASSERT_NE(label2, nullptr) << "Second label should exist";
     ASSERT_EQ(label2->GetId(), labelId2) << "Second label should have correct ID";
-    ASSERT_DOUBLE_EQ(label2->getT0(), 1.0) << "Second label start time should be 1.0";
-    ASSERT_DOUBLE_EQ(label2->getT1(), 2.0) << "Second label end time should be 2.0";
+    ASSERT_DOUBLE_EQ(label2->getT0(), 2.0) << "Second label start time should be 2.0";
+    ASSERT_DOUBLE_EQ(label2->getT1(), 3.0) << "Second label end time should be 3.0";
 
     const Au3Label* label3 = labelTrack->GetLabel(2);
     ASSERT_NE(label3, nullptr) << "Third label should exist";
     ASSERT_EQ(label3->GetId(), labelId3) << "Third label should have correct ID";
-    ASSERT_DOUBLE_EQ(label3->getT0(), 3.0) << "Third label start time should be 3.0";
-    ASSERT_DOUBLE_EQ(label3->getT1(), 4.0) << "Third label end time should be 4.0";
+    ASSERT_DOUBLE_EQ(label3->getT0(), 4.0) << "Third label start time should be 4.0";
+    ASSERT_DOUBLE_EQ(label3->getT1(), 5.0) << "Third label end time should be 5.0";
 }
 
 TEST_F(Au3LabelsInteractionsTests, MoveLabelsWithZeroOffset)
@@ -1237,6 +1279,100 @@ TEST_F(Au3LabelsInteractionsTests, StretchLabelRightBeforeStartTime)
     ASSERT_EQ(stretchedLabel->GetId(), labelId) << "Label should have correct ID";
     ASSERT_DOUBLE_EQ(stretchedLabel->getT0(), 2.0) << "Label start time should be 2.0";
     ASSERT_DOUBLE_EQ(stretchedLabel->getT1(), 3.0) << "Label end time should be 3.0";
+}
+
+TEST_F(Au3LabelsInteractionsTests, StretchLabelRightInverse)
+{
+    //! [GIVEN] There is a project with a label track containing one label
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(tracks);
+    ASSERT_NE(labelTrack, nullptr) << "Failed to create label track";
+
+    //! [GIVEN] Add a label from 3.0 to 6.0
+    SelectedRegion region;
+    region.setTimes(3.0, 6.0);
+    TrackItemId labelId = labelTrack->AddLabel(region, wxString("Test Label"));
+    ASSERT_EQ(labelTrack->GetNumLabels(), 1) << "Label track should contain one label";
+
+    const LabelKey labelKey { labelTrack->GetId(), labelId };
+
+    //! [EXPECT] Multiple notifications for label changes
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(3);
+
+    //! [WHEN] Stretch right edge multiple times, crossing the left edge
+    // First stretch: move right edge from 6.0 to 2.5 (past left edge 3.0)
+    bool result1 = m_labelsInteraction->stretchLabelRight(labelKey, 2.5, false);
+    ASSERT_TRUE(result1) << "First stretch should succeed";
+
+    //! [THEN] Left edge should stay at 3.0, right edge at 2.5 (swapped by SelectedRegion)
+    const Au3Label* label1 = labelTrack->GetLabel(0);
+    ASSERT_DOUBLE_EQ(label1->getT0(), 2.5) << "After swap, T0 should be 2.5";
+    ASSERT_DOUBLE_EQ(label1->getT1(), 3.0) << "After swap, T1 should be original left edge 3.0";
+
+    //! [WHEN] Continue stretching right edge to 2.0
+    bool result2 = m_labelsInteraction->stretchLabelRight(labelKey, 2.0, false);
+    ASSERT_TRUE(result2) << "Second stretch should succeed";
+
+    //! [THEN] Anchor (original left edge 3.0) should remain fixed
+    const Au3Label* label2 = labelTrack->GetLabel(0);
+    ASSERT_DOUBLE_EQ(label2->getT0(), 2.0) << "After swap, T0 should be 2.0";
+    ASSERT_DOUBLE_EQ(label2->getT1(), 3.0) << "After swap, T1 should still be original left edge 3.0";
+
+    //! [WHEN] Continue stretching right edge to 1.5 and complete
+    bool result3 = m_labelsInteraction->stretchLabelRight(labelKey, 1.5, true);
+    ASSERT_TRUE(result3) << "Third stretch should succeed";
+
+    //! [THEN] Anchor should still be at original left edge 3.0
+    const Au3Label* label3 = labelTrack->GetLabel(0);
+    ASSERT_DOUBLE_EQ(label3->getT0(), 1.5) << "After swap, T0 should be 1.5";
+    ASSERT_DOUBLE_EQ(label3->getT1(), 3.0) << "After swap, T1 should still be original left edge 3.0";
+}
+
+TEST_F(Au3LabelsInteractionsTests, StretchLabelLeftInverse)
+{
+    //! [GIVEN] There is a project with a label track containing one label
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(tracks);
+    ASSERT_NE(labelTrack, nullptr) << "Failed to create label track";
+
+    //! [GIVEN] Add a label from 3.0 to 6.0
+    SelectedRegion region;
+    region.setTimes(3.0, 6.0);
+    TrackItemId labelId = labelTrack->AddLabel(region, wxString("Test Label"));
+    ASSERT_EQ(labelTrack->GetNumLabels(), 1) << "Label track should contain one label";
+
+    const LabelKey labelKey { labelTrack->GetId(), labelId };
+
+    //! [EXPECT] Multiple notifications for label changes
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(3);
+
+    //! [WHEN] Stretch left edge multiple times, crossing the right edge
+    // First stretch: move left edge from 3.0 to 6.5 (past right edge 6.0)
+    bool result1 = m_labelsInteraction->stretchLabelLeft(labelKey, 6.5, false);
+    ASSERT_TRUE(result1) << "First stretch should succeed";
+
+    //! [THEN] Right edge should stay at 6.0, left edge at 6.5
+    const Au3Label* label1 = labelTrack->GetLabel(0);
+    ASSERT_DOUBLE_EQ(label1->getT0(), 6.0) << "After swap, T0 should be original right edge 6.0";
+    ASSERT_DOUBLE_EQ(label1->getT1(), 6.5) << "After swap, T1 should be 6.5";
+
+    //! [WHEN] Continue stretching left edge to 7.0
+    bool result2 = m_labelsInteraction->stretchLabelLeft(labelKey, 7.0, false);
+    ASSERT_TRUE(result2) << "Second stretch should succeed";
+
+    //! [THEN] Anchor (original right edge 6.0) should remain fixed
+    const Au3Label* label2 = labelTrack->GetLabel(0);
+    ASSERT_DOUBLE_EQ(label2->getT0(), 6.0) << "After swap, T0 should still be original right edge 6.0";
+    ASSERT_DOUBLE_EQ(label2->getT1(), 7.0) << "After swap, T1 should be 7.0";
+
+    //! [WHEN] Continue stretching left edge to 7.5 and complete
+    bool result3 = m_labelsInteraction->stretchLabelLeft(labelKey, 7.5, true);
+    ASSERT_TRUE(result3) << "Third stretch should succeed";
+
+    //! [THEN] Anchor should still be at original right edge 6.0
+    const Au3Label* label3 = labelTrack->GetLabel(0);
+    ASSERT_DOUBLE_EQ(label3->getT0(), 6.0) << "After swap, T0 should still be original right edge 6.0";
+    ASSERT_DOUBLE_EQ(label3->getT1(), 7.5) << "After swap, T1 should be 7.5";
 }
 
 TEST_F(Au3LabelsInteractionsTests, StretchLabelLeftWithInvalidKey)
