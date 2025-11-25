@@ -50,7 +50,7 @@ const std::string mixingDownToMonoLabel = muse::trc("trackedit", "Mixing down to
 
 constexpr float DEFAULT_VERTICAL_RANGE = 1.0f;
 constexpr float MAX_VERTICAL_RANGE = 2.0f;
-constexpr float MIN_VERTICAL_RANGE = 1.0f / (1 << 11);
+constexpr float MIN_VERTICAL_RANGE = 1.0f / (1 << 10);
 }
 
 Au3TracksInteraction::Au3TracksInteraction()
