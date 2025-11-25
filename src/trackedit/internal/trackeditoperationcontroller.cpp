@@ -184,7 +184,7 @@ bool TrackeditOperationController::cutClipIntoClipboard(const ClipKey& clipKey)
 
 bool TrackeditOperationController::cutItemDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
-    std::vector<ITrackDataPtr> tracksData(tracksIds.size());
+    std::vector<ITrackDataPtr> tracksData;
     for (const auto& trackId : tracksIds) {
         const auto data = tracksInteraction()->cutTrackData(trackId, begin, end, moveClips);
         if (!data) {
