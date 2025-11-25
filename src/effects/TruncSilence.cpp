@@ -106,6 +106,24 @@ std::unique_ptr<EffectEditor> EffectTruncSilence::PopulateOrExchange(
    }
    S.EndStatic();
 
+   S.StartStatic(XO("Truncate Location"));
+   {
+      S.StartMultiColumn(1, wxALIGN_LEFT);
+      {
+         mTruncateStart = S.AddCheckBox(
+            XXO("Remove silence from &beginning"),
+            mbTruncateStart);
+         mTruncateMiddle = S.AddCheckBox(
+            XXO("Remove silence from &middle"),
+            mbTruncateMiddle);
+         mTruncateEnd = S.AddCheckBox(
+            XXO("Remove silence from &end"),
+            mbTruncateEnd);
+      }
+      S.EndMultiColumn();
+   }
+   S.EndStatic();
+
    UpdateUI();
    return nullptr;
 }
@@ -128,6 +146,19 @@ bool EffectTruncSilence::TransferDataFromWindow(EffectSettings &)
    }
 
    mbIndependent = mIndependent->IsChecked();
+   mbTruncateStart = mTruncateStart->IsChecked();
+   mbTruncateMiddle = mTruncateMiddle->IsChecked();
+   mbTruncateEnd = mTruncateEnd->IsChecked();
+
+   // Validate that at least one location option is selected
+   bool anyLocationSelected = 
+      mbTruncateStart || mbTruncateMiddle || mbTruncateEnd;
+   
+   if (!anyLocationSelected)
+   {
+      EffectEditor::EnableApply(mUIParent, false);
+      return false;
+   }
 
    return true;
 }

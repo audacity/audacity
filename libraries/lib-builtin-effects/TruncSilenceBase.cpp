@@ -74,7 +74,7 @@ const EffectParameterMethods& TruncSilenceBase::Parameters() const
 {
    static CapturedParameters<
       TruncSilenceBase, Threshold, ActIndex, Minimum, Truncate, Compress,
-      Independent>
+      Independent, TruncateStart, TruncateMiddle, TruncateEnd>
       parameters;
    return parameters;
 }
@@ -107,6 +107,11 @@ TruncSilenceBase::TruncSilenceBase()
    //   The values should be figured dynamically ... too many frames could be
    //   invalid
    mBlendFrameCount = DEF_BlendFrameCount;
+   
+   // Initialize new parameters (Reset should handle this, but be explicit)
+   mbTruncateStart = true;
+   mbTruncateMiddle = true;
+   mbTruncateEnd = true;
 }
 
 TruncSilenceBase::~TruncSilenceBase()
@@ -369,11 +374,40 @@ bool TruncSilenceBase::DoRemoval(
    // tracks.
    //
 
+   // Filter silences based on location options
+   RegionList filteredSilences;
+   
+   if (silences.empty())
+   {
+      return true;
+   }
+   
+   // Determine track boundaries
+   double trackStart = mT0;
+   double trackEnd = mT1;
+   
+   for (const auto& region : silences)
+   {
+      bool isAtStart = (region.start <= trackStart + 0.001);
+      bool isAtEnd = (region.end >= trackEnd - 0.001);
+      bool isInMiddle = !isAtStart && !isAtEnd;
+      
+      bool shouldInclude = false;
+      if (isAtStart && mbTruncateStart) shouldInclude = true;
+      if (isAtEnd && mbTruncateEnd) shouldInclude = true;
+      if (isInMiddle && mbTruncateMiddle) shouldInclude = true;
+      
+      if (shouldInclude)
+      {
+         filteredSilences.push_back(region);
+      }
+   }
+
    // Loop over detected regions in reverse (so cuts don't change time values
    // down the line)
    int whichReg = 0;
    RegionList::const_reverse_iterator rit;
-   for (rit = silences.rbegin(); rit != silences.rend(); ++rit)
+   for (rit = filteredSilences.rbegin(); rit != filteredSilences.rend(); ++rit)
    {
       const Region& region = *rit;
       const Region* const r = &region;
@@ -381,7 +415,7 @@ bool TruncSilenceBase::DoRemoval(
       // Progress dialog and cancellation. Do additional cleanup before return.
       const double frac =
          detectFrac + (1 - detectFrac) *
-                         (iGroup + whichReg / double(silences.size())) /
+                         (iGroup + whichReg / double(filteredSilences.size())) /
                          nGroups;
       if (TotalProgress(frac))
          return false;
