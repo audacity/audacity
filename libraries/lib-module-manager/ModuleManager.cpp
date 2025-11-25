@@ -108,7 +108,13 @@ bool Module::Load(wxString &deferredErrorMessage)
 
    auto ShortName = wxFileName(mName).GetName();
 
-   if (!mLib->Load(mName, wxDL_NOW | wxDL_QUIET | wxDL_GLOBAL)) {
+￼  // If we hit an error in libdl, it doesn't set errno; you instead
+￼  // have to use dlerror(), and there is no public integer representation.
+￼  // Similarly, if Load() fails for anything else that isn't a system
+￼  // call, errno won't be set, but wxSysErrorMsg() uses errno. So at
+￼  // least 0 it out beforehand, and let wxDynamicLibrary log errors.
+￼  errno = 0;
+￼  if (!mLib->Load(mName, wxDL_NOW | wxDL_GLOBAL)) {
       // For this failure path, only, there is a possibility of retrial
       // after some other dependency of this module is loaded.  So the
       // error is not immediately reported.
