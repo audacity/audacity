@@ -345,9 +345,8 @@ void TrackeditActionsController::doGlobalCopy()
         return;
     }
 
-    if (selectionController()->selectedLabels().size() == 1) {
-        dispatcher()->dispatch(LABEL_COPY_CODE,
-                               actions::ActionData::make_arg1<trackedit::LabelKey>(selectionController()->selectedLabels().at(0)));
+    if (!selectionController()->selectedLabels().empty()) {
+        dispatcher()->dispatch(LABEL_COPY_MULTI_CODE);
         return;
     }
 }
