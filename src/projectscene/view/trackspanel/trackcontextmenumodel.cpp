@@ -14,12 +14,12 @@ namespace {
 constexpr const char* TRACK_FORMAT_CHANGE_ACTION = "action://trackedit/track/change-format?format=%1";
 constexpr const char* TRACK_RATE_CHANGE_ACTION = "action://trackedit/track/change-rate?rate=%1";
 
-constexpr const char* TRACK_VIEW_WAVEFORM_ACTION = "track-view-waveform";
-constexpr const char* TRACK_VIEW_SPECTROGRAM_ACTION = "track-view-spectrogram";
-constexpr const char* TRACK_VIEW_MULTI_ACTION = "track-view-multi";
-constexpr const char* TRACK_VIEW_HALF_WAVE_ACTION = "track-view-half-wave";
+constexpr const char* TRACK_VIEW_WAVEFORM_ACTION = "action://trackedit/track-view-waveform";
+constexpr const char* TRACK_VIEW_SPECTROGRAM_ACTION = "action://trackedit/track-view-spectrogram";
+constexpr const char* TRACK_VIEW_MULTI_ACTION = "action://trackedit/track-view-multi";
+constexpr const char* TRACK_VIEW_HALF_WAVE_ACTION = "action://trackedit/track-view-half-wave";
 
-constexpr const char* TRACK_SPECTROGRAM_SETTINGS_ACTION = "track-spectrogram-settings";
+constexpr const char* TRACK_SPECTROGRAM_SETTINGS_ACTION = "action://trackedit/track-spectrogram-settings";
 
 constexpr const char* TRACK_COLOR_MENU_ID = "trackColorMenu";
 constexpr const char* TRACK_FORMAT_MENU_ID = "trackFormatMenu";
@@ -183,6 +183,19 @@ void TrackContextMenuModel::handleMenuItem(const QString& itemId)
     if (itemId == "track-rename") {
         emit trackRenameRequested();
     } else {
+        //! Why an async call?
+        //!
+        //! On the one hand, `pushHistoryState` may be called as a result of a QML item triggering an action that will lead to its deletion
+        //! (e.g. deleting a track from a context menu).
+        //!
+        //! On the other hand, when the QML-triggered action is called after an undo, this undo history item gets discarded.
+        //! If this undo item involved the creation of audio blocks, such as when generating audio, `pushHistoryState` will delete these blocks.
+        //! If there was many of them, it will open a progress dialog which, to be updated, leads to `QCoreApplication::processEvents()` calls.
+        //!
+        //! This crashes because QCoreApplication::processEvents() will now process an event that deletes the QML item that is at the origin of this very call...
+        //! Qt then throws the message "Object 0x..... destroyed while one of its QML signal handlers is in progress."
+        //!
+        //! https://github.com/audacity/audacity/issues/9530
         muse::async::Async::call(this, [this, itemId]{ AbstractMenuModel::handleMenuItem(itemId); });
     }
 }
@@ -422,17 +435,19 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackViewItems()
     m_trackViewTypeChangeActionCodeList.clear();
     muse::uicomponents::MenuItemList items;
     items.reserve(5);
-    for (const muse::actions::ActionCode& code : { TRACK_VIEW_WAVEFORM_ACTION,
-                                                   TRACK_VIEW_SPECTROGRAM_ACTION,
-                                                   TRACK_VIEW_MULTI_ACTION,
-                                                   TRACK_VIEW_HALF_WAVE_ACTION,
-                                                   "separator",
-                                                   TRACK_SPECTROGRAM_SETTINGS_ACTION }) {
-        if (code == "separator") {
+    for (const std::string action : { TRACK_VIEW_WAVEFORM_ACTION,
+                                      TRACK_VIEW_SPECTROGRAM_ACTION,
+                                      TRACK_VIEW_MULTI_ACTION,
+                                      TRACK_VIEW_HALF_WAVE_ACTION,
+                                      "separator",
+                                      TRACK_SPECTROGRAM_SETTINGS_ACTION }) {
+        if (action == "separator") {
             items.push_back(makeSeparator());
         } else {
-            items.push_back(makeItemWithArg(code));
-            m_trackViewTypeChangeActionCodeList.push_back(code);
+            muse::actions::ActionQuery query(action);
+            query.addParam("trackId", muse::Val { m_trackId });
+            items.push_back(makeMenuItem(query.toString()));
+            m_trackViewTypeChangeActionCodeList.push_back(action);
         }
     }
     return items;

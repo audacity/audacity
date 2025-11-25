@@ -107,10 +107,10 @@ static const ActionQuery TRACK_CHANGE_COLOR_QUERY("action://trackedit/track/chan
 static const ActionQuery TRACK_CHANGE_FORMAT_QUERY("action://trackedit/track/change-format");
 static const ActionQuery TRACK_CHANGE_RATE_QUERY("action://trackedit/track/change-rate");
 
-static const ActionCode SET_TRACK_VIEW_WAVEFORM("track-view-waveform");
-static const ActionCode SET_TRACK_VIEW_SPECTROGRAM("track-view-spectrogram");
-static const ActionCode SET_TRACK_VIEW_MULTI("track-view-multi");
-static const ActionCode TRACK_OPEN_SPECTROGRAM_SETTINGS("track-spectrogram-settings");
+static const ActionQuery SET_TRACK_VIEW_WAVEFORM("action://trackedit/track-view-waveform");
+static const ActionQuery SET_TRACK_VIEW_SPECTROGRAM("action://trackedit/track-view-spectrogram");
+static const ActionQuery SET_TRACK_VIEW_MULTI("action://trackedit/track-view-multi");
+static const ActionQuery TRACK_OPEN_SPECTROGRAM_SETTINGS("action://trackedit/track-spectrogram-settings");
 
 static const ActionCode LABEL_ADD_CODE("label-add");
 
@@ -1782,49 +1782,49 @@ void TrackeditActionsController::setTrackRate(const muse::actions::ActionQuery& 
     }
 }
 
-void TrackeditActionsController::changeTrackViewToWaveform(const muse::actions::ActionData& d)
+void TrackeditActionsController::changeTrackViewToWaveform(const muse::actions::ActionQuery& q)
 {
-    changeTrackView(d, TrackViewType::Waveform);
+    changeTrackView(q, TrackViewType::Waveform);
 }
 
-void TrackeditActionsController::changeTrackViewToSpectrogram(const muse::actions::ActionData& d)
+void TrackeditActionsController::changeTrackViewToSpectrogram(const muse::actions::ActionQuery& q)
 {
-    changeTrackView(d, TrackViewType::Spectrogram);
+    changeTrackView(q, TrackViewType::Spectrogram);
 }
 
-void TrackeditActionsController::changeTrackViewToWaveformAndSpectrogram(const muse::actions::ActionData& d)
+void TrackeditActionsController::changeTrackViewToWaveformAndSpectrogram(const muse::actions::ActionQuery& q)
 {
-    changeTrackView(d, TrackViewType::WaveformAndSpectrogram);
+    changeTrackView(q, TrackViewType::WaveformAndSpectrogram);
 }
 
-void TrackeditActionsController::changeTrackView(const muse::actions::ActionData& d, TrackViewType trackView)
+void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuery& q, TrackViewType trackView)
 {
-    IF_ASSERT_FAILED(d.count() == 1) {
+    IF_ASSERT_FAILED(q.params().size() == 1) {
         return;
     }
-    const auto trackId = d.arg<TrackId>(0);
+    const auto trackId = q.param("trackId").toInt();
     if (!trackeditInteraction()->changeAudioTrackViewType(trackId, trackView)) {
         return;
     }
     switch (trackView) {
     case TrackViewType::Waveform:
-        notifyActionCheckedChanged(SET_TRACK_VIEW_WAVEFORM);
+        notifyActionCheckedChanged(SET_TRACK_VIEW_WAVEFORM.toString());
         break;
     case TrackViewType::Spectrogram:
-        notifyActionCheckedChanged(SET_TRACK_VIEW_SPECTROGRAM);
+        notifyActionCheckedChanged(SET_TRACK_VIEW_SPECTROGRAM.toString());
         break;
     case TrackViewType::WaveformAndSpectrogram:
-        notifyActionCheckedChanged(SET_TRACK_VIEW_MULTI);
+        notifyActionCheckedChanged(SET_TRACK_VIEW_MULTI.toString());
         break;
     default:
         assert(false);
     }
 }
 
-void TrackeditActionsController::openTrackSpectrogramSettings(const muse::actions::ActionData& d)
+void TrackeditActionsController::openTrackSpectrogramSettings(const muse::actions::ActionQuery& q)
 {
     muse::UriQuery spectrogramSettingsUri("audacity://trackedit/track_spectrogram_settings");
-    spectrogramSettingsUri.addParam("trackId", muse::Val(d.arg<TrackId>(0)));
+    spectrogramSettingsUri.addParam("trackId", muse::Val(q.param("trackId").toInt()));
     interactive()->open(spectrogramSettingsUri);
 }
 
