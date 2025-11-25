@@ -85,6 +85,9 @@ protected:
    double mTruncLongestAllowedSilence;
    double mSilenceCompressPercent;
    bool mbIndependent;
+   bool mbTruncateStart;
+   bool mbTruncateMiddle;
+   bool mbTruncateEnd;
 
    size_t mBlendFrameCount;
 
@@ -136,5 +139,14 @@ protected:
    };
    static constexpr EffectParameter Independent {
       &TruncSilenceBase::mbIndependent, L"Independent", false, false, true, 1
+   };
+   static constexpr EffectParameter TruncateStart {
+      &TruncSilenceBase::mbTruncateStart, L"TruncateStart", true, false, true, 1
+   };
+   static constexpr EffectParameter TruncateMiddle {
+      &TruncSilenceBase::mbTruncateMiddle, L"TruncateMiddle", true, false, true, 1
+   };
+   static constexpr EffectParameter TruncateEnd {
+      &TruncSilenceBase::mbTruncateEnd, L"TruncateEnd", true, false, true, 1
    };
 };

@@ -106,6 +106,24 @@ std::unique_ptr<EffectEditor> EffectTruncSilence::PopulateOrExchange(
    }
    S.EndStatic();
 
+   S.StartStatic(XO("Truncate Location"));
+   {
+      S.StartMultiColumn(1, wxALIGN_LEFT);
+      {
+         mTruncateStart = S.AddCheckBox(
+            XXO("Remove silence from &beginning"),
+            mbTruncateStart);
+         mTruncateMiddle = S.AddCheckBox(
+            XXO("Remove silence from &middle"),
+            mbTruncateMiddle);
+         mTruncateEnd = S.AddCheckBox(
+            XXO("Remove silence from &end"),
+            mbTruncateEnd);
+      }
+      S.EndMultiColumn();
+   }
+   S.EndStatic();
+
    UpdateUI();
    return nullptr;
 }
@@ -128,6 +146,23 @@ bool EffectTruncSilence::TransferDataFromWindow(EffectSettings &)
    }
 
    mbIndependent = mIndependent->IsChecked();
+   mbTruncateStart = mTruncateStart->IsChecked();
+   mbTruncateMiddle = mTruncateMiddle->IsChecked();
+   mbTruncateEnd = mTruncateEnd->IsChecked();
+
+   // Validate that at least one location option is selected
+   bool anyLocationSelected = 
+      mbTruncateStart || mbTruncateMiddle || mbTruncateEnd;
+   
+   if (!anyLocationSelected)
+   {
+      AudacityMessageBox(
+         XO("At least one location option must be selected.\n\nPlease select at least one of:\n• Remove silence from beginning\n• Remove silence from middle\n• Remove silence from end"),
+         XO("Truncate Silence"),
+         wxOK | wxICON_INFORMATION);
+      EffectEditor::EnableApply(mUIParent, false);
+      return false;
+   }
 
    return true;
 }
