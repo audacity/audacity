@@ -123,15 +123,15 @@ Uuid Uuid::FromString(const std::string& str)
     const size_t length = str.length();
 
     if (length == 0) {
-        return {}
+        return {};
     }
 
     const bool hasBraces = str[0] == '{';
 
     if (hasBraces && (length != BRACED_UUID_LENGTH || str.back() != '}')) {
-        return {}
+        return {};
     } else if (!hasBraces && length != UUID_LENGTH) {
-        return {}
+        return {};
     }
 
     const unsigned int iteratorOffset = hasBraces ? 1 : 0;
@@ -144,7 +144,7 @@ Uuid Uuid::FromString(const std::string& str)
 
     for (int i = 0; i < 16; ++i) {
         if (!readByte(currentByte, currentSymbol, inputEnd)) {
-            return {}
+            return {};
         }
 
         if (currentSymbol != inputEnd && *currentSymbol == '-') {
