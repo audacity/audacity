@@ -7,6 +7,7 @@
 
 #include "global/modularity/ioc.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
+#include "effects/effects_base/ieffectsconfiguration.h"
 
 class AUControl;
 
@@ -21,6 +22,7 @@ class AudioUnitView : public QQuickItem
     Q_PROPERTY(int minimumWidth READ minimumWidth WRITE setMinimumWidth NOTIFY minimumWidthChanged FINAL)
 
     muse::Inject<IEffectInstancesRegister> instancesRegister;
+    muse::Inject<IEffectsConfiguration> configuration;
 
 public:
     AudioUnitView(QQuickItem* parent = nullptr);
@@ -31,6 +33,7 @@ public:
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void deinit();
+    Q_INVOKABLE void reload();
 
     int sidePadding() const;
     void setSidePadding(int newSidePadding);

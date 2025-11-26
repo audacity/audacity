@@ -27,8 +27,24 @@ void EffectViewerDialogModel::setInstanceId(int newInstanceId)
     }
     m_instanceId = newInstanceId;
     emit instanceIdChanged();
-    const auto id = instancesRegister()->effectIdByInstanceId(m_instanceId).toStdString();
+
+    m_effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
+    const auto id = m_effectId.toStdString();
     m_title = QString::fromStdString(effectsProvider()->effectName(id));
     emit titleChanged();
+}
+
+bool EffectViewerDialogModel::useVendorUI() const
+{
+    if (m_effectId.empty()) {
+        return true; // Default to vendor UI
+    }
+    const bool result = configuration()->pluginUIMode(m_effectId) == PluginUIMode::VendorUI;
+    return result;
+}
+
+void EffectViewerDialogModel::refreshUIMode()
+{
+    emit useVendorUIChanged();
 }
 } // namespace au::effects
