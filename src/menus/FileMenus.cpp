@@ -327,7 +327,7 @@ void OnExportLabels(const CommandContext &context)
       wxEmptyString,
       fName,
       wxT("txt"),
-      { FileNames::TextFiles, LabelTrack::SubripFiles, LabelTrack::WebVTTFiles },
+      { FileNames::TextFiles, LabelTrack::SubripFiles, LabelTrack::WebVTTFiles, LabelTrack::PodcastChaptersFiles },
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
       &window);
 
