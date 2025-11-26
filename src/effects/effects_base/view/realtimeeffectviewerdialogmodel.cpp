@@ -68,6 +68,10 @@ void RealtimeEffectViewerDialogModel::load()
     realtimeEffectService()->effectSettingsChanged().onNotify(this, [this] {
         emit isActiveChanged();
     });
+
+    configuration()->pluginUIModeChanged().onNotify(this, [this] {
+        emit useVendorUIChanged();
+    });
 }
 
 EffectFamily RealtimeEffectViewerDialogModel::prop_effectFamily() const
@@ -186,5 +190,25 @@ void RealtimeEffectViewerDialogModel::subscribe()
 bool RealtimeEffectViewerDialogModel::prop_isMasterEffect() const
 {
     return realtimeEffectService()->trackId(m_effectState) == IRealtimeEffectService::masterTrackId;
+}
+
+bool RealtimeEffectViewerDialogModel::useVendorUI() const
+{
+    if (!m_effectState) {
+        return true; // Default to vendor UI
+    }
+
+    const auto effectId = muse::String::fromStdString(m_effectState->GetID().ToStdString());
+    if (effectId.empty()) {
+        return true; // Default to vendor UI
+    }
+
+    const bool result = configuration()->pluginUIMode(effectId) == PluginUIMode::VendorUI;
+    return result;
+}
+
+void RealtimeEffectViewerDialogModel::refreshUIMode()
+{
+    emit useVendorUIChanged();
 }
 }

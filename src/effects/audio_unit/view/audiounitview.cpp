@@ -36,8 +36,11 @@ void AudioUnitView::init()
 {
     const auto instance = std::dynamic_pointer_cast<AudioUnitInstance>(instancesRegister()->instanceById(m_instanceId));
 
-    // TODO: When design for this setting is ready, use the user preference here
-    bool isGraphical = true;
+    // Check if we should use the vendor UI (custom Cocoa UI) or the generic UI
+    // When useVendorUI is true, we want the custom graphical UI
+    // When useVendorUI is false, we want Apple's generic AUGenericView (fallback UI)
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
+    const bool isGraphical = (configuration()->pluginUIMode(effectId) == PluginUIMode::VendorUI);
 
     m_auControl = std::make_unique<AUControl>();
     if (!m_auControl->create(instance->GetComponent(),
@@ -57,6 +60,13 @@ void AudioUnitView::init()
 void AudioUnitView::deinit()
 {
     m_auControl.reset();
+}
+
+void AudioUnitView::reload()
+{
+    // usually called when updating UI mode
+    deinit();
+    init();
 }
 
 void AudioUnitView::embedNativeView()
