@@ -10,7 +10,6 @@ import Audacity.Effects 1.0
 import Audacity.AudioUnit 1.0
 
 Rectangle {
-
     id: root
 
     // in
@@ -23,6 +22,9 @@ Rectangle {
     // out
     property alias title: model.title
 
+    // Expose the view for external access (e.g., to call reload())
+    property alias view: view
+
     color: ui.theme.backgroundPrimaryColor
 
     width: implicitWidth
@@ -31,7 +33,6 @@ Rectangle {
     implicitWidth: view.implicitWidth
     implicitHeight: view.implicitHeight
 
-
     Component.onCompleted: {
         model.init()
         view.init()
@@ -39,7 +40,16 @@ Rectangle {
     }
 
     Component.onDestruction: {
-        model.deinit();
+        model.deinit()
+    }
+
+    // Reload the view when UI mode changes
+    Connections {
+        target: manageMenuModel
+        function onUseVendorUIChanged() {
+            console.debug("AudioUnitViewer: UI mode changed, reloading view")
+            view.reload()
+        }
     }
 
     function preview() {
@@ -62,7 +72,7 @@ Rectangle {
     ContextMenuLoader {
         id: menuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             manageMenuModel.handleMenuItem(itemId)
         }
     }

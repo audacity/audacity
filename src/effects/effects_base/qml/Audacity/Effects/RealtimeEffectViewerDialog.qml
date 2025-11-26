@@ -36,12 +36,47 @@ EffectStyledDialogView {
 
     Component.onCompleted: {
         viewerModel.load()
+        loadViewer()
+    }
+
+    // Listen to UI mode changes from the presets bar menu
+    Connections {
+        target: presetsBar.manageMenuModel
+        function onUseVendorUIChanged() {
+            viewerModel.refreshUIMode()
+        }
+    }
+
+    Connections {
+        target: viewerModel
+        function onUseVendorUIChanged() {
+            // For Audio Units, reload the view instead of switching components
+            if (viewerModel.effectFamily === EffectFamily.AudioUnit && viewLoader.item) {
+                viewLoader.item.view.reload()
+            } else {
+                loadViewer()
+            }
+        }
+    }
+
+    function loadViewer() {
+        // Audio Units always use AudioUnitViewer, which handles both vendor UI and Apple's generic UI internally
+        if (viewerModel.effectFamily === EffectFamily.AudioUnit) {
+            viewLoader.sourceComponent = audioUnitViewerComponent
+            return
+        }
+
+        // Check if we should use generated UI instead of vendor UI
+        // (only for external plugins, not built-in effects or Audio Units)
+        if (!viewerModel.useVendorUI && viewerModel.effectFamily !== EffectFamily.Builtin) {
+            viewLoader.sourceComponent = generatedViewerComponent
+            return
+        }
+
+        // Otherwise, load the appropriate vendor UI
         switch (viewerModel.effectFamily) {
         case EffectFamily.Builtin:
             viewLoader.sourceComponent = builtinViewerComponent
-            break
-        case EffectFamily.AudioUnit:
-            viewLoader.sourceComponent = audioUnitViewerComponent
             break
         case EffectFamily.LV2:
             viewLoader.sourceComponent = lv2ViewerComponent
@@ -107,6 +142,14 @@ EffectStyledDialogView {
         }
     }
 
+    Component {
+        id: generatedViewerComponent
+        GeneratedEffectViewer {
+            id: view
+            instanceId: root.instanceId
+        }
+    }
+
     ColumnLayout {
         spacing: 0
         anchors.fill: parent
@@ -115,7 +158,6 @@ EffectStyledDialogView {
             Layout.fillWidth: true
 
             window: Window {
-
                 id: win
 
                 color: ui.theme.backgroundPrimaryColor

@@ -4,8 +4,8 @@
 #pragma once
 
 #include "effectstypes.h"
-#include "async/notification.h"
-#include "modularity/imoduleinterface.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/modularity/imoduleinterface.h"
 
 namespace au::effects {
 class IEffectsConfiguration : MODULE_EXPORT_INTERFACE
