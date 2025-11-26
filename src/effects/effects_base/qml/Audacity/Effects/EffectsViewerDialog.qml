@@ -58,13 +58,48 @@ EffectStyledDialogView {
     }
 
     onWindowChanged: {
+        loadViewer()
+    }
+
+    Connections {
+        target: viewerModel
+        function onUseVendorUIChanged() {
+            // For Audio Units, reload the view instead of switching components
+            if (effectFamily === EffectFamily.AudioUnit && viewerLoader.item) {
+                viewerLoader.item.view.reload()
+            } else {
+                loadViewer()
+            }
+        }
+    }
+
+    // Listen to UI mode changes from the presets bar menu
+    Connections {
+        target: presetsBar.manageMenuModel
+        function onUseVendorUIChanged() {
+            viewerModel.refreshUIMode()
+        }
+    }
+
+    function loadViewer() {
         // Wait until the window is set: VstView needs it for intialization
+        // Audio Units always use AudioUnitViewer, which handles both vendor UI and Apple's generic UI internally
+        if (effectFamily === EffectFamily.AudioUnit) {
+            viewerLoader.sourceComponent = audioUnitViewerComp
+            return
+        }
+
+        // Check if we should use generated UI instead of vendor UI
+        // (only for external plugins, not built-in effects or Audio Units)
+        if (!viewerModel.useVendorUI && effectFamily !== EffectFamily.Builtin) {
+            viewerLoader.sourceComponent = generatedViewerComp
+            return
+        }
+
+        // Otherwise, load the appropriate vendor UI
         switch (effectFamily) {
         case EffectFamily.Builtin:
             viewerLoader.sourceComponent = builtinViewerComp
-            break
-        case EffectFamily.AudioUnit:
-            viewerLoader.sourceComponent = audioUnitViewerComp
             break
         case EffectFamily.LV2:
             viewerLoader.sourceComponent = lv2ViewerComp
@@ -286,6 +321,13 @@ EffectStyledDialogView {
             bottomPadding: bbox.implicitHeight + prv.panelMargins * 2
             sidePadding: prv.viewMargins
             minimumWidth: prv.minimumWidth
+        }
+    }
+
+    Component {
+        id: generatedViewerComp
+        GeneratedEffectViewer {
+            instanceId: root.instanceId
         }
     }
 }

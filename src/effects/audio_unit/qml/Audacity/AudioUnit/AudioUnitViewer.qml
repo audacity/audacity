@@ -25,6 +25,9 @@ Rectangle {
 
     readonly property var model: AudioUnitViewModelFactory.createModel(root, root.instanceId)
 
+    // Expose the view for external access (e.g., to call reload())
+    property alias view: view
+
     color: ui.theme.backgroundPrimaryColor
 
     width: implicitWidth
@@ -41,6 +44,15 @@ Rectangle {
 
     Component.onDestruction: {
         model.deinit()
+    }
+
+    // Reload the view when UI mode changes
+    Connections {
+        target: manageMenuModel
+        function onUseVendorUIChanged() {
+            console.debug("AudioUnitViewer: UI mode changed, reloading view")
+            view.reload()
+        }
     }
 
     function startPreview() {
