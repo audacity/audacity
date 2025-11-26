@@ -54,7 +54,7 @@ if(OS_IS_LIN OR OS_IS_FBSD)
 endif()
 
 # AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3defs.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
 
 set(MODULE_INCLUDE
     ${AU3_INCLUDE}
