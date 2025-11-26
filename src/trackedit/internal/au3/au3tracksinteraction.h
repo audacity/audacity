@@ -8,10 +8,11 @@
 #include "modularity/ioc.h"
 #include "iinteractive.h"
 #include "context/iglobalcontext.h"
-#include "../../itrackeditconfiguration.h"
-#include "../../iclipsinteraction.h"
-#include "../../iselectioncontroller.h"
-#include "../../iprojecthistory.h"
+#include "trackedit/itrackeditconfiguration.h"
+#include "trackedit/iclipsinteraction.h"
+#include "trackedit/iselectioncontroller.h"
+#include "trackedit/iprojecthistory.h"
+#include "playback/iplaybackconfiguration.h"
 
 #include "../../itracksinteraction.h"
 
@@ -27,6 +28,7 @@ class Au3TracksInteraction : public ITracksInteraction
     muse::Inject<au::trackedit::ITrackeditConfiguration> configuration;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<au::trackedit::IClipsInteraction> clipsInteraction;
+    muse::Inject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
 public:
     Au3TracksInteraction();
@@ -73,6 +75,13 @@ public:
     bool makeStereoTrack(const TrackId left, const TrackId right) override;
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
 
+    void zoomInVertically(const trackedit::TrackId& trackId) override;
+    void zoomOutVertically(const trackedit::TrackId& trackId) override;
+    void resetVerticalZoom(const trackedit::TrackId& trackId) override;
+    bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const override;
+    bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const override;
+    bool isMinVerticalZoom(const trackedit::TrackId& trackId) const override;
+
     double nearestZeroCrossing(double time) const override;
 
     muse::Progress progress() const override;
@@ -115,6 +124,9 @@ private:
     int trackPosition(const TrackId trackId);
     void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
     void moveTrackTo(const TrackId trackId, int pos);
+
+    float maxVerticalZoom(const trackedit::Track& track) const;
+    void adjustVerticalZoom(const trackedit::TrackId& trackId);
 
     context::IPlaybackStatePtr playbackState() const;
 

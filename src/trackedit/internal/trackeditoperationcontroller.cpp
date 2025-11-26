@@ -761,6 +761,36 @@ std::optional<secs_t> TrackeditOperationController::getLeftmostLabelStartTime(co
     return labelsInteraction()->getLeftmostLabelStartTime(labelKeys);
 }
 
+void TrackeditOperationController::zoomInVertically(const trackedit::TrackId& trackId)
+{
+    tracksInteraction()->zoomInVertically(trackId);
+}
+
+void TrackeditOperationController::zoomOutVertically(const trackedit::TrackId& trackId)
+{
+    tracksInteraction()->zoomOutVertically(trackId);
+}
+
+void TrackeditOperationController::resetVerticalZoom(const trackedit::TrackId& trackId)
+{
+    tracksInteraction()->resetVerticalZoom(trackId);
+}
+
+bool TrackeditOperationController::isDefaultVerticalZoom(const trackedit::TrackId& trackId) const
+{
+    return tracksInteraction()->isDefaultVerticalZoom(trackId);
+}
+
+bool TrackeditOperationController::isMaxVerticalZoom(const trackedit::TrackId& trackId) const
+{
+    return tracksInteraction()->isMaxVerticalZoom(trackId);
+}
+
+bool TrackeditOperationController::isMinVerticalZoom(const trackedit::TrackId& trackId) const
+{
+    return tracksInteraction()->isMinVerticalZoom(trackId);
+}
+
 muse::Progress TrackeditOperationController::progress() const
 {
     return tracksInteraction()->progress();

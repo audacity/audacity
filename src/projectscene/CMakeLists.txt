@@ -106,8 +106,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/connectingdotspainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/iau3wavepainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/sampledata.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformScale.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformScale.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformSettings.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformSettings.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/WaveformPainter.cpp
@@ -193,21 +191,21 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogmonoruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogstereoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogstereoruler.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogrulerutils.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogrulerutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogbaseruler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblogbaseruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearmonoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearmonoruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearstereoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearstereoruler.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearrulerutils.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearrulerutils.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/itrackrulermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearbaseruler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/dblinearbaseruler.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/itrackruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearstereoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearstereoruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearmonoruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearmonoruler.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearrulerutils.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearrulerutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearbaseruler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/linearbaseruler.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/trackrulermodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackruler/trackrulermodel.h
 

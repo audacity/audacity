@@ -133,6 +133,13 @@ public:
 
     virtual std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const = 0;
 
+    virtual void zoomInVertically(const trackedit::TrackId& trackId) = 0;
+    virtual void zoomOutVertically(const trackedit::TrackId& trackId) = 0;
+    virtual void resetVerticalZoom(const trackedit::TrackId& trackId) = 0;
+    virtual bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const = 0;
+    virtual bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const = 0;
+    virtual bool isMinVerticalZoom(const trackedit::TrackId& trackId) const = 0;
+
     virtual muse::Progress progress() const = 0;
 };
 }
