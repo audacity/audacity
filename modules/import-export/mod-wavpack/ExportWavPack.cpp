@@ -28,6 +28,9 @@
 #include "ExportPluginHelpers.h"
 #include "ExportOptionsEditor.h"
 #include "ExportPluginRegistry.h"
+#include "crypto/MD5.h"
+
+#include <cstring>
 
 namespace
 {
@@ -258,6 +261,8 @@ class WavPackExportProcessor final : public ExportProcessor
       WavpackContext *wpc{};
       std::unique_ptr<Mixer> mixer;
       std::unique_ptr<Tags> metadata;
+      crypto::MD5 md5;
+      uint32_t bytesPerSample {};
    } context;
 public:
 
@@ -432,6 +437,7 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
    config.bits_per_sample = bitDepth;
    config.bytes_per_sample = bitDepth/8;
    config.float_norm_exp = context.format == floatSample ? 127 : 0;
+   config.flags |= CONFIG_MD5_CHECKSUM;
 
    if (config.num_channels <= 2)
       config.channel_mask = 0x5 - config.num_channels;
@@ -473,6 +479,12 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
       throw ExportErrorException( WavpackGetErrorMessage(context.wpc) );
    }
 
+   context.bytesPerSample = static_cast<uint32_t>(config.bytes_per_sample);
+   if (context.bytesPerSample == 0 || context.bytesPerSample > sizeof(uint32_t)) {
+      throw ExportException(_("Unsupported bytes-per-sample value for WavPack export"));
+   }
+   context.md5.Reset();
+
    context.status = selectionOnly
       ? XO("Exporting selected audio as WavPack")
       : XO("Exporting the audio as WavPack");
@@ -507,18 +519,36 @@ ExportResult WavPackExportProcessor::Process(ExportProcessorDelegate& delegate)
          if (samplesThisRun == 0)
             break;
 
+            const auto bytesPerSample = context.bytesPerSample;
+            auto& md5 = context.md5;
+            const auto updateMd5 = [&](uint32_t sampleValue) {
+               unsigned char sampleBytes[4];
+               sampleBytes[0] = static_cast<unsigned char>(sampleValue & 0xFF);
+               sampleBytes[1]
+                  = static_cast<unsigned char>((sampleValue >> 8) & 0xFF);
+               sampleBytes[2]
+                  = static_cast<unsigned char>((sampleValue >> 16) & 0xFF);
+               sampleBytes[3]
+                  = static_cast<unsigned char>((sampleValue >> 24) & 0xFF);
+               md5.Update(sampleBytes, bytesPerSample);
+            };
+
          if (context.format == int16Sample) {
             const int16_t *mixed = reinterpret_cast<const int16_t*>(context.mixer->GetBuffer());
             for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
                for (size_t i = 0; i < context.numChannels; i++) {
-                  wavpackBuffer[j*context.numChannels + i] = (static_cast<int32_t>(*mixed++) * 65536) >> 16;
+                  const auto sampleValue = (static_cast<int32_t>(*mixed++) * 65536) >> 16;
+                  wavpackBuffer[j*context.numChannels + i] = sampleValue;
+                  updateMd5(sampleValue);
                }
             }
          } else {
             const int *mixed = reinterpret_cast<const int*>(context.mixer->GetBuffer());
             for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
                for (size_t i = 0; i < context.numChannels; i++) {
-                  wavpackBuffer[j*context.numChannels + i] = *mixed++;
+                  const auto sampleValue = *mixed++;
+                  wavpackBuffer[j*context.numChannels + i] = sampleValue;
+                  updateMd5(sampleValue);
                }
             }
          }
@@ -529,6 +559,11 @@ ExportResult WavPackExportProcessor::Process(ExportProcessorDelegate& delegate)
          exportResult = ExportPluginHelpers::UpdateProgress(
             delegate, *context.mixer, context.t0, context.t1);
       }
+   }
+
+   const auto md5Sum = context.md5.Finalize();
+   if (!WavpackStoreMD5Sum(context.wpc, md5Sum.data())) {
+      throw ExportErrorException(WavpackGetErrorMessage(context.wpc));
    }
 
    if (!WavpackFlushSamples(context.wpc)) {

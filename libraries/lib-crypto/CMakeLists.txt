@@ -6,6 +6,8 @@ A set of helpers for working with cryptographic functions.
 ]]
 
 set( SOURCES
+   crypto/MD5.cpp
+   crypto/MD5.h
    crypto/SHA256.cpp
    crypto/SHA256.h
 )
