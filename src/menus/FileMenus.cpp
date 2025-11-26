@@ -336,14 +336,6 @@ void OnExportLabels(const CommandContext &context)
 
    LabelFormat format = LabelTrack::FormatForFileName(fName);
 
-   // Ensure filename has correct extension for selected format
-   if (format == LabelFormat::PODCAST_CHAPTERS_JSON && fName.Right(5).CmpNoCase(wxT(".json")) != 0) {
-      // Add .json extension if not present
-      wxFileName fileName(fName);
-      fileName.SetExt(wxT("json"));
-      fName = fileName.GetFullPath();
-   }
-
    // Move existing files out of the way.  Otherwise wxTextFile will
    // append to (rather than replace) the current file.
 
