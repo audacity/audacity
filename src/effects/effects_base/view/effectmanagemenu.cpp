@@ -252,7 +252,7 @@ void EffectManageMenu::setUseVendorUI(const bool value)
         return;
     }
 
-    const PluginUIMode mode = value ? PluginUIMode::VendorUI : PluginUIMode::GeneratedUI;
+    const PluginUIMode mode = value ? PluginUIMode::VendorUI : PluginUIMode::FallbackUI;
     configuration()->setPluginUIMode(effectId, mode);
     emit useVendorUIChanged();
 }
