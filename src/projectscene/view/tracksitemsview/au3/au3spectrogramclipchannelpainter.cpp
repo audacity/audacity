@@ -1,7 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "au3spectrogramchannelpainter.h"
+#include "au3spectrogramclipchannelpainter.h"
 
 #include "./ClipParameters.h"
 #include "./SpectrumCache.h"
@@ -94,7 +94,7 @@ ChooseColorSet(float bin0, float bin1, float selBinLo,
 }
 }
 
-Au3SpectrogramChannelPainter::Params::Params(SpectrogramSettings& settings,
+Au3SpectrogramClipChannelPainter::Params::Params(SpectrogramSettings& settings,
                                              const SelectedRegion& selectedRegion,
                                              const ZoomInfo& zoomInfo,
                                              bool trackIsSelected)
@@ -105,12 +105,12 @@ Au3SpectrogramChannelPainter::Params::Params(SpectrogramSettings& settings,
 {
 }
 
-Au3SpectrogramChannelPainter::Au3SpectrogramChannelPainter(std::weak_ptr<au3::Au3Project> au3Project)
+Au3SpectrogramClipChannelPainter::Au3SpectrogramClipChannelPainter(std::weak_ptr<au3::Au3Project> au3Project)
     : m_au3Project{std::move(au3Project)}
 {
 }
 
-void Au3SpectrogramChannelPainter::paint(QPainter& painter, WaveClipChannel& clipChannel, const WaveChannel& trackChannel,
+void Au3SpectrogramClipChannelPainter::paint(QPainter& painter, WaveClipChannel& clipChannel, const WaveChannel& trackChannel,
                                          const WaveMetrics& metrics, const Params& params)
 {
     SpectrogramSettings& settings = params.settings;

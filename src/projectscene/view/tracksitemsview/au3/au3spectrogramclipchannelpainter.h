@@ -20,12 +20,12 @@
 namespace au::projectscene {
 struct WaveMetrics;
 
-class Au3SpectrogramChannelPainter
+class Au3SpectrogramClipChannelPainter
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:
-    Au3SpectrogramChannelPainter(std::weak_ptr<au3::Au3Project> au3Project);
+    Au3SpectrogramClipChannelPainter(std::weak_ptr<au3::Au3Project> au3Project);
 
     struct Params : PaintParams {
         Params(SpectrogramSettings& settings, const SelectedRegion& selectedRegion, const ZoomInfo& zoomInfo, bool trackIsSelected);
