@@ -57,7 +57,7 @@ public:
    struct BadFormatException {};
    static LabelStruct Import(wxTextFile &file, int &index, LabelFormat format);
 
-   void Export(wxTextFile &file, LabelFormat format, int index) const;
+   void Export(wxTextFile &file, LabelFormat format, int index, bool isLast = false) const;
 
    /// Relationships between selection region and labels
    enum TimeRelations
@@ -158,6 +158,11 @@ public:
    void Import(wxTextFile & f, LabelFormat format);
    void Export(wxTextFile & f, LabelFormat format) const;
 
+private:
+   void ExportHeader(wxTextFile &f, LabelFormat format) const;
+   void ExportFooter(wxTextFile &f, LabelFormat format) const;
+
+public:
    int GetNumLabels() const;
    const LabelStruct *GetLabel(int index) const;
    const LabelArray &GetLabels() const { return mLabels; }
