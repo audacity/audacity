@@ -50,7 +50,6 @@ Rectangle {
     Connections {
         target: manageMenuModel
         function onUseVendorUIChanged() {
-            console.debug("AudioUnitViewer: UI mode changed, reloading view")
             view.reload()
         }
     }

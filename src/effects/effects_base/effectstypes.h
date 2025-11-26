@@ -50,7 +50,7 @@ enum class EffectMenuOrganization {
 
 enum class PluginUIMode {
     VendorUI = 0,      // Use plugin's native/graphical UI
-    GeneratedUI = 1,   // Use Audacity's auto-generated UI
+    FallbackUI = 1,   // Use Audacity's fallback UI
 };
 
 class EffectFamilies
