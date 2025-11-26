@@ -47,7 +47,7 @@ UpdateNotificationDialog::UpdateNotificationDialog(wxWindow* parent, const Notif
         htmlContent += notification.message;
         htmlContent += wxT("</body></html>");
 
-        auto htmlWindow = safenew wxHtmlWindow(S.GetParent(), wxID_ANY,
+        auto htmlWindow = safenew HtmlWindow(S.GetParent(), wxID_ANY,
             wxDefaultPosition, wxSize(400, -1), wxHW_SCROLLBAR_AUTO);
         htmlWindow->SetBorders(10);
         htmlWindow->SetPage(htmlContent);
