@@ -6,7 +6,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-#include "uicomponents/view/toolbaritem.h"
+#include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
 namespace au::playback {
 class PlaybackToolBarTimeSignatureItem : public muse::uicomponents::ToolBarItem

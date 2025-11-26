@@ -6,8 +6,8 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-#include "uicomponents/view/abstractmenumodel.h"
-#include "uicomponents/view/abstracttoolbarmodel.h"
+#include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
+#include "uicomponents/qml/Muse/UiComponents/abstracttoolbarmodel.h"
 
 namespace au::projectscene {
 class WorkspacesToolBarModel : public muse::uicomponents::AbstractToolBarModel

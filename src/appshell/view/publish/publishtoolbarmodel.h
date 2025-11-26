@@ -22,7 +22,7 @@
 #ifndef AU_APPSHELL_PUBLISHTOOLBARMODEL_H
 #define AU_APPSHELL_PUBLISHTOOLBARMODEL_H
 
-#include "uicomponents/view/abstractmenumodel.h"
+#include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
 
 namespace au::appshell {
 class PublishToolBarModel : public muse::uicomponents::AbstractMenuModel

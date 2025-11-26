@@ -1,6 +1,6 @@
 #pragma once
 
-#include "uicomponents/view/abstractmenumodel.h"
+#include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
 
 #include "modularity/ioc.h"
 #include "effects/effects_base/ieffectpresetsprovider.h"

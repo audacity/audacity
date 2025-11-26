@@ -183,7 +183,7 @@ void AppShellModule::registerUiTypes()
     qmlRegisterType<PublishToolBarModel>("Audacity.AppShell", 1, 0, "PublishToolBarModel");
     qmlRegisterType<MainToolBarModel>("Audacity.AppShell", 1, 0, "MainToolBarModel");
 
-    qmlRegisterType<WindowDropArea>("Muse.Ui", 1, 0, "WindowDropArea");
+    qmlRegisterType<WindowDropArea>("Audacity.AppShell", 1, 0, "WindowDropArea");
 }
 
 void AppShellModule::onPreInit(const IApplication::RunMode& mode)

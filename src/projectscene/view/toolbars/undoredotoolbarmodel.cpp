@@ -3,7 +3,7 @@
 */
 #include "undoredotoolbarmodel.h"
 
-#include "uicomponents/view/toolbaritem.h"
+#include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
 using namespace au::projectscene;
 using namespace muse::uicomponents;

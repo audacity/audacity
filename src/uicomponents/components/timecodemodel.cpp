@@ -3,7 +3,7 @@
 */
 #include "timecodemodel.h"
 
-#include "uicomponents/view/menuitem.h"
+#include "uicomponents/qml/Muse/UiComponents/menuitem.h"
 #include "ui/uiaction.h"
 
 #include "numericformatter.h"

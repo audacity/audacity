@@ -12,7 +12,7 @@
 #include "record/irecordcontroller.h"
 #include "record/irecordconfiguration.h"
 
-#include "uicomponents/view/abstracttoolbarmodel.h"
+#include "uicomponents/qml/Muse/UiComponents/abstracttoolbarmodel.h"
 
 namespace au::projectscene {
 class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel

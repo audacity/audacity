@@ -4,7 +4,7 @@
 #pragma once
 
 #include "context/iglobalcontext.h"
-#include "uicomponents/view/abstractmenumodel.h"
+#include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
 
 #include "playback/iaudiodevicesprovider.h"
 

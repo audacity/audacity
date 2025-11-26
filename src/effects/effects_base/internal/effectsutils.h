@@ -6,7 +6,7 @@
 
 // This is required because this file is now used in effects/builtin
 #include "effects/effects_base/effectstypes.h"
-#include "uicomponents/view/menuitem.h"
+#include "uicomponents/qml/Muse/UiComponents/menuitem.h"
 
 namespace au::effects::utils {
 using EffectFilter = std::function<bool (const EffectMeta&)>;

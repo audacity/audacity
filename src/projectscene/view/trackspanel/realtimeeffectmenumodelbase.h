@@ -4,7 +4,7 @@
 #pragma once
 
 #include "internal/irealtimeeffectpaneltrackselection.h"
-#include "uicomponents/view/abstractmenumodel.h"
+#include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
 #include "trackedit/trackedittypes.h"
 #include "effects/effects_base/ieffectsconfiguration.h"
 #include "effects/effects_base/ieffectsprovider.h"

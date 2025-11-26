@@ -5,7 +5,7 @@
 
 #include <QHash>
 
-#include "uicomponents/view/selectableitemlistmodel.h"
+#include "uicomponents/qml/Muse/UiComponents/selectableitemlistmodel.h"
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"

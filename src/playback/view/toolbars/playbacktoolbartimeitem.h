@@ -11,7 +11,7 @@
 #include "playback/iplayback.h"
 #include "playback/iplaybackconfiguration.h"
 
-#include "uicomponents/view/toolbaritem.h"
+#include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
 namespace au::playback {
 class PlaybackToolBarTimeItem : public muse::uicomponents::ToolBarItem
