@@ -75,7 +75,7 @@ endif()
 # ==================================
 # === AU3 ===
 # ==================================
-include(${CMAKE_CURRENT_LIST_DIR}/au3defs.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/au3wrapDefs.cmake)
 
 # AU3 Libraries - using add_subdirectory instead of manual source listing
 # Note: Libraries are renamed from lib-* to au3-* in the au3/libraries directory

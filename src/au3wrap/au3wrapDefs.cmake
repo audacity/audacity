@@ -148,7 +148,7 @@ set(WXBASE_RESTRICTIONS
 set(AU3_LINK
     wxwidgets::wxwidgets
     expat::expat
-    portaudio::portaudio
+    portaudio::portaudio # portaudio might only be required internally in au3-audio-io
     libmp3lame::libmp3lame
     wavpack::wavpack
     mpg123::libmpg123
