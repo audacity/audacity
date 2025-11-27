@@ -98,10 +98,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audiosetupcontextmenumodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/isamplespainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainterutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainterutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/samplespainterutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/iminmaxrmspainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/minmaxrmspainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/minmaxrmspainter.h

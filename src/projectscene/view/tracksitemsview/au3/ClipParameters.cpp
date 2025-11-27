@@ -52,106 +52,73 @@ double GetBlankSpaceBeforePlayEndTime(const ClipTimes& clip)
 }
 } // namespace
 
-ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& rect, const ZoomInfo& zoomInfo)
-    : trackRectT0{zoomInfo.PositionToTime(0)}, averagePixelsPerSecond{GetPixelsPerSecond(rect, zoomInfo)},
+ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintableSubrect, const ZoomInfo& zoomInfo)
+    : trackRectT0{zoomInfo.viewportT0}, averagePixelsPerSecond{GetPixelsPerSecond(trackPaintableSubrect, zoomInfo)},
     showIndividualSamples{ShowIndividualSamples(
                               clip.GetRate(),
                               clip.GetStretchRatio(), averagePixelsPerSecond)}
 {
-    const auto trackRectT1 = zoomInfo.PositionToTime(rect.width());
+    const auto trackRectT1 = zoomInfo.viewportT1;
     const auto stretchRatio = clip.GetStretchRatio();
     const auto playStartTime = clip.GetPlayStartTime();
 
     const double clipLength = clip.GetPlayEndTime() - clip.GetPlayStartTime();
 
     // Hidden duration because too far left.
-    const auto tpre = trackRectT0 - playStartTime;
+    const auto hiddenDurationLeft = trackRectT0 - playStartTime;
     const auto tpost = trackRectT1 - playStartTime;
 
     const auto blank = GetBlankSpaceBeforePlayEndTime(clip);
 
-    // Calculate actual selection bounds so that t0 > 0 and t1 < the
+    // Calculate actual selection bounds so that visibleT0 > 0 and visibleT1 < the
     // end of the track
-    t0 = std::max(tpre, .0);
-    t1 = std::min(tpost, clipLength - blank)
-         + CalculateAdjustmentForZoomLevel(
+    visibleT0 = std::max(hiddenDurationLeft, .0);
+    visibleT1 = std::min(tpost, clipLength - blank)
+                + CalculateAdjustmentForZoomLevel(
         averagePixelsPerSecond, showIndividualSamples);
 
-    // Make sure t1 (the right bound) is greater than 0
-    if (t1 < 0.0) {
-        t1 = 0.0;
+    // Make sure visibleT1 (the right bound) is greater than 0
+    if (visibleT1 < 0.0) {
+        visibleT1 = 0.0;
     }
 
-    // Make sure t1 is greater than t0
-    if (t0 > t1) {
-        t0 = t1;
+    // Make sure visibleT1 is greater than visibleT0
+    if (visibleT0 > visibleT1) {
+        visibleT0 = visibleT1;
     }
 
-    // The variable "hiddenMid" will be the rectangle containing the
+    // The variable "mid" will be the rectangle containing the
     // actual waveform, as opposed to any blank area before
-    // or after the track, as it would appear without the fisheye.
-    hiddenMid = rect;
+    // or after the track.
+    paintableClipRect = trackPaintableSubrect;
 
     // If the left edge of the track is to the right of the left
     // edge of the display, then there's some unused area to the
-    // left of the track.  Reduce the "hiddenMid"
-    hiddenLeftOffset = 0;
-    if (tpre < 0) {
+    // left of the track.  Reduce the "paintableClipRect"
+    leftOffset = 0;
+    if (hiddenDurationLeft < 0) {
         // Fix Bug #1296 caused by premature conversion to (int).
         int64_t time64 = zoomInfo.TimeToPosition(playStartTime);
         if (time64 < 0) {
             time64 = 0;
         }
-        hiddenLeftOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
+        leftOffset = (time64 < trackPaintableSubrect.width()) ? (int)time64 : trackPaintableSubrect.width();
 
-        hiddenMid.setX(hiddenMid.x() + hiddenLeftOffset);
-        hiddenMid.setWidth(hiddenMid.width() - hiddenLeftOffset);
+        paintableClipRect.setX(paintableClipRect.x() + leftOffset);
     }
 
     // If the right edge of the track is to the left of the right
     // edge of the display, then there's some unused area to the right
-    // of the track.  Reduce the "hiddenMid" rect by the
+    // of the track.  Reduce the "paintableClipRect" rect by the
     // size of the blank area.
-    if (tpost > t1) {
-        int64_t time64 = zoomInfo.TimeToPosition(playStartTime + t1);
+    if (tpost > visibleT1) {
+        int64_t time64 = zoomInfo.TimeToPosition(playStartTime + visibleT1);
         if (time64 < 0) {
             time64 = 0;
         }
-        const int hiddenRightOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
+        const int hiddenRightOffset = (time64 < trackPaintableSubrect.width()) ? (int)time64 : trackPaintableSubrect.width();
 
-        hiddenMid.setWidth(std::max(0, hiddenRightOffset - hiddenLeftOffset));
-    }
-    // The variable "mid" will be the rectangle containing the
-    // actual waveform, as distorted by the fisheye,
-    // as opposed to any blank area before or after the track.
-    mid = rect;
-
-    // If the left edge of the track is to the right of the left
-    // edge of the display, then there's some unused area to the
-    // left of the track.  Reduce the "mid"
-    leftOffset = 0;
-    if (tpre < 0) {
-        int64_t time64 = zoomInfo.TimeToPosition(playStartTime);
-        if (time64 < 0) {
-            time64 = 0;
-        }
-        leftOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
-
-        mid.setX(mid.x() + leftOffset);
-        mid.setWidth(mid.width() - leftOffset);
-    }
-
-    // If the right edge of the track is to the left of the right
-    // edge of the display, then there's some unused area to the right
-    // of the track.  Reduce the "mid" rect by the
-    // size of the blank area.
-    if (tpost > t1) {
-        int64_t time64 = zoomInfo.TimeToPosition(playStartTime + t1);
-        if (time64 < 0) {
-            time64 = 0;
-        }
-        const int distortedRightOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
-        mid.setWidth(std::max(0, distortedRightOffset - leftOffset));
+        paintableClipRect.setWidth(std::max(0, hiddenRightOffset - leftOffset));
     }
 }
 

@@ -7,10 +7,13 @@
 
 namespace au::projectscene {
 struct ZoomInfo {
-    ZoomInfo(double zoom, double viewportTime);
+    ZoomInfo(double zoom, double viewportT0, double viewportT1);
 
     const double zoom;
-    const double viewportTime;
+    const double viewportT0;
+    const double viewportT1;
+
+    int viewportWidth() const;
 
     double PositionToTime(int64_t position, int64_t origin = 0) const;
     int64_t TimeToPosition(double projectTime, int64_t origin = 0) const;

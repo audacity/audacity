@@ -87,6 +87,12 @@ QColor& ThemeBase::Colour(int iIndex)
     return resources.mColours[iIndex];
 }
 
+Theme::Theme()
+{
+    // TODO clean up
+    mpSet = &mSets[{}];
+}
+
 void Theme::EnsureInitialised()
 {
     if (!mpSet || mpSet->bInitialised) {
