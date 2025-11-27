@@ -39,6 +39,7 @@ public:
     Q_INVOKABLE void savePresetAs();
 
     Q_INVOKABLE void load() override;
+    void handleMenuItem(const QString& itemId) override;
 
 signals:
     void instanceIdChanged();
