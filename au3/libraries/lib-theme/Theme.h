@@ -99,6 +99,7 @@ public:
 protected:
     wxArrayString mColourNames;
 
+    std::map<Identifier, ThemeSet> mSets;
     ThemeSet* mpSet = nullptr;
 };
 
@@ -106,7 +107,7 @@ class THEME_API Theme final : public ThemeBase
 {
     friend class AColor; // So it can publish
 public:
-    Theme() = default;
+    Theme();
     ~Theme() override = default;
 
     void EnsureInitialised() override;

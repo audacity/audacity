@@ -69,10 +69,8 @@ BuiltinEffectBase {
 
             measureUnitsSymbol: qsTrc("global", "Hz")
 
-            onValueEdited: function (newValue) {
-                if (tone.frequencyStart !== newValue) {
-                    tone.frequencyStart = newValue
-                }
+            onValueEditingFinished: function (newValue) {
+                tone.frequencyStart = newValue
             }
         }
 
@@ -89,10 +87,8 @@ BuiltinEffectBase {
             decimals: 4
             step: 0.01
 
-            onValueEdited: function (newValue) {
-                if (tone.amplitudeStart !== newValue) {
-                    tone.amplitudeStart = newValue
-                }
+            onValueEditingFinished: function (newValue) {
+                tone.amplitudeStart = newValue
             }
         }
 
