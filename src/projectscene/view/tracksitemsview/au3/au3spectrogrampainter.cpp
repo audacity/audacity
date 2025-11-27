@@ -4,6 +4,7 @@
 #include "au3spectrogrampainter.h"
 
 #include "au3wrap/internal/domaccessor.h"
+#include "trackedit/itrackeditproject.h"
 
 #include "framework/global/log.h"
 
@@ -18,20 +19,12 @@ void Au3SpectrogramPainter::init()
     globalContext()->currentProjectChanged().onNotify(this, [this]{
         const auto project = globalContext()->currentProject();
         if (project) {
-            onProjectChanged(*project);
+            m_au3Project = reinterpret_cast<au3::Au3Project*>(project->au3ProjectPtr())->shared_from_this();
         }
     });
 }
 
-void Au3SpectrogramPainter::onProjectChanged(project::IAudacityProject& project)
-{
-    m_au3Project = reinterpret_cast<au3::Au3Project*>(project.au3ProjectPtr())->shared_from_this();
-    for (auto& painter : m_channelPainters) {
-        painter = std::make_unique<Au3SpectrogramChannelPainter>(m_au3Project);
-    }
-}
-
-void Au3SpectrogramPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey, const WaveMetrics& metrics,
+void Au3SpectrogramPainter::paint(QPainter& qPainter, const trackedit::ClipKey& clipKey, const WaveMetrics& metrics,
                                   const ZoomInfo& zoomInfo,
                                   const SelectedRegion& selectedRegion)
 {
@@ -45,26 +38,20 @@ void Au3SpectrogramPainter::paint(QPainter& painter, const trackedit::ClipKey& c
         return;
     }
 
-    auto& settings = SpectrogramSettings::Get(*track);
+    if (m_trackPainterMap.find(clipKey.trackId) == m_trackPainterMap.end()) {
+        std::weak_ptr<WaveTrack> weakTrack = std::static_pointer_cast<WaveTrack>(track->shared_from_this());
+        m_trackPainterMap.emplace(clipKey.trackId, Au3SpectrogramTrackPainter { std::move(weakTrack) });
+    }
 
-    const std::shared_ptr<au3::Au3WaveClip> clip = au3::DomAccessor::findWaveClip(track, clipKey.itemId);
-    if (!clip) {
+    auto& trackPainter = m_trackPainterMap.at(clipKey.trackId);
+    IF_ASSERT_FAILED(!trackPainter.trackExpired()) {
         return;
     }
 
-    const Au3SpectrogramChannelPainter::Params params {
-        settings,
-        selectedRegion,
-        zoomInfo,
-        track->IsSelected()
+    const SpectrogramGlobalContext gc {
+        metrics, zoomInfo, selectedRegion
     };
 
-    for (const std::shared_ptr<WaveClipChannel> channel : clip->Channels()) {
-        const auto i = channel->GetChannelIndex();
-        IF_ASSERT_FAILED(i < m_channelPainters.size()) {
-            continue;
-        }
-        m_channelPainters[i]->paint(painter, *channel, *track->GetChannel(i), metrics, params);
-    }
+    trackPainter.paintClip(clipKey.itemId, qPainter, gc);
 }
 }

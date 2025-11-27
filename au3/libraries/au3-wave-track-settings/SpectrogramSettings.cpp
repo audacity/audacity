@@ -687,9 +687,8 @@ auto SpectrogramBounds::Clone() const -> PointerType
 }
 
 void SpectrogramBounds::GetBounds(
-    const WaveChannel& wc, float& min, float& max) const
+    const WaveTrack& wt, float& min, float& max) const
 {
-    auto& wt = wc.GetTrack();
     const double rate = wt.GetRate();
 
     const auto& settings = SpectrogramSettings::Get(wt);

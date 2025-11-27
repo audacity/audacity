@@ -94,34 +94,21 @@ ChooseColorSet(float bin0, float bin1, float selBinLo,
 }
 }
 
-Au3SpectrogramClipChannelPainter::Params::Params(SpectrogramSettings& settings,
-                                             const SelectedRegion& selectedRegion,
-                                             const ZoomInfo& zoomInfo,
-                                             bool trackIsSelected)
-    : settings{settings}
-    , zoomInfo{zoomInfo}
-    , selectedRegion{selectedRegion}
-    , trackIsSelected{trackIsSelected}
-{
-}
+Au3SpectrogramClipChannelPainter::Au3SpectrogramClipChannelPainter(std::shared_ptr<WaveClipChannel> channel)
+    : m_waveClipChannel{std::move(channel)} {}
 
-Au3SpectrogramClipChannelPainter::Au3SpectrogramClipChannelPainter(std::weak_ptr<au3::Au3Project> au3Project)
-    : m_au3Project{std::move(au3Project)}
+void Au3SpectrogramClipChannelPainter::paint(QPainter& painter, const SpectrogramGlobalContext& gc, const SpectrogramTrackContext& tc)
 {
-}
-
-void Au3SpectrogramClipChannelPainter::paint(QPainter& painter, WaveClipChannel& clipChannel, const WaveChannel& trackChannel,
-                                         const WaveMetrics& metrics, const Params& params)
-{
-    SpectrogramSettings& settings = params.settings;
-    const ZoomInfo& zoomInfo = params.zoomInfo;
+    SpectrogramSettings &settings = tc.settings;
+    const ZoomInfo &zoomInfo = gc.zoomInfo;
+    auto& clipChannel = *m_waveClipChannel;
     Au3SelectedRegion selectedRegion;
-    selectedRegion.setT0(params.selectedRegion.t0);
-    selectedRegion.setT1(params.selectedRegion.t1);
-    selectedRegion.setF0(params.selectedRegion.f0);
-    selectedRegion.setF1(params.selectedRegion.f1);
+    selectedRegion.setT0(gc.selectedRegion.t0);
+    selectedRegion.setT1(gc.selectedRegion.t1);
+    selectedRegion.setF0(gc.selectedRegion.f0);
+    selectedRegion.setF1(gc.selectedRegion.f1);
 
-    const QRect rect{ static_cast<int>(metrics.left), 0, static_cast<int>(metrics.width), static_cast<int>(metrics.height) };
+    const QRect rect{ static_cast<int>(gc.metrics.left), 0, static_cast<int>(gc.metrics.width), static_cast<int>(gc.metrics.height) };
     const ClipParameters clipParams { clipChannel, rect, zoomInfo };
 
     const QRect& hiddenMid = clipParams.hiddenMid;
@@ -134,7 +121,7 @@ void Au3SpectrogramClipChannelPainter::paint(QPainter& painter, WaveClipChannel&
     const double& t0 = clipParams.t0;
     const double playStartTime = clipChannel.GetPlayStartTime();
 
-    const auto [ssel0, ssel1] = GetSelectedSampleIndices(selectedRegion, clipChannel, params.trackIsSelected);
+    const auto [ssel0, ssel1] = GetSelectedSampleIndices(selectedRegion, clipChannel, tc.trackIsSelected);
     const double& averagePixelsPerSecond = clipParams.averagePixelsPerSecond;
     const double sampleRate = clipChannel.GetRate();
     const double stretchRatio = clipChannel.GetStretchRatio();
@@ -162,16 +149,13 @@ void Au3SpectrogramClipChannelPainter::paint(QPainter& painter, WaveClipChannel&
 
     auto nBins = settings.NBins();
 
-    float minFreq, maxFreq;
-    SpectrogramBounds::Get(trackChannel).GetBounds(trackChannel, minFreq, maxFreq);
-
     const SpectrogramSettings::ScaleType scaleType = settings.scaleType;
 
     // nearest frequency to each pixel row from number scale, for selecting
     // the desired fft bin(s) for display on that row
     float* bins = (float*)alloca(sizeof(*bins) * (hiddenMid.height() + 1));
     {
-        const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
+        const NumberScale numberScale(settings.GetScale(tc.minFreq, tc.maxFreq));
 
         NumberScale::Iterator it = numberScale.begin(mid.height());
         float nextBin = std::max(0.0f, std::min(float(nBins - 1),
@@ -194,8 +178,8 @@ void Au3SpectrogramClipChannelPainter::paint(QPainter& painter, WaveClipChannel&
         && scaleType == specPxCache->scaleType
         && gain == specPxCache->gain
         && range == specPxCache->range
-        && minFreq == specPxCache->minFreq
-        && maxFreq == specPxCache->maxFreq
+        && tc.minFreq == specPxCache->minFreq
+        && tc.maxFreq == specPxCache->maxFreq
         ) {
         // Wave clip's spectrum cache is up to date,
         // and so is the spectrum pixel cache
@@ -205,8 +189,8 @@ void Au3SpectrogramClipChannelPainter::paint(QPainter& painter, WaveClipChannel&
         specPxCache->scaleType = scaleType;
         specPxCache->gain = gain;
         specPxCache->range = range;
-        specPxCache->minFreq = minFreq;
-        specPxCache->maxFreq = maxFreq;
+        specPxCache->minFreq = tc.minFreq;
+        specPxCache->maxFreq = tc.maxFreq;
 
         for (int xx = 0; xx < hiddenMid.width(); ++xx) {
             for (int yy = 0; yy < hiddenMid.height(); ++yy) {
@@ -255,7 +239,7 @@ void Au3SpectrogramClipChannelPainter::paint(QPainter& painter, WaveClipChannel&
     // Bug 2389 - always draw at least one pixel of selection.
     int selectedX = zoomInfo.TimeToPosition(selectedRegion.t0(), -leftOffset);
 
-    const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
+    const NumberScale numberScale(settings.GetScale(tc.minFreq, tc.maxFreq));
     const int windowSize = settings.WindowSize();
 
     // Lambda for converting yy (not mouse coord!) to respective freq. bins
@@ -329,7 +313,7 @@ void Au3SpectrogramClipChannelPainter::paint(QPainter& painter, WaveClipChannel&
         } // each yy
     } // each xx
 
-    const QRectF targetRect(metrics.left, metrics.top, metrics.width, metrics.height);
+    const QRectF targetRect(gc.metrics.left, gc.metrics.top, gc.metrics.width, gc.metrics.height);
     const QRectF sourceRect(0, 0, mid.width(), mid.height());
     painter.drawImage(targetRect, image, sourceRect);
 }

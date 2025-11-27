@@ -5,6 +5,7 @@
 
 #include "../ispectrogrampainter.h"
 #include "../tracksitemsviewtypes.h"
+#include "./au3spectrogramtypes.h"
 
 #include "au3wrap/au3types.h"
 #include "context/iglobalcontext.h"
@@ -25,20 +26,11 @@ class Au3SpectrogramClipChannelPainter
     muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:
-    Au3SpectrogramClipChannelPainter(std::weak_ptr<au3::Au3Project> au3Project);
+    Au3SpectrogramClipChannelPainter(std::shared_ptr<WaveClipChannel>);
 
-    struct Params : PaintParams {
-        Params(SpectrogramSettings& settings, const SelectedRegion& selectedRegion, const ZoomInfo& zoomInfo, bool trackIsSelected);
-
-        SpectrogramSettings& settings;
-        const ZoomInfo& zoomInfo;
-        const SelectedRegion& selectedRegion;
-        const bool trackIsSelected;
-    };
-
-    void paint(QPainter&, WaveClipChannel&, const WaveChannel&, const WaveMetrics&, const Params&);
+    void paint(QPainter&, const SpectrogramGlobalContext&, const SpectrogramTrackContext&);
 
 private:
-    std::weak_ptr<au3::Au3Project> m_au3Project; // TODO check if still needed when done
+    const std::shared_ptr<WaveClipChannel> m_waveClipChannel;
 };
 }

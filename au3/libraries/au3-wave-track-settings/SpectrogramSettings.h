@@ -216,7 +216,7 @@ public:
     ~SpectrogramBounds() override;
     PointerType Clone() const override;
 
-    void GetBounds(const WaveChannel& wc, float& min, float& max) const;
+    void GetBounds(const WaveTrack& track, float& min, float& max) const;
 
     void SetBounds(float min, float max)
     { mSpectrumMin = min, mSpectrumMax = max; }
