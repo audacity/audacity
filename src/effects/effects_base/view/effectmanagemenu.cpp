@@ -29,6 +29,9 @@ void EffectManageMenu::load()
 
 void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& instanceId)
 {
+    assert(!effectId.empty());
+    assert(instanceId != 0);
+
     MenuItemList items;
     QVariantList presets;
 
@@ -140,7 +143,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
 
     // UI Mode toggle - only for external plugins (VST3, LV2, Audio Units...)
     // Built-in effects don't have a "Vendor UI" concept
-    if (!effectId.empty()) {
+    {
         const EffectMeta effectMeta = effectsProvider()->meta(effectId);
         const bool isExternalPlugin = effectMeta.family != EffectFamily::Builtin
                                       && effectMeta.family != EffectFamily::Unknown;
