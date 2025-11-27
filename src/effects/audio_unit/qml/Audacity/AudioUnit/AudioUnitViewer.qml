@@ -25,7 +25,6 @@ Rectangle {
 
     readonly property var model: AudioUnitViewModelFactory.createModel(root, root.instanceId)
 
-    // Expose the view for external access (e.g., to call reload())
     property alias view: view
 
     color: ui.theme.backgroundPrimaryColor

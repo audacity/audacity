@@ -36,9 +36,6 @@ void AudioUnitView::init()
 {
     const auto instance = std::dynamic_pointer_cast<AudioUnitInstance>(instancesRegister()->instanceById(m_instanceId));
 
-    // Check if we should use the vendor UI (custom Cocoa UI) or the generic UI
-    // When useVendorUI is true, we want the custom graphical UI
-    // When useVendorUI is false, we want Apple's generic AUGenericView (fallback UI)
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
     const bool isGraphical = (configuration()->pluginUIMode(effectId) == PluginUIMode::VendorUI);
 
@@ -64,7 +61,6 @@ void AudioUnitView::deinit()
 
 void AudioUnitView::reload()
 {
-    // usually called when updating UI mode
     deinit();
     init();
 }
