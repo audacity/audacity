@@ -960,10 +960,6 @@
         <seq>Ctrl+F</seq>
     </SC>
     <SC>
-        <key>fit-in-window</key>
-        <seq>Ctrl+F</seq>
-    </SC>
-    <SC>
         <key>fit-v</key>
         <seq>Ctrl+Shift+F</seq>
     </SC>
