@@ -8,7 +8,7 @@
 
   @brief Provides a set of internal commonly used functions/structures
 
-  Part of lib-module-manager library.
+  Part of au3-module-manager library.
 
 **********************************************************************/
 

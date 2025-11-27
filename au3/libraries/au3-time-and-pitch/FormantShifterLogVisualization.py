@@ -11,7 +11,7 @@
 # 4. Run your Audacity build and play a track with pitch shifting and formant preservation enabled.
 #
 # You will hear a gentle noise burst at the specified time, which indicates precisely the place where the snapshot was taken.
-# Now you can run this script from lib-time-and-pitch's root directory.
+# Now you can run this script from au3-time-and-pitch's root directory.
 #
 # Note: the value in `overrideLogTime.txt` gets re-read on each playback, but to enable/disable the tuning,
 # you have to change the config file and then restart Audacity.

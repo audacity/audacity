@@ -6,18 +6,18 @@ Bullet from A to B means _A uses B_.
 Arrow from A to B means _A implements B_.
 ```mermaid
 flowchart BT
-   subgraph libaudacityapplicationlogic["lib-audacity-application-logic"]
+   subgraph libaudacityapplicationlogic["au3-audacity-application-logic"]
       DoEffect
    end
-   subgraph libmodulemanager["lib-module-manager"]
+   subgraph libmodulemanager["au3-module-manager"]
       PluginManager
       ModuleManager
       PluginProvider
    end
-   subgraph libeffects["lib-effects"]
+   subgraph libeffects["au3-effects"]
       BuiltinEffectsModule
    end
-   subgraph libvst3["lib-vst3"]
+   subgraph libvst3["au3-vst3"]
       VST3EffectsModule
    end
    subgraph etc["..."]
@@ -65,11 +65,11 @@ flowchart BT
    classDef greenLib fill:#9cee94,color:#000
    classDef pinkLib fill:#f8b7c2,color:#000
 
-   subgraph libvst3["lib-vst3"]
+   subgraph libvst3["au3-vst3"]
       VST3EffectsModule:::greenLib
    end
 
-   subgraph libcomponents["lib-components"]
+   subgraph libcomponents["au3-components"]
       PluginProvider:::greenLib
    end
 
@@ -79,19 +79,19 @@ flowchart BT
       Analyzers
    end
 
-   subgraph audioUnit["lib-audio-unit"]
+   subgraph audioUnit["au3-audio-unit"]
       AudioUnitEffectsModule:::greenLib
    end
-   subgraph ladspa["lib-ladspa"]
+   subgraph ladspa["au3-ladspa"]
       LadspaEffectsModule:::greenLib
    end
-   subgraph lV2["lib-lv2"]
+   subgraph lV2["au3-lv2"]
       LV2EffectsModule:::greenLib
    end
-   subgraph vST["lib-vst"]
+   subgraph vST["au3-vst"]
       VSTEffectsModule:::greenLib
    end
-   subgraph libeffects["lib-effects"]
+   subgraph libeffects["au3-effects"]
       BuiltinEffectsModule:::greenLib
    end
 
@@ -122,11 +122,11 @@ flowchart BT
 
    classDef greenLib fill:#9cee94,color:#000
 
-   subgraph libeffects["lib-effects"]
+   subgraph libeffects["au3-effects"]
       PerTrackEffect:::greenLib
    end
 
-   subgraph libvst["lib-vst"]
+   subgraph libvst["au3-vst"]
       VSTEffectBase:::greenLib
    end
 
