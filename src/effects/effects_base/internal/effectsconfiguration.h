@@ -29,8 +29,8 @@ public:
     double previewMaxDuration() const override;
     void setPreviewMaxDuration(double value) override;
 
-    PluginUIMode pluginUIMode(const EffectId& effectId) const override;
-    void setPluginUIMode(const EffectId& effectId, PluginUIMode mode) override;
+    EffectUIMode pluginUIMode(const EffectId& effectId) const override;
+    void setPluginUIMode(const EffectId& effectId, EffectUIMode mode) override;
     muse::async::Notification pluginUIModeChanged() const override;
 
 private:

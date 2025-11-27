@@ -204,7 +204,7 @@ bool RealtimeEffectViewerDialogModel::useVendorUI() const
         return true; // Default to vendor UI
     }
 
-    const bool result = configuration()->pluginUIMode(effectId) == PluginUIMode::VendorUI;
+    const bool result = configuration()->pluginUIMode(effectId) == EffectUIMode::VendorUI;
     return result;
 }
 

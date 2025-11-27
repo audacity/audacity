@@ -77,23 +77,23 @@ void EffectsConfiguration::setPreviewMaxDuration(double value)
     muse::settings()->setSharedValue(PREVIEW_MAX_DURATION, muse::Val(value));
 }
 
-PluginUIMode EffectsConfiguration::pluginUIMode(const EffectId& effectId) const
+EffectUIMode EffectsConfiguration::pluginUIMode(const EffectId& effectId) const
 {
     if (effectId.empty()) {
-        return PluginUIMode::VendorUI;
+        return EffectUIMode::VendorUI;
     }
 
     const muse::Settings::Key key = makePluginUIModeKey(effectId);
     // Set default to VendorUI (native plugin UI) for backward compatibility
-    muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(PluginUIMode::VendorUI)));
-    return static_cast<PluginUIMode>(muse::settings()->value(key).toInt());
+    muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(EffectUIMode::VendorUI)));
+    return static_cast<EffectUIMode>(muse::settings()->value(key).toInt());
 }
 
-void EffectsConfiguration::setPluginUIMode(const EffectId& effectId, PluginUIMode mode)
+void EffectsConfiguration::setPluginUIMode(const EffectId& effectId, EffectUIMode mode)
 {
     const muse::Settings::Key key = makePluginUIModeKey(effectId);
     // Set default to VendorUI (native plugin UI) for backward compatibility
-    muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(PluginUIMode::VendorUI)));
+    muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(EffectUIMode::VendorUI)));
 
     if (pluginUIMode(effectId) == mode) {
         return;

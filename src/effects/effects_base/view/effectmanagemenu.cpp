@@ -155,7 +155,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
             menuItem->setAction(action);
             menuItem->setId("toggle_vendor_ui");
 
-            const bool isVendorUI = (configuration()->pluginUIMode(effectId) == PluginUIMode::VendorUI);
+            const bool isVendorUI = (configuration()->pluginUIMode(effectId) == EffectUIMode::VendorUI);
             // Set both enabled and checked state
             menuItem->setState(ui::UiActionState::make_enabled(isVendorUI));
 
@@ -231,7 +231,7 @@ bool EffectManageMenu::useVendorUI() const
     if (effectId.empty()) {
         return true; // Default to vendor UI
     }
-    return configuration()->pluginUIMode(effectId) == PluginUIMode::VendorUI;
+    return configuration()->pluginUIMode(effectId) == EffectUIMode::VendorUI;
 }
 
 void EffectManageMenu::setUseVendorUI(const bool value)
@@ -245,7 +245,7 @@ void EffectManageMenu::setUseVendorUI(const bool value)
         return;
     }
 
-    const PluginUIMode mode = value ? PluginUIMode::VendorUI : PluginUIMode::FallbackUI;
+    const EffectUIMode mode = value ? EffectUIMode::VendorUI : EffectUIMode::FallbackUI;
     configuration()->setPluginUIMode(effectId, mode);
     emit useVendorUIChanged();
 }
