@@ -23,8 +23,8 @@ public:
     virtual void setEffectMenuOrganization(EffectMenuOrganization) = 0;
     virtual muse::async::Notification effectMenuOrganizationChanged() const = 0;
 
-    virtual EffectUIMode pluginUIMode(const EffectId& effectId) const = 0;
-    virtual void setPluginUIMode(const EffectId& effectId, EffectUIMode mode) = 0;
-    virtual muse::async::Notification pluginUIModeChanged() const = 0;
+    virtual EffectUIMode effectUIMode(const EffectId& effectId) const = 0;
+    virtual void setEffectUIMode(const EffectId& effectId, EffectUIMode mode) = 0;
+    virtual muse::async::Notification effectUIModeChanged() const = 0;
 };
 }
