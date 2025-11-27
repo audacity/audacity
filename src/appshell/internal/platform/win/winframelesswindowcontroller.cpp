@@ -152,6 +152,7 @@ bool WinFramelessWindowController::removeWindowFrame(MSG* message, qintptr* resu
     if (placement.showCmd == SW_SHOWMAXIMIZED) {
         HMONITOR hMonitor = MonitorFromWindow(message->hwnd, MONITOR_DEFAULTTONULL);
         if (hMonitor != NULL) {
+            m_monitorInfo.cbSize = sizeof(MONITORINFO);
             GetMonitorInfoW(hMonitor, &m_monitorInfo);
         }
 
@@ -170,6 +171,8 @@ bool WinFramelessWindowController::removeWindowFrame(MSG* message, qintptr* resu
                     params.rgrc[0].bottom -= 1;
                 }
             }
+        } else if (!isTaskbarVisibleOnMonitor(hMonitor)) {
+            params.rgrc[0].bottom += 1;
         }
     }
 
@@ -373,6 +376,42 @@ bool WinFramelessWindowController::isWindowMaximized(HWND hWnd) const
     return wp.showCmd == SW_MAXIMIZE;
 }
 
+HWND WinFramelessWindowController::findTaskbar() const
+{
+    return FindWindow(L"Shell_TrayWnd", nullptr);
+}
+
+std::optional<UINT> WinFramelessWindowController::taskbarEdge() const
+{
+    APPBARDATA appBarData;
+    appBarData.cbSize = sizeof(appBarData);
+
+    HWND taskbar = findTaskbar();
+    if (!taskbar) {
+        return std::nullopt;
+    }
+
+    appBarData.hWnd = taskbar;
+
+    SHAppBarMessage(ABM_GETTASKBARPOS, &appBarData);
+    return appBarData.uEdge;
+}
+
+bool WinFramelessWindowController::isTaskbarVisibleOnMonitor(HMONITOR hMonitor) const
+{
+    HWND taskbar = findTaskbar();
+    if (!taskbar) {
+        return false;
+    }
+
+    HMONITOR hTaskbarMonitor = MonitorFromWindow(taskbar, MONITOR_DEFAULTTONEAREST);
+    if (!hTaskbarMonitor) {
+        return false;
+    }
+
+    return hMonitor == hTaskbarMonitor;
+}
+
 bool WinFramelessWindowController::isTaskbarInAutohideState() const
 {
     APPBARDATA appBarData;
@@ -381,20 +420,6 @@ bool WinFramelessWindowController::isTaskbarInAutohideState() const
     UINT taskbarState = SHAppBarMessage(ABM_GETSTATE, &appBarData);
 
     return ABS_AUTOHIDE & taskbarState;
-}
-
-std::optional<UINT> WinFramelessWindowController::taskbarEdge() const
-{
-    APPBARDATA appBarData;
-    appBarData.cbSize = sizeof(appBarData);
-
-    appBarData.hWnd = FindWindow(L"Shell_TrayWnd", nullptr);
-    if (!appBarData.hWnd) {
-        return std::nullopt;
-    }
-
-    SHAppBarMessage(ABM_GETTASKBARPOS, &appBarData);
-    return appBarData.uEdge;
 }
 
 int WinFramelessWindowController::borderWidth() const

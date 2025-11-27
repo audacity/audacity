@@ -66,9 +66,11 @@ private:
     bool showSystemMenuIfNeed(MSG* message) const;
 
     bool isWindowMaximized(HWND hWnd) const;
-    bool isTaskbarInAutohideState() const;
 
+    HWND findTaskbar() const;
     std::optional<UINT> taskbarEdge() const;
+    bool isTaskbarInAutohideState() const;
+    bool isTaskbarVisibleOnMonitor(HMONITOR hMonitor) const;
 
     int borderWidth() const;
 
