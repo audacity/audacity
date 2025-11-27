@@ -561,7 +561,7 @@ ExportResult WavPackExportProcessor::Process(ExportProcessorDelegate& delegate)
       }
    }
 
-   const auto md5Sum = context.md5.Finalize();
+   auto md5Sum = context.md5.Finalize();
    if (!WavpackStoreMD5Sum(context.wpc, md5Sum.data())) {
       throw ExportErrorException(WavpackGetErrorMessage(context.wpc));
    }
