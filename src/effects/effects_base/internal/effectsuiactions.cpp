@@ -56,6 +56,13 @@ static UiActionList STATIC_ACTIONS = {
              au::context::CTX_ANY,
              TranslatableString("action", "&Export…"),
              TranslatableString("action", "Export preset")
+             ),
+    UiAction("action://effects/toggle_vendor_ui",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("effects", "Use Vendor UI"),
+             TranslatableString("effects", "Toggle between vendor UI and fallback UI"),
+             Checkable::Yes
              )
 };
 
@@ -76,6 +83,12 @@ EffectsUiActions::EffectsUiActions(std::shared_ptr<EffectsActionsController> con
 
     effectsProvider()->effectMetaListChanged().onNotify(this, [this] {
         reload();
+    });
+
+    configuration()->effectUIModeChanged().onNotify(this, [this] {
+        ActionCodeList codes;
+        codes.push_back("action://effects/toggle_vendor_ui");
+        m_actionCheckedChanged.send(codes);
     });
 }
 
@@ -152,8 +165,15 @@ bool EffectsUiActions::actionEnabled(const UiAction& action) const
     return m_controller->canReceiveAction(action.code);
 }
 
-bool EffectsUiActions::actionChecked(const UiAction&) const
+bool EffectsUiActions::actionChecked(const UiAction& action) const
 {
+    if (action.code.find("action://effects/toggle_vendor_ui") == 0) {
+        ActionQuery query(action.code);
+        if (query.contains("effectId")) {
+            EffectId effectId = EffectId::fromStdString(query.param("effectId").toString());
+            return configuration()->effectUIMode(effectId) == EffectUIMode::VendorUI;
+        }
+    }
     return false;
 }
 
@@ -169,6 +189,5 @@ muse::async::Channel<ActionCodeList> EffectsUiActions::actionEnabledChanged() co
 
 muse::async::Channel<ActionCodeList> EffectsUiActions::actionCheckedChanged() const
 {
-    static muse::async::Channel<ActionCodeList> ch;
-    return ch;
+    return m_actionCheckedChanged;
 }

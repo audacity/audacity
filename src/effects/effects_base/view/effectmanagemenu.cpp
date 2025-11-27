@@ -149,20 +149,10 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
 
         if (isExternalPlugin) {
             items << makeSeparator();
-            MenuItem* menuItem = new MenuItem(this);
-
-            // Create a UiAction for this menu item
-            ui::UiAction action;
-            action.title = TranslatableString("effects", "Use Vendor UI");
-            action.checkable = ui::Checkable::Yes;
-            menuItem->setAction(action);
-            menuItem->setId("toggle_vendor_ui");
-
-            const bool isVendorUI = (configuration()->effectUIMode(effectId) == EffectUIMode::VendorUI);
-            // Set both enabled and checked state
-            menuItem->setState(ui::UiActionState::make_enabled(isVendorUI));
-
-            items << menuItem;
+            ActionQuery q("action://effects/toggle_vendor_ui");
+            q.addParam("effectId", Val(effectId.toStdString()));
+            MenuItem* item = makeMenuItem(q.toString());
+            items << item;
         }
     }
 
@@ -251,13 +241,4 @@ void EffectManageMenu::setUseVendorUI(const bool value)
     const EffectUIMode mode = value ? EffectUIMode::VendorUI : EffectUIMode::FallbackUI;
     configuration()->setEffectUIMode(effectId, mode);
     emit useVendorUIChanged();
-}
-
-void EffectManageMenu::handleMenuItem(const QString& itemId)
-{
-    if (itemId == "toggle_vendor_ui") {
-        setUseVendorUI(!useVendorUI());
-    } else {
-        AbstractMenuModel::handleMenuItem(itemId);
-    }
 }
