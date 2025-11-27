@@ -14,17 +14,14 @@ void EffectManageMenu::load()
 
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
 
-    // subscribe on user presets change (only once)
-    if (!m_presetsSubscribed) {
-        presetsController()->userPresetsChanged().onReceive(this, [this, effectId](const EffectId& eid) {
-            if (effectId != eid) {
-                return;
-            }
+    // Subscribe on user presets change (replace subscription each time with new effectId)
+    presetsController()->userPresetsChanged().onReceive(this, [this, effectId](const EffectId& eid) {
+        if (effectId != eid) {
+            return;
+        }
 
-            reload(effectId, m_instanceId);
-        });
-        m_presetsSubscribed = true;
-    }
+        reload(effectId, m_instanceId);
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     reload(effectId, m_instanceId);
 }
