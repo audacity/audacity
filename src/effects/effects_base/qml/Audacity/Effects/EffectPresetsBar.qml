@@ -52,11 +52,7 @@ RowLayout {
         parentWindow: root.parentWindow
 
         onHandleMenuItem: function (itemId) {
-            if (itemId === "toggle_vendor_ui") {
-                manageMenuModel.useVendorUI = !manageMenuModel.useVendorUI
-            } else {
-                manageMenuModel.handleMenuItem(itemId)
-            }
+            manageMenuModel.handleMenuItem(itemId)
         }
     }
 

@@ -162,7 +162,6 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
             // Set both enabled and checked state
             menuItem->setState(ui::UiActionState::make_enabled(isVendorUI));
 
-            // Note: The actual toggle will be handled by the QML binding to useVendorUI property
             items << menuItem;
         }
     }
@@ -252,4 +251,13 @@ void EffectManageMenu::setUseVendorUI(const bool value)
     const PluginUIMode mode = value ? PluginUIMode::VendorUI : PluginUIMode::FallbackUI;
     configuration()->setPluginUIMode(effectId, mode);
     emit useVendorUIChanged();
+}
+
+void EffectManageMenu::handleMenuItem(const QString& itemId)
+{
+    if (itemId == "toggle_vendor_ui") {
+        setUseVendorUI(!useVendorUI());
+    } else {
+        AbstractMenuModel::handleMenuItem(itemId);
+    }
 }
