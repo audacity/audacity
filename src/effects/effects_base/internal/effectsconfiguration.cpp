@@ -84,22 +84,21 @@ PluginUIMode EffectsConfiguration::pluginUIMode(const EffectId& effectId) const
     }
 
     const muse::Settings::Key key = makePluginUIModeKey(effectId);
-    // Default to VendorUI (native plugin UI) for backward compatibility
-    const muse::Val value = muse::settings()->value(key);
-    if (value.isNull()) {
-        // No setting exists yet, return default
-        return PluginUIMode::VendorUI;
-    }
-    return static_cast<PluginUIMode>(value.toInt());
+    // Set default to VendorUI (native plugin UI) for backward compatibility
+    muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(PluginUIMode::VendorUI)));
+    return static_cast<PluginUIMode>(muse::settings()->value(key).toInt());
 }
 
 void EffectsConfiguration::setPluginUIMode(const EffectId& effectId, PluginUIMode mode)
 {
+    const muse::Settings::Key key = makePluginUIModeKey(effectId);
+    // Set default to VendorUI (native plugin UI) for backward compatibility
+    muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(PluginUIMode::VendorUI)));
+
     if (pluginUIMode(effectId) == mode) {
         return;
     }
 
-    const muse::Settings::Key key = makePluginUIModeKey(effectId);
     muse::settings()->setSharedValue(key, muse::Val(static_cast<int>(mode)));
     m_pluginUIModeChanged.notify();
 }
