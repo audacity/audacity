@@ -44,7 +44,9 @@ void Au3SpectrogramPainter::paint(QPainter& qPainter, const trackedit::ClipKey& 
     }
 
     auto& trackPainter = m_trackPainterMap.at(clipKey.trackId);
-    IF_ASSERT_FAILED(!trackPainter.trackExpired()) {
+    if (trackPainter.trackExpired()) {
+        // TODO: find out why this may happen
+        m_trackPainterMap.erase(clipKey.trackId);
         return;
     }
 
