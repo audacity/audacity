@@ -15,8 +15,8 @@ set( SOURCES
    ViewInfo.h
 )
 set( LIBRARIES
-   lib-snapping-interface
+   au3-snapping-interface
 )
-audacity_library( lib-time-frequency-selection "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-time-frequency-selection "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

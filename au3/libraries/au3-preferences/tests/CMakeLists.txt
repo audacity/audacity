@@ -1,15 +1,15 @@
 #[[
-Unit tests for lib-preferences
+Unit tests for au3-preferences
 ]]
 
 add_unit_test(
    NAME
-      lib-preferences
+      au3-preferences
    SOURCES
       SettingsTestsCommon.cpp
       SettingsTestsCommon.h
       SettingsWXTests.cpp
    LIBRARIES
-      lib-preferences
-      lib-wx-init
+      au3-preferences
+      au3-wx-init
 )

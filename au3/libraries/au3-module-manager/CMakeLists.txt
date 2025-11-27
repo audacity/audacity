@@ -30,9 +30,9 @@ set( SOURCES
    PluginManager.h
 )
 set( LIBRARIES
-   lib-xml-interface
-   lib-ipc-interface
+   au3-xml-interface
+   au3-ipc-interface
 )
-audacity_library( lib-module-manager "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-module-manager "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

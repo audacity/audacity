@@ -10,8 +10,8 @@ set( SOURCES
    Tags.h
 )
 set( LIBRARIES
-   lib-project-history-interface
-   lib-file-formats-interface
+   au3-project-history-interface
+   au3-file-formats-interface
 )
-audacity_library( lib-tags "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-tags "${SOURCES}" "${LIBRARIES}"
    "" "" )

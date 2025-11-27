@@ -25,8 +25,8 @@ set( SOURCES
 set( LIBRARIES
    portaudio::portaudio
    $<$<BOOL:${USE_PORTMIXER}>:portmixer>
-   lib-preferences-interface
+   au3-preferences-interface
 )
-audacity_library( lib-audio-devices "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-audio-devices "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

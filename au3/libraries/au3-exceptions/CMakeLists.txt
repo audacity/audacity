@@ -27,8 +27,8 @@ set( SOURCES
    UserException.h
 )
 set( LIBRARIES
-   lib-utility-interface
-   lib-basic-ui-interface
+   au3-utility-interface
+   au3-basic-ui-interface
 )
 
 if( APPLE AND MIN_MACOS_VERSION VERSION_LESS "10.12")
@@ -38,6 +38,6 @@ if( APPLE AND MIN_MACOS_VERSION VERSION_LESS "10.12")
    )
 endif()
 
-audacity_library( lib-exceptions "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-exceptions "${SOURCES}" "${LIBRARIES}"
    "${DEFINITIONS}" ""
 )

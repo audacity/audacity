@@ -1,12 +1,12 @@
 #[[
-Unit tests for lib-time-and-pitch
+Unit tests for au3-time-and-pitch
 ]]
 
 add_compile_definitions(CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
 
 add_unit_test(
    NAME
-      lib-time-and-pitch
+      au3-time-and-pitch
    WAV_FILE_IO
    MOCK_PREFS
    SOURCES
@@ -14,6 +14,6 @@ add_unit_test(
       TimeAndPitchFakeSource.h
       TimeAndPitchRealSource.h
    LIBRARIES
-      lib-utility
-      lib-time-and-pitch-interface
+      au3-utility
+      au3-time-and-pitch-interface
 )

@@ -23,4 +23,4 @@ set(DEFINES
       -DUSE_CRASHPAD
 )
 
-audacity_library( lib-crashpad-configurer "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "" )
+audacity_library( au3-crashpad-configurer "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "" )

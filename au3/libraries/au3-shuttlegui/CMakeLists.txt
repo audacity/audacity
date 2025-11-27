@@ -35,11 +35,11 @@ set( SOURCES
    wxTextCtrlWrapper.h
 )
 set( LIBRARIES
-   lib-command-parameters-interface
+   au3-command-parameters-interface
    PRIVATE
-   lib-theme-interface
-   lib-wx-wrappers-interface
+   au3-theme-interface
+   au3-wx-wrappers-interface
 )
-audacity_library( lib-shuttlegui "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-shuttlegui "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

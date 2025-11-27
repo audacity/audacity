@@ -1,5 +1,5 @@
 #[[
-Library of built-in effects. Implement the UI-agnostic APIs of lib-effects.
+Library of built-in effects. Implement the UI-agnostic APIs of au3-effects.
 ]]
 
 # Include AU3 compatibility macros
@@ -88,13 +88,13 @@ set( SOURCES
    WahWahBase.h
 )
 set( LIBRARIES
-   lib-dynamic-range-processor-interface
-   lib-wave-track-fft-interface
-   lib-label-track-interface
-   lib-note-track-interface
+   au3-dynamic-range-processor-interface
+   au3-wave-track-fft-interface
+   au3-label-track-interface
+   au3-note-track-interface
    $<$<BOOL:${USE_SBSMS}>:libsbsms>
    $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
 )
-audacity_library( lib-builtin-effects "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-builtin-effects "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

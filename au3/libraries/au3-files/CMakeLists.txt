@@ -30,11 +30,11 @@ set( SOURCES
    wxFileNameWrapper.h
 )
 set( LIBRARIES
-   lib-exceptions-interface
-   lib-preferences-interface
+   au3-exceptions-interface
+   au3-preferences-interface
 )
 set(DEFINES
    PRIVATE
       -DAUDACITY_VERSION=${AUDACITY_VERSION}
 )
-audacity_library( lib-files "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "")
+audacity_library( au3-files "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "")

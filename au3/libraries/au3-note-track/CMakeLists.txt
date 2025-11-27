@@ -17,11 +17,11 @@ set( SOURCES
    WrapAllegro.h
 )
 set( LIBRARIES
-   lib-audio-io-interface
-   lib-playable-track-interface
+   au3-audio-io-interface
+   au3-playable-track-interface
    portmidi::portmidi
    portsmf
 )
-audacity_library( lib-note-track "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-note-track "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

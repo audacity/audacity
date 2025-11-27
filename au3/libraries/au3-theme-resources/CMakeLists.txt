@@ -179,7 +179,7 @@ foreach( pair
       DEPENDS ${THEME_FILES}
          # Also depend on the list of images, forcing rebuild in case of
          # deleted images only
-         ../lib-theme/AllThemeResources.h
+         ../au3-theme/AllThemeResources.h
       COMMENT "Generating ${filename}.h..."
    )
 
@@ -204,8 +204,8 @@ set( SOURCES
    LoadThemeResources.cpp
 )
 set( LIBRARIES
-   lib-theme-interface
+   au3-theme-interface
  )
-audacity_library( lib-theme-resources "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-theme-resources "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

@@ -36,10 +36,10 @@ set( SOURCES
    formatters/ParsedNumericConverterFormatter.h
 )
 set( LIBRARIES
-   lib-math-interface
-   lib-project-rate-interface
+   au3-math-interface
+   au3-project-rate-interface
 )
-audacity_library( lib-numeric-formats "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-numeric-formats "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
 

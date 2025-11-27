@@ -11,12 +11,12 @@ set( SOURCES
    AudacityApplicationLogicTypes.h
 )
 set( LIBRARIES
-   lib-audio-io-interface
-   lib-effects-interface
-   lib-menus-interface
-   lib-project-file-io-interface
-   lib-viewport-interface
+   au3-audio-io-interface
+   au3-effects-interface
+   au3-menus-interface
+   au3-project-file-io-interface
+   au3-viewport-interface
 )
-audacity_library( lib-audacity-application-logic "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-audacity-application-logic "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

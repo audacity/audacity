@@ -25,9 +25,9 @@ set( SOURCES
    SettingsVisitor.h
 )
 set( LIBRARIES
-   lib-strings-interface
-   lib-utility
+   au3-strings-interface
+   au3-utility
 )
-audacity_library( lib-components "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-components "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

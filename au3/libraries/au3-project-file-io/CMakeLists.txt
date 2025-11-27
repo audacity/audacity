@@ -1,6 +1,6 @@
 #[[
 A library handling project persistency, and supplying concrete SampleBlock
-and SampleBlockFactory subclasses so that lib-wave-track is usable.
+and SampleBlockFactory subclasses so that au3-wave-track is usable.
 
 All usage of Sqlite is encapsulated in this library.
 ]]
@@ -25,24 +25,24 @@ set( SOURCES
 )
 
 set( LIBRARIES
-   lib-wave-track-interface
+   au3-wave-track-interface
 )
 
 list( APPEND LIBRARIES
    # If Sentry reporting is enabled, this library depends on
-   # lib-network-manager-interface
+   # au3-network-manager-interface
    # If Sentry reporting is disabled, an INTERFACE library
    # will be defined
-   lib-sentry-reporting-interface
+   au3-sentry-reporting-interface
 )
 
 # Only this library needs sqlite, so make the dependency private
 list( APPEND LIBRARIES
    PRIVATE
-      lib-sqlite-helpers-interface
+      au3-sqlite-helpers-interface
 )
 
-audacity_library( lib-project-file-io "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-project-file-io "${SOURCES}" "${LIBRARIES}"
    ""
    ""
 )

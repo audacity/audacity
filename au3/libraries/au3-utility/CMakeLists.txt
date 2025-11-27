@@ -68,6 +68,6 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set( LIBRARIES PRIVATE ${CORE_FOUNDATION})
 endif()
 
-audacity_library( lib-utility "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-utility "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

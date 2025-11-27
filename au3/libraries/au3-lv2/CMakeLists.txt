@@ -31,9 +31,9 @@ set( SOURCES
    zix/ring.h
 )
 set( LIBRARIES
-   lib-effects-interface
+   au3-effects-interface
    lv2
 )
-audacity_library( lib-lv2 "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-lv2 "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

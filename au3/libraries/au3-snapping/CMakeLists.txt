@@ -12,7 +12,7 @@ This library:
 # Include AU3 compatibility macros
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
 
-set(TARGET lib-snapping)
+set(TARGET au3-snapping)
 set(TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
 set(SOURCES
@@ -29,10 +29,10 @@ set(SOURCES
 )
 
 set( LIBRARIES
-   lib-project-rate-interface
-   lib-numeric-formats-interface
-   lib-screen-geometry-interface
-   lib-track-interface
+   au3-project-rate-interface
+   au3-numeric-formats-interface
+   au3-screen-geometry-interface
+   au3-track-interface
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )

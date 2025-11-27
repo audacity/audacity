@@ -27,9 +27,9 @@ set( SOURCES
    SimpleCompressor/LookAheadGainReduction.h
 )
 set( LIBRARIES
-   lib-utility
-   lib-strings
+   au3-utility
+   au3-strings
 )
-audacity_library( lib-dynamic-range-processor "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-dynamic-range-processor "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

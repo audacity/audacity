@@ -12,10 +12,10 @@ set( SOURCES
    PrefsPanel.h
 )
 set( LIBRARIES
-   lib-registries-interface
-   lib-shuttlegui-interface
-   lib-wx-wrappers-interface
+   au3-registries-interface
+   au3-shuttlegui-interface
+   au3-wx-wrappers-interface
 )
-audacity_library( lib-preference-pages "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-preference-pages "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

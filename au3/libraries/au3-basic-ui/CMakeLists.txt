@@ -22,8 +22,8 @@ set( SOURCES
    BasicUIPoint.h
 )
 set( LIBRARIES
-   lib-strings-interface
+   au3-strings-interface
 )
-audacity_library( lib-basic-ui "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-basic-ui "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

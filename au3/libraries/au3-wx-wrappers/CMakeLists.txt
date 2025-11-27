@@ -39,11 +39,11 @@ set( SOURCES
 )
 
 set( LIBRARIES
-   lib-files-interface
+   au3-files-interface
    wxwidgets::wxwidgets
 )
 
-audacity_library( lib-wx-wrappers "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-wx-wrappers "${SOURCES}" "${LIBRARIES}"
    ""
    "$<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>"
 )

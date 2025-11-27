@@ -5,7 +5,7 @@ A library, that allows uploading to audio.com sharing service
 # Include AU3 compatibility macros
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
 
-set( TARGET lib-cloud-audiocom )
+set( TARGET au3-cloud-audiocom )
 set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
 def_vars()
@@ -57,16 +57,16 @@ set( SOURCES
 
 set ( LIBRARIES
 PUBLIC
-      lib-network-manager-interface # Required for the networking
-      lib-files-interface # FileNames
-      lib-strings-interface # Languages
-      lib-wave-track-interface
-      lib-project-file-io-interface # ProjectFileIOExtension
-      lib-concurrency-interface
+      au3-network-manager-interface # Required for the networking
+      au3-files-interface # FileNames
+      au3-strings-interface # Languages
+      au3-wave-track-interface
+      au3-project-file-io-interface # ProjectFileIOExtension
+      au3-concurrency-interface
    PRIVATE
-      lib-sqlite-helpers-interface
-      lib-crypto-interface
-      lib-import-export-interface
+      au3-sqlite-helpers-interface
+      au3-crypto-interface
+      au3-import-export-interface
       wavpack::wavpack # Required for the WavPackCompressor
       wxBase # Required to retrieve the OS information
 )

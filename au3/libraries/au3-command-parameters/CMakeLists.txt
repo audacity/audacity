@@ -15,9 +15,9 @@ set( SOURCES
    WrappedType.h
 )
 set( LIBRARIES
-   lib-preferences-interface
+   au3-preferences-interface
 )
-audacity_library( lib-command-parameters "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-command-parameters "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
 

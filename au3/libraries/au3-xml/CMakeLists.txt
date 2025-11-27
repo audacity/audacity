@@ -22,11 +22,11 @@ set( SOURCES
    audacityproject.dtd
 )
 set( LIBRARIES
-   lib-files-interface
-   lib-string-utils-interface
+   au3-files-interface
+   au3-string-utils-interface
    PRIVATE
    expat::expat
 )
-audacity_library( lib-xml "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-xml "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

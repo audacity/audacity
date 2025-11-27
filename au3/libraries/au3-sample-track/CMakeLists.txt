@@ -16,9 +16,9 @@ set( SOURCES
    SampleTrack.h
 )
 set( LIBRARIES
-   lib-mixer-interface
-   lib-playable-track-interface
+   au3-mixer-interface
+   au3-playable-track-interface
 )
-audacity_library( lib-sample-track "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-sample-track "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

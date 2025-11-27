@@ -39,10 +39,10 @@ set( SOURCES
 )
 set( LIBRARIES
 PUBLIC
-   lib-files-interface
-   lib-utility-interface
+   au3-files-interface
+   au3-utility-interface
    pffft
 )
-audacity_library( lib-time-and-pitch "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-time-and-pitch "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

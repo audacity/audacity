@@ -13,8 +13,8 @@ set( SOURCES
    LabelTrackEditing.cpp
 )
 set( LIBRARIES
-   lib-effects-interface
+   au3-effects-interface
 )
-audacity_library( lib-label-track "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-label-track "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

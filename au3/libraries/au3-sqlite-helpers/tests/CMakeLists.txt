@@ -1,12 +1,12 @@
 #[[
-Unit tests for lib-sqlite
+Unit tests for au3-sqlite
 ]]
 
 add_unit_test(
    NAME
-      lib-sqlite-helpers
+      au3-sqlite-helpers
    SOURCES
       SQliteHelpersTests.cpp
    LIBRARIES
-      lib-sqlite-helpers-interface
+      au3-sqlite-helpers-interface
 )

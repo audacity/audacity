@@ -35,9 +35,9 @@ set( SOURCES
    UndoTracks.h
 )
 set( LIBRARIES
-   lib-channel-interface
-   lib-project-history-interface
+   au3-channel-interface
+   au3-project-history-interface
 )
-audacity_library( lib-track "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-track "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

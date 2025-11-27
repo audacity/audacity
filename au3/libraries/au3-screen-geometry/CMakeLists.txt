@@ -13,6 +13,6 @@ set( SOURCES
 )
 set( LIBRARIES
 )
-audacity_library( lib-screen-geometry "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-screen-geometry "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

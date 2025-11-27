@@ -30,12 +30,12 @@ set( SOURCES
    StatefulPerTrackEffect.h
 )
 set( LIBRARIES
-   lib-command-parameters-interface
-   lib-numeric-formats-interface
-   lib-realtime-effects
-   lib-stretching-sequence-interface
-   lib-wave-track-interface
+   au3-command-parameters-interface
+   au3-numeric-formats-interface
+   au3-realtime-effects
+   au3-stretching-sequence-interface
+   au3-wave-track-interface
 )
-audacity_library( lib-effects "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-effects "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

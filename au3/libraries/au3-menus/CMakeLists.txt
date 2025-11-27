@@ -29,8 +29,8 @@ set(SOURCES
 )
 
 set( LIBRARIES
-   lib-project-history-interface
+   au3-project-history-interface
 )
 
-audacity_library(lib-menus "${SOURCES}" "${LIBRARIES}"
+audacity_library(au3-menus "${SOURCES}" "${LIBRARIES}"
    "" "" )

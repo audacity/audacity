@@ -5,7 +5,7 @@ Implements audio import and export pipelines.
 # Include AU3 compatibility macros
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
 
-set( TARGET lib-import-export )
+set( TARGET au3-import-export )
 set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
 def_vars()
@@ -46,12 +46,12 @@ set( SOURCES
 )
 set( LIBRARIES
 #   rapidjson::rapidjson
-   lib-tags-interface
-   lib-wave-track-interface
-   lib-project-interface
+   au3-tags-interface
+   au3-wave-track-interface
+   au3-project-interface
    PRIVATE
-      lib-effects-interface
+      au3-effects-interface
 )
-audacity_library( lib-import-export "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-import-export "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

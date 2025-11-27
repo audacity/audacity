@@ -11,10 +11,10 @@ set( SOURCES
 )
 set( LIBRARIES
    PUBLIC
-      lib-wave-track-interface
-      lib-fft-interface
+      au3-wave-track-interface
+      au3-fft-interface
 )
 
-audacity_library( lib-wave-track-fft "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-wave-track-fft "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

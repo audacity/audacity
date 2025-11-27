@@ -1,5 +1,5 @@
 #[[
-Unit tests for lib-music-information-retrieval
+Unit tests for au3-music-information-retrieval
 ]]
 
 add_compile_definitions(
@@ -8,7 +8,7 @@ add_compile_definitions(
 
 add_unit_test(
    NAME
-      lib-music-information-retrieval
+      au3-music-information-retrieval
    WAV_FILE_IO
    SOURCES
       MirFakes.h
@@ -21,5 +21,5 @@ add_unit_test(
       WavMirAudioReader.cpp
       WavMirAudioReader.h
    LIBRARIES
-      lib-music-information-retrieval
+      au3-music-information-retrieval
 )

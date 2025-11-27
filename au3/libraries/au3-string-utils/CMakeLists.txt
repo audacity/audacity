@@ -5,7 +5,7 @@ String encoding and formatting utilities
 # Include AU3 compatibility macros
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
 
-set(TARGET lib-string-utils)
+set(TARGET au3-string-utils)
 set(TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
 def_vars()

@@ -34,4 +34,4 @@ elseif(UNIX)
             internal/unix/CrashReportContext.cpp)
 endif()
 
-audacity_library( lib-breakpad-configurer "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "" )
+audacity_library( au3-breakpad-configurer "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "" )

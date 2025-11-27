@@ -17,11 +17,11 @@ set( SOURCES
    SavedMasterEffectList.h
 )
 set( LIBRARIES
-   lib-channel-interface
-   lib-math-interface
-   lib-module-manager-interface
-   lib-project-history-interface
+   au3-channel-interface
+   au3-math-interface
+   au3-module-manager-interface
+   au3-project-history-interface
 )
-audacity_library( lib-realtime-effects "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-realtime-effects "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
