@@ -1,62 +1,32 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "global/realfn.h"
-
 #include "dblogmonoruler.h"
-#include "dblogrulerutils.h"
+
+#include "framework/global/realfn.h"
 
 using namespace au::projectscene;
 
 namespace {
-constexpr int MIN_ADJACENT_FULL_STEPS_HEIGHT = 17;
-constexpr int MIN_ADJACENT_SMALL_STEPS_HEIGHT = 4;
-const std::vector<std::pair<double, double> > STEP_INCREMENT = {
-    { { 1.0 / 6.0, 1.0 / 30.0 },
-        { 1.0 / 6.0, 1.0 / 12.0 },
-        { 1.0 / 3.0, 1.0 / 6.0 },
-        { 1.0, 1.0 / 3.0 } } };
-constexpr std::pair <double, double> DEFAULT_INCREMENT = { 1.0, 1.0 / 3.0 };
+constexpr int MIN_ADJACENT_FULL_STEPS_HEIGHT = 20;
+}
 
-int getAlignment(double value, bool isNegativeSample)
+DbLogMonoRuler::DbLogMonoRuler()
+    : DbLogBaseRuler(DbLogRulerUiSettings { MIN_ADJACENT_FULL_STEPS_HEIGHT })
 {
-    if (muse::RealIsEqual(value, 0.0)) {
+}
+
+int DbLogMonoRuler::getAlignment(double value, bool isNegativeSample) const
+{
+    if (muse::RealIsEqual(value, m_maxDisplayValueDB)) {
         return isNegativeSample ? 1 : -1;
     }
     return 0;
 }
-}
 
 double DbLogMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, bool isNegativeSample) const
 {
-    return dblogrulerutils::valueToPosition(step, m_height, m_dbRange, isNegativeSample);
-}
-
-void DbLogMonoRuler::setHeight(int height)
-{
-    m_height = height;
-}
-
-void DbLogMonoRuler::setChannelHeightRatio(double channelHeightRatio)
-{
-    m_channelHeightRatio = channelHeightRatio;
-}
-
-void DbLogMonoRuler::setCollapsed(bool isCollapsed)
-{
-    m_collapsed = isCollapsed;
-}
-
-void DbLogMonoRuler::setDbRange(double dbRange)
-{
-    m_dbRange = dbRange;
-}
-
-std::string DbLogMonoRuler::sampleToText(double sample) const
-{
-    std::stringstream ss;
-    ss << std::fixed << std::setprecision(0) << std::abs(sample);
-    return ss.str();
+    return valueToPosition(step, m_height, isNegativeSample);
 }
 
 std::vector<TrackRulerFullStep> DbLogMonoRuler::fullSteps() const
@@ -65,21 +35,15 @@ std::vector<TrackRulerFullStep> DbLogMonoRuler::fullSteps() const
         return { TrackRulerFullStep { m_dbRange, 0, 0, true, true, false } };
     }
 
-    std::vector<double> steps = dblogrulerutils::fullStepsValues(m_height, dblogrulerutils::StepSettings {
-        m_dbRange,
-        static_cast<double>(MIN_ADJACENT_FULL_STEPS_HEIGHT),
-        static_cast<double>(MIN_ADJACENT_SMALL_STEPS_HEIGHT),
-        DEFAULT_INCREMENT,
-        STEP_INCREMENT
-    });
+    std::vector<double> steps = fullStepsValues(m_height);
 
     std::vector<TrackRulerFullStep> result;
     result.reserve((2 * steps.size()) + 1);
     for (double value : steps) {
-        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, false), dblogrulerutils::isBold(value,
-                                                                                                            m_dbRange), false, false });
-        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, true), dblogrulerutils::isBold(value, m_dbRange), false,
-                                              true });
+        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, false),
+                                              isBold(value), false, false });
+        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, true),
+                                              isBold(value), false, true });
     }
     result.push_back(TrackRulerFullStep { m_dbRange, 0, 0, true, true, false });
 
@@ -92,16 +56,8 @@ std::vector<TrackRulerSmallStep> DbLogMonoRuler::smallSteps() const
         return { TrackRulerSmallStep { 0.0, 0, false }, TrackRulerSmallStep { 0.0, 0, true } };
     }
 
-    const dblogrulerutils::StepSettings settings = {
-        m_dbRange,
-        static_cast<double>(MIN_ADJACENT_FULL_STEPS_HEIGHT),
-        static_cast<double>(MIN_ADJACENT_SMALL_STEPS_HEIGHT),
-        DEFAULT_INCREMENT,
-        STEP_INCREMENT
-    };
-
-    std::vector<double> steps = dblogrulerutils::smallStepsValues(m_height, settings);
-    std::vector<double> fullSteps = dblogrulerutils::fullStepsValues(m_height, settings);
+    std::vector<double> steps = smallStepsValues(m_height);
+    std::vector<double> fullSteps = fullStepsValues(m_height);
     std::vector<TrackRulerSmallStep> result;
     for (double value : steps) {
         if (std::find(fullSteps.begin(), fullSteps.end(), value) != fullSteps.end()) {

@@ -42,6 +42,7 @@ body:
       label: Audacity Version
       description: What version of Audacity are you running?
       options:
+        - Audacity 3.7.6
         - Audacity 3.7.5
         - Audacity 3.7.4
         - Audacity 3.7.3

@@ -41,7 +41,7 @@ private:
     void clearClipboard() override;
     muse::Ret pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks) override;
     bool cutClipIntoClipboard(const ClipKey& clipKey) override;
-    bool cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
+    bool cutItemDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
     bool copyClipIntoClipboard(const trackedit::ClipKey& clipKey) override;
     bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) override;
     bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
@@ -113,7 +113,7 @@ private:
     bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) override;
 
     bool removeLabel(const LabelKey& labelKey) override;
-    bool removeLabels(const LabelKeyList& labelKeys) override;
+    bool removeLabels(const LabelKeyList& labelKeys, bool moveLabels) override;
 
     bool cutLabel(const LabelKey& labelKey) override;
     bool copyLabel(const LabelKey& labelKey) override;
@@ -121,6 +121,15 @@ private:
     bool moveLabels(secs_t timePositionOffset, bool completed) override;
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
+
+    std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const override;
+
+    void zoomInVertically(const trackedit::TrackId& trackId) override;
+    void zoomOutVertically(const trackedit::TrackId& trackId) override;
+    void resetVerticalZoom(const trackedit::TrackId& trackId) override;
+    bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const override;
+    bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const override;
+    bool isMinVerticalZoom(const trackedit::TrackId& trackId) const override;
 
     muse::Progress progress() const override;
 

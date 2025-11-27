@@ -136,6 +136,14 @@ LabelTrack* LabelTrack::Create(TrackList& trackList)
     return Create(trackList, trackList.MakeUniqueTrackName(GetDefaultName()));
 }
 
+LabelTrack::Holder LabelTrack::CreatePtr(TrackList& trackList)
+{
+    auto track = std::make_shared<LabelTrack>();
+    track->SetName(trackList.MakeUniqueTrackName(GetDefaultName()));
+    trackList.Add(track);
+    return track;
+}
+
 LabelTrack::LabelTrack()
     : UniqueChannelTrack{}
     , mClipLen{0.0}
@@ -261,13 +269,14 @@ void LabelTrack::Clear(double b, double e, bool moveClips)
 bool LabelTrack::SplitDelete(double b, double e)
 {
     // May DELETE labels, so use subscripts to iterate
+
+    std::vector<size_t> labelsToDelete;
+
     for (size_t i = 0, len = mLabels.size(); i < len; ++i) {
         auto& labelStruct = mLabels[i];
-        LabelStruct::TimeRelations relation
-            =labelStruct.RegionRelation(b, e, this);
+        LabelStruct::TimeRelations relation = labelStruct.RegionRelation(b, e, this);
         if (relation == LabelStruct::SURROUNDS_LABEL) {
-            DeleteLabel(i);
-            --i;
+            labelsToDelete.push_back(i);
         } else if (relation == LabelStruct::WITHIN_LABEL) {
             labelStruct.selectedRegion.moveT1(-(e - b));
         } else if (relation == LabelStruct::ENDS_IN_LABEL) {
@@ -275,6 +284,10 @@ bool LabelTrack::SplitDelete(double b, double e)
         } else if (relation == LabelStruct::BEGINS_IN_LABEL) {
             labelStruct.selectedRegion.setT1(b);
         }
+    }
+
+    for (auto it = labelsToDelete.rbegin(); it != labelsToDelete.rend(); ++it) {
+        DeleteLabel(*it);
     }
 
     return true;
@@ -1123,6 +1136,21 @@ void LabelTrack::DeleteLabel(int index)
 
     Publish({ LabelTrackEvent::Deletion,
               this->SharedPointer<LabelTrack>(), title, index, -1 });
+}
+
+void LabelTrack::DeleteLabelById(int64_t id)
+{
+    for (size_t i = 0; i < mLabels.size(); ++i) {
+        if (mLabels[i].GetId() == id) {
+            const auto title = mLabels[i].title;
+            mLabels.erase(mLabels.begin() + i);
+
+            Publish({ LabelTrackEvent::Deletion,
+                      this->SharedPointer<LabelTrack>(), title, (int)i, -1 });
+
+            break;
+        }
+    }
 }
 
 /// Sorts the labels in order of their starting times.

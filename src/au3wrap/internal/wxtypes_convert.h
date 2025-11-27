@@ -20,6 +20,11 @@ inline wxString wxFromString(const muse::String& s)
 {
     return wxString(s.toStdWString());
 }
+
+inline wxString wxFromStdString(const std::string& s)
+{
+    return wxString(s);
+}
 }
 
 #endif // AU_AU3WRAP_WXTYPES_CONVERT_H

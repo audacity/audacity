@@ -14,8 +14,14 @@ TrackItemsContainer {
         context: root.context
     }
 
+    TrackLabelsLayoutManager {
+        id: layoutManager
+        labelsModel: labelsModel
+    }
+
     onInitRequired: function() {
         labelsModel.init()
+        layoutManager.init()
     }
 
     contentComponent: Component {
@@ -25,6 +31,7 @@ TrackItemsContainer {
                 anchors.fill: parent
                 anchors.bottomMargin: root.bottomSeparatorHeight
                 z: 1
+                clip: true
 
                 function mapToAllLabels(e, f) {
                     for (let i = 0; i < repeater.count; i++) {
@@ -98,14 +105,18 @@ TrackItemsContainer {
 
                         property var itemData: model.item
 
-                        height: parent.height
+                        height: parent.height - y
                         width: itemData.width
                         x: itemData.x
+                        y: (itemData.visualHeight + 2) * itemData.level
+                        z: itemData.level
 
                         asynchronous: true
 
+                        visible: y < root.height
+
                         sourceComponent: {
-                            if ((itemData.x + itemData.width) < (0 - labelsModel.cacheBufferPx)) {
+                            if ((itemData.x + itemData.visualWidth) < (0 - labelsModel.cacheBufferPx)) {
                                 return null
                             }
 
@@ -130,6 +141,12 @@ TrackItemsContainer {
                                 isSelected: Boolean(itemData) && itemData.selected
                                 enableCursorInteraction: true
 
+                                isLeftLinked: Boolean(itemData) && itemData.isLeftLinked
+                                isRightLinked: Boolean(itemData) && itemData.isRightLinked
+                                isLinkedActive: Boolean(itemData) && itemData.isLinkedActive
+
+                                container: repeater
+
                                 navigation.name: Boolean(itemData) ? itemData.title + itemData.index : ""
                                 navigation.panel: root.navigationPanel
                                 navigation.column: Boolean(itemData) ? Math.floor(itemData.x) : 0
@@ -146,11 +163,17 @@ TrackItemsContainer {
                                     var xWithinTrack = xWithinLabel + itemData.x
 
                                     trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
+
+                                    let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
+                                    root.triggerItemGuideline(time, false)
                                 }
 
                                 onRequestSelected: {
                                     labelsModel.selectLabel(itemData.key)
-                                    root.itemSelectedRequested()
+                                }
+
+                                onRequestSingleSelected: {
+                                    labelsModel.selectLabel(itemData.key)
                                 }
 
                                 onRequestSelectionReset: {
@@ -159,7 +182,7 @@ TrackItemsContainer {
                                 }
 
                                 onTitleEditStarted: {
-                                    labelsModel.selectLabel(itemData.key)
+                                    itemData.isEditing = true
                                 }
 
                                 onTitleEditAccepted: function(newTitle) {
@@ -171,20 +194,32 @@ TrackItemsContainer {
                                     labelsModel.resetSelectedLabels()
                                 }
 
+                                onTitleEditFinished: {
+                                    itemData.isEditing = false
+                                }
+
                                 onLabelStartEditRequested: function() {
+                                    itemData.isEditing = true
                                     labelsModel.startEditItem(itemData.key)
                                 }
 
                                 onLabelEndEditRequested: function() {
                                     labelsModel.endEditItem(itemData.key)
+                                    itemData.isEditing = false
                                 }
 
-                                onLabelLeftStretchRequested: function(completed) {
-                                    labelsModel.stretchLabelLeft(itemData.key, completed)
+                                onLabelLeftStretchRequested: function(unlink, completed) {
+                                    var leftLinkedLabelKey = layoutManager.leftLinkedLabel(itemData.key)
+                                    labelsModel.stretchLabelLeft(itemData.key, leftLinkedLabelKey, unlink, completed)
+
+                                    handleLabelGuideline(itemData.key, Direction.Left, completed)
                                 }
 
-                                onLabelRightStretchRequested: function(completed) {
-                                    labelsModel.stretchLabelRight(itemData.key, completed)
+                                onLabelRightStretchRequested: function(unlink, completed) {
+                                    var rightLinkedLabelKey = layoutManager.rightLinkedLabel(itemData.key)
+                                    labelsModel.stretchLabelRight(itemData.key, rightLinkedLabelKey, unlink, completed)
+
+                                    handleLabelGuideline(itemData.key, Direction.Right, completed)
                                 }
 
                                 onHeaderHoveredChanged: function() {
@@ -197,6 +232,22 @@ TrackItemsContainer {
                                     })
                                 }
 
+                                onVisualWidthChanged: function() {
+                                    itemData.visualWidth = item.visualWidth
+                                }
+
+                                onActivateLeftLinkedLabel: {
+                                    layoutManager.activateLeftLinkedLabel(itemData.key)
+                                }
+
+                                onActivateRightLinkedLabel: {
+                                    layoutManager.activateRightLinkedLabel(itemData.key)
+                                }
+
+                                onDeactivateLinkedLabel: {
+                                    layoutManager.deactivateLinkedLabel(itemData.key)
+                                }
+
                                 Connections {
                                     target: labelsModel
                                     function onItemTitleEditRequested(key) {
@@ -204,6 +255,10 @@ TrackItemsContainer {
                                             item.editTitle()
                                         }
                                     }
+                                }
+
+                                Component.onCompleted: {
+                                    itemData.visualHeight = item.headerDefaultHeight
                                 }
                             }
                         }
@@ -249,6 +304,8 @@ TrackItemsContainer {
             root.updateMoveActive(completed)
 
             labelsModel.moveSelectedLabels(itemKey, completed)
+
+            handleLabelGuideline(itemKey, Direction.Auto, completed)
         }
 
         function onItemStartEditRequested(itemKey) {
@@ -257,6 +314,16 @@ TrackItemsContainer {
 
         function onItemEndEditRequested(itemKey) {
             labelsModel.endEditItem(itemKey)
+        }
+
+        function onItemReleaseRequested(itemKey) {
+            labelsModel.toggleTracksDataSelectionByLabel(itemKey)
+        }
+
+        function onCancelItemDragEditRequested(itemKey) {
+            if (labelsModel.cancelItemDragEdit(itemKey)) {
+                root.itemDragEditCanceled()
+            }
         }
 
         function onStartAutoScroll() {
@@ -269,6 +336,13 @@ TrackItemsContainer {
             if (root.context) {
                 root.context.stopAutoScroll()
             }
+        }
+    }
+
+    function handleLabelGuideline(labelKey, direction, completed) {
+        let guidelinePos = labelsModel.findGuideline(labelKey, direction)
+        if (guidelinePos) {
+            triggerItemGuideline(guidelinePos, completed)
         }
     }
 }

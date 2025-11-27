@@ -339,7 +339,7 @@ Rectangle {
             anchors.top: parent.top
             anchors.right: parent.right
             height: timeline.height
-            width: tracksModel.isVerticalRulersVisible ? 32 : 0
+            width: tracksModel.isVerticalRulersVisible ? tracksModel.verticalRulerWidth : 0
 
             color: ui.theme.backgroundSecondaryColor
 
@@ -427,6 +427,9 @@ Rectangle {
 
             hoverEnabled: true
 
+            property var lastItemClickKey: null
+            property bool itemWasMoved: false
+
             onWheel: function (wheelEvent) {
                 timeline.onWheel(wheelEvent.x, wheelEvent.pixelDelta, wheelEvent.angleDelta)
             }
@@ -440,6 +443,7 @@ Rectangle {
                     if (root.itemHeaderHovered) {
                         tracksItemsView.itemStartEditRequested(hoveredItemKey)
                         root.interactionState = TracksItemsView.State.DraggingItem
+                        lastItemClickKey = root.hoveredItemKey
                     } else {
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
                             playCursorController.seekToX(e.x)
@@ -453,7 +457,10 @@ Rectangle {
                         handleGuideline(e.x, false)
 
                         splitToolController.mouseDown(e.x)
+                        lastItemClickKey = null
                     }
+
+                    itemWasMoved = false
                 } else if (e.button === Qt.RightButton) {
                     if (tracksHovered)
                     //! TODO AU4: handle context menu over empty track area
@@ -467,6 +474,10 @@ Rectangle {
                 timeline.updateCursorPosition(e.x, e.y)
                 splitToolController.mouseMove(e.x)
 
+                if (root.itemHeaderHovered && mainMouseArea.pressed) {
+                    itemWasMoved = true
+                }
+
                 if (root.interactionState === TracksItemsView.State.DraggingItem) {
                     tracksItemsView.itemMoveRequested(hoveredItemKey, false)
                     tracksItemsView.startAutoScroll()
@@ -478,9 +489,14 @@ Rectangle {
                 }
             }
 
-            onReleased: e => {
+            onReleased: function(e) {
                 if (e.button !== Qt.LeftButton) {
                     return
+                }
+
+                if (!itemWasMoved) {
+                    tracksItemsView.itemReleaseRequested(hoveredItemKey)
+                    itemWasMoved = false
                 }
 
                 if (root.interactionState === TracksItemsView.State.DraggingItem) {
@@ -586,6 +602,7 @@ Rectangle {
                 signal itemMoveRequested(var itemKey, bool completed)
                 signal itemStartEditRequested(var itemKey)
                 signal itemEndEditRequested(var itemKey)
+                signal itemReleaseRequested(var itemKey)
                 signal cancelItemDragEditRequested(var itemKey)
                 signal startAutoScroll
                 signal stopAutoScroll
@@ -679,6 +696,7 @@ Rectangle {
                             isTrackAudible: itemData.isTrackAudible
                             isLinear: itemData.isLinear
                             dbRange: itemData.dbRange
+                            verticalZoom: itemData.trackVerticalZoom
                             isWaveformViewVisible: itemData.isWaveformViewVisible
                             isSpectrogramViewVisible: itemData.isSpectrogramViewVisible
 
@@ -813,7 +831,7 @@ Rectangle {
                                 })
                             }
 
-                            onTriggerClipGuideline: function (time, completed) {
+                            onTriggerItemGuideline: function (time, completed) {
                                 root.guidelinePos = timeline.context.timeToPosition(time)
                                 root.guidelineVisible = root.guidelinePos >= 0 && !completed
                             }
@@ -936,6 +954,15 @@ Rectangle {
                                 }
                                 tracksItemsView.moveActive = !completed
                             }
+
+                            onTriggerItemGuideline: function (time, completed) {
+                                root.guidelinePos = timeline.context.timeToPosition(time)
+                                root.guidelineVisible = root.guidelinePos >= 0 && !completed
+                            }
+
+                            onHandleTimeGuideline: function (x) {
+                                root.handleGuideline(x)
+                            }
                         }
                     }
                 }
@@ -979,8 +1006,6 @@ Rectangle {
         }
 
         Rectangle {
-            id: clipGuideline
-
             anchors.top: content.top
             anchors.bottom: content.bottom
 

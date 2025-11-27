@@ -7,11 +7,10 @@
 
 **********************************************************************/
 
-#include "WaveformScale.h"
-
 #include "WaveTrack.h"
-
 #include "au3wrap/au3types.h"
+
+#include "waveformscale.h"
 
 using namespace au::au3;
 

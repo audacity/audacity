@@ -117,6 +117,9 @@ public:
      */
     static LabelTrack* Create(TrackList& trackList);
 
+    using Holder = std::shared_ptr<LabelTrack>;
+    static Holder CreatePtr(TrackList& trackList);
+
     LabelTrack();
     LabelTrack(const LabelTrack& orig, ProtectedCreationArg&&);
 
@@ -128,8 +131,6 @@ public:
     void ShiftBy(double t0, double delta) override;
 
     void SetSelected(bool s) override;
-
-    using Holder = std::shared_ptr<LabelTrack>;
 
     static const FileNames::FileType SubripFiles;
     static const FileNames::FileType WebVTTFiles;
@@ -144,8 +145,9 @@ public:
     void WriteXML(XMLWriter& xmlFile) const override;
 
     Track::Holder Cut(double t0, double t1, bool moveClips) override;
-    Track::Holder Copy(double t0, double t1, bool forClipboard = true)
-    const override;
+
+    Track::Holder Copy(double t0, double t1, bool forClipboard = true) const override;
+
     void Clear(double t0, double t1, bool moveClips) override;
     void Paste(double t, const Track& src, bool moveClips) override;
     bool Repeat(double t0, double t1, int n);
@@ -168,8 +170,8 @@ public:
     //This returns the id of the label we just added.
     int64_t AddLabel(const SelectedRegion& region, const wxString& title);
 
-    //This deletes the label at given index.
     void DeleteLabel(int index);
+    void DeleteLabelById(int64_t id);
 
     // This pastes labels without shifting existing ones
     bool PasteOver(double t, const Track& src);

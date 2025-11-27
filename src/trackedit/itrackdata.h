@@ -3,10 +3,7 @@
  */
 #pragma once
 
-#include "trackedittypes.h"
-
 #include <memory>
-#include <variant>
 
 namespace au::trackedit {
 class ITrackData

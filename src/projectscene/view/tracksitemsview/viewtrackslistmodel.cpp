@@ -11,6 +11,36 @@
 
 using namespace au::projectscene;
 
+namespace {
+constexpr int numDecimals(float value)
+{
+    constexpr int MAX_DECIMAL_PLACES = 4;
+    constexpr float POWER_OF_TEN = 10000.0f;
+
+    int rounded_scaled_value = static_cast<int>((value * POWER_OF_TEN) + 0.5f);
+    int integer_part = static_cast<int>(value);
+    int decimal_part_scaled = rounded_scaled_value - (integer_part * static_cast<int>(POWER_OF_TEN));
+
+    if (decimal_part_scaled == 0) {
+        return 0;
+    }
+
+    int count = MAX_DECIMAL_PLACES;
+    int power_of_ten = 10;
+
+    while (count > 0 && (decimal_part_scaled % power_of_ten) == 0) {
+        count--;
+        power_of_ten *= 10;
+    }
+
+    return count;
+}
+
+static_assert(numDecimals(0.14999999) == 2);
+static_assert(numDecimals(1.00) == 0);
+static_assert(numDecimals(0.005) == 3);
+}
+
 ViewTracksListModel::ViewTracksListModel(QObject* parent)
     : QAbstractListModel(parent)
 {
@@ -158,6 +188,7 @@ void ViewTracksListModel::load()
                 break;
             }
         }
+        emit verticalRulerWidthChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
     endResetModel();
@@ -267,6 +298,9 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case DbRangeRole:
         return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
 
+    case VerticalZoomRole:
+        return track.verticalZoom;
+
     default:
         break;
     }
@@ -289,9 +323,10 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { IsLinearRole, "isLinear" },
         { AvailableRulerTypesRole, "availableRulerTypes" },
         { TrackRulerTypeRole, "trackRulerType" },
+        { DbRangeRole, "dbRange" },
+        { VerticalZoomRole, "trackVerticalZoom" },
         { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
         { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
-        { DbRangeRole, "dbRange" }
     };
     return roles;
 }
@@ -299,6 +334,26 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
 bool ViewTracksListModel::isVerticalRulersVisible() const
 {
     return projectSceneConfiguration()->isVerticalRulersVisible();
+}
+
+int ViewTracksListModel::verticalRulerWidth() const
+{
+    float smallestBoundValue = 1;
+    for (const auto& track : m_trackList) {
+        if (track.rulerType != au::trackedit::TrackRulerType::Linear) {
+            //Only linear rulers contain decimal places.
+            continue;
+        }
+
+        // Find the smallest vertical zoom among linear rulers to ajust the width globally.
+        smallestBoundValue = std::min(smallestBoundValue, track.verticalZoom);
+    }
+    smallestBoundValue *= 0.1f;
+
+    const int nDecimals = numDecimals(smallestBoundValue);
+
+    // Adjust the width according to the number of decimal places.
+    return 56 + (nDecimals * 8);
 }
 
 int ViewTracksListModel::totalTracksHeight() const
@@ -311,11 +366,6 @@ int ViewTracksListModel::totalTracksHeight() const
     }
 
     return viewState->totalTrackHeight().val;
-}
-
-void ViewTracksListModel::toggleVerticalRuler() const
-{
-    projectSceneConfiguration()->setVerticalRulersVisible(!projectSceneConfiguration()->isVerticalRulersVisible());
 }
 
 void ViewTracksListModel::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType)

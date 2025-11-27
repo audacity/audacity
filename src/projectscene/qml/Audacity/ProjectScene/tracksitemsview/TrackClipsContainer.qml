@@ -17,6 +17,7 @@ TrackItemsContainer {
     property bool rightTrimPressedButtons: false
     property bool isLinear: false
     property real dbRange: -60.0
+    property real verticalZoom: 1.0
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
 
@@ -243,6 +244,7 @@ TrackItemsContainer {
                                 isAudible: root.isTrackAudible
                                 isLinear: root.isLinear
                                 dbRange: root.dbRange
+                                verticalZoom: root.verticalZoom
                                 isWaveformViewVisible: root.isWaveformViewVisible
                                 isSpectrogramViewVisible: root.isSpectrogramViewVisible
                                 multiSampleEdit: clipsContainer.multiSampleEdit
@@ -343,7 +345,7 @@ TrackItemsContainer {
                                 onClipEndEditRequested: function() {
                                     clipsModel.endEditItem(itemData.key)
 
-                                    root.triggerClipGuideline(false, -1)
+                                    root.triggerItemGuideline(false, -1)
                                 }
 
                                 onClipLeftTrimRequested: function(completed, action) {
@@ -385,7 +387,7 @@ TrackItemsContainer {
                                     trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
 
                                     let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
-                                    root.triggerClipGuideline(time, false)
+                                    root.triggerItemGuideline(time, false)
                                 }
 
                                 onRequestSelected: {
@@ -530,9 +532,11 @@ TrackItemsContainer {
             clipsModel.endEditItem(itemKey)
         }
 
+        function onItemReleaseRequested(itemKey) {}
+
         function onCancelItemDragEditRequested(itemKey) {
             if (clipsModel.cancelItemDragEdit(itemKey)) {
-                root.clipDragEditCanceled()
+                root.itemDragEditCanceled()
             }
         }
 
@@ -548,7 +552,7 @@ TrackItemsContainer {
     function handleClipGuideline(clipKey, direction, completed) {
         let guidelinePos = clipsModel.findGuideline(clipKey, direction)
         if (guidelinePos) {
-            triggerClipGuideline(guidelinePos, completed)
+            triggerItemGuideline(guidelinePos, completed)
         }
     }
 }

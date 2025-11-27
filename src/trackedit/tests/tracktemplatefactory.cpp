@@ -1,10 +1,14 @@
 #include "tracktemplatefactory.h"
 
-#include "WaveTrack.h"
-#include "WaveClip.h"
-
 #include <tuple>
 #include <random>
+
+#include "WaveTrack.h"
+#include "WaveClip.h"
+#include "LabelTrack.h"
+#include "SelectedRegion.h"
+
+#include "au3wrap/internal/wxtypes_convert.h"
 
 using namespace au::au3;
 
@@ -68,5 +72,35 @@ std::vector<float> TrackTemplateFactory::createNoise(double duration, double sam
 std::vector<float> TrackTemplateFactory::createSilence(double duration, double sampleRate)
 {
     return std::vector<float>(static_cast<size_t>(duration * sampleRate), 0.0f);
+}
+
+std::shared_ptr<LabelTrack> TrackTemplateFactory::createLabelTrackFromTemplate(const std::string& name,
+                                                                               const std::vector<LabelTemplate>& labelTemplates)
+{
+    auto& trackList = Au3TrackList::Get(m_project);
+    auto track = ::LabelTrack::CreatePtr(trackList);
+    track->SetName(wxFromStdString(name));
+
+    for (const auto& tmpl : labelTemplates) {
+        SelectedRegion region;
+        region.setTimes(tmpl.t0, tmpl.t1);
+        track->AddLabel(region, wxFromStdString(tmpl.title));
+    }
+
+    return track;
+}
+
+au::au3::Au3TrackId TrackTemplateFactory::addLabelTrackToProject(std::shared_ptr<LabelTrack> track)
+{
+    auto& trackList = Au3TrackList::Get(m_project);
+    trackList.Add(track, ::TrackList::DoAssignId::Yes, ::TrackList::EventPublicationSynchrony::Synchronous);
+    return track->GetId();
+}
+
+au::au3::Au3TrackId TrackTemplateFactory::addLabelTrackFromTemplate(const std::string& name,
+                                                                    const std::vector<LabelTemplate>& labelTemplates)
+{
+    auto track = createLabelTrackFromTemplate(name, labelTemplates);
+    return addLabelTrackToProject(track);
 }
 }
