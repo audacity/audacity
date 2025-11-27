@@ -8,7 +8,7 @@
   Matthieu Hodgkinson
 
   DSP utilities used by the Music Information Retrieval code.
-  These may migrate to lib-math if needed elsewhere.
+  These may migrate to au3-math if needed elsewhere.
 
 **********************************************************************/
 

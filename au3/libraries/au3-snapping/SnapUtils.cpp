@@ -54,7 +54,7 @@ wxString DeduceSnapTo()
     // where snapping was controlled by the "/SelectionFormat".
     // We are only trying to match the known values from the
     // config to the appropriate snapping function, this matching
-    // does not introduce any kind of dependency to the lib-numeric-format.
+    // does not introduce any kind of dependency to the au3-numeric-format.
 
     const auto selectionFormat = gPrefs->Read(SelectionFormatKey);
 

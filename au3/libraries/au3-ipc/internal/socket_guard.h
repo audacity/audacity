@@ -6,7 +6,7 @@
 
   @author Vitaly Sverchinsky
 
-  Part of lib-ipc library
+  Part of au3-ipc library
 
 **********************************************************************/
 

@@ -6,7 +6,7 @@
 
   @author Vitaly Sverchinsky
 
-  Part of lib-module-manager library
+  Part of au3-module-manager library
 
 **********************************************************************/
 
