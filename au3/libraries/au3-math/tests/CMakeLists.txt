@@ -1,12 +1,12 @@
 #[[
-Unit tests for lib-math
+Unit tests for au3-math
 ]]
 
 add_unit_test(
    NAME
-      lib-math
+      au3-math
    SOURCES
       MathTests.cpp
    LIBRARIES
-      lib-math
+      au3-math
 )

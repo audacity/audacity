@@ -13,9 +13,9 @@ set( SOURCES
    UndoManager.h
 )
 set( LIBRARIES
-   lib-project-interface
-   lib-transactions-interface
+   au3-project-interface
+   au3-transactions-interface
 )
-audacity_library( lib-project-history "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-project-history "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

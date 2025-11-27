@@ -11,10 +11,10 @@ set( SOURCES
    TimeTrack.h
 )
 set( LIBRARIES
-   lib-mixer-interface # for Envelope
-   lib-project-rate-interface
-   lib-track-interface
+   au3-mixer-interface # for Envelope
+   au3-project-rate-interface
+   au3-track-interface
 )
-audacity_library( lib-time-track "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-time-track "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

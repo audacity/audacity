@@ -6,7 +6,7 @@ using Exception and Message interfaces.
 # Include AU3 compatibility macros
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
 
-set( TARGET lib-sentry-reporting )
+set( TARGET au3-sentry-reporting )
 set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
 def_vars()
@@ -27,9 +27,9 @@ if(${_OPT}has_sentry_reporting)
 
 
     set ( LIBRARIES PRIVATE
-        lib-network-manager # Required for the networking
-        lib-string-utils # ToUtf8
-        lib-uuid # UUIDs are required as an event identifier.
+        au3-network-manager # Required for the networking
+        au3-string-utils # ToUtf8
+        au3-uuid # UUIDs are required as an event identifier.
         rapidjson::rapidjson # Protocol is JSON based
         wxBase # Required to retrieve the OS information
     )

@@ -33,10 +33,10 @@ set( SOURCES
    Gain.h
 )
 set( LIBRARIES
-   lib-preferences-interface
+   au3-preferences-interface
    PRIVATE
    soxr
 )
-audacity_library( lib-math "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-math "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

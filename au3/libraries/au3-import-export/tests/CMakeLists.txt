@@ -1,13 +1,13 @@
 #[[
-Unit tests for lib-import-export
+Unit tests for au3-import-export
 ]]
 add_subdirectory(../riff-test-util)
 
 add_unit_test(
    NAME
-      lib-import-export
+      au3-import-export
    SOURCES
       GetAcidizerTagsTests.cpp
    LIBRARIES
-      lib-import-export
+      au3-import-export
 )

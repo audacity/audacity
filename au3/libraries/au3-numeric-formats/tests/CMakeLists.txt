@@ -1,16 +1,16 @@
 #  SPDX-License-Identifier: GPL-2.0-or-later
 #[[
-Unit tests for lib-numeric-formats
+Unit tests for au3-numeric-formats
 ]]
 
 add_unit_test(
    NAME
-      lib-numeric-formats
+      au3-numeric-formats
    MOCK_PREFS
    MOCK_AUDIO
    SOURCES
       NumericConverterTests.cpp
    LIBRARIES
-      lib-numeric-formats
+      au3-numeric-formats
       wxBase
 )

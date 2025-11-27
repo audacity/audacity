@@ -10,8 +10,8 @@ set( SOURCES
    PlayableTrack.h
 )
 set( LIBRARIES
-   lib-track-interface
+   au3-track-interface
 )
-audacity_library( lib-playable-track "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-playable-track "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

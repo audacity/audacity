@@ -16,5 +16,5 @@ set( SOURCES
 set( LIBRARIES
    PUBLIC
 )
-audacity_library( lib-concurrency "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-concurrency "${SOURCES}" "${LIBRARIES}"
    "" "" )

@@ -31,9 +31,9 @@ set( SOURCES
 set( LIBRARIES
    PUBLIC
       sqlite
-      lib-exceptions-interface
-      lib-strings-interface
-      lib-string-utils-interface
+      au3-exceptions-interface
+      au3-strings-interface
+      au3-string-utils-interface
 )
-audacity_library( lib-sqlite-helpers "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-sqlite-helpers "${SOURCES}" "${LIBRARIES}"
    "" "" )

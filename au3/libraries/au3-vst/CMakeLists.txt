@@ -17,8 +17,8 @@ set( SOURCES
    aeffectx.h
 )
 set( LIBRARIES
-   lib-effects-interface
+   au3-effects-interface
 )
-audacity_library( lib-vst "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-vst "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

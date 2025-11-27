@@ -24,9 +24,9 @@ set( SOURCES
    Prefs.h
 )
 set( LIBRARIES 
-   lib-basic-ui-interface
-   lib-components-interface
+   au3-basic-ui-interface
+   au3-components-interface
 )
-audacity_library( lib-preferences "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-preferences "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

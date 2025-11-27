@@ -18,8 +18,8 @@ set( SOURCES
    AudioGraphTask.h
 )
 set( LIBRARIES
-   lib-math-interface
+   au3-math-interface
 )
-audacity_library( lib-audio-graph "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-audio-graph "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

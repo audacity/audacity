@@ -16,13 +16,13 @@ set( SOURCES
 
 set( LIBRARIES
    PRIVATE
-   lib-string-utils-interface
-   lib-utility-interface
+   au3-string-utils-interface
+   au3-utility-interface
    wxBase
 )
 
 set ( DEFINES INTERFACE -DHAS_CUSTOM_URL_HANDLING )
 
-audacity_library( lib-url-schemes "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-url-schemes "${SOURCES}" "${LIBRARIES}"
    "${DEFINES}" ""
 )

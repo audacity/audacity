@@ -15,5 +15,5 @@ set( SOURCES
 set( LIBRARIES
    PUBLIC
 )
-audacity_library( lib-crypto "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-crypto "${SOURCES}" "${LIBRARIES}"
    "" "" )

@@ -1,12 +1,12 @@
 #[[
-Unit tests for lib-stretching-sequence
+Unit tests for au3-stretching-sequence
 ]]
 
 add_compile_definitions(CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
 
 add_unit_test(
    NAME
-      lib-stretching-sequence
+      au3-stretching-sequence
    SOURCES
       AudioContainerHelper.h
       AudioSegmentSampleViewTest.cpp
@@ -31,6 +31,6 @@ add_unit_test(
    MOCK_AUDIO
    WAV_FILE_IO
    LIBRARIES
-      lib-stretching-sequence
-      lib-wave-track
+      au3-stretching-sequence
+      au3-wave-track
 )

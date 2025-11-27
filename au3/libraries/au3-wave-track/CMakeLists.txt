@@ -42,12 +42,12 @@ set( SOURCES
    WaveChannelViewConstants.h
 )
 set( LIBRARIES
-   lib-project-rate-interface
-   lib-sample-track-interface
-   lib-stretching-sequence-interface
-   lib-track-selection-interface
+   au3-project-rate-interface
+   au3-sample-track-interface
+   au3-stretching-sequence-interface
+   au3-track-selection-interface
 )
-audacity_library( lib-wave-track "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-wave-track "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
 

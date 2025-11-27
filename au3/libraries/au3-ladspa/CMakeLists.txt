@@ -17,9 +17,9 @@ set( SOURCES
    ladspa.h
 )
 set( LIBRARIES
-   lib-effects-interface
+   au3-effects-interface
 )
-audacity_library( lib-ladspa "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-ladspa "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
 

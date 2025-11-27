@@ -5,7 +5,7 @@ Generation of UUIDs
 # Include AU3 compatibility macros
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
 
-set( TARGET lib-uuid )
+set( TARGET au3-uuid )
 set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
 def_vars()
@@ -28,6 +28,6 @@ else()
     set( LIBRARIES PRIVATE libuuid::libuuid)
 endif()
 
-list( APPEND LIBRARIES PRIVATE lib-string-utils lib-utility)
+list( APPEND LIBRARIES PRIVATE au3-string-utils au3-utility)
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "" )

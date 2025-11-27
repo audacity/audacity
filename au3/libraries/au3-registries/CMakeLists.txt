@@ -40,9 +40,9 @@ set( SOURCES
    Registry.h
 )
 set( LIBRARIES
-   lib-preferences-interface
-   lib-exceptions
+   au3-preferences-interface
+   au3-exceptions
 )
-audacity_library( lib-registries "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-registries "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

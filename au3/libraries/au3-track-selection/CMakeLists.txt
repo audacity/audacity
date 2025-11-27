@@ -22,8 +22,8 @@ set( SOURCES
    TrackFocus.h
 )
 set( LIBRARIES
-   lib-time-frequency-selection-interface
+   au3-time-frequency-selection-interface
 )
-audacity_library( lib-track-selection "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-track-selection "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

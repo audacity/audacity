@@ -16,7 +16,7 @@ pipelines.
 
 Class Envelope represents piecewise linear or exponential curves, and is
 sometimes used with an independent variable that is not time.  Perhaps a base
-class Curve should be extracted from it and lowered into lib-math.
+class Curve should be extracted from it and lowered into au3-math.
 ]]
 
 # Include AU3 compatibility macros
@@ -45,9 +45,9 @@ set( SOURCES
    WideSampleSource.h
 )
 set( LIBRARIES
-   lib-audio-graph-interface
-   lib-xml-interface
+   au3-audio-graph-interface
+   au3-xml-interface
 )
-audacity_library( lib-mixer "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-mixer "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

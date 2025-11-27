@@ -34,6 +34,6 @@ set( SOURCES
 set( LIBRARIES
    wxBase
 )
-audacity_library( lib-strings "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-strings "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

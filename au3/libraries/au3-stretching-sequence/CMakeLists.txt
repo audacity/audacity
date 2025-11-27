@@ -33,10 +33,10 @@ set( SOURCES
    TempoChange.h
 )
 set( LIBRARIES
-   lib-channel
-   lib-mixer
-   lib-time-and-pitch
+   au3-channel
+   au3-mixer
+   au3-time-and-pitch
 )
-audacity_library( lib-stretching-sequence "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-stretching-sequence "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

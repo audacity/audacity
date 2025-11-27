@@ -46,18 +46,18 @@ set( SOURCES
    SettingsWX.h
 )
 set( LIBRARIES
-   lib-shuttlegui-interface
-   lib-string-utils-interface
-   lib-theme-interface
-   lib-wx-wrappers-interface
-   lib-preferences-interface
+   au3-shuttlegui-interface
+   au3-string-utils-interface
+   au3-theme-interface
+   au3-wx-wrappers-interface
+   au3-preferences-interface
    # If Sentry reporting is enabled, this library depends on
-   # lib-network-manager-interface
+   # au3-network-manager-interface
    # If Sentry reporting is disabled, an INTERFACE library
    # will be defined
-   lib-sentry-reporting-interface
+   au3-sentry-reporting-interface
 )
 
-audacity_library( lib-wx-init "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-wx-init "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

@@ -21,9 +21,9 @@ set( SOURCES
    ProjectStatus.h
 )
 set( LIBRARIES
-   lib-registries-interface
-   lib-xml-interface
+   au3-registries-interface
+   au3-xml-interface
 )
-audacity_library( lib-project "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-project "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

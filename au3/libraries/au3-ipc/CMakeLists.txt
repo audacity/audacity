@@ -19,11 +19,11 @@ set( SOURCES
    internal/socket_guard.h
 )
 set( LIBRARIES
-   lib-utility-interface
+   au3-utility-interface
    PRIVATE
       $<$<PLATFORM_ID:Windows>:wsock32>
       $<$<PLATFORM_ID:Windows>:ws2_32>
 )
-audacity_library( lib-ipc "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-ipc "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

@@ -27,8 +27,8 @@ set( SOURCES
    Channel.h
 )
 set( LIBRARIES
-   lib-registries-interface
+   au3-registries-interface
 )
-audacity_library( lib-channel "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-channel "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

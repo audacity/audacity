@@ -1,11 +1,11 @@
 #  SPDX-License-Identifier: GPL-2.0-or-later
 #[[
-Unit tests for lib-utility
+Unit tests for au3-utility
 ]]
 
 add_unit_test(
    NAME
-      lib-utility
+      au3-utility
    SOURCES
       CallableTest.cpp
       CompositeTest.cpp
@@ -14,5 +14,5 @@ add_unit_test(
       TypeEnumeratorTest.cpp
       VariantTest.cpp
    LIBRARIES
-      lib-utility
+      au3-utility
 )

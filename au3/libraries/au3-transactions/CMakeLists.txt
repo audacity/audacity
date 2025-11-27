@@ -16,9 +16,9 @@ set( SOURCES
    TransactionScope.h
 )
 set( LIBRARIES
-   lib-exceptions-interface
+   au3-exceptions-interface
 )
-audacity_library( lib-transactions "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-transactions "${SOURCES}" "${LIBRARIES}"
    ""
    ""
 )

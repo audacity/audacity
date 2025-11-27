@@ -19,9 +19,9 @@ set( SOURCES
    Theme.h
 )
 set( LIBRARIES
-   lib-files-interface
+   au3-files-interface
    wxwidgets::wxwidgets
  )
-audacity_library( lib-theme "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-theme "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

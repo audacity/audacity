@@ -2,7 +2,7 @@
 #[[
 A library for fast fourier transforms
 
-Note -- this cannot be combined with lib-math, which depends on libsoxr, which
+Note -- this cannot be combined with au3-math, which depends on libsoxr, which
 includes a different version of pffft.h
 ]]
 
@@ -26,10 +26,10 @@ set( SOURCES
 set( LIBRARIES
 PUBLIC
    pffft
-   lib-math-interface
-   lib-strings-interface
-   lib-utility-interface
+   au3-math-interface
+   au3-strings-interface
+   au3-utility-interface
 )
-audacity_library( lib-fft "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-fft "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

@@ -26,10 +26,10 @@ set( SOURCES
 )
 set( LIBRARIES
    portaudio::portaudio
-   lib-mixer-interface
-   lib-project-rate-interface
-   lib-realtime-effects
+   au3-mixer-interface
+   au3-project-rate-interface
+   au3-realtime-effects
 )
-audacity_library( lib-audio-io "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-audio-io "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

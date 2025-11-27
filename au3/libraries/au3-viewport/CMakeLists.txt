@@ -11,10 +11,10 @@ set( SOURCES
    Viewport.h
 )
 set( LIBRARIES
-   lib-playable-track-interface
-   lib-snapping-interface
-   lib-track-selection-interface
+   au3-playable-track-interface
+   au3-snapping-interface
+   au3-track-selection-interface
 )
-audacity_library( lib-viewport "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-viewport "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

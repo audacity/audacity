@@ -1,12 +1,12 @@
 #[[
-Unit tests for lib-crypto
+Unit tests for au3-crypto
 ]]
 
 add_unit_test(
    NAME
-      lib-crypto
+      au3-crypto
    SOURCES
       CryptoTests.cpp
    LIBRARIES
-      lib-crypto-interface
+      au3-crypto-interface
 )

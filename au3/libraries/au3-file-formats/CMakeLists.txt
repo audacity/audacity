@@ -13,8 +13,8 @@ set( SOURCES
 set( LIBRARIES
    PUBLIC
       SndFile::sndfile
-      lib-math-interface
+      au3-math-interface
 )
-audacity_library( lib-file-formats "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-file-formats "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

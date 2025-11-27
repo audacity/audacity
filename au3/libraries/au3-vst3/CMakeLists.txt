@@ -36,11 +36,11 @@ set( SOURCES
 )
 set( LIBRARIES
    vst_sdk_3
-   lib-utility
-   lib-effects-interface
-   lib-files-interface
+   au3-utility
+   au3-effects-interface
+   au3-files-interface
 )
-audacity_library( lib-vst3 "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-vst3 "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
 

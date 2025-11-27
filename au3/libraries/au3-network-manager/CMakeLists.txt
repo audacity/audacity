@@ -5,7 +5,7 @@ Asynchronously send and receive requests and responses over internet
 # Include AU3 compatibility macros
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
 
-set(TARGET lib-network-manager)
+set(TARGET au3-network-manager)
 set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
 def_vars()
@@ -44,13 +44,13 @@ set( SOURCES
 
 
 set ( LIBRARIES
-    lib-string-utils-interface
-    lib-preferences-interface
-    lib-concurrency-interface
+    au3-string-utils-interface
+    au3-preferences-interface
+    au3-concurrency-interface
 PRIVATE
     CURL::libcurl
     threadpool::threadpool
-    lib-exceptions-interface
+    au3-exceptions-interface
 )
 
 set ( DEFINES INTERFACE "HAS_NETWORKING" PRIVATE "WIN32_LEAN_AND_MEAN" )

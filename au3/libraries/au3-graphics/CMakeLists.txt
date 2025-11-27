@@ -16,8 +16,8 @@ set( SOURCES
 )
 set( LIBRARIES
    PRIVATE
-      lib-utility-interface
+      au3-utility-interface
 )
-audacity_library( lib-graphics "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-graphics "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

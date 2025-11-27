@@ -24,11 +24,11 @@ set( SOURCES
 
 set( LIBRARIES
 PUBLIC
-   lib-fft
-   lib-utility
-   lib-file-formats-interface
+   au3-fft
+   au3-utility
+   au3-file-formats-interface
 )
 
-audacity_library( lib-music-information-retrieval "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-music-information-retrieval "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

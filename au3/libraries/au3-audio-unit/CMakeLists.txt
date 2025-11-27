@@ -18,11 +18,11 @@ set( SOURCES
    AudioUnitWrapper.h
 )
 set( LIBRARIES
-   lib-utility
-   lib-effects-interface
+   au3-utility
+   au3-effects-interface
     "-framework AudioUnit"
 )
-audacity_library( lib-audio-unit "${SOURCES}" "${LIBRARIES}"
+audacity_library( au3-audio-unit "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
 
