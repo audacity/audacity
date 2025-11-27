@@ -48,7 +48,7 @@ enum class EffectMenuOrganization {
     Flat = 1,
 };
 
-enum class PluginUIMode {
+enum class EffectUIMode {
     VendorUI = 0,      // Use plugin's native/graphical UI
     FallbackUI = 1,   // Use Audacity's fallback UI
 };

@@ -49,7 +49,7 @@ bool EffectViewerDialogModel::useVendorUI() const
     if (m_effectId.empty()) {
         return true; // Default to vendor UI
     }
-    const bool result = configuration()->pluginUIMode(m_effectId) == PluginUIMode::VendorUI;
+    const bool result = configuration()->pluginUIMode(m_effectId) == EffectUIMode::VendorUI;
     return result;
 }
 
