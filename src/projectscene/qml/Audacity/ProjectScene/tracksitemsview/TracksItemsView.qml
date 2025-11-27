@@ -260,6 +260,7 @@ Rectangle {
                 let position = convertToTimelinePosition(e)
                 if (!playRegionActivated) {
                     playCursorController.seekToX(position.x, playbackState.isPlaying || timeline.context.playbackOnRulerClickEnabled)
+                    playCursorController.setPlaybackRegion(position.x, position.x)
                 }
                 playRegionActivated = false
             }
