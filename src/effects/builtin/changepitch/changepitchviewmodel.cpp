@@ -62,6 +62,16 @@ void ChangePitchViewModel::setFromPitchValue(const int newFromPitch)
     e.Calc_SemitonesChange_fromPitches();
     e.Calc_PercentChange();
 
+    // Clamp the resulting percentage to valid range
+    if (e.m_dPercentChange < percentChangeMin() || e.m_dPercentChange > percentChangeMax()) {
+        e.m_dPercentChange = std::clamp(e.m_dPercentChange, percentChangeMin(), percentChangeMax());
+        // Recalculate dependent values from the clamped percentage
+        e.Calc_SemitonesChange_fromPercentChange();
+        e.Calc_ToPitch();
+        e.Calc_ToOctave();
+        e.Calc_ToFrequency();
+    }
+
     e.m_bLoopDetect = false;
 
     emit fromPitchValueChanged();
@@ -71,6 +81,9 @@ void ChangePitchViewModel::setFromPitchValue(const int newFromPitch)
     emit semitonesIntegerValueChanged();
     emit centsValueChanged();
     emit percentChangeValueChanged();
+    emit toPitchValueChanged();
+    emit toOctaveValueChanged();
+    emit toFrequencyValueChanged();
 }
 
 QStringList ChangePitchViewModel::pitchChoices() const
@@ -140,6 +153,16 @@ void ChangePitchViewModel::setFromOctaveValue(const int newFromOctave)
     e.Calc_SemitonesChange_fromPitches();
     e.Calc_PercentChange();
 
+    // Clamp the resulting percentage to valid range
+    if (e.m_dPercentChange < percentChangeMin() || e.m_dPercentChange > percentChangeMax()) {
+        e.m_dPercentChange = std::clamp(e.m_dPercentChange, percentChangeMin(), percentChangeMax());
+        // Recalculate dependent values from the clamped percentage
+        e.Calc_SemitonesChange_fromPercentChange();
+        e.Calc_ToPitch();
+        e.Calc_ToOctave();
+        e.Calc_ToFrequency();
+    }
+
     e.m_bLoopDetect = false;
 
     emit fromOctaveValueChanged();
@@ -149,6 +172,9 @@ void ChangePitchViewModel::setFromOctaveValue(const int newFromOctave)
     emit semitonesIntegerValueChanged();
     emit centsValueChanged();
     emit percentChangeValueChanged();
+    emit toPitchValueChanged();
+    emit toOctaveValueChanged();
+    emit toFrequencyValueChanged();
 }
 
 int ChangePitchViewModel::fromOctaveMin() const
@@ -199,6 +225,16 @@ void ChangePitchViewModel::setToPitchValue(const int newToPitch)
     e.m_bLoopDetect = true;
     e.Calc_SemitonesChange_fromPitches();
     e.Calc_PercentChange();
+
+    // Clamp the resulting percentage to valid range
+    if (e.m_dPercentChange < percentChangeMin() || e.m_dPercentChange > percentChangeMax()) {
+        e.m_dPercentChange = std::clamp(e.m_dPercentChange, percentChangeMin(), percentChangeMax());
+        // Recalculate dependent values from the clamped percentage
+        e.Calc_SemitonesChange_fromPercentChange();
+        e.Calc_ToPitch();
+        e.Calc_ToOctave();
+    }
+
     e.Calc_ToFrequency();
     e.m_bLoopDetect = false;
 
@@ -208,6 +244,7 @@ void ChangePitchViewModel::setToPitchValue(const int newToPitch)
     emit centsValueChanged();
     emit percentChangeValueChanged();
     emit toFrequencyValueChanged();
+    emit toOctaveValueChanged();
 }
 
 // To Octave
@@ -228,6 +265,16 @@ void ChangePitchViewModel::setToOctaveValue(const int newToOctave)
     e.m_bLoopDetect = true;
     e.Calc_SemitonesChange_fromPitches();
     e.Calc_PercentChange();
+
+    // Clamp the resulting percentage to valid range
+    if (e.m_dPercentChange < percentChangeMin() || e.m_dPercentChange > percentChangeMax()) {
+        e.m_dPercentChange = std::clamp(e.m_dPercentChange, percentChangeMin(), percentChangeMax());
+        // Recalculate dependent values from the clamped percentage
+        e.Calc_SemitonesChange_fromPercentChange();
+        e.Calc_ToPitch();
+        e.Calc_ToOctave();
+    }
+
     e.Calc_ToFrequency();
     e.m_bLoopDetect = false;
 
@@ -237,6 +284,7 @@ void ChangePitchViewModel::setToOctaveValue(const int newToOctave)
     emit centsValueChanged();
     emit percentChangeValueChanged();
     emit toFrequencyValueChanged();
+    emit toPitchValueChanged();
 }
 
 int ChangePitchViewModel::toOctaveMin() const
@@ -288,6 +336,16 @@ void ChangePitchViewModel::setSemitonesValue(const double newSemitones)
     e.Calc_ToPitch();
     e.Calc_ToOctave();
     e.Calc_PercentChange();
+
+    // Clamp the resulting percentage to valid range
+    if (e.m_dPercentChange < percentChangeMin() || e.m_dPercentChange > percentChangeMax()) {
+        e.m_dPercentChange = std::clamp(e.m_dPercentChange, percentChangeMin(), percentChangeMax());
+        // Recalculate semitones from the clamped percentage
+        e.Calc_SemitonesChange_fromPercentChange();
+        e.Calc_ToPitch();
+        e.Calc_ToOctave();
+    }
+
     e.Calc_ToFrequency();
     e.m_bLoopDetect = false;
 
@@ -414,6 +472,17 @@ void ChangePitchViewModel::setFromFrequencyValue(const double newFromFrequency)
     // to avoid rounding errors when frequency changes don't cross semitone boundaries
     e.m_dPercentChange = ((e.m_ToFrequency / e.m_FromFrequency) - 1.0) * 100.0;
 
+    // Clamp the resulting percentage to valid range
+    if (e.m_dPercentChange < percentChangeMin() || e.m_dPercentChange > percentChangeMax()) {
+        e.m_dPercentChange = std::clamp(e.m_dPercentChange, percentChangeMin(), percentChangeMax());
+        // Recalculate ToFrequency from the clamped percentage
+        e.Calc_ToFrequency();
+        // Update TO pitch/octave from the new ToFrequency
+        const double toMidiNote = FreqToMIDInote(e.m_ToFrequency);
+        e.m_nToPitch = PitchIndex(toMidiNote);
+        e.m_nToOctave = PitchOctave(toMidiNote);
+    }
+
     // Calculate semitones from the percent change
     e.Calc_SemitonesChange_fromPercentChange();
 
@@ -427,6 +496,9 @@ void ChangePitchViewModel::setFromFrequencyValue(const double newFromFrequency)
     emit semitonesIntegerValueChanged();
     emit centsValueChanged();
     emit percentChangeValueChanged();
+    emit toFrequencyValueChanged();
+    emit toPitchValueChanged();
+    emit toOctaveValueChanged();
 }
 
 double ChangePitchViewModel::fromFrequencyMin() const
@@ -486,6 +558,17 @@ void ChangePitchViewModel::setToFrequencyValue(const double newToFrequency)
     // to avoid rounding errors when frequency changes don't cross semitone boundaries
     e.m_dPercentChange = ((e.m_ToFrequency / e.m_FromFrequency) - 1.0) * 100.0;
 
+    // Clamp the resulting percentage to valid range
+    if (e.m_dPercentChange < percentChangeMin() || e.m_dPercentChange > percentChangeMax()) {
+        e.m_dPercentChange = std::clamp(e.m_dPercentChange, percentChangeMin(), percentChangeMax());
+        // Recalculate ToFrequency from the clamped percentage
+        e.Calc_ToFrequency();
+        // Update TO pitch/octave from the new ToFrequency
+        dToMIDInote = FreqToMIDInote(e.m_ToFrequency);
+        e.m_nToPitch = PitchIndex(dToMIDInote);
+        e.m_nToOctave = PitchOctave(dToMIDInote);
+    }
+
     // Calculate semitones from the percent change
     e.Calc_SemitonesChange_fromPercentChange();
 
@@ -541,11 +624,14 @@ void ChangePitchViewModel::setPercentChangeValue(const double newPercentChange)
 {
     auto& e = effect<ChangePitchEffect>();
 
-    if (e.m_dPercentChange == newPercentChange) {
+    // Clamp the percentage to the valid range
+    const double clampedPercentChange = std::clamp(newPercentChange, percentChangeMin(), percentChangeMax());
+
+    if (e.m_dPercentChange == clampedPercentChange) {
         return;
     }
 
-    e.m_dPercentChange = newPercentChange;
+    e.m_dPercentChange = clampedPercentChange;
     e.m_bLoopDetect = true;
     e.Calc_SemitonesChange_fromPercentChange();
     e.Calc_ToPitch();
