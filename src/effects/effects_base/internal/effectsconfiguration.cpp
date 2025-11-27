@@ -85,8 +85,15 @@ EffectUIMode EffectsConfiguration::effectUIMode(const EffectId& effectId) const
 
     const muse::Settings::Key key = makeEffectUIModeKey(effectId);
     // Set default to VendorUI (native plugin UI) for backward compatibility
-    muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(EffectUIMode::VendorUI)));
-    return static_cast<EffectUIMode>(muse::settings()->value(key).toInt());
+    constexpr EffectUIMode defaultMode = EffectUIMode::VendorUI;
+    muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(defaultMode)));
+
+    const muse::Val value = muse::settings()->value(key);
+    if (value.isNull()) {
+        return defaultMode;
+    }
+
+    return static_cast<EffectUIMode>(value.toInt());
 }
 
 void EffectsConfiguration::setEffectUIMode(const EffectId& effectId, EffectUIMode mode)
