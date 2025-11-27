@@ -11,11 +11,11 @@ static const std::string moduleName("effects");
 static const muse::Settings::Key APPLY_EFFECT_TO_ALL_AUDIO(moduleName, "effects/applyEffectToAllAudio");
 static const muse::Settings::Key EFFECT_MENU_ORGANIZATION(moduleName, "effects/effectMenuOrganization");
 static const muse::Settings::Key PREVIEW_MAX_DURATION(moduleName, "effects/previewMaxDuration");
-static const std::string PLUGIN_UI_MODE_PREFIX = "effects/pluginUIMode/";
+static const std::string EFFECT_UI_MODE_PREFIX = "effects/effectUIMode/";
 
-static muse::Settings::Key makePluginUIModeKey(const EffectId& effectId)
+static muse::Settings::Key makeEffectUIModeKey(const EffectId& effectId)
 {
-    return { moduleName, PLUGIN_UI_MODE_PREFIX + effectId.toStdString() };
+    return { moduleName, EFFECT_UI_MODE_PREFIX + effectId.toStdString() };
 }
 
 void EffectsConfiguration::init()
@@ -77,33 +77,33 @@ void EffectsConfiguration::setPreviewMaxDuration(double value)
     muse::settings()->setSharedValue(PREVIEW_MAX_DURATION, muse::Val(value));
 }
 
-EffectUIMode EffectsConfiguration::pluginUIMode(const EffectId& effectId) const
+EffectUIMode EffectsConfiguration::effectUIMode(const EffectId& effectId) const
 {
     if (effectId.empty()) {
         return EffectUIMode::VendorUI;
     }
 
-    const muse::Settings::Key key = makePluginUIModeKey(effectId);
+    const muse::Settings::Key key = makeEffectUIModeKey(effectId);
     // Set default to VendorUI (native plugin UI) for backward compatibility
     muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(EffectUIMode::VendorUI)));
     return static_cast<EffectUIMode>(muse::settings()->value(key).toInt());
 }
 
-void EffectsConfiguration::setPluginUIMode(const EffectId& effectId, EffectUIMode mode)
+void EffectsConfiguration::setEffectUIMode(const EffectId& effectId, EffectUIMode mode)
 {
-    const muse::Settings::Key key = makePluginUIModeKey(effectId);
+    const muse::Settings::Key key = makeEffectUIModeKey(effectId);
     // Set default to VendorUI (native plugin UI) for backward compatibility
     muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(EffectUIMode::VendorUI)));
 
-    if (pluginUIMode(effectId) == mode) {
+    if (effectUIMode(effectId) == mode) {
         return;
     }
 
     muse::settings()->setSharedValue(key, muse::Val(static_cast<int>(mode)));
-    m_pluginUIModeChanged.notify();
+    m_effectUIModeChanged.notify();
 }
 
-muse::async::Notification EffectsConfiguration::pluginUIModeChanged() const
+muse::async::Notification EffectsConfiguration::effectUIModeChanged() const
 {
-    return m_pluginUIModeChanged;
+    return m_effectUIModeChanged;
 }

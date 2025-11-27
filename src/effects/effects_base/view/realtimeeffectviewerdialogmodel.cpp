@@ -69,7 +69,7 @@ void RealtimeEffectViewerDialogModel::load()
         emit isActiveChanged();
     });
 
-    configuration()->pluginUIModeChanged().onNotify(this, [this] {
+    configuration()->effectUIModeChanged().onNotify(this, [this] {
         emit useVendorUIChanged();
         emit viewerComponentTypeChanged();
     });
@@ -204,7 +204,7 @@ bool RealtimeEffectViewerDialogModel::useVendorUI() const
         return true; // Default to vendor UI
     }
 
-    const bool result = configuration()->pluginUIMode(effectId) == EffectUIMode::VendorUI;
+    const bool result = configuration()->effectUIMode(effectId) == EffectUIMode::VendorUI;
     return result;
 }
 

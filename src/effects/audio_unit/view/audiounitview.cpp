@@ -37,7 +37,7 @@ void AudioUnitView::init()
     const auto instance = std::dynamic_pointer_cast<AudioUnitInstance>(instancesRegister()->instanceById(m_instanceId));
 
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
-    const bool isGraphical = (configuration()->pluginUIMode(effectId) == EffectUIMode::VendorUI);
+    const bool isGraphical = (configuration()->effectUIMode(effectId) == EffectUIMode::VendorUI);
 
     m_auControl = std::make_unique<AUControl>();
     if (!m_auControl->create(instance->GetComponent(),

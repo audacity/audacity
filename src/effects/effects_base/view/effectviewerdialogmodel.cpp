@@ -12,7 +12,7 @@ EffectViewerDialogModel::EffectViewerDialogModel(QObject* parent)
 
 void EffectViewerDialogModel::load()
 {
-    configuration()->pluginUIModeChanged().onNotify(this, [this] {
+    configuration()->effectUIModeChanged().onNotify(this, [this] {
         emit useVendorUIChanged();
         emit viewerComponentTypeChanged();
     });
@@ -49,7 +49,7 @@ bool EffectViewerDialogModel::useVendorUI() const
     if (m_effectId.empty()) {
         return true; // Default to vendor UI
     }
-    const bool result = configuration()->pluginUIMode(m_effectId) == EffectUIMode::VendorUI;
+    const bool result = configuration()->effectUIMode(m_effectId) == EffectUIMode::VendorUI;
     return result;
 }
 
