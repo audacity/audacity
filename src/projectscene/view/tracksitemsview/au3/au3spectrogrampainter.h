@@ -4,7 +4,7 @@
 #pragma once
 
 #include "../ispectrogrampainter.h"
-#include "./au3spectrogramchannelpainter.h"
+#include "./au3spectrogramtrackpainter.h"
 
 #include "context/iglobalcontext.h"
 #include "au3wrap/au3types.h"
@@ -13,6 +13,7 @@
 #include "framework/global/async/asyncable.h"
 
 #include <array>
+#include <unordered_map>
 
 namespace au::projectscene {
 class Au3SpectrogramPainter final : public ISpectrogramPainter, public muse::async::Asyncable
@@ -27,9 +28,7 @@ public:
     void paint(QPainter&, const trackedit::ClipKey&, const WaveMetrics&, const ZoomInfo&, const SelectedRegion&) override;
 
 private:
-    void onProjectChanged(project::IAudacityProject& project);
-
     std::weak_ptr<au3::Au3Project> m_au3Project;
-    std::array<std::unique_ptr<Au3SpectrogramChannelPainter>, 2> m_channelPainters;
+    std::unordered_map<trackedit::TrackId, Au3SpectrogramTrackPainter> m_trackPainterMap;
 };
 }
