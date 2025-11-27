@@ -48,9 +48,9 @@ EffectStyledDialogView {
 
     Connections {
         target: viewerModel
-        function onUseVendorUIChanged() {
+        function onViewerComponentTypeChanged() {
             // For Audio Units, reload the view instead of switching components
-            if (viewerModel.effectFamily === EffectFamily.AudioUnit && viewLoader.item) {
+            if (viewerModel.viewerComponentType === ViewerComponentType.AudioUnit && viewLoader.item) {
                 viewLoader.item.view.reload()
             } else {
                 loadViewer()
@@ -59,29 +59,21 @@ EffectStyledDialogView {
     }
 
     function loadViewer() {
-        // Audio Units always use AudioUnitViewer, which handles both vendor UI and Apple's generic UI internally
-        if (viewerModel.effectFamily === EffectFamily.AudioUnit) {
+        switch (viewerModel.viewerComponentType) {
+        case ViewerComponentType.AudioUnit:
             viewLoader.sourceComponent = audioUnitViewerComponent
-            return
-        }
-
-        // Check if we should use generated UI instead of vendor UI
-        // (only for external plugins, not built-in effects or Audio Units)
-        if (!viewerModel.useVendorUI && viewerModel.effectFamily !== EffectFamily.Builtin) {
-            viewLoader.sourceComponent = generatedViewerComponent
-            return
-        }
-
-        // Otherwise, load the appropriate vendor UI
-        switch (viewerModel.effectFamily) {
-        case EffectFamily.Builtin:
-            viewLoader.sourceComponent = builtinViewerComponent
             break
-        case EffectFamily.LV2:
+        case ViewerComponentType.Lv2:
             viewLoader.sourceComponent = lv2ViewerComponent
             break
-        case EffectFamily.VST3:
+        case ViewerComponentType.Vst:
             viewLoader.sourceComponent = vstViewerComponent
+            break
+        case ViewerComponentType.Builtin:
+            viewLoader.sourceComponent = builtinViewerComponent
+            break
+        case ViewerComponentType.Generated:
+            viewLoader.sourceComponent = generatedViewerComponent
             break
         default:
             viewLoader.sourceComponent = null

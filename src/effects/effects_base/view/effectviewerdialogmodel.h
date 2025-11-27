@@ -6,19 +6,24 @@
 #include "ieffectinstancesregister.h"
 #include "ieffectsprovider.h"
 #include "ieffectsconfiguration.h"
+#include "effectstypes.h"
+#include "realtimeeffectviewerdialogmodel.h"
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
 
 #include <QObject>
 
 namespace au::effects {
-class EffectViewerDialogModel : public QObject
+class EffectViewerDialogModel : public QObject, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
 
     Q_PROPERTY(QString title READ title NOTIFY titleChanged FINAL)
     Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
     Q_PROPERTY(bool useVendorUI READ useVendorUI NOTIFY useVendorUIChanged FINAL)
+    Q_PROPERTY(EffectFamily effectFamily READ effectFamily NOTIFY effectFamilyChanged FINAL)
+    Q_PROPERTY(ViewerComponentType viewerComponentType READ viewerComponentType NOTIFY viewerComponentTypeChanged FINAL)
 
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectsProvider> effectsProvider;
@@ -28,17 +33,22 @@ public:
     explicit EffectViewerDialogModel(QObject* parent = nullptr);
     ~EffectViewerDialogModel() override = default;
 
+    Q_INVOKABLE void load();
+    Q_INVOKABLE void refreshUIMode();
+
     QString title() const;
     int instanceId() const;
     void setInstanceId(int newInstanceId);
     bool useVendorUI() const;
-
-    Q_INVOKABLE void refreshUIMode();
+    EffectFamily effectFamily() const;
+    ViewerComponentType viewerComponentType() const;
 
 signals:
     void titleChanged();
     void instanceIdChanged();
     void useVendorUIChanged();
+    void effectFamilyChanged();
+    void viewerComponentTypeChanged();
 
 private:
     QString m_title;

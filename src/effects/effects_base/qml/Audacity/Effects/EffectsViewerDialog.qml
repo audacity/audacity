@@ -21,13 +21,13 @@ EffectStyledDialogView {
     QtObject {
         id: prv
         property alias viewer: viewerLoader.item
-        property bool isApplyAllowed: effectFamily != EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
-        property bool showPresets: effectFamily != EffectFamily.Builtin || viewer.usesPresets
+        property bool isApplyAllowed: viewerModel.effectFamily != EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
+        property bool showPresets: viewerModel.effectFamily != EffectFamily.Builtin || viewer.usesPresets
 
-        property int minimumWidth: effectFamily === EffectFamily.LV2 ? 500 : 250
-        property int panelMargins: effectFamily == EffectFamily.Builtin ? 16 : 4
-        property int viewMargins: effectFamily == EffectFamily.Builtin ? 16 : 0
-        property int separatorHeight: effectFamily == EffectFamily.Builtin ? separator.height + prv.panelMargins : 0
+        property int minimumWidth: viewerModel.effectFamily === EffectFamily.LV2 ? 500 : 250
+        property int panelMargins: viewerModel.effectFamily == EffectFamily.Builtin ? 16 : 4
+        property int viewMargins: viewerModel.effectFamily == EffectFamily.Builtin ? 16 : 0
+        property int separatorHeight: viewerModel.effectFamily == EffectFamily.Builtin ? separator.height + prv.panelMargins : 0
 
         function closeWindow(accept) {
             prv.viewer.stopPreview()
@@ -57,15 +57,19 @@ EffectStyledDialogView {
         return height
     }
 
+    Component.onCompleted: {
+        viewerModel.load()
+    }
+
     onWindowChanged: {
         loadViewer()
     }
 
     Connections {
         target: viewerModel
-        function onUseVendorUIChanged() {
+        function onViewerComponentTypeChanged() {
             // For Audio Units, reload the view instead of switching components
-            if (effectFamily === EffectFamily.AudioUnit && viewerLoader.item) {
+            if (viewerModel.viewerComponentType === ViewerComponentType.AudioUnit && viewerLoader.item) {
                 viewerLoader.item.view.reload()
             } else {
                 loadViewer()
@@ -82,30 +86,21 @@ EffectStyledDialogView {
     }
 
     function loadViewer() {
-        // Wait until the window is set: VstView needs it for intialization
-        // Audio Units always use AudioUnitViewer, which handles both vendor UI and Apple's generic UI internally
-        if (effectFamily === EffectFamily.AudioUnit) {
+        switch (viewerModel.viewerComponentType) {
+        case ViewerComponentType.AudioUnit:
             viewerLoader.sourceComponent = audioUnitViewerComp
-            return
-        }
-
-        // Check if we should use generated UI instead of vendor UI
-        // (only for external plugins, not built-in effects or Audio Units)
-        if (!viewerModel.useVendorUI && effectFamily !== EffectFamily.Builtin) {
-            viewerLoader.sourceComponent = generatedViewerComp
-            return
-        }
-
-        // Otherwise, load the appropriate vendor UI
-        switch (effectFamily) {
-        case EffectFamily.Builtin:
-            viewerLoader.sourceComponent = builtinViewerComp
             break
-        case EffectFamily.LV2:
+        case ViewerComponentType.Lv2:
             viewerLoader.sourceComponent = lv2ViewerComp
             break
-        case EffectFamily.VST3:
+        case ViewerComponentType.Vst:
             viewerLoader.sourceComponent = vstViewerComp
+            break
+        case ViewerComponentType.Builtin:
+            viewerLoader.sourceComponent = builtinViewerComp
+            break
+        case ViewerComponentType.Generated:
+            viewerLoader.sourceComponent = generatedViewerComp
             break
         default:
             viewerLoader.sourceComponent = null
@@ -161,7 +156,7 @@ EffectStyledDialogView {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    visible: effectFamily == EffectFamily.Builtin
+                    visible: viewerModel.effectFamily == EffectFamily.Builtin
                 }
             }
         }
