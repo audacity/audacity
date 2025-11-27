@@ -16,10 +16,11 @@ TrackItemsContainer {
     property bool leftTrimPressedButtons: false
     property bool rightTrimPressedButtons: false
     property real dbRange: -60.0
+    property color trackColor
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
 
-    signal movePreviewClip(int x, int duration) // clip title too?
+    signal movePreviewClip(int x, int duration, string title)
     signal clearPreviewClip()
 
     TrackClipsListModel {
@@ -455,20 +456,25 @@ TrackItemsContainer {
                     }
                 }
 
-                ClipItemSmall {
+                ClipPreview {
                     id: previewClip
 
+                    height: parent.height
+
                     visible: false
-                    opacity: 0.3
-                    color: "#FFFFFF"
+                    clipColor: root.trackColor
 
                     Connections {
                         target: root
 
-                        function onMovePreviewClip(x, endPos) {
+                        function onMovePreviewClip(x, endPos, title) {
                             previewClip.visible = true
                             previewClip.x = x
                             previewClip.width = endPos - x
+
+                            if (previewClip.title != title) {
+                                previewClip.title = title
+                            }
                         }
 
                         function onClearPreviewClip() {

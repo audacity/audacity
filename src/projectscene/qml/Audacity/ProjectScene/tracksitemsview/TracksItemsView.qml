@@ -620,7 +620,7 @@ Rectangle {
                 signal startAutoScroll
                 signal stopAutoScroll
 
-                signal previewImportClipRequested(int trackId, real startPos, real endPos)
+                signal previewImportClipRequested(int trackId, real startPos, real endPos, string title)
                 signal clearPreviewImportClip()
 
                 header: Rectangle {
@@ -706,6 +706,7 @@ Rectangle {
                             canvas: content
 
                             trackId: itemData.trackId
+                            trackColor: itemData.color
 
                             isDataSelected: itemData.isDataSelected
                             isTrackSelected: itemData.isTrackSelected
@@ -878,9 +879,9 @@ Rectangle {
                             Connections {
                                 target: tracksItemsView
 
-                                function onPreviewImportClipRequested(trackId, startPos, endPos) {
+                                function onPreviewImportClipRequested(trackId, startPos, endPos, title) {
                                     if (trackId === trackClipsContainer.trackId) {
-                                        trackClipsContainer.movePreviewClip(startPos, endPos)
+                                        trackClipsContainer.movePreviewClip(startPos, endPos, title)
                                     } else {
                                         trackClipsContainer.clearPreviewClip()
                                     }
@@ -1103,7 +1104,8 @@ Rectangle {
 
             let trackId = tracksViewState.trackAtPosition(position.x, position.y)
             let endPos = timeline.context.timeToPosition((timeline.context.positionToTime(position.x) + tracksModel.audioFileLength(urls)))
-            tracksItemsView.previewImportClipRequested(trackId, position.x, endPos)
+            let title = tracksModel.audioFileName(urls[0])
+            tracksItemsView.previewImportClipRequested(trackId, position.x, endPos, title)
         }
 
         onExited: {

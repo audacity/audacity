@@ -241,6 +241,13 @@ double ViewTracksListModel::audioFileLength(const QStringList& fileUrls)
     return fileInfo.duration;
 }
 
+QString ViewTracksListModel::audioFileName(const QString& fileUrl)
+{
+    muse::io::path_t filePath = fileUrl;
+
+    return filename(filePath, false /* including extension */).toQString();
+}
+
 void ViewTracksListModel::handleDroppedFiles(const trackedit::TrackId& trackId, double startTime, const QStringList& fileUrls)
 {
     std::vector<muse::io::path_t> localPaths;
@@ -250,7 +257,7 @@ void ViewTracksListModel::handleDroppedFiles(const trackedit::TrackId& trackId, 
     }
 
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    if (fileUrls.size() > 1) {
+    if (fileUrls.size() > 1) { // TODO: implement multiple files drag
         prj->import(localPaths);
     } else {
         prj->importIntoTrack(localPaths.front(), trackId, startTime);
@@ -317,6 +324,10 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case DbRangeRole:
         return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
 
+    case ColorRole: {
+        return QVariant::fromValue(track.color.toQColor());
+    }
+
     default:
         break;
     }
@@ -338,7 +349,8 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { IsStereoRole, "isStereo" },
         { DbRangeRole, "dbRange" },
         { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
-        { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" }
+        { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
+        { ColorRole, "color" }
     };
     return roles;
 }
