@@ -54,6 +54,5 @@ private:
     QString m_instanceId;
     QString m_currentPreset;
     QVariantList m_presets;
-    bool m_presetsSubscribed = false;
 };
 }
