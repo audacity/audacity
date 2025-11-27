@@ -43,6 +43,7 @@
         <file>qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarActionDelegate.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarCustomisePopup.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipItemSmall.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ClipPreview.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipHandles.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ChannelSplitter.qml</file>
         <file>images/customCursorShapes/ClipStretchBoth.png</file>

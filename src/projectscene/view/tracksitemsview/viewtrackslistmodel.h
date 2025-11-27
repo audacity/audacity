@@ -44,6 +44,7 @@ public:
 
     Q_INVOKABLE void load();
     Q_INVOKABLE double audioFileLength(const QStringList& fileUrls);
+    Q_INVOKABLE QString audioFileName(const QString& fileUrl);
     Q_INVOKABLE void handleDroppedFiles(const trackedit::TrackId& trackId, double startTime, const QStringList& fileUrls);
 
     int rowCount(const QModelIndex& parent) const override;
@@ -76,6 +77,7 @@ private:
         IsWaveformViewVisibleRole,
         IsSpectrogramViewVisibleRole,
         DbRangeRole,
+        ColorRole,
     };
 
     std::vector<trackedit::Track> m_trackList;
