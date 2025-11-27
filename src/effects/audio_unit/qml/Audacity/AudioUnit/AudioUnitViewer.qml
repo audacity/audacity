@@ -54,6 +54,10 @@ Rectangle {
         model.preview()
     }
 
+    function reload() {
+        view.reload()
+    }
+
     function manage(parent) {
         var px = parent.x
         var py = parent.y + parent.height
