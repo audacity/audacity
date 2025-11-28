@@ -40,9 +40,9 @@ std::string DbLogBaseRuler::sampleToText(double sample) const
     return ss.str();
 }
 
-void DbLogBaseRuler::setVerticalZoom(float verticalZoom)
+void DbLogBaseRuler::setDisplayBounds(std::pair<float, float> displayBounds)
 {
-    m_maxDisplayValueDB = std::round(muse::linear_to_db(verticalZoom));
+    m_maxDisplayValueDB = std::round(muse::linear_to_db(displayBounds.second));
 }
 
 bool DbLogBaseRuler::isBold(double value) const

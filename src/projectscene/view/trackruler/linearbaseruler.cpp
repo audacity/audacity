@@ -34,10 +34,10 @@ void LinearBaseRuler::setCollapsed(bool isCollapsed)
     m_collapsed = isCollapsed;
 }
 
-void LinearBaseRuler::setVerticalZoom(float verticalZoom)
+void LinearBaseRuler::setDisplayBounds(std::pair<float, float> displayBounds)
 {
-    m_minDisplayValue = -verticalZoom;
-    m_maxDisplayValue = verticalZoom;
+    m_minDisplayValue = displayBounds.first;
+    m_maxDisplayValue = displayBounds.second;
 }
 
 std::string LinearBaseRuler::sampleToText(double sample) const
@@ -97,8 +97,8 @@ int LinearBaseRuler::getPrecision(double step) const
 double LinearBaseRuler::valueToPosition(double value, double height) const
 {
     double newValue = std::clamp(value, static_cast<double>(m_minDisplayValue), static_cast<double>(m_maxDisplayValue));
-    double ret = (0.5 - newValue / (m_maxDisplayValue - m_minDisplayValue)) * height;
-    return ret;
+    double perc = (newValue - m_minDisplayValue) / (m_maxDisplayValue - m_minDisplayValue);
+    return (1 - perc) * height;
 }
 
 std::pair<double, double> LinearBaseRuler::stepsIncrement(double height) const

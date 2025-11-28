@@ -28,12 +28,12 @@ void DbLinearBaseRuler::setCollapsed(bool isCollapsed)
     m_collapsed = isCollapsed;
 }
 
-void DbLinearBaseRuler::setVerticalZoom(float verticalZoom)
+void DbLinearBaseRuler::setDisplayBounds(std::pair<float, float> displayBounds)
 {
     // The defult vertical zoom is 1.0 which corresponds to 0 dB
     // For a zoom of 0.5 the max display value is 0.5 or -6 dB
     // We need just to convert the linear zoom value to dB
-    m_maxDisplayValueDB = muse::linear_to_db(verticalZoom);
+    m_maxDisplayValueDB = muse::linear_to_db(displayBounds.second);
 }
 
 void DbLinearBaseRuler::setDbRange(double dbRange)

@@ -93,7 +93,7 @@ IWavePainter::Params WaveView::getWavePainterParams() const
     params.showClipping = configuration()->isClippingInWaveformVisible();
     params.isLinear = m_isLinear;
     params.dbRange = m_dbRange;
-    params.verticalZoom = m_verticalZoom;
+    params.displayBounds = m_displayBounds;
 
     projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
     if (clipStyle == projectscene::ClipStyles::Style::COLORFUL) {
@@ -391,18 +391,26 @@ void WaveView::setDbRange(double dbRange)
     update();
 }
 
-float WaveView::verticalZoom() const
+QVariant WaveView::displayBounds() const
 {
-    return m_verticalZoom;
+    QMap<QString, float> bounds;
+    bounds["min"] = m_displayBounds.first;
+    bounds["max"] = m_displayBounds.second;
+    return QVariant::fromValue(bounds);
 }
 
-void WaveView::setVerticalZoom(float verticalZoom)
+void WaveView::setDisplayBounds(const QVariant& displayBounds)
 {
-    if (m_verticalZoom == verticalZoom) {
+    float minBound = displayBounds.toMap().value("min", -1.0f).toFloat();
+    float maxBound = displayBounds.toMap().value("max", 1.0f).toFloat();
+
+    if (m_displayBounds.first == minBound && m_displayBounds.second == maxBound) {
         return;
     }
 
-    m_verticalZoom = verticalZoom;
+    m_displayBounds.first = minBound;
+    m_displayBounds.second = maxBound;
+
     update();
 }
 

@@ -40,7 +40,7 @@ Rectangle {
     property bool isAudible: true
     property bool isLinear: false
     property real dbRange: -60.0
-    property real verticalZoom: 1.0
+    property var displayBounds: ({ "min": -1.0, "max": 1.0 })
     property real selectionStart: 0
     property real selectionWidth: 0
     property bool selectionInProgress: false
@@ -765,7 +765,7 @@ Rectangle {
                 isBrush: root.isBrush
                 isLinear: root.isLinear
                 dbRange: root.dbRange
-                verticalZoom: root.verticalZoom
+                displayBounds: root.displayBounds
 
                 function onWaveViewPositionChanged(x, y) {
                     if (waveView.isIsolationMode) {

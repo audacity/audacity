@@ -51,7 +51,7 @@ public:
         Style style;
         bool isLinear = true;
         double dbRange = -60.0;
-        float verticalZoom = 1.0f;
+        std::pair<float, float> displayBounds = { -1.0f, 1.0f };
     };
 
     enum class PlotType

@@ -23,7 +23,7 @@ Item {
         trackId: model.trackId
         isStereo: model.isStereo
         rulerType: model.trackRulerType
-        verticalZoom: model.trackVerticalZoom
+        displayBounds: model.trackDisplayBounds
 
         isCollapsed: root.isCollapsed
         channelHeightRatio: root.channelHeightRatio
