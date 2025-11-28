@@ -1,9 +1,48 @@
 
-set(PKGLIBDIR "${_PKGLIBDIR}" )
-set(LIBDIR "${CMAKE_INSTALL_FULL_LIBDIR}" )
+# **********************************************************************
+#
+#  Audacity: A Digital Audio Editor
+#
+#  au3wrapDefs.cmake
+#
+#  AU3 wrap module definitions for AU4
+#
+#  This file provides AU4-specific setup for the au3wrap module.
+#  Most AU3 library setup is handled by au3/au3defs.cmake and
+#  au3/libraries/CMakeLists.txt.
+#
+# **********************************************************************
+
+# Include AU3 compatibility layer
+# This provides the audacity_library() macro and import_export_symbol() function
+include(${AUDACITY_ROOT}/au3defs.cmake)
+
+# Path variables for AU3 code
+set(AU3_LIBRARIES ${AUDACITY_ROOT}/libraries)
+set(AU3_MODULES ${AUDACITY_ROOT}/modules)
+
+# Generate *_API definitions for all AU3 libraries
+# This is needed for AU3 source files compiled directly in au3wrap and for tests
+set(_AU3_API_DEFS "")
+if(DEFINED AU3_ALL_LIBRARIES)
+    foreach(lib ${AU3_ALL_LIBRARIES})
+        # Skip non-library entries like image-compiler
+        if(lib STREQUAL "image-compiler")
+            continue()
+        endif()
+
+        # Generate API macro for this library (same logic as in au3defs.cmake)
+        import_export_symbol(api_symbol "${lib}")
+        list(APPEND _AU3_API_DEFS -D${api_symbol}=)
+    endforeach()
+endif()
+
+# AU4-specific definitions for au3wrap module
+set(PKGLIBDIR "${_PKGLIBDIR}")
+set(LIBDIR "${CMAKE_INSTALL_FULL_LIBDIR}")
 
 set(AU3_DEF
-
+    # Audacity version information (needed by AU3 source files compiled directly in au3wrap)
     -DAUDACITY_VERSION=4
     -DAUDACITY_RELEASE=0
     -DAUDACITY_REVISION=0
@@ -15,82 +54,30 @@ set(AU3_DEF
     # This value is used in the resource compiler for Windows
     -DAUDACITY_FILE_VERSION=L"${AUDACITY_VERSION},${AUDACITY_RELEASE},${AUDACITY_REVISION},${AUDACITY_MODLEVEL}"
 
+    # safenew macro for AU3 compatibility
     -Dsafenew=new
 
-    -DUTILITY_API=
-    -DPROJECT_API=
-    -DSTRINGS_API=
-    -DEXCEPTIONS_API=
-    -DREGISTRIES_API=
-    -DPREFERENCES_API=
-    -DXML_API=
-    -DBASIC_UI_API=
-    -DCOMPONENTS_API=
-    -DSTRING_UTILS_API=
-    -DFILES_API=
-    -DPROJECT_FILE_IO_API=
-    -DPROJECT_HISTORY_API=
-    -DMATH_API=
-    -DFFT_API=
-    -DTRANSACTIONS_API=
-    -DSTRETCHING_SEQUENCE_API=
-    -DWAVE_TRACK_API=
-    -DWAVE_TRACK_FFT_API=
-    -DSAMPLE_TRACK_API=
-    -DMIXER_API=
-    -DAUDIO_GRAPH_API=
-    -DPLAYABLE_TRACK_API=
-    -DTRACK_API=
-    -DCHANNEL_API=
-    -DTIME_AND_PITCH_API=
-    -DPROJECT_RATE_API=
-    -DTRACK_SELECTION_API=
-    -DAUDIO_DEVICES_API=
-    -DAUDIO_IO_API=
-    -DREALTIME_EFFECTS_API=
-    -DMODULE_MANAGER_API=
-    -DWX_INIT_API=
-    -DVIEWPORT_API=
-    -DSNAPPING_API=
-    -DNUMERIC_FORMATS_API=
-    -DLABEL_TRACK_API=
-    -DBUILTIN_EFFECTS_API=
-
-    -DTIME_FREQUENCY_SELECTION_API=
-    -DSCREEN_GEOMETRY_API=
-    -DSQLITE_HELPERS_API=
-
-    -DGRAPHICS_API=
-    -DWAVE_TRACK_PAINT_API=
-
+    # Experimental features
     -DEXPERIMENTAL_SPECTRAL_EDITING
 
-    -DEFFECTS_API=
-    -DBUILTIN_EFFECTS_API=
-    -DVST3_API=
+    # LV2 support flag
     -DUSE_LV2
-    -DLV2_API=
+
+    # Path definitions for plugins
     -DPKGLIBDIR="${PKGLIBDIR}"
     -DLIBDIR="${LIBDIR}"
-    -DIPC_API=
 
-    -DCOMMAND_PARAMETERS_API=
-    -DAUDACITY_APPLICATION_LOGIC_API=
-    -DMENUS_API=
-    -DDYNAMIC_RANGE_PROCESSOR_API=
-
-    -DIMPORT_EXPORT_API=
-    -DTAGS_API=
-    -DFILE_FORMATS_API=
-
+    # FFmpeg support (not yet a library)
     -DFFMPEG_SUPPORT_API=
+
+    # AU3 library API definitions (auto-generated from AU3_ALL_LIBRARIES)
+    ${_AU3_API_DEFS}
 )
 
-set(AU3_LIBRARIES ${AUDACITY_ROOT}/libraries)
-set(AU3_MODULES ${AUDACITY_ROOT}/modules)
-
-# AU3 include directories - only external dependencies and special paths
-# Library-specific includes are now handled by each library's CMakeLists.txt
+# AU3 include directories for au3wrap module
+# These are external dependencies and special paths needed by AU3 source files
+# that are compiled directly in au3wrap (not yet converted to libraries)
+# Note: AU3 library-specific includes are handled by au3defs.cmake
 set(AU3_INCLUDE
     ${wxwidgets_INCLUDE_DIRS}
     ${expat_INCLUDE_DIRS}

@@ -75,72 +75,17 @@ endif()
 # ==================================
 # === AU3 ===
 # ==================================
+
+# Include AU3 wrap definitions
 include(${CMAKE_CURRENT_LIST_DIR}/au3wrapDefs.cmake)
 
-# AU3 Libraries - using add_subdirectory instead of manual source listing
-# Note: Libraries are renamed from lib-* to au3-* in the au3/libraries directory
-
-# Third-party libraries
+# Third-party libraries (not part of au3/libraries)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sqlite au3-sqlite)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soxr au3-soxr)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/pffft au3-pffft)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/portmixer au3-portmixer)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soundtouch au3-soundtouch)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sbsms au3-sbsms)
-
-# Core AU3 libraries (in dependency order)
-add_subdirectory(${AU3_LIBRARIES}/au3-string-utils au3-string-utils)
-add_subdirectory(${AU3_LIBRARIES}/au3-strings au3-strings)
-add_subdirectory(${AU3_LIBRARIES}/au3-utility au3-utility)
-add_subdirectory(${AU3_LIBRARIES}/au3-components au3-components)
-add_subdirectory(${AU3_LIBRARIES}/au3-basic-ui au3-basic-ui)
-add_subdirectory(${AU3_LIBRARIES}/au3-exceptions au3-exceptions)
-add_subdirectory(${AU3_LIBRARIES}/au3-preferences au3-preferences)
-add_subdirectory(${AU3_LIBRARIES}/au3-math au3-math)
-add_subdirectory(${AU3_LIBRARIES}/au3-files au3-files)
-add_subdirectory(${AU3_LIBRARIES}/au3-registries au3-registries)
-add_subdirectory(${AU3_LIBRARIES}/au3-xml au3-xml)
-add_subdirectory(${AU3_LIBRARIES}/au3-project au3-project)
-add_subdirectory(${AU3_LIBRARIES}/au3-project-rate au3-project-rate)
-add_subdirectory(${AU3_LIBRARIES}/au3-file-formats au3-file-formats)
-add_subdirectory(${AU3_LIBRARIES}/au3-track au3-track)
-add_subdirectory(${AU3_LIBRARIES}/au3-transactions au3-transactions)
-add_subdirectory(${AU3_LIBRARIES}/au3-sample-track au3-sample-track)
-add_subdirectory(${AU3_LIBRARIES}/au3-audio-graph au3-audio-graph)
-add_subdirectory(${AU3_LIBRARIES}/au3-tags au3-tags)
-add_subdirectory(${AU3_LIBRARIES}/au3-wave-track au3-wave-track)
-add_subdirectory(${AU3_LIBRARIES}/au3-wave-track-settings au3-wave-track-settings)
-add_subdirectory(${AU3_LIBRARIES}/au3-track-selection au3-track-selection)
-add_subdirectory(${AU3_LIBRARIES}/au3-sqlite-helpers au3-sqlite-helpers)
-add_subdirectory(${AU3_LIBRARIES}/au3-project-history au3-project-history)
-add_subdirectory(${AU3_LIBRARIES}/au3-project-file-io au3-project-file-io)
-add_subdirectory(${AU3_LIBRARIES}/au3-time-and-pitch au3-time-and-pitch)
-add_subdirectory(${AU3_LIBRARIES}/au3-playable-track au3-playable-track)
-add_subdirectory(${AU3_LIBRARIES}/au3-audio-devices au3-audio-devices)
-add_subdirectory(${AU3_LIBRARIES}/au3-fft au3-fft)
-add_subdirectory(${AU3_LIBRARIES}/au3-wave-track-fft au3-wave-track-fft)
-add_subdirectory(${AU3_LIBRARIES}/au3-stretching-sequence au3-stretching-sequence)
-add_subdirectory(${AU3_LIBRARIES}/au3-channel au3-channel)
-add_subdirectory(${AU3_LIBRARIES}/au3-mixer au3-mixer)
-add_subdirectory(${AU3_LIBRARIES}/au3-realtime-effects au3-realtime-effects)
-add_subdirectory(${AU3_LIBRARIES}/au3-audio-io au3-audio-io)
-add_subdirectory(${AU3_LIBRARIES}/au3-module-manager au3-module-manager)
-add_subdirectory(${AU3_LIBRARIES}/au3-time-frequency-selection au3-time-frequency-selection)
-add_subdirectory(${AU3_LIBRARIES}/au3-screen-geometry au3-screen-geometry)
-add_subdirectory(${AU3_LIBRARIES}/au3-graphics au3-graphics)
-add_subdirectory(${AU3_LIBRARIES}/au3-wave-track-paint au3-wave-track-paint)
-add_subdirectory(${AU3_LIBRARIES}/au3-viewport au3-viewport)
-add_subdirectory(${AU3_LIBRARIES}/au3-snapping au3-snapping)
-add_subdirectory(${AU3_LIBRARIES}/au3-numeric-formats au3-numeric-formats)
-add_subdirectory(${AU3_LIBRARIES}/au3-command-parameters au3-command-parameters)
-add_subdirectory(${AU3_LIBRARIES}/au3-menus au3-menus)
-add_subdirectory(${AU3_LIBRARIES}/au3-effects au3-effects)
-add_subdirectory(${AU3_LIBRARIES}/au3-builtin-effects au3-builtin-effects)
-add_subdirectory(${AU3_LIBRARIES}/au3-dynamic-range-processor au3-dynamic-range-processor)
-add_subdirectory(${AU3_LIBRARIES}/au3-label-track au3-label-track)
-add_subdirectory(${AU3_LIBRARIES}/au3-import-export au3-import-export)
-add_subdirectory(${AU3_LIBRARIES}/au3-ipc au3-ipc)
-add_subdirectory(${AU3_LIBRARIES}/au3-audacity-application-logic au3-audacity-application-logic)
 
 # AU3 modules that are still compiled as sources (not yet converted to libraries)
 set(AU3_SRC
@@ -169,33 +114,34 @@ set(AU3_SRC
     ${AU3_MODULES}/import-export/mod-pcm/ImportPCM.h
 )
 
-if (AU_MODULE_EFFECTS_AUDIO_UNIT)
-    add_subdirectory(${AU3_LIBRARIES}/au3-audio-unit au3-audio-unit)
+# Conditional third-party SDKs (must be set up before AU3 libraries)
+if (AU_MODULE_EFFECTS_LV2)
+    add_subdirectory(lv2sdk)
+endif()
 
+if(AU_MODULE_EFFECTS_VST)
+    add_subdirectory(vst3)
+endif()
+
+# Include AU3 libraries - this will add all library subdirectories
+# and set AU3_LIBRARIES_LIST in this scope
+add_subdirectory(${AU3_LIBRARIES} au3-libraries)
+
+# Additional linking setup for conditional libraries
+if (AU_MODULE_EFFECTS_AUDIO_UNIT)
     set(AU3_LINK ${AU3_LINK}
         "-framework AudioUnit"
         "-framework AudioToolbox"
     )
-
-    set(AU3_LIBRARIES_LIST ${AU3_LIBRARIES_LIST} au3-audio-unit)
 endif()
 
 if (AU_MODULE_EFFECTS_LV2)
-    add_subdirectory(lv2sdk)
-    add_subdirectory(${AU3_LIBRARIES}/au3-lv2 au3-lv2)
-
     set(AU3_LINK ${AU3_LINK} lv2sdk)
-    set(AU3_LIBRARIES_LIST ${AU3_LIBRARIES_LIST} au3-lv2)
 endif()
 
 if(AU_MODULE_EFFECTS_VST)
-    # VST3 SDK
-    add_subdirectory(vst3)
-    add_subdirectory(${AU3_LIBRARIES}/au3-vst3 au3-vst3)
-
     set(AU3_INCLUDE ${AU3_INCLUDE} ${AU_MODULE_VST_VST3_SDK_PATH})
     set(AU3_LINK ${AU3_LINK} vst_sdk_3)
-    set(AU3_LIBRARIES_LIST ${AU3_LIBRARIES_LIST} au3-vst3)
 endif()
 
 # FFmpeg support (still compiled as sources, not yet converted to library)
@@ -303,62 +249,7 @@ set(MODULE_SRC ${MODULE_SRC}
 )
 
 # ==================================
-# List of all AU3 libraries to link publicly
-set(AU3_LIBRARIES_LIST
-    au3-string-utils
-    au3-strings
-    au3-utility
-    au3-components
-    au3-basic-ui
-    au3-exceptions
-    au3-preferences
-    au3-math
-    au3-files
-    au3-registries
-    au3-xml
-    au3-project
-    au3-project-rate
-    au3-file-formats
-    au3-track
-    au3-transactions
-    au3-sample-track
-    au3-audio-graph
-    au3-tags
-    au3-wave-track
-    au3-track-selection
-    au3-sqlite-helpers
-    au3-project-history
-    au3-project-file-io
-    au3-time-and-pitch
-    au3-playable-track
-    au3-audio-devices
-    au3-fft
-    au3-wave-track-fft
-    au3-stretching-sequence
-    au3-channel
-    au3-mixer
-    au3-realtime-effects
-    au3-audio-io
-    au3-module-manager
-    au3-time-frequency-selection
-    au3-screen-geometry
-    au3-graphics
-    au3-wave-track-paint
-    au3-viewport
-    au3-snapping
-    au3-numeric-formats
-    au3-command-parameters
-    au3-menus
-    au3-effects
-    au3-builtin-effects
-    au3-dynamic-range-processor
-    au3-label-track
-    au3-import-export
-    au3-ipc
-    au3-audacity-application-logic
-    ${AU3_LIBRARIES_LIST}
-)
-
+# AU3_LIBRARIES_LIST is now set by au3/libraries/CMakeLists.txt
 # ==================================
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
