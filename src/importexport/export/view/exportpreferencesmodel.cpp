@@ -358,6 +358,11 @@ void ExportPreferencesModel::setFilePickerPath(const QString& path)
 {
     muse::io::FileInfo info(path);
 
+    if (info.entryType() == muse::io::EntryType::Dir) {
+        setDirectoryPath(info.absoluteFilePath());
+        return;
+    }
+
     setDirectoryPath(info.absolutePath());
     setFilename(info.baseName());
 }
