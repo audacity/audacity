@@ -122,5 +122,14 @@ inline Unit degrees()
         muse::qtrc("effects/units", "degrees")
     };
 }
+
+// No unit (empty)
+inline Unit none()
+{
+    return {
+        QString(),
+        QString()
+    };
+}
 } // namespace units
 }
