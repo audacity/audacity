@@ -391,7 +391,9 @@ void PlaybackController::onSeekAction(const muse::actions::ActionQuery& q)
     const muse::secs_t secs = q.param("seekTime").toDouble();
     const bool triggerPlay = q.param("triggerPlay").toBool();
 
-    if (isPaused()) {
+    const bool isSeekStartPositionValid = isSeekPositionValid(secs);
+
+    if (isPaused() || (!isSeekStartPositionValid)) {
         player()->stop();
     }
 
@@ -402,7 +404,7 @@ void PlaybackController::onSeekAction(const muse::actions::ActionQuery& q)
             return;
         }
 
-        if (!isPlaybackStartPositionValid()) {
+        if (!isSeekStartPositionValid) {
             return;
         }
 
@@ -704,6 +706,12 @@ bool PlaybackController::isPlaybackStartPositionValid() const
     }
 
     return true;
+}
+
+bool PlaybackController::isSeekPositionValid(const muse::secs_t& seekTime) const
+{
+    const auto playbackRegion = player()->playbackRegion();
+    return playbackRegion.isValid() ? (seekTime <= playbackRegion.end) : (seekTime <= totalPlayTime());
 }
 
 muse::secs_t PlaybackController::playbackPosition() const

@@ -259,7 +259,8 @@ Rectangle {
             onClicked: function (e) {
                 let position = convertToTimelinePosition(e)
                 if (!playRegionActivated) {
-                    playCursorController.seekToX(position.x, timeline.context.playbackOnRulerClickEnabled)
+                    playCursorController.seekToX(position.x, playbackState.isPlaying || timeline.context.playbackOnRulerClickEnabled)
+                    playCursorController.setPlaybackRegion(position.x, position.x)
                 }
                 playRegionActivated = false
             }
@@ -328,7 +329,7 @@ Rectangle {
                 }
 
                 onPlayCursorMousePositionChanged: function (ix) {
-                     timeline.updateCursorPosition(ix, 0)
+                    timeline.updateCursorPosition(ix, 0)
                 }
             }
         }
@@ -504,8 +505,7 @@ Rectangle {
                     tracksItemsView.itemMoveRequested(hoveredItemKey, true)
                     tracksItemsView.stopAutoScroll()
                     tracksItemsView.itemEndEditRequested(hoveredItemKey)
-                }
-                else {
+                } else {
                     splitToolController.mouseUp(e.x)
 
                     if (selectionController.isLeftSelection(e.x)) {
@@ -993,8 +993,6 @@ Rectangle {
             x: Math.max(timeline.context.selectionStartPosition, 0.0)
             width: timeline.context.selectionEndPosition - x
         }
-
-        PlaybackPositionTimer {}
 
         PlayCursorLine {
             id: playCursor
