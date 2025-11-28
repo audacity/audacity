@@ -20,6 +20,7 @@ include(${AUDACITY_ROOT}/au3defs.cmake)
 # Path variables for AU3 code
 set(AU3_LIBRARIES ${AUDACITY_ROOT}/libraries)
 set(AU3_MODULES ${AUDACITY_ROOT}/modules)
+set(IMPORT_EXPORT_MODULE ${AU3_MODULES}/import-export)
 
 # Generate *_API definitions for all AU3 libraries
 # This is needed for AU3 source files compiled directly in au3wrap and for tests
@@ -106,8 +107,11 @@ set(AU3_INCLUDE
 
     ${AUDACITY_ROOT}
 
+    # AU3 libraries directory for namespaced includes like #include "au3-tags/Tags.h"
+    ${AU3_LIBRARIES}
+
     # FFmpeg module (not yet converted to library)
-    ${AU3_MODULES}/import-export/mod-ffmpeg
+    ${IMPORT_EXPORT_MODULE}/mod-ffmpeg
 )
 
 set(WXBASE_RESTRICTIONS
