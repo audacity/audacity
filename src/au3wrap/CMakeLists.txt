@@ -448,6 +448,9 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WavePaintParameters.cpp
     ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WavePaintParameters.h
 
+    ${AU3_LIBRARIES}/lib-wave-track-settings/SpectrogramSettings.cpp
+    ${AU3_LIBRARIES}/lib-wave-track-settings/SpectrogramSettings.h
+
     ${AU3_LIBRARIES}/lib-graphics/FrameStatistics.cpp
     ${AU3_LIBRARIES}/lib-graphics/FrameStatistics.h
 

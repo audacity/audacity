@@ -101,6 +101,7 @@ private:
     void openAudioSettingsDialog();
     void openShortcutsPreferencesDialog();
     void openEditingPreferencesDialog();
+    void openSpectrogramPreferencesDialog();
 
     void revertToFactorySettings();
 

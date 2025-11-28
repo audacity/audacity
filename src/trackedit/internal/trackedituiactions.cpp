@@ -210,7 +210,7 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Resample track..."),
              TranslatableString("action", "Resample track...")
              ),
-    UiAction("track-view-waveform",
+    UiAction("action://trackedit/track-view-waveform",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Waveform"),
@@ -218,7 +218,7 @@ UiActionList STATIC_ACTIONS = {
              IconCode::Code::WAVEFORM,
              Checkable::Yes
              ),
-    UiAction("track-view-spectrogram",
+    UiAction("action://trackedit/track-view-spectrogram",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Spectogram"),
@@ -226,7 +226,7 @@ UiActionList STATIC_ACTIONS = {
              IconCode::Code::SPECTROGRAM,
              Checkable::Yes
              ),
-    UiAction("track-view-multi",
+    UiAction("action://trackedit/track-view-multi",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Multi-view"),
@@ -234,7 +234,13 @@ UiActionList STATIC_ACTIONS = {
              IconCode::Code::SPECTROGRAM_BOX_SELECTION, // TODO need proper icon
              Checkable::Yes
              ),
-    UiAction("track-view-half-wave",
+    UiAction("action://trackedit/track-spectrogram-settings",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Spectrogram settings…"),
+             TranslatableString("action", "Spectrogram settings…")
+             ),
+    UiAction("action://trackedit/track-view-half-wave",
              //! TODO: Change context when half-wave is implemented
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,

@@ -43,6 +43,7 @@ Column {
     property alias navigation: control.navigation
 
     signal valueEdited(var newValue)
+    signal valueEditingFinished(var newValue)
 
     spacing: 6
 
@@ -65,8 +66,12 @@ Column {
 
         navigation.accessible.name: titleLabel.text + " " + currentValue + " " + measureUnitsSymbol
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             root.valueEdited(newValue)
+        }
+
+        onValueEditingFinished: function (newValue) {
+            root.valueEditingFinished(newValue)
         }
     }
 }

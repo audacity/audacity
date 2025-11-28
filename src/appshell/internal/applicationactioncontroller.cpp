@@ -64,6 +64,7 @@ void ApplicationActionController::init()
     dispatcher()->reg(this, "audio-settings", this, &ApplicationActionController::openAudioSettingsDialog);
     dispatcher()->reg(this, "shortcuts-preferences", this, &ApplicationActionController::openShortcutsPreferencesDialog);
     dispatcher()->reg(this, "editing-preferences", this, &ApplicationActionController::openEditingPreferencesDialog);
+    dispatcher()->reg(this, "spectrogram-preferences", this, &ApplicationActionController::openSpectrogramPreferencesDialog);
 
     // Global actions
     dispatcher()->reg(this, "action://copy", this, &ApplicationActionController::doGlobalCopy);
@@ -273,6 +274,14 @@ void ApplicationActionController::openEditingPreferencesDialog()
 {
     muse::UriQuery preferencesUri("audacity://preferences");
     preferencesUri.addParam("currentPageId", muse::Val("editing"));
+
+    interactive()->open(preferencesUri);
+}
+
+void ApplicationActionController::openSpectrogramPreferencesDialog()
+{
+    muse::UriQuery preferencesUri("audacity://preferences");
+    preferencesUri.addParam("currentPageId", muse::Val("spectrogram"));
 
     interactive()->open(preferencesUri);
 }
