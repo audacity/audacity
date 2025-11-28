@@ -107,7 +107,7 @@ EffectStyledDialogView {
         }
     }
 
-    EffectViewerDialogModel {
+    DestructiveEffectViewerDialogModel {
         id: viewerModel
     }
 
