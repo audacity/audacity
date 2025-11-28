@@ -1,0 +1,34 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#pragma once
+
+#include "../ispectrogrampainter.h"
+#include "./au3spectrogramtrackpainter.h"
+
+#include "context/iglobalcontext.h"
+#include "au3wrap/au3types.h"
+
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
+
+#include <array>
+#include <unordered_map>
+
+namespace au::projectscene {
+class Au3SpectrogramPainter final : public ISpectrogramPainter, public muse::async::Asyncable
+{
+    muse::Inject<context::IGlobalContext> globalContext;
+
+public:
+    ~Au3SpectrogramPainter() override = default;
+
+    void init();
+
+    void paint(QPainter&, const trackedit::ClipKey&, const WaveMetrics&, const ZoomInfo&, const SelectedRegion&) override;
+
+private:
+    std::weak_ptr<au3::Au3Project> m_au3Project;
+    std::unordered_map<trackedit::TrackId, Au3SpectrogramTrackPainter> m_trackPainterMap;
+};
+}

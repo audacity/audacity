@@ -17,6 +17,7 @@ set(AU3_DEF
 
     -Dsafenew=new
 
+    -DWAVE_TRACK_SETTINGS_API=
     -DUTILITY_API=
     -DPROJECT_API=
     -DSTRINGS_API=
@@ -62,6 +63,7 @@ set(AU3_DEF
 
     -DGRAPHICS_API=
     -DWAVE_TRACK_PAINT_API=
+    -DTHEME_API=
 
     -DEXPERIMENTAL_SPECTRAL_EDITING
 
@@ -127,6 +129,7 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-stretching-sequence
     ${AU3_LIBRARIES}/lib-wave-track
     ${AU3_LIBRARIES}/lib-wave-track-fft
+    ${AU3_LIBRARIES}/lib-wave-track-settings
     ${AU3_LIBRARIES}/lib-sample-track
     ${AU3_LIBRARIES}/lib-label-track
     ${AU3_LIBRARIES}/lib-mixer
@@ -156,6 +159,7 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-time-frequency-selection
     ${AU3_LIBRARIES}/lib-graphics
     ${AU3_LIBRARIES}/lib-wave-track-paint
+    ${AU3_LIBRARIES}/lib-theme
 
     # effects
     ${AU3_LIBRARIES}/lib-effects

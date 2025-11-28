@@ -105,9 +105,8 @@ SpectrogramSettings& SpectrogramSettings::Get(const WaveChannel& channel)
     return Get(channel.GetTrack());
 }
 
-SpectrogramSettings& SpectrogramSettings::Own(WaveChannel& wc)
+SpectrogramSettings& SpectrogramSettings::Own(WaveTrack& track)
 {
-    auto& track = wc.GetTrack();
     auto pSettings = track.Attachments::Find<SpectrogramSettings>(key1);
     if (!pSettings) {
         auto uSettings = std::make_unique<SpectrogramSettings>();
@@ -544,6 +543,22 @@ void SpectrogramSettings::CacheWindows()
     }
 }
 
+namespace {
+constexpr auto isPowerOfTwo(int x) -> bool
+{
+    return (x != 0) && ((x & (x - 1)) == 0);
+}
+static_assert(isPowerOfTwo(3) == false);
+static_assert(isPowerOfTwo(4) == true);
+}
+
+void SpectrogramSettings::SetWindowSize(int size)
+{
+    assert(isPowerOfTwo(size));
+    windowSize = size;
+    InvalidateCaches();
+}
+
 void SpectrogramSettings::ConvertToEnumeratedWindowSizes()
 {
     unsigned size;
@@ -672,9 +687,8 @@ auto SpectrogramBounds::Clone() const -> PointerType
 }
 
 void SpectrogramBounds::GetBounds(
-    const WaveChannel& wc, float& min, float& max) const
+    const WaveTrack& wt, float& min, float& max) const
 {
-    auto& wt = wc.GetTrack();
     const double rate = wt.GetRate();
 
     const auto& settings = SpectrogramSettings::Get(wt);

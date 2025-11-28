@@ -31,11 +31,13 @@
 #include "internal/trackeditconfiguration.h"
 #include "internal/trackeditoperationcontroller.h"
 #include "internal/tracknavigationcontroller.h"
+#include "internal/trackspectrogramsettingsupdater.h"
 #include "internal/undomanager.h"
 
 #include "view/deletebehaviorpanelmodel.h"
 #include "view/pastebehaviorpanelmodel.h"
 #include "view/tracknavigationmodel.h"
+#include "view/trackspectrogramsettingsmodel.h"
 
 #include "internal/au3/au3trackeditproject.h"
 #include "internal/au3/au3selectioncontroller.h"
@@ -57,7 +59,11 @@ using namespace muse::actions;
 
 TrackeditModule::TrackeditModule()
     : m_trackeditController(std::make_shared<TrackeditActionsController>()),
-    m_trackeditUiActions(std::make_shared<TrackeditUiActions>(m_trackeditController))
+    m_trackeditUiActions(std::make_shared<TrackeditUiActions>(m_trackeditController)),
+    m_selectionController(std::make_shared<Au3SelectionController>()),
+    m_configuration(std::make_shared<TrackeditConfiguration>()),
+    m_trackNavigationController(std::make_shared<TrackNavigationController>()),
+    m_trackSpectrogramSettingsUpdater(std::make_shared<TrackSpectrogramSettingsUpdater>())
 {
 }
 
@@ -73,10 +79,6 @@ std::string TrackeditModule::moduleName() const
 
 void TrackeditModule::registerExports()
 {
-    m_selectionController = std::make_shared<Au3SelectionController>();
-    m_configuration = std::make_shared<TrackeditConfiguration>();
-    m_trackNavigationController = std::make_shared<TrackNavigationController>();
-
     ioc()->registerExport<ITrackeditProjectCreator>(moduleName(), new Au3TrackeditProjectCreator());
     ioc()->registerExport<ITrackeditInteraction>(moduleName(),
                                                  new TrackeditInteraction(std::make_unique<TrackeditOperationController>(
@@ -97,6 +99,7 @@ void TrackeditModule::registerUiTypes()
     qmlRegisterType<DeleteBehaviorPanelModel>("Audacity.TrackEdit", 1, 0, "DeleteBehaviorPanelModel");
     qmlRegisterType<PasteBehaviorPanelModel>("Audacity.TrackEdit", 1, 0, "PasteBehaviorPanelModel");
     qmlRegisterType<TrackNavigationModel>("Audacity.TrackEdit", 1, 0, "TrackNavigationModel");
+    qmlRegisterType<TrackSpectrogramSettingsModel>("Audacity.TrackEdit", 1, 0, "TrackSpectrogramSettingsModel");
 }
 
 void TrackeditModule::resolveImports()
@@ -109,6 +112,8 @@ void TrackeditModule::resolveImports()
         ir->registerQmlUri(muse::Uri(
                                "audacity://trackedit/delete_behavior_followup"),
                            "Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml");
+        ir->registerQmlUri(muse::Uri(
+                               "audacity://trackedit/track_spectrogram_settings"), "Audacity/TrackEdit/TrackSpectrogramSettingsDialog.qml");
     }
 }
 
@@ -123,6 +128,7 @@ void TrackeditModule::onInit(const muse::IApplication::RunMode&)
     m_selectionController->init();
     m_configuration->init();
     m_trackNavigationController->init();
+    m_trackSpectrogramSettingsUpdater->init();
 
     TimeSignatureRestorer::reg();
 

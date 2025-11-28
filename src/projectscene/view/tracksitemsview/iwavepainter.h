@@ -5,6 +5,7 @@
 
 #include "modularity/imoduleinterface.h"
 #include "trackedit/trackedittypes.h"
+#include "./tracksitemsviewtypes.h"
 
 namespace au::projectscene {
 class IWavePainter : MODULE_EXPORT_INTERFACE
@@ -32,19 +33,7 @@ public:
         QColor selectedEnvelopeBackground;
     };
 
-    struct Geometry {
-        double height = 0.0;
-        double width = 0.0;
-        double left = 0.0;
-    };
-
-    struct Params {
-        Geometry geometry;
-        double zoom = 0.0;
-        double fromTime = 0.0;
-        double toTime = 0.0;
-        double selectionStartTime = 0.0;
-        double selectionEndTime = 0.0;
+    struct Params : PaintParams {
         double channelHeightRatio = 0.5;
         bool showRMS = false;
         bool showClipping = false;
