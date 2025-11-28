@@ -33,7 +33,8 @@ class TrackRulerModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(trackedit::TrackId trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
 
-    Q_PROPERTY(float verticalZoom READ verticalZoom WRITE setVerticalZoom FINAL)
+    Q_PROPERTY(QVariant displayBounds READ displayBounds WRITE setDisplayBounds FINAL)
+
     Q_PROPERTY(bool isDefaultZoom READ isDefaultZoom NOTIFY isDefaultZoomChanged FINAL)
     Q_PROPERTY(bool isMaxZoom READ isMaxZoom NOTIFY isMaxZoomChanged FINAL)
     Q_PROPERTY(bool isMinZoom READ isMinZoom NOTIFY isMinZoomChanged FINAL)
@@ -71,8 +72,8 @@ public:
     int rulerType() const;
     void setRulerType(int rulerType);
 
-    float verticalZoom() const;
-    void setVerticalZoom(float verticalZoom);
+    QVariant displayBounds() const;
+    void setDisplayBounds(const QVariant& displayBounds);
 
     bool isDefaultZoom() const;
     bool isMaxZoom() const;
@@ -114,6 +115,9 @@ private:
     int m_height = 0;
     double m_channelHeightRatio = 0.5;
     int m_rulerType = 2;
-    float m_verticalZoom = 1.0f;
+    QMap<QString, float> m_displayBounds {
+        { "min", -1.0f },
+        { "max", 1.0f }
+    };
 };
 }

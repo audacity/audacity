@@ -23,7 +23,7 @@ public:
     void setCollapsed(bool isCollapsed) override;
     void setDbRange(double dbRange) override;
     std::string sampleToText(double sample) const override;
-    void setVerticalZoom(float verticalZoom) override;
+    void setDisplayBounds(std::pair<float, float> displayBounds) override;
 
 protected:
     int computeLowestFullStepValue(double height) const;
