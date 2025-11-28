@@ -43,4 +43,17 @@ enum class SpectrogramWindowType {
     Gaussian45,
     _count
 };
+
+struct AllSpectrogramSettings {
+    bool spectralSelectionEnabled = false;
+    SpectrogramColorScheme colorScheme = static_cast<SpectrogramColorScheme>(0);
+    int colorGainDb = 0;
+    int colorRangeDb = 0;
+    int colorHighBoostDbPerDec = 0;
+    SpectrogramScale scale = static_cast<SpectrogramScale>(0);
+    SpectrogramAlgorithm algorithm = static_cast<SpectrogramAlgorithm>(0);
+    SpectrogramWindowType windowType = static_cast<SpectrogramWindowType>(0);
+    int winSizeLog2 = 0;
+    int zeroPaddingFactor = 0;
+};
 }

@@ -23,7 +23,7 @@ void Au3SpectrogramTrackPainter::paintClip(trackedit::ClipId clipId, QPainter& q
         return;
     }
 
-    auto& settings = ::SpectrogramSettings::Get(*waveTrack);
+    auto& settings = ::SpectrogramSettings::Own(*waveTrack);
 
     float minFreq, maxFreq;
     SpectrogramBounds::Get(*waveTrack).GetBounds(*waveTrack, minFreq, maxFreq);
