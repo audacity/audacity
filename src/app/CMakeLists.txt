@@ -70,8 +70,6 @@ set(LINK_LIB
     muse::draw
     muse::actions
     muse::ui
-    muse::ui_qml
-    muse::ui_dialogs_qml
     muse::uicomponents
     muse::uicomponents_qml
     muse::graphicaleffects_qml

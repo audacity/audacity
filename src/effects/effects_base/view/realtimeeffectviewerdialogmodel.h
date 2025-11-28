@@ -11,7 +11,7 @@
 #include "context/iglobalcontext.h"
 #include "actions/actionable.h"
 #include "async/asyncable.h"
-#include "ui/qml/Muse/Ui/navigationpanel.h"
+#include "ui/view/navigationpanel.h"
 #include "uicomponents/qml/Muse/UiComponents/dialogview.h"
 
 #include <QObject>
