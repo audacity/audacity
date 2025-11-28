@@ -19,11 +19,13 @@ StyledPopupView {
     required property bool isDefaultZoom
     required property bool isMaxZoom
     required property bool isMinZoom
+    required property bool isHalfWave
 
     signal rulerTypeChangeRequested(int newType)
     signal zoomInRequested()
     signal zoomOutRequested()
     signal zoomResetRequested()
+    signal toggleHalfWaveRequested()
 
     contentWidth: uiModel.popupWidth - 2*uiModel.popupMargins
     contentHeight: uiModel.popupHeight - 2*uiModel.popupMargins
@@ -134,14 +136,12 @@ StyledPopupView {
         CheckBox {
             id: halfwave
 
-            enabled: false
-
             text: qsTrc("trackruler", "Half wave")
 
-            checked: false
+            checked: root.isHalfWave
 
             onClicked: {
-                console.log("Half wave toggled: " + checked)
+                root.toggleHalfWaveRequested()
             }
         }
     }

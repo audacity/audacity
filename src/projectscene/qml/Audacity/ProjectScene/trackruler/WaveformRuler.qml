@@ -46,6 +46,7 @@ Item {
         isDefaultZoom: rulerModel.isDefaultZoom
         isMaxZoom: rulerModel.isMaxZoom
         isMinZoom: rulerModel.isMinZoom
+        isHalfWave: rulerModel.isHalfWave
 
         placementPolicies: PopupView.PreferLeft
 
@@ -63,6 +64,10 @@ Item {
 
         onZoomResetRequested: {
             rulerModel.resetZoom()
+        }
+
+        onToggleHalfWaveRequested: {
+            rulerModel.toggleHalfWave()
         }
     }
 

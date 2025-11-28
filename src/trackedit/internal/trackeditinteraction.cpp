@@ -512,6 +512,16 @@ bool TrackeditInteraction::isMinVerticalZoom(const trackedit::TrackId& trackId) 
     return m_interaction->isMinVerticalZoom(trackId);
 }
 
+void TrackeditInteraction::toggleHalfWave(const trackedit::TrackId& trackId)
+{
+    m_interaction->toggleHalfWave(trackId);
+}
+
+bool TrackeditInteraction::isHalfWave(const trackedit::TrackId& trackId) const
+{
+    return m_interaction->isHalfWave(trackId);
+}
+
 muse::Progress TrackeditInteraction::progress() const
 {
     return m_interaction->progress();

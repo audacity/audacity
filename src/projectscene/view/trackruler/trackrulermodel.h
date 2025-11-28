@@ -38,6 +38,8 @@ class TrackRulerModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool isMaxZoom READ isMaxZoom NOTIFY isMaxZoomChanged FINAL)
     Q_PROPERTY(bool isMinZoom READ isMinZoom NOTIFY isMinZoomChanged FINAL)
 
+    Q_PROPERTY(bool isHalfWave READ isHalfWave NOTIFY isHalfWaveChanged FINAL)
+
     muse::Inject<au::playback::IPlaybackConfiguration> configuration;
     muse::Inject<au::trackedit::ITrackeditInteraction> trackeditInteraction;
 
@@ -48,6 +50,7 @@ public:
     Q_INVOKABLE void zoomIn();
     Q_INVOKABLE void zoomOut();
     Q_INVOKABLE void resetZoom();
+    Q_INVOKABLE void toggleHalfWave();
 
     std::vector<QVariantMap> fullSteps() const;
     std::vector<QVariantMap> smallSteps() const;
@@ -78,6 +81,8 @@ public:
     trackedit::TrackId trackId() const;
     void setTrackId(const trackedit::TrackId& newTrackId);
 
+    bool isHalfWave() const;
+
 signals:
     void fullStepsChanged();
     void smallStepsChanged();
@@ -95,6 +100,8 @@ signals:
     void isMinZoomChanged();
 
     void trackIdChanged();
+
+    void isHalfWaveChanged();
 private:
     std::shared_ptr<ITrackRuler> buildRulerModel();
     double stepToPosition(double step, int channel, bool isNegativeSample) const;

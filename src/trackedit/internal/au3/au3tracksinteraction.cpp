@@ -19,7 +19,7 @@
 #include "au3-realtime-effects/RealtimeEffectList.h"
 #include "au3-exceptions/UserException.h"
 
-#include "global/types/number.h"
+#include "framework/global/types/number.h"
 
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
@@ -1281,6 +1281,39 @@ void Au3TracksInteraction::adjustVerticalZoom(const trackedit::TrackId& trackId)
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+}
+
+void Au3TracksInteraction::toggleHalfWave(const trackedit::TrackId& trackId)
+{
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    if (waveTrack == nullptr) {
+        return;
+    }
+
+    float min;
+    float max;
+    auto& cache = WaveformScale::Get(*waveTrack);
+    cache.GetDisplayBounds(min, max);
+
+    cache.SetDisplayBounds(muse::is_equal(min, 0.0f) ? -max : 0.0f, max);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+}
+
+bool Au3TracksInteraction::isHalfWave(const trackedit::TrackId& trackId) const
+{
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    if (waveTrack == nullptr) {
+        return false;
+    }
+
+    float min;
+    float max;
+    auto& cache = WaveformScale::Get(*waveTrack);
+    cache.GetDisplayBounds(min, max);
+
+    return muse::is_equal(min, 0.0f);
 }
 
 double Au3TracksInteraction::nearestZeroCrossing(double t0) const
