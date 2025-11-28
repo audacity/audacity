@@ -6,8 +6,6 @@ using Exception and Message interfaces.
 set( TARGET au3-sentry-reporting )
 set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
-def_vars()
-
 if(${_OPT}has_sentry_reporting)
     set( SOURCES
         SentryHelper.h

@@ -5,8 +5,6 @@ Asynchronously send and receive requests and responses over internet
 set(TARGET au3-network-manager)
 set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
-def_vars()
-
 set( SOURCES
     IResponse.h
     IResponseFactory.h

@@ -5,8 +5,6 @@ and SampleBlockFactory subclasses so that au3-wave-track is usable.
 All usage of Sqlite is encapsulated in this library.
 ]]
 
-addlib( sqlite             sqlite      SQLITE      YES   YES   "sqlite3 >= 3.31.1" )
-
 set( SOURCES
    ActiveProjects.cpp
    ActiveProjects.h
