@@ -262,6 +262,13 @@ void TrackRulerModel::resetZoom()
     emit isMinZoomChanged();
 }
 
+void TrackRulerModel::toggleHalfWave()
+{
+    trackeditInteraction()->toggleHalfWave(m_trackId);
+
+    emit isHalfWaveChanged();
+}
+
 bool TrackRulerModel::isDefaultZoom() const
 {
     return trackeditInteraction()->isDefaultVerticalZoom(m_trackId);
@@ -275,6 +282,11 @@ bool TrackRulerModel::isMaxZoom() const
 bool TrackRulerModel::isMinZoom() const
 {
     return trackeditInteraction()->isMinVerticalZoom(m_trackId);
+}
+
+bool TrackRulerModel::isHalfWave() const
+{
+    return trackeditInteraction()->isHalfWave(m_trackId);
 }
 
 void TrackRulerModel::setTrackId(const trackedit::TrackId& newTrackId)

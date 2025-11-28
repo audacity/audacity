@@ -776,6 +776,16 @@ void TrackeditOperationController::resetVerticalZoom(const trackedit::TrackId& t
     tracksInteraction()->resetVerticalZoom(trackId);
 }
 
+void TrackeditOperationController::toggleHalfWave(const trackedit::TrackId& trackId)
+{
+    tracksInteraction()->toggleHalfWave(trackId);
+}
+
+bool TrackeditOperationController::isHalfWave(const trackedit::TrackId& trackId) const
+{
+    return tracksInteraction()->isHalfWave(trackId);
+}
+
 bool TrackeditOperationController::isDefaultVerticalZoom(const trackedit::TrackId& trackId) const
 {
     return tracksInteraction()->isDefaultVerticalZoom(trackId);
