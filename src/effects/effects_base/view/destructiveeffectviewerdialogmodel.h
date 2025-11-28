@@ -15,7 +15,7 @@
 #include <QObject>
 
 namespace au::effects {
-class EffectViewerDialogModel : public QObject, public muse::Injectable, public muse::async::Asyncable
+class DestructiveEffectViewerDialogModel : public QObject, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -30,8 +30,8 @@ class EffectViewerDialogModel : public QObject, public muse::Injectable, public 
     muse::Inject<IEffectsConfiguration> configuration;
 
 public:
-    explicit EffectViewerDialogModel(QObject* parent = nullptr);
-    ~EffectViewerDialogModel() override = default;
+    explicit DestructiveEffectViewerDialogModel(QObject* parent = nullptr);
+    ~DestructiveEffectViewerDialogModel() override = default;
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void refreshUIMode();
