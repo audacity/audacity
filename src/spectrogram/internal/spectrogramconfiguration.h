@@ -55,6 +55,10 @@ public:
     void setZeroPaddingFactor(int value) override;
     muse::async::Channel<int> zeroPaddingFactorChanged() const override;
 
+    AllSpectrogramSettings allSettings() const override;
+    void setAllSettings(const AllSpectrogramSettings &) override;
+    muse::async::Notification someSettingChanged() const override;
+
 private:
     muse::async::Channel<bool> m_spectralSelectionEnabledChanged;
     muse::async::Channel<SpectrogramColorScheme> m_colorSchemeChanged;
@@ -66,5 +70,6 @@ private:
     muse::async::Channel<SpectrogramWindowType> m_windowTypeChanged;
     muse::async::Channel<int> m_winSizeLog2Changed;
     muse::async::Channel<int> m_zeroPaddingFactorChanged;
+    muse::async::Notification m_someSettingChanged;
 };
 }

@@ -2,9 +2,9 @@
  * Audacity: A Digital Audio Editor
  */
 #include "trackspectrogramsettingsmodel.h"
+#include "internal/snapshotspectrogramconfiguration.h"
 #include "internal/au3/au3trackspectrogramconfiguration.h"
 
-#include "framework/global/defer.h"
 #include "framework/global/log.h"
 
 namespace au::trackedit {
@@ -19,7 +19,18 @@ void TrackSpectrogramSettingsModel::componentComplete()
         return;
     }
     doSetUseGlobalSettings(trackConfig->useGlobalSettings());
-    readFromConfig(trackConfig->useGlobalSettings() ? *globalSpectrogramConfiguration() : *trackConfig);
+    const spectrogram::ISpectrogramConfiguration& originalConfig
+        = trackConfig->useGlobalSettings() ? *globalSpectrogramConfiguration() : *trackConfig;
+    readFromConfig(originalConfig);
+    m_configToRevertTo = std::make_unique<SnapshotSpectrogramConfiguration>(originalConfig);
+    sendRepaintRequest();
+}
+
+TrackSpectrogramSettingsModel::~TrackSpectrogramSettingsModel() {
+    if (m_configToRevertTo) {
+        readFromConfig(*m_configToRevertTo);
+        apply();
+    }
 }
 
 void TrackSpectrogramSettingsModel::readFromConfig(const spectrogram::ISpectrogramConfiguration& config)
@@ -57,34 +68,21 @@ void TrackSpectrogramSettingsModel::preview()
         return;
     }
 
-    muse::Defer restore{ [trackConfig,
-                          spectralSelectionEnabled_1 = trackConfig->spectralSelectionEnabled(),
-                          colorGainDb_2 = trackConfig->colorGainDb(),
-                          colorRangeDb_3 = trackConfig->colorRangeDb(),
-                          colorHighBoostDbPerDec_4 = trackConfig->colorHighBoostDbPerDec(),
-                          colorScheme_5 = trackConfig->colorScheme(),
-                          scale_6 = trackConfig->scale(),
-                          algorithm_7 = trackConfig->algorithm(),
-                          windowType_8 = trackConfig->windowType(),
-                          winSizeLog2_9 = trackConfig->winSizeLog2(),
-                          zeroPaddingFactor_10 = trackConfig->zeroPaddingFactor()
-                         ]{
-            trackConfig->setSpectralSelectionEnabled(spectralSelectionEnabled_1);
-            trackConfig->setColorGainDb(colorGainDb_2);
-            trackConfig->setColorRangeDb(colorRangeDb_3);
-            trackConfig->setColorHighBoostDbPerDec(colorHighBoostDbPerDec_4);
-            trackConfig->setColorScheme(colorScheme_5);
-            trackConfig->setScale(scale_6);
-            trackConfig->setAlgorithm(algorithm_7);
-            trackConfig->setWindowType(windowType_8);
-            trackConfig->setWinSizeLog2(winSizeLog2_9);
-            trackConfig->setZeroPaddingFactor(zeroPaddingFactor_10);
-        } };
-
-    trackConfig->setUseGlobalSettings(m_useGlobalSettings);
     writeToConfig(*trackConfig);
+    sendRepaintRequest();
+}
 
-    // Here, something like spectrogramPainter()->paint(m_trackId) - when the spectrogram painting is in place.
+void TrackSpectrogramSettingsModel::sendRepaintRequest()
+{
+    const ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    IF_ASSERT_FAILED(project) {
+        return;
+    }
+    const auto track = project->track(m_trackId);
+    IF_ASSERT_FAILED(track) {
+        return;
+    }
+    project->notifyAboutTrackChanged(*track);
 }
 
 void TrackSpectrogramSettingsModel::apply()
@@ -95,6 +93,8 @@ void TrackSpectrogramSettingsModel::apply()
     }
     trackConfig->setUseGlobalSettings(m_useGlobalSettings);
     writeToConfig(*trackConfig);
+    m_configToRevertTo = std::make_unique<SnapshotSpectrogramConfiguration>(*trackConfig);
+    sendRepaintRequest();
 }
 
 void TrackSpectrogramSettingsModel::setTrackId(int value)

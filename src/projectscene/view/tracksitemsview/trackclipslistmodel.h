@@ -3,7 +3,9 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+
+#include "spectrogram/ispectrogramconfiguration.h"
 #include "ui/iuiconfiguration.h"
 #include "workspace/iworkspacemanager.h"
 #include "iprojectsceneconfiguration.h"
@@ -23,6 +25,7 @@ class TrackClipsListModel : public TrackItemsListModel
     Q_PROPERTY(bool isContrastFocusBorderEnabled READ isContrastFocusBorderEnabled NOTIFY isContrastFocusBorderEnabledChanged FINAL)
 
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::Inject<spectrogram::ISpectrogramConfiguration> spectrogramConfiguration;
     muse::Inject<muse::workspace::IWorkspaceManager> workspacesManager;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;

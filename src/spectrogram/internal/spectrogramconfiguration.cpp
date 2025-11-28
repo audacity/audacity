@@ -26,51 +26,61 @@ void SpectrogramConfiguration::init()
     muse::settings()->setDefaultValue(SPECTRAL_SELECTION_ENABLED, muse::Val(true));
     muse::settings()->valueChanged(SPECTRAL_SELECTION_ENABLED).onReceive(this, [this](const muse::Val& val) {
         m_spectralSelectionEnabledChanged.send(val.toBool());
+        m_someSettingChanged.notify();
     });
 
     muse::settings()->setDefaultValue(COLOR_SCHEME, muse::Val(SpectrogramColorScheme::Roseus));
     muse::settings()->valueChanged(COLOR_SCHEME).onReceive(this, [this](const muse::Val& val) {
         m_colorSchemeChanged.send(static_cast<SpectrogramColorScheme>(val.toInt()));
+        m_someSettingChanged.notify();
     });
 
     muse::settings()->setDefaultValue(COLOR_GAIN_DB, muse::Val(20));
     muse::settings()->valueChanged(COLOR_GAIN_DB).onReceive(this, [this](const muse::Val& val) {
         m_colorGainDbChanged.send(val.toInt());
+        m_someSettingChanged.notify();
     });
 
     muse::settings()->setDefaultValue(COLOR_RANGE_DB, muse::Val(80));
     muse::settings()->valueChanged(COLOR_RANGE_DB).onReceive(this, [this](const muse::Val& val) {
         m_colorRangeDbChanged.send(val.toInt());
+        m_someSettingChanged.notify();
     });
 
     muse::settings()->setDefaultValue(COLOR_HIGH_BOOST_DB_PER_DEC, muse::Val(0));
     muse::settings()->valueChanged(COLOR_HIGH_BOOST_DB_PER_DEC).onReceive(this, [this](const muse::Val& val) {
         m_colorHighBoostDbPerDecChanged.send(val.toInt());
+        m_someSettingChanged.notify();
     });
 
     muse::settings()->setDefaultValue(SCALE, muse::Val(static_cast<int>(SpectrogramScale::Mel)));
     muse::settings()->valueChanged(SCALE).onReceive(this, [this](const muse::Val& val) {
         m_scaleChanged.send(val.toEnum<SpectrogramScale>());
+        m_someSettingChanged.notify();
     });
 
     muse::settings()->setDefaultValue(ALGORITHM, muse::Val(SpectrogramAlgorithm::Frequencies));
     muse::settings()->valueChanged(ALGORITHM).onReceive(this, [this](const muse::Val& val) {
         m_algorithmChanged.send(val.toEnum<SpectrogramAlgorithm>());
+        m_someSettingChanged.notify();
     });
 
     muse::settings()->setDefaultValue(WINDOW_TYPE, muse::Val(SpectrogramWindowType::Hann));
     muse::settings()->valueChanged(WINDOW_TYPE).onReceive(this, [this](const muse::Val& val) {
         m_windowTypeChanged.send(val.toEnum<SpectrogramWindowType>());
+        m_someSettingChanged.notify();
     });
 
     muse::settings()->setDefaultValue(WIN_SIZE_LOG2, muse::Val(11 /*2048*/));
     muse::settings()->valueChanged(WIN_SIZE_LOG2).onReceive(this, [this](const muse::Val& val) {
         m_winSizeLog2Changed.send(val.toInt());
+        m_someSettingChanged.notify();
     });
 
     muse::settings()->setDefaultValue(ZERO_PADDING_FACTOR, muse::Val(2));
     muse::settings()->valueChanged(ZERO_PADDING_FACTOR).onReceive(this, [this](const muse::Val& val) {
         m_zeroPaddingFactorChanged.send(val.toInt());
+        m_someSettingChanged.notify();
     });
 }
 
@@ -252,5 +262,40 @@ void SpectrogramConfiguration::setZeroPaddingFactor(int value)
 muse::async::Channel<int> SpectrogramConfiguration::zeroPaddingFactorChanged() const
 {
     return m_zeroPaddingFactorChanged;
+}
+
+AllSpectrogramSettings SpectrogramConfiguration::allSettings() const
+{
+    AllSpectrogramSettings settings;
+    settings.spectralSelectionEnabled = spectralSelectionEnabled();
+    settings.colorScheme = colorScheme();
+    settings.colorGainDb = colorGainDb();
+    settings.colorRangeDb = colorRangeDb();
+    settings.colorHighBoostDbPerDec = colorHighBoostDbPerDec();
+    settings.scale = scale();
+    settings.algorithm = algorithm();
+    settings.windowType = windowType();
+    settings.winSizeLog2 = winSizeLog2();
+    settings.zeroPaddingFactor = zeroPaddingFactor();
+    return settings;
+}
+
+void SpectrogramConfiguration::setAllSettings(const AllSpectrogramSettings &settings)
+{
+    setSpectralSelectionEnabled(settings.spectralSelectionEnabled);
+    setColorScheme(settings.colorScheme);
+    setColorGainDb(settings.colorGainDb);
+    setColorRangeDb(settings.colorRangeDb);
+    setColorHighBoostDbPerDec(settings.colorHighBoostDbPerDec);
+    setScale(settings.scale);
+    setAlgorithm(settings.algorithm);
+    setWindowType(settings.windowType);
+    setWinSizeLog2(settings.winSizeLog2);
+    setZeroPaddingFactor(settings.zeroPaddingFactor);
+}
+
+muse::async::Notification SpectrogramConfiguration::someSettingChanged() const
+{
+    return m_someSettingChanged;
 }
 }
