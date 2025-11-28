@@ -105,9 +105,8 @@ SpectrogramSettings& SpectrogramSettings::Get(const WaveChannel& channel)
     return Get(channel.GetTrack());
 }
 
-SpectrogramSettings& SpectrogramSettings::Own(WaveChannel& wc)
+SpectrogramSettings& SpectrogramSettings::Own(WaveTrack& track)
 {
-    auto& track = wc.GetTrack();
     auto pSettings = track.Attachments::Find<SpectrogramSettings>(key1);
     if (!pSettings) {
         auto uSettings = std::make_unique<SpectrogramSettings>();
