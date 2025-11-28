@@ -165,38 +165,7 @@ set(MODULE_SRC
     )
 
 # AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3defs.cmake)
-
-set(AU3_SRC
-    ${AU3_LIBRARIES}/lib-effects/StatefulPerTrackEffect.cpp
-    ${AU3_LIBRARIES}/lib-effects/StatefulPerTrackEffect.h
-    ${AU3_LIBRARIES}/lib-effects/StatefulEffect.cpp
-    ${AU3_LIBRARIES}/lib-effects/StatefulEffect.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/Generator.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/Generator.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/SilenceBase.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/SilenceBase.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationBase.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/EqualizationBase.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/TruncSilenceBase.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/TruncSilenceBase.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/ChangePitchBase.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/ChangePitchBase.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/SoundTouchBase.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/SoundTouchBase.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/SBSMSBase.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/SBSMSBase.h
-    ${AU3_LIBRARIES}/lib-math/PitchName.cpp
-    ${AU3_LIBRARIES}/lib-math/PitchName.h
-    ${AU3_LIBRARIES}/lib-fft/FFT.cpp
-    ${AU3_LIBRARIES}/lib-fft/FFT.h
-    ${AU3_LIBRARIES}/lib-fft/Spectrum.cpp
-    ${AU3_LIBRARIES}/lib-fft/Spectrum.h
-)
-
-set(AU3_DEF ${AU3_DEF}
+set(MODULE_DEF ${MODULE_DEF}
     -DBUILTIN_EFFECTS_API=
     USE_SOUNDTOUCH=1
     USE_SBSMS=1
@@ -205,14 +174,8 @@ set(AU3_DEF ${AU3_DEF}
     # -DNOTE_TRACK_API=
 )
 
-set(MODULE_SRC ${MODULE_SRC}
-    ${AU3_SRC}
-)
-
-set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
-
 set(MODULE_LINK au3wrap)
+set(MODULE_LINK_PUBLIC au3-effects au3-builtin-effects)
 
 set(MODULE_USE_UNITY OFF)
 
