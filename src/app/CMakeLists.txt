@@ -70,7 +70,11 @@ set(LINK_LIB
     muse::draw
     muse::actions
     muse::ui
+    muse::ui_qml
+    muse::ui_dialogs_qml
     muse::uicomponents
+    muse::uicomponents_qml
+    muse::graphicaleffects_qml
     muse::dockwindow
     muse::shortcuts
     muse::workspace
@@ -79,6 +83,7 @@ set(LINK_LIB
     muse::network
     muse::multiinstances
     muse::learn
+    muse::learn_qml
     muse::languages
     muse::diagnostics
     muse::audioplugins

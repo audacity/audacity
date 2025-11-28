@@ -98,7 +98,7 @@ Item {
 
                 enabled: modelData["enabled"]
 
-                width: parent.width
+                width: radioButtonList.width
 
                 navigation.name: title
                 navigation.panel: navPanel

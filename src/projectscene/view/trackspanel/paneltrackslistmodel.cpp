@@ -7,7 +7,7 @@
 #include "global/async/async.h"
 #include "global/containers.h"
 
-#include "uicomponents/view/itemmultiselectionmodel.h"
+#include "uicomponents/qml/Muse/UiComponents/itemmultiselectionmodel.h"
 
 #include "view/trackspanel/wavetrackitem.h"
 #include "view/trackspanel/labeltrackitem.h"

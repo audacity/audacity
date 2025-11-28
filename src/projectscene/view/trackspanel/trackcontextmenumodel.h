@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "uicomponents/view/abstractmenumodel.h"
+#include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
 #include "types/projectscenetypes.h"
 #include "iprojectsceneconfiguration.h"
 #include "context/iglobalcontext.h"

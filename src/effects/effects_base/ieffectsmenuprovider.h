@@ -7,7 +7,7 @@
 
 #include "global/modularity/ioc.h"
 #include "global/async/notification.h"
-#include "uicomponents/view/menuitem.h"
+#include "uicomponents/qml/Muse/UiComponents/menuitem.h"
 
 namespace au::effects {
 enum class EffectFilter {

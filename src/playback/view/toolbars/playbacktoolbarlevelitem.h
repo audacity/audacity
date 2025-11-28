@@ -10,7 +10,7 @@
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackcontroller.h"
 
-#include "uicomponents/view/toolbaritem.h"
+#include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
 namespace au::playback {
 class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem

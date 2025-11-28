@@ -7,7 +7,7 @@
 #include "context/iglobalcontext.h"
 #include "ui/iuiactionsregister.h"
 
-#include "uicomponents/view/toolbaritem.h"
+#include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
 namespace au::projectscene {
 class SnapToolBarItem : public muse::uicomponents::ToolBarItem

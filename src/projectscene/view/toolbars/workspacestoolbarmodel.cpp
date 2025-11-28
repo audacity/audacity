@@ -9,7 +9,7 @@
 #include "workspace/view/workspacesmenumodel.h"
 #endif
 
-#include "uicomponents/view/toolbaritem.h"
+#include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
 #include "translation.h"
 

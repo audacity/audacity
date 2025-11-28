@@ -13,7 +13,7 @@
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iaudiodevicesprovider.h"
 
-#include "uicomponents/view/toolbaritem.h"
+#include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
 namespace au::record {
 class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem

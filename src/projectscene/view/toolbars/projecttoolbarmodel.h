@@ -4,7 +4,7 @@
 #pragma once
 
 #include "actions/actionable.h"
-#include "uicomponents/view/abstracttoolbarmodel.h"
+#include "uicomponents/qml/Muse/UiComponents/abstracttoolbarmodel.h"
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"

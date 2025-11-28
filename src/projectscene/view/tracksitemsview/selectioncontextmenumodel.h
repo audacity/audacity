@@ -9,7 +9,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-#include "uicomponents/view/abstractmenumodel.h"
+#include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
 
 namespace au::projectscene {
 class SelectionContextMenuModel : public muse::uicomponents::AbstractMenuModel

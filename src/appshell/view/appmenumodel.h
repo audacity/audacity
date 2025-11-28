@@ -28,7 +28,7 @@
 Q_MOC_INCLUDE(< QWindow >)
 #endif
 
-#include "uicomponents/view/abstractmenumodel.h"
+#include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
 
 #include "modularity/ioc.h"
 #include "ui/imainwindow.h"
