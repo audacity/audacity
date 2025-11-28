@@ -5,8 +5,6 @@ A library, that allows uploading to audio.com sharing service
 set( TARGET au3-cloud-audiocom )
 set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
-def_vars()
-
 set( SOURCES
    CloudLibrarySettings.cpp
    CloudLibrarySettings.h

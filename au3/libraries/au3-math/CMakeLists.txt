@@ -2,8 +2,6 @@
 A library of mathematical utilities and manipulation of samples
 ]]
 
-addlib( libsoxr            soxr        SOXR        YES   YES   "soxr >= 0.1.1" )
-
 set( SOURCES
    Biquad.cpp
    Biquad.h

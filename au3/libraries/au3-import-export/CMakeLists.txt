@@ -5,8 +5,6 @@ Implements audio import and export pipelines.
 set( TARGET au3-import-export )
 set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
-def_vars()
-
 set( SOURCES
    Export.cpp
    Export.h
