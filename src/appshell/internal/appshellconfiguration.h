@@ -87,6 +87,7 @@ public:
     void startEditSettings() override;
     void applySettings() override;
     void rollbackSettings() override;
+    muse::async::Notification settingsApplied() const override;
 
     void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true) const override;
 
@@ -111,6 +112,7 @@ private:
     muse::io::paths_t parseSessionProjectsPaths(const QByteArray& json) const;
 
     QString m_preferencesDialogCurrentPageId;
+    muse::async::Notification m_settingsApplied;
 };
 }
 

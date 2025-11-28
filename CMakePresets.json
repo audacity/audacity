@@ -15,7 +15,8 @@
       "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_INSTALL_PREFIX": "src/app"
+        "CMAKE_INSTALL_PREFIX": "src/app",
+        "CMAKE_PREFIX_PATH" : "$env{QT6_DIR}"
       }
     },
     {
