@@ -7,7 +7,7 @@
 
 muse::Ret au::effects::AudioUnitViewLauncher::showEffect(const EffectInstanceId& instanceId) const
 {
-    muse::UriQuery uri(EFFECT_VIEWER_URI);
+    muse::UriQuery uri(DESTRUCTIVE_VIEWER_URI);
     uri.addParam("instanceId", muse::Val(instanceId));
     uri.addParam("effectFamily", muse::Val(EffectFamily::AudioUnit));
     return interactive()->openSync(uri).ret;

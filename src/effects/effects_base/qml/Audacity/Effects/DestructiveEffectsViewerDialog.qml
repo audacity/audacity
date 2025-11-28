@@ -17,18 +17,17 @@ EffectStyledDialogView {
     id: root
 
     property alias instanceId: viewerModel.instanceId
-    property int effectFamily: EffectFamily.Unknown
 
     QtObject {
         id: prv
         property alias viewer: viewerLoader.item
-        property bool isApplyAllowed: effectFamily != EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
-        property bool showPresets: effectFamily != EffectFamily.Builtin || viewer.usesPresets
+        property bool isApplyAllowed: viewerModel.effectFamily != EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
+        property bool showPresets: viewerModel.effectFamily != EffectFamily.Builtin || viewer.usesPresets
 
-        property int minimumWidth: effectFamily === EffectFamily.LV2 ? 500 : 250
-        property int panelMargins: effectFamily == EffectFamily.Builtin ? 16 : 4
-        property int viewMargins: effectFamily == EffectFamily.Builtin ? 16 : 0
-        property int separatorHeight: effectFamily == EffectFamily.Builtin ? separator.height + prv.panelMargins : 0
+        property int minimumWidth: viewerModel.effectFamily === EffectFamily.LV2 ? 500 : 250
+        property int panelMargins: viewerModel.effectFamily == EffectFamily.Builtin ? 16 : 4
+        property int viewMargins: viewerModel.effectFamily == EffectFamily.Builtin ? 16 : 0
+        property int separatorHeight: viewerModel.effectFamily == EffectFamily.Builtin ? separator.height + prv.panelMargins : 0
     }
 
     title: viewerModel.title
@@ -40,27 +39,57 @@ EffectStyledDialogView {
         return height
     }
 
+    Component.onCompleted: {
+        viewerModel.load()
+    }
+
     onWindowChanged: {
-        // Wait until the window is set: VstView needs it for intialization
-        switch (effectFamily) {
-        case EffectFamily.Builtin:
-            viewerLoader.sourceComponent = builtinViewerComp
-            break
-        case EffectFamily.AudioUnit:
+        loadViewer()
+    }
+
+    Connections {
+        target: viewerModel
+        function onViewerComponentTypeChanged() {
+            // For Audio Units, reload the view instead of switching components
+            if (viewerModel.viewerComponentType === ViewerComponentType.AudioUnit && viewerLoader.item) {
+                viewerLoader.item.reload()
+            } else {
+                loadViewer()
+            }
+        }
+    }
+
+    // Listen to UI mode changes from the presets bar menu
+    Connections {
+        target: presetsBar.manageMenuModel
+        function onUseVendorUIChanged() {
+            viewerModel.refreshUIMode()
+        }
+    }
+
+    function loadViewer() {
+        switch (viewerModel.viewerComponentType) {
+        case ViewerComponentType.AudioUnit:
             viewerLoader.sourceComponent = audioUnitViewerComp
             break
-        case EffectFamily.LV2:
+        case ViewerComponentType.Lv2:
             viewerLoader.sourceComponent = lv2ViewerComp
             break
-        case EffectFamily.VST3:
+        case ViewerComponentType.Vst:
             viewerLoader.sourceComponent = vstViewerComp
+            break
+        case ViewerComponentType.Builtin:
+            viewerLoader.sourceComponent = builtinViewerComp
+            break
+        case ViewerComponentType.Generated:
+            viewerLoader.sourceComponent = generatedViewerComp
             break
         default:
             viewerLoader.sourceComponent = null
         }
     }
 
-    EffectViewerDialogModel {
+    DestructiveEffectViewerDialogModel {
         id: viewerModel
     }
 
@@ -108,7 +137,7 @@ EffectStyledDialogView {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    visible: effectFamily == EffectFamily.Builtin
+                    visible: viewerModel.effectFamily == EffectFamily.Builtin
                 }
             }
         }
@@ -247,6 +276,13 @@ EffectStyledDialogView {
             bottomPadding: bbox.implicitHeight + prv.panelMargins * 2
             sidePadding: prv.viewMargins
             minimumWidth: prv.minimumWidth
+        }
+    }
+
+    Component {
+        id: generatedViewerComp
+        GeneratedEffectViewer {
+            instanceId: root.instanceId
         }
     }
 }

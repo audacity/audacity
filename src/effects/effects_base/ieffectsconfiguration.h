@@ -4,8 +4,8 @@
 #pragma once
 
 #include "effectstypes.h"
-#include "async/notification.h"
-#include "modularity/imoduleinterface.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/modularity/imoduleinterface.h"
 
 namespace au::effects {
 class IEffectsConfiguration : MODULE_EXPORT_INTERFACE
@@ -22,5 +22,9 @@ public:
     virtual EffectMenuOrganization effectMenuOrganization() const = 0;
     virtual void setEffectMenuOrganization(EffectMenuOrganization) = 0;
     virtual muse::async::Notification effectMenuOrganizationChanged() const = 0;
+
+    virtual EffectUIMode effectUIMode(const EffectId& effectId) const = 0;
+    virtual void setEffectUIMode(const EffectId& effectId, EffectUIMode mode) = 0;
+    virtual muse::async::Notification effectUIModeChanged() const = 0;
 };
 }

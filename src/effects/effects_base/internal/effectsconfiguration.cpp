@@ -10,6 +10,12 @@ using namespace au::effects;
 static const std::string moduleName("effects");
 static const muse::Settings::Key APPLY_EFFECT_TO_ALL_AUDIO(moduleName, "effects/applyEffectToAllAudio");
 static const muse::Settings::Key EFFECT_MENU_ORGANIZATION(moduleName, "effects/effectMenuOrganization");
+static const std::string EFFECT_UI_MODE_PREFIX = "effects/effectUIMode/";
+
+static muse::Settings::Key makeEffectUIModeKey(const EffectId& effectId)
+{
+    return { moduleName, EFFECT_UI_MODE_PREFIX + effectId.toStdString() };
+}
 
 void EffectsConfiguration::init()
 {
@@ -56,4 +62,42 @@ void EffectsConfiguration::setEffectMenuOrganization(EffectMenuOrganization orga
 muse::async::Notification EffectsConfiguration::effectMenuOrganizationChanged() const
 {
     return m_effectMenuOrganizationChanged;
+}
+
+EffectUIMode EffectsConfiguration::effectUIMode(const EffectId& effectId) const
+{
+    if (effectId.empty()) {
+        return EffectUIMode::VendorUI;
+    }
+
+    const muse::Settings::Key key = makeEffectUIModeKey(effectId);
+    // Set default to VendorUI (native plugin UI) for backward compatibility
+    constexpr EffectUIMode defaultMode = EffectUIMode::VendorUI;
+    muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(defaultMode)));
+
+    const muse::Val value = muse::settings()->value(key);
+    if (value.isNull()) {
+        return defaultMode;
+    }
+
+    return static_cast<EffectUIMode>(value.toInt());
+}
+
+void EffectsConfiguration::setEffectUIMode(const EffectId& effectId, EffectUIMode mode)
+{
+    const muse::Settings::Key key = makeEffectUIModeKey(effectId);
+    // Set default to VendorUI (native plugin UI) for backward compatibility
+    muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(EffectUIMode::VendorUI)));
+
+    if (effectUIMode(effectId) == mode) {
+        return;
+    }
+
+    muse::settings()->setSharedValue(key, muse::Val(static_cast<int>(mode)));
+    m_effectUIModeChanged.notify();
+}
+
+muse::async::Notification EffectsConfiguration::effectUIModeChanged() const
+{
+    return m_effectUIModeChanged;
 }

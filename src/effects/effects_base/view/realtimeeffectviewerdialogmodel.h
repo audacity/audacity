@@ -6,6 +6,7 @@
 #include "modularity/ioc.h"
 #include "ieffectinstancesregister.h"
 #include "ieffectsprovider.h"
+#include "ieffectsconfiguration.h"
 #include "effectstypes.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "context/iglobalcontext.h"
@@ -17,6 +18,23 @@
 #include <QObject>
 
 namespace au::effects {
+class ViewerComponentTypes
+{
+    Q_GADGET
+public:
+    enum class Type {
+        AudioUnit,
+        Lv2,
+        Vst,
+        Builtin,
+        Generated,
+        Unknown
+    };
+    Q_ENUM(Type)
+};
+
+using ViewerComponentType = ViewerComponentTypes::Type;
+
 class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable, public muse::async::Asyncable,
     public muse::actions::Actionable
 {
@@ -31,15 +49,19 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable,
         muse::ui::NavigationPanel
         * navigationPanel READ prop_navigationPanel WRITE prop_setNavigationPanel NOTIFY navigationPanelChanged);
     Q_PROPERTY(EffectFamily effectFamily READ prop_effectFamily NOTIFY effectFamilyChanged);
+    Q_PROPERTY(bool useVendorUI READ useVendorUI NOTIFY useVendorUIChanged FINAL);
+    Q_PROPERTY(ViewerComponentType viewerComponentType READ viewerComponentType NOTIFY viewerComponentTypeChanged FINAL);
 
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectsProvider> effectsProvider;
+    muse::Inject<IEffectsConfiguration> configuration;
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<muse::ui::INavigationController> navigationController;
 
 public:
     Q_INVOKABLE void load();
+    Q_INVOKABLE void refreshUIMode();
 
     RealtimeEffectViewerDialogModel(QObject* parent = nullptr);
     ~RealtimeEffectViewerDialogModel() override;
@@ -62,6 +84,9 @@ public:
 
     EffectFamily prop_effectFamily() const;
 
+    bool useVendorUI() const;
+    ViewerComponentType viewerComponentType() const;
+
 signals:
     void trackNameChanged();
     void titleChanged();
@@ -70,6 +95,8 @@ signals:
     void dialogViewChanged();
     void navigationPanelChanged();
     void effectFamilyChanged();
+    void useVendorUIChanged();
+    void viewerComponentTypeChanged();
 
 private:
     void subscribe();

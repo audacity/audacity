@@ -2,3 +2,4 @@ module Audacity.Effects
 BypassEffectButton 1.0 BypassEffectButton.qml
 EffectPresetsBar 1.0 EffectPresetsBar.qml
 EffectStyledDialogView 1.0 EffectStyledDialogView.qml
+GeneratedEffectViewer 1.0 GeneratedEffectViewer.qml

@@ -15,20 +15,23 @@ void EffectManageMenu::load()
     const EffectInstanceId instanceId = m_instanceId.toULongLong();
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
 
-    // subscribe on user presets change
+    // Subscribe on user presets change (replace subscription each time with new effectId/instanceId)
     presetsController()->userPresetsChanged().onReceive(this, [this, effectId, instanceId](const EffectId& eid) {
         if (effectId != eid) {
             return;
         }
 
         reload(effectId, instanceId);
-    });
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     reload(effectId, instanceId);
 }
 
 void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& instanceId)
 {
+    assert(!effectId.empty());
+    assert(instanceId != 0);
+
     MenuItemList items;
     QVariantList presets;
 
@@ -138,6 +141,22 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
         items << item;
     }
 
+    // UI Mode toggle - only for external plugins (VST3, LV2, Audio Units...)
+    // Built-in effects don't have a "Vendor UI" concept
+    {
+        const EffectMeta effectMeta = effectsProvider()->meta(effectId);
+        const bool isExternalPlugin = effectMeta.family != EffectFamily::Builtin
+                                      && effectMeta.family != EffectFamily::Unknown;
+
+        if (isExternalPlugin) {
+            items << makeSeparator();
+            ActionQuery q("action://effects/toggle_vendor_ui");
+            q.addParam("effectId", Val(effectId.toStdString()));
+            MenuItem* item = makeMenuItem(q.toString());
+            items << item;
+        }
+    }
+
     setItems(items);
     m_presets = presets;
     emit presetsChanged();
@@ -196,4 +215,33 @@ void EffectManageMenu::savePresetAs()
     dispatcher()->dispatch(q);
     emit presetsChanged();
     emit presetChanged();
+}
+
+bool EffectManageMenu::useVendorUI() const
+{
+    const EffectInstanceId instanceId = m_instanceId.toULongLong();
+    if (instanceId == 0) {
+        return true; // Default to vendor UI
+    }
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
+    if (effectId.empty()) {
+        return true; // Default to vendor UI
+    }
+    return configuration()->effectUIMode(effectId) == EffectUIMode::VendorUI;
+}
+
+void EffectManageMenu::setUseVendorUI(const bool value)
+{
+    const EffectInstanceId instanceId = m_instanceId.toULongLong();
+    if (instanceId == 0) {
+        return;
+    }
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
+    if (effectId.empty()) {
+        return;
+    }
+
+    const EffectUIMode mode = value ? EffectUIMode::VendorUI : EffectUIMode::FallbackUI;
+    configuration()->setEffectUIMode(effectId, mode);
+    emit useVendorUIChanged();
 }
