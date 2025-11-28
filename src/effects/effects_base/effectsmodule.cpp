@@ -25,7 +25,7 @@
 
 #include "view/effectmanagemenu.h"
 #include "view/effectsuiengine.h"
-#include "view/effectviewerdialogmodel.h"
+#include "view/destructiveeffectviewerdialogmodel.h"
 #include "view/realtimeeffectviewerdialogmodel.h"
 
 using namespace au::effects;
@@ -64,7 +64,7 @@ void EffectsModule::resolveImports()
 {
     auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
     if (ir) {
-        ir->registerQmlUri(muse::Uri("audacity://effects/effect_viewer"), "Audacity/Effects/EffectsViewerDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://effects/destructive_viewer"), "Audacity/Effects/DestructiveEffectsViewerDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://effects/realtime_viewer"), "Audacity/Effects/RealtimeEffectViewerDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://effects/presets/input_name"), "Audacity/Effects/PresetNameDialog.qml");
     }
@@ -78,7 +78,7 @@ void EffectsModule::registerResources()
 void EffectsModule::registerUiTypes()
 {
     qmlRegisterType<EffectManageMenu>("Audacity.Effects", 1, 0, "EffectManageMenu");
-    qmlRegisterType<EffectViewerDialogModel>("Audacity.Effects", 1, 0, "EffectViewerDialogModel");
+    qmlRegisterType<DestructiveEffectViewerDialogModel>("Audacity.Effects", 1, 0, "DestructiveEffectViewerDialogModel");
     qmlRegisterType<RealtimeEffectViewerDialogModel>("Audacity.Effects", 1, 0, "RealtimeEffectViewerDialogModel");
     qmlRegisterUncreatableType<EffectFamilies>("Audacity.Effects", 1, 0, "EffectFamily", "Not creatable from QML");
     qmlRegisterUncreatableType<ViewerComponentTypes>("Audacity.Effects", 1, 0, "ViewerComponentType", "Not creatable from QML");

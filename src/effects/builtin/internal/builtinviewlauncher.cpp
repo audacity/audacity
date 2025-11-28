@@ -14,7 +14,7 @@ using namespace au::effects;
 
 muse::Ret BuiltinViewLauncher::showEffect(const EffectInstanceId& instanceId) const
 {
-    muse::UriQuery uri(EFFECT_VIEWER_URI);
+    muse::UriQuery uri(DESTRUCTIVE_VIEWER_URI);
     uri.addParam("instanceId", muse::Val(instanceId));
     uri.addParam("effectFamily", muse::Val(EffectFamily::Builtin));
     return interactive()->openSync(uri).ret;

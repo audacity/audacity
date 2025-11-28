@@ -1,16 +1,16 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "effectviewerdialogmodel.h"
+#include "destructiveeffectviewerdialogmodel.h"
 #include "log.h"
 
 namespace au::effects {
-EffectViewerDialogModel::EffectViewerDialogModel(QObject* parent)
+DestructiveEffectViewerDialogModel::DestructiveEffectViewerDialogModel(QObject* parent)
     : QObject(parent)
 {
 }
 
-void EffectViewerDialogModel::load()
+void DestructiveEffectViewerDialogModel::load()
 {
     configuration()->effectUIModeChanged().onNotify(this, [this] {
         emit useVendorUIChanged();
@@ -18,17 +18,17 @@ void EffectViewerDialogModel::load()
     });
 }
 
-QString EffectViewerDialogModel::title() const
+QString DestructiveEffectViewerDialogModel::title() const
 {
     return m_title;
 }
 
-int EffectViewerDialogModel::instanceId() const
+int DestructiveEffectViewerDialogModel::instanceId() const
 {
     return m_instanceId;
 }
 
-void EffectViewerDialogModel::setInstanceId(int newInstanceId)
+void DestructiveEffectViewerDialogModel::setInstanceId(int newInstanceId)
 {
     if (m_instanceId == newInstanceId) {
         return;
@@ -44,7 +44,7 @@ void EffectViewerDialogModel::setInstanceId(int newInstanceId)
     emit viewerComponentTypeChanged();
 }
 
-bool EffectViewerDialogModel::useVendorUI() const
+bool DestructiveEffectViewerDialogModel::useVendorUI() const
 {
     if (m_effectId.empty()) {
         return true; // Default to vendor UI
@@ -53,13 +53,13 @@ bool EffectViewerDialogModel::useVendorUI() const
     return result;
 }
 
-void EffectViewerDialogModel::refreshUIMode()
+void DestructiveEffectViewerDialogModel::refreshUIMode()
 {
     emit useVendorUIChanged();
     emit viewerComponentTypeChanged();
 }
 
-EffectFamily EffectViewerDialogModel::effectFamily() const
+EffectFamily DestructiveEffectViewerDialogModel::effectFamily() const
 {
     if (m_effectId.empty()) {
         return EffectFamily::Unknown;
@@ -68,7 +68,7 @@ EffectFamily EffectViewerDialogModel::effectFamily() const
     return meta.family;
 }
 
-ViewerComponentType EffectViewerDialogModel::viewerComponentType() const
+ViewerComponentType DestructiveEffectViewerDialogModel::viewerComponentType() const
 {
     const EffectFamily family = effectFamily();
 
