@@ -33,7 +33,7 @@
 class UpdateManager final : public wxEvtHandler, public PrefsListener
 {
 public:
-    UpdateManager() = default;
+    UpdateManager();
 
     static UpdateManager& GetInstance();
     static void Start(bool suppressModal);
@@ -76,6 +76,7 @@ private:
 
     std::mutex mUpdateMutex;
     bool mOnProgress{ false };
+    bool mSendAnonymousUsageInfo{ false };
 
 public:
     DECLARE_EVENT_TABLE()
