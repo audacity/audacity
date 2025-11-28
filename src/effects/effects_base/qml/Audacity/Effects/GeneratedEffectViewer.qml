@@ -70,7 +70,7 @@ Rectangle {
         }
     }
 
-    // Dummy methods to match the interface expected by EffectsViewerDialog
+    // Dummy methods to match the interface expected by DestructiveEffectsViewerDialog
     function preview() {
         console.log("GeneratedEffectViewer: preview() called")
     }

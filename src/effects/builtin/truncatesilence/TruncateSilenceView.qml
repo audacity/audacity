@@ -12,7 +12,7 @@ BuiltinEffectBase {
     id: root
 
     width: prv.desiredWidth - (2 * prv.spaceXL) // we need to remove the padding from the dialog desired width
-    implicitHeight: mainColumn.height // see with EffectsViewerDialog.qml
+    implicitHeight: mainColumn.height // see with DestructiveEffectsViewerDialog.qml
 
     property string title: truncateSilence.effectTitle()
     property bool isApplyAllowed: true
