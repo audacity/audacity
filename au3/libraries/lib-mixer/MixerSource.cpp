@@ -15,9 +15,8 @@
 
 #include "AudioGraphBuffers.h"
 #include "Envelope.h"
-#include "Resample.h"
+#include "au3-math/float_cast.h"
 #include "WideSampleSequence.h"
-#include "float_cast.h"
 
 namespace {
 template<typename T, typename F> std::vector<T>

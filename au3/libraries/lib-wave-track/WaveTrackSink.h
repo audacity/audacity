@@ -16,9 +16,8 @@
 #define __AUDACITY_WAVE_TRACK_SINK__
 
 #include "AudioGraphSink.h" // to inherit
-#include "SampleCount.h"
-#include "SampleFormat.h"
-#include <memory>
+#include "au3-math/SampleCount.h"
+#include "au3-math/SampleFormat.h"
 
 class WaveChannel;
 class WaveTrack;

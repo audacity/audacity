@@ -4,7 +4,7 @@
 #include "defaultplaybackpolicy.h"
 
 #include "ProjectAudioIO.h"
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 #include "ViewInfo.h"
 #include "log.h"
 

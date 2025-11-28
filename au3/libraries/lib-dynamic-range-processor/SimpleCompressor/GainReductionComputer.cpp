@@ -18,6 +18,10 @@
 
 #include "GainReductionComputer.h"
 #include "MathApprox.h"
+// Linux requires explicit include for std::abs
+#ifdef __linux__
+#include <cmath>
+#endif
 
 namespace DanielRudrich {
 namespace {

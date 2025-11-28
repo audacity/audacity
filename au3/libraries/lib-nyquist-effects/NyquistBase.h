@@ -10,7 +10,7 @@
 #pragma once
 
 #include "FileNames.h"
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 #include "StatefulEffect.h"
 #include "WaveChannelViewConstants.h"
 

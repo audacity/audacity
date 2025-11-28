@@ -16,7 +16,7 @@
 
 // Clang will fail to instantiate a variant if sampleCount is forward declared
 // It tries to instantiate std::invoke_result for some reason
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 
 //! Utility class to calculate sample range for a given column
 class WAVE_TRACK_PAINT_API PixelSampleMapper final

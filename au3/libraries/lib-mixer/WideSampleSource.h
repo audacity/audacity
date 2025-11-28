@@ -15,7 +15,7 @@
 #define __AUDACITY_WIDE_SAMPLE_SOURCE__
 
 #include "AudioGraphSource.h" // to inherit
-#include "SampleCount.h"
+#include "au3-math/SampleCount.h"
 #include <functional>
 
 class WideSampleSequence;
