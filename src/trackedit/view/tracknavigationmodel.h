@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ui/qml/Muse/Ui/navigationsection.h"
-#include "ui/qml/Muse/Ui/navigationpanel.h"
+#include "ui/view/navigationsection.h"
+#include "ui/view/navigationpanel.h"
 #include "global/async/asyncable.h"
 
 #include "global/modularity/ioc.h"

@@ -24,7 +24,7 @@
 
 #include <QPainter>
 
-#include "uicomponents/qml/Muse/UiComponents/quickpaintedview.h"
+#include "uicomponents/view/quickpaintedview.h"
 
 namespace au::project {
 class PixmapProjectThumbnailView : public muse::uicomponents::QuickPaintedView
