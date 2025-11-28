@@ -2,9 +2,6 @@
 A UI-agnostic, high-level library implementing the behavior of Audacity.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    AudacityApplicationLogic.cpp
    AudacityApplicationLogic.h

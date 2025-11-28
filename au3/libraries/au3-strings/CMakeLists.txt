@@ -13,9 +13,6 @@ implicitly interconvert with wxString.
 This library depends only on the wxBase subset of wxWidgets.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    Base64.h
    Base64.cpp

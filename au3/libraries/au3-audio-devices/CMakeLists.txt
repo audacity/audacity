@@ -10,9 +10,6 @@ purposes.
 Does not contain an audio engine.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    AudioIOBase.cpp
    AudioIOBase.h

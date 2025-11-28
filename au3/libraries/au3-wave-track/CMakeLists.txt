@@ -16,9 +16,6 @@ Some other utilities related to wave tracks are also included.  MixAndRender
 and WaveTrackSink make new WaveTrack objects.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    SampleBlock.cpp
    SampleBlock.h

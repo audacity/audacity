@@ -14,9 +14,6 @@ standards.  It also provides other pervasively used utilities that don't
 correspond to things in the standard.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    AppEvents.cpp
    AppEvents.h

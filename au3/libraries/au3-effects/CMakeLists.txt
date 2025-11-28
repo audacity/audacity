@@ -2,9 +2,6 @@
 Framework for destructive application of effects, generators, analyzers
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    EffectBase.cpp
    EffectBase.h

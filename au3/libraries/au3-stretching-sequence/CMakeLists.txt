@@ -6,9 +6,6 @@ Please refer to this directory's readme for a presentation of the constraints
 inherent to such an implementation.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    AudioSegment.cpp
    AudioSegment.h

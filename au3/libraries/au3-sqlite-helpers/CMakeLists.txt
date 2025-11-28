@@ -5,9 +5,6 @@
 A set of helpers for working with sqlite databases.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    sqlite/Blob.cpp
    sqlite/Blob.h

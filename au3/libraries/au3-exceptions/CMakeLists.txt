@@ -15,9 +15,6 @@ to catch all otherwise uncaught exceptions. That is a responsibility of high
 level code.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    AudacityException.cpp
    AudacityException.h

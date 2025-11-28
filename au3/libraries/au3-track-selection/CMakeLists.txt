@@ -10,9 +10,6 @@ Also the logic to set and get the unique focused track of the project, with a
 callback interface for screen reader notifications.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    SelectionState.cpp
    SelectionState.h

@@ -2,9 +2,6 @@
 Library for Music Information Retrieval (MIR) algorithms.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    DecimatingMirAudioReader.cpp
    DecimatingMirAudioReader.h

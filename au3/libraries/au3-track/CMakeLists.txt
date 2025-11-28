@@ -17,9 +17,6 @@ which describe what certain effects do to one track, so the warp might be
 reapplied to another track that must stay synchronized.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    ChannelAttachments.cpp
    ChannelAttachments.h
