@@ -2,9 +2,6 @@
 The registry of pages in the Preferences dialog and some of those pages
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    LibraryPrefs.cpp
    LibraryPrefs.h

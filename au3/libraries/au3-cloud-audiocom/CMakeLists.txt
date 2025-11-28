@@ -2,9 +2,6 @@
 A library, that allows uploading to audio.com sharing service
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( TARGET au3-cloud-audiocom )
 set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 

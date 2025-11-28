@@ -3,9 +3,6 @@ Part of the audio engine, specializing in the management of effect stacks
 and application of effect transformations to buffers of samples.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    RealtimeEffectList.cpp
    RealtimeEffectList.h

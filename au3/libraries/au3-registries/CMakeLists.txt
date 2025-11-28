@@ -27,9 +27,6 @@ computes the merging of trees, and supports visitation.  It is used notably
 by the tree of menus, allowing insertion of menu items in decoupled code.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    AttachedVirtualFunction.h
    ClientData.cpp

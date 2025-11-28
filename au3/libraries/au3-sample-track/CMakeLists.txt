@@ -8,9 +8,6 @@ These interfaces are sufficient for the audio engine to play and record tracks,
 so the engine will not depend on a particular realization of sample storage.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    SampleTrack.cpp
    SampleTrack.h

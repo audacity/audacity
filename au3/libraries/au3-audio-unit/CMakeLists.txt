@@ -2,9 +2,6 @@
 AudioUnit effect processing logic, minus user interface
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    AudioUnitEffectBase.cpp
    AudioUnitEffectBase.h

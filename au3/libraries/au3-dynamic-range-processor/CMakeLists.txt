@@ -2,9 +2,6 @@
 Dynamic-range processor and utilities
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    CompressorProcessor.cpp
    CompressorProcessor.h

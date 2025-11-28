@@ -5,9 +5,6 @@ objects attached to a host object.  The template is parametrized by the host
 type.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    XMLAttributeValueView.cpp
    XMLAttributeValueView.h

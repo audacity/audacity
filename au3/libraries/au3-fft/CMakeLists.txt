@@ -6,9 +6,6 @@ Note -- this cannot be combined with au3-math, which depends on libsoxr, which
 includes a different version of pffft.h
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    FFT.cpp
    FFT.h

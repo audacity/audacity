@@ -2,9 +2,6 @@
 A track that holds MIDI data.  Playback of MIDI.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 if( NOT TARGET portsmf )
    addlib( portsmf            portsmf     PORTSMF     NO    YES   "portSMF >= 0.1" )
 endif()

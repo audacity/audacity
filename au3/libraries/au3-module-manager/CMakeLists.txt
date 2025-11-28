@@ -6,9 +6,6 @@ Maintains persistent data in the configuration file for enablement of modules
 and plug-ins, and preferred settings.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    AsyncPluginValidator.cpp
    AsyncPluginValidator.h

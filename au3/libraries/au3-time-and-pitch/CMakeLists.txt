@@ -4,9 +4,6 @@ Provides time-stretching and pitch-shifting functionality.
 Based on the more versatile time-stretching from StaffPad, but tailored for the needs of Audacity.
 ]]
 
-# Include AU3 compatibility macros
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../au3defs.cmake)
-
 set( SOURCES
    StaffPad/CircularSampleBuffer.h
    StaffPad/FourierTransform_pffft.cpp
