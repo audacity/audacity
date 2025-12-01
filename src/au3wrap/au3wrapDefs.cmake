@@ -27,11 +27,6 @@ set(IMPORT_EXPORT_MODULE ${AU3_MODULES}/import-export)
 set(_AU3_API_DEFS "")
 if(DEFINED AU3_ALL_LIBRARIES)
     foreach(lib ${AU3_ALL_LIBRARIES})
-        # Skip non-library entries like image-compiler
-        if(lib STREQUAL "image-compiler")
-            continue()
-        endif()
-
         # Generate API macro for this library (same logic as in au3defs.cmake)
         import_export_symbol(api_symbol "${lib}")
         list(APPEND _AU3_API_DEFS -D${api_symbol}=)
