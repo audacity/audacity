@@ -7,10 +7,9 @@
 #include <QStringList>
 #include <optional>
 
-#include "logger.h"
-
-#include "global/iapplication.h"
-#include "io/path.h"
+#include "framework/global/logger.h"
+#include "framework/global/iapplication.h"
+#include "framework/global/io/path.h"
 
 class QCoreApplication;
 
