@@ -121,11 +121,11 @@ set(AU3_LINK
     libmp3lame::libmp3lame # used by mod-mp3 not yet a library
     wavpack::wavpack # used by mod-wavpack not yet a library
     mpg123::libmpg123 # used by mod-mpg123 not yet a library
-#    SndFile::sndfile # TODO: mod-pcm
-#    Vorbis::vorbis # TODO: mod-ogg AND/OR mod-opus
-#    FLAC::FLAC # TODO: mod-flac
-#    Ogg::ogg # TODO: mod-ogg AND/OR mod-opus
-#    Opus::opus # TODO: mod-opus
+    SndFile::sndfile # mod-pcm
+    Vorbis::vorbis # mod-ogg AND/OR mod-opus
+    FLAC::FLAC # mod-flac
+    Ogg::ogg # mod-ogg AND/OR mod-opus
+    Opus::opus # mod-opus
 )
 
 set(WXBASE_DEFS
