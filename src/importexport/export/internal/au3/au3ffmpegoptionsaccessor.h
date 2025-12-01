@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "ExportFFmpegOptions.h"
+#include "mod-ffmpeg/ExportFFmpegOptions.h"
 
 #include "iffmpegoptionsaccessor.h"
 

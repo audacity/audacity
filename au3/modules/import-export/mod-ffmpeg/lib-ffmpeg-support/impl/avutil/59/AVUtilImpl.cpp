@@ -16,10 +16,10 @@ extern "C"
 
 #include <wx/log.h>
 
-#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/FFmpegFunctions.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/FFmpegFunctions.h"
 
-#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/wrappers/AVChannelLayoutWrapper.h"
-#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/wrappers/AVFrameWrapper.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/wrappers/AVChannelLayoutWrapper.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/wrappers/AVFrameWrapper.h"
 
 #include "../../FFmpegAPIResolver.h"
 #include "../../FFmpegLog.h"

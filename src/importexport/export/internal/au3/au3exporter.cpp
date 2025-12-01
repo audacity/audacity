@@ -11,7 +11,7 @@
 #include "au3-tags/Tags.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
-#include "modules/import-export/RegisterExportPlugins.h"
+#include "RegisterExportPlugins.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"

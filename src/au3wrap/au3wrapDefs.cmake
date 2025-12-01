@@ -105,13 +105,11 @@ set(AU3_INCLUDE
     # also include the Generated config.h for SBSMS
     ${CMAKE_BINARY_DIR}/src/au3wrap/au3-sbsms/private
 
-    ${AUDACITY_ROOT}
-
     # AU3 libraries directory for namespaced includes like #include "au3-tags/Tags.h"
     ${AU3_LIBRARIES}
 
-    # FFmpeg module (not yet converted to library)
-    ${IMPORT_EXPORT_MODULE}/mod-ffmpeg
+    # for modules like mod-mp3, mod-ffmpeg that are still compiled as sources
+    ${IMPORT_EXPORT_MODULE}
 )
 
 set(WXBASE_RESTRICTIONS
