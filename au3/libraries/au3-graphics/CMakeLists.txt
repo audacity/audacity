@@ -2,6 +2,8 @@
 A library responsible for custom rendering in Audacity
 ]]
 
+set( TARGET au3-graphics )
+
 set( SOURCES
    FrameStatistics.cpp
    FrameStatistics.h
@@ -15,6 +17,6 @@ set( LIBRARIES
    PRIVATE
       au3-utility-interface
 )
-audacity_library( au3-graphics "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

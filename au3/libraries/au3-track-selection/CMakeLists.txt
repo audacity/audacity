@@ -10,6 +10,8 @@ Also the logic to set and get the unique focused track of the project, with a
 callback interface for screen reader notifications.
 ]]
 
+set( TARGET au3-track-selection )
+
 set( SOURCES
    SelectionState.cpp
    SelectionState.h
@@ -21,6 +23,6 @@ set( SOURCES
 set( LIBRARIES
    au3-time-frequency-selection-interface
 )
-audacity_library( au3-track-selection "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

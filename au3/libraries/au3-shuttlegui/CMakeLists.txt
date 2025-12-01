@@ -25,6 +25,8 @@ defined, scattered, in plug-ins instead of hard-coded
 Non-intrusive definition of more kinds of visitations of the dialog description
 ]]
 
+set( TARGET au3-shuttlegui )
+
 set( SOURCES
    ReadOnlyText.h
    ShuttleGui.cpp
@@ -37,6 +39,6 @@ set( LIBRARIES
    au3-theme-interface
    au3-wx-wrappers-interface
 )
-audacity_library( au3-shuttlegui "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

@@ -2,6 +2,8 @@
 A library of mathematical utilities and manipulation of samples
 ]]
 
+set( TARGET au3-math )
+
 set( SOURCES
    Biquad.cpp
    Biquad.h
@@ -32,6 +34,6 @@ set( LIBRARIES
    PRIVATE
    soxr
 )
-audacity_library( au3-math "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

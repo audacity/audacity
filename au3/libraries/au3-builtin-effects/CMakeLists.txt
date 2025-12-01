@@ -2,6 +2,8 @@
 Library of built-in effects. Implement the UI-agnostic APIs of au3-effects.
 ]]
 
+set( TARGET au3-builtin-effects )
+
 set( SOURCES
 #   AmplifyBase.cpp
 #   AmplifyBase.h
@@ -92,6 +94,6 @@ set( LIBRARIES
    $<$<BOOL:${USE_SBSMS}>:libsbsms>
    $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
 )
-audacity_library( au3-builtin-effects "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

@@ -14,6 +14,8 @@ FileConfig decorates wxFileConfig, with a member function to
 alert the user of failure to initialize it (as when the file is read-only).
 ]]
 
+set( TARGET au3-preferences )
+
 set( SOURCES
    BasicSettings.cpp
    BasicSettings.h
@@ -24,6 +26,6 @@ set( LIBRARIES
    au3-basic-ui-interface
    au3-components-interface
 )
-audacity_library( au3-preferences "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

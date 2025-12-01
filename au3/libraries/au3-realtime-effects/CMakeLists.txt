@@ -3,6 +3,8 @@ Part of the audio engine, specializing in the management of effect stacks
 and application of effect transformations to buffers of samples.
 ]]
 
+set( TARGET au3-realtime-effects )
+
 set( SOURCES
    RealtimeEffectList.cpp
    RealtimeEffectList.h
@@ -19,6 +21,6 @@ set( LIBRARIES
    au3-module-manager-interface
    au3-project-history-interface
 )
-audacity_library( au3-realtime-effects "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

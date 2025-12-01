@@ -2,6 +2,8 @@
 A UI-agnostic, high-level library implementing the behavior of Audacity.
 ]]
 
+set( TARGET au3-audacity-application-logic )
+
 set( SOURCES
    AudacityApplicationLogic.cpp
    AudacityApplicationLogic.h
@@ -14,6 +16,6 @@ set( LIBRARIES
    au3-project-file-io-interface
    au3-viewport-interface
 )
-audacity_library( au3-audacity-application-logic "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

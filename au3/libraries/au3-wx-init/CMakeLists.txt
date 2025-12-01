@@ -3,6 +3,8 @@ Startup time injections of wxWidgets based implementations of services behind
 toolkit-neutral facades
 ]]
 
+set( TARGET au3-wx-init )
+
 set( SOURCES
    AccessibleLinksFormatter.cpp
    AccessibleLinksFormatter.h
@@ -55,6 +57,6 @@ set( LIBRARIES
    au3-sentry-reporting-interface
 )
 
-audacity_library( au3-wx-init "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

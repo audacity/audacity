@@ -13,6 +13,8 @@ set the pointer.  If it does not, then calls to the non-member functions in
 namespace BasicUI are no-ops.
 ]]
 
+set( TARGET au3-basic-ui )
+
 set( SOURCES
    BasicUI.cpp
    BasicUI.h
@@ -21,6 +23,6 @@ set( SOURCES
 set( LIBRARIES
    au3-strings-interface
 )
-audacity_library( au3-basic-ui "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

@@ -3,6 +3,8 @@
 Library, responsible for handling custom URL scemas.
 ]]
 
+set( TARGET au3-url-schemes )
+
 set( SOURCES
    URLSchemesRegistry.cpp
    URLSchemesRegistry.h
@@ -20,6 +22,6 @@ set( LIBRARIES
 
 set ( DEFINES INTERFACE -DHAS_CUSTOM_URL_HANDLING )
 
-audacity_library( au3-url-schemes "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "${DEFINES}" ""
 )

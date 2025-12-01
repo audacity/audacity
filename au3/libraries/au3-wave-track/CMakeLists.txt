@@ -16,6 +16,8 @@ Some other utilities related to wave tracks are also included.  MixAndRender
 and WaveTrackSink make new WaveTrack objects.
 ]]
 
+set( TARGET au3-wave-track )
+
 set( SOURCES
    SampleBlock.cpp
    SampleBlock.h
@@ -44,7 +46,7 @@ set( LIBRARIES
    au3-stretching-sequence-interface
    au3-track-selection-interface
 )
-audacity_library( au3-wave-track "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
 

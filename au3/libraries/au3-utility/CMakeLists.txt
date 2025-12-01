@@ -14,6 +14,8 @@ standards.  It also provides other pervasively used utilities that don't
 correspond to things in the standard.
 ]]
 
+set( TARGET au3-utility )
+
 set( SOURCES
    AppEvents.cpp
    AppEvents.h
@@ -65,6 +67,6 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set( LIBRARIES PRIVATE ${CORE_FOUNDATION})
 endif()
 
-audacity_library( au3-utility "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

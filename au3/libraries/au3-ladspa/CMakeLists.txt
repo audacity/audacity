@@ -2,6 +2,8 @@
 Ladspa effect plugin discovery and processing logic, without user interface
 ]]
 
+set( TARGET au3-ladspa )
+
 if( "${${_OPT}use_ladspa}" )
 
 set( SOURCES
@@ -16,7 +18,7 @@ set( SOURCES
 set( LIBRARIES
    au3-effects-interface
 )
-audacity_library( au3-ladspa "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
 

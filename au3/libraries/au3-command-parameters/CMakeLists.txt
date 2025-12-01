@@ -3,6 +3,8 @@ Facilities for defining and visiting the heterogenously typed parameters of an
 effect, or command
 ]]
 
+set( TARGET au3-command-parameters )
+
 set( SOURCES
    ShuttleAutomation.cpp
    ShuttleAutomation.h
@@ -14,7 +16,7 @@ set( SOURCES
 set( LIBRARIES
    au3-preferences-interface
 )
-audacity_library( au3-command-parameters "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
 

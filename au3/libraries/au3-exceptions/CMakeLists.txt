@@ -15,6 +15,8 @@ to catch all otherwise uncaught exceptions. That is a responsibility of high
 level code.
 ]]
 
+set( TARGET au3-exceptions )
+
 set( SOURCES
    AudacityException.cpp
    AudacityException.h
@@ -35,6 +37,6 @@ if( APPLE AND MIN_MACOS_VERSION VERSION_LESS "10.12")
    )
 endif()
 
-audacity_library( au3-exceptions "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "${DEFINITIONS}" ""
 )

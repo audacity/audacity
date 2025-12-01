@@ -6,6 +6,8 @@ Please refer to this directory's readme for a presentation of the constraints
 inherent to such an implementation.
 ]]
 
+set( TARGET au3-stretching-sequence )
+
 set( SOURCES
    AudioSegment.cpp
    AudioSegment.h
@@ -34,6 +36,6 @@ set( LIBRARIES
    au3-mixer
    au3-time-and-pitch
 )
-audacity_library( au3-stretching-sequence "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

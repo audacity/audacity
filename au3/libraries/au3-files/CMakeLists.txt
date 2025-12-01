@@ -8,6 +8,8 @@ for temporary projects.
 Also the global logger which can save to a file.
 ]]
 
+set( TARGET au3-files )
+
 set( SOURCES
    AudacityLogger.cpp
    AudacityLogger.h
@@ -34,4 +36,4 @@ set(DEFINES
    PRIVATE
       -DAUDACITY_VERSION=${AUDACITY_VERSION}
 )
-audacity_library( au3-files "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "")
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "")

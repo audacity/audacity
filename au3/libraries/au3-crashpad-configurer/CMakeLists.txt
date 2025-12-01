@@ -3,6 +3,8 @@ This library provides an interface to configure and start Crashpad handler
 in a platform independent way.
 ]]
 
+set( TARGET au3-crashpad-configurer )
+
 set(SOURCES
    CrashpadConfigurer.h
    CrashpadConfigurer.cpp
@@ -20,4 +22,4 @@ set(DEFINES
       -DUSE_CRASHPAD
 )
 
-audacity_library( au3-crashpad-configurer "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "" )
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "" )

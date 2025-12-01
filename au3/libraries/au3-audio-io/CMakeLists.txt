@@ -7,6 +7,8 @@ Includes ability to transform the played-back sample streams with effects in
 realtime.
 ]]
 
+set( TARGET au3-audio-io )
+
 set( SOURCES
    AudioIO.cpp
    AudioIO.h
@@ -27,6 +29,6 @@ set( LIBRARIES
    au3-project-rate-interface
    au3-realtime-effects
 )
-audacity_library( au3-audio-io "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

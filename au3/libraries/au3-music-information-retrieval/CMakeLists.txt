@@ -2,6 +2,8 @@
 Library for Music Information Retrieval (MIR) algorithms.
 ]]
 
+set( TARGET au3-music-information-retrieval )
+
 set( SOURCES
    DecimatingMirAudioReader.cpp
    DecimatingMirAudioReader.h
@@ -26,6 +28,6 @@ PUBLIC
    au3-file-formats-interface
 )
 
-audacity_library( au3-music-information-retrieval "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

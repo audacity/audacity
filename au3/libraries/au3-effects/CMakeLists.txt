@@ -2,6 +2,8 @@
 Framework for destructive application of effects, generators, analyzers
 ]]
 
+set( TARGET au3-effects )
+
 set( SOURCES
    EffectBase.cpp
    EffectBase.h
@@ -33,6 +35,6 @@ set( LIBRARIES
    au3-stretching-sequence-interface
    au3-wave-track-interface
 )
-audacity_library( au3-effects "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

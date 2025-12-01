@@ -5,6 +5,8 @@
 A set of concurrency primitives
 ]]
 
+set( TARGET au3-concurrency )
+
 set( SOURCES
    concurrency/CancellationContext.cpp
    concurrency/CancellationContext.h
@@ -13,5 +15,5 @@ set( SOURCES
 set( LIBRARIES
    PUBLIC
 )
-audacity_library( au3-concurrency "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" "" )

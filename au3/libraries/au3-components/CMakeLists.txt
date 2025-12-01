@@ -8,6 +8,8 @@ string.  It serves to "name" various things.
 CommandParameters, for write and reading key-value pairs to and from strings.
 ]]
 
+set( TARGET au3-components )
+
 set( SOURCES
    ComponentInterface.cpp
    ComponentInterface.h
@@ -25,6 +27,6 @@ set( LIBRARIES
    au3-strings-interface
    au3-utility
 )
-audacity_library( au3-components "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

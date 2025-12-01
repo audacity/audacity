@@ -2,6 +2,8 @@
 A library responsible for custom rendering in Audacity
 ]]
 
+set( TARGET au3-wave-track-paint )
+
 set( SOURCES
    GraphicsDataCache.cpp
    GraphicsDataCache.h
@@ -29,6 +31,6 @@ set( LIBRARIES
       au3-graphics-interface
       au3-wave-track-interface
 )
-audacity_library( au3-wave-track-paint "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

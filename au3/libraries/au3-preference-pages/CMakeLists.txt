@@ -2,6 +2,8 @@
 The registry of pages in the Preferences dialog and some of those pages
 ]]
 
+set( TARGET au3-preference-pages )
+
 set( SOURCES
    LibraryPrefs.cpp
    LibraryPrefs.h
@@ -13,6 +15,6 @@ set( LIBRARIES
    au3-shuttlegui-interface
    au3-wx-wrappers-interface
 )
-audacity_library( au3-preference-pages "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

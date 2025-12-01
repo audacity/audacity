@@ -2,6 +2,8 @@
 LV2 effect plugin discovery and processing logic, without user interface
 ]]
 
+set( TARGET au3-lv2 )
+
 set( SOURCES
    LV2EffectBase.cpp
    LV2EffectBase.h
@@ -31,6 +33,6 @@ set( LIBRARIES
    au3-effects-interface
    lv2
 )
-audacity_library( au3-lv2 "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

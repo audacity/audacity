@@ -2,6 +2,8 @@
 A library holding image and color data for the four built-in themes
 ]]
 
+set( TARGET au3-theme-resources )
+
 # Names of the image files (and Colors.txt) expected in each theme
 set( IMAGE_LIST
    AnonymousUser.png
@@ -203,6 +205,6 @@ set( SOURCES
 set( LIBRARIES
    au3-theme-interface
  )
-audacity_library( au3-theme-resources "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

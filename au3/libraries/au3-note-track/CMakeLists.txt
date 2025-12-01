@@ -2,6 +2,8 @@
 A track that holds MIDI data.  Playback of MIDI.
 ]]
 
+set( TARGET au3-note-track )
+
 set( SOURCES
    MIDIPlay.cpp
    MIDIPlay.h
@@ -15,6 +17,6 @@ set( LIBRARIES
    portmidi::portmidi
    portsmf
 )
-audacity_library( au3-note-track "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

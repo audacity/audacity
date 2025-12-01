@@ -19,6 +19,8 @@ sometimes used with an independent variable that is not time.  Perhaps a base
 class Curve should be extracted from it and lowered into au3-math.
 ]]
 
+set( TARGET au3-mixer )
+
 set( SOURCES
    AudioIOSequences.cpp
    AudioIOSequences.h
@@ -45,6 +47,6 @@ set( LIBRARIES
    au3-audio-graph-interface
    au3-xml-interface
 )
-audacity_library( au3-mixer "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

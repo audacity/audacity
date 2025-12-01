@@ -2,6 +2,8 @@
 VST 2 effect plugin discovery and processing logic, without user interface
 ]]
 
+set( TARGET au3-vst )
+
 set( SOURCES
    VSTEffectBase.cpp
    VSTEffectBase.h
@@ -16,6 +18,6 @@ set( SOURCES
 set( LIBRARIES
    au3-effects-interface
 )
-audacity_library( au3-vst "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

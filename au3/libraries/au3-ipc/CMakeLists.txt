@@ -3,6 +3,8 @@ Small crossplatform IPC library, provides a simple way
 to transfer data/messages between processes.
 ]]
 
+set( TARGET au3-ipc )
+
 set( SOURCES
    IPCChannel.cpp
    IPCChannel.h
@@ -21,6 +23,6 @@ set( LIBRARIES
       $<$<PLATFORM_ID:Windows>:wsock32>
       $<$<PLATFORM_ID:Windows>:ws2_32>
 )
-audacity_library( au3-ipc "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

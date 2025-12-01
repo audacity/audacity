@@ -5,6 +5,8 @@ and SampleBlockFactory subclasses so that au3-wave-track is usable.
 All usage of Sqlite is encapsulated in this library.
 ]]
 
+set( TARGET au3-project-file-io )
+
 set( SOURCES
    ActiveProjects.cpp
    ActiveProjects.h
@@ -37,7 +39,7 @@ list( APPEND LIBRARIES
       au3-sqlite-helpers-interface
 )
 
-audacity_library( au3-project-file-io "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    ""
    ""
 )

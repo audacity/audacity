@@ -2,6 +2,8 @@
 AudioUnit effect processing logic, minus user interface
 ]]
 
+set( TARGET au3-audio-unit )
+
 set( SOURCES
    AudioUnitEffectBase.cpp
    AudioUnitEffectBase.h
@@ -19,7 +21,7 @@ set( LIBRARIES
    au3-effects-interface
     "-framework AudioUnit"
 )
-audacity_library( au3-audio-unit "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
 

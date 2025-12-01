@@ -2,6 +2,8 @@
 Utilities for construction of effect processing pipelines
 ]]
 
+set( TARGET au3-audio-graph )
+
 set( SOURCES
    AudioGraphBuffers.cpp
    AudioGraphBuffers.h
@@ -17,6 +19,6 @@ set( SOURCES
 set( LIBRARIES
    au3-math-interface
 )
-audacity_library( au3-audio-graph "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
