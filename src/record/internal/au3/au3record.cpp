@@ -109,9 +109,17 @@ WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const b
         // count channels in this track
         const auto nChannels = candidate->NChannels();
         if (strictRules && nChannels > recordingChannels) {
-            // The recording would under-fill this track's channels
-            // Can't use any partial accumulated results
-            // either.  Keep looking.
+            const bool stereoTrackMonoInput
+                =(recordingChannels == 1 && nChannels == 2 && candidates.empty());
+            if (stereoTrackMonoInput) {
+                candidates.clear();
+                channelCounts.clear();
+                candidates.push_back(candidate->SharedPointer<Au3WaveTrack>());
+                channelCounts.push_back(nChannels);
+                totalChannels = nChannels;
+                break;
+            }
+
             candidates.clear();
             channelCounts.clear();
             totalChannels = 0;
@@ -133,6 +141,17 @@ WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const b
                 // Done!
                 return candidates;
             }
+        }
+    }
+
+    if (strictRules && !candidates.empty()) {
+        const bool allowDownmix
+            =(recordingChannels == 2 && totalChannels == 1 && candidates.size() == 1);
+        const bool allowUpmix
+            =(recordingChannels == 1 && totalChannels == 2 && candidates.size() == 1
+              && !channelCounts.empty() && channelCounts.front() == 2);
+        if (allowDownmix || allowUpmix) {
+            return candidates;
         }
     }
 

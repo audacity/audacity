@@ -236,6 +236,13 @@ public:
     using RingBuffers = std::vector<std::unique_ptr<RingBuffer> >;
     RingBuffers mCaptureBuffers;
     RecordableSequences mCaptureSequences;
+    struct TrackChannelInfo {
+        size_t sequenceIndex{};
+        size_t channelIndex{};
+    };
+    std::vector<TrackChannelInfo> mCaptureChannelLayout;
+    std::vector<std::vector<size_t>> mTrackChannelSourceMap;
+    bool mCaptureNeedsMixdown{ false };
     //!Buffers that hold outcome of transformations applied to each individual sample source.
     //!Number of buffers equals to the sum of number all source channels.
     std::vector<std::vector<float> > mProcessingBuffers;
@@ -579,6 +586,9 @@ private:
      between threads, to overcome the mismatch of their batch sizes.
      */
     void SequenceBufferExchange();
+
+    void ResetCaptureRouting();
+    void ConfigureCaptureRouting(size_t requestedChannels);
 
     //! First part of SequenceBufferExchange
     void FillPlayBuffers();
