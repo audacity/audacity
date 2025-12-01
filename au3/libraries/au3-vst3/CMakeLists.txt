@@ -36,6 +36,7 @@ set( LIBRARIES
    au3-utility
    au3-effects-interface
    au3-files-interface
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

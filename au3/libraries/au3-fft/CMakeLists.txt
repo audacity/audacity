@@ -28,6 +28,7 @@ PUBLIC
    au3-math-interface
    au3-strings-interface
    au3-utility-interface
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

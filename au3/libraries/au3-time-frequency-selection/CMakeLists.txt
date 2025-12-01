@@ -15,6 +15,7 @@ set( SOURCES
 )
 set( LIBRARIES
    au3-snapping-interface
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

@@ -13,6 +13,7 @@ set( LIBRARIES
    au3-playable-track-interface
    au3-snapping-interface
    au3-track-selection-interface
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

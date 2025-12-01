@@ -41,6 +41,7 @@ PUBLIC
    au3-files-interface
    au3-utility-interface
    pffft
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

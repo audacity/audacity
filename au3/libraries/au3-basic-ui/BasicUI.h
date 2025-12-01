@@ -16,6 +16,8 @@ Paul Licameli
 #include "au3-strings/Identifier.h"
 #include "au3-strings/Internat.h"
 
+class wxString;
+
 namespace BasicUI {
 //! @name Types used in the Services interface
 //! @{

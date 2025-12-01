@@ -16,6 +16,7 @@ set( LIBRARIES
    au3-playable-track-interface
    portmidi::portmidi
    portsmf
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

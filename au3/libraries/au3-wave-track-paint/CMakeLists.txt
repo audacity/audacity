@@ -23,6 +23,7 @@ set( SOURCES
 set( LIBRARIES
    PUBLIC
       au3-utility-interface
+      wxBase
    PRIVATE
       au3-math-interface
       au3-screen-geometry-interface

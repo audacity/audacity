@@ -21,6 +21,7 @@ set( LIBRARIES
    au3-project-interface
    au3-audio-devices-interface
    au3-math-interface
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

@@ -20,6 +20,7 @@ set( LIBRARIES
    au3-math-interface
    au3-module-manager-interface
    au3-project-history-interface
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
