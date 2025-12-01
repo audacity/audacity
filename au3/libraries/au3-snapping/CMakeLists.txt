@@ -10,7 +10,6 @@ This library:
 ]]
 
 set(TARGET au3-snapping)
-set(TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
 set(SOURCES
    details/BeatsSnapFunctions.cpp
