@@ -11,6 +11,7 @@ set(MODULE_TEST_SRC
 
 set(MODULE_TEST_LINK
     effects_base
+    au3-preferences
 )
 
 # AU3 - needed because test files include AU3 headers
