@@ -97,23 +97,19 @@ set(AU3_LINK
     Opus::opus # mod-opus
 )
 
+# Platform-specific wxWidgets definitions and libraries
+# Note: WXBASE_RESTRICTIONS and WXPLATFORM_DEFS are defined in au3defs.cmake (included above)
 set(WXBASE_DEFS
-    # Note: WXBASE_RESTRICTIONS is defined in au3defs.cmake (included above)
-    # and is reused here for AU3 source files compiled directly in au3wrap
     ${WXBASE_RESTRICTIONS}
+    ${WXPLATFORM_DEFS}
 )
 
-include(GetPlatformInfo)
-
-if (OS_IS_LIN)
-    set(WXBASE_DEFS ${WXBASE_DEFS} __WXGTK__)
-elseif(OS_IS_MAC)
-    set(WXBASE_DEFS ${WXBASE_DEFS} __WXMAC__)
+# Platform-specific libraries for au3wrap
+if(OS_IS_MAC)
     find_library(CoreAudio NAMES CoreAudio)
     find_library(CoreAudioKit NAMES CoreAudioKit)
     set(AU3_LINK ${AU3_LINK} zlib::zlib ${CoreAudio} ${CoreAudioKit})
 elseif(OS_IS_WIN)
-   set(WXBASE_DEFS ${WXBASE_DEFS} __WXMSW__ WXUSINGDLL)
    set(AU3_LINK ${AU3_LINK} zlib::zlib winmm mmdevapi mfplat)
 endif()
 
