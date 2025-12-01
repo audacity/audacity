@@ -19,9 +19,17 @@ DbLogStereoRuler::DbLogStereoRuler()
 
 int DbLogStereoRuler::getAlignment(double value, size_t channel, bool isNegativeSample) const
 {
+    if (m_isHalfWave && muse::RealIsEqual(value, m_dbRange)) {
+        return 1;
+    }
+
     if (std::round(value) == std::round(m_maxDisplayValueDB)) {
         if (channel == 0) {
             return isNegativeSample ? 0 : -1;
+        }
+
+        if (m_isHalfWave) {
+            return -1;
         }
 
         return isNegativeSample ? 1 : 0;
@@ -61,14 +69,17 @@ std::vector<TrackRulerFullStep> DbLogStereoRuler::fullSteps() const
         const auto values = fullStepsValues(channelHeights[channel]);
 
         for (double value : values) {
-            for (bool isNegativeSample : { false, true }) {
+            for (bool isNegativeSample : (m_isHalfWave ? std::vector<bool> { false } : std::vector<bool> { false, true })) {
                 steps.push_back(TrackRulerFullStep {
                     value, channel, getAlignment(value, channel, isNegativeSample), isBold(value), value == 0.0,
                     isNegativeSample });
             }
         }
     }
-    steps.push_back(TrackRulerFullStep { m_maxDisplayValueDB, 2, 0, true, true, false });
+
+    if (!m_isHalfWave) {
+        steps.push_back(TrackRulerFullStep { m_maxDisplayValueDB, 2, 0, true, true, false });
+    }
 
     return steps;
 }
@@ -91,7 +102,7 @@ std::vector<TrackRulerSmallStep> DbLogStereoRuler::smallSteps() const
         const auto values = smallStepsValues(channelHeights[channel]);
         const auto fullSteps = fullStepsValues(channelHeights[channel]);
         for (double v : values) {
-            for (bool isNegativeSample : { false, true }) {
+            for (bool isNegativeSample : (m_isHalfWave ? std::vector<bool> { false } : std::vector<bool> { false, true })) {
                 if (std::find_if(fullSteps.begin(), fullSteps.end(),
                                  [&](double fullStepValue) {
                     return muse::RealIsEqual(fullStepValue, v);

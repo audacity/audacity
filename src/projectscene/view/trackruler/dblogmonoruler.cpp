@@ -18,6 +18,10 @@ DbLogMonoRuler::DbLogMonoRuler()
 
 int DbLogMonoRuler::getAlignment(double value, bool isNegativeSample) const
 {
+    if (m_isHalfWave && muse::RealIsEqual(value, m_dbRange)) {
+        return 1;
+    }
+
     if (muse::RealIsEqual(value, m_maxDisplayValueDB)) {
         return isNegativeSample ? 1 : -1;
     }
@@ -42,10 +46,15 @@ std::vector<TrackRulerFullStep> DbLogMonoRuler::fullSteps() const
     for (double value : steps) {
         result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, false),
                                               isBold(value), false, false });
-        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, true),
-                                              isBold(value), false, true });
+        if (!m_isHalfWave) {
+            result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, true),
+                                                  isBold(value), false, true });
+        }
     }
-    result.push_back(TrackRulerFullStep { m_dbRange, 0, 0, true, true, false });
+
+    if (!m_isHalfWave) {
+        result.push_back(TrackRulerFullStep { m_dbRange, 0, 0, true, true, false });
+    }
 
     return result;
 }
@@ -64,7 +73,9 @@ std::vector<TrackRulerSmallStep> DbLogMonoRuler::smallSteps() const
             continue;
         }
         result.push_back(TrackRulerSmallStep { value, 0, false });
-        result.push_back(TrackRulerSmallStep { value, 0, true });
+        if (!m_isHalfWave) {
+            result.push_back(TrackRulerSmallStep { value, 0, true });
+        }
     }
     return result;
 }

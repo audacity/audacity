@@ -34,6 +34,7 @@ protected:
     double m_channelHeightRatio = 1.0;
     double m_dbRange = 0.0;
     double m_maxDisplayValueDB = 0.0;
+    bool m_isHalfWave = false;
     DbLogRulerUiSettings m_ui_settings;
 };
 }
