@@ -4,8 +4,6 @@ Ladspa effect plugin discovery and processing logic, without user interface
 
 set( TARGET au3-ladspa )
 
-if( "${${_OPT}use_ladspa}" )
-
 set( SOURCES
    LadspaEffectBase.cpp
    LadspaEffectBase.h
@@ -21,5 +19,3 @@ set( LIBRARIES
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
-
-endif()

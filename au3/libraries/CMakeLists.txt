@@ -57,7 +57,6 @@ set( LIBRARIES
 #   au3-time-track # not yet used in AU4
    au3-snapping
 #   au3-vst # not yet used in AU4
-#   au3-ladspa # not yet used in AU4
    au3-playable-track
    au3-time-and-pitch
    au3-mixer
@@ -118,6 +117,10 @@ endif()
 
 if ( DEFINED ${_OPT}use_nyquist AND ${_OPT}use_nyquist )
    list( APPEND LIBRARIES au3-nyquist-effects )
+endif()
+
+if ( DEFINED ${_OPT}use_ladspa AND ${_OPT}use_ladspa )
+   list( APPEND LIBRARIES au3-ladspa )
 endif()
 
 # This library depends on au3-network-manager
