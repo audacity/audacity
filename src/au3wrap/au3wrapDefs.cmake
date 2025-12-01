@@ -72,16 +72,11 @@ set(AU3_DEF
 # that are compiled directly in au3wrap (not yet converted to libraries)
 # Note: AU3 library-specific includes are handled by au3defs.cmake
 set(AU3_INCLUDE
-    ${wxwidgets_INCLUDE_DIRS}
-    ${expat_INCLUDE_DIRS}
-    ${PortAudio_INCLUDE_DIR}
-    ${libmp3lame_INCLUDE_DIRS}
-    ${wavpack_INCLUDE_DIRS}
-    ${libsndfile_INCLUDE_DIRS}
-    ${vorbis_INCLUDE_DIRS}
-    ${flac_INCLUDE_DIRS}
-    ${ogg_INCLUDE_DIRS}
-    ${opus_INCLUDE_DIRS}
+#    ${libsndfile_INCLUDE_DIRS} # TODO: mod-pcm
+#    ${vorbis_INCLUDE_DIRS} # TODO: mod-ogg AND/OR mod-opus
+#    ${flac_INCLUDE_DIRS} # TODO: mod-flac
+#    ${ogg_INCLUDE_DIRS} # TODO: mod-ogg AND/OR mod-opus
+#    ${opus_INCLUDE_DIRS} # TODO: mod-opus
 
     ${AUDACITY_ROOT}/lib-src/sqlite
     ${AUDACITY_ROOT}/lib-src/pffft
@@ -127,23 +122,14 @@ set(WXBASE_RESTRICTIONS
 )
 
 set(AU3_LINK
-    wxwidgets::wxwidgets
-    expat::expat
-    portaudio::portaudio # portaudio might only be required internally in au3-audio-io
-    libmp3lame::libmp3lame
-    wavpack::wavpack
-    mpg123::libmpg123
-    SndFile::sndfile
-    Vorbis::vorbis
-    FLAC::FLAC
-    Ogg::ogg
-    Opus::opus
-    sqlite
-    soxr
-    pffft
-    portmixer
-    soundtouch
-    libsbsms
+    libmp3lame::libmp3lame # used by mod-mp3 not yet a library
+    wavpack::wavpack # used by mod-wavpack not yet a library
+    mpg123::libmpg123 # used by mod-mpg123 not yet a library
+#    SndFile::sndfile # TODO: mod-pcm
+#    Vorbis::vorbis # TODO: mod-ogg AND/OR mod-opus
+#    FLAC::FLAC # TODO: mod-flac
+#    Ogg::ogg # TODO: mod-ogg AND/OR mod-opus
+#    Opus::opus # TODO: mod-opus
 )
 
 set(WXBASE_DEFS
