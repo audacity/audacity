@@ -65,8 +65,6 @@ endif()
 set(LINK_LIB
     ${QT_LIBRARIES}
     muse::global
-    wxwidgets::wxwidgets
-
     muse::draw
     muse::actions
     muse::ui
