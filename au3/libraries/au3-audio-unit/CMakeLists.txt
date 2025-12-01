@@ -19,7 +19,8 @@ set( SOURCES
 set( LIBRARIES
    au3-utility
    au3-effects-interface
-    "-framework AudioUnit"
+   "-framework AudioUnit"
+   "-framework AudioToolbox"
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

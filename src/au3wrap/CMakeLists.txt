@@ -101,13 +101,6 @@ endif()
 add_subdirectory(${AU3_LIBRARIES} au3-libraries)
 
 # Additional linking setup for conditional libraries
-if (AU_MODULE_EFFECTS_AUDIO_UNIT)
-    set(AU3_LINK ${AU3_LINK}
-        "-framework AudioUnit"
-        "-framework AudioToolbox"
-    )
-endif()
-
 if (AU_MODULE_EFFECTS_LV2)
     set(AU3_LINK ${AU3_LINK} lv2sdk)
 endif()
