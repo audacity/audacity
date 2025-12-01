@@ -46,6 +46,6 @@ set( LIBRARIES
    PRIVATE
       au3-effects-interface
 )
-audacity_library( au3-import-export "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
