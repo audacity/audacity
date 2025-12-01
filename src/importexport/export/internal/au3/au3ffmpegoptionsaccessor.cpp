@@ -2,7 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "modules/import-export/mod-ffmpeg/ExportFFmpegOptions.h"
+#include "mod-ffmpeg/ExportFFmpegOptions.h"
 
 #include "au3ffmpegoptionsaccessor.h"
 

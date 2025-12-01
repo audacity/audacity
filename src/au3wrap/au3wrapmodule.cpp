@@ -5,7 +5,7 @@
 
 #include <wx/log.h>
 
-#include "FFmpeg.h"
+#include "mod-ffmpeg/FFmpeg.h"
 #include "FileNames.h"
 #include "au3-import-export/Import.h"
 #include "au3-import-export/ExportPluginRegistry.h"

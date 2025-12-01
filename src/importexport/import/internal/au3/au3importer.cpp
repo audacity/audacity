@@ -11,7 +11,7 @@
 #include "au3-numeric-formats/ProjectTimeSignature.h"
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-tags/Tags.h"
-#include "modules/import-export/RegisterImportPlugins.h"
+#include "RegisterImportPlugins.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
