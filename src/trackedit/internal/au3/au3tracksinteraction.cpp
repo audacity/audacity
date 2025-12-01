@@ -32,6 +32,7 @@
 
 #include "dom/track.h"
 #include "playback/playbacktypes.h"
+#include "realfn.h"
 #include "thirdparty/kors_logger/src/log_base.h"
 #include "trackediterrors.h"
 
@@ -1163,8 +1164,8 @@ void Au3TracksInteraction::zoomInVertically(const trackedit::TrackId& trackId)
     trackedit::Track track = DomConverter::track(waveTrack);
     float maxZoom = maxVerticalZoom(track);
 
-    float min = 0;
-    float max = 0;
+    float min = 0.0f;
+    float max = 0.0f;
     auto& cache = WaveformScale::Get(*waveTrack);
     cache.GetDisplayBounds(min, max);
     if (muse::is_equal(max, maxZoom)) {
@@ -1184,8 +1185,8 @@ void Au3TracksInteraction::zoomOutVertically(const trackedit::TrackId& trackId)
         return;
     }
 
-    float min = 0;
-    float max = 0;
+    float min = 0.0f;
+    float max = 0.0f;
     auto& cache = WaveformScale::Get(*waveTrack);
     cache.GetDisplayBounds(min, max);
     if (muse::is_equal(max, MAX_VERTICAL_RANGE)) {
@@ -1205,8 +1206,11 @@ void Au3TracksInteraction::resetVerticalZoom(const trackedit::TrackId& trackId)
         return;
     }
 
+    float min = 0.0f;
+    float max = 0.0f;
     auto& cache = WaveformScale::Get(*waveTrack);
-    cache.SetDisplayBounds(-DEFAULT_VERTICAL_RANGE, DEFAULT_VERTICAL_RANGE);
+    cache.GetDisplayBounds(min, max);
+    cache.SetDisplayBounds(muse::RealIsEqual(min, 0.0f) ? 0.0f : -DEFAULT_VERTICAL_RANGE, DEFAULT_VERTICAL_RANGE);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
@@ -1219,8 +1223,8 @@ bool Au3TracksInteraction::isDefaultVerticalZoom(const trackedit::TrackId& track
         return false;
     }
 
-    float min = 0;
-    float max = 0;
+    float min = 0.0f;
+    float max = 0.0f;
     auto& cache = WaveformScale::Get(*waveTrack);
     cache.GetDisplayBounds(min, max);
     return muse::is_equal(max, DEFAULT_VERTICAL_RANGE);
