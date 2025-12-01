@@ -22,17 +22,6 @@ set(AU3_LIBRARIES ${AUDACITY_ROOT}/libraries)
 set(AU3_MODULES ${AUDACITY_ROOT}/modules)
 set(IMPORT_EXPORT_MODULE ${AU3_MODULES}/import-export)
 
-# Generate *_API definitions for all AU3 libraries
-# This is needed for AU3 source files compiled directly in au3wrap and for tests
-set(_AU3_API_DEFS "")
-if(DEFINED AU3_ALL_LIBRARIES)
-    foreach(lib ${AU3_ALL_LIBRARIES})
-        # Generate API macro for this library (same logic as in au3defs.cmake)
-        import_export_symbol(api_symbol "${lib}")
-        list(APPEND _AU3_API_DEFS -D${api_symbol}=)
-    endforeach()
-endif()
-
 # AU4-specific definitions for au3wrap module
 set(PKGLIBDIR "${_PKGLIBDIR}")
 set(LIBDIR "${CMAKE_INSTALL_FULL_LIBDIR}")
@@ -51,8 +40,15 @@ set(AU3_DEF
     # FFmpeg support (not yet a library)
     -DFFMPEG_SUPPORT_API=
 
-    # AU3 library API definitions (auto-generated from AU3_ALL_LIBRARIES)
-    ${_AU3_API_DEFS}
+    # AU3 library API definitions (defined in au3defs.cmake, included above)
+    # Note: AU3_API_DEFS is generated in au3defs.cmake (included above) and reused here
+    # to avoid duplicating the API generation logic
+    ${AU3_API_DEFS}
+
+    # Platform-specific wxWidgets definitions
+    # Note: WXBASE_RESTRICTIONS and WXPLATFORM_DEFS are defined in au3defs.cmake (included above)
+    # and are reused here for AU3 source files compiled directly in au3wrap
+    ${WXBASE_RESTRICTIONS} ${WXPLATFORM_DEFS}
 )
 
 # AU3 include directories for au3wrap module
@@ -94,13 +90,6 @@ set(AU3_LINK
     Opus::opus # mod-opus
 )
 
-# Platform-specific wxWidgets definitions and libraries
-# Note: WXBASE_RESTRICTIONS and WXPLATFORM_DEFS are defined in au3defs.cmake (included above)
-set(WXBASE_DEFS
-    ${WXBASE_RESTRICTIONS}
-    ${WXPLATFORM_DEFS}
-)
-
 # Platform-specific libraries for au3wrap
 if(OS_IS_MAC)
     find_library(CoreAudio NAMES CoreAudio)
@@ -109,5 +98,3 @@ if(OS_IS_MAC)
 elseif(OS_IS_WIN)
    set(AU3_LINK ${AU3_LINK} zlib::zlib winmm mmdevapi mfplat)
 endif()
-
-set(AU3_DEF ${AU3_DEF} ${WXBASE_DEFS})
