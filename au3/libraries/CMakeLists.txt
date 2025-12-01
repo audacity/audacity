@@ -6,6 +6,21 @@ It sets up the AU3_ALL_LIBRARIES cache variable and includes au3defs.cmake
 before processing individual library subdirectories.
 ]]
 
+# Create wxBase INTERFACE target for toolkit-neutral wxWidgets usage
+# This is a simple wrapper around wxwidgets::wxwidgets that provides include paths
+# and linking, but does NOT include GUI restrictions as compile definitions.
+#
+# The audacity_library() macro in au3defs.cmake automatically applies wxBase
+# restrictions (wxUSE_GUI=0, etc.) as PRIVATE compile definitions to any library
+# that links to wxBase. This ensures:
+# - Libraries using wxBase get the restrictions applied to their own compilation
+# - The restrictions do NOT propagate to consumers (PRIVATE, not INTERFACE)
+# - Libraries can choose between wxBase (no GUI) or wxwidgets::wxwidgets (full GUI)
+if(NOT TARGET wxBase)
+    add_library(wxBase INTERFACE)
+    target_link_libraries(wxBase INTERFACE wxwidgets::wxwidgets)
+endif()
+
 # The list of modules is ordered so that each library occurs after any others
 # that it depends on
 set( LIBRARIES
