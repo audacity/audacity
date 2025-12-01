@@ -7,6 +7,17 @@ namespace au::projectscene {
 SpectrogramView::SpectrogramView(QQuickItem* parent)
     : AbstractClipView(parent)
 {
+    setFlag(QQuickItem::ItemObservesViewport, true);
+}
+
+void SpectrogramView::setTimelineIndentWidth(int width)
+{
+    if (m_timelineIndentWidth == width) {
+        return;
+    }
+    m_timelineIndentWidth = width;
+    emit timelineIndentWidthChanged();
+    update();
 }
 
 void SpectrogramView::setTimelineContext(TimelineContext* newContext)
@@ -26,7 +37,8 @@ void SpectrogramView::paint(QPainter* painter)
 
     const auto project = globalContext()->currentProject();
 
-    const ZoomInfo zoomInfo { m_context->zoom(), m_context->frameStartTime(), m_context->frameEndTime() };
+    const auto indentTime = m_timelineIndentWidth / m_context->zoom();
+    const ZoomInfo zoomInfo { m_context->zoom(), m_context->frameStartTime() - indentTime, m_context->frameEndTime() };
     const SelectedRegion selectedRegion { m_clipTime.selectionStartTime, m_clipTime.selectionEndTime };
 
     PaintParams params;
@@ -40,6 +52,10 @@ void SpectrogramView::paint(QPainter* painter)
     params.selectionEndTime = m_clipTime.selectionEndTime;
 
     const WaveMetrics metrics = wavepainterutils::getWaveMetrics(project, m_clipKey.key, params);
-    spectrogramPainter()->paint(*painter, m_clipKey.key, metrics, zoomInfo, selectedRegion);
+
+    const QRect visibleSubrect = clipRect().toRect();
+    const int xBegin = std::max(visibleSubrect.left() - m_timelineIndentWidth, 0);
+    const int xEnd = visibleSubrect.right() + 1;
+    spectrogramPainter()->paintClip(*painter, xBegin, xEnd, height(), m_clipKey.key, metrics, zoomInfo, selectedRegion);
 }
 }

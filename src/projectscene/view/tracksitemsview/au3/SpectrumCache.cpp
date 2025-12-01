@@ -374,37 +374,8 @@ void SpecCache::Populate(
         const int lowerBoundX = jj == 0 ? 0 : copyEnd;
         const int upperBoundX = jj == 0 ? copyBegin : numPixels;
 
-// todo(mhodgkinson): I don't find an option to define _OPENMP anywhere. Is this
-// still of interest?
-#ifdef _OPENMP
-        // Storage for mutable per-thread data.
-        // private clause ensures one copy per thread
-        struct ThreadLocalStorage {
-            ThreadLocalStorage() { }
-            ~ThreadLocalStorage() { }
-
-            void init(SampleTrackCache& waveTrackCache, size_t scratchSize)
-            {
-                if (!cache) {
-                    cache = std::make_unique<SampleTrackCache>(waveTrackCache.GetTrack());
-                    scratch.resize(scratchSize);
-                }
-            }
-
-            std::unique_ptr<SampleTrackCache> cache;
-            std::vector<float> scratch;
-        } tls;
-
-      #pragma omp parallel for private(tls)
-#endif
         for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
-#ifdef _OPENMP
-            tls.init(waveTrackCache, scratchSize);
-            SampleTrackCache& cache = *tls.cache;
-            float* buffer = &tls.scratch[0];
-#else
             float* buffer = &scratch[0];
-#endif
             CalculateOneSpectrum(
                 settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
                 gainFactors, buffer, &freq[0]);
