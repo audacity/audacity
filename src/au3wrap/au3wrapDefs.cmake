@@ -38,17 +38,8 @@ set(PKGLIBDIR "${_PKGLIBDIR}")
 set(LIBDIR "${CMAKE_INSTALL_FULL_LIBDIR}")
 
 set(AU3_DEF
-    # Audacity version information (needed by AU3 source files compiled directly in au3wrap)
-    -DAUDACITY_VERSION=4
-    -DAUDACITY_RELEASE=0
-    -DAUDACITY_REVISION=0
-    -DAUDACITY_MODLEVEL=0
-
-    # Version string for visual display
-    -DAUDACITY_VERSION_STRING=L"${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION}${AUDACITY_SUFFIX}"
-
-    # This value is used in the resource compiler for Windows
-    -DAUDACITY_FILE_VERSION=L"${AUDACITY_VERSION},${AUDACITY_RELEASE},${AUDACITY_REVISION},${AUDACITY_MODLEVEL}"
+    # Audacity version information (defined in au3defs.cmake, included above)
+    ${AUDACITY_VERSION_DEFS}
 
     # safenew macro for AU3 compatibility
     -Dsafenew=new
