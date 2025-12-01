@@ -124,15 +124,15 @@ if (${_OPT}use_ffmpeg)
       lib-math
    )
 
-   set( DEFINITIONS PUBLIC USE_FFMPEG )
+   set( DEFINES PUBLIC USE_FFMPEG )
 
    if(APPLE)
       # Required for RTLD_DEFAULT
-      list(APPEND DEFINITIONS PRIVATE _DARWIN_C_SOURCE )
+      list(APPEND DEFINES PRIVATE _DARWIN_C_SOURCE )
    endif()
 
    audacity_library( lib-ffmpeg-support "${SOURCES}" "${LIBRARIES}"
-      "${DEFINITIONS}" ""
+      "${DEFINES}" ""
    )
 
 endif()
