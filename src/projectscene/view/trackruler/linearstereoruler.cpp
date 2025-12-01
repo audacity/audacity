@@ -23,17 +23,8 @@ constexpr double MIN_CHANNEL_HEIGHT = 40.0;
 
 double LinearStereoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, [[maybe_unused]] bool isNegativeSample) const
 {
-    double clampedValue = std::clamp(step, static_cast<double>(m_minDisplayValue), static_cast<double>(m_maxDisplayValue));
-
-    double position;
-    if (channel == 0) {
-        position = (0.5 - clampedValue / (m_maxDisplayValue - m_minDisplayValue)) * m_height * m_channelHeightRatio;
-    } else {
-        position = (0.5 - clampedValue / (m_maxDisplayValue - m_minDisplayValue)) * (1.0 - m_channelHeightRatio) * m_height
-                   + m_channelHeightRatio * m_height;
-    }
-
-    return position;
+    return channel == 0 ? valueToPosition(step, m_height * m_channelHeightRatio)
+           : valueToPosition(step, m_height * (1.0 - m_channelHeightRatio)) + (m_height * m_channelHeightRatio);
 }
 
 std::vector<TrackRulerFullStep> LinearStereoRuler::fullSteps() const
