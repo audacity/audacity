@@ -179,7 +179,7 @@ StyledDialogView {
 
                         pickerType: FilePicker.PickerType.Any
                         pathFieldWidth: root.dropdownWidth
-                        spacing: 10
+                        spacing: 8
                         filter: exportPreferencesModel.fileFilter()
 
                         buttonType: FlatButton.Horizontal
@@ -285,10 +285,11 @@ StyledDialogView {
                                 enabled: exportPreferencesModel.maxExportChannels > 0
                                 text: qsTrc("export", "Mono")
 
+                                spacing: 8
+
                                 navigation.name: "MonoBox"
                                 navigation.panel: audioSection.navigation
-                                navigation.row: channelsGroup.navigationOrderStart
-                                navigation.column: 0
+                                navigation.order: channelsGroup.navigationOrderStart
 
                                 onToggled: {
                                     exportPreferencesModel.setExportChannels(ExportChannels.MONO)
@@ -296,15 +297,17 @@ StyledDialogView {
                             }
 
                             RoundedRadioButton {
+                                id: stereoBtn
 
                                 checked: exportPreferencesModel.exportChannels == ExportChannels.STEREO
                                 enabled: exportPreferencesModel.maxExportChannels > 1
                                 text: qsTrc("export", "Stereo")
 
+                                spacing: 8
+
                                 navigation.name: "StereoBox"
                                 navigation.panel: audioSection.navigation
-                                navigation.row: channelsGroup.navigationOrderStart
-                                navigation.column: 1
+                                navigation.order: monoBtn.navigation.order + 1
 
                                 onToggled: {
                                     exportPreferencesModel.setExportChannels(ExportChannels.STEREO)
@@ -312,15 +315,17 @@ StyledDialogView {
                             }
 
                             RoundedRadioButton {
+                                id: customBtn
 
                                 checked: exportPreferencesModel.exportChannels == ExportChannels.CUSTOM
                                 text: qsTrc("export", "Custom mapping")
                                 enabled: false // until custom mapping grid is implemented
 
+                                spacing: 8
+
                                 navigation.name: "CustomBox"
                                 navigation.panel: audioSection.navigation
-                                navigation.row: channelsGroup.navigationOrderStart
-                                navigation.column: 2
+                                navigation.order: stereoBtn.navigation.order + 1
 
                                 onToggled: {
                                     exportPreferencesModel.setExportChannels(ExportChannels.CUSTOM)
@@ -357,8 +362,7 @@ StyledDialogView {
 
                         navigation.name: "SampleRateDropdown"
                         navigation.panel: audioSection.navigation
-                        navigation.row: channelsGroup.navigationOrderStart + 1
-                        navigation.column: 0
+                        navigation.order: customBtn.navigation.order + 1
                         navigation.accessible.name: formatLabel.text + ": " + currentText
 
                         indeterminateText: ""
@@ -387,9 +391,7 @@ StyledDialogView {
 
                             navigation.name: "CustomFFmpegButton"
                             navigation.panel: audioSection.navigation
-                            navigation.row: sampleRateDropdown.navigation.row + 1
-                            navigation.column: 0
-                            navigation.accessible.name: text + " button"
+                            navigation.order: sampleRateDropdown.navigation.order + 1
 
                             onClicked: {
                                 exportPreferencesModel.openCustomFFmpegDialog()
@@ -527,7 +529,7 @@ StyledDialogView {
                         navigation.name: "TrimBlankSpaceBox"
                         navigation.panel: renderingSection.navigation
                         navigation.order: 1
-                        navigation.accessible.name: text + " checkbox"
+                        navigation.accessible.name: text
 
                         onClicked: {}
                     }
@@ -615,8 +617,7 @@ StyledDialogView {
             currentIndex: option.value
 
             navigation.panel: audioSection.navigation
-            navigation.row: 2 + option.index
-            navigation.column: 0
+            navigation.order: sampleRateDropdown.navigation.order + 1 + option.index
 
             onActivated: function(index, value) {
                 dynamicOptionsModel.setData(dynamicOptionsModel.index(option.index, 0),
@@ -634,8 +635,7 @@ StyledDialogView {
             checked: Boolean(option.value)
 
             navigation.panel: audioSection.navigation
-            navigation.row: 2 + option.index
-            navigation.column: 0
+            navigation.order: sampleRateDropdown.navigation.order + 1 + option.index
 
             onClicked: dynamicOptionsModel.setData(
                            dynamicOptionsModel.index(option.index, 0),
@@ -687,8 +687,7 @@ StyledDialogView {
             currentValue: option.value
 
             navigation.panel: audioSection.navigation
-            navigation.row: 2 + option.index
-            navigation.column: 0
+            navigation.order: sampleRateDropdown.navigation.order + 1 + option.index
 
             onValueEdited: function(newValue) {
                 dynamicOptionsModel.setData(
