@@ -95,28 +95,6 @@ set(AU3_INCLUDE
     ${IMPORT_EXPORT_MODULE}
 )
 
-set(WXBASE_RESTRICTIONS
-   "wxUSE_GUI=0"
-
-   # Don't use app.h
-   _WX_APP_H_BASE_
-
-   # Don't use evtloop.h
-   _WX_EVTLOOP_H_
-
-   # Don't use image.h
-   _WX_IMAGE_H
-
-   # Don't use colour.h
-   _WX_COLOUR_H_BASE_
-
-   # Don't use brush.h
-   _WX_BRUSH_H_BASE_
-
-   # Don't use pen.h
-   _WX_PEN_H_BASE_
-)
-
 set(AU3_LINK
     libmp3lame::libmp3lame # used by mod-mp3 not yet a library
     wavpack::wavpack # used by mod-wavpack not yet a library
@@ -129,6 +107,8 @@ set(AU3_LINK
 )
 
 set(WXBASE_DEFS
+    # Note: WXBASE_RESTRICTIONS is defined in au3defs.cmake (included above)
+    # and is reused here for AU3 source files compiled directly in au3wrap
     ${WXBASE_RESTRICTIONS}
 )
 
