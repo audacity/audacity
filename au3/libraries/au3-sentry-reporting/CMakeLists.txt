@@ -4,7 +4,6 @@ using Exception and Message interfaces.
 ]]
 
 set( TARGET au3-sentry-reporting )
-set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
 if(${_OPT}has_sentry_reporting)
     set( SOURCES

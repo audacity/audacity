@@ -3,7 +3,6 @@ Generation of UUIDs
 ]]
 
 set( TARGET au3-uuid )
-set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
 set( SOURCES
     Uuid.h

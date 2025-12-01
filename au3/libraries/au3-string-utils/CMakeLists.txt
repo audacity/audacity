@@ -3,7 +3,6 @@ String encoding and formatting utilities
 ]]
 
 set(TARGET au3-string-utils)
-set(TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 
 set(SOURCES
     HexHelpers.h
