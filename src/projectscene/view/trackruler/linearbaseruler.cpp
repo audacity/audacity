@@ -96,9 +96,9 @@ int LinearBaseRuler::getPrecision(double step) const
 
 double LinearBaseRuler::valueToPosition(double value, double height) const
 {
-    double newValue = std::clamp(value, static_cast<double>(m_minDisplayValue), static_cast<double>(m_maxDisplayValue));
-    double perc = (newValue - m_minDisplayValue) / (m_maxDisplayValue - m_minDisplayValue);
-    return (1 - perc) * height;
+    const double newValue = std::clamp(value, static_cast<double>(m_minDisplayValue), static_cast<double>(m_maxDisplayValue));
+    const double percentage = (newValue - m_minDisplayValue) / (m_maxDisplayValue - m_minDisplayValue);
+    return (1 - percentage) * height;
 }
 
 std::pair<double, double> LinearBaseRuler::stepsIncrement(double height) const
@@ -131,8 +131,8 @@ std::vector<double> LinearBaseRuler::fullStepsValues(double height) const
 
     const std::pair<double, double> increment = stepsIncrement(height);
     std::vector<double> steps;
-    for (double v = m_minDisplayValue; v <= m_maxDisplayValue; v += increment.first) {
-        steps.push_back(v);
+    for (double value = m_minDisplayValue; value <= m_maxDisplayValue + increment.first * 0.5; value += increment.first) {
+        steps.push_back(value);
     }
     return steps;
 }
@@ -147,8 +147,9 @@ std::vector<double> LinearBaseRuler::smallStepsValues(double height) const
 
     const std::pair<double, double> increment = stepsIncrement(height);
     std::vector<double> steps;
-    for (double v = m_minDisplayValue; v <= m_maxDisplayValue; v += increment.second) {
+    for (double v = m_minDisplayValue; v <= m_maxDisplayValue + increment.second * 0.5; v += increment.second) {
         steps.push_back(v);
     }
+
     return steps;
 }
