@@ -16,6 +16,8 @@
 
 #include <type_traits>
 
+#include "MemoryX.h" // for safenew
+
 namespace PackedArray {
 template<typename T> struct Traits;
 

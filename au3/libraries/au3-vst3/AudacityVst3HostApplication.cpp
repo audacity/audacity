@@ -11,6 +11,8 @@
 #include <string>
 #include <pluginterfaces/vst/ivstunits.h>
 
+#include "au3-utility/MemoryX.h" // for safenew
+
 using namespace Steinberg;
 using namespace Steinberg::Vst;
 

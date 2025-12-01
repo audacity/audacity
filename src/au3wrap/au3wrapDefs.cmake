@@ -41,9 +41,6 @@ set(AU3_DEF
     # Audacity version information (defined in au3defs.cmake, included above)
     ${AUDACITY_VERSION_DEFS}
 
-    # safenew macro for AU3 compatibility
-    -Dsafenew=new
-
     # Experimental features
     -DEXPERIMENTAL_SPECTRAL_EDITING
 
