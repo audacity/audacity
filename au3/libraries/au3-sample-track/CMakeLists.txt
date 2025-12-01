@@ -17,6 +17,7 @@ set( SOURCES
 set( LIBRARIES
    au3-mixer-interface
    au3-playable-track-interface
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

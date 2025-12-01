@@ -21,6 +21,7 @@ set( LIBRARIES
    au3-effects-interface
    "-framework AudioUnit"
    "-framework AudioToolbox"
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

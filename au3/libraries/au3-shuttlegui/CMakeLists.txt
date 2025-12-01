@@ -38,6 +38,7 @@ set( LIBRARIES
    PRIVATE
    au3-theme-interface
    au3-wx-wrappers-interface
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

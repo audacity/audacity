@@ -15,6 +15,7 @@ set( LIBRARIES
    au3-menus-interface
    au3-project-file-io-interface
    au3-viewport-interface
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

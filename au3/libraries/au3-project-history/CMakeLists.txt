@@ -14,6 +14,7 @@ set( SOURCES
 set( LIBRARIES
    au3-project-interface
    au3-transactions-interface
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

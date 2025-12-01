@@ -11,6 +11,7 @@ set( SOURCES
    ZoomInfo.h
 )
 set( LIBRARIES
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

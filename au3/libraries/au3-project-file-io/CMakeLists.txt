@@ -23,6 +23,7 @@ set( SOURCES
 
 set( LIBRARIES
    au3-wave-track-interface
+   wxBase
 )
 
 list( APPEND LIBRARIES

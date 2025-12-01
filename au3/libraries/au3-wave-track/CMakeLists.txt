@@ -45,6 +45,7 @@ set( LIBRARIES
    au3-sample-track-interface
    au3-stretching-sequence-interface
    au3-track-selection-interface
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

@@ -45,6 +45,7 @@ PRIVATE
     CURL::libcurl
     threadpool::threadpool
     au3-exceptions-interface
+    wxBase
 )
 
 set ( DEFINES INTERFACE "HAS_NETWORKING" PRIVATE "WIN32_LEAN_AND_MEAN" )

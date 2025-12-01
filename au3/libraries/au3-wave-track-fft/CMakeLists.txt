@@ -12,6 +12,7 @@ set( LIBRARIES
    PUBLIC
       au3-wave-track-interface
       au3-fft-interface
+      wxBase
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

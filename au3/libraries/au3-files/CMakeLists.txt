@@ -31,6 +31,7 @@ set( SOURCES
 set( LIBRARIES
    au3-exceptions-interface
    au3-preferences-interface
+   wxBase
 )
 set(DEFINES
    PRIVATE

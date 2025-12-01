@@ -17,6 +17,7 @@ set( LIBRARIES
    au3-time-track-interface
    au3-wave-track-settings
    libnyquist
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

@@ -55,6 +55,7 @@ set( LIBRARIES
    # If Sentry reporting is disabled, an INTERFACE library
    # will be defined
    au3-sentry-reporting-interface
+   wxBase
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

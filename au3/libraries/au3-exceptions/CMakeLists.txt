@@ -28,6 +28,7 @@ set( SOURCES
 set( LIBRARIES
    au3-utility-interface
    au3-basic-ui-interface
+   wxBase
 )
 
 if( APPLE AND MIN_MACOS_VERSION VERSION_LESS "10.12")

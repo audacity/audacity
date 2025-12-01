@@ -37,6 +37,7 @@ set( SOURCES
 set( LIBRARIES
    au3-math-interface
    au3-project-rate-interface
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

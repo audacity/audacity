@@ -13,6 +13,7 @@ set( LIBRARIES
    au3-mixer-interface # for Envelope
    au3-project-rate-interface
    au3-track-interface
+   wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

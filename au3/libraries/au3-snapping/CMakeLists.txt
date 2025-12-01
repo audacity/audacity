@@ -29,6 +29,7 @@ set( LIBRARIES
    au3-numeric-formats-interface
    au3-screen-geometry-interface
    au3-track-interface
+   wxBase
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )
