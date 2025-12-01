@@ -3,6 +3,8 @@ Various versions of FFmpeg and a facade to hide their binary incompatibilities
 ]]
 
 if (${_OPT}use_ffmpeg)
+   set( TARGET lib-ffmpeg-support )
+
    set( SOURCES
       FFmpegTypes.h
 
@@ -131,7 +133,7 @@ if (${_OPT}use_ffmpeg)
       list(APPEND DEFINES PRIVATE _DARWIN_C_SOURCE )
    endif()
 
-   audacity_library( lib-ffmpeg-support "${SOURCES}" "${LIBRARIES}"
+   audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
       "${DEFINES}" ""
    )
 
