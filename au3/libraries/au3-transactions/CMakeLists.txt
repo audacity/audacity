@@ -8,6 +8,8 @@ The main program can inject an implementation.  If this isn't done, then the
 object has no effect.
 ]]
 
+set( TARGET au3-transactions )
+
 set( SOURCES
    TransactionScope.cpp
    TransactionScope.h
@@ -15,7 +17,7 @@ set( SOURCES
 set( LIBRARIES
    au3-exceptions-interface
 )
-audacity_library( au3-transactions "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    ""
    ""
 )

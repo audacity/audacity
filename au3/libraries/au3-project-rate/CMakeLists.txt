@@ -7,6 +7,8 @@ This library depends on au3-audio-devices, because available devices may be
 queried to decide the default sample rate.
 ]]
 
+set( TARGET au3-project-rate )
+
 set( SOURCES
    Decibels.cpp
    Decibels.h
@@ -20,6 +22,6 @@ set( LIBRARIES
    au3-audio-devices-interface
    au3-math-interface
 )
-audacity_library( au3-project-rate "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

@@ -7,6 +7,8 @@ Definitions of may commonly used formats.
 Per-project choices of numeric formats.
 ]]
 
+set( TARGET au3-numeric-formats )
+
 set( SOURCES
    Beats.cpp
    Beats.h
@@ -36,7 +38,7 @@ set( LIBRARIES
    au3-math-interface
    au3-project-rate-interface
 )
-audacity_library( au3-numeric-formats "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
 

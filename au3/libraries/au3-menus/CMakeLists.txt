@@ -9,6 +9,8 @@ registry, and can build menus, if a subclass overrides certain virtual functions
 appropriately for the UI toolkit.
 ]]
 
+set( TARGET au3-menus )
+
 set(SOURCES
    CommandContext.cpp
    CommandContext.h
@@ -29,5 +31,5 @@ set( LIBRARIES
    au3-project-history-interface
 )
 
-audacity_library(au3-menus "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" "" )

@@ -5,6 +5,8 @@ objects attached to a host object.  The template is parametrized by the host
 type.
 ]]
 
+set( TARGET au3-xml )
+
 set( SOURCES
    XMLAttributeValueView.cpp
    XMLAttributeValueView.h
@@ -24,6 +26,6 @@ set( LIBRARIES
    PRIVATE
    expat::expat
 )
-audacity_library( au3-xml "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

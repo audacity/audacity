@@ -3,6 +3,8 @@ This library provides an interface to configure and start Breakpad handler
 in a platform independent way.
 ]]
 
+set( TARGET au3-breakpad-configurer )
+
 set(SOURCES
    BreakpadConfigurer.h
    BreakpadConfigurer.cpp
@@ -31,4 +33,4 @@ elseif(UNIX)
             internal/unix/CrashReportContext.cpp)
 endif()
 
-audacity_library( au3-breakpad-configurer "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "" )
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "" )

@@ -6,6 +6,8 @@ Note -- this cannot be combined with au3-math, which depends on libsoxr, which
 includes a different version of pffft.h
 ]]
 
+set( TARGET au3-fft )
+
 set( SOURCES
    FFT.cpp
    FFT.h
@@ -27,6 +29,6 @@ PUBLIC
    au3-strings-interface
    au3-utility-interface
 )
-audacity_library( au3-fft "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

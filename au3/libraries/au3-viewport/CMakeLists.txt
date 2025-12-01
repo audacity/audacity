@@ -3,6 +3,8 @@ Viewport defines a callback facade for horizontal and vertical scrollbars, and
 provides methods to scroll and zoom the view of tracks.
 ]]
 
+set( TARGET au3-viewport )
+
 set( SOURCES
    Viewport.cpp
    Viewport.h
@@ -12,6 +14,6 @@ set( LIBRARIES
    au3-snapping-interface
    au3-track-selection-interface
 )
-audacity_library( au3-viewport "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

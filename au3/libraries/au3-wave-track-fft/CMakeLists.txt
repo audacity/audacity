@@ -2,6 +2,8 @@
 FFT-related operations for WaveTrack
 ]]
 
+set( TARGET au3-wave-track-fft )
+
 set( SOURCES
    TrackSpectrumTransformer.cpp
    TrackSpectrumTransformer.h
@@ -12,6 +14,6 @@ set( LIBRARIES
       au3-fft-interface
 )
 
-audacity_library( au3-wave-track-fft "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

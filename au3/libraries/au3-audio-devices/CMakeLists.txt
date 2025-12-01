@@ -10,6 +10,8 @@ purposes.
 Does not contain an audio engine.
 ]]
 
+set( TARGET au3-audio-devices )
+
 set( SOURCES
    AudioIOBase.cpp
    AudioIOBase.h
@@ -24,6 +26,6 @@ set( LIBRARIES
    $<$<BOOL:${USE_PORTMIXER}>:portmixer>
    au3-preferences-interface
 )
-audacity_library( au3-audio-devices "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

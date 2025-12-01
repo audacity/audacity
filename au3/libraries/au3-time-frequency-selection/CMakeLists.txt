@@ -3,6 +3,8 @@ Per-project state of selected time interval, frequency interval of simple
 spectral selection, and play region
 ]]
 
+set( TARGET au3-time-frequency-selection )
+
 set( SOURCES
    ProjectSelectionManager.cpp
    ProjectSelectionManager.h
@@ -14,6 +16,6 @@ set( SOURCES
 set( LIBRARIES
    au3-snapping-interface
 )
-audacity_library( au3-time-frequency-selection "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

@@ -3,6 +3,8 @@ Management of undo and redo history of the project, stored as states, not
 deltas.  There is not yet persistency of undo history across sessions.
 ]]
 
+set( TARGET au3-project-history )
+
 set( SOURCES
    ProjectHistory.cpp
    ProjectHistory.h
@@ -13,6 +15,6 @@ set( LIBRARIES
    au3-project-interface
    au3-transactions-interface
 )
-audacity_library( au3-project-history "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

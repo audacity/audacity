@@ -13,6 +13,8 @@ implicitly interconvert with wxString.
 This library depends only on the wxBase subset of wxWidgets.
 ]]
 
+set( TARGET au3-strings )
+
 set( SOURCES
    Base64.h
    Base64.cpp
@@ -31,6 +33,6 @@ set( SOURCES
 set( LIBRARIES
    wxBase
 )
-audacity_library( au3-strings "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

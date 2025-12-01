@@ -2,6 +2,8 @@
 VST3 effect plugin discovery and processing logic, without user interface
 ]]
 
+set( TARGET au3-vst3 )
+
 set( SOURCES
    AudacityVst3HostApplication.cpp
    AudacityVst3HostApplication.h
@@ -35,7 +37,7 @@ set( LIBRARIES
    au3-effects-interface
    au3-files-interface
 )
-audacity_library( au3-vst3 "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
 

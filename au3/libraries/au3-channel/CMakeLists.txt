@@ -19,6 +19,8 @@ interval-major iteration, but sometimes the other iteration is more convenient
 to the task.
 ]]
 
+set( TARGET au3-channel )
+
 set( SOURCES
    Channel.cpp
    Channel.h
@@ -26,6 +28,6 @@ set( SOURCES
 set( LIBRARIES
    au3-registries-interface
 )
-audacity_library( au3-channel "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

@@ -2,6 +2,8 @@
 UI-agnostic library for WaveTrack settings.
 ]]
 
+set( TARGET au3-wave-track-settings )
+
 set( SOURCES
    SpectrogramSettings.cpp
    SpectrogramSettings.h
@@ -13,6 +15,6 @@ set( LIBRARIES
       au3-fft-interface
       au3-wave-track-interface
 )
-audacity_library( au3-wave-track-settings "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

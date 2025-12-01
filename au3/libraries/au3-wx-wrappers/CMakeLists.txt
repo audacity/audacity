@@ -6,6 +6,8 @@ instead of wxString in constructions.
 Very much not toolkit-neutral!
 ]]
 
+set( TARGET au3-wx-wrappers )
+
 set( SOURCES
    AccessibilityUtils.cpp
    AccessibilityUtils.h
@@ -40,7 +42,7 @@ set( LIBRARIES
    wxwidgets::wxwidgets
 )
 
-audacity_library( au3-wx-wrappers "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    ""
    "$<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>"
 )

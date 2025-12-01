@@ -3,6 +3,8 @@ Classes relating to the mappings between x or y coordinates of the screen, and
 times, or frequencies, or amplitudes.
 ]]
 
+set( TARGET au3-screen-geometry )
+
 set( SOURCES
    NumberScale.h
    ZoomInfo.cpp
@@ -10,6 +12,6 @@ set( SOURCES
 )
 set( LIBRARIES
 )
-audacity_library( au3-screen-geometry "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

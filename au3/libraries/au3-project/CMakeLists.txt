@@ -9,6 +9,8 @@ Also ProjectStatus, an abstraction of the status bar, just holding some strings
 and formatter functions, and emitting events when changed.
 ]]
 
+set( TARGET au3-project )
+
 set( SOURCES
    Project.cpp
    Project.h
@@ -21,6 +23,6 @@ set( LIBRARIES
    au3-registries-interface
    au3-xml-interface
 )
-audacity_library( au3-project "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

@@ -4,6 +4,8 @@ Provides time-stretching and pitch-shifting functionality.
 Based on the more versatile time-stretching from StaffPad, but tailored for the needs of Audacity.
 ]]
 
+set( TARGET au3-time-and-pitch )
+
 set( SOURCES
    StaffPad/CircularSampleBuffer.h
    StaffPad/FourierTransform_pffft.cpp
@@ -40,6 +42,6 @@ PUBLIC
    au3-utility-interface
    pffft
 )
-audacity_library( au3-time-and-pitch "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

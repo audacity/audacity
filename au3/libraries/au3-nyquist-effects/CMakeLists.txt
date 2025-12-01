@@ -2,6 +2,8 @@
 Library of built-in effects. Implement the UI-agnostic APIs of au3-effects.
 ]]
 
+set( TARGET au3-nyquist-effects )
+
 set( SOURCES
    LoadNyquist.cpp
    LoadNyquist.h
@@ -16,6 +18,6 @@ set( LIBRARIES
    au3-wave-track-settings
    libnyquist
 )
-audacity_library( au3-nyquist-effects "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

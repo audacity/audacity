@@ -17,6 +17,8 @@ which describe what certain effects do to one track, so the warp might be
 reapplied to another track that must stay synchronized.
 ]]
 
+set( TARGET au3-track )
+
 set( SOURCES
    ChannelAttachments.cpp
    ChannelAttachments.h
@@ -35,6 +37,6 @@ set( LIBRARIES
    au3-channel-interface
    au3-project-history-interface
 )
-audacity_library( au3-track "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

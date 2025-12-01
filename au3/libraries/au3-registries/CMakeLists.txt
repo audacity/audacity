@@ -27,6 +27,8 @@ computes the merging of trees, and supports visitation.  It is used notably
 by the tree of menus, allowing insertion of menu items in decoupled code.
 ]]
 
+set( TARGET au3-registries )
+
 set( SOURCES
    AttachedVirtualFunction.h
    ClientData.cpp
@@ -40,6 +42,6 @@ set( LIBRARIES
    au3-preferences-interface
    au3-exceptions
 )
-audacity_library( au3-registries "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

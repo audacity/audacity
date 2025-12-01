@@ -5,6 +5,8 @@
 A set of helpers for working with sqlite databases.
 ]]
 
+set( TARGET au3-sqlite-helpers )
+
 set( SOURCES
    sqlite/Blob.cpp
    sqlite/Blob.h
@@ -32,5 +34,5 @@ set( LIBRARIES
       au3-strings-interface
       au3-string-utils-interface
 )
-audacity_library( au3-sqlite-helpers "${SOURCES}" "${LIBRARIES}"
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" "" )
