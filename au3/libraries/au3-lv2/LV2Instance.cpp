@@ -10,7 +10,6 @@
   License: GPL v2 or later.  See License.txt.
 
 **********************************************************************/
-#if defined(USE_LV2)
 
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wparentheses"
@@ -294,5 +293,3 @@ bool LV2Instance::RealtimeProcessEnd(EffectSettings&) noexcept
         return true;
     });
 }
-
-#endif

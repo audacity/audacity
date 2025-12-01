@@ -11,8 +11,6 @@
 
 **********************************************************************/
 
-#if defined(USE_LV2)
-
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wparentheses"
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -82,5 +80,3 @@ bool LV2Preferences::SetUseGUI(
 {
     return SetSetting(effect, UseGUIStr, useGUI);
 }
-
-#endif

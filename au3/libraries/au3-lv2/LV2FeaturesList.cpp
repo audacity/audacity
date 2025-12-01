@@ -11,8 +11,6 @@
 
 **********************************************************************/
 
-#if defined(USE_LV2)
-
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wparentheses"
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -259,4 +257,3 @@ int LV2FeaturesList::LogVPrintf(LV2_URID type, const char *fmt, va_list ap)
       wxT("%s: %s"), GetPluginSymbol(mPlug).Msgid().Translation(), text);
    return len;
 }
-#endif

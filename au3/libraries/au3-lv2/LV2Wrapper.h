@@ -16,8 +16,6 @@
 #ifndef __AUDACITY_LV2_WRAPPER__
 #define __AUDACITY_LV2_WRAPPER__
 
-#if USE_LV2
-
 #include "LV2Utils.h"
 #include "LV2FeaturesList.h"
 #include "LV2InstanceFeaturesList.h"
@@ -117,5 +115,4 @@ private:
     bool mActivated{ false };
 };
 
-#endif
 #endif

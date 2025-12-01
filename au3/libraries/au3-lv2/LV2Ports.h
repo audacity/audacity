@@ -15,8 +15,6 @@
 #ifndef __AUDACITY_LV2_PORTS__
 #define __AUDACITY_LV2_PORTS__
 
-#if USE_LV2
-
 #include <functional>
 #include <optional>
 #include <unordered_map>
@@ -319,5 +317,4 @@ public:
     LV2ControlPortStateArray mControlPortStates;
 };
 
-#endif
 #endif

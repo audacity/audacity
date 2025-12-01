@@ -56,9 +56,6 @@ set(AU3_DEF
     # Experimental features
     -DEXPERIMENTAL_SPECTRAL_EDITING
 
-    # LV2 support flag
-    -DUSE_LV2
-
     # Path definitions for plugins
     -DPKGLIBDIR="${PKGLIBDIR}"
     -DLIBDIR="${LIBDIR}"

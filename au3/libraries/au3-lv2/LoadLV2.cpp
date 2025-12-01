@@ -15,7 +15,6 @@ Functions that find and load all LV2 plugins on the system.
 *//*******************************************************************/
 #include "LV2Wrapper.h"
 #include "au3-module-manager/PluginInterface.h"
-#if defined(USE_LV2)
 
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wparentheses"
@@ -143,11 +142,7 @@ bool LV2EffectsModule::SupportsCustomModulePaths() const
 
 EffectFamilySymbol LV2EffectsModule::GetOptionalFamilySymbol()
 {
-#if USE_LV2
     return LV2EFFECTS_FAMILY;
-#else
-    return {};
-#endif
 }
 
 const FileExtensions& LV2EffectsModule::GetFileExtensions()
@@ -354,5 +349,3 @@ const LilvPlugin* LV2EffectsModule::GetPlugin(const PluginPath& path)
     }
     return nullptr;
 }
-
-#endif
