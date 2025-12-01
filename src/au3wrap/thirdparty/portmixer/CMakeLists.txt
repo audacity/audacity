@@ -128,7 +128,12 @@ set_target_properties( ${TARGET} PROPERTIES FOLDER "lib-src" )
 
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
-target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+target_include_directories( ${TARGET}
+   PRIVATE
+      ${TARGET_ROOT}/src
+   PUBLIC
+      ${TARGET_ROOT}/include
+)
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
 set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE On)
 
