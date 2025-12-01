@@ -15,8 +15,6 @@
 #ifndef __AUDACITY_LV2_INSTANCE__
 #define __AUDACITY_LV2_INSTANCE__
 
-#if USE_LV2
-
 #include "LV2InstanceFeaturesList.h"
 #include "LV2Ports.h"
 #include "au3-effects/PerTrackEffect.h"
@@ -89,5 +87,4 @@ private:
     bool mUseLatency{ false };
 };
 
-#endif
 #endif

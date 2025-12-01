@@ -14,8 +14,6 @@
 #ifndef __AUDACITY_LV2_FEATURES_LIST__
 #define __AUDACITY_LV2_FEATURES_LIST__
 
-#if USE_LV2
-
 #include "lv2/log/log.h"
 #include "lv2/uri-map/uri-map.h"
 
@@ -142,5 +140,4 @@ public:
    const bool mOk;
 };
 
-#endif
 #endif

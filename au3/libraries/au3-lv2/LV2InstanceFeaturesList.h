@@ -14,8 +14,6 @@
 #ifndef __AUDACITY_LV2_INSTANCE_FEATURES_LIST__
 #define __AUDACITY_LV2_INSTANCE_FEATURES_LIST__
 
-#if USE_LV2
-
 #include "LV2FeaturesList.h"
 #include "au3-utility/Callable.h"
 #include "au3-utility/GlobalVariable.h"
@@ -81,6 +79,4 @@ struct LV2_API LV2WrapperFeaturesList final : ExtendedLV2FeaturesList {
       return static_cast<const LV2InstanceFeaturesList&>(mBaseFeatures);
    }
 };
-
-#endif
 #endif

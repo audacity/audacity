@@ -11,8 +11,6 @@
 
 **********************************************************************/
 
-#if defined(USE_LV2)
-
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wparentheses"
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -278,5 +276,3 @@ LV2_Worker_Status LV2Wrapper::Respond(uint32_t size, const void* data)
     return (err == wxMSGQUEUE_NO_ERROR)
            ? LV2_WORKER_SUCCESS : LV2_WORKER_ERR_UNKNOWN;
 }
-
-#endif

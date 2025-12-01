@@ -15,8 +15,6 @@
 #ifndef __AUDACITY_LV2_PREFERENCES__
 #define __AUDACITY_LV2_PREFERENCES__
 
-#if defined(USE_LV2)
-
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wparentheses"
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -53,5 +51,4 @@ bool SetUseGUI(const EffectDefinitionInterface& effect, bool useGUI);
 */
 }
 
-#endif
 #endif

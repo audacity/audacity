@@ -10,7 +10,6 @@
   License: GPL v2 or later.  See License.txt.
 
 **********************************************************************/
-#if defined(USE_LV2)
 
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wparentheses"
@@ -395,5 +394,3 @@ bool LV2EffectBase::SaveParameters(
     return SetConfig(*this,
                      PluginSettings::Private, group, wxT("Parameters"), parms);
 }
-
-#endif
