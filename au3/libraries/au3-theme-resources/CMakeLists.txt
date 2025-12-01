@@ -173,15 +173,6 @@ foreach( pair
       OUTPUT_VARIABLE THEME_FILES )
    set( arguments ${CMAKE_CURRENT_SOURCE_DIR} ${theme} )
 
-   add_custom_command( OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/${filename}.h"
-      COMMAND image-compiler ${arguments}
-      DEPENDS ${THEME_FILES}
-         # Also depend on the list of images, forcing rebuild in case of
-         # deleted images only
-         ../au3-theme/AllThemeResources.h
-      COMMENT "Generating ${filename}.h..."
-   )
-
    add_custom_target(${theme} SOURCES ${THEME_FILES})
    set_target_properties(${theme}
       PROPERTIES

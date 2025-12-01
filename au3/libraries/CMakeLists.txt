@@ -30,7 +30,6 @@ set( LIBRARIES
    au3-project-rate
    au3-file-formats
 #   au3-theme # not yet used in AU4
-#   image-compiler # not yet used in AU4 # not a library, but has a place in their dependency graph
 #   au3-theme-resources # not yet used in AU4
    au3-track
    au3-transactions
