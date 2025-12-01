@@ -564,7 +564,7 @@ Rectangle {
                 }
 
                 function isWithinRange(val, x, w) {
-                    return val >= x && val <= (x + w);
+                    return val >= x && val <= (x + w)
                 }
             }
 
@@ -852,6 +852,7 @@ Rectangle {
                 context: root.context
                 clipKey: root.clipKey
                 clipTime: root.clipTime
+                timelineIndentWidth: root.canvas.anchors.leftMargin
             }
         }
     }

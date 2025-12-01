@@ -59,7 +59,6 @@ ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintabl
                               clip.GetStretchRatio(), averagePixelsPerSecond)}
 {
     const auto trackRectT1 = zoomInfo.viewportT1;
-    const auto stretchRatio = clip.GetStretchRatio();
     const auto playStartTime = clip.GetPlayStartTime();
 
     const double clipLength = clip.GetPlayEndTime() - clip.GetPlayStartTime();

@@ -220,7 +220,7 @@ void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCod
     if (containsAny(codes, m_trackViewTypeChangeActionCodeList)) {
         const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
         const std::optional<trackedit::Track> track = trackeditProject->track(m_trackId);
-        assert(track.has_value());
+        // assert(track.has_value()); hit this when wanting to make a stereo track out of two mono tracks
         if (track.has_value()) {
             const trackedit::TrackViewType viewType = track->viewType;
             for (const auto& viewTypeCode : m_trackViewTypeChangeActionCodeList) {

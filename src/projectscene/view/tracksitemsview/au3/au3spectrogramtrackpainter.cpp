@@ -9,6 +9,7 @@
 
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
+#include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
 
 namespace au::projectscene {
 Au3SpectrogramTrackPainter::Au3SpectrogramTrackPainter(std::weak_ptr<WaveTrack> waveTrack)
@@ -16,7 +17,8 @@ Au3SpectrogramTrackPainter::Au3SpectrogramTrackPainter(std::weak_ptr<WaveTrack> 
 {
 }
 
-void Au3SpectrogramTrackPainter::paintClip(trackedit::ClipId clipId, QPainter& qPainter, const SpectrogramGlobalContext& globalContext)
+void Au3SpectrogramTrackPainter::paintClip(trackedit::ClipId clipId, QPainter& qPainter, int xBegin, int xEnd, int trackHeight,
+                                           const SpectrogramGlobalContext& globalContext)
 {
     const auto waveTrack = m_waveTrack.lock();
     IF_ASSERT_FAILED(waveTrack) {
@@ -28,11 +30,13 @@ void Au3SpectrogramTrackPainter::paintClip(trackedit::ClipId clipId, QPainter& q
     float minFreq, maxFreq;
     SpectrogramBounds::Get(*waveTrack).GetBounds(*waveTrack, minFreq, maxFreq);
 
+    constexpr auto leftRightHeightRatio = 1.0; // For now at least.
     const SpectrogramTrackContext trackContext{
         settings,
         waveTrack->IsSelected(),
         minFreq,
         maxFreq,
+        leftRightHeightRatio
     };
 
     ::WaveClip* const clip = au3::DomAccessor::findWaveClip(waveTrack.get(), clipId).get();
@@ -48,9 +52,16 @@ void Au3SpectrogramTrackPainter::paintClip(trackedit::ClipId clipId, QPainter& q
         m_clipPainterMap.emplace(clip, std::move(painters));
     }
 
-    auto& painters = m_clipPainterMap.at(clip);
-    for (auto i = 0u; i < painters.size(); ++i) {
-        painters[i]->paint(qPainter, globalContext, trackContext);
+    auto& channelPainters = m_clipPainterMap.at(clip);
+    const auto isStereo = channelPainters.size() == 2;
+    const auto rightChannelHeight = static_cast<int>(std::round(trackHeight * leftRightHeightRatio / 2));
+    for (auto i = 0u; i < channelPainters.size(); ++i) {
+        const auto isRightChannel = i == 1u;
+        const auto channelHeight = isStereo ? (isRightChannel ? rightChannelHeight : trackHeight - rightChannelHeight) : trackHeight;
+        QImage image{ xEnd - xBegin, channelHeight, QImage::Format_RGB888 };
+        channelPainters[i]->paint(image, globalContext, trackContext);
+        const auto channelY = isStereo ? (isRightChannel ? trackHeight - rightChannelHeight : 0) : 0;
+        qPainter.drawImage(QPoint { xBegin, channelY }, image);
     }
 }
 

@@ -4,12 +4,10 @@
 #include "au3spectrogrampainter.h"
 
 #include "au3wrap/internal/domaccessor.h"
-#include "trackedit/itrackeditproject.h"
 
 #include "framework/global/log.h"
 
 #include "libraries/lib-project/Project.h"
-#include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
 
@@ -24,9 +22,10 @@ void Au3SpectrogramPainter::init()
     });
 }
 
-void Au3SpectrogramPainter::paint(QPainter& qPainter, const trackedit::ClipKey& clipKey, const WaveMetrics& metrics,
-                                  const ZoomInfo& zoomInfo,
-                                  const SelectedRegion& selectedRegion)
+void Au3SpectrogramPainter::paintClip(QPainter& qPainter, int xBegin, int xEnd, int trackHeight, const trackedit::ClipKey& clipKey,
+                                      const WaveMetrics& metrics,
+                                      const ZoomInfo& zoomInfo,
+                                      const SelectedRegion& selectedRegion)
 {
     const auto au3Project = m_au3Project.lock();
     IF_ASSERT_FAILED(au3Project) {
@@ -54,6 +53,6 @@ void Au3SpectrogramPainter::paint(QPainter& qPainter, const trackedit::ClipKey& 
         metrics, zoomInfo, selectedRegion
     };
 
-    trackPainter.paintClip(clipKey.itemId, qPainter, gc);
+    trackPainter.paintClip(clipKey.itemId, qPainter, xBegin, xEnd, trackHeight, gc);
 }
 }

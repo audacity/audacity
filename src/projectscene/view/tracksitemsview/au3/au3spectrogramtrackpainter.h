@@ -26,7 +26,7 @@ public:
     bool trackExpired() const;
     bool hasClip(trackedit::ClipId) const;
 
-    void paintClip(trackedit::ClipId, QPainter&, const SpectrogramGlobalContext&);
+    void paintClip(trackedit::ClipId, QPainter&, int xBegin, int xEnd, int trackHeight, const SpectrogramGlobalContext&);
 
 private:
     const std::weak_ptr<WaveTrack> m_waveTrack;
