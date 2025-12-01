@@ -78,10 +78,6 @@ set(AU3_INCLUDE
 #    ${ogg_INCLUDE_DIRS} # TODO: mod-ogg AND/OR mod-opus
 #    ${opus_INCLUDE_DIRS} # TODO: mod-opus
 
-    ${AUDACITY_ROOT}/lib-src/sqlite
-    ${AUDACITY_ROOT}/lib-src/pffft
-    ${AUDACITY_ROOT}/lib-src/libsoxr/src
-    ${AUDACITY_ROOT}/lib-src/portmixer
     # As for the above libraries, SoundTouch includes: Even though soundtouch is linked via AU3_LINK, the include paths
     # don't propagate through the static library chain, so we need to add them explicitly
     ${AUDACITY_ROOT}/lib-src/soundtouch/include
