@@ -4,6 +4,7 @@
 #include "dblinearmonoruler.h"
 
 #include "framework/global/realfn.h"
+#include "framework/global/types/ratio.h"
 
 #include "projectscene/view/trackruler/itrackruler.h"
 
@@ -27,7 +28,7 @@ DbLinearMonoRuler::DbLinearMonoRuler()
 double DbLinearMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, bool isNegativeSample) const
 {
     if (muse::RealIsEqual(step, m_dbRange)) {
-        return m_height / 2.0;
+        return m_height / ((m_maxDisplayValue - m_minDisplayValue) / m_maxDisplayValue);
     }
 
     return valueToPosition(step, m_height, isNegativeSample);
@@ -35,19 +36,26 @@ double DbLinearMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t ch
 
 std::vector<TrackRulerFullStep> DbLinearMonoRuler::fullSteps() const
 {
+    const double maxDisplayValueDB = muse::linear_to_db(m_maxDisplayValue);
+
     if (m_collapsed) {
         return { TrackRulerFullStep { m_dbRange, 0, 0, true, true, false } };
     }
 
     const std::vector<int> valuesList = fullStepValues(m_height);
-    std::vector<TrackRulerFullStep> steps { TrackRulerFullStep { m_dbRange, 0, 0, false, true, false },
-                                            TrackRulerFullStep { m_maxDisplayValueDB, 0, -1, true, true, false },
-                                            TrackRulerFullStep { m_maxDisplayValueDB, 0, 1, true, true, true }
+    std::vector<TrackRulerFullStep> steps { TrackRulerFullStep { m_dbRange, 0, m_isHalfWave ? 1 : 0, false, true, false },
+                                            TrackRulerFullStep { maxDisplayValueDB, 0, -1, true, true, false }
     };
+
+    if (!m_isHalfWave) {
+        steps.push_back(TrackRulerFullStep { maxDisplayValueDB, 0, 1, true, true, true });
+    }
 
     for (const int stepValue : valuesList) {
         steps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), 0, 0, false, false, false });
-        steps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), 0, 0, false, false, true });
+        if (!m_isHalfWave) {
+            steps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), 0, 0, false, false, true });
+        }
     }
 
     return steps;
@@ -55,12 +63,16 @@ std::vector<TrackRulerFullStep> DbLinearMonoRuler::fullSteps() const
 
 std::vector<TrackRulerSmallStep> DbLinearMonoRuler::smallSteps() const
 {
+    const double maxDisplayValueDB = muse::linear_to_db(m_maxDisplayValue);
+
     if (m_collapsed) {
-        return { TrackRulerSmallStep { m_maxDisplayValueDB, 0, false }, TrackRulerSmallStep { m_maxDisplayValueDB, 0, true } };
+        return m_isHalfWave ? std::vector<TrackRulerSmallStep> { TrackRulerSmallStep { maxDisplayValueDB, 0, false } }
+               : std::vector<TrackRulerSmallStep> { TrackRulerSmallStep { maxDisplayValueDB, 0, false },
+                                                    TrackRulerSmallStep { maxDisplayValueDB, 0, true } };
     }
 
     std::vector<int> valuesList = fullStepValues(m_height);
-    valuesList.push_back(static_cast<int>(m_maxDisplayValueDB));
+    valuesList.push_back(static_cast<int>(maxDisplayValueDB));
 
     std::vector<std::tuple<int, int> > fullStepRanges;
     fullStepRanges.reserve(valuesList.size() - 1);
@@ -69,7 +81,7 @@ std::vector<TrackRulerSmallStep> DbLinearMonoRuler::smallSteps() const
     }
 
     // We ensure small steps will be shown onlu if there is enough room between full steps
-    int lowestSmallStep = static_cast<int>(m_maxDisplayValueDB);
+    int lowestSmallStep = static_cast<int>(maxDisplayValueDB);
     for (const auto& [startValue, endValue] : fullStepRanges) {
         double firstPos = valueToPosition(startValue, m_height, false);
         double secondPos = valueToPosition(endValue, m_height, false);
@@ -80,12 +92,15 @@ std::vector<TrackRulerSmallStep> DbLinearMonoRuler::smallSteps() const
     }
 
     std::vector<TrackRulerSmallStep> steps = {};
-    for (int i = lowestSmallStep; i < m_maxDisplayValueDB; i++) {
+    for (int i = lowestSmallStep; i < maxDisplayValueDB; i++) {
         if (std::find(valuesList.begin(), valuesList.end(), i) != valuesList.end()) {
             continue;
         }
         steps.push_back(TrackRulerSmallStep { static_cast<double>(i), 0, false });
-        steps.push_back(TrackRulerSmallStep { static_cast<double>(i), 0, true });
+
+        if (!m_isHalfWave) {
+            steps.push_back(TrackRulerSmallStep { static_cast<double>(i), 0, true });
+        }
     }
     return steps;
 }
