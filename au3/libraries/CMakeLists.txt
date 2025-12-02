@@ -35,9 +35,9 @@ set( LIBRARIES
    au3-preferences
    au3-math
    au3-files
-   au3-import-export
-   au3-ipc
    au3-registries
+   au3-ipc
+   au3-import-export
    au3-xml
    au3-audio-devices
    au3-project
