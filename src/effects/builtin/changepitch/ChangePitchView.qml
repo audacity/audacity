@@ -19,11 +19,8 @@ BuiltinEffectBase {
     property string title: changePitch.effectTitle()
     property bool isApplyAllowed: true
 
-    model: changePitch
-
-    ChangePitchViewModel {
-        id: changePitch
-    }
+    builtinEffectModel: ChangePitchViewModelFactory.createModel(root, root.instanceId)
+    property alias changePitch: root.builtinEffectModel
 
     QtObject {
         id: prv

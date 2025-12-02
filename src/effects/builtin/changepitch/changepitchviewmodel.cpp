@@ -12,6 +12,11 @@
 
 using namespace au::effects;
 
+ChangePitchViewModel::ChangePitchViewModel(QObject* parent, int instanceId)
+    : BuiltinEffectModel(parent, instanceId)
+{
+}
+
 QString ChangePitchViewModel::effectTitle() const
 {
     return muse::qtrc("effects/changepitch", "Change Pitch");
