@@ -280,7 +280,7 @@ AllSpectrogramSettings SpectrogramConfiguration::allSettings() const
     return settings;
 }
 
-void SpectrogramConfiguration::setAllSettings(const AllSpectrogramSettings &settings)
+void SpectrogramConfiguration::setAllSettings(const AllSpectrogramSettings& settings)
 {
     setSpectralSelectionEnabled(settings.spectralSelectionEnabled);
     setColorScheme(settings.colorScheme);

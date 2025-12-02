@@ -56,7 +56,7 @@ public:
     muse::async::Channel<int> zeroPaddingFactorChanged() const override;
 
     AllSpectrogramSettings allSettings() const override;
-    void setAllSettings(const AllSpectrogramSettings &) override;
+    void setAllSettings(const AllSpectrogramSettings&) override;
     muse::async::Notification someSettingChanged() const override;
 
 private:
