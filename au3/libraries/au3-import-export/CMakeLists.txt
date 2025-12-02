@@ -44,8 +44,9 @@ set( LIBRARIES
    au3-wave-track-interface
    au3-project-interface
    PRIVATE
-      au3-effects-interface
-      wxBase
+   au3-effects-interface
+   wxBase
+   SndFile::sndfile
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""
