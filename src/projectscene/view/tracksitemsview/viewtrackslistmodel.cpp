@@ -264,17 +264,64 @@ void ViewTracksListModel::endImportDrag()
     m_tracksCountWhenDragStarted = -1;
 }
 
-int ViewTracksListModel::prepareConditionalTrack(int draggedFilesCount)
+void ViewTracksListModel::prepareConditionalTracks(int currentTrackId, int draggedFilesCount)
 {
+    if (draggedFilesCount <= 0) {
+        return;
+    }
+
     int tracksCreated = m_trackList.size() - m_tracksCountWhenDragStarted;
 
     if (draggedFilesCount <= tracksCreated) {
-        return m_trackList.back().id;
+        return;
     }
 
-    trackeditInteraction()->newMonoTrack();
+    int currentIndex = -1;
+    for (int i = 0; i < static_cast<int>(m_trackList.size()); ++i) {
+        if (m_trackList[i].id == currentTrackId) {
+            currentIndex = i;
+            break;
+        }
+    }
 
-    return m_trackList.back().id;
+    int availableTracks;
+    if (currentIndex < 0) {
+        availableTracks = 0;
+    } else {
+        availableTracks = static_cast<int>(m_trackList.size()) - currentIndex;
+    }
+
+    int missingTracks = draggedFilesCount - availableTracks;
+    if (missingTracks <= 0) {
+        return;
+    }
+
+    for (int i = 0; i < missingTracks; ++i) {
+        // TODO: this is bad, newMonoTrack adds to history
+        trackeditInteraction()->newMonoTrack();
+    }
+}
+
+QVariant ViewTracksListModel::draggedTracksIds(int currentTrackId, int draggedFilesCount)
+{
+    QVariantList trackIds;
+    // get m_trackList.size() for stereo/mono only
+    for (size_t i = 0; i < m_trackList.size(); ++i) {
+        if (m_trackList.at(i).id == currentTrackId || static_cast<int>(m_trackList.size() - i) == draggedFilesCount) {
+            trackIds.push_back(m_trackList.at(i).id);
+            draggedFilesCount--;
+        } else if (!trackIds.empty()) {
+            // TODO: skip label tracks
+            trackIds.push_back(m_trackList.at(i).id);
+            draggedFilesCount--;
+        }
+
+        if (draggedFilesCount == 0) {
+            break;
+        }
+    }
+
+    return trackIds;
 }
 
 void ViewTracksListModel::removeDragAddedTracks(int currentTrackId, int draggedFilesCount)
@@ -301,10 +348,22 @@ void ViewTracksListModel::handleDroppedFiles(const trackedit::TrackId& trackId, 
     }
 
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    if (fileUrls.size() > 1) { // TODO: implement multiple files drag
-        prj->import(localPaths);
-    } else {
-        prj->importIntoTrack(localPaths.front(), trackId, startTime);
+
+    bool importEnabled = false;
+    int importCount = 0;
+    for (size_t i = 0; i < m_trackList.size(); ++i) {
+        if (m_trackList.at(i).id == trackId) {
+            importEnabled = true;
+        }
+
+        if (importEnabled) {
+            prj->importIntoTrack(localPaths.at(importCount), m_trackList.at(i).id, startTime);
+            importCount++;
+        }
+
+        if (importCount >= static_cast<int>(localPaths.size())) {
+            break;
+        }
     }
 }
 

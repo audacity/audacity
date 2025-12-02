@@ -621,7 +621,7 @@ Rectangle {
                 signal stopAutoScroll
 
                 signal previewImportClipRequested(int trackId, real startPos, real endPos, string title)
-                signal clearPreviewImportClip()
+                signal clearPreviewImportClip(var excludeTrackIds)
 
                 header: Rectangle {
                     height: 2
@@ -882,13 +882,13 @@ Rectangle {
                                 function onPreviewImportClipRequested(trackId, startPos, endPos, title) {
                                     if (trackId === trackClipsContainer.trackId) {
                                         trackClipsContainer.movePreviewClip(startPos, endPos, title)
-                                    } else {
-                                        trackClipsContainer.clearPreviewClip()
                                     }
                                 }
 
-                                function onClearPreviewImportClip() {
-                                    trackClipsContainer.clearPreviewClip()
+                                function onClearPreviewImportClip(excludeTrackIds) {
+                                    if (!excludeTrackIds.includes(trackClipsContainer.trackId)) {
+                                        trackClipsContainer.clearPreviewClip()
+                                    }
                                 }
                             }
                         }
@@ -1078,13 +1078,13 @@ Rectangle {
     DropArea {
         id: dropArea
 
-        anchors.fill: parent
+        anchors.fill: content
 
         Timer {
             id: clearPreviewClipsTimer
             interval: 100
             onTriggered: {
-                tracksItemsView.clearPreviewImportClip()
+                tracksItemsView.clearPreviewImportClip([])
                 tracksModel.endImportDrag()
             }
         }
@@ -1095,25 +1095,27 @@ Rectangle {
 
             let urls = drop.urls.concat([]);
 
-            // TODO: parallel/serial visuals of multiple clips
-            if (urls.length > 1) {
-                return
-            }
-
             tracksModel.startImportDrag()
             // update preview clip position
             let position = mapToItem(content, Qt.point(drop.x, drop.y))
 
-            let trackId = tracksViewState.trackAtPosition(position.x, position.y)
-            if (trackId == -1) {
-                trackId = tracksModel.prepareConditionalTrack(urls.length)
-            } else {
-               tracksModel.removeDragAddedTracks(trackId, urls.length);
-            }
+            var trackId = tracksViewState.trackAtPosition(position.x, position.y)
+            tracksModel.prepareConditionalTracks(trackId, urls.length)
+            tracksModel.removeDragAddedTracks(trackId, urls.length)
 
+            let tracksIds = tracksModel.draggedTracksIds(trackId, urls.length)
+
+            // TODO: get endPos and title for every url separately
             let endPos = timeline.context.timeToPosition((timeline.context.positionToTime(position.x) + tracksModel.audioFileLength(urls)))
-            let title = tracksModel.audioFileName(urls[0])
-            tracksItemsView.previewImportClipRequested(trackId, position.x, endPos, title)
+
+            tracksItemsView.clearPreviewImportClip(tracksIds /* tracks not to clear */)
+            for (let i = 0; i < urls.length; i++) {
+                const url = urls[i];
+                const trackId = tracksIds[i];
+
+                let title = tracksModel.audioFileName(url)
+                tracksItemsView.previewImportClipRequested(trackId, position.x, endPos, title)
+            }
         }
 
         onExited: {
@@ -1132,10 +1134,8 @@ Rectangle {
 
             let position = mapToItem(content, Qt.point(drop.x, drop.y))
             let trackId = tracksViewState.trackAtPosition(position.x, position.y)
-            if (trackId == -1) {
-                trackId = tracksModel.prepareConditionalTrack(urls.length)
-            }
-            tracksModel.handleDroppedFiles(trackId, timeline.context.positionToTime(position.x), urls)
+            let tracksIds = tracksModel.draggedTracksIds(trackId, urls.length)
+            tracksModel.handleDroppedFiles(tracksIds[0], timeline.context.positionToTime(position.x), urls)
 
             tracksModel.endImportDrag()
             drop.acceptProposedAction()
