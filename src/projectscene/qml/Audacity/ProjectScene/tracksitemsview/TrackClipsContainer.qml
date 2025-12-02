@@ -20,7 +20,7 @@ TrackItemsContainer {
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
 
-    signal movePreviewClip(int x, int duration, string title)
+    signal movePreviewClip(int x, int width, string title)
     signal clearPreviewClip()
 
     TrackClipsListModel {
@@ -467,10 +467,16 @@ TrackItemsContainer {
                     Connections {
                         target: root
 
-                        function onMovePreviewClip(x, endPos, title) {
-                            previewClip.visible = true
+                        function onMovePreviewClip(x, width, title) {
+                            if (!previewClip.visible) {
+                                previewClip.visible = true
+                            }
+
                             previewClip.x = x
-                            previewClip.width = endPos - x
+
+                            if (previewClip.width != width) {
+                                previewClip.width = width
+                            }
 
                             if (previewClip.title != title) {
                                 previewClip.title = title
@@ -478,7 +484,9 @@ TrackItemsContainer {
                         }
 
                         function onClearPreviewClip() {
-                            previewClip.visible = false
+                            if (previewClip.visible) {
+                                previewClip.visible = false
+                            }
                         }
                     }
                 }
