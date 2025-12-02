@@ -388,7 +388,12 @@ protected:
     //! Holds some state for duration of playback or recording
     std::unique_ptr<TransportState> mpTransportState;
 
-    AudioCallbackInfoQueue mAudioCallbackInfoQueue { 16 };
+    // In a jitter-free world, the size of this queue only has to be `ceil(producerRate / consumerRate)`.
+    // If we assume a minimum of 30fps for the consumer (this is supposed to be read by a entity occupied with
+    // smooth rendering of the playback cursor), and a callback pushing maybe as little as 10 samples per
+    // callback (I've just seen 14 samples per callback, on MacOS with a requested buffer size of 10ms),
+    // we get ceil(96000 / 10 / 30) = 360. The rounding to the next power of two should accommodate jitter.
+    AudioCallbackInfoQueue mAudioCallbackInfoQueue { 512 };
 
 private:
     /*!

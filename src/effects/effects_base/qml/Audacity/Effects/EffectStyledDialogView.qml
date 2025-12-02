@@ -11,6 +11,8 @@ StyledDialogView {
 
     resizable: false
 
+    required property int instanceId
+
     property NavigationPanel navigationPanel: NavigationPanel {
         name: root.title
         enabled: root.isOpened

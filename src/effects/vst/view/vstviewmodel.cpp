@@ -13,6 +13,10 @@
 
 using namespace au::effects;
 
+VstViewModel::VstViewModel(QObject* parent, int instanceId)
+    : AbstractEffectViewModel(parent, instanceId)
+{}
+
 VstViewModel::~VstViewModel()
 {
     m_settingUpdateTimer.stop();
@@ -20,7 +24,7 @@ VstViewModel::~VstViewModel()
     checkSettingChangesFromUi(true);
 }
 
-void VstViewModel::init()
+void VstViewModel::doInit()
 {
     EffectInstanceId id = this->instanceId();
     IF_ASSERT_FAILED(id != 0) {
@@ -117,7 +121,7 @@ void VstViewModel::settingsFromView()
     });
 }
 
-void VstViewModel::preview()
+void VstViewModel::doStartPreview()
 {
     IF_ASSERT_FAILED(m_settingsAccess) {
         return;
@@ -129,18 +133,4 @@ void VstViewModel::preview()
         executionScenario()->previewEffect(instanceId(), settings);
         return nullptr;
     });
-}
-
-int VstViewModel::instanceId() const
-{
-    return m_instanceId;
-}
-
-void VstViewModel::setInstanceId(int newInstanceId)
-{
-    if (m_instanceId == newInstanceId) {
-        return;
-    }
-    m_instanceId = newInstanceId;
-    emit instanceIdChanged();
 }

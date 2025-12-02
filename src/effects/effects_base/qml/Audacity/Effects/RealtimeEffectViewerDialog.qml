@@ -16,7 +16,6 @@ import Audacity.AudioUnit
 EffectStyledDialogView {
     id: root
 
-    property string instanceId
     property alias effectState: viewerModel.effectState
 
     title: viewerModel.title + " - " + viewerModel.trackName
@@ -64,7 +63,6 @@ EffectStyledDialogView {
     Component {
         id: audioUnitViewerComponent
         AudioUnitViewer {
-            id: view
             instanceId: root.instanceId
             topPadding: headerBar.y + headerBar.height + prv.padding
             minimumWidth: prv.minimumWidth
@@ -74,7 +72,6 @@ EffectStyledDialogView {
     Component {
         id: lv2ViewerComponent
         Lv2Viewer {
-            id: view
             instanceId: root.instanceId
             effectState: root.effectState
             title: root.title
@@ -84,7 +81,6 @@ EffectStyledDialogView {
     Component {
         id: vstViewerComponent
         VstViewer {
-            id: view
             instanceId: root.instanceId
             topPadding: headerBar.y + headerBar.height + prv.padding
             minimumWidth: prv.minimumWidth
@@ -99,8 +95,10 @@ EffectStyledDialogView {
             rightPadding: prv.padding
             bottomPadding: prv.padding
 
+            property alias instanceId: viewer.instanceId
+
             BuiltinEffectViewer {
-                id: view
+                id: viewer
                 instanceId: root.instanceId
                 usedDestructively: false
             }
@@ -115,7 +113,6 @@ EffectStyledDialogView {
             Layout.fillWidth: true
 
             window: Window {
-
                 id: win
 
                 color: ui.theme.backgroundPrimaryColor

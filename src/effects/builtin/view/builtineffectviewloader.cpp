@@ -21,6 +21,7 @@
  */
 #include "builtineffectviewloader.h"
 #include "effects/effects_base/effectstypes.h"
+#include "effects/effects_base/internal/abstractviewlauncher.h"
 
 #include <QQmlEngine>
 
@@ -33,14 +34,6 @@
 
 using namespace au::effects;
 
-namespace {
-static int gInitializationInstanceId = -1;
-}
-
-BuiltinEffectViewLoader::BuiltinEffectViewLoader(QObject* parent)
-    : QObject(parent)
-{}
-
 BuiltinEffectViewLoader::~BuiltinEffectViewLoader()
 {
     if (m_contentItem) {
@@ -49,12 +42,10 @@ BuiltinEffectViewLoader::~BuiltinEffectViewLoader()
     }
 }
 
-void BuiltinEffectViewLoader::load(const QString& instanceId, QObject* itemParent, QObject* dialogView, bool usedDestructively)
+void BuiltinEffectViewLoader::load(int instanceId, QObject* itemParent, QObject* dialogView, bool usedDestructively)
 {
-    LOGD() << "instanceId: " << instanceId;
-
     // TODO: could instancesRegister have a `typeByInstanceId` method?
-    const auto effectId = instancesRegister()->effectIdByInstanceId(instanceId.toInt()).toStdString();
+    const auto effectId = instancesRegister()->effectIdByInstanceId(instanceId).toStdString();
 
     const auto effect = dynamic_cast<Effect*>(EffectManager::Get().GetEffect(effectId));
     IF_ASSERT_FAILED(effect) {
@@ -82,14 +73,13 @@ void BuiltinEffectViewLoader::load(const QString& instanceId, QObject* itemParen
         return;
     }
 
-    gInitializationInstanceId = instanceId.toInt();
     QObject* obj = component.createWithInitialProperties(
     {
         { "parent", QVariant::fromValue(itemParent) },
+        { "instanceId", instanceId },
         { "dialogView", QVariant::fromValue(dialogView) },
         { "usedDestructively", usedDestructively }
     });
-    gInitializationInstanceId = -1;
 
     m_contentItem = qobject_cast<QQuickItem*>(obj);
     if (!m_contentItem) {
@@ -113,11 +103,6 @@ void BuiltinEffectViewLoader::load(const QString& instanceId, QObject* itemParen
     }
 
     emit contentItemChanged();
-}
-
-int BuiltinEffectViewLoader::initializationInstanceId()
-{
-    return gInitializationInstanceId;
 }
 
 QQuickItem* BuiltinEffectViewLoader::contentItem() const

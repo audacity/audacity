@@ -8,6 +8,11 @@
 
 using namespace au::effects;
 
+NoiseReductionViewModel::NoiseReductionViewModel(QObject* parent, int instanceId)
+    : BuiltinEffectModel{parent, instanceId}
+{
+}
+
 void NoiseReductionViewModel::doReload()
 {
     emit isApplyAllowedChanged();

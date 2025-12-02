@@ -7,18 +7,19 @@ BuiltinEffectBase {
     id: root
 
     property string title: amplify.effectTitle
-    property alias isApplyAllowed: amplify.isApplyAllowed
+    property bool isApplyAllowed: amplify.isApplyAllowed
 
     width: 320
     implicitHeight: column.height
 
-    model: amplify
-
-    AmplifyViewModel {
-        id: amplify
-
-        onAmpValueChanged: ampSlider.value = ampValue
+    builtinEffectModel: {
+        var model = AmplifyViewModelFactory.createModel(root, root.instanceId)
+        model.ampValueChanged.connect(function () {
+            ampSlider.value = model.ampValue
+        })
+        return model
     }
+    property alias amplify: root.builtinEffectModel
 
     Component.onCompleted: {
         ampSlider.value = amplify.ampValue

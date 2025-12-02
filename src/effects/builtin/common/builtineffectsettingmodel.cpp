@@ -4,8 +4,8 @@
 #include "builtineffectsettingmodel.h"
 
 namespace au::effects {
-BuiltinEffectSettingModel::BuiltinEffectSettingModel(QObject* parent)
-    : BuiltinEffectModel{parent} {}
+BuiltinEffectSettingModel::BuiltinEffectSettingModel(QObject* parent, int instanceId)
+    : BuiltinEffectModel{parent, instanceId} {}
 
 QString BuiltinEffectSettingModel::paramId() const
 {

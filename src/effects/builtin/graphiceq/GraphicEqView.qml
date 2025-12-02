@@ -14,11 +14,8 @@ BuiltinEffectBase {
     width: boardRectangle.width
     implicitHeight: boardRectangle.height
 
-    model: graphicEq
-
-    GraphicEqViewModel {
-        id: graphicEq
-    }
+    builtinEffectModel: GraphicEqViewModelFactory.createModel(root, root.instanceId)
+    property alias graphicEq: root.builtinEffectModel
 
     Rectangle {
         id: boardRectangle

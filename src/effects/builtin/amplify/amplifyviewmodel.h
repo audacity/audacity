@@ -36,7 +36,8 @@ class AmplifyViewModel : public BuiltinEffectModel
     Q_PROPERTY(bool isApplyAllowed READ isApplyAllowed NOTIFY isApplyAllowedChanged FINAL)
 
 public:
-    AmplifyViewModel() = default;
+    AmplifyViewModel(QObject* parent, int instanceId);
+    ~AmplifyViewModel() override = default;
 
     QString effectTitle() const;
 
@@ -80,5 +81,9 @@ private:
     db_t m_newPeak = 0.0f;
     bool m_canClip = false;
     bool m_isApplyAllowed = false;
+};
+
+class AmplifyViewModelFactory : public EffectViewModelFactory<AmplifyViewModel>
+{
 };
 }

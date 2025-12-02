@@ -10,16 +10,13 @@ BuiltinEffectBase {
     id: root
 
     property string title: qsTrc("projectscene/silence", "Silence")
-    property alias isApplyAllowed: silence.isApplyAllowed
+    property bool isApplyAllowed: silence.isApplyAllowed
 
     implicitWidth: 300
     implicitHeight: column.implicitHeight
 
-    model: silence
-
-    SilenceViewModel {
-        id: silence
-    }
+    builtinEffectModel: SilenceViewModelFactory.createModel(root, root.instanceId)
+    property alias silence: root.builtinEffectModel
 
     Column {
         id: column

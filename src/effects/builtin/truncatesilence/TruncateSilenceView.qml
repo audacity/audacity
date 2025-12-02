@@ -17,11 +17,8 @@ BuiltinEffectBase {
     property string title: truncateSilence.effectTitle()
     property bool isApplyAllowed: true
 
-    model: truncateSilence
-
-    TruncateSilenceViewModel {
-        id: truncateSilence
-    }
+    builtinEffectModel: TruncateSilenceViewModelFactory.createModel(root, root.instanceId)
+    property alias truncateSilence: root.builtinEffectModel
 
     QtObject {
         id: prv

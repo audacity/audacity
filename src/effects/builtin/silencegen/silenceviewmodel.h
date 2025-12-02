@@ -13,11 +13,16 @@ class SilenceViewModel : public GeneratorEffectModel
     Q_OBJECT
 
 public:
-    SilenceViewModel() = default;
+    SilenceViewModel(QObject* parent, int instanceId)
+        : GeneratorEffectModel(parent, instanceId) {}
     ~SilenceViewModel() override = default;
 
 private:
     void doEmitSignals() override {}
     bool usesPresets() const override { return false; }
+};
+
+class SilenceViewModelFactory : public EffectViewModelFactory<SilenceViewModel>
+{
 };
 }

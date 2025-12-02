@@ -14,6 +14,7 @@ protected:
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<IEffectInstancesRegister> instancesRegister;
 
+    muse::Ret doShowEffect(int instanceId, EffectFamily) const;
     void doShowRealtimeEffect(const RealtimeEffectStatePtr& state) const;
 
 private:

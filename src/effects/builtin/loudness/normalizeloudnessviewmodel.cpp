@@ -8,6 +8,11 @@
 #include "global/translation.h"
 
 namespace au::effects {
+NormalizeLoudnessViewModel::NormalizeLoudnessViewModel(QObject* parent, int instanceId)
+    : BuiltinEffectModel(parent, instanceId)
+{
+}
+
 void NormalizeLoudnessViewModel::doReload()
 {
     emit useRmsAlgorithmChanged();

@@ -26,7 +26,7 @@ void RealtimeEffectListItemMenuModel::doPopulateMenu()
 {
     MenuItemList items;
 
-    items << makeMenuItem("realtimeeffect-remove", muse::TranslatableString("projectscene", "No effect")) << makeSeparator();
+    items << makeMenuItem("realtimeeffect-remove", muse::TranslatableString("projectscene", "Remove effect")) << makeSeparator();
 
     const auto effectMenus = this->effectMenus();
     if (!effectMenus.empty()) {

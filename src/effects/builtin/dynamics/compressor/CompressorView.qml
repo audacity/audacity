@@ -18,34 +18,38 @@ DynamicsEffectBase {
     width: rootColumn.width
     implicitHeight: rootColumn.height
 
-    model: compressor
-
-    CompressorViewModel {
-        id: compressor
-
-        onCompressionCurveChanged: {
-            compressionCurve.requestPaint()
-        }
+    builtinEffectModel: {
+        var model = CompressorViewModelFactory.createModel(root, root.instanceId)
+        model.onCompressionCurveChanged.connect(compressionCurve.requestPaint)
+        return model
     }
+    property alias compressor: root.builtinEffectModel
 
     Column {
         id: rootColumn
 
-        DynamicsPanel {
-            width: root.width
-            visible: !root.usedDestructively
+        Component {
+            id: dynamicsPanel
 
-            instanceId: compressor.instanceId
-            playState: root.playState
+            DynamicsPanel {
+                width: root.width
 
-            showInputDbModel: CompressorSettingModel {
-                paramId: "showInput"
+                instanceId: compressor.instanceId
+                playState: root.playState
+
+                showInputDbModel: CompressorSettingModelFactory.createModel(root, root.instanceId, "showInput")
+                showOutputDbModel: CompressorSettingModelFactory.createModel(root, root.instanceId, "showOutput")
+                showCompressionDbModel: CompressorSettingModelFactory.createModel(root, root.instanceId, "showActual")
             }
-            showOutputDbModel: CompressorSettingModel {
-                paramId: "showOutput"
-            }
-            showCompressionDbModel: CompressorSettingModel {
-                paramId: "showActual"
+        }
+
+        Loader {
+            id: dynamicsPanelLoader
+
+            Component.onCompleted: {
+                if (!root.usedDestructively) {
+                    sourceComponent = dynamicsPanel
+                }
             }
         }
 
@@ -78,9 +82,7 @@ DynamicsEffectBase {
                             isVertical: true
                             knobFirst: false
                             warp: true
-                            model: CompressorSettingModel {
-                                paramId: modelData
-                            }
+                            model: CompressorSettingModelFactory.createModel(root, root.instanceId, modelData)
                         }
                     }
                 }
@@ -104,11 +106,12 @@ DynamicsEffectBase {
                             isVertical: true
                             knobFirst: false
                             warp: true
-                            model: CompressorSettingModel {
-                                paramId: modelData
-                                onValueChanged: {
+                            model: {
+                                var model = CompressorSettingModelFactory.createModel(root, root.instanceId, modelData)
+                                model.onValueChanged.connect(function () {
                                     compressionCurve.requestPaint()
-                                }
+                                })
+                                return model
                             }
                         }
                     }

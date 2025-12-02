@@ -13,12 +13,13 @@ BuiltinEffectBase {
     id: root
 
     property string title: qsTrc("effects/tone", "Tone")
-    property alias isApplyAllowed: tone.isApplyAllowed
+    property bool isApplyAllowed: tone.isApplyAllowed
 
     width: 360
     implicitHeight: column.height
 
-    model: tone
+    builtinEffectModel: ToneViewModelFactory.createModel(root, root.instanceId)
+    property alias tone: root.builtinEffectModel
 
     QtObject {
         id: prv
@@ -26,10 +27,6 @@ BuiltinEffectBase {
         readonly property int spacing: 16
         readonly property int interpolationLinear: 0
         readonly property int interpolationLogarithmic: 1
-    }
-
-    ToneViewModel {
-        id: tone
     }
 
     Column {

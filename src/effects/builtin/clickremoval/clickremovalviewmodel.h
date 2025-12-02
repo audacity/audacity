@@ -28,7 +28,7 @@ class ClickRemovalViewModel : public BuiltinEffectModel
     Q_PROPERTY(int widthDecimals READ widthDecimals CONSTANT FINAL)
 
 public:
-    ClickRemovalViewModel() = default;
+    ClickRemovalViewModel(QObject* parent, int instanceId);
 
     QString effectTitle() const;
 
@@ -54,5 +54,9 @@ signals:
 
 private:
     void doReload() override;
+};
+
+class ClickRemovalViewModelFactory : public EffectViewModelFactory<ClickRemovalViewModel>
+{
 };
 }

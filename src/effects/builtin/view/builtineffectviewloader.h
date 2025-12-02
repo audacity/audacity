@@ -28,14 +28,11 @@ class BuiltinEffectViewLoader : public QObject, public muse::async::Asyncable
     muse::Inject<IEffectInstancesRegister> instancesRegister;
 
 public:
-    BuiltinEffectViewLoader(QObject* parent = nullptr);
     ~BuiltinEffectViewLoader() override;
 
     QQuickItem* contentItem() const;
 
-    Q_INVOKABLE void load(const QString& instanceId, QObject* itemParent, QObject* dialogView, bool usedDestructively);
-
-    static int initializationInstanceId();
+    Q_INVOKABLE void load(int instanceId, QObject* itemParent, QObject* dialogView, bool usedDestructively);
 
 signals:
     void titleChanged();

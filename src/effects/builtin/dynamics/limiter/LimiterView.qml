@@ -19,38 +19,43 @@ DynamicsEffectBase {
     width: rootColumn.width
     implicitHeight: rootColumn.height
 
-    model: limiter
-
-    LimiterViewModel {
-        id: limiter
-    }
+    builtinEffectModel: LimiterViewModelFactory.createModel(root, root.instanceId)
+    property alias limiter: root.builtinEffectModel
 
     Column {
         id: rootColumn
 
-        DynamicsPanel {
-            width: root.width
-            visible: !root.usedDestructively
+        Component {
+            id: dynamicsPanel
 
-            instanceId: limiter.instanceId
-            playState: root.playState
+            DynamicsPanel {
+                width: root.width
+                visible: !root.usedDestructively
 
-            showInputDbModel: LimiterSettingModel {
-                paramId: "showInput"
-            }
-            showOutputDbModel: LimiterSettingModel {
-                paramId: "showOutput"
-            }
-            showCompressionDbModel: LimiterSettingModel {
-                paramId: "showActual"
-            }
+                instanceId: limiter.instanceId
+                playState: root.playState
 
-            // Specific to limiter
-            dbMin: -12
-            dbStep: 3
-            duration: 2
-            timelineHeight: knobRow.height
-            needsClipIndicator: false // Clipping with the limiter is impossible.
+                showInputDbModel: LimiterSettingModelFactory.createModel(root, root.instanceId, "showInput")
+                showOutputDbModel: LimiterSettingModelFactory.createModel(root, root.instanceId, "showOutput")
+                showCompressionDbModel: LimiterSettingModelFactory.createModel(root, root.instanceId, "showActual")
+
+                // Specific to limiter
+                dbMin: -12
+                dbStep: 3
+                duration: 2
+                timelineHeight: knobRow.height
+                needsClipIndicator: false // Clipping with the limiter is impossible.
+            }
+        }
+
+        Loader {
+            id: dynamicsPanelLoader
+
+            Component.onCompleted: {
+                if (!root.usedDestructively) {
+                    sourceComponent = dynamicsPanel
+                }
+            }
         }
 
         Rectangle {
@@ -79,9 +84,7 @@ DynamicsEffectBase {
                         isVertical: true
                         radius: 24
                         warp: true
-                        model: LimiterSettingModel {
-                            paramId: "thresholdDb"
-                        }
+                        model: LimiterSettingModelFactory.createModel(root, root.instanceId, "thresholdDb")
                     }
                 }
 
@@ -95,9 +98,7 @@ DynamicsEffectBase {
                         isVertical: true
                         radius: 24
                         warp: true
-                        model: LimiterSettingModel {
-                            paramId: "makeupTargetDb"
-                        }
+                        model: LimiterSettingModelFactory.createModel(root, root.instanceId, "makeupTargetDb")
                     }
                 }
 
@@ -118,9 +119,7 @@ DynamicsEffectBase {
                         knobFirst: false
                         radius: 16
                         warp: true
-                        model: LimiterSettingModel {
-                            paramId: modelData
-                        }
+                        model: LimiterSettingModelFactory.createModel(root, root.instanceId, modelData)
                     }
                 }
             }
