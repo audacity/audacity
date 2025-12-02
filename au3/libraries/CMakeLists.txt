@@ -27,7 +27,7 @@ set( LIBRARIES
    au3-string-utils
    au3-strings
    au3-utility
-   au3-uuid
+#   au3-uuid # not yet used in AU4
    au3-components
    au3-basic-ui
    au3-exceptions
