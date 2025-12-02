@@ -91,8 +91,8 @@ set( LIBRARIES
    au3-wave-track-fft-interface
    au3-label-track-interface
    au3-note-track-interface
-   $<$<BOOL:${USE_SBSMS}>:libsbsms>
-   $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
+   $<$<BOOL:${AU_USE_SBSMS}>:libsbsms>
+   $<$<BOOL:${AU_USE_SOUNDTOUCH}>:soundtouch>
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
