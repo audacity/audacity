@@ -13,6 +13,16 @@
 # **********************************************************************
 
 include(GetPlatformInfo)
+include(GNUInstallDirs)
+
+# Plugin directory paths (needed by LV2 and other plugin loaders)
+# These are shared by all AU3 libraries and au3wrap module
+if(NOT DEFINED _PKGLIBDIR)
+    # _PKGLIBDIR is not defined in AU4, so we use a reasonable default
+    set(_PKGLIBDIR "${CMAKE_INSTALL_PREFIX}/lib/audacity")
+endif()
+set(PKGLIBDIR "${_PKGLIBDIR}")
+set(LIBDIR "${CMAKE_INSTALL_FULL_LIBDIR}")
 
 # Expose only the GUI-less subset of full wxWidgets
 # Also prohibit use of some other headers by pre-defining their include guards
@@ -232,6 +242,13 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
 
     # Audacity version information (shared variable defined at top of file)
     list(APPEND _private_defs ${AUDACITY_VERSION_DEFS})
+
+    # Plugin directory paths (needed by LV2 and other plugin loaders)
+    # PKGLIBDIR and LIBDIR are defined at the top of this file
+    list(APPEND _private_defs
+        -DPKGLIBDIR="${PKGLIBDIR}"
+        -DLIBDIR="${LIBDIR}"
+    )
 
     if(_private_defs)
         target_compile_definitions(${au3_target_name} PRIVATE ${_private_defs})
