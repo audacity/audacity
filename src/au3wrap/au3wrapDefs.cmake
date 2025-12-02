@@ -15,6 +15,7 @@
 
 # Include AU3 compatibility layer
 # This provides the audacity_library() macro and import_export_symbol() function
+# It also defines PKGLIBDIR and LIBDIR which are shared by all AU3 code
 include(${AUDACITY_ROOT}/au3defs.cmake)
 
 # Path variables for AU3 code
@@ -22,15 +23,11 @@ set(AU3_LIBRARIES ${AUDACITY_ROOT}/libraries)
 set(AU3_MODULES ${AUDACITY_ROOT}/modules)
 set(IMPORT_EXPORT_MODULE ${AU3_MODULES}/import-export)
 
-# AU4-specific definitions for au3wrap module
-set(PKGLIBDIR "${_PKGLIBDIR}")
-set(LIBDIR "${CMAKE_INSTALL_FULL_LIBDIR}")
-
 set(AU3_DEF
     # Audacity version information (defined in au3defs.cmake, included above)
     ${AUDACITY_VERSION_DEFS}
 
-    # Path definitions for plugins
+    # Path definitions for plugins (defined in au3defs.cmake, included above)
     -DPKGLIBDIR="${PKGLIBDIR}"
     -DLIBDIR="${LIBDIR}"
 
