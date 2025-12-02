@@ -54,9 +54,9 @@ set(AU3_DEF
 # Note: AU3 library-specific includes are handled by au3defs.cmake
 set(AU3_INCLUDE
 #    ${libsndfile_INCLUDE_DIRS} # TODO: mod-pcm
-#    ${vorbis_INCLUDE_DIRS} # TODO: mod-ogg AND/OR mod-opus
+#    ${vorbis_INCLUDE_DIRS} # TODO: mod-ogg
 #    ${flac_INCLUDE_DIRS} # TODO: mod-flac
-#    ${ogg_INCLUDE_DIRS} # TODO: mod-ogg AND/OR mod-opus
+#    ${ogg_INCLUDE_DIRS} # TODO: mod-opus
 #    ${opus_INCLUDE_DIRS} # TODO: mod-opus
 
     # AU3 libraries directory for namespaced includes like #include "au3-tags/Tags.h"
@@ -71,9 +71,9 @@ set(AU3_LINK
     wavpack::wavpack # used by mod-wavpack not yet a library
     mpg123::libmpg123 # used by mod-mpg123 not yet a library
     SndFile::sndfile # mod-pcm
-    Vorbis::vorbis # mod-ogg AND/OR mod-opus
+    Vorbis::vorbis # mod-ogg
     FLAC::FLAC # mod-flac
-    Ogg::ogg # mod-ogg AND/OR mod-opus
+    Ogg::ogg # mod-opus
     Opus::opus # mod-opus
 )
 
