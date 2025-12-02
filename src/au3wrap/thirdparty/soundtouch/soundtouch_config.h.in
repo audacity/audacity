@@ -1,0 +1,32 @@
+/* SoundTouch configuration for AU4 build */
+
+#ifndef SOUNDTOUCH_CONFIG_INCLUDED
+#define SOUNDTOUCH_CONFIG_INCLUDED
+
+/* Define to 1 if you have the <cpuid.h> header file. */
+#cmakedefine HAVE_CPUID_H
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#cmakedefine HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#cmakedefine HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#cmakedefine HAVE_STDLIB_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#cmakedefine HAVE_STRING_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#cmakedefine HAVE_UNISTD_H
+
+/* Note: SOUNDTOUCH_FLOAT_SAMPLES and SOUNDTOUCH_INTEGER_SAMPLES are defined
+   as compiler flags in CMakeLists.txt, not here, because they need to be
+   defined before STTypes.h is included. */
+
+/* Do not use x86 optimizations */
+#cmakedefine SOUNDTOUCH_DISABLE_X86_OPTIMIZATIONS
+
+#endif /* SOUNDTOUCH_CONFIG_INCLUDED */
+

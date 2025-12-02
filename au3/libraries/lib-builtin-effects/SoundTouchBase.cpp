@@ -16,13 +16,12 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 #include "SoundTouchBase.h"
 #include "EffectOutputTracks.h"
 
-#include <math.h>
-
 #include "LabelTrack.h"
-#include "SyncLock.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#ifdef USE_MIDI
 #include "NoteTrack.h"
+#endif
 #include "TimeWarper.h"
 
 // Soundtouch defines these as well, which are also in generated configmac.h
@@ -78,16 +77,9 @@ bool SoundTouchBase::ProcessWithTimeWarper(InitFunction initer,
     // by the subclass for subclass-specific parameters. The
     // time warper should also be set.
 
-    // Check if this effect will alter the selection length; if so, we need
-    // to operate on sync-lock selected tracks.
-    bool mustSync = true;
-    if (mT1 == warper.Warp(mT1)) {
-        mustSync = false;
-    }
-
     //Iterate over each track
     // Needs all for sync-lock grouping.
-    EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
+    EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
     bool bGoodResult = true;
 
     mPreserveLength = preserveLength;
@@ -97,8 +89,7 @@ bool SoundTouchBase::ProcessWithTimeWarper(InitFunction initer,
     outputs.Get().Any().VisitWhile(bGoodResult,
                                    [&](auto&& fallthrough){
         return [&](LabelTrack& lt) {
-            if (!(lt.GetSelected()
-                  || (mustSync && SyncLock::IsSyncLockSelected(lt)))) {
+            if (!lt.GetSelected()) {
                 return fallthrough();
             }
             if (!ProcessLabelTrack(&lt, warper)) {
@@ -108,8 +99,7 @@ bool SoundTouchBase::ProcessWithTimeWarper(InitFunction initer,
     },
 #ifdef USE_MIDI
                                    [&](auto&& fallthrough) { return [&](NoteTrack& nt) {
-            if (!(nt.GetSelected()
-                  || (mustSync && SyncLock::IsSyncLockSelected(nt)))) {
+            if (!nt.GetSelected() {
                 return fallthrough();
             }
             if (!ProcessNoteTrack(&nt, warper)) {
@@ -165,12 +155,7 @@ bool SoundTouchBase::ProcessWithTimeWarper(InitFunction initer,
             }
             mCurTrackNum++;
         };
-                                   },
-                                   [&](Track& t) {
-        if (mustSync && SyncLock::IsSyncLockSelected(t)) {
-            t.SyncLockAdjust(mT1, warper.Warp(mT1));
-        }
-    }
+                                   }
                                    );
 
     if (bGoodResult) {
