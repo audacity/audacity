@@ -163,15 +163,8 @@ bool EffectsUiActions::actionEnabled(const UiAction& action) const
     return m_controller->canReceiveAction(action.code);
 }
 
-bool EffectsUiActions::actionChecked(const UiAction& action) const
+bool EffectsUiActions::actionChecked([[maybe_unused]] const UiAction& action) const
 {
-    if (action.code.find("action://effects/toggle_vendor_ui") == 0) {
-        ActionQuery query(action.code);
-        if (query.contains("effectId")) {
-            EffectId effectId = EffectId::fromStdString(query.param("effectId").toString());
-            return configuration()->effectUIMode(effectId) == EffectUIMode::VendorUI;
-        }
-    }
     return false;
 }
 
