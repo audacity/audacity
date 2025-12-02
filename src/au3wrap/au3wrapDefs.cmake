@@ -30,9 +30,6 @@ set(AU3_DEF
     # Audacity version information (defined in au3defs.cmake, included above)
     ${AUDACITY_VERSION_DEFS}
 
-    # Experimental features
-    -DEXPERIMENTAL_SPECTRAL_EDITING
-
     # Path definitions for plugins
     -DPKGLIBDIR="${PKGLIBDIR}"
     -DLIBDIR="${LIBDIR}"
