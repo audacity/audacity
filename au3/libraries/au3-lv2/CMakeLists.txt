@@ -28,7 +28,7 @@ set( SOURCES
 )
 set( LIBRARIES
    au3-effects-interface
-   lv2
+   lv2sdk
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
