@@ -39,6 +39,7 @@ set( SOURCES
    Registry.h
 )
 set( LIBRARIES
+   au3-utility
    au3-preferences-interface
    au3-exceptions
    wxBase
