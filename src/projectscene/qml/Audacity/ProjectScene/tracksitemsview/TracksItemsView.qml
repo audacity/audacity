@@ -620,7 +620,7 @@ Rectangle {
                 signal startAutoScroll
                 signal stopAutoScroll
 
-                signal previewImportClipRequested(int trackId, real startPos, real endPos, string title)
+                signal previewImportClipRequested(int trackId, real startPos, real width, string title)
                 signal clearPreviewImportClip(var excludeTrackIds)
 
                 header: Rectangle {
@@ -1080,23 +1080,30 @@ Rectangle {
 
         anchors.fill: content
 
+        property bool dragInitialized: false
+
         Timer {
             id: clearPreviewClipsTimer
             interval: 100
             onTriggered: {
                 tracksItemsView.clearPreviewImportClip([])
                 tracksModel.endImportDrag()
+                dropArea.dragInitialized = false
             }
         }
 
         onEntered: drop => {
+            const t0 = Date.now();
             drop.accepted = true
             clearPreviewClipsTimer.stop()
 
             let urls = drop.urls.concat([]);
 
-            tracksModel.startImportDrag()
-            // update preview clip position
+            if (!dropArea.dragInitialized) {
+                tracksModel.startImportDrag()
+                tracksModel.probeAudioFilesLength(urls)
+            }
+
             let position = mapToItem(content, Qt.point(drop.x, drop.y))
 
             var trackId = tracksViewState.trackAtPosition(position.x, position.y)
@@ -1105,17 +1112,22 @@ Rectangle {
 
             let tracksIds = tracksModel.draggedTracksIds(trackId, urls.length)
 
-            // TODO: get endPos and title for every url separately
-            let endPos = timeline.context.timeToPosition((timeline.context.positionToTime(position.x) + tracksModel.audioFileLength(urls)))
-
             tracksItemsView.clearPreviewImportClip(tracksIds /* tracks not to clear */)
+            const startTime = timeline.context.positionToTime(position.x);
+            const durations  = tracksModel.lastProbedDurations();
+            const titles     = tracksModel.lastProbedFileNames();
             for (let i = 0; i < urls.length; i++) {
-                const url = urls[i];
                 const trackId = tracksIds[i];
+                const length  = durations[i];
+                const title   = titles[i];
 
-                let title = tracksModel.audioFileName(url)
-                tracksItemsView.previewImportClipRequested(trackId, position.x, endPos, title)
+                const endPos = timeline.context.timeToPosition(startTime + length);
+                tracksItemsView.previewImportClipRequested(trackId, position.x, endPos - position.x, title);
             }
+
+            // const t1 = Date.now();
+            // console.log("Duration:", (t1 - t0), "ms");
+            dropArea.dragInitialized = true
         }
 
         onExited: {

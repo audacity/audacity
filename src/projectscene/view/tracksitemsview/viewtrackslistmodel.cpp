@@ -217,35 +217,55 @@ void ViewTracksListModel::load()
     }, muse::async::Asyncable::Mode::SetReplace);
 }
 
-double ViewTracksListModel::audioFileLength(const QStringList& fileUrls)
+void ViewTracksListModel::probeAudioFilesLength(const QStringList& fileUrls)
 {
+    if (fileUrls == m_lastDraggedUrls) {
+        return;
+    }
+
+    m_lastDraggedUrls = fileUrls;
+    m_lastDraggedFilesInfo.clear();
+    m_lastDraggedFilesInfo.reserve(fileUrls.size());
+
     std::vector<muse::io::path_t> localPaths;
+    localPaths.reserve(fileUrls.size());
+
     for (const auto& fileUrl : fileUrls) {
-        QUrl url(fileUrl);
+        const QUrl url(fileUrl);
         localPaths.push_back(muse::io::path_t(url.toLocalFile()));
     }
 
-    project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (localPaths.empty()) {
-        return 0.0;
+        return;
     }
 
-    // temporary
-    if (m_lastProbedFileInfo.path == localPaths.at(0)) {
-        return m_lastProbedFileInfo.duration;
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+
+    for (const auto& path : localPaths) {
+        au::importexport::FileInfo fileInfo = importer()->fileInfo(path);
+        m_lastDraggedFilesInfo.push_back(std::move(fileInfo));
     }
-
-    importexport::FileInfo fileInfo = importer()->fileInfo(localPaths.at(0));
-    m_lastProbedFileInfo = fileInfo;
-
-    return fileInfo.duration;
 }
 
-QString ViewTracksListModel::audioFileName(const QString& fileUrl)
+QVariantList ViewTracksListModel::lastProbedDurations() const
 {
-    muse::io::path_t filePath = fileUrl;
+    QVariantList out;
+    out.reserve(static_cast<int>(m_lastDraggedFilesInfo.size()));
+    for (const auto& info : m_lastDraggedFilesInfo) {
+        out.push_back(info.duration);
+    }
+    return out;
+}
 
-    return filename(filePath, false /* including extension */).toQString();
+QVariantList ViewTracksListModel::lastProbedFileNames() const
+{
+    QVariantList out;
+    out.reserve(static_cast<int>(m_lastDraggedFilesInfo.size()));
+    for (const auto& info : m_lastDraggedFilesInfo) {
+        std::string title = muse::io::filename(info.filename, false /* including extension */).toStdString();
+        out.push_back(QString::fromStdString(title));
+    }
+    return out;
 }
 
 void ViewTracksListModel::startImportDrag()
@@ -262,6 +282,7 @@ void ViewTracksListModel::endImportDrag()
     tracksInteraction()->removeDragAddedTracks(m_tracksCountWhenDragStarted, true /* emptyOnly */);
 
     m_tracksCountWhenDragStarted = -1;
+    m_lastDraggedFilesInfo.clear();
 }
 
 void ViewTracksListModel::prepareConditionalTracks(int currentTrackId, int draggedFilesCount)

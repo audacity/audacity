@@ -45,8 +45,9 @@ public:
     explicit ViewTracksListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
-    Q_INVOKABLE double audioFileLength(const QStringList& fileUrls);
-    Q_INVOKABLE QString audioFileName(const QString& fileUrl);
+    Q_INVOKABLE void probeAudioFilesLength(const QStringList& fileUrls);
+    Q_INVOKABLE QVariantList lastProbedDurations() const;
+    Q_INVOKABLE QVariantList lastProbedFileNames() const;
     Q_INVOKABLE void startImportDrag();
     Q_INVOKABLE void endImportDrag();
     Q_INVOKABLE void prepareConditionalTracks(int currentTrackId, int draggedFileCount);
@@ -89,9 +90,8 @@ private:
 
     std::vector<trackedit::Track> m_trackList;
 
-    // TODO std::pair<importexport::FileInfo, std::chrono::steady_clock::time_point> m_lastProbedFileInfo;
-    // TODO: will need a vector for multiple files
-    importexport::FileInfo m_lastProbedFileInfo;
+    std::vector<au::importexport::FileInfo> m_lastDraggedFilesInfo;
+    QStringList m_lastDraggedUrls;
     int m_tracksCountWhenDragStarted = -1;
 };
 }
