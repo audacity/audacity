@@ -132,7 +132,7 @@ struct Builder : Base
     //! Variadic constructor
     template<typename ... Items>
     Builder(BaseArgs... args, Items&&... items)
-        : Base{std::forward<BaseArgs>(args)...}
+        : BaseType{std::forward<BaseArgs>(args)...}
     {
         (..., push_back(std::forward<Items>(items)));
     }
@@ -157,7 +157,7 @@ struct Builder : Base
                                                     ItemBuilder, std::invoke_result_t<Transformer, Arg> > > >
     Builder(BaseArgs... args,
             InputIterator begin, InputIterator end, Transformer transformer)
-        : Base{std::forward<BaseArgs>(args)...}
+        : BaseType{std::forward<BaseArgs>(args)...}
     {
         std::for_each(begin, end,
                       [this, &transformer](Arg&& arg){ push_back(transformer(arg)); });
