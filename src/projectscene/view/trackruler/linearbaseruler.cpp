@@ -16,7 +16,8 @@ constexpr int MIN_ADJACENT_SMALL_STEPS_HEIGHT = 10;
 constexpr double MAX_VALUE = 1.0;
 constexpr double MIN_VALUE = -1.0;
 
-constexpr int MAX_DECIMAL_PRECISION = 4;
+constexpr int MAX_DISPLAY_DECIMAL_PRECISION = 4;
+constexpr int MAX_DECIMAL_PRECISION = 10;
 }
 
 void LinearBaseRuler::setHeight(int height)
@@ -46,11 +47,8 @@ std::string LinearBaseRuler::sampleToText(double sample) const
     constexpr int MAX_PRECISION = 4;
 
     const auto increments = stepsIncrement(m_height);
-    int precision = getPrecision(increments.first);
-    double multiplier = std::pow(10.0, precision);
-    double rounded = std::round(std::abs(sample) * multiplier) / multiplier;
-
-    precision = std::clamp(precision, MIN_PRECISION, MAX_PRECISION);
+    const int precision = std::clamp(getPrecision(increments.first), MIN_PRECISION, MAX_PRECISION);
+    const double rounded = muse::RealRound(std::abs(sample), precision);
 
     std::stringstream ss;
     ss << std::fixed << std::setprecision(precision) << rounded;
@@ -80,7 +78,7 @@ int LinearBaseRuler::getPrecision(double step) const
     int precision = 0;
     double temp = step;
 
-    while (precision < MAX_DECIMAL_PRECISION) {
+    while (precision < MAX_DISPLAY_DECIMAL_PRECISION) {
         double shifted = temp * std::pow(10.0, precision);
         double fractional_part = shifted - std::floor(shifted);
 
@@ -107,7 +105,7 @@ std::pair<double, double> LinearBaseRuler::stepsIncrement(double height) const
     std::pair<double, double> increment = { DEFAULT_INCREMENT.first * factor, DEFAULT_INCREMENT.second * factor };
     for (const auto& stepInc : STEP_INCREMENT) {
         const auto& [fs, ss] = stepInc;
-        if (fs * factor < (10 ^ (-MAX_DECIMAL_PRECISION))) {
+        if (fs * factor < (10 ^ (-MAX_DISPLAY_DECIMAL_PRECISION))) {
             continue;
         }
 
@@ -132,7 +130,7 @@ std::vector<double> LinearBaseRuler::fullStepsValues(double height) const
     const std::pair<double, double> increment = stepsIncrement(height);
     std::vector<double> steps;
     for (double value = m_minDisplayValue; value <= m_maxDisplayValue + increment.first * 0.5; value += increment.first) {
-        steps.push_back(value);
+        steps.push_back(muse::RealRound(value, MAX_DECIMAL_PRECISION));
     }
     return steps;
 }
@@ -148,7 +146,7 @@ std::vector<double> LinearBaseRuler::smallStepsValues(double height) const
     const std::pair<double, double> increment = stepsIncrement(height);
     std::vector<double> steps;
     for (double v = m_minDisplayValue; v <= m_maxDisplayValue + increment.second * 0.5; v += increment.second) {
-        steps.push_back(v);
+        steps.push_back(muse::RealRound(v, MAX_DECIMAL_PRECISION));
     }
 
     return steps;
