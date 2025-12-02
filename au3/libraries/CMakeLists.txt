@@ -57,7 +57,7 @@ set( LIBRARIES
    au3-realtime-effects
    au3-audio-io
    au3-wave-track
-#   au3-wave-track-settings # not yet used in AU4
+   au3-wave-track-settings
    au3-wave-track-paint
    au3-track-selection
    au3-project-file-io
