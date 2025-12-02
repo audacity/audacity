@@ -84,10 +84,6 @@ EffectsUiActions::EffectsUiActions(std::shared_ptr<EffectsActionsController> con
     effectsProvider()->effectMetaListChanged().onNotify(this, [this] {
         reload();
     });
-
-    configuration()->effectUIModeChanged().onNotify(this, [this] {
-        m_actionCheckedChanged.send(ActionCodeList { "action://effects/toggle_vendor_ui" });
-    });
 }
 
 namespace {
