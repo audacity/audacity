@@ -76,6 +76,8 @@ public:
 
     double nearestZeroCrossing(double time) const override;
 
+    void removeDragAddedTracks(size_t numTracksWhenDragStarted, bool emptyOnly) override;
+
     muse::Progress progress() const override;
 
 private:

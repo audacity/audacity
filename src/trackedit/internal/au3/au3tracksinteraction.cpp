@@ -1240,6 +1240,20 @@ double Au3TracksInteraction::nearestZeroCrossing(double t0) const
     return t0 + (argmin - (int)windowSize / 2) / rate;
 }
 
+void Au3TracksInteraction::removeDragAddedTracks(size_t numTracksWhenDragStarted, bool emptyOnly)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    const auto tracks = prj->trackList();
+    for (auto i = numTracksWhenDragStarted; i < tracks.size(); ++i) {
+        const auto& track = tracks[i];
+        Au3WaveTrack* const waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(track.id));
+        if (!emptyOnly || waveTrack->IsEmpty()) {
+            ::TrackList::Get(projectRef()).Remove(*waveTrack);
+            prj->notifyAboutTrackRemoved(track);
+        }
+    }
+}
+
 TrackIdList Au3TracksInteraction::pasteIntoNewTracks(const std::vector<Au3TrackDataPtr>& tracksData)
 {
     auto& project = projectRef();

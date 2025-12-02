@@ -1085,6 +1085,7 @@ Rectangle {
             interval: 100
             onTriggered: {
                 tracksItemsView.clearPreviewImportClip()
+                tracksModel.endImportDrag()
             }
         }
 
@@ -1099,10 +1100,17 @@ Rectangle {
                 return
             }
 
+            tracksModel.startImportDrag()
             // update preview clip position
             let position = mapToItem(content, Qt.point(drop.x, drop.y))
 
             let trackId = tracksViewState.trackAtPosition(position.x, position.y)
+            if (trackId == -1) {
+                trackId = tracksModel.prepareConditionalTrack(urls.length)
+            } else {
+               tracksModel.removeDragAddedTracks(trackId, urls.length);
+            }
+
             let endPos = timeline.context.timeToPosition((timeline.context.positionToTime(position.x) + tracksModel.audioFileLength(urls)))
             let title = tracksModel.audioFileName(urls[0])
             tracksItemsView.previewImportClipRequested(trackId, position.x, endPos, title)
@@ -1124,8 +1132,12 @@ Rectangle {
 
             let position = mapToItem(content, Qt.point(drop.x, drop.y))
             let trackId = tracksViewState.trackAtPosition(position.x, position.y)
+            if (trackId == -1) {
+                trackId = tracksModel.prepareConditionalTrack(urls.length)
+            }
             tracksModel.handleDroppedFiles(trackId, timeline.context.positionToTime(position.x), urls)
 
+            tracksModel.endImportDrag()
             drop.acceptProposedAction()
         }
     }
