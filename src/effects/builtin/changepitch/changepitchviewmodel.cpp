@@ -5,7 +5,7 @@
 #include "changepitcheffect.h"
 
 #include "../common/measureunits.h"
-#include "libraries/lib-math/PitchName.h"
+#include "au3-math/PitchName.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
 #include <cmath>
