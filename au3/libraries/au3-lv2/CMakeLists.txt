@@ -25,9 +25,6 @@ set( SOURCES
    LoadLV2.cpp
    LoadLV2.h
    lv2_external_ui.h
-   zix/common.h
-   zix/ring.cpp
-   zix/ring.h
 )
 set( LIBRARIES
    au3-effects-interface
