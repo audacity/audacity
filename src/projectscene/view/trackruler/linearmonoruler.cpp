@@ -7,12 +7,6 @@
 
 using namespace au::projectscene;
 
-namespace {
-constexpr std::array<TrackRulerFullStep, 1> COLLAPSED_FULL_STEPS = { {
-    TrackRulerFullStep{ 0.0, 0, 0, true, true, false },
-} };
-}
-
 double LinearMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, [[maybe_unused]] bool isNegativeSample) const
 {
     return valueToPosition(step, m_height);
@@ -21,7 +15,7 @@ double LinearMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t chan
 std::vector<TrackRulerFullStep> LinearMonoRuler::fullSteps() const
 {
     if (m_collapsed) {
-        return { COLLAPSED_FULL_STEPS.begin(), COLLAPSED_FULL_STEPS.end() };
+        return { TrackRulerFullStep{ ((m_maxDisplayValue - m_minDisplayValue) / 2.0) + m_minDisplayValue, 0, 0, true, true, false } };
     }
 
     std::vector<double> steps = fullStepsValues(m_height);
