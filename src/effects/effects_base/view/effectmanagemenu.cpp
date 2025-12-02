@@ -216,10 +216,7 @@ void EffectManageMenu::savePresetAs()
 
 bool EffectManageMenu::useVendorUI() const
 {
-    const EffectInstanceId instanceId = m_instanceId.toULongLong();
-    if (instanceId == 0) {
-        return true; // Default to vendor UI
-    }
+    const EffectInstanceId instanceId = m_instanceId;
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
     if (effectId.empty()) {
         return true; // Default to vendor UI
@@ -229,10 +226,7 @@ bool EffectManageMenu::useVendorUI() const
 
 void EffectManageMenu::setUseVendorUI(const bool value)
 {
-    const EffectInstanceId instanceId = m_instanceId.toULongLong();
-    if (instanceId == 0) {
-        return;
-    }
+    const EffectInstanceId instanceId = m_instanceId;
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
     if (effectId.empty()) {
         return;
