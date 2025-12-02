@@ -11,7 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_SPECTROGRAM_SETTINGS__
 #define __AUDACITY_SPECTROGRAM_SETTINGS__
 
-#include "ClientData.h" // to inherit
+#include "au3-registries/ClientData.h" // to inherit
 #include "au3-preferences/Prefs.h"
 #include "au3-math/SampleFormat.h"
 #include "au3-fft/RealFFTf.h"
