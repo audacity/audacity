@@ -79,15 +79,12 @@ void EffectsConfiguration::setPreviewMaxDuration(double value)
 
 EffectUIMode EffectsConfiguration::effectUIMode(const EffectId& effectId) const
 {
+    constexpr EffectUIMode defaultMode = EffectUIMode::VendorUI;
     if (effectId.empty()) {
-        return EffectUIMode::VendorUI;
+        return defaultMode;
     }
 
     const muse::Settings::Key key = makeEffectUIModeKey(effectId);
-    // Set default to VendorUI (native plugin UI) for backward compatibility
-    constexpr EffectUIMode defaultMode = EffectUIMode::VendorUI;
-    muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(defaultMode)));
-
     const muse::Val value = muse::settings()->value(key);
     if (value.isNull()) {
         return defaultMode;
@@ -99,9 +96,6 @@ EffectUIMode EffectsConfiguration::effectUIMode(const EffectId& effectId) const
 void EffectsConfiguration::setEffectUIMode(const EffectId& effectId, EffectUIMode mode)
 {
     const muse::Settings::Key key = makeEffectUIModeKey(effectId);
-    // Set default to VendorUI (native plugin UI) for backward compatibility
-    muse::settings()->setDefaultValue(key, muse::Val(static_cast<int>(EffectUIMode::VendorUI)));
-
     if (effectUIMode(effectId) == mode) {
         return;
     }
