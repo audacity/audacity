@@ -64,7 +64,7 @@ public:
     void setUseGlobalSettings(bool value);
 
     spectrogram::AllSpectrogramSettings allSettings() const override;
-    void setAllSettings(const spectrogram::AllSpectrogramSettings &) override;
+    void setAllSettings(const spectrogram::AllSpectrogramSettings&) override;
     muse::async::Notification someSettingChanged() const override;
 
 private:

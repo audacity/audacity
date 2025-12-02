@@ -99,8 +99,8 @@ Au3SpectrogramClipChannelPainter::Au3SpectrogramClipChannelPainter(std::shared_p
 
 void Au3SpectrogramClipChannelPainter::paint(QImage& image, const SpectrogramGlobalContext& gc, const SpectrogramTrackContext& tc)
 {
-    SpectrogramSettings &settings = tc.settings;
-    const ZoomInfo &zoomInfo = gc.zoomInfo;
+    SpectrogramSettings& settings = tc.settings;
+    const ZoomInfo& zoomInfo = gc.zoomInfo;
     auto& clipChannel = *m_waveClipChannel;
     Au3SelectedRegion selectedRegion;
     // Careful: t1 must be set before t0
@@ -217,7 +217,6 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image, const SpectrogramGlo
     int selectedX = zoomInfo.TimeToPosition(selectedRegion.t0(), -leftOffset);
 
     for (int xx = 0; xx < imageWidth; ++xx) {
-
         // zoomInfo must be queried for each column since with fisheye enabled
         // time between columns is variable
         const auto w0 = sampleCount(

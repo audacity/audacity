@@ -26,7 +26,8 @@ void TrackSpectrogramSettingsModel::componentComplete()
     sendRepaintRequest();
 }
 
-TrackSpectrogramSettingsModel::~TrackSpectrogramSettingsModel() {
+TrackSpectrogramSettingsModel::~TrackSpectrogramSettingsModel()
+{
     if (m_configToRevertTo) {
         readFromConfig(*m_configToRevertTo);
         apply();
