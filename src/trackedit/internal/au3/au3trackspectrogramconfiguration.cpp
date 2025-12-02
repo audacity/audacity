@@ -10,7 +10,7 @@
 
 #include "framework/global/log.h"
 
-#include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
+#include "au3-wave-track-settings/SpectrogramSettings.h"
 
 namespace au::trackedit {
 using Au3Setts = ::SpectrogramSettings;

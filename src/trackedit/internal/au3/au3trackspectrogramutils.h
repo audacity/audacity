@@ -5,8 +5,8 @@
 
 #include "spectrogram/spectrogramtypes.h"
 
-#include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
-#include "libraries/lib-fft/FFT.h" // eWindowFunctions
+#include "au3-wave-track-settings/SpectrogramSettings.h"
+#include "au3-fft/FFT.h" // eWindowFunctions
 
 namespace au::trackedit {
 constexpr auto toAu3ColorScheme(spectrogram::SpectrogramColorScheme scheme)
