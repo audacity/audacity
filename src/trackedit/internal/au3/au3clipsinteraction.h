@@ -4,17 +4,18 @@
 #pragma once
 
 #include "modularity/ioc.h"
-#include "iinteractive.h"
 #include "context/iglobalcontext.h"
-#include "../../itrackeditconfiguration.h"
-#include "../../iselectioncontroller.h"
-#include "../../iprojecthistory.h"
+#include "trackedit/iselectioncontroller.h"
+#include "trackedit/itrackeditconfiguration.h"
+#include "trackedit/iprojecthistory.h"
+#include "iinteractive.h"
+#include "trackedit/itracksinteraction.h"
 
 #include "au3wrap/au3types.h"
 
 #include "au3interactiontypes.h"
 
-#include "../../iclipsinteraction.h"
+#include "trackedit/iclipsinteraction.h"
 
 namespace au::trackedit {
 class Au3TrackData;
@@ -27,6 +28,7 @@ class Au3ClipsInteraction : public IClipsInteraction
     muse::Inject<au::trackedit::ITrackeditConfiguration> configuration;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<ITracksInteraction> tracksInteraction;
 
 public:
     Au3ClipsInteraction();
@@ -116,8 +118,6 @@ private:
     bool stretchClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
-
-    void removeDragAddedTracks(ITrackeditProject& prj, size_t numTracksWhenDragStarted, bool emptyOnly);
 
     context::IPlaybackStatePtr playbackState() const;
 

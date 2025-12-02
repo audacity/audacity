@@ -248,6 +248,50 @@ QString ViewTracksListModel::audioFileName(const QString& fileUrl)
     return filename(filePath, false /* including extension */).toQString();
 }
 
+void ViewTracksListModel::startImportDrag()
+{
+    if (m_tracksCountWhenDragStarted != -1) {
+        return;
+    }
+
+    m_tracksCountWhenDragStarted = m_trackList.size();
+}
+
+void ViewTracksListModel::endImportDrag()
+{
+    tracksInteraction()->removeDragAddedTracks(m_tracksCountWhenDragStarted, true /* emptyOnly */);
+
+    m_tracksCountWhenDragStarted = -1;
+}
+
+int ViewTracksListModel::prepareConditionalTrack(int draggedFilesCount)
+{
+    int tracksCreated = m_trackList.size() - m_tracksCountWhenDragStarted;
+
+    if (draggedFilesCount <= tracksCreated) {
+        return m_trackList.back().id;
+    }
+
+    trackeditInteraction()->newMonoTrack();
+
+    return m_trackList.back().id;
+}
+
+void ViewTracksListModel::removeDragAddedTracks(int currentTrackId, int draggedFilesCount)
+{
+    int neededTracksCount = 0;
+    for (size_t i = 0; i < m_trackList.size(); ++i) {
+        neededTracksCount++;
+        if (m_trackList.at(i).id == currentTrackId) {
+            neededTracksCount += draggedFilesCount - 1;
+            break;
+        }
+    }
+
+    neededTracksCount = std::max(neededTracksCount, m_tracksCountWhenDragStarted);
+    tracksInteraction()->removeDragAddedTracks(neededTracksCount, true /* emptyOnly */);
+}
+
 void ViewTracksListModel::handleDroppedFiles(const trackedit::TrackId& trackId, double startTime, const QStringList& fileUrls)
 {
     std::vector<muse::io::path_t> localPaths;

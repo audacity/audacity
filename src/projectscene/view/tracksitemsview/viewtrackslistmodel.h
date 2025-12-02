@@ -18,6 +18,7 @@
 #include "playback/itrackplaybackcontrol.h"
 #include "playback/iplaybackconfiguration.h"
 #include "importexport/import/iimporter.h"
+#include "trackedit/itracksinteraction.h"
 
 #include "trackedit/dom/track.h"
 
@@ -38,6 +39,7 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
     muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
     muse::Inject<importexport::IImporter> importer;
+    muse::Inject<trackedit::ITracksInteraction> tracksInteraction;
 
 public:
     explicit ViewTracksListModel(QObject* parent = nullptr);
@@ -45,6 +47,10 @@ public:
     Q_INVOKABLE void load();
     Q_INVOKABLE double audioFileLength(const QStringList& fileUrls);
     Q_INVOKABLE QString audioFileName(const QString& fileUrl);
+    Q_INVOKABLE void startImportDrag();
+    Q_INVOKABLE void endImportDrag();
+    Q_INVOKABLE int prepareConditionalTrack(int draggedFileCount);
+    Q_INVOKABLE void removeDragAddedTracks(int currentTrackId, int draggedFilesCount);
     Q_INVOKABLE void handleDroppedFiles(const trackedit::TrackId& trackId, double startTime, const QStringList& fileUrls);
 
     int rowCount(const QModelIndex& parent) const override;
@@ -85,5 +91,6 @@ private:
     // TODO std::pair<importexport::FileInfo, std::chrono::steady_clock::time_point> m_lastProbedFileInfo;
     // TODO: will need a vector for multiple files
     importexport::FileInfo m_lastProbedFileInfo;
+    int m_tracksCountWhenDragStarted = -1;
 };
 }
