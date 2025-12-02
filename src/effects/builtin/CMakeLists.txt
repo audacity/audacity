@@ -167,8 +167,8 @@ set(MODULE_SRC
 # AU3
 set(MODULE_DEF ${MODULE_DEF}
     -DBUILTIN_EFFECTS_API=
-    USE_SOUNDTOUCH=1
-    USE_SBSMS=1
+    # Note: USE_SOUNDTOUCH and USE_SBSMS are now set as PUBLIC compile definitions
+    # by the soundtouch and libsbsms targets, so they propagate automatically when linked
     # Note: NOTE_TRACK_API is only needed if USE_MIDI is defined
     # Currently MIDI support is not enabled in AU4
     # -DNOTE_TRACK_API=
