@@ -86,9 +86,7 @@ EffectsUiActions::EffectsUiActions(std::shared_ptr<EffectsActionsController> con
     });
 
     configuration()->effectUIModeChanged().onNotify(this, [this] {
-        ActionCodeList codes;
-        codes.push_back("action://effects/toggle_vendor_ui");
-        m_actionCheckedChanged.send(codes);
+        m_actionCheckedChanged.send(ActionCodeList { "action://effects/toggle_vendor_ui" });
     });
 }
 
