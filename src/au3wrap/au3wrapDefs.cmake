@@ -70,11 +70,14 @@ set(AU3_LINK
     libmp3lame::libmp3lame # used by mod-mp3 not yet a library
     wavpack::wavpack # used by mod-wavpack not yet a library
     mpg123::libmpg123 # used by mod-mpg123 not yet a library
-    SndFile::sndfile # mod-pcm
-    Vorbis::vorbis # mod-ogg
-    FLAC::FLAC # mod-flac
-    Ogg::ogg # mod-opus
-    Opus::opus # mod-opus
+    SndFile::sndfile # used by mod-pcm not yet a library
+    # The following are transitive dependencies of SndFile::sndfile
+    # They must be linked even though mod-ogg, mod-flac, and mod-opus are not compiled in AU4
+    # because libsndfile is dynamically linked against these libraries
+    Vorbis::vorbis # transitive dependency of SndFile::sndfile
+    FLAC::FLAC # transitive dependency of SndFile::sndfile
+    Ogg::ogg # transitive dependency of SndFile::sndfile
+    Opus::opus # transitive dependency of SndFile::sndfile
 )
 
 # Platform-specific libraries for au3wrap
