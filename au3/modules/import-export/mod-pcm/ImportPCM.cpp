@@ -25,7 +25,7 @@
 #include <wx/wx.h>
 #include <wx/ffile.h>
 
-#include "sndfile.h"
+#include <sndfile.h>
 
 #ifndef SNDFILE_1
 #error Requires libsndfile 1.0 or higher
