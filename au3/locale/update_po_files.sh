@@ -5,7 +5,7 @@ set -o errexit
 CDPATH= cd -- "$(dirname -- "$0")"
 
 echo ";; Recreating audacity.pot using .h, .cpp and .mm files"
-for path in ../modules/* ../libraries/lib-* ../include ../src ../crashreports ; do
+for path in ../modules/* ../libraries/lib-* ../include ../src ../crashreports ; do # if we still use this file we might want to update "lib-" into "au3-"
    find $path -name \*.h -o -name \*.cpp -o -name \*.mm
 done | LANG=c sort | \
 sed -E 's/\.\.\///g' |\
