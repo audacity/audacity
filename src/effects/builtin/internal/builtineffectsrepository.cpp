@@ -267,7 +267,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
         }
 #if USE_SOUNDTOUCH
         else if (symbol == ChangePitchEffect::Symbol) {
-            qmlRegisterType<ChangePitchViewModel>("Audacity.Effects", 1, 0, "ChangePitchViewModel");
+            REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(ChangePitchViewModelFactory);
             regView(ChangePitchEffect::Symbol, u"qrc:/changepitch/ChangePitchView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Change pitch"),

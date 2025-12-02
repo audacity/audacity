@@ -25,7 +25,8 @@ class ChangePitchViewModel : public BuiltinEffectModel
     Q_PROPERTY(QString estimatedStartPitch READ estimatedStartPitch NOTIFY estimatedStartPitchChanged FINAL)
 
 public:
-    ChangePitchViewModel() = default;
+    ChangePitchViewModel(QObject* parent, int instanceId);
+    ~ChangePitchViewModel() override = default;
 
     int fromPitchValue() const;
     void setFromPitchValue(int newFromPitch);
@@ -137,5 +138,9 @@ private:
     void doReload() override;
 
     QStringList pitchChoices() const;
+};
+
+class ChangePitchViewModelFactory : public EffectViewModelFactory<ChangePitchViewModel>
+{
 };
 }
