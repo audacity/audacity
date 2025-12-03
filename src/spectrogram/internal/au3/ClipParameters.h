@@ -32,17 +32,10 @@ struct ClipParameters
      */
     ClipParameters(const ClipTimes& clip, const QRect& trackPaintableSubrect, const ZoomInfo& zoomInfo);
 
-    const double trackRectT0; // absolute time of left edge of track
-
     // Lower and upper visible time boundaries (relative to clip). If completely
     // off-screen, `t0 == t1`.
     double visibleT0;
-    double visibleT1;
 
-    const double averagePixelsPerSecond;
-    const bool showIndividualSamples;
-
-    QRect paintableClipRect;
     int leftOffset;
 };
 }
