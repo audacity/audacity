@@ -261,9 +261,9 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotifi
                 else if (code == wxID_NO)
                 {
                     mOnProgress = false;
+                    // Proceed with notifications if update was skipped
+                    ShowNotifications();
                 }
-
-                ShowNotifications();
             });
         }
 #if UPDATE_LOCAL_TESTING == 0

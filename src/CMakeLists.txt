@@ -899,6 +899,9 @@ set( SOURCES
           update/UpdateDataParser.h
           update/UpdateDataParser.cpp
           update/UpdateDataStructures.h
+          update/ReleaseInfo.h
+          update/UpdateFeedMigrationParser.h
+          update/UpdateFeedMigrationParser.cpp
           update/UpdateManager.h
           update/UpdateManager.cpp
           update/UpdateNoticeDialog.h
