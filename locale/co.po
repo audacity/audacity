@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2021.
 #
 # Translators:
 # Link Winterberg, 2024
@@ -13,14 +13,15 @@ msgstr ""
 "Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-25 18:02+0300\n"
-"PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2025\n"
+"PO-Revision-Date: 2025-12-02 19:03+0100\n"
+"Last-Translator: Patriccollu di Santa Maria è Sichè <https://github.com/Patriccollu/Lingua_Corsa-Infurmatica/#readme>\n"
 "Language-Team: Corsican (https://app.transifex.com/audacity/teams/164520/co/)\n"
 "Language: co\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.8\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -1353,15 +1354,14 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Variazioni rapide di a qualità di a tunalità, cum’è stu sonu di chitarra cusì populare di l’anni 70"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Sbagliu d’impurtazione"
+msgstr "Sbagliu à l’impurtazione d’audio da u nivulu"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
 msgid "Can't download cloud audio"
-msgstr ""
+msgstr "Ùn si pò micca scaricà l’audio da u nivulu"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -4245,7 +4245,7 @@ msgstr "Altezza (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Wavelet (1/6 Octave Hann)"
-msgstr ""
+msgstr "Marusulellu (1/6 Ottava Hann)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
@@ -7195,20 +7195,21 @@ msgid "Open from audio.com"
 msgstr "Apre da audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "Scaricamentu di %s"
+msgstr "Scaricamentu di l’audio"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "Fiascu di cudificazione di a prerigatura in « %s »"
+msgstr ""
+"Fiascu per scaricà l’audio da u nivulu.\n"
+"%s"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
-msgstr ""
+msgstr "U schedariu audio scaricatu ùn esiste micca."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -7230,19 +7231,16 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "E fighjulate ponu esse mudificate solu per i prughjetti in u Nivulu"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open &From Cloud"
-msgstr "Apre da u Nivulu"
+msgstr "Apre da u &Nivulu"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Apre un prughjettu…"
+msgstr "Apre un &prughjettu di u nivulu…"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "Mudificà a &fighjulata audio in u Nivulu"
+msgstr "Apre un schedariu &audio di u nivulu…"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7385,9 +7383,8 @@ msgid "Don't show this again"
 msgstr "Ùn affissà più què"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "Mudificà a &fighjulata audio in u Nivulu"
+msgstr "Apre un schedariu audio di u nivulu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7395,7 +7392,7 @@ msgid "less than 1 minute"
 msgstr "menu d’1 minutu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] "1 minutu fà"
@@ -7410,21 +7407,20 @@ msgstr[0] "1 ora fà"
 msgstr[1] "%d ore fà"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Titulu di traccia"
+msgstr "Titulu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
-msgstr ""
+msgstr "Autore"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Tags"
-msgstr ""
+msgstr "Etichette"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Created"
-msgstr ""
+msgstr "Creatu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7432,14 +7428,12 @@ msgid "Failed to authorize account"
 msgstr "Fiascu per auturizatà u contu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Incaricamentu di l’audio…"
+msgstr "Caricamentu di a lista audio…"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "Impussibule d’ottene a lista di i prughjetti"
+msgstr "Impussibule d’ottene a lista audio"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -11660,7 +11654,7 @@ msgstr "Benvenuti in Audacity !"
 
 #: src/WhatsNewDialog.cpp
 msgid "Video: how we're redesigning Audacity for the future"
-msgstr ""
+msgstr "Video : cumu cuncepimu torna Audacity per l’avvene"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11668,16 +11662,15 @@ msgstr "Cumpiete a vostra cunfigurazione di u nivulu Audacity cù audio.com"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
-msgstr ""
+msgstr "Ottinite di rigalu i nostri attrezzi AI OpenVino"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
-msgstr ""
+msgstr "Scuprite i nostri moduli d’estensione di rigalu per sculpì u vostru audio"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Ottene moduli d’estensione è soni di rigalu"
+msgstr "Affissà i moduli d’estensione di rigalu"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -19774,31 +19767,32 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Manca=ingrandà, Diritta=riduce, Centru=nurmale"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "&Installà a nova versione"
+msgstr "Installà Audacity 4"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
 "Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
 "easier to use than ever."
 msgstr ""
+"Hè ghjuntu Audacity 4 ! Cuntenendu una centina d’amendamenti chì u rende\n"
+"più rapidu è più chè mai faciule à impiegà."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
-msgstr ""
+msgstr "L’installazione ùn cambia micca Audacity 3 è a vostra cunfigurazione attuale stà cum’ella hè."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Discover what's new in our full feature breakdown."
-msgstr ""
+msgstr "Scuprite ciò chì hè novu i a nostra lista cumpleta di e funzioni."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No thanks"
-msgstr ""
+msgstr "Innò, vi ringraziu"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Remind me later"
-msgstr ""
+msgstr "Rammintatemi un altra volta"
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -19901,11 +19895,11 @@ msgstr "Accettà è cuntinuà"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Remind me later"
-msgstr ""
+msgstr "Rammintatemi un altra &volta"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Dismiss"
-msgstr ""
+msgstr "&Ricusà"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
