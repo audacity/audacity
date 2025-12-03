@@ -122,7 +122,6 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image,
     const double playStartTime = clipChannel.GetPlayStartTime();
 
     const auto [ssel0, ssel1] = GetSelectedSampleIndices(selectedRegion, clipChannel, tc.trackIsSelected);
-    const double& averagePixelsPerSecond = clipParams.averagePixelsPerSecond;
     const double sampleRate = clipChannel.GetRate();
     const double stretchRatio = clipChannel.GetStretchRatio();
     const double& leftOffset = clipParams.leftOffset;
@@ -140,8 +139,8 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image,
     const sampleCount* where = nullptr;
     const auto half = settings.GetFFTLength() / 2;
     const double binUnit = sampleRate / (2 * half);
-    const bool updated = WaveClipSpectrumCache::Get(clipChannel).GetSpectrogram(clipChannel, spectrogram, settings, where,
-                                                                                imageWidth, visibleT0, averagePixelsPerSecond);
+    const bool updated = WaveClipSpectrumCache::Get(clipChannel).GetSpectrogram(clipChannel, spectrogram, settings, where, imageWidth,
+                                                                                visibleT0, zoomInfo.zoom);
 
     auto nBins = settings.NBins();
 

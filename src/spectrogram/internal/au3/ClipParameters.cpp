@@ -17,35 +17,6 @@ Matthieu Hodgkinson split from class WaveChannelView.cpp
 
 namespace au::spectrogram {
 namespace {
-// Returns an offset in seconds to be applied to the right clip
-// boundary so that it does not overlap the last sample
-double CalculateAdjustmentForZoomLevel(double avgPixPerSecond, bool showSamples)
-{
-    constexpr double pixelsOffset { 2 }; // The desired offset in pixels
-    if (showSamples) {
-        // adjustment so that the last circular point doesn't appear
-        // to be hanging off the end
-        return pixelsOffset
-               / avgPixPerSecond; // pixels / ( pixels / second ) = seconds
-    }
-    return .0;
-}
-
-double GetPixelsPerSecond(const QRect& viewRect, const ZoomInfo& zoomInfo)
-{
-    const auto h = zoomInfo.positionToTime(0);
-    const auto trackRectT1 = zoomInfo.positionToTime(viewRect.width());
-    return viewRect.width() / (trackRectT1 - h);
-}
-
-bool ShowIndividualSamples(
-    int sampleRate, double stretchRatio, double pixelsPerSecond)
-{
-    const auto secondsPerSample = stretchRatio / sampleRate;
-    const auto pixelsPerSample = pixelsPerSecond * secondsPerSample;
-    return pixelsPerSample > 0.5;
-}
-
 double GetBlankSpaceBeforePlayEndTime(const ClipTimes& clip)
 {
     return 0.99 * clip.GetStretchRatio() / clip.GetRate();
@@ -53,10 +24,6 @@ double GetBlankSpaceBeforePlayEndTime(const ClipTimes& clip)
 } // namespace
 
 ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintableSubrect, const ZoomInfo& zoomInfo)
-    : trackRectT0{zoomInfo.viewportT0}, averagePixelsPerSecond{GetPixelsPerSecond(trackPaintableSubrect, zoomInfo)},
-    showIndividualSamples{ShowIndividualSamples(
-                              clip.GetRate(),
-                              clip.GetStretchRatio(), averagePixelsPerSecond)}
 {
     const auto trackRectT1 = zoomInfo.viewportT1;
     const auto playStartTime = clip.GetPlayStartTime();
@@ -64,7 +31,7 @@ ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintabl
     const double clipLength = clip.GetPlayEndTime() - clip.GetPlayStartTime();
 
     // Hidden duration because too far left.
-    const auto hiddenDurationLeft = trackRectT0 - playStartTime;
+    const auto hiddenDurationLeft = zoomInfo.viewportT0 - playStartTime;
     const auto tpost = trackRectT1 - playStartTime;
 
     const auto blank = GetBlankSpaceBeforePlayEndTime(clip);
@@ -72,24 +39,12 @@ ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintabl
     // Calculate actual selection bounds so that visibleT0 > 0 and visibleT1 < the
     // end of the track
     visibleT0 = std::max(hiddenDurationLeft, .0);
-    visibleT1 = std::min(tpost, clipLength - blank)
-                + CalculateAdjustmentForZoomLevel(
-        averagePixelsPerSecond, showIndividualSamples);
-
-    // Make sure visibleT1 (the right bound) is greater than 0
-    if (visibleT1 < 0.0) {
-        visibleT1 = 0.0;
-    }
+    const auto visibleT1 = std::max(std::min(tpost, clipLength - blank), 0.0);
 
     // Make sure visibleT1 is greater than visibleT0
     if (visibleT0 > visibleT1) {
         visibleT0 = visibleT1;
     }
-
-    // The variable "mid" will be the rectangle containing the
-    // actual waveform, as opposed to any blank area before
-    // or after the track.
-    paintableClipRect = trackPaintableSubrect;
 
     // If the left edge of the track is to the right of the left
     // edge of the display, then there's some unused area to the
@@ -102,22 +57,6 @@ ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintabl
             time64 = 0;
         }
         leftOffset = (time64 < trackPaintableSubrect.width()) ? (int)time64 : trackPaintableSubrect.width();
-
-        paintableClipRect.setX(paintableClipRect.x() + leftOffset);
-    }
-
-    // If the right edge of the track is to the left of the right
-    // edge of the display, then there's some unused area to the right
-    // of the track.  Reduce the "paintableClipRect" rect by the
-    // size of the blank area.
-    if (tpost > visibleT1) {
-        int64_t time64 = zoomInfo.timeToPosition(playStartTime + visibleT1);
-        if (time64 < 0) {
-            time64 = 0;
-        }
-        const int hiddenRightOffset = (time64 < trackPaintableSubrect.width()) ? (int)time64 : trackPaintableSubrect.width();
-
-        paintableClipRect.setWidth(std::max(0, hiddenRightOffset - leftOffset));
     }
 }
 }
