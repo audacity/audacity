@@ -120,30 +120,4 @@ ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintabl
         paintableClipRect.setWidth(std::max(0, hiddenRightOffset - leftOffset));
     }
 }
-
-QRect ClipParameters::GetClipRect(const ClipTimes& clip, const ZoomInfo& zoomInfo, const QRect& viewRect, bool* outShowSamples)
-{
-    const auto pixelsPerSecond = GetPixelsPerSecond(viewRect, zoomInfo);
-    const auto showIndividualSamples = ShowIndividualSamples(
-        clip.GetRate(), clip.GetStretchRatio(), pixelsPerSecond);
-    const auto clipEndingAdjustment
-        =CalculateAdjustmentForZoomLevel(pixelsPerSecond, showIndividualSamples);
-    if (outShowSamples != nullptr) {
-        *outShowSamples = showIndividualSamples;
-    }
-    constexpr auto edgeLeft = static_cast<int64_t>(std::numeric_limits<int>::min());
-    constexpr auto edgeRight = static_cast<int64_t>(std::numeric_limits<int>::max());
-    const auto left = std::clamp<int64_t>(zoomInfo.TimeToPosition(clip.GetPlayStartTime(), viewRect.x()), edgeLeft, edgeRight);
-    const auto blank = GetBlankSpaceBeforePlayEndTime(clip);
-    const auto right = std::clamp<int64_t>(zoomInfo.TimeToPosition(clip.GetPlayEndTime() - blank + clipEndingAdjustment,
-                                                                   viewRect.x()), edgeLeft, edgeRight);
-    if (right >= left) {
-        // after clamping we can expect that left and right
-        // are small enough to be put into int
-        return QRect(
-            static_cast<int>(left), viewRect.y(),
-            std::max(1, static_cast<int>(right - left)), viewRect.height());
-    }
-    return QRect();
-}
 }

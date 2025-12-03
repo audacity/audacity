@@ -16,14 +16,14 @@ int ZoomInfo::viewportWidth() const
     return static_cast<int>(std::round((viewportT1 - viewportT0) * zoom));
 }
 
-double ZoomInfo::PositionToTime(int64_t position, int64_t origin) const
+double ZoomInfo::PositionToTime(int64_t position) const
 {
-    return viewportT0 + (position - origin) / zoom;
+    return viewportT0 + position / zoom;
 }
 
-int64_t ZoomInfo::TimeToPosition(double projectTime, int64_t origin) const
+int64_t ZoomInfo::TimeToPosition(double projectTime) const
 {
-    double t = 0.5 + zoom * (projectTime - viewportT0) + origin;
+    double t = 0.5 + zoom * (projectTime - viewportT0);
     if (t < INT64_MIN) {
         return INT64_MIN;
     }
