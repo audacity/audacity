@@ -36,26 +36,47 @@ double DbLinearMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t ch
 
 std::vector<TrackRulerFullStep> DbLinearMonoRuler::fullSteps() const
 {
+    return m_isHalfWave ? fullStepsForHalfWave() : fullStepsForFullWave();
+}
+
+std::vector<TrackRulerFullStep> DbLinearMonoRuler::fullStepsForHalfWave() const
+{
     const double maxDisplayValueDB = muse::linear_to_db(m_maxDisplayValue);
 
+    if (m_collapsed) {
+        return { TrackRulerFullStep { maxDisplayValueDB - 6, 0, 0, true, true, false } };
+    }
+
+    const std::vector<int> valuesList = fullStepValues(m_height);
+    std::vector<TrackRulerFullStep> steps { TrackRulerFullStep { m_dbRange, 0, 1, false, true, false },
+                                            TrackRulerFullStep { maxDisplayValueDB, 0, -1, true, false, false }
+    };
+
+    for (const int stepValue : valuesList) {
+        steps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), 0, 0, false, false, false });
+    }
+
+    return steps;
+}
+
+std::vector<TrackRulerFullStep> DbLinearMonoRuler::fullStepsForFullWave() const
+{
     if (m_collapsed) {
         return { TrackRulerFullStep { m_dbRange, 0, 0, true, true, false } };
     }
 
+    const double maxDisplayValueDB = muse::linear_to_db(m_maxDisplayValue);
+
     const std::vector<int> valuesList = fullStepValues(m_height);
-    std::vector<TrackRulerFullStep> steps { TrackRulerFullStep { m_dbRange, 0, m_isHalfWave ? 1 : 0, false, true, false },
-                                            TrackRulerFullStep { maxDisplayValueDB, 0, -1, true, true, false }
+    std::vector<TrackRulerFullStep> steps { TrackRulerFullStep { m_dbRange, 0, 0, false, true, false },
+                                            TrackRulerFullStep { maxDisplayValueDB, 0, -1, true, false, false }
     };
 
-    if (!m_isHalfWave) {
-        steps.push_back(TrackRulerFullStep { maxDisplayValueDB, 0, 1, true, true, true });
-    }
+    steps.push_back(TrackRulerFullStep { maxDisplayValueDB, 0, 1, true, false, true });
 
     for (const int stepValue : valuesList) {
         steps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), 0, 0, false, false, false });
-        if (!m_isHalfWave) {
-            steps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), 0, 0, false, false, true });
-        }
+        steps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), 0, 0, false, false, true });
     }
 
     return steps;
