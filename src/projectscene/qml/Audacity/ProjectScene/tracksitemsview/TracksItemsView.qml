@@ -1089,6 +1089,8 @@ Rectangle {
                 tracksItemsView.clearPreviewImportClip([])
                 tracksModel.endImportDrag()
                 dropArea.dragInitialized = false
+                root.guidelinePos = -1
+                root.guidelineVisible = false
             }
         }
 
@@ -1128,6 +1130,8 @@ Rectangle {
             // const t1 = Date.now();
             // console.log("Duration:", (t1 - t0), "ms");
             dropArea.dragInitialized = true
+            root.guidelinePos = position.x
+            root.guidelineVisible = true
         }
 
         onExited: {
@@ -1151,6 +1155,9 @@ Rectangle {
 
             tracksModel.endImportDrag()
             drop.acceptProposedAction()
+
+            root.guidelinePos = -1
+            root.guidelineVisible = false
         }
     }
 
