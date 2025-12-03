@@ -30,12 +30,13 @@ namespace Composite {
  @tparam ComponentArgs... passed to constructor of Component
  */
 template<
-    typename Component,
+    typename Component_,
     typename ComponentPointer,
     typename ... ComponentArgs
     >
-class Base : public Component
+class Base : public Component_
 {
+    using Component = Component_;
 public:
     using value_type = ComponentPointer;
     using Items = std::vector<value_type>;
@@ -95,9 +96,10 @@ This<true> {};
 /*!
  This class comes between Base and Derived in the inheritance graph
  */
-template<typename Base, typename Derived, typename ... BaseArgs>
-struct Builder : Base
+ template<typename Base_, typename Derived, typename ... BaseArgs>
+struct Builder : Base_
 {
+    using Base = Base_;
     using BaseType = Base;
 
     //! Define a push_back, which makes this work also with back_inserter
@@ -169,12 +171,15 @@ private:
 
 //! Extend Base with extra fields, in a second, protected base class
 template<
-    typename Base,
-    typename Base2,
+    typename Base_,
+    typename Base2_,
     typename ... RequiredBaseArgs
     >
-struct Extension : public Base, protected Base2
+struct Extension : public Base_, protected Base2_
 {
+    using Base = Base_;
+    using Base2 = Base2_;
+
     template<typename ... OtherBaseArgs>
     Extension(RequiredBaseArgs... args, Base2 arg2,
               OtherBaseArgs&&... otherArgs)
@@ -187,14 +192,16 @@ struct Extension : public Base, protected Base2
 
 //! Specialization when there is no need for the second base
 template<
-    typename Base,
+    typename Base_,
     typename ... RequiredBaseArgs
     > struct Extension<
-    Base,
+    Base_,
     void,
     RequiredBaseArgs...
-    >  : public Base
+    >  : public Base_
 {
+    using Base = Base_;
+
     template<typename ... OtherBaseArgs>
     Extension(RequiredBaseArgs... args, OtherBaseArgs&&... otherArgs)
         : Base(std::forward<RequiredBaseArgs>(args)...,
