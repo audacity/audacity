@@ -32,6 +32,12 @@ Au3Player::Au3Player()
             m_consumedSamplesSoFar = 0;
             m_reachedEnd.val = false;
         }
+
+        if (st != PlaybackStatus::Stopped) {
+            m_timer.start();
+        } else {
+            m_timer.stop();
+        }
     });
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
@@ -52,14 +58,6 @@ Au3Player::Au3Player()
             oldTempo = ts.tempo;
             m_loopRegionChanged.notify();
         });
-    });
-
-    m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus status) {
-        if (status != PlaybackStatus::Stopped) {
-            m_timer.start();
-        } else {
-            m_timer.stop();
-        }
     });
 
     m_timer.setInterval(16);
