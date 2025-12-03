@@ -19,12 +19,9 @@ It is also a place to document colour usage policy in Audacity
 #include "AColor.h"
 #include "AColorResources.h"
 
-#include <wx/colour.h>
-
 #include "AllThemeResources.h"
 #include "Theme.h"
 
-bool AColor::inited = false;
 unsigned char AColor::gradient_pre[ColorGradientTotal][colorSchemes][gradientSteps][3];
 
 bool AColor::gradient_inited = 0;
