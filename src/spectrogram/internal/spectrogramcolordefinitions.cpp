@@ -16,4 +16,4 @@
 // This declares the variables such as
 // int BmpRecordButton = -1;
 #define THEME_DECLARATIONS
-#include "AllThemeResources.h"
+#include "spectrogramcolordefinitions.h"
