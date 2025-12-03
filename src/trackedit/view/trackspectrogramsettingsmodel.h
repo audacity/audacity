@@ -9,8 +9,6 @@
 
 #include "framework/global/modularity/ioc.h"
 
-#include <optional>
-
 namespace au::trackedit {
 class Au3TrackSpectrogramConfiguration;
 class SpectrogramConfigurationSnapshot;

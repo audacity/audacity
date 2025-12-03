@@ -1,19 +1,8 @@
-/**********************************************************************
-
-  Audacity: A Digital Audio Editor
-
-  Theme.h
-
-  James Crook
-
-  Audacity is free software.
-  This file is licensed under the wxWidgets license, see License.txt
-
-**********************************************************************/
-
-#ifndef __AUDACITY_THEME__
-#define __AUDACITY_THEME__
-
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#pragma once
+ 
 #include "ComponentInterfaceSymbol.h" // Identifier
 
 #include <QColor>
@@ -31,14 +20,14 @@ struct ThemeSet
     bool bInitialised = false;
 };
 
-class THEME_API ThemeBase
+class SpectrogramColorRegisterBase
 {
 public:
-    ThemeBase (const ThemeBase&) = delete;
-    ThemeBase& operator =(const ThemeBase&) = delete;
+    SpectrogramColorRegisterBase (const SpectrogramColorRegisterBase&) = delete;
+    SpectrogramColorRegisterBase& operator =(const SpectrogramColorRegisterBase&) = delete;
 
-    ThemeBase() = default;
-    virtual ~ThemeBase() = default;
+    SpectrogramColorRegisterBase() = default;
+    virtual ~SpectrogramColorRegisterBase() = default;
 
     virtual void EnsureInitialised() = 0;
 
@@ -54,16 +43,14 @@ protected:
     ThemeSet mSet;
 };
 
-class THEME_API Theme final : public ThemeBase
+class SpectrogramColorRegister final : public SpectrogramColorRegisterBase
 {
 public:
-    Theme() = default;
-    ~Theme() override = default;
+    SpectrogramColorRegister() = default;
+    ~SpectrogramColorRegister() override = default;
 
     void EnsureInitialised() override;
     void RegisterColours();
 };
 
-extern THEME_API Theme theTheme;
-
-#endif // __AUDACITY_THEME__
+extern SpectrogramColorRegister theTheme;

@@ -5,6 +5,8 @@
 
 #include "spectrogram/ispectrogramconfiguration.h"
 
+#include <cassert>
+
 namespace au::trackedit {
 class SnapshotSpectrogramConfiguration final : public spectrogram::ISpectrogramConfiguration
 {
@@ -26,34 +28,34 @@ public:
     ~SnapshotSpectrogramConfiguration() override = default;
 
     bool spectralSelectionEnabled() const override { return m_spectralSelectionEnabled; }
-    void setSpectralSelectionEnabled(bool) override {}
+    void setSpectralSelectionEnabled(bool) override { assert(false); }
 
     int colorGainDb() const override { return m_colorGainDb; }
-    void setColorGainDb(int) override {}
+    void setColorGainDb(int) override { assert(false); }
 
     int colorRangeDb() const override { return m_colorRangeDb; }
-    void setColorRangeDb(int) override {}
+    void setColorRangeDb(int) override { assert(false); }
 
     int colorHighBoostDbPerDec() const override { return m_colorHighBoostDbPerDec; }
-    void setColorHighBoostDbPerDec(int) override {}
+    void setColorHighBoostDbPerDec(int) override { assert(false); }
 
     spectrogram::SpectrogramColorScheme colorScheme() const override { return m_colorScheme; }
-    void setColorScheme(spectrogram::SpectrogramColorScheme) override {}
+    void setColorScheme(spectrogram::SpectrogramColorScheme) override { assert(false); }
 
     spectrogram::SpectrogramScale scale() const override { return m_scale; }
-    void setScale(spectrogram::SpectrogramScale) override {}
+    void setScale(spectrogram::SpectrogramScale) override { assert(false); }
 
     spectrogram::SpectrogramAlgorithm algorithm() const override { return m_algorithm; }
-    void setAlgorithm(spectrogram::SpectrogramAlgorithm) override {}
+    void setAlgorithm(spectrogram::SpectrogramAlgorithm) override { assert(false); }
 
     spectrogram::SpectrogramWindowType windowType() const override { return m_windowType; }
-    void setWindowType(spectrogram::SpectrogramWindowType) override {}
+    void setWindowType(spectrogram::SpectrogramWindowType) override { assert(false); }
 
     int winSizeLog2() const override { return m_winSizeLog2; }
-    void setWinSizeLog2(int) override {}
+    void setWinSizeLog2(int) override { assert(false); }
 
     int zeroPaddingFactor() const override { return m_zeroPaddingFactor; }
-    void setZeroPaddingFactor(int) override {}
+    void setZeroPaddingFactor(int) override { assert(false); }
 
     spectrogram::AllSpectrogramSettings allSettings() const override
     {
@@ -61,7 +63,7 @@ public:
         return {};
     }
 
-    void setAllSettings(const spectrogram::AllSpectrogramSettings&) {}
+    void setAllSettings(const spectrogram::AllSpectrogramSettings&) override { assert(false); }
 
 private:
     const bool m_spectralSelectionEnabled;

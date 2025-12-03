@@ -69,27 +69,27 @@ float findValue(const float* spectrum, float bin0, float bin1, unsigned nBins, b
 
 constexpr auto DASH_LENGTH = 10; // pixel
 
-inline AColor::ColorGradientChoice
+inline SpectrogramColors::ColorGradientChoice
 ChooseColorSet(float bin0, float bin1, float selBinLo,
                float selBinCenter, float selBinHi, int dashCount, bool isSpectral)
 {
     if (!isSpectral) {
-        return AColor::ColorGradientTimeSelected;
+        return SpectrogramColors::ColorGradientTimeSelected;
     }
     if ((selBinCenter >= 0) && (bin0 <= selBinCenter)
         && (selBinCenter < bin1)) {
-        return AColor::ColorGradientEdge;
+        return SpectrogramColors::ColorGradientEdge;
     }
     if ((0 == dashCount % 2)
         && (((selBinLo >= 0) && (bin0 <= selBinLo) && (selBinLo < bin1))
             || ((selBinHi >= 0) && (bin0 <= selBinHi) && (selBinHi < bin1)))) {
-        return AColor::ColorGradientEdge;
+        return SpectrogramColors::ColorGradientEdge;
     }
     if ((selBinLo < 0 || selBinLo < bin1) && (selBinHi < 0 || selBinHi > bin0)) {
-        return AColor::ColorGradientTimeAndFrequencySelected;
+        return SpectrogramColors::ColorGradientTimeAndFrequencySelected;
     }
 
-    return AColor::ColorGradientTimeSelected;
+    return SpectrogramColors::ColorGradientTimeSelected;
 }
 }
 
@@ -208,8 +208,8 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image, const SpectrogramGlo
     specCache.Grow(0, settings, -1, visibleT0);
 
     // build color gradient tables (not thread safe)
-    if (!AColor::gradient_inited) {
-        AColor::PreComputeGradient();
+    if (!SpectrogramColors::gradient_inited) {
+        SpectrogramColors::PreComputeGradient();
     }
 
     // Bug 2389 - always draw at least one pixel of selection.
@@ -236,7 +236,7 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image, const SpectrogramGlo
             // For spectral selection, determine what colour
             // set to use.  We use a darker selection if
             // in both spectral range and time range.
-            AColor::ColorGradientChoice selected = AColor::ColorGradientUnselected;
+            SpectrogramColors::ColorGradientChoice selected = SpectrogramColors::ColorGradientUnselected;
 
             // If we are in the time selected range, then we may use a different color set.
             if (maybeSelected) {
