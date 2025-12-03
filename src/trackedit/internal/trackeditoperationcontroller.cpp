@@ -721,11 +721,20 @@ bool TrackeditOperationController::removeLabels(const LabelKeyList& labelKeys, b
 
 bool TrackeditOperationController::moveLabels(secs_t timePositionOffset, bool completed)
 {
-    bool success = labelsInteraction()->moveLabels(timePositionOffset, completed);
+    bool success = labelsInteraction()->moveLabels(timePositionOffset);
     if (success && completed) {
-        projectHistory()->pushHistoryState("Label moved", "Move label");
+        projectHistory()->pushHistoryState("Labels moved", "Move labels");
     }
     return success;
+}
+
+muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)
+{
+    muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabels(labelKeys, toTrackId);
+    if (retVal.ret && completed) {
+        projectHistory()->pushHistoryState("Labels moved", "Move labels");
+    }
+    return retVal;
 }
 
 bool TrackeditOperationController::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)

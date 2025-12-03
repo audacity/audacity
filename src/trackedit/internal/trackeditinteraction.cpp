@@ -462,6 +462,11 @@ bool TrackeditInteraction::moveLabels(secs_t timePositionOffset, bool completed)
     return m_interaction->moveLabels(timePositionOffset, completed);
 }
 
+muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)
+{
+    return m_interaction->moveLabels(labelKeys, toTrackId, completed);
+}
+
 bool TrackeditInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)
 {
     return m_interaction->stretchLabelLeft(labelKey, newStartTime, completed);

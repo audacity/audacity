@@ -348,13 +348,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Show effects"),
              Checkable::Yes
              ),
-    UiAction("toggle-label-editor",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Show label editor"),
-             TranslatableString("action", "Show label editor"),
-             Checkable::Yes
-             ),
     UiAction("toggle-metadata-editor",
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,

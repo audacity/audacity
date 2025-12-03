@@ -1087,7 +1087,7 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsRight)
     const double timeOffset = 2.0;
 
     //! [WHEN] Move the labels right
-    bool result = m_labelsInteraction->moveLabels(timeOffset, true);
+    bool result = m_labelsInteraction->moveLabels(timeOffset);
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Moving labels should succeed";
@@ -1152,7 +1152,7 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsLeftWhenLabelIsAtZero)
     const double timeOffset = -1.0;
 
     //! [WHEN] Move the labels left by 1.0 second
-    bool result = m_labelsInteraction->moveLabels(timeOffset, true);
+    bool result = m_labelsInteraction->moveLabels(timeOffset);
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Moving labels should succeed";
@@ -1199,7 +1199,7 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsWithZeroOffset)
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     //! [WHEN] Move the label by zero offset
-    bool result = m_labelsInteraction->moveLabels(0.0, true);
+    bool result = m_labelsInteraction->moveLabels(0.0);
 
     //! [THEN] The operation succeeds but does nothing
     ASSERT_TRUE(result) << "Moving by zero should succeed";
@@ -1234,7 +1234,7 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsWithNoSelection)
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     //! [WHEN] Try to move labels with no selection
-    bool result = m_labelsInteraction->moveLabels(2.0, true);
+    bool result = m_labelsInteraction->moveLabels(2.0);
 
     //! [THEN] The operation fails
     ASSERT_FALSE(result) << "Moving with no selection should fail";
@@ -1245,6 +1245,46 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsWithNoSelection)
     ASSERT_EQ(label->GetId(), labelId) << "Label should have correct ID";
     ASSERT_DOUBLE_EQ(label->getT0(), 1.0) << "Label start time should be unchanged";
     ASSERT_DOUBLE_EQ(label->getT1(), 2.0) << "Label end time should be unchanged";
+}
+
+TEST_F(Au3LabelsInteractionsTests, MoveLabelsToAnotherTrack)
+{
+    //! [GIVEN] There is a project with two label tracks
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* labelTrack1 = ::LabelTrack::Create(tracks);
+    Au3LabelTrack* labelTrack2 = ::LabelTrack::Create(tracks);
+    ASSERT_NE(labelTrack1, nullptr) << "Failed to create first label track";
+    ASSERT_NE(labelTrack2, nullptr) << "Failed to create second label track";
+
+    //! [GIVEN] Add a label to the first track
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    TrackItemId labelId = labelTrack1->AddLabel(region, wxString("Test Label"));
+    ASSERT_EQ(labelTrack1->GetNumLabels(), 1) << "First track should contain one label";
+    ASSERT_EQ(labelTrack2->GetNumLabels(), 0) << "Second track should be empty";
+
+    //! [EXPECT] The project is notified about label added and track changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(2);
+
+    //! [WHEN] Move the label from first track to second track
+    LabelKeyList labelsToMove = { { labelTrack1->GetId(), labelId } };
+    muse::RetVal<LabelKeyList> result = m_labelsInteraction->moveLabels(labelsToMove, labelTrack2->GetId());
+
+    //! [THEN] The operation is successful
+    ASSERT_TRUE(result.ret) << "Moving label to another track should succeed";
+    ASSERT_EQ(result.val.size(), 1) << "Should return one new label key";
+
+    //! [THEN] The label is moved to the second track
+    ASSERT_EQ(labelTrack1->GetNumLabels(), 0) << "First track should be empty";
+    ASSERT_EQ(labelTrack2->GetNumLabels(), 1) << "Second track should contain one label";
+
+    //! [THEN] The moved label has correct properties
+    const Au3Label* movedLabel = labelTrack2->GetLabel(0);
+    ASSERT_NE(movedLabel, nullptr) << "Moved label should exist";
+    ASSERT_DOUBLE_EQ(movedLabel->getT0(), 1.0) << "Label start time should be preserved";
+    ASSERT_DOUBLE_EQ(movedLabel->getT1(), 2.0) << "Label end time should be preserved";
+    EXPECT_EQ(movedLabel->title, wxString("Test Label")) << "Label title should be preserved";
 }
 
 TEST_F(Au3LabelsInteractionsTests, StretchSingleLabelLeft)

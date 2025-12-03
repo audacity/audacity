@@ -159,6 +159,14 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/mousehelper.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/dropcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/dropcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/labelstableviewmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/labelstableviewverticalheader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/labelstableviewverticalheader.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/labelstableviewtrackcell.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/labelstableviewtrackcell.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/labelstableviewtimecodecell.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/labelstableviewtimecodecell.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.h
