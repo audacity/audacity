@@ -35,7 +35,7 @@ private:
    void OnGoToAudioCom(wxCommandEvent&);
 
    wxImage Rescale(const wxImage& image, int width, int height);
-   wxImage LoadEmbeddedPNG(const unsigned char* data, size_t len);
+   wxImage LoadEmbeddedImage(const unsigned char* data, size_t len);
 
    DECLARE_EVENT_TABLE()
 };
