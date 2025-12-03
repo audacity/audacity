@@ -1080,15 +1080,12 @@ Rectangle {
 
         anchors.fill: content
 
-        property bool dragInitialized: false
-
         Timer {
             id: clearPreviewClipsTimer
             interval: 100
             onTriggered: {
                 tracksItemsView.clearPreviewImportClip([])
                 tracksModel.endImportDrag()
-                dropArea.dragInitialized = false
                 root.guidelinePos = -1
                 root.guidelineVisible = false
             }
@@ -1101,10 +1098,8 @@ Rectangle {
 
             let urls = drop.urls.concat([]);
 
-            if (!dropArea.dragInitialized) {
-                tracksModel.startImportDrag()
-                tracksModel.probeAudioFilesLength(urls)
-            }
+            tracksModel.startImportDrag()
+            tracksModel.probeAudioFilesLength(urls)
 
             let position = mapToItem(content, Qt.point(drop.x, drop.y))
 
@@ -1129,7 +1124,6 @@ Rectangle {
 
             // const t1 = Date.now();
             // console.log("Duration:", (t1 - t0), "ms");
-            dropArea.dragInitialized = true
             root.guidelinePos = position.x
             root.guidelineVisible = true
         }

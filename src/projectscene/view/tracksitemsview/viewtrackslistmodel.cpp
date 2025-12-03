@@ -283,6 +283,7 @@ void ViewTracksListModel::endImportDrag()
 
     m_tracksCountWhenDragStarted = -1;
     m_lastDraggedFilesInfo.clear();
+    m_lastDraggedUrls.clear();
 }
 
 void ViewTracksListModel::prepareConditionalTracks(int currentTrackId, int draggedFilesCount)
