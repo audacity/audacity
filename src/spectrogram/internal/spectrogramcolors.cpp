@@ -17,7 +17,7 @@ void SpectrogramColors::PreComputeGradient()
         return;
     }
     gradient_inited = 1;
-    theTheme.EnsureInitialised();
+    spectrogramColorRegister.EnsureInitialised();
 
     // Keep in correspondence with enum SpectrogramSettings::ColorScheme
 
@@ -31,11 +31,11 @@ void SpectrogramColors::PreComputeGradient()
         // Get color scheme from SpectrogramColorRegister
         const int gsteps = 4;
         float gradient[gsteps + 1][3];
-        theTheme.Colour(clrSpectro1) = theTheme.Colour(clrUnselected);
-        theTheme.Colour(clrSpectro1Sel) = theTheme.Colour(clrSelected);
+        spectrogramColorRegister.Colour(clrSpectro1) = spectrogramColorRegister.Colour(clrUnselected);
+        spectrogramColorRegister.Colour(clrSpectro1Sel) = spectrogramColorRegister.Colour(clrSelected);
         int clrFirst = (selected == ColorGradientUnselected) ? clrSpectro1 : clrSpectro1Sel;
         for (int j=0; j < (gsteps + 1); j++) {
-            QColor c = theTheme.Colour(clrFirst + j);
+            QColor c = spectrogramColorRegister.Colour(clrFirst + j);
             gradient[ j] [0] = c.red() / 255.0;
             gradient[ j] [1] = c.green() / 255.0;
             gradient[ j] [2] = c.blue() / 255.0;

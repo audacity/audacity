@@ -5,8 +5,8 @@
 
 #include "spectrogramcolordefinitions.h"
 
-// theTheme is a global variable.
-SpectrogramColorRegister theTheme;
+// spectrogramColorRegister is a global variable.
+SpectrogramColorRegister spectrogramColorRegister;
 
 namespace {
 enum teResourceFlags
@@ -64,6 +64,6 @@ void SpectrogramColorRegister::RegisterColours()
 // RegisterImage( myFlags, bmpRecordButton, some image, wxT("RecordButton"));
     int myFlags = resFlagPaired;
     NameSet allNames;
-#define THEME_INITS
+#define SPECTROGRAM_COLORS_INITS
 #include "spectrogramcolordefinitions.h"
 }

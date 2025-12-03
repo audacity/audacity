@@ -3,7 +3,7 @@
  */
 #include "macromagic.h"
 
-SET_THEME_FLAGS(resFlagNewLine);
+SET_SPECTROGRAM_COLORS_FLAGS(resFlagNewLine);
 
 DEFINE_COLOUR(clrUnselected, QColor(30,  30,  30), wxT("Unselected"));
 DEFINE_COLOUR(clrSelected,   QColor(93,  65,  93), wxT("Selected"));
