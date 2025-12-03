@@ -3,6 +3,8 @@
  */
 #include "au3spectrogramclipchannelpainter.h"
 
+#include "internal/spectrogramutils.h"
+
 #include "./ClipParameters.h"
 #include "./SpectrumCache.h"
 
@@ -96,7 +98,9 @@ ChooseColorSet(float bin0, float bin1, float selBinLo,
 Au3SpectrogramClipChannelPainter::Au3SpectrogramClipChannelPainter(std::shared_ptr<WaveClipChannel> channel)
     : m_waveClipChannel{std::move(channel)} {}
 
-void Au3SpectrogramClipChannelPainter::paint(QImage& image, const SpectrogramGlobalContext& gc, const SpectrogramTrackContext& tc)
+void Au3SpectrogramClipChannelPainter::paint(QImage& image,
+                                             const SpectrogramGlobalContext& gc,
+                                             const SpectrogramTrackContext& tc)
 {
     SpectrogramSettings& settings = tc.settings;
     const ZoomInfo& zoomInfo = gc.zoomInfo;
@@ -213,18 +217,18 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image, const SpectrogramGlo
     }
 
     // Bug 2389 - always draw at least one pixel of selection.
-    int selectedX = zoomInfo.TimeToPosition(selectedRegion.t0()) - leftOffset;
+    int selectedX = zoomInfo.timeToPosition(selectedRegion.t0()) - leftOffset;
 
     for (int xx = 0; xx < imageWidth; ++xx) {
         // zoomInfo must be queried for each column since with fisheye enabled
         // time between columns is variable
         const auto w0 = sampleCount(
             0.5 + sampleRate / stretchRatio
-            * (zoomInfo.PositionToTime(xx - leftOffset) - playStartTime));
+            * (zoomInfo.positionToTime(xx - leftOffset) - playStartTime));
 
         const auto w1 = sampleCount(
             0.5 + sampleRate / stretchRatio
-            * (zoomInfo.PositionToTime(xx + 1 - leftOffset) - playStartTime));
+            * (zoomInfo.positionToTime(xx + 1 - leftOffset) - playStartTime));
         bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
         maybeSelected = maybeSelected || (xx == selectedX);
 

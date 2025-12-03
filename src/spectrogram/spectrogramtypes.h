@@ -57,19 +57,6 @@ struct AllSpectrogramSettings {
     int zeroPaddingFactor = 0;
 };
 
-struct ZoomInfo {
-    ZoomInfo(double zoom, double viewportT0, double viewportT1);
-
-    const double zoom;
-    const double viewportT0;
-    const double viewportT1;
-
-    int viewportWidth() const;
-
-    double PositionToTime(int64_t position) const;
-    int64_t TimeToPosition(double projectTime) const;
-};
-
 struct SelectedRegion {
     static constexpr int UndefinedFrequency = -1;
 

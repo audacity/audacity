@@ -33,8 +33,8 @@ double CalculateAdjustmentForZoomLevel(double avgPixPerSecond, bool showSamples)
 
 double GetPixelsPerSecond(const QRect& viewRect, const ZoomInfo& zoomInfo)
 {
-    const auto h = zoomInfo.PositionToTime(0);
-    const auto trackRectT1 = zoomInfo.PositionToTime(viewRect.width());
+    const auto h = zoomInfo.positionToTime(0);
+    const auto trackRectT1 = zoomInfo.positionToTime(viewRect.width());
     return viewRect.width() / (trackRectT1 - h);
 }
 
@@ -97,7 +97,7 @@ ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintabl
     leftOffset = 0;
     if (hiddenDurationLeft < 0) {
         // Fix Bug #1296 caused by premature conversion to (int).
-        int64_t time64 = zoomInfo.TimeToPosition(playStartTime);
+        int64_t time64 = zoomInfo.timeToPosition(playStartTime);
         if (time64 < 0) {
             time64 = 0;
         }
@@ -111,7 +111,7 @@ ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintabl
     // of the track.  Reduce the "paintableClipRect" rect by the
     // size of the blank area.
     if (tpost > visibleT1) {
-        int64_t time64 = zoomInfo.TimeToPosition(playStartTime + visibleT1);
+        int64_t time64 = zoomInfo.timeToPosition(playStartTime + visibleT1);
         if (time64 < 0) {
             time64 = 0;
         }

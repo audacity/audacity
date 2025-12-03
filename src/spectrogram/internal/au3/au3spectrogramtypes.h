@@ -4,6 +4,8 @@
 #pragma once
 
 #include "spectrogramtypes.h"
+#include "internal/spectrogramutils.h"
+
 #include "projectscene/view/tracksitemsview/au3/WaveMetrics.h"
 
 class SpectrogramSettings;

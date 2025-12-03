@@ -1,7 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "spectrogramtypes.h"
+#include "spectrogramutils.h"
 
 #include <cmath>
 
@@ -16,12 +16,12 @@ int ZoomInfo::viewportWidth() const
     return static_cast<int>(std::round((viewportT1 - viewportT0) * zoom));
 }
 
-double ZoomInfo::PositionToTime(int64_t position) const
+double ZoomInfo::positionToTime(int64_t position) const
 {
     return viewportT0 + position / zoom;
 }
 
-int64_t ZoomInfo::TimeToPosition(double projectTime) const
+int64_t ZoomInfo::timeToPosition(double projectTime) const
 {
     double t = 0.5 + zoom * (projectTime - viewportT0);
     if (t < INT64_MIN) {

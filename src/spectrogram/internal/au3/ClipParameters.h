@@ -14,7 +14,7 @@ Matthieu Hodgkinson split from class WaveChannelView.h
 **********************************************************************/
 #pragma once
 
-#include "spectrogramtypes.h"
+#include "../spectrogramutils.h"
 
 #include <QRect>
 
