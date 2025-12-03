@@ -6,7 +6,7 @@
 #include "./ClipParameters.h"
 #include "./SpectrumCache.h"
 
-#include "spectrogram/AColor.h"
+#include "spectrogram/spectrogramcolors.h"
 
 #include "libraries/lib-time-frequency-selection/SelectedRegion.h"
 #include "libraries/lib-screen-geometry/NumberScale.h"

@@ -5,21 +5,22 @@
 declare_module(spectrogram)
 
 set(MODULE_SRC
-    ${CMAKE_CURRENT_LIST_DIR}/AColor.h
+    ${CMAKE_CURRENT_LIST_DIR}/spectrogramcolors.h
     ${CMAKE_CURRENT_LIST_DIR}/ispectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.h
     ${CMAKE_CURRENT_LIST_DIR}/spectrogramtypes.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/internal/AColor.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/AColorResources.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/AllThemeResources.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/AllThemeResources.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/MacroMagic.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/macromagic.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/roseuscolormaps.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolordefinitions.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolordefinitions.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolorregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolorregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolors.cpp
+
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramconfiguration.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/Theme.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/Theme.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/abstractsectionparameterslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/abstractsectionparameterslistmodel.h

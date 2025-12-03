@@ -16,11 +16,11 @@ It is also a place to document colour usage policy in Audacity
 
 *//********************************************************************/
 
-#include "../AColor.h"
-#include "AColorResources.h"
+#include "../spectrogramcolors.h"
+#include "roseuscolormaps.h"
 
-#include "AllThemeResources.h"
-#include "Theme.h"
+#include "spectrogramcolordefinitions.h"
+#include "spectrogramcolorregister.h"
 
 unsigned char AColor::gradient_pre[ColorGradientTotal][colorSchemes][gradientSteps][3];
 

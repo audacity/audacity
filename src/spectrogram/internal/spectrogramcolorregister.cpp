@@ -53,10 +53,10 @@ and use it for toolbar and window layouts too.
 
 *//*****************************************************************/
 
-#include "Theme.h"
+#include "spectrogramcolorregister.h"
 
 
-#include "AllThemeResources.h"
+#include "spectrogramcolordefinitions.h"
 
 // theTheme is a global variable.
 THEME_API Theme theTheme;
@@ -118,5 +118,5 @@ void Theme::RegisterColours()
     int myFlags = resFlagPaired;
     NameSet allNames;
 #define THEME_INITS
-#include "AllThemeResources.h"
+#include "spectrogramcolordefinitions.h"
 }
