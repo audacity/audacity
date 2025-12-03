@@ -25,7 +25,6 @@ void Au3SpectrogramPainter::init()
 void Au3SpectrogramPainter::paintClip(QPainter& qPainter, int xBegin, int xEnd, int trackHeight, double viewportT0, double viewportT1,
                                       double zoom,
                                       const trackedit::ClipKey& clipKey,
-                                      const projectscene::WaveMetrics& metrics,
                                       const SelectedRegion& selectedRegion)
 {
     const auto au3Project = m_au3Project.lock();
@@ -52,9 +51,7 @@ void Au3SpectrogramPainter::paintClip(QPainter& qPainter, int xBegin, int xEnd, 
 
     const ZoomInfo zoomInfo{ zoom, viewportT0, viewportT1 };
 
-    const SpectrogramGlobalContext gc {
-        metrics, zoomInfo, selectedRegion
-    };
+    const SpectrogramGlobalContext gc { zoomInfo, selectedRegion };
 
     trackPainter.paintClip(clipKey.itemId, qPainter, xBegin, xEnd, trackHeight, gc);
 }

@@ -6,13 +6,10 @@
 #include "spectrogramtypes.h"
 #include "internal/spectrogramutils.h"
 
-#include "projectscene/view/tracksitemsview/au3/WaveMetrics.h"
-
 class SpectrogramSettings;
 
 namespace au::spectrogram {
 struct SpectrogramGlobalContext {
-    const projectscene::WaveMetrics& metrics;
     const ZoomInfo& zoomInfo;
     const SelectedRegion& selectedRegion;
 };

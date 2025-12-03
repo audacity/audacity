@@ -42,22 +42,10 @@ void SpectrogramView::paint(QPainter* painter)
     const auto viewportT1 = m_context->frameEndTime();
     const spectrogram::SelectedRegion selectedRegion { m_clipTime.selectionStartTime, m_clipTime.selectionEndTime };
 
-    PaintParams params;
-    params.geometry.height = height();
-    params.geometry.width = width();
-    params.geometry.left = 0.0;
-    params.zoom = m_context->zoom();
-    params.fromTime = (m_clipTime.itemStartTime - m_clipTime.startTime);
-    params.toTime = params.fromTime + (m_clipTime.itemEndTime - m_clipTime.startTime);
-    params.selectionStartTime = m_clipTime.selectionStartTime;
-    params.selectionEndTime = m_clipTime.selectionEndTime;
-
-    const WaveMetrics metrics = wavepainterutils::getWaveMetrics(project, m_clipKey.key, params);
-
     const QRect visibleSubrect = clipRect().toRect();
     const int xBegin = std::max(visibleSubrect.left() - m_timelineIndentWidth, 0);
     const int xEnd = visibleSubrect.right() + 1;
     spectrogramPainter()->paintClip(*painter, xBegin, xEnd, height(), viewportT0, viewportT1,
-                                    m_context->zoom(), m_clipKey.key, metrics, selectedRegion);
+                                    m_context->zoom(), m_clipKey.key, selectedRegion);
 }
 }
