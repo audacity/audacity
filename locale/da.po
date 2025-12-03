@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
-"PO-Revision-Date: 2025-07-27 16:43+0200\n"
+"POT-Creation-Date: 2025-12-03 19:18+0300\n"
+"PO-Revision-Date: 2025-11-25 18:37+0100\n"
 "Last-Translator: Thomas Breinstrup\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -1349,15 +1349,14 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Hurtige variationer i tonekvaliteten, ligesom den populære guitarlyd fra 1970'erne"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Fejl ved import"
+msgstr "Fejl ved import af lyd fra netdrevet"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
 msgid "Can't download cloud audio"
-msgstr ""
+msgstr "Kan ikke hente lyd fra netdrevet"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -4239,7 +4238,7 @@ msgstr "Tonehøjde (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Wavelet (1/6 Octave Hann)"
-msgstr ""
+msgstr "Wavelet (1/6 oktav Hann)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
@@ -7189,20 +7188,21 @@ msgid "Open from audio.com"
 msgstr "Åbner fra audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "Henter %s"
+msgstr "Henter lyd"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "Kunne ikke kode forudindstilling fra \"%s\""
+msgstr ""
+"Kunne ikke hente lyd fra netdrevet.\n"
+"%s"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
-msgstr ""
+msgstr "Den hentede lydfil findes ikke."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -7224,19 +7224,16 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Forhåndsvisninger kan kun opdateres for netdrevsprojekter"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open &From Cloud"
-msgstr "Åbn fra netdrevet"
+msgstr "Åbn &fra netdrevet"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Åbn projekt..."
+msgstr "Åbn &projekt fra netdrevet..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "&Opdatér forhåndsvisning for lyd på netdrev"
+msgstr "Åbn &lydfil fra netdrevet..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7379,9 +7376,8 @@ msgid "Don't show this again"
 msgstr "Vis ikke dette igen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "Når lydfiler importeres"
+msgstr "Åben lydfil fra netdrevet"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7389,11 +7385,11 @@ msgid "less than 1 minute"
 msgstr "mindre end 1 minut siden"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "et minut siden"
-msgstr[1] "%d minutter siden"
+msgstr[0] "for et minut siden"
+msgstr[1] "for %d minutter siden"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7404,22 +7400,20 @@ msgstr[0] "en time siden"
 msgstr[1] "%d timer siden"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Titel på spor"
+msgstr "Titel"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
-msgstr ""
+msgstr "Forfatter"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Tags"
-msgstr ""
+msgstr "Etiketter"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Created"
-msgstr "Opret"
+msgstr "Oprettet"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7427,14 +7421,12 @@ msgid "Failed to authorize account"
 msgstr "Kunne ikke autorisere kontoen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Uploader lyd..."
+msgstr "Indlæser liste over lyd..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "Projektlisten kunne ikke indlæses"
+msgstr "Listen over lyd kunne ikke indlæses"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7635,7 +7627,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create a free cloud storage account to access your projects and audio from any device"
-msgstr "Opret en gratis Cloud Storage-konto, og tilgå dine projekter og din lyd fra enhver enhed"
+msgstr "Opret en gratis Cloud Storage-konto og tilgå dine projekter og din lyd fra enhver enhed"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -11657,7 +11649,7 @@ msgstr "Velkommen til Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Video: how we're redesigning Audacity for the future"
-msgstr ""
+msgstr "Video: Sådan redesigner vi Audacity til fremtiden"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11665,16 +11657,15 @@ msgstr "Gennemfør din opsætning af Audacity på netdrevet med audio.com"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
-msgstr ""
+msgstr "Hent vores gratis OpenVino AI-værktøjer"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
-msgstr ""
+msgstr "Udforsk de gratis tilføjelsesprogrammer til at formgive din lyd"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Hent gratis tilføjelsesprogrammer og lyde"
+msgstr "Se gratis tilføjelsesprogrammer"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -19775,31 +19766,32 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Venstre = zoom ind, højre = zoom ud, midt = normal"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "&Installér opdatering"
+msgstr "Installér Audacity 4"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
 "Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
 "easier to use than ever."
 msgstr ""
+"Audacity 4 er klar! Pakket med hundreder af opgraderinger, som gør det\n"
+"hurtigere og lettere at anvende end nogensinde før."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
-msgstr ""
+msgstr "Installationen påvirker ikke Audacity 3, så din nuværende opsætning berøres ikke."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Discover what's new in our full feature breakdown."
-msgstr ""
+msgstr "Se, hvad der er nyt i vores fulde gennemgang af funktioner."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No thanks"
-msgstr ""
+msgstr "Nej tak"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Remind me later"
-msgstr ""
+msgstr "Påmind mig senere"
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -19902,11 +19894,11 @@ msgstr "Acceptér && fortsæt"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Remind me later"
-msgstr ""
+msgstr "&Påmind mig senere"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Dismiss"
-msgstr ""
+msgstr "&Afbryd"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"

@@ -6,13 +6,14 @@
 # Translators:
 # Link Winterberg, 2024
 # Yuri Chornoivan <yurchor@ukr.net>, 2025
+# , fuzzy
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2025-12-03 19:18+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/audacity/teams/164520/uk/)\n"
@@ -1354,15 +1355,14 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Швидкі зміни якості тону, подібні до гітарного звуку, популярного у 1970-ті"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Помилка під час спроби імпортування"
+msgstr "Помилка під час імпортування звукових даних з «хмари»"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
 msgid "Can't download cloud audio"
-msgstr ""
+msgstr "Не вдалося отримати звукові дані з «хмари»"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -4248,7 +4248,7 @@ msgstr "Висота тону (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Wavelet (1/6 Octave Hann)"
-msgstr ""
+msgstr "Вейвлет (1/6 октави, Ганн)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
@@ -7198,20 +7198,21 @@ msgid "Open from audio.com"
 msgstr "Відкрити з audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "Отримуємо %s"
+msgstr "Отримуємо звукові дані"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "Не вдалося закодувати набір шаблонів з «%s»"
+msgstr ""
+"Не вдалося отримати звукові дані з «хмари»:\n"
+"%s"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
-msgstr ""
+msgstr "Отриманого файла звукових даних не існує."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -7233,19 +7234,16 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Дані попереднього прослуховування може бути оновлено лише для хмарних проєктів"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open &From Cloud"
-msgstr "Відкрити з хмари"
+msgstr "Відкрити з &хмари"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Відкрити проєкт…"
+msgstr "Відкрити хмарний &проєкт..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "&Оновити дані попереднього прослуховування у хмарі"
+msgstr "Відкрити зв&уковий файл з хмари…"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7388,9 +7386,8 @@ msgid "Don't show this again"
 msgstr "Більше не показувати"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "&Оновити дані попереднього прослуховування у хмарі"
+msgstr "Відкрити звуковий файл з хмари"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7398,10 +7395,10 @@ msgid "less than 1 minute"
 msgstr "менше, ніж за хвилину"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "%d хвилину тому"
+msgstr[0] "хвилину тому"
 msgstr[1] "%d хвилини тому"
 msgstr[2] "%d хвилин тому"
 msgstr[3] "%d хвилину тому"
@@ -7417,21 +7414,20 @@ msgstr[2] "%d годин тому"
 msgstr[3] "%d годину тому"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Назва доріжки"
+msgstr "Заголовок"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
-msgstr ""
+msgstr "Автор"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Tags"
-msgstr ""
+msgstr "Мітки"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Created"
-msgstr ""
+msgstr "Створено"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7439,14 +7435,12 @@ msgid "Failed to authorize account"
 msgstr "Не вдалося уповноважити обліковий запис"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Вивантажуємо звукові дані…"
+msgstr "Завантажуємо список звукових даних…"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "Не вдалося отримати список проєктів"
+msgstr "Не вдалося отримати список звукових даних"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -11676,7 +11670,7 @@ msgstr "Ласкаво просимо до Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Video: how we're redesigning Audacity for the future"
-msgstr ""
+msgstr "Відео: як ми змінюємо дизайн Audacity задля майбутнього"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11684,16 +11678,15 @@ msgstr "Завершіть ваше налаштовування хмари Auda
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
-msgstr ""
+msgstr "Отримайте наші безкоштовні інструменти ШІ OpenVino"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
-msgstr ""
+msgstr "Вивчіть вільні додатки для надання форми вашому звуку"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Отримання вільних додатків та звукових даних"
+msgstr "Переглянути безкоштовні додатки"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -19798,31 +19791,30 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Ліва=Збільшити, Права=Зменшити, Середня=Звичайний масштаб"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "&Встановити оновлення"
+msgstr "Встановити Audacity 4"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
 "Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
 "easier to use than ever."
-msgstr ""
+msgstr "Випущено Audacity 4! Сотні оновлень, які роблять користування програмою швидким і простим, як ніколи досі."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
-msgstr ""
+msgstr "Встановлені дані не вплинуть на роботу Audacity 3, отже поточні налаштування залишаться незмінними."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Discover what's new in our full feature breakdown."
-msgstr ""
+msgstr "Ознайомтеся із нововведеннями у нашому повному розборі можливостей."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No thanks"
-msgstr ""
+msgstr "Ні, дякую"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Remind me later"
-msgstr ""
+msgstr "Нагадайте пізніше"
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -19925,11 +19917,11 @@ msgstr "Прийняти і продовжити"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Remind me later"
-msgstr ""
+msgstr "&Нагадайте пізніше"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Dismiss"
-msgstr ""
+msgstr "&Відмовитися"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -21782,92 +21774,3 @@ msgstr "Спектральні інструменти"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Застарілі"
-
-#~ msgid "Open Fro&m Cloud..."
-#~ msgstr "Відкрити з х&мари..."
-
-#~ msgid "<font color=\"#000000\">"
-#~ msgstr "<font color=\"#000000\">"
-
-#~ msgid "Sign up to Audacity's cloud saving platform"
-#~ msgstr "Увійдіть до хмарної платформи зберігання даних Audacity"
-
-#~ msgid "and access your projects from anywhere!"
-#~ msgstr "і отримуйте доступ до ваших проєктів будь-де!"
-
-#~ msgid "</font>"
-#~ msgstr "</font>"
-
-#, c-format
-#~ msgid "What's new in Audacity %s"
-#~ msgstr "Нове в Audacity %s"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-#~ msgstr "Перегляньте [[%s|відео щодо випуску]] або ознайомтеся із [[%s|журналом змін]], щоб дізнатися більше про те, що було включено до найсвіжішого випуску!</p>"
-
-#, c-format
-#~ msgid "You can also read the [[%s|changelog]]</p>"
-#~ msgstr "Ви також можете ознайомитися із [[%s|журналом змін]]</p>"
-
-#, c-format
-#~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-#~ msgstr "<p>Спробуйте нашу [[%sпрограму |Muse Hub]], щоб отримати широкий діапазон звукових додатків для користувачів Audacity</p>"
-
-#~ msgid "A vocal processing effect that enhances vocal clarity and depth."
-#~ msgstr "Ефекти обробки голосових даних, який покращує чистоту та глибину голосу."
-
-#~ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-#~ msgstr "Багатоцільовий додаток штучного відлуння для просторових ефектів з природним звучанням."
-
-#~ msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-#~ msgstr "Додаток моделювання підсилення та ефектів гітарного звуку для отримання реалістичних відтінків та придатних до налаштування звуків."
-
-#~ msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-#~ msgstr "Додаток інтерактивного штучного відлуння, який адаптується до динаміки доріжки для занурення у звуковий ландшафт."
-
-#~ msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-#~ msgstr "Додаток обробки голосових даних з декількома ефектами, який удосконалює якість звукових доріжок з метою отримання професійних результатів."
-
-#~ msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-#~ msgstr "Додаток ефектів посилення басів, який розроблено для створення енергійного і чистого низькорівневого звуку."
-
-#~ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-#~ msgstr "Додаток для удосконалення акустичного звуку із поліпшенням теплоти та ясності звуку."
-
-#~ msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-#~ msgstr "Чудовий додаток удосконалення голосових даних для отримання кришталево чистих професійних голосових ефектів."
-
-#~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-#~ msgstr "Інтерактивний засіб поділу даних для ізолювання вокалу, ударних та інших інструментів."
-
-#, c-format
-#~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-#~ msgstr "Ознайомтеся із діапазоном додатків від відомих розробників на [[%s|MuseHub]]."
-
-#~ msgid "A multiband compressor offering precise control over frequencies."
-#~ msgstr "Багатосмуговий засіб стискання, за допомогою якого можна точно керувати частотами."
-
-#~ msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-#~ msgstr "Ace Studio – провідний генератор голосових даних з ШІ у світі."
-
-#~ msgid "Continue for Cloud Storage"
-#~ msgstr "Продовжити з хмарним сховищем"
-
-#~ msgid "What's new in Audacity"
-#~ msgstr "Що нового в Audacity"
-
-#~ msgid "Watch the release video"
-#~ msgstr "Переглянути відео щодо випуску"
-
-#~ msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-#~ msgstr "Soap Voice Cleaner: студійна якість накладного звуку"
-
-#~ msgid "Help us decide the future of Audacity"
-#~ msgstr "Допоможіть нам створити майбутнє Audacity"
-
-#~ msgid "Take part in survey"
-#~ msgstr "Взяти участь в опитуванні"
-
-#~ msgid "Audacity feature survey"
-#~ msgstr "Опитування щодо можливостей Audacity"

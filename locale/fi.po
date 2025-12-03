@@ -7,15 +7,17 @@
 # Link Winterberg, 2024
 # Dmitry Makarenko, 2025
 # Heino Keränen, 2025
+# , fuzzy
+# Kimmo Kujansuu <mrkujansuu@gmail.com>, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2025-12-03 19:18+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Heino Keränen, 2025\n"
+"Last-Translator: Kimmo Kujansuu <mrkujansuu@gmail.com>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/audacity/teams/164520/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -1354,15 +1356,14 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Nopeat äänenlaadun vaihtelut, kuten 1970-luvulla suositussa kitaratehosteessa"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Tuontivirhe"
+msgstr "Virhe pilviäänen tuonnissa"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
 msgid "Can't download cloud audio"
-msgstr ""
+msgstr "Pilviäänen lataaminen ei onnistu"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -4246,7 +4247,7 @@ msgstr "Sävelkorkeus (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Wavelet (1/6 Octave Hann)"
-msgstr ""
+msgstr "Wavelet (1/6 Octave Hann)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
@@ -7196,20 +7197,21 @@ msgid "Open from audio.com"
 msgstr "Avaa osoitteesta audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "Ladataan %s"
+msgstr "Äänitiedoston lataaminen"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "Esimäärityksen koodaaminen kohteesta \"%s\" epäonnistui"
+msgstr ""
+"Lataaminen pilvestä epäonnistui.\n"
+"%s"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
-msgstr ""
+msgstr "Ladattua äänitiedostoa ei ole."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -7231,19 +7233,16 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Esikatselut voidaan päivittää vain pilviprojekteille"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open &From Cloud"
-msgstr "Avaa pilvestä"
+msgstr "A&vaa pilvestä"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Avaa projekti..."
+msgstr "Avaa &projekti pilvestä..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "&Päivitä Cloud Audio esikatselu"
+msgstr "Avaa &äänitiedosto pilvestä..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7386,9 +7385,8 @@ msgid "Don't show this again"
 msgstr "Älä näytä tätä uudelleen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "&Päivitä Cloud Audio esikatselu"
+msgstr "Avaa äänitiedosto pilvestä"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7396,10 +7394,10 @@ msgid "less than 1 minute"
 msgstr "alle 1 minuutti"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "minutes ago"
+msgstr[0] "minuutti sitten"
 msgstr[1] "%d minuuttia sitten"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
@@ -7411,21 +7409,20 @@ msgstr[0] "one hour ago"
 msgstr[1] "%d tuntia sitten"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Raidan otsikko"
+msgstr "Nimi"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
-msgstr ""
+msgstr "Julkaisija"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Tags"
-msgstr ""
+msgstr "Tunnisteet"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Created"
-msgstr ""
+msgstr "Luotu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7433,14 +7430,12 @@ msgid "Failed to authorize account"
 msgstr "Tilin valtuuttaminen epäonnistui"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Ladataan ääntä..."
+msgstr "Ladataan ääniluetteloa..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "Projektiluettelon hakeminen epäonnistui"
+msgstr "Luettelon hakeminen epäonnistui"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -11664,7 +11659,7 @@ msgstr "Tervetuloa käyttämään Audacityä!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Video: how we're redesigning Audacity for the future"
-msgstr ""
+msgstr "Video: suunnittelemme Audacityn uudelleen tulevaisuutta varten"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11672,16 +11667,15 @@ msgstr "Viimeistele Audacity-pilvipalvelusi asennus osoitteessa audio.com"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
-msgstr ""
+msgstr "Hanki ilmaiset OpenVino AI-työkalut"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
-msgstr ""
+msgstr "Selaa ilmaisia liitännäisiä äänen muokkaamista varten"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Hanki ilmaisia ​​laajennuksia ja ääniä"
+msgstr "Näytä ilmaiset laajennukset"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -19775,31 +19769,32 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Vasen=lähennä, oikea=loitonna, keskipainike=normaaliksi"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "&Asenna päivitys"
+msgstr "Asenna Audacity 4"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
 "Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
 "easier to use than ever."
 msgstr ""
+"Audacity 4 on täällä! Täynnä satoja päivityksiä, jotka tekevät siitä\n"
+"nopean ja helpon käyttää."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
-msgstr ""
+msgstr "Asennus ei korvaa Audacity 3:sta, joten kokoonpanosi pysyy ennallaan."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Discover what's new in our full feature breakdown."
-msgstr ""
+msgstr "Tutustu uusiin ominaisuuksiin, täydellinen luettelo."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No thanks"
-msgstr ""
+msgstr "Ei kiitos"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Remind me later"
-msgstr ""
+msgstr "Muistuta myöhemmin"
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -19902,11 +19897,11 @@ msgstr "Hyväksy && jatka"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Remind me later"
-msgstr ""
+msgstr "&Muistuta myöhemmin"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Dismiss"
-msgstr ""
+msgstr "&Hylkää"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -21759,92 +21754,3 @@ msgstr "Spektrityökalut"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Perinteinen"
-
-#~ msgid "Open Fro&m Cloud..."
-#~ msgstr "A&vaa pilvestä..."
-
-#~ msgid "<font color=\"#000000\">"
-#~ msgstr "<font color=\"#000000\">"
-
-#~ msgid "Sign up to Audacity's cloud saving platform"
-#~ msgstr "Rekisteröidy Audacityn pilvitallennusalustaan"
-
-#~ msgid "and access your projects from anywhere!"
-#~ msgstr "ja käytä projektejasi mistä tahansa!"
-
-#~ msgid "</font>"
-#~ msgstr "</font>"
-
-#, c-format
-#~ msgid "What's new in Audacity %s"
-#~ msgstr "Mitä uutta Audacityssä %s"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-#~ msgstr "Katso [[%s|julkaisuvideo]] tai lue [[%s|muutosloki]] saadaksesi lisätietoja siitä, mitä olemme sisällyttäneet uusimpaan versioon!</p>"
-
-#, c-format
-#~ msgid "You can also read the [[%s|changelog]]</p>"
-#~ msgstr "Voit myös lukea [[%s|muutoslokia]]</p>"
-
-#, c-format
-#~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-#~ msgstr "<p>Tutustu [[%s|Muse Hub -sovellukseen]], josta löydät laajan valikoiman äänilaajennuksia Audacityn käyttäjille</p>"
-
-#~ msgid "A vocal processing effect that enhances vocal clarity and depth."
-#~ msgstr "Äänenkäsittelytehoste, joka parantaa äänen selkeyttä ja syvyyttä."
-
-#~ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-#~ msgstr "Monikäyttöinen kaikulaajennus tilaviin, luonnollisen kuuloisiin tehosteisiin."
-
-#~ msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-#~ msgstr "Kitaravahvistimen ja efektien mallinnuslaajennus realistisia soundeja ja muokattavia ääniä varten."
-
-#~ msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-#~ msgstr "Reagoiva kaikuliitännäinen, joka mukautuu kappaleen dynamiikkaan ja luo mukaansatempaavia äänimaisemia."
-
-#~ msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-#~ msgstr "Laulun multiefekti-lisäosa, joka parantaa lauluraitoja ammattimaisia tuloksia varten."
-
-#~ msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-#~ msgstr "Bassotehoste-lisäosa, joka on suunniteltu tuottamaan iskevää, selkeää matalan tason ääntä."
-
-#~ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-#~ msgstr "Lisäosa akustisen äänen täydellisyyteen, joka lisää lämpöä ja selkeyttä."
-
-#~ msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-#~ msgstr "Hämmästyttävä äänenparannuslisäosa kristallinkirkkaisiin, ammattimaisiin ääniefekteihin."
-
-#~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-#~ msgstr "Reaaliaikainen varren erotustyökalu laulun, rumpujen ja instrumenttien eristämiseen."
-
-#, c-format
-#~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-#~ msgstr "Tutustu erilaisiin tunnettujen kehittäjien tekemiin lisäosiin, jotka ovat saatavilla [[%s|MuseHubissa]]."
-
-#~ msgid "A multiband compressor offering precise control over frequencies."
-#~ msgstr "Monikaistainen kompressori, joka tarjoaa tarkan taajuuksien hallinnan."
-
-#~ msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-#~ msgstr "Ace Studio - Maailman ensimmäinen tekoälyn lauluäänigeneraattori."
-
-#~ msgid "Continue for Cloud Storage"
-#~ msgstr "Jatka Cloud Storagelle"
-
-#~ msgid "What's new in Audacity"
-#~ msgstr "Uutta Audacityssä"
-
-#~ msgid "Watch the release video"
-#~ msgstr "Katso julkaisuvideo"
-
-#~ msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-#~ msgstr "Soap Voice Cleaner: studiolaatuinen äänitys"
-
-#~ msgid "Help us decide the future of Audacity"
-#~ msgstr "Auta meitä päättämään Audacityn tulevaisuudesta"
-
-#~ msgid "Take part in survey"
-#~ msgstr "Osallistu kyselyyn"
-
-#~ msgid "Audacity feature survey"
-#~ msgstr "Audacityn ominaisuuskysely"
