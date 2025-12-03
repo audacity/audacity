@@ -76,20 +76,13 @@ enum teResourceFlags
 QColor& ThemeBase::Colour(int iIndex)
 {
     wxASSERT(iIndex >= 0);
-    auto& resources = *mpSet;
     EnsureInitialised();
-    return resources.mColours[iIndex];
-}
-
-Theme::Theme()
-{
-    // TODO clean up
-    mpSet = &mSets[{}];
+    return mSet.mColours[iIndex];
 }
 
 void Theme::EnsureInitialised()
 {
-    if (!mpSet || mpSet->bInitialised) {
+    if (mSet.bInitialised) {
         return;
     }
     RegisterColours();
@@ -98,9 +91,8 @@ void Theme::EnsureInitialised()
 void ThemeBase::RegisterColour(NameSet& allNames,
                                int& iIndex, const QColor& Clr, const wxString& Name)
 {
-    auto& resources = *mpSet;
-    resources.mColours.push_back(Clr);
-    auto index = resources.mColours.size() - 1;
+    mSet.mColours.push_back(Clr);
+    auto index = mSet.mColours.size() - 1;
     if (iIndex == -1) {
         // First time assignment of global variable identifying a colour
         iIndex = index;
@@ -116,10 +108,10 @@ void ThemeBase::RegisterColour(NameSet& allNames,
 
 void Theme::RegisterColours()
 {
-    if (!mpSet || mpSet->bInitialised) {
+    if (mSet.bInitialised) {
         return;
     }
-    mpSet->bInitialised = true;
+    mSet.bInitialised = true;
 
 // This initialises the variables e.g
 // RegisterImage( myFlags, bmpRecordButton, some image, wxT("RecordButton"));
