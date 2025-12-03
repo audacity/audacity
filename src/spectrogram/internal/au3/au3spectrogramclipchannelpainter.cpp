@@ -13,7 +13,7 @@
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
 
-namespace au::projectscene {
+namespace au::spectrogram {
 using Au3SelectedRegion = ::SelectedRegion;
 
 namespace {

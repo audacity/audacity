@@ -17,7 +17,7 @@
 class WaveClip;
 class WaveTrack;
 
-namespace au::projectscene {
+namespace au::spectrogram {
 class Au3SpectrogramTrackPainter
 {
 public:

@@ -11,7 +11,7 @@
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
 
-namespace au::projectscene {
+namespace au::spectrogram {
 void Au3SpectrogramPainter::init()
 {
     globalContext()->currentProjectChanged().onNotify(this, [this]{
@@ -23,7 +23,7 @@ void Au3SpectrogramPainter::init()
 }
 
 void Au3SpectrogramPainter::paintClip(QPainter& qPainter, int xBegin, int xEnd, int trackHeight, const trackedit::ClipKey& clipKey,
-                                      const WaveMetrics& metrics,
+                                      const projectscene::WaveMetrics& metrics,
                                       const ZoomInfo& zoomInfo,
                                       const SelectedRegion& selectedRegion)
 {

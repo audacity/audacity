@@ -38,8 +38,8 @@ void SpectrogramView::paint(QPainter* painter)
     const auto project = globalContext()->currentProject();
 
     const auto indentTime = m_timelineIndentWidth / m_context->zoom();
-    const ZoomInfo zoomInfo { m_context->zoom(), m_context->frameStartTime() - indentTime, m_context->frameEndTime() };
-    const SelectedRegion selectedRegion { m_clipTime.selectionStartTime, m_clipTime.selectionEndTime };
+    const spectrogram::ZoomInfo zoomInfo { m_context->zoom(), m_context->frameStartTime() - indentTime, m_context->frameEndTime() };
+    const spectrogram::SelectedRegion selectedRegion { m_clipTime.selectionStartTime, m_clipTime.selectionEndTime };
 
     PaintParams params;
     params.geometry.height = height();

@@ -1,6 +1,8 @@
 #include "spectrogrammodule.h"
 
 #include "internal/spectrogramconfiguration.h"
+#include "internal/au3/au3spectrogrampainter.h"
+
 #include "view/abstractspectrogramsettingsmodel.h"
 #include "view/algorithmsectionparameterlistmodel.h"
 #include "view/colorsectionparameterlistmodel.h"
@@ -10,7 +12,9 @@
 
 namespace au::spectrogram {
 SpectrogramModule::SpectrogramModule()
-    : m_configuration(std::make_shared<SpectrogramConfiguration>())
+    :
+        m_au3SpectrogramPainter(std::make_shared<Au3SpectrogramPainter>()),
+    m_configuration(std::make_shared<SpectrogramConfiguration>())
 {
 }
 
@@ -22,6 +26,7 @@ std::string SpectrogramModule::moduleName() const
 void SpectrogramModule::registerExports()
 {
     ioc()->registerExport<ISpectrogramConfiguration>(moduleName(), m_configuration);
+    ioc()->registerExport<ISpectrogramPainter>(moduleName(), m_au3SpectrogramPainter);
 }
 
 void SpectrogramModule::registerUiTypes()
@@ -35,6 +40,7 @@ void SpectrogramModule::registerUiTypes()
 
 void SpectrogramModule::onInit(const muse::IApplication::RunMode&)
 {
+    m_au3SpectrogramPainter->init();
     m_configuration->init();
 }
 }

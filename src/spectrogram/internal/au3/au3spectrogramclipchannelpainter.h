@@ -13,7 +13,7 @@
 
 #include <QImage>
 
-namespace au::projectscene {
+namespace au::spectrogram {
 struct WaveMetrics;
 
 class Au3SpectrogramClipChannelPainter
