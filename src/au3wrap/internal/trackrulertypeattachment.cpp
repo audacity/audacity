@@ -30,7 +30,7 @@ void TrackRulerTypeAttachment::CopyTo(Au3Track& track) const
 
 TrackRulerTypeAttachment::TrackRulerTypeAttachment(Au3Track& track)
     : mTrack{track.shared_from_this()}
-    , mRulerType{TrackRulerType::DbLinear}
+    , mRulerType{TrackRulerType::Linear}
 {
 }
 
