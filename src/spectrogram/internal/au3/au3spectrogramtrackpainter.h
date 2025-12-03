@@ -30,7 +30,7 @@ public:
 
 private:
     const std::weak_ptr<WaveTrack> m_waveTrack;
-    using ClipChannelPainterVector = std::vector<std::unique_ptr<Au3SpectrogramClipChannelPainter>>;
+    using ClipChannelPainterVector = std::vector<std::unique_ptr<Au3SpectrogramClipChannelPainter> >;
     std::unordered_map<const ::WaveClip*, ClipChannelPainterVector> m_clipPainterMap;
 };
 }

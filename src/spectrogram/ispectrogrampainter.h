@@ -26,7 +26,7 @@ public:
     /**
      * @param trackHeight excluding the track header height
      */
-    virtual void paintClip(QPainter&, int xBegin, int xEnd, int trackHeight, const trackedit::ClipKey&, const projectscene::WaveMetrics&,
-                           const ZoomInfo&, const SelectedRegion&) = 0;
+    virtual void paintClip(QPainter&, int xBegin, int xEnd, int trackHeight, double viewportT0, double viewportT1, double zoom,
+                           const trackedit::ClipKey&, const projectscene::WaveMetrics&, const SelectedRegion&) = 0;
 };
 }

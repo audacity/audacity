@@ -22,9 +22,10 @@ void Au3SpectrogramPainter::init()
     });
 }
 
-void Au3SpectrogramPainter::paintClip(QPainter& qPainter, int xBegin, int xEnd, int trackHeight, const trackedit::ClipKey& clipKey,
+void Au3SpectrogramPainter::paintClip(QPainter& qPainter, int xBegin, int xEnd, int trackHeight, double viewportT0, double viewportT1,
+                                      double zoom,
+                                      const trackedit::ClipKey& clipKey,
                                       const projectscene::WaveMetrics& metrics,
-                                      const ZoomInfo& zoomInfo,
                                       const SelectedRegion& selectedRegion)
 {
     const auto au3Project = m_au3Project.lock();
@@ -48,6 +49,8 @@ void Au3SpectrogramPainter::paintClip(QPainter& qPainter, int xBegin, int xEnd, 
         m_trackPainterMap.erase(clipKey.trackId);
         return;
     }
+
+    const ZoomInfo zoomInfo{ zoom, viewportT0, viewportT1 };
 
     const SpectrogramGlobalContext gc {
         metrics, zoomInfo, selectedRegion
