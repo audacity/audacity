@@ -41,7 +41,7 @@ public:
     using Items = std::vector<value_type>;
 
     explicit Base(ComponentArgs... args)
-        : Component{std::forward<ComponentArgs>(args)...}
+        : Component(std::forward<ComponentArgs>(args)...)
     {
         static_assert(std::has_virtual_destructor_v<Component>);
     }
@@ -132,7 +132,7 @@ struct Builder : Base
     //! Variadic constructor
     template<typename ... Items>
     Builder(BaseArgs... args, Items&&... items)
-        : BaseType{std::forward<BaseArgs>(args)...}
+        : BaseType(std::forward<BaseArgs>(args)...)
     {
         (..., push_back(std::forward<Items>(items)));
     }
@@ -143,10 +143,10 @@ struct Builder : Base
              typename ItemBuilder = decltype(Traits<Base, Derived>::ItemBuilder),
              typename sfinae = std::enable_if_t<std::is_invocable_v<ItemBuilder, Arg> > >
     Builder(BaseArgs... args, InputIterator begin, InputIterator end)
-        : Builder{
+        : Builder(
                   std::forward<BaseArgs>(args)..., begin, end,
                   [](Arg&& arg) -> decltype(auto) { return std::forward<Arg>(arg); }
-                  }
+                  )
     {}
 
     //! Iterator range constructor, with explicit transformer
@@ -157,7 +157,7 @@ struct Builder : Base
                                                     ItemBuilder, std::invoke_result_t<Transformer, Arg> > > >
     Builder(BaseArgs... args,
             InputIterator begin, InputIterator end, Transformer transformer)
-        : BaseType{std::forward<BaseArgs>(args)...}
+        : BaseType(std::forward<BaseArgs>(args)...)
     {
         std::for_each(begin, end,
                       [this, &transformer](Arg&& arg){ push_back(transformer(arg)); });
@@ -178,10 +178,10 @@ struct Extension : public Base, protected Base2
     template<typename ... OtherBaseArgs>
     Extension(RequiredBaseArgs... args, Base2 arg2,
               OtherBaseArgs&&... otherArgs)
-        : Base{std::forward<RequiredBaseArgs>(args)...,
+        : Base(std::forward<RequiredBaseArgs>(args)...,
                std::forward<OtherBaseArgs>(otherArgs)...
-               }
-        , Base2{std::move(arg2)}
+               )
+        , Base2(std::move(arg2))
     {}
 };
 
@@ -197,9 +197,9 @@ template<
 {
     template<typename ... OtherBaseArgs>
     Extension(RequiredBaseArgs... args, OtherBaseArgs&&... otherArgs)
-        : Base{std::forward<RequiredBaseArgs>(args)...,
+        : Base(std::forward<RequiredBaseArgs>(args)...,
                std::forward<OtherBaseArgs>(otherArgs)...
-               }
+               )
     {}
 };
 }
