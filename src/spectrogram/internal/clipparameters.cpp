@@ -1,34 +1,22 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-
-/*  SPDX-License-Identifier: GPL-2.0-or-later */
-/**********************************************************************
-
-Audacity: A Digital Audio Editor
-
-ClipParameters.cpp
-
-Matthieu Hodgkinson split from class WaveChannelView.cpp
-
-**********************************************************************/
-#include "ClipParameters.h"
-#include "ClipInterface.h"
+#include "clipparameters.h"
 
 namespace au::spectrogram {
 namespace {
 double GetBlankSpaceBeforePlayEndTime(const ClipTimes& clip)
 {
-    return 0.99 * clip.GetStretchRatio() / clip.GetRate();
+    return 0.99 * clip.stretchRatio / clip.playEndTime;
 }
 } // namespace
 
 ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintableSubrect, const ZoomInfo& zoomInfo)
 {
     const auto trackRectT1 = zoomInfo.viewportT1;
-    const auto playStartTime = clip.GetPlayStartTime();
+    const auto playStartTime = clip.playStartTime;
 
-    const double clipLength = clip.GetPlayEndTime() - clip.GetPlayStartTime();
+    const double clipLength = clip.playEndTime - clip.playStartTime;
 
     // Hidden duration because too far left.
     const auto hiddenDurationLeft = zoomInfo.viewportT0 - playStartTime;

@@ -4,8 +4,8 @@
 #include "au3spectrogramclipchannelpainter.h"
 
 #include "internal/spectrogramutils.h"
+#include "internal/clipparameters.h"
 
-#include "./ClipParameters.h"
 #include "./SpectrumCache.h"
 
 #include "spectrogram/spectrogramcolors.h"
@@ -113,7 +113,12 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image,
     selectedRegion.setF1(gc.selectedRegion.f1);
 
     const QRect paintableRect{ 0, 0, zoomInfo.viewportWidth(), image.height() };
-    const ClipParameters clipParams { clipChannel, paintableRect, zoomInfo }; // TODO try to get rid of ClipParameters
+    const ClipTimes clipTimes{
+        clipChannel.GetPlayStartTime(),
+        clipChannel.GetPlayEndTime(),
+        clipChannel.GetStretchRatio()
+    };
+    const ClipParameters clipParams { clipTimes, paintableRect, zoomInfo };
 
     const int imageWidth = image.width();
     const int imageHeight = image.height();
