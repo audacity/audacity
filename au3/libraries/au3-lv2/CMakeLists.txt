@@ -13,12 +13,16 @@ set( SOURCES
    LV2Instance.h
    LV2InstanceFeaturesList.cpp
    LV2InstanceFeaturesList.h
+   LV2PluginId.cpp
+   LV2PluginId.h
    LV2Ports.cpp
    LV2Ports.h
    LV2Preferences.cpp
    LV2Preferences.h
    LV2Symbols.cpp
    LV2Symbols.h
+   LV2UIFeaturesList.cpp
+   LV2UIFeaturesList.h
    LV2Utils.h
    LV2Wrapper.cpp
    LV2Wrapper.h
