@@ -1,32 +1,17 @@
-/**********************************************************************
-
-  Audacity: A Digital Audio Editor
-
-  AColor.cpp
-
-  Dominic Mazzoni
-
-
-********************************************************************//**
-
-\class AColor
-\brief AColor Manages color brushes and pens
-
-It is also a place to document colour usage policy in Audacity
-
-*//********************************************************************/
-
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #include "../spectrogramcolors.h"
 #include "roseuscolormaps.h"
 
 #include "spectrogramcolordefinitions.h"
 #include "spectrogramcolorregister.h"
 
-unsigned char AColor::gradient_pre[ColorGradientTotal][colorSchemes][gradientSteps][3];
+unsigned char SpectrogramColors::gradient_pre[ColorGradientTotal][colorSchemes][gradientSteps][3];
 
-bool AColor::gradient_inited = 0;
+bool SpectrogramColors::gradient_inited = 0;
 
-void AColor::PreComputeGradient()
+void SpectrogramColors::PreComputeGradient()
 {
     if (gradient_inited) {
         return;
@@ -37,13 +22,13 @@ void AColor::PreComputeGradient()
     // Keep in correspondence with enum SpectrogramSettings::ColorScheme
 
     // colorScheme 0: Color (New)
-    std::copy_n(&specColormap[0][0], gradientSteps * 3, &gradient_pre[ColorGradientUnselected][0][0][0]);
-    std::copy_n(&selColormap[0][0], gradientSteps * 3, &gradient_pre[ColorGradientTimeSelected][0][0][0]);
-    std::copy_n(&freqSelColormap[0][0], gradientSteps * 3, &gradient_pre[ColorGradientTimeAndFrequencySelected][0][0][0]);
+    std::copy_n(&roseusColormap[0][0], gradientSteps * 3, &gradient_pre[ColorGradientUnselected][0][0][0]);
+    std::copy_n(&roseusSelectedColormap[0][0], gradientSteps * 3, &gradient_pre[ColorGradientTimeSelected][0][0][0]);
+    std::copy_n(&roseusFrequencySelectedColormap[0][0], gradientSteps * 3, &gradient_pre[ColorGradientTimeAndFrequencySelected][0][0][0]);
     std::fill_n(&gradient_pre[ColorGradientEdge][0][0][0], gradientSteps * 3, 0);
 
     for (int selected = 0; selected < ColorGradientTotal; selected++) {
-        // Get color scheme from Theme
+        // Get color scheme from SpectrogramColorRegister
         const int gsteps = 4;
         float gradient[gsteps + 1][3];
         theTheme.Colour(clrSpectro1) = theTheme.Colour(clrUnselected);

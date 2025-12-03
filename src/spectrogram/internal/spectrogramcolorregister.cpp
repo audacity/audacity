@@ -1,65 +1,12 @@
-/**********************************************************************
-
-  Audacity: A Digital Audio Editor
-
-  Theme.cpp
-
-  James Crook
-
-  Audacity is free software.
-  This file is licensed under the wxWidgets license, see License.txt
-
-********************************************************************//**
-
-\class Theme
-\brief Based on ThemeBase, Theme manages image and icon resources.
-
-   Theme is a class which manages theme resources.
-   It maps sets of ids to the resources and to names of the resources,
-   so that they can be loaded/saved from files.
-
-   Theme adds the Audacity specific images to ThemeBase.
-
-\see \ref Themability
-
-*//*****************************************************************//**
-
-\class ThemeBase
-\brief Theme management - Image loading and saving.
-
-   Base for the Theme class. ThemeBase is a generic
-   non-Audacity specific class.
-
-\see \ref Themability
-
-*//*****************************************************************//**
-
-\class FlowPacker
-\brief Packs rectangular boxes into a rectangle, using simple first fit.
-
-This class is currently used by Theme to pack its images into the image
-cache.  Perhaps someday we will improve FlowPacker and make it more flexible,
-and use it for toolbar and window layouts too.
-
-*//*****************************************************************//**
-
-\class SourceOutputStream
-\brief Allows us to capture output of the Save .png and 'pipe' it into
-our own output function which gives a series of numbers.
-
-This class is currently used by Theme to pack its images into the image
-cache.  Perhaps someday we will improve FlowPacker and make it more flexible,
-and use it for toolbar and window layouts too.
-
-*//*****************************************************************/
-
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #include "spectrogramcolorregister.h"
-
 
 #include "spectrogramcolordefinitions.h"
 
 // theTheme is a global variable.
-THEME_API Theme theTheme;
+SpectrogramColorRegister theTheme;
 
 namespace {
 enum teResourceFlags
@@ -73,14 +20,14 @@ enum teResourceFlags
 };
 }
 
-QColor& ThemeBase::Colour(int iIndex)
+QColor& SpectrogramColorRegisterBase::Colour(int iIndex)
 {
     wxASSERT(iIndex >= 0);
     EnsureInitialised();
     return mSet.mColours[iIndex];
 }
 
-void Theme::EnsureInitialised()
+void SpectrogramColorRegister::EnsureInitialised()
 {
     if (mSet.bInitialised) {
         return;
@@ -88,7 +35,7 @@ void Theme::EnsureInitialised()
     RegisterColours();
 }
 
-void ThemeBase::RegisterColour(NameSet& allNames,
+void SpectrogramColorRegisterBase::RegisterColour(NameSet& allNames,
                                int& iIndex, const QColor& Clr, const wxString& Name)
 {
     mSet.mColours.push_back(Clr);
@@ -106,7 +53,7 @@ void ThemeBase::RegisterColour(NameSet& allNames,
     }
 }
 
-void Theme::RegisterColours()
+void SpectrogramColorRegister::RegisterColours()
 {
     if (mSet.bInitialised) {
         return;

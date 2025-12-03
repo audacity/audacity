@@ -20,7 +20,8 @@ void TrackSpectrogramSettingsUpdater::init()
             // Likely changed from the prefs without a project open
             return;
         }
-        for (const Track track : trackeditProject->trackList()) {
+
+        for (const Track& track : trackeditProject->trackList()) {
             const auto trackConfig = Au3TrackSpectrogramConfiguration::create(track.id, *globalContext());
             IF_ASSERT_FAILED(trackConfig) {
                 continue;
@@ -45,7 +46,7 @@ void TrackSpectrogramSettingsUpdater::onSomeSettingChanged()
         return;
     }
     const spectrogram::AllSpectrogramSettings globalSettings = globalSpectrogramConfiguration()->allSettings();
-    for (const Track track : trackeditProject->trackList()) {
+    for (const Track& track : trackeditProject->trackList()) {
         const auto trackConfig = Au3TrackSpectrogramConfiguration::create(track.id, *globalContext());
         IF_ASSERT_FAILED(trackConfig) {
             continue;
