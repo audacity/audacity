@@ -53,4 +53,4 @@ public:
     void RegisterColours();
 };
 
-extern SpectrogramColorRegister theTheme;
+extern SpectrogramColorRegister spectrogramColorRegister;

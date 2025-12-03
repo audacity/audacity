@@ -8,5 +8,5 @@
 
 // This declares the variables such as
 // int BmpRecordButton = -1;
-#define THEME_DECLARATIONS
+#define SPECTROGRAM_COLORS_DECLARATIONS
 #include "spectrogramcolordefinitions.h"
