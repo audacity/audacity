@@ -27,17 +27,12 @@ public:
         ColorGradientTotal // keep me last
     };
 
-    static void Init();
-    static void ReInit();
-    static void PreComputeGradient();  // this one
+    static void PreComputeGradient();
 
     static bool gradient_inited;
     static const int colorSchemes = 4;
     static const int gradientSteps = 256;
     static unsigned char gradient_pre[ColorGradientTotal][colorSchemes][gradientSteps][3];
-
-private:
-    static bool inited;
 };
 
 inline void GetColorGradient(float value,

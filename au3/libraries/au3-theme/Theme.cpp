@@ -55,29 +55,23 @@ and use it for toolbar and window layouts too.
 
 #include "Theme.h"
 
-#include <map>
-
-#include <wx/wxprec.h>
-#include <wx/brush.h>
-#include <wx/pen.h>
-#include <wx/file.h>
-#include <wx/ffile.h>
-#include <wx/txtstrm.h>
-#include <wx/wfstream.h>
-#include <wx/mstream.h>
-#include <wx/settings.h>
-#include <regex>
 
 #include "AllThemeResources.h"
-#include "au3-basic-ui/BasicUI.h"
-#include "au3-files/FileNames.h"
-#include "au3-preferences/Prefs.h"
-#include "ImageManipulation.h"
-#include "au3-strings/Internat.h"
-#include "au3-utility/MemoryX.h"
 
 // theTheme is a global variable.
 THEME_API Theme theTheme;
+
+namespace {
+enum teResourceFlags
+{
+    resFlagNone   =0x00,
+    resFlagPaired =0x01,
+    resFlagCursor =0x02,
+    resFlagNewLine = 0x04,
+    resFlagInternal = 0x08, // For image manipulation.  Don't save or load.
+    resFlagSkip = 0x10
+};
+}
 
 QColor& ThemeBase::Colour(int iIndex)
 {
