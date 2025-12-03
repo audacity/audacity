@@ -1,13 +1,16 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Audacity Team
+# Japanese translation for Audacity.
+# Copyright (C) 2025 Audacity Team
 # This file is distributed under the same license as the audacity package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
 # Translators:
-# Link Winterberg, 2024
+# ThemeBoy <transifex@themeboy.com>, 2024
+# hokorobi <hokorobi.hokorobi@gmail.com>, 2024
+# Nishikori Shinki, 2024
+# ABE Tsunehiko, 2024
+# Thomas De Rocker, 2024
+# Beluga, 2024
+# 森の子リスのミーコの大冒険 <phroneris@gmail.com>, 2024
 # Tadahisa Sugisaki, 2025
-# , fuzzy
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -7387,14 +7390,14 @@ msgstr "1 分未満"
 #, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "1 分前"
+msgstr[0] "%d 分前"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "one hour ago"
 msgid_plural "%d hours ago"
-msgstr[0] "1 時間前"
+msgstr[0] "%d 時間前"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Title"
