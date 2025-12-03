@@ -2,12 +2,16 @@
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
-# Link Winterberg, 2024
+# Saverio <saverio.brancaccio@gmail.com>, 2024
+# Matteo O., 2024
+# Cristina Mantione, 2024
+# Paval Shalamitski <yehekim@gmail.com>, 2024
+# Francesco Sercia, 2024
 # Michele Locati <michele@locati.it>, 2025
 # , fuzzy
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
