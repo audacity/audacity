@@ -230,7 +230,13 @@ static UiActionList STATIC_ACTIONS = {
              muse::shortcuts::CTX_PROJECT_OPENED,
              TranslatableString("action", "Multi track selection next"),
              TranslatableString("action", "Multi track selection next")
-             )
+             ),
+    UiAction("toggle-label-editor",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Show label editor"),
+             TranslatableString("action", "Show label editor")
+             ),
 };
 
 ProjectSceneUiActions::ProjectSceneUiActions(std::shared_ptr<ProjectSceneActionsController> controller)

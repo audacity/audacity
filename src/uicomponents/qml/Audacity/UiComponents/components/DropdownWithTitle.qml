@@ -7,8 +7,6 @@ import QtQuick.Layouts
 import Muse.Ui
 import Muse.UiComponents
 
-import Audacity.ProjectScene
-
 RowLayout {
     id: root
 
@@ -18,6 +16,8 @@ RowLayout {
 
     property bool isOptionEnabled: false
     property bool allowOptionToggle: true
+
+    property alias isOpened: menuLoader.isMenuOpened
 
     property var navigation: allowOptionToggle ? optionCheckBox.navigation : navCtrl // todo
 
@@ -30,6 +30,7 @@ RowLayout {
         Layout.alignment: Qt.AlignVCenter
 
         text: root.title
+        visible: text !== ""
     }
 
     CheckBox {

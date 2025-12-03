@@ -7,6 +7,7 @@ import QtQuick.Layouts
 import Muse.Ui
 import Muse.UiComponents
 
+import Audacity.UiComponents
 import Audacity.ProjectScene
 
 import "internal"

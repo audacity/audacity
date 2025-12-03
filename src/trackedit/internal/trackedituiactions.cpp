@@ -402,7 +402,7 @@ UiActionList STATIC_ACTIONS = {
              au::context::CTX_ANY,
              TranslatableString("action", "Ungroup clips"),
              TranslatableString("action", "Ungroup clips")
-             ),
+             )
 };
 }
 
