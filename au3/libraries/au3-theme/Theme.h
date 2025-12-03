@@ -20,7 +20,6 @@
 
 #include <wx/arrstr.h>
 
-#include <map>
 #include <unordered_set>
 #include <vector>
 
@@ -52,15 +51,14 @@ public:
 protected:
     wxArrayString mColourNames;
 
-    std::map<Identifier, ThemeSet> mSets;
-    ThemeSet* mpSet = nullptr;
+    ThemeSet mSet;
 };
 
 class THEME_API Theme final : public ThemeBase
 {
     friend class AColor; // So it can publish
 public:
-    Theme();
+    Theme() = default;
     ~Theme() override = default;
 
     void EnsureInitialised() override;
