@@ -15,7 +15,7 @@ Matthieu Hodgkinson split from class WaveChannelView.cpp
 #include "ClipParameters.h"
 #include "ClipInterface.h"
 
-namespace au::projectscene {
+namespace au::spectrogram {
 namespace {
 // Returns an offset in seconds to be applied to the right clip
 // boundary so that it does not overlap the last sample

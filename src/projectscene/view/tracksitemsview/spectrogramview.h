@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "ispectrogrampainter.h"
+#include "spectrogram/ispectrogrampainter.h"
 #include "abstractclipview.h"
 
 #include "context/iglobalcontext.h"
@@ -14,7 +14,7 @@ class SpectrogramView : public AbstractClipView
     Q_OBJECT
     Q_PROPERTY(int timelineIndentWidth READ timelineIndentWidth WRITE setTimelineIndentWidth NOTIFY timelineIndentWidthChanged FINAL)
 
-    muse::Inject<ISpectrogramPainter> spectrogramPainter;
+    muse::Inject<spectrogram::ISpectrogramPainter> spectrogramPainter;
     muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:

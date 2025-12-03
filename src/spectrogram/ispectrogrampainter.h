@@ -14,7 +14,9 @@
 
 namespace au::projectscene {
 struct WaveMetrics;
+}
 
+namespace au::spectrogram {
 class ISpectrogramPainter : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(ISpectrogramPainter)
@@ -24,7 +26,7 @@ public:
     /**
      * @param trackHeight excluding the track header height
      */
-    virtual void paintClip(QPainter&, int xBegin, int xEnd, int trackHeight, const trackedit::ClipKey&, const WaveMetrics&, const ZoomInfo&,
-                           const SelectedRegion&) = 0;
+    virtual void paintClip(QPainter&, int xBegin, int xEnd, int trackHeight, const trackedit::ClipKey&, const projectscene::WaveMetrics&,
+                           const ZoomInfo&, const SelectedRegion&) = 0;
 };
 }

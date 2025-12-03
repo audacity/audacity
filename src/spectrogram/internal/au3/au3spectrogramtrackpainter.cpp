@@ -11,7 +11,7 @@
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
 
-namespace au::projectscene {
+namespace au::spectrogram {
 Au3SpectrogramTrackPainter::Au3SpectrogramTrackPainter(std::weak_ptr<WaveTrack> waveTrack)
     : m_waveTrack(std::move(waveTrack))
 {

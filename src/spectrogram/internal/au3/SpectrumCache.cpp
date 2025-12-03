@@ -7,7 +7,6 @@
 
 #include "libraries/lib-fft/RealFFTf.h"
 #include "libraries/lib-fft/Spectrum.h"
-#include "libraries/lib-mixer/WideSampleSequence.h"
 #include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
 #include "libraries/lib-wave-track/Sequence.h"
 #include "libraries/lib-wave-track/WaveTrack.h"

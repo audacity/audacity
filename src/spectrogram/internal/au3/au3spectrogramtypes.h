@@ -3,14 +3,14 @@
  */
 #pragma once
 
-#include "../spectrogramtypes.h"
-#include "./WaveMetrics.h"
+#include "spectrogramtypes.h"
+#include "projectscene/view/tracksitemsview/au3/WaveMetrics.h"
 
 class SpectrogramSettings;
 
-namespace au::projectscene {
+namespace au::spectrogram {
 struct SpectrogramGlobalContext {
-    const WaveMetrics& metrics;
+    const projectscene::WaveMetrics& metrics;
     const ZoomInfo& zoomInfo;
     const SelectedRegion& selectedRegion;
 };

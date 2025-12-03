@@ -14,13 +14,13 @@ Matthieu Hodgkinson split from class WaveChannelView.h
 **********************************************************************/
 #pragma once
 
-#include "../spectrogramtypes.h"
+#include "spectrogramtypes.h"
 
 #include <QRect>
 
 class ClipTimes;
 
-namespace au::projectscene {
+namespace au::spectrogram {
 struct ClipParameters
 {
     // Do a bunch of calculations common to waveform and spectrum drawing.

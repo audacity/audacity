@@ -7,8 +7,10 @@ declare_module(spectrogram)
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/spectrogramcolors.h
     ${CMAKE_CURRENT_LIST_DIR}/ispectrogramconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/ispectrogrampainter.h
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/spectrogramtypes.cpp
     ${CMAKE_CURRENT_LIST_DIR}/spectrogramtypes.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/macromagic.h
@@ -18,6 +20,19 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolorregister.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolorregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolors.cpp
+
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/ClipParameters.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/ClipParameters.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrumCache.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrumCache.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogrampainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogrampainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogramtrackpainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogramtrackpainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogramclipchannelpainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogramclipchannelpainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/WaveClipUIUtilities.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/WaveClipUIUtilities.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramconfiguration.h
