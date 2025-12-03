@@ -6,11 +6,10 @@
 #include "./ClipParameters.h"
 #include "./SpectrumCache.h"
 
-#include "framework/global/log.h"
+#include "spectrogram/AColor.h"
 
 #include "libraries/lib-time-frequency-selection/SelectedRegion.h"
 #include "libraries/lib-screen-geometry/NumberScale.h"
-#include "libraries/lib-theme/AColor.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
 

@@ -238,7 +238,9 @@ set(MODULE_SRC
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
-set(MODULE_LINK au3wrap trackedit uicomponents)
+set(MODULE_LINK au3wrap trackedit uicomponents
+    spectrogram # will be removed in commit later in this PR
+)
 
 set(MODULE_INCLUDE ${CLIPSVIEW_V1_INC})
 

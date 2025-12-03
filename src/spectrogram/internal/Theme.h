@@ -56,7 +56,6 @@ protected:
 
 class THEME_API Theme final : public ThemeBase
 {
-    friend class AColor; // So it can publish
 public:
     Theme() = default;
     ~Theme() override = default;

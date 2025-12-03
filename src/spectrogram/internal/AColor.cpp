@@ -16,7 +16,7 @@ It is also a place to document colour usage policy in Audacity
 
 *//********************************************************************/
 
-#include "AColor.h"
+#include "../AColor.h"
 #include "AColorResources.h"
 
 #include "AllThemeResources.h"
