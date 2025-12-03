@@ -140,7 +140,7 @@ endif()
 # This library depends on au3-network-manager
 # If Sentry reporting is disabled, an INTERFACE library
 # will be defined
-#Disabling for now as not used yet in AU4 : list( APPEND LIBRARIES au3-sentry-reporting)
+list( APPEND LIBRARIES au3-sentry-reporting)
 
 # Set a CACHE variable with all AU3 library names so that au3defs.cmake can use it
 # to generate API macros for all libraries

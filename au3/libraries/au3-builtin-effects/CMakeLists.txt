@@ -90,7 +90,7 @@ set( LIBRARIES
    au3-dynamic-range-processor-interface
    au3-wave-track-fft-interface
    au3-label-track-interface
-   au3-note-track-interface
+#   au3-note-track-interface # don't link for now as we need USE_MIDI
    $<$<BOOL:${AU_USE_SBSMS}>:libsbsms>
    $<$<BOOL:${AU_USE_SOUNDTOUCH}>:soundtouch>
    wxBase

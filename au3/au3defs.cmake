@@ -160,6 +160,16 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
     # Add PRIVATE include directories for AU3 library dependencies
     # This allows the library to include headers from its dependencies
     set(_private_includes "")
+    foreach(lib ${_interface_libs})
+        # Add the include directory of the interface library
+        # Interface libraries provide headers without linking
+        if(TARGET ${lib})
+            get_target_property(_lib_includes ${lib} INTERFACE_INCLUDE_DIRECTORIES)
+            if(_lib_includes)
+                list(APPEND _private_includes ${_lib_includes})
+            endif()
+        endif()
+    endforeach()
     if(_private_includes)
         target_include_directories(${au3_target_name} PRIVATE ${_private_includes})
     endif()
@@ -171,8 +181,12 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
     if(_private_libs)
         target_link_libraries(${au3_target_name} PRIVATE ${_private_libs})
     endif()
-    # Note: _interface_libs are handled by adding their include directories in the
-    # PRIVATE includes section above. We don't actually link them.
+    # Link interface libraries as PRIVATE dependencies
+    # The -interface suffix indicates that the library should not be part of the
+    # public API, but we still need to link it to resolve symbols
+    if(_interface_libs)
+        target_link_libraries(${au3_target_name} PRIVATE ${_interface_libs})
+    endif()
 
     # Add ADDITIONAL_LIBRARIES if provided
     # Note: In macros, we need to check the actual value, not just the parameter name
@@ -268,6 +282,49 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
     #     add_subdirectory(tests)
     # endif()
 endmacro()
+
+
+# A special macro for header only libraries
+
+macro( audacity_header_only_library NAME SOURCES IMPORT_TARGETS
+        ADDITIONAL_DEFINES )
+    # ditto comment in the previous macro
+    add_library( ${NAME} INTERFACE )
+
+    target_include_directories ( ${NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} )
+    target_sources( ${NAME} INTERFACE ${SOURCES})
+    target_link_libraries( ${NAME} INTERFACE ${IMPORT_TARGETS} )
+    target_compile_definitions( ${NAME} INTERFACE ${ADDITIONAL_DEFINES} )
+
+    # define an additional interface library target
+    make_interface_alias(${NAME} "SHARED")
+
+    # just for graphviz
+#    collect_edges( ${NAME} "${IMPORT_TARGETS}" "SHARED" )
+    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+endmacro()
+
+function ( make_interface_alias TARGET REAL_LIBTYTPE )
+    set(INTERFACE_TARGET "${TARGET}-interface")
+    if (NOT REAL_LIBTYPE STREQUAL "MODULE")
+        add_library("${INTERFACE_TARGET}" ALIAS "${TARGET}")
+    else()
+        add_library("${INTERFACE_TARGET}" INTERFACE)
+        foreach(PROP
+                INTERFACE_INCLUDE_DIRECTORIES
+                INTERFACE_COMPILE_DEFINITIONS
+                INTERFACE_LINK_LIBRARIES
+                AUDACITY_GRAPH_DEPENDENCIES
+        )
+            get_target_property( PROPS "${TARGET}" "${PROP}" )
+            if (PROPS)
+                set_target_properties(
+                        "${INTERFACE_TARGET}"
+                        PROPERTIES "${PROP}" "${PROPS}" )
+            endif()
+        endforeach()
+    endif()
+endfunction()
 
 # Macro to add a unit test for an AU3 library
 # Usage: add_unit_test(NAME name SOURCES sources... LIBRARIES libraries...)
