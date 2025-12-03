@@ -44,9 +44,5 @@ struct ClipParameters
 
     QRect paintableClipRect;
     int leftOffset;
-
-    // returns a clip rectangle restricted by viewRect,
-    // and with clipOffsetX - clip horizontal origin offset within view rect
-    static QRect GetClipRect(const ClipTimes& clip, const ZoomInfo& zoomInfo, const QRect& viewRect, bool* outShowSamples = nullptr);
 };
 }

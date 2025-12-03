@@ -66,8 +66,8 @@ struct ZoomInfo {
 
     int viewportWidth() const;
 
-    double PositionToTime(int64_t position, int64_t origin = 0) const;
-    int64_t TimeToPosition(double projectTime, int64_t origin = 0) const;
+    double PositionToTime(int64_t position) const;
+    int64_t TimeToPosition(double projectTime) const;
 };
 
 struct SelectedRegion {

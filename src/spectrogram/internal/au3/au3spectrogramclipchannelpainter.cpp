@@ -213,19 +213,18 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image, const SpectrogramGlo
     }
 
     // Bug 2389 - always draw at least one pixel of selection.
-    int selectedX = zoomInfo.TimeToPosition(selectedRegion.t0(), -leftOffset);
+    int selectedX = zoomInfo.TimeToPosition(selectedRegion.t0()) - leftOffset;
 
     for (int xx = 0; xx < imageWidth; ++xx) {
         // zoomInfo must be queried for each column since with fisheye enabled
         // time between columns is variable
         const auto w0 = sampleCount(
             0.5 + sampleRate / stretchRatio
-            * (zoomInfo.PositionToTime(xx, -leftOffset) - playStartTime));
+            * (zoomInfo.PositionToTime(xx - leftOffset) - playStartTime));
 
         const auto w1 = sampleCount(
             0.5 + sampleRate / stretchRatio
-            * (zoomInfo.PositionToTime(xx + 1, -leftOffset) - playStartTime));
-
+            * (zoomInfo.PositionToTime(xx + 1 - leftOffset) - playStartTime));
         bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
         maybeSelected = maybeSelected || (xx == selectedX);
 
