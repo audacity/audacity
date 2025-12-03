@@ -1,26 +1,19 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-
-/*  SPDX-License-Identifier: GPL-2.0-or-later */
-/**********************************************************************
-
-Audacity: A Digital Audio Editor
-
-ClipParameters.h
-
-Matthieu Hodgkinson split from class WaveChannelView.h
-
-**********************************************************************/
 #pragma once
 
-#include "../spectrogramutils.h"
+#include "./spectrogramutils.h"
 
 #include <QRect>
 
-class ClipTimes;
-
 namespace au::spectrogram {
+struct ClipTimes {
+    const double playStartTime;
+    const double playEndTime;
+    const double stretchRatio;
+};
+
 struct ClipParameters
 {
     // Do a bunch of calculations common to waveform and spectrum drawing.

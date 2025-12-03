@@ -12,6 +12,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.h
     ${CMAKE_CURRENT_LIST_DIR}/spectrogramtypes.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/clipparameters.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/clipparameters.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/macromagic.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/roseuscolormaps.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolordefinitions.cpp
@@ -22,8 +24,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/ClipParameters.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/ClipParameters.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrumCache.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrumCache.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogrampainter.cpp
