@@ -1843,9 +1843,9 @@ double AudioIO::GetStreamTime()
 //! Sits in a thread loop reading and writing audio.
 void AudioIO::AudioThread(std::atomic<bool>& finish)
 {
-    enum class State {
-        eUndefined, eOnce, eLoopRunning, eDoNothing, eMonitoring
-    } lastState = State::eUndefined;
+    enum class ProcessingState {
+        eSkipProcessing, ePrimeProcessing, eMonitoringProcessing, eCallbackProcessing
+    } lastState = ProcessingState::eSkipProcessing;
     AudioIO* const gAudioIO = AudioIO::Get();
     while (!finish.load(std::memory_order_acquire)) {
         using Clock = std::chrono::steady_clock;
@@ -1862,15 +1862,15 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
             gAudioIO->mAudioThreadShouldCallSequenceBufferExchangeOnce
             .store(false, std::memory_order_release);
 
-            lastState = State::eOnce;
+            lastState = ProcessingState::ePrimeProcessing;
         } else if (gAudioIO->mAudioThreadSequenceBufferExchangeLoopRunning
                    .load(std::memory_order_relaxed)) {
-            if (lastState != State::eLoopRunning) {
+            if (lastState != ProcessingState::eCallbackProcessing) {
                 // Main thread has told us to start - acknowledge that we do
                 gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStart,
                                                         std::memory_order::memory_order_release);
             }
-            lastState = State::eLoopRunning;
+            lastState = ProcessingState::eCallbackProcessing;
 
             // We call the processing after raising the acknowledge flag, because the main thread
             // only needs to know that the message was seen.
@@ -1880,17 +1880,18 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
 
             gAudioIO->SequenceBufferExchange();
         } else {
-            if ((lastState == State::eLoopRunning)
-                || (lastState == State::eMonitoring)) {
+            if ((lastState == ProcessingState::eCallbackProcessing)
+                || (lastState == ProcessingState::eMonitoringProcessing)
+                || (lastState == ProcessingState::ePrimeProcessing)) {
                 // Main thread has told us to stop; (actually: to neither process "once" nor "loop running")
                 // acknowledge that we received the order and that no more processing will be done.
                 gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStop,
                                                         std::memory_order::memory_order_release);
             }
-            lastState = State::eDoNothing;
+            lastState = ProcessingState::eSkipProcessing;
 
             if (gAudioIO->IsMonitoring()) {
-                lastState = State::eMonitoring;
+               lastState = ProcessingState::eMonitoringProcessing;
             }
         }
 

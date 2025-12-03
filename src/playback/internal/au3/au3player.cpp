@@ -32,6 +32,12 @@ Au3Player::Au3Player()
             m_consumedSamplesSoFar = 0;
             m_reachedEnd.val = false;
         }
+
+        if (st != PlaybackStatus::Stopped) {
+            m_timer.start();
+        } else {
+            m_timer.stop();
+        }
     });
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
@@ -53,6 +59,10 @@ Au3Player::Au3Player()
             m_loopRegionChanged.notify();
         });
     });
+
+    m_timer.setInterval(16);
+    m_timer.setTimerType(Qt::PreciseTimer);
+    m_timer.callOnTimeout([this]() { updatePlaybackPosition(); });
 }
 
 bool Au3Player::isBusy() const

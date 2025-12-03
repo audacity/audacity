@@ -15,6 +15,8 @@
 
 #include "au3wrap/au3types.h"
 
+#include <QTimer>
+
 #include <chrono>
 #include <optional>
 
@@ -94,5 +96,6 @@ private:
 
     std::optional<TargetPoint> m_currentTarget;
     unsigned long long m_consumedSamplesSoFar = 0;
+    QTimer m_timer;
 };
 }
