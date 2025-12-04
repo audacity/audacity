@@ -90,16 +90,12 @@ ChooseColorSet(float bin0, float bin1, float selBinLo,
 }
 }
 
-Au3SpectrogramClipChannelPainter::Au3SpectrogramClipChannelPainter(std::shared_ptr<WaveClipChannel> channel)
-    : m_waveClipChannel{std::move(channel)} {}
-
-void Au3SpectrogramClipChannelPainter::paint(QImage& image,
-                                             const ViewInfo& viewInfo,
-                                             const SelectionInfo& selectionInfo,
-                                             const SpectrogramTrackContext& tc)
+void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
+                                                 const ViewInfo& viewInfo,
+                                                 const SelectionInfo& selectionInfo,
+                                                 const SpectrogramTrackContext& tc, WaveClipChannel& clipChannel)
 {
     SpectrogramSettings& settings = tc.settings;
-    auto& clipChannel = *m_waveClipChannel;
     const QRect paintableRect{ 0, 0, viewportWidth(viewInfo), image.height() };
     const ClipTimes clipTimes{
         clipChannel.GetPlayStartTime(),
