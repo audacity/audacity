@@ -12,9 +12,8 @@
 # Dongyun Kim <kenny122@ajou.ac.kr>, 2023
 # Seong-ho Cho <darkcircle.0426@gmail.com>, 2023
 # Potato <sheppaul@naver.com>, 2023
-# LEE Hwanyong <hwan@ajou.ac.kr>, 2023
 # JungHee Lee <daemul72@gmail.com>, 2025
-# , fuzzy
+# LEE Hwanyong <hwan@ajou.ac.kr>, 2023-2025
 #
 #, fuzzy
 msgid ""
@@ -205,7 +204,7 @@ msgstr "녹음 음량을 에뮬레이팅합니다\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Recording volume is native\n"
-msgstr "녹음 음량을 자체 설정합니다\n"
+msgstr "녹음 음량은 네이티브입니다\n"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Could not find any audio devices.\n"
