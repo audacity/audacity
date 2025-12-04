@@ -1,11 +1,10 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "../spectrogramcolors.h"
-#include "roseuscolormaps.h"
-
-#include "spectrogramcolordefinitions.h"
-#include "spectrogramcolorregister.h"
+#include "internal/spectrogramcolors.h"
+#include "internal/roseuscolormaps.h"
+#include "internal/spectrogramcolordefinitions.h"
+#include "internal/spectrogramcolorregister.h"
 
 unsigned char SpectrogramColors::gradient_pre[ColorGradientTotal][colorSchemes][gradientSteps][3];
 

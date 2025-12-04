@@ -2,13 +2,11 @@
  * Audacity: A Digital Audio Editor
  */
 #include "au3spectrogramclipchannelpainter.h"
-
-#include "internal/spectrogramutils.h"
-#include "internal/clipparameters.h"
-
 #include "./SpectrumCache.h"
 
-#include "spectrogram/spectrogramcolors.h"
+#include "internal/spectrogramcolors.h"
+#include "internal/spectrogramutils.h"
+#include "internal/clipparameters.h"
 
 #include "libraries/lib-screen-geometry/NumberScale.h"
 #include "libraries/lib-wave-track/WaveClip.h"
