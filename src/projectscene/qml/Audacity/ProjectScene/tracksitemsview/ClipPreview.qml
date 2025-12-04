@@ -10,6 +10,9 @@ Rectangle {
     property bool collapsed: false
 
     property alias title: titleLabel.text
+    property real desiredWidth: -1
+
+    width: desiredWidth <= 0 ? titleLabel.implicitWidth + 20 : desiredWidth
 
     radius: 4
     border.width: 1
@@ -50,6 +53,45 @@ Rectangle {
             radius: 4
         }
 
+        Rectangle {
+            id: clipBodyGradient
+
+            x: parent.width - 20
+            height: root.height - header.height - 1
+            width: 50
+
+            anchors.bottom: parent.bottom
+
+            visible: desiredWidth <= 0
+
+            gradient: Gradient {
+                orientation: Qt.Horizontal
+                GradientStop { position: 0.0; color: "#00FFFFFF" }
+                GradientStop { position: 0.4; color: ui.blendColors(ui.blendColors("transparent", "#FFFFFF", 0.3), ui.blendColors("transparent", root.clipColor, 0.4), 0.5)}
+                // /*ui.blendColors("#FFFFFF", root.clipColor, 0.5)*//*root.clipColor;*/
+                GradientStop { position: 1.0; color: "#00FFFFFF" }
+            }
+        }
+
+        Rectangle {
+            id: bottomBorderGradient
+
+            x: parent.width - 20
+            y: parent.height - 1
+
+            height: 1
+            width: 50
+
+            visible: desiredWidth <= 0
+
+            gradient: Gradient {
+                orientation: Qt.Horizontal
+                GradientStop { position: 0.0; color: "#00FFFFFF" }
+                GradientStop { position: 0.4; color: "#FFFFFFFF" }
+                GradientStop { position: 1.0; color: "#00FFFFFF" }
+            }
+        }
+
     }
 
     RoundedRectangle {
@@ -79,6 +121,23 @@ Rectangle {
             horizontalAlignment: Qt.AlignLeft
 
             color: "#000000"
+        }
+
+        Rectangle {
+            id: headerGradient
+
+            x: parent.width - 20
+            width: 50
+            height: header.height - 1
+
+            visible: desiredWidth <= 0
+
+            gradient: Gradient {
+                orientation: Qt.Horizontal
+                GradientStop { position: 0.0; color: "#00FFFFFF" }
+                GradientStop { position: 0.4; color: ui.blendColors("#FFFFFF", root.clipColor, 0.3) }
+                GradientStop { position: 1.0; color: "#00FFFFFF" }
+            }
         }
     }
 }

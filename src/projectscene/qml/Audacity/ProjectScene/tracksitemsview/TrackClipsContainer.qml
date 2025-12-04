@@ -474,8 +474,8 @@ TrackItemsContainer {
 
                             previewClip.x = x
 
-                            if (previewClip.width != width) {
-                                previewClip.width = width
+                            if (previewClip.desiredWidth != width) {
+                                previewClip.desiredWidth = width
                             }
 
                             if (previewClip.title != title) {

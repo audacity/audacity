@@ -879,9 +879,9 @@ Rectangle {
                             Connections {
                                 target: tracksItemsView
 
-                                function onPreviewImportClipRequested(trackId, startPos, endPos, title) {
+                                function onPreviewImportClipRequested(trackId, startPos, width, title) {
                                     if (trackId === trackClipsContainer.trackId) {
-                                        trackClipsContainer.movePreviewClip(startPos, endPos, title)
+                                        trackClipsContainer.movePreviewClip(startPos, width, title)
                                     }
                                 }
 
