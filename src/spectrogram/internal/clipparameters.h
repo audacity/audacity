@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "./spectrogramutils.h"
+#include "spectrogramtypes.h"
 
 #include <QRect>
 
@@ -23,7 +23,7 @@ struct ClipParameters
      * and beside that filling the remaining rectangle area. In other words, the rectangle where spectrogram values on the track may be painted (or not if
      * there is no clip there).
      */
-    ClipParameters(const ClipTimes& clip, const QRect& trackPaintableSubrect, const ZoomInfo& zoomInfo);
+    ClipParameters(const ClipTimes& clip, const QRect& trackPaintableSubrect, const ViewInfo&);
 
     // Lower and upper visible time boundaries (relative to clip). If completely
     // off-screen, `t0 == t1`.

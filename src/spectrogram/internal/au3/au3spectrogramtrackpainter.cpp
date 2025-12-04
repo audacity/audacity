@@ -17,8 +17,8 @@ Au3SpectrogramTrackPainter::Au3SpectrogramTrackPainter(std::weak_ptr<WaveTrack> 
 {
 }
 
-void Au3SpectrogramTrackPainter::paintClip(QPainter& qPainter, const ClipInfo& clipInfo, int trackHeight,
-                                           const SpectrogramGlobalContext& globalContext)
+void Au3SpectrogramTrackPainter::paintClip(QPainter& qPainter, const ClipInfo& clipInfo, const ViewInfo& viewInfo,
+                                           const SelectedRegion& selectedRegion)
 {
     const auto waveTrack = m_waveTrack.lock();
     IF_ASSERT_FAILED(waveTrack) {
@@ -38,6 +38,8 @@ void Au3SpectrogramTrackPainter::paintClip(QPainter& qPainter, const ClipInfo& c
         maxFreq,
         leftRightHeightRatio
     };
+
+    const int trackHeight{ viewInfo.trackHeight };
 
     ::WaveClip* const clip = au3::DomAccessor::findWaveClip(waveTrack.get(), static_cast<int64_t>(clipInfo.clipId)).get();
     if (!clip) {
@@ -59,7 +61,7 @@ void Au3SpectrogramTrackPainter::paintClip(QPainter& qPainter, const ClipInfo& c
         const auto isRightChannel = i == 1u;
         const auto channelHeight = isStereo ? (isRightChannel ? rightChannelHeight : trackHeight - rightChannelHeight) : trackHeight;
         QImage image{ clipInfo.xPaintEnd - clipInfo.xPaintBegin, channelHeight, QImage::Format_RGB888 };
-        channelPainters[i]->paint(image, globalContext, trackContext);
+        channelPainters[i]->paint(image, viewInfo, selectedRegion, trackContext);
         const auto channelY = isStereo ? (isRightChannel ? trackHeight - rightChannelHeight : 0) : 0;
         qPainter.drawImage(QPoint { clipInfo.xPaintBegin, channelY }, image);
     }

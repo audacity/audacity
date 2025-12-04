@@ -23,8 +23,8 @@ void Au3SpectrogramPainter::init()
     });
 }
 
-void Au3SpectrogramPainter::paintClip(QPainter& qPainter, const ClipInfo& clipInfo, int trackHeight, double viewportT0,
-                                      double viewportT1, double zoom, const SelectedRegion& selectedRegion)
+void Au3SpectrogramPainter::paintClip(QPainter& qPainter, const ClipInfo& clipInfo, const ViewInfo& viewInfo,
+                                      const SelectedRegion& selectedRegion)
 {
     const auto au3Project = m_au3Project.lock();
     IF_ASSERT_FAILED(au3Project) {
@@ -48,10 +48,6 @@ void Au3SpectrogramPainter::paintClip(QPainter& qPainter, const ClipInfo& clipIn
         return;
     }
 
-    const ZoomInfo zoomInfo{ zoom, viewportT0, viewportT1 };
-
-    const SpectrogramGlobalContext gc { zoomInfo, selectedRegion };
-
-    trackPainter.paintClip(qPainter, clipInfo, trackHeight, gc);
+    trackPainter.paintClip(qPainter, clipInfo, viewInfo, selectedRegion);
 }
 }

@@ -52,6 +52,13 @@ void SpectrogramView::paint(QPainter* painter)
         xEnd,
     };
 
-    spectrogramPainter()->paintClip(*painter, clipInfo, height(), viewportT0, viewportT1, m_context->zoom(), selectedRegion);
+    const spectrogram::ViewInfo viewInfo {
+        static_cast<int>(height()),
+        viewportT0,
+        viewportT1,
+        m_context->zoom()
+    };
+
+    spectrogramPainter()->paintClip(*painter, clipInfo, viewInfo, selectedRegion);
 }
 }

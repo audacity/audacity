@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "clipparameters.h"
+#include "spectrogramutils.h"
 
 namespace au::spectrogram {
 namespace {
@@ -11,15 +12,15 @@ double GetBlankSpaceBeforePlayEndTime(const ClipTimes& clip)
 }
 } // namespace
 
-ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintableSubrect, const ZoomInfo& zoomInfo)
+ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintableSubrect, const ViewInfo& viewInfo)
 {
-    const auto trackRectT1 = zoomInfo.viewportT1;
+    const auto trackRectT1 = viewInfo.viewportT1;
     const auto playStartTime = clip.playStartTime;
 
     const double clipLength = clip.playEndTime - clip.playStartTime;
 
     // Hidden duration because too far left.
-    const auto hiddenDurationLeft = zoomInfo.viewportT0 - playStartTime;
+    const auto hiddenDurationLeft = viewInfo.viewportT0 - playStartTime;
     const auto tpost = trackRectT1 - playStartTime;
 
     const auto blank = GetBlankSpaceBeforePlayEndTime(clip);
@@ -40,7 +41,7 @@ ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintabl
     leftOffset = 0;
     if (hiddenDurationLeft < 0) {
         // Fix Bug #1296 caused by premature conversion to (int).
-        int64_t time64 = zoomInfo.timeToPosition(playStartTime);
+        int64_t time64 = timeToPosition(viewInfo, playStartTime);
         if (time64 < 0) {
             time64 = 0;
         }

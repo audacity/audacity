@@ -3,20 +3,12 @@
  */
 #pragma once
 
-#include <cstdint>
+#include "spectrogramtypes.h"
+
 #include <cmath>
 
 namespace au::spectrogram {
-struct ZoomInfo {
-    ZoomInfo(double zoom, double viewportT0, double viewportT1);
-
-    const double zoom;
-    const double viewportT0;
-    const double viewportT1;
-
-    int viewportWidth() const;
-
-    double positionToTime(int64_t position) const;
-    int64_t timeToPosition(double projectTime) const;
-};
+int viewportWidth(const ViewInfo&);
+double positionToTime(const ViewInfo&, int position);
+int timeToPosition(const ViewInfo&, double projectTime);
 }

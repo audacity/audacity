@@ -6,24 +6,19 @@
 #include <cmath>
 
 namespace au::spectrogram {
-ZoomInfo::ZoomInfo(double zoom, double viewportT0, double viewportT1)
-    : zoom{zoom}, viewportT0{viewportT0}, viewportT1{viewportT1}
+int viewportWidth(const ViewInfo& viewInfo)
 {
+    return static_cast<int>(std::round((viewInfo.viewportT1 - viewInfo.viewportT0) * viewInfo.pixelsPerSecond));
 }
 
-int ZoomInfo::viewportWidth() const
+double positionToTime(const ViewInfo& viewInfo, int position)
 {
-    return static_cast<int>(std::round((viewportT1 - viewportT0) * zoom));
+    return viewInfo.viewportT0 + position / viewInfo.pixelsPerSecond;
 }
 
-double ZoomInfo::positionToTime(int64_t position) const
+int timeToPosition(const ViewInfo& viewInfo, double projectTime)
 {
-    return viewportT0 + position / zoom;
-}
-
-int64_t ZoomInfo::timeToPosition(double projectTime) const
-{
-    double t = 0.5 + zoom * (projectTime - viewportT0);
+    double t = 0.5 + viewInfo.pixelsPerSecond * (projectTime - viewInfo.viewportT0);
     if (t < INT64_MIN) {
         return INT64_MIN;
     }
