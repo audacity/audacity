@@ -51,6 +51,9 @@ private:
    wxTextCtrl* mTruncLongestAllowedSilenceT;
    wxTextCtrl* mSilenceCompressPercentT;
    wxCheckBox* mIndependent;
+   wxCheckBox* mTruncateStart;
+   wxCheckBox* mTruncateMiddle;
+   wxCheckBox* mTruncateEnd;
 };
 
 #endif
