@@ -36,18 +36,6 @@ void Au3SpectrogramPainter::paintClip(QPainter& qPainter, const ClipInfo& clipIn
         return;
     }
 
-    if (m_trackPainterMap.find(clipInfo.trackId) == m_trackPainterMap.end()) {
-        std::weak_ptr<WaveTrack> weakTrack = std::static_pointer_cast<WaveTrack>(track->shared_from_this());
-        m_trackPainterMap.emplace(clipInfo.trackId, Au3SpectrogramTrackPainter { std::move(weakTrack) });
-    }
-
-    auto& trackPainter = m_trackPainterMap.at(clipInfo.trackId);
-    if (trackPainter.trackExpired()) {
-        // TODO: find out why this may happen
-        m_trackPainterMap.erase(clipInfo.trackId);
-        return;
-    }
-
-    trackPainter.paintClip(qPainter, clipInfo, viewInfo, selectionInfo);
+    m_trackPainter.paintClip(qPainter, clipInfo, viewInfo, selectionInfo, *track);
 }
 }

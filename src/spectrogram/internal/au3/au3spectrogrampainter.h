@@ -28,6 +28,6 @@ public:
 
 private:
     std::weak_ptr<au3::Au3Project> m_au3Project;
-    std::unordered_map<int64_t /*track ID*/, Au3SpectrogramTrackPainter> m_trackPainterMap;
+    Au3SpectrogramTrackPainter m_trackPainter;
 };
 }
