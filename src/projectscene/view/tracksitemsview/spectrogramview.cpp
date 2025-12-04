@@ -45,7 +45,13 @@ void SpectrogramView::paint(QPainter* painter)
     const QRect visibleSubrect = clipRect().toRect();
     const int xBegin = std::max(visibleSubrect.left() - m_timelineIndentWidth, 0);
     const int xEnd = visibleSubrect.right() + 1;
-    spectrogramPainter()->paintClip(*painter, xBegin, xEnd, height(), viewportT0, viewportT1,
-                                    m_context->zoom(), m_clipKey.key, selectedRegion);
+    const spectrogram::ClipInfo clipInfo {
+        static_cast<int>(m_clipKey.key.itemId),
+        static_cast<int>(m_clipKey.key.trackId),
+        xBegin,
+        xEnd,
+    };
+
+    spectrogramPainter()->paintClip(*painter, clipInfo, height(), viewportT0, viewportT1, m_context->zoom(), selectedRegion);
 }
 }

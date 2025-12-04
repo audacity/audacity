@@ -10,6 +10,7 @@
 #include "libraries/lib-project/Project.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
+#include "spectrogramtypes.h"
 
 namespace au::spectrogram {
 void Au3SpectrogramPainter::init()
@@ -22,30 +23,28 @@ void Au3SpectrogramPainter::init()
     });
 }
 
-void Au3SpectrogramPainter::paintClip(QPainter& qPainter, int xBegin, int xEnd, int trackHeight, double viewportT0, double viewportT1,
-                                      double zoom,
-                                      const trackedit::ClipKey& clipKey,
-                                      const SelectedRegion& selectedRegion)
+void Au3SpectrogramPainter::paintClip(QPainter& qPainter, const ClipInfo& clipInfo, int trackHeight, double viewportT0,
+                                      double viewportT1, double zoom, const SelectedRegion& selectedRegion)
 {
     const auto au3Project = m_au3Project.lock();
     IF_ASSERT_FAILED(au3Project) {
         return;
     }
 
-    au3::Au3WaveTrack* const track = au3::DomAccessor::findWaveTrack(*au3Project, au3::Au3TrackId { clipKey.trackId });
+    au3::Au3WaveTrack* const track = au3::DomAccessor::findWaveTrack(*au3Project, au3::Au3TrackId { clipInfo.trackId });
     if (!track) {
         return;
     }
 
-    if (m_trackPainterMap.find(clipKey.trackId) == m_trackPainterMap.end()) {
+    if (m_trackPainterMap.find(clipInfo.trackId) == m_trackPainterMap.end()) {
         std::weak_ptr<WaveTrack> weakTrack = std::static_pointer_cast<WaveTrack>(track->shared_from_this());
-        m_trackPainterMap.emplace(clipKey.trackId, Au3SpectrogramTrackPainter { std::move(weakTrack) });
+        m_trackPainterMap.emplace(clipInfo.trackId, Au3SpectrogramTrackPainter { std::move(weakTrack) });
     }
 
-    auto& trackPainter = m_trackPainterMap.at(clipKey.trackId);
+    auto& trackPainter = m_trackPainterMap.at(clipInfo.trackId);
     if (trackPainter.trackExpired()) {
         // TODO: find out why this may happen
-        m_trackPainterMap.erase(clipKey.trackId);
+        m_trackPainterMap.erase(clipInfo.trackId);
         return;
     }
 
@@ -53,6 +52,6 @@ void Au3SpectrogramPainter::paintClip(QPainter& qPainter, int xBegin, int xEnd, 
 
     const SpectrogramGlobalContext gc { zoomInfo, selectedRegion };
 
-    trackPainter.paintClip(clipKey.itemId, qPainter, xBegin, xEnd, trackHeight, gc);
+    trackPainter.paintClip(qPainter, clipInfo, trackHeight, gc);
 }
 }

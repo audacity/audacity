@@ -24,11 +24,10 @@ public:
 
     void init();
 
-    void paintClip(QPainter&, int xBegin, int xEnd, int trackHeight, double viewportT0, double viewportT1, double zoom,
-                   const trackedit::ClipKey&, const SelectedRegion&) override;
+    void paintClip(QPainter&, const ClipInfo&, int trackHeight, double viewportT0, double viewportT1, double zoom, const SelectedRegion&) override;
 
 private:
     std::weak_ptr<au3::Au3Project> m_au3Project;
-    std::unordered_map<trackedit::TrackId, Au3SpectrogramTrackPainter> m_trackPainterMap;
+    std::unordered_map<int64_t /*track ID*/, Au3SpectrogramTrackPainter> m_trackPainterMap;
 };
 }

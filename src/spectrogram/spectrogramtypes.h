@@ -69,4 +69,11 @@ struct SelectedRegion {
     const double f0;
     const double f1;
 };
+
+struct ClipInfo {
+    const int clipId;
+    const int trackId;
+    const int xPaintBegin;
+    const int xPaintEnd;
+};
 }
