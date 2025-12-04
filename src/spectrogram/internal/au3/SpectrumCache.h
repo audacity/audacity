@@ -57,7 +57,7 @@ public:
     unsigned zeroPaddingFactor { 0 };
     int frequencyGain;
     std::vector<float> freq;
-    std::vector<sampleCount> where;
+    std::vector<long long> where;
 
     int dirty;
 
@@ -115,7 +115,7 @@ struct WaveClipSpectrumCache final : WaveClipListener
     // > In the interim, this still works correctly for WideSampleSequence backed
     // > by a right channel track, which always ignores its partner.
     bool GetSpectrogram(const WaveChannelInterval& clip, const float*& spectrogram, SpectrogramSettings& spectrogramSettings,
-                        const sampleCount*& where, size_t numPixels, double t0 /*absolute time*/, double pixelsPerSecond);
+                        const long long*& where, size_t numPixels, double t0 /*absolute time*/, double pixelsPerSecond);
 
     void MakeStereo(WaveClipListener&& other, bool aligned) override;
     void SwapChannels() override;

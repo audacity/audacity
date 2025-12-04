@@ -3,7 +3,7 @@
  */
 
 #include "SpectrumCache.h"
-#include "WaveClipUIUtilities.h"
+#include "internal/spectrogramutils.h"
 
 #include "libraries/lib-fft/RealFFTf.h"
 #include "libraries/lib-fft/Spectrum.h"
@@ -109,9 +109,9 @@ bool SpecCache::CalculateOneSpectrum(
     // the visible area.
 
     if (xx < 0) {
-        from = sampleCount(where[0].as_double() + xx * samplesPerPixel);
+        from = sampleCount(static_cast<double>(where[0]) + xx * samplesPerPixel);
     } else if (xx > (int)len) {
-        from = sampleCount(where[len].as_double() + (xx - len) * samplesPerPixel);
+        from = sampleCount(static_cast<double>(where[len]) + (xx - len) * samplesPerPixel);
     } else {
         from = where[xx];
     }
@@ -436,7 +436,7 @@ void SpecCache::Populate(
 bool WaveClipSpectrumCache::GetSpectrogram(
     const WaveChannelInterval& clip,
     const float*& spectrogram, SpectrogramSettings& settings,
-    const sampleCount*& where, size_t numPixels, double t0,
+    const long long*& where, size_t numPixels, double t0,
     double pixelsPerSecond)
 {
     auto& mSpecCache = mSpecCaches[clip.GetChannelIndex()];
@@ -481,7 +481,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 
     int copyBegin = 0, copyEnd = 0;
     if (match) {
-        WaveClipUIUtilities::findCorrection(
+        au::spectrogram::findCorrection(
             mSpecCache->where, mSpecCache->len, numPixels, t0, sampleRate,
             stretchRatio, samplesPerPixel, oldX0, correction);
         // Remember our first pixel maps to oldX0 in the old cache,
@@ -529,7 +529,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
     // purposely offset the display 1/2 sample to the left (as compared
     // to waveform display) to properly center response of the FFT
     constexpr auto addBias = true;
-    WaveClipUIUtilities::fillWhere(
+    au::spectrogram::fillWhere(
         mSpecCache->where, numPixels, addBias, correction, t0, sampleRate,
         stretchRatio, samplesPerPixel);
 
