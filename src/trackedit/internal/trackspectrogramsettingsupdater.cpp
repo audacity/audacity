@@ -11,49 +11,46 @@ namespace au::trackedit {
 void TrackSpectrogramSettingsUpdater::init()
 {
     globalSpectrogramConfiguration()->someSettingChanged().onNotify(this, [this]{
-        onSomeSettingChanged();
+        maybeApplyGlobalSettingsToTrack();
     });
 
     appShellConfiguration()->settingsApplied().onNotify(this, [this]{
-        const auto trackeditProject = globalContext()->currentTrackeditProject();
-        if (!trackeditProject) {
-            // Likely changed from the prefs without a project open
-            return;
-        }
+        forEachTrack([](ITrackeditProject& trackeditProject, const Track& track, Au3TrackSpectrogramConfiguration& config){
+            if (config.useGlobalSettings()) {
+                trackeditProject.notifyAboutTrackChanged(track);
+            }
+        });
+    });
 
-        for (const Track& track : trackeditProject->trackList()) {
-            const auto trackConfig = Au3TrackSpectrogramConfiguration::create(track.id, *globalContext());
-            IF_ASSERT_FAILED(trackConfig) {
-                continue;
-            }
-            if (trackConfig->useGlobalSettings()) {
-                trackeditProject->notifyAboutTrackChanged(track);
-            }
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]{
+        maybeApplyGlobalSettingsToTrack();
+    });
+
+    maybeApplyGlobalSettingsToTrack();
+}
+
+void TrackSpectrogramSettingsUpdater::maybeApplyGlobalSettingsToTrack()
+{
+    forEachTrack([this](ITrackeditProject&, const Track&, Au3TrackSpectrogramConfiguration& config){
+        if (config.useGlobalSettings()) {
+            config.setAllSettings(globalSpectrogramConfiguration()->allSettings());
         }
     });
 }
 
-void TrackSpectrogramSettingsUpdater::onSomeSettingChanged()
+void TrackSpectrogramSettingsUpdater::forEachTrack(std::function<void(ITrackeditProject&, const trackedit::Track&,
+                                                                      Au3TrackSpectrogramConfiguration&)> func) const
 {
-    const auto project = globalContext()->currentProject();
-    if (!project) {
-        // Likely changed from the prefs without a project open
+    const auto trackeditProject = globalContext()->currentTrackeditProject();
+    if (!trackeditProject) {
         return;
     }
-
-    const auto trackeditProject = project->trackeditProject();
-    IF_ASSERT_FAILED(trackeditProject) {
-        return;
-    }
-    const spectrogram::AllSpectrogramSettings globalSettings = globalSpectrogramConfiguration()->allSettings();
     for (const Track& track : trackeditProject->trackList()) {
         const auto trackConfig = Au3TrackSpectrogramConfiguration::create(track.id, *globalContext());
         IF_ASSERT_FAILED(trackConfig) {
             continue;
         }
-        if (trackConfig->useGlobalSettings()) {
-            trackConfig->setAllSettings(globalSettings);
-        }
+        func(*trackeditProject, track, *trackConfig);
     }
 }
 }

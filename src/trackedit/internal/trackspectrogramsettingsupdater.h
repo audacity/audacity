@@ -10,7 +10,10 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
+#include <functional>
+
 namespace au::trackedit {
+class Au3TrackSpectrogramConfiguration;
 class TrackSpectrogramSettingsUpdater : public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -19,6 +22,7 @@ class TrackSpectrogramSettingsUpdater : public muse::async::Asyncable
 
 public:
     void init();
-    void onSomeSettingChanged();
+    void forEachTrack(std::function<void(ITrackeditProject&, const trackedit::Track&, Au3TrackSpectrogramConfiguration&)>) const;
+    void maybeApplyGlobalSettingsToTrack();
 };
 }
