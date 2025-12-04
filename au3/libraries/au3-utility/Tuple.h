@@ -74,18 +74,23 @@ template<size_t Index, size_t... Indices> struct increasing<Index, Indices...> {
 }
 
 //! Return a tuple of values initialized from a subsequence of a tuple
-template<size_t... Indices> constexpr auto Project = [](auto&& tuple)
-{
-    using Tuple = decltype(tuple);
-    constexpr auto size = std::tuple_size_v<std::remove_reference_t<Tuple> >;
-    static_assert(((Indices < size) && ...), "Indices must be in range");
-    // Increasing indices will also be unique, preventing the possibility
-    // of moving-from a tuple member twice
-    // TODO weaker test just for uniqueness
-    static_assert(detail::increasing<Indices...>::value,
-                  "Indices must be strictly increasing");
-    return std::make_tuple(std::get<Indices>(std::forward<Tuple>(tuple))...);
+template<size_t... Indices>
+struct ProjectImpl {
+    template<typename Tuple>
+    constexpr auto operator()(Tuple&& tuple) const
+    {
+        constexpr auto size = std::tuple_size_v<std::remove_reference_t<Tuple> >;
+        static_assert(((Indices < size) && ...), "Indices must be in range");
+        // Increasing indices will also be unique, preventing the possibility
+        // of moving-from a tuple member twice
+        // TODO weaker test just for uniqueness
+        static_assert(detail::increasing<Indices...>::value,
+                      "Indices must be strictly increasing");
+        return std::make_tuple(std::get<Indices>(std::forward<Tuple>(tuple))...);
+    }
 };
+
+template<size_t... Indices> inline constexpr ProjectImpl<Indices...> Project{};
 
 //! Destructures a std::index_sequence argument
 template<size_t... Indices, typename Tuple> auto Projection(
@@ -95,19 +100,24 @@ template<size_t... Indices, typename Tuple> auto Projection(
 }
 
 //! Forwarding of a subsequence of a tuple
-template<size_t... Indices> constexpr auto ForwardProject = [](auto&& tuple)
-{
-    using Tuple = decltype(tuple);
-    constexpr auto size = std::tuple_size_v<std::remove_reference_t<Tuple> >;
-    static_assert(((Indices < size) && ...), "Indices must be in range");
-    // Increasing indices will also be unique, preventing the possibility
-    // of (later) moving-from a duplicated rvalue reference in the tuple
-    // TODO weaker test just for uniqueness
-    static_assert(detail::increasing<Indices...>::value,
-                  "Indices must be strictly increasing");
-    return
-        std::forward_as_tuple(std::get<Indices>(std::forward<Tuple>(tuple))...);
+template<size_t... Indices>
+struct ForwardProjectImpl {
+    template<typename Tuple>
+    constexpr auto operator()(Tuple&& tuple) const
+    {
+        constexpr auto size = std::tuple_size_v<std::remove_reference_t<Tuple> >;
+        static_assert(((Indices < size) && ...), "Indices must be in range");
+        // Increasing indices will also be unique, preventing the possibility
+        // of (later) moving-from a duplicated rvalue reference in the tuple
+        // TODO weaker test just for uniqueness
+        static_assert(detail::increasing<Indices...>::value,
+                      "Indices must be strictly increasing");
+        return
+            std::forward_as_tuple(std::get<Indices>(std::forward<Tuple>(tuple))...);
+    }
 };
+
+template<size_t... Indices> inline constexpr ForwardProjectImpl<Indices...> ForwardProject{};
 
 //! Destructures a std::index_sequence argument
 template<size_t... Indices, typename Tuple> constexpr auto ForwardingProjection(
