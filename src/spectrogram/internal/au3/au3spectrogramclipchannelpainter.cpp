@@ -10,7 +10,6 @@
 
 #include "spectrogram/spectrogramcolors.h"
 
-#include "libraries/lib-time-frequency-selection/SelectedRegion.h"
 #include "libraries/lib-screen-geometry/NumberScale.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
@@ -18,14 +17,14 @@
 namespace au::spectrogram {
 namespace {
 std::pair<sampleCount, sampleCount> GetSelectedSampleIndices(
-    const SelectedRegion& selectedRegion, const WaveChannelInterval& clip,
+    const SelectionInfo& selectionInfo, const WaveChannelInterval& clip,
     bool trackIsSelected)
 {
     if (!trackIsSelected) {
         return { 0, 0 };
     }
-    const double t0 = selectedRegion.t0; // left selection bound
-    const double t1 = selectedRegion.t1; // right selection bound
+    const double t0 = selectionInfo.t0; // left selection bound
+    const double t1 = selectionInfo.t1; // right selection bound
     const auto startTime = clip.GetPlayStartTime();
     const auto s0 = std::max(sampleCount(0), clip.TimeToSamples(t0 - startTime));
     auto s1 = std::clamp(
@@ -98,7 +97,7 @@ Au3SpectrogramClipChannelPainter::Au3SpectrogramClipChannelPainter(std::shared_p
 
 void Au3SpectrogramClipChannelPainter::paint(QImage& image,
                                              const ViewInfo& viewInfo,
-                                             const SelectedRegion& selectedRegion,
+                                             const SelectionInfo& selectionInfo,
                                              const SpectrogramTrackContext& tc)
 {
     SpectrogramSettings& settings = tc.settings;
@@ -117,15 +116,15 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image,
     const double& visibleT0 = clipParams.visibleT0;
     const double playStartTime = clipChannel.GetPlayStartTime();
 
-    const auto [ssel0, ssel1] = GetSelectedSampleIndices(selectedRegion, clipChannel, tc.trackIsSelected);
+    const auto [ssel0, ssel1] = GetSelectedSampleIndices(selectionInfo, clipChannel, tc.trackIsSelected);
     const double sampleRate = clipChannel.GetRate();
     const double stretchRatio = clipChannel.GetStretchRatio();
     const double& leftOffset = clipParams.leftOffset;
 
-    double freqLo = SelectedRegion::UndefinedFrequency;
-    double freqHi = SelectedRegion::UndefinedFrequency;
-    freqLo = selectedRegion.f0;
-    freqHi = selectedRegion.f1;
+    double freqLo = SelectionInfo::UndefinedFrequency;
+    double freqHi = SelectionInfo::UndefinedFrequency;
+    freqLo = selectionInfo.f0;
+    freqHi = selectionInfo.f1;
 
     const int& colorScheme = settings.colorScheme;
     const int& range = settings.range;
@@ -212,7 +211,7 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image,
     }
 
     // Bug 2389 - always draw at least one pixel of selection.
-    int selectedX = timeToPosition(viewInfo, selectedRegion.t0) - leftOffset;
+    int selectedX = timeToPosition(viewInfo, selectionInfo.t0) - leftOffset;
 
     for (int xx = 0; xx < imageWidth; ++xx) {
         const auto w0 = sampleCount(

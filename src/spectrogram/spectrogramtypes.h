@@ -57,10 +57,10 @@ struct AllSpectrogramSettings {
     int zeroPaddingFactor = 0;
 };
 
-struct SelectedRegion {
+struct SelectionInfo {
     static constexpr int UndefinedFrequency = -1;
 
-    SelectedRegion(double t0 = 0.0, double t1 = 0.0, double f0 = UndefinedFrequency, double f1 = UndefinedFrequency)
+    SelectionInfo(double t0 = 0.0, double t1 = 0.0, double f0 = UndefinedFrequency, double f1 = UndefinedFrequency)
         : t0{t0}, t1{t1}, f0{f0}, f1{f1}
     {}
 
