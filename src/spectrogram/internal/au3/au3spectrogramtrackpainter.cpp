@@ -5,35 +5,23 @@
 
 #include "au3wrap/internal/domaccessor.h"
 
-#include "framework/global/log.h"
-
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
 
 namespace au::spectrogram {
-Au3SpectrogramTrackPainter::Au3SpectrogramTrackPainter(std::weak_ptr<WaveTrack> waveTrack)
-    : m_waveTrack(std::move(waveTrack))
-{
-}
-
 void Au3SpectrogramTrackPainter::paintClip(QPainter& qPainter, const ClipInfo& clipInfo, const ViewInfo& viewInfo,
-                                           const SelectionInfo& selectionInfo)
+                                           const SelectionInfo& selectionInfo, WaveTrack& waveTrack)
 {
-    const auto waveTrack = m_waveTrack.lock();
-    IF_ASSERT_FAILED(waveTrack) {
-        return;
-    }
-
-    auto& settings = ::SpectrogramSettings::Own(*waveTrack);
+    auto& settings = ::SpectrogramSettings::Own(waveTrack);
 
     float minFreq, maxFreq;
-    SpectrogramBounds::Get(*waveTrack).GetBounds(*waveTrack, minFreq, maxFreq);
+    SpectrogramBounds::Get(waveTrack).GetBounds(waveTrack, minFreq, maxFreq);
 
     constexpr auto leftRightHeightRatio = 1.0; // For now at least.
     const SpectrogramTrackContext trackContext{
         settings,
-        waveTrack->IsSelected(),
+        waveTrack.IsSelected(),
         minFreq,
         maxFreq,
         leftRightHeightRatio
@@ -41,7 +29,7 @@ void Au3SpectrogramTrackPainter::paintClip(QPainter& qPainter, const ClipInfo& c
 
     const int trackHeight{ viewInfo.trackHeight };
 
-    ::WaveClip* const clip = au3::DomAccessor::findWaveClip(waveTrack.get(), static_cast<int64_t>(clipInfo.clipId)).get();
+    ::WaveClip* const clip = au3::DomAccessor::findWaveClip(&waveTrack, static_cast<int64_t>(clipInfo.clipId)).get();
     if (!clip) {
         return;
     }
@@ -65,10 +53,5 @@ void Au3SpectrogramTrackPainter::paintClip(QPainter& qPainter, const ClipInfo& c
         const auto channelY = isStereo ? (isRightChannel ? trackHeight - rightChannelHeight : 0) : 0;
         qPainter.drawImage(QPoint { clipInfo.xPaintBegin, channelY }, image);
     }
-}
-
-bool Au3SpectrogramTrackPainter::trackExpired() const
-{
-    return m_waveTrack.expired();
 }
 }
