@@ -16,18 +16,16 @@
 #include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
 
 namespace au::spectrogram {
-using Au3SelectedRegion = ::SelectedRegion;
-
 namespace {
 std::pair<sampleCount, sampleCount> GetSelectedSampleIndices(
-    const Au3SelectedRegion& selectedRegion, const WaveChannelInterval& clip,
+    const SelectedRegion& selectedRegion, const WaveChannelInterval& clip,
     bool trackIsSelected)
 {
     if (!trackIsSelected) {
         return { 0, 0 };
     }
-    const double t0 = selectedRegion.t0(); // left selection bound
-    const double t1 = selectedRegion.t1(); // right selection bound
+    const double t0 = selectedRegion.t0; // left selection bound
+    const double t1 = selectedRegion.t1; // right selection bound
     const auto startTime = clip.GetPlayStartTime();
     const auto s0 = std::max(sampleCount(0), clip.TimeToSamples(t0 - startTime));
     auto s1 = std::clamp(
@@ -99,26 +97,19 @@ Au3SpectrogramClipChannelPainter::Au3SpectrogramClipChannelPainter(std::shared_p
     : m_waveClipChannel{std::move(channel)} {}
 
 void Au3SpectrogramClipChannelPainter::paint(QImage& image,
-                                             const SpectrogramGlobalContext& gc,
+                                             const ViewInfo& viewInfo,
+                                             const SelectedRegion& selectedRegion,
                                              const SpectrogramTrackContext& tc)
 {
     SpectrogramSettings& settings = tc.settings;
-    const ZoomInfo& zoomInfo = gc.zoomInfo;
     auto& clipChannel = *m_waveClipChannel;
-    Au3SelectedRegion selectedRegion;
-    // Careful: t1 must be set before t0
-    selectedRegion.setT1(gc.selectedRegion.t1);
-    selectedRegion.setT0(gc.selectedRegion.t0);
-    selectedRegion.setF0(gc.selectedRegion.f0);
-    selectedRegion.setF1(gc.selectedRegion.f1);
-
-    const QRect paintableRect{ 0, 0, zoomInfo.viewportWidth(), image.height() };
+    const QRect paintableRect{ 0, 0, viewportWidth(viewInfo), image.height() };
     const ClipTimes clipTimes{
         clipChannel.GetPlayStartTime(),
         clipChannel.GetPlayEndTime(),
         clipChannel.GetStretchRatio()
     };
-    const ClipParameters clipParams { clipTimes, paintableRect, zoomInfo };
+    const ClipParameters clipParams { clipTimes, paintableRect, viewInfo };
 
     const int imageWidth = image.width();
     const int imageHeight = image.height();
@@ -133,8 +124,8 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image,
 
     double freqLo = SelectedRegion::UndefinedFrequency;
     double freqHi = SelectedRegion::UndefinedFrequency;
-    freqLo = selectedRegion.f0();
-    freqHi = selectedRegion.f1();
+    freqLo = selectedRegion.f0;
+    freqHi = selectedRegion.f1;
 
     const int& colorScheme = settings.colorScheme;
     const int& range = settings.range;
@@ -145,7 +136,7 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image,
     const auto half = settings.GetFFTLength() / 2;
     const double binUnit = sampleRate / (2 * half);
     const bool updated = WaveClipSpectrumCache::Get(clipChannel).GetSpectrogram(clipChannel, spectrogram, settings, where, imageWidth,
-                                                                                visibleT0, zoomInfo.zoom);
+                                                                                visibleT0, viewInfo.pixelsPerSecond);
 
     auto nBins = settings.NBins();
 
@@ -221,18 +212,16 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image,
     }
 
     // Bug 2389 - always draw at least one pixel of selection.
-    int selectedX = zoomInfo.timeToPosition(selectedRegion.t0()) - leftOffset;
+    int selectedX = timeToPosition(viewInfo, selectedRegion.t0) - leftOffset;
 
     for (int xx = 0; xx < imageWidth; ++xx) {
-        // zoomInfo must be queried for each column since with fisheye enabled
-        // time between columns is variable
         const auto w0 = sampleCount(
             0.5 + sampleRate / stretchRatio
-            * (zoomInfo.positionToTime(xx - leftOffset) - playStartTime));
+            * (positionToTime(viewInfo, xx + leftOffset) - playStartTime));
 
         const auto w1 = sampleCount(
             0.5 + sampleRate / stretchRatio
-            * (zoomInfo.positionToTime(xx + 1 - leftOffset) - playStartTime));
+            * (positionToTime(viewInfo, xx + 1 + leftOffset) - playStartTime));
         bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
         maybeSelected = maybeSelected || (xx == selectedX);
 

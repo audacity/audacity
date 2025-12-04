@@ -22,7 +22,7 @@ public:
     explicit Au3SpectrogramTrackPainter(std::weak_ptr<WaveTrack>);
 
     bool trackExpired() const;
-    void paintClip(QPainter&, const ClipInfo&, int trackHeight, const SpectrogramGlobalContext&);
+    void paintClip(QPainter&, const ClipInfo&, const ViewInfo&, const SelectedRegion&);
 
 private:
     const std::weak_ptr<WaveTrack> m_waveTrack;

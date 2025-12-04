@@ -76,4 +76,11 @@ struct ClipInfo {
     const int xPaintBegin;
     const int xPaintEnd;
 };
+
+struct ViewInfo {
+    const int trackHeight;
+    const double viewportT0;
+    const double viewportT1;
+    const double pixelsPerSecond; // aka zoom
+};
 }

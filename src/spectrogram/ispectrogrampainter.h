@@ -16,10 +16,6 @@ class ISpectrogramPainter : MODULE_EXPORT_INTERFACE
 public:
     virtual ~ISpectrogramPainter() = default;
 
-    /**
-     * @param trackHeight excluding the track header height
-     */
-    virtual void paintClip(QPainter&, const ClipInfo&, int trackHeight, double viewportT0, double viewportT1, double zoom,
-                           const SelectedRegion&) = 0;
+    virtual void paintClip(QPainter&, const ClipInfo&, const ViewInfo&, const SelectedRegion&) = 0;
 };
 }

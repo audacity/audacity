@@ -3,6 +3,7 @@
  */
 #pragma once
 
+#include "spectrogramtypes.h"
 #include "./au3spectrogramtypes.h"
 
 #include "context/iglobalcontext.h"
@@ -23,7 +24,7 @@ class Au3SpectrogramClipChannelPainter
 public:
     Au3SpectrogramClipChannelPainter(std::shared_ptr<WaveClipChannel>);
 
-    void paint(QImage&, const SpectrogramGlobalContext&, const SpectrogramTrackContext&);
+    void paint(QImage&, const ViewInfo&, const SelectedRegion&, const SpectrogramTrackContext&);
 
 private:
     const std::shared_ptr<WaveClipChannel> m_waveClipChannel;
