@@ -131,7 +131,7 @@ void Au3SpectrogramClipChannelPainter::paint(QImage& image,
     const int& gain = settings.gain;
 
     const float* spectrogram = nullptr;
-    const sampleCount* where = nullptr;
+    const long long* where = nullptr;
     const auto half = settings.GetFFTLength() / 2;
     const double binUnit = sampleRate / (2 * half);
     const bool updated = WaveClipSpectrumCache::Get(clipChannel).GetSpectrogram(clipChannel, spectrogram, settings, where, imageWidth,
