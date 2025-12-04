@@ -36,7 +36,7 @@ void SpectrogramColorRegister::EnsureInitialised()
 }
 
 void SpectrogramColorRegisterBase::RegisterColour(NameSet& allNames,
-                               int& iIndex, const QColor& Clr, const wxString& Name)
+                                                  int& iIndex, const QColor& Clr, const wxString& Name)
 {
     mSet.mColours.push_back(Clr);
     auto index = mSet.mColours.size() - 1;
