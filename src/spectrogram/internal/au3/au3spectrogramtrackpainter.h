@@ -6,8 +6,6 @@
 #include "./au3spectrogramclipchannelpainter.h"
 #include "./au3spectrogramtypes.h"
 
-#include "trackedit/trackedittypes.h"
-
 #include <QPainter>
 
 #include <memory>
@@ -24,9 +22,7 @@ public:
     explicit Au3SpectrogramTrackPainter(std::weak_ptr<WaveTrack>);
 
     bool trackExpired() const;
-    bool hasClip(trackedit::ClipId) const;
-
-    void paintClip(trackedit::ClipId, QPainter&, int xBegin, int xEnd, int trackHeight, const SpectrogramGlobalContext&);
+    void paintClip(QPainter&, const ClipInfo&, int trackHeight, const SpectrogramGlobalContext&);
 
 private:
     const std::weak_ptr<WaveTrack> m_waveTrack;

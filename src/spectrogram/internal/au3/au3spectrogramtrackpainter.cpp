@@ -17,7 +17,7 @@ Au3SpectrogramTrackPainter::Au3SpectrogramTrackPainter(std::weak_ptr<WaveTrack> 
 {
 }
 
-void Au3SpectrogramTrackPainter::paintClip(trackedit::ClipId clipId, QPainter& qPainter, int xBegin, int xEnd, int trackHeight,
+void Au3SpectrogramTrackPainter::paintClip(QPainter& qPainter, const ClipInfo& clipInfo, int trackHeight,
                                            const SpectrogramGlobalContext& globalContext)
 {
     const auto waveTrack = m_waveTrack.lock();
@@ -39,7 +39,7 @@ void Au3SpectrogramTrackPainter::paintClip(trackedit::ClipId clipId, QPainter& q
         leftRightHeightRatio
     };
 
-    ::WaveClip* const clip = au3::DomAccessor::findWaveClip(waveTrack.get(), clipId).get();
+    ::WaveClip* const clip = au3::DomAccessor::findWaveClip(waveTrack.get(), static_cast<int64_t>(clipInfo.clipId)).get();
     if (!clip) {
         return;
     }
@@ -58,29 +58,15 @@ void Au3SpectrogramTrackPainter::paintClip(trackedit::ClipId clipId, QPainter& q
     for (auto i = 0u; i < channelPainters.size(); ++i) {
         const auto isRightChannel = i == 1u;
         const auto channelHeight = isStereo ? (isRightChannel ? rightChannelHeight : trackHeight - rightChannelHeight) : trackHeight;
-        QImage image{ xEnd - xBegin, channelHeight, QImage::Format_RGB888 };
+        QImage image{ clipInfo.xPaintEnd - clipInfo.xPaintBegin, channelHeight, QImage::Format_RGB888 };
         channelPainters[i]->paint(image, globalContext, trackContext);
         const auto channelY = isStereo ? (isRightChannel ? trackHeight - rightChannelHeight : 0) : 0;
-        qPainter.drawImage(QPoint { xBegin, channelY }, image);
+        qPainter.drawImage(QPoint { clipInfo.xPaintBegin, channelY }, image);
     }
 }
 
 bool Au3SpectrogramTrackPainter::trackExpired() const
 {
     return m_waveTrack.expired();
-}
-
-bool Au3SpectrogramTrackPainter::hasClip(trackedit::ClipId clipId) const
-{
-    const auto track = m_waveTrack.lock();
-    if (!track) {
-        return false;
-    }
-    for (const std::shared_ptr<WaveClip>& interval : track->Intervals()) {
-        if (interval->GetId() == clipId) {
-            return true;
-        }
-    }
-    return false;
 }
 }
