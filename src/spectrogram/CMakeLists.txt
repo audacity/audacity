@@ -30,8 +30,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrumCache.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogrampainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogrampainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogramtrackpainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogramtrackpainter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogramclipchannelpainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogramclipchannelpainter.h
 

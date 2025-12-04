@@ -4,15 +4,12 @@
 #pragma once
 
 #include "ispectrogrampainter.h"
-#include "./au3spectrogramtrackpainter.h"
 
 #include "context/iglobalcontext.h"
 #include "au3wrap/au3types.h"
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
-
-#include <unordered_map>
 
 namespace au::spectrogram {
 class Au3SpectrogramPainter final : public ISpectrogramPainter, public muse::async::Asyncable
@@ -28,6 +25,5 @@ public:
 
 private:
     std::weak_ptr<au3::Au3Project> m_au3Project;
-    Au3SpectrogramTrackPainter m_trackPainter;
 };
 }
