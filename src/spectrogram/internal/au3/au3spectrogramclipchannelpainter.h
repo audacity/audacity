@@ -24,7 +24,7 @@ class Au3SpectrogramClipChannelPainter
 public:
     Au3SpectrogramClipChannelPainter(std::shared_ptr<WaveClipChannel>);
 
-    void paint(QImage&, const ViewInfo&, const SelectedRegion&, const SpectrogramTrackContext&);
+    void paint(QImage&, const ViewInfo&, const SelectionInfo&, const SpectrogramTrackContext&);
 
 private:
     const std::shared_ptr<WaveClipChannel> m_waveClipChannel;

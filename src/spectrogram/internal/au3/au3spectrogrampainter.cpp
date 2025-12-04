@@ -24,7 +24,7 @@ void Au3SpectrogramPainter::init()
 }
 
 void Au3SpectrogramPainter::paintClip(QPainter& qPainter, const ClipInfo& clipInfo, const ViewInfo& viewInfo,
-                                      const SelectedRegion& selectedRegion)
+                                      const SelectionInfo& selectionInfo)
 {
     const auto au3Project = m_au3Project.lock();
     IF_ASSERT_FAILED(au3Project) {
@@ -48,6 +48,6 @@ void Au3SpectrogramPainter::paintClip(QPainter& qPainter, const ClipInfo& clipIn
         return;
     }
 
-    trackPainter.paintClip(qPainter, clipInfo, viewInfo, selectedRegion);
+    trackPainter.paintClip(qPainter, clipInfo, viewInfo, selectionInfo);
 }
 }
