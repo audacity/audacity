@@ -5,15 +5,15 @@
 #
 # Translators:
 # Link Winterberg, 2024
-# 2424b8c1452cb0f648922f67bdb52c16_7bd1e0e, 2024
 # Jean-Louis Waltener, 2025
+# , fuzzy
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2025-12-03 19:18+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Jean-Louis Waltener, 2025\n"
 "Language-Team: French (https://app.transifex.com/audacity/teams/164520/fr/)\n"
@@ -477,7 +477,7 @@ msgstr "Click Removal est conçu pour supprimer les clics sur des pistes audio"
 
 #: libraries/lib-builtin-effects/ClickRemovalBase.cpp
 msgid "Algorithm not effective on this audio. Nothing changed."
-msgstr "Algorithme inefficace sur cette audio. Rien n’a changé."
+msgstr "L'algorithme n'a pas fonctionné sur cet enregistrement audio. Aucune modification."
 
 #: libraries/lib-builtin-effects/ClickRemovalBase.cpp
 #, c-format
@@ -1072,7 +1072,7 @@ msgstr "Règle l’amplitude de crête d’une ou plusieurs piste(s)"
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr "L'effet de réparation ne peut pas être appliqué à des clips étirés ou rétrécis."
+msgstr "L'effet de réparation ne peut pas être appliqué à des clips étirés ou rétrécis"
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid ""
@@ -1354,15 +1354,14 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Variations de tonalité rapide, comme ce son de guitare si populaire dans les années 1970"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Erreur d’importation"
+msgstr "Erreur d'importation audio du cloud"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
 msgid "Can't download cloud audio"
-msgstr ""
+msgstr "Impossible de télécharger l'audio du cloud"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -2264,27 +2263,27 @@ msgstr "Si♭"
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: libraries/lib-math/PitchName.cpp
 msgid "C♯/D♭"
-msgstr "Do♯/Ré♭"
+msgstr "Do♯ / Ré♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: libraries/lib-math/PitchName.cpp
 msgid "D♯/E♭"
-msgstr "Ré♯/Mi♭"
+msgstr "Ré♯ / Mi♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: libraries/lib-math/PitchName.cpp
 msgid "F♯/G♭"
-msgstr "Fa♯/Sol♭"
+msgstr "Fa♯ / Sol♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: libraries/lib-math/PitchName.cpp
 msgid "G♯/A♭"
-msgstr "Sol♯/La♭"
+msgstr "Sol♯ / La♭"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: libraries/lib-math/PitchName.cpp
 msgid "A♯/B♭"
-msgstr "La♯/Si♭"
+msgstr "La♯ / Si♭"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -2359,11 +2358,11 @@ msgstr "Ann&uler"
 #: libraries/lib-menus/CommandManager.cpp
 #, c-format
 msgid "&Redo %s"
-msgstr "&Refaire %s"
+msgstr "&Rétablir %s"
 
 #: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
 msgid "&Redo"
-msgstr "&Refaire"
+msgstr "&Rétablir"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -3129,7 +3128,7 @@ msgstr "Bibliothèques"
 
 #: libraries/lib-preference-pages/LibraryPrefs.cpp
 msgid "Preferences for Library"
-msgstr "Préférences pour les bilbliothèques "
+msgstr "Préférences des bibliothèques"
 
 #: libraries/lib-preference-pages/LibraryPrefs.h
 msgid "Library"
@@ -3544,7 +3543,7 @@ msgstr "La connexion au fichier de projet est nulle"
 
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
 msgid "Discarding undo/redo history"
-msgstr "Abandonner l’historique d’annulation/rétablissement"
+msgstr "Effacer l’historique Annuler / Rétablir"
 
 #: libraries/lib-project-history/ProjectHistory.cpp
 msgid "Created new project"
@@ -3913,7 +3912,7 @@ msgstr "Classique"
 
 #: libraries/lib-theme-resources/DarkThemeAsCeeCode.cpp
 msgid "Dark"
-msgstr "Noir"
+msgstr "Sombre"
 
 #. i18n-hint: greater difference between foreground and
 #. background colors
@@ -3924,7 +3923,7 @@ msgstr "Contraste élevé"
 #. i18n-hint: Light meaning opposite of dark
 #: libraries/lib-theme-resources/LightThemeAsCeeCode.cpp
 msgid "Light"
-msgstr "Léger"
+msgstr "Clair"
 
 #. i18n-hint: A theme is a consistent visual style across an application's
 #. graphical user interface, including choices of colors, and similarity of images
@@ -4245,7 +4244,7 @@ msgstr "Hauteur (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Wavelet (1/6 Octave Hann)"
-msgstr ""
+msgstr "Wavelet (1/6 Octave Hann)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
@@ -4461,7 +4460,7 @@ msgstr "Local"
 
 #: libraries/lib-wx-init/HelpSystem.cpp
 msgid "From Internet"
-msgstr "Depuis l’internet"
+msgstr "Depuis internet"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "Welcome!"
@@ -5274,7 +5273,7 @@ msgstr "LTP"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "M4A (AAC) Files (FFmpeg)"
-msgstr "Fichiers (FFmpeg) M4A (AAC)"
+msgstr "Fichiers M4A (AAC) (FFmpeg)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "AC3 Files (FFmpeg)"
@@ -5282,19 +5281,19 @@ msgstr "Fichiers AC3 (FFmpeg)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "AMR (narrow band) Files (FFmpeg)"
-msgstr "Fichiers (FFmpeg) AMR (bande étroite)"
+msgstr "Fichiers AMR (Bande étroite) (FFmpeg)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Opus (OggOpus) Files (FFmpeg)"
-msgstr "Fichiers (OggOpus) Opus (OggOpus)"
+msgstr "Fichiers Opus (OggOpus) (FFmpeg)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "WMA (version 2) Files (FFmpeg)"
-msgstr "Fichiers (FFmpeg) WMA (version 2)"
+msgstr "Fichiers WMA (Version 2) (FFmpeg)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Custom FFmpeg Export"
-msgstr "Personnalisation de l’export FFmpeg"
+msgstr "Personnaliser l’export FFmpeg"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Estimate"
@@ -5318,11 +5317,11 @@ msgstr "Recherche complète"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Log search"
-msgstr "Recherche dans le journal"
+msgstr "Recherche Log"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Configure custom FFmpeg options"
-msgstr "Configurer les options personnalisées de FFmpeg"
+msgstr "Configurer les options FFmpeg personnalisées"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Preset:"
@@ -5340,7 +5339,7 @@ msgstr "Enregistrer le préréglage"
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #: src/effects/EffectUI.cpp
 msgid "Delete Preset"
-msgstr "Effacer le préréglage"
+msgstr "Supprimer le préréglage"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Import Presets"
@@ -5366,11 +5365,11 @@ msgstr "Tous les formats et codecs ne sont pas compatibles. Certaines combinaiso
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Formats"
-msgstr "Montrer tous les formats"
+msgstr "Afficher tous les Formats"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Codecs"
-msgstr "Montrer tous les Codecs"
+msgstr "Afficher tous les Codecs"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Formats"
@@ -5390,7 +5389,7 @@ msgid ""
 "Optional\n"
 "empty - automatic"
 msgstr ""
-"Format de caractères ISO 639 3\n"
+"Code de langue ISO 639 à 3 lettres\n"
 "Optionnel\n"
 "vide - automatique"
 
@@ -5428,14 +5427,14 @@ msgid ""
 "0 - automatic\n"
 "Recommended - 192000"
 msgstr ""
-"Le débit binaire (bits/seconde) - influence la taille et la qualité du fichier obtenu\n"
-"Certains codecs pourraient n’accepter que des valeurs spécifiques (128k, 192k, 256k etc)\n"
+"Le Bit Rate (bits / seconde) - influence la taille et la qualité du fichier obtenu\n"
+"Certains codecs n’acceptent que des valeurs spécifiques (128k, 192k, 256k etc.)\n"
 "0 - automatique\n"
 "Recommandé - 192000"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Bit Rate:"
-msgstr "Débit binaire :"
+msgstr "Bit Rate :"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
@@ -5447,7 +5446,7 @@ msgstr ""
 "Qualité générale, utilisée différemment selon les codecs\n"
 "Requis pour vorbis\n"
 "0 - automatique\n"
-"-1 - Arrêté (remplacé par débit )"
+"-1 - Arrêté (utilise le Bit Rate)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Quality:"
@@ -5471,13 +5470,13 @@ msgid ""
 "Optional\n"
 "0 - automatic"
 msgstr ""
-"Largeur de coupe-bande audio (Hz)\n"
+"Largeur de bande du cutoff audio (Hz)\n"
 "Optionnel\n"
 "0 - automatique"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Cutoff:"
-msgstr "Coupure :"
+msgstr "Cutoff :"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
@@ -5487,7 +5486,7 @@ msgid ""
 msgstr ""
 "Profil AAC\n"
 "Basse complexité - par défaut\n"
-"La plupart des lecteurs n’acceptent rien d’autre"
+"La plupart des lecteurs n’acceptent rien d’autre que LC"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Profile:"
@@ -5506,10 +5505,10 @@ msgid ""
 "max - 10 (slow encoding, small output file)"
 msgstr ""
 "Niveau de compression\n"
-"requis pour FLAC\n"
+"Requis pour FLAC\n"
 "-1 - automatique\n"
-"min - 0 (encodage rapide, fichier de sortie important)\n"
-"max - 10 (encodage lent, fichier de sortie réduit)"
+"min - 0 (Encodage rapide, fichier de sortie important)\n"
+"max - 10 (Encodage lent, fichier de sortie réduit)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Compression:"
@@ -5523,7 +5522,7 @@ msgid ""
 "min - 16\n"
 "max - 65535"
 msgstr ""
-"Taille d’affichage\n"
+"Taille de la Frame\n"
 "Optionnel\n"
 "0 - par défaut\n"
 "min - 16\n"
@@ -5531,7 +5530,7 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Frame:"
-msgstr "Trame :"
+msgstr "Frame :"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
@@ -5559,13 +5558,13 @@ msgid ""
 "Full search - default"
 msgstr ""
 "Méthode d’ordre de prédiction\n"
-"Approximation - plus rapide, faible compression\n"
+"Estimer - plus rapide, faible compression\n"
 "Recherche log - plus lent, meilleure compression\n"
 "Recherche complète - par défaut"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "PdO Method:"
-msgstr "Méthode d’ordre de prédiction :"
+msgstr "Méthode PdO :"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
@@ -5583,7 +5582,7 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Min. PdO"
-msgstr "PdO minimum"
+msgstr "PdO min."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
@@ -5601,7 +5600,7 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Max. PdO"
-msgstr "PdO maximum"
+msgstr "PdO max."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
@@ -5619,7 +5618,7 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Min. PtO"
-msgstr "PtO minimum"
+msgstr "PtO min."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
@@ -5637,13 +5636,13 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Max. PtO"
-msgstr "PtO maximum"
+msgstr "PtO max."
 
 #. i18n-hint:  Abbreviates "Linear Predictive Coding",
 #. but this text needs to be kept very short
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Use LPC"
-msgstr "Utilise LPC"
+msgstr "Utiliser LPC"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "MPEG container options"
@@ -5655,7 +5654,7 @@ msgid ""
 "Optional\n"
 "0 - default"
 msgstr ""
-"Débit binaire maximum de flux multiplexé\n"
+"Bit Rate maximum de flux multiplexé\n"
 "Optionnel\n"
 "0 - défaut"
 
@@ -5664,7 +5663,7 @@ msgstr ""
 #. it has a hard to predict effect on the degree of compression
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Mux Rate:"
-msgstr "Taux de mixage :"
+msgstr "Taux de Mux :"
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 #. compression.  It measures how big a chunk of audio is compressed in one piece.
@@ -5686,17 +5685,17 @@ msgstr "Taille de paquet :"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "You can't delete a preset without name"
-msgstr "Vous ne pouvez effacer un préréglage sans nom"
+msgstr "Vous ne pouvez supprimer un préréglage sans nom"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, c-format
 msgid "Delete preset '%s'?"
-msgstr "Effacer le préréglage '%s' ?"
+msgstr "Supprimer le préréglage '%s' ?"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Confirm Deletion"
-msgstr "Confirmer l’effacement"
+msgstr "Confirmer la suppression"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "You can't save a preset without a name"
@@ -5723,7 +5722,7 @@ msgstr "Le format %s n’est pas compatible avec le codec %s."
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Incompatible format and codec"
-msgstr "Format et codec incompatible"
+msgstr "Format et codec incompatibles"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Failed to guess format"
@@ -6848,7 +6847,7 @@ msgstr "&Annuler\tCtrl+Z"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "&Redo\tCtrl+Y"
-msgstr "&Refaire\tCtrl+Y"
+msgstr "&Rétablir\tCtrl+Y"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Cu&t\tCtrl+X"
@@ -7109,11 +7108,11 @@ msgstr "Annuler la dernière modification"
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
 msgid "Redo"
-msgstr "Refaire"
+msgstr "Rétablir"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Redo previous change"
-msgstr "Refaire la dernière modification"
+msgstr "Rétablir la dernière modification"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Find"
@@ -7195,20 +7194,21 @@ msgid "Open from audio.com"
 msgstr "Ouvrir depuis audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "Téléchargement %s"
+msgstr "Téléchargement de l'audio"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "Échec de l'encodage du préréglage à partir de \"%s\""
+msgstr ""
+"Échec du téléchargement de l'audio du cloud.\n"
+"%s"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
-msgstr ""
+msgstr "Le fichier audio téléchargé n'existe pas."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -7230,19 +7230,16 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Les aperçus ne peuvent être mis à jour que pour les projets Cloud"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open &From Cloud"
-msgstr "Ouvrir depuis le Cloud"
+msgstr "Ouvrir depuis le &Cloud"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Ouvrir un projet…"
+msgstr "Ouvrir un &Projet du cloud..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "Mettre à jo&ur l'aperçu audio dans le cloud"
+msgstr "Ouvrir un fichier &Audio du cloud..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7385,9 +7382,8 @@ msgid "Don't show this again"
 msgstr "Ne plus afficher"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "Mettre à jo&ur l'aperçu audio dans le cloud"
+msgstr "Ouvrir un fichier audio du cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7395,7 +7391,7 @@ msgid "less than 1 minute"
 msgstr "moins d’1 minute"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] "il y a une minute"
@@ -7412,21 +7408,20 @@ msgstr[1] "il y a %d heures"
 msgstr[2] "Il y a %d heures"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Titre de la piste"
+msgstr "Titre"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
-msgstr ""
+msgstr "Auteur"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Tags"
-msgstr ""
+msgstr "Balises"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Created"
-msgstr ""
+msgstr "Créé"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7434,14 +7429,12 @@ msgid "Failed to authorize account"
 msgstr "Impossible d'autoriser le compte"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Téléversement de l'audio…"
+msgstr "Chargement de la liste audio..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "Impossible d'obtenir la liste des projets"
+msgstr "Impossible d'obtenir la liste audio"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7642,7 +7635,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create a free cloud storage account to access your projects and audio from any device"
-msgstr "Créez un compte Cloud Storage gratuit et accédez à vos projets et à votre audio depuis n'importe quel appareil"
+msgstr "Créez un compte cloud storage gratuit et accédez à vos projets et à votre audio depuis n'importe quel appareil"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7964,7 +7957,7 @@ msgstr "Essayer à nouveau"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
-msgstr "Trouvez-le sur MuseHub"
+msgstr "Téléchargez-les sur MuseHub"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a partner"
@@ -8369,7 +8362,7 @@ msgstr "Support de format de fichier"
 
 #: src/AboutDialog.cpp
 msgid "MP3 Import"
-msgstr "Importation de MP3"
+msgstr "Import MP3"
 
 #. i18n-hint: LAME is the codec name. This name should not be translated
 #.
@@ -11682,7 +11675,7 @@ msgstr "Bienvenue dans Audacity !"
 
 #: src/WhatsNewDialog.cpp
 msgid "Video: how we're redesigning Audacity for the future"
-msgstr ""
+msgstr "Vidéo : Comment nous repensons Audacity pour l’avenir"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11690,16 +11683,15 @@ msgstr "Finalisez votre configuration cloud Audacity avec audio.com"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
-msgstr ""
+msgstr "Téléchargez nos outils IA OpenVino gratuits"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
-msgstr ""
+msgstr "Découvrez les plugins gratuits pour sculpter votre audio"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Obtenez des greffons et des sons gratuits"
+msgstr "Afficher les plugins gratuits"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -11913,7 +11905,7 @@ msgstr "Types :"
 
 #: src/commands/GetTrackInfoCommand.h
 msgid "Gets track values as JSON."
-msgstr "Obtient des valeurs de piste en tant que JSON"
+msgstr "Obtient les valeurs de piste en tant que JSON."
 
 #: src/commands/HelpCommand.cpp
 msgid "Comment"
@@ -14271,7 +14263,7 @@ msgstr "(%) [-50 à 100] :"
 
 #: src/effects/TimeScale.cpp
 msgid "Final Pitch Shift"
-msgstr "Ajustement de hauteur final "
+msgstr "Ajustement de hauteur final"
 
 #: src/effects/TimeScale.cpp
 msgid "(s&emitones) [-12 to 12]:"
@@ -15135,7 +15127,7 @@ msgstr "Rien à annuler"
 
 #: src/menus/EditMenus.cpp
 msgid "Nothing to redo"
-msgstr "Rien à refaire"
+msgstr "Rien à rétablir"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut to the clipboard"
@@ -15553,7 +15545,7 @@ msgstr "Régions audio étiquetées divisées et supprimées"
 #. regions
 #: src/menus/LabelMenus.cpp
 msgid "Split Delete Labeled Audio"
-msgstr "Diviser et supprimer l'audio étiqueté "
+msgstr "Diviser et supprimer l'audio étiqueté"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -19803,31 +19795,32 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Gauche=zoom avant, Droit=zoom arrière, Milieu=normal"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "&Installer la mise à jour"
+msgstr "Installer Audacity 4"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
 "Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
 "easier to use than ever."
 msgstr ""
+"Audacity 4 est arrivé ! Doté de centaines d'améliorations qui le rendent plus rapide\n"
+"et plus facile à utiliser que jamais."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
-msgstr ""
+msgstr "L'installation n'affecte pas Audacity 3, votre configuration actuelle reste inchangée."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Discover what's new in our full feature breakdown."
-msgstr ""
+msgstr "Découvrez les nouveautés dans notre liste complète des fonctionnalités."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No thanks"
-msgstr ""
+msgstr "Non merci"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Remind me later"
-msgstr ""
+msgstr "Rappelez le moi plus tard"
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -19930,11 +19923,11 @@ msgstr "Accepter && continuer"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Remind me later"
-msgstr ""
+msgstr "&Rappelez le moi plus tard"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Dismiss"
-msgstr ""
+msgstr "&Refuser"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -21787,92 +21780,3 @@ msgstr "Outils spectraux"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Classique"
-
-#~ msgid "Open Fro&m Cloud..."
-#~ msgstr "Ouvrir depuis le Cloud..."
-
-#~ msgid "<font color=\"#000000\">"
-#~ msgstr "<font color=\"#000000\">"
-
-#~ msgid "Sign up to Audacity's cloud saving platform"
-#~ msgstr "Rejoignez le stockage Cloud d'Audacity"
-
-#~ msgid "and access your projects from anywhere!"
-#~ msgstr "et accédez à vos projets où que vous soyez !"
-
-#~ msgid "</font>"
-#~ msgstr "</font>"
-
-#, c-format
-#~ msgid "What's new in Audacity %s"
-#~ msgstr "Quoi de neuf dans Audacity %s"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-#~ msgstr "Regardez la [[%s|vidéo]] ou lisez le [[%s|journal des modifications]] pour savoir ce que nous avons inclus dans la dernière version !</p>"
-
-#, c-format
-#~ msgid "You can also read the [[%s|changelog]]</p>"
-#~ msgstr "Vous pouvez également lire le [[%s|changelog]]</p>"
-
-#, c-format
-#~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-#~ msgstr "<p>Découvrez notre [[%s|Application Muse Hub]] pour une large gamme de plugins audio pour les utilisateurs d'Audacity</p>"
-
-#~ msgid "A vocal processing effect that enhances vocal clarity and depth."
-#~ msgstr "Un effet de traitement vocal qui améliore la clarté et la profondeur de la voix."
-
-#~ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-#~ msgstr "Un greffon de réverbération polyvalent pour des effets spacieux et naturels."
-
-#~ msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-#~ msgstr "Un plugin de modélisation d'ampli et d'effets de guitare pour des sons réalistes et personnalisables."
-
-#~ msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-#~ msgstr "Un plugin de réverbération réactif qui s'adapte à la dynamique de la piste pour des paysages sonores immersifs."
-
-#~ msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-#~ msgstr "Un plugin multi-effet vocal qui améliore les pistes vocales pour des résultats professionnels."
-
-#~ msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-#~ msgstr "Un plugin d'effet de basse conçu pour fournir un son grave clair et percutant."
-
-#~ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-#~ msgstr "Un plugin pour la perfection du son acoustique, améliorant la chaleur et la clarté."
-
-#~ msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-#~ msgstr "Un plugin d'amélioration de la voix incroyable pour des effets vocaux professionnels et clairs comme du cristal."
-
-#~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-#~ msgstr "Un outil de séparation de stems en temps réel pour isoler les voix, la batterie et les instruments."
-
-#, c-format
-#~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-#~ msgstr "Découvrez une variété de plugins de développeurs renommés disponibles sur [[%s|MuseHub]]."
-
-#~ msgid "A multiband compressor offering precise control over frequencies."
-#~ msgstr "Un compresseur multibande offrant un contrôle précis des fréquences."
-
-#~ msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-#~ msgstr "Ace Studio - Le générateur de voix chantée IA n°1 au monde."
-
-#~ msgid "Continue for Cloud Storage"
-#~ msgstr "Continuer avec le stockage Cloud"
-
-#~ msgid "What's new in Audacity"
-#~ msgstr "Quoi de neuf dans Audacity"
-
-#~ msgid "Watch the release video"
-#~ msgstr "Regarder la vidéo"
-
-#~ msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-#~ msgstr "Soap Voice Cleaner : Son de voix off de qualité studio"
-
-#~ msgid "Help us decide the future of Audacity"
-#~ msgstr "Aidez-nous à imaginer l'avenir d'Audacity"
-
-#~ msgid "Take part in survey"
-#~ msgstr "Participez à l'enquête"
-
-#~ msgid "Audacity feature survey"
-#~ msgstr "Enquête sur les fonctionnalités d'Audacity"

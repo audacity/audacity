@@ -6,13 +6,14 @@
 # Translators:
 # Link Winterberg, 2025
 # Mihai Vasiliu <mihai.vasiliu.93@gmail.com>, 2025
+# , fuzzy
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2025-12-03 19:18+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Mihai Vasiliu <mihai.vasiliu.93@gmail.com>, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/audacity/teams/164520/ro/)\n"
@@ -489,7 +490,7 @@ msgstr "Poți să măsori doar câte o pistă deodată."
 
 #: libraries/lib-builtin-effects/ContrastBase.cpp
 msgid "Please select an audio track."
-msgstr "Te rog selectează o pistă audio."
+msgstr "Selectează o pistă audio."
 
 #: libraries/lib-builtin-effects/ContrastBase.cpp
 msgid ""
@@ -505,7 +506,7 @@ msgid ""
 "Please select a section of a track."
 msgstr ""
 "Nimic de măsurat.\n"
-"Te rog selectează o secțiune dintr-o pistă."
+"Selectează o secțiune dintr-o pistă."
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Hard Clipping"
@@ -1093,7 +1094,7 @@ msgid ""
 msgstr ""
 "Repararea funcționează utilizând date audio din afara regiunii selectate.\n"
 "\n"
-"Te rog selectează o regiune care are audio adiacent în cel puțin unul din capetele sale.\n"
+"Selectează o regiune care are audio adiacent în cel puțin unul din capetele sale.\n"
 "\n"
 "Cu cât mai mult audio adiacent, cu atât mai bun va fi rezultatul."
 
@@ -1353,15 +1354,14 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Variații rapide de ton calitative, ca acel sunet de chitară popular în anii 1970"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Eroare la import"
+msgstr "Eroare la importarea audioului din cloud"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
 msgid "Can't download cloud audio"
-msgstr ""
+msgstr "Nu se poate descărca audioul din cloud"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -1632,7 +1632,7 @@ msgid ""
 "Please inform the Audacity team at https://forum.audacityteam.org/."
 msgstr ""
 "Eroare internă în %s la %s linia %d.\n"
-"Te rog informează echipa Audacity la https://forum.audacityteam.org/."
+"Informează echipa Audacity la https://forum.audacityteam.org/."
 
 #: libraries/lib-exceptions/InconsistencyException.cpp
 #, c-format
@@ -1641,7 +1641,7 @@ msgid ""
 "Please inform the Audacity team at https://forum.audacityteam.org/."
 msgstr ""
 "Eroare internă la %s linia %d.\n"
-"Te rog informează echipa Audacity la https://forum.audacityteam.org/."
+"Informează echipa Audacity la https://forum.audacityteam.org/."
 
 #: libraries/lib-exceptions/InconsistencyException.h
 msgid "Internal Error"
@@ -2341,7 +2341,7 @@ msgid ""
 "this is a bug, please tell us exactly where it occurred."
 msgstr ""
 "A apărut o problemă cu ultima ta acțiune. Dacă consideri că\n"
-"este un bug, te rog spune-ne exact cum s-a întâmplat."
+"este un bug, spune-ne exact cum s-a întâmplat."
 
 #: libraries/lib-menus/CommandManager.cpp
 msgid "Disallowed"
@@ -3215,7 +3215,7 @@ msgid ""
 "Directories Preferences."
 msgstr ""
 "Mai este foarte puțin spațiu liber pe %s\n"
-"Te rog alege un dosar temporar cu mai mult spațiu din\n"
+"Alege un dosar temporar cu mai mult spațiu din\n"
 "Preferințe dosare."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -3526,11 +3526,11 @@ msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Backing up project"
-msgstr "Se face o copie de siguranță a proiectului"
+msgstr "Se face un backup al proiectului"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Automatic database backup failed."
-msgstr "Crearea automată a copiei de siguranță a bazei de date a eșuat."
+msgstr "Crearea automată a unui backup al bazei de date a eșuat."
 
 #: libraries/lib-project-file-io/ProjectSerializer.cpp
 msgid ""
@@ -3999,7 +3999,7 @@ msgid ""
 "Please report the problem."
 msgstr ""
 "Audacity nu-și poate citi propria temă implicită.\n"
-"Te rog raportează această problemă."
+"Raportează această problemă."
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -4247,7 +4247,7 @@ msgstr "Înălțime sunet (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Wavelet (1/6 Octave Hann)"
-msgstr ""
+msgstr "Wavelet (1/6 octavă Hann)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
@@ -4533,7 +4533,7 @@ msgstr "Poți de asemenea să citești ajutorul nostru despre importarea [[https
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "Se pare că manualul nu este instalat. Te rog [[*URL*|vezi manualul online]] sau [[https://manual.audacityteam.org/man/unzipping_the_manual.html|descarcă manualul]]. <br> <br> Pentru a vizualiza mereu manualul online, schimbă în Preferințe interfață „Locația manualului” la „Pe internet”."
+msgstr "Se pare că manualul nu este instalat. [[*URL*|Vezi manualul online]] sau [[https://manual.audacityteam.org/man/unzipping_the_manual.html|descarcă manualul]]. <br> <br> Pentru a vizualiza mereu manualul online, schimbă în Preferințe interfață „Locația manualului” la „Pe internet”."
 
 #: libraries/lib-wx-init/LogWindow.cpp
 msgid "Audacity Log"
@@ -4647,7 +4647,7 @@ msgstr "Fișierul „%s” există deja, sigur vrei să îl suprascrii?"
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Please choose an existing file."
-msgstr "Te rog alege un fișier existent."
+msgstr "Alege un fișier existent."
 
 #: libraries/lib-wx-wrappers/FileDialog/mac/FileDialogPrivate.mm
 msgid "File type:"
@@ -4744,7 +4744,7 @@ msgstr ""
 "%s\n"
 "Această funcție nu este suportată în versiuni de Audacity mai vechi de 3.3.3.\n"
 "Aceste piste stereo au fost divizate în piste mono.\n"
-"Te rog verifică dacă totul funcționează cum ar trebui înainte să salvezi."
+"Verifică dacă totul funcționează cum ar trebui înainte să salvezi."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid ""
@@ -5878,12 +5878,12 @@ msgstr "Confirmă suprascriere"
 
 #: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Please select format before saving a profile"
-msgstr "Te rog alege un format înainte de a salva un profil"
+msgstr "Alege un format înainte de a salva un profil"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Please select codec before saving a profile"
-msgstr "Te rog alege un codec înainte de a salva un profil"
+msgstr "Alege un codec înainte de a salva un profil"
 
 #: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
@@ -6199,7 +6199,7 @@ msgid ""
 "Please download the latest version of 'LAME for Audacity'."
 msgstr ""
 "Ai făcut legătura cu lame_enc.dll v%d.%d. Această versiune nu este compatibilă cu Audacity %d.%d.%d.\n"
-"Te rog descarcă ultima versiune de „LAME pentru Audacity”."
+"Descarcă ultima versiune de „LAME pentru Audacity”."
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only lame_enc.dll"
@@ -7197,20 +7197,21 @@ msgid "Open from audio.com"
 msgstr "Deschide de pe audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "Se descarcă %s"
+msgstr "Se descarcă audio"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "A eșuat codarea unei presetări din „%s”"
+msgstr ""
+"A eșuat descărcarea audioului din cloud.\n"
+"%s"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
-msgstr ""
+msgstr "Fișierul audio descărcat nu există."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -7232,19 +7233,16 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Previzualizările pot fi actualizate doar pentru proiectele din Cloud"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open &From Cloud"
-msgstr "Deschide din Cloud"
+msgstr "Deschid&e din cloud"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Deschide proiect..."
+msgstr "Deschide &proiect din cloud..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "Act&ualizează previzualizarea audio din Cloud"
+msgstr "Deschide fișier &audio din cloud..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7387,9 +7385,8 @@ msgid "Don't show this again"
 msgstr "Nu mai afișa asta din nou"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "Act&ualizează previzualizarea audio din Cloud"
+msgstr "Deschide fișier audio din cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7397,10 +7394,10 @@ msgid "less than 1 minute"
 msgstr "mai puțin de 1 minut"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "acum 1 minut"
+msgstr[0] "acum un minut"
 msgstr[1] "acum %d minute"
 msgstr[2] "acum %d de minute"
 
@@ -7414,21 +7411,20 @@ msgstr[1] "acum %d ore"
 msgstr[2] "acum %d de ore"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Titlu pistă"
+msgstr "Titlu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Tags"
-msgstr ""
+msgstr "Etichete"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Created"
-msgstr ""
+msgstr "Creat"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7436,14 +7432,12 @@ msgid "Failed to authorize account"
 msgstr "A eșuat autorizarea contului"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Se încarcă audio pe server..."
+msgstr "Se încarcă lista de audio..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "A eșuat preluarea listei de proiecte"
+msgstr "A eșuat obținerea listei de audio"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7577,7 +7571,7 @@ msgstr "Asociază cont"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 msgid "We were unable to link your account. Please try again."
-msgstr "Nu am putut să îți asociem contul. Te rog încearcă din nou."
+msgstr "Nu am putut să îți asociem contul. Încearcă din nou."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
@@ -7632,7 +7626,7 @@ msgid ""
 "Please ensure your email is correct and that your password is at least 8 characters long"
 msgstr ""
 "Ups! Se pare că a fost o problemă cu datele introduse.\n"
-"Te rog asigură-te că email-ul tău este corect și că parola are cel puțin 8 caractere lungime"
+"Asigură-te că email-ul tău este corect și că parola are cel puțin 8 caractere lungime"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
@@ -7640,11 +7634,11 @@ msgid ""
 "Please double-check your credentials and try again!"
 msgstr ""
 "Ne pare rău, dar se pare că email-ul sau parola pe care le-ai introdus nu sunt corecte.\n"
-"Te rog verifică credențialele și încearcă din nou!"
+"Verifică credențialele și încearcă din nou!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create a free cloud storage account to access your projects and audio from any device"
-msgstr "Creează un cont gratuit de stocare în Cloud și accesează-ți proiectele și fișierele audio de pe orice dispozitiv"
+msgstr "Crează un cont de stocare în cloud gratuit pentru a-ți accesa proiectele și fișierele audio de pe orice dispozitiv"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7760,7 +7754,7 @@ msgstr "Conflict proiect Cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
-msgstr "Încerci să deschizi o nouă versiune activă a acestui proiect când deja ai una deschisă. Te rog alege ce versiune dorești să rămână deschisă."
+msgstr "Încerci să deschizi o nouă versiune activă a acestui proiect când deja ai una deschisă. Alege ce versiune dorești să rămână deschisă."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Keep currently open version"
@@ -7820,7 +7814,7 @@ msgstr "Se încarcă audio pe server..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr "Nu putem încărca acest fișier pe server. Te rog încearcă din nou și asigură-te că ți-ai asociat contul Audio.com înainte de a încărca."
+msgstr "Nu putem încărca acest fișier pe server. Încearcă din nou și asigură-te că ți-ai asociat contul Audio.com înainte de a încărca."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Upload error"
@@ -7857,7 +7851,7 @@ msgstr "Audacity a întâmpinat probleme la conectarea la server."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "The project is too large to upload. Please save it to your computer instead."
-msgstr "Proiectul este prea mare pentru a fi încărcat pe server. Te rog salvează-l pe calculatorul local."
+msgstr "Proiectul este prea mare pentru a fi încărcat pe server. Salvează-l pe calculatorul local."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "You don't have access to this project."
@@ -7950,7 +7944,7 @@ msgstr "Se încarcă..."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Please wait..."
-msgstr "Te rog așteaptă..."
+msgstr "Așteaptă..."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Connection error"
@@ -7958,7 +7952,7 @@ msgstr "Eroare de conexiune"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
-msgstr "Audacity nu se poate conecta la MuseHub.com. Te rog verifică conexiunea și încearcă din nou."
+msgstr "Audacity nu se poate conecta la MuseHub.com. Verifică conexiunea și încearcă din nou."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Try again"
@@ -7986,11 +7980,11 @@ msgstr "Fișierele Allegro (.gro) exportate salvează timpul ca:"
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Please select only one Note Track at a time."
-msgstr "Te rog selectează doar o singură pistă de note deodată."
+msgstr "Selectează doar o singură pistă de note deodată."
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Please select a Note Track."
-msgstr "Te rog selectează o pistă de note."
+msgstr "Selectează o pistă de note."
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Export MIDI As:"
@@ -8624,7 +8618,7 @@ msgid ""
 msgstr ""
 "Audacity nu a putut găsi un loc sigur în care să salveze fișierele temporare.\n"
 "Audacity are nevoie de un loc în care programele de curățare automată să nu îi șteargă fișierele temporare.\n"
-"Te rog introdu un dosar adecvat în dialogul de preferințe."
+"Introdu un dosar adecvat în dialogul de preferințe."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -8632,11 +8626,11 @@ msgid ""
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "Audacity nu a putut găsi un loc unde să stocheze fișierele temporare.\n"
-"Te rog introdu un dosar adecvat în fereastra de preferințe."
+"Introdu un dosar adecvat în fereastra de preferințe."
 
 #: src/AudacityApp.cpp
 msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
-msgstr "Audacity este pe cale de a se închide. Te rog repornește Audacity pentru a folosi noul dosar pentru fișiere temporare."
+msgstr "Audacity este pe cale de a se închide. Repornește Audacity pentru a folosi noul dosar pentru fișiere temporare."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -9139,7 +9133,7 @@ msgstr "Se aplică „%s” pe proiectul curent"
 
 #: src/BatchProcessDialog.cpp
 msgid "Please save and close the current project first."
-msgstr "Te rog salvează și închide proiectul curent mai întâi."
+msgstr "Salvează și închide proiectul curent mai întâi."
 
 #: src/BatchProcessDialog.cpp
 msgid "Select file(s) for batch processing..."
@@ -10465,7 +10459,7 @@ msgstr ""
 "Această caracteristică nu este suportată în versiunile Audacity mai vechi de 3.3.3.\n"
 "Aceste piste stereo au fost împărțite în piste mono.\n"
 "Prin urmare, unele efecte în timp real pot lipsi.\n"
-"Te rog verifică dacă totul funcționează cum ar trebui înainte să salvezi."
+"Verifică dacă totul funcționează cum ar trebui înainte să salvezi."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -10509,7 +10503,7 @@ msgid ""
 msgstr ""
 "Dimensiunea proiectului depășește spațiul liber disponibil pe discul țintă.\n"
 "\n"
-"Te rog alege un alt disc cu mai mult spațiu liber."
+"Alege un alt disc cu mai mult spațiu liber."
 
 #: src/ProjectFileManager.cpp
 msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
@@ -10526,7 +10520,7 @@ msgid ""
 "Please try again and select an original name."
 msgstr ""
 "Proiectul nu a fost salvat deoarece numele fișierului dat ar suprascrie un alt proiect.\n"
-"Te rog încearcă din nou și alege un nume original."
+"Încearcă din nou și alege un nume original."
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -10563,7 +10557,7 @@ msgid ""
 "Please try again and select an original name."
 msgstr ""
 "Proiectul nu a fost salvat deoarece proiectul selectat este deschis într-o altă fereastră.\n"
-"Te rog încearcă din nou și alege un nume original."
+"Încearcă din nou și alege un nume original."
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -10576,7 +10570,7 @@ msgid ""
 "Please try again and select an original name."
 msgstr ""
 "Salvarea unei copii nu trebuie să suprascrie un proiect salvat existent.\n"
-"Te rog încearcă din nou și alege un nume original."
+"Încearcă din nou și alege un nume original."
 
 #: src/ProjectFileManager.cpp
 msgid "Error Saving Copy of Project"
@@ -10602,14 +10596,14 @@ msgid ""
 "\n"
 "Please open the actual Audacity project file instead."
 msgstr ""
-"Încerci să deschizi o copie de siguranță a unui fișier creată automat.\n"
+"Încerci să deschizi un fișier de backup creat automat.\n"
 "Acest lucru poate rezulta în pierderi de date semnificative.\n"
 "\n"
-"Te rog deschide fișierul actual de proiect Audacity în schimb."
+"Deschide fișierul actual de proiect Audacity în schimb."
 
 #: src/ProjectFileManager.cpp
 msgid "Warning - Backup File Detected"
-msgstr "Atenție - copie de siguranță detectată"
+msgstr "Atenție - fișier backup detectat"
 
 #: src/ProjectFileManager.cpp
 msgid "Error Opening File"
@@ -11161,7 +11155,7 @@ msgid ""
 msgstr ""
 "Numele de fișier selectat nu poate fi utilizat\n"
 "pentru înregistrarea temporizată deoarece va suprascrie un alt proiect.\n"
-"Te rog încearcă din nou și selectează un nume original."
+"Încearcă din nou și selectează un nume original."
 
 #: src/TimerRecordDialog.cpp
 msgid "Error Saving Timer Recording Project"
@@ -11463,7 +11457,7 @@ msgid ""
 msgstr ""
 "Înregistrarea temporizată nu poate fi folosită cu mai mult de un proiect deschis.\n"
 "\n"
-"Te rog închide orice alt proiect adițional și reîncearcă."
+"Închide orice alt proiect adițional și reîncearcă."
 
 #: src/TimerRecordDialog.cpp
 msgid ""
@@ -11473,7 +11467,7 @@ msgid ""
 msgstr ""
 "Înregistrarea temporizată nu poate fi folosită cât timp ai modificări nesalvate.\n"
 "\n"
-"Te rog salvează sau închide acest proiect și reîncearcă."
+"Salvează sau închide acest proiect și reîncearcă."
 
 #: src/TimerRecordDialog.cpp
 msgid "&Timer Record..."
@@ -11671,7 +11665,7 @@ msgstr "Bun venit la Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Video: how we're redesigning Audacity for the future"
-msgstr ""
+msgstr "Video: Cum reproiectăm Audacity pentru viitor"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11679,16 +11673,15 @@ msgstr "Finalizează configurarea Cloud-ului în Audacity cu audio.com"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
-msgstr ""
+msgstr "Obține uneltele noastre cu IA gratuite OpenVino"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
-msgstr ""
+msgstr "Explorează plugin-uri gratuite pentru modelarea audioului tău"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Obține plugin-uri și sunete gratuite"
+msgstr "Vezi plugin-urile gratuite"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -15140,7 +15133,7 @@ msgstr "Lipește clipul"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasting clip contents, please wait"
-msgstr "Se lipește conținutul clipului, te rog așteaptă"
+msgstr "Se lipește conținutul clipului, așteaptă"
 
 #: src/menus/EditMenus.cpp
 msgid "The content you are trying to paste will span across more tracks than you currently have available. Add more tracks and try again."
@@ -15371,7 +15364,7 @@ msgstr "Salvează proiectul c&a..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Backup Project..."
-msgstr "Fă o &copie de siguranță a proiectului..."
+msgstr "Realizează un &backup al proiectului..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Export Audio..."
@@ -16296,7 +16289,7 @@ msgstr "Reeșantionează pista"
 
 #: src/menus/TrackMenus.cpp
 msgid "Please select at least one audio track and one MIDI track."
-msgstr "Te rog selectează cel puțin o pistă audio și o pistă MIDI."
+msgstr "Selectează cel puțin o pistă audio și o pistă MIDI."
 
 #: src/menus/TrackMenus.cpp
 #, c-format
@@ -16543,20 +16536,20 @@ msgstr "Setează sfârșitul b&uclei"
 
 #: src/menus/TransportMenus.cpp
 msgid "Please select in a mono track."
-msgstr "Te rog selectează într-o pistă mono."
+msgstr "Selectează într-o pistă mono."
 
 #: src/menus/TransportMenus.cpp
 msgid "Please select in a stereo track or two mono tracks."
-msgstr "Te rog selectează într-o pistă stereo sau în două piste mono."
+msgstr "Selectează într-o pistă stereo sau în două piste mono."
 
 #: src/menus/TransportMenus.cpp
 #, c-format
 msgid "Please select at least %d channels."
-msgstr "Te rog selectează cel puțin %d canale."
+msgstr "Selectează cel puțin %d canale."
 
 #: src/menus/TransportMenus.cpp
 msgid "Please select a time within a clip."
-msgstr "Te rog selectează un timp dintr-un clip."
+msgstr "Selectează un timp dintr-un clip."
 
 #. i18n-hint: 'Transport' is the name given to the set of controls that
 #. play, record, pause etc.
@@ -19790,31 +19783,32 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Stânga=mărește, dreapta=micșorează, mijloc=normal"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "&Instalează actualizarea"
+msgstr "Instalează Audacity 4"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
 "Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
 "easier to use than ever."
 msgstr ""
+"Audacity 4 este aici! Împreună cu sute de modificări care-l fac mai rapid și\n"
+"mai ușor de utilizat ca niciodată."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
-msgstr ""
+msgstr "Instalarea nu va afecta Audacity 3, configurația existentă va rămâne neatinsă."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Discover what's new in our full feature breakdown."
-msgstr ""
+msgstr "Descoperă ce este nou în defalcarea noastră pe componente."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No thanks"
-msgstr ""
+msgstr "Nu, mulțumesc"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Remind me later"
-msgstr ""
+msgstr "Amintește-mi mai târziu"
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -19917,11 +19911,11 @@ msgstr "Acceptă și continuă"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Remind me later"
-msgstr ""
+msgstr "Amintește-mi mai tâ&rziu"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Dismiss"
-msgstr ""
+msgstr "R&espinge"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -20126,7 +20120,7 @@ msgstr "Nu s-au putut scrie fișierele în dosarul: %s."
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
-msgstr "Te rog verifică dacă dosarul există, are permisiunile necesare și că discul nu este plin."
+msgstr "Verifică dacă dosarul există, are permisiunile necesare și că discul nu este plin."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -20254,7 +20248,7 @@ msgstr "Paul Licameli"
 #: plug-ins/SpectralEditShelves.ny
 #, lisp-format
 msgid "~aPlease select frequencies."
-msgstr "~aTe rog alege frecvențele."
+msgstr "~aAlege frecvențele."
 
 #: plug-ins/SpectralEditMulti.ny
 #, lisp-format
@@ -20265,7 +20259,7 @@ msgid ""
 msgstr ""
 "~aLățimea de bandă este zero (frecvența superioară~%~\n"
 "                       și cea inferioară sunt ambele ~a Hz).~%~\n"
-"                       Te rog alege un interval de frecvențe."
+"                       Alege un interval de frecvențe."
 
 #: plug-ins/SpectralEditMulti.ny
 #, lisp-format
@@ -20327,7 +20321,7 @@ msgid ""
 msgstr ""
 "~aLățimea de bandă este zero (frecvența superioară~%~\n"
 "                        și cea inferioară sunt ambele ~a Hz).~%~\n"
-"                        Te rog alege un interval de frecvențe."
+"                        Alege un interval de frecvențe."
 
 #: plug-ins/SpectralEditShelves.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Edit Shelves"
@@ -21775,92 +21769,3 @@ msgstr "Unelte spectrale"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Învechite"
-
-#~ msgid "Open Fro&m Cloud..."
-#~ msgstr "Deschi&de din Cloud..."
-
-#~ msgid "<font color=\"#000000\">"
-#~ msgstr "<font color=\"#000000\">"
-
-#~ msgid "Sign up to Audacity's cloud saving platform"
-#~ msgstr "Înscrie-te în platforma de salvare în Cloud a Audacity"
-
-#~ msgid "and access your projects from anywhere!"
-#~ msgstr "și accesează-ți proiectele de oriunde!"
-
-#~ msgid "</font>"
-#~ msgstr "</font>"
-
-#, c-format
-#~ msgid "What's new in Audacity %s"
-#~ msgstr "Ce este nou în Audacity %s"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-#~ msgstr "Urmărește [[%s|videoul de lansare]] sau citește [[%s|lista de schimbări]] pentru a afla mai multe despre ce am inclus în ultima versiune!</p>"
-
-#, c-format
-#~ msgid "You can also read the [[%s|changelog]]</p>"
-#~ msgstr "Poți de asemenea să citești [[%s|lista de schimbări]]</p>"
-
-#, c-format
-#~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-#~ msgstr "<p>Verifică [[%s|aplicația noastră Muse Hub]] pentru o gamă largă de plugin-uri audio pentru utilizatorii Audacity</p>"
-
-#~ msgid "A vocal processing effect that enhances vocal clarity and depth."
-#~ msgstr "Un efect de procesare vocală care îmbunătățește claritatea și adâncimea vocală."
-
-#~ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-#~ msgstr "Un plugin polivalent de reverberații pentru un efect spațios care sună natural."
-
-#~ msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-#~ msgstr "Un plugin de amplificator de chitară și modelare de efecte pentru tonuri realistice și sunete personalizabile."
-
-#~ msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-#~ msgstr "Un plugin de reverberații receptive care se adaptează la dinamica pistei pentru peisaje sonore imersive."
-
-#~ msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-#~ msgstr "Un plugin cu efecte multiple vocale care îmbunătățește pistele vocale pentru rezultate profesionale."
-
-#~ msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-#~ msgstr "Un plugin de efecte bas conceput să livreze sunete joase clare și puternice."
-
-#~ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-#~ msgstr "Un plugin pentru perfectarea sunetului acustic, îmbunătățind căldura și claritatea."
-
-#~ msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-#~ msgstr "Un plugin uimitor de îmbunătățire a vocii pentru efecte vocale profesionale, curate ca cristalul."
-
-#~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-#~ msgstr "O unealtă de izolarea a vocii, tobelor și instrumentelor în timp real."
-
-#, c-format
-#~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-#~ msgstr "Vizualizează o varietate de plugin-uri create de dezvoltatori binecunoscuți disponibile pe [[%s|MuseHub]]."
-
-#~ msgid "A multiband compressor offering precise control over frequencies."
-#~ msgstr "Un compresor multi-bandă oferind control precis asupra frecvențelor."
-
-#~ msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-#~ msgstr "Ace Studio - Numărul 1 mondial în generatoare AI de voce muzicală."
-
-#~ msgid "Continue for Cloud Storage"
-#~ msgstr "Continuă pentru stocare în Cloud"
-
-#~ msgid "What's new in Audacity"
-#~ msgstr "Ce este nou în Audacity"
-
-#~ msgid "Watch the release video"
-#~ msgstr "Urmărește videoul de lansare"
-
-#~ msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-#~ msgstr "Curățător de voce cu săpun: sunet de voce la calitate studio"
-
-#~ msgid "Help us decide the future of Audacity"
-#~ msgstr "Ajută-ne să decidem viitorul pentru Audacity"
-
-#~ msgid "Take part in survey"
-#~ msgstr "Ia parte la chestionar"
-
-#~ msgid "Audacity feature survey"
-#~ msgstr "Chestionar caracteristici Audacity"

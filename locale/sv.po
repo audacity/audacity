@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
-"PO-Revision-Date: 2025-07-29 13:31+0200\n"
+"POT-Creation-Date: 2025-12-03 19:18+0300\n"
+"PO-Revision-Date: 2025-12-01 12:24+0100\n"
 "Last-Translator: A. Regnander <anton_r_3@hotmail.com>\n"
 "Language-Team: swedish <musselasse@gmail.com, anton_r_3@hotmail.com>\n"
 "Language: sv\n"
@@ -1351,15 +1351,14 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Snabba variationer i tonkvaliteten, som det där gitarrljudet som var populärt på 70-talet"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Fel uppstod under import"
+msgstr "Fel vid import av moln ljud"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
 msgid "Can't download cloud audio"
-msgstr ""
+msgstr "Kan inte ladda ner moln ljud"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -4243,7 +4242,7 @@ msgstr "Tonhöjd (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Wavelet (1/6 Octave Hann)"
-msgstr ""
+msgstr "Wavelet (1/6 Octave Hann)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
@@ -7193,20 +7192,21 @@ msgid "Open from audio.com"
 msgstr "Öppna från audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "Laddar ned %s"
+msgstr "Laddar ner ljud"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "Misslyckades med att tyda förinställningarna från \"%s\""
+msgstr ""
+"Misslyckades med att ladda ner ljud från moln.\n"
+"%s"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
-msgstr ""
+msgstr "Nerladdad ljudfil finns inte."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -7228,19 +7228,16 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Förhandsvisningar kan endast uppdateras för molnprojekt"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open &From Cloud"
-msgstr "Öppna från Moln"
+msgstr "Öppna &från moln"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Öppna projekt..."
+msgstr "Öppna moln &projekt..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "Uppdatera Cloud Audio förhandsvisning"
+msgstr "Öppna moln &ljudfil..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7383,9 +7380,8 @@ msgid "Don't show this again"
 msgstr "Visa inte detta igen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "När ljudfiler importeras"
+msgstr "Öppna moln ljudfil"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7393,7 +7389,7 @@ msgid "less than 1 minute"
 msgstr "mindre än 1 minut"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] "en minut sedan"
@@ -7408,23 +7404,20 @@ msgstr[0] "en timme sedan"
 msgstr[1] "%d timmar sedan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Spårtitel"
+msgstr "Titel"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Author"
-msgstr "Författare:"
+msgstr "Författare"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Tags"
-msgstr ""
+msgstr "Tags"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Created"
-msgstr "Skapa"
+msgstr "Skapat"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7432,14 +7425,12 @@ msgid "Failed to authorize account"
 msgstr "Det gick inte att auktorisera konto"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Laddar upp ljud..."
+msgstr "Laddar ljudlista---"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "Misslyckades med att få projektlistan"
+msgstr "Misslyckades med att få ljudlista"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7640,7 +7631,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create a free cloud storage account to access your projects and audio from any device"
-msgstr "Skapa ett gratis molnlagringskonto och få tillgång till dina projekt och ljud från vilken enhet som helst"
+msgstr "Skapa ett gratis molnlagringskonto för att komma åt dina projekt och ljud från vilken enhet som helst"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -11664,7 +11655,7 @@ msgstr "Välkommen to Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Video: how we're redesigning Audacity for the future"
-msgstr ""
+msgstr "Video: hur vi omdesignade Audacity för framtiden"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11672,16 +11663,15 @@ msgstr "Slutför din Audacity-molninstallation med audio.com"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
-msgstr ""
+msgstr "Få vår fria OpenVino AI verktyg"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
-msgstr ""
+msgstr "Utforska gratis plugins för att skulptera ditt ljud"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Hämta gratis plugins & ljud"
+msgstr "Se fria plugins"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -19780,31 +19770,32 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Vänster=Zooma in, Höger=Zooma ut, Mitten=Återställ"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "&Installera uppdatering"
+msgstr "Installera Audacity 4"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
 "Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
 "easier to use than ever."
 msgstr ""
+"Audacity 4 är här! Fullpackad med hundratals uppgraderingar som gör det snabbare och\n"
+" enklare att använda än någonsin."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
-msgstr ""
+msgstr "Installationen påverkar inte Audacity 3, så din nuvarande installation är oförändrad."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Discover what's new in our full feature breakdown."
-msgstr ""
+msgstr "Upptäck nyheterna i vår fullständiga funktionsöversikt."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No thanks"
-msgstr ""
+msgstr "Nej tack"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Remind me later"
-msgstr ""
+msgstr "Påminn mig senare"
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -19819,7 +19810,7 @@ msgstr "Sök efter uppdateringar"
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, c-format
 msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
-msgstr "Om du vill ändra din inställning för autmatiska uppdateringar, så kan du göra det på %s."
+msgstr "Om du vill ändra din inställning för automatiska uppdateringar, så kan du göra det på %s."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
 #. i18n-hint: a page in the Preferences dialog; use same name
@@ -19907,11 +19898,11 @@ msgstr "Acceptera && fortsätt"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Remind me later"
-msgstr ""
+msgstr "&Påminn mig senare"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Dismiss"
-msgstr ""
+msgstr "&Avböj"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -21768,6 +21759,9 @@ msgstr "Gammal"
 #~ msgid "Open Fro&m Cloud..."
 #~ msgstr "Öppna fr&ån moln..."
 
+#~ msgid "Create free Cloud Storage account and access your projects and audio from any device"
+#~ msgstr "Skapa ett gratis molnlagringskonto och få tillgång till dina projekt och ljud från vilken enhet som helst"
+
 #~ msgid "<font color=\"#000000\">"
 #~ msgstr "<font color=\"#000000\">"
 
@@ -21780,19 +21774,18 @@ msgstr "Gammal"
 #~ msgid "</font>"
 #~ msgstr "</font>"
 
-#, c-format
 #~ msgid "What's new in Audacity %s"
 #~ msgstr "Vad är nytt i Audacity %s"
 
-#, c-format
 #~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
 #~ msgstr "Titta på [[%s|release-video]] eller läs [[%s|changelog]] för att lära dig mer om vad vi har inkluderat i den senaste versionen!</p>"
 
-#, c-format
 #~ msgid "You can also read the [[%s|changelog]]</p>"
 #~ msgstr "Du kan också läsa [[%s|changelog]]</p>"
 
-#, c-format
+#~ msgid "Get free plugins & sounds"
+#~ msgstr "Hämta gratis plugins & ljud"
+
 #~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
 #~ msgstr "<p>Kolla in vår [[%s|Muse Hub-app]] för ett brett utbud av ljudpluginprogram för Audacity-användare</p>"
 
@@ -21823,7 +21816,6 @@ msgstr "Gammal"
 #~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
 #~ msgstr "Ett verktyg för stamseparering i realtid för att isolera sång, trummor och instrument."
 
-#, c-format
 #~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
 #~ msgstr "Kolla in en mängd plugins från välkända utvecklare tillgängliga på [[%s|MuseHub]]."
 
@@ -22191,6 +22183,9 @@ msgstr "Gammal"
 
 #~ msgid "Save To Cloud..."
 #~ msgstr "Spara till Molnet..."
+
+#~ msgid "Update Cloud Audio Preview"
+#~ msgstr "Uppdatera Cloud Audio förhandsvisning"
 
 #~ msgid "Open From Cloud..."
 #~ msgstr "Öppna från Moln..."
@@ -23283,6 +23278,9 @@ msgstr "Gammal"
 
 #~ msgid "Folder:"
 #~ msgstr "Mapp:"
+
+#~ msgid "Create"
+#~ msgstr "Skapa"
 
 #~ msgid "Options:"
 #~ msgstr "Alternativ:"
@@ -24518,6 +24516,9 @@ msgstr "Gammal"
 #~ msgstr ""
 #~ "Om det tillgängliga systemminnet sjunker under detta värde, kommer ljud inte\n"
 #~ "att cachelagras i minnet utan kommer att skrivas till hårddisken."
+
+#~ msgid "When importing audio files"
+#~ msgstr "När ljudfiler importeras"
 
 #~ msgid "Allow &background on-demand loading"
 #~ msgstr "Tillåt begärd inläsning i &bakgrunden"
@@ -26486,6 +26487,9 @@ msgstr "Gammal"
 
 #~ msgid "Performing Effect: %s"
 #~ msgstr "Skapar Effect: %s"
+
+#~ msgid "Author: "
+#~ msgstr "Författare:"
 
 #~ msgid "Sorry, Plug-in Effects cannot be performed on stereo tracks where the individual channels of the track do not match."
 #~ msgstr "Tyvärr, VST Effects kan inte användas på stereospår när de enskilda kanalerna i spåret inte passar."

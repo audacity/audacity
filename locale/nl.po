@@ -1,20 +1,19 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Audacity Team
+# Dutch translation for Audacity.
+# Copyright (C) 2025 Audacity Team
 # This file is distributed under the same license as the audacity package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Link Winterberg, 2024
-# Thomas De Rocker, 2025
+# Paval Shalamitski <yehekim@gmail.com>, 2023
+# Thomas De Rocker, 2023-2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2025-12-03 19:52+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Thomas De Rocker, 2025\n"
+"Last-Translator: Dmitry Makarenko, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/audacity/teams/164520/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -1351,15 +1350,14 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Snelle variaties in toonkwaliteit, zoals het populaire gitaargeluid in de jaren 1970"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Fout bij importeren"
+msgstr "Fout bij importeren van cloud-audio"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
 msgid "Can't download cloud audio"
-msgstr ""
+msgstr "Kan cloud-audio niet downloaden"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -4245,7 +4243,7 @@ msgstr "Toonhoogte (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Wavelet (1/6 Octave Hann)"
-msgstr ""
+msgstr "Wavelet (1/6-octaaf Hann)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
@@ -7189,20 +7187,21 @@ msgid "Open from audio.com"
 msgstr "Openen van audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "%s downloaden"
+msgstr "Audio downloaden"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "Coderen van voorinstelling van \"%s\" mislukt"
+msgstr ""
+"Het downloaden van cloud-audio is mislukt.\n"
+"%s"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
-msgstr ""
+msgstr "Het gedownloade audiobestand bestaat niet."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -7224,19 +7223,16 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Voorbeelden kunnen alleen worden bijgewerkt voor Cloud-projecten"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open &From Cloud"
-msgstr "Openen van Cloud"
+msgstr "Open &vanuit de Cloud"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Project openen..."
+msgstr "Cloud &project openen…"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "Cloud-audiovoorbeeld bijwerken"
+msgstr "Cloud &audiobestand openen..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7379,9 +7375,8 @@ msgid "Don't show this again"
 msgstr "Dit niet meer weergeven"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "Cloud-audiovoorbeeld bijwerken"
+msgstr "Cloud audiobestand openen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7389,11 +7384,11 @@ msgid "less than 1 minute"
 msgstr "minder dan 1 minuut"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "een minuut geleden"
-msgstr[1] "%d minutes ago"
+msgstr[0] "één minuut geleden"
+msgstr[1] "%d minuten geleden"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7404,21 +7399,20 @@ msgstr[0] "een uur geleden"
 msgstr[1] "%d uur geleden"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Track-titel"
+msgstr "Titel"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
-msgstr ""
+msgstr "Auteur"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Tags"
-msgstr ""
+msgstr "Tags"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Created"
-msgstr ""
+msgstr "Gemaakt"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7426,14 +7420,12 @@ msgid "Failed to authorize account"
 msgstr "Account niet gemachtigd"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Audio uploaden..."
+msgstr "Audiolijst laden…"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "Lijst met projecten is niet opgehaald"
+msgstr "Kan audiolijst niet ophalen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7634,7 +7626,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create a free cloud storage account to access your projects and audio from any device"
-msgstr "Gratis cloudopslag-account aanmaken en toegang krijgen tot uw projecten en audio vanaf elk apparaat"
+msgstr "Maak een gratis cloudopslagaccount aan om je projecten en audio vanaf elk apparaat te openen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -11643,7 +11635,7 @@ msgstr "Welkom bij Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Video: how we're redesigning Audacity for the future"
-msgstr ""
+msgstr "Video: hoe we Audacity opnieuw ontwerpen voor de toekomst"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11651,16 +11643,15 @@ msgstr "Vervolledig uw Audacity cloud-instelling met audio.com"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
-msgstr ""
+msgstr "Download onze gratis OpenVino-AI-tools"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
-msgstr ""
+msgstr "Ontdek gratis plug-ins om je audio vorm te geven"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Gratis plug-ins en geluiden verkrijgen"
+msgstr "Gratis plug-ins bekijken"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -19758,9 +19749,8 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Links=Inzoomen, Rechts=Uitzoomen, Middel=Normaal"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "Update installeren"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
@@ -21744,92 +21734,3 @@ msgstr "Spectraal gereedschap"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Oud"
-
-#~ msgid "Open Fro&m Cloud..."
-#~ msgstr "Openen van Cloud..."
-
-#~ msgid "<font color=\"#000000\">"
-#~ msgstr "<font color=\"#000000\">"
-
-#~ msgid "Sign up to Audacity's cloud saving platform"
-#~ msgstr "Registreren bij het cloud-opslagplatform van Audacity"
-
-#~ msgid "and access your projects from anywhere!"
-#~ msgstr "en krijg overal toegang tot uw projecten!"
-
-#~ msgid "</font>"
-#~ msgstr "</font>"
-
-#, c-format
-#~ msgid "What's new in Audacity %s"
-#~ msgstr "Wat is nieuw in Audacity %s"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-#~ msgstr "Bekijk de [[%s|release video]] of lees het [[%s|changelog]] voor meer informatie over wat we in de nieuwste release hebben opgenomen! </p>"
-
-#, c-format
-#~ msgid "You can also read the [[%s|changelog]]</p>"
-#~ msgstr "U kunt ook het [[%s|changelog]] lezen</p>"
-
-#, c-format
-#~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-#~ msgstr "<p>Kijk eens naar onze [[%s|Muse Hub app]] voor een uitgebreid aanbod aan audioplugins voor Audacity-gebruikers</p>"
-
-#~ msgid "A vocal processing effect that enhances vocal clarity and depth."
-#~ msgstr "Een stembewerkingseffect dat de helderheid en diepte van de stem verbetert."
-
-#~ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-#~ msgstr "Een multifunctionele galm-plugin voor ruimtelijke, natuurlijk klinkende effecten."
-
-#~ msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-#~ msgstr "Een plugin voor gitaarversterker- en effectmodellering voor realistische tonen en aanpasbare geluiden."
-
-#~ msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-#~ msgstr "Een snel reagerende galm-plugin die zich aanpast aan de dynamiek van een track voor meeslepende soundscapes."
-
-#~ msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-#~ msgstr "Een vocale multi-effect plugin die vocale tracks verbetert voor professionele resultaten."
-
-#~ msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-#~ msgstr "Een baseffect-plugin ontworpen voor een pittig, helder laag geluid."
-
-#~ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-#~ msgstr "Een plugin voor akoestische geluidsperfectie, die warmte en helderheid verbetert."
-
-#~ msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-#~ msgstr "Een verbazingwekkende stemverbeteringsplugin voor kristalheldere, professionele vocale effecten."
-
-#~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-#~ msgstr "Een realtime hulpmiddel voor stemseparatie om zang, drums en instrumenten te isoleren."
-
-#, c-format
-#~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-#~ msgstr "Bekijk een verscheidenheid aan plugins van bekende ontwikkelaars die beschikbaar zijn op [[%s|MuseHub]]."
-
-#~ msgid "A multiband compressor offering precise control over frequencies."
-#~ msgstr "Een multibandcompressor met nauwkeurige controle over frequenties."
-
-#~ msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-#~ msgstr "Ace Studio - De beste AI-zangstemgenerator ter wereld."
-
-#~ msgid "Continue for Cloud Storage"
-#~ msgstr "Doorgaan voor cloudopslag"
-
-#~ msgid "What's new in Audacity"
-#~ msgstr "Wat is nieuw in Audacity"
-
-#~ msgid "Watch the release video"
-#~ msgstr "De release-video bekijken"
-
-#~ msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-#~ msgstr "Soap Voice Cleaner: studio-kwaliteit voice-over geluid"
-
-#~ msgid "Help us decide the future of Audacity"
-#~ msgstr "Help ons om over de toekomst van Audacity te beslissen"
-
-#~ msgid "Take part in survey"
-#~ msgstr "Deelnemen aan vragenlijst"
-
-#~ msgid "Audacity feature survey"
-#~ msgstr "Audacity-functies vragenlijst"
