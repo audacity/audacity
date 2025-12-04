@@ -560,7 +560,6 @@ static wxString SubRipTimestampFromDouble(double timestamp, bool webvtt)
 
 // Helper function to escape JSON special characters
 // Podcast 2.0 Chapters spec requires proper JSON escaping
-// Order matters: backslash must be escaped first to avoid double-escaping
 static wxString EscapeJSON(const wxString& input)
 {
    wxString result;
@@ -568,7 +567,7 @@ static wxString EscapeJSON(const wxString& input)
    for (auto ch : input) {
       wchar_t c = static_cast<wchar_t>(ch);
       switch (c) {
-         case '\\': result += wxT("\\\\"); break;  // Must be first
+         case '\\': result += wxT("\\\\"); break;
          case '"':  result += wxT("\\\""); break;
          case '\n': result += wxT("\\n");  break;
          case '\r': result += wxT("\\r");  break;
