@@ -8,8 +8,10 @@
 
 #include "context/iglobalcontext.h"
 
+#include "framework/global/async/asyncable.h"
+
 namespace au::projectscene {
-class SpectrogramView : public AbstractClipView
+class SpectrogramView : public AbstractClipView, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(int timelineIndentWidth READ timelineIndentWidth WRITE setTimelineIndentWidth NOTIFY timelineIndentWidthChanged FINAL)
@@ -30,6 +32,8 @@ signals:
 private:
     void setTimelineContext(TimelineContext* newContext) override;
     void paint(QPainter* painter) override;
+    void classBegin() override {}
+    void componentComplete() override;
 
     int m_timelineIndentWidth = 0;
 };

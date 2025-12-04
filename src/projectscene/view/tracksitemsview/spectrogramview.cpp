@@ -10,6 +10,20 @@ SpectrogramView::SpectrogramView(QQuickItem* parent)
     setFlag(QQuickItem::ItemObservesViewport, true);
 }
 
+void SpectrogramView::componentComplete()
+{
+    AbstractClipView::componentComplete();
+    const auto project = globalContext()->currentTrackeditProject();
+    IF_ASSERT_FAILED(project) {
+        return;
+    }
+    project->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
+        if (track.id == m_clipKey.key.trackId) {
+            update();
+        }
+    });
+}
+
 void SpectrogramView::setTimelineIndentWidth(int width)
 {
     if (m_timelineIndentWidth == width) {
