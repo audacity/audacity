@@ -20,26 +20,26 @@ enum teResourceFlags
 };
 }
 
-QColor& SpectrogramColorRegisterBase::Colour(int iIndex)
+QColor& SpectrogramColorRegister::Colour(int iIndex)
 {
     wxASSERT(iIndex >= 0);
     EnsureInitialised();
-    return mSet.mColours[iIndex];
+    return mColours[iIndex];
 }
 
 void SpectrogramColorRegister::EnsureInitialised()
 {
-    if (mSet.bInitialised) {
+    if (mColorsInitialized) {
         return;
     }
     RegisterColours();
 }
 
-void SpectrogramColorRegisterBase::RegisterColour(NameSet& allNames,
-                                                  int& iIndex, const QColor& Clr, const wxString& Name)
+void SpectrogramColorRegister::RegisterColour(NameSet& allNames,
+                                              int& iIndex, const QColor& Clr, const wxString& Name)
 {
-    mSet.mColours.push_back(Clr);
-    auto index = mSet.mColours.size() - 1;
+    mColours.push_back(Clr);
+    auto index = mColours.size() - 1;
     if (iIndex == -1) {
         // First time assignment of global variable identifying a colour
         iIndex = index;
@@ -55,10 +55,10 @@ void SpectrogramColorRegisterBase::RegisterColour(NameSet& allNames,
 
 void SpectrogramColorRegister::RegisterColours()
 {
-    if (mSet.bInitialised) {
+    if (mColorsInitialized) {
         return;
     }
-    mSet.bInitialised = true;
+    mColorsInitialized = true;
 
 // This initialises the variables e.g
 // RegisterImage( myFlags, bmpRecordButton, some image, wxT("RecordButton"));
