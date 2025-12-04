@@ -12,8 +12,7 @@
 
 namespace au::spectrogram {
 SpectrogramModule::SpectrogramModule()
-    :
-        m_au3SpectrogramPainter(std::make_shared<Au3SpectrogramPainter>()),
+    : m_au3SpectrogramPainter(std::make_shared<Au3SpectrogramPainter>()),
     m_configuration(std::make_shared<SpectrogramConfiguration>())
 {
 }
