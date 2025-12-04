@@ -8,8 +8,6 @@
 #include "view/colorsectionparameterlistmodel.h"
 #include "view/globalspectrogramsettingsmodel.h"
 
-#include "framework/ui/iinteractiveuriregister.h"
-
 namespace au::spectrogram {
 SpectrogramModule::SpectrogramModule()
     : m_au3SpectrogramPainter(std::make_shared<Au3SpectrogramPainter>()),
