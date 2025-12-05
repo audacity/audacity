@@ -23,7 +23,7 @@ Item {
         trackId: model.trackId
         isStereo: model.isStereo
         rulerType: model.trackRulerType
-        verticalZoom: model.trackVerticalZoom
+        displayBounds: model.trackDisplayBounds
 
         isCollapsed: root.isCollapsed
         channelHeightRatio: root.channelHeightRatio
@@ -46,6 +46,7 @@ Item {
         isDefaultZoom: rulerModel.isDefaultZoom
         isMaxZoom: rulerModel.isMaxZoom
         isMinZoom: rulerModel.isMinZoom
+        isHalfWave: rulerModel.isHalfWave
 
         placementPolicies: PopupView.PreferLeft
 
@@ -63,6 +64,10 @@ Item {
 
         onZoomResetRequested: {
             rulerModel.resetZoom()
+        }
+
+        onToggleHalfWaveRequested: {
+            rulerModel.toggleHalfWave()
         }
     }
 

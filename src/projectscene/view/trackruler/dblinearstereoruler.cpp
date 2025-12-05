@@ -4,6 +4,7 @@
 #include "dblinearstereoruler.h"
 
 #include "framework/global/realfn.h"
+#include "framework/global/types/ratio.h"
 
 using namespace au::projectscene;
 
@@ -35,7 +36,7 @@ double DbLinearStereoRuler::stepToPosition(double step, size_t channel, bool isN
     const double channelMiddleOffset = (endPosition - startPosition) / 2.0;
 
     if (muse::RealIsEqual(step, m_dbRange)) {
-        return startPosition + channelMiddleOffset;
+        return m_isHalfWave ? endPosition : startPosition + channelMiddleOffset;
     }
 
     return startPosition + valueToPosition(step, endPosition - startPosition, isNegativeSample);
@@ -43,10 +44,51 @@ double DbLinearStereoRuler::stepToPosition(double step, size_t channel, bool isN
 
 std::vector<TrackRulerFullStep> DbLinearStereoRuler::fullSteps() const
 {
+    return m_isHalfWave ? fullStepsForHalfWave() : fullStepsForFullWave();
+}
+
+std::vector<TrackRulerFullStep> DbLinearStereoRuler::fullStepsForHalfWave() const
+{
+    const double maxDisplayValueDB = muse::linear_to_db(m_maxDisplayValue);
+
+    if (m_collapsed) {
+        return { TrackRulerFullStep { maxDisplayValueDB - 6, 0, 0, true, true, false },
+                 TrackRulerFullStep { maxDisplayValueDB - 6, 1, 0, true, true, false } };
+    }
+
+    std::vector<double> channelHeights = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
+    std::vector<TrackRulerFullStep> steps;
+
+    for (size_t channel = 0; channel < channelHeights.size(); ++channel) {
+        if (channelHeights[channel] < MIN_CHANNEL_HEIGHT) {
+            steps.push_back(TrackRulerFullStep { maxDisplayValueDB - 6, channel, 0, true, true, false });
+            continue;
+        }
+
+        std::vector<TrackRulerFullStep> channelSteps { TrackRulerFullStep { m_dbRange, channel, 1, false, true, false },
+                                                       TrackRulerFullStep { maxDisplayValueDB, channel,
+                                                                            -1, true, false, false },
+        };
+
+        auto valuesList = fullStepValues(channelHeights[channel]);
+        for (const auto& stepValue : valuesList) {
+            channelSteps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), channel, 0, false, false, false });
+        }
+
+        steps.insert(steps.end(), channelSteps.begin(), channelSteps.end());
+    }
+
+    return steps;
+}
+
+std::vector<TrackRulerFullStep> DbLinearStereoRuler::fullStepsForFullWave() const
+{
     if (m_collapsed) {
         return { TrackRulerFullStep { m_dbRange, 0, 0, true, true, false },
                  TrackRulerFullStep { m_dbRange, 1, 0, true, true, true } };
     }
+
+    const double maxDisplayValueDB = muse::linear_to_db(m_maxDisplayValue);
 
     std::vector<double> channelHeights = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
     std::vector<TrackRulerFullStep> steps;
@@ -58,17 +100,18 @@ std::vector<TrackRulerFullStep> DbLinearStereoRuler::fullSteps() const
         }
 
         std::vector<TrackRulerFullStep> channelSteps { TrackRulerFullStep { m_dbRange, channel, 0, false, true, false },
-                                                       TrackRulerFullStep { m_maxDisplayValueDB, channel, channel == 0 ? -1 : 0, true, true,
-                                                                            false },
-                                                       TrackRulerFullStep { m_maxDisplayValueDB, channel, channel == 1 ? 1 : 0, true, true,
-                                                                            true }
+                                                       TrackRulerFullStep { maxDisplayValueDB, channel,
+                                                                            channel == 0 ? -1 : 0, true, channel == 1, false },
         };
+
+        channelSteps.push_back(TrackRulerFullStep { maxDisplayValueDB, channel, channel == 1 ? 1 : 0, true, channel == 0, true });
 
         auto valuesList = fullStepValues(channelHeights[channel]);
         for (const auto& stepValue : valuesList) {
             channelSteps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), channel, 0, false, false, false });
             channelSteps.push_back(TrackRulerFullStep { static_cast<double>(stepValue), channel, 0, false, false, true });
         }
+
         steps.insert(steps.end(), channelSteps.begin(), channelSteps.end());
     }
 
@@ -77,15 +120,17 @@ std::vector<TrackRulerFullStep> DbLinearStereoRuler::fullSteps() const
 
 std::vector<TrackRulerSmallStep> DbLinearStereoRuler::smallSteps() const
 {
+    const double maxDisplayValueDB = muse::linear_to_db(m_maxDisplayValue);
+
     if (m_collapsed) {
-        return { TrackRulerSmallStep { m_maxDisplayValueDB, 0, false }, TrackRulerSmallStep { m_maxDisplayValueDB, 1, true } };
+        return { TrackRulerSmallStep { maxDisplayValueDB, 0, false }, TrackRulerSmallStep { maxDisplayValueDB, 1, true } };
     }
 
     std::vector<double> channelHeights = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
     std::vector<TrackRulerSmallStep> steps;
     for (size_t channel = 0; channel < 2; ++channel) {
         std::vector<int> valuesList = fullStepValues(channelHeights[channel]);
-        valuesList.push_back(static_cast<int>(m_maxDisplayValueDB));
+        valuesList.push_back(static_cast<int>(maxDisplayValueDB));
 
         std::vector<std::tuple<int, int> > fullStepRanges;
         fullStepRanges.reserve(valuesList.size() - 1);
@@ -94,7 +139,7 @@ std::vector<TrackRulerSmallStep> DbLinearStereoRuler::smallSteps() const
         }
 
         // We ensure small steps will be shown onlu if there is enough room between full steps
-        int lowestSmallStep = static_cast<int>(m_maxDisplayValueDB);
+        int lowestSmallStep = static_cast<int>(maxDisplayValueDB);
         for (const auto& [startValue, endValue] : fullStepRanges) {
             double firstPos = valueToPosition(startValue, channelHeights[channel], false);
             double secondPos = valueToPosition(endValue, channelHeights[channel], false);
@@ -104,7 +149,7 @@ std::vector<TrackRulerSmallStep> DbLinearStereoRuler::smallSteps() const
             }
         }
 
-        for (int i = lowestSmallStep; i < m_maxDisplayValueDB; i++) {
+        for (int i = lowestSmallStep; i < maxDisplayValueDB; i++) {
             if (std::find(valuesList.begin(), valuesList.end(), i) != valuesList.end()) {
                 continue;
             }

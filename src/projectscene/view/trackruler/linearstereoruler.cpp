@@ -4,36 +4,18 @@
 #include "linearstereoruler.h"
 
 #include "framework/global/realfn.h"
+#include "view/trackruler/itrackruler.h"
 
 using namespace au::projectscene;
 
 namespace {
-constexpr std::array<TrackRulerFullStep, 2> COLLAPSED_FULL_STEPS = { {
-    TrackRulerFullStep{ 0.0, 0, 0, true, true, false },
-    TrackRulerFullStep{ 0.0, 1, 0, true, true, false },
-} };
-
-constexpr std::array<TrackRulerSmallStep, 2> COLLAPSED_SMALL_STEPS = { {
-    TrackRulerSmallStep{ 1.0, 0, false },
-    TrackRulerSmallStep{ -1.0, 1, false }
-} };
-
 constexpr double MIN_CHANNEL_HEIGHT = 40.0;
 }
 
 double LinearStereoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, [[maybe_unused]] bool isNegativeSample) const
 {
-    double clampedValue = std::clamp(step, static_cast<double>(m_minDisplayValue), static_cast<double>(m_maxDisplayValue));
-
-    double position;
-    if (channel == 0) {
-        position = (0.5 - clampedValue / (m_maxDisplayValue - m_minDisplayValue)) * m_height * m_channelHeightRatio;
-    } else {
-        position = (0.5 - clampedValue / (m_maxDisplayValue - m_minDisplayValue)) * (1.0 - m_channelHeightRatio) * m_height
-                   + m_channelHeightRatio * m_height;
-    }
-
-    return position;
+    return channel == 0 ? valueToPosition(step, m_height * m_channelHeightRatio)
+           : valueToPosition(step, m_height * (1.0 - m_channelHeightRatio)) + (m_height * m_channelHeightRatio);
 }
 
 std::vector<TrackRulerFullStep> LinearStereoRuler::fullSteps() const
@@ -41,14 +23,17 @@ std::vector<TrackRulerFullStep> LinearStereoRuler::fullSteps() const
     std::vector<TrackRulerFullStep> steps;
 
     if (m_collapsed) {
-        steps.insert(steps.end(), COLLAPSED_FULL_STEPS.begin(), COLLAPSED_FULL_STEPS.end());
-        return steps;
+        const double middleValue = ((m_maxDisplayValue - m_minDisplayValue) / 2.0) + m_minDisplayValue;
+
+        return { TrackRulerFullStep{ middleValue, 0, 0, true, true, false },
+                 TrackRulerFullStep{ middleValue, 1, 0, true, true, false } };
     }
 
     std::vector<double> channelHeight = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
     for (size_t ch = 0; ch < channelHeight.size(); ++ch) {
         if (channelHeight[ch] < MIN_CHANNEL_HEIGHT) {
-            steps.push_back(TrackRulerFullStep { 0.0, ch, 0, true, true, false });
+            const double middleValue = ((m_maxDisplayValue - m_minDisplayValue) / 2.0) + m_minDisplayValue;
+            steps.push_back(TrackRulerFullStep { middleValue, ch, 0, true, true, false });
             continue;
         }
 
@@ -57,7 +42,7 @@ std::vector<TrackRulerFullStep> LinearStereoRuler::fullSteps() const
             steps.push_back(TrackRulerFullStep { value,
                                                  ch,
                                                  getAlignment(value),
-                                                 isBold(value), value == 0.0, value < 0.0 });
+                                                 isBold(value), isFullTick(value, ch), value < 0.0 });
         }
     }
 
@@ -68,8 +53,8 @@ std::vector<TrackRulerSmallStep> LinearStereoRuler::smallSteps() const
 {
     std::vector<TrackRulerSmallStep> steps;
     if (m_collapsed) {
-        steps.insert(steps.end(), COLLAPSED_SMALL_STEPS.begin(), COLLAPSED_SMALL_STEPS.end());
-        return steps;
+        return { TrackRulerSmallStep{ m_maxDisplayValue, 0, false },
+                 TrackRulerSmallStep{ m_minDisplayValue, 1, false } };
     }
 
     std::vector<double> channelHeight = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
@@ -90,4 +75,21 @@ std::vector<TrackRulerSmallStep> LinearStereoRuler::smallSteps() const
     }
 
     return steps;
+}
+
+bool LinearStereoRuler::isFullTick(double value, size_t channel) const
+{
+    if (muse::RealIsEqual(value, 0.0)) {
+        return true;
+    }
+
+    if (channel == 0 && muse::RealIsEqual(value, m_minDisplayValue)) {
+        return true;
+    }
+
+    if (channel == 1 && muse::RealIsEqual(value, m_maxDisplayValue)) {
+        return true;
+    }
+
+    return false;
 }

@@ -33,10 +33,13 @@ class TrackRulerModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(trackedit::TrackId trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
 
-    Q_PROPERTY(float verticalZoom READ verticalZoom WRITE setVerticalZoom FINAL)
+    Q_PROPERTY(QVariant displayBounds READ displayBounds WRITE setDisplayBounds FINAL)
+
     Q_PROPERTY(bool isDefaultZoom READ isDefaultZoom NOTIFY isDefaultZoomChanged FINAL)
     Q_PROPERTY(bool isMaxZoom READ isMaxZoom NOTIFY isMaxZoomChanged FINAL)
     Q_PROPERTY(bool isMinZoom READ isMinZoom NOTIFY isMinZoomChanged FINAL)
+
+    Q_PROPERTY(bool isHalfWave READ isHalfWave NOTIFY isHalfWaveChanged FINAL)
 
     muse::Inject<au::playback::IPlaybackConfiguration> configuration;
     muse::Inject<au::trackedit::ITrackeditInteraction> trackeditInteraction;
@@ -48,6 +51,7 @@ public:
     Q_INVOKABLE void zoomIn();
     Q_INVOKABLE void zoomOut();
     Q_INVOKABLE void resetZoom();
+    Q_INVOKABLE void toggleHalfWave();
 
     std::vector<QVariantMap> fullSteps() const;
     std::vector<QVariantMap> smallSteps() const;
@@ -68,8 +72,8 @@ public:
     int rulerType() const;
     void setRulerType(int rulerType);
 
-    float verticalZoom() const;
-    void setVerticalZoom(float verticalZoom);
+    QVariant displayBounds() const;
+    void setDisplayBounds(const QVariant& displayBounds);
 
     bool isDefaultZoom() const;
     bool isMaxZoom() const;
@@ -77,6 +81,8 @@ public:
 
     trackedit::TrackId trackId() const;
     void setTrackId(const trackedit::TrackId& newTrackId);
+
+    bool isHalfWave() const;
 
 signals:
     void fullStepsChanged();
@@ -95,6 +101,8 @@ signals:
     void isMinZoomChanged();
 
     void trackIdChanged();
+
+    void isHalfWaveChanged();
 private:
     std::shared_ptr<ITrackRuler> buildRulerModel();
     double stepToPosition(double step, int channel, bool isNegativeSample) const;
@@ -107,6 +115,9 @@ private:
     int m_height = 0;
     double m_channelHeightRatio = 0.5;
     int m_rulerType = 2;
-    float m_verticalZoom = 1.0f;
+    QMap<QString, float> m_displayBounds {
+        { "min", -1.0f },
+        { "max", 1.0f }
+    };
 };
 }

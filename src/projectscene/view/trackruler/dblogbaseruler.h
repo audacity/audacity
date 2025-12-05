@@ -19,7 +19,7 @@ public:
     void setCollapsed(bool isCollapsed) override;
     void setDbRange(double dbRange) override;
     std::string sampleToText(double sample) const override;
-    void setVerticalZoom(float verticalZoom) override;
+    void setDisplayBounds(std::pair<float, float> displayBounds) override;
 
 protected:
     bool isBold(double value) const;
@@ -34,6 +34,7 @@ protected:
     double m_channelHeightRatio = 1.0;
     double m_dbRange = 0.0;
     double m_maxDisplayValueDB = 0.0;
+    bool m_isHalfWave = false;
     DbLogRulerUiSettings m_ui_settings;
 };
 }

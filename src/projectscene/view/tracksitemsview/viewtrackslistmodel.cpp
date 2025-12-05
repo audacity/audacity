@@ -298,8 +298,11 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case DbRangeRole:
         return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
 
-    case VerticalZoomRole:
-        return track.verticalZoom;
+    case DisplayBoundsRole:
+        return QVariant::fromValue(QMap<QString, QVariant> {
+            { "min", static_cast<double>(track.displayBounds.first) },
+            { "max", static_cast<double>(track.displayBounds.second) }
+        });
 
     default:
         break;
@@ -324,9 +327,9 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { AvailableRulerTypesRole, "availableRulerTypes" },
         { TrackRulerTypeRole, "trackRulerType" },
         { DbRangeRole, "dbRange" },
-        { VerticalZoomRole, "trackVerticalZoom" },
         { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
         { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
+        { DisplayBoundsRole, "trackDisplayBounds" }
     };
     return roles;
 }
@@ -346,7 +349,7 @@ int ViewTracksListModel::verticalRulerWidth() const
         }
 
         // Find the smallest vertical zoom among linear rulers to ajust the width globally.
-        smallestBoundValue = std::min(smallestBoundValue, track.verticalZoom);
+        smallestBoundValue = std::min(smallestBoundValue, ((track.displayBounds.second - track.displayBounds.first) / 2.0f));
     }
     smallestBoundValue *= 0.1f;
 

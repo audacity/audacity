@@ -18,6 +18,10 @@ DbLogMonoRuler::DbLogMonoRuler()
 
 int DbLogMonoRuler::getAlignment(double value, bool isNegativeSample) const
 {
+    if (m_isHalfWave && muse::RealIsEqual(value, m_dbRange)) {
+        return 1;
+    }
+
     if (muse::RealIsEqual(value, m_maxDisplayValueDB)) {
         return isNegativeSample ? 1 : -1;
     }
@@ -31,6 +35,28 @@ double DbLogMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t chann
 
 std::vector<TrackRulerFullStep> DbLogMonoRuler::fullSteps() const
 {
+    return m_isHalfWave ? fullStepsForHalfWave() : fullStepsForFullWave();
+}
+
+std::vector<TrackRulerFullStep> DbLogMonoRuler::fullStepsForHalfWave() const
+{
+    if (m_collapsed) {
+        return { TrackRulerFullStep { ((m_dbRange - m_maxDisplayValueDB) / 2) + m_maxDisplayValueDB, 0, 0, true, true, false } };
+    }
+
+    std::vector<double> steps = fullStepsValues(m_height);
+
+    std::vector<TrackRulerFullStep> result;
+    result.reserve(steps.size());
+    for (double value : steps) {
+        result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, false),
+                                              isBold(value), false, false });
+    }
+    return result;
+}
+
+std::vector<TrackRulerFullStep> DbLogMonoRuler::fullStepsForFullWave() const
+{
     if (m_collapsed) {
         return { TrackRulerFullStep { m_dbRange, 0, 0, true, true, false } };
     }
@@ -38,7 +64,7 @@ std::vector<TrackRulerFullStep> DbLogMonoRuler::fullSteps() const
     std::vector<double> steps = fullStepsValues(m_height);
 
     std::vector<TrackRulerFullStep> result;
-    result.reserve((2 * steps.size()) + 1);
+    result.reserve((steps.size() * 2) + 1);
     for (double value : steps) {
         result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, false),
                                               isBold(value), false, false });
@@ -53,7 +79,7 @@ std::vector<TrackRulerFullStep> DbLogMonoRuler::fullSteps() const
 std::vector<TrackRulerSmallStep> DbLogMonoRuler::smallSteps() const
 {
     if (m_collapsed) {
-        return { TrackRulerSmallStep { 0.0, 0, false }, TrackRulerSmallStep { 0.0, 0, true } };
+        return { TrackRulerSmallStep { m_maxDisplayValueDB, 0, false }, TrackRulerSmallStep { 0.0, 0, true } };
     }
 
     std::vector<double> steps = smallStepsValues(m_height);
@@ -64,7 +90,9 @@ std::vector<TrackRulerSmallStep> DbLogMonoRuler::smallSteps() const
             continue;
         }
         result.push_back(TrackRulerSmallStep { value, 0, false });
-        result.push_back(TrackRulerSmallStep { value, 0, true });
+        if (!m_isHalfWave) {
+            result.push_back(TrackRulerSmallStep { value, 0, true });
+        }
     }
     return result;
 }

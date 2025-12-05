@@ -172,18 +172,25 @@ void TrackRulerModel::setRulerType(int rulerType)
     emit isMinZoomChanged();
 }
 
-float TrackRulerModel::verticalZoom() const
+QVariant TrackRulerModel::displayBounds() const
 {
-    return m_verticalZoom;
+    return QVariant::fromValue(m_displayBounds);
 }
 
-void TrackRulerModel::setVerticalZoom(float verticalZoom)
+void TrackRulerModel::setDisplayBounds(const QVariant& displayBounds)
 {
-    if (m_verticalZoom == verticalZoom) {
+    QMap<QString, QVariant> boundsMap = displayBounds.toMap();
+
+    QMap<QString, float> floatMap;
+    for (auto it = boundsMap.begin(); it != boundsMap.end(); ++it) {
+        floatMap[it.key()] = it.value().toFloat();
+    }
+
+    if (m_displayBounds == floatMap) {
         return;
     }
 
-    m_verticalZoom = verticalZoom;
+    m_displayBounds = floatMap;
 
     m_model = buildRulerModel();
 
@@ -230,7 +237,7 @@ std::shared_ptr<ITrackRuler> TrackRulerModel::buildRulerModel()
     model->setChannelHeightRatio(m_channelHeightRatio);
     model->setCollapsed(m_isCollapsed);
     model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
-    model->setVerticalZoom(m_verticalZoom);
+    model->setDisplayBounds({ m_displayBounds["min"], m_displayBounds["max"] });
 
     return model;
 }
@@ -262,6 +269,13 @@ void TrackRulerModel::resetZoom()
     emit isMinZoomChanged();
 }
 
+void TrackRulerModel::toggleHalfWave()
+{
+    trackeditInteraction()->toggleHalfWave(m_trackId);
+
+    emit isHalfWaveChanged();
+}
+
 bool TrackRulerModel::isDefaultZoom() const
 {
     return trackeditInteraction()->isDefaultVerticalZoom(m_trackId);
@@ -275,6 +289,11 @@ bool TrackRulerModel::isMaxZoom() const
 bool TrackRulerModel::isMinZoom() const
 {
     return trackeditInteraction()->isMinVerticalZoom(m_trackId);
+}
+
+bool TrackRulerModel::isHalfWave() const
+{
+    return trackeditInteraction()->isHalfWave(m_trackId);
 }
 
 void TrackRulerModel::setTrackId(const trackedit::TrackId& newTrackId)
