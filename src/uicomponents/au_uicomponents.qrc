@@ -2,7 +2,8 @@
     <qresource prefix="/">
         <file>qml/Audacity/UiComponents/qmldir</file>
         <file>qml/Audacity/UiComponents/components/Timecode.qml</file>
-        <file>qml/Audacity/UiComponents/components/TimecodeField.qml</file>
+        <file>qml/Audacity/UiComponents/components/internal/NumericField.qml</file>
+        <file>qml/Audacity/UiComponents/components/internal/NumericView.qml</file>
         <file>qml/Audacity/UiComponents/components/TimecodeStartEnd.qml</file>
         <file>qml/Audacity/UiComponents/components/TimeSignature.qml</file>
         <file>qml/Audacity/UiComponents/components/internal/TimeSignaturePopup.qml</file>

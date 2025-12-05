@@ -8,17 +8,13 @@
 #include "containers.h"
 
 namespace au::uicomponents {
-enum class NumericType
-{
-    Time,
-    Duration,
-    Frequency,
-    Bandwidth
+enum class NumericViewFormatType {
+    Undefined = -1,
+    UserType = 0
 };
 
 enum class TimecodeFormatType {
-    Undefined = -1,
-    Seconds,
+    Seconds = static_cast<int>(NumericViewFormatType::UserType) + 1,
     SecondsMilliseconds,
     HHMMSS,
     DDHHMMSS,

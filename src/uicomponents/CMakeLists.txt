@@ -12,6 +12,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/uicomponentsmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/uicomponentsmodule.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/components/numericviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/components/numericviewmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/components/bpmmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/components/bpmmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/components/timecodemodeselector.cpp
@@ -25,7 +27,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/components/beatsformatter.h
     ${CMAKE_CURRENT_LIST_DIR}/components/fieldsinteractioncontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/components/fieldsinteractioncontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/types/timecode.h
+    ${CMAKE_CURRENT_LIST_DIR}/types/numerictypes.h
 )
 
 setup_module()

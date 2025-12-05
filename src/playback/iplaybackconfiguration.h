@@ -8,7 +8,7 @@
 #include "framework/draw/types/color.h"
 
 #include "playbacktypes.h"
-#include "uicomponents/types/timecode.h"
+#include "uicomponents/types/numerictypes.h"
 #include "trackedit/trackedittypes.h"
 
 namespace au::playback {
