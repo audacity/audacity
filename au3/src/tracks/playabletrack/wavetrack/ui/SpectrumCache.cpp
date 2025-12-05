@@ -98,7 +98,7 @@ bool SpecCache::CalculateOneSpectrum(
     const SpectrogramSettings& settings, const WaveChannelInterval& clip,
     const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
     const std::vector<float>& gainFactors, float* __restrict scratch,
-    float* __restrict out) const
+    float* __restrict out, std::optional<AudioSegmentSampleView>& sampleCacheHolder) const
 {
     bool result = false;
     const bool reassignment
@@ -172,10 +172,10 @@ bool SpecCache::CalculateOneSpectrum(
             if (myLen > 0) {
                 constexpr auto iChannel = 0u;
                 constexpr auto mayThrow = false; // Don't throw just for display
-                mSampleCacheHolder.emplace(
+                sampleCacheHolder.emplace(
                     clip.GetSampleView(from, myLen, mayThrow));
                 floats.resize(myLen);
-                mSampleCacheHolder->Copy(floats.data(), myLen);
+                sampleCacheHolder->Copy(floats.data(), myLen);
                 useBuffer = floats.data();
                 if (copy) {
                     if (useBuffer) {
@@ -380,46 +380,47 @@ void SpecCache::Populate(
         const int lowerBoundX = jj == 0 ? 0 : copyEnd;
         const int upperBoundX = jj == 0 ? copyBegin : numPixels;
 
-// todo(mhodgkinson): I don't find an option to define _OPENMP anywhere. Is this
-// still of interest?
 #ifdef _OPENMP
         // Storage for mutable per-thread data.
-        // private clause ensures one copy per thread
+        // Each thread needs its own scratch buffer and sample cache holder
         struct ThreadLocalStorage {
             ThreadLocalStorage() { }
             ~ThreadLocalStorage() { }
 
-            void init(SampleTrackCache& waveTrackCache, size_t scratchSize)
+            void init(size_t scratchSize)
             {
-                if (!cache) {
-                    cache = std::make_unique<SampleTrackCache>(waveTrackCache.GetTrack());
+                if (scratch.empty()) {
                     scratch.resize(scratchSize);
                 }
             }
 
-            std::unique_ptr<SampleTrackCache> cache;
             std::vector<float> scratch;
+            std::optional<AudioSegmentSampleView> sampleCacheHolder;
         } tls;
 
       #pragma omp parallel for private(tls)
 #endif
         for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
 #ifdef _OPENMP
-            tls.init(waveTrackCache, scratchSize);
-            SampleTrackCache& cache = *tls.cache;
+            tls.init(scratchSize);
             float* buffer = &tls.scratch[0];
-#else
-            float* buffer = &scratch[0];
-#endif
             CalculateOneSpectrum(
                 settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
-                gainFactors, buffer, &freq[0]);
+                gainFactors, buffer, &freq[0], tls.sampleCacheHolder);
+#else
+            float* buffer = &scratch[0];
+            std::optional<AudioSegmentSampleView> sampleCacheHolder;
+            CalculateOneSpectrum(
+                settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
+                gainFactors, buffer, &freq[0], sampleCacheHolder);
+#endif
         }
 
         if (reassignment) {
             // Need to look beyond the edges of the range to accumulate more
             // time reassignments.
             // I'm not sure what's a good stopping criterion?
+            std::optional<AudioSegmentSampleView> sampleCacheHolder;
             auto xx = lowerBoundX;
             const double pixelsPerSample
                 =pixelsPerSecond * clip.GetStretchRatio() / sampleRate;
@@ -427,7 +428,7 @@ void SpecCache::Populate(
             for (int ii = 0; ii < limit; ++ii) {
                 const bool result = CalculateOneSpectrum(
                     settings, clip, --xx, pixelsPerSecond, lowerBoundX, upperBoundX,
-                    gainFactors, &scratch[0], &freq[0]);
+                    gainFactors, &scratch[0], &freq[0], sampleCacheHolder);
                 if (!result) {
                     break;
                 }
@@ -437,7 +438,7 @@ void SpecCache::Populate(
             for (int ii = 0; ii < limit; ++ii) {
                 const bool result = CalculateOneSpectrum(
                     settings, clip, xx++, pixelsPerSecond, lowerBoundX, upperBoundX,
-                    gainFactors, &scratch[0], &freq[0]);
+                    gainFactors, &scratch[0], &freq[0], sampleCacheHolder);
                 if (!result) {
                     break;
                 }

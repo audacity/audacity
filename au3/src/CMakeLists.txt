@@ -1361,6 +1361,16 @@ propagate_interesting_dependencies( ${TARGET} "${AUDACITY_LIBRARIES}" )
 
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
+
+# Enable OpenMP for parallel spectrogram computation
+find_package(OpenMP)
+if(OpenMP_CXX_FOUND)
+   message(STATUS "OpenMP found - enabling parallel spectrogram computation")
+   target_link_libraries(${TARGET} OpenMP::OpenMP_CXX)
+else()
+   message(STATUS "OpenMP not found - spectrogram computation will be serial")
+endif()
+
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_options( ${TARGET} PRIVATE ${LDFLAGS} )
