@@ -11,6 +11,12 @@ static const std::string moduleName("effects");
 static const muse::Settings::Key APPLY_EFFECT_TO_ALL_AUDIO(moduleName, "effects/applyEffectToAllAudio");
 static const muse::Settings::Key EFFECT_MENU_ORGANIZATION(moduleName, "effects/effectMenuOrganization");
 static const muse::Settings::Key PREVIEW_MAX_DURATION(moduleName, "effects/previewMaxDuration");
+static const std::string EFFECT_UI_MODE_PREFIX = "effects/effectUIMode/";
+
+static muse::Settings::Key makeEffectUIModeKey(const EffectId& effectId)
+{
+    return { moduleName, EFFECT_UI_MODE_PREFIX + effectId.toStdString() };
+}
 
 void EffectsConfiguration::init()
 {
@@ -69,4 +75,36 @@ double EffectsConfiguration::previewMaxDuration() const
 void EffectsConfiguration::setPreviewMaxDuration(double value)
 {
     muse::settings()->setSharedValue(PREVIEW_MAX_DURATION, muse::Val(value));
+}
+
+EffectUIMode EffectsConfiguration::effectUIMode(const EffectId& effectId) const
+{
+    constexpr EffectUIMode defaultMode = EffectUIMode::VendorUI;
+    if (effectId.empty()) {
+        return defaultMode;
+    }
+
+    const muse::Settings::Key key = makeEffectUIModeKey(effectId);
+    const muse::Val value = muse::settings()->value(key);
+    if (value.isNull()) {
+        return defaultMode;
+    }
+
+    return static_cast<EffectUIMode>(value.toInt());
+}
+
+void EffectsConfiguration::setEffectUIMode(const EffectId& effectId, EffectUIMode mode)
+{
+    const muse::Settings::Key key = makeEffectUIModeKey(effectId);
+    if (effectUIMode(effectId) == mode) {
+        return;
+    }
+
+    muse::settings()->setSharedValue(key, muse::Val(static_cast<int>(mode)));
+    m_effectUIModeChanged.notify();
+}
+
+muse::async::Notification EffectsConfiguration::effectUIModeChanged() const
+{
+    return m_effectUIModeChanged;
 }

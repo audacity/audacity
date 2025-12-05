@@ -16,6 +16,8 @@
 #include "../ieffectexecutionscenario.h"
 #include "../ieffectsprovider.h"
 #include "../ieffectpresetsscenario.h"
+#include "../ieffectsconfiguration.h"
+#include "../ieffectinstancesregister.h"
 
 namespace au::effects {
 class EffectsUiActions;
@@ -27,6 +29,8 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::Inject<IEffectExecutionScenario> effectExecutionScenario;
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectPresetsScenario> presetsScenario;
+    muse::Inject<IEffectsConfiguration> configuration;
+    muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<au::playback::IPlaybackController> playbackController;
 
@@ -46,6 +50,7 @@ private:
     void deletePreset(const muse::actions::ActionQuery& q);
     void importPreset(const muse::actions::ActionQuery& q);
     void exportPreset(const muse::actions::ActionQuery& q);
+    void toggleVendorUI(const muse::actions::ActionQuery& q);
 
     std::shared_ptr<EffectsUiActions> m_uiActions;
     muse::async::Channel<muse::actions::ActionCodeList> m_canReceiveActionsChanged;

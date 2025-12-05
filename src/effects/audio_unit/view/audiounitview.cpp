@@ -36,8 +36,8 @@ void AudioUnitView::init()
 {
     const auto instance = std::dynamic_pointer_cast<AudioUnitInstance>(instancesRegister()->instanceById(m_instanceId));
 
-    // TODO: When design for this setting is ready, use the user preference here
-    bool isGraphical = true;
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
+    const bool isGraphical = (configuration()->effectUIMode(effectId) == EffectUIMode::VendorUI);
 
     m_auControl = std::make_unique<AUControl>();
     if (!m_auControl->create(instance->GetComponent(),
@@ -57,6 +57,12 @@ void AudioUnitView::init()
 void AudioUnitView::deinit()
 {
     m_auControl.reset();
+}
+
+void AudioUnitView::reload()
+{
+    deinit();
+    init();
 }
 
 void AudioUnitView::embedNativeView()

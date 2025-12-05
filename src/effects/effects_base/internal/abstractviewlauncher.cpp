@@ -11,7 +11,7 @@ constexpr const char16_t* REALTIME_VIEWER_URI
 
 muse::Ret AbstractViewLauncher::doShowEffect(int instanceId, EffectFamily family) const
 {
-    muse::UriQuery uri(EFFECT_VIEWER_URI);
+    muse::UriQuery uri(DESTRUCTIVE_EFFECT_VIEWER_URI);
     uri.addParam("instanceId", muse::Val(instanceId));
     uri.addParam("effectFamily", muse::Val(family));
     const auto ret = interactive()->openSync(uri);
