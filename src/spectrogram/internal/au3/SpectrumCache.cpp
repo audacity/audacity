@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
@@ -9,14 +12,13 @@
 **********************************************************************/
 
 #include "SpectrumCache.h"
+#include "internal/spectrogramutils.h"
 
-#include "SpectrogramSettings.h"
-#include "RealFFTf.h"
-#include "Sequence.h"
-#include "Spectrum.h"
-#include "WaveClipUIUtilities.h"
-#include "WaveTrack.h"
-#include "WideSampleSequence.h"
+#include "libraries/lib-fft/RealFFTf.h"
+#include "libraries/lib-fft/Spectrum.h"
+#include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
+#include "libraries/lib-wave-track/Sequence.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 #include <cmath>
 
 namespace {
@@ -116,9 +118,9 @@ bool SpecCache::CalculateOneSpectrum(
     // the visible area.
 
     if (xx < 0) {
-        from = sampleCount(where[0].as_double() + xx * samplesPerPixel);
+        from = sampleCount(static_cast<double>(where[0]) + xx * samplesPerPixel);
     } else if (xx > (int)len) {
-        from = sampleCount(where[len].as_double() + (xx - len) * samplesPerPixel);
+        from = sampleCount(static_cast<double>(where[len]) + (xx - len) * samplesPerPixel);
     } else {
         from = where[xx];
     }
@@ -380,37 +382,8 @@ void SpecCache::Populate(
         const int lowerBoundX = jj == 0 ? 0 : copyEnd;
         const int upperBoundX = jj == 0 ? copyBegin : numPixels;
 
-// todo(mhodgkinson): I don't find an option to define _OPENMP anywhere. Is this
-// still of interest?
-#ifdef _OPENMP
-        // Storage for mutable per-thread data.
-        // private clause ensures one copy per thread
-        struct ThreadLocalStorage {
-            ThreadLocalStorage() { }
-            ~ThreadLocalStorage() { }
-
-            void init(SampleTrackCache& waveTrackCache, size_t scratchSize)
-            {
-                if (!cache) {
-                    cache = std::make_unique<SampleTrackCache>(waveTrackCache.GetTrack());
-                    scratch.resize(scratchSize);
-                }
-            }
-
-            std::unique_ptr<SampleTrackCache> cache;
-            std::vector<float> scratch;
-        } tls;
-
-      #pragma omp parallel for private(tls)
-#endif
         for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
-#ifdef _OPENMP
-            tls.init(waveTrackCache, scratchSize);
-            SampleTrackCache& cache = *tls.cache;
-            float* buffer = &tls.scratch[0];
-#else
             float* buffer = &scratch[0];
-#endif
             CalculateOneSpectrum(
                 settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
                 gainFactors, buffer, &freq[0]);
@@ -472,7 +445,7 @@ void SpecCache::Populate(
 bool WaveClipSpectrumCache::GetSpectrogram(
     const WaveChannelInterval& clip,
     const float*& spectrogram, SpectrogramSettings& settings,
-    const sampleCount*& where, size_t numPixels, double t0,
+    const long long*& where, size_t numPixels, double t0,
     double pixelsPerSecond)
 {
     auto& mSpecCache = mSpecCaches[clip.GetChannelIndex()];
@@ -517,7 +490,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 
     int copyBegin = 0, copyEnd = 0;
     if (match) {
-        WaveClipUIUtilities::findCorrection(
+        au::spectrogram::findCorrection(
             mSpecCache->where, mSpecCache->len, numPixels, t0, sampleRate,
             stretchRatio, samplesPerPixel, oldX0, correction);
         // Remember our first pixel maps to oldX0 in the old cache,
@@ -565,7 +538,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
     // purposely offset the display 1/2 sample to the left (as compared
     // to waveform display) to properly center response of the FFT
     constexpr auto addBias = true;
-    WaveClipUIUtilities::fillWhere(
+    au::spectrogram::fillWhere(
         mSpecCache->where, numPixels, addBias, correction, t0, sampleRate,
         stretchRatio, samplesPerPixel);
 

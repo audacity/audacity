@@ -528,7 +528,7 @@ void RecreateWindow(
 
 void SpectrogramSettings::CacheWindows()
 {
-    if (hFFT == NULL || window == NULL) {
+    if (hFFT == NULL || window == NULL || (algorithm == algReassignment && (tWindow == NULL || dWindow == NULL))) {
         double scale;
         auto factor = ZeroPaddingFactor();
         const auto fftLen = WindowSize() * factor;
@@ -548,6 +548,7 @@ constexpr auto isPowerOfTwo(int x) -> bool
 {
     return (x != 0) && ((x & (x - 1)) == 0);
 }
+
 static_assert(isPowerOfTwo(3) == false);
 static_assert(isPowerOfTwo(4) == true);
 }
@@ -687,9 +688,8 @@ auto SpectrogramBounds::Clone() const -> PointerType
 }
 
 void SpectrogramBounds::GetBounds(
-    const WaveChannel& wc, float& min, float& max) const
+    const WaveTrack& wt, float& min, float& max) const
 {
-    auto& wt = wc.GetTrack();
     const double rate = wt.GetRate();
 
     const auto& settings = SpectrogramSettings::Get(wt);

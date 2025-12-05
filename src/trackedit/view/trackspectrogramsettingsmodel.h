@@ -27,7 +27,7 @@ class TrackSpectrogramSettingsModel : public spectrogram::AbstractSpectrogramSet
 
 public:
     TrackSpectrogramSettingsModel(QObject* parent = nullptr);
-    ~TrackSpectrogramSettingsModel() override = default;
+    ~TrackSpectrogramSettingsModel() override;
 
     Q_INVOKABLE void preview();
     Q_INVOKABLE void apply();
@@ -92,6 +92,7 @@ private:
 
     void readFromConfig(const spectrogram::ISpectrogramConfiguration&);
     void writeToConfig(spectrogram::ISpectrogramConfiguration&);
+    void sendRepaintRequest();
 
     int m_trackId = -1;
     bool m_useGlobalSettings = false;
@@ -105,5 +106,7 @@ private:
     spectrogram::SpectrogramWindowType m_windowType_8 = static_cast<spectrogram::SpectrogramWindowType>(0);
     int m_windowSize_9 = 0;
     int m_zeroPaddingFactor_10 = 0;
+
+    std::unique_ptr<spectrogram::ISpectrogramConfiguration> m_configToRevertTo;
 };
 }

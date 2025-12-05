@@ -149,7 +149,7 @@ Rectangle {
 
         anchors.fill: parent
         color: "transparent"
-        border.width: root.enableContrastBorder ?  2 : 1
+        border.width: root.enableContrastBorder ? 2 : 1
         border.color: "#000000"
         radius: root.enableContrastBorder ? 0 : 4
         z: root.parent.z + 1
@@ -564,7 +564,7 @@ Rectangle {
                 }
 
                 function isWithinRange(val, x, w) {
-                    return val >= x && val <= (x + w);
+                    return val >= x && val <= (x + w)
                 }
             }
 
@@ -848,6 +848,11 @@ Rectangle {
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+
+                context: root.context
+                clipKey: root.clipKey
+                clipTime: root.clipTime
+                timelineIndentWidth: root.canvas.anchors.leftMargin
             }
         }
     }

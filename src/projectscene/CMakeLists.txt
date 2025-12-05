@@ -101,6 +101,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/iminmaxrmspainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/minmaxrmspainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/minmaxrmspainter.h
+
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/iconnectingdotspainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/connectingdotspainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/au3/connectingdotspainter.h
@@ -138,6 +139,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/viewtrackslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/wavepainterproxy.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/wavepainterproxy.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/abstractclipview.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/abstractclipview.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/spectrogramview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/spectrogramview.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/waveview.cpp
