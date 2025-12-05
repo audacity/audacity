@@ -3,7 +3,7 @@
 */
 #include "bpmmodel.h"
 
-#include "numericformatter.h"
+#include "internal/numeric/numericformatter.h"
 
 static constexpr double BPM_MAX = 999.0;
 static constexpr double BPM_MIN = 1.0;

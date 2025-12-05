@@ -3,7 +3,7 @@
 */
 #include "frequencymodel.h"
 
-#include "numericformatter.h"
+#include "internal/numeric/numericformatter.h"
 
 #include "translation.h"
 

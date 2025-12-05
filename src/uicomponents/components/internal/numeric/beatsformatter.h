@@ -5,7 +5,7 @@
 
 #include <array>
 
-#include "timecodemodeselector.h"
+#include "../../timecodemodeselector.h"
 #include "timecodeformatter.h"
 
 namespace au::uicomponents {
