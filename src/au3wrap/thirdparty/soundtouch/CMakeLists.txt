@@ -57,14 +57,11 @@ check_include_file(unistd.h HAVE_UNISTD_H)
 list( APPEND OPTIONS
    PRIVATE
       $<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:
-         -O3
-         -fcheck-new
          -Wno-unused-parameter
          -Wno-unused-variable
          -Wno-unused-function
       >
       $<$<CXX_COMPILER_ID:MSVC>:
-         /O2
          /wd4100
          /wd4505
       >

@@ -10,6 +10,7 @@
 #include "libraries/lib-label-track/LabelTrack.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 using namespace au::au3;
 using namespace au::importexport;
@@ -46,7 +47,7 @@ muse::Ret Au3LabelsExporter::exportData(const muse::io::path_t& filePath, const 
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    wxTextFile textFile(wxString(filePath.toStdString()));
+    wxTextFile textFile(wxFromString(filePath.toString()));
 
     bool open = false;
     if (textFile.Exists()) {

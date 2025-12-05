@@ -125,7 +125,7 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
 
     std::vector<Track*> results;
 
-    wxFileName fn(fileName.toStdString());
+    wxFileName fn(wxFromString(fileName.toString()));
 
     double newRate = 0;
     wxString trackNameBase = fn.GetName();
