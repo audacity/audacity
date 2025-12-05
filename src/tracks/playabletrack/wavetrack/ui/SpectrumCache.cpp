@@ -17,6 +17,7 @@
 #include "WaveClipUIUtilities.h"
 #include "WaveTrack.h"
 #include "WideSampleSequence.h"
+#include "TF_Calculator.h"
 #include <cmath>
 
 namespace {
@@ -329,128 +330,6 @@ bool SpecCache::CalculateOneSpectrum(
    return result;
 }
 
-bool SpecCache::CalculateOneWaveletSpectrum(
-   const SpectrogramSettings& settings, const WaveChannelInterval& clip,
-   const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
-   const std::vector<float>& gainFactors,
-   float* __restrict out) const
-{
-   bool result = false;
-   sampleCount from;
-
-   const auto numSamples = clip.GetSequence().GetNumSamples();
-   const auto sampleRate = clip.GetRate();
-   const auto stretchRatio = clip.GetStretchRatio();
-   const auto samplesPerPixel = sampleRate / pixelsPerSecond / stretchRatio;
-   const size_t nBins = settings.NBins();
-   float *const results = &out[nBins * xx];
-
-   // not reassignment, xx is surely within bounds.
-   wxASSERT(xx >= 0);
-   if (xx > (int)len)
-      from = sampleCount(where[len].as_double() + (xx - len) * samplesPerPixel);
-   else
-      from = where[xx];
-
-   if (from < 0 || from >= numSamples) {
-      if (xx >= 0 && xx < (int)len) {
-         // Pixel column is out of bounds of the clip!  Should not happen.
-         std::fill(results, results + nBins, 0.0f);
-      }
-   }
-   else
-   {
-      // Iterate frequencies in turn
-      // Note that as opposed to Fourier Transform, using wavelets implies a window length that varies with frequency
-      // We extract samples corresponding to max wavelet length (the first)
-    
-      // Locate longest wavelet (first one)
-      const auto longestWaveletLen = settings.waveletMaxLength;
-      wxASSERT(longestWaveletLen);
-       
-      auto myLen = 2 * longestWaveletLen - 1;
-      std::vector<float> scratch(myLen);
-
-      // Take a window of the track centered at this sample.
-      from -= longestWaveletLen;
-      float * adj = &scratch[0];
-      if (from < 0) {
-         // Near the start of the clip, pad left with zeroes as needed.
-         for (auto ii = from; ii < 0; ++ii)
-             *adj++ = 0;
-         myLen += from.as_long_long(); // add a negative
-         from = 0;
-      }
-      if (from + myLen >= numSamples) {
-         // Near the end of the clip, pad right with zeroes as needed.
-         // newlen is bounded by myLen:
-         auto newlen = ( numSamples - from ).as_size_t();
-         for (decltype(myLen) ii = newlen; ii < myLen; ++ii)
-             adj[ii] = 0;
-         myLen = newlen;
-      }
-      std::vector<float> floats;
-      if (myLen > 0) {
-         constexpr auto iChannel = 0u;
-         constexpr auto mayThrow = false; // Don't throw just for display
-         mSampleCacheHolder.emplace(
-             clip.GetSampleView(from, myLen, mayThrow));
-         floats.resize(myLen);
-         mSampleCacheHolder->Copy(floats.data(), myLen);
-         float *useBuffer = floats.data();
-         memcpy(adj, useBuffer, myLen * sizeof(float));
-      }
-
-      // Done preparing samples. Now onward with calculations
-      const float * middleSample = &scratch[longestWaveletLen - 1];
-      for (size_t iBin = 0; iBin < nBins; iBin++)
-      {
-          if (settings.waveletSizes[iBin] == 0)
-          {
-             results[iBin] = -160.0;
-             continue;
-          }
-         
-          const float *right = middleSample;
-          const float *left = middleSample;
-          // Do the inner product
-          const float * wRe = &settings.waveletsRe[iBin][0];
-          const float * wIm = &settings.waveletsIm[iBin][0];
-          double sumRe = *middleSample * *wRe;
-          double sumIm = 0.0;
-          wRe++, wIm++, right++, left--;
-          const auto halfLen = settings.waveletSizes[iBin];
-          for (auto ii = 1; ii < halfLen; ii++)
-          {
-              sumRe +=  (*right + *left) * *wRe;
-              sumIm +=  (*left - *right) * *wIm;
-              wRe++, wIm++, right++, left--;
-          }
-
-          // Calculate magnitude
-          float power = sumRe * sumRe + sumIm * sumIm;
-          
-          
-          // Do the log thing
-          if (power <= 0)
-             power = -160.0;
-          else
-             power = 10.0*log10f(power);
-
-          results[iBin] = power;
-      }
-
-
-       if (!gainFactors.empty()) {
-          // Apply a frequency-dependent gain factor
-          for (size_t ii = 0; ii < nBins; ++ii)
-             results[ii] += gainFactors[ii];
-       }
-       result = true;
-   }
-
-   return result;
-}
 
 void SpecCache::Grow(
    size_t len_, SpectrogramSettings& settings, double samplesPerPixel,
@@ -493,15 +372,138 @@ void SpecCache::Populate(
    // because of zero padding done for increased frequency resolution
    const size_t fftLen = windowSizeSetting * zeroPaddingFactorSetting;
    const auto nBins = settings.NBins();
-
-   const size_t bufferSize = fftLen;
-   const size_t scratchSize = reassignment ? 3 * bufferSize : bufferSize;
-   std::vector<float> scratch(scratchSize);
-
+   
    std::vector<float> gainFactors;
    if (!autocorrelation)
       ComputeSpectrogramGainFactors(
          fftLen, sampleRate, frequencyGainSetting, gainFactors);
+
+   if (isWaveletAnalysis(settings) || settings.algorithm == SpectrogramSettings::algSTFT)
+   {
+      const auto stretchRatio = clip.GetStretchRatio();
+      const auto samplesPerPixel = sampleRate / pixelsPerSecond / stretchRatio;
+
+      assert(pixelsPerSecond > 0);
+      assert(numPixels > 0);
+      const auto numSamplesInClip = clip.GetSequence().GetNumSamples();
+      // Loop over the ranges before and after the copied portion and compute anew.
+      // One of the ranges may be empty.
+      for (int jj = 0; jj < 2; ++jj)
+      {
+         const int lowerBoundX = jj == 0 ? 0 : copyEnd;
+         const int upperBoundX = jj == 0 ? copyBegin : numPixels;
+
+         if (lowerBoundX >= upperBoundX) continue;
+         assert(lowerBoundX >= 0 && lowerBoundX < numPixels);
+         assert(upperBoundX > 0 && upperBoundX <= numPixels);
+         // Calculate number of samples needed to cover range
+         // Easy as subtracting where[] locations of extremes
+         // Get rid of bias on "where" array
+         const sampleCount fromView = where[lowerBoundX] - 1;
+         const sampleCount toView = where[upperBoundX] - 1;
+         const auto numSamples = toView - fromView + 1;
+         auto myBufferLen = numSamples.as_size_t();
+
+         // Prepare the buffer of samples we will be working on
+         // In principle, we have 6 different situations for View relative to Clip
+         // All situations do not occur, but it is nice to make robust code
+         // Missing samples in left end or right end of working buffer will be zeropadded
+         // 0: Clip empty
+         // 1; EmpptyL
+         // 2: EmptyR
+         if (numSamplesInClip == 0 || toView < 0 || fromView > numSamplesInClip - 1)
+         {
+            // In this case simpy put "zeroes" into result and we are done
+            memset(&freq[lowerBoundX* nBins], 0, sizeof(float) * (upperBoundX - lowerBoundX) * nBins);
+            continue;
+         }
+         
+         // Prepare our calculator
+         unsigned int nPre;
+         unsigned int nPost;
+         unsigned int missingLeft = 0;
+         unsigned int missingRight = 0;
+         settings.pTFCalculator->prepare(numSamples.as_size_t(), samplesPerPixel, nPre, nPost);
+
+         // 3: OverlapL
+         if (fromView < 0 && toView <= numSamplesInClip - 1)
+         {
+            missingLeft = - fromView.as_size_t();
+            nPre = 0;
+            nPost = std::min(nPost, (unsigned int)((numSamplesInClip - 1 - toView).as_size_t()));
+         }
+         // 4: OverlapR
+         else if (toView > numSamplesInClip - 1 && fromView >= 0)
+         {
+            missingRight = (toView - (numSamplesInClip - 1)).as_size_t();
+            nPost = 0;
+            nPre = std::min(nPre, (unsigned int)(fromView.as_size_t()));
+         }
+         // 5: Within
+         else if (toView <= numSamplesInClip - 1 && fromView >=0)
+         {
+            nPre = std::min(nPre, (unsigned int)(fromView.as_size_t()));
+            nPost = std::min(nPost, (unsigned int)((numSamplesInClip - 1 - toView).as_size_t()));
+         }
+         // 6: Enclosing
+         else if (fromView < 0 && toView > numSamplesInClip - 1)
+         {
+            missingLeft = - fromView.as_size_t();
+            missingRight = (toView - (numSamplesInClip - 1)).as_size_t();
+            nPre = 0;
+            nPost = 0;
+         }
+         else
+         {
+            assert(0); // logic WRONG
+         }
+         myBufferLen += nPre + nPost;
+
+         // Get those samples into a buffer of mine
+         std::vector<float> floats;
+         floats.resize(myBufferLen);
+         constexpr auto iChannel = 0u;
+         constexpr auto mayThrow = false; // Don't throw just for display
+         
+         if (missingRight > 0)
+         {
+            memset(&floats[myBufferLen - missingRight], 0, missingRight * sizeof(float));
+         }
+         if (missingLeft > 0)
+         {
+            memset(&floats[0], 0, missingLeft * sizeof(float));
+         }
+         assert(myBufferLen - missingRight - missingLeft > 0);
+         mSampleCacheHolder.emplace(clip.GetSampleView(fromView - nPre, myBufferLen - missingRight - missingLeft, mayThrow));
+         mSampleCacheHolder->Copy(&floats[missingLeft], myBufferLen - missingRight - missingLeft);
+         
+         // And finally do the transform
+         settings.pTFCalculator->transform(&floats[nPre], numSamples.as_size_t(), nPre, nPost);
+
+         // Extract data at given timestamps
+         size_t nb = settings.pTFCalculator->getResult(where.cbegin() + lowerBoundX, where.cbegin() +  upperBoundX, nBins, &freq[lowerBoundX * nBins]);
+
+         // Do the log thing
+         for (size_t inx = lowerBoundX * nBins; inx < nb + lowerBoundX * nBins ; inx ++)
+         {
+            float correction =  (gainFactors.empty()) ? 0.0 : gainFactors[inx % nBins];
+            float result = freq[inx];
+            if (result <= 0)
+               result = -160.0;
+            else
+               result = 10.0*log10f(result);
+            freq[inx] = result + correction;
+         }
+      }
+
+      // And done!
+      return;
+   }
+
+
+   const size_t bufferSize = fftLen;
+   const size_t scratchSize = reassignment ? 3 * bufferSize : bufferSize;
+   std::vector<float> scratch(scratchSize);
 
    // Loop over the ranges before and after the copied portion and compute anew.
    // One of the ranges may be empty.
@@ -532,12 +534,6 @@ void SpecCache::Populate(
 #endif
       for (auto xx = lowerBoundX; xx < upperBoundX; ++xx)
       {
-         if (isWaveletAnalysis(settings))
-         {
-             CalculateOneWaveletSpectrum(settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
-                                         gainFactors, &freq[0]);
-         }
-         else
          {
 #ifdef _OPENMP
              tls.init(waveTrackCache, scratchSize);

@@ -171,10 +171,6 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
    // Do not copy these!
    , hFFT{}
    , window{}
-   , waveletsRe{}
-   , waveletsIm{}
-   , waveletSizes{}
-   , waveletMaxLength(0)
    , tWindow{}
    , dWindow{}
 {
@@ -288,7 +284,7 @@ const TranslatableStrings &SpectrogramSettings::GetAlgorithmNames()
       XO("Reassignment") ,
       /* i18n-hint: EAC abbreviates "Enhanced Autocorrelation" */
       XO("Pitch (EAC)") ,
-#ifdef WAVELET
+#ifndef NO_WAVELET
       XO("Wavelet (1/6 Octave Hann)") ,
 #endif
    };
@@ -534,10 +530,7 @@ void SpectrogramSettings::DestroyWindows()
 {
    hFFT.reset();
    window.reset();
-   waveletsRe.reset();
-   waveletsIm.reset();
-   waveletSizes.reset();
-   waveletMaxLength = 0;
+   pTFCalculator.reset(NULL);
    dWindow.reset();
    tWindow.reset();
 }
@@ -598,81 +591,31 @@ namespace
          window[ii] *= scale;
 }
 
-void RecreateWavelet(size_t &size, Floats &waveletRe, Floats &waveletIm, double frequency, size_t bins)
-{
-    assert(frequency >= 0);
-    assert(frequency <= 0.5);
-    if (frequency == 0)
-    {
-        size = 0;
-        waveletRe = Floats{};
-        waveletIm = Floats{};
-        return;
-    }
-    
-    // We will then create a modulated Hann window at the given nominal frequency
-    // Window length must be chosen such that spectral power bandwidth is 1/6th of an octave
-    // This bandwidth constraint then in return governs the duration of the hann window
-    // The RMS Bandwidth of Hann window is 2* 1/T * sqrt(1/3)
-    // Formula to obtain duration is thus
-    // RMSBW = 2 * sqrt(1/3) / T
-    // T = 2 * sqrt(1/3) / RMSBW
-    // RMSBW = 1/6th octave, ie factor 2^0.16667 = 1.122 between bands
-    // T = 2 * sqrt(1/3) / (sqrt(1.122) * Fc - Fc / sqrt(1.122)) = 2 * sqrt(1/3) / (sqrt(1.122) - 1/sqrt(1.122) / Fc = 10,02 / Fc
-    const double BandsPerOctave = 6.0;
-    const double bwFactor = pow(2, 1.0/BandsPerOctave);
-    const double durationFactor = 2 * sqrt(1.0/3.0) / (sqrt(bwFactor) - sqrt(1/bwFactor));
-    const double PI = 4.0 * atan(1);
-    const double omega = 2 * PI * frequency;
-
-    double waveletDurationHalf = 0.5 * durationFactor / frequency; // float number of samples for half-length. Hann enveloped filter will be zero outside range [-waveletDurationHalf; waveletDurationHalf]
-    size = (int) (waveletDurationHalf); // truncate to integer number of samples. "size" will hold the half-length of the wavelet filter (conjugate symmetry)
-    if (size > bins)
-    {
-        // There is no point in using wavelets that exceed resolution in our frequency array (under sampling, really)
-        size = 0;
-        waveletRe = Floats{};
-        waveletIm = Floats{};
-        return;
-    }
-
-
-    waveletRe = Floats{size};
-    waveletIm = Floats{size};
-    
-    for (int i = 0; i < size; i++)
-    {
-        double relative_dt = i / waveletDurationHalf;
-        double envelope = (1 + cos(relative_dt * PI)) / (waveletDurationHalf * 2.0); // Normalize for zero gain when doing convolution
-        waveletRe[i] = envelope * cos(omega * i);
-        waveletIm[i] = envelope * sin(omega * i);
-    }
-    
-    return;
-}
 }
 
 void SpectrogramSettings::CacheWindows()
 {
    if (algorithm == algWavelet)
    {
-       if (waveletsRe == NULL || waveletsIm == NULL)
+       if (!pTFCalculator)
        {
-           size_t num = NBins();
-           waveletsRe = FloatBuffers {num};
-           waveletsIm = FloatBuffers {num};
-           waveletSizes = ArrayOf<size_t> {num};
-           waveletMaxLength = 0;
-           double delta = 0.5 / num;
-           for (int i = 0; i < num; i++)
-           {
-               RecreateWavelet(waveletSizes[i], waveletsRe[i], waveletsIm[i], i * delta, num);
-               if (waveletSizes[i] > waveletMaxLength)
-               {
-                   waveletMaxLength = waveletSizes[i];
-               }
-           }
+          pTFCalculator = audacityTimeFrequencyCalculator::createWaveletCalculator(18/*Q*/, 50 /*overlap*/, 0.4 /*fmax*/, 10/*octaves*/);
        }
+   }
+   else if (algorithm == algSTFT)
+   {
+      if (!pTFCalculator)
+      {
+         auto factor = ZeroPaddingFactor();
+         const auto fftLen = WindowSize() * factor;
+         const auto padding = (WindowSize() * (factor - 1)) / 2;
+         if (window == NULL)
+         {
+            double scale;
+            RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
+         }
+         pTFCalculator = audacityTimeFrequencyCalculator::createStftCalculator(WindowSize(), fftLen,  &window[padding]);
+      }
    }
    else
    {

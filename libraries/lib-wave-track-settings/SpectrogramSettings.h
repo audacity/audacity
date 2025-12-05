@@ -15,6 +15,7 @@ Paul Licameli
 #include "Prefs.h"
 #include "SampleFormat.h"
 #include "RealFFTf.h"
+#include "TF_Calculator.h"
 
 #undef SPECTRAL_SELECTION_GLOBAL_SWITCH
 
@@ -197,11 +198,8 @@ public:
 
    // Variables used for computing the spectrum
    HFFT           hFFT;
+   unique_ptr<audacityTimeFrequencyCalculator> pTFCalculator;
    Floats         window;
-   FloatBuffers   waveletsRe;
-   FloatBuffers   waveletsIm;
-   ArrayOf<size_t>   waveletSizes;
-   size_t         waveletMaxLength;
 
    // Two other windows for computing reassigned spectrogram
    Floats         tWindow; // Window times time parameter

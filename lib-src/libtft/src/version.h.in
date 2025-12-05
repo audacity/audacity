@@ -1,0 +1,6 @@
+// the configured options and settings for tf_constantq
+#define tf_constantq_VERSION_MAJOR @tfq_VERSION_MAJOR@
+#define tf_constantq_VERSION_MINOR @tfq_VERSION_MINOR@
+#ifndef TF_DATA_TYPE
+    #define TF_DATA_TYPE float
+#endif

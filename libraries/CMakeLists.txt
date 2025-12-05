@@ -40,6 +40,7 @@ set( LIBRARIES
    lib-tags
    lib-realtime-effects
    lib-audio-io
+   lib-tft
    lib-wave-track
    lib-wave-track-settings
    lib-wave-track-paint
