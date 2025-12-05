@@ -270,3 +270,4 @@ build.*
 # Private developer's files
 .vscode/settings.json
 CMakeUserPresets.json
+build_test/
