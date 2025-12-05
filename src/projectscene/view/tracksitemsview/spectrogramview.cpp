@@ -34,15 +34,6 @@ void SpectrogramView::setTimelineIndentWidth(int width)
     update();
 }
 
-void SpectrogramView::setTimelineContext(TimelineContext* newContext)
-{
-    if (m_context == newContext) {
-        return;
-    }
-    m_context = newContext;
-    update();
-}
-
 void SpectrogramView::paint(QPainter* painter)
 {
     if (!m_context) {

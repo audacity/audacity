@@ -171,31 +171,9 @@ void WaveView::paint(QPainter* painter)
     wavePainter()->paint(*painter, m_clipKey.key, params, pType);
 }
 
-void WaveView::setTimelineContext(TimelineContext* newContext)
+void WaveView::addSpecializedConnections(TimelineContext& context)
 {
-    if (m_context == newContext) {
-        return;
-    }
-
-    if (m_context) {
-        disconnect(m_context, nullptr, this, nullptr);
-    }
-
-    m_context = newContext;
-
-    if (m_context) {
-        connect(m_context, &TimelineContext::frameTimeChanged, this, &WaveView::updateView);
-        connect(m_context, &TimelineContext::selectionStartTimeChanged, this, &WaveView::updateView);
-        connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &WaveView::updateView);
-        connect(m_context, &TimelineContext::zoomChanged, this, &WaveView::onWaveZoomChanged);
-    }
-
-    emit timelineContextChanged();
-}
-
-void WaveView::updateView()
-{
-    update();
+    connect(&context, &TimelineContext::zoomChanged, this, &WaveView::onWaveZoomChanged);
 }
 
 QColor WaveView::clipColor() const

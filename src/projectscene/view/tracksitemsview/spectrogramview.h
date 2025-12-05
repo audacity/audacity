@@ -30,7 +30,6 @@ signals:
     void timelineIndentWidthChanged();
 
 private:
-    void setTimelineContext(TimelineContext* newContext) override;
     void paint(QPainter* painter) override;
     void classBegin() override {}
     void componentComplete() override;

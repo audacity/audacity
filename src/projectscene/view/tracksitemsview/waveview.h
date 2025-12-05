@@ -38,8 +38,6 @@ public:
     WaveView(QQuickItem* parent = nullptr);
     ~WaveView() override;
 
-    void setTimelineContext(TimelineContext* newContext) override;
-
     QColor clipColor() const;
     void setClipColor(const QColor& newClipColor);
 
@@ -86,8 +84,7 @@ signals:
     void isBrushChanged();
 
 private:
-
-    void updateView();
+    void addSpecializedConnections(TimelineContext& context) override;
     void onWaveZoomChanged();
     IWavePainter::Params getWavePainterParams() const;
     void applyColorfulStyle(IWavePainter::Params& params, const QColor& clipColor, bool selected) const;
