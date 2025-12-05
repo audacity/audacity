@@ -3,8 +3,8 @@
 */
 #include "timecodemodel.h"
 
-#include "numericformatter.h"
-#include "beatsformatter.h"
+#include "internal/numeric/numericformatter.h"
+#include "internal/numeric/beatsformatter.h"
 
 #include "translation.h"
 

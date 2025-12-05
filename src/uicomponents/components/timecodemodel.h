@@ -4,7 +4,7 @@
 #pragma once
 
 #include "timecodemodeselector.h"
-#include "numericviewmodel.h"
+#include "internal/numeric/numericviewmodel.h"
 
 namespace au::uicomponents {
 class TimecodeModel : public NumericViewModel

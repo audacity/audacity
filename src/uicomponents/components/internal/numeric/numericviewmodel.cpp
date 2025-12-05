@@ -4,6 +4,7 @@
 #include "numericviewmodel.h"
 
 #include "framework/global/log.h"
+#include "framework/global/realfn.h"
 
 #include "uicomponents/qml/Muse/UiComponents/menuitem.h"
 #include "ui/uiaction.h"
@@ -64,7 +65,7 @@ double NumericViewModel::value() const
 
 void NumericViewModel::setValue(double value)
 {
-    if (qFuzzyCompare(m_value, value)) {
+    if (muse::RealIsEqual(m_value, value)) {
         return;
     }
 
@@ -178,7 +179,7 @@ double NumericViewModel::sampleRate() const
 
 void NumericViewModel::setSampleRate(double sampleRate)
 {
-    if (qFuzzyCompare(m_sampleRate, sampleRate)) {
+    if (muse::RealIsEqual(m_sampleRate, sampleRate)) {
         return;
     }
 
@@ -195,7 +196,7 @@ double NumericViewModel::tempo() const
 
 void NumericViewModel::setTempo(double tempo)
 {
-    if (qFuzzyCompare(m_tempo, tempo)) {
+    if (muse::RealIsEqual(m_tempo, tempo)) {
         return;
     }
 

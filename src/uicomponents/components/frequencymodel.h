@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "numericviewmodel.h"
+#include "internal/numeric/numericviewmodel.h"
 
 namespace au::uicomponents {
 class FrequencyModel : public NumericViewModel
