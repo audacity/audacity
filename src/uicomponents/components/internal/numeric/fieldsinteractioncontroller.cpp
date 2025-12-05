@@ -96,6 +96,7 @@ bool FieldsInteractionController::eventFilter(QObject* watched, QEvent* event)
             return true;
         } else if (key >= Qt::Key_0 && key <= Qt::Key_9) {
             QString newValueStr = m_valueString;
+            newValueStr.replace('-', QChar('0'));
             newValueStr.replace(m_currentEditedFieldIndex, 1, QChar('0' + (key - Qt::Key_0)));
 
             emit valueChanged(m_formatter->stringToValue(newValueStr).value());

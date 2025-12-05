@@ -396,7 +396,10 @@ NumericFormatter::ConversionResult NumericFormatter::valueToString(double value,
 
         if (value < 0) {
             for (size_t ii = 0; ii < m_fields[i].digits; ++ii) {
-                field[0] = '-';
+                field[ii] = '-';
+            }
+            for (size_t ii = m_fields[i].digits; ii < 10; ++ii) {
+                field[ii] = '\0';
             }
         } else {
             snprintf(field, sizeof(field), m_fields[i].formatStr.toStdString().c_str(), (int)value);

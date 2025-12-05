@@ -12,6 +12,7 @@
 #include "components/timecodemodeselector.h"
 #include "components/timecodemodel.h"
 #include "components/bpmmodel.h"
+#include "components/frequencymodel.h"
 
 #include "log.h"
 
@@ -38,6 +39,7 @@ void UiComponentsModule::registerUiTypes()
                                                      "TimecodeModeSelector is a simple enum");
     qmlRegisterType<TimecodeModel>("Audacity.UiComponents", 1, 0, "TimecodeModel");
     qmlRegisterType<BPMModel>("Audacity.UiComponents", 1, 0, "BPMModel");
+    qmlRegisterType<FrequencyModel>("Audacity.UiComponents", 1, 0, "FrequencyModel");
 }
 
 void UiComponentsModule::onInit(const muse::IApplication::RunMode& mode)

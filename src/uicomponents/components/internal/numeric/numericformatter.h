@@ -26,7 +26,5 @@ protected:
     bool m_scalingFactorIsSamples = false;
 
     bool m_ntscDrop = false;
-
-    NumericType m_type = NumericType::Time;
 };
 }

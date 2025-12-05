@@ -5,7 +5,7 @@
 
 #include <QString>
 
-#include "uicomponents/types/timecode.h"
+#include "uicomponents/types/numerictypes.h"
 
 namespace au::uicomponents {
 struct FieldConfig final

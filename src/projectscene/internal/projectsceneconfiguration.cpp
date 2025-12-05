@@ -6,7 +6,7 @@
 #include "global/stringutils.h"
 
 #include "types/projectscenetypes.h"
-#include "uicomponents/types/timecode.h"
+#include "uicomponents/types/numerictypes.h"
 
 #include "projectsceneconfiguration.h"
 
