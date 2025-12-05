@@ -14,6 +14,7 @@
 #include "modules/import-export/RegisterExportPlugins.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "translation.h"
 
@@ -108,7 +109,7 @@ muse::Ret Au3Exporter::exportData(std::string filename)
         filePath = filePath.appendingSuffix(defaultExtension);
     }
 
-    wxFileName wxfilename = wxString(filePath.toStdString());
+    wxFileName wxfilename = wxFromString(filePath.toString());
 
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     IF_ASSERT_FAILED(project) {

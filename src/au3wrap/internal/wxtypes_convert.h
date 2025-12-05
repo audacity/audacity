@@ -27,7 +27,7 @@ inline wxString wxFromString(const muse::String& s)
 
 inline wxString wxFromStdString(const std::string& s)
 {
-    return wxString(s);
+    return wxString::FromUTF8(s);
 }
 
 #ifndef NO_QT_SUPPORT
