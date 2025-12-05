@@ -1363,12 +1363,10 @@ target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOU
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 
 # Enable OpenMP for parallel spectrogram computation
-find_package(OpenMP)
+find_package(OpenMP QUIET)
 if(OpenMP_CXX_FOUND)
    message(STATUS "OpenMP found - enabling parallel spectrogram computation")
    target_link_libraries(${TARGET} OpenMP::OpenMP_CXX)
-else()
-   message(STATUS "OpenMP not found - spectrogram computation will be serial")
 endif()
 
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )

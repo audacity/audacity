@@ -389,9 +389,7 @@ void SpecCache::Populate(
 
             void init(size_t scratchSize)
             {
-                if (scratch.empty()) {
-                    scratch.resize(scratchSize);
-                }
+                scratch.resize(scratchSize);
             }
 
             std::vector<float> scratch;
