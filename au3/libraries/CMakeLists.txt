@@ -86,7 +86,7 @@ set( LIBRARIES
    au3-sqlite-helpers
 #   au3-preference-pages # not yet used in AU4
    au3-dynamic-range-processor
-   au3-audacity-application-logic
+#   au3-audacity-application-logic # not yet used in AU4
    au3-builtin-effects
    au3-label-track
    au3-wave-track-fft
