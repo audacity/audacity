@@ -6,7 +6,7 @@ extern "C"
 
 #include <algorithm>
 
-#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/AVCodecID.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/AVCodecID.h"
 
 #include "../../FFmpegAPIResolver.h"
 

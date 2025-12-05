@@ -27,8 +27,8 @@
 
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "global/types/number.h"
-#include "libraries/lib-effects/EffectManager.h"
-#include "libraries/lib-effects/Effect.h"
+#include "au3-effects/EffectManager.h"
+#include "au3-effects/Effect.h"
 
 #include "log.h"
 

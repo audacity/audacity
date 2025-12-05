@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "libraries/lib-preferences/BasicSettings.h"
+#include "au3-preferences/BasicSettings.h"
 
 namespace au::au3 {
 class Au3CommonSettings : public audacity::BasicSettings

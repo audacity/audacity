@@ -4,14 +4,14 @@
 
 #include "au3exporter.h"
 
-#include "libraries/lib-basic-ui/BasicUI.h"
-#include "libraries/lib-import-export/ExportPluginRegistry.h"
-#include "libraries/lib-import-export/ExportUtils.h"
-#include "libraries/lib-mixer/MixerOptions.h"
-#include "libraries/lib-tags/Tags.h"
-#include "libraries/lib-track/Track.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "modules/import-export/RegisterExportPlugins.h"
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-import-export/ExportPluginRegistry.h"
+#include "au3-import-export/ExportUtils.h"
+#include "au3-mixer/MixerOptions.h"
+#include "au3-tags/Tags.h"
+#include "au3-track/Track.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "RegisterExportPlugins.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"

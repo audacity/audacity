@@ -7,8 +7,8 @@
 
 #include "framework/global/modularity/ioc.h"
 
-#include "libraries/lib-strings/wxArrayStringEx.h"
-#include "libraries/lib-utility/IteratorX.h"
+#include "au3-strings/wxArrayStringEx.h"
+#include "au3-utility/IteratorX.h"
 
 #include "playback/iaudiodevicesprovider.h"
 #include "context/iglobalcontext.h"

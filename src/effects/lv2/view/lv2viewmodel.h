@@ -8,9 +8,9 @@
 #include "effects/effects_base/view/abstracteffectviewmodel.h"
 #include "trackedit/iprojecthistory.h"
 
-#include "libraries/lib-lv2/LV2UIFeaturesList.h"
-#include "libraries/lib-lv2/LV2Instance.h"
-#include "libraries/lib-lv2/LV2Wrapper.h"
+#include "au3-lv2/LV2UIFeaturesList.h"
+#include "au3-lv2/LV2Instance.h"
+#include "au3-lv2/LV2Wrapper.h"
 
 #include "modularity/ioc.h"
 

@@ -3,7 +3,7 @@
  */
 #include "realtimeeffectlistitemmenumodel.h"
 #include "effects/effects_base/effectstypes.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
 #include "global/defer.h"
 #include "log.h"
 

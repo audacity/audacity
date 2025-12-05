@@ -40,11 +40,11 @@
 *//********************************************************************/
 #include "noisereductioneffect.h"
 
-#include "libraries/lib-effects/EffectOutputTracks.h"
-#include "libraries/lib-fft/FFT.h"
-#include "libraries/lib-wave-track-fft/TrackSpectrumTransformer.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-command-parameters/ShuttleAutomation.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-fft/FFT.h"
+#include "au3-wave-track-fft/TrackSpectrumTransformer.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
 #include <algorithm>
 #include <cmath>
 

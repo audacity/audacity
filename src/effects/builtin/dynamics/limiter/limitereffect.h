@@ -3,9 +3,9 @@
  */
 #pragma once
 
-#include "libraries/lib-dynamic-range-processor/DynamicRangeProcessorTypes.h"
-#include "libraries/lib-effects/PerTrackEffect.h"
-#include "libraries/lib-components/SettingsVisitor.h"
+#include "au3-dynamic-range-processor/DynamicRangeProcessorTypes.h"
+#include "au3-effects/PerTrackEffect.h"
+#include "au3-components/SettingsVisitor.h"
 #include "dynamics/dynamicseffectsmacros.h"
 
 namespace au::effects {

@@ -12,8 +12,8 @@
 
 #include <wx/dynlib.h>
 
-#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/AVFormatFunctions.h"
-#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/DynamicLibraryHelpers.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/AVFormatFunctions.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/impl/DynamicLibraryHelpers.h"
 
 bool LoadAVFormatFunctions(
     const wxDynamicLibrary& lib, AVFormatFunctions& functions)

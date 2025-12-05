@@ -16,7 +16,7 @@
 
 #include "../FFmpegTypes.h"
 
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 
 struct FFmpegFunctions;
 typedef struct AVCodecContext AVCodecContext;

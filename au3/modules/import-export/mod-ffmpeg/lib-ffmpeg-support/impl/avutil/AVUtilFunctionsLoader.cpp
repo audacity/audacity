@@ -12,8 +12,8 @@
 
 #include <wx/dynlib.h>
 
-#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/AVUtilFunctions.h"
-#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/DynamicLibraryHelpers.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/AVUtilFunctions.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/impl/DynamicLibraryHelpers.h"
 
 bool LoadAVUtilFunctions(
     const wxDynamicLibrary& lib, AVUtilFunctions& functions)

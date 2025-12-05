@@ -10,7 +10,7 @@
 #include "effectstypes.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/iprojecthistory.h"
-#include "libraries/lib-utility/Observer.h"
+#include "au3-utility/Observer.h"
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>

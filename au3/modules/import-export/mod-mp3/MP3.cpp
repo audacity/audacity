@@ -8,6 +8,6 @@
 
 **********************************************************************/
 
-#include "ModuleConstants.h"
+#include "au3-utility/ModuleConstants.h"
 
 DEFINE_MODULE_ENTRIES

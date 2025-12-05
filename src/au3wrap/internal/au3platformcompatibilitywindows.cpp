@@ -15,7 +15,7 @@
 
 *//*******************************************************************/
 
-#include "PlatformCompatibility.h"
+#include "au3-files/PlatformCompatibility.h"
 #include <cassert>
 #include <shlobj.h>
 

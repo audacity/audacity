@@ -6,7 +6,7 @@
 #include "../ivsteffectsrepository.h"
 #include "effects/effects_base/internal/effectsrepositoryhelper.h"
 #include "modularity/ioc.h"
-#include "libraries/lib-vst3/VST3EffectsModule.h"
+#include "au3-vst3/VST3EffectsModule.h"
 
 namespace au::effects {
 class VstEffectsRepository final : public IVstEffectsRepository

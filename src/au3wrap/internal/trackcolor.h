@@ -5,7 +5,7 @@
 #include "projectscene/iprojectsceneconfiguration.h"
 
 #include "draw/types/color.h"
-#include "libraries/lib-track/Track.h"
+#include "au3-track/Track.h"
 
 namespace au::au3 {
 class TrackColor : public TrackAttachment

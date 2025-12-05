@@ -5,7 +5,7 @@
 
 #include <QObject>
 
-#include "libraries/lib-components/EffectInterface.h"
+#include "au3-components/EffectInterface.h"
 
 #include "modularity/ioc.h"
 #include "effects/effects_base/ieffectsprovider.h"

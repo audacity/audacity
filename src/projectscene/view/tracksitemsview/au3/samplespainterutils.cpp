@@ -1,13 +1,14 @@
 #include "samplespainterutils.h"
 
+#include "au3-mixer/Envelope.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveClipUtilities.h"
+#include "au3-wave-track/WaveChannelUtilities.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-screen-geometry/ZoomInfo.h"
+
 #include "au3wrap/internal/domaccessor.h"
 #include "wavepainterutils.h"
-#include "Envelope.h"
-#include "WaveClip.h"
-#include "WaveClipUtilities.h"
-#include "WaveChannelUtilities.h"
-#include "WaveTrack.h"
-#include "ZoomInfo.h"
 #include <cstdlib>
 
 static constexpr auto X_MIN_DISTANCE = 5;

@@ -1,9 +1,9 @@
 #include "viewinfo.h"
 
-#include "XMLAttributeValueView.h"
-#include "XMLWriter.h"
-#include "Prefs.h"
-#include "UndoManager.h"
+#include "au3-xml/XMLAttributeValueView.h"
+#include "au3-xml/XMLWriter.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-project-history/UndoManager.h"
 
 using namespace au::au3;
 

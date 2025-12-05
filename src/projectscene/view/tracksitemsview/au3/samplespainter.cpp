@@ -3,13 +3,14 @@
 #include <set>
 
 #include "au3wrap/internal/domaccessor.h"
-#include "Envelope.h"
+#include "au3-mixer/Envelope.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-track/PendingTracks.h"
+#include "au3-screen-geometry/ZoomInfo.h"
+
 #include "sampledata.h"
 #include "samplespainterutils.h"
 #include "wavepainterutils.h"
-#include "WaveClip.h"
-#include "PendingTracks.h"
-#include "ZoomInfo.h"
 
 constexpr auto SAMPLE_TICK_SIZE = 4;
 constexpr auto SAMPLE_HEAD_PADDING = (SAMPLE_TICK_SIZE / 2) + 1;

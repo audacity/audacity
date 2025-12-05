@@ -3,8 +3,8 @@
  */
 #include "selectionrestorer.h"
 
-#include "libraries/lib-project-history/UndoManager.h"
-#include "libraries/lib-project/Project.h"
+#include "au3-project-history/UndoManager.h"
+#include "au3-project/Project.h"
 
 namespace au::trackedit {
 static const ::AudacityProject::AttachedObjects::RegisteredFactory key{

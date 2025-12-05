@@ -27,11 +27,11 @@ function.
 #include <wx/app.h>
 #include <wx/log.h>
 
-#include "BasicSettings.h"
-#include "Mix.h"
-#include "libraries/lib-tags/Tags.h"
-#include "Track.h"
-#include "wxFileNameWrapper.h"
+#include "au3-preferences/BasicSettings.h"
+#include "au3-mixer/Mix.h"
+#include "au3-tags/Tags.h"
+#include "au3-track/Track.h"
+#include "au3-files/wxFileNameWrapper.h"
 
 #if defined(__WXMSW__)
 #define OSINPUT(X) ((X).mb_str() ? (char*)(const char*)(X).mb_str() : "")
@@ -43,10 +43,10 @@ function.
 #define OSINPUT(X) OSFILENAME(X)
 #endif
 
-#include "libraries/lib-import-export/ExportPluginHelpers.h"
-#include "libraries/lib-import-export/PlainExportOptionsEditor.h"
+#include "au3-import-export/ExportPluginHelpers.h"
+#include "au3-import-export/PlainExportOptionsEditor.h"
 #include "FFmpegDefines.h"
-#include "libraries/lib-import-export/ExportPluginRegistry.h"
+#include "au3-import-export/ExportPluginRegistry.h"
 
 #include "ExportFFmpeg.h"
 

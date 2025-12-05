@@ -26,8 +26,8 @@
 #  include <dlfcn.h>
 #endif
 
-#include "Prefs.h"
-#include "FileNames.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-files/FileNames.h"
 
 #include "impl/avutil/AVUtilFunctionsLoader.h"
 #include "impl/avcodec/AVCodecFunctionsLoader.h"

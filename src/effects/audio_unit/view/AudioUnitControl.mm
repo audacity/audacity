@@ -10,7 +10,7 @@
 
 #include <AudioUnit/AUCocoaUIView.h>
 
-#include "AudioUnitUtils.h"
+#include "au3-audio-unit/AudioUnitUtils.h"
 
 @interface AUView : NSView
 {

@@ -37,7 +37,7 @@ set(MODULE_SRC
 set(MODULE_LINK au3wrap lv2sdk X11)
 
 # AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3defs.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
 
 set(MODULE_DEF ${AU3_DEF})
 

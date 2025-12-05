@@ -3,8 +3,8 @@
  */
 #include "lv2viewlauncher.h"
 
-#include "libraries/lib-components/EffectInterface.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
 
 using namespace au::effects;
 

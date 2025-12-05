@@ -8,13 +8,13 @@ extern "C" {
 #include <cstring>
 #include <numeric>
 
-#include "float_cast.h"
+#include "au3-math/float_cast.h"
 
-#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/FFmpegFunctions.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/FFmpegFunctions.h"
 
-#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/wrappers/AVCodecContextWrapper.h"
-#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/wrappers/AVCodecWrapper.h"
-#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/wrappers/AVPacketWrapper.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/wrappers/AVCodecContextWrapper.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/wrappers/AVCodecWrapper.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/wrappers/AVPacketWrapper.h"
 
 #include "../../FFmpegAPIResolver.h"
 
@@ -45,7 +45,7 @@ const bool registered = ([]() {
 })();
 }
 
-#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/FFmpegTypes.h"
+#include "mod-ffmpeg/lib-ffmpeg-support/FFmpegTypes.h"
 static_assert(
     AV_CODEC_FLAG_GLOBAL_HEADER == AUDACITY_AV_CODEC_FLAG_GLOBAL_HEADER
     && AV_CODEC_CAP_SMALL_LAST_FRAME == AUDACITY_AV_CODEC_CAP_SMALL_LAST_FRAME

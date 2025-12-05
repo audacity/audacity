@@ -36,7 +36,7 @@
 #include "ShuttleGui.h"
 #include "Tags.h"
 #include "Track.h"
-#include "float_cast.h"
+#include "au3-math/float_cast.h"
 #include "widgets/FileHistory.h"
 #include "wxPanelWrapper.h"
 #include "widgets/Warning.h"

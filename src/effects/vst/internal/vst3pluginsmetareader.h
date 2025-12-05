@@ -4,7 +4,7 @@
 #pragma once
 
 #include "effects/effects_base/internal/abstractaudiopluginmetareader.h"
-#include "libraries/lib-vst3/VST3EffectsModule.h"
+#include "au3-vst3/VST3EffectsModule.h"
 
 namespace au::effects {
 class Vst3PluginsMetaReader : public AbstractAudioPluginMetaReader

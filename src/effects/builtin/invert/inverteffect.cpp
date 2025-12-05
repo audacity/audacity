@@ -1,5 +1,5 @@
 #include "inverteffect.h"
-#include "LoadEffects.h"
+#include "au3-effects/LoadEffects.h"
 
 namespace au::effects {
 InvertEffect::InvertEffect()

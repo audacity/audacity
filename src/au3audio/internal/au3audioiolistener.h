@@ -8,7 +8,7 @@
 #include "global/async/notification.h"
 #include "global/async/channel.h"
 
-#include "libraries/lib-audio-io/AudioIOListener.h"
+#include "au3-audio-io/AudioIOListener.h"
 
 #include "au3wrap/au3types.h"
 

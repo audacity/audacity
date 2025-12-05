@@ -1,5 +1,5 @@
 #include "WaveformPainter.h"
-#include "ZoomInfo.h"
+#include "au3-screen-geometry/ZoomInfo.h"
 
 namespace au::projectscene {
 struct WaveBitmapCacheElementQt final : public WaveBitmapCacheElement

@@ -11,7 +11,7 @@ sourceLocation=$(readlink -f "$scriptLocation/../../..")
 cmake -B "${buildDirectory}/x64" -S "${sourceLocation}" -DCMAKE_BUILD_TYPE="${buildType}" -DCMAKE_CONFIGURATION_TYPES="${buildType}" -DMACOS_ARCHITECTURE=x86_64 -G Xcode
 cmake --build "${buildDirectory}/x64" --config "${buildType}"
 
-cmake -B "${buildDirectory}/arm64" -S "${sourceLocation}" -DCMAKE_BUILD_TYPE="${buildType}" -DCMAKE_CONFIGURATION_TYPES="${buildType}" -DMACOS_ARCHITECTURE=arm64 -G Xcode -DIMAGE_COMPILER_EXECUTABLE="${buildDirectory}/x64/utils/${buildType}/image-compiler"
+cmake -B "${buildDirectory}/arm64" -S "${sourceLocation}" -DCMAKE_BUILD_TYPE="${buildType}" -DCMAKE_CONFIGURATION_TYPES="${buildType}" -DMACOS_ARCHITECTURE=arm64 -G Xcode
 cmake --build "${buildDirectory}/arm64" --config "${buildType}"
 
 rm -Rf "${buildDirectory}/Audacity.app"

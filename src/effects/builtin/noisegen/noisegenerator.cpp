@@ -1,5 +1,5 @@
 #include "noisegenerator.h"
-#include "ShuttleAutomation.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
 #include <cmath>
 
 #include "log.h"

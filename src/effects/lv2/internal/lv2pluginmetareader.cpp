@@ -2,9 +2,9 @@
  * Audacity: A Digital Audio Editor
  */
 #include "lv2pluginmetareader.h"
-#include "libraries/lib-module-manager/PluginManager.h"
-#include "libraries/lib-module-manager/PluginManager.h"
-#include "libraries/lib-strings/TranslatableString.h"
+#include "au3-module-manager/PluginManager.h"
+#include "au3-module-manager/PluginManager.h"
+#include "au3-strings/TranslatableString.h"
 
 namespace au::effects {
 Lv2PluginMetaReader::Lv2PluginMetaReader()

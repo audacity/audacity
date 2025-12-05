@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <libraries/lib-import-export/ImportPlugin.h>
-#include "libraries/lib-file-formats/FileFormats.h"
+#include "au3-import-export/ImportPlugin.h"
+#include "au3-file-formats/FileFormats.h"
 
 class PCMImportPlugin final : public ImportPlugin
 {

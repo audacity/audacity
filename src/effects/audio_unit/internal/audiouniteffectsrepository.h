@@ -7,7 +7,7 @@
 
 #include "audioplugins/iknownaudiopluginsregister.h"
 #include "effects/effects_base/internal/effectsrepositoryhelper.h"
-#include "libraries/lib-audio-unit/AudioUnitEffectsModule.h"
+#include "au3-audio-unit/AudioUnitEffectsModule.h"
 
 namespace au::effects {
 class AudioUnitEffectsRepository : public IAudioUnitEffectsRepository

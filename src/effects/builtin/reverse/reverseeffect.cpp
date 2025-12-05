@@ -1,8 +1,8 @@
 #include "reverseeffect.h"
-#include "EffectOutputTracks.h"
-#include "LabelTrack.h"
-#include "WaveTrack.h"
-#include "WaveTrackUtilities.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-label-track/LabelTrack.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 #include <algorithm>
 #include <cmath>
 

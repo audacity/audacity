@@ -2,7 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "generatoreffect.h"
-#include "libraries/lib-components/EffectInterface.h"
+#include "au3-components/EffectInterface.h"
 #include "playback/iaudiooutput.h"
 #include "trackedit/itrackeditproject.h"
 #include "log.h"

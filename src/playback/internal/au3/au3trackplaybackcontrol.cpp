@@ -3,7 +3,7 @@
 #include "au3wrap/internal/domaccessor.h"
 #include "playbacktypes.h"
 
-#include "WaveTrack.h"
+#include "au3-wave-track/WaveTrack.h"
 
 #include "au3trackplaybackcontrol.h"
 

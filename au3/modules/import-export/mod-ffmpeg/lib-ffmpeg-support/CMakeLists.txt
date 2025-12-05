@@ -3,6 +3,8 @@ Various versions of FFmpeg and a facade to hide their binary incompatibilities
 ]]
 
 if (${_OPT}use_ffmpeg)
+   set( TARGET lib-ffmpeg-support )
+
    set( SOURCES
       FFmpegTypes.h
 
@@ -124,15 +126,15 @@ if (${_OPT}use_ffmpeg)
       lib-math
    )
 
-   set( DEFINITIONS PUBLIC USE_FFMPEG )
+   set( DEFINES PUBLIC USE_FFMPEG )
 
    if(APPLE)
       # Required for RTLD_DEFAULT
-      list(APPEND DEFINITIONS PRIVATE _DARWIN_C_SOURCE )
+      list(APPEND DEFINES PRIVATE _DARWIN_C_SOURCE )
    endif()
 
-   audacity_library( lib-ffmpeg-support "${SOURCES}" "${LIBRARIES}"
-      "${DEFINITIONS}" ""
+   audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
+      "${DEFINES}" ""
    )
 
 endif()

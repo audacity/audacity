@@ -4,7 +4,7 @@
 #pragma once
 
 #include "ilv2idleui.h"
-#include "libraries/lib-lv2/lv2_external_ui.h"
+#include "au3-lv2/lv2_external_ui.h"
 
 #include <suil/suil.h>
 

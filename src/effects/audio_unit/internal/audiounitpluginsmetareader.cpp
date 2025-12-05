@@ -6,7 +6,7 @@
 
 #include <regex>
 
-#include "libraries/lib-audio-unit/AudioUnitEffectsModule.h"
+#include "au3-audio-unit/AudioUnitEffectsModule.h"
 
 using namespace muse::audio;
 

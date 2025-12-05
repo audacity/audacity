@@ -4,9 +4,9 @@
 #include "abstractdbmetermodel.h"
 #include "playback/iplayer.h"
 
-#include "libraries/lib-builtin-effects/CompressorInstance.h"
-#include "libraries/lib-dynamic-range-processor/DynamicRangeProcessorTypes.h"
-#include "libraries/lib-dynamic-range-processor/MeterValueProvider.h"
+#include "au3-builtin-effects/CompressorInstance.h"
+#include "au3-dynamic-range-processor/DynamicRangeProcessorTypes.h"
+#include "au3-dynamic-range-processor/MeterValueProvider.h"
 
 namespace au::effects {
 namespace {

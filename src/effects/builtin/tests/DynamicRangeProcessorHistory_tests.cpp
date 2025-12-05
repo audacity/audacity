@@ -1,7 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "libraries/lib-dynamic-range-processor/DynamicRangeProcessorHistory.h"
+#include "au3-dynamic-range-processor/DynamicRangeProcessorHistory.h"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>

@@ -14,8 +14,8 @@
 
 **********************************************************************/
 
-#include "libraries/lib-effects/StatefulEffect.h"
-#include "libraries/lib-components/SettingsVisitor.h"
+#include "au3-effects/StatefulEffect.h"
+#include "au3-components/SettingsVisitor.h"
 
 namespace au::effects {
 // Define both of these to make the radio button three-way

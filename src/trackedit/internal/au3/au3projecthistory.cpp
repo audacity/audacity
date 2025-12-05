@@ -4,9 +4,9 @@
 
 #include "au3projecthistory.h"
 
-#include "libraries/lib-project-history/ProjectHistory.h"
-#include "libraries/lib-project-history/UndoManager.h"
-#include "libraries/lib-project/Project.h"
+#include "au3-project-history/ProjectHistory.h"
+#include "au3-project-history/UndoManager.h"
+#include "au3-project/Project.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 

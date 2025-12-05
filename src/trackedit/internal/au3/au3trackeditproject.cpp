@@ -1,17 +1,16 @@
 #include "au3trackeditproject.h"
 
-#include "libraries/lib-track/Track.h"
-#include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
-
-#include "libraries/lib-stretching-sequence/TempoChange.h"
+#include "au3-track/Track.h"
+#include "au3-numeric-formats/ProjectTimeSignature.h"
+#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-project-history/UndoManager.h"
 
 #include "au3wrap/iau3project.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
-#include "log.h"
-#include "UndoManager.h"
+#include "framework/global/log.h"
 
 using namespace muse;
 using namespace au::trackedit;

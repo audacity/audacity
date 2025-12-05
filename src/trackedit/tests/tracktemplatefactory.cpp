@@ -3,10 +3,10 @@
 #include <tuple>
 #include <random>
 
-#include "WaveTrack.h"
-#include "WaveClip.h"
-#include "LabelTrack.h"
-#include "SelectedRegion.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-label-track/LabelTrack.h"
+#include "au3-time-frequency-selection/SelectedRegion.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 

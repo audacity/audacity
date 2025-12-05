@@ -3,10 +3,11 @@
 */
 #include "defaultplaybackpolicy.h"
 
-#include "ProjectAudioIO.h"
-#include "SampleCount.h"
-#include "ViewInfo.h"
-#include "log.h"
+#include "framework/global/log.h"
+
+#include "au3-audio-io/ProjectAudioIO.h"
+#include "au3-math/SampleCount.h"
+#include "au3-time-frequency-selection/ViewInfo.h"
 
 namespace au::au3audio {
 DefaultPlaybackPolicy::DefaultPlaybackPolicy(AudacityProject& project,

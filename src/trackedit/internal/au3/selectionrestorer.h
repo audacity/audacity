@@ -4,7 +4,7 @@
 #pragma once
 
 #include "../../trackedittypes.h"
-#include "libraries/lib-registries/ClientData.h"
+#include "au3-registries/ClientData.h"
 
 class AudacityProject;
 

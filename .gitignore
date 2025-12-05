@@ -153,10 +153,10 @@ help/temp*
 # Misc
 src/RevisionIdent.h
 win/resetPrefs.txt
-libraries/lib-music-information-retrieval/tests/benchmarking-dataset/
-libraries/lib-music-information-retrieval/tests/TatumQuantizationFitVisualization/debug_output.py
-libraries/lib-music-information-retrieval/tests/TatumQuantizationFitVisualization/stft_log.py
-libraries/lib-music-information-retrieval/tests/TatumQuantizationFitVisualization/__pycache__/
+libraries/au3-music-information-retrieval/tests/benchmarking-dataset/
+libraries/au3-music-information-retrieval/tests/TatumQuantizationFitVisualization/debug_output.py
+libraries/au3-music-information-retrieval/tests/TatumQuantizationFitVisualization/stft_log.py
+libraries/au3-music-information-retrieval/tests/TatumQuantizationFitVisualization/__pycache__/
 compile_commands.json
 
 # Emacs backup files

@@ -1,0 +1,10 @@
+add_unit_test(
+   NAME
+      au3-dynamic-range-processor
+   SOURCES
+      CompressorProcessorTests.cpp
+      DynamicRangeProcessorHistoryTests.cpp
+      DynamicRangeProcessorUtilsTests.cpp
+   LIBRARIES
+      au3-dynamic-range-processor
+)

@@ -1,10 +1,11 @@
 #include "connectingdotspainter.h"
 
+#include "au3-wave-track/WaveClip.h"
+#include "au3-track/PendingTracks.h"
+
 #include "au3wrap/internal/domaccessor.h"
 #include "wavepainterutils.h"
 #include "samplespainterutils.h"
-#include "WaveClip.h"
-#include "PendingTracks.h"
 
 using namespace au::au3;
 namespace {

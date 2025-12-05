@@ -1,5 +1,5 @@
 #include "dtmfgenerator.h"
-#include "ShuttleAutomation.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
 #include <cmath>
 
 using namespace au::effects;
