@@ -35,6 +35,11 @@ enum class TimecodeFormatType {
     BarBeatTick
 };
 
+enum class FrequencyFormatType {
+    Centihertz = static_cast<int>(NumericViewFormatType::UserType) + 1,
+    Hertz
+};
+
 static size_t calculateDigits(size_t rangeEnd)
 {
     if (rangeEnd == 0) {

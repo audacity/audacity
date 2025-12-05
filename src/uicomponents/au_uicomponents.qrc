@@ -8,6 +8,7 @@
         <file>qml/Audacity/UiComponents/components/TimeSignature.qml</file>
         <file>qml/Audacity/UiComponents/components/internal/TimeSignaturePopup.qml</file>
         <file>qml/Audacity/UiComponents/components/BPM.qml</file>
+        <file>qml/Audacity/UiComponents/components/Frequency.qml</file>
         <file>qml/Audacity/UiComponents/components/ArrowButton.qml</file>
         <file>qml/Audacity/UiComponents/components/ArrowMenuButton.qml</file>
     </qresource>
