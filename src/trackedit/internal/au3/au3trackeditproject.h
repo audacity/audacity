@@ -5,7 +5,7 @@
 
 #include "trackedit/itrackeditproject.h"
 
-#include "UndoManager.h"
+#include "au3-project-history/UndoManager.h"
 
 #include "modularity/ioc.h"
 #include "iglobalconfiguration.h"

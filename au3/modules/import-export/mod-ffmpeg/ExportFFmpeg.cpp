@@ -27,11 +27,11 @@ function.
 #include <wx/app.h>
 #include <wx/log.h>
 
-#include "BasicSettings.h"
-#include "Mix.h"
+#include "au3-preferences/BasicSettings.h"
+#include "au3-mixer/Mix.h"
 #include "au3-tags/Tags.h"
-#include "Track.h"
-#include "wxFileNameWrapper.h"
+#include "au3-track/Track.h"
+#include "au3-files/wxFileNameWrapper.h"
 
 #if defined(__WXMSW__)
 #define OSINPUT(X) ((X).mb_str() ? (char*)(const char*)(X).mb_str() : "")

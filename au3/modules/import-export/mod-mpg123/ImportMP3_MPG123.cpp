@@ -16,7 +16,7 @@
 #include "au3-import-export/Import.h"
 #include "au3-import-export/ImportUtils.h"
 #include "au3-import-export/ImportProgressListener.h"
-#include "Project.h"
+#include "au3-project/Project.h"
 
 #define DESC XO("MP3 files")
 
@@ -26,10 +26,10 @@
 #include <mpg123.h>
 
 #include "au3-tags/Tags.h"
-#include "WaveTrack.h"
+#include "au3-wave-track/WaveTrack.h"
 
-#include "CodeConversions.h"
-#include "FromChars.h"
+#include "au3-string-utils/CodeConversions.h"
+#include "au3-string-utils/FromChars.h"
 
 #include "ImportMP3_MPG123.h"
 

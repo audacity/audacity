@@ -13,8 +13,8 @@
 ***********************************************************************/
 #pragma once
 
-#include "SettingsVisitor.h"
-#include "StatefulEffect.h"
+#include "au3-components/SettingsVisitor.h"
+#include "au3-effects/StatefulEffect.h"
 
 class Envelope;
 class WaveChannel;

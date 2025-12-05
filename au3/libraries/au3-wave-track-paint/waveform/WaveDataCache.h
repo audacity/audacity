@@ -16,7 +16,7 @@
 #include <vector>
 #include <functional>
 
-#include "GraphicsDataCache.h"
+#include "../GraphicsDataCache.h"
 #include "WaveData.h"
 #include "au3-utility/Observer.h"
 

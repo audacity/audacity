@@ -7,7 +7,7 @@
 
 **********************************************************************/
 
-#include "WaveTrack.h"
+#include "au3-wave-track/WaveTrack.h"
 #include "au3wrap/au3types.h"
 
 #include "waveformscale.h"

@@ -29,8 +29,8 @@
 #include <wavpack/wavpack.h>
 
 #include "au3-tags/Tags.h"
-#include "WaveTrack.h"
-#include "CodeConversions.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-string-utils/CodeConversions.h"
 #include "au3-import-export/ImportUtils.h"
 #include "au3-import-export/ImportProgressListener.h"
 

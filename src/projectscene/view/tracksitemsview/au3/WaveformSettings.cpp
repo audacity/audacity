@@ -1,6 +1,6 @@
 #include "WaveformSettings.h"
-#include "WaveTrack.h"
-#include "Channel.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-channel/Channel.h"
 
 namespace au::projectscene {
 static const ChannelGroup::Attachments::RegisteredFactory

@@ -3,11 +3,11 @@
  */
 #pragma once
 
-#include "ClientData.h"
-#include "Observer.h"
-#include "Project.h"
+#include "au3-registries/ClientData.h"
+#include "au3-utility/Observer.h"
+#include "au3-project/Project.h"
 
-#include "global/async/notification.h"
+#include "framework/global/async/notification.h"
 
 class AudacityProject;
 

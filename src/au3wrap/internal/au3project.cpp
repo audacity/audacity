@@ -18,7 +18,7 @@
 #include "au3-tags/Tags.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
-#include "TempoChange.h"
+#include "au3-stretching-sequence/TempoChange.h"
 
 //! HACK
 //! Static variable is not initialized

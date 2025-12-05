@@ -4,7 +4,7 @@
 
 #include "au3labelsexporter.h"
 
-#include <FileNames.h>
+#include "au3-files/FileNames.h"
 
 #include "au3-track/Track.h"
 #include "au3-label-track/LabelTrack.h"

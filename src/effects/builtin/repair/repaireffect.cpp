@@ -8,10 +8,10 @@
 
 **********************************************************************/
 #include "repaireffect.h"
-#include "EffectOutputTracks.h"
-#include "InterpolateAudio.h"
-#include "TimeStretching.h"
-#include "WaveTrack.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-math/InterpolateAudio.h"
+#include "au3-wave-track/TimeStretching.h"
+#include "au3-wave-track/WaveTrack.h"
 #include <cmath>
 
 const ComponentInterfaceSymbol Repair::Symbol { XO("Repair") };

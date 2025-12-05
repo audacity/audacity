@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "BasicUI.h" // For ProgressResult
+#include "au3-basic-ui/BasicUI.h" // For ProgressResult
 
-#include "iinteractive.h"
-#include "modularity/ioc.h"
-#include "async/asyncable.h"
+#include "framework/global/iinteractive.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
 
 using ProgressResult = BasicUI::ProgressResult;
 

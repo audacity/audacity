@@ -15,7 +15,7 @@
 
 *//*******************************************************************/
 
-#include "PlatformCompatibility.h"
+#include "au3-files/PlatformCompatibility.h"
 #include <CoreServices/CoreServices.h>
 #include <limits.h>
 #include <mach-o/dyld.h>

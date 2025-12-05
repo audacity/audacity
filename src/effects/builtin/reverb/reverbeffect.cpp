@@ -1,8 +1,10 @@
 #include "reverbeffect.h"
-#include "ShuttleAutomation.h"
-#include "Reverb_libSoX.h"
-#include "global/types/number.h"
-#include "global/log.h"
+
+#include "framework/global/types/number.h"
+#include "framework/global/log.h"
+
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-math/Reverb_libSoX.h"
 
 namespace au::effects {
 struct Reverb_priv_t

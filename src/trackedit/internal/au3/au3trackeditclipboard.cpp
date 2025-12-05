@@ -7,10 +7,10 @@
 
 #include "containers.h"
 
-#include "Track.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
-#include "LabelTrack.h"
+#include "au3-track/Track.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-label-track/LabelTrack.h"
 
 using namespace au::trackedit;
 

@@ -4,8 +4,8 @@
 
 #include "wavpack/wavpack.h"
 
-#include "Mix.h"
-#include "SampleFormat.h"
+#include "au3-mixer/Mix.h"
+#include "au3-math/SampleFormat.h"
 #include "au3-import-export/ExportOptionsEditor.h"
 #include "au3-import-export/ExportPlugin.h"
 

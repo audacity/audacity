@@ -1,6 +1,6 @@
 #include "ExportFFmpegOptions.h"
 #include "FFmpegDefines.h"
-#include "Mix.h"
+#include "au3-mixer/Mix.h"
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
 #include "lib-ffmpeg-support/FifoBuffer.h"
 #include "au3-import-export/ExportPlugin.h"

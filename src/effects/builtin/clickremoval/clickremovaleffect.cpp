@@ -28,10 +28,10 @@
 
 *//*******************************************************************/
 #include "clickremovaleffect.h"
-#include "EffectOutputTracks.h"
-#include "Prefs.h"
-#include "ShuttleAutomation.h"
-#include "WaveTrack.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-wave-track/WaveTrack.h"
 #include <cmath>
 
 namespace au::effects {

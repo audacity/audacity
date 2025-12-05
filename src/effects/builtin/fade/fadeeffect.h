@@ -1,6 +1,6 @@
 #pragma once
 
-#include "StatefulPerTrackEffect.h"
+#include "au3-effects/StatefulPerTrackEffect.h"
 
 namespace au::effects {
 class FadeEffectBase : public StatefulPerTrackEffect
