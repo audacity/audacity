@@ -4,17 +4,17 @@
 
 #include "settings.h"
 
+#include "framework/global/log.h"
+#include "framework/global/realfn.h"
+
 #include "internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
 #include "au3-audio-devices/DeviceManager.h"
 #include "au3-audio-devices/AudioIOBase.h"
 #include "au3-utility/IteratorX.h"
-#include "QualitySettings.h"
-#include "ProjectRate.h"
-
-#include "log.h"
-#include "realfn.h"
+#include "au3-project-rate/QualitySettings.h"
+#include "au3-project-rate/ProjectRate.h"
 
 #include "au3audiodevicesprovider.h"
 

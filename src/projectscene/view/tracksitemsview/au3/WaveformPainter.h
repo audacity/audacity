@@ -1,11 +1,12 @@
 #pragma once
 
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track-paint/waveform/WavePaintParameters.h"
+#include "au3-wave-track-paint/waveform/WaveDataCache.h"
+#include "au3-wave-track-paint/waveform/WaveBitmapCache.h"
+
 #include "au3wrap/au3types.h"
-#include "WaveClip.h"
 #include "WaveMetrics.h"
-#include "waveform/WavePaintParameters.h"
-#include "waveform/WaveDataCache.h"
-#include "waveform/WaveBitmapCache.h"
 
 namespace au::projectscene {
 class WaveformPainter final : public WaveClipListener

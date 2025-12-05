@@ -19,7 +19,7 @@ License: GPL v2 or later.  See License.txt.
 
 #include "FFmpeg.h"
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
-#include "ModuleConstants.h"
+#include "au3-utility/ModuleConstants.h"
 #include "ImportFFmpeg.cpp"
 #include "ExportFFmpeg.cpp"
 

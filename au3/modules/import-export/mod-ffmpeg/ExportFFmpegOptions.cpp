@@ -17,7 +17,7 @@
 
 #include "FFmpegPresets.h"
 #include "FFmpegDefines.h"
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 /// Format-codec compatibility list
 /// Must end with NULL entry

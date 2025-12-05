@@ -16,7 +16,7 @@ Describes shared object that is used to access FFmpeg libraries.
 #if !defined(__AUDACITY_FFMPEG__)
 #define __AUDACITY_FFMPEG__
 
-#include "Prefs.h"
+#include "au3-preferences/Prefs.h"
 
 TranslatableString GetFFmpegVersion();
 

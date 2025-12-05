@@ -4,7 +4,7 @@
 
 #include <wavpack/wavpack.h>
 
-#include "SampleFormat.h"
+#include "au3-math/SampleFormat.h"
 #include "au3-import-export/ImportPlugin.h"
 
 class WavPackImportPlugin final : public ImportPlugin

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "SettingsVisitor.h"
-#include "StatefulPerTrackEffect.h"
+#include "au3-components/SettingsVisitor.h"
+#include "au3-effects/StatefulPerTrackEffect.h"
 
 #include "../common/params.h"
 

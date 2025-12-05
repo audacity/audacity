@@ -16,7 +16,7 @@
 #pragma once
 
 #include <unordered_map>
-#include "XMLTagHandler.h"
+#include "au3-xml/XMLTagHandler.h"
 
 class FFmpegPreset
 {

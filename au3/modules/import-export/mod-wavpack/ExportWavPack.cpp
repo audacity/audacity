@@ -15,12 +15,12 @@
 **********************************************************************/
 
 #include "au3-import-export/Export.h"
-#include "wxFileNameWrapper.h"
-#include "Mix.h"
+#include "au3-files/wxFileNameWrapper.h"
+#include "au3-mixer/Mix.h"
 
 #include <wavpack/wavpack.h>
 
-#include "Track.h"
+#include "au3-track/Track.h"
 #include "au3-tags/Tags.h"
 
 #include "au3-import-export/ExportPluginHelpers.h"

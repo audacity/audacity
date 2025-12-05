@@ -7,7 +7,7 @@ extern "C"
 #include <cstring>
 #include <numeric>
 
-#include "float_cast.h"
+#include "au3-math/float_cast.h"
 
 #include "mod-ffmpeg/lib-ffmpeg-support/FFmpegFunctions.h"
 

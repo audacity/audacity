@@ -16,13 +16,13 @@
 
 #include <sndfile.h>
 
-#include "Dither.h"
+#include "au3-math/Dither.h"
 #include "au3-file-formats/FileFormats.h"
-#include "Mix.h"
-#include "Prefs.h"
+#include "au3-mixer/Mix.h"
+#include "au3-preferences/Prefs.h"
 #include "au3-tags/Tags.h"
-#include "Track.h"
-#include "wxFileNameWrapper.h"
+#include "au3-track/Track.h"
+#include "au3-files/wxFileNameWrapper.h"
 
 #include "au3-import-export/Export.h"
 #include "au3-import-export/ExportOptionsEditor.h"

@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "PlaybackSchedule.h"
+#include "au3-audio-io/PlaybackSchedule.h"
 
 namespace au::au3audio {
 //! The PlaybackPolicy used by Audacity for most playback.

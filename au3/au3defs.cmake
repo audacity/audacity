@@ -153,6 +153,7 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
         PUBLIC
             # Allow namespaced includes like: #include "au3-math/SampleFormat.h"
             ${CMAKE_CURRENT_SOURCE_DIR}/..
+        PRIVATE
             # For internal includes within the library
             ${CMAKE_CURRENT_SOURCE_DIR}
     )

@@ -1,16 +1,18 @@
 #include "au3importer.h"
 
-#include "BasicUI.h"
-#include "TempoChange.h"
-#include "Track.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
-#include "io/path.h"
+#include "framework/global/io/path.h"
+
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-track/Track.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
 #include "au3-import-export/ImportPlugin.h"
 #include "au3-import-export/ImportProgressListener.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-tags/Tags.h"
+
 #include "RegisterImportPlugins.h"
 
 #include "au3wrap/au3types.h"

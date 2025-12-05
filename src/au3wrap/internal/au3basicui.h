@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "global/async/asyncable.h"
-#include "modularity/ioc.h"
-#include "iinteractive.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/iinteractive.h"
 
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 class Au3BasicUI final : public BasicUI::Services, public muse::async::Asyncable
 {

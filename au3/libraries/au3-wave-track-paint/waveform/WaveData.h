@@ -12,7 +12,7 @@
 
 #include <vector>
 
-#include "PixelSampleMapper.h"
+#include "../PixelSampleMapper.h"
 
 //! Data for sample blocks related to the column
 struct WAVE_TRACK_PAINT_API WaveDisplayColumn final

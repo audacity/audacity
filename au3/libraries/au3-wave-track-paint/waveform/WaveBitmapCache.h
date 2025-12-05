@@ -12,9 +12,9 @@
 
 #include <memory>
 
-#include "GraphicsDataCache.h"
+#include "../GraphicsDataCache.h"
 #include "au3-utility/Observer.h"
-#include "waveform/WavePaintParameters.h"
+#include "WavePaintParameters.h"
 
 class wxBitmap;
 class wxImage;

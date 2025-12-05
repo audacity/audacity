@@ -141,7 +141,7 @@ static const auto exts = {
 // all the includes live here by default
 #include "au3-import-export/Import.h"
 #include "au3-tags/Tags.h"
-#include "WaveTrack.h"
+#include "au3-wave-track/WaveTrack.h"
 #include "au3-import-export/ImportPlugin.h"
 #include "au3-import-export/ImportUtils.h"
 #include "au3-import-export/ImportProgressListener.h"

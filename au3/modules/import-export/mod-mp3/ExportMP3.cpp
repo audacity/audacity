@@ -69,17 +69,17 @@
 #include <wx/log.h>
 #include <wx/mimetype.h>
 
-#include "FileNames.h"
-#include "float_cast.h"
-#include "Mix.h"
-#include "Prefs.h"
+#include "au3-files/FileNames.h"
+#include "au3-math/float_cast.h"
+#include "au3-mixer/Mix.h"
+#include "au3-preferences/Prefs.h"
 #include "au3-tags/Tags.h"
-#include "Track.h"
-#include "wxFileNameWrapper.h"
-#include "Project.h"
+#include "au3-track/Track.h"
+#include "au3-files/wxFileNameWrapper.h"
+#include "au3-project/Project.h"
 
 #include "au3-import-export/Export.h"
-#include "BasicUI.h"
+#include "au3-basic-ui/BasicUI.h"
 
 #include <lame/lame.h>
 
