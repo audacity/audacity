@@ -3,23 +3,12 @@
 */
 #pragma once
 
-#include <QAbstractListModel>
-#include <QQuickItem>
-
-#include "timecodeformatter.h"
-#include "fieldsinteractioncontroller.h"
+#include "numericviewmodel.h"
 
 namespace au::uicomponents {
-class BPMModel : public QAbstractListModel
+class BPMModel : public NumericViewModel
 {
     Q_OBJECT
-
-    Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged FINAL)
-
-    Q_PROPERTY(int currentEditedFieldIndex READ currentEditedFieldIndex
-               WRITE setCurrentEditedFieldIndex NOTIFY currentEditedFieldIndexChanged FINAL)
-
-    Q_PROPERTY(QQuickItem * visualItem READ visualItem WRITE setVisualItem)
 
 public:
     explicit BPMModel(QObject* parent = nullptr);
@@ -27,43 +16,9 @@ public:
     Q_INVOKABLE void upValue();
     Q_INVOKABLE void downValue();
 
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex& index, int role) const override;
-    QHash<int, QByteArray> roleNames() const override;
-
-    double value() const;
-    void setValue(double value);
-
-    int currentEditedFieldIndex() const;
-    void setCurrentEditedFieldIndex(int index);
-
-    QQuickItem* visualItem() const;
-    void setVisualItem(QQuickItem* item);
-
-signals:
-    void valueChanged();
-    void currentEditedFieldIndexChanged();
-    void visualItemChanged();
+    void setValue(double value) override;
 
 private:
-    enum Roles {
-        rSymbol = Qt::UserRole + 1,
-        rIsEditable
-    };
-
-    static bool isFieldEditable(const QChar& fieldSymbol);
-
-    void reloadFormatter();
-    void initFormatter();
-
-    void initFieldInteractionController();
-
-    void updateValueString();
-
-    double m_value = -1.0;
-    QString m_valueString;
-
-    std::shared_ptr<TimecodeFormatter> m_formatter;
-    std::shared_ptr<FieldsInteractionController> m_fieldsInteractionController;
+    void reloadFormatter() override;
 };
 }

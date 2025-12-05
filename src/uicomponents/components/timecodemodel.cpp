@@ -3,130 +3,74 @@
 */
 #include "timecodemodel.h"
 
-#include "uicomponents/qml/Muse/UiComponents/menuitem.h"
-#include "ui/uiaction.h"
-
 #include "numericformatter.h"
 #include "beatsformatter.h"
 
 #include "translation.h"
-#include "log.h"
 
 using namespace au::uicomponents;
 
-bool TimecodeModel::isFieldEditable(const QChar& fieldSymbol)
-{
-    return fieldSymbol.isDigit();
-}
-
 TimecodeModel::TimecodeModel(QObject* parent)
-    : QAbstractListModel(parent)
+    : NumericViewModel(parent)
 {
     // translate all
     m_availableViewFormats = {
-        { TimecodeFormatType::Seconds, muse::qtrc("uicomponents", "seconds"), "01000,01000s" },
-        { TimecodeFormatType::SecondsMilliseconds, muse::qtrc("uicomponents", "seconds + milliseconds"), "01000,01000>01000 s" },
-        { TimecodeFormatType::HHMMSS, muse::qtrc("uicomponents", "hh:mm:ss"), "0100 h 060 m 060 s" },
-        { TimecodeFormatType::DDHHMMSS, muse::qtrc("uicomponents", "dd:hh:mm:ss"), "0100 d 024 h 060 m 060 s" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::Seconds), muse::qtrc("uicomponents", "seconds"), "01000,01000s" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::SecondsMilliseconds), muse::qtrc("uicomponents", "seconds + milliseconds"),
+          "01000,01000>01000 s" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::HHMMSS), muse::qtrc("uicomponents", "hh:mm:ss"), "0100 h 060 m 060 s" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::DDHHMMSS), muse::qtrc("uicomponents", "dd:hh:mm:ss"),
+          "0100 d 024 h 060 m 060 s" },
 
-        { TimecodeFormatType::HHMMSSHundredths, muse::qtrc("uicomponents", "hh:mm:ss + hundredths"), "0100 h 060 m 060>0100 s" },
-        { TimecodeFormatType::HHMMSSMilliseconds, muse::qtrc("uicomponents", "hh:mm:ss + milliseconds"), "0100 h 060 m 060>01000 s" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::HHMMSSHundredths), muse::qtrc("uicomponents", "hh:mm:ss + hundredths"),
+          "0100 h 060 m 060>0100 s" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::HHMMSSMilliseconds), muse::qtrc("uicomponents", "hh:mm:ss + milliseconds"),
+          "0100 h 060 m 060>01000 s" },
 
-        { TimecodeFormatType::HHMMSSSamples, muse::qtrc("uicomponents", "hh:mm:ss + samples"), "0100 h 060 m 060 s+># samples" },
-        { TimecodeFormatType::Samples, muse::qtrc("uicomponents", "samples"), "01000,01000,01000 samples|#" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::HHMMSSSamples), muse::qtrc("uicomponents", "hh:mm:ss + samples"),
+          "0100 h 060 m 060 s+># samples" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::Samples), muse::qtrc("uicomponents", "samples"),
+          "01000,01000,01000 samples|#" },
 
-        { TimecodeFormatType::HHMMSSFilmFrames, muse::qtrc("uicomponents", "hh:mm:ss + film frames (24 fps)"),
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::HHMMSSFilmFrames), muse::qtrc("uicomponents",
+                                                                                               "hh:mm:ss + film frames (24 fps)"),
           "0100 h 060 m 060 s+>24 frames" },
-        { TimecodeFormatType::FilmFrames, muse::qtrc("uicomponents", "Film frames (24 fps)"), "01000,01000 frames|24" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::FilmFrames), muse::qtrc("uicomponents", "Film frames (24 fps)"),
+          "01000,01000 frames|24" },
 
-        { TimecodeFormatType::HHMMSSNTSCDropFrames, muse::qtrc("uicomponents", "hh:mm:ss + NTSC drop frames"),
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::HHMMSSNTSCDropFrames), muse::qtrc("uicomponents",
+                                                                                                   "hh:mm:ss + NTSC drop frames"),
           "0100 h 060 m 060 s+>30 frames|N" },
-        { TimecodeFormatType::HHMMSSNTSCNonDropFrames, muse::qtrc("uicomponents", "hh:mm:ss + NTSC non-drop frames"),
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::HHMMSSNTSCNonDropFrames), muse::qtrc("uicomponents",
+                                                                                                      "hh:mm:ss + NTSC non-drop frames"),
           "0100 h 060 m 060 s+>030 frames| .999000999" },
-        { TimecodeFormatType::NTSCFrames, muse::qtrc("uicomponents", "NTSC frames"), "01000,01000 frames|29.97002997" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::NTSCFrames), muse::qtrc("uicomponents", "NTSC frames"),
+          "01000,01000 frames|29.97002997" },
 
-        { TimecodeFormatType::HHMMSSPALFrames, muse::qtrc("uicomponents", "hh:mm:ss + PAL frames (25 fps)"),
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::HHMMSSPALFrames), muse::qtrc("uicomponents",
+                                                                                              "hh:mm:ss + PAL frames (25 fps)"),
           "0100 h 060 m 060 s+>25 frames" },
-        { TimecodeFormatType::PALFrames, muse::qtrc("uicomponents", "PAL frames (25 fps)"), "01000,01000 frames|25" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::PALFrames), muse::qtrc("uicomponents", "PAL frames (25 fps)"),
+          "01000,01000 frames|25" },
 
-        { TimecodeFormatType::HHMMSSCDDAFrames, muse::qtrc("uicomponents", "hh:mm:ss + CDDA frames (25 fps)"),
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::HHMMSSCDDAFrames), muse::qtrc("uicomponents",
+                                                                                               "hh:mm:ss + CDDA frames (25 fps)"),
           "0100 h 060 m 060 s+>75 frames" },
-        { TimecodeFormatType::CDDAFrames, muse::qtrc("uicomponents", "CDDA frames (75 fps)"), "01000,01000 frames|75" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::CDDAFrames), muse::qtrc("uicomponents", "CDDA frames (75 fps)"),
+          "01000,01000 frames|75" },
 
-        { TimecodeFormatType::BarBeat, muse::qtrc("uicomponents", "bar:beat"), "bar:beat" },
-        { TimecodeFormatType::BarBeatTick, muse::qtrc("uicomponents", "bar:beat:tick"), "bar:beat:tick" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::BarBeat), muse::qtrc("uicomponents", "bar:beat"), "bar:beat" },
+        { static_cast<NumericViewFormatType>(TimecodeFormatType::BarBeatTick), muse::qtrc("uicomponents", "bar:beat:tick"),
+          "bar:beat:tick" },
     };
+
+    m_currentFormat = static_cast<NumericViewFormatType>(TimecodeFormatType::HHMMSS);
 
     initFieldInteractionController();
 
     reloadFormatter();
 
     setValue(0.0);
-}
-
-QVariantList TimecodeModel::availableFormats()
-{
-    muse::uicomponents::MenuItemList result;
-
-    for (const ViewFormat& viewFormat : m_availableViewFormats) {
-        muse::uicomponents::MenuItem* item = new muse::uicomponents::MenuItem(this);
-
-        int id = static_cast<int>(viewFormat.type);
-
-        item->setId(QString::number(id));
-
-        muse::ui::UiAction action;
-        action.title = muse::TranslatableString::untranslatable(viewFormat.title);
-        action.checkable = muse::ui::Checkable::Yes;
-        item->setAction(action);
-
-        muse::ui::UiActionState state;
-        state.enabled = true;
-        state.checked = m_currentFormat == viewFormat.type;
-
-        item->setState(state);
-
-        result << item;
-    }
-
-    return menuItemListToVariantList(result);
-}
-
-int TimecodeModel::rowCount(const QModelIndex& parent) const
-{
-    UNUSED(parent);
-    return m_valueString.size();
-}
-
-QVariant TimecodeModel::data(const QModelIndex& index, int role) const
-{
-    if (!index.isValid()) {
-        return QVariant();
-    }
-
-    QChar ch = m_valueString[index.row()];
-
-    switch (role) {
-    case rSymbol: return QVariant::fromValue(ch);
-    case rIsEditable: return isFieldEditable(ch);
-    }
-
-    return QVariant();
-}
-
-QHash<int, QByteArray> TimecodeModel::roleNames() const
-{
-    static const QHash<int, QByteArray> roles = {
-        { rSymbol, "symbol" },
-        { rIsEditable, "editable" }
-    };
-
-    return roles;
-}
-
-QString TimecodeModel::valueString() const
-{
-    return m_valueString;
 }
 
 TimecodeMode TimecodeModel::mode() const
@@ -147,96 +91,16 @@ void TimecodeModel::setMode(TimecodeMode mode)
     emit valueChanged();
 }
 
-double TimecodeModel::value() const
-{
-    return m_value;
-}
-
-void TimecodeModel::setValue(double value)
-{
-    if (qFuzzyCompare(m_value, value)) {
-        return;
-    }
-
-    m_value = value;
-
-    updateValueString();
-    emit valueChanged();
-}
-
-int TimecodeModel::currentFormat() const
-{
-    return static_cast<int>(m_currentFormat);
-}
-
-void TimecodeModel::setCurrentFormat(int format)
-{
-    TimecodeFormatType newFormat = static_cast<TimecodeFormatType>(format);
-    if (m_currentFormat == newFormat) {
-        return;
-    }
-
-    m_currentFormat = newFormat;
-
-    reloadFormatter();
-    updateValueString();
-
-    emit currentFormatChanged();
-    emit availableFormatsChanged();
-    emit valueChanged();
-}
-
-QString TimecodeModel::currentFormatStr() const
-{
-    ViewFormat current = currentViewFormat();
-    if (!current.isValid()) {
-        return QString();
-    }
-
-    return current.title;
-}
-
-void TimecodeModel::setCurrentFormatStr(const QString& title)
-{
-    for (int i = 0; i < m_availableViewFormats.size(); ++i) {
-        ViewFormat format = m_availableViewFormats[i];
-        if (format.title == title) {
-            setCurrentFormat(static_cast<int>(format.type));
-            return;
-        }
-    }
-    // TODO log error
-}
-
-int TimecodeModel::currentEditedFieldIndex() const
-{
-    return m_fieldsInteractionController->currentEditedFieldIndex();
-}
-
-void TimecodeModel::setCurrentEditedFieldIndex(int index)
-{
-    m_fieldsInteractionController->setCurrentEditedFieldIndex(index);
-}
-
-QQuickItem* TimecodeModel::visualItem() const
-{
-    return m_fieldsInteractionController->visualItem();
-}
-
-void TimecodeModel::setVisualItem(QQuickItem* item)
-{
-    m_fieldsInteractionController->setVisualItem(item);
-}
-
 void TimecodeModel::reloadFormatter()
 {
-    ViewFormat currentFormat = currentViewFormat();
+    NumericViewFormat currentFormat = currentViewFormat();
     if (!currentFormat.isValid()) {
         return;
     }
 
-    if (currentFormat.type == TimecodeFormatType::BarBeat || currentFormat.type == TimecodeFormatType::BarBeatTick) {
-        int fracPart = currentFormat.type == TimecodeFormatType::BarBeat ? 0 : 16;
+    TimecodeFormatType formatType = static_cast<TimecodeFormatType>(currentFormat.type);
+    if (formatType == TimecodeFormatType::BarBeat || formatType == TimecodeFormatType::BarBeatTick) {
+        int fracPart = formatType == TimecodeFormatType::BarBeat ? 0 : 16;
         m_formatter = std::make_shared<BeatsFormatter>(currentFormat.formatStr, fracPart, m_mode);
     } else {
         m_formatter = std::make_shared<NumericFormatter>(currentFormat.formatStr);
@@ -245,128 +109,4 @@ void TimecodeModel::reloadFormatter()
     initFormatter();
 
     m_fieldsInteractionController->setFormatter(m_formatter);
-}
-
-void TimecodeModel::initFormatter()
-{
-    m_formatter->setSampleRate(m_sampleRate);
-    m_formatter->setTempo(m_tempo);
-    m_formatter->setUpperTimeSignature(m_upperTimeSignature);
-    m_formatter->setLowerTimeSignature(m_lowerTimeSignature);
-
-    m_formatter->init();
-}
-
-void TimecodeModel::initFieldInteractionController()
-{
-    m_fieldsInteractionController = std::make_shared<FieldsInteractionController>(this);
-
-    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::currentEditedFieldIndexChanged,
-            this, &TimecodeModel::currentEditedFieldIndexChanged);
-
-    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::valueChanged,
-            this, &TimecodeModel::setValue);
-}
-
-void TimecodeModel::updateValueString()
-{
-    constexpr bool toNearest = true;
-    QString newValueString = m_formatter->valueToString(m_value, toNearest).valueString;
-
-    if (newValueString.size() != m_valueString.size()) {
-        beginResetModel();
-        m_valueString = newValueString;
-        endResetModel();
-    } else {
-        m_valueString = newValueString;
-
-        QModelIndex topLeft = index(0, 0);
-        QModelIndex bottomRight = index(rowCount() - 1, 0);
-
-        emit dataChanged(topLeft, bottomRight, { rSymbol });
-    }
-
-    m_fieldsInteractionController->setValueString(m_valueString);
-}
-
-const TimecodeModel::ViewFormat& TimecodeModel::currentViewFormat() const
-{
-    for (int i = 0; i < m_availableViewFormats.size(); ++i) {
-        if (m_availableViewFormats[i].type == m_currentFormat) {
-            return m_availableViewFormats[i];
-        }
-    }
-
-    static ViewFormat stub;
-    return stub;
-}
-
-double TimecodeModel::sampleRate() const
-{
-    return m_sampleRate;
-}
-
-void TimecodeModel::setSampleRate(double sampleRate)
-{
-    if (qFuzzyCompare(m_sampleRate, sampleRate)) {
-        return;
-    }
-
-    m_sampleRate = sampleRate;
-
-    initFormatter();
-    updateValueString();
-
-    emit currentFormatChanged();
-}
-
-double TimecodeModel::tempo() const
-{
-    return m_tempo;
-}
-
-void TimecodeModel::setTempo(double tempo)
-{
-    if (qFuzzyCompare(m_tempo, tempo)) {
-        return;
-    }
-
-    m_tempo = tempo;
-
-    initFormatter();
-    updateValueString();
-}
-
-int TimecodeModel::upperTimeSignature() const
-{
-    return m_upperTimeSignature;
-}
-
-void TimecodeModel::setUpperTimeSignature(int timeSignature)
-{
-    if (m_upperTimeSignature == timeSignature) {
-        return;
-    }
-
-    m_upperTimeSignature = timeSignature;
-
-    initFormatter();
-    updateValueString();
-}
-
-int TimecodeModel::lowerTimeSignature() const
-{
-    return m_lowerTimeSignature;
-}
-
-void TimecodeModel::setLowerTimeSignature(int timeSignature)
-{
-    if (m_lowerTimeSignature == timeSignature) {
-        return;
-    }
-
-    m_lowerTimeSignature = timeSignature;
-
-    initFormatter();
-    updateValueString();
 }
