@@ -5,6 +5,7 @@
 #include <QCoreApplication>
 
 #include "progressdialog.h"
+#include "wxtypes_convert.h"
 
 ProgressDialog::ProgressDialog(const std::string& title)
     : m_progressTitle{title}
@@ -15,7 +16,7 @@ ProgressDialog::ProgressDialog(const std::string& title)
 }
 
 ProgressDialog::ProgressDialog(const TranslatableString& title)
-    : ProgressDialog{title.Translation().ToStdString()}
+    : ProgressDialog{au::au3::wxToStdSting(title.Translation())}
 {
 }
 
@@ -30,7 +31,7 @@ void ProgressDialog::Reinit()
 
 void ProgressDialog::SetDialogTitle(const TranslatableString& title)
 {
-    m_progressTitle = title.Translation().ToStdString();
+    m_progressTitle = au::au3::wxToStdSting(title.Translation());
 }
 
 ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long long denominator, const TranslatableString& message)
@@ -46,7 +47,7 @@ ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long 
     }
 
     if (!message.empty()) {
-        m_progressMessage = message.Translation().ToStdString();
+        m_progressMessage = au::au3::wxToStdSting(message.Translation());
     }
 
     if (m_progress.progress(numerator, denominator, m_progressMessage)) {
@@ -61,5 +62,5 @@ ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long 
 
 void ProgressDialog::SetMessage(const TranslatableString& message)
 {
-    m_progressMessage = message.Translation().ToStdString();
+    m_progressMessage = au::au3::wxToStdSting(message.Translation());
 }
