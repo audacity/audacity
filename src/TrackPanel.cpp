@@ -266,7 +266,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
      mTracks(tracks),
      mRuler(ruler),
      mTrackArtist(nullptr),
-     mRefreshBacking(false)
+     mRefreshBacking(false),
+     mIsPanning(false),
+     mLastPanX(0)
 #ifndef __WXGTK__   //Get rid if this pragma for gtk
 #pragma warning( default: 4355 )
 #endif
