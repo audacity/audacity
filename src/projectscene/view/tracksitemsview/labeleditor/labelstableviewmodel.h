@@ -11,6 +11,8 @@
 #include "trackedit/itrackeditinteraction.h"
 #include "importexport/export/ilabelsexporter.h"
 #include "importexport/export/iexportconfiguration.h"
+#include "importexport/import/ilabelsimporter.h"
+#include "importexport/import/iimportconfiguration.h"
 
 #include "uicomponents/qml/Muse/UiComponents/abstracttableviewmodel.h"
 
@@ -39,7 +41,9 @@ class LabelsTableViewModel : public muse::uicomponents::AbstractTableViewModel, 
     muse::Inject<context::IGlobalContext> globalContext = { this };
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction = { this };
     muse::Inject<importexport::ILabelsExporter> labelExporter = { this };
-    muse::Inject<importexport::IExportConfiguration> labelsExportConfiguration = { this };
+    muse::Inject<importexport::IExportConfiguration> exportConfiguration = { this };
+    muse::Inject<importexport::ILabelsImporter> labelsImporter = { this };
+    muse::Inject<importexport::IImportConfiguration> importConfiguration = { this };
 
 public:
     explicit LabelsTableViewModel(QObject* parent = nullptr);
@@ -52,6 +56,7 @@ public:
     Q_INVOKABLE void removeSelectedLabels();
 
     Q_INVOKABLE void exportLabels();
+    Q_INVOKABLE void importLabels();
 
 private:
     bool doCellValueChangeRequested(int row, int column, const muse::Val& value) override;
@@ -75,6 +80,7 @@ private:
     bool changeLabelLowFrequency(int row, int column, const muse::Val& value);
     bool changeLabelHighFrequency(int row, int column, const muse::Val& value);
 
-    muse::io::path_t selectFileForImportExport();
+    muse::io::path_t selectFileForExport();
+    muse::io::path_t selectFileForImport();
 };
 }

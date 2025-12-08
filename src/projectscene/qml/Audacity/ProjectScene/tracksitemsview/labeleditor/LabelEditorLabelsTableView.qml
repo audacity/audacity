@@ -27,6 +27,10 @@ StyledTableView {
         tableViewModel.exportLabels()
     }
 
+    function importLabels() {
+        tableViewModel.importLabels()
+    }
+
     LabelsTableViewModel {
         id: tableViewModel
     }
