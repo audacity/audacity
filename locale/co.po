@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2021.
 #
 # Translators:
 # Link Winterberg, 2024
@@ -10,17 +10,18 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.5\n"
+"Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-04 17:39+0200\n"
-"PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2025\n"
+"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"PO-Revision-Date: 2025-12-02 19:03+0100\n"
+"Last-Translator: Patriccollu di Santa Maria è Sichè <https://github.com/Patriccollu/Lingua_Corsa-Infurmatica/#readme>\n"
 "Language-Team: Corsican (https://app.transifex.com/audacity/teams/164520/co/)\n"
 "Language: co\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.8\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -1351,6 +1352,16 @@ msgstr "Wahwah"
 #: libraries/lib-builtin-effects/WahWahBase.cpp
 msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
 msgstr "Variazioni rapide di a qualità di a tunalità, cum’è stu sonu di chitarra cusì populare di l’anni 70"
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+msgctxt "cloud sync"
+msgid "Error importing cloud audio"
+msgstr "Sbagliu à l’impurtazione d’audio da u nivulu"
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+msgctxt "update dialog"
+msgid "Can't download cloud audio"
+msgstr "Ùn si pò micca scaricà l’audio da u nivulu"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -4233,6 +4244,10 @@ msgid "Pitch (EAC)"
 msgstr "Altezza (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Wavelet (1/6 Octave Hann)"
+msgstr "Marusulellu (1/6 Ottava Hann)"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
 msgstr "A frequenza massima deve esse 100 Hz o più"
 
@@ -7006,6 +7021,7 @@ msgid "New script"
 msgstr "Novu scenariu"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Open"
 msgstr "Apre"
@@ -7140,6 +7156,7 @@ msgid "Go to previous S-expr"
 msgstr "Andà à l’Espr-S precedente"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Next"
 msgstr "Seguente"
@@ -7171,6 +7188,29 @@ msgstr "In attesa di audio.com"
 msgid "An action on audio.com is required before you can continue. You can cancel this operation."
 msgstr "Un’azzione hè richiesta nant’à audio.com nanzu di pudè cuntinuà. Pudete abbandunà st’operazione."
 
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "Apre da audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+msgid "Downloading audio"
+msgstr "Scaricamentu di l’audio"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#, c-format
+msgid ""
+"Failed to download audio from cloud.\n"
+"%s"
+msgstr ""
+"Fiascu per scaricà l’audio da u nivulu.\n"
+"%s"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+msgid "Downloaded audio file does not exist."
+msgstr "U schedariu audio scaricatu ùn esiste micca."
+
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
@@ -7183,11 +7223,6 @@ msgid "Generating audio preview..."
 msgstr "Generazione di a fighjulata audio…"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "Apre da audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
 msgstr "Sincrunizazione di u prughjettu"
 
@@ -7196,16 +7231,24 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "E fighjulate ponu esse mudificate solu per i prughjetti in u Nivulu"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Open &From Cloud"
+msgstr "Apre da u &Nivulu"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Open Cloud &Project..."
+msgstr "Apre un &prughjettu di u nivulu…"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Open Cloud &Audio File..."
+msgstr "Apre un schedariu &audio di u nivulu…"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
 msgstr "Arregistrà in u Ni&vulu…"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "&Update Cloud Audio Preview"
 msgstr "Mudificà a &fighjulata audio in u Nivulu"
-
-#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open Fro&m Cloud..."
-msgstr "Apre &da u Nivulu…"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "S&hare Audio..."
@@ -7338,6 +7381,80 @@ msgstr "&Scunnettesi"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
 msgstr "Ùn affissà più què"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Open cloud audio file"
+msgstr "Apre un schedariu audio di u nivulu"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "less than 1 minute"
+msgstr "menu d’1 minutu"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, c-format
+msgid "one minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "1 minutu fà"
+msgstr[1] "%d minuti fà"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "1 ora fà"
+msgstr[1] "%d ore fà"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Title"
+msgstr "Titulu"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Author"
+msgstr "Autore"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Tags"
+msgstr "Etichette"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Created"
+msgstr "Creatu"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Failed to authorize account"
+msgstr "Fiascu per auturizatà u contu"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Loading audio list..."
+msgstr "Caricamentu di a lista audio…"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Failed to get audio list"
+msgstr "Impussibule d’ottene a lista audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Search:"
+msgstr "Circà :"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Prev"
+msgstr "Precedente"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr "Fighjà nant’à audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "Page %d of %d"
+msgstr "Pagina %d nant’à %d"
 
 #. i18n-hint: A title that is shown on the first project save that allows the
 #. user to select Cloud or local save.
@@ -7648,10 +7765,6 @@ msgid "Open from Cloud"
 msgstr "Apre da u Nivulu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "less than 1 minute"
-msgstr "menu d’1 minutu"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "one minutes ago"
 msgid_plural "%d minutes ago"
@@ -7659,19 +7772,8 @@ msgstr[0] "1 minutu fà"
 msgstr[1] "%d minuti fà"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "one hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "1 ora fà"
-msgstr[1] "%d ore fà"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Modified"
 msgstr "Mudificatu"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Failed to authorize account"
-msgstr "Fiascu per auturizatà u contu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Loading projects list..."
@@ -7684,23 +7786,6 @@ msgstr "Impussibule d’ottene a lista di i prughjetti"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Cloud saved projects"
 msgstr "Prughjetti arregistrati in u Nivulu"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Search:"
-msgstr "Circà :"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Prev"
-msgstr "Precedente"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "View in audio.com"
-msgstr "Fighjà nant’à audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "Page %d of %d"
-msgstr "Pagina %d nant’à %d"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Anyone will be able to listen to this audio."
@@ -10843,7 +10928,7 @@ msgstr "Effetti in tempu reale per %s"
 msgid "Realtime Effects"
 msgstr "Effetti in tempu reale"
 
-#: src/RealtimeEffectPanel.cpp
+#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
 msgid "Watch video"
 msgstr "Fighjà u filmettu"
 
@@ -11564,129 +11649,28 @@ msgid "Calibration Complete"
 msgstr "Calibrera compia"
 
 #: src/WhatsNewDialog.cpp
-msgid "<font color=\"#000000\">"
-msgstr "<font color=\"#000000\">"
-
-#: src/WhatsNewDialog.cpp
-msgid "Sign up to Audacity's cloud saving platform"
-msgstr "Cunnittitevi à a piattaforma d’arregistramentu in u nivulu d’Audacity"
-
-#: src/WhatsNewDialog.cpp
-msgid "and access your projects from anywhere!"
-msgstr "è accidite à i vostri prughjetti in ogni locu !"
-
-#: src/WhatsNewDialog.cpp
-msgid "</font>"
-msgstr "</font>"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "What's new in Audacity %s"
-msgstr "Ciò chì hè novu in Audacity %s"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr "Fighjate u [[%s|filmettu di a versione]] o lighjite u [[%s|ghjurnale di i cambiamenti]] per sapene di più annantu à ciò chì no avemu cambiatu in l’ultima versione !</p>"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "You can also read the [[%s|changelog]]</p>"
-msgstr "Pudete leghje ancu u [[%s|ghjurnale di i cambiamenti]]</p>"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get free plugins & sounds"
-msgstr "Ottene moduli d’estensione è soni di rigalu"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr "<p>Fighjate a nostra [[%s|appiecazione Hub Muse]] per una scelta tamanta di moduli d’estensione audio per l’utilizatori d’Audacity</p>"
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr "Un effettu di trattamentu vucale chì megliureghja a chjarezza è a prufundezza di a voce."
-
-#: src/WhatsNewDialog.cpp
-msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr "Un modulu d’estensione pulivalente di riverberazione per effetti sunori spaziosi è naturali."
-
-#: src/WhatsNewDialog.cpp
-msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr "Un modulu d’estensione d’amplificazione è di mudellizazione d’effetti per a chitarra chì permette tunalità realiste è soni persunalizavule."
-
-#: src/WhatsNewDialog.cpp
-msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr "Un modulu d’estensione reattivu di riverberazione chì s’adatta à a dinamica di a traccia per creà paisagi sunori immersivi."
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr "Un modulu d’estensione multieffettu vucale chì megliureghja e traccie di voce per dà un risultatu prufessiunale."
-
-#: src/WhatsNewDialog.cpp
-msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr "Un modulu d’estensione d’effettu di bassu cuncepitu per pruvede un sonu di bassu chjaru è percutente."
-
-#: src/WhatsNewDialog.cpp
-msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr "Un modulu d’estensione per a perfezzione di u sonu acusticu chì megliureghja u calore è a chjarezza."
-
-#: src/WhatsNewDialog.cpp
-msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr "Un modulu d’estensione stunente d’amendamentu di a voce per creà effetti vucali prufessiunali chjari cum’è u cristallu."
-
-#: src/WhatsNewDialog.cpp
-msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr "Un attrezzu in tempu reale di staccamentu d’elementi sunori per isulà e voce, a batteria è l’altri istrumenti."
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr "Scuprite moduli d’estensione numerosi, creati da sviluppatori famosi, dispunibule nant’à [[%s|MuseHub]]."
-
-#: src/WhatsNewDialog.cpp
-msgid "A multiband compressor offering precise control over frequencies."
-msgstr "Un cumpressore multibanda chì permette un cuntrollu precisu di e frequenze."
-
-#: src/WhatsNewDialog.cpp
-msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-msgstr "Ace Studio - U generatore IA di voce cantata n°1 à u mondu."
-
-#: src/WhatsNewDialog.cpp
-msgid "Continue for Cloud Storage"
-msgstr "Cuntinuà per l’allucamentu nant’à u nivulu"
-
-#: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Benvenuti in Audacity !"
+
+#: src/WhatsNewDialog.cpp
+msgid "Video: how we're redesigning Audacity for the future"
+msgstr "Video : cumu cuncepimu torna Audacity per l’avvene"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "Cumpiete a vostra cunfigurazione di u nivulu Audacity cù audio.com"
 
 #: src/WhatsNewDialog.cpp
-msgid "What's new in Audacity"
-msgstr "Ciò chì hè novu in Audacity"
+msgid "Get our free OpenVino AI tools"
+msgstr "Ottinite di rigalu i nostri attrezzi AI OpenVino"
 
 #: src/WhatsNewDialog.cpp
-msgid "Watch the release video"
-msgstr "Fighjà u filmettu di a versione"
+msgid "Explore free plugins for sculpting your audio"
+msgstr "Scuprite i nostri moduli d’estensione di rigalu per sculpì u vostru audio"
 
 #: src/WhatsNewDialog.cpp
-msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr "Soap Voice Cleaner : sonu di voce « off » di qualità « studio »"
-
-#: src/WhatsNewDialog.cpp
-msgid "Help us decide the future of Audacity"
-msgstr "Aiutateci à cuncipisce u futuru d’Audacity"
-
-#: src/WhatsNewDialog.cpp
-msgid "Take part in survey"
-msgstr "Pigliate parte à l’inchiesta"
-
-#: src/WhatsNewDialog.cpp
-msgid "Audacity feature survey"
-msgstr "Inchiesta nant’à e funzioni d’Audacity"
+msgid "View free plugins"
+msgstr "Affissà i moduli d’estensione di rigalu"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -19782,6 +19766,34 @@ msgstr "Trascinà per ingrandà in una regione, Cliccu dirittu per riduce"
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Manca=ingrandà, Diritta=riduce, Centru=nurmale"
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Install Audacity 4"
+msgstr "Installà Audacity 4"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid ""
+"Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
+"easier to use than ever."
+msgstr ""
+"Hè ghjuntu Audacity 4 ! Cuntenendu una centina d’amendamenti chì u rende\n"
+"più rapidu è più chè mai faciule à impiegà."
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
+msgstr "L’installazione ùn cambia micca Audacity 3 è a vostra cunfigurazione attuale stà cum’ella hè."
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Discover what's new in our full feature breakdown."
+msgstr "Scuprite ciò chì hè novu i a nostra lista cumpleta di e funzioni."
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No thanks"
+msgstr "Innò, vi ringraziu"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Remind me later"
+msgstr "Rammintatemi un altra volta"
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19880,6 +19892,14 @@ msgstr "Disattivà l’UUID"
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Accept && continue"
 msgstr "Accettà è cuntinuà"
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Remind me later"
+msgstr "Rammintatemi un altra &volta"
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Dismiss"
+msgstr "&Ricusà"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -21732,3 +21752,92 @@ msgstr "Attrezzi spettrali"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Classicu"
+
+#~ msgid "Open Fro&m Cloud..."
+#~ msgstr "Apre &da u Nivulu…"
+
+#~ msgid "<font color=\"#000000\">"
+#~ msgstr "<font color=\"#000000\">"
+
+#~ msgid "Sign up to Audacity's cloud saving platform"
+#~ msgstr "Cunnittitevi à a piattaforma d’arregistramentu in u nivulu d’Audacity"
+
+#~ msgid "and access your projects from anywhere!"
+#~ msgstr "è accidite à i vostri prughjetti in ogni locu !"
+
+#~ msgid "</font>"
+#~ msgstr "</font>"
+
+#, c-format
+#~ msgid "What's new in Audacity %s"
+#~ msgstr "Ciò chì hè novu in Audacity %s"
+
+#, c-format
+#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
+#~ msgstr "Fighjate u [[%s|filmettu di a versione]] o lighjite u [[%s|ghjurnale di i cambiamenti]] per sapene di più annantu à ciò chì no avemu cambiatu in l’ultima versione !</p>"
+
+#, c-format
+#~ msgid "You can also read the [[%s|changelog]]</p>"
+#~ msgstr "Pudete leghje ancu u [[%s|ghjurnale di i cambiamenti]]</p>"
+
+#, c-format
+#~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+#~ msgstr "<p>Fighjate a nostra [[%s|appiecazione Hub Muse]] per una scelta tamanta di moduli d’estensione audio per l’utilizatori d’Audacity</p>"
+
+#~ msgid "A vocal processing effect that enhances vocal clarity and depth."
+#~ msgstr "Un effettu di trattamentu vucale chì megliureghja a chjarezza è a prufundezza di a voce."
+
+#~ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
+#~ msgstr "Un modulu d’estensione pulivalente di riverberazione per effetti sunori spaziosi è naturali."
+
+#~ msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
+#~ msgstr "Un modulu d’estensione d’amplificazione è di mudellizazione d’effetti per a chitarra chì permette tunalità realiste è soni persunalizavule."
+
+#~ msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
+#~ msgstr "Un modulu d’estensione reattivu di riverberazione chì s’adatta à a dinamica di a traccia per creà paisagi sunori immersivi."
+
+#~ msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
+#~ msgstr "Un modulu d’estensione multieffettu vucale chì megliureghja e traccie di voce per dà un risultatu prufessiunale."
+
+#~ msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
+#~ msgstr "Un modulu d’estensione d’effettu di bassu cuncepitu per pruvede un sonu di bassu chjaru è percutente."
+
+#~ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
+#~ msgstr "Un modulu d’estensione per a perfezzione di u sonu acusticu chì megliureghja u calore è a chjarezza."
+
+#~ msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
+#~ msgstr "Un modulu d’estensione stunente d’amendamentu di a voce per creà effetti vucali prufessiunali chjari cum’è u cristallu."
+
+#~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
+#~ msgstr "Un attrezzu in tempu reale di staccamentu d’elementi sunori per isulà e voce, a batteria è l’altri istrumenti."
+
+#, c-format
+#~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
+#~ msgstr "Scuprite moduli d’estensione numerosi, creati da sviluppatori famosi, dispunibule nant’à [[%s|MuseHub]]."
+
+#~ msgid "A multiband compressor offering precise control over frequencies."
+#~ msgstr "Un cumpressore multibanda chì permette un cuntrollu precisu di e frequenze."
+
+#~ msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
+#~ msgstr "Ace Studio - U generatore IA di voce cantata n°1 à u mondu."
+
+#~ msgid "Continue for Cloud Storage"
+#~ msgstr "Cuntinuà per l’allucamentu nant’à u nivulu"
+
+#~ msgid "What's new in Audacity"
+#~ msgstr "Ciò chì hè novu in Audacity"
+
+#~ msgid "Watch the release video"
+#~ msgstr "Fighjà u filmettu di a versione"
+
+#~ msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+#~ msgstr "Soap Voice Cleaner : sonu di voce « off » di qualità « studio »"
+
+#~ msgid "Help us decide the future of Audacity"
+#~ msgstr "Aiutateci à cuncipisce u futuru d’Audacity"
+
+#~ msgid "Take part in survey"
+#~ msgstr "Pigliate parte à l’inchiesta"
+
+#~ msgid "Audacity feature survey"
+#~ msgstr "Inchiesta nant’à e funzioni d’Audacity"

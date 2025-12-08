@@ -6,13 +6,15 @@
 # Translators:
 # Link Winterberg, 2024
 # 王晨旭 <wcxu21@126.com>, 2025
+# , fuzzy
+# 绅士喵, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.5\n"
+"Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-04 17:39+0200\n"
+"POT-Creation-Date: 2025-12-03 19:18+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: 王晨旭 <wcxu21@126.com>, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/audacity/teams/164520/zh_CN/)\n"
@@ -509,11 +511,11 @@ msgstr ""
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Hard Clipping"
-msgstr "硬截幅"
+msgstr "硬削波"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Soft Clipping"
-msgstr "软截幅"
+msgstr "软削波"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Soft Overdrive"
@@ -783,15 +785,15 @@ msgstr "为选区应用线性淡出"
 
 #: libraries/lib-builtin-effects/FindClippingBase.cpp
 msgid "Find Clipping"
-msgstr "寻找截幅失真"
+msgstr "查找削波"
 
 #: libraries/lib-builtin-effects/FindClippingBase.cpp
 msgid "Creates labels where clipping is detected"
-msgstr "检测到截幅失真时创建标签"
+msgstr "检测到削波时创建标签"
 
 #: libraries/lib-builtin-effects/FindClippingBase.cpp
 msgid "Clipping"
-msgstr "截幅失真"
+msgstr "削波"
 
 #. i18n-hint: Two numbers are substituted; the second is the
 #. size of a set, the first is the size of a subset, and not
@@ -1350,6 +1352,16 @@ msgstr "哇哇声"
 #: libraries/lib-builtin-effects/WahWahBase.cpp
 msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
 msgstr "快速的音质变化，就像 20 世纪 70 年代流行的吉他声音"
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+msgctxt "cloud sync"
+msgid "Error importing cloud audio"
+msgstr "导入云音频时出错"
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+msgctxt "update dialog"
+msgid "Can't download cloud audio"
+msgstr "无法下载云音频"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -4226,6 +4238,10 @@ msgid "Pitch (EAC)"
 msgstr "音高 (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Wavelet (1/6 Octave Hann)"
+msgstr "小波（1/6 倍频程汉宁窗）"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
 msgstr "最高频率必须不低于100Hz"
 
@@ -6993,6 +7009,7 @@ msgid "New script"
 msgstr "新建脚本"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Open"
 msgstr "打开"
@@ -7127,6 +7144,7 @@ msgid "Go to previous S-expr"
 msgstr "转到上一个 S-expr"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Next"
 msgstr "下一个"
@@ -7158,6 +7176,29 @@ msgstr "正在等待 audio.con"
 msgid "An action on audio.com is required before you can continue. You can cancel this operation."
 msgstr "您需要在 audio.com 上执行操作才能继续。您可以取消此操作。"
 
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "从 audio.com 打开"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+msgid "Downloading audio"
+msgstr "正在下载音频"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#, c-format
+msgid ""
+"Failed to download audio from cloud.\n"
+"%s"
+msgstr ""
+"从云端下载音频失败。\n"
+"%s"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+msgid "Downloaded audio file does not exist."
+msgstr "下载的音频文件不存在。"
+
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
@@ -7170,11 +7211,6 @@ msgid "Generating audio preview..."
 msgstr "正在生成音频预览..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "从 audio.com 打开"
-
-#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
 msgstr "同步项目"
 
@@ -7183,16 +7219,24 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "仅可更新云项目的预览"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Open &From Cloud"
+msgstr "从云端打开​​(&F)"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Open Cloud &Project..."
+msgstr "打开云端项目(&P)..."
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Open Cloud &Audio File..."
+msgstr "打开云端音频文件(&A)..."
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
 msgstr "保存到云端(&T)..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "&Update Cloud Audio Preview"
 msgstr "更新云端音频预览(&U)"
-
-#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open Fro&m Cloud..."
-msgstr "从云端打开​​(&M)..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "S&hare Audio..."
@@ -7325,6 +7369,78 @@ msgstr "注销(&S)"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
 msgstr "不再显示此内容"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Open cloud audio file"
+msgstr "打开云端音频文件"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "less than 1 minute"
+msgstr "不到 1 分钟"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, c-format
+msgid "one minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "%d 分钟前"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "%d 小时前"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Title"
+msgstr "标题"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Author"
+msgstr "作者"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Tags"
+msgstr "标签"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Created"
+msgstr "已创建"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Failed to authorize account"
+msgstr "账户授权失败"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Loading audio list..."
+msgstr "正在加载音频列表..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Failed to get audio list"
+msgstr "获取音频列表失败"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Search:"
+msgstr "搜索："
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Prev"
+msgstr "上一个"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr "在 audio.com 查看"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "Page %d of %d"
+msgstr "第 %d 页，共 %d 页"
 
 #. i18n-hint: A title that is shown on the first project save that allows the
 #. user to select Cloud or local save.
@@ -7504,7 +7620,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create a free cloud storage account to access your projects and audio from any device"
-msgstr ""
+msgstr "创建免费云存储帐户，即可从任何设备访问您的项目和音频。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7520,7 +7636,7 @@ msgstr "继续使用 Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Or use email and password"
-msgstr ""
+msgstr "或者使用电子邮件和密码"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -7635,28 +7751,14 @@ msgid "Open from Cloud"
 msgstr "从云端打开"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "less than 1 minute"
-msgstr "不到 1 分钟"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "one minutes ago"
 msgid_plural "%d minutes ago"
 msgstr[0] "%d 分钟前"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "one hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "%d 小时前"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Modified"
 msgstr "已修改"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Failed to authorize account"
-msgstr "账户授权失败"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Loading projects list..."
@@ -7669,23 +7771,6 @@ msgstr "无法获取项目列表"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Cloud saved projects"
 msgstr "云端保存的项目"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Search:"
-msgstr "搜索："
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Prev"
-msgstr "上一个"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "View in audio.com"
-msgstr "在 audio.com 查看"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "Page %d of %d"
-msgstr "第 %d 页，共 %d 页"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Anyone will be able to listen to this audio."
@@ -10826,7 +10911,7 @@ msgstr "%s的实时效果器"
 msgid "Realtime Effects"
 msgstr "实时效果器"
 
-#: src/RealtimeEffectPanel.cpp
+#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
 msgid "Watch video"
 msgstr "观看视频"
 
@@ -11541,129 +11626,28 @@ msgid "Calibration Complete"
 msgstr "校准完成"
 
 #: src/WhatsNewDialog.cpp
-msgid "<font color=\"#000000\">"
-msgstr "<font color=\"#000000\">"
-
-#: src/WhatsNewDialog.cpp
-msgid "Sign up to Audacity's cloud saving platform"
-msgstr "注册 Audacity 的云储蓄平台"
-
-#: src/WhatsNewDialog.cpp
-msgid "and access your projects from anywhere!"
-msgstr "并从任何地方访问您的项目！"
-
-#: src/WhatsNewDialog.cpp
-msgid "</font>"
-msgstr "</font>"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "What's new in Audacity %s"
-msgstr "Audacity %s 版本的新功能"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr "观看 [[%s发布视频]] 或阅读 [[%s变更日志]] 以了解我们在最新版本中包含的更多信息！</p>"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "You can also read the [[%s|changelog]]</p>"
-msgstr "您还可以阅读[[%s|changelog]]1"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get free plugins & sounds"
-msgstr "获取免费插件和声音"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr "<p>查看我们的 [[%s|Muse Hub 应用程序]] 为 Audacity 用户提供各种音频插件</p>"
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr "一种增强声音清晰度和深度的声音处理效果。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr "多用途混响插件，可产生宽敞、自然的声音效果。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr "吉他放大器和效果建模插件，可产生逼真的音调和可定制的声音。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr "响应式混响插件，可适应音轨动态，获得身临其境的音景。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr "声音多效果插件，可增强声音轨道以获得专业效果。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr "低音效果插件旨在提供强劲、清晰的低音声音。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr "一个用于实现完美声音的插件，可增强温暖度和清晰度。"
-
-#: src/WhatsNewDialog.cpp
-msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr "令人惊叹的语音增强插件，可实现清晰、专业的声音效果。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr "一种实时主干分离工具，用于隔离人声、鼓和乐器。"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr "查看 [[%s MuseHub]] 上由知名开发者提供的各种插件。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A multiband compressor offering precise control over frequencies."
-msgstr "多频段压缩器可对频率进行精确控制。"
-
-#: src/WhatsNewDialog.cpp
-msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-msgstr "Ace Studio - 世界第一的 AI 歌唱声音生成器。"
-
-#: src/WhatsNewDialog.cpp
-msgid "Continue for Cloud Storage"
-msgstr "继续云存储"
-
-#: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "欢迎使用 Audacity!"
+
+#: src/WhatsNewDialog.cpp
+msgid "Video: how we're redesigning Audacity for the future"
+msgstr "视频：我们如何重新设计面向未来的 Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "使用 audio.com 完成您的 Audacity 云设置"
 
 #: src/WhatsNewDialog.cpp
-msgid "What's new in Audacity"
-msgstr "Audacity 的新功能"
+msgid "Get our free OpenVino AI tools"
+msgstr "获取我们的免费 OpenVINO AI 工具"
 
 #: src/WhatsNewDialog.cpp
-msgid "Watch the release video"
-msgstr "观看发布视频"
+msgid "Explore free plugins for sculpting your audio"
+msgstr "探索用于塑造音频的免费插件"
 
 #: src/WhatsNewDialog.cpp
-msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr "Soap Voice Cleaner：录音室品质的画外音"
-
-#: src/WhatsNewDialog.cpp
-msgid "Help us decide the future of Audacity"
-msgstr "帮助我们决定 Audacity 的未来"
-
-#: src/WhatsNewDialog.cpp
-msgid "Take part in survey"
-msgstr "参与调查"
-
-#: src/WhatsNewDialog.cpp
-msgid "Audacity feature survey"
-msgstr "Audacity 功能调查"
+msgid "View free plugins"
+msgstr "查看免费插件"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -12405,7 +12389,7 @@ msgstr "新峰值振幅 (dB) (&N)："
 
 #: src/effects/Amplify.cpp
 msgid "Allo&w clipping"
-msgstr "允许截幅失真(&W)"
+msgstr "允许削波(&W)"
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -13004,7 +12988,7 @@ msgstr "参数控制"
 
 #: src/effects/Distortion.cpp
 msgid "Clipping level"
-msgstr "截幅等级"
+msgstr "削波等级"
 
 #: src/effects/Distortion.cpp
 msgid "Drive"
@@ -13016,7 +13000,7 @@ msgstr "增益补偿"
 
 #: src/effects/Distortion.cpp
 msgid "Clipping threshold"
-msgstr "截幅阈值"
+msgstr "削波阈值"
 
 #: src/effects/Distortion.cpp
 msgid "Hardness"
@@ -16744,7 +16728,7 @@ msgstr "额外菜单​​(&X)"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
-msgstr "在波形中显示片段(&S)"
+msgstr "在波形中显示削波(&S)"
 
 #: src/menus/ViewMenus.cpp
 msgid "Sho&w RMS in Waveform"
@@ -19751,6 +19735,32 @@ msgstr "拖入放大区域，右击缩小"
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "鼠标左键=放大， 右键=缩小， 中键=正常"
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Install Audacity 4"
+msgstr "安装 Audacity 4"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid ""
+"Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
+"easier to use than ever."
+msgstr "Audacity 4 来了！它包含了数百项升级，使其比以往任何时候都更快、更易于使用。"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
+msgstr "安装不会影响 Audacity 3，因此您现有的设置将保持不变。"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Discover what's new in our full feature breakdown."
+msgstr "在我们的完整功能介绍中了解新增内容。"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No thanks"
+msgstr "不，谢谢"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Remind me later"
+msgstr "稍后提醒我"
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19849,6 +19859,14 @@ msgstr "禁用 UUID"
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Accept && continue"
 msgstr "接受并继续"
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Remind me later"
+msgstr "稍后提醒我(&R)"
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Dismiss"
+msgstr "关闭(&D)"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -20425,7 +20443,7 @@ msgstr "Benjamin Schwartz 和 Steve Daulton"
 
 #: plug-ins/clipfix.ny
 msgid "Threshold of Clipping (%)"
-msgstr "剪切阈值（%）"
+msgstr "削波阈值（%）"
 
 #: plug-ins/clipfix.ny
 msgid "Reduce amplitude to allow for restored peaks (dB)"

@@ -146,7 +146,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 
    snapshots.push_back(CarouselSnapshot(
       XXO("Video: how we're redesigning Audacity for the future"),
-      RoundedImage(Rescale(LoadEmbeddedPNG(Audacity40Video_png, Audacity40Video_png_len), width, height), 12),
+      RoundedImage(Rescale(LoadEmbeddedImage(Audacity40Video_png, Audacity40Video_png_len), width, height), 12),
       WhatsNewURL,
       XXO("Watch video"),
       XXO("")
@@ -160,7 +160,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 
       snapshots.push_back(CarouselSnapshot(
          XXO("Complete your Audacity cloud setup with audio.com"),
-         RoundedImage(Rescale(LoadEmbeddedPNG(AudioDotComPromo_png, AudioDotComPromo_png_len), width, height), 12),
+         RoundedImage(Rescale(LoadEmbeddedImage(AudioDotComPromo_png, AudioDotComPromo_png_len), width, height), 12),
          displayLoginDialog,
          XXO("Continue"),
          XXO("")
@@ -170,7 +170,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 #if defined (__WXOSX__) || defined(__WXMSW__)
    snapshots.push_back(CarouselSnapshot(
       XXO("Get our free OpenVino AI tools"),
-      RoundedImage(Rescale(LoadEmbeddedPNG(OpenVinoMH_png, OpenVinoMH_png_len), width, height), 12),
+      RoundedImage(Rescale(LoadEmbeddedImage(OpenVinoMH_png, OpenVinoMH_png_len), width, height), 12),
       OpenVinoURL,
       XXO("Get it on MuseHub"),
       XXO("")
@@ -184,8 +184,8 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
       };
 
       snapshots.push_back(CarouselSnapshot(
-         XXO("Explore free plugins for scuplting your audio"),
-         RoundedImage(Rescale(LoadEmbeddedPNG(MuseHubPromo_png, MuseHubPromo_png_len), width, height), 12),
+         XXO("Explore free plugins for sculpting your audio"),
+         RoundedImage(Rescale(LoadEmbeddedImage(MuseHubPromo_jpg, MuseHubPromo_jpg_len), width, height), 12),
          displayMuseHub,
          XXO("View free plugins"),
          XXO("")
@@ -194,7 +194,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 
    snapshots.push_back(CarouselSnapshot(
       XXO("25th Anniversary Merchandise!"),
-      RoundedImage(Rescale(LoadEmbeddedPNG(AudacityMerchStore_png, AudacityMerchStore_png_len), width, height), 12),
+      RoundedImage(Rescale(LoadEmbeddedImage(AudacityMerchStore_png, AudacityMerchStore_png_len), width, height), 12),
       AudacityMerchStoreURL,
       XXO("Visit now"),
       XXO("Visit our new Audacity merch store")
@@ -297,13 +297,13 @@ wxImage WhatsNewDialog::Rescale(const wxImage& image, int width, int height)
    return img;
 }
 
-wxImage WhatsNewDialog::LoadEmbeddedPNG(const unsigned char* data, size_t len)
+wxImage WhatsNewDialog::LoadEmbeddedImage(const unsigned char* data, size_t len)
 {
     wxMemoryInputStream stream(data, len);
     wxImage image;
-    if (!image.LoadFile(stream, wxBITMAP_TYPE_PNG))
+    if (!image.LoadFile(stream, wxBITMAP_TYPE_ANY))
     {
-        wxLogError("Failed to load embedded PNG image.");
+        wxLogError("Failed to load embedded image.");
         return wxImage();
     }
     return image;

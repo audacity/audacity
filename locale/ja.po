@@ -1,18 +1,22 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Audacity Team
+# Japanese translation for Audacity.
+# Copyright (C) 2025 Audacity Team
 # This file is distributed under the same license as the audacity package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 # Translators:
-# Link Winterberg, 2024
+# ThemeBoy <transifex@themeboy.com>, 2024
+# hokorobi <hokorobi.hokorobi@gmail.com>, 2024
+# Nishikori Shinki, 2024
+# ABE Tsunehiko, 2024
+# Thomas De Rocker, 2024
+# Beluga, 2024
+# 森の子リスのミーコの大冒険 <phroneris@gmail.com>, 2024
 # Tadahisa Sugisaki, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.5\n"
+"Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-04 17:39+0200\n"
+"POT-Creation-Date: 2025-12-03 19:18+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Tadahisa Sugisaki, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/audacity/teams/164520/ja/)\n"
@@ -832,7 +836,7 @@ msgstr "ラウドネスノーマライズ"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 msgid "Sets the loudness of one or more tracks"
-msgstr "1 つまたは複数のトラックに対してラウドネスを設定"
+msgstr "1 トラック以上に対してラウドネスを設定"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 msgid "Normalizing Loudness...\n"
@@ -1351,6 +1355,16 @@ msgstr "ワウ（Wahwah）"
 #: libraries/lib-builtin-effects/WahWahBase.cpp
 msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
 msgstr "1970 年代ギターサウンドのような急激な音質変化です"
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+msgctxt "cloud sync"
+msgid "Error importing cloud audio"
+msgstr "クラウドオーディオのインポートエラー"
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+msgctxt "update dialog"
+msgid "Can't download cloud audio"
+msgstr "クラウドオーディオをダウンロードできません"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -4220,6 +4234,10 @@ msgid "Pitch (EAC)"
 msgstr "ピッチ（EAC）"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Wavelet (1/6 Octave Hann)"
+msgstr "ウェーブレット（1/6 オクターブ ハン窓）"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
 msgstr "最高周波数は 100 Hz 以上である必要があります"
 
@@ -6998,6 +7016,7 @@ msgid "New script"
 msgstr "新規スクリプト"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Open"
 msgstr "開く"
@@ -7132,6 +7151,7 @@ msgid "Go to previous S-expr"
 msgstr "前の S-expr へ"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Next"
 msgstr "次へ"
@@ -7163,6 +7183,29 @@ msgstr "audio.com の応答を待っています"
 msgid "An action on audio.com is required before you can continue. You can cancel this operation."
 msgstr "続けるには audio.com での操作が必要です。この操作はキャンセルできます。"
 
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "audio.com から開く"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+msgid "Downloading audio"
+msgstr "オーディオをダウンロード中"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#, c-format
+msgid ""
+"Failed to download audio from cloud.\n"
+"%s"
+msgstr ""
+"クラウドからオーディオをダウンロードできません。\n"
+"「%s」"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+msgid "Downloaded audio file does not exist."
+msgstr "ダウンロードされたオーディオファイルはありません。"
+
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
@@ -7175,11 +7218,6 @@ msgid "Generating audio preview..."
 msgstr "オーディオプレビューを生成中..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "audio.com から開く"
-
-#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
 msgstr "プロジェクトを同期"
 
@@ -7188,16 +7226,24 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "プレビューはクラウドプロジェクトに対してのみ更新できます"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Open &From Cloud"
+msgstr "クラウドから開く(&F)"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Open Cloud &Project..."
+msgstr "クラウドプロジェクトを開く... (&P)"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Open Cloud &Audio File..."
+msgstr "クラウドオーディオファイルを開く...(&A)"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
 msgstr "クラウドに保存(&T)..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "&Update Cloud Audio Preview"
 msgstr "クラウドオーディオプレビューを更新(&U)"
-
-#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open Fro&m Cloud..."
-msgstr "クラウドから開く(&M)..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "S&hare Audio..."
@@ -7330,6 +7376,78 @@ msgstr "サインアウト(&S)"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
 msgstr "次回からは表示しない"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Open cloud audio file"
+msgstr "クラウドオーディオファイルを開く"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "less than 1 minute"
+msgstr "1 分未満"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, c-format
+msgid "one minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "%d 分前"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "%d 時間前"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Title"
+msgstr "タイトル"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Author"
+msgstr "作者"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Tags"
+msgstr "タグ"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Created"
+msgstr "作成日"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Failed to authorize account"
+msgstr "アカウント認証に失敗しました"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Loading audio list..."
+msgstr "オーディオリストを読み込み中..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Failed to get audio list"
+msgstr "オーディオリストの読み込みに失敗"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Search:"
+msgstr "検索:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Prev"
+msgstr "前へ"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr "audio.com で表示"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "Page %d of %d"
+msgstr "ページ %d（全 %d ページ）"
 
 #. i18n-hint: A title that is shown on the first project save that allows the
 #. user to select Cloud or local save.
@@ -7642,28 +7760,14 @@ msgid "Open from Cloud"
 msgstr "クラウドから開く"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "less than 1 minute"
-msgstr "1 分未満"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "one minutes ago"
 msgid_plural "%d minutes ago"
 msgstr[0] "%d 分前"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "one hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "%d 時間前"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Modified"
 msgstr "変更しました"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Failed to authorize account"
-msgstr "アカウント認証に失敗しました"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Loading projects list..."
@@ -7676,23 +7780,6 @@ msgstr "プロジェクトリストの読み込みに失敗しました"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Cloud saved projects"
 msgstr "クラウドに保存したプロジェクト"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Search:"
-msgstr "検索:"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Prev"
-msgstr "前へ"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "View in audio.com"
-msgstr "audio.com で表示"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "Page %d of %d"
-msgstr "ページ %d（全 %d ページ）"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Anyone will be able to listen to this audio."
@@ -10842,7 +10929,7 @@ msgstr "%s のリアルタイムエフェクト"
 msgid "Realtime Effects"
 msgstr "リアルタイムエフェクト"
 
-#: src/RealtimeEffectPanel.cpp
+#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
 msgid "Watch video"
 msgstr "動画を視聴"
 
@@ -11565,129 +11652,28 @@ msgid "Calibration Complete"
 msgstr "校正完了"
 
 #: src/WhatsNewDialog.cpp
-msgid "<font color=\"#000000\">"
-msgstr "<font color=“#000000”>"
-
-#: src/WhatsNewDialog.cpp
-msgid "Sign up to Audacity's cloud saving platform"
-msgstr "Audacity のクラウド保存プラットフォームにサインアップ"
-
-#: src/WhatsNewDialog.cpp
-msgid "and access your projects from anywhere!"
-msgstr "また、自分のプロジェクトにどこでもアクセスできます!"
-
-#: src/WhatsNewDialog.cpp
-msgid "</font>"
-msgstr "</font>"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "What's new in Audacity %s"
-msgstr "Audacity %s の更新内容"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr "[%s|リリースビデオ]]を見たり、[[%s|更新ログ]]を読んで、最新リリースに含まれる内容について詳しい情報を得てください!<p>"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "You can also read the [[%s|changelog]]</p>"
-msgstr "[[%s|changelog]] もお読みください</p>"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get free plugins & sounds"
-msgstr "無料のプラグインとサウンドを入手"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr "<p>Audascity ユーザーのためのさまざまなオーディオプラグインを提供する [[%s|Muse Hub app]] をチェックしてください</p>"
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr "ボーカルの明瞭さと深みを高めるボーカル処理エフェクトです。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr "ゆったりした自然な響き効果をもたらす汎用のリバーブプラグインです。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr "リアルなトーンとカスタマイズ可能なサウンドのための、ギターアンプとエフェクトモデリング用プラグインです。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr "没入感あるサウンド風景のための、トラックの強弱変化への追従性の高いリバーブプラグインです。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr "ボーカルトラックをプロフェッショナルに仕上げる、ボーカルマルチエフェクトプラグインです。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr "パンチの効いたクリアなローエンドサウンドを実現するベースエフェクトプラグインです。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr "暖かみと明瞭度を高め完璧なアコースティックサウンドを実現するプラグインです。"
-
-#: src/WhatsNewDialog.cpp
-msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr "宝石のように澄んだプロフェッショナルなボーカルエフェクトを実現する、驚異のボイス強調プラグインです。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr "ボーカル、ドラム、楽器を分離する、リアルタイムステム分離ツールです。"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr "有名な開発者による[[%s|MuseHub]]のさまざまなプラグインをチェックしてください。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A multiband compressor offering precise control over frequencies."
-msgstr "周波数を正確にコントロールできるマルチバンドコンプレッサーです。"
-
-#: src/WhatsNewDialog.cpp
-msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-msgstr "Ace Studio - 世界No.1の AI 歌声ジェネレータです。"
-
-#: src/WhatsNewDialog.cpp
-msgid "Continue for Cloud Storage"
-msgstr "クラウドストレージで続ける"
-
-#: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Audacity へようこそ!"
+
+#: src/WhatsNewDialog.cpp
+msgid "Video: how we're redesigning Audacity for the future"
+msgstr "動画：未来を見据えた Audacity のデザイン刷新"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "audio.com で Audacity クラウドの設定を完了する"
 
 #: src/WhatsNewDialog.cpp
-msgid "What's new in Audacity"
-msgstr "Audacity の新機能"
+msgid "Get our free OpenVino AI tools"
+msgstr "無料の OpenVino AI ツールを入手"
 
 #: src/WhatsNewDialog.cpp
-msgid "Watch the release video"
-msgstr "リリース動画を見る"
+msgid "Explore free plugins for sculpting your audio"
+msgstr "オーディオを加工する無料プラグインを探索"
 
 #: src/WhatsNewDialog.cpp
-msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr "Soap ボイスクリーナー：スタジオ品質のナレーションサウンド"
-
-#: src/WhatsNewDialog.cpp
-msgid "Help us decide the future of Audacity"
-msgstr "Audacity の未来にご協力ください"
-
-#: src/WhatsNewDialog.cpp
-msgid "Take part in survey"
-msgstr "調査に参加"
-
-#: src/WhatsNewDialog.cpp
-msgid "Audacity feature survey"
-msgstr "Audacity 機能調査"
+msgid "View free plugins"
+msgstr "無料のプラグインを表示"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -19795,6 +19781,32 @@ msgstr "ドラッグして範囲を拡大、右クリックして縮小"
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "左=拡大、右=縮小、中央=通常"
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Install Audacity 4"
+msgstr "Audacity 4 をインストール"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid ""
+"Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
+"easier to use than ever."
+msgstr "Audacity 4 登場! 数百ものアップグレードを詰め込んで、これまで以上に高速で使いやすくなりました。"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
+msgstr "インストールしても Audacity 3 には影響しません。既存の環境はそのまま残ります。"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Discover what's new in our full feature breakdown."
+msgstr "新機能の詳細な解説で、最新情報を発見してください。"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No thanks"
+msgstr "いいえ、結構です"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Remind me later"
+msgstr "あとで通知"
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19893,6 +19905,14 @@ msgstr "UUID を無効化"
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Accept && continue"
 msgstr "承認して継続(&&)"
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Remind me later"
+msgstr "あとで通知(&R)"
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Dismiss"
+msgstr "閉じる(&D)"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"

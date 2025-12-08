@@ -5,9 +5,9 @@
 # Miroslav Nikolić <miroslavnikolic@rocketmail.com>, 2011—2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.5\n"
+"Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-04 17:39+0200\n"
+"POT-Creation-Date: 2025-11-25 18:02+0300\n"
 "PO-Revision-Date: 2014-10-06 05:34-0000\n"
 "Last-Translator: Miroslav Nikolic\n"
 "Language-Team: Serbian <>\n"
@@ -1392,6 +1392,17 @@ msgstr "Vauvau"
 
 #: libraries/lib-builtin-effects/WahWahBase.cpp
 msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
+msgstr ""
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+#, fuzzy
+msgctxt "cloud sync"
+msgid "Error importing cloud audio"
+msgstr "Greška uvoženja"
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+msgctxt "update dialog"
+msgid "Can't download cloud audio"
 msgstr ""
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
@@ -4333,6 +4344,10 @@ msgid "Pitch (EAC)"
 msgstr "Vrhunac (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Wavelet (1/6 Octave Hann)"
+msgstr ""
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
 msgstr "Najveća učestanost mora biti 100 Hz ili iznad"
 
@@ -7231,6 +7246,7 @@ msgid "New script"
 msgstr ""
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, fuzzy
 msgid "Open"
@@ -7383,6 +7399,7 @@ msgid "Go to previous S-expr"
 msgstr ""
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, fuzzy
 msgid "Next"
@@ -7418,6 +7435,28 @@ msgstr "Čuvam snimljeni zvuk"
 msgid "An action on audio.com is required before you can continue. You can cancel this operation."
 msgstr ""
 
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#, fuzzy
+msgid "Downloading audio"
+msgstr "Preuzmi"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to download audio from cloud.\n"
+"%s"
+msgstr "Nisam uspeo da uklonim „%s“"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+msgid "Downloaded audio file does not exist."
+msgstr ""
+
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
@@ -7431,11 +7470,6 @@ msgid "Generating audio preview..."
 msgstr "Stvaram buku"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 #, fuzzy
 msgid "Synchronizing project"
 msgstr "Čuvanje &projekata"
@@ -7446,17 +7480,26 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 #, fuzzy
+msgid "Open &From Cloud"
+msgstr "Otvori &skorašnju..."
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open Cloud &Project..."
+msgstr "Otvori &skorašnju..."
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Open Cloud &Audio File..."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
 msgid "Save &To Cloud..."
 msgstr "Sačuvaj kao..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "&Update Cloud Audio Preview"
 msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Open Fro&m Cloud..."
-msgstr "Otvori &skorašnju..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 #, fuzzy
@@ -7609,6 +7652,91 @@ msgstr "Linearno"
 #, fuzzy
 msgid "Don't show this again"
 msgstr "Ne prikazuj više ovo upozorenje"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Open cloud audio file"
+msgstr "Prilikom uvoza datoteka zvuka"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "less than 1 minute"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy, c-format
+msgid "one minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "Trajanje tona:"
+msgstr[1] "Trajanje tona:"
+msgstr[2] "Trajanje tona:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "Trajanje tona:"
+msgstr[1] "Trajanje tona:"
+msgstr[2] "Trajanje tona:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Title"
+msgstr "Naslov numere"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Author"
+msgstr "Autor: "
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Tags"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Created"
+msgstr "Napravi"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to authorize account"
+msgstr "Ne mogu da dovučem opis toka"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Loading audio list..."
+msgstr "Smeštam zvuk"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Failed to get audio list"
+msgstr "Nisam uspeo da pronađem kodek"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Search:"
+msgstr "&Potraži:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Prev"
+msgstr "&Prikaži"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "Page %d of %d"
+msgstr "Priključci od %i do %i"
 
 #. i18n-hint: A title that is shown on the first project save that allows the
 #. user to select Cloud or local save.
@@ -7935,10 +8063,6 @@ msgid "Open from Cloud"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "less than 1 minute"
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "one minutes ago"
 msgid_plural "%d minutes ago"
@@ -7947,22 +8071,9 @@ msgstr[1] ""
 msgstr[2] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
-msgid "one hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "Trajanje tona:"
-msgstr[1] "Trajanje tona:"
-msgstr[2] "Trajanje tona:"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, fuzzy
 msgid "Modified"
 msgstr "Izmenjeni natpis"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Failed to authorize account"
-msgstr "Ne mogu da dovučem opis toka"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, fuzzy
@@ -7978,25 +8089,6 @@ msgstr "Nisam uspeo da pronađem kodek"
 #, fuzzy
 msgid "Cloud saved projects"
 msgstr "Projekti Odvažnosti"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Search:"
-msgstr "&Potraži:"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Prev"
-msgstr "&Prikaži"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "View in audio.com"
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
-msgid "Page %d of %d"
-msgstr "Priključci od %i do %i"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, fuzzy
@@ -11242,7 +11334,7 @@ msgstr "Primenjeno je dejstvo: %s"
 msgid "Realtime Effects"
 msgstr "Uključite efekte"
 
-#: src/RealtimeEffectPanel.cpp
+#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
 msgid "Watch video"
 msgstr ""
 
@@ -11985,131 +12077,29 @@ msgid "Calibration Complete"
 msgstr "Rezultati kalibracije\n"
 
 #: src/WhatsNewDialog.cpp
-msgid "<font color=\"#000000\">"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Sign up to Audacity's cloud saving platform"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "and access your projects from anywhere!"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "</font>"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "What's new in Audacity %s"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "You can also read the [[%s|changelog]]</p>"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Get free plugins & sounds"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "A multiband compressor offering precise control over frequencies."
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Continue for Cloud Storage"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Dobrodošli u Odvažnost!"
+
+#: src/WhatsNewDialog.cpp
+msgid "Video: how we're redesigning Audacity for the future"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
-msgid "What's new in Audacity"
-msgstr "Zatvori Odvažnost"
-
-#: src/WhatsNewDialog.cpp
-msgid "Watch the release video"
+msgid "Get our free OpenVino AI tools"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Help us decide the future of Audacity"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Take part in survey"
+msgid "Explore free plugins for sculpting your audio"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
 #, fuzzy
-msgid "Audacity feature survey"
-msgstr "Datoteke projekta Odvažnosti"
+msgid "View free plugins"
+msgstr "Ne mogu da učitam „%s“ priključak"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -21034,6 +21024,33 @@ msgstr ""
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr ""
 
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Install Audacity 4"
+msgstr "Zatvori Odvažnost"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid ""
+"Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
+"easier to use than ever."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Discover what's new in our full feature breakdown."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No thanks"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Remind me later"
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, fuzzy
@@ -21142,6 +21159,14 @@ msgstr "isključeno"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Accept && continue"
+msgstr ""
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Remind me later"
+msgstr ""
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Dismiss"
 msgstr ""
 
 #: src/update/UpdatePopupDialog.cpp
@@ -23143,6 +23168,14 @@ msgid "Legacy"
 msgstr ""
 
 #, fuzzy
+#~ msgid "What's new in Audacity"
+#~ msgstr "Zatvori Odvažnost"
+
+#, fuzzy
+#~ msgid "Audacity feature survey"
+#~ msgstr "Datoteke projekta Odvažnosti"
+
+#, fuzzy
 #~ msgid "Get AI effects..."
 #~ msgstr "Postavke..."
 
@@ -24170,9 +24203,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Imate samo jednu pojačanu zvučnu numeru a nemate primenjivih \n"
 #~ "natpisa, tako da ne možete da izvezete u zasebne zvučne datoteke."
-
-#~ msgid "Create"
-#~ msgstr "Napravi"
 
 #, fuzzy
 #~ msgid "Options:"
@@ -25222,9 +25252,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Ako dostupna memorija sistema padne ispod ove vrednosti, zvuk neće\n"
 #~ "više biti smeštan u memoriju već će biti zapisivan na disk."
-
-#~ msgid "When importing audio files"
-#~ msgstr "Prilikom uvoza datoteka zvuka"
 
 #~ msgid "Allow &background on-demand loading"
 #~ msgstr "Omogući učitavanje &pozadine na zahtev"
@@ -27058,9 +27085,6 @@ msgstr ""
 
 #~ msgid "Performing Effect: %s"
 #~ msgstr "Izvršavam dejstvo: %s"
-
-#~ msgid "Author: "
-#~ msgstr "Autor: "
 
 #~ msgid "Sorry, Plug-in Effects cannot be performed on stereo tracks where the individual channels of the track do not match."
 #~ msgstr "Izvinite, dejstva priključka ne mogu biti primenjena na stereo numerama gde se pojedinačni kanali numere ne podudaraju."

@@ -62,6 +62,11 @@ BEGIN_EVENT_TABLE(UpdateManager, wxEvtHandler)
     EVT_TIMER(ID_TIMER, UpdateManager::OnTimer)
 END_EVENT_TABLE()
 
+UpdateManager::UpdateManager()
+{
+   mSendAnonymousUsageInfo = SendAnonymousUsageInfo->ReadWithDefault(false);
+}
+
 UpdateManager& UpdateManager::GetInstance()
 {
     static UpdateManager updateManager;
@@ -256,9 +261,9 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotifi
                 else if (code == wxID_NO)
                 {
                     mOnProgress = false;
+                    // Proceed with notifications if update was skipped
+                    ShowNotifications();
                 }
-
-                ShowNotifications();
             });
         }
 #if UPDATE_LOCAL_TESTING == 0
@@ -405,16 +410,23 @@ void UpdateManager::SendOptOutRequest() const {
 
 void UpdateManager::UpdatePrefs()
 {
+   const bool updatedSendAnonymousUsageInfo = SendAnonymousUsageInfo->Read();
+   bool prefsUpdated = false;
+
    //! Create the instance id if the user allowed it and it was not created before
-   if (SendAnonymousUsageInfo->Read()) {
+   if (updatedSendAnonymousUsageInfo && !mSendAnonymousUsageInfo) {
       if(InstanceId->Read().IsEmpty()) {
          InstanceId->Write(audacity::Uuid::Generate().ToHexString());
-         gPrefs->Flush();
+         prefsUpdated = true;
       }
    }
-   else {
+   else if (mSendAnonymousUsageInfo && !updatedSendAnonymousUsageInfo) {
       SendOptOutRequest();
    }
+
+   mSendAnonymousUsageInfo = updatedSendAnonymousUsageInfo;
+   if (prefsUpdated)
+      gPrefs->Flush();
 }
 
 std::vector<Notification> UpdateManager::GetActiveNotifications() const

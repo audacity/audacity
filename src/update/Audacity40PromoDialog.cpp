@@ -9,6 +9,11 @@
 #include "Audacity40PromoDialog.h"
 
 #include "HyperLink.h"
+#include "UpdateFeedMigrationParser.h"
+
+#include "NetworkManager.h"
+#include "IResponse.h"
+#include "Request.h"
 
 #include <wx/sizer.h>
 #include <wx/stattext.h>
@@ -18,14 +23,17 @@
 #include <wx/image.h>
 #include <wx/mstream.h>
 #include <wx/log.h>
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
+#include <wx/platinfo.h>
+#include <wx/app.h>
 
 #include "../../images/Audacity40Promo.h"
 
 namespace
 {
-    // TODO: Update these links with final URLs
-    constexpr auto InstallAudacity4Link = "https://www.audacityteam.org/download/";
-    constexpr auto FeatureBreakdownLink = "https://www.audacityteam.org/blog/audacity-4-0-release/";
+    constexpr auto FeatureBreakdownLink = "https://www.audacityteam.org/au4/";
+    StringSetting perfAudioComUserId { wxT("/cloud/audiocom/userId"), wxEmptyString };
 
     wxBitmap LoadEmbeddedPNG(const unsigned char* data, size_t len)
     {
@@ -92,8 +100,234 @@ Audacity40PromoDialog::Audacity40PromoDialog(wxWindow* parent, const Notificatio
     Bind(wxEVT_BUTTON, [this](wxCommandEvent& evt) {
         if (evt.GetId() == wxID_OK)
         {
-            wxLaunchDefaultBrowser(InstallAudacity4Link);
+            OnInstallClicked();
+            return;
         }
         EndModal(evt.GetId());
     });
+}
+
+Audacity40PromoDialog::~Audacity40PromoDialog()
+{
+    if (mInstallerFile.is_open())
+        mInstallerFile.close();
+
+    if (mCurrentResponse)
+        mCurrentResponse->abort();
+}
+
+std::string Audacity40PromoDialog::GetUpdatesUrl() const
+{
+   #if AUDACITY_BUILD_LEVEL == 0
+      std::string url = "https://updates.audacityteam.org/builds/alpha.json";
+   #elif AUDACITY_BUILD_LEVEL == 1
+      std::string url = "https://updates.audacityteam.org/builds/beta.json";
+   #else
+      std::string url = "https://updates.audacityteam.org/feed/latest.json";
+   #endif
+
+   if (SendAnonymousUsageInfo->Read())
+   {
+      url += "?audacity-instance-id=" + InstanceId->Read().ToStdString();
+
+      if (!perfAudioComUserId.Read().IsEmpty())
+      {
+         url += "&user_id=" + perfAudioComUserId.Read().ToStdString();
+      }
+   }
+
+   return url;
+}
+
+void Audacity40PromoDialog::OnInstallClicked()
+{
+    FetchReleaseInfo();
+}
+
+void Audacity40PromoDialog::FetchReleaseInfo()
+{
+    using namespace audacity::network_manager;
+
+    const Request request(GetUpdatesUrl());
+    mCurrentResponse = NetworkManager::GetInstance().doGet(request);
+
+    mCurrentResponse->setRequestFinishedCallback([this](IResponse* response) {
+        if (response->getError() != NetworkError::NoError)
+        {
+            BasicUI::CallAfter([this] {
+                wxLogError("Failed to fetch Audacity 4 release info");
+                BasicUI::ShowErrorDialog({},
+                    XO("Error"),
+                    XO("Unable to fetch Audacity 4 release information. Please try again later."),
+                    wxString(),
+                    BasicUI::ErrorDialogOptions{ BasicUI::ErrorDialogType::ModalError });
+                EndModal(wxID_CANCEL);
+            });
+            return;
+        }
+
+        std::string jsonData = response->readAll<std::string>();
+        UpdateFeedMigrationParser parser;
+
+        if (!parser.ParseRelease(jsonData, mReleaseInfo) || !mReleaseInfo.IsValid())
+        {
+            BasicUI::CallAfter([this] {
+                wxLogError("Failed to parse Audacity 4 release info");
+                BasicUI::ShowErrorDialog({},
+                    XO("Error"),
+                    XO("Unable to parse Audacity 4 release information. Please try again later."),
+                    wxString(),
+                    BasicUI::ErrorDialogOptions{ BasicUI::ErrorDialogType::ModalError });
+                EndModal(wxID_CANCEL);
+            });
+            return;
+        }
+
+        BasicUI::CallAfter([this] {
+            StartDownload();
+        });
+    });
+}
+
+void Audacity40PromoDialog::StartDownload()
+{
+    using namespace audacity::network_manager;
+
+    if (mReleaseInfo.fileUrl.empty())
+    {
+        wxLogError("No download URL available for current platform");
+        BasicUI::ShowErrorDialog({},
+            XO("Error"),
+            XO("No Audacity 4 installer available for your platform."),
+            wxString(),
+            BasicUI::ErrorDialogOptions{ BasicUI::ErrorDialogType::ModalError });
+        EndModal(wxID_CANCEL);
+        return;
+    }
+
+    wxString installerExtension;
+    const wxPlatformInfo& info = wxPlatformInfo::Get();
+    if (info.GetOperatingSystemId() & wxOS_WINDOWS)
+        installerExtension = "msi";
+    else if (info.GetOperatingSystemId() & wxOS_MAC)
+        installerExtension = "dmg";
+    else
+    {
+        wxFileName fn(mReleaseInfo.fileName);
+        installerExtension = fn.GetExt();
+    }
+
+    wxString filename = wxFileName(mReleaseInfo.fileName).GetName();
+
+    mInstallerPath = wxFileName(
+        wxStandardPaths::Get().GetUserDir(wxStandardPaths::Dir_Downloads),
+        filename, installerExtension)
+        .GetFullPath()
+        .ToStdString();
+
+    mInstallerFile.open(mInstallerPath, std::ios::binary);
+    if (!mInstallerFile.is_open())
+    {
+        wxLogError("Failed to create installer file: %s", mInstallerPath);
+        BasicUI::ShowErrorDialog({},
+            XO("Error"),
+            XO("Unable to create installer file. Please check write permissions."),
+            wxString(),
+            BasicUI::ErrorDialogOptions{ BasicUI::ErrorDialogType::ModalError });
+        EndModal(wxID_CANCEL);
+        return;
+    }
+
+    mProgressDialog = BasicUI::MakeProgress(XO("Audacity update"), XO("Downloading %s").Format(filename));
+    wxASSERT(mProgressDialog);
+
+    const Request downloadRequest(mReleaseInfo.fileUrl);
+    mCurrentResponse = NetworkManager::GetInstance().doGet(downloadRequest);
+
+    mCurrentResponse->setDownloadProgressCallback(
+        [this](int64_t current, int64_t expected) {
+            CallAfter([this, current, expected] {
+                if (mProgressDialog)
+                    mProgressDialog->Poll(current, expected);
+            });
+        });
+
+    mCurrentResponse->setOnDataReceivedCallback(
+        [this](IResponse* response) {
+            if (response->getError() == NetworkError::NoError)
+            {
+                std::vector<char> buffer(response->getBytesAvailable());
+                size_t bytes = response->readData(buffer.data(), buffer.size());
+
+                if (mInstallerFile.is_open())
+                    mInstallerFile.write(buffer.data(), bytes);
+            }
+        });
+
+    mCurrentResponse->setRequestFinishedCallback(
+        [this](IResponse* response) {
+            bool success = (response->getError() == NetworkError::NoError);
+
+            CallAfter([this, success] {
+                OnDownloadFinished(success);
+            });
+        });
+}
+
+void Audacity40PromoDialog::OnDownloadFinished(bool success)
+{
+    mProgressDialog.reset();
+
+    if (mInstallerFile.is_open())
+        mInstallerFile.close();
+
+    if (!success)
+    {
+        wxLogError("Failed to download Audacity 4 installer");
+        BasicUI::ShowErrorDialog({},
+            XO("Download Error"),
+            XO("Failed to download Audacity 4 installer. Please try again later."),
+            wxString(),
+            BasicUI::ErrorDialogOptions{ BasicUI::ErrorDialogType::ModalError });
+        EndModal(wxID_CANCEL);
+        return;
+    }
+
+    LaunchInstaller();
+    EndModal(wxID_OK);
+}
+
+void Audacity40PromoDialog::LaunchInstaller()
+{
+    const wxPlatformInfo& info = wxPlatformInfo::Get();
+
+    if (!wxFileName(mInstallerPath).Exists())
+    {
+        wxLogError("Installer file not found: %s", mInstallerPath);
+        return;
+    }
+
+    if (info.GetOperatingSystemId() & wxOS_WINDOWS)
+    {
+        wxFileName fn(mInstallerPath);
+        if (fn.GetExt().Lower() == "msi")
+        {
+            // MSI files need to be launched with msiexec
+            wxExecute("msiexec /i \"" + mInstallerPath + "\"", wxEXEC_ASYNC);
+        }
+        else
+        {
+            wxExecute("\"" + mInstallerPath + "\"", wxEXEC_ASYNC);
+        }
+    }
+    else if (info.GetOperatingSystemId() & wxOS_MAC)
+    {
+        wxExecute("open \"" + mInstallerPath + "\"", wxEXEC_ASYNC);
+    }
+    else
+    {
+        // Linux - make executable and run
+        wxExecute("chmod +x \"" + mInstallerPath + "\"", wxEXEC_SYNC);
+        wxExecute("\"" + mInstallerPath + "\"", wxEXEC_ASYNC);
+    }
 }

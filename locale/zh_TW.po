@@ -11,9 +11,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.5\n"
+"Project-Id-Version: audacity 3.7.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-04 17:39+0200\n"
+"POT-Creation-Date: 2025-11-25 18:02+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Jesse Lin <jesselin.com@gmail.com>, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/audacity/teams/164520/zh_TW/)\n"
@@ -1352,6 +1352,17 @@ msgstr "哇音"
 #: libraries/lib-builtin-effects/WahWahBase.cpp
 msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
 msgstr "快速音色變化，類似於1970年代的流行吉他聲"
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+#, fuzzy
+msgctxt "cloud sync"
+msgid "Error importing cloud audio"
+msgstr "匯入時發生錯誤"
+
+#: libraries/lib-cloud-audiocom/CloudSyncService.cpp
+msgctxt "update dialog"
+msgid "Can't download cloud audio"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -4229,6 +4240,10 @@ msgid "Pitch (EAC)"
 msgstr "音高 (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Wavelet (1/6 Octave Hann)"
+msgstr ""
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
 msgstr "最大頻率必須大於或等於 100 Hz"
 
@@ -6994,6 +7009,7 @@ msgid "New script"
 msgstr "新增腳本"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Open"
 msgstr "開啟"
@@ -7128,6 +7144,7 @@ msgid "Go to previous S-expr"
 msgstr "前往上一個 S-expr"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Next"
 msgstr "下一個"
@@ -7159,6 +7176,28 @@ msgstr "等候 audio.com 回應"
 msgid "An action on audio.com is required before you can continue. You can cancel this operation."
 msgstr "您需要在 audio.com 上執行操作才能繼續。您可以取消此操作。"
 
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "從 audio.com 開啟"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#, fuzzy
+msgid "Downloading audio"
+msgstr "下載中 %s"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to download audio from cloud.\n"
+"%s"
+msgstr "無法對「%s」中的預設集進行編碼"
+
+#: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
+msgid "Downloaded audio file does not exist."
+msgstr ""
+
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
@@ -7171,11 +7210,6 @@ msgid "Generating audio preview..."
 msgstr "正在生成聲音預覽..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "從 audio.com 開啟"
-
-#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
 msgstr "同步專案中"
 
@@ -7184,16 +7218,27 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "只能更新雲端專案的預覽"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open &From Cloud"
+msgstr "從雲端開啟"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open Cloud &Project..."
+msgstr "開啟專案..."
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open Cloud &Audio File..."
+msgstr "上傳雲端聲音預覽(&U)"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
 msgstr "儲存到雲端(&T)..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "&Update Cloud Audio Preview"
 msgstr "上傳雲端聲音預覽(&U)"
-
-#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open Fro&m Cloud..."
-msgstr "從雲端開啟(&M)..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "S&hare Audio..."
@@ -7326,6 +7371,82 @@ msgstr "登出(&S)"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
 msgstr "不再顯示"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Open cloud audio file"
+msgstr "上傳雲端聲音預覽(&U)"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "less than 1 minute"
+msgstr "少於一分鐘"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy, c-format
+msgid "one minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "%d 分鐘"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "%d 小時"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Title"
+msgstr "軌道標題"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Author"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Tags"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+msgid "Created"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Failed to authorize account"
+msgstr "帳號授權失敗"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Loading audio list..."
+msgstr "上傳聲音..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#, fuzzy
+msgid "Failed to get audio list"
+msgstr "開啟專案清單發生失敗"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Search:"
+msgstr "搜尋："
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Prev"
+msgstr "前一個"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr "在 Audio.com 瀏覽"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "Page %d of %d"
+msgstr "第 %d 頁，共 %d 頁"
 
 #. i18n-hint: A title that is shown on the first project save that allows the
 #. user to select Cloud or local save.
@@ -7634,28 +7755,14 @@ msgid "Open from Cloud"
 msgstr "從雲端開啟"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "less than 1 minute"
-msgstr "少於一分鐘"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "one minutes ago"
 msgid_plural "%d minutes ago"
 msgstr[0] "%d 分鐘"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "one hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "%d 小時"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Modified"
 msgstr "已修改"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Failed to authorize account"
-msgstr "帳號授權失敗"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Loading projects list..."
@@ -7668,23 +7775,6 @@ msgstr "開啟專案清單發生失敗"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Cloud saved projects"
 msgstr "雲端儲存的專案"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Search:"
-msgstr "搜尋："
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Prev"
-msgstr "前一個"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "View in audio.com"
-msgstr "在 Audio.com 瀏覽"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "Page %d of %d"
-msgstr "第 %d 頁，共 %d 頁"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Anyone will be able to listen to this audio."
@@ -10832,7 +10922,7 @@ msgstr "%s的即時效果"
 msgid "Realtime Effects"
 msgstr "即時效果"
 
-#: src/RealtimeEffectPanel.cpp
+#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
 msgid "Watch video"
 msgstr "觀看影片"
 
@@ -11546,129 +11636,29 @@ msgid "Calibration Complete"
 msgstr "完成校正結果"
 
 #: src/WhatsNewDialog.cpp
-msgid "<font color=\"#000000\">"
-msgstr "<font color=\"#000000\">"
-
-#: src/WhatsNewDialog.cpp
-msgid "Sign up to Audacity's cloud saving platform"
-msgstr "註冊 Audacity 雲端儲存平台"
-
-#: src/WhatsNewDialog.cpp
-msgid "and access your projects from anywhere!"
-msgstr "並隨時隨地存取您的專案！"
-
-#: src/WhatsNewDialog.cpp
-msgid "</font>"
-msgstr "</font>"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "What's new in Audacity %s"
-msgstr "Audacity %s 版本的新功能"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr "觀看[[%s|發行影片]]或閱讀[[%s|變更日誌]]以了解更多有關我們最新版本的資訊！</p>"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "You can also read the [[%s|changelog]]</p>"
-msgstr "您也可以閱讀[[ %s|更新日誌]]</p>"
-
-#: src/WhatsNewDialog.cpp
-msgid "Get free plugins & sounds"
-msgstr "取得免費外掛以及音效"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr "<p>查欬我們的 [[%s|Muse Hub app]]，有提供Audacity 用戶不同的種類的聲音外掛程式"
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr "人聲處理效果，可增強人聲的清晰度和深度。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr "多用途迴響外掛，可提供寬敞、自然的音效。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr "吉他擴大器和效果模擬外掛，可提供逼真的音調和可自訂的聲音。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr "一款響應式迴響外掛，可適應追蹤動態以實現身臨其境的聲景。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr "一款人聲多效果外掛，可增強人聲軌道以獲得專業效果。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr "一款低音效果外掛，旨在提供強勁、清晰的低頻聲音。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr "一款用於完美聲音、增強溫暖度和清晰度的外掛。"
-
-#: src/WhatsNewDialog.cpp
-msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr "令人驚嘆的語音增強外掛，可提供水晶般清晰、專業的人聲效果。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr "即時分離工具，用於分離人聲、鼓和樂器。"
-
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr "檢查可以在 [[%s|MuseHub]] 上找到，並且由知名開發人員提供的各種外掛程式。"
-
-#: src/WhatsNewDialog.cpp
-msgid "A multiband compressor offering precise control over frequencies."
-msgstr "多頻段壓縮器提供對頻率的精確控制。"
-
-#: src/WhatsNewDialog.cpp
-msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-msgstr "Ace Studio - 全球第一的 AI 歌聲生成器。"
-
-#: src/WhatsNewDialog.cpp
-msgid "Continue for Cloud Storage"
-msgstr "繼續使用雲端儲存"
-
-#: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "歡迎使用 Audacity！"
+
+#: src/WhatsNewDialog.cpp
+msgid "Video: how we're redesigning Audacity for the future"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
 msgstr "使用audio.com完成你的Audacity 雲端設定"
 
 #: src/WhatsNewDialog.cpp
-msgid "What's new in Audacity"
-msgstr "Audacity 的新功能"
+msgid "Get our free OpenVino AI tools"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Watch the release video"
-msgstr "觀看發布影片"
+msgid "Explore free plugins for sculpting your audio"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr "Soap Voice Cleaner: 錄音室等級的配音"
-
-#: src/WhatsNewDialog.cpp
-msgid "Help us decide the future of Audacity"
-msgstr "幫我們決定AUDACITY的未來"
-
-#: src/WhatsNewDialog.cpp
-msgid "Take part in survey"
-msgstr "參加問卷調查"
-
-#: src/WhatsNewDialog.cpp
-msgid "Audacity feature survey"
-msgstr "Audacity 功能問卷調查"
+#, fuzzy
+msgid "View free plugins"
+msgstr "取得免費外掛以及音效"
 
 #: src/WhatsNewDialog.cpp
 msgid "25th Anniversary Merchandise!"
@@ -19755,6 +19745,33 @@ msgstr "拖動以縮放到區域內，右鍵點選以縮小"
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "左鍵=放大，右鍵=縮小，中鍵=正常"
 
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Install Audacity 4"
+msgstr "安裝更新(&I)"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid ""
+"Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
+"easier to use than ever."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Discover what's new in our full feature breakdown."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No thanks"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Remind me later"
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19853,6 +19870,14 @@ msgstr "停用 UUID"
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Accept && continue"
 msgstr "接受並繼續"
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Remind me later"
+msgstr ""
+
+#: src/update/UpdateNotificationDialog.cpp
+msgid "&Dismiss"
+msgstr ""
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -21703,3 +21728,92 @@ msgstr "頻譜工具"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "傳統"
+
+#~ msgid "Open Fro&m Cloud..."
+#~ msgstr "從雲端開啟(&M)..."
+
+#~ msgid "<font color=\"#000000\">"
+#~ msgstr "<font color=\"#000000\">"
+
+#~ msgid "Sign up to Audacity's cloud saving platform"
+#~ msgstr "註冊 Audacity 雲端儲存平台"
+
+#~ msgid "and access your projects from anywhere!"
+#~ msgstr "並隨時隨地存取您的專案！"
+
+#~ msgid "</font>"
+#~ msgstr "</font>"
+
+#, c-format
+#~ msgid "What's new in Audacity %s"
+#~ msgstr "Audacity %s 版本的新功能"
+
+#, c-format
+#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
+#~ msgstr "觀看[[%s|發行影片]]或閱讀[[%s|變更日誌]]以了解更多有關我們最新版本的資訊！</p>"
+
+#, c-format
+#~ msgid "You can also read the [[%s|changelog]]</p>"
+#~ msgstr "您也可以閱讀[[ %s|更新日誌]]</p>"
+
+#, c-format
+#~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+#~ msgstr "<p>查欬我們的 [[%s|Muse Hub app]]，有提供Audacity 用戶不同的種類的聲音外掛程式"
+
+#~ msgid "A vocal processing effect that enhances vocal clarity and depth."
+#~ msgstr "人聲處理效果，可增強人聲的清晰度和深度。"
+
+#~ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
+#~ msgstr "多用途迴響外掛，可提供寬敞、自然的音效。"
+
+#~ msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
+#~ msgstr "吉他擴大器和效果模擬外掛，可提供逼真的音調和可自訂的聲音。"
+
+#~ msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
+#~ msgstr "一款響應式迴響外掛，可適應追蹤動態以實現身臨其境的聲景。"
+
+#~ msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
+#~ msgstr "一款人聲多效果外掛，可增強人聲軌道以獲得專業效果。"
+
+#~ msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
+#~ msgstr "一款低音效果外掛，旨在提供強勁、清晰的低頻聲音。"
+
+#~ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
+#~ msgstr "一款用於完美聲音、增強溫暖度和清晰度的外掛。"
+
+#~ msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
+#~ msgstr "令人驚嘆的語音增強外掛，可提供水晶般清晰、專業的人聲效果。"
+
+#~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
+#~ msgstr "即時分離工具，用於分離人聲、鼓和樂器。"
+
+#, c-format
+#~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
+#~ msgstr "檢查可以在 [[%s|MuseHub]] 上找到，並且由知名開發人員提供的各種外掛程式。"
+
+#~ msgid "A multiband compressor offering precise control over frequencies."
+#~ msgstr "多頻段壓縮器提供對頻率的精確控制。"
+
+#~ msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
+#~ msgstr "Ace Studio - 全球第一的 AI 歌聲生成器。"
+
+#~ msgid "Continue for Cloud Storage"
+#~ msgstr "繼續使用雲端儲存"
+
+#~ msgid "What's new in Audacity"
+#~ msgstr "Audacity 的新功能"
+
+#~ msgid "Watch the release video"
+#~ msgstr "觀看發布影片"
+
+#~ msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+#~ msgstr "Soap Voice Cleaner: 錄音室等級的配音"
+
+#~ msgid "Help us decide the future of Audacity"
+#~ msgstr "幫我們決定AUDACITY的未來"
+
+#~ msgid "Take part in survey"
+#~ msgstr "參加問卷調查"
+
+#~ msgid "Audacity feature survey"
+#~ msgstr "Audacity 功能問卷調查"
