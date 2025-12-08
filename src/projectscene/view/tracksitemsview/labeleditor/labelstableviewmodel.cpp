@@ -265,10 +265,24 @@ void LabelsTableViewModel::removeSelectedLabels()
 
 void LabelsTableViewModel::exportLabels()
 {
-    muse::io::path_t exportPath = selectFileForImportExport();
+    muse::io::path_t exportPath = selectFileForExport();
     Ret ret = labelExporter()->exportData(exportPath);
     if (!ret) {
         LOGE() << ret.toString();
+    } else {
+        interactive()->revealInFileBrowser(exportPath);
+    }
+}
+
+void LabelsTableViewModel::importLabels()
+{
+    muse::io::path_t importPath = selectFileForImport();
+    Ret ret = labelsImporter()->importData(importPath);
+    if (!ret) {
+        LOGE() << ret.toString();
+    } else {
+        // reload
+        load();
     }
 }
 
@@ -511,15 +525,29 @@ bool LabelsTableViewModel::changeLabelHighFrequency(int row, int column, const V
     return trackeditInteraction()->changeLabelHighFrequency(labelKey, value.toDouble());
 }
 
-io::path_t LabelsTableViewModel::selectFileForImportExport()
+io::path_t LabelsTableViewModel::selectFileForExport()
 {
     std::vector<std::string> filter = labelExporter()->fileFilter();
-    io::path_t defaultDir = labelsExportConfiguration()->labelsDirectoryPath();
+    io::path_t defaultDir = exportConfiguration()->labelsDirectoryPath();
+
+    io::path_t filePath = interactive()->selectSavingFileSync(muse::trc("global", "Open"), defaultDir, filter);
+
+    if (!filePath.empty()) {
+        exportConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
+    }
+
+    return filePath;
+}
+
+io::path_t LabelsTableViewModel::selectFileForImport()
+{
+    std::vector<std::string> filter = labelsImporter()->fileFilter();
+    io::path_t defaultDir = importConfiguration()->labelsDirectoryPath();
 
     io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("global", "Open"), defaultDir, filter);
 
     if (!filePath.empty()) {
-        labelsExportConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
+        importConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
     }
 
     return filePath;

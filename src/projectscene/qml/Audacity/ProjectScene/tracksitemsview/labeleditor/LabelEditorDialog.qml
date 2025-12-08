@@ -37,6 +37,10 @@ StyledDialogView {
             onExportRequested: {
                 labelsTableView.exportLabels()
             }
+
+            onImportRequested: {
+                labelsTableView.importLabels()
+            }
         }
 
         LabelEditorLabelsTableView {
