@@ -79,6 +79,7 @@ struct ClipInfo {
 
 struct ViewInfo {
     const int trackHeight;
+    const double channelHeightRatio;
     const double viewportT0;
     const double viewportT1;
     const double pixelsPerSecond; // aka zoom

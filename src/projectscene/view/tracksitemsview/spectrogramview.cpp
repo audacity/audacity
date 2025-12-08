@@ -59,6 +59,7 @@ void SpectrogramView::paint(QPainter* painter)
 
     const spectrogram::ViewInfo viewInfo {
         static_cast<int>(height()),
+        m_channelHeightRatio,
         viewportT0,
         viewportT1,
         m_context->zoom()

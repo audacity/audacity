@@ -11,6 +11,5 @@ struct SpectrogramTrackContext {
     const bool trackIsSelected;
     const float minFreq;
     const float maxFreq;
-    const double leftRightHeightRatio;
 };
 }

@@ -853,6 +853,7 @@ Rectangle {
                 clipKey: root.clipKey
                 clipTime: root.clipTime
                 timelineIndentWidth: root.canvas.anchors.leftMargin
+                channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
             }
         }
     }

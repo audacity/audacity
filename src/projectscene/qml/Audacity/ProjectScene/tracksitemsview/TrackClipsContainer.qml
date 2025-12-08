@@ -63,8 +63,10 @@ TrackItemsContainer {
 
                 property double targetHeightRatio: 0.5
                 readonly property int minChannelHeight: 20
-                readonly property int yMinValue: Math.min(root.height / 2, minChannelHeight)
-                readonly property int yMaxValue: Math.max(root.height / 2, root.height - minChannelHeight)
+                readonly property bool isMultiView: root.isSpectrogramViewVisible && root.isWaveformViewVisible
+                readonly property int viewHeight: isMultiView ? (root.height / 2) : root.height
+                readonly property int yMinValue: Math.min(viewHeight / 2, minChannelHeight)
+                readonly property int yMaxValue: Math.max(viewHeight / 2, viewHeight - minChannelHeight)
 
                 property bool multiSampleEdit: false
                 property int currentChannel: 0
@@ -98,7 +100,7 @@ TrackItemsContainer {
 
                 function updateChannelHeightRatio(position) {
                     const newY = Math.min(Math.max(position, yMinValue), yMaxValue)
-                    root.trackViewState.changeChannelHeightRatio(newY / height)
+                    root.trackViewState.changeChannelHeightRatio(newY / viewHeight)
                 }
 
                 function resetTargetHeightRatio() {
@@ -106,7 +108,7 @@ TrackItemsContainer {
                 }
 
                 onHeightChanged: {
-                    updateChannelHeightRatio(clipsContainer.targetHeightRatio * clipsContainer.height)
+                    updateChannelHeightRatio(clipsContainer.targetHeightRatio * viewHeight)
                 }
 
                 MouseArea {
