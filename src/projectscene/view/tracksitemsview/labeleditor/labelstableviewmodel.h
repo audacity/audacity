@@ -6,8 +6,11 @@
 #include <qqmlintegration.h>
 
 #include "modularity/ioc.h"
+#include "iinteractive.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/itrackeditinteraction.h"
+#include "importexport/export/ilabelsexporter.h"
+#include "importexport/export/iexportconfiguration.h"
 
 #include "uicomponents/qml/Muse/UiComponents/abstracttableviewmodel.h"
 
@@ -32,8 +35,11 @@ class LabelsTableViewModel : public muse::uicomponents::AbstractTableViewModel, 
     Q_OBJECT
     QML_ELEMENT;
 
+    muse::Inject<muse::IInteractive> interactive = { this };
     muse::Inject<context::IGlobalContext> globalContext = { this };
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction = { this };
+    muse::Inject<importexport::ILabelsExporter> labelExporter = { this };
+    muse::Inject<importexport::IExportConfiguration> labelsExportConfiguration = { this };
 
 public:
     explicit LabelsTableViewModel(QObject* parent = nullptr);
@@ -44,6 +50,8 @@ public:
 
     Q_INVOKABLE void addNewLabel();
     Q_INVOKABLE void removeSelectedLabels();
+
+    Q_INVOKABLE void exportLabels();
 
 private:
     bool doCellValueChangeRequested(int row, int column, const muse::Val& value) override;
@@ -66,5 +74,7 @@ private:
     bool changeLabelEndTime(int row, int column, const muse::Val& value);
     bool changeLabelLowFrequency(int row, int column, const muse::Val& value);
     bool changeLabelHighFrequency(int row, int column, const muse::Val& value);
+
+    muse::io::path_t selectFileForImportExport();
 };
 }

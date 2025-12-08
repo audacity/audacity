@@ -10,12 +10,6 @@
 
 using namespace au::importexport;
 
-namespace au::importexport {
-static const QString SUB_RIP_TYPE_CODE("srt");
-static const QString WEB_VTT_TYPE_CODE("vtt");
-static const QString TEXT_TYPE_CODE("txt");
-}
-
 ExportLabelsModel::ExportLabelsModel(QObject* parent)
     : QObject(parent)
 {
@@ -134,18 +128,23 @@ void ExportLabelsModel::deselectAllTracks()
 
 QVariantList ExportLabelsModel::fileTypes() const
 {
-    QVariantList result = {
-        QVariantMap { { "title", muse::qtrc("export", "Text file (*.txt)") }, { "code", TEXT_TYPE_CODE } },
-        QVariantMap { { "title", muse::qtrc("export", "SubRip text file (*.srt)") }, { "code", SUB_RIP_TYPE_CODE } },
-        QVariantMap { { "title", muse::qtrc("export", "WebVTT file (*.vtt)") }, { "code", WEB_VTT_TYPE_CODE } },
-    };
+    QVariantList result;
+
+    int index = 0;
+    for (const std::string& filter : labelExporter()->fileFilter()) {
+        result << QVariantMap { { "title", QString::fromStdString(filter) }, { "code", QString::number(index) } };
+        index++;
+    }
 
     return result;
 }
 
 void ExportLabelsModel::initDefaultFileType()
 {
-    setCurrentFileTypeCode(TEXT_TYPE_CODE);
+    QVariantList types = fileTypes();
+    if (!types.empty()) {
+        setCurrentFileTypeCode(types.front().toMap().value("code").toString());
+    }
 }
 
 QString ExportLabelsModel::fileName() const

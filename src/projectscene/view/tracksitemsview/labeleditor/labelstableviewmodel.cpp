@@ -263,6 +263,15 @@ void LabelsTableViewModel::removeSelectedLabels()
     }
 }
 
+void LabelsTableViewModel::exportLabels()
+{
+    muse::io::path_t exportPath = selectFileForImportExport();
+    Ret ret = labelExporter()->exportData(exportPath);
+    if (!ret) {
+        LOGE() << ret.toString();
+    }
+}
+
 bool LabelsTableViewModel::doCellValueChangeRequested(int row, int column, const Val& value)
 {
     switch (column) {
@@ -500,4 +509,18 @@ bool LabelsTableViewModel::changeLabelHighFrequency(int row, int column, const V
     trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
 
     return trackeditInteraction()->changeLabelHighFrequency(labelKey, value.toDouble());
+}
+
+io::path_t LabelsTableViewModel::selectFileForImportExport()
+{
+    std::vector<std::string> filter = labelExporter()->fileFilter();
+    io::path_t defaultDir = labelsExportConfiguration()->labelsDirectoryPath();
+
+    io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("global", "Open"), defaultDir, filter);
+
+    if (!filePath.empty()) {
+        labelsExportConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
+    }
+
+    return filePath;
 }

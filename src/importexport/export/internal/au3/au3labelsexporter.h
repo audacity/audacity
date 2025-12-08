@@ -16,6 +16,8 @@ class Au3LabelsExporter : public ILabelsExporter, public muse::Injectable
 public:
     Au3LabelsExporter() = default;
 
-    muse::Ret exportData(const muse::io::path_t& filePath, const trackedit::TrackIdList& includedLabelTracksIds) override;
+    muse::Ret exportData(const muse::io::path_t& filePath, const trackedit::TrackIdList& includedLabelTracksIds = {}) override;
+
+    std::vector<std::string> fileFilter() override;
 };
 }

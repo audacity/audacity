@@ -23,6 +23,10 @@ StyledTableView {
         tableViewModel.removeSelectedLabels()
     }
 
+    function exportLabels() {
+        tableViewModel.exportLabels()
+    }
+
     LabelsTableViewModel {
         id: tableViewModel
     }
