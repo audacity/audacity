@@ -741,6 +741,7 @@ Rectangle {
         }
 
         ColumnLayout {
+            id: viewsColumn
 
             anchors.top: (!root.collapsed && header.visible) ? header.bottom : parent.top
             anchors.left: parent.left
@@ -797,32 +798,6 @@ Rectangle {
                     }
                 }
 
-                FlatButton {
-                    id: accessibilitySelectBtn
-
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 10
-
-                    navigation.name: "SelectBtn"
-                    navigation.panel: root.clipNavigationPanel
-                    navigation.column: 0
-
-                    width: 55
-                    height: 20
-                    text: !root.clipSelected ? qsTrc("clips", "Select") : qsTrc("clips", "Deselect")
-                    visible: root.clipNavigationPanel.highlight
-                    normalColor: "#2b2a33"
-
-                    onClicked: {
-                        if (!root.clipSelected) {
-                            root.requestSelected()
-                        } else {
-                            root.requestSelectionReset()
-                        }
-                    }
-                }
-
                 onIsNearSampleChanged: {
                     if (root.isNearSample) {
                         waveView.forceActiveFocus()
@@ -854,6 +829,32 @@ Rectangle {
                 clipTime: root.clipTime
                 timelineIndentWidth: root.canvas.anchors.leftMargin
                 channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
+            }
+        }
+
+        FlatButton {
+            id: accessibilitySelectBtn
+
+            anchors.horizontalCenter: viewsColumn.horizontalCenter
+            anchors.bottom: viewsColumn.bottom
+            anchors.bottomMargin: 10
+
+            navigation.name: "SelectBtn"
+            navigation.panel: root.clipNavigationPanel
+            navigation.column: 0
+
+            width: 55
+            height: 20
+            text: !root.clipSelected ? qsTrc("clips", "Select") : qsTrc("clips", "Deselect")
+            visible: root.clipNavigationPanel.highlight
+            normalColor: "#2b2a33"
+
+            onClicked: {
+                if (!root.clipSelected) {
+                    root.requestSelected()
+                } else {
+                    root.requestSelectionReset()
+                }
             }
         }
     }
