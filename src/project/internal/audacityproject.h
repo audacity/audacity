@@ -63,7 +63,7 @@ public:
     muse::Ret import(const muse::io::path_t& path, bool forceMode = false) override;
     muse::Ret import(const std::vector<muse::io::path_t>& paths, bool forceMode) override;
     muse::Ret importIntoTrack(const muse::io::path_t& filePath, trackedit::TrackId dstTrackId, muse::secs_t startTime) override;
-    muse::Ret importIntoTracks(const std::vector<muse::io::path_t>& filePaths, std::vector<trackedit::TrackId>& dstTrackIds,
+    muse::Ret importIntoTracks(const std::vector<muse::io::path_t>& filePaths, const std::vector<trackedit::TrackId>& dstTrackIds,
                                muse::secs_t startTime) override;
     void close() override;
     muse::async::Notification aboutCloseBegin() const override;

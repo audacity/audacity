@@ -68,7 +68,6 @@ Rectangle {
                 orientation: Qt.Horizontal
                 GradientStop { position: 0.0; color: "#00FFFFFF" }
                 GradientStop { position: 0.4; color: ui.blendColors(ui.blendColors("transparent", "#FFFFFF", 0.3), ui.blendColors("transparent", root.clipColor, 0.4), 0.5)}
-                // /*ui.blendColors("#FFFFFF", root.clipColor, 0.5)*//*root.clipColor;*/
                 GradientStop { position: 1.0; color: "#00FFFFFF" }
             }
         }

@@ -81,7 +81,7 @@ Ret Audacity4Project::importIntoTrack(const muse::io::path_t& filePath,
 }
 
 Ret Audacity4Project::importIntoTracks(const std::vector<muse::io::path_t>& filePaths,
-                                       std::vector<trackedit::TrackId>& dstTrackIds,
+                                       const std::vector<trackedit::TrackId>& dstTrackIds,
                                        muse::secs_t startTime)
 {
     muse::Ret ret = muse::make_ret(Ret::Code::Ok);

@@ -1091,7 +1091,7 @@ Rectangle {
             interval: 100
             onTriggered: {
                 tracksItemsView.clearPreviewImportClip([])
-                lastProbedUrls = null
+                dropArea.lastProbedUrls = null
                 tracksModel.endImportDrag()
                 root.guidelinePos = -1
                 root.guidelineVisible = false
@@ -1104,11 +1104,11 @@ Rectangle {
             let urls = drop.urls
             tracksModel.startImportDrag()
             if (!lastProbedUrls) {
-                // NOTE: passing list from QML to C++ is very expensive
-                // so avoid calling this function as soon as possible
-                // otherwise the preview clip animation will be slow
+                // NOTE: working with urls list from DropArea
+                // is expensive so avoid it otherwise the preview clip
+                // move will be laggy
                 tracksModel.probeAudioFilesLength(urls)
-                lastProbedUrls = urls
+                dropArea.lastProbedUrls = urls
             }
 
             let position = mapToItem(content, Qt.point(drop.x, drop.y))
@@ -1145,14 +1145,14 @@ Rectangle {
             let position = mapToItem(content, Qt.point(drop.x, drop.y))
             let trackId = tracksViewState.trackAtPosition(position.x, position.y)
             let tracksIds = tracksModel.draggedTracksIds(trackId, urls.length)
-            tracksModel.handleDroppedFiles(tracksIds[0], timeline.context.positionToTime(position.x), urls)
+            tracksModel.handleDroppedFiles(tracksIds, timeline.context.positionToTime(position.x), urls)
 
             tracksModel.endImportDrag()
             drop.acceptProposedAction()
 
             root.guidelinePos = -1
             root.guidelineVisible = false
-            lastProbedUrls = null
+            dropArea.lastProbedUrls = null
         }
     }
 
