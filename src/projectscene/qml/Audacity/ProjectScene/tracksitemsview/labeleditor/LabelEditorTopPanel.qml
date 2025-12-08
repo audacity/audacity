@@ -23,7 +23,7 @@ Item {
 
     signal importRequested()
     signal exportRequested()
-    signal removeSelectedLabelRequested()
+    signal removeSelectedLabelsRequested()
     signal addLabelRequested()
 
     function readInfo() {
@@ -105,7 +105,7 @@ Item {
             navigation.column: 3
 
             onClicked: {
-                root.removeSelectedLabelRequested()
+                root.removeSelectedLabelsRequested()
             }
         }
 

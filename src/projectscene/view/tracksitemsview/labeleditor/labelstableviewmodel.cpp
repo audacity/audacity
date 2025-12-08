@@ -176,11 +176,7 @@ void LabelsTableViewModel::addNewLabel()
     }
 
     QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
-    if (selectedIndexes.isEmpty()) {
-        return;
-    }
-
-    int row = selectedIndexes.first().row();
+    int row = !selectedIndexes.empty() ? selectedIndexes.first().row() : 0;
 
     std::vector<trackedit::Track> labelTracks = allLabelTracks();
     if (labelTracks.empty()) {
@@ -217,6 +213,54 @@ void LabelsTableViewModel::addNewLabel()
     cells.append(makeTimecodeCell(Val(createdLabel.highFrequency)));
 
     insertRow(row, cells);
+
+    QTimer::singleShot(100, [=](){
+        TableViewCell* labelCell = findCell(row, LABEL_COLUMN);
+        labelCell->requestEdit();
+    });
+}
+
+void LabelsTableViewModel::removeSelectedLabels()
+{
+    ItemMultiSelectionModel* selectionModel = this->selectionModel();
+    if (!selectionModel) {
+        return;
+    }
+
+    QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
+    if (selectedIndexes.isEmpty()) {
+        return;
+    }
+
+    std::vector<trackedit::LabelKey> labelKeysToRemove;
+    std::set<int> rowsToRemove;
+
+    for (const QModelIndex& index : selectedIndexes) {
+        int row = index.row();
+
+        LabelsTableViewVerticalHeader* vHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
+        if (!vHeader) {
+            continue;
+        }
+
+        trackedit::LabelKey labelKey = vHeader->labelKey().key;
+        labelKeysToRemove.push_back(labelKey);
+        rowsToRemove.insert(row);
+    }
+
+    if (labelKeysToRemove.empty()) {
+        return;
+    }
+
+    bool ok = trackeditInteraction()->removeLabels(labelKeysToRemove, true /* completed */);
+    if (!ok) {
+        return;
+    }
+
+    for (int row : rowsToRemove) {
+        removeVerticalHeader(row);
+        removeRow(row);
+    }
 }
 
 bool LabelsTableViewModel::doCellValueChangeRequested(int row, int column, const Val& value)

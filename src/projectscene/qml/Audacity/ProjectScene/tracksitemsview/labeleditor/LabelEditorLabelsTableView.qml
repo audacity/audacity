@@ -19,6 +19,10 @@ StyledTableView {
         tableViewModel.addNewLabel()
     }
 
+    function removeSelectedLabels() {
+        tableViewModel.removeSelectedLabels()
+    }
+
     LabelsTableViewModel {
         id: tableViewModel
     }
