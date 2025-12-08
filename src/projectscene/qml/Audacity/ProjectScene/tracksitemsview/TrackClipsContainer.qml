@@ -21,6 +21,11 @@ TrackItemsContainer {
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
 
+    QtObject {
+        id: prv
+        readonly property bool isMultiView: root.isSpectrogramViewVisible && root.isWaveformViewVisible
+    }
+
     TrackClipsListModel {
         id: clipsModel
         trackId: root.trackId
@@ -61,8 +66,7 @@ TrackItemsContainer {
 
                 property double targetHeightRatio: 0.5
                 readonly property int minChannelHeight: 20
-                readonly property bool isMultiView: root.isSpectrogramViewVisible && root.isWaveformViewVisible
-                readonly property int viewHeight: isMultiView ? (root.height / 2) : root.height
+                readonly property int viewHeight: prv.isMultiView ? (root.height / 2) : root.height
                 readonly property int yMinValue: Math.min(viewHeight / 2, minChannelHeight)
                 readonly property int yMaxValue: Math.max(viewHeight / 2, viewHeight - minChannelHeight)
 
@@ -500,7 +504,7 @@ TrackItemsContainer {
                 anchors.topMargin: root.trackViewState.isTrackCollapsed ? 1 : 21
                 anchors.bottomMargin: 3
 
-                channelHeightRatio: root.trackViewState.channelHeightRatio
+                channelHeightRatio: prv.isMultiView ? 0.5 : root.trackViewState.channelHeightRatio
                 color: "#FFFFFF"
                 opacity: 0.05
                 visible: clipsModel.isStereo
