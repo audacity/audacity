@@ -171,18 +171,18 @@ public:
         .WillByDefault(Return(m_au3ProjectAccessor->au3ProjectPtr()));
 
         ON_CALL(*m_trackEditProject, trackList())
-            .WillByDefault(testing::Invoke([this](){
-                std::vector<Track> result;
+        .WillByDefault(testing::Invoke([this](){
+            std::vector<Track> result;
 
-                auto& tracks = Au3TrackList::Get(projectRef());
+            auto& tracks = Au3TrackList::Get(projectRef());
 
-                for (const Au3Track* t : tracks) {
-                    Track au4t = au3::DomConverter::track(t);
-                    result.push_back(std::move(au4t));
-                }
+            for (const Au3Track* t : tracks) {
+                Track au4t = au3::DomConverter::track(t);
+                result.push_back(std::move(au4t));
+            }
 
-                return result;
-            }));
+            return result;
+        }));
     }
 
     TrackId createTrack(const TestTrackID testTrackID)

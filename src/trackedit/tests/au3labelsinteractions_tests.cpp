@@ -334,6 +334,112 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithAudioTrackPresent)
     removeTrack(audioTrackId);
 }
 
+TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWhenPlaybackIsActive)
+{
+    //! [GIVEN] There is a project with an audio track and a label track
+    const TrackId audioTrackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(audioTrackId, INVALID_TRACK) << "Failed to create audio track";
+
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* existingLabelTrack = ::LabelTrack::Create(tracks);
+    ASSERT_NE(existingLabelTrack, nullptr) << "Failed to create label track";
+    ASSERT_EQ(tracks.Size(), 2) << "Precondition failed: Should have audio track and label track";
+
+    //! [GIVEN] There is a selection from 1.0 to 3.0 seconds (but it won't be used when playback is active)
+    const double selectionStart = 1.0;
+    const double selectionEnd = 3.0;
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(selectionStart));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(selectionEnd));
+    ON_CALL(*m_selectionController, focusedTrack())
+    .WillByDefault(Return(INVALID_TRACK));
+
+    //! [GIVEN] Playback is active at position 2.5 seconds
+    const double playbackPosition = 2.5;
+    ON_CALL(*m_playbackState, isPlaying())
+    .WillByDefault(Return(true));
+    ON_CALL(*m_playbackState, playbackPosition())
+    .WillByDefault(Return(playbackPosition));
+
+    //! [EXPECT] The project is notified about a new label being added but NOT about a new track
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
+
+    //! [WHEN] Add a label to the selection (while playback is active)
+    bool result = m_labelsInteraction->addLabelToSelection();
+
+    //! [THEN] The existing label track now contains one label
+    ASSERT_TRUE(result) << "Adding label to selection should succeed";
+    ASSERT_EQ(tracks.Size(), 2) << "No new track should have been created";
+    ASSERT_EQ(existingLabelTrack->GetNumLabels(), 1) << "Label track should contain one label";
+
+    //! [THEN] The label is created at the playback position (as a point label), not at the selection
+    const Au3Label* label = existingLabelTrack->GetLabel(0);
+    ASSERT_NE(label, nullptr) << "Label should exist";
+    ASSERT_DOUBLE_EQ(label->getT0(), playbackPosition) << "Label start time should match playback position";
+    ASSERT_DOUBLE_EQ(label->getT1(), playbackPosition) << "Label end time should match playback position (point label)";
+
+    // Cleanup
+    removeTrack(audioTrackId);
+}
+
+TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWhenRecordingIsActive)
+{
+    //! [GIVEN] There is a project with an audio track and a label track
+    const TrackId audioTrackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(audioTrackId, INVALID_TRACK) << "Failed to create audio track";
+
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* existingLabelTrack = ::LabelTrack::Create(tracks);
+    ASSERT_NE(existingLabelTrack, nullptr) << "Failed to create label track";
+    ASSERT_EQ(tracks.Size(), 2) << "Precondition failed: Should have audio track and label track";
+
+    //! [GIVEN] There is a selection from 1.0 to 3.0 seconds (but it won't be used when recording is active)
+    const double selectionStart = 1.0;
+    const double selectionEnd = 3.0;
+    ON_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillByDefault(Return(selectionStart));
+    ON_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillByDefault(Return(selectionEnd));
+    ON_CALL(*m_selectionController, focusedTrack())
+    .WillByDefault(Return(INVALID_TRACK));
+
+    //! [GIVEN] Playback is not active
+    ON_CALL(*m_playbackState, isPlaying())
+    .WillByDefault(Return(false));
+
+    //! [GIVEN] Recording is active at position 3.5 seconds
+    const double recordPosition = 3.5;
+    ON_CALL(*m_globalContext, isRecording())
+    .WillByDefault(Return(true));
+    ON_CALL(*m_globalContext, recordPosition())
+    .WillByDefault(Return(recordPosition));
+
+    //! [EXPECT] The project is notified about a new label being added but NOT about a new track
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
+
+    //! [WHEN] Add a label to the selection (while recording is active)
+    bool result = m_labelsInteraction->addLabelToSelection();
+
+    //! [THEN] The existing label track now contains one label
+    ASSERT_TRUE(result) << "Adding label to selection should succeed";
+    ASSERT_EQ(tracks.Size(), 2) << "No new track should have been created";
+    ASSERT_EQ(existingLabelTrack->GetNumLabels(), 1) << "Label track should contain one label";
+
+    //! [THEN] The label is created at the record position (as a point label), not at the selection
+    const Au3Label* label = existingLabelTrack->GetLabel(0);
+    ASSERT_NE(label, nullptr) << "Label should exist";
+    ASSERT_DOUBLE_EQ(label->getT0(), recordPosition) << "Label start time should match record position";
+    ASSERT_DOUBLE_EQ(label->getT1(), recordPosition) << "Label end time should match record position (point label)";
+
+    // Cleanup
+    removeTrack(audioTrackId);
+}
+
 TEST_F(Au3LabelsInteractionsTests, ChangeLabelTitle)
 {
     //! [GIVEN] There is a project with a label track containing one label

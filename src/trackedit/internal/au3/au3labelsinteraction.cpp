@@ -70,8 +70,18 @@ bool Au3LabelsInteraction::addLabelToSelection()
 
     wxString title = wxEmptyString;
     SelectedRegion selectedRegion;
-    selectedRegion.setTimes(selectionController()->dataSelectedStartTime(),
-                            selectionController()->dataSelectedEndTime());
+
+    context::IPlaybackStatePtr playbackState = globalContext()->playbackState();
+    if (playbackState->isPlaying()) {
+        muse::secs_t playbackPos = playbackState->playbackPosition();
+        selectedRegion.setTimes(playbackPos, playbackPos);
+    } else if (globalContext()->isRecording()) {
+        muse::secs_t recordPos = globalContext()->recordPosition();
+        selectedRegion.setTimes(recordPos, recordPos);
+    } else {
+        selectedRegion.setTimes(selectionController()->dataSelectedStartTime(),
+                                selectionController()->dataSelectedEndTime());
+    }
 
     int64_t newLabelId = labelTrack->AddLabel(selectedRegion, title);
     const auto& newLabel = DomAccessor::findLabel(labelTrack, newLabelId);
