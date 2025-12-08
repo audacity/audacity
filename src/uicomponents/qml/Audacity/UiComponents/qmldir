@@ -7,3 +7,6 @@ ArrowButton 1.0 components/ArrowButton.qml
 ArrowMenuButton 1.0 components/ArrowMenuButton.qml
 DropdownWithTitle 1.0 components/DropdownWithTitle.qml
 BaseSection 1.0 components/BaseSection.qml
+Snowflake 1.0 components/Snowflake.qml
+Snowpile 1.0 components/Snowpile.qml
+Sparkle 1.0 components/Sparkle.qml
