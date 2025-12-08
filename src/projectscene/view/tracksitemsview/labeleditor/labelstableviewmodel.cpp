@@ -4,6 +4,7 @@
 #include "labelstableviewmodel.h"
 
 #include "framework/global/translation.h"
+#include "framework/global/log.h"
 
 #include "uicomponents/components/timecodemodel.h"
 #include "uicomponents/components/frequencymodel.h"
@@ -161,29 +162,76 @@ void LabelsTableViewModel::handleTrackMenuItem(int row, int column, const QStrin
     for (const muse::uicomponents::MenuItem* item : trackCell->availableTracks()) {
         if (item->id() == itemId) {
             trackCell->setCurrentTrackId(item->args().arg<trackedit::TrackId>());
-            trackCell->setValue(Val(item->translatedTitle()));
+            trackCell->setValue_property(item->translatedTitle());
             break;
         }
     }
 }
 
-void LabelsTableViewModel::doCellValueChanged(int row, int column)
+void LabelsTableViewModel::addNewLabel()
+{
+    ItemMultiSelectionModel* selectionModel = this->selectionModel();
+    if (!selectionModel) {
+        return;
+    }
+
+    QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
+    if (selectedIndexes.isEmpty()) {
+        return;
+    }
+
+    int row = selectedIndexes.first().row();
+
+    std::vector<trackedit::Track> labelTracks = allLabelTracks();
+    if (labelTracks.empty()) {
+        // todo: create new
+        return;
+    }
+
+    trackedit::TrackId trackId = labelTracks.front().id;
+
+    RetVal<trackedit::LabelKey> retVal = trackeditInteraction()->addLabel(trackId);
+    if (!retVal.ret) {
+        LOGE() << retVal.ret.toString();
+        return;
+    }
+
+    const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    trackedit::Label createdLabel = project->label(retVal.val);
+
+    LabelsTableViewVerticalHeader* vHeader = new LabelsTableViewVerticalHeader(this);
+    vHeader->setLabelKey(retVal.val);
+    insertVerticalHeader(row, vHeader);
+
+    QVector<TableViewCell*> cells;
+
+    QString trackTitle = labelTracks.front().title.toQString();
+    cells.append(makeTrackCell(trackId, trackTitle));
+
+    cells.append(makeCell(Val(createdLabel.title.toStdString())));
+
+    cells.append(makeTimecodeCell(Val(createdLabel.startTime)));
+    cells.append(makeTimecodeCell(Val(createdLabel.endTime)));
+
+    cells.append(makeTimecodeCell(Val(createdLabel.lowFrequency)));
+    cells.append(makeTimecodeCell(Val(createdLabel.highFrequency)));
+
+    insertRow(row, cells);
+}
+
+bool LabelsTableViewModel::doCellValueChangeRequested(int row, int column, const Val& value)
 {
     switch (column) {
-    case TRACK_COLUMN: moveLabel(row, column);
-        break;
-    case LABEL_COLUMN: renameLabel(row, column);
-        break;
-    case START_TIME_COLUMN: changeLabelStartTime(row, column);
-        break;
-    case END_TIME_COLUMN: changeLabelEndTime(row, column);
-        break;
-    case LOW_FREQUENCY_COLUMN: changeLabelLowFrequency(row, column);
-        break;
-    case HIGH_FREQUENCY_COLUMN: changeLabelHighFrequency(row, column);
-        break;
+    case TRACK_COLUMN: return moveLabel(row, column, value);
+    case LABEL_COLUMN: return renameLabel(row, column, value);
+    case START_TIME_COLUMN: return changeLabelStartTime(row, column, value);
+    case END_TIME_COLUMN: return changeLabelEndTime(row, column, value);
+    case LOW_FREQUENCY_COLUMN: return changeLabelLowFrequency(row, column, value);
+    case HIGH_FREQUENCY_COLUMN: return changeLabelHighFrequency(row, column, value);
     default: break;
     }
+
+    return false;
 }
 
 TableViewCell* LabelsTableViewModel::makeTrackCell(const trackedit::TrackId& trackId, const QString& trackTitle)
@@ -278,16 +326,18 @@ MenuItem* LabelsTableViewModel::makeSeparator()
     return item;
 }
 
-void LabelsTableViewModel::moveLabel(int row, int column)
+bool LabelsTableViewModel::moveLabel(int row, int column, const Val& value)
 {
+    Q_UNUSED(value);
+
     LabelsTableViewVerticalHeader* verticalHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
     if (!verticalHeader) {
-        return;
+        return false;
     }
 
     const LabelsTableViewTrackCell* cell = dynamic_cast<LabelsTableViewTrackCell*>(findCell(row, column));
     if (!cell) {
-        return;
+        return false;
     }
 
     trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
@@ -295,47 +345,46 @@ void LabelsTableViewModel::moveLabel(int row, int column)
     muse::RetVal<trackedit::LabelKeyList> retVal = trackeditInteraction()->moveLabels({ labelKey }, cell->currentTrackId(),
                                                                                       true /* completed */);
     if (!retVal.ret) {
-        return;
+        return false;
     }
 
     labelKey.trackId = retVal.val.front().trackId;
     labelKey.itemId = retVal.val.front().itemId;
 
     verticalHeader->setLabelKey(labelKey);
+
+    return true;
 }
 
-void LabelsTableViewModel::renameLabel(int row, int column)
+bool LabelsTableViewModel::renameLabel(int row, int column, const Val& value)
 {
+    Q_UNUSED(column);
+
     LabelsTableViewVerticalHeader* verticalHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
     if (!verticalHeader) {
-        return;
-    }
-
-    const TableViewCell* cell = findCell(row, column);
-    if (!cell) {
-        return;
+        return false;
     }
 
     trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
 
-    trackeditInteraction()->changeLabelTitle(labelKey, String::fromStdString(cell->value().toString()));
+    return trackeditInteraction()->changeLabelTitle(labelKey, String::fromStdString(value.toString()));
 }
 
-void LabelsTableViewModel::changeLabelStartTime(int row, int column)
+bool LabelsTableViewModel::changeLabelStartTime(int row, int column, const Val& value)
 {
     LabelsTableViewVerticalHeader* verticalHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
     if (!verticalHeader) {
-        return;
+        return false;
     }
 
     TableViewCell* cell = findCell(row, column);
     if (!cell) {
-        return;
+        return false;
     }
 
     trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
 
-    bool ok = trackeditInteraction()->stretchLabelLeft(labelKey, cell->value().toDouble(), true /* completed */);
+    bool ok = trackeditInteraction()->stretchLabelLeft(labelKey, value.toDouble(), true /* completed */);
     if (ok) {
         //! NOTE: When stretching, the beginning and end may switch places, so let's update them
         const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
@@ -347,23 +396,25 @@ void LabelsTableViewModel::changeLabelStartTime(int row, int column)
         TableViewCell* endTimeCell = findCell(row, END_TIME_COLUMN);
         endTimeCell->setValue(Val(actualLabel.endTime));
     }
+
+    return ok;
 }
 
-void LabelsTableViewModel::changeLabelEndTime(int row, int column)
+bool LabelsTableViewModel::changeLabelEndTime(int row, int column, const Val& value)
 {
     LabelsTableViewVerticalHeader* verticalHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
     if (!verticalHeader) {
-        return;
+        return false;
     }
 
     TableViewCell* cell = findCell(row, column);
     if (!cell) {
-        return;
+        return false;
     }
 
     trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
 
-    bool ok = trackeditInteraction()->stretchLabelRight(labelKey, cell->value().toDouble(), true /* completed */);
+    bool ok = trackeditInteraction()->stretchLabelRight(labelKey, value.toDouble(), true /* completed */);
     if (ok) {
         //! NOTE: When stretching, the beginning and end may switch places, so let's update them
         const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
@@ -375,38 +426,34 @@ void LabelsTableViewModel::changeLabelEndTime(int row, int column)
 
         cell->setValue(Val(actualLabel.endTime));
     }
+
+    return ok;
 }
 
-void LabelsTableViewModel::changeLabelLowFrequency(int row, int column)
+bool LabelsTableViewModel::changeLabelLowFrequency(int row, int column, const Val& value)
 {
+    Q_UNUSED(column);
+
     LabelsTableViewVerticalHeader* verticalHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
     if (!verticalHeader) {
-        return;
-    }
-
-    const TableViewCell* cell = findCell(row, column);
-    if (!cell) {
-        return;
+        return false;
     }
 
     trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
 
-    trackeditInteraction()->changeLabelLowFrequency(labelKey, cell->value().toDouble());
+    return trackeditInteraction()->changeLabelLowFrequency(labelKey, value.toDouble());
 }
 
-void LabelsTableViewModel::changeLabelHighFrequency(int row, int column)
+bool LabelsTableViewModel::changeLabelHighFrequency(int row, int column, const Val& value)
 {
+    Q_UNUSED(column);
+
     LabelsTableViewVerticalHeader* verticalHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
     if (!verticalHeader) {
-        return;
-    }
-
-    const TableViewCell* cell = findCell(row, column);
-    if (!cell) {
-        return;
+        return false;
     }
 
     trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
 
-    trackeditInteraction()->changeLabelHighFrequency(labelKey, cell->value().toDouble());
+    return trackeditInteraction()->changeLabelHighFrequency(labelKey, value.toDouble());
 }

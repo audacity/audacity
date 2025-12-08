@@ -45,11 +45,17 @@ StyledDialogView {
 
         LabelEditorTopPanel {
             Layout.fillWidth: true
+
+            onAddLabelRequested: {
+                labelsTableView.addNewLabel()
+            }
         }
 
         SeparatorLine {}
 
         LabelEditorLabelsTableView {
+            id: labelsTableView
+
             Layout.fillWidth: true
             Layout.fillHeight: true
         }

@@ -15,6 +15,10 @@ StyledTableView {
 
     headerCapitalization: Font.Capitalize
 
+    function addNewLabel() {
+        tableViewModel.addNewLabel()
+    }
+
     LabelsTableViewModel {
         id: tableViewModel
     }
@@ -84,6 +88,8 @@ StyledTableView {
             signal changed(double value)
             signal editingFinished()
 
+            height: 24
+
             value: val
 
             currentFormat: parseInt(tableViewModel.headerData(column, Qt.Horizontal).currentFormatId)
@@ -116,6 +122,8 @@ StyledTableView {
 
             signal changed(double value)
             signal editingFinished()
+
+            height: 24
 
             value: val
 

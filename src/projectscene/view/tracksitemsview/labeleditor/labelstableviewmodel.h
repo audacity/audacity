@@ -42,8 +42,10 @@ public:
 
     Q_INVOKABLE void handleTrackMenuItem(int row, int column, const QString& itemId);
 
+    Q_INVOKABLE void addNewLabel();
+
 private:
-    void doCellValueChanged(int row, int column) override;
+    bool doCellValueChangeRequested(int row, int column, const muse::Val& value) override;
 
     QVector<muse::uicomponents::TableViewHeader*> makeHorizontalHeaders();
     QVector<muse::uicomponents::TableViewHeader*> makeVerticalHeaders();
@@ -57,11 +59,11 @@ private:
     muse::uicomponents::MenuItemList makeAvailableTracksList(const trackedit::TrackId& currentTrackId);
     muse::uicomponents::MenuItem* makeSeparator();
 
-    void moveLabel(int row, int column);
-    void renameLabel(int row, int column);
-    void changeLabelStartTime(int row, int column);
-    void changeLabelEndTime(int row, int column);
-    void changeLabelLowFrequency(int row, int column);
-    void changeLabelHighFrequency(int row, int column);
+    bool moveLabel(int row, int column, const muse::Val& value);
+    bool renameLabel(int row, int column, const muse::Val& value);
+    bool changeLabelStartTime(int row, int column, const muse::Val& value);
+    bool changeLabelEndTime(int row, int column, const muse::Val& value);
+    bool changeLabelLowFrequency(int row, int column, const muse::Val& value);
+    bool changeLabelHighFrequency(int row, int column, const muse::Val& value);
 };
 }
