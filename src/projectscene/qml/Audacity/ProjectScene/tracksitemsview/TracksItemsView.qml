@@ -620,7 +620,7 @@ Rectangle {
                 signal startAutoScroll
                 signal stopAutoScroll
 
-                signal previewImportClipRequested(int trackId, real startPos, real width, string title)
+                signal previewImportClipRequested(var trackIds, real startPos, var durations, var titles)
                 signal clearPreviewImportClip(var excludeTrackIds)
 
                 header: Rectangle {
@@ -879,9 +879,13 @@ Rectangle {
                             Connections {
                                 target: tracksItemsView
 
-                                function onPreviewImportClipRequested(trackId, startPos, width, title) {
-                                    if (trackId === trackClipsContainer.trackId) {
-                                        trackClipsContainer.movePreviewClip(startPos, width, title)
+                                function onPreviewImportClipRequested(tracksIds, startPos, durations, titles) {
+                                    for (let i = 0; i < tracksIds.length; i++) {
+                                        if (tracksIds[i] == trackClipsContainer.trackId) {
+                                            const startTime = timeline.context.positionToTime(startPos);
+                                            const endPos = timeline.context.timeToPosition(startTime + durations[i]);
+                                            trackClipsContainer.movePreviewClip(startPos, endPos - startPos, titles[i])
+                                        }
                                     }
                                 }
 
@@ -1080,11 +1084,14 @@ Rectangle {
 
         anchors.fill: content
 
+        property var lastProbedUrls: null
+
         Timer {
             id: clearPreviewClipsTimer
             interval: 100
             onTriggered: {
                 tracksItemsView.clearPreviewImportClip([])
+                lastProbedUrls = null
                 tracksModel.endImportDrag()
                 root.guidelinePos = -1
                 root.guidelineVisible = false
@@ -1092,14 +1099,17 @@ Rectangle {
         }
 
         onEntered: drop => {
-            const t0 = Date.now();
-            drop.accepted = true
             clearPreviewClipsTimer.stop()
 
-            let urls = drop.urls.concat([]);
-
+            let urls = drop.urls
             tracksModel.startImportDrag()
-            tracksModel.probeAudioFilesLength(urls)
+            if (!lastProbedUrls) {
+                // NOTE: passing list from QML to C++ is very expensive
+                // so avoid calling this function as soon as possible
+                // otherwise the preview clip animation will be slow
+                tracksModel.probeAudioFilesLength(urls)
+                lastProbedUrls = urls
+            }
 
             let position = mapToItem(content, Qt.point(drop.x, drop.y))
 
@@ -1108,22 +1118,12 @@ Rectangle {
             tracksModel.removeDragAddedTracks(trackId, urls.length)
 
             let tracksIds = tracksModel.draggedTracksIds(trackId, urls.length)
-
             tracksItemsView.clearPreviewImportClip(tracksIds /* tracks not to clear */)
-            const startTime = timeline.context.positionToTime(position.x);
             const durations  = tracksModel.lastProbedDurations();
             const titles     = tracksModel.lastProbedFileNames();
-            for (let i = 0; i < urls.length; i++) {
-                const trackId = tracksIds[i];
-                const length  = durations[i];
-                const title   = titles[i];
 
-                const endPos = timeline.context.timeToPosition(startTime + length);
-                tracksItemsView.previewImportClipRequested(trackId, position.x, endPos - position.x, title);
-            }
+            tracksItemsView.previewImportClipRequested(tracksIds, position.x, durations, titles);
 
-            // const t1 = Date.now();
-            // console.log("Duration:", (t1 - t0), "ms");
             root.guidelinePos = position.x
             root.guidelineVisible = true
         }
@@ -1152,6 +1152,7 @@ Rectangle {
 
             root.guidelinePos = -1
             root.guidelineVisible = false
+            lastProbedUrls = null
         }
     }
 

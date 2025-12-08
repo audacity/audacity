@@ -319,8 +319,7 @@ void ViewTracksListModel::prepareConditionalTracks(int currentTrackId, int dragg
     }
 
     for (int i = 0; i < missingTracks; ++i) {
-        // TODO: this is bad, newMonoTrack adds to history
-        trackeditInteraction()->newMonoTrack();
+        tracksInteraction()->addWaveTrack(1);
     }
 }
 
@@ -373,13 +372,15 @@ void ViewTracksListModel::handleDroppedFiles(const trackedit::TrackId& trackId, 
 
     bool importEnabled = false;
     int importCount = 0;
+    std::vector<trackedit::TrackId> trackIds;
+    // TODO: omit label tracks
     for (size_t i = 0; i < m_trackList.size(); ++i) {
         if (m_trackList.at(i).id == trackId) {
             importEnabled = true;
         }
 
         if (importEnabled) {
-            prj->importIntoTrack(localPaths.at(importCount), m_trackList.at(i).id, startTime);
+            trackIds.push_back(m_trackList.at(i).id);
             importCount++;
         }
 
@@ -387,6 +388,8 @@ void ViewTracksListModel::handleDroppedFiles(const trackedit::TrackId& trackId, 
             break;
         }
     }
+
+    prj->importIntoTracks(localPaths, trackIds, startTime);
 }
 
 int ViewTracksListModel::rowCount(const QModelIndex&) const

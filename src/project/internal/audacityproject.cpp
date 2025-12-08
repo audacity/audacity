@@ -75,8 +75,26 @@ Ret Audacity4Project::importIntoTrack(const muse::io::path_t& filePath,
                                    .arg(filePath.toString()).toStdString();
     Ret ok = doImportIntoTrack(filePath, dstTrackId, startTime);
 
-    // TODO: take care of project history
+    projectHistory()->pushHistoryState(importInfo, muse::trc("project", "Import"));
+
     return ok;
+}
+
+Ret Audacity4Project::importIntoTracks(const std::vector<muse::io::path_t>& filePaths,
+                                       std::vector<trackedit::TrackId>& dstTrackIds,
+                                       muse::secs_t startTime)
+{
+    muse::Ret ret = muse::make_ret(Ret::Code::Ok);
+    for (size_t i = 0; i < filePaths.size(); ++i) {
+        Ret ok = doImportIntoTrack(filePaths.at(i), dstTrackIds.at(i), startTime);
+        if (!ok) {
+            ret = muse::make_ret(Ret::Code::InternalError);
+        }
+    }
+
+    projectHistory()->pushHistoryState(muse::trc("project", "Imported multiple files"), muse::trc("project", "Import"));
+
+    return ret;
 }
 
 Ret Audacity4Project::import(const muse::io::path_t& path, const bool forceMode)

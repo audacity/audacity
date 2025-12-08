@@ -661,14 +661,20 @@ bool Au3TracksInteraction::splitDeleteSelectedOnTracks(const TrackIdList tracksI
 
 bool Au3TracksInteraction::newMonoTrack()
 {
-    addWaveTrack(1);
+    auto trackId = addWaveTrack(1);
+    selectionController()->setSelectedTracks({ trackId });
+    selectionController()->setFocusedTrack(trackId);
+
     projectHistory()->pushHistoryState("Created new mono track", "New Mono Track");
     return true;
 }
 
 bool Au3TracksInteraction::newStereoTrack()
 {
-    addWaveTrack(2);
+    auto trackId = addWaveTrack(2);
+    selectionController()->setSelectedTracks({ trackId });
+    selectionController()->setFocusedTrack(trackId);
+
     projectHistory()->pushHistoryState("Created new stereo track", "New Stereo Track");
     return true;
 }
@@ -1778,15 +1784,14 @@ void Au3TracksInteraction::moveTrackTo(const TrackId trackId, int to)
     trackEdit->notifyAboutTrackMoved(track, pos);
 }
 
-void Au3TracksInteraction::addWaveTrack(int numChannels)
+au::trackedit::TrackId Au3TracksInteraction::addWaveTrack(int numChannels)
 {
     const auto track = utils::appendWaveTrack(Au3TrackList::Get(projectRef()), numChannels);
 
     const auto prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackAdded(DomConverter::track(track));
 
-    selectionController()->setSelectedTracks({ track->GetId() });
-    selectionController()->setFocusedTrack(track->GetId());
+    return track->GetId();
 }
 
 int Au3TracksInteraction::trackPosition(const TrackId trackId)
