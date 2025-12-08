@@ -44,13 +44,11 @@ void Au3SpectrogramPainter::paintClip(QPainter& qPainter, const ClipInfo& clipIn
     float minFreq, maxFreq;
     SpectrogramBounds::Get(*waveTrack).GetBounds(*waveTrack, minFreq, maxFreq);
 
-    constexpr auto leftRightHeightRatio = 1.0; // For now at least.
     const SpectrogramTrackContext trackContext{
         settings,
         waveTrack->IsSelected(),
         minFreq,
-        maxFreq,
-        leftRightHeightRatio
+        maxFreq
     };
 
     const int trackHeight{ viewInfo.trackHeight };
@@ -61,7 +59,7 @@ void Au3SpectrogramPainter::paintClip(QPainter& qPainter, const ClipInfo& clipIn
     }
 
     const auto isStereo = clip->NChannels() == 2;
-    const auto rightChannelHeight = static_cast<int>(std::round(trackHeight * leftRightHeightRatio / 2));
+    const auto rightChannelHeight = static_cast<int>(std::round(trackHeight * (1 - viewInfo.channelHeightRatio)));
     for (auto i = 0u; i < clip->NChannels(); ++i) {
         const auto isRightChannel = i == 1u;
         const auto channelHeight = isStereo ? (isRightChannel ? rightChannelHeight : trackHeight - rightChannelHeight) : trackHeight;
