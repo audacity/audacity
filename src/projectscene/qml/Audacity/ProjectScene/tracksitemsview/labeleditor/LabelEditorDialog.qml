@@ -33,6 +33,10 @@ StyledDialogView {
             onRemoveSelectedLabelsRequested: {
                 labelsTableView.removeSelectedLabels()
             }
+
+            onExportRequested: {
+                labelsTableView.exportLabels()
+            }
         }
 
         LabelEditorLabelsTableView {
