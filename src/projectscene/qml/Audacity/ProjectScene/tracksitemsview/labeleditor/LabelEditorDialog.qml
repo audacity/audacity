@@ -19,26 +19,6 @@ StyledDialogView {
 
     resizable: false
 
-    // PitchAndSpeedChangeModel {
-    //     id: changeModel
-
-    //     onCloseDialogRequested: function(){
-    //         root.close()
-    //     }
-    // }
-
-    // Component.onCompleted: {
-    //     changeModel.load(root.trackId, root.clipId)
-    // }
-
-    // onNavigationActivateRequested: {
-    //     if (root.focusItemName == "speed") {
-    //         speedSection.requestActiveFocus()
-    //     } else {
-    //         pitchSection.requestActiveFocus()
-    //     }
-    // }
-
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -49,9 +29,11 @@ StyledDialogView {
             onAddLabelRequested: {
                 labelsTableView.addNewLabel()
             }
-        }
 
-        SeparatorLine {}
+            onRemoveSelectedLabelsRequested: {
+                labelsTableView.removeSelectedLabels()
+            }
+        }
 
         LabelEditorLabelsTableView {
             id: labelsTableView
@@ -75,7 +57,7 @@ StyledDialogView {
 
             onStandardButtonClicked: function(buttonId) {
                 switch(buttonId) {
-                case ButtonBoxModel.Done: root.accept(); break;
+                case ButtonBoxModel.Close: root.accept(); break;
                 }
             }
         }

@@ -43,6 +43,7 @@ public:
     Q_INVOKABLE void handleTrackMenuItem(int row, int column, const QString& itemId);
 
     Q_INVOKABLE void addNewLabel();
+    Q_INVOKABLE void removeSelectedLabels();
 
 private:
     bool doCellValueChangeRequested(int row, int column, const muse::Val& value) override;
