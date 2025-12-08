@@ -6,6 +6,7 @@
 #include "framework/global/translation.h"
 
 #include "uicomponents/components/timecodemodel.h"
+#include "uicomponents/components/frequencymodel.h"
 
 #include "labelstableviewverticalheader.h"
 #include "labelstableviewtrackcell.h"
@@ -50,7 +51,6 @@ QVector<TableViewHeader*> LabelsTableViewModel::makeHorizontalHeaders()
                                      TableViewCellEditMode::Mode::DoubleClick, 296);
 
     static auto timecodeModelStub = au::uicomponents::TimecodeModel();
-
     MenuItemList timecodeFormats = timecodeModelStub.availableFormats();
 
     TableViewHeader* startTimeHeader = makeHorizontalHeader(qtrc("projectscene", "Start time"),
@@ -67,10 +67,27 @@ QVector<TableViewHeader*> LabelsTableViewModel::makeHorizontalHeaders()
     endTimeHeader->setCurrentFormatId(QString::number(timecodeModelStub.currentFormat()));
     hHeaders << endTimeHeader;
 
-    hHeaders << makeHorizontalHeader(qtrc("projectscene", "Low frequency"), TableViewCellType::Type::String,
-                                     TableViewCellEditMode::Mode::StartInEdit, 110);
-    hHeaders << makeHorizontalHeader(qtrc("projectscene", "High frequency"), TableViewCellType::Type::String,
-                                     TableViewCellEditMode::Mode::StartInEdit, 110);
+    static auto lowFrequencyModelStub = au::uicomponents::FrequencyModel();
+    MenuItemList lowFrequencyFormats = lowFrequencyModelStub.availableFormats();
+
+    TableViewHeader* lowFrequencyHeader = makeHorizontalHeader(qtrc("projectscene",
+                                                                    "Low frequency"),
+                                                               static_cast<TableViewCellType::Type>(LabelsTableViewCellType::Type::Frequency),
+                                                               TableViewCellEditMode::Mode::StartInEdit);
+    lowFrequencyHeader->setAvailableFormats(lowFrequencyFormats);
+    lowFrequencyHeader->setCurrentFormatId(QString::number(lowFrequencyModelStub.currentFormat()));
+    hHeaders << lowFrequencyHeader;
+
+    static auto highFrequencyModelStub = au::uicomponents::FrequencyModel();
+    MenuItemList highFrequencyFormats = highFrequencyModelStub.availableFormats();
+
+    TableViewHeader* highFrequencyHeader = makeHorizontalHeader(qtrc("projectscene", "High frequency"),
+                                                                static_cast<TableViewCellType::Type>(LabelsTableViewCellType::Type::
+                                                                                                     Frequency),
+                                                                TableViewCellEditMode::Mode::StartInEdit);
+    highFrequencyHeader->setAvailableFormats(highFrequencyFormats);
+    highFrequencyHeader->setCurrentFormatId(QString::number(highFrequencyModelStub.currentFormat()));
+    hHeaders << highFrequencyHeader;
 
     return hHeaders;
 }
@@ -110,12 +127,12 @@ QVector<QVector<TableViewCell*> > LabelsTableViewModel::makeTable()
 
             row.append(makeTrackCell(track.id, track.title));
             row.append(makeCell(Val(label.title.toStdString())));
+
             row.append(makeTimecodeCell(Val(label.startTime)));
             row.append(makeTimecodeCell(Val(label.endTime)));
 
-            // todo
-            row.append(makeCell(Val(QString()))); // Low frequency
-            row.append(makeCell(Val(QString()))); // High frequency
+            row.append(makeTimecodeCell(Val(label.lowFrequency)));
+            row.append(makeTimecodeCell(Val(label.highFrequency)));
 
             table.append(row);
         }
@@ -362,14 +379,34 @@ void LabelsTableViewModel::changeLabelEndTime(int row, int column)
 
 void LabelsTableViewModel::changeLabelLowFrequency(int row, int column)
 {
-    Q_UNUSED(row);
-    Q_UNUSED(column);
-    NOT_IMPLEMENTED;
+    LabelsTableViewVerticalHeader* verticalHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
+    if (!verticalHeader) {
+        return;
+    }
+
+    const TableViewCell* cell = findCell(row, column);
+    if (!cell) {
+        return;
+    }
+
+    trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
+
+    trackeditInteraction()->changeLabelLowFrequency(labelKey, cell->value().toDouble());
 }
 
 void LabelsTableViewModel::changeLabelHighFrequency(int row, int column)
 {
-    Q_UNUSED(row);
-    Q_UNUSED(column);
-    NOT_IMPLEMENTED;
+    LabelsTableViewVerticalHeader* verticalHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
+    if (!verticalHeader) {
+        return;
+    }
+
+    const TableViewCell* cell = findCell(row, column);
+    if (!cell) {
+        return;
+    }
+
+    trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
+
+    trackeditInteraction()->changeLabelHighFrequency(labelKey, cell->value().toDouble());
 }

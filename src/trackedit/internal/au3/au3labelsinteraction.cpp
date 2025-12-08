@@ -123,6 +123,56 @@ bool Au3LabelsInteraction::changeLabelTitle(const LabelKey& labelKey, const muse
     return true;
 }
 
+bool Au3LabelsInteraction::changeLabelLowFrequency(const LabelKey& labelKey, double frequency)
+{
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
+    IF_ASSERT_FAILED(label) {
+        return false;
+    }
+
+    label->selectedRegion.setF0(frequency);
+
+    LOGD() << "changed low frequency of label: " << labelKey.itemId << ", track: " << labelKey.trackId;
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, label));
+    }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::changeLabelHighFrequency(const LabelKey& labelKey, double frequency)
+{
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
+    IF_ASSERT_FAILED(label) {
+        return false;
+    }
+
+    label->selectedRegion.setF1(frequency);
+
+    LOGD() << "changed high frequency of label: " << labelKey.itemId << ", track: " << labelKey.trackId;
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, label));
+    }
+
+    return true;
+}
+
 bool Au3LabelsInteraction::removeLabel(const LabelKey& labelKey)
 {
     Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelKey.trackId));
