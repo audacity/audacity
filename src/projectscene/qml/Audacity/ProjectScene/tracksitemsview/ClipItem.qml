@@ -19,8 +19,8 @@ Rectangle {
     required property bool isSpectrogramViewVisible
     property int pitch: 0
     property int speedPercentage: 0
-    property alias showChannelSplitter: channelSplitter.visible
-    property alias channelHeightRatio: channelSplitter.channelHeightRatio
+    property bool showChannelSplitter: false
+    property alias channelHeightRatio: waveChannelSplitter.channelHeightRatio
     property var canvas: null
     property color clipColor: "#677CE4"
     property color normalHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : root.classicHeaderColor
@@ -783,9 +783,11 @@ Rectangle {
                 }
 
                 ChannelSplitter {
-                    id: channelSplitter
+                    id: waveChannelSplitter
 
                     anchors.fill: parent
+
+                    visible: root.showChannelSplitter
 
                     editable: root.enableCursorInteraction && root.asymmetricStereoHeightsPossible
                     asymmetricStereoHeightsPossible: root.asymmetricStereoHeightsPossible
@@ -829,6 +831,25 @@ Rectangle {
                 clipTime: root.clipTime
                 timelineIndentWidth: root.canvas.anchors.leftMargin
                 channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
+
+                ChannelSplitter {
+                    id: spectrogramChannelSplitter
+
+                    anchors.fill: parent
+
+                    visible: root.showChannelSplitter
+
+                    channelHeightRatio: parent.channelHeightRatio
+                    editable: root.enableCursorInteraction && root.asymmetricStereoHeightsPossible
+                    asymmetricStereoHeightsPossible: root.asymmetricStereoHeightsPossible
+
+                    color: "#000000"
+                    opacity: 0.10
+
+                    onPositionChangeRequested: function (position) {
+                        root.splitterPositionChangeRequested(position)
+                    }
+                }
             }
         }
 
