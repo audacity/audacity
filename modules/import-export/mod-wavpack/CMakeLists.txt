@@ -13,6 +13,7 @@ set( SOURCES
 set( LIBRARIES
    PRIVATE
       wavpack::wavpack
+      lib-crypto
 )
 
 set (EXTRA_CLUSTER_NODES "${LIBRARIES}" PARENT_SCOPE)

@@ -31,7 +31,7 @@
   <url type="help">https://support.audacityteam.org/</url>
   <url type="translate">https://support.audacityteam.org/community/contributing/translating</url>
   <releases>
-    <release version="3.7.6" date="2025-05-26">
+    <release version="3.7.7" date="2025-11-25">
      <description>
         <p>The 3.7.x series of releases is primarily for maintenance while we work on Audacity 4.0.</p>
       </description>
