@@ -661,6 +661,16 @@ bool TrackeditOperationController::resampleTracks(const TrackIdList& tracksIds, 
     return false;
 }
 
+muse::RetVal<LabelKey> TrackeditOperationController::addLabel(const TrackId& toTrackId)
+{
+    muse::RetVal<LabelKey> retVal = labelsInteraction()->addLabel(toTrackId);
+    if (retVal.ret) {
+        projectHistory()->pushHistoryState("Label added", "Add label");
+    }
+
+    return retVal;
+}
+
 bool TrackeditOperationController::addLabelToSelection()
 {
     if (labelsInteraction()->addLabelToSelection()) {

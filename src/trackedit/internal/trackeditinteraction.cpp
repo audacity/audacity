@@ -427,6 +427,11 @@ bool TrackeditInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
     });
 }
 
+muse::RetVal<LabelKey> TrackeditInteraction::addLabel(const TrackId& toTrackId)
+{
+    return m_interaction->addLabel(toTrackId);
+}
+
 bool TrackeditInteraction::addLabelToSelection()
 {
     return m_interaction->addLabelToSelection();

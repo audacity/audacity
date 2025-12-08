@@ -39,6 +39,26 @@ au::context::IPlaybackStatePtr Au3LabelsInteraction::playbackState() const
     return globalContext()->playbackState();
 }
 
+muse::RetVal<LabelKey> Au3LabelsInteraction::addLabel(const TrackId& toTrackId)
+{
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(toTrackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return muse::RetVal<LabelKey>(make_ret(Err::TrackNotFound));
+    }
+
+    SelectedRegion selectedRegion;
+    selectedRegion.setTimes(0.0, 0.0);
+
+    int64_t newLabelId = labelTrack->AddLabel(selectedRegion, wxEmptyString);
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelAdded(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, newLabelId)));
+    }
+
+    return muse::RetVal<LabelKey>::make_ok({ labelTrack->GetId(), newLabelId });
+}
+
 bool Au3LabelsInteraction::addLabelToSelection()
 {
     auto& project = projectRef();

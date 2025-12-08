@@ -117,7 +117,9 @@ public:
     virtual bool makeStereoTrack(const TrackId left, const TrackId right) = 0;
     virtual bool resampleTracks(const TrackIdList& tracksIds, int rate) = 0;
 
+    virtual muse::RetVal<LabelKey> addLabel(const TrackId& toTrackId) = 0;
     virtual bool addLabelToSelection() = 0;
+
     virtual bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) = 0;
     virtual bool changeLabelLowFrequency(const LabelKey& labelKey, double frequency) = 0;
     virtual bool changeLabelHighFrequency(const LabelKey& labelKey, double frequency) = 0;

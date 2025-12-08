@@ -122,7 +122,9 @@ public:
     bool makeStereoTrack(const TrackId left, const TrackId right) override;
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
 
+    muse::RetVal<LabelKey> addLabel(const TrackId& toTrackId) override;
     bool addLabelToSelection() override;
+
     bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) override;
     bool changeLabelLowFrequency(const LabelKey& labelKey, double frequency) override;
     bool changeLabelHighFrequency(const LabelKey& labelKey, double frequency) override;
