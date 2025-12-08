@@ -437,6 +437,16 @@ bool TrackeditInteraction::changeLabelTitle(const LabelKey& labelKey, const muse
     return m_interaction->changeLabelTitle(labelKey, title);
 }
 
+bool TrackeditInteraction::changeLabelLowFrequency(const LabelKey& labelKey, double frequency)
+{
+    return m_interaction->changeLabelLowFrequency(labelKey, frequency);
+}
+
+bool TrackeditInteraction::changeLabelHighFrequency(const LabelKey& labelKey, double frequency)
+{
+    return m_interaction->changeLabelHighFrequency(labelKey, frequency);
+}
+
 bool TrackeditInteraction::removeLabel(const LabelKey& labelKey)
 {
     return m_interaction->removeLabel(labelKey);

@@ -679,6 +679,24 @@ bool TrackeditOperationController::changeLabelTitle(const LabelKey& labelKey, co
     return false;
 }
 
+bool TrackeditOperationController::changeLabelLowFrequency(const LabelKey& labelKey, double frequency)
+{
+    if (labelsInteraction()->changeLabelLowFrequency(labelKey, frequency)) {
+        projectHistory()->pushHistoryState("Label low frequency changed", "Change label low frequency");
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::changeLabelHighFrequency(const LabelKey& labelKey, double frequency)
+{
+    if (labelsInteraction()->changeLabelHighFrequency(labelKey, frequency)) {
+        projectHistory()->pushHistoryState("Label high frequency changed", "Change label high frequency");
+        return true;
+    }
+    return false;
+}
+
 bool TrackeditOperationController::cutLabel(const LabelKey& labelKey)
 {
     ITrackDataPtr data = labelsInteraction()->cutLabel(labelKey);

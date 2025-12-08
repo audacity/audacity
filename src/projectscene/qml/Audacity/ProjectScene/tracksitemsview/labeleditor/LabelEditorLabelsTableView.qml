@@ -29,6 +29,7 @@ StyledTableView {
         switch(type) {
         case LabelsTableViewCellType.Track: return trackComp
         case LabelsTableViewCellType.Timecode: return timecodeComp
+        case LabelsTableViewCellType.Frequency: return frequencyComp
         }
 
         return null
@@ -71,6 +72,39 @@ StyledTableView {
         id: timecodeComp
 
         Timecode {
+            id: item
+
+            property var itemData
+            property double val
+            property int row
+            property int column
+
+            property string accessibleName: val
+
+            signal changed(double value)
+            signal editingFinished()
+
+            value: val
+
+            currentFormat: parseInt(tableViewModel.headerData(column, Qt.Horizontal).currentFormatId)
+            showMenu: false
+
+            sampleRate: Boolean(itemData) ? itemData.sampleRate : 0
+            tempo: Boolean(itemData) ? itemData.tempo : 0
+            upperTimeSignature: Boolean(itemData) ? itemData.upperTimeSignature : -1
+            lowerTimeSignature: Boolean(itemData) ? itemData.lowerTimeSignature : -1
+
+            onValueChangeRequested: function(newValue) {
+                item.changed(newValue)
+            }
+        }
+    }
+
+
+    Component {
+        id: frequencyComp
+
+        Frequency {
             id: item
 
             property var itemData

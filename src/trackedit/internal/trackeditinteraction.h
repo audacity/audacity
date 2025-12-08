@@ -110,6 +110,8 @@ private:
 
     bool addLabelToSelection() override;
     bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) override;
+    bool changeLabelLowFrequency(const LabelKey& labelKey, double frequency) override;
+    bool changeLabelHighFrequency(const LabelKey& labelKey, double frequency) override;
 
     bool removeLabel(const LabelKey& labelKey) override;
     bool removeLabels(const LabelKeyList& labelKeys, bool moveLabels) override;

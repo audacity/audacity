@@ -20,7 +20,8 @@ QML_ELEMENT;
 
 enum class Type {
     Track = static_cast<int>(muse::uicomponents::TableViewCellType::Type::UserType) + 1,
-    Timecode
+    Timecode,
+    Frequency
 };
 
 Q_ENUM_NS(Type)

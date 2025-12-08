@@ -131,6 +131,8 @@ au::trackedit::Label DomConverter::label(const Au3LabelTrack* labelTrack, const 
     label.title = wxToString(au3label->title);
     label.startTime = au3label->getT0();
     label.endTime = au3label->getT1();
+    label.lowFrequency = au3label->getLowFrequency();
+    label.highFrequency = au3label->getHighFrequency();
 
     label.color = TrackColor::Get(labelTrack).GetColor();
 
