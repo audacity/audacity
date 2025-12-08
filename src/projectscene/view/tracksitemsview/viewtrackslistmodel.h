@@ -51,9 +51,9 @@ public:
     Q_INVOKABLE void startImportDrag();
     Q_INVOKABLE void endImportDrag();
     Q_INVOKABLE void prepareConditionalTracks(int currentTrackId, int draggedFileCount);
-    Q_INVOKABLE QVariant draggedTracksIds(int currentTrackId, int draggedFilesCount);
+    Q_INVOKABLE QVariantList draggedTracksIds(int currentTrackId, int draggedFilesCount);
     Q_INVOKABLE void removeDragAddedTracks(int currentTrackId, int draggedFilesCount);
-    Q_INVOKABLE void handleDroppedFiles(const trackedit::TrackId& trackId, double startTime, const QStringList& fileUrls);
+    Q_INVOKABLE void handleDroppedFiles(const std::vector<trackedit::TrackId>& trackIds, double startTime, const QStringList& fileUrls);
 
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;

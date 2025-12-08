@@ -36,6 +36,10 @@ constexpr int numDecimals(float value)
     return count;
 }
 
+auto isAudioTrack = [](au::trackedit::TrackType type) {
+    return type == au::trackedit::TrackType::Mono || type == au::trackedit::TrackType::Stereo;
+};
+
 static_assert(numDecimals(0.14999999) == 2);
 static_assert(numDecimals(1.00) == 0);
 static_assert(numDecimals(0.005) == 3);
@@ -292,54 +296,116 @@ void ViewTracksListModel::prepareConditionalTracks(int currentTrackId, int dragg
         return;
     }
 
-    int tracksCreated = m_trackList.size() - m_tracksCountWhenDragStarted;
+    const int totalTracks = static_cast<int>(m_trackList.size());
 
-    if (draggedFilesCount <= tracksCreated) {
+    const int tracksCreated
+        =(m_tracksCountWhenDragStarted >= 0)
+          ? std::max(0, totalTracks - m_tracksCountWhenDragStarted)
+          : 0;
+
+    if (tracksCreated >= draggedFilesCount) {
         return;
     }
 
     int currentIndex = -1;
-    for (int i = 0; i < static_cast<int>(m_trackList.size()); ++i) {
+    for (int i = 0; i < totalTracks; ++i) {
         if (m_trackList[i].id == currentTrackId) {
             currentIndex = i;
             break;
         }
     }
 
-    int availableTracks;
-    if (currentIndex < 0) {
-        availableTracks = 0;
-    } else {
-        availableTracks = static_cast<int>(m_trackList.size()) - currentIndex;
+    int startIndex = (currentIndex < 0) ? totalTracks : currentIndex;
+
+    int availableAudioTracks = 0;
+    for (int i = startIndex; i < totalTracks; ++i) {
+        if (isAudioTrack(m_trackList[i].type)) {
+            ++availableAudioTracks;
+        }
     }
 
-    int missingTracks = draggedFilesCount - availableTracks;
+    int missingTracks = draggedFilesCount - availableAudioTracks;
     if (missingTracks <= 0) {
         return;
     }
 
-    for (int i = 0; i < missingTracks; ++i) {
+    const int maxNewAllowed = draggedFilesCount - tracksCreated;
+    if (maxNewAllowed <= 0) {
+        return;
+    }
+
+    const int toCreate = std::min(missingTracks, maxNewAllowed);
+
+    for (int i = 0; i < toCreate; ++i) {
         tracksInteraction()->addWaveTrack(1);
     }
 }
 
-QVariant ViewTracksListModel::draggedTracksIds(int currentTrackId, int draggedFilesCount)
+QVariantList ViewTracksListModel::draggedTracksIds(int currentTrackId, int draggedFilesCount)
 {
     QVariantList trackIds;
-    // get m_trackList.size() for stereo/mono only
-    for (size_t i = 0; i < m_trackList.size(); ++i) {
-        if (m_trackList.at(i).id == currentTrackId || static_cast<int>(m_trackList.size() - i) == draggedFilesCount) {
-            trackIds.push_back(m_trackList.at(i).id);
-            draggedFilesCount--;
-        } else if (!trackIds.empty()) {
-            // TODO: skip label tracks
-            trackIds.push_back(m_trackList.at(i).id);
-            draggedFilesCount--;
-        }
+    if (draggedFilesCount <= 0 || m_trackList.empty()) {
+        return trackIds;
+    }
 
-        if (draggedFilesCount == 0) {
-            break;
+    const int total = static_cast<int>(m_trackList.size());
+
+    // collect indices of all audio tracks
+    std::vector<int> audioIndices;
+    audioIndices.reserve(total);
+    for (int i = 0; i < total; ++i) {
+        if (isAudioTrack(m_trackList[i].type)) {
+            audioIndices.push_back(i);
         }
+    }
+
+    if (audioIndices.empty()) {
+        return trackIds;
+    }
+
+    int currentRow = -1;
+    if (currentTrackId >= 0) {
+        for (int i = 0; i < total; ++i) {
+            if (m_trackList[i].id == currentTrackId) {
+                currentRow = i;
+                break;
+            }
+        }
+    }
+
+    int thresholdRow;
+    if (currentRow >= 0) {
+        // cursor is over a track, start from that track
+        thresholdRow = currentRow;
+    } else {
+        // cursor is below tracks, start from newly created track
+        thresholdRow = std::max(0, m_tracksCountWhenDragStarted);
+    }
+
+    int startAudioPos = 0;
+    while (startAudioPos < static_cast<int>(audioIndices.size())
+           && audioIndices[startAudioPos] < thresholdRow) {
+        ++startAudioPos;
+    }
+
+    const int availFromStart = static_cast<int>(audioIndices.size()) - startAudioPos;
+
+    if (availFromStart >= draggedFilesCount) {
+        for (int i = 0; i < draggedFilesCount; ++i) {
+            int trackIndex = audioIndices[startAudioPos + i];
+            trackIds.push_back(static_cast<int>(m_trackList[trackIndex].id));
+        }
+        return trackIds;
+    }
+
+    // fallback, not enough tracks: use last `draggedFilesCount` audio tracks
+    const int totalAudio = static_cast<int>(audioIndices.size());
+    const int toTake = std::min(draggedFilesCount, totalAudio);
+    const int firstIndex = totalAudio - toTake;
+
+    for (int i = firstIndex; i < totalAudio; ++i) {
+        int trackIndex = audioIndices[i];
+        trackIds.push_back(static_cast<int>(m_trackList[trackIndex].id));
     }
 
     return trackIds;
@@ -347,20 +413,60 @@ QVariant ViewTracksListModel::draggedTracksIds(int currentTrackId, int draggedFi
 
 void ViewTracksListModel::removeDragAddedTracks(int currentTrackId, int draggedFilesCount)
 {
-    int neededTracksCount = 0;
-    for (size_t i = 0; i < m_trackList.size(); ++i) {
-        neededTracksCount++;
-        if (m_trackList.at(i).id == currentTrackId) {
-            neededTracksCount += draggedFilesCount - 1;
+    if (draggedFilesCount <= 0 || m_tracksCountWhenDragStarted < 0) {
+        return;
+    }
+
+    const int total = static_cast<int>(m_trackList.size());
+    if (total <= m_tracksCountWhenDragStarted) {
+        return;
+    }
+
+    int currentIndex = -1;
+    for (int i = 0; i < total; ++i) {
+        if (m_trackList[i].id == currentTrackId) {
+            currentIndex = i;
             break;
         }
     }
 
-    neededTracksCount = std::max(neededTracksCount, m_tracksCountWhenDragStarted);
+    int startIndex;
+    if (currentIndex >= 0) {
+        // cursor is over some existing track (label or audio)
+        startIndex = currentIndex;
+    } else if (m_tracksCountWhenDragStarted >= 0
+               && m_tracksCountWhenDragStarted < total) {
+        // cursor is below the last track
+        startIndex = m_tracksCountWhenDragStarted;
+    } else {
+        // fallback
+        startIndex = 0;
+    }
+
+    int remaining = draggedFilesCount;
+    int highestUsedIndex = m_tracksCountWhenDragStarted - 1;
+
+    // detect where dragged files will land: walk from startIndex downwards,
+    // counting only audio tracks.
+    for (int i = startIndex; i < total && remaining > 0; ++i) {
+        if (!isAudioTrack(m_trackList[i].type)) {
+            continue;
+        }
+
+        highestUsedIndex = std::max(highestUsedIndex, i);
+        --remaining;
+    }
+
+    int neededTracksCount = m_tracksCountWhenDragStarted;
+    if (highestUsedIndex >= 0) {
+        neededTracksCount = std::max(neededTracksCount, highestUsedIndex + 1);
+    }
+
+    // remove only extra empty tracks beyond neededTracksCount
     tracksInteraction()->removeDragAddedTracks(neededTracksCount, true /* emptyOnly */);
 }
 
-void ViewTracksListModel::handleDroppedFiles(const trackedit::TrackId& trackId, double startTime, const QStringList& fileUrls)
+void ViewTracksListModel::handleDroppedFiles(const std::vector<trackedit::TrackId>& trackIds, double startTime, const QStringList& fileUrls)
 {
     std::vector<muse::io::path_t> localPaths;
     for (const auto& fileUrl : fileUrls) {
@@ -369,25 +475,6 @@ void ViewTracksListModel::handleDroppedFiles(const trackedit::TrackId& trackId, 
     }
 
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
-
-    bool importEnabled = false;
-    int importCount = 0;
-    std::vector<trackedit::TrackId> trackIds;
-    // TODO: omit label tracks
-    for (size_t i = 0; i < m_trackList.size(); ++i) {
-        if (m_trackList.at(i).id == trackId) {
-            importEnabled = true;
-        }
-
-        if (importEnabled) {
-            trackIds.push_back(m_trackList.at(i).id);
-            importCount++;
-        }
-
-        if (importCount >= static_cast<int>(localPaths.size())) {
-            break;
-        }
-    }
 
     prj->importIntoTracks(localPaths, trackIds, startTime);
 }

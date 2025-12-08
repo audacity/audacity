@@ -22,7 +22,7 @@ public:
     virtual muse::Ret import(const muse::io::path_t& path, bool forceMode = false) = 0;
     virtual muse::Ret import(const std::vector<muse::io::path_t>& paths, bool forceMode = false) = 0;
     virtual muse::Ret importIntoTrack(const muse::io::path_t& filePath, trackedit::TrackId dstTrackId, muse::secs_t startTime) = 0;
-    virtual muse::Ret importIntoTracks(const std::vector<muse::io::path_t>& filePaths, std::vector<trackedit::TrackId>& dstTrackIds,
+    virtual muse::Ret importIntoTracks(const std::vector<muse::io::path_t>& filePaths, const std::vector<trackedit::TrackId>& dstTrackIds,
                                        muse::secs_t startTime) = 0;
 
     virtual void close() = 0;
