@@ -561,8 +561,10 @@ Ret Au3Record::doRecord(Au3Project& project,
             }
         }
 
+        std::vector<std::pair<WaveTrack::Holder, Au3WaveTrack::IntervalHolder> > newTrackHolders;
+
         int trackCounter = 0;
-        for (auto newTrack : newTracks) {
+        for (auto& newTrack : newTracks) {
             // Quantize bounds to the rate of the new track.
             if (t0 < DBL_MAX) {
                 t0 = newTrack->SnapToSample(t0);
@@ -606,14 +608,16 @@ Ret Au3Record::doRecord(Au3Project& project,
             //create a new clip with a proper name before recording is started
             auto newClip = insertEmptyInterval(*newTrack, t0, false);
 
-            auto list = TrackList::Create(p);
+            newTrackHolders.push_back({ newTrack, newClip });
+        }
 
-            for (auto& w : newTracks) {
-                list->Add(std::static_pointer_cast<Track>(std::move(w)));
-            }
+        auto list = TrackList::Create(p);
+        for (auto& w : newTracks) {
+            list->Add(std::static_pointer_cast<Track>(std::move(w)));
+        }
+        pendingTracks.RegisterPendingNewTracks(*list);
 
-            pendingTracks.RegisterPendingNewTracks(*list);
-
+        for (auto& [newTrack, newClip] : newTrackHolders) {
             auto updater = [this, trackId = newTrack->GetId(), clipId = newClip->GetId()](Au3Track& d, const Au3Track& s){
                 assert(d.NChannels() == s.NChannels());
                 auto& dst = static_cast<Au3WaveTrack&>(d);
