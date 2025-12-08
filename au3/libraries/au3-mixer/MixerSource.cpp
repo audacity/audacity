@@ -341,8 +341,12 @@ std::optional<size_t> MixerSource::Acquire(Buffers& data, size_t bound)
     assert(data.BlockSize() <= data.Remaining());
 
     auto&[mT0, mT1, _, mTime] = *mTimesAndSpeed;
+    bool hasEndTime = mT1 < std::numeric_limits<decltype(mT1)>::max();
 
-    const auto target = std::min(sampleCount { bound }, sampleCount { (mT1 - mTime) * mRate }).as_size_t();
+    const sampleCount requested = sampleCount { bound };
+    const sampleCount available = hasEndTime ? sampleCount { (mT1 - mTime) * mRate } : sampleCount::max();
+
+    const auto target = std::min(requested, available).as_size_t();
 
     // TODO: more-than-two-channels
     const auto maxChannels = mMaxChannels = data.Channels();
