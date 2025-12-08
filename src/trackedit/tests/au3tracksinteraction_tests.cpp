@@ -1151,6 +1151,133 @@ TEST_F(Au3TracksInteractionTests, PasteLabelsDistributesToMultipleTracks)
     removeTrack(dstLabelTrack2Id);
 }
 
+TEST_F(Au3TracksInteractionTests, PasteLabelTrackWhenWaveTrackSelected)
+{
+    //! [GIVEN] There is a project with tracks: Wave, Label, Wave, Label
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+
+    const TrackId waveTrack1Id = factory.addTrackFromTemplate("Wave Track 1", {
+            { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } }
+        });
+
+    const TrackId sourceLabelTrackId = factory.addLabelTrackFromTemplate("Source Label Track", {
+            { 1.0, 2.0, "Label to copy" }
+        });
+
+    const TrackId waveTrack2Id = factory.addTrackFromTemplate("Wave Track 2", {
+            { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } }
+        });
+
+    const TrackId dstLabelTrackId = factory.addLabelTrackFromTemplate("Destination Label Track", {});
+
+    //! [GIVEN] Clipboard contains label data from the first label track
+    Au3LabelTrack* sourceLabelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(sourceLabelTrackId));
+    ASSERT_NE(sourceLabelTrack, nullptr) << "Failed to find source label track";
+    const Au3Track::Holder trackCopy = sourceLabelTrack->Copy(0.0, 10.0);
+    ASSERT_NE(trackCopy, nullptr) << "Failed to copy label track";
+    const ITrackDataPtr trackData = std::make_shared<Au3TrackData>(trackCopy);
+
+    //! [GIVEN] Select the second wave track
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { waveTrack2Id }));
+
+    //! [WHEN] Paste from clipboard
+    constexpr auto moveClips = false;
+    constexpr auto moveAllTracks = false;
+    constexpr auto isMultiSelectionCopy = false;
+    auto projectWasModified = false;
+    const muse::Ret ret = m_tracksInteraction->paste({ trackData }, 5.0, moveClips,
+                                                     moveAllTracks, isMultiSelectionCopy, projectWasModified);
+    ASSERT_EQ(ret, muse::make_ok()) << "The return value is not Ok";
+
+    //! [THEN] Label is pasted into the next label track after the selected wave track
+    Au3LabelTrack* dstLabelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(dstLabelTrackId));
+    ASSERT_NE(dstLabelTrack, nullptr) << "Failed to find destination label track";
+    ASSERT_EQ(dstLabelTrack->GetNumLabels(), 1) << "Destination track should have 1 label";
+
+    //! [THEN] Label is pasted at the correct position
+    const Au3Label* label = dstLabelTrack->GetLabel(0);
+    ASSERT_NE(label, nullptr) << "Label should exist";
+    ASSERT_DOUBLE_EQ(label->getT0(), 6.0) << "Label start time should be 6.0 (5.0 + 1.0)";
+    ASSERT_DOUBLE_EQ(label->getT1(), 7.0) << "Label end time should be 7.0 (5.0 + 2.0)";
+
+    // Cleanup
+    removeTrack(waveTrack1Id);
+    removeTrack(sourceLabelTrackId);
+    removeTrack(waveTrack2Id);
+    removeTrack(dstLabelTrackId);
+}
+
+TEST_F(Au3TracksInteractionTests, PasteLabelTrackCreatesNewTrack)
+{
+    //! [GIVEN] There is a project with tracks: Wave, Label, Wave (no label tracks after the selected wave)
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+
+    const TrackId waveTrack1Id = factory.addTrackFromTemplate("Wave Track 1", {
+            { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } }
+        });
+
+    const TrackId sourceLabelTrackId = factory.addLabelTrackFromTemplate("Source Label Track", {
+            { 1.0, 2.0, "Label to copy" }
+        });
+
+    const TrackId waveTrack2Id = factory.addTrackFromTemplate("Wave Track 2", {
+            { 0.0, { { 1.0, TrackTemplateFactory::createNoise } } }
+        });
+
+    //! [GIVEN] Clipboard contains label data from the label track
+    Au3LabelTrack* sourceLabelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(sourceLabelTrackId));
+    ASSERT_NE(sourceLabelTrack, nullptr) << "Failed to find source label track";
+    const Au3Track::Holder trackCopy = sourceLabelTrack->Copy(0.0, 10.0);
+    ASSERT_NE(trackCopy, nullptr) << "Failed to copy label track";
+    const ITrackDataPtr trackData = std::make_shared<Au3TrackData>(trackCopy);
+
+    //! [GIVEN] Select the second wave track
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(TrackIdList { waveTrack2Id }));
+
+    //! [GIVEN] Count tracks before paste
+    const Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
+    const size_t tracksBeforePaste = projectTracks.Size();
+    ASSERT_EQ(tracksBeforePaste, 3) << "Should have 3 tracks before paste";
+
+    //! [EXPECT] The playback is asked for its position (when creating new track)
+    EXPECT_CALL(*m_playbackState, playbackPosition()).Times(1).WillOnce(Return(5.0));
+
+    //! [EXPECT] The project is notified about track added
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
+
+    //! [WHEN] Paste from clipboard
+    constexpr auto moveClips = false;
+    constexpr auto moveAllTracks = false;
+    constexpr auto isMultiSelectionCopy = false;
+    auto projectWasModified = false;
+    const muse::Ret ret = m_tracksInteraction->paste({ trackData }, 5.0, moveClips,
+                                                     moveAllTracks, isMultiSelectionCopy, projectWasModified);
+    ASSERT_EQ(ret, muse::make_ok()) << "The return value is not Ok";
+
+    //! [THEN] A new label track was created
+    ASSERT_EQ(projectTracks.Size(), tracksBeforePaste + 1) << "Should have one more track after paste";
+
+    //! [THEN] Find the newly created label track (it should be the last track)
+    const TrackId newLabelTrackId = (*projectTracks.rbegin())->GetId();
+    Au3LabelTrack* newLabelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(newLabelTrackId));
+    ASSERT_NE(newLabelTrack, nullptr) << "Failed to find newly created label track";
+    ASSERT_EQ(newLabelTrack->GetNumLabels(), 1) << "New label track should have 1 label";
+
+    //! [THEN] Label is pasted at the correct position
+    const Au3Label* label = newLabelTrack->GetLabel(0);
+    ASSERT_NE(label, nullptr) << "Label should exist";
+    ASSERT_DOUBLE_EQ(label->getT0(), 6.0) << "Label start time should be 6.0 (5.0 + 1.0)";
+    ASSERT_DOUBLE_EQ(label->getT1(), 7.0) << "Label end time should be 7.0 (5.0 + 2.0)";
+
+    // Cleanup
+    removeTrack(waveTrack1Id);
+    removeTrack(sourceLabelTrackId);
+    removeTrack(waveTrack2Id);
+    removeTrack(newLabelTrackId);
+}
+
 TEST_F(Au3TracksInteractionTests, AddNewMonoTrack)
 {
     //! [GIVEN] There is a project with no tracks
