@@ -99,6 +99,7 @@ public:
         Default,
         RMS,
         Gradient,
+        Candy,
     };
     Q_ENUM(MeterStyle)
 };

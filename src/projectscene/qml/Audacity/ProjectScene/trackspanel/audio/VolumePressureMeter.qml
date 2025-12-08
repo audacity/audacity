@@ -46,6 +46,9 @@ Canvas {
         readonly property var gradientColorYellow: "#FFE100"
         readonly property var gradientColorRed: "#EF476F"
 
+        readonly property var candyColor1: "#FF6B6B"
+        readonly property var candyColor2: "#FFFFFF"
+
         readonly property color meterBackgroundColor: Utils.colorWithAlpha(ui.theme.strokeColor, 0.7)
 
         readonly property var maxPeakMarkerColor: "#14151A"
@@ -70,6 +73,8 @@ Canvas {
                         return meterStyle.gradientColorYellow
                     }
                     return meterStyle.gradientColorRed
+                case PlaybackMeterStyle.Candy:
+                    return meterStyle.candyColor1
                 default:
                     return meterStyle.maxPeakMarkerColor
             }
@@ -93,6 +98,8 @@ Canvas {
         property bool needsClear: false
 
         property real updatedVolumePressure: -145.0
+
+        property real candyOffset: 0
         property real maxPeak: -145.0
         property real recentPeak: -145.0
         property var recentVolumePressure: []
@@ -129,7 +136,7 @@ Canvas {
                 return;
             }
 
-            return prv.indicatorHeight * root.meterModel.sampleToPosition(sampleValue); 
+            return prv.indicatorHeight * root.meterModel.sampleToPosition(sampleValue);
         }
 
         function drawRoundedRect(ctx, fillStyle, x, y, width, height, radius, roundedEdge) {
@@ -166,12 +173,23 @@ Canvas {
             ctx.fill();
             ctx.restore();
         }
-        
+
         onIsClippingChanged: {
             if (prv.isClipping) {
                 prv.clipped = true
                 root.requestPaint()
             }
+        }
+    }
+
+    Timer {
+        id: candyAnimationTimer
+        interval: 50
+        running: root.meterModel && root.meterModel.meterStyle == PlaybackMeterStyle.Candy && prv.updatedVolumePressure > root.minDisplayedVolumePressure
+        repeat: true
+        onTriggered: {
+            prv.candyOffset = (prv.candyOffset + 1) % 20
+            root.requestPaint()
         }
     }
 
@@ -208,6 +226,8 @@ Canvas {
             drawBarStyleRMS(ctx)
         } else if (root.meterModel.meterStyle == PlaybackMeterStyle.Gradient) {
             drawBarStyleGradient(ctx)
+        } else if (root.meterModel.meterStyle == PlaybackMeterStyle.Candy) {
+            drawBarStyleCandy(ctx)
         }
     }
 
@@ -269,6 +289,45 @@ Canvas {
         if (meterHeight > 0) {
             const fillStyle = meterStyle.createGradient(ctx, 0, prv.indicatorHeight)
             prv.drawRoundedRect(ctx, fillStyle, 0, root.height - meterHeight, indicatorWidth, meterHeight, 2, "bottom")
+        }
+
+        drawPeakMarkers(ctx)
+    }
+
+    function drawBarStyleCandy(ctx) {
+        if (prv.isClipping) {
+            ctx.fillStyle = meterStyle.clippedColor
+            ctx.fillRect(0, 0, root.indicatorWidth, prv.indicatorHeight + root.overloadHeight)
+            return
+        }
+
+        const meterHeight = prv.sampleValueToHeight(prv.updatedVolumePressure)
+        if (meterHeight > 0) {
+            ctx.save()
+            ctx.beginPath()
+            ctx.rect(0, root.height - meterHeight, root.indicatorWidth, meterHeight)
+            ctx.clip()
+
+            const stripeWidth = 10
+            const maxHeight = prv.indicatorHeight
+            const totalWidth = root.indicatorWidth + maxHeight + stripeWidth * 4
+
+            const startX = -maxHeight - stripeWidth * 2 + prv.candyOffset
+
+            let colorIndex = 0
+            for (let x = startX; x < totalWidth; x += stripeWidth) {
+                ctx.fillStyle = (colorIndex % 2 === 0) ? meterStyle.candyColor1 : meterStyle.candyColor2
+                ctx.beginPath()
+                ctx.moveTo(x, root.height)
+                ctx.lineTo(x + stripeWidth, root.height)
+                ctx.lineTo(x + stripeWidth + maxHeight, root.height - maxHeight)
+                ctx.lineTo(x + maxHeight, root.height - maxHeight)
+                ctx.closePath()
+                ctx.fill()
+                colorIndex++
+            }
+
+            ctx.restore()
         }
 
         drawPeakMarkers(ctx)
