@@ -15,6 +15,7 @@
 
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "au3wrap/internal/domconverter.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -168,6 +169,20 @@ public:
 
         ON_CALL(*m_currentProject, au3ProjectPtr())
         .WillByDefault(Return(m_au3ProjectAccessor->au3ProjectPtr()));
+
+        ON_CALL(*m_trackEditProject, trackList())
+        .WillByDefault(testing::Invoke([this](){
+            std::vector<Track> result;
+
+            auto& tracks = Au3TrackList::Get(projectRef());
+
+            for (const Au3Track* t : tracks) {
+                Track au4t = au3::DomConverter::track(t);
+                result.push_back(std::move(au4t));
+            }
+
+            return result;
+        }));
     }
 
     TrackId createTrack(const TestTrackID testTrackID)

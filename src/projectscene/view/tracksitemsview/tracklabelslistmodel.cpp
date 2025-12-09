@@ -84,6 +84,10 @@ void TrackLabelsListModel::onReload()
 
             update();
 
+            QTimer::singleShot(100, [this](){
+                dispatcher()->dispatch("label-rename");
+            });
+
             break;
         }
     }, muse::async::Asyncable::Mode::SetReplace);

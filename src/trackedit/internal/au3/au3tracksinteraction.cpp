@@ -1448,7 +1448,7 @@ TrackIdList Au3TracksInteraction::determineDestinationTracksIds(const std::vecto
                : trackType == TrackType::Mono || trackType == TrackType::Stereo;
     };
 
-    // If there's a label track in clipboard, match tracks strictly by position and type
+    //! NOTE: If there's a label track in clipboard, match tracks strictly by position and type
     if (hasLabelTrack && tracks.size() == clipboardData.size()) {
         TrackIdList result;
 
@@ -1461,24 +1461,31 @@ TrackIdList Au3TracksInteraction::determineDestinationTracksIds(const std::vecto
         return result;
     }
 
-    size_t clipboardTracksSize = clipboardData.size();
+    //! NOTE: Filter destinationTrackIds to only include tracks that match the filter
+    TrackIdList filteredDestinationTrackIds;
+    for (const auto& trackId : destinationTrackIds) {
+        auto it = std::find_if(tracks.begin(), tracks.end(), [trackId](const Track& track) {
+            return track.id == trackId;
+        });
 
-    if (destinationTrackIds.size() < clipboardTracksSize) {
-        //! NOTE: not enough tracks selected, add more consecutively
-        return expandDestinationTracks(tracks, destinationTrackIds, clipboardTracksSize);
-    } else if (destinationTrackIds.size() > clipboardTracksSize) {
-        //! NOTE: more tracks selected than needed, return sub-vector
-        return TrackIdList(destinationTrackIds.begin(), destinationTrackIds.begin() + clipboardTracksSize);
+        if (it != tracks.end() && matchesFilter(it->type)) {
+            filteredDestinationTrackIds.push_back(trackId);
+        }
     }
 
-    //! NOTE: selected tracks size matches clipboard size
-    return destinationTrackIds;
-}
+    size_t clipboardTracksSize = clipboardData.size();
+    if (filteredDestinationTrackIds.size() > clipboardTracksSize) {
+        //! NOTE: more tracks selected than needed, return sub-vector
+        return TrackIdList(filteredDestinationTrackIds.begin(), filteredDestinationTrackIds.begin() + clipboardTracksSize);
+    }
 
-TrackIdList Au3TracksInteraction::expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
-                                                          size_t clipboardTracksSize) const
-{
-    TrackIdList result = destinationTrackIds;
+    if (filteredDestinationTrackIds.size() == clipboardTracksSize) {
+        //! NOTE: selected tracks size matches clipboard size
+        return filteredDestinationTrackIds;
+    }
+
+    //! NOTE: not enough tracks selected, add more consecutively
+    TrackIdList result = filteredDestinationTrackIds;
     bool collecting = false;
 
     for (const auto& track : tracks) {
@@ -1486,7 +1493,7 @@ TrackIdList Au3TracksInteraction::expandDestinationTracks(const std::vector<Trac
             collecting = true;
             continue;
         }
-        if (collecting) {
+        if (collecting && matchesFilter(track.type)) {
             result.push_back(track.id);
             if (result.size() >= clipboardTracksSize) {
                 break;
