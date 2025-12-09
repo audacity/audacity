@@ -44,6 +44,16 @@ public:
     virtual void setSplitToolEnabled(const bool enabled) = 0;
     virtual muse::ValCh<bool> splitToolEnabled() = 0;
 
+    virtual muse::ValCh<std::pair<float, float> > verticalDisplayBounds(const trackedit::TrackId& trackId) const = 0;
+    virtual void zoomInVertically(const trackedit::TrackId& trackId) = 0;
+    virtual void zoomOutVertically(const trackedit::TrackId& trackId) = 0;
+    virtual void resetVerticalZoom(const trackedit::TrackId& trackId) = 0;
+
+    virtual muse::ValCh<int> verticalRulerWidth() const = 0;
+
+    virtual muse::ValCh<bool> isHalfWave(const trackedit::TrackId& trackId) const = 0;
+    virtual void toggleHalfWave(const trackedit::TrackId& trackId) = 0;
+
     //State of user interaction
     virtual double mousePositionY() const = 0;
     virtual void setMousePositionY(double y) = 0;

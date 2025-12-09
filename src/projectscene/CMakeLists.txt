@@ -37,6 +37,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/viewinfo.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/viewinfo.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/waveformscale.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/waveformscale.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.h

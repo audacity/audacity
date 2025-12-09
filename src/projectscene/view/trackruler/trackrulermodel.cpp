@@ -20,6 +20,12 @@ TrackRulerModel::TrackRulerModel(QObject* parent)
     m_model = buildRulerModel();
 }
 
+IProjectViewStatePtr TrackRulerModel::viewState() const
+{
+    au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    return prj ? prj->viewState() : nullptr;
+}
+
 void TrackRulerModel::init()
 {
     m_model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
@@ -244,7 +250,12 @@ std::shared_ptr<ITrackRuler> TrackRulerModel::buildRulerModel()
 
 void TrackRulerModel::zoomIn()
 {
-    trackeditInteraction()->zoomInVertically(m_trackId);
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return;
+    }
+
+    prjViewState->zoomInVertically(m_trackId);
 
     emit isDefaultZoomChanged();
     emit isMaxZoomChanged();
@@ -253,7 +264,12 @@ void TrackRulerModel::zoomIn()
 
 void TrackRulerModel::zoomOut()
 {
-    trackeditInteraction()->zoomOutVertically(m_trackId);
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return;
+    }
+
+    prjViewState->zoomOutVertically(m_trackId);
 
     emit isDefaultZoomChanged();
     emit isMaxZoomChanged();
@@ -262,7 +278,12 @@ void TrackRulerModel::zoomOut()
 
 void TrackRulerModel::resetZoom()
 {
-    trackeditInteraction()->resetVerticalZoom(m_trackId);
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return;
+    }
+
+    prjViewState->resetVerticalZoom(m_trackId);
 
     emit isDefaultZoomChanged();
     emit isMaxZoomChanged();
@@ -271,29 +292,39 @@ void TrackRulerModel::resetZoom()
 
 void TrackRulerModel::toggleHalfWave()
 {
-    trackeditInteraction()->toggleHalfWave(m_trackId);
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return;
+    }
+
+    prjViewState->toggleHalfWave(m_trackId);
 
     emit isHalfWaveChanged();
 }
 
 bool TrackRulerModel::isDefaultZoom() const
 {
-    return trackeditInteraction()->isDefaultVerticalZoom(m_trackId);
+    return false;
 }
 
 bool TrackRulerModel::isMaxZoom() const
 {
-    return trackeditInteraction()->isMaxVerticalZoom(m_trackId);
+    return false;
 }
 
 bool TrackRulerModel::isMinZoom() const
 {
-    return trackeditInteraction()->isMinVerticalZoom(m_trackId);
+    return false;
 }
 
 bool TrackRulerModel::isHalfWave() const
 {
-    return trackeditInteraction()->isHalfWave(m_trackId);
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return false;
+    }
+
+    return prjViewState->isHalfWave(m_trackId).val;
 }
 
 void TrackRulerModel::setTrackId(const trackedit::TrackId& newTrackId)

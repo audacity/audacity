@@ -4,7 +4,6 @@
 #include "trackcolor.h"
 #include "trackrulertypeattachment.h"
 #include "trackviewtypeattachment.h"
-#include "waveformscale.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -78,21 +77,6 @@ au::trackedit::TrackViewType trackViewType(const Au3Track* track)
         return type;
     }
 }
-
-std::pair<float, float> trackDisplayBounds(const Au3Track* track)
-{
-    const auto* waveTrack = dynamic_cast<const WaveTrack*>(track);
-    if (waveTrack == nullptr) {
-        return { -1.0f, 1.0f };
-    }
-
-    const auto& cache = WaveformScale::Get(*waveTrack);
-    float min  = 0.0f;
-    float max = 0.0f;
-    cache.GetDisplayBounds(min, max);
-
-    return { min, max };
-}
 }
 
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
@@ -137,7 +121,6 @@ au::trackedit::Track DomConverter::track(const Au3Track* track)
     au4t.rulerType = trackRulerType(track);
     au4t.viewType = trackViewType(track);
     au4t.rate = trackRate(track);
-    au4t.displayBounds = trackDisplayBounds(track);
     return au4t;
 }
 

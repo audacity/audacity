@@ -193,6 +193,15 @@ void ViewTracksListModel::load()
 
     endResetModel();
 
+    projectSceneConfiguration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool) {
+        emit isVerticalRulersVisibleChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
+    emit isVerticalRulersVisibleChanged();
+
+    playbackConfiguration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { DbRangeRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
     const IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
 
     if (!viewState) {
@@ -203,13 +212,8 @@ void ViewTracksListModel::load()
         emit totalTracksHeightChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    projectSceneConfiguration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool) {
-        emit isVerticalRulersVisibleChanged();
-    }, muse::async::Asyncable::Mode::SetReplace);
-    emit isVerticalRulersVisibleChanged();
-
-    playbackConfiguration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { DbRangeRole });
+    viewState->verticalRulerWidth().ch.onReceive(this, [this](int) {
+        emit verticalRulerWidthChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 }
 
@@ -298,12 +302,6 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case DbRangeRole:
         return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
 
-    case DisplayBoundsRole:
-        return QVariant::fromValue(QMap<QString, QVariant> {
-            { "min", static_cast<double>(track.displayBounds.first) },
-            { "max", static_cast<double>(track.displayBounds.second) }
-        });
-
     default:
         break;
     }
@@ -328,8 +326,7 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { TrackRulerTypeRole, "trackRulerType" },
         { DbRangeRole, "dbRange" },
         { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
-        { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
-        { DisplayBoundsRole, "trackDisplayBounds" }
+        { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" }
     };
     return roles;
 }
@@ -341,22 +338,14 @@ bool ViewTracksListModel::isVerticalRulersVisible() const
 
 int ViewTracksListModel::verticalRulerWidth() const
 {
-    float smallestBoundValue = 1;
-    for (const auto& track : m_trackList) {
-        if (track.rulerType != au::trackedit::TrackRulerType::Linear) {
-            //Only linear rulers contain decimal places.
-            continue;
-        }
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
 
-        // Find the smallest vertical zoom among linear rulers to ajust the width globally.
-        smallestBoundValue = std::min(smallestBoundValue, ((track.displayBounds.second - track.displayBounds.first) / 2.0f));
+    if (!viewState) {
+        return 0;
     }
-    smallestBoundValue *= 0.1f;
 
-    const int nDecimals = numDecimals(smallestBoundValue);
-
-    // Adjust the width according to the number of decimal places.
-    return 56 + (nDecimals * 8);
+    return viewState->verticalRulerWidth().val;
 }
 
 int ViewTracksListModel::totalTracksHeight() const

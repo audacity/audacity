@@ -57,9 +57,29 @@ void TrackViewStateModel::init()
             emit channelHeightRatioChanged();
         }, muse::async::Asyncable::Mode::SetReplace);
 
+        m_displayBounds = vs->verticalDisplayBounds(m_trackId);
+        m_displayBounds.ch.onReceive(this, [this](std::pair<float, float> bounds) {
+            if (m_displayBounds.val == bounds) {
+                return;
+            }
+            m_displayBounds.val = bounds;
+            emit displayBoundsChanged();
+        }, muse::async::Asyncable::Mode::SetReplace);
+
+        m_isHalfWave = vs->isHalfWave(m_trackId);
+        m_isHalfWave.ch.onReceive(this, [this](bool isHalfWave) {
+            if (m_isHalfWave.val == isHalfWave) {
+                return;
+            }
+            m_isHalfWave.val = isHalfWave;
+            emit isHalfWaveChanged();
+        }, muse::async::Asyncable::Mode::SetReplace);
+
         emit trackHeightChanged();
         emit isTrackCollapsedChanged();
         emit channelHeightRatioChanged();
+        emit displayBoundsChanged();
+        emit isHalfWaveChanged();
     }
 
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
@@ -120,6 +140,20 @@ bool TrackViewStateModel::isTrackCollapsed() const
 double TrackViewStateModel::channelHeightRatio() const
 {
     return m_channelHeightRatio.val;
+}
+
+QVariant TrackViewStateModel::displayBounds() const
+{
+    const auto& [min, max] = m_displayBounds.val;
+    return QVariant::fromValue(QMap<QString, QVariant> {
+        { "min", static_cast<double>(min) },
+        { "max", static_cast<double>(max) }
+    });
+}
+
+bool TrackViewStateModel::isHalfWave() const
+{
+    return m_isHalfWave.val;
 }
 
 bool TrackViewStateModel::isPlaying() const

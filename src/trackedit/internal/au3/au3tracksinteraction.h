@@ -75,17 +75,6 @@ public:
     bool makeStereoTrack(const TrackId left, const TrackId right) override;
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
 
-    void zoomInVertically(const trackedit::TrackId& trackId) override;
-    void zoomOutVertically(const trackedit::TrackId& trackId) override;
-    void resetVerticalZoom(const trackedit::TrackId& trackId) override;
-
-    bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const override;
-    bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const override;
-    bool isMinVerticalZoom(const trackedit::TrackId& trackId) const override;
-
-    void toggleHalfWave(const trackedit::TrackId& trackId) override;
-    bool isHalfWave(const trackedit::TrackId& trackId) const override;
-
     double nearestZeroCrossing(double time) const override;
 
     muse::Progress progress() const override;
@@ -127,7 +116,6 @@ private:
     void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
     void moveTrackTo(const TrackId trackId, int pos);
 
-    float maxVerticalZoom(const trackedit::Track& track) const;
     void adjustVerticalZoom(const trackedit::TrackId& trackId);
 
     context::IPlaybackStatePtr playbackState() const;

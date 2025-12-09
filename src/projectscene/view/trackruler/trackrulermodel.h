@@ -9,8 +9,8 @@
 #include "framework/global/async/asyncable.h"
 
 #include "framework/global/modularity/ioc.h"
+#include "context/iglobalcontext.h"
 #include "playback/iplaybackconfiguration.h"
-#include "trackedit/itrackeditinteraction.h"
 #include "trackedit/trackedittypes.h"
 
 #include "projectscene/view/trackruler/itrackruler.h"
@@ -19,6 +19,9 @@ namespace au::projectscene {
 class TrackRulerModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
+
+    muse::Inject<au::playback::IPlaybackConfiguration> configuration;
+    muse::Inject<au::context::IGlobalContext> globalContext;
 
     Q_PROPERTY(std::vector<QVariantMap> fullSteps READ fullSteps NOTIFY fullStepsChanged)
     Q_PROPERTY(std::vector<QVariantMap> smallSteps READ smallSteps NOTIFY smallStepsChanged)
@@ -40,9 +43,6 @@ class TrackRulerModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool isMinZoom READ isMinZoom NOTIFY isMinZoomChanged FINAL)
 
     Q_PROPERTY(bool isHalfWave READ isHalfWave NOTIFY isHalfWaveChanged FINAL)
-
-    muse::Inject<au::playback::IPlaybackConfiguration> configuration;
-    muse::Inject<au::trackedit::ITrackeditInteraction> trackeditInteraction;
 
 public:
     explicit TrackRulerModel(QObject* parent = nullptr);
@@ -104,6 +104,8 @@ signals:
 
     void isHalfWaveChanged();
 private:
+    IProjectViewStatePtr viewState() const;
+
     std::shared_ptr<ITrackRuler> buildRulerModel();
     double stepToPosition(double step, int channel, bool isNegativeSample) const;
 

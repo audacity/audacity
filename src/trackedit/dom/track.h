@@ -64,7 +64,6 @@ struct Track {
     TrackRulerType rulerType = TrackRulerType::Linear;
     TrackViewType viewType = TrackViewType::Unspecified;
     uint64_t rate;
-    std::pair<float, float> displayBounds = { -1.0f, 1.0f };
 };
 
 using TrackList = std::vector<Track>;

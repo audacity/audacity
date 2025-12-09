@@ -124,17 +124,6 @@ private:
 
     std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const override;
 
-    void zoomInVertically(const trackedit::TrackId& trackId) override;
-    void zoomOutVertically(const trackedit::TrackId& trackId) override;
-    void resetVerticalZoom(const trackedit::TrackId& trackId) override;
-
-    bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const override;
-    bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const override;
-    bool isMinVerticalZoom(const trackedit::TrackId& trackId) const override;
-
-    void toggleHalfWave(const trackedit::TrackId& trackId) override;
-    bool isHalfWave(const trackedit::TrackId& trackId) const override;
-
     muse::Progress progress() const override;
 
 private:

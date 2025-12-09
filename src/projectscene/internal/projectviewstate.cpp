@@ -2,9 +2,17 @@
 * Audacity: A Digital Audio Editor
 */
 #include "projectviewstate.h"
+#include "au3wrap/iau3project.h"
 #include "au3wrap/internal/projectsnap.h"
-#include "au3/viewinfo.h"
+#include "au3wrap/internal/domaccessor.h"
+#include "au3wrap/internal/domconverter.h"
 #include "au3wrap/au3types.h"
+#include "au3/viewinfo.h"
+#include "au3/waveformscale.h"
+#include "trackedit/dom/track.h"
+#include "types/number.h"
+#include "types/retval.h"
+#include <memory>
 
 using namespace au::projectscene;
 
@@ -14,6 +22,34 @@ constexpr int TRACK_MIN_HEIGHT = 44;
 constexpr int TRACK_COLLAPSE_HEIGHT = 72;
 
 namespace {
+constexpr int numDecimals(float value)
+{
+    constexpr int MAX_DECIMAL_PLACES = 4;
+    constexpr float POWER_OF_TEN = 10000.0f;
+
+    int rounded_scaled_value = static_cast<int>((value * POWER_OF_TEN) + 0.5f);
+    int integer_part = static_cast<int>(value);
+    int decimal_part_scaled = rounded_scaled_value - (integer_part * static_cast<int>(POWER_OF_TEN));
+
+    if (decimal_part_scaled == 0) {
+        return 0;
+    }
+
+    int count = MAX_DECIMAL_PLACES;
+    int power_of_ten = 10;
+
+    while (count > 0 && (decimal_part_scaled % power_of_ten) == 0) {
+        count--;
+        power_of_ten *= 10;
+    }
+
+    return count;
+}
+
+static_assert(numDecimals(0.14999999) == 2);
+static_assert(numDecimals(1.00) == 0);
+static_assert(numDecimals(0.005) == 3);
+
 void saveProjectSnap(std::shared_ptr<au::au3::IAu3Project> project, const Snap& snap)
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
@@ -57,6 +93,36 @@ ZoomState getProjectZoomState(au::au3::Au3Project* au3Project)
         projectZoomState.vPos()
     };
 }
+
+std::pair<float, float> getVerticalDisplayBounds(std::shared_ptr<au::au3::IAu3Project> project, const au::trackedit::TrackId& trackId)
+{
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+
+    au::au3::Au3WaveTrack* waveTrack = au::au3::DomAccessor::findWaveTrack(*au3Project, au::au3::Au3TrackId(trackId));
+    if (waveTrack == nullptr) {
+        return { -1.0f, 1.0f };
+    }
+
+    float min = 0.0f;
+    float max = 0.0f;
+    auto& cache = WaveformScale::Get(*waveTrack);
+    cache.GetDisplayBounds(min, max);
+    return { min, max };
+}
+
+void setVerticalDisplayBounds(std::shared_ptr<au::au3::IAu3Project> project, const au::trackedit::TrackId& trackId, const std::pair<float,
+                                                                                                                                    float>& bounds)
+{
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+
+    au::au3::Au3WaveTrack* waveTrack = au::au3::DomAccessor::findWaveTrack(*au3Project, au::au3::Au3TrackId(trackId));
+    if (waveTrack == nullptr) {
+        return;
+    }
+
+    auto& cache = WaveformScale::Get(*waveTrack);
+    cache.SetDisplayBounds(bounds.first, bounds.second);
+}
 }
 
 ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project)
@@ -95,6 +161,7 @@ ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project
                 return;
             }
             m_totalTracksHeight.set(m_totalTracksHeight.val - it->second.height.val);
+            m_verticalRulerWidth.set(calculateVerticalRulerWidth());
             m_tracks.erase(it);
         });
 
@@ -115,6 +182,8 @@ ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project
     projectHistory()->historyChanged().onNotify(this, [this]() {
         updateItemsBoundaries(false);
     });
+
+    m_au3Project = project;
 }
 
 muse::ValCh<int> ProjectViewState::totalTrackHeight() const
@@ -179,9 +248,13 @@ int ProjectViewState::trackVerticalPosition(const trackedit::TrackId& trackId) c
 
 ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::TrackId& trackId) const
 {
+    const std::pair<float, float> defaultBounds = getVerticalDisplayBounds(m_au3Project, trackId);
+
     TrackData d;
     d.collapsed.val = false;
     d.channelHeightRatio.val = 1.0;
+    d.verticalDisplayBounds.val = defaultBounds;
+    d.isHalfWave.val = (defaultBounds.first == 0.0f);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (prj) {
@@ -193,6 +266,7 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
     }
 
     m_totalTracksHeight.set(m_totalTracksHeight.val + d.height.val);
+    m_verticalRulerWidth.set(calculateVerticalRulerWidth());
 
     return m_tracks.insert({ trackId, d }).first->second;
 }
@@ -419,6 +493,126 @@ muse::ValCh<bool> ProjectViewState::splitToolEnabled()
     return m_splitToolEnabled;
 }
 
+muse::ValCh<std::pair<float, float> > ProjectViewState::verticalDisplayBounds(const trackedit::TrackId& trackId) const
+{
+    auto it = m_tracks.find(trackId);
+    if (it != m_tracks.end()) {
+        return it->second.verticalDisplayBounds;
+    }
+
+    const ProjectViewState::TrackData& d = makeTrackData(trackId);
+    return d.verticalDisplayBounds;
+}
+
+float ProjectViewState::maxVerticalZoomLevel(const trackedit::TrackId& trackId) const
+{
+    constexpr int MIN_DISTANCE_FROM_RANGE = 6;
+    constexpr int DB_PER_STEP = 6;
+    constexpr float MIN_VERTICAL_RANGE = 1.0f / (1 << 9);
+
+    const au::au3::Au3Project* au3Project = reinterpret_cast<const au::au3::Au3Project*>(m_au3Project->au3ProjectPtr());
+
+    const au::au3::Au3WaveTrack* waveTrack = au::au3::DomAccessor::findWaveTrack(*au3Project, ::TrackId(trackId));
+    if (waveTrack == nullptr) {
+        return MIN_VERTICAL_RANGE;
+    }
+
+    trackedit::Track track = au::au3::DomConverter::track(waveTrack);
+
+    if (track.rulerType == trackedit::TrackRulerType::DbLog) {
+        const int dBRange = static_cast<int>(playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange()));
+        const int steps = (-dBRange - MIN_DISTANCE_FROM_RANGE) / DB_PER_STEP;
+        return std::max(MIN_VERTICAL_RANGE, 1.0f / (1 << steps));
+    }
+
+    return MIN_VERTICAL_RANGE;
+}
+
+void ProjectViewState::zoomInVertically(const trackedit::TrackId& trackId)
+{
+    const auto& [verticalMin, verticalMax] = getVerticalDisplayBounds(m_au3Project, trackId);
+    const float maxZoom = maxVerticalZoomLevel(trackId);
+
+    auto it = m_tracks.find(trackId);
+    if (it != m_tracks.end()) {
+        const std::pair<float, float> newBounds = {
+            std::min(verticalMin / 2.0f, -maxZoom),
+            std::max(verticalMax / 2.0f, maxZoom)
+        };
+        setVerticalDisplayBounds(m_au3Project, trackId, newBounds);
+        it->second.verticalDisplayBounds.set(newBounds);
+        m_verticalRulerWidth.set(calculateVerticalRulerWidth());
+    }
+}
+
+void ProjectViewState::zoomOutVertically(const trackedit::TrackId& trackId)
+{
+    constexpr float MAX_VERTICAL_RANGE = 2.0f;
+
+    const auto& [verticalMin, verticalMax] = getVerticalDisplayBounds(m_au3Project, trackId);
+
+    auto it = m_tracks.find(trackId);
+    if (it != m_tracks.end()) {
+        const std::pair<float, float> newBounds = {
+            std::max(verticalMin * 2.0f, -MAX_VERTICAL_RANGE),
+            std::min(verticalMax * 2.0f, MAX_VERTICAL_RANGE)
+        };
+        setVerticalDisplayBounds(m_au3Project, trackId, newBounds);
+        it->second.verticalDisplayBounds.set(newBounds);
+        m_verticalRulerWidth.set(calculateVerticalRulerWidth());
+    }
+}
+
+void ProjectViewState::resetVerticalZoom(const trackedit::TrackId& trackId)
+{
+    const float DEFAULT_VERTICAL_MIN = -1.0f;
+    const float DEFAULT_VERTICAL_MAX = 1.0f;
+
+    const auto& [verticalMin, _] = getVerticalDisplayBounds(m_au3Project, trackId);
+    const bool isHalfWave = (verticalMin == 0.0f);
+
+    const std::pair<float, float> defaultBounds =  { isHalfWave ? 0.0f : DEFAULT_VERTICAL_MIN, DEFAULT_VERTICAL_MAX };
+
+    auto it = m_tracks.find(trackId);
+    if (it != m_tracks.end()) {
+        setVerticalDisplayBounds(m_au3Project, trackId, defaultBounds);
+        it->second.verticalDisplayBounds.set(defaultBounds);
+        m_verticalRulerWidth.set(calculateVerticalRulerWidth());
+    }
+}
+
+muse::ValCh<bool> ProjectViewState::isHalfWave(const trackedit::TrackId& trackId) const
+{
+    auto it = m_tracks.find(trackId);
+    if (it != m_tracks.end()) {
+        return it->second.isHalfWave;
+    }
+
+    const ProjectViewState::TrackData& d = makeTrackData(trackId);
+    return d.isHalfWave;
+}
+
+void ProjectViewState::toggleHalfWave(const trackedit::TrackId& trackId)
+{
+    const auto& [verticalMin, verticalMax] = getVerticalDisplayBounds(m_au3Project, trackId);
+
+    auto it = m_tracks.find(trackId);
+    if (it != m_tracks.end()) {
+        bool isHalfWave = (verticalMin == 0.0f);
+        setVerticalDisplayBounds(m_au3Project, trackId,
+                                 { isHalfWave ? -verticalMax : 0.0f, verticalMax });
+        it->second.verticalDisplayBounds.set(
+            { isHalfWave ? -verticalMax : 0.0f, verticalMax });
+        it->second.isHalfWave.set(!isHalfWave);
+        m_verticalRulerWidth.set(calculateVerticalRulerWidth());
+    }
+}
+
+muse::ValCh<int> ProjectViewState::verticalRulerWidth() const
+{
+    return m_verticalRulerWidth;
+}
+
 void ProjectViewState::setItemEditStartTimeOffset(double val)
 {
     if (m_itemEditStartTimeOffset == val) {
@@ -556,6 +750,37 @@ muse::ValCh<bool> ProjectViewState::ctrlPressed() const
 int ProjectViewState::trackDefaultHeight() const
 {
     return TRACK_DEFAULT_HEIGHT;
+}
+
+int ProjectViewState::calculateVerticalRulerWidth() const
+{
+    constexpr int MIN_RULER_WIDTH = 56;
+
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
+
+    if (!viewState) {
+        return MIN_RULER_WIDTH;
+    }
+
+    float smallestBoundValue = 1;
+    for (const auto& [trackId, trackData] : m_tracks) {
+        const auto track = prj->trackeditProject()->track(trackId);
+        if (!track || (track->rulerType != au::trackedit::TrackRulerType::Linear)) {
+            continue;
+        }
+
+        const auto& [minBound, maxBound] = viewState->verticalDisplayBounds(trackId).val;
+
+        // Find the smallest vertical zoom among linear rulers to ajust the width globally.
+        smallestBoundValue = std::min(smallestBoundValue, ((maxBound - minBound) / 2.0f));
+    }
+    smallestBoundValue *= 0.1f;
+
+    const int nDecimals = numDecimals(smallestBoundValue);
+
+    // Adjust the width according to the number of decimal places.
+    return MIN_RULER_WIDTH + (nDecimals * 8);
 }
 
 bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)

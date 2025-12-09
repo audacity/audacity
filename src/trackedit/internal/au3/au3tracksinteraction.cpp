@@ -26,7 +26,6 @@
 #include "au3wrap/internal/trackcolor.h"
 #include "au3wrap/internal/trackrulertypeattachment.h"
 #include "au3wrap/internal/trackviewtypeattachment.h"
-#include "au3wrap/internal/waveformscale.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
@@ -48,10 +47,6 @@ using namespace au::au3;
 
 namespace {
 const std::string mixingDownToMonoLabel = muse::trc("trackedit", "Mixing down to mono...");
-
-constexpr float DEFAULT_VERTICAL_RANGE = 1.0f;
-constexpr float MAX_VERTICAL_RANGE = 2.0f;
-constexpr float MIN_VERTICAL_RANGE = 1.0f / (1 << 9);
 }
 
 Au3TracksInteraction::Au3TracksInteraction()
@@ -1140,184 +1135,30 @@ bool Au3TracksInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
     return true;
 }
 
-float Au3TracksInteraction::maxVerticalZoom(const trackedit::Track& track) const
-{
-    constexpr int MIN_DISTANCE_FROM_RANGE = 6;
-    constexpr int DB_PER_STEP = 6;
-
-    if (track.rulerType == trackedit::TrackRulerType::DbLog) {
-        const int dBRange = static_cast<int>(playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange()));
-        const int steps = (-dBRange - MIN_DISTANCE_FROM_RANGE) / DB_PER_STEP;
-        return std::max(MIN_VERTICAL_RANGE, 1.0f / (1 << steps));
-    }
-
-    return MIN_VERTICAL_RANGE;
-}
-
-void Au3TracksInteraction::zoomInVertically(const trackedit::TrackId& trackId)
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    if (waveTrack == nullptr) {
-        return;
-    }
-
-    trackedit::Track track = DomConverter::track(waveTrack);
-    float maxZoom = maxVerticalZoom(track);
-
-    float min = 0.0f;
-    float max = 0.0f;
-    auto& cache = WaveformScale::Get(*waveTrack);
-    cache.GetDisplayBounds(min, max);
-    if (muse::is_equal(max, maxZoom)) {
-        return;
-    }
-
-    cache.SetDisplayBounds(min / 2, max / 2);
-
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
-}
-
-void Au3TracksInteraction::zoomOutVertically(const trackedit::TrackId& trackId)
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    if (waveTrack == nullptr) {
-        return;
-    }
-
-    float min = 0.0f;
-    float max = 0.0f;
-    auto& cache = WaveformScale::Get(*waveTrack);
-    cache.GetDisplayBounds(min, max);
-    if (muse::is_equal(max, MAX_VERTICAL_RANGE)) {
-        return;
-    }
-
-    cache.SetDisplayBounds(min * 2, max * 2);
-
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
-}
-
-void Au3TracksInteraction::resetVerticalZoom(const trackedit::TrackId& trackId)
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    if (waveTrack == nullptr) {
-        return;
-    }
-
-    float min = 0.0f;
-    float max = 0.0f;
-    auto& cache = WaveformScale::Get(*waveTrack);
-    cache.GetDisplayBounds(min, max);
-    cache.SetDisplayBounds(muse::RealIsEqual(min, 0.0f) ? 0.0f : -DEFAULT_VERTICAL_RANGE, DEFAULT_VERTICAL_RANGE);
-
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
-}
-
-bool Au3TracksInteraction::isDefaultVerticalZoom(const trackedit::TrackId& trackId) const
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    if (waveTrack == nullptr) {
-        return false;
-    }
-
-    float min = 0.0f;
-    float max = 0.0f;
-    auto& cache = WaveformScale::Get(*waveTrack);
-    cache.GetDisplayBounds(min, max);
-    return muse::is_equal(max, DEFAULT_VERTICAL_RANGE);
-}
-
-bool Au3TracksInteraction::isMaxVerticalZoom(const trackedit::TrackId& trackId) const
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    if (waveTrack == nullptr) {
-        return false;
-    }
-
-    trackedit::Track track = DomConverter::track(waveTrack);
-    float maxZoom = maxVerticalZoom(track);
-
-    float min;
-    float max;
-    auto& cache = WaveformScale::Get(*waveTrack);
-    cache.GetDisplayBounds(min, max);
-    return muse::is_equal(max, maxZoom);
-}
-
-bool Au3TracksInteraction::isMinVerticalZoom(const trackedit::TrackId& trackId) const
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    if (waveTrack == nullptr) {
-        return false;
-    }
-
-    float min;
-    float max;
-    auto& cache = WaveformScale::Get(*waveTrack);
-    cache.GetDisplayBounds(min, max);
-    return muse::is_equal(max, MAX_VERTICAL_RANGE);
-}
-
 void Au3TracksInteraction::adjustVerticalZoom(const trackedit::TrackId& trackId)
 {
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    if (waveTrack == nullptr) {
-        return;
-    }
+    // Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    // if (waveTrack == nullptr) {
+    //     return;
+    // }
 
-    trackedit::Track track = DomConverter::track(waveTrack);
-    float maxZoom = maxVerticalZoom(track);
+    // trackedit::Track track = DomConverter::track(waveTrack);
+    // float maxZoom = maxVerticalZoom(track);
 
-    float min;
-    float max;
-    auto& cache = WaveformScale::Get(*waveTrack);
-    cache.GetDisplayBounds(min, max);
-    if (muse::is_equal(max, maxZoom)) {
-        return;
-    }
+    // float min;
+    // float max;
+    // auto& cache = WaveformScale::Get(*waveTrack);
+    // cache.GetDisplayBounds(min, max);
+    // if (muse::is_equal(max, maxZoom)) {
+    //     return;
+    // }
 
-    if (max < maxZoom) {
-        cache.SetDisplayBounds(-maxZoom, maxZoom);
-    }
+    // if (max < maxZoom) {
+    //     cache.SetDisplayBounds(-maxZoom, maxZoom);
+    // }
 
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
-}
-
-void Au3TracksInteraction::toggleHalfWave(const trackedit::TrackId& trackId)
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    if (waveTrack == nullptr) {
-        return;
-    }
-
-    float min;
-    float max;
-    auto& cache = WaveformScale::Get(*waveTrack);
-    cache.GetDisplayBounds(min, max);
-
-    cache.SetDisplayBounds(muse::is_equal(min, 0.0f) ? -max : 0.0f, max);
-
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
-}
-
-bool Au3TracksInteraction::isHalfWave(const trackedit::TrackId& trackId) const
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    if (waveTrack == nullptr) {
-        return false;
-    }
-
-    float min;
-    float max;
-    auto& cache = WaveformScale::Get(*waveTrack);
-    cache.GetDisplayBounds(min, max);
-
-    return muse::is_equal(min, 0.0f);
+    // trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    // prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 }
 
 double Au3TracksInteraction::nearestZeroCrossing(double t0) const

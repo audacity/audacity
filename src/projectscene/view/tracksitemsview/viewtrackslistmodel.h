@@ -78,7 +78,6 @@ private:
         IsWaveformViewVisibleRole,
         IsSpectrogramViewVisibleRole,
         DbRangeRole,
-        DisplayBoundsRole,
     };
 
     std::vector<trackedit::Track> m_trackList;

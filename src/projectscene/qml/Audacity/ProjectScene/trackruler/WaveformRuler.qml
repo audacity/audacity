@@ -8,6 +8,8 @@ Item {
 
     required property bool isCollapsed
     required property real channelHeightRatio
+    required property var displayBounds
+    required property bool isHalfWave
 
     signal setTrackRulerTypeRequested(int rulerType)
 
@@ -23,10 +25,10 @@ Item {
         trackId: model.trackId
         isStereo: model.isStereo
         rulerType: model.trackRulerType
-        displayBounds: model.trackDisplayBounds
 
         isCollapsed: root.isCollapsed
         channelHeightRatio: root.channelHeightRatio
+        displayBounds: root.displayBounds
     }
 
     MouseArea {
@@ -46,7 +48,7 @@ Item {
         isDefaultZoom: rulerModel.isDefaultZoom
         isMaxZoom: rulerModel.isMaxZoom
         isMinZoom: rulerModel.isMinZoom
-        isHalfWave: rulerModel.isHalfWave
+        isHalfWave: root.isHalfWave
 
         placementPolicies: PopupView.PreferLeft
 
