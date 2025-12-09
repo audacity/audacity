@@ -12,14 +12,17 @@ Paul Licameli
 #ifndef __AUDACITY_SPECTRUM_TRANSFORMER__
 #define __AUDACITY_SPECTRUM_TRANSFORMER__
 
+#include "PffftTransformer.h"
+#include "au3-math/SampleCount.h"
+
 #include <cassert>
 #include <functional>
 #include <memory>
 #include <vector>
-#include "RealFFTf.h"
-#include "au3-math/SampleCount.h"
 
 enum eWindowFunctions : int;
+
+class WaveChannel;
 
 /*!
  @brief A class that transforms a portion of a wave track (preserving duration)
@@ -30,7 +33,7 @@ enum eWindowFunctions : int;
  and -behind to nearby windows.  May also be used just to gather information
  without producing output.
 */
-class FFT_API SpectrumTransformer /* not final */
+class SpectrumTransformer /* not final */
 {
 public:
     // Public interface
@@ -80,7 +83,7 @@ public:
     bool Finish(const WindowProcessor& processor);
 
     //! Derive this class to add information to the queue.  @see NewWindow()
-    struct FFT_API Window
+    struct Window
     {
         explicit Window(size_t windowSize)
             : mRealFFTs(windowSize / 2)
@@ -161,13 +164,14 @@ protected:
 
 private:
     std::vector<std::unique_ptr<Window> > mQueue;
-    HFFT hFFT;
+    PffftTransformer mTransformer;
     sampleCount mInSampleCount = 0;
     sampleCount mOutStepCount = 0; //!< sometimes negative
     size_t mInWavePos = 0;
 
     //! These have size mWindowSize:
-    FloatVector mFFTBuffer;
+    PffftFloatVector mFFTBuffer;
+    PffftFloatVector mWork;
     FloatVector mInWaveBuffer;
     FloatVector mOutOverlapBuffer;
     //! These have size mWindowSize, or 0 for rectangular window:

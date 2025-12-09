@@ -5,6 +5,9 @@
 
 #include "spectrogramtypes.h"
 
+#include "spectrogramtypes.h"
+
+#include "au3-fft/PffftTransformer.h"
 #include "au3-utility/MemoryX.h"
 #include "au3-wave-track/WaveClip.h" // to inherit WaveClipListener
 
@@ -59,7 +62,7 @@ public:
     size_t windowSize { 0 };
     unsigned zeroPaddingFactor { 0 };
     int frequencyGain;
-    std::vector<float> freq;
+    PffftFloatVector freq;
     std::vector<long long> where;
 
     int dirty;
@@ -68,7 +71,7 @@ private:
     // Calculate one column of the spectrum
     bool CalculateOneSpectrum(
         const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip, const int xx, double pixelsPerSecond, int lowerBoundX,
-        int upperBoundX, const std::vector<float>& gainFactors, float* __restrict scratch, float* __restrict out);
+        int upperBoundX, const std::vector<float>& gainFactors, PffftFloats scratch, PffftFloats out);
 
     std::optional<AudioSegmentSampleView> mSampleCacheHolder;
 };

@@ -7,7 +7,7 @@
 #include "spectrogramtypes.h"
 
 #include "au3-math/SampleFormat.h"
-#include "au3-fft/RealFFTf.h"
+#include "au3-fft/PffftTransformer.h"
 #include "au3-track/TrackAttachment.h"
 
 class EnumValueSymbols;
@@ -62,7 +62,7 @@ public:
     size_t NBins() const;
 
     // Variables used for computing the spectrum
-    HFFT hFFT;
+    PffftTransformer transformer;
     Floats window;
 
     // Two other windows for computing reassigned spectrogram

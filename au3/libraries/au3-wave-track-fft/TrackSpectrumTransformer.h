@@ -15,7 +15,7 @@ class WaveChannel;
 class WaveTrack;
 
 //! Subclass of SpectrumTransformer that rewrites a track
-class WAVE_TRACK_FFT_API TrackSpectrumTransformer /* not final */ : public SpectrumTransformer
+class TrackSpectrumTransformer /* not final */ : public SpectrumTransformer
 {
 public:
     /*!
