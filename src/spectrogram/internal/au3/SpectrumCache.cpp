@@ -12,6 +12,8 @@
 #include "au3-wave-track/WaveTrack.h"
 #include "spectrogramtypes.h"
 
+#include <QtConcurrent>
+
 #include <cmath>
 #include <cassert>
 
@@ -177,9 +179,12 @@ bool SpecCache::CalculateOneSpectrum(
                 constexpr auto iChannel = 0u;
                 constexpr auto mayThrow = false; // Don't throw just for display
                 floats.resize(PffftTransformer::PaddedCount(myLen));
-                mSampleCacheHolder.emplace(
-                    clip.GetSampleView(from, myLen, mayThrow));
-                mSampleCacheHolder->Copy(floats.data(), myLen);
+                {
+                    std::lock_guard<std::mutex> lock(mSampleCacheMutex);
+                    mSampleCacheHolders.emplace_back(
+                        clip.GetSampleView(from, myLen, mayThrow));
+                    mSampleCacheHolders.back().Copy(floats.data(), myLen);
+                }
                 useBuffer = floats.aligned();
                 if (copy) {
                     if (useBuffer) {
@@ -376,7 +381,6 @@ void SpecCache::Populate(
     // One work area for pffft, one work area for the outputs, two extra
     // output areas to compute reassignment
     const size_t scratchSize = (reassignment ? 4u : 2u) * PffftTransformer::PaddedCount(fftLen);
-    PffftFloatVector scratch(scratchSize);
 
     std::vector<float> gainFactors;
     if (!autocorrelation) {
@@ -390,15 +394,23 @@ void SpecCache::Populate(
         const int lowerBoundX = jj == 0 ? 0 : copyEnd;
         const int upperBoundX = jj == 0 ? copyBegin : numPixels;
 
-        for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
+        std::vector<int> xRange(upperBoundX - lowerBoundX);
+        std::iota(xRange.begin(), xRange.end(), lowerBoundX);
+
+        QtConcurrent::blockingMap(
+            xRange,
+            [&](int xx) {
+            PffftFloatVector scratch(scratchSize);
             auto work = scratch.aligned();
             auto out = freq.aligned();
             CalculateOneSpectrum(
                 settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
                 gainFactors, work, out);
-        }
+        });
 
         if (reassignment) {
+            PffftFloatVector scratch(scratchSize);
+
             // Need to look beyond the edges of the range to accumulate more
             // time reassignments.
             // I'm not sure what's a good stopping criterion?
@@ -429,7 +441,7 @@ void SpecCache::Populate(
 
             // Now Convert to dB terms.  Do this only after accumulating
             // power values, which may cross columns with the time correction.
-            for (xx = lowerBoundX; xx < upperBoundX; ++xx) {
+            QtConcurrent::blockingMap(xRange, [&](int xx) {
                 const auto results = freq.aligned(PffftTransformer::PaddedCount(nBins), xx).get();
                 for (size_t ii = 0; ii < nBins; ++ii) {
                     float& power = results[ii];
@@ -445,7 +457,7 @@ void SpecCache::Populate(
                         results[ii] += gainFactors[ii];
                     }
                 }
-            }
+            });
         }
     }
 }
@@ -563,8 +575,8 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 }
 
 WaveClipSpectrumCache::WaveClipSpectrumCache(size_t nChannels)
-    : mSpecCaches(nChannels)
-    , mSpecPxCaches(nChannels)
+    : mSpecPxCaches(nChannels),
+    mSpecCaches(nChannels)
 {
     for (auto& pCache : mSpecCaches) {
         pCache = std::make_unique<SpecCache>();

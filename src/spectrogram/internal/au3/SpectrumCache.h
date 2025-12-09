@@ -73,7 +73,8 @@ private:
         const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip, const int xx, double pixelsPerSecond, int lowerBoundX,
         int upperBoundX, const std::vector<float>& gainFactors, PffftFloats scratch, PffftFloats out);
 
-    std::optional<AudioSegmentSampleView> mSampleCacheHolder;
+    std::vector<AudioSegmentSampleView> mSampleCacheHolders;
+    std::mutex mSampleCacheMutex;
 };
 
 class SpecPxCache
