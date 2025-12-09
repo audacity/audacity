@@ -124,6 +124,9 @@ set(MODULE_SRC ${MODULE_SRC}
     ${IMPORT_EXPORT_MODULE}/mod-pcm/ImportPCM.cpp
     ${IMPORT_EXPORT_MODULE}/mod-pcm/ImportPCM.h
 
+    ${IMPORT_EXPORT_MODULE}/mod-ogg/ExportOGG.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-ogg/ExportOGG.h
+
     # FFmpeg support (still compiled as sources, not yet converted to library)
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ImportFFmpeg.cpp
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ExportFFmpeg.cpp
