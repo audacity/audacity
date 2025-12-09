@@ -95,7 +95,7 @@ bool SpecCache::CalculateOneSpectrum(
     const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip,
     const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
     const std::vector<float>& gainFactors, float* __restrict scratch,
-    float* __restrict out) const
+    float* __restrict out)
 {
     bool result = false;
     const bool reassignment = settings.algorithm == SpectrogramAlgorithm::Reassignment;
@@ -167,9 +167,9 @@ bool SpecCache::CalculateOneSpectrum(
             if (myLen > 0) {
                 constexpr auto iChannel = 0u;
                 constexpr auto mayThrow = false; // Don't throw just for display
+                floats.resize(myLen);
                 mSampleCacheHolder.emplace(
                     clip.GetSampleView(from, myLen, mayThrow));
-                floats.resize(myLen);
                 mSampleCacheHolder->Copy(floats.data(), myLen);
                 useBuffer = floats.data();
                 if (copy) {
@@ -389,9 +389,11 @@ void SpecCache::Populate(
                 =pixelsPerSecond * clip.GetStretchRatio() / sampleRate;
             const int limit = std::min((int)(0.5 + fftLen * pixelsPerSample), 100);
             for (int ii = 0; ii < limit; ++ii) {
+                auto work = &scratch[0];
+                auto out = &freq[0];
                 const bool result = CalculateOneSpectrum(
                     settings, clip, --xx, pixelsPerSecond, lowerBoundX, upperBoundX,
-                    gainFactors, &scratch[0], &freq[0]);
+                    gainFactors, work, out);
                 if (!result) {
                     break;
                 }
