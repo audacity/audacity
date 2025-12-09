@@ -304,17 +304,32 @@ void TrackRulerModel::toggleHalfWave()
 
 bool TrackRulerModel::isDefaultZoom() const
 {
-    return false;
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return false;
+    }
+
+    return prjViewState->isDefaultVerticalZoom(m_trackId);
 }
 
 bool TrackRulerModel::isMaxZoom() const
 {
-    return false;
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return false;
+    }
+
+    return prjViewState->isMaxVerticalZoom(m_trackId);
 }
 
 bool TrackRulerModel::isMinZoom() const
 {
-    return false;
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return false;
+    }
+
+    return prjViewState->isMinVerticalZoom(m_trackId);
 }
 
 bool TrackRulerModel::isHalfWave() const

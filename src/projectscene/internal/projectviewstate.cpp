@@ -581,6 +581,29 @@ void ProjectViewState::resetVerticalZoom(const trackedit::TrackId& trackId)
     }
 }
 
+bool ProjectViewState::isDefaultVerticalZoom(const trackedit::TrackId& trackId) const
+{
+    constexpr float DEFAULT_VERTICAL_MAX = 1.0f;
+
+    const auto& [_, verticalMax] = getVerticalDisplayBounds(m_au3Project, trackId);
+    return muse::RealIsEqual(verticalMax, DEFAULT_VERTICAL_MAX);
+}
+
+bool ProjectViewState::isMaxVerticalZoom(const trackedit::TrackId& trackId) const
+{
+    const auto& [_, verticalMax] = getVerticalDisplayBounds(m_au3Project, trackId);
+    const float maxZoom = maxVerticalZoomLevel(trackId);
+    return muse::RealIsEqualOrLess(std::abs(verticalMax), maxZoom);
+}
+
+bool ProjectViewState::isMinVerticalZoom(const trackedit::TrackId& trackId) const
+{
+    constexpr float MAX_VERTICAL_RANGE = 2.0f;
+
+    const auto& [_, verticalMax] = getVerticalDisplayBounds(m_au3Project, trackId);
+    return muse::RealIsEqualOrMore(std::abs(verticalMax), MAX_VERTICAL_RANGE);
+}
+
 muse::ValCh<bool> ProjectViewState::isHalfWave(const trackedit::TrackId& trackId) const
 {
     auto it = m_tracks.find(trackId);
