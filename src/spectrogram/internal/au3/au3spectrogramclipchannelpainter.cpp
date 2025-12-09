@@ -8,9 +8,9 @@
 #include "internal/spectrogramutils.h"
 #include "internal/clipparameters.h"
 
-#include "libraries/lib-screen-geometry/NumberScale.h"
-#include "libraries/lib-wave-track/WaveClip.h"
-#include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
+#include "au3-screen-geometry/NumberScale.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track-settings/SpectrogramSettings.h"
 
 namespace au::spectrogram {
 namespace {

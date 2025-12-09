@@ -11,9 +11,9 @@
 
 #include "framework/global/log.h"
 
-#include "libraries/lib-project/Project.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
+#include "au3-project/Project.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track-settings/SpectrogramSettings.h"
 
 namespace au::spectrogram {
 void Au3SpectrogramPainter::init()
