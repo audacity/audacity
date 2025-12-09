@@ -13,6 +13,7 @@ Paul Licameli
 
 *//*******************************************************************/
 
+#define WAVELET
 
 #include "SpectrogramSettings.h"
 
