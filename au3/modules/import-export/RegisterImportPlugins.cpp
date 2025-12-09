@@ -8,6 +8,7 @@
 #include "mod-wavpack/ImportWavPack.h"
 #include "mod-mpg123/ImportMP3_MPG123.h"
 #include "mod-pcm/ImportPCM.h"
+#include "mod-ogg/ImportOGG.h"
 
 void RegisterImportPlugins()
 {
@@ -24,5 +25,10 @@ void RegisterImportPlugins()
     static Importer::RegisteredImportPlugin sPCMImportPlugin{
         "PCM",
         std::make_unique< PCMImportPlugin >()
+    };
+
+    static Importer::RegisteredImportPlugin sOGGImportPlugin{
+        "OGG",
+        std::make_unique< OggImportPlugin >()
     };
 }
