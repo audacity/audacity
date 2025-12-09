@@ -223,9 +223,10 @@ void Viewport::ScrollHorizontalByPixels(int deltaPixels)
     if (!mpCallbacks)
         return;
     int current = mpCallbacks->GetHorizontalThumbPosition();
-    int max = mpCallbacks->GetHorizontalRange() -
-              mpCallbacks->GetHorizontalThumbSize();
-    int newPos = std::clamp(current - deltaPixels, 0, max);
+    int max = std::max(
+       0, mpCallbacks->GetHorizontalRange() -
+       mpCallbacks->GetHorizontalThumbSize());
+    int newPos = std::clamp(current + deltaPixels, 0, max);
     sbarH += deltaPixels;
     sbarH = std::clamp<wxInt64>(
         sbarH,
