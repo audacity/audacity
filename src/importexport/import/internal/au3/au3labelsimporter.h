@@ -21,4 +21,3 @@ public:
     std::vector<std::string> fileFilter() override;
 };
 }
-

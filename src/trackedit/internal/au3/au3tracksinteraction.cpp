@@ -679,10 +679,10 @@ bool Au3TracksInteraction::newStereoTrack()
     return true;
 }
 
-bool Au3TracksInteraction::newLabelTrack()
+muse::RetVal<au::trackedit::TrackId> Au3TracksInteraction::newLabelTrack(const muse::String& title)
 {
     auto& tracks = Au3TrackList::Get(projectRef());
-    Au3LabelTrack* track = ::LabelTrack::Create(tracks);
+    Au3LabelTrack* track = !title.empty() ? ::LabelTrack::Create(tracks, wxFromString(title)) : ::LabelTrack::Create(tracks);
 
     const auto prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackAdded(DomConverter::labelTrack(track));
@@ -690,7 +690,7 @@ bool Au3TracksInteraction::newLabelTrack()
     selectionController()->setSelectedTracks({ track->GetId() });
     selectionController()->setFocusedTrack(track->GetId());
 
-    return true;
+    return muse::RetVal<TrackId>::make_ok(track->GetId());
 }
 
 bool Au3TracksInteraction::deleteTracks(const TrackIdList& trackIds)

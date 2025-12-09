@@ -167,6 +167,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/labelstableviewtrackcell.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/labelstableviewtimecodecell.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/labelstableviewtimecodecell.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/addnewlabeltrackmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/addnewlabeltrackmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.h

@@ -288,9 +288,9 @@ bool TrackeditInteraction::newStereoTrack()
     return withPlaybackStop(&ITrackeditInteraction::newStereoTrack);
 }
 
-bool TrackeditInteraction::newLabelTrack()
+muse::RetVal<TrackId> TrackeditInteraction::newLabelTrack(const muse::String& title)
 {
-    return withPlaybackStop(&ITrackeditInteraction::newLabelTrack);
+    return withPlaybackStopRetVal(&ITrackeditInteraction::newLabelTrack, title);
 }
 
 bool TrackeditInteraction::deleteTracks(const TrackIdList& trackIds)

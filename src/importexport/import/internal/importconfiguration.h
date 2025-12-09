@@ -23,6 +23,4 @@ public:
 
 private:
 };
-
 }
-

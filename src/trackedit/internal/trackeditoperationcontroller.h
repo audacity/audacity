@@ -86,7 +86,7 @@ public:
 
     bool newMonoTrack() override;
     bool newStereoTrack() override;
-    bool newLabelTrack() override;
+    muse::RetVal<TrackId> newLabelTrack(const muse::String& title = muse::String()) override;
 
     bool deleteTracks(const TrackIdList& trackIds) override;
     bool duplicateTracks(const TrackIdList& trackIds) override;

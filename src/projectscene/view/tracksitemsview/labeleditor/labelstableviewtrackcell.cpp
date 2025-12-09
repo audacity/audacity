@@ -37,5 +37,14 @@ au::trackedit::TrackId LabelsTableViewTrackCell::currentTrackId() const
 
 void LabelsTableViewTrackCell::setCurrentTrackId(const trackedit::TrackId& trackId)
 {
+    if (m_trackId == trackId) {
+        return;
+    }
+
     m_trackId = trackId;
+
+    for (muse::uicomponents::MenuItem* item : m_availableTracks) {
+        bool selected = !item->args().empty() ? item->args().arg<trackedit::TrackId>() == trackId : false;
+        item->setSelected(selected);
+    }
 }

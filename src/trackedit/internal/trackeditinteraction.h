@@ -71,9 +71,11 @@ private:
     std::optional<secs_t> getRightmostClipEndTime(const ClipKeyList& clipKeys) const override;
     double nearestZeroCrossing(double time) const override;
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) override;
+
     bool newMonoTrack() override;
     bool newStereoTrack() override;
-    bool newLabelTrack() override;
+    muse::RetVal<TrackId> newLabelTrack(const muse::String& title = muse::String()) override;
+
     bool deleteTracks(const TrackIdList& trackIds) override;
     bool duplicateTracks(const TrackIdList& trackIds) override;
     void moveTracks(const TrackIdList& trackIds, const TrackMoveDirection direction) override;
@@ -132,11 +134,30 @@ private:
     muse::Progress progress() const override;
 
 private:
+
+    const std::unique_ptr<ITrackeditInteraction> m_interaction;
+
     template<typename Func, typename ... Args>
     muse::Ret withPlaybackStop(Func method, Args&&... args)
     {
         if (recordController()->isRecording()) {
             return make_ret(trackedit::Err::DisallowedDuringRecording);
+        }
+        playbackController()->stop();
+
+        return (m_interaction.get()->*method)(std::forward<Args>(args)...);
+    }
+
+    template<typename Func, typename ... Args>
+    auto withPlaybackStopRetVal(Func method, Args&&... args)
+    -> decltype((m_interaction.get()->*method)(std::forward<Args>(args)...))
+    {
+        using RetType = decltype((m_interaction.get()->*method)(std::forward<Args>(args)...));
+
+        if (recordController()->isRecording()) {
+            RetType retVal;
+            retVal.ret = make_ret(trackedit::Err::DisallowedDuringRecording);
+            return retVal;
         }
         playbackController()->stop();
 
@@ -157,7 +178,5 @@ private:
 
         return method(std::forward<Args>(args)...);
     }
-
-    const std::unique_ptr<ITrackeditInteraction> m_interaction;
 };
 } // namespace au::trackedit

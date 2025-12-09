@@ -74,5 +74,6 @@
         <file>qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorDialog.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorLabelsTableView.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml</file>
     </qresource>
 </RCC>

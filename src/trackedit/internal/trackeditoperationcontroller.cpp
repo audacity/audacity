@@ -480,9 +480,9 @@ bool TrackeditOperationController::newStereoTrack()
     return false;
 }
 
-bool TrackeditOperationController::newLabelTrack()
+muse::RetVal<TrackId> TrackeditOperationController::newLabelTrack(const muse::String& title)
 {
-    return tracksInteraction()->newLabelTrack();
+    return tracksInteraction()->newLabelTrack(title);
 }
 
 bool TrackeditOperationController::deleteTracks(const TrackIdList& trackIds)

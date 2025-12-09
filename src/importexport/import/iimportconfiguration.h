@@ -3,7 +3,6 @@
 */
 #pragma once
 
-#include "async/notification.h"
 #include "global/io/path.h"
 
 #include "modularity/imoduleinterface.h"
@@ -21,4 +20,3 @@ public:
     virtual void setLabelsDirectoryPath(const muse::io::path_t& path) = 0;
 };
 }
-
