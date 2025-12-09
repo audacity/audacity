@@ -3,9 +3,9 @@
 */
 #include "vstviewmodel.h"
 
-#include "libraries/lib-components/EffectInterface.h"
-#include "libraries/lib-vst3/VST3Instance.h"
-#include "libraries/lib-vst3/VST3Wrapper.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-vst3/VST3Instance.h"
+#include "au3-vst3/VST3Wrapper.h"
 
 #include "effects/effects_base/effectstypes.h"
 

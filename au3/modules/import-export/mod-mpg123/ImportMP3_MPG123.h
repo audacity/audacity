@@ -6,8 +6,8 @@
 
 #include <wx/file.h>
 
-#include "WaveTrack.h"
-#include "libraries/lib-import-export/ImportPlugin.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-import-export/ImportPlugin.h"
 
 const auto exts = { wxT("mp3"), wxT("mp2"), wxT("mpa") };
 

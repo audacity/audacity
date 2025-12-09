@@ -3,12 +3,12 @@
 #include "realtimeeffectrestorer.h"
 #include "realtimeeffectserviceutils.h"
 
-#include "libraries/lib-audio-io/AudioIO.h"
+#include "au3-audio-io/AudioIO.h"
 
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-effects/EffectManager.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectList.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-effects/EffectManager.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
 
 #include "project/iaudacityproject.h"
 

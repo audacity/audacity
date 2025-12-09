@@ -9,7 +9,7 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
-#include "libraries/lib-utility/LockFreeQueue.h"
+#include "au3-utility/LockFreeQueue.h"
 
 #include "context/iglobalcontext.h"
 #include "audio/iaudioengine.h"

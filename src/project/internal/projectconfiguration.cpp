@@ -3,8 +3,7 @@
 
 #include <QDir>
 
-#include "FileNames.h"
-#include "Prefs.h"
+#include "au3-files/FileNames.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 

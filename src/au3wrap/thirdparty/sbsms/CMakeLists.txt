@@ -17,13 +17,6 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/src/trackpoint.cpp
 )
 
-list( APPEND INCLUDES
-   PUBLIC
-      ${TARGET_ROOT}/include
-   PRIVATE
-      ${CMAKE_CURRENT_BINARY_DIR}/private
-)
-
 list( APPEND DEFINES
    PUBLIC
       USE_SBSMS=1
@@ -84,6 +77,10 @@ configure_file( sbsms_config.h.in private/config.h )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
-target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+target_include_directories( ${TARGET}
+   PUBLIC
+      ${CMAKE_CURRENT_BINARY_DIR}/private
+      ${TARGET_ROOT}/include
+)
 set_target_properties( ${TARGET} PROPERTIES ${PROPERTIES} )
 

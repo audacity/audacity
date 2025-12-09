@@ -15,7 +15,7 @@
 #include "effects/effects_base/view/abstracteffectviewmodel.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 
-#include "libraries/lib-audio-unit/AudioUnitInstance.h"
+#include "au3-audio-unit/AudioUnitInstance.h"
 
 namespace au::effects {
 class AudioUnitViewModel : public AbstractEffectViewModel

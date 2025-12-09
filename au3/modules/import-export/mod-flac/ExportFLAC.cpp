@@ -23,7 +23,7 @@ Joshua Haberman
 
 #include "FLAC++/encoder.h"
 
-#include "float_cast.h"
+#include "au3-math/float_cast.h"
 #include "Mix.h"
 #include "Prefs.h"
 

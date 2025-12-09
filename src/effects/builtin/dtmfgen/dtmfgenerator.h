@@ -1,7 +1,8 @@
 #pragma once
 
-#include "SettingsVisitor.h" // EffectParameter
-#include "PerTrackEffect.h"
+#include "au3-components/SettingsVisitor.h" // EffectParameter
+#include "au3-effects/PerTrackEffect.h"
+
 #include "common/generatoreffect.h"
 #include <array>
 

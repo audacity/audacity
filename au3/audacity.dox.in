@@ -2064,11 +2064,9 @@ INCLUDE_FILE_PATTERNS  =
 PREDEFINED             = AUDACITY_DLL_API \
                          USE_VST=1 \
                          USE_FFMPEG=1 \
-                         USE_LV2=1 \
                          USE_NYQUIST=1 \
                          USE_LADSPA=1 \
                          USE_VAMP=1 \
-                         USE_AUDIO_UNITS \
                          USE_MIDI=1 \
                          USE_LIBVORBIS=1 \
                          USE_LIBFLAC=1 \

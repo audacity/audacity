@@ -18,7 +18,7 @@
 
 #include "log.h"
 
-#include "libraries/lib-lv2/LoadLV2.h"
+#include "au3-lv2/LoadLV2.h"
 
 using namespace muse;
 using namespace au::effects;

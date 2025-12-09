@@ -16,19 +16,19 @@
 
 #include <sndfile.h>
 
-#include "Dither.h"
-#include "libraries/lib-file-formats/FileFormats.h"
-#include "Mix.h"
-#include "Prefs.h"
-#include "libraries/lib-tags/Tags.h"
-#include "Track.h"
-#include "wxFileNameWrapper.h"
+#include "au3-math/Dither.h"
+#include "au3-file-formats/FileFormats.h"
+#include "au3-mixer/Mix.h"
+#include "au3-preferences/Prefs.h"
+#include "au3-tags/Tags.h"
+#include "au3-track/Track.h"
+#include "au3-files/wxFileNameWrapper.h"
 
-#include "libraries/lib-import-export/Export.h"
-#include "libraries/lib-import-export/ExportOptionsEditor.h"
+#include "au3-import-export/Export.h"
+#include "au3-import-export/ExportOptionsEditor.h"
 
-#include "libraries/lib-import-export/ExportPluginHelpers.h"
-#include "libraries/lib-import-export/ExportPluginRegistry.h"
+#include "au3-import-export/ExportPluginHelpers.h"
+#include "au3-import-export/ExportPluginRegistry.h"
 
 #include "ExportPCM.h"
 

@@ -6,12 +6,12 @@
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <CoreFoundation/CoreFoundation.h>
 
-#include "libraries/lib-effects/EffectManager.h"
-#include "libraries/lib-effects/Effect.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
-#include "libraries/lib-audio-unit/AudioUnitInstance.h"
-#include "libraries/lib-audio-unit/AudioUnitUtils.h"
-#include "libraries/lib-audio-unit/AudioUnitEffectBase.h"
+#include "au3-effects/EffectManager.h"
+#include "au3-effects/Effect.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3-audio-unit/AudioUnitInstance.h"
+#include "au3-audio-unit/AudioUnitUtils.h"
+#include "au3-audio-unit/AudioUnitEffectBase.h"
 
 #include "log.h"
 

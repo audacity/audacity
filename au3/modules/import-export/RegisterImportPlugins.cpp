@@ -2,12 +2,12 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "libraries/lib-import-export/Import.h"
+#include "au3-import-export/Import.h"
 #include "RegisterImportPlugins.h"
 
-#include "modules/import-export/mod-wavpack/ImportWavPack.h"
-#include "modules/import-export/mod-mpg123/ImportMP3_MPG123.h"
-#include "modules/import-export/mod-pcm/ImportPCM.h"
+#include "mod-wavpack/ImportWavPack.h"
+#include "mod-mpg123/ImportMP3_MPG123.h"
+#include "mod-pcm/ImportPCM.h"
 
 void RegisterImportPlugins()
 {

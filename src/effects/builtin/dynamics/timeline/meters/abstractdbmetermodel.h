@@ -6,8 +6,8 @@
 #include "../abstractdynamicseffectinstancemodel.h"
 #include "../stopwatch.h"
 
-#include "libraries/lib-dynamic-range-processor/MeterValueProvider.h"
-#include "libraries/lib-utility/LockFreeQueue.h"
+#include "au3-dynamic-range-processor/MeterValueProvider.h"
+#include "au3-utility/LockFreeQueue.h"
 
 namespace au::effects {
 class AbstractDbMeterModel : public AbstractDynamicsEffectInstanceModel

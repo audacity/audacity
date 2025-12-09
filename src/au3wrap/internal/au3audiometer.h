@@ -5,7 +5,7 @@
 #pragma once
 
 #include "audio/iaudiometer.h"
-#include "libraries/lib-audio-devices/IMeterSender.h"
+#include "au3-audio-devices/IMeterSender.h"
 
 namespace au::au3 {
 /**

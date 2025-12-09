@@ -15,10 +15,10 @@
 
 #pragma once
 
-#include "Identifier.h"
-#include "TranslatableString.h"
+#include "au3-strings/Identifier.h"
+#include "au3-strings/TranslatableString.h"
+#include "au3-strings/wxArrayStringEx.h"
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
-#include "wxArrayStringEx.h"
 
 class FFmpegPresets;
 

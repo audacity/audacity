@@ -1,7 +1,8 @@
 #pragma once
 
+#include "au3-registries/ClientData.h"
+
 #include "au3wrap/au3types.h"
-#include "ClientData.h"
 
 namespace au::projectscene {
 class WaveformSettings final : public ClientData::Cloneable<>

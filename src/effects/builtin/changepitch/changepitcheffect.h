@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "libraries/lib-builtin-effects/ChangePitchBase.h"
+#include "au3-builtin-effects/ChangePitchBase.h"
 
 namespace au::effects {
 class ChangePitchEffect final : public ChangePitchBase

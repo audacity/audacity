@@ -5,8 +5,8 @@
 #include "generatoreffect.h"
 #include "log.h"
 
-#include "libraries/lib-components/EffectInterface.h"
-#include "libraries/lib-effects/Effect.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-effects/Effect.h"
 
 using namespace au::effects;
 

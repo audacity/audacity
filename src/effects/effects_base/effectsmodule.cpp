@@ -3,8 +3,8 @@
 */
 #include "effectsmodule.h"
 
-#include "libraries/lib-module-manager/PluginManager.h"
-#include "libraries/lib-files/FileNames.h"
+#include "au3-module-manager/PluginManager.h"
+#include "au3-files/FileNames.h"
 
 #include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"

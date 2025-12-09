@@ -4,7 +4,7 @@
 #pragma once
 
 #include "builtineffectsettingmodel.h"
-#include "libraries/lib-components/SettingsVisitor.h"
+#include "au3-components/SettingsVisitor.h"
 
 #include <functional>
 #include <unordered_map>

@@ -6,8 +6,8 @@
 #include "effectstypes.h"
 #include "au3wrap/au3types.h"
 #include "project/iaudacityproject.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectList.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
 
 #include <optional>
 

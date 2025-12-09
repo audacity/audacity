@@ -122,6 +122,10 @@ if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
     option(AU_MODULE_EFFECTS_AUDIO_UNIT "Build Audacity Audio Unit module" ON)
 endif()
 
+# Time-stretching and pitch-shifting libraries
+option(AU_USE_SBSMS "Build with SBSMS support for time-stretching effects" ON)
+option(AU_USE_SOUNDTOUCH "Build with SoundTouch support for pitch/tempo effects" ON)
+
 # === Setup ===
 
 # === Pack ===

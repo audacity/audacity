@@ -6,7 +6,7 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
-#include "libraries/lib-track/Track.h"
+#include "au3-track/Track.h"
 
 #include "au3wrap/au3types.h"
 #include "context/iglobalcontext.h"

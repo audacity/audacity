@@ -2,11 +2,11 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "libraries/lib-import-export/ExportPluginRegistry.h"
-#include "modules/import-export/mod-mp3/ExportMP3.h"
-#include "modules/import-export/mod-ffmpeg/ExportFFmpeg.h"
-#include "modules/import-export/mod-wavpack/ExportWavPack.h"
-#include "modules/import-export/mod-pcm/ExportPCM.h"
+#include "au3-import-export/ExportPluginRegistry.h"
+#include "mod-mp3/ExportMP3.h"
+#include "mod-ffmpeg/ExportFFmpeg.h"
+#include "mod-wavpack/ExportWavPack.h"
+#include "mod-pcm/ExportPCM.h"
 
 #include "RegisterExportPlugins.h"
 

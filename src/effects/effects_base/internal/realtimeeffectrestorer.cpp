@@ -5,11 +5,11 @@
 
 #include "irealtimeeffectservice.h"
 
-#include "libraries/lib-project/Project.h"
-#include "libraries/lib-project-history/UndoManager.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectList.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
+#include "au3-project/Project.h"
+#include "au3-project-history/UndoManager.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3-wave-track/WaveTrack.h"
 
 namespace au::effects {
 namespace {

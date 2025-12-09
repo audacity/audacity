@@ -40,11 +40,11 @@ set_source_files_properties(
 )
 
 # AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3defs.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
 
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
 
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK au3wrap au3-audio-unit)
 
 setup_module()

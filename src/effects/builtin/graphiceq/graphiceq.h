@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "libraries/lib-builtin-effects/EqualizationBase.h"
+#include "au3-builtin-effects/EqualizationBase.h"
 
 namespace au::effects {
 class GraphicEq : public EqualizationBase

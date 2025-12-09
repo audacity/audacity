@@ -41,7 +41,7 @@ set( DEFINES
 
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
-target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+target_include_directories( ${TARGET} PUBLIC ${TARGET_ROOT} )
 
 set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE On)
 

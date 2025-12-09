@@ -6,7 +6,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-#include "libraries/lib-import-export/Export.h"
+#include "au3-import-export/Export.h"
 
 #include "../../iexporter.h"
 #include "internal/exportconfiguration.h"

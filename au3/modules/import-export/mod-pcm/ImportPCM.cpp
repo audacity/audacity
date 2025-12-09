@@ -19,24 +19,24 @@
 
 *//*******************************************************************/
 
-#include "libraries/lib-import-export/Import.h"
-#include "libraries/lib-tags/Tags.h"
+#include "au3-import-export/Import.h"
+#include "au3-tags/Tags.h"
 
 #include <wx/wx.h>
 #include <wx/ffile.h>
 
-#include "sndfile.h"
+#include <sndfile.h>
 
 #ifndef SNDFILE_1
 #error Requires libsndfile 1.0 or higher
 #endif
 
-#include "libraries/lib-file-formats/FileFormats.h"
-#include "libraries/lib-import-export/GetAcidizerTags.h"
-#include "libraries/lib-import-export/ImportPlugin.h"
-#include "libraries/lib-import-export/ImportProgressListener.h"
-#include "libraries/lib-import-export/ImportUtils.h"
-#include "WaveTrack.h"
+#include "au3-file-formats/FileFormats.h"
+#include "au3-import-export/GetAcidizerTags.h"
+#include "au3-import-export/ImportPlugin.h"
+#include "au3-import-export/ImportProgressListener.h"
+#include "au3-import-export/ImportUtils.h"
+#include "au3-wave-track/WaveTrack.h"
 
 #include <algorithm>
 

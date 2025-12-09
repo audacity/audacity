@@ -1,14 +1,14 @@
 #include "amplifyeffect.h"
 
-#include "EffectOutputTracks.h"
-#include "ShuttleAutomation.h"
-#include "TimeStretching.h"
-#include "WaveChannelUtilities.h"
-#include "WaveTrack.h"
+#include "framework/global/realfn.h"
+
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-wave-track/TimeStretching.h"
+#include "au3-wave-track/WaveChannelUtilities.h"
+#include "au3-wave-track/WaveTrack.h"
 
 #include "au3wrap/au3types.h"
-
-#include "global/realfn.h"
 
 using namespace au::effects;
 using namespace au::au3;

@@ -3,9 +3,9 @@
 */
 #include "musevstmodulesrepository.h"
 
-#include "libraries/lib-module-manager/PluginManager.h"
-#include "libraries/lib-effects/EffectManager.h"
-#include "libraries/lib-vst3/VST3EffectBase.h"
+#include "au3-module-manager/PluginManager.h"
+#include "au3-effects/EffectManager.h"
+#include "au3-vst3/VST3EffectBase.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 

@@ -1,0 +1,41 @@
+#[[
+Framework for destructive application of effects, generators, analyzers
+]]
+
+set( TARGET au3-effects )
+
+set( SOURCES
+   EffectBase.cpp
+   EffectBase.h
+   Effect.cpp
+   Effect.h
+   EffectManager.cpp
+   EffectManager.h
+   EffectOutputTracks.cpp
+   EffectOutputTracks.h
+   EffectPlugin.cpp
+   EffectPlugin.h
+   LoadEffects.cpp
+   LoadEffects.h
+   MixAndRender.cpp
+   MixAndRender.h
+   PerTrackEffect.cpp
+   PerTrackEffect.h
+   StatefulEffectBase.cpp
+   StatefulEffectBase.h
+   StatefulEffect.cpp
+   StatefulEffect.h
+   StatefulPerTrackEffect.cpp
+   StatefulPerTrackEffect.h
+)
+set( LIBRARIES
+   au3-command-parameters-interface
+   au3-numeric-formats-interface
+   au3-realtime-effects
+   au3-stretching-sequence-interface
+   au3-wave-track-interface
+   wxBase
+)
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
+   "" ""
+)

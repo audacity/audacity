@@ -1,7 +1,7 @@
 #pragma once
 
-#include "PerTrackEffect.h"
-#include "SettingsVisitor.h"
+#include "au3-effects/PerTrackEffect.h"
+#include "au3-components/SettingsVisitor.h"
 
 namespace au::effects {
 struct ReverbSettings

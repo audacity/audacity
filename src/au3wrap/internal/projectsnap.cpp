@@ -1,8 +1,8 @@
 #include "projectsnap.h"
 
-#include "XMLAttributeValueView.h"
-#include "XMLWriter.h"
-#include "Prefs.h"
+#include "au3-xml/XMLAttributeValueView.h"
+#include "au3-xml/XMLWriter.h"
+#include "au3-preferences/Prefs.h"
 
 using namespace au::au3;
 

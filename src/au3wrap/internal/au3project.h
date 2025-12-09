@@ -11,8 +11,8 @@
 #include "global/modularity/ioc.h"
 
 #include "au3wrap/iau3project.h"
-#include "libraries/lib-track/Track.h"
-#include "libraries/lib-utility/Observer.h"
+#include "au3-track/Track.h"
+#include "au3-utility/Observer.h"
 
 class TrackList;
 using TrackHolders = std::vector<std::shared_ptr<Track> >;
