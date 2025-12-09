@@ -103,8 +103,24 @@ std::string PlatformCompatibility::GetResourcesDir()
 
 std::string PlatformCompatibility::GetExecutablePath()
 {
-    wchar_t buffer[MAX_PATH];
-    GetModuleFileNameW(NULL, buffer, MAX_PATH);
-    std::wstring wstr(buffer);
-    return std::string(wstr.begin(), wstr.end());
+    // TODO: Implement for Windows
+    return "";
+}
+
+std::string PlatformCompatibility::GetTempDir()
+{
+    // TODO: Implement for Windows
+    return "";
+}
+
+std::string PlatformCompatibility::GetHomeDir()
+{
+    // TODO: Implement for Windows
+    return "";
+}
+
+FilePath PlatformCompatibility::GetLongFileName(const FilePath& shortFileName)
+{
+    // TODO: Implement for Windows (convert short path to long path)
+    return shortFileName;
 }

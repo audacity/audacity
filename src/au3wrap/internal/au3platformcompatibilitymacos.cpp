@@ -92,10 +92,24 @@ std::string PlatformCompatibility::GetResourcesDir()
 
 std::string PlatformCompatibility::GetExecutablePath()
 {
-    char path[PATH_MAX];
-    uint32_t size = sizeof(path);
-    if (_NSGetExecutablePath(path, &size) == 0) {
-        return std::string(path);
-    }
+    // TODO: Implement for macOS
     return "";
+}
+
+std::string PlatformCompatibility::GetTempDir()
+{
+    // TODO: Implement for macOS
+    return "";
+}
+
+std::string PlatformCompatibility::GetHomeDir()
+{
+    // TODO: Implement for macOS
+    return "";
+}
+
+FilePath PlatformCompatibility::GetLongFileName(const FilePath& shortFileName)
+{
+    // TODO: Implement for macOS (likely just return shortFileName as-is)
+    return shortFileName;
 }
