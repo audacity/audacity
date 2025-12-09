@@ -21,7 +21,6 @@ set( SOURCES
    FileNames.h
    PathList.cpp
    PathList.h
-   PlatformCompatibility.cpp
    PlatformCompatibility.h
    TempDirectory.cpp
    TempDirectory.h
