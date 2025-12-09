@@ -5,11 +5,11 @@
 #include "SpectrumCache.h"
 #include "internal/spectrogramutils.h"
 
-#include "libraries/lib-fft/RealFFTf.h"
-#include "libraries/lib-fft/Spectrum.h"
-#include "libraries/lib-wave-track-settings/SpectrogramSettings.h"
-#include "libraries/lib-wave-track/Sequence.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
+#include "au3-fft/Spectrum.h"
+#include "au3-wave-track-settings/SpectrogramSettings.h"
+#include "au3-wave-track/Sequence.h"
+#include "au3-wave-track/WaveTrack.h"
+
 #include <cmath>
 
 namespace {

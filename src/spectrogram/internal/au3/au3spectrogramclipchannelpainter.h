@@ -6,7 +6,7 @@
 #include "spectrogramtypes.h"
 #include "./au3spectrogramtypes.h"
 
-#include "libraries/lib-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveClip.h"
 
 #include <QImage>
 

@@ -10,8 +10,8 @@ using WaveChannelInterval = WaveClipChannel;
 class WideSampleSequence;
 
 #include <vector>
-#include "MemoryX.h"
-#include "WaveClip.h" // to inherit WaveClipListener
+#include "au3-utility/MemoryX.h"
+#include "au3-wave-track/WaveClip.h" // to inherit WaveClipListener
 
 using Floats = ArrayOf<float>;
 
