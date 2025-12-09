@@ -26,6 +26,15 @@ set( SOURCES
    TempDirectory.h
    wxFileNameWrapper.h
 )
+# Add platform-specific PlatformCompatibility implementations
+if(OS_IS_WIN)
+    list(APPEND SOURCES PlatformCompatibilityWindows.cpp)
+elseif(OS_IS_LIN)
+    list(APPEND SOURCES PlatformCompatibilityLinux.cpp)
+elseif(OS_IS_MAC)
+    list(APPEND SOURCES PlatformCompatibilityMacOS.cpp)
+endif()
+
 set( LIBRARIES
    au3-exceptions-interface
    au3-preferences-interface

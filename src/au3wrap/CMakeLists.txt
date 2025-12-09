@@ -60,18 +60,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/waveformscale.h
     )
 
-
-if(OS_IS_WIN)
-    set(MODULE_SRC ${MODULE_SRC}
-        ${CMAKE_CURRENT_LIST_DIR}/internal/au3platformcompatibilitywindows.cpp)
-elseif(OS_IS_LIN)
-    set(MODULE_SRC ${MODULE_SRC}
-        ${CMAKE_CURRENT_LIST_DIR}/internal/au3platformcompatibilitylinux.cpp)
-elseif(OS_IS_MAC)
-    set(MODULE_SRC ${MODULE_SRC}
-        ${CMAKE_CURRENT_LIST_DIR}/internal/au3platformcompatibilitymacos.cpp)
-endif()
-
 # ==================================
 # === AU3 ===
 # ==================================
