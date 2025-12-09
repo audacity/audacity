@@ -21,4 +21,3 @@ public:
     virtual std::vector<std::string> fileFilter() = 0;
 };
 }
-

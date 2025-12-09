@@ -63,7 +63,7 @@ private:
 
     QVector<muse::uicomponents::TableViewHeader*> makeHorizontalHeaders();
     QVector<muse::uicomponents::TableViewHeader*> makeVerticalHeaders();
-    QVector<QVector<muse::uicomponents::TableViewCell*>> makeTable();
+    QVector<QVector<muse::uicomponents::TableViewCell*> > makeTable();
 
     std::vector<trackedit::Track> allLabelTracks() const;
 
@@ -79,6 +79,8 @@ private:
     bool changeLabelEndTime(int row, int column, const muse::Val& value);
     bool changeLabelLowFrequency(int row, int column, const muse::Val& value);
     bool changeLabelHighFrequency(int row, int column, const muse::Val& value);
+
+    QString createNewLabelTrack(int currentRow);
 
     muse::io::path_t selectFileForExport();
     muse::io::path_t selectFileForImport();

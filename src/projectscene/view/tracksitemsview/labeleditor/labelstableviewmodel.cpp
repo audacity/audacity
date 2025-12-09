@@ -144,23 +144,24 @@ QVector<QVector<TableViewCell*> > LabelsTableViewModel::makeTable()
 
 void LabelsTableViewModel::handleTrackMenuItem(int row, int column, const QString& itemId)
 {
-    TableViewCell* cell = findCell(row, column);
-    if (!cell) {
+    if (!isRowValid(row) || !isColumnValid(column)) {
         return;
     }
 
-    LabelsTableViewTrackCell* trackCell = dynamic_cast<LabelsTableViewTrackCell*>(cell);
-    if (!trackCell) {
+    QString labelTrackItemId = itemId;
+
+    if (labelTrackItemId == NEW_LABEL_TRACK_CODE) {
+        labelTrackItemId = createNewLabelTrack(row);
+    }
+
+    if (labelTrackItemId.isEmpty()) {
         return;
     }
 
-    if (itemId == NEW_LABEL_TRACK_CODE) {
-        // todo: add new label track
-        return;
-    }
+    LabelsTableViewTrackCell* trackCell = dynamic_cast<LabelsTableViewTrackCell*>(findCell(row, column));
 
     for (const muse::uicomponents::MenuItem* item : trackCell->availableTracks()) {
-        if (item->id() == itemId) {
+        if (item->id() == labelTrackItemId) {
             trackCell->setCurrentTrackId(item->args().arg<trackedit::TrackId>());
             trackCell->setValue_property(item->translatedTitle());
             break;
@@ -304,8 +305,12 @@ bool LabelsTableViewModel::doCellValueChangeRequested(int row, int column, const
 TableViewCell* LabelsTableViewModel::makeTrackCell(const trackedit::TrackId& trackId, const QString& trackTitle)
 {
     LabelsTableViewTrackCell* result = new LabelsTableViewTrackCell(makeCell(Val(trackTitle)));
-    result->setCurrentTrackId(trackId);
+
+    //! NOTE: The order is important.
+    //! Setting the current track ID updates the selected item in the list of available tracks.
     result->setAvailableTracks(makeAvailableTracksList(trackId));
+    result->setCurrentTrackId(trackId);
+
     return result;
 }
 
@@ -353,8 +358,9 @@ MenuItemList LabelsTableViewModel::makeAvailableTracksList(const trackedit::Trac
 
         ui::UiActionState state;
         state.enabled = true;
-        state.checked = track.id == currentTrackId;
         item->setState(state);
+
+        item->setSelectable(true);
 
         item->setArgs(actions::ActionData::make_arg1(track.id));
         item->setId(QString::fromStdString(action.code) + action.title.qTranslatedWithoutMnemonic());
@@ -523,6 +529,39 @@ bool LabelsTableViewModel::changeLabelHighFrequency(int row, int column, const V
     trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
 
     return trackeditInteraction()->changeLabelHighFrequency(labelKey, value.toDouble());
+}
+
+QString LabelsTableViewModel::createNewLabelTrack(int currentRow)
+{
+    RetVal<muse::Val> rv = interactive()->openSync("audacity://projectscene/addnewlabeltrack");
+    if (!rv.ret) {
+        return QString();
+    }
+
+    trackedit::TrackId newTrackId = rv.val.toInt();
+
+    QString newLabelTrackItemId;
+
+    for (int i = 0; i < rowCount(); i++) {
+        LabelsTableViewTrackCell* trackCell = dynamic_cast<LabelsTableViewTrackCell*>(findCell(i, TRACK_COLUMN));
+        if (!trackCell) {
+            continue;
+        }
+
+        MenuItemList availableTracks = makeAvailableTracksList(trackCell->currentTrackId());
+        trackCell->setAvailableTracks(availableTracks);
+
+        if (currentRow == i) {
+            for (const MenuItem* item : availableTracks) {
+                if (item->args().arg<trackedit::TrackId>() == newTrackId) {
+                    newLabelTrackItemId = item->id();
+                    break;
+                }
+            }
+        }
+    }
+
+    return newLabelTrackItemId;
 }
 
 io::path_t LabelsTableViewModel::selectFileForExport()

@@ -73,7 +73,7 @@ StyledTableView {
             allowOptionToggle: false
 
             onHandleMenuItem: function(itemId) {
-                tableViewModel.handleTrackMenuItem(row, column, itemId)
+                Qt.callLater(tableViewModel.handleTrackMenuItem, row, column, itemId)
             }
 
             onIsOpenedChanged: {

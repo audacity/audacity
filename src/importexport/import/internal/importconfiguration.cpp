@@ -6,8 +6,6 @@
 
 #include "global/settings.h"
 
-#include "log.h"
-
 using namespace au::importexport;
 
 static const std::string module_name("importer");
@@ -28,4 +26,3 @@ void ImportConfiguration::setLabelsDirectoryPath(const muse::io::path_t& path)
 {
     muse::settings()->setSharedValue(IMPORT_LABELS_DIRECTORY_PATH, muse::Val(path));
 }
-
