@@ -23,7 +23,6 @@ public:
 
 protected:
     bool isBold(double value) const;
-    int getAlignment(double value) const;
     double valueToPosition(double value, double height, bool isNegativeSample) const;
     std::pair<double, double> stepsIncrement(double height) const;
     std::vector<double> fullStepsValues(double height) const;

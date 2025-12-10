@@ -95,8 +95,8 @@ int LinearBaseRuler::getPrecision(double step) const
 double LinearBaseRuler::valueToPosition(double value, double height) const
 {
     const double newValue = std::clamp(value, static_cast<double>(m_minDisplayValue), static_cast<double>(m_maxDisplayValue));
-    const double percentage = (newValue - m_minDisplayValue) / (m_maxDisplayValue - m_minDisplayValue);
-    return (1 - percentage) * height;
+    const double fraction = (newValue - m_minDisplayValue) / (m_maxDisplayValue - m_minDisplayValue);
+    return (1 - fraction) * height;
 }
 
 std::pair<double, double> LinearBaseRuler::stepsIncrement(double height) const
@@ -105,7 +105,7 @@ std::pair<double, double> LinearBaseRuler::stepsIncrement(double height) const
     std::pair<double, double> increment = { DEFAULT_INCREMENT.first * factor, DEFAULT_INCREMENT.second * factor };
     for (const auto& stepInc : STEP_INCREMENT) {
         const auto& [fs, ss] = stepInc;
-        if (fs * factor < (10 ^ (-MAX_DISPLAY_DECIMAL_PRECISION))) {
+        if (fs * factor < std::pow(10.0, -MAX_DISPLAY_DECIMAL_PRECISION)) {
             continue;
         }
 
