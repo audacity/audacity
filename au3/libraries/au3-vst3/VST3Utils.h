@@ -47,6 +47,11 @@ public:
 
     static wxString ToWxString(const Steinberg::Vst::TChar* str);
 
+    //Get the unit string for a VST3 parameter
+    //Returns empty string if units cannot be determined or if conversion fails
+    static wxString GetParameterUnitString(Steinberg::Vst::IEditController* controller,
+                                           const Steinberg::Vst::ParameterInfo& info);
+
     //Builds a string key suitable to use as an Audacity macro param
     //key, which is guaranteed to be unique, and most likely be in
     //a human-readable form.
