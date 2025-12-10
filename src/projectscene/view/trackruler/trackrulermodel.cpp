@@ -67,10 +67,10 @@ std::vector<QVariantMap> TrackRulerModel::fullSteps() const
         return QVariantMap {
             { "alignment", step.alignment },
             { "value", step.value },
-            { "y", stepToPosition(step.value, step.channel, step.isNegativeSample) },
+            { "y", stepToPosition(step.value, step.channel, static_cast<bool>(step.isNegativeSample)) },
             { "channel", static_cast<int>(step.channel) },
-            { "bold", step.isBold },
-            { "fullWidthTick", step.fullWidthTick }
+            { "bold", static_cast<bool>(step.isBold) },
+            { "fullWidthTick", static_cast<bool>(step.fullWidthTick) }
         };
     });
 
@@ -90,7 +90,7 @@ std::vector<QVariantMap> TrackRulerModel::smallSteps() const
         return QVariantMap {
             { "channel", static_cast<int>(step.channel) },
             { "value", step.value },
-            { "y", stepToPosition(step.value, step.channel, step.isNegativeSample) }
+            { "y", stepToPosition(step.value, step.channel, static_cast<bool>(step.isNegativeSample)) }
         };
     });
     return variantSteps;

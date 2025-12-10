@@ -68,8 +68,8 @@ double DbLogStereoRuler::stepToPosition(double step, size_t channel, bool isNega
 std::vector<TrackRulerFullStep> DbLogStereoRuler::fullSteps() const
 {
     if (m_collapsed) {
-        return { TrackRulerFullStep { m_dbRange, 0, 0, true, true, false },
-                 TrackRulerFullStep { m_dbRange, 1, 0, true, true, true } };
+        return { TrackRulerFullStep { m_dbRange, 0, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO },
+                 TrackRulerFullStep { m_dbRange, 1, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::YES } };
     }
 
     return m_isHalfWave ? fullStepsForHalfWave() : fullStepsForFullWave();
@@ -81,15 +81,15 @@ std::vector<TrackRulerFullStep> DbLogStereoRuler::fullStepsForHalfWave() const
     std::vector<TrackRulerFullStep> steps;
     for (size_t channel = 0; channel < channelHeights.size(); ++channel) {
         if (channelHeights[channel] < MIN_CHANNEL_HEIGHT) {
-            steps.push_back(TrackRulerFullStep { m_dbRange, channel, 0, true, true, false });
+            steps.push_back(TrackRulerFullStep { m_dbRange, channel, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO });
             continue;
         }
 
         const auto values = fullStepsValues(channelHeights[channel]);
         for (double value : values) {
             steps.push_back(TrackRulerFullStep {
-                value, channel, getAlignment(value, channel, false), isBold(value),
-                isFullTick(value, channel, false), false });
+                value, channel, getAlignment(value, channel, false), isBold(value) ? IsBold::YES : IsBold::NO,
+                isFullTick(value, channel, false) ? IsFullWidthTick::YES : IsFullWidthTick::NO, IsNegativeSample::NO });
         }
     }
     return steps;
@@ -101,7 +101,7 @@ std::vector<TrackRulerFullStep> DbLogStereoRuler::fullStepsForFullWave() const
     std::vector<TrackRulerFullStep> steps;
     for (size_t channel = 0; channel < channelHeights.size(); ++channel) {
         if (channelHeights[channel] < MIN_CHANNEL_HEIGHT) {
-            steps.push_back(TrackRulerFullStep { m_dbRange, channel, 0, true, true, false });
+            steps.push_back(TrackRulerFullStep { m_dbRange, channel, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO });
             continue;
         }
 
@@ -109,14 +109,14 @@ std::vector<TrackRulerFullStep> DbLogStereoRuler::fullStepsForFullWave() const
         for (double value : values) {
             for (bool isNegativeSample : { false, true }) {
                 steps.push_back(TrackRulerFullStep {
-                    value, channel, getAlignment(value, channel, isNegativeSample), isBold(value),
-                    isFullTick(value, channel, isNegativeSample),
-                    isNegativeSample });
+                    value, channel, getAlignment(value, channel, isNegativeSample), isBold(value) ? IsBold::YES : IsBold::NO,
+                    isFullTick(value, channel, isNegativeSample) ? IsFullWidthTick::YES : IsFullWidthTick::NO,
+                    isNegativeSample ? IsNegativeSample::YES : IsNegativeSample::NO });
             }
         }
     }
 
-    steps.push_back(TrackRulerFullStep { m_maxDisplayValueDB, 2, 0, true, true, false });
+    steps.push_back(TrackRulerFullStep { m_maxDisplayValueDB, 2, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO });
 
     return steps;
 }
@@ -124,7 +124,8 @@ std::vector<TrackRulerFullStep> DbLogStereoRuler::fullStepsForFullWave() const
 std::vector<TrackRulerSmallStep> DbLogStereoRuler::smallSteps() const
 {
     if (m_collapsed) {
-        return { TrackRulerSmallStep { m_maxDisplayValueDB, 0, false }, TrackRulerSmallStep { 0.0, 1, true } };
+        return { TrackRulerSmallStep { m_maxDisplayValueDB, 0, IsNegativeSample::NO },
+                 TrackRulerSmallStep { 0.0, 1, IsNegativeSample::YES } };
     }
 
     return m_isHalfWave ? smallStepsForHalfWave() : smallStepsForFullWave();
@@ -137,7 +138,8 @@ std::vector<TrackRulerSmallStep> DbLogStereoRuler::smallStepsForHalfWave() const
     std::vector<double> channelHeights = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
     for (size_t channel = 0; channel < channelHeights.size(); ++channel) {
         if (channelHeights[channel] < MIN_CHANNEL_HEIGHT) {
-            steps.push_back(TrackRulerSmallStep { m_maxDisplayValueDB, channel, channel == 1 });
+            steps.push_back(TrackRulerSmallStep { m_maxDisplayValueDB, channel,
+                                                  channel == 1 ? IsNegativeSample::YES : IsNegativeSample::NO });
             continue;
         }
 
@@ -151,7 +153,7 @@ std::vector<TrackRulerSmallStep> DbLogStereoRuler::smallStepsForHalfWave() const
             }) != fullSteps.end()) {
                 continue;
             }
-            steps.push_back(TrackRulerSmallStep { value, channel, false });
+            steps.push_back(TrackRulerSmallStep { value, channel, IsNegativeSample::NO });
         }
     }
 
@@ -165,7 +167,8 @@ std::vector<TrackRulerSmallStep> DbLogStereoRuler::smallStepsForFullWave() const
     std::vector<double> channelHeights = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
     for (size_t channel = 0; channel < channelHeights.size(); ++channel) {
         if (channelHeights[channel] < MIN_CHANNEL_HEIGHT) {
-            steps.push_back(TrackRulerSmallStep { m_maxDisplayValueDB, channel, channel == 1 });
+            steps.push_back(TrackRulerSmallStep { m_maxDisplayValueDB, channel,
+                                                  channel == 1 ? IsNegativeSample::YES : IsNegativeSample::NO });
             continue;
         }
 
@@ -180,7 +183,7 @@ std::vector<TrackRulerSmallStep> DbLogStereoRuler::smallStepsForFullWave() const
                 }) != fullSteps.end()) {
                     continue;
                 }
-                steps.push_back(TrackRulerSmallStep { value, channel, isNegativeSample });
+                steps.push_back(TrackRulerSmallStep { value, channel, isNegativeSample ? IsNegativeSample::YES : IsNegativeSample::NO });
             }
         }
     }

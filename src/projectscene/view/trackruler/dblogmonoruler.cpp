@@ -41,7 +41,9 @@ std::vector<TrackRulerFullStep> DbLogMonoRuler::fullSteps() const
 std::vector<TrackRulerFullStep> DbLogMonoRuler::fullStepsForHalfWave() const
 {
     if (m_collapsed) {
-        return { TrackRulerFullStep { ((m_dbRange - m_maxDisplayValueDB) / 2) + m_maxDisplayValueDB, 0, 0, true, true, false } };
+        return { TrackRulerFullStep { ((m_dbRange - m_maxDisplayValueDB) / 2) + m_maxDisplayValueDB, 0, 0, IsBold::YES,
+                                      IsFullWidthTick::YES,
+                                      IsNegativeSample::NO } };
     }
 
     std::vector<double> steps = fullStepsValues(m_height);
@@ -50,7 +52,7 @@ std::vector<TrackRulerFullStep> DbLogMonoRuler::fullStepsForHalfWave() const
     result.reserve(steps.size());
     for (double value : steps) {
         result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, false),
-                                              isBold(value), false, false });
+                                              isBold(value) ? IsBold::YES : IsBold::NO, IsFullWidthTick::NO, IsNegativeSample::NO });
     }
     return result;
 }
@@ -58,7 +60,7 @@ std::vector<TrackRulerFullStep> DbLogMonoRuler::fullStepsForHalfWave() const
 std::vector<TrackRulerFullStep> DbLogMonoRuler::fullStepsForFullWave() const
 {
     if (m_collapsed) {
-        return { TrackRulerFullStep { m_dbRange, 0, 0, true, true, false } };
+        return { TrackRulerFullStep { m_dbRange, 0, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO } };
     }
 
     std::vector<double> steps = fullStepsValues(m_height);
@@ -67,11 +69,11 @@ std::vector<TrackRulerFullStep> DbLogMonoRuler::fullStepsForFullWave() const
     result.reserve((steps.size() * 2) + 1);
     for (double value : steps) {
         result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, false),
-                                              isBold(value), false, false });
+                                              isBold(value) ? IsBold::YES : IsBold::NO, IsFullWidthTick::NO, IsNegativeSample::NO });
         result.push_back(TrackRulerFullStep { value, 0, getAlignment(value, true),
-                                              isBold(value), false, true });
+                                              isBold(value) ? IsBold::YES : IsBold::NO, IsFullWidthTick::NO, IsNegativeSample::YES });
     }
-    result.push_back(TrackRulerFullStep { m_dbRange, 0, 0, true, true, false });
+    result.push_back(TrackRulerFullStep { m_dbRange, 0, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO });
 
     return result;
 }
@@ -79,7 +81,8 @@ std::vector<TrackRulerFullStep> DbLogMonoRuler::fullStepsForFullWave() const
 std::vector<TrackRulerSmallStep> DbLogMonoRuler::smallSteps() const
 {
     if (m_collapsed) {
-        return { TrackRulerSmallStep { m_maxDisplayValueDB, 0, false }, TrackRulerSmallStep { 0.0, 0, true } };
+        return { TrackRulerSmallStep { m_maxDisplayValueDB, 0, IsNegativeSample::NO },
+                 TrackRulerSmallStep { 0.0, 0, IsNegativeSample::YES } };
     }
 
     std::vector<double> steps = smallStepsValues(m_height);
@@ -89,9 +92,9 @@ std::vector<TrackRulerSmallStep> DbLogMonoRuler::smallSteps() const
         if (std::find(fullSteps.begin(), fullSteps.end(), value) != fullSteps.end()) {
             continue;
         }
-        result.push_back(TrackRulerSmallStep { value, 0, false });
+        result.push_back(TrackRulerSmallStep { value, 0, IsNegativeSample::NO });
         if (!m_isHalfWave) {
-            result.push_back(TrackRulerSmallStep { value, 0, true });
+            result.push_back(TrackRulerSmallStep { value, 0, IsNegativeSample::YES });
         }
     }
     return result;

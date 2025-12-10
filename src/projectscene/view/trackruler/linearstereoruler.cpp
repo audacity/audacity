@@ -25,15 +25,15 @@ std::vector<TrackRulerFullStep> LinearStereoRuler::fullSteps() const
     if (m_collapsed) {
         const double middleValue = ((m_maxDisplayValue - m_minDisplayValue) / 2.0) + m_minDisplayValue;
 
-        return { TrackRulerFullStep{ middleValue, 0, 0, true, true, false },
-                 TrackRulerFullStep{ middleValue, 1, 0, true, true, false } };
+        return { TrackRulerFullStep{ middleValue, 0, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO },
+                 TrackRulerFullStep{ middleValue, 1, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO } };
     }
 
     std::vector<double> channelHeight = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
     for (size_t ch = 0; ch < channelHeight.size(); ++ch) {
         if (channelHeight[ch] < MIN_CHANNEL_HEIGHT) {
             const double middleValue = ((m_maxDisplayValue - m_minDisplayValue) / 2.0) + m_minDisplayValue;
-            steps.push_back(TrackRulerFullStep { middleValue, ch, 0, true, true, false });
+            steps.push_back(TrackRulerFullStep { middleValue, ch, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO });
             continue;
         }
 
@@ -42,7 +42,9 @@ std::vector<TrackRulerFullStep> LinearStereoRuler::fullSteps() const
             steps.push_back(TrackRulerFullStep { value,
                                                  ch,
                                                  getAlignment(value),
-                                                 isBold(value), isFullTick(value, ch), value < 0.0 });
+                                                 isBold(value) ? IsBold::YES : IsBold::NO,
+                                                 isFullTick(value, ch) ? IsFullWidthTick::YES : IsFullWidthTick::NO,
+                                                 value < 0.0 ? IsNegativeSample::YES : IsNegativeSample::NO });
         }
     }
 
@@ -53,14 +55,14 @@ std::vector<TrackRulerSmallStep> LinearStereoRuler::smallSteps() const
 {
     std::vector<TrackRulerSmallStep> steps;
     if (m_collapsed) {
-        return { TrackRulerSmallStep{ m_maxDisplayValue, 0, false },
-                 TrackRulerSmallStep{ m_minDisplayValue, 1, false } };
+        return { TrackRulerSmallStep{ m_maxDisplayValue, 0, IsNegativeSample::NO },
+                 TrackRulerSmallStep{ m_minDisplayValue, 1, IsNegativeSample::NO } };
     }
 
     std::vector<double> channelHeight = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
     for (size_t ch = 0; ch < 2; ++ch) {
         if (channelHeight[ch] < MIN_CHANNEL_HEIGHT) {
-            steps.push_back(TrackRulerSmallStep { 0.0, ch, false });
+            steps.push_back(TrackRulerSmallStep { 0.0, ch, IsNegativeSample::NO });
             continue;
         }
 
@@ -70,7 +72,7 @@ std::vector<TrackRulerSmallStep> LinearStereoRuler::smallSteps() const
             if (std::find_if(fullSteps.begin(), fullSteps.end(), [v](double fs) { return muse::RealIsEqual(v, fs); }) != fullSteps.end()) {
                 continue;
             }
-            steps.push_back(TrackRulerSmallStep { v, ch,  v < 0.0 });
+            steps.push_back(TrackRulerSmallStep { v, ch, v < 0.0 ? IsNegativeSample::YES : IsNegativeSample::NO });
         }
     }
 

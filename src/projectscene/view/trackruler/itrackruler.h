@@ -4,19 +4,34 @@
 #include <vector>
 
 namespace au::projectscene {
+enum class IsFullWidthTick : bool {
+    NO = false,
+    YES = true,
+};
+
+enum class IsBold : bool {
+    NO = false,
+    YES = true,
+};
+
+enum class IsNegativeSample : bool {
+    NO = false,
+    YES = true,
+};
+
 struct TrackRulerFullStep {
     double value;
     size_t channel;
     int alignment;
-    bool isBold;
-    bool fullWidthTick;
-    bool isNegativeSample;
+    IsBold isBold;
+    IsFullWidthTick fullWidthTick;
+    IsNegativeSample isNegativeSample;
 };
 
 struct TrackRulerSmallStep {
     double value;
     size_t channel;
-    bool isNegativeSample;
+    IsNegativeSample isNegativeSample;
 };
 
 class ITrackRuler
