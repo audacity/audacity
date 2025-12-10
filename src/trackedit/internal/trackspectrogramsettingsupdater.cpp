@@ -30,9 +30,10 @@ void TrackSpectrogramSettingsUpdater::init()
 
 void TrackSpectrogramSettingsUpdater::maybeApplyGlobalSettingsToTrack()
 {
-    forEachTrack([this](ITrackeditProject&, const Track&, spectrogram::ITrackSpectrogramConfiguration& config){
+    forEachTrack([this](ITrackeditProject& trackeditProject, const Track& track, spectrogram::ITrackSpectrogramConfiguration& config){
         if (config.useGlobalSettings()) {
             config.setAllSettings(globalSpectrogramConfiguration()->allSettings());
+            trackeditProject.notifyAboutTrackChanged(track);
         }
     });
 }
