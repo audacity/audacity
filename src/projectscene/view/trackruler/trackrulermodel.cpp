@@ -52,6 +52,12 @@ void TrackRulerModel::init()
         emit fullStepsChanged();
         emit smallStepsChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
+
+    prjViewState->isHalfWave(m_trackId).ch.onReceive(this, [this](bool isHalfWave) {
+        emit isHalfWaveChanged();
+        emit fullStepsChanged();
+        emit smallStepsChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 std::vector<QVariantMap> TrackRulerModel::fullSteps() const
