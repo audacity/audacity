@@ -62,7 +62,9 @@ struct Track {
     muse::draw::Color color;
     TrackFormat format = TrackFormat::Undefined;
     TrackViewType viewType = TrackViewType::Unspecified;
-    uint64_t rate;
+    uint64_t rate = 0;
+    bool solo = false;
+    bool mute = false;
 };
 
 using TrackList = std::vector<Track>;
