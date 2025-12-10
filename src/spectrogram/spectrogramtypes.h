@@ -60,14 +60,10 @@ struct AllSpectrogramSettings {
 struct SelectionInfo {
     static constexpr int UndefinedFrequency = -1;
 
-    SelectionInfo(double t0 = 0.0, double t1 = 0.0, double f0 = UndefinedFrequency, double f1 = UndefinedFrequency)
-        : t0{t0}, t1{t1}, f0{f0}, f1{f1}
-    {}
-
-    const double t0;
-    const double t1;
-    const double f0;
-    const double f1;
+    const double startTime = 0.0;
+    const double endTime = 0.0;
+    const double startFrequency = UndefinedFrequency;
+    const double endFrequency = UndefinedFrequency;
 };
 
 struct ClipInfo {
@@ -80,8 +76,8 @@ struct ClipInfo {
 struct ViewInfo {
     const int trackHeight;
     const double channelHeightRatio;
-    const double viewportT0;
-    const double viewportT1;
+    const double viewportStartTime;
+    const double viewportEndTime;
     const double pixelsPerSecond; // aka zoom
 };
 }

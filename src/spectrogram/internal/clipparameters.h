@@ -27,14 +27,14 @@ public:
     ClipParameters(const ClipTimes& clip, const QRect& trackPaintableSubrect, const ViewInfo&);
 
     // Lower and upper visible time boundaries (relative to clip). If completely
-    // off-screen, `t0 == t1`.
+    // off-screen, `startTime == endTime`.
 
-    double visibleT0() const { return m_visibleT0; }
+    double visibleStartTime() const { return m_visibleStartTime; }
 
     int leftOffset() const { return static_cast<int>(m_leftOffset); }
 
 private:
-    double m_visibleT0 = 0.0;
+    double m_visibleStartTime = 0.0;
     int m_leftOffset = 0;
 };
 }
