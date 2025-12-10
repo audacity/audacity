@@ -14,38 +14,18 @@ Joshua Haberman
 
 **********************************************************************/
 
-#include <rapidjson/document.h>
-
-#include "Export.h"
+#include "ExportFLAC.h"
 
 #include <wx/ffile.h>
 #include <wx/log.h>
 
-#include "FLAC++/encoder.h"
-
 #include "au3-math/float_cast.h"
-#include "Mix.h"
-#include "Prefs.h"
-
-#include "Tags.h"
-#include "Track.h"
-
-#include "wxFileNameWrapper.h"
-
-#include "ExportPluginHelpers.h"
-#include "ExportPluginRegistry.h"
-#include "PlainExportOptionsEditor.h"
 
 //----------------------------------------------------------------------------
 // ExportFLACOptions Class
 //----------------------------------------------------------------------------
 
 namespace {
-enum : int {
-    FlacOptionIDBitDepth = 0,
-    FlacOptionIDLevel
-};
-
 const std::initializer_list<PlainExportOptionsEditor::OptionDesc> FlacOptions {
     {
         {
@@ -162,66 +142,6 @@ static struct
 
 //----------------------------------------------------------------------------
 
-struct FLAC__StreamMetadataDeleter {
-    void operator ()(FLAC__StreamMetadata* p) const
-    {
-        if (p) {
-            ::FLAC__metadata_object_delete(p);
-        }
-    }
-};
-using FLAC__StreamMetadataHandle = std::unique_ptr<
-    FLAC__StreamMetadata, FLAC__StreamMetadataDeleter
-    >;
-
-class FLACExportProcessor final : public ExportProcessor
-{
-    struct
-    {
-        TranslatableString status;
-        double t0;
-        double t1;
-        unsigned numChannels;
-        wxFileNameWrapper fName;
-        sampleFormat format;
-        FLAC::Encoder::File encoder;
-        wxFFile f;
-        std::unique_ptr<Mixer> mixer;
-    } context;
-
-public:
-
-    bool Initialize(AudacityProject& project, const Parameters& parameters, const wxFileNameWrapper& filename, double t0, double t1,
-                    bool selectedOnly, double sampleFormat, unsigned channels, MixerOptions::Downmix* mixerSpec, const Tags* tags) override;
-
-    ExportResult Process(ExportProcessorDelegate& delegate) override;
-
-private:
-
-    FLAC__StreamMetadataHandle MakeMetadata(AudacityProject* project, const Tags* tags) const;
-};
-
-class ExportFLAC final : public ExportPlugin
-{
-public:
-
-    ExportFLAC();
-
-    int GetFormatCount() const override;
-    FormatInfo GetFormatInfo(int) const override;
-
-    bool ParseConfig(int, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const override;
-
-    std::vector<std::string> GetMimeTypes(int) const override;
-
-    // Required
-
-    std::unique_ptr<ExportOptionsEditor>
-    CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const override;
-
-    std::unique_ptr<ExportProcessor> CreateProcessor(int format) const override;
-};
-
 //----------------------------------------------------------------------------
 
 ExportFLAC::ExportFLAC() = default;
@@ -238,38 +158,38 @@ FormatInfo ExportFLAC::GetFormatInfo(int) const
     };
 }
 
-bool ExportFLAC::ParseConfig(int, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const
-{
-    if (!config.IsObject()
-        || !config.HasMember("level") || !config["level"].IsNumber()
-        || !config.HasMember("bit_depth") || !config["bit_depth"].IsNumber()) {
-        return false;
-    }
+// bool ExportFLAC::ParseConfig(int, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const
+// {
+//     if (!config.IsObject()
+//         || !config.HasMember("level") || !config["level"].IsNumber()
+//         || !config.HasMember("bit_depth") || !config["bit_depth"].IsNumber()) {
+//         return false;
+//     }
 
-    const auto level = ExportValue(std::to_string(config["level"].GetInt()));
-    const auto bitDepth = ExportValue(std::to_string(config["bit_depth"].GetInt()));
+//     const auto level = ExportValue(std::to_string(config["level"].GetInt()));
+//     const auto bitDepth = ExportValue(std::to_string(config["bit_depth"].GetInt()));
 
-    for (const auto& desc : FlacOptions) {
-        const auto& option = desc.option;
-        if ((option.id == FlacOptionIDLevel
-             && std::find(option.values.begin(),
-                          option.values.end(),
-                          level) == option.values.end())
-            ||
-            (desc.option.id == FlacOptionIDBitDepth
-             && std::find(option.values.begin(),
-                          option.values.end(),
-                          bitDepth) == option.values.end())) {
-            return false;
-        }
-    }
-    ExportProcessor::Parameters result {
-        { FlacOptionIDLevel, level },
-        { FlacOptionIDBitDepth, bitDepth }
-    };
-    std::swap(parameters, result);
-    return true;
-}
+//     for (const auto& desc : FlacOptions) {
+//         const auto& option = desc.option;
+//         if ((option.id == FlacOptionIDLevel
+//              && std::find(option.values.begin(),
+//                           option.values.end(),
+//                           level) == option.values.end())
+//             ||
+//             (desc.option.id == FlacOptionIDBitDepth
+//              && std::find(option.values.begin(),
+//                           option.values.end(),
+//                           bitDepth) == option.values.end())) {
+//             return false;
+//         }
+//     }
+//     ExportProcessor::Parameters result {
+//         { FlacOptionIDLevel, level },
+//         { FlacOptionIDBitDepth, bitDepth }
+//     };
+//     std::swap(parameters, result);
+//     return true;
+// }
 
 std::vector<std::string> ExportFLAC::GetMimeTypes(int) const
 {
@@ -513,7 +433,3 @@ FLAC__StreamMetadataHandle FLACExportProcessor::MakeMetadata(AudacityProject* pr
 
     return metadata;
 }
-
-static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "FLAC",
-                                                                 []{ return std::make_unique< ExportFLAC >(); }
-};

@@ -8,6 +8,7 @@
 #include "mod-wavpack/ExportWavPack.h"
 #include "mod-pcm/ExportPCM.h"
 #include "mod-ogg/ExportOGG.h"
+#include "mod-flac/ExportFLAC.h"
 
 #include "RegisterExportPlugins.h"
 
@@ -36,5 +37,10 @@ void RegisterExportPlugins()
     static ExportPluginRegistry::RegisteredPlugin sOGGPlugin{
         "OGG",
         []{ return std::make_unique< ExportOGG >(); }
+    };
+
+    static ExportPluginRegistry::RegisteredPlugin sFLACPlugin{
+        "FLAC",
+        []{ return std::make_unique< ExportFLAC >(); }
     };
 }
