@@ -109,9 +109,17 @@ WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const b
         // count channels in this track
         const auto nChannels = candidate->NChannels();
         if (strictRules && nChannels > recordingChannels) {
-            // The recording would under-fill this track's channels
-            // Can't use any partial accumulated results
-            // either.  Keep looking.
+            const bool stereoTrackMonoInput
+                =(recordingChannels == 1 && nChannels == 2 && candidates.empty());
+            if (stereoTrackMonoInput) {
+                candidates.clear();
+                channelCounts.clear();
+                candidates.push_back(candidate->SharedPointer<Au3WaveTrack>());
+                channelCounts.push_back(nChannels);
+                totalChannels = nChannels;
+                break;
+            }
+
             candidates.clear();
             channelCounts.clear();
             totalChannels = 0;
@@ -133,6 +141,17 @@ WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const b
                 // Done!
                 return candidates;
             }
+        }
+    }
+
+    if (strictRules && !candidates.empty()) {
+        const bool allowDownmix
+            =(recordingChannels == 2 && totalChannels == 1 && candidates.size() == 1);
+        const bool allowUpmix
+            =(recordingChannels == 1 && totalChannels == 2 && candidates.size() == 1
+              && !channelCounts.empty() && channelCounts.front() == 2);
+        if (allowDownmix || allowUpmix) {
+            return candidates;
         }
     }
 
@@ -542,8 +561,10 @@ Ret Au3Record::doRecord(Au3Project& project,
             }
         }
 
+        std::vector<std::pair<WaveTrack::Holder, Au3WaveTrack::IntervalHolder> > newTrackHolders;
+
         int trackCounter = 0;
-        for (auto newTrack : newTracks) {
+        for (auto& newTrack : newTracks) {
             // Quantize bounds to the rate of the new track.
             if (t0 < DBL_MAX) {
                 t0 = newTrack->SnapToSample(t0);
@@ -587,14 +608,16 @@ Ret Au3Record::doRecord(Au3Project& project,
             //create a new clip with a proper name before recording is started
             auto newClip = insertEmptyInterval(*newTrack, t0, false);
 
-            auto list = TrackList::Create(p);
+            newTrackHolders.push_back({ newTrack, newClip });
+        }
 
-            for (auto& w : newTracks) {
-                list->Add(std::static_pointer_cast<Track>(std::move(w)));
-            }
+        auto list = TrackList::Create(p);
+        for (auto& w : newTracks) {
+            list->Add(std::static_pointer_cast<Track>(std::move(w)));
+        }
+        pendingTracks.RegisterPendingNewTracks(*list);
 
-            pendingTracks.RegisterPendingNewTracks(*list);
-
+        for (auto& [newTrack, newClip] : newTrackHolders) {
             auto updater = [this, trackId = newTrack->GetId(), clipId = newClip->GetId()](Au3Track& d, const Au3Track& s){
                 assert(d.NChannels() == s.NChannels());
                 auto& dst = static_cast<Au3WaveTrack&>(d);

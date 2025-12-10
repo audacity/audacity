@@ -115,9 +115,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-wave-track/WaveTrack.h"
 
-using std::max;
-using std::min;
-
 namespace {
 float GetAbsValue(const float* buffer, size_t frames, size_t step)
 {
@@ -802,6 +799,58 @@ void AudioIO::ResetOwningProject()
     mOwningProject.reset();
 }
 
+void AudioIO::ResetCaptureRouting()
+{
+    mCaptureChannelLayout.clear();
+    mTrackChannelSourceMap.clear();
+    mCaptureNeedsMixdown = false;
+}
+
+void AudioIO::ConfigureCaptureRouting(size_t inputChannelsCount)
+{
+    ResetCaptureRouting();
+
+    if (mCaptureSequences.empty() || inputChannelsCount == 0) {
+        return;
+    }
+
+    for (size_t trackIdx = 0; trackIdx < mCaptureSequences.size(); ++trackIdx) {
+        const auto nChannels = mCaptureSequences[trackIdx]->NChannels();
+        for (size_t channelIdx = 0; channelIdx < nChannels; ++channelIdx) {
+            mCaptureChannelLayout.push_back({ trackIdx, channelIdx });
+        }
+    }
+
+    if (mCaptureChannelLayout.empty()) {
+        return;
+    }
+
+    const auto captureChannelsCount = mCaptureChannelLayout.size();
+
+    mTrackChannelSourceMap.resize(captureChannelsCount);
+
+    // Only allow up/down mixing for mono<->stereo cases
+    const bool canMix = (inputChannelsCount <= 2 && captureChannelsCount <= 2);
+
+    if (canMix && inputChannelsCount == 2 && captureChannelsCount == 1) {
+        // Stereo input -> Mono track: mix both input channels to mono
+        mCaptureNeedsMixdown = true;
+        mTrackChannelSourceMap[0].push_back(0);
+        mTrackChannelSourceMap[0].push_back(1);
+    } else if (canMix && inputChannelsCount == 1 && captureChannelsCount == 2) {
+        // Mono input -> Stereo track: duplicate mono to both channels
+        mCaptureNeedsMixdown = false;
+        mTrackChannelSourceMap[0].push_back(0);
+        mTrackChannelSourceMap[1].push_back(0);
+    } else {
+        // 1 to 1 mapping
+        mCaptureNeedsMixdown = false;
+        for (size_t t = 0; t < std::min(captureChannelsCount, inputChannelsCount); ++t) {
+            mTrackChannelSourceMap[t].push_back(t);
+        }
+    }
+}
+
 void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
 {
     if (IsBusy()) {
@@ -966,6 +1015,7 @@ int AudioIO::StartStream(const TransportSequences& sequences,
         sequences.playbackSequences.begin(),
         sequences.playbackSequences.end()
     };
+    ResetCaptureRouting();
 
     bool commit = false;
     auto cleanupSequences = finally([&]{
@@ -989,6 +1039,7 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     mPlaybackMixers.clear();
     mCaptureBuffers.clear();
     mResample.clear();
+    ResetCaptureRouting();
     mPlaybackSchedule.mTimeQueue.Clear();
 
     mPlaybackSchedule.Init(
@@ -1011,11 +1062,12 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     }
 
     if (mCaptureSequences.size() > 0) {
-        numCaptureChannels = accumulate(
-            mCaptureSequences.begin(), mCaptureSequences.end(), size_t {},
-            [](auto acc, const auto& pSequence) {
-            return acc + pSequence->NChannels();
-        });
+        size_t requestedInputChannels = AudioIORecordChannels.Read();
+        if (requestedInputChannels == 0) {
+            requestedInputChannels = 1;
+        }
+        ConfigureCaptureRouting(requestedInputChannels);
+        numCaptureChannels = requestedInputChannels;
         // I don't deal with the possibility of the capture sequences
         // having different sample formats, since it will never happen
         // with the current code.  This code wouldn't *break* if this
@@ -1747,6 +1799,7 @@ void AudioIO::StopStream()
 
     mPlaybackSequences.clear();
     mCaptureSequences.clear();
+    ResetCaptureRouting();
 
     mPlaybackSchedule.GetPolicy().Finalize(mPlaybackSchedule);
 
@@ -2334,6 +2387,10 @@ void AudioIO::DrainRecordBuffers()
         return;
     }
 
+    if (mTrackChannelSourceMap.empty() && mNumCaptureChannels > 0) {
+        ConfigureCaptureRouting(mNumCaptureChannels);
+    }
+
     auto delayedHandler = [this] ( AudacityException* pException ) {
         // In the main thread, stop recording
         // This is one place where the application handles disk
@@ -2361,54 +2418,42 @@ void AudioIO::DrainRecordBuffers()
     GuardedCall([&] {
         // start record buffering
         const auto avail = GetCommonlyAvailCapture(); // samples
-        const auto remainingTime
-            =std::max(0.0, mRecordingSchedule.ToConsume());
+        const auto remainingTime = std::max(0.0, mRecordingSchedule.ToConsume());
         // This may be a very big double number:
         const auto remainingSamples = remainingTime * mRate;
         bool latencyCorrected = true;
 
-        double deltat = avail / mRate;
+        const double deltat = avail / mRate;
 
         if (mAudioThreadShouldCallSequenceBufferExchangeOnce
             .load(std::memory_order_relaxed)
             || deltat >= mMinCaptureSecsToCopy) {
-            bool newBlocks = false;
-
             // Append captured samples to the end of the RecordableSequences.
             // (WaveTracks have their own buffering for efficiency.)
-            auto iter = mCaptureSequences.begin();
-            auto width = (*iter)->NChannels();
-            size_t iChannel = 0;
-            for (size_t i = 0; i < mNumCaptureChannels; ++i) {
-                Finally Do { [&]{
-                        if (++iChannel == width) {
-                            ++iter;
-                            iChannel = 0;
-                            if (iter != mCaptureSequences.end()) {
-                                width = (*iter)->NChannels();
-                            }
-                        }
-                    } };
+            const size_t hardwareChannels = std::min(mNumCaptureChannels, mCaptureBuffers.size());
+            if (hardwareChannels == 0 || mCaptureChannelLayout.empty()) {
+                return;
+            }
+
+            struct CapturedChannelData {
+                SampleBuffer buffer;
+                size_t size { 0 };
+                sampleFormat format { floatSample };
+            };
+
+            std::vector<CapturedChannelData> captured(hardwareChannels);
+            const bool forceFloatCapture = mCaptureNeedsMixdown
+                                           || !mRecordingSchedule.mCrossfadeData.empty();
+
+            for (size_t i = 0; i < hardwareChannels; ++i) {
                 size_t discarded = 0;
 
                 if (!mRecordingSchedule.mLatencyCorrected) {
                     const auto correction = mRecordingSchedule.TotalCorrection();
-                    if (correction >= 0) {
-                        // Rightward shift
-                        // Once only (per sequence per recording), insert some initial
-                        // silence.
-                        size_t size = floor(correction * mRate * mFactor);
-                        SampleBuffer temp(size, mCaptureFormat);
-                        ClearSamples(temp.ptr(), mCaptureFormat, 0, size);
-                        (*iter)->Append(iChannel, temp.ptr(), mCaptureFormat, size, 1,
-                                        // Do not dither recordings
-                                        narrowestSampleFormat);
-                    } else {
-                        // Leftward shift
-                        // discard some samples from the ring buffers.
-                        size_t size = floor(
-                            mRecordingSchedule.ToDiscard() * mRate);
-
+                    // Leftward shift
+                    // discard some samples from the ring buffers.
+                    if (correction < 0) {
+                        size_t size = floor(mRecordingSchedule.ToDiscard() * mRate);
                         // The ring buffer might have grown concurrently -- don't discard more
                         // than the "avail" value noted above.
                         discarded = mCaptureBuffers[i]->Discard(std::min(avail, size));
@@ -2421,42 +2466,23 @@ void AudioIO::DrainRecordBuffers()
                     }
                 }
 
-                const float* pCrossfadeSrc = nullptr;
-                size_t crossfadeStart = 0, totalCrossfadeLength = 0;
-                if (i < mRecordingSchedule.mCrossfadeData.size()) {
-                    // Do crossfading
-                    // The supplied crossfade samples are at the same rate as the
-                    // sequence
-                    const auto& data = mRecordingSchedule.mCrossfadeData[i];
-                    totalCrossfadeLength = data.size();
-                    if (totalCrossfadeLength) {
-                        crossfadeStart
-                            =floor(mRecordingSchedule.Consumed() * mCaptureRate);
-                        if (crossfadeStart < totalCrossfadeLength) {
-                            pCrossfadeSrc = data.data() + crossfadeStart;
-                        }
-                    }
+                if (avail <= discarded) {
+                    captured[i].size = 0;
+                    continue;
                 }
 
-                wxASSERT(discarded <= avail);
                 size_t toGet = avail - discarded;
                 SampleBuffer temp;
-                size_t size;
-                sampleFormat format;
+                size_t size = 0;
+                sampleFormat format = mCaptureFormat;
+
                 if (mFactor == 1.0) {
                     // Take captured samples directly
                     size = toGet;
-                    if (pCrossfadeSrc) {
-                        // Change to float for crossfade calculation
-                        format = floatSample;
-                    } else {
-                        format = mCaptureFormat;
-                    }
+                    // Change to float for crossfade/mix calculation
+                    format = forceFloatCapture ? floatSample : mCaptureFormat;
                     temp.Allocate(size, format);
-                    const auto got
-                        =mCaptureBuffers[i]->Get(temp.ptr(), format, toGet);
-                    // wxASSERT(got == toGet);
-                    // but we can't assert in this thread
+                    const auto got = mCaptureBuffers[i]->Get(temp.ptr(), format, toGet);
                     wxUnusedVar(got);
                     if (double(size) > remainingSamples) {
                         size = floor(remainingSamples);
@@ -2466,10 +2492,7 @@ void AudioIO::DrainRecordBuffers()
                     format = floatSample;
                     SampleBuffer temp1(toGet, floatSample);
                     temp.Allocate(size, format);
-                    const auto got
-                        =mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, toGet);
-                    // wxASSERT(got == toGet);
-                    // but we can't assert in this thread
+                    const auto got = mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, toGet);
                     wxUnusedVar(got);
                     /* we are re-sampling on the fly. The last resampling call
                      * must flush any samples left in the rate conversion buffer
@@ -2479,25 +2502,144 @@ void AudioIO::DrainRecordBuffers()
                         if (double(toGet) > remainingSamples) {
                             toGet = floor(remainingSamples);
                         }
-                        const auto results
-                            =mResample[i]->Process(mFactor, (float*)temp1.ptr(), toGet,
-                                                   !IsStreamActive(), (float*)temp.ptr(), size);
+                        const auto results = mResample[i]->Process(mFactor,
+                                                                   (float*)temp1.ptr(), toGet,
+                                                                   !IsStreamActive(),
+                                                                   (float*)temp.ptr(), size);
                         size = results.second;
                     }
                 }
 
-                if (pCrossfadeSrc) {
-                    wxASSERT(format == floatSample);
-                    size_t crossfadeLength = std::min(size, totalCrossfadeLength - crossfadeStart);
-                    if (crossfadeLength) {
-                        auto ratio = double(crossfadeStart) / totalCrossfadeLength;
-                        auto ratioStep = 1.0 / totalCrossfadeLength;
-                        auto pCrossfadeDst = (float*)temp.ptr();
+                captured[i].buffer = std::move(temp);
+                captured[i].size = size;
+                captured[i].format = format;
+            }
 
-                        // Crossfade loop here
-                        for (size_t ii = 0; ii < crossfadeLength; ++ii) {
-                            *pCrossfadeDst = ratio * *pCrossfadeDst + (1.0 - ratio) * *pCrossfadeSrc;
-                            ++pCrossfadeSrc, ++pCrossfadeDst;
+            const auto ensureFloatView = [&](size_t srcIndex, size_t sampleCount) -> const float* {
+                auto& src = captured[srcIndex];
+                if (src.format != floatSample) {
+                    SampleBuffer converted(sampleCount, floatSample);
+                    SamplesToFloats(src.buffer.ptr(), src.format,
+                                    reinterpret_cast<float*>(converted.ptr()),
+                                    sampleCount, 1, 1);
+                    src.buffer = std::move(converted);
+                    src.format = floatSample;
+                    src.size = sampleCount;
+                }
+                return reinterpret_cast<const float*>(src.buffer.ptr());
+            };
+
+            bool newBlocks = false;
+            size_t trackChannelIndex = 0;
+            const auto correction = mRecordingSchedule.TotalCorrection();
+
+            for (const auto& info : mCaptureChannelLayout) {
+                if (trackChannelIndex >= mTrackChannelSourceMap.size()) {
+                    break;
+                }
+
+                const auto& sources = mTrackChannelSourceMap[trackChannelIndex];
+                if (sources.empty()) {
+                    ++trackChannelIndex;
+                    continue;
+                }
+
+                const auto firstSource = sources.front();
+                if (firstSource >= captured.size()) {
+                    ++trackChannelIndex;
+                    continue;
+                }
+
+                size_t size = captured[firstSource].size;
+                sampleFormat format = captured[firstSource].format;
+                constSamplePtr dataPtr = captured[firstSource].buffer.ptr();
+                SampleBuffer mixBuffer;
+                SampleBuffer floatConversionBuffer;
+
+                if (sources.size() > 1) {
+                    size = captured[firstSource].size;
+                    for (auto srcIndex : sources) {
+                        if (srcIndex >= captured.size()) {
+                            size = 0;
+                            break;
+                        }
+                        size = std::min(size, captured[srcIndex].size);
+                    }
+
+                    if (size > 0) {
+                        mixBuffer.Allocate(size, floatSample);
+                        auto dest = reinterpret_cast<float*>(mixBuffer.ptr());
+                        std::fill(dest, dest + size, 0.0f);
+
+                        for (auto srcIndex : sources) {
+                            const auto* srcPtr = ensureFloatView(srcIndex, size);
+                            for (size_t s = 0; s < size; ++s) {
+                                dest[s] += srcPtr[s];
+                            }
+                        }
+
+                        const float gain = 1.0f / static_cast<float>(sources.size());
+                        for (size_t s = 0; s < size; ++s) {
+                            dest[s] *= gain;
+                        }
+
+                        dataPtr = mixBuffer.ptr();
+                        format = floatSample;
+                    }
+                }
+
+                if (!dataPtr || size == 0) {
+                    ++trackChannelIndex;
+                    continue;
+                }
+
+                if (double(size) > remainingSamples) {
+                    size = floor(remainingSamples);
+                }
+
+                auto& sequence = mCaptureSequences[info.sequenceIndex];
+                if (!sequence) {
+                    ++trackChannelIndex;
+                    continue;
+                }
+
+                if (!mRecordingSchedule.mLatencyCorrected && correction >= 0) {
+                    // Rightward shift
+                    // Once only (per sequence per recording), insert some initial
+                    // silence.
+                    const auto silenceSamples = static_cast<size_t>(floor(correction * mRate * mFactor));
+                    if (silenceSamples > 0) {
+                        SampleBuffer silence(silenceSamples, mCaptureFormat);
+                        ClearSamples(silence.ptr(), mCaptureFormat, 0, silenceSamples);
+                        newBlocks = sequence->Append(info.channelIndex, silence.ptr(), mCaptureFormat,
+                                                     silenceSamples, 1, narrowestSampleFormat) || newBlocks;
+                    }
+                }
+
+                const bool needsCrossfade
+                    = trackChannelIndex < mRecordingSchedule.mCrossfadeData.size()
+                      && !mRecordingSchedule.mCrossfadeData[trackChannelIndex].empty();
+
+                if (needsCrossfade && format != floatSample) {
+                    floatConversionBuffer.Allocate(size, floatSample);
+                    SamplesToFloats(dataPtr, format,
+                                    reinterpret_cast<float*>(floatConversionBuffer.ptr()),
+                                    size, 1, 1);
+                    dataPtr = floatConversionBuffer.ptr();
+                    format = floatSample;
+                }
+
+                if (needsCrossfade) {
+                    auto* dst = reinterpret_cast<float*>(const_cast<samplePtr>(dataPtr));
+                    const auto& data = mRecordingSchedule.mCrossfadeData[trackChannelIndex];
+                    auto crossfadeStart = static_cast<size_t>(floor(mRecordingSchedule.Consumed() * mCaptureRate));
+                    if (crossfadeStart < data.size()) {
+                        const auto crossfadeLength = std::min<size_t>(size, data.size() - crossfadeStart);
+                        auto ratio = double(crossfadeStart) / data.size();
+                        const auto ratioStep = 1.0 / data.size();
+                        const float* src = data.data() + crossfadeStart;
+                        for (size_t s = 0; s < crossfadeLength; ++s) {
+                            dst[s] = ratio * dst[s] + (1.0 - ratio) * src[s];
                             ratio += ratioStep;
                         }
                     }
@@ -2505,11 +2647,10 @@ void AudioIO::DrainRecordBuffers()
 
                 // Now append
                 // see comment in second handler about guarantee
-                newBlocks = (*iter)->Append(iChannel,
-                                            temp.ptr(), format, size, 1,
-                                            // Do not dither recordings
-                                            narrowestSampleFormat
-                                            ) || newBlocks;
+                newBlocks = sequence->Append(info.channelIndex, dataPtr, format,
+                                             size, 1, narrowestSampleFormat) || newBlocks;
+
+                ++trackChannelIndex;
             } // end loop over capture channels
 
             // Now update the recording schedule position
@@ -3048,7 +3189,9 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
         auto nChannels = sequence->NChannels();
         const int64_t id = sequence->GetRecordableSequenceId();
         for (size_t ch = 0; ch < nChannels; ch++) {
-            sender->push(ch, { sptr + ch, frames, nChannels, dacTime }, IMeterSender::TrackId { id });
+            // Map track channel to input channel, wrapping if track has more channels than input
+            size_t inputCh = ch % mNumCaptureChannels;
+            sender->push(ch, { sptr + inputCh, frames, mNumCaptureChannels, dacTime }, IMeterSender::TrackId { id });
         }
     }
 
