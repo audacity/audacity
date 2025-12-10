@@ -10,6 +10,7 @@
 #include "mod-ogg/ExportOGG.h"
 #include "mod-flac/ExportFLAC.h"
 #include "mod-opus/ExportOpus.h"
+#include "mod-mp2/ExportMP2.h"
 
 #include "RegisterExportPlugins.h"
 
@@ -48,5 +49,10 @@ void RegisterExportPlugins()
     static ExportPluginRegistry::RegisteredPlugin sOpusPlugin{
         "Opus",
         []{ return std::make_unique< ExportOpus >(); }
+    };
+
+    static ExportPluginRegistry::RegisteredPlugin sMP2Plugin{
+        "MP2",
+        []{ return std::make_unique< ExportMP2 >(); }
     };
 }
