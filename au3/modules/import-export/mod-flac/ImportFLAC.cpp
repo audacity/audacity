@@ -24,15 +24,7 @@
 
 #include <wx/defs.h>
 
-#include "Import.h"
-#include "ImportPlugin.h"
-#include "ImportProgressListener.h"
-
-#include "Tags.h"
-
-#define FLAC_HEADER "fLaC"
-
-#define DESC XO("FLAC files")
+#include "ImportFLAC.h"
 
 static const auto exts = {
     wxT("flac"),
@@ -41,11 +33,6 @@ static const auto exts = {
 
 #include <wx/file.h>
 #include <wx/ffile.h>
-
-#include "FLAC++/decoder.h"
-
-#include "WaveTrack.h"
-#include "ImportUtils.h"
 
 #ifdef USE_LIBID3TAG
 extern "C" {
@@ -60,92 +47,19 @@ extern "C" {
 #undef LEGACY_FLAC
 #endif
 
-class FLACImportFileHandle;
-
-class MyFLACFile final : public FLAC::Decoder::File
+MyFLACFile::MyFLACFile(FLACImportFileHandle* handle)
+    : mFile(handle)
 {
-public:
-    MyFLACFile(FLACImportFileHandle* handle)
-        : mFile(handle)
-    {
-        mWasError = false;
-        set_metadata_ignore_all();
-        set_metadata_respond(FLAC__METADATA_TYPE_VORBIS_COMMENT);
-        set_metadata_respond(FLAC__METADATA_TYPE_STREAMINFO);
-    }
+    mWasError = false;
+    set_metadata_ignore_all();
+    set_metadata_respond(FLAC__METADATA_TYPE_VORBIS_COMMENT);
+    set_metadata_respond(FLAC__METADATA_TYPE_STREAMINFO);
+}
 
-    bool get_was_error() const
-    {
-        return mWasError;
-    }
-
-    ImportProgressListener* mImportProgressListener { nullptr };
-
-private:
-    friend class FLACImportFileHandle;
-    FLACImportFileHandle* mFile;
-    bool mWasError;
-    wxArrayString mComments;
-protected:
-    FLAC__StreamDecoderWriteStatus write_callback(const FLAC__Frame* frame, const FLAC__int32* const buffer[]) override;
-    void metadata_callback(const FLAC__StreamMetadata* metadata) override;
-    void error_callback(FLAC__StreamDecoderErrorStatus status) override;
-};
-
-class FLACImportPlugin final : public ImportPlugin
+FLACImportPlugin::FLACImportPlugin()
+    : ImportPlugin(FileExtensions(exts.begin(), exts.end()))
 {
-public:
-    FLACImportPlugin()
-        : ImportPlugin(FileExtensions(exts.begin(), exts.end()))
-    {
-    }
-
-    ~FLACImportPlugin() { }
-
-    wxString GetPluginStringID() override { return wxT("libflac"); }
-    TranslatableString GetPluginFormatDescription() override;
-    std::unique_ptr<ImportFileHandle> Open(
-        const FilePath& Filename, AudacityProject*)  override;
-};
-
-class FLACImportFileHandle final : public ImportFileHandleEx
-{
-    friend class MyFLACFile;
-public:
-    FLACImportFileHandle(const FilePath& name);
-    ~FLACImportFileHandle();
-
-    bool Init();
-
-    TranslatableString GetFileDescription() override;
-    ByteCount GetFileUncompressedBytes() override;
-    void Import(
-        ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
-        std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
-
-    wxInt32 GetStreamCount() override { return 1; }
-
-    const TranslatableStrings& GetStreamInfo() override
-    {
-        static TranslatableStrings empty;
-        return empty;
-    }
-
-    void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)) override
-    {}
-
-private:
-    sampleFormat mFormat;
-    std::unique_ptr<MyFLACFile> mFile;
-    wxFFile mHandle;
-    unsigned long mSampleRate;
-    unsigned long mNumChannels;
-    unsigned long mBitsPerSample;
-    FLAC__uint64 mNumSamples;
-    FLAC__uint64 mSamplesDone;
-    bool mStreamInfoDone;
-    WaveTrack::Holder mTrack;
-};
+}
 
 void MyFLACFile::metadata_callback(const FLAC__StreamMetadata* metadata)
 {
@@ -214,11 +128,9 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame* fra
 {
     // Don't let C++ exceptions propagate through libflac
     return GuardedCall< FLAC__StreamDecoderWriteStatus >([&] {
-
         unsigned chn = 0;
         ImportUtils::ForEachChannel(*mFile->mTrack, [&](auto& channel)
         {
-
             if (frame->header.bits_per_sample == 8) {
                 auto tmp = ArrayOf< short > { frame->header.blocksize };
                 for (unsigned int s = 0; s < frame->header.blocksize; s++) {
@@ -241,7 +153,7 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame* fra
             } else {
                 auto tmp = ArrayOf< float > { frame->header.blocksize };
                 for (unsigned int s = 0; s < frame->header.blocksize; s++) {
-                    tmp[s] = static_cast<float>(buffer[chn][s]) / static_cast<float>(1<<(frame->header.bits_per_sample-1));
+                    tmp[s] = static_cast<float>(buffer[chn][s]) / static_cast<float>(1 << (frame->header.bits_per_sample - 1));
                 }
                 channel.AppendBuffer((samplePtr)tmp.get(),
                                      floatSample,
@@ -312,10 +224,6 @@ std::unique_ptr<ImportFileHandle> FLACImportPlugin::Open(
     // This std::move is needed to "upcast" the pointer type
     return std::move(handle);
 }
-
-static Importer::RegisteredImportPlugin registered{ "FLAC",
-                                                    std::make_unique< FLACImportPlugin >()
-};
 
 FLACImportFileHandle::FLACImportFileHandle(const FilePath& name)
     :  ImportFileHandleEx(name),

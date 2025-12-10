@@ -9,6 +9,7 @@
 #include "mod-mpg123/ImportMP3_MPG123.h"
 #include "mod-pcm/ImportPCM.h"
 #include "mod-ogg/ImportOGG.h"
+#include "mod-flac/ImportFLAC.h"
 
 void RegisterImportPlugins()
 {
@@ -30,5 +31,10 @@ void RegisterImportPlugins()
     static Importer::RegisteredImportPlugin sOGGImportPlugin{
         "OGG",
         std::make_unique< OggImportPlugin >()
+    };
+
+    static Importer::RegisteredImportPlugin sFLACImportPlugin{
+        "FLAC",
+        std::make_unique< FLACImportPlugin >()
     };
 }
