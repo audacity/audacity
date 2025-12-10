@@ -77,6 +77,7 @@ populate(vorbis "vorbis/1.3.7")
 populate(flac "flac/1.4.2")
 populate(ogg "ogg/1.3.5")
 populate(opus "opus/1.5.2")
+populate(opusfile "opusfile/0.12")
 
 if (NOT OS_IS_LIN)
     populate(zlib "zlib/1.2.13")
