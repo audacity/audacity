@@ -17,7 +17,7 @@ constexpr const char* TRACK_RATE_CHANGE_ACTION = "action://trackedit/track/chang
 constexpr const char* TRACK_VIEW_WAVEFORM_ACTION = "action://trackedit/track-view-waveform";
 constexpr const char* TRACK_VIEW_SPECTROGRAM_ACTION = "action://trackedit/track-view-spectrogram";
 constexpr const char* TRACK_VIEW_MULTI_ACTION = "action://trackedit/track-view-multi";
-constexpr const char* TRACK_VIEW_HALF_WAVE_ACTION = "action://trackedit/track-view-half-wave";
+constexpr const char* TRACK_VIEW_HALF_WAVE_ACTION = "action://projectscene/track-view-half-wave";
 
 constexpr const char* TRACK_SPECTROGRAM_SETTINGS_ACTION = "action://trackedit/track-spectrogram-settings";
 

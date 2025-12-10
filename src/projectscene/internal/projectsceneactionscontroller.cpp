@@ -2,6 +2,8 @@
 * Audacity: A Digital Audio Editor
 */
 
+#include "project/iaudacityproject.h"
+
 #include "projectsceneactionscontroller.h"
 
 using namespace muse;
@@ -16,6 +18,7 @@ static const ActionCode MINUTES_SECONDS_RULER("minutes-seconds-ruler");
 static const ActionCode BEATS_MEASURES_RULER("beats-measures-ruler");
 static const ActionCode CLIP_PITCH_AND_SPEED_CODE("clip-pitch-speed");
 static const ActionCode TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE("toggle-playback-on-ruler-click-enabled");
+static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
 
 void ProjectSceneActionsController::init()
 {
@@ -29,6 +32,7 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, CLIP_PITCH_AND_SPEED_CODE, this, &ProjectSceneActionsController::openClipPitchAndSpeedEdit);
     dispatcher()->reg(this, TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE, this,
                       &ProjectSceneActionsController::togglePlaybackOnRulerClickEnabled);
+    dispatcher()->reg(this, TOGGLE_TRACK_HALF_WAVE, this, &ProjectSceneActionsController::toggleTrackHalfWave);
 }
 
 void ProjectSceneActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
@@ -113,6 +117,22 @@ void ProjectSceneActionsController::togglePlaybackOnRulerClickEnabled()
     bool isEnabled = configuration()->playbackOnRulerClickEnabled();
     configuration()->setPlaybackOnRulerClickEnabled(!isEnabled);
     notifyActionCheckedChanged(TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE);
+}
+
+void ProjectSceneActionsController::toggleTrackHalfWave(const muse::actions::ActionQuery& q)
+{
+    IF_ASSERT_FAILED(q.params().size() == 1) {
+        return;
+    }
+    const int trackId = q.param("trackId").toInt();
+
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    const auto viewState = prj->viewState();
+
+    if (viewState == nullptr) {
+        return;
+    }
+    viewState->toggleHalfWave(trackId);
 }
 
 bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) const
