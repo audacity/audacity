@@ -134,6 +134,9 @@ set(MODULE_SRC ${MODULE_SRC}
     ${IMPORT_EXPORT_MODULE}/mod-flac/ImportFLAC.cpp
     ${IMPORT_EXPORT_MODULE}/mod-flac/ImportFLAC.h
 
+    ${IMPORT_EXPORT_MODULE}/mod-opus/ExportOpus.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-opus/ExportOpus.h
+
     # FFmpeg support (still compiled as sources, not yet converted to library)
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ImportFFmpeg.cpp
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ExportFFmpeg.cpp
