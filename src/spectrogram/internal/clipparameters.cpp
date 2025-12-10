@@ -25,27 +25,26 @@ ClipParameters::ClipParameters(const ClipTimes& clip, const QRect& trackPaintabl
 
     const auto blank = GetBlankSpaceBeforePlayEndTime(clip);
 
-    // Calculate actual selection bounds so that visibleT0 > 0 and visibleT1 < the
+    // Calculate actual selection bounds so that m_visibleT0 > 0 and visibleT1 < the
     // end of the track
-    visibleT0 = std::max(hiddenDurationLeft, .0);
+    m_visibleT0 = std::max(hiddenDurationLeft, .0);
     const auto visibleT1 = std::max(std::min(tpost, clipLength - blank), 0.0);
 
-    // Make sure visibleT1 is greater than visibleT0
-    if (visibleT0 > visibleT1) {
-        visibleT0 = visibleT1;
+    if (m_visibleT0 > visibleT1) {
+        m_visibleT0 = visibleT1;
     }
 
     // If the left edge of the track is to the right of the left
     // edge of the display, then there's some unused area to the
     // left of the track.  Reduce the "paintableClipRect"
-    leftOffset = 0;
+    m_leftOffset = 0;
     if (hiddenDurationLeft < 0) {
         // Fix Bug #1296 caused by premature conversion to (int).
         int64_t time64 = timeToPosition(viewInfo, playStartTime);
         if (time64 < 0) {
             time64 = 0;
         }
-        leftOffset = (time64 < trackPaintableSubrect.width()) ? (int)time64 : trackPaintableSubrect.width();
+        m_leftOffset = (time64 < trackPaintableSubrect.width()) ? (int)time64 : trackPaintableSubrect.width();
     }
 }
 }

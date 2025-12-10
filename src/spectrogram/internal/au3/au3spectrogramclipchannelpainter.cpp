@@ -107,13 +107,13 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
     const int imageWidth = image.width();
     const int imageHeight = image.height();
 
-    const double& visibleT0 = clipParams.visibleT0;
+    const double visibleT0 = clipParams.visibleT0();
     const double playStartTime = clipChannel.GetPlayStartTime();
 
     const auto [ssel0, ssel1] = GetSelectedSampleIndices(selectionInfo, clipChannel, tc.trackIsSelected);
     const double sampleRate = clipChannel.GetRate();
     const double stretchRatio = clipChannel.GetStretchRatio();
-    const double& leftOffset = clipParams.leftOffset;
+    const double leftOffset = clipParams.leftOffset();
 
     double freqLo = SelectionInfo::UndefinedFrequency;
     double freqHi = SelectionInfo::UndefinedFrequency;
