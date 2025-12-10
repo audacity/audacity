@@ -11,6 +11,7 @@
 #include "au3-wave-track/WaveTrack.h"
 
 #include <cmath>
+#include <cassert>
 
 namespace {
 static void ComputeSpectrumUsingRealFFTf
@@ -186,7 +187,7 @@ bool SpecCache::CalculateOneSpectrum(
 
         if (autocorrelation) {
             // not reassignment, xx is surely within bounds.
-            wxASSERT(xx >= 0);
+            assert(xx >= 0);
             float* const results = &out[nBins * xx];
             // This function does not mutate useBuffer
             ComputeSpectrum(
@@ -292,7 +293,7 @@ bool SpecCache::CalculateOneSpectrum(
             }
         } else {
             // not reassignment, xx is surely within bounds.
-            wxASSERT(xx >= 0);
+            assert(xx >= 0);
             float* const results = &out[nBins * xx];
 
             // Do the FFT.  Note that useBuffer is multiplied by the window,
@@ -515,7 +516,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
         // in two regions to update. This won't happen in zoom, since
         // old cache doesn't match. It won't happen in resize, since the
         // spectrum view is pinned to left side of window.
-        wxASSERT(
+        assert(
             (copyBegin >= 0 && copyEnd == (int)numPixels) // copied the end
             || (copyBegin == 0 && copyEnd <= (int)numPixels) // copied the beginning
             );

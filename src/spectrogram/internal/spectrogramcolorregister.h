@@ -5,24 +5,21 @@
 
 #include <QColor>
 
-#include <wx/arrstr.h>
-
 #include <unordered_set>
 #include <vector>
 
 class SpectrogramColorRegister final
 {
 public:
-    using NameSet = std::unordered_set<wxString>;
+    using NameSet = std::unordered_set<std::string>;
 
     void EnsureInitialised();
-    void RegisterColour(NameSet& allNames, int& iIndex, const QColor& Clr, const wxString& Name);
+    void RegisterColour(NameSet& allNames, int& iIndex, const QColor& Clr, const std::string& Name);
 
     QColor& Colour(int iIndex);
     void RegisterColours();
 
 private:
-    wxArrayString mColourNames;
     std::vector<QColor> mColours;
     bool mColorsInitialized = false;
 };

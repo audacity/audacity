@@ -5,6 +5,8 @@
 
 #include "spectrogramcolordefinitions.h"
 
+#include <cassert>
+
 // spectrogramColorRegister is a global variable.
 SpectrogramColorRegister spectrogramColorRegister;
 
@@ -22,7 +24,7 @@ enum teResourceFlags
 
 QColor& SpectrogramColorRegister::Colour(int iIndex)
 {
-    wxASSERT(iIndex >= 0);
+    assert(iIndex >= 0);
     EnsureInitialised();
     return mColours[iIndex];
 }
@@ -36,20 +38,18 @@ void SpectrogramColorRegister::EnsureInitialised()
 }
 
 void SpectrogramColorRegister::RegisterColour(NameSet& allNames,
-                                              int& iIndex, const QColor& Clr, const wxString& Name)
+                                              int& iIndex, const QColor& Clr, const std::string& Name)
 {
     mColours.push_back(Clr);
-    auto index = mColours.size() - 1;
+    auto index = static_cast<int>(mColours.size()) - 1;
     if (iIndex == -1) {
         // First time assignment of global variable identifying a colour
         iIndex = index;
-        mColourNames.push_back(Name);
-        wxASSERT(allNames.insert(Name).second);
+        allNames.insert(Name);
     } else {
         // If revisiting for another theme set,
         // colours should be re-done in the same sequence
-        wxASSERT(iIndex == index);
-        wxASSERT(mColourNames[index] == Name);
+        assert(iIndex == index);
     }
 }
 
@@ -61,8 +61,8 @@ void SpectrogramColorRegister::RegisterColours()
     mColorsInitialized = true;
 
 // This initialises the variables e.g
-// RegisterImage( myFlags, bmpRecordButton, some image, wxT("RecordButton"));
-    int myFlags = resFlagPaired;
+// RegisterImage( myFlags, bmpRecordButton, some image, "RecordButton");
+    [[maybe_unused]] int myFlags = resFlagPaired;
     NameSet allNames;
 #define SPECTROGRAM_COLORS_INITS
 #include "spectrogramcolordefinitions.h"
