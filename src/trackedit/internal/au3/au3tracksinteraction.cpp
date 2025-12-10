@@ -1708,15 +1708,23 @@ void Au3TracksInteraction::insertBlankSpace(const TrackIdList& trackIds, secs_t 
     auto prj = globalContext()->currentTrackeditProject();
 
     for (const auto& trackId : trackIds) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-        auto emptyTrack = trackFactory.Create(waveTrack->Channels().size(), defaultFormat, rate);
-        auto emptyClip = emptyTrack->CreateClip();
-        emptyClip->SetIsPlaceholder(true);
-        emptyClip->InsertSilence(0, duration);
-        emptyTrack->InsertInterval(std::move(emptyClip), true, false);
+        Au3Track* changedTrack = nullptr;
 
-        waveTrack->Paste(begin, *emptyTrack, true);
-        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        if (Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId))) {
+            auto emptyTrack = trackFactory.Create(waveTrack->Channels().size(), defaultFormat, rate);
+            auto emptyClip = emptyTrack->CreateClip();
+            emptyClip->SetIsPlaceholder(true);
+            emptyClip->InsertSilence(0, duration);
+            emptyTrack->InsertInterval(std::move(emptyClip), true, false);
+
+            waveTrack->Paste(begin, *emptyTrack, true);
+            changedTrack = waveTrack;
+        } else if (Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId))) {
+            labelTrack->ShiftBy(begin, duration);
+            changedTrack = labelTrack;
+        }
+
+        prj->notifyAboutTrackChanged(DomConverter::track(changedTrack));
     }
 }
 
