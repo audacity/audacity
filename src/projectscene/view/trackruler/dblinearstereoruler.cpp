@@ -1,11 +1,12 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "dblinearstereoruler.h"
-
 #include "framework/global/realfn.h"
 #include "framework/global/types/ratio.h"
+
 #include "view/trackruler/itrackruler.h"
+
+#include "dblinearstereoruler.h"
 
 using namespace au::projectscene;
 

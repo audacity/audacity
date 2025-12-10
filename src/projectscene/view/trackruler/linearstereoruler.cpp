@@ -1,10 +1,11 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "linearstereoruler.h"
-
 #include "framework/global/realfn.h"
+
 #include "view/trackruler/itrackruler.h"
+
+#include "linearstereoruler.h"
 
 using namespace au::projectscene;
 

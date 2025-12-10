@@ -1,12 +1,12 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "dblinearmonoruler.h"
-
 #include "framework/global/realfn.h"
 #include "framework/global/types/ratio.h"
 
 #include "projectscene/view/trackruler/itrackruler.h"
+
+#include "dblinearmonoruler.h"
 
 using namespace au::projectscene;
 

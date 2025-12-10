@@ -1,10 +1,12 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "dblogstereoruler.h"
 
 #include "framework/global/realfn.h"
+
 #include "view/trackruler/itrackruler.h"
+
+#include "dblogstereoruler.h"
 
 using namespace au::projectscene;
 

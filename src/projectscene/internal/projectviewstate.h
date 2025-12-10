@@ -15,7 +15,6 @@
 #include "au3wrap/iau3project.h"
 
 #include "../iprojectviewstate.h"
-#include "types/val.h"
 
 namespace au::projectscene {
 class ProjectViewState : public QObject, public IProjectViewState, public muse::async::Asyncable

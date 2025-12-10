@@ -1,9 +1,9 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "dblogmonoruler.h"
-
 #include "framework/global/realfn.h"
+
+#include "dblogmonoruler.h"
 
 using namespace au::projectscene;
 

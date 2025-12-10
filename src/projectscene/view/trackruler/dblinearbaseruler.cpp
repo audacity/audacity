@@ -1,10 +1,10 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "dblinearbaseruler.h"
-
 #include "framework/global/types/ratio.h"
 #include "framework/global/realfn.h"
+
+#include "dblinearbaseruler.h"
 
 using namespace au::projectscene;
 

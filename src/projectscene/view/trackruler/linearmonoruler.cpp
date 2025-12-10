@@ -1,9 +1,9 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "linearmonoruler.h"
-
 #include "framework/global/realfn.h"
+
+#include "linearmonoruler.h"
 
 using namespace au::projectscene;
 
