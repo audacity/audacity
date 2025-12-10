@@ -129,6 +129,9 @@ set(MODULE_SRC ${MODULE_SRC}
     ${IMPORT_EXPORT_MODULE}/mod-ogg/ImportOGG.cpp
     ${IMPORT_EXPORT_MODULE}/mod-ogg/ImportOGG.h
 
+    ${IMPORT_EXPORT_MODULE}/mod-flac/ExportFLAC.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-flac/ExportFLAC.h
+
     # FFmpeg support (still compiled as sources, not yet converted to library)
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ImportFFmpeg.cpp
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ExportFFmpeg.cpp

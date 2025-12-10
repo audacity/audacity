@@ -69,10 +69,11 @@ set(AU3_LINK
     mpg123::libmpg123 # used by mod-mpg123 not yet a library
     SndFile::sndfile # used by mod-pcm not yet a library
     # The following are transitive dependencies of SndFile::sndfile
-    # They must be linked even though mod-ogg, mod-flac, and mod-opus are not compiled in AU4
+    # They must be linked even if mod-ogg, mod-flac, and mod-opus are not compiled in AU4
     # because libsndfile is dynamically linked against these libraries
     Vorbis::vorbis # transitive dependency of SndFile::sndfile
-    FLAC::FLAC # transitive dependency of SndFile::sndfile
+    FLAC::FLAC # used by mod-flac not yet a library, transitive dependency of SndFile::sndfile
+    FLAC::FLAC++ # used by mod-flac not yet a library
     Ogg::ogg # transitive dependency of SndFile::sndfile
     Opus::opus # transitive dependency of SndFile::sndfile
 )
