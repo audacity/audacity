@@ -7,17 +7,17 @@
 
 int au::spectrogram::viewportWidth(const ViewInfo& viewInfo)
 {
-    return static_cast<int>(std::round((viewInfo.viewportT1 - viewInfo.viewportT0) * viewInfo.pixelsPerSecond));
+    return static_cast<int>(std::round((viewInfo.viewportEndTime - viewInfo.viewportStartTime) * viewInfo.pixelsPerSecond));
 }
 
 double au::spectrogram::positionToTime(const ViewInfo& viewInfo, int position)
 {
-    return viewInfo.viewportT0 + position / viewInfo.pixelsPerSecond;
+    return viewInfo.viewportStartTime + position / viewInfo.pixelsPerSecond;
 }
 
 int au::spectrogram::timeToPosition(const ViewInfo& viewInfo, double projectTime)
 {
-    double t = 0.5 + viewInfo.pixelsPerSecond * (projectTime - viewInfo.viewportT0);
+    double t = 0.5 + viewInfo.pixelsPerSecond * (projectTime - viewInfo.viewportStartTime);
     if (t < INT64_MIN) {
         return INT64_MIN;
     }

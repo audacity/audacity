@@ -43,8 +43,8 @@ void SpectrogramView::paint(QPainter* painter)
     const auto project = globalContext()->currentProject();
 
     const auto indentTime = m_timelineIndentWidth / m_context->zoom();
-    const auto viewportT0 = m_context->frameStartTime() - indentTime;
-    const auto viewportT1 = m_context->frameEndTime();
+    const auto viewportStartTime = m_context->frameStartTime() - indentTime;
+    const auto viewportEndTime = m_context->frameEndTime();
     const spectrogram::SelectionInfo selectionInfo { m_clipTime.selectionStartTime, m_clipTime.selectionEndTime };
 
     const QRect visibleSubrect = clipRect().toRect();
@@ -60,8 +60,8 @@ void SpectrogramView::paint(QPainter* painter)
     const spectrogram::ViewInfo viewInfo {
         static_cast<int>(height()),
         m_channelHeightRatio,
-        viewportT0,
-        viewportT1,
+        viewportStartTime,
+        viewportEndTime,
         m_context->zoom()
     };
 

@@ -21,12 +21,10 @@ std::pair<sampleCount, sampleCount> GetSelectedSampleIndices(
     if (!trackIsSelected) {
         return { 0, 0 };
     }
-    const double t0 = selectionInfo.t0; // left selection bound
-    const double t1 = selectionInfo.t1; // right selection bound
-    const auto startTime = clip.GetPlayStartTime();
-    const auto s0 = std::max(sampleCount(0), clip.TimeToSamples(t0 - startTime));
+    const auto playStartTime = clip.GetPlayStartTime();
+    const auto s0 = std::max(sampleCount(0), clip.TimeToSamples(selectionInfo.startTime - playStartTime));
     auto s1 = std::clamp(
-        clip.TimeToSamples(t1 - startTime), sampleCount { 0 },
+        clip.TimeToSamples(selectionInfo.endTime - playStartTime), sampleCount { 0 },
         clip.GetVisibleSampleCount());
     return { s0, s1 };
 }
@@ -107,7 +105,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
     const int imageWidth = image.width();
     const int imageHeight = image.height();
 
-    const double visibleT0 = clipParams.visibleT0();
+    const double visibleStartTime = clipParams.visibleStartTime();
     const double playStartTime = clipChannel.GetPlayStartTime();
 
     const auto [ssel0, ssel1] = GetSelectedSampleIndices(selectionInfo, clipChannel, tc.trackIsSelected);
@@ -115,10 +113,8 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
     const double stretchRatio = clipChannel.GetStretchRatio();
     const double leftOffset = clipParams.leftOffset();
 
-    double freqLo = SelectionInfo::UndefinedFrequency;
-    double freqHi = SelectionInfo::UndefinedFrequency;
-    freqLo = selectionInfo.f0;
-    freqHi = selectionInfo.f1;
+    const double startFrequency = selectionInfo.startFrequency;
+    const double endFrequency = selectionInfo.endFrequency;
 
     const int& colorScheme = settings.colorScheme;
     const int& range = settings.range;
@@ -129,7 +125,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
     const auto half = settings.GetFFTLength() / 2;
     const double binUnit = sampleRate / (2 * half);
     const bool updated = WaveClipSpectrumCache::Get(clipChannel).GetSpectrogram(clipChannel, spectrogram, settings, where, imageWidth,
-                                                                                visibleT0, viewInfo.pixelsPerSecond);
+                                                                                visibleStartTime, viewInfo.pixelsPerSecond);
 
     auto nBins = settings.NBins();
 
@@ -186,18 +182,18 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
         }
     } // updating cache
 
-    float selBinLo = settings.findBin(freqLo, binUnit);
-    float selBinHi = settings.findBin(freqHi, binUnit);
-    float selBinCenter = (freqLo < 0 || freqHi < 0)
+    float selBinLo = settings.findBin(startFrequency, binUnit);
+    float selBinHi = settings.findBin(endFrequency, binUnit);
+    float selBinCenter = (startFrequency < 0 || endFrequency < 0)
                          ? -1
-                         : settings.findBin(sqrt(freqLo * freqHi), binUnit);
+                         : settings.findBin(sqrt(startFrequency * endFrequency), binUnit);
 
     const bool isSpectral = settings.SpectralSelectionEnabled();
 
     SpecCache specCache;
 
     // need explicit resize since specCache.where[] accessed before Populate()
-    specCache.Grow(0, settings, -1, visibleT0);
+    specCache.Grow(0, settings, -1, visibleStartTime);
 
     // build color gradient tables (not thread safe)
     if (!SpectrogramColors::gradient_inited) {
@@ -205,7 +201,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
     }
 
     // Bug 2389 - always draw at least one pixel of selection.
-    int selectedX = timeToPosition(viewInfo, selectionInfo.t0) - leftOffset;
+    int selectedX = timeToPosition(viewInfo, selectionInfo.startTime) - leftOffset;
 
     for (int xx = 0; xx < imageWidth; ++xx) {
         const auto w0 = sampleCount(
