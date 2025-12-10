@@ -11,6 +11,8 @@ set( TARGET au3-fft )
 set( SOURCES
    FFT.cpp
    FFT.h
+   PowerSpectrumGetter.cpp
+   PowerSpectrumGetter.h
    RealFFTf.cpp
    RealFFTf.h
    Spectrum.cpp
@@ -19,8 +21,6 @@ set( SOURCES
    SpectrumAnalyst.h
    SpectrumTransformer.cpp
    SpectrumTransformer.h
-   PffftTransformer.cpp
-   PffftTransformer.h
 )
 set( LIBRARIES
 PUBLIC

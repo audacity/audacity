@@ -24,9 +24,8 @@ SpectrumTransformer::SpectrumTransformer(bool needsOutput,
     , mStepSize{mWindowSize / mStepsPerWindow}
     , mLeadingPadding{leadingPadding}
     , mTrailingPadding{trailingPadding}
-    , mTransformer{mWindowSize}
+    , hFFT{GetFFT(mWindowSize)}
     , mFFTBuffer(mWindowSize)
-    , mWork(mWindowSize)
     , mInWaveBuffer(mWindowSize)
     , mOutOverlapBuffer(mWindowSize)
     , mNeedsOutput{needsOutput}
@@ -212,7 +211,7 @@ void SpectrumTransformer::FillFirstWindow()
             memmove(pFFTBuffer, pInWaveBuffer, mWindowSize * sizeof(float));
         }
     }
-    mTransformer.TransformOrdered(mFFTBuffer.aligned(), mFFTBuffer.aligned(), mWork.aligned());
+    RealFFTf(mFFTBuffer.data(), hFFT.get());
 
     auto& record = Nth(0);
 
@@ -220,10 +219,12 @@ void SpectrumTransformer::FillFirstWindow()
     {
         float* pReal = &record.mRealFFTs[1];
         float* pImag = &record.mImagFFTs[1];
-        const auto last = 2 * (mSpectrumSize - 1);
-        for (size_t ii = 2; ii < last; ii += 2) {
-            *pReal++ = mFFTBuffer[ii];
-            *pImag++ = mFFTBuffer[ii + 1];
+        int* pBitReversed = &hFFT->BitReversed[1];
+        const auto last = mSpectrumSize - 1;
+        for (size_t ii = 1; ii < last; ++ii) {
+            const int kk = *pBitReversed++;
+            *pReal++ = mFFTBuffer[kk];
+            *pImag++ = mFFTBuffer[kk + 1];
         }
         // DC and Fs/2 bins need to be handled specially
         const float dc = mFFTBuffer[0];
@@ -300,19 +301,28 @@ void SpectrumTransformer::OutputStep()
         // The Fs/2 component is stored as the imaginary part of the DC component
         mFFTBuffer[1] = record.mImagFFTs[0];
 
-        // Invert the FFT into the output buffer and rescale by 1/N
-        mTransformer.InverseTransformOrdered(mFFTBuffer.aligned(), mFFTBuffer.aligned(), mWork.aligned(), true);
+        // Invert the FFT into the output buffer
+        InverseRealFFTf(mFFTBuffer.data(), hFFT.get());
 
         // Overlap-add
-        const auto pOut = mOutOverlapBuffer.data();
         if (mOutWindow.size() > 0) {
+            auto pOut = mOutOverlapBuffer.data();
             auto pWindow = mOutWindow.data();
-            transform(mFFTBuffer.begin(), mFFTBuffer.end(), pOut, pOut,
-                      [&](float buf, float out){ return out + buf * *pWindow++; });
+            auto pBitReversed = &hFFT->BitReversed[0];
+            for (size_t jj = 0; jj < last; ++jj) {
+                auto kk = *pBitReversed++;
+                *pOut++ += mFFTBuffer[kk] * (*pWindow++);
+                *pOut++ += mFFTBuffer[kk + 1] * (*pWindow++);
+            }
         } else {
-            transform(mFFTBuffer.begin(), mFFTBuffer.end(), pOut, pOut, std::plus<> {});
+            auto pOut = mOutOverlapBuffer.data();
+            auto pBitReversed = &hFFT->BitReversed[0];
+            for (size_t jj = 0; jj < last; ++jj) {
+                auto kk = *pBitReversed++;
+                *pOut++ += mFFTBuffer[kk];
+                *pOut++ += mFFTBuffer[kk + 1];
+            }
         }
-
         auto buffer = mOutOverlapBuffer.data();
         if (mOutStepCount >= 0) {
             // Output the first portion of the overlap buffer, they're done

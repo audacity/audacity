@@ -76,7 +76,7 @@ Au3SpectrogramSettings::Au3SpectrogramSettings(const Au3SpectrogramSettings& oth
     , algorithm(other.algorithm)
 
     // Do not copy these!
-    , transformer{}
+    , hFFT{}
     , window{}
     , tWindow{}
     , dWindow{}
@@ -181,7 +181,7 @@ bool Au3SpectrogramSettings::HandleXMLAttribute(const std::string_view& attr, co
 
 void Au3SpectrogramSettings::DestroyWindows()
 {
-    transformer.Reset();
+    hFFT.reset();
     window.reset();
     dWindow.reset();
     tWindow.reset();
@@ -252,13 +252,13 @@ void RecreateWindow(
 
 void Au3SpectrogramSettings::CacheWindows()
 {
-    if (!transformer || !window || (algorithm == SpectrogramAlgorithm::Reassignment && (tWindow == NULL || dWindow == NULL))) {
+    if (hFFT == NULL || window == NULL || (algorithm == SpectrogramAlgorithm::Reassignment && (tWindow == NULL || dWindow == NULL))) {
         double scale;
         auto factor = ZeroPaddingFactor();
         const auto fftLen = WindowSize() * factor;
         const auto padding = (WindowSize() * (factor - 1)) / 2;
 
-        transformer.Reset(fftLen);
+        hFFT = GetFFT(fftLen);
         RecreateWindow(window, WINDOW, fftLen, padding, m_windowType, m_windowSize, scale);
         if (algorithm == SpectrogramAlgorithm::Reassignment) {
             RecreateWindow(tWindow, TWINDOW, fftLen, padding, m_windowType, m_windowSize, scale);

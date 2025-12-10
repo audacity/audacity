@@ -19,24 +19,21 @@
 
 namespace au::spectrogram {
 namespace {
-static void ComputeSpectrumUsingPffft(PffftFloats buf,
-                                      const PffftTransformer& transformer,
-                                      const float* __restrict window, size_t len,
-                                      PffftFloats work, PffftFloats output)
+static void ComputeSpectrumUsingRealFFTf
+    (float* __restrict buffer, const FFTParam* hFFT,
+    const float* __restrict window, size_t len, float* __restrict out)
 {
-    const auto buffer = buf.get();
-    const auto out = output.get();
-    {
-        size_t i;
-        const auto size = transformer.Size();
-        for (i = 0; i < size; ++i) {
-            buffer[i] *= window[i];
-        }
-        for (; i < len; ++i) {
-            buffer[i] = 0; // zero pad as needed
-        }
+    size_t i;
+    if (len > hFFT->Points * 2) {
+        len = hFFT->Points * 2;
     }
-    transformer.TransformOrdered(buf, buf, work);
+    for (i = 0; i < len; i++) {
+        buffer[i] *= window[i];
+    }
+    for (; i < (hFFT->Points * 2); i++) {
+        buffer[i] = 0; // zero pad as needed
+    }
+    RealFFTf(buffer, hFFT);
     // Handle the (real-only) DC
     float power = buffer[0] * buffer[0];
     if (power <= 0) {
@@ -44,13 +41,14 @@ static void ComputeSpectrumUsingPffft(PffftFloats buf,
     } else {
         out[0] = 10.0 * log10f(power);
     }
-    for (size_t index = 2; index < len; index += 2) {
+    for (i = 1; i < hFFT->Points; i++) {
+        const int index = hFFT->BitReversed[i];
         const float re = buffer[index], im = buffer[index + 1];
         power = re * re + im * im;
         if (power <= 0) {
-            out[index / 2] = -160.0;
+            out[i] = -160.0;
         } else {
-            out[index / 2] = 10.0 * log10f(power);
+            out[i] = 10.0 * log10f(power);
         }
     }
 }
@@ -98,8 +96,8 @@ bool SpecCache::Matches(
 bool SpecCache::CalculateOneSpectrum(
     const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip,
     const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
-    const std::vector<float>& gainFactors, const PffftFloats work,
-    const PffftFloats out)
+    const std::vector<float>& gainFactors, float* __restrict scratch,
+    float* __restrict out)
 {
     bool result = false;
     const bool reassignment = settings.algorithm == SpectrogramAlgorithm::Reassignment;
@@ -127,27 +125,20 @@ bool SpecCache::CalculateOneSpectrum(
     const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
     const size_t padding = (windowSizeSetting * (zeroPaddingFactorSetting - 1)) / 2;
     const size_t fftLen = windowSizeSetting * zeroPaddingFactorSetting;
-    auto scratch = work + PffftAlignedCount{ fftLen };
-    const auto nBins = settings.NBins();
-
-    const auto Column = [&out, nBins](int xx){
-        assert(xx >= 0);
-        return out + PffftTransformer::PaddedCount(nBins) * size_t(xx);
-    };
+    auto nBins = settings.NBins();
 
     if (from < 0 || from >= numSamples) {
         if (xx >= 0 && xx < (int)len) {
             // Pixel column is out of bounds of the clip!  Should not happen.
-            const auto results = Column(xx).get();
+            float* const results = &out[nBins * xx];
             std::fill(results, results + nBins, 0.0f);
         }
     } else {
         // We can avoid copying memory when ComputeSpectrum is used below
         bool copy = !autocorrelation || (padding > 0) || reassignment;
-        PffftFloatVector floats;
-        PffftFloats useBuffer{};
-        const auto pScratch = scratch.get();
-        float* adj = pScratch + padding;
+        std::vector<float> floats;
+        float* useBuffer = 0;
+        float* adj = scratch + padding;
 
         {
             auto myLen = windowSizeSetting;
@@ -178,17 +169,17 @@ bool SpecCache::CalculateOneSpectrum(
             if (myLen > 0) {
                 constexpr auto iChannel = 0u;
                 constexpr auto mayThrow = false; // Don't throw just for display
-                floats.resize(PffftTransformer::PaddedCount(myLen));
+                floats.resize(myLen);
                 {
                     std::lock_guard<std::mutex> lock(mSampleCacheMutex);
                     mSampleCacheHolders.emplace_back(
                         clip.GetSampleView(from, myLen, mayThrow));
                     mSampleCacheHolders.back().Copy(floats.data(), myLen);
                 }
-                useBuffer = floats.aligned();
+                useBuffer = floats.data();
                 if (copy) {
                     if (useBuffer) {
-                        memcpy(adj, useBuffer.get(), myLen * sizeof(float));
+                        memcpy(adj, useBuffer, myLen * sizeof(float));
                     } else {
                         memset(adj, 0, myLen * sizeof(float));
                     }
@@ -202,55 +193,51 @@ bool SpecCache::CalculateOneSpectrum(
 
         if (autocorrelation) {
             // not reassignment, xx is surely within bounds.
-            assert(xx >= 0);
-            const auto results = Column(xx).get();
+            wxASSERT(xx >= 0);
+            float* const results = &out[nBins * xx];
             // This function does not mutate useBuffer
             ComputeSpectrum(
-                useBuffer.get(), windowSizeSetting, windowSizeSetting, results,
+                useBuffer, windowSizeSetting, windowSizeSetting, results,
                 autocorrelation, toAu3WindowType(settings.WindowType()));
         } else if (reassignment) {
             static const double epsilon = 1e-16;
+            const auto hFFT = settings.hFFT.get();
 
-            // Assuming scratch is well aligned for pffft, scratch2 and scratch3
-            // should be too
-            const auto scratch2 = (scratch + PffftTransformer::PaddedCount(fftLen));
-            std::copy(pScratch, pScratch + fftLen, scratch2.get());
+            float* const scratch2 = scratch + fftLen;
+            std::copy(scratch, scratch2, scratch2);
 
-            const auto scratch3 = (scratch + 2u * PffftTransformer::PaddedCount(fftLen));
-            std::copy(pScratch, pScratch + fftLen, scratch3.get());
-
-            auto& transformer = settings.transformer;
+            float* const scratch3 = scratch + 2 * fftLen;
+            std::copy(scratch, scratch2, scratch3);
 
             {
                 const float* const window = settings.window.get();
                 for (size_t ii = 0; ii < fftLen; ++ii) {
-                    pScratch[ii] *= window[ii];
+                    scratch[ii] *= window[ii];
                 }
-                transformer.TransformOrdered(scratch, scratch, work);
+                RealFFTf(scratch, hFFT);
             }
 
             {
                 const float* const dWindow = settings.dWindow.get();
-                const auto pScratch2 = scratch2.get();
                 for (size_t ii = 0; ii < fftLen; ++ii) {
-                    pScratch2[ii] *= dWindow[ii];
+                    scratch2[ii] *= dWindow[ii];
                 }
-                transformer.TransformOrdered(scratch2, scratch2, work);
+                RealFFTf(scratch2, hFFT);
             }
 
             {
                 const float* const tWindow = settings.tWindow.get();
-                const auto pScratch3 = scratch3.get();
                 for (size_t ii = 0; ii < fftLen; ++ii) {
-                    pScratch3[ii] *= tWindow[ii];
+                    scratch3[ii] *= tWindow[ii];
                 }
-                transformer.TransformOrdered(scratch3, scratch3, work);
+                RealFFTf(scratch3, hFFT);
             }
 
-            for (size_t index = 0; index < fftLen; index += 2) {
+            for (size_t ii = 0; ii < hFFT->Points; ++ii) {
+                const int index = hFFT->BitReversed[ii];
                 const float
-                    denomRe = pScratch[index],
-                    denomIm = index == 0 ? 0 : pScratch[index + 1];
+                    denomRe = scratch[index],
+                    denomIm = ii == 0 ? 0 : scratch[index + 1];
                 const double power = denomRe * denomRe + denomIm * denomIm;
                 if (power < epsilon) {
                     // Avoid dividing by near-zero below
@@ -259,11 +246,10 @@ bool SpecCache::CalculateOneSpectrum(
 
                 double freqCorrection;
                 {
-                    const auto pScratch2 = scratch2.get();
                     const double multiplier = -(fftLen / (2.0f * M_PI));
                     const float
-                        numRe = pScratch2[index],
-                        numIm = index == 0 ? 0 : pScratch2[index + 1];
+                        numRe = scratch2[index],
+                        numIm = ii == 0 ? 0 : scratch2[index + 1];
                     // Find complex quotient --
                     // Which means, multiply numerator by conjugate of denominator,
                     // then divide by norm squared of denominator --
@@ -275,16 +261,15 @@ bool SpecCache::CalculateOneSpectrum(
                     freqCorrection = multiplier * quotIm;
                 }
 
-                const int bin = (int)((int)index / 2 + freqCorrection + 0.5f);
+                const int bin = (int)((int)ii + freqCorrection + 0.5f);
                 // Must check if correction takes bin out of bounds, above or below!
                 // bin is signed!
-                if (bin >= 0 && bin < (int)fftLen / 2) {
+                if (bin >= 0 && bin < (int)hFFT->Points) {
                     double timeCorrection;
                     {
-                        const auto pScratch3 = scratch3.get();
                         const float
-                            numRe = pScratch3[index],
-                            numIm = index == 0 ? 0 : pScratch3[index + 1];
+                            numRe = scratch3[index],
+                            numIm = ii == 0 ? 0 : scratch3[index + 1];
                         // Find another complex quotient --
                         // Then just take its real part.
                         // The result has sample interval as unit.
@@ -301,21 +286,21 @@ bool SpecCache::CalculateOneSpectrum(
                         result = true;
 
                         // This is non-negative, because bin and correctedX are
-                        const auto dst = Column(correctedX).get() + bin;
+                        auto ind = (int)nBins * correctedX + bin;
 #ifdef _OPENMP
                         // This assignment can race if index reaches into another thread's bins.
                         // The probability of a race very low, so this carries little overhead,
                         // about 5% slower vs allowing it to race.
                   #pragma omp atomic update
 #endif
-                        *dst += power;
+                        out[ind] += power;
                     }
                 }
             }
         } else {
             // not reassignment, xx is surely within bounds.
-            assert(xx >= 0);
-            const auto res = Column(xx);
+            wxASSERT(xx >= 0);
+            float* const results = &out[nBins * xx];
 
             // Do the FFT.  Note that useBuffer is multiplied by the window,
             // and the window is initialized with leading and trailing zeroes
@@ -323,9 +308,8 @@ bool SpecCache::CalculateOneSpectrum(
             // the part of useBuffer in the padding zones.
 
             // This function mutates useBuffer
-            ComputeSpectrumUsingPffft(useBuffer,
-                                      settings.transformer, settings.window.get(), fftLen, work, res);
-            const auto results = res.get();
+            ComputeSpectrumUsingRealFFTf
+                (useBuffer, settings.hFFT.get(), settings.window.get(), fftLen, results);
             if (!gainFactors.empty()) {
                 // Apply a frequency-dependent gain factor
                 for (size_t ii = 0; ii < nBins; ++ii) {
@@ -347,7 +331,7 @@ void SpecCache::Grow(
     // len columns, and so many rows, column-major.
     // Don't take column literally -- this isn't pixel data yet, it's the
     // raw data to be mapped onto the display.
-    freq.resize(len_ * PffftTransformer::PaddedCount(settings.NBins()));
+    freq.resize(len_ * settings.NBins());
 
     // Sample counts corresponding to the columns, and to one past the end.
     where.resize(len_ + 1);
@@ -378,9 +362,9 @@ void SpecCache::Populate(
     const size_t fftLen = windowSizeSetting * zeroPaddingFactorSetting;
     const auto nBins = settings.NBins();
 
-    // One work area for pffft, one work area for the outputs, two extra
-    // output areas to compute reassignment
-    const size_t scratchSize = (reassignment ? 4u : 2u) * PffftTransformer::PaddedCount(fftLen);
+    const size_t bufferSize = fftLen;
+    const size_t scratchSize = reassignment ? 3 * bufferSize : bufferSize;
+    std::vector<float> scratch(scratchSize);
 
     std::vector<float> gainFactors;
     if (!autocorrelation) {
@@ -400,17 +384,14 @@ void SpecCache::Populate(
         QtConcurrent::blockingMap(
             xRange,
             [&](int xx) {
-            PffftFloatVector scratch(scratchSize);
-            auto work = scratch.aligned();
-            auto out = freq.aligned();
+            std::vector<float> scratch(scratchSize);
+            float* buffer = &scratch[0];
             CalculateOneSpectrum(
                 settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
-                gainFactors, work, out);
+                gainFactors, buffer, &freq[0]);
         });
 
         if (reassignment) {
-            PffftFloatVector scratch(scratchSize);
-
             // Need to look beyond the edges of the range to accumulate more
             // time reassignments.
             // I'm not sure what's a good stopping criterion?
@@ -419,8 +400,8 @@ void SpecCache::Populate(
                 =pixelsPerSecond * clip.GetStretchRatio() / sampleRate;
             const int limit = std::min((int)(0.5 + fftLen * pixelsPerSample), 100);
             for (int ii = 0; ii < limit; ++ii) {
-                auto work = scratch.aligned();
-                auto out = freq.aligned();
+                auto work = &scratch[0];
+                auto out = &freq[0];
                 const bool result = CalculateOneSpectrum(
                     settings, clip, --xx, pixelsPerSecond, lowerBoundX, upperBoundX,
                     gainFactors, work, out);
@@ -433,7 +414,7 @@ void SpecCache::Populate(
             for (int ii = 0; ii < limit; ++ii) {
                 const bool result = CalculateOneSpectrum(
                     settings, clip, xx++, pixelsPerSecond, lowerBoundX, upperBoundX,
-                    gainFactors, scratch.aligned(), freq.aligned());
+                    gainFactors, &scratch[0], &freq[0]);
                 if (!result) {
                     break;
                 }
@@ -441,8 +422,11 @@ void SpecCache::Populate(
 
             // Now Convert to dB terms.  Do this only after accumulating
             // power values, which may cross columns with the time correction.
+#ifdef _OPENMP
+         #pragma omp parallel for
+#endif
             QtConcurrent::blockingMap(xRange, [&](int xx) {
-                const auto results = freq.aligned(PffftTransformer::PaddedCount(nBins), xx).get();
+                float* const results = &freq[nBins * xx];
                 for (size_t ii = 0; ii < nBins; ++ii) {
                     float& power = results[ii];
                     if (power <= 0) {
@@ -523,17 +507,16 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 
     mSpecCache->leftTrim = clip.GetTrimLeft();
     mSpecCache->rightTrim = clip.GetTrimRight();
-    const auto columnSize = PffftTransformer::PaddedCount(settings.NBins());
-    auto& freq = mSpecCache->freq;
+    auto nBins = settings.NBins();
 
     // Optimization: if the old cache is good and overlaps
     // with the current one, re-use as much of the cache as
     // possible
     if (copyEnd > copyBegin) {
         // memmove is required since dst/src overlap
-        const auto dst = freq.aligned(columnSize, copyBegin).get();
-        const auto src = freq.aligned(columnSize, copyBegin + oldX0).get();
-        memmove(dst, src, columnSize * (copyEnd - copyBegin) * sizeof(float));
+        memmove(&mSpecCache->freq[nBins * copyBegin],
+                &mSpecCache->freq[nBins * (copyBegin + oldX0)],
+                nBins * (copyEnd - copyBegin) * sizeof(float));
     }
 
     // Resize the cache, keep the contents unchanged.
@@ -553,8 +536,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
         int zeroBegin = copyBegin > 0 ? 0 : copyEnd - copyBegin;
         int zeroEnd = copyBegin > 0 ? copyBegin : numPixels;
 
-        const auto dst = freq.aligned(columnSize, zeroBegin).get();
-        memset(dst, 0, columnSize * (zeroEnd - zeroBegin) * sizeof(float));
+        memset(&mSpecCache->freq[nBins * zeroBegin], 0, nBins * (zeroEnd - zeroBegin) * sizeof(float));
     }
 
     // purposely offset the display 1/2 sample to the left (as compared
