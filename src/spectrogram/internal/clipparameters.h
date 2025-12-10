@@ -14,8 +14,9 @@ struct ClipTimes {
     const double stretchRatio;
 };
 
-struct ClipParameters
+class ClipParameters
 {
+public:
     // Do a bunch of calculations common to waveform and spectrum drawing.
     /**
      * @param trackPaintableSubrect Let `rect` be the rectangle occupied by a track in the UI, including track header and the upper rectangle reserved for clip titles.
@@ -27,8 +28,13 @@ struct ClipParameters
 
     // Lower and upper visible time boundaries (relative to clip). If completely
     // off-screen, `t0 == t1`.
-    double visibleT0;
 
-    int leftOffset;
+    double visibleT0() const { return m_visibleT0; }
+
+    int leftOffset() const { return static_cast<int>(m_leftOffset); }
+
+private:
+    double m_visibleT0 = 0.0;
+    int m_leftOffset = 0;
 };
 }
