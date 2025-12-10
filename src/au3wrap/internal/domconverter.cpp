@@ -71,6 +71,26 @@ au::trackedit::TrackViewType trackViewType(const Au3Track* track)
         return type;
     }
 }
+
+bool trackSolo(const Au3Track* track)
+{
+    const auto* playableTrack = dynamic_cast<const PlayableTrack*>(track);
+    if (playableTrack == nullptr) {
+        return false;
+    }
+
+    return playableTrack->GetSolo();
+}
+
+bool trackMute(const Au3Track* track)
+{
+    const auto* playableTrack = dynamic_cast<const PlayableTrack*>(track);
+    if (playableTrack == nullptr) {
+        return false;
+    }
+
+    return playableTrack->GetMute();
+}
 }
 
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
@@ -114,6 +134,8 @@ au::trackedit::Track DomConverter::track(const Au3Track* track)
     au4t.format = trackFormat(track);
     au4t.viewType = trackViewType(track);
     au4t.rate = trackRate(track);
+    au4t.solo = trackSolo(track);
+    au4t.mute = trackMute(track);
     return au4t;
 }
 
