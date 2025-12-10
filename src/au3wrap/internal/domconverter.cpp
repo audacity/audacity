@@ -92,6 +92,26 @@ float trackVerticalZoom(const Au3Track* track)
     cache.GetDisplayBounds(min, max);
     return (max - min) / 2.0f;
 }
+
+bool trackSolo(const Au3Track* track)
+{
+    const auto* playableTrack = dynamic_cast<const PlayableTrack*>(track);
+    if (playableTrack == nullptr) {
+        return false;
+    }
+
+    return playableTrack->GetSolo();
+}
+
+bool trackMute(const Au3Track* track)
+{
+    const auto* playableTrack = dynamic_cast<const PlayableTrack*>(track);
+    if (playableTrack == nullptr) {
+        return false;
+    }
+
+    return playableTrack->GetMute();
+}
 }
 
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
@@ -137,6 +157,8 @@ au::trackedit::Track DomConverter::track(const Au3Track* track)
     au4t.viewType = trackViewType(track);
     au4t.rate = trackRate(track);
     au4t.verticalZoom = trackVerticalZoom(track);
+    au4t.solo = trackSolo(track);
+    au4t.mute = trackMute(track);
     return au4t;
 }
 
