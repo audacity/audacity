@@ -71,6 +71,9 @@ public:
     muse::ValCh<bool> isHalfWave(const trackedit::TrackId& trackId) const override;
     void toggleHalfWave(const trackedit::TrackId& trackId) override;
 
+    muse::ValCh<int> trackRulerType(const trackedit::TrackId& trackId) const override;
+    void setTrackRulerType(const trackedit::TrackId& trackId, int rulerType) override;
+
     muse::ValCh<int> verticalRulerWidth() const override;
 
     // State of user interaction
@@ -121,6 +124,7 @@ private:
         muse::ValCh<double> channelHeightRatio;
         muse::ValCh<std::pair<float, float> > verticalDisplayBounds;
         muse::ValCh<bool> isHalfWave;
+        muse::ValCh<int> rulerType;
     };
 
     mutable muse::ValCh<int> m_totalTracksHeight;

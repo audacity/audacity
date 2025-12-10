@@ -26,7 +26,7 @@ class TrackViewStateModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool isTrackCollapsed READ isTrackCollapsed NOTIFY isTrackCollapsedChanged FINAL)
     Q_PROPERTY(double channelHeightRatio READ channelHeightRatio NOTIFY channelHeightRatioChanged FINAL)
     Q_PROPERTY(QVariant displayBounds READ displayBounds NOTIFY displayBoundsChanged FINAL)
-    Q_PROPERTY(bool isHalfWave READ isHalfWave NOTIFY isHalfWaveChanged FINAL)
+    Q_PROPERTY(bool isLinear READ isLinear NOTIFY isLinearChanged FINAL)
 
     Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
     Q_PROPERTY(bool isRecording READ isRecording NOTIFY isRecordingChanged FINAL)
@@ -54,7 +54,8 @@ public:
     Q_INVOKABLE void changeChannelHeightRatio(double ratio);
 
     QVariant displayBounds() const;
-    bool isHalfWave() const;
+
+    bool isLinear() const;
 
     playback::PlaybackMeterModel* meterModel() const;
 
@@ -70,7 +71,7 @@ signals:
     void isPlayingChanged();
     void isRecordingChanged();
     void displayBoundsChanged();
-    void isHalfWaveChanged();
+    void isLinearChanged();
 
 private:
     IProjectViewStatePtr viewState() const;
@@ -80,7 +81,7 @@ private:
     muse::ValCh<bool> m_isTrackCollapsed;
     muse::ValCh<double> m_channelHeightRatio;
     muse::ValCh<std::pair<float, float> > m_displayBounds;
-    muse::ValCh<bool> m_isHalfWave;
+    muse::ValCh<int> m_rulerType;
 
     playback::PlaybackMeterModel* m_meterModel = nullptr;
 };

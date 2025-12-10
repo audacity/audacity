@@ -66,20 +66,19 @@ void TrackViewStateModel::init()
             emit displayBoundsChanged();
         }, muse::async::Asyncable::Mode::SetReplace);
 
-        m_isHalfWave = vs->isHalfWave(m_trackId);
-        m_isHalfWave.ch.onReceive(this, [this](bool isHalfWave) {
-            if (m_isHalfWave.val == isHalfWave) {
+        m_rulerType = vs->trackRulerType(m_trackId);
+        m_rulerType.ch.onReceive(this, [this](int type) {
+            if (m_rulerType.val == type) {
                 return;
             }
-            m_isHalfWave.val = isHalfWave;
-            emit isHalfWaveChanged();
+            m_rulerType.val = type;
+            emit isLinearChanged();
         }, muse::async::Asyncable::Mode::SetReplace);
 
         emit trackHeightChanged();
         emit isTrackCollapsedChanged();
         emit channelHeightRatioChanged();
         emit displayBoundsChanged();
-        emit isHalfWaveChanged();
     }
 
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
@@ -151,9 +150,15 @@ QVariant TrackViewStateModel::displayBounds() const
     });
 }
 
-bool TrackViewStateModel::isHalfWave() const
+bool TrackViewStateModel::isLinear() const
 {
-    return m_isHalfWave.val;
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return true;
+    }
+
+    const auto rulerType = prjViewState->trackRulerType(m_trackId).val;
+    return rulerType != static_cast<int>(au::trackedit::TrackRulerType::DbLog);
 }
 
 bool TrackViewStateModel::isPlaying() const

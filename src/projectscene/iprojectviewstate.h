@@ -57,6 +57,9 @@ public:
     virtual muse::ValCh<bool> isHalfWave(const trackedit::TrackId& trackId) const = 0;
     virtual void toggleHalfWave(const trackedit::TrackId& trackId) = 0;
 
+    virtual muse::ValCh<int> trackRulerType(const trackedit::TrackId& trackId) const = 0;
+    virtual void setTrackRulerType(const trackedit::TrackId& trackId, int rulerType) = 0;
+
     //State of user interaction
     virtual double mousePositionY() const = 0;
     virtual void setMousePositionY(double y) = 0;

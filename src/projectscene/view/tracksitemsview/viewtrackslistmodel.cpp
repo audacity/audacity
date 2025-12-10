@@ -278,12 +278,6 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case IsStereoRole:
         return track.type == au::trackedit::TrackType::Stereo;
 
-    case IsLinearRole:
-        return track.rulerType != au::trackedit::TrackRulerType::DbLog;
-
-    case TrackRulerTypeRole:
-        return static_cast<int>(track.rulerType);
-
     case IsWaveformViewVisibleRole:
         return track.viewType == au::trackedit::TrackViewType::Waveform
                || track.viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
@@ -291,13 +285,6 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case IsSpectrogramViewVisibleRole:
         return track.viewType == au::trackedit::TrackViewType::Spectrogram
                || track.viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
-
-    case AvailableRulerTypesRole:
-        return QVariant::fromValue(QList<QMap<QString, QVariant> > {
-            { { "label", "Logarithmic (dB)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLog) } },
-            { { "label", "Linear (dB)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLinear) } },
-            { { "label", "Linear (amp)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::Linear) } },
-        });
 
     case DbRangeRole:
         return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
@@ -321,9 +308,6 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { IsMultiSelectionActiveRole, "isMultiSelectionActive" },
         { IsTrackAudibleRole, "isTrackAudible" },
         { IsStereoRole, "isStereo" },
-        { IsLinearRole, "isLinear" },
-        { AvailableRulerTypesRole, "availableRulerTypes" },
-        { TrackRulerTypeRole, "trackRulerType" },
         { DbRangeRole, "dbRange" },
         { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
         { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" }
@@ -358,10 +342,4 @@ int ViewTracksListModel::totalTracksHeight() const
     }
 
     return viewState->totalTrackHeight().val;
-}
-
-void ViewTracksListModel::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType)
-{
-    trackeditInteraction()->changeTrackRulerType(trackId, static_cast<trackedit::TrackRulerType>(rulerType));
-    emit dataChanged(index(0), index(m_trackList.size() - 1), { TrackRulerTypeRole });
 }

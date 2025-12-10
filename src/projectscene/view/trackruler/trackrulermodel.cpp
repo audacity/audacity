@@ -4,6 +4,7 @@
 
 #include "trackrulermodel.h"
 
+#include "internal/projectviewstate.h"
 #include "trackedit/dom/track.h"
 #include "projectscene/view/trackruler/linearstereoruler.h"
 #include "projectscene/view/trackruler/linearmonoruler.h"
@@ -34,6 +35,23 @@ void TrackRulerModel::init()
         emit fullStepsChanged();
         emit smallStepsChanged();
     });
+
+    const auto prjViewState = viewState();
+    if (prjViewState == nullptr) {
+        return;
+    }
+
+    prjViewState->trackRulerType(m_trackId).ch.onReceive(this, [this](int) {
+        m_model = buildRulerModel();
+        emit fullStepsChanged();
+        emit smallStepsChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    prjViewState->verticalDisplayBounds(m_trackId).ch.onReceive(this, [this](std::pair<float, float> bounds) {
+        m_model->setDisplayBounds(bounds);
+        emit fullStepsChanged();
+        emit smallStepsChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 std::vector<QVariantMap> TrackRulerModel::fullSteps() const
@@ -157,16 +175,22 @@ void TrackRulerModel::setChannelHeightRatio(double channelHeightRatio)
 
 int TrackRulerModel::rulerType() const
 {
-    return m_rulerType;
+    const auto prjViewState = viewState();
+    if (prjViewState == nullptr) {
+        return static_cast<int>(au::trackedit::TrackRulerType::Linear);
+    }
+
+    return prjViewState->trackRulerType(m_trackId).val;
 }
 
 void TrackRulerModel::setRulerType(int rulerType)
 {
-    if (m_rulerType == rulerType) {
+    const auto prjViewState = viewState();
+    if (prjViewState == nullptr) {
         return;
     }
 
-    m_rulerType = rulerType;
+    prjViewState->setTrackRulerType(m_trackId, rulerType);
 
     m_model = buildRulerModel();
 
@@ -178,40 +202,39 @@ void TrackRulerModel::setRulerType(int rulerType)
     emit isMinZoomChanged();
 }
 
-QVariant TrackRulerModel::displayBounds() const
+QVariant TrackRulerModel::availableRulerTypes() const
 {
-    return QVariant::fromValue(m_displayBounds);
+    return QVariant::fromValue(QList<QMap<QString, QVariant> > {
+        { { "label", "Logarithmic (dB)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLog) } },
+        { { "label", "Linear (dB)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLinear) } },
+        { { "label", "Linear (amp)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::Linear) } },
+    });
 }
 
-void TrackRulerModel::setDisplayBounds(const QVariant& displayBounds)
+bool TrackRulerModel::isRulerTypeLinear() const
 {
-    QMap<QString, QVariant> boundsMap = displayBounds.toMap();
+    return rulerType() != static_cast<int>(au::trackedit::TrackRulerType::DbLog);
+}
 
-    QMap<QString, float> floatMap;
-    for (auto it = boundsMap.begin(); it != boundsMap.end(); ++it) {
-        floatMap[it.key()] = it.value().toFloat();
+QVariant TrackRulerModel::displayBounds() const
+{
+    const auto prjViewState = viewState();
+    if (prjViewState == nullptr) {
+        return QVariant();
     }
 
-    if (m_displayBounds == floatMap) {
-        return;
-    }
-
-    m_displayBounds = floatMap;
-
-    m_model = buildRulerModel();
-
-    emit fullStepsChanged();
-    emit smallStepsChanged();
-    emit isDefaultZoomChanged();
-    emit isMaxZoomChanged();
-    emit isMinZoomChanged();
+    muse::ValCh<std::pair<float, float> > bounds = prjViewState->verticalDisplayBounds(m_trackId);
+    QVariant::fromValue(QMap<QString, QVariant> {
+        { "min", bounds.val.first },
+        { "max", bounds.val.second }
+    });
 }
 
 std::shared_ptr<ITrackRuler> TrackRulerModel::buildRulerModel()
 {
     std::shared_ptr<ITrackRuler> model = nullptr;
 
-    const auto rulerType = static_cast<trackedit::TrackRulerType>(m_rulerType);
+    const auto rulerType = static_cast<trackedit::TrackRulerType>(this->rulerType());
     switch (rulerType) {
     case trackedit::TrackRulerType::DbLog:
         if (m_isStereo) {
@@ -243,7 +266,12 @@ std::shared_ptr<ITrackRuler> TrackRulerModel::buildRulerModel()
     model->setChannelHeightRatio(m_channelHeightRatio);
     model->setCollapsed(m_isCollapsed);
     model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
-    model->setDisplayBounds({ m_displayBounds["min"], m_displayBounds["max"] });
+
+    const auto prjViewState = viewState();
+    if (prjViewState != nullptr) {
+        std::pair<float, float> bounds = prjViewState->verticalDisplayBounds(m_trackId).val;
+        model->setDisplayBounds(bounds);
+    }
 
     return model;
 }
@@ -260,6 +288,8 @@ void TrackRulerModel::zoomIn()
     emit isDefaultZoomChanged();
     emit isMaxZoomChanged();
     emit isMinZoomChanged();
+    emit fullStepsChanged();
+    emit smallStepsChanged();
 }
 
 void TrackRulerModel::zoomOut()
@@ -274,6 +304,8 @@ void TrackRulerModel::zoomOut()
     emit isDefaultZoomChanged();
     emit isMaxZoomChanged();
     emit isMinZoomChanged();
+    emit fullStepsChanged();
+    emit smallStepsChanged();
 }
 
 void TrackRulerModel::resetZoom()
@@ -288,6 +320,8 @@ void TrackRulerModel::resetZoom()
     emit isDefaultZoomChanged();
     emit isMaxZoomChanged();
     emit isMinZoomChanged();
+    emit fullStepsChanged();
+    emit smallStepsChanged();
 }
 
 void TrackRulerModel::toggleHalfWave()

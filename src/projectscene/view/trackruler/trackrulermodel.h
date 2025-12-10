@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QVariantMap>
+#include <qvariant.h>
 
 #include "framework/global/async/asyncable.h"
 
@@ -32,11 +33,13 @@ class TrackRulerModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(double channelHeightRatio READ channelHeightRatio WRITE setChannelHeightRatio NOTIFY channelHeightRatioChanged FINAL)
 
+    Q_PROPERTY(QVariant availableRulerTypes READ availableRulerTypes CONSTANT FINAL)
     Q_PROPERTY(int rulerType READ rulerType WRITE setRulerType NOTIFY rulerTypeChanged FINAL)
+    Q_PROPERTY(bool isRulerTypeLinear READ isRulerTypeLinear CONSTANT FINAL)
 
     Q_PROPERTY(trackedit::TrackId trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
 
-    Q_PROPERTY(QVariant displayBounds READ displayBounds WRITE setDisplayBounds FINAL)
+    Q_PROPERTY(QVariant displayBounds READ displayBounds FINAL)
 
     Q_PROPERTY(bool isDefaultZoom READ isDefaultZoom NOTIFY isDefaultZoomChanged FINAL)
     Q_PROPERTY(bool isMaxZoom READ isMaxZoom NOTIFY isMaxZoomChanged FINAL)
@@ -71,9 +74,10 @@ public:
 
     int rulerType() const;
     void setRulerType(int rulerType);
+    QVariant availableRulerTypes() const;
+    bool isRulerTypeLinear() const;
 
     QVariant displayBounds() const;
-    void setDisplayBounds(const QVariant& displayBounds);
 
     bool isDefaultZoom() const;
     bool isMaxZoom() const;
@@ -116,10 +120,5 @@ private:
     bool m_isCollapsed = false;
     int m_height = 0;
     double m_channelHeightRatio = 0.5;
-    int m_rulerType = 2;
-    QMap<QString, float> m_displayBounds {
-        { "min", -1.0f },
-        { "max", 1.0f }
-    };
 };
 }

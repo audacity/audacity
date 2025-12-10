@@ -24,14 +24,12 @@
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/trackcolor.h"
-#include "au3wrap/internal/trackrulertypeattachment.h"
 #include "au3wrap/internal/trackviewtypeattachment.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
 #include "dom/track.h"
 #include "playback/playbacktypes.h"
-#include "realfn.h"
 #include "thirdparty/kors_logger/src/log_base.h"
 #include "trackediterrors.h"
 
@@ -145,20 +143,20 @@ bool Au3TracksInteraction::changeTracksColor(const TrackIdList& tracksIds, const
     return true;
 }
 
-bool Au3TracksInteraction::changeTrackRulerType(const trackedit::TrackId& trackId, trackedit::TrackRulerType rulerType)
-{
-    Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(track) {
-        return false;
-    }
+// bool Au3TracksInteraction::changeTrackRulerType(const trackedit::TrackId& trackId, trackedit::TrackRulerType rulerType)
+// {
+//     Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
+//     IF_ASSERT_FAILED(track) {
+//         return false;
+//     }
 
-    au::au3::TrackRulerTypeAttachment::Get(track).SetRulerType(rulerType);
-    adjustVerticalZoom(trackId);
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackChanged(DomConverter::track(track));
+//     au::au3::TrackRulerTypeAttachment::Get(track).SetRulerType(rulerType);
+//     adjustVerticalZoom(trackId);
+//     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+//     prj->notifyAboutTrackChanged(DomConverter::track(track));
 
-    return true;
-}
+//     return true;
+// }
 
 bool Au3TracksInteraction::changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
 {
@@ -1135,31 +1133,31 @@ bool Au3TracksInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
     return true;
 }
 
-void Au3TracksInteraction::adjustVerticalZoom(const trackedit::TrackId& trackId)
-{
-    // Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    // if (waveTrack == nullptr) {
-    //     return;
-    // }
+//void Au3TracksInteraction::adjustVerticalZoom(const trackedit::TrackId& trackId)
+//{
+// Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+// if (waveTrack == nullptr) {
+//     return;
+// }
 
-    // trackedit::Track track = DomConverter::track(waveTrack);
-    // float maxZoom = maxVerticalZoom(track);
+// trackedit::Track track = DomConverter::track(waveTrack);
+// float maxZoom = maxVerticalZoom(track);
 
-    // float min;
-    // float max;
-    // auto& cache = WaveformScale::Get(*waveTrack);
-    // cache.GetDisplayBounds(min, max);
-    // if (muse::is_equal(max, maxZoom)) {
-    //     return;
-    // }
+// float min;
+// float max;
+// auto& cache = WaveformScale::Get(*waveTrack);
+// cache.GetDisplayBounds(min, max);
+// if (muse::is_equal(max, maxZoom)) {
+//     return;
+// }
 
-    // if (max < maxZoom) {
-    //     cache.SetDisplayBounds(-maxZoom, maxZoom);
-    // }
+// if (max < maxZoom) {
+//     cache.SetDisplayBounds(-maxZoom, maxZoom);
+// }
 
-    // trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    // prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
-}
+// trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+// prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+//}
 
 double Au3TracksInteraction::nearestZeroCrossing(double t0) const
 {

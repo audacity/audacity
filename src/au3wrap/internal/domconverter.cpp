@@ -2,7 +2,6 @@
 
 #include "au3types.h"
 #include "trackcolor.h"
-#include "trackrulertypeattachment.h"
 #include "trackviewtypeattachment.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveClip.h"
@@ -62,11 +61,6 @@ int trackRate(const Au3Track* track)
     return waveTrack->GetRate();
 }
 
-au::trackedit::TrackRulerType trackRulerType(const Au3Track* track)
-{
-    return TrackRulerTypeAttachment::Get(track).GetRulerType();
-}
-
 au::trackedit::TrackViewType trackViewType(const Au3Track* track)
 {
     const auto type = TrackViewTypeAttachment::Get(track).GetTrackViewType();
@@ -118,7 +112,6 @@ au::trackedit::Track DomConverter::track(const Au3Track* track)
     }
 
     au4t.format = trackFormat(track);
-    au4t.rulerType = trackRulerType(track);
     au4t.viewType = trackViewType(track);
     au4t.rate = trackRate(track);
     return au4t;

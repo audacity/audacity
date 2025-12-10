@@ -118,16 +118,6 @@ bool TrackeditOperationController::changeTracksColor(const TrackIdList& tracksId
     return false;
 }
 
-bool TrackeditOperationController::changeTrackRulerType(const trackedit::TrackId& trackId, trackedit::TrackRulerType rulerType)
-{
-    if (tracksInteraction()->changeTrackRulerType(trackId, rulerType)) {
-        projectHistory()->modifyState();
-        projectHistory()->markUnsaved();
-        return true;
-    }
-    return false;
-}
-
 bool TrackeditOperationController::changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
 {
     if (tracksInteraction()->changeAudioTrackViewType(trackId, viewType)) {

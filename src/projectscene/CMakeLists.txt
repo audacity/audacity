@@ -35,6 +35,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/tapholdshortcut.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/tapholdshortcut.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/trackrulertypeattachment.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/trackrulertypeattachment.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/viewinfo.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/viewinfo.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/waveformscale.cpp

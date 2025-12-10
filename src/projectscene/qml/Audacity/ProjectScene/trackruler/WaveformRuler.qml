@@ -8,10 +8,6 @@ Item {
 
     required property bool isCollapsed
     required property real channelHeightRatio
-    required property var displayBounds
-    required property bool isHalfWave
-
-    signal setTrackRulerTypeRequested(int rulerType)
 
     Component.onCompleted: {
         rulerModel.init()
@@ -24,11 +20,9 @@ Item {
 
         trackId: model.trackId
         isStereo: model.isStereo
-        rulerType: model.trackRulerType
 
         isCollapsed: root.isCollapsed
         channelHeightRatio: root.channelHeightRatio
-        displayBounds: root.displayBounds
     }
 
     MouseArea {
@@ -42,18 +36,18 @@ Item {
 
     TrackRulerCustomizePopup {
         id: customisePopup
-        rulerType: model.trackRulerType
-        availableRulerTypes: model.availableRulerTypes
 
+        availableRulerTypes: rulerModel.availableRulerTypes
+        rulerType: rulerModel.rulerType
         isDefaultZoom: rulerModel.isDefaultZoom
         isMaxZoom: rulerModel.isMaxZoom
         isMinZoom: rulerModel.isMinZoom
-        isHalfWave: root.isHalfWave
+        isHalfWave: rulerModel.isHalfWave
 
         placementPolicies: PopupView.PreferLeft
 
         onRulerTypeChangeRequested: function (rulerType) {
-            root.setTrackRulerTypeRequested(rulerType)
+            rulerModel.rulerType = rulerType
         }
 
         onZoomInRequested: {

@@ -707,7 +707,6 @@ Rectangle {
                             isTrackFocused: itemData.isTrackFocused
                             isMultiSelectionActive: itemData.isMultiSelectionActive
                             isTrackAudible: itemData.isTrackAudible
-                            isLinear: itemData.isLinear
                             dbRange: itemData.dbRange
                             isWaveformViewVisible: itemData.isWaveformViewVisible
                             isSpectrogramViewVisible: itemData.isSpectrogramViewVisible

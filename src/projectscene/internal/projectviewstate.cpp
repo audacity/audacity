@@ -1,18 +1,23 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "projectviewstate.h"
+
+#include <memory>
+
+#include "framework/global/types/retval.h"
+
 #include "au3wrap/iau3project.h"
 #include "au3wrap/internal/projectsnap.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/au3types.h"
-#include "au3/viewinfo.h"
-#include "au3/waveformscale.h"
 #include "trackedit/dom/track.h"
-#include "types/number.h"
-#include "types/retval.h"
-#include <memory>
+
+#include "au3/waveformscale.h"
+#include "au3/viewinfo.h"
+#include "au3/trackrulertypeattachment.h"
+
+#include "projectviewstate.h"
 
 using namespace au::projectscene;
 
@@ -122,6 +127,32 @@ void setVerticalDisplayBounds(std::shared_ptr<au::au3::IAu3Project> project, con
 
     auto& cache = WaveformScale::Get(*waveTrack);
     cache.SetDisplayBounds(bounds.first, bounds.second);
+}
+
+int getTrackRulerType(std::shared_ptr<au::au3::IAu3Project> project, const au::trackedit::TrackId& trackId)
+{
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+
+    au::au3::Au3Track* track = au::au3::DomAccessor::findTrack(*au3Project, au::au3::Au3TrackId(trackId));
+    if (track == nullptr) {
+        return static_cast<int>(au::trackedit::TrackRulerType::Linear);
+    }
+
+    auto& cache = TrackRulerTypeAttachment::Get(track);
+    return static_cast<int>(cache.GetRulerType());
+}
+
+void setTrackRulerType(std::shared_ptr<au::au3::IAu3Project> project, const au::trackedit::TrackId& trackId, int rulerType)
+{
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+
+    au::au3::Au3Track* track = au::au3::DomAccessor::findTrack(*au3Project, au::au3::Au3TrackId(trackId));
+    if (track == nullptr) {
+        return;
+    }
+
+    auto& cache = TrackRulerTypeAttachment::Get(track);
+    cache.SetRulerType(static_cast<au::trackedit::TrackRulerType>(rulerType));
 }
 }
 
@@ -249,12 +280,14 @@ int ProjectViewState::trackVerticalPosition(const trackedit::TrackId& trackId) c
 ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::TrackId& trackId) const
 {
     const std::pair<float, float> defaultBounds = getVerticalDisplayBounds(m_au3Project, trackId);
+    const int defaultRulerType = getTrackRulerType(m_au3Project, trackId);
 
     TrackData d;
     d.collapsed.val = false;
     d.channelHeightRatio.val = 1.0;
     d.verticalDisplayBounds.val = defaultBounds;
     d.isHalfWave.val = (defaultBounds.first == 0.0f);
+    d.rulerType.val = defaultRulerType;
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (prj) {
@@ -519,7 +552,9 @@ float ProjectViewState::maxVerticalZoomLevel(const trackedit::TrackId& trackId) 
 
     trackedit::Track track = au::au3::DomConverter::track(waveTrack);
 
-    if (track.rulerType == trackedit::TrackRulerType::DbLog) {
+    const auto rulerType = static_cast<trackedit::TrackRulerType>(::getTrackRulerType(m_au3Project, trackId));
+
+    if (rulerType == trackedit::TrackRulerType::DbLog) {
         const int dBRange = static_cast<int>(playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange()));
         const int steps = (-dBRange - MIN_DISTANCE_FROM_RANGE) / DB_PER_STEP;
         return std::max(MIN_VERTICAL_RANGE, 1.0f / (1 << steps));
@@ -627,6 +662,27 @@ void ProjectViewState::toggleHalfWave(const trackedit::TrackId& trackId)
         it->second.verticalDisplayBounds.set(
             { isHalfWave ? -verticalMax : 0.0f, verticalMax });
         it->second.isHalfWave.set(!isHalfWave);
+        m_verticalRulerWidth.set(calculateVerticalRulerWidth());
+    }
+}
+
+muse::ValCh<int> ProjectViewState::trackRulerType(const trackedit::TrackId& trackId) const
+{
+    auto it = m_tracks.find(trackId);
+    if (it != m_tracks.end()) {
+        return it->second.rulerType;
+    }
+
+    const ProjectViewState::TrackData& d = makeTrackData(trackId);
+    return d.rulerType;
+}
+
+void ProjectViewState::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType)
+{
+    auto it = m_tracks.find(trackId);
+    if (it != m_tracks.end()) {
+        it->second.rulerType.set(rulerType);
+        ::setTrackRulerType(m_au3Project, trackId, rulerType);
         m_verticalRulerWidth.set(calculateVerticalRulerWidth());
     }
 }
@@ -788,8 +844,8 @@ int ProjectViewState::calculateVerticalRulerWidth() const
 
     float smallestBoundValue = 1;
     for (const auto& [trackId, trackData] : m_tracks) {
-        const auto track = prj->trackeditProject()->track(trackId);
-        if (!track || (track->rulerType != au::trackedit::TrackRulerType::Linear)) {
+        const auto rulerType = static_cast<au::trackedit::TrackRulerType>(::getTrackRulerType(m_au3Project, trackId));
+        if (rulerType != au::trackedit::TrackRulerType::Linear) {
             continue;
         }
 

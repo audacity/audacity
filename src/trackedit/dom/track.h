@@ -61,7 +61,6 @@ struct Track {
     TrackType type = TrackType::Undefined;
     muse::draw::Color color;
     TrackFormat format = TrackFormat::Undefined;
-    TrackRulerType rulerType = TrackRulerType::Linear;
     TrackViewType viewType = TrackViewType::Unspecified;
     uint64_t rate;
 };

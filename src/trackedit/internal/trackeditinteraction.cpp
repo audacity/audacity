@@ -76,11 +76,6 @@ bool TrackeditInteraction::changeTracksColor(const TrackIdList& tracksIds, const
     return m_interaction->changeTracksColor(tracksIds, color);
 }
 
-bool TrackeditInteraction::changeTrackRulerType(const trackedit::TrackId& trackId, trackedit::TrackRulerType rulerType)
-{
-    return m_interaction->changeTrackRulerType(trackId, rulerType);
-}
-
 bool TrackeditInteraction::changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
 {
     return m_interaction->changeAudioTrackViewType(trackId, viewType);

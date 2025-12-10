@@ -37,7 +37,6 @@ public:
     bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) override;
     bool changeTracksColor(const TrackIdList& tracksIds, const std::string& color) override;
-    bool changeTrackRulerType(const trackedit::TrackId& trackId, trackedit::TrackRulerType rulerType) override;
     bool changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) override;
 
     muse::Ret paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks, bool isMultiSelectionCopy,
@@ -115,8 +114,6 @@ private:
     int trackPosition(const TrackId trackId);
     void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
     void moveTrackTo(const TrackId trackId, int pos);
-
-    void adjustVerticalZoom(const trackedit::TrackId& trackId);
 
     context::IPlaybackStatePtr playbackState() const;
 
