@@ -136,6 +136,8 @@ set(MODULE_SRC ${MODULE_SRC}
 
     ${IMPORT_EXPORT_MODULE}/mod-opus/ExportOpus.cpp
     ${IMPORT_EXPORT_MODULE}/mod-opus/ExportOpus.h
+    ${IMPORT_EXPORT_MODULE}/mod-opus/ImportOpus.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-opus/ImportOpus.h
 
     # FFmpeg support (still compiled as sources, not yet converted to library)
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ImportFFmpeg.cpp

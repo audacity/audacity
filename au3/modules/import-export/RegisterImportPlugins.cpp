@@ -10,6 +10,7 @@
 #include "mod-pcm/ImportPCM.h"
 #include "mod-ogg/ImportOGG.h"
 #include "mod-flac/ImportFLAC.h"
+#include "mod-opus/ImportOpus.h"
 
 void RegisterImportPlugins()
 {
@@ -36,5 +37,10 @@ void RegisterImportPlugins()
     static Importer::RegisteredImportPlugin sFLACImportPlugin{
         "FLAC",
         std::make_unique< FLACImportPlugin >()
+    };
+
+    static Importer::RegisteredImportPlugin sOpusImportPlugin{
+        "Opus",
+        std::make_unique< OpusImportPlugin >()
     };
 }

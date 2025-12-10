@@ -76,6 +76,7 @@ set(AU3_LINK
     FLAC::FLAC++ # used by mod-flac not yet a library
     Ogg::ogg # transitive dependency of SndFile::sndfile
     Opus::opus # transitive dependency of SndFile::sndfile
+    opusfile::opusfile # used by mod-opus no yet a library
 )
 
 # Platform-specific libraries for au3wrap
