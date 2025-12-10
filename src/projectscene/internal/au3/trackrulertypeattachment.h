@@ -5,7 +5,7 @@
 
 #include "au3wrap/au3types.h"
 #include "trackedit/dom/track.h"
-#include "libraries/lib-track/Track.h"
+#include "au3-track/Track.h"
 
 class TrackRulerTypeAttachment : public TrackAttachment
 {
