@@ -115,8 +115,6 @@ private:
     int calculateVerticalRulerWidth() const;
     float maxVerticalZoomLevel(const trackedit::TrackId& trackId) const;
 
-    std::shared_ptr<au::au3::IAu3Project> m_au3Project;
-
     struct TrackData {
         muse::ValCh<int> height;
         muse::ValCh<bool> collapsed;
