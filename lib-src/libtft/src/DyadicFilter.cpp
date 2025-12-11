@@ -26,6 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "DyadicFilter.h"
 #include <assert.h>
 #include <algorithm>
+#include <cstring>
 
 const TF_DATA_TYPE DyadicFilter::filter_taps[DyadicFilter::cstFilterTaps] = {
  0.0000615047460950818,
