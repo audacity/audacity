@@ -20,7 +20,8 @@ void TrackSpectrogramSettingsModel::componentComplete()
     }
     doSetUseGlobalSettings(trackConfig->useGlobalSettings());
     const spectrogram::ISpectrogramConfiguration& originalConfig
-        = trackConfig->useGlobalSettings() ? *globalSpectrogramConfiguration() : *trackConfig;
+        = trackConfig->useGlobalSettings() ? static_cast<spectrogram::ISpectrogramConfiguration&>(*globalSpectrogramConfiguration()) : *
+          trackConfig;
     readFromConfig(originalConfig);
     m_configToRevertTo = std::make_unique<SnapshotSpectrogramConfiguration>(originalConfig);
     sendRepaintRequest();

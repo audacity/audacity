@@ -21,8 +21,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolorregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolors.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolors.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramconfiguration.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/globalspectrogramconfiguration.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/globalspectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.h
 

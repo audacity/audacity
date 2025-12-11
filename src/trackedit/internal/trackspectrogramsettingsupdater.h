@@ -4,7 +4,7 @@
 #pragma once
 
 #include "context/iglobalcontext.h"
-#include "spectrogram/ispectrogramconfiguration.h"
+#include "spectrogram/iglobalspectrogramconfiguration.h"
 #include "appshell/iappshellconfiguration.h"
 
 #include "framework/global/async/asyncable.h"
@@ -17,7 +17,7 @@ class Au3TrackSpectrogramConfiguration;
 class TrackSpectrogramSettingsUpdater : public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<spectrogram::ISpectrogramConfiguration> globalSpectrogramConfiguration;
+    muse::Inject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
     muse::Inject<au::appshell::IAppShellConfiguration> appShellConfiguration;
 
 public:
