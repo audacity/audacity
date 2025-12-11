@@ -10,11 +10,9 @@
 
 #include "framework/global/log.h"
 
-#include "au3-wave-track-settings/SpectrogramSettings.h"
+#include "spectrogram/internal/au3/SpectrogramSettings.h" // for now, track settings provider coming
 
 namespace au::trackedit {
-using Au3Setts = ::SpectrogramSettings;
-
 std::shared_ptr<Au3TrackSpectrogramConfiguration> Au3TrackSpectrogramConfiguration::create(int trackId,
                                                                                            const au::context::IGlobalContext& context)
 {
@@ -27,10 +25,10 @@ std::shared_ptr<Au3TrackSpectrogramConfiguration> Au3TrackSpectrogramConfigurati
     IF_ASSERT_FAILED(waveTrack) {
         return nullptr;
     }
-    return std::make_shared<Au3TrackSpectrogramConfiguration>(::SpectrogramSettings::Get(*waveTrack));
+    return std::make_shared<Au3TrackSpectrogramConfiguration>(spectrogram::SpectrogramSettings::Get(*waveTrack));
 }
 
-Au3TrackSpectrogramConfiguration::Au3TrackSpectrogramConfiguration(::SpectrogramSettings& settings)
+Au3TrackSpectrogramConfiguration::Au3TrackSpectrogramConfiguration(spectrogram::SpectrogramSettings& settings)
     : m_settings(settings)
 {}
 
@@ -142,7 +140,8 @@ muse::async::Channel<spectrogram::SpectrogramScale> Au3TrackSpectrogramConfigura
 
 spectrogram::SpectrogramScale Au3TrackSpectrogramConfiguration::scale() const
 {
-    return static_cast<spectrogram::SpectrogramScale>(fromAu3Scale(static_cast<Au3Setts::ScaleTypeValues>(m_settings.scaleType)));
+    return static_cast<spectrogram::SpectrogramScale>(fromAu3Scale(static_cast<spectrogram::SpectrogramSettings::ScaleTypeValues>(m_settings
+                                                                                                                                  .scaleType)));
 }
 
 void Au3TrackSpectrogramConfiguration::setScale(spectrogram::SpectrogramScale value)
@@ -163,7 +162,8 @@ muse::async::Channel<spectrogram::SpectrogramAlgorithm> Au3TrackSpectrogramConfi
 
 spectrogram::SpectrogramAlgorithm Au3TrackSpectrogramConfiguration::algorithm() const
 {
-    return static_cast<spectrogram::SpectrogramAlgorithm>(fromAu3Algorithm(static_cast<Au3Setts::AlgorithmValues>(m_settings.algorithm)));
+    return static_cast<spectrogram::SpectrogramAlgorithm>(fromAu3Algorithm(static_cast<spectrogram::SpectrogramSettings::AlgorithmValues>(
+                                                                               m_settings.algorithm)));
 }
 
 void Au3TrackSpectrogramConfiguration::setAlgorithm(spectrogram::SpectrogramAlgorithm value)

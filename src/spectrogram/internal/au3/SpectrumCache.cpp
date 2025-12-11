@@ -3,16 +3,17 @@
  */
 
 #include "SpectrumCache.h"
+#include "./SpectrogramSettings.h"
 #include "internal/spectrogramutils.h"
 
 #include "au3-fft/Spectrum.h"
-#include "au3-wave-track-settings/SpectrogramSettings.h"
 #include "au3-wave-track/Sequence.h"
 #include "au3-wave-track/WaveTrack.h"
 
 #include <cmath>
 #include <cassert>
 
+namespace au::spectrogram {
 namespace {
 static void ComputeSpectrumUsingRealFFTf
     (float* __restrict buffer, const FFTParam* hFFT,
@@ -611,4 +612,5 @@ void WaveClipSpectrumCache::Erase(size_t index)
     if (index < mSpecPxCaches.size()) {
         mSpecPxCaches.erase(mSpecPxCaches.begin() + index);
     }
+}
 }

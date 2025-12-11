@@ -1,15 +1,7 @@
-/**********************************************************************
-
-Audacity: A Digital Audio Editor
-
-SpectrogramSettings.h
-
-Paul Licameli
-
-**********************************************************************/
-
-#ifndef __AUDACITY_SPECTROGRAM_SETTINGS__
-#define __AUDACITY_SPECTROGRAM_SETTINGS__
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#pragma once
 
 #include "au3-math/SampleFormat.h"
 #include "au3-fft/RealFFTf.h"
@@ -23,6 +15,7 @@ class wxArrayStringEx;
 class WaveChannel;
 class WaveTrack;
 
+namespace au::spectrogram {
 class SpectrogramSettings : public TrackAttachment
 {
 public:
@@ -166,5 +159,4 @@ public:
 private:
     float mSpectrumMin = -1, mSpectrumMax = -1;
 };
-
-#endif
+}

@@ -5,8 +5,6 @@ UI-agnostic library for WaveTrack settings.
 set( TARGET au3-wave-track-settings )
 
 set( SOURCES
-   SpectrogramSettings.cpp
-   SpectrogramSettings.h
    WaveformSettings.cpp
    WaveformSettings.h
 )

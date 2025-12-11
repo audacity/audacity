@@ -3,17 +3,19 @@
  */
 #pragma once
 
+#include "au3-utility/MemoryX.h"
+#include "au3-wave-track/WaveClip.h" // to inherit WaveClipListener
+
+#include <vector>
+
 class sampleCount;
-class SpectrogramSettings;
 class WaveClipChannel;
 using WaveChannelInterval = WaveClipChannel;
 class WideSampleSequence;
 
-#include <vector>
-#include "au3-utility/MemoryX.h"
-#include "au3-wave-track/WaveClip.h" // to inherit WaveClipListener
-
+namespace au::spectrogram {
 using Floats = ArrayOf<float>;
+class SpectrogramSettings;
 
 class SpecCache
 {
@@ -121,3 +123,4 @@ struct WaveClipSpectrumCache final : WaveClipListener
     void SwapChannels() override;
     void Erase(size_t index) override;
 };
+}

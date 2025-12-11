@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "au3spectrogramclipchannelpainter.h"
+#include "./SpectrogramSettings.h"
 #include "./SpectrumCache.h"
 
 #include "internal/spectrogramcolors.h"
@@ -10,7 +11,6 @@
 
 #include "au3-screen-geometry/NumberScale.h"
 #include "au3-wave-track/WaveClip.h"
-#include "au3-wave-track-settings/SpectrogramSettings.h"
 
 namespace au::spectrogram {
 namespace {

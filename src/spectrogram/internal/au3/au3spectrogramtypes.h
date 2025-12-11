@@ -3,11 +3,10 @@
  */
 #pragma once
 
-class SpectrogramSettings;
-
 namespace au::spectrogram {
+class SpectrogramSettings;
 struct SpectrogramTrackContext {
-    ::SpectrogramSettings& settings;
+    SpectrogramSettings& settings;
     const bool trackIsSelected;
     const float minFreq;
     const float maxFreq;
