@@ -245,6 +245,21 @@ void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCod
         }
     }
 
+    if (containsAny(codes, { ActionCode(TRACK_VIEW_HALF_WAVE_ACTION) })) {
+        const auto project = globalContext()->currentProject();
+        assert(project);
+
+        const auto viewState = project->viewState();
+        assert(viewState);
+
+        const bool isHalfWave = viewState->isHalfWave(m_trackId).val;
+
+        MenuItem& item = findItem(ActionCode(TRACK_VIEW_HALF_WAVE_ACTION));
+        auto state = item.state();
+        state.checked = isHalfWave;
+        item.setState(state);
+    }
+
     for (const auto& formatInfo : au::trackedit::availableTrackFormats()) {
         if (std::find(codes.begin(), codes.end(), makeTrackFormatChangeAction(formatInfo.format).toString()) != codes.end()) {
             updateTrackFormatState();

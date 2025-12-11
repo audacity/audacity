@@ -12,7 +12,7 @@
 #include "framework/global/modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackconfiguration.h"
-#include "trackedit/trackedittypes.h"
+#include "framework/actions/iactionsdispatcher.h"
 
 #include "projectscene/view/trackruler/itrackruler.h"
 
@@ -21,6 +21,7 @@ class TrackRulerModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::playback::IPlaybackConfiguration> configuration;
     muse::Inject<au::context::IGlobalContext> globalContext;
 

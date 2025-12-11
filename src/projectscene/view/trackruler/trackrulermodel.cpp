@@ -13,6 +13,10 @@
 
 using namespace au::projectscene;
 
+namespace {
+const muse::actions::ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
+}
+
 TrackRulerModel::TrackRulerModel(QObject* parent)
     : QObject(parent)
 {
@@ -330,14 +334,9 @@ void TrackRulerModel::resetZoom()
 
 void TrackRulerModel::toggleHalfWave()
 {
-    const auto prjViewState = viewState();
-    if (!prjViewState) {
-        return;
-    }
-
-    prjViewState->toggleHalfWave(m_trackId);
-
-    emit isHalfWaveChanged();
+    muse::actions::ActionQuery query(TOGGLE_TRACK_HALF_WAVE);
+    query.addParam("trackId", muse::Val { m_trackId });
+    dispatcher()->dispatch(query);
 }
 
 bool TrackRulerModel::isDefaultZoom() const

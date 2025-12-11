@@ -133,6 +133,7 @@ void ProjectSceneActionsController::toggleTrackHalfWave(const muse::actions::Act
         return;
     }
     viewState->toggleHalfWave(trackId);
+    notifyActionCheckedChanged(TOGGLE_TRACK_HALF_WAVE.toString());
 }
 
 bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) const
