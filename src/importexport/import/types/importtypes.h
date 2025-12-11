@@ -8,8 +8,7 @@
 namespace au::importexport {
 struct FileInfo
 {
-    std::string filename;
     muse::io::path_t path;
-    double duration;
+    double duration = 0.0;
 };
-} // namespace au::importexport
+}

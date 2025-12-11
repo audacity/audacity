@@ -12,6 +12,7 @@
         <file>qml/Audacity/ProjectScene/tracksitemsview/LabelHeader.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/LabelEar.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/LabelStalk.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ImportDropArea.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItemButtonBackground.qml</file>
