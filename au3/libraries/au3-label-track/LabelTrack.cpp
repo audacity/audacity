@@ -958,9 +958,11 @@ bool LabelTrack::PasteOver(double t, const Track& src)
 void LabelTrack::Paste(double t, const Track& src, bool moveClips)
 {
     bool bOk = src.TypeSwitch<bool>([&](const LabelTrack& lt) {
-        double shiftAmt = lt.mClipLen > 0.0 ? lt.mClipLen : lt.GetEndTime();
+        if (moveClips) {
+            double shiftAmt = lt.mClipLen > 0.0 ? lt.mClipLen : lt.GetEndTime();
+            ShiftLabelsOnInsert(shiftAmt, t);
+        }
 
-        ShiftLabelsOnInsert(shiftAmt, t);
         PasteOver(t, src);
 
         return true;
