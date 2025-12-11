@@ -26,6 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "WaveletVoiceUnbuffered.h"
 #include <iostream>
 #include <assert.h>
+#include <tuple>
 
 WaveletVoiceUnbuffered::WaveletVoiceUnbuffered(const float overlapPercentage,
                            const DyadicFilter * dFilter,

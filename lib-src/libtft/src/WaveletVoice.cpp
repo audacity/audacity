@@ -26,6 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "WaveletVoice.h"
 #include <iostream>
 #include <assert.h>
+#include <tuple>
 
 WaveletVoice::WaveletVoice(const float overlapPercentage,
                            const DyadicFilter * dFilter,
