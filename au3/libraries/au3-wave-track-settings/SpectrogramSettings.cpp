@@ -222,6 +222,69 @@ void SpectrogramSettings::CopyTo(::Track& track) const
     specSettings = *this;
 }
 
+void SpectrogramSettings::WriteXMLAttributes(XMLWriter& writer) const
+{
+    writer.WriteAttr("syncWithGlobalSettings", syncWithGlobalSettings);
+    writer.WriteAttr("minFreq", minFreq);
+    writer.WriteAttr("maxFreq", maxFreq);
+    writer.WriteAttr("range", range);
+    writer.WriteAttr("gain", gain);
+    writer.WriteAttr("frequencyGain", frequencyGain);
+    writer.WriteAttr("windowType", windowType);
+    writer.WriteAttr("windowSize", windowSize);
+    writer.WriteAttr("zeroPaddingFactor", zeroPaddingFactor);
+    writer.WriteAttr("colorScheme", static_cast<int>(colorScheme));
+    writer.WriteAttr("scaleType", static_cast<int>(scaleType));
+    writer.WriteAttr("spectralSelection", spectralSelection);
+    writer.WriteAttr("algorithm", static_cast<int>(algorithm));
+}
+
+bool SpectrogramSettings::HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView)
+{
+    int nValue;
+    if (attr == "syncWithGlobalSettings" && valueView.TryGet(nValue)) {
+        syncWithGlobalSettings = (nValue != 0);
+        return true;
+    } else if (attr == "minFreq" && valueView.TryGet(nValue)) {
+        minFreq = nValue;
+        return true;
+    } else if (attr == "maxFreq" && valueView.TryGet(nValue)) {
+        maxFreq = nValue;
+        return true;
+    } else if (attr == "range" && valueView.TryGet(nValue)) {
+        range = nValue;
+        return true;
+    } else if (attr == "gain" && valueView.TryGet(nValue)) {
+        gain = nValue;
+        return true;
+    } else if (attr == "frequencyGain" && valueView.TryGet(nValue)) {
+        frequencyGain = nValue;
+        return true;
+    } else if (attr == "windowType" && valueView.TryGet(nValue)) {
+        windowType = nValue;
+        return true;
+    } else if (attr == "windowSize" && valueView.TryGet(nValue)) {
+        windowSize = nValue;
+        return true;
+    } else if (attr == "zeroPaddingFactor" && valueView.TryGet(nValue)) {
+        zeroPaddingFactor = nValue;
+        return true;
+    } else if (attr == "colorScheme" && valueView.TryGet(nValue)) {
+        colorScheme = ColorScheme(nValue);
+        return true;
+    } else if (attr == "scaleType" && valueView.TryGet(nValue)) {
+        scaleType = ScaleType(nValue);
+        return true;
+    } else if (attr == "spectralSelection" && valueView.TryGet(nValue)) {
+        spectralSelection = (nValue != 0);
+        return true;
+    } else if (attr == "algorithm" && valueView.TryGet(nValue)) {
+        algorithm = Algorithm(nValue);
+        return true;
+    }
+    return false;
+}
+
 void SpectrogramSettings::DestroyWindows()
 {
     hFFT.reset();
