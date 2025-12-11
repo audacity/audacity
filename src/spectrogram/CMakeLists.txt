@@ -26,6 +26,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrogramSettings.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrogramSettings.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrumCache.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrumCache.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogrampainter.cpp

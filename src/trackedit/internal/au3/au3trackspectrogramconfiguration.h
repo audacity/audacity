@@ -9,7 +9,9 @@ namespace au::context {
 class IGlobalContext;
 }
 
+namespace au::spectrogram {
 class SpectrogramSettings;
+}
 
 namespace au::trackedit {
 class Au3TrackSpectrogramConfiguration final : public spectrogram::ISpectrogramConfiguration
@@ -17,7 +19,7 @@ class Au3TrackSpectrogramConfiguration final : public spectrogram::ISpectrogramC
 public:
     static std::shared_ptr<Au3TrackSpectrogramConfiguration> create(int trackId, const context::IGlobalContext& globalContext);
 
-    Au3TrackSpectrogramConfiguration(::SpectrogramSettings&);
+    Au3TrackSpectrogramConfiguration(spectrogram::SpectrogramSettings&);
     ~Au3TrackSpectrogramConfiguration() override = default;
 
     bool spectralSelectionEnabled() const override;
@@ -80,6 +82,6 @@ private:
     muse::async::Channel<int> m_zeroPaddingFactorChanged;
     muse::async::Notification m_someSettingChanged;
 
-    ::SpectrogramSettings& m_settings;
+    spectrogram::SpectrogramSettings& m_settings;
 };
 }

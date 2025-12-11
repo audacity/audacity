@@ -1,18 +1,6 @@
-/**********************************************************************
-
-Audacity: A Digital Audio Editor
-
-SpectrogramSettings.cpp
-
-Paul Licameli
-
-*******************************************************************//**
-
-\class SpectrogramSettings
-\brief Spectrogram settings, either for one track or as defaults.
-
-*//*******************************************************************/
-
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #include "SpectrogramSettings.h"
 
 #include "au3-basic-ui/BasicUI.h"
@@ -23,11 +11,14 @@ Paul Licameli
 #include <algorithm>
 #include <cmath>
 
+namespace au::spectrogram {
+namespace {
 static const AttachedTrackObjects::RegisteredFactory key1{
     [](::Track&) -> std::shared_ptr<SpectrogramSettings> {
         return std::make_shared<SpectrogramSettings>();
     }
 };
+}
 
 const SpectrogramSettings& SpectrogramSettings::Get(const WaveTrack& track)
 {
@@ -550,4 +541,5 @@ void SpectrogramBounds::GetBounds(
             min = std::clamp(spectrumMin, bottom, top);
         }
     }
+}
 }
