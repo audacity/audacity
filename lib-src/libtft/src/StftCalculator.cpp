@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <assert.h>
 #include <iostream>
 #include <numeric>
+#include <cstring>
 
 using namespace std;
 
