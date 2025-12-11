@@ -85,7 +85,7 @@ IWavePainter::Params WaveView::getWavePainterParams() const
 
     params.zoom = m_context->zoom();
     params.fromTime = (m_clipTime.itemStartTime - m_clipTime.startTime);
-    params.toTime = params.fromTime + (m_clipTime.itemEndTime - m_clipTime.startTime);
+    params.toTime = params.fromTime + (m_clipTime.itemEndTime - m_clipTime.itemStartTime);
     params.selectionStartTime = m_clipTime.selectionStartTime;
     params.selectionEndTime = m_clipTime.selectionEndTime;
     params.channelHeightRatio = m_channelHeightRatio;
