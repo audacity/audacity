@@ -37,7 +37,7 @@ static const AttachedTrackObjects::RegisteredFactory key1{
         settings->SetZeroPaddingFactor(globalSettings.zeroPaddingFactor);
         settings->colorScheme = toAu3ColorScheme(globalSettings.colorScheme);
         settings->scaleType = toAu3Scale(globalSettings.scale);
-        settings->spectralSelection = globalSettings.spectralSelectionEnabled;
+        settings->spectralSelectionEnabled = globalSettings.spectralSelectionEnabled;
         settings->algorithm = toAu3Algorithm(globalSettings.algorithm);
 
         return settings;
@@ -68,10 +68,10 @@ Au3SpectrogramSettings::Au3SpectrogramSettings(const Au3SpectrogramSettings& oth
     , frequencyGain(other.frequencyGain)
     , m_windowType(other.m_windowType)
     , m_windowSize(other.m_windowSize)
-    , zeroPaddingFactor(other.zeroPaddingFactor)
+    , m_zeroPaddingFactor(other.m_zeroPaddingFactor)
     , colorScheme(other.colorScheme)
     , scaleType(other.scaleType)
-    , spectralSelection(other.spectralSelection)
+    , spectralSelectionEnabled(other.spectralSelectionEnabled)
     , algorithm(other.algorithm)
 
     // Do not copy these!
@@ -92,139 +92,16 @@ Au3SpectrogramSettings& Au3SpectrogramSettings::operator=(const Au3SpectrogramSe
         frequencyGain = other.frequencyGain;
         m_windowType = other.m_windowType;
         m_windowSize = other.m_windowSize;
-        zeroPaddingFactor = other.zeroPaddingFactor;
+        m_zeroPaddingFactor = other.m_zeroPaddingFactor;
         colorScheme = other.colorScheme;
         scaleType = other.scaleType;
-        spectralSelection = other.spectralSelection;
+        spectralSelectionEnabled = other.spectralSelectionEnabled;
         algorithm = other.algorithm;
 
         // Invalidate the caches
         DestroyWindows();
     }
     return *this;
-}
-
-//static
-const EnumValueSymbols& Au3SpectrogramSettings::GetScaleNames()
-{
-    static const EnumValueSymbols result{
-        // Keep in correspondence with enum Au3SpectrogramSettings::ScaleType:
-        XO("Linear"),
-        XO("Logarithmic"),
-        /* i18n-hint: The name of a frequency scale in psychoacoustics */
-        XO("Mel"),
-        /* i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen */
-        XO("Bark"),
-        /* i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth */
-        XO("ERB"),
-        /* i18n-hint: Time units, that is Period = 1 / Frequency */
-        XO("Period"),
-    };
-    return result;
-}
-
-//static
-const EnumValueSymbols& Au3SpectrogramSettings::GetColorSchemeNames()
-{
-    static const EnumValueSymbols result{
-        // Keep in correspondence with enum Au3SpectrogramSettings::ColorScheme:
-        /* i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme */
-        { wxT("SpecColorNew"),     XC("Color (Roseus)",    "spectrum prefs") },
-        /* i18n-hint: Classic color scheme(from theme) for spectrograms */
-        { wxT("SpecColorTheme"),   XC("Color (classic)",   "spectrum prefs") },
-        /* i18n-hint: Grayscale color scheme for spectrograms */
-        { wxT("SpecGrayscale"),    XC("Grayscale",         "spectrum prefs") },
-        /* i18n-hint: Inverse grayscale color scheme for spectrograms */
-        { wxT("SpecInvGrayscale"), XC("Inverse grayscale", "spectrum prefs") },
-    };
-
-    wxASSERT(csNumColorScheme == result.size());
-
-    return result;
-}
-
-//static
-const TranslatableStrings& Au3SpectrogramSettings::GetAlgorithmNames()
-{
-    static const TranslatableStrings results{
-        // Keep in correspondence with enum Au3SpectrogramSettings::Algorithm:
-        XO("Frequencies"),
-        /* i18n-hint: the Reassignment algorithm for spectrograms */
-        XO("Reassignment"),
-        /* i18n-hint: EAC abbreviates "Enhanced Autocorrelation" */
-        XO("Pitch (EAC)"),
-    };
-    return results;
-}
-
-bool Au3SpectrogramSettings::Validate(bool quiet)
-{
-    if (!quiet
-        && maxFreq < 100) {
-        BasicUI::ShowMessageBox(XO("Maximum frequency must be 100 Hz or above"));
-        return false;
-    } else {
-        maxFreq = std::max(100, maxFreq);
-    }
-
-    if (!quiet
-        && minFreq < 0) {
-        BasicUI::ShowMessageBox(XO("Minimum frequency must be at least 0 Hz"));
-        return false;
-    } else {
-        minFreq = std::max(0, minFreq);
-    }
-
-    if (!quiet
-        && maxFreq <= minFreq) {
-        BasicUI::ShowMessageBox(XO(
-                                    "Minimum frequency must be less than maximum frequency"));
-        return false;
-    } else {
-        maxFreq = std::max(1 + minFreq, maxFreq);
-    }
-
-    if (!quiet
-        && range <= 0) {
-        BasicUI::ShowMessageBox(XO("The range must be at least 1 dB"));
-        return false;
-    } else {
-        range = std::max(1, range);
-    }
-
-    if (!quiet
-        && frequencyGain < 0) {
-        BasicUI::ShowMessageBox(XO("The frequency gain cannot be negative"));
-        return false;
-    } else if (!quiet
-               && frequencyGain > 60) {
-        BasicUI::ShowMessageBox(XO(
-                                    "The frequency gain must be no more than 60 dB/dec"));
-        return false;
-    } else {
-        frequencyGain
-            =std::max(0, std::min(60, frequencyGain));
-    }
-
-    // The rest are controlled by drop-down menus so they can't go wrong
-    // in the Preferences dialog, but we also come here after reading fom saved
-    // preference files, which could be or from future versions.  Validate quietly.
-    m_windowType
-        =std::max(0, std::min(NumWindowFuncs() - 1, m_windowType));
-    scaleType
-        =ScaleType(std::max(0,
-                            std::min((int)(Au3SpectrogramSettings::stNumScaleTypes)-1,
-                                     (int)(scaleType))));
-    colorScheme = ColorScheme(
-        std::max(0, std::min<int>(csNumColorScheme - 1, colorScheme))
-        );
-    algorithm = Algorithm(
-        std::max(0, std::min((int)(algNumAlgorithms) - 1, (int)(algorithm)))
-        );
-    ConvertToEnumeratedWindowSizes();
-    ConvertToActualWindowSizes();
-
-    return true;
 }
 
 Au3SpectrogramSettings::~Au3SpectrogramSettings()
@@ -248,10 +125,10 @@ void Au3SpectrogramSettings::WriteXMLAttributes(XMLWriter& writer) const
     writer.WriteAttr("frequencyGain", frequencyGain);
     writer.WriteAttr("m_windowType", m_windowType);
     writer.WriteAttr("m_windowSize", m_windowSize);
-    writer.WriteAttr("zeroPaddingFactor", zeroPaddingFactor);
+    writer.WriteAttr("zeroPaddingFactor", m_zeroPaddingFactor);
     writer.WriteAttr("colorScheme", static_cast<int>(colorScheme));
     writer.WriteAttr("scaleType", static_cast<int>(scaleType));
-    writer.WriteAttr("spectralSelection", spectralSelection);
+    writer.WriteAttr("spectralSelectionEnabled", spectralSelectionEnabled);
     writer.WriteAttr("algorithm", static_cast<int>(algorithm));
 }
 
@@ -283,7 +160,7 @@ bool Au3SpectrogramSettings::HandleXMLAttribute(const std::string_view& attr, co
         m_windowSize = nValue;
         return true;
     } else if (attr == "zeroPaddingFactor" && valueView.TryGet(nValue)) {
-        zeroPaddingFactor = nValue;
+        m_zeroPaddingFactor = nValue;
         return true;
     } else if (attr == "colorScheme" && valueView.TryGet(nValue)) {
         colorScheme = ColorScheme(nValue);
@@ -291,8 +168,8 @@ bool Au3SpectrogramSettings::HandleXMLAttribute(const std::string_view& attr, co
     } else if (attr == "scaleType" && valueView.TryGet(nValue)) {
         scaleType = ScaleType(nValue);
         return true;
-    } else if (attr == "spectralSelection" && valueView.TryGet(nValue)) {
-        spectralSelection = (nValue != 0);
+    } else if (attr == "spectralSelectionEnabled" && valueView.TryGet(nValue)) {
+        spectralSelectionEnabled = (nValue != 0);
         return true;
     } else if (attr == "algorithm" && valueView.TryGet(nValue)) {
         algorithm = Algorithm(nValue);
@@ -406,36 +283,6 @@ void Au3SpectrogramSettings::SetWindowSize(int size)
     DestroyWindows();
 }
 
-void Au3SpectrogramSettings::ConvertToEnumeratedWindowSizes()
-{
-    unsigned size;
-    int logarithm;
-
-    logarithm = -LogMinWindowSize;
-    size = unsigned(m_windowSize);
-    while (size > 1) {
-        size >>= 1, ++logarithm;
-    }
-    m_windowSize = std::max(0, std::min(NumWindowSizes - 1, logarithm));
-
-    // Choices for zero padding begin at 1
-    logarithm = 0;
-    size = unsigned(zeroPaddingFactor);
-    while (zeroPaddingFactor > 1) {
-        zeroPaddingFactor >>= 1, ++logarithm;
-    }
-    zeroPaddingFactor = std::max(0,
-                                 std::min(LogMaxWindowSize - (m_windowSize + LogMinWindowSize),
-                                          logarithm
-                                          ));
-}
-
-void Au3SpectrogramSettings::ConvertToActualWindowSizes()
-{
-    m_windowSize = 1 << (m_windowSize + LogMinWindowSize);
-    zeroPaddingFactor = 1 << zeroPaddingFactor;
-}
-
 float Au3SpectrogramSettings::findBin(float frequency, float binUnit) const
 {
     float linearBin = frequency / binUnit;
@@ -448,11 +295,7 @@ float Au3SpectrogramSettings::findBin(float frequency, float binUnit) const
 
 size_t Au3SpectrogramSettings::GetFFTLength() const
 {
-//#ifndef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-    // return m_windowSize;
-//#else
-    return m_windowSize * ((algorithm != algPitchEAC) ? zeroPaddingFactor : 1);
-//#endif
+    return m_windowSize * ((algorithm != algPitchEAC) ? m_zeroPaddingFactor : 1);
 }
 
 size_t Au3SpectrogramSettings::NBins() const
@@ -491,11 +334,6 @@ NumberScale Au3SpectrogramSettings::GetScale(float minFreqIn, float maxFreqIn) c
     }
 
     return NumberScale(type, minFreqIn, maxFreqIn);
-}
-
-bool Au3SpectrogramSettings::SpectralSelectionEnabled() const
-{
-    return spectralSelection;
 }
 
 static const ChannelGroup::Attachments::RegisteredFactory
@@ -571,7 +409,16 @@ void SpectrogramBounds::GetBounds(
 void Au3SpectrogramSettings::SetZeroPaddingFactor(int factor)
 {
     assert(isPowerOfTwo(factor));
-    zeroPaddingFactor = factor;
+    m_zeroPaddingFactor = factor;
     DestroyWindows();
+}
+
+void Au3SpectrogramSettings::SetWindowType(int type)
+{
+    m_windowType = type;
+    DestroyWindows();
+}
+size_t Au3SpectrogramSettings::ZeroPaddingFactor() const {
+  return algorithm == algPitchEAC ? 1 : m_zeroPaddingFactor;
 }
 } // namespace au::spectrogram
