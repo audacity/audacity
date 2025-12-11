@@ -113,6 +113,7 @@ EffectStyledDialogView {
 
     DestructiveEffectViewerDialogModel {
         id: viewerModel
+        instanceId: root.instanceId
     }
 
     Column {
