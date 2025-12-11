@@ -3,15 +3,15 @@
  */
 #pragma once
 
-#include "ispectrogramconfiguration.h"
+#include "iglobalspectrogramconfiguration.h"
 
 #include "framework/global/async/asyncable.h"
 
 namespace au::spectrogram {
-class SpectrogramConfiguration : public ISpectrogramConfiguration, public muse::async::Asyncable
+class GlobalSpectrogramConfiguration : public IGlobalSpectrogramConfiguration, public muse::async::Asyncable
 {
 public:
-    ~SpectrogramConfiguration() override = default;
+    ~GlobalSpectrogramConfiguration() override = default;
 
     void init();
 

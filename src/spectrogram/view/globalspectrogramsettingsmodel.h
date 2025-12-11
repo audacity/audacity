@@ -4,7 +4,7 @@
 #pragma once
 
 #include "abstractspectrogramsettingsmodel.h"
-#include "spectrogram/ispectrogramconfiguration.h"
+#include "spectrogram/iglobalspectrogramconfiguration.h"
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
@@ -16,7 +16,7 @@ class GlobalSpectrogramSettingsModel : public AbstractSpectrogramSettingsModel, 
 {
     Q_OBJECT
 
-    muse::Inject<ISpectrogramConfiguration> configuration;
+    muse::Inject<IGlobalSpectrogramConfiguration> configuration;
 
 public:
     GlobalSpectrogramSettingsModel(QObject* parent = nullptr);

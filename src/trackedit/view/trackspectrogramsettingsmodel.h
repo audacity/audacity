@@ -4,7 +4,7 @@
 #pragma once
 
 #include "spectrogram/view/abstractspectrogramsettingsmodel.h"
-#include "spectrogram/ispectrogramconfiguration.h"
+#include "spectrogram/iglobalspectrogramconfiguration.h"
 #include "context/iglobalcontext.h"
 
 #include "framework/global/modularity/ioc.h"
@@ -22,7 +22,7 @@ class TrackSpectrogramSettingsModel : public spectrogram::AbstractSpectrogramSet
     Q_PROPERTY(QString trackTitle READ trackTitle NOTIFY trackIdChanged)
     Q_PROPERTY(bool useGlobalSettings READ useGlobalSettings WRITE setUseGlobalSettings NOTIFY useGlobalSettingsChanged)
 
-    muse::Inject<spectrogram::ISpectrogramConfiguration> globalSpectrogramConfiguration;
+    muse::Inject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
     muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:

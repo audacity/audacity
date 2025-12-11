@@ -43,18 +43,6 @@ void Au3TrackSpectrogramConfiguration::setSpectralSelectionEnabled(bool value)
         return;
     }
     m_settings.spectralSelection = value;
-    m_spectralSelectionEnabledChanged.send(value);
-    m_someSettingChanged.notify();
-}
-
-muse::async::Channel<bool> Au3TrackSpectrogramConfiguration::spectralSelectionEnabledChanged() const
-{
-    return m_spectralSelectionEnabledChanged;
-}
-
-muse::async::Channel<int> Au3TrackSpectrogramConfiguration::colorGainDbChanged() const
-{
-    return m_colorGainDbChanged;
 }
 
 int Au3TrackSpectrogramConfiguration::colorGainDb() const
@@ -68,13 +56,6 @@ void Au3TrackSpectrogramConfiguration::setColorGainDb(int value)
         return;
     }
     m_settings.gain = value;
-    m_colorGainDbChanged.send(value);
-    m_someSettingChanged.notify();
-}
-
-muse::async::Channel<int> Au3TrackSpectrogramConfiguration::colorRangeDbChanged() const
-{
-    return m_colorRangeDbChanged;
 }
 
 int Au3TrackSpectrogramConfiguration::colorRangeDb() const
@@ -88,13 +69,6 @@ void Au3TrackSpectrogramConfiguration::setColorRangeDb(int value)
         return;
     }
     m_settings.range = value;
-    m_colorRangeDbChanged.send(value);
-    m_someSettingChanged.notify();
-}
-
-muse::async::Channel<int> Au3TrackSpectrogramConfiguration::colorHighBoostDbPerDecChanged() const
-{
-    return m_colorHighBoostDbPerDecChanged;
 }
 
 int Au3TrackSpectrogramConfiguration::colorHighBoostDbPerDec() const
@@ -108,13 +82,6 @@ void Au3TrackSpectrogramConfiguration::setColorHighBoostDbPerDec(int value)
         return;
     }
     m_settings.frequencyGain = value;
-    m_colorHighBoostDbPerDecChanged.send(value);
-    m_someSettingChanged.notify();
-}
-
-muse::async::Channel<spectrogram::SpectrogramColorScheme> Au3TrackSpectrogramConfiguration::colorSchemeChanged() const
-{
-    return m_colorSchemeChanged;
 }
 
 spectrogram::SpectrogramColorScheme Au3TrackSpectrogramConfiguration::colorScheme() const
@@ -129,13 +96,6 @@ void Au3TrackSpectrogramConfiguration::setColorScheme(spectrogram::SpectrogramCo
         return;
     }
     m_settings.colorScheme = au3value;
-    m_colorSchemeChanged.send(value);
-    m_someSettingChanged.notify();
-}
-
-muse::async::Channel<spectrogram::SpectrogramScale> Au3TrackSpectrogramConfiguration::scaleChanged() const
-{
-    return m_scaleChanged;
 }
 
 spectrogram::SpectrogramScale Au3TrackSpectrogramConfiguration::scale() const
@@ -151,13 +111,6 @@ void Au3TrackSpectrogramConfiguration::setScale(spectrogram::SpectrogramScale va
         return;
     }
     m_settings.scaleType = au3value;
-    m_scaleChanged.send(value);
-    m_someSettingChanged.notify();
-}
-
-muse::async::Channel<spectrogram::SpectrogramAlgorithm> Au3TrackSpectrogramConfiguration::algorithmChanged() const
-{
-    return m_algorithmChanged;
 }
 
 spectrogram::SpectrogramAlgorithm Au3TrackSpectrogramConfiguration::algorithm() const
@@ -173,13 +126,6 @@ void Au3TrackSpectrogramConfiguration::setAlgorithm(spectrogram::SpectrogramAlgo
         return;
     }
     m_settings.algorithm = au3value;
-    m_algorithmChanged.send(value);
-    m_someSettingChanged.notify();
-}
-
-muse::async::Channel<spectrogram::SpectrogramWindowType> Au3TrackSpectrogramConfiguration::windowTypeChanged() const
-{
-    return m_windowTypeChanged;
 }
 
 spectrogram::SpectrogramWindowType Au3TrackSpectrogramConfiguration::windowType() const
@@ -194,13 +140,6 @@ void Au3TrackSpectrogramConfiguration::setWindowType(spectrogram::SpectrogramWin
         return;
     }
     m_settings.windowType = au3value;
-    m_windowTypeChanged.send(value);
-    m_someSettingChanged.notify();
-}
-
-muse::async::Channel<int> Au3TrackSpectrogramConfiguration::winSizeLog2Changed() const
-{
-    return m_winSizeLog2Changed;
 }
 
 int Au3TrackSpectrogramConfiguration::winSizeLog2() const
@@ -215,8 +154,6 @@ void Au3TrackSpectrogramConfiguration::setWinSizeLog2(int logValue)
         return;
     }
     m_settings.SetWindowSize(value);
-    m_winSizeLog2Changed.send(logValue);
-    m_someSettingChanged.notify();
 }
 
 int Au3TrackSpectrogramConfiguration::zeroPaddingFactor() const
@@ -230,13 +167,6 @@ void Au3TrackSpectrogramConfiguration::setZeroPaddingFactor(int value)
         return;
     }
     m_settings.zeroPaddingFactor = value;
-    m_zeroPaddingFactorChanged.send(value);
-    m_someSettingChanged.notify();
-}
-
-muse::async::Channel<int> Au3TrackSpectrogramConfiguration::zeroPaddingFactorChanged() const
-{
-    return m_zeroPaddingFactorChanged;
 }
 
 bool Au3TrackSpectrogramConfiguration::useGlobalSettings() const
@@ -278,9 +208,5 @@ void Au3TrackSpectrogramConfiguration::setAllSettings(const spectrogram::AllSpec
     setWinSizeLog2(allSettings.winSizeLog2);
     setZeroPaddingFactor(allSettings.zeroPaddingFactor);
 }
-
-muse::async::Notification Au3TrackSpectrogramConfiguration::someSettingChanged() const
-{
-    return m_someSettingChanged;
 }
-} // namespace au::spectrogram
+
