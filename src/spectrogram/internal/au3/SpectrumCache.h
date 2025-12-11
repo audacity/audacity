@@ -3,9 +3,12 @@
  */
 #pragma once
 
+#include "spectrogramtypes.h"
+
 #include "au3-utility/MemoryX.h"
 #include "au3-wave-track/WaveClip.h" // to inherit WaveClipListener
 
+#include <optional>
 #include <vector>
 
 class sampleCount;
@@ -23,10 +26,8 @@ public:
 
     // Make invalid cache
     SpecCache()
-        : algorithm(-1)
-        , spp(-1.0)
+        : spp(-1.0)
         , start(-1.0)
-        , windowType(-1)
         , frequencyGain(-1)
         , dirty(-1)
     {
@@ -49,12 +50,12 @@ public:
         double pixelsPerSecond);
 
     size_t len { 0 };      // counts pixels, not samples
-    int algorithm;
+    std::optional<SpectrogramAlgorithm> algorithm;
     double spp;      // samples per pixel
     double leftTrim{ .0 };
     double rightTrim{ .0 };
     double start;      // relative to clip start
-    int windowType;
+    std::optional<SpectrogramWindowType> windowType;
     size_t windowSize { 0 };
     unsigned zeroPaddingFactor { 0 };
     int frequencyGain;
@@ -79,19 +80,16 @@ public:
         : len{cacheLen}
         , values{len}
     {
-        scaleType = 0;
-        range = gain = -1;
-        minFreq = maxFreq = -1;
     }
 
     size_t len;
     Floats values;
 
-    int scaleType;
-    int range;
-    int gain;
-    int minFreq;
-    int maxFreq;
+    SpectrogramScale scaleType = static_cast<SpectrogramScale>(0);
+    int range = -1;
+    int gain = -1;
+    int minFreq = -1;
+    int maxFreq = -1;
 };
 
 struct WaveClipSpectrumCache final : WaveClipListener

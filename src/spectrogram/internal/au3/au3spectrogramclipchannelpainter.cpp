@@ -116,7 +116,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
     const double startFrequency = selectionInfo.startFrequency;
     const double endFrequency = selectionInfo.endFrequency;
 
-    const int& colorScheme = settings.colorScheme;
+    const SpectrogramColorScheme colorScheme = settings.colorScheme;
     const int& range = settings.range;
     const int& gain = settings.gain;
 
@@ -129,7 +129,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
 
     auto nBins = settings.NBins();
 
-    const Au3SpectrogramSettings::ScaleType scaleType = settings.scaleType;
+    const SpectrogramScale scaleType = settings.scaleType;
 
     // nearest frequency to each pixel row from number scale, for selecting
     // the desired fft bin(s) for display on that row
@@ -150,7 +150,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
         bins[yy] = nextBin;
     }
 
-    const bool autocorrelation = settings.algorithm == Au3SpectrogramSettings::algPitchEAC;
+    const bool autocorrelation = settings.algorithm == SpectrogramAlgorithm::Pitch;
     auto& clipCache = WaveClipSpectrumCache::Get(clipChannel);
     auto& specPxCache = clipCache.mSpecPxCaches[clipChannel.GetChannelIndex()];
     if (!updated && specPxCache

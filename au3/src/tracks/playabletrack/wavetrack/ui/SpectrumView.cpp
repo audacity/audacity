@@ -368,7 +368,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext& context,
     }
 
     auto& settings = SpectrogramSettings::Get(channel);
-    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
+    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::SpectrogramAlgorithm::Pitch);
 
     enum {
         DASH_LENGTH = 10   /* pixels */
