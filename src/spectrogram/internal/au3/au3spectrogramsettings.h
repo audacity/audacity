@@ -3,6 +3,8 @@
  */
 #pragma once
 
+#include "iglobalspectrogramconfiguration.h"
+
 #include "au3-math/SampleFormat.h"
 #include "au3-fft/RealFFTf.h"
 #include "au3-track/TrackAttachment.h"
@@ -19,6 +21,7 @@ namespace au::spectrogram {
 class Au3SpectrogramSettings : public TrackAttachment
 {
 public:
+    static void setGlobalSpectrogramConfiguration(std::weak_ptr<IGlobalSpectrogramConfiguration> globalConfig);
 
     enum {
         LogMinWindowSize = 3,

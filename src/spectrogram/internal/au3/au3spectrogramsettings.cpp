@@ -3,21 +3,51 @@
  */
 #include "au3spectrogramsettings.h"
 
+#include "iglobalspectrogramconfiguration.h"
+
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-fft/FFT.h"
 #include "au3-screen-geometry/NumberScale.h"
 #include "au3-wave-track/WaveTrack.h"
+
+#include "framework/global/log.h"
+#include "internal/au3/au3spectrogramutils.h"
 
 #include <algorithm>
 #include <cmath>
 
 namespace au::spectrogram {
 namespace {
+static std::weak_ptr<IGlobalSpectrogramConfiguration> sGlobalConfiguration;
+
 static const AttachedTrackObjects::RegisteredFactory key1{
     [](::Track&) -> std::shared_ptr<Au3SpectrogramSettings> {
-        return std::make_shared<Au3SpectrogramSettings>();
+        auto settings = std::make_shared<Au3SpectrogramSettings>();
+        const auto globalConfig = sGlobalConfiguration.lock();
+        IF_ASSERT_FAILED(globalConfig) {
+            return settings;
+        }
+
+        const SpectrogramSettings globalSettings = globalConfig->allSettings();
+        settings->range = globalSettings.colorRangeDb;
+        settings->gain = globalSettings.colorGainDb;
+        settings->frequencyGain = globalSettings.colorHighBoostDbPerDec;
+        settings->windowType = toAu3WindowType(globalSettings.windowType);
+        settings->SetWindowSize(1 << globalSettings.winSizeLog2);
+        settings->zeroPaddingFactor = globalSettings.zeroPaddingFactor;
+        settings->colorScheme = toAu3ColorScheme(globalSettings.colorScheme);
+        settings->scaleType = toAu3Scale(globalSettings.scale);
+        settings->spectralSelection = globalSettings.spectralSelectionEnabled;
+        settings->algorithm = toAu3Algorithm(globalSettings.algorithm);
+
+        return settings;
     }
 };
+}
+
+void Au3SpectrogramSettings::setGlobalSpectrogramConfiguration(std::weak_ptr<IGlobalSpectrogramConfiguration> globalConfig)
+{
+    sGlobalConfiguration = globalConfig;
 }
 
 const Au3SpectrogramSettings& Au3SpectrogramSettings::Get(const WaveTrack& track)
