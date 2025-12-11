@@ -47,6 +47,7 @@ for drawing different aspects of the label and its text box.
 
 const FileNames::FileType LabelTrack::SubripFiles{ XO("SubRip text file"), { wxT("srt") }, true };
 const FileNames::FileType LabelTrack::WebVTTFiles{ XO("WebVTT file"), { wxT("vtt") }, true };
+const FileNames::FileType LabelTrack::PodcastChaptersFiles{ XO("Podcast Chapters"), { wxT("json") }, true };
 const FileNames::FileType LabelTrack::AllSupportedFiles{ XO("Supported label file"), { wxT("srt"), wxT("txt") }, true };
 
 EnumSetting<bool> LabelStyleSetting {
@@ -557,7 +558,29 @@ static wxString SubRipTimestampFromDouble(double timestamp, bool webvtt)
    return dt.Format(webvtt ? webvttFormat : subripFormat, wxDateTime::UTC);
 }
 
-void LabelStruct::Export(wxTextFile &file, LabelFormat format, int index) const
+// Helper function to escape JSON special characters
+// Podcast 2.0 Chapters spec requires proper JSON escaping
+static wxString EscapeJSON(const wxString& input)
+{
+   wxString result;
+   result.reserve(input.length() * 2); // Reserve space for potential expansion
+   for (auto ch : input) {
+      wchar_t c = static_cast<wchar_t>(ch);
+      switch (c) {
+         case '\\': result += wxT("\\\\"); break;
+         case '"':  result += wxT("\\\""); break;
+         case '\n': result += wxT("\\n");  break;
+         case '\r': result += wxT("\\r");  break;
+         case '\t': result += wxT("\\t");  break;
+         case '\b': result += wxT("\\b");  break;
+         case '\f': result += wxT("\\f");  break;
+         default:   result += ch;          break;
+      }
+   }
+   return result;
+}
+
+void LabelStruct::Export(wxTextFile &file, LabelFormat format, int index, bool isLast) const
 {
    switch (format) {
    case LabelFormat::TEXT:
@@ -601,6 +624,23 @@ void LabelStruct::Export(wxTextFile &file, LabelFormat format, int index) const
       file.AddLine(title);
       file.AddLine(wxT(""));
 
+      break;
+   }
+   case LabelFormat::PODCAST_CHAPTERS_JSON:
+   {
+      // Individual chapter object (called from LabelTrack::Export)
+      // Format: {"startTime": X.XXX, "title": "..."}
+      // Podcast 2.0 Chapters spec version 1.2.0
+      wxString escapedTitle = EscapeJSON(title);
+      
+      // Use 4 spaces indentation (2 for array item + 2 for object) per JSON spec standard
+      wxString entry = wxString::Format(
+         wxT("    {\"startTime\": %s, \"title\": \"%s\"}%s"),
+         Internat::ToString(getT0(), 3),
+         escapedTitle,
+         isLast ? wxT("") : wxT(",")
+      );
+      file.AddLine(entry);
       break;
    }
    }
@@ -672,18 +712,44 @@ auto LabelStruct::RegionRelation(
    }
 }
 
-/// Export labels including label start and end-times.
-void LabelTrack::Export(wxTextFile & f, LabelFormat format) const
+void LabelTrack::ExportHeader(wxTextFile &f, LabelFormat format) const
 {
    if (format == LabelFormat::WEBVTT) {
       f.AddLine(wxT("WEBVTT"));
       f.AddLine(wxT(""));
    }
+   else if (format == LabelFormat::PODCAST_CHAPTERS_JSON) {
+      // JSON header per Podcast 2.0 Chapters spec version 1.2.0
+      f.AddLine(wxT("{"));
+      f.AddLine(wxT("  \"version\": \"1.2.0\","));
+      f.AddLine(wxT("  \"chapters\": ["));
+   }
+}
+
+void LabelTrack::ExportFooter(wxTextFile &f, LabelFormat format) const
+{
+   if (format == LabelFormat::PODCAST_CHAPTERS_JSON) {
+      // JSON footer per Podcast 2.0 Chapters spec
+      f.AddLine(wxT("  ]"));
+      f.AddLine(wxT("}"));
+   }
+}
+
+/// Export labels including label start and end-times.
+void LabelTrack::Export(wxTextFile & f, LabelFormat format) const
+{
+   ExportHeader(f, format);
 
    // PRL: to do: export other selection fields
    int index = 0;
-   for (auto &labelStruct: mLabels)
-      labelStruct.Export(f, format, index++);
+   int numLabels = mLabels.size();
+   for (auto &labelStruct: mLabels) {
+      bool isLast = (index == numLabels - 1);
+      labelStruct.Export(f, format, index, isLast);
+      ++index;
+   }
+   
+   ExportFooter(f, format);
 }
 
 LabelFormat LabelTrack::FormatForFileName(const wxString & fileName)
@@ -693,6 +759,8 @@ LabelFormat LabelTrack::FormatForFileName(const wxString & fileName)
       format = LabelFormat::SUBRIP;
    } else if (fileName.Right(4).CmpNoCase(wxT(".vtt")) == 0) {
       format = LabelFormat::WEBVTT;
+   } else if (fileName.Right(5).CmpNoCase(wxT(".json")) == 0) {
+      format = LabelFormat::PODCAST_CHAPTERS_JSON;
    }
    return format;
 }
