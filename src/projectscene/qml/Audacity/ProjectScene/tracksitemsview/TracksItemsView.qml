@@ -320,16 +320,29 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.topMargin: 24
 
-                x: playCursorController.positionX
+                x: playCursorController.positionX - (width / 2)
 
-                timelinePressed: timelineMouseArea.pressed
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: pressed || timelineMouseArea.pressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor
 
-                onSetPlaybackPosition: function (ix) {
-                    playCursorController.seekToX(ix)
-                }
+                    onPositionChanged: function (e) {
+                        var ix = mapToItem(timeline, e.x, e.y).x
+                        if (pressed) {
+                            playCursorController.seekToX(ix)
+                        }
+                        timeline.updateCursorPosition(ix, 0)
+                    }
 
-                onPlayCursorMousePositionChanged: function (ix) {
-                    timeline.updateCursorPosition(ix, 0)
+                    onReleased: function (e) {
+                        var ix = mapToItem(timeline, e.x, e.y).x
+                        playCursorController.seekToX(ix)
+                        if (!timelineMouseArea.playRegionActivated) {
+                            playCursorController.seekToX(ix, playbackState.isPlaying || timeline.context.playbackOnRulerClickEnabled)
+                            playCursorController.setPlaybackRegion(ix, ix)
+                        }
+                    }
                 }
             }
         }
