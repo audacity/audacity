@@ -118,16 +118,6 @@ bool TrackeditOperationController::changeTracksColor(const TrackIdList& tracksId
     return false;
 }
 
-bool TrackeditOperationController::changeTrackRulerType(const trackedit::TrackId& trackId, trackedit::TrackRulerType rulerType)
-{
-    if (tracksInteraction()->changeTrackRulerType(trackId, rulerType)) {
-        projectHistory()->modifyState();
-        projectHistory()->markUnsaved();
-        return true;
-    }
-    return false;
-}
-
 bool TrackeditOperationController::changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
 {
     if (tracksInteraction()->changeAudioTrackViewType(trackId, viewType)) {
@@ -759,36 +749,6 @@ bool TrackeditOperationController::stretchLabelRight(const LabelKey& labelKey, s
 std::optional<secs_t> TrackeditOperationController::getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const
 {
     return labelsInteraction()->getLeftmostLabelStartTime(labelKeys);
-}
-
-void TrackeditOperationController::zoomInVertically(const trackedit::TrackId& trackId)
-{
-    tracksInteraction()->zoomInVertically(trackId);
-}
-
-void TrackeditOperationController::zoomOutVertically(const trackedit::TrackId& trackId)
-{
-    tracksInteraction()->zoomOutVertically(trackId);
-}
-
-void TrackeditOperationController::resetVerticalZoom(const trackedit::TrackId& trackId)
-{
-    tracksInteraction()->resetVerticalZoom(trackId);
-}
-
-bool TrackeditOperationController::isDefaultVerticalZoom(const trackedit::TrackId& trackId) const
-{
-    return tracksInteraction()->isDefaultVerticalZoom(trackId);
-}
-
-bool TrackeditOperationController::isMaxVerticalZoom(const trackedit::TrackId& trackId) const
-{
-    return tracksInteraction()->isMaxVerticalZoom(trackId);
-}
-
-bool TrackeditOperationController::isMinVerticalZoom(const trackedit::TrackId& trackId) const
-{
-    return tracksInteraction()->isMinVerticalZoom(trackId);
 }
 
 muse::Progress TrackeditOperationController::progress() const

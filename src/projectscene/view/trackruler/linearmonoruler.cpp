@@ -1,17 +1,11 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "linearmonoruler.h"
-
 #include "framework/global/realfn.h"
 
-using namespace au::projectscene;
+#include "linearmonoruler.h"
 
-namespace {
-constexpr std::array<TrackRulerFullStep, 1> COLLAPSED_FULL_STEPS = { {
-    TrackRulerFullStep{ 0.0, 0, 0, true, true, false },
-} };
-}
+using namespace au::projectscene;
 
 double LinearMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t channel, [[maybe_unused]] bool isNegativeSample) const
 {
@@ -21,7 +15,9 @@ double LinearMonoRuler::stepToPosition(double step, [[maybe_unused]] size_t chan
 std::vector<TrackRulerFullStep> LinearMonoRuler::fullSteps() const
 {
     if (m_collapsed) {
-        return { COLLAPSED_FULL_STEPS.begin(), COLLAPSED_FULL_STEPS.end() };
+        return { TrackRulerFullStep{ ((m_maxDisplayValue - m_minDisplayValue) / 2.0) + m_minDisplayValue, 0, 0, IsBold::YES,
+                                     IsFullWidthTick::YES,
+                                     IsNegativeSample::NO } };
     }
 
     std::vector<double> steps = fullStepsValues(m_height);
@@ -30,8 +26,9 @@ std::vector<TrackRulerFullStep> LinearMonoRuler::fullSteps() const
     for (double v : steps) {
         result.push_back(TrackRulerFullStep { v, 0,
                                               getAlignment(v),
-                                              isBold(v),
-                                              muse::RealIsEqual(v, 0.0), v < 0.0 });
+                                              isBold(v) ? IsBold::YES : IsBold::NO,
+                                              muse::RealIsEqual(v, 0.0) ? IsFullWidthTick::YES : IsFullWidthTick::NO,
+                                              v < 0.0 ? IsNegativeSample::YES : IsNegativeSample::NO });
     }
 
     return result;
@@ -40,8 +37,8 @@ std::vector<TrackRulerFullStep> LinearMonoRuler::fullSteps() const
 std::vector<TrackRulerSmallStep> LinearMonoRuler::smallSteps() const
 {
     if (m_collapsed) {
-        return { TrackRulerSmallStep{ m_maxDisplayValue, 0, m_maxDisplayValue < 0.0 },
-                 TrackRulerSmallStep{ m_minDisplayValue, 0, m_minDisplayValue < 0.0 } };
+        return { TrackRulerSmallStep{ m_maxDisplayValue, 0, m_maxDisplayValue < 0.0 ? IsNegativeSample::YES : IsNegativeSample::NO },
+                 TrackRulerSmallStep{ m_minDisplayValue, 0, m_minDisplayValue < 0.0 ? IsNegativeSample::YES : IsNegativeSample::NO } };
     }
 
     std::vector<double> fullSteps = fullStepsValues(m_height);
@@ -53,7 +50,7 @@ std::vector<TrackRulerSmallStep> LinearMonoRuler::smallSteps() const
             continue;
         }
 
-        result.push_back(TrackRulerSmallStep { v, 0, v < 0.0 });
+        result.push_back(TrackRulerSmallStep { v, 0, v < 0.0 ? IsNegativeSample::YES : IsNegativeSample::NO });
     }
 
     return result;

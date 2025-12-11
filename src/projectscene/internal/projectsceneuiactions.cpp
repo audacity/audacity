@@ -230,6 +230,13 @@ static UiActionList STATIC_ACTIONS = {
              muse::shortcuts::CTX_PROJECT_OPENED,
              TranslatableString("action", "Multi track selection next"),
              TranslatableString("action", "Multi track selection next")
+             ),
+    UiAction("action://projectscene/track-view-half-wave",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Half-wave"),
+             TranslatableString("action", "Half-wave"),
+             Checkable::Yes
              )
 };
 

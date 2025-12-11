@@ -43,7 +43,6 @@ public:
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);
-    Q_INVOKABLE void setTrackRulerType(const trackedit::TrackId& trackId, int rulerType);
 
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -72,13 +71,9 @@ private:
         IsMultiSelectionActiveRole,
         IsTrackAudibleRole,
         IsStereoRole,
-        IsLinearRole,
-        AvailableRulerTypesRole,
-        TrackRulerTypeRole,
         IsWaveformViewVisibleRole,
         IsSpectrogramViewVisibleRole,
         DbRangeRole,
-        VerticalZoomRole,
     };
 
     std::vector<trackedit::Track> m_trackList;

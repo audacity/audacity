@@ -1,9 +1,6 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-
-#include "trackrulermodel.h"
-
 #include "trackedit/dom/track.h"
 #include "projectscene/view/trackruler/linearstereoruler.h"
 #include "projectscene/view/trackruler/linearmonoruler.h"
@@ -12,12 +9,24 @@
 #include "projectscene/view/trackruler/dblinearmonoruler.h"
 #include "projectscene/view/trackruler/dblinearstereoruler.h"
 
+#include "trackrulermodel.h"
+
 using namespace au::projectscene;
+
+namespace {
+const muse::actions::ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
+}
 
 TrackRulerModel::TrackRulerModel(QObject* parent)
     : QObject(parent)
 {
     m_model = buildRulerModel();
+}
+
+IProjectViewStatePtr TrackRulerModel::viewState() const
+{
+    au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    return prj ? prj->viewState() : nullptr;
 }
 
 void TrackRulerModel::init()
@@ -28,6 +37,29 @@ void TrackRulerModel::init()
         emit fullStepsChanged();
         emit smallStepsChanged();
     });
+
+    const auto prjViewState = viewState();
+    if (prjViewState == nullptr) {
+        return;
+    }
+
+    prjViewState->trackRulerType(m_trackId).ch.onReceive(this, [this](int) {
+        m_model = buildRulerModel();
+        emit fullStepsChanged();
+        emit smallStepsChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    prjViewState->verticalDisplayBounds(m_trackId).ch.onReceive(this, [this](std::pair<float, float> bounds) {
+        m_model->setDisplayBounds(bounds);
+        emit fullStepsChanged();
+        emit smallStepsChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    prjViewState->isHalfWave(m_trackId).ch.onReceive(this, [this](bool isHalfWave) {
+        emit isHalfWaveChanged();
+        emit fullStepsChanged();
+        emit smallStepsChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 std::vector<QVariantMap> TrackRulerModel::fullSteps() const
@@ -43,10 +75,10 @@ std::vector<QVariantMap> TrackRulerModel::fullSteps() const
         return QVariantMap {
             { "alignment", step.alignment },
             { "value", step.value },
-            { "y", stepToPosition(step.value, step.channel, step.isNegativeSample) },
+            { "y", stepToPosition(step.value, step.channel, static_cast<bool>(step.isNegativeSample)) },
             { "channel", static_cast<int>(step.channel) },
-            { "bold", step.isBold },
-            { "fullWidthTick", step.fullWidthTick }
+            { "bold", static_cast<bool>(step.isBold) },
+            { "fullWidthTick", static_cast<bool>(step.fullWidthTick) }
         };
     });
 
@@ -66,7 +98,7 @@ std::vector<QVariantMap> TrackRulerModel::smallSteps() const
         return QVariantMap {
             { "channel", static_cast<int>(step.channel) },
             { "value", step.value },
-            { "y", stepToPosition(step.value, step.channel, step.isNegativeSample) }
+            { "y", stepToPosition(step.value, step.channel, static_cast<bool>(step.isNegativeSample)) }
         };
     });
     return variantSteps;
@@ -151,16 +183,22 @@ void TrackRulerModel::setChannelHeightRatio(double channelHeightRatio)
 
 int TrackRulerModel::rulerType() const
 {
-    return m_rulerType;
+    const auto prjViewState = viewState();
+    if (prjViewState == nullptr) {
+        return static_cast<int>(au::trackedit::TrackRulerType::Linear);
+    }
+
+    return prjViewState->trackRulerType(m_trackId).val;
 }
 
 void TrackRulerModel::setRulerType(int rulerType)
 {
-    if (m_rulerType == rulerType) {
+    const auto prjViewState = viewState();
+    if (prjViewState == nullptr) {
         return;
     }
 
-    m_rulerType = rulerType;
+    prjViewState->setTrackRulerType(m_trackId, rulerType);
 
     m_model = buildRulerModel();
 
@@ -172,33 +210,39 @@ void TrackRulerModel::setRulerType(int rulerType)
     emit isMinZoomChanged();
 }
 
-float TrackRulerModel::verticalZoom() const
+QVariant TrackRulerModel::availableRulerTypes() const
 {
-    return m_verticalZoom;
+    return QVariant::fromValue(QList<QMap<QString, QVariant> > {
+        { { "label", "Logarithmic (dB)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLog) } },
+        { { "label", "Linear (dB)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLinear) } },
+        { { "label", "Linear (amp)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::Linear) } },
+    });
 }
 
-void TrackRulerModel::setVerticalZoom(float verticalZoom)
+bool TrackRulerModel::isRulerTypeLinear() const
 {
-    if (m_verticalZoom == verticalZoom) {
-        return;
+    return rulerType() != static_cast<int>(au::trackedit::TrackRulerType::DbLog);
+}
+
+QVariant TrackRulerModel::displayBounds() const
+{
+    const auto prjViewState = viewState();
+    if (prjViewState == nullptr) {
+        return QVariant();
     }
 
-    m_verticalZoom = verticalZoom;
-
-    m_model = buildRulerModel();
-
-    emit fullStepsChanged();
-    emit smallStepsChanged();
-    emit isDefaultZoomChanged();
-    emit isMaxZoomChanged();
-    emit isMinZoomChanged();
+    muse::ValCh<std::pair<float, float> > bounds = prjViewState->verticalDisplayBounds(m_trackId);
+    QVariant::fromValue(QMap<QString, QVariant> {
+        { "min", bounds.val.first },
+        { "max", bounds.val.second }
+    });
 }
 
 std::shared_ptr<ITrackRuler> TrackRulerModel::buildRulerModel()
 {
     std::shared_ptr<ITrackRuler> model = nullptr;
 
-    const auto rulerType = static_cast<trackedit::TrackRulerType>(m_rulerType);
+    const auto rulerType = static_cast<trackedit::TrackRulerType>(this->rulerType());
     switch (rulerType) {
     case trackedit::TrackRulerType::DbLog:
         if (m_isStereo) {
@@ -230,51 +274,109 @@ std::shared_ptr<ITrackRuler> TrackRulerModel::buildRulerModel()
     model->setChannelHeightRatio(m_channelHeightRatio);
     model->setCollapsed(m_isCollapsed);
     model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
-    model->setVerticalZoom(m_verticalZoom);
+
+    const auto prjViewState = viewState();
+    if (prjViewState != nullptr) {
+        std::pair<float, float> bounds = prjViewState->verticalDisplayBounds(m_trackId).val;
+        model->setDisplayBounds(bounds);
+    }
 
     return model;
 }
 
 void TrackRulerModel::zoomIn()
 {
-    trackeditInteraction()->zoomInVertically(m_trackId);
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return;
+    }
+
+    prjViewState->zoomInVertically(m_trackId);
 
     emit isDefaultZoomChanged();
     emit isMaxZoomChanged();
     emit isMinZoomChanged();
+    emit fullStepsChanged();
+    emit smallStepsChanged();
 }
 
 void TrackRulerModel::zoomOut()
 {
-    trackeditInteraction()->zoomOutVertically(m_trackId);
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return;
+    }
+
+    prjViewState->zoomOutVertically(m_trackId);
 
     emit isDefaultZoomChanged();
     emit isMaxZoomChanged();
     emit isMinZoomChanged();
+    emit fullStepsChanged();
+    emit smallStepsChanged();
 }
 
 void TrackRulerModel::resetZoom()
 {
-    trackeditInteraction()->resetVerticalZoom(m_trackId);
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return;
+    }
+
+    prjViewState->resetVerticalZoom(m_trackId);
 
     emit isDefaultZoomChanged();
     emit isMaxZoomChanged();
     emit isMinZoomChanged();
+    emit fullStepsChanged();
+    emit smallStepsChanged();
+}
+
+void TrackRulerModel::toggleHalfWave()
+{
+    muse::actions::ActionQuery query(TOGGLE_TRACK_HALF_WAVE);
+    query.addParam("trackId", muse::Val { m_trackId });
+    dispatcher()->dispatch(query);
 }
 
 bool TrackRulerModel::isDefaultZoom() const
 {
-    return trackeditInteraction()->isDefaultVerticalZoom(m_trackId);
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return false;
+    }
+
+    return prjViewState->isDefaultVerticalZoom(m_trackId);
 }
 
 bool TrackRulerModel::isMaxZoom() const
 {
-    return trackeditInteraction()->isMaxVerticalZoom(m_trackId);
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return false;
+    }
+
+    return prjViewState->isMaxVerticalZoom(m_trackId);
 }
 
 bool TrackRulerModel::isMinZoom() const
 {
-    return trackeditInteraction()->isMinVerticalZoom(m_trackId);
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return false;
+    }
+
+    return prjViewState->isMinVerticalZoom(m_trackId);
+}
+
+bool TrackRulerModel::isHalfWave() const
+{
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return false;
+    }
+
+    return prjViewState->isHalfWave(m_trackId).val;
 }
 
 void TrackRulerModel::setTrackId(const trackedit::TrackId& newTrackId)

@@ -354,7 +354,7 @@ std::optional<int> hitNearestSampleChannelIndex(std::shared_ptr<au::project::IAu
 
         const auto adjustedYPos = position.y() - top;
 
-        const auto baselineYPos = getWaveYPos(0.0, -params.verticalZoom, params.verticalZoom, waveMetrics.height, dB, true,
+        const auto baselineYPos = getWaveYPos(0.0, params.displayBounds.first, params.displayBounds.second, waveMetrics.height, dB, true,
                                               dBRange, false);
         if (std::abs(adjustedYPos - baselineYPos) <= BASELINE_HIT_AREA_SIZE) {
             return i;
@@ -366,7 +366,7 @@ std::optional<int> hitNearestSampleChannelIndex(std::shared_ptr<au::project::IAu
             continue;
         }
 
-        const auto ypos = getWaveYPos(tt, -params.verticalZoom, params.verticalZoom, waveMetrics.height, dB, true, dBRange,
+        const auto ypos = getWaveYPos(tt, params.displayBounds.first, params.displayBounds.second, waveMetrics.height, dB, true, dBRange,
                                       false);
 
         if (position.y() < top || position.y() > top + waveMetrics.height) {
@@ -456,7 +456,8 @@ void setIsolatedPoint(const unsigned int currentChannel, const trackedit::ClipKe
     const auto yy = std::max(y, 0); // Allow top edge
 
     float newValue
-        = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, -params.verticalZoom, params.verticalZoom);
+        = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, params.displayBounds.first,
+                                            params.displayBounds.second);
 
     // Ensure value stays within valid audio range
     newValue = std::clamp(newValue, -1.0f, 1.0f);
@@ -542,8 +543,8 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
             static_cast<int>(point.y() - channelTopOffset), static_cast<int>(waveMetrics.height - 1)); // Allow bottom edge
         const auto yy = std::max(y, 0); // Allow top edge
 
-        float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, -params.verticalZoom,
-                                                           params.verticalZoom);
+        float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, params.displayBounds.first,
+                                                           params.displayBounds.second);
 
         // Ensure value stays within valid audio range
         newValue = std::clamp(newValue, -1.0f, 1.0f);

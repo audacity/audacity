@@ -41,7 +41,6 @@ public:
     virtual bool resetClipSpeed(const ClipKey& clipKey) = 0;
     virtual bool changeClipColor(const ClipKey& clipKey, const std::string& color) = 0;
     virtual bool changeTracksColor(const TrackIdList& tracksIds, const std::string& color) = 0;
-    virtual bool changeTrackRulerType(const trackedit::TrackId& trackId, trackedit::TrackRulerType rulerType) = 0;
     virtual bool changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
@@ -132,13 +131,6 @@ public:
     virtual bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) = 0;
 
     virtual std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const = 0;
-
-    virtual void zoomInVertically(const trackedit::TrackId& trackId) = 0;
-    virtual void zoomOutVertically(const trackedit::TrackId& trackId) = 0;
-    virtual void resetVerticalZoom(const trackedit::TrackId& trackId) = 0;
-    virtual bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const = 0;
-    virtual bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const = 0;
-    virtual bool isMinVerticalZoom(const trackedit::TrackId& trackId) const = 0;
 
     virtual muse::Progress progress() const = 0;
 };

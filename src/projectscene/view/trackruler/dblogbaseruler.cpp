@@ -1,10 +1,10 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "dblogbaseruler.h"
-
 #include "framework/global/realfn.h"
 #include "framework/global/types/ratio.h"
+
+#include "dblogbaseruler.h"
 
 using namespace au::projectscene;
 
@@ -40,9 +40,10 @@ std::string DbLogBaseRuler::sampleToText(double sample) const
     return ss.str();
 }
 
-void DbLogBaseRuler::setVerticalZoom(float verticalZoom)
+void DbLogBaseRuler::setDisplayBounds(std::pair<float, float> displayBounds)
 {
-    m_maxDisplayValueDB = std::round(muse::linear_to_db(verticalZoom));
+    m_maxDisplayValueDB = std::round(muse::linear_to_db(displayBounds.second));
+    m_isHalfWave = muse::RealIsEqual(displayBounds.first, 0.0f);
 }
 
 bool DbLogBaseRuler::isBold(double value) const
@@ -52,7 +53,7 @@ bool DbLogBaseRuler::isBold(double value) const
 
 double DbLogBaseRuler::valueToPosition(double value, double height, bool isNegativeSample) const
 {
-    double middlePosition = height / 2.0;
+    double middlePosition = height / (m_isHalfWave ? 1.0 : 2.0);
 
     if (muse::RealIsEqual(value, m_dbRange)) {
         return middlePosition;

@@ -7,6 +7,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "playback/iplaybackconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/iprojecthistory.h"
 #include "../iprojectsceneconfiguration.h"
@@ -24,6 +25,7 @@ class ProjectViewState : public QObject, public IProjectViewState, public muse::
     muse::Inject<IProjectSceneConfiguration> configuration;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
 public:
     ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project);
@@ -56,6 +58,22 @@ public:
 
     void setSplitToolEnabled(const bool enabled) override;
     muse::ValCh<bool> splitToolEnabled() override;
+
+    muse::ValCh<std::pair<float, float> > verticalDisplayBounds(const trackedit::TrackId& trackId) const override;
+    void zoomInVertically(const trackedit::TrackId& trackId) override;
+    void zoomOutVertically(const trackedit::TrackId& trackId) override;
+    void resetVerticalZoom(const trackedit::TrackId& trackId) override;
+    bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const override;
+    bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const override;
+    bool isMinVerticalZoom(const trackedit::TrackId& trackId) const override;
+
+    muse::ValCh<bool> isHalfWave(const trackedit::TrackId& trackId) const override;
+    void toggleHalfWave(const trackedit::TrackId& trackId) override;
+
+    muse::ValCh<int> trackRulerType(const trackedit::TrackId& trackId) const override;
+    void setTrackRulerType(const trackedit::TrackId& trackId, int rulerType) override;
+
+    muse::ValCh<int> verticalRulerWidth() const override;
 
     // State of user interaction
     double mousePositionY() const override;
@@ -94,13 +112,20 @@ public:
     int trackDefaultHeight() const override;
 
 private:
+    int calculateVerticalRulerWidth() const;
+    float maxVerticalZoomLevel(const trackedit::TrackId& trackId) const;
+
     struct TrackData {
         muse::ValCh<int> height;
         muse::ValCh<bool> collapsed;
         muse::ValCh<double> channelHeightRatio;
+        muse::ValCh<std::pair<float, float> > verticalDisplayBounds;
+        muse::ValCh<bool> isHalfWave;
+        muse::ValCh<int> rulerType;
     };
 
     mutable muse::ValCh<int> m_totalTracksHeight;
+    mutable muse::ValCh<int> m_verticalRulerWidth;
 
     TrackData& makeTrackData(const trackedit::TrackId& trackId) const;
 

@@ -46,7 +46,6 @@ public:
     bool resetClipSpeed(const ClipKey& clipKey) override;
     bool changeClipColor(const ClipKey& clipKey, const std::string& color) override;
     bool changeTracksColor(const TrackIdList& tracksIds, const std::string& color) override;
-    bool changeTrackRulerType(const trackedit::TrackId& trackId, trackedit::TrackRulerType rulerType) override;
     bool changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
@@ -137,13 +136,6 @@ public:
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
 
     std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const override;
-
-    void zoomInVertically(const trackedit::TrackId& trackId) override;
-    void zoomOutVertically(const trackedit::TrackId& trackId) override;
-    void resetVerticalZoom(const trackedit::TrackId& trackId) override;
-    bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const override;
-    bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const override;
-    bool isMinVerticalZoom(const trackedit::TrackId& trackId) const override;
 
     muse::Progress progress() const override;
 

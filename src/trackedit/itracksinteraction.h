@@ -27,7 +27,6 @@ public:
     virtual bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) = 0;
 
     virtual bool changeTracksColor(const TrackIdList& trackId, const std::string& color) = 0;
-    virtual bool changeTrackRulerType(const trackedit::TrackId& trackId, trackedit::TrackRulerType rulerType) = 0;
     virtual bool changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) = 0;
 
     virtual muse::Ret paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks,
@@ -64,13 +63,6 @@ public:
     virtual bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) = 0;
     virtual bool makeStereoTrack(const TrackId left, const TrackId right) = 0;
     virtual bool resampleTracks(const TrackIdList& tracksIds, int rate) = 0;
-
-    virtual void zoomInVertically(const trackedit::TrackId& trackId) = 0;
-    virtual void zoomOutVertically(const trackedit::TrackId& trackId) = 0;
-    virtual void resetVerticalZoom(const trackedit::TrackId& trackId) = 0;
-    virtual bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const = 0;
-    virtual bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const = 0;
-    virtual bool isMinVerticalZoom(const trackedit::TrackId& trackId) const = 0;
 
     virtual double nearestZeroCrossing(double time) const = 0;
 

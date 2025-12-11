@@ -57,9 +57,28 @@ void TrackViewStateModel::init()
             emit channelHeightRatioChanged();
         }, muse::async::Asyncable::Mode::SetReplace);
 
+        m_displayBounds = vs->verticalDisplayBounds(m_trackId);
+        m_displayBounds.ch.onReceive(this, [this](std::pair<float, float> bounds) {
+            if (m_displayBounds.val == bounds) {
+                return;
+            }
+            m_displayBounds.val = bounds;
+            emit displayBoundsChanged();
+        }, muse::async::Asyncable::Mode::SetReplace);
+
+        m_rulerType = vs->trackRulerType(m_trackId);
+        m_rulerType.ch.onReceive(this, [this](int type) {
+            if (m_rulerType.val == type) {
+                return;
+            }
+            m_rulerType.val = type;
+            emit isLinearChanged();
+        }, muse::async::Asyncable::Mode::SetReplace);
+
         emit trackHeightChanged();
         emit isTrackCollapsedChanged();
         emit channelHeightRatioChanged();
+        emit displayBoundsChanged();
     }
 
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
@@ -120,6 +139,26 @@ bool TrackViewStateModel::isTrackCollapsed() const
 double TrackViewStateModel::channelHeightRatio() const
 {
     return m_channelHeightRatio.val;
+}
+
+QVariant TrackViewStateModel::displayBounds() const
+{
+    const auto& [min, max] = m_displayBounds.val;
+    return QVariant::fromValue(QMap<QString, QVariant> {
+        { "min", static_cast<double>(min) },
+        { "max", static_cast<double>(max) }
+    });
+}
+
+bool TrackViewStateModel::isLinear() const
+{
+    const auto prjViewState = viewState();
+    if (!prjViewState) {
+        return true;
+    }
+
+    const auto rulerType = prjViewState->trackRulerType(m_trackId).val;
+    return rulerType != static_cast<int>(au::trackedit::TrackRulerType::DbLog);
 }
 
 bool TrackViewStateModel::isPlaying() const

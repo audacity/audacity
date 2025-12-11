@@ -15,5 +15,7 @@ public:
     std::vector<TrackRulerSmallStep> smallSteps() const override;
 private:
     int getAlignment(double value, bool isNegativeSample) const;
+    std::vector<TrackRulerFullStep> fullStepsForHalfWave() const;
+    std::vector<TrackRulerFullStep> fullStepsForFullWave() const;
 };
 }

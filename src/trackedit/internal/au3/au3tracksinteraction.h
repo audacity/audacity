@@ -37,7 +37,6 @@ public:
     bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) override;
     bool changeTracksColor(const TrackIdList& tracksIds, const std::string& color) override;
-    bool changeTrackRulerType(const trackedit::TrackId& trackId, trackedit::TrackRulerType rulerType) override;
     bool changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) override;
 
     muse::Ret paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks, bool isMultiSelectionCopy,
@@ -74,13 +73,6 @@ public:
     bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) override;
     bool makeStereoTrack(const TrackId left, const TrackId right) override;
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
-
-    void zoomInVertically(const trackedit::TrackId& trackId) override;
-    void zoomOutVertically(const trackedit::TrackId& trackId) override;
-    void resetVerticalZoom(const trackedit::TrackId& trackId) override;
-    bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const override;
-    bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const override;
-    bool isMinVerticalZoom(const trackedit::TrackId& trackId) const override;
 
     double nearestZeroCrossing(double time) const override;
 
@@ -122,9 +114,6 @@ private:
     int trackPosition(const TrackId trackId);
     void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
     void moveTrackTo(const TrackId trackId, int pos);
-
-    float maxVerticalZoom(const trackedit::Track& track) const;
-    void adjustVerticalZoom(const trackedit::TrackId& trackId);
 
     context::IPlaybackStatePtr playbackState() const;
 

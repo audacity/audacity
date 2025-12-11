@@ -191,10 +191,6 @@ Rectangle {
 
                             isCollapsed: trackViewState.isTrackCollapsed
                             channelHeightRatio: trackViewState.channelHeightRatio
-
-                            onSetTrackRulerTypeRequested: function (rulerType) {
-                                root.model.setTrackRulerType(model.trackId, rulerType)
-                            }
                         }
 
                         SpectrogramRuler {

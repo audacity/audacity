@@ -14,6 +14,7 @@
 #include "record/irecordcontroller.h"
 
 #include "playback/view/common/playbackmetermodel.h"
+#include "types/val.h"
 
 namespace au::projectscene {
 class TrackViewStateModel : public QObject, public muse::async::Asyncable
@@ -24,6 +25,8 @@ class TrackViewStateModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(int trackHeight READ trackHeight NOTIFY trackHeightChanged FINAL)
     Q_PROPERTY(bool isTrackCollapsed READ isTrackCollapsed NOTIFY isTrackCollapsedChanged FINAL)
     Q_PROPERTY(double channelHeightRatio READ channelHeightRatio NOTIFY channelHeightRatioChanged FINAL)
+    Q_PROPERTY(QVariant displayBounds READ displayBounds NOTIFY displayBoundsChanged FINAL)
+    Q_PROPERTY(bool isLinear READ isLinear NOTIFY isLinearChanged FINAL)
 
     Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
     Q_PROPERTY(bool isRecording READ isRecording NOTIFY isRecordingChanged FINAL)
@@ -50,6 +53,10 @@ public:
     double channelHeightRatio() const;
     Q_INVOKABLE void changeChannelHeightRatio(double ratio);
 
+    QVariant displayBounds() const;
+
+    bool isLinear() const;
+
     playback::PlaybackMeterModel* meterModel() const;
 
     bool isPlaying() const;
@@ -63,6 +70,8 @@ signals:
     void meterModelChanged();
     void isPlayingChanged();
     void isRecordingChanged();
+    void displayBoundsChanged();
+    void isLinearChanged();
 
 private:
     IProjectViewStatePtr viewState() const;
@@ -71,6 +80,8 @@ private:
     muse::ValCh<int> m_trackHeight;
     muse::ValCh<bool> m_isTrackCollapsed;
     muse::ValCh<double> m_channelHeightRatio;
+    muse::ValCh<std::pair<float, float> > m_displayBounds;
+    muse::ValCh<int> m_rulerType;
 
     playback::PlaybackMeterModel* m_meterModel = nullptr;
 };

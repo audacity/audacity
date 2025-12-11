@@ -240,14 +240,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Spectrogram settings…"),
              TranslatableString("action", "Spectrogram settings…")
              ),
-    UiAction("action://trackedit/track-view-half-wave",
-             //! TODO: Change context when half-wave is implemented
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Half-wave"),
-             TranslatableString("action", "Half-wave"),
-             Checkable::Yes
-             ),
     UiAction("action://trackedit/paste-default",
              "action://paste",
              au::context::UiCtxProjectOpened,
