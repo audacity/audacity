@@ -75,6 +75,15 @@ Rectangle {
         console.log("GeneratedEffectViewer: preview() called")
     }
 
+    function startPreview() {
+        console.log("GeneratedEffectViewer: startPreview() called")
+    }
+
+    function stopPreview() {
+        console.log("GeneratedEffectViewer: stopPreview() called")
+    }
+
     property bool isApplyAllowed: true
     property bool usesPresets: true
+    property bool isPreviewing: false
 }
