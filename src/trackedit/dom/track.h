@@ -63,8 +63,10 @@ struct Track {
     TrackFormat format = TrackFormat::Undefined;
     TrackRulerType rulerType = TrackRulerType::Linear;
     TrackViewType viewType = TrackViewType::Unspecified;
-    uint64_t rate;
+    uint64_t rate = 0;
     float verticalZoom = 1.0f;
+    bool solo = false;
+    bool mute = false;
 };
 
 using TrackList = std::vector<Track>;
