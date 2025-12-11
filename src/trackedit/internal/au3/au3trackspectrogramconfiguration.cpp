@@ -27,7 +27,7 @@ std::shared_ptr<Au3TrackSpectrogramConfiguration> Au3TrackSpectrogramConfigurati
     IF_ASSERT_FAILED(waveTrack) {
         return nullptr;
     }
-    return std::make_shared<Au3TrackSpectrogramConfiguration>(::SpectrogramSettings::Own(*waveTrack));
+    return std::make_shared<Au3TrackSpectrogramConfiguration>(::SpectrogramSettings::Get(*waveTrack));
 }
 
 Au3TrackSpectrogramConfiguration::Au3TrackSpectrogramConfiguration(::SpectrogramSettings& settings)
