@@ -1,5 +1,9 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.7.7
+
+Hotfix: fixes broken waveform scrolling and selection for some users introduced in 3.7.6.
+
 Changes in version 3.7.6
 
 This is a patch release. It contains the following changes:
