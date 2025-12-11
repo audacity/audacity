@@ -2,7 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "au3spectrogramclipchannelpainter.h"
-#include "./SpectrogramSettings.h"
+#include "./au3spectrogramsettings.h"
 #include "./SpectrumCache.h"
 
 #include "internal/spectrogramcolors.h"
@@ -93,7 +93,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
                                                  const SelectionInfo& selectionInfo,
                                                  const SpectrogramTrackContext& tc, WaveClipChannel& clipChannel)
 {
-    SpectrogramSettings& settings = tc.settings;
+    Au3SpectrogramSettings& settings = tc.settings;
     const QRect paintableRect{ 0, 0, viewportWidth(viewInfo), image.height() };
     const ClipTimes clipTimes{
         clipChannel.GetPlayStartTime(),
@@ -129,7 +129,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
 
     auto nBins = settings.NBins();
 
-    const SpectrogramSettings::ScaleType scaleType = settings.scaleType;
+    const Au3SpectrogramSettings::ScaleType scaleType = settings.scaleType;
 
     // nearest frequency to each pixel row from number scale, for selecting
     // the desired fft bin(s) for display on that row
@@ -150,7 +150,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
         bins[yy] = nextBin;
     }
 
-    const bool autocorrelation = settings.algorithm == SpectrogramSettings::algPitchEAC;
+    const bool autocorrelation = settings.algorithm == Au3SpectrogramSettings::algPitchEAC;
     auto& clipCache = WaveClipSpectrumCache::Get(clipChannel);
     auto& specPxCache = clipCache.mSpecPxCaches[clipChannel.GetChannelIndex()];
     if (!updated && specPxCache

@@ -4,7 +4,7 @@
 #pragma once
 
 #include "spectrogram/spectrogramtypes.h"
-#include "spectrogram/internal/au3/SpectrogramSettings.h" // for now, track settings provider coming
+#include "spectrogram/internal/au3/au3spectrogramsettings.h" // for now, track settings provider coming
 
 #include "au3-fft/FFT.h" // eWindowFunctions
 
@@ -13,29 +13,29 @@ constexpr auto toAu3ColorScheme(spectrogram::SpectrogramColorScheme scheme)
 {
     switch (scheme) {
     case spectrogram::SpectrogramColorScheme::Roseus:
-        return spectrogram::SpectrogramSettings::ColorScheme::csColorNew;
+        return spectrogram::Au3SpectrogramSettings::ColorScheme::csColorNew;
     case spectrogram::SpectrogramColorScheme::Classic:
-        return spectrogram::SpectrogramSettings::ColorScheme::csColorTheme;
+        return spectrogram::Au3SpectrogramSettings::ColorScheme::csColorTheme;
     case spectrogram::SpectrogramColorScheme::Grayscale:
-        return spectrogram::SpectrogramSettings::ColorScheme::csGrayscale;
+        return spectrogram::Au3SpectrogramSettings::ColorScheme::csGrayscale;
     case spectrogram::SpectrogramColorScheme::InverseGrayscale:
-        return spectrogram::SpectrogramSettings::ColorScheme::csInvGrayscale;
+        return spectrogram::Au3SpectrogramSettings::ColorScheme::csInvGrayscale;
     default:
         assert(false);
-        return spectrogram::SpectrogramSettings::ColorScheme::csColorNew;
+        return spectrogram::Au3SpectrogramSettings::ColorScheme::csColorNew;
     }
 }
 
-constexpr int fromAu3ColorScheme(spectrogram::SpectrogramSettings::ColorScheme scheme)
+constexpr int fromAu3ColorScheme(spectrogram::Au3SpectrogramSettings::ColorScheme scheme)
 {
     switch (scheme) {
-    case spectrogram::SpectrogramSettings::ColorScheme::csColorNew:
+    case spectrogram::Au3SpectrogramSettings::ColorScheme::csColorNew:
         return static_cast<int>(spectrogram::SpectrogramColorScheme::Roseus);
-    case spectrogram::SpectrogramSettings::ColorScheme::csColorTheme:
+    case spectrogram::Au3SpectrogramSettings::ColorScheme::csColorTheme:
         return static_cast<int>(spectrogram::SpectrogramColorScheme::Classic);
-    case spectrogram::SpectrogramSettings::ColorScheme::csGrayscale:
+    case spectrogram::Au3SpectrogramSettings::ColorScheme::csGrayscale:
         return static_cast<int>(spectrogram::SpectrogramColorScheme::Grayscale);
-    case spectrogram::SpectrogramSettings::ColorScheme::csInvGrayscale:
+    case spectrogram::Au3SpectrogramSettings::ColorScheme::csInvGrayscale:
         return static_cast<int>(spectrogram::SpectrogramColorScheme::InverseGrayscale);
     default:
         assert(false);
@@ -47,37 +47,37 @@ constexpr auto toAu3Scale(spectrogram::SpectrogramScale scale)
 {
     switch (scale) {
     case spectrogram::SpectrogramScale::Linear:
-        return spectrogram::SpectrogramSettings::ScaleTypeValues::stLinear;
+        return spectrogram::Au3SpectrogramSettings::ScaleTypeValues::stLinear;
     case spectrogram::SpectrogramScale::Logarithmic:
-        return spectrogram::SpectrogramSettings::ScaleTypeValues::stLogarithmic;
+        return spectrogram::Au3SpectrogramSettings::ScaleTypeValues::stLogarithmic;
     case spectrogram::SpectrogramScale::Mel:
-        return spectrogram::SpectrogramSettings::ScaleTypeValues::stMel;
+        return spectrogram::Au3SpectrogramSettings::ScaleTypeValues::stMel;
     case spectrogram::SpectrogramScale::Bark:
-        return spectrogram::SpectrogramSettings::ScaleTypeValues::stBark;
+        return spectrogram::Au3SpectrogramSettings::ScaleTypeValues::stBark;
     case spectrogram::SpectrogramScale::ERB:
-        return spectrogram::SpectrogramSettings::ScaleTypeValues::stErb;
+        return spectrogram::Au3SpectrogramSettings::ScaleTypeValues::stErb;
     case spectrogram::SpectrogramScale::Period:
-        return spectrogram::SpectrogramSettings::ScaleTypeValues::stPeriod;
+        return spectrogram::Au3SpectrogramSettings::ScaleTypeValues::stPeriod;
     default:
         assert(false);
-        return spectrogram::SpectrogramSettings::ScaleTypeValues::stLinear;
+        return spectrogram::Au3SpectrogramSettings::ScaleTypeValues::stLinear;
     }
 }
 
-constexpr int fromAu3Scale(spectrogram::SpectrogramSettings::ScaleTypeValues scale)
+constexpr int fromAu3Scale(spectrogram::Au3SpectrogramSettings::ScaleTypeValues scale)
 {
     switch (scale) {
-    case spectrogram::SpectrogramSettings::ScaleTypeValues::stLinear:
+    case spectrogram::Au3SpectrogramSettings::ScaleTypeValues::stLinear:
         return static_cast<int>(spectrogram::SpectrogramScale::Linear);
-    case spectrogram::SpectrogramSettings::ScaleTypeValues::stLogarithmic:
+    case spectrogram::Au3SpectrogramSettings::ScaleTypeValues::stLogarithmic:
         return static_cast<int>(spectrogram::SpectrogramScale::Logarithmic);
-    case spectrogram::SpectrogramSettings::ScaleTypeValues::stMel:
+    case spectrogram::Au3SpectrogramSettings::ScaleTypeValues::stMel:
         return static_cast<int>(spectrogram::SpectrogramScale::Mel);
-    case spectrogram::SpectrogramSettings::ScaleTypeValues::stBark:
+    case spectrogram::Au3SpectrogramSettings::ScaleTypeValues::stBark:
         return static_cast<int>(spectrogram::SpectrogramScale::Bark);
-    case spectrogram::SpectrogramSettings::ScaleTypeValues::stErb:
+    case spectrogram::Au3SpectrogramSettings::ScaleTypeValues::stErb:
         return static_cast<int>(spectrogram::SpectrogramScale::ERB);
-    case spectrogram::SpectrogramSettings::ScaleTypeValues::stPeriod:
+    case spectrogram::Au3SpectrogramSettings::ScaleTypeValues::stPeriod:
         return static_cast<int>(spectrogram::SpectrogramScale::Period);
     default:
         assert(false);
@@ -147,25 +147,25 @@ constexpr auto toAu3Algorithm(spectrogram::SpectrogramAlgorithm algorithm)
 {
     switch (algorithm) {
     case spectrogram::SpectrogramAlgorithm::Frequencies:
-        return spectrogram::SpectrogramSettings::AlgorithmValues::algSTFT;
+        return spectrogram::Au3SpectrogramSettings::AlgorithmValues::algSTFT;
     case spectrogram::SpectrogramAlgorithm::Reassignment:
-        return spectrogram::SpectrogramSettings::AlgorithmValues::algReassignment;
+        return spectrogram::Au3SpectrogramSettings::AlgorithmValues::algReassignment;
     case spectrogram::SpectrogramAlgorithm::Pitch:
-        return spectrogram::SpectrogramSettings::AlgorithmValues::algPitchEAC;
+        return spectrogram::Au3SpectrogramSettings::AlgorithmValues::algPitchEAC;
     default:
         assert(false);
-        return static_cast<spectrogram::SpectrogramSettings::AlgorithmValues>(0);
+        return static_cast<spectrogram::Au3SpectrogramSettings::AlgorithmValues>(0);
     }
 }
 
-constexpr int fromAu3Algorithm(spectrogram::SpectrogramSettings::AlgorithmValues algorithm)
+constexpr int fromAu3Algorithm(spectrogram::Au3SpectrogramSettings::AlgorithmValues algorithm)
 {
     switch (algorithm) {
-    case spectrogram::SpectrogramSettings::AlgorithmValues::algSTFT:
+    case spectrogram::Au3SpectrogramSettings::AlgorithmValues::algSTFT:
         return static_cast<int>(spectrogram::SpectrogramAlgorithm::Frequencies);
-    case spectrogram::SpectrogramSettings::AlgorithmValues::algReassignment:
+    case spectrogram::Au3SpectrogramSettings::AlgorithmValues::algReassignment:
         return static_cast<int>(spectrogram::SpectrogramAlgorithm::Reassignment);
-    case spectrogram::SpectrogramSettings::AlgorithmValues::algPitchEAC:
+    case spectrogram::Au3SpectrogramSettings::AlgorithmValues::algPitchEAC:
         return static_cast<int>(spectrogram::SpectrogramAlgorithm::Pitch);
     default:
         assert(false);

@@ -3,7 +3,7 @@
  */
 
 #include "SpectrumCache.h"
-#include "./SpectrogramSettings.h"
+#include "./au3spectrogramsettings.h"
 #include "internal/spectrogramutils.h"
 
 #include "au3-fft/Spectrum.h"
@@ -72,7 +72,7 @@ void ComputeSpectrogramGainFactors
 
 bool SpecCache::Matches(
     int dirty_, double samplesPerPixel,
-    const SpectrogramSettings& settings) const
+    const Au3SpectrogramSettings& settings) const
 {
     // Make a tolerant comparison of the spp values in this wise:
     // accumulated difference of times over the number of pixels is less than
@@ -90,14 +90,14 @@ bool SpecCache::Matches(
 }
 
 bool SpecCache::CalculateOneSpectrum(
-    const SpectrogramSettings& settings, const WaveChannelInterval& clip,
+    const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip,
     const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
     const std::vector<float>& gainFactors, float* __restrict scratch,
     float* __restrict out) const
 {
     bool result = false;
     const bool reassignment
-        =(settings.algorithm == SpectrogramSettings::algReassignment);
+        =(settings.algorithm == Au3SpectrogramSettings::algReassignment);
     const size_t windowSizeSetting = settings.WindowSize();
 
     sampleCount from;
@@ -119,7 +119,7 @@ bool SpecCache::CalculateOneSpectrum(
     }
 
     const bool autocorrelation
-        =settings.algorithm == SpectrogramSettings::algPitchEAC;
+        =settings.algorithm == Au3SpectrogramSettings::algPitchEAC;
     const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
     const size_t padding = (windowSizeSetting * (zeroPaddingFactorSetting - 1)) / 2;
     const size_t fftLen = windowSizeSetting * zeroPaddingFactorSetting;
@@ -318,7 +318,7 @@ bool SpecCache::CalculateOneSpectrum(
 }
 
 void SpecCache::Grow(
-    size_t len_, SpectrogramSettings& settings, double samplesPerPixel,
+    size_t len_, Au3SpectrogramSettings& settings, double samplesPerPixel,
     double start_)
 {
     settings.CacheWindows();
@@ -342,16 +342,16 @@ void SpecCache::Grow(
 }
 
 void SpecCache::Populate(
-    const SpectrogramSettings& settings, const WaveChannelInterval& clip,
+    const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip,
     int copyBegin, int copyEnd, size_t numPixels, double pixelsPerSecond)
 {
     const auto sampleRate = clip.GetRate();
     const int& frequencyGainSetting = settings.frequencyGain;
     const size_t windowSizeSetting = settings.WindowSize();
     const bool autocorrelation
-        =settings.algorithm == SpectrogramSettings::algPitchEAC;
+        =settings.algorithm == Au3SpectrogramSettings::algPitchEAC;
     const bool reassignment
-        =settings.algorithm == SpectrogramSettings::algReassignment;
+        =settings.algorithm == Au3SpectrogramSettings::algReassignment;
     const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
 
     // FFT length may be longer than the window of samples that affect results
@@ -437,7 +437,7 @@ void SpecCache::Populate(
 
 bool WaveClipSpectrumCache::GetSpectrogram(
     const WaveChannelInterval& clip,
-    const float*& spectrogram, SpectrogramSettings& settings,
+    const float*& spectrogram, Au3SpectrogramSettings& settings,
     const long long*& where, size_t numPixels, double t0,
     double pixelsPerSecond)
 {
@@ -463,7 +463,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 
     // Caching is not implemented for reassignment, unless for
     // a complete hit, because of the complications of time reassignment
-    if (settings.algorithm == SpectrogramSettings::algReassignment) {
+    if (settings.algorithm == Au3SpectrogramSettings::algReassignment) {
         match = false;
     }
 
@@ -512,7 +512,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
     mSpecCache->Grow(numPixels, settings, samplesPerPixel, t0);
 
     // Reassignment accumulates, so it needs a zeroed buffer
-    if (settings.algorithm == SpectrogramSettings::algReassignment) {
+    if (settings.algorithm == Au3SpectrogramSettings::algReassignment) {
         // The cache could theoretically copy from the middle, resulting
         // in two regions to update. This won't happen in zoom, since
         // old cache doesn't match. It won't happen in resize, since the

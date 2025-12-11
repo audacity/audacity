@@ -18,7 +18,7 @@ void SpectrogramColors::PreComputeGradient()
     gradient_inited = 1;
     spectrogramColorRegister.EnsureInitialised();
 
-    // Keep in correspondence with enum SpectrogramSettings::ColorScheme
+    // Keep in correspondence with enum Au3SpectrogramSettings::ColorScheme
 
     // colorScheme 0: Color (New)
     std::copy_n(&roseusColormap[0][0], gradientSteps * 3, &gradient_pre[ColorGradientUnselected][0][0][0]);
