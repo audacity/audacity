@@ -28,6 +28,10 @@ void TrackSpectrogramSettingsModel::componentComplete()
 
 TrackSpectrogramSettingsModel::~TrackSpectrogramSettingsModel()
 {
+    if (!globalContext()->currentProject()) {
+        // Could happen if user is quitting the application
+        return;
+    }
     if (m_configToRevertTo) {
         readFromConfig(*m_configToRevertTo);
         apply();
