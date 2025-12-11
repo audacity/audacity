@@ -116,7 +116,7 @@ TrackItemsContainer {
                         visible: y < root.height
 
                         sourceComponent: {
-                            if ((itemData.x + itemData.visualWidth) < (0 - labelsModel.cacheBufferPx)) {
+                            if ((itemData.x + itemData.width) < (0 - labelsModel.cacheBufferPx)) {
                                 return null
                             }
 
