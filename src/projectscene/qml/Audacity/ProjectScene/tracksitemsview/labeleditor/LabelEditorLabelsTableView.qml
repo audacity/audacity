@@ -13,6 +13,8 @@ import Audacity.ProjectScene
 StyledTableView {
     id: root
 
+    property bool hasSelection: tableViewModel.selectionModel.hasSelection
+
     headerCapitalization: Font.Capitalize
 
     function addNewLabel() {

@@ -26,6 +26,8 @@ StyledDialogView {
         LabelEditorTopPanel {
             Layout.fillWidth: true
 
+            canRemove: labelsTableView.hasSelection
+
             onAddLabelRequested: {
                 labelsTableView.addNewLabel()
             }

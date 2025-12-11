@@ -308,7 +308,7 @@ TableViewCell* LabelsTableViewModel::makeTrackCell(const trackedit::TrackId& tra
 
     //! NOTE: The order is important.
     //! Setting the current track ID updates the selected item in the list of available tracks.
-    result->setAvailableTracks(makeAvailableTracksList(trackId));
+    result->setAvailableTracks(makeAvailableTracksList());
     result->setCurrentTrackId(trackId);
 
     return result;
@@ -339,7 +339,7 @@ std::vector<au::trackedit::Track> LabelsTableViewModel::allLabelTracks() const
     return result;
 }
 
-MenuItemList LabelsTableViewModel::makeAvailableTracksList(const trackedit::TrackId& currentTrackId)
+MenuItemList LabelsTableViewModel::makeAvailableTracksList()
 {
     std::vector<trackedit::Track> labelTracks = allLabelTracks();
     if (labelTracks.empty()) {
@@ -348,12 +348,13 @@ MenuItemList LabelsTableViewModel::makeAvailableTracksList(const trackedit::Trac
 
     MenuItemList result;
 
+    int index = 0;
     for (const trackedit::Track& track : labelTracks) {
         MenuItem* item = new MenuItem();
 
         ui::UiAction action;
         action.code = SELECT_LABEL_TRACK_CODE;
-        action.title = TranslatableString::untranslatable(track.title);
+        action.title = TranslatableString::untranslatable(String::number(index) + " - " + track.title);
         item->setAction(action);
 
         ui::UiActionState state;
@@ -366,6 +367,7 @@ MenuItemList LabelsTableViewModel::makeAvailableTracksList(const trackedit::Trac
         item->setId(QString::fromStdString(action.code) + action.title.qTranslatedWithoutMnemonic());
 
         result << item;
+        index++;
     }
 
     result << makeSeparator();
@@ -548,7 +550,7 @@ QString LabelsTableViewModel::createNewLabelTrack(int currentRow)
             continue;
         }
 
-        MenuItemList availableTracks = makeAvailableTracksList(trackCell->currentTrackId());
+        MenuItemList availableTracks = makeAvailableTracksList();
         trackCell->setAvailableTracks(availableTracks);
 
         if (currentRow == i) {
