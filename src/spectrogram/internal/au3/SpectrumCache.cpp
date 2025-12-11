@@ -82,7 +82,7 @@ bool SpecCache::Matches(
     return
         sppMatch
         && dirty == dirty_
-        && windowType == settings.windowType
+        && windowType == settings.WindowType()
         && windowSize == settings.WindowSize()
         && zeroPaddingFactor == settings.ZeroPaddingFactor()
         && frequencyGain == settings.frequencyGain
@@ -193,7 +193,7 @@ bool SpecCache::CalculateOneSpectrum(
             // This function does not mutate useBuffer
             ComputeSpectrum(
                 useBuffer, windowSizeSetting, windowSizeSetting, results,
-                autocorrelation, settings.windowType);
+                autocorrelation, settings.WindowType());
         } else if (reassignment) {
             static const double epsilon = 1e-16;
             const auto hFFT = settings.hFFT.get();
@@ -335,7 +335,7 @@ void SpecCache::Grow(
     algorithm = settings.algorithm;
     spp = samplesPerPixel;
     start = start_;
-    windowType = settings.windowType;
+    windowType = settings.WindowType();
     windowSize = settings.WindowSize();
     zeroPaddingFactor = settings.ZeroPaddingFactor();
     frequencyGain = settings.frequencyGain;
