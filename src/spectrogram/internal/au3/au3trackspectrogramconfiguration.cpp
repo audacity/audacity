@@ -2,7 +2,8 @@
  * Audacity: A Digital Audio Editor
  */
 #include "au3trackspectrogramconfiguration.h"
-#include "au3trackspectrogramutils.h"
+#include "au3spectrogramutils.h"
+#include "SpectrogramSettings.h"
 
 #include "project/iaudacityproject.h"
 #include "au3wrap/internal/domaccessor.h"
@@ -10,9 +11,7 @@
 
 #include "framework/global/log.h"
 
-#include "spectrogram/internal/au3/SpectrogramSettings.h" // for now, track settings provider coming
-
-namespace au::trackedit {
+namespace au::spectrogram {
 std::shared_ptr<Au3TrackSpectrogramConfiguration> Au3TrackSpectrogramConfiguration::create(int trackId,
                                                                                            const au::context::IGlobalContext& context)
 {
@@ -25,10 +24,10 @@ std::shared_ptr<Au3TrackSpectrogramConfiguration> Au3TrackSpectrogramConfigurati
     IF_ASSERT_FAILED(waveTrack) {
         return nullptr;
     }
-    return std::make_shared<Au3TrackSpectrogramConfiguration>(spectrogram::SpectrogramSettings::Get(*waveTrack));
+    return std::make_shared<Au3TrackSpectrogramConfiguration>(SpectrogramSettings::Get(*waveTrack));
 }
 
-Au3TrackSpectrogramConfiguration::Au3TrackSpectrogramConfiguration(spectrogram::SpectrogramSettings& settings)
+Au3TrackSpectrogramConfiguration::Au3TrackSpectrogramConfiguration(SpectrogramSettings& settings)
     : m_settings(settings)
 {}
 
@@ -84,12 +83,12 @@ void Au3TrackSpectrogramConfiguration::setColorHighBoostDbPerDec(int value)
     m_settings.frequencyGain = value;
 }
 
-spectrogram::SpectrogramColorScheme Au3TrackSpectrogramConfiguration::colorScheme() const
+SpectrogramColorScheme Au3TrackSpectrogramConfiguration::colorScheme() const
 {
-    return static_cast<spectrogram::SpectrogramColorScheme>(fromAu3ColorScheme(m_settings.colorScheme));
+    return static_cast<SpectrogramColorScheme>(fromAu3ColorScheme(m_settings.colorScheme));
 }
 
-void Au3TrackSpectrogramConfiguration::setColorScheme(spectrogram::SpectrogramColorScheme value)
+void Au3TrackSpectrogramConfiguration::setColorScheme(SpectrogramColorScheme value)
 {
     const auto au3value = toAu3ColorScheme(value);
     if (m_settings.colorScheme == au3value) {
@@ -98,13 +97,13 @@ void Au3TrackSpectrogramConfiguration::setColorScheme(spectrogram::SpectrogramCo
     m_settings.colorScheme = au3value;
 }
 
-spectrogram::SpectrogramScale Au3TrackSpectrogramConfiguration::scale() const
+SpectrogramScale Au3TrackSpectrogramConfiguration::scale() const
 {
-    return static_cast<spectrogram::SpectrogramScale>(fromAu3Scale(static_cast<spectrogram::SpectrogramSettings::ScaleTypeValues>(m_settings
+    return static_cast<SpectrogramScale>(fromAu3Scale(static_cast<SpectrogramSettings::ScaleTypeValues>(m_settings
                                                                                                                                   .scaleType)));
 }
 
-void Au3TrackSpectrogramConfiguration::setScale(spectrogram::SpectrogramScale value)
+void Au3TrackSpectrogramConfiguration::setScale(SpectrogramScale value)
 {
     const auto au3value = toAu3Scale(value);
     if (m_settings.scaleType == au3value) {
@@ -113,13 +112,13 @@ void Au3TrackSpectrogramConfiguration::setScale(spectrogram::SpectrogramScale va
     m_settings.scaleType = au3value;
 }
 
-spectrogram::SpectrogramAlgorithm Au3TrackSpectrogramConfiguration::algorithm() const
+SpectrogramAlgorithm Au3TrackSpectrogramConfiguration::algorithm() const
 {
-    return static_cast<spectrogram::SpectrogramAlgorithm>(fromAu3Algorithm(static_cast<spectrogram::SpectrogramSettings::AlgorithmValues>(
+    return static_cast<SpectrogramAlgorithm>(fromAu3Algorithm(static_cast<SpectrogramSettings::AlgorithmValues>(
                                                                                m_settings.algorithm)));
 }
 
-void Au3TrackSpectrogramConfiguration::setAlgorithm(spectrogram::SpectrogramAlgorithm value)
+void Au3TrackSpectrogramConfiguration::setAlgorithm(SpectrogramAlgorithm value)
 {
     const auto au3value = toAu3Algorithm(value);
     if (m_settings.algorithm == au3value) {
@@ -128,12 +127,12 @@ void Au3TrackSpectrogramConfiguration::setAlgorithm(spectrogram::SpectrogramAlgo
     m_settings.algorithm = au3value;
 }
 
-spectrogram::SpectrogramWindowType Au3TrackSpectrogramConfiguration::windowType() const
+SpectrogramWindowType Au3TrackSpectrogramConfiguration::windowType() const
 {
-    return static_cast<spectrogram::SpectrogramWindowType>(fromAu3WindowType(static_cast<::eWindowFunctions>(m_settings.windowType)));
+    return static_cast<SpectrogramWindowType>(fromAu3WindowType(static_cast<::eWindowFunctions>(m_settings.windowType)));
 }
 
-void Au3TrackSpectrogramConfiguration::setWindowType(spectrogram::SpectrogramWindowType value)
+void Au3TrackSpectrogramConfiguration::setWindowType(SpectrogramWindowType value)
 {
     const auto au3value = toAu3WindowType(value);
     if (m_settings.windowType == au3value) {
@@ -179,9 +178,9 @@ void Au3TrackSpectrogramConfiguration::setUseGlobalSettings(bool value)
     m_settings.syncWithGlobalSettings = value;
 }
 
-spectrogram::AllSpectrogramSettings Au3TrackSpectrogramConfiguration::allSettings() const
+AllSpectrogramSettings Au3TrackSpectrogramConfiguration::allSettings() const
 {
-    spectrogram::AllSpectrogramSettings allSettings;
+    AllSpectrogramSettings allSettings;
     allSettings.spectralSelectionEnabled = spectralSelectionEnabled();
     allSettings.colorGainDb = colorGainDb();
     allSettings.colorRangeDb = colorRangeDb();
@@ -195,7 +194,7 @@ spectrogram::AllSpectrogramSettings Au3TrackSpectrogramConfiguration::allSetting
     return allSettings;
 }
 
-void Au3TrackSpectrogramConfiguration::setAllSettings(const spectrogram::AllSpectrogramSettings& allSettings)
+void Au3TrackSpectrogramConfiguration::setAllSettings(const AllSpectrogramSettings& allSettings)
 {
     setSpectralSelectionEnabled(allSettings.spectralSelectionEnabled);
     setColorGainDb(allSettings.colorGainDb);

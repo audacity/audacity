@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "spectrogram/ispectrogramconfiguration.h"
+#include "itrackspectrogramconfiguration.h"
 
 namespace au::context {
 class IGlobalContext;
@@ -11,15 +11,13 @@ class IGlobalContext;
 
 namespace au::spectrogram {
 class SpectrogramSettings;
-}
 
-namespace au::trackedit {
-class Au3TrackSpectrogramConfiguration final : public spectrogram::ISpectrogramConfiguration
+class Au3TrackSpectrogramConfiguration final : public ITrackSpectrogramConfiguration
 {
 public:
     static std::shared_ptr<Au3TrackSpectrogramConfiguration> create(int trackId, const context::IGlobalContext& globalContext);
 
-    Au3TrackSpectrogramConfiguration(spectrogram::SpectrogramSettings&);
+    Au3TrackSpectrogramConfiguration(SpectrogramSettings&);
     ~Au3TrackSpectrogramConfiguration() override = default;
 
     bool spectralSelectionEnabled() const override;
@@ -34,17 +32,17 @@ public:
     int colorHighBoostDbPerDec() const override;
     void setColorHighBoostDbPerDec(int value) override;
 
-    spectrogram::SpectrogramColorScheme colorScheme() const override;
-    void setColorScheme(spectrogram::SpectrogramColorScheme value) override;
+    SpectrogramColorScheme colorScheme() const override;
+    void setColorScheme(SpectrogramColorScheme value) override;
 
-    spectrogram::SpectrogramScale scale() const override;
-    void setScale(spectrogram::SpectrogramScale value) override;
+    SpectrogramScale scale() const override;
+    void setScale(SpectrogramScale value) override;
 
-    spectrogram::SpectrogramAlgorithm algorithm() const override;
-    void setAlgorithm(spectrogram::SpectrogramAlgorithm value) override;
+    SpectrogramAlgorithm algorithm() const override;
+    void setAlgorithm(SpectrogramAlgorithm value) override;
 
-    spectrogram::SpectrogramWindowType windowType() const override;
-    void setWindowType(spectrogram::SpectrogramWindowType value) override;
+    SpectrogramWindowType windowType() const override;
+    void setWindowType(SpectrogramWindowType value) override;
 
     int winSizeLog2() const override;
     void setWinSizeLog2(int value) override;
@@ -55,10 +53,10 @@ public:
     bool useGlobalSettings() const;
     void setUseGlobalSettings(bool value);
 
-    spectrogram::AllSpectrogramSettings allSettings() const override;
-    void setAllSettings(const spectrogram::AllSpectrogramSettings&) override;
+    AllSpectrogramSettings allSettings() const override;
+    void setAllSettings(const AllSpectrogramSettings&) override;
 
 private:
-    spectrogram::SpectrogramSettings& m_settings;
+    SpectrogramSettings& m_settings;
 };
 }

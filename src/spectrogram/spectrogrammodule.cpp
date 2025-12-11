@@ -1,6 +1,7 @@
 #include "spectrogrammodule.h"
 
 #include "internal/globalspectrogramconfiguration.h"
+#include "internal/trackspectrogramconfigurationprovider.h"
 #include "internal/au3/au3spectrogrampainter.h"
 
 #include "view/abstractspectrogramsettingsmodel.h"
@@ -24,6 +25,7 @@ void SpectrogramModule::registerExports()
 {
     ioc()->registerExport<IGlobalSpectrogramConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<ISpectrogramPainter>(moduleName(), m_au3SpectrogramPainter);
+    ioc()->registerExport<ITrackSpectrogramConfigurationProvider>(moduleName(), new TrackSpectrogramConfigurationProvider);
 }
 
 void SpectrogramModule::registerUiTypes()

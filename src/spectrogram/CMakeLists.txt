@@ -6,6 +6,8 @@ declare_module(spectrogram)
 
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ispectrogramconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/iglobalspectrogramconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/itrackspectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/ispectrogrampainter.h
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.h
@@ -25,6 +27,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/globalspectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackspectrogramconfigurationprovider.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackspectrogramconfigurationprovider.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrogramSettings.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrogramSettings.h
@@ -34,6 +38,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogrampainter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogramclipchannelpainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogramclipchannelpainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogramutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackspectrogramconfiguration.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackspectrogramconfiguration.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/abstractsectionparameterslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/abstractsectionparameterslistmodel.h
