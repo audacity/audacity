@@ -87,7 +87,7 @@ int WaveletVoice::transform()
       {
          resultRe[i] = resultIm[i] = 0.0;
       }
-      return;
+      return resultLen;
    }
 
    TF_DATA_TYPE * ptRe = resultRe;
