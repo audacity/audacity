@@ -55,8 +55,8 @@ void ConnectingDotsPainter::paint(QPainter& painter, const trackedit::ClipKey& c
         // Draw center line at the middle of the current channel
         const int centerY = waveMetrics.top + waveMetrics.height / 2;
         samplespainterutils::drawCenterLine(painter, waveMetrics, params.style, centerY);
-        const auto samples = samplespainterutils::getSampleData(*waveClip, index, waveMetrics, dB, dBRange, params.verticalZoom,
-                                                                -params.verticalZoom);
+        const auto samples = samplespainterutils::getSampleData(*waveClip, index, waveMetrics, dB, dBRange, params.displayBounds.second,
+                                                                params.displayBounds.first);
         if (samples.size() == 0) {
             continue;
         }

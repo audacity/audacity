@@ -17,7 +17,7 @@ constexpr const char* TRACK_RATE_CHANGE_ACTION = "action://trackedit/track/chang
 constexpr const char* TRACK_VIEW_WAVEFORM_ACTION = "action://trackedit/track-view-waveform";
 constexpr const char* TRACK_VIEW_SPECTROGRAM_ACTION = "action://trackedit/track-view-spectrogram";
 constexpr const char* TRACK_VIEW_MULTI_ACTION = "action://trackedit/track-view-multi";
-constexpr const char* TRACK_VIEW_HALF_WAVE_ACTION = "action://trackedit/track-view-half-wave";
+constexpr const char* TRACK_VIEW_HALF_WAVE_ACTION = "action://projectscene/track-view-half-wave";
 
 constexpr const char* TRACK_SPECTROGRAM_SETTINGS_ACTION = "action://trackedit/track-spectrogram-settings";
 
@@ -243,6 +243,21 @@ void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCod
                 item.setState(state);
             }
         }
+    }
+
+    if (containsAny(codes, { ActionCode(TRACK_VIEW_HALF_WAVE_ACTION) })) {
+        const auto project = globalContext()->currentProject();
+        assert(project);
+
+        const auto viewState = project->viewState();
+        assert(viewState);
+
+        const bool isHalfWave = viewState->isHalfWave(m_trackId).val;
+
+        MenuItem& item = findItem(ActionCode(TRACK_VIEW_HALF_WAVE_ACTION));
+        auto state = item.state();
+        state.checked = isHalfWave;
+        item.setState(state);
     }
 
     for (const auto& formatInfo : au::trackedit::availableTrackFormats()) {

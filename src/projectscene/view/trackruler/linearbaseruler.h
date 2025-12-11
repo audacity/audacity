@@ -13,7 +13,7 @@ public:
     void setChannelHeightRatio(double channelHeightRatio) override;
     void setCollapsed(bool isCollapsed) override;
     std::string sampleToText(double sample) const override;
-    void setVerticalZoom(float verticalZoom) override;
+    void setDisplayBounds(std::pair<float, float> displayBounds) override;
 
 protected:
     bool isBold(double value) const;

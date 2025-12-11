@@ -1,10 +1,10 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "dblinearbaseruler.h"
-
 #include "framework/global/types/ratio.h"
 #include "framework/global/realfn.h"
+
+#include "dblinearbaseruler.h"
 
 using namespace au::projectscene;
 
@@ -28,12 +28,12 @@ void DbLinearBaseRuler::setCollapsed(bool isCollapsed)
     m_collapsed = isCollapsed;
 }
 
-void DbLinearBaseRuler::setVerticalZoom(float verticalZoom)
+void DbLinearBaseRuler::setDisplayBounds(std::pair<float, float> displayBounds)
 {
-    // The defult vertical zoom is 1.0 which corresponds to 0 dB
-    // For a zoom of 0.5 the max display value is 0.5 or -6 dB
-    // We need just to convert the linear zoom value to dB
-    m_maxDisplayValueDB = muse::linear_to_db(verticalZoom);
+    m_minDisplayValue = displayBounds.first;
+    m_maxDisplayValue = displayBounds.second;
+
+    m_isHalfWave = muse::RealIsEqual(m_minDisplayValue, 0.0);
 }
 
 void DbLinearBaseRuler::setDbRange(double dbRange)
@@ -59,7 +59,7 @@ int DbLinearBaseRuler::computeLowestFullStepValue(double height) const
     // We prefer to show only multiple of 3 values as full steps
     constexpr int FULL_STEP_INCREMENT = 3;
 
-    auto const middlePoint = height / 2.0;
+    auto const middlePoint = height / ((m_maxDisplayValue - m_minDisplayValue) / m_maxDisplayValue);
     int lowestFullStep = static_cast<int>(m_dbRange);
 
     // Find the closer value to dbRange that has enough room to be drawn
@@ -75,23 +75,23 @@ int DbLinearBaseRuler::computeLowestFullStepValue(double height) const
 
 double DbLinearBaseRuler::valueToPosition(double value, double height, bool isNegativeSample) const
 {
-    const double maxLinearValue = std::abs(muse::db_to_linear(static_cast<double>(m_maxDisplayValueDB)));
     const double linearValue = muse::db_to_linear(value) * (isNegativeSample ? -1.0 : 1.0);
-    const double clampedLinearValue = std::clamp(linearValue, -maxLinearValue, maxLinearValue);
-
-    return (0.5 - clampedLinearValue / (2 * maxLinearValue)) * height;
+    const double clampedLinearValue = std::clamp(linearValue, m_minDisplayValue, m_maxDisplayValue);
+    const double percentage = (clampedLinearValue - m_minDisplayValue) / (m_maxDisplayValue - m_minDisplayValue);
+    return (1 - percentage) * height;
 }
 
 std::vector<int> DbLinearBaseRuler::fullStepValues(double height) const
 {
     const int lowestFullStep = computeLowestFullStepValue(height);
+    const double maxDisplayValueDB = muse::linear_to_db(m_maxDisplayValue);
 
     std::vector<int> steps;
     if (lowestFullStep != 0) {
         steps.push_back(lowestFullStep);
         int previousValidStep = lowestFullStep;
 
-        for (int step = lowestFullStep + 1; step < m_maxDisplayValueDB; step++) {
+        for (int step = lowestFullStep + 1; step < maxDisplayValueDB; step++) {
             const int diff = step - previousValidStep;
             if (std::find(m_ui_settings.fullStepSizes.begin(), m_ui_settings.fullStepSizes.end(),
                           diff) == m_ui_settings.fullStepSizes.end()) {

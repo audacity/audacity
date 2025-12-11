@@ -61,10 +61,8 @@ struct Track {
     TrackType type = TrackType::Undefined;
     muse::draw::Color color;
     TrackFormat format = TrackFormat::Undefined;
-    TrackRulerType rulerType = TrackRulerType::Linear;
     TrackViewType viewType = TrackViewType::Unspecified;
     uint64_t rate;
-    float verticalZoom = 1.0f;
 };
 
 using TrackList = std::vector<Track>;

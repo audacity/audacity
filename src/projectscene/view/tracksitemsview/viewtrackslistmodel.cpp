@@ -193,6 +193,15 @@ void ViewTracksListModel::load()
 
     endResetModel();
 
+    projectSceneConfiguration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool) {
+        emit isVerticalRulersVisibleChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
+    emit isVerticalRulersVisibleChanged();
+
+    playbackConfiguration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { DbRangeRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
     const IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
 
     if (!viewState) {
@@ -203,13 +212,8 @@ void ViewTracksListModel::load()
         emit totalTracksHeightChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    projectSceneConfiguration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool) {
-        emit isVerticalRulersVisibleChanged();
-    }, muse::async::Asyncable::Mode::SetReplace);
-    emit isVerticalRulersVisibleChanged();
-
-    playbackConfiguration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { DbRangeRole });
+    viewState->verticalRulerWidth().ch.onReceive(this, [this](int) {
+        emit verticalRulerWidthChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 }
 
@@ -274,12 +278,6 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case IsStereoRole:
         return track.type == au::trackedit::TrackType::Stereo;
 
-    case IsLinearRole:
-        return track.rulerType != au::trackedit::TrackRulerType::DbLog;
-
-    case TrackRulerTypeRole:
-        return static_cast<int>(track.rulerType);
-
     case IsWaveformViewVisibleRole:
         return track.viewType == au::trackedit::TrackViewType::Waveform
                || track.viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
@@ -288,18 +286,8 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
         return track.viewType == au::trackedit::TrackViewType::Spectrogram
                || track.viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
 
-    case AvailableRulerTypesRole:
-        return QVariant::fromValue(QList<QMap<QString, QVariant> > {
-            { { "label", "Logarithmic (dB)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLog) } },
-            { { "label", "Linear (dB)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::DbLinear) } },
-            { { "label", "Linear (amp)" }, { "value", static_cast<int>(au::trackedit::TrackRulerType::Linear) } },
-        });
-
     case DbRangeRole:
         return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
-
-    case VerticalZoomRole:
-        return track.verticalZoom;
 
     default:
         break;
@@ -320,13 +308,9 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { IsMultiSelectionActiveRole, "isMultiSelectionActive" },
         { IsTrackAudibleRole, "isTrackAudible" },
         { IsStereoRole, "isStereo" },
-        { IsLinearRole, "isLinear" },
-        { AvailableRulerTypesRole, "availableRulerTypes" },
-        { TrackRulerTypeRole, "trackRulerType" },
         { DbRangeRole, "dbRange" },
-        { VerticalZoomRole, "trackVerticalZoom" },
         { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
-        { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
+        { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" }
     };
     return roles;
 }
@@ -338,22 +322,14 @@ bool ViewTracksListModel::isVerticalRulersVisible() const
 
 int ViewTracksListModel::verticalRulerWidth() const
 {
-    float smallestBoundValue = 1;
-    for (const auto& track : m_trackList) {
-        if (track.rulerType != au::trackedit::TrackRulerType::Linear) {
-            //Only linear rulers contain decimal places.
-            continue;
-        }
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
 
-        // Find the smallest vertical zoom among linear rulers to ajust the width globally.
-        smallestBoundValue = std::min(smallestBoundValue, track.verticalZoom);
+    if (!viewState) {
+        return 0;
     }
-    smallestBoundValue *= 0.1f;
 
-    const int nDecimals = numDecimals(smallestBoundValue);
-
-    // Adjust the width according to the number of decimal places.
-    return 56 + (nDecimals * 8);
+    return viewState->verticalRulerWidth().val;
 }
 
 int ViewTracksListModel::totalTracksHeight() const
@@ -366,10 +342,4 @@ int ViewTracksListModel::totalTracksHeight() const
     }
 
     return viewState->totalTrackHeight().val;
-}
-
-void ViewTracksListModel::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType)
-{
-    trackeditInteraction()->changeTrackRulerType(trackId, static_cast<trackedit::TrackRulerType>(rulerType));
-    emit dataChanged(index(0), index(m_trackList.size() - 1), { TrackRulerTypeRole });
 }

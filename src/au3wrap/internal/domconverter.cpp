@@ -2,9 +2,7 @@
 
 #include "au3types.h"
 #include "trackcolor.h"
-#include "trackrulertypeattachment.h"
 #include "trackviewtypeattachment.h"
-#include "waveformscale.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -63,11 +61,6 @@ int trackRate(const Au3Track* track)
     return waveTrack->GetRate();
 }
 
-au::trackedit::TrackRulerType trackRulerType(const Au3Track* track)
-{
-    return TrackRulerTypeAttachment::Get(track).GetRulerType();
-}
-
 au::trackedit::TrackViewType trackViewType(const Au3Track* track)
 {
     const auto type = TrackViewTypeAttachment::Get(track).GetTrackViewType();
@@ -77,20 +70,6 @@ au::trackedit::TrackViewType trackViewType(const Au3Track* track)
     } else {
         return type;
     }
-}
-
-float trackVerticalZoom(const Au3Track* track)
-{
-    const auto* waveTrack = dynamic_cast<const WaveTrack*>(track);
-    if (waveTrack == nullptr) {
-        return 0.0f;
-    }
-
-    const auto& cache = WaveformScale::Get(*waveTrack);
-    float min  = 0.0f;
-    float max = 0.0f;
-    cache.GetDisplayBounds(min, max);
-    return (max - min) / 2.0f;
 }
 }
 
@@ -133,10 +112,8 @@ au::trackedit::Track DomConverter::track(const Au3Track* track)
     }
 
     au4t.format = trackFormat(track);
-    au4t.rulerType = trackRulerType(track);
     au4t.viewType = trackViewType(track);
     au4t.rate = trackRate(track);
-    au4t.verticalZoom = trackVerticalZoom(track);
     return au4t;
 }
 

@@ -54,8 +54,8 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
         params.geometry.height * (1 - params.channelHeightRatio),
     };
 
-    const float zoomMin = dB ? getDBValue(-params.verticalZoom, dbRange) : -params.verticalZoom;
-    const float zoomMax = dB ? getDBValue(params.verticalZoom, dbRange) : params.verticalZoom;
+    const float zoomMin = dB ? getDBValue(params.displayBounds.first, dbRange) : params.displayBounds.first;
+    const float zoomMax = dB ? getDBValue(params.displayBounds.second, dbRange) : params.displayBounds.second;
 
     auto& waveformPainter = WaveformPainter::Get(*waveClip);
     WavePaintParameters paintParameters;
