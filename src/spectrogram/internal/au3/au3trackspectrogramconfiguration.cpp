@@ -85,46 +85,41 @@ void Au3TrackSpectrogramConfiguration::setColorHighBoostDbPerDec(int value)
 
 SpectrogramColorScheme Au3TrackSpectrogramConfiguration::colorScheme() const
 {
-    return static_cast<SpectrogramColorScheme>(fromAu3ColorScheme(m_settings.colorScheme));
+    return m_settings.colorScheme;
 }
 
 void Au3TrackSpectrogramConfiguration::setColorScheme(SpectrogramColorScheme value)
 {
-    const auto au3value = toAu3ColorScheme(value);
-    if (m_settings.colorScheme == au3value) {
+    if (m_settings.colorScheme == value) {
         return;
     }
-    m_settings.colorScheme = au3value;
+    m_settings.colorScheme = value;
 }
 
 SpectrogramScale Au3TrackSpectrogramConfiguration::scale() const
 {
-    return static_cast<SpectrogramScale>(fromAu3Scale(static_cast<Au3SpectrogramSettings::ScaleTypeValues>(m_settings
-                                                                                                           .scaleType)));
+    return m_settings.scaleType;
 }
 
 void Au3TrackSpectrogramConfiguration::setScale(SpectrogramScale value)
 {
-    const auto au3value = toAu3Scale(value);
-    if (m_settings.scaleType == au3value) {
+    if (m_settings.scaleType == value) {
         return;
     }
-    m_settings.scaleType = au3value;
+    m_settings.scaleType = value;
 }
 
 SpectrogramAlgorithm Au3TrackSpectrogramConfiguration::algorithm() const
 {
-    return static_cast<SpectrogramAlgorithm>(fromAu3Algorithm(static_cast<Au3SpectrogramSettings::AlgorithmValues>(
-                                                                  m_settings.algorithm)));
+    return m_settings.algorithm;
 }
 
 void Au3TrackSpectrogramConfiguration::setAlgorithm(SpectrogramAlgorithm value)
 {
-    const auto au3value = toAu3Algorithm(value);
-    if (m_settings.algorithm == au3value) {
+    if (m_settings.algorithm == value) {
         return;
     }
-    m_settings.algorithm = au3value;
+    m_settings.algorithm = value;
 }
 
 SpectrogramWindowType Au3TrackSpectrogramConfiguration::windowType() const
@@ -134,11 +129,10 @@ SpectrogramWindowType Au3TrackSpectrogramConfiguration::windowType() const
 
 void Au3TrackSpectrogramConfiguration::setWindowType(SpectrogramWindowType value)
 {
-    const auto au3value = toAu3WindowType(value);
-    if (m_settings.WindowType() == au3value) {
+    if (m_settings.WindowType() == value) {
         return;
     }
-    m_settings.SetWindowType(au3value);
+    m_settings.SetWindowType(value);
 }
 
 int Au3TrackSpectrogramConfiguration::winSizeLog2() const

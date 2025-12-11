@@ -4,11 +4,13 @@
 
 #include "SpectrumCache.h"
 #include "./au3spectrogramsettings.h"
+#include "internal/au3/au3spectrogramutils.h"
 #include "internal/spectrogramutils.h"
 
 #include "au3-fft/Spectrum.h"
 #include "au3-wave-track/Sequence.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "spectrogramtypes.h"
 
 #include <cmath>
 #include <cassert>
@@ -96,8 +98,7 @@ bool SpecCache::CalculateOneSpectrum(
     float* __restrict out) const
 {
     bool result = false;
-    const bool reassignment
-        =(settings.algorithm == Au3SpectrogramSettings::algReassignment);
+    const bool reassignment = settings.algorithm == SpectrogramAlgorithm::Reassignment;
     const size_t windowSizeSetting = settings.WindowSize();
 
     sampleCount from;
@@ -118,8 +119,7 @@ bool SpecCache::CalculateOneSpectrum(
         from = where[xx];
     }
 
-    const bool autocorrelation
-        =settings.algorithm == Au3SpectrogramSettings::algPitchEAC;
+    const bool autocorrelation = settings.algorithm == SpectrogramAlgorithm::Pitch;
     const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
     const size_t padding = (windowSizeSetting * (zeroPaddingFactorSetting - 1)) / 2;
     const size_t fftLen = windowSizeSetting * zeroPaddingFactorSetting;
@@ -193,7 +193,7 @@ bool SpecCache::CalculateOneSpectrum(
             // This function does not mutate useBuffer
             ComputeSpectrum(
                 useBuffer, windowSizeSetting, windowSizeSetting, results,
-                autocorrelation, settings.WindowType());
+                autocorrelation, toAu3WindowType(settings.WindowType()));
         } else if (reassignment) {
             static const double epsilon = 1e-16;
             const auto hFFT = settings.hFFT.get();
@@ -348,10 +348,8 @@ void SpecCache::Populate(
     const auto sampleRate = clip.GetRate();
     const int& frequencyGainSetting = settings.frequencyGain;
     const size_t windowSizeSetting = settings.WindowSize();
-    const bool autocorrelation
-        =settings.algorithm == Au3SpectrogramSettings::algPitchEAC;
-    const bool reassignment
-        =settings.algorithm == Au3SpectrogramSettings::algReassignment;
+    const bool autocorrelation = settings.algorithm == SpectrogramAlgorithm::Pitch;
+    const bool reassignment = settings.algorithm == SpectrogramAlgorithm::Reassignment;
     const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
 
     // FFT length may be longer than the window of samples that affect results
@@ -463,7 +461,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 
     // Caching is not implemented for reassignment, unless for
     // a complete hit, because of the complications of time reassignment
-    if (settings.algorithm == Au3SpectrogramSettings::algReassignment) {
+    if (settings.algorithm == SpectrogramAlgorithm::Reassignment) {
         match = false;
     }
 
@@ -512,7 +510,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
     mSpecCache->Grow(numPixels, settings, samplesPerPixel, t0);
 
     // Reassignment accumulates, so it needs a zeroed buffer
-    if (settings.algorithm == Au3SpectrogramSettings::algReassignment) {
+    if (settings.algorithm == SpectrogramAlgorithm::Reassignment) {
         // The cache could theoretically copy from the middle, resulting
         // in two regions to update. This won't happen in zoom, since
         // old cache doesn't match. It won't happen in resize, since the

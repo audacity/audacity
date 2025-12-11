@@ -6,6 +6,7 @@
 #include "internal/spectrogramcolordefinitions.h"
 #include "internal/spectrogramcolorregister.h"
 
+namespace au::spectrogram {
 unsigned char SpectrogramColors::gradient_pre[ColorGradientTotal][colorSchemes][gradientSteps][3];
 
 bool SpectrogramColors::gradient_inited = 0;
@@ -160,4 +161,5 @@ void SpectrogramColors::PreComputeGradient()
             gradient_pre[selected][2][i][2] = (unsigned char)(255 * b);
         }
     }
+}
 }

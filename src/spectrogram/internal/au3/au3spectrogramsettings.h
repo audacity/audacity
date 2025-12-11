@@ -4,6 +4,7 @@
 #pragma once
 
 #include "iglobalspectrogramconfiguration.h"
+#include "spectrogramtypes.h"
 
 #include "au3-math/SampleFormat.h"
 #include "au3-fft/RealFFTf.h"
@@ -21,40 +22,6 @@ namespace au::spectrogram {
 class Au3SpectrogramSettings : public TrackAttachment
 {
 public:
-    // Do not assume that this enumeration will remain the
-    // same as NumberScaleType in future.  That enum may become
-    // more general purpose.
-    typedef int ScaleType;
-    enum ScaleTypeValues : int {
-        stLinear,
-        stLogarithmic,
-        stMel,
-        stBark,
-        stErb,
-        stPeriod,
-
-        stNumScaleTypes,
-    };
-
-    enum ColorScheme : int {
-        // Keep in correspondence with AColor::colorSchemes, AColor::gradient_pre
-        csColorNew = 0,
-        csColorTheme,
-        csGrayscale,
-        csInvGrayscale,
-
-        csNumColorScheme,
-    };
-
-    typedef int Algorithm;
-    enum AlgorithmValues : int {
-        algSTFT = 0,
-        algReassignment,
-        algPitchEAC,
-
-        algNumAlgorithms,
-    };
-
     static void setGlobalSpectrogramConfiguration(std::weak_ptr<IGlobalSpectrogramConfiguration> globalConfig);
 
     static const Au3SpectrogramSettings& Get(const WaveTrack&);
@@ -74,16 +41,16 @@ public:
     int range = 0;
     int gain = 0;
     int frequencyGain = 0;
-    ColorScheme colorScheme = csColorNew;
-    ScaleType scaleType = stLogarithmic;
+    SpectrogramColorScheme colorScheme = static_cast<SpectrogramColorScheme>(0);
+    SpectrogramScale scaleType = static_cast<SpectrogramScale>(0);
     bool spectralSelectionEnabled = false;
-    Algorithm algorithm = algSTFT;
+    SpectrogramAlgorithm algorithm = static_cast<SpectrogramAlgorithm>(0);
     // For now. When rulers are implemented for spectrogram view, this may need some refactoring.
     int minFreq = 1;
     int maxFreq = 20000;
 
-    int WindowType() const { return m_windowType; }
-    void SetWindowType(int type);
+    SpectrogramWindowType WindowType() const { return m_windowType; }
+    void SetWindowType(SpectrogramWindowType type);
 
     int WindowSize() const { return m_windowSize; }
     void SetWindowSize(int size);
@@ -119,7 +86,7 @@ private:
 
 private:
     // Changing any of these destroys the windows
-    int m_windowType = 0;
+    SpectrogramWindowType m_windowType = static_cast<SpectrogramWindowType>(0);
     int m_windowSize = 0;
     int m_zeroPaddingFactor = 0;
 };
