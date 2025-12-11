@@ -44,7 +44,7 @@ public:
     virtual int zeroPaddingFactor() const = 0;
     virtual void setZeroPaddingFactor(int value) = 0;
 
-    virtual AllSpectrogramSettings allSettings() const = 0;
-    virtual void setAllSettings(const AllSpectrogramSettings&) = 0;
+    virtual SpectrogramSettings allSettings() const = 0;
+    virtual void setAllSettings(const SpectrogramSettings&) = 0;
 };
 } // namespace au::spectrogram

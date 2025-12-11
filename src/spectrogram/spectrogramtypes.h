@@ -44,7 +44,7 @@ enum class SpectrogramWindowType {
     _count
 };
 
-struct AllSpectrogramSettings {
+struct SpectrogramSettings {
     bool spectralSelectionEnabled = false;
     SpectrogramColorScheme colorScheme = static_cast<SpectrogramColorScheme>(0);
     int colorGainDb = 0;
