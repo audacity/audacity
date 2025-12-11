@@ -234,7 +234,7 @@ void LabelsTableViewModel::removeSelectedLabels()
     }
 
     std::vector<trackedit::LabelKey> labelKeysToRemove;
-    std::set<int> rowsToRemove;
+    std::vector<int> rowsToRemove;
 
     for (const QModelIndex& index : selectedIndexes) {
         int row = index.row();
@@ -245,8 +245,12 @@ void LabelsTableViewModel::removeSelectedLabels()
         }
 
         trackedit::LabelKey labelKey = vHeader->labelKey().key;
+        if (muse::contains(labelKeysToRemove, labelKey)) {
+            continue;
+        }
+
         labelKeysToRemove.push_back(labelKey);
-        rowsToRemove.insert(row);
+        rowsToRemove.push_back(row);
     }
 
     if (labelKeysToRemove.empty()) {
@@ -308,7 +312,7 @@ TableViewCell* LabelsTableViewModel::makeTrackCell(const trackedit::TrackId& tra
 
     //! NOTE: The order is important.
     //! Setting the current track ID updates the selected item in the list of available tracks.
-    result->setAvailableTracks(makeAvailableTracksList(trackId));
+    result->setAvailableTracks(makeAvailableTracksList());
     result->setCurrentTrackId(trackId);
 
     return result;
@@ -339,7 +343,7 @@ std::vector<au::trackedit::Track> LabelsTableViewModel::allLabelTracks() const
     return result;
 }
 
-MenuItemList LabelsTableViewModel::makeAvailableTracksList(const trackedit::TrackId& currentTrackId)
+MenuItemList LabelsTableViewModel::makeAvailableTracksList()
 {
     std::vector<trackedit::Track> labelTracks = allLabelTracks();
     if (labelTracks.empty()) {
@@ -348,24 +352,25 @@ MenuItemList LabelsTableViewModel::makeAvailableTracksList(const trackedit::Trac
 
     MenuItemList result;
 
+    int index = 0;
     for (const trackedit::Track& track : labelTracks) {
         MenuItem* item = new MenuItem();
 
         ui::UiAction action;
         action.code = SELECT_LABEL_TRACK_CODE;
-        action.title = TranslatableString::untranslatable(track.title);
+        action.title = TranslatableString::untranslatable(String::number(index) + " - " + track.title);
+        action.checkable = muse::ui::Checkable::Yes;
         item->setAction(action);
 
         ui::UiActionState state;
         state.enabled = true;
         item->setState(state);
 
-        item->setSelectable(true);
-
         item->setArgs(actions::ActionData::make_arg1(track.id));
         item->setId(QString::fromStdString(action.code) + action.title.qTranslatedWithoutMnemonic());
 
         result << item;
+        index++;
     }
 
     result << makeSeparator();
@@ -374,7 +379,7 @@ MenuItemList LabelsTableViewModel::makeAvailableTracksList(const trackedit::Trac
 
     ui::UiAction action;
     action.code = NEW_LABEL_TRACK_CODE;
-    action.title = TranslatableString("projectscene", "New Label track");
+    action.title = TranslatableString("projectscene", "New label track");
     item->setAction(action);
 
     ui::UiActionState state;
@@ -548,7 +553,7 @@ QString LabelsTableViewModel::createNewLabelTrack(int currentRow)
             continue;
         }
 
-        MenuItemList availableTracks = makeAvailableTracksList(trackCell->currentTrackId());
+        MenuItemList availableTracks = makeAvailableTracksList();
         trackCell->setAvailableTracks(availableTracks);
 
         if (currentRow == i) {
@@ -569,7 +574,7 @@ io::path_t LabelsTableViewModel::selectFileForExport()
     std::vector<std::string> filter = labelExporter()->fileFilter();
     io::path_t defaultDir = exportConfiguration()->labelsDirectoryPath();
 
-    io::path_t filePath = interactive()->selectSavingFileSync(muse::trc("global", "Open"), defaultDir, filter);
+    io::path_t filePath = interactive()->selectSavingFileSync(muse::trc("global", "Save"), defaultDir, filter);
 
     if (!filePath.empty()) {
         exportConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));

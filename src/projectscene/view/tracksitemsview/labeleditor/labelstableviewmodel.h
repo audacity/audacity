@@ -70,7 +70,7 @@ private:
     muse::uicomponents::TableViewCell* makeTrackCell(const trackedit::TrackId& trackId, const QString& trackTitle);
     muse::uicomponents::TableViewCell* makeTimecodeCell(const muse::Val& value);
 
-    muse::uicomponents::MenuItemList makeAvailableTracksList(const trackedit::TrackId& currentTrackId);
+    muse::uicomponents::MenuItemList makeAvailableTracksList();
     muse::uicomponents::MenuItem* makeSeparator();
 
     bool moveLabel(int row, int column, const muse::Val& value);

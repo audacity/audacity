@@ -13,7 +13,9 @@ import Audacity.ProjectScene
 StyledTableView {
     id: root
 
-    headerCapitalization: Font.Capitalize
+    property bool hasSelection: tableViewModel.selectionModel.hasSelection
+
+    headerCapitalization: Font.MixedCase
 
     function addNewLabel() {
         tableViewModel.addNewLabel()

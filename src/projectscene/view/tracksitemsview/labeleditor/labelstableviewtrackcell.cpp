@@ -44,7 +44,7 @@ void LabelsTableViewTrackCell::setCurrentTrackId(const trackedit::TrackId& track
     m_trackId = trackId;
 
     for (muse::uicomponents::MenuItem* item : m_availableTracks) {
-        bool selected = !item->args().empty() ? item->args().arg<trackedit::TrackId>() == trackId : false;
-        item->setSelected(selected);
+        bool checked = !item->args().empty() ? item->args().arg<trackedit::TrackId>() == trackId : false;
+        item->setChecked(checked);
     }
 }

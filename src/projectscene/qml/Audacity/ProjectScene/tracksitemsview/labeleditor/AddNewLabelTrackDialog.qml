@@ -106,9 +106,9 @@ StyledDialogView {
             }
 
             FlatButton {
-                text: qsTrc("global", "Ok")
+                text: qsTrc("projectscene", "Confirm")
                 buttonRole: ButtonBoxModel.AcceptRole
-                buttonId: ButtonBoxModel.Ok
+                buttonId: ButtonBoxModel.CustomButton
                 accentButton: true
                 isNarrow: true
                 enabled: trackNameInput.inputField.text.trim() !== ""
