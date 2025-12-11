@@ -4,6 +4,7 @@
 #pragma once
 
 #include "itrackspectrogramconfigurationprovider.h"
+#include "iglobalspectrogramconfiguration.h"
 
 #include "context/iglobalcontext.h"
 
@@ -13,9 +14,12 @@ namespace au::spectrogram {
 class TrackSpectrogramConfigurationProvider final : public ITrackSpectrogramConfigurationProvider
 {
     muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
 
 public:
     ~TrackSpectrogramConfigurationProvider() override = default;
+
+    void init();
 
     ITrackSpectrogramConfigurationPtr trackSpectrogramConfiguration(int trackId) const override;
 };

@@ -57,13 +57,13 @@ public:
     int zeroPaddingFactor() const override { return m_zeroPaddingFactor; }
     void setZeroPaddingFactor(int) override { assert(false); }
 
-    spectrogram::AllSpectrogramSettings allSettings() const override
+    spectrogram::SpectrogramSettings allSettings() const override
     {
         assert(false);
         return {};
     }
 
-    void setAllSettings(const spectrogram::AllSpectrogramSettings&) override { assert(false); }
+    void setAllSettings(const spectrogram::SpectrogramSettings&) override { assert(false); }
 
 private:
     const bool m_spectralSelectionEnabled;

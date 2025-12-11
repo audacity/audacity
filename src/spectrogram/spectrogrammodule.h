@@ -8,6 +8,7 @@
 namespace au::spectrogram {
 class Au3SpectrogramPainter;
 class GlobalSpectrogramConfiguration;
+class TrackSpectrogramConfigurationProvider;
 
 class SpectrogramModule : public muse::modularity::IModuleSetup
 {
@@ -24,5 +25,6 @@ public:
 private:
     const std::shared_ptr<Au3SpectrogramPainter> m_au3SpectrogramPainter;
     const std::shared_ptr<GlobalSpectrogramConfiguration> m_configuration;
+    const std::shared_ptr<TrackSpectrogramConfigurationProvider> m_trackSpectrogramConfigurationProvider;
 };
 }
