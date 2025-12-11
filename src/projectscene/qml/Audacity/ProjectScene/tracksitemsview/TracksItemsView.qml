@@ -1079,80 +1079,16 @@ Rectangle {
         }
     }
 
-    DropArea {
-        id: dropArea
-
+    ImportDropArea {
         anchors.fill: content
 
-        property var lastProbedUrls: null
+        tracksItemsView: tracksItemsView
+        tracksViewState: tracksViewState
+        timeline: timeline
 
-        Timer {
-            id: clearPreviewClipsTimer
-            interval: 100
-            onTriggered: {
-                tracksItemsView.clearPreviewImportClip([])
-                dropArea.lastProbedUrls = null
-                tracksModel.endImportDrag()
-                root.guidelinePos = -1
-                root.guidelineVisible = false
-            }
-        }
-
-        onEntered: drop => {
-            clearPreviewClipsTimer.stop()
-
-            let urls = drop.urls
-            tracksModel.startImportDrag()
-            if (!lastProbedUrls) {
-                // NOTE: working with urls list from DropArea
-                // is expensive so avoid it otherwise the preview clip
-                // move will be laggy
-                tracksModel.probeAudioFilesLength(urls)
-                dropArea.lastProbedUrls = urls
-            }
-
-            let position = mapToItem(content, Qt.point(drop.x, drop.y))
-
-            var trackId = tracksViewState.trackAtPosition(position.x, position.y)
-            tracksModel.prepareConditionalTracks(trackId, urls.length)
-            tracksModel.removeDragAddedTracks(trackId, urls.length)
-
-            let tracksIds = tracksModel.draggedTracksIds(trackId, urls.length)
-            tracksItemsView.clearPreviewImportClip(tracksIds /* tracks not to clear */)
-            const durations  = tracksModel.lastProbedDurations();
-            const titles     = tracksModel.lastProbedFileNames();
-
-            tracksItemsView.previewImportClipRequested(tracksIds, position.x, durations, titles);
-
-            root.guidelinePos = position.x
-            root.guidelineVisible = true
-        }
-
-        onExited: {
-            clearPreviewClipsTimer.start()
-        }
-
-        onPositionChanged: {
-            // NOTE! Qt does not reliably send onPositionChanged for external drags
-            // it is expected that Qt may trigger entered/exited signals alternately
-            // instead of positionChanged
-        }
-
-        onDropped: drop => {
-            // Forces conversion to a compatible array
-            let urls = drop.urls.concat([]);
-
-            let position = mapToItem(content, Qt.point(drop.x, drop.y))
-            let trackId = tracksViewState.trackAtPosition(position.x, position.y)
-            let tracksIds = tracksModel.draggedTracksIds(trackId, urls.length)
-            tracksModel.handleDroppedFiles(tracksIds, timeline.context.positionToTime(position.x), urls)
-
-            tracksModel.endImportDrag()
-            drop.acceptProposedAction()
-
-            root.guidelinePos = -1
-            root.guidelineVisible = false
-            dropArea.lastProbedUrls = null
+        onSetGuidelineRequested: function(pos, visibility) {
+            root.guidelinePos = pos
+            root.guidelineVisible = visibility
         }
     }
 

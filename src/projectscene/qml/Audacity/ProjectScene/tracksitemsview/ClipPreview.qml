@@ -1,12 +1,13 @@
 import QtQuick
 
 import Muse.UiComponents
+import Audacity.UiComponents
 
 Rectangle {
 
     id: root
 
-    property color clipColor: "#677CE4"
+    property color clipColor: null
     property bool collapsed: false
 
     property alias title: titleLabel.text
@@ -16,7 +17,7 @@ Rectangle {
 
     radius: 4
     border.width: 1
-    border.color: "#000000"
+    border.color: "black"
 
     color: "transparent"
 
@@ -28,7 +29,7 @@ Rectangle {
         color: "transparent"
 
         border.width:  1
-        border.color: "#FFFFFF"
+        border.color: "white"
         radius: 4
 
         Rectangle {
@@ -36,7 +37,7 @@ Rectangle {
 
             anchors.fill: parent
             anchors.margins: 1
-            color: "#FFFFFF"
+            color: "white"
             opacity: 0.3
 
             radius: 4
@@ -67,7 +68,7 @@ Rectangle {
             gradient: Gradient {
                 orientation: Qt.Horizontal
                 GradientStop { position: 0.0; color: "#00FFFFFF" }
-                GradientStop { position: 0.4; color: ui.blendColors(ui.blendColors("transparent", "#FFFFFF", 0.3), ui.blendColors("transparent", root.clipColor, 0.4), 0.5)}
+                GradientStop { position: 0.4; color: ui.blendColors(ui.blendColors("transparent", "white", 0.3), ui.blendColors("transparent", root.clipColor, 0.4), 0.5)}
                 GradientStop { position: 1.0; color: "#00FFFFFF" }
             }
         }
@@ -107,7 +108,7 @@ Rectangle {
 
         height: 20
 
-        color: ui.blendColors("#FFFFFF", root.clipColor, 0.3)
+        color: ui.blendColors("white", root.clipColor, 0.3)
 
         visible: !root.collapsed
 
@@ -119,7 +120,7 @@ Rectangle {
             anchors.rightMargin: 8
             horizontalAlignment: Qt.AlignLeft
 
-            color: "#000000"
+            color: "black"
         }
 
         Rectangle {
@@ -134,7 +135,7 @@ Rectangle {
             gradient: Gradient {
                 orientation: Qt.Horizontal
                 GradientStop { position: 0.0; color: "#00FFFFFF" }
-                GradientStop { position: 0.4; color: ui.blendColors("#FFFFFF", root.clipColor, 0.3) }
+                GradientStop { position: 0.4; color: ui.blendColors("white", root.clipColor, 0.3) }
                 GradientStop { position: 1.0; color: "#00FFFFFF" }
             }
         }

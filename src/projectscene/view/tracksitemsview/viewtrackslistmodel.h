@@ -17,8 +17,6 @@
 #include "trackedit/itrackeditinteraction.h"
 #include "playback/itrackplaybackcontrol.h"
 #include "playback/iplaybackconfiguration.h"
-#include "importexport/import/iimporter.h"
-#include "trackedit/itracksinteraction.h"
 
 #include "trackedit/dom/track.h"
 
@@ -38,22 +36,11 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
     muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
-    muse::Inject<importexport::IImporter> importer;
-    muse::Inject<trackedit::ITracksInteraction> tracksInteraction;
 
 public:
     explicit ViewTracksListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
-    Q_INVOKABLE void probeAudioFilesLength(const QStringList& fileUrls);
-    Q_INVOKABLE QVariantList lastProbedDurations() const;
-    Q_INVOKABLE QVariantList lastProbedFileNames() const;
-    Q_INVOKABLE void startImportDrag();
-    Q_INVOKABLE void endImportDrag();
-    Q_INVOKABLE void prepareConditionalTracks(int currentTrackId, int draggedFileCount);
-    Q_INVOKABLE QVariantList draggedTracksIds(int currentTrackId, int draggedFilesCount);
-    Q_INVOKABLE void removeDragAddedTracks(int currentTrackId, int draggedFilesCount);
-    Q_INVOKABLE void handleDroppedFiles(const std::vector<trackedit::TrackId>& trackIds, double startTime, const QStringList& fileUrls);
 
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -89,9 +76,5 @@ private:
     };
 
     std::vector<trackedit::Track> m_trackList;
-
-    std::vector<au::importexport::FileInfo> m_lastDraggedFilesInfo;
-    QStringList m_lastDraggedUrls;
-    int m_tracksCountWhenDragStarted = -1;
 };
 }

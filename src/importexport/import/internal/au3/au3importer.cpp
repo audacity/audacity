@@ -100,7 +100,6 @@ au::importexport::FileInfo au::importexport::Au3Importer::fileInfo(const muse::i
 
         auto inFile = plugin->Open(filePath.toStdString(), project);
         if ((inFile != NULL) && (inFile->GetStreamCount() > 0)) {
-            fileInfo.filename = inFile->GetFilename();
             fileInfo.path = filePath;
             fileInfo.duration = inFile->GetDuration();
 
@@ -188,6 +187,8 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
     std::vector<ITrackDataPtr> importedData;
     for (auto& holder : tmpTracks) {
         importedData.push_back(std::make_shared<Au3TrackData>(holder));
+        // TODO: implement multi-channel, multi-file drag&drop import
+        // for now, simply import first of the streams
         break;
     }
 
