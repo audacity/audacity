@@ -22,7 +22,7 @@ EffectStyledDialogView {
         id: prv
         property alias viewer: viewerLoader.item
         property bool isApplyAllowed: viewerModel.effectFamily != EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
-        property bool showPresets: viewerModel.effectFamily != EffectFamily.Builtin || viewer.usesPresets
+        property bool showPresets: viewerModel.effectFamily != EffectFamily.Builtin || (viewer && viewer.usesPresets)
 
         property int minimumWidth: viewerModel.effectFamily === EffectFamily.LV2 ? 500 : 250
         property int panelMargins: viewerModel.effectFamily == EffectFamily.Builtin ? 16 : 4
@@ -30,7 +30,9 @@ EffectStyledDialogView {
         property int separatorHeight: viewerModel.effectFamily == EffectFamily.Builtin ? separator.height + prv.panelMargins : 0
 
         function closeWindow(accept) {
-            prv.viewer.stopPreview()
+            if (prv.viewer) {
+                prv.viewer.stopPreview()
+            }
             // Call later because the preview calls `QCoreApplication::processEvents()`,
             // and we must make sure it doesn't do this after we've closed the dialog, or we'll be getting that Qt exception
             // "Object %p destroyed while one of its QML signal handlers is in progress."
@@ -44,7 +46,9 @@ EffectStyledDialogView {
         target: root.window
         function onClosing(event) {
             // Stop preview before closing, for the same reason as in closeWindow()
-            prv.viewer.stopPreview()
+            if (prv.viewer) {
+                prv.viewer.stopPreview()
+            }
         }
     }
 
@@ -143,7 +147,7 @@ EffectStyledDialogView {
                         navigationPanel: root.navigationPanel
                         navigationOrder: 0
 
-                        enabled: !prv.viewer.isPreviewing
+                        enabled: !(prv.viewer && prv.viewer.isPreviewing)
                         parentWindow: root.window
                         instanceId: root.instanceId
                     }
@@ -216,7 +220,7 @@ EffectStyledDialogView {
                             minWidth: 80
                             isLeftSide: true
 
-                            text: prv.viewer.isPreviewing ?
+                            text: (prv.viewer && prv.viewer.isPreviewing) ?
                             //: Shown on a button that stops effect preview
                             qsTrc("effects", "Stop preview") :
                             //: Shown on a button that starts effect preview
@@ -226,7 +230,16 @@ EffectStyledDialogView {
                             buttonId: ButtonBoxModel.CustomButton + 2
                             enabled: prv.isApplyAllowed
 
-                            onClicked: prv.viewer.isPreviewing ? prv.viewer.stopPreview() : prv.viewer.startPreview()
+                            onClicked: {
+                                if (!prv.viewer) {
+                                    return
+                                }
+                                if (prv.viewer.isPreviewing) {
+                                    prv.viewer.stopPreview()
+                                } else {
+                                    prv.viewer.startPreview()
+                                }
+                            }
                         }
 
                         FlatButton {
@@ -272,7 +285,7 @@ EffectStyledDialogView {
         width: viewerLoader.width
         height: viewerLoader.height
 
-        visible: prv.viewer.isPreviewing
+        visible: prv.viewer && prv.viewer.isPreviewing
         effectFamily: root.effectFamily
     }
 
