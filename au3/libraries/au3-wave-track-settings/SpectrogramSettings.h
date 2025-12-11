@@ -62,7 +62,8 @@ public:
     ~SpectrogramSettings();
 
     void CopyTo(::Track& track) const override;
-
+    void WriteXMLAttributes(XMLWriter& writer) const override;
+    bool HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueVuew) override;
 
     bool Validate(bool quiet);
 
