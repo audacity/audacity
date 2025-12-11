@@ -129,16 +129,16 @@ void Au3TrackSpectrogramConfiguration::setAlgorithm(SpectrogramAlgorithm value)
 
 SpectrogramWindowType Au3TrackSpectrogramConfiguration::windowType() const
 {
-    return static_cast<SpectrogramWindowType>(fromAu3WindowType(static_cast<::eWindowFunctions>(m_settings.windowType)));
+    return static_cast<SpectrogramWindowType>(fromAu3WindowType(static_cast<::eWindowFunctions>(m_settings.WindowType())));
 }
 
 void Au3TrackSpectrogramConfiguration::setWindowType(SpectrogramWindowType value)
 {
     const auto au3value = toAu3WindowType(value);
-    if (m_settings.windowType == au3value) {
+    if (m_settings.WindowType() == au3value) {
         return;
     }
-    m_settings.windowType = au3value;
+    m_settings.SetWindowType(au3value);
 }
 
 int Au3TrackSpectrogramConfiguration::winSizeLog2() const
@@ -162,10 +162,10 @@ int Au3TrackSpectrogramConfiguration::zeroPaddingFactor() const
 
 void Au3TrackSpectrogramConfiguration::setZeroPaddingFactor(int value)
 {
-    if (m_settings.zeroPaddingFactor == value) {
+    if (m_settings.ZeroPaddingFactor() == value) {
         return;
     }
-    m_settings.zeroPaddingFactor = value;
+    m_settings.SetZeroPaddingFactor(value);
 }
 
 bool Au3TrackSpectrogramConfiguration::useGlobalSettings() const

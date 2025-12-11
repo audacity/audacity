@@ -63,7 +63,6 @@ public:
 
     bool Validate(bool quiet);
 
-    void InvalidateCaches();
     void DestroyWindows();
     void CacheWindows();
     void ConvertToEnumeratedWindowSizes();
@@ -89,15 +88,28 @@ public:
     int gain = 0;
     int frequencyGain = 0;
 
-    int windowType = 0;
+public:
+    void SetWindowType(int type)
+    {
+        m_windowType = type;
+        DestroyWindows();
+    }
+
+    int WindowType() const { return m_windowType; }
 
 private:
-    int windowSize = 0;
+    int m_windowType = 0;
+    int m_windowSize = 0;
+
 public:
-    int WindowSize() const { return windowSize; }
+    int WindowSize() const { return m_windowSize; }
     void SetWindowSize(int size);
 
+    void SetZeroPaddingFactor(int factor);
+
+private:
     int zeroPaddingFactor = 0;
+
 public:
     size_t ZeroPaddingFactor() const
     {

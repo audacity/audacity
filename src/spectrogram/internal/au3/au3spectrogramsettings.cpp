@@ -32,9 +32,9 @@ static const AttachedTrackObjects::RegisteredFactory key1{
         settings->range = globalSettings.colorRangeDb;
         settings->gain = globalSettings.colorGainDb;
         settings->frequencyGain = globalSettings.colorHighBoostDbPerDec;
-        settings->windowType = toAu3WindowType(globalSettings.windowType);
+        settings->SetWindowType(toAu3WindowType(globalSettings.windowType));
         settings->SetWindowSize(1 << globalSettings.winSizeLog2);
-        settings->zeroPaddingFactor = globalSettings.zeroPaddingFactor;
+        settings->SetZeroPaddingFactor(globalSettings.zeroPaddingFactor);
         settings->colorScheme = toAu3ColorScheme(globalSettings.colorScheme);
         settings->scaleType = toAu3Scale(globalSettings.scale);
         settings->spectralSelection = globalSettings.spectralSelectionEnabled;
@@ -66,8 +66,8 @@ Au3SpectrogramSettings::Au3SpectrogramSettings(const Au3SpectrogramSettings& oth
     , range(other.range)
     , gain(other.gain)
     , frequencyGain(other.frequencyGain)
-    , windowType(other.windowType)
-    , windowSize(other.windowSize)
+    , m_windowType(other.m_windowType)
+    , m_windowSize(other.m_windowSize)
     , zeroPaddingFactor(other.zeroPaddingFactor)
     , colorScheme(other.colorScheme)
     , scaleType(other.scaleType)
@@ -90,8 +90,8 @@ Au3SpectrogramSettings& Au3SpectrogramSettings::operator=(const Au3SpectrogramSe
         range = other.range;
         gain = other.gain;
         frequencyGain = other.frequencyGain;
-        windowType = other.windowType;
-        windowSize = other.windowSize;
+        m_windowType = other.m_windowType;
+        m_windowSize = other.m_windowSize;
         zeroPaddingFactor = other.zeroPaddingFactor;
         colorScheme = other.colorScheme;
         scaleType = other.scaleType;
@@ -209,8 +209,8 @@ bool Au3SpectrogramSettings::Validate(bool quiet)
     // The rest are controlled by drop-down menus so they can't go wrong
     // in the Preferences dialog, but we also come here after reading fom saved
     // preference files, which could be or from future versions.  Validate quietly.
-    windowType
-        =std::max(0, std::min(NumWindowFuncs() - 1, windowType));
+    m_windowType
+        =std::max(0, std::min(NumWindowFuncs() - 1, m_windowType));
     scaleType
         =ScaleType(std::max(0,
                             std::min((int)(Au3SpectrogramSettings::stNumScaleTypes)-1,
@@ -225,11 +225,6 @@ bool Au3SpectrogramSettings::Validate(bool quiet)
     ConvertToActualWindowSizes();
 
     return true;
-}
-
-void Au3SpectrogramSettings::InvalidateCaches()
-{
-    DestroyWindows();
 }
 
 Au3SpectrogramSettings::~Au3SpectrogramSettings()
@@ -251,8 +246,8 @@ void Au3SpectrogramSettings::WriteXMLAttributes(XMLWriter& writer) const
     writer.WriteAttr("range", range);
     writer.WriteAttr("gain", gain);
     writer.WriteAttr("frequencyGain", frequencyGain);
-    writer.WriteAttr("windowType", windowType);
-    writer.WriteAttr("windowSize", windowSize);
+    writer.WriteAttr("m_windowType", m_windowType);
+    writer.WriteAttr("m_windowSize", m_windowSize);
     writer.WriteAttr("zeroPaddingFactor", zeroPaddingFactor);
     writer.WriteAttr("colorScheme", static_cast<int>(colorScheme));
     writer.WriteAttr("scaleType", static_cast<int>(scaleType));
@@ -281,11 +276,11 @@ bool Au3SpectrogramSettings::HandleXMLAttribute(const std::string_view& attr, co
     } else if (attr == "frequencyGain" && valueView.TryGet(nValue)) {
         frequencyGain = nValue;
         return true;
-    } else if (attr == "windowType" && valueView.TryGet(nValue)) {
-        windowType = nValue;
+    } else if (attr == "m_windowType" && valueView.TryGet(nValue)) {
+        m_windowType = nValue;
         return true;
-    } else if (attr == "windowSize" && valueView.TryGet(nValue)) {
-        windowSize = nValue;
+    } else if (attr == "m_windowSize" && valueView.TryGet(nValue)) {
+        m_windowSize = nValue;
         return true;
     } else if (attr == "zeroPaddingFactor" && valueView.TryGet(nValue)) {
         zeroPaddingFactor = nValue;
@@ -320,19 +315,19 @@ enum {
 };
 void RecreateWindow(
     Floats& window, int which, size_t fftLen,
-    size_t padding, int windowType, size_t windowSize, double& scale)
+    size_t padding, int m_windowType, size_t m_windowSize, double& scale)
 {
     // Create the requested window function
     window = Floats{ fftLen };
     size_t ii;
 
     const bool extra = padding > 0;
-    wxASSERT(windowSize % 2 == 0);
+    wxASSERT(m_windowSize % 2 == 0);
     if (extra) {
         // For windows that do not go to 0 at the edges, this improves symmetry
-        ++windowSize;
+        ++m_windowSize;
     }
-    const size_t endOfWindow = padding + windowSize;
+    const size_t endOfWindow = padding + m_windowSize;
     // Left and right padding
     for (ii = 0; ii < padding; ++ii) {
         window[ii] = 0.0;
@@ -345,18 +340,18 @@ void RecreateWindow(
     // Overwrite middle as needed
     switch (which) {
     case WINDOW:
-        NewWindowFunc(windowType, windowSize, extra, window.get() + padding);
+        NewWindowFunc(m_windowType, m_windowSize, extra, window.get() + padding);
         break;
     case TWINDOW:
-        NewWindowFunc(windowType, windowSize, extra, window.get() + padding);
+        NewWindowFunc(m_windowType, m_windowSize, extra, window.get() + padding);
         {
-            for (int jj = padding, multiplier = -(int)windowSize / 2; jj < (int)endOfWindow; ++jj, ++multiplier) {
+            for (int jj = padding, multiplier = -(int)m_windowSize / 2; jj < (int)endOfWindow; ++jj, ++multiplier) {
                 window[jj] *= multiplier;
             }
         }
         break;
     case DWINDOW:
-        DerivativeOfWindowFunc(windowType, windowSize, extra, window.get() + padding);
+        DerivativeOfWindowFunc(m_windowType, m_windowSize, extra, window.get() + padding);
         break;
     default:
         wxASSERT(false);
@@ -386,10 +381,10 @@ void Au3SpectrogramSettings::CacheWindows()
         const auto padding = (WindowSize() * (factor - 1)) / 2;
 
         hFFT = GetFFT(fftLen);
-        RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
+        RecreateWindow(window, WINDOW, fftLen, padding, m_windowType, m_windowSize, scale);
         if (algorithm == algReassignment) {
-            RecreateWindow(tWindow, TWINDOW, fftLen, padding, windowType, windowSize, scale);
-            RecreateWindow(dWindow, DWINDOW, fftLen, padding, windowType, windowSize, scale);
+            RecreateWindow(tWindow, TWINDOW, fftLen, padding, m_windowType, m_windowSize, scale);
+            RecreateWindow(dWindow, DWINDOW, fftLen, padding, m_windowType, m_windowSize, scale);
         }
     }
 }
@@ -407,8 +402,8 @@ static_assert(isPowerOfTwo(4) == true);
 void Au3SpectrogramSettings::SetWindowSize(int size)
 {
     assert(isPowerOfTwo(size));
-    windowSize = size;
-    InvalidateCaches();
+    m_windowSize = size;
+    DestroyWindows();
 }
 
 void Au3SpectrogramSettings::ConvertToEnumeratedWindowSizes()
@@ -417,11 +412,11 @@ void Au3SpectrogramSettings::ConvertToEnumeratedWindowSizes()
     int logarithm;
 
     logarithm = -LogMinWindowSize;
-    size = unsigned(windowSize);
+    size = unsigned(m_windowSize);
     while (size > 1) {
         size >>= 1, ++logarithm;
     }
-    windowSize = std::max(0, std::min(NumWindowSizes - 1, logarithm));
+    m_windowSize = std::max(0, std::min(NumWindowSizes - 1, logarithm));
 
     // Choices for zero padding begin at 1
     logarithm = 0;
@@ -430,14 +425,14 @@ void Au3SpectrogramSettings::ConvertToEnumeratedWindowSizes()
         zeroPaddingFactor >>= 1, ++logarithm;
     }
     zeroPaddingFactor = std::max(0,
-                                 std::min(LogMaxWindowSize - (windowSize + LogMinWindowSize),
+                                 std::min(LogMaxWindowSize - (m_windowSize + LogMinWindowSize),
                                           logarithm
                                           ));
 }
 
 void Au3SpectrogramSettings::ConvertToActualWindowSizes()
 {
-    windowSize = 1 << (windowSize + LogMinWindowSize);
+    m_windowSize = 1 << (m_windowSize + LogMinWindowSize);
     zeroPaddingFactor = 1 << zeroPaddingFactor;
 }
 
@@ -454,9 +449,9 @@ float Au3SpectrogramSettings::findBin(float frequency, float binUnit) const
 size_t Au3SpectrogramSettings::GetFFTLength() const
 {
 //#ifndef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-    // return windowSize;
+    // return m_windowSize;
 //#else
-    return windowSize * ((algorithm != algPitchEAC) ? zeroPaddingFactor : 1);
+    return m_windowSize * ((algorithm != algPitchEAC) ? zeroPaddingFactor : 1);
 //#endif
 }
 
@@ -572,4 +567,11 @@ void SpectrogramBounds::GetBounds(
         }
     }
 }
+
+void Au3SpectrogramSettings::SetZeroPaddingFactor(int factor)
+{
+    assert(isPowerOfTwo(factor));
+    zeroPaddingFactor = factor;
+    DestroyWindows();
 }
+} // namespace au::spectrogram
