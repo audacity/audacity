@@ -15,115 +15,28 @@ Paul Licameli
 
 #include "SpectrogramSettings.h"
 
-#include "au3-screen-geometry/NumberScale.h"
-
-#include <algorithm>
-
+#include "au3-basic-ui/BasicUI.h"
 #include "au3-fft/FFT.h"
-#include "au3-preferences/Prefs.h"
+#include "au3-screen-geometry/NumberScale.h"
 #include "au3-wave-track/WaveTrack.h"
 
+#include <algorithm>
 #include <cmath>
 
-#include "au3-basic-ui/BasicUI.h"
-
-IntSetting SpectrumMaxFreq{
-    L"/Spectrum/MaxFreq", 20000 };
-
-namespace {
-// Other settings not yet used outside of this file
-
-// To do: migrate these to ChoiceSetting preferences, which will store an
-// Identifier instead of a number in the preference file.
-IntSetting SpectrumAlgorithm{
-    L"/Spectrum/Algorithm", 0 }; // Default to Frequencies
-IntSetting SpectrumScale{
-    L"/Spectrum/ScaleType", 2 }; // Default to Mel
-IntSetting SpectrumWindowFunction{
-    L"/Spectrum/WindowType", eWinFuncHann };
-
-BoolSetting SpectrumEnableSelection{
-    L"/Spectrum/EnableSpectralSelection", true };
-IntSetting SpectrumFFTSize{
-    L"/Spectrum/FFTSize", 2048 };
-IntSetting SpectrumFrequencyGain{
-    L"/Spectrum/FrequencyGain", 0 };
-IntSetting SpectrumGain{
-    L"/Spectrum/Gain", 20 };
-BoolSetting SpectrumGrayscale{
-    L"/Spectrum/Grayscale", false };
-IntSetting SpectrumMinFreq{
-    L"/Spectrum/MinFreq", 0 };
-IntSetting SpectrumRange{
-    L"/Spectrum/Range", 80 };
-IntSetting SpectrumZeroPaddingFactor{
-    L"/Spectrum/ZeroPaddingFactor", 2 };
-}
-
-SpectrogramSettings::Globals::Globals()
-{
-    LoadPrefs();
-}
-
-void SpectrogramSettings::Globals::SavePrefs()
-{
-#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
-    SpectrumEnableSelection.Write(spectralSelection);
-#endif
-}
-
-void SpectrogramSettings::Globals::LoadPrefs()
-{
-#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
-    spectralSelection = SpectrumEnableSelection.Read();
-#endif
-}
-
-SpectrogramSettings::Globals
-& SpectrogramSettings::Globals::Get()
-{
-    static Globals instance;
-    return instance;
-}
-
-static const ChannelGroup::Attachments::RegisteredFactory
-    key1{ [](auto&) { return nullptr; } };
-
-SpectrogramSettings& SpectrogramSettings::Get(const WaveTrack& track)
-{
-    auto& mutTrack = const_cast<WaveTrack&>(track);
-    auto pSettings = mutTrack.Attachments::Find<SpectrogramSettings>(key1);
-    if (pSettings) {
-        return *pSettings;
-    } else {
-        return SpectrogramSettings::defaults();
+static const AttachedTrackObjects::RegisteredFactory key1{
+    [](::Track&) -> std::shared_ptr<SpectrogramSettings> {
+        return std::make_shared<SpectrogramSettings>();
     }
+};
+
+const SpectrogramSettings& SpectrogramSettings::Get(const WaveTrack& track)
+{
+    return const_cast<WaveTrack&>(track).AttachedTrackObjects::Get<SpectrogramSettings>(key1);
 }
 
-SpectrogramSettings& SpectrogramSettings::Get(const WaveChannel& channel)
+SpectrogramSettings& SpectrogramSettings::Get(WaveTrack& track)
 {
-    return Get(channel.GetTrack());
-}
-
-SpectrogramSettings& SpectrogramSettings::Own(WaveTrack& track)
-{
-    auto pSettings = track.Attachments::Find<SpectrogramSettings>(key1);
-    if (!pSettings) {
-        auto uSettings = std::make_unique<SpectrogramSettings>();
-        pSettings = uSettings.get();
-        track.Attachments::Assign(key1, std::move(uSettings));
-    }
-    return *pSettings;
-}
-
-void SpectrogramSettings::Reset(WaveChannel& wc)
-{
-    wc.GetTrack().Attachments::Assign(key1, nullptr);
-}
-
-SpectrogramSettings::SpectrogramSettings()
-{
-    LoadPrefs();
+    return track.AttachedTrackObjects::Get<SpectrogramSettings>(key1);
 }
 
 SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings& other)
@@ -137,9 +50,7 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings& other)
     , zeroPaddingFactor(other.zeroPaddingFactor)
     , colorScheme(other.colorScheme)
     , scaleType(other.scaleType)
-#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
     , spectralSelection(other.spectralSelection)
-#endif
     , algorithm(other.algorithm)
 
     // Do not copy these!
@@ -163,21 +74,13 @@ SpectrogramSettings& SpectrogramSettings::operator=(const SpectrogramSettings& o
         zeroPaddingFactor = other.zeroPaddingFactor;
         colorScheme = other.colorScheme;
         scaleType = other.scaleType;
-#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
         spectralSelection = other.spectralSelection;
-#endif
         algorithm = other.algorithm;
 
         // Invalidate the caches
         DestroyWindows();
     }
     return *this;
-}
-
-SpectrogramSettings& SpectrogramSettings::defaults()
-{
-    static SpectrogramSettings instance;
-    return instance;
 }
 
 //static
@@ -218,24 +121,6 @@ const EnumValueSymbols& SpectrogramSettings::GetColorSchemeNames()
 
     return result;
 }
-
-void SpectrogramSettings::ColorSchemeEnumSetting::Migrate(wxString& value)
-{
-    // Migrate old grayscale option to Color scheme choice
-    bool isGrayscale = SpectrumGrayscale.Read();
-    if (isGrayscale && !gPrefs->Read(wxT("/Spectrum/ColorScheme"), &value)) {
-        value = GetColorSchemeNames().at(csGrayscale).Internal();
-        Write(value);
-        gPrefs->Flush();
-    }
-}
-
-SpectrogramSettings::ColorSchemeEnumSetting SpectrogramSettings::colorSchemeSetting{
-    wxT("/Spectrum/ColorScheme"),
-    GetColorSchemeNames(),
-    csColorNew, // default to Color(New)
-    { csColorNew, csColorTheme, csGrayscale, csInvGrayscale },
-};
 
 //static
 const TranslatableStrings& SpectrogramSettings::GetAlgorithmNames()
@@ -321,125 +206,6 @@ bool SpectrogramSettings::Validate(bool quiet)
     return true;
 }
 
-void SpectrogramSettings::LoadPrefs()
-{
-    minFreq = SpectrumMinFreq.Read();
-
-    maxFreq = SpectrumMaxFreq.Read();
-
-    range = SpectrumRange.Read();
-    gain = SpectrumGain.Read();
-    frequencyGain = SpectrumFrequencyGain.Read();
-
-    windowSize = SpectrumFFTSize.Read();
-
-    zeroPaddingFactor = SpectrumZeroPaddingFactor.Read();
-
-    windowType = SpectrumWindowFunction.Read();
-
-    colorScheme = colorSchemeSetting.ReadEnum();
-
-    scaleType = static_cast<ScaleType>(SpectrumScale.Read());
-
-#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
-    spectralSelection = SpectrumEnableSelection.Read();
-#endif
-
-    algorithm = static_cast<Algorithm>(SpectrumAlgorithm.Read());
-
-    // Enforce legal values
-    Validate(true);
-
-    InvalidateCaches();
-}
-
-void SpectrogramSettings::SavePrefs()
-{
-    SpectrumMinFreq.Write(minFreq);
-    SpectrumMaxFreq.Write(maxFreq);
-
-    // Nothing wrote these.  They only varied from the linear scale bounds in-session. -- PRL
-    // gPrefs->Write(wxT("/SpectrumLog/MaxFreq"), logMinFreq);
-    // gPrefs->Write(wxT("/SpectrumLog/MinFreq"), logMaxFreq);
-
-    SpectrumRange.Write(range);
-    SpectrumGain.Write(gain);
-    SpectrumFrequencyGain.Write(frequencyGain);
-
-    SpectrumFFTSize.Write(windowSize);
-
-    SpectrumZeroPaddingFactor.Write(zeroPaddingFactor);
-
-    SpectrumWindowFunction.Write(windowType);
-
-    colorSchemeSetting.WriteEnum(colorScheme);
-
-    SpectrumScale.Write(static_cast<int>(scaleType));
-
-#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
-    SpectrumEnableSelection.Write(spectralSelection);
-#endif
-
-    SpectrumAlgorithm.Write(static_cast<int>(algorithm));
-}
-
-// This is a temporary hack until SpectrogramSettings gets fully integrated
-void SpectrogramSettings::UpdatePrefs()
-{
-    if (minFreq == defaults().minFreq) {
-        minFreq = SpectrumMinFreq.Read();
-    }
-
-    if (maxFreq == defaults().maxFreq) {
-        maxFreq = SpectrumMaxFreq.Read();
-    }
-
-    if (range == defaults().range) {
-        range = SpectrumRange.Read();
-    }
-
-    if (gain == defaults().gain) {
-        gain = SpectrumGain.Read();
-    }
-
-    if (frequencyGain == defaults().frequencyGain) {
-        frequencyGain = SpectrumFrequencyGain.Read();
-    }
-
-    if (windowSize == defaults().windowSize) {
-        windowSize = SpectrumFFTSize.Read();
-    }
-
-    if (zeroPaddingFactor == defaults().zeroPaddingFactor) {
-        zeroPaddingFactor = SpectrumZeroPaddingFactor.Read();
-    }
-
-    if (windowType == defaults().windowType) {
-        windowType = SpectrumWindowFunction.Read();
-    }
-
-    if (colorScheme == defaults().colorScheme) {
-        colorScheme = colorSchemeSetting.ReadEnum();
-    }
-
-    if (scaleType == defaults().scaleType) {
-        scaleType = static_cast<ScaleType>(SpectrumScale.Read());
-    }
-
-#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
-    if (spectralSelection == defaults().spectralSelection) {
-        spectralSelection = SpectrumEnableSelection.Read();
-    }
-#endif
-
-    if (algorithm == defaults().algorithm) {
-        algorithm = static_cast<Algorithm>(SpectrumAlgorithm.Read());
-    }
-
-    // Enforce legal values
-    Validate(true);
-}
-
 void SpectrogramSettings::InvalidateCaches()
 {
     DestroyWindows();
@@ -450,9 +216,10 @@ SpectrogramSettings::~SpectrogramSettings()
     DestroyWindows();
 }
 
-auto SpectrogramSettings::Clone() const -> PointerType
+void SpectrogramSettings::CopyTo(::Track& track) const
 {
-    return std::make_unique<SpectrogramSettings>(*this);
+    auto& specSettings = SpectrogramSettings::Get(static_cast<WaveTrack&>(track));
+    specSettings = *this;
 }
 
 void SpectrogramSettings::DestroyWindows()
@@ -649,11 +416,7 @@ NumberScale SpectrogramSettings::GetScale(float minFreqIn, float maxFreqIn) cons
 
 bool SpectrogramSettings::SpectralSelectionEnabled() const
 {
-#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
-    return Globals::Get().spectralSelection;
-#else
     return spectralSelection;
-#endif
 }
 
 static const ChannelGroup::Attachments::RegisteredFactory
@@ -668,16 +431,6 @@ const SpectrogramBounds& SpectrogramBounds::Get(
     const WaveTrack& track)
 {
     return Get(const_cast<WaveTrack&>(track));
-}
-
-SpectrogramBounds& SpectrogramBounds::Get(WaveChannel& channel)
-{
-    return Get(channel.GetTrack());
-}
-
-const SpectrogramBounds& SpectrogramBounds::Get(const WaveChannel& channel)
-{
-    return Get(const_cast<WaveChannel&>(channel));
 }
 
 SpectrogramBounds::~SpectrogramBounds() = default;

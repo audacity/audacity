@@ -11,12 +11,9 @@ Paul Licameli
 #ifndef __AUDACITY_SPECTROGRAM_SETTINGS__
 #define __AUDACITY_SPECTROGRAM_SETTINGS__
 
-#include "au3-registries/ClientData.h" // to inherit
-#include "au3-preferences/Prefs.h"
 #include "au3-math/SampleFormat.h"
 #include "au3-fft/RealFFTf.h"
-
-#undef SPECTRAL_SELECTION_GLOBAL_SWITCH
+#include "au3-track/TrackAttachment.h"
 
 class EnumValueSymbols;
 struct FFTParam;
@@ -26,26 +23,9 @@ class wxArrayStringEx;
 class WaveChannel;
 class WaveTrack;
 
-class SpectrogramSettings : public PrefsListener, public ClientData::Cloneable<>
+class SpectrogramSettings : public TrackAttachment
 {
-    friend class SpectrumPrefs;
 public:
-
-    // Singleton for settings that are not per-track
-    class Globals
-    {
-    public:
-        static Globals& Get();
-        void SavePrefs();
-
-#ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
-        bool spectralSelection;
-#endif
-
-    private:
-        Globals();
-        void LoadPrefs();
-    };
 
     enum {
         LogMinWindowSize = 3,
@@ -73,39 +53,18 @@ public:
     static const EnumValueSymbols& GetColorSchemeNames();
     static const TranslatableStrings& GetAlgorithmNames();
 
-    //! Return either the track's independent settings or global defaults
-    //! Mutative access to attachment even if the track argument is const
-    static SpectrogramSettings& Get(const WaveTrack& track);
+    static const SpectrogramSettings& Get(const WaveTrack&);
+    static SpectrogramSettings& Get(WaveTrack&);
 
-    /*!
-     @copydoc Get(const WaveTrack &)
-     */
-    static SpectrogramSettings& Get(const WaveChannel& channel);
-
-    // Force creation track's independent settings
-    static SpectrogramSettings& Own(WaveTrack& wc);
-
-    //! Make channel lose indpendent settings and use defaults
-    static void Reset(WaveChannel& channel);
-
-    static SpectrogramSettings& defaults();
-    SpectrogramSettings();
+    SpectrogramSettings() = default;
     SpectrogramSettings(const SpectrogramSettings& other);
     SpectrogramSettings& operator=(const SpectrogramSettings& other);
     ~SpectrogramSettings();
 
-    PointerType Clone() const override;
+    void CopyTo(::Track& track) const override;
 
-    bool IsDefault() const
-    {
-        return this == &defaults();
-    }
 
     bool Validate(bool quiet);
-    void LoadPrefs();
-    void SavePrefs();
-
-    void UpdatePrefs() override;
 
     void InvalidateCaches();
     void DestroyWindows();
@@ -120,27 +79,28 @@ public:
     // If "bins" is false, units are Hz
     NumberScale GetScale(float minFreq, float maxFreq) const;
 
-    int minFreq;
-    int maxFreq;
+    // For now. When rulers are implemented for spectrogram view, this may need some refactoring.
+    int minFreq = 1;
+    int maxFreq = 20000;
 
     bool SpectralSelectionEnabled() const;
 
 public:
     bool syncWithGlobalSettings = true;
 
-    int range;
-    int gain;
-    int frequencyGain;
+    int range = 0;
+    int gain = 0;
+    int frequencyGain = 0;
 
-    int windowType;
+    int windowType = 0;
 
 private:
-    int windowSize;
+    int windowSize = 0;
 public:
     int WindowSize() const { return windowSize; }
     void SetWindowSize(int size);
 
-    int zeroPaddingFactor;
+    int zeroPaddingFactor = 0;
 public:
     size_t ZeroPaddingFactor() const
     {
@@ -159,20 +119,11 @@ public:
 
         csNumColorScheme,
     };
-    ColorScheme colorScheme;
+    ColorScheme colorScheme = csColorNew;
 
-    class ColorSchemeEnumSetting : public EnumSetting< ColorScheme >
-    {
-        using EnumSetting< ColorScheme >::EnumSetting;
-        void Migrate(wxString& value) override;
-    };
-    static ColorSchemeEnumSetting colorSchemeSetting;
+    ScaleType scaleType = stLogarithmic;
 
-    ScaleType scaleType;
-
-#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
-    bool spectralSelection; // But should this vary per track? -- PRL
-#endif
+    bool spectralSelection = false; // But should this vary per track? -- PRL - I've also asked the question, awaiting response. -- MH
 
     typedef int Algorithm;
     enum AlgorithmValues : int {
@@ -182,9 +133,7 @@ public:
 
         algNumAlgorithms,
     };
-    Algorithm algorithm;
-
-    // Following fields are derived from preferences.
+    Algorithm algorithm = algSTFT;
 
     // Variables used for computing the spectrum
     HFFT hFFT;
@@ -195,8 +144,6 @@ public:
     Floats dWindow;        // Derivative of window
 };
 
-extern IntSetting SpectrumMaxFreq;
-
 class SpectrogramBounds : public ClientData::Cloneable<>
 {
 public:
@@ -206,12 +153,6 @@ public:
 
     //! @copydoc Get(WaveTrack&)
     static const SpectrogramBounds& Get(const WaveTrack& track);
-
-    //! @copydoc Get(WaveTrack&)
-    static SpectrogramBounds& Get(WaveChannel& channel);
-
-    //! @copydoc Get(WaveTrack&)
-    static const SpectrogramBounds& Get(const WaveChannel& channel);
 
     ~SpectrogramBounds() override;
     PointerType Clone() const override;
