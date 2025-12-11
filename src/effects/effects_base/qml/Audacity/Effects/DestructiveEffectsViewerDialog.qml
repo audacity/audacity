@@ -63,6 +63,7 @@ EffectStyledDialogView {
 
     Component.onCompleted: {
         viewerModel.load()
+        loadViewer()
     }
 
     onWindowChanged: {
