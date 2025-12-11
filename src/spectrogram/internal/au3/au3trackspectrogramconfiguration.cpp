@@ -3,7 +3,7 @@
  */
 #include "au3trackspectrogramconfiguration.h"
 #include "au3spectrogramutils.h"
-#include "SpectrogramSettings.h"
+#include "au3spectrogramsettings.h"
 
 #include "project/iaudacityproject.h"
 #include "au3wrap/internal/domaccessor.h"
@@ -24,10 +24,10 @@ std::shared_ptr<Au3TrackSpectrogramConfiguration> Au3TrackSpectrogramConfigurati
     IF_ASSERT_FAILED(waveTrack) {
         return nullptr;
     }
-    return std::make_shared<Au3TrackSpectrogramConfiguration>(SpectrogramSettings::Get(*waveTrack));
+    return std::make_shared<Au3TrackSpectrogramConfiguration>(Au3SpectrogramSettings::Get(*waveTrack));
 }
 
-Au3TrackSpectrogramConfiguration::Au3TrackSpectrogramConfiguration(SpectrogramSettings& settings)
+Au3TrackSpectrogramConfiguration::Au3TrackSpectrogramConfiguration(Au3SpectrogramSettings& settings)
     : m_settings(settings)
 {}
 
@@ -99,8 +99,8 @@ void Au3TrackSpectrogramConfiguration::setColorScheme(SpectrogramColorScheme val
 
 SpectrogramScale Au3TrackSpectrogramConfiguration::scale() const
 {
-    return static_cast<SpectrogramScale>(fromAu3Scale(static_cast<SpectrogramSettings::ScaleTypeValues>(m_settings
-                                                                                                                                  .scaleType)));
+    return static_cast<SpectrogramScale>(fromAu3Scale(static_cast<Au3SpectrogramSettings::ScaleTypeValues>(m_settings
+                                                                                                           .scaleType)));
 }
 
 void Au3TrackSpectrogramConfiguration::setScale(SpectrogramScale value)
@@ -114,8 +114,8 @@ void Au3TrackSpectrogramConfiguration::setScale(SpectrogramScale value)
 
 SpectrogramAlgorithm Au3TrackSpectrogramConfiguration::algorithm() const
 {
-    return static_cast<SpectrogramAlgorithm>(fromAu3Algorithm(static_cast<SpectrogramSettings::AlgorithmValues>(
-                                                                               m_settings.algorithm)));
+    return static_cast<SpectrogramAlgorithm>(fromAu3Algorithm(static_cast<Au3SpectrogramSettings::AlgorithmValues>(
+                                                                  m_settings.algorithm)));
 }
 
 void Au3TrackSpectrogramConfiguration::setAlgorithm(SpectrogramAlgorithm value)
@@ -208,4 +208,3 @@ void Au3TrackSpectrogramConfiguration::setAllSettings(const AllSpectrogramSettin
     setZeroPaddingFactor(allSettings.zeroPaddingFactor);
 }
 }
-

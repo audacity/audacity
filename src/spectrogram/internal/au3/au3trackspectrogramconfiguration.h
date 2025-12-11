@@ -10,14 +10,14 @@ class IGlobalContext;
 }
 
 namespace au::spectrogram {
-class SpectrogramSettings;
+class Au3SpectrogramSettings;
 
 class Au3TrackSpectrogramConfiguration final : public ITrackSpectrogramConfiguration
 {
 public:
     static std::shared_ptr<Au3TrackSpectrogramConfiguration> create(int trackId, const context::IGlobalContext& globalContext);
 
-    Au3TrackSpectrogramConfiguration(SpectrogramSettings&);
+    Au3TrackSpectrogramConfiguration(Au3SpectrogramSettings&);
     ~Au3TrackSpectrogramConfiguration() override = default;
 
     bool spectralSelectionEnabled() const override;
@@ -57,6 +57,6 @@ public:
     void setAllSettings(const AllSpectrogramSettings&) override;
 
 private:
-    SpectrogramSettings& m_settings;
+    Au3SpectrogramSettings& m_settings;
 };
 }

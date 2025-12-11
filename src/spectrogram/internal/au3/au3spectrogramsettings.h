@@ -16,7 +16,7 @@ class WaveChannel;
 class WaveTrack;
 
 namespace au::spectrogram {
-class SpectrogramSettings : public TrackAttachment
+class Au3SpectrogramSettings : public TrackAttachment
 {
 public:
 
@@ -46,13 +46,13 @@ public:
     static const EnumValueSymbols& GetColorSchemeNames();
     static const TranslatableStrings& GetAlgorithmNames();
 
-    static const SpectrogramSettings& Get(const WaveTrack&);
-    static SpectrogramSettings& Get(WaveTrack&);
+    static const Au3SpectrogramSettings& Get(const WaveTrack&);
+    static Au3SpectrogramSettings& Get(WaveTrack&);
 
-    SpectrogramSettings() = default;
-    SpectrogramSettings(const SpectrogramSettings& other);
-    SpectrogramSettings& operator=(const SpectrogramSettings& other);
-    ~SpectrogramSettings();
+    Au3SpectrogramSettings() = default;
+    Au3SpectrogramSettings(const Au3SpectrogramSettings& other);
+    Au3SpectrogramSettings& operator=(const Au3SpectrogramSettings& other);
+    ~Au3SpectrogramSettings();
 
     void CopyTo(::Track& track) const override;
     void WriteXMLAttributes(XMLWriter& writer) const override;

@@ -1,7 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "SpectrogramSettings.h"
+#include "au3spectrogramsettings.h"
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-fft/FFT.h"
@@ -14,23 +14,23 @@
 namespace au::spectrogram {
 namespace {
 static const AttachedTrackObjects::RegisteredFactory key1{
-    [](::Track&) -> std::shared_ptr<SpectrogramSettings> {
-        return std::make_shared<SpectrogramSettings>();
+    [](::Track&) -> std::shared_ptr<Au3SpectrogramSettings> {
+        return std::make_shared<Au3SpectrogramSettings>();
     }
 };
 }
 
-const SpectrogramSettings& SpectrogramSettings::Get(const WaveTrack& track)
+const Au3SpectrogramSettings& Au3SpectrogramSettings::Get(const WaveTrack& track)
 {
-    return const_cast<WaveTrack&>(track).AttachedTrackObjects::Get<SpectrogramSettings>(key1);
+    return const_cast<WaveTrack&>(track).AttachedTrackObjects::Get<Au3SpectrogramSettings>(key1);
 }
 
-SpectrogramSettings& SpectrogramSettings::Get(WaveTrack& track)
+Au3SpectrogramSettings& Au3SpectrogramSettings::Get(WaveTrack& track)
 {
-    return track.AttachedTrackObjects::Get<SpectrogramSettings>(key1);
+    return track.AttachedTrackObjects::Get<Au3SpectrogramSettings>(key1);
 }
 
-SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings& other)
+Au3SpectrogramSettings::Au3SpectrogramSettings(const Au3SpectrogramSettings& other)
     : minFreq(other.minFreq)
     , maxFreq(other.maxFreq)
     , range(other.range)
@@ -52,7 +52,7 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings& other)
 {
 }
 
-SpectrogramSettings& SpectrogramSettings::operator=(const SpectrogramSettings& other)
+Au3SpectrogramSettings& Au3SpectrogramSettings::operator=(const Au3SpectrogramSettings& other)
 {
     if (this != &other) {
         minFreq = other.minFreq;
@@ -75,10 +75,10 @@ SpectrogramSettings& SpectrogramSettings::operator=(const SpectrogramSettings& o
 }
 
 //static
-const EnumValueSymbols& SpectrogramSettings::GetScaleNames()
+const EnumValueSymbols& Au3SpectrogramSettings::GetScaleNames()
 {
     static const EnumValueSymbols result{
-        // Keep in correspondence with enum SpectrogramSettings::ScaleType:
+        // Keep in correspondence with enum Au3SpectrogramSettings::ScaleType:
         XO("Linear"),
         XO("Logarithmic"),
         /* i18n-hint: The name of a frequency scale in psychoacoustics */
@@ -94,10 +94,10 @@ const EnumValueSymbols& SpectrogramSettings::GetScaleNames()
 }
 
 //static
-const EnumValueSymbols& SpectrogramSettings::GetColorSchemeNames()
+const EnumValueSymbols& Au3SpectrogramSettings::GetColorSchemeNames()
 {
     static const EnumValueSymbols result{
-        // Keep in correspondence with enum SpectrogramSettings::ColorScheme:
+        // Keep in correspondence with enum Au3SpectrogramSettings::ColorScheme:
         /* i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme */
         { wxT("SpecColorNew"),     XC("Color (Roseus)",    "spectrum prefs") },
         /* i18n-hint: Classic color scheme(from theme) for spectrograms */
@@ -114,10 +114,10 @@ const EnumValueSymbols& SpectrogramSettings::GetColorSchemeNames()
 }
 
 //static
-const TranslatableStrings& SpectrogramSettings::GetAlgorithmNames()
+const TranslatableStrings& Au3SpectrogramSettings::GetAlgorithmNames()
 {
     static const TranslatableStrings results{
-        // Keep in correspondence with enum SpectrogramSettings::Algorithm:
+        // Keep in correspondence with enum Au3SpectrogramSettings::Algorithm:
         XO("Frequencies"),
         /* i18n-hint: the Reassignment algorithm for spectrograms */
         XO("Reassignment"),
@@ -127,7 +127,7 @@ const TranslatableStrings& SpectrogramSettings::GetAlgorithmNames()
     return results;
 }
 
-bool SpectrogramSettings::Validate(bool quiet)
+bool Au3SpectrogramSettings::Validate(bool quiet)
 {
     if (!quiet
         && maxFreq < 100) {
@@ -183,7 +183,7 @@ bool SpectrogramSettings::Validate(bool quiet)
         =std::max(0, std::min(NumWindowFuncs() - 1, windowType));
     scaleType
         =ScaleType(std::max(0,
-                            std::min((int)(SpectrogramSettings::stNumScaleTypes)-1,
+                            std::min((int)(Au3SpectrogramSettings::stNumScaleTypes)-1,
                                      (int)(scaleType))));
     colorScheme = ColorScheme(
         std::max(0, std::min<int>(csNumColorScheme - 1, colorScheme))
@@ -197,23 +197,23 @@ bool SpectrogramSettings::Validate(bool quiet)
     return true;
 }
 
-void SpectrogramSettings::InvalidateCaches()
+void Au3SpectrogramSettings::InvalidateCaches()
 {
     DestroyWindows();
 }
 
-SpectrogramSettings::~SpectrogramSettings()
+Au3SpectrogramSettings::~Au3SpectrogramSettings()
 {
     DestroyWindows();
 }
 
-void SpectrogramSettings::CopyTo(::Track& track) const
+void Au3SpectrogramSettings::CopyTo(::Track& track) const
 {
-    auto& specSettings = SpectrogramSettings::Get(static_cast<WaveTrack&>(track));
+    auto& specSettings = Au3SpectrogramSettings::Get(static_cast<WaveTrack&>(track));
     specSettings = *this;
 }
 
-void SpectrogramSettings::WriteXMLAttributes(XMLWriter& writer) const
+void Au3SpectrogramSettings::WriteXMLAttributes(XMLWriter& writer) const
 {
     writer.WriteAttr("syncWithGlobalSettings", syncWithGlobalSettings);
     writer.WriteAttr("minFreq", minFreq);
@@ -230,7 +230,7 @@ void SpectrogramSettings::WriteXMLAttributes(XMLWriter& writer) const
     writer.WriteAttr("algorithm", static_cast<int>(algorithm));
 }
 
-bool SpectrogramSettings::HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView)
+bool Au3SpectrogramSettings::HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView)
 {
     int nValue;
     if (attr == "syncWithGlobalSettings" && valueView.TryGet(nValue)) {
@@ -276,7 +276,7 @@ bool SpectrogramSettings::HandleXMLAttribute(const std::string_view& attr, const
     return false;
 }
 
-void SpectrogramSettings::DestroyWindows()
+void Au3SpectrogramSettings::DestroyWindows()
 {
     hFFT.reset();
     window.reset();
@@ -347,7 +347,7 @@ void RecreateWindow(
 }
 }
 
-void SpectrogramSettings::CacheWindows()
+void Au3SpectrogramSettings::CacheWindows()
 {
     if (hFFT == NULL || window == NULL || (algorithm == algReassignment && (tWindow == NULL || dWindow == NULL))) {
         double scale;
@@ -374,14 +374,14 @@ static_assert(isPowerOfTwo(3) == false);
 static_assert(isPowerOfTwo(4) == true);
 }
 
-void SpectrogramSettings::SetWindowSize(int size)
+void Au3SpectrogramSettings::SetWindowSize(int size)
 {
     assert(isPowerOfTwo(size));
     windowSize = size;
     InvalidateCaches();
 }
 
-void SpectrogramSettings::ConvertToEnumeratedWindowSizes()
+void Au3SpectrogramSettings::ConvertToEnumeratedWindowSizes()
 {
     unsigned size;
     int logarithm;
@@ -405,13 +405,13 @@ void SpectrogramSettings::ConvertToEnumeratedWindowSizes()
                                           ));
 }
 
-void SpectrogramSettings::ConvertToActualWindowSizes()
+void Au3SpectrogramSettings::ConvertToActualWindowSizes()
 {
     windowSize = 1 << (windowSize + LogMinWindowSize);
     zeroPaddingFactor = 1 << zeroPaddingFactor;
 }
 
-float SpectrogramSettings::findBin(float frequency, float binUnit) const
+float Au3SpectrogramSettings::findBin(float frequency, float binUnit) const
 {
     float linearBin = frequency / binUnit;
     if (linearBin < 0) {
@@ -421,7 +421,7 @@ float SpectrogramSettings::findBin(float frequency, float binUnit) const
     }
 }
 
-size_t SpectrogramSettings::GetFFTLength() const
+size_t Au3SpectrogramSettings::GetFFTLength() const
 {
 //#ifndef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
     // return windowSize;
@@ -430,13 +430,13 @@ size_t SpectrogramSettings::GetFFTLength() const
 //#endif
 }
 
-size_t SpectrogramSettings::NBins() const
+size_t Au3SpectrogramSettings::NBins() const
 {
     // Omit the Nyquist frequency bin
     return GetFFTLength() / 2;
 }
 
-NumberScale SpectrogramSettings::GetScale(float minFreqIn, float maxFreqIn) const
+NumberScale Au3SpectrogramSettings::GetScale(float minFreqIn, float maxFreqIn) const
 {
     NumberScaleType type = nstLinear;
 
@@ -468,7 +468,7 @@ NumberScale SpectrogramSettings::GetScale(float minFreqIn, float maxFreqIn) cons
     return NumberScale(type, minFreqIn, maxFreqIn);
 }
 
-bool SpectrogramSettings::SpectralSelectionEnabled() const
+bool Au3SpectrogramSettings::SpectralSelectionEnabled() const
 {
     return spectralSelection;
 }
@@ -499,15 +499,15 @@ void SpectrogramBounds::GetBounds(
 {
     const double rate = wt.GetRate();
 
-    const auto& settings = SpectrogramSettings::Get(wt);
+    const auto& settings = Au3SpectrogramSettings::Get(wt);
     const auto type = settings.scaleType;
 
     const float top = (rate / 2.);
 
     float bottom;
-    if (type == SpectrogramSettings::stLinear) {
+    if (type == Au3SpectrogramSettings::stLinear) {
         bottom = 0.0f;
-    } else if (type == SpectrogramSettings::stPeriod) {
+    } else if (type == Au3SpectrogramSettings::stPeriod) {
         // special case
         const auto half = settings.GetFFTLength() / 2;
         // EAC returns no data for below this frequency:
