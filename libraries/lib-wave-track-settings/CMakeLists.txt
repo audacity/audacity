@@ -11,7 +11,7 @@ set( SOURCES
 set( LIBRARIES
    PUBLIC
       lib-fft-interface
-      lib-tft-interface
+      lib-tft
       lib-wave-track-interface
 )
 audacity_library( lib-wave-track-settings "${SOURCES}" "${LIBRARIES}"

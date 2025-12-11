@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include <iostream>
 #include <assert.h>
+#include <cmath>
 #include "WaveletCalculator.h"
 #include "ConfinedGaussianWaveletVoice.h"
 
@@ -36,7 +37,7 @@ WaveletCalculator::WaveletCalculator(unsigned int nOctaves,
    assert(increment < 1); //Avoid recursion
    
    float fCenter = fmax;  // Place first filter as high as possible
-   int nVoices = (int)(nOctaves * log(2) /( -log(increment)));
+   int nVoices = (int)(nOctaves * std::log(2) /( -std::log(increment)));
    for (int i = nVoices; i--; fCenter *= increment)
    {
       cout << "Making wavelet at fc " << fCenter << endl;
@@ -194,7 +195,7 @@ void  WaveletCalculator::prepare(unsigned int n_samples, unsigned int resolution
           double bw;
           double dist;
           (*iter)->getFrequency(freq, bw);
-          dist = abs(log(freq / *iterFreq));
+          dist = std::abs(std::log(freq / *iterFreq));
           if (dist < bestLogDist)
           {
              freqBest = freq;
@@ -206,7 +207,7 @@ void  WaveletCalculator::prepare(unsigned int n_samples, unsigned int resolution
        assert(pVoice);
        
        // Maybe we are not within range
-       if (abs(*iterFreq - freqBest) > 0.5* bwBest) {
+       if (std::abs(*iterFreq - freqBest) > 0.5* bwBest) {
           for (int i = 0; i < timestamps.size(); i++)
           {
              *pOut = 0;
