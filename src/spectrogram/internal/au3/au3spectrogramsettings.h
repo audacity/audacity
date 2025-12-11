@@ -21,15 +21,6 @@ namespace au::spectrogram {
 class Au3SpectrogramSettings : public TrackAttachment
 {
 public:
-    static void setGlobalSpectrogramConfiguration(std::weak_ptr<IGlobalSpectrogramConfiguration> globalConfig);
-
-    enum {
-        LogMinWindowSize = 3,
-        LogMaxWindowSize = 15,
-
-        NumWindowSizes = LogMaxWindowSize - LogMinWindowSize + 1,
-    };
-
     // Do not assume that this enumeration will remain the
     // same as NumberScaleType in future.  That enum may become
     // more general purpose.
@@ -45,80 +36,6 @@ public:
         stNumScaleTypes,
     };
 
-    static const EnumValueSymbols& GetScaleNames();
-    static const EnumValueSymbols& GetColorSchemeNames();
-    static const TranslatableStrings& GetAlgorithmNames();
-
-    static const Au3SpectrogramSettings& Get(const WaveTrack&);
-    static Au3SpectrogramSettings& Get(WaveTrack&);
-
-    Au3SpectrogramSettings() = default;
-    Au3SpectrogramSettings(const Au3SpectrogramSettings& other);
-    Au3SpectrogramSettings& operator=(const Au3SpectrogramSettings& other);
-    ~Au3SpectrogramSettings();
-
-    void CopyTo(::Track& track) const override;
-    void WriteXMLAttributes(XMLWriter& writer) const override;
-    bool HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueVuew) override;
-
-    bool Validate(bool quiet);
-
-    void DestroyWindows();
-    void CacheWindows();
-    void ConvertToEnumeratedWindowSizes();
-    void ConvertToActualWindowSizes();
-
-    // Need to be told what the bin unit is, as this structure does not know
-    // the rate
-    float findBin(float frequency, float binUnit) const;
-
-    // If "bins" is false, units are Hz
-    NumberScale GetScale(float minFreq, float maxFreq) const;
-
-    // For now. When rulers are implemented for spectrogram view, this may need some refactoring.
-    int minFreq = 1;
-    int maxFreq = 20000;
-
-    bool SpectralSelectionEnabled() const;
-
-public:
-    bool syncWithGlobalSettings = true;
-
-    int range = 0;
-    int gain = 0;
-    int frequencyGain = 0;
-
-public:
-    void SetWindowType(int type)
-    {
-        m_windowType = type;
-        DestroyWindows();
-    }
-
-    int WindowType() const { return m_windowType; }
-
-private:
-    int m_windowType = 0;
-    int m_windowSize = 0;
-
-public:
-    int WindowSize() const { return m_windowSize; }
-    void SetWindowSize(int size);
-
-    void SetZeroPaddingFactor(int factor);
-
-private:
-    int zeroPaddingFactor = 0;
-
-public:
-    size_t ZeroPaddingFactor() const
-    {
-        return algorithm == algPitchEAC ? 1 : zeroPaddingFactor;
-    }
-
-    size_t GetFFTLength() const; // window size (times zero padding, if STFT)
-    size_t NBins() const;
-
     enum ColorScheme : int {
         // Keep in correspondence with AColor::colorSchemes, AColor::gradient_pre
         csColorNew = 0,
@@ -128,11 +45,6 @@ public:
 
         csNumColorScheme,
     };
-    ColorScheme colorScheme = csColorNew;
-
-    ScaleType scaleType = stLogarithmic;
-
-    bool spectralSelection = false; // But should this vary per track? -- PRL - I've also asked the question, awaiting response. -- MH
 
     typedef int Algorithm;
     enum AlgorithmValues : int {
@@ -142,7 +54,45 @@ public:
 
         algNumAlgorithms,
     };
+
+    static void setGlobalSpectrogramConfiguration(std::weak_ptr<IGlobalSpectrogramConfiguration> globalConfig);
+
+    static const Au3SpectrogramSettings& Get(const WaveTrack&);
+    static Au3SpectrogramSettings& Get(WaveTrack&);
+
+    Au3SpectrogramSettings() = default;
+    Au3SpectrogramSettings(const Au3SpectrogramSettings& other);
+    Au3SpectrogramSettings& operator=(const Au3SpectrogramSettings& other);
+    ~Au3SpectrogramSettings();
+
+    void CacheWindows();
+    float findBin(float frequency, float binUnit) const;
+    NumberScale GetScale(float minFreq, float maxFreq) const;
+
+public:
+    bool syncWithGlobalSettings = true;
+    int range = 0;
+    int gain = 0;
+    int frequencyGain = 0;
+    ColorScheme colorScheme = csColorNew;
+    ScaleType scaleType = stLogarithmic;
+    bool spectralSelectionEnabled = false;
     Algorithm algorithm = algSTFT;
+    // For now. When rulers are implemented for spectrogram view, this may need some refactoring.
+    int minFreq = 1;
+    int maxFreq = 20000;
+
+    int WindowType() const { return m_windowType; }
+    void SetWindowType(int type);
+
+    int WindowSize() const { return m_windowSize; }
+    void SetWindowSize(int size);
+
+    size_t ZeroPaddingFactor() const;
+    void SetZeroPaddingFactor(int factor);
+
+    size_t GetFFTLength() const;
+    size_t NBins() const;
 
     // Variables used for computing the spectrum
     HFFT hFFT;
@@ -151,6 +101,27 @@ public:
     // Two other windows for computing reassigned spectrogram
     Floats tWindow;        // Window times time parameter
     Floats dWindow;        // Derivative of window
+
+private:
+    enum {
+        LogMinWindowSize = 3,
+        LogMaxWindowSize = 15,
+
+        NumWindowSizes = LogMaxWindowSize - LogMinWindowSize + 1,
+    };
+
+private:
+    void DestroyWindows();
+
+    void CopyTo(::Track& track) const override;
+    void WriteXMLAttributes(XMLWriter& writer) const override;
+    bool HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueVuew) override;
+
+private:
+    // Changing any of these destroys the windows
+    int m_windowType = 0;
+    int m_windowSize = 0;
+    int m_zeroPaddingFactor = 0;
 };
 
 class SpectrogramBounds : public ClientData::Cloneable<>

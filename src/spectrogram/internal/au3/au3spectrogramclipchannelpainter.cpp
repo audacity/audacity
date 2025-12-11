@@ -188,7 +188,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
                          ? -1
                          : settings.findBin(sqrt(startFrequency * endFrequency), binUnit);
 
-    const bool isSpectral = settings.SpectralSelectionEnabled();
+    const bool isSpectral = settings.spectralSelectionEnabled;
 
     SpecCache specCache;
 
