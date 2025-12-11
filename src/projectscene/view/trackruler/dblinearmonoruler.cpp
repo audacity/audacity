@@ -41,10 +41,13 @@ std::vector<TrackRulerFullStep> DbLinearMonoRuler::fullSteps() const
 
 std::vector<TrackRulerFullStep> DbLinearMonoRuler::fullStepsForHalfWave() const
 {
+    constexpr double HALF_WAVE_OFFSET_DB = 6.0;
+
     const double maxDisplayValueDB = muse::linear_to_db(m_maxDisplayValue);
 
     if (m_collapsed) {
-        return { TrackRulerFullStep { maxDisplayValueDB - 6, 0, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO } };
+        const double halfMaxDisplayValueDB = maxDisplayValueDB - HALF_WAVE_OFFSET_DB;
+        return { TrackRulerFullStep { halfMaxDisplayValueDB, 0, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO } };
     }
 
     const std::vector<int> valuesList = fullStepValues(m_height);

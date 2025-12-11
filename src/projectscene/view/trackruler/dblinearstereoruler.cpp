@@ -17,6 +17,7 @@ constexpr int MIN_ADJACENT_SMALL_STEPS_HEIGHT = 5;
 constexpr int MIN_FULL_STEP_TO_ZERO_HEIGHT = 10;
 constexpr int MIN_CHANNEL_HEIGHT = 30;
 const std::vector<int> FULL_STEP_SIZES = { 1, 2, 3, 6, 9 };
+constexpr double HALF_WAVE_OFFSET_DB = 6.0;
 }
 
 DbLinearStereoRuler::DbLinearStereoRuler()
@@ -54,8 +55,9 @@ std::vector<TrackRulerFullStep> DbLinearStereoRuler::fullStepsForHalfWave() cons
     const double maxDisplayValueDB = muse::linear_to_db(m_maxDisplayValue);
 
     if (m_collapsed) {
-        return { TrackRulerFullStep { maxDisplayValueDB - 6, 0, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO },
-                 TrackRulerFullStep { maxDisplayValueDB - 6, 1, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO } };
+        const double halfMaxDisplayValueDB = maxDisplayValueDB - HALF_WAVE_OFFSET_DB;
+        return { TrackRulerFullStep { halfMaxDisplayValueDB, 0, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO },
+                 TrackRulerFullStep { halfMaxDisplayValueDB, 1, 0, IsBold::YES, IsFullWidthTick::YES, IsNegativeSample::NO } };
     }
 
     std::vector<double> channelHeights = { m_height* m_channelHeightRatio, m_height* (1.0 - m_channelHeightRatio) };
@@ -63,7 +65,8 @@ std::vector<TrackRulerFullStep> DbLinearStereoRuler::fullStepsForHalfWave() cons
 
     for (size_t channel = 0; channel < channelHeights.size(); ++channel) {
         if (channelHeights[channel] < MIN_CHANNEL_HEIGHT) {
-            steps.push_back(TrackRulerFullStep { maxDisplayValueDB - 6, channel, 0, IsBold::YES, IsFullWidthTick::YES,
+            const double halfMaxDisplayValueDB = maxDisplayValueDB - HALF_WAVE_OFFSET_DB;
+            steps.push_back(TrackRulerFullStep { halfMaxDisplayValueDB, channel, 0, IsBold::YES, IsFullWidthTick::YES,
                                                  IsNegativeSample::NO });
             continue;
         }
