@@ -8,7 +8,7 @@
 
 #include "au3-fft/FFT.h" // eWindowFunctions
 
-namespace au::trackedit {
+namespace au::spectrogram {
 constexpr auto toAu3ColorScheme(spectrogram::SpectrogramColorScheme scheme)
 {
     switch (scheme) {

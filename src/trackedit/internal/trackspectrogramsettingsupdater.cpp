@@ -3,7 +3,6 @@
  */
 
 #include "trackspectrogramsettingsupdater.h"
-#include "au3/au3trackspectrogramconfiguration.h"
 
 #include "framework/global/log.h"
 
@@ -15,7 +14,7 @@ void TrackSpectrogramSettingsUpdater::init()
     });
 
     appShellConfiguration()->settingsApplied().onNotify(this, [this]{
-        forEachTrack([](ITrackeditProject& trackeditProject, const Track& track, Au3TrackSpectrogramConfiguration& config){
+        forEachTrack([](ITrackeditProject& trackeditProject, const Track& track, spectrogram::ITrackSpectrogramConfiguration& config){
             if (config.useGlobalSettings()) {
                 trackeditProject.notifyAboutTrackChanged(track);
             }
@@ -31,7 +30,7 @@ void TrackSpectrogramSettingsUpdater::init()
 
 void TrackSpectrogramSettingsUpdater::maybeApplyGlobalSettingsToTrack()
 {
-    forEachTrack([this](ITrackeditProject&, const Track&, Au3TrackSpectrogramConfiguration& config){
+    forEachTrack([this](ITrackeditProject&, const Track&, spectrogram::ITrackSpectrogramConfiguration& config){
         if (config.useGlobalSettings()) {
             config.setAllSettings(globalSpectrogramConfiguration()->allSettings());
         }
@@ -39,14 +38,14 @@ void TrackSpectrogramSettingsUpdater::maybeApplyGlobalSettingsToTrack()
 }
 
 void TrackSpectrogramSettingsUpdater::forEachTrack(std::function<void(ITrackeditProject&, const trackedit::Track&,
-                                                                      Au3TrackSpectrogramConfiguration&)> func) const
+                                                                      spectrogram::ITrackSpectrogramConfiguration&)> func) const
 {
     const auto trackeditProject = globalContext()->currentTrackeditProject();
     if (!trackeditProject) {
         return;
     }
     for (const Track& track : trackeditProject->trackList()) {
-        const auto trackConfig = Au3TrackSpectrogramConfiguration::create(track.id, *globalContext());
+        const auto trackConfig = trackSpectrogramConfigurationProvider()->trackSpectrogramConfiguration(track.id);
         IF_ASSERT_FAILED(trackConfig) {
             continue;
         }

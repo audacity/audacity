@@ -5,14 +5,12 @@
 
 #include "spectrogram/view/abstractspectrogramsettingsmodel.h"
 #include "spectrogram/iglobalspectrogramconfiguration.h"
+#include "spectrogram/itrackspectrogramconfigurationprovider.h"
 #include "context/iglobalcontext.h"
 
 #include "framework/global/modularity/ioc.h"
 
 namespace au::trackedit {
-class Au3TrackSpectrogramConfiguration;
-class SpectrogramConfigurationSnapshot;
-
 class TrackSpectrogramSettingsModel : public spectrogram::AbstractSpectrogramSettingsModel, public QQmlParserStatus,
     public muse::async::Asyncable
 {
@@ -24,6 +22,7 @@ class TrackSpectrogramSettingsModel : public spectrogram::AbstractSpectrogramSet
 
     muse::Inject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
     muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<spectrogram::ITrackSpectrogramConfigurationProvider> trackSpectrogramConfigurationProvider;
 
 public:
     TrackSpectrogramSettingsModel(QObject* parent = nullptr);

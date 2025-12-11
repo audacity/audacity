@@ -3,7 +3,7 @@
  */
 #include "trackspectrogramsettingsmodel.h"
 #include "internal/snapshotspectrogramconfiguration.h"
-#include "internal/au3/au3trackspectrogramconfiguration.h"
+#include "spectrogram/itrackspectrogramconfigurationprovider.h"
 
 #include "framework/global/log.h"
 
@@ -14,7 +14,7 @@ TrackSpectrogramSettingsModel::TrackSpectrogramSettingsModel(QObject* parent)
 
 void TrackSpectrogramSettingsModel::componentComplete()
 {
-    const auto trackConfig = Au3TrackSpectrogramConfiguration::create(m_trackId, *globalContext());
+    const auto trackConfig = trackSpectrogramConfigurationProvider()->trackSpectrogramConfiguration(m_trackId);
     IF_ASSERT_FAILED(trackConfig) {
         return;
     }
@@ -69,7 +69,7 @@ void TrackSpectrogramSettingsModel::writeToConfig(spectrogram::ISpectrogramConfi
 
 void TrackSpectrogramSettingsModel::preview()
 {
-    const auto trackConfig = Au3TrackSpectrogramConfiguration::create(m_trackId, *globalContext());
+    const auto trackConfig = trackSpectrogramConfigurationProvider()->trackSpectrogramConfiguration(m_trackId);
     IF_ASSERT_FAILED(trackConfig) {
         return;
     }
@@ -93,7 +93,7 @@ void TrackSpectrogramSettingsModel::sendRepaintRequest()
 
 void TrackSpectrogramSettingsModel::apply()
 {
-    const auto trackConfig = Au3TrackSpectrogramConfiguration::create(m_trackId, *globalContext());
+    const auto trackConfig = trackSpectrogramConfigurationProvider()->trackSpectrogramConfiguration(m_trackId);
     IF_ASSERT_FAILED(trackConfig) {
         return;
     }
