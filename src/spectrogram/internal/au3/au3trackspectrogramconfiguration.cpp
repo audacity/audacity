@@ -178,9 +178,9 @@ void Au3TrackSpectrogramConfiguration::setUseGlobalSettings(bool value)
     m_settings.syncWithGlobalSettings = value;
 }
 
-AllSpectrogramSettings Au3TrackSpectrogramConfiguration::allSettings() const
+SpectrogramSettings Au3TrackSpectrogramConfiguration::allSettings() const
 {
-    AllSpectrogramSettings allSettings;
+    SpectrogramSettings allSettings;
     allSettings.spectralSelectionEnabled = spectralSelectionEnabled();
     allSettings.colorGainDb = colorGainDb();
     allSettings.colorRangeDb = colorRangeDb();
@@ -194,7 +194,7 @@ AllSpectrogramSettings Au3TrackSpectrogramConfiguration::allSettings() const
     return allSettings;
 }
 
-void Au3TrackSpectrogramConfiguration::setAllSettings(const AllSpectrogramSettings& allSettings)
+void Au3TrackSpectrogramConfiguration::setAllSettings(const SpectrogramSettings& allSettings)
 {
     setSpectralSelectionEnabled(allSettings.spectralSelectionEnabled);
     setColorGainDb(allSettings.colorGainDb);

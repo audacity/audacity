@@ -264,9 +264,9 @@ muse::async::Channel<int> GlobalSpectrogramConfiguration::zeroPaddingFactorChang
     return m_zeroPaddingFactorChanged;
 }
 
-AllSpectrogramSettings GlobalSpectrogramConfiguration::allSettings() const
+SpectrogramSettings GlobalSpectrogramConfiguration::allSettings() const
 {
-    AllSpectrogramSettings settings;
+    SpectrogramSettings settings;
     settings.spectralSelectionEnabled = spectralSelectionEnabled();
     settings.colorScheme = colorScheme();
     settings.colorGainDb = colorGainDb();
@@ -280,7 +280,7 @@ AllSpectrogramSettings GlobalSpectrogramConfiguration::allSettings() const
     return settings;
 }
 
-void GlobalSpectrogramConfiguration::setAllSettings(const AllSpectrogramSettings& settings)
+void GlobalSpectrogramConfiguration::setAllSettings(const SpectrogramSettings& settings)
 {
     setSpectralSelectionEnabled(settings.spectralSelectionEnabled);
     setColorScheme(settings.colorScheme);

@@ -53,8 +53,8 @@ public:
     bool useGlobalSettings() const;
     void setUseGlobalSettings(bool value);
 
-    AllSpectrogramSettings allSettings() const override;
-    void setAllSettings(const AllSpectrogramSettings&) override;
+    SpectrogramSettings allSettings() const override;
+    void setAllSettings(const SpectrogramSettings&) override;
 
 private:
     Au3SpectrogramSettings& m_settings;
