@@ -17,7 +17,6 @@
 #include "WaveClipUIUtilities.h"
 #include "WaveTrack.h"
 #include "WideSampleSequence.h"
-#include "TF_Calculator.h"
 #include <cmath>
 
 namespace {
@@ -478,10 +477,20 @@ void SpecCache::Populate(
          mSampleCacheHolder->Copy(&floats[missingLeft], myBufferLen - missingRight - missingLeft);
          
          // And finally do the transform
-         settings.pTFCalculator->transform(&floats[nPre], numSamples.as_size_t(), nPre, nPost);
+         settings.pTFCalculator->doTransform(&floats[nPre], numSamples.as_size_t(), nPre, nPost);
 
          // Extract data at given timestamps
-         size_t nb = settings.pTFCalculator->getResult(where.cbegin() + lowerBoundX, where.cbegin() +  upperBoundX, nBins, &freq[lowerBoundX * nBins]);
+         // Lambda to sampleCount int to double
+         auto transformer = [](sampleCount s, sampleCount b) { return (s - b).as_double(); };
+
+         // Create a transforming iterator. This requires C++17 for std::transform_iterator
+         std::vector<double> timestamps;
+         auto from = where.cbegin() +  lowerBoundX;
+         auto to = where.cbegin() +  upperBoundX;
+         for (auto it = from; it != to; it++) {
+             timestamps.push_back(transformer(*it, *from));
+         }
+         size_t nb = settings.pTFCalculator->extractFrequencySlices(timestamps, 0.0, 0.5 / nBins, nBins, &freq[lowerBoundX * nBins], timestamps.size() * nBins, true);
 
          // Do the log thing
          for (size_t inx = lowerBoundX * nBins; inx < nb + lowerBoundX * nBins ; inx ++)

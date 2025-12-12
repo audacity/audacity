@@ -68,7 +68,6 @@ set( LIBRARIES
    lib-viewport
    lib-music-information-retrieval
    lib-crypto
-   lib-tft
    lib-fft
    lib-concurrency
    lib-sqlite-helpers

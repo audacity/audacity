@@ -27,6 +27,8 @@ Paul Licameli
 #include <cmath>
 
 #include "BasicUI.h"
+#include "WaveletCalculator.h"
+#include "StftCalculator.h"
 
 IntSetting SpectrumMaxFreq{
    L"/Spectrum/MaxFreq", 20000 };
@@ -599,7 +601,7 @@ void SpectrogramSettings::CacheWindows()
    {
        if (!pTFCalculator)
        {
-          pTFCalculator = audacityTimeFrequencyCalculator::createWaveletCalculator(18/*Q*/, 50 /*overlap*/, 0.4 /*fmax*/, 10/*octaves*/);
+          pTFCalculator = make_unique<WaveletCalculator>(10/*octaves*/, 0.4 /*fmax*/, 18/*Q*/, 50 /*overlap*/ );
        }
    }
    else if (algorithm == algSTFT)
@@ -614,7 +616,7 @@ void SpectrogramSettings::CacheWindows()
             double scale;
             RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
          }
-         pTFCalculator = audacityTimeFrequencyCalculator::createStftCalculator(WindowSize(), fftLen,  &window[padding]);
+         pTFCalculator = make_unique<StftCalculator>(WindowSize(), fftLen, &window[padding]);
       }
    }
    else
