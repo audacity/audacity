@@ -10,10 +10,10 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.7\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-25 18:02+0300\n"
-"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"PO-Revision-Date: 2025-12-12 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
 "Language: pl\n"
@@ -218,7 +218,7 @@ msgstr "Błąd: %s"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Error Initializing Audio"
-msgstr "Błąd inicjowania dźwięku"
+msgstr "Błąd inicjalizacji dźwięku"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Audacity Audio"
@@ -2505,7 +2505,7 @@ msgstr "Nie udało się otworzyć pliku do przesłania: %s"
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "Wystąpił błąd inicjowania warstwy wej./wyj. MIDI.\n"
+msgstr "Wystąpił błąd inicjalizacji warstwy wej./wyj. MIDI.\n"
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid ""
@@ -2517,7 +2517,7 @@ msgstr ""
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid "Error Initializing Midi"
-msgstr "Błąd inicjowania MIDI"
+msgstr "Błąd inicjalizacji MIDI"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3054,7 +3054,7 @@ msgstr "Nyquist zwrócił wartość: %d"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Nyquist returned too many audio channels.\n"
-msgstr "Nyquist zwrócił za dużo kanałów dźwiękowych.\n"
+msgstr "Nyquist zwrócił zbyt wiele kanałów dźwiękowych.\n"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Nyquist returned one audio channel as an array.\n"
@@ -13267,7 +13267,7 @@ msgstr "Przygotowywanie podglądu"
 
 #: src/effects/EffectPreview.cpp
 msgid "Previewing"
-msgstr "Podglądanie"
+msgstr "Podgląd"
 
 #: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
 msgid "&Generate"
@@ -17533,11 +17533,11 @@ msgstr "Wykorzystując: PortMidi"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
-msgstr "Opóźnienie syntetyz&atora MIDI (ms):"
+msgstr "Opóźnienie syntez&atora MIDI (ms):"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
-msgstr "Opóźnienie syntetyzatora MIDI musi być liczbą całkowitą"
+msgstr "Opóźnienie syntezatora MIDI musi być liczbą całkowitą"
 
 #: src/prefs/MidiIOPrefs.h
 msgid "Midi IO"
@@ -19202,7 +19202,7 @@ msgstr "&Format"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Changing sample format"
-msgstr "Zmienianie formatu próbkowania"
+msgstr "Zmiana formatu próbkowania"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
@@ -20172,7 +20172,7 @@ msgstr "Wartość przepełnienia"
 
 #: src/widgets/valnum.cpp
 msgid "Too many decimal digits"
-msgstr "Za dużo cyfr po przecinku"
+msgstr "Zbyt wiele cyfr po przecinku"
 
 #: src/widgets/valnum.cpp
 #, c-format
@@ -20861,7 +20861,7 @@ msgstr "~ag ~am ~as"
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
-msgstr "Wykryto za dużo ciszy.~%Dodano tylko pierwsze 10000 etykiet."
+msgstr "Wykryto zbyt wiele ciszy.~%Dodano tylko pierwsze 10000 etykiet."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
