@@ -71,11 +71,11 @@ public:
 
 private:
     // Calculate one column of the spectrum
+    // Made non-const and added sampleCacheHolder parameter for thread safety
     bool CalculateOneSpectrum(
         const SpectrogramSettings& settings, const WaveChannelInterval& clip, const int xx, double pixelsPerSecond, int lowerBoundX,
-        int upperBoundX, const std::vector<float>& gainFactors, float* __restrict scratch, float* __restrict out) const;
-
-    mutable std::optional<AudioSegmentSampleView> mSampleCacheHolder;
+        int upperBoundX, const std::vector<float>& gainFactors, float* __restrict scratch, float* __restrict out,
+        std::optional<AudioSegmentSampleView>& sampleCacheHolder) const;
 };
 
 class SpecPxCache
