@@ -56,6 +56,13 @@ static UiActionList STATIC_ACTIONS = {
              au::context::CTX_ANY,
              TranslatableString("action", "&Export…"),
              TranslatableString("action", "Export preset")
+             ),
+    UiAction("action://effects/toggle_vendor_ui",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("effects", "Use Vendor UI"),
+             TranslatableString("effects", "Toggle between vendor UI and fallback UI"),
+             Checkable::Yes
              )
 };
 
@@ -152,7 +159,7 @@ bool EffectsUiActions::actionEnabled(const UiAction& action) const
     return m_controller->canReceiveAction(action.code);
 }
 
-bool EffectsUiActions::actionChecked(const UiAction&) const
+bool EffectsUiActions::actionChecked([[maybe_unused]] const UiAction& action) const
 {
     return false;
 }
@@ -169,6 +176,5 @@ muse::async::Channel<ActionCodeList> EffectsUiActions::actionEnabledChanged() co
 
 muse::async::Channel<ActionCodeList> EffectsUiActions::actionCheckedChanged() const
 {
-    static muse::async::Channel<ActionCodeList> ch;
-    return ch;
+    return m_actionCheckedChanged;
 }

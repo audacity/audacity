@@ -4,9 +4,10 @@
         <file>qml/Audacity/Effects/BypassEffectButton.qml</file>
         <file>qml/Audacity/Effects/EffectControlsDisablingOverlay.qml</file>
         <file>qml/Audacity/Effects/EffectPresetsBar.qml</file>
-        <file>qml/Audacity/Effects/EffectsViewerDialog.qml</file>
+        <file>qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml</file>
         <file>qml/Audacity/Effects/EffectStyledDialogView.qml</file>
         <file>qml/Audacity/Effects/RealtimeEffectViewerDialog.qml</file>
         <file>qml/Audacity/Effects/PresetNameDialog.qml</file>
+        <file>qml/Audacity/Effects/GeneratedEffectViewer.qml</file>
     </qresource>
 </RCC>

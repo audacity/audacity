@@ -94,15 +94,11 @@ void RecordUiActions::init()
     });
 
     m_controller->isMicMeteringOnChanged().onNotify(this, [this]() {
-        ActionCodeList codes;
-        codes.push_back(RECORD_TOGGLE_MIC_METERING.toString());
-        m_actionCheckedChanged.send(codes);
+        m_actionCheckedChanged.send(ActionCodeList { RECORD_TOGGLE_MIC_METERING.toString() });
     });
 
     m_controller->isInputMonitoringOnChanged().onNotify(this, [this]() {
-        ActionCodeList codes;
-        codes.push_back(RECORD_TOGGLE_INPUT_MONITORING.toString());
-        m_actionCheckedChanged.send(codes);
+        m_actionCheckedChanged.send(ActionCodeList { RECORD_TOGGLE_INPUT_MONITORING.toString() });
     });
 }
 

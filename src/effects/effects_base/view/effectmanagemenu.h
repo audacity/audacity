@@ -1,10 +1,12 @@
 #pragma once
 
-#include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
+#include "framework/uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
+#include "framework/global/modularity/ioc.h"
 
-#include "modularity/ioc.h"
 #include "effects/effects_base/ieffectpresetsprovider.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
+#include "effects/effects_base/ieffectsconfiguration.h"
+#include "effects/effects_base/ieffectsprovider.h"
 
 namespace au::effects {
 class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
@@ -14,9 +16,12 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
     Q_PROPERTY(QVariantList presets READ presets NOTIFY presetsChanged FINAL)
     Q_PROPERTY(QString preset READ preset WRITE setPreset NOTIFY presetChanged FINAL)
     Q_PROPERTY(bool enabled READ enabled NOTIFY presetsChanged FINAL)
+    Q_PROPERTY(bool useVendorUI READ useVendorUI WRITE setUseVendorUI NOTIFY useVendorUIChanged FINAL)
 
     muse::Inject<IEffectPresetsProvider> presetsController;
     muse::Inject<IEffectInstancesRegister> instancesRegister;
+    muse::Inject<IEffectsConfiguration> configuration;
+    muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
@@ -27,6 +32,8 @@ public:
     QString preset() const;
     void setPreset(QString presetId);
     bool enabled() const;
+    bool useVendorUI() const;
+    void setUseVendorUI(bool value);
 
     Q_INVOKABLE void resetPreset();
     Q_INVOKABLE void savePresetAs();
@@ -37,6 +44,7 @@ signals:
     void instanceIdChanged();
     void presetsChanged();
     void presetChanged();
+    void useVendorUIChanged();
 
 private:
 

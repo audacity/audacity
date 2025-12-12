@@ -29,8 +29,13 @@ public:
     double previewMaxDuration() const override;
     void setPreviewMaxDuration(double value) override;
 
+    EffectUIMode effectUIMode(const EffectId& effectId) const override;
+    void setEffectUIMode(const EffectId& effectId, EffectUIMode mode) override;
+    muse::async::Notification effectUIModeChanged() const override;
+
 private:
     muse::async::Notification m_applyEffectToAllAudioChanged;
     muse::async::Notification m_effectMenuOrganizationChanged;
+    muse::async::Notification m_effectUIModeChanged;
 };
 }

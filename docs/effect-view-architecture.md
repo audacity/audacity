@@ -23,13 +23,13 @@ classDiagram
 
   RealtimeEffectViewerDialog o.. BuiltinEffectViewer
   RealtimeEffectViewerDialog o.. VstViewer
-  EffectsViewerDialog o.. VstViewer
-  EffectsViewerDialog o.. BuiltinEffectViewer
+  DestructiveEffectsViewerDialog o.. VstViewer
+  DestructiveEffectsViewerDialog o.. BuiltinEffectViewer
   BuiltinEffectViewer *-- BuiltinEffectViewLoader
   BuiltinEffectViewLoader o.. ReverbView: loads
   BuiltinEffectViewLoader o.. CompressorView: loads
-  Vst3ViewLauncher ..> EffectsViewerDialog
-  BuiltinViewLauncher ..> EffectsViewerDialog
+  Vst3ViewLauncher ..> DestructiveEffectsViewerDialog
+  BuiltinViewLauncher ..> DestructiveEffectsViewerDialog
 
   class ReverbView:::qml
   class CompressorView:::qml
@@ -38,7 +38,7 @@ classDiagram
     load(instanceId)
   }
 
-  class EffectsViewerDialog:::qml {
+  class DestructiveEffectsViewerDialog:::qml {
     instanceId: string
     ------------
     manageBtn
@@ -47,7 +47,7 @@ classDiagram
     applyBtn
   }
 
-  class EffectsViewerDialog:::qml {
+  class DestructiveEffectsViewerDialog:::qml {
     instanceId: string
     ------------
     manageBtn
