@@ -80,11 +80,6 @@ private:
       const std::vector<float>& gainFactors, float* __restrict scratch,
       float* __restrict out) const;
 
-   bool CalculateOneWaveletSpectrum(
-      const SpectrogramSettings& settings, const WaveChannelInterval &clip,
-      const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
-      const std::vector<float>& gainFactors,
-      float* __restrict out) const;
    mutable std::optional<AudioSegmentSampleView> mSampleCacheHolder;
 };
 
