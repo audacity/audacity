@@ -40,7 +40,6 @@ set( LIBRARIES
    lib-tags
    lib-realtime-effects
    lib-audio-io
-   lib-tft
    lib-wave-track
    lib-wave-track-settings
    lib-wave-track-paint
@@ -69,6 +68,7 @@ set( LIBRARIES
    lib-viewport
    lib-music-information-retrieval
    lib-crypto
+   lib-tft
    lib-fft
    lib-concurrency
    lib-sqlite-helpers
