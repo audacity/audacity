@@ -185,6 +185,29 @@ TranslatableString MP3ImportFileHandle::GetFileDescription()
     return DESC;
 }
 
+double MP3ImportFileHandle::GetDuration() const
+{
+    if (!mHandle) {
+        return 0.0;
+    }
+
+    long rate = 0;
+    int channels = 0;
+    int encoding = 0;
+
+    int err = mpg123_getformat(mHandle, &rate, &channels, &encoding);
+    if (err != MPG123_OK || rate <= 0) {
+        return 0.0;
+    }
+
+    off_t length = mpg123_length(mHandle);
+    if (length < 0) {
+        return 0.0;
+    }
+
+    return static_cast<double>(length) / static_cast<double>(rate);
+}
+
 auto MP3ImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
     // We have to parse the file first using mpg123_scan,

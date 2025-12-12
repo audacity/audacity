@@ -489,7 +489,7 @@ void Au3ClipsInteraction::cancelClipDragEdit()
         if (const auto prj = globalContext()->currentTrackeditProject()) {
             // Doesn't matter it tracks are now empty or not - we're canceling the action.
             constexpr auto emptyOnly = false;
-            removeDragAddedTracks(*prj, m_tracksWhenDragStarted->size, emptyOnly);
+            tracksInteraction()->removeDragAddedTracks(m_tracksWhenDragStarted->size, emptyOnly);
         }
         m_tracksWhenDragStarted.reset();
     }
@@ -1047,7 +1047,7 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(int offset)
         // in which case we make it nice to the user and remove them automatically.
         // `m_tracksWhenDragStarted` tells use what the tracks looks like at the start of the interaction. We check all extra tracks.
         constexpr auto emptyOnly = true;
-        removeDragAddedTracks(*prj, m_tracksWhenDragStarted->size, emptyOnly);
+        tracksInteraction()->removeDragAddedTracks(m_tracksWhenDragStarted->size, emptyOnly);
     }
 
     return needsDownmixing;
@@ -1394,19 +1394,6 @@ bool Au3ClipsInteraction::doChangeClipSpeed(const ClipKey& clipKey, double speed
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 
     return true;
-}
-
-void Au3ClipsInteraction::removeDragAddedTracks(ITrackeditProject& prj, size_t numTracksWhenDragStarted, bool emptyOnly)
-{
-    const auto tracks = prj.trackList();
-    for (auto i = numTracksWhenDragStarted; i < tracks.size(); ++i) {
-        const auto& track = tracks[i];
-        Au3WaveTrack* const waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(track.id));
-        if (!emptyOnly || waveTrack->IsEmpty()) {
-            ::TrackList::Get(projectRef()).Remove(*waveTrack);
-            prj.notifyAboutTrackRemoved(track);
-        }
-    }
 }
 
 muse::Progress Au3ClipsInteraction::progress() const

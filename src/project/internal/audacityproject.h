@@ -62,6 +62,9 @@ public:
     muse::Ret load(const muse::io::path_t& path, bool forceMode = false, const std::string& format = "") override;
     muse::Ret import(const muse::io::path_t& path, bool forceMode = false) override;
     muse::Ret import(const std::vector<muse::io::path_t>& paths, bool forceMode) override;
+    muse::Ret importIntoTrack(const muse::io::path_t& filePath, trackedit::TrackId dstTrackId, muse::secs_t startTime) override;
+    muse::Ret importIntoTracks(const std::vector<muse::io::path_t>& filePaths, const std::vector<trackedit::TrackId>& dstTrackIds,
+                               muse::secs_t startTime) override;
     void close() override;
     muse::async::Notification aboutCloseBegin() const override;
     muse::async::Notification aboutCloseEnd() const override;
@@ -99,6 +102,7 @@ private:
 
     muse::Ret doLoad(const muse::io::path_t& path, bool forceMode, const std::string& format);
     muse::Ret doImport(const muse::io::path_t& path, bool forceMode) const;
+    muse::Ret doImportIntoTrack(const muse::io::path_t& path, trackedit::TrackId dstTrackId, muse::secs_t startTime);
 
     muse::Ret saveProject(const muse::io::path_t& path, bool generateBackup = true, bool createThumbnail = true);
     muse::Ret doSave(const muse::io::path_t& path, /*engraving::MscIoMode ioMode,*/ bool generateBackup = true,

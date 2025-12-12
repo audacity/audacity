@@ -9,15 +9,14 @@
 
 #include "global/async/asyncable.h"
 
-#include "iprojectsceneconfiguration.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "playback/iplaybackconfiguration.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "playback/itrackplaybackcontrol.h"
-#include "projectscene/iprojectsceneconfiguration.h"
+#include "playback/iplaybackconfiguration.h"
 
 #include "trackedit/dom/track.h"
 
@@ -42,7 +41,6 @@ public:
     explicit ViewTracksListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
-    Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);
 
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -74,6 +72,7 @@ private:
         IsWaveformViewVisibleRole,
         IsSpectrogramViewVisibleRole,
         DbRangeRole,
+        ColorRole,
     };
 
     std::vector<trackedit::Track> m_trackList;

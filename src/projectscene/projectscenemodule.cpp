@@ -55,6 +55,7 @@
 #include "view/tracksitemsview/au3/minmaxrmspainter.h"
 #include "view/tracksitemsview/au3/samplespainter.h"
 #include "view/tracksitemsview/mousehelper.h"
+#include "view/tracksitemsview/dropcontroller.h"
 
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
@@ -177,6 +178,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<SelectionViewController>("Audacity.ProjectScene", 1, 0, "SelectionViewController");
     qmlRegisterType<PitchAndSpeedChangeModel>("Audacity.ProjectScene", 1, 0, "PitchAndSpeedChangeModel");
     qmlRegisterType<SplitToolController>("Audacity.ProjectScene", 1, 0, "SplitToolController");
+    qmlRegisterType<DropController>("Audacity.ProjectScene", 1, 0, "DropController");
 
     // timeline
     qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");

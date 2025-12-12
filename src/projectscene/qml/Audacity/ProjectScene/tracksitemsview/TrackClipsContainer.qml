@@ -16,8 +16,12 @@ TrackItemsContainer {
     property bool leftTrimPressedButtons: false
     property bool rightTrimPressedButtons: false
     property real dbRange: -60.0
+    property color trackColor
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
+
+    signal movePreviewClip(int x, int width, string title)
+    signal clearPreviewClip()
 
     TrackClipsListModel {
         id: clipsModel
@@ -447,6 +451,41 @@ TrackItemsContainer {
                                         }
                                     }
                                 }
+                            }
+                        }
+                    }
+                }
+
+                ClipPreview {
+                    id: previewClip
+
+                    height: parent.height
+
+                    visible: false
+                    clipColor: root.trackColor
+
+                    Connections {
+                        target: root
+
+                        function onMovePreviewClip(x, width, title) {
+                            if (!previewClip.visible) {
+                                previewClip.visible = true
+                            }
+
+                            previewClip.x = x
+
+                            if (previewClip.desiredWidth != width) {
+                                previewClip.desiredWidth = width
+                            }
+
+                            if (previewClip.title != title) {
+                                previewClip.title = title
+                            }
+                        }
+
+                        function onClearPreviewClip() {
+                            if (previewClip.visible) {
+                                previewClip.visible = false
                             }
                         }
                     }

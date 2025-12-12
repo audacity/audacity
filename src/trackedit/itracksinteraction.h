@@ -66,6 +66,9 @@ public:
 
     virtual double nearestZeroCrossing(double time) const = 0;
 
+    virtual au::trackedit::TrackId addWaveTrack(int nChannels) = 0;
+    virtual void removeDragAddedTracks(size_t numTracksWhenDragStarted, bool emptyOnly) = 0;
+
     virtual muse::Progress progress() const = 0;
 };
 }

@@ -17,6 +17,12 @@
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
+#include "au3wrap/internal/domaccessor.h"
+#include "trackedit/internal/au3/au3trackdata.h"
+
+using au::trackedit::ITrackDataPtr;
+using au::trackedit::Au3TrackData;
+using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 
 using namespace au::au3;
 
@@ -81,6 +87,29 @@ void au::importexport::Au3Importer::init()
     RegisterImportPlugins();
 }
 
+au::importexport::FileInfo au::importexport::Au3Importer::fileInfo(const muse::io::path_t& filePath)
+{
+    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    auto importPlugins = Importer::sImportPluginList();
+
+    FileInfo fileInfo;
+    for (const auto plugin : importPlugins) {
+        if (!plugin->SupportsExtension(suffix(filePath))) {
+            continue;
+        }
+
+        auto inFile = plugin->Open(filePath.toStdString(), project);
+        if ((inFile != NULL) && (inFile->GetStreamCount() > 0)) {
+            fileInfo.path = filePath;
+            fileInfo.duration = inFile->GetDuration();
+
+            return fileInfo;
+        }
+    }
+
+    return FileInfo{};
+}
+
 bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
@@ -116,6 +145,62 @@ bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
     committed = true;
 
     addImportedTracks(filePath, std::move(newTracks));
+
+    return true;
+}
+
+bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& filePath,
+                                                    trackedit::TrackId dstTrackId,
+                                                    muse::secs_t startTime)
+{
+    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    ImportProgress importProgressListener(*project);
+
+    TrackHolders tmpTracks;
+    auto oldTags = Tags::Get(*project).shared_from_this();
+    bool committed = false;
+    auto cleanup = finally([&]{
+        if (!committed) {
+            Tags::Set(*project, oldTags);
+        }
+    });
+    auto newTags = oldTags->Duplicate();
+    Tags::Set(*project, newTags);
+    std::optional<LibFileFormats::AcidizerTags> acidTags;
+    TranslatableString errorMessage;
+
+    const bool ok = Importer::Get().Import(
+        *project,
+        wxFromString(filePath.toString()),
+        &importProgressListener,
+        &WaveTrackFactory::Get(*project),
+        tmpTracks,
+        newTags.get(),
+        acidTags,
+        errorMessage
+        );
+
+    if (!ok || tmpTracks.empty()) {
+        return false;
+    }
+
+    std::vector<ITrackDataPtr> importedData;
+    for (auto& holder : tmpTracks) {
+        importedData.push_back(std::make_shared<Au3TrackData>(holder));
+        // TODO: implement multi-channel, multi-file drag&drop import
+        // for now, simply import first of the streams
+        break;
+    }
+
+    WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(*project, ::TrackId(dstTrackId));
+    IF_ASSERT_FAILED(dstWaveTrack) {
+        return false;
+    }
+
+    bool modifiedState = false;
+    selectionController()->setSelectedTracks({ dstTrackId }, true);
+    tracksInteraction()->paste(importedData, startTime, false /* moveClips */, false /* moveAllTracks */,
+                               false /* isMultiSelectionCopy */, modifiedState);
 
     return true;
 }
