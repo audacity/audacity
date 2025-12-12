@@ -19,8 +19,8 @@ Rectangle {
     required property bool isSpectrogramViewVisible
     property int pitch: 0
     property int speedPercentage: 0
-    property alias showChannelSplitter: channelSplitter.visible
-    property alias channelHeightRatio: channelSplitter.channelHeightRatio
+    property bool showChannelSplitter: false
+    property alias channelHeightRatio: waveChannelSplitter.channelHeightRatio
     property var canvas: null
     property color clipColor: "#677CE4"
     property color normalHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : root.classicHeaderColor
@@ -149,7 +149,7 @@ Rectangle {
 
         anchors.fill: parent
         color: "transparent"
-        border.width: root.enableContrastBorder ?  2 : 1
+        border.width: root.enableContrastBorder ? 2 : 1
         border.color: "#000000"
         radius: root.enableContrastBorder ? 0 : 4
         z: root.parent.z + 1
@@ -564,7 +564,7 @@ Rectangle {
                 }
 
                 function isWithinRange(val, x, w) {
-                    return val >= x && val <= (x + w);
+                    return val >= x && val <= (x + w)
                 }
             }
 
@@ -741,6 +741,7 @@ Rectangle {
         }
 
         ColumnLayout {
+            id: viewsColumn
 
             anchors.top: (!root.collapsed && header.visible) ? header.bottom : parent.top
             anchors.left: parent.left
@@ -782,9 +783,11 @@ Rectangle {
                 }
 
                 ChannelSplitter {
-                    id: channelSplitter
+                    id: waveChannelSplitter
 
                     anchors.fill: parent
+
+                    visible: root.showChannelSplitter
 
                     editable: root.enableCursorInteraction && root.asymmetricStereoHeightsPossible
                     asymmetricStereoHeightsPossible: root.asymmetricStereoHeightsPossible
@@ -794,32 +797,6 @@ Rectangle {
 
                     onPositionChangeRequested: function (position) {
                         root.splitterPositionChangeRequested(position)
-                    }
-                }
-
-                FlatButton {
-                    id: accessibilitySelectBtn
-
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 10
-
-                    navigation.name: "SelectBtn"
-                    navigation.panel: root.clipNavigationPanel
-                    navigation.column: 0
-
-                    width: 55
-                    height: 20
-                    text: !root.clipSelected ? qsTrc("clips", "Select") : qsTrc("clips", "Deselect")
-                    visible: root.clipNavigationPanel.highlight
-                    normalColor: "#2b2a33"
-
-                    onClicked: {
-                        if (!root.clipSelected) {
-                            root.requestSelected()
-                        } else {
-                            root.requestSelectionReset()
-                        }
                     }
                 }
 
@@ -848,6 +825,57 @@ Rectangle {
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+
+                context: root.context
+                clipKey: root.clipKey
+                clipTime: root.clipTime
+                timelineIndentWidth: root.canvas.anchors.leftMargin
+                channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
+
+                ChannelSplitter {
+                    id: spectrogramChannelSplitter
+
+                    anchors.fill: parent
+
+                    visible: root.showChannelSplitter
+
+                    channelHeightRatio: parent.channelHeightRatio
+                    editable: root.enableCursorInteraction && root.asymmetricStereoHeightsPossible
+                    asymmetricStereoHeightsPossible: root.asymmetricStereoHeightsPossible
+
+                    color: "#000000"
+                    opacity: 0.10
+
+                    onPositionChangeRequested: function (position) {
+                        root.splitterPositionChangeRequested(position)
+                    }
+                }
+            }
+        }
+
+        FlatButton {
+            id: accessibilitySelectBtn
+
+            anchors.horizontalCenter: viewsColumn.horizontalCenter
+            anchors.bottom: viewsColumn.bottom
+            anchors.bottomMargin: 10
+
+            navigation.name: "SelectBtn"
+            navigation.panel: root.clipNavigationPanel
+            navigation.column: 0
+
+            width: 55
+            height: 20
+            text: !root.clipSelected ? qsTrc("clips", "Select") : qsTrc("clips", "Deselect")
+            visible: root.clipNavigationPanel.highlight
+            normalColor: "#2b2a33"
+
+            onClicked: {
+                if (!root.clipSelected) {
+                    root.requestSelected()
+                } else {
+                    root.requestSelectionReset()
+                }
             }
         }
     }

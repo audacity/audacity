@@ -4,15 +4,13 @@
 #pragma once
 
 #include "spectrogram/view/abstractspectrogramsettingsmodel.h"
-#include "spectrogram/ispectrogramconfiguration.h"
+#include "spectrogram/iglobalspectrogramconfiguration.h"
+#include "spectrogram/itrackspectrogramconfigurationprovider.h"
 #include "context/iglobalcontext.h"
 
 #include "framework/global/modularity/ioc.h"
 
 namespace au::trackedit {
-class Au3TrackSpectrogramConfiguration;
-class SpectrogramConfigurationSnapshot;
-
 class TrackSpectrogramSettingsModel : public spectrogram::AbstractSpectrogramSettingsModel, public QQmlParserStatus,
     public muse::async::Asyncable
 {
@@ -22,12 +20,13 @@ class TrackSpectrogramSettingsModel : public spectrogram::AbstractSpectrogramSet
     Q_PROPERTY(QString trackTitle READ trackTitle NOTIFY trackIdChanged)
     Q_PROPERTY(bool useGlobalSettings READ useGlobalSettings WRITE setUseGlobalSettings NOTIFY useGlobalSettingsChanged)
 
-    muse::Inject<spectrogram::ISpectrogramConfiguration> globalSpectrogramConfiguration;
+    muse::Inject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
     muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<spectrogram::ITrackSpectrogramConfigurationProvider> trackSpectrogramConfigurationProvider;
 
 public:
     TrackSpectrogramSettingsModel(QObject* parent = nullptr);
-    ~TrackSpectrogramSettingsModel() override = default;
+    ~TrackSpectrogramSettingsModel() override;
 
     Q_INVOKABLE void preview();
     Q_INVOKABLE void apply();
@@ -92,6 +91,7 @@ private:
 
     void readFromConfig(const spectrogram::ISpectrogramConfiguration&);
     void writeToConfig(spectrogram::ISpectrogramConfiguration&);
+    void sendRepaintRequest();
 
     int m_trackId = -1;
     bool m_useGlobalSettings = false;
@@ -105,5 +105,7 @@ private:
     spectrogram::SpectrogramWindowType m_windowType_8 = static_cast<spectrogram::SpectrogramWindowType>(0);
     int m_windowSize_9 = 0;
     int m_zeroPaddingFactor_10 = 0;
+
+    std::unique_ptr<spectrogram::ISpectrogramConfiguration> m_configToRevertTo;
 };
 }

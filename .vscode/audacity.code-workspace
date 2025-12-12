@@ -22,5 +22,6 @@
             "-DNO_TRANSLATIONS_OPTION=NO_TRANSLATIONS", // Comment out to compile translations
         ],
         "cmake.buildBeforeRun": false, // Useful if you are running the "audacity (install)" target :
+        "uncrustify.executablePath.linux": "/usr/local/bin/uncrustify_074",
     }
 }

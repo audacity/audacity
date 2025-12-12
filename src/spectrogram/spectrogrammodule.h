@@ -6,7 +6,9 @@
 #include "framework/global/modularity/imodulesetup.h"
 
 namespace au::spectrogram {
-class SpectrogramConfiguration;
+class Au3SpectrogramPainter;
+class GlobalSpectrogramConfiguration;
+class TrackSpectrogramConfigurationProvider;
 
 class SpectrogramModule : public muse::modularity::IModuleSetup
 {
@@ -21,6 +23,8 @@ public:
     void onInit(const muse::IApplication::RunMode&) override;
 
 private:
-    const std::shared_ptr<SpectrogramConfiguration> m_configuration;
+    const std::shared_ptr<Au3SpectrogramPainter> m_au3SpectrogramPainter;
+    const std::shared_ptr<GlobalSpectrogramConfiguration> m_configuration;
+    const std::shared_ptr<TrackSpectrogramConfigurationProvider> m_trackSpectrogramConfigurationProvider;
 };
 }
