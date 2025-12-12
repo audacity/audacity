@@ -1,24 +1,21 @@
-/**********************************************************************
-
-  Audacity: A Digital Audio Editor
-
-  @file SpectrumCache.cpp
-
-  Paul Licameli split from WaveClip.cpp
-
-**********************************************************************/
+/*
+ * Audacity: A Digital Audio Editor
+ */
 
 #include "SpectrumCache.h"
+#include "./au3spectrogramsettings.h"
+#include "internal/au3/au3spectrogramutils.h"
+#include "internal/spectrogramutils.h"
 
-#include "SpectrogramSettings.h"
-#include "RealFFTf.h"
-#include "Sequence.h"
-#include "Spectrum.h"
-#include "WaveClipUIUtilities.h"
-#include "WaveTrack.h"
-#include "WideSampleSequence.h"
+#include "au3-fft/Spectrum.h"
+#include "au3-wave-track/Sequence.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "spectrogramtypes.h"
+
 #include <cmath>
+#include <cassert>
 
+namespace au::spectrogram {
 namespace {
 static void ComputeSpectrumUsingRealFFTf
     (float* __restrict buffer, const FFTParam* hFFT,
@@ -77,7 +74,7 @@ void ComputeSpectrogramGainFactors
 
 bool SpecCache::Matches(
     int dirty_, double samplesPerPixel,
-    const SpectrogramSettings& settings) const
+    const Au3SpectrogramSettings& settings) const
 {
     // Make a tolerant comparison of the spp values in this wise:
     // accumulated difference of times over the number of pixels is less than
@@ -87,7 +84,7 @@ bool SpecCache::Matches(
     return
         sppMatch
         && dirty == dirty_
-        && windowType == settings.windowType
+        && windowType == settings.WindowType()
         && windowSize == settings.WindowSize()
         && zeroPaddingFactor == settings.ZeroPaddingFactor()
         && frequencyGain == settings.frequencyGain
@@ -95,14 +92,13 @@ bool SpecCache::Matches(
 }
 
 bool SpecCache::CalculateOneSpectrum(
-    const SpectrogramSettings& settings, const WaveChannelInterval& clip,
+    const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip,
     const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
     const std::vector<float>& gainFactors, float* __restrict scratch,
     float* __restrict out) const
 {
     bool result = false;
-    const bool reassignment
-        =(settings.algorithm == SpectrogramSettings::algReassignment);
+    const bool reassignment = settings.algorithm == SpectrogramAlgorithm::Reassignment;
     const size_t windowSizeSetting = settings.WindowSize();
 
     sampleCount from;
@@ -116,15 +112,14 @@ bool SpecCache::CalculateOneSpectrum(
     // the visible area.
 
     if (xx < 0) {
-        from = sampleCount(where[0].as_double() + xx * samplesPerPixel);
+        from = sampleCount(static_cast<double>(where[0]) + xx * samplesPerPixel);
     } else if (xx > (int)len) {
-        from = sampleCount(where[len].as_double() + (xx - len) * samplesPerPixel);
+        from = sampleCount(static_cast<double>(where[len]) + (xx - len) * samplesPerPixel);
     } else {
         from = where[xx];
     }
 
-    const bool autocorrelation
-        =settings.algorithm == SpectrogramSettings::algPitchEAC;
+    const bool autocorrelation = settings.algorithm == SpectrogramAlgorithm::Pitch;
     const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
     const size_t padding = (windowSizeSetting * (zeroPaddingFactorSetting - 1)) / 2;
     const size_t fftLen = windowSizeSetting * zeroPaddingFactorSetting;
@@ -193,12 +188,12 @@ bool SpecCache::CalculateOneSpectrum(
 
         if (autocorrelation) {
             // not reassignment, xx is surely within bounds.
-            wxASSERT(xx >= 0);
+            assert(xx >= 0);
             float* const results = &out[nBins * xx];
             // This function does not mutate useBuffer
             ComputeSpectrum(
                 useBuffer, windowSizeSetting, windowSizeSetting, results,
-                autocorrelation, settings.windowType);
+                autocorrelation, toAu3WindowType(settings.WindowType()));
         } else if (reassignment) {
             static const double epsilon = 1e-16;
             const auto hFFT = settings.hFFT.get();
@@ -299,7 +294,7 @@ bool SpecCache::CalculateOneSpectrum(
             }
         } else {
             // not reassignment, xx is surely within bounds.
-            wxASSERT(xx >= 0);
+            assert(xx >= 0);
             float* const results = &out[nBins * xx];
 
             // Do the FFT.  Note that useBuffer is multiplied by the window,
@@ -323,7 +318,7 @@ bool SpecCache::CalculateOneSpectrum(
 }
 
 void SpecCache::Grow(
-    size_t len_, SpectrogramSettings& settings, double samplesPerPixel,
+    size_t len_, Au3SpectrogramSettings& settings, double samplesPerPixel,
     double start_)
 {
     settings.CacheWindows();
@@ -340,23 +335,21 @@ void SpecCache::Grow(
     algorithm = settings.algorithm;
     spp = samplesPerPixel;
     start = start_;
-    windowType = settings.windowType;
+    windowType = settings.WindowType();
     windowSize = settings.WindowSize();
     zeroPaddingFactor = settings.ZeroPaddingFactor();
     frequencyGain = settings.frequencyGain;
 }
 
 void SpecCache::Populate(
-    const SpectrogramSettings& settings, const WaveChannelInterval& clip,
+    const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip,
     int copyBegin, int copyEnd, size_t numPixels, double pixelsPerSecond)
 {
     const auto sampleRate = clip.GetRate();
     const int& frequencyGainSetting = settings.frequencyGain;
     const size_t windowSizeSetting = settings.WindowSize();
-    const bool autocorrelation
-        =settings.algorithm == SpectrogramSettings::algPitchEAC;
-    const bool reassignment
-        =settings.algorithm == SpectrogramSettings::algReassignment;
+    const bool autocorrelation = settings.algorithm == SpectrogramAlgorithm::Pitch;
+    const bool reassignment = settings.algorithm == SpectrogramAlgorithm::Reassignment;
     const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
 
     // FFT length may be longer than the window of samples that affect results
@@ -380,37 +373,8 @@ void SpecCache::Populate(
         const int lowerBoundX = jj == 0 ? 0 : copyEnd;
         const int upperBoundX = jj == 0 ? copyBegin : numPixels;
 
-// todo(mhodgkinson): I don't find an option to define _OPENMP anywhere. Is this
-// still of interest?
-#ifdef _OPENMP
-        // Storage for mutable per-thread data.
-        // private clause ensures one copy per thread
-        struct ThreadLocalStorage {
-            ThreadLocalStorage() { }
-            ~ThreadLocalStorage() { }
-
-            void init(SampleTrackCache& waveTrackCache, size_t scratchSize)
-            {
-                if (!cache) {
-                    cache = std::make_unique<SampleTrackCache>(waveTrackCache.GetTrack());
-                    scratch.resize(scratchSize);
-                }
-            }
-
-            std::unique_ptr<SampleTrackCache> cache;
-            std::vector<float> scratch;
-        } tls;
-
-      #pragma omp parallel for private(tls)
-#endif
         for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
-#ifdef _OPENMP
-            tls.init(waveTrackCache, scratchSize);
-            SampleTrackCache& cache = *tls.cache;
-            float* buffer = &tls.scratch[0];
-#else
             float* buffer = &scratch[0];
-#endif
             CalculateOneSpectrum(
                 settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
                 gainFactors, buffer, &freq[0]);
@@ -471,8 +435,8 @@ void SpecCache::Populate(
 
 bool WaveClipSpectrumCache::GetSpectrogram(
     const WaveChannelInterval& clip,
-    const float*& spectrogram, SpectrogramSettings& settings,
-    const sampleCount*& where, size_t numPixels, double t0,
+    const float*& spectrogram, Au3SpectrogramSettings& settings,
+    const long long*& where, size_t numPixels, double t0,
     double pixelsPerSecond)
 {
     auto& mSpecCache = mSpecCaches[clip.GetChannelIndex()];
@@ -497,7 +461,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 
     // Caching is not implemented for reassignment, unless for
     // a complete hit, because of the complications of time reassignment
-    if (settings.algorithm == SpectrogramSettings::algReassignment) {
+    if (settings.algorithm == SpectrogramAlgorithm::Reassignment) {
         match = false;
     }
 
@@ -517,7 +481,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 
     int copyBegin = 0, copyEnd = 0;
     if (match) {
-        WaveClipUIUtilities::findCorrection(
+        au::spectrogram::findCorrection(
             mSpecCache->where, mSpecCache->len, numPixels, t0, sampleRate,
             stretchRatio, samplesPerPixel, oldX0, correction);
         // Remember our first pixel maps to oldX0 in the old cache,
@@ -546,12 +510,12 @@ bool WaveClipSpectrumCache::GetSpectrogram(
     mSpecCache->Grow(numPixels, settings, samplesPerPixel, t0);
 
     // Reassignment accumulates, so it needs a zeroed buffer
-    if (settings.algorithm == SpectrogramSettings::algReassignment) {
+    if (settings.algorithm == SpectrogramAlgorithm::Reassignment) {
         // The cache could theoretically copy from the middle, resulting
         // in two regions to update. This won't happen in zoom, since
         // old cache doesn't match. It won't happen in resize, since the
         // spectrum view is pinned to left side of window.
-        wxASSERT(
+        assert(
             (copyBegin >= 0 && copyEnd == (int)numPixels) // copied the end
             || (copyBegin == 0 && copyEnd <= (int)numPixels) // copied the beginning
             );
@@ -565,7 +529,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
     // purposely offset the display 1/2 sample to the left (as compared
     // to waveform display) to properly center response of the FFT
     constexpr auto addBias = true;
-    WaveClipUIUtilities::fillWhere(
+    au::spectrogram::fillWhere(
         mSpecCache->where, numPixels, addBias, correction, t0, sampleRate,
         stretchRatio, samplesPerPixel);
 
@@ -646,4 +610,5 @@ void WaveClipSpectrumCache::Erase(size_t index)
     if (index < mSpecPxCaches.size()) {
         mSpecPxCaches.erase(mSpecPxCaches.begin() + index);
     }
+}
 }

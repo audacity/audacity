@@ -3,15 +3,15 @@
  */
 #pragma once
 
-#include "ispectrogramconfiguration.h"
+#include "iglobalspectrogramconfiguration.h"
 
 #include "framework/global/async/asyncable.h"
 
 namespace au::spectrogram {
-class SpectrogramConfiguration : public ISpectrogramConfiguration, public muse::async::Asyncable
+class GlobalSpectrogramConfiguration : public IGlobalSpectrogramConfiguration, public muse::async::Asyncable
 {
 public:
-    ~SpectrogramConfiguration() override = default;
+    ~GlobalSpectrogramConfiguration() override = default;
 
     void init();
 
@@ -55,6 +55,10 @@ public:
     void setZeroPaddingFactor(int value) override;
     muse::async::Channel<int> zeroPaddingFactorChanged() const override;
 
+    SpectrogramSettings allSettings() const override;
+    void setAllSettings(const SpectrogramSettings&) override;
+    muse::async::Notification someSettingChanged() const override;
+
 private:
     muse::async::Channel<bool> m_spectralSelectionEnabledChanged;
     muse::async::Channel<SpectrogramColorScheme> m_colorSchemeChanged;
@@ -66,5 +70,6 @@ private:
     muse::async::Channel<SpectrogramWindowType> m_windowTypeChanged;
     muse::async::Channel<int> m_winSizeLog2Changed;
     muse::async::Channel<int> m_zeroPaddingFactorChanged;
+    muse::async::Notification m_someSettingChanged;
 };
 }
