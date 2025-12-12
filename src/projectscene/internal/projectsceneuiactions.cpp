@@ -231,13 +231,19 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Multi track selection next"),
              TranslatableString("action", "Multi track selection next")
              ),
+    UiAction("toggle-label-editor",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Show label editor"),
+             TranslatableString("action", "Show label editor")
+             ),
     UiAction("action://projectscene/track-view-half-wave",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Half-wave"),
              TranslatableString("action", "Half-wave"),
              Checkable::Yes
-             )
+             ),
 };
 
 ProjectSceneUiActions::ProjectSceneUiActions(std::shared_ptr<ProjectSceneActionsController> controller)

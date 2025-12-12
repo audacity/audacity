@@ -19,8 +19,12 @@ class ILabelsInteraction : MODULE_EXPORT_INTERFACE
 public:
     virtual ~ILabelsInteraction() = default;
 
+    virtual muse::RetVal<LabelKey> addLabel(const TrackId& toTrackId) = 0;
     virtual bool addLabelToSelection() = 0;
+
     virtual bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) = 0;
+    virtual bool changeLabelLowFrequency(const LabelKey& labelKey, double frequency) = 0;
+    virtual bool changeLabelHighFrequency(const LabelKey& labelKey, double frequency) = 0;
 
     virtual bool removeLabel(const LabelKey& labelKey) = 0;
     virtual bool removeLabels(const LabelKeyList& labelKeys, bool moveLabels) = 0;
@@ -28,7 +32,8 @@ public:
     virtual ITrackDataPtr cutLabel(const LabelKey& labelKey) = 0;
     virtual ITrackDataPtr copyLabel(const LabelKey& labelKey) = 0;
 
-    virtual bool moveLabels(secs_t timePositionOffset, bool completed) = 0;
+    virtual bool moveLabels(secs_t timePositionOffset) = 0;
+    virtual muse::RetVal<LabelKeyList> moveLabels(const LabelKeyList& labelKeys, const trackedit::TrackId& toTrackId) = 0;
 
     virtual bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) = 0;
     virtual bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) = 0;

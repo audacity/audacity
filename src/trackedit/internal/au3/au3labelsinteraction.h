@@ -20,8 +20,12 @@ class Au3LabelsInteraction : public ILabelsInteraction
 public:
     Au3LabelsInteraction();
 
+    muse::RetVal<LabelKey> addLabel(const TrackId& toTrackId) override;
     bool addLabelToSelection() override;
+
     bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) override;
+    bool changeLabelLowFrequency(const LabelKey& labelKey, double frequency) override;
+    bool changeLabelHighFrequency(const LabelKey& labelKey, double frequency) override;
 
     bool removeLabel(const LabelKey& labelKey) override;
     bool removeLabels(const LabelKeyList& labelKeys, bool moveLabels) override;
@@ -30,7 +34,8 @@ public:
 
     ITrackDataPtr copyLabel(const LabelKey& labelKey) override;
 
-    bool moveLabels(secs_t timePositionOffset, bool completed) override;
+    bool moveLabels(secs_t timePositionOffset) override;
+    muse::RetVal<LabelKeyList> moveLabels(const LabelKeyList& labelKeys, const trackedit::TrackId& toTrackId) override;
 
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;

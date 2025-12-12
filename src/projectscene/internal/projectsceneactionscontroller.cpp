@@ -18,6 +18,7 @@ static const ActionCode MINUTES_SECONDS_RULER("minutes-seconds-ruler");
 static const ActionCode BEATS_MEASURES_RULER("beats-measures-ruler");
 static const ActionCode CLIP_PITCH_AND_SPEED_CODE("clip-pitch-speed");
 static const ActionCode TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE("toggle-playback-on-ruler-click-enabled");
+static const ActionCode LABEL_OPEN_EDITOR_CODE("toggle-label-editor");
 static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
 
 void ProjectSceneActionsController::init()
@@ -32,6 +33,7 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, CLIP_PITCH_AND_SPEED_CODE, this, &ProjectSceneActionsController::openClipPitchAndSpeedEdit);
     dispatcher()->reg(this, TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE, this,
                       &ProjectSceneActionsController::togglePlaybackOnRulerClickEnabled);
+    dispatcher()->reg(this, LABEL_OPEN_EDITOR_CODE, this, &ProjectSceneActionsController::openLabelEditor);
     dispatcher()->reg(this, TOGGLE_TRACK_HALF_WAVE, this, &ProjectSceneActionsController::toggleTrackHalfWave);
 }
 
@@ -110,6 +112,11 @@ void ProjectSceneActionsController::openClipPitchAndSpeedEdit(const ActionData& 
     query.addParam("focusItemName", muse::Val("pitch"));
 
     interactive()->open(query);
+}
+
+void ProjectSceneActionsController::openLabelEditor()
+{
+    interactive()->open("audacity://projectscene/openlabeleditor");
 }
 
 void ProjectSceneActionsController::togglePlaybackOnRulerClickEnabled()

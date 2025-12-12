@@ -38,9 +38,11 @@ muse::Ret Au3LabelsExporter::exportData(const muse::io::path_t& filePath, const 
 
     const Au3TrackList& tracks = Au3TrackList::Get(*project);
     for (auto labelTrack : tracks.Any<const LabelTrack>()) {
-        if (muse::contains(includedLabelTracksIds, labelTrack->GetId().raw())) {
-            labelTracks.emplace_back(labelTrack);
+        if (!includedLabelTracksIds.empty() && !muse::contains(includedLabelTracksIds, labelTrack->GetId().raw())) {
+            continue;
         }
+
+        labelTracks.emplace_back(labelTrack);
     }
 
     IF_ASSERT_FAILED(!labelTracks.empty()) {
@@ -70,4 +72,11 @@ muse::Ret Au3LabelsExporter::exportData(const muse::io::path_t& filePath, const 
     textFile.Close();
 
     return muse::make_ret(muse::Ret::Code::Ok);
+}
+
+std::vector<std::string> Au3LabelsExporter::fileFilter()
+{
+    return { muse::trc("importexport", "Text file (*.txt)"),
+             muse::trc("importexport", "SubRip text file (*.srt)"),
+             muse::trc("importexport", "WebVTT file (*.vtt)") };
 }

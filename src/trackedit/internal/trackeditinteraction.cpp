@@ -288,9 +288,9 @@ bool TrackeditInteraction::newStereoTrack()
     return withPlaybackStop(&ITrackeditInteraction::newStereoTrack);
 }
 
-bool TrackeditInteraction::newLabelTrack()
+muse::RetVal<TrackId> TrackeditInteraction::newLabelTrack(const muse::String& title)
 {
-    return withPlaybackStop(&ITrackeditInteraction::newLabelTrack);
+    return withPlaybackStopRetVal(&ITrackeditInteraction::newLabelTrack, title);
 }
 
 bool TrackeditInteraction::deleteTracks(const TrackIdList& trackIds)
@@ -427,6 +427,11 @@ bool TrackeditInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
     });
 }
 
+muse::RetVal<LabelKey> TrackeditInteraction::addLabel(const TrackId& toTrackId)
+{
+    return m_interaction->addLabel(toTrackId);
+}
+
 bool TrackeditInteraction::addLabelToSelection()
 {
     return m_interaction->addLabelToSelection();
@@ -435,6 +440,16 @@ bool TrackeditInteraction::addLabelToSelection()
 bool TrackeditInteraction::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)
 {
     return m_interaction->changeLabelTitle(labelKey, title);
+}
+
+bool TrackeditInteraction::changeLabelLowFrequency(const LabelKey& labelKey, double frequency)
+{
+    return m_interaction->changeLabelLowFrequency(labelKey, frequency);
+}
+
+bool TrackeditInteraction::changeLabelHighFrequency(const LabelKey& labelKey, double frequency)
+{
+    return m_interaction->changeLabelHighFrequency(labelKey, frequency);
 }
 
 bool TrackeditInteraction::removeLabel(const LabelKey& labelKey)
@@ -460,6 +475,11 @@ bool TrackeditInteraction::copyLabel(const LabelKey& labelKey)
 bool TrackeditInteraction::moveLabels(secs_t timePositionOffset, bool completed)
 {
     return m_interaction->moveLabels(timePositionOffset, completed);
+}
+
+muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)
+{
+    return m_interaction->moveLabels(labelKeys, toTrackId, completed);
 }
 
 bool TrackeditInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)

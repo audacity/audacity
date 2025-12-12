@@ -86,7 +86,7 @@ public:
 
     bool newMonoTrack() override;
     bool newStereoTrack() override;
-    bool newLabelTrack() override;
+    muse::RetVal<TrackId> newLabelTrack(const muse::String& title = muse::String()) override;
 
     bool deleteTracks(const TrackIdList& trackIds) override;
     bool duplicateTracks(const TrackIdList& trackIds) override;
@@ -122,8 +122,12 @@ public:
     bool makeStereoTrack(const TrackId left, const TrackId right) override;
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
 
+    muse::RetVal<LabelKey> addLabel(const TrackId& toTrackId) override;
     bool addLabelToSelection() override;
+
     bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) override;
+    bool changeLabelLowFrequency(const LabelKey& labelKey, double frequency) override;
+    bool changeLabelHighFrequency(const LabelKey& labelKey, double frequency) override;
 
     bool removeLabel(const LabelKey& labelKey) override;
     bool removeLabels(const LabelKeyList& labelKeys, bool moveLabels) override;
@@ -132,6 +136,8 @@ public:
     bool copyLabel(const LabelKey& labelKey) override;
 
     bool moveLabels(secs_t timePositionOffset, bool completed) override;
+    muse::RetVal<LabelKeyList> moveLabels(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed) override;
+
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
 

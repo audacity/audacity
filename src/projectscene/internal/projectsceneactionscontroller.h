@@ -46,6 +46,8 @@ private:
 
     void openClipPitchAndSpeedEdit(const muse::actions::ActionData& args);
 
+    void openLabelEditor();
+
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 };
 }
