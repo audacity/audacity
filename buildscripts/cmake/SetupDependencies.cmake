@@ -29,7 +29,8 @@ else()
     set(LIB_BUILD_TYPE "debug")
 endif()
 
-set(REMOTE_ROOT_URL https://raw.githubusercontent.com/musescore/muse_deps/main)
+# set(REMOTE_ROOT_URL https://raw.githubusercontent.com/musescore/muse_deps/main)
+set(REMOTE_ROOT_URL https://raw.githubusercontent.com/grliszas14/muse_deps/au3_missing_libs)
 set(LOCAL_ROOT_PATH ${FETCHCONTENT_BASE_DIR})
 
 function(populate name remote_suffix)
@@ -77,6 +78,7 @@ populate(vorbis "vorbis/1.3.7")
 populate(flac "flac/1.4.2")
 populate(ogg "ogg/1.3.5")
 populate(opus "opus/1.5.2")
+populate(opusfile "opusfile/0.12")
 
 if (NOT OS_IS_LIN)
     populate(zlib "zlib/1.2.13")

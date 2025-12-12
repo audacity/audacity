@@ -11,141 +11,61 @@
 
 **********************************************************************/
 
-#include "Export.h"
+#include "ExportOGG.h"
 
 #include <wx/log.h>
 #include <wx/stream.h>
 
-#include <vorbis/vorbisenc.h>
-
-#include "wxFileNameWrapper.h"
-#include "ExportPluginHelpers.h"
-#include "ExportPluginRegistry.h"
-#include "FileIO.h"
-#include "Mix.h"
-
-#include "Tags.h"
-#include "Track.h"
-
-#include "PlainExportOptionsEditor.h"
-
-namespace {
-enum : int {
-    OptionIDOGGQuality = 0
-};
-
-const ExportOption OGGQualityOption {
-    OptionIDOGGQuality, XO("Quality"),
-    5,
-    ExportOption::TypeRange,
-    { 0, 10 }
-};
-
-class ExportOptionOGGEditor final : public ExportOptionsEditor
+ExportOptionOGGEditor::ExportOptionOGGEditor()
 {
-    int mQualityUnscaled;
-public:
-
-    ExportOptionOGGEditor()
-    {
-        mQualityUnscaled = *std::get_if<int>(&OGGQualityOption.defaultValue);
-    }
-
-    int GetOptionsCount() const override
-    {
-        return 1;
-    }
-
-    bool GetOption(int, ExportOption& option) const override
-    {
-        option = OGGQualityOption;
-        return true;
-    }
-
-    bool GetValue(ExportOptionID, ExportValue& value) const override
-    {
-        value = mQualityUnscaled;
-        return true;
-    }
-
-    bool SetValue(ExportOptionID, const ExportValue& value) override
-    {
-        if (auto num = std::get_if<int>(&value)) {
-            mQualityUnscaled = *num;
-            return true;
-        }
-        return false;
-    }
-
-    SampleRateList GetSampleRateList() const override
-    {
-        return {};
-    }
-
-    void Load(const audacity::BasicSettings& config) override
-    {
-        mQualityUnscaled = config.Read(wxT("/FileFormats/OggExportQuality"), 50) / 10;
-    }
-
-    void Store(audacity::BasicSettings& config) const override
-    {
-        config.Write(wxT("/FileFormats/OggExportQuality"), mQualityUnscaled * 10);
-    }
-};
+    mQualityUnscaled = *std::get_if<int>(&OGGQualityOption.defaultValue);
 }
 
-#define SAMPLES_PER_RUN 8192u
-
-class OGGExportProcessor final : public ExportProcessor
+std::string ExportOptionOGGEditor::GetName() const
 {
-    struct
-    {
-        TranslatableString status;
-        double t0;
-        double t1;
-        unsigned numChannels;
-        std::unique_ptr<Mixer> mixer;
-        std::unique_ptr<FileIO> outFile;
-        wxFileNameWrapper fName;
+    return "ogg";
+}
 
-        // All the Ogg and Vorbis encoding data
-        ogg_stream_state stream;
-        ogg_page page;
-        ogg_packet packet;
-
-        vorbis_info info;
-        vorbis_comment comment;
-        vorbis_dsp_state dsp;
-        vorbis_block block;
-        bool stream_ok{ false };
-        bool analysis_state_ok{ false };
-    } context;
-public:
-    ~OGGExportProcessor() override;
-
-    bool Initialize(AudacityProject& project, const Parameters& parameters, const wxFileNameWrapper& filename, double t0, double t1,
-                    bool selectedOnly, double sampleRate, unsigned channels, MixerOptions::Downmix* mixerSpec, const Tags* tags) override;
-
-    ExportResult Process(ExportProcessorDelegate& delegate) override;
-
-private:
-    static void FillComment(AudacityProject* project, vorbis_comment* comment, const Tags* metadata);
-};
-
-class ExportOGG final : public ExportPlugin
+int ExportOptionOGGEditor::GetOptionsCount() const
 {
-public:
+    return 1;
+}
 
-    ExportOGG();
+bool ExportOptionOGGEditor::GetOption(int, ExportOption& option) const
+{
+    option = OGGQualityOption;
+    return true;
+}
 
-    int GetFormatCount() const override;
-    FormatInfo GetFormatInfo(int) const override;
+bool ExportOptionOGGEditor::GetValue(ExportOptionID, ExportValue& value) const
+{
+    value = mQualityUnscaled;
+    return true;
+}
 
-    std::unique_ptr<ExportOptionsEditor>
-    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
+bool ExportOptionOGGEditor::SetValue(ExportOptionID, const ExportValue& value)
+{
+    if (auto num = std::get_if<int>(&value)) {
+        mQualityUnscaled = *num;
+        return true;
+    }
+    return false;
+}
 
-    std::unique_ptr<ExportProcessor> CreateProcessor(int format) const override;
-};
+ExportOptionOGGEditor::SampleRateList ExportOptionOGGEditor::GetSampleRateList() const
+{
+    return {};
+}
+
+void ExportOptionOGGEditor::Load(const audacity::BasicSettings& config)
+{
+    mQualityUnscaled = config.Read(wxT("/FileFormats/OggExportQuality"), 50) / 10;
+}
+
+void ExportOptionOGGEditor::Store(audacity::BasicSettings& config) const
+{
+    config.Write(wxT("/FileFormats/OggExportQuality"), mQualityUnscaled * 10);
+}
 
 ExportOGG::ExportOGG() = default;
 
@@ -383,7 +303,3 @@ void OGGExportProcessor::FillComment(AudacityProject* project, vorbis_comment* c
                                (char*)(const char*)v.mb_str(wxConvUTF8));
     }
 }
-
-static ExportPluginRegistry::RegisteredPlugin sRegisteredPlugin{ "OGG",
-                                                                 []{ return std::make_unique< ExportOGG >(); }
-};

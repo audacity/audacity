@@ -126,6 +126,21 @@ set(MODULE_SRC ${MODULE_SRC}
     ${IMPORT_EXPORT_MODULE}/mod-pcm/ImportPCM.cpp
     ${IMPORT_EXPORT_MODULE}/mod-pcm/ImportPCM.h
 
+    ${IMPORT_EXPORT_MODULE}/mod-ogg/ExportOGG.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-ogg/ExportOGG.h
+    ${IMPORT_EXPORT_MODULE}/mod-ogg/ImportOGG.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-ogg/ImportOGG.h
+
+    ${IMPORT_EXPORT_MODULE}/mod-flac/ExportFLAC.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-flac/ExportFLAC.h
+    ${IMPORT_EXPORT_MODULE}/mod-flac/ImportFLAC.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-flac/ImportFLAC.h
+
+    ${IMPORT_EXPORT_MODULE}/mod-opus/ExportOpus.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-opus/ExportOpus.h
+    ${IMPORT_EXPORT_MODULE}/mod-opus/ImportOpus.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-opus/ImportOpus.h
+
     # FFmpeg support (still compiled as sources, not yet converted to library)
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ImportFFmpeg.cpp
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ExportFFmpeg.cpp
