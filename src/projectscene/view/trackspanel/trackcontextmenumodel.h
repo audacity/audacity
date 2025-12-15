@@ -56,6 +56,7 @@ private:
     void updateTrackFormatState();
     void updateTrackRateState();
     void updateTrackMonoState();
+    void updateTrackViewCheckedState();
 
     trackedit::TrackId m_trackId;
     muse::actions::ActionCodeList m_colorChangeActionCodeList;
