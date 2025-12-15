@@ -217,18 +217,6 @@ void ViewTracksListModel::load()
     }, muse::async::Asyncable::Mode::SetReplace);
 }
 
-void ViewTracksListModel::handleDroppedFiles(const QStringList& fileUrls)
-{
-    std::vector<muse::io::path_t> localPaths;
-    for (const auto& fileUrl : fileUrls) {
-        QUrl url(fileUrl);
-        localPaths.push_back(muse::io::path_t(url.toLocalFile()));
-    }
-
-    project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    prj->import(localPaths);
-}
-
 int ViewTracksListModel::rowCount(const QModelIndex&) const
 {
     return static_cast<int>(m_trackList.size());
@@ -289,6 +277,10 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case DbRangeRole:
         return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
 
+    case ColorRole: {
+        return QVariant::fromValue(track.color.toQColor());
+    }
+
     default:
         break;
     }
@@ -310,7 +302,8 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { IsStereoRole, "isStereo" },
         { DbRangeRole, "dbRange" },
         { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
-        { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" }
+        { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
+        { ColorRole, "color" }
     };
     return roles;
 }

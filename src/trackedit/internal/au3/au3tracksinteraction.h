@@ -76,13 +76,15 @@ public:
 
     double nearestZeroCrossing(double time) const override;
 
+    au::trackedit::TrackId addWaveTrack(int nChannels) override;
+    void removeDragAddedTracks(size_t numTracksWhenDragStarted, bool emptyOnly) override;
+
     muse::Progress progress() const override;
 
 private:
     friend class Au3TracksInteractionTests;
 
     au3::Au3Project& projectRef() const;
-    void addWaveTrack(int nChannels);
     TrackIdList pasteIntoNewTracks(const std::vector<Au3TrackDataPtr>& tracksData);
     std::shared_ptr<au3::Au3Track> createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
     TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,

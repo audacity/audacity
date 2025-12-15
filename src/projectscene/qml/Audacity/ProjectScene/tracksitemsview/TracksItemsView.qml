@@ -620,6 +620,9 @@ Rectangle {
                 signal startAutoScroll
                 signal stopAutoScroll
 
+                signal previewImportClipRequested(var trackIds, real startPos, var durations, var titles)
+                signal clearPreviewImportClip(var excludeTrackIds)
+
                 header: Rectangle {
                     height: 2
                     width: parent.width
@@ -690,6 +693,8 @@ Rectangle {
                         id: trackClipsContainerComp
 
                         TrackClipsContainer {
+                            id: trackClipsContainer
+
                             property var itemData: trackItemLoader.itemData
                             property int index: trackItemLoader.index
 
@@ -701,6 +706,7 @@ Rectangle {
                             canvas: content
 
                             trackId: itemData.trackId
+                            trackColor: itemData.color
 
                             isDataSelected: itemData.isDataSelected
                             isTrackSelected: itemData.isTrackSelected
@@ -868,6 +874,26 @@ Rectangle {
                                 }
 
                                 return 0
+                            }
+
+                            Connections {
+                                target: tracksItemsView
+
+                                function onPreviewImportClipRequested(tracksIds, startPos, durations, titles) {
+                                    for (let i = 0; i < tracksIds.length; i++) {
+                                        if (tracksIds[i] == trackClipsContainer.trackId) {
+                                            const startTime = timeline.context.positionToTime(startPos);
+                                            const endPos = timeline.context.timeToPosition(startTime + durations[i]);
+                                            trackClipsContainer.movePreviewClip(startPos, endPos - startPos, titles[i])
+                                        }
+                                    }
+                                }
+
+                                function onClearPreviewImportClip(excludeTrackIds) {
+                                    if (!excludeTrackIds.includes(trackClipsContainer.trackId)) {
+                                        trackClipsContainer.clearPreviewClip()
+                                    }
+                                }
                             }
                         }
                     }
@@ -1053,14 +1079,16 @@ Rectangle {
         }
     }
 
-    DropArea {
-        anchors.fill: parent
-        onDropped: drop => {
-            let urls = drop.urls.concat([]);
-            // Forces conversion to a compatible array
-            tracksModel.handleDroppedFiles(urls)
+    ImportDropArea {
+        anchors.fill: content
 
-            drop.acceptProposedAction()
+        tracksItemsView: tracksItemsView
+        tracksViewState: tracksViewState
+        timeline: timeline
+
+        onSetGuidelineRequested: function(pos, visibility) {
+            root.guidelinePos = pos
+            root.guidelineVisible = visibility
         }
     }
 

@@ -12,6 +12,7 @@
         <file>qml/Audacity/ProjectScene/tracksitemsview/LabelHeader.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/LabelEar.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/LabelStalk.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ImportDropArea.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItemButtonBackground.qml</file>
@@ -43,6 +44,7 @@
         <file>qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarActionDelegate.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarCustomisePopup.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipItemSmall.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ClipPreview.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipHandles.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ChannelSplitter.qml</file>
         <file>images/customCursorShapes/ClipStretchBoth.png</file>

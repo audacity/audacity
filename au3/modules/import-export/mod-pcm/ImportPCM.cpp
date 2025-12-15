@@ -238,6 +238,15 @@ TranslatableString PCMImportFileHandle::GetFileDescription()
         untranslated, {} };
 }
 
+double PCMImportFileHandle::GetDuration() const
+{
+    if (mInfo.frames <= 0 || mInfo.samplerate <= 0) {
+        return 0.0;
+    }
+
+    return static_cast<double>(mInfo.frames) / static_cast<double>(mInfo.samplerate);
+}
+
 auto PCMImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
     return mInfo.frames * mInfo.channels * SAMPLE_SIZE(mFormat);
