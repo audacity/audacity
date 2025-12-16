@@ -41,7 +41,6 @@
 #include "view/tracksitemsview/tracklabelslayoutmanager.h"
 #include "view/tracksitemsview/tracklabelitem.h"
 #include "view/tracksitemsview/waveview.h"
-#include "view/tracksitemsview/spectrogramview.h"
 #include "view/tracksitemsview/clipcontextmenumodel.h"
 #include "view/tracksitemsview/multiclipcontextmenumodel.h"
 #include "view/tracksitemsview/labelcontextmenumodel.h"
@@ -169,7 +168,6 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<TrackLabelsLayoutManager>("Audacity.ProjectScene", 1, 0, "TrackLabelsLayoutManager");
     qmlRegisterUncreatableType<TrackLabelItem>("Audacity.ProjectScene", 1, 0, "TrackLabelItem", "Not creatable from QML");
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
-    qmlRegisterType<SpectrogramView>("Audacity.ProjectScene", 1, 0, "SpectrogramView");
     qmlRegisterType<ClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "ClipContextMenuModel");
     qmlRegisterType<MultiClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "MultiClipContextMenuModel");
     qmlRegisterType<LabelContextMenuModel>("Audacity.ProjectScene", 1, 0, "LabelContextMenuModel");

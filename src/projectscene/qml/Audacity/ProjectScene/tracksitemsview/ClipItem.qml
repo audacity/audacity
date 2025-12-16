@@ -7,6 +7,7 @@ import Muse.GraphicalEffects
 
 import Audacity.ProjectScene
 import Audacity.Playback
+import Audacity.Spectrogram
 
 Rectangle {
     id: root
@@ -826,11 +827,16 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                context: root.context
-                clipKey: root.clipKey
-                clipTime: root.clipTime
+                clipId: root.clipKey.itemId()
+                trackId: root.clipKey.trackId()
+
                 timelineIndentWidth: root.canvas.anchors.leftMargin
                 channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
+                zoom: root.context.zoom
+                frameStartTime: root.context.frameStartTime
+                frameEndTime: root.context.frameEndTime
+                selectionStartTime: root.context.selectionStartTime
+                selectionEndTime: root.context.selectionEndTime
 
                 ChannelSplitter {
                     id: spectrogramChannelSplitter

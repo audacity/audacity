@@ -32,15 +32,15 @@ static const QColor CLASSIC_SAMPLES_BASE_SELECTED_COLOR = QColor(103, 124, 228);
 static const QColor CLASSIC_RMS_COLOR = QColor(151, 151, 253);                      // Rms: #9797FD
 static const QColor CLASSIC_CLIPPING_COLOR = QColor(239, 71, 111);                  // Clipped: #ef476f
 
-static const float SAMPLE_HEAD_DEFAULT_ALPHA = 0.6f;
-static const float SAMPLE_HEAD_CLIP_SELECTED_ALPHA = 0.8f;
-static const float SAMPLE_HEAD_DATA_SELECTED_ALPHA = 0.9f;
-static const float SAMPLE_STALK_DEFAULT_ALPHA = 0.4f;
-static const float SAMPLE_STALK_CLIP_SELECTED_ALPHA = 0.6f;
-static const float SAMPLE_STALK_DATA_SELECTED_ALPHA = 0.7f;
+static const float SAMPLE_HEAD_DEFAULT_ALPHA= 0.6;
+static const float SAMPLE_HEAD_CLIP_SELECTED_ALPHA = 0.8;
+static const float SAMPLE_HEAD_DATA_SELECTED_ALPHA = 0.9;
+static const float SAMPLE_STALK_DEFAULT_ALPHA = 0.4;
+static const float SAMPLE_STALK_CLIP_SELECTED_ALPHA = 0.6;
+static const float SAMPLE_STALK_DATA_SELECTED_ALPHA = 0.7;
 
 WaveView::WaveView(QQuickItem* parent)
-    : AbstractClipView(parent)
+    : QQuickPaintedItem(parent)
 {
     //! NOTE: Push history state after edit is completed to avoid multiple unecessary calls.
     connect(this, &WaveView::isIsolationModeChanged, [this]() {
@@ -66,6 +66,14 @@ WaveView::WaveView(QQuickItem* parent)
 
 WaveView::~WaveView()
 {
+}
+
+void WaveView::setClipKey(const ClipKey& newClipKey)
+{
+    m_clipKey = newClipKey;
+    emit clipKeyChanged();
+
+    update();
 }
 
 IWavePainter::Params WaveView::getWavePainterParams() const
@@ -171,9 +179,41 @@ void WaveView::paint(QPainter* painter)
     wavePainter()->paint(*painter, m_clipKey.key, params, pType);
 }
 
-void WaveView::addSpecializedConnections(TimelineContext& context)
+ClipKey WaveView::clipKey() const
 {
-    connect(&context, &TimelineContext::zoomChanged, this, &WaveView::onWaveZoomChanged);
+    return m_clipKey;
+}
+
+TimelineContext* WaveView::timelineContext() const
+{
+    return m_context;
+}
+
+void WaveView::setTimelineContext(TimelineContext* newContext)
+{
+    if (m_context == newContext) {
+        return;
+    }
+
+    if (m_context) {
+        disconnect(m_context, nullptr, this, nullptr);
+    }
+
+    m_context = newContext;
+
+    if (m_context) {
+        connect(m_context, &TimelineContext::frameTimeChanged, this, &WaveView::updateView);
+        connect(m_context, &TimelineContext::selectionStartTimeChanged, this, &WaveView::updateView);
+        connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &WaveView::updateView);
+        connect(m_context, &TimelineContext::zoomChanged, this, &WaveView::onWaveZoomChanged);
+    }
+
+    emit timelineContextChanged();
+}
+
+void WaveView::updateView()
+{
+    update();
 }
 
 QColor WaveView::clipColor() const
@@ -189,6 +229,50 @@ void WaveView::setClipColor(const QColor& newClipColor)
     m_clipColor = newClipColor;
     emit clipColorChanged();
 
+    update();
+}
+
+bool WaveView::clipSelected() const
+{
+    return m_clipSelected;
+}
+
+void WaveView::setClipSelected(bool newClipSelected)
+{
+    if (m_clipSelected == newClipSelected) {
+        return;
+    }
+    m_clipSelected = newClipSelected;
+    emit clipSelectedChanged();
+
+    update();
+}
+
+ClipTime WaveView::clipTime() const
+{
+    return m_clipTime;
+}
+
+void WaveView::setClipTime(const ClipTime& newClipTime)
+{
+    if (m_clipTime == newClipTime) {
+        return;
+    }
+    m_clipTime = newClipTime;
+    emit clipTimeChanged();
+
+    update();
+}
+
+double WaveView::channelHeightRatio() const
+{
+    return m_channelHeightRatio;
+}
+
+void WaveView::setChannelHeightRatio(double channelHeightRatio)
+{
+    m_channelHeightRatio = channelHeightRatio;
+    emit channelHeightRatioChanged();
     update();
 }
 
