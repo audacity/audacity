@@ -79,6 +79,16 @@ TranslatableString OggImportFileHandle::GetFileDescription()
     return DESC;
 }
 
+double OggImportFileHandle::GetDuration() const
+{
+    if (!mVorbisFile) {
+        return 0.0;
+    }
+
+    const double seconds = ov_time_total(mVorbisFile.get(), -1);
+    return (seconds > 0.0) ? seconds : 0.0;
+}
+
 auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
     // TODO:

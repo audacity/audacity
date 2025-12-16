@@ -292,6 +292,15 @@ TranslatableString FLACImportFileHandle::GetFileDescription()
     return DESC;
 }
 
+double FLACImportFileHandle::GetDuration() const
+{
+    if (!mStreamInfoDone || mSampleRate <= 0 || mNumSamples == 0) {
+        return 0.0;
+    }
+
+    return static_cast<double>(mNumSamples) / static_cast<double>(mSampleRate);
+}
+
 auto FLACImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
     // TODO: Get Uncompressed byte count.

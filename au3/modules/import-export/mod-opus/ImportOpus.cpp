@@ -93,6 +93,15 @@ TranslatableString OpusImportFileHandle::GetFileDescription()
     return DESC;
 }
 
+double OpusImportFileHandle::GetDuration() const
+{
+    if (mNumSamples <= 0) {
+        return 0.0;
+    }
+
+    return static_cast<double>(mNumSamples) / static_cast<double>(mSampleRate);
+}
+
 auto OpusImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
     return 0;
