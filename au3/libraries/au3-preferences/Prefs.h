@@ -221,10 +221,6 @@ public:
         if (pVar) {
             *pVar = defaultValue;
         }
-        if (pVar && this->mValid) {
-            *pVar = this->mCurrentValue;
-            return true;
-        }
         const auto config = this->GetConfig();
         if (pVar && config) {
             if ((this->mValid = config->Read(this->mPath, &this->mCurrentValue))) {
@@ -248,9 +244,6 @@ public:
      default-default stored in this object. */
     T ReadWithDefault(const T& defaultValue) const
     {
-        if (this->mValid) {
-            return this->mCurrentValue;
-        }
         const auto config = this->GetConfig();
         if (config) {
             this->mCurrentValue
