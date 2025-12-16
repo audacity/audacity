@@ -19,13 +19,12 @@ namespace {
 /* i18n-hint: kbps abbreviates "thousands of bits per second" */
 TranslatableString n_kbps(int n)
 {
-    return XO("%d kbps").Format(n);
+    return XO("%d kbit/s").Format(n);
 }
 
 enum : int
 {
     OPUSOptionIDBitRate = 0,
-    OPUSOptionIDQuality,
     OPUSOptionIDFrameDuration,
     OPUSOptionIDVBRMode,
     OPUSOptionIDApplication,
@@ -44,7 +43,7 @@ enum : int
 const std::initializer_list<PlainExportOptionsEditor::OptionDesc> OPUSOptions {
     {
         {
-            OPUSOptionIDBitRate, XO("Bit Rate"),
+            OPUSOptionIDBitRate, XO("Quality"),
             OPUS_AUTO,
             ExportOption::TypeEnum,
             {
@@ -84,14 +83,6 @@ const std::initializer_list<PlainExportOptionsEditor::OptionDesc> OPUSOptions {
                 XO("Maximum")
             }
         }, wxT("/FileFormats/OPUS/Bitrate")
-    },
-    {
-        {
-            OPUSOptionIDQuality, XO("Quality"),
-            10,
-            ExportOption::TypeRange,
-            { 0, 10 }
-        }, wxT("/FileFormats/OPUS/Quality")
     },
     {
         {
@@ -338,8 +329,7 @@ bool OpusExportProcessor::Initialize(
         parameters, OPUSOptionIDBitRate, OPUS_AUTO);
     const auto vbrMode = ExportPluginHelpers::GetParameterValue<int>(
         parameters, OPUSOptionIDVBRMode, VBRMode::VBR);
-    const int complexity = ExportPluginHelpers::GetParameterValue<int>(
-        parameters, OPUSOptionIDQuality, 10);
+    const int complexity = 10;
     const int frameMultiplier = ExportPluginHelpers::GetParameterValue<int>(
         parameters, OPUSOptionIDFrameDuration, 200);
     const int application = ExportPluginHelpers::GetParameterValue<int>(
