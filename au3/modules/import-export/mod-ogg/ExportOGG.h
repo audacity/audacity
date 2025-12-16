@@ -21,17 +21,6 @@
 
 #define SAMPLES_PER_RUN 8192u
 
-enum : int {
-    OptionIDOGGQuality = 0
-};
-
-const ExportOption OGGQualityOption {
-    OptionIDOGGQuality, XO("Quality"),
-    5,
-    ExportOption::TypeRange,
-    { 0, 10 }
-};
-
 class ExportOptionOGGEditor final : public ExportOptionsEditor
 {
 public:

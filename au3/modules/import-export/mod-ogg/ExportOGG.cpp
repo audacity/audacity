@@ -16,9 +16,57 @@
 #include <wx/log.h>
 #include <wx/stream.h>
 
+namespace {
+/* i18n-hint: kbit/s abbreviates "thousands of bits per second" */
+TranslatableString n_kbps(int n)
+{
+    return XO("%d kbit/s").Format(n);
+}
+
+enum : int {
+    OptionIDOGGBitRate = 1,
+};
+
+// NOTE: there's a nominal Quality -> bitrate conversion in Ogg Vorbis
+// but effective bitrate may vary depending on sample rate
+const PlainExportOptionsEditor::OptionDesc OGGOptionBitrate {
+    {
+        OptionIDOGGBitRate, XO("Quality"),
+        6,
+        ExportOption::TypeEnum,
+        {
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+        },
+        {
+            n_kbps(64),
+            n_kbps(80),
+            n_kbps(96),
+            n_kbps(112),
+            n_kbps(128),
+            n_kbps(160),
+            n_kbps(192),
+            n_kbps(224),
+            n_kbps(256),
+            n_kbps(320),
+            n_kbps(500),
+        }
+    }, wxT("/FileFormats/OGG/Bitrate")
+};
+}
+
 ExportOptionOGGEditor::ExportOptionOGGEditor()
 {
-    mQualityUnscaled = *std::get_if<int>(&OGGQualityOption.defaultValue);
+    mQualityUnscaled = *std::get_if<int>(&OGGOptionBitrate.option.defaultValue);
 }
 
 std::string ExportOptionOGGEditor::GetName() const
@@ -33,7 +81,7 @@ int ExportOptionOGGEditor::GetOptionsCount() const
 
 bool ExportOptionOGGEditor::GetOption(int, ExportOption& option) const
 {
-    option = OGGQualityOption;
+    option = OGGOptionBitrate.option;
     return true;
 }
 
@@ -59,12 +107,12 @@ ExportOptionOGGEditor::SampleRateList ExportOptionOGGEditor::GetSampleRateList()
 
 void ExportOptionOGGEditor::Load(const audacity::BasicSettings& config)
 {
-    mQualityUnscaled = config.Read(wxT("/FileFormats/OggExportQuality"), 50) / 10;
+    mQualityUnscaled = config.Read(wxT("/FileFormats/OGG/Bitrate"), 50) / 10;
 }
 
 void ExportOptionOGGEditor::Store(audacity::BasicSettings& config) const
 {
-    config.Write(wxT("/FileFormats/OggExportQuality"), mQualityUnscaled * 10);
+    config.Write(wxT("/FileFormats/OGG/Bitrate"), mQualityUnscaled * 10);
 }
 
 ExportOGG::ExportOGG() = default;
@@ -108,7 +156,8 @@ bool OGGExportProcessor::Initialize(AudacityProject& project,
     context.t1 = t1;
     context.numChannels = numChannels;
 
-    double quality = ExportPluginHelpers::GetParameterValue(parameters, 0, 5) / 10.0;
+    double quality = ExportPluginHelpers::GetParameterValue<int>(
+        parameters, OptionIDOGGBitRate, 6) / 10.0;
 
     wxLogNull logNo;           // temporarily disable wxWidgets error messages
 

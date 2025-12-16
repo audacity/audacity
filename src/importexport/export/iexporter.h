@@ -23,6 +23,7 @@ public:
     virtual int formatIndex(const std::string& format) const = 0;
     virtual std::vector<std::string> formatExtensions(const std::string& format) const = 0;
     virtual bool isCustomFFmpegExportFormat() const = 0;
+    virtual bool isOggExportFormat() const = 0;
     virtual bool hasMetadata() const = 0;
 
     virtual int maxChannels() const = 0;
