@@ -22,5 +22,6 @@ public:
     void init();
 
     ITrackSpectrogramConfigurationPtr trackSpectrogramConfiguration(int trackId) const override;
+    void copyConfiguration(const ISpectrogramConfiguration& source, ISpectrogramConfiguration& destination) const override;
 };
 }

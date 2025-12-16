@@ -264,36 +264,6 @@ muse::async::Channel<int> GlobalSpectrogramConfiguration::zeroPaddingFactorChang
     return m_zeroPaddingFactorChanged;
 }
 
-SpectrogramSettings GlobalSpectrogramConfiguration::allSettings() const
-{
-    SpectrogramSettings settings;
-    settings.spectralSelectionEnabled = spectralSelectionEnabled();
-    settings.colorScheme = colorScheme();
-    settings.colorGainDb = colorGainDb();
-    settings.colorRangeDb = colorRangeDb();
-    settings.colorHighBoostDbPerDec = colorHighBoostDbPerDec();
-    settings.scale = scale();
-    settings.algorithm = algorithm();
-    settings.windowType = windowType();
-    settings.winSizeLog2 = winSizeLog2();
-    settings.zeroPaddingFactor = zeroPaddingFactor();
-    return settings;
-}
-
-void GlobalSpectrogramConfiguration::setAllSettings(const SpectrogramSettings& settings)
-{
-    setSpectralSelectionEnabled(settings.spectralSelectionEnabled);
-    setColorScheme(settings.colorScheme);
-    setColorGainDb(settings.colorGainDb);
-    setColorRangeDb(settings.colorRangeDb);
-    setColorHighBoostDbPerDec(settings.colorHighBoostDbPerDec);
-    setScale(settings.scale);
-    setAlgorithm(settings.algorithm);
-    setWindowType(settings.windowType);
-    setWinSizeLog2(settings.winSizeLog2);
-    setZeroPaddingFactor(settings.zeroPaddingFactor);
-}
-
 muse::async::Notification GlobalSpectrogramConfiguration::someSettingChanged() const
 {
     return m_someSettingChanged;

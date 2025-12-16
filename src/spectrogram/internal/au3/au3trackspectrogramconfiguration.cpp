@@ -171,34 +171,4 @@ void Au3TrackSpectrogramConfiguration::setUseGlobalSettings(bool value)
 {
     m_settings.syncWithGlobalSettings = value;
 }
-
-SpectrogramSettings Au3TrackSpectrogramConfiguration::allSettings() const
-{
-    SpectrogramSettings allSettings;
-    allSettings.spectralSelectionEnabled = spectralSelectionEnabled();
-    allSettings.colorGainDb = colorGainDb();
-    allSettings.colorRangeDb = colorRangeDb();
-    allSettings.colorHighBoostDbPerDec = colorHighBoostDbPerDec();
-    allSettings.colorScheme = colorScheme();
-    allSettings.scale = scale();
-    allSettings.algorithm = algorithm();
-    allSettings.windowType = windowType();
-    allSettings.winSizeLog2 = winSizeLog2();
-    allSettings.zeroPaddingFactor = zeroPaddingFactor();
-    return allSettings;
-}
-
-void Au3TrackSpectrogramConfiguration::setAllSettings(const SpectrogramSettings& allSettings)
-{
-    setSpectralSelectionEnabled(allSettings.spectralSelectionEnabled);
-    setColorGainDb(allSettings.colorGainDb);
-    setColorRangeDb(allSettings.colorRangeDb);
-    setColorHighBoostDbPerDec(allSettings.colorHighBoostDbPerDec);
-    setColorScheme(allSettings.colorScheme);
-    setScale(allSettings.scale);
-    setAlgorithm(allSettings.algorithm);
-    setWindowType(allSettings.windowType);
-    setWinSizeLog2(allSettings.winSizeLog2);
-    setZeroPaddingFactor(allSettings.zeroPaddingFactor);
-}
 }
