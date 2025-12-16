@@ -23,29 +23,28 @@ class Au3AudioDevicesProvider : public playback::IAudioDevicesProvider
 public:
     void init();
 
-    std::vector<std::string> audioOutputDevices() const override;
-    std::string currentAudioOutputDevice() const override;
-    void setAudioOutputDevice(const std::string& deviceName) override;
-    muse::async::Notification audioOutputDeviceChanged() const override;
+    std::vector<std::string> outputDevices() const override;
+    std::string currentOutputDevice() const override;
+    void setOutputDevice(const std::string& device) override;
+    muse::async::Notification outputDeviceChanged() const override;
 
-    std::vector<std::string> audioInputDevices() const override;
-    std::string currentAudioInputDevice() const override;
-    void setAudioInputDevice(const std::string& deviceName) override;
-    muse::async::Notification audioInputDeviceChanged() const override;
+    std::vector<std::string> inputDevices() const override;
+    std::string currentInputDevice() const override;
+    void setInputDevice(const std::string& device) override;
+    muse::async::Notification inputDeviceChanged() const override;
 
     void handleDeviceChange() override;
 
-    std::vector<std::string> audioApiList() const override;
-    std::string currentAudioApi() const override;
-    void setAudioApi(const std::string& audioApi) override;
-    muse::async::Notification audioApiChanged() const override;
+    std::vector<std::string> apiList() const override;
+    std::string currentApi() const override;
+    void setApi(const std::string& api) override;
+    muse::async::Notification apiChanged() const override;
 
-    std::vector<std::string> inputChannelsList() const override;
-    std::string currentInputChannels() const override;
-    int currentInputChannelsCount() const override;
-    void setInputChannels(const std::string& channels) override;
+    int inputChannelsAvailable() const override;
+    int inputChannelsSelected() const override;
+    void setInputChannels(const int count) override;
+    muse::async::Notification inputChannelsAvailableChanged() const override;
     muse::async::Notification inputChannelsChanged() const override;
-    muse::async::Notification inputChannelsListChanged() const override;
 
     double bufferLength() const override;
     void setBufferLength(double newBufferLength) override;
@@ -71,78 +70,15 @@ private:
     void initInputChannels();
 
     void updateInputOutputDevices();
-    void setupRecordingDevice(const std::string& newDevice);
+    void setupInputDevice(const std::string& newDevice);
 
     std::string defaultOutputDevice();
     std::string defaultInputDevice();
 
-    class Choices
-    {
-    public:
-        void Clear() { mStrings.Clear(); mIndex = -1; }
-        [[nodiscard]] bool Empty() const { return mStrings.empty(); }
-        std::optional<wxString> Get() const
-        {
-            if (mIndex < 0 || mIndex >= mStrings.size()) {
-                return {};
-            }
-            return { mStrings[mIndex] };
-        }
-
-        wxString GetFirst() const
-        {
-            if (!Empty()) {
-                return mStrings[0];
-            }
-            return {};
-        }
-
-        int GetSmallIntegerId() const
-        {
-            return mIndex;
-        }
-
-        int Find(const wxString& name) const
-        {
-            return make_iterator_range(mStrings).index(name);
-        }
-
-        bool Set(const wxString& name)
-        {
-            auto index = make_iterator_range(mStrings).index(name);
-            if (index != -1) {
-                mIndex = index;
-                return true;
-            }
-            // else no state change
-            return false;
-        }
-
-        void Set(wxArrayString&& names)
-        {
-            mStrings.swap(names);
-            mIndex = mStrings.empty() ? -1 : 0;
-        }
-
-        // id is just a small-integer index into the string array
-        bool Set(int id)
-        {
-            if (id < 0 || id >= mStrings.size()) {
-                return false; // no change of state then
-            }
-            mIndex = id;
-            return true;
-        }
-
-    private:
-        wxArrayStringEx mStrings;
-        int mIndex{ -1 };
-    };
-
-    Choices mInput;
-    Choices mOutput;
-    Choices mInputChannels;
-    Choices mHost;
+    std::vector<std::string> m_audioApis;
+    std::vector<std::string> m_outputDevices;
+    std::vector<std::string> m_inputDevices;
+    int m_inputChannelsAvailable;
 
     muse::async::Notification m_audioOutputDeviceChanged;
     muse::async::Notification m_audioInputDeviceChanged;

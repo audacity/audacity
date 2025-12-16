@@ -53,7 +53,7 @@ void WaveTrackItem::init(const trackedit::Track& track)
     }, muse::async::Asyncable::Mode::SetReplace);
 
     audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
-        const int inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
+        const int inputChannelsCount = audioDevicesProvider()->inputChannelsSelected();
         m_recordStreamChannelsMatch = (trackType() == trackedit::TrackType::Mono && inputChannelsCount == 1)
                                       || (trackType() == trackedit::TrackType::Stereo && inputChannelsCount == 2);
         checkMainAudioInput();
@@ -83,7 +83,7 @@ void WaveTrackItem::init(const trackedit::Track& track)
         }
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    const int inputChannelsCount = audioDevicesProvider()->currentInputChannelsCount();
+    const int inputChannelsCount = audioDevicesProvider()->inputChannelsSelected();
     m_recordStreamChannelsMatch = (trackType() == trackedit::TrackType::Mono && inputChannelsCount == 1)
                                   || (trackType() == trackedit::TrackType::Stereo && inputChannelsCount == 2);
 

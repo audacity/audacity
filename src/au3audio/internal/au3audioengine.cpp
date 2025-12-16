@@ -146,11 +146,6 @@ void Au3AudioEngine::handleDeviceChange()
     AudioIO::Get()->HandleDeviceChange();
 }
 
-int Au3AudioEngine::getHostIndex(const std::string& hostName)
-{
-    return AudioIO::Get()->GetHostIndex(hostName);
-}
-
 muse::String Au3AudioEngine::lastErrorString() const
 {
     return au::au3::wxToString(AudioIO::Get()->LastPaErrorString());

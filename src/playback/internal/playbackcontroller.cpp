@@ -620,7 +620,7 @@ void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
 
     int index = q.param("api_index").toInt();
 
-    audioDevicesProvider()->setAudioApi(audioDevicesProvider()->audioApiList().at(index));
+    audioDevicesProvider()->setApi(audioDevicesProvider()->apiList().at(index));
 }
 
 void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& q)
@@ -631,7 +631,7 @@ void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& 
 
     int index = q.param("device_index").toInt();
 
-    audioDevicesProvider()->setAudioOutputDevice(audioDevicesProvider()->audioOutputDevices().at(index));
+    audioDevicesProvider()->setOutputDevice(audioDevicesProvider()->outputDevices().at(index));
 }
 
 void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q)
@@ -642,7 +642,7 @@ void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q
 
     int index = q.param("device_index").toInt();
 
-    audioDevicesProvider()->setAudioInputDevice(audioDevicesProvider()->audioInputDevices().at(index));
+    audioDevicesProvider()->setInputDevice(audioDevicesProvider()->inputDevices().at(index));
 }
 
 void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
@@ -653,7 +653,7 @@ void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
 
     int index = q.param("input-channels_index").toInt();
 
-    audioDevicesProvider()->setInputChannels(audioDevicesProvider()->inputChannelsList().at(index));
+    audioDevicesProvider()->setInputChannels(index);
 }
 
 void PlaybackController::notifyActionCheckedChanged(const ActionCode& actionCode)

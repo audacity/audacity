@@ -61,7 +61,7 @@ void AudioSetupContextMenuModel::makeMenuItems()
 MenuItemList AudioSetupContextMenuModel::makeHostItems()
 {
     MenuItemList items;
-    auto currentApi = audioDevicesProvider()->currentAudioApi();
+    auto currentApi = audioDevicesProvider()->currentApi();
 
     auto makeChangeApiAction = [](int index) {
         ActionQuery q = PLAYBACK_CHANGE_AUDIO_API_QUERY;
@@ -69,7 +69,7 @@ MenuItemList AudioSetupContextMenuModel::makeHostItems()
         return q;
     };
 
-    const auto& apiList = audioDevicesProvider()->audioApiList();
+    const auto& apiList = audioDevicesProvider()->apiList();
     for (size_t i = 0; i < apiList.size(); ++i) {
         MenuItem* item = makeMenuItem(makeChangeApiAction(i).toString(),
                                       muse::TranslatableString::untranslatable(muse::String::fromStdString(apiList.at(i))));
@@ -86,7 +86,7 @@ MenuItemList AudioSetupContextMenuModel::makeHostItems()
 MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
 {
     MenuItemList items;
-    auto currentOutputDevice = audioDevicesProvider()->currentAudioOutputDevice();
+    auto currentOutputDevice = audioDevicesProvider()->currentOutputDevice();
 
     auto makeChangePlaybackDeviceAction = [](int index) {
         ActionQuery q = PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY;
@@ -94,7 +94,7 @@ MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
         return q;
     };
 
-    const auto& outputDevicesList = audioDevicesProvider()->audioOutputDevices();
+    const auto& outputDevicesList = audioDevicesProvider()->outputDevices();
     for (size_t i = 0; i < outputDevicesList.size(); ++i) {
         MenuItem* item = makeMenuItem(makeChangePlaybackDeviceAction(i).toString(),
                                       muse::TranslatableString::untranslatable(muse::String::fromStdString(outputDevicesList.at(i))));
@@ -111,7 +111,7 @@ MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
 MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
 {
     MenuItemList items;
-    auto currentInputDevice = audioDevicesProvider()->currentAudioInputDevice();
+    auto currentInputDevice = audioDevicesProvider()->currentInputDevice();
 
     auto makeChangeRecordingDeviceAction = [](int index) {
         ActionQuery q = PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY;
@@ -119,7 +119,7 @@ MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
         return q;
     };
 
-    const auto& inputDevicesList = audioDevicesProvider()->audioInputDevices();
+    const auto& inputDevicesList = audioDevicesProvider()->inputDevices();
     for (size_t i = 0; i < inputDevicesList.size(); ++i) {
         MenuItem* item = makeMenuItem(makeChangeRecordingDeviceAction(i).toString(),
                                       muse::TranslatableString::untranslatable(muse::String::fromStdString(inputDevicesList.at(i))));
@@ -136,20 +136,31 @@ MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
 MenuItemList AudioSetupContextMenuModel::makeInputChannelsItems()
 {
     MenuItemList items;
-    auto currentInputChannels = audioDevicesProvider()->currentInputChannels();
+    int inputChannelsSelected = audioDevicesProvider()->inputChannelsSelected();
+    int inputChannelsAvailable = audioDevicesProvider()->inputChannelsAvailable();
 
-    auto makeChangeInputChannelsAction = [](int index) {
+    auto makeChangeInputChannelsAction = [](int index) -> ActionQuery {
         ActionQuery q = PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY;
         q.addParam("input-channels_index", muse::Val(index));
         return q;
     };
 
-    const auto& inputChannelsList = audioDevicesProvider()->inputChannelsList();
-    for (size_t i = 0; i < inputChannelsList.size(); ++i) {
-        MenuItem* item = makeMenuItem(makeChangeInputChannelsAction(i).toString(),
-                                      muse::TranslatableString::untranslatable(muse::String::fromStdString(inputChannelsList.at(i))));
+    auto channelName = [](int channelNumber) -> QString {
+        return channelNumber == 1
+               ? muse::qtrc("projectscene/toolbars", "%1 (Mono) Recording channel").arg(channelNumber)
+               : channelNumber == 2
+               ? muse::qtrc("projectscene/toolbars", "%1 (Stereo) Recording channels").arg(channelNumber)
+               : QString::number(channelNumber);
+    };
+
+    for (int i = 0; i < inputChannelsAvailable; ++i) {
+        int channelNumber = i + 1;
+        MenuItem* item = makeMenuItem(makeChangeInputChannelsAction(channelNumber).toString(),
+                                      muse::TranslatableString::untranslatable(channelName(channelNumber)));
+
         item->setId(QString::fromStdString(item->query().toString()));
-        if (currentInputChannels == inputChannelsList.at(i)) {
+
+        if (inputChannelsSelected == (channelNumber)) {
             item->setChecked(true);
         }
         items << item;

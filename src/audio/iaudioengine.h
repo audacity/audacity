@@ -45,7 +45,6 @@ public:
     virtual bool canStopAudioStream(AudacityProject& project) const = 0;
 
     virtual void handleDeviceChange() = 0;
-    virtual int getHostIndex(const std::string& hostName) = 0;
 
     virtual muse::String lastErrorString() const = 0;
     virtual double getPlaybackSampleRate() const = 0;

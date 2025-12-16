@@ -48,12 +48,12 @@ const std::vector<DeviceSourceMap>& DeviceManager::GetOutputDeviceMaps()
     return mOutputDeviceSourceMaps;
 }
 
-wxString MakeDeviceSourceString(const DeviceSourceMap* map)
+std::string MakeDeviceSourceString(const DeviceSourceMap* map)
 {
-    wxString ret;
+    std::string ret;
     ret = map->deviceString;
     if (map->totalSources > 1) {
-        ret += wxT(": ") + map->sourceString;
+        ret += ": " + map->sourceString;
     }
 
     return ret;
@@ -88,6 +88,18 @@ DeviceSourceMap* DeviceManager::GetDefaultOutputDevice(int hostIndex)
 DeviceSourceMap* DeviceManager::GetDefaultInputDevice(int hostIndex)
 {
     return GetDefaultDevice(hostIndex, 1);
+}
+
+int DeviceManager::GetHostIndex(const std::string& hostName)
+{
+    PaHostApiIndex hostCnt = Pa_GetHostApiCount();
+    for (PaHostApiIndex hostNum = 0; hostNum < hostCnt; hostNum++) {
+        const PaHostApiInfo* hinfo = Pa_GetHostApiInfo(hostNum);
+        if (hinfo && wxString(wxSafeConvertMB2WX(hinfo->name)) == wxString(hostName)) {
+            return hostNum;
+        }
+    }
+    return -1;
 }
 
 //--------------- Device Enumeration --------------------------

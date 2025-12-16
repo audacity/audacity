@@ -79,7 +79,7 @@ Item {
             title: qsTrc("appshell/preferences", "Recording channels")
             columnWidth: root.columnWidth
 
-            currentIndex: indexOfValue(apiModel.currentInputChannels)
+            currentIndex: indexOfValue(apiModel.currentInputChannelsSelected)
             model: apiModel.inputChannelsList
 
             navigation.name: "RecordingChannelsBox"
@@ -87,7 +87,7 @@ Item {
             navigation.row: root.navigationOrderStart + 2
 
             onValueEdited: function(newIndex, newValue) {
-                apiModel.inputChannelsSelected(newValue)
+                apiModel.inputChannelsSelected(newIndex)
             }
         }
     }

@@ -33,6 +33,15 @@ QString toSampleRateName(uint64_t sampleRate)
 {
     return QString::number(sampleRate) + " Hz";
 }
+
+QString channelName(int channelNumber)
+{
+    return channelNumber == 1
+           ? muse::qtrc("appshell/preferences", "%1 (Mono) Recording channel").arg(channelNumber)
+           : channelNumber == 2
+           ? muse::qtrc("appshell/preferences", "%1 (Stereo) Recording channels").arg(channelNumber)
+           : QString::number(channelNumber);
+}
 }
 
 CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* parent)
@@ -42,7 +51,7 @@ CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* pare
 
 void CommonAudioApiConfigurationModel::load()
 {
-    audioDevicesProvider()->audioApiChanged().onNotify(this, [this]() {
+    audioDevicesProvider()->apiChanged().onNotify(this, [this]() {
         emit currentAudioApiIndexChanged();
         emit outputDeviceListChanged();
         emit inputDeviceListChanged();
@@ -52,12 +61,12 @@ void CommonAudioApiConfigurationModel::load()
         emit currentInputDeviceIdChanged();
 
         emit inputChannelsListChanged();
-        emit currentInputChannelsChanged();
+        emit currentInputChannelsSelectedChanged();
     });
-    audioDevicesProvider()->audioOutputDeviceChanged().onNotify(this, [this]() { emit currentOutputDeviceIdChanged(); });
-    audioDevicesProvider()->audioInputDeviceChanged().onNotify(this, [this]() { emit currentInputDeviceIdChanged(); });
-    audioDevicesProvider()->inputChannelsListChanged().onNotify(this, [this](){ emit inputChannelsListChanged(); });
-    audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this](){ emit currentInputChannelsChanged(); });
+    audioDevicesProvider()->outputDeviceChanged().onNotify(this, [this]() { emit currentOutputDeviceIdChanged(); });
+    audioDevicesProvider()->inputDeviceChanged().onNotify(this, [this]() { emit currentInputDeviceIdChanged(); });
+    audioDevicesProvider()->inputChannelsAvailableChanged().onNotify(this, [this](){ emit inputChannelsListChanged(); });
+    audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this](){ emit currentInputChannelsSelectedChanged(); });
     audioDevicesProvider()->bufferLengthChanged().onNotify(this, [this](){ emit bufferLengthChanged(); });
     audioDevicesProvider()->latencyCompensationChanged().onNotify(this, [this](){ emit latencyCompensationChanged(); });
     audioDevicesProvider()->defaultSampleRateChanged().onNotify(this, [this](){
@@ -72,7 +81,7 @@ void CommonAudioApiConfigurationModel::load()
 
 int CommonAudioApiConfigurationModel::currentAudioApiIndex() const
 {
-    QString currentApi = QString::fromStdString(audioDevicesProvider()->currentAudioApi());
+    QString currentApi = QString::fromStdString(audioDevicesProvider()->currentApi());
     return audioApiList().indexOf(currentApi);
 }
 
@@ -82,18 +91,18 @@ void CommonAudioApiConfigurationModel::setCurrentAudioApiIndex(int index)
         return;
     }
 
-    std::vector<std::string> apiList = audioDevicesProvider()->audioApiList();
+    std::vector<std::string> apiList = audioDevicesProvider()->apiList();
     if (index < 0 || index >= static_cast<int>(apiList.size())) {
         return;
     }
 
-    audioDevicesProvider()->setAudioApi(apiList[index]);
+    audioDevicesProvider()->setApi(apiList[index]);
 }
 
 QStringList CommonAudioApiConfigurationModel::audioApiList() const
 {
     QStringList result;
-    for (const std::string& api: audioDevicesProvider()->audioApiList()) {
+    for (const std::string& api: audioDevicesProvider()->apiList()) {
         result.push_back(QString::fromStdString(api));
     }
 
@@ -102,48 +111,48 @@ QStringList CommonAudioApiConfigurationModel::audioApiList() const
 
 QString CommonAudioApiConfigurationModel::currentOutputDeviceId() const
 {
-    return QString::fromStdString(audioDevicesProvider()->currentAudioOutputDevice());
+    return QString::fromStdString(audioDevicesProvider()->currentOutputDevice());
 }
 
 QVariantList CommonAudioApiConfigurationModel::outputDeviceList() const
 {
     QVariantList result;
-    for (const auto& device : audioDevicesProvider()->audioOutputDevices()) {
+    for (const auto& device : audioDevicesProvider()->outputDevices()) {
         result << QString::fromStdString(device);
     }
 
     return result;
 }
 
-void CommonAudioApiConfigurationModel::outputDeviceSelected(const QString& deviceId)
+void CommonAudioApiConfigurationModel::outputDeviceSelected(const QString& device)
 {
-    if (deviceId == currentOutputDeviceId()) {
+    if (device == currentOutputDeviceId()) {
         return;
     }
-    audioDevicesProvider()->setAudioOutputDevice(deviceId.toStdString());
+    audioDevicesProvider()->setOutputDevice(device.toStdString());
 }
 
 QString CommonAudioApiConfigurationModel::currentInputDeviceId() const
 {
-    return QString::fromStdString(audioDevicesProvider()->currentAudioInputDevice());
+    return QString::fromStdString(audioDevicesProvider()->currentInputDevice());
 }
 
 QVariantList CommonAudioApiConfigurationModel::inputDeviceList() const
 {
     QVariantList result;
-    for (const auto& device : audioDevicesProvider()->audioInputDevices()) {
+    for (const auto& device : audioDevicesProvider()->inputDevices()) {
         result << QString::fromStdString(device);
     }
 
     return result;
 }
 
-void CommonAudioApiConfigurationModel::inputDeviceSelected(const QString& deviceId)
+void CommonAudioApiConfigurationModel::inputDeviceSelected(const QString& device)
 {
-    if (deviceId == currentInputDeviceId()) {
+    if (device == currentInputDeviceId()) {
         return;
     }
-    audioDevicesProvider()->setAudioInputDevice(deviceId.toStdString());
+    audioDevicesProvider()->setInputDevice(device.toStdString());
 }
 
 double CommonAudioApiConfigurationModel::bufferLength() const
@@ -175,28 +184,25 @@ void CommonAudioApiConfigurationModel::latencyCompensationSelected(
     audioDevicesProvider()->setLatencyCompensation(latencyCompensationStr.toDouble());
 }
 
-QString CommonAudioApiConfigurationModel::currentInputChannels() const
+QString CommonAudioApiConfigurationModel::currentInputChannelsSelected() const
 {
-    return QString::fromStdString(audioDevicesProvider()->currentInputChannels());
+    return channelName(audioDevicesProvider()->inputChannelsSelected());
 }
 
 QVariantList CommonAudioApiConfigurationModel::inputChannelsList() const
 {
     QVariantList result;
-    for (const auto& channel : audioDevicesProvider()->inputChannelsList()) {
-        result << QString::fromStdString(channel);
+
+    for (int i = 0; i < audioDevicesProvider()->inputChannelsAvailable(); i++) {
+        result << channelName(i + 1);
     }
 
     return result;
 }
 
-void CommonAudioApiConfigurationModel::inputChannelsSelected(const QString& channelsStr)
+void CommonAudioApiConfigurationModel::inputChannelsSelected(const int index)
 {
-    if (channelsStr == currentInputChannels()) {
-        return;
-    }
-
-    audioDevicesProvider()->setInputChannels(channelsStr.toStdString());
+    audioDevicesProvider()->setInputChannels(index + 1);
 }
 
 QString CommonAudioApiConfigurationModel::defaultSampleRate() const

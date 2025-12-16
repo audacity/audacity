@@ -48,7 +48,7 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
     Q_PROPERTY(double bufferLength READ bufferLength NOTIFY bufferLengthChanged)
     Q_PROPERTY(double latencyCompensation READ latencyCompensation NOTIFY latencyCompensationChanged)
 
-    Q_PROPERTY(QString currentInputChannels READ currentInputChannels NOTIFY currentInputChannelsChanged)
+    Q_PROPERTY(QString currentInputChannelsSelected READ currentInputChannelsSelected NOTIFY currentInputChannelsSelectedChanged)
     Q_PROPERTY(QVariantList inputChannelsList READ inputChannelsList NOTIFY inputChannelsListChanged)
 
     Q_PROPERTY(QString defaultSampleRate READ defaultSampleRate NOTIFY defaultSampleRateChanged)
@@ -77,11 +77,11 @@ public:
 
     QString currentOutputDeviceId() const;
     QVariantList outputDeviceList() const;
-    Q_INVOKABLE void outputDeviceSelected(const QString& deviceId);
+    Q_INVOKABLE void outputDeviceSelected(const QString& device);
 
     QString currentInputDeviceId() const;
     QVariantList inputDeviceList() const;
-    Q_INVOKABLE void inputDeviceSelected(const QString& deviceId);
+    Q_INVOKABLE void inputDeviceSelected(const QString& device);
 
     double bufferLength() const;
     Q_INVOKABLE void bufferLengthSelected(const QString& bufferLengthStr);
@@ -89,9 +89,9 @@ public:
     double latencyCompensation() const;
     Q_INVOKABLE void latencyCompensationSelected(const QString& latencyCompensationStr);
 
-    QString currentInputChannels() const;
+    QString currentInputChannelsSelected() const;
     QVariantList inputChannelsList() const;
-    Q_INVOKABLE void inputChannelsSelected(const QString& channelsStr);
+    Q_INVOKABLE void inputChannelsSelected(const int index);
 
     // used for dropdown
     QString defaultSampleRate() const;
@@ -124,7 +124,7 @@ signals:
     void bufferLengthChanged();
     void latencyCompensationChanged();
 
-    void currentInputChannelsChanged();
+    void currentInputChannelsSelectedChanged();
     void inputChannelsListChanged();
 
     void defaultSampleRateChanged();
