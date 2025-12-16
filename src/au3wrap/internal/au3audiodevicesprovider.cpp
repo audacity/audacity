@@ -440,3 +440,18 @@ std::string Au3AudioDevicesProvider::defaultInputDevice()
 {
     return muse::settings()->value(RECORDING_DEVICE).toString();
 }
+
+void Au3AudioDevicesProvider::rescan()
+{
+    DeviceManager::Instance()->Rescan();
+
+    initHosts();
+    updateInputOutputDevices();
+    initInputChannels();
+
+    m_audioApiChanged.notify();
+    m_audioOutputDeviceChanged.notify();
+    m_audioInputDeviceChanged.notify();
+    m_inputChannelsListChanged.notify();
+    m_inputChannelsChanged.notify();
+}

@@ -64,9 +64,10 @@ public:
     void setDefaultSampleFormat(const std::string& format) override;
     muse::async::Notification defaultSampleFormatChanged() const override;
 
+    void rescan() override;
+
 private:
     void initHosts();
-    void initHostDevices();
     void initInputChannels();
 
     void updateInputOutputDevices();

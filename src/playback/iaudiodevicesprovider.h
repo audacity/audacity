@@ -55,5 +55,7 @@ public:
     virtual muse::async::Notification defaultSampleFormatChanged() const = 0;
 
     virtual void handleDeviceChange() = 0;
+
+    virtual void rescan() = 0;
 };
 }

@@ -54,6 +54,8 @@ void PlaybackController::init()
     dispatcher()->reg(this, "set-loop-region-in-out", this, &PlaybackController::setLoopRegionInOut);
     dispatcher()->reg(this, "toggle-selection-follows-loop-region", this, &PlaybackController::setSelectionFollowsLoopRegion);
 
+    dispatcher()->reg(this, "rescan-devices", this, &PlaybackController::rescanAudioDevices);
+
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
     });
@@ -654,6 +656,11 @@ void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
     int index = q.param("input-channels_index").toInt();
 
     audioDevicesProvider()->setInputChannels(index);
+}
+
+void PlaybackController::rescanAudioDevices()
+{
+    audioDevicesProvider()->rescan();
 }
 
 void PlaybackController::notifyActionCheckedChanged(const ActionCode& actionCode)
