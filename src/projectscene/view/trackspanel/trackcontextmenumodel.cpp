@@ -125,6 +125,7 @@ void TrackContextMenuModel::load()
         updateTrackFormatState();
         updateTrackRateState();
         updateTrackMonoState();
+        updateTrackViewCheckedState();
     }, muse::async::Asyncable::Mode::SetReplace);
 
     selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList&) {
@@ -162,6 +163,7 @@ void TrackContextMenuModel::load()
     updateTrackFormatState();
     updateTrackRateState();
     updateTrackMonoState();
+    updateTrackViewCheckedState();
 }
 
 au::trackedit::TrackId TrackContextMenuModel::trackId() const
@@ -218,31 +220,7 @@ void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCod
     }
 
     if (containsAny(codes, m_trackViewTypeChangeActionCodeList)) {
-        const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
-        const std::optional<trackedit::Track> track = trackeditProject->track(m_trackId);
-        assert(track.has_value());
-        if (track.has_value()) {
-            const trackedit::TrackViewType viewType = track->viewType;
-            for (const auto& viewTypeCode : m_trackViewTypeChangeActionCodeList) {
-                MenuItem& item = findItem(viewTypeCode);
-                auto state = item.state();
-                switch (viewType) {
-                case trackedit::TrackViewType::Waveform:
-                    state.checked = (viewTypeCode == TRACK_VIEW_WAVEFORM_ACTION);
-                    break;
-                case trackedit::TrackViewType::Spectrogram:
-                    state.checked = (viewTypeCode == TRACK_VIEW_SPECTROGRAM_ACTION);
-                    break;
-                case trackedit::TrackViewType::WaveformAndSpectrogram:
-                    state.checked = (viewTypeCode == TRACK_VIEW_MULTI_ACTION);
-                    break;
-                default:
-                    assert(false);
-                    state.checked = false;
-                }
-                item.setState(state);
-            }
-        }
+        updateTrackViewCheckedState();
     }
 
     if (containsAny(codes, { ActionCode(TRACK_VIEW_HALF_WAVE_ACTION) })) {
@@ -297,6 +275,34 @@ void TrackContextMenuModel::updateColorCheckedState()
         } else {
             auto state = item.state();
             state.checked = false;
+            item.setState(state);
+        }
+    }
+}
+
+void TrackContextMenuModel::updateTrackViewCheckedState()
+{
+    const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
+    const std::optional<trackedit::Track> track = trackeditProject->track(m_trackId);
+    if (track.has_value()) {
+        const trackedit::TrackViewType viewType = track->viewType;
+        for (const auto& viewTypeCode : m_trackViewTypeChangeActionCodeList) {
+            MenuItem& item = findItem(viewTypeCode);
+            auto state = item.state();
+            switch (viewType) {
+            case trackedit::TrackViewType::Waveform:
+                state.checked = (viewTypeCode == TRACK_VIEW_WAVEFORM_ACTION);
+                break;
+            case trackedit::TrackViewType::Spectrogram:
+                state.checked = (viewTypeCode == TRACK_VIEW_SPECTROGRAM_ACTION);
+                break;
+            case trackedit::TrackViewType::WaveformAndSpectrogram:
+                state.checked = (viewTypeCode == TRACK_VIEW_MULTI_ACTION);
+                break;
+            default:
+                assert(false);
+                state.checked = false;
+            }
             item.setState(state);
         }
     }

@@ -11,6 +11,7 @@ class TrackeditUiActions;
 class Au3SelectionController;
 class TrackeditConfiguration;
 class TrackNavigationController;
+class TrackSpectrogramSettingsUpdater;
 class TrackeditModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -27,8 +28,9 @@ public:
 private:
     const std::shared_ptr<TrackeditActionsController> m_trackeditController;
     const std::shared_ptr<TrackeditUiActions> m_trackeditUiActions;
-    std::shared_ptr<Au3SelectionController> m_selectionController;
-    std::shared_ptr<TrackeditConfiguration> m_configuration;
-    std::shared_ptr<TrackNavigationController> m_trackNavigationController;
+    const std::shared_ptr<Au3SelectionController> m_selectionController;
+    const std::shared_ptr<TrackeditConfiguration> m_configuration;
+    const std::shared_ptr<TrackNavigationController> m_trackNavigationController;
+    const std::shared_ptr<TrackSpectrogramSettingsUpdater> m_trackSpectrogramSettingsUpdater;
 };
 }

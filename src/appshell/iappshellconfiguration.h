@@ -73,6 +73,7 @@ public:
     virtual void startEditSettings() = 0;
     virtual void applySettings() = 0;
     virtual void rollbackSettings() = 0;
+    virtual muse::async::Notification settingsApplied() const = 0;
 
     virtual void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true) const = 0;
 

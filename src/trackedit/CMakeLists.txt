@@ -35,6 +35,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/dom/wave.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dom/wave.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/snapshotspectrogramconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackspectrogramsettingsupdater.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackspectrogramsettingsupdater.h
+
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditinteraction.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditoperationcontroller.cpp
@@ -52,9 +56,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/deletebehavioronboardingscenario.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/deletebehavioronboardingscenario.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackspectrogramutils.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackspectrogramconfiguration.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackspectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditproject.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditproject.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3selectioncontroller.cpp

@@ -1,16 +1,20 @@
 #include "spectrogrammodule.h"
 
-#include "internal/spectrogramconfiguration.h"
+#include "internal/globalspectrogramconfiguration.h"
+#include "internal/trackspectrogramconfigurationprovider.h"
+#include "internal/au3/au3spectrogrampainter.h"
+
 #include "view/abstractspectrogramsettingsmodel.h"
 #include "view/algorithmsectionparameterlistmodel.h"
 #include "view/colorsectionparameterlistmodel.h"
 #include "view/globalspectrogramsettingsmodel.h"
-
-#include "framework/ui/iinteractiveuriregister.h"
+#include "view/spectrogramview.h"
 
 namespace au::spectrogram {
 SpectrogramModule::SpectrogramModule()
-    : m_configuration(std::make_shared<SpectrogramConfiguration>())
+    : m_au3SpectrogramPainter(std::make_shared<Au3SpectrogramPainter>()),
+    m_configuration(std::make_shared<GlobalSpectrogramConfiguration>()),
+    m_trackSpectrogramConfigurationProvider(std::make_shared<TrackSpectrogramConfigurationProvider>())
 {
 }
 
@@ -21,7 +25,9 @@ std::string SpectrogramModule::moduleName() const
 
 void SpectrogramModule::registerExports()
 {
-    ioc()->registerExport<ISpectrogramConfiguration>(moduleName(), m_configuration);
+    ioc()->registerExport<IGlobalSpectrogramConfiguration>(moduleName(), m_configuration);
+    ioc()->registerExport<ISpectrogramPainter>(moduleName(), m_au3SpectrogramPainter);
+    ioc()->registerExport<ITrackSpectrogramConfigurationProvider>(moduleName(), m_trackSpectrogramConfigurationProvider);
 }
 
 void SpectrogramModule::registerUiTypes()
@@ -31,10 +37,13 @@ void SpectrogramModule::registerUiTypes()
     qmlRegisterType<GlobalSpectrogramSettingsModel>("Audacity.Spectrogram", 1, 0, "GlobalSpectrogramSettingsModel");
     qmlRegisterType<AlgorithmSectionParameterListModel>("Audacity.Spectrogram", 1, 0, "AlgorithmSectionParameterListModel");
     qmlRegisterType<ColorSectionParameterListModel>("Audacity.Spectrogram", 1, 0, "ColorSectionParameterListModel");
+    qmlRegisterType<SpectrogramView>("Audacity.Spectrogram", 1, 0, "SpectrogramView");
 }
 
 void SpectrogramModule::onInit(const muse::IApplication::RunMode&)
 {
+    m_au3SpectrogramPainter->init();
     m_configuration->init();
+    m_trackSpectrogramConfigurationProvider->init();
 }
 }

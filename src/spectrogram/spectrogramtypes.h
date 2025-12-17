@@ -43,4 +43,41 @@ enum class SpectrogramWindowType {
     Gaussian45,
     _count
 };
+
+struct SpectrogramSettings {
+    bool spectralSelectionEnabled = false;
+    SpectrogramColorScheme colorScheme = static_cast<SpectrogramColorScheme>(0);
+    int colorGainDb = 0;
+    int colorRangeDb = 0;
+    int colorHighBoostDbPerDec = 0;
+    SpectrogramScale scale = static_cast<SpectrogramScale>(0);
+    SpectrogramAlgorithm algorithm = static_cast<SpectrogramAlgorithm>(0);
+    SpectrogramWindowType windowType = static_cast<SpectrogramWindowType>(0);
+    int winSizeLog2 = 0;
+    int zeroPaddingFactor = 0;
+};
+
+struct SelectionInfo {
+    static constexpr int UndefinedFrequency = -1;
+
+    const double startTime = 0.0;
+    const double endTime = 0.0;
+    const double startFrequency = UndefinedFrequency;
+    const double endFrequency = UndefinedFrequency;
+};
+
+struct ClipInfo {
+    const int clipId;
+    const int trackId;
+    const int xPaintBegin;
+    const int xPaintEnd;
+};
+
+struct ViewInfo {
+    const int trackHeight;
+    const double channelHeightRatio;
+    const double viewportStartTime;
+    const double viewportEndTime;
+    const double pixelsPerSecond; // aka zoom
+};
 }

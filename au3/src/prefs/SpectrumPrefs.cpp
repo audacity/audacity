@@ -496,7 +496,7 @@ void SpectrumPrefs::EnableDisableSTFTOnlyControls()
 {
     // Enable or disable other controls that are applicable only to STFT.
     const bool STFT
-        =(mAlgorithmChoice->GetSelection() != SpectrogramSettings::algPitchEAC);
+        =(mAlgorithmChoice->GetSelection() != SpectrogramSettings::SpectrogramAlgorithm::Pitch);
     mGain->Enable(STFT);
     mRange->Enable(STFT);
     mFrequencyGain->Enable(STFT);

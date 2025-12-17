@@ -42,6 +42,9 @@ public:
     inline bool operator==(const TrackItemKey& other) const { return key == other.key; }
     inline bool operator<(const TrackItemKey& other) const { return key < other.key; }
 
+    Q_INVOKABLE trackedit::TrackId trackId() const { return key.trackId; }
+    Q_INVOKABLE trackedit::TrackItemId itemId() const { return key.itemId; }
+
     trackedit::TrackItemKey key;
 };
 
