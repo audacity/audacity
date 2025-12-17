@@ -6,9 +6,10 @@
 #include <chrono>
 #include <optional>
 
-#include "framework/global/async/notification.h"
 #include "framework/global/async/channel.h"
+#include "framework/global/async/notification.h"
 #include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/types/string.h"
 
 #include "au3wrap/au3types.h"
 

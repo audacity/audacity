@@ -42,8 +42,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/domaccessor.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3project.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3project.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodevicesprovider.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodevicesprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3commonsettings.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3commonsettings.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3basicui.cpp

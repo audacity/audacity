@@ -19,17 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef AU_APPSHELL_COMMONAUDIOAPICONFIGURATIONMODEL_H
-#define AU_APPSHELL_COMMONAUDIOAPICONFIGURATIONMODEL_H
+#pragma once
 
 #include <QObject>
 
-#include "async/asyncable.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
 
-#include "modularity/ioc.h"
-// #include "audio/iaudioconfiguration.h"
-// #include "audio/iaudiodriver.h"
-#include "playback/iaudiodevicesprovider.h"
+#include "audio/iaudiodevicesprovider.h"
 #include "ui/iuiconfiguration.h"
 
 namespace au::appshell {
@@ -61,9 +58,7 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
 
     Q_PROPERTY(double longestDeviceNameLength READ longestDeviceNameLength NOTIFY longestDeviceNameLengthChanged)
 
-    // INJECT(muse::audio::IAudioConfiguration, audioConfiguration)
-    // INJECT(muse::audio::IAudioDriver, audioDriver)
-    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
@@ -142,5 +137,3 @@ private:
     bool m_otherSampleRate = false;
 };
 }
-
-#endif // AU_APPSHELL_COMMONAUDIOAPICONFIGURATIONMODEL_H

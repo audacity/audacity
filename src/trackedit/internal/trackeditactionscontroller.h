@@ -3,36 +3,35 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/actions/actionable.h"
+#include "framework/global/iinteractive.h"
 
-#include "async/asyncable.h"
-#include "actions/iactionsdispatcher.h"
-#include "actions/actionable.h"
+#include "audio/iaudiodevicesprovider.h"
 #include "context/iglobalcontext.h"
-#include "iinteractive.h"
-
-#include "projectscene/iprojectsceneconfiguration.h"
-#include "playback/iaudiodevicesprovider.h"
-#include "iprojecthistory.h"
-#include "itrackeditinteraction.h"
-#include "itrackeditconfiguration.h"
-#include "iselectioncontroller.h"
 #include "deletebehavioronboardingscenario.h"
+#include "iprojecthistory.h"
+#include "iselectioncontroller.h"
+#include "itrackeditconfiguration.h"
+#include "itrackeditinteraction.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 
 #include "../itrackeditactionscontroller.h"
 
 namespace au::trackedit {
 class TrackeditActionsController : public ITrackeditActionsController, public muse::actions::Actionable, public muse::async::Asyncable
 {
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
-    muse::Inject<trackedit::ITrackeditConfiguration> configuration;
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
-    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<trackedit::ITrackeditConfiguration> configuration;
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
 
 public:
     void init();

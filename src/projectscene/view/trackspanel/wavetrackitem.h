@@ -3,9 +3,9 @@
 */
 #pragma once
 
+#include "audio/iaudiodevicesprovider.h"
 #include "playback/iplayback.h"
 #include "playback/itrackplaybackcontrol.h"
-#include "playback/iaudiodevicesprovider.h"
 #include "record/irecord.h"
 #include "trackedit/iprojecthistory.h"
 
@@ -32,7 +32,7 @@ class WaveTrackItem : public TrackItem
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
     muse::Inject<playback::IPlayback> playback;
     muse::Inject<record::IRecord> record;
-    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:

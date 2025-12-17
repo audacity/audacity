@@ -17,7 +17,6 @@
 
 #include "internal/wxlogwrap.h"
 #include "internal/au3project.h"
-#include "internal/au3audiodevicesprovider.h"
 #include "internal/au3commonsettings.h"
 #include "internal/au3basicui.h"
 
@@ -37,11 +36,9 @@ std::string Au3WrapModule::moduleName() const
 
 void Au3WrapModule::registerExports()
 {
-    m_audioDevicesProvider = std::make_shared<Au3AudioDevicesProvider>();
     m_au3BasicUi = std::make_shared<Au3BasicUI>();
 
     ioc()->registerExport<IAu3ProjectCreator>(moduleName(), new Au3ProjectCreator());
-    ioc()->registerExport<playback::IAudioDevicesProvider>(moduleName(), m_audioDevicesProvider);
 }
 
 void Au3WrapModule::onPreInit(const muse::IApplication::RunMode&)
@@ -60,8 +57,6 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
     if (!ok) {
         LOGE() << "failed init sql";
     }
-
-    m_audioDevicesProvider->init();
 
     FFmpegStartup();
 

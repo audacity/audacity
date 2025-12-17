@@ -14,6 +14,8 @@ set(MODULE_SRC
     # AU3
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioengine.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodevicesprovider.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodevicesprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioiolistener.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/defaultplaybackpolicy.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/defaultplaybackpolicy.h

@@ -3,18 +3,19 @@
 */
 #pragma once
 
-#include "ui/iuiactionsmodule.h"
+#include "framework/ui/iuiactionsmodule.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
+
 #include "trackeditactionscontroller.h"
-#include "modularity/ioc.h"
 #include "context/iuicontextresolver.h"
-#include "async/asyncable.h"
-#include "playback/iaudiodevicesprovider.h"
+#include "audio/iaudiodevicesprovider.h"
 
 namespace au::trackedit {
 class TrackeditUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
 {
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<context::IUiContextResolver> uicontextResolver;
-    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     TrackeditUiActions(std::shared_ptr<TrackeditActionsController> controller);

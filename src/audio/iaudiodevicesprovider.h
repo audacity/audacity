@@ -8,7 +8,7 @@
 #include "framework/global/async/notification.h"
 #include "framework/global/modularity/imoduleinterface.h"
 
-namespace au::playback {
+namespace au::audio {
 class IAudioDevicesProvider : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IAudioDevicesProvider)
@@ -25,7 +25,7 @@ public:
     virtual void setInputDevice(const std::string& device) = 0;
     virtual muse::async::Notification inputDeviceChanged() const = 0;
 
-    virtual std::vector<std::string> apiList() const = 0;
+    virtual std::vector<std::string> apis() const = 0;
     virtual std::string currentApi() const = 0;
     virtual void setApi(const std::string& api) = 0;
     virtual muse::async::Notification apiChanged() const = 0;
@@ -44,12 +44,12 @@ public:
     virtual void setLatencyCompensation(double newLatencyCompensation) = 0;
     virtual muse::async::Notification latencyCompensationChanged() const = 0;
 
-    virtual std::vector<uint64_t> availableSampleRateList() const = 0;
+    virtual std::vector<uint64_t> sampleRates() const = 0;
     virtual uint64_t defaultSampleRate() const = 0;
     virtual void setDefaultSampleRate(uint64_t newRate) = 0;
     virtual muse::async::Notification defaultSampleRateChanged() const = 0;
 
-    virtual std::vector<std::string> defaultSampleFormatList() const = 0;
+    virtual std::vector<std::string> sampleFormats() const = 0;
     virtual std::string defaultSampleFormat() const = 0;
     virtual void setDefaultSampleFormat(const std::string& format) = 0;
     virtual muse::async::Notification defaultSampleFormatChanged() const = 0;

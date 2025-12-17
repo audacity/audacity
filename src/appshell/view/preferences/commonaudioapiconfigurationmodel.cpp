@@ -91,7 +91,7 @@ void CommonAudioApiConfigurationModel::setCurrentAudioApiIndex(int index)
         return;
     }
 
-    std::vector<std::string> apiList = audioDevicesProvider()->apiList();
+    std::vector<std::string> apiList = audioDevicesProvider()->apis();
     if (index < 0 || index >= static_cast<int>(apiList.size())) {
         return;
     }
@@ -102,7 +102,7 @@ void CommonAudioApiConfigurationModel::setCurrentAudioApiIndex(int index)
 QStringList CommonAudioApiConfigurationModel::audioApiList() const
 {
     QStringList result;
-    for (const std::string& api: audioDevicesProvider()->apiList()) {
+    for (const std::string& api: audioDevicesProvider()->apis()) {
         result.push_back(QString::fromStdString(api));
     }
 
@@ -223,7 +223,7 @@ QVariantList CommonAudioApiConfigurationModel::defaultSampleRateList()
 {
     QVariantList result;
     m_sampleRateMapping.clear();
-    for (const auto& rate : audioDevicesProvider()->availableSampleRateList()) {
+    for (const auto& rate : audioDevicesProvider()->sampleRates()) {
         QString sampleRateName = toSampleRateName(rate);
         m_sampleRateMapping.push_back(std::make_pair(rate, sampleRateName));
         result << QVariant::fromValue(sampleRateName);
@@ -290,7 +290,7 @@ QString CommonAudioApiConfigurationModel::defaultSampleFormat() const
 QVariantList CommonAudioApiConfigurationModel::defaultSampleFormatList() const
 {
     QVariantList result;
-    for (const auto& format : audioDevicesProvider()->defaultSampleFormatList()) {
+    for (const auto& format : audioDevicesProvider()->sampleFormats()) {
         result << QString::fromStdString(format);
     }
 

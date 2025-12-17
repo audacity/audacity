@@ -10,30 +10,30 @@
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/ui/iuiactionsregister.h"
 
-#include "context/iglobalcontext.h"
 #include "audio/audiotypes.h"
+#include "audio/iaudiodevicesprovider.h"
+#include "context/iglobalcontext.h"
+#include "playback/iplayback.h"
+#include "playback/iplaybackconfiguration.h"
+#include "playback/iplaybackcontroller.h"
+#include "playback/iplayer.h"
 #include "record/irecordcontroller.h"
 #include "trackedit/iselectioncontroller.h"
-#include "playback/iaudiodevicesprovider.h"
-#include "playback/iplaybackconfiguration.h"
-#include "playback/iplayback.h"
-#include "playback/iplayer.h"
-#include "playback/iplaybackcontroller.h"
 
 namespace au::playback {
 class PlaybackUiActions;
 class PlaybackController : public IPlaybackController, public muse::actions::Actionable, public muse::async::Asyncable
 {
 public:
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<muse::IApplication> application;
+    muse::Inject<au::playback::IPlaybackConfiguration> playbackConfiguration;
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<IPlayback> playback;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<muse::IApplication> application;
+    muse::Inject<muse::IInteractive> interactive;
     muse::Inject<record::IRecordController> recordController;
     muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
-    muse::Inject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
 public:
     void init();

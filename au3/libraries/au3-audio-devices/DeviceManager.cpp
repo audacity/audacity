@@ -50,6 +50,9 @@ const std::vector<DeviceSourceMap>& DeviceManager::GetOutputDeviceMaps()
 
 std::string MakeDeviceSourceString(const DeviceSourceMap* map)
 {
+    if (!map) {
+        return {};
+    }
     std::string ret;
     ret = map->deviceString;
     if (map->totalSources > 1) {

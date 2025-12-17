@@ -622,7 +622,7 @@ void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
 
     int index = q.param("api_index").toInt();
 
-    audioDevicesProvider()->setApi(audioDevicesProvider()->apiList().at(index));
+    audioDevicesProvider()->setApi(audioDevicesProvider()->apis().at(index));
 }
 
 void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& q)

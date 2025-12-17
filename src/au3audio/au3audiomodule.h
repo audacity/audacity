@@ -9,6 +9,8 @@
 
 namespace au::au3audio {
 class Au3AudioEngine;
+class Au3AudioDevicesProvider;
+
 class Au3AudioModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -24,5 +26,6 @@ public:
 private:
 
     std::shared_ptr<Au3AudioEngine> m_audioEngine;
+    std::shared_ptr<Au3AudioDevicesProvider> m_audioDevicesProvider;
 };
 }

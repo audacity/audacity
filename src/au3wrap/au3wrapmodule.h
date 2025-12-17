@@ -32,7 +32,6 @@ private:
 
     WxLogWrap* m_wxLog = nullptr;
 
-    std::shared_ptr<Au3AudioDevicesProvider> m_audioDevicesProvider;
     std::shared_ptr<Au3BasicUI> m_au3BasicUi;
 };
 }

@@ -69,7 +69,7 @@ MenuItemList AudioSetupContextMenuModel::makeHostItems()
         return q;
     };
 
-    const auto& apiList = audioDevicesProvider()->apiList();
+    const auto& apiList = audioDevicesProvider()->apis();
     for (size_t i = 0; i < apiList.size(); ++i) {
         MenuItem* item = makeMenuItem(makeChangeApiAction(i).toString(),
                                       muse::TranslatableString::untranslatable(muse::String::fromStdString(apiList.at(i))));
