@@ -94,15 +94,26 @@ wxString VST3Utils::ToWxString(const Steinberg::Vst::TChar* str)
     return { reinterpret_cast<const char*>(str), csConv };
 }
 
-wxString VST3Utils::GetParameterUnitString(Steinberg::Vst::IEditController* controller,
-                                           const Steinberg::Vst::ParameterInfo& info)
+std::string VST3Utils::UTF16ToStdString(const Steinberg::Vst::TChar* str)
+{
+    if (!str || str[0] == 0) {
+        return std::string();
+    }
+
+    // Use wxString's built-in UTF-16 to UTF-8 conversion
+    // This leverages the same conversion logic as ToWxString
+    return ToWxString(str).ToStdString();
+}
+
+std::string VST3Utils::GetParameterUnitStdString(Steinberg::Vst::IEditController* controller,
+                                                 const Steinberg::Vst::ParameterInfo& info)
 {
     // Check the units field in parameter info first (simpler and more reliable)
     try {
         // Some plugins have malformed unit strings that cause exceptions
         // even when checking the first character, so wrap everything
         if (info.units[0] != 0) {
-            return ToWxString(info.units);
+            return UTF16ToStdString(info.units);
         }
     } catch (...) {
         // Silently ignore - malformed unit strings are common in VST3 plugins
@@ -117,7 +128,7 @@ wxString VST3Utils::GetParameterUnitString(Steinberg::Vst::IEditController* cont
             if (unitInfo->getUnitInfo(info.unitId, uInfo) == Steinberg::kResultOk) {
                 // Check if there's a unit name
                 if (uInfo.name[0] != 0) {
-                    return ToWxString(uInfo.name);
+                    return UTF16ToStdString(uInfo.name);
                 }
             }
         }
@@ -125,7 +136,7 @@ wxString VST3Utils::GetParameterUnitString(Steinberg::Vst::IEditController* cont
         // Silently ignore - same as above
     }
 
-    return wxString();
+    return std::string();
 }
 
 wxString VST3Utils::MakeAutomationParameterKey(const Steinberg::Vst::ParameterInfo& parameterInfo)
