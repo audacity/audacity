@@ -47,9 +47,6 @@ StyledDialogView {
 
             width: parent.width
             settingsModel: root.settingsModel
-            onActiveFocusRequested: function (rect) {
-                root.ensureContentVisibleRequested(rect)
-            }
         }
 
         SeparatorLine {}
@@ -60,9 +57,6 @@ StyledDialogView {
 
             width: parent.width
             settingsModel: root.settingsModel
-            onActiveFocusRequested: function (rect) {
-                root.ensureContentVisibleRequested(rect)
-            }
         }
 
         SeparatorLine {}
@@ -73,9 +67,6 @@ StyledDialogView {
 
             width: parent.width
             settingsModel: root.settingsModel
-            onActiveFocusRequested: function (rect) {
-                root.ensureContentVisibleRequested(rect)
-            }
         }
 
         SeparatorLine {}
@@ -86,9 +77,6 @@ StyledDialogView {
 
             width: parent.width
             settingsModel: root.settingsModel
-            onActiveFocusRequested: function (rect) {
-                root.ensureContentVisibleRequested(rect)
-            }
         }
     }
 

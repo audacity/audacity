@@ -11,6 +11,12 @@ class ISpectrogramConfiguration
 public:
     virtual ~ISpectrogramConfiguration() = default;
 
+    virtual int minFreq() const = 0;
+    virtual void setMinFreq(int value) = 0;
+
+    virtual int maxFreq() const = 0;
+    virtual void setMaxFreq(int value) = 0;
+
     virtual SpectrogramColorScheme colorScheme() const = 0;
     virtual void setColorScheme(SpectrogramColorScheme value) = 0;
 

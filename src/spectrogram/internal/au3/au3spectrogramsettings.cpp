@@ -29,6 +29,8 @@ static const AttachedTrackObjects::RegisteredFactory key1{
             return settings;
         }
 
+        settings->minFreq = globalConfig->minFreq();
+        settings->maxFreq = globalConfig->maxFreq();
         settings->range = globalConfig->colorRangeDb();
         settings->gain = globalConfig->colorGainDb();
         settings->frequencyGain = globalConfig->colorHighBoostDbPerDec();

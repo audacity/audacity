@@ -56,6 +56,8 @@ void TrackSpectrogramSettingsModel::componentComplete()
 
     m_initialTrackConfig = std::make_unique<SnapshotSpectrogramConfiguration>(*m_trackConfig);
 
+    emit minFreqChanged();
+    emit maxFreqChanged();
     emit colorGainDbChanged();
     emit colorRangeDbChanged();
     emit colorHighBoostDbPerDecChanged();
@@ -128,6 +130,8 @@ void TrackSpectrogramSettingsModel::setUseGlobalSettings(bool value)
     m_trackConfig->setUseGlobalSettings(value);
     if (value) {
         trackSpectrogramConfigurationProvider()->copyConfiguration(*globalSpectrogramConfiguration(), *m_trackConfig);
+        emit minFreqChanged();
+        emit maxFreqChanged();
         emit colorGainDbChanged();
         emit colorRangeDbChanged();
         emit colorHighBoostDbPerDecChanged();
@@ -140,6 +144,36 @@ void TrackSpectrogramSettingsModel::setUseGlobalSettings(bool value)
         sendRepaintRequest();
     }
     emit useGlobalSettingsChanged();
+}
+
+int TrackSpectrogramSettingsModel::minFreq() const
+{
+    return m_trackConfig ? m_trackConfig->minFreq() : 0;
+}
+
+void TrackSpectrogramSettingsModel::doSetMinFreq(int value)
+{
+    if (m_trackConfig->minFreq() == value) {
+        return;
+    }
+    m_trackConfig->setMinFreq(value);
+    emit minFreqChanged();
+    onSettingChanged();
+}
+
+int TrackSpectrogramSettingsModel::maxFreq() const
+{
+    return m_trackConfig ? m_trackConfig->maxFreq() : 0;
+}
+
+void TrackSpectrogramSettingsModel::doSetMaxFreq(int value)
+{
+    if (m_trackConfig->maxFreq() == value) {
+        return;
+    }
+    m_trackConfig->setMaxFreq(value);
+    emit maxFreqChanged();
+    onSettingChanged();
 }
 
 int TrackSpectrogramSettingsModel::colorGainDb() const

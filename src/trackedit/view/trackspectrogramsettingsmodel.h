@@ -38,6 +38,12 @@ public:
     bool useGlobalSettings() const;
     void setUseGlobalSettings(bool value);
 
+    int minFreq() const override;
+    void doSetMinFreq(int value) override;
+
+    int maxFreq() const override;
+    void doSetMaxFreq(int value) override;
+
     int colorGainDb() const override;
     void setColorGainDb(int value) override;
 

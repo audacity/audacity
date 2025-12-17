@@ -41,4 +41,46 @@ TrackSpectrogramBaseSection {
             }
         }
     }
+
+    Repeater {
+        id: repeater
+
+        model: ScaleSectionParameterListModel {
+            settingsModel: root.settingsModel
+            columnWidth: root.prefsColumnWidth
+        }
+
+        Row {
+            spacing: 0
+
+            StyledTextLabel {
+                width: root.mediumControlWidth
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: controlLabel
+                elide: Text.ElideNone
+                wrapMode: Text.NoWrap
+                horizontalAlignment: Text.AlignLeft
+            }
+
+            IncrementalPropertyControl {
+                width: root.mediumControlWidth
+
+                navigation.panel: root.navigation
+                navigation.order: index + 1
+                navigation.name: "ScaleIncrementalControl_" + index
+
+                minValue: controlMinValue
+                maxValue: controlMaxValue
+                measureUnitsSymbol: controlUnits
+                decimals: 0
+                step: 1
+
+                currentValue: controlCurrentValue
+                onValueEditingFinished: function (value) {
+                    controlCurrentValue = value
+                }
+            }
+        }
+    }
 }

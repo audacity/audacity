@@ -52,6 +52,26 @@ void GlobalSpectrogramSettingsModel::setSpectralSelectionEnabled(bool value)
     configuration()->setSpectralSelectionEnabled(value);
 }
 
+int GlobalSpectrogramSettingsModel::minFreq() const
+{
+    return configuration()->minFreq();
+}
+
+void GlobalSpectrogramSettingsModel::doSetMinFreq(int value)
+{
+    configuration()->setMinFreq(value);
+}
+
+int GlobalSpectrogramSettingsModel::maxFreq() const
+{
+    return configuration()->maxFreq();
+}
+
+void GlobalSpectrogramSettingsModel::doSetMaxFreq(int value)
+{
+    configuration()->setMaxFreq(value);
+}
+
 int GlobalSpectrogramSettingsModel::colorGainDb() const
 {
     return configuration()->colorGainDb();

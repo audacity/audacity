@@ -7,6 +7,7 @@
 #include "view/abstractspectrogramsettingsmodel.h"
 #include "view/algorithmsectionparameterlistmodel.h"
 #include "view/colorsectionparameterlistmodel.h"
+#include "view/scalesectionparameterlistmodel.h"
 #include "view/globalspectrogramsettingsmodel.h"
 #include "view/spectrogramview.h"
 
@@ -37,6 +38,7 @@ void SpectrogramModule::registerUiTypes()
     qmlRegisterType<GlobalSpectrogramSettingsModel>("Audacity.Spectrogram", 1, 0, "GlobalSpectrogramSettingsModel");
     qmlRegisterType<AlgorithmSectionParameterListModel>("Audacity.Spectrogram", 1, 0, "AlgorithmSectionParameterListModel");
     qmlRegisterType<ColorSectionParameterListModel>("Audacity.Spectrogram", 1, 0, "ColorSectionParameterListModel");
+    qmlRegisterType<ScaleSectionParameterListModel>("Audacity.Spectrogram", 1, 0, "ScaleSectionParameterListModel");
     qmlRegisterType<SpectrogramView>("Audacity.Spectrogram", 1, 0, "SpectrogramView");
 }
 

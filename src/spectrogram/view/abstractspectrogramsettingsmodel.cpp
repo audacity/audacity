@@ -7,12 +7,28 @@
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
 
-#include <limits>
+#include <algorithm>
 
 namespace au::spectrogram {
 AbstractSpectrogramSettingsModel::AbstractSpectrogramSettingsModel(QObject* parent)
     : QObject(parent)
 {}
+
+void AbstractSpectrogramSettingsModel::setMinFreq(int value)
+{
+    doSetMinFreq(std::clamp(value, frequencyHardMinimum(), frequencyHardMaximum()));
+    if (maxFreq() <= minFreq()) {
+        doSetMaxFreq(minFreq());
+    }
+}
+
+void AbstractSpectrogramSettingsModel::setMaxFreq(int value)
+{
+    doSetMaxFreq(std::clamp(value, frequencyHardMinimum(), frequencyHardMaximum()));
+    if (minFreq() >= maxFreq()) {
+        doSetMinFreq(maxFreq());
+    }
+}
 
 QString AbstractSpectrogramSettingsModel::colorSchemeName(int scheme) const
 {

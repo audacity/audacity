@@ -20,6 +20,12 @@ public:
     Au3TrackSpectrogramConfiguration(Au3SpectrogramSettings&);
     ~Au3TrackSpectrogramConfiguration() override = default;
 
+    int minFreq() const override;
+    void setMinFreq(int value) override;
+
+    int maxFreq() const override;
+    void setMaxFreq(int value) override;
+
     int colorGainDb() const override;
     void setColorGainDb(int value) override;
 

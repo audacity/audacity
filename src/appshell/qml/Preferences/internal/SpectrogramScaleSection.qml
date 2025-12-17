@@ -21,6 +21,7 @@ SpectrogramBaseSection {
 
         navigation.panel: root.navigation
         navigation.name: "ScaleComboBox"
+        navigation.order: 0
 
         title: qsTrc("spectrogram/preferences/settings", "Scale")
         spacing: root.narrowSpacing
@@ -30,6 +31,37 @@ SpectrogramBaseSection {
 
         onValueEdited: function (index) {
             settingsModel.scale = index
+        }
+    }
+
+    Repeater {
+        id: repeater
+
+        model: ScaleSectionParameterListModel {
+            settingsModel: root.settingsModel
+            columnWidth: root.prefsColumnWidth
+        }
+
+        IncrementalPropertyControlWithTitle {
+            id: control
+
+            navigation.panel: root.navigation
+            navigation.order: index + 1
+            navigation.name: "ScaleIncrementalControl_" + index
+
+            spacing: root.narrowSpacing
+            controlWidth: mediumControlWidth
+            title: controlLabel
+            minValue: controlMinValue
+            maxValue: controlMaxValue
+            measureUnitsSymbol: controlUnits
+            decimals: 0
+            step: 1
+
+            currentValue: controlCurrentValue
+            onValueEditingFinished: function (value) {
+                controlCurrentValue = value
+            }
         }
     }
 }

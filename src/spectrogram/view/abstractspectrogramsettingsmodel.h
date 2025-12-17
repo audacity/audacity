@@ -11,6 +11,9 @@ class AbstractSpectrogramSettingsModel : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(int minFreq READ minFreq WRITE setMinFreq NOTIFY minFreqChanged)
+    Q_PROPERTY(int maxFreq READ maxFreq WRITE setMaxFreq NOTIFY maxFreqChanged)
+
     Q_PROPERTY(int colorGainDb READ colorGainDb WRITE setColorGainDb NOTIFY colorGainDbChanged)
 
     Q_PROPERTY(int colorRangeDb READ colorRangeDb WRITE setColorRangeDb NOTIFY colorRangeDbChanged)
@@ -35,6 +38,18 @@ class AbstractSpectrogramSettingsModel : public QObject
 public:
     explicit AbstractSpectrogramSettingsModel(QObject* parent = nullptr);
     virtual ~AbstractSpectrogramSettingsModel() = default;
+
+    virtual int minFreq() const = 0;
+    void setMinFreq(int value);
+    int frequencyHardMinimum() const { return 0; }
+
+    virtual int maxFreq() const = 0;
+    void setMaxFreq(int value);
+    int frequencyHardMaximum() const
+    {
+        // TODO make dynamic based on sample rate
+        return 22050;
+    }
 
     virtual int colorGainDb() const = 0;
     virtual void setColorGainDb(int value) = 0;
@@ -69,6 +84,8 @@ public:
     virtual void setZeroPaddingFactor(int value) = 0;
 
 signals:
+    void minFreqChanged();
+    void maxFreqChanged();
     void colorGainDbChanged();
     void colorRangeDbChanged();
     void colorHighBoostDbPerDecChanged();
@@ -80,6 +97,9 @@ signals:
     void zeroPaddingFactorChanged();
 
 private:
+    virtual void doSetMinFreq(int value) = 0;
+    virtual void doSetMaxFreq(int value) = 0;
+
     QString colorSchemeName(int) const;
     QString scaleName(int) const;
 };

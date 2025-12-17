@@ -12,7 +12,9 @@ class SnapshotSpectrogramConfiguration final : public spectrogram::ITrackSpectro
 {
 public:
     SnapshotSpectrogramConfiguration(const ITrackSpectrogramConfiguration& config)
-        : m_colorGainDb{config.colorGainDb()},
+        : m_minFreq{config.minFreq()},
+        m_maxFreq{config.maxFreq()},
+        m_colorGainDb{config.colorGainDb()},
         m_colorRangeDb{config.colorRangeDb()},
         m_colorHighBoostDbPerDec{config.colorHighBoostDbPerDec()},
         m_colorScheme{config.colorScheme()},
@@ -26,6 +28,12 @@ public:
     }
 
     ~SnapshotSpectrogramConfiguration() override = default;
+
+    int minFreq() const override { return m_minFreq; }
+    void setMinFreq(int) override { assert(false); }
+
+    int maxFreq() const override { return m_maxFreq; }
+    void setMaxFreq(int) override { assert(false); }
 
     int colorGainDb() const override { return m_colorGainDb; }
     void setColorGainDb(int) override { assert(false); }
@@ -58,6 +66,8 @@ public:
     void setUseGlobalSettings(bool) override { assert(false); }
 
 private:
+    const int m_minFreq;
+    const int m_maxFreq;
     const int m_colorGainDb;
     const int m_colorRangeDb;
     const int m_colorHighBoostDbPerDec;
