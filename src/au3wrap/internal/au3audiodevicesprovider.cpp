@@ -339,14 +339,14 @@ void Au3AudioDevicesProvider::initHosts()
     m_audioApis.clear();
 
     for (auto& device : inMaps) {
-        std::string host = wxToStdSting(device.hostString);
+        std::string host = wxToStdString(device.hostString);
         if (!muse::contains(m_audioApis, host)) {
             m_audioApis.push_back(host);
         }
     }
 
     for (auto& device : outMaps) {
-        std::string host = wxToStdSting(device.hostString);
+        std::string host = wxToStdString(device.hostString);
         if (!muse::contains(m_audioApis, host)) {
             m_audioApis.push_back(host);
         }
@@ -363,7 +363,7 @@ void Au3AudioDevicesProvider::initInputChannels()
         if (device.hostString != host) {
             continue;
         }
-        const auto deviceName = wxToStdSting(MakeDeviceSourceString(&device));
+        const auto deviceName = wxToStdString(MakeDeviceSourceString(&device));
         if (deviceName == inputDevice) {
             m_inputChannelsAvailable = device.numChannels;
             break;
@@ -408,7 +408,7 @@ void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
     int prevInputChannels = muse::settings()->value(INPUT_CHANNELS).toInt();
 
     for (const auto& device : inMaps) {
-        const auto deviceName = wxToStdSting(MakeDeviceSourceString(&device));
+        const auto deviceName = wxToStdString(MakeDeviceSourceString(&device));
         if (device.hostString != host || deviceName != newDevice) {
             continue;
         }

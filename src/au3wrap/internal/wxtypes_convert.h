@@ -10,14 +10,14 @@
 #endif
 
 namespace au::au3 {
-inline std::string wxToStdSting(const wxString& s)
+inline std::string wxToStdString(const wxString& s)
 {
     return s.ToStdString(wxConvUTF8);
 }
 
 inline muse::String wxToString(const wxString& s)
 {
-    return muse::String::fromStdString(wxToStdSting(s));
+    return muse::String::fromStdString(wxToStdString(s));
 }
 
 inline wxString wxFromString(const muse::String& s)

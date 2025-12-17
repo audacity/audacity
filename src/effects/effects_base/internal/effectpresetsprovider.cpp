@@ -228,7 +228,7 @@ muse::Ret EffectPresetsProvider::exportPreset(const EffectInstanceId& effectInst
     auto commandId = effect->GetSquashedName(effect->GetSymbol().Internal());
     params = commandId.GET() + ":" + params;
 
-    std::string str = au3::wxToStdSting(params);
+    std::string str = au3::wxToStdString(params);
     ByteArray data = ByteArray::fromRawData(str.c_str(), str.size());
 
     Ret ret = io::File::writeFile(filePath, data);

@@ -340,7 +340,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     false
                     );
         } else {
-            LOGW() << "effect not found for symbol: " << au3::wxToStdSting(symbol.Internal());
+            LOGW() << "effect not found for symbol: " << au3::wxToStdString(symbol.Internal());
         }
     }
 
@@ -372,7 +372,7 @@ EffectMeta BuiltinEffectsRepository::effectMeta(const ComponentInterfaceSymbol& 
 {
     auto it = m_metas.find(symbol);
     if (it == m_metas.end()) {
-        LOGW() << "not found effect meta for symbol: " << au3::wxToStdSting(symbol.Internal());
+        LOGW() << "not found effect meta for symbol: " << au3::wxToStdString(symbol.Internal());
         return EffectMeta();
     }
     return it->second;

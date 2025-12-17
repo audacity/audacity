@@ -17,7 +17,7 @@ static muse::Settings::Key make_key(const wxString& key)
         _key.Remove(0, 1);
     }
 
-    return muse::Settings::Key("au3wrap", wxToStdSting(_key));
+    return muse::Settings::Key("au3wrap", wxToStdString(_key));
 }
 
 Au3CommonSettings::Au3CommonSettings()
@@ -53,7 +53,7 @@ bool Au3CommonSettings::HasEntry(const wxString& key) const
 
 bool Au3CommonSettings::HasGroup(const wxString& key) const
 {
-    NOT_IMPLEMENTED << ", key: " << wxToStdSting(key);
+    NOT_IMPLEMENTED << ", key: " << wxToStdString(key);
     return false;
 }
 
@@ -70,7 +70,7 @@ void Au3CommonSettings::Clear()
 
 void Au3CommonSettings::DoBeginGroup(const wxString& prefix)
 {
-    NOT_IMPLEMENTED << ", prefix: " << wxToStdSting(prefix);
+    NOT_IMPLEMENTED << ", prefix: " << wxToStdString(prefix);
 }
 
 void Au3CommonSettings::DoEndGroup() noexcept
@@ -181,6 +181,6 @@ bool Au3CommonSettings::Write(const wxString& key, double value)
 
 bool Au3CommonSettings::Write(const wxString& key, const wxString& value)
 {
-    muse::settings()->setLocalValue(make_key(key), muse::Val(wxToStdSting(value)));
+    muse::settings()->setLocalValue(make_key(key), muse::Val(wxToStdString(value)));
     return true;
 }

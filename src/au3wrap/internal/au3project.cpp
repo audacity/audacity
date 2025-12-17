@@ -273,7 +273,7 @@ std::string Au3ProjectAccessor::title() const
         return std::string();
     }
 
-    return wxToStdSting(m_data->project->GetProjectName());
+    return wxToStdString(m_data->project->GetProjectName());
 }
 
 uintptr_t Au3ProjectAccessor::au3ProjectPtr() const

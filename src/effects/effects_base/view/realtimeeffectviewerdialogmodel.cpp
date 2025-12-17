@@ -85,7 +85,7 @@ EffectFamily RealtimeEffectViewerDialogModel::prop_effectFamily() const
     if (!plug || !PluginManager::IsPluginAvailable(*plug)) {
         return EffectFamily::Unknown;
     }
-    const std::string family = au3::wxToStdSting(plug->GetEffectFamily());
+    const std::string family = au3::wxToStdString(plug->GetEffectFamily());
     if (family == "VST3") {
         return EffectFamily::VST3;
     } else if (family == "LV2") {

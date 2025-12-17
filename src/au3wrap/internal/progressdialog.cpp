@@ -16,7 +16,7 @@ ProgressDialog::ProgressDialog(const std::string& title)
 }
 
 ProgressDialog::ProgressDialog(const TranslatableString& title)
-    : ProgressDialog{au::au3::wxToStdSting(title.Translation())}
+    : ProgressDialog{au::au3::wxToStdString(title.Translation())}
 {
 }
 
@@ -31,7 +31,7 @@ void ProgressDialog::Reinit()
 
 void ProgressDialog::SetDialogTitle(const TranslatableString& title)
 {
-    m_progressTitle = au::au3::wxToStdSting(title.Translation());
+    m_progressTitle = au::au3::wxToStdString(title.Translation());
 }
 
 ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long long denominator, const TranslatableString& message)
@@ -47,7 +47,7 @@ ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long 
     }
 
     if (!message.empty()) {
-        m_progressMessage = au::au3::wxToStdSting(message.Translation());
+        m_progressMessage = au::au3::wxToStdString(message.Translation());
     }
 
     if (m_progress.progress(numerator, denominator, m_progressMessage)) {
@@ -62,5 +62,5 @@ ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long 
 
 void ProgressDialog::SetMessage(const TranslatableString& message)
 {
-    m_progressMessage = au::au3::wxToStdSting(message.Translation());
+    m_progressMessage = au::au3::wxToStdString(message.Translation());
 }
