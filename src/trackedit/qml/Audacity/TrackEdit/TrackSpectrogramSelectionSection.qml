@@ -21,6 +21,10 @@ TrackSpectrogramBaseSection {
             text: qsTrc("appshell/preferences/spectrogram", "Use global settings")
             checked: settingsModel.useGlobalSettings
 
+            navigation.panel: root.navigation
+            navigation.name: "UseGlobalSettingsCheckBox"
+            navigation.order: 0
+
             onClicked: {
                 settingsModel.useGlobalSettings = !settingsModel.useGlobalSettings
             }
@@ -29,6 +33,10 @@ TrackSpectrogramBaseSection {
         CheckBox {
             text: qsTrc("appshell/preferences/spectrogram", "Enable spectral selection")
             checked: settingsModel.spectralSelectionEnabled
+
+            navigation.panel: root.navigation
+            navigation.name: "EnableSpectralSelectionCheckBox"
+            navigation.order: 1
 
             onClicked: {
                 settingsModel.spectralSelectionEnabled = !settingsModel.spectralSelectionEnabled

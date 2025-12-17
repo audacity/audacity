@@ -42,6 +42,9 @@ StyledDialogView {
         padding: 16
 
         TrackSpectrogramSelectionSection {
+            navigation.section: root.navigationSection
+            navigation.order: 0
+
             width: parent.width
             settingsModel: root.settingsModel
             onActiveFocusRequested: function (rect) {
@@ -52,6 +55,9 @@ StyledDialogView {
         SeparatorLine {}
 
         TrackSpectrogramScaleSection {
+            navigation.section: root.navigationSection
+            navigation.order: 1
+
             width: parent.width
             settingsModel: root.settingsModel
             onActiveFocusRequested: function (rect) {
@@ -62,6 +68,9 @@ StyledDialogView {
         SeparatorLine {}
 
         TrackSpectrogramColorsSection {
+            navigation.section: root.navigationSection
+            navigation.order: 2
+
             width: parent.width
             settingsModel: root.settingsModel
             onActiveFocusRequested: function (rect) {
@@ -72,6 +81,9 @@ StyledDialogView {
         SeparatorLine {}
 
         TrackSpectrogramAlgorithmSection {
+            navigation.section: root.navigationSection
+            navigation.order: 3
+
             width: parent.width
             settingsModel: root.settingsModel
             onActiveFocusRequested: function (rect) {
@@ -91,6 +103,9 @@ StyledDialogView {
         anchors.top: separator.bottom
         width: parent.width
 
+        navigationPanel.section: root.navigationSection
+        navigationPanel.order: 4
+
         padding: 12
         spacing: 8
 
@@ -99,6 +114,10 @@ StyledDialogView {
 
             height: prv.buttonHeight
             minWidth: 80
+
+            navigation.panel: bbox.navigationPanel
+            navigation.name: "CancelButton"
+            navigation.order: 1
 
             text: qsTrc("spectrogram/prefs", "Cancel")
             buttonRole: ButtonBoxModel.RejectRole
@@ -114,6 +133,10 @@ StyledDialogView {
 
             height: prv.buttonHeight
             minWidth: 80
+
+            navigation.panel: bbox.navigationPanel
+            navigation.name: "OKButton"
+            navigation.order: 2
 
             text: qsTrc("spectrogram/prefs", "Ok")
             buttonRole: ButtonBoxModel.AcceptRole

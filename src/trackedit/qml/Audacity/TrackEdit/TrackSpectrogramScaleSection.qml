@@ -31,6 +31,9 @@ TrackSpectrogramBaseSection {
         StyledDropdown {
             width: root.largeControlWidth
 
+            navigation.panel: root.navigation
+            navigation.name: "ScaleComboBox"
+
             model: settingsModel.scaleNames
             currentIndex: settingsModel.scale
             onActivated: function (index, value) {

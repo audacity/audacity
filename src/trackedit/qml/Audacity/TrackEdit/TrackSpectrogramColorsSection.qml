@@ -21,6 +21,8 @@ TrackSpectrogramBaseSection {
         spacing: root.narrowSpacing
 
         Repeater {
+            id: repeater
+
             model: ColorSectionParameterListModel {
                 settingsModel: root.settingsModel
                 columnWidth: root.prefsColumnWidth
@@ -41,6 +43,10 @@ TrackSpectrogramBaseSection {
 
                 IncrementalPropertyControl {
                     width: root.mediumControlWidth
+
+                    navigation.panel: root.navigation
+                    navigation.order: index
+                    navigation.name: "ColorsIncrementalControl_" + index
 
                     minValue: colorControlMinValue
                     maxValue: colorControlMaxValue
@@ -71,6 +77,10 @@ TrackSpectrogramBaseSection {
 
             StyledDropdown {
                 width: root.largeControlWidth
+
+                navigation.panel: root.navigation
+                navigation.name: "ColorsSchemeComboBox"
+                navigation.order: repeater.count
 
                 model: settingsModel.colorSchemeNames
                 currentIndex: settingsModel.colorScheme
