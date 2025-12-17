@@ -30,6 +30,22 @@ Rectangle {
     property alias ctrlPressed: tracksViewState.ctrlPressed
     property alias isSplitMode: splitToolController.active
 
+    signal externalDropAreaEntered(var drop)
+    signal externalDropAreaExitted()
+    signal externalDropAreaDropped(var drop)
+
+    onExternalDropAreaEntered: drop => {
+        importDropArea.externalDropAreaEntered(drop)
+    }
+
+    onExternalDropAreaExitted: {
+        importDropArea.externalDropAreaExitted()
+    }
+
+    onExternalDropAreaDropped: drop => {
+        importDropArea.externalDropAreaDropped(drop)
+    }
+
     color: ui.theme.backgroundPrimaryColor
 
     clip: true
@@ -1140,7 +1156,9 @@ Rectangle {
     }
 
     ImportDropArea {
-        anchors.fill: content
+        id: importDropArea
+
+        anchors.fill: root
 
         tracksItemsView: tracksItemsView
         tracksViewState: tracksViewState
