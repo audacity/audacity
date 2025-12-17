@@ -4,8 +4,8 @@
 #pragma once
 
 #include "effectstypes.h"
-#include "async/notification.h"
-#include "modularity/imoduleinterface.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/modularity/imoduleinterface.h"
 
 namespace au::effects {
 class IEffectsConfiguration : MODULE_EXPORT_INTERFACE
@@ -25,5 +25,9 @@ public:
 
     virtual double previewMaxDuration() const = 0;
     virtual void setPreviewMaxDuration(double value) = 0;
+
+    virtual EffectUIMode effectUIMode(const EffectId& effectId) const = 0;
+    virtual void setEffectUIMode(const EffectId& effectId, EffectUIMode mode) = 0;
+    virtual muse::async::Notification effectUIModeChanged() const = 0;
 };
 }

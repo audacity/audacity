@@ -21,16 +21,18 @@ EffectStyledDialogView {
     QtObject {
         id: prv
         property alias viewer: viewerLoader.item
-        property bool isApplyAllowed: effectFamily != EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
-        property bool showPresets: effectFamily != EffectFamily.Builtin || viewer.usesPresets
+        property bool isApplyAllowed: viewerModel.effectFamily != EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
+        property bool showPresets: viewerModel.effectFamily != EffectFamily.Builtin || (viewer && viewer.usesPresets)
 
-        property int minimumWidth: effectFamily === EffectFamily.LV2 ? 500 : 250
-        property int panelMargins: effectFamily == EffectFamily.Builtin ? 16 : 4
-        property int viewMargins: effectFamily == EffectFamily.Builtin ? 16 : 0
-        property int separatorHeight: effectFamily == EffectFamily.Builtin ? separator.height + prv.panelMargins : 0
+        property int minimumWidth: viewerModel.effectFamily === EffectFamily.LV2 ? 500 : 250
+        property int panelMargins: viewerModel.effectFamily == EffectFamily.Builtin ? 16 : 4
+        property int viewMargins: viewerModel.effectFamily == EffectFamily.Builtin ? 16 : 0
+        property int separatorHeight: viewerModel.effectFamily == EffectFamily.Builtin ? separator.height + prv.panelMargins : 0
 
         function closeWindow(accept) {
-            prv.viewer.stopPreview()
+            if (prv.viewer) {
+                prv.viewer.stopPreview()
+            }
             // Call later because the preview calls `QCoreApplication::processEvents()`,
             // and we must make sure it doesn't do this after we've closed the dialog, or we'll be getting that Qt exception
             // "Object %p destroyed while one of its QML signal handlers is in progress."
@@ -44,7 +46,9 @@ EffectStyledDialogView {
         target: root.window
         function onClosing(event) {
             // Stop preview before closing, for the same reason as in closeWindow()
-            prv.viewer.stopPreview()
+            if (prv.viewer) {
+                prv.viewer.stopPreview()
+            }
         }
     }
 
@@ -57,28 +61,60 @@ EffectStyledDialogView {
         return height
     }
 
+    Component.onCompleted: {
+        viewerModel.load()
+        loadViewer()
+    }
+
     onWindowChanged: {
-        // Wait until the window is set: VstView needs it for intialization
-        switch (effectFamily) {
-        case EffectFamily.Builtin:
-            viewerLoader.sourceComponent = builtinViewerComp
-            break
-        case EffectFamily.AudioUnit:
+        loadViewer()
+    }
+
+    Connections {
+        target: viewerModel
+        function onViewerComponentTypeChanged() {
+            // For Audio Units, reload the view instead of switching components
+            if (viewerModel.viewerComponentType === ViewerComponentType.AudioUnit && viewerLoader.item) {
+                viewerLoader.item.reload()
+            } else {
+                loadViewer()
+            }
+        }
+    }
+
+    // Listen to UI mode changes from the presets bar menu
+    Connections {
+        target: presetsBar.manageMenuModel
+        function onUseVendorUIChanged() {
+            viewerModel.refreshUIMode()
+        }
+    }
+
+    function loadViewer() {
+        switch (viewerModel.viewerComponentType) {
+        case ViewerComponentType.AudioUnit:
             viewerLoader.sourceComponent = audioUnitViewerComp
             break
-        case EffectFamily.LV2:
+        case ViewerComponentType.Lv2:
             viewerLoader.sourceComponent = lv2ViewerComp
             break
-        case EffectFamily.VST3:
+        case ViewerComponentType.Vst:
             viewerLoader.sourceComponent = vstViewerComp
+            break
+        case ViewerComponentType.Builtin:
+            viewerLoader.sourceComponent = builtinViewerComp
+            break
+        case ViewerComponentType.Generated:
+            viewerLoader.sourceComponent = generatedViewerComp
             break
         default:
             viewerLoader.sourceComponent = null
         }
     }
 
-    EffectViewerDialogModel {
+    DestructiveEffectViewerDialogModel {
         id: viewerModel
+        instanceId: root.instanceId
     }
 
     Column {
@@ -113,7 +149,7 @@ EffectStyledDialogView {
                         navigationPanel: root.navigationPanel
                         navigationOrder: 0
 
-                        enabled: !prv.viewer.isPreviewing
+                        enabled: !(prv.viewer && prv.viewer.isPreviewing)
                         parentWindow: root.window
                         instanceId: root.instanceId
                     }
@@ -126,7 +162,7 @@ EffectStyledDialogView {
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    visible: effectFamily == EffectFamily.Builtin
+                    visible: viewerModel.effectFamily == EffectFamily.Builtin
                 }
             }
         }
@@ -186,7 +222,7 @@ EffectStyledDialogView {
                             minWidth: 80
                             isLeftSide: true
 
-                            text: prv.viewer.isPreviewing ?
+                            text: (prv.viewer && prv.viewer.isPreviewing) ?
                             //: Shown on a button that stops effect preview
                             qsTrc("effects", "Stop preview") :
                             //: Shown on a button that starts effect preview
@@ -196,7 +232,16 @@ EffectStyledDialogView {
                             buttonId: ButtonBoxModel.CustomButton + 2
                             enabled: prv.isApplyAllowed
 
-                            onClicked: prv.viewer.isPreviewing ? prv.viewer.stopPreview() : prv.viewer.startPreview()
+                            onClicked: {
+                                if (!prv.viewer) {
+                                    return
+                                }
+                                if (prv.viewer.isPreviewing) {
+                                    prv.viewer.stopPreview()
+                                } else {
+                                    prv.viewer.startPreview()
+                                }
+                            }
                         }
 
                         FlatButton {
@@ -242,7 +287,7 @@ EffectStyledDialogView {
         width: viewerLoader.width
         height: viewerLoader.height
 
-        visible: prv.viewer.isPreviewing
+        visible: prv.viewer && prv.viewer.isPreviewing
         effectFamily: root.effectFamily
     }
 
@@ -286,6 +331,13 @@ EffectStyledDialogView {
             bottomPadding: bbox.implicitHeight + prv.panelMargins * 2
             sidePadding: prv.viewMargins
             minimumWidth: prv.minimumWidth
+        }
+    }
+
+    Component {
+        id: generatedViewerComp
+        GeneratedEffectViewer {
+            instanceId: root.instanceId
         }
     }
 }

@@ -68,6 +68,11 @@ void RealtimeEffectViewerDialogModel::load()
     realtimeEffectService()->effectSettingsChanged().onNotify(this, [this] {
         emit isActiveChanged();
     });
+
+    configuration()->effectUIModeChanged().onNotify(this, [this] {
+        emit useVendorUIChanged();
+        emit viewerComponentTypeChanged();
+    });
 }
 
 EffectFamily RealtimeEffectViewerDialogModel::prop_effectFamily() const
@@ -186,5 +191,57 @@ void RealtimeEffectViewerDialogModel::subscribe()
 bool RealtimeEffectViewerDialogModel::prop_isMasterEffect() const
 {
     return realtimeEffectService()->trackId(m_effectState) == IRealtimeEffectService::masterTrackId;
+}
+
+bool RealtimeEffectViewerDialogModel::useVendorUI() const
+{
+    if (!m_effectState) {
+        return true; // Default to vendor UI
+    }
+
+    const auto effectId = muse::String::fromStdString(m_effectState->GetID().ToStdString());
+    if (effectId.empty()) {
+        return true; // Default to vendor UI
+    }
+
+    const bool result = configuration()->effectUIMode(effectId) == EffectUIMode::VendorUI;
+    return result;
+}
+
+void RealtimeEffectViewerDialogModel::refreshUIMode()
+{
+    emit useVendorUIChanged();
+    emit viewerComponentTypeChanged();
+}
+
+ViewerComponentType RealtimeEffectViewerDialogModel::viewerComponentType() const
+{
+    const EffectFamily family = prop_effectFamily();
+
+    // Audio Units always use AudioUnitViewer, which handles both vendor UI and Apple's generic UI internally
+    if (family == EffectFamily::AudioUnit) {
+        return ViewerComponentType::AudioUnit;
+    }
+
+    // Built-in effects always use their custom viewers
+    if (family == EffectFamily::Builtin) {
+        return ViewerComponentType::Builtin;
+    }
+
+    // For external plugins (VST3, LV2), check if we should use generated UI
+    const bool shouldUseVendorUI = useVendorUI();
+    if (!shouldUseVendorUI) {
+        return ViewerComponentType::Generated;
+    }
+
+    // Use the appropriate vendor UI
+    switch (family) {
+    case EffectFamily::LV2:
+        return ViewerComponentType::Lv2;
+    case EffectFamily::VST3:
+        return ViewerComponentType::Vst;
+    default:
+        return ViewerComponentType::Unknown;
+    }
 }
 }

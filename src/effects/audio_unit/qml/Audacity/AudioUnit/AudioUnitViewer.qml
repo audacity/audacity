@@ -25,6 +25,8 @@ Rectangle {
 
     readonly property var model: AudioUnitViewModelFactory.createModel(root, root.instanceId)
 
+    property alias view: view
+
     color: ui.theme.backgroundPrimaryColor
 
     width: implicitWidth
@@ -43,12 +45,24 @@ Rectangle {
         model.deinit()
     }
 
+    // Reload the view when UI mode changes
+    Connections {
+        target: manageMenuModel
+        function onUseVendorUIChanged() {
+            view.reload()
+        }
+    }
+
     function startPreview() {
         model.startPreview()
     }
 
     function stopPreview() {
         model.stopPreview()
+    }
+
+    function reload() {
+        view.reload()
     }
 
     function manage(parent) {

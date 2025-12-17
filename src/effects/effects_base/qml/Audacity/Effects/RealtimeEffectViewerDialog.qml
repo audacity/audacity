@@ -35,18 +35,45 @@ EffectStyledDialogView {
 
     Component.onCompleted: {
         viewerModel.load()
-        switch (viewerModel.effectFamily) {
-        case EffectFamily.Builtin:
-            viewLoader.sourceComponent = builtinViewerComponent
-            break
-        case EffectFamily.AudioUnit:
+        loadViewer()
+    }
+
+    // Listen to UI mode changes from the presets bar menu
+    Connections {
+        target: presetsBar.manageMenuModel
+        function onUseVendorUIChanged() {
+            viewerModel.refreshUIMode()
+        }
+    }
+
+    Connections {
+        target: viewerModel
+        function onViewerComponentTypeChanged() {
+            // For Audio Units, reload the view instead of switching components
+            if (viewerModel.viewerComponentType === ViewerComponentType.AudioUnit && viewLoader.item) {
+                viewLoader.item.reload()
+            } else {
+                loadViewer()
+            }
+        }
+    }
+
+    function loadViewer() {
+        switch (viewerModel.viewerComponentType) {
+        case ViewerComponentType.AudioUnit:
             viewLoader.sourceComponent = audioUnitViewerComponent
             break
-        case EffectFamily.LV2:
+        case ViewerComponentType.Lv2:
             viewLoader.sourceComponent = lv2ViewerComponent
             break
-        case EffectFamily.VST3:
+        case ViewerComponentType.Vst:
             viewLoader.sourceComponent = vstViewerComponent
+            break
+        case ViewerComponentType.Builtin:
+            viewLoader.sourceComponent = builtinViewerComponent
+            break
+        case ViewerComponentType.Generated:
+            viewLoader.sourceComponent = generatedViewerComponent
             break
         default:
             viewLoader.sourceComponent = null
@@ -102,6 +129,14 @@ EffectStyledDialogView {
                 instanceId: root.instanceId
                 usedDestructively: false
             }
+        }
+    }
+
+    Component {
+        id: generatedViewerComponent
+        GeneratedEffectViewer {
+            id: view
+            instanceId: root.instanceId
         }
     }
 

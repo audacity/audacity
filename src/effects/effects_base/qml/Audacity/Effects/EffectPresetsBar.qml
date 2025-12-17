@@ -18,9 +18,14 @@ RowLayout {
 
     property var parentWindow: null
 
+    // Expose the manage menu model so parent can listen to its signals
+    property alias manageMenuModel: manageMenuModel
+
     spacing: 4
 
     function manage(button) {
+        // Reload the menu to ensure the checkmark state is current
+        manageMenuModel.load()
         var pos = Qt.point(button.x, button.y + button.height)
         menuLoader.show(pos, manageMenuModel)
     }
@@ -32,6 +37,11 @@ RowLayout {
     EffectManageMenu {
         id: manageMenuModel
         instanceId: root.instanceId
+
+        onUseVendorUIChanged: {
+            // Reload the menu to update the checkmark
+            manageMenuModel.load()
+        }
     }
 
     ContextMenuLoader {

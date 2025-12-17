@@ -48,6 +48,8 @@ void EffectsActionsController::registerActions()
     dispatcher()->reg(this, ActionQuery("action://effects/presets/import"), this, &EffectsActionsController::importPreset);
     dispatcher()->reg(this, ActionQuery("action://effects/presets/export"), this, &EffectsActionsController::exportPreset);
 
+    dispatcher()->reg(this, ActionQuery("action://effects/toggle_vendor_ui"), this, &EffectsActionsController::toggleVendorUI);
+
     m_uiActions->reload();
     uiActionsRegister()->unreg(m_uiActions);
     uiActionsRegister()->reg(m_uiActions);
@@ -121,6 +123,18 @@ void EffectsActionsController::exportPreset(const ActionQuery& q)
 
     EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
     presetsScenario()->exportPreset(effectInstanceId);
+}
+
+void EffectsActionsController::toggleVendorUI(const ActionQuery& q)
+{
+    IF_ASSERT_FAILED(q.contains("effectId")) {
+        return;
+    }
+
+    const EffectId effectId = EffectId::fromStdString(q.param("effectId").toString());
+    const EffectUIMode currentMode = configuration()->effectUIMode(effectId);
+    const EffectUIMode newMode = (currentMode == EffectUIMode::VendorUI) ? EffectUIMode::FallbackUI : EffectUIMode::VendorUI;
+    configuration()->setEffectUIMode(effectId, newMode);
 }
 
 bool EffectsActionsController::canReceiveAction(const muse::actions::ActionCode& code) const
