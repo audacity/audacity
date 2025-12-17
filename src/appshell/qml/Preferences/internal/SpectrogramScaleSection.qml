@@ -19,6 +19,9 @@ SpectrogramBaseSection {
     ComboBoxWithTitle {
         width: parent.width
 
+        navigation.panel: root.navigation
+        navigation.name: "ScaleComboBox"
+
         title: qsTrc("spectrogram/preferences/settings", "Scale")
         spacing: root.narrowSpacing
         columnWidth: root.mediumControlWidth

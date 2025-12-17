@@ -28,4 +28,6 @@ BaseSection {
             root.activeFocusRequested(Qt.rect(x, y, width, height))
         }
     }
+
+    navigationOrderEnd: root.navigation.order
 }

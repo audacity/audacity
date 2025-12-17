@@ -25,5 +25,8 @@ SpectrogramBaseSection {
         onClicked: {
             settingsModel.spectralSelectionEnabled = !settingsModel.spectralSelectionEnabled
         }
+
+        navigation.panel: root.navigation
+        navigation.name: "SpectralSelectionEnabledCheckBox"
     }
 }
