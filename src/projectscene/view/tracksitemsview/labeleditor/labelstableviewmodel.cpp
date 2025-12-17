@@ -294,12 +294,12 @@ void LabelsTableViewModel::importLabels()
 bool LabelsTableViewModel::doCellValueChangeRequested(int row, int column, const Val& value)
 {
     switch (column) {
-    case TRACK_COLUMN: return moveLabel(row, column, value);
-    case LABEL_COLUMN: return renameLabel(row, column, value);
-    case START_TIME_COLUMN: return changeLabelStartTime(row, column, value);
-    case END_TIME_COLUMN: return changeLabelEndTime(row, column, value);
-    case LOW_FREQUENCY_COLUMN: return changeLabelLowFrequency(row, column, value);
-    case HIGH_FREQUENCY_COLUMN: return changeLabelHighFrequency(row, column, value);
+    case TRACK_COLUMN: return moveLabel(row, value);
+    case LABEL_COLUMN: return renameLabel(row, value);
+    case START_TIME_COLUMN: return changeLabelStartTime(row, value);
+    case END_TIME_COLUMN: return changeLabelEndTime(row, value);
+    case LOW_FREQUENCY_COLUMN: return changeLabelLowFrequency(row, value);
+    case HIGH_FREQUENCY_COLUMN: return changeLabelHighFrequency(row, value);
     default: break;
     }
 
@@ -404,7 +404,7 @@ MenuItem* LabelsTableViewModel::makeSeparator()
     return item;
 }
 
-bool LabelsTableViewModel::moveLabel(int row, int column, const Val& value)
+bool LabelsTableViewModel::moveLabel(int row, const Val& value)
 {
     Q_UNUSED(value);
 
@@ -413,7 +413,7 @@ bool LabelsTableViewModel::moveLabel(int row, int column, const Val& value)
         return false;
     }
 
-    const LabelsTableViewTrackCell* cell = dynamic_cast<LabelsTableViewTrackCell*>(findCell(row, column));
+    const LabelsTableViewTrackCell* cell = dynamic_cast<LabelsTableViewTrackCell*>(findCell(row, TRACK_COLUMN));
     if (!cell) {
         return false;
     }
@@ -434,10 +434,8 @@ bool LabelsTableViewModel::moveLabel(int row, int column, const Val& value)
     return true;
 }
 
-bool LabelsTableViewModel::renameLabel(int row, int column, const Val& value)
+bool LabelsTableViewModel::renameLabel(int row, const Val& value)
 {
-    Q_UNUSED(column);
-
     LabelsTableViewVerticalHeader* verticalHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
     if (!verticalHeader) {
         return false;
@@ -448,14 +446,14 @@ bool LabelsTableViewModel::renameLabel(int row, int column, const Val& value)
     return trackeditInteraction()->changeLabelTitle(labelKey, String::fromStdString(value.toString()));
 }
 
-bool LabelsTableViewModel::changeLabelStartTime(int row, int column, const Val& value)
+bool LabelsTableViewModel::changeLabelStartTime(int row, const Val& value)
 {
     LabelsTableViewVerticalHeader* verticalHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
     if (!verticalHeader) {
         return false;
     }
 
-    TableViewCell* cell = findCell(row, column);
+    TableViewCell* cell = findCell(row, START_TIME_COLUMN);
     if (!cell) {
         return false;
     }
@@ -478,14 +476,14 @@ bool LabelsTableViewModel::changeLabelStartTime(int row, int column, const Val& 
     return ok;
 }
 
-bool LabelsTableViewModel::changeLabelEndTime(int row, int column, const Val& value)
+bool LabelsTableViewModel::changeLabelEndTime(int row, const Val& value)
 {
     LabelsTableViewVerticalHeader* verticalHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
     if (!verticalHeader) {
         return false;
     }
 
-    TableViewCell* cell = findCell(row, column);
+    TableViewCell* cell = findCell(row, END_TIME_COLUMN);
     if (!cell) {
         return false;
     }
@@ -508,10 +506,8 @@ bool LabelsTableViewModel::changeLabelEndTime(int row, int column, const Val& va
     return ok;
 }
 
-bool LabelsTableViewModel::changeLabelLowFrequency(int row, int column, const Val& value)
+bool LabelsTableViewModel::changeLabelLowFrequency(int row, const Val& value)
 {
-    Q_UNUSED(column);
-
     LabelsTableViewVerticalHeader* verticalHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
     if (!verticalHeader) {
         return false;
@@ -522,10 +518,8 @@ bool LabelsTableViewModel::changeLabelLowFrequency(int row, int column, const Va
     return trackeditInteraction()->changeLabelLowFrequency(labelKey, value.toDouble());
 }
 
-bool LabelsTableViewModel::changeLabelHighFrequency(int row, int column, const Val& value)
+bool LabelsTableViewModel::changeLabelHighFrequency(int row, const Val& value)
 {
-    Q_UNUSED(column);
-
     LabelsTableViewVerticalHeader* verticalHeader = dynamic_cast<LabelsTableViewVerticalHeader*>(findVerticalHeader(row));
     if (!verticalHeader) {
         return false;

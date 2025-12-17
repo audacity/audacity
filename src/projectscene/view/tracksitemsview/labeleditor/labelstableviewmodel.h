@@ -73,12 +73,12 @@ private:
     muse::uicomponents::MenuItemList makeAvailableTracksList();
     muse::uicomponents::MenuItem* makeSeparator();
 
-    bool moveLabel(int row, int column, const muse::Val& value);
-    bool renameLabel(int row, int column, const muse::Val& value);
-    bool changeLabelStartTime(int row, int column, const muse::Val& value);
-    bool changeLabelEndTime(int row, int column, const muse::Val& value);
-    bool changeLabelLowFrequency(int row, int column, const muse::Val& value);
-    bool changeLabelHighFrequency(int row, int column, const muse::Val& value);
+    bool moveLabel(int row, const muse::Val& value);
+    bool renameLabel(int row, const muse::Val& value);
+    bool changeLabelStartTime(int row, const muse::Val& value);
+    bool changeLabelEndTime(int row, const muse::Val& value);
+    bool changeLabelLowFrequency(int row, const muse::Val& value);
+    bool changeLabelHighFrequency(int row, const muse::Val& value);
 
     QString createNewLabelTrack(int currentRow);
 
