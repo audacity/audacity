@@ -50,8 +50,8 @@ public:
     int zeroPaddingFactor() const override;
     void setZeroPaddingFactor(int value) override;
 
-    bool useGlobalSettings() const;
-    void setUseGlobalSettings(bool value);
+    bool useGlobalSettings() const override;
+    void setUseGlobalSettings(bool value) override;
 
 private:
     Au3SpectrogramSettings& m_settings;
