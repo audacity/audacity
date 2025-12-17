@@ -76,7 +76,7 @@ private:
     std::vector<std::string> m_audioApis;
     std::vector<std::string> m_outputDevices;
     std::vector<std::string> m_inputDevices;
-    int m_inputChannelsAvailable;
+    int m_inputChannelsAvailable = 0;
 
     muse::async::Notification m_audioOutputDeviceChanged;
     muse::async::Notification m_audioInputDeviceChanged;

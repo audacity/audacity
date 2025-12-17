@@ -2,22 +2,20 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "containers.h"
-#include "settings.h"
-
-#include "framework/global/realfn.h"
+#include "au3audiodevicesprovider.h"
 
 #include <algorithm>
+
+#include "framework/global/containers.h"
+#include "framework/global/settings.h"
+#include "framework/global/realfn.h"
 
 #include "au3wrap/au3types.h"
 
 #include "au3-audio-devices/DeviceManager.h"
 #include "au3-audio-devices/AudioIOBase.h"
-#include "au3-utility/IteratorX.h"
 #include "au3-project-rate/QualitySettings.h"
 #include "au3-project-rate/ProjectRate.h"
-
-#include "au3audiodevicesprovider.h"
 
 using namespace muse;
 using namespace au::au3;
@@ -73,9 +71,11 @@ void Au3AudioDevicesProvider::init()
     const int hostIndex = DeviceManager::Instance()->GetHostIndex(currentApi());
     const auto inputDevice = DeviceManager::Instance()->GetDefaultInputDevice(hostIndex);
     const auto outputDevice = DeviceManager::Instance()->GetDefaultOutputDevice(hostIndex);
+    auto inputMaps = DeviceManager::Instance()->GetInputDeviceMaps();
+    auto outputMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
 
-    muse::settings()->setDefaultValue(PLAYBACK_DEVICE, muse::Val(MakeDeviceSourceString(outputDevice)));
-    muse::settings()->setDefaultValue(RECORDING_DEVICE, muse::Val(MakeDeviceSourceString(inputDevice)));
+    muse::settings()->setDefaultValue(PLAYBACK_DEVICE, muse::Val(MakeDeviceSourceString(outputDevice, outputMaps)));
+    muse::settings()->setDefaultValue(RECORDING_DEVICE, muse::Val(MakeDeviceSourceString(inputDevice, inputMaps)));
 
     muse::settings()->setDefaultValue(INPUT_CHANNELS, muse::Val(1));
     muse::settings()->setDefaultValue(LATENCY_DURATION, muse::Val(100.0));
@@ -365,7 +365,7 @@ void Au3AudioDevicesProvider::initInputChannels()
         if (device.hostString != host) {
             continue;
         }
-        const auto deviceName = wxToStdString(MakeDeviceSourceString(&device));
+        const auto deviceName = MakeDeviceSourceString(&device, inMaps);
         if (deviceName == inputDevice) {
             m_inputChannelsAvailable = device.numChannels;
             break;
@@ -385,14 +385,14 @@ void Au3AudioDevicesProvider::updateInputOutputDevices()
         if (device.hostString != currentApi()) {
             continue;
         }
-        m_inputDevices.push_back(wxToStdString(MakeDeviceSourceString(&device)));
+        m_inputDevices.push_back(MakeDeviceSourceString(&device, inputDevices));
     }
 
     for (const auto& device : outputDevices) {
         if (device.hostString != currentApi()) {
             continue;
         }
-        m_outputDevices.push_back(wxToStdString(MakeDeviceSourceString(&device)));
+        m_outputDevices.push_back(MakeDeviceSourceString(&device, outputDevices));
     }
 
     setInputDevice(defaultInputDevice());
@@ -407,7 +407,7 @@ void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
     int prevInputChannels = muse::settings()->value(INPUT_CHANNELS).toInt();
 
     for (const auto& device : inMaps) {
-        const auto deviceName = wxToStdString(MakeDeviceSourceString(&device));
+        const auto deviceName = MakeDeviceSourceString(&device, inMaps);
         if (device.hostString != host || deviceName != newDevice) {
             continue;
         }

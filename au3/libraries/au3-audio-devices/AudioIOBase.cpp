@@ -18,6 +18,7 @@ Paul Licameli split from AudioIO.cpp
 
 #include "au3-utility/IteratorX.h"
 #include "au3-preferences/Prefs.h"
+#include "DeviceManager.h"
 
 #include "portaudio.h"
 
@@ -727,30 +728,15 @@ int AudioIOBase::getPlayDevIndex(const wxString& devNameArg)
         devName = AudioIOPlaybackDevice.Read();
     }
 
-    auto hostName = AudioIOHost.Read();
-    PaHostApiIndex hostCnt = Pa_GetHostApiCount();
-    PaHostApiIndex hostNum;
-    for (hostNum = 0; hostNum < hostCnt; hostNum++) {
-        const PaHostApiInfo* hinfo = Pa_GetHostApiInfo(hostNum);
-        if (hinfo && wxString(wxSafeConvertMB2WX(hinfo->name)) == hostName) {
-            for (PaDeviceIndex hostDevice = 0; hostDevice < hinfo->deviceCount; hostDevice++) {
-                PaDeviceIndex deviceNum = Pa_HostApiDeviceIndexToDeviceIndex(hostNum, hostDevice);
-
-                const PaDeviceInfo* dinfo = Pa_GetDeviceInfo(deviceNum);
-                if (dinfo && DeviceName(dinfo) == devName && dinfo->maxOutputChannels > 0) {
-                    // this device name matches the stored one, and works.
-                    // So we say this is the answer and return it
-                    return deviceNum;
-                }
-            }
-
-            // The device wasn't found so use the default for this host.
-            // LL:  At this point, preferences and active no longer match.
-            return hinfo->defaultOutputDevice;
+    if (!devName.empty()) {
+        wxString hostName = AudioIOHost.Read();
+        int deviceIndex = DeviceManager::Instance()->GetOutputDevicePaIndex(hostName.ToStdString(wxConvUTF8), devName.ToStdString(wxConvUTF8));
+        if (deviceIndex >= 0) {
+            return deviceIndex;
         }
     }
 
-    // The host wasn't found, so use the default output device.
+    // Use the default output device.
     // FIXME: TRAP_ERR PaErrorCode not handled well (this code is similar to input code
     // and the input side has more comments.)
 
@@ -778,30 +764,16 @@ int AudioIOBase::getRecordDevIndex(const wxString& devNameArg)
         devName = AudioIORecordingDevice.Read();
     }
 
-    auto hostName = AudioIOHost.Read();
-    PaHostApiIndex hostCnt = Pa_GetHostApiCount();
-    PaHostApiIndex hostNum;
-    for (hostNum = 0; hostNum < hostCnt; hostNum++) {
-        const PaHostApiInfo* hinfo = Pa_GetHostApiInfo(hostNum);
-        if (hinfo && wxString(wxSafeConvertMB2WX(hinfo->name)) == hostName) {
-            for (PaDeviceIndex hostDevice = 0; hostDevice < hinfo->deviceCount; hostDevice++) {
-                PaDeviceIndex deviceNum = Pa_HostApiDeviceIndexToDeviceIndex(hostNum, hostDevice);
-
-                const PaDeviceInfo* dinfo = Pa_GetDeviceInfo(deviceNum);
-                if (dinfo && DeviceName(dinfo) == devName && dinfo->maxInputChannels > 0) {
-                    // this device name matches the stored one, and works.
-                    // So we say this is the answer and return it
-                    return deviceNum;
-                }
-            }
-
-            // The device wasn't found so use the default for this host.
-            // LL:  At this point, preferences and active no longer match.
-            return hinfo->defaultInputDevice;
+    if (!devName.empty()) {
+        wxString hostName = AudioIOHost.Read();
+        int deviceIndex = DeviceManager::Instance()->GetInputDevicePaIndex(
+            hostName.ToStdString(wxConvUTF8), devName.ToStdString(wxConvUTF8));
+        if (deviceIndex >= 0) {
+            return deviceIndex;
         }
     }
 
-    // The host wasn't found, so use the default input device.
+    // Use the default input device
     // FIXME: TRAP_ERR PaErrorCode not handled well in getRecordDevIndex()
     PaDeviceIndex deviceNum = Pa_GetDefaultInputDevice();
 

@@ -8,6 +8,7 @@
 
 #include "DeviceManager.h"
 
+#include <map>
 #include <wx/log.h>
 #include <thread>
 
@@ -48,18 +49,97 @@ const std::vector<DeviceSourceMap>& DeviceManager::GetOutputDeviceMaps()
     return mOutputDeviceSourceMaps;
 }
 
-std::string MakeDeviceSourceString(const DeviceSourceMap* map)
+static std::string GetBaseDeviceName(const DeviceSourceMap* map)
 {
     if (!map) {
         return {};
     }
-    std::string ret;
-    ret = map->deviceString;
+    std::string ret = map->deviceString.ToStdString(wxConvUTF8);
     if (map->totalSources > 1) {
-        ret += ": " + map->sourceString;
+        ret += ": " + map->sourceString.ToStdString(wxConvUTF8);
+    }
+    return ret;
+}
+
+std::string MakeDeviceSourceString(const DeviceSourceMap* map,
+                                   const std::vector<DeviceSourceMap>& deviceMaps)
+{
+    if (!map) {
+        return {};
     }
 
-    return ret;
+    std::string baseName = GetBaseDeviceName(map);
+
+    int occurrence = 0;
+    for (const auto& device : deviceMaps) {
+        if (&device == map) {
+            break;
+        }
+        if (device.hostString == map->hostString && GetBaseDeviceName(&device) == baseName) {
+            occurrence++;
+        }
+    }
+
+    if (occurrence == 0) {
+        return baseName;
+    } else {
+        return baseName + "#" + std::to_string(occurrence + 1);
+    }
+}
+
+static std::pair<std::string, int> ParseDeviceId(const std::string& stableId)
+{
+    size_t hashPos = stableId.rfind('#');
+    if (hashPos == std::string::npos) {
+        return { stableId, 0 };
+    }
+
+    std::string name = stableId.substr(0, hashPos);
+    std::string indexStr = stableId.substr(hashPos + 1);
+
+    try {
+        int occurrence = std::stoi(indexStr) - 1;
+        return { name, occurrence };
+    } catch (...) {
+        return { stableId, 0 };
+    }
+}
+
+static int FindDeviceIndexByDeviceId(const std::vector<DeviceSourceMap>& deviceMaps,
+                                     const std::string& hostName,
+                                     const std::string& deviceId)
+{
+    auto [targetName, targetOccurrence] = ParseDeviceId(deviceId);
+
+    std::map<std::string, int> nameCount;
+    for (const auto& device : deviceMaps) {
+        if (device.hostString != hostName) {
+            continue;
+        }
+        std::string deviceName = GetBaseDeviceName(&device);
+        int occurrence = nameCount[deviceName]++;
+
+        if (deviceName == targetName && occurrence == targetOccurrence) {
+            return device.deviceIndex;
+        }
+    }
+    return -1;
+}
+
+int DeviceManager::GetInputDevicePaIndex(const std::string& hostName, const std::string& deviceId)
+{
+    if (!m_inited) {
+        Init();
+    }
+    return FindDeviceIndexByDeviceId(mInputDeviceSourceMaps, hostName, deviceId);
+}
+
+int DeviceManager::GetOutputDevicePaIndex(const std::string& hostName, const std::string& deviceId)
+{
+    if (!m_inited) {
+        Init();
+    }
+    return FindDeviceIndexByDeviceId(mOutputDeviceSourceMaps, hostName, deviceId);
 }
 
 DeviceSourceMap* DeviceManager::GetDefaultDevice(int hostIndex, int isInput)

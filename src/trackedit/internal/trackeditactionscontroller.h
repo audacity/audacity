@@ -3,20 +3,22 @@
 */
 #pragma once
 
-#include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
-#include "framework/actions/iactionsdispatcher.h"
 #include "framework/actions/actionable.h"
+
+#include "framework/global/modularity/ioc.h"
 #include "framework/global/iinteractive.h"
+#include "framework/actions/iactionsdispatcher.h"
 
 #include "audio/iaudiodevicesprovider.h"
 #include "context/iglobalcontext.h"
-#include "deletebehavioronboardingscenario.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 #include "iprojecthistory.h"
 #include "iselectioncontroller.h"
 #include "itrackeditconfiguration.h"
 #include "itrackeditinteraction.h"
-#include "projectscene/iprojectsceneconfiguration.h"
+
+#include "deletebehavioronboardingscenario.h"
 
 #include "../itrackeditactionscontroller.h"
 
