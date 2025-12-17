@@ -64,10 +64,10 @@ AlgorithmSectionParameterListModel::AlgorithmSectionParameterListModel(QObject* 
 void AlgorithmSectionParameterListModel::onSettingsModelSet(AbstractSpectrogramSettingsModel&)
 {
     const QList<int> roles { ControlCurrentIndexRole, ControlCurrentValueRole };
-    CONNECT_SETTING_CHANGED(algorithmChanged_7, Control::Algorithm, roles);
-    CONNECT_SETTING_CHANGED(windowSizeChanged_9, Control::WindowSize, roles);
-    CONNECT_SETTING_CHANGED(windowTypeChanged_8, Control::WindowType, roles);
-    CONNECT_SETTING_CHANGED(zeroPaddingFactorChanged_10, Control::ZeroPaddingFactor, roles);
+    CONNECT_SETTING_CHANGED(algorithmChanged, Control::Algorithm, roles);
+    CONNECT_SETTING_CHANGED(windowSizeChanged, Control::WindowSize, roles);
+    CONNECT_SETTING_CHANGED(windowTypeChanged, Control::WindowType, roles);
+    CONNECT_SETTING_CHANGED(zeroPaddingFactorChanged, Control::ZeroPaddingFactor, roles);
 }
 
 QVariant AlgorithmSectionParameterListModel::data(const QModelIndex& index, int role) const
@@ -160,16 +160,16 @@ int AlgorithmSectionParameterListModel::controlCurrentValue(Control control) con
 {
     switch (control) {
     case Algorithm: {
-        return m_settingsModel->algorithm_7();
+        return m_settingsModel->algorithm();
     }
     case WindowSize: {
-        return m_settingsModel->windowSize_9();
+        return m_settingsModel->windowSize();
     }
     case WindowType: {
-        return m_settingsModel->windowType_8();
+        return m_settingsModel->windowType();
     }
     case ZeroPaddingFactor: {
-        return m_settingsModel->zeroPaddingFactor_10();
+        return m_settingsModel->zeroPaddingFactor();
     }
     default:
         assert(false);
@@ -181,13 +181,13 @@ int AlgorithmSectionParameterListModel::controlCurrentIndex(Control control) con
 {
     switch (control) {
     case Algorithm:
-        return propertyIndex(algorithmTable, static_cast<SpectrogramAlgorithm>(m_settingsModel->algorithm_7()));
+        return propertyIndex(algorithmTable, static_cast<SpectrogramAlgorithm>(m_settingsModel->algorithm()));
     case WindowSize:
-        return propertyIndex(windowSizeTable, m_settingsModel->windowSize_9());
+        return propertyIndex(windowSizeTable, m_settingsModel->windowSize());
     case WindowType:
-        return propertyIndex(windowTypeTable, static_cast<SpectrogramWindowType>(m_settingsModel->windowType_8()));
+        return propertyIndex(windowTypeTable, static_cast<SpectrogramWindowType>(m_settingsModel->windowType()));
     case ZeroPaddingFactor:
-        return propertyIndex(zeroPaddingFactorTable, m_settingsModel->zeroPaddingFactor_10());
+        return propertyIndex(zeroPaddingFactorTable, m_settingsModel->zeroPaddingFactor());
     default:
         assert(false);
         return 0;
@@ -209,16 +209,16 @@ bool AlgorithmSectionParameterListModel::setData(const QModelIndex& index, const
 
     switch (control) {
     case Algorithm:
-        m_settingsModel->setAlgorithm_7(static_cast<int>(propertyValue(algorithmTable, currentIndex)));
+        m_settingsModel->setAlgorithm(static_cast<int>(propertyValue(algorithmTable, currentIndex)));
         break;
     case WindowSize:
-        m_settingsModel->setWindowSize_9(propertyValue(windowSizeTable, currentIndex));
+        m_settingsModel->setWindowSize(propertyValue(windowSizeTable, currentIndex));
         break;
     case WindowType:
-        m_settingsModel->setWindowType_8(static_cast<int>(propertyValue(windowTypeTable, currentIndex)));
+        m_settingsModel->setWindowType(static_cast<int>(propertyValue(windowTypeTable, currentIndex)));
         break;
     case ZeroPaddingFactor:
-        m_settingsModel->setZeroPaddingFactor_10(static_cast<int>(propertyValue(zeroPaddingFactorTable, currentIndex)));
+        m_settingsModel->setZeroPaddingFactor(static_cast<int>(propertyValue(zeroPaddingFactorTable, currentIndex)));
         break;
     default:
         assert(false);

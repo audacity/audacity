@@ -31,19 +31,6 @@ Au3TrackSpectrogramConfiguration::Au3TrackSpectrogramConfiguration(Au3Spectrogra
     : m_settings(settings)
 {}
 
-bool Au3TrackSpectrogramConfiguration::spectralSelectionEnabled() const
-{
-    return m_settings.spectralSelectionEnabled;
-}
-
-void Au3TrackSpectrogramConfiguration::setSpectralSelectionEnabled(bool value)
-{
-    if (m_settings.spectralSelectionEnabled == value) {
-        return;
-    }
-    m_settings.spectralSelectionEnabled = value;
-}
-
 int Au3TrackSpectrogramConfiguration::colorGainDb() const
 {
     return m_settings.gain;

@@ -20,7 +20,6 @@ ITrackSpectrogramConfigurationPtr TrackSpectrogramConfigurationProvider::trackSp
 void TrackSpectrogramConfigurationProvider::copyConfiguration(const ISpectrogramConfiguration& source,
                                                               ISpectrogramConfiguration& destination) const
 {
-    destination.setSpectralSelectionEnabled(source.spectralSelectionEnabled());
     destination.setColorGainDb(source.colorGainDb());
     destination.setColorRangeDb(source.colorRangeDb());
     destination.setColorHighBoostDbPerDec(source.colorHighBoostDbPerDec());

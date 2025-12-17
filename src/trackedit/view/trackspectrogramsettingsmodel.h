@@ -38,35 +38,32 @@ public:
     bool useGlobalSettings() const;
     void setUseGlobalSettings(bool value);
 
-    bool spectralSelectionEnabled_1() const override;
-    void setSpectralSelectionEnabled_1(bool value) override;
+    int colorGainDb() const override;
+    void setColorGainDb(int value) override;
 
-    int colorGainDb_2() const override;
-    void setColorGainDb_2(int value) override;
+    int colorRangeDb() const override;
+    void setColorRangeDb(int value) override;
 
-    int colorRangeDb_3() const override;
-    void setColorRangeDb_3(int value) override;
+    int colorHighBoostDbPerDec() const override;
+    void setColorHighBoostDbPerDec(int value) override;
 
-    int colorHighBoostDbPerDec_4() const override;
-    void setColorHighBoostDbPerDec_4(int value) override;
+    int colorScheme() const override;
+    void setColorScheme(int value) override;
 
-    int colorScheme_5() const override;
-    void setColorScheme_5(int value) override;
+    int scale() const override;
+    void setScale(int value) override;
 
-    int scale_6() const override;
-    void setScale_6(int value) override;
+    int algorithm() const override;
+    void setAlgorithm(int value) override;
 
-    int algorithm_7() const override;
-    void setAlgorithm_7(int value) override;
+    int windowType() const override;
+    void setWindowType(int value) override;
 
-    int windowType_8() const override;
-    void setWindowType_8(int value) override;
+    int windowSize() const override;
+    void setWindowSize(int value) override;
 
-    int windowSize_9() const override;
-    void setWindowSize_9(int value) override;
-
-    int zeroPaddingFactor_10() const override;
-    void setZeroPaddingFactor_10(int value) override;
+    int zeroPaddingFactor() const override;
+    void setZeroPaddingFactor(int value) override;
 
 signals:
     void trackIdChanged();

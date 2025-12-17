@@ -20,9 +20,6 @@ public:
     Au3TrackSpectrogramConfiguration(Au3SpectrogramSettings&);
     ~Au3TrackSpectrogramConfiguration() override = default;
 
-    bool spectralSelectionEnabled() const override;
-    void setSpectralSelectionEnabled(bool value) override;
-
     int colorGainDb() const override;
     void setColorGainDb(int value) override;
 

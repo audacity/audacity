@@ -12,8 +12,7 @@ class SnapshotSpectrogramConfiguration final : public spectrogram::ITrackSpectro
 {
 public:
     SnapshotSpectrogramConfiguration(const ITrackSpectrogramConfiguration& config)
-        : m_spectralSelectionEnabled{config.spectralSelectionEnabled()},
-        m_colorGainDb{config.colorGainDb()},
+        : m_colorGainDb{config.colorGainDb()},
         m_colorRangeDb{config.colorRangeDb()},
         m_colorHighBoostDbPerDec{config.colorHighBoostDbPerDec()},
         m_colorScheme{config.colorScheme()},
@@ -27,9 +26,6 @@ public:
     }
 
     ~SnapshotSpectrogramConfiguration() override = default;
-
-    bool spectralSelectionEnabled() const override { return m_spectralSelectionEnabled; }
-    void setSpectralSelectionEnabled(bool) override { assert(false); }
 
     int colorGainDb() const override { return m_colorGainDb; }
     void setColorGainDb(int) override { assert(false); }
@@ -62,7 +58,6 @@ public:
     void setUseGlobalSettings(bool) override { assert(false); }
 
 private:
-    const bool m_spectralSelectionEnabled;
     const int m_colorGainDb;
     const int m_colorRangeDb;
     const int m_colorHighBoostDbPerDec;

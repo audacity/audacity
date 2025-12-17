@@ -37,7 +37,6 @@ static const AttachedTrackObjects::RegisteredFactory key1{
         settings->SetZeroPaddingFactor(globalConfig->zeroPaddingFactor());
         settings->colorScheme = globalConfig->colorScheme();
         settings->scaleType = globalConfig->scale();
-        settings->spectralSelectionEnabled = globalConfig->spectralSelectionEnabled();
         settings->algorithm = globalConfig->algorithm();
 
         return settings;
@@ -67,7 +66,6 @@ Au3SpectrogramSettings::Au3SpectrogramSettings(const Au3SpectrogramSettings& oth
     , frequencyGain(other.frequencyGain)
     , colorScheme(other.colorScheme)
     , scaleType(other.scaleType)
-    , spectralSelectionEnabled(other.spectralSelectionEnabled)
     , algorithm(other.algorithm)
     , minFreq(other.minFreq)
     , maxFreq(other.maxFreq)
@@ -97,7 +95,6 @@ Au3SpectrogramSettings& Au3SpectrogramSettings::operator=(const Au3SpectrogramSe
         m_zeroPaddingFactor = other.m_zeroPaddingFactor;
         colorScheme = other.colorScheme;
         scaleType = other.scaleType;
-        spectralSelectionEnabled = other.spectralSelectionEnabled;
         algorithm = other.algorithm;
 
         // Invalidate the caches
@@ -130,7 +127,6 @@ void Au3SpectrogramSettings::WriteXMLAttributes(XMLWriter& writer) const
     writer.WriteAttr("zeroPaddingFactor", m_zeroPaddingFactor);
     writer.WriteAttr("colorScheme", static_cast<int>(colorScheme));
     writer.WriteAttr("scaleType", static_cast<int>(scaleType));
-    writer.WriteAttr("spectralSelectionEnabled", spectralSelectionEnabled);
     writer.WriteAttr("algorithm", static_cast<int>(algorithm));
 }
 
@@ -169,9 +165,6 @@ bool Au3SpectrogramSettings::HandleXMLAttribute(const std::string_view& attr, co
         return true;
     } else if (attr == "scaleType" && valueView.TryGet(nValue)) {
         scaleType = static_cast<SpectrogramScale>(nValue);
-        return true;
-    } else if (attr == "spectralSelectionEnabled" && valueView.TryGet(nValue)) {
-        spectralSelectionEnabled = (nValue != 0);
         return true;
     } else if (attr == "algorithm" && valueView.TryGet(nValue)) {
         algorithm = static_cast<SpectrogramAlgorithm>(nValue);

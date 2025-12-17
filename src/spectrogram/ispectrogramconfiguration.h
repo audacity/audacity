@@ -11,9 +11,6 @@ class ISpectrogramConfiguration
 public:
     virtual ~ISpectrogramConfiguration() = default;
 
-    virtual bool spectralSelectionEnabled() const = 0;
-    virtual void setSpectralSelectionEnabled(bool value) = 0;
-
     virtual SpectrogramColorScheme colorScheme() const = 0;
     virtual void setColorScheme(SpectrogramColorScheme value) = 0;
 

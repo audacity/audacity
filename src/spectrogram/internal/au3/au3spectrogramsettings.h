@@ -43,7 +43,6 @@ public:
     int frequencyGain = 0;
     SpectrogramColorScheme colorScheme = static_cast<SpectrogramColorScheme>(0);
     SpectrogramScale scaleType = static_cast<SpectrogramScale>(0);
-    bool spectralSelectionEnabled = false;
     SpectrogramAlgorithm algorithm = static_cast<SpectrogramAlgorithm>(0);
     // For now. When rulers are implemented for spectrogram view, this may need some refactoring.
     int minFreq = 1;

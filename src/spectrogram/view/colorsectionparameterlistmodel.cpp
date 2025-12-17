@@ -16,9 +16,9 @@ ColorSectionParameterListModel::ColorSectionParameterListModel(QObject* parent)
 void ColorSectionParameterListModel::onSettingsModelSet(AbstractSpectrogramSettingsModel&)
 {
     const QList<int> roles { ControlCurrentValueRole };
-    CONNECT_SETTING_CHANGED(colorGainDbChanged_2, Control::ColorGain, roles);
-    CONNECT_SETTING_CHANGED(colorRangeDbChanged_3, Control::ColorRange, roles);
-    CONNECT_SETTING_CHANGED(colorHighBoostDbPerDecChanged_4, Control::ColorHighBoost, roles);
+    CONNECT_SETTING_CHANGED(colorGainDbChanged, Control::ColorGain, roles);
+    CONNECT_SETTING_CHANGED(colorRangeDbChanged, Control::ColorRange, roles);
+    CONNECT_SETTING_CHANGED(colorHighBoostDbPerDecChanged, Control::ColorHighBoost, roles);
 }
 
 QVariant ColorSectionParameterListModel::data(const QModelIndex& index, int role) const
@@ -45,11 +45,11 @@ int ColorSectionParameterListModel::controlCurrentValue(Control control) const
 {
     switch (control) {
     case ColorGain:
-        return m_settingsModel->colorGainDb_2();
+        return m_settingsModel->colorGainDb();
     case ColorRange:
-        return m_settingsModel->colorRangeDb_3();
+        return m_settingsModel->colorRangeDb();
     case ColorHighBoost:
-        return m_settingsModel->colorHighBoostDbPerDec_4();
+        return m_settingsModel->colorHighBoostDbPerDec();
     default:
         assert(false);
         return 0;
@@ -158,13 +158,13 @@ bool ColorSectionParameterListModel::setData(const QModelIndex& index, const QVa
 
     switch (control) {
     case ColorGain:
-        m_settingsModel->setColorGainDb_2(currentValue);
+        m_settingsModel->setColorGainDb(currentValue);
         break;
     case ColorRange:
-        m_settingsModel->setColorRangeDb_3(currentValue);
+        m_settingsModel->setColorRangeDb(currentValue);
         break;
     case ColorHighBoost:
-        m_settingsModel->setColorHighBoostDbPerDec_4(currentValue);
+        m_settingsModel->setColorHighBoostDbPerDec(currentValue);
         break;
     default:
         assert(false);
