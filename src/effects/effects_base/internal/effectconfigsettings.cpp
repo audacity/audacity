@@ -102,7 +102,7 @@ bool EffectConfigSettings::Save()
                 obj["type"] = "double";
             } else if constexpr (std::is_same_v<T, wxString>) {
                 obj["key"] = key;
-                obj["val"] = au::au3::wxToStdSting(v);
+                obj["val"] = au::au3::wxToStdString(v);
                 obj["type"] = "string";
             }
         }, p.second);
@@ -122,7 +122,7 @@ bool EffectConfigSettings::Save()
 
 std::string EffectConfigSettings::fullKey(const wxString& key) const
 {
-    std::string path = au3::wxToStdSting(key);
+    std::string path = au3::wxToStdString(key);
     if (!m_currentGroup.empty()) {
         return m_currentGroup + "/" + path;
     }
@@ -181,7 +181,7 @@ wxArrayString EffectConfigSettings::GetChildGroups() const
 wxArrayString EffectConfigSettings::GetChildKeys() const
 {
     wxArrayString child;
-    std::string group = au3::wxToStdSting(GetGroup());
+    std::string group = au3::wxToStdString(GetGroup());
     for (const auto& p : m_vals) {
         const std::string& fullKey = p.first;
         if (fullKey.find(group) == std::string::npos) {
@@ -306,7 +306,7 @@ bool EffectConfigSettings::Flush() noexcept
 
 void EffectConfigSettings::DoBeginGroup(const wxString& prefix)
 {
-    m_currentGroup = au3::wxToStdSting(prefix);
+    m_currentGroup = au3::wxToStdString(prefix);
     if (!m_currentGroup.empty() && m_currentGroup.back() == '/') {
         m_currentGroup.pop_back();
     }

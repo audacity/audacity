@@ -5,13 +5,14 @@
 
 #include <QString>
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+
+#include "audio/iaudiodevicesprovider.h"
+#include "playback/iplaybackconfiguration.h"
 #include "record/irecord.h"
 #include "record/irecordconfiguration.h"
 #include "record/irecordcontroller.h"
 #include "record/irecordmetercontroller.h"
-#include "playback/iplaybackconfiguration.h"
-#include "playback/iaudiodevicesprovider.h"
 
 #include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
 
@@ -38,12 +39,12 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
 
     Q_PROPERTY(playback::PlaybackMeterStyle::MeterStyle meterStyle READ meterStyle NOTIFY meterStyleChanged FINAL)
 
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
     muse::Inject<record::IRecord> record;
     muse::Inject<record::IRecordConfiguration> recordConfiguration;
     muse::Inject<record::IRecordController> recordController;
     muse::Inject<record::IRecordMeterController> recordMeterController;
-    muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
-    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     explicit PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,

@@ -15,7 +15,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iplayback.h
     ${CMAKE_CURRENT_LIST_DIR}/iplayer.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudiooutput.h
-    ${CMAKE_CURRENT_LIST_DIR}/iaudiodevicesprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/iplaybackcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/iplaybackmeter.h
     ${CMAKE_CURRENT_LIST_DIR}/iplaybackmetercontroller.h

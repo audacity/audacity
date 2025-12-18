@@ -37,7 +37,6 @@ public:
     bool canStopAudioStream(AudacityProject& project) const override;
 
     void handleDeviceChange() override;
-    int getHostIndex(const std::string& hostName) override;
     muse::String lastErrorString() const override;
     double getPlaybackSampleRate() const override;
     void updateTimePosition(unsigned long newlyConsumedSamples) override;

@@ -1,17 +1,15 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#ifndef AU_APPSHELL_PLAYBACKPREFERENCESMODEL_H
-#define AU_APPSHELL_PLAYBACKPREFERENCESMODEL_H
+#pragma once
 
 #include <QObject>
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
 
-#include "async/asyncable.h"
 #include "audio/main/iaudioconfiguration.h"
-
-#include "playback/iaudiodevicesprovider.h"
+#include "audio/iaudiodevicesprovider.h"
 #include "playback/iplaybackconfiguration.h"
 
 namespace au::appshell {
@@ -31,9 +29,9 @@ class PlaybackPreferencesModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(double shortSkip READ shortSkip NOTIFY shortSkipChanged)
     Q_PROPERTY(double longSkip READ longSkip NOTIFY longSkipChanged)
 
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<muse::audio::IAudioConfiguration> audioConfiguration;
     muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
-    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     explicit PlaybackPreferencesModel(QObject* parent = nullptr);
@@ -67,5 +65,3 @@ signals:
     void longSkipChanged();
 };
 }
-
-#endif // AU_APPSHELL_PLAYBACKPREFERENCESMODEL_H

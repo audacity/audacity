@@ -6,9 +6,10 @@
 #include <chrono>
 #include <optional>
 
-#include "framework/global/async/notification.h"
 #include "framework/global/async/channel.h"
+#include "framework/global/async/notification.h"
 #include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/types/string.h"
 
 #include "au3wrap/au3types.h"
 
@@ -45,7 +46,6 @@ public:
     virtual bool canStopAudioStream(AudacityProject& project) const = 0;
 
     virtual void handleDeviceChange() = 0;
-    virtual int getHostIndex(const std::string& hostName) = 0;
 
     virtual muse::String lastErrorString() const = 0;
     virtual double getPlaybackSampleRate() const = 0;

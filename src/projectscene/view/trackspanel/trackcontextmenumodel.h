@@ -4,21 +4,22 @@
 #pragma once
 
 #include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
-#include "types/projectscenetypes.h"
-#include "iprojectsceneconfiguration.h"
+
+#include "audio/iaudiodevicesprovider.h"
 #include "context/iglobalcontext.h"
+#include "iprojectsceneconfiguration.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/iselectioncontroller.h"
-#include "playback/iaudiodevicesprovider.h"
 
 namespace au::projectscene {
 class TrackContextMenuModel : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
+
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
-    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<trackedit::ISelectionController> selectionController;
 
     Q_PROPERTY(trackedit::TrackId trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)

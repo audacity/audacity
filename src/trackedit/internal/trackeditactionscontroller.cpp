@@ -1887,7 +1887,7 @@ void TrackeditActionsController::resampleTracks(const muse::actions::ActionData&
     muse::UriQuery resampleUri("audacity://trackedit/custom_rate");
 
     muse::ValList availableSampleRates;
-    for (const auto& rate : audioDevicesProvider()->availableSampleRateList()) {
+    for (const auto& rate : audioDevicesProvider()->sampleRates()) {
         availableSampleRates.push_back(muse::Val(static_cast<int>(rate)));
     }
     resampleUri.addParam("availableRates", muse::Val(availableSampleRates));

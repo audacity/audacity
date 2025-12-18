@@ -160,7 +160,7 @@ void PlaybackToolBarRecordLevelItem::setRightMaxPeak(const float newRightMaxPeak
 
 int PlaybackToolBarRecordLevelItem::recordingChannelsCount() const
 {
-    return audioDevicesProvider()->currentInputChannelsCount();
+    return audioDevicesProvider()->inputChannelsSelected();
 }
 
 bool PlaybackToolBarRecordLevelItem::isInputMonitoringOn() const

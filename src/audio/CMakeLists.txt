@@ -10,6 +10,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/audiotypes.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudioengine.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudiometer.h
+    ${CMAKE_CURRENT_LIST_DIR}/iaudiodevicesprovider.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiometer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiometer.h

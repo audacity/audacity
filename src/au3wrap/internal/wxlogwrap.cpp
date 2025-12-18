@@ -19,18 +19,18 @@ void WxLogWrap::DoLogRecord(wxLogLevel level, const wxString& msg, const wxLogRe
     switch (level) {
     case wxLOG_FatalError:
     case wxLOG_Error:
-        LOGE_T(tag)() << wxToStdSting(msg);
+        LOGE_T(tag)() << wxToStdString(msg);
         break;
     case wxLOG_Warning:
-        LOGW_T(tag)() << wxToStdSting(msg);
+        LOGW_T(tag)() << wxToStdString(msg);
         break;
     case wxLOG_Message:
     case wxLOG_Status:
     case wxLOG_Info:
-        LOGI_T(tag)() << wxToStdSting(msg);
+        LOGI_T(tag)() << wxToStdString(msg);
         break;
     default:
-        LOGD_T(tag)() << wxToStdSting(msg);
+        LOGD_T(tag)() << wxToStdString(msg);
         break;
     }
 }

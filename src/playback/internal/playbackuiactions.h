@@ -6,17 +6,16 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/ui/iuiactionsmodule.h"
-#include "framework/ui/iuiactionsregister.h"
 
+#include "audio/iaudiodevicesprovider.h"
 #include "context/iuicontextresolver.h"
-#include "iaudiodevicesprovider.h"
 #include "internal/playbackcontroller.h"
 
 namespace au::playback {
 class PlaybackUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
 {
-    INJECT(context::IUiContextResolver, uicontextResolver)
-    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<context::IUiContextResolver> uiContextResolver;
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     PlaybackUiActions(std::shared_ptr<PlaybackController> controller);

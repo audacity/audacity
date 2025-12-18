@@ -41,7 +41,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     auto makeApplyAction = [](const EffectInstanceId& iid, const PresetId& p) {
         ActionQuery q("action://effects/presets/apply");
         q.addParam("instanceId", Val(iid));
-        q.addParam("presetId", Val(au3::wxToStdSting(p)));
+        q.addParam("presetId", Val(au3::wxToStdString(p)));
         return q;
     };
 
@@ -85,7 +85,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
                 String name = au3::wxToString(p);
                 ActionQuery q("action://effects/presets/delete");
                 q.addParam("effectId", Val(effectId.toStdString()));
-                q.addParam("presetId", Val(au3::wxToStdSting(p)));
+                q.addParam("presetId", Val(au3::wxToStdString(p)));
                 MenuItem* item = makeMenuItem(q.toString(), TranslatableString::untranslatable(name));
                 item->setId("user_delete_" + name);
                 subitems << item;

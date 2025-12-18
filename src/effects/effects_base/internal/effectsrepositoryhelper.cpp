@@ -111,7 +111,7 @@ bool EffectsRepositoryHelper::ensurePluginIsLoaded(const EffectId& effectId) con
 
     const auto ptr = PluginManager::Get().GetPlugin(pluginId);
     if (!ptr) {
-        LOGE() << "failed register plugin: " << au3::wxToStdSting(pluginId) << ", path: " << path;
+        LOGE() << "failed register plugin: " << au3::wxToStdString(pluginId) << ", path: " << path;
         return false;
     }
 

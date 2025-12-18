@@ -248,15 +248,15 @@ void PlaybackUiActions::init()
         m_actionEnabledChanged.send(codes);
     });
 
-    audioDevicesProvider()->audioApiChanged().onNotify(this, [this]() {
+    audioDevicesProvider()->apiChanged().onNotify(this, [this]() {
         actionCheckedChanged().send(ActionCodeList({ PLAYBACK_CHANGE_AUDIO_API_QUERY.toString() }));
     });
 
-    audioDevicesProvider()->audioOutputDeviceChanged().onNotify(this, [this]() {
+    audioDevicesProvider()->outputDeviceChanged().onNotify(this, [this]() {
         actionCheckedChanged().send(ActionCodeList({ PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString() }));
     });
 
-    audioDevicesProvider()->audioInputDeviceChanged().onNotify(this, [this]() {
+    audioDevicesProvider()->inputDeviceChanged().onNotify(this, [this]() {
         actionCheckedChanged().send(ActionCodeList({ PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString() }));
     });
 

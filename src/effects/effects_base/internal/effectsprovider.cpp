@@ -231,7 +231,7 @@ IEffectViewLauncherPtr getLauncher(const EffectId& effectId, const IEffectViewLa
         return {};
     }
 
-    const auto family = au::au3::wxToStdSting(plug->GetEffectFamily());
+    const auto family = au::au3::wxToStdString(plug->GetEffectFamily());
     const auto launcher = launchRegister.launcher(family);
     IF_ASSERT_FAILED(launcher) {
         LOGE() << "not found launcher for family:" << family;

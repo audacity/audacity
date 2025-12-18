@@ -7,29 +7,29 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
+#include "au3wrap/au3types.h"
+#include "au3wrap/internal/au3audiometer.h"
+#include "audio/iaudiodevicesprovider.h"
+#include "audio/iaudioengine.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
-#include "playback/iaudiodevicesprovider.h"
 #include "record/iaudioinput.h"
 #include "record/irecordconfiguration.h"
 #include "record/irecordcontroller.h"
 #include "record/irecordmetercontroller.h"
 #include "trackedit/iselectioncontroller.h"
-#include "audio/iaudioengine.h"
-#include "au3wrap/au3types.h"
-#include "au3wrap/internal/au3audiometer.h"
 
 namespace au::record {
 class Au3AudioInput : public IAudioInput, public muse::async::Asyncable
 {
+    muse::Inject<au::audio::IAudioEngine> audioEngine;
     muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<playback::IPlaybackController> playbackController;
     muse::Inject<record::IRecordConfiguration> configuration;
     muse::Inject<record::IRecordController> controller;
     muse::Inject<record::IRecordMeterController> meterController;
-    muse::Inject<playback::IPlaybackController> playbackController;
     muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
-    muse::Inject<au::audio::IAudioEngine> audioEngine;
 
 public:
     Au3AudioInput();

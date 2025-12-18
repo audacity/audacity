@@ -3,18 +3,17 @@
 */
 #pragma once
 
+#include "audio/iaudiodevicesprovider.h"
 #include "context/iglobalcontext.h"
 #include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
-
-#include "playback/iaudiodevicesprovider.h"
 
 namespace au::projectscene {
 class AudioSetupContextMenuModel : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
 
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     AudioSetupContextMenuModel() = default;
