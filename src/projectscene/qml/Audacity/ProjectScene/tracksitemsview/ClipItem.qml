@@ -837,6 +837,8 @@ Rectangle {
                 frameEndTime: root.context.frameEndTime
                 selectionStartTime: root.context.selectionStartTime
                 selectionEndTime: root.context.selectionEndTime
+                spectralSelectionStartFrequency: root.context.spectralSelectionStartFrequency
+                spectralSelectionEndFrequency: root.context.spectralSelectionEndFrequency
 
                 ChannelSplitter {
                     id: spectrogramChannelSplitter

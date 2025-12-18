@@ -83,6 +83,22 @@ void TimelineContext::init(double frameWidth)
         setSelectionEndTime(time);
     });
 
+    m_spectralSelectionStartFrequency = selectionController()->spectralSelectionStartFrequency();
+    selectionController()->spectralSelectionStartFrequencyChanged().onReceive(this, [this](double frequency) {
+        if (!muse::is_equal(m_spectralSelectionStartFrequency, frequency)) {
+            m_spectralSelectionStartFrequency = frequency;
+            emit spectralSelectionStartFrequencyChanged();
+        }
+    });
+
+    m_spectralSelectionEndFrequency = selectionController()->spectralSelectionEndFrequency();
+    selectionController()->spectralSelectionEndFrequencyChanged().onReceive(this, [this](double frequency) {
+        if (!muse::is_equal(m_spectralSelectionEndFrequency, frequency)) {
+            m_spectralSelectionEndFrequency = frequency;
+            emit spectralSelectionEndFrequencyChanged();
+        }
+    });
+
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
     });
@@ -829,6 +845,16 @@ double TimelineContext::selectedItemEndPosition() const
 bool TimelineContext::singleItemSelected() const
 {
     return m_singleItemSelected;
+}
+
+double TimelineContext::spectralSelectionStartFrequency() const
+{
+    return m_spectralSelectionStartFrequency;
+}
+
+double TimelineContext::spectralSelectionEndFrequency() const
+{
+    return m_spectralSelectionEndFrequency;
 }
 
 void TimelineContext::updateSelectionActive()

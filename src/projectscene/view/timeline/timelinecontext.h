@@ -41,6 +41,9 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     Q_PROPERTY(double selectionStartPosition READ selectionStartPosition NOTIFY selectionStartPositionChanged FINAL)
     Q_PROPERTY(double selectionEndPosition READ selectionEndPosition NOTIFY selectionEndPositionChanged FINAL)
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
+    
+    Q_PROPERTY(double spectralSelectionStartFrequency READ spectralSelectionStartFrequency NOTIFY spectralSelectionStartFrequencyChanged FINAL)
+    Q_PROPERTY(double spectralSelectionEndFrequency READ spectralSelectionEndFrequency NOTIFY spectralSelectionEndFrequencyChanged FINAL)
 
     Q_PROPERTY(double selectedItemStartTime READ selectedItemStartTime NOTIFY selectedItemStartTimeChanged FINAL)
     Q_PROPERTY(double selectedItemEndTime READ selectedItemEndTime NOTIFY selectedItemEndTimeChanged FINAL)
@@ -89,6 +92,9 @@ public:
     double selectionStartPosition() const;
     double selectionEndPosition() const;
     bool selectionActive() const;
+    
+    double spectralSelectionStartFrequency() const;
+    double spectralSelectionEndFrequency() const;
 
     double selectedItemStartTime() const;
     double selectedItemEndTime() const;
@@ -153,6 +159,9 @@ signals:
     void selectionStartPositionChanged();
     void selectionEndPositionChanged();
     void selectionActiveChanged();
+    
+    void spectralSelectionStartFrequencyChanged();
+    void spectralSelectionEndFrequencyChanged();
 
     void selectedItemStartTimeChanged();
     void selectedItemEndTimeChanged();
@@ -228,6 +237,9 @@ private:
     trackedit::secs_t m_selectionStartTime = -1.0;
     trackedit::secs_t m_selectionEndTime = -1.0;
     bool m_selectionActive = false;
+    
+    double m_spectralSelectionStartFrequency = -1.0;
+    double m_spectralSelectionEndFrequency = -1.0;
 
     trackedit::secs_t m_selectedItemStartTime = -1.0;
     trackedit::secs_t m_selectedItemEndTime = -1.0;
