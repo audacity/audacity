@@ -5,7 +5,6 @@
 
 #include "modularity/ioc.h"
 #include "global/iglobalconfiguration.h"
-#include "../iexporter.h"
 
 #include "../iexportconfiguration.h"
 
@@ -13,7 +12,6 @@ namespace au::importexport {
 class ExportConfiguration : public IExportConfiguration
 {
     muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
-    muse::Inject<au::importexport::IExporter> exporter;
 
 public:
     ExportConfiguration() = default;
@@ -27,9 +25,6 @@ public:
     muse::io::path_t directoryPath() const override;
     void setDirectoryPath(const muse::io::path_t& path) override;
     muse::async::Notification directoryPathChanged() const override;
-
-    muse::io::path_t labelsDirectoryPath() const override;
-    void setLabelsDirectoryPath(const muse::io::path_t& path) override;
 
     int exportChannels() const override;
     void setExportChannels(int channels) override;

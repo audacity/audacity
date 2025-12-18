@@ -12,20 +12,10 @@
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "labelsutils.h"
+
 using namespace au::au3;
 using namespace au::importexport;
-
-static LabelFormat labelFormatFromSuffix(const muse::io::path_t& filePath)
-{
-    std::string suffix = muse::io::suffix(filePath);
-    if (suffix == "srt") {
-        return LabelFormat::SUBRIP;
-    } else if (suffix == "vtt") {
-        return LabelFormat::WEBVTT;
-    }
-
-    return LabelFormat::TEXT;
-}
 
 muse::Ret Au3LabelsExporter::exportData(const muse::io::path_t& filePath, const trackedit::TrackIdList& includedLabelTracksIds)
 {

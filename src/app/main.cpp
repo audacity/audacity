@@ -82,6 +82,7 @@
 #include "effects/nyquist/nyquisteffectsmodule.h"
 #include "importexport/import/importermodule.h"
 #include "importexport/export/exportermodule.h"
+#include "importexport/labels/labelsmodule.h"
 
 #ifdef MUSE_MODULE_AUTOBOT
 #include "autobot/autobotmodule.h"
@@ -269,6 +270,7 @@ int main(int argc, char** argv)
         app.addModule(new au::project::ProjectModule());
         app.addModule(new au::importexport::ExporterModule());
         app.addModule(new au::importexport::ImporterModule());
+        app.addModule(new au::importexport::LabelsModule());
         app.addModule(new au::au3::Au3WrapModule());
         app.addModule(new au::effects::EffectsModule());
         app.addModule(new au::effects::BuiltinEffectsModule());

@@ -3,18 +3,17 @@
 */
 #pragma once
 
-#include "global/io/path.h"
+#include "io/path.h"
 
 #include "modularity/imoduleinterface.h"
 
 namespace au::importexport {
-class IImportConfiguration : MODULE_EXPORT_INTERFACE
+class ILabelsConfiguration : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(IImportConfiguration)
+    INTERFACE_ID(ILabelsConfiguration)
 
 public:
-
-    virtual ~IImportConfiguration() = default;
+    virtual ~ILabelsConfiguration() = default;
 
     virtual muse::io::path_t labelsDirectoryPath() const = 0;
     virtual void setLabelsDirectoryPath(const muse::io::path_t& path) = 0;

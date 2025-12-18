@@ -566,12 +566,12 @@ QString LabelsTableViewModel::createNewLabelTrack(int currentRow)
 io::path_t LabelsTableViewModel::selectFileForExport()
 {
     std::vector<std::string> filter = labelExporter()->fileFilter();
-    io::path_t defaultDir = exportConfiguration()->labelsDirectoryPath();
+    io::path_t defaultDir = labelsConfiguration()->labelsDirectoryPath();
 
     io::path_t filePath = interactive()->selectSavingFileSync(muse::trc("global", "Save"), defaultDir, filter);
 
     if (!filePath.empty()) {
-        exportConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
+        labelsConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
     }
 
     return filePath;
@@ -580,12 +580,12 @@ io::path_t LabelsTableViewModel::selectFileForExport()
 io::path_t LabelsTableViewModel::selectFileForImport()
 {
     std::vector<std::string> filter = labelsImporter()->fileFilter();
-    io::path_t defaultDir = importConfiguration()->labelsDirectoryPath();
+    io::path_t defaultDir = labelsConfiguration()->labelsDirectoryPath();
 
     io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("global", "Open"), defaultDir, filter);
 
     if (!filePath.empty()) {
-        importConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
+        labelsConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
     }
 
     return filePath;

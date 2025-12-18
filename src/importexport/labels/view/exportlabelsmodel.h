@@ -11,7 +11,7 @@
 #include "iinteractive.h"
 #include "context/iglobalcontext.h"
 #include "ilabelsexporter.h"
-#include "iexportconfiguration.h"
+#include "ilabelsconfiguration.h"
 
 namespace au::importexport {
 class ExportLabelsModel : public QObject, public muse::async::Asyncable, public muse::Injectable
@@ -30,7 +30,7 @@ class ExportLabelsModel : public QObject, public muse::async::Asyncable, public 
     muse::Inject<muse::IInteractive> interactive = { this };
     muse::Inject<context::IGlobalContext> globalContext = { this };
     muse::Inject<ILabelsExporter> labelExporter = { this };
-    muse::Inject<IExportConfiguration> configuration = { this };
+    muse::Inject<ILabelsConfiguration> configuration = { this };
 
 public:
     explicit ExportLabelsModel(QObject* parent = nullptr);

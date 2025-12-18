@@ -6,10 +6,8 @@
         <file>qml/Export/internal/GeneralOptionsSection.qml</file>
         <file>qml/Export/internal/FLACOptionsSection.qml</file>
         <file>qml/Export/internal/MPEGOptionsSection.qml</file>
-        <file>qml/Export/internal/LabelTracksSelectionView.qml</file>
         <file>qml/Export/CustomFFmpegDialog.qml</file>
         <file>qml/Export/MetadataDialog.qml</file>
         <file>qml/Export/internal/MetadataControlPanel.qml</file>
-        <file>qml/Export/ExportLabelsDialog.qml</file>
     </qresource>
 </RCC>

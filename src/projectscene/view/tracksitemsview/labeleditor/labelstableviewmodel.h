@@ -9,10 +9,9 @@
 #include "iinteractive.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/itrackeditinteraction.h"
-#include "importexport/export/ilabelsexporter.h"
-#include "importexport/export/iexportconfiguration.h"
-#include "importexport/import/ilabelsimporter.h"
-#include "importexport/import/iimportconfiguration.h"
+#include "importexport/labels/ilabelsexporter.h"
+#include "importexport/labels/ilabelsimporter.h"
+#include "importexport/labels/ilabelsconfiguration.h"
 
 #include "uicomponents/qml/Muse/UiComponents/abstracttableviewmodel.h"
 
@@ -41,9 +40,8 @@ class LabelsTableViewModel : public muse::uicomponents::AbstractTableViewModel, 
     muse::Inject<context::IGlobalContext> globalContext = { this };
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction = { this };
     muse::Inject<importexport::ILabelsExporter> labelExporter = { this };
-    muse::Inject<importexport::IExportConfiguration> exportConfiguration = { this };
     muse::Inject<importexport::ILabelsImporter> labelsImporter = { this };
-    muse::Inject<importexport::IImportConfiguration> importConfiguration = { this };
+    muse::Inject<importexport::ILabelsConfiguration> labelsConfiguration = { this };
 
 public:
     explicit LabelsTableViewModel(QObject* parent = nullptr);
