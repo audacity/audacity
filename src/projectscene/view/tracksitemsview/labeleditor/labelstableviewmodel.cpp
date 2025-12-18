@@ -193,7 +193,8 @@ void LabelsTableViewModel::addNewLabel()
 
     std::vector<trackedit::Track> labelTracks = allLabelTracks();
     if (labelTracks.empty()) {
-        // todo: create new
+        createNewLabelTrack(-1);
+        addNewLabel();
         return;
     }
 
