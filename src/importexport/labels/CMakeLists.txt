@@ -14,6 +14,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ilabelsexporter.h
     ${CMAKE_CURRENT_LIST_DIR}/ilabelsconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/labelsutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/labelstypes.h
 
     #internals
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3labelsimporter.cpp

@@ -4,9 +4,11 @@
 
 #include "exportlabelsmodel.h"
 
+#include "framework/global/translation.h"
+
 #include "trackedit/trackedittypes.h"
 
-#include "translation.h"
+#include "labelsutils.h"
 
 using namespace au::importexport;
 
@@ -45,14 +47,15 @@ void ExportLabelsModel::init(const QVariant& trackId)
 
     setLabelTracks(labelTracks);
 
-    initDefaultFileType();
-
     setDirectoryPath(configuration()->labelsDirectoryPath().toQString());
+
+    emit currentFileTypeChanged();
 }
 
 void ExportLabelsModel::exportData()
 {
-    muse::io::path_t filePath = m_directoryPath.toStdString() + "/" + m_fileName.toStdString() + "." + m_currentFileTypeCode.toStdString();
+    muse::io::path_t filePath = m_directoryPath.toStdString() + "/" + m_fileName.toStdString() + "."
+                                + fileSuffixFromType(m_currentFileType);
 
     trackedit::TrackIdList selectedTracksIds;
     for (const QVariant& trackId : m_selectedTracks) {
@@ -130,21 +133,13 @@ QVariantList ExportLabelsModel::fileTypes() const
 {
     QVariantList result;
 
-    int index = 0;
-    for (const std::string& filter : labelExporter()->fileFilter()) {
-        result << QVariantMap { { "title", QString::fromStdString(filter) }, { "code", QString::number(index) } };
-        index++;
+    for (const FileFilter& filter : configuration()->fileFilter()) {
+        result << QVariantMap {
+            { "title", QString::fromStdString(filter.title) }, { "type", static_cast<int>(filter.type) }
+            };
     }
 
     return result;
-}
-
-void ExportLabelsModel::initDefaultFileType()
-{
-    QVariantList types = fileTypes();
-    if (!types.empty()) {
-        setCurrentFileTypeCode(types.front().toMap().value("code").toString());
-    }
 }
 
 QString ExportLabelsModel::fileName() const
@@ -177,17 +172,18 @@ void ExportLabelsModel::setDirectoryPath(const QString& path)
     emit directoryPathChanged();
 }
 
-QString ExportLabelsModel::currentFileTypeCode() const
+int ExportLabelsModel::currentFileType() const
 {
-    return m_currentFileTypeCode;
+    return static_cast<int>(m_currentFileType);
 }
 
-void ExportLabelsModel::setCurrentFileTypeCode(const QString& typeCode)
+void ExportLabelsModel::setCurrentFileType(int type)
 {
-    if (m_currentFileTypeCode == typeCode) {
+    FileType fileType = static_cast<FileType>(type);
+    if (m_currentFileType == fileType) {
         return;
     }
 
-    m_currentFileTypeCode = typeCode;
-    emit currentFileTypeCodeChanged();
+    m_currentFileType = fileType;
+    emit currentFileTypeChanged();
 }

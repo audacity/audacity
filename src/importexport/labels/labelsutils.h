@@ -7,8 +7,10 @@
 
 #include "au3-label-track/LabelTrack.h"
 
+#include "labelstypes.h"
+
 namespace au::importexport {
-inline ::LabelFormat labelFormatFromSuffix(const muse::io::path_t& filePath)
+inline ::LabelFormat au3labelFormatFromSuffix(const muse::io::path_t& filePath)
 {
     std::string suffix = muse::io::suffix(filePath);
     if (suffix == "srt") {
@@ -18,5 +20,20 @@ inline ::LabelFormat labelFormatFromSuffix(const muse::io::path_t& filePath)
     }
 
     return ::LabelFormat::TEXT;
+}
+
+inline std::string fileSuffixFromType(FileType fileType)
+{
+    switch (fileType) {
+        case FileType::TEXT:
+            return "txt";
+        case FileType::SUBRIP:
+            return "srt";
+        case FileType::WEBVTT:
+            return "vtt";
+        default:
+            return "";
+    }
+    return "";
 }
 }

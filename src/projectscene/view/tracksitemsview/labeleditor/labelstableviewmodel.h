@@ -41,7 +41,7 @@ class LabelsTableViewModel : public muse::uicomponents::AbstractTableViewModel, 
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction = { this };
     muse::Inject<importexport::ILabelsExporter> labelExporter = { this };
     muse::Inject<importexport::ILabelsImporter> labelsImporter = { this };
-    muse::Inject<importexport::ILabelsConfiguration> labelsConfiguration = { this };
+    muse::Inject<importexport::ILabelsConfiguration> labelsImportExportConfiguration = { this };
 
 public:
     explicit LabelsTableViewModel(QObject* parent = nullptr);

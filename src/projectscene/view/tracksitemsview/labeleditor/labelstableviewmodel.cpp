@@ -28,6 +28,15 @@ using namespace muse;
 using namespace muse::ui;
 using namespace muse::uicomponents;
 
+static std::vector<std::string> importExportFilter(const std::vector<au::importexport::FileFilter>& fileFilters)
+{
+    std::vector<std::string> result;
+    for (const au::importexport::FileFilter& fileFilter : fileFilters) {
+        result.push_back(fileFilter.title);
+    }
+    return result;
+}
+
 LabelsTableViewModel::LabelsTableViewModel(QObject* parent)
     : AbstractTableViewModel(parent)
 {
@@ -565,13 +574,13 @@ QString LabelsTableViewModel::createNewLabelTrack(int currentRow)
 
 io::path_t LabelsTableViewModel::selectFileForExport()
 {
-    std::vector<std::string> filter = labelExporter()->fileFilter();
-    io::path_t defaultDir = labelsConfiguration()->labelsDirectoryPath();
+    std::vector<std::string> filter = importExportFilter(labelsImportExportConfiguration()->fileFilter());
+    io::path_t defaultDir = labelsImportExportConfiguration()->labelsDirectoryPath();
 
     io::path_t filePath = interactive()->selectSavingFileSync(muse::trc("global", "Save"), defaultDir, filter);
 
     if (!filePath.empty()) {
-        labelsConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
+        labelsImportExportConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
     }
 
     return filePath;
@@ -579,13 +588,13 @@ io::path_t LabelsTableViewModel::selectFileForExport()
 
 io::path_t LabelsTableViewModel::selectFileForImport()
 {
-    std::vector<std::string> filter = labelsImporter()->fileFilter();
-    io::path_t defaultDir = labelsConfiguration()->labelsDirectoryPath();
+    std::vector<std::string> filter = importExportFilter(labelsImportExportConfiguration()->fileFilter());
+    io::path_t defaultDir = labelsImportExportConfiguration()->labelsDirectoryPath();
 
     io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("global", "Open"), defaultDir, filter);
 
     if (!filePath.empty()) {
-        labelsConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
+        labelsImportExportConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
     }
 
     return filePath;

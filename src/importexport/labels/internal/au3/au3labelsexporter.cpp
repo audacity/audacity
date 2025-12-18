@@ -55,18 +55,11 @@ muse::Ret Au3LabelsExporter::exportData(const muse::io::path_t& filePath, const 
     textFile.Clear();
 
     for (auto labelTrack: labelTracks) {
-        labelTrack->Export(textFile, labelFormatFromSuffix(filePath));
+        labelTrack->Export(textFile, au3labelFormatFromSuffix(filePath));
     }
 
     textFile.Write();
     textFile.Close();
 
     return muse::make_ret(muse::Ret::Code::Ok);
-}
-
-std::vector<std::string> Au3LabelsExporter::fileFilter()
-{
-    return { muse::trc("importexport", "Text file (*.txt)"),
-             muse::trc("importexport", "SubRip text file (*.srt)"),
-             muse::trc("importexport", "WebVTT file (*.vtt)") };
 }

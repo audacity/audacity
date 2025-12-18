@@ -17,7 +17,5 @@ public:
     virtual ~ILabelsImporter() = default;
 
     virtual muse::Ret importData(const muse::io::path_t& filePath) = 0;
-
-    virtual std::vector<std::string> fileFilter() = 0;
 };
 }

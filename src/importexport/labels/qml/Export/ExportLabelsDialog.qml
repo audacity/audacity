@@ -116,9 +116,9 @@ StyledDialogView {
                     Layout.preferredWidth: prv.dropdownWidth
 
                     textRole: "title"
-                    valueRole: "code"
+                    valueRole: "type"
 
-                    currentIndex: indexOfValue(exportModel.currentFileTypeCode)
+                    currentIndex: indexOfValue(exportModel.currentFileType)
                     model: exportModel.fileTypes
 
                     navigation.name: "FileTypeDropdown"
@@ -129,7 +129,7 @@ StyledDialogView {
                     indeterminateText: ""
 
                     onActivated: function(index, value) {
-                        exportModel.currentFileTypeCode = value
+                        exportModel.currentFileType = value
                     }
                 }
             }

@@ -18,6 +18,8 @@ public:
 
     void init();
 
+    std::vector<FileFilter> fileFilter() const override;
+
     muse::io::path_t labelsDirectoryPath() const override;
     void setLabelsDirectoryPath(const muse::io::path_t& path) override;
 };

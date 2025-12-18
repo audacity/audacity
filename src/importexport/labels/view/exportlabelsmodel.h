@@ -22,7 +22,7 @@ class ExportLabelsModel : public QObject, public muse::async::Asyncable, public 
     Q_PROPERTY(QString directoryPath READ directoryPath WRITE setDirectoryPath NOTIFY directoryPathChanged)
 
     Q_PROPERTY(QVariantList fileTypes READ fileTypes CONSTANT FINAL)
-    Q_PROPERTY(QString currentFileTypeCode READ currentFileTypeCode WRITE setCurrentFileTypeCode NOTIFY currentFileTypeCodeChanged FINAL)
+    Q_PROPERTY(int currentFileType READ currentFileType WRITE setCurrentFileType NOTIFY currentFileTypeChanged FINAL)
 
     Q_PROPERTY(QVariantList labelTracks READ labelTracks NOTIFY labelTracksChanged FINAL)
     Q_PROPERTY(QVariantList selectedTracks READ selectedTracks NOTIFY selectedTracksChanged FINAL)
@@ -54,24 +54,22 @@ public:
     QString directoryPath() const;
     void setDirectoryPath(const QString& path);
 
-    QString currentFileTypeCode() const;
-    void setCurrentFileTypeCode(const QString& typeCode);
+    int currentFileType() const;
+    void setCurrentFileType(int type);
 
     QVariantList fileTypes() const;
 
 signals:
     void fileNameChanged();
     void directoryPathChanged();
-    void currentFileTypeCodeChanged();
+    void currentFileTypeChanged();
 
     void labelTracksChanged();
     void selectedTracksChanged();
 
 private:
-    void initDefaultFileType();
-
     QString m_fileName;
-    QString m_currentFileTypeCode;
+    FileType m_currentFileType = FileType::TEXT;
     QString m_directoryPath;
 
     QVariantList m_labelTracks;
