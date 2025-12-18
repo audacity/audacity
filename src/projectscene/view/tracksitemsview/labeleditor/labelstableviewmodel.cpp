@@ -18,10 +18,18 @@ static const muse::actions::ActionCode NEW_LABEL_TRACK_CODE("new-label-track");
 
 static const int TRACK_COLUMN = 0;
 static const int LABEL_COLUMN = 1;
+
 static const int START_TIME_COLUMN = 2;
+static const std::string START_TIME_COLUMN_NAME = "startTime";
+
 static const int END_TIME_COLUMN = 3;
+static const std::string END_TIME_COLUMN_NAME = "endTime";
+
 static const int LOW_FREQUENCY_COLUMN = 4;
+static const std::string LOW_FREQUENCY_COLUMN_NAME = "lowFrequency";
+
 static const int HIGH_FREQUENCY_COLUMN = 5;
+static const std::string HIGH_FREQUENCY_COLUMN_NAME = "highFrequency";
 
 using namespace au::projectscene;
 using namespace muse;
@@ -67,7 +75,9 @@ QVector<TableViewHeader*> LabelsTableViewModel::makeHorizontalHeaders()
                                                             static_cast<TableViewCellType::Type>(LabelsTableViewCellType::Type::Timecode),
                                                             TableViewCellEditMode::Mode::StartInEdit);
     startTimeHeader->setAvailableFormats(startTimeFormats);
-    startTimeHeader->setCurrentFormatId(QString::number(startTimeModelStub.currentFormat()));
+
+    startTimeHeader->setCurrentFormatId(labelEditorColumnFormat(START_TIME_COLUMN_NAME, startTimeModelStub.currentFormat()));
+    connectToColumnFormatChange(startTimeHeader, START_TIME_COLUMN_NAME);
     hHeaders << startTimeHeader;
 
     static auto endTimeModelStub = au::uicomponents::TimecodeModel();
@@ -77,7 +87,8 @@ QVector<TableViewHeader*> LabelsTableViewModel::makeHorizontalHeaders()
                                                           static_cast<TableViewCellType::Type>(LabelsTableViewCellType::Type::Timecode),
                                                           TableViewCellEditMode::Mode::StartInEdit);
     endTimeHeader->setAvailableFormats(endTimeFormats);
-    endTimeHeader->setCurrentFormatId(QString::number(endTimeModelStub.currentFormat()));
+    endTimeHeader->setCurrentFormatId(labelEditorColumnFormat(END_TIME_COLUMN_NAME, endTimeModelStub.currentFormat()));
+    connectToColumnFormatChange(endTimeHeader, END_TIME_COLUMN_NAME);
     hHeaders << endTimeHeader;
 
     static auto lowFrequencyModelStub = au::uicomponents::FrequencyModel();
@@ -88,7 +99,8 @@ QVector<TableViewHeader*> LabelsTableViewModel::makeHorizontalHeaders()
                                                                static_cast<TableViewCellType::Type>(LabelsTableViewCellType::Type::Frequency),
                                                                TableViewCellEditMode::Mode::StartInEdit);
     lowFrequencyHeader->setAvailableFormats(lowFrequencyFormats);
-    lowFrequencyHeader->setCurrentFormatId(QString::number(lowFrequencyModelStub.currentFormat()));
+    lowFrequencyHeader->setCurrentFormatId(labelEditorColumnFormat(LOW_FREQUENCY_COLUMN_NAME, lowFrequencyModelStub.currentFormat()));
+    connectToColumnFormatChange(lowFrequencyHeader, LOW_FREQUENCY_COLUMN_NAME);
     hHeaders << lowFrequencyHeader;
 
     static auto highFrequencyModelStub = au::uicomponents::FrequencyModel();
@@ -99,7 +111,8 @@ QVector<TableViewHeader*> LabelsTableViewModel::makeHorizontalHeaders()
                                                                                                      Frequency),
                                                                 TableViewCellEditMode::Mode::StartInEdit);
     highFrequencyHeader->setAvailableFormats(highFrequencyFormats);
-    highFrequencyHeader->setCurrentFormatId(QString::number(highFrequencyModelStub.currentFormat()));
+    highFrequencyHeader->setCurrentFormatId(labelEditorColumnFormat(HIGH_FREQUENCY_COLUMN_NAME, highFrequencyModelStub.currentFormat()));
+    connectToColumnFormatChange(highFrequencyHeader, HIGH_FREQUENCY_COLUMN_NAME);
     hHeaders << highFrequencyHeader;
 
     return hHeaders;
@@ -152,6 +165,19 @@ QVector<QVector<TableViewCell*> > LabelsTableViewModel::makeTable()
     }
 
     return table;
+}
+
+QString LabelsTableViewModel::labelEditorColumnFormat(const std::string& columnName, int defaultValue) const
+{
+    int result = configuration()->labelEditorColumnFormat(columnName);
+    return QString::number(result == -1 ? defaultValue : result);
+}
+
+void LabelsTableViewModel::connectToColumnFormatChange(muse::uicomponents::TableViewHeader* columnHeader, const std::string& columnName)
+{
+    connect(columnHeader, &TableViewHeader::currentFormatIdChanged, [=](){
+        configuration()->setLabelEditorColumnFormat(columnName, columnHeader->currentFormatId().toInt());
+    });
 }
 
 void LabelsTableViewModel::handleTrackMenuItem(int row, int column, const QString& itemId)

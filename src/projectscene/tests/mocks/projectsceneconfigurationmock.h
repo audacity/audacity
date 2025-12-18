@@ -58,5 +58,8 @@ public:
     MOCK_METHOD(bool, playbackOnRulerClickEnabled, (), (const, override));
     MOCK_METHOD(void, setPlaybackOnRulerClickEnabled, (bool enabled), (override));
     MOCK_METHOD(muse::async::Notification, playbackOnRulerClickEnabledChanged, (), (const, override));
+
+    MOCK_METHOD(int, labelEditorColumnFormat, (const std::string& columnName), (const, override));
+    MOCK_METHOD(void, setLabelEditorColumnFormat, (const std::string& columnName, int format), (const, override));
 };
 }

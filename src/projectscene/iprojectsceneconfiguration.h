@@ -59,5 +59,8 @@ public:
     virtual bool playbackOnRulerClickEnabled() const = 0;
     virtual void setPlaybackOnRulerClickEnabled(bool enabled) = 0;
     virtual muse::async::Notification playbackOnRulerClickEnabledChanged() const = 0;
+
+    virtual int labelEditorColumnFormat(const std::string& columnName) const = 0;
+    virtual void setLabelEditorColumnFormat(const std::string& columnName, int format) const = 0;
 };
 }
