@@ -66,6 +66,10 @@ Rectangle {
         id: playbackState
     }
 
+    PlayRegionModel {
+        id: playRegionModel
+    }
+
     ViewTracksListModel {
         id: tracksModel
 
@@ -1041,6 +1045,8 @@ Rectangle {
         }
 
         Rectangle {
+            id: snapGuideline
+
             anchors.top: content.top
             anchors.bottom: content.bottom
 
@@ -1077,6 +1083,38 @@ Rectangle {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
         }
+    }
+
+    Rectangle {
+        id: loopRegionGuidelineLeft
+
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        x: timeline.context.timeToPosition(playRegionModel.start) + content.x
+        z: timelineHeader.z + 1
+
+        width: 1
+
+        color: "#FFFFFF"
+        opacity: 0.8
+
+        visible: playRegionModel.active
+    }
+
+    Rectangle {
+        id: loopRegionGuidelineRight
+
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        x: timeline.context.timeToPosition(playRegionModel.end) + content.x
+        z: timelineHeader.z + 1
+
+        width: 1
+
+        color: "#FFFFFF"
+        opacity: 0.8
+
+        visible: playRegionModel.active
     }
 
     ImportDropArea {
