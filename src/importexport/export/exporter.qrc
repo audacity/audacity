@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/Export/ExportDialog.qml</file>
-        <file>qml/Export/internal/BaseSection.qml</file>
         <file>qml/Export/internal/FormatAndCodecSection.qml</file>
         <file>qml/Export/internal/GeneralOptionsSection.qml</file>
         <file>qml/Export/internal/FLACOptionsSection.qml</file>

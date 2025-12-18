@@ -2,6 +2,5 @@
     <qresource prefix="/">
         <file>qml/Export/ExportLabelsDialog.qml</file>
         <file>qml/Export/internal/LabelTracksSelectionView.qml</file>
-        <file>qml/Export/internal/BaseSection.qml</file>
     </qresource>
 </RCC>

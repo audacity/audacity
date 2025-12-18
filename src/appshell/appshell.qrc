@@ -100,7 +100,6 @@
         <file>qml/platform/mac/Main.qml</file>
         <file>qml/platform/win/Main.qml</file>
         <file>resources/win_opengl_buglist.json</file>
-        <file>qml/Preferences/internal/BaseSection.qml</file>
         <file>qml/Preferences/internal/SpectrogramBaseSection.qml</file>
         <file>qml/Preferences/internal/LanguagesSection.qml</file>
         <file>qml/Preferences/internal/NumberFormatSection.qml</file>
