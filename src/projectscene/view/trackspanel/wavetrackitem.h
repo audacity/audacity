@@ -7,7 +7,6 @@
 #include "playback/itrackplaybackcontrol.h"
 #include "playback/iaudiodevicesprovider.h"
 #include "record/irecord.h"
-#include "trackedit/iprojecthistory.h"
 
 #include "trackitem.h"
 
@@ -33,7 +32,6 @@ class WaveTrackItem : public TrackItem
     muse::Inject<playback::IPlayback> playback;
     muse::Inject<record::IRecord> record;
     muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     explicit WaveTrackItem(QObject* parent = nullptr);
