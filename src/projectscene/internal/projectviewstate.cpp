@@ -527,6 +527,16 @@ muse::ValCh<bool> ProjectViewState::splitToolEnabled() const
     return m_splitToolEnabled;
 }
 
+void ProjectViewState::setSpectrogramToggledTrackMap(const SpectrogramToggledTrackMap& map)
+{
+    m_spectrogramToggledTrackMap.set(map);
+}
+
+muse::ValCh<SpectrogramToggledTrackMap> ProjectViewState::spectrogramToggledTrackMap() const
+{
+    return m_spectrogramToggledTrackMap;
+}
+
 muse::ValCh<std::pair<float, float> > ProjectViewState::verticalDisplayBounds(const trackedit::TrackId& trackId) const
 {
     auto it = m_tracks.find(trackId);

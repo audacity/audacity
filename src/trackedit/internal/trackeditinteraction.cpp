@@ -76,6 +76,11 @@ bool TrackeditInteraction::changeTracksColor(const TrackIdList& tracksIds, const
     return m_interaction->changeTracksColor(tracksIds, color);
 }
 
+bool TrackeditInteraction::toggleGlobalSpectrogramView()
+{
+    return m_interaction->toggleGlobalSpectrogramView();
+}
+
 bool TrackeditInteraction::changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
 {
     return m_interaction->changeAudioTrackViewType(trackId, viewType);

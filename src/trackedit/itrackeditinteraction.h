@@ -41,6 +41,7 @@ public:
     virtual bool resetClipSpeed(const ClipKey& clipKey) = 0;
     virtual bool changeClipColor(const ClipKey& clipKey, const std::string& color) = 0;
     virtual bool changeTracksColor(const TrackIdList& tracksIds, const std::string& color) = 0;
+    virtual bool toggleGlobalSpectrogramView() = 0;
     virtual bool changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;

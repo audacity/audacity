@@ -44,6 +44,9 @@ public:
     virtual void setSplitToolEnabled(bool enabled) = 0;
     virtual muse::ValCh<bool> splitToolEnabled() const = 0;
 
+    virtual muse::ValCh<SpectrogramToggledTrackMap> spectrogramToggledTrackMap() const = 0;
+    virtual void setSpectrogramToggledTrackMap(const SpectrogramToggledTrackMap& map) = 0;
+
     virtual muse::ValCh<std::pair<float, float> > verticalDisplayBounds(const trackedit::TrackId& trackId) const = 0;
     virtual void zoomInVertically(const trackedit::TrackId& trackId) = 0;
     virtual void zoomOutVertically(const trackedit::TrackId& trackId) = 0;

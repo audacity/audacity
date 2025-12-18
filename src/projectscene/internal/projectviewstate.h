@@ -59,6 +59,9 @@ public:
     void setSplitToolEnabled(bool enabled) override;
     muse::ValCh<bool> splitToolEnabled() const override;
 
+    void setSpectrogramToggledTrackMap(const SpectrogramToggledTrackMap& map) override;
+    muse::ValCh<SpectrogramToggledTrackMap> spectrogramToggledTrackMap() const override;
+
     muse::ValCh<std::pair<float, float> > verticalDisplayBounds(const trackedit::TrackId& trackId) const override;
     void zoomInVertically(const trackedit::TrackId& trackId) override;
     void zoomOutVertically(const trackedit::TrackId& trackId) override;
@@ -138,6 +141,7 @@ private:
     muse::ValCh<Snap> m_snap;
 
     muse::ValCh<bool> m_splitToolEnabled;
+    muse::ValCh<SpectrogramToggledTrackMap> m_spectrogramToggledTrackMap;
 
     muse::ValCh<double> m_mouseYPosition;
 
