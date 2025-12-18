@@ -237,6 +237,12 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Half-wave"),
              TranslatableString("action", "Half-wave"),
              Checkable::Yes
+             ),
+    UiAction("toggle-label-editor",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Show label editor"),
+             TranslatableString("action", "Show label editor")
              )
 };
 

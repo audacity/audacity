@@ -480,9 +480,9 @@ bool TrackeditOperationController::newStereoTrack()
     return false;
 }
 
-bool TrackeditOperationController::newLabelTrack()
+muse::RetVal<TrackId> TrackeditOperationController::newLabelTrack(const muse::String& title)
 {
-    return tracksInteraction()->newLabelTrack();
+    return tracksInteraction()->newLabelTrack(title);
 }
 
 bool TrackeditOperationController::deleteTracks(const TrackIdList& trackIds)
@@ -661,6 +661,16 @@ bool TrackeditOperationController::resampleTracks(const TrackIdList& tracksIds, 
     return false;
 }
 
+muse::RetVal<LabelKey> TrackeditOperationController::addLabel(const TrackId& toTrackId)
+{
+    muse::RetVal<LabelKey> retVal = labelsInteraction()->addLabel(toTrackId);
+    if (retVal.ret) {
+        projectHistory()->pushHistoryState("Label added", "Add label");
+    }
+
+    return retVal;
+}
+
 bool TrackeditOperationController::addLabelToSelection()
 {
     if (labelsInteraction()->addLabelToSelection()) {
@@ -674,6 +684,24 @@ bool TrackeditOperationController::changeLabelTitle(const LabelKey& labelKey, co
 {
     if (labelsInteraction()->changeLabelTitle(labelKey, title)) {
         projectHistory()->pushHistoryState("Label title changed", "Change label title");
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::changeLabelLowFrequency(const LabelKey& labelKey, double frequency)
+{
+    if (labelsInteraction()->changeLabelLowFrequency(labelKey, frequency)) {
+        projectHistory()->pushHistoryState("Label low frequency changed", "Change label low frequency");
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::changeLabelHighFrequency(const LabelKey& labelKey, double frequency)
+{
+    if (labelsInteraction()->changeLabelHighFrequency(labelKey, frequency)) {
+        projectHistory()->pushHistoryState("Label high frequency changed", "Change label high frequency");
         return true;
     }
     return false;
@@ -721,11 +749,20 @@ bool TrackeditOperationController::removeLabels(const LabelKeyList& labelKeys, b
 
 bool TrackeditOperationController::moveLabels(secs_t timePositionOffset, bool completed)
 {
-    bool success = labelsInteraction()->moveLabels(timePositionOffset, completed);
+    bool success = labelsInteraction()->moveLabels(timePositionOffset);
     if (success && completed) {
-        projectHistory()->pushHistoryState("Label moved", "Move label");
+        projectHistory()->pushHistoryState("Labels moved", "Move labels");
     }
     return success;
+}
+
+muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)
+{
+    muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabels(labelKeys, toTrackId);
+    if (retVal.ret && completed) {
+        projectHistory()->pushHistoryState("Labels moved", "Move labels");
+    }
+    return retVal;
 }
 
 bool TrackeditOperationController::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)

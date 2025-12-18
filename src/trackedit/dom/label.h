@@ -17,6 +17,8 @@ struct Label {
     muse::draw::Color color;
     double startTime = 0.0;
     double endTime = 0.0;
+    double lowFrequency = 0.0;
+    double highFrequency = 0.0;
 
     inline bool isValid() const { return key.isValid(); }
 };

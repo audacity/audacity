@@ -55,6 +55,8 @@
 #include "view/tracksitemsview/au3/samplespainter.h"
 #include "view/tracksitemsview/mousehelper.h"
 #include "view/tracksitemsview/dropcontroller.h"
+#include "view/tracksitemsview/labeleditor/labelstableviewmodel.h"
+#include "view/tracksitemsview/labeleditor/addnewlabeltrackmodel.h"
 
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
@@ -121,6 +123,10 @@ void ProjectSceneModule::resolveImports()
                            "Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchAndSpeedChangeDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://projectscene/insertsilence"),
                            "Audacity/ProjectScene/common/InsertSilence.qml");
+        ir->registerQmlUri(muse::Uri("audacity://projectscene/openlabeleditor"),
+                           "Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://projectscene/addnewlabeltrack"),
+                           "Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml");
     }
 }
 
@@ -177,6 +183,10 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<PitchAndSpeedChangeModel>("Audacity.ProjectScene", 1, 0, "PitchAndSpeedChangeModel");
     qmlRegisterType<SplitToolController>("Audacity.ProjectScene", 1, 0, "SplitToolController");
     qmlRegisterType<DropController>("Audacity.ProjectScene", 1, 0, "DropController");
+    qmlRegisterType<LabelsTableViewModel>("Audacity.ProjectScene", 1, 0, "LabelsTableViewModel");
+    qmlRegisterUncreatableMetaObject(LabelsTableViewCellType::staticMetaObject,
+                                     "Audacity.ProjectScene", 1, 0, "LabelsTableViewCellType", "");
+    qmlRegisterType<AddNewLabelTrackModel>("Audacity.ProjectScene", 1, 0, "AddNewLabelTrackModel");
 
     // timeline
     qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");

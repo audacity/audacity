@@ -44,10 +44,14 @@ public:
     LabelStruct(const SelectedRegion& region, const wxString& aTitle);
     // Copies region but then overwrites other times
     LabelStruct(const SelectedRegion& region, double t0, double t1, const wxString& aTitle);
+
     const SelectedRegion& getSelectedRegion() const { return selectedRegion; }
     double getDuration() const { return selectedRegion.duration(); }
     double getT0() const { return selectedRegion.t0(); }
     double getT1() const { return selectedRegion.t1(); }
+    double getLowFrequency() const { return selectedRegion.f0(); }
+    double getHighFrequency() const { return selectedRegion.f1(); }
+
     // Returns true iff the label got inverted:
     bool AdjustEdge(int iEdge, double fNewTime);
     void MoveLabel(int iEdge, double fNewTime);

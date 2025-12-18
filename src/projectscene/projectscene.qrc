@@ -67,10 +67,13 @@
         <file>qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/SpeedSection.qml</file>
         <file>qml/Audacity/ProjectScene/historypanel/HistoryPanel.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml</file>
-        <file>qml/Audacity/ProjectScene/toolbars/internal/DropdownWithTitle.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/PlayRegion.qml</file>
         <file>qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml</file>
         <file>qml/Audacity/ProjectScene/trackruler/WaveformRuler.qml</file>
         <file>qml/Audacity/ProjectScene/trackruler/SpectrogramRuler.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorDialog.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorLabelsTableView.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml</file>
     </qresource>
 </RCC>

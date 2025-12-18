@@ -6,17 +6,17 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-#include "../../ilabelsexporter.h"
+#include "../../ilabelsimporter.h"
 
 namespace au::importexport {
-class Au3LabelsExporter : public ILabelsExporter, public muse::Injectable
+class Au3LabelsImporter : public ILabelsImporter, public muse::Injectable
 {
     muse::Inject<context::IGlobalContext> globalContext = { this };
 
 public:
-    Au3LabelsExporter() = default;
+    Au3LabelsImporter() = default;
 
-    muse::Ret exportData(const muse::io::path_t& filePath, const trackedit::TrackIdList& includedLabelTracksIds = {}) override;
+    muse::Ret importData(const muse::io::path_t& filePath) override;
 
     std::vector<std::string> fileFilter() override;
 };

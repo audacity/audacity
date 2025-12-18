@@ -53,14 +53,15 @@ RowLayout {
             property int margin: 6
 
             width: row.width + margin * 2
-            height: row.height
+            height: parent.height
 
             Row {
                 id: row
 
                 anchors.left: parent.left
                 anchors.leftMargin: parent.margin
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
 
                 spacing: 0
 
@@ -68,6 +69,7 @@ RowLayout {
                     model: root.model
 
                     delegate: NumericField {
+                        height: row.height
                         value: symbol
 
                         isSelected: model.index === root.model.currentEditedFieldIndex
@@ -103,4 +105,3 @@ RowLayout {
         }
     }
 }
-

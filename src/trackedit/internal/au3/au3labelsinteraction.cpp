@@ -15,6 +15,8 @@
 
 #include "au3trackdata.h"
 
+#include "trackediterrors.h"
+
 #include "defer.h"
 #include "log.h"
 
@@ -35,6 +37,26 @@ au::au3::Au3Project& Au3LabelsInteraction::projectRef() const
 au::context::IPlaybackStatePtr Au3LabelsInteraction::playbackState() const
 {
     return globalContext()->playbackState();
+}
+
+muse::RetVal<LabelKey> Au3LabelsInteraction::addLabel(const TrackId& toTrackId)
+{
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(toTrackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return muse::RetVal<LabelKey>(make_ret(Err::TrackNotFound));
+    }
+
+    SelectedRegion selectedRegion;
+    selectedRegion.setTimes(0.0, 0.0);
+
+    int64_t newLabelId = labelTrack->AddLabel(selectedRegion, wxEmptyString);
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelAdded(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, newLabelId)));
+    }
+
+    return muse::RetVal<LabelKey>::make_ok({ labelTrack->GetId(), newLabelId });
 }
 
 bool Au3LabelsInteraction::addLabelToSelection()
@@ -112,6 +134,56 @@ bool Au3LabelsInteraction::changeLabelTitle(const LabelKey& labelKey, const muse
     label->title = wxFromString(title);
 
     LOGD() << "changed title of label: " << labelKey.itemId << ", track: " << labelKey.trackId;
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, label));
+    }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::changeLabelLowFrequency(const LabelKey& labelKey, double frequency)
+{
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
+    IF_ASSERT_FAILED(label) {
+        return false;
+    }
+
+    label->selectedRegion.setF0(frequency);
+
+    LOGD() << "changed low frequency of label: " << labelKey.itemId << ", track: " << labelKey.trackId;
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, label));
+    }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::changeLabelHighFrequency(const LabelKey& labelKey, double frequency)
+{
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
+    IF_ASSERT_FAILED(label) {
+        return false;
+    }
+
+    label->selectedRegion.setF1(frequency);
+
+    LOGD() << "changed high frequency of label: " << labelKey.itemId << ", track: " << labelKey.trackId;
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
@@ -232,10 +304,8 @@ ITrackDataPtr Au3LabelsInteraction::copyLabel(const LabelKey& labelKey)
     return std::make_shared<Au3TrackData>(std::move(track));
 }
 
-bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset, bool completed)
+bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset)
 {
-    UNUSED(completed);
-
     if (muse::RealIsEqual(timePositionOffset, 0.0)) {
         return true;
     }
@@ -294,6 +364,62 @@ bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset, bool completed)
     }
 
     return true;
+}
+
+muse::RetVal<LabelKeyList> Au3LabelsInteraction::moveLabels(const LabelKeyList& labelKeys, const TrackId& toTrackId)
+{
+    muse::RetVal<LabelKeyList> result;
+    result.ret = make_ret(Err::NoError);
+
+    if (labelKeys.empty()) {
+        return result;
+    }
+
+    Au3LabelTrack* toLabelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(toTrackId));
+    IF_ASSERT_FAILED(toLabelTrack) {
+        result.ret = make_ret(Err::TrackNotFound);
+        return result;
+    }
+
+    const auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        result.ret = make_ret(Err::UnknownError);
+        return result;
+    }
+
+    std::vector<Au3LabelTrack*> changedTracks;
+    for (const auto& labelKey : labelKeys) {
+        Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelKey.trackId));
+        IF_ASSERT_FAILED(labelTrack) {
+            result.val.push_back(labelKey);
+            continue;
+        }
+
+        Au3Label* au3Label = labelTrack->GetLabelById(labelKey.itemId);
+        IF_ASSERT_FAILED(au3Label) {
+            result.val.push_back(labelKey);
+            continue;
+        }
+
+        int64_t newLabelId = toLabelTrack->AddLabel(au3Label->getSelectedRegion(), au3Label->title);
+        labelTrack->DeleteLabelById(au3Label->GetId());
+
+        changedTracks.push_back(labelTrack);
+        changedTracks.push_back(toLabelTrack);
+
+        project->notifyAboutLabelAdded(DomConverter::label(toLabelTrack, DomAccessor::findLabel(toLabelTrack, newLabelId)));
+
+        LabelKey newLabelKey = labelKey;
+        newLabelKey.trackId = toLabelTrack->GetId();
+        newLabelKey.itemId = newLabelId;
+        result.val.push_back(newLabelKey);
+    }
+
+    for (const auto& changedTrack : changedTracks) {
+        project->notifyAboutTrackChanged(DomConverter::track(changedTrack));
+    }
+
+    return result;
 }
 
 bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)
