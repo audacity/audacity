@@ -48,6 +48,9 @@ using TrackItemKeyList = std::vector<TrackItemKey>;
 using ClipKey = TrackItemKey;
 using ClipKeyList = TrackItemKeyList;
 
+// Spectral selection
+constexpr double SPECTRAL_SELECTION_UNDEFINED_FREQUENCY = -1.0;
+
 using LabelKey = TrackItemKey;
 using LabelKeyList = TrackItemKeyList;
 

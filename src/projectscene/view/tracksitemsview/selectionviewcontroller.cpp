@@ -429,13 +429,16 @@ void SelectionViewController::setSpectralSelection(double y1, double y2, bool co
 
 double SelectionViewController::yToFrequency(double y, const trackedit::TrackId& trackId) const
 {
-    // TODO: This needs to be implemented properly to convert Y coordinates to frequency
-    // For now, return a placeholder that will need to be updated with actual conversion logic
-    // that takes into account the spectrogram scale type, min/max frequency, and track height
+    // TODO: This needs to be properly implemented with the following improvements:
+    // 1. Get actual min/max frequency from Au3SpectrogramSettings for this track
+    // 2. Apply the proper scale transformation (linear, log, mel, bark, ERB, period)
+    // 3. Handle stereo tracks correctly (consider channel split position)
+    // 4. Account for the spectrogram's minFreq and maxFreq settings
+    // For now, this uses a simple linear mapping with reasonable defaults
     
     IProjectViewStatePtr vs = viewState();
     if (!vs) {
-        return -1.0;
+        return trackedit::SPECTRAL_SELECTION_UNDEFINED_FREQUENCY;
     }
 
     int trackVertPos = vs->trackVerticalPosition(trackId);
@@ -447,14 +450,13 @@ double SelectionViewController::yToFrequency(double y, const trackedit::TrackId&
     // Clamp to [0, 1]
     relativeY = std::max(0.0, std::min(1.0, relativeY));
     
-    // For now, use a simple linear mapping to frequency range
-    // In reality, this should use the spectrogram's scale (linear, log, mel, etc.)
-    // and the track's min/max frequency settings
-    constexpr double minFreq = 0.0;
-    constexpr double maxFreq = 20000.0;
+    // Use common default frequency range for spectrograms
+    // These should ideally come from the track's spectrogram settings
+    constexpr double DEFAULT_MIN_FREQ = 0.0;
+    constexpr double DEFAULT_MAX_FREQ = 20000.0;
     
-    // Invert Y (top = high frequency, bottom = low frequency)
-    double frequency = maxFreq - (relativeY * (maxFreq - minFreq));
+    // Invert Y coordinate (top of view = high frequency, bottom = low frequency)
+    double frequency = DEFAULT_MAX_FREQ - (relativeY * (DEFAULT_MAX_FREQ - DEFAULT_MIN_FREQ));
     
     return frequency;
 }

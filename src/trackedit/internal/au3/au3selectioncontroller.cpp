@@ -899,9 +899,8 @@ muse::async::Channel<double> Au3SelectionController::spectralSelectionEndFrequen
 
 bool Au3SelectionController::hasSpectralSelection() const
 {
-    constexpr double UndefinedFrequency = -1.0;
-    return m_spectralSelectionStartFrequency.val != UndefinedFrequency
-           && m_spectralSelectionEndFrequency.val != UndefinedFrequency
+    return m_spectralSelectionStartFrequency.val != SPECTRAL_SELECTION_UNDEFINED_FREQUENCY
+           && m_spectralSelectionEndFrequency.val != SPECTRAL_SELECTION_UNDEFINED_FREQUENCY
            && m_spectralSelectionStartFrequency.val != m_spectralSelectionEndFrequency.val;
 }
 
@@ -909,14 +908,12 @@ void Au3SelectionController::resetSpectralSelection()
 {
     MYLOG() << "resetSpectralSelection";
 
-    constexpr double UndefinedFrequency = -1.0;
-    
     auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
-    selectedRegion.setF0(UndefinedFrequency);
-    selectedRegion.setF1(UndefinedFrequency);
+    selectedRegion.setF0(SPECTRAL_SELECTION_UNDEFINED_FREQUENCY);
+    selectedRegion.setF1(SPECTRAL_SELECTION_UNDEFINED_FREQUENCY);
 
-    m_spectralSelectionStartFrequency.set(UndefinedFrequency, true);
-    m_spectralSelectionEndFrequency.set(UndefinedFrequency, true);
+    m_spectralSelectionStartFrequency.set(SPECTRAL_SELECTION_UNDEFINED_FREQUENCY, true);
+    m_spectralSelectionEndFrequency.set(SPECTRAL_SELECTION_UNDEFINED_FREQUENCY, true);
 }
 
 void Au3SelectionController::updateSelectionController()
