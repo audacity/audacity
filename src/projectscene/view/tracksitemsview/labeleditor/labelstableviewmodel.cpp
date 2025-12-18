@@ -508,20 +508,16 @@ bool LabelsTableViewModel::changeLabelStartTime(int row, const Val& value)
 
     trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
 
-    bool ok = trackeditInteraction()->stretchLabelLeft(labelKey, value.toDouble(), true /* completed */);
-    if (ok) {
-        //! NOTE: When stretching, the beginning and end may switch places, so let's update them
-        const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    TableViewCell* endTimeCell = findCell(row, END_TIME_COLUMN);
 
-        const trackedit::Label actualLabel = project->label(labelKey);
-
-        cell->setValue(Val(actualLabel.startTime));
-
-        TableViewCell* endTimeCell = findCell(row, END_TIME_COLUMN);
-        endTimeCell->setValue(Val(actualLabel.endTime));
+    //! NOTE: correct the right side so that the left side is not higher than the right
+    if (muse::RealIsEqualOrLess(endTimeCell->value().toDouble(), value.toDouble())) {
+        //! NOTE: without push to history
+        labelsInteraction()->stretchLabelRight(labelKey, value.toDouble(), true /* completed */);
+        endTimeCell->setValue(value);
     }
 
-    return ok;
+    return trackeditInteraction()->stretchLabelLeft(labelKey, value.toDouble(), true /* completed */);
 }
 
 bool LabelsTableViewModel::changeLabelEndTime(int row, const Val& value)
@@ -538,20 +534,16 @@ bool LabelsTableViewModel::changeLabelEndTime(int row, const Val& value)
 
     trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
 
-    bool ok = trackeditInteraction()->stretchLabelRight(labelKey, value.toDouble(), true /* completed */);
-    if (ok) {
-        //! NOTE: When stretching, the beginning and end may switch places, so let's update them
-        const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    TableViewCell* startTimeCell = findCell(row, START_TIME_COLUMN);
 
-        const trackedit::Label actualLabel = project->label(labelKey);
-
-        TableViewCell* startTimeCell = findCell(row, START_TIME_COLUMN);
-        startTimeCell->setValue(Val(actualLabel.startTime));
-
-        cell->setValue(Val(actualLabel.endTime));
+    //! NOTE: correct the left side so that the right side is not lower than the left
+    if (muse::RealIsEqualOrMore(startTimeCell->value().toDouble(), value.toDouble())) {
+        //! NOTE: without push to history
+        labelsInteraction()->stretchLabelLeft(labelKey, value.toDouble(), true /* completed */);
+        startTimeCell->setValue(value);
     }
 
-    return ok;
+    return trackeditInteraction()->stretchLabelRight(labelKey, value.toDouble(), true /* completed */);
 }
 
 bool LabelsTableViewModel::changeLabelLowFrequency(int row, const Val& value)

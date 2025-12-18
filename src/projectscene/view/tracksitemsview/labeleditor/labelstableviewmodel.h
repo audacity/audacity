@@ -9,6 +9,7 @@
 #include "iinteractive.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/itrackeditinteraction.h"
+#include "trackedit/ilabelsinteraction.h"
 #include "importexport/labels/ilabelsexporter.h"
 #include "importexport/labels/ilabelsimporter.h"
 #include "importexport/labels/ilabelsconfiguration.h"
@@ -40,6 +41,7 @@ class LabelsTableViewModel : public muse::uicomponents::AbstractTableViewModel, 
     muse::Inject<muse::IInteractive> interactive = { this };
     muse::Inject<context::IGlobalContext> globalContext = { this };
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction = { this };
+    muse::Inject<trackedit::ILabelsInteraction> labelsInteraction = { this };
     muse::Inject<importexport::ILabelsExporter> labelExporter = { this };
     muse::Inject<importexport::ILabelsImporter> labelsImporter = { this };
     muse::Inject<importexport::ILabelsConfiguration> labelsImportExportConfiguration = { this };
