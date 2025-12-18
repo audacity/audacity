@@ -43,6 +43,8 @@ void Au3SelectionController::init()
             auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
             m_selectedStartTime.set(selectedRegion.t0(), true);
             m_selectedEndTime.set(selectedRegion.t1(), true);
+            m_spectralSelectionStartFrequency.set(selectedRegion.f0(), true);
+            m_spectralSelectionEndFrequency.set(selectedRegion.f1(), true);
 
             auto& restorer = SelectionRestorer::Get(projectRef());
             restorer.selectionGetter = [this] {
@@ -577,6 +579,7 @@ void Au3SelectionController::resetDataSelection()
     m_selectedStartTime.set(initialPlaybackPosition, true);
     m_selectedEndTime.set(initialPlaybackPosition, true);
 
+    resetSpectralSelection();
     setClipsIntersectingRangeSelection({});
 }
 
@@ -850,6 +853,70 @@ secs_t Au3SelectionController::selectionStartTime() const
 void Au3SelectionController::setSelectionStartTime(secs_t time)
 {
     m_selectionStartTime.set(time, true);
+}
+
+// spectral selection
+
+double Au3SelectionController::spectralSelectionStartFrequency() const
+{
+    return m_spectralSelectionStartFrequency.val;
+}
+
+void Au3SelectionController::setSpectralSelectionStartFrequency(double frequency, bool complete)
+{
+    MYLOG() << "spectral start frequency: " << frequency << ", complete: " << complete;
+
+    auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
+    selectedRegion.setF0(frequency);
+
+    m_spectralSelectionStartFrequency.set(frequency, complete);
+}
+
+muse::async::Channel<double> Au3SelectionController::spectralSelectionStartFrequencyChanged() const
+{
+    return m_spectralSelectionStartFrequency.changed;
+}
+
+double Au3SelectionController::spectralSelectionEndFrequency() const
+{
+    return m_spectralSelectionEndFrequency.val;
+}
+
+void Au3SelectionController::setSpectralSelectionEndFrequency(double frequency, bool complete)
+{
+    MYLOG() << "spectral end frequency: " << frequency << ", complete: " << complete;
+
+    auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
+    selectedRegion.setF1(frequency);
+
+    m_spectralSelectionEndFrequency.set(frequency, complete);
+}
+
+muse::async::Channel<double> Au3SelectionController::spectralSelectionEndFrequencyChanged() const
+{
+    return m_spectralSelectionEndFrequency.changed;
+}
+
+bool Au3SelectionController::hasSpectralSelection() const
+{
+    constexpr double UndefinedFrequency = -1.0;
+    return m_spectralSelectionStartFrequency.val != UndefinedFrequency
+           && m_spectralSelectionEndFrequency.val != UndefinedFrequency
+           && m_spectralSelectionStartFrequency.val != m_spectralSelectionEndFrequency.val;
+}
+
+void Au3SelectionController::resetSpectralSelection()
+{
+    MYLOG() << "resetSpectralSelection";
+
+    constexpr double UndefinedFrequency = -1.0;
+    
+    auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
+    selectedRegion.setF0(UndefinedFrequency);
+    selectedRegion.setF1(UndefinedFrequency);
+
+    m_spectralSelectionStartFrequency.set(UndefinedFrequency, true);
+    m_spectralSelectionEndFrequency.set(UndefinedFrequency, true);
 }
 
 void Au3SelectionController::updateSelectionController()

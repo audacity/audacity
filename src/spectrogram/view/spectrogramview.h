@@ -25,6 +25,8 @@ class SpectrogramView : public QQuickPaintedItem, public muse::async::Asyncable
     Q_PROPERTY(double frameEndTime READ frameEndTime WRITE setFrameEndTime NOTIFY frameEndTimeChanged FINAL)
     Q_PROPERTY(double selectionStartTime READ selectionStartTime WRITE setSelectionStartTime NOTIFY selectionStartTimeChanged FINAL)
     Q_PROPERTY(double selectionEndTime READ selectionEndTime WRITE setSelectionEndTime NOTIFY selectionEndTimeChanged FINAL)
+    Q_PROPERTY(double spectralSelectionStartFrequency READ spectralSelectionStartFrequency WRITE setSpectralSelectionStartFrequency NOTIFY spectralSelectionStartFrequencyChanged FINAL)
+    Q_PROPERTY(double spectralSelectionEndFrequency READ spectralSelectionEndFrequency WRITE setSpectralSelectionEndFrequency NOTIFY spectralSelectionEndFrequencyChanged FINAL)
 
     muse::Inject<ISpectrogramPainter> spectrogramPainter;
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -60,6 +62,12 @@ public:
     double selectionEndTime() const { return m_selectionEndTime; }
     void setSelectionEndTime(double time);
 
+    double spectralSelectionStartFrequency() const { return m_spectralSelectionStartFrequency; }
+    void setSpectralSelectionStartFrequency(double frequency);
+
+    double spectralSelectionEndFrequency() const { return m_spectralSelectionEndFrequency; }
+    void setSpectralSelectionEndFrequency(double frequency);
+
 signals:
     void clipIdChanged();
     void trackIdChanged();
@@ -70,6 +78,8 @@ signals:
     void frameEndTimeChanged();
     void selectionStartTimeChanged();
     void selectionEndTimeChanged();
+    void spectralSelectionStartFrequencyChanged();
+    void spectralSelectionEndFrequencyChanged();
 
 private:
     void paint(QPainter* painter) override;
@@ -85,5 +95,7 @@ private:
     double m_frameEndTime = 0.0;
     double m_selectionStartTime = 0.0;
     double m_selectionEndTime = 0.0;
+    double m_spectralSelectionStartFrequency = -1.0;
+    double m_spectralSelectionEndFrequency = -1.0;
 };
 }

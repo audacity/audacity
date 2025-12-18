@@ -91,6 +91,18 @@ public:
     virtual trackedit::secs_t selectionStartTime() const = 0;
     virtual void setSelectionStartTime(trackedit::secs_t time) = 0;
 
+    // spectral selection
+    virtual double spectralSelectionStartFrequency() const = 0;
+    virtual void setSpectralSelectionStartFrequency(double frequency, bool complete) = 0;
+    virtual muse::async::Channel<double> spectralSelectionStartFrequencyChanged() const = 0;
+
+    virtual double spectralSelectionEndFrequency() const = 0;
+    virtual void setSpectralSelectionEndFrequency(double frequency, bool complete) = 0;
+    virtual muse::async::Channel<double> spectralSelectionEndFrequencyChanged() const = 0;
+
+    virtual bool hasSpectralSelection() const = 0;
+    virtual void resetSpectralSelection() = 0;
+
     // grouping
     virtual bool selectionContainsGroup() const = 0;
     virtual bool isSelectionGrouped() const = 0;

@@ -85,6 +85,18 @@ public:
     trackedit::secs_t selectionStartTime() const override;
     void setSelectionStartTime(trackedit::secs_t time) override;
 
+    // spectral selection
+    double spectralSelectionStartFrequency() const override;
+    void setSpectralSelectionStartFrequency(double frequency, bool complete) override;
+    muse::async::Channel<double> spectralSelectionStartFrequencyChanged() const override;
+
+    double spectralSelectionEndFrequency() const override;
+    void setSpectralSelectionEndFrequency(double frequency, bool complete) override;
+    muse::async::Channel<double> spectralSelectionEndFrequencyChanged() const override;
+
+    bool hasSpectralSelection() const override;
+    void resetSpectralSelection() override;
+
     // grouping
     bool selectionContainsGroup() const override;
     bool isSelectionGrouped() const override;
@@ -149,6 +161,10 @@ private:
     Val<ClipKeyList> m_clipsIntersectingRangeSelection;
 
     Val<trackedit::secs_t> m_selectionStartTime; // indicates where user started selection
+
+    // spectral selection
+    Val<double> m_spectralSelectionStartFrequency;
+    Val<double> m_spectralSelectionEndFrequency;
 
     // track focus state
     Val<TrackId> m_focusedTrack = Val<TrackId> { TrackId(-1) };

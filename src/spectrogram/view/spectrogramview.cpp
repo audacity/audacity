@@ -114,6 +114,26 @@ void SpectrogramView::setSelectionEndTime(double time)
     update();
 }
 
+void SpectrogramView::setSpectralSelectionStartFrequency(double frequency)
+{
+    if (muse::is_equal(m_spectralSelectionStartFrequency, frequency)) {
+        return;
+    }
+    m_spectralSelectionStartFrequency = frequency;
+    emit spectralSelectionStartFrequencyChanged();
+    update();
+}
+
+void SpectrogramView::setSpectralSelectionEndFrequency(double frequency)
+{
+    if (muse::is_equal(m_spectralSelectionEndFrequency, frequency)) {
+        return;
+    }
+    m_spectralSelectionEndFrequency = frequency;
+    emit spectralSelectionEndFrequencyChanged();
+    update();
+}
+
 void SpectrogramView::paint(QPainter* painter)
 {
     const auto project = globalContext()->currentProject();
@@ -121,7 +141,12 @@ void SpectrogramView::paint(QPainter* painter)
     const auto indentTime = m_timelineIndentWidth / m_zoom;
     const auto viewportStartTime = m_frameStartTime - indentTime;
     const auto viewportEndTime = m_frameEndTime;
-    const spectrogram::SelectionInfo selectionInfo { m_selectionStartTime, m_selectionEndTime };
+    const spectrogram::SelectionInfo selectionInfo { 
+        m_selectionStartTime, 
+        m_selectionEndTime,
+        m_spectralSelectionStartFrequency,
+        m_spectralSelectionEndFrequency
+    };
 
     const QRect visibleSubrect = clipRect().toRect();
     const int xBegin = std::max(visibleSubrect.left() - m_timelineIndentWidth, 0);
