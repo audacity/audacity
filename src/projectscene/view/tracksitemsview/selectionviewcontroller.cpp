@@ -134,6 +134,11 @@ void SelectionViewController::onPositionChanged(double x, double y)
     }
 
     setSelection(x1, x2, false);
+    
+    // spectral selection
+    double y1 = m_startPoint.y();
+    double y2 = y;
+    setSpectralSelection(y1, y2, false);
 }
 
 void SelectionViewController::onReleased(double x, double y)
@@ -205,6 +210,11 @@ void SelectionViewController::onReleased(double x, double y)
 
     // time
     setSelection(x1, x2, true);
+    
+    // spectral selection
+    double y1 = m_startPoint.y();
+    double y2 = y;
+    setSpectralSelection(y1, y2, true);
 }
 
 void SelectionViewController::onSelectionDraged(double x1, double x2, bool completed)
@@ -379,4 +389,93 @@ void SelectionViewController::setSelection(double x1, double x2, bool complete)
 {
     selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), complete);
     selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), complete);
+}
+
+void SelectionViewController::setSpectralSelection(double y1, double y2, bool complete)
+{
+    if (!isSpectralSelectionEnabled()) {
+        return;
+    }
+
+    // Get the track at this Y position
+    IProjectViewStatePtr vs = viewState();
+    if (!vs) {
+        return;
+    }
+
+    trackedit::TrackId trackId = vs->trackAtPosition(m_startPoint.y());
+    if (trackId == trackedit::TrackId(-1)) {
+        return;
+    }
+
+    // Check if this track is in spectrogram view mode
+    if (!isTrackInSpectrogramView(trackId)) {
+        selectionController()->resetSpectralSelection();
+        return;
+    }
+
+    // Convert Y coordinates to frequencies
+    double f1 = yToFrequency(y1, trackId);
+    double f2 = yToFrequency(y2, trackId);
+
+    // Ensure f1 <= f2
+    if (f1 > f2) {
+        std::swap(f1, f2);
+    }
+
+    selectionController()->setSpectralSelectionStartFrequency(f1, complete);
+    selectionController()->setSpectralSelectionEndFrequency(f2, complete);
+}
+
+double SelectionViewController::yToFrequency(double y, const trackedit::TrackId& trackId) const
+{
+    // TODO: This needs to be implemented properly to convert Y coordinates to frequency
+    // For now, return a placeholder that will need to be updated with actual conversion logic
+    // that takes into account the spectrogram scale type, min/max frequency, and track height
+    
+    IProjectViewStatePtr vs = viewState();
+    if (!vs) {
+        return -1.0;
+    }
+
+    int trackVertPos = vs->trackVerticalPosition(trackId);
+    int trackHeight = vs->trackHeight(trackId).val;
+    
+    // Calculate relative position within track (0.0 at top, 1.0 at bottom)
+    double relativeY = (y - trackVertPos) / static_cast<double>(trackHeight);
+    
+    // Clamp to [0, 1]
+    relativeY = std::max(0.0, std::min(1.0, relativeY));
+    
+    // For now, use a simple linear mapping to frequency range
+    // In reality, this should use the spectrogram's scale (linear, log, mel, etc.)
+    // and the track's min/max frequency settings
+    constexpr double minFreq = 0.0;
+    constexpr double maxFreq = 20000.0;
+    
+    // Invert Y (top = high frequency, bottom = low frequency)
+    double frequency = maxFreq - (relativeY * (maxFreq - minFreq));
+    
+    return frequency;
+}
+
+bool SelectionViewController::isSpectralSelectionEnabled() const
+{
+    return spectrogramConfiguration()->spectralSelectionEnabled();
+}
+
+bool SelectionViewController::isTrackInSpectrogramView(const trackedit::TrackId& trackId) const
+{
+    auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return false;
+    }
+
+    auto track = prj->track(trackId);
+    if (!track.has_value()) {
+        return false;
+    }
+
+    return track->viewType == trackedit::TrackViewType::Spectrogram
+           || track->viewType == trackedit::TrackViewType::WaveformAndSpectrogram;
 }

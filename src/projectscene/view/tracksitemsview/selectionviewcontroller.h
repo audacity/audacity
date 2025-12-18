@@ -9,6 +9,7 @@
 #include "context/iglobalcontext.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/itrackeditinteraction.h"
+#include "spectrogram/iglobalspectrogramconfiguration.h"
 
 #include "types/projectscenetypes.h"
 #include "../timeline/timelinecontext.h"
@@ -26,6 +27,7 @@ class SelectionViewController : public QObject
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
+    muse::Inject<spectrogram::IGlobalSpectrogramConfiguration> spectrogramConfiguration;
 
 public:
     SelectionViewController(QObject* parent = nullptr);
@@ -73,6 +75,10 @@ private:
     IProjectViewStatePtr viewState() const;
     trackedit::TrackIdList trackIdList() const;
     void setSelection(double x1, double x2, bool complete);
+    void setSpectralSelection(double y1, double y2, bool complete);
+    double yToFrequency(double y, const trackedit::TrackId& trackId) const;
+    bool isSpectralSelectionEnabled() const;
+    bool isTrackInSpectrogramView(const trackedit::TrackId& trackId) const;
 
     Qt::KeyboardModifiers keyboardModifiers() const;
 
