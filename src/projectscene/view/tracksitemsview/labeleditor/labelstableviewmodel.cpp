@@ -60,21 +60,24 @@ QVector<TableViewHeader*> LabelsTableViewModel::makeHorizontalHeaders()
     hHeaders << makeHorizontalHeader(qtrc("projectscene", "Label text"), TableViewCellType::Type::String,
                                      TableViewCellEditMode::Mode::DoubleClick, 296);
 
-    static auto timecodeModelStub = au::uicomponents::TimecodeModel();
-    MenuItemList timecodeFormats = timecodeModelStub.availableFormats();
+    static auto startTimeModelStub = au::uicomponents::TimecodeModel();
+    MenuItemList startTimeFormats = startTimeModelStub.availableFormats();
 
     TableViewHeader* startTimeHeader = makeHorizontalHeader(qtrc("projectscene", "Start time"),
                                                             static_cast<TableViewCellType::Type>(LabelsTableViewCellType::Type::Timecode),
                                                             TableViewCellEditMode::Mode::StartInEdit);
-    startTimeHeader->setAvailableFormats(timecodeFormats);
-    startTimeHeader->setCurrentFormatId(QString::number(timecodeModelStub.currentFormat()));
+    startTimeHeader->setAvailableFormats(startTimeFormats);
+    startTimeHeader->setCurrentFormatId(QString::number(startTimeModelStub.currentFormat()));
     hHeaders << startTimeHeader;
+
+    static auto endTimeModelStub = au::uicomponents::TimecodeModel();
+    MenuItemList endTimeFormats = endTimeModelStub.availableFormats();
 
     TableViewHeader* endTimeHeader = makeHorizontalHeader(qtrc("projectscene", "End time"),
                                                           static_cast<TableViewCellType::Type>(LabelsTableViewCellType::Type::Timecode),
                                                           TableViewCellEditMode::Mode::StartInEdit);
-    endTimeHeader->setAvailableFormats(timecodeFormats);
-    endTimeHeader->setCurrentFormatId(QString::number(timecodeModelStub.currentFormat()));
+    endTimeHeader->setAvailableFormats(endTimeFormats);
+    endTimeHeader->setCurrentFormatId(QString::number(endTimeModelStub.currentFormat()));
     hHeaders << endTimeHeader;
 
     static auto lowFrequencyModelStub = au::uicomponents::FrequencyModel();
@@ -323,6 +326,15 @@ TableViewCell* LabelsTableViewModel::makeTrackCell(const trackedit::TrackId& tra
     //! Setting the current track ID updates the selected item in the list of available tracks.
     result->setAvailableTracks(makeAvailableTracksList());
     result->setCurrentTrackId(trackId);
+
+    //! NOTE: Update the track title in the cell.
+    //! Keep the title synchronized with the track from the list of available tracks.
+    for (const MenuItem* item : result->availableTracks()) {
+        if (item->args().arg<trackedit::TrackId>() == trackId) {
+            result->setValue_property(item->translatedTitle());
+            break;
+        }
+    }
 
     return result;
 }
