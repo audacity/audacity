@@ -55,15 +55,25 @@ OggImportFileHandle::OggImportFileHandle(const FilePath& filename,
     mVorbisFile(std::move(vorbisFile))
     , mStreamUsage{static_cast<size_t>(mVorbisFile->links)}
 {
-    for (int i = 0; i < mVorbisFile->links; i++) {
+    const int links = mVorbisFile ? mVorbisFile->links : 0;
+
+    mStreamInfo.clear();
+    mStreamInfo.reserve(std::max(0, links));
+
+    for (int i = 0; i < links; ++i) {
+        mStreamUsage[i] = 1;
+    }
+
+    for (int i = 0; i < links; ++i) {
+        const auto& vi = mVorbisFile->vi[i];
         auto strinfo = XO("Index[%02x] Version[%d], Channels[%d], Rate[%ld]")
                        .Format(
-            (unsigned int)i,
-            mVorbisFile->vi[i].version,
-            mVorbisFile->vi[i].channels,
-            mVorbisFile->vi[i].rate);
+            static_cast<unsigned int>(i),
+            vi.version,
+            vi.channels,
+            vi.rate
+            );
         mStreamInfo.push_back(strinfo);
-        mStreamUsage[i] = 0;
     }
 }
 
@@ -189,7 +199,18 @@ void OggImportFileHandle::Import(
             if (mStreamUsage[bitstream] != 0) {
                 /* give the data to the wavetracks */
                 unsigned chn = 0;
-                ImportUtils::ForEachChannel(**std::next(mStreams.begin(), bitstream), [&](auto& channel)
+                if (bitstream < 0 || static_cast<size_t>(bitstream) >= mStreams.size()) {
+                    wxLogError("Ogg Vorbis importer: invalid bitstream index %d (links=%d)",
+                               bitstream, mVorbisFile ? mVorbisFile->links : -1);
+                    break;
+                }
+
+                auto& holderPtr = mStreams[bitstream];
+                if (!holderPtr) {
+                    continue;
+                }
+
+                ImportUtils::ForEachChannel(*holderPtr, [&](auto& channel)
                 {
                     channel.AppendBuffer(
                         (char*)(mainBuffer.get() + chn),
@@ -224,6 +245,9 @@ void OggImportFileHandle::Import(
     }
 
     for (auto& stream : mStreams) {
+        if (!stream) {
+            continue;
+        }
         ImportUtils::FinalizeImport(outTracks, std::move(*stream));
     }
     mStreams.clear();
