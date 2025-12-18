@@ -25,14 +25,14 @@ inline ::LabelFormat au3labelFormatFromSuffix(const muse::io::path_t& filePath)
 inline std::string fileSuffixFromType(FileType fileType)
 {
     switch (fileType) {
-        case FileType::TEXT:
-            return "txt";
-        case FileType::SUBRIP:
-            return "srt";
-        case FileType::WEBVTT:
-            return "vtt";
-        default:
-            return "";
+    case FileType::TEXT:
+        return "txt";
+    case FileType::SUBRIP:
+        return "srt";
+    case FileType::WEBVTT:
+        return "vtt";
+    default:
+        return "";
     }
     return "";
 }

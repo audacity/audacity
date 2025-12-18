@@ -296,7 +296,7 @@ void LabelsTableViewModel::removeSelectedLabels()
         return;
     }
 
-    bool ok = trackeditInteraction()->removeLabels(labelKeysToRemove, true /* completed */);
+    bool ok = trackeditInteraction()->removeLabels(labelKeysToRemove, false /* move labels */);
     if (!ok) {
         return;
     }
