@@ -41,6 +41,8 @@ static const ActionCode LOOP_ACTION_CODE("toggle-loop-region");
 
 static const ActionCode SPLIT_TOOL_ACTION_CODE("split-tool");
 
+static const ActionCode TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE("action://trackedit/global-view-spectrogram");
+
 static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
 static const ActionCode PLAYBACK_TIME("playback-time");
 static const ActionCode PLAYBACK_BPM("playback-bpm");
@@ -63,6 +65,7 @@ static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
         { PLAYBACK_REWIND_END_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { LOOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { SPLIT_TOOL_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { SNAP_ACTION_CODE, PlaybackToolBarModel::SNAP }
     };
 
@@ -118,6 +121,7 @@ void PlaybackToolBarModel::setupProjectConnections(project::IAudacityProject& pr
 {
     const auto vs = project.viewState();
     vs->splitToolEnabled().ch.onReceive(this, [this](bool){ updateSplitState(); });
+    vs->spectrogramToggledTrackMap().ch.onReceive(this, [this](auto){ updateGlobalSpectrogramViewState(); });
 }
 
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
@@ -149,6 +153,7 @@ void PlaybackToolBarModel::updateStates()
     updateRecordState();
     updateLoopState();
     updateSplitState();
+    updateGlobalSpectrogramViewState();
 }
 
 void PlaybackToolBarModel::updatePlayState()
@@ -270,6 +275,30 @@ void PlaybackToolBarModel::updateSplitState()
         backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::ACCENT_COLOR).toString());
     }
 
+    item->setBackgroundColor(backgroundColor);
+}
+
+void PlaybackToolBarModel::updateGlobalSpectrogramViewState()
+{
+    auto prj = context()->currentProject();
+
+    if (!prj) {
+        return;
+    }
+
+    PlaybackToolBarControlItem* const item
+        = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE));
+
+    if (item == nullptr) {
+        return;
+    }
+
+    const auto vs = prj->viewState();
+    const bool isOn = !vs->spectrogramToggledTrackMap().val.empty();
+    item->setSelected(isOn);
+
+    const QColor backgroundColor{ uiConfiguration()->currentTheme().values.value(isOn ? muse::ui::ACCENT_COLOR : muse::ui::BUTTON_COLOR).
+                                  toString() };
     item->setBackgroundColor(backgroundColor);
 }
 

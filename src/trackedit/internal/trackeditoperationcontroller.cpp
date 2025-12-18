@@ -118,6 +118,31 @@ bool TrackeditOperationController::changeTracksColor(const TrackIdList& tracksId
     return false;
 }
 
+bool TrackeditOperationController::toggleGlobalSpectrogramView()
+{
+    const auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+    const auto trackeditProject = project->trackeditProject();
+    const auto viewState = project->viewState();
+    std::unordered_map<TrackId, TrackViewType> map = viewState->spectrogramToggledTrackMap().val;
+    if (map.empty()) {
+        for (const auto& track : trackeditProject->trackList()) {
+            if (tracksInteraction()->changeAudioTrackViewType(track.id, TrackViewType::Spectrogram)) {
+                map.insert({ track.id, track.viewType });
+            }
+        }
+    } else {
+        for (const auto& [trackId, trackTypeBeforeToggled] : map) {
+            tracksInteraction()->changeAudioTrackViewType(trackId, trackTypeBeforeToggled);
+        }
+        map.clear();
+    }
+    viewState->setSpectrogramToggledTrackMap(std::move(map));
+    return true;
+}
+
 bool TrackeditOperationController::changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
 {
     if (tracksInteraction()->changeAudioTrackViewType(trackId, viewType)) {

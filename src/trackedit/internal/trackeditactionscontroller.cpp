@@ -107,6 +107,7 @@ static const ActionQuery TRACK_CHANGE_COLOR_QUERY("action://trackedit/track/chan
 static const ActionQuery TRACK_CHANGE_FORMAT_QUERY("action://trackedit/track/change-format");
 static const ActionQuery TRACK_CHANGE_RATE_QUERY("action://trackedit/track/change-rate");
 
+static const ActionQuery TOGGLE_GLOBAL_VIEW_SPECTROGRAM("action://trackedit/global-view-spectrogram");
 static const ActionQuery SET_TRACK_VIEW_WAVEFORM("action://trackedit/track-view-waveform");
 static const ActionQuery SET_TRACK_VIEW_SPECTROGRAM("action://trackedit/track-view-spectrogram");
 static const ActionQuery SET_TRACK_VIEW_MULTI("action://trackedit/track-view-multi");
@@ -278,6 +279,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, TRACK_CHANGE_FORMAT_QUERY, this, &TrackeditActionsController::setTrackFormat);
     dispatcher()->reg(this, TRACK_CHANGE_RATE_QUERY, this, &TrackeditActionsController::setTrackRate);
 
+    dispatcher()->reg(this, TOGGLE_GLOBAL_VIEW_SPECTROGRAM, this, &TrackeditActionsController::toggleGlobalSpectrogramView);
     dispatcher()->reg(this, SET_TRACK_VIEW_WAVEFORM, this, &TrackeditActionsController::changeTrackViewToWaveform);
     dispatcher()->reg(this, SET_TRACK_VIEW_SPECTROGRAM, this, &TrackeditActionsController::changeTrackViewToSpectrogram);
     dispatcher()->reg(this, SET_TRACK_VIEW_MULTI, this, &TrackeditActionsController::changeTrackViewToWaveformAndSpectrogram);
@@ -1780,6 +1782,11 @@ void TrackeditActionsController::setTrackRate(const muse::actions::ActionQuery& 
     if (trackeditInteraction()->changeTracksRate(tracks, rate)) {
         notifyActionCheckedChanged(q.toString());
     }
+}
+
+void TrackeditActionsController::toggleGlobalSpectrogramView()
+{
+    trackeditInteraction()->toggleGlobalSpectrogramView();
 }
 
 void TrackeditActionsController::changeTrackViewToWaveform(const muse::actions::ActionQuery& q)

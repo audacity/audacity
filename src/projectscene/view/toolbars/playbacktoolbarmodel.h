@@ -14,6 +14,10 @@
 
 #include "uicomponents/qml/Muse/UiComponents/abstracttoolbarmodel.h"
 
+namespace au::project {
+class IAudacityProject;
+}
+
 namespace au::projectscene {
 class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel
 {
@@ -55,6 +59,7 @@ signals:
 
 private:
     void reload();
+    void setupProjectConnections(project::IAudacityProject& project);
 
     void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
 
@@ -64,6 +69,7 @@ private:
     void updateRecordState();
     void updateLoopState();
     void updateSplitState();
+    void updateGlobalSpectrogramViewState();
 
     void setupConnections();
 

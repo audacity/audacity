@@ -145,6 +145,7 @@ private:
     void setTrackFormat(const muse::actions::ActionQuery& q);
     void setTrackRate(const muse::actions::ActionQuery& q);
 
+    void toggleGlobalSpectrogramView();
     void changeTrackViewToWaveform(const muse::actions::ActionQuery&);
     void changeTrackViewToSpectrogram(const muse::actions::ActionQuery&);
     void changeTrackViewToWaveformAndSpectrogram(const muse::actions::ActionQuery&);
