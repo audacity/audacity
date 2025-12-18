@@ -50,6 +50,8 @@ using ClipKeyList = TrackItemKeyList;
 
 // Spectral selection
 constexpr double SPECTRAL_SELECTION_UNDEFINED_FREQUENCY = -1.0;
+constexpr double SPECTRAL_SELECTION_DEFAULT_MIN_FREQ = 0.0;
+constexpr double SPECTRAL_SELECTION_DEFAULT_MAX_FREQ = 20000.0;
 
 using LabelKey = TrackItemKey;
 using LabelKeyList = TrackItemKeyList;

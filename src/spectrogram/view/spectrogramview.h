@@ -95,7 +95,7 @@ private:
     double m_frameEndTime = 0.0;
     double m_selectionStartTime = 0.0;
     double m_selectionEndTime = 0.0;
-    double m_spectralSelectionStartFrequency = -1.0;
-    double m_spectralSelectionEndFrequency = -1.0;
+    double m_spectralSelectionStartFrequency = spectrogram::SelectionInfo::UndefinedFrequency;
+    double m_spectralSelectionEndFrequency = spectrogram::SelectionInfo::UndefinedFrequency;
 };
 }

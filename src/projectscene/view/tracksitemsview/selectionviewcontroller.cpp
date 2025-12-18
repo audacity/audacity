@@ -452,11 +452,11 @@ double SelectionViewController::yToFrequency(double y, const trackedit::TrackId&
     
     // Use common default frequency range for spectrograms
     // These should ideally come from the track's spectrogram settings
-    constexpr double DEFAULT_MIN_FREQ = 0.0;
-    constexpr double DEFAULT_MAX_FREQ = 20000.0;
+    constexpr double minFreq = trackedit::SPECTRAL_SELECTION_DEFAULT_MIN_FREQ;
+    constexpr double maxFreq = trackedit::SPECTRAL_SELECTION_DEFAULT_MAX_FREQ;
     
     // Invert Y coordinate (top of view = high frequency, bottom = low frequency)
-    double frequency = DEFAULT_MAX_FREQ - (relativeY * (DEFAULT_MAX_FREQ - DEFAULT_MIN_FREQ));
+    double frequency = maxFreq - (relativeY * (maxFreq - minFreq));
     
     return frequency;
 }
