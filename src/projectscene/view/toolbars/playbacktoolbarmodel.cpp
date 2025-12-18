@@ -89,9 +89,12 @@ void PlaybackToolBarModel::load()
             reload();
             emit isEnabledChanged();
             if (context()->currentProject()) {
-                context()->currentProject()->viewState()->splitToolEnabled().ch.onReceive(this, [this](bool){ updateSplitState(); });
+                setupProjectConnections(*context()->currentProject());
             }
         });
+        if (context()->currentProject()) {
+            setupProjectConnections(*context()->currentProject());
+        }
 
         configuration()->playbackMeterPositionChanged().onNotify(this, [this]() {
             reload();
@@ -109,6 +112,12 @@ void PlaybackToolBarModel::reload()
 {
     load();
     updateStates();
+}
+
+void PlaybackToolBarModel::setupProjectConnections(project::IAudacityProject& project)
+{
+    const auto vs = project.viewState();
+    vs->splitToolEnabled().ch.onReceive(this, [this](bool){ updateSplitState(); });
 }
 
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
@@ -256,14 +265,11 @@ void PlaybackToolBarModel::updateSplitState()
     bool splitToolEnabled = vs->splitToolEnabled().val;
     item->setSelected(splitToolEnabled);
 
-    QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
     QColor backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BUTTON_COLOR).toString());
     if (splitToolEnabled) {
-        iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
         backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::ACCENT_COLOR).toString());
     }
 
-    item->setIconColor(iconColor);
     item->setBackgroundColor(backgroundColor);
 }
 
