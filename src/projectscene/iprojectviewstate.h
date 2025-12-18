@@ -41,8 +41,8 @@ public:
     virtual Snap getSnap() const = 0;
     virtual muse::ValCh<Snap> snap() const = 0;
 
-    virtual void setSplitToolEnabled(const bool enabled) = 0;
-    virtual muse::ValCh<bool> splitToolEnabled() = 0;
+    virtual void setSplitToolEnabled(bool enabled) = 0;
+    virtual muse::ValCh<bool> splitToolEnabled() const = 0;
 
     virtual muse::ValCh<std::pair<float, float> > verticalDisplayBounds(const trackedit::TrackId& trackId) const = 0;
     virtual void zoomInVertically(const trackedit::TrackId& trackId) = 0;

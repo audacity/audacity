@@ -56,8 +56,8 @@ public:
     Snap getSnap() const override;
     muse::ValCh<Snap> snap() const override;
 
-    void setSplitToolEnabled(const bool enabled) override;
-    muse::ValCh<bool> splitToolEnabled() override;
+    void setSplitToolEnabled(bool enabled) override;
+    muse::ValCh<bool> splitToolEnabled() const override;
 
     muse::ValCh<std::pair<float, float> > verticalDisplayBounds(const trackedit::TrackId& trackId) const override;
     void zoomInVertically(const trackedit::TrackId& trackId) override;

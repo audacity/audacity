@@ -522,7 +522,7 @@ void ProjectViewState::setSplitToolEnabled(const bool enabled)
     m_splitToolEnabled.set(enabled);
 }
 
-muse::ValCh<bool> ProjectViewState::splitToolEnabled()
+muse::ValCh<bool> ProjectViewState::splitToolEnabled() const
 {
     return m_splitToolEnabled;
 }
