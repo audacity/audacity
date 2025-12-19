@@ -44,9 +44,6 @@ public:
     virtual void setSplitToolEnabled(bool enabled) = 0;
     virtual muse::ValCh<bool> splitToolEnabled() const = 0;
 
-    virtual muse::ValCh<SpectrogramToggledTrackMap> spectrogramToggledTrackMap() const = 0;
-    virtual void setSpectrogramToggledTrackMap(const SpectrogramToggledTrackMap& map) = 0;
-
     virtual muse::ValCh<std::pair<float, float> > verticalDisplayBounds(const trackedit::TrackId& trackId) const = 0;
     virtual void zoomInVertically(const trackedit::TrackId& trackId) = 0;
     virtual void zoomOutVertically(const trackedit::TrackId& trackId) = 0;
@@ -59,6 +56,11 @@ public:
 
     virtual muse::ValCh<bool> isHalfWave(const trackedit::TrackId& trackId) const = 0;
     virtual void toggleHalfWave(const trackedit::TrackId& trackId) = 0;
+
+    virtual muse::ValCh<trackedit::TrackViewType> trackViewType(const trackedit::TrackId& trackId) const = 0;
+    virtual void setTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) = 0;
+    virtual void toggleGlobalSpectrogramView() = 0;
+    virtual muse::ValCh<bool> globalSpectrogramViewIsOn() const = 0;
 
     virtual muse::ValCh<int> trackRulerType(const trackedit::TrackId& trackId) const = 0;
     virtual void setTrackRulerType(const trackedit::TrackId& trackId, int rulerType) = 0;

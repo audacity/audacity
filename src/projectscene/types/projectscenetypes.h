@@ -4,8 +4,6 @@
 #ifndef AU_PROJECTSCENE_TRACKTYPES_H
 #define AU_PROJECTSCENE_TRACKTYPES_H
 
-#include <unordered_map>
-
 #include <qobjectdefs.h>
 
 #include "actions/actiontypes.h"
@@ -184,8 +182,6 @@ public:
     };
     Q_ENUM(AsymmetricStereoHeights)
 };
-
-using SpectrogramToggledTrackMap = std::unordered_map<trackedit::TrackId, trackedit::TrackViewType>;
 
 constexpr const char16_t* COLOR_CHANGE_ACTION = u"action://trackedit/clip/change-color?color=%1";
 inline muse::actions::ActionQuery makeClipColorChangeAction(const std::string& colorHex)

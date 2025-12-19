@@ -1786,7 +1786,11 @@ void TrackeditActionsController::setTrackRate(const muse::actions::ActionQuery& 
 
 void TrackeditActionsController::toggleGlobalSpectrogramView()
 {
-    trackeditInteraction()->toggleGlobalSpectrogramView();
+    const auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return;
+    }
+    project->viewState()->toggleGlobalSpectrogramView();
 }
 
 void TrackeditActionsController::changeTrackViewToWaveform(const muse::actions::ActionQuery& q)
@@ -1810,9 +1814,11 @@ void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuer
         return;
     }
     const auto trackId = q.param("trackId").toInt();
-    if (!trackeditInteraction()->changeAudioTrackViewType(trackId, trackView)) {
+    const auto prj = globalContext()->currentProject();
+    IF_ASSERT_FAILED(prj) {
         return;
     }
+    prj->viewState()->setTrackViewType(trackId, trackView);
     switch (trackView) {
     case TrackViewType::Waveform:
         notifyActionCheckedChanged(SET_TRACK_VIEW_WAVEFORM.toString());
