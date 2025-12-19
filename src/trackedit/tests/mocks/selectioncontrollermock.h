@@ -29,6 +29,15 @@ public:
     MOCK_METHOD(double, leftMostSelectedClipStartTime, (), (const, override));
     MOCK_METHOD(double, rightMostSelectedClipEndTime, (), (const, override));
 
+    MOCK_METHOD(double, spectralSelectionStartFrequency, (), (const, override));
+    MOCK_METHOD(void, setSpectralSelectionStartFrequency, (double, bool), (override));
+    MOCK_METHOD(muse::async::Channel<double>, spectralSelectionStartFrequencyChanged, (), (const, override));
+    MOCK_METHOD(double, spectralSelectionEndFrequency, (), (const, override));
+    MOCK_METHOD(void, setSpectralSelectionEndFrequency, (double, bool), (override));
+    MOCK_METHOD(muse::async::Channel<double>, spectralSelectionEndFrequencyChanged, (), (const, override));
+    MOCK_METHOD(bool, hasSpectralSelection, (), (const, override));
+    MOCK_METHOD(void, resetSpectralSelection, (), (override));
+
     MOCK_METHOD(void, resetSelectedLabels, (), (override));
     MOCK_METHOD(bool, hasSelectedLabels, (), (const, override));
     MOCK_METHOD(LabelKeyList, selectedLabels, (), (const, override));

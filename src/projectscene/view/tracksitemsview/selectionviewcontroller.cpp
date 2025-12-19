@@ -134,7 +134,7 @@ void SelectionViewController::onPositionChanged(double x, double y)
     }
 
     setSelection(x1, x2, false);
-    
+
     // spectral selection
     double y1 = m_startPoint.y();
     double y2 = y;
@@ -210,7 +210,7 @@ void SelectionViewController::onReleased(double x, double y)
 
     // time
     setSelection(x1, x2, true);
-    
+
     // spectral selection
     double y1 = m_startPoint.y();
     double y2 = y;
@@ -435,7 +435,7 @@ double SelectionViewController::yToFrequency(double y, const trackedit::TrackId&
     // 3. Handle stereo tracks correctly (consider channel split position)
     // 4. Account for the spectrogram's minFreq and maxFreq settings
     // For now, this uses a simple linear mapping with reasonable defaults
-    
+
     IProjectViewStatePtr vs = viewState();
     if (!vs) {
         return trackedit::SPECTRAL_SELECTION_UNDEFINED_FREQUENCY;
@@ -443,21 +443,21 @@ double SelectionViewController::yToFrequency(double y, const trackedit::TrackId&
 
     int trackVertPos = vs->trackVerticalPosition(trackId);
     int trackHeight = vs->trackHeight(trackId).val;
-    
+
     // Calculate relative position within track (0.0 at top, 1.0 at bottom)
     double relativeY = (y - trackVertPos) / static_cast<double>(trackHeight);
-    
+
     // Clamp to [0, 1]
     relativeY = std::max(0.0, std::min(1.0, relativeY));
-    
+
     // Use common default frequency range for spectrograms
     // These should ideally come from the track's spectrogram settings
     constexpr double minFreq = trackedit::SPECTRAL_SELECTION_DEFAULT_MIN_FREQ;
     constexpr double maxFreq = trackedit::SPECTRAL_SELECTION_DEFAULT_MAX_FREQ;
-    
+
     // Invert Y coordinate (top of view = high frequency, bottom = low frequency)
     double frequency = maxFreq - (relativeY * (maxFreq - minFreq));
-    
+
     return frequency;
 }
 
