@@ -149,6 +149,7 @@ void TrackLabelsLayoutManager::subscribeToLabelsChanges()
     }
 
     connect(m_labelsModel, &QAbstractListModel::rowsInserted, this, &TrackLabelsLayoutManager::subscribeToLabelsChanges);
+    connect(m_labelsModel, &QAbstractListModel::rowsRemoved, this, &TrackLabelsLayoutManager::subscribeToLabelsChanges);
 
     relayout();
 }
@@ -165,6 +166,7 @@ void TrackLabelsLayoutManager::unsubscribeFromLabelsChanges()
     }
 
     disconnect(m_labelsModel, &QAbstractListModel::rowsInserted, this, &TrackLabelsLayoutManager::subscribeToLabelsChanges);
+    disconnect(m_labelsModel, &QAbstractListModel::rowsRemoved, this, &TrackLabelsLayoutManager::subscribeToLabelsChanges);
 }
 
 QList<TrackLabelsLayoutManager::LabelInfo> TrackLabelsLayoutManager::collectLabelsInfo() const

@@ -19,7 +19,5 @@ public:
     virtual ~ILabelsExporter() = default;
 
     virtual muse::Ret exportData(const muse::io::path_t& filePath, const trackedit::TrackIdList& includedLabelTracksIds = {}) = 0;
-
-    virtual std::vector<std::string> fileFilter() = 0;
 };
 }

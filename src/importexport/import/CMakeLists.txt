@@ -9,16 +9,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/importermodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/importermodule.h
     ${CMAKE_CURRENT_LIST_DIR}/iimporter.h
-    ${CMAKE_CURRENT_LIST_DIR}/ilabelsimporter.h
-    ${CMAKE_CURRENT_LIST_DIR}/iimportconfiguration.h
 
     #internals
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3importer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3importer.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3labelsimporter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3labelsimporter.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/importconfiguration.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/importconfiguration.h
     
     ${CMAKE_CURRENT_LIST_DIR}/types/importtypes.h
 )

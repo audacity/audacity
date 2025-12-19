@@ -4,10 +4,13 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+
 import Muse.Ui
 import Muse.UiComponents
 
+import Audacity.UiComponents 1.0
 import Audacity.Export 1.0
+
 import "internal"
 
 StyledDialogView {

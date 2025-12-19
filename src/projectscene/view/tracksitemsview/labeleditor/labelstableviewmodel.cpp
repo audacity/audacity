@@ -18,15 +18,32 @@ static const muse::actions::ActionCode NEW_LABEL_TRACK_CODE("new-label-track");
 
 static const int TRACK_COLUMN = 0;
 static const int LABEL_COLUMN = 1;
+
 static const int START_TIME_COLUMN = 2;
+static const std::string START_TIME_COLUMN_NAME = "startTime";
+
 static const int END_TIME_COLUMN = 3;
+static const std::string END_TIME_COLUMN_NAME = "endTime";
+
 static const int LOW_FREQUENCY_COLUMN = 4;
+static const std::string LOW_FREQUENCY_COLUMN_NAME = "lowFrequency";
+
 static const int HIGH_FREQUENCY_COLUMN = 5;
+static const std::string HIGH_FREQUENCY_COLUMN_NAME = "highFrequency";
 
 using namespace au::projectscene;
 using namespace muse;
 using namespace muse::ui;
 using namespace muse::uicomponents;
+
+static std::vector<std::string> importExportFilter(const std::vector<au::importexport::FileFilter>& fileFilters)
+{
+    std::vector<std::string> result;
+    for (const au::importexport::FileFilter& fileFilter : fileFilters) {
+        result.push_back(fileFilter.title);
+    }
+    return result;
+}
 
 LabelsTableViewModel::LabelsTableViewModel(QObject* parent)
     : AbstractTableViewModel(parent)
@@ -51,21 +68,27 @@ QVector<TableViewHeader*> LabelsTableViewModel::makeHorizontalHeaders()
     hHeaders << makeHorizontalHeader(qtrc("projectscene", "Label text"), TableViewCellType::Type::String,
                                      TableViewCellEditMode::Mode::DoubleClick, 296);
 
-    static auto timecodeModelStub = au::uicomponents::TimecodeModel();
-    MenuItemList timecodeFormats = timecodeModelStub.availableFormats();
+    static auto startTimeModelStub = au::uicomponents::TimecodeModel();
+    MenuItemList startTimeFormats = startTimeModelStub.availableFormats();
 
     TableViewHeader* startTimeHeader = makeHorizontalHeader(qtrc("projectscene", "Start time"),
                                                             static_cast<TableViewCellType::Type>(LabelsTableViewCellType::Type::Timecode),
                                                             TableViewCellEditMode::Mode::StartInEdit);
-    startTimeHeader->setAvailableFormats(timecodeFormats);
-    startTimeHeader->setCurrentFormatId(QString::number(timecodeModelStub.currentFormat()));
+    startTimeHeader->setAvailableFormats(startTimeFormats);
+
+    startTimeHeader->setCurrentFormatId(labelEditorColumnFormat(START_TIME_COLUMN_NAME, startTimeModelStub.currentFormat()));
+    connectToColumnFormatChange(startTimeHeader, START_TIME_COLUMN_NAME);
     hHeaders << startTimeHeader;
+
+    static auto endTimeModelStub = au::uicomponents::TimecodeModel();
+    MenuItemList endTimeFormats = endTimeModelStub.availableFormats();
 
     TableViewHeader* endTimeHeader = makeHorizontalHeader(qtrc("projectscene", "End time"),
                                                           static_cast<TableViewCellType::Type>(LabelsTableViewCellType::Type::Timecode),
                                                           TableViewCellEditMode::Mode::StartInEdit);
-    endTimeHeader->setAvailableFormats(timecodeFormats);
-    endTimeHeader->setCurrentFormatId(QString::number(timecodeModelStub.currentFormat()));
+    endTimeHeader->setAvailableFormats(endTimeFormats);
+    endTimeHeader->setCurrentFormatId(labelEditorColumnFormat(END_TIME_COLUMN_NAME, endTimeModelStub.currentFormat()));
+    connectToColumnFormatChange(endTimeHeader, END_TIME_COLUMN_NAME);
     hHeaders << endTimeHeader;
 
     static auto lowFrequencyModelStub = au::uicomponents::FrequencyModel();
@@ -76,7 +99,8 @@ QVector<TableViewHeader*> LabelsTableViewModel::makeHorizontalHeaders()
                                                                static_cast<TableViewCellType::Type>(LabelsTableViewCellType::Type::Frequency),
                                                                TableViewCellEditMode::Mode::StartInEdit);
     lowFrequencyHeader->setAvailableFormats(lowFrequencyFormats);
-    lowFrequencyHeader->setCurrentFormatId(QString::number(lowFrequencyModelStub.currentFormat()));
+    lowFrequencyHeader->setCurrentFormatId(labelEditorColumnFormat(LOW_FREQUENCY_COLUMN_NAME, lowFrequencyModelStub.currentFormat()));
+    connectToColumnFormatChange(lowFrequencyHeader, LOW_FREQUENCY_COLUMN_NAME);
     hHeaders << lowFrequencyHeader;
 
     static auto highFrequencyModelStub = au::uicomponents::FrequencyModel();
@@ -87,7 +111,8 @@ QVector<TableViewHeader*> LabelsTableViewModel::makeHorizontalHeaders()
                                                                                                      Frequency),
                                                                 TableViewCellEditMode::Mode::StartInEdit);
     highFrequencyHeader->setAvailableFormats(highFrequencyFormats);
-    highFrequencyHeader->setCurrentFormatId(QString::number(highFrequencyModelStub.currentFormat()));
+    highFrequencyHeader->setCurrentFormatId(labelEditorColumnFormat(HIGH_FREQUENCY_COLUMN_NAME, highFrequencyModelStub.currentFormat()));
+    connectToColumnFormatChange(highFrequencyHeader, HIGH_FREQUENCY_COLUMN_NAME);
     hHeaders << highFrequencyHeader;
 
     return hHeaders;
@@ -142,6 +167,19 @@ QVector<QVector<TableViewCell*> > LabelsTableViewModel::makeTable()
     return table;
 }
 
+QString LabelsTableViewModel::labelEditorColumnFormat(const std::string& columnName, int defaultValue) const
+{
+    int result = configuration()->labelEditorColumnFormat(columnName);
+    return QString::number(result == -1 ? defaultValue : result);
+}
+
+void LabelsTableViewModel::connectToColumnFormatChange(muse::uicomponents::TableViewHeader* columnHeader, const std::string& columnName)
+{
+    connect(columnHeader, &TableViewHeader::currentFormatIdChanged, [=](){
+        configuration()->setLabelEditorColumnFormat(columnName, columnHeader->currentFormatId().toInt());
+    });
+}
+
 void LabelsTableViewModel::handleTrackMenuItem(int row, int column, const QString& itemId)
 {
     if (!isRowValid(row) || !isColumnValid(column)) {
@@ -181,7 +219,8 @@ void LabelsTableViewModel::addNewLabel()
 
     std::vector<trackedit::Track> labelTracks = allLabelTracks();
     if (labelTracks.empty()) {
-        // todo: create new
+        createNewLabelTrack(-1);
+        addNewLabel();
         return;
     }
 
@@ -257,7 +296,7 @@ void LabelsTableViewModel::removeSelectedLabels()
         return;
     }
 
-    bool ok = trackeditInteraction()->removeLabels(labelKeysToRemove, true /* completed */);
+    bool ok = trackeditInteraction()->removeLabels(labelKeysToRemove, false /* move labels */);
     if (!ok) {
         return;
     }
@@ -314,6 +353,15 @@ TableViewCell* LabelsTableViewModel::makeTrackCell(const trackedit::TrackId& tra
     //! Setting the current track ID updates the selected item in the list of available tracks.
     result->setAvailableTracks(makeAvailableTracksList());
     result->setCurrentTrackId(trackId);
+
+    //! NOTE: Update the track title in the cell.
+    //! Keep the title synchronized with the track from the list of available tracks.
+    for (const MenuItem* item : result->availableTracks()) {
+        if (item->args().arg<trackedit::TrackId>() == trackId) {
+            result->setValue_property(item->translatedTitle());
+            break;
+        }
+    }
 
     return result;
 }
@@ -460,20 +508,16 @@ bool LabelsTableViewModel::changeLabelStartTime(int row, const Val& value)
 
     trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
 
-    bool ok = trackeditInteraction()->stretchLabelLeft(labelKey, value.toDouble(), true /* completed */);
-    if (ok) {
-        //! NOTE: When stretching, the beginning and end may switch places, so let's update them
-        const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    TableViewCell* endTimeCell = findCell(row, END_TIME_COLUMN);
 
-        const trackedit::Label actualLabel = project->label(labelKey);
-
-        cell->setValue(Val(actualLabel.startTime));
-
-        TableViewCell* endTimeCell = findCell(row, END_TIME_COLUMN);
-        endTimeCell->setValue(Val(actualLabel.endTime));
+    //! NOTE: correct the right side so that the left side is not higher than the right
+    if (muse::RealIsEqualOrLess(endTimeCell->value().toDouble(), value.toDouble())) {
+        //! NOTE: without push to history
+        labelsInteraction()->stretchLabelRight(labelKey, value.toDouble(), true /* completed */);
+        endTimeCell->setValue(value);
     }
 
-    return ok;
+    return trackeditInteraction()->stretchLabelLeft(labelKey, value.toDouble(), true /* completed */);
 }
 
 bool LabelsTableViewModel::changeLabelEndTime(int row, const Val& value)
@@ -490,20 +534,16 @@ bool LabelsTableViewModel::changeLabelEndTime(int row, const Val& value)
 
     trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
 
-    bool ok = trackeditInteraction()->stretchLabelRight(labelKey, value.toDouble(), true /* completed */);
-    if (ok) {
-        //! NOTE: When stretching, the beginning and end may switch places, so let's update them
-        const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    TableViewCell* startTimeCell = findCell(row, START_TIME_COLUMN);
 
-        const trackedit::Label actualLabel = project->label(labelKey);
-
-        TableViewCell* startTimeCell = findCell(row, START_TIME_COLUMN);
-        startTimeCell->setValue(Val(actualLabel.startTime));
-
-        cell->setValue(Val(actualLabel.endTime));
+    //! NOTE: correct the left side so that the right side is not lower than the left
+    if (muse::RealIsEqualOrMore(startTimeCell->value().toDouble(), value.toDouble())) {
+        //! NOTE: without push to history
+        labelsInteraction()->stretchLabelLeft(labelKey, value.toDouble(), true /* completed */);
+        startTimeCell->setValue(value);
     }
 
-    return ok;
+    return trackeditInteraction()->stretchLabelRight(labelKey, value.toDouble(), true /* completed */);
 }
 
 bool LabelsTableViewModel::changeLabelLowFrequency(int row, const Val& value)
@@ -565,13 +605,13 @@ QString LabelsTableViewModel::createNewLabelTrack(int currentRow)
 
 io::path_t LabelsTableViewModel::selectFileForExport()
 {
-    std::vector<std::string> filter = labelExporter()->fileFilter();
-    io::path_t defaultDir = exportConfiguration()->labelsDirectoryPath();
+    std::vector<std::string> filter = importExportFilter(labelsImportExportConfiguration()->fileFilter());
+    io::path_t defaultDir = labelsImportExportConfiguration()->labelsDirectoryPath();
 
     io::path_t filePath = interactive()->selectSavingFileSync(muse::trc("global", "Save"), defaultDir, filter);
 
     if (!filePath.empty()) {
-        exportConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
+        labelsImportExportConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
     }
 
     return filePath;
@@ -579,13 +619,13 @@ io::path_t LabelsTableViewModel::selectFileForExport()
 
 io::path_t LabelsTableViewModel::selectFileForImport()
 {
-    std::vector<std::string> filter = labelsImporter()->fileFilter();
-    io::path_t defaultDir = importConfiguration()->labelsDirectoryPath();
+    std::vector<std::string> filter = importExportFilter(labelsImportExportConfiguration()->fileFilter());
+    io::path_t defaultDir = labelsImportExportConfiguration()->labelsDirectoryPath();
 
     io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("global", "Open"), defaultDir, filter);
 
     if (!filePath.empty()) {
-        importConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
+        labelsImportExportConfiguration()->setLabelsDirectoryPath(io::dirpath(filePath));
     }
 
     return filePath;

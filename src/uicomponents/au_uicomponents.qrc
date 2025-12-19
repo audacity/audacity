@@ -12,5 +12,6 @@
         <file>qml/Audacity/UiComponents/components/ArrowButton.qml</file>
         <file>qml/Audacity/UiComponents/components/ArrowMenuButton.qml</file>
         <file>qml/Audacity/UiComponents/components/DropdownWithTitle.qml</file>
+        <file>qml/Audacity/UiComponents/components/BaseSection.qml</file>
     </qresource>
 </RCC>

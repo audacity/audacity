@@ -28,9 +28,6 @@ public:
     virtual void setDirectoryPath(const muse::io::path_t& path) = 0;
     virtual muse::async::Notification directoryPathChanged() const = 0;
 
-    virtual muse::io::path_t labelsDirectoryPath() const = 0;
-    virtual void setLabelsDirectoryPath(const muse::io::path_t& path) = 0;
-
     virtual std::string currentFormat() const = 0;
     virtual void setCurrentFormat(const std::string& format) = 0;
     virtual muse::async::Notification currentFormatChanged() const = 0;

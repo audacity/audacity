@@ -24,6 +24,8 @@ import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
+
+import Audacity.UiComponents 1.0
 import Audacity.Preferences 1.0
 
 BaseSection {

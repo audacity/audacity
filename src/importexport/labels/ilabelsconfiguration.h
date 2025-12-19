@@ -3,18 +3,21 @@
 */
 #pragma once
 
-#include "global/io/path.h"
+#include "io/path.h"
 
 #include "modularity/imoduleinterface.h"
 
+#include "labelstypes.h"
+
 namespace au::importexport {
-class IImportConfiguration : MODULE_EXPORT_INTERFACE
+class ILabelsConfiguration : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(IImportConfiguration)
+    INTERFACE_ID(ILabelsConfiguration)
 
 public:
+    virtual ~ILabelsConfiguration() = default;
 
-    virtual ~IImportConfiguration() = default;
+    virtual std::vector<FileFilter> fileFilter() const = 0;
 
     virtual muse::io::path_t labelsDirectoryPath() const = 0;
     virtual void setLabelsDirectoryPath(const muse::io::path_t& path) = 0;

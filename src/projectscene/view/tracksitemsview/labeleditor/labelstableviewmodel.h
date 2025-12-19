@@ -9,10 +9,11 @@
 #include "iinteractive.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/itrackeditinteraction.h"
-#include "importexport/export/ilabelsexporter.h"
-#include "importexport/export/iexportconfiguration.h"
-#include "importexport/import/ilabelsimporter.h"
-#include "importexport/import/iimportconfiguration.h"
+#include "trackedit/ilabelsinteraction.h"
+#include "importexport/labels/ilabelsexporter.h"
+#include "importexport/labels/ilabelsimporter.h"
+#include "importexport/labels/ilabelsconfiguration.h"
+#include "iprojectsceneconfiguration.h"
 
 #include "uicomponents/qml/Muse/UiComponents/abstracttableviewmodel.h"
 
@@ -40,10 +41,11 @@ class LabelsTableViewModel : public muse::uicomponents::AbstractTableViewModel, 
     muse::Inject<muse::IInteractive> interactive = { this };
     muse::Inject<context::IGlobalContext> globalContext = { this };
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction = { this };
+    muse::Inject<trackedit::ILabelsInteraction> labelsInteraction = { this };
     muse::Inject<importexport::ILabelsExporter> labelExporter = { this };
-    muse::Inject<importexport::IExportConfiguration> exportConfiguration = { this };
     muse::Inject<importexport::ILabelsImporter> labelsImporter = { this };
-    muse::Inject<importexport::IImportConfiguration> importConfiguration = { this };
+    muse::Inject<importexport::ILabelsConfiguration> labelsImportExportConfiguration = { this };
+    muse::Inject<IProjectSceneConfiguration> configuration = { this };
 
 public:
     explicit LabelsTableViewModel(QObject* parent = nullptr);
@@ -64,6 +66,9 @@ private:
     QVector<muse::uicomponents::TableViewHeader*> makeHorizontalHeaders();
     QVector<muse::uicomponents::TableViewHeader*> makeVerticalHeaders();
     QVector<QVector<muse::uicomponents::TableViewCell*> > makeTable();
+
+    QString labelEditorColumnFormat(const std::string& columnName, int defaultValue) const;
+    void connectToColumnFormatChange(muse::uicomponents::TableViewHeader* columnHeader, const std::string& columnName);
 
     std::vector<trackedit::Track> allLabelTracks() const;
 

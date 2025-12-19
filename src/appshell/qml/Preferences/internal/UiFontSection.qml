@@ -23,6 +23,8 @@ import QtQuick 2.15
 
 import Muse.UiComponents 1.0
 
+import Audacity.UiComponents 1.0
+
 BaseSection {
     id: root
 

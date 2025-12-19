@@ -104,6 +104,7 @@ set(LINK_LIB
     effects_nyquist
     importer
     exporter
+    iex_labels
 )
 
 if (AU_MODULE_EFFECTS_VST)

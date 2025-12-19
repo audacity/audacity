@@ -3,7 +3,10 @@
 */
 #include "settings.h"
 
-#include "global/stringutils.h"
+#include "framework/global/stringutils.h"
+#include "framework/global/serialization/json.h"
+
+#include "framework/global/log.h"
 
 #include "types/projectscenetypes.h"
 #include "uicomponents/types/numerictypes.h"
@@ -29,6 +32,8 @@ static const muse::Settings::Key STEREO_HEIGHTS_PREF(moduleName, "projectscene/a
 static const muse::Settings::Key ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES(moduleName, "projectscene/asymmetricStereoHeightsWorkspaces");
 static const muse::Settings::Key SELECTION_TIMECODE_FORMAT(moduleName, "projectscene/selectionTimecodeFormat");
 static const muse::Settings::Key PLAYBACK_ON_RULER_CLICK_ENABLED(moduleName, "projectscene/playbackOnRulerClickEnabled");
+static const muse::Settings::Key LABEL_EDITOR_COLUMN_FORMAT(moduleName, "projectscene/labelEditorColumnFormat");
+
 static const bool DEFAULT_PLAYBACK_ON_RULER_CLICK_ENABLED = false;
 
 void ProjectSceneConfiguration::init()
@@ -277,6 +282,55 @@ bool ProjectSceneConfiguration::playbackOnRulerClickEnabled() const
 void ProjectSceneConfiguration::setPlaybackOnRulerClickEnabled(bool enabled)
 {
     muse::settings()->setSharedValue(PLAYBACK_ON_RULER_CLICK_ENABLED, muse::Val(enabled));
+}
+
+muse::ByteArray ProjectSceneConfiguration::labelEditorColumnFormatJson() const
+{
+    return muse::ByteArray(muse::String::fromStdString(muse::settings()->value(
+                                                           LABEL_EDITOR_COLUMN_FORMAT).toString()).toUtf8());
+}
+
+int ProjectSceneConfiguration::labelEditorColumnFormat(const std::string& columnName) const
+{
+    int result = -1;
+
+    muse::ByteArray json = labelEditorColumnFormatJson();
+    if (json.empty()) {
+        return result;
+    }
+
+    std::string err;
+    muse::JsonDocument jsodDoc = muse::JsonDocument::fromJson(json, &err);
+    if (!err.empty()) {
+        LOGE() << err;
+        return result;
+    }
+
+    if (!jsodDoc.isObject()) {
+        return result;
+    }
+
+    muse::JsonObject obj = jsodDoc.rootObject();
+    if (obj.contains(columnName)) {
+        result = obj.value(columnName).toInt();
+    }
+
+    return result;
+}
+
+void ProjectSceneConfiguration::setLabelEditorColumnFormat(const std::string& columnName, int format) const
+{
+    muse::ByteArray json = labelEditorColumnFormatJson();
+    muse::JsonObject obj;
+    if (json.empty()) {
+        obj[columnName] = format;
+    } else {
+        obj = muse::JsonDocument::fromJson(json).rootObject();
+        obj[columnName] = format;
+    }
+
+    muse::ByteArray newJson = muse::JsonDocument(obj).toJson();
+    muse::settings()->setSharedValue(LABEL_EDITOR_COLUMN_FORMAT, muse::Val(muse::String::fromUtf8(newJson).toStdString()));
 }
 
 muse::async::Notification ProjectSceneConfiguration::playbackOnRulerClickEnabledChanged() const

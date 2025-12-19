@@ -17,7 +17,5 @@ public:
     Au3LabelsImporter() = default;
 
     muse::Ret importData(const muse::io::path_t& filePath) override;
-
-    std::vector<std::string> fileFilter() override;
 };
 }

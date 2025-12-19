@@ -69,7 +69,12 @@ public:
     void setPlaybackOnRulerClickEnabled(bool enabled) override;
     muse::async::Notification playbackOnRulerClickEnabledChanged() const override;
 
+    int labelEditorColumnFormat(const std::string& columnName) const override;
+    void setLabelEditorColumnFormat(const std::string& columnName, int format) const override;
+
 private:
+    muse::ByteArray labelEditorColumnFormatJson() const;
+
     muse::async::Channel<bool> m_isVerticalRulersVisibleChanged;
     muse::async::Channel<bool> m_isRMSInWaveformVisibleChanged;
     muse::async::Channel<bool> m_isClippingInWaveformVisibleChanged;

@@ -10,20 +10,10 @@
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/domconverter.h"
 
+#include "labelsutils.h"
+
 using namespace au::au3;
 using namespace au::importexport;
-
-static LabelFormat labelFormatFromSuffix(const muse::io::path_t& filePath)
-{
-    std::string suffix = muse::io::suffix(filePath);
-    if (suffix == "srt") {
-        return LabelFormat::SUBRIP;
-    } else if (suffix == "vtt") {
-        return LabelFormat::WEBVTT;
-    }
-
-    return LabelFormat::TEXT;
-}
 
 muse::Ret Au3LabelsImporter::importData(const muse::io::path_t& filePath)
 {
@@ -38,7 +28,7 @@ muse::Ret Au3LabelsImporter::importData(const muse::io::path_t& filePath)
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    LabelFormat format = labelFormatFromSuffix(filePath);
+    LabelFormat format = au3labelFormatFromSuffix(filePath);
 
     auto& tracks = Au3TrackList::Get(*project);
 
@@ -63,11 +53,4 @@ muse::Ret Au3LabelsImporter::importData(const muse::io::path_t& filePath)
     }
 
     return muse::make_ret(muse::Ret::Code::Ok);
-}
-
-std::vector<std::string> Au3LabelsImporter::fileFilter()
-{
-    return { muse::trc("importexport", "Text file (*.txt)"),
-             muse::trc("importexport", "SubRip text file (*.srt)"),
-             muse::trc("importexport", "WebVTT file (*.vtt)") };
 }
