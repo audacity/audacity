@@ -7,6 +7,10 @@
 #include "mod-ffmpeg/ExportFFmpeg.h"
 #include "mod-wavpack/ExportWavPack.h"
 #include "mod-pcm/ExportPCM.h"
+#include "mod-ogg/ExportOGG.h"
+#include "mod-flac/ExportFLAC.h"
+#include "mod-opus/ExportOpus.h"
+#include "mod-mp2/ExportMP2.h"
 
 #include "RegisterExportPlugins.h"
 
@@ -30,5 +34,25 @@ void RegisterExportPlugins()
     static ExportPluginRegistry::RegisteredPlugin sPCMPlugin{
         "PCM",
         []{ return std::make_unique< ExportPCM >(); }
+    };
+
+    static ExportPluginRegistry::RegisteredPlugin sOGGPlugin{
+        "OGG",
+        []{ return std::make_unique< ExportOGG >(); }
+    };
+
+    static ExportPluginRegistry::RegisteredPlugin sFLACPlugin{
+        "FLAC",
+        []{ return std::make_unique< ExportFLAC >(); }
+    };
+
+    static ExportPluginRegistry::RegisteredPlugin sOpusPlugin{
+        "Opus",
+        []{ return std::make_unique< ExportOpus >(); }
+    };
+
+    static ExportPluginRegistry::RegisteredPlugin sMP2Plugin{
+        "MP2",
+        []{ return std::make_unique< ExportMP2 >(); }
     };
 }

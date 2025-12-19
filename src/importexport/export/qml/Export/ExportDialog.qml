@@ -509,6 +509,21 @@ StyledDialogView {
                             }
                         }
                     }
+
+                    RowLayout {
+
+                        visible: exportPreferencesModel.oggFormatOptionsVisible
+
+                        Item {
+                            width: root.labelColumnWidth
+                        }
+
+                        StyledTextLabel {
+                            id: oggWarning
+
+                            text: qsTrc("export", "Effective bitrate may vary")
+                        }
+                    }
                 }
             }
 

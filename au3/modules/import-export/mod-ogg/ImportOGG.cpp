@@ -28,14 +28,7 @@
 
 *//*******************************************************************/
 
-#include "Import.h"
-#include "Tags.h"
-
-#define DESC XO("Ogg Vorbis files")
-
-static const auto exts = {
-    wxT("ogg")
-};
+#include "ImportOGG.h"
 
 #include <wx/log.h>
 #include <wx/setup.h> // see next comment
@@ -45,151 +38,65 @@ static const auto exts = {
  * was a bitch to track down. */
 #include <wx/ffile.h>
 
-#include <vorbis/vorbisfile.h>
-
-#include "WaveTrack.h"
-#include "ImportPlugin.h"
-#include "ImportProgressListener.h"
-#include "ImportUtils.h"
-
-class OggImportPlugin final : public ImportPlugin
-{
-public:
-    OggImportPlugin()
-        :  ImportPlugin(FileExtensions(exts.begin(), exts.end()))
-    {
-    }
-
-    ~OggImportPlugin() { }
-
-    wxString GetPluginStringID() override { return wxT("liboggvorbis"); }
-    TranslatableString GetPluginFormatDescription() override;
-    std::unique_ptr<ImportFileHandle> Open(
-        const FilePath& Filename, AudacityProject*) override;
+static const auto exts = {
+    wxT("ogg")
 };
 
-class OggImportFileHandle final : public ImportFileHandleEx
+OggImportPlugin::OggImportPlugin()
+    :  ImportPlugin(FileExtensions(exts.begin(), exts.end()))
 {
-public:
-    OggImportFileHandle(const FilePath& filename,
-                        std::unique_ptr<wxFFile>&& file,
-                        std::unique_ptr<OggVorbis_File>&& vorbisFile)
-        :  ImportFileHandleEx(filename),
-        mFile(std::move(file)),
-        mVorbisFile(std::move(vorbisFile))
-        , mStreamUsage{static_cast<size_t>(mVorbisFile->links)}
-    {
-        for (int i = 0; i < mVorbisFile->links; i++) {
-            auto strinfo = XO("Index[%02x] Version[%d], Channels[%d], Rate[%ld]")
-                           .Format(
-                (unsigned int)i,
-                mVorbisFile->vi[i].version,
-                mVorbisFile->vi[i].channels,
-                mVorbisFile->vi[i].rate);
-            mStreamInfo.push_back(strinfo);
-            mStreamUsage[i] = 0;
-        }
-    }
-
-    ~OggImportFileHandle();
-
-    TranslatableString GetFileDescription() override;
-    ByteCount GetFileUncompressedBytes() override;
-    void Import(
-        ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
-        std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
-
-    wxInt32 GetStreamCount() override
-    {
-        if (mVorbisFile) {
-            return mVorbisFile->links;
-        } else {
-            return 0;
-        }
-    }
-
-    const TranslatableStrings& GetStreamInfo() override
-    {
-        return mStreamInfo;
-    }
-
-    void SetStreamUsage(wxInt32 StreamID, bool Use) override
-    {
-        if (mVorbisFile) {
-            if (StreamID < mVorbisFile->links) {
-                mStreamUsage[StreamID] = (Use ? 1 : 0);
-            }
-        }
-    }
-
-private:
-    std::unique_ptr<wxFFile> mFile;
-    std::unique_ptr<OggVorbis_File> mVorbisFile;
-
-    ArrayOf<int> mStreamUsage;
-    TranslatableStrings mStreamInfo;
-    std::vector<TrackListHolder> mStreams;
-};
-
-TranslatableString OggImportPlugin::GetPluginFormatDescription()
-{
-    return DESC;
 }
 
-std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(
-    const FilePath& filename, AudacityProject*)
+OggImportFileHandle::OggImportFileHandle(const FilePath& filename,
+                                         std::unique_ptr<wxFFile>&& file,
+                                         std::unique_ptr<OggVorbis_File>&& vorbisFile)
+    :  ImportFileHandleEx(filename),
+    mFile(std::move(file)),
+    mVorbisFile(std::move(vorbisFile))
+    , mStreamUsage{static_cast<size_t>(mVorbisFile->links)}
 {
-    // Suppress some compiler warnings about unused global variables in the library header
-    wxUnusedVar(OV_CALLBACKS_DEFAULT);
-    wxUnusedVar(OV_CALLBACKS_NOCLOSE);
-    wxUnusedVar(OV_CALLBACKS_STREAMONLY);
-    wxUnusedVar(OV_CALLBACKS_STREAMONLY_NOCLOSE);
+    const int links = mVorbisFile ? mVorbisFile->links : 0;
 
-    auto vorbisFile = std::make_unique<OggVorbis_File>();
-    auto file = std::make_unique<wxFFile>(filename, wxT("rb"));
+    mStreamInfo.clear();
+    mStreamInfo.reserve(std::max(0, links));
 
-    if (!file->IsOpened()) {
-        // No need for a message box, it's done automatically (but how?)
-        return nullptr;
+    for (int i = 0; i < links; ++i) {
+        mStreamUsage[i] = 1;
     }
 
-    int err = ov_open(file->fp(), vorbisFile.get(), NULL, 0);
-
-    if (err < 0) {
-        TranslatableString message;
-
-        switch (err) {
-        case OV_EREAD:
-            message = XO("Media read error");
-            break;
-        case OV_ENOTVORBIS:
-            message = XO("Not an Ogg Vorbis file");
-            break;
-        case OV_EVERSION:
-            message = XO("Vorbis version mismatch");
-            break;
-        case OV_EBADHEADER:
-            message = XO("Invalid Vorbis bitstream header");
-            break;
-        case OV_EFAULT:
-            message = XO("Internal logic fault");
-            break;
-        }
-
-        // what to do with message?
-        return nullptr;
+    for (int i = 0; i < links; ++i) {
+        const auto& vi = mVorbisFile->vi[i];
+        auto strinfo = XO("Index[%02x] Version[%d], Channels[%d], Rate[%ld]")
+                       .Format(
+            static_cast<unsigned int>(i),
+            vi.version,
+            vi.channels,
+            vi.rate
+            );
+        mStreamInfo.push_back(strinfo);
     }
-
-    return std::make_unique<OggImportFileHandle>(filename, std::move(file), std::move(vorbisFile));
 }
 
-static Importer::RegisteredImportPlugin registered{ "OGG",
-                                                    std::make_unique< OggImportPlugin >()
-};
+OggImportFileHandle::~OggImportFileHandle()
+{
+    ov_clear(mVorbisFile.get());
+    mFile->Detach();   // so that it doesn't try to close the file (ov_clear()
+    // did that already)
+}
 
 TranslatableString OggImportFileHandle::GetFileDescription()
 {
     return DESC;
+}
+
+double OggImportFileHandle::GetDuration() const
+{
+    if (!mVorbisFile) {
+        return 0.0;
+    }
+
+    const double seconds = ov_time_total(mVorbisFile.get(), -1);
+    return (seconds > 0.0) ? seconds : 0.0;
 }
 
 auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
@@ -292,7 +199,18 @@ void OggImportFileHandle::Import(
             if (mStreamUsage[bitstream] != 0) {
                 /* give the data to the wavetracks */
                 unsigned chn = 0;
-                ImportUtils::ForEachChannel(**std::next(mStreams.begin(), bitstream), [&](auto& channel)
+                if (bitstream < 0 || static_cast<size_t>(bitstream) >= mStreams.size()) {
+                    wxLogError("Ogg Vorbis importer: invalid bitstream index %d (links=%d)",
+                               bitstream, mVorbisFile ? mVorbisFile->links : -1);
+                    break;
+                }
+
+                auto& holderPtr = mStreams[bitstream];
+                if (!holderPtr) {
+                    continue;
+                }
+
+                ImportUtils::ForEachChannel(*holderPtr, [&](auto& channel)
                 {
                     channel.AppendBuffer(
                         (char*)(mainBuffer.get() + chn),
@@ -327,6 +245,9 @@ void OggImportFileHandle::Import(
     }
 
     for (auto& stream : mStreams) {
+        if (!stream) {
+            continue;
+        }
         ImportUtils::FinalizeImport(outTracks, std::move(*stream));
     }
     mStreams.clear();
@@ -353,9 +274,77 @@ void OggImportFileHandle::Import(
                                     : ImportProgressListener::ImportResult::Success);
 }
 
-OggImportFileHandle::~OggImportFileHandle()
+wxInt32 OggImportFileHandle::GetStreamCount()
 {
-    ov_clear(mVorbisFile.get());
-    mFile->Detach();   // so that it doesn't try to close the file (ov_clear()
-                       // did that already)
+    if (mVorbisFile) {
+        return mVorbisFile->links;
+    } else {
+        return 0;
+    }
+}
+
+const TranslatableStrings& OggImportFileHandle::GetStreamInfo()
+{
+    return mStreamInfo;
+}
+
+void OggImportFileHandle::SetStreamUsage(wxInt32 StreamID, bool Use)
+{
+    if (mVorbisFile) {
+        if (StreamID < mVorbisFile->links) {
+            mStreamUsage[StreamID] = (Use ? 1 : 0);
+        }
+    }
+}
+
+TranslatableString OggImportPlugin::GetPluginFormatDescription()
+{
+    return DESC;
+}
+
+std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(
+    const FilePath& filename, AudacityProject*)
+{
+    // Suppress some compiler warnings about unused global variables in the library header
+    wxUnusedVar(OV_CALLBACKS_DEFAULT);
+    wxUnusedVar(OV_CALLBACKS_NOCLOSE);
+    wxUnusedVar(OV_CALLBACKS_STREAMONLY);
+    wxUnusedVar(OV_CALLBACKS_STREAMONLY_NOCLOSE);
+
+    auto vorbisFile = std::make_unique<OggVorbis_File>();
+    auto file = std::make_unique<wxFFile>(filename, wxT("rb"));
+
+    if (!file->IsOpened()) {
+        // No need for a message box, it's done automatically (but how?)
+        return nullptr;
+    }
+
+    int err = ov_open(file->fp(), vorbisFile.get(), NULL, 0);
+
+    if (err < 0) {
+        TranslatableString message;
+
+        switch (err) {
+        case OV_EREAD:
+            message = XO("Media read error");
+            break;
+        case OV_ENOTVORBIS:
+            message = XO("Not an Ogg Vorbis file");
+            break;
+        case OV_EVERSION:
+            message = XO("Vorbis version mismatch");
+            break;
+        case OV_EBADHEADER:
+            message = XO("Invalid Vorbis bitstream header");
+            break;
+        case OV_EFAULT:
+            message = XO("Internal logic fault");
+            break;
+        }
+
+        // what to do with message?
+        return nullptr;
+    }
+
+    return std::make_unique<OggImportFileHandle>(filename, std::move(file), std::move(vorbisFile));
 }

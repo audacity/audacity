@@ -66,6 +66,8 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sqlite au3-sqlite)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soxr au3-soxr)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/pffft au3-pffft)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/portmixer au3-portmixer)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/twolame au3-twolame)
+list(APPEND AU3_LINK twolame)
 
 # Conditional time-stretching and pitch-shifting libraries
 if (AU_USE_SOUNDTOUCH)
@@ -123,6 +125,24 @@ set(MODULE_SRC ${MODULE_SRC}
     ${IMPORT_EXPORT_MODULE}/mod-pcm/ExportPCM.h
     ${IMPORT_EXPORT_MODULE}/mod-pcm/ImportPCM.cpp
     ${IMPORT_EXPORT_MODULE}/mod-pcm/ImportPCM.h
+
+    ${IMPORT_EXPORT_MODULE}/mod-ogg/ExportOGG.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-ogg/ExportOGG.h
+    ${IMPORT_EXPORT_MODULE}/mod-ogg/ImportOGG.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-ogg/ImportOGG.h
+
+    ${IMPORT_EXPORT_MODULE}/mod-flac/ExportFLAC.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-flac/ExportFLAC.h
+    ${IMPORT_EXPORT_MODULE}/mod-flac/ImportFLAC.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-flac/ImportFLAC.h
+
+    ${IMPORT_EXPORT_MODULE}/mod-opus/ExportOpus.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-opus/ExportOpus.h
+    ${IMPORT_EXPORT_MODULE}/mod-opus/ImportOpus.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-opus/ImportOpus.h
+
+    ${IMPORT_EXPORT_MODULE}/mod-mp2/ExportMP2.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-mp2/ExportMP2.h
 
     # FFmpeg support (still compiled as sources, not yet converted to library)
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ImportFFmpeg.cpp
