@@ -9,6 +9,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iglobalspectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackspectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/ispectrogrampainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/ispectrogramservice.h
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.h
     ${CMAKE_CURRENT_LIST_DIR}/spectrogramtypes.h
@@ -28,8 +29,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/globalspectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/trackspectrogramconfigurationprovider.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/trackspectrogramconfigurationprovider.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramservice.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramservice.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3clipchannelreader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3clipchannelreader.h
