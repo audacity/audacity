@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "ispectrogrampainter.h"
+#include "internal/ispectrogrampainter.h"
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
