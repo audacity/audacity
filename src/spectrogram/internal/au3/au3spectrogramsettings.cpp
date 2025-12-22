@@ -6,10 +6,10 @@
 #include "iglobalspectrogramconfiguration.h"
 #include "au3spectrogramutils.h"
 #include "spectrogramtypes.h"
+#include "../numberscale.h"
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-fft/FFT.h"
-#include "au3-screen-geometry/NumberScale.h"
 #include "au3-wave-track/WaveTrack.h"
 
 #include "framework/global/log.h"
