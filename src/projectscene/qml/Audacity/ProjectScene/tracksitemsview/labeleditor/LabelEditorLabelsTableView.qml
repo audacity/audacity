@@ -64,6 +64,10 @@ StyledTableView {
             property int row
             property int column
 
+            property NavigationPanel navigationPanel
+            property int navigationRow
+            property int navigationColumnStart
+
             property string accessibleName: current
 
             signal changed(string stub)
@@ -73,6 +77,10 @@ StyledTableView {
             current: val
 
             allowOptionToggle: false
+
+            navigation.panel: navigationPanel
+            navigation.order: navigationRow
+            navigation.column: navigationColumnStart
 
             onHandleMenuItem: function(itemId) {
                 Qt.callLater(tableViewModel.handleTrackMenuItem, row, column, itemId)
@@ -114,6 +122,10 @@ StyledTableView {
             upperTimeSignature: Boolean(itemData) ? itemData.upperTimeSignature : -1
             lowerTimeSignature: Boolean(itemData) ? itemData.lowerTimeSignature : -1
 
+            // navigation.panel: navigationPanel
+            // navigation.row: navigationRow
+            // navigation.column: navigationColumnStart
+
             onValueChangeRequested: function(newValue) {
                 item.changed(newValue)
             }
@@ -148,6 +160,10 @@ StyledTableView {
             tempo: Boolean(itemData) ? itemData.tempo : 0
             upperTimeSignature: Boolean(itemData) ? itemData.upperTimeSignature : -1
             lowerTimeSignature: Boolean(itemData) ? itemData.lowerTimeSignature : -1
+
+            // navigation.panel: navigationPanel
+            // navigation.row: navigationRow
+            // navigation.column: navigationColumnStart
 
             onValueChangeRequested: function(newValue) {
                 item.changed(newValue)

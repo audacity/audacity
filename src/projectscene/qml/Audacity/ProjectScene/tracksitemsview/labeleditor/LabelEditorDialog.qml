@@ -19,14 +19,27 @@ StyledDialogView {
 
     resizable: false
 
+    onNavigationActivateRequested: {
+        topPanel.focusOnFirst()
+    }
+
+    onAccessibilityActivateRequested: {
+        topPanel.readInfo()
+    }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
 
         LabelEditorTopPanel {
+            id: topPanel
+
             Layout.fillWidth: true
 
             canRemove: labelsTableView.hasSelection
+
+            navigationPanel.section: root.navigationSection
+            navigationPanel.order: 1
 
             onAddLabelRequested: {
                 labelsTableView.addNewLabel()
@@ -50,6 +63,9 @@ StyledDialogView {
 
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            navigationPanel.section: root.navigationSection
+            navigationPanel.order: topPanel.navigationPanel.order + 1
         }
 
         SeparatorLine {}
@@ -63,7 +79,7 @@ StyledDialogView {
             buttons: [ ButtonBoxModel.Close ]
 
             navigationPanel.section: root.navigationSection
-            navigationPanel.order: 4
+            navigationPanel.order: labelsTableView.navigationPanel.order + 1
 
             onStandardButtonClicked: function(buttonId) {
                 switch(buttonId) {
