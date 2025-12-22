@@ -53,6 +53,65 @@ enum class EffectUIMode {
     FallbackUI = 1,   // Use Audacity's fallback UI
 };
 
+// Parameter types for auto-generated UI
+enum class ParameterType {
+    Unknown = -1,
+    Toggle,        // Boolean on/off
+    Dropdown,      // Enumerated list of choices
+    Slider,        // Continuous value with range
+    Numeric,       // Numeric input field
+    ReadOnly,      // Display-only (meter, status)
+};
+
+// Parameter metadata for auto-generated UI
+struct ParameterInfo {
+    muse::String id;              // Unique parameter identifier
+    muse::String name;            // Display name
+    muse::String description;     // Optional description
+    muse::String units;           // Unit string (dB, Hz, %, etc.)
+    muse::String group;           // Parameter group/category
+
+    ParameterType type = ParameterType::Unknown;
+
+    // Value range (normalized 0.0 to 1.0 for VST3)
+    double minValue = 0.0;
+    double maxValue = 1.0;
+    double defaultValue = 0.0;
+    double currentValue = 0.0;
+
+    // Formatted value string from plugin (e.g., "440 Hz", "3.5 dB", "-12.0 dB")
+    // This is the plugin's own string representation via getParamStringByValue()
+    muse::String currentValueString;
+
+    // Plain value range (actual display values for DISCRETE parameters only)
+    // For continuous parameters, these are NOT reliable - use currentValueString instead
+    // Only valid if hasPlainRange is true (discrete parameters with working conversions)
+    double plainMinValue = 0.0;
+    double plainMaxValue = 1.0;
+    double plainDefaultValue = 0.0;
+    double plainCurrentValue = 0.0;
+    bool hasPlainRange = false;  // True for discrete params with valid plain value conversions
+
+    // For discrete parameters
+    int stepCount = 0;            // 0=continuous, 1=toggle, >1=discrete steps
+    double stepSize = 0.0;        // Step increment for discrete values
+
+    // For dropdown/enumeration parameters
+    std::vector<muse::String> enumValues;  // List of choice labels
+    std::vector<double> enumIndices;       // Corresponding numeric values
+
+    // Flags
+    bool isReadOnly = false;
+    bool isHidden = false;
+    bool isLogarithmic = false;
+    bool isInteger = false;
+    bool canAutomate = true;
+
+    bool isValid() const { return !id.empty(); }
+};
+
+using ParameterInfoList = std::vector<ParameterInfo>;
+
 class EffectFamilies
 {
     Q_GADGET
