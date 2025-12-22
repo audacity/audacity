@@ -210,6 +210,10 @@ ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project
         saveProjectZoomState(au3Project, zoomState);
     });
 
+    m_spectrogramToggledTracks.ch.onReceive(this, [this](auto) {
+        m_globalSpectrogramViewIsOnChanged.notify();
+    });
+
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
         auto prj = globalContext()->currentTrackeditProject();
         if (!prj) {
@@ -766,6 +770,12 @@ void ProjectViewState::setTrackViewType(const trackedit::TrackId& trackId, track
         return;
     }
 
+    if (m_spectrogramToggledTracks.val.find(trackId) != m_spectrogramToggledTracks.val.end()) {
+        auto map = std::move(m_spectrogramToggledTracks.val);
+        map.erase(trackId);
+        m_spectrogramToggledTracks.set(std::move(map));
+    }
+
     const auto it = m_tracks.find(trackId);
     if (it != m_tracks.end()) {
         it->second.viewType.set(viewType);
@@ -781,42 +791,48 @@ void ProjectViewState::toggleGlobalSpectrogramView()
     IF_ASSERT_FAILED(prj) {
         return;
     }
-    TrackViewTypeById& map = m_spectrogramToggledTrackMap;
+    auto set = m_spectrogramToggledTracks.val;
     auto changed = false;
-    if (map.empty()) {
+    using namespace trackedit;
+    if (set.empty()) {
         for (auto& [trackId, trackData] : m_tracks) {
-            const auto viewTypeNow = trackData.viewType.val;
-            if (viewTypeNow == trackedit::TrackViewType::Spectrogram || viewTypeNow == trackedit::TrackViewType::WaveformAndSpectrogram) {
+            if (trackData.viewType.val != TrackViewType::Waveform) {
                 continue;
             }
             changed = true;
-            trackData.viewType.set(trackedit::TrackViewType::Spectrogram);
-            ::setTrackViewType(prj, trackId, trackedit::TrackViewType::Spectrogram);
-            map.insert({ trackId, viewTypeNow });
+            trackData.viewType.set(TrackViewType::Spectrogram);
+            ::setTrackViewType(prj, trackId, TrackViewType::Spectrogram);
+            set.insert(trackId);
         }
     } else {
-        for (const auto& [trackId, trackTypeBeforeToggled] : map) {
+        for (const auto& trackId : set) {
             const auto it = m_tracks.find(trackId);
-            if (it == m_tracks.end() || it->second.viewType.val == trackTypeBeforeToggled) {
+            if (it == m_tracks.end() || it->second.viewType.val == TrackViewType::Waveform) {
                 continue;
             }
             changed = true;
-            it->second.viewType.set(trackTypeBeforeToggled);
-            ::setTrackViewType(prj, trackId, trackTypeBeforeToggled);
+            it->second.viewType.set(TrackViewType::Waveform);
+            ::setTrackViewType(prj, trackId, TrackViewType::Waveform);
         }
-        map.clear();
+        set.clear();
     }
+
+    m_spectrogramToggledTracks.set(std::move(set));
 
     if (changed) {
         projectHistory()->modifyState();
         projectHistory()->markUnsaved();
-        m_globalSpectrogramViewIsOn.set(!map.empty());
     }
 }
 
-muse::ValCh<bool> ProjectViewState::globalSpectrogramViewIsOn() const
+bool ProjectViewState::globalSpectrogramViewIsOn() const
 {
-    return m_globalSpectrogramViewIsOn;
+    return !m_spectrogramToggledTracks.val.empty();
+}
+
+muse::async::Notification ProjectViewState::globalSpectrogramViewIsOnChanged() const
+{
+    return m_globalSpectrogramViewIsOnChanged;
 }
 
 muse::ValCh<int> ProjectViewState::trackRulerType(const trackedit::TrackId& trackId) const
