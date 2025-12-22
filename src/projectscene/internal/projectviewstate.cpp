@@ -786,7 +786,7 @@ void ProjectViewState::toggleGlobalSpectrogramView()
     if (map.empty()) {
         for (auto& [trackId, trackData] : m_tracks) {
             const auto viewTypeNow = trackData.viewType.val;
-            if (viewTypeNow == trackedit::TrackViewType::Spectrogram) {
+            if (viewTypeNow == trackedit::TrackViewType::Spectrogram || viewTypeNow == trackedit::TrackViewType::WaveformAndSpectrogram) {
                 continue;
             }
             changed = true;
