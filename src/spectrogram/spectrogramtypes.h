@@ -6,7 +6,8 @@
 namespace au::spectrogram {
 // Spectrogram
 enum class SpectrogramScale {
-    Linear = 0,
+    Undefined = -1,
+    Linear,
     Logarithmic,
     Mel,
     Bark,
