@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "ispectrogrampainter.h"
+#include "internal/ispectrogrampainter.h"
 
 #include "context/iglobalcontext.h"
 #include "au3wrap/au3types.h"
