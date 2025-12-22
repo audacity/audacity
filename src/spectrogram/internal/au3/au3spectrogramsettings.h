@@ -15,13 +15,14 @@
 
 class EnumValueSymbols;
 struct FFTParam;
-class NumberScale;
 class SpectrumPrefs;
 class wxArrayStringEx;
 class WaveChannel;
 class WaveTrack;
 
 namespace au::spectrogram {
+class NumberScale;
+
 class Au3SpectrogramSettings : public TrackAttachment
 {
 public:

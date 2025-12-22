@@ -1,86 +1,79 @@
-/**********************************************************************
-
-Audacity: A Digital Audio Editor
-
-NumberScale.h
-
-Paul Licameli
-
-**********************************************************************/
-
-#ifndef __AUDACITY_NUMBER_SCALE__
-#define __AUDACITY_NUMBER_SCALE__
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#pragma once
 
 #include <algorithm>
+#include <cassert>
 #include <cmath>
-#include <wx/debug.h>
 
-enum NumberScaleType {
-    nstLinear,
-    nstLogarithmic,
-    nstMel,
-    nstBark,
-    nstErb,
-    nstPeriod,
+namespace au::spectrogram {
+enum class NumberScaleType {
+    Linear,
+    Logarithmic,
+    Mel,
+    Bark,
+    Erb,
+    Period,
 
-    nstNumScaleTypes,
-    nstNone,
+    NumScaleTypes,
+    None,
 };
 
 class NumberScale
 {
 public:
     NumberScale()
-        : mType(nstNone), mValue0(0), mValue1(1)
+        : mType(NumberScaleType::None), mValue0(0), mValue1(1)
     {}
 
     NumberScale(NumberScaleType type, float value0, float value1)
         : mType(type)
     {
         switch (mType) {
-        case nstLinear:
-        case nstNone:
+        case NumberScaleType::Linear:
+        case NumberScaleType::None:
         {
             mValue0 = value0;
             mValue1 = value1;
         }
         break;
-        case nstLogarithmic:
+        case NumberScaleType::Logarithmic:
         {
             mValue0 = logf(value0);
             mValue1 = logf(value1);
         }
         break;
-        case nstMel:
+        case NumberScaleType::Mel:
         {
             mValue0 = hzToMel(value0);
             mValue1 = hzToMel(value1);
         }
         break;
-        case nstBark:
+        case NumberScaleType::Bark:
         {
             mValue0 = hzToBark(value0);
             mValue1 = hzToBark(value1);
         }
         break;
-        case nstErb:
+        case NumberScaleType::Erb:
         {
             mValue0 = hzToErb(value0);
             mValue1 = hzToErb(value1);
         }
         break;
-        case nstPeriod:
+        case NumberScaleType::Period:
         {
             mValue0 = hzToPeriod(value0);
             mValue1 = hzToPeriod(value1);
         }
         break;
         default:
-            wxASSERT(false);
+            assert(false);
         }
     }
 
-    NumberScale Reversal() const
+    NumberScale reversal() const
     {
         NumberScale result(*this);
         std::swap(result.mValue0, result.mValue1);
@@ -153,23 +146,23 @@ public:
     }
 
     // Random access
-    float PositionToValue(float pp) const
+    float positionToValue(float pp) const
     {
         switch (mType) {
         default:
-            wxASSERT(false);
-        case nstLinear:
-        case nstNone:
+            assert(false);
+        case NumberScaleType::Linear:
+        case NumberScaleType::None:
             return mValue0 + pp * (mValue1 - mValue0);
-        case nstLogarithmic:
+        case NumberScaleType::Logarithmic:
             return exp(mValue0 + pp * (mValue1 - mValue0));
-        case nstMel:
+        case NumberScaleType::Mel:
             return melToHz(mValue0 + pp * (mValue1 - mValue0));
-        case nstBark:
+        case NumberScaleType::Bark:
             return barkToHz(mValue0 + pp * (mValue1 - mValue0));
-        case nstErb:
+        case NumberScaleType::Erb:
             return erbToHz(mValue0 + pp * (mValue1 - mValue0));
-        case nstPeriod:
+        case NumberScaleType::Period:
             return periodToHz(mValue0 + pp * (mValue1 - mValue0));
         }
     }
@@ -188,18 +181,18 @@ public:
         {
             switch (mType) {
             default:
-                wxASSERT(false);
-            case nstLinear:
-            case nstNone:
-            case nstLogarithmic:
+                assert(false);
+            case NumberScaleType::Linear:
+            case NumberScaleType::None:
+            case NumberScaleType::Logarithmic:
                 return mValue;
-            case nstMel:
+            case NumberScaleType::Mel:
                 return melToHz(mValue);
-            case nstBark:
+            case NumberScaleType::Bark:
                 return barkToHz(mValue);
-            case nstErb:
+            case NumberScaleType::Erb:
                 return erbToHz(mValue);
-            case nstPeriod:
+            case NumberScaleType::Period:
                 return periodToHz(mValue);
             }
         }
@@ -207,19 +200,19 @@ public:
         Iterator& operator ++()
         {
             switch (mType) {
-            case nstLinear:
-            case nstNone:
-            case nstMel:
-            case nstBark:
-            case nstErb:
-            case nstPeriod:
+            case NumberScaleType::Linear:
+            case NumberScaleType::None:
+            case NumberScaleType::Mel:
+            case NumberScaleType::Bark:
+            case NumberScaleType::Erb:
+            case NumberScaleType::Period:
                 mValue += mStep;
                 break;
-            case nstLogarithmic:
+            case NumberScaleType::Logarithmic:
                 mValue *= mStep;
                 break;
             default:
-                wxASSERT(false);
+                assert(false);
             }
             return *this;
         }
@@ -234,18 +227,18 @@ public:
     {
         switch (mType) {
         default:
-            wxASSERT(false);
-        case nstLinear:
-        case nstNone:
-        case nstMel:
-        case nstBark:
-        case nstErb:
-        case nstPeriod:
+            assert(false);
+        case NumberScaleType::Linear:
+        case NumberScaleType::None:
+        case NumberScaleType::Mel:
+        case NumberScaleType::Bark:
+        case NumberScaleType::Erb:
+        case NumberScaleType::Period:
             return Iterator
                        (mType,
                        nPositions == 1 ? 0 : (mValue1 - mValue0) / (nPositions - 1),
                        mValue0);
-        case nstLogarithmic:
+        case NumberScaleType::Logarithmic:
             return Iterator
                        (mType,
                        nPositions == 1 ? 1 : exp((mValue1 - mValue0) / (nPositions - 1)),
@@ -254,23 +247,23 @@ public:
     }
 
     // Inverse
-    float ValueToPosition(float val) const
+    float valueToPosition(float val) const
     {
         switch (mType) {
         default:
-            wxASSERT(false);
-        case nstLinear:
-        case nstNone:
+            assert(false);
+        case NumberScaleType::Linear:
+        case NumberScaleType::None:
             return (val - mValue0) / (mValue1 - mValue0);
-        case nstLogarithmic:
+        case NumberScaleType::Logarithmic:
             return (log(val) - mValue0) / (mValue1 - mValue0);
-        case nstMel:
+        case NumberScaleType::Mel:
             return (hzToMel(val) - mValue0) / (mValue1 - mValue0);
-        case nstBark:
+        case NumberScaleType::Bark:
             return (hzToBark(val) - mValue0) / (mValue1 - mValue0);
-        case nstErb:
+        case NumberScaleType::Erb:
             return (hzToErb(val) - mValue0) / (mValue1 - mValue0);
-        case nstPeriod:
+        case NumberScaleType::Period:
             return (hzToPeriod(val) - mValue0) / (mValue1 - mValue0);
         }
     }
@@ -280,5 +273,4 @@ private:
     float mValue0;
     float mValue1;
 };
-
-#endif
+}

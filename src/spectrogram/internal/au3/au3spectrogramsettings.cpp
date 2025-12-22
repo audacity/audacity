@@ -313,7 +313,7 @@ size_t Au3SpectrogramSettings::NBins() const
 
 NumberScale Au3SpectrogramSettings::GetScale(float minFreqIn, float maxFreqIn) const
 {
-    NumberScaleType type = nstLinear;
+    NumberScaleType type = NumberScaleType::Linear;
 
     // Don't assume the correspondence of the enums will remain direct in the future.
     // Do this switch.
@@ -321,22 +321,22 @@ NumberScale Au3SpectrogramSettings::GetScale(float minFreqIn, float maxFreqIn) c
     default:
         wxASSERT(false);
     case SpectrogramScale::Linear:
-        type = nstLinear;
+        type = NumberScaleType::Linear;
         break;
     case SpectrogramScale::Logarithmic:
-        type = nstLogarithmic;
+        type = NumberScaleType::Logarithmic;
         break;
     case SpectrogramScale::Mel:
-        type = nstMel;
+        type = NumberScaleType::Mel;
         break;
     case SpectrogramScale::Bark:
-        type = nstBark;
+        type = NumberScaleType::Bark;
         break;
     case SpectrogramScale::ERB:
-        type = nstErb;
+        type = NumberScaleType::Erb;
         break;
     case SpectrogramScale::Period:
-        type = nstPeriod;
+        type = NumberScaleType::Period;
         break;
     }
 
