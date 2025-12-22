@@ -3,15 +3,15 @@
  */
 #pragma once
 
-#include "spectrogram/ispectrogramconfiguration.h"
+#include "spectrogram/itrackspectrogramconfiguration.h"
 
 #include <cassert>
 
 namespace au::trackedit {
-class SnapshotSpectrogramConfiguration final : public spectrogram::ISpectrogramConfiguration
+class SnapshotSpectrogramConfiguration final : public spectrogram::ITrackSpectrogramConfiguration
 {
 public:
-    SnapshotSpectrogramConfiguration(const ISpectrogramConfiguration& config)
+    SnapshotSpectrogramConfiguration(const ITrackSpectrogramConfiguration& config)
         : m_spectralSelectionEnabled{config.spectralSelectionEnabled()},
         m_colorGainDb{config.colorGainDb()},
         m_colorRangeDb{config.colorRangeDb()},
@@ -21,7 +21,8 @@ public:
         m_algorithm{config.algorithm()},
         m_windowType{config.windowType()},
         m_winSizeLog2{config.winSizeLog2()},
-        m_zeroPaddingFactor{config.zeroPaddingFactor()}
+        m_zeroPaddingFactor{config.zeroPaddingFactor()},
+        m_useGlobalSettings{config.useGlobalSettings()}
     {
     }
 
@@ -57,13 +58,8 @@ public:
     int zeroPaddingFactor() const override { return m_zeroPaddingFactor; }
     void setZeroPaddingFactor(int) override { assert(false); }
 
-    spectrogram::SpectrogramSettings allSettings() const override
-    {
-        assert(false);
-        return {};
-    }
-
-    void setAllSettings(const spectrogram::SpectrogramSettings&) override { assert(false); }
+    bool useGlobalSettings() const override { return m_useGlobalSettings; }
+    void setUseGlobalSettings(bool) override { assert(false); }
 
 private:
     const bool m_spectralSelectionEnabled;
@@ -76,5 +72,6 @@ private:
     const spectrogram::SpectrogramWindowType m_windowType;
     const int m_winSizeLog2;
     const int m_zeroPaddingFactor;
+    const bool m_useGlobalSettings;
 };
 }

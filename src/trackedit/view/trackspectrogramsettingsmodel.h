@@ -28,8 +28,7 @@ public:
     TrackSpectrogramSettingsModel(QObject* parent = nullptr);
     ~TrackSpectrogramSettingsModel() override;
 
-    Q_INVOKABLE void preview();
-    Q_INVOKABLE void apply();
+    Q_INVOKABLE void accept();
 
     int trackId() const { return m_trackId; }
     void setTrackId(int value);
@@ -74,38 +73,15 @@ signals:
     void useGlobalSettingsChanged();
 
 private:
-    void doSetUseGlobalSettings(bool value);
-    void doSetSpectralSelectionEnabled_1(bool value, bool resetUseGlobalSettings);
-    void doSetColorGainDb_2(int value, bool resetUseGlobalSettings);
-    void doSetColorRangeDb_3(int value, bool resetUseGlobalSettings);
-    void doSetColorHighBoostDbPerDec_4(int value, bool resetUseGlobalSettings);
-    void doSetColorScheme_5(int value, bool resetUseGlobalSettings);
-    void doSetScale_6(int value, bool resetUseGlobalSettings);
-    void doSetAlgorithm_7(int value, bool resetUseGlobalSettings);
-    void doSetWindowType_8(int value, bool resetUseGlobalSettings);
-    void doSetWindowSize_9(int value, bool resetUseGlobalSettings);
-    void doSetZeroPaddingFactor_10(int value, bool resetUseGlobalSettings);
-
     void classBegin() override {}
     void componentComplete() override;
 
-    void readFromConfig(const spectrogram::ISpectrogramConfiguration&);
-    void writeToConfig(spectrogram::ISpectrogramConfiguration&);
+    void onSettingChanged();
     void sendRepaintRequest();
 
     int m_trackId = -1;
-    bool m_useGlobalSettings = false;
-    bool m_spectralSelectionEnabled_1 = false;
-    int m_colorGainDb_2 = 0;
-    int m_colorRangeDb_3 = 0;
-    int m_colorHighBoostDbPerDec_4 = 0;
-    spectrogram::SpectrogramColorScheme m_colorScheme_5 = static_cast<spectrogram::SpectrogramColorScheme>(0);
-    spectrogram::SpectrogramScale m_scale_6 = static_cast<spectrogram::SpectrogramScale>(0);
-    spectrogram::SpectrogramAlgorithm m_algorithm_7 = static_cast<spectrogram::SpectrogramAlgorithm>(0);
-    spectrogram::SpectrogramWindowType m_windowType_8 = static_cast<spectrogram::SpectrogramWindowType>(0);
-    int m_windowSize_9 = 0;
-    int m_zeroPaddingFactor_10 = 0;
 
-    std::unique_ptr<spectrogram::ISpectrogramConfiguration> m_configToRevertTo;
+    std::shared_ptr<spectrogram::ITrackSpectrogramConfiguration> m_trackConfig;
+    std::unique_ptr<spectrogram::ITrackSpectrogramConfiguration> m_initialTrackConfig;
 };
 }

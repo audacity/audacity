@@ -203,6 +203,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
     // Bug 2389 - always draw at least one pixel of selection.
     int selectedX = timeToPosition(viewInfo, selectionInfo.startTime) - leftOffset;
 
+    // There used to be a pragma omp parallel for here. Can/Should we use QtConcurrent?
     for (int xx = 0; xx < imageWidth; ++xx) {
         const auto w0 = sampleCount(
             0.5 + sampleRate / stretchRatio
@@ -214,6 +215,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
         bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
         maybeSelected = maybeSelected || (xx == selectedX);
 
+        // There used to be a pragma omp parallel for here. Can/Should we use QtConcurrent?
         for (int yy = 0; yy < imageHeight; ++yy) {
             const float bin     = bins[yy];
             const float nextBin = bins[yy + 1];

@@ -16,4 +16,19 @@ ITrackSpectrogramConfigurationPtr TrackSpectrogramConfigurationProvider::trackSp
 {
     return Au3TrackSpectrogramConfiguration::create(trackId, *globalContext());
 }
+
+void TrackSpectrogramConfigurationProvider::copyConfiguration(const ISpectrogramConfiguration& source,
+                                                              ISpectrogramConfiguration& destination) const
+{
+    destination.setSpectralSelectionEnabled(source.spectralSelectionEnabled());
+    destination.setColorGainDb(source.colorGainDb());
+    destination.setColorRangeDb(source.colorRangeDb());
+    destination.setColorHighBoostDbPerDec(source.colorHighBoostDbPerDec());
+    destination.setColorScheme(source.colorScheme());
+    destination.setScale(source.scale());
+    destination.setAlgorithm(source.algorithm());
+    destination.setWindowType(source.windowType());
+    destination.setWinSizeLog2(source.winSizeLog2());
+    destination.setZeroPaddingFactor(source.zeroPaddingFactor());
+}
 }

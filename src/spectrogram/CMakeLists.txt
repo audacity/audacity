@@ -13,6 +13,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.h
     ${CMAKE_CURRENT_LIST_DIR}/spectrogramtypes.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/iclipchannelreader.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/clipparameters.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/clipparameters.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/macromagic.h
@@ -30,8 +31,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackspectrogramconfigurationprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackspectrogramconfigurationprovider.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrumCache.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrumCache.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3clipchannelreader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3clipchannelreader.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3concurrentclipchannelreader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3concurrentclipchannelreader.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogrampainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogrampainter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogrampainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogrampainter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogramclipchannelpainter.cpp
@@ -41,7 +46,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3spectrogramutils.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackspectrogramconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackspectrogramconfiguration.h
-
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrumCache.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrumCache.h
+    
     ${CMAKE_CURRENT_LIST_DIR}/view/abstractsectionparameterslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/abstractsectionparameterslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/abstractspectrogramsettingsmodel.cpp
@@ -59,7 +66,6 @@ set(MODULE_SRC
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
 set(MODULE_USE_UNITY OFF)
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK au3wrap Qt6::Concurrent)
 
 setup_module()
-

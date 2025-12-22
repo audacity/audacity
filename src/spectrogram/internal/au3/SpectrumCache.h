@@ -3,6 +3,7 @@
  */
 #pragma once
 
+#include "internal/iclipchannelreader.h"
 #include "spectrogramtypes.h"
 
 #include "au3-utility/MemoryX.h"
@@ -14,9 +15,10 @@
 class sampleCount;
 class WaveClipChannel;
 using WaveChannelInterval = WaveClipChannel;
-class WideSampleSequence;
 
 namespace au::spectrogram {
+class IClipChannelReader;
+
 using Floats = ArrayOf<float>;
 class Au3SpectrogramSettings;
 
@@ -65,12 +67,25 @@ public:
     int dirty;
 
 private:
-    // Calculate one column of the spectrum
-    bool CalculateOneSpectrum(
-        const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip, const int xx, double pixelsPerSecond, int lowerBoundX,
-        int upperBoundX, const std::vector<float>& gainFactors, float* __restrict scratch, float* __restrict out) const;
+    struct SpectrumParams {
+        const int xx;
+        const double pixelsPerSecond;
+        const int lowerBoundX;
+        const int upperBoundX;
+        const std::vector<float>& gainFactors;
+        float* const __restrict scratch;
+        float* const __restrict out;
+    };
 
-    mutable std::optional<AudioSegmentSampleView> mSampleCacheHolder;
+    struct ClipParams {
+        const long long numSamples;
+        const int sampleRate;
+        const double stretchRatio;
+    };
+
+    // Calculate one column of the spectrum
+    bool CalculateOneSpectrum(const Au3SpectrogramSettings& settings, IClipChannelReader& reader, const SpectrumParams& spectrumParams,
+                              const ClipParams& clipParams) const;
 };
 
 class SpecPxCache

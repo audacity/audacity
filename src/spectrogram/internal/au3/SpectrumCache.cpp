@@ -4,13 +4,17 @@
 
 #include "SpectrumCache.h"
 #include "./au3spectrogramsettings.h"
-#include "internal/au3/au3spectrogramutils.h"
+#include "./au3spectrogramutils.h"
+#include "./au3clipchannelreader.h"
+#include "./au3concurrentclipchannelreader.h"
 #include "internal/spectrogramutils.h"
+#include "spectrogramtypes.h"
 
 #include "au3-fft/Spectrum.h"
 #include "au3-wave-track/Sequence.h"
 #include "au3-wave-track/WaveTrack.h"
-#include "spectrogramtypes.h"
+
+#include <QtConcurrent>
 
 #include <cmath>
 #include <cassert>
@@ -91,11 +95,9 @@ bool SpecCache::Matches(
         && algorithm == settings.algorithm;
 }
 
-bool SpecCache::CalculateOneSpectrum(
-    const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip,
-    const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
-    const std::vector<float>& gainFactors, float* __restrict scratch,
-    float* __restrict out) const
+bool SpecCache::CalculateOneSpectrum(const Au3SpectrogramSettings& settings, IClipChannelReader& reader,
+                                     const SpectrumParams& spectrumParams,
+                                     const ClipParams& clipParams) const
 {
     bool result = false;
     const bool reassignment = settings.algorithm == SpectrogramAlgorithm::Reassignment;
@@ -103,9 +105,18 @@ bool SpecCache::CalculateOneSpectrum(
 
     sampleCount from;
 
-    const auto numSamples = clip.GetSequence().GetNumSamples();
-    const auto sampleRate = clip.GetRate();
-    const auto stretchRatio = clip.GetStretchRatio();
+    const auto numSamples = clipParams.numSamples;
+    const auto sampleRate = clipParams.sampleRate;
+    const auto stretchRatio = clipParams.stretchRatio;
+
+    const auto pixelsPerSecond = spectrumParams.pixelsPerSecond;
+    const int xx = spectrumParams.xx;
+    float* __restrict const out = spectrumParams.out;
+    float* __restrict const scratch = spectrumParams.scratch;
+    const auto lowerBoundX = spectrumParams.lowerBoundX;
+    const auto upperBoundX = spectrumParams.upperBoundX;
+    const auto& gainFactors = spectrumParams.gainFactors;
+
     const auto samplesPerPixel = sampleRate / pixelsPerSecond / stretchRatio;
     // xx may be for a column that is out of the visible bounds, but only
     // when we are calculating reassignment contributions that may cross into
@@ -165,12 +176,9 @@ bool SpecCache::CalculateOneSpectrum(
             }
 
             if (myLen > 0) {
-                constexpr auto iChannel = 0u;
                 constexpr auto mayThrow = false; // Don't throw just for display
-                mSampleCacheHolder.emplace(
-                    clip.GetSampleView(from, myLen, mayThrow));
                 floats.resize(myLen);
-                mSampleCacheHolder->Copy(floats.data(), myLen);
+                reader.readSamples(from.as_long_long(), myLen, floats.data(), mayThrow);
                 useBuffer = floats.data();
                 if (copy) {
                     if (useBuffer) {
@@ -367,31 +375,62 @@ void SpecCache::Populate(
             fftLen, sampleRate, frequencyGainSetting, gainFactors);
     }
 
+    const ClipParams clipParams {
+        clip.GetSequence().GetNumSamples().as_long_long(),
+        sampleRate,
+        clip.GetStretchRatio()
+    };
+
     // Loop over the ranges before and after the copied portion and compute anew.
     // One of the ranges may be empty.
     for (int jj = 0; jj < 2; ++jj) {
         const int lowerBoundX = jj == 0 ? 0 : copyEnd;
         const int upperBoundX = jj == 0 ? copyBegin : numPixels;
 
-        for (auto xx = lowerBoundX; xx < upperBoundX; ++xx) {
+        std::vector<int> xRange(upperBoundX - lowerBoundX);
+        std::iota(xRange.begin(), xRange.end(), lowerBoundX);
+
+        Au3ConcurrentClipChannelReader concurrentReader(clip);
+        QtConcurrent::blockingMap(
+            xRange,
+            [&](int xx) {
+            std::vector<float> scratch(scratchSize);
             float* buffer = &scratch[0];
-            CalculateOneSpectrum(
-                settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
-                gainFactors, buffer, &freq[0]);
-        }
+            SpectrumParams spectrumParams {
+                xx,
+                pixelsPerSecond,
+                lowerBoundX,
+                upperBoundX,
+                gainFactors,
+                buffer,
+                &freq[0]
+            };
+            CalculateOneSpectrum(settings, concurrentReader, spectrumParams, clipParams);
+        });
 
         if (reassignment) {
             // Need to look beyond the edges of the range to accumulate more
             // time reassignments.
             // I'm not sure what's a good stopping criterion?
+
+            Au3ClipChannelReader reader(clip);
             auto xx = lowerBoundX;
             const double pixelsPerSample
                 =pixelsPerSecond * clip.GetStretchRatio() / sampleRate;
             const int limit = std::min((int)(0.5 + fftLen * pixelsPerSample), 100);
             for (int ii = 0; ii < limit; ++ii) {
-                const bool result = CalculateOneSpectrum(
-                    settings, clip, --xx, pixelsPerSecond, lowerBoundX, upperBoundX,
-                    gainFactors, &scratch[0], &freq[0]);
+                auto work = &scratch[0];
+                auto out = &freq[0];
+                const SpectrumParams spectrumParams {
+                    --xx,
+                    pixelsPerSecond,
+                    lowerBoundX,
+                    upperBoundX,
+                    gainFactors,
+                    work,
+                    out
+                };
+                const bool result = CalculateOneSpectrum(settings, reader, spectrumParams, clipParams);
                 if (!result) {
                     break;
                 }
@@ -399,9 +438,16 @@ void SpecCache::Populate(
 
             xx = upperBoundX;
             for (int ii = 0; ii < limit; ++ii) {
-                const bool result = CalculateOneSpectrum(
-                    settings, clip, xx++, pixelsPerSecond, lowerBoundX, upperBoundX,
-                    gainFactors, &scratch[0], &freq[0]);
+                const SpectrumParams spectrumParams {
+                    xx++,
+                    pixelsPerSecond,
+                    lowerBoundX,
+                    upperBoundX,
+                    gainFactors,
+                    &scratch[0],
+                    &freq[0]
+                };
+                const bool result = CalculateOneSpectrum(settings, reader, spectrumParams, clipParams);
                 if (!result) {
                     break;
                 }
@@ -412,7 +458,7 @@ void SpecCache::Populate(
 #ifdef _OPENMP
          #pragma omp parallel for
 #endif
-            for (xx = lowerBoundX; xx < upperBoundX; ++xx) {
+            QtConcurrent::blockingMap(xRange, [&](int xx) {
                 float* const results = &freq[nBins * xx];
                 for (size_t ii = 0; ii < nBins; ++ii) {
                     float& power = results[ii];
@@ -428,7 +474,7 @@ void SpecCache::Populate(
                         results[ii] += gainFactors[ii];
                     }
                 }
-            }
+            });
         }
     }
 }
@@ -544,8 +590,8 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 }
 
 WaveClipSpectrumCache::WaveClipSpectrumCache(size_t nChannels)
-    : mSpecCaches(nChannels)
-    , mSpecPxCaches(nChannels)
+    : mSpecPxCaches(nChannels),
+    mSpecCaches(nChannels)
 {
     for (auto& pCache : mSpecCaches) {
         pCache = std::make_unique<SpecCache>();

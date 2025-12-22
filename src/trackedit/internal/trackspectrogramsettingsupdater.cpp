@@ -13,14 +13,6 @@ void TrackSpectrogramSettingsUpdater::init()
         maybeApplyGlobalSettingsToTrack();
     });
 
-    appShellConfiguration()->settingsApplied().onNotify(this, [this]{
-        forEachTrack([](ITrackeditProject& trackeditProject, const Track& track, spectrogram::ITrackSpectrogramConfiguration& config){
-            if (config.useGlobalSettings()) {
-                trackeditProject.notifyAboutTrackChanged(track);
-            }
-        });
-    });
-
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]{
         maybeApplyGlobalSettingsToTrack();
     });
@@ -30,9 +22,10 @@ void TrackSpectrogramSettingsUpdater::init()
 
 void TrackSpectrogramSettingsUpdater::maybeApplyGlobalSettingsToTrack()
 {
-    forEachTrack([this](ITrackeditProject&, const Track&, spectrogram::ITrackSpectrogramConfiguration& config){
+    forEachTrack([this](ITrackeditProject& trackeditProject, const Track& track, spectrogram::ITrackSpectrogramConfiguration& config){
         if (config.useGlobalSettings()) {
-            config.setAllSettings(globalSpectrogramConfiguration()->allSettings());
+            trackSpectrogramConfigurationProvider()->copyConfiguration(*globalSpectrogramConfiguration(), config);
+            trackeditProject.notifyAboutTrackChanged(track);
         }
     });
 }
@@ -45,6 +38,9 @@ void TrackSpectrogramSettingsUpdater::forEachTrack(std::function<void(ITrackedit
         return;
     }
     for (const Track& track : trackeditProject->trackList()) {
+        if (track.type != TrackType::Mono && track.type != TrackType::Stereo) {
+            continue;
+        }
         const auto trackConfig = trackSpectrogramConfigurationProvider()->trackSpectrogramConfiguration(track.id);
         IF_ASSERT_FAILED(trackConfig) {
             continue;

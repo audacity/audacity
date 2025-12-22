@@ -4,6 +4,8 @@
 #include "au3spectrogramsettings.h"
 
 #include "iglobalspectrogramconfiguration.h"
+#include "au3spectrogramutils.h"
+#include "spectrogramtypes.h"
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-fft/FFT.h"
@@ -11,8 +13,6 @@
 #include "au3-wave-track/WaveTrack.h"
 
 #include "framework/global/log.h"
-#include "au3spectrogramutils.h"
-#include "spectrogramtypes.h"
 
 #include <algorithm>
 #include <cmath>
@@ -29,17 +29,16 @@ static const AttachedTrackObjects::RegisteredFactory key1{
             return settings;
         }
 
-        const SpectrogramSettings globalSettings = globalConfig->allSettings();
-        settings->range = globalSettings.colorRangeDb;
-        settings->gain = globalSettings.colorGainDb;
-        settings->frequencyGain = globalSettings.colorHighBoostDbPerDec;
-        settings->SetWindowType(globalSettings.windowType);
-        settings->SetWindowSize(1 << globalSettings.winSizeLog2);
-        settings->SetZeroPaddingFactor(globalSettings.zeroPaddingFactor);
-        settings->colorScheme = globalSettings.colorScheme;
-        settings->scaleType = globalSettings.scale;
-        settings->spectralSelectionEnabled = globalSettings.spectralSelectionEnabled;
-        settings->algorithm = globalSettings.algorithm;
+        settings->range = globalConfig->colorRangeDb();
+        settings->gain = globalConfig->colorGainDb();
+        settings->frequencyGain = globalConfig->colorHighBoostDbPerDec();
+        settings->SetWindowType(globalConfig->windowType());
+        settings->SetWindowSize(1 << globalConfig->winSizeLog2());
+        settings->SetZeroPaddingFactor(globalConfig->zeroPaddingFactor());
+        settings->colorScheme = globalConfig->colorScheme();
+        settings->scaleType = globalConfig->scale();
+        settings->spectralSelectionEnabled = globalConfig->spectralSelectionEnabled();
+        settings->algorithm = globalConfig->algorithm();
 
         return settings;
     }
@@ -62,24 +61,26 @@ Au3SpectrogramSettings& Au3SpectrogramSettings::Get(WaveTrack& track)
 }
 
 Au3SpectrogramSettings::Au3SpectrogramSettings(const Au3SpectrogramSettings& other)
-    : minFreq(other.minFreq)
-    , maxFreq(other.maxFreq)
+    : syncWithGlobalSettings(other.syncWithGlobalSettings)
     , range(other.range)
     , gain(other.gain)
     , frequencyGain(other.frequencyGain)
-    , m_windowType(other.m_windowType)
-    , m_windowSize(other.m_windowSize)
-    , m_zeroPaddingFactor(other.m_zeroPaddingFactor)
     , colorScheme(other.colorScheme)
     , scaleType(other.scaleType)
     , spectralSelectionEnabled(other.spectralSelectionEnabled)
     , algorithm(other.algorithm)
+    , minFreq(other.minFreq)
+    , maxFreq(other.maxFreq)
 
     // Do not copy these!
     , hFFT{}
     , window{}
     , tWindow{}
     , dWindow{}
+
+    , m_windowType(other.m_windowType)
+    , m_windowSize(other.m_windowSize)
+    , m_zeroPaddingFactor(other.m_zeroPaddingFactor)
 {
 }
 

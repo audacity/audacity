@@ -95,20 +95,6 @@ StyledDialogView {
         spacing: 8
 
         FlatButton {
-            id: previewBtn
-
-            height: prv.buttonHeight
-            minWidth: 80
-            isLeftSide: true
-
-            text: qsTrc("spectrogram/prefs", "Preview")
-            buttonRole: ButtonBoxModel.CustomRole
-            buttonId: ButtonBoxModel.CustomButton + 1
-
-            onClicked: settingsModel.preview()
-        }
-
-        FlatButton {
             id: cancelBtn
 
             height: prv.buttonHeight
@@ -129,13 +115,13 @@ StyledDialogView {
             height: prv.buttonHeight
             minWidth: 80
 
-            text: qsTrc("spectrogram/prefs", "Apply")
+            text: qsTrc("spectrogram/prefs", "Ok")
             buttonRole: ButtonBoxModel.AcceptRole
-            buttonId: ButtonBoxModel.Apply
+            buttonId: ButtonBoxModel.Ok
             accentButton: true
 
             onClicked: {
-                settingsModel.apply()
+                settingsModel.accept()
                 root.accept()
             }
         }
