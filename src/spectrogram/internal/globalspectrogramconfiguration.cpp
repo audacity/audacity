@@ -9,6 +9,8 @@ namespace au::spectrogram {
 namespace {
 static const std::string moduleName("spectrogram");
 
+static const muse::Settings::Key MIN_FREQ(moduleName, "spectrogram/minFreq");
+static const muse::Settings::Key MAX_FREQ(moduleName, "spectrogram/maxFreq");
 static const muse::Settings::Key SPECTRAL_SELECTION_ENABLED(moduleName, "spectrogram/spectralSelectionEnabled");
 static const muse::Settings::Key COLOR_SCHEME(moduleName, "spectrogram/colorScheme");
 static const muse::Settings::Key COLOR_GAIN_DB(moduleName, "spectrogram/colorGainDb");
@@ -23,6 +25,18 @@ static const muse::Settings::Key ZERO_PADDING_FACTOR(moduleName, "spectrogram/ze
 
 void GlobalSpectrogramConfiguration::init()
 {
+    muse::settings()->setDefaultValue(MIN_FREQ, muse::Val(0));
+    muse::settings()->valueChanged(MIN_FREQ).onReceive(this, [this](const muse::Val& val) {
+        m_minFreqChanged.send(val.toInt());
+        m_someSettingChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(MAX_FREQ, muse::Val(20000));
+    muse::settings()->valueChanged(MAX_FREQ).onReceive(this, [this](const muse::Val& val) {
+        m_maxFreqChanged.send(val.toInt());
+        m_someSettingChanged.notify();
+    });
+
     muse::settings()->setDefaultValue(SPECTRAL_SELECTION_ENABLED, muse::Val(true));
     muse::settings()->valueChanged(SPECTRAL_SELECTION_ENABLED).onReceive(this, [this](const muse::Val& val) {
         m_spectralSelectionEnabledChanged.send(val.toBool());
@@ -82,6 +96,42 @@ void GlobalSpectrogramConfiguration::init()
         m_zeroPaddingFactorChanged.send(val.toInt());
         m_someSettingChanged.notify();
     });
+}
+
+int GlobalSpectrogramConfiguration::minFreq() const
+{
+    return muse::settings()->value(MIN_FREQ).toInt();
+}
+
+void GlobalSpectrogramConfiguration::setMinFreq(int value)
+{
+    if (minFreq() == value) {
+        return;
+    }
+    muse::settings()->setSharedValue(MIN_FREQ, muse::Val(value));
+}
+
+muse::async::Channel<int> GlobalSpectrogramConfiguration::minFreqChanged() const
+{
+    return m_minFreqChanged;
+}
+
+int GlobalSpectrogramConfiguration::maxFreq() const
+{
+    return muse::settings()->value(MAX_FREQ).toInt();
+}
+
+void GlobalSpectrogramConfiguration::setMaxFreq(int value)
+{
+    if (maxFreq() == value) {
+        return;
+    }
+    muse::settings()->setSharedValue(MAX_FREQ, muse::Val(value));
+}
+
+muse::async::Channel<int> GlobalSpectrogramConfiguration::maxFreqChanged() const
+{
+    return m_maxFreqChanged;
 }
 
 bool GlobalSpectrogramConfiguration::spectralSelectionEnabled() const

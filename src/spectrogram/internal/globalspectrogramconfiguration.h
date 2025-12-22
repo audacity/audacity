@@ -15,6 +15,14 @@ public:
 
     void init();
 
+    int minFreq() const override;
+    void setMinFreq(int value) override;
+    muse::async::Channel<int> minFreqChanged() const override;
+
+    int maxFreq() const override;
+    void setMaxFreq(int value) override;
+    muse::async::Channel<int> maxFreqChanged() const override;
+
     bool spectralSelectionEnabled() const override;
     void setSpectralSelectionEnabled(bool value) override;
     muse::async::Channel<bool> spectralSelectionEnabledChanged() const override;
@@ -58,6 +66,8 @@ public:
     muse::async::Notification someSettingChanged() const override;
 
 private:
+    muse::async::Channel<int> m_minFreqChanged;
+    muse::async::Channel<int> m_maxFreqChanged;
     muse::async::Channel<bool> m_spectralSelectionEnabledChanged;
     muse::async::Channel<SpectrogramColorScheme> m_colorSchemeChanged;
     muse::async::Channel<int> m_colorGainDbChanged;

@@ -26,6 +26,7 @@ TrackSpectrogramBaseSection {
         spacing: root.narrowSpacing
         width: parent.width
         height: contentHeight
+        clip: false // or the highlight rectangle will be clipped
 
         delegate: Row {
             spacing: 0
@@ -43,6 +44,10 @@ TrackSpectrogramBaseSection {
             StyledDropdown {
                 id: comboBox
                 width: controlWidth
+
+                navigation.panel: root.navigation
+                navigation.order: index
+                navigation.name: "AlgorithmComboBox_" + index
 
                 model: controlPossibleValues
                 currentIndex: controlCurrentIndex

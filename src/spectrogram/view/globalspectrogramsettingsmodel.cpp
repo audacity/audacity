@@ -10,134 +10,160 @@ GlobalSpectrogramSettingsModel::GlobalSpectrogramSettingsModel(QObject* parent)
 
 void GlobalSpectrogramSettingsModel::componentComplete()
 {
+    configuration()->minFreqChanged().onReceive(this, [this](auto){
+        emit minFreqChanged();
+    });
+    configuration()->maxFreqChanged().onReceive(this, [this](auto){
+        emit maxFreqChanged();
+    });
     configuration()->spectralSelectionEnabledChanged().onReceive(this, [this](auto){
-        emit spectralSelectionEnabledChanged_1();
+        emit spectralSelectionEnabledChanged();
     });
     configuration()->colorGainDbChanged().onReceive(this, [this](auto){
-        emit colorGainDbChanged_2();
+        emit colorGainDbChanged();
     });
     configuration()->colorRangeDbChanged().onReceive(this, [this](auto){
-        emit colorRangeDbChanged_3();
+        emit colorRangeDbChanged();
     });
     configuration()->colorHighBoostDbPerDecChanged().onReceive(this, [this](auto){
-        emit colorHighBoostDbPerDecChanged_4();
+        emit colorHighBoostDbPerDecChanged();
     });
     configuration()->colorSchemeChanged().onReceive(this, [this](auto){
-        emit colorSchemeChanged_5();
+        emit colorSchemeChanged();
     });
     configuration()->scaleChanged().onReceive(this, [this](auto){
-        emit scaleChanged_6();
+        emit scaleChanged();
     });
     configuration()->algorithmChanged().onReceive(this, [this](auto){
-        emit algorithmChanged_7();
+        emit algorithmChanged();
     });
     configuration()->windowTypeChanged().onReceive(this, [this](auto){
-        emit windowTypeChanged_8();
+        emit windowTypeChanged();
     });
     configuration()->winSizeLog2Changed().onReceive(this, [this](auto){
-        emit windowSizeChanged_9();
+        emit windowSizeChanged();
     });
     configuration()->zeroPaddingFactorChanged().onReceive(this, [this](auto){
-        emit zeroPaddingFactorChanged_10();
+        emit zeroPaddingFactorChanged();
     });
 }
 
-bool GlobalSpectrogramSettingsModel::spectralSelectionEnabled_1() const
+bool GlobalSpectrogramSettingsModel::spectralSelectionEnabled() const
 {
     return configuration()->spectralSelectionEnabled();
 }
 
-void GlobalSpectrogramSettingsModel::setSpectralSelectionEnabled_1(bool value)
+void GlobalSpectrogramSettingsModel::setSpectralSelectionEnabled(bool value)
 {
     configuration()->setSpectralSelectionEnabled(value);
 }
 
-int GlobalSpectrogramSettingsModel::colorGainDb_2() const
+int GlobalSpectrogramSettingsModel::minFreq() const
+{
+    return configuration()->minFreq();
+}
+
+void GlobalSpectrogramSettingsModel::doSetMinFreq(int value)
+{
+    configuration()->setMinFreq(value);
+}
+
+int GlobalSpectrogramSettingsModel::maxFreq() const
+{
+    return configuration()->maxFreq();
+}
+
+void GlobalSpectrogramSettingsModel::doSetMaxFreq(int value)
+{
+    configuration()->setMaxFreq(value);
+}
+
+int GlobalSpectrogramSettingsModel::colorGainDb() const
 {
     return configuration()->colorGainDb();
 }
 
-void GlobalSpectrogramSettingsModel::setColorGainDb_2(int value)
+void GlobalSpectrogramSettingsModel::setColorGainDb(int value)
 {
     configuration()->setColorGainDb(value);
 }
 
-int GlobalSpectrogramSettingsModel::colorRangeDb_3() const
+int GlobalSpectrogramSettingsModel::colorRangeDb() const
 {
     return configuration()->colorRangeDb();
 }
 
-void GlobalSpectrogramSettingsModel::setColorRangeDb_3(int value)
+void GlobalSpectrogramSettingsModel::setColorRangeDb(int value)
 {
     configuration()->setColorRangeDb(value);
 }
 
-int GlobalSpectrogramSettingsModel::colorHighBoostDbPerDec_4() const
+int GlobalSpectrogramSettingsModel::colorHighBoostDbPerDec() const
 {
     return configuration()->colorHighBoostDbPerDec();
 }
 
-void GlobalSpectrogramSettingsModel::setColorHighBoostDbPerDec_4(int value)
+void GlobalSpectrogramSettingsModel::setColorHighBoostDbPerDec(int value)
 {
     configuration()->setColorHighBoostDbPerDec(value);
 }
 
-int GlobalSpectrogramSettingsModel::colorScheme_5() const
+int GlobalSpectrogramSettingsModel::colorScheme() const
 {
     return static_cast<int>(configuration()->colorScheme());
 }
 
-void GlobalSpectrogramSettingsModel::setColorScheme_5(int value)
+void GlobalSpectrogramSettingsModel::setColorScheme(int value)
 {
     configuration()->setColorScheme(static_cast<spectrogram::SpectrogramColorScheme>(value));
 }
 
-int GlobalSpectrogramSettingsModel::scale_6() const
+int GlobalSpectrogramSettingsModel::scale() const
 {
     return static_cast<int>(configuration()->scale());
 }
 
-void GlobalSpectrogramSettingsModel::setScale_6(int value)
+void GlobalSpectrogramSettingsModel::setScale(int value)
 {
     configuration()->setScale(static_cast<spectrogram::SpectrogramScale>(value));
 }
 
-int GlobalSpectrogramSettingsModel::algorithm_7() const
+int GlobalSpectrogramSettingsModel::algorithm() const
 {
     return static_cast<int>(configuration()->algorithm());
 }
 
-void GlobalSpectrogramSettingsModel::setAlgorithm_7(int value)
+void GlobalSpectrogramSettingsModel::setAlgorithm(int value)
 {
     configuration()->setAlgorithm(static_cast<spectrogram::SpectrogramAlgorithm>(value));
 }
 
-int GlobalSpectrogramSettingsModel::windowType_8() const
+int GlobalSpectrogramSettingsModel::windowType() const
 {
     return static_cast<int>(configuration()->windowType());
 }
 
-void GlobalSpectrogramSettingsModel::setWindowType_8(int value)
+void GlobalSpectrogramSettingsModel::setWindowType(int value)
 {
     configuration()->setWindowType(static_cast<spectrogram::SpectrogramWindowType>(value));
 }
 
-int GlobalSpectrogramSettingsModel::windowSize_9() const
+int GlobalSpectrogramSettingsModel::windowSize() const
 {
     return 1 << configuration()->winSizeLog2();
 }
 
-void GlobalSpectrogramSettingsModel::setWindowSize_9(int value)
+void GlobalSpectrogramSettingsModel::setWindowSize(int value)
 {
     configuration()->setWinSizeLog2(log2(value));
 }
 
-int GlobalSpectrogramSettingsModel::zeroPaddingFactor_10() const
+int GlobalSpectrogramSettingsModel::zeroPaddingFactor() const
 {
     return configuration()->zeroPaddingFactor();
 }
 
-void GlobalSpectrogramSettingsModel::setZeroPaddingFactor_10(int value)
+void GlobalSpectrogramSettingsModel::setZeroPaddingFactor(int value)
 {
     configuration()->setZeroPaddingFactor(value);
 }

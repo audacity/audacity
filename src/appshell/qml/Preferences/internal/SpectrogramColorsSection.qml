@@ -22,6 +22,8 @@ SpectrogramBaseSection {
         spacing: root.mediumSpacing
 
         Repeater {
+            id: repeater
+
             model: ColorSectionParameterListModel {
                 settingsModel: root.settingsModel
                 columnWidth: root.prefsColumnWidth
@@ -29,6 +31,10 @@ SpectrogramBaseSection {
 
             IncrementalPropertyControlWithTitle {
                 id: control
+
+                navigation.panel: root.navigation
+                navigation.order: index
+                navigation.name: "ColorsIncrementalControl_" + index
 
                 spacing: root.narrowSpacing
                 controlWidth: colorControlWidth
@@ -48,6 +54,10 @@ SpectrogramBaseSection {
 
         ComboBoxWithTitle {
             width: parent.width
+
+            navigation.panel: root.navigation
+            navigation.order: repeater.count
+            navigation.name: "ColorsSchemeComboBox"
 
             title: qsTrc("spectrogram/settings", "Scheme")
             spacing: root.narrowSpacing

@@ -56,16 +56,17 @@ void TrackSpectrogramSettingsModel::componentComplete()
 
     m_initialTrackConfig = std::make_unique<SnapshotSpectrogramConfiguration>(*m_trackConfig);
 
-    emit spectralSelectionEnabledChanged_1();
-    emit colorGainDbChanged_2();
-    emit colorRangeDbChanged_3();
-    emit colorHighBoostDbPerDecChanged_4();
-    emit colorSchemeChanged_5();
-    emit scaleChanged_6();
-    emit algorithmChanged_7();
-    emit windowTypeChanged_8();
-    emit windowSizeChanged_9();
-    emit zeroPaddingFactorChanged_10();
+    emit minFreqChanged();
+    emit maxFreqChanged();
+    emit colorGainDbChanged();
+    emit colorRangeDbChanged();
+    emit colorHighBoostDbPerDecChanged();
+    emit colorSchemeChanged();
+    emit scaleChanged();
+    emit algorithmChanged();
+    emit windowTypeChanged();
+    emit windowSizeChanged();
+    emit zeroPaddingFactorChanged();
     emit useGlobalSettingsChanged();
 
     sendRepaintRequest();
@@ -129,173 +130,190 @@ void TrackSpectrogramSettingsModel::setUseGlobalSettings(bool value)
     m_trackConfig->setUseGlobalSettings(value);
     if (value) {
         trackSpectrogramConfigurationProvider()->copyConfiguration(*globalSpectrogramConfiguration(), *m_trackConfig);
-        emit spectralSelectionEnabledChanged_1();
-        emit colorGainDbChanged_2();
-        emit colorRangeDbChanged_3();
-        emit colorHighBoostDbPerDecChanged_4();
-        emit colorSchemeChanged_5();
-        emit scaleChanged_6();
-        emit algorithmChanged_7();
-        emit windowTypeChanged_8();
-        emit windowSizeChanged_9();
-        emit zeroPaddingFactorChanged_10();
+        emit minFreqChanged();
+        emit maxFreqChanged();
+        emit colorGainDbChanged();
+        emit colorRangeDbChanged();
+        emit colorHighBoostDbPerDecChanged();
+        emit colorSchemeChanged();
+        emit scaleChanged();
+        emit algorithmChanged();
+        emit windowTypeChanged();
+        emit windowSizeChanged();
+        emit zeroPaddingFactorChanged();
         sendRepaintRequest();
     }
     emit useGlobalSettingsChanged();
 }
 
-bool TrackSpectrogramSettingsModel::spectralSelectionEnabled_1() const
+int TrackSpectrogramSettingsModel::minFreq() const
 {
-    return m_trackConfig ? m_trackConfig->spectralSelectionEnabled() : false;
+    return m_trackConfig ? m_trackConfig->minFreq() : 0;
 }
 
-void TrackSpectrogramSettingsModel::setSpectralSelectionEnabled_1(bool value)
+void TrackSpectrogramSettingsModel::doSetMinFreq(int value)
 {
-    if (m_trackConfig->spectralSelectionEnabled() == value) {
+    if (m_trackConfig->minFreq() == value) {
         return;
     }
-    m_trackConfig->setSpectralSelectionEnabled(value);
-    emit spectralSelectionEnabledChanged_1();
+    m_trackConfig->setMinFreq(value);
+    emit minFreqChanged();
     onSettingChanged();
 }
 
-int TrackSpectrogramSettingsModel::colorGainDb_2() const
+int TrackSpectrogramSettingsModel::maxFreq() const
+{
+    return m_trackConfig ? m_trackConfig->maxFreq() : 0;
+}
+
+void TrackSpectrogramSettingsModel::doSetMaxFreq(int value)
+{
+    if (m_trackConfig->maxFreq() == value) {
+        return;
+    }
+    m_trackConfig->setMaxFreq(value);
+    emit maxFreqChanged();
+    onSettingChanged();
+}
+
+int TrackSpectrogramSettingsModel::colorGainDb() const
 {
     return m_trackConfig ? m_trackConfig->colorGainDb() : 0;
 }
 
-void TrackSpectrogramSettingsModel::setColorGainDb_2(int value)
+void TrackSpectrogramSettingsModel::setColorGainDb(int value)
 {
     if (m_trackConfig->colorGainDb() == value) {
         return;
     }
+
     m_trackConfig->setColorGainDb(value);
-    emit colorGainDbChanged_2();
+    emit colorGainDbChanged();
     onSettingChanged();
 }
 
-int TrackSpectrogramSettingsModel::colorRangeDb_3() const
+int TrackSpectrogramSettingsModel::colorRangeDb() const
 {
     return m_trackConfig ? m_trackConfig->colorRangeDb() : 0;
 }
 
-void TrackSpectrogramSettingsModel::setColorRangeDb_3(int value)
+void TrackSpectrogramSettingsModel::setColorRangeDb(int value)
 {
     if (m_trackConfig->colorRangeDb() == value) {
         return;
     }
     m_trackConfig->setColorRangeDb(value);
-    emit colorRangeDbChanged_3();
+    emit colorRangeDbChanged();
     onSettingChanged();
 }
 
-int TrackSpectrogramSettingsModel::colorHighBoostDbPerDec_4() const
+int TrackSpectrogramSettingsModel::colorHighBoostDbPerDec() const
 {
     return m_trackConfig ? m_trackConfig->colorHighBoostDbPerDec() : 0;
 }
 
-void TrackSpectrogramSettingsModel::setColorHighBoostDbPerDec_4(int value)
+void TrackSpectrogramSettingsModel::setColorHighBoostDbPerDec(int value)
 {
     if (m_trackConfig->colorHighBoostDbPerDec() == value) {
         return;
     }
     m_trackConfig->setColorHighBoostDbPerDec(value);
-    emit colorHighBoostDbPerDecChanged_4();
+    emit colorHighBoostDbPerDecChanged();
     onSettingChanged();
 }
 
-int TrackSpectrogramSettingsModel::colorScheme_5() const
+int TrackSpectrogramSettingsModel::colorScheme() const
 {
     return m_trackConfig ? static_cast<int>(m_trackConfig->colorScheme()) : 0;
 }
 
-void TrackSpectrogramSettingsModel::setColorScheme_5(int value)
+void TrackSpectrogramSettingsModel::setColorScheme(int value)
 {
     const auto scheme = static_cast<spectrogram::SpectrogramColorScheme>(value);
     if (m_trackConfig->colorScheme() == scheme) {
         return;
     }
     m_trackConfig->setColorScheme(scheme);
-    emit colorSchemeChanged_5();
+    emit colorSchemeChanged();
     onSettingChanged();
 }
 
-int TrackSpectrogramSettingsModel::scale_6() const
+int TrackSpectrogramSettingsModel::scale() const
 {
     return m_trackConfig ? static_cast<int>(m_trackConfig->scale()) : 0;
 }
 
-void TrackSpectrogramSettingsModel::setScale_6(int value)
+void TrackSpectrogramSettingsModel::setScale(int value)
 {
     const auto scale = static_cast<spectrogram::SpectrogramScale>(value);
     if (m_trackConfig->scale() == scale) {
         return;
     }
     m_trackConfig->setScale(scale);
-    emit scaleChanged_6();
+    emit scaleChanged();
     onSettingChanged();
 }
 
-int TrackSpectrogramSettingsModel::algorithm_7() const
+int TrackSpectrogramSettingsModel::algorithm() const
 {
     return m_trackConfig ? static_cast<int>(m_trackConfig->algorithm()) : 0;
 }
 
-void TrackSpectrogramSettingsModel::setAlgorithm_7(int value)
+void TrackSpectrogramSettingsModel::setAlgorithm(int value)
 {
     const auto algorithm = static_cast<spectrogram::SpectrogramAlgorithm>(value);
     if (m_trackConfig->algorithm() == algorithm) {
         return;
     }
     m_trackConfig->setAlgorithm(algorithm);
-    emit algorithmChanged_7();
+    emit algorithmChanged();
     onSettingChanged();
 }
 
-int TrackSpectrogramSettingsModel::windowType_8() const
+int TrackSpectrogramSettingsModel::windowType() const
 {
     return m_trackConfig ? static_cast<int>(m_trackConfig->windowType()) : 0;
 }
 
-void TrackSpectrogramSettingsModel::setWindowType_8(int value)
+void TrackSpectrogramSettingsModel::setWindowType(int value)
 {
     const auto windowType = static_cast<spectrogram::SpectrogramWindowType>(value);
     if (m_trackConfig->windowType() == windowType) {
         return;
     }
     m_trackConfig->setWindowType(windowType);
-    emit windowTypeChanged_8();
+    emit windowTypeChanged();
     onSettingChanged();
 }
 
-int TrackSpectrogramSettingsModel::windowSize_9() const
+int TrackSpectrogramSettingsModel::windowSize() const
 {
     return m_trackConfig ? 1 << m_trackConfig->winSizeLog2() : 0;
 }
 
-void TrackSpectrogramSettingsModel::setWindowSize_9(int value)
+void TrackSpectrogramSettingsModel::setWindowSize(int value)
 {
     assert(isPowerOfTwo(value));
     if (m_trackConfig->winSizeLog2() == logTwo(value)) {
         return;
     }
     m_trackConfig->setWinSizeLog2(logTwo(value));
-    emit windowSizeChanged_9();
+    emit windowSizeChanged();
     onSettingChanged();
 }
 
-int TrackSpectrogramSettingsModel::zeroPaddingFactor_10() const
+int TrackSpectrogramSettingsModel::zeroPaddingFactor() const
 {
     return m_trackConfig ? m_trackConfig->zeroPaddingFactor() : 0;
 }
 
-void TrackSpectrogramSettingsModel::setZeroPaddingFactor_10(int value)
+void TrackSpectrogramSettingsModel::setZeroPaddingFactor(int value)
 {
     if (m_trackConfig->zeroPaddingFactor() == value) {
         return;
     }
     m_trackConfig->setZeroPaddingFactor(value);
-    emit zeroPaddingFactorChanged_10();
+    emit zeroPaddingFactorChanged();
     onSettingChanged();
 }
 } // namespace au::spectrogram

@@ -20,8 +20,11 @@ public:
     Au3TrackSpectrogramConfiguration(Au3SpectrogramSettings&);
     ~Au3TrackSpectrogramConfiguration() override = default;
 
-    bool spectralSelectionEnabled() const override;
-    void setSpectralSelectionEnabled(bool value) override;
+    int minFreq() const override;
+    void setMinFreq(int value) override;
+
+    int maxFreq() const override;
+    void setMaxFreq(int value) override;
 
     int colorGainDb() const override;
     void setColorGainDb(int value) override;
@@ -50,8 +53,8 @@ public:
     int zeroPaddingFactor() const override;
     void setZeroPaddingFactor(int value) override;
 
-    bool useGlobalSettings() const;
-    void setUseGlobalSettings(bool value);
+    bool useGlobalSettings() const override;
+    void setUseGlobalSettings(bool value) override;
 
 private:
     Au3SpectrogramSettings& m_settings;

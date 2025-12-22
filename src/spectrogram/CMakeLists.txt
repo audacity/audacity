@@ -57,6 +57,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/algorithmsectionparameterlistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/colorsectionparameterlistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/colorsectionparameterlistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/scalesectionparameterlistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/scalesectionparameterlistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/globalspectrogramsettingsmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/globalspectrogramsettingsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/spectrogramview.cpp

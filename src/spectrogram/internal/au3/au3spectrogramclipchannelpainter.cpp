@@ -65,12 +65,8 @@ float findValue(const float* spectrum, float bin0, float bin1, unsigned nBins, b
 constexpr auto DASH_LENGTH = 10; // pixel
 
 inline SpectrogramColors::ColorGradientChoice
-ChooseColorSet(float bin0, float bin1, float selBinLo,
-               float selBinCenter, float selBinHi, int dashCount, bool isSpectral)
+ChooseColorSet(float bin0, float bin1, float selBinLo, float selBinCenter, float selBinHi, int dashCount)
 {
-    if (!isSpectral) {
-        return SpectrogramColors::ColorGradientTimeSelected;
-    }
     if ((selBinCenter >= 0) && (bin0 <= selBinCenter)
         && (selBinCenter < bin1)) {
         return SpectrogramColors::ColorGradientEdge;
@@ -188,8 +184,6 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
                          ? -1
                          : settings.findBin(sqrt(startFrequency * endFrequency), binUnit);
 
-    const bool isSpectral = settings.spectralSelectionEnabled;
-
     SpecCache specCache;
 
     // need explicit resize since specCache.where[] accessed before Populate()
@@ -227,8 +221,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
 
             // If we are in the time selected range, then we may use a different color set.
             if (maybeSelected) {
-                selected = ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
-                                          (xx + leftOffset - leftOffset) / DASH_LENGTH, isSpectral);
+                selected = ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi, (xx + leftOffset - leftOffset) / DASH_LENGTH);
             }
 
             const float value = specPxCache->values[xx * imageHeight + yy];

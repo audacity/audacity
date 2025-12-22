@@ -24,11 +24,16 @@ SpectrogramBaseSection {
             columnWidth: root.prefsColumnWidth
         }
 
+        clip: false // or the highlight rectangle will be clipped
         spacing: root.mediumSpacing
         width: parent.width
         height: contentHeight
 
         delegate: ComboBoxWithTitle {
+            navigation.panel: root.navigation
+            navigation.order: index
+            navigation.name: "AlgorithmComboBox_" + index
+
             title: controlLabel
             columnWidth: controlWidth
             model: controlPossibleValues

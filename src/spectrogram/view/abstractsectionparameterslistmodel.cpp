@@ -32,7 +32,6 @@ void AbstractSectionParametersListModel::setColumnWidth(int width)
     }
     m_columnWidth = width;
 
-    emit dataChanged(index(0), index(rowCount({}) - 1));
     emit columnWidthChanged();
 }
 

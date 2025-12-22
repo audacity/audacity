@@ -31,17 +31,24 @@ Au3TrackSpectrogramConfiguration::Au3TrackSpectrogramConfiguration(Au3Spectrogra
     : m_settings(settings)
 {}
 
-bool Au3TrackSpectrogramConfiguration::spectralSelectionEnabled() const
+int Au3TrackSpectrogramConfiguration::minFreq() const
 {
-    return m_settings.spectralSelectionEnabled;
+    return m_settings.minFreq;
 }
 
-void Au3TrackSpectrogramConfiguration::setSpectralSelectionEnabled(bool value)
+void Au3TrackSpectrogramConfiguration::setMinFreq(int value)
 {
-    if (m_settings.spectralSelectionEnabled == value) {
-        return;
-    }
-    m_settings.spectralSelectionEnabled = value;
+    m_settings.minFreq = value;
+}
+
+int Au3TrackSpectrogramConfiguration::maxFreq() const
+{
+    return m_settings.maxFreq;
+}
+
+void Au3TrackSpectrogramConfiguration::setMaxFreq(int value)
+{
+    m_settings.maxFreq = value;
 }
 
 int Au3TrackSpectrogramConfiguration::colorGainDb() const
