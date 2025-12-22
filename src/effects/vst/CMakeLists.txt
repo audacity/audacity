@@ -39,7 +39,8 @@ include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
 set(MODULE_INCLUDE ${AU3_INCLUDE} ${MUSE_FRAMEWORK_SRC_PATH}/vst)
 set(MODULE_DEF ${AU3_DEF})
 
-set(MODULE_LINK au3wrap vst_sdk_3)
+set(MODULE_LINK au3wrap)
+# Note: vst_sdk_3 is transitively provided by au3-vst3 (via au3wrap)
 
 if(MUSE_MODULE_VST_QML)
     list(APPEND MODULE_LINK muse::vst_qml)
