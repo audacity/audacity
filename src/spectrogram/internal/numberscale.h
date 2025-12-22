@@ -3,66 +3,56 @@
  */
 #pragma once
 
+#include "spectrogramtypes.h"
+
 #include <algorithm>
 #include <cassert>
 #include <cmath>
 
 namespace au::spectrogram {
-enum class NumberScaleType {
-    Linear,
-    Logarithmic,
-    Mel,
-    Bark,
-    Erb,
-    Period,
-
-    NumScaleTypes,
-    None,
-};
-
 class NumberScale
 {
 public:
     NumberScale()
-        : mType(NumberScaleType::None), mValue0(0), mValue1(1)
+        : mType(SpectrogramScale::Undefined), mValue0(0), mValue1(1)
     {}
 
-    NumberScale(NumberScaleType type, float value0, float value1)
+    NumberScale(SpectrogramScale type, float value0, float value1)
         : mType(type)
     {
         switch (mType) {
-        case NumberScaleType::Linear:
-        case NumberScaleType::None:
+        case SpectrogramScale::Linear:
+        case SpectrogramScale::Undefined:
         {
             mValue0 = value0;
             mValue1 = value1;
         }
         break;
-        case NumberScaleType::Logarithmic:
+        case SpectrogramScale::Logarithmic:
         {
             mValue0 = logf(value0);
             mValue1 = logf(value1);
         }
         break;
-        case NumberScaleType::Mel:
+        case SpectrogramScale::Mel:
         {
             mValue0 = hzToMel(value0);
             mValue1 = hzToMel(value1);
         }
         break;
-        case NumberScaleType::Bark:
+        case SpectrogramScale::Bark:
         {
             mValue0 = hzToBark(value0);
             mValue1 = hzToBark(value1);
         }
         break;
-        case NumberScaleType::Erb:
+        case SpectrogramScale::ERB:
         {
             mValue0 = hzToErb(value0);
             mValue1 = hzToErb(value1);
         }
         break;
-        case NumberScaleType::Period:
+        case SpectrogramScale::Period:
         {
             mValue0 = hzToPeriod(value0);
             mValue1 = hzToPeriod(value1);
@@ -151,18 +141,18 @@ public:
         switch (mType) {
         default:
             assert(false);
-        case NumberScaleType::Linear:
-        case NumberScaleType::None:
+        case SpectrogramScale::Linear:
+        case SpectrogramScale::Undefined:
             return mValue0 + pp * (mValue1 - mValue0);
-        case NumberScaleType::Logarithmic:
+        case SpectrogramScale::Logarithmic:
             return exp(mValue0 + pp * (mValue1 - mValue0));
-        case NumberScaleType::Mel:
+        case SpectrogramScale::Mel:
             return melToHz(mValue0 + pp * (mValue1 - mValue0));
-        case NumberScaleType::Bark:
+        case SpectrogramScale::Bark:
             return barkToHz(mValue0 + pp * (mValue1 - mValue0));
-        case NumberScaleType::Erb:
+        case SpectrogramScale::ERB:
             return erbToHz(mValue0 + pp * (mValue1 - mValue0));
-        case NumberScaleType::Period:
+        case SpectrogramScale::Period:
             return periodToHz(mValue0 + pp * (mValue1 - mValue0));
         }
     }
@@ -172,7 +162,7 @@ public:
     class Iterator
     {
     public:
-        Iterator(NumberScaleType type, float step, float value)
+        Iterator(SpectrogramScale type, float step, float value)
             : mType(type), mStep(step), mValue(value)
         {
         }
@@ -182,17 +172,17 @@ public:
             switch (mType) {
             default:
                 assert(false);
-            case NumberScaleType::Linear:
-            case NumberScaleType::None:
-            case NumberScaleType::Logarithmic:
+            case SpectrogramScale::Linear:
+            case SpectrogramScale::Undefined:
+            case SpectrogramScale::Logarithmic:
                 return mValue;
-            case NumberScaleType::Mel:
+            case SpectrogramScale::Mel:
                 return melToHz(mValue);
-            case NumberScaleType::Bark:
+            case SpectrogramScale::Bark:
                 return barkToHz(mValue);
-            case NumberScaleType::Erb:
+            case SpectrogramScale::ERB:
                 return erbToHz(mValue);
-            case NumberScaleType::Period:
+            case SpectrogramScale::Period:
                 return periodToHz(mValue);
             }
         }
@@ -200,15 +190,15 @@ public:
         Iterator& operator ++()
         {
             switch (mType) {
-            case NumberScaleType::Linear:
-            case NumberScaleType::None:
-            case NumberScaleType::Mel:
-            case NumberScaleType::Bark:
-            case NumberScaleType::Erb:
-            case NumberScaleType::Period:
+            case SpectrogramScale::Linear:
+            case SpectrogramScale::Undefined:
+            case SpectrogramScale::Mel:
+            case SpectrogramScale::Bark:
+            case SpectrogramScale::ERB:
+            case SpectrogramScale::Period:
                 mValue += mStep;
                 break;
-            case NumberScaleType::Logarithmic:
+            case SpectrogramScale::Logarithmic:
                 mValue *= mStep;
                 break;
             default:
@@ -218,7 +208,7 @@ public:
         }
 
     private:
-        const NumberScaleType mType;
+        const SpectrogramScale mType;
         const float mStep;
         float mValue;
     };
@@ -228,17 +218,17 @@ public:
         switch (mType) {
         default:
             assert(false);
-        case NumberScaleType::Linear:
-        case NumberScaleType::None:
-        case NumberScaleType::Mel:
-        case NumberScaleType::Bark:
-        case NumberScaleType::Erb:
-        case NumberScaleType::Period:
+        case SpectrogramScale::Linear:
+        case SpectrogramScale::Undefined:
+        case SpectrogramScale::Mel:
+        case SpectrogramScale::Bark:
+        case SpectrogramScale::ERB:
+        case SpectrogramScale::Period:
             return Iterator
                        (mType,
                        nPositions == 1 ? 0 : (mValue1 - mValue0) / (nPositions - 1),
                        mValue0);
-        case NumberScaleType::Logarithmic:
+        case SpectrogramScale::Logarithmic:
             return Iterator
                        (mType,
                        nPositions == 1 ? 1 : exp((mValue1 - mValue0) / (nPositions - 1)),
@@ -252,24 +242,24 @@ public:
         switch (mType) {
         default:
             assert(false);
-        case NumberScaleType::Linear:
-        case NumberScaleType::None:
+        case SpectrogramScale::Linear:
+        case SpectrogramScale::Undefined:
             return (val - mValue0) / (mValue1 - mValue0);
-        case NumberScaleType::Logarithmic:
+        case SpectrogramScale::Logarithmic:
             return (log(val) - mValue0) / (mValue1 - mValue0);
-        case NumberScaleType::Mel:
+        case SpectrogramScale::Mel:
             return (hzToMel(val) - mValue0) / (mValue1 - mValue0);
-        case NumberScaleType::Bark:
+        case SpectrogramScale::Bark:
             return (hzToBark(val) - mValue0) / (mValue1 - mValue0);
-        case NumberScaleType::Erb:
+        case SpectrogramScale::ERB:
             return (hzToErb(val) - mValue0) / (mValue1 - mValue0);
-        case NumberScaleType::Period:
+        case SpectrogramScale::Period:
             return (hzToPeriod(val) - mValue0) / (mValue1 - mValue0);
         }
     }
 
 private:
-    NumberScaleType mType;
+    const SpectrogramScale mType;
     float mValue0;
     float mValue1;
 };
