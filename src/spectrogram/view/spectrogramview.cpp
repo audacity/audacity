@@ -13,15 +13,6 @@ SpectrogramView::SpectrogramView(QQuickItem* parent)
 
 void SpectrogramView::componentComplete()
 {
-    const auto project = globalContext()->currentTrackeditProject();
-    IF_ASSERT_FAILED(project) {
-        return;
-    }
-    project->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
-        if (track.id == m_trackId) {
-            update();
-        }
-    });
 }
 
 void SpectrogramView::setClipId(int id)
@@ -116,8 +107,6 @@ void SpectrogramView::setSelectionEndTime(double time)
 
 void SpectrogramView::paint(QPainter* painter)
 {
-    const auto project = globalContext()->currentProject();
-
     const auto indentTime = m_timelineIndentWidth / m_zoom;
     const auto viewportStartTime = m_frameStartTime - indentTime;
     const auto viewportEndTime = m_frameEndTime;
