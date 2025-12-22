@@ -6,7 +6,6 @@ times, or frequencies, or amplitudes.
 set( TARGET au3-screen-geometry )
 
 set( SOURCES
-   NumberScale.h
    ZoomInfo.cpp
    ZoomInfo.h
 )

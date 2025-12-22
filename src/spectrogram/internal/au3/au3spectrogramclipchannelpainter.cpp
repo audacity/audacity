@@ -8,8 +8,8 @@
 #include "internal/spectrogramcolors.h"
 #include "internal/spectrogramutils.h"
 #include "internal/clipparameters.h"
+#include "internal/numberscale.h"
 
-#include "au3-screen-geometry/NumberScale.h"
 #include "au3-wave-track/WaveClip.h"
 
 namespace au::spectrogram {

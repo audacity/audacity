@@ -18,6 +18,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/clipparameters.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/clipparameters.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/macromagic.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/numberscale.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/roseuscolormaps.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolordefinitions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolordefinitions.h
