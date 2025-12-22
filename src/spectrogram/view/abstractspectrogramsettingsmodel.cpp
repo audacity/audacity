@@ -30,6 +30,12 @@ void AbstractSpectrogramSettingsModel::setMaxFreq(int value)
     }
 }
 
+int AbstractSpectrogramSettingsModel::frequencyHardMaximum() const
+{
+    const auto sampleRates = audioDevicesProvider()->sampleRates();
+    return static_cast<int>(*std::max_element(sampleRates.begin(), sampleRates.end()) / 2);
+}
+
 QString AbstractSpectrogramSettingsModel::colorSchemeName(int scheme) const
 {
     switch (static_cast<SpectrogramColorScheme>(scheme)) {

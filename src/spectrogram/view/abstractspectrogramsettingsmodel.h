@@ -3,7 +3,10 @@
  */
 #pragma once
 
-#include <QAbstractListModel>
+#include "audio/iaudiodevicesprovider.h"
+
+#include "framework/global/modularity/ioc.h"
+
 #include <QObject>
 
 namespace au::spectrogram {
@@ -35,6 +38,8 @@ class AbstractSpectrogramSettingsModel : public QObject
     Q_PROPERTY(int windowSize READ windowSize WRITE setWindowSize NOTIFY windowSizeChanged)
     Q_PROPERTY(int zeroPaddingFactor READ zeroPaddingFactor WRITE setZeroPaddingFactor NOTIFY zeroPaddingFactorChanged)
 
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
+
 public:
     explicit AbstractSpectrogramSettingsModel(QObject* parent = nullptr);
     virtual ~AbstractSpectrogramSettingsModel() = default;
@@ -45,11 +50,7 @@ public:
 
     virtual int maxFreq() const = 0;
     void setMaxFreq(int value);
-    int frequencyHardMaximum() const
-    {
-        // TODO make dynamic based on sample rate
-        return 22050;
-    }
+    int frequencyHardMaximum() const;
 
     virtual int colorGainDb() const = 0;
     virtual void setColorGainDb(int value) = 0;
