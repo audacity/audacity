@@ -121,7 +121,7 @@ void PlaybackToolBarModel::setupProjectConnections(project::IAudacityProject& pr
 {
     const auto vs = project.viewState();
     vs->splitToolEnabled().ch.onReceive(this, [this](bool){ updateSplitState(); });
-    vs->globalSpectrogramViewIsOn().ch.onReceive(this, [this](bool){ updateGlobalSpectrogramViewState(); });
+    vs->globalSpectrogramViewIsOnChanged().onNotify(this, [this] { updateGlobalSpectrogramViewState(); });
 }
 
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
@@ -294,7 +294,7 @@ void PlaybackToolBarModel::updateGlobalSpectrogramViewState()
     }
 
     const auto vs = prj->viewState();
-    const bool isOn = vs->globalSpectrogramViewIsOn().val;
+    const bool isOn = vs->globalSpectrogramViewIsOn();
     item->setSelected(isOn);
 
     const QColor backgroundColor{ uiConfiguration()->currentTheme().values.value(isOn ? muse::ui::ACCENT_COLOR : muse::ui::BUTTON_COLOR).
