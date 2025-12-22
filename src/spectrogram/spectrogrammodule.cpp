@@ -1,7 +1,7 @@
 #include "spectrogrammodule.h"
 
 #include "internal/globalspectrogramconfiguration.h"
-#include "internal/trackspectrogramconfigurationprovider.h"
+#include "internal/spectrogramservice.h"
 #include "internal/au3/au3spectrogrampainter.h"
 
 #include "view/abstractspectrogramsettingsmodel.h"
@@ -15,7 +15,7 @@ namespace au::spectrogram {
 SpectrogramModule::SpectrogramModule()
     : m_au3SpectrogramPainter(std::make_shared<Au3SpectrogramPainter>()),
     m_configuration(std::make_shared<GlobalSpectrogramConfiguration>()),
-    m_trackSpectrogramConfigurationProvider(std::make_shared<TrackSpectrogramConfigurationProvider>())
+    m_spectrogramService(std::make_shared<SpectrogramService>())
 {
 }
 
@@ -28,7 +28,7 @@ void SpectrogramModule::registerExports()
 {
     ioc()->registerExport<IGlobalSpectrogramConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<ISpectrogramPainter>(moduleName(), m_au3SpectrogramPainter);
-    ioc()->registerExport<ITrackSpectrogramConfigurationProvider>(moduleName(), m_trackSpectrogramConfigurationProvider);
+    ioc()->registerExport<ISpectrogramService>(moduleName(), m_spectrogramService);
 }
 
 void SpectrogramModule::registerUiTypes()
@@ -46,6 +46,6 @@ void SpectrogramModule::onInit(const muse::IApplication::RunMode&)
 {
     m_au3SpectrogramPainter->init();
     m_configuration->init();
-    m_trackSpectrogramConfigurationProvider->init();
+    m_spectrogramService->init();
 }
 }

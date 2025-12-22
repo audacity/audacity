@@ -5,7 +5,7 @@
 
 #include "spectrogram/view/abstractspectrogramsettingsmodel.h"
 #include "spectrogram/iglobalspectrogramconfiguration.h"
-#include "spectrogram/itrackspectrogramconfigurationprovider.h"
+#include "spectrogram/ispectrogramservice.h"
 #include "context/iglobalcontext.h"
 
 #include "framework/global/modularity/ioc.h"
@@ -22,7 +22,7 @@ class TrackSpectrogramSettingsModel : public spectrogram::AbstractSpectrogramSet
 
     muse::Inject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
     muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<spectrogram::ITrackSpectrogramConfigurationProvider> trackSpectrogramConfigurationProvider;
+    muse::Inject<spectrogram::ISpectrogramService> spectrogramService;
 
 public:
     TrackSpectrogramSettingsModel(QObject* parent = nullptr);

@@ -8,12 +8,12 @@
 #include "framework/global/modularity/imoduleinterface.h"
 
 namespace au::spectrogram {
-class ITrackSpectrogramConfigurationProvider : MODULE_EXPORT_INTERFACE
+class ISpectrogramService : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(ITrackSpectrogramConfigurationProvider)
+    INTERFACE_ID(ISpectrogramService)
 
 public:
-    virtual ~ITrackSpectrogramConfigurationProvider() = default;
+    virtual ~ISpectrogramService() = default;
 
     virtual ITrackSpectrogramConfigurationPtr trackSpectrogramConfiguration(int trackId) const = 0;
     virtual void copyConfiguration(const ISpectrogramConfiguration& source, ISpectrogramConfiguration& destination) const = 0;
