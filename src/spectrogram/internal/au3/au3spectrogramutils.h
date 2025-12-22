@@ -66,4 +66,4 @@ constexpr int fromAu3WindowType(eWindowFunctions windowType)
         return 0;
     }
 }
-} // namespace au::trackedit
+}

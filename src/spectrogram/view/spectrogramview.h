@@ -5,8 +5,6 @@
 
 #include "ispectrogrampainter.h"
 
-#include "context/iglobalcontext.h"
-
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
@@ -27,7 +25,6 @@ class SpectrogramView : public QQuickPaintedItem, public muse::async::Asyncable
     Q_PROPERTY(double selectionEndTime READ selectionEndTime WRITE setSelectionEndTime NOTIFY selectionEndTimeChanged FINAL)
 
     muse::Inject<ISpectrogramPainter> spectrogramPainter;
-    muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:
     SpectrogramView(QQuickItem* parent = nullptr);
