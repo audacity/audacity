@@ -225,8 +225,6 @@ bool AlgorithmSectionParameterListModel::setData(const QModelIndex& index, const
         return false;
     }
 
-    emit dataChanged(this->index(control), this->index(control), { ControlCurrentIndexRole, ControlCurrentValueRole });
-
     return true;
 }
 }

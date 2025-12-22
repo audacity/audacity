@@ -21,6 +21,8 @@ public:
     virtual void setSpectralSelectionEnabled(bool value) = 0;
     virtual muse::async::Channel<bool> spectralSelectionEnabledChanged() const = 0;
 
+    virtual muse::async::Channel<int> minFreqChanged() const = 0;
+    virtual muse::async::Channel<int> maxFreqChanged() const = 0;
     virtual muse::async::Channel<SpectrogramColorScheme> colorSchemeChanged() const = 0;
     virtual muse::async::Channel<int> colorGainDbChanged() const = 0;
     virtual muse::async::Channel<int> colorRangeDbChanged() const = 0;

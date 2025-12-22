@@ -17,11 +17,11 @@ public:
 
     int minFreq() const override;
     void setMinFreq(int value) override;
-    muse::async::Channel<int> minFreqChanged() const;
+    muse::async::Channel<int> minFreqChanged() const override;
 
     int maxFreq() const override;
     void setMaxFreq(int value) override;
-    muse::async::Channel<int> maxFreqChanged() const;
+    muse::async::Channel<int> maxFreqChanged() const override;
 
     bool spectralSelectionEnabled() const override;
     void setSpectralSelectionEnabled(bool value) override;

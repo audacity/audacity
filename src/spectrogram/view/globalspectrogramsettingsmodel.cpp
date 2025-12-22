@@ -10,6 +10,12 @@ GlobalSpectrogramSettingsModel::GlobalSpectrogramSettingsModel(QObject* parent)
 
 void GlobalSpectrogramSettingsModel::componentComplete()
 {
+    configuration()->minFreqChanged().onReceive(this, [this](auto){
+        emit minFreqChanged();
+    });
+    configuration()->maxFreqChanged().onReceive(this, [this](auto){
+        emit maxFreqChanged();
+    });
     configuration()->spectralSelectionEnabledChanged().onReceive(this, [this](auto){
         emit spectralSelectionEnabledChanged();
     });

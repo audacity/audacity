@@ -171,8 +171,6 @@ bool ColorSectionParameterListModel::setData(const QModelIndex& index, const QVa
         return false;
     }
 
-    emit dataChanged(this->index(control), this->index(control), { ControlCurrentValueRole });
-
     return true;
 }
 }
