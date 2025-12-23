@@ -44,6 +44,16 @@ void SpectrogramView::setTrackId(int id)
     update();
 }
 
+void SpectrogramView::setChannel(int channel)
+{
+    if (m_channel == channel) {
+        return;
+    }
+    m_channel = channel;
+    emit channelChanged();
+    update();
+}
+
 void SpectrogramView::setTimelineIndentWidth(int width)
 {
     if (m_timelineIndentWidth == width) {
@@ -51,16 +61,6 @@ void SpectrogramView::setTimelineIndentWidth(int width)
     }
     m_timelineIndentWidth = width;
     emit timelineIndentWidthChanged();
-    update();
-}
-
-void SpectrogramView::setChannelHeightRatio(double ratio)
-{
-    if (muse::is_equal(m_channelHeightRatio, ratio)) {
-        return;
-    }
-    m_channelHeightRatio = ratio;
-    emit channelHeightRatioChanged();
     update();
 }
 
@@ -129,15 +129,14 @@ void SpectrogramView::paint(QPainter* painter)
     }
     const int xBegin = std::max(visibleSubrect.left() - m_timelineIndentWidth, 0);
     const int xEnd = visibleSubrect.right() + 1;
-    const spectrogram::ClipInfo clipInfo { m_clipId, m_trackId, xBegin, xEnd };
+    const spectrogram::ClipChannelInfo channelInfo { m_clipId, m_trackId, m_channel, xBegin, xEnd };
     const spectrogram::ViewInfo viewInfo {
-        static_cast<int>(height()),
-        m_channelHeightRatio,
+        height(),
         viewportStartTime,
         viewportEndTime,
         m_zoom
     };
 
-    spectrogramPainter()->paintClip(*painter, clipInfo, viewInfo, selectionInfo);
+    spectrogramPainter()->paintClipChannel(*painter, channelInfo, viewInfo, selectionInfo);
 }
 }

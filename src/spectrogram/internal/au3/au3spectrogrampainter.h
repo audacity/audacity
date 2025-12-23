@@ -21,7 +21,7 @@ public:
 
     void init();
 
-    void paintClip(QPainter&, const ClipInfo&, const ViewInfo&, const SelectionInfo&) override;
+    void paintClipChannel(QPainter&, const ClipChannelInfo&, const ViewInfo&, const SelectionInfo&) override;
 
 private:
     std::weak_ptr<au3::Au3Project> m_au3Project;
