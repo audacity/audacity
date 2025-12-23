@@ -27,7 +27,7 @@ Item {
         Repeater {
             model: root.isStereo ? 2 : 1
 
-            SpectrogramView {
+            ClipChannelSpectrogramView {
                 id: spectrogramView
 
                 Layout.fillWidth: true
