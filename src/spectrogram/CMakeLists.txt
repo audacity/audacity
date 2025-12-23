@@ -4,6 +4,8 @@
 
 declare_module(spectrogram)
 
+set(MODULE_QRC spectrogram.qrc)
+
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ispectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/iglobalspectrogramconfiguration.h

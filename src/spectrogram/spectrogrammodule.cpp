@@ -11,6 +11,11 @@
 #include "view/globalspectrogramsettingsmodel.h"
 #include "view/spectrogramview.h"
 
+static void spectrogram_init_qrc()
+{
+    Q_INIT_RESOURCE(spectrogram);
+}
+
 namespace au::spectrogram {
 SpectrogramModule::SpectrogramModule()
     : m_au3SpectrogramPainter(std::make_shared<Au3SpectrogramPainter>()),
@@ -22,6 +27,11 @@ SpectrogramModule::SpectrogramModule()
 std::string SpectrogramModule::moduleName() const
 {
     return "spectrogram";
+}
+
+void SpectrogramModule::registerResources()
+{
+    spectrogram_init_qrc();
 }
 
 void SpectrogramModule::registerExports()

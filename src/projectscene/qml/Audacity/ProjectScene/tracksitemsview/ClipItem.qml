@@ -821,7 +821,7 @@ Rectangle {
                 }
             }
 
-            SpectrogramView {
+            ClipSpectrogramView {
                 visible: root.isSpectrogramViewVisible
 
                 Layout.fillWidth: true
