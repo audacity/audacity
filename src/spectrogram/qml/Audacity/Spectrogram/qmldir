@@ -1,0 +1,2 @@
+module Audacity.Spectrogram
+ClipSpectrogramView 1.0 ClipSpectrogramView.qml
