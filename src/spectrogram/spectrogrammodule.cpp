@@ -9,7 +9,7 @@
 #include "view/colorsectionparameterlistmodel.h"
 #include "view/scalesectionparameterlistmodel.h"
 #include "view/globalspectrogramsettingsmodel.h"
-#include "view/spectrogramview.h"
+#include "view/clipchannelspectrogramview.h"
 
 static void spectrogram_init_qrc()
 {
@@ -49,7 +49,7 @@ void SpectrogramModule::registerUiTypes()
     qmlRegisterType<AlgorithmSectionParameterListModel>("Audacity.Spectrogram", 1, 0, "AlgorithmSectionParameterListModel");
     qmlRegisterType<ColorSectionParameterListModel>("Audacity.Spectrogram", 1, 0, "ColorSectionParameterListModel");
     qmlRegisterType<ScaleSectionParameterListModel>("Audacity.Spectrogram", 1, 0, "ScaleSectionParameterListModel");
-    qmlRegisterType<SpectrogramView>("Audacity.Spectrogram", 1, 0, "SpectrogramView");
+    qmlRegisterType<ClipChannelSpectrogramView>("Audacity.Spectrogram", 1, 0, "ClipChannelSpectrogramView");
 }
 
 void SpectrogramModule::onInit(const muse::IApplication::RunMode&)
