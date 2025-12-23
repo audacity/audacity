@@ -23,6 +23,7 @@ can't be.
 #include <cassert>
 
 #include <wx/dcclient.h>
+#include <wx/settings.h>
 
 BEGIN_EVENT_TABLE(auStaticText, wxWindow)
     EVT_PAINT(auStaticText::OnPaint)
@@ -36,8 +37,11 @@ auStaticText::auStaticText(wxWindow* parent, wxString textIn) :
    int textWidth, textHeight;
 
    int fontSize = 11;
-   #ifdef __WXMSW__
+   #if defined(__WXMSW__)
       fontSize = 9;
+   #elif defined(__WXGTK__)
+      auto defaultFont = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+      fontSize = defaultFont.GetPointSize();
    #endif
    wxFont font(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    GetTextExtent(textIn, &textWidth, &textHeight, NULL, NULL, &font);
