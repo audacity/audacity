@@ -11,7 +11,7 @@
 #include <QQuickPaintedItem>
 
 namespace au::spectrogram {
-class SpectrogramView : public QQuickPaintedItem, public muse::async::Asyncable
+class ClipChannelSpectrogramView : public QQuickPaintedItem, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(int clipId READ clipId WRITE setClipId NOTIFY clipIdChanged FINAL)
@@ -27,8 +27,8 @@ class SpectrogramView : public QQuickPaintedItem, public muse::async::Asyncable
     muse::Inject<ISpectrogramPainter> spectrogramPainter;
 
 public:
-    SpectrogramView(QQuickItem* parent = nullptr);
-    ~SpectrogramView() override = default;
+    ClipChannelSpectrogramView(QQuickItem* parent = nullptr);
+    ~ClipChannelSpectrogramView() override = default;
 
     int clipId() const { return m_clipId; }
     void setClipId(int id);
