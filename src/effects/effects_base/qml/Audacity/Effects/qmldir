@@ -4,3 +4,4 @@ EffectControlsDisablingOverlay 1.0 EffectControlsDisablingOverlay.qml
 EffectPresetsBar 1.0 EffectPresetsBar.qml
 EffectStyledDialogView 1.0 EffectStyledDialogView.qml
 GeneratedEffectViewer 1.0 GeneratedEffectViewer.qml
+ParameterControl 1.0 ParameterControl.qml
