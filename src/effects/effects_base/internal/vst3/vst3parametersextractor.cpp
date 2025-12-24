@@ -81,10 +81,12 @@ ParameterInfo convertParamInfo(const VST3ParameterExtraction::ParamInfo& au3Info
 }
 } // anonymous namespace
 
-ParameterInfoList VST3ParametersExtractor::extractParameters(EffectInstanceEx* instance)
+ParameterInfoList VST3ParametersExtractor::extractParameters(EffectInstanceEx* instance,
+                                                             const std::shared_ptr<EffectSettingsAccess>& settingsAccess)
 {
     // Delegate to AU3 bridge function (does not expose VST3 SDK types)
-    std::vector<VST3ParameterExtraction::ParamInfo> au3Params = VST3ParameterExtraction::extractParameters(instance);
+    std::vector<VST3ParameterExtraction::ParamInfo> au3Params
+        =VST3ParameterExtraction::extractParameters(instance, settingsAccess.get());
 
     // Convert AU3 ParamInfo to AU4 ParameterInfo
     ParameterInfoList result;

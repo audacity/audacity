@@ -90,7 +90,7 @@ void getEnumValues(Steinberg::Vst::IEditController* controller,
 }
 } // anonymous namespace
 
-std::vector<ParamInfo> extractParameters(EffectInstanceEx* instance)
+std::vector<ParamInfo> extractParameters(EffectInstanceEx* instance, EffectSettingsAccess* settingsAccess)
 {
     if (!instance) {
         return {};
@@ -100,6 +100,19 @@ std::vector<ParamInfo> extractParameters(EffectInstanceEx* instance)
     auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
     if (!vst3Instance) {
         return {};
+    }
+
+    auto& wrapper = vst3Instance->GetWrapper();
+
+    // If settings access is provided, apply stored settings to the edit controller first
+    // This ensures we read the actual saved values, not default values
+    if (settingsAccess) {
+        settingsAccess->ModifySettings([&wrapper](EffectSettings& settings) {
+            // FetchSettings applies the stored processor/controller state to the edit controller
+            // resetState=false means don't reset to defaults if no stored state exists
+            wrapper.FetchSettings(settings, false);
+            return nullptr;
+        });
     }
 
     // Get the edit controller

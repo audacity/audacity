@@ -34,7 +34,7 @@ public:
 
 private:
     // Extract parameters from VST3 plugin
-    ParameterInfoList extractVST3Parameters(EffectInstance* instance) const;
+    ParameterInfoList extractVST3Parameters(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess) const;
 
     // Extract parameters from LV2 plugin
     ParameterInfoList extractLV2Parameters(EffectInstance* instance) const;

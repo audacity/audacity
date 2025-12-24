@@ -16,7 +16,9 @@ class VST3ParametersExtractor
 {
 public:
     //! Extract all parameters from a VST3 effect instance
-    static ParameterInfoList extractParameters(EffectInstanceEx* instance);
+    //! @param settingsAccess Optional settings access to apply stored settings before extraction
+    static ParameterInfoList extractParameters(EffectInstanceEx* instance,
+                                               const std::shared_ptr<EffectSettingsAccess>& settingsAccess = nullptr);
 
     //! Get the current value of a VST3 parameter
     static double getParameterValue(EffectInstanceEx* instance, const muse::String& parameterId);
