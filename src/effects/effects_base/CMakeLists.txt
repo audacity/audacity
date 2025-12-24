@@ -78,6 +78,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/destructiveeffectviewerdialogmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.h
     )
 
 # VST3 parameter extraction (conditional)

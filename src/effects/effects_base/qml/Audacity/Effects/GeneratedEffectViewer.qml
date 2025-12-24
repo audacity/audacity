@@ -14,19 +14,40 @@ Rectangle {
 
     property int instanceId: -1
 
-    implicitWidth: 400
-    implicitHeight: 300
+    implicitWidth: 480
+    implicitHeight: 640
 
     color: ui.theme.backgroundPrimaryColor
 
+    QtObject {
+        id: prv
+
+        readonly property int spaceS: 4
+        readonly property int spaceM: 8
+        readonly property int spaceL: 12
+        readonly property int spaceXL: 16
+
+        readonly property int borderWidth: 1
+        readonly property int borderRadius: 4
+    }
+
+    GeneratedEffectViewerModel {
+        id: viewModel
+        instanceId: root.instanceId
+    }
+
+    Component.onCompleted: {
+        viewModel.load()
+    }
+
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 16
-        spacing: 16
+        anchors.margins: prv.spaceXL
+        spacing: prv.spaceXL
 
         StyledTextLabel {
             Layout.fillWidth: true
-            text: qsTrc("effects", "Generated UI")
+            text: viewModel.title
             font: ui.theme.headerBoldFont
             horizontalAlignment: Text.AlignHCenter
         }
@@ -36,35 +57,41 @@ Rectangle {
             Layout.fillHeight: true
             color: ui.theme.backgroundSecondaryColor
             border.color: ui.theme.strokeColor
-            border.width: 1
-            radius: 4
+            border.width: prv.borderWidth
+            radius: prv.borderRadius
 
-            ColumnLayout {
+            StyledFlickable {
                 anchors.fill: parent
-                anchors.margins: 16
-                spacing: 12
+                anchors.margins: prv.spaceXL
+                contentHeight: parametersColumn.height
 
-                StyledTextLabel {
-                    Layout.fillWidth: true
-                    text: qsTrc("effects", "Auto-generated UI based on plugin parameters")
-                    horizontalAlignment: Text.AlignHCenter
-                }
+                ColumnLayout {
+                    id: parametersColumn
+                    width: parent.width
+                    spacing: prv.spaceL
 
-                StyledTextLabel {
-                    Layout.fillWidth: true
-                    text: qsTrc("effects", "Instance ID: %1").arg(root.instanceId)
-                    horizontalAlignment: Text.AlignHCenter
-                }
+                    // Show message if no parameters
+                    StyledTextLabel {
+                        Layout.fillWidth: true
+                        visible: !viewModel.hasParameters
+                        text: viewModel.noParametersMessage
+                        horizontalAlignment: Text.AlignHCenter
+                        opacity: 0.6
+                    }
 
-                Item {
-                    Layout.fillHeight: true
-                }
+                    // Parameter controls
+                    Repeater {
+                        model: viewModel.parameters
 
-                StyledTextLabel {
-                    Layout.fillWidth: true
-                    text: qsTrc("effects", "Parameter extraction and UI generation coming soon...")
-                    horizontalAlignment: Text.AlignHCenter
-                    opacity: 0.6
+                        delegate: ParameterControl {
+                            Layout.fillWidth: true
+                            parameterData: modelData
+
+                            onValueChanged: function (value) {
+                                viewModel.setParameterValue(modelData.id, value)
+                            }
+                        }
+                    }
                 }
             }
         }
