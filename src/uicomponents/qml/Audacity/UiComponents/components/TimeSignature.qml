@@ -18,6 +18,15 @@ RowLayout {
     property alias upper: upperLabel.text
     property alias lower: lowerLabel.text
 
+    property NavigationControl navigation: NavigationControl {
+        name: "TimeSignature"
+        enabled: root.enabled && root.visible
+
+        accessible.role: MUAccessible.Information
+        accessible.name: qsTrc("au/uicomponents", "Time Signature" + ": "
+                               + upperLabel.text + "/" + lowerLabel.text)
+    }
+
     signal upperChangeRequested(var newValue)
     signal lowerChangeRequested(var newValue)
 
@@ -78,6 +87,8 @@ RowLayout {
                     color: ui.theme.fontSecondaryColor
                 }
             }
+
+            NavigationFocusBorder { navigationCtrl: root.navigation }
         }
     }
 
@@ -94,6 +105,10 @@ RowLayout {
                 popup.open()
             }
         }
+
+        navigation.panel: root.navigation.panel
+        navigation.row: root.navigation.row
+        navigation.column: root.navigation.column + 1
 
         onClicked: function(mouse) {
             togglePopupOpened()
