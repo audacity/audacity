@@ -93,11 +93,11 @@ Slider {
 
         onNavigationEvent: function(event) {
             switch(event.type) {
-            case NavigationEvent.Left:
+            case NavigationEvent.Down:
                 root.decreaseRequested()
                 event.accepted = true
                 break
-            case NavigationEvent.Right:
+            case NavigationEvent.Up:
                 root.increaseRequested()
                 event.accepted = true
                 break
