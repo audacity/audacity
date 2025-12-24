@@ -15,8 +15,8 @@ Item {
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "LabelEditorTopPanel"
         direction: NavigationPanel.Horizontal
-        accessible.role: MUAccessible.Dialog
-        accessible.name: titleLabel.text
+        accessible.role: MUAccessible.Button
+        accessible.name: titleLabel.text + "; " + importButton.text
     }
 
     implicitHeight: 48
@@ -25,6 +25,10 @@ Item {
     signal exportRequested()
     signal removeSelectedLabelsRequested()
     signal addLabelRequested()
+
+    function focusOnFirst() {
+        importButton.navigation.requestActive()
+    }
 
     function readInfo() {
         accessibleInfo.ignored = false
@@ -35,7 +39,7 @@ Item {
         id: accessibleInfo
         visualItem: root
         role: MUAccessible.Button
-        name: titleLabel.text // todo
+        name: titleLabel.text
     }
 
     RowLayout {
@@ -60,6 +64,8 @@ Item {
         }
 
         FlatButton {
+            id: importButton
+
             Layout.alignment: Qt.AlignRight
 
             text: qsTrc("projectscene", "Import")
@@ -67,7 +73,7 @@ Item {
 
             navigation.name: "ImportButton"
             navigation.panel: root.navigationPanel
-            navigation.column: 1
+            navigation.order: 1
 
             onClicked: {
                 root.importRequested()
@@ -76,6 +82,8 @@ Item {
 
 
         FlatButton {
+            id: exportButton
+
             Layout.alignment: Qt.AlignRight
 
             text: qsTrc("projectscene", "Export")
@@ -83,7 +91,7 @@ Item {
 
             navigation.name: "ExportButton"
             navigation.panel: root.navigationPanel
-            navigation.column: 2
+            navigation.order: importButton.navigation.order + 1
 
             onClicked: {
                 root.exportRequested()
@@ -102,7 +110,7 @@ Item {
 
             navigation.name: "DeleteButton"
             navigation.panel: root.navigationPanel
-            navigation.column: 3
+            navigation.order: exportButton.navigation.order + 1
 
             onClicked: {
                 root.removeSelectedLabelsRequested()
@@ -119,7 +127,7 @@ Item {
 
             navigation.name: "AddButton"
             navigation.panel: root.navigationPanel
-            navigation.column: 4
+            navigation.order: deleteButton.navigation.order + 1
 
             onClicked: {
                 root.addLabelRequested()

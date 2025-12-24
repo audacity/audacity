@@ -19,12 +19,12 @@ RowLayout {
 
     property alias isOpened: menuLoader.isMenuOpened
 
-    property var navigation: allowOptionToggle ? optionCheckBox.navigation : navCtrl // todo
-
-    spacing: 6
+    property NavigationControl navigation: allowOptionToggle ? optionCheckBox.navigation : navCtrl
 
     signal isOptionEnableChangeRequested(var enable)
     signal handleMenuItem(var itemId)
+
+    spacing: 6
 
     StyledTextLabel {
         Layout.alignment: Qt.AlignVCenter
