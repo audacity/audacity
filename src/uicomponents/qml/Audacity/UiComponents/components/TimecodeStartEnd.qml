@@ -23,6 +23,9 @@ RowLayout {
 
     property int currentFormat: 0
 
+    property NavigationPanel navigationPanel: null
+    property string accessibleName: ""
+
     signal startValueChangeRequested(var newValue)
     signal endValueChangeRequested(var newValue)
     signal formatChangeRequested(var newFormat)
@@ -42,6 +45,12 @@ RowLayout {
 
         showMenu: false
 
+        navigation.panel: root.navigationPanel
+        navigation.row: 1
+        navigation.column: 1
+
+        accessibleName: root.accessibleName
+
         onValueChangeRequested: function(newValue) {
             root.startValueChangeRequested(newValue)
         }
@@ -59,6 +68,10 @@ RowLayout {
         currentFormat: root.currentFormat
 
         backgroundLeftRadius: 0
+
+        navigation.panel: root.navigationPanel
+        navigation.row: startTimecode.navigation.row
+        navigation.column: startTimecode.navigationColumnEnd + 1
 
         onValueChangeRequested: function(newValue) {
             root.endValueChangeRequested(newValue)

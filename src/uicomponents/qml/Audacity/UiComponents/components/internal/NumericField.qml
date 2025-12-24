@@ -24,6 +24,9 @@ ListItemBlank {
 
     opacity: enabled ? 1.0 : ui.theme.itemOpacityDisabled
 
+    navigation.name: symbolField.text
+    navigation.enabled: isEditable
+
     StyledTextLabel {
         id: symbolField
 

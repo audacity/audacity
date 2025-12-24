@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>qml/Audacity/Record/qmldir</file>
         <file>qml/Audacity/Record/RecordLevel.qml</file>
+        <file>qml/Audacity/Record/internal/RecordLevelPopup.qml</file>
     </qresource>
 </RCC>

@@ -74,9 +74,7 @@ StyledSlider {
 
         onReleased: {
             prv.dragActive = false
-            if (!containsMouse) {
-                tooltip.hide(true)
-            }
+            tooltip.hide(true)
             root.newVolumeRequested(root.value, true)
         }
 

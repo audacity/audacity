@@ -22,10 +22,28 @@
 import QtQuick
 import QtQuick.Layouts
 
+import Muse.UiComponents
+
 import Audacity.ProjectScene
 
 Item {
     id: root
+
+    property NavigationSection navigationSection: NavigationSection {
+        id: navSec
+        name: "ProjectStatusBar"
+        enabled: root.enabled && root.visible
+        order: 1000
+    }
+
+    NavigationPanel {
+        id: navPanel
+        name: "ProjectStatusBar"
+        enabled: root.enabled && root.visible
+        order: 0
+        direction: NavigationPanel.Horizontal
+        section: navSec
+    }
 
     RowLayout {
         id: statusBarRow
@@ -40,6 +58,8 @@ Item {
         SelectionStatus {
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
             Layout.preferredWidth: width
+
+            navigationPanel: navPanel
         }
     }
 }

@@ -30,6 +30,7 @@ class NumericViewModel : public QAbstractListModel
     Q_OBJECT
 
     Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged FINAL)
+    Q_PROPERTY(QString valueString READ valueString NOTIFY valueChanged FINAL)
 
     Q_PROPERTY(double sampleRate READ sampleRate WRITE setSampleRate FINAL)
     Q_PROPERTY(double tempo READ tempo WRITE setTempo FINAL)
@@ -89,6 +90,7 @@ signals:
     void currentFormatChanged();
     void currentEditedFieldIndexChanged();
     void visualItemChanged();
+    void editingFinished();
 
 protected:
     enum Roles {

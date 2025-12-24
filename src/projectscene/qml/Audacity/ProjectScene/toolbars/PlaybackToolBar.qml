@@ -323,7 +323,7 @@ Item {
         enabled: view.model.isEnabled
 
         navigation.panel: root.navigationPanel
-        navigation.order: 100
+        navigation.order: 10000
         navigation.accessible.name: qsTrc("projectscene", "Customize toolbar")
 
         onClicked: {

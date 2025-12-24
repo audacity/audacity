@@ -28,14 +28,16 @@ public:
 
     int rowCount() const;
 
+    bool isFieldEditable(const QChar& fieldSymbol);
+
 signals:
     void currentEditedFieldIndexChanged();
     void visualItemChanged();
 
     void valueChanged(double value);
+    void editingFinished();
 
 private:
-    static bool isFieldEditable(const QChar& fieldSymbol);
     bool eventFilter(QObject* watched, QEvent* event) override;
     bool needOverrideShortcut(QEvent* event) const;
 

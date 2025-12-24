@@ -20,8 +20,7 @@ Item {
     property alias rightCurrentVolumePressure: rightVolumePressure.currentVolumePressure
     property alias rightCurrentRMS: rightVolumePressure.currentRMS
 
-    property NavigationPanel navigationPanel: null
-    property int navigationOrder: 0
+    property alias navigation: popupButton.navigation
 
     property bool isPlaying: false
 
@@ -50,6 +49,8 @@ Item {
         spacing: 0
 
         FlatButton {
+            id: popupButton
+
             Layout.preferredWidth: root.height
             Layout.preferredHeight: root.height
             Layout.rightMargin: 6
@@ -125,8 +126,9 @@ Item {
 
                 enabled: root.enabled
 
-                navigation.panel: root.navigationPanel
-                navigation.order: root.navigationOrder
+                navigation.panel: root.navigation.panel
+                navigation.row: root.navigation.row
+                navigation.column: root.navigation.column + 1
 
                 onVolumeLevelMoved: function(level) {
                     leftVolumePressure.reset()
@@ -142,6 +144,20 @@ Item {
                     leftVolumePressure.resetClipped()
                     rightVolumePressure.reset()
                     rightVolumePressure.resetClipped()
+                }
+
+                onDecreaseRequested: {
+                    if (volumeLevel <= from) {
+                        return
+                    }
+                    root.volumeLevelChangeRequested(Math.round(volumeLevel * 100) / 100 - 1)
+                }
+
+                onIncreaseRequested: {
+                    if (volumeLevel >= to) {
+                        return
+                    }
+                    root.volumeLevelChangeRequested(Math.round(volumeLevel * 100) / 100 + 1)
                 }
             }
 

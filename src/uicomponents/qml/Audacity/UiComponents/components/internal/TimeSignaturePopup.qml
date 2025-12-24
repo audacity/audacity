@@ -28,7 +28,17 @@ StyledPopupView {
 
         spacing: 8
 
+        NavigationPanel {
+            id: navPanel
+            name: "TimeSignaturePopup"
+            enabled: root.isOpened
+            direction: NavigationPanel.Horizontal
+            section: root.navigationSection
+        }
+
         StyledTextLabel {
+            id: titleLabel
+
             Layout.fillWidth: true
 
             text: qsTrc("playback", "Time signature")
@@ -49,6 +59,10 @@ StyledPopupView {
                 decimals: 0
                 maxValue: 128
                 minValue: 1
+
+                navigation.panel: navPanel
+                navigation.order: 1
+                navigation.accessible.name: titleLabel.text + " : " + currentValue
 
                 onValueEdited: function(newValue) {
                     root.upperChangeRequested(newValue)
@@ -78,6 +92,9 @@ StyledPopupView {
                     { "text": "32", "value": 32 },
                     { "text": "64", "value": 64 }
                 ]
+
+                navigation.panel: navPanel
+                navigation.order: 2
 
                 onActivated: function(index, value) {
                     root.lowerChangeRequested(value)

@@ -5,13 +5,11 @@
 
 #include <QKeyEvent>
 
-#include "log.h"
-
 using namespace au::uicomponents;
 
 bool FieldsInteractionController::isFieldEditable(const QChar& fieldSymbol)
 {
-    return fieldSymbol.isDigit();
+    return fieldSymbol.isDigit() || fieldSymbol == '-';
 }
 
 FieldsInteractionController::FieldsInteractionController(QObject* parent)
@@ -228,4 +226,6 @@ void FieldsInteractionController::scrollCurrentEditedField(int pixelsYScrolled, 
 void FieldsInteractionController::finishEditing()
 {
     setCurrentEditedFieldIndex(-1);
+
+    emit editingFinished();
 }

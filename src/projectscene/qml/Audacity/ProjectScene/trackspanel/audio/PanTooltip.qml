@@ -57,7 +57,7 @@ StyledPopupView {
         repeat: false
 
         onTriggered: {
-            open()
+            root.open()
         }
     }
 
@@ -68,13 +68,13 @@ StyledPopupView {
         repeat: false
 
         onTriggered: {
-            close()
+            root.close()
         }
     }
 
     function show(noDelay = false) {
         if (noDelay) {
-            open()
+            root.open()
         } else {
             openTimer.restart()
         }
@@ -83,7 +83,7 @@ StyledPopupView {
 
     function hide(noDelay = false) {
         if (noDelay) {
-            close()
+            root.close()
         } else {
             closeTimer.restart()
         }

@@ -413,6 +413,8 @@ DockPage {
         minimumHeight: thickness
         maximumHeight: thickness
 
+        navigationSection: content.navigationSection
+
         ProjectStatusBar {}
     }
 }
