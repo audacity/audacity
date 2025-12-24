@@ -11,11 +11,6 @@
 
 using namespace au::uicomponents;
 
-static bool isFieldEditable(const QChar& fieldSymbol)
-{
-    return fieldSymbol.isDigit() || fieldSymbol == '-';
-}
-
 NumericViewModel::NumericViewModel(QObject* parent)
     : QAbstractListModel(parent)
 {
@@ -37,7 +32,7 @@ QVariant NumericViewModel::data(const QModelIndex& index, int role) const
 
     switch (role) {
     case rSymbol: return QVariant::fromValue(ch);
-    case rIsEditable: return isFieldEditable(ch);
+    case rIsEditable: return m_fieldsInteractionController->isFieldEditable(ch);
     }
 
     return QVariant();
@@ -249,6 +244,9 @@ void NumericViewModel::initFieldInteractionController()
 
     connect(m_fieldsInteractionController.get(), &FieldsInteractionController::valueChanged,
             this, &NumericViewModel::setValue);
+
+    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::editingFinished,
+            this, &NumericViewModel::editingFinished);
 }
 
 void NumericViewModel::initFormatter()

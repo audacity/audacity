@@ -22,7 +22,32 @@ RowLayout {
     property color textColor: ui.theme.fontSecondaryColor
     property color backgroundColor: ui.theme.backgroundQuarternaryColor
 
+    property int navigationColumnEnd: menuBtn.navigation.column
+    property NavigationControl navigation: NavigationControl {
+        property bool triggerLocked: false
+
+        name: "NumericViewItem"
+        enabled: root.enabled && root.visible
+
+        accessible.role: MUAccessible.Information
+        accessible.name: model ? model.valueString : ""
+
+        onTriggered: {
+            if (triggerLocked) {
+                return
+            }
+
+            prv.isFieldsNavigationEnabled = true
+
+            var item = repeater.itemAt(0)
+            if (item) {
+                root.model.currentEditedFieldIndex = 0
+            }
+        }
+    }
+
     signal valueChangeRequested(var newValue)
+    signal valueEditingFinished()
 
     height: 28
 
@@ -37,6 +62,22 @@ RowLayout {
         function onValueChanged() {
             root.valueChangeRequested(value)
         }
+
+        function onEditingFinished() {
+            root.navigation.triggerLocked = true
+            root.navigation.requestActive()
+            root.navigation.triggerLocked = false
+
+            prv.isFieldsNavigationEnabled = false
+
+            root.valueEditingFinished()
+        }
+    }
+
+    QtObject {
+        id: prv
+
+        property bool isFieldsNavigationEnabled: false
     }
 
     RoundedRectangle {
@@ -66,6 +107,8 @@ RowLayout {
                 spacing: 0
 
                 Repeater {
+                    id: repeater
+
                     model: root.model
 
                     delegate: NumericField {
@@ -73,10 +116,31 @@ RowLayout {
                         value: symbol
 
                         isSelected: model.index === root.model.currentEditedFieldIndex
+
                         isEditable: editable
 
                         color: root.textColor
                         enabled: root.enabled
+
+                        navigation.panel: root.navigation.panel
+                        navigation.enabled: prv.isFieldsNavigationEnabled
+                        navigation.row: root.navigation.row
+                        navigation.column: root.navigation.column + 1 + model.index
+
+                        navigation.onNavigationEvent: function(event) {
+                            if (event.type === NavigationEvent.Escape) {
+                                prv.isFieldsNavigationEnabled = false
+
+                                root.navigation.navigationEvent(event)
+                                event.accepted = true
+                            }
+                        }
+
+                        onIsSelectedChanged: {
+                            if (isSelected && !navigation.active) {
+                                navigation.requestActive()
+                            }
+                        }
 
                         onClicked: {
                             root.model.currentEditedFieldIndex = model.index
@@ -84,6 +148,8 @@ RowLayout {
                     }
                 }
             }
+
+            NavigationFocusBorder { navigationCtrl: root.navigation }
         }
     }
 
@@ -99,6 +165,10 @@ RowLayout {
         backgroundColor: root.backgroundColor
         iconColor: root.textColor
         visible: root.showMenu
+
+        navigation.panel: root.navigation.panel
+        navigation.row: root.navigation.row
+        navigation.column: root.navigation.column + 1 + repeater.count + 1
 
         onHandleMenuItem: function(itemId) {
             root.model.currentFormat = parseInt(itemId)
