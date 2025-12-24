@@ -22,7 +22,6 @@ RowLayout {
     property color textColor: ui.theme.fontSecondaryColor
     property color backgroundColor: ui.theme.backgroundQuarternaryColor
 
-    property int navigationColumnEnd: menuBtn.navigation.column
     property NavigationControl navigation: NavigationControl {
         property bool triggerLocked: false
 
@@ -30,7 +29,7 @@ RowLayout {
         enabled: root.enabled && root.visible
 
         accessible.role: MUAccessible.Information
-        accessible.name: model ? model.valueString : ""
+        accessible.name: accessibleName + (model ? model.valueString : "")
 
         onTriggered: {
             if (triggerLocked) {
@@ -45,6 +44,9 @@ RowLayout {
             }
         }
     }
+    property alias navigationColumnEnd: menuBtn.navigation.column
+
+    property string accessibleName: ""
 
     signal valueChangeRequested(var newValue)
     signal valueEditingFinished()
