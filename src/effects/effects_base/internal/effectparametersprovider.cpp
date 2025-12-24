@@ -30,7 +30,11 @@ ParameterInfoList EffectParametersProvider::parameters(EffectInstanceId instance
 
     switch (family) {
     case EffectFamily::VST3:
-        return extractVST3Parameters(instance);
+    {
+        // Get settings access to apply stored settings before extraction
+        EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instanceId);
+        return extractVST3Parameters(instance, settingsAccess);
+    }
     case EffectFamily::LV2:
         return extractLV2Parameters(instance);
     case EffectFamily::AudioUnit:
@@ -166,10 +170,11 @@ muse::async::Notification EffectParametersProvider::parameterValuesChanged() con
     return m_parameterValuesChanged;
 }
 
-ParameterInfoList EffectParametersProvider::extractVST3Parameters(EffectInstance* instance) const
+ParameterInfoList EffectParametersProvider::extractVST3Parameters(EffectInstance* instance,
+                                                                  EffectSettingsAccessPtr settingsAccess) const
 {
 #ifdef USE_VST3
-    return VST3ParametersExtractor::extractParameters(instance);
+    return VST3ParametersExtractor::extractParameters(instance, settingsAccess);
 #else
     LOGW() << "VST3 support not enabled in this build";
     return {};

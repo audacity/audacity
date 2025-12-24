@@ -74,8 +74,9 @@ struct ParamInfo {
 };
 
 //! Extract all parameters from a VST3 effect instance
+//! @param settingsAccess Optional settings access to apply stored settings before extraction
 //! Returns empty vector if instance is not a VST3 instance or on error
-std::vector<ParamInfo> extractParameters(EffectInstanceEx* instance);
+std::vector<ParamInfo> extractParameters(EffectInstanceEx* instance, EffectSettingsAccess* settingsAccess = nullptr);
 
 //! Get the current value of a VST3 parameter
 //! Returns 0.0 if parameter not found or on error
