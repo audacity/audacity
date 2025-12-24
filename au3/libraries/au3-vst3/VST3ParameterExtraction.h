@@ -15,6 +15,7 @@
 #include <string>
 
 class EffectInstanceEx;
+class EffectSettingsAccess;
 
 namespace VST3ParameterExtraction {
 //! Parameter type enumeration (mirrors AU4's ParameterType)
@@ -81,8 +82,9 @@ std::vector<ParamInfo> extractParameters(EffectInstanceEx* instance);
 double getParameterValue(EffectInstanceEx* instance, uint32_t parameterId);
 
 //! Set the value of a VST3 parameter
+//! @param settingsAccess Optional settings access to persist the change
 //! Returns true on success, false on error
-bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double value);
+bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double value, EffectSettingsAccess* settingsAccess = nullptr);
 
 //! Get formatted string representation of a VST3 parameter value
 //! Returns empty string if parameter not found or on error
