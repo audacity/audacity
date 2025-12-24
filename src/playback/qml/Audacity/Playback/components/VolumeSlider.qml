@@ -29,7 +29,7 @@ Slider {
     from: meterModel ? meterModel.dbRange : 0
     to: 0
     value: root.volumeLevel
-    stepSize: 0.1
+    stepSize: 1
     orientation: Qt.Horizontal
     wheelEnabled: true
 

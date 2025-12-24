@@ -150,14 +150,14 @@ Item {
                     if (volumeLevel <= from) {
                         return
                     }
-                    root.volumeLevelChangeRequested(Math.round(volumeLevel * 100) / 100 - 1)
+                    root.volumeLevelChangeRequested(Math.round(volumeLevel * 100) / 100 - stepSize)
                 }
 
                 onIncreaseRequested: {
                     if (volumeLevel >= to) {
                         return
                     }
-                    root.volumeLevelChangeRequested(Math.round(volumeLevel * 100) / 100 + 1)
+                    root.volumeLevelChangeRequested(Math.round(volumeLevel * 100) / 100 + stepSize)
                 }
             }
 
