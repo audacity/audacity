@@ -302,34 +302,43 @@ Canvas {
         }
 
         const meterHeight = prv.sampleValueToHeight(prv.updatedVolumePressure)
-        if (meterHeight > 0) {
-            ctx.save()
-            ctx.beginPath()
-            ctx.rect(0, root.height - meterHeight, root.indicatorWidth, meterHeight)
-            ctx.clip()
+        if (meterHeight <= 0) return
 
-            const stripeWidth = 10
-            const maxHeight = prv.indicatorHeight
-            const totalWidth = root.indicatorWidth + maxHeight + stripeWidth * 4
+        ctx.save()
 
-            const startX = -maxHeight - stripeWidth * 2 + prv.candyOffset
+        ctx.beginPath()
+        ctx.rect(0, root.height - meterHeight, root.indicatorWidth, meterHeight)
+        ctx.clip()
 
-            let colorIndex = 0
-            for (let x = startX; x < totalWidth; x += stripeWidth) {
-                ctx.fillStyle = (colorIndex % 2 === 0) ? meterStyle.candyColor1 : meterStyle.candyColor2
-                ctx.beginPath()
-                ctx.moveTo(x, root.height)
-                ctx.lineTo(x + stripeWidth, root.height)
-                ctx.lineTo(x + stripeWidth + maxHeight, root.height - maxHeight)
-                ctx.lineTo(x + maxHeight, root.height - maxHeight)
-                ctx.closePath()
-                ctx.fill()
-                colorIndex++
-            }
+        const stripeWidth = 10
+        const maxHeight = prv.indicatorHeight
+        const totalWidth = root.indicatorWidth + maxHeight + stripeWidth * 4
 
-            ctx.restore()
+        const effectiveOffset = prv.candyOffset % (stripeWidth * 2)
+        const startX = -maxHeight - (stripeWidth * 2) + effectiveOffset
+
+        function traceStripe(x) {
+            ctx.moveTo(x, root.height)
+            ctx.lineTo(x + stripeWidth, root.height)
+            ctx.lineTo(x + stripeWidth + maxHeight, root.height - maxHeight)
+            ctx.lineTo(x + maxHeight, root.height - maxHeight)
         }
 
+        ctx.beginPath()
+        for (let x = startX; x < totalWidth; x += stripeWidth * 2) {
+            traceStripe(x)
+        }
+        ctx.fillStyle = meterStyle.candyColor1
+        ctx.fill()
+
+        ctx.beginPath()
+        for (let x = startX + stripeWidth; x < totalWidth; x += stripeWidth * 2) {
+            traceStripe(x)
+        }
+        ctx.fillStyle = meterStyle.candyColor2
+        ctx.fill()
+
+        ctx.restore()
         drawPeakMarkers(ctx)
     }
 

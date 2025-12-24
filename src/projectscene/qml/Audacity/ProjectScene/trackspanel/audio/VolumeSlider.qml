@@ -158,27 +158,6 @@ StyledSlider {
                 anchors.margins: 2
                 radius: width / 2
                 color: handle.ballColor
-
-            //     SequentialAnimation {
-            //         loops: Animation.Infinite
-
-
-            //         ColorAnimation {
-            //             target: body
-            //             property: "color"
-            //             from: handle.ballColor
-            //             to: Qt.lighter(handle.ballColor, 1.5)
-            //             duration: 4000
-            //         }
-
-            //         ColorAnimation {
-            //             target: body
-            //             property: "color"
-            //             from: Qt.lighter(handle.ballColor, 1.5)
-            //             to: handle.ballColor
-            //             duration: 4000
-            //         }
-            //     }
             }
 
             Rectangle {
