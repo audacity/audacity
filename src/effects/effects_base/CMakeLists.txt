@@ -24,6 +24,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectpresetsscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectviewlauncher.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectviewlaunchregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectparametersprovider.h
 
     # internal
     ${CMAKE_CURRENT_LIST_DIR}/internal/abstractaudiopluginmetareader.cpp
@@ -62,6 +63,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectpresetsscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewlaunchregister.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewlaunchregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectparametersprovider.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectparametersprovider.h
 
     # view
     ${CMAKE_CURRENT_LIST_DIR}/view/abstracteffectviewmodel.cpp

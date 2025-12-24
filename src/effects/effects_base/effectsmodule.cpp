@@ -22,6 +22,7 @@
 #include "internal/effectpresetsprovider.h"
 #include "internal/effectpresetsscenario.h"
 #include "internal/effectviewlaunchregister.h"
+#include "internal/effectparametersprovider.h"
 
 #include "view/effectmanagemenu.h"
 #include "view/effectsuiengine.h"
@@ -58,6 +59,7 @@ void EffectsModule::registerExports()
     ioc()->registerExport<IEffectPresetsProvider>(moduleName(), std::make_shared<EffectPresetsProvider>(iocContext()));
     ioc()->registerExport<IEffectPresetsScenario>(moduleName(), std::make_shared<EffectPresetsScenario>(iocContext()));
     ioc()->registerExport<IEffectViewLaunchRegister>(moduleName(), new EffectViewLaunchRegister());
+    ioc()->registerExport<IEffectParametersProvider>(moduleName(), new EffectParametersProvider());
 }
 
 void EffectsModule::resolveImports()
