@@ -1,61 +1,80 @@
 import QtQuick
+import QtQuick.Particles
 import Muse.Ui
 import Muse.UiComponents
 
-StyledIconLabel {
+import Audacity.Playback 1.0
+
+Item {
     id: root
 
-    antialiasing: true
+    width: sled.width
+    height: sled.height
 
-    y: -1 // offset up to avoid too much cropping
+    clip: false
 
-    iconCode: IconCode.PLAYHEAD_FILLED
-
-    font.pixelSize: 17
-    color: "black"
-
-    StyledIconLabel {
-        id: playheadFill
-
-        // inset the Fill Icon by 1px X,Y
-        x: 1
-        y: 1
-
-        iconCode: IconCode.PLAYHEAD_FILLED
-
-        font.pixelSize: 15
-        color: "white"
+    Image {
+        id: sled
+        source: "qrc:/images/sled.png"
+        width: 53
+        height: 32
+        fillMode: Image.PreserveAspectFit
     }
 
-    // we do some pixel trickery to hide the aliased bottom part and "connect" to the PlayCursorLine
-    Rectangle {
-        // this is to remove the aliased part in the bottom of the Icon
-        id: playheadBottomCenterDot
-        width: 1
-        height: 2
-        x: parent.width / 2
-        y: 15
-        color: "white"
-        antialiasing: true
+    PlaybackStateModel {
+        id: playbackState
     }
-    Rectangle {
-        // this is to remove the aliased part in the bottom of the Icon
-        id: playheadBottomCenterDotLeft
-        width: 1
-        height: 1
-        x: (parent.width / 2) - 1
-        y: 16
-        color: "black"
-        antialiasing: true
+
+    ParticleSystem {
+        id: snowSystem
     }
-    Rectangle {
-        // this is to remove the aliased part in the bottom of the Icon
-        id: playheadBottomCenterDotRight
-        width: 1
-        height: 1
-        x: (parent.width / 2) + 1
-        y: 16
-        color: "black"
-        antialiasing: true
+
+    Emitter {
+        id: snowEmitter
+        system: snowSystem
+        enabled: playbackState.isPlaying
+        x: sled.width / 2 - width / 2
+        y: sled.height
+        width: 20
+        height: 4
+
+        emitRate: 150
+        lifeSpan: 2000
+        lifeSpanVariation: 400
+
+        velocity: AngleDirection {
+            angle: 210
+            angleVariation: 15
+            magnitude: 40
+            magnitudeVariation: 15
+        }
+
+        size: 3
+        sizeVariation: 2
+    }
+
+    ImageParticle {
+        id: snowParticle
+        system: snowSystem
+        source: "qrc:/images/snow.png"
+        smooth: true
+
+        alpha: 0.6
+        alphaVariation: 0.3
+
+        rotationVariation: 180
+        rotationVelocityVariation: 90
+    }
+
+    Wander {
+        system: snowSystem
+        xVariance: 15
+        pace: 60
+    }
+
+    Gravity {
+        system: snowSystem
+        angle: 90
+        magnitude: 20
     }
 }

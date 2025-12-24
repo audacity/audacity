@@ -11,7 +11,11 @@
         <file>qml/Audacity/UiComponents/components/Frequency.qml</file>
         <file>qml/Audacity/UiComponents/components/ArrowButton.qml</file>
         <file>qml/Audacity/UiComponents/components/ArrowMenuButton.qml</file>
-        <file>qml/Audacity/UiComponents/components/DropdownWithTitle.qml</file>
+		<file>qml/Audacity/UiComponents/components/DropdownWithTitle.qml</file>
         <file>qml/Audacity/UiComponents/components/BaseSection.qml</file>
+        <file>qml/Audacity/UiComponents/components/Snowflake.qml</file>
+        <file>qml/Audacity/UiComponents/components/snowflake.png</file>
+        <file>qml/Audacity/UiComponents/components/Snowpile.qml</file>
+        <file>qml/Audacity/UiComponents/components/Sparkle.qml</file>
     </qresource>
 </RCC>

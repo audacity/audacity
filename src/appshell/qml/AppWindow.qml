@@ -25,6 +25,7 @@ import QtQuick.Controls 2.15
 import Muse.Ui 1.0
 import Muse.Shortcuts 1.0
 import Audacity.AppShell 1.0
+import Audacity.UiComponents
 
 ApplicationWindow {
     id: root
@@ -81,5 +82,18 @@ ApplicationWindow {
 
     function showMinimizedWithSavePreviousState() {
         bridge.showMinimizedWithSavePreviousState()
+    }
+
+    Snowflake {
+        anchors.fill: parent
+        opacity: .2
+        z: 1000
+    }
+    Snowpile {
+        id: pile
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        z: 1001
     }
 }

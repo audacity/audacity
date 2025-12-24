@@ -180,20 +180,47 @@ Slider {
         }
 
         Rectangle {
-            id: handleRect
+            id: handle
             anchors.fill: parent
             radius: width / 2
             color: "transparent"
-            border.color: ui.theme.fontPrimaryColor
 
             Rectangle {
                 anchors.fill: parent
-                anchors.margins: 1
                 radius: width / 2
-                color: ui.theme.backgroundPrimaryColor
-                opacity: 0.7
+                color: Qt.darker(ui.theme.accentColor, 1.3)
             }
 
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: 2
+                radius: width / 2
+                color: ui.theme.accentColor
+            }
+
+            Rectangle {
+                width: handle.width * 0.28
+                height: handle.height * 0.28
+                radius: width / 2
+                color: "white"
+                opacity: 0.2
+
+                anchors.left: handle.left
+                anchors.top: handle.top
+                anchors.leftMargin: handle.width * 0.18
+                anchors.topMargin: handle.height * 0.18
+            }
+
+            Rectangle {
+                width: handle.width * 0.24
+                height: handle.height * 0.10
+                radius: height / 2
+                color: "#b0b0b0"
+
+                anchors.horizontalCenter: handle.horizontalCenter
+                anchors.bottom: handle.top
+                anchors.bottomMargin: -height / 2
+            }
         }
     }
 

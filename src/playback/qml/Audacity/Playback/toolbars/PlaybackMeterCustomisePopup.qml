@@ -48,13 +48,13 @@ StyledPopupView {
 
         RowLayout {
             Layout.fillWidth: true
-            Layout.preferredHeight: 120
+            Layout.preferredHeight: 160
             
             spacing: 12
 
             StyledGroupBox {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 120
+                Layout.preferredHeight: 160
 
                 title: qsTrc("Playback", "Meter style")
 
@@ -67,7 +67,8 @@ StyledPopupView {
                 model: [
                     {label : qsTrc("playback","Default"), value: PlaybackMeterStyle.Default},
                     {label : qsTrc("playback","RMS"), value: PlaybackMeterStyle.RMS},
-                    {label : qsTrc("playback","Gradient"), value: PlaybackMeterStyle.Gradient}
+                    {label : qsTrc("playback","Gradient"), value: PlaybackMeterStyle.Gradient},
+                    {label : qsTrc("playback","Candy"), value: PlaybackMeterStyle.Candy}
                 ]
 
                 onValueChangeRequested: function(value) {
@@ -77,7 +78,7 @@ StyledPopupView {
 
             StyledGroupBox {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 120
+                Layout.preferredHeight: 160
 
                 title: qsTrc("Playback", "Meter type")
 
