@@ -12,9 +12,13 @@
 
 #include "VST3Instance.h"
 #include "VST3Utils.h"
+#include "VST3Wrapper.h"
+
+#include "au3-components/EffectInterface.h"
 
 #include <pluginterfaces/vst/ivsteditcontroller.h>
 #include <pluginterfaces/vst/ivstunits.h>
+#include <pluginterfaces/vst/ivstcomponent.h>
 
 #include <wx/log.h>
 
@@ -238,7 +242,8 @@ double getParameterValue(EffectInstanceEx* instance, uint32_t parameterId)
     return editController->getParamNormalized(parameterId);
 }
 
-bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double value)
+bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double value,
+                       EffectSettingsAccess* settingsAccess)
 {
     if (!instance) {
         return false;
@@ -249,7 +254,8 @@ bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double 
         return false;
     }
 
-    auto editController = vst3Instance->vstEditController();
+    auto& wrapper = vst3Instance->GetWrapper();
+    auto editController = wrapper.mEditController;
     if (!editController) {
         return false;
     }
@@ -257,8 +263,31 @@ bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double 
     // Clamp value to 0.0 - 1.0 range (VST3 normalized range)
     value = std::clamp(value, 0.0, 1.0);
 
-    // Set the parameter value
-    return editController->setParamNormalized(parameterId, value) == Steinberg::kResultOk;
+    // Set the parameter value on the edit controller
+    if (editController->setParamNormalized(parameterId, value) != Steinberg::kResultOk) {
+        return false;
+    }
+
+    // Also notify via component handler to update settings and sync with audio processor
+    // This is the same flow used by the vendor UI when parameters are changed
+    if (wrapper.mComponentHandler) {
+        wrapper.mComponentHandler->beginEdit(parameterId);
+        wrapper.mComponentHandler->performEdit(parameterId, value);
+        wrapper.mComponentHandler->endEdit(parameterId);
+    }
+
+    // If settings access is provided, flush parameters and store settings to persist the change
+    // This ensures the parameter change is saved and will be restored when switching UI modes
+    if (settingsAccess) {
+        settingsAccess->ModifySettings([&wrapper](EffectSettings& settings) {
+            wrapper.FlushParameters(settings);
+            wrapper.StoreSettings(settings);
+            return nullptr;
+        });
+        settingsAccess->Flush();
+    }
+
+    return true;
 }
 
 std::string getParameterValueString(EffectInstanceEx* instance, uint32_t parameterId, double value)
