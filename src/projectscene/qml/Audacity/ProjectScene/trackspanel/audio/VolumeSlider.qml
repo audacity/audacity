@@ -124,4 +124,108 @@ StyledSlider {
             return prv.startFineValue + step
         }
     }
+
+    handle: Rectangle {
+        id: handleBackground
+
+        x: root.leftPadding + root.visualPosition * (root.availableWidth - width)
+        y: root.topPadding + root.availableHeight / 2 - height / 2
+
+        width: 24
+        height: width
+        radius: width / 2
+
+        color: "transparent"
+
+        Rectangle {
+            id: handle
+            anchors.fill: parent
+            radius: width / 2
+
+            color: "transparent"
+
+            property color ballColor: "green"
+
+            Rectangle {
+                anchors.fill: parent
+                radius: width / 2
+                color: Qt.darker(handle.ballColor, 1.3)
+            }
+
+            Rectangle {
+                id: body
+                anchors.fill: parent
+                anchors.margins: 2
+                radius: width / 2
+                color: handle.ballColor
+
+            //     SequentialAnimation {
+            //         loops: Animation.Infinite
+
+
+            //         ColorAnimation {
+            //             target: body
+            //             property: "color"
+            //             from: handle.ballColor
+            //             to: Qt.lighter(handle.ballColor, 1.5)
+            //             duration: 4000
+            //         }
+
+            //         ColorAnimation {
+            //             target: body
+            //             property: "color"
+            //             from: Qt.lighter(handle.ballColor, 1.5)
+            //             to: handle.ballColor
+            //             duration: 4000
+            //         }
+            //     }
+            }
+
+            Rectangle {
+                width: handle.width * 0.28
+                height: handle.height * 0.28
+                radius: width / 2
+                color: "white"
+                opacity: 0.2
+
+                anchors.left: handle.left
+                anchors.top: handle.top
+                anchors.leftMargin: handle.width * 0.18
+                anchors.topMargin: handle.height * 0.18
+            }
+
+            Rectangle {
+                width: handle.width * 0.24
+                height: handle.height * 0.10
+                radius: height / 2
+                color: "#b0b0b0"
+
+                anchors.horizontalCenter: handle.horizontalCenter
+                anchors.bottom: handle.top
+                anchors.bottomMargin: -height / 2
+            }
+
+            states: [
+                State {
+                    name: "HOVERED"
+                    when: mouseArea.containsMouse && !mouseArea.pressed
+
+                    PropertyChanges {
+                        target: body
+                        color: Qt.lighter(handle.ballColor, 1.2)
+                    }
+                },
+
+                State {
+                    name: "PRESSED"
+                    when: mouseArea.pressed
+
+                    PropertyChanges {
+                        target: body
+                        color: Qt.lighter(handle.ballColor, 1.5)
+                    }
+                }
+            ]
+        }
+    }
 }

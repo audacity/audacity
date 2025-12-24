@@ -322,7 +322,7 @@ Rectangle {
                 id: head
 
                 anchors.top: parent.top
-                anchors.topMargin: 24
+                anchors.topMargin: 8
 
                 x: playCursorController.positionX - (width / 2)
 

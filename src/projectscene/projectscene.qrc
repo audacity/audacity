@@ -47,6 +47,8 @@
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipPreview.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipHandles.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ChannelSplitter.qml</file>
+        <file>images/sled.png</file>
+        <file>images/snow.png</file>
         <file>images/customCursorShapes/ClipStretchBoth.png</file>
         <file>images/customCursorShapes/ClipStretchLeft.png</file>
         <file>images/customCursorShapes/ClipStretchRight.png</file>
