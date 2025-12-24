@@ -3,8 +3,9 @@
  */
 #pragma once
 
-#include "../au3types.h"
 #include "trackedit/dom/track.h"
+#include "au3wrap/au3types.h"
+
 #include "au3-track/Track.h"
 
 namespace au::au3 {
@@ -25,6 +26,6 @@ public:
 
 private:
     std::weak_ptr<Au3Track> mTrack;
-    trackedit::TrackViewType mTrackViewType = trackedit::TrackViewType::Unspecified;
+    trackedit::TrackViewType mTrackViewType = trackedit::TrackViewType::Undefined;
 };
 }
