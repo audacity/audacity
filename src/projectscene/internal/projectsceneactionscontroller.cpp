@@ -21,6 +21,8 @@ static const ActionCode TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE("toggle-play
 static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
 static const ActionCode LABEL_OPEN_EDITOR_CODE("toggle-label-editor");
 
+static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
+
 void ProjectSceneActionsController::init()
 {
     dispatcher()->reg(this, MINUTES_SECONDS_RULER, this, &ProjectSceneActionsController::toggleMinutesSecondsRuler);
@@ -97,6 +99,10 @@ void ProjectSceneActionsController::pinnedPlayHead()
 
 void ProjectSceneActionsController::openClipPitchAndSpeedEdit(const ActionData& args)
 {
+    if (interactive()->isOpened(EDIT_PITCH_AND_SPEED_URI).val) {
+        return;
+    }
+
     IF_ASSERT_FAILED(args.count() == 1) {
         return;
     }
@@ -106,7 +112,7 @@ void ProjectSceneActionsController::openClipPitchAndSpeedEdit(const ActionData& 
         return;
     }
 
-    muse::UriQuery query("audacity://projectscene/editpitchandspeed");
+    muse::UriQuery query(EDIT_PITCH_AND_SPEED_URI);
     query.addParam("trackId", muse::Val(std::to_string(clipKey.trackId)));
     query.addParam("clipId", muse::Val(std::to_string(clipKey.itemId)));
     query.addParam("focusItemName", muse::Val("pitch"));
