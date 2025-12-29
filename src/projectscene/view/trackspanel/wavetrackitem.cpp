@@ -77,12 +77,6 @@ void WaveTrackItem::init(const trackedit::Track& track)
         muteOrSoloChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    projectHistory()->historyChanged().onNotify(this, [this]() {
-        if (isAudible()) {
-            muteOrSoloChanged();
-        }
-    }, muse::async::Asyncable::Mode::SetReplace);
-
     const int inputChannelsCount = audioDevicesProvider()->inputChannelsSelected();
     m_recordStreamChannelsMatch = (trackType() == trackedit::TrackType::Mono && inputChannelsCount == 1)
                                   || (trackType() == trackedit::TrackType::Stereo && inputChannelsCount == 2);

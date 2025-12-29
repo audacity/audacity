@@ -61,12 +61,8 @@ void ViewTracksListModel::load()
         emit escapePressed();
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this] (long) {
-        emit dataChanged(index(0), index(static_cast<int>(m_trackList.size()) - 1), { IsTrackAudibleRole });
-    }, muse::async::Asyncable::Mode::SetReplace);
-
-    projectHistory()->historyChanged().onNotify(this, [this]() {
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackAudibleRole });
+    trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this] (long trackId) {
+        emit dataChanged(indexOf(trackId), indexOf(trackId), { IsTrackAudibleRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
     beginResetModel();
@@ -79,6 +75,7 @@ void ViewTracksListModel::load()
             return;
         }
 
+        // TODO: only dataChanged affected tracks, not the whole thing
         QModelIndex beginIndex = index(0);
         QModelIndex lastIndex = index(static_cast<int>(m_trackList.size()) - 1);
 
@@ -92,6 +89,7 @@ void ViewTracksListModel::load()
             return;
         }
 
+        // TODO: only dataChanged affected tracks, not the whole thing
         QModelIndex beginIndex = index(0);
         QModelIndex lastIndex = index(static_cast<int>(m_trackList.size()) - 1);
 
@@ -101,6 +99,7 @@ void ViewTracksListModel::load()
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList& clipKeys) {
         Q_UNUSED(clipKeys);
 
+        // TODO: only dataChanged affected tracks, not the whole thing
         const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
         emit dataChanged(index(0), index(lastIndex), { IsMultiSelectionActiveRole });
     }, muse::async::Asyncable::Mode::SetReplace);
@@ -111,6 +110,7 @@ void ViewTracksListModel::load()
             return;
         }
 
+        // TODO: only dataChanged affected tracks, not the whole thing
         const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
         emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
     }, muse::async::Asyncable::Mode::SetReplace);
@@ -121,6 +121,7 @@ void ViewTracksListModel::load()
             return;
         }
 
+        // TODO: only dataChanged affected tracks, not the whole thing
         const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
         emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
     }, muse::async::Asyncable::Mode::SetReplace);
@@ -180,14 +181,12 @@ void ViewTracksListModel::load()
     }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
-        for (size_t i = 0; i < m_trackList.size(); ++i) {
-            if (m_trackList.at(i).id == track.id) {
-                m_trackList[i] = track;
-
-                emit dataChanged(index(i), index(i));
-                break;
-            }
+        QModelIndex idx = indexOf(track.id);
+        if (!idx.isValid()) {
+            return;
         }
+        m_trackList[idx.row()] = track;
+        emit dataChanged(idx, idx);
         emit verticalRulerWidthChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
@@ -323,6 +322,16 @@ int ViewTracksListModel::verticalRulerWidth() const
     }
 
     return viewState->verticalRulerWidth().val;
+}
+
+QModelIndex ViewTracksListModel::indexOf(trackedit::TrackId trackId)
+{
+    for (size_t i = 0; i < m_trackList.size(); i++) {
+        if (m_trackList[i].id == trackId) {
+            return index(static_cast<int>(i));
+        }
+    }
+    return QModelIndex();
 }
 
 int ViewTracksListModel::totalTracksHeight() const

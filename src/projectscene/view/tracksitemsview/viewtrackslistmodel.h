@@ -13,7 +13,6 @@
 #include "context/iglobalcontext.h"
 #include "projectscene/iprojectsceneconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
-#include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "playback/itrackplaybackcontrol.h"
 #include "playback/iplaybackconfiguration.h"
@@ -32,7 +31,6 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
     muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
@@ -74,6 +72,8 @@ private:
         DbRangeRole,
         ColorRole,
     };
+
+    QModelIndex indexOf(trackedit::TrackId trackId);
 
     std::vector<trackedit::Track> m_trackList;
 };

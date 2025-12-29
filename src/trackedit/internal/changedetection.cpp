@@ -252,7 +252,9 @@ void notifyOfUndoRedo(const TracksAndItems& before,
     {
         auto trackFieldComparison = [](const Track& first, const Track& second) {
             return first.type == second.type
-                   && first.title == second.title;
+                   && first.title == second.title
+                   && first.solo == second.solo
+                   && first.mute == second.mute;
 
             //! For now these do not result in "autosave",
             //  and so should not be criteria under undo/redo.
