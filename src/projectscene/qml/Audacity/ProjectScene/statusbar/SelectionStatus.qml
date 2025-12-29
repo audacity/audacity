@@ -6,6 +6,10 @@ import Audacity.ProjectScene
 import Audacity.UiComponents 1.0
 
 Row {
+    id: root
+
+    property NavigationPanel navigationPanel: null
+
     spacing: 6
 
     SelectionStatusModel {
@@ -17,6 +21,8 @@ Row {
     }
 
     StyledTextLabel {
+        id: titleLabel
+
         anchors.verticalCenter: parent.verticalCenter
 
         text: qsTrc("projectscene", "Selection")
@@ -26,6 +32,8 @@ Row {
     }
 
     TimecodeStartEnd {
+        id: startEndTimeCode
+
         startValue: selectionModel.startTime
         endValue: selectionModel.endTime
 
@@ -37,6 +45,9 @@ Row {
         currentFormat: selectionModel.currentFormat
 
         enabled: selectionModel.isEnabled
+
+        navigationPanel: root.navigationPanel
+        accessibleName: titleLabel.text
 
         onStartValueChangeRequested: function(newValue) {
             selectionModel.startTime = newValue
