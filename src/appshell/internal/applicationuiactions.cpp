@@ -30,7 +30,6 @@
 
 #include "log.h"
 
-using namespace mu;
 using namespace au::appshell;
 
 using namespace muse;

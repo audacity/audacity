@@ -11,6 +11,7 @@
 #include "framework/global/realfn.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "au3-audio-devices/DeviceManager.h"
 #include "au3-audio-devices/AudioIOBase.h"
