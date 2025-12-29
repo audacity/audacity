@@ -104,7 +104,7 @@ TrackItem {
                     rightVolumePressureMeter.resetClipped()
                 }
 
-                TapHandler { onTapped: clearMeters() }
+                TapHandler { onTapped: volumePressureContainer.clearMeters() }
 
                 VolumePressureMeter {
                     id: leftOrMonoVolumePressureMeter
