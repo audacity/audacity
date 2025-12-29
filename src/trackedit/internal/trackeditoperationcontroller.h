@@ -46,7 +46,6 @@ public:
     bool resetClipSpeed(const ClipKey& clipKey) override;
     bool changeClipColor(const ClipKey& clipKey, const std::string& color) override;
     bool changeTracksColor(const TrackIdList& tracksIds, const std::string& color) override;
-    bool changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;

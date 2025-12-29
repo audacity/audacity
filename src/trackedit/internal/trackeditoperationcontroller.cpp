@@ -118,16 +118,6 @@ bool TrackeditOperationController::changeTracksColor(const TrackIdList& tracksId
     return false;
 }
 
-bool TrackeditOperationController::changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
-{
-    if (tracksInteraction()->changeAudioTrackViewType(trackId, viewType)) {
-        projectHistory()->modifyState();
-        projectHistory()->markUnsaved();
-        return true;
-    }
-    return false;
-}
-
 bool TrackeditOperationController::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
 {
     return clipsInteraction()->changeClipOptimizeForVoice(clipKey, optimize);

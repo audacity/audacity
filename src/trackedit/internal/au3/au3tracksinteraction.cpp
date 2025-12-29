@@ -24,7 +24,6 @@
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/trackcolor.h"
-#include "au3wrap/internal/trackviewtypeattachment.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
@@ -157,20 +156,6 @@ bool Au3TracksInteraction::changeTracksColor(const TrackIdList& tracksIds, const
 
 //     return true;
 // }
-
-bool Au3TracksInteraction::changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
-{
-    Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(track) {
-        return false;
-    }
-
-    au3::TrackViewTypeAttachment::Get(track).SetTrackViewType(viewType);
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackChanged(DomConverter::track(track));
-
-    return true;
-}
 
 muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks,
                                       bool isMultiSelectionCopy, bool& projectWasModified)
