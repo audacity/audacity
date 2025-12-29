@@ -26,7 +26,7 @@
 #include "muse_framework_config.h"
 
 #ifdef MUSE_MODULE_WORKSPACE
-#include "workspace/view/workspacesmenumodel.h"
+#include "workspace/qml/Muse/Workspace/workspacesmenumodel.h"
 #endif
 
 #include "log.h"

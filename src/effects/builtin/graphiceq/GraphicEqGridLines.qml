@@ -1,6 +1,6 @@
 import QtQuick 2.15
 import Muse.Ui
-import Muse.UiComponents 1.0
+import Muse.UiComponents
 
 Item {
     id: root

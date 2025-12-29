@@ -128,6 +128,10 @@ set(MODULE_LINK
     muse::dockwindow
     )
 
+if(MUSE_MODULE_WORKSPACE)
+    set(MODULE_LINK ${MODULE_LINK} muse::workspace_qml)
+endif()   
+
 if (OS_IS_MAC)
     set(MODULE_SRC ${MODULE_SRC}
         ${CMAKE_CURRENT_LIST_DIR}/view/internal/platform/macos/macosappmenumodelhook.mm

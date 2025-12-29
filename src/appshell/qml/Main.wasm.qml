@@ -24,7 +24,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.15
 import MuseScore.NotationScene 1.0
 import MuseScore.Playback 1.0
-import Muse.UiComponents 1.0
+import Muse.UiComponents
 import "DevTools/Audio"
 
 ApplicationWindow {

@@ -211,6 +211,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              TranslatableString("action", "Preferences…")
              ),
     UiAction("action://copy",
+             { "action://trackedit/copy" },
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Copy"),
@@ -218,6 +219,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              IconCode::Code::COPY
              ),
     UiAction("action://cut",
+             { "action://trackedit/cut" },
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Cut"),
@@ -225,6 +227,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              IconCode::Code::CUT
              ),
     UiAction("action://paste",
+             { "action://trackedit/paste-default" },
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Paste"),
@@ -232,6 +235,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              IconCode::Code::PASTE
              ),
     UiAction("action://undo",
+             { "action://trackedit/undo" },
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Undo"),
@@ -239,6 +243,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              IconCode::Code::UNDO
              ),
     UiAction("action://redo",
+             { "action://trackedit/redo" },
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Redo"),
@@ -246,6 +251,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              IconCode::Code::REDO
              ),
     UiAction("action://delete",
+             { "action://trackedit/delete" },
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "De&lete"),

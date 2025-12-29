@@ -23,7 +23,7 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
-import Muse.UiComponents 1.0
+import Muse.UiComponents
 
 ColumnLayout {
     id: root
