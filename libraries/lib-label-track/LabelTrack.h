@@ -31,6 +31,7 @@ enum class LabelFormat
    TEXT,
    SUBRIP,
    WEBVTT,
+   PODCAST_CHAPTERS_JSON,
 };
 
 LABEL_TRACK_API
@@ -56,7 +57,7 @@ public:
    struct BadFormatException {};
    static LabelStruct Import(wxTextFile &file, int &index, LabelFormat format);
 
-   void Export(wxTextFile &file, LabelFormat format, int index) const;
+   void Export(wxTextFile &file, LabelFormat format, int index, bool isLast = false) const;
 
    /// Relationships between selection region and labels
    enum TimeRelations
@@ -130,6 +131,7 @@ class LABEL_TRACK_API LabelTrack final
 
    static const FileNames::FileType SubripFiles;
    static const FileNames::FileType WebVTTFiles;
+   static const FileNames::FileType PodcastChaptersFiles;
    static const FileNames::FileType AllSupportedFiles;
 
 private:
@@ -156,6 +158,11 @@ public:
    void Import(wxTextFile & f, LabelFormat format);
    void Export(wxTextFile & f, LabelFormat format) const;
 
+private:
+   void ExportHeader(wxTextFile &f, LabelFormat format) const;
+   void ExportFooter(wxTextFile &f, LabelFormat format) const;
+
+public:
    int GetNumLabels() const;
    const LabelStruct *GetLabel(int index) const;
    const LabelArray &GetLabels() const { return mLabels; }
