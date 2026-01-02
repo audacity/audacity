@@ -23,7 +23,7 @@
 import QtQuick 2.15
 
 import Muse.Ui 1.0
-import Muse.UiComponents 1.0
+import Muse.UiComponents
 import Muse.GraphicalEffects
 
 import Audacity.UiComponents 1.0

@@ -30,7 +30,6 @@
 
 // #include "multiinstances/resourcelockguard.h"
 
-using namespace mu;
 using namespace muse;
 using namespace au::appshell;
 

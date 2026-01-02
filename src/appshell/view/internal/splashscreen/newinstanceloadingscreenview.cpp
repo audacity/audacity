@@ -28,6 +28,7 @@
 
 #include "translation.h"
 
+using namespace muse;
 using namespace au::appshell;
 
 NewInstanceLoadingScreenView::NewInstanceLoadingScreenView(bool forNewScore, const QString& openingFileName, QWidget* parent)

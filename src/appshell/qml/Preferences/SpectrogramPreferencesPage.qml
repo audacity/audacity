@@ -3,7 +3,7 @@
  */
 import QtQuick 2.15
 
-import Muse.UiComponents 1.0
+import Muse.UiComponents
 
 import Audacity.Preferences 1.0
 import Audacity.Spectrogram 1.0

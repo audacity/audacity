@@ -21,7 +21,7 @@
  */
 import QtQuick 2.15
 
-import Muse.UiComponents 1.0
+import Muse.UiComponents
 
 Column {
     property alias title: titleLabel.text

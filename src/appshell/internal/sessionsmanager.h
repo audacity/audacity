@@ -27,6 +27,7 @@
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
+#include "global/io/ifilesystem.h"
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
 #include "iappshellconfiguration.h"

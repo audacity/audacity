@@ -19,7 +19,6 @@ constexpr const char16_t* TRACK_FORMAT_CHANGE_ACTION = u"action://trackedit/trac
 constexpr const char16_t* TRACK_RATE_CHANGE_ACTION = u"action://trackedit/track/change-rate?rate=%1";
 UiActionList STATIC_ACTIONS = {
     UiAction("action://trackedit/copy",
-             "action://copy",
              au::context::UiCtxProjectOpened,
              au::context::CTX_DISABLED,
              TranslatableString("action", "Copy"),
@@ -27,7 +26,6 @@ UiActionList STATIC_ACTIONS = {
              IconCode::Code::COPY
              ),
     UiAction("action://trackedit/cut",
-             "action://cut",
              au::context::UiCtxProjectOpened,
              au::context::CTX_DISABLED,
              TranslatableString("action", "Cut"),
@@ -35,7 +33,6 @@ UiActionList STATIC_ACTIONS = {
              IconCode::Code::CUT
              ),
     UiAction("action://trackedit/undo",
-             "action://undo",
              au::context::UiCtxProjectOpened,
              au::context::CTX_DISABLED,
              TranslatableString("action", "&Undo"),
@@ -43,7 +40,6 @@ UiActionList STATIC_ACTIONS = {
              IconCode::Code::UNDO
              ),
     UiAction("action://trackedit/redo",
-             "action://redo",
              au::context::UiCtxProjectOpened,
              au::context::CTX_DISABLED,
              TranslatableString("action", "&Redo"),
@@ -51,7 +47,6 @@ UiActionList STATIC_ACTIONS = {
              IconCode::Code::REDO
              ),
     UiAction("action://trackedit/delete",
-             "action://delete",
              au::context::UiCtxProjectOpened,
              au::context::CTX_DISABLED,
              TranslatableString("action", "De&lete"),
@@ -241,7 +236,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Spectrogram settings…")
              ),
     UiAction("action://trackedit/paste-default",
-             "action://paste",
              au::context::UiCtxProjectOpened,
              au::context::CTX_DISABLED,
              TranslatableString("action", "&Paste"),

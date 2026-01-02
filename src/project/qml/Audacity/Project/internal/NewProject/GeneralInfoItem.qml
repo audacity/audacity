@@ -22,7 +22,7 @@
 import QtQuick 2.9
 
 import Muse.Ui 1.0
-import Muse.UiComponents 1.0
+import Muse.UiComponents
 
 Column {
     id: root

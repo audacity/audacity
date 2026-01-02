@@ -74,7 +74,7 @@ set(LINK_LIB
     muse::uicomponents_qml
     muse::graphicaleffects_qml
     muse::dockwindow
-    muse::shortcuts
+    muse::dockwindow_qml
     muse::workspace
     muse::accessibility
     muse::cloud
@@ -128,6 +128,10 @@ if (MUSE_MODULE_EXTENSIONS)
     list(APPEND LINK_LIB muse::extensions)
 endif()
 
+if (MUSE_MODULE_SHORTCUTS)
+    list(APPEND LINK_LIB muse::shortcuts muse::shortcuts_qml)
+endif()
+    
 set (AUDACITY_APPEND_SRC)
 
 if (OS_IS_WIN)

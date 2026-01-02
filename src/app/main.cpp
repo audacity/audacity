@@ -242,7 +242,9 @@ int main(int argc, char** argv)
         app.addModule(new muse::ui::UiModule());
         app.addModule(new muse::uicomponents::UiComponentsModule());
         app.addModule(new muse::dock::DockModule());
+#ifdef MUSE_MODULE_SHORTCUTS
         app.addModule(new muse::shortcuts::ShortcutsModule());
+#endif
         app.addModule(new muse::cloud::CloudModule());
         app.addModule(new muse::network::NetworkModule());
     }

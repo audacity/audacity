@@ -4,7 +4,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
-import Muse.UiComponents 1.0
+import Muse.UiComponents
 
 import Audacity.Spectrogram 1.0
 
