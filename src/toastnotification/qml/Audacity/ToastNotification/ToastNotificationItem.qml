@@ -15,9 +15,19 @@ Item {
     property int autoDismissTimeout: 5000
     property var actions: null
 
+    property int margins: 12
+    property int spacing: 12
+    property int dismissButtonSize: 16
+    property int iconSize: 16
+    property int titlePixelSize: 12
+    property int messagePixelSize: 12
+    property int actionButtonHeight: 24
+    property int actionButtonMargins: 8
+    property int actionButtonsSpacing: 8
+
     signal dismissed()
     signal actionTriggered(string actionStr)
- 
+
     width: 360
     height: implicitHeight
 
@@ -77,13 +87,13 @@ Item {
         anchors.right: parent.right
         anchors.top: parent.top
 
-        anchors.margins: 12
-        spacing: 12
+        anchors.margins: root.margins
+        spacing: root.spacing
 
         StyledIconLabel {
             id: iconLabel
 
-            width: 16
+            width: root.iconSize
 
             iconCode: root.iconCode
         }
@@ -101,7 +111,7 @@ Item {
                 wrapMode: Text.WordWrap
                 horizontalAlignment: Text.AlignLeft
 
-                font.pixelSize: 12
+                font.pixelSize: root.titlePixelSize
                 font.bold: true
 
                 text: root.title
@@ -114,7 +124,7 @@ Item {
                 wrapMode: Text.WordWrap
                 horizontalAlignment: Text.AlignLeft
 
-                font.pixelSize: 12
+                font.pixelSize: root.messagePixelSize
                 font.bold: false
 
                 text: root.message
@@ -133,16 +143,16 @@ Item {
                 id: actionsRow
 
                 width: parent.width
-                spacing: 8
+                spacing: root.actionButtonsSpacing
 
                 Repeater {
                     model: root.actions.length
 
                     FlatButton {
                         text: root.actions[index].text
-                        height: 24
+                        height: root.actionButtonHeight
                         minWidth: 0
-                        margins: 8
+                        margins: root.actionButtonMargins
                         onClicked: {
                             root.actionTriggered(root.actions[index].text);
                         }
@@ -155,8 +165,8 @@ Item {
             id: dismissButton
 
             visible: root.dismissable
-            width: 16
-            height: 16
+            width: root.dismissButtonSize
+            height: width
 
             icon: IconCode.CLOSE_X_ROUNDED
             transparent: true

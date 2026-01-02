@@ -10,6 +10,8 @@ import Audacity.ToastNotification 1.0
 StyledListView {
     id: root
 
+    property int animationDuration: 600
+
     width: 360
     implicitHeight: contentHeight
     height: implicitHeight
@@ -47,12 +49,12 @@ StyledListView {
         
         Behavior on x {
             NumberAnimation {
-                duration: 1000
+                duration: root.animationDuration
                 easing.type: Easing.OutCubic
             }
         }
         
-        Behavior on opacity { OpacityAnimator { duration: 1000 } }
+        Behavior on opacity { OpacityAnimator { duration: root.animationDuration } }
 
         onDismissed: {
             root.dismissNotificationAt(model.id);
