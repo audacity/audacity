@@ -345,7 +345,7 @@ muse::io::path_t ProjectActionsController::selectOpeningFile()
 io::path_t ProjectActionsController::selectImportFile()
 {
     std::string audioFileExt
-        = "*.aac *.ac3 *.mp3 *.wma *.wav *.flac *.ogg *.opus *.aif *.aiff *.amr *.ape *.au *.dts *.mpc *.tta *.wv *.shn *.voc *.mmf";
+        = "*.aac *.ac3 *.mp2 *.mp3 *.wma *.wav *.flac *.ogg *.opus *.aif *.aiff *.amr *.ape *.au *.dts *.mpc *.tta *.wv *.shn *.voc *.mmf";
     std::string videoFileExt
         = "*.avi *.mp4 *.mkv *.mov *.flv *.wmv *.asf *.webm *.mpg *.mpeg *.m4v *.ts *.gxf *.mxf *.nut *.dv *.3gp *.3g2 *.mj2";
     std::string gameMediaFileExt
