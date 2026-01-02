@@ -12,6 +12,7 @@ namespace au::context {
 class GlobalContext : public au::context::IGlobalContext, public muse::Injectable
 {
     muse::Inject<au::record::IRecordController> recordController;
+    muse::Inject<toastnotification::IToastNotification> toastNotification;
 
 public:
 
@@ -32,10 +33,12 @@ public:
     muse::secs_t recordPosition() const override;
     muse::async::Channel<muse::secs_t> recordPositionChanged() const override;
 
+    std::shared_ptr<toastnotification::IToastNotification> currentToastNotification() const override;
 private:
     au::project::IAudacityProjectPtr m_currentProject;
     muse::async::Notification m_currentProjectChanged;
 
     std::shared_ptr<PlaybackState> m_playbackState;
+    std::shared_ptr<toastnotification::IToastNotification> m_toastNotification;
 };
 }

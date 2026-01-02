@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Audacity/ToastNotification/qmldir</file>
+        <file>qml/Audacity/ToastNotification/ToastNotification.qml</file>
+        <file>qml/Audacity/ToastNotification/ToastNotificationItem.qml</file>
+    </qresource>
+</RCC>

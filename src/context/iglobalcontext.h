@@ -9,6 +9,7 @@
 #include "project/iaudacityproject.h"
 #include "playback/iplayer.h"
 #include "iplaybackstate.h"
+#include "toastnotification/itoastnotification.h"
 
 namespace au::context {
 class IGlobalContext : MODULE_EXPORT_INTERFACE
@@ -33,5 +34,7 @@ public:
 
     virtual muse::secs_t recordPosition() const = 0;
     virtual muse::async::Channel<muse::secs_t> recordPositionChanged() const = 0;
+
+    virtual std::shared_ptr<toastnotification::IToastNotification> currentToastNotification() const = 0;
 };
 }

@@ -25,5 +25,7 @@ public:
     MOCK_METHOD(muse::async::Notification, isRecordingChanged, (), (const, override));
     MOCK_METHOD(muse::secs_t, recordPosition, (), (const, override));
     MOCK_METHOD(muse::async::Channel<muse::secs_t>, recordPositionChanged, (), (const, override));
+
+    MOCK_METHOD(std::shared_ptr<toastnotification::IToastNotification>, currentToastNotification, (), (const, override));
 };
 }
