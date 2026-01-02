@@ -21,6 +21,7 @@ public:
         QColor selectedSamplePen;
         QColor sampleBrush;
         QColor rmsPen;
+        QColor rmsSelectedPen;
         QColor clippedPen;
         QColor highlight;
         QColor centerLine;

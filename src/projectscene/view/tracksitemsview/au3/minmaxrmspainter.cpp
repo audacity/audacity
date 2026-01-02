@@ -75,7 +75,7 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
         .SetShowRMS(params.showRMS)
         .SetRMSColors(
             ColorFromQColor(params.style.rmsPen),
-            ColorFromQColor(params.style.rmsPen))
+            ColorFromQColor(params.style.rmsSelectedPen))
         .SetBackgroundColors(
             ColorFromQColor(params.style.normalBackground),
             ColorFromQColor(params.style.selectedBackground))

@@ -19,6 +19,7 @@ static const QColor BACKGROUND_COLOR = QColor(255, 255, 255);
 static const QColor SAMPLES_BASE_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLES_HIGHLIGHT_COLOR = QColor(255, 255, 255);
 static const QColor RMS_BASE_COLOR = QColor(255, 255, 255);
+static const QColor RMS_SELECTED_COLOR = QColor(255, 255, 255); // TODO: This need update
 static const QColor CLIPPING_SOLID_COLOR = QColor(239, 71, 111);
 static const QColor CENTER_LINE_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_HEAD_COLOR = QColor(0, 0, 0);
@@ -30,6 +31,7 @@ static const QColor CLASSIC_BACKGROUND_SELECTED_COLOR = QColor(170, 195, 242);  
 static const QColor CLASSIC_SAMPLES_BASE_COLOR = QColor(100, 100, 211);             // Sample: #6464D3
 static const QColor CLASSIC_SAMPLES_BASE_SELECTED_COLOR = QColor(103, 124, 228);    // SelSample: #677ce4
 static const QColor CLASSIC_RMS_COLOR = QColor(151, 151, 253);                      // Rms: #9797FD
+static const QColor CLASSIC_RMS_SELECTED_COLOR = QColor(151, 151, 253);             // Rms: #9797FD // TODO: This need update
 static const QColor CLASSIC_CLIPPING_COLOR = QColor(239, 71, 111);                  // Clipped: #ef476f
 
 static const float SAMPLE_HEAD_DEFAULT_ALPHA= 0.6;
@@ -124,6 +126,7 @@ void WaveView::applyColorfulStyle(IWavePainter::Params& params,
                                                         selected ? SAMPLES_HIGHLIGHT_COLOR : SAMPLES_BASE_COLOR,
                                                         0.75);
     params.style.rmsPen = muse::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.25);
+    params.style.rmsSelectedPen = muse::blendQColors(params.style.selectedSamplePen, RMS_BASE_COLOR, 0.6); // TODO: use RMS_SELECTED_COLOR
     params.style.clippedPen = CLIPPING_SOLID_COLOR;
     params.style.centerLine = muse::blendQColors(params.style.samplePen, CENTER_LINE_COLOR, 0.2);
 
@@ -155,6 +158,7 @@ void WaveView::applyClassicStyle(IWavePainter::Params& params, bool selected) co
     params.style.samplePen = baseSampleColor;
     params.style.selectedSamplePen = CLASSIC_SAMPLES_BASE_SELECTED_COLOR;
     params.style.rmsPen = CLASSIC_RMS_COLOR;
+    params.style.rmsSelectedPen = muse::blendQColors(params.style.selectedSamplePen, CLASSIC_RMS_COLOR, 0.6); // TODO: use CLASSIC_RMS_SELECTED_COLOR
     params.style.clippedPen = CLASSIC_CLIPPING_COLOR;
     params.style.centerLine = baseSampleColor;
     params.style.sampleHead = baseSampleColor;
