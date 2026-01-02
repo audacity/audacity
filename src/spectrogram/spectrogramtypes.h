@@ -6,7 +6,8 @@
 namespace au::spectrogram {
 // Spectrogram
 enum class SpectrogramScale {
-    Linear = 0,
+    Undefined = -1,
+    Linear,
     Logarithmic,
     Mel,
     Bark,
@@ -53,16 +54,16 @@ struct SelectionInfo {
     const double endFrequency = UndefinedFrequency;
 };
 
-struct ClipInfo {
+struct ClipChannelInfo {
     const int clipId;
     const int trackId;
+    const int channel;
     const int xPaintBegin;
     const int xPaintEnd;
 };
 
 struct ViewInfo {
-    const int trackHeight;
-    const double channelHeightRatio;
+    const double channelHeight;
     const double viewportStartTime;
     const double viewportEndTime;
     const double pixelsPerSecond; // aka zoom

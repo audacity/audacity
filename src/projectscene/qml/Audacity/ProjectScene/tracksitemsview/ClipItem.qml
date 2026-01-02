@@ -41,7 +41,10 @@ Rectangle {
     property bool isAudible: true
     property bool isLinear: false
     property real dbRange: -60.0
-    property var displayBounds: ({ "min": -1.0, "max": 1.0 })
+    property var displayBounds: ({
+            "min": -1.0,
+            "max": 1.0
+        })
     property real selectionStart: 0
     property real selectionWidth: 0
     property bool selectionInProgress: false
@@ -821,7 +824,7 @@ Rectangle {
                 }
             }
 
-            SpectrogramView {
+            ClipSpectrogramView {
                 visible: root.isSpectrogramViewVisible
 
                 Layout.fillWidth: true
@@ -829,9 +832,10 @@ Rectangle {
 
                 clipId: root.clipKey.itemId()
                 trackId: root.clipKey.trackId()
+                isStereo: root.showChannelSplitter
+                channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
 
                 timelineIndentWidth: root.canvas.anchors.leftMargin
-                channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
                 zoom: root.context.zoom
                 frameStartTime: root.context.frameStartTime
                 frameEndTime: root.context.frameEndTime

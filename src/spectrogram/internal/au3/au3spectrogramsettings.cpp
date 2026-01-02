@@ -6,10 +6,10 @@
 #include "iglobalspectrogramconfiguration.h"
 #include "au3spectrogramutils.h"
 #include "spectrogramtypes.h"
+#include "../numberscale.h"
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-fft/FFT.h"
-#include "au3-screen-geometry/NumberScale.h"
 #include "au3-wave-track/WaveTrack.h"
 
 #include "framework/global/log.h"
@@ -303,34 +303,7 @@ size_t Au3SpectrogramSettings::NBins() const
 
 NumberScale Au3SpectrogramSettings::GetScale(float minFreqIn, float maxFreqIn) const
 {
-    NumberScaleType type = nstLinear;
-
-    // Don't assume the correspondence of the enums will remain direct in the future.
-    // Do this switch.
-    switch (scaleType) {
-    default:
-        wxASSERT(false);
-    case SpectrogramScale::Linear:
-        type = nstLinear;
-        break;
-    case SpectrogramScale::Logarithmic:
-        type = nstLogarithmic;
-        break;
-    case SpectrogramScale::Mel:
-        type = nstMel;
-        break;
-    case SpectrogramScale::Bark:
-        type = nstBark;
-        break;
-    case SpectrogramScale::ERB:
-        type = nstErb;
-        break;
-    case SpectrogramScale::Period:
-        type = nstPeriod;
-        break;
-    }
-
-    return NumberScale(type, minFreqIn, maxFreqIn);
+    return NumberScale(scaleType, minFreqIn, maxFreqIn);
 }
 
 static const ChannelGroup::Attachments::RegisteredFactory

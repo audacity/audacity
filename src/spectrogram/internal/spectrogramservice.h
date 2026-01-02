@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "itrackspectrogramconfigurationprovider.h"
+#include "ispectrogramservice.h"
 #include "iglobalspectrogramconfiguration.h"
 
 #include "context/iglobalcontext.h"
@@ -11,13 +11,13 @@
 #include "framework/global/modularity/ioc.h"
 
 namespace au::spectrogram {
-class TrackSpectrogramConfigurationProvider final : public ITrackSpectrogramConfigurationProvider
+class SpectrogramService final : public ISpectrogramService
 {
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
 
 public:
-    ~TrackSpectrogramConfigurationProvider() override = default;
+    ~SpectrogramService() override = default;
 
     void init();
 

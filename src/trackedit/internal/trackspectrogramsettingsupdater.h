@@ -5,7 +5,7 @@
 
 #include "context/iglobalcontext.h"
 #include "spectrogram/iglobalspectrogramconfiguration.h"
-#include "spectrogram/itrackspectrogramconfigurationprovider.h"
+#include "spectrogram/ispectrogramservice.h"
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
@@ -18,7 +18,7 @@ class TrackSpectrogramSettingsUpdater : public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
-    muse::Inject<spectrogram::ITrackSpectrogramConfigurationProvider> trackSpectrogramConfigurationProvider;
+    muse::Inject<spectrogram::ISpectrogramService> spectrogramService;
 
 public:
     void init();
