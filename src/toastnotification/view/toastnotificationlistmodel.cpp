@@ -1,6 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include <cstddef>
 #include <iterator>
 #include <algorithm>
 
@@ -24,6 +25,12 @@ void ToastNotificationListModel::init()
     }
 
     currentToastNotification->notificationAdded().onReceive(this, [this](const ToastNotificationItem& notification) {
+        if (m_notifications.size() >= m_maxItems) {
+            beginRemoveRows(QModelIndex(), 0, 0);
+            m_notifications.erase(m_notifications.begin());
+            endRemoveRows();
+        }
+
         beginInsertRows(QModelIndex(), static_cast<int>(m_notifications.size()), static_cast<int>(m_notifications.size()));
         m_notifications.emplace_back(notification);
         endInsertRows();
@@ -139,4 +146,18 @@ QHash<int, QByteArray> ToastNotificationListModel::roleNames() const
         { AutoDismissTimeoutRole, "autoDismissTimeout" }
     };
     return roles;
+}
+
+int ToastNotificationListModel::maxItems() const
+{
+    return m_maxItems;
+}
+
+void ToastNotificationListModel::setMaxItems(int maxItems)
+{
+    if (maxItems < 0) {
+        return;
+    }
+
+    m_maxItems = maxItems;
 }
