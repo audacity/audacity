@@ -4,6 +4,7 @@
 #pragma once
 
 #include "internal/ispectrogrampainter.h"
+#include "ispectrogramservice.h"
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
@@ -25,6 +26,7 @@ class ClipChannelSpectrogramView : public QQuickPaintedItem, public muse::async:
     Q_PROPERTY(double selectionEndTime READ selectionEndTime WRITE setSelectionEndTime NOTIFY selectionEndTimeChanged FINAL)
 
     muse::Inject<ISpectrogramPainter> spectrogramPainter;
+    muse::Inject<ISpectrogramService> spectrogramService;
 
 public:
     ClipChannelSpectrogramView(QQuickItem* parent = nullptr);
@@ -68,10 +70,19 @@ signals:
     void selectionStartTimeChanged();
     void selectionEndTimeChanged();
 
+    void mousePressed(const QPointF&);
+    void mouseDragged(const QPointF&);
+    void mouseReleased(const QPointF&);
+
 private:
     void paint(QPainter* painter) override;
     void classBegin() override {}
     void componentComplete() override;
+
+    void mousePressEvent(QMouseEvent*) override;
+    void mouseMoveEvent(QMouseEvent*) override;
+    void mouseReleaseEvent(QMouseEvent*) override;
+    void hoverMoveEvent(QHoverEvent*) override;
 
     int m_clipId = -1;
     int m_trackId = -1;

@@ -16,8 +16,10 @@ Item {
     required property double frameEndTime
     required property double selectionStartTime
     required property double selectionEndTime
-    required property double spectralSelectionStartFrequency
-    required property double spectralSelectionEndFrequency
+
+    signal spectrogramMouseClick(int channel, real x, real y, real height)
+    signal spectrogramMouseDrag(int channel, real x, real y, real height)
+    signal spectrogramMouseRelease(int channel, real x, real y, real height)
 
     ColumnLayout {
         anchors.fill: parent
@@ -47,8 +49,16 @@ Item {
                 frameEndTime: root.frameEndTime
                 selectionStartTime: root.selectionStartTime
                 selectionEndTime: root.selectionEndTime
-                spectralSelectionStartFrequency: root.spectralSelectionStartFrequency
-                spectralSelectionEndFrequency: root.spectralSelectionEndFrequency
+
+                onMousePressed: function (point) {
+                    root.spectrogramMouseClick(index, point.x, point.y, height)
+                }
+                onMouseDragged: function (point) {
+                    root.spectrogramMouseDrag(index, point.x, point.y, height)
+                }
+                onMouseReleased: function (point) {
+                    root.spectrogramMouseRelease(index, point.x, point.y, height)
+                }
             }
         }
     }

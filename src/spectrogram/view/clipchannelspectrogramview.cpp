@@ -9,10 +9,38 @@ ClipChannelSpectrogramView::ClipChannelSpectrogramView(QQuickItem* parent)
     : QQuickPaintedItem(parent)
 {
     setFlag(QQuickItem::ItemObservesViewport, true);
+    setAcceptedMouseButtons(Qt::MouseButton::LeftButton);
+    setAcceptHoverEvents(true);
 }
 
 void ClipChannelSpectrogramView::componentComplete()
 {
+}
+
+void ClipChannelSpectrogramView::mousePressEvent(QMouseEvent* event)
+{
+    event->accept();
+    emit mousePressed(event->position());
+}
+
+void ClipChannelSpectrogramView::mouseMoveEvent(QMouseEvent* event)
+{
+    if ((event->buttons() & Qt::MouseButton::LeftButton) == 0) {
+        return;
+    }
+    event->accept();
+    emit mouseDragged(event->position());
+}
+
+void ClipChannelSpectrogramView::mouseReleaseEvent(QMouseEvent* event)
+{
+    event->accept();
+    emit mouseReleased(event->position());
+}
+
+void ClipChannelSpectrogramView::hoverMoveEvent(QHoverEvent* )
+{
+    setCursor(Qt::CursorShape::CrossCursor);
 }
 
 void ClipChannelSpectrogramView::setClipId(int id)
@@ -110,13 +138,13 @@ void ClipChannelSpectrogramView::paint(QPainter* painter)
     const auto indentTime = m_timelineIndentWidth / m_zoom;
     const auto viewportStartTime = m_frameStartTime - indentTime;
     const auto viewportEndTime = m_frameEndTime;
-    const spectrogram::SelectionInfo selectionInfo { m_selectionStartTime, m_selectionEndTime };
+    const SelectionInfo selectionInfo { m_selectionStartTime, m_selectionEndTime };
 
     const QRect visibleSubrect = clipRect().toRect();
     const int xBegin = std::max(visibleSubrect.left() - m_timelineIndentWidth, 0);
     const int xEnd = visibleSubrect.right() + 1;
-    const spectrogram::ClipChannelInfo channelInfo { m_clipId, m_trackId, m_channel, xBegin, xEnd };
-    const spectrogram::ViewInfo viewInfo {
+    const ClipChannelInfo channelInfo { m_clipId, m_trackId, m_channel, xBegin, xEnd };
+    const ViewInfo viewInfo {
         height(),
         viewportStartTime,
         viewportEndTime,
