@@ -24,6 +24,7 @@ import QtQuick.Window 2.15
 
 import Muse.UiComponents
 import Audacity.AppShell 1.0
+import Audacity.ToastNotification 1.0
 
 import "../../"
 
@@ -83,5 +84,22 @@ AppWindow {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+    }
+
+    ToastNotification {
+        id: notification
+
+        ToastNotificationListModel {
+            id: toastnotificationmodel
+        }
+
+        Component.onCompleted: {
+            toastnotificationmodel.init();
+        }
+
+        model: toastnotificationmodel
+
+        x: parent.width - width - 20
+        y: parent.height - height - 50
     }
 }

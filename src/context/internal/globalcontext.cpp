@@ -89,3 +89,8 @@ muse::async::Channel<muse::secs_t> GlobalContext::recordPositionChanged() const
 {
     return recordController()->recordPositionChanged();
 }
+
+std::shared_ptr<au::toastnotification::IToastNotification> GlobalContext::currentToastNotification() const
+{
+    return toastNotification();
+}

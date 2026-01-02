@@ -60,6 +60,8 @@ add_subdirectory(importexport)
 
 add_subdirectory(uicomponents)
 
+add_subdirectory(toastnotification)
+
 # Stubs
 add_subdirectory(stubs)
 
