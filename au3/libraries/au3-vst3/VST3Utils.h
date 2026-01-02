@@ -47,6 +47,14 @@ public:
 
     static wxString ToWxString(const Steinberg::Vst::TChar* str);
 
+    //Convert VST3 UTF-16 string to std::string (UTF-8)
+    //Returns empty string if str is null or empty, or if conversion fails
+    static std::string UTF16ToStdString(const Steinberg::Vst::TChar* str);
+
+    //Get the unit string for a VST3 parameter as std::string
+    //Returns empty string if units cannot be determined or if conversion fails
+    static std::string GetParameterUnitStdString(Steinberg::Vst::IEditController* controller, const Steinberg::Vst::ParameterInfo& info);
+
     //Builds a string key suitable to use as an Audacity macro param
     //key, which is guaranteed to be unique, and most likely be in
     //a human-readable form.
