@@ -51,6 +51,7 @@
 #include <wx/textdlg.h>
 #include <wx/numdlg.h>
 #include <wx/radiobut.h>
+#include <wx/settings.h>
 #include <wx/tooltip.h>
 
 #include <math.h>
@@ -1101,8 +1102,11 @@ float MeterPanel::GetPeakHold() const
 wxFont MeterPanel::GetFont() const
 {
    int fontSize = 10;
-#if defined __WXMSW__
+#if defined(__WXMSW__)
    fontSize = 8;
+#elif defined(__WXGTK__)
+   auto defaultFont = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+   fontSize = defaultFont.GetPointSize() - 2;
 #endif
 
    return wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
