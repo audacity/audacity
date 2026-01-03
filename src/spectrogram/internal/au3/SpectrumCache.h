@@ -50,6 +50,10 @@ public:
     void Populate(
         const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip, int copyBegin, int copyEnd, size_t numPixels,
         double pixelsPerSecond);
+    // Calculate the dirty columns at the begin and end of the cache (Constant-Q variant)
+    void PopulateConstantQ(
+        const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip, int copyBegin, int copyEnd, size_t numPixels,
+        double pixelsPerSecond);
 
     size_t len { 0 };      // counts pixels, not samples
     std::optional<SpectrogramAlgorithm> algorithm;
