@@ -15,6 +15,8 @@ Paul Licameli
 #include "Prefs.h"
 #include "SampleFormat.h"
 #include "RealFFTf.h"
+#include "TimeFrequencyCalculator.h"
+#include <memory>
 
 #undef SPECTRAL_SELECTION_GLOBAL_SWITCH
 
@@ -197,11 +199,8 @@ public:
 
    // Variables used for computing the spectrum
    HFFT           hFFT;
+   std::unique_ptr<ITimeFrequencyCalculator> pTFCalculator;
    Floats         window;
-   FloatBuffers   waveletsRe;
-   FloatBuffers   waveletsIm;
-   ArrayOf<size_t>   waveletSizes;
-   size_t         waveletMaxLength;
 
    // Two other windows for computing reassigned spectrogram
    Floats         tWindow; // Window times time parameter
