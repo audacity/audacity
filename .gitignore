@@ -270,3 +270,6 @@ build.*
 # Private developer's files
 .vscode/settings.json
 CMakeUserPresets.json
+
+# Nix files
+/result
