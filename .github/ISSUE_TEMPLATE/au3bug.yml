@@ -42,14 +42,11 @@ body:
       label: Audacity Version
       description: What version of Audacity are you running?
       options:
+        - Audacity 3.7.7
         - Audacity 3.7.6
         - Audacity 3.7.5
         - Audacity 3.7.4
-        - Audacity 3.7.3
-        - Audacity 3.7.2
-        - Audacity 3.7.1
-        - Audacity 3.7.0
-        - Audacity 3.6.4 or older
+        - Audacity 3.7.3 or older
         - Other
     validations:
       required: true
