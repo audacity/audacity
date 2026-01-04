@@ -14,7 +14,7 @@ if( NOT vst3sdk_FOUND )
    endif()
 
    if( NOT EXISTS ${vst3sdk_DIR} )
-      message( STATUS "VST3SDK not found. Please set VST3SDK_DIR to the path to the vst3sdk directory." )
+      message( STATUS "VST3SDK not found. Please set VST3_SDK_DIR to the path to the vst3sdk directory." )
       return()
    endif()
 
