@@ -82,6 +82,7 @@ set( LIBRARIES
 #   au3-music-information-retrieval # not yet used in AU4
 #   au3-crypto # not yet used in AU4
    au3-fft
+   au3-tft
 #   au3-concurrency # not yet used in AU4
    au3-sqlite-helpers
 #   au3-preference-pages # not yet used in AU4

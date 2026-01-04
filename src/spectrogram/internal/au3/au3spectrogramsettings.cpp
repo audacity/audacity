@@ -14,6 +14,8 @@
 
 #include "framework/global/log.h"
 
+#include "WaveletCalculator.h"
+
 #include <algorithm>
 #include <cmath>
 
@@ -181,6 +183,7 @@ void Au3SpectrogramSettings::DestroyWindows()
     window.reset();
     dWindow.reset();
     tWindow.reset();
+    pTFCalculator.reset(NULL);
 }
 
 namespace {
@@ -248,7 +251,14 @@ void RecreateWindow(
 
 void Au3SpectrogramSettings::CacheWindows()
 {
-    if (hFFT == NULL || window == NULL || (algorithm == SpectrogramAlgorithm::Reassignment && (tWindow == NULL || dWindow == NULL))) {
+    if (isConstantQ())
+    {
+        if (pTFCalculator == NULL)
+        {
+            pTFCalculator = make_unique<WaveletCalculator>(10/*octaves*/, 0.4 /*fmax*/, 18/*Q*/, 50 /*overlap*/ );
+        }
+    }
+    else if (hFFT == NULL || window == NULL || (algorithm == SpectrogramAlgorithm::Reassignment && (tWindow == NULL || dWindow == NULL))) {
         double scale;
         auto factor = ZeroPaddingFactor();
         const auto fftLen = WindowSize() * factor;
