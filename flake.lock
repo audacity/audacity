@@ -21,14 +21,19 @@
     "muse-framework": {
       "flake": false,
       "locked": {
-        "path": "muse_framework",
-        "type": "path"
+        "lastModified": 1766998896,
+        "narHash": "sha256-L1g+jFd3Iz4HccPnLAKILByLUsR7w1Gwl/0dwtzfeBk=",
+        "rev": "10dce057ccbc74ee90f46bf02d17c87bbe7dbec1",
+        "revCount": 168,
+        "submodules": true,
+        "type": "git",
+        "url": "file:./muse_framework"
       },
       "original": {
-        "path": "muse_framework",
-        "type": "path"
-      },
-      "parent": []
+        "submodules": true,
+        "type": "git",
+        "url": "file:./muse_framework"
+      }
     },
     "nixpkgs": {
       "locked": {

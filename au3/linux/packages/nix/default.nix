@@ -30,12 +30,20 @@
   harfbuzz,
   freetype,
   wxGTK32,
+  muse-framework,
 }:
 stdenv.mkDerivation {
   pname = "audacity";
   version = "4.0.0-alpha-2";
 
   src = ../../../../.;
+
+  postUnpack = ''
+    # Link muse_framework from the flake input into the source tree
+    rm -rf $sourceRoot/muse_framework
+    cp -r ${muse-framework} $sourceRoot/muse_framework
+    chmod -R u+w $sourceRoot/muse_framework
+  '';
 
   nativeBuildInputs = [
     cmake
