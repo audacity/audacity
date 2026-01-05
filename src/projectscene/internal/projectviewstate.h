@@ -76,7 +76,8 @@ public:
     void setTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) override;
     void toggleGlobalSpectrogramView() override;
     bool globalSpectrogramViewIsOn() const override;
-    muse::async::Notification globalSpectrogramViewIsOnChanged() const override;
+    bool globalSpectrogramViewToggleIsActive() const override;
+    muse::async::Notification globalSpectrogramViewToggleChanged() const override;
 
     muse::ValCh<int> trackRulerType(const trackedit::TrackId& trackId) const override;
     void setTrackRulerType(const trackedit::TrackId& trackId, int rulerType) override;
@@ -149,7 +150,7 @@ private:
     muse::ValCh<bool> m_splitToolEnabled;
 
     muse::ValCh<std::unordered_set<trackedit::TrackId> > m_spectrogramToggledTracks;
-    muse::async::Notification m_globalSpectrogramViewIsOnChanged;
+    muse::async::Notification m_globalSpectrogramViewToggleChanged;
 
     muse::ValCh<double> m_mouseYPosition;
 

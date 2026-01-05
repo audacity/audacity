@@ -20,6 +20,7 @@ static const ActionCode CLIP_PITCH_AND_SPEED_CODE("clip-pitch-speed");
 static const ActionCode TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE("toggle-playback-on-ruler-click-enabled");
 static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
 static const ActionCode LABEL_OPEN_EDITOR_CODE("toggle-label-editor");
+static const ActionCode TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE("action://trackedit/global-view-spectrogram");
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
@@ -37,6 +38,15 @@ void ProjectSceneActionsController::init()
                       &ProjectSceneActionsController::togglePlaybackOnRulerClickEnabled);
     dispatcher()->reg(this, TOGGLE_TRACK_HALF_WAVE, this, &ProjectSceneActionsController::toggleTrackHalfWave);
     dispatcher()->reg(this, LABEL_OPEN_EDITOR_CODE, this, &ProjectSceneActionsController::openLabelEditor);
+
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        const auto prj = globalContext()->currentProject();
+        if (prj) {
+            prj->viewState()->globalSpectrogramViewToggleChanged().onNotify(this, [this]() {
+                m_actionEnabledChanged.send(TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE);
+            });
+        }
+    });
 }
 
 void ProjectSceneActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
@@ -168,7 +178,19 @@ Channel<ActionCode> ProjectSceneActionsController::actionCheckedChanged() const
     return m_actionCheckedChanged;
 }
 
-bool ProjectSceneActionsController::canReceiveAction(const ActionCode&) const
+bool ProjectSceneActionsController::canReceiveAction(const ActionCode& actionCode) const
 {
-    return globalContext()->currentProject() != nullptr;
+    const auto prj = globalContext()->currentProject();
+    if (!prj) {
+        return false;
+    } else if (actionCode == TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE) {
+        return prj->viewState()->globalSpectrogramViewToggleIsActive();
+    } else {
+        return true;
+    }
+}
+
+Channel<ActionCode> ProjectSceneActionsController::actionEnabledChanged() const
+{
+    return m_actionEnabledChanged;
 }

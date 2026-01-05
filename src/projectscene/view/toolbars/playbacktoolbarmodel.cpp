@@ -121,7 +121,7 @@ void PlaybackToolBarModel::setupProjectConnections(project::IAudacityProject& pr
 {
     const auto vs = project.viewState();
     vs->splitToolEnabled().ch.onReceive(this, [this](bool){ updateSplitState(); });
-    vs->globalSpectrogramViewIsOnChanged().onNotify(this, [this] { updateGlobalSpectrogramViewState(); });
+    vs->globalSpectrogramViewToggleChanged().onNotify(this, [this] { updateGlobalSpectrogramViewState(); });
 }
 
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)

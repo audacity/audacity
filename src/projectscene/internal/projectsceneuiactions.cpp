@@ -289,6 +289,9 @@ void ProjectSceneUiActions::init()
     m_controller->actionCheckedChanged().onReceive(this, [this](const ActionCode& code) {
         m_actionCheckedChanged.send({ code });
     });
+    m_controller->actionEnabledChanged().onReceive(this, [this](const ActionCode& code) {
+        m_actionEnabledChanged.send({ code });
+    });
 }
 
 const UiActionList& ProjectSceneUiActions::actionsList() const

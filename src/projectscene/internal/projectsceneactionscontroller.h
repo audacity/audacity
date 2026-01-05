@@ -28,6 +28,7 @@ public:
     bool actionChecked(const muse::actions::ActionCode& actionCode) const override;
     muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const override;
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
+    muse::async::Channel<muse::actions::ActionCode> actionEnabledChanged() const override;
 
 private:
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
@@ -49,5 +50,6 @@ private:
     void openLabelEditor();
 
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
+    muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
 };
 }

@@ -211,7 +211,7 @@ ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project
     });
 
     m_spectrogramToggledTracks.ch.onReceive(this, [this](auto) {
-        m_globalSpectrogramViewIsOnChanged.notify();
+        m_globalSpectrogramViewToggleChanged.notify();
     });
 
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
@@ -765,6 +765,10 @@ muse::ValCh<au::trackedit::TrackViewType> ProjectViewState::trackViewType(const 
 
 void ProjectViewState::setTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
 {
+    if (trackViewType(trackId).val == viewType) {
+        return;
+    }
+
     const auto project = globalContext()->currentProject();
     if (!project) {
         return;
@@ -780,6 +784,7 @@ void ProjectViewState::setTrackViewType(const trackedit::TrackId& trackId, track
     if (it != m_tracks.end()) {
         it->second.viewType.set(viewType);
         ::setTrackViewType(project, trackId, viewType);
+        m_globalSpectrogramViewToggleChanged.notify();
         projectHistory()->modifyState();
         projectHistory()->markUnsaved();
     }
@@ -825,14 +830,25 @@ void ProjectViewState::toggleGlobalSpectrogramView()
     }
 }
 
+bool ProjectViewState::globalSpectrogramViewToggleIsActive() const
+{
+    if (globalSpectrogramViewIsOn()) {
+        return true;
+    }
+    return std::any_of(m_tracks.begin(), m_tracks.end(),
+                       [](const auto& pair) {
+        return pair.second.viewType.val == trackedit::TrackViewType::Waveform;
+    });
+}
+
 bool ProjectViewState::globalSpectrogramViewIsOn() const
 {
     return !m_spectrogramToggledTracks.val.empty();
 }
 
-muse::async::Notification ProjectViewState::globalSpectrogramViewIsOnChanged() const
+muse::async::Notification ProjectViewState::globalSpectrogramViewToggleChanged() const
 {
-    return m_globalSpectrogramViewIsOnChanged;
+    return m_globalSpectrogramViewToggleChanged;
 }
 
 muse::ValCh<int> ProjectViewState::trackRulerType(const trackedit::TrackId& trackId) const
