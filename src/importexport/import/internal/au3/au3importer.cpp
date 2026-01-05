@@ -184,8 +184,13 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
         return false;
     }
 
+    std::string baseName = filename(filePath, false).toStdString();
     std::vector<ITrackDataPtr> importedData;
     for (auto& holder : tmpTracks) {
+        for (const auto& interval : dynamic_cast<WaveTrack*>(holder.get())->Intervals()) {
+            interval->SetName(baseName);
+        }
+
         importedData.push_back(std::make_shared<Au3TrackData>(holder));
         // TODO: implement multi-channel, multi-file drag&drop import
         // for now, simply import first of the streams
