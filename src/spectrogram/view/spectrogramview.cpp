@@ -124,6 +124,9 @@ void SpectrogramView::paint(QPainter* painter)
     const spectrogram::SelectionInfo selectionInfo { m_selectionStartTime, m_selectionEndTime };
 
     const QRect visibleSubrect = clipRect().toRect();
+    if (!visibleSubrect.isValid()) {
+        return;
+    }
     const int xBegin = std::max(visibleSubrect.left() - m_timelineIndentWidth, 0);
     const int xEnd = visibleSubrect.right() + 1;
     const spectrogram::ClipInfo clipInfo { m_clipId, m_trackId, xBegin, xEnd };
