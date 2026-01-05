@@ -15,6 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/app.h>
 #include <wx/dc.h>
 #include <wx/font.h>
+#include <wx/settings.h>
 #include <wx/window.h>
 
 #include "AColor.h"
@@ -37,8 +38,11 @@ struct Settings : PrefsListener {
 
    void UpdatePrefs() override
    {
-#if defined __WXMAC__
+#if defined(__WXMAC__)
       int fontSize = 12;
+#elif defined(__WXGTK__)
+      auto defaultFont = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+      int fontSize = defaultFont.GetPointSize();
 #else
       int fontSize = 10;
 #endif
