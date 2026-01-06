@@ -107,6 +107,7 @@ static const ActionQuery TRACK_CHANGE_COLOR_QUERY("action://trackedit/track/chan
 static const ActionQuery TRACK_CHANGE_FORMAT_QUERY("action://trackedit/track/change-format");
 static const ActionQuery TRACK_CHANGE_RATE_QUERY("action://trackedit/track/change-rate");
 
+static const ActionQuery TOGGLE_GLOBAL_VIEW_SPECTROGRAM("action://trackedit/global-view-spectrogram");
 static const ActionQuery SET_TRACK_VIEW_WAVEFORM("action://trackedit/track-view-waveform");
 static const ActionQuery SET_TRACK_VIEW_SPECTROGRAM("action://trackedit/track-view-spectrogram");
 static const ActionQuery SET_TRACK_VIEW_MULTI("action://trackedit/track-view-multi");
@@ -278,6 +279,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, TRACK_CHANGE_FORMAT_QUERY, this, &TrackeditActionsController::setTrackFormat);
     dispatcher()->reg(this, TRACK_CHANGE_RATE_QUERY, this, &TrackeditActionsController::setTrackRate);
 
+    dispatcher()->reg(this, TOGGLE_GLOBAL_VIEW_SPECTROGRAM, this, &TrackeditActionsController::toggleGlobalSpectrogramView);
     dispatcher()->reg(this, SET_TRACK_VIEW_WAVEFORM, this, &TrackeditActionsController::changeTrackViewToWaveform);
     dispatcher()->reg(this, SET_TRACK_VIEW_SPECTROGRAM, this, &TrackeditActionsController::changeTrackViewToSpectrogram);
     dispatcher()->reg(this, SET_TRACK_VIEW_MULTI, this, &TrackeditActionsController::changeTrackViewToWaveformAndSpectrogram);
@@ -1782,6 +1784,15 @@ void TrackeditActionsController::setTrackRate(const muse::actions::ActionQuery& 
     }
 }
 
+void TrackeditActionsController::toggleGlobalSpectrogramView()
+{
+    const auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return;
+    }
+    project->viewState()->toggleGlobalSpectrogramView();
+}
+
 void TrackeditActionsController::changeTrackViewToWaveform(const muse::actions::ActionQuery& q)
 {
     changeTrackView(q, TrackViewType::Waveform);
@@ -1803,9 +1814,11 @@ void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuer
         return;
     }
     const auto trackId = q.param("trackId").toInt();
-    if (!trackeditInteraction()->changeAudioTrackViewType(trackId, trackView)) {
+    const auto prj = globalContext()->currentProject();
+    IF_ASSERT_FAILED(prj) {
         return;
     }
+    prj->viewState()->setTrackViewType(trackId, trackView);
     switch (trackView) {
     case TrackViewType::Waveform:
         notifyActionCheckedChanged(SET_TRACK_VIEW_WAVEFORM.toString());

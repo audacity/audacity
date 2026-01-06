@@ -76,11 +76,6 @@ bool TrackeditInteraction::changeTracksColor(const TrackIdList& tracksIds, const
     return m_interaction->changeTracksColor(tracksIds, color);
 }
 
-bool TrackeditInteraction::changeAudioTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
-{
-    return m_interaction->changeAudioTrackViewType(trackId, viewType);
-}
-
 bool TrackeditInteraction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
 {
     return withPlaybackStop(&ITrackeditInteraction::changeClipOptimizeForVoice, clipKey, optimize);

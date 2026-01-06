@@ -221,6 +221,17 @@ int ViewTracksListModel::rowCount(const QModelIndex&) const
     return static_cast<int>(m_trackList.size());
 }
 
+namespace {
+au::trackedit::TrackViewType getTrackViewType(const au::project::IAudacityProjectPtr& prj, const au::trackedit::TrackId& trackId)
+{
+    if (!prj) {
+        return au::trackedit::TrackViewType::Undefined;
+    }
+    const auto viewState = prj->viewState();
+    return viewState->trackViewType(trackId).val;
+}
+}
+
 QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid()) {
@@ -265,13 +276,14 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case IsStereoRole:
         return track.type == au::trackedit::TrackType::Stereo;
 
-    case IsWaveformViewVisibleRole:
-        return track.viewType == au::trackedit::TrackViewType::Waveform
-               || track.viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
-
-    case IsSpectrogramViewVisibleRole:
-        return track.viewType == au::trackedit::TrackViewType::Spectrogram
-               || track.viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
+    case IsWaveformViewVisibleRole: {
+        const auto vt = getTrackViewType(globalContext()->currentProject(), track.id);
+        return vt == trackedit::TrackViewType::Waveform || vt == trackedit::TrackViewType::WaveformAndSpectrogram;
+    }
+    case IsSpectrogramViewVisibleRole: {
+        const auto vt = getTrackViewType(globalContext()->currentProject(), track.id);
+        return vt == trackedit::TrackViewType::Spectrogram || vt == trackedit::TrackViewType::WaveformAndSpectrogram;
+    }
 
     case DbRangeRole:
         return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());

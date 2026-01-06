@@ -282,29 +282,29 @@ void TrackContextMenuModel::updateColorCheckedState()
 
 void TrackContextMenuModel::updateTrackViewCheckedState()
 {
-    const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
-    const std::optional<trackedit::Track> track = trackeditProject->track(m_trackId);
-    if (track.has_value()) {
-        const trackedit::TrackViewType viewType = track->viewType;
-        for (const auto& viewTypeCode : m_trackViewTypeChangeActionCodeList) {
-            MenuItem& item = findItem(viewTypeCode);
-            auto state = item.state();
-            switch (viewType) {
-            case trackedit::TrackViewType::Waveform:
-                state.checked = (viewTypeCode == TRACK_VIEW_WAVEFORM_ACTION);
-                break;
-            case trackedit::TrackViewType::Spectrogram:
-                state.checked = (viewTypeCode == TRACK_VIEW_SPECTROGRAM_ACTION);
-                break;
-            case trackedit::TrackViewType::WaveformAndSpectrogram:
-                state.checked = (viewTypeCode == TRACK_VIEW_MULTI_ACTION);
-                break;
-            default:
-                assert(false);
-                state.checked = false;
-            }
-            item.setState(state);
+    const auto prj = globalContext()->currentProject();
+    IF_ASSERT_FAILED(prj) {
+        return;
+    }
+    const auto viewType = prj->viewState()->trackViewType(m_trackId).val;
+    for (const auto& viewTypeCode : m_trackViewTypeChangeActionCodeList) {
+        MenuItem& item = findItem(viewTypeCode);
+        auto state = item.state();
+        switch (viewType) {
+        case trackedit::TrackViewType::Waveform:
+            state.checked = (viewTypeCode == TRACK_VIEW_WAVEFORM_ACTION);
+            break;
+        case trackedit::TrackViewType::Spectrogram:
+            state.checked = (viewTypeCode == TRACK_VIEW_SPECTROGRAM_ACTION);
+            break;
+        case trackedit::TrackViewType::WaveformAndSpectrogram:
+            state.checked = (viewTypeCode == TRACK_VIEW_MULTI_ACTION);
+            break;
+        default:
+            assert(viewType == trackedit::TrackViewType::Undefined);
+            state.checked = false;
         }
+        item.setState(state);
     }
 }
 

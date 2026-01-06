@@ -16,6 +16,8 @@
 
 #include "../iprojectviewstate.h"
 
+#include <unordered_set>
+
 namespace au::projectscene {
 class ProjectViewState : public QObject, public IProjectViewState, public muse::async::Asyncable
 {
@@ -56,8 +58,8 @@ public:
     Snap getSnap() const override;
     muse::ValCh<Snap> snap() const override;
 
-    void setSplitToolEnabled(const bool enabled) override;
-    muse::ValCh<bool> splitToolEnabled() override;
+    void setSplitToolEnabled(bool enabled) override;
+    muse::ValCh<bool> splitToolEnabled() const override;
 
     muse::ValCh<std::pair<float, float> > verticalDisplayBounds(const trackedit::TrackId& trackId) const override;
     void zoomInVertically(const trackedit::TrackId& trackId) override;
@@ -69,6 +71,13 @@ public:
 
     muse::ValCh<bool> isHalfWave(const trackedit::TrackId& trackId) const override;
     void toggleHalfWave(const trackedit::TrackId& trackId) override;
+
+    muse::ValCh<trackedit::TrackViewType> trackViewType(const trackedit::TrackId& trackId) const override;
+    void setTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) override;
+    void toggleGlobalSpectrogramView() override;
+    bool globalSpectrogramViewIsOn() const override;
+    bool globalSpectrogramViewToggleIsActive() const override;
+    muse::async::Notification globalSpectrogramViewToggleChanged() const override;
 
     muse::ValCh<int> trackRulerType(const trackedit::TrackId& trackId) const override;
     void setTrackRulerType(const trackedit::TrackId& trackId, int rulerType) override;
@@ -122,6 +131,7 @@ private:
         muse::ValCh<std::pair<float, float> > verticalDisplayBounds;
         muse::ValCh<bool> isHalfWave;
         muse::ValCh<int> rulerType;
+        muse::ValCh<trackedit::TrackViewType> viewType;
     };
 
     mutable muse::ValCh<int> m_totalTracksHeight;
@@ -138,6 +148,9 @@ private:
     muse::ValCh<Snap> m_snap;
 
     muse::ValCh<bool> m_splitToolEnabled;
+
+    muse::ValCh<std::unordered_set<trackedit::TrackId> > m_spectrogramToggledTracks;
+    muse::async::Notification m_globalSpectrogramViewToggleChanged;
 
     muse::ValCh<double> m_mouseYPosition;
 

@@ -65,11 +65,11 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Zoom to fit project"),
              IconCode::Code::FIT_PROJECT
              ),
-    UiAction("spectral-editing",
+    UiAction("action://trackedit/global-view-spectrogram",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
-             TranslatableString("action", "Spectral editing"),
-             TranslatableString("action", "Spectral editing"),
+             TranslatableString("action", "Toggle spectral view"),
+             TranslatableString("action", "Toggle spectral view"),
              IconCode::Code::SPECTROGRAM
              ),
     UiAction("spectral-box-select",
@@ -289,6 +289,9 @@ void ProjectSceneUiActions::init()
     m_controller->actionCheckedChanged().onReceive(this, [this](const ActionCode& code) {
         m_actionCheckedChanged.send({ code });
     });
+    m_controller->actionEnabledChanged().onReceive(this, [this](const ActionCode& code) {
+        m_actionEnabledChanged.send({ code });
+    });
 }
 
 const UiActionList& ProjectSceneUiActions::actionsList() const
@@ -339,8 +342,7 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "zoom-to-selection", true },
             { "zoom-to-fit-project", true },
             { "zoom", true },
-            { "", true },
-            // { "spectral-editing", false },
+            { "action://trackedit/global-view-spectrogram", true },
             // { "spectral-box-select", false },
             // { "spectral-brush", false },
             // { "", true },

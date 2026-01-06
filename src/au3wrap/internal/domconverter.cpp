@@ -2,7 +2,6 @@
 
 #include "au3types.h"
 #include "trackcolor.h"
-#include "trackviewtypeattachment.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -59,17 +58,6 @@ int trackRate(const Au3Track* track)
         return -1;
     }
     return waveTrack->GetRate();
-}
-
-au::trackedit::TrackViewType trackViewType(const Au3Track* track)
-{
-    const auto type = TrackViewTypeAttachment::Get(track).GetTrackViewType();
-    if (type == au::trackedit::TrackViewType::Unspecified && dynamic_cast<const WaveTrack*>(track)) {
-        // Default to Waveform for WaveTracks
-        return au::trackedit::TrackViewType::Waveform;
-    } else {
-        return type;
-    }
 }
 
 bool trackSolo(const Au3Track* track)
@@ -132,7 +120,6 @@ au::trackedit::Track DomConverter::track(const Au3Track* track)
     }
 
     au4t.format = trackFormat(track);
-    au4t.viewType = trackViewType(track);
     au4t.rate = trackRate(track);
     au4t.solo = trackSolo(track);
     au4t.mute = trackMute(track);

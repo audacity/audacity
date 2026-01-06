@@ -41,8 +41,8 @@ public:
     virtual Snap getSnap() const = 0;
     virtual muse::ValCh<Snap> snap() const = 0;
 
-    virtual void setSplitToolEnabled(const bool enabled) = 0;
-    virtual muse::ValCh<bool> splitToolEnabled() = 0;
+    virtual void setSplitToolEnabled(bool enabled) = 0;
+    virtual muse::ValCh<bool> splitToolEnabled() const = 0;
 
     virtual muse::ValCh<std::pair<float, float> > verticalDisplayBounds(const trackedit::TrackId& trackId) const = 0;
     virtual void zoomInVertically(const trackedit::TrackId& trackId) = 0;
@@ -56,6 +56,13 @@ public:
 
     virtual muse::ValCh<bool> isHalfWave(const trackedit::TrackId& trackId) const = 0;
     virtual void toggleHalfWave(const trackedit::TrackId& trackId) = 0;
+
+    virtual muse::ValCh<trackedit::TrackViewType> trackViewType(const trackedit::TrackId& trackId) const = 0;
+    virtual void setTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) = 0;
+    virtual void toggleGlobalSpectrogramView() = 0;
+    virtual bool globalSpectrogramViewIsOn() const = 0;
+    virtual bool globalSpectrogramViewToggleIsActive() const = 0;
+    virtual muse::async::Notification globalSpectrogramViewToggleChanged() const = 0;
 
     virtual muse::ValCh<int> trackRulerType(const trackedit::TrackId& trackId) const = 0;
     virtual void setTrackRulerType(const trackedit::TrackId& trackId, int rulerType) = 0;
