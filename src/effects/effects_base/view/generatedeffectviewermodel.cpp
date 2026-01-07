@@ -9,8 +9,118 @@ using namespace au::effects;
 using namespace muse;
 
 GeneratedEffectViewerModel::GeneratedEffectViewerModel(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QAbstractListModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
+}
+
+int GeneratedEffectViewerModel::rowCount(const QModelIndex& parent) const
+{
+    if (parent.isValid()) {
+        return 0;
+    }
+    return static_cast<int>(m_parameters.size());
+}
+
+QVariant GeneratedEffectViewerModel::data(const QModelIndex& index, int role) const
+{
+    if (!index.isValid() || index.row() < 0 || index.row() >= static_cast<int>(m_parameters.size())) {
+        return QVariant();
+    }
+
+    const ParameterInfo& param = m_parameters[index.row()];
+
+    switch (role) {
+    case IdRole:
+        return param.id.toQString();
+    case NameRole:
+        return param.name.toQString();
+    case UnitsRole:
+        return param.units.toQString();
+    case TypeRole:
+        switch (param.type) {
+        case ParameterType::Toggle: return QStringLiteral("toggle");
+        case ParameterType::Dropdown: return QStringLiteral("dropdown");
+        case ParameterType::Slider: return QStringLiteral("slider");
+        case ParameterType::Numeric: return QStringLiteral("numeric");
+        case ParameterType::ReadOnly: return QStringLiteral("readonly");
+        default: return QStringLiteral("unknown");
+        }
+    case MinValueRole:
+        return param.minValue;
+    case MaxValueRole:
+        return param.maxValue;
+    case DefaultValueRole:
+        return param.defaultValue;
+    case CurrentValueRole:
+        return param.currentValue;
+    case StepSizeRole:
+        return param.stepSize;
+    case StepCountRole:
+        return param.stepCount;
+    case CurrentValueStringRole:
+        return param.currentValueString.toQString();
+    case EnumValuesRole:
+    {
+        QVariantList list;
+        for (const auto& val : param.enumValues) {
+            list.append(val.toQString());
+        }
+        return list;
+    }
+    case EnumIndicesRole:
+        return QVariant::fromValue(param.enumIndices);
+    case IsReadOnlyRole:
+        return param.isReadOnly;
+    case IsHiddenRole:
+        return param.isHidden;
+    case IsLogarithmicRole:
+        return param.isLogarithmic;
+    case IsIntegerRole:
+        return param.isInteger;
+    case CanAutomateRole:
+        return param.canAutomate;
+    default:
+        return QVariant();
+    }
+}
+
+bool GeneratedEffectViewerModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    if (!index.isValid() || index.row() < 0 || index.row() >= static_cast<int>(m_parameters.size())) {
+        return false;
+    }
+
+    if (role != CurrentValueRole) {
+        return false;
+    }
+
+    setParameterValue(index.row(), value.toDouble());
+    return true;
+}
+
+QHash<int, QByteArray> GeneratedEffectViewerModel::roleNames() const
+{
+    static const QHash<int, QByteArray> roles = {
+        { IdRole, "id" },
+        { NameRole, "name" },
+        { UnitsRole, "units" },
+        { TypeRole, "type" },
+        { MinValueRole, "minValue" },
+        { MaxValueRole, "maxValue" },
+        { DefaultValueRole, "defaultValue" },
+        { CurrentValueRole, "currentValue" },
+        { StepSizeRole, "stepSize" },
+        { StepCountRole, "stepCount" },
+        { CurrentValueStringRole, "currentValueString" },
+        { EnumValuesRole, "enumValues" },
+        { EnumIndicesRole, "enumIndices" },
+        { IsReadOnlyRole, "isReadOnly" },
+        { IsHiddenRole, "isHidden" },
+        { IsLogarithmicRole, "isLogarithmic" },
+        { IsIntegerRole, "isInteger" },
+        { CanAutomateRole, "canAutomate" },
+    };
+    return roles;
 }
 
 void GeneratedEffectViewerModel::load()
@@ -18,11 +128,11 @@ void GeneratedEffectViewerModel::load()
     LOGI() << "instanceId=" << m_instanceId;
 
     updateEffectName();
-    updateParameters();
+    reloadParameters();
 
     // Listen for parameter value changes
     parametersProvider()->parameterValuesChanged().onNotify(this, [this]() {
-        updateParameters();
+        reloadParameters();
     });
 }
 
@@ -41,7 +151,7 @@ void GeneratedEffectViewerModel::setInstanceId(int newInstanceId)
     emit instanceIdChanged();
 
     updateEffectName();
-    updateParameters();
+    reloadParameters();
 }
 
 QString GeneratedEffectViewerModel::effectName() const
@@ -62,121 +172,53 @@ QString GeneratedEffectViewerModel::noParametersMessage() const
     return QObject::tr("No parameters available for this effect");
 }
 
-QVariantList GeneratedEffectViewerModel::parameters() const
-{
-    return m_parameters;
-}
-
 bool GeneratedEffectViewerModel::hasParameters() const
 {
-    return !m_parameters.isEmpty();
+    return !m_parameters.empty();
 }
 
-void GeneratedEffectViewerModel::setParameterValue(const QString& parameterId, double plainValue)
+void GeneratedEffectViewerModel::setParameterValue(int index, double plainValue)
 {
-    LOGI() << "parameterId=" << parameterId << " plainValue=" << plainValue;
-
     if (m_instanceId < 0) {
         LOGE() << "Invalid instance ID";
         return;
     }
 
-    // Get parameter info to convert plain value to normalized
-    const ParameterInfo param = parametersProvider()->parameter(m_instanceId, String::fromQString(parameterId));
-    if (!param.isValid()) {
-        LOGW() << "Parameter not found: " << parameterId;
+    if (index < 0 || index >= static_cast<int>(m_parameters.size())) {
+        LOGE() << "Invalid parameter index: " << index;
         return;
     }
+
+    ParameterInfo& param = m_parameters[index];
+    LOGI() << "index=" << index << " id=" << param.id << " plainValue=" << plainValue;
 
     // Convert plain value to normalized [0,1] for the plugin API
     const double normalizedValue = param.toNormalized(plainValue);
 
-    bool success = parametersProvider()->setParameterValue(m_instanceId, String::fromQString(parameterId), normalizedValue);
+    bool success = parametersProvider()->setParameterValue(m_instanceId, param.id, normalizedValue);
     if (!success) {
         LOGW() << "Failed to set parameter value";
+        return;
     }
+
+    // Update local cache and emit dataChanged for just this row
+    param.currentValue = plainValue;
+    // Also update the formatted string
+    param.currentValueString = parametersProvider()->parameterValueString(m_instanceId, param.id, normalizedValue);
+
+    QModelIndex modelIndex = createIndex(index, 0);
+    emit dataChanged(modelIndex, modelIndex, { CurrentValueRole, CurrentValueStringRole });
 }
 
-QString GeneratedEffectViewerModel::getParameterValueString(const QString& parameterId, double normalizedValue) const
+QString GeneratedEffectViewerModel::getParameterValueString(int index, double normalizedValue) const
 {
-    if (m_instanceId < 0) {
+    if (m_instanceId < 0 || index < 0 || index >= static_cast<int>(m_parameters.size())) {
         return QString::number(normalizedValue);
     }
 
-    String result = parametersProvider()->parameterValueString(m_instanceId, String::fromQString(parameterId), normalizedValue);
+    const ParameterInfo& param = m_parameters[index];
+    String result = parametersProvider()->parameterValueString(m_instanceId, param.id, normalizedValue);
     return result.toQString();
-}
-
-QVariantMap GeneratedEffectViewerModel::parameterInfoToVariant(const ParameterInfo& info) const
-{
-    QVariantMap map;
-
-    map["id"] = info.id.toQString();
-    map["name"] = info.name.toQString();
-    map["units"] = info.units.toQString();
-
-    // Convert ParameterType enum to string for QML
-    QString typeStr;
-    switch (info.type) {
-    case ParameterType::Toggle:
-        typeStr = "toggle";
-        break;
-    case ParameterType::Dropdown:
-        typeStr = "dropdown";
-        break;
-    case ParameterType::Slider:
-        typeStr = "slider";
-        break;
-    case ParameterType::Numeric:
-        typeStr = "numeric";
-        break;
-    case ParameterType::ReadOnly:
-        typeStr = "readonly";
-        break;
-    default:
-        typeStr = "unknown";
-        break;
-    }
-    map["type"] = typeStr;
-
-    // Value range (plain/display values)
-    map["minValue"] = info.minValue;
-    map["maxValue"] = info.maxValue;
-    map["defaultValue"] = info.defaultValue;
-    map["currentValue"] = info.currentValue;
-    map["stepSize"] = info.stepSize;
-    map["stepCount"] = static_cast<int>(info.stepCount);
-
-    // Formatted value string from plugin (e.g., "440 Hz", "3.5 dB")
-    map["currentValueString"] = info.currentValueString.toQString();
-
-    // Enum values for dropdown
-    if (info.type == ParameterType::Dropdown) {
-        QVariantList enumValues;
-        QVariantList enumIndices;
-
-        // Make sure both vectors have the same size
-        size_t count = std::min(info.enumValues.size(), info.enumIndices.size());
-
-        for (size_t i = 0; i < count; ++i) {
-            enumValues.append(info.enumValues[i].toQString());
-            enumIndices.append(info.enumIndices[i]);
-        }
-
-        map["enumValues"] = enumValues;
-        map["enumIndices"] = enumIndices;
-
-        LOGI() << "Dropdown parameter " << info.name << " has " << count << " enum values";
-    }
-
-    // Flags
-    map["isReadOnly"] = info.isReadOnly;
-    map["isHidden"] = info.isHidden;
-    map["isLogarithmic"] = info.isLogarithmic;
-    map["isInteger"] = info.isInteger;
-    map["canAutomate"] = info.canAutomate;
-
-    return map;
 }
 
 void GeneratedEffectViewerModel::updateEffectName()
@@ -202,28 +244,40 @@ void GeneratedEffectViewerModel::updateEffectName()
     }
 }
 
-void GeneratedEffectViewerModel::updateParameters()
+void GeneratedEffectViewerModel::reloadParameters()
 {
-    if (m_instanceId < 0) {
-        m_parameters.clear();
-        emit parametersChanged();
-        return;
-    }
+    const bool hadParameters = !m_parameters.empty();
 
-    ParameterInfoList paramList = parametersProvider()->parameters(m_instanceId);
+    beginResetModel();
 
-    LOGI() << "found " << paramList.size() << " parameters";
+    m_parameters.clear();
 
-    QVariantList newParameters;
-    for (const auto& param : paramList) {
-        // Skip hidden parameters
-        if (param.isHidden) {
-            continue;
+    if (m_instanceId >= 0) {
+        ParameterInfoList paramList = parametersProvider()->parameters(m_instanceId);
+
+        LOGI() << "found " << paramList.size() << " parameters";
+
+        // Filter out hidden parameters
+        for (const auto& param : paramList) {
+            if (!param.isHidden) {
+                m_parameters.push_back(param);
+            }
         }
-
-        newParameters.append(parameterInfoToVariant(param));
     }
 
-    m_parameters = newParameters;
-    emit parametersChanged();
+    endResetModel();
+
+    if (hadParameters != !m_parameters.empty()) {
+        emit hasParametersChanged();
+    }
+}
+
+int GeneratedEffectViewerModel::findParameterIndex(const muse::String& parameterId) const
+{
+    for (size_t i = 0; i < m_parameters.size(); ++i) {
+        if (m_parameters[i].id == parameterId) {
+            return static_cast<int>(i);
+        }
+    }
+    return -1;
 }

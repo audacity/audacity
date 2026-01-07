@@ -81,14 +81,14 @@ Rectangle {
 
                     // Parameter controls
                     Repeater {
-                        model: viewModel.parameters
+                        model: viewModel
 
                         delegate: ParameterControl {
                             Layout.fillWidth: true
-                            parameterData: modelData
+                            parameterData: model
 
                             onValueChanged: function (value) {
-                                viewModel.setParameterValue(modelData.id, value)
+                                viewModel.setParameterValue(index, value)
                             }
                         }
                     }
