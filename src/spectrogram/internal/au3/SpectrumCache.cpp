@@ -393,6 +393,10 @@ void SpecCache::Populate(
         const int lowerBoundX = jj == 0 ? 0 : copyEnd;
         const int upperBoundX = jj == 0 ? copyBegin : numPixels;
 
+        if (lowerBoundX >= upperBoundX) {
+            continue;
+        }
+
         std::vector<int> xRange(upperBoundX - lowerBoundX);
         std::iota(xRange.begin(), xRange.end(), lowerBoundX);
 
