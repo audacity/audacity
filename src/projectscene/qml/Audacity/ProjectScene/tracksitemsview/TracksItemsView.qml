@@ -507,7 +507,7 @@ Rectangle {
                 }
             }
 
-            onReleased: function(e) {
+            onReleased: function (e) {
                 if (e.button !== Qt.LeftButton) {
                     return
                 }
@@ -886,8 +886,8 @@ Rectangle {
                                 function onPreviewImportClipRequested(tracksIds, startPos, durations, titles) {
                                     for (let i = 0; i < tracksIds.length; i++) {
                                         if (tracksIds[i] == trackClipsContainer.trackId) {
-                                            const startTime = timeline.context.positionToTime(startPos);
-                                            const endPos = timeline.context.timeToPosition(startTime + durations[i]);
+                                            const startTime = timeline.context.positionToTime(startPos)
+                                            const endPos = timeline.context.timeToPosition(startTime + durations[i])
                                             trackClipsContainer.movePreviewClip(startPos, endPos - startPos, titles[i])
                                         }
                                     }
@@ -1124,7 +1124,7 @@ Rectangle {
         tracksViewState: tracksViewState
         timeline: timeline
 
-        onSetGuidelineRequested: function(pos, visibility) {
+        onSetGuidelineRequested: function (pos, visibility) {
             root.guidelinePos = pos
             root.guidelineVisible = visibility
         }
