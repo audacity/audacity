@@ -26,10 +26,11 @@ public:
     Q_INVOKABLE QVariantList lastProbedFileNames() const;
     Q_INVOKABLE void startImportDrag();
     Q_INVOKABLE void endImportDrag();
+    Q_INVOKABLE int requiredTracksCount() const;
     Q_INVOKABLE void prepareConditionalTracks(int currentTrackId, int draggedFileCount);
     Q_INVOKABLE QVariantList draggedTracksIds(int currentTrackId, int draggedFilesCount);
     Q_INVOKABLE void removeDragAddedTracks(int currentTrackId, int draggedFilesCount);
-    Q_INVOKABLE void handleDroppedFiles(const std::vector<trackedit::TrackId>& trackIds, double startTime, const QStringList& fileUrls);
+    Q_INVOKABLE void handleDroppedFiles(const std::vector<trackedit::TrackId>& trackIds, double startTime);
 
 private:
     std::vector<au::importexport::FileInfo> m_lastDraggedFilesInfo;

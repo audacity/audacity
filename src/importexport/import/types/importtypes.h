@@ -10,5 +10,6 @@ struct FileInfo
 {
     muse::io::path_t path;
     double duration = 0.0;
+    int trackCount = 0;
 };
 }

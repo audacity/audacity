@@ -247,6 +247,17 @@ double PCMImportFileHandle::GetDuration() const
     return static_cast<double>(mInfo.frames) / static_cast<double>(mInfo.samplerate);
 }
 
+int PCMImportFileHandle::GetRequiredTrackCount() const
+{
+    const int channels = mInfo.channels;
+
+    if (channels <= 0) {
+        return 0;
+    }
+
+    return (channels <= 2) ? 1 : static_cast<size_t>(channels);
+}
+
 auto PCMImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
     return mInfo.frames * mInfo.channels * SAMPLE_SIZE(mFormat);
