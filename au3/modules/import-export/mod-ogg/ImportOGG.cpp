@@ -99,6 +99,27 @@ double OggImportFileHandle::GetDuration() const
     return (seconds > 0.0) ? seconds : 0.0;
 }
 
+int OggImportFileHandle::GetRequiredTrackCount() const
+{
+    if (!mVorbisFile) {
+        return 0;
+    }
+
+    size_t tracks = 0;
+
+    for (int i = 0; i < mVorbisFile->links; ++i) {
+        const int channels = mVorbisFile->vi[i].channels;
+
+        if (channels <= 2) {
+            tracks += 1;
+        } else {
+            tracks += channels;
+        }
+    }
+
+    return tracks;
+}
+
 auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
     // TODO:

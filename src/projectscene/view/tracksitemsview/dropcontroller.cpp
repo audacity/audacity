@@ -46,7 +46,9 @@ QVariantList DropController::lastProbedDurations() const
     QVariantList out;
     out.reserve(static_cast<int>(m_lastDraggedFilesInfo.size()));
     for (const auto& info : m_lastDraggedFilesInfo) {
-        out.push_back(info.duration);
+        for (int i = 0; i < info.trackCount; ++i) {
+            out.push_back(info.duration);
+        }
     }
     return out;
 }
@@ -54,11 +56,19 @@ QVariantList DropController::lastProbedDurations() const
 QVariantList DropController::lastProbedFileNames() const
 {
     QVariantList out;
-    out.reserve(static_cast<int>(m_lastDraggedUrls.size()));
-    for (const auto& info : m_lastDraggedUrls) {
-        std::string title = muse::io::filename(info, false /* including extension */).toStdString();
-        out.push_back(QString::fromStdString(title));
+    out.reserve(static_cast<int>(requiredTracksCount()));
+
+    auto urlIter  = m_lastDraggedUrls.cbegin();
+    auto infoIter = m_lastDraggedFilesInfo.cbegin();
+    for (; urlIter != m_lastDraggedUrls.cend() && infoIter != m_lastDraggedFilesInfo.cend();
+         ++urlIter, ++infoIter) {
+        std::string title = muse::io::filename(*urlIter, false /* including extension */).toStdString();
+
+        for (int n = 0; n < infoIter->trackCount; ++n) {
+            out.push_back(QString::fromStdString(title));
+        }
     }
+
     return out;
 }
 
@@ -83,6 +93,16 @@ void DropController::endImportDrag()
     m_tracksCountWhenDragStarted = -1;
     m_lastDraggedFilesInfo.clear();
     m_lastDraggedUrls.clear();
+}
+
+int DropController::requiredTracksCount() const
+{
+    int count = 0;
+    for (const auto& info : m_lastDraggedFilesInfo) {
+        count += info.trackCount;
+    }
+
+    return count;
 }
 
 void DropController::prepareConditionalTracks(int currentTrackId, int draggedFilesCount)
@@ -282,15 +302,22 @@ void DropController::removeDragAddedTracks(int currentTrackId, int draggedFilesC
     tracksInteraction()->removeDragAddedTracks(neededTracksCount, true /* emptyOnly */);
 }
 
-void DropController::handleDroppedFiles(const std::vector<trackedit::TrackId>& trackIds, double startTime, const QStringList& fileUrls)
+void DropController::handleDroppedFiles(const std::vector<trackedit::TrackId>& trackIds, double startTime)
 {
     std::vector<muse::io::path_t> localPaths;
-    for (const auto& fileUrl : fileUrls) {
-        QUrl url(fileUrl);
-        localPaths.push_back(muse::io::path_t(url.toLocalFile()));
+
+    // NOTE: importer only needs the first trackId (out of many) for multichannel files
+    // while `trackIds` contains all, we may need to skip some of them
+    std::vector<trackedit::TrackId> adjustedDstTrackIds;
+    auto dstTrackIter = trackIds.begin();
+    for (const auto& info : m_lastDraggedFilesInfo) {
+        localPaths.push_back(info.path);
+
+        adjustedDstTrackIds.push_back(*dstTrackIter);
+        std::advance(dstTrackIter, info.trackCount);
     }
 
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
 
-    prj->importIntoTracks(localPaths, trackIds, startTime);
+    prj->importIntoTracks(localPaths, adjustedDstTrackIds, startTime);
 }

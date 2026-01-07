@@ -102,6 +102,7 @@ au::importexport::FileInfo au::importexport::Au3Importer::fileInfo(const muse::i
         if ((inFile != NULL) && (inFile->GetStreamCount() > 0)) {
             fileInfo.path = filePath;
             fileInfo.duration = inFile->GetDuration();
+            fileInfo.trackCount = inFile->GetRequiredTrackCount();
 
             return fileInfo;
         }
@@ -191,21 +192,14 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
             interval->SetName(baseName);
         }
 
+        holder->ShiftBy(startTime);
         importedData.push_back(std::make_shared<Au3TrackData>(holder));
-        // TODO: implement multi-channel, multi-file drag&drop import
-        // for now, simply import first of the streams
-        break;
-    }
-
-    WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(*project, ::TrackId(dstTrackId));
-    IF_ASSERT_FAILED(dstWaveTrack) {
-        return false;
     }
 
     bool modifiedState = false;
     selectionController()->setSelectedTracks({ dstTrackId }, true);
-    tracksInteraction()->paste(importedData, startTime, false /* moveClips */, false /* moveAllTracks */,
-                               false /* isMultiSelectionCopy */, modifiedState);
+    tracksInteraction()->paste(importedData, 0.0, false /* moveClips */, false /* moveAllTracks */,
+                               true /* isMultiSelectionCopy */, modifiedState);
 
     return true;
 }

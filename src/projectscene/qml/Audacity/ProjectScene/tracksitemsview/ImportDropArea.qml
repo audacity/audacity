@@ -93,10 +93,11 @@ DropArea {
         }
 
         var trackId = tracksViewState.trackAtPosition(dropX, dropY)
-        dropController.prepareConditionalTracks(trackId, urls.length)
-        dropController.removeDragAddedTracks(trackId, urls.length)
+        let trackCount = dropController.requiredTracksCount()
+        dropController.prepareConditionalTracks(trackId, trackCount)
+        dropController.removeDragAddedTracks(trackId, trackCount)
 
-        let tracksIds = dropController.draggedTracksIds(trackId, urls.length)
+        let tracksIds = dropController.draggedTracksIds(trackId, trackCount)
         tracksItemsView.clearPreviewImportClip(tracksIds /* tracks not to clear */)
         const durations  = dropController.lastProbedDurations();
         const titles     = dropController.lastProbedFileNames();
@@ -107,9 +108,6 @@ DropArea {
     }
 
     function handleOnDropped(drop, externalDrop) {
-        // Forces conversion to a compatible array
-        let urls = drop.urls.concat([]);
-
         let dropX = 0
         let dropY = drop.y
         if (!externalDrop) {
@@ -118,8 +116,10 @@ DropArea {
         }
 
         let trackId = tracksViewState.trackAtPosition(dropX, dropY)
-        let tracksIds = dropController.draggedTracksIds(trackId, urls.length)
-        dropController.handleDroppedFiles(tracksIds, timeline.context.positionToTime(dropX), urls)
+        let trackCount = dropController.requiredTracksCount()
+        let tracksIds = dropController.draggedTracksIds(trackId, trackCount)
+        // by this time, url list is already inside dropController
+        dropController.handleDroppedFiles(tracksIds, timeline.context.positionToTime(dropX))
 
         dropController.endImportDrag()
         drop.acceptProposedAction()

@@ -119,6 +119,15 @@ double WavPackImportFileHandle::GetDuration() const
     return static_cast<double>(mNumSamples) / static_cast<double>(mSampleRate);
 }
 
+int WavPackImportFileHandle::GetRequiredTrackCount() const
+{
+    if (mNumChannels <= 0) {
+        return 0;
+    }
+
+    return (mNumChannels <= 2) ? 1 : static_cast<size_t>(mNumChannels);
+}
+
 auto WavPackImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
     return 0;

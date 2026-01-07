@@ -208,6 +208,17 @@ double MP3ImportFileHandle::GetDuration() const
     return static_cast<double>(length) / static_cast<double>(rate);
 }
 
+int MP3ImportFileHandle::GetRequiredTrackCount() const
+{
+    const int channels = mNumChannels;
+
+    if (channels <= 0) {
+        return 0;
+    }
+
+    return (channels <= 2) ? 1 : static_cast<size_t>(channels);
+}
+
 auto MP3ImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
     // We have to parse the file first using mpg123_scan,

@@ -202,6 +202,7 @@ public:
 
     TranslatableString GetFileDescription() override;
     double GetDuration() const override;
+    int GetRequiredTrackCount() const override;
     ByteCount GetFileUncompressedBytes() override;
 
     void Import(
@@ -468,6 +469,25 @@ double FFmpegImportFileHandle::GetDuration() const
     }
 
     return maxDurationSeconds;
+}
+
+int FFmpegImportFileHandle::GetRequiredTrackCount() const
+{
+    size_t tracks = 0;
+
+    for (const auto& sc : mStreamContexts) {
+        if (!sc.Use) {
+            continue;
+        }
+
+        if (sc.InitialChannels <= 2) {
+            tracks += 1;
+        } else {
+            tracks += sc.InitialChannels;
+        }
+    }
+
+    return tracks;
 }
 
 auto FFmpegImportFileHandle::GetFileUncompressedBytes() -> ByteCount
