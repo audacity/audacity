@@ -154,69 +154,35 @@ std::vector<ParamInfo> extractParameters(EffectInstanceEx* instance, EffectSetti
                 // Note: isHidden is always false here since hidden parameters are filtered above
                 paramInfo.canAutomate = (vst3Info.flags & Steinberg::Vst::ParameterInfo::kCanAutomate) != 0;
 
-                // Value range (VST3 uses normalized 0.0 to 1.0)
-                paramInfo.minValue = 0.0;
-                paramInfo.maxValue = 1.0;
-                paramInfo.defaultValue = vst3Info.defaultNormalizedValue;
-                paramInfo.currentValue = editController->getParamNormalized(vst3Info.id);
-
-                // Get formatted value string from plugin (e.g., "440 Hz", "3.5 dB")
-                Steinberg::Vst::String128 stringValue;
-                if (editController->getParamStringByValue(vst3Info.id, paramInfo.currentValue, stringValue) == Steinberg::kResultOk) {
-                    paramInfo.currentValueString = VST3Utils::UTF16ToStdString(stringValue);
-                }
-
-                // Step count (must be set before plain value extraction check below)
+                // Step count
                 paramInfo.stepCount = vst3Info.stepCount;
                 if (paramInfo.stepCount > 0) {
                     paramInfo.stepSize = 1.0 / static_cast<double>(paramInfo.stepCount);
                 }
 
-                // For discrete parameters (including lists), try to get plain value range
-                // Note: normalizedParamToPlain is only reliable for discrete parameters!
-                // For continuous parameters, it often just returns the normalized value.
-                // See Issue #4763 in Audacity for details.
-                if (paramInfo.stepCount > 0) {
-                    try {
-                        paramInfo.plainMinValue = editController->normalizedParamToPlain(vst3Info.id, 0.0);
-                        paramInfo.plainMaxValue = editController->normalizedParamToPlain(vst3Info.id, 1.0);
-                        paramInfo.plainDefaultValue = editController->normalizedParamToPlain(vst3Info.id, vst3Info.defaultNormalizedValue);
-                        paramInfo.plainCurrentValue = editController->normalizedParamToPlain(vst3Info.id, paramInfo.currentValue);
+                // Get normalized values first
+                double normalizedDefault = vst3Info.defaultNormalizedValue;
+                double normalizedCurrent = editController->getParamNormalized(vst3Info.id);
 
-                        // Check if plugin provides valid plain value conversions (Issue #4763)
-                        // Some buggy plugins just return the input value unchanged.
-                        // Test: if plainParamToNormalized(stepCount) == stepCount, conversions are broken
-                        double testValue = static_cast<double>(paramInfo.stepCount);
-                        double testResult = editController->plainParamToNormalized(vst3Info.id, testValue);
+                // Get formatted value string from plugin (e.g., "440 Hz", "3.5 dB")
+                Steinberg::Vst::String128 stringValue;
+                if (editController->getParamStringByValue(vst3Info.id, normalizedCurrent, stringValue) == Steinberg::kResultOk) {
+                    paramInfo.currentValueString = VST3Utils::UTF16ToStdString(stringValue);
+                }
 
-                        // If they're different, plugin conversions work correctly
-                        bool usePluginConversions = std::abs(testValue - testResult) > 0.0001;
-
-                        paramInfo.hasPlainRange = usePluginConversions;
-                    } catch (const std::exception& e) {
-                        wxLogDebug("VST3ParameterExtraction: exception getting plain values for param %d: %s",
-                                   vst3Info.id, e.what());
-                        paramInfo.plainMinValue = 0.0;
-                        paramInfo.plainMaxValue = 1.0;
-                        paramInfo.plainDefaultValue = vst3Info.defaultNormalizedValue;
-                        paramInfo.plainCurrentValue = paramInfo.currentValue;
-                        paramInfo.hasPlainRange = false;
-                    } catch (...) {
-                        wxLogDebug("VST3ParameterExtraction: unknown exception getting plain values for param %d",
-                                   vst3Info.id);
-                        paramInfo.plainMinValue = 0.0;
-                        paramInfo.plainMaxValue = 1.0;
-                        paramInfo.plainDefaultValue = vst3Info.defaultNormalizedValue;
-                        paramInfo.plainCurrentValue = paramInfo.currentValue;
-                        paramInfo.hasPlainRange = false;
-                    }
-                } else {
-                    // Continuous parameters: don't use plain values, use getParamStringByValue instead
-                    paramInfo.plainMinValue = 0.0;
-                    paramInfo.plainMaxValue = 1.0;
-                    paramInfo.plainDefaultValue = vst3Info.defaultNormalizedValue;
-                    paramInfo.plainCurrentValue = paramInfo.currentValue;
-                    paramInfo.hasPlainRange = false;
+                // Convert to plain (display) values via normalizedParamToPlain
+                // For plugins that don't implement proper conversions, these will be 0.0 to 1.0
+                try {
+                    paramInfo.minValue = editController->normalizedParamToPlain(vst3Info.id, 0.0);
+                    paramInfo.maxValue = editController->normalizedParamToPlain(vst3Info.id, 1.0);
+                    paramInfo.defaultValue = editController->normalizedParamToPlain(vst3Info.id, normalizedDefault);
+                    paramInfo.currentValue = editController->normalizedParamToPlain(vst3Info.id, normalizedCurrent);
+                } catch (...) {
+                    // Fallback to normalized values if conversion fails
+                    paramInfo.minValue = 0.0;
+                    paramInfo.maxValue = 1.0;
+                    paramInfo.defaultValue = normalizedDefault;
+                    paramInfo.currentValue = normalizedCurrent;
                 }
 
                 // For list/dropdown parameters, get the enum values
@@ -255,7 +221,7 @@ double getParameterValue(EffectInstanceEx* instance, uint32_t parameterId)
     return editController->getParamNormalized(parameterId);
 }
 
-bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double value,
+bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double normalizedValue,
                        EffectSettingsAccess* settingsAccess)
 {
     if (!instance) {
@@ -273,11 +239,11 @@ bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double 
         return false;
     }
 
-    // Clamp value to 0.0 - 1.0 range (VST3 normalized range)
-    value = std::clamp(value, 0.0, 1.0);
+    // Clamp to normalized [0.0, 1.0] range for VST3 API
+    normalizedValue = std::clamp(normalizedValue, 0.0, 1.0);
 
     // Set the parameter value on the edit controller
-    if (editController->setParamNormalized(parameterId, value) != Steinberg::kResultOk) {
+    if (editController->setParamNormalized(parameterId, normalizedValue) != Steinberg::kResultOk) {
         return false;
     }
 
@@ -285,7 +251,7 @@ bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double 
     // This is the same flow used by the vendor UI when parameters are changed
     if (wrapper.mComponentHandler) {
         wrapper.mComponentHandler->beginEdit(parameterId);
-        wrapper.mComponentHandler->performEdit(parameterId, value);
+        wrapper.mComponentHandler->performEdit(parameterId, normalizedValue);
         wrapper.mComponentHandler->endEdit(parameterId);
     }
 

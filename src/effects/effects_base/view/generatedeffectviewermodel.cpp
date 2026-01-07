@@ -72,28 +72,38 @@ bool GeneratedEffectViewerModel::hasParameters() const
     return !m_parameters.isEmpty();
 }
 
-void GeneratedEffectViewerModel::setParameterValue(const QString& parameterId, double value)
+void GeneratedEffectViewerModel::setParameterValue(const QString& parameterId, double plainValue)
 {
-    LOGI() << "GeneratedEffectViewerModel::setParameterValue() parameterId=" << parameterId << " value=" << value;
+    LOGI() << "GeneratedEffectViewerModel::setParameterValue() parameterId=" << parameterId << " plainValue=" << plainValue;
 
     if (m_instanceId < 0) {
         LOGE() << "Invalid instance ID";
         return;
     }
 
-    bool success = parametersProvider()->setParameterValue(m_instanceId, String::fromQString(parameterId), value);
+    // Get parameter info to convert plain value to normalized
+    const ParameterInfo param = parametersProvider()->parameter(m_instanceId, String::fromQString(parameterId));
+    if (!param.isValid()) {
+        LOGW() << "Parameter not found: " << parameterId;
+        return;
+    }
+
+    // Convert plain value to normalized [0,1] for the plugin API
+    const double normalizedValue = param.toNormalized(plainValue);
+
+    bool success = parametersProvider()->setParameterValue(m_instanceId, String::fromQString(parameterId), normalizedValue);
     if (!success) {
         LOGW() << "Failed to set parameter value";
     }
 }
 
-QString GeneratedEffectViewerModel::getParameterValueString(const QString& parameterId, double value) const
+QString GeneratedEffectViewerModel::getParameterValueString(const QString& parameterId, double normalizedValue) const
 {
     if (m_instanceId < 0) {
-        return QString::number(value);
+        return QString::number(normalizedValue);
     }
 
-    String result = parametersProvider()->parameterValueString(m_instanceId, String::fromQString(parameterId), value);
+    String result = parametersProvider()->parameterValueString(m_instanceId, String::fromQString(parameterId), normalizedValue);
     return result.toQString();
 }
 
@@ -129,7 +139,7 @@ QVariantMap GeneratedEffectViewerModel::parameterInfoToVariant(const ParameterIn
     }
     map["type"] = typeStr;
 
-    // Value range (normalized)
+    // Value range (plain/display values)
     map["minValue"] = info.minValue;
     map["maxValue"] = info.maxValue;
     map["defaultValue"] = info.defaultValue;
@@ -139,13 +149,6 @@ QVariantMap GeneratedEffectViewerModel::parameterInfoToVariant(const ParameterIn
 
     // Formatted value string from plugin (e.g., "440 Hz", "3.5 dB")
     map["currentValueString"] = info.currentValueString.toQString();
-
-    // Plain value range (actual display values for discrete parameters only)
-    map["plainMinValue"] = info.plainMinValue;
-    map["plainMaxValue"] = info.plainMaxValue;
-    map["plainDefaultValue"] = info.plainDefaultValue;
-    map["plainCurrentValue"] = info.plainCurrentValue;
-    map["hasPlainRange"] = info.hasPlainRange;
 
     // Enum values for dropdown
     if (info.type == ParameterType::Dropdown) {

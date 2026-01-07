@@ -36,8 +36,8 @@ public:
     ~GeneratedEffectViewerModel() override = default;
 
     Q_INVOKABLE void load();
-    Q_INVOKABLE void setParameterValue(const QString& parameterId, double value);
-    Q_INVOKABLE QString getParameterValueString(const QString& parameterId, double value) const;
+    Q_INVOKABLE void setParameterValue(const QString& parameterId, double plainValue);
+    Q_INVOKABLE QString getParameterValueString(const QString& parameterId, double normalizedValue) const;
 
     int instanceId() const;
     void setInstanceId(int newInstanceId);
