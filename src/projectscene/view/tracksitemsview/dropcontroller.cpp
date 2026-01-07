@@ -24,9 +24,13 @@ void DropController::probeAudioFilesLength(const QStringList& fileUrls)
     std::vector<muse::io::path_t> localPaths;
     localPaths.reserve(fileUrls.size());
 
+    const auto exts = importer()->supportedExtensions();
     for (const auto& fileUrl : fileUrls) {
         const QUrl url(fileUrl);
-        localPaths.push_back(muse::io::path_t(url.toLocalFile()));
+        muse::io::path_t path = muse::io::path_t(url.toLocalFile());
+        if (muse::contains(exts, muse::io::suffix(path))) {
+            localPaths.push_back(path);
+        }
     }
 
     if (localPaths.empty()) {
