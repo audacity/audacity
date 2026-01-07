@@ -18,5 +18,6 @@ public:
     virtual FileInfo fileInfo(const muse::io::path_t& filePath) = 0;
     virtual bool import(const muse::io::path_t& filePath) = 0;
     virtual bool importIntoTrack(const muse::io::path_t& filePath, trackedit::TrackId dstTrackId, trackedit::secs_t startTime) = 0;
+    virtual std::vector<std::string> supportedExtensions() const = 0;
 };
 }

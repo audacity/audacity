@@ -204,6 +204,42 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
     return true;
 }
 
+std::vector<std::string> au::importexport::Au3Importer::supportedExtensions() const
+{
+    static const std::vector<std::string> supportedExtensions = [] {
+        std::unordered_set<std::string> uniq;
+
+        const auto fileTypes = Importer::Get().GetFileTypes(FileNames::FileType {});
+
+        if (fileTypes.size() > 1) {
+            const auto& exts = fileTypes[1].extensions;
+            for (const auto& wxExt : exts) {
+                std::string ext = wxExt.ToStdString();
+
+                if (ext.empty() || ext == "*") {
+                    continue;
+                }
+
+                if (!ext.empty() && ext.front() == '.') {
+                    ext.erase(ext.begin());
+                }
+
+                uniq.emplace(ext);
+            }
+        }
+
+        std::vector<std::string> out;
+        out.reserve(uniq.size());
+        for (auto& e : uniq) {
+            out.push_back(e);
+        }
+
+        return out;
+    }();
+
+    return supportedExtensions;
+}
+
 void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks)
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
