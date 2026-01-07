@@ -333,7 +333,7 @@ void PlaybackController::doPlay(bool ignoreSelection)
     player()->play();
 }
 
-void PlaybackController::playTracksAction(const muse::actions::ActionQuery& q)
+void PlaybackController::playTracksAction(const muse::actions::ActionQuery&)
 {
     // this is not implemented yet
     /*

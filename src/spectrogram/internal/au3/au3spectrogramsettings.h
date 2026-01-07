@@ -59,7 +59,7 @@ public:
     int WindowSize() const { return m_windowSize; }
     void SetWindowSize(int size);
 
-    size_t ZeroPaddingFactor() const;
+    int ZeroPaddingFactor() const;
     void SetZeroPaddingFactor(int factor);
 
     size_t GetFFTLength() const;

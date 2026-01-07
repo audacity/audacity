@@ -12,7 +12,7 @@ int viewportWidth(const ViewInfo&);
 
 double positionToTime(const ViewInfo&, int position);
 
-int timeToPosition(const ViewInfo&, double projectTime);
+long long timeToPosition(const ViewInfo&, double projectTime);
 
 void findCorrection(
     const std::vector<long long>& oldWhere, size_t oldLen, size_t newLen, double t0, double sampleRate, double stretchRatio,

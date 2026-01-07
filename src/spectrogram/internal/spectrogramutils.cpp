@@ -15,7 +15,7 @@ double au::spectrogram::positionToTime(const ViewInfo& viewInfo, int position)
     return viewInfo.viewportStartTime + position / viewInfo.pixelsPerSecond;
 }
 
-int au::spectrogram::timeToPosition(const ViewInfo& viewInfo, double projectTime)
+long long au::spectrogram::timeToPosition(const ViewInfo& viewInfo, double projectTime)
 {
     double t = 0.5 + viewInfo.pixelsPerSecond * (projectTime - viewInfo.viewportStartTime);
     if (t < INT64_MIN) {

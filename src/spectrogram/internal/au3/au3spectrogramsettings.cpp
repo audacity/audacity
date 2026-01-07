@@ -66,14 +66,14 @@ Au3SpectrogramSettings& Au3SpectrogramSettings::Get(WaveTrack& track)
 
 Au3SpectrogramSettings::Au3SpectrogramSettings(const Au3SpectrogramSettings& other)
     : syncWithGlobalSettings(other.syncWithGlobalSettings)
+    , minFreq(other.minFreq)
+    , maxFreq(other.maxFreq)
     , range(other.range)
     , gain(other.gain)
     , frequencyGain(other.frequencyGain)
     , colorScheme(other.colorScheme)
     , scaleType(other.scaleType)
     , algorithm(other.algorithm)
-    , minFreq(other.minFreq)
-    , maxFreq(other.maxFreq)
 
     // Do not copy these!
     , hFFT{}
@@ -311,11 +311,6 @@ size_t Au3SpectrogramSettings::NBins() const
     return GetFFTLength() / 2;
 }
 
-NumberScale Au3SpectrogramSettings::GetScale(float minFreqIn, float maxFreqIn) const
-{
-    return NumberScale(scaleType, minFreqIn, maxFreqIn);
-}
-
 static const ChannelGroup::Attachments::RegisteredFactory
     key2{ [](auto&) { return std::make_unique<SpectrogramBounds>(); } };
 
@@ -399,7 +394,7 @@ void Au3SpectrogramSettings::SetWindowType(SpectrogramWindowType type)
     DestroyWindows();
 }
 
-size_t Au3SpectrogramSettings::ZeroPaddingFactor() const
+int Au3SpectrogramSettings::ZeroPaddingFactor() const
 {
     return algorithm == SpectrogramAlgorithm::Pitch ? 1 : m_zeroPaddingFactor;
 }

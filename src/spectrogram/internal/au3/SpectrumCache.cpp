@@ -784,8 +784,8 @@ void WaveClipSpectrumCache::MakeStereo(WaveClipListener&& other, bool)
 {
     auto pOther = dynamic_cast<WaveClipSpectrumCache*>(&other);
     assert(pOther); // precondition
-    mSpecCaches.push_back(move(pOther->mSpecCaches[0]));
-    mSpecPxCaches.push_back(move(pOther->mSpecPxCaches[0]));
+    mSpecCaches.push_back(std::move(pOther->mSpecCaches[0]));
+    mSpecPxCaches.push_back(std::move(pOther->mSpecPxCaches[0]));
 }
 
 void WaveClipSpectrumCache::SwapChannels()

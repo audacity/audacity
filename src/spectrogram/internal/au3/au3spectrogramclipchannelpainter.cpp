@@ -195,7 +195,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
     }
 
     // Bug 2389 - always draw at least one pixel of selection.
-    int selectedX = timeToPosition(viewInfo, selectionInfo.startTime) - leftOffset;
+    int selectedX = static_cast<int>(timeToPosition(viewInfo, selectionInfo.startTime) - leftOffset);
 
     // There used to be a pragma omp parallel for here. Can/Should we use QtConcurrent?
     for (int xx = 0; xx < imageWidth; ++xx) {
