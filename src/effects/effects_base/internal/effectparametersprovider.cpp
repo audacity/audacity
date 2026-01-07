@@ -69,7 +69,7 @@ double EffectParametersProvider::parameterValue(EffectInstanceId instanceId, con
     return param.currentValue;
 }
 
-bool EffectParametersProvider::setParameterValue(EffectInstanceId instanceId, const String& parameterId, double value)
+bool EffectParametersProvider::setParameterValue(EffectInstanceId instanceId, const String& parameterId, double normalizedValue)
 {
     EffectInstance* instance = instancesRegister()->instanceById(instanceId).get();
     if (!instance) {
@@ -80,18 +80,16 @@ bool EffectParametersProvider::setParameterValue(EffectInstanceId instanceId, co
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
     EffectFamily family = getEffectFamily(effectId);
 
+    bool success = false;
+
     switch (family) {
     case EffectFamily::VST3:
 #ifdef USE_VST3
     {
         // Get the settings access to properly persist the parameter change
         EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instanceId);
-
-        if (VST3ParametersExtractor::setParameterValue(instance, parameterId, value, settingsAccess)) {
-            m_parameterValuesChanged.notify();
-            return true;
-        }
-        return false;
+        success = VST3ParametersExtractor::setParameterValue(instance, parameterId, normalizedValue, settingsAccess);
+        break;
     }
 #else
         LOGW() << "VST3 support not enabled in this build";
@@ -111,6 +109,21 @@ bool EffectParametersProvider::setParameterValue(EffectInstanceId instanceId, co
         LOGW() << "Parameter value setting not supported for effect family: " << static_cast<int>(family);
         return false;
     }
+
+    if (success) {
+        // Get the updated parameter info to send plain value and formatted string
+        ParameterInfo param = parameter(instanceId, parameterId);
+
+        ParameterChangedData data;
+        data.instanceId = instanceId;
+        data.parameterId = parameterId;
+        data.newPlainValue = param.currentValue;
+        data.newValueString = param.currentValueString;
+
+        m_parameterChanged.send(data);
+    }
+
+    return success;
 }
 
 String EffectParametersProvider::parameterValueString(EffectInstanceId instanceId, const String& parameterId, double value) const
@@ -165,9 +178,9 @@ bool EffectParametersProvider::supportsParameterExtraction(const EffectId& effec
            || family == EffectFamily::AudioUnit;
 }
 
-muse::async::Notification EffectParametersProvider::parameterValuesChanged() const
+muse::async::Channel<ParameterChangedData> EffectParametersProvider::parameterChanged() const
 {
-    return m_parameterValuesChanged;
+    return m_parameterChanged;
 }
 
 ParameterInfoList EffectParametersProvider::extractVST3Parameters(EffectInstance* instance,
