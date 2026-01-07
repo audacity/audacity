@@ -147,7 +147,6 @@ void Au3TrackeditProject::onTrackListEvent(const TrackListEvent& e)
     if (track) {
         trackId = track->GetId();
     }
-    LOGD() << "trackId: " << trackId << ", type: " << eventTypeToString(e);
 
     switch (e.mType) {
     case TrackListEvent::DELETION: {
