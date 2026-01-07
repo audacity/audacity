@@ -3,12 +3,20 @@
 */
 #pragma once
 
-#include "framework/global/async/notification.h"
+#include "framework/global/async/channel.h"
 #include "framework/global/modularity/imoduleinterface.h"
 
 #include "effectstypes.h"
 
 namespace au::effects {
+//! Data sent when a parameter value changes
+struct ParameterChangedData {
+    EffectInstanceId instanceId = -1;
+    muse::String parameterId;
+    double newPlainValue = 0.0;       // New value in plain/display units
+    muse::String newValueString;      // Formatted string representation
+};
+
 //! Interface for extracting parameter metadata from effects
 //! This provides a unified way to get parameter information from different plugin formats
 //! (VST3, LV2, Audio Units, etc.) for auto-generating UIs
@@ -39,7 +47,7 @@ public:
     //! Set value of a parameter
     //! @param instanceId The effect instance ID
     //! @param parameterId The parameter identifier
-    //! @param value The new value to set
+    //! @param value The new value to set (normalized 0-1)
     //! @return true if successful
     virtual bool setParameterValue(EffectInstanceId instanceId, const muse::String& parameterId, double value) = 0;
 
@@ -55,7 +63,8 @@ public:
     //! @return true if parameters can be extracted
     virtual bool supportsParameterExtraction(const EffectId& effectId) const = 0;
 
-    //! Notification when parameter values change
-    virtual muse::async::Notification parameterValuesChanged() const = 0;
+    //! Channel that sends data when a specific parameter value changes
+    //! Subscribers receive the instance ID, parameter ID, and new values
+    virtual muse::async::Channel<ParameterChangedData> parameterChanged() const = 0;
 };
 }

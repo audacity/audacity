@@ -30,7 +30,7 @@ public:
 
     bool supportsParameterExtraction(const EffectId& effectId) const override;
 
-    muse::async::Notification parameterValuesChanged() const override;
+    muse::async::Channel<ParameterChangedData> parameterChanged() const override;
 
 private:
     // Extract parameters from VST3 plugin
@@ -45,6 +45,6 @@ private:
     // Helper to determine effect family
     EffectFamily getEffectFamily(const EffectId& effectId) const;
 
-    mutable muse::async::Notification m_parameterValuesChanged;
+    mutable muse::async::Channel<ParameterChangedData> m_parameterChanged;
 };
 }

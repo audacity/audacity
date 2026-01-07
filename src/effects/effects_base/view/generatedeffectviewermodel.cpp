@@ -130,9 +130,26 @@ void GeneratedEffectViewerModel::load()
     updateEffectName();
     reloadParameters();
 
-    // Listen for parameter value changes
-    parametersProvider()->parameterValuesChanged().onNotify(this, [this]() {
-        reloadParameters();
+    // Listen for individual parameter value changes
+    parametersProvider()->parameterChanged().onReceive(this, [this](const ParameterChangedData& data) {
+        // Only handle changes for our instance
+        if (data.instanceId != m_instanceId) {
+            return;
+        }
+
+        // Find the parameter in our list and update it
+        int idx = findParameterIndex(data.parameterId);
+        if (idx < 0) {
+            return;
+        }
+
+        // Update the cached values
+        m_parameters[idx].currentValue = data.newPlainValue;
+        m_parameters[idx].currentValueString = data.newValueString;
+
+        // Emit dataChanged for just this row
+        QModelIndex modelIndex = createIndex(idx, 0);
+        emit dataChanged(modelIndex, modelIndex, { CurrentValueRole, CurrentValueStringRole });
     });
 }
 
@@ -189,25 +206,17 @@ void GeneratedEffectViewerModel::setParameterValue(int index, double plainValue)
         return;
     }
 
-    ParameterInfo& param = m_parameters[index];
+    const ParameterInfo& param = m_parameters[index];
     LOGI() << "index=" << index << " id=" << param.id << " plainValue=" << plainValue;
 
     // Convert plain value to normalized [0,1] for the plugin API
     const double normalizedValue = param.toNormalized(plainValue);
 
+    // Call the provider - it will send parameterChanged() which we handle in load()
     bool success = parametersProvider()->setParameterValue(m_instanceId, param.id, normalizedValue);
     if (!success) {
         LOGW() << "Failed to set parameter value";
-        return;
     }
-
-    // Update local cache and emit dataChanged for just this row
-    param.currentValue = plainValue;
-    // Also update the formatted string
-    param.currentValueString = parametersProvider()->parameterValueString(m_instanceId, param.id, normalizedValue);
-
-    QModelIndex modelIndex = createIndex(index, 0);
-    emit dataChanged(modelIndex, modelIndex, { CurrentValueRole, CurrentValueStringRole });
 }
 
 QString GeneratedEffectViewerModel::getParameterValueString(int index, double normalizedValue) const
