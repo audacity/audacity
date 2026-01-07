@@ -16,8 +16,21 @@ Item {
     required property double frameEndTime
     required property double selectionStartTime
     required property double selectionEndTime
-    required property double spectralSelectionStartFrequency
-    required property double spectralSelectionEndFrequency
+    required property double selectionStartFrequency
+    required property double selectionEndFrequency
+
+    function getSpectrogramHit(y /* relative to this item */) {
+        const channel = y < height * channelHeightRatio ? 0 : 1
+        const spectrogramY = channel === 0 ? y : y - height * channelHeightRatio
+        const spectrogramHeight = channel === 0 ? height * channelHeightRatio : height * (1.0 - channelHeightRatio)
+        return SpectrogramHitFactory.createSpectrogramHit(root.trackId, channel, spectrogramY, spectrogramHeight)
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.CrossCursor
+        acceptedButtons: Qt.NoButton // Don't consume mouse events
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -47,8 +60,8 @@ Item {
                 frameEndTime: root.frameEndTime
                 selectionStartTime: root.selectionStartTime
                 selectionEndTime: root.selectionEndTime
-                spectralSelectionStartFrequency: root.spectralSelectionStartFrequency
-                spectralSelectionEndFrequency: root.spectralSelectionEndFrequency
+                selectionStartFrequency: root.selectionStartFrequency
+                selectionEndFrequency: root.selectionEndFrequency
             }
         }
     }

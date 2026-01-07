@@ -109,9 +109,6 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
     const double stretchRatio = clipChannel.GetStretchRatio();
     const double leftOffset = clipParams.leftOffset();
 
-    const double startFrequency = selectionInfo.startFrequency;
-    const double endFrequency = selectionInfo.endFrequency;
-
     const SpectrogramColorScheme colorScheme = settings.colorScheme;
     const int& range = settings.range;
     const int& gain = settings.gain;
@@ -131,7 +128,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
     // the desired fft bin(s) for display on that row
     float* bins = (float*)alloca(sizeof(*bins) * (imageHeight + 1));
     {
-        const NumberScale numberScale(settings.GetScale(tc.minFreq, tc.maxFreq));
+        const NumberScale numberScale(settings.scaleType, tc.minFreq, tc.maxFreq);
 
         NumberScale::Iterator it = numberScale.begin(imageHeight);
         float nextBin = std::max(0.0f, std::min(float(nBins - 1),
@@ -178,11 +175,13 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
         }
     } // updating cache
 
-    float selBinLo = settings.findBin(startFrequency, binUnit);
-    float selBinHi = settings.findBin(endFrequency, binUnit);
-    float selBinCenter = (startFrequency < 0 || endFrequency < 0)
-                         ? -1
-                         : settings.findBin(sqrt(startFrequency * endFrequency), binUnit);
+    const auto selectionStartFrequency = std::clamp<float>(selectionInfo.startFrequency, tc.minFreq, tc.maxFreq);
+    const auto selectionEndFrequency = std::clamp<float>(selectionInfo.endFrequency, tc.minFreq, tc.maxFreq);
+    const float selBinLo = settings.findBin(selectionStartFrequency, binUnit);
+    const float selBinHi = settings.findBin(selectionEndFrequency, binUnit);
+    const float selBinCenter = (selectionStartFrequency < 0 || selectionEndFrequency < 0)
+                               ? -1
+                               : settings.findBin(sqrt(selectionStartFrequency * selectionEndFrequency), binUnit);
 
     SpecCache specCache;
 

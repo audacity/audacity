@@ -67,6 +67,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/globalspectrogramsettingsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipchannelspectrogramview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipchannelspectrogramview.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/spectrogramhit.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/spectrogramhit.h
     ${CMAKE_CURRENT_LIST_DIR}/view/spectrogramviewutils.h
 )
 

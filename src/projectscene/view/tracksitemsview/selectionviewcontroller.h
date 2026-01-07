@@ -5,10 +5,13 @@
 
 #include <QObject>
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+
 #include "context/iglobalcontext.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/itrackeditinteraction.h"
+#include "spectrogram/view/spectrogramhit.h"
+#include "spectrogram/ispectrogramservice.h"
 
 #include "types/projectscenetypes.h"
 #include "../timeline/timelinecontext.h"
@@ -26,6 +29,7 @@ class SelectionViewController : public QObject
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
+    muse::Inject<spectrogram::ISpectrogramService> spectrogramService;
 
 public:
     SelectionViewController(QObject* parent = nullptr);
@@ -38,7 +42,7 @@ public:
     //! NOTE The x coordinates must match the timeline.
     //! The y coordinates must match the track view
     //! If this is not the case, then appropriate adjustments must be made.
-    Q_INVOKABLE void onPressed(double x, double y);
+    Q_INVOKABLE void onPressed(double x, double y, const spectrogram::SpectrogramHit* spectrogramHit = nullptr);
     Q_INVOKABLE void onPositionChanged(double x, double y);
     Q_INVOKABLE void onReleased(double x, double y);
 
@@ -72,7 +76,7 @@ private:
 
     IProjectViewStatePtr viewState() const;
     trackedit::TrackIdList trackIdList() const;
-    void setSelection(double x1, double x2, bool complete);
+    void setSelection(double x1, double x2, double y, bool complete);
 
     Qt::KeyboardModifiers keyboardModifiers() const;
 
@@ -86,5 +90,6 @@ private:
     bool m_selectionEditInProgress = false;
     QPointF m_startPoint;
     QPointF m_lastPoint;
+    const spectrogram::SpectrogramHit* m_spectrogramHit;
 };
 }

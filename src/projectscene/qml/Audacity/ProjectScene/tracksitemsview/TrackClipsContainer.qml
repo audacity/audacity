@@ -4,6 +4,7 @@ import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.ProjectScene
+import Audacity.Spectrogram
 
 TrackItemsContainer {
     id: root
@@ -19,6 +20,8 @@ TrackItemsContainer {
     property color trackColor
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
+    required property double selectionStartFrequency
+    required property double selectionEndFrequency
 
     signal movePreviewClip(int x, int width, string title)
     signal clearPreviewClip
@@ -41,6 +44,25 @@ TrackItemsContainer {
     function changeClipTitle(index, newTitle) {
         clipsModel.changeClipTitle(index, newTitle)
         clipsModel.resetSelectedClips()
+    }
+
+    function getSpectrogramHit(y) {
+        if (!contentItem) {
+            return null
+        }
+        const e = {
+            // We don't need x for this
+            x: 0,
+            y: y
+        }
+        var hit = null
+        contentItem.clipsContainer.mapToAllClips(e, function (clipItem, mouseEvent, controller) {
+            hit = clipItem.getSpectrogramHit(mouseEvent.y)
+            if (hit) {
+                controller.shouldStop = true
+            }
+        })
+        return hit
     }
 
     onCtrlPressedChanged: {
@@ -76,6 +98,9 @@ TrackItemsContainer {
                 property int currentChannel: 0
 
                 function mapToAllClips(e, f) {
+                    const controller = {
+                        shouldStop: false
+                    }
                     for (let i = 0; i < repeator.count; i++) {
                         let clipLoader = repeator.itemAt(i)
                         if (clipLoader && clipLoader.item) {
@@ -85,7 +110,10 @@ TrackItemsContainer {
                                 modifiers: e.modifiers,
                                 x: clipPos.x,
                                 y: clipPos.y
-                            })
+                            }, controller)
+                            if (controller.shouldStop) {
+                                break
+                            }
                         }
                     }
                 }
@@ -271,6 +299,9 @@ TrackItemsContainer {
                                 //! NOTE: use the same integer rounding as in WaveBitmapCache
                                 selectionStart: root.context.selectionStartPosition < itemData.x ? 0 : Math.floor(root.context.selectionStartPosition - itemData.x + 0.5)
                                 selectionWidth: root.context.selectionStartPosition < itemData.x ? Math.round(root.context.selectionEndPosition - itemData.x) : Math.floor(root.context.selectionEndPosition - itemData.x + 0.5) - Math.floor(root.context.selectionStartPosition - itemData.x + 0.5)
+
+                                selectionStartFrequency: root.selectionStartFrequency
+                                selectionEndFrequency: root.selectionEndFrequency
 
                                 leftVisibleMargin: itemData.leftVisibleMargin
                                 rightVisibleMargin: itemData.rightVisibleMargin

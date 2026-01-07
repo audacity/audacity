@@ -6,6 +6,7 @@
 #include "selectionviewcontroller.h"
 
 #include "log.h"
+#include "spectrogram/spectrogramtypes.h"
 
 using namespace au::projectscene;
 using namespace au::project;
@@ -29,7 +30,7 @@ void SelectionViewController::load()
     });
 }
 
-void SelectionViewController::onPressed(double x, double y)
+void SelectionViewController::onPressed(double x, double y, const spectrogram::SpectrogramHit* spectrogramHit)
 {
     if (!isProjectOpened()) {
         return;
@@ -72,7 +73,15 @@ void SelectionViewController::onPressed(double x, double y)
     }
     selectionController()->setSelectedTracks(tracks, true);
 
-    if (modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier)) {
+    if (spectrogramHit) {
+        if (m_spectrogramHit && m_spectrogramHit->trackId != spectrogramHit->trackId) {
+            // New spectrogram hit on different track, reset frequency selection
+            selectionController()->setFrequencySelection(spectrogramHit->trackId,
+                                                         std::make_pair(spectrogram::SelectionInfo::UndefinedFrequency,
+                                                                        spectrogram::SelectionInfo::UndefinedFrequency));
+        }
+        m_spectrogramHit = spectrogramHit;
+    } else if (modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier)) {
         double x1 = m_startPoint.x();
         double x2 = x;
         if (x1 > x2) {
@@ -135,7 +144,7 @@ void SelectionViewController::onPositionChanged(double x, double y)
         std::swap(x1, x2);
     }
 
-    setSelection(x1, x2, false);
+    setSelection(x1, x2, y, false);
 }
 
 void SelectionViewController::onReleased(double x, double y)
@@ -143,6 +152,8 @@ void SelectionViewController::onReleased(double x, double y)
     if (!isProjectOpened()) {
         return;
     }
+
+    m_spectrogramHit = nullptr;
 
     IProjectViewStatePtr vs = viewState();
     if (!vs) {
@@ -186,13 +197,13 @@ void SelectionViewController::onReleased(double x, double y)
         } else {
             selectionController()->resetSelectedTracks();
         }
-        setSelection(x1, x1, true);
+        setSelection(x1, x1, y, true);
         return;
     }
 
     if (tracks.empty()) {
         selectionController()->resetSelectedTracks();
-        setSelection(x1, x2, true);
+        setSelection(x1, x2, y, true);
         return;
     }
 
@@ -206,7 +217,7 @@ void SelectionViewController::onReleased(double x, double y)
     selectionController()->setSelectedTracks(tracks, true);
 
     // time
-    setSelection(x1, x2, true);
+    setSelection(x1, x2, y, true);
 }
 
 void SelectionViewController::onSelectionDraged(double x1, double x2, bool completed)
@@ -220,7 +231,7 @@ void SelectionViewController::onSelectionDraged(double x1, double x2, bool compl
         std::swap(x1, x2);
     }
 
-    setSelection(x1, x2, completed);
+    setSelection(x1, x2, 0 /*dragging to be implemented*/, completed);
     m_selectionEditInProgress = !completed;
     emit selectionEditInProgressChanged();
 }
@@ -377,8 +388,21 @@ void SelectionViewController::setSelectionActive(bool newSelectionActive)
     emit selectionActiveChanged();
 }
 
-void SelectionViewController::setSelection(double x1, double x2, bool complete)
+void SelectionViewController::setSelection(double x1, double x2, double y, bool complete)
 {
     selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), complete);
     selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), complete);
+
+    if (!m_spectrogramHit) {
+        return;
+    }
+    const auto yDiff = y - m_startPoint.y();
+    const auto y1 = m_spectrogramHit->spectrogramY;
+    const auto y2 = y1 + yDiff;
+    auto freq1 = spectrogramService()->yToFrequency(m_spectrogramHit->trackId, y1, m_spectrogramHit->spectrogramHeight);
+    auto freq2 = spectrogramService()->yToFrequency(m_spectrogramHit->trackId, y2, m_spectrogramHit->spectrogramHeight);
+    if (freq1 > freq2) {
+        std::swap(freq1, freq2);
+    }
+    selectionController()->setFrequencySelection(m_spectrogramHit->trackId, std::make_pair(freq1, freq2));
 }

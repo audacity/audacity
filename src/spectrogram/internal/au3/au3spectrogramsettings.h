@@ -38,7 +38,6 @@ public:
 
     void CacheWindows();
     float findBin(float frequency, float binUnit) const;
-    NumberScale GetScale(float minFreq, float maxFreq) const;
 
 public:
     bool syncWithGlobalSettings = true;

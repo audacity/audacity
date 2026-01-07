@@ -7,6 +7,7 @@ import Muse.UiComponents
 import Audacity.ProjectScene
 import Audacity.Project
 import Audacity.Playback
+import Audacity.Spectrogram
 
 Rectangle {
     id: root
@@ -468,7 +469,18 @@ Rectangle {
                         }
 
                         if (!splitToolController.active) {
-                            selectionController.onPressed(e.x, e.y)
+                            var spectrogramHit = null
+                            tracksItemsView.checkIfAnyTrack(function (trackItem) {
+                                if (trackItem.getSpectrogramHit) {
+                                    const y = trackItem.mapFromItem(tracksItemsView, 0, e.y).y
+                                    spectrogramHit = trackItem.getSpectrogramHit(y)
+                                    if (spectrogramHit) {
+                                        return true
+                                    }
+                                }
+                                return false
+                            })
+                            selectionController.onPressed(e.x, e.y, spectrogramHit)
                             selectionController.resetSelectedItems()
                             itemsSelection.visible = true
                         }
@@ -733,6 +745,9 @@ Rectangle {
                                     return trackItem && trackItem.hover
                                 })
                             }
+
+                            selectionStartFrequency: itemData.frequencySelection.startFrequency
+                            selectionEndFrequency: itemData.frequencySelection.endFrequency
 
                             navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 

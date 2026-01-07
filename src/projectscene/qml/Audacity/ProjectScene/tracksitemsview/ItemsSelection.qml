@@ -14,11 +14,6 @@ Item {
     signal requestSelectionContextMenu(real x, real y)
     signal handleGuideline(var x, var completed)
 
-    onSelectionInProgressChanged: {
-        leftMa.cursorShape = root.selectionInProgress ? Qt.IBeamCursor : Qt.SizeHorCursor
-        rightMa.cursorShape = root.selectionInProgress ? Qt.IBeamCursor : Qt.SizeHorCursor
-    }
-
     Rectangle {
         id: selRect
 
@@ -65,7 +60,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
-        visible: isDataSelected
+        visible: isDataSelected && !root.selectionInProgress
         width: selRect.width >= 16 ? 8 : (selRect.width / 2)
         cursorShape: Qt.SizeHorCursor
 
@@ -127,7 +122,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
-        visible: isDataSelected
+        visible: isDataSelected && !root.selectionInProgress
         width: selRect.width >= 16 ? 8 : (selRect.width / 2)
         cursorShape: Qt.SizeHorCursor
 

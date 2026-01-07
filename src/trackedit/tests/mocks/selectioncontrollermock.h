@@ -67,6 +67,11 @@ public:
     MOCK_METHOD(trackedit::secs_t, selectionStartTime, (), (const override));
     MOCK_METHOD(void, setSelectionStartTime, (trackedit::secs_t), (override));
 
+    using FrequencySelection = std::pair<double, double>;
+    MOCK_METHOD(FrequencySelection, frequencySelection, (trackedit::TrackId trackId), (const, override));
+    MOCK_METHOD(void, setFrequencySelection, (trackedit::TrackId, const FrequencySelection&), (override));
+    MOCK_METHOD(muse::async::Channel<trackedit::TrackId>, frequencySelectionChanged, (), (const, override));
+
     MOCK_METHOD(bool, selectionContainsGroup, (), (const, override));
     MOCK_METHOD(bool, isSelectionGrouped, (), (const, override));
 

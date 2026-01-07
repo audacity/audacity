@@ -25,6 +25,10 @@ class ClipChannelSpectrogramView : public QQuickPaintedItem, public muse::async:
     Q_PROPERTY(double frameEndTime READ frameEndTime WRITE setFrameEndTime NOTIFY frameEndTimeChanged FINAL)
     Q_PROPERTY(double selectionStartTime READ selectionStartTime WRITE setSelectionStartTime NOTIFY selectionStartTimeChanged FINAL)
     Q_PROPERTY(double selectionEndTime READ selectionEndTime WRITE setSelectionEndTime NOTIFY selectionEndTimeChanged FINAL)
+    Q_PROPERTY(
+        double selectionStartFrequency READ selectionStartFrequency WRITE setSelectionStartFrequency NOTIFY selectionFrequencyChanged FINAL)
+    Q_PROPERTY(
+        double selectionEndFrequency READ selectionEndFrequency WRITE setSelectionEndFrequency NOTIFY selectionFrequencyChanged FINAL)
 
     muse::Inject<ISpectrogramPainter> spectrogramPainter;
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -60,6 +64,12 @@ public:
     double selectionEndTime() const { return m_selectionEndTime; }
     void setSelectionEndTime(double time);
 
+    double selectionStartFrequency() const;
+    void setSelectionStartFrequency(double frequency);
+
+    double selectionEndFrequency() const;
+    void setSelectionEndFrequency(double frequency);
+
 signals:
     void clipIdChanged();
     void trackIdChanged();
@@ -70,6 +80,7 @@ signals:
     void frameEndTimeChanged();
     void selectionStartTimeChanged();
     void selectionEndTimeChanged();
+    void selectionFrequencyChanged();
 
 private:
     void paint(QPainter* painter) override;
@@ -85,5 +96,7 @@ private:
     double m_frameEndTime = 0.0;
     double m_selectionStartTime = 0.0;
     double m_selectionEndTime = 0.0;
+    double m_selectionStartFrequency = SelectionInfo::UndefinedFrequency;
+    double m_selectionEndFrequency = SelectionInfo::UndefinedFrequency;
 };
 }

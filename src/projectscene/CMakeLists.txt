@@ -229,7 +229,7 @@ set(MODULE_SRC
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
-set(MODULE_LINK au3wrap trackedit uicomponents)
+set(MODULE_LINK au3wrap trackedit spectrogram uicomponents)
 if(MUSE_MODULE_WORKSPACE)
     set(MODULE_LINK ${MODULE_LINK} muse::workspace_qml)
 endif()  

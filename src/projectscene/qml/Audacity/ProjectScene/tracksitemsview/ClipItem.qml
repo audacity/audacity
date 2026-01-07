@@ -51,6 +51,9 @@ Rectangle {
     property bool enableCursorInteraction: !selectionInProgress && !isBrush
     property bool isContrastFocusBorderEnabled: false
 
+    required property real selectionStartFrequency
+    required property real selectionEndFrequency
+
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
 
@@ -236,6 +239,17 @@ Rectangle {
     function mouseReleased() {
         waveView.isNearSample = false
         waveView.onWaveViewPositionChanged(lastSample.x, lastSample.y)
+    }
+
+    function getSpectrogramHit(y /* relative to this item */) {
+        if (!isSpectrogramViewVisible || y > height) {
+            return null
+        }
+        y = spectrogramView.mapFromItem(root, 0, y).y
+        if (y < 0) {
+            return null
+        }
+        return spectrogramView.getSpectrogramHit(y)
     }
 
     function setLastSample(x, y) {
@@ -825,6 +839,8 @@ Rectangle {
             }
 
             ClipSpectrogramView {
+                id: spectrogramView
+
                 visible: root.isSpectrogramViewVisible
 
                 Layout.fillWidth: true
@@ -841,6 +857,8 @@ Rectangle {
                 frameEndTime: root.context.frameEndTime
                 selectionStartTime: root.context.selectionStartTime
                 selectionEndTime: root.context.selectionEndTime
+                selectionStartFrequency: root.selectionStartFrequency
+                selectionEndFrequency: root.selectionEndFrequency
 
                 ChannelSplitter {
                     id: spectrogramChannelSplitter
