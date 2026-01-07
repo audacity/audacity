@@ -15,7 +15,7 @@ GeneratedEffectViewerModel::GeneratedEffectViewerModel(QObject* parent)
 
 void GeneratedEffectViewerModel::load()
 {
-    LOGI() << "GeneratedEffectViewerModel::load() instanceId=" << m_instanceId;
+    LOGI() << "instanceId=" << m_instanceId;
 
     updateEffectName();
     updateParameters();
@@ -74,7 +74,7 @@ bool GeneratedEffectViewerModel::hasParameters() const
 
 void GeneratedEffectViewerModel::setParameterValue(const QString& parameterId, double plainValue)
 {
-    LOGI() << "GeneratedEffectViewerModel::setParameterValue() parameterId=" << parameterId << " plainValue=" << plainValue;
+    LOGI() << "parameterId=" << parameterId << " plainValue=" << plainValue;
 
     if (m_instanceId < 0) {
         LOGE() << "Invalid instance ID";
@@ -212,7 +212,7 @@ void GeneratedEffectViewerModel::updateParameters()
 
     ParameterInfoList paramList = parametersProvider()->parameters(m_instanceId);
 
-    LOGI() << "GeneratedEffectViewerModel::updateParameters() found " << paramList.size() << " parameters";
+    LOGI() << "found " << paramList.size() << " parameters";
 
     QVariantList newParameters;
     for (const auto& param : paramList) {
