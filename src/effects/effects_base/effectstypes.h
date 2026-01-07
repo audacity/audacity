@@ -80,7 +80,6 @@ struct ParameterInfo {
     double currentValue = 0.0;
 
     // Formatted value string from plugin (e.g., "440 Hz", "3.5 dB", "-12.0 dB")
-    // This is the plugin's own string representation via getParamStringByValue()
     muse::String currentValueString;
 
     // Plain value range (actual display values for DISCRETE parameters only)
