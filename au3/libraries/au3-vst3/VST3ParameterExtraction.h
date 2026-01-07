@@ -29,6 +29,8 @@ enum class ParamType {
 };
 
 //! Simple parameter info structure that doesn't expose VST3 SDK types
+//! Values are stored in plain (display) representation, obtained via normalizedParamToPlain().
+//! Use getNormalizedValue() to convert back to normalized [0,1] for VST3 API calls.
 struct ParamInfo {
     uint32_t id = 0;                  // VST3 parameter ID (matches Steinberg::Vst::ParamID type)
     std::string name;                 // Display name
@@ -38,9 +40,11 @@ struct ParamInfo {
 
     ParamType type = ParamType::Unknown;
 
-    // Value range (normalized 0.0 to 1.0)
+    // Value range in plain (display) values, e.g., -60 to +6 for dB, 20 to 20000 for Hz
+    // Obtained via normalizedParamToPlain(). For plugins that don't implement proper
+    // conversions, these will be 0.0 to 1.0 (same as normalized).
     double minValue = 0.0;
-    double maxValue = 1.0;
+    double maxValue = 0.0;
     double defaultValue = 0.0;
     double currentValue = 0.0;
 
@@ -48,22 +52,13 @@ struct ParamInfo {
     // This is the plugin's own string representation via getParamStringByValue()
     std::string currentValueString;
 
-    // Plain value range (actual display values for DISCRETE parameters only)
-    // For continuous parameters, these are NOT reliable - use currentValueString instead
-    // Only valid if hasPlainRange is true (discrete parameters with working conversions)
-    double plainMinValue = 0.0;
-    double plainMaxValue = 1.0;
-    double plainDefaultValue = 0.0;
-    double plainCurrentValue = 0.0;
-    bool hasPlainRange = false;  // True for discrete params with valid plain value conversions
-
     // For discrete parameters
     int stepCount = 0;                // 0=continuous, 1=toggle, >1=discrete steps
     double stepSize = 0.0;            // Step increment for discrete values
 
     // For dropdown/enumeration parameters
     std::vector<std::string> enumValues;  // List of choice labels
-    std::vector<double> enumIndices;      // Corresponding numeric values
+    std::vector<double> enumIndices;      // Corresponding normalized values
 
     // Flags
     bool isReadOnly = false;
@@ -71,6 +66,30 @@ struct ParamInfo {
     bool isLogarithmic = false;
     bool isInteger = false;
     bool canAutomate = true;
+
+    //! Convert current plain value to normalized [0,1] for VST3 API calls
+    double getNormalizedValue() const
+    {
+        if (maxValue == minValue) {
+            return 0.0; // Avoid division by zero
+        }
+        return (currentValue - minValue) / (maxValue - minValue);
+    }
+
+    //! Convert a plain value to normalized [0,1]
+    double toNormalized(double plainValue) const
+    {
+        if (maxValue == minValue) {
+            return 0.0;
+        }
+        return (plainValue - minValue) / (maxValue - minValue);
+    }
+
+    //! Convert a normalized [0,1] value to plain
+    double toPlain(double normalizedValue) const
+    {
+        return minValue + normalizedValue * (maxValue - minValue);
+    }
 };
 
 //! Extract all parameters from a VST3 effect instance
@@ -78,18 +97,22 @@ struct ParamInfo {
 //! Returns empty vector if instance is not a VST3 instance or on error
 std::vector<ParamInfo> extractParameters(EffectInstanceEx* instance, EffectSettingsAccess* settingsAccess = nullptr);
 
-//! Get the current value of a VST3 parameter
+//! Get the current normalized value [0,1] of a VST3 parameter
 //! Returns 0.0 if parameter not found or on error
 double getParameterValue(EffectInstanceEx* instance, uint32_t parameterId);
 
-//! Set the value of a VST3 parameter
+//! Set the value of a VST3 parameter using a normalized value [0,1]
+//! Use ParamInfo::toNormalized() to convert plain values before calling this
+//! @param normalizedValue Value in [0,1] range
 //! @param settingsAccess Optional settings access to persist the change
 //! Returns true on success, false on error
-bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double value, EffectSettingsAccess* settingsAccess = nullptr);
+bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double normalizedValue,
+                       EffectSettingsAccess* settingsAccess = nullptr);
 
 //! Get formatted string representation of a VST3 parameter value
+//! @param normalizedValue Value in [0,1] range
 //! Returns empty string if parameter not found or on error
-std::string getParameterValueString(EffectInstanceEx* instance, uint32_t parameterId, double value);
+std::string getParameterValueString(EffectInstanceEx* instance, uint32_t parameterId, double normalizedValue);
 
 //! Convert normalized value (0.0-1.0) to plain value (actual display value)
 //! Returns the plain value, or the normalized value if conversion is not supported

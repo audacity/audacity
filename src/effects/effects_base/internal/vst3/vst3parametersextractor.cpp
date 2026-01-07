@@ -48,18 +48,13 @@ ParameterInfo convertParamInfo(const VST3ParameterExtraction::ParamInfo& au3Info
 
     au4Info.type = convertParamType(au3Info.type);
 
+    // Plain (display) values - already converted from normalized in AU3
     au4Info.minValue = au3Info.minValue;
     au4Info.maxValue = au3Info.maxValue;
     au4Info.defaultValue = au3Info.defaultValue;
     au4Info.currentValue = au3Info.currentValue;
 
     au4Info.currentValueString = String::fromStdString(au3Info.currentValueString);
-
-    au4Info.plainMinValue = au3Info.plainMinValue;
-    au4Info.plainMaxValue = au3Info.plainMaxValue;
-    au4Info.plainDefaultValue = au3Info.plainDefaultValue;
-    au4Info.plainCurrentValue = au3Info.plainCurrentValue;
-    au4Info.hasPlainRange = au3Info.hasPlainRange;
 
     au4Info.stepCount = au3Info.stepCount;
     au4Info.stepSize = au3Info.stepSize;

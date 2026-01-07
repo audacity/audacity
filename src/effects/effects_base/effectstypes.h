@@ -64,6 +64,8 @@ enum class ParameterType {
 };
 
 // Parameter metadata for auto-generated UI
+// Values are stored in plain (display) representation, e.g., -60 to +6 for dB.
+// Use getNormalizedValue() to convert to normalized [0,1] for plugin API calls.
 struct ParameterInfo {
     muse::String id;              // Unique parameter identifier
     muse::String name;            // Display name
@@ -73,23 +75,15 @@ struct ParameterInfo {
 
     ParameterType type = ParameterType::Unknown;
 
-    // Value range (normalized 0.0 to 1.0 for VST3)
+    // Value range in plain (display) values, e.g., -60 to +6 for dB, 20 to 20000 for Hz
+    // For plugins that don't implement proper conversions, these will be 0.0 to 1.0.
     double minValue = 0.0;
-    double maxValue = 1.0;
+    double maxValue = 0.0;
     double defaultValue = 0.0;
     double currentValue = 0.0;
 
     // Formatted value string from plugin (e.g., "440 Hz", "3.5 dB", "-12.0 dB")
     muse::String currentValueString;
-
-    // Plain value range (actual display values for DISCRETE parameters only)
-    // For continuous parameters, these are NOT reliable - use currentValueString instead
-    // Only valid if hasPlainRange is true (discrete parameters with working conversions)
-    double plainMinValue = 0.0;
-    double plainMaxValue = 1.0;
-    double plainDefaultValue = 0.0;
-    double plainCurrentValue = 0.0;
-    bool hasPlainRange = false;  // True for discrete params with valid plain value conversions
 
     // For discrete parameters
     int stepCount = 0;            // 0=continuous, 1=toggle, >1=discrete steps
@@ -97,7 +91,7 @@ struct ParameterInfo {
 
     // For dropdown/enumeration parameters
     std::vector<muse::String> enumValues;  // List of choice labels
-    std::vector<double> enumIndices;       // Corresponding numeric values
+    std::vector<double> enumIndices;       // Corresponding normalized values
 
     // Flags
     bool isReadOnly = false;
@@ -107,6 +101,30 @@ struct ParameterInfo {
     bool canAutomate = true;
 
     bool isValid() const { return !id.empty(); }
+
+    //! Convert current plain value to normalized [0,1] for plugin API calls
+    double getNormalizedValue() const
+    {
+        if (maxValue == minValue) {
+            return 0.0; // Avoid division by zero
+        }
+        return (currentValue - minValue) / (maxValue - minValue);
+    }
+
+    //! Convert a plain value to normalized [0,1]
+    double toNormalized(double plainValue) const
+    {
+        if (maxValue == minValue) {
+            return 0.0;
+        }
+        return (plainValue - minValue) / (maxValue - minValue);
+    }
+
+    //! Convert a normalized [0,1] value to plain
+    double toPlain(double normalizedValue) const
+    {
+        return minValue + normalizedValue * (maxValue - minValue);
+    }
 };
 
 using ParameterInfoList = std::vector<ParameterInfo>;
