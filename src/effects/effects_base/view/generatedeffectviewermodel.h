@@ -11,12 +11,11 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
 
-#include <QObject>
-#include <QVariantList>
-#include <QVariantMap>
+#include <QAbstractListModel>
+#include <QHash>
 
 namespace au::effects {
-class GeneratedEffectViewerModel : public QObject, public muse::Injectable, public muse::async::Asyncable
+class GeneratedEffectViewerModel : public QAbstractListModel, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -24,20 +23,48 @@ class GeneratedEffectViewerModel : public QObject, public muse::Injectable, publ
     Q_PROPERTY(QString effectName READ effectName NOTIFY effectNameChanged FINAL)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged FINAL)
     Q_PROPERTY(QString noParametersMessage READ noParametersMessage NOTIFY noParametersMessageChanged FINAL)
-    Q_PROPERTY(QVariantList parameters READ parameters NOTIFY parametersChanged FINAL)
-    Q_PROPERTY(bool hasParameters READ hasParameters NOTIFY parametersChanged FINAL)
+    Q_PROPERTY(bool hasParameters READ hasParameters NOTIFY hasParametersChanged FINAL)
 
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectParametersProvider> parametersProvider;
     muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
+    // Roles for QML access
+    enum Roles {
+        IdRole = Qt::UserRole + 1,
+        NameRole,
+        UnitsRole,
+        TypeRole,
+        MinValueRole,
+        MaxValueRole,
+        DefaultValueRole,
+        CurrentValueRole,
+        StepSizeRole,
+        StepCountRole,
+        CurrentValueStringRole,
+        EnumValuesRole,
+        EnumIndicesRole,
+        IsReadOnlyRole,
+        IsHiddenRole,
+        IsLogarithmicRole,
+        IsIntegerRole,
+        CanAutomateRole,
+    };
+    Q_ENUM(Roles)
+
     explicit GeneratedEffectViewerModel(QObject* parent = nullptr);
     ~GeneratedEffectViewerModel() override = default;
 
+    // QAbstractListModel interface
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
+    QHash<int, QByteArray> roleNames() const override;
+
     Q_INVOKABLE void load();
-    Q_INVOKABLE void setParameterValue(const QString& parameterId, double plainValue);
-    Q_INVOKABLE QString getParameterValueString(const QString& parameterId, double normalizedValue) const;
+    Q_INVOKABLE void setParameterValue(int index, double plainValue);
+    Q_INVOKABLE QString getParameterValueString(int index, double normalizedValue) const;
 
     int instanceId() const;
     void setInstanceId(int newInstanceId);
@@ -45,7 +72,6 @@ public:
     QString effectName() const;
     QString title() const;
     QString noParametersMessage() const;
-    QVariantList parameters() const;
     bool hasParameters() const;
 
 signals:
@@ -53,15 +79,15 @@ signals:
     void effectNameChanged();
     void titleChanged();
     void noParametersMessageChanged();
-    void parametersChanged();
+    void hasParametersChanged();
 
 private:
-    QVariantMap parameterInfoToVariant(const ParameterInfo& info) const;
-    void updateParameters();
+    void reloadParameters();
     void updateEffectName();
+    int findParameterIndex(const muse::String& parameterId) const;
 
     int m_instanceId = -1;
     QString m_effectName;
-    QVariantList m_parameters;
+    ParameterInfoList m_parameters;
 };
 }
