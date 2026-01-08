@@ -120,6 +120,20 @@ bool FindFFmpegLibs()
     return true;
 }
 
+bool SetFFmpegPath(const wxString& path)
+{
+    SettingTransaction transaction;
+
+    auto normalizeFFmpegPath = [](const wxString& input) -> wxString {
+        return wxDirExists(input) ? input : wxPathOnly(input);
+    };
+
+    AVFormatPath.Write(normalizeFFmpegPath(path));
+
+    transaction.Commit();
+    return true;
+}
+
 BoolSetting FFmpegNotFoundDontShow{ L"/FFmpeg/NotFoundDontShow", false };
 
 DEFINE_VERSION_CHECK
