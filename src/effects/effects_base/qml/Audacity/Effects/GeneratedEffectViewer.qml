@@ -97,20 +97,20 @@ Rectangle {
         }
     }
 
-    // Dummy methods to match the interface expected by DestructiveEffectsViewerDialog
+    // Preview methods - delegate to viewModel
     function preview() {
-        console.log("GeneratedEffectViewer: preview() called")
+        viewModel.startPreview()
     }
 
     function startPreview() {
-        console.log("GeneratedEffectViewer: startPreview() called")
+        viewModel.startPreview()
     }
 
     function stopPreview() {
-        console.log("GeneratedEffectViewer: stopPreview() called")
+        viewModel.stopPreview()
     }
 
     property bool isApplyAllowed: true
     property bool usesPresets: true
-    property bool isPreviewing: false
+    property bool isPreviewing: viewModel.isPreviewing
 }
