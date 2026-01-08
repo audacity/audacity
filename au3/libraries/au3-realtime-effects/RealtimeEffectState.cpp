@@ -337,6 +337,16 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
         return false;
     }
 
+    uint64_t modificationCounter() const override
+    {
+        if (auto pState = mwState.lock()) {
+            if (auto pAccessState = pState->GetAccessState()) {
+                return pAccessState->mLastSettings.counter;
+            }
+        }
+        return 0;
+    }
+
     //! Store no state here but this weak pointer, so `IsSameAs` isn't lying
     std::weak_ptr<RealtimeEffectState> mwState;
 };
