@@ -18,7 +18,7 @@ class IToastProvider : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IToastProvider() = default;
 
-    virtual void show(std::shared_ptr<ToastItem> item) = 0;
+    virtual void show(ToastItem item) = 0;
 
     virtual void setMaxItems(int maxItems) = 0;
 

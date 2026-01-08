@@ -125,7 +125,7 @@ QVariant ToastListModel::data(const QModelIndex& index, int role) const
         return actionsList;
     }
     case ProgressRole:
-        return toast->progress();
+        return static_cast<int>(toast->currentProgress());
     default:
         return QVariant();
     }

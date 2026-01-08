@@ -2,6 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 #include "framework/ui/view/iconcodes.h"
+#include "toast/internal/toastitem.h"
 
 #include "toast.h"
 
@@ -20,15 +21,13 @@ void Toast::init()
 void Toast::show(const std::string& title, const std::string& message, muse::ui::IconCode::Code iconCode, bool dismissible,
                  const std::vector<ToastAction>& actions)
 {
-    const auto item = std::make_shared<ToastItem>(title, message, iconCode, dismissible, std::chrono::seconds(0), actions);
-    toastProvider()->show(item);
+    toastProvider()->show(ToastItem(title, message, iconCode, dismissible, std::chrono::seconds(0), actions));
 }
 
 void Toast::showWithTimeout(const std::string& title, const std::string& message, std::chrono::seconds timeout,
                             muse::ui::IconCode::Code iconCode, bool dismissible, const std::vector<ToastAction>& actions)
 {
-    const auto item = std::make_shared<ToastItem>(title, message, iconCode, dismissible, timeout, actions);
-    toastProvider()->show(item);
+    toastProvider()->show(ToastItem(title, message, iconCode, dismissible, timeout, actions));
 }
 
 void Toast::showSucess(const std::string& title, const std::string& message)
@@ -54,5 +53,5 @@ void Toast::showWarning(const std::string& title, const std::string& message)
 void Toast::showWithProgress(const std::string& title, const std::string& message, std::shared_ptr<muse::Progress> progress,
                              muse::ui::IconCode::Code iconCode, bool dismissible, const std::vector<ToastAction>& actions)
 {
-    const auto item = std::make_shared<ToastItem>(title, message, iconCode, dismissible, actions, progress);
+    toastProvider()->show(ToastItem(title, message, iconCode, dismissible, actions, progress));
 }

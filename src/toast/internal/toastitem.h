@@ -8,12 +8,11 @@
 #include "framework/global/async/notification.h"
 #include "framework/ui/view/iconcodes.h"
 #include "framework/global/progress.h"
-#include "framework/global/async/asyncable.h"
 
 #include "toast/toasttypes.h"
 
 namespace au::toast {
-class ToastItem : public muse::async::Asyncable
+class ToastItem
 {
 public:
     ToastItem(const std::string& title, const std::string& message, muse::ui::IconCode::Code iconCode, bool dismissible,
@@ -29,9 +28,12 @@ public:
     muse::ui::IconCode::Code iconCode() const;
     bool isDismissible() const;
     const std::vector<ToastAction>& actions() const;
+    std::chrono::seconds timeout() const;
 
-    int progress() const;
-    muse::async::Notification progressChanged();
+    double currentProgress() const;
+    void setCurrentProgress(double progress);
+    muse::async::Notification progressChanged() const;
+    std::shared_ptr<muse::Progress> progress() const;
 
 private:
     int m_id;
@@ -39,13 +41,11 @@ private:
     std::string m_message;
     muse::ui::IconCode::Code m_iconCode;
     bool m_dismissible;
+    std::chrono::seconds m_timeout;
     std::vector<ToastAction> m_actions;
 
     double m_currentProgress = 0;
     muse::async::Notification m_progressChanged;
     std::shared_ptr<muse::Progress> m_progress;
-    std::map<int, std::unique_ptr<QTimer> > m_progressTimers;
-
-    void stopTimer();
 };
 }

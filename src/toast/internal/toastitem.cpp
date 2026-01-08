@@ -16,24 +16,9 @@ ToastItem::ToastItem(const std::string& title, const std::string& message, muse:
     m_message(message),
     m_iconCode(iconCode),
     m_dismissible(dismissible),
-    m_actions(actions)
+    m_timeout(timeout),
+    m_actions(std::move(actions))
 {
-    const int timeoutMs = std::chrono::duration_cast<std::chrono::milliseconds>(timeout).count();
-    int interval = static_cast<int>(timeoutMs / 100);
-
-    auto timer = std::make_unique<QTimer>();
-    timer->setInterval(interval);
-    timer->setSingleShot(false);
-    timer->start();
-    timer->callOnTimeout([this, timeoutMs, interval]() mutable {
-        m_currentProgress += (static_cast<double>(interval) / static_cast<double>(timeoutMs)) * 100.0;
-        m_progressChanged.notify();
-        if (m_currentProgress >= 100.0) {
-            stopTimer();
-        }
-    });
-
-    m_progressTimers[m_id] = std::move(timer);
 }
 
 ToastItem::ToastItem(const std::string& title, const std::string& message, muse::ui::IconCode::Code iconCode, bool dismissible,
@@ -43,17 +28,10 @@ ToastItem::ToastItem(const std::string& title, const std::string& message, muse:
     m_message(message),
     m_iconCode(iconCode),
     m_dismissible(dismissible),
-    m_actions(actions),
-    m_progress(progress)
+    m_timeout(std::chrono::seconds(0)),
+    m_actions(std::move(actions)),
+    m_progress(std::move(progress))
 {
-    if (m_progress) {
-        m_progress->progressChanged().onReceive(this, [this](int64_t current, int64_t total, const std::string&) {
-            if (total > 0) {
-                m_currentProgress = static_cast<int>((static_cast<double>(current) / static_cast<double>(total)) * 100.0);
-                m_progressChanged.notify();
-            }
-        });
-    }
 }
 
 int ToastItem::id() const
@@ -76,6 +54,11 @@ muse::ui::IconCode::Code ToastItem::iconCode() const
     return m_iconCode;
 }
 
+std::chrono::seconds ToastItem::timeout() const
+{
+    return m_timeout;
+}
+
 bool ToastItem::isDismissible() const
 {
     return m_dismissible;
@@ -86,21 +69,23 @@ const std::vector<ToastAction>& ToastItem::actions() const
     return m_actions;
 }
 
-int ToastItem::progress() const
+std::shared_ptr<muse::Progress> ToastItem::progress() const
 {
-    return static_cast<int>(m_currentProgress);
+    return m_progress;
 }
 
-muse::async::Notification ToastItem::progressChanged()
+double ToastItem::currentProgress() const
+{
+    return m_currentProgress;
+}
+
+void ToastItem::setCurrentProgress(double progress)
+{
+    m_currentProgress = progress;
+    m_progressChanged.notify();
+}
+
+muse::async::Notification ToastItem::progressChanged() const
 {
     return m_progressChanged;
-}
-
-void ToastItem::stopTimer()
-{
-    auto it = m_progressTimers.find(m_id);
-    if (it != m_progressTimers.end()) {
-        it->second->stop();
-        m_progressTimers.erase(it);
-    }
 }

@@ -61,12 +61,6 @@ Item {
 
         visible: root.progress > 0
         value: 100 - root.progress
-
-        onValueChanged: {
-            if (value <= 0) {
-                root.dismissed();
-            }
-        }
     }
 
     Row {

@@ -3,10 +3,12 @@
 */
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "framework/global/async/channel.h"
 #include "framework/global/async/asyncable.h"
+#include "framework/global/progress.h"
 
 #include "toast/itoastprovider.h"
 
@@ -14,7 +16,7 @@ namespace au::toast {
 class ToastProvider : public IToastProvider, public muse::async::Asyncable
 {
 public:
-    void show(std::shared_ptr<ToastItem> item) override;
+    void show(ToastItem item) override;
 
     void setMaxItems(int maxItems) override;
 
@@ -24,10 +26,17 @@ public:
     void dismissToast(int id) override;
 
 private:
+    void cleanup(int id);
+    void checkProgress(int id);
+    void checkTimer(int id);
+
     std::vector<std::shared_ptr<ToastItem> > m_toasts;
 
     muse::async::Channel<std::shared_ptr<ToastItem> > m_toastAdded;
     muse::async::Channel<int> m_toastDismissed;
+
+    std::map<int, std::unique_ptr<QTimer> > m_progressTimers;
+    std::map<int, std::shared_ptr<muse::Progress> > m_progresses;
 
     int m_maxItems = 0;
 };
