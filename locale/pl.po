@@ -10,10 +10,10 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.7\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-25 18:02+0300\n"
-"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"PO-Revision-Date: 2026-01-08 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
 "Language: pl\n"
@@ -218,7 +218,7 @@ msgstr "Błąd: %s"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Error Initializing Audio"
-msgstr "Błąd inicjowania dźwięku"
+msgstr "Błąd inicjalizacji dźwięku"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Audacity Audio"
@@ -485,7 +485,7 @@ msgstr "Zaznaczenie musi być większe niż %d próbek."
 
 #: libraries/lib-builtin-effects/ContrastBase.cpp
 msgid "You can only measure one track at a time."
-msgstr "Możesz pomierzyć tylko jedną ścieżkę na raz."
+msgstr "Możesz zmierzyć tylko jedną ścieżkę na raz."
 
 #: libraries/lib-builtin-effects/ContrastBase.cpp
 msgid "Please select an audio track."
@@ -942,15 +942,15 @@ msgstr "Ustawia amplitudę szczytową jednej lub więcej ścieżek"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Removing DC offset and Normalizing...\n"
-msgstr "Usuwanie offsetu DC i normalizowanie...\n"
+msgstr "Usuwanie przesunięcia stałoprądowego i normalizowanie...\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Removing DC offset...\n"
-msgstr "Usuwanie offsetu DC...\n"
+msgstr "Usuwanie przesunięcia stałoprądowego...\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Normalizing without removing DC offset...\n"
-msgstr "Normalizowanie bez usuwania offsetu DC...\n"
+msgstr "Normalizowanie bez usuwania przesunięcia stałoprądowego...\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Not doing anything...\n"
@@ -2315,7 +2315,7 @@ msgstr "24-bitowy PCM"
 #: libraries/lib-math/SampleFormat.cpp
 #: libraries/lib-project-rate/QualitySettings.cpp
 msgid "32-bit float"
-msgstr "32-bitowy float"
+msgstr "32-bitowy zmiennoprzecinkowy"
 
 #: libraries/lib-math/SampleFormat.cpp
 msgid "Unknown format"
@@ -2505,7 +2505,7 @@ msgstr "Nie udało się otworzyć pliku do przesłania: %s"
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "Wystąpił błąd inicjowania warstwy wej./wyj. MIDI.\n"
+msgstr "Wystąpił błąd inicjalizacji warstwy wej./wyj. MIDI.\n"
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid ""
@@ -2517,7 +2517,7 @@ msgstr ""
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid "Error Initializing Midi"
-msgstr "Błąd inicjowania MIDI"
+msgstr "Błąd inicjalizacji MIDI"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3054,11 +3054,11 @@ msgstr "Nyquist zwrócił wartość: %d"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Nyquist returned too many audio channels.\n"
-msgstr "Nyquist zwrócił za dużo kanałów dźwiękowych.\n"
+msgstr "Nyquist zwrócił zbyt wiele kanałów dźwięku.\n"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Nyquist returned one audio channel as an array.\n"
-msgstr "Nyquist zwrócił jedną ścieżkę dźwiękową jako szereg.\n"
+msgstr "Nyquist zwrócił jeden kanał dźwięku jako szereg.\n"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Nyquist returned an empty array.\n"
@@ -4146,7 +4146,7 @@ msgstr "Błąd zapisywania presetów efektów"
 #: libraries/lib-vst/VSTWrapper.cpp
 #, c-format
 msgid "This parameter file was saved from %s. Continue?"
-msgstr "Ten plik parametryczny został zapisany z %s. Kontynuować?"
+msgstr "Ten plik parametrów został zapisany z %s. Kontynuować?"
 
 #: libraries/lib-vst/VSTWrapper.cpp
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
@@ -6722,11 +6722,11 @@ msgstr "Unsigned 8-bitowe PCM"
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "32 bit float"
-msgstr "32-bitowe float"
+msgstr "32-bitowe zmiennoprzecinkowe"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "64 bit float"
-msgstr "64-bitowe float"
+msgstr "64-bitowe zmiennoprzecinkowe"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "U-Law"
@@ -8249,7 +8249,7 @@ msgstr "Strona internetowa %s: "
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s software is copyright %s 1999-2024 %s Team."
-msgstr "%s jest chroniony prawem autorskim %s 1999-2024 Zespół %s."
+msgstr "%s jest chroniony prawem autorskim %s 1999-2026 Zespół %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -9498,7 +9498,7 @@ msgid ""
 "You can only do this when playing and recording are\n"
 "stopped. (Pausing is not sufficient.)"
 msgstr ""
-"Możesz dokonać tego, gdy odtwarzanie i nagrywanie\n"
+"Możesz to zrobić tylko wtedy, gdy odtwarzanie i nagrywanie\n"
 "zostaną zatrzymane. (Wstrzymanie nie jest wystarczające.)"
 
 #: src/CommonCommandFlags.cpp
@@ -9506,7 +9506,7 @@ msgid ""
 "You must first select some stereo audio to perform this\n"
 "action. (You cannot use this with mono.)"
 msgstr ""
-"Najpierw musisz zaznaczyć dźwięk, aby wykonać to działanie.\n"
+"Najpierw musisz zaznaczyć dźwięk, aby wykonać tę czynność.\n"
 "(Nie możesz użyć tego z mono.)"
 
 #: src/CommonCommandFlags.cpp
@@ -9514,7 +9514,7 @@ msgid ""
 "You must first select some audio to perform this action.\n"
 "(Selecting other kinds of track won't work.)"
 msgstr ""
-"Najpierw musisz zaznaczyć dźwięk, aby wykonać to działanie.\n"
+"Najpierw musisz zaznaczyć dźwięk, aby wykonać tę czynność.\n"
 "(Zaznaczenie innych rodzajów ścieżki nie zadziała.)"
 
 #: src/CrashReport.cpp
@@ -11759,7 +11759,7 @@ msgstr "Czas opóźnienia (sekundy):"
 
 #: src/commands/Demo.cpp
 msgid "Decay factor:"
-msgstr "Współczynnik opadania:"
+msgstr "Współczynnik zanikania:"
 
 #: src/commands/Demo.h
 msgid "Does the demo action."
@@ -13211,7 +13211,7 @@ msgstr "&Narastanie (ms)"
 
 #: src/effects/DynamicRangeProcessorEditor.h
 msgid "&Release (ms)"
-msgstr "O&padanie (ms)"
+msgstr "&Zanikanie (ms)"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Input"
@@ -13235,7 +13235,7 @@ msgstr "Czas opóźnienia (sekun&dy):"
 
 #: src/effects/Echo.cpp
 msgid "D&ecay factor:"
-msgstr "Współ&czynnik opadania:"
+msgstr "Współ&czynnik zanikania:"
 
 #: src/effects/EffectPresetDialog.cpp
 msgid "Select Preset"
@@ -13267,7 +13267,7 @@ msgstr "Przygotowywanie podglądu"
 
 #: src/effects/EffectPreview.cpp
 msgid "Previewing"
-msgstr "Podglądanie"
+msgstr "Podgląd"
 
 #: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
 msgid "&Generate"
@@ -13686,14 +13686,14 @@ msgstr "Czas narastania"
 #. * sound dies away.
 #: src/effects/LegacyCompressor.cpp
 msgid "R&elease Time:"
-msgstr "&Czas opadania:"
+msgstr "&Czas zanikania:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/LegacyCompressor.cpp
 msgid "Release Time"
-msgstr "Czas opadania"
+msgstr "Czas zanikania"
 
 #. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/LegacyCompressor.cpp
@@ -13724,7 +13724,7 @@ msgstr "Czas narastania %.2f sek."
 #: src/effects/LegacyCompressor.cpp
 #, c-format
 msgid "Release Time %.1f secs"
-msgstr "Czas opadania %.1f sek."
+msgstr "Czas zanikania %.1f sek."
 
 #: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
@@ -13801,11 +13801,11 @@ msgstr "Czas narastania"
 
 #: src/effects/NoiseReduction.cpp
 msgid "R&elease time (secs):"
-msgstr "Czas opadania (s&ekundy):"
+msgstr "Czas zanikania (s&ekundy):"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Release time"
-msgstr "Czas opadania"
+msgstr "Czas zanikania"
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Frequency smoothing (bands):"
@@ -13943,7 +13943,7 @@ msgstr "&Metoda dyskryminacji:"
 
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
-msgstr "Usuń offset DC (wyś&rodkuj w pionie na 0,0)"
+msgstr "Usuń przesunięcie stałoprądowe (wyś&rodkuj w pionie na 0,0)"
 
 #: src/effects/Normalize.cpp
 msgid "&Normalize peak amplitude to   "
@@ -14176,7 +14176,7 @@ msgstr "Próg ciszy"
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time:"
-msgstr "Wstępnie gładki czas:"
+msgstr "Presmooth Time:"
 
 #. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
 #. This is a NEW experimental effect, and until we have it documented in the user
@@ -14184,7 +14184,7 @@ msgstr "Wstępnie gładki czas:"
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time"
-msgstr "Wstępnie gładki czas"
+msgstr "Presmooth Time"
 
 #. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
 #. This is a NEW experimental effect, and until we have it documented in the user
@@ -14192,7 +14192,7 @@ msgstr "Wstępnie gładki czas"
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Line Time:"
-msgstr "Czas jako linia:"
+msgstr "Line Time:"
 
 #. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
 #. This is a NEW experimental effect, and until we have it documented in the user
@@ -14200,11 +14200,11 @@ msgstr "Czas jako linia:"
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Line Time"
-msgstr "Czas jako linia"
+msgstr "Line Time"
 
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Smooth Time:"
-msgstr "Gładki czas:"
+msgstr "Smooth Time:"
 
 #. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
 #. This is a NEW experimental effect, and until we have it documented in the user
@@ -14212,7 +14212,7 @@ msgstr "Gładki czas:"
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Smooth Time"
-msgstr "Gładki czas"
+msgstr "Smooth Time"
 
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Use Defaults"
@@ -14371,7 +14371,7 @@ msgstr "Rozmiar bufora kontroluje liczbę próbek wysyłanych do efektu przy ka�
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
-msgstr "Rozmiar &bufora (od 8 do 1048576 próbek):"
+msgstr "Rozmiar &bufora (8 do 1048576 próbek):"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -15499,7 +15499,7 @@ msgstr "Wklej tekst do nowej etykiety"
 #. regions.
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio regions to clipboard"
-msgstr "Wytnij oznaczone obszary dźwięku do schowka"
+msgstr "Wycięto oznaczone obszary dźwięku do schowka"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -15518,7 +15518,7 @@ msgstr "Usuń oznaczony dźwięk"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr "Wytnij oznaczone obszary dźwięku do schowka i pozostaw przerwę"
+msgstr "Wycięto oznaczone obszary dźwięku do schowka i pozostawiono przerwę"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio and leave gap"
@@ -15528,7 +15528,7 @@ msgstr "Wytnij oznaczony dźwięk i pozostaw przerwę"
 #. the labeled audio regions
 #: src/menus/LabelMenus.cpp
 msgid "Split Deleted labeled audio regions"
-msgstr "Podziel usunięto oznaczone obszary dźwięku"
+msgstr "Podzielono usunięto oznaczone obszary dźwięku"
 
 #. i18n-hint: (verb) Do a special kind of DELETE on labeled audio
 #. regions
@@ -15559,7 +15559,7 @@ msgstr "Kopiuj oznaczony dźwięk"
 #. audio (a point or a region)
 #: src/menus/LabelMenus.cpp
 msgid "Split labeled audio (points or regions)"
-msgstr "Podziel oznaczony dźwięk (punkty lub obszary)"
+msgstr "Podzielono oznaczony dźwięk (punkty lub obszary)"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -17533,11 +17533,11 @@ msgstr "Wykorzystując: PortMidi"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
-msgstr "Opóźnienie syntetyz&atora MIDI (ms):"
+msgstr "Opóźnienie syntez&atora MIDI (ms):"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
-msgstr "Opóźnienie syntetyzatora MIDI musi być liczbą całkowitą"
+msgstr "Opóźnienie syntezatora MIDI musi być liczbą całkowitą"
 
 #: src/prefs/MidiIOPrefs.h
 msgid "Midi IO"
@@ -20172,7 +20172,7 @@ msgstr "Wartość przepełnienia"
 
 #: src/widgets/valnum.cpp
 msgid "Too many decimal digits"
-msgstr "Za dużo cyfr po przecinku"
+msgstr "Zbyt wiele cyfr po przecinku"
 
 #: src/widgets/valnum.cpp
 #, c-format
@@ -20861,7 +20861,7 @@ msgstr "~ag ~am ~as"
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
-msgstr "Wykryto za dużo ciszy.~%Dodano tylko pierwsze 10000 etykiet."
+msgstr "Wykryto zbyt wiele ciszy.~%Dodano tylko pierwsze 10000 etykiet."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
@@ -20982,7 +20982,7 @@ msgstr "Narastanie (ms)"
 
 #: plug-ins/noisegate.ny
 msgid "Decay (ms)"
-msgstr "Opadanie (ms)"
+msgstr "Zanikanie (ms)"
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -21287,7 +21287,7 @@ msgstr "Steven Jones"
 
 #: plug-ins/rissetdrum.ny
 msgid "Decay (seconds)"
-msgstr "Opadanie (sekundy)"
+msgstr "Zanikanie (sekundy)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Center frequency of noise (Hz)"
@@ -21427,7 +21427,7 @@ msgid ""
 msgstr ""
 "~a~%Częstotliwość próbkowania: ~a Hz. Przykładowe wartości na ~a skali. ~a.~%~aPrzetworzona długość: ~a ~\n"
 "                  próbek, ~a sekund.~% Amplituda szczytowa: ~a (liniowa) ~a dB.  Nieważona RMS: ~a dB.~%~\n"
-"                  Offset DC: ~a~a"
+"                  Przesunięcie stałoprądowe: ~a~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -21474,7 +21474,7 @@ msgstr "<b>RMS</b> (nieważona): &nbsp;&nbsp;~a dB."
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
-msgstr "<b>Offset DC:</b> &nbsp;&nbsp;~a"
+msgstr "<b>Przesunięcie stałoprądowe:</b> &nbsp;&nbsp;~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
