@@ -1,6 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
+#include <QtCore/QFileInfo>
 
 #include "customffmpegpreferencesmodel.h"
 
@@ -102,6 +103,106 @@ void CustomFFmpegPreferencesModel::init()
     exportConfiguration()->ffmpegPacketSizeChanged().onNotify(this, [this] {
         emit packetSizeChanged();
     });
+}
+
+QString CustomFFmpegPreferencesModel::ffmpegVersion() const
+{
+    return QString::fromStdString(ffmpegOptionsAccessor()->ffmpegVersion());
+}
+
+QString CustomFFmpegPreferencesModel::ffmpegLibraryPath() const
+{
+    std::string path = ffmpegOptionsAccessor()->ffmpegLibraryPath();
+
+    if (path.empty()) {
+        return QString{};
+    }
+    return QString::fromStdString(path);
+}
+
+void CustomFFmpegPreferencesModel::setFFmpegLibraryPath(const QString& path)
+{
+    const QFileInfo fi(path);
+
+    if (!fi.exists()) {
+        interactive()->error(
+            muse::trc("preferences", "Error"),
+            muse::trc("preferences", "The selected path does not exist.")
+            );
+        return;
+    }
+
+    if (!path.contains("avformat")) {
+        interactive()->error(
+            muse::trc("preferences", "Error"),
+            muse::qtrc("preferences", "Please select a path that contains %1").arg(avformatString()).toStdString()
+            );
+        return;
+    }
+
+    ffmpegOptionsAccessor()->setFFmpegLibraryPath(path);
+
+    interactive()->info(muse::trc("preferences", "Success"),
+                        muse::trc("preferences", "Please restart the application for the changes to take effect."));
+}
+
+void CustomFFmpegPreferencesModel::locateFFmpegLibrary()
+{
+    QString libraryPath = ffmpegLibraryPath();
+    if (!libraryPath.isEmpty()) {
+        auto ret = interactive()->questionSync(muse::trc("appshell/preferences", "Success"),
+                                               muse::trc(
+                                                   "appshell/preferences",
+                                                   "Audacity already has detected a valid FFmpeg version. Do you want to choose another FFmpeg installation instead?"),
+        {
+            muse::IInteractive::ButtonData(
+                muse::IInteractive::Button::Cancel, muse::trc("appshell/preferences", "Cancel"),
+                false),
+            muse::IInteractive::ButtonData(
+                muse::IInteractive::Button::Apply, muse::trc("appshell/preferences", "Change FFmpeg"), true)
+        }
+                                               );
+
+        if (ret.standardButton() != muse::IInteractive::Button::Apply) {
+            return;
+        }
+    }
+
+    muse::io::path_t initialPath;
+    if (!libraryPath.isEmpty()) {
+        initialPath = libraryPath;
+    }
+
+    if (initialPath.empty()) {
+        initialPath = globalConfiguration()->userDataPath();
+    }
+
+    std::string libFileName = avformatString().toStdString();
+    const std::string filter
+        =libFileName.replace(libFileName.find('.'), 0, "*");
+    muse::io::path_t directory = interactive()->selectOpeningFileSync(muse::qtrc("appshell/preferences",
+                                                                                 "Locate %1").arg(
+                                                                          libFileName).toStdString(), initialPath, { filter });
+
+    if (directory.empty()) {
+        return;
+    }
+
+    ffmpegOptionsAccessor()->setFFmpegLibraryPath(directory);
+
+    interactive()->info(muse::trc("appshell/preferences", "Success"),
+                        muse::trc("appshell/preferences", "Please restart the application for the changes to take effect."));
+}
+
+QString CustomFFmpegPreferencesModel::avformatString() const
+{
+#if defined(__WXMSW__)
+    return "avformat.dll";
+#elif defined(__WXMAC__)
+    return "libavformat.dylib";
+#else
+    return "libavformat.so";
+#endif
 }
 
 int CustomFFmpegPreferencesModel::ffmpegFormatIndex() const

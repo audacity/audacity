@@ -50,6 +50,7 @@ qt_add_qml_module(preferences_qml
         internal/DeleteBehaviorSection.qml
         internal/EffectBehaviorSection.qml
         internal/EffectOptionsSection.qml
+        internal/FFmpegLibrarySection.qml
         internal/FoldersSection.qml
         internal/FreeSpaceSection.qml
         internal/IncrementalPropertyControlWithTitle.qml
