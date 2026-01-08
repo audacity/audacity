@@ -114,6 +114,10 @@ RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectP
 
     muse::io::path_t selectedPath = interactive()->selectSavingFileSync(dialogTitle, defaultPath, filter);
 
+    if (selectedPath.empty()) {
+        return make_ret(Ret::Code::Cancel);
+    }
+
     // force save to aup4 format
     std::string suffix = muse::io::suffix(selectedPath);
     std::string correctedPath = selectedPath.toStdString();
@@ -128,10 +132,6 @@ RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectP
     correctedPath += "aup4";
 
     selectedPath = correctedPath;
-
-    if (selectedPath.empty()) {
-        return make_ret(Ret::Code::Cancel);
-    }
 
     configuration()->setLastSavedProjectsPath(io::dirpath(selectedPath));
 
