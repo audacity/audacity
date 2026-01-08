@@ -8,7 +8,7 @@
 // AU3 VST3 parameter extraction bridge (does not expose VST3 SDK types)
 #include "au3-vst3/VST3ParameterExtraction.h"
 
-#include "au3-components/EffectInterface.h"  // For EffectSettingsAccess
+#include "au3-components/EffectInterface.h"
 
 using namespace au::effects;
 using namespace muse;

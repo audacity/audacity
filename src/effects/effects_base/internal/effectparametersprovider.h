@@ -9,12 +9,14 @@
 #include "../ieffectparametersprovider.h"
 #include "../ieffectinstancesregister.h"
 #include "../ieffectsprovider.h"
+#include "../iparameterextractorregistry.h"
 
 namespace au::effects {
 class EffectParametersProvider : public IEffectParametersProvider, public muse::async::Asyncable
 {
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectsProvider> effectsProvider;
+    muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry;
 
 public:
     EffectParametersProvider() = default;
@@ -33,15 +35,6 @@ public:
     muse::async::Channel<ParameterChangedData> parameterChanged() const override;
 
 private:
-    // Extract parameters from VST3 plugin
-    ParameterInfoList extractVST3Parameters(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess) const;
-
-    // Extract parameters from LV2 plugin
-    ParameterInfoList extractLV2Parameters(EffectInstance* instance) const;
-
-    // Extract parameters from Audio Unit plugin
-    ParameterInfoList extractAudioUnitParameters(EffectInstance* instance) const;
-
     // Helper to determine effect family
     EffectFamily getEffectFamily(const EffectId& effectId) const;
 

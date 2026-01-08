@@ -25,6 +25,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectviewlauncher.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectviewlaunchregister.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectparametersprovider.h
+    ${CMAKE_CURRENT_LIST_DIR}/iparameterextractorregistry.h
+    # interfaces for optional services
+    ${CMAKE_CURRENT_LIST_DIR}/iparameterextractorservice.h
 
     # internal
     ${CMAKE_CURRENT_LIST_DIR}/internal/abstractaudiopluginmetareader.cpp
@@ -65,6 +68,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewlaunchregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectparametersprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectparametersprovider.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/parameterextractorregistry.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/parameterextractorregistry.h
 
     # view
     ${CMAKE_CURRENT_LIST_DIR}/view/abstracteffectviewmodel.cpp
@@ -84,26 +89,11 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/effectpreviewhelper.h
     )
 
-# VST3 parameter extraction (conditional)
-if(AU_MODULE_EFFECTS_VST)
-    list(APPEND MODULE_SRC
-        ${CMAKE_CURRENT_LIST_DIR}/internal/vst3/vst3parametersextractor.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/internal/vst3/vst3parametersextractor.h
-    )
-endif()
-
 # AU3
 include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
 
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
-
-# Add USE_VST3 define if VST3 is enabled
-# Note: AU4 code uses VST3ParameterExtraction bridge from au3-vst3 which does not expose VST3 SDK types,
-# so we don't need to add the VST3 SDK include path here.
-if(AU_MODULE_EFFECTS_VST)
-    list(APPEND MODULE_DEF -DUSE_VST3)
-endif()
 
 set(MODULE_LINK au3wrap)
 

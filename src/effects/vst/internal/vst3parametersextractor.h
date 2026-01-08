@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "../../effectstypes.h"
+#include "effects/effects_base/effectstypes.h"
 
 class EffectInstanceEx;
 class EffectSettingsAccess;
