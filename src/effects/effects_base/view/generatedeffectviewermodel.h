@@ -24,7 +24,7 @@ class GeneratedEffectViewerModel : public QAbstractListModel, public muse::Injec
     Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
     Q_PROPERTY(QString effectName READ effectName NOTIFY effectNameChanged FINAL)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged FINAL)
-    Q_PROPERTY(QString noParametersMessage READ noParametersMessage NOTIFY noParametersMessageChanged FINAL)
+    Q_PROPERTY(QString noParametersMessage READ noParametersMessage CONSTANT FINAL)
     Q_PROPERTY(bool hasParameters READ hasParameters NOTIFY hasParametersChanged FINAL)
     Q_PROPERTY(bool isPreviewing READ isPreviewing NOTIFY isPreviewingChanged FINAL)
 
@@ -84,7 +84,6 @@ signals:
     void instanceIdChanged();
     void effectNameChanged();
     void titleChanged();
-    void noParametersMessageChanged();
     void hasParametersChanged();
     void isPreviewingChanged();
 
