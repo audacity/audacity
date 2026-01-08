@@ -12,7 +12,7 @@ import Audacity.Effects
 Rectangle {
     id: root
 
-    property int instanceId: -1
+    required property int instanceId
 
     implicitWidth: 480
     implicitHeight: 640
