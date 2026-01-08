@@ -31,10 +31,12 @@ void SimpleEffectSettingsAccess::Set(EffectSettings&& settings,
                                      std::unique_ptr<Message>)
 {
     mSettings = std::move(settings);
+    ++mCounter;
 }
 
 void SimpleEffectSettingsAccess::Set(std::unique_ptr<Message>)
 {
+    ++mCounter;
 }
 
 void SimpleEffectSettingsAccess::Flush()
@@ -144,7 +146,7 @@ int EffectInstance::id() const
     return m_id;
 }
 
-bool EffectInstance::RealtimeInitialize(EffectSettings&, double, size_t )
+bool EffectInstance::RealtimeInitialize(EffectSettings&, double, size_t)
 {
     return false;
 }

@@ -201,6 +201,13 @@ public:
     //! @return whether this and the other give access to the same settings
     virtual bool IsSameAs(const EffectSettingsAccess& other) const = 0;
 
+    //! @return a counter that increments on each Set() call
+    /*!
+     Useful for detecting if settings have changed since last access.
+     Default implementation returns 0 (no tracking).
+     */
+    virtual uint64_t modificationCounter() const { return 0; }
+
     //! Do a correct read-modify-write of settings
     /*!
      @param function takes EffectSettings & and its return is a unique pointer
@@ -229,8 +236,10 @@ public:
     void Set(std::unique_ptr<Message> pMessage) override;
     void Flush() override;
     bool IsSameAs(const EffectSettingsAccess& other) const override;
+    uint64_t modificationCounter() const override { return mCounter; }
 private:
     EffectSettings& mSettings;
+    uint64_t mCounter{ 0 };
 };
 
 /*************************************************************************************//**

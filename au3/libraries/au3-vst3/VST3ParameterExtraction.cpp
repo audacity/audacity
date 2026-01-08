@@ -104,15 +104,19 @@ std::vector<ParamInfo> extractParameters(EffectInstanceEx* instance, EffectSetti
 
     auto& wrapper = vst3Instance->GetWrapper();
 
-    // If settings access is provided, apply stored settings to the edit controller first
-    // This ensures we read the actual saved values, not default values
+    // Only call FetchSettings if settings have changed since last time
+    // This avoids expensive state restoration on every parameter read
     if (settingsAccess) {
-        settingsAccess->ModifySettings([&wrapper](EffectSettings& settings) {
-            // FetchSettings applies the stored processor/controller state to the edit controller
-            // resetState=false means don't reset to defaults if no stored state exists
-            wrapper.FetchSettings(settings, false);
-            return nullptr;
-        });
+        const uint64_t currentCounter = settingsAccess->modificationCounter();
+        if (currentCounter != wrapper.lastFetchedSettingsCounter) {
+            settingsAccess->ModifySettings([&wrapper](EffectSettings& settings) {
+                // FetchSettings applies the stored processor/controller state to the edit controller
+                // resetState=false means don't reset to defaults if no stored state exists
+                wrapper.FetchSettings(settings, false);
+                return nullptr;
+            });
+            wrapper.lastFetchedSettingsCounter = currentCounter;
+        }
     }
 
     // Get the edit controller
