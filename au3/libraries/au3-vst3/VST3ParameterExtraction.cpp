@@ -26,7 +26,9 @@
 #include <stdexcept>
 #include <sstream>
 
-namespace VST3ParameterExtraction {
+using VST3ParameterExtraction::ParamType;
+using VST3ParameterExtraction::ParamInfo;
+
 namespace {
 //! Convert VST3 parameter flags to ParamType
 ParamType getParameterType(const Steinberg::Vst::ParameterInfo& info)
@@ -90,7 +92,7 @@ void getEnumValues(Steinberg::Vst::IEditController* controller,
 }
 } // anonymous namespace
 
-std::vector<ParamInfo> extractParameters(EffectInstanceEx* instance, EffectSettingsAccess* settingsAccess)
+std::vector<ParamInfo> VST3ParameterExtraction::extractParameters(EffectInstanceEx* instance, EffectSettingsAccess* settingsAccess)
 {
     if (!instance) {
         return {};
@@ -206,7 +208,7 @@ std::vector<ParamInfo> extractParameters(EffectInstanceEx* instance, EffectSetti
     return result;
 }
 
-double getParameterValue(EffectInstanceEx* instance, uint32_t parameterId)
+double VST3ParameterExtraction::getParameterValue(EffectInstanceEx* instance, uint32_t parameterId)
 {
     if (!instance) {
         return 0.0;
@@ -225,8 +227,8 @@ double getParameterValue(EffectInstanceEx* instance, uint32_t parameterId)
     return editController->getParamNormalized(parameterId);
 }
 
-bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double normalizedValue,
-                       EffectSettingsAccess* settingsAccess)
+bool VST3ParameterExtraction::setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double normalizedValue,
+                                                EffectSettingsAccess* settingsAccess)
 {
     if (!instance) {
         return false;
@@ -273,7 +275,7 @@ bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double 
     return true;
 }
 
-std::string getParameterValueString(EffectInstanceEx* instance, uint32_t parameterId, double value)
+std::string VST3ParameterExtraction::getParameterValueString(EffectInstanceEx* instance, uint32_t parameterId, double value)
 {
     if (!instance) {
         return std::string();
@@ -301,7 +303,7 @@ std::string getParameterValueString(EffectInstanceEx* instance, uint32_t paramet
     return oss.str();
 }
 
-double normalizedToPlain(EffectInstanceEx* instance, uint32_t parameterId, double normalizedValue)
+double VST3ParameterExtraction::normalizedToPlain(EffectInstanceEx* instance, uint32_t parameterId, double normalizedValue)
 {
     if (!instance) {
         return normalizedValue;
@@ -330,7 +332,7 @@ double normalizedToPlain(EffectInstanceEx* instance, uint32_t parameterId, doubl
     }
 }
 
-double plainToNormalized(EffectInstanceEx* instance, uint32_t parameterId, double plainValue)
+double VST3ParameterExtraction::plainToNormalized(EffectInstanceEx* instance, uint32_t parameterId, double plainValue)
 {
     if (!instance) {
         return std::clamp(plainValue, 0.0, 1.0);
@@ -359,4 +361,3 @@ double plainToNormalized(EffectInstanceEx* instance, uint32_t parameterId, doubl
         return std::clamp(plainValue, 0.0, 1.0);
     }
 }
-} // namespace VST3ParameterExtraction
