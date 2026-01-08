@@ -15,6 +15,8 @@
 #include <QHash>
 
 namespace au::effects {
+class EffectPreviewHelper;
+
 class GeneratedEffectViewerModel : public QAbstractListModel, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
@@ -24,6 +26,7 @@ class GeneratedEffectViewerModel : public QAbstractListModel, public muse::Injec
     Q_PROPERTY(QString title READ title NOTIFY titleChanged FINAL)
     Q_PROPERTY(QString noParametersMessage READ noParametersMessage NOTIFY noParametersMessageChanged FINAL)
     Q_PROPERTY(bool hasParameters READ hasParameters NOTIFY hasParametersChanged FINAL)
+    Q_PROPERTY(bool isPreviewing READ isPreviewing NOTIFY isPreviewingChanged FINAL)
 
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectParametersProvider> parametersProvider;
@@ -65,6 +68,8 @@ public:
     Q_INVOKABLE void load();
     Q_INVOKABLE void setParameterValue(int index, double plainValue);
     Q_INVOKABLE QString getParameterValueString(int index, double normalizedValue) const;
+    Q_INVOKABLE void startPreview();
+    Q_INVOKABLE void stopPreview();
 
     int instanceId() const;
     void setInstanceId(int newInstanceId);
@@ -73,6 +78,7 @@ public:
     QString title() const;
     QString noParametersMessage() const;
     bool hasParameters() const;
+    bool isPreviewing() const;
 
 signals:
     void instanceIdChanged();
@@ -80,14 +86,17 @@ signals:
     void titleChanged();
     void noParametersMessageChanged();
     void hasParametersChanged();
+    void isPreviewingChanged();
 
 private:
     void reloadParameters();
     void updateEffectName();
+    void initPreviewHelper();
     int findParameterIndex(const muse::String& parameterId) const;
 
     int m_instanceId = -1;
     QString m_effectName;
     ParameterInfoList m_parameters;
+    EffectPreviewHelper* m_previewHelper = nullptr;
 };
 }

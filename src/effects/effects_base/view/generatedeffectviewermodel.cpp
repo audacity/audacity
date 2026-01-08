@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "generatedeffectviewermodel.h"
+#include "effectpreviewhelper.h"
 
 #include "framework/global/log.h"
 
@@ -129,6 +130,7 @@ void GeneratedEffectViewerModel::load()
 
     updateEffectName();
     reloadParameters();
+    initPreviewHelper();
 
     // Listen for individual parameter value changes
     parametersProvider()->parameterChanged().onReceive(this, [this](const ParameterChangedData& data) {
@@ -289,4 +291,40 @@ int GeneratedEffectViewerModel::findParameterIndex(const muse::String& parameter
         }
     }
     return -1;
+}
+
+void GeneratedEffectViewerModel::initPreviewHelper()
+{
+    if (m_previewHelper) {
+        delete m_previewHelper;
+        m_previewHelper = nullptr;
+    }
+
+    if (m_instanceId < 0) {
+        return;
+    }
+
+    m_previewHelper = new EffectPreviewHelper(this, m_instanceId);
+    connect(m_previewHelper, &EffectPreviewHelper::isPreviewingChanged,
+            this, &GeneratedEffectViewerModel::isPreviewingChanged);
+    m_previewHelper->init();
+}
+
+void GeneratedEffectViewerModel::startPreview()
+{
+    if (m_previewHelper) {
+        m_previewHelper->startPreview();
+    }
+}
+
+void GeneratedEffectViewerModel::stopPreview()
+{
+    if (m_previewHelper) {
+        m_previewHelper->stopPreview();
+    }
+}
+
+bool GeneratedEffectViewerModel::isPreviewing() const
+{
+    return m_previewHelper ? m_previewHelper->isPreviewing() : false;
 }
