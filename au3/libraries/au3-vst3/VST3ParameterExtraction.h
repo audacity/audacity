@@ -29,7 +29,7 @@ enum class ParamType {
 };
 
 //! Simple parameter info structure that doesn't expose VST3 SDK types
-//! Values are stored in plain (display) representation, obtained via normalizedParamToPlain().
+//! Values are stored in "Full Range" (display) representation, obtained via normalizedParamToFullRange().
 //! Use getNormalizedValue() to convert back to normalized [0,1] for VST3 API calls.
 struct ParamInfo {
     uint32_t id = 0;                  // VST3 parameter ID (matches Steinberg::Vst::ParamID type)
@@ -40,8 +40,8 @@ struct ParamInfo {
 
     ParamType type = ParamType::Unknown;
 
-    // Value range in plain (display) values, e.g., -60 to +6 for dB, 20 to 20000 for Hz
-    // Obtained via normalizedParamToPlain(). For plugins that don't implement proper
+    // Value range in "Full Range" (display) values, e.g., -60 to +6 for dB, 20 to 20000 for Hz
+    // Obtained via normalizedParamToFullRange(). For plugins that don't implement proper
     // conversions, these will be 0.0 to 1.0 (same as normalized).
     double minValue = 0.0;
     double maxValue = 0.0;
@@ -67,7 +67,7 @@ struct ParamInfo {
     bool isInteger = false;
     bool canAutomate = true;
 
-    //! Convert current plain value to normalized [0,1] for VST3 API calls
+    //! Convert current "Full Range" value to normalized [0,1] for VST3 API calls
     double getNormalizedValue() const
     {
         if (maxValue == minValue) {
@@ -76,7 +76,7 @@ struct ParamInfo {
         return (currentValue - minValue) / (maxValue - minValue);
     }
 
-    //! Convert a plain value to normalized [0,1]
+    //! Convert a "Full Range" value to normalized [0,1]
     double toNormalized(double plainValue) const
     {
         if (maxValue == minValue) {
@@ -102,7 +102,7 @@ std::vector<ParamInfo> extractParameters(EffectInstanceEx* instance, EffectSetti
 double getParameterValue(EffectInstanceEx* instance, uint32_t parameterId);
 
 //! Set the value of a VST3 parameter using a normalized value [0,1]
-//! Use ParamInfo::toNormalized() to convert plain values before calling this
+//! Use ParamInfo::toNormalized() to convert "Full Range" values before calling this
 //! @param normalizedValue Value in [0,1] range
 //! @param settingsAccess Optional settings access to persist the change
 //! Returns true on success, false on error
@@ -114,11 +114,11 @@ bool setParameterValue(EffectInstanceEx* instance, uint32_t parameterId, double 
 //! Returns empty string if parameter not found or on error
 std::string getParameterValueString(EffectInstanceEx* instance, uint32_t parameterId, double normalizedValue);
 
-//! Convert normalized value (0.0-1.0) to plain value (actual display value)
-//! Returns the plain value, or the normalized value if conversion is not supported
-double normalizedToPlain(EffectInstanceEx* instance, uint32_t parameterId, double normalizedValue);
+//! Convert normalized value (0.0-1.0) to "Full Range" value (actual display value)
+//! Returns the "Full Range" value, or the normalized value if conversion is not supported
+double normalizedToFullRange(EffectInstanceEx* instance, uint32_t parameterId, double normalizedValue);
 
-//! Convert plain value (actual display value) to normalized value (0.0-1.0)
-//! Returns the normalized value, or the plain value clamped to 0.0-1.0 if conversion is not supported
+//! Convert "Full Range" value (actual display value) to normalized value (0.0-1.0)
+//! Returns the normalized value, or the "Full Range" value clamped to 0.0-1.0 if conversion is not supported
 double plainToNormalized(EffectInstanceEx* instance, uint32_t parameterId, double plainValue);
 } // namespace VST3ParameterExtraction
