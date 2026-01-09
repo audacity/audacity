@@ -792,7 +792,7 @@ msgid ""
 "The temporary files directory is on a FAT formatted drive.\n"
 "Resetting to default location."
 msgstr ""
-"Das Verzeichnis der temporären Dateien befindet sich auf einem FAT-formatiertem Laufwerk.\n"
+"Das Verzeichnis der temporären Dateien befindet sich auf einem FAT-formatierten Laufwerk.\n"
 "Auf Standardort zurückgesetzt."
 
 #: libraries/lib-files/TempDirectory.cpp
