@@ -96,26 +96,4 @@ private:
     int m_windowSize = 0;
     int m_zeroPaddingFactor = 0;
 };
-
-class SpectrogramBounds : public ClientData::Cloneable<>
-{
-public:
-
-    //! Get either the global default settings, or the track's own if previously created
-    static SpectrogramBounds& Get(WaveTrack& track);
-
-    //! @copydoc Get(WaveTrack&)
-    static const SpectrogramBounds& Get(const WaveTrack& track);
-
-    ~SpectrogramBounds() override;
-    PointerType Clone() const override;
-
-    void GetBounds(const WaveTrack& track, float& min, float& max) const;
-
-    void SetBounds(float min, float max)
-    { mSpectrumMin = min, mSpectrumMax = max; }
-
-private:
-    float mSpectrumMin = -1, mSpectrumMax = -1;
-};
 }

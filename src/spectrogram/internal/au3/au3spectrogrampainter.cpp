@@ -7,6 +7,8 @@
 #include "./au3spectrogramtypes.h"
 #include "./au3spectrogramclipchannelpainter.h"
 #include "./au3spectrogramsettings.h"
+#include "./au3trackspectrogramconfiguration.h"
+#include "../spectrogramutils.h"
 
 #include "au3wrap/internal/domaccessor.h"
 
@@ -41,8 +43,7 @@ void Au3SpectrogramPainter::paintClipChannel(QPainter& qPainter, const ClipChann
 
     auto& settings = Au3SpectrogramSettings::Get(*waveTrack);
 
-    float minFreq, maxFreq;
-    SpectrogramBounds::Get(*waveTrack).GetBounds(*waveTrack, minFreq, maxFreq);
+    const auto [minFreq, maxFreq] = spectrogramBounds(Au3TrackSpectrogramConfiguration { settings }, waveTrack->GetRate());
 
     const SpectrogramTrackContext trackContext{
         settings,

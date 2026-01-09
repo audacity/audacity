@@ -3,6 +3,7 @@
  */
 #pragma once
 
+#include "ispectrogramconfiguration.h"
 #include "spectrogramtypes.h"
 
 #include <vector>
@@ -21,4 +22,8 @@ void findCorrection(
 void fillWhere(
     std::vector<long long>& where, size_t len, bool addBias, double correction, double t0, double sampleRate, double stretchRatio,
     double samplesPerPixel);
+
+int fftLength(const ISpectrogramConfiguration& config);
+
+std::pair<float, float> spectrogramBounds(const ISpectrogramConfiguration&, double sampleRate);
 }
