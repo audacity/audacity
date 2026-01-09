@@ -1,5 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Audacity Team
+# Copyright (C) 2026 Audacity Team
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -11,6 +11,7 @@
 # jhuffer <joachim.huffer@gmail.com>, 2024
 # Michał Trzebiatowski <michtrz@gmail.com>, 2024
 # Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024
+# Benedikt Hofer <coden.mit.benni@gmail.com>, 2026.
 #
 #, fuzzy
 msgid ""
@@ -792,7 +793,7 @@ msgid ""
 "The temporary files directory is on a FAT formatted drive.\n"
 "Resetting to default location."
 msgstr ""
-"Das Verzeichnis der temporären Dateien befindet sich auf einem FAT-formatiertem Laufwerk.\n"
+"Das Verzeichnis der temporären Dateien befindet sich auf einem FAT-formatierten Laufwerk.\n"
 "Auf Standardort zurückgesetzt."
 
 #: libraries/lib-files/TempDirectory.cpp
@@ -849,7 +850,7 @@ msgstr "Alle unterstützten Dateien"
 #, c-format
 msgid ""
 "\"%s\" \n"
-"is a not an audio file. \n"
+"is not an audio file. \n"
 "Audacity cannot open this type of file."
 msgstr ""
 "„%s“\n"
@@ -2940,7 +2941,7 @@ msgstr "Es ist nicht ausreichend Platz vorhanden, um die Auswahl einzufügen"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "A track has a corrupted sample sequence."
-msgstr "Ein Spur hat eine beschädigte Sample-Sequenz."
+msgstr "Eine Spur hat eine beschädigte Sample-Sequenz."
 
 #: libraries/lib-wave-track/WaveTrackUtilities.cpp
 msgid "There is not enough room available to expand the cut line"
@@ -9841,7 +9842,7 @@ msgid ""
 msgstr ""
 "%s\n"
 "\n"
-"„%s“ wurde abgerochen weil die Aufnahme angehalten wurde."
+"„%s“ wurde abgebrochen weil die Aufnahme angehalten wurde."
 
 #: src/TimerRecordDialog.cpp
 msgid "Timer Recording"
@@ -10196,7 +10197,7 @@ msgstr "Sehen Sie sich das [[%s|Release-Video]] an oder lesen Sie das [[https://
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
-msgstr "Kostenlose Erweiterungen und Geräuschen holen"
+msgstr "Kostenlose Erweiterungen und Geräusche holen"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
@@ -11362,7 +11363,7 @@ msgstr "Kompressor"
 
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr "Reduziert den „dynamische Reichweite“ oder Unterschiede zwischen lauten und leisen Teilen."
+msgstr "Reduziert die „dynamische Reichweite“ oder Unterschiede zwischen lauten und leisen Teilen."
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
@@ -11670,12 +11671,12 @@ msgstr "Harter Limiter 1413"
 #: src/effects/Distortion.cpp
 #, no-c-format
 msgid "Hard clip -12dB, 80% make-up gain"
-msgstr "Hartes Abschneiden - 12dB, 80% Makeup gain"
+msgstr "Hartes Abschneiden - 12dB, 80% Verstärkung"
 
 #: src/effects/Distortion.cpp
 #, no-c-format
 msgid "Soft clip -12dB, 80% make-up gain"
-msgstr "Sanftes Abschneiden - 12dB, 80% Makeup gain"
+msgstr "Sanftes Abschneiden - 12dB, 80% Verstärkung"
 
 #: src/effects/Distortion.cpp
 msgid "Fuzz Box"
@@ -17648,7 +17649,7 @@ msgstr "Die Minimalfrequenz muss ganzzahlig sein"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "The gain must be an integer"
-msgstr "Die Anhebung muss aus ganzzahlig sein"
+msgstr "Die Anhebung muss ganzzahlig sein"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "The range must be a positive integer"
@@ -17698,7 +17699,7 @@ msgstr ""
 "Themefähigkeit ist ein experimentelles Feature.\n"
 "\n"
 "Um es zu testen, klicken Sie auf „Themencache speichern“. Danach können Sie die Bilder und Farben in\n"
-"ImageCacheVxx.png finden und mit einen Editor wie Gimp bearbeiten.\n"
+"ImageCacheVxx.png finden und mit einem Editor wie Gimp bearbeiten.\n"
 "\n"
 "Klicken Sie „Themencache laden“, um die veränderten Bilder und Farben wieder in Audacity zu laden."
 
@@ -19065,7 +19066,7 @@ msgstr ""
 "Spuren gerendert.\n"
 "\n"
 "Dadurch werden alle Echtzeiteffekte auf die Wellenform angewendet\n"
-"und verborgene Daten entfernt. Darüber hinaus wird der gesamte\n"
+"und verborgene Daten entfernt. Darüber hinaus wird die gesamte\n"
 "Spur zu einem großen Clip.\n"
 "\n"
 "Möchten Sie fortfahren?"

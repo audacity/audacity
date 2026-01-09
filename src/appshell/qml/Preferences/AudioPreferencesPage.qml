@@ -5,7 +5,7 @@
  * Audacity
  * A Digital Audio Editor
  *
- * Copyright (C) 2025 Audacity BVBA and others
+ * Copyright (C) 2026 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
