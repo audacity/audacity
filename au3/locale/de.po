@@ -849,7 +849,7 @@ msgstr "Alle unterstützten Dateien"
 #, c-format
 msgid ""
 "\"%s\" \n"
-"is a not an audio file. \n"
+"is not an audio file. \n"
 "Audacity cannot open this type of file."
 msgstr ""
 "„%s“\n"
