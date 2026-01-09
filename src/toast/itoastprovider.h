@@ -3,9 +3,6 @@
 */
 #pragma once
 
-#include <string>
-#include <vector>
-
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/async/channel.h"
 

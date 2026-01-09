@@ -36,12 +36,12 @@ public:
     std::shared_ptr<muse::Progress> progress() const;
 
 private:
-    int m_id;
-    std::string m_title;
-    std::string m_message;
-    muse::ui::IconCode::Code m_iconCode;
-    bool m_dismissible;
-    std::chrono::seconds m_timeout;
+    int m_id = 0;
+    std::string m_title = "Title";
+    std::string m_message = "Message";
+    muse::ui::IconCode::Code m_iconCode = muse::ui::IconCode::Code::NONE;
+    bool m_dismissible = true;
+    std::chrono::seconds m_timeout = std::chrono::seconds(0);
     std::vector<ToastAction> m_actions;
 
     double m_currentProgress = 0;
